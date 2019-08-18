@@ -7,6 +7,9 @@
   "engines": {
     "node": ">= 10.16.0"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
     "@sustainer-network/consts": "^0.0.1",
     "@sustainer-network/email-validator": "^0.0.1",
@@ -19,5 +22,5 @@
   "devDependencies": {
     "mocha": "^6.1.4"
   },
-  "gitHead": "5a3e3d11b802029c5c92c60d20057b862e01dacf"
+  "gitHead": "a87e090981b08d50c4d1b3be2f37ead4e2031a0f"
 }
