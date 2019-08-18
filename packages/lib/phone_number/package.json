@@ -1,6 +1,6 @@
 {
   "name": "@sustainer-network/phone-number",
-  "version": "0.0.1",
+  "version": "0.0.0",
   "description": "Phone number formatting.",
   "main": "index.js",
   "author": "",
