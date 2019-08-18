@@ -1,0 +1,22 @@
+{
+  "name": "@sustainer-network/request",
+  "version": "0.0.0",
+  "description": "Http access.",
+  "main": "index.js",
+  "author": "João Ritter",
+  "engines": {
+    "node": ">= 10.16.0"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "dependencies": {
+    "async-request": "^1.2.0",
+    "query-string": "^6.8.1"
+  },
+  "devDependencies": {
+    "mocha": "^6.1.4",
+    "sinon": "^7.3.2",
+    "sinon-chai": "^3.3.0"
+  }
+}

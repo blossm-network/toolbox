@@ -1,0 +1,59 @@
+{
+  "name": "@sustainer-network/js",
+  "description": "The Sustainer Network codebase.",
+  "version": "0.0.0",
+  "private": true,
+  "workspaces": [
+    "packages/**/*"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sustainer-network/sustainer-network-js.git"
+  },
+  "author": "sustainernetwork.org",
+  "bugs": {
+    "url": "https://github.com/sustainer-network/sustainer-network-js/issues"
+  },
+  "homepage": "https://github.com/sustainer-network/sustainer-network-js#readme",
+  "engines": {
+    "node": ">= 10.16.0"
+  },
+  "scripts": {
+    "preversion": "yarn test",
+    "version": "auto-changelog && git add CHANGELOG.md",
+    "postversion": "git push",
+    "precommit": "lint-staged",
+    "bootstrap": "lerna bootstrap --use-workspaces",
+    "compile": "lerna run compile",
+    "clean": "lerna run clean",
+    "test": "lerna run test",
+    "patch": "lerna version patch",
+    "major": "lerna version major",
+    "check-packages": "yarn clean && yarn compile && yarn test",
+    "lerna-publish": "npx lerna publish -y from-package"
+  },
+  "devDependencies": {
+    "auto-changelog": "^1.13.0",
+    "chai": "^4.2.0",
+    "eslint": "^5.16.0",
+    "eslint-config-prettier": "^4.1.0",
+    "eslint-plugin-import": "^2.17.2",
+    "husky": "^1.3.1",
+    "lerna": "^3.16.4",
+    "lint-staged": "^8.1.7",
+    "mocha": "^6.1.4",
+    "prettier-eslint-cli": "^4.7.1",
+    "sinon": "^7.3.2"
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint --fix",
+      "prettier-eslint --write",
+      "git add"
+    ],
+    "*.json": [
+      "prettier-eslint --write",
+      "git add"
+    ]
+  }
+}

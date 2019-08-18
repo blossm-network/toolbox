@@ -1,0 +1,17 @@
+steps:
+  - name: $_NODE_IMAGE
+    entrypoint: yarn
+    args: ["install"]
+  - name: $_NODE_IMAGE
+    entrypoint: yarn
+    args: ["check-packages"]
+  - name: $_NODE_IMAGE
+    entrypoint: yarn
+    args: ["lerna-publish"]
+
+substitutions:
+  _NODE_IMAGE: node:10.16.0
+
+options:
+  env:
+    - "NPM_TOKEN=${_NPM_TOKEN}"
