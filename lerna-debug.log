@@ -12,10 +12,10 @@
 7 verbose currentBranch master
 8 silly remoteBranchExists
 9 silly isBehindUpstream
-10 silly isBehindUpstream master is behind origin/master by 0 commit(s) and ahead by 1
+10 silly isBehindUpstream master is behind origin/master by 0 commit(s) and ahead by 3
 11 silly hasTags
 12 verbose hasTags true
-13 silly git-describe.sync "@sustainer-network/clean-command@0.0.2-1-g6a6c4ed" => {"lastTagName":"@sustainer-network/clean-command@0.0.2","lastVersion":"0.0.2","refCount":"1","sha":"6a6c4ed","isDirty":false}
+13 silly git-describe.sync "@sustainer-network/clean-command@0.0.2-3-g029f52d" => {"lastTagName":"@sustainer-network/clean-command@0.0.2","lastVersion":"0.0.2","refCount":"3","sha":"029f52d","isDirty":false}
 14 info Looking for changed packages since @sustainer-network/clean-command@0.0.2
 15 info ignoring diff in paths matching [ '*.md' ]
 16 silly checking diff packages/consts
@@ -86,8 +86,8 @@
 81 verbose updated @sustainer-network/validate-command
 82 verbose updated @sustainer-network/validation
 83 verbose updated @sustainer-network/validator
-84 verbose git-describe undefined => "@sustainer-network/clean-command@0.0.2-1-g6a6c4ed"
-85 silly git-describe parsed => {"lastTagName":"@sustainer-network/clean-command@0.0.2","lastVersion":"0.0.2","refCount":"1","sha":"6a6c4ed","isDirty":false}
+84 verbose git-describe undefined => "@sustainer-network/clean-command@0.0.2-3-g029f52d"
+85 silly git-describe parsed => {"lastTagName":"@sustainer-network/clean-command@0.0.2","lastVersion":"0.0.2","refCount":"3","sha":"029f52d","isDirty":false}
 86 info execute Skipping releases
 87 silly lifecycle "preversion" starting in "@sustainer-network/js"
 88 info lifecycle @sustainer-network/js@0.0.0~preversion: @sustainer-network/js@0.0.0
@@ -105,25 +105,25 @@
 100 silly lifecycle No script for "preversion" in "@sustainer-network/email-validator", continuing
 101 silly lifecycle No script for "preversion" in "@sustainer-network/nonce", continuing
 102 silly lifecycle No script for "preversion" in "@sustainer-network/phone-number", continuing
-103 silly lifecycle No script for "version" in "@sustainer-network/datetime", continuing
+103 silly lifecycle No script for "version" in "@sustainer-network/consts", continuing
 104 silly lifecycle No script for "preversion" in "@sustainer-network/request", continuing
-105 silly lifecycle No script for "version" in "@sustainer-network/errors", continuing
+105 silly lifecycle No script for "version" in "@sustainer-network/datetime", continuing
 106 silly lifecycle No script for "preversion" in "@sustainer-network/uuid", continuing
-107 silly lifecycle No script for "version" in "@sustainer-network/clean-command", continuing
+107 silly lifecycle No script for "version" in "@sustainer-network/email-validator", continuing
 108 silly lifecycle No script for "preversion" in "@sustainer-network/validation", continuing
-109 silly lifecycle No script for "version" in "@sustainer-network/email-validator", continuing
-110 silly lifecycle No script for "preversion" in "@sustainer-network/jwt", continuing
-111 silly lifecycle No script for "version" in "@sustainer-network/nonce", continuing
-112 silly lifecycle No script for "version" in "@sustainer-network/command-name-from-body", continuing
-113 silly lifecycle No script for "preversion" in "@sustainer-network/normalize-command", continuing
-114 silly lifecycle No script for "version" in "@sustainer-network/phone-number", continuing
-115 silly lifecycle No script for "version" in "@sustainer-network/consts", continuing
+109 silly lifecycle No script for "version" in "@sustainer-network/command-name-from-body", continuing
+110 silly lifecycle No script for "version" in "@sustainer-network/clean-command", continuing
+111 silly lifecycle No script for "version" in "@sustainer-network/phone-number", continuing
+112 silly lifecycle No script for "version" in "@sustainer-network/errors", continuing
+113 silly lifecycle No script for "preversion" in "@sustainer-network/jwt", continuing
+114 silly lifecycle No script for "version" in "@sustainer-network/nonce", continuing
+115 silly lifecycle No script for "preversion" in "@sustainer-network/normalize-command", continuing
 116 silly lifecycle No script for "version" in "@sustainer-network/request", continuing
-117 silly lifecycle No script for "version" in "@sustainer-network/normalize-command", continuing
-118 silly lifecycle No script for "version" in "@sustainer-network/uuid", continuing
-119 silly lifecycle No script for "preversion" in "@sustainer-network/create-event", continuing
-120 silly lifecycle No script for "version" in "@sustainer-network/validation", continuing
-121 silly lifecycle No script for "preversion" in "@sustainer-network/validator", continuing
+117 silly lifecycle No script for "version" in "@sustainer-network/validation", continuing
+118 silly lifecycle No script for "preversion" in "@sustainer-network/validator", continuing
+119 silly lifecycle No script for "version" in "@sustainer-network/uuid", continuing
+120 silly lifecycle No script for "preversion" in "@sustainer-network/create-event", continuing
+121 silly lifecycle No script for "version" in "@sustainer-network/normalize-command", continuing
 122 silly lifecycle No script for "version" in "@sustainer-network/jwt", continuing
 123 silly lifecycle No script for "version" in "@sustainer-network/validator", continuing
 124 silly lifecycle No script for "preversion" in "@sustainer-network/validate-command", continuing
@@ -139,18 +139,18 @@
 134 silly lifecycle @sustainer-network/js@0.0.0~version: Args: [ '-c', 'auto-changelog && git add CHANGELOG.md' ]
 135 silly lifecycle @sustainer-network/js@0.0.0~version: Returned: code: 0  signal: null
 136 silly lifecycle "version" finished in "@sustainer-network/js"
-137 silly gitAdd [ '/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/packages/lib/datetime/package.json',
-137 silly gitAdd   '/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/packages/errors/package.json',
-137 silly gitAdd   '/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/packages/lib/clean_command/package.json',
+137 silly gitAdd [ '/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/packages/consts/package.json',
+137 silly gitAdd   '/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/packages/lib/datetime/package.json',
 137 silly gitAdd   '/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/packages/lib/email_validator/package.json',
-137 silly gitAdd   '/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/packages/lib/nonce/package.json',
 137 silly gitAdd   '/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/packages/lib/command_name_from_body/package.json',
+137 silly gitAdd   '/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/packages/lib/clean_command/package.json',
 137 silly gitAdd   '/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/packages/lib/phone_number/package.json',
-137 silly gitAdd   '/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/packages/consts/package.json',
+137 silly gitAdd   '/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/packages/errors/package.json',
+137 silly gitAdd   '/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/packages/lib/nonce/package.json',
 137 silly gitAdd   '/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/packages/lib/request/package.json',
-137 silly gitAdd   '/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/packages/lib/normalize_command/package.json',
-137 silly gitAdd   '/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/packages/lib/uuid/package.json',
 137 silly gitAdd   '/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/packages/lib/validation/package.json',
+137 silly gitAdd   '/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/packages/lib/uuid/package.json',
+137 silly gitAdd   '/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/packages/lib/normalize_command/package.json',
 137 silly gitAdd   '/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/packages/lib/jwt/package.json',
 137 silly gitAdd   '/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/packages/utils/validator/package.json',
 137 silly gitAdd   '/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/packages/lib/create_event/package.json',
@@ -177,7 +177,7 @@
 138 silly gitCommit  - @sustainer-network/validator@0.0.1
 139 verbose git [ 'commit',
 139 verbose git   '-F',
-139 verbose git   '/private/var/folders/td/1z2wysyx391gm5_235h7rvsm0000gn/T/3a723420-e422-44e6-af96-b811f1e1b91b/lerna-commit.txt' ]
+139 verbose git   '/private/var/folders/td/1z2wysyx391gm5_235h7rvsm0000gn/T/ab1870ad-7898-4ab6-bf5f-240721d43bac/lerna-commit.txt' ]
 140 silly gitTag @sustainer-network/consts@0.0.1
 141 verbose git [ 'tag',
 141 verbose git   '@sustainer-network/consts@0.0.1',
