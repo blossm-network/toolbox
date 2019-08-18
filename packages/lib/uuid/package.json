@@ -1,6 +1,6 @@
 {
   "name": "@sustainer-network/uuid",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Creates a uuid.",
   "main": "index.js",
   "author": "sustainernetwork.org",

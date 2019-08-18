@@ -1,6 +1,6 @@
 {
   "name": "@sustainer-network/command-name-from-body",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Finds the command name from the hostname of a request body.",
   "main": "index.js",
   "author": "João Ritter",

@@ -1,6 +1,6 @@
 {
   "name": "@sustainer-network/normalize-command",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Normalizes the paramaters found in command requests.",
   "main": "index.js",
   "author": "sustainernetwork.org",
@@ -11,8 +11,8 @@
     "access": "public"
   },
   "dependencies": {
-    "@sustainer-network/command-name-from-body": "^0.0.1",
-    "@sustainer-network/nonce": "^0.0.1"
+    "@sustainer-network/command-name-from-body": "^0.0.2",
+    "@sustainer-network/nonce": "^0.0.2"
   },
   "scripts": {
     "test": "mocha"
