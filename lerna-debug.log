@@ -15,256 +15,253 @@
 10 silly isBehindUpstream master is behind origin/master by 0 commit(s) and ahead by 3
 11 silly hasTags
 12 verbose hasTags true
-13 silly git-describe.sync "@sustainer-network/clean-command@0.0.2-3-g029f52d" => {"lastTagName":"@sustainer-network/clean-command@0.0.2","lastVersion":"0.0.2","refCount":"3","sha":"029f52d","isDirty":false}
-14 info Looking for changed packages since @sustainer-network/clean-command@0.0.2
+13 silly git-describe.sync "@sustainer-network/clean-command@0.0.1-3-g07bde3f" => {"lastTagName":"@sustainer-network/clean-command@0.0.1","lastVersion":"0.0.1","refCount":"3","sha":"07bde3f","isDirty":false}
+14 info Looking for changed packages since @sustainer-network/clean-command@0.0.1
 15 info ignoring diff in paths matching [ '*.md' ]
 16 silly checking diff packages/consts
-17 silly found diff in packages/consts/package.json
-18 verbose filtered diff [ 'packages/consts/package.json' ]
-19 silly checking diff packages/errors
-20 silly found diff in packages/errors/package.json
-21 verbose filtered diff [ 'packages/errors/package.json' ]
-22 silly checking diff packages/exec/domains/auth_token/command_handlers/http/create_auth_token
-23 silly found diff in packages/exec/domains/auth_token/command_handlers/http/create_auth_token/package.json
-24 verbose filtered diff [ 'packages/exec/domains/auth_token/command_handlers/http/create_auth_token/package.json' ]
-25 silly checking diff packages/lib/clean_command
-26 silly found diff in packages/lib/clean_command/package.json
-27 verbose filtered diff [ 'packages/lib/clean_command/package.json' ]
+17 silly no diff found in @sustainer-network/consts
+18 silly checking diff packages/errors
+19 silly no diff found in @sustainer-network/errors
+20 silly checking diff packages/exec/domains/auth_token/command_handlers/create_auth_token/http
+21 silly found diff in packages/exec/domains/auth_token/command_handlers/create_auth_token/http/.DS_Store
+21 silly found diff in packages/exec/domains/auth_token/command_handlers/create_auth_token/http/README.md
+21 silly found diff in packages/exec/domains/auth_token/command_handlers/create_auth_token/http/deps.js
+21 silly found diff in packages/exec/domains/auth_token/command_handlers/create_auth_token/http/index.js
+21 silly found diff in packages/exec/domains/auth_token/command_handlers/create_auth_token/http/package.json
+21 silly found diff in packages/exec/domains/auth_token/command_handlers/create_auth_token/http/src/authorize.js
+21 silly found diff in packages/exec/domains/auth_token/command_handlers/create_auth_token/http/src/clean.js
+21 silly found diff in packages/exec/domains/auth_token/command_handlers/create_auth_token/http/src/validate.js
+21 silly found diff in packages/exec/domains/auth_token/command_handlers/create_auth_token/http/src/version.js
+21 silly found diff in packages/exec/domains/auth_token/command_handlers/create_auth_token/http/test/authorize.js
+21 silly found diff in packages/exec/domains/auth_token/command_handlers/create_auth_token/http/test/clean.js
+21 silly found diff in packages/exec/domains/auth_token/command_handlers/create_auth_token/http/test/index.js
+21 silly found diff in packages/exec/domains/auth_token/command_handlers/create_auth_token/http/test/validate.js
+21 silly found diff in packages/exec/domains/auth_token/command_handlers/create_auth_token/http/test/version.js
+22 verbose filtered diff [ 'packages/exec/domains/auth_token/command_handlers/create_auth_token/http/.DS_Store',
+22 verbose filtered diff   'packages/exec/domains/auth_token/command_handlers/create_auth_token/http/deps.js',
+22 verbose filtered diff   'packages/exec/domains/auth_token/command_handlers/create_auth_token/http/index.js',
+22 verbose filtered diff   'packages/exec/domains/auth_token/command_handlers/create_auth_token/http/package.json',
+22 verbose filtered diff   'packages/exec/domains/auth_token/command_handlers/create_auth_token/http/src/authorize.js',
+22 verbose filtered diff   'packages/exec/domains/auth_token/command_handlers/create_auth_token/http/src/clean.js',
+22 verbose filtered diff   'packages/exec/domains/auth_token/command_handlers/create_auth_token/http/src/validate.js',
+22 verbose filtered diff   'packages/exec/domains/auth_token/command_handlers/create_auth_token/http/src/version.js',
+22 verbose filtered diff   'packages/exec/domains/auth_token/command_handlers/create_auth_token/http/test/authorize.js',
+22 verbose filtered diff   'packages/exec/domains/auth_token/command_handlers/create_auth_token/http/test/clean.js',
+22 verbose filtered diff   'packages/exec/domains/auth_token/command_handlers/create_auth_token/http/test/index.js',
+22 verbose filtered diff   'packages/exec/domains/auth_token/command_handlers/create_auth_token/http/test/validate.js',
+22 verbose filtered diff   'packages/exec/domains/auth_token/command_handlers/create_auth_token/http/test/version.js' ]
+23 silly checking diff packages/exec/event_store/http
+24 silly found diff in packages/exec/event_store/http/.DS_Store
+24 silly found diff in packages/exec/event_store/http/README.md
+24 silly found diff in packages/exec/event_store/http/deps.js
+24 silly found diff in packages/exec/event_store/http/index.js
+24 silly found diff in packages/exec/event_store/http/package.json
+24 silly found diff in packages/exec/event_store/http/src/authorize.js
+24 silly found diff in packages/exec/event_store/http/src/clean_add.js
+24 silly found diff in packages/exec/event_store/http/src/validate_add.js
+24 silly found diff in packages/exec/event_store/http/src/validate_hydrate.js
+24 silly found diff in packages/exec/event_store/http/test/authorize.js
+24 silly found diff in packages/exec/event_store/http/test/clean_add.js
+24 silly found diff in packages/exec/event_store/http/test/index.js
+24 silly found diff in packages/exec/event_store/http/test/validate_add.js
+24 silly found diff in packages/exec/event_store/http/test/validate_hydrate.js
+25 verbose filtered diff [ 'packages/exec/event_store/http/.DS_Store',
+25 verbose filtered diff   'packages/exec/event_store/http/deps.js',
+25 verbose filtered diff   'packages/exec/event_store/http/index.js',
+25 verbose filtered diff   'packages/exec/event_store/http/package.json',
+25 verbose filtered diff   'packages/exec/event_store/http/src/authorize.js',
+25 verbose filtered diff   'packages/exec/event_store/http/src/clean_add.js',
+25 verbose filtered diff   'packages/exec/event_store/http/src/validate_add.js',
+25 verbose filtered diff   'packages/exec/event_store/http/src/validate_hydrate.js',
+25 verbose filtered diff   'packages/exec/event_store/http/test/authorize.js',
+25 verbose filtered diff   'packages/exec/event_store/http/test/clean_add.js',
+25 verbose filtered diff   'packages/exec/event_store/http/test/index.js',
+25 verbose filtered diff   'packages/exec/event_store/http/test/validate_add.js',
+25 verbose filtered diff   'packages/exec/event_store/http/test/validate_hydrate.js' ]
+26 silly checking diff packages/lib/clean_command
+27 silly no diff found in @sustainer-network/clean-command
 28 silly checking diff packages/lib/command_name_from_body
-29 silly found diff in packages/lib/command_name_from_body/package.json
-30 verbose filtered diff [ 'packages/lib/command_name_from_body/package.json' ]
-31 silly checking diff packages/lib/create_event
-32 silly found diff in packages/lib/create_event/package.json
-33 verbose filtered diff [ 'packages/lib/create_event/package.json' ]
-34 silly checking diff packages/lib/datetime
-35 silly found diff in packages/lib/datetime/package.json
-36 verbose filtered diff [ 'packages/lib/datetime/package.json' ]
-37 silly checking diff packages/lib/email_validator
-38 silly found diff in packages/lib/email_validator/package.json
-39 verbose filtered diff [ 'packages/lib/email_validator/package.json' ]
+29 silly no diff found in @sustainer-network/command-name-from-body
+30 silly checking diff packages/lib/create_event
+31 silly found diff in packages/lib/create_event/index.js
+31 silly found diff in packages/lib/create_event/test/index.js
+32 verbose filtered diff [ 'packages/lib/create_event/index.js',
+32 verbose filtered diff   'packages/lib/create_event/test/index.js' ]
+33 silly checking diff packages/lib/datetime
+34 silly no diff found in @sustainer-network/datetime
+35 silly checking diff packages/lib/email_validator
+36 silly no diff found in @sustainer-network/email-validator
+37 silly checking diff packages/lib/event_store
+38 silly found diff in packages/lib/event_store/README.md
+38 silly found diff in packages/lib/event_store/deps.js
+38 silly found diff in packages/lib/event_store/index.js
+38 silly found diff in packages/lib/event_store/package.json
+38 silly found diff in packages/lib/event_store/src/_stream.js
+38 silly found diff in packages/lib/event_store/src/add.js
+38 silly found diff in packages/lib/event_store/src/hydrate.js
+38 silly found diff in packages/lib/event_store/test/add.js
+38 silly found diff in packages/lib/event_store/test/hydrate.js
+39 verbose filtered diff [ 'packages/lib/event_store/deps.js',
+39 verbose filtered diff   'packages/lib/event_store/index.js',
+39 verbose filtered diff   'packages/lib/event_store/package.json',
+39 verbose filtered diff   'packages/lib/event_store/src/_stream.js',
+39 verbose filtered diff   'packages/lib/event_store/src/add.js',
+39 verbose filtered diff   'packages/lib/event_store/src/hydrate.js',
+39 verbose filtered diff   'packages/lib/event_store/test/add.js',
+39 verbose filtered diff   'packages/lib/event_store/test/hydrate.js' ]
 40 silly checking diff packages/lib/jwt
-41 silly found diff in packages/lib/jwt/package.json
-42 verbose filtered diff [ 'packages/lib/jwt/package.json' ]
-43 silly checking diff packages/lib/nonce
-44 silly found diff in packages/lib/nonce/package.json
-45 verbose filtered diff [ 'packages/lib/nonce/package.json' ]
-46 silly checking diff packages/lib/normalize_command
-47 silly found diff in packages/lib/normalize_command/package.json
-48 verbose filtered diff [ 'packages/lib/normalize_command/package.json' ]
-49 silly checking diff packages/lib/phone_number
-50 silly found diff in packages/lib/phone_number/package.json
-51 verbose filtered diff [ 'packages/lib/phone_number/package.json' ]
-52 silly checking diff packages/lib/request
-53 silly found diff in packages/lib/request/package.json
-54 verbose filtered diff [ 'packages/lib/request/package.json' ]
-55 silly checking diff packages/lib/uuid
-56 silly found diff in packages/lib/uuid/package.json
-57 verbose filtered diff [ 'packages/lib/uuid/package.json' ]
-58 silly checking diff packages/lib/validate_command
-59 silly found diff in packages/lib/validate_command/package.json
-60 verbose filtered diff [ 'packages/lib/validate_command/package.json' ]
-61 silly checking diff packages/lib/validation
-62 silly found diff in packages/lib/validation/package.json
-63 verbose filtered diff [ 'packages/lib/validation/package.json' ]
+41 silly no diff found in @sustainer-network/jwt
+42 silly checking diff packages/lib/nonce
+43 silly no diff found in @sustainer-network/nonce
+44 silly checking diff packages/lib/normalize_command
+45 silly no diff found in @sustainer-network/normalize-command
+46 silly checking diff packages/lib/phone_number
+47 silly no diff found in @sustainer-network/phone-number
+48 silly checking diff packages/lib/request
+49 silly found diff in packages/lib/request/package.json
+50 verbose filtered diff [ 'packages/lib/request/package.json' ]
+51 silly checking diff packages/lib/token_from_req
+52 silly found diff in packages/lib/token_from_req/README.md
+52 silly found diff in packages/lib/token_from_req/index.js
+52 silly found diff in packages/lib/token_from_req/package.json
+52 silly found diff in packages/lib/token_from_req/test/index.js
+53 verbose filtered diff [ 'packages/lib/token_from_req/index.js',
+53 verbose filtered diff   'packages/lib/token_from_req/package.json',
+53 verbose filtered diff   'packages/lib/token_from_req/test/index.js' ]
+54 silly checking diff packages/lib/uuid
+55 silly no diff found in @sustainer-network/uuid
+56 silly checking diff packages/lib/validate_command
+57 silly found diff in packages/lib/validate_command/test/index.js
+58 verbose filtered diff [ 'packages/lib/validate_command/test/index.js' ]
+59 silly checking diff packages/lib/validation
+60 silly no diff found in @sustainer-network/validation
+61 silly checking diff packages/libraries/event_store/js
+62 silly found diff in packages/libraries/event_store/js/README.md
+62 silly found diff in packages/libraries/event_store/js/index.js
+62 silly found diff in packages/libraries/event_store/js/package.json
+62 silly found diff in packages/libraries/event_store/js/test/index.js
+63 verbose filtered diff [ 'packages/libraries/event_store/js/index.js',
+63 verbose filtered diff   'packages/libraries/event_store/js/package.json',
+63 verbose filtered diff   'packages/libraries/event_store/js/test/index.js' ]
 64 silly checking diff packages/utils/validator
 65 silly found diff in packages/utils/validator/package.json
 66 verbose filtered diff [ 'packages/utils/validator/package.json' ]
-67 verbose updated @sustainer-network/consts
-68 verbose updated @sustainer-network/errors
-69 verbose updated @sustainer-network/create-auth-token-command-handler
-70 verbose updated @sustainer-network/clean-command
-71 verbose updated @sustainer-network/command-name-from-body
-72 verbose updated @sustainer-network/create-event
-73 verbose updated @sustainer-network/datetime
-74 verbose updated @sustainer-network/email-validator
-75 verbose updated @sustainer-network/jwt
-76 verbose updated @sustainer-network/nonce
-77 verbose updated @sustainer-network/normalize-command
-78 verbose updated @sustainer-network/phone-number
-79 verbose updated @sustainer-network/request
-80 verbose updated @sustainer-network/uuid
-81 verbose updated @sustainer-network/validate-command
-82 verbose updated @sustainer-network/validation
-83 verbose updated @sustainer-network/validator
-84 verbose git-describe undefined => "@sustainer-network/clean-command@0.0.2-3-g029f52d"
-85 silly git-describe parsed => {"lastTagName":"@sustainer-network/clean-command@0.0.2","lastVersion":"0.0.2","refCount":"3","sha":"029f52d","isDirty":false}
-86 info execute Skipping releases
-87 silly lifecycle "preversion" starting in "@sustainer-network/js"
-88 info lifecycle @sustainer-network/js@0.0.0~preversion: @sustainer-network/js@0.0.0
-89 verbose lifecycle @sustainer-network/js@0.0.0~preversion: unsafe-perm in lifecycle true
-90 verbose lifecycle @sustainer-network/js@0.0.0~preversion: PATH: /Users/joao/Documents/repos/sustainer-network/sustainer-network-js/node_modules/npm-lifecycle/node-gyp-bin:/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/node_modules/.bin:/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/node_modules/.bin:/Users/joao/.config/yarn/link/node_modules/.bin:/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/node_modules/.bin:/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/node_modules/.bin:/Users/joao/.config/yarn/link/node_modules/.bin:/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/node_modules/.bin:/Users/joao/.nvm/versions/node/v8.6.0/bin:/Users/joao/.nvm/versions/node/v10.16.0/libexec/lib/node_modules/npm/bin/node-gyp-bin:/Users/joao/.nvm/versions/node/v10.16.0/lib/node_modules/npm/bin/node-gyp-bin:/Users/joao/.nvm/versions/node/v10.16.0/bin/node_modules/npm/bin/node-gyp-bin:/Users/joao/.nvm/versions/node/v10.16.0/bin:/Users/joao/.nvm/versions/node/v10.16.0/bin:/Users/joao/.google-cloud-sdk/bin:/Users/joao/.flutter_build/bin:/Users/joao/.yarn/bin:/Users/joao/.config/yarn/global/node_modules/.bin:/Users/joao/.mongo/bin:/Developer/adt-bundle/sdk/tools:/Developer/adt-bundle/sdk/platform-tools:/usr/local/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Users/joao/.google-cloud-sdk/bin:/Users/joao/.flutter_build/bin:/Users/joao/.yarn/bin:/Users/joao/.config/yarn/global/node_modules/.bin:/Users/joao/.mongo/bin:/Developer/adt-bundle/sdk/tools:/Developer/adt-bundle/sdk/platform-tools
-91 verbose lifecycle @sustainer-network/js@0.0.0~preversion: CWD: /Users/joao/Documents/repos/sustainer-network/sustainer-network-js
-92 silly lifecycle @sustainer-network/js@0.0.0~preversion: Args: [ '-c', 'yarn test' ]
-93 silly lifecycle @sustainer-network/js@0.0.0~preversion: Returned: code: 0  signal: null
-94 silly lifecycle "preversion" finished in "@sustainer-network/js"
-95 silly lifecycle No script for "preversion" in "@sustainer-network/consts", continuing
-96 silly lifecycle No script for "preversion" in "@sustainer-network/errors", continuing
-97 silly lifecycle No script for "preversion" in "@sustainer-network/clean-command", continuing
-98 silly lifecycle No script for "preversion" in "@sustainer-network/command-name-from-body", continuing
-99 silly lifecycle No script for "preversion" in "@sustainer-network/datetime", continuing
-100 silly lifecycle No script for "preversion" in "@sustainer-network/email-validator", continuing
-101 silly lifecycle No script for "preversion" in "@sustainer-network/nonce", continuing
-102 silly lifecycle No script for "preversion" in "@sustainer-network/phone-number", continuing
-103 silly lifecycle No script for "version" in "@sustainer-network/consts", continuing
-104 silly lifecycle No script for "preversion" in "@sustainer-network/request", continuing
-105 silly lifecycle No script for "version" in "@sustainer-network/datetime", continuing
-106 silly lifecycle No script for "preversion" in "@sustainer-network/uuid", continuing
-107 silly lifecycle No script for "version" in "@sustainer-network/email-validator", continuing
-108 silly lifecycle No script for "preversion" in "@sustainer-network/validation", continuing
-109 silly lifecycle No script for "version" in "@sustainer-network/command-name-from-body", continuing
-110 silly lifecycle No script for "version" in "@sustainer-network/clean-command", continuing
-111 silly lifecycle No script for "version" in "@sustainer-network/phone-number", continuing
-112 silly lifecycle No script for "version" in "@sustainer-network/errors", continuing
-113 silly lifecycle No script for "preversion" in "@sustainer-network/jwt", continuing
-114 silly lifecycle No script for "version" in "@sustainer-network/nonce", continuing
-115 silly lifecycle No script for "preversion" in "@sustainer-network/normalize-command", continuing
-116 silly lifecycle No script for "version" in "@sustainer-network/request", continuing
-117 silly lifecycle No script for "version" in "@sustainer-network/validation", continuing
-118 silly lifecycle No script for "preversion" in "@sustainer-network/validator", continuing
-119 silly lifecycle No script for "version" in "@sustainer-network/uuid", continuing
-120 silly lifecycle No script for "preversion" in "@sustainer-network/create-event", continuing
-121 silly lifecycle No script for "version" in "@sustainer-network/normalize-command", continuing
-122 silly lifecycle No script for "version" in "@sustainer-network/jwt", continuing
-123 silly lifecycle No script for "version" in "@sustainer-network/validator", continuing
-124 silly lifecycle No script for "preversion" in "@sustainer-network/validate-command", continuing
-125 silly lifecycle No script for "version" in "@sustainer-network/create-event", continuing
-126 silly lifecycle No script for "version" in "@sustainer-network/validate-command", continuing
-127 silly lifecycle No script for "preversion" in "@sustainer-network/create-auth-token-command-handler", continuing
-128 silly lifecycle No script for "version" in "@sustainer-network/create-auth-token-command-handler", continuing
-129 silly lifecycle "version" starting in "@sustainer-network/js"
-130 info lifecycle @sustainer-network/js@0.0.0~version: @sustainer-network/js@0.0.0
-131 verbose lifecycle @sustainer-network/js@0.0.0~version: unsafe-perm in lifecycle true
-132 verbose lifecycle @sustainer-network/js@0.0.0~version: PATH: /Users/joao/Documents/repos/sustainer-network/sustainer-network-js/node_modules/npm-lifecycle/node-gyp-bin:/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/node_modules/.bin:/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/node_modules/.bin:/Users/joao/.config/yarn/link/node_modules/.bin:/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/node_modules/.bin:/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/node_modules/.bin:/Users/joao/.config/yarn/link/node_modules/.bin:/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/node_modules/.bin:/Users/joao/.nvm/versions/node/v8.6.0/bin:/Users/joao/.nvm/versions/node/v10.16.0/libexec/lib/node_modules/npm/bin/node-gyp-bin:/Users/joao/.nvm/versions/node/v10.16.0/lib/node_modules/npm/bin/node-gyp-bin:/Users/joao/.nvm/versions/node/v10.16.0/bin/node_modules/npm/bin/node-gyp-bin:/Users/joao/.nvm/versions/node/v10.16.0/bin:/Users/joao/.nvm/versions/node/v10.16.0/bin:/Users/joao/.google-cloud-sdk/bin:/Users/joao/.flutter_build/bin:/Users/joao/.yarn/bin:/Users/joao/.config/yarn/global/node_modules/.bin:/Users/joao/.mongo/bin:/Developer/adt-bundle/sdk/tools:/Developer/adt-bundle/sdk/platform-tools:/usr/local/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Users/joao/.google-cloud-sdk/bin:/Users/joao/.flutter_build/bin:/Users/joao/.yarn/bin:/Users/joao/.config/yarn/global/node_modules/.bin:/Users/joao/.mongo/bin:/Developer/adt-bundle/sdk/tools:/Developer/adt-bundle/sdk/platform-tools
-133 verbose lifecycle @sustainer-network/js@0.0.0~version: CWD: /Users/joao/Documents/repos/sustainer-network/sustainer-network-js
-134 silly lifecycle @sustainer-network/js@0.0.0~version: Args: [ '-c', 'auto-changelog && git add CHANGELOG.md' ]
-135 silly lifecycle @sustainer-network/js@0.0.0~version: Returned: code: 0  signal: null
-136 silly lifecycle "version" finished in "@sustainer-network/js"
-137 silly gitAdd [ '/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/packages/consts/package.json',
-137 silly gitAdd   '/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/packages/lib/datetime/package.json',
-137 silly gitAdd   '/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/packages/lib/email_validator/package.json',
-137 silly gitAdd   '/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/packages/lib/command_name_from_body/package.json',
-137 silly gitAdd   '/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/packages/lib/clean_command/package.json',
-137 silly gitAdd   '/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/packages/lib/phone_number/package.json',
-137 silly gitAdd   '/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/packages/errors/package.json',
-137 silly gitAdd   '/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/packages/lib/nonce/package.json',
-137 silly gitAdd   '/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/packages/lib/request/package.json',
-137 silly gitAdd   '/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/packages/lib/validation/package.json',
-137 silly gitAdd   '/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/packages/lib/uuid/package.json',
-137 silly gitAdd   '/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/packages/lib/normalize_command/package.json',
-137 silly gitAdd   '/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/packages/lib/jwt/package.json',
-137 silly gitAdd   '/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/packages/utils/validator/package.json',
-137 silly gitAdd   '/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/packages/lib/create_event/package.json',
-137 silly gitAdd   '/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/packages/lib/validate_command/package.json',
-137 silly gitAdd   '/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/packages/exec/domains/auth_token/command_handlers/http/create_auth_token/package.json' ]
-138 silly gitCommit Publish
-138 silly gitCommit
-138 silly gitCommit  - @sustainer-network/consts@0.0.1
-138 silly gitCommit  - @sustainer-network/errors@0.0.1
-138 silly gitCommit  - @sustainer-network/create-auth-token-command-handler@0.0.1
-138 silly gitCommit  - @sustainer-network/clean-command@0.0.1
-138 silly gitCommit  - @sustainer-network/command-name-from-body@0.0.1
-138 silly gitCommit  - @sustainer-network/create-event@0.0.1
-138 silly gitCommit  - @sustainer-network/datetime@0.0.1
-138 silly gitCommit  - @sustainer-network/email-validator@0.0.1
-138 silly gitCommit  - @sustainer-network/jwt@0.0.1
-138 silly gitCommit  - @sustainer-network/nonce@0.0.1
-138 silly gitCommit  - @sustainer-network/normalize-command@0.0.1
-138 silly gitCommit  - @sustainer-network/phone-number@0.0.1
-138 silly gitCommit  - @sustainer-network/request@0.0.1
-138 silly gitCommit  - @sustainer-network/uuid@0.0.1
-138 silly gitCommit  - @sustainer-network/validate-command@0.0.1
-138 silly gitCommit  - @sustainer-network/validation@0.0.1
-138 silly gitCommit  - @sustainer-network/validator@0.0.1
-139 verbose git [ 'commit',
-139 verbose git   '-F',
-139 verbose git   '/private/var/folders/td/1z2wysyx391gm5_235h7rvsm0000gn/T/ab1870ad-7898-4ab6-bf5f-240721d43bac/lerna-commit.txt' ]
-140 silly gitTag @sustainer-network/consts@0.0.1
-141 verbose git [ 'tag',
-141 verbose git   '@sustainer-network/consts@0.0.1',
-141 verbose git   '-m',
-141 verbose git   '@sustainer-network/consts@0.0.1' ]
-142 silly gitTag @sustainer-network/errors@0.0.1
-143 verbose git [ 'tag',
-143 verbose git   '@sustainer-network/errors@0.0.1',
-143 verbose git   '-m',
-143 verbose git   '@sustainer-network/errors@0.0.1' ]
-144 silly gitTag @sustainer-network/create-auth-token-command-handler@0.0.1
-145 verbose git [ 'tag',
-145 verbose git   '@sustainer-network/create-auth-token-command-handler@0.0.1',
-145 verbose git   '-m',
-145 verbose git   '@sustainer-network/create-auth-token-command-handler@0.0.1' ]
-146 silly gitTag @sustainer-network/clean-command@0.0.1
-147 verbose git [ 'tag',
-147 verbose git   '@sustainer-network/clean-command@0.0.1',
-147 verbose git   '-m',
-147 verbose git   '@sustainer-network/clean-command@0.0.1' ]
-148 silly gitTag @sustainer-network/command-name-from-body@0.0.1
-149 verbose git [ 'tag',
-149 verbose git   '@sustainer-network/command-name-from-body@0.0.1',
-149 verbose git   '-m',
-149 verbose git   '@sustainer-network/command-name-from-body@0.0.1' ]
-150 silly gitTag @sustainer-network/create-event@0.0.1
-151 verbose git [ 'tag',
-151 verbose git   '@sustainer-network/create-event@0.0.1',
-151 verbose git   '-m',
-151 verbose git   '@sustainer-network/create-event@0.0.1' ]
-152 silly gitTag @sustainer-network/datetime@0.0.1
-153 verbose git [ 'tag',
-153 verbose git   '@sustainer-network/datetime@0.0.1',
-153 verbose git   '-m',
-153 verbose git   '@sustainer-network/datetime@0.0.1' ]
-154 silly gitTag @sustainer-network/email-validator@0.0.1
-155 verbose git [ 'tag',
-155 verbose git   '@sustainer-network/email-validator@0.0.1',
-155 verbose git   '-m',
-155 verbose git   '@sustainer-network/email-validator@0.0.1' ]
-156 silly gitTag @sustainer-network/jwt@0.0.1
-157 verbose git [ 'tag',
-157 verbose git   '@sustainer-network/jwt@0.0.1',
-157 verbose git   '-m',
-157 verbose git   '@sustainer-network/jwt@0.0.1' ]
-158 silly gitTag @sustainer-network/nonce@0.0.1
-159 verbose git [ 'tag',
-159 verbose git   '@sustainer-network/nonce@0.0.1',
-159 verbose git   '-m',
-159 verbose git   '@sustainer-network/nonce@0.0.1' ]
-160 silly gitTag @sustainer-network/normalize-command@0.0.1
-161 verbose git [ 'tag',
-161 verbose git   '@sustainer-network/normalize-command@0.0.1',
-161 verbose git   '-m',
-161 verbose git   '@sustainer-network/normalize-command@0.0.1' ]
-162 silly gitTag @sustainer-network/phone-number@0.0.1
-163 verbose git [ 'tag',
-163 verbose git   '@sustainer-network/phone-number@0.0.1',
-163 verbose git   '-m',
-163 verbose git   '@sustainer-network/phone-number@0.0.1' ]
-164 silly gitTag @sustainer-network/request@0.0.1
-165 verbose git [ 'tag',
-165 verbose git   '@sustainer-network/request@0.0.1',
-165 verbose git   '-m',
-165 verbose git   '@sustainer-network/request@0.0.1' ]
-166 silly gitTag @sustainer-network/uuid@0.0.1
-167 verbose git [ 'tag',
-167 verbose git   '@sustainer-network/uuid@0.0.1',
-167 verbose git   '-m',
-167 verbose git   '@sustainer-network/uuid@0.0.1' ]
-168 silly gitTag @sustainer-network/validate-command@0.0.1
-169 verbose git [ 'tag',
-169 verbose git   '@sustainer-network/validate-command@0.0.1',
-169 verbose git   '-m',
-169 verbose git   '@sustainer-network/validate-command@0.0.1' ]
-170 silly gitTag @sustainer-network/validation@0.0.1
-171 verbose git [ 'tag',
-171 verbose git   '@sustainer-network/validation@0.0.1',
-171 verbose git   '-m',
-171 verbose git   '@sustainer-network/validation@0.0.1' ]
-172 silly gitTag @sustainer-network/validator@0.0.1
-173 verbose git [ 'tag',
-173 verbose git   '@sustainer-network/validator@0.0.1',
-173 verbose git   '-m',
-173 verbose git   '@sustainer-network/validator@0.0.1' ]
-174 error Error: Command failed: git tag @sustainer-network/request@0.0.1 -m @sustainer-network/request@0.0.1
-174 error fatal: tag '@sustainer-network/request@0.0.1' already exists
-174 error
-174 error     at makeError (/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/node_modules/execa/index.js:174:9)
-174 error     at Promise.all.then.arr (/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/node_modules/execa/index.js:278:16)
+67 verbose updated @sustainer-network/create-auth-token-command-handler
+68 verbose updated @sustainer-network/event-store-handler
+69 verbose updated @sustainer-network/create-event
+70 verbose updated @sustainer-network/event-store
+71 verbose updated @sustainer-network/request
+72 verbose updated @sustainer-network/token-from-req
+73 verbose updated @sustainer-network/validate-command
+74 verbose updated @sustainer-network/event-store-js
+75 verbose updated @sustainer-network/validator
+76 verbose git-describe undefined => "@sustainer-network/clean-command@0.0.1-3-g07bde3f"
+77 silly git-describe parsed => {"lastTagName":"@sustainer-network/clean-command@0.0.1","lastVersion":"0.0.1","refCount":"3","sha":"07bde3f","isDirty":false}
+78 info execute Skipping releases
+79 silly lifecycle "preversion" starting in "@sustainer-network/js"
+80 info lifecycle @sustainer-network/js@0.0.0~preversion: @sustainer-network/js@0.0.0
+81 verbose lifecycle @sustainer-network/js@0.0.0~preversion: unsafe-perm in lifecycle true
+82 verbose lifecycle @sustainer-network/js@0.0.0~preversion: PATH: /Users/joao/Documents/repos/sustainer-network/sustainer-network-js/node_modules/npm-lifecycle/node-gyp-bin:/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/node_modules/.bin:/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/node_modules/.bin:/Users/joao/.config/yarn/link/node_modules/.bin:/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/node_modules/.bin:/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/node_modules/.bin:/Users/joao/.config/yarn/link/node_modules/.bin:/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/node_modules/.bin:/Users/joao/.nvm/versions/node/v8.6.0/bin:/Users/joao/.nvm/versions/node/v10.16.0/libexec/lib/node_modules/npm/bin/node-gyp-bin:/Users/joao/.nvm/versions/node/v10.16.0/lib/node_modules/npm/bin/node-gyp-bin:/Users/joao/.nvm/versions/node/v10.16.0/bin/node_modules/npm/bin/node-gyp-bin:/Users/joao/.nvm/versions/node/v10.16.0/bin:/Users/joao/.nvm/versions/node/v10.16.0/bin:/Users/joao/.google-cloud-sdk/bin:/Users/joao/.flutter_build/bin:/Users/joao/.yarn/bin:/Users/joao/.config/yarn/global/node_modules/.bin:/Users/joao/.mongo/bin:/Developer/adt-bundle/sdk/tools:/Developer/adt-bundle/sdk/platform-tools:/usr/local/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Users/joao/.google-cloud-sdk/bin:/Users/joao/.flutter_build/bin:/Users/joao/.yarn/bin:/Users/joao/.config/yarn/global/node_modules/.bin:/Users/joao/.mongo/bin:/Developer/adt-bundle/sdk/tools:/Developer/adt-bundle/sdk/platform-tools
+83 verbose lifecycle @sustainer-network/js@0.0.0~preversion: CWD: /Users/joao/Documents/repos/sustainer-network/sustainer-network-js
+84 silly lifecycle @sustainer-network/js@0.0.0~preversion: Args: [ '-c', 'yarn test' ]
+85 silly lifecycle @sustainer-network/js@0.0.0~preversion: Returned: code: 0  signal: null
+86 silly lifecycle "preversion" finished in "@sustainer-network/js"
+87 silly lifecycle No script for "preversion" in "@sustainer-network/create-event", continuing
+88 silly lifecycle No script for "preversion" in "@sustainer-network/event-store", continuing
+89 silly lifecycle No script for "preversion" in "@sustainer-network/request", continuing
+90 silly lifecycle No script for "preversion" in "@sustainer-network/token-from-req", continuing
+91 silly lifecycle No script for "preversion" in "@sustainer-network/validator", continuing
+92 silly lifecycle No script for "version" in "@sustainer-network/event-store", continuing
+93 silly lifecycle No script for "version" in "@sustainer-network/validator", continuing
+94 silly lifecycle No script for "preversion" in "@sustainer-network/event-store-handler", continuing
+95 silly lifecycle No script for "preversion" in "@sustainer-network/validate-command", continuing
+96 silly lifecycle No script for "version" in "@sustainer-network/request", continuing
+97 silly lifecycle No script for "preversion" in "@sustainer-network/event-store-js", continuing
+98 silly lifecycle No script for "version" in "@sustainer-network/create-event", continuing
+99 silly lifecycle No script for "version" in "@sustainer-network/token-from-req", continuing
+100 silly lifecycle No script for "version" in "@sustainer-network/validate-command", continuing
+101 silly lifecycle No script for "preversion" in "@sustainer-network/create-auth-token-command-handler", continuing
+102 silly lifecycle No script for "version" in "@sustainer-network/event-store-js", continuing
+103 silly lifecycle No script for "version" in "@sustainer-network/event-store-handler", continuing
+104 silly lifecycle No script for "version" in "@sustainer-network/create-auth-token-command-handler", continuing
+105 silly lifecycle "version" starting in "@sustainer-network/js"
+106 info lifecycle @sustainer-network/js@0.0.0~version: @sustainer-network/js@0.0.0
+107 verbose lifecycle @sustainer-network/js@0.0.0~version: unsafe-perm in lifecycle true
+108 verbose lifecycle @sustainer-network/js@0.0.0~version: PATH: /Users/joao/Documents/repos/sustainer-network/sustainer-network-js/node_modules/npm-lifecycle/node-gyp-bin:/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/node_modules/.bin:/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/node_modules/.bin:/Users/joao/.config/yarn/link/node_modules/.bin:/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/node_modules/.bin:/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/node_modules/.bin:/Users/joao/.config/yarn/link/node_modules/.bin:/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/node_modules/.bin:/Users/joao/.nvm/versions/node/v8.6.0/bin:/Users/joao/.nvm/versions/node/v10.16.0/libexec/lib/node_modules/npm/bin/node-gyp-bin:/Users/joao/.nvm/versions/node/v10.16.0/lib/node_modules/npm/bin/node-gyp-bin:/Users/joao/.nvm/versions/node/v10.16.0/bin/node_modules/npm/bin/node-gyp-bin:/Users/joao/.nvm/versions/node/v10.16.0/bin:/Users/joao/.nvm/versions/node/v10.16.0/bin:/Users/joao/.google-cloud-sdk/bin:/Users/joao/.flutter_build/bin:/Users/joao/.yarn/bin:/Users/joao/.config/yarn/global/node_modules/.bin:/Users/joao/.mongo/bin:/Developer/adt-bundle/sdk/tools:/Developer/adt-bundle/sdk/platform-tools:/usr/local/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Users/joao/.google-cloud-sdk/bin:/Users/joao/.flutter_build/bin:/Users/joao/.yarn/bin:/Users/joao/.config/yarn/global/node_modules/.bin:/Users/joao/.mongo/bin:/Developer/adt-bundle/sdk/tools:/Developer/adt-bundle/sdk/platform-tools
+109 verbose lifecycle @sustainer-network/js@0.0.0~version: CWD: /Users/joao/Documents/repos/sustainer-network/sustainer-network-js
+110 silly lifecycle @sustainer-network/js@0.0.0~version: Args: [ '-c', 'auto-changelog && git add CHANGELOG.md' ]
+111 silly lifecycle @sustainer-network/js@0.0.0~version: Returned: code: 0  signal: null
+112 silly lifecycle "version" finished in "@sustainer-network/js"
+113 silly gitAdd [ '/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/packages/lib/event_store/package.json',
+113 silly gitAdd   '/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/packages/utils/validator/package.json',
+113 silly gitAdd   '/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/packages/lib/request/package.json',
+113 silly gitAdd   '/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/packages/lib/create_event/package.json',
+113 silly gitAdd   '/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/packages/lib/token_from_req/package.json',
+113 silly gitAdd   '/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/packages/lib/validate_command/package.json',
+113 silly gitAdd   '/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/packages/libraries/event_store/js/package.json',
+113 silly gitAdd   '/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/packages/exec/event_store/http/package.json',
+113 silly gitAdd   '/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/packages/exec/domains/auth_token/command_handlers/create_auth_token/http/package.json' ]
+114 silly gitCommit Publish
+114 silly gitCommit
+114 silly gitCommit  - @sustainer-network/create-auth-token-command-handler@0.0.2
+114 silly gitCommit  - @sustainer-network/event-store-handler@0.0.1
+114 silly gitCommit  - @sustainer-network/create-event@0.0.2
+114 silly gitCommit  - @sustainer-network/event-store@0.0.1
+114 silly gitCommit  - @sustainer-network/request@0.0.3
+114 silly gitCommit  - @sustainer-network/token-from-req@0.0.1
+114 silly gitCommit  - @sustainer-network/validate-command@0.0.2
+114 silly gitCommit  - @sustainer-network/event-store-js@0.0.1
+114 silly gitCommit  - @sustainer-network/validator@0.0.2
+115 verbose git [ 'commit',
+115 verbose git   '-F',
+115 verbose git   '/private/var/folders/td/1z2wysyx391gm5_235h7rvsm0000gn/T/490dc88b-c0fe-4214-903e-0e83f1eafce3/lerna-commit.txt' ]
+116 silly gitTag @sustainer-network/create-auth-token-command-handler@0.0.2
+117 verbose git [ 'tag',
+117 verbose git   '@sustainer-network/create-auth-token-command-handler@0.0.2',
+117 verbose git   '-m',
+117 verbose git   '@sustainer-network/create-auth-token-command-handler@0.0.2' ]
+118 silly gitTag @sustainer-network/event-store-handler@0.0.1
+119 verbose git [ 'tag',
+119 verbose git   '@sustainer-network/event-store-handler@0.0.1',
+119 verbose git   '-m',
+119 verbose git   '@sustainer-network/event-store-handler@0.0.1' ]
+120 silly gitTag @sustainer-network/create-event@0.0.2
+121 verbose git [ 'tag',
+121 verbose git   '@sustainer-network/create-event@0.0.2',
+121 verbose git   '-m',
+121 verbose git   '@sustainer-network/create-event@0.0.2' ]
+122 silly gitTag @sustainer-network/event-store@0.0.1
+123 verbose git [ 'tag',
+123 verbose git   '@sustainer-network/event-store@0.0.1',
+123 verbose git   '-m',
+123 verbose git   '@sustainer-network/event-store@0.0.1' ]
+124 silly gitTag @sustainer-network/request@0.0.3
+125 verbose git [ 'tag',
+125 verbose git   '@sustainer-network/request@0.0.3',
+125 verbose git   '-m',
+125 verbose git   '@sustainer-network/request@0.0.3' ]
+126 silly gitTag @sustainer-network/token-from-req@0.0.1
+127 verbose git [ 'tag',
+127 verbose git   '@sustainer-network/token-from-req@0.0.1',
+127 verbose git   '-m',
+127 verbose git   '@sustainer-network/token-from-req@0.0.1' ]
+128 silly gitTag @sustainer-network/validate-command@0.0.2
+129 verbose git [ 'tag',
+129 verbose git   '@sustainer-network/validate-command@0.0.2',
+129 verbose git   '-m',
+129 verbose git   '@sustainer-network/validate-command@0.0.2' ]
+130 silly gitTag @sustainer-network/event-store-js@0.0.1
+131 verbose git [ 'tag',
+131 verbose git   '@sustainer-network/event-store-js@0.0.1',
+131 verbose git   '-m',
+131 verbose git   '@sustainer-network/event-store-js@0.0.1' ]
+132 silly gitTag @sustainer-network/validator@0.0.2
+133 verbose git [ 'tag',
+133 verbose git   '@sustainer-network/validator@0.0.2',
+133 verbose git   '-m',
+133 verbose git   '@sustainer-network/validator@0.0.2' ]
+134 error Error: Command failed: git tag @sustainer-network/create-auth-token-command-handler@0.0.2 -m @sustainer-network/create-auth-token-command-handler@0.0.2
+134 error fatal: tag '@sustainer-network/create-auth-token-command-handler@0.0.2' already exists
+134 error
+134 error     at makeError (/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/node_modules/execa/index.js:174:9)
+134 error     at Promise.all.then.arr (/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/node_modules/execa/index.js:278:16)

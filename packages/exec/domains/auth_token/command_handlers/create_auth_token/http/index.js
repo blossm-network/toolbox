@@ -19,7 +19,7 @@ module.exports = async ({ body, serviceDomain, publishEventFn }) => {
   await validate(body);
   await deps.normalizeCommand(body);
 
-  /**  side effects **/
+  /** side effects **/
   const root = await deps.newUuid();
   const token = await deps.createJwt({
     data: {
