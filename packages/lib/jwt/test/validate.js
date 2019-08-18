@@ -1,6 +1,6 @@
 const { expect } = require("chai").use(require("chai-as-promised"));
 
-const errors = require("@sustainer-network/errors");
+const { unauthorized } = require("@sustainer-network/errors");
 
 const { create, validate } = require("..");
 
@@ -32,7 +32,7 @@ describe("Validate", () => {
     const token = await create({ data: {}, secret, expiresIn });
 
     await expect(validate({ token, secret })).to.be.rejectedWith(
-      errors.unauthorized.tokenExpired
+      unauthorized.tokenExpired
     );
   });
 
@@ -48,6 +48,6 @@ describe("Validate", () => {
 
     await expect(
       validate({ token, secret: verifyingSecret })
-    ).to.be.rejectedWith(errors.unauthorized.tokenInvalid);
+    ).to.be.rejectedWith(unauthorized.tokenInvalid);
   });
 });
