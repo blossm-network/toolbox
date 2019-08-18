@@ -1,0 +1,22 @@
+{
+  "name": "@sustainer-network/email-validator",
+  "version": "0.0.0",
+  "description": "Email address validation.",
+  "main": "index.js",
+  "author": "sustainernetwork.org",
+  "engines": {
+    "node": ">= 10.16.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "validator": "^10.11.0"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "devDependencies": {
+    "mocha": "^6.1.4"
+  }
+}

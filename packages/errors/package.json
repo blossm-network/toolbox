@@ -1,0 +1,17 @@
+{
+  "name": "@sustainer-network/errors",
+  "version": "0.0.0",
+  "description": "A library of errors that can be thrown by the network.",
+  "main": "index.js",
+  "author": "sustainernetwork.org",
+  "engines": {
+    "node": ">= 10.16.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "common-tags": "^1.8.0",
+    "restify-errors": "^8.0.0"
+  }
+}

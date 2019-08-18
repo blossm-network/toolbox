@@ -1,0 +1,22 @@
+{
+  "name": "@sustainer-network/nonce",
+  "version": "0.0.0",
+  "description": "Create a nonce.",
+  "main": "index.js",
+  "author": "sustainernetwork.org",
+  "engines": {
+    "node": ">= 10.16.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "nonce": "^1.0.4"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "devDependencies": {
+    "mocha": "^6.1.4"
+  }
+}

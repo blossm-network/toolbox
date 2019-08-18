@@ -1,0 +1,19 @@
+{
+  "name": "@sustainer-network/command-name-from-body",
+  "version": "0.0.0",
+  "description": "Finds the command name from the hostname of a request body.",
+  "main": "index.js",
+  "author": "João Ritter",
+  "engines": {
+    "node": ">= 10.16.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "devDependencies": {
+    "mocha": "^6.1.4"
+  }
+}

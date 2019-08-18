@@ -1,0 +1,22 @@
+{
+  "name": "@sustainer-network/uuid",
+  "version": "0.0.0",
+  "description": "Creates a uuid.",
+  "main": "index.js",
+  "author": "sustainernetwork.org",
+  "engines": {
+    "node": ">= 10.16.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "dependencies": {
+    "uuid": "^3.3.2"
+  },
+  "devDependencies": {
+    "mocha": "^6.1.4"
+  }
+}

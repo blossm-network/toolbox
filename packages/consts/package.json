@@ -1,0 +1,16 @@
+{
+  "name": "@sustainer-network/consts",
+  "version": "0.0.0",
+  "description": "Constants that confine the app.",
+  "main": "index.js",
+  "author": "sustainernetwork.org",
+  "engines": {
+    "node": ">= 10.16.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "echo 'no tests'"
+  }
+}

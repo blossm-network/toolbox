@@ -1,0 +1,23 @@
+{
+  "name": "@sustainer-network/phone-number",
+  "version": "0.0.0",
+  "description": "Phone number formatting.",
+  "main": "index.js",
+  "author": "",
+  "engines": {
+    "node": ">= 10.16.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "google-libphonenumber": "^3.2.2",
+    "phone": "^2.3.11"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "devDependencies": {
+    "mocha": "^6.1.4"
+  }
+}

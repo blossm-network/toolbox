@@ -1,0 +1,53 @@
+const { expect } = require("chai").use(require("chai-as-promised"));
+
+const errors = require("@sustainer-network/errors");
+
+const { create, validate } = require("..");
+
+describe("Validate", () => {
+  it("it should validate a valid jwt token", async () => {
+    const secret = "secret";
+    const token = await create({ data: {}, secret, options: {} });
+
+    const validatedToken = await validate({ token, secret });
+
+    expect(validatedToken).to.exist;
+  });
+
+  it("it should validate a valid jwt token with data", async () => {
+    const value = "value";
+    const data = { key: value };
+    const secret = "secret";
+    const token = await create({ data, secret, options: {} });
+
+    const validatedToken = await validate({ token, secret });
+
+    expect(validatedToken.key).to.equal(value);
+  });
+
+  it("it should be expired if the validation time is after the expired time", async () => {
+    const secret = "secret";
+    const expiresIn = 0;
+
+    const token = await create({ data: {}, secret, expiresIn });
+
+    await expect(validate({ token, secret })).to.be.rejectedWith(
+      errors.unauthorized.tokenExpired
+    );
+  });
+
+  it("it should be invalid if the secret is wrong", async () => {
+    const signingSecret = "secret";
+    const verifyingSecret = "bad";
+
+    const token = await create({
+      data: {},
+      secret: signingSecret,
+      options: {}
+    });
+
+    await expect(
+      validate({ token, secret: verifyingSecret })
+    ).to.be.rejectedWith(errors.unauthorized.tokenInvalid);
+  });
+});

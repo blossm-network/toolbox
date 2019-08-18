@@ -1,0 +1,22 @@
+{
+  "name": "@sustainer-network/validation",
+  "version": "0.0.0",
+  "description": "Value validation for common types.",
+  "main": "index.js",
+  "author": "sustainernetwork.org",
+  "engines": {
+    "node": ">= 10.16.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "tcomb-validation": "^3.4.1"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "devDependencies": {
+    "mocha": "^6.1.4"
+  }
+}
