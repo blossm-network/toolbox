@@ -8,7 +8,7 @@ const now = new Date();
 const goodBody = {
   name: "some-command",
   traceId: "traceId!",
-  issuedTimestamp: datetime.fineTimestamp(),
+  issuedTimestamp: datetime.fineTimestamp() - 2,
   payload: { a: 1 },
   issuerInfo: {
     id: "good-id",

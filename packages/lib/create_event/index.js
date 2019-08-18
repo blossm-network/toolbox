@@ -5,14 +5,16 @@ module.exports = async (
   { root, topic, serviceDomain, payload, version } = {}
 ) => {
   return {
-    root: root || (await deps.makeUuid()),
-    topic,
-    serviceDomain,
-    payload,
-    version,
-    traceId: body.traceId,
-    commandInstanceId: body.commandInstanceId,
-    command: body.name,
-    commandIssuedTimestamp: body.issuedTimestamp
+    fact: {
+      root: root || (await deps.makeUuid()),
+      topic,
+      serviceDomain,
+      version,
+      traceId: body.traceId,
+      commandInstanceId: body.commandInstanceId,
+      command: body.name,
+      commandIssuedTimestamp: body.issuedTimestamp
+    },
+    payload
   };
 };

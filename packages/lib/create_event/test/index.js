@@ -34,15 +34,17 @@ describe("Create event", () => {
     });
 
     expect(value).to.deep.equal({
-      root,
-      topic,
-      serviceDomain,
-      payload,
-      version,
-      traceId,
-      commandInstanceId,
-      command: name,
-      commandIssuedTimestamp: issuedTimestamp
+      fact: {
+        root,
+        topic,
+        serviceDomain,
+        version,
+        traceId,
+        commandInstanceId,
+        command: name,
+        commandIssuedTimestamp: issuedTimestamp
+      },
+      payload
     });
   });
   it("should get called with expected params if root is missin", async () => {
@@ -73,15 +75,17 @@ describe("Create event", () => {
     });
 
     expect(value).to.deep.equal({
-      root: newUuid,
-      topic,
-      serviceDomain,
-      payload,
-      version,
-      traceId,
-      commandInstanceId,
-      command: name,
-      commandIssuedTimestamp: issuedTimestamp
+      fact: {
+        root: newUuid,
+        topic,
+        serviceDomain,
+        version,
+        traceId,
+        commandInstanceId,
+        command: name,
+        commandIssuedTimestamp: issuedTimestamp
+      },
+      payload
     });
   });
 });

@@ -27,6 +27,5 @@
     "mocha": "^6.1.4",
     "sinon": "^7.3.2",
     "sinon-chai": "^3.3.0"
-  },
-  "gitHead": "a87e090981b08d50c4d1b3be2f37ead4e2031a0f"
+  }
 }

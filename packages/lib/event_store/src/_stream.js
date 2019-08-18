@@ -1,0 +1,20 @@
+module.exports = ({ table, rowKeyDelineator, root, from, to }) => {
+  const filter = [
+    {
+      column: {
+        // Only retrieve the most recent version of the cell.
+        // There could be many versions of a cell if a client retried a request.
+        cellLimit: 1
+      }
+    }
+  ];
+
+  const query = {
+    prefix: root,
+    filter,
+    ...(from != undefined && { start: `${root}${rowKeyDelineator}${from}` }),
+    ...(to != undefined && { end: `${root}${rowKeyDelineator}${to}` })
+  };
+
+  return table.createReadStream(query);
+};

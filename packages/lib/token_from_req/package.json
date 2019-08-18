@@ -1,9 +1,9 @@
 {
-  "name": "@sustainer-network/uuid",
-  "version": "0.0.1",
-  "description": "Creates a uuid.",
+  "name": "@sustainer-network/token-from-req",
+  "version": "0.0.0",
+  "description": "Finds the jwt Bearer token from the Authorization header of the request.",
   "main": "index.js",
-  "author": "sustainernetwork.org",
+  "author": "João Ritter",
   "engines": {
     "node": ">= 10.16.0"
   },
@@ -12,9 +12,6 @@
   },
   "scripts": {
     "test": "mocha"
-  },
-  "dependencies": {
-    "uuid": "^3.3.2"
   },
   "devDependencies": {
     "mocha": "^6.1.4"
