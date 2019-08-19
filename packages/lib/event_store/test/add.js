@@ -13,7 +13,7 @@ describe("Normalized event store add", () => {
   it("should call add with the correct params if table exists", async () => {
     const insertFake = fake();
     const table = {
-      exists: () => true,
+      exists: () => [true],
       insert: row => insertFake(row)
     };
     const tableFake = fake.returns(table);
@@ -24,7 +24,7 @@ describe("Normalized event store add", () => {
 
     replace(deps.bigtable, "instance", instanceFake);
 
-    const normalizedEventStore = require("../index");
+    const normalizedEventStore = require("..");
 
     const storeId = "store";
 
@@ -55,7 +55,7 @@ describe("Normalized event store add", () => {
     const createFake = fake();
 
     const table = {
-      exists: () => false,
+      exists: () => [false],
       create: createFake,
       insert: insertFake
     };
@@ -67,7 +67,7 @@ describe("Normalized event store add", () => {
 
     replace(deps.bigtable, "instance", instanceFake);
 
-    const normalizedEventStore = require("../index");
+    const normalizedEventStore = require("..");
 
     const storeId = "store";
 

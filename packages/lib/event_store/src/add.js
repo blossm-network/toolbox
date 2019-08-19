@@ -10,9 +10,10 @@ const initializeTable = async table => {
     ]
   };
 
-  table = await table.create(options);
   // eslint-disable-next-line no-console
-  console.log("r wassup?: ", table);
+  console.log("bout to create");
+
+  await table.create(options);
 };
 
 module.exports = ({ instance, storeId, rowKeyDelineator }) => {
@@ -22,9 +23,11 @@ module.exports = ({ instance, storeId, rowKeyDelineator }) => {
   return async ({ event }) => {
     // eslint-disable-next-line no-console
     console.log("calling: ", event);
-    if (!(await table.exists())) await initializeTable(table);
+    const [tableExists] = await table.exists();
+    if (!tableExists) await initializeTable(table);
+    const [newTableExists] = await table.exists();
     // eslint-disable-next-line no-console
-    console.log("sofarsogood", await table.exists());
+    console.log("sofarsogood", newTableExists);
     const row = {
       key: `${event.fact.root}${rowKeyDelineator}${event.fact.createdTimestamp}`,
       data: {
