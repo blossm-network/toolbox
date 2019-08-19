@@ -1,6 +1,6 @@
 {
   "name": "@sustainer-network/token-from-req",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Finds the jwt Bearer token from the Authorization header of the request.",
   "main": "index.js",
   "author": "João Ritter",
