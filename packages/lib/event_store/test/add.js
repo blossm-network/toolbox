@@ -29,12 +29,12 @@ describe("Normalized event store add", () => {
     const storeId = "store";
 
     const root = "root";
-    const timestamp = 1234;
+    const createdTimestamp = 1234;
 
     const event = {
       fact: {
         root,
-        timestamp
+        createdTimestamp
       },
       payload: {
         a: 3
@@ -46,7 +46,7 @@ describe("Normalized event store add", () => {
     expect(tableFake).to.have.been.calledWith(storeId);
     expect(instanceFake).to.have.been.calledWith(storeInstance);
     expect(insertFake).to.have.been.calledWith({
-      key: `${root}#${timestamp}`,
+      key: `${root}#${createdTimestamp}`,
       data: { a: { a: JSON.stringify(event) } }
     });
   });
@@ -72,12 +72,12 @@ describe("Normalized event store add", () => {
     const storeId = "store";
 
     const root = "root";
-    const timestamp = 1234;
+    const createdTimestamp = 1234;
 
     const event = {
       fact: {
         root,
-        timestamp
+        createdTimestamp
       },
       payload: {
         a: 3
@@ -92,7 +92,7 @@ describe("Normalized event store add", () => {
       families: [{ name: "a" }]
     });
     expect(insertFake).to.have.been.calledWith({
-      key: `${root}#${timestamp}`,
+      key: `${root}#${createdTimestamp}`,
       data: { a: { a: JSON.stringify(event) } }
     });
   });
