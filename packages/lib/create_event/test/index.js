@@ -1,10 +1,19 @@
 const { expect } = require("chai").use(require("sinon-chai"));
-const { restore, replace, fake } = require("sinon");
+const { restore, replace, fake, useFakeTimers } = require("sinon");
 const createEvent = require("../");
+const datetime = require("@sustainer-network/datetime");
 const deps = require("../deps");
 
+let clock;
+
+const now = new Date();
+
 describe("Create event", () => {
+  beforeEach(() => {
+    clock = useFakeTimers(now.getTime());
+  });
   afterEach(() => {
+    clock.restore();
     restore();
   });
   it("should get called with expected params", async () => {
@@ -42,7 +51,8 @@ describe("Create event", () => {
         traceId,
         commandInstanceId,
         command: name,
-        commandIssuedTimestamp: issuedTimestamp
+        commandIssuedTimestamp: issuedTimestamp,
+        timestamp: datetime.fineTimestamp()
       },
       payload
     });
@@ -83,7 +93,8 @@ describe("Create event", () => {
         traceId,
         commandInstanceId,
         command: name,
-        commandIssuedTimestamp: issuedTimestamp
+        commandIssuedTimestamp: issuedTimestamp,
+        timestamp: datetime.fineTimestamp()
       },
       payload
     });

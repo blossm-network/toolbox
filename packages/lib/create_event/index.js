@@ -1,3 +1,4 @@
+const datetime = require("@sustainer-network/datetime");
 const deps = require("./deps");
 
 module.exports = async (
@@ -13,7 +14,8 @@ module.exports = async (
       traceId: body.traceId,
       commandInstanceId: body.commandInstanceId,
       command: body.name,
-      commandIssuedTimestamp: body.issuedTimestamp
+      commandIssuedTimestamp: body.issuedTimestamp,
+      timestamp: datetime.fineTimestamp()
     },
     payload
   };
