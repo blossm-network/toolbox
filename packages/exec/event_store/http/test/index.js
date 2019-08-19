@@ -21,12 +21,12 @@ describe("Event store", () => {
 
     const root = "love!";
 
-    const body = {
+    const query = {
       root,
       storeId
     };
 
-    const response = await eventStoreHandler.hydrate({ body });
+    const response = await eventStoreHandler.hydrate({ query });
 
     expect(store).to.have.been.calledWith({ storeId });
     expect(hydrate).to.have.been.calledWith({ root });
@@ -42,12 +42,12 @@ describe("Event store", () => {
     replace(deps, "eventStore", store);
 
     const root = "love!";
-    const body = {
+    const query = {
       root,
       storeId
     };
 
-    expect(async () => await eventStoreHandler.hydrate({ body })).to.throw;
+    expect(async () => await eventStoreHandler.hydrate({ query })).to.throw;
   });
 
   it("should call add with the correct params", async () => {

@@ -14,11 +14,11 @@ exports.add = async ({ body, token }) => {
   store.add({ event: body.event });
 };
 
-exports.hydrate = async ({ body, token }) => {
+exports.hydrate = async ({ query, token }) => {
   await authorize(token);
-  await validateHydrate(body);
+  await validateHydrate(query);
 
-  const store = deps.eventStore({ storeId: body.storeId });
-  const aggregateRoot = store.hydrate({ root: body.root });
+  const store = deps.eventStore({ storeId: query.storeId });
+  const aggregateRoot = store.hydrate({ root: query.root });
   return aggregateRoot;
 };
