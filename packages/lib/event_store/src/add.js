@@ -10,7 +10,9 @@ const createTable = async table => {
     ]
   };
 
-  await table.create(options);
+  const r = await table.create(options);
+  // eslint-disable-next-line no-console
+  console.log("r wassup?: ", r);
 };
 
 module.exports = ({ instance, storeId, rowKeyDelineator }) => {
@@ -20,9 +22,10 @@ module.exports = ({ instance, storeId, rowKeyDelineator }) => {
   return async ({ event }) => {
     // eslint-disable-next-line no-console
     console.log("calling: ", event);
+    const exi = await table.exists();
     // eslint-disable-next-line no-console
-    console.log("sofarsogood but does it?: ", await table.exists());
-    if (!(await table.exists())) await createTable(table);
+    console.log("sofarsogood but does it?: ", exi);
+    if (!exi) await createTable(table);
     // eslint-disable-next-line no-console
     console.log("sofarsogood", await table.exists());
     const row = {
