@@ -20,11 +20,13 @@ module.exports = ({ instance, storeId, rowKeyDelineator }) => {
   return async ({ event }) => {
     // eslint-disable-next-line no-console
     console.log("calling: ", event);
+    // eslint-disable-next-line no-console
+    console.log("sofarsogood but does it?: ", await table.exists());
     if (!(await table.exists())) await createTable(table);
     // eslint-disable-next-line no-console
-    console.log("sofarsogood");
+    console.log("sofarsogood", await table.exists());
     const row = {
-      key: `${event.fact.root}${rowKeyDelineator}${event.fact.timestamp}`,
+      key: `${event.fact.root}${rowKeyDelineator}${event.fact.createdTimestamp}`,
       data: {
         [column_family_id]: {
           [column_qualifier]: JSON.stringify(event)

@@ -52,7 +52,7 @@ describe("Create event", () => {
         commandInstanceId,
         command: name,
         commandIssuedTimestamp: issuedTimestamp,
-        timestamp: datetime.fineTimestamp()
+        createdTimestamp: datetime.fineTimestamp()
       },
       payload
     });
@@ -94,7 +94,7 @@ describe("Create event", () => {
         commandInstanceId,
         command: name,
         commandIssuedTimestamp: issuedTimestamp,
-        timestamp: datetime.fineTimestamp()
+        createdTimestamp: datetime.fineTimestamp()
       },
       payload
     });

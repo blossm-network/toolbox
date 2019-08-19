@@ -15,7 +15,7 @@ module.exports = async (
       commandInstanceId: body.commandInstanceId,
       command: body.name,
       commandIssuedTimestamp: body.issuedTimestamp,
-      timestamp: datetime.fineTimestamp()
+      createdTimestamp: datetime.fineTimestamp()
     },
     payload
   };
