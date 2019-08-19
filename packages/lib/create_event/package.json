@@ -1,6 +1,6 @@
 {
   "name": "@sustainer-network/create-event",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Creates a normalized event.",
   "main": "index.js",
   "author": "sustainernetwork.org",
