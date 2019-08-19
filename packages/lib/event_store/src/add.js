@@ -14,10 +14,15 @@ const createTable = async table => {
 };
 
 module.exports = ({ instance, storeId, rowKeyDelineator }) => {
+  // eslint-disable-next-line no-console
+  console.log("ADDING: ", storeId, rowKeyDelineator);
   const table = instance.table(storeId);
   return async ({ event }) => {
+    // eslint-disable-next-line no-console
+    console.log("calling: ", event);
     if (!(await table.exists())) await createTable(table);
-
+    // eslint-disable-next-line no-console
+    console.log("sofarsogood");
     const row = {
       key: `${event.fact.root}${rowKeyDelineator}${event.fact.timestamp}`,
       data: {
@@ -27,8 +32,12 @@ module.exports = ({ instance, storeId, rowKeyDelineator }) => {
       }
     };
 
+    // eslint-disable-next-line no-console
+    console.log("row: ", row);
     await table.insert(row);
 
+    // eslint-disable-next-line no-console
+    console.log("inserted: ");
     return row;
   };
 };
