@@ -5,6 +5,7 @@ const eventStoreHandler = require("..");
 const deps = require("../deps");
 
 const storeId = "some-id";
+const service = "some-service";
 
 describe("Event store", () => {
   afterEach(() => {
@@ -23,12 +24,13 @@ describe("Event store", () => {
 
     const query = {
       root,
-      storeId
+      storeId,
+      service
     };
 
     const response = await eventStoreHandler.hydrate({ query });
 
-    expect(store).to.have.been.calledWith({ storeId });
+    expect(store).to.have.been.calledWith({ storeId, service });
     expect(hydrate).to.have.been.calledWith({ root });
     expect(response).to.equal(result);
   });
@@ -76,11 +78,12 @@ describe("Event store", () => {
 
     const body = {
       event,
-      storeId
+      storeId,
+      service
     };
 
     const response = await eventStoreHandler.add({ body });
-    expect(store).to.have.been.calledWith({ storeId });
+    expect(store).to.have.been.calledWith({ storeId, service });
     expect(add).to.have.been.calledWith({ event });
     expect(response).to.be.be.undefined;
   });
@@ -100,7 +103,8 @@ describe("Event store", () => {
 
     const body = {
       event,
-      storeId
+      storeId,
+      service
     };
 
     expect(async () => await eventStoreHandler.add({ body })).to.throw;

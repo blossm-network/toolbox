@@ -5,10 +5,11 @@ const deps = require("./deps");
 
 const rowKeyDelineator = "#";
 
-module.exports = ({ storeId }) => {
+module.exports = ({ storeId, service }) => {
   const instance = deps.bigtable.instance(process.env.STORE_INSTANCE);
+  const tableName = `${service}-${storeId}`;
   return {
-    add: add({ instance, storeId, rowKeyDelineator }),
-    hydrate: hydrate({ instance, storeId, rowKeyDelineator })
+    add: add({ instance, tableName, rowKeyDelineator }),
+    hydrate: hydrate({ instance, tableName, rowKeyDelineator })
   };
 };

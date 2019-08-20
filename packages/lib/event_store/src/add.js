@@ -16,10 +16,11 @@ const initializeTable = async table => {
   await table.create(options);
 };
 
-module.exports = ({ instance, storeId, rowKeyDelineator }) => {
+module.exports = ({ instance, tableName, rowKeyDelineator }) => {
   // eslint-disable-next-line no-console
-  console.log("ADDING: ", storeId, rowKeyDelineator);
-  let table = instance.table(storeId);
+  console.log("ADDING: ", tableName, rowKeyDelineator);
+
+  let table = instance.table(tableName);
   return async ({ event }) => {
     // eslint-disable-next-line no-console
     console.log("calling: ", event);

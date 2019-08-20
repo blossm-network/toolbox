@@ -27,6 +27,7 @@ describe("Normalized event store add", () => {
     const normalizedEventStore = require("..");
 
     const storeId = "store";
+    const service = "some-service";
 
     const root = "root";
     const createdTimestamp = 1234;
@@ -41,9 +42,9 @@ describe("Normalized event store add", () => {
       }
     };
 
-    await normalizedEventStore({ storeId }).add({ event });
+    await normalizedEventStore({ storeId, service }).add({ event });
 
-    expect(tableFake).to.have.been.calledWith(storeId);
+    expect(tableFake).to.have.been.calledWith(`${service}-${storeId}`);
     expect(instanceFake).to.have.been.calledWith(storeInstance);
     expect(insertFake).to.have.been.calledWith({
       key: `${root}#${createdTimestamp}`,
@@ -70,6 +71,7 @@ describe("Normalized event store add", () => {
     const normalizedEventStore = require("..");
 
     const storeId = "store";
+    const service = "service";
 
     const root = "root";
     const createdTimestamp = 1234;
@@ -84,9 +86,9 @@ describe("Normalized event store add", () => {
       }
     };
 
-    await normalizedEventStore({ storeId }).add({ event });
+    await normalizedEventStore({ storeId, service }).add({ event });
 
-    expect(tableFake).to.have.been.calledWith(storeId);
+    expect(tableFake).to.have.been.calledWith(`${service}-${storeId}`);
     expect(instanceFake).to.have.been.calledWith(storeInstance);
     expect(createFake).to.have.been.calledWith({
       families: [{ name: "a" }]

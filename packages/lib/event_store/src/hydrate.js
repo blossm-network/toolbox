@@ -1,7 +1,7 @@
 const stream = require("./_stream");
 
-module.exports = ({ instance, storeId, rowKeyDelineator }) => {
-  const table = instance.table(storeId);
+module.exports = ({ instance, tableName, rowKeyDelineator }) => {
+  const table = instance.table(tableName);
   return async ({ root }) => {
     if (!(await table.exists())) return null;
     return new Promise((resolve, reject) => {
