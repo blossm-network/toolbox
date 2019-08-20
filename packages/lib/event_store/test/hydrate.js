@@ -40,7 +40,6 @@ describe("Normalized event store hydrate", () => {
 
     const table = {
       exists: () => [true],
-      getRows: () => ["rows"],
       createReadStream: readStringFake
     };
     const tableFake = fake.returns(table);
@@ -83,7 +82,6 @@ describe("Normalized event store hydrate", () => {
 
     const table = {
       exists: () => [false],
-      getRows: () => ["rows"],
       createReadStream: readStringFake
     };
     const tableFake = fake.returns(table);
@@ -123,7 +121,6 @@ describe("Normalized event store hydrate", () => {
 
     const table = {
       exists: () => [true],
-      getRows: () => ["rows"],
       createReadStream: readStringFake
     };
     const tableFake = fake.returns(table);
@@ -180,7 +177,6 @@ describe("Normalized event store hydrate", () => {
 
     const table = {
       exists: () => [true],
-      getRows: () => ["rows"],
       createReadStream: readStringFake
     };
     const tableFake = fake.returns(table);

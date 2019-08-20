@@ -11,8 +11,6 @@ module.exports = ({
   return async ({ root }) => {
     const [tableExists] = await table.exists();
     if (!tableExists) return null;
-    // eslint-disable-next-line no-console
-    console.log("ROWS: ", await table.getRows());
     return new Promise((resolve, reject) => {
       let hydrated = {};
       stream({
@@ -26,13 +24,7 @@ module.exports = ({
 
           const event = JSON.parse(data.value);
 
-          // eslint-disable-next-line no-console
-          console.log("event to hydrate: ", event);
-
           hydrated = { ...hydrated, ...event.payload };
-
-          // eslint-disable-next-line no-console
-          console.log("new hydrated: ", hydrated);
         })
         .on("end", () => resolve(hydrated));
     });
