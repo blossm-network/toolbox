@@ -10,11 +10,14 @@ module.exports = ({ table, rowKeyDelineator, root, from, to }) => {
   ];
 
   const query = {
-    prefix: root,
+    ...(from == undefined && to == undefined && { prefix: root }),
     filter,
     ...(from != undefined && { start: `${root}${rowKeyDelineator}${from}` }),
     ...(to != undefined && { end: `${root}${rowKeyDelineator}${to}` })
   };
+
+  // eslint-disable-next-line no-console
+  console.log("query: ", query);
 
   return table.createReadStream(query);
 };

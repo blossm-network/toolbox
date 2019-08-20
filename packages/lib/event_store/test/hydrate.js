@@ -60,7 +60,6 @@ describe("Normalized event store hydrate", () => {
     expect(instanceFake).to.have.been.calledWith(storeInstance);
     expect(readStringFake).to.have.been.calledWith({
       prefix: root,
-      start: `${root}#0`,
       filter: [{ column: { cellLimit: 1 } }]
     });
   });
@@ -207,7 +206,6 @@ describe("Normalized event store hydrate", () => {
     expect(instanceFake).to.have.been.calledWith(storeInstance);
     expect(readStringFake).to.have.been.calledWith({
       prefix: root,
-      start: `${root}#0`,
       filter: [{ column: { cellLimit: 1 } }]
     });
   });
