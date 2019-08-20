@@ -22,20 +22,15 @@ module.exports = ({
       })
         .on("error", err => reject(err))
         .on("data", row => {
-          const event = row.data[columnFamilyId][columnQualifier][0];
+          const data = row.data[columnFamilyId][columnQualifier][0];
           // eslint-disable-next-line no-console
-          console.log("row! ", row);
-          // eslint-disable-next-line no-console
-          console.log("row spec! ", row.data[columnFamilyId][columnQualifier]);
-          // eslint-disable-next-line no-console
-          console.log(
-            "length! ",
-            row.data[columnFamilyId][columnQualifier].length
-          );
-          // eslint-disable-next-line no-console
-          console.log("row event! ", event);
+          console.log("row event! ", data.value);
+
+          const event = JSON.parse(data.value);
+
           // eslint-disable-next-line no-console
           console.log("addding! ", event.payload);
+
           hydrated = { ...hydrated, ...event.payload };
         })
         .on("end", () => {

@@ -9,28 +9,27 @@ const storeId = "store";
 const service = "some-service";
 
 const root = "root";
+const goodPayload = {
+  a: 1
+};
+const goodData = {
+  a: {
+    a: [{ value: JSON.stringify({ payload: goodPayload }) }]
+  }
+};
 describe("Normalized event store hydrate", () => {
   afterEach(() => {
     restore();
   });
 
   it("should call hydrate with the correct params if table exists", async () => {
-    const payload = {
-      a: 1
-    };
-    const data = {
-      a: {
-        a: [{ payload }]
-      }
-    };
-
     const readStringFake = fake.returns({
       on: (status, fn) => {
         switch (status) {
         case "error":
           return readStringFake();
         case "data":
-          fn({ data });
+          fn({ data: goodData });
           return readStringFake();
         case "end":
           fn();
@@ -57,7 +56,7 @@ describe("Normalized event store hydrate", () => {
       root
     });
 
-    expect(result).to.deep.equal(payload);
+    expect(result).to.deep.equal(goodPayload);
     expect(tableFake).to.have.been.calledWith(`${service}-${storeId}`);
     expect(instanceFake).to.have.been.calledWith(storeInstance);
     expect(readStringFake).to.have.been.calledWith({
@@ -66,19 +65,13 @@ describe("Normalized event store hydrate", () => {
     });
   });
   it("should call hydrate with the correct params if table does not exists", async () => {
-    const data = {
-      a: {
-        a: 1
-      }
-    };
-
     const readStringFake = fake.returns({
       on: (status, fn) => {
         switch (status) {
         case "error":
           return readStringFake();
         case "data":
-          fn({ data });
+          fn({ data: goodData });
           return readStringFake();
         case "end":
           fn();
@@ -110,13 +103,6 @@ describe("Normalized event store hydrate", () => {
     expect(result).to.be.null;
   });
   it("should call hydrate and throw error if needed", async () => {
-    const payload = {
-      a: 1
-    };
-    const data = {
-      a: { a: [{ payload }] }
-    };
-
     const readStringFake = fake.returns({
       on: (status, fn) => {
         switch (status) {
@@ -124,7 +110,7 @@ describe("Normalized event store hydrate", () => {
           fn(new Error());
           break;
         case "data":
-          fn({ data });
+          fn({ data: goodData });
           return readStringFake();
         case "end":
           fn();
@@ -165,12 +151,12 @@ describe("Normalized event store hydrate", () => {
     };
     const data0 = {
       a: {
-        a: [{ payload: payload0 }]
+        a: [{ value: JSON.stringify({ payload: payload0 }) }]
       }
     };
     const data1 = {
       a: {
-        a: [{ payload: payload1 }]
+        a: [{ value: JSON.stringify({ payload: payload1 }) }]
       }
     };
 
