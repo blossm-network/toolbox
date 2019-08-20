@@ -23,7 +23,13 @@ module.exports = ({
 
           const event = JSON.parse(data.value);
 
+          // eslint-disable-next-line no-console
+          console.log("event to hydrate: ", event);
+
           hydrated = { ...hydrated, ...event.payload };
+
+          // eslint-disable-next-line no-console
+          console.log("new hydrated: ", event);
         })
         .on("end", () => resolve(hydrated));
     });
