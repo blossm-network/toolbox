@@ -1,21 +1,41 @@
 const { expect } = require("chai").use(require("sinon-chai"));
+const { restore, replace, fake } = require("sinon");
+const deps = require("../deps");
 const request = require("../");
 
-const addParamsToUrl = require("../src/add_params_to_url");
-
 describe("Request", () => {
+  afterEach(() => {
+    restore();
+  });
   it("should call post with correct params", async () => {
     const params = { hello: "there" };
     const url = "http://google.com";
+
+    const response = "someResponse";
+    const requestFake = fake.returns(response);
+    replace(deps, "request", requestFake);
+
     const reply = await request.post(url, params);
-    expect(reply).to.exist;
+    expect(reply).to.equal(response);
+    expect(deps.request).to.have.been.calledWith(url, {
+      method: "POST",
+      data: params
+    });
   });
   it("should call post with correct params with header", async () => {
     const params = { hello: "there" };
     const headers = { hi: "there" };
     const url = "http://google.com";
+    const response = "someResponse";
+    const requestFake = fake.returns(response);
+    replace(deps, "request", requestFake);
     const reply = await request.post(url, params, headers);
-    expect(reply).to.exist;
+    expect(reply).to.equal(response);
+    expect(deps.request).to.have.been.calledWith(url, {
+      method: "POST",
+      data: params,
+      headers
+    });
   });
 
   it("should call get with correct params", async () => {
@@ -24,24 +44,39 @@ describe("Request", () => {
       how: ["are", "you"],
       andy: [0, "ur dogs?"]
     };
+    const response = "someResponse";
+    const requestFake = fake.returns(response);
+    replace(deps, "request", requestFake);
     const url = "http://google.com";
     const reply = await request.get(url, params);
-    expect(reply).to.exist;
-  });
-
-  it("should create the right url with params", async () => {
-    const params = {
-      hello: "there",
-      how: ["are", "you"],
-      andy: [0, "ur dogs?"]
-    };
-    const url = "http://google.com";
-    expect(addParamsToUrl(url, params)).to.equal(
-      "http://google.com?andy=0&andy=ur%20dogs%3F&hello=there&how=are&how=you"
+    expect(reply).to.equal(response);
+    expect(deps.request).to.have.been.calledWith(
+      `${url}?andy=0&andy=ur%20dogs%3F&hello=there&how=are&how=you`
     );
   });
-  it("should create the right url with no params", async () => {
+  it("should call get with correct string params", async () => {
+    const params = {
+      hello: "there",
+      how: "are",
+      you: "now"
+    };
+    const response = "someResponse";
+    const requestFake = fake.returns(response);
+    replace(deps, "request", requestFake);
     const url = "http://google.com";
-    expect(addParamsToUrl(url)).to.equal("http://google.com");
+    const reply = await request.get(url, params);
+    expect(reply).to.equal(response);
+    expect(deps.request).to.have.been.calledWith(
+      `${url}?hello=there&how=are&you=now`
+    );
+  });
+  it("should call get with no params", async () => {
+    const response = "someResponse";
+    const requestFake = fake.returns(response);
+    replace(deps, "request", requestFake);
+    const url = "http://google.com";
+    const reply = await request.get(url);
+    expect(reply).to.equal(response);
+    expect(deps.request).to.have.been.calledWith(url);
   });
 });
