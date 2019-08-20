@@ -3,6 +3,7 @@ const validate = require("../src/validate_hydrate");
 
 const goodBody = {
   storeId: "some-store-id",
+  service: "some-service",
   root: "some-root"
 };
 
@@ -22,6 +23,22 @@ describe("Validate hydrate", () => {
     const body = {
       ...goodBody,
       storeId: undefined
+    };
+
+    expect(async () => await validate(body)).to.throw;
+  });
+  it("should throw if a bad service is passed", async () => {
+    const body = {
+      ...goodBody,
+      service: ""
+    };
+
+    expect(async () => await validate(body)).to.throw;
+  });
+  it("should throw if no service is passed", async () => {
+    const body = {
+      ...goodBody,
+      service: undefined
     };
 
     expect(async () => await validate(body)).to.throw;
