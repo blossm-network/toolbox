@@ -29,7 +29,7 @@ module.exports = ({
           hydrated = { ...hydrated, ...event.payload };
 
           // eslint-disable-next-line no-console
-          console.log("new hydrated: ", event);
+          console.log("new hydrated: ", hydrated);
         })
         .on("end", () => resolve(hydrated));
     });
