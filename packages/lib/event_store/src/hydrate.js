@@ -21,8 +21,7 @@ module.exports = ({
         .on("data", row => {
           const data = row.data[columnFamilyId][columnQualifier][0];
 
-          // const event = JSON.parse(data.value);
-          const event = data.value;
+          const event = JSON.parse(data.value);
 
           hydrated = { ...hydrated, ...event.payload };
         })

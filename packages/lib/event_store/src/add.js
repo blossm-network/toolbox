@@ -25,8 +25,7 @@ module.exports = ({
       key: `${event.fact.root}${rowKeyDelineator}${event.fact.createdTimestamp}`,
       data: {
         [columnFamilyId]: {
-          [columnQualifier]: event
-          // [columnQualifier]: JSON.stringify(event)
+          [columnQualifier]: JSON.stringify(event)
         }
       }
     };
