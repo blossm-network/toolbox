@@ -11,7 +11,7 @@ exports.add = async ({ body, token }) => {
   await validateAdd(body);
 
   const store = deps.eventStore({
-    storeId: body.storeId,
+    store: body.store,
     service: body.service
   });
   await store.add({ event: body.event });
@@ -22,9 +22,9 @@ exports.hydrate = async ({ query, token }) => {
   await validateHydrate(query);
 
   const store = deps.eventStore({
-    storeId: query.storeId,
+    store: query.store,
     service: query.service
   });
-  const aggregateRoot = await store.hydrate({ root: query.root });
-  return aggregateRoot;
+
+  return await store.hydrate({ root: query.root });
 };

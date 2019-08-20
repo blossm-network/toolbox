@@ -1,10 +1,10 @@
 const { expect } = require("chai").use(require("sinon-chai"));
 const { restore, replace, fake } = require("sinon");
-const eventStoreHandler = require("..");
+const eventStoreService = require("..");
 
 const deps = require("../deps");
 
-const storeId = "some-id";
+const store = "some-id";
 const service = "some-service";
 
 describe("Event store", () => {
@@ -15,22 +15,22 @@ describe("Event store", () => {
   it("should call hydrate with the correct params", async () => {
     const result = "random";
     const hydrate = fake.resolves(result);
-    const store = fake.returns({
+    const eventStore = fake.returns({
       hydrate
     });
-    replace(deps, "eventStore", store);
+    replace(deps, "eventStore", eventStore);
 
     const root = "love!";
 
     const query = {
       root,
-      storeId,
+      store,
       service
     };
 
-    const response = await eventStoreHandler.hydrate({ query });
+    const response = await eventStoreService.hydrate({ query });
 
-    expect(store).to.have.been.calledWith({ storeId, service });
+    expect(eventStore).to.have.been.calledWith({ store, service });
     expect(hydrate).to.have.been.calledWith({ root });
     expect(response).to.equal(result);
   });
@@ -38,26 +38,26 @@ describe("Event store", () => {
   it("should reject as expected if hydrate fails", async () => {
     const err = Error();
     const hydrate = fake.rejects(err);
-    const store = fake.returns({
+    const eventStore = fake.returns({
       hydrate
     });
-    replace(deps, "eventStore", store);
+    replace(deps, "eventStore", eventStore);
 
     const root = "love!";
     const query = {
       root,
-      storeId
+      store
     };
 
-    expect(async () => await eventStoreHandler.hydrate({ query })).to.throw;
+    expect(async () => await eventStoreService.hydrate({ query })).to.throw;
   });
 
   it("should call add with the correct params", async () => {
     const add = fake.resolves();
-    const store = fake.returns({
+    const eventStore = fake.returns({
       add
     });
-    replace(deps, "eventStore", store);
+    replace(deps, "eventStore", eventStore);
 
     const event = {
       fact: {
@@ -78,12 +78,12 @@ describe("Event store", () => {
 
     const body = {
       event,
-      storeId,
+      store,
       service
     };
 
-    const response = await eventStoreHandler.add({ body });
-    expect(store).to.have.been.calledWith({ storeId, service });
+    const response = await eventStoreService.add({ body });
+    expect(eventStore).to.have.been.calledWith({ store, service });
     expect(add).to.have.been.calledWith({ event });
     expect(response).to.be.be.undefined;
   });
@@ -91,10 +91,10 @@ describe("Event store", () => {
   it("should reject as expected if add fails", async () => {
     const err = Error();
     const add = fake.rejects(err);
-    const store = fake.returns({
+    const eventStore = fake.returns({
       add
     });
-    replace(deps, "eventStore", store);
+    replace(deps, "eventStore", eventStore);
 
     const event = {
       a: 3,
@@ -103,10 +103,10 @@ describe("Event store", () => {
 
     const body = {
       event,
-      storeId,
+      store,
       service
     };
 
-    expect(async () => await eventStoreHandler.add({ body })).to.throw;
+    expect(async () => await eventStoreService.add({ body })).to.throw;
   });
 });

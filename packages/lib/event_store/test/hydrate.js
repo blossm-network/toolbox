@@ -5,7 +5,7 @@ const storeInstance = "some-instance";
 process.env.STORE_INSTANCE = storeInstance;
 const deps = require("../deps");
 
-const storeId = "store";
+const store = "store";
 const service = "some-service";
 
 const root = "root";
@@ -52,12 +52,12 @@ describe("Normalized event store hydrate", () => {
 
     const normalizedEventStore = require("..");
 
-    const result = await normalizedEventStore({ storeId, service }).hydrate({
+    const result = await normalizedEventStore({ store, service }).hydrate({
       root
     });
 
     expect(result).to.deep.equal(goodPayload);
-    expect(tableFake).to.have.been.calledWith(`${service}-${storeId}`);
+    expect(tableFake).to.have.been.calledWith(`${service}-${store}`);
     expect(instanceFake).to.have.been.calledWith(storeInstance);
     expect(readStringFake).to.have.been.calledWith({
       prefix: root,
@@ -94,11 +94,11 @@ describe("Normalized event store hydrate", () => {
 
     const eventStore = require("..");
 
-    const result = await eventStore({ storeId, service }).hydrate({
+    const result = await eventStore({ store, service }).hydrate({
       root
     });
 
-    expect(tableFake).to.have.been.calledWith(`${service}-${storeId}`);
+    expect(tableFake).to.have.been.calledWith(`${service}-${store}`);
     expect(instanceFake).to.have.been.calledWith(storeInstance);
     expect(result).to.be.null;
   });
@@ -133,12 +133,11 @@ describe("Normalized event store hydrate", () => {
 
     const eventStore = require("..");
 
-    const storeId = "store";
+    const store = "store";
 
     const root = "root";
 
-    expect(async () => await eventStore({ storeId }).hydrate({ root })).to
-      .throw;
+    expect(async () => await eventStore({ store }).hydrate({ root })).to.throw;
   });
   it("should call hydrate with the correct params and correct reducing if exists", async () => {
     const payload0 = {
@@ -190,12 +189,12 @@ describe("Normalized event store hydrate", () => {
 
     const eventStore = require("..");
 
-    const result = await eventStore({ storeId, service }).hydrate({
+    const result = await eventStore({ store, service }).hydrate({
       root
     });
 
     expect(result).to.deep.equal({ a: 2, b: 2, c: 4 });
-    expect(tableFake).to.have.been.calledWith(`${service}-${storeId}`);
+    expect(tableFake).to.have.been.calledWith(`${service}-${store}`);
     expect(instanceFake).to.have.been.calledWith(storeInstance);
     expect(readStringFake).to.have.been.calledWith({
       prefix: root,
