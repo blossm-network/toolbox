@@ -12,6 +12,8 @@ module.exports = ({ instance, tableName, rowKeyDelineator }) => {
       stream({ table, rowKeyDelineator, root })
         .on("error", err => reject(err))
         .on("data", row => {
+          // eslint-disable-next-line no-console
+          console.log("row! ", row);
           const event = JSON.parse(row.data);
           // eslint-disable-next-line no-console
           console.log("addding! ", event.payload);
