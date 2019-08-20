@@ -1,6 +1,6 @@
 {
   "name": "@sustainer-network/event-store",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "description": "Add events and hydrate aggregate roots from a big table store.",
   "main": "index.js",
   "author": "sustainernetwork.org",
