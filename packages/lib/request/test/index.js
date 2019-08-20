@@ -37,11 +37,11 @@ describe("Request", () => {
     };
     const url = "http://google.com";
     expect(addParamsToUrl(url, params)).to.equal(
-      "http://google.com/andy=0&andy=ur%20dogs%3F&hello=there&how=are&how=you"
+      "http://google.com?andy=0&andy=ur%20dogs%3F&hello=there&how=are&how=you"
     );
   });
   it("should create the right url with no params", async () => {
     const url = "http://google.com";
-    expect(addParamsToUrl(url)).to.equal("http://google.com/");
+    expect(addParamsToUrl(url)).to.equal("http://google.com");
   });
 });
