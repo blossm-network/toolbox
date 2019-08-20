@@ -9,7 +9,10 @@ module.exports = ({
 }) => {
   const table = instance.table(tableName);
   return async ({ root }) => {
-    if (!(await table.exists())) return null;
+    const [tableExists] = await table.exists();
+    if (!tableExists) return null;
+    // eslint-disable-next-line no-console
+    console.log("ROWS: ", await table.getRows());
     return new Promise((resolve, reject) => {
       let hydrated = {};
       stream({
