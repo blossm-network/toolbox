@@ -14,7 +14,7 @@ exports.add = async ({ body, token }) => {
     storeId: body.storeId,
     service: body.service
   });
-  store.add({ event: body.event });
+  await store.add({ event: body.event });
 };
 
 exports.hydrate = async ({ query, token }) => {
@@ -27,7 +27,7 @@ exports.hydrate = async ({ query, token }) => {
     storeId: query.storeId,
     service: query.service
   });
-  const aggregateRoot = store.hydrate({ root: query.root });
+  const aggregateRoot = await store.hydrate({ root: query.root });
   // eslint-disable-next-line no-console
   console.log("http hydration doon: ", aggregateRoot);
   return aggregateRoot;
