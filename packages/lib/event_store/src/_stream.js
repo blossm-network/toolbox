@@ -16,8 +16,5 @@ module.exports = ({ table, rowKeyDelineator, root, from, to }) => {
     ...(to != undefined && { end: `${root}${rowKeyDelineator}${to}` })
   };
 
-  // eslint-disable-next-line no-console
-  console.log("query: ", query);
-
   return table.createReadStream(query);
 };

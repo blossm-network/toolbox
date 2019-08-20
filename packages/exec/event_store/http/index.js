@@ -18,8 +18,6 @@ exports.add = async ({ body, token }) => {
 };
 
 exports.hydrate = async ({ query, token }) => {
-  // eslint-disable-next-line no-console
-  console.log("http hydration handler: ", query);
   await authorize(token);
   await validateHydrate(query);
 
@@ -28,7 +26,5 @@ exports.hydrate = async ({ query, token }) => {
     service: query.service
   });
   const aggregateRoot = await store.hydrate({ root: query.root });
-  // eslint-disable-next-line no-console
-  console.log("http hydration doon: ", aggregateRoot);
   return aggregateRoot;
 };
