@@ -19,7 +19,9 @@ describe("Normalized event store hydrate", () => {
       a: 1
     };
     const data = {
-      payload
+      a: {
+        a: [{ payload }]
+      }
     };
 
     const readStringFake = fake.returns({
@@ -65,7 +67,9 @@ describe("Normalized event store hydrate", () => {
   });
   it("should call hydrate with the correct params if table does not exists", async () => {
     const data = {
-      a: 1
+      a: {
+        a: 1
+      }
     };
 
     const readStringFake = fake.returns({
@@ -95,9 +99,9 @@ describe("Normalized event store hydrate", () => {
 
     replace(deps.bigtable, "instance", instanceFake);
 
-    const normalizedEventStore = require("..");
+    const eventStore = require("..");
 
-    const result = await normalizedEventStore({ storeId, service }).hydrate({
+    const result = await eventStore({ storeId, service }).hydrate({
       root
     });
 
@@ -110,7 +114,7 @@ describe("Normalized event store hydrate", () => {
       a: 1
     };
     const data = {
-      payload
+      a: { a: [{ payload }] }
     };
 
     const readStringFake = fake.returns({
@@ -141,15 +145,14 @@ describe("Normalized event store hydrate", () => {
 
     replace(deps.bigtable, "instance", instanceFake);
 
-    const normalizedEventStore = require("../index");
+    const eventStore = require("..");
 
     const storeId = "store";
 
     const root = "root";
 
-    expect(
-      async () => await normalizedEventStore({ storeId }).hydrate({ root })
-    ).to.throw;
+    expect(async () => await eventStore({ storeId }).hydrate({ root })).to
+      .throw;
   });
   it("should call hydrate with the correct params and correct reducing if exists", async () => {
     const payload0 = {
@@ -161,10 +164,14 @@ describe("Normalized event store hydrate", () => {
       c: 4
     };
     const data0 = {
-      payload: payload0
+      a: {
+        a: [{ payload: payload0 }]
+      }
     };
     const data1 = {
-      payload: payload1
+      a: {
+        a: [{ payload: payload1 }]
+      }
     };
 
     const readStringFake = fake.returns({
@@ -195,9 +202,9 @@ describe("Normalized event store hydrate", () => {
 
     replace(deps.bigtable, "instance", instanceFake);
 
-    const normalizedEventStore = require("..");
+    const eventStore = require("..");
 
-    const result = await normalizedEventStore({ storeId, service }).hydrate({
+    const result = await eventStore({ storeId, service }).hydrate({
       root
     });
 

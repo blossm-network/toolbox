@@ -24,7 +24,7 @@ describe("Normalized event store add", () => {
 
     replace(deps.bigtable, "instance", instanceFake);
 
-    const normalizedEventStore = require("..");
+    const eventStore = require("..");
 
     const storeId = "store";
     const service = "some-service";
@@ -42,7 +42,7 @@ describe("Normalized event store add", () => {
       }
     };
 
-    await normalizedEventStore({ storeId, service }).add({ event });
+    await eventStore({ storeId, service }).add({ event });
 
     expect(tableFake).to.have.been.calledWith(`${service}-${storeId}`);
     expect(instanceFake).to.have.been.calledWith(storeInstance);

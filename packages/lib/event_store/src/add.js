@@ -1,11 +1,8 @@
-const column_family_id = "a";
-const column_qualifier = "a";
-
-const initializeTable = async table => {
+const initializeTable = async (table, columnFamilyId) => {
   const options = {
     families: [
       {
-        name: column_family_id
+        name: columnFamilyId
       }
     ]
   };
@@ -16,7 +13,13 @@ const initializeTable = async table => {
   await table.create(options);
 };
 
-module.exports = ({ instance, tableName, rowKeyDelineator }) => {
+module.exports = ({
+  instance,
+  tableName,
+  rowKeyDelineator,
+  columnFamilyId,
+  columnQualifier
+}) => {
   // eslint-disable-next-line no-console
   console.log("ADDING: ", tableName, rowKeyDelineator);
 
@@ -25,15 +28,15 @@ module.exports = ({ instance, tableName, rowKeyDelineator }) => {
     // eslint-disable-next-line no-console
     console.log("calling: ", event);
     const [tableExists] = await table.exists();
-    if (!tableExists) await initializeTable(table);
+    if (!tableExists) await initializeTable(table, columnFamilyId);
     const [newTableExists] = await table.exists();
     // eslint-disable-next-line no-console
     console.log("sofarsogood", newTableExists);
     const row = {
       key: `${event.fact.root}${rowKeyDelineator}${event.fact.createdTimestamp}`,
       data: {
-        [column_family_id]: {
-          [column_qualifier]: JSON.stringify(event)
+        [columnFamilyId]: {
+          [columnQualifier]: JSON.stringify(event)
         }
       }
     };
