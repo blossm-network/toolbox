@@ -28,7 +28,7 @@ describe("Normalized event store hydrate", () => {
         case "error":
           return readStringFake();
         case "data":
-          fn({ data: JSON.stringify(data) });
+          fn({ data });
           return readStringFake();
         case "end":
           fn();
@@ -74,7 +74,7 @@ describe("Normalized event store hydrate", () => {
         case "error":
           return readStringFake();
         case "data":
-          fn({ data: JSON.stringify(data) });
+          fn({ data });
           return readStringFake();
         case "end":
           fn();
@@ -120,7 +120,7 @@ describe("Normalized event store hydrate", () => {
           fn(new Error());
           break;
         case "data":
-          fn({ data: JSON.stringify(data) });
+          fn({ data });
           return readStringFake();
         case "end":
           fn();
@@ -173,8 +173,8 @@ describe("Normalized event store hydrate", () => {
         case "error":
           return readStringFake();
         case "data":
-          fn({ data: JSON.stringify(data0) });
-          fn({ data: JSON.stringify(data1) });
+          fn({ data: data0 });
+          fn({ data: data1 });
           return readStringFake();
         case "end":
           fn();

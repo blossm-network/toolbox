@@ -14,10 +14,9 @@ module.exports = ({ instance, tableName, rowKeyDelineator }) => {
         .on("data", row => {
           // eslint-disable-next-line no-console
           console.log("row! ", row);
-          const event = JSON.parse(row.data);
           // eslint-disable-next-line no-console
-          console.log("addding! ", event.payload);
-          hydrated = { ...hydrated, ...event.payload };
+          console.log("addding! ", row.data.payload);
+          hydrated = { ...hydrated, ...row.data.payload };
         })
         .on("end", () => {
           // eslint-disable-next-line no-console
