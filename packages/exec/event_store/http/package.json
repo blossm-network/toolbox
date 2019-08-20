@@ -1,7 +1,7 @@
 {
   "name": "@sustainer-network/event-store-service",
   "description": "Handles access to an event store.",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "scripts": {
     "test": "mocha --recursive",
     "check-packages": "yarn clean && yarn compile && yarn test"
@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@sustainer-network/errors": "*",
-    "@sustainer-network/event-store": "^0.0.16",
+    "@sustainer-network/event-store": "^0.0.17",
     "@sustainer-network/validator": "^0.0.2"
   },
   "devDependencies": {
