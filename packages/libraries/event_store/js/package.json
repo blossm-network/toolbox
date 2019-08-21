@@ -1,7 +1,7 @@
 {
   "name": "@sustainer-network/event-store-js",
   "description": "Access to an event store.",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "scripts": {
     "test": "mocha --recursive"
   },
