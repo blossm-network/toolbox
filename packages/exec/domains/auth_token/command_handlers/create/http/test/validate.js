@@ -5,15 +5,15 @@ const goodBody = {
   payload: {
     permissions: [
       {
-        command: "good-command",
-        root: "good-root"
+        domain: "good-domain",
+        root: "good-root",
+        scope: "read"
       }
     ],
     metadata: {
       a: 1,
       b: 2
-    },
-    account: "good-account-root"
+    }
   }
 };
 
@@ -52,28 +52,12 @@ describe("Validate", () => {
 
     expect(async () => await validate(body)).to.throw;
   });
-  it("should throw if a bad account is passed", async () => {
-    const body = {
-      ...goodBody,
-      "payload.account": 123
-    };
-
-    expect(async () => await validate(body)).to.throw;
-  });
-  it("should throw if no account is passed", async () => {
-    const body = {
-      ...goodBody,
-      "payload.account": undefined
-    };
-
-    expect(async () => await validate(body)).to.throw;
-  });
-  it("should throw if a bad command is passed in a permission", async () => {
+  it("should throw if a bad domain is passed in a permission", async () => {
     const body = {
       ...goodBody,
       "payload.permissions": [
         {
-          command: 123,
+          domain: 123,
           root: "good-root"
         }
       ]
@@ -81,7 +65,7 @@ describe("Validate", () => {
 
     expect(async () => await validate(body)).to.throw;
   });
-  it("should throw if no command is passed in a permission", async () => {
+  it("should throw if no domain is passed in a permission", async () => {
     const body = {
       ...goodBody,
       "payload.permissions": [
@@ -98,7 +82,7 @@ describe("Validate", () => {
       ...goodBody,
       "payload.permissions": [
         {
-          command: "good-command",
+          domain: "good-domain",
           root: 342
         }
       ]
@@ -111,6 +95,33 @@ describe("Validate", () => {
       ...goodBody,
       "payload.permissions": [
         {
+          domain: "good-domain"
+        }
+      ]
+    };
+
+    expect(async () => await validate(body)).to.throw;
+  });
+  it("should throw if a bad scope is passed in a permission", async () => {
+    const body = {
+      ...goodBody,
+      "payload.permissions": [
+        {
+          domain: "good-domain",
+          root: "good-root",
+          scope: 123
+        }
+      ]
+    };
+
+    expect(async () => await validate(body)).to.throw;
+  });
+  it("should throw if no scope is passed in a permission", async () => {
+    const body = {
+      ...goodBody,
+      "payload.permissions": [
+        {
+          command: "good-command",
           root: "good-root"
         }
       ]

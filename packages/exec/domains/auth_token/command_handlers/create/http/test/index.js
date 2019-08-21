@@ -36,8 +36,9 @@ describe("Create auth token", () => {
 
     const permissions = [
       {
-        command: "good-command",
-        root: "good-root"
+        domain: "good-domain",
+        root: "good-root",
+        scope: "scope"
       }
     ];
 
