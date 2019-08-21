@@ -26,7 +26,7 @@ describe("Event store", () => {
     const post = fake();
     replace(request, "post", post);
 
-    const storeId = "love!";
+    const store = "love!";
 
     const payload = {
       a: 1,
@@ -40,9 +40,9 @@ describe("Event store", () => {
     const command = "command";
     const commandInstanceId = "commandId";
     const commandIssuedTimestamp = 234;
-    const serviceDomain = "some.domain";
+    const service = "some-domain";
 
-    await eventStore({ storeId, serviceDomain }).add({
+    await eventStore({ store, service }).add({
       fact: {
         root,
         topic,
@@ -56,9 +56,10 @@ describe("Event store", () => {
     });
 
     expect(post).to.have.been.calledWith(
-      `https://event-store.${serviceDomain}/add`,
+      "https://event-store.sustainer.network/add",
       {
-        storeId,
+        store,
+        service,
         event: {
           fact: {
             root,
@@ -80,7 +81,7 @@ describe("Event store", () => {
     const post = fake();
     replace(request, "post", post);
 
-    const storeId = "love!";
+    const store = "love!";
 
     const payload = {
       a: 1,
@@ -92,9 +93,9 @@ describe("Event store", () => {
     const version = "version";
     const commandInstanceId = "commandId";
     const command = "command";
-    const serviceDomain = "some.domain";
+    const service = "some-domain";
 
-    await eventStore({ storeId, serviceDomain }).add({
+    await eventStore({ store, service }).add({
       fact: {
         root,
         topic,
@@ -106,9 +107,10 @@ describe("Event store", () => {
     });
 
     expect(post).to.have.been.calledWith(
-      `https://event-store.${serviceDomain}/add`,
+      "https://event-store.sustainer.network/add",
       {
-        storeId,
+        store,
+        service,
         event: {
           fact: {
             root,
@@ -128,16 +130,16 @@ describe("Event store", () => {
     const get = fake();
     replace(request, "get", get);
 
-    const storeId = "love!";
-    const serviceDomain = "some.domain";
+    const store = "love!";
+    const service = "some.domain";
 
     const root = "user";
 
-    await eventStore({ storeId, serviceDomain }).hydrate(root);
+    await eventStore({ store, service }).hydrate(root);
 
     expect(get).to.have.been.calledWith(
-      `https://event-store.${serviceDomain}/hydrate`,
-      { storeId, root }
+      "https://event-store.sustainer.network/hydrate",
+      { store, root, service }
     );
   });
 });

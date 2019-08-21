@@ -1,7 +1,7 @@
 const request = require("@sustainer-network/request");
 const datetime = require("@sustainer-network/datetime");
 
-module.exports = ({ storeId, serviceDomain }) => {
+module.exports = ({ store, service }) => {
   const isStaging = process.env.NODE_ENV == "staging";
   return {
     add: async ({
@@ -33,16 +33,16 @@ module.exports = ({ storeId, serviceDomain }) => {
       await request.post(
         `https://event-store${
           isStaging ? ".staging" : ""
-        }.${serviceDomain}/add`,
-        { event, storeId }
+        }.sustainer.network/add`,
+        { event, store, service }
       );
     },
     hydrate: async root => {
       await request.get(
         `https://event-store${
           isStaging ? ".staging" : ""
-        }.${serviceDomain}/hydrate`,
-        { root, storeId }
+        }.sustainer.network/hydrate`,
+        { root, store, service }
       );
     }
   };
