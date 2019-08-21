@@ -4,7 +4,6 @@ const hydrate = require("./src/hydrate");
 const deps = require("./deps");
 
 const rowKeyDelineator = "#";
-
 const columnFamilyId = "a";
 const columnQualifier = "a";
 

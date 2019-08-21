@@ -6,3 +6,4 @@ exports.validateCommand = require("@sustainer-network/validate-command");
 exports.cleanCommand = require("@sustainer-network/clean-command");
 exports.newUuid = require("@sustainer-network/uuid");
 exports.createJwt = createJwt;
+exports.main = require("./src/main");

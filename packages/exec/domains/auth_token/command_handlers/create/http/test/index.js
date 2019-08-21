@@ -19,13 +19,10 @@ describe("Create auth token", () => {
     const createEventFake = fake.returns(event);
     replace(deps, "createEvent", createEventFake);
 
-    const newUuid = "newUuid!";
-    const newUuidFake = fake.returns(newUuid);
-    replace(deps, "newUuid", newUuidFake);
-
-    const newToken = "token!";
-    const jwtCreateFake = fake.returns(newToken);
-    replace(deps, "createJwt", jwtCreateFake);
+    const response = "some-response";
+    const payload = "some-payload";
+    const mainFake = fake.returns({ payload, response });
+    replace(deps, "main", mainFake);
 
     const account = "good-account-root";
     const issuerInfo = {
@@ -63,31 +60,15 @@ describe("Create auth token", () => {
       publishEventFn
     });
 
-    expect(result).to.be.deep.equal({ token: newToken });
+    expect(result).to.be.deep.equal(response);
     expect(deps.cleanCommand).to.have.been.calledWith(body);
     expect(deps.validateCommand).to.have.been.calledWith(body);
     expect(deps.normalizeCommand).to.have.been.calledWith(body);
-    expect(deps.newUuid).to.have.been.calledOnce;
-    expect(deps.createJwt).to.have.been.calledWith({
-      data: {
-        root: newUuid,
-        account,
-        issuerInfo,
-        permissions,
-        metadata
-      },
-      expiresIn: 15552000,
-      secret
-    });
     expect(deps.createEvent).to.have.been.calledWith(body, {
       version: 0,
-      topic: "created.auth-token",
+      topic: `created.auth-token.${serviceDomain}`,
       serviceDomain,
-      payload: {
-        token: newToken,
-        issuerInfo,
-        account
-      }
+      payload
     });
     expect(publishEventFn).to.have.been.calledWith(event);
   });
