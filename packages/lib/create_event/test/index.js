@@ -23,7 +23,7 @@ describe("Create event", () => {
     const issuedTimestamp = 23;
     const root = "root!";
     const topic = "topic!";
-    const serviceDomain = "sustainer.network";
+    const service = "sustainer-network";
     const payload = { a: 1 };
     const version = 0;
 
@@ -37,7 +37,7 @@ describe("Create event", () => {
     const value = await createEvent(body, {
       root,
       topic,
-      serviceDomain,
+      service,
       payload,
       version
     });
@@ -46,7 +46,7 @@ describe("Create event", () => {
       fact: {
         root,
         topic,
-        serviceDomain,
+        service,
         version,
         traceId,
         commandInstanceId,
@@ -66,7 +66,7 @@ describe("Create event", () => {
     const name = "command!";
     const issuedTimestamp = 23;
     const topic = "topic!";
-    const serviceDomain = "sustainer.network";
+    const service = "sustainer.network";
     const payload = { a: 1 };
     const version = 0;
 
@@ -79,7 +79,7 @@ describe("Create event", () => {
 
     const value = await createEvent(body, {
       topic,
-      serviceDomain,
+      service,
       payload,
       version
     });
@@ -88,7 +88,7 @@ describe("Create event", () => {
       fact: {
         root: newUuid,
         topic,
-        serviceDomain,
+        service,
         version,
         traceId,
         commandInstanceId,

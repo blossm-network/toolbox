@@ -3,13 +3,13 @@ const deps = require("./deps");
 
 module.exports = async (
   body,
-  { root, topic, serviceDomain, payload, version } = {}
+  { root, topic, service, payload, version } = {}
 ) => {
   return {
     fact: {
       root: root || (await deps.makeUuid()),
       topic,
-      serviceDomain,
+      service,
       version,
       traceId: body.traceId,
       commandInstanceId: body.commandInstanceId,

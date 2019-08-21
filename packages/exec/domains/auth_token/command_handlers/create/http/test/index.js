@@ -40,7 +40,11 @@ describe("Create auth token", () => {
         root: "good-root"
       }
     ];
+
+    const service = "some-service";
+
     const body = {
+      service,
       payload: {
         permissions,
         metadata,
@@ -50,13 +54,10 @@ describe("Create auth token", () => {
       issuedTimestamp: 123
     };
 
-    const serviceDomain = "some.service.domain";
-
     const publishEventFn = fake();
 
     const result = await createAuthToken({
       body,
-      serviceDomain,
       publishEventFn
     });
 
@@ -66,8 +67,8 @@ describe("Create auth token", () => {
     expect(deps.normalizeCommand).to.have.been.calledWith(body);
     expect(deps.createEvent).to.have.been.calledWith(body, {
       version: 0,
-      topic: `created.auth-token.${serviceDomain}`,
-      serviceDomain,
+      topic: `created.auth-token.${service}`,
+      service,
       payload
     });
     expect(publishEventFn).to.have.been.calledWith(event);
