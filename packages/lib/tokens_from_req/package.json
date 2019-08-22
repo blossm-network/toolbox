@@ -1,0 +1,19 @@
+{
+  "name": "@sustainer-network/tokens-from-req",
+  "version": "0.0.0",
+  "description": "Parses the jwt Bearer token and the Basic Auth token from the Authorization header of the request.",
+  "main": "index.js",
+  "author": "sustainernetwork.org",
+  "engines": {
+    "node": ">= 10.16.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "devDependencies": {
+    "mocha": "^6.1.4"
+  }
+}
