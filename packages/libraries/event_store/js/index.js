@@ -13,7 +13,9 @@ module.exports = ({ domain, service }) => {
         version,
         traceId,
         commandInstanceId,
-        command,
+        commandAction,
+        commandDomain,
+        commandService,
         commandIssuedTimestamp
       },
       payload
@@ -25,7 +27,9 @@ module.exports = ({ domain, service }) => {
           service,
           version,
           commandInstanceId,
-          command,
+          commandAction,
+          commandDomain,
+          commandService,
           ...(commandIssuedTimestamp && { commandIssuedTimestamp }),
           ...(traceId && { traceId }),
           createdTimestamp: datetime.fineTimestamp()

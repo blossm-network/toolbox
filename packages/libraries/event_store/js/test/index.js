@@ -23,7 +23,9 @@ const root = "root";
 const topic = "topic";
 const version = "version";
 const commandInstanceId = "commandId";
-const command = "command";
+const commandAction = "command-action";
+const commandDomain = "command-domain";
+const commandService = "command-service";
 const _service = "the-service-that-this-event-belongs-to";
 const service = "the-service-the-event-was-triggered-in";
 
@@ -51,7 +53,9 @@ describe("Event store", () => {
         service,
         version,
         traceId,
-        command,
+        commandAction,
+        commandDomain,
+        commandService,
         commandInstanceId,
         commandIssuedTimestamp
       },
@@ -70,7 +74,9 @@ describe("Event store", () => {
             service,
             version,
             commandInstanceId,
-            command,
+            commandAction,
+            commandDomain,
+            commandService,
             traceId,
             createdTimestamp: datetime.fineTimestamp(),
             commandIssuedTimestamp
@@ -90,7 +96,9 @@ describe("Event store", () => {
         root,
         topic,
         service,
-        command,
+        commandAction,
+        commandDomain,
+        commandService,
         commandInstanceId,
         version
       },
@@ -108,7 +116,9 @@ describe("Event store", () => {
             topic,
             service,
             version,
-            command,
+            commandAction,
+            commandDomain,
+            commandService,
             commandInstanceId,
             createdTimestamp: datetime.fineTimestamp()
           },

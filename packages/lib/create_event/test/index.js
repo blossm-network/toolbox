@@ -19,25 +19,27 @@ describe("Create event", () => {
   it("should get called with expected params", async () => {
     const traceId = "tradeId!";
     const commandInstanceId = "commandInstanceId!";
-    const name = "command!";
+    const commandAction = "command-action!";
+    const commandDomain = "command-domain!";
+    const commandService = "command-service!";
     const issuedTimestamp = 23;
     const root = "root!";
-    const topic = "topic!";
-    const service = "sustainer-network";
+    const authorizedService = "some-authorized-service";
     const payload = { a: 1 };
     const version = 0;
 
     const body = {
       traceId,
       commandInstanceId,
-      name,
-      issuedTimestamp
+      action: commandAction,
+      domain: commandDomain,
+      service: commandService,
+      issuedTimestamp,
+      authorizedService
     };
 
     const value = await createEvent(body, {
       root,
-      topic,
-      service,
       payload,
       version
     });
@@ -45,12 +47,14 @@ describe("Create event", () => {
     expect(value).to.deep.equal({
       fact: {
         root,
-        topic,
-        service,
+        topic: `did-${commandAction}.${commandDomain}.${commandService}`,
+        service: authorizedService,
         version,
         traceId,
         commandInstanceId,
-        command: name,
+        commandAction,
+        commandDomain,
+        commandService,
         commandIssuedTimestamp: issuedTimestamp,
         createdTimestamp: datetime.fineTimestamp()
       },
@@ -63,23 +67,25 @@ describe("Create event", () => {
 
     const traceId = "tradeId!";
     const commandInstanceId = "commandInstanceId!";
-    const name = "command!";
+    const commandAction = "command-action!";
+    const commandDomain = "command-domain!";
+    const commandService = "command-service!";
     const issuedTimestamp = 23;
-    const topic = "topic!";
-    const service = "sustainer.network";
+    const authorizedService = "some-authorized-service";
     const payload = { a: 1 };
     const version = 0;
 
     const body = {
       traceId,
       commandInstanceId,
-      name,
-      issuedTimestamp
+      action: commandAction,
+      domain: commandDomain,
+      service: commandService,
+      issuedTimestamp,
+      authorizedService
     };
 
     const value = await createEvent(body, {
-      topic,
-      service,
       payload,
       version
     });
@@ -87,12 +93,14 @@ describe("Create event", () => {
     expect(value).to.deep.equal({
       fact: {
         root: newUuid,
-        topic,
-        service,
+        topic: `did-${commandAction}.${commandDomain}.${commandService}`,
+        service: authorizedService,
         version,
         traceId,
         commandInstanceId,
-        command: name,
+        commandAction,
+        commandDomain,
+        commandService,
         commandIssuedTimestamp: issuedTimestamp,
         createdTimestamp: datetime.fineTimestamp()
       },

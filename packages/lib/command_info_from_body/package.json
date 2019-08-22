@@ -1,7 +1,7 @@
 {
-  "name": "@sustainer-network/command-name-from-body",
-  "version": "0.0.2",
-  "description": "Finds the command name from the hostname of a request body.",
+  "name": "@sustainer-network/command-info-from-body",
+  "version": "0.0.0",
+  "description": "Finds the command name, domain, and service from the hostname of a request body.",
   "main": "index.js",
   "author": "sustainernetwork.org",
   "engines": {

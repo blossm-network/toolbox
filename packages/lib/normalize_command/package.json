@@ -11,7 +11,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@sustainer-network/command-name-from-body": "^0.0.2",
+    "@sustainer-network/command-info-from-body": "*",
     "@sustainer-network/nonce": "^0.0.1"
   },
   "scripts": {

@@ -4,7 +4,6 @@ const validate = require("./src/validate");
 const clean = require("./src/clean");
 const authorize = require("./src/authorize");
 const version = require("./src/version");
-const config = require("./config");
 
 module.exports = async ({ body, tokens, publishEventFn }) => {
   await authorize({ body, tokens });
@@ -16,14 +15,12 @@ module.exports = async ({ body, tokens, publishEventFn }) => {
   const { payload, response } = await deps.main({ body });
   const event = await deps.createEvent(body, {
     version,
-    topic: `${config.event}.${config.domain}.${config.service}`,
-    service: body.service,
     payload
   });
   await publishEventFn({
     event,
-    domain: config.domain,
-    service: config.service
+    domain: body.domain,
+    service: body.service
   });
   return response;
 };

@@ -11,8 +11,12 @@ describe("Normalize command", () => {
     const commandInstanceId = "commandInstanceId!";
     const sourceCommandName = "command!";
 
-    const name = "command!";
-    replace(deps, "commandNameFromBody", fake.returns(name));
+    const info = {
+      action: "some-action",
+      domain: "some-domain",
+      service: "some-service"
+    };
+    replace(deps, "commandInfoFromBody", fake.returns(info));
 
     const body = {
       commandInstanceId,
@@ -24,40 +28,68 @@ describe("Normalize command", () => {
     expect(body).to.deep.equal({
       commandInstanceId,
       sourceCommandName,
-      name
+      action: info.action,
+      domain: info.domain,
+      service: info.service,
+      sourceCommandAction: info.action,
+      sourceCommandDomain: info.domain,
+      sourceCommandService: info.service
     });
   });
   it("should get called with expected params and passed in command", async () => {
     const commandInstanceId = "commandInstanceId!";
-    const name = "command!";
-    replace(deps, "commandNameFromBody", fake.returns(name));
+    const info = {
+      action: "some-action",
+      domain: "some-domain",
+      service: "some-service"
+    };
+    replace(deps, "commandInfoFromBody", fake.returns(info));
+
+    const sourceCommandAction = "action!";
+    const sourceCommandService = "service!";
+    const sourceCommandDomain = "domain!";
 
     const body = {
+      sourceCommandAction,
+      sourceCommandDomain,
+      sourceCommandService,
       commandInstanceId
     };
 
-    await normalizeCommand(body, { name });
+    await normalizeCommand(body);
 
     expect(body).to.deep.equal({
       commandInstanceId,
-      sourceCommandName: name,
-      name
+      sourceCommandAction,
+      sourceCommandDomain,
+      sourceCommandService,
+      action: info.action,
+      domain: info.domain,
+      service: info.service
     });
   });
   it("should get called with expected params", async () => {
     const newNonce = "newNonce!";
     replace(deps, "nonce", fake.returns(newNonce));
-    const name = "command!";
-    replace(deps, "commandNameFromBody", fake.returns(name));
+    const info = {
+      action: "some-action",
+      domain: "some-domain",
+      service: "some-service"
+    };
+    replace(deps, "commandInfoFromBody", fake.returns(info));
 
     const body = {};
 
-    await normalizeCommand(body, { name });
+    await normalizeCommand(body);
 
     expect(body).to.deep.equal({
       commandInstanceId: newNonce,
-      sourceCommandName: name,
-      name
+      sourceCommandAction: info.action,
+      sourceCommandDomain: info.domain,
+      sourceCommandService: info.service,
+      action: info.action,
+      domain: info.domain,
+      service: info.service
     });
   });
 });

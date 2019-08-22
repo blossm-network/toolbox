@@ -1,2 +1,2 @@
 exports.nonce = require("@sustainer-network/nonce");
-exports.commandNameFromBody = require("@sustainer-network/command-name-from-body");
+exports.commandInfoFromBody = require("@sustainer-network/command-info-from-body");
