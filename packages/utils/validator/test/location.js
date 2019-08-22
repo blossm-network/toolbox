@@ -1,5 +1,5 @@
 const { expect } = require("chai");
-const { location } = require("../index");
+const { location } = require("..");
 
 describe("Valid location", () => {
   it("should not contain errors if the location is formatted correctly", () => {

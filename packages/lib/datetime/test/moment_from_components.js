@@ -1,6 +1,6 @@
 const { expect } = require("chai");
 
-const { momentFromComponents } = require("../index");
+const { momentFromComponents } = require("..");
 
 describe("Converts correctly", () => {
   it("it should return the correct moment", async () => {

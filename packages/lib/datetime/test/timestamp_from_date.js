@@ -1,6 +1,6 @@
 const { expect } = require("chai");
 
-const { timestampFromDate } = require("../index");
+const { timestampFromDate } = require("..");
 
 describe("Converts correctly", () => {
   it("it should return a timestamp used to create the date", async () => {

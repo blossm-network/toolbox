@@ -1,5 +1,5 @@
 const { expect } = require("chai");
-const { objectArray } = require("../index");
+const { objectArray } = require("..");
 
 const validObjectArray = [{}, {}];
 const invalidObjectArray = [{}, true];

@@ -1,6 +1,6 @@
 const { expect } = require("chai");
 
-const { componentsFromTimestamp } = require("../index");
+const { componentsFromTimestamp } = require("..");
 
 describe("Converts correctly", () => {
   it("it should return correct components", async () => {

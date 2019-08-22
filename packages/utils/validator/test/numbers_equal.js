@@ -1,5 +1,5 @@
 const { expect } = require("chai");
-const { numbersEqual } = require("../index");
+const { numbersEqual } = require("..");
 
 describe("Valid numbers equal", () => {
   it("should not contain errors if the two numbers are the same", () => {

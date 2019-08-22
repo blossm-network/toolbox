@@ -1,5 +1,5 @@
 const { expect } = require("chai");
-const { dayTimeRange } = require("../index");
+const { dayTimeRange } = require("..");
 
 describe("Valid date time range", () => {
   it("should not contain errors if the number is within range", () => {

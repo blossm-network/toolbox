@@ -1,7 +1,7 @@
 const { expect } = require("chai");
 const { useFakeTimers } = require("sinon");
 
-const { moment } = require("../index");
+const { moment } = require("..");
 
 let clock;
 

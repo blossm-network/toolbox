@@ -1,5 +1,5 @@
 const { expect } = require("chai");
-const { findErrorInArray, string } = require("../index");
+const { findErrorInArray, string } = require("..");
 
 describe("Errors exist", () => {
   it("should return the first error that is found", () => {

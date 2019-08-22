@@ -1,5 +1,5 @@
 const { expect } = require("chai");
-const { name } = require("../index");
+const { name } = require("..");
 
 describe("Valid name", () => {
   it("should not contain errors if the name is formatted correctly", () => {

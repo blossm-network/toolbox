@@ -1,5 +1,5 @@
 const { expect } = require("chai");
-const { format } = require("../index");
+const { format } = require("..");
 
 describe("Valid numbers", () => {
   it("should return an E164 formatted phone number, if the input is a valid phone number", () => {

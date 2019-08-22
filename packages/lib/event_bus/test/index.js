@@ -19,7 +19,7 @@ describe("Event bus", () => {
 
     replace(gcp, "PubSub", pubsub);
 
-    eventBus = require("../index");
+    eventBus = require("..");
   });
   after(() => {
     restore();

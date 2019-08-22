@@ -3,7 +3,7 @@ const { expect } = require("chai")
   .use(require("sinon-chai"));
 const { useFakeTimers } = require("sinon");
 
-const { fineTimestamp } = require("../index");
+const { fineTimestamp } = require("..");
 
 let clock;
 

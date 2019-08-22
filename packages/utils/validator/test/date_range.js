@@ -1,5 +1,5 @@
 const { expect } = require("chai");
-const { dateRange } = require("../index");
+const { dateRange } = require("..");
 
 describe("Valid date", () => {
   it("should not contain errors if the number is within range", () => {

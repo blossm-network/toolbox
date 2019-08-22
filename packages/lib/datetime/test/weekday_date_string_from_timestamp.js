@@ -1,6 +1,6 @@
 const { expect } = require("chai");
 
-const { weekdayDateStringFromTimestamp } = require("../index");
+const { weekdayDateStringFromTimestamp } = require("..");
 
 describe("Converts correctly", () => {
   it("it should return an expected string based on the utc timestamp", async () => {

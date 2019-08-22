@@ -1,7 +1,7 @@
 const { utc } = require("moment");
 const { expect } = require("chai");
 
-const { componentsFromMoment } = require("../index");
+const { componentsFromMoment } = require("..");
 
 describe("Converts correctly", () => {
   it("it should return correct components", async () => {

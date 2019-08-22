@@ -1,5 +1,5 @@
 const { expect } = require("chai");
-const { buffer } = require("../index");
+const { buffer } = require("..");
 
 const invalidBuffers = ["hello", 0, () => 0, {}];
 const validBuffer = new Buffer.from([0x62, 0x75, 0x66, 0x66, 0x65, 0x72]);

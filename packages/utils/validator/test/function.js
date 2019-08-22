@@ -1,5 +1,5 @@
 const { expect } = require("chai");
-const { fn } = require("../index");
+const { fn } = require("..");
 
 const invalidFunctions = ["hello", 0, false, {}];
 const validFunction = () => {};

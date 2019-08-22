@@ -1,5 +1,5 @@
 const { expect } = require("chai");
-const { number } = require("../index");
+const { number } = require("..");
 
 const invalidNumbers = ["hello", true, () => 0, {}];
 const validNumber = 0;

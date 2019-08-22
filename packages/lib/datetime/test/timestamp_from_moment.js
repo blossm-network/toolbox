@@ -1,7 +1,7 @@
 const { expect } = require("chai");
 const { utc } = require("moment");
 
-const { timestampFromMoment } = require("../index");
+const { timestampFromMoment } = require("..");
 
 describe("Converts correctly", () => {
   it("it should return a timestamp used to create the moment", async () => {

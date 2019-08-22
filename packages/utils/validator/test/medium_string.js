@@ -1,5 +1,5 @@
 const { expect } = require("chai");
-const { mediumString } = require("../index");
+const { mediumString } = require("..");
 
 describe("Valid medium strings", () => {
   const validShortString = "Vulpes bengalensis is a relatively small fox.";

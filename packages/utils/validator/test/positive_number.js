@@ -1,5 +1,5 @@
 const { expect } = require("chai");
-const { positiveNumber } = require("../index");
+const { positiveNumber } = require("..");
 
 describe("Valid positive number", () => {
   it("should not contain errors if the number is positive", () => {

@@ -1,5 +1,5 @@
 const { expect } = require("chai");
-const { email } = require("../index");
+const { email } = require("..");
 
 describe("Valid email", () => {
   it("should not contain errors if the email is formatted correctly", () => {

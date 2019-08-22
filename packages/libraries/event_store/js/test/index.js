@@ -2,7 +2,7 @@ const { expect } = require("chai")
   .use(require("chai-datetime"))
   .use(require("sinon-chai"));
 const { restore, replace, fake } = require("sinon");
-const eventStore = require("../index");
+const eventStore = require("..");
 const request = require("@sustainer-network/request");
 const { useFakeTimers } = require("sinon");
 

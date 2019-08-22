@@ -1,7 +1,7 @@
 const Moment = require("moment");
 const { expect } = require("chai");
 
-const { copyMoment } = require("../index");
+const { copyMoment } = require("..");
 
 describe("Creates correctly", () => {
   it("it should create a new moment that equals the passed in moment", async () => {

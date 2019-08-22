@@ -1,5 +1,5 @@
 const { expect } = require("chai");
-const { numberArray } = require("../index");
+const { numberArray } = require("..");
 
 const validNumberArray = [0, 1];
 const invalidNumberArray = ["Hello", 0];

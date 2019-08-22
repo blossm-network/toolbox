@@ -1,5 +1,5 @@
 const { expect } = require("chai");
-const { percentRange } = require("../index");
+const { percentRange } = require("..");
 
 describe("Valid percent", () => {
   it("should not contain errors if the number is within range", () => {

@@ -1,5 +1,5 @@
 const { expect } = require("chai");
-const { dateComponents } = require("../index");
+const { dateComponents } = require("..");
 
 describe("Valid date components", () => {
   it("should not contain errors if the data components are formatted correctly", () => {

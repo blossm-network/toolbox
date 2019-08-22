@@ -1,5 +1,5 @@
 const { expect } = require("chai");
-const { numberRange } = require("../index");
+const { numberRange } = require("..");
 
 const bounds = { lowerBound: 2, upperBound: 3 };
 

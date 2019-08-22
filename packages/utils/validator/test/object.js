@@ -1,5 +1,5 @@
 const { expect } = require("chai");
-const { object } = require("../index");
+const { object } = require("..");
 
 const invalidObjects = ["hello", 0, () => 0, false];
 const validObject = { key: "value" };

@@ -1,5 +1,5 @@
 const { expect } = require("chai");
-const { monthRange } = require("../index");
+const { monthRange } = require("..");
 
 describe("Valid month", () => {
   it("should not contain errors if the number is within range", () => {

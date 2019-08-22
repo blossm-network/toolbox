@@ -1,5 +1,5 @@
 const { expect } = require("chai");
-const { scheduleIntervalRange } = require("../index");
+const { scheduleIntervalRange } = require("..");
 
 describe("Valid positive number", () => {
   it("should not contain errors if the number is within range", () => {

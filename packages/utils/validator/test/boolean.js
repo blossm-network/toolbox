@@ -1,5 +1,5 @@
 const { expect } = require("chai");
-const { boolean } = require("../index");
+const { boolean } = require("..");
 
 const invalidBooleans = ["hello", 0, () => 0, {}];
 const validBoolean = false;

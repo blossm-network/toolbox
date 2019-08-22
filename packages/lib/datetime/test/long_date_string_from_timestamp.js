@@ -1,6 +1,6 @@
 const { expect } = require("chai");
 
-const { longDateStringFromTimestamp } = require("../index");
+const { longDateStringFromTimestamp } = require("..");
 
 describe("Converts correctly", () => {
   it("it should return an expected string based on the utc timestamp", async () => {

@@ -1,5 +1,5 @@
 const { expect } = require("chai");
-const { countryCode } = require("../index");
+const { countryCode } = require("..");
 
 const invalidCountryCodes = [0, "Hello", false, () => {}, {}];
 const validCountryCodes = [

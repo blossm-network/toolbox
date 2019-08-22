@@ -1,6 +1,6 @@
 const { expect } = require("chai");
 
-const { momentFromTimestamp } = require("../index");
+const { momentFromTimestamp } = require("..");
 
 describe("Converts correctly", () => {
   it("it should return a moment with the same timestamp used to create it", async () => {

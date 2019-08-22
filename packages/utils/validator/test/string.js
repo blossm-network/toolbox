@@ -1,5 +1,5 @@
 const { expect } = require("chai");
-const { string } = require("../index");
+const { string } = require("..");
 
 const invalidStrings = [0, true, () => 0, {}];
 const validString = "Hello";

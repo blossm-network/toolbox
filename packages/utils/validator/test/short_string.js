@@ -1,5 +1,5 @@
 const { expect } = require("chai");
-const { shortString } = require("../index");
+const { shortString } = require("..");
 
 describe("Valid short strings", () => {
   const validShortString = "Hello";

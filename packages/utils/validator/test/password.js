@@ -1,5 +1,5 @@
 const { expect } = require("chai");
-const { password } = require("../index");
+const { password } = require("..");
 
 describe("Valid passwords", () => {
   it("should not contain errors if the password is formatted correctly", () => {

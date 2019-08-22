@@ -1,5 +1,5 @@
 const { expect } = require("chai");
-const { longString } = require("../index");
+const { longString } = require("..");
 
 describe("Valid medium strings", () => {
   const validLongString =

@@ -1,5 +1,5 @@
 const { expect } = require("chai");
-const { booleanArray } = require("../index");
+const { booleanArray } = require("..");
 
 const validBooleanArray = [false, true];
 const invalidBooleanArray = ["Hello", true];
