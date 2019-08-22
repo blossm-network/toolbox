@@ -1,5 +1,5 @@
 const { PubSub } = require("@google-cloud/pubsub");
-const { topic } = PubSub();
+const { topic } = new PubSub();
 
 exports.publish = async event => {
   if (event.payload == undefined) event.payload = {};

@@ -9,14 +9,11 @@ let publish = fake.returns(result);
 
 describe("Event bus", () => {
   before(() => {
-    const pubsub = () => {
+    const pubsub = function() {};
+    pubsub.prototype.topic = t => {
+      expect(t).to.equal(topic);
       return {
-        topic: t => {
-          expect(t).to.equal(topic);
-          return {
-            publish
-          };
-        }
+        publish
       };
     };
 
