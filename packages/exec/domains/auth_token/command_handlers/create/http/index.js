@@ -6,8 +6,8 @@ const authorize = require("./src/authorize");
 const version = require("./src/version");
 const config = require("./config");
 
-module.exports = async ({ body, token, publishEventFn }) => {
-  await authorize({ body, token });
+module.exports = async ({ body, tokens, publishEventFn }) => {
+  await authorize({ body, tokens });
   await deps.cleanCommand(body);
   await clean(body);
   await deps.validateCommand(body);

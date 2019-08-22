@@ -5,8 +5,8 @@ const validateHydrate = require("./src/validate_hydrate");
 
 const deps = require("./deps");
 
-exports.add = async ({ body, token }) => {
-  await authorize(token);
+exports.add = async ({ body, tokens }) => {
+  await authorize(tokens);
   await cleanAdd(body);
   await validateAdd(body);
 
