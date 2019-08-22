@@ -1,0 +1,21 @@
+{
+  "name": "@sustainer-network/event-bus",
+  "version": "0.0.0",
+  "description": "Publishes an event to PubSub.",
+  "main": "index.js",
+  "author": "sustainernetwork.org",
+  "engines": {
+    "node": ">= 10.16.0"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "dependencies": {
+    "@google-cloud/pubsub": "^0.30.1"
+  },
+  "devDependencies": {
+    "mocha": "^6.1.4",
+    "sinon": "^7.3.2",
+    "sinon-chai": "^3.3.0"
+  }
+}
