@@ -4,7 +4,7 @@ const deps = require("../deps");
 const createAuthToken = require("..");
 
 const secret = "SECRET!";
-process.env.secret = secret;
+process.env.SECRET = secret;
 
 describe("Create auth token", () => {
   afterEach(() => {
@@ -68,11 +68,15 @@ describe("Create auth token", () => {
     expect(deps.normalizeCommand).to.have.been.calledWith(body);
     expect(deps.createEvent).to.have.been.calledWith(body, {
       version: 0,
-      topic: `created.auth-token.${service}`,
+      topic: "created.auth-token.core",
       service,
       payload
     });
-    expect(publishEventFn).to.have.been.calledWith(event);
+    expect(publishEventFn).to.have.been.calledWith({
+      event,
+      domain: "auth-token",
+      service: "core"
+    });
   });
 
   it("should throw correctly", async () => {

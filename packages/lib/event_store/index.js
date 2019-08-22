@@ -7,9 +7,9 @@ const rowKeyDelineator = "#";
 const columnFamilyId = "a";
 const columnQualifier = "a";
 
-module.exports = ({ store, service }) => {
+module.exports = ({ domain, service }) => {
   const instance = deps.bigtable.instance(process.env.STORE_INSTANCE);
-  const tableName = `${service}-${store}`;
+  const tableName = `${service}-${domain}`;
   return {
     add: add({
       instance,

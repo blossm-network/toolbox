@@ -8,7 +8,7 @@ const { badRequest } = require("@sustainer-network/errors");
 
 module.exports = async body => {
   const systemInputError = findError([
-    string(body.store, { shouldAllowEmptyString: false }),
+    string(body.domain, { shouldAllowEmptyString: false }),
     string(body.service, { shouldAllowEmptyString: false }),
     object(body.event)
   ]);
@@ -26,6 +26,7 @@ module.exports = async body => {
   const eventFactSystemInputError = findError([
     string(body.event.fact.root),
     string(body.event.fact.topic),
+    string(body.event.fact.service),
     number(body.event.fact.version),
     string(body.event.fact.commandInstanceId),
     string(body.event.fact.command),

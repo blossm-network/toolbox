@@ -15,7 +15,7 @@ module.exports = async ({ body }) => {
       metadata: body.payload.metadata
     },
     expiresIn: SIX_MONTHS,
-    secret: process.env.secret
+    secret: process.env.SECRET
   });
 
   const payload = {

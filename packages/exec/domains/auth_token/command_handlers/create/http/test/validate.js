@@ -3,6 +3,7 @@ const validate = require("../src/validate");
 
 const goodBody = {
   payload: {
+    account: "some-account-root",
     permissions: [
       {
         domain: "good-domain",

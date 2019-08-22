@@ -51,13 +51,13 @@ describe("Validate command", () => {
     };
     expect(async () => await validateCommand(body)).to.throw;
   });
-  it("should throw if a no issuerInfo is passed", async () => {
+  it("should not throw if a no issuerInfo is passed", async () => {
     const body = {
       ...goodBody,
       issuerInfo: undefined
     };
 
-    expect(async () => await validateCommand(body)).to.throw;
+    expect(await validateCommand(body)).to.not.throw;
   });
   it("should throw if a bad issuerId is passed", async () => {
     const body = {

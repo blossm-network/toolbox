@@ -11,7 +11,7 @@ exports.add = async ({ body, token }) => {
   await validateAdd(body);
 
   const store = deps.eventStore({
-    store: body.store,
+    domain: body.domain,
     service: body.service
   });
   await store.add({ event: body.event });
@@ -22,7 +22,7 @@ exports.hydrate = async ({ query, token }) => {
   await validateHydrate(query);
 
   const store = deps.eventStore({
-    store: query.store,
+    domain: query.domain,
     service: query.service
   });
 

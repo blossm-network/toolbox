@@ -12,6 +12,21 @@ let clock;
 
 const now = new Date();
 
+const domain = "love!";
+
+const payload = {
+  a: 1,
+  b: 2
+};
+
+const root = "root";
+const topic = "topic";
+const version = "version";
+const commandInstanceId = "commandId";
+const command = "command";
+const _service = "the-service-that-this-event-belongs-to";
+const service = "the-service-the-event-was-triggered-in";
+
 describe("Event store", () => {
   beforeEach(() => {
     clock = useFakeTimers(now.getTime());
@@ -26,26 +41,14 @@ describe("Event store", () => {
     const post = fake();
     replace(request, "post", post);
 
-    const store = "love!";
-
-    const payload = {
-      a: 1,
-      b: 2
-    };
-
-    const root = "root";
-    const topic = "topic";
-    const version = "version";
     const traceId = "traceId";
-    const command = "command";
-    const commandInstanceId = "commandId";
     const commandIssuedTimestamp = 234;
-    const service = "some-domain";
 
-    await eventStore({ store, service }).add({
+    await eventStore({ domain, service }).add({
       fact: {
         root,
         topic,
+        service,
         version,
         traceId,
         command,
@@ -58,12 +61,13 @@ describe("Event store", () => {
     expect(post).to.have.been.calledWith(
       "https://event-store.sustainer.network/add",
       {
-        store,
+        domain,
         service,
         event: {
           fact: {
             root,
             topic,
+            service,
             version,
             commandInstanceId,
             command,
@@ -81,24 +85,11 @@ describe("Event store", () => {
     const post = fake();
     replace(request, "post", post);
 
-    const store = "love!";
-
-    const payload = {
-      a: 1,
-      b: 2
-    };
-
-    const root = "root";
-    const topic = "topic";
-    const version = "version";
-    const commandInstanceId = "commandId";
-    const command = "command";
-    const service = "some-domain";
-
-    await eventStore({ store, service }).add({
+    await eventStore({ domain, service: _service }).add({
       fact: {
         root,
         topic,
+        service,
         command,
         commandInstanceId,
         version
@@ -109,12 +100,13 @@ describe("Event store", () => {
     expect(post).to.have.been.calledWith(
       "https://event-store.sustainer.network/add",
       {
-        store,
-        service,
+        domain,
+        service: _service,
         event: {
           fact: {
             root,
             topic,
+            service,
             version,
             command,
             commandInstanceId,
@@ -130,16 +122,16 @@ describe("Event store", () => {
     const get = fake();
     replace(request, "get", get);
 
-    const store = "love!";
+    const domain = "love!";
     const service = "some.domain";
 
     const root = "user";
 
-    await eventStore({ store, service }).hydrate(root);
+    await eventStore({ domain, service }).hydrate(root);
 
     expect(get).to.have.been.calledWith(
       "https://event-store.sustainer.network/hydrate",
-      { store, root, service }
+      { domain, root, service }
     );
   });
 });

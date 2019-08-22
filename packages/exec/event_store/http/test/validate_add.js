@@ -2,12 +2,13 @@ const { expect } = require("chai");
 const validate = require("../src/validate_add");
 
 const goodBody = {
-  store: "some-store-id",
+  domain: "some-store-domain",
   service: "some-service",
   event: {
     fact: {
       root: "someRoot",
       topic: "a.topic",
+      service: "service",
       version: 0,
       commandInstanceId: "someid",
       command: "a.command",
@@ -26,18 +27,18 @@ describe("Validate add", () => {
   it("should handle correct params correctly", async () => {
     expect(await validate(goodBody)).to.not.throw;
   });
-  it("should throw if a bad store is passed", async () => {
+  it("should throw if a bad domain is passed", async () => {
     const body = {
       ...goodBody,
-      store: ""
+      domain: ""
     };
 
     expect(async () => await validate(body)).to.throw;
   });
-  it("should throw if no store is passed", async () => {
+  it("should throw if no domain is passed", async () => {
     const body = {
       ...goodBody,
-      store: undefined
+      domain: undefined
     };
 
     expect(async () => await validate(body)).to.throw;

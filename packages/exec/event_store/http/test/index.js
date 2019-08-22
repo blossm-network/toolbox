@@ -4,7 +4,7 @@ const eventStoreService = require("..");
 
 const deps = require("../deps");
 
-const store = "some-id";
+const domain = "some-domain";
 const service = "some-service";
 
 describe("Event store", () => {
@@ -24,13 +24,13 @@ describe("Event store", () => {
 
     const query = {
       root,
-      store,
+      domain,
       service
     };
 
     const response = await eventStoreService.hydrate({ query });
 
-    expect(eventStore).to.have.been.calledWith({ store, service });
+    expect(eventStore).to.have.been.calledWith({ domain, service });
     expect(hydrate).to.have.been.calledWith({ root });
     expect(response).to.equal(result);
   });
@@ -46,7 +46,7 @@ describe("Event store", () => {
     const root = "love!";
     const query = {
       root,
-      store
+      domain
     };
 
     expect(async () => await eventStoreService.hydrate({ query })).to.throw;
@@ -63,6 +63,7 @@ describe("Event store", () => {
       fact: {
         root: "someRoot",
         topic: "a.topic",
+        service: "a-service",
         version: 0,
         commandInstanceId: "someid",
         command: "a.command",
@@ -78,12 +79,12 @@ describe("Event store", () => {
 
     const body = {
       event,
-      store,
+      domain,
       service
     };
 
     const response = await eventStoreService.add({ body });
-    expect(eventStore).to.have.been.calledWith({ store, service });
+    expect(eventStore).to.have.been.calledWith({ domain, service });
     expect(add).to.have.been.calledWith({ event });
     expect(response).to.be.be.undefined;
   });
@@ -103,7 +104,7 @@ describe("Event store", () => {
 
     const body = {
       event,
-      store,
+      domain,
       service
     };
 

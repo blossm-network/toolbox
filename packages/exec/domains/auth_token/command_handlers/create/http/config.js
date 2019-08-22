@@ -1,4 +1,5 @@
 module.exports = {
   event: "created",
-  domain: "auth-token"
+  domain: "auth-token",
+  service: "core"
 };

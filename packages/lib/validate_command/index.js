@@ -10,9 +10,8 @@ const { SECONDS_IN_DAY } = require("@sustainer-network/consts");
 
 module.exports = async body => {
   const systemInputError = findError([
-    object(body.issuerInfo),
+    object(body.issuerInfo, { optional: true }),
     string(body.traceId, { optional: true }),
-    string(body.name, { optional: true }),
     number(body.issuedTimestamp)
   ]);
 
@@ -27,13 +26,15 @@ module.exports = async body => {
     throw badRequest.message("The issuedTimestamp seems incorrect.");
   }
 
-  const issuerInfoSystemInputError = findError([
-    string(body.issuerInfo.id),
-    string(body.issuerInfo.ip)
-  ]);
+  if (body.issuerInfo != undefined) {
+    const issuerInfoSystemInputError = findError([
+      string(body.issuerInfo.id),
+      string(body.issuerInfo.ip)
+    ]);
 
-  if (issuerInfoSystemInputError) {
-    throw badRequest.message(issuerInfoSystemInputError.message);
+    if (issuerInfoSystemInputError) {
+      throw badRequest.message(issuerInfoSystemInputError.message);
+    }
   }
 
   const userInputError = findError([object(body.payload, { optional: true })]);

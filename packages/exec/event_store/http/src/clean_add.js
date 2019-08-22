@@ -12,6 +12,7 @@ module.exports = async body => {
     if (
       property != "root" &&
       property != "topic" &&
+      property != "service" &&
       property != "version" &&
       property != "commandInstanceId" &&
       property != "command" &&

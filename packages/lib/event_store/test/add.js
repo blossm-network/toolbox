@@ -5,7 +5,7 @@ const storeInstance = "some-instance";
 process.env.STORE_INSTANCE = storeInstance;
 const deps = require("../deps");
 
-describe("Normalized event store add", () => {
+describe("Event store add", () => {
   afterEach(() => {
     restore();
   });
@@ -26,7 +26,7 @@ describe("Normalized event store add", () => {
 
     const eventStore = require("..");
 
-    const store = "store";
+    const domain = "some-domain";
     const service = "some-service";
 
     const root = "root";
@@ -42,9 +42,9 @@ describe("Normalized event store add", () => {
       }
     };
 
-    await eventStore({ store, service }).add({ event });
+    await eventStore({ domain, service }).add({ event });
 
-    expect(tableFake).to.have.been.calledWith(`${service}-${store}`);
+    expect(tableFake).to.have.been.calledWith(`${service}-${domain}`);
     expect(instanceFake).to.have.been.calledWith(storeInstance);
     expect(insertFake).to.have.been.calledWith({
       key: `${root}#${createdTimestamp}`,
@@ -68,9 +68,9 @@ describe("Normalized event store add", () => {
 
     replace(deps.bigtable, "instance", instanceFake);
 
-    const normalizedEventStore = require("..");
+    const eventStore = require("..");
 
-    const store = "store";
+    const domain = "domain";
     const service = "service";
 
     const root = "root";
@@ -86,9 +86,9 @@ describe("Normalized event store add", () => {
       }
     };
 
-    await normalizedEventStore({ store, service }).add({ event });
+    await eventStore({ domain, service }).add({ event });
 
-    expect(tableFake).to.have.been.calledWith(`${service}-${store}`);
+    expect(tableFake).to.have.been.calledWith(`${service}-${domain}`);
     expect(instanceFake).to.have.been.calledWith(storeInstance);
     expect(createFake).to.have.been.calledWith({
       families: [{ name: "a" }]

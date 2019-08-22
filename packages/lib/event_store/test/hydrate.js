@@ -5,7 +5,7 @@ const storeInstance = "some-instance";
 process.env.STORE_INSTANCE = storeInstance;
 const deps = require("../deps");
 
-const store = "store";
+const domain = "some-domain";
 const service = "some-service";
 
 const root = "root";
@@ -17,7 +17,7 @@ const goodData = {
     a: [{ value: JSON.stringify({ payload: goodPayload }) }]
   }
 };
-describe("Normalized event store hydrate", () => {
+describe("Event store hydrate", () => {
   afterEach(() => {
     restore();
   });
@@ -50,14 +50,14 @@ describe("Normalized event store hydrate", () => {
 
     replace(deps.bigtable, "instance", instanceFake);
 
-    const normalizedEventStore = require("..");
+    const eventStore = require("..");
 
-    const result = await normalizedEventStore({ store, service }).hydrate({
+    const result = await eventStore({ domain, service }).hydrate({
       root
     });
 
     expect(result).to.deep.equal(goodPayload);
-    expect(tableFake).to.have.been.calledWith(`${service}-${store}`);
+    expect(tableFake).to.have.been.calledWith(`${service}-${domain}`);
     expect(instanceFake).to.have.been.calledWith(storeInstance);
     expect(readStringFake).to.have.been.calledWith({
       prefix: root,
@@ -94,11 +94,11 @@ describe("Normalized event store hydrate", () => {
 
     const eventStore = require("..");
 
-    const result = await eventStore({ store, service }).hydrate({
+    const result = await eventStore({ domain, service }).hydrate({
       root
     });
 
-    expect(tableFake).to.have.been.calledWith(`${service}-${store}`);
+    expect(tableFake).to.have.been.calledWith(`${service}-${domain}`);
     expect(instanceFake).to.have.been.calledWith(storeInstance);
     expect(result).to.be.null;
   });
@@ -189,12 +189,12 @@ describe("Normalized event store hydrate", () => {
 
     const eventStore = require("..");
 
-    const result = await eventStore({ store, service }).hydrate({
+    const result = await eventStore({ domain, service }).hydrate({
       root
     });
 
     expect(result).to.deep.equal({ a: 2, b: 2, c: 4 });
-    expect(tableFake).to.have.been.calledWith(`${service}-${store}`);
+    expect(tableFake).to.have.been.calledWith(`${service}-${domain}`);
     expect(instanceFake).to.have.been.calledWith(storeInstance);
     expect(readStringFake).to.have.been.calledWith({
       prefix: root,

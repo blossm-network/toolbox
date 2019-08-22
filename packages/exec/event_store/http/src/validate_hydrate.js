@@ -3,7 +3,7 @@ const { badRequest } = require("@sustainer-network/errors");
 
 module.exports = async query => {
   const systemInputError = findError([
-    string(query.store, { shouldAllowEmptyString: false }),
+    string(query.domain, { shouldAllowEmptyString: false }),
     string(query.service, { shouldAllowEmptyString: false }),
     string(query.root)
   ]);
