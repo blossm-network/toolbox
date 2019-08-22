@@ -7,6 +7,9 @@
   "engines": {
     "node": ">= 10.16.0"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "test": "mocha"
   },
@@ -17,5 +20,6 @@
     "mocha": "^6.1.4",
     "sinon": "^7.3.2",
     "sinon-chai": "^3.3.0"
-  }
+  },
+  "gitHead": "f795fd03594234dbe6d5f599c6ecb1f905864472"
 }
