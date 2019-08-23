@@ -17,10 +17,6 @@ module.exports = async ({ body, tokens, publishEventFn }) => {
     version,
     payload
   });
-  await publishEventFn({
-    event,
-    domain: body.domain,
-    service: body.service
-  });
+  await publishEventFn(event);
   return response;
 };

@@ -14,6 +14,7 @@ exports.add = async ({ body, tokens }) => {
     domain: body.domain,
     service: body.service
   });
+
   await store.add({ event: body.event });
 };
 

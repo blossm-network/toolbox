@@ -10,11 +10,13 @@ module.exports = async (body, { root, payload, version } = {}) => {
       version,
       traceId: body.traceId,
       createdTimestamp: datetime.fineTimestamp(),
-      commandInstanceId: body.commandInstanceId,
-      commandAction: body.action,
-      commandDomain: body.domain,
-      commandService: body.service,
-      commandIssuedTimestamp: body.issuedTimestamp
+      command: {
+        id: body.id,
+        action: body.action,
+        domain: body.domain,
+        service: body.service,
+        issuedTimestamp: body.issuedTimestamp
+      }
     },
     payload
   };

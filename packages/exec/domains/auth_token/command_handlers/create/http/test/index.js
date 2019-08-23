@@ -74,11 +74,7 @@ describe("Create auth token", () => {
       version: 0,
       payload
     });
-    expect(publishEventFn).to.have.been.calledWith({
-      event,
-      domain,
-      service
-    });
+    expect(publishEventFn).to.have.been.calledWith(event);
   });
 
   it("should throw correctly", async () => {

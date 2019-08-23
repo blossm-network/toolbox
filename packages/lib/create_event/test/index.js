@@ -18,11 +18,11 @@ describe("Create event", () => {
   });
   it("should get called with expected params", async () => {
     const traceId = "tradeId!";
-    const commandInstanceId = "commandInstanceId!";
+    const commandId = "command-id!";
     const commandAction = "command-action!";
     const commandDomain = "command-domain!";
     const commandService = "command-service!";
-    const issuedTimestamp = 23;
+    const commandIssuedTimestamp = 23;
     const root = "root!";
     const authorizedService = "some-authorized-service";
     const payload = { a: 1 };
@@ -30,11 +30,11 @@ describe("Create event", () => {
 
     const body = {
       traceId,
-      commandInstanceId,
+      id: commandId,
       action: commandAction,
       domain: commandDomain,
       service: commandService,
-      issuedTimestamp,
+      issuedTimestamp: commandIssuedTimestamp,
       authorizedService
     };
 
@@ -51,12 +51,14 @@ describe("Create event", () => {
         service: authorizedService,
         version,
         traceId,
-        commandInstanceId,
-        commandAction,
-        commandDomain,
-        commandService,
-        commandIssuedTimestamp: issuedTimestamp,
-        createdTimestamp: datetime.fineTimestamp()
+        createdTimestamp: datetime.fineTimestamp(),
+        command: {
+          id: commandId,
+          action: commandAction,
+          domain: commandDomain,
+          service: commandService,
+          issuedTimestamp: commandIssuedTimestamp
+        }
       },
       payload
     });
@@ -66,22 +68,22 @@ describe("Create event", () => {
     replace(deps, "makeUuid", fake.returns(newUuid));
 
     const traceId = "tradeId!";
-    const commandInstanceId = "commandInstanceId!";
+    const commandId = "commandId!";
     const commandAction = "command-action!";
     const commandDomain = "command-domain!";
     const commandService = "command-service!";
-    const issuedTimestamp = 23;
+    const commandIssuedTimestamp = 23;
     const authorizedService = "some-authorized-service";
     const payload = { a: 1 };
     const version = 0;
 
     const body = {
       traceId,
-      commandInstanceId,
+      id: commandId,
       action: commandAction,
       domain: commandDomain,
       service: commandService,
-      issuedTimestamp,
+      issuedTimestamp: commandIssuedTimestamp,
       authorizedService
     };
 
@@ -97,12 +99,14 @@ describe("Create event", () => {
         service: authorizedService,
         version,
         traceId,
-        commandInstanceId,
-        commandAction,
-        commandDomain,
-        commandService,
-        commandIssuedTimestamp: issuedTimestamp,
-        createdTimestamp: datetime.fineTimestamp()
+        createdTimestamp: datetime.fineTimestamp(),
+        command: {
+          id: commandId,
+          action: commandAction,
+          domain: commandDomain,
+          service: commandService,
+          issuedTimestamp: commandIssuedTimestamp
+        }
       },
       payload
     });
