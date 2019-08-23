@@ -18,7 +18,7 @@ module.exports = ({
   columnQualifier
 }) => {
   const table = instance.table(tableName);
-  return async ({ event }) => {
+  return async event => {
     const [tableExists] = await table.exists();
     if (!tableExists) await initializeTable(table, columnFamilyId);
     const row = {

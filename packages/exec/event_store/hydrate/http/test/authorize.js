@@ -3,8 +3,8 @@ const authorize = require("../src/authorize");
 
 describe("Authorize", () => {
   it("should handle correct params correctly", async () => {
-    const params = {};
+    const token = {};
 
-    expect(await authorize(params)).to.not.throw;
+    expect(await authorize(token)).to.not.throw;
   });
 });

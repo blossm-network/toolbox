@@ -1,6 +1,6 @@
 const { expect } = require("chai").use(require("sinon-chai"));
 const { restore, replace, fake } = require("sinon");
-const eventStoreService = require("..");
+const addToEventStore = require("..");
 
 const deps = require("../deps");
 
@@ -12,52 +12,13 @@ describe("Event store", () => {
     restore();
   });
 
-  it("should call hydrate with the correct params", async () => {
-    const result = "random";
-    const hydrate = fake.resolves(result);
-    const eventStore = fake.returns({
-      hydrate
-    });
-    replace(deps, "eventStore", eventStore);
-
-    const root = "love!";
-
-    const query = {
-      root,
-      domain,
-      service
-    };
-
-    const response = await eventStoreService.hydrate({ query });
-
-    expect(eventStore).to.have.been.calledWith({ domain, service });
-    expect(hydrate).to.have.been.calledWith({ root });
-    expect(response).to.equal(result);
-  });
-
-  it("should reject as expected if hydrate fails", async () => {
-    const err = Error();
-    const hydrate = fake.rejects(err);
-    const eventStore = fake.returns({
-      hydrate
-    });
-    replace(deps, "eventStore", eventStore);
-
-    const root = "love!";
-    const query = {
-      root,
-      domain
-    };
-
-    expect(async () => await eventStoreService.hydrate({ query })).to.throw;
-  });
-
   it("should call add with the correct params", async () => {
     const add = fake.resolves();
     const eventStore = fake.returns({
       add
     });
     replace(deps, "eventStore", eventStore);
+    replace(deps.eventBus, "publish", fake());
 
     const event = {
       fact: {
@@ -81,15 +42,16 @@ describe("Event store", () => {
       }
     };
 
-    const body = {
+    const params = {
       event,
       domain,
       service
     };
 
-    const response = await eventStoreService.add({ body });
+    const response = await addToEventStore({ params });
     expect(eventStore).to.have.been.calledWith({ domain, service });
-    expect(add).to.have.been.calledWith({ event });
+    expect(add).to.have.been.calledWith(event);
+    expect(deps.eventBus.publish).to.have.been.calledWith(event);
     expect(response).to.be.be.undefined;
   });
 
@@ -106,12 +68,12 @@ describe("Event store", () => {
       b: 4
     };
 
-    const body = {
+    const params = {
       event,
       domain,
       service
     };
 
-    expect(async () => await eventStoreService.add({ body })).to.throw;
+    expect(async () => await addToEventStore({ params })).to.throw;
   });
 });

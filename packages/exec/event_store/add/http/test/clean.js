@@ -1,9 +1,9 @@
 const { expect } = require("chai");
-const clean = require("../src/clean_add");
+const clean = require("../src/clean");
 
 describe("Clean add", () => {
   it("should handle correct params correctly", async () => {
-    const body = {
+    const params = {
       event: {
         fact: {
           bogus: 1,
@@ -17,9 +17,9 @@ describe("Clean add", () => {
       }
     };
 
-    await clean(body);
+    await clean(params);
 
-    expect(body.event.fact).to.deep.equal({
+    expect(params.event.fact).to.deep.equal({
       version: 30,
       createdTimestamp: 10,
       command: {

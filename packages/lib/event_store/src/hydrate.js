@@ -8,7 +8,7 @@ module.exports = ({
   columnQualifier
 }) => {
   const table = instance.table(tableName);
-  return async ({ root }) => {
+  return async root => {
     const [tableExists] = await table.exists();
     if (!tableExists) return null;
     return new Promise((resolve, reject) => {

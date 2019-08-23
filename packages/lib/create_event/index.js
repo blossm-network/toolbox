@@ -2,7 +2,7 @@ const datetime = require("@sustainer-network/datetime");
 const deps = require("./deps");
 
 module.exports = async (
-  body,
+  params,
   { action, domain, service, root, payload, version } = {}
 ) => {
   const isStaging = process.env.NODE_ENV == "staging";
@@ -10,16 +10,16 @@ module.exports = async (
     fact: {
       root: root || (await deps.makeUuid()),
       topic: `did-${action}.${domain}.${isStaging ? "staging." : ""}${service}`,
-      service: body.authorizedService,
+      service: params.authorizedService,
       version,
-      traceId: body.traceId,
+      traceId: params.traceId,
       createdTimestamp: datetime.fineTimestamp(),
       command: {
-        id: body.id,
+        id: params.id,
         action,
         domain,
         service,
-        issuedTimestamp: body.issuedTimestamp
+        issuedTimestamp: params.issuedTimestamp
       }
     },
     payload

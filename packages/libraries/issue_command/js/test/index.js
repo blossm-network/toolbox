@@ -85,7 +85,7 @@ describe("Issue command", () => {
       b: 2
     };
 
-    const body = {
+    const params = {
       traceId,
       sourceCommand,
       issuerInfo
@@ -95,7 +95,7 @@ describe("Issue command", () => {
     const domain = "a-domain";
     const service = "a-service";
 
-    await issueCommand({ action, domain, service }).with(payload, { body });
+    await issueCommand({ action, domain, service }).with(payload, { params });
 
     expect(post).to.have.been.calledWith(
       `${protocol}${action}.${domain}.${service}.sustainer.network`,

@@ -3,15 +3,15 @@ const datetime = require("@sustainer-network/datetime");
 
 module.exports = ({ action, domain, service }) => {
   return {
-    with: async (payload, { body } = {}) => {
-      const params = { payload };
-      if (body) {
-        params.traceId = body.traceId;
-        params.issuerInfo = body.issuerInfo;
-        params.sourceCommand = body.sourceCommand;
+    with: async (payload, { params } = {}) => {
+      const data = { payload };
+      if (params) {
+        data.traceId = params.traceId;
+        data.issuerInfo = params.issuerInfo;
+        data.sourceCommand = params.sourceCommand;
       }
 
-      params.issuedTimestamp = datetime.fineTimestamp();
+      data.issuedTimestamp = datetime.fineTimestamp();
 
       const isStaging = process.env.NODE_ENV == "staging";
 
@@ -19,7 +19,7 @@ module.exports = ({ action, domain, service }) => {
         `https://${action}.${domain}.${service}${
           isStaging ? ".staging" : ""
         }.sustainer.network`,
-        params
+        data
       );
     }
   };

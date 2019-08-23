@@ -42,7 +42,7 @@ describe("Create auth token", () => {
       }
     ];
 
-    const body = {
+    const params = {
       payload: {
         permissions,
         metadata,
@@ -55,15 +55,15 @@ describe("Create auth token", () => {
     const publishEventFn = fake();
 
     const result = await createAuthToken({
-      body,
+      params,
       publishEventFn
     });
 
     expect(result).to.be.deep.equal(response);
-    expect(deps.cleanCommand).to.have.been.calledWith(body);
-    expect(deps.validateCommand).to.have.been.calledWith(body);
-    expect(deps.normalizeCommand).to.have.been.calledWith(body);
-    expect(deps.createEvent).to.have.been.calledWith(body, {
+    expect(deps.cleanCommand).to.have.been.calledWith(params);
+    expect(deps.validateCommand).to.have.been.calledWith(params);
+    expect(deps.normalizeCommand).to.have.been.calledWith(params);
+    expect(deps.createEvent).to.have.been.calledWith(params, {
       action: "create",
       domain: "auth-token",
       service: "core",
@@ -76,8 +76,8 @@ describe("Create auth token", () => {
   it("should throw correctly", async () => {
     const err = Error();
     replace(deps, "cleanCommand", fake.rejects(err));
-    const body = {};
+    const params = {};
 
-    expect(async () => await createAuthToken({ body })).to.throw;
+    expect(async () => await createAuthToken({ params })).to.throw;
   });
 });

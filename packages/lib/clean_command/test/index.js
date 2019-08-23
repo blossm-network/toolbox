@@ -5,24 +5,24 @@ describe("Clean command", () => {
   it("should clean the request correctly", async () => {
     const payload = { a: 2 };
 
-    const body = {
+    const params = {
       issuedTimestamp: "123",
       payload
     };
 
-    await cleanCommand(body);
+    await cleanCommand(params);
 
-    expect(body).to.deep.equal({
+    expect(params).to.deep.equal({
       issuedTimestamp: 123,
       payload
     });
   });
   it("should add a payload", async () => {
-    const body = { issuedTimestamp: "123" };
+    const params = { issuedTimestamp: "123" };
 
-    await cleanCommand(body);
+    await cleanCommand(params);
 
-    expect(body).to.deep.equal({
+    expect(params).to.deep.equal({
       issuedTimestamp: 123,
       payload: {}
     });
@@ -30,7 +30,7 @@ describe("Clean command", () => {
   it("should clean remove unwanted issuerInfo fields", async () => {
     const id = "issuerId!";
     const ip = "123";
-    const body = {
+    const params = {
       issuedTimestamp: "123",
       issuerInfo: {
         id,
@@ -40,9 +40,9 @@ describe("Clean command", () => {
       }
     };
 
-    await cleanCommand(body);
+    await cleanCommand(params);
 
-    expect(body.issuerInfo).to.deep.equal({
+    expect(params.issuerInfo).to.deep.equal({
       id,
       ip
     });

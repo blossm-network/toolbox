@@ -42,7 +42,7 @@ describe("Event store add", () => {
       }
     };
 
-    await eventStore({ domain, service }).add({ event });
+    await eventStore({ domain, service }).add(event);
 
     expect(tableFake).to.have.been.calledWith(`${service}-${domain}`);
     expect(instanceFake).to.have.been.calledWith(storeInstance);
@@ -86,7 +86,7 @@ describe("Event store add", () => {
       }
     };
 
-    await eventStore({ domain, service }).add({ event });
+    await eventStore({ domain, service }).add(event);
 
     expect(tableFake).to.have.been.calledWith(`${service}-${domain}`);
     expect(instanceFake).to.have.been.calledWith(storeInstance);

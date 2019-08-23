@@ -11,22 +11,22 @@ describe("Normalize command", () => {
     const newNonce = "newNonce!";
     replace(deps, "nonce", fake.returns(newNonce));
 
-    const body = {
+    const params = {
       action: "some-action",
       domain: "some-domain",
       service: "some-service"
     };
 
-    await normalizeCommand(body);
+    await normalizeCommand(params);
 
-    expect(body).to.deep.equal({
-      ...body,
+    expect(params).to.deep.equal({
+      ...params,
       id: newNonce,
       sourceCommand: {
         id: newNonce,
-        action: body.action,
-        domain: body.domain,
-        service: body.service
+        action: params.action,
+        domain: params.domain,
+        service: params.service
       }
     });
   });
@@ -38,7 +38,7 @@ describe("Normalize command", () => {
     const sourceCommandDomain = "command-domain!";
     const sourceCommandService = "command-service!";
 
-    const body = {
+    const params = {
       action: "some-action",
       domain: "some-domain",
       service: "some-service",
@@ -50,10 +50,10 @@ describe("Normalize command", () => {
       }
     };
 
-    await normalizeCommand(body);
+    await normalizeCommand(params);
 
-    expect(body).to.deep.equal({
-      ...body,
+    expect(params).to.deep.equal({
+      ...params,
       id: newNonce
     });
   });
@@ -61,22 +61,22 @@ describe("Normalize command", () => {
     const newNonce = "newNonce!";
     replace(deps, "nonce", fake.returns(newNonce));
 
-    const body = {
+    const params = {
       action: "some-action",
       domain: "some-domain",
       service: "some-service"
     };
 
-    await normalizeCommand(body);
+    await normalizeCommand(params);
 
-    expect(body).to.deep.equal({
-      ...body,
+    expect(params).to.deep.equal({
+      ...params,
       id: newNonce,
       sourceCommand: {
         id: newNonce,
-        action: body.action,
-        domain: body.domain,
-        service: body.service
+        action: params.action,
+        domain: params.domain,
+        service: params.service
       }
     });
   });

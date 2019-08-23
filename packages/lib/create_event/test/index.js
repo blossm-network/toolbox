@@ -29,14 +29,14 @@ describe("Create event", () => {
     restore();
   });
   it("should get called with expected params", async () => {
-    const body = {
+    const params = {
       traceId,
       id: commandId,
       issuedTimestamp: commandIssuedTimestamp,
       authorizedService
     };
 
-    const value = await createEvent(body, {
+    const value = await createEvent(params, {
       action: commandAction,
       domain: commandDomain,
       service: commandService,
@@ -65,7 +65,7 @@ describe("Create event", () => {
     });
   });
   it("should get called with expected params in staging", async () => {
-    const body = {
+    const params = {
       traceId,
       id: commandId,
       issuedTimestamp: commandIssuedTimestamp,
@@ -73,7 +73,7 @@ describe("Create event", () => {
     };
 
     process.env.NODE_ENV = "staging";
-    const value = await createEvent(body, {
+    const value = await createEvent(params, {
       action: commandAction,
       domain: commandDomain,
       service: commandService,
@@ -105,14 +105,14 @@ describe("Create event", () => {
     const newUuid = "newUuid!";
     replace(deps, "makeUuid", fake.returns(newUuid));
 
-    const body = {
+    const params = {
       traceId,
       id: commandId,
       issuedTimestamp: commandIssuedTimestamp,
       authorizedService
     };
 
-    const value = await createEvent(body, {
+    const value = await createEvent(params, {
       action: commandAction,
       domain: commandDomain,
       service: commandService,

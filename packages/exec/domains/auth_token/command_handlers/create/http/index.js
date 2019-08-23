@@ -6,15 +6,15 @@ const clean = require("./src/clean");
 const authorize = require("./src/authorize");
 const version = require("./src/version");
 
-module.exports = async ({ body, tokens, publishEventFn }) => {
-  await authorize({ body, tokens });
-  await deps.cleanCommand(body);
-  await clean(body);
-  await deps.validateCommand(body);
-  await validate(body);
-  await deps.normalizeCommand(body);
-  const { payload, response } = await deps.main(body);
-  const event = await deps.createEvent(body, {
+module.exports = async ({ params, tokens, publishEventFn }) => {
+  await authorize({ params, tokens });
+  await deps.cleanCommand(params);
+  await clean(params);
+  await deps.validateCommand(params);
+  await validate(params);
+  await deps.normalizeCommand(params);
+  const { payload, response } = await deps.main(params);
+  const event = await deps.createEvent(params, {
     ...config,
     version,
     payload

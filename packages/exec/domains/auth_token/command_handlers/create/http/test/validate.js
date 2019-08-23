@@ -1,7 +1,7 @@
 const { expect } = require("chai");
 const validate = require("../src/validate");
 
-const goodBody = {
+const goodParams = {
   payload: {
     account: "some-account-root",
     permissions: [
@@ -20,42 +20,42 @@ const goodBody = {
 
 describe("Validate", () => {
   it("should handle correct params correctly", async () => {
-    expect(await validate(goodBody)).to.not.throw;
+    expect(await validate(goodParams)).to.not.throw;
   });
   it("should throw if bad permissions are passed", async () => {
-    const body = {
-      ...goodBody,
+    const params = {
+      ...goodParams,
       "payload.permissions": 123
     };
 
-    expect(async () => await validate(body)).to.throw;
+    expect(async () => await validate(params)).to.throw;
   });
   it("should throw if no permissions are passed", async () => {
-    const body = {
-      ...goodBody,
+    const params = {
+      ...goodParams,
       "payload.permissions": undefined
     };
 
-    expect(async () => await validate(body)).to.throw;
+    expect(async () => await validate(params)).to.throw;
   });
   it("should throw if bad metadata are passed", async () => {
-    const body = {
-      ...goodBody,
+    const params = {
+      ...goodParams,
       "payload.metadata": 123
     };
 
-    expect(async () => await validate(body)).to.throw;
+    expect(async () => await validate(params)).to.throw;
   });
   it("should  throw if no metadata are passed", async () => {
-    const body = {
+    const params = {
       "payload.metadata": undefined
     };
 
-    expect(async () => await validate(body)).to.throw;
+    expect(async () => await validate(params)).to.throw;
   });
   it("should throw if a bad domain is passed in a permission", async () => {
-    const body = {
-      ...goodBody,
+    const params = {
+      ...goodParams,
       "payload.permissions": [
         {
           domain: 123,
@@ -64,11 +64,11 @@ describe("Validate", () => {
       ]
     };
 
-    expect(async () => await validate(body)).to.throw;
+    expect(async () => await validate(params)).to.throw;
   });
   it("should throw if no domain is passed in a permission", async () => {
-    const body = {
-      ...goodBody,
+    const params = {
+      ...goodParams,
       "payload.permissions": [
         {
           root: "good-root"
@@ -76,11 +76,11 @@ describe("Validate", () => {
       ]
     };
 
-    expect(async () => await validate(body)).to.throw;
+    expect(async () => await validate(params)).to.throw;
   });
   it("should throw if a bad root is passed in a permission", async () => {
-    const body = {
-      ...goodBody,
+    const params = {
+      ...goodParams,
       "payload.permissions": [
         {
           domain: "good-domain",
@@ -89,11 +89,11 @@ describe("Validate", () => {
       ]
     };
 
-    expect(async () => await validate(body)).to.throw;
+    expect(async () => await validate(params)).to.throw;
   });
   it("should throw if no root is passed in a permission", async () => {
-    const body = {
-      ...goodBody,
+    const params = {
+      ...goodParams,
       "payload.permissions": [
         {
           domain: "good-domain"
@@ -101,11 +101,11 @@ describe("Validate", () => {
       ]
     };
 
-    expect(async () => await validate(body)).to.throw;
+    expect(async () => await validate(params)).to.throw;
   });
   it("should throw if a bad scope is passed in a permission", async () => {
-    const body = {
-      ...goodBody,
+    const params = {
+      ...goodParams,
       "payload.permissions": [
         {
           domain: "good-domain",
@@ -115,11 +115,11 @@ describe("Validate", () => {
       ]
     };
 
-    expect(async () => await validate(body)).to.throw;
+    expect(async () => await validate(params)).to.throw;
   });
   it("should throw if no scope is passed in a permission", async () => {
-    const body = {
-      ...goodBody,
+    const params = {
+      ...goodParams,
       "payload.permissions": [
         {
           command: "good-command",
@@ -128,6 +128,6 @@ describe("Validate", () => {
       ]
     };
 
-    expect(async () => await validate(body)).to.throw;
+    expect(async () => await validate(params)).to.throw;
   });
 });

@@ -8,11 +8,11 @@ const { badRequest, conflict } = require("@sustainer-network/errors");
 const { fineTimestamp } = require("@sustainer-network/datetime");
 const { SECONDS_IN_DAY } = require("@sustainer-network/consts");
 
-module.exports = async body => {
+module.exports = async params => {
   const systemInputError = findError([
-    object(body.issuerInfo, { optional: true }),
-    string(body.traceId, { optional: true }),
-    number(body.issuedTimestamp)
+    object(params.issuerInfo, { optional: true }),
+    string(params.traceId, { optional: true }),
+    number(params.issuedTimestamp)
   ]);
 
   if (systemInputError) {
@@ -20,16 +20,16 @@ module.exports = async body => {
   }
 
   if (
-    fineTimestamp() < body.issuedTimestamp ||
-    fineTimestamp() - body.issuedTimestamp > SECONDS_IN_DAY * 1000
+    fineTimestamp() < params.issuedTimestamp ||
+    fineTimestamp() - params.issuedTimestamp > SECONDS_IN_DAY * 1000
   ) {
     throw badRequest.message("The issuedTimestamp seems incorrect.");
   }
 
-  if (body.issuerInfo != undefined) {
+  if (params.issuerInfo != undefined) {
     const issuerInfoSystemInputError = findError([
-      string(body.issuerInfo.id),
-      string(body.issuerInfo.ip)
+      string(params.issuerInfo.id),
+      string(params.issuerInfo.ip)
     ]);
 
     if (issuerInfoSystemInputError) {
@@ -37,7 +37,9 @@ module.exports = async body => {
     }
   }
 
-  const userInputError = findError([object(body.payload, { optional: true })]);
+  const userInputError = findError([
+    object(params.payload, { optional: true })
+  ]);
 
   if (userInputError) throw conflict.message(userInputError.message);
 };

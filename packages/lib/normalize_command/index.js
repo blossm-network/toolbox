@@ -1,16 +1,16 @@
 const deps = require("./deps");
 
-module.exports = async body => {
+module.exports = async params => {
   const id = deps.nonce();
-  body.id = id;
+  params.id = id;
 
-  //prevent crashing if body.sourceCommand is undefined;
-  body.sourceCommand = body.sourceCommand || {};
+  //prevent crashing if params.sourceCommand is undefined;
+  params.sourceCommand = params.sourceCommand || {};
 
-  body.sourceCommand = {
-    id: body.sourceCommand.id || id,
-    action: body.sourceCommand.action || body.action,
-    domain: body.sourceCommand.domain || body.domain,
-    service: body.sourceCommand.service || body.service
+  params.sourceCommand = {
+    id: params.sourceCommand.id || id,
+    action: params.sourceCommand.action || params.action,
+    domain: params.sourceCommand.domain || params.domain,
+    service: params.sourceCommand.service || params.service
   };
 };

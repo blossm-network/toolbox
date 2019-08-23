@@ -1,11 +1,11 @@
-module.exports = async body => {
-  body.payload = body.payload || {};
+module.exports = async params => {
+  params.payload = params.payload || {};
 
-  body.issuedTimestamp = parseInt(body.issuedTimestamp);
+  params.issuedTimestamp = parseInt(params.issuedTimestamp);
 
-  for (const property in body.issuerInfo) {
+  for (const property in params.issuerInfo) {
     if (property != "id" && property != "ip") {
-      delete body.issuerInfo[property];
+      delete params.issuerInfo[property];
     }
   }
 };

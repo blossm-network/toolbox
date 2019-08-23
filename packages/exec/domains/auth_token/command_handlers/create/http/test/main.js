@@ -35,7 +35,7 @@ describe("Create auth token", () => {
         root: "good-root"
       }
     ];
-    const body = {
+    const params = {
       payload: {
         permissions,
         metadata,
@@ -45,7 +45,7 @@ describe("Create auth token", () => {
       issuedTimestamp: 123
     };
 
-    const { payload, response } = await main(body);
+    const { payload, response } = await main(params);
 
     expect(response).to.be.deep.equal({ token: newToken });
     expect(deps.newUuid).to.have.been.calledOnce;
