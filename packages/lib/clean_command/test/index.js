@@ -3,7 +3,7 @@ const cleanCommand = require("..");
 
 describe("Clean command", () => {
   it("should clean the request correctly", async () => {
-    const payload = { a: 1 };
+    const payload = { a: 2 };
 
     const body = {
       issuedTimestamp: "123",

@@ -15,8 +15,8 @@
 10 silly isBehindUpstream master is behind origin/master by 0 commit(s) and ahead by 1
 11 silly hasTags
 12 verbose hasTags true
-13 silly git-describe.sync "@sustainer-network/event-bus@0.0.3-1-ged96a86" => {"lastTagName":"@sustainer-network/event-bus@0.0.3","lastVersion":"0.0.3","refCount":"1","sha":"ed96a86","isDirty":false}
-14 info Looking for changed packages since @sustainer-network/event-bus@0.0.3
+13 silly git-describe.sync "@sustainer-network/event-store-service@0.0.11-1-g2b43c22" => {"lastTagName":"@sustainer-network/event-store-service@0.0.11","lastVersion":"0.0.11","refCount":"1","sha":"2b43c22","isDirty":false}
+14 info Looking for changed packages since @sustainer-network/event-store-service@0.0.11
 15 info ignoring diff in paths matching [ '*.md' ]
 16 silly checking diff packages/consts
 17 silly no diff found in @sustainer-network/consts
@@ -27,291 +27,93 @@
 22 silly checking diff packages/exec/event_store/http
 23 silly no diff found in @sustainer-network/event-store-service
 24 silly checking diff packages/lib/clean_command
-25 silly no diff found in @sustainer-network/clean-command
-26 silly checking diff packages/lib/command_name_from_body
-27 silly found diff in packages/lib/command_name_from_body/package.json
-28 verbose filtered diff [ 'packages/lib/command_name_from_body/package.json' ]
+25 silly found diff in packages/lib/clean_command/index.js
+25 silly found diff in packages/lib/clean_command/test/index.js
+26 verbose filtered diff [ 'packages/lib/clean_command/index.js',
+26 verbose filtered diff   'packages/lib/clean_command/test/index.js' ]
+27 silly checking diff packages/lib/command_info_from_body
+28 silly no diff found in @sustainer-network/command-info-from-body
 29 silly checking diff packages/lib/create_event
 30 silly no diff found in @sustainer-network/create-event
 31 silly checking diff packages/lib/datetime
-32 silly found diff in packages/lib/datetime/test/components_from_moment.js
-32 silly found diff in packages/lib/datetime/test/components_from_timestamp.js
-32 silly found diff in packages/lib/datetime/test/copy_moment.js
-32 silly found diff in packages/lib/datetime/test/fine_timestamp.js
-32 silly found diff in packages/lib/datetime/test/fine_timestamp_from_date.js
-32 silly found diff in packages/lib/datetime/test/long_date_string_from_timestamp.js
-32 silly found diff in packages/lib/datetime/test/moment.js
-32 silly found diff in packages/lib/datetime/test/moment_from_components.js
-32 silly found diff in packages/lib/datetime/test/moment_from_timestamp.js
-32 silly found diff in packages/lib/datetime/test/timestamp.js
-32 silly found diff in packages/lib/datetime/test/timestamp_from_components.js
-32 silly found diff in packages/lib/datetime/test/timestamp_from_date.js
-32 silly found diff in packages/lib/datetime/test/timestamp_from_moment.js
-32 silly found diff in packages/lib/datetime/test/weekday_date_string_from_timestamp.js
-33 verbose filtered diff [ 'packages/lib/datetime/test/components_from_moment.js',
-33 verbose filtered diff   'packages/lib/datetime/test/components_from_timestamp.js',
-33 verbose filtered diff   'packages/lib/datetime/test/copy_moment.js',
-33 verbose filtered diff   'packages/lib/datetime/test/fine_timestamp.js',
-33 verbose filtered diff   'packages/lib/datetime/test/fine_timestamp_from_date.js',
-33 verbose filtered diff   'packages/lib/datetime/test/long_date_string_from_timestamp.js',
-33 verbose filtered diff   'packages/lib/datetime/test/moment.js',
-33 verbose filtered diff   'packages/lib/datetime/test/moment_from_components.js',
-33 verbose filtered diff   'packages/lib/datetime/test/moment_from_timestamp.js',
-33 verbose filtered diff   'packages/lib/datetime/test/timestamp.js',
-33 verbose filtered diff   'packages/lib/datetime/test/timestamp_from_components.js',
-33 verbose filtered diff   'packages/lib/datetime/test/timestamp_from_date.js',
-33 verbose filtered diff   'packages/lib/datetime/test/timestamp_from_moment.js',
-33 verbose filtered diff   'packages/lib/datetime/test/weekday_date_string_from_timestamp.js' ]
-34 silly checking diff packages/lib/email_validator
-35 silly no diff found in @sustainer-network/email-validator
-36 silly checking diff packages/lib/event_bus
-37 silly found diff in packages/lib/event_bus/test/index.js
-38 verbose filtered diff [ 'packages/lib/event_bus/test/index.js' ]
-39 silly checking diff packages/lib/event_store
-40 silly no diff found in @sustainer-network/event-store
-41 silly checking diff packages/lib/jwt
-42 silly no diff found in @sustainer-network/jwt
-43 silly checking diff packages/lib/nonce
-44 silly no diff found in @sustainer-network/nonce
-45 silly checking diff packages/lib/normalize_command
-46 silly no diff found in @sustainer-network/normalize-command
-47 silly checking diff packages/lib/phone_number
-48 silly found diff in packages/lib/phone_number/test/format.js
-49 verbose filtered diff [ 'packages/lib/phone_number/test/format.js' ]
-50 silly checking diff packages/lib/request
-51 silly no diff found in @sustainer-network/request
-52 silly checking diff packages/lib/tokens_from_req
-53 silly no diff found in @sustainer-network/tokens-from-req
-54 silly checking diff packages/lib/uuid
-55 silly no diff found in @sustainer-network/uuid
-56 silly checking diff packages/lib/validate_command
-57 silly no diff found in @sustainer-network/validate-command
-58 silly checking diff packages/lib/validation
-59 silly found diff in packages/lib/validation/test/boolean.js
-59 silly found diff in packages/lib/validation/test/boolean_array.js
-59 silly found diff in packages/lib/validation/test/function.js
-59 silly found diff in packages/lib/validation/test/function_array.js
-59 silly found diff in packages/lib/validation/test/number.js
-59 silly found diff in packages/lib/validation/test/number_array.js
-59 silly found diff in packages/lib/validation/test/object.js
-59 silly found diff in packages/lib/validation/test/object_array.js
-59 silly found diff in packages/lib/validation/test/string.js
-59 silly found diff in packages/lib/validation/test/string_array.js
-60 verbose filtered diff [ 'packages/lib/validation/test/boolean.js',
-60 verbose filtered diff   'packages/lib/validation/test/boolean_array.js',
-60 verbose filtered diff   'packages/lib/validation/test/function.js',
-60 verbose filtered diff   'packages/lib/validation/test/function_array.js',
-60 verbose filtered diff   'packages/lib/validation/test/number.js',
-60 verbose filtered diff   'packages/lib/validation/test/number_array.js',
-60 verbose filtered diff   'packages/lib/validation/test/object.js',
-60 verbose filtered diff   'packages/lib/validation/test/object_array.js',
-60 verbose filtered diff   'packages/lib/validation/test/string.js',
-60 verbose filtered diff   'packages/lib/validation/test/string_array.js' ]
-61 silly checking diff packages/libraries/event_store/js
-62 silly found diff in packages/libraries/event_store/js/test/index.js
-63 verbose filtered diff [ 'packages/libraries/event_store/js/test/index.js' ]
-64 silly checking diff packages/utils/validator
-65 silly found diff in packages/utils/validator/test/boolean.js
-65 silly found diff in packages/utils/validator/test/boolean_array.js
-65 silly found diff in packages/utils/validator/test/buffer.js
-65 silly found diff in packages/utils/validator/test/country_code.js
-65 silly found diff in packages/utils/validator/test/date_components.js
-65 silly found diff in packages/utils/validator/test/date_range.js
-65 silly found diff in packages/utils/validator/test/day_range.js
-65 silly found diff in packages/utils/validator/test/day_time_range.js
-65 silly found diff in packages/utils/validator/test/email.js
-65 silly found diff in packages/utils/validator/test/find_error_in_array.js
-65 silly found diff in packages/utils/validator/test/function.js
-65 silly found diff in packages/utils/validator/test/function_array.js
-65 silly found diff in packages/utils/validator/test/location.js
-65 silly found diff in packages/utils/validator/test/long_string.js
-65 silly found diff in packages/utils/validator/test/medium_string.js
-65 silly found diff in packages/utils/validator/test/month_range.js
-65 silly found diff in packages/utils/validator/test/name.js
-65 silly found diff in packages/utils/validator/test/number.js
-65 silly found diff in packages/utils/validator/test/number_array.js
-65 silly found diff in packages/utils/validator/test/number_range.js
-65 silly found diff in packages/utils/validator/test/numbers_equal.js
-65 silly found diff in packages/utils/validator/test/object.js
-65 silly found diff in packages/utils/validator/test/object_array.js
-65 silly found diff in packages/utils/validator/test/password.js
-65 silly found diff in packages/utils/validator/test/percent_range.js
-65 silly found diff in packages/utils/validator/test/phone_number.js
-65 silly found diff in packages/utils/validator/test/positive_number.js
-65 silly found diff in packages/utils/validator/test/schedule_interval_range.js
-65 silly found diff in packages/utils/validator/test/short_string.js
-65 silly found diff in packages/utils/validator/test/string.js
-65 silly found diff in packages/utils/validator/test/string_array.js
-65 silly found diff in packages/utils/validator/test/year_range.js
-66 verbose filtered diff [ 'packages/utils/validator/test/boolean.js',
-66 verbose filtered diff   'packages/utils/validator/test/boolean_array.js',
-66 verbose filtered diff   'packages/utils/validator/test/buffer.js',
-66 verbose filtered diff   'packages/utils/validator/test/country_code.js',
-66 verbose filtered diff   'packages/utils/validator/test/date_components.js',
-66 verbose filtered diff   'packages/utils/validator/test/date_range.js',
-66 verbose filtered diff   'packages/utils/validator/test/day_range.js',
-66 verbose filtered diff   'packages/utils/validator/test/day_time_range.js',
-66 verbose filtered diff   'packages/utils/validator/test/email.js',
-66 verbose filtered diff   'packages/utils/validator/test/find_error_in_array.js',
-66 verbose filtered diff   'packages/utils/validator/test/function.js',
-66 verbose filtered diff   'packages/utils/validator/test/function_array.js',
-66 verbose filtered diff   'packages/utils/validator/test/location.js',
-66 verbose filtered diff   'packages/utils/validator/test/long_string.js',
-66 verbose filtered diff   'packages/utils/validator/test/medium_string.js',
-66 verbose filtered diff   'packages/utils/validator/test/month_range.js',
-66 verbose filtered diff   'packages/utils/validator/test/name.js',
-66 verbose filtered diff   'packages/utils/validator/test/number.js',
-66 verbose filtered diff   'packages/utils/validator/test/number_array.js',
-66 verbose filtered diff   'packages/utils/validator/test/number_range.js',
-66 verbose filtered diff   'packages/utils/validator/test/numbers_equal.js',
-66 verbose filtered diff   'packages/utils/validator/test/object.js',
-66 verbose filtered diff   'packages/utils/validator/test/object_array.js',
-66 verbose filtered diff   'packages/utils/validator/test/password.js',
-66 verbose filtered diff   'packages/utils/validator/test/percent_range.js',
-66 verbose filtered diff   'packages/utils/validator/test/phone_number.js',
-66 verbose filtered diff   'packages/utils/validator/test/positive_number.js',
-66 verbose filtered diff   'packages/utils/validator/test/schedule_interval_range.js',
-66 verbose filtered diff   'packages/utils/validator/test/short_string.js',
-66 verbose filtered diff   'packages/utils/validator/test/string.js',
-66 verbose filtered diff   'packages/utils/validator/test/string_array.js',
-66 verbose filtered diff   'packages/utils/validator/test/year_range.js' ]
-67 verbose updated @sustainer-network/create-auth-token-command-handler
-68 verbose updated @sustainer-network/event-store-service
-69 verbose updated @sustainer-network/command-name-from-body
-70 verbose updated @sustainer-network/datetime
-71 verbose updated @sustainer-network/event-bus
-72 verbose updated @sustainer-network/normalize-command
-73 verbose updated @sustainer-network/phone-number
-74 verbose updated @sustainer-network/validate-command
-75 verbose updated @sustainer-network/validation
-76 verbose updated @sustainer-network/event-store-js
-77 verbose updated @sustainer-network/validator
-78 verbose git-describe undefined => "@sustainer-network/event-bus@0.0.3-1-ged96a86"
-79 silly git-describe parsed => {"lastTagName":"@sustainer-network/event-bus@0.0.3","lastVersion":"0.0.3","refCount":"1","sha":"ed96a86","isDirty":false}
-80 info execute Skipping releases
-81 silly lifecycle "preversion" starting in "@sustainer-network/js"
-82 info lifecycle @sustainer-network/js@0.0.0~preversion: @sustainer-network/js@0.0.0
-83 warn lifecycle The node binary used for scripts is /var/folders/td/1z2wysyx391gm5_235h7rvsm0000gn/T/yarn--1566514626725-0.8294427862246854/node but npm is using /Users/joao/.nvm/versions/node/v10.16.0/bin/node itself. Use the `--scripts-prepend-node-path` option to include the path for the node binary npm was executed with.
-84 verbose lifecycle @sustainer-network/js@0.0.0~preversion: unsafe-perm in lifecycle true
-85 verbose lifecycle @sustainer-network/js@0.0.0~preversion: PATH: /Users/joao/Documents/repos/sustainer-network/sustainer-network-js/node_modules/npm-lifecycle/node-gyp-bin:/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/node_modules/.bin:/var/folders/td/1z2wysyx391gm5_235h7rvsm0000gn/T/yarn--1566514626725-0.8294427862246854:/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/node_modules/.bin:/Users/joao/.config/yarn/link/node_modules/.bin:/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/node_modules/.bin:/Users/joao/.nvm/versions/node/v10.16.0/libexec/lib/node_modules/npm/bin/node-gyp-bin:/Users/joao/.nvm/versions/node/v10.16.0/lib/node_modules/npm/bin/node-gyp-bin:/Users/joao/.nvm/versions/node/v10.16.0/bin/node_modules/npm/bin/node-gyp-bin:/Users/joao/.nvm/versions/node/v10.16.0/bin:/Users/joao/.google-cloud-sdk/bin:/Users/joao/.flutter_build/bin:/Users/joao/.yarn/bin:/Users/joao/.config/yarn/global/node_modules/.bin:/Developer/adt-bundle/sdk/tools:/Developer/adt-bundle/sdk/platform-tools:/usr/local/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Users/joao/.google-cloud-sdk/bin:/Users/joao/.flutter_build/bin:/Users/joao/.yarn/bin:/Users/joao/.config/yarn/global/node_modules/.bin:/Developer/adt-bundle/sdk/tools:/Developer/adt-bundle/sdk/platform-tools
-86 verbose lifecycle @sustainer-network/js@0.0.0~preversion: CWD: /Users/joao/Documents/repos/sustainer-network/sustainer-network-js
-87 silly lifecycle @sustainer-network/js@0.0.0~preversion: Args: [ '-c', 'yarn test' ]
-88 silly lifecycle @sustainer-network/js@0.0.0~preversion: Returned: code: 0  signal: null
-89 silly lifecycle "preversion" finished in "@sustainer-network/js"
-90 silly lifecycle No script for "preversion" in "@sustainer-network/command-name-from-body", continuing
-91 silly lifecycle No script for "preversion" in "@sustainer-network/datetime", continuing
-92 silly lifecycle No script for "preversion" in "@sustainer-network/event-bus", continuing
-93 silly lifecycle No script for "preversion" in "@sustainer-network/phone-number", continuing
-94 silly lifecycle No script for "version" in "@sustainer-network/datetime", continuing
-95 silly lifecycle No script for "preversion" in "@sustainer-network/validation", continuing
-96 silly lifecycle No script for "version" in "@sustainer-network/command-name-from-body", continuing
-97 silly lifecycle No script for "preversion" in "@sustainer-network/event-store-js", continuing
-98 silly lifecycle No script for "version" in "@sustainer-network/phone-number", continuing
-99 silly lifecycle No script for "preversion" in "@sustainer-network/normalize-command", continuing
-100 silly lifecycle No script for "version" in "@sustainer-network/event-bus", continuing
-101 silly lifecycle No script for "version" in "@sustainer-network/validation", continuing
-102 silly lifecycle No script for "preversion" in "@sustainer-network/validator", continuing
-103 silly lifecycle No script for "version" in "@sustainer-network/normalize-command", continuing
-104 silly lifecycle No script for "version" in "@sustainer-network/event-store-js", continuing
-105 silly lifecycle No script for "version" in "@sustainer-network/validator", continuing
-106 silly lifecycle No script for "preversion" in "@sustainer-network/event-store-service", continuing
-107 silly lifecycle No script for "preversion" in "@sustainer-network/validate-command", continuing
-108 silly lifecycle No script for "version" in "@sustainer-network/event-store-service", continuing
-109 silly lifecycle No script for "version" in "@sustainer-network/validate-command", continuing
-110 silly lifecycle No script for "preversion" in "@sustainer-network/create-auth-token-command-handler", continuing
-111 silly lifecycle No script for "version" in "@sustainer-network/create-auth-token-command-handler", continuing
-112 silly lifecycle "version" starting in "@sustainer-network/js"
-113 info lifecycle @sustainer-network/js@0.0.0~version: @sustainer-network/js@0.0.0
-114 verbose lifecycle @sustainer-network/js@0.0.0~version: unsafe-perm in lifecycle true
-115 verbose lifecycle @sustainer-network/js@0.0.0~version: PATH: /Users/joao/Documents/repos/sustainer-network/sustainer-network-js/node_modules/npm-lifecycle/node-gyp-bin:/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/node_modules/.bin:/var/folders/td/1z2wysyx391gm5_235h7rvsm0000gn/T/yarn--1566514626725-0.8294427862246854:/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/node_modules/.bin:/Users/joao/.config/yarn/link/node_modules/.bin:/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/node_modules/.bin:/Users/joao/.nvm/versions/node/v10.16.0/libexec/lib/node_modules/npm/bin/node-gyp-bin:/Users/joao/.nvm/versions/node/v10.16.0/lib/node_modules/npm/bin/node-gyp-bin:/Users/joao/.nvm/versions/node/v10.16.0/bin/node_modules/npm/bin/node-gyp-bin:/Users/joao/.nvm/versions/node/v10.16.0/bin:/Users/joao/.google-cloud-sdk/bin:/Users/joao/.flutter_build/bin:/Users/joao/.yarn/bin:/Users/joao/.config/yarn/global/node_modules/.bin:/Developer/adt-bundle/sdk/tools:/Developer/adt-bundle/sdk/platform-tools:/usr/local/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Users/joao/.google-cloud-sdk/bin:/Users/joao/.flutter_build/bin:/Users/joao/.yarn/bin:/Users/joao/.config/yarn/global/node_modules/.bin:/Developer/adt-bundle/sdk/tools:/Developer/adt-bundle/sdk/platform-tools
-116 verbose lifecycle @sustainer-network/js@0.0.0~version: CWD: /Users/joao/Documents/repos/sustainer-network/sustainer-network-js
-117 silly lifecycle @sustainer-network/js@0.0.0~version: Args: [ '-c', 'auto-changelog && git add CHANGELOG.md' ]
-118 silly lifecycle @sustainer-network/js@0.0.0~version: Returned: code: 0  signal: null
-119 silly lifecycle "version" finished in "@sustainer-network/js"
-120 silly gitAdd [ '/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/packages/lib/datetime/package.json',
-120 silly gitAdd   '/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/packages/lib/command_name_from_body/package.json',
-120 silly gitAdd   '/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/packages/lib/phone_number/package.json',
-120 silly gitAdd   '/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/packages/lib/event_bus/package.json',
-120 silly gitAdd   '/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/packages/lib/validation/package.json',
-120 silly gitAdd   '/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/packages/lib/normalize_command/package.json',
-120 silly gitAdd   '/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/packages/libraries/event_store/js/package.json',
-120 silly gitAdd   '/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/packages/utils/validator/package.json',
-120 silly gitAdd   '/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/packages/exec/event_store/http/package.json',
-120 silly gitAdd   '/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/packages/lib/validate_command/package.json',
-120 silly gitAdd   '/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/packages/exec/domains/auth_token/command_handlers/create/http/package.json' ]
-121 silly gitCommit Publish
-121 silly gitCommit
-121 silly gitCommit  - @sustainer-network/create-auth-token-command-handler@0.0.11
-121 silly gitCommit  - @sustainer-network/event-store-service@0.0.9
-121 silly gitCommit  - @sustainer-network/command-name-from-body@0.0.2
-121 silly gitCommit  - @sustainer-network/datetime@0.0.2
-121 silly gitCommit  - @sustainer-network/event-bus@0.0.4
-121 silly gitCommit  - @sustainer-network/normalize-command@0.0.2
-121 silly gitCommit  - @sustainer-network/phone-number@0.0.2
-121 silly gitCommit  - @sustainer-network/validate-command@0.0.4
-121 silly gitCommit  - @sustainer-network/validation@0.0.2
-121 silly gitCommit  - @sustainer-network/event-store-js@0.0.7
-121 silly gitCommit  - @sustainer-network/validator@0.0.3
-122 verbose git [ 'commit',
-122 verbose git   '-F',
-122 verbose git   '/private/var/folders/td/1z2wysyx391gm5_235h7rvsm0000gn/T/ddd47899-7490-4d50-ba57-9d64241bd740/lerna-commit.txt' ]
-123 silly gitTag @sustainer-network/create-auth-token-command-handler@0.0.11
-124 verbose git [ 'tag',
-124 verbose git   '@sustainer-network/create-auth-token-command-handler@0.0.11',
-124 verbose git   '-m',
-124 verbose git   '@sustainer-network/create-auth-token-command-handler@0.0.11' ]
-125 silly gitTag @sustainer-network/event-store-service@0.0.9
-126 verbose git [ 'tag',
-126 verbose git   '@sustainer-network/event-store-service@0.0.9',
-126 verbose git   '-m',
-126 verbose git   '@sustainer-network/event-store-service@0.0.9' ]
-127 silly gitTag @sustainer-network/command-name-from-body@0.0.2
-128 verbose git [ 'tag',
-128 verbose git   '@sustainer-network/command-name-from-body@0.0.2',
-128 verbose git   '-m',
-128 verbose git   '@sustainer-network/command-name-from-body@0.0.2' ]
-129 silly gitTag @sustainer-network/datetime@0.0.2
-130 verbose git [ 'tag',
-130 verbose git   '@sustainer-network/datetime@0.0.2',
-130 verbose git   '-m',
-130 verbose git   '@sustainer-network/datetime@0.0.2' ]
-131 silly gitTag @sustainer-network/event-bus@0.0.4
-132 verbose git [ 'tag',
-132 verbose git   '@sustainer-network/event-bus@0.0.4',
-132 verbose git   '-m',
-132 verbose git   '@sustainer-network/event-bus@0.0.4' ]
-133 silly gitTag @sustainer-network/normalize-command@0.0.2
-134 verbose git [ 'tag',
-134 verbose git   '@sustainer-network/normalize-command@0.0.2',
-134 verbose git   '-m',
-134 verbose git   '@sustainer-network/normalize-command@0.0.2' ]
-135 silly gitTag @sustainer-network/phone-number@0.0.2
-136 verbose git [ 'tag',
-136 verbose git   '@sustainer-network/phone-number@0.0.2',
-136 verbose git   '-m',
-136 verbose git   '@sustainer-network/phone-number@0.0.2' ]
-137 silly gitTag @sustainer-network/validate-command@0.0.4
-138 verbose git [ 'tag',
-138 verbose git   '@sustainer-network/validate-command@0.0.4',
-138 verbose git   '-m',
-138 verbose git   '@sustainer-network/validate-command@0.0.4' ]
-139 silly gitTag @sustainer-network/validation@0.0.2
-140 verbose git [ 'tag',
-140 verbose git   '@sustainer-network/validation@0.0.2',
-140 verbose git   '-m',
-140 verbose git   '@sustainer-network/validation@0.0.2' ]
-141 silly gitTag @sustainer-network/event-store-js@0.0.7
-142 verbose git [ 'tag',
-142 verbose git   '@sustainer-network/event-store-js@0.0.7',
-142 verbose git   '-m',
-142 verbose git   '@sustainer-network/event-store-js@0.0.7' ]
-143 silly gitTag @sustainer-network/validator@0.0.3
-144 verbose git [ 'tag',
-144 verbose git   '@sustainer-network/validator@0.0.3',
-144 verbose git   '-m',
-144 verbose git   '@sustainer-network/validator@0.0.3' ]
-145 error Error: Command failed: git tag @sustainer-network/command-name-from-body@0.0.2 -m @sustainer-network/command-name-from-body@0.0.2
-145 error fatal: tag '@sustainer-network/command-name-from-body@0.0.2' already exists
-145 error
-145 error     at makeError (/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/node_modules/execa/index.js:174:9)
-145 error     at Promise.all.then.arr (/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/node_modules/execa/index.js:278:16)
+32 silly no diff found in @sustainer-network/datetime
+33 silly checking diff packages/lib/email_validator
+34 silly no diff found in @sustainer-network/email-validator
+35 silly checking diff packages/lib/event_bus
+36 silly no diff found in @sustainer-network/event-bus
+37 silly checking diff packages/lib/event_store
+38 silly no diff found in @sustainer-network/event-store
+39 silly checking diff packages/lib/jwt
+40 silly no diff found in @sustainer-network/jwt
+41 silly checking diff packages/lib/nonce
+42 silly no diff found in @sustainer-network/nonce
+43 silly checking diff packages/lib/normalize_command
+44 silly no diff found in @sustainer-network/normalize-command
+45 silly checking diff packages/lib/phone_number
+46 silly no diff found in @sustainer-network/phone-number
+47 silly checking diff packages/lib/request
+48 silly no diff found in @sustainer-network/request
+49 silly checking diff packages/lib/tokens_from_req
+50 silly no diff found in @sustainer-network/tokens-from-req
+51 silly checking diff packages/lib/uuid
+52 silly no diff found in @sustainer-network/uuid
+53 silly checking diff packages/lib/validate_command
+54 silly no diff found in @sustainer-network/validate-command
+55 silly checking diff packages/lib/validation
+56 silly no diff found in @sustainer-network/validation
+57 silly checking diff packages/libraries/event_store/js
+58 silly no diff found in @sustainer-network/event-store-js
+59 silly checking diff packages/libraries/issue_command/js
+60 silly no diff found in @sustainer-network/issue-command-js
+61 silly checking diff packages/utils/validator
+62 silly no diff found in @sustainer-network/validator
+63 verbose updated @sustainer-network/create-auth-token-command-handler
+64 verbose updated @sustainer-network/clean-command
+65 verbose git-describe undefined => "@sustainer-network/event-store-service@0.0.11-1-g2b43c22"
+66 silly git-describe parsed => {"lastTagName":"@sustainer-network/event-store-service@0.0.11","lastVersion":"0.0.11","refCount":"1","sha":"2b43c22","isDirty":false}
+67 info execute Skipping releases
+68 silly lifecycle "preversion" starting in "@sustainer-network/js"
+69 info lifecycle @sustainer-network/js@0.0.0~preversion: @sustainer-network/js@0.0.0
+70 warn lifecycle The node binary used for scripts is /var/folders/td/1z2wysyx391gm5_235h7rvsm0000gn/T/yarn--1566527114552-0.08503315841769243/node but npm is using /Users/joao/.nvm/versions/node/v10.16.0/bin/node itself. Use the `--scripts-prepend-node-path` option to include the path for the node binary npm was executed with.
+71 verbose lifecycle @sustainer-network/js@0.0.0~preversion: unsafe-perm in lifecycle true
+72 verbose lifecycle @sustainer-network/js@0.0.0~preversion: PATH: /Users/joao/Documents/repos/sustainer-network/sustainer-network-js/node_modules/npm-lifecycle/node-gyp-bin:/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/node_modules/.bin:/var/folders/td/1z2wysyx391gm5_235h7rvsm0000gn/T/yarn--1566527114552-0.08503315841769243:/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/node_modules/.bin:/Users/joao/.config/yarn/link/node_modules/.bin:/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/node_modules/.bin:/Users/joao/.nvm/versions/node/v10.16.0/libexec/lib/node_modules/npm/bin/node-gyp-bin:/Users/joao/.nvm/versions/node/v10.16.0/lib/node_modules/npm/bin/node-gyp-bin:/Users/joao/.nvm/versions/node/v10.16.0/bin/node_modules/npm/bin/node-gyp-bin:/Users/joao/.nvm/versions/node/v10.16.0/bin:/Users/joao/.google-cloud-sdk/bin:/Users/joao/.flutter_build/bin:/Users/joao/.yarn/bin:/Users/joao/.config/yarn/global/node_modules/.bin:/Developer/adt-bundle/sdk/tools:/Developer/adt-bundle/sdk/platform-tools:/usr/local/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Users/joao/.google-cloud-sdk/bin:/Users/joao/.flutter_build/bin:/Users/joao/.yarn/bin:/Users/joao/.config/yarn/global/node_modules/.bin:/Developer/adt-bundle/sdk/tools:/Developer/adt-bundle/sdk/platform-tools
+73 verbose lifecycle @sustainer-network/js@0.0.0~preversion: CWD: /Users/joao/Documents/repos/sustainer-network/sustainer-network-js
+74 silly lifecycle @sustainer-network/js@0.0.0~preversion: Args: [ '-c', 'yarn test' ]
+75 silly lifecycle @sustainer-network/js@0.0.0~preversion: Returned: code: 0  signal: null
+76 silly lifecycle "preversion" finished in "@sustainer-network/js"
+77 silly lifecycle No script for "preversion" in "@sustainer-network/clean-command", continuing
+78 silly lifecycle No script for "version" in "@sustainer-network/clean-command", continuing
+79 silly lifecycle No script for "preversion" in "@sustainer-network/create-auth-token-command-handler", continuing
+80 silly lifecycle No script for "version" in "@sustainer-network/create-auth-token-command-handler", continuing
+81 silly lifecycle "version" starting in "@sustainer-network/js"
+82 info lifecycle @sustainer-network/js@0.0.0~version: @sustainer-network/js@0.0.0
+83 verbose lifecycle @sustainer-network/js@0.0.0~version: unsafe-perm in lifecycle true
+84 verbose lifecycle @sustainer-network/js@0.0.0~version: PATH: /Users/joao/Documents/repos/sustainer-network/sustainer-network-js/node_modules/npm-lifecycle/node-gyp-bin:/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/node_modules/.bin:/var/folders/td/1z2wysyx391gm5_235h7rvsm0000gn/T/yarn--1566527114552-0.08503315841769243:/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/node_modules/.bin:/Users/joao/.config/yarn/link/node_modules/.bin:/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/node_modules/.bin:/Users/joao/.nvm/versions/node/v10.16.0/libexec/lib/node_modules/npm/bin/node-gyp-bin:/Users/joao/.nvm/versions/node/v10.16.0/lib/node_modules/npm/bin/node-gyp-bin:/Users/joao/.nvm/versions/node/v10.16.0/bin/node_modules/npm/bin/node-gyp-bin:/Users/joao/.nvm/versions/node/v10.16.0/bin:/Users/joao/.google-cloud-sdk/bin:/Users/joao/.flutter_build/bin:/Users/joao/.yarn/bin:/Users/joao/.config/yarn/global/node_modules/.bin:/Developer/adt-bundle/sdk/tools:/Developer/adt-bundle/sdk/platform-tools:/usr/local/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Users/joao/.google-cloud-sdk/bin:/Users/joao/.flutter_build/bin:/Users/joao/.yarn/bin:/Users/joao/.config/yarn/global/node_modules/.bin:/Developer/adt-bundle/sdk/tools:/Developer/adt-bundle/sdk/platform-tools
+85 verbose lifecycle @sustainer-network/js@0.0.0~version: CWD: /Users/joao/Documents/repos/sustainer-network/sustainer-network-js
+86 silly lifecycle @sustainer-network/js@0.0.0~version: Args: [ '-c', 'auto-changelog && git add CHANGELOG.md' ]
+87 silly lifecycle @sustainer-network/js@0.0.0~version: Returned: code: 0  signal: null
+88 silly lifecycle "version" finished in "@sustainer-network/js"
+89 silly gitAdd [ '/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/packages/lib/clean_command/package.json',
+89 silly gitAdd   '/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/packages/exec/domains/auth_token/command_handlers/create/http/package.json' ]
+90 silly gitCommit Publish
+90 silly gitCommit
+90 silly gitCommit  - @sustainer-network/create-auth-token-command-handler@0.0.15
+90 silly gitCommit  - @sustainer-network/clean-command@0.0.2
+91 verbose git [ 'commit',
+91 verbose git   '-F',
+91 verbose git   '/private/var/folders/td/1z2wysyx391gm5_235h7rvsm0000gn/T/a9c247f8-2a2d-4e73-95d2-c9e6aee86ba9/lerna-commit.txt' ]
+92 silly gitTag @sustainer-network/create-auth-token-command-handler@0.0.15
+93 verbose git [ 'tag',
+93 verbose git   '@sustainer-network/create-auth-token-command-handler@0.0.15',
+93 verbose git   '-m',
+93 verbose git   '@sustainer-network/create-auth-token-command-handler@0.0.15' ]
+94 silly gitTag @sustainer-network/clean-command@0.0.2
+95 verbose git [ 'tag',
+95 verbose git   '@sustainer-network/clean-command@0.0.2',
+95 verbose git   '-m',
+95 verbose git   '@sustainer-network/clean-command@0.0.2' ]
+96 error Error: Command failed: git tag @sustainer-network/clean-command@0.0.2 -m @sustainer-network/clean-command@0.0.2
+96 error fatal: tag '@sustainer-network/clean-command@0.0.2' already exists
+96 error
+96 error     at makeError (/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/node_modules/execa/index.js:174:9)
+96 error     at Promise.all.then.arr (/Users/joao/Documents/repos/sustainer-network/sustainer-network-js/node_modules/execa/index.js:278:16)
