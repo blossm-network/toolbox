@@ -28,13 +28,22 @@ module.exports = async body => {
     string(body.event.fact.topic),
     string(body.event.fact.service),
     number(body.event.fact.version),
-    string(body.event.fact.commandInstanceId),
-    string(body.event.fact.command),
-    number(body.event.fact.commandIssuedTimestamp),
+    object(body.event.fact.command),
     string(body.event.fact.traceId, { optional: true }),
     number(body.event.fact.createdTimestamp)
   ]);
 
   if (eventFactSystemInputError)
     throw badRequest.message(eventFactSystemInputError.message);
+
+  const eventCommandFactSystemInputError = findError([
+    string(body.event.fact.command.id),
+    string(body.event.fact.command.action),
+    string(body.event.fact.command.domain),
+    string(body.event.fact.command.service),
+    number(body.event.fact.command.issuedTimestamp)
+  ]);
+
+  if (eventCommandFactSystemInputError)
+    throw badRequest.message(eventCommandFactSystemInputError.message);
 };

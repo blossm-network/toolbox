@@ -65,9 +65,13 @@ describe("Event store", () => {
         topic: "a.topic",
         service: "a-service",
         version: 0,
-        commandInstanceId: "someid",
-        command: "a.command",
-        commandIssuedTimestamp: 123,
+        command: {
+          id: "someId",
+          action: "some-action",
+          domain: "some-domain",
+          service: "some-service",
+          issuedTimestamp: 123
+        },
         traceId: "a-trace-id",
         createdTimestamp: 10
       },

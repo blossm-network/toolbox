@@ -10,9 +10,13 @@ const goodBody = {
       topic: "a.topic",
       service: "service",
       version: 0,
-      commandInstanceId: "someid",
-      command: "a.command",
-      commandIssuedTimestamp: 123,
+      command: {
+        id: "someId",
+        action: "some-action",
+        domain: "some-domain",
+        service: "some-service",
+        issuedTimestamp: 123
+      },
       traceId: "a-trace-id",
       createdTimestamp: 10
     },
@@ -110,7 +114,7 @@ describe("Validate add", () => {
   it("should throw if a bad root passed", async () => {
     const body = {
       ...goodBody,
-      "events.fact.root": 123
+      "event.fact.root": 123
     };
 
     expect(async () => await validate(body)).to.throw;
@@ -118,7 +122,7 @@ describe("Validate add", () => {
   it("should throw if no root is passed", async () => {
     const body = {
       ...goodBody,
-      "events.fact.root": undefined
+      "event.fact.root": undefined
     };
 
     expect(async () => await validate(body)).to.throw;
@@ -126,7 +130,7 @@ describe("Validate add", () => {
   it("should throw if a bad topic is passed", async () => {
     const body = {
       ...goodBody,
-      "events.fact.topic": 123
+      "event.fact.topic": 123
     };
 
     expect(async () => await validate(body)).to.throw;
@@ -134,7 +138,7 @@ describe("Validate add", () => {
   it("should throw if no topic is passed", async () => {
     const body = {
       ...goodBody,
-      "events.fact.topic": undefined
+      "event.fact.topic": undefined
     };
 
     expect(async () => await validate(body)).to.throw;
@@ -142,7 +146,7 @@ describe("Validate add", () => {
   it("should throw if a bad version is passed", async () => {
     const body = {
       ...goodBody,
-      "events.fact.version": {}
+      "event.fact.version": {}
     };
 
     expect(async () => await validate(body)).to.throw;
@@ -150,23 +154,7 @@ describe("Validate add", () => {
   it("should throw if no version is passed", async () => {
     const body = {
       ...goodBody,
-      "events.fact.version": undefined
-    };
-
-    expect(async () => await validate(body)).to.throw;
-  });
-  it("should throw if a bad command instance id is passed", async () => {
-    const body = {
-      ...goodBody,
-      "events.fact.commandInstanceId": 123
-    };
-
-    expect(async () => await validate(body)).to.throw;
-  });
-  it("should throw if no command instance id is passed", async () => {
-    const body = {
-      ...goodBody,
-      "events.fact.commandInstanceId": undefined
+      "event.fact.version": undefined
     };
 
     expect(async () => await validate(body)).to.throw;
@@ -174,7 +162,7 @@ describe("Validate add", () => {
   it("should throw if a bad command is passed", async () => {
     const body = {
       ...goodBody,
-      "events.fact.command": 123
+      "event.fact.command": 123
     };
 
     expect(async () => await validate(body)).to.throw;
@@ -182,7 +170,71 @@ describe("Validate add", () => {
   it("should throw if no command is passed", async () => {
     const body = {
       ...goodBody,
-      "events.fact.command": undefined
+      "event.fact.command": undefined
+    };
+
+    expect(async () => await validate(body)).to.throw;
+  });
+  it("should throw if a bad command id is passed", async () => {
+    const body = {
+      ...goodBody,
+      "event.fact.command.id": 123
+    };
+
+    expect(async () => await validate(body)).to.throw;
+  });
+  it("should throw if no command id is passed", async () => {
+    const body = {
+      ...goodBody,
+      "event.fact.command.id": undefined
+    };
+
+    expect(async () => await validate(body)).to.throw;
+  });
+  it("should throw if a bad command action is passed", async () => {
+    const body = {
+      ...goodBody,
+      "event.fact.command.action": 123
+    };
+
+    expect(async () => await validate(body)).to.throw;
+  });
+  it("should throw if no command action is passed", async () => {
+    const body = {
+      ...goodBody,
+      "event.fact.command.action": undefined
+    };
+
+    expect(async () => await validate(body)).to.throw;
+  });
+  it("should throw if a bad command domain is passed", async () => {
+    const body = {
+      ...goodBody,
+      "event.fact.command.domain": 123
+    };
+
+    expect(async () => await validate(body)).to.throw;
+  });
+  it("should throw if no command domain is passed", async () => {
+    const body = {
+      ...goodBody,
+      "event.fact.command.domain": undefined
+    };
+
+    expect(async () => await validate(body)).to.throw;
+  });
+  it("should throw if a bad command service is passed", async () => {
+    const body = {
+      ...goodBody,
+      "event.fact.command.service": 123
+    };
+
+    expect(async () => await validate(body)).to.throw;
+  });
+  it("should throw if no command service is passed", async () => {
+    const body = {
+      ...goodBody,
+      "event.fact.command.service": undefined
     };
 
     expect(async () => await validate(body)).to.throw;
@@ -190,15 +242,15 @@ describe("Validate add", () => {
   it("should throw if a bad command issued timestamp is passed", async () => {
     const body = {
       ...goodBody,
-      "events.fact.commandIssuedTimestamp": "nope"
+      "event.fact.command.issuedTimestamp": "Asdf"
     };
 
     expect(async () => await validate(body)).to.throw;
   });
-  it("should throw if no command issues timestamp is passed", async () => {
+  it("should throw if no command issued timestamp is passed", async () => {
     const body = {
       ...goodBody,
-      "events.fact.command": undefined
+      "event.fact.command.issuedTimestamp": undefined
     };
 
     expect(async () => await validate(body)).to.throw;
@@ -206,7 +258,7 @@ describe("Validate add", () => {
   it("should throw if a bad trace id is passed", async () => {
     const body = {
       ...goodBody,
-      "events.fact.traceId": 123
+      "event.fact.traceId": 123
     };
 
     expect(async () => await validate(body)).to.throw;
@@ -214,7 +266,7 @@ describe("Validate add", () => {
   it("should not throw if no traceId is passed", async () => {
     const body = {
       ...goodBody,
-      "events.fact.traceId": undefined
+      "event.fact.traceId": undefined
     };
 
     expect(async () => await validate(body)).to.not.throw;
@@ -222,7 +274,7 @@ describe("Validate add", () => {
   it("should throw if a bad created timestamp is passed", async () => {
     const body = {
       ...goodBody,
-      "events.fact.createdTimestamp": "nope"
+      "event.fact.createdTimestamp": "nope"
     };
 
     expect(async () => await validate(body)).to.throw;
@@ -230,7 +282,7 @@ describe("Validate add", () => {
   it("should throw if no created timestamp is passed", async () => {
     const body = {
       ...goodBody,
-      "events.fact.createdTimestamp": undefined
+      "event.fact.createdTimestamp": undefined
     };
 
     expect(async () => await validate(body)).to.throw;
