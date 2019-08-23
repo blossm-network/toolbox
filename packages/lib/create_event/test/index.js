@@ -31,14 +31,14 @@ describe("Create event", () => {
     const body = {
       traceId,
       id: commandId,
-      action: commandAction,
-      domain: commandDomain,
-      service: commandService,
       issuedTimestamp: commandIssuedTimestamp,
       authorizedService
     };
 
     const value = await createEvent(body, {
+      action: commandAction,
+      domain: commandDomain,
+      service: commandService,
       root,
       payload,
       version
@@ -80,14 +80,14 @@ describe("Create event", () => {
     const body = {
       traceId,
       id: commandId,
-      action: commandAction,
-      domain: commandDomain,
-      service: commandService,
       issuedTimestamp: commandIssuedTimestamp,
       authorizedService
     };
 
     const value = await createEvent(body, {
+      action: commandAction,
+      domain: commandDomain,
+      service: commandService,
       payload,
       version
     });

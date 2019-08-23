@@ -12,9 +12,6 @@ module.exports = async body => {
   const systemInputError = findError([
     object(body.issuerInfo, { optional: true }),
     string(body.traceId, { optional: true }),
-    string(body.action),
-    string(body.domain),
-    string(body.service),
     number(body.issuedTimestamp)
   ]);
 

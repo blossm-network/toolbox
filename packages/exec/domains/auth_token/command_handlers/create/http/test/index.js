@@ -42,14 +42,7 @@ describe("Create auth token", () => {
       }
     ];
 
-    const action = "some-action";
-    const domain = "some-domain";
-    const service = "some-service";
-
     const body = {
-      action,
-      domain,
-      service,
       payload: {
         permissions,
         metadata,
@@ -71,6 +64,9 @@ describe("Create auth token", () => {
     expect(deps.validateCommand).to.have.been.calledWith(body);
     expect(deps.normalizeCommand).to.have.been.calledWith(body);
     expect(deps.createEvent).to.have.been.calledWith(body, {
+      action: "create",
+      domain: "auth-token",
+      service: "core",
       version: 0,
       payload
     });
