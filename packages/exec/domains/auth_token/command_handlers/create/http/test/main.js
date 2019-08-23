@@ -45,9 +45,7 @@ describe("Create auth token", () => {
       issuedTimestamp: 123
     };
 
-    const { payload, response } = await main({
-      body
-    });
+    const { payload, response } = await main(body);
 
     expect(response).to.be.deep.equal({ token: newToken });
     expect(deps.newUuid).to.have.been.calledOnce;

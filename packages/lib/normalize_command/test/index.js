@@ -11,27 +11,22 @@ describe("Normalize command", () => {
     const newNonce = "newNonce!";
     replace(deps, "nonce", fake.returns(newNonce));
 
-    const info = {
+    const body = {
       action: "some-action",
       domain: "some-domain",
       service: "some-service"
     };
-    replace(deps, "commandInfoFromBody", fake.returns(info));
-
-    const body = {};
 
     await normalizeCommand(body);
 
     expect(body).to.deep.equal({
+      ...body,
       id: newNonce,
-      action: info.action,
-      domain: info.domain,
-      service: info.service,
       sourceCommand: {
         id: newNonce,
-        action: info.action,
-        domain: info.domain,
-        service: info.service
+        action: body.action,
+        domain: body.domain,
+        service: body.service
       }
     });
   });
@@ -43,14 +38,10 @@ describe("Normalize command", () => {
     const sourceCommandDomain = "command-domain!";
     const sourceCommandService = "command-service!";
 
-    const info = {
+    const body = {
       action: "some-action",
       domain: "some-domain",
-      service: "some-service"
-    };
-    replace(deps, "commandInfoFromBody", fake.returns(info));
-
-    const body = {
+      service: "some-service",
       sourceCommand: {
         action: sourceCommandAction,
         domain: sourceCommandDomain,
@@ -62,42 +53,30 @@ describe("Normalize command", () => {
     await normalizeCommand(body);
 
     expect(body).to.deep.equal({
-      id: newNonce,
-      action: info.action,
-      domain: info.domain,
-      service: info.service,
-      sourceCommand: {
-        id: sourceCommandId,
-        action: sourceCommandAction,
-        domain: sourceCommandDomain,
-        service: sourceCommandService
-      }
+      ...body,
+      id: newNonce
     });
   });
   it("should get called with expected params", async () => {
     const newNonce = "newNonce!";
     replace(deps, "nonce", fake.returns(newNonce));
-    const info = {
+
+    const body = {
       action: "some-action",
       domain: "some-domain",
       service: "some-service"
     };
-    replace(deps, "commandInfoFromBody", fake.returns(info));
-
-    const body = {};
 
     await normalizeCommand(body);
 
     expect(body).to.deep.equal({
+      ...body,
       id: newNonce,
-      action: info.action,
-      domain: info.domain,
-      service: info.service,
       sourceCommand: {
         id: newNonce,
-        action: info.action,
-        domain: info.domain,
-        service: info.service
+        action: body.action,
+        domain: body.domain,
+        service: body.service
       }
     });
   });

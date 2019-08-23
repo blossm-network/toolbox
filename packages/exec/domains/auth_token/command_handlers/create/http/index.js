@@ -12,7 +12,7 @@ module.exports = async ({ body, tokens, publishEventFn }) => {
   await deps.validateCommand(body);
   await validate(body);
   await deps.normalizeCommand(body);
-  const { payload, response } = await deps.main({ body });
+  const { payload, response } = await deps.main(body);
   const event = await deps.createEvent(body, {
     version,
     payload

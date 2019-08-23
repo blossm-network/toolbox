@@ -4,7 +4,7 @@ const { SECONDS_IN_MONTH } = require("@sustainer-network/consts");
 
 const SIX_MONTHS = 6 * SECONDS_IN_MONTH;
 
-module.exports = async ({ body }) => {
+module.exports = async body => {
   const root = await deps.newUuid();
   const token = await deps.createJwt({
     data: {

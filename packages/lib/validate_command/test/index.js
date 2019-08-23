@@ -6,7 +6,9 @@ const validateCommand = require("..");
 const now = new Date();
 
 const goodBody = {
-  name: "some-command",
+  action: "some-action",
+  domain: "some-domain",
+  service: "some-service",
   traceId: "traceId!",
   issuedTimestamp: datetime.fineTimestamp() - 2,
   payload: { a: 1 },
@@ -114,6 +116,51 @@ describe("Validate command", () => {
     const body = {
       ...goodBody,
       issuedTimestamp: undefined
+    };
+
+    expect(async () => await validateCommand(body)).to.throw;
+  });
+  it("should throw if a bad action is passed", async () => {
+    const body = {
+      ...goodBody,
+      action: 123
+    };
+    expect(async () => await validateCommand(body)).to.throw;
+  });
+  it("should throw if a no action is passed", async () => {
+    const body = {
+      ...goodBody,
+      action: undefined
+    };
+
+    expect(async () => await validateCommand(body)).to.throw;
+  });
+  it("should throw if a bad domain is passed", async () => {
+    const body = {
+      ...goodBody,
+      domain: 123
+    };
+    expect(async () => await validateCommand(body)).to.throw;
+  });
+  it("should throw if a no domain is passed", async () => {
+    const body = {
+      ...goodBody,
+      domain: undefined
+    };
+
+    expect(async () => await validateCommand(body)).to.throw;
+  });
+  it("should throw if a bad service is passed", async () => {
+    const body = {
+      ...goodBody,
+      service: 123
+    };
+    expect(async () => await validateCommand(body)).to.throw;
+  });
+  it("should throw if a no service is passed", async () => {
+    const body = {
+      ...goodBody,
+      service: undefined
     };
 
     expect(async () => await validateCommand(body)).to.throw;
