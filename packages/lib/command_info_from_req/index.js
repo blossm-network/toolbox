@@ -4,5 +4,9 @@ module.exports = req => {
 
   if (subdomains.length <= 3) return {};
 
-  return { name: subdomains[0], domain: subdomains[1], service: subdomains[2] };
+  return {
+    action: subdomains[0],
+    domain: subdomains[1],
+    service: subdomains[2]
+  };
 };
