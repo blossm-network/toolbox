@@ -1,5 +1,5 @@
 const { PubSub } = require("@google-cloud/pubsub");
-const { topic } = new PubSub();
+const pubsub = new PubSub();
 
 exports.publish = async event => {
   if (event.payload == undefined) event.payload = {};
@@ -7,7 +7,7 @@ exports.publish = async event => {
   const data = JSON.stringify(event);
   const buffer = Buffer.from(data);
 
-  const id = await topic(event.fact.topic).publish(buffer);
+  const id = await pubsub.topic(event.fact.topic).publish(buffer);
 
   return id;
 };
