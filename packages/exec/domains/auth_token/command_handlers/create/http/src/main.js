@@ -4,24 +4,31 @@ const { SECONDS_IN_MONTH } = require("@sustainer-network/consts");
 
 const SIX_MONTHS = 6 * SECONDS_IN_MONTH;
 
+const stringsFromAudience = audience =>
+  audience.map(
+    audience =>
+      `${audience.service}:${audience.domain}:${audience.root}:${audience.scope}`
+  );
+
 module.exports = async params => {
   const root = await deps.newUuid();
   const token = await deps.createJwt({
+    options: {
+      issuer: params.payload.issuer,
+      subject: params.payload.subject,
+      audience: stringsFromAudience(params.payload.audience),
+      expiresIn: SIX_MONTHS
+    },
     data: {
       root,
-      issuerInfo: params.issuerInfo,
-      account: params.payload.account,
-      permissions: params.payload.permissions,
-      metadata: params.payload.metadata
+      ...params.payload.metadata
     },
-    expiresIn: SIX_MONTHS,
     secret: process.env.SECRET
   });
 
   const payload = {
     token,
-    issuerInfo: params.issuerInfo,
-    account: params.payload.account
+    issuerInfo: params.issuerInfo
   };
 
   return { payload, response: { token } };

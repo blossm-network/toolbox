@@ -9,21 +9,23 @@ const { badRequest } = require("@sustainer-network/errors");
 
 module.exports = async params => {
   const systemInputError = findError([
-    objectArray(params.payload.permissions, { optional: true }),
+    objectArray(params.payload.audience, { optional: true }),
     object(params.payload.metadata),
-    string(params.payload.account)
+    string(params.payload.issuer),
+    string(params.payload.subject)
   ]);
 
   if (systemInputError) throw badRequest.message(systemInputError.message);
 
-  for (const permission of params.payload.permissions) {
-    const permissionsSystemInputError = findError([
-      string(permission.scope),
-      string(permission.domain),
-      string(permission.root)
+  for (const audience of params.payload.audience) {
+    const audienceSystemInputError = findError([
+      string(audience.service),
+      string(audience.domain),
+      string(audience.scope),
+      string(audience.root)
     ]);
 
-    if (permissionsSystemInputError)
-      throw badRequest.message(permissionsSystemInputError.message);
+    if (audienceSystemInputError)
+      throw badRequest.message(audienceSystemInputError.message);
   }
 };

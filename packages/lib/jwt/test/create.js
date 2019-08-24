@@ -4,12 +4,18 @@ const { create } = require("..");
 
 describe("Create", () => {
   it("it should create a jwt token if all variables are passed in", async () => {
-    const data = { key: "value" };
-    const secret = "secret";
     const options = {
-      expiresIn: 5
+      issuer: "some-iss",
+      subject: "some-sub",
+      audience: "some-aud",
+      expiresIn: 60
     };
-    const token = await create({ data, secret, options });
+    const secret = "secret";
+    const payload = {
+      root: "some-root",
+      a: 1
+    };
+    const token = await create({ payload, secret, options });
 
     expect(token).to.exist;
   });

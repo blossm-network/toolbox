@@ -19,7 +19,6 @@ describe("Create auth token", () => {
     const jwtCreateFake = fake.returns(newToken);
     replace(deps, "createJwt", jwtCreateFake);
 
-    const account = "good-account-root";
     const issuerInfo = {
       id: "good-id",
       ip: "good-ip"
@@ -29,17 +28,29 @@ describe("Create auth token", () => {
       b: 2
     };
 
-    const permissions = [
+    const service = "good-service";
+    const domain = "good-domain";
+    const root = "good-root";
+    const scope = "good-command";
+
+    const audience = [
       {
-        command: "good-command",
-        root: "good-root"
+        service,
+        domain,
+        root,
+        scope
       }
     ];
+
+    const issuer = "good-issuer-principle";
+    const subject = "good-subject-principle";
+
     const params = {
       payload: {
-        permissions,
+        audience,
         metadata,
-        account
+        issuer,
+        subject
       },
       issuerInfo,
       issuedTimestamp: 123
@@ -50,20 +61,21 @@ describe("Create auth token", () => {
     expect(response).to.be.deep.equal({ token: newToken });
     expect(deps.newUuid).to.have.been.calledOnce;
     expect(deps.createJwt).to.have.been.calledWith({
+      options: {
+        issuer,
+        subject,
+        audience: [`${service}:${domain}:${root}:${scope}`],
+        expiresIn: 15552000
+      },
       data: {
         root: newUuid,
-        account,
-        issuerInfo,
-        permissions,
-        metadata
+        ...metadata
       },
-      expiresIn: 15552000,
-      secret
+      secret: process.env.SECRET
     });
     expect(payload).to.deep.equal({
       token: newToken,
-      issuerInfo,
-      account
+      issuerInfo
     });
   });
 });

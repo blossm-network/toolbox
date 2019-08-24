@@ -3,10 +3,12 @@ const validate = require("../src/validate");
 
 const goodParams = {
   payload: {
-    account: "some-account-root",
-    permissions: [
+    issuer: "some-principle-root",
+    subject: "some-other-principle-root",
+    audience: [
       {
         domain: "good-domain",
+        service: "good-service",
         root: "good-root",
         scope: "read"
       }
@@ -22,18 +24,50 @@ describe("Validate", () => {
   it("should handle correct params correctly", async () => {
     expect(await validate(goodParams)).to.not.throw;
   });
-  it("should throw if bad permissions are passed", async () => {
+  it("should throw if bad audience are passed", async () => {
     const params = {
       ...goodParams,
-      "payload.permissions": 123
+      "payload.audience": 123
     };
 
     expect(async () => await validate(params)).to.throw;
   });
-  it("should throw if no permissions are passed", async () => {
+  it("should throw if no audience are passed", async () => {
     const params = {
       ...goodParams,
-      "payload.permissions": undefined
+      "payload.audience": undefined
+    };
+
+    expect(async () => await validate(params)).to.throw;
+  });
+  it("should throw if bad issuer is passed", async () => {
+    const params = {
+      ...goodParams,
+      "payload.issuer": 123
+    };
+
+    expect(async () => await validate(params)).to.throw;
+  });
+  it("should throw if no issuer is passed", async () => {
+    const params = {
+      ...goodParams,
+      "payload.issuer": undefined
+    };
+
+    expect(async () => await validate(params)).to.throw;
+  });
+  it("should throw if bad subject is passed", async () => {
+    const params = {
+      ...goodParams,
+      "payload.subject": 123
+    };
+
+    expect(async () => await validate(params)).to.throw;
+  });
+  it("should throw if no subject is passed", async () => {
+    const params = {
+      ...goodParams,
+      "payload.subject": undefined
     };
 
     expect(async () => await validate(params)).to.throw;
@@ -53,37 +87,38 @@ describe("Validate", () => {
 
     expect(async () => await validate(params)).to.throw;
   });
-  it("should throw if a bad domain is passed in a permission", async () => {
+  it("should throw if a bad domain is passed in a audience", async () => {
     const params = {
       ...goodParams,
-      "payload.permissions": [
+      "payload.audience": [
         {
-          domain: 123,
-          root: "good-root"
+          ...goodParams.payload.audience,
+          domain: 123
         }
       ]
     };
 
     expect(async () => await validate(params)).to.throw;
   });
-  it("should throw if no domain is passed in a permission", async () => {
+  it("should throw if no domain is passed in a audience", async () => {
     const params = {
       ...goodParams,
-      "payload.permissions": [
+      "payload.audience": [
         {
-          root: "good-root"
+          ...goodParams.payload.audience,
+          domain: undefined
         }
       ]
     };
 
     expect(async () => await validate(params)).to.throw;
   });
-  it("should throw if a bad root is passed in a permission", async () => {
+  it("should throw if a bad root is passed in a audience", async () => {
     const params = {
       ...goodParams,
-      "payload.permissions": [
+      "payload.audience": [
         {
-          domain: "good-domain",
+          ...goodParams.payload.audience,
           root: 342
         }
       ]
@@ -91,25 +126,25 @@ describe("Validate", () => {
 
     expect(async () => await validate(params)).to.throw;
   });
-  it("should throw if no root is passed in a permission", async () => {
+  it("should throw if no root is passed in a audience", async () => {
     const params = {
       ...goodParams,
-      "payload.permissions": [
+      "payload.audience": [
         {
-          domain: "good-domain"
+          ...goodParams.payload.audience,
+          root: undefined
         }
       ]
     };
 
     expect(async () => await validate(params)).to.throw;
   });
-  it("should throw if a bad scope is passed in a permission", async () => {
+  it("should throw if a bad scope is passed in a audience", async () => {
     const params = {
       ...goodParams,
-      "payload.permissions": [
+      "payload.audience": [
         {
-          domain: "good-domain",
-          root: "good-root",
+          ...goodParams.payload.audience,
           scope: 123
         }
       ]
@@ -117,13 +152,39 @@ describe("Validate", () => {
 
     expect(async () => await validate(params)).to.throw;
   });
-  it("should throw if no scope is passed in a permission", async () => {
+  it("should throw if no scope is passed in a audience", async () => {
     const params = {
       ...goodParams,
-      "payload.permissions": [
+      "payload.audience": [
         {
-          command: "good-command",
-          root: "good-root"
+          ...goodParams.payload.audience,
+          scope: undefined
+        }
+      ]
+    };
+
+    expect(async () => await validate(params)).to.throw;
+  });
+  it("should throw if a bad service is passed in a audience", async () => {
+    const params = {
+      ...goodParams,
+      "payload.audience": [
+        {
+          ...goodParams.payload.audience,
+          service: 123
+        }
+      ]
+    };
+
+    expect(async () => await validate(params)).to.throw;
+  });
+  it("should throw if no scope is passed in a audience", async () => {
+    const params = {
+      ...goodParams,
+      "payload.audience": [
+        {
+          ...goodParams.payload.audience,
+          service: undefined
         }
       ]
     };

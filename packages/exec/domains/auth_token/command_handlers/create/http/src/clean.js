@@ -1,13 +1,23 @@
 module.exports = async params => {
   for (const key in params.payload) {
-    if (key != "permissions" && key != "metadata" && key != "account") {
+    if (
+      key != "audience" &&
+      key != "metadata" &&
+      key != "issuer" &&
+      key != "subject"
+    ) {
       delete params.payload[key];
     }
   }
-  for (const permission of params.payload.permissions) {
-    for (const key in permission) {
-      if (key != "scope" && key != "domain" && key != "root") {
-        delete permission[key];
+  for (const audience of params.payload.audience) {
+    for (const key in audience) {
+      if (
+        key != "scope" &&
+        key != "domain" &&
+        key != "root" &&
+        key != "service"
+      ) {
+        delete audience[key];
       }
     }
   }

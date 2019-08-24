@@ -24,7 +24,9 @@ describe("Create auth token", () => {
     const mainFake = fake.returns({ payload, response });
     replace(deps, "main", mainFake);
 
-    const account = "good-account-root";
+    const issuer = "good-principle-root";
+    const subject = "good-other-principle-root";
+
     const issuerInfo = {
       id: "good-id",
       ip: "good-ip"
@@ -34,8 +36,9 @@ describe("Create auth token", () => {
       b: 2
     };
 
-    const permissions = [
+    const audience = [
       {
+        service: "good-service",
         domain: "good-domain",
         root: "good-root",
         scope: "scope"
@@ -44,9 +47,10 @@ describe("Create auth token", () => {
 
     const params = {
       payload: {
-        permissions,
+        audience,
         metadata,
-        account
+        issuer,
+        subject
       },
       issuerInfo,
       issuedTimestamp: 123

@@ -5,7 +5,7 @@ describe("Clean", () => {
   it("should handle correct params correctly", async () => {
     const params = {
       payload: {
-        permissions: [{ bogus: 23 }],
+        audience: [{ bogus: 23 }],
         bogus: 23
       }
     };
@@ -13,6 +13,6 @@ describe("Clean", () => {
     await clean(params);
 
     expect(params.payload.metadata).to.deep.equal({});
-    expect(params.payload.permissions).to.deep.equal([{}]);
+    expect(params.payload.audience).to.deep.equal([{}]);
   });
 });
