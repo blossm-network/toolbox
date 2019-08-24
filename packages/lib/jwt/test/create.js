@@ -8,7 +8,7 @@ describe("Create", () => {
       issuer: "some-iss",
       subject: "some-sub",
       audience: "some-aud",
-      expiresIn: 60
+      expiresIn: 50
     };
     const secret = "secret";
     const payload = {
