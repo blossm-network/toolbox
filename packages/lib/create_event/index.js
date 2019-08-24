@@ -9,7 +9,7 @@ module.exports = async (
   return {
     fact: {
       root: root || (await deps.makeUuid()),
-      topic: `did-${action}.${domain}.${isStaging ? "staging." : ""}${service}`,
+      topic: `did-${action}.${domain}.${service}${isStaging ? ".staging" : ""}`,
       service: params.authorizedService,
       version,
       traceId: params.traceId,

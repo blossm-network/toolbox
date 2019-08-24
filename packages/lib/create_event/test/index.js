@@ -85,7 +85,7 @@ describe("Create event", () => {
     expect(value).to.deep.equal({
       fact: {
         root,
-        topic: `did-${commandAction}.${commandDomain}.staging.${commandService}`,
+        topic: `did-${commandAction}.${commandDomain}.${commandService}.staging`,
         service: authorizedService,
         version,
         traceId,
