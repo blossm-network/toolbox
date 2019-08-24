@@ -62,7 +62,7 @@ describe("Event store", () => {
     });
 
     expect(post).to.have.been.calledWith(
-      "https://event-store.sustainer.network/add",
+      "https://event-store.core.sustainer.network/add",
       {
         domain: commandDomain,
         service: commandService,
@@ -110,7 +110,7 @@ describe("Event store", () => {
     });
 
     expect(post).to.have.been.calledWith(
-      "https://event-store.sustainer.network/add",
+      "https://event-store.core.sustainer.network/add",
       {
         domain: commandDomain,
         service: commandService,
@@ -147,7 +147,7 @@ describe("Event store", () => {
     await eventStore.hydrate({ root, domain, service });
 
     expect(get).to.have.been.calledWith(
-      "https://event-store.sustainer.network/hydrate",
+      "https://event-store.core.sustainer.network/hydrate",
       { domain, root, service }
     );
   });

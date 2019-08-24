@@ -27,14 +27,16 @@ module.exports = {
     };
 
     await request.post(
-      `https://event-store${isStaging ? ".staging" : ""}.sustainer.network/add`,
+      `https://event-store.core${
+        isStaging ? ".staging" : ""
+      }.sustainer.network/add`,
       { event, domain: command.domain, service: command.service }
     );
   },
   hydrate: async ({ root, domain, service }) => {
     const isStaging = process.env.NODE_ENV == "staging";
     await request.get(
-      `https://event-store${
+      `https://event-store.core${
         isStaging ? ".staging" : ""
       }.sustainer.network/hydrate`,
       { root, domain, service }
