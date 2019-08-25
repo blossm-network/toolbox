@@ -39,18 +39,11 @@ describe("Create auth token", () => {
       b: 2
     };
 
-    const audience = [
-      {
-        service: "good-service",
-        domain: "good-domain",
-        root: "good-root",
-        scope: "scope"
-      }
-    ];
+    const audiences = ["one", "two"];
 
     const params = {
       payload: {
-        audience,
+        audiences,
         metadata,
         issuer,
         subject
