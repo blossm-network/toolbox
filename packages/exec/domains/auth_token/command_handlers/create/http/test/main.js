@@ -54,7 +54,7 @@ describe("Create auth token", () => {
         issuer: `create.auth-token.core.${process.env.NETWORK}`,
         subject,
         audience: `${audience0},${audience1}`,
-        expiresIn: 15552000
+        expiresIn: 7776000
       },
       data: {
         root: newUuid,
@@ -98,7 +98,7 @@ describe("Create auth token", () => {
         issuer: `create.auth-token.core.staging.${process.env.NETWORK}`,
         subject,
         audience: `${audience0},${audience1}`,
-        expiresIn: 15552000
+        expiresIn: 7776000
       },
       data: {
         root: newUuid,
