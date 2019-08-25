@@ -12,8 +12,10 @@ module.exports = async (
       topic: `did-${action}.${domain}.${service}${
         isStaging ? ".staging" : ""
       }.${network}`,
-      service: params.authorized.service,
-      network: params.authorized.network,
+      ...(params.authorized != undefined && {
+        service: params.authorized.service,
+        network: params.authorized.network
+      }),
       version,
       traceId: params.traceId,
       createdTimestamp: datetime.fineTimestamp(),

@@ -154,4 +154,40 @@ describe("Create event", () => {
       payload
     });
   });
+  it("should get called with expected params if authorized is missing", async () => {
+    const params = {
+      traceId,
+      id: commandId,
+      issuedTimestamp: commandIssuedTimestamp
+    };
+
+    const value = await createEvent(params, {
+      action: commandAction,
+      domain: commandDomain,
+      root,
+      service: commandService,
+      network: commandNetwork,
+      payload,
+      version
+    });
+
+    expect(value).to.deep.equal({
+      fact: {
+        root,
+        topic: `did-${commandAction}.${commandDomain}.${commandService}.${commandNetwork}`,
+        version,
+        traceId,
+        createdTimestamp: datetime.fineTimestamp(),
+        command: {
+          id: commandId,
+          action: commandAction,
+          domain: commandDomain,
+          service: commandService,
+          network: commandNetwork,
+          issuedTimestamp: commandIssuedTimestamp
+        }
+      },
+      payload
+    });
+  });
 });
