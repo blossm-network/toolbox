@@ -1,9 +1,9 @@
 const deps = require("../deps");
 const { action, domain, service } = require("../config");
 
-const { SECONDS_IN_MONTH } = require("@sustainer-network/consts");
+const { SECONDS_IN_DAY } = require("@sustainer-network/consts");
 
-const THREE_MONTHS = 3 * SECONDS_IN_MONTH;
+const NINETY_DAYS = 90 * SECONDS_IN_DAY;
 
 module.exports = async params => {
   const root = await deps.newUuid();
@@ -19,7 +19,7 @@ module.exports = async params => {
       issuer,
       subject: params.payload.subject,
       audience: params.payload.audiences.join(","),
-      expiresIn: THREE_MONTHS
+      expiresIn: NINETY_DAYS
     },
     data: {
       root,
