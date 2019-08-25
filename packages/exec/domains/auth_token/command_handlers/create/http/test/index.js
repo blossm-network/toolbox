@@ -15,6 +15,8 @@ describe("Create auth token", () => {
   });
   it("should execute the request correctly", async () => {
     replace(deps, "cleanCommand", fake());
+    const context = "some-context";
+    replace(deps, "authorizeCommand", fake.returns(context));
     replace(deps, "validateCommand", fake());
     replace(deps, "normalizeCommand", fake());
 
@@ -54,20 +56,36 @@ describe("Create auth token", () => {
 
     const publishEventFn = fake();
 
+    const tokens = "tokens";
     const result = await createAuthToken({
       params,
+      tokens,
       publishEventFn
     });
 
     expect(result).to.be.deep.equal(response);
+    expect(deps.authorizeCommand).to.have.been.calledWith({
+      params,
+      tokens,
+      network: process.env.NETWORK,
+      service: "core",
+      domain: "auth-token",
+      action: "create"
+    });
     expect(deps.cleanCommand).to.have.been.calledWith(params);
     expect(deps.validateCommand).to.have.been.calledWith(params);
     expect(deps.normalizeCommand).to.have.been.calledWith(params);
-    expect(deps.createEvent).to.have.been.calledWith(params, {
-      action: "create",
-      domain: "auth-token",
-      service: "core",
-      network,
+    expect(deps.createEvent).to.have.been.calledWith({
+      context,
+      traceId: params.traceId,
+      command: {
+        action: "create",
+        domain: "auth-token",
+        service: "core",
+        network,
+        id: params.id,
+        issuedTimestamp: params.issuedTimestamp
+      },
       version: 0,
       payload
     });

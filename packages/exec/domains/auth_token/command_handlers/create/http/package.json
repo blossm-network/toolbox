@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@sustainer-network/clean-command": "^0.0.4",
+    "@sustainer-network/authorize-command": "*",
     "@sustainer-network/consts": "^0.0.1",
     "@sustainer-network/create-event": "^0.0.13",
     "@sustainer-network/datetime": "^0.0.2",

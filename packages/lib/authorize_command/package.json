@@ -1,0 +1,19 @@
+{
+  "name": "@sustainer-network/authorize-command",
+  "version": "0.0.0",
+  "description": "Authorize command requests.",
+  "main": "index.js",
+  "author": "sustainernetwork.org",
+  "engines": {
+    "node": ">= 10.16.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "devDependencies": {
+    "mocha": "^6.1.4"
+  }
+}

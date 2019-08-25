@@ -1,10 +1,14 @@
 const datetime = require("@sustainer-network/datetime");
 const deps = require("./deps");
 
-module.exports = async (
-  params,
-  { action, domain, service, network, root, payload, version } = {}
-) => {
+module.exports = async ({
+  root,
+  payload,
+  version,
+  traceId,
+  context,
+  command: { id, action, domain, service, network, issuedTimestamp }
+} = {}) => {
   const isStaging = process.env.NODE_ENV == "staging";
   return {
     fact: {
@@ -12,20 +16,17 @@ module.exports = async (
       topic: `did-${action}.${domain}.${service}${
         isStaging ? ".staging" : ""
       }.${network}`,
-      ...(params.authorized != undefined && {
-        service: params.authorized.service,
-        network: params.authorized.network
-      }),
+      ...(context != undefined && { context }),
       version,
-      traceId: params.traceId,
+      traceId,
       createdTimestamp: datetime.fineTimestamp(),
       command: {
-        id: params.id,
+        id,
         action,
         domain,
         service,
         network,
-        issuedTimestamp: params.issuedTimestamp
+        issuedTimestamp
       }
     },
     payload

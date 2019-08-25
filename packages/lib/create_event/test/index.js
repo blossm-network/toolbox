@@ -16,9 +16,10 @@ const commandService = "command-service!";
 const commandNetwork = "command-network!";
 const commandIssuedTimestamp = 23;
 const root = "root!";
-const authorized = {
+const context = {
   service: "some-authorized-service",
-  network: "some-authorized-network"
+  network: "some-authorized-network",
+  principle: "some-principle"
 };
 
 const payload = { a: 1 };
@@ -34,18 +35,17 @@ describe("Create event", () => {
     restore();
   });
   it("should get called with expected params", async () => {
-    const params = {
+    const value = await createEvent({
       traceId,
-      id: commandId,
-      issuedTimestamp: commandIssuedTimestamp,
-      authorized
-    };
-
-    const value = await createEvent(params, {
-      action: commandAction,
-      domain: commandDomain,
-      service: commandService,
-      network: commandNetwork,
+      context,
+      command: {
+        id: commandId,
+        issuedTimestamp: commandIssuedTimestamp,
+        action: commandAction,
+        domain: commandDomain,
+        service: commandService,
+        network: commandNetwork
+      },
       root,
       payload,
       version
@@ -55,8 +55,11 @@ describe("Create event", () => {
       fact: {
         root,
         topic: `did-${commandAction}.${commandDomain}.${commandService}.${commandNetwork}`,
-        service: authorized.service,
-        network: authorized.network,
+        context: {
+          service: context.service,
+          network: context.network,
+          principle: context.principle
+        },
         version,
         traceId,
         createdTimestamp: datetime.fineTimestamp(),
@@ -74,19 +77,18 @@ describe("Create event", () => {
   });
 
   it("should get called with expected params in staging", async () => {
-    const params = {
-      traceId,
-      id: commandId,
-      issuedTimestamp: commandIssuedTimestamp,
-      authorized
-    };
-
     process.env.NODE_ENV = "staging";
-    const value = await createEvent(params, {
-      action: commandAction,
-      domain: commandDomain,
-      service: commandService,
-      network: commandNetwork,
+    const value = await createEvent({
+      command: {
+        id: commandId,
+        issuedTimestamp: commandIssuedTimestamp,
+        action: commandAction,
+        domain: commandDomain,
+        service: commandService,
+        network: commandNetwork
+      },
+      traceId,
+      context,
       root,
       payload,
       version
@@ -96,8 +98,11 @@ describe("Create event", () => {
       fact: {
         root,
         topic: `did-${commandAction}.${commandDomain}.${commandService}.staging.${commandNetwork}`,
-        service: authorized.service,
-        network: authorized.network,
+        context: {
+          service: context.service,
+          network: context.network,
+          principle: context.principle
+        },
         version,
         traceId,
         createdTimestamp: datetime.fineTimestamp(),
@@ -117,18 +122,17 @@ describe("Create event", () => {
     const newUuid = "newUuid!";
     replace(deps, "makeUuid", fake.returns(newUuid));
 
-    const params = {
+    const value = await createEvent({
       traceId,
-      id: commandId,
-      issuedTimestamp: commandIssuedTimestamp,
-      authorized
-    };
-
-    const value = await createEvent(params, {
-      action: commandAction,
-      domain: commandDomain,
-      service: commandService,
-      network: commandNetwork,
+      command: {
+        action: commandAction,
+        domain: commandDomain,
+        service: commandService,
+        network: commandNetwork,
+        id: commandId,
+        issuedTimestamp: commandIssuedTimestamp
+      },
+      context,
       payload,
       version
     });
@@ -137,8 +141,11 @@ describe("Create event", () => {
       fact: {
         root: newUuid,
         topic: `did-${commandAction}.${commandDomain}.${commandService}.${commandNetwork}`,
-        service: authorized.service,
-        network: authorized.network,
+        context: {
+          service: context.service,
+          network: context.network,
+          principle: context.principle
+        },
         version,
         traceId,
         createdTimestamp: datetime.fineTimestamp(),
@@ -155,18 +162,58 @@ describe("Create event", () => {
     });
   });
   it("should get called with expected params if authorized is missing", async () => {
-    const params = {
+    const value = await createEvent({
       traceId,
-      id: commandId,
-      issuedTimestamp: commandIssuedTimestamp
-    };
-
-    const value = await createEvent(params, {
-      action: commandAction,
-      domain: commandDomain,
+      context,
+      command: {
+        action: commandAction,
+        domain: commandDomain,
+        service: commandService,
+        network: commandNetwork,
+        id: commandId,
+        issuedTimestamp: commandIssuedTimestamp
+      },
       root,
-      service: commandService,
-      network: commandNetwork,
+      payload,
+      version
+    });
+
+    expect(value).to.deep.equal({
+      fact: {
+        root,
+        topic: `did-${commandAction}.${commandDomain}.${commandService}.${commandNetwork}`,
+        version,
+        traceId,
+        createdTimestamp: datetime.fineTimestamp(),
+        context: {
+          service: context.service,
+          network: context.network,
+          principle: context.principle
+        },
+        command: {
+          id: commandId,
+          action: commandAction,
+          domain: commandDomain,
+          service: commandService,
+          network: commandNetwork,
+          issuedTimestamp: commandIssuedTimestamp
+        }
+      },
+      payload
+    });
+  });
+  it("should get called with expected params if context is missing", async () => {
+    const value = await createEvent({
+      traceId,
+      command: {
+        id: commandId,
+        issuedTimestamp: commandIssuedTimestamp,
+        action: commandAction,
+        domain: commandDomain,
+        service: commandService,
+        network: commandNetwork
+      },
+      root,
       payload,
       version
     });
