@@ -6,6 +6,9 @@ const createAuthToken = require("..");
 const secret = "SECRET!";
 process.env.SECRET = secret;
 
+const network = "network!";
+process.env.NETWORK = network;
+
 describe("Create auth token", () => {
   afterEach(() => {
     restore();
@@ -71,6 +74,7 @@ describe("Create auth token", () => {
       action: "create",
       domain: "auth-token",
       service: "core",
+      network,
       version: 0,
       payload
     });

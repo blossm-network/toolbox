@@ -1,22 +1,24 @@
 const deps = require("../deps");
+const { action, domain, service } = require("../config");
 
 const { SECONDS_IN_MONTH } = require("@sustainer-network/consts");
 
 const SIX_MONTHS = 6 * SECONDS_IN_MONTH;
 
-const stringsFromAudience = audience =>
-  audience.map(
-    audience =>
-      `${audience.service}:${audience.domain}:${audience.root}:${audience.scope}`
-  );
-
 module.exports = async params => {
   const root = await deps.newUuid();
+
+  const isStaging = process.env.NODE_ENV == "staging";
+
+  const issuer = `${action}.${domain}.${service}.${
+    isStaging ? "staging." : ""
+  }${process.env.NETWORK}`;
+
   const token = await deps.createJwt({
     options: {
-      issuer: params.payload.issuer,
+      issuer,
       subject: params.payload.subject,
-      audience: stringsFromAudience(params.payload.audience),
+      audience: params.payload.audiences.join(","),
       expiresIn: SIX_MONTHS
     },
     data: {

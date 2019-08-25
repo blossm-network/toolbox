@@ -13,9 +13,14 @@ const commandId = "command-id!";
 const commandAction = "command-action!";
 const commandDomain = "command-domain!";
 const commandService = "command-service!";
+const commandNetwork = "command-network!";
 const commandIssuedTimestamp = 23;
 const root = "root!";
-const authorizedService = "some-authorized-service";
+const authorized = {
+  service: "some-authorized-service",
+  network: "some-authorized-network"
+};
+
 const payload = { a: 1 };
 const version = 0;
 
@@ -33,13 +38,14 @@ describe("Create event", () => {
       traceId,
       id: commandId,
       issuedTimestamp: commandIssuedTimestamp,
-      authorizedService
+      authorized
     };
 
     const value = await createEvent(params, {
       action: commandAction,
       domain: commandDomain,
       service: commandService,
+      network: commandNetwork,
       root,
       payload,
       version
@@ -48,8 +54,9 @@ describe("Create event", () => {
     expect(value).to.deep.equal({
       fact: {
         root,
-        topic: `did-${commandAction}.${commandDomain}.${commandService}`,
-        service: authorizedService,
+        topic: `did-${commandAction}.${commandDomain}.${commandService}.${commandNetwork}`,
+        service: authorized.service,
+        network: authorized.network,
         version,
         traceId,
         createdTimestamp: datetime.fineTimestamp(),
@@ -58,18 +65,20 @@ describe("Create event", () => {
           action: commandAction,
           domain: commandDomain,
           service: commandService,
+          network: commandNetwork,
           issuedTimestamp: commandIssuedTimestamp
         }
       },
       payload
     });
   });
+
   it("should get called with expected params in staging", async () => {
     const params = {
       traceId,
       id: commandId,
       issuedTimestamp: commandIssuedTimestamp,
-      authorizedService
+      authorized
     };
 
     process.env.NODE_ENV = "staging";
@@ -77,6 +86,7 @@ describe("Create event", () => {
       action: commandAction,
       domain: commandDomain,
       service: commandService,
+      network: commandNetwork,
       root,
       payload,
       version
@@ -85,8 +95,9 @@ describe("Create event", () => {
     expect(value).to.deep.equal({
       fact: {
         root,
-        topic: `did-${commandAction}.${commandDomain}.${commandService}.staging`,
-        service: authorizedService,
+        topic: `did-${commandAction}.${commandDomain}.${commandService}.staging.${commandNetwork}`,
+        service: authorized.service,
+        network: authorized.network,
         version,
         traceId,
         createdTimestamp: datetime.fineTimestamp(),
@@ -95,6 +106,7 @@ describe("Create event", () => {
           action: commandAction,
           domain: commandDomain,
           service: commandService,
+          network: commandNetwork,
           issuedTimestamp: commandIssuedTimestamp
         }
       },
@@ -109,13 +121,14 @@ describe("Create event", () => {
       traceId,
       id: commandId,
       issuedTimestamp: commandIssuedTimestamp,
-      authorizedService
+      authorized
     };
 
     const value = await createEvent(params, {
       action: commandAction,
       domain: commandDomain,
       service: commandService,
+      network: commandNetwork,
       payload,
       version
     });
@@ -123,8 +136,9 @@ describe("Create event", () => {
     expect(value).to.deep.equal({
       fact: {
         root: newUuid,
-        topic: `did-${commandAction}.${commandDomain}.${commandService}`,
-        service: authorizedService,
+        topic: `did-${commandAction}.${commandDomain}.${commandService}.${commandNetwork}`,
+        service: authorized.service,
+        network: authorized.network,
         version,
         traceId,
         createdTimestamp: datetime.fineTimestamp(),
@@ -133,6 +147,7 @@ describe("Create event", () => {
           action: commandAction,
           domain: commandDomain,
           service: commandService,
+          network: commandNetwork,
           issuedTimestamp: commandIssuedTimestamp
         }
       },

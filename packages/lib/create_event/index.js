@@ -3,14 +3,17 @@ const deps = require("./deps");
 
 module.exports = async (
   params,
-  { action, domain, service, root, payload, version } = {}
+  { action, domain, service, network, root, payload, version } = {}
 ) => {
   const isStaging = process.env.NODE_ENV == "staging";
   return {
     fact: {
       root: root || (await deps.makeUuid()),
-      topic: `did-${action}.${domain}.${service}${isStaging ? ".staging" : ""}`,
-      service: params.authorizedService,
+      topic: `did-${action}.${domain}.${service}${
+        isStaging ? ".staging" : ""
+      }.${network}`,
+      service: params.authorized.service,
+      network: params.authorized.network,
       version,
       traceId: params.traceId,
       createdTimestamp: datetime.fineTimestamp(),
@@ -19,6 +22,7 @@ module.exports = async (
         action,
         domain,
         service,
+        network,
         issuedTimestamp: params.issuedTimestamp
       }
     },

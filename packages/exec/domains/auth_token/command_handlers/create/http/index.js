@@ -16,6 +16,7 @@ module.exports = async ({ params, tokens, publishEventFn }) => {
   const { payload, response } = await deps.main(params);
   const event = await deps.createEvent(params, {
     ...config,
+    network: process.env.NETWORK,
     version,
     payload
   });
