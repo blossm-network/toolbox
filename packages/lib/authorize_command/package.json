@@ -1,6 +1,6 @@
 {
   "name": "@sustainer-network/authorize-command",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Authorize command requests.",
   "main": "index.js",
   "author": "sustainernetwork.org",
@@ -11,8 +11,8 @@
     "access": "public"
   },
   "dependencies": {
-    "@sustainer-network/jwt": "*",
-    "@sustainer-network/array-intersection": "*"
+    "@sustainer-network/array-intersection": "^0.0.1",
+    "@sustainer-network/jwt": "*"
   },
   "scripts": {
     "test": "mocha"
