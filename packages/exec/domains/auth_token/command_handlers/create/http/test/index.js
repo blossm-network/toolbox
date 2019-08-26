@@ -7,17 +7,19 @@ const secret = "SECRET!";
 process.env.SECRET = secret;
 
 const network = "network!";
-process.env.NETWORK = network;
 
 describe("Create auth token", () => {
+  beforeEach(() => {
+    process.env.NETWORK = network;
+  });
   afterEach(() => {
     restore();
   });
   it("should execute the request correctly", async () => {
     replace(deps, "cleanCommand", fake());
-    const context = "some-context";
-    replace(deps, "authorizeCommand", fake.returns(context));
     replace(deps, "validateCommand", fake());
+    const authContext = "some-auth-context";
+    replace(deps, "authorizeCommand", fake.returns({ context: authContext }));
     replace(deps, "normalizeCommand", fake());
 
     const event = "event!";
@@ -30,28 +32,34 @@ describe("Create auth token", () => {
     replace(deps, "main", mainFake);
 
     const issuer = "good-principle-root";
-    const subject = "good-other-principle-root";
+    const principle = "good-other-principle-root";
 
     const issuerInfo = {
       id: "good-id",
       ip: "good-ip"
     };
-    const metadata = {
-      a: 1,
-      b: 2
-    };
 
     const audiences = ["one", "two"];
 
+    const context = {
+      a: 2
+    };
+
+    const goodScope = {
+      domain: "some-scope-domain",
+      root: "some-scope-root",
+      priviledge: "some-scope-priviledge"
+    };
+
     const params = {
-      payload: {
-        audiences,
-        metadata,
-        issuer,
-        subject
-      },
+      context,
+      scopes: [goodScope],
+      audiences,
+      issuer,
+      principle,
       issuerInfo,
-      issuedTimestamp: 123
+      issuedTimestamp: 123,
+      id: "some-id"
     };
 
     const publishEventFn = fake();
@@ -64,20 +72,12 @@ describe("Create auth token", () => {
     });
 
     expect(result).to.be.deep.equal(response);
-    expect(deps.authorizeCommand).to.have.been.calledWith({
-      params,
-      tokens,
-      network: process.env.NETWORK,
-      service: "core",
-      domain: "auth-token",
-      action: "create"
-    });
     expect(deps.cleanCommand).to.have.been.calledWith(params);
     expect(deps.validateCommand).to.have.been.calledWith(params);
     expect(deps.normalizeCommand).to.have.been.calledWith(params);
     expect(deps.createEvent).to.have.been.calledWith({
-      context,
       traceId: params.traceId,
+      context: authContext,
       command: {
         action: "create",
         domain: "auth-token",

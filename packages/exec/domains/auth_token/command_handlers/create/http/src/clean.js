@@ -1,8 +1,20 @@
 module.exports = async params => {
-  for (const key in params.payload) {
-    if (key != "audiences" && key != "metadata" && key != "subject") {
-      delete params.payload[key];
+  for (const key in params) {
+    if (
+      key != "audiences" &&
+      key != "principle" &&
+      key != "scopes" &&
+      key != "context"
+    ) {
+      delete params[key];
     }
   }
-  params.payload.metadata = params.payload.metadata || {};
+
+  for (const scope of params.scopes) {
+    for (const key in scope) {
+      if (key != "domain" && key != "root" && key != "priviledge") {
+        delete scope[key];
+      }
+    }
+  }
 };

@@ -11,12 +11,12 @@ module.exports = async ({
 } = {}) => {
   const isStaging = process.env.NODE_ENV == "staging";
   return {
+    ...(context != undefined && { context }),
     fact: {
       root: root || (await deps.makeUuid()),
       topic: `did-${action}.${domain}.${service}${
         isStaging ? ".staging" : ""
       }.${network}`,
-      ...(context != undefined && { context }),
       version,
       traceId,
       createdTimestamp: datetime.fineTimestamp(),

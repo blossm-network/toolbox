@@ -16,11 +16,7 @@ const commandService = "command-service!";
 const commandNetwork = "command-network!";
 const commandIssuedTimestamp = 23;
 const root = "root!";
-const context = {
-  service: "some-authorized-service",
-  network: "some-authorized-network",
-  principle: "some-principle"
-};
+const context = "some-context";
 
 const payload = { a: 1 };
 const version = 0;
@@ -52,14 +48,10 @@ describe("Create event", () => {
     });
 
     expect(value).to.deep.equal({
+      context,
       fact: {
         root,
         topic: `did-${commandAction}.${commandDomain}.${commandService}.${commandNetwork}`,
-        context: {
-          service: context.service,
-          network: context.network,
-          principle: context.principle
-        },
         version,
         traceId,
         createdTimestamp: datetime.fineTimestamp(),
@@ -95,14 +87,10 @@ describe("Create event", () => {
     });
 
     expect(value).to.deep.equal({
+      context,
       fact: {
         root,
         topic: `did-${commandAction}.${commandDomain}.${commandService}.staging.${commandNetwork}`,
-        context: {
-          service: context.service,
-          network: context.network,
-          principle: context.principle
-        },
         version,
         traceId,
         createdTimestamp: datetime.fineTimestamp(),
@@ -138,14 +126,10 @@ describe("Create event", () => {
     });
 
     expect(value).to.deep.equal({
+      context,
       fact: {
         root: newUuid,
         topic: `did-${commandAction}.${commandDomain}.${commandService}.${commandNetwork}`,
-        context: {
-          service: context.service,
-          network: context.network,
-          principle: context.principle
-        },
         version,
         traceId,
         createdTimestamp: datetime.fineTimestamp(),
@@ -179,17 +163,13 @@ describe("Create event", () => {
     });
 
     expect(value).to.deep.equal({
+      context,
       fact: {
         root,
         topic: `did-${commandAction}.${commandDomain}.${commandService}.${commandNetwork}`,
         version,
         traceId,
         createdTimestamp: datetime.fineTimestamp(),
-        context: {
-          service: context.service,
-          network: context.network,
-          principle: context.principle
-        },
         command: {
           id: commandId,
           action: commandAction,

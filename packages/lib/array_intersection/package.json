@@ -1,7 +1,7 @@
 {
-  "name": "@sustainer-network/authorize-command",
-  "version": "0.0.1",
-  "description": "Authorize command requests.",
+  "name": "@sustainer-network/array-intersection",
+  "version": "0.0.0",
+  "description": "Finds the items in common between two arrays.",
   "main": "index.js",
   "author": "sustainernetwork.org",
   "engines": {
@@ -10,12 +10,11 @@
   "publishConfig": {
     "access": "public"
   },
-  "dependencies": {
-    "@sustainer-network/jwt": "*",
-    "@sustainer-network/array-intersection": "*"
-  },
   "scripts": {
     "test": "mocha"
+  },
+  "dependencies": {
+    "lodash": "4.17.11"
   },
   "devDependencies": {
     "mocha": "^6.1.4"

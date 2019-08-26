@@ -5,7 +5,7 @@ const { SECONDS_IN_DAY } = require("@sustainer-network/consts");
 
 const NINETY_DAYS = 90 * SECONDS_IN_DAY;
 
-module.exports = async params => {
+module.exports = async ({ params, context }) => {
   const root = await deps.newUuid();
 
   const isStaging = process.env.NODE_ENV == "staging";
@@ -17,13 +17,19 @@ module.exports = async params => {
   const token = await deps.createJwt({
     options: {
       issuer,
-      subject: params.payload.subject,
-      audience: params.payload.audiences.join(","),
+      subject: params.principle,
+      audience: params.audiences.join(","),
       expiresIn: NINETY_DAYS
     },
     data: {
       root,
-      ...params.payload.metadata
+      principle: params.principle,
+      scopes: params.scopes,
+      context: {
+        ...params.context,
+        ...(context != undefined && context),
+        network: process.env.NETWORK
+      }
     },
     secret: process.env.SECRET
   });
