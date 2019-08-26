@@ -1,6 +1,6 @@
 {
   "name": "@sustainer-network/authorize-command",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Authorize command requests.",
   "main": "index.js",
   "author": "sustainernetwork.org",
