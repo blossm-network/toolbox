@@ -72,6 +72,16 @@ describe("Create auth token", () => {
     });
 
     expect(result).to.be.deep.equal(response);
+    expect(deps.authorizeCommand).to.have.been.calledWith({
+      requirements: {
+        domain: "auth-token",
+        service: "core",
+        network,
+        priviledges: ["create"]
+      },
+      tokens,
+      strict: false
+    });
     expect(deps.cleanCommand).to.have.been.calledWith(params);
     expect(deps.validateCommand).to.have.been.calledWith(params);
     expect(deps.normalizeCommand).to.have.been.calledWith(params);

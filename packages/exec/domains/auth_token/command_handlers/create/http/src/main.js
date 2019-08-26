@@ -1,5 +1,5 @@
 const deps = require("../deps");
-const { action, domain, service } = require("../config");
+const { action, domain, service } = require("./config");
 
 const { SECONDS_IN_DAY } = require("@sustainer-network/consts");
 
