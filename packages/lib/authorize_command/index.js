@@ -20,10 +20,17 @@ module.exports = async ({
     return {};
   }
 
-  const { scopes, context, principle } = await deps.validate({
+  const data = await deps.validate({
     token: tokens.bearer,
     secret: process.env.SECRET
   });
+
+  //eslint-disable-next-line no-console
+  console.log("DATA: ", {
+    data
+  });
+
+  const { scopes, context, principle } = data;
 
   //Do the scopes and the context allow the provided service, network, domain, and action combo?
   if (network != undefined && context.network !== network)
