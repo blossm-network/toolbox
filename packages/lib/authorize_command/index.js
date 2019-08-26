@@ -6,9 +6,13 @@ const WILDCARD = "*";
 
 module.exports = async ({
   requirements: { network, service, domain, priviledges, root },
-  tokens
+  tokens,
+  strict = true
 }) => {
-  if (tokens.bearer == undefined) throw unauthorized.tokenInvalid;
+  if (tokens.bearer == undefined) {
+    if (strict) throw unauthorized.tokenInvalid;
+    return {};
+  }
 
   const { scopes, context, principle } = await deps.validate({
     token: tokens.bearer,

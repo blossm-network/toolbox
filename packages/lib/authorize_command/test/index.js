@@ -144,6 +144,25 @@ describe("Authorize command", () => {
       }
     });
   });
+  it("should authorize all wildcards with no token and not strict", async () => {
+    const scopes = [];
+
+    replace(deps, "validate", fake.returns({ scopes, context, principle }));
+
+    const document = await authorize({
+      requirements: {
+        network,
+        service,
+        domain: "domain",
+        priviledge: "priviledge",
+        root: "root"
+      },
+      tokens: {},
+      strict: false
+    });
+
+    expect(document).to.deep.equal({});
+  });
   it("should not authorize if theres a mismatch in priviledge", async () => {
     const scopes = [`${domain}:${root}:bogus`];
 
@@ -251,6 +270,44 @@ describe("Authorize command", () => {
           tokens: {
             bearer
           }
+        })
+    ).to.throw;
+  });
+  it("should not authorize if there are no token", async () => {
+    const scopes = [`${domain}:${root}:${priviledge}`];
+
+    replace(deps, "validate", fake.returns({ scopes, context, principle }));
+
+    expect(
+      async () =>
+        await authorize({
+          requirements: {
+            network,
+            service,
+            domain,
+            priviledge,
+            root
+          },
+          tokens: {}
+        })
+    ).to.throw;
+  });
+  it("should not authorize if there are no token", async () => {
+    const scopes = [`${domain}:${root}:${priviledge}`];
+
+    replace(deps, "validate", fake.returns({ scopes, context, principle }));
+
+    expect(
+      async () =>
+        await authorize({
+          requirements: {
+            network,
+            service,
+            domain,
+            priviledge,
+            root
+          },
+          tokens: {}
         })
     ).to.throw;
   });

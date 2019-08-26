@@ -9,7 +9,8 @@ module.exports = async ({ params, tokens, publishEventFn }) => {
   const { context } = await deps.authorizeCommand({
     tokens,
     network: process.env.NETWORK,
-    ...config
+    ...config,
+    strict: false
   });
   await deps.cleanCommand(params);
   await clean(params);
