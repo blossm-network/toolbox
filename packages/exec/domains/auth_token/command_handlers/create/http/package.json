@@ -1,7 +1,7 @@
 {
   "name": "@sustainer-network/create-auth-token-command-handler",
   "description": "Creates an auth token.",
-  "version": "0.0.32",
+  "version": "0.0.33",
   "scripts": {
     "test": "mocha --recursive"
   },
@@ -12,7 +12,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@sustainer-network/authorize-command": "^0.0.4",
+    "@sustainer-network/authorize-command": "^0.0.5",
     "@sustainer-network/clean-command": "^0.0.4",
     "@sustainer-network/consts": "^0.0.1",
     "@sustainer-network/create-event": "^0.0.15",
