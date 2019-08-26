@@ -18,7 +18,6 @@ describe("Clean", () => {
 
     expect(params).to.deep.equal({
       scopes: [{}],
-
       context: 1
     });
   });

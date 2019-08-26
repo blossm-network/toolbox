@@ -9,6 +9,12 @@ module.exports = async ({
   tokens,
   strict = true
 }) => {
+  //eslint-disable-next-line no-console
+  console.log("MEH: ", {
+    tokens,
+    requirements: { network, service, domain, priviledges, root },
+    strict
+  });
   if (tokens.bearer == undefined) {
     if (strict) throw unauthorized.tokenInvalid;
     return {};
