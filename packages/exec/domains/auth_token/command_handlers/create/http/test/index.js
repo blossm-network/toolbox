@@ -15,8 +15,8 @@ const service = "some-service";
 describe("Create auth token", () => {
   beforeEach(() => {
     process.env.ACTION = action;
-    process.env.NETWORK = domain;
-    process.env.NETWORK = service;
+    process.env.DOMAIN = domain;
+    process.env.SERVICE = service;
     process.env.NETWORK = network;
   });
   afterEach(() => {
@@ -80,7 +80,12 @@ describe("Create auth token", () => {
 
     expect(result).to.be.deep.equal(response);
     expect(deps.authorizeCommand).to.have.been.calledWith({
-      priviledges: ["create"],
+      requirements: {
+        priviledges: ["create"],
+        domain,
+        service,
+        network
+      },
       tokens,
       strict: false
     });
@@ -92,7 +97,11 @@ describe("Create auth token", () => {
       context: authContext,
       command: {
         id: params.id,
-        issuedTimestamp: params.issuedTimestamp
+        issuedTimestamp: params.issuedTimestamp,
+        action,
+        domain,
+        network,
+        service
       },
       version: 0,
       payload

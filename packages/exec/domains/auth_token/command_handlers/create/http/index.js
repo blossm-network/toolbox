@@ -7,7 +7,12 @@ const version = require("./src/version");
 
 module.exports = async ({ params, tokens, publishEventFn }) => {
   const { context } = await deps.authorizeCommand({
-    priviledges,
+    requirements: {
+      priviledges,
+      domain: process.env.DOMAIN,
+      service: process.env.SERVICE,
+      network: process.env.NETWORK
+    },
     tokens,
     strict: false
   });
@@ -24,7 +29,11 @@ module.exports = async ({ params, tokens, publishEventFn }) => {
     context,
     command: {
       id: params.id,
-      issuedTimestamp: params.issuedTimestamp
+      issuedTimestamp: params.issuedTimestamp,
+      action: process.env.ACTION,
+      domain: process.env.DOMAIN,
+      service: process.env.SERVICE,
+      network: process.env.NETWORK
     }
   });
   await publishEventFn(event);
