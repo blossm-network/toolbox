@@ -18,6 +18,9 @@ const context = {
 const authContext = { b: 2 };
 
 const network = "some-network";
+const action = "some-action";
+const domain = "some-domain";
+const service = "some-service";
 
 const principle = "good-subject-principle";
 
@@ -27,6 +30,9 @@ describe("Create auth token", () => {
   beforeEach(() => {
     process.env.NODE_ENV = "production";
     process.env.NETWORK = network;
+    process.env.ACTION = action;
+    process.env.SERVICE = service;
+    process.env.DOMAIN = domain;
   });
   afterEach(() => {
     restore();
@@ -55,7 +61,7 @@ describe("Create auth token", () => {
     expect(deps.newUuid).to.have.been.calledOnce;
     expect(deps.createJwt).to.have.been.calledWith({
       options: {
-        issuer: `create.auth-token.core.${network}`,
+        issuer: `${action}.${domain}.${service}.${network}`,
         subject: principle,
         audience: `${audience0},${audience1}`,
         expiresIn: 7776000
@@ -103,7 +109,7 @@ describe("Create auth token", () => {
     expect(deps.newUuid).to.have.been.calledOnce;
     expect(deps.createJwt).to.have.been.calledWith({
       options: {
-        issuer: `create.auth-token.core.staging.${network}`,
+        issuer: `${action}.${domain}.${service}.staging.${network}`,
         subject: principle,
         audience: `${audience0},${audience1}`,
         expiresIn: 7776000
@@ -152,7 +158,7 @@ describe("Create auth token", () => {
     expect(deps.newUuid).to.have.been.calledOnce;
     expect(deps.createJwt).to.have.been.calledWith({
       options: {
-        issuer: `create.auth-token.core.${network}`,
+        issuer: `${action}.${domain}.${service}.${network}`,
         subject: principle,
         audience: `${audience0},${audience1}`,
         expiresIn: 7776000

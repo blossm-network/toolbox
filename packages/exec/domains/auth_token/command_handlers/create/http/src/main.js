@@ -1,5 +1,4 @@
 const deps = require("../deps");
-const { action, domain, service } = require("./config");
 
 const { SECONDS_IN_DAY } = require("@sustainer-network/consts");
 
@@ -10,9 +9,9 @@ module.exports = async ({ params, context }) => {
 
   const isStaging = process.env.NODE_ENV == "staging";
 
-  const issuer = `${action}.${domain}.${service}.${
-    isStaging ? "staging." : ""
-  }${process.env.NETWORK}`;
+  const issuer = `${process.env.ACTION}.${process.env.DOMAIN}.${
+    process.env.SERVICE
+  }.${isStaging ? "staging." : ""}${process.env.NETWORK}`;
 
   const token = await deps.createJwt({
     options: {

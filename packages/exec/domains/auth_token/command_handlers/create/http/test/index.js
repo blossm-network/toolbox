@@ -8,8 +8,15 @@ process.env.SECRET = secret;
 
 const network = "network!";
 
+const action = "some-action";
+const domain = "some-domain";
+const service = "some-service";
+
 describe("Create auth token", () => {
   beforeEach(() => {
+    process.env.ACTION = action;
+    process.env.NETWORK = domain;
+    process.env.NETWORK = service;
     process.env.NETWORK = network;
   });
   afterEach(() => {
@@ -73,12 +80,7 @@ describe("Create auth token", () => {
 
     expect(result).to.be.deep.equal(response);
     expect(deps.authorizeCommand).to.have.been.calledWith({
-      requirements: {
-        domain: "auth-token",
-        service: "core",
-        network,
-        priviledges: ["create"]
-      },
+      priviledges: ["create"],
       tokens,
       strict: false
     });
@@ -89,10 +91,6 @@ describe("Create auth token", () => {
       traceId: params.traceId,
       context: authContext,
       command: {
-        action: "create",
-        domain: "auth-token",
-        service: "core",
-        network,
         id: params.id,
         issuedTimestamp: params.issuedTimestamp
       },

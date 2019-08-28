@@ -25,6 +25,10 @@ describe("Create event", () => {
   beforeEach(() => {
     clock = useFakeTimers(now.getTime());
     process.env.NODE_ENV = "production";
+    process.env.ACTION = commandAction;
+    process.env.DOMAIN = commandDomain;
+    process.env.SERVICE = commandService;
+    process.env.NETWORK = commandNetwork;
   });
   afterEach(() => {
     clock.restore();
@@ -36,11 +40,7 @@ describe("Create event", () => {
       context,
       command: {
         id: commandId,
-        issuedTimestamp: commandIssuedTimestamp,
-        action: commandAction,
-        domain: commandDomain,
-        service: commandService,
-        network: commandNetwork
+        issuedTimestamp: commandIssuedTimestamp
       },
       root,
       payload,
@@ -73,11 +73,7 @@ describe("Create event", () => {
     const value = await createEvent({
       command: {
         id: commandId,
-        issuedTimestamp: commandIssuedTimestamp,
-        action: commandAction,
-        domain: commandDomain,
-        service: commandService,
-        network: commandNetwork
+        issuedTimestamp: commandIssuedTimestamp
       },
       traceId,
       context,
@@ -113,10 +109,6 @@ describe("Create event", () => {
     const value = await createEvent({
       traceId,
       command: {
-        action: commandAction,
-        domain: commandDomain,
-        service: commandService,
-        network: commandNetwork,
         id: commandId,
         issuedTimestamp: commandIssuedTimestamp
       },
@@ -150,10 +142,6 @@ describe("Create event", () => {
       traceId,
       context,
       command: {
-        action: commandAction,
-        domain: commandDomain,
-        service: commandService,
-        network: commandNetwork,
         id: commandId,
         issuedTimestamp: commandIssuedTimestamp
       },
@@ -187,11 +175,7 @@ describe("Create event", () => {
       traceId,
       command: {
         id: commandId,
-        issuedTimestamp: commandIssuedTimestamp,
-        action: commandAction,
-        domain: commandDomain,
-        service: commandService,
-        network: commandNetwork
+        issuedTimestamp: commandIssuedTimestamp
       },
       root,
       payload,

@@ -7,25 +7,25 @@ module.exports = async ({
   version,
   traceId,
   context,
-  command: { id, action, domain, service, network, issuedTimestamp }
+  command: { id, issuedTimestamp }
 } = {}) => {
   const isStaging = process.env.NODE_ENV == "staging";
   return {
     ...(context != undefined && { context }),
     fact: {
       root: root || (await deps.makeUuid()),
-      topic: `did-${action}.${domain}.${service}${
-        isStaging ? ".staging" : ""
-      }.${network}`,
+      topic: `did-${process.env.ACTION}.${process.env.DOMAIN}.${
+        process.env.SERVICE
+      }${isStaging ? ".staging" : ""}.${process.env.NETWORK}`,
       version,
       traceId,
       createdTimestamp: datetime.fineTimestamp(),
       command: {
         id,
-        action,
-        domain,
-        service,
-        network,
+        action: process.env.ACTION,
+        domain: process.env.DOMAIN,
+        service: process.env.SERVICE,
+        network: process.env.NETWORK,
         issuedTimestamp
       }
     },
