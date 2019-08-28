@@ -1,0 +1,17 @@
+{
+  "name": "@sustainer-network/log-transports",
+  "version": "0.0.0",
+  "description": "Destinations to publish logs to.",
+  "main": "index.js",
+  "author": "sustainernetwork.org",
+  "engines": {
+    "node": ">= 10.16.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@google-cloud/logging-winston": "^0.11.1",
+    "winston": "^3.2.1"
+  }
+}
