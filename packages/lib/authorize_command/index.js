@@ -4,17 +4,7 @@ const intersection = require("@sustainer-network/array-intersection");
 
 const WILDCARD = "*";
 
-module.exports = async ({
-  requirements: { network, service, domain, priviledges, root },
-  tokens,
-  strict = true
-}) => {
-  //eslint-disable-next-line no-console
-  console.log("MEH: ", {
-    tokens,
-    requirements: { network, service, domain, priviledges, root },
-    strict
-  });
+module.exports = async ({ priviledges, root, tokens, strict = true }) => {
   if (tokens.bearer == undefined) {
     if (strict) throw unauthorized.tokenInvalid;
     return {};
@@ -25,27 +15,19 @@ module.exports = async ({
     secret: process.env.SECRET
   });
 
-  //eslint-disable-next-line no-console
-  console.log("DATA: ", {
-    data
-  });
-
   const { scopes, context, principle } = data;
 
   //Do the scopes and the context allow the provided service, network, domain, and action combo?
-  if (network != undefined && context.network !== network)
-    throw unauthorized.tokenInvalid;
+  if (context.network !== process.env.NETWORK) throw unauthorized.tokenInvalid;
 
-  if (service != undefined && context.service !== service)
-    throw unauthorized.tokenInvalid;
+  if (context.service !== process.env.SERVICE) throw unauthorized.tokenInvalid;
 
   const satisfiedScopes = scopes.filter(scope => {
     const [scopeDomain, scopeRoot, scopePriviledges] = scope.split(":");
 
     const domainViolated =
       scopeDomain != WILDCARD &&
-      domain != undefined &&
-      !scopeDomain.split(",").includes(domain);
+      !scopeDomain.split(",").includes(process.env.DOMAIN);
 
     const rootViolated =
       scopeRoot != WILDCARD &&
@@ -55,7 +37,7 @@ module.exports = async ({
     const priviledgesViolated =
       scopePriviledges != WILDCARD &&
       priviledges != undefined &&
-      intersection(scopeRoot.split(","), priviledges).length == 0;
+      intersection(scopePriviledges.split(","), priviledges).length == 0;
 
     return !domainViolated && !rootViolated && !priviledgesViolated;
   });
