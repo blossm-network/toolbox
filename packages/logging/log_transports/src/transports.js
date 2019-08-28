@@ -8,7 +8,7 @@ const loggerTransports = createLogger({
     // Logs to stack driver.
     new LoggingWinston({
       serviceContext: {
-        service: "roof",
+        service: process.env.SERVICE,
         version: "0"
       }
     }),
