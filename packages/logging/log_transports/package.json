@@ -1,6 +1,6 @@
 {
   "name": "@sustainer-network/log-transports",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Destinations to publish logs to.",
   "main": "index.js",
   "author": "sustainernetwork.org",
