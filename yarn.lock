@@ -156,6 +156,13 @@
     retry-request "^4.0.0"
     teeny-request "^5.2.1"
 
+"@google-cloud/kms@^1.3.2":
+  version "1.3.2"
+  resolved "https://registry.yarnpkg.com/@google-cloud/kms/-/kms-1.3.2.tgz#0cab780b77f4c5ebed2ff767d01415c3ac6fe1ac"
+  integrity sha512-pY+zsIpwxdNKM03Kv0G/+BMAT5TYeddjH8VyqNlQiccXtPDZ9pzLCtmcF1Q0u1iuQxRKjjHzT89leavVdQPA7A==
+  dependencies:
+    google-gax "^1.0.0"
+
 "@google-cloud/logging-winston@^2.0.1":
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/@google-cloud/logging-winston/-/logging-winston-2.0.1.tgz#678f4aa0f3002d99ac8e291a2788c01610b96892"

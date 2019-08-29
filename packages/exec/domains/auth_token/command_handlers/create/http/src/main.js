@@ -13,6 +13,17 @@ module.exports = async ({ params, context }) => {
     process.env.SERVICE
   }.${isStaging ? "staging." : ""}${process.env.NETWORK}`;
 
+  const client = new deps.kms.KeyManagementServiceClient();
+  const formattedName = client.cryptoKeyVersionPath(
+    process.env.GCP_PROJECT,
+    process.env.GCP_KEY_LOCATION,
+    process.env.GCP_KEY_RING,
+    process.env.GCP_KEY,
+    process.env.GCP_KEY_VERSION
+  );
+
+  const [{ pem }] = await client.getPublicKey({ name: formattedName });
+
   const token = await deps.createJwt({
     options: {
       issuer,
@@ -30,7 +41,7 @@ module.exports = async ({ params, context }) => {
         network: process.env.NETWORK
       }
     },
-    secret: process.env.SECRET
+    secret: pem
   });
 
   const payload = {

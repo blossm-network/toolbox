@@ -8,5 +8,6 @@ exports.cleanCommand = require("@sustainer-network/clean-command");
 exports.authorizeCommand = require("@sustainer-network/authorize-command");
 exports.timestamp = timestamp;
 exports.newUuid = require("@sustainer-network/uuid");
+exports.kms = require("@google-cloud/kms");
 exports.createJwt = createJwt;
 exports.main = require("./src/main");
