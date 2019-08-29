@@ -15,7 +15,7 @@ describe("Request", () => {
       expect(options).to.deep.equal({
         url,
         method: "POST",
-        body: params,
+        body: JSON.stringify(params),
         json: true
       });
       callback(null, null, response);
@@ -32,7 +32,7 @@ describe("Request", () => {
       expect(options).to.deep.equal({
         url,
         method: "POST",
-        body: params,
+        body: JSON.stringify(params),
         json: true,
         headers
       });
