@@ -10,7 +10,7 @@ describe("Request", () => {
   it("should call post with correct params", async () => {
     const params = { hello: "there" };
     const url = "http://google.com";
-    const response = "someResponse";
+    const response = "some-response";
     replace(deps, "request", (options, callback) => {
       expect(options).to.deep.equal({
         url,
