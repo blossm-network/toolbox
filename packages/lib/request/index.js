@@ -7,7 +7,7 @@ exports.post = async (url, params, headers) =>
       {
         url,
         method: "POST",
-        body: JSON.stringify(params),
+        body: params,
         json: true,
         ...(headers != undefined && { headers })
       },
