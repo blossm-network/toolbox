@@ -4,7 +4,7 @@ const { SECONDS_IN_DAY } = require("@sustainer-network/consts");
 
 const NINETY_DAYS = 90 * SECONDS_IN_DAY;
 
-module.exports = async ({ params, context }) => {
+module.exports = async ({ params, publicKey, context }) => {
   const root = await deps.newUuid();
 
   const isStaging = process.env.NODE_ENV == "staging";
@@ -12,17 +12,6 @@ module.exports = async ({ params, context }) => {
   const issuer = `${process.env.ACTION}.${process.env.DOMAIN}.${
     process.env.SERVICE
   }.${isStaging ? "staging." : ""}${process.env.NETWORK}`;
-
-  const client = new deps.kms.KeyManagementServiceClient();
-  const formattedName = client.cryptoKeyVersionPath(
-    process.env.GCP_PROJECT,
-    process.env.GCP_KEY_LOCATION,
-    process.env.GCP_KEY_RING,
-    process.env.GCP_KEY,
-    process.env.GCP_KEY_VERSION
-  );
-
-  const [{ pem }] = await client.getPublicKey({ name: formattedName });
 
   const token = await deps.createJwt({
     options: {
@@ -41,7 +30,7 @@ module.exports = async ({ params, context }) => {
         network: process.env.NETWORK
       }
     },
-    secret: pem
+    secret: publicKey
   });
 
   const payload = {

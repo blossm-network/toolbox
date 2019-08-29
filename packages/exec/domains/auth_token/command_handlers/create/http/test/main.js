@@ -16,6 +16,7 @@ const context = {
   a: 1
 };
 const authContext = { b: 2 };
+const publicKey = "some-public-key";
 
 const network = "some-network";
 const action = "some-action";
@@ -26,12 +27,6 @@ const principle = "good-subject-principle";
 
 const scopes = [{ k: "some scope" }];
 
-const gcpProject = "some-project";
-const gcpKeyRing = "some-key-ring";
-const gcpKey = "some-key";
-const gcpKeyLocation = "some-key-location";
-const gcpKeyVersion = "1";
-
 describe("Create auth token", () => {
   beforeEach(() => {
     process.env.NODE_ENV = "production";
@@ -39,11 +34,6 @@ describe("Create auth token", () => {
     process.env.ACTION = action;
     process.env.SERVICE = service;
     process.env.DOMAIN = domain;
-    process.env.GCP_PROJECT = gcpProject;
-    process.env.GCP_KEY_RING = gcpKeyRing;
-    process.env.GCP_KEY = gcpKey;
-    process.env.GCP_KEY_LOCATION = gcpKeyLocation;
-    process.env.GCP_KEY_VERSION = gcpKeyVersion;
   });
   afterEach(() => {
     restore();
@@ -52,19 +42,6 @@ describe("Create auth token", () => {
     const newUuid = "newUuid!";
     const newUuidFake = fake.returns(newUuid);
     replace(deps, "newUuid", newUuidFake);
-
-    const path = "some-path";
-    const pathFake = fake.returns(path);
-    const kmsClient = function() {};
-    kmsClient.prototype.cryptoKeyVersionPath = pathFake;
-
-    const pem = "some-pem";
-    const getKeyFake = fake.returns([{ pem }]);
-    kmsClient.prototype.getPublicKey = getKeyFake;
-
-    replace(deps, "kms", {
-      KeyManagementServiceClient: kmsClient
-    });
 
     const newToken = "token!";
     const jwtCreateFake = fake.returns(newToken);
@@ -79,18 +56,14 @@ describe("Create auth token", () => {
       issuedTimestamp: 123
     };
 
-    const { payload, response } = await main({ params, context: authContext });
+    const { payload, response } = await main({
+      params,
+      context: authContext,
+      publicKey
+    });
 
     expect(response).to.be.deep.equal({ token: newToken });
     expect(deps.newUuid).to.have.been.calledOnce;
-    expect(pathFake).to.have.been.calledWith(
-      gcpProject,
-      gcpKeyLocation,
-      gcpKeyRing,
-      gcpKey,
-      gcpKeyVersion
-    );
-    expect(getKeyFake).to.have.been.calledWith({ name: path });
     expect(deps.createJwt).to.have.been.calledWith({
       options: {
         issuer: `${action}.${domain}.${service}.${network}`,
@@ -108,7 +81,7 @@ describe("Create auth token", () => {
           network
         }
       },
-      secret: pem
+      secret: publicKey
     });
     expect(payload).to.deep.equal({
       token: newToken,
@@ -119,19 +92,6 @@ describe("Create auth token", () => {
     const newUuid = "newUuid!";
     const newUuidFake = fake.returns(newUuid);
     replace(deps, "newUuid", newUuidFake);
-
-    const path = "some-path";
-    const pathFake = fake.returns(path);
-    const kmsClient = function() {};
-    kmsClient.prototype.cryptoKeyVersionPath = pathFake;
-
-    const pem = "some-pem";
-    const getKeyFake = fake.returns([{ pem }]);
-    kmsClient.prototype.getPublicKey = getKeyFake;
-
-    replace(deps, "kms", {
-      KeyManagementServiceClient: kmsClient
-    });
 
     const newToken = "token!";
     const jwtCreateFake = fake.returns(newToken);
@@ -148,18 +108,14 @@ describe("Create auth token", () => {
 
     process.env.NODE_ENV = "staging";
 
-    const { payload, response } = await main({ params, context: authContext });
+    const { payload, response } = await main({
+      params,
+      context: authContext,
+      publicKey
+    });
 
     expect(response).to.be.deep.equal({ token: newToken });
     expect(deps.newUuid).to.have.been.calledOnce;
-    expect(pathFake).to.have.been.calledWith(
-      gcpProject,
-      gcpKeyLocation,
-      gcpKeyRing,
-      gcpKey,
-      gcpKeyVersion
-    );
-    expect(getKeyFake).to.have.been.calledWith({ name: path });
     expect(deps.createJwt).to.have.been.calledWith({
       options: {
         issuer: `${action}.${domain}.${service}.staging.${network}`,
@@ -177,7 +133,7 @@ describe("Create auth token", () => {
         },
         scopes
       },
-      secret: pem
+      secret: publicKey
     });
     expect(payload).to.deep.equal({
       token: newToken,
@@ -188,19 +144,6 @@ describe("Create auth token", () => {
     const newUuid = "newUuid!";
     const newUuidFake = fake.returns(newUuid);
     replace(deps, "newUuid", newUuidFake);
-
-    const path = "some-path";
-    const pathFake = fake.returns(path);
-    const kmsClient = function() {};
-    kmsClient.prototype.cryptoKeyVersionPath = pathFake;
-
-    const pem = "some-pem";
-    const getKeyFake = fake.returns([{ pem }]);
-    kmsClient.prototype.getPublicKey = getKeyFake;
-
-    replace(deps, "kms", {
-      KeyManagementServiceClient: kmsClient
-    });
 
     const newToken = "token!";
     const jwtCreateFake = fake.returns(newToken);
@@ -217,19 +160,12 @@ describe("Create auth token", () => {
 
     const { payload, response } = await main({
       params,
-      context: { a: 2, network: 4 }
+      context: { a: 2, network: 4 },
+      publicKey
     });
 
     expect(response).to.be.deep.equal({ token: newToken });
     expect(deps.newUuid).to.have.been.calledOnce;
-    expect(pathFake).to.have.been.calledWith(
-      gcpProject,
-      gcpKeyLocation,
-      gcpKeyRing,
-      gcpKey,
-      gcpKeyVersion
-    );
-    expect(getKeyFake).to.have.been.calledWith({ name: path });
     expect(deps.createJwt).to.have.been.calledWith({
       options: {
         issuer: `${action}.${domain}.${service}.${network}`,
@@ -246,7 +182,7 @@ describe("Create auth token", () => {
           network
         }
       },
-      secret: pem
+      secret: publicKey
     });
     expect(payload).to.deep.equal({
       token: newToken,
