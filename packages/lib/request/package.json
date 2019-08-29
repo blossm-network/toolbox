@@ -14,7 +14,7 @@
     "test": "mocha"
   },
   "dependencies": {
-    "async-request": "^1.2.0",
+    "request": "^1.2.0",
     "query-string": "^6.8.1"
   },
   "devDependencies": {

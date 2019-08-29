@@ -1,1 +1,1 @@
-exports.request = require("async-request");
+exports.request = require("request");

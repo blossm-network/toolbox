@@ -5,6 +5,7 @@ exports.post = async (url, params, headers) =>
   await deps.request(url, {
     method: "POST",
     data: params,
+    json: true,
     ...(headers != undefined && { headers })
   });
 

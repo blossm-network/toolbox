@@ -19,7 +19,8 @@ describe("Request", () => {
     expect(reply).to.equal(response);
     expect(deps.request).to.have.been.calledWith(url, {
       method: "POST",
-      data: params
+      data: params,
+      json: true
     });
   });
   it("should call post with correct params with header", async () => {
@@ -34,6 +35,7 @@ describe("Request", () => {
     expect(deps.request).to.have.been.calledWith(url, {
       method: "POST",
       data: params,
+      json: true,
       headers
     });
   });

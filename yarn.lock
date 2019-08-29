@@ -1104,6 +1104,14 @@
   version "0.7.1"
   resolved "https://registry.yarnpkg.com/@sinonjs/text-encoding/-/text-encoding-0.7.1.tgz#8da5c6530915653f3a1f38fd5f101d8c3f8079c5"
 
+"@sustainer-network/jwt@^0.0.3":
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/@sustainer-network/jwt/-/jwt-0.0.3.tgz#4b8479f71df6ff8b87160aafd26823027e34fccb"
+  integrity sha512-Dmgtwi4VWoHnVcf7ai7jZ5ANozRpc1GGDbI2kVWCdubUvLgoqsplcfIistoZnKhKYMsvF5N+j+mxoY7MVcg21Q==
+  dependencies:
+    "@sustainer-network/errors" "^0.0.1"
+    jsonwebtoken "^8.5.1"
+
 "@types/bytebuffer@^5.0.40":
   version "5.0.40"
   resolved "https://registry.yarnpkg.com/@types/bytebuffer/-/bytebuffer-5.0.40.tgz#d6faac40dcfb09cd856cdc4c01d3690ba536d3ee"
