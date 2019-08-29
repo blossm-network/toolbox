@@ -1,7 +1,7 @@
 {
   "name": "@sustainer-network/issue-command-js",
   "description": "Issues a command.",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "main": "index.js",
   "author": "sustainernetwork.org",
   "engines": {
@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@sustainer-network/datetime": "*",
-    "@sustainer-network/request": "*"
+    "@sustainer-network/request": "^0.0.7"
   },
   "devDependencies": {
     "chai-datetime": "^1.5.0",

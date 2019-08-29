@@ -1,6 +1,6 @@
 {
   "name": "@sustainer-network/request",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Http access.",
   "main": "index.js",
   "author": "sustainernetwork.org",
@@ -14,8 +14,8 @@
     "test": "mocha"
   },
   "dependencies": {
-    "request": "^1.2.0",
-    "query-string": "^6.8.1"
+    "query-string": "^6.8.1",
+    "request": "^1.2.0"
   },
   "devDependencies": {
     "mocha": "^6.1.4",
