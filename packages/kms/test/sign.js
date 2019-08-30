@@ -1,7 +1,7 @@
 const { expect } = require("chai").use(require("sinon-chai"));
 const { restore, replace, fake } = require("sinon");
 const crypto = require("crypto");
-const sign = require("../src/sign");
+const { sign } = require("..");
 
 const kms = require("@google-cloud/kms");
 

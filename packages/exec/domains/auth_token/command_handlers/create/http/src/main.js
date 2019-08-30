@@ -4,7 +4,7 @@ const { SECONDS_IN_DAY } = require("@sustainer-network/consts");
 
 const NINETY_DAYS = 90 * SECONDS_IN_DAY;
 
-module.exports = async ({ params, publicKey, context }) => {
+module.exports = async ({ params, context }) => {
   const root = await deps.newUuid();
 
   const isStaging = process.env.NODE_ENV == "staging";
@@ -20,7 +20,7 @@ module.exports = async ({ params, publicKey, context }) => {
       audience: params.audiences.join(","),
       expiresIn: NINETY_DAYS
     },
-    data: {
+    payload: {
       root,
       principle: params.principle,
       scopes: params.scopes,
@@ -30,7 +30,7 @@ module.exports = async ({ params, publicKey, context }) => {
         network: process.env.NETWORK
       }
     },
-    secret: publicKey
+    signFn: deps.sign
   });
 
   const payload = {
