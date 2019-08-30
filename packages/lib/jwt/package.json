@@ -1,6 +1,6 @@
 {
   "name": "@sustainer-network/jwt",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "JWT token creating and validating.",
   "main": "index.js",
   "author": "sustainernetwork.org",
@@ -11,8 +11,8 @@
     "access": "public"
   },
   "dependencies": {
-    "@sustainer-network/errors": "^0.0.1",
     "@sustainer-network/datetime": "*",
+    "@sustainer-network/errors": "^0.0.1",
     "@sustainer-network/nonce": "*",
     "crypto-js": "^3.1.9-1",
     "jwt-decode": "^2.2.0"
