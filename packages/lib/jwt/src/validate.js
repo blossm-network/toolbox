@@ -1,15 +1,15 @@
-const { verify } = require("jsonwebtoken");
 const { unauthorized } = require("@sustainer-network/errors");
+const { decodeJwt } = require("../deps");
 
-module.exports = async ({ token, secret }) => {
-  try {
-    const decodedObject = await verify(token, secret);
-    return decodedObject;
-  } catch (err) {
-    const isExpired = err.name == "TokenExpiredError";
-    const error = isExpired
-      ? unauthorized.tokenExpired
-      : unauthorized.tokenInvalid;
-    throw error;
-  }
+module.exports = async ({ token, verifyFn }) => {
+  const [header, payload, signature] = token.split(".");
+
+  const isVerified = await verifyFn({
+    message: `${header}.${payload}`,
+    signature
+  });
+
+  if (!isVerified) throw unauthorized.tokenInvalid;
+
+  return decodeJwt(token);
 };
