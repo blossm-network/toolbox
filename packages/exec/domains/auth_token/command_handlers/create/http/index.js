@@ -5,7 +5,7 @@ const validate = require("./src/validate");
 const clean = require("./src/clean");
 const version = require("./src/version");
 
-module.exports = async ({ params, tokens, publishEventFn }) => {
+module.exports = async ({ params, tokens, signFn, publishEventFn }) => {
   const { context } = await deps.authorizeCommand({
     requirements: {
       priviledges,
@@ -21,7 +21,7 @@ module.exports = async ({ params, tokens, publishEventFn }) => {
   await deps.validateCommand(params);
   await validate(params);
   await deps.normalizeCommand(params);
-  const { payload, response } = await deps.main({ params, context });
+  const { payload, response } = await deps.main({ params, context, signFn });
   const event = await deps.createEvent({
     payload,
     version,

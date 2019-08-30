@@ -4,7 +4,7 @@ const { SECONDS_IN_DAY } = require("@sustainer-network/consts");
 
 const NINETY_DAYS = 90 * SECONDS_IN_DAY;
 
-module.exports = async ({ params, context }) => {
+module.exports = async ({ params, context, signFn }) => {
   const root = await deps.newUuid();
 
   const isStaging = process.env.NODE_ENV == "staging";
@@ -30,7 +30,7 @@ module.exports = async ({ params, context }) => {
         network: process.env.NETWORK
       }
     },
-    signFn: deps.sign
+    signFn
   });
 
   const payload = {

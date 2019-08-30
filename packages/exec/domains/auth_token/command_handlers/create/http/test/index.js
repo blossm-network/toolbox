@@ -70,12 +70,14 @@ describe("Create auth token", () => {
     };
 
     const publishEventFn = fake();
+    const signFn = fake();
 
     const tokens = "tokens";
 
     const result = await createAuthToken({
       params,
       tokens,
+      signFn,
       publishEventFn
     });
 

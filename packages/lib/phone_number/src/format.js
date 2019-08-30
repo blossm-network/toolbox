@@ -12,7 +12,7 @@ function defaultFormatter(number) {
 function backupFormatter(number) {
   try {
     const internationalizedPhonNumber = phoneUtil.parseAndKeepRawInput(
-      "+" + number
+      `+${number}`
     );
     if (phoneUtil.isValidNumber(internationalizedPhonNumber)) {
       return phoneUtil.format(internationalizedPhonNumber, PNF.E164);

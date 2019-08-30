@@ -46,8 +46,7 @@ describe("Create auth token", () => {
     const jwtCreateFake = fake.returns(newToken);
     replace(deps, "createJwt", jwtCreateFake);
 
-    const signFn = fake();
-    replace(deps, "sign", signFn);
+    const signFn = "some-sign-fn";
 
     const params = {
       audiences,
@@ -60,7 +59,8 @@ describe("Create auth token", () => {
 
     const { payload, response } = await main({
       params,
-      context: authContext
+      context: authContext,
+      signFn
     });
 
     expect(response).to.be.deep.equal({ token: newToken });
@@ -107,14 +107,14 @@ describe("Create auth token", () => {
       issuedTimestamp: 123
     };
 
-    process.env.NODE_ENV = "staging";
+    const signFn = "some-sign-fn";
 
-    const signFn = fake();
-    replace(deps, "sign", signFn);
+    process.env.NODE_ENV = "staging";
 
     const { payload, response } = await main({
       params,
-      context: authContext
+      context: authContext,
+      signFn
     });
 
     expect(response).to.be.deep.equal({ token: newToken });
@@ -136,7 +136,7 @@ describe("Create auth token", () => {
         },
         scopes
       },
-      signFn: deps.sign
+      signFn
     });
     expect(payload).to.deep.equal({
       token: newToken,
@@ -161,12 +161,12 @@ describe("Create auth token", () => {
       issuedTimestamp: 123
     };
 
-    const signFn = fake();
-    replace(deps, "sign", signFn);
+    const signFn = "some-sign-fn";
 
     const { payload, response } = await main({
       params,
-      context: { a: 2, network: 4 }
+      context: { a: 2, network: 4 },
+      signFn
     });
 
     expect(response).to.be.deep.equal({ token: newToken });
@@ -187,7 +187,7 @@ describe("Create auth token", () => {
           network
         }
       },
-      signFn: deps.sign
+      signFn
     });
     expect(payload).to.deep.equal({
       token: newToken,
