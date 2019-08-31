@@ -17,7 +17,7 @@ describe("Request", () => {
         method: "POST",
         json: params
       });
-      callback(null, null, response);
+      callback(null, response);
     });
     const reply = await request.post(url, params);
     expect(reply).to.equal(response);
@@ -34,7 +34,7 @@ describe("Request", () => {
         json: params,
         headers
       });
-      callback(null, null, response);
+      callback(null, response);
     });
     const reply = await request.post(url, params, headers);
     expect(reply).to.equal(response);
@@ -51,7 +51,7 @@ describe("Request", () => {
       expect(fullUrl).to.equal(
         `${url}?andy=0&andy=ur%20dogs%3F&hello=there&how=are&how=you`
       );
-      callback(null, null, response);
+      callback(null, response);
     });
     const url = "http://google.com";
     const reply = await request.get(url, params);
@@ -66,7 +66,7 @@ describe("Request", () => {
     const response = "someResponse";
     replace(deps, "request", (fullUrl, callback) => {
       expect(fullUrl).to.equal(`${url}?hello=there&how=are&you=now`);
-      callback(null, null, response);
+      callback(null, response);
     });
     const url = "http://google.com";
     const reply = await request.get(url, params);
@@ -76,7 +76,7 @@ describe("Request", () => {
     const response = "someResponse";
     replace(deps, "request", (fullUrl, callback) => {
       expect(fullUrl).to.equal(url);
-      callback(null, null, response);
+      callback(null, response);
     });
     const url = "http://google.com";
     const reply = await request.get(url);
