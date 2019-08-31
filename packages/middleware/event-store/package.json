@@ -1,0 +1,22 @@
+{
+  "name": "@sustainer-network/event-store-middleware",
+  "version": "0.0.0",
+  "description": "Event store middleware.",
+  "main": "index.js",
+  "author": "sustainernetwork.org",
+  "engines": {
+    "node": ">= 10.16.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "dependencies": {
+    "body-parser": "^1.19.0"
+  },
+  "devDependencies": {
+    "mocha": "^6.1.4"
+  }
+}
