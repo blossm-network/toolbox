@@ -24,7 +24,6 @@ const version = 0;
 describe("Create event", () => {
   beforeEach(() => {
     clock = useFakeTimers(now.getTime());
-    process.env.NODE_ENV = "production";
     process.env.ACTION = commandAction;
     process.env.DOMAIN = commandDomain;
     process.env.SERVICE = commandService;
@@ -68,40 +67,6 @@ describe("Create event", () => {
     });
   });
 
-  it("should get called with expected params in staging", async () => {
-    process.env.NODE_ENV = "staging";
-    const value = await createEvent({
-      command: {
-        id: commandId,
-        issuedTimestamp: commandIssuedTimestamp
-      },
-      traceId,
-      context,
-      root,
-      payload,
-      version
-    });
-
-    expect(value).to.deep.equal({
-      context,
-      fact: {
-        root,
-        topic: `did-${commandAction}.${commandDomain}.${commandService}.staging.${commandNetwork}`,
-        version,
-        traceId,
-        createdTimestamp: datetime.fineTimestamp(),
-        command: {
-          id: commandId,
-          action: commandAction,
-          domain: commandDomain,
-          service: commandService,
-          network: commandNetwork,
-          issuedTimestamp: commandIssuedTimestamp
-        }
-      },
-      payload
-    });
-  });
   it("should get called with expected params if root is missin", async () => {
     const newUuid = "newUuid!";
     replace(deps, "makeUuid", fake.returns(newUuid));
