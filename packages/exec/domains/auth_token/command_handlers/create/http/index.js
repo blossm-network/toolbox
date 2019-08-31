@@ -4,6 +4,7 @@ const priviledges = require("./src/priviledges");
 const validate = require("./src/validate");
 const clean = require("./src/clean");
 const version = require("./src/version");
+const main = require("./src/main");
 
 module.exports = async ({ params, tokens, signFn, publishEventFn }) => {
   const { context } = await deps.authorizeCommand({
@@ -17,11 +18,11 @@ module.exports = async ({ params, tokens, signFn, publishEventFn }) => {
     strict: false
   });
   await deps.cleanCommand(params);
-  await clean(params);
+  await clean(params.payload);
   await deps.validateCommand(params);
-  await validate(params);
+  await validate(params.payload);
   await deps.normalizeCommand(params);
-  const { payload, response } = await deps.main({ params, context, signFn });
+  const { payload, response } = await main({ params, context, signFn });
   const event = await deps.createEvent({
     payload,
     version,

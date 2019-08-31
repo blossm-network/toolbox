@@ -49,10 +49,12 @@ describe("Create auth token", () => {
     const signFn = "some-sign-fn";
 
     const params = {
-      audiences,
-      principle,
-      context,
-      scopes,
+      payload: {
+        audiences,
+        principle,
+        context,
+        scopes
+      },
       issuerInfo,
       issuedTimestamp: 123
     };
@@ -99,10 +101,12 @@ describe("Create auth token", () => {
     replace(deps, "createJwt", jwtCreateFake);
 
     const params = {
-      audiences,
-      context,
-      scopes,
-      principle,
+      payload: {
+        audiences,
+        principle,
+        context,
+        scopes
+      },
       issuerInfo,
       issuedTimestamp: 123
     };
@@ -153,10 +157,12 @@ describe("Create auth token", () => {
     replace(deps, "createJwt", jwtCreateFake);
 
     const params = {
-      audiences,
-      principle,
-      context: { a: 1 },
-      scopes,
+      payload: {
+        audiences,
+        principle,
+        context: { a: 1 },
+        scopes
+      },
       issuerInfo,
       issuedTimestamp: 123
     };

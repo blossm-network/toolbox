@@ -3,8 +3,7 @@ const clean = require("../src/clean");
 
 describe("Clean", () => {
   it("should handle correct params correctly", async () => {
-    const params = {
-      payload: {},
+    const payload = {
       context: 1,
       scopes: [
         {
@@ -14,9 +13,9 @@ describe("Clean", () => {
       bogus: "nope"
     };
 
-    await clean(params);
+    await clean(payload);
 
-    expect(params).to.deep.equal({
+    expect(payload).to.deep.equal({
       scopes: [{}],
       context: 1
     });

@@ -8,17 +8,17 @@ const {
 
 const { badRequest } = require("@sustainer-network/errors");
 
-module.exports = async params => {
+module.exports = async payload => {
   const systemInputError = findError([
-    stringArray(params.audiences),
-    string(params.principle),
-    objectArray(params.scopes),
-    object(params.context)
+    stringArray(payload.audiences),
+    string(payload.principle),
+    objectArray(payload.scopes),
+    object(payload.context)
   ]);
 
   if (systemInputError) throw badRequest.message(systemInputError.message);
 
-  for (const scope of params.scopes) {
+  for (const scope of payload.scopes) {
     const systemScopeInputError = findError([
       string(scope.domain),
       string(scope.root),

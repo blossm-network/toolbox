@@ -33,12 +33,14 @@ describe("Create auth token", () => {
     const createEventFake = fake.returns(event);
     replace(deps, "createEvent", createEventFake);
 
-    const response = "some-response";
-    const payload = "some-payload";
-    const mainFake = fake.returns({ payload, response });
-    replace(deps, "main", mainFake);
+    const newUuid = "newUuid!";
+    const newUuidFake = fake.returns(newUuid);
+    replace(deps, "newUuid", newUuidFake);
 
-    const issuer = "good-principle-root";
+    const newToken = "token!";
+    const jwtCreateFake = fake.returns(newToken);
+    replace(deps, "createJwt", jwtCreateFake);
+
     const principle = "good-other-principle-root";
 
     const issuerInfo = {
@@ -59,14 +61,14 @@ describe("Create auth token", () => {
     };
 
     const params = {
-      context,
-      scopes: [goodScope],
-      audiences,
-      issuer,
-      principle,
+      payload: {
+        context,
+        scopes: [goodScope],
+        audiences,
+        principle
+      },
       issuerInfo,
-      issuedTimestamp: 123,
-      id: "some-id"
+      issuedTimestamp: 123
     };
 
     const publishEventFn = fake();
@@ -81,7 +83,7 @@ describe("Create auth token", () => {
       publishEventFn
     });
 
-    expect(result).to.be.deep.equal(response);
+    expect(result).to.be.deep.equal({ token: newToken });
     expect(deps.authorizeCommand).to.have.been.calledWith({
       requirements: {
         priviledges: ["create"],
@@ -107,7 +109,7 @@ describe("Create auth token", () => {
         service
       },
       version: 0,
-      payload
+      payload: { issuerInfo, token: newToken }
     });
     expect(publishEventFn).to.have.been.calledWith(event);
   });

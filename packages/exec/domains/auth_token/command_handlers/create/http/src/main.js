@@ -16,16 +16,16 @@ module.exports = async ({ params, context, signFn }) => {
   const token = await deps.createJwt({
     options: {
       issuer,
-      subject: params.principle,
-      audience: params.audiences.join(","),
+      subject: params.payload.principle,
+      audience: params.payload.audiences.join(","),
       expiresIn: NINETY_DAYS
     },
     payload: {
       root,
-      principle: params.principle,
-      scopes: params.scopes,
+      principle: params.payload.principle,
+      scopes: params.payload.scopes,
       context: {
-        ...params.context,
+        ...params.payload.context,
         ...(context != undefined && context),
         network: process.env.NETWORK
       }

@@ -6,13 +6,18 @@ describe("Clean command", () => {
     const payload = { a: 2 };
 
     const params = {
-      payload
+      bogus: 1,
+      payload,
+      sourceCommand: {
+        bogus: 3
+      }
     };
 
     await cleanCommand(params);
 
     expect(params).to.deep.equal({
-      payload
+      payload,
+      sourceCommand: {}
     });
   });
   it("should add a payload", async () => {

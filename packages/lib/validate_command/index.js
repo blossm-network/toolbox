@@ -9,8 +9,6 @@ const { fineTimestamp } = require("@sustainer-network/datetime");
 const { SECONDS_IN_DAY } = require("@sustainer-network/consts");
 
 module.exports = async params => {
-  //eslint-disable-next-line no-console
-  console.log("PARMA: ", params);
   const systemInputError = findError([
     object(params.issuerInfo, { optional: true }),
     string(params.traceId, { optional: true }),
