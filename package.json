@@ -22,7 +22,7 @@
     "preversion": "yarn test",
     "version": "auto-changelog && git add CHANGELOG.md",
     "postversion": "git push",
-    "precommit": "yarn test && lint-staged",
+    "precommit": "lint-staged",
     "bootstrap": "lerna bootstrap --use-workspaces",
     "compile": "lerna run compile",
     "clean": "lerna run clean",

@@ -27,6 +27,8 @@ const commandService = "command-service";
 const commandIssuedTimestamp = 234;
 const service = "the-service-the-event-was-triggered-in";
 
+const context = "some-context";
+
 describe("Event store", () => {
   beforeEach(() => {
     clock = useFakeTimers(now.getTime());
@@ -44,6 +46,7 @@ describe("Event store", () => {
     const traceId = "traceId";
 
     await eventStore.add({
+      context,
       fact: {
         root,
         topic,
@@ -62,15 +65,15 @@ describe("Event store", () => {
     });
 
     expect(post).to.have.been.calledWith(
-      "https://event-store.core.sustainer.network/add",
+      "https://add.event-store.core.sustainer.network",
       {
         domain: commandDomain,
         service: commandService,
         event: {
+          context,
           fact: {
             root,
             topic,
-            service,
             version,
             command: {
               id: commandId,
@@ -93,10 +96,10 @@ describe("Event store", () => {
     replace(request, "post", post);
 
     await eventStore.add({
+      context,
       fact: {
         root,
         topic,
-        service,
         command: {
           action: commandAction,
           domain: commandDomain,
@@ -110,15 +113,15 @@ describe("Event store", () => {
     });
 
     expect(post).to.have.been.calledWith(
-      "https://event-store.core.sustainer.network/add",
+      "https://add.event-store.core.sustainer.network",
       {
         domain: commandDomain,
         service: commandService,
         event: {
+          context,
           fact: {
             root,
             topic,
-            service,
             version,
             command: {
               action: commandAction,
@@ -135,7 +138,7 @@ describe("Event store", () => {
     );
   });
 
-  it("should call hydrate with the right params", async () => {
+  it("should call aggregate with the right params", async () => {
     const get = fake();
     replace(request, "get", get);
 
@@ -144,10 +147,10 @@ describe("Event store", () => {
 
     const root = "user";
 
-    await eventStore.hydrate({ root, domain, service });
+    await eventStore.aggregate({ root, domain, service });
 
     expect(get).to.have.been.calledWith(
-      "https://event-store.core.sustainer.network/hydrate",
+      "https://aggregate.event-store.core.sustainer.network",
       { domain, root, service }
     );
   });

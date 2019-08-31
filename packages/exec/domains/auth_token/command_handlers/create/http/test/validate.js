@@ -60,7 +60,7 @@ describe("Validate", () => {
 
     expect(async () => await validate(payload)).to.throw;
   });
-  it("should  throw if no scopes are passed", async () => {
+  it("should throw if no scopes are passed", async () => {
     const payload = {
       ...goodPayload,
       scopes: undefined

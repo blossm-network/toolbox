@@ -3,15 +3,16 @@ const datetime = require("@sustainer-network/datetime");
 
 module.exports = {
   add: async ({
-    fact: { root, topic, service, version, traceId, command },
+    context,
+    fact: { root, topic, version, traceId, command },
     payload
   }) => {
     const isStaging = process.env.NODE_ENV == "staging";
     const event = {
+      context,
       fact: {
         root,
         topic,
-        service,
         version,
         createdTimestamp: datetime.fineTimestamp(),
         ...(traceId && { traceId }),
@@ -27,18 +28,18 @@ module.exports = {
     };
 
     await request.post(
-      `https://event-store.core${
+      `https://add.event-store.core${
         isStaging ? ".staging" : ""
-      }.sustainer.network/add`,
+      }.sustainer.network`,
       { event, domain: command.domain, service: command.service }
     );
   },
-  hydrate: async ({ root, domain, service }) => {
+  aggregate: async ({ root, domain, service }) => {
     const isStaging = process.env.NODE_ENV == "staging";
     await request.get(
-      `https://event-store.core${
+      `https://aggregate.event-store.core${
         isStaging ? ".staging" : ""
-      }.sustainer.network/hydrate`,
+      }.sustainer.network`,
       { root, domain, service }
     );
   }
