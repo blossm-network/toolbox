@@ -1,8 +1,5 @@
 module.exports = async params => {
-  params.event.fact.version = parseInt(params.event.fact.version);
-  params.event.fact.createdTimestamp = parseInt(
-    params.event.fact.createdTimestamp
-  );
+  params.event.fact.createdTimestamp;
 
   for (const property in params.event.fact) {
     if (
@@ -29,7 +26,5 @@ module.exports = async params => {
       delete params.event.fact.command[property];
     }
   }
-  params.event.fact.command.issuedTimestamp = parseInt(
-    params.event.fact.command.issuedTimestamp
-  );
+  params.event.fact.command.issuedTimestamp;
 };
