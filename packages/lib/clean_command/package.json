@@ -1,6 +1,6 @@
 {
   "name": "@sustainer-network/clean-command",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Cleans the paramaters found in command requests.",
   "main": "index.js",
   "author": "sustainernetwork.org",
