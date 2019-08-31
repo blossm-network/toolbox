@@ -10,13 +10,28 @@ exports.post = async (url, params, headers) =>
         json: params,
         ...(headers != undefined && { headers })
       },
-      (err, response) => (err ? reject(err) : resolve(response))
+      (err, response, body) =>
+        err
+          ? reject(err)
+          : resolve({
+            headers: response.headers,
+            statusCode: response.statusCode,
+            statusMessage: response.statusMessage,
+            body
+          })
     )
   );
 
 exports.get = (url, params) =>
   new Promise((resolve, reject) =>
-    deps.request(addParamsToUrl(url, params), (err, response) =>
-      err ? reject(err) : resolve(response)
+    deps.request(addParamsToUrl(url, params), (err, response, body) =>
+      err
+        ? reject(err)
+        : resolve({
+          headers: response.headers,
+          statusCode: response.statusCode,
+          statusMessage: response.statusMessage,
+          body
+        })
     )
   );

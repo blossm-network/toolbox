@@ -3,6 +3,16 @@ const { restore, replace } = require("sinon");
 const deps = require("../deps");
 const request = require("..");
 
+const statusCode = "some-status-code";
+const statusMessage = "some-status-message";
+const headers = "some-headers";
+const response = {
+  statusCode,
+  statusMessage,
+  headers
+};
+const body = "some-body";
+
 describe("Request", () => {
   afterEach(() => {
     restore();
@@ -10,34 +20,32 @@ describe("Request", () => {
   it("should call post with correct params", async () => {
     const params = { hello: "there" };
     const url = "http://google.com";
-    const response = "some-response";
     replace(deps, "request", (options, callback) => {
       expect(options).to.deep.equal({
         url,
         method: "POST",
         json: params
       });
-      callback(null, response);
+      callback(null, response, body);
     });
     const reply = await request.post(url, params);
-    expect(reply).to.equal(response);
+    expect(reply).to.deep.equal({ ...response, body });
   });
   it("should call post with correct params with header", async () => {
     const params = { hello: "there" };
-    const headers = { hi: "there" };
+    const reqHeaders = { hi: "there" };
     const url = "http://google.com";
-    const response = "someResponse";
     replace(deps, "request", (options, callback) => {
       expect(options).to.deep.equal({
         url,
         method: "POST",
         json: params,
-        headers
+        headers: reqHeaders
       });
-      callback(null, response);
+      callback(null, response, body);
     });
-    const reply = await request.post(url, params, headers);
-    expect(reply).to.equal(response);
+    const reply = await request.post(url, params, reqHeaders);
+    expect(reply).to.deep.equal({ ...response, body });
   });
 
   it("should call get with correct params", async () => {
@@ -46,16 +54,15 @@ describe("Request", () => {
       how: ["are", "you"],
       andy: [0, "ur dogs?"]
     };
-    const response = "someResponse";
     replace(deps, "request", (fullUrl, callback) => {
       expect(fullUrl).to.equal(
         `${url}?andy=0&andy=ur%20dogs%3F&hello=there&how=are&how=you`
       );
-      callback(null, response);
+      callback(null, response, body);
     });
     const url = "http://google.com";
     const reply = await request.get(url, params);
-    expect(reply).to.equal(response);
+    expect(reply).to.deep.equal({ ...response, body });
   });
   it("should call get with correct string params", async () => {
     const params = {
@@ -63,23 +70,21 @@ describe("Request", () => {
       how: "are",
       you: "now"
     };
-    const response = "someResponse";
     replace(deps, "request", (fullUrl, callback) => {
       expect(fullUrl).to.equal(`${url}?hello=there&how=are&you=now`);
-      callback(null, response);
+      callback(null, response, body);
     });
     const url = "http://google.com";
     const reply = await request.get(url, params);
-    expect(reply).to.equal(response);
+    expect(reply).to.deep.equal({ ...response, body });
   });
   it("should call get with no params", async () => {
-    const response = "someResponse";
     replace(deps, "request", (fullUrl, callback) => {
       expect(fullUrl).to.equal(url);
-      callback(null, response);
+      callback(null, response, body);
     });
     const url = "http://google.com";
     const reply = await request.get(url);
-    expect(reply).to.equal(response);
+    expect(reply).to.deep.equal({ ...response, body });
   });
 });
