@@ -16,6 +16,7 @@ module.exports = async params => {
   if (systemInputError) throw badRequest.message(systemInputError.message);
 
   const eventSystemInputError = findError([
+    object(params.event.context),
     object(params.event.fact),
     object(params.event.payload)
   ]);
@@ -26,7 +27,6 @@ module.exports = async params => {
   const eventFactSystemInputError = findError([
     string(params.event.fact.root),
     string(params.event.fact.topic),
-    string(params.event.fact.service),
     number(params.event.fact.version),
     object(params.event.fact.command),
     string(params.event.fact.traceId, { optional: true }),

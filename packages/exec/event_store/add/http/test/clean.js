@@ -11,13 +11,18 @@ describe("Clean add", () => {
             bogus: 1
           }
         }
-      }
+      },
+      bogus: 4
     };
 
     await clean(params);
 
-    expect(params.event.fact).to.deep.equal({
-      command: {}
+    expect(params).to.deep.equal({
+      event: {
+        fact: {
+          command: {}
+        }
+      }
     });
   });
 });

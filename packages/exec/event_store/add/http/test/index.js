@@ -21,10 +21,12 @@ describe("Event store", () => {
     replace(deps.eventBus, "publish", fake());
 
     const event = {
+      context: {
+        service: "a-service"
+      },
       fact: {
         root: "someRoot",
         topic: "a.topic",
-        service: "a-service",
         version: 0,
         command: {
           id: "someId",

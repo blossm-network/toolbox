@@ -5,10 +5,13 @@ const goodParams = {
   domain: "some-store-domain",
   service: "some-service",
   event: {
+    context: {
+      service: "service",
+      network: "network"
+    },
     fact: {
       root: "someRoot",
       topic: "a.topic",
-      service: "service",
       version: 0,
       command: {
         id: "someId",
@@ -91,6 +94,22 @@ describe("Validate add", () => {
     const params = {
       ...goodParams,
       "event.payload": undefined
+    };
+
+    expect(async () => await validate(params)).to.throw;
+  });
+  it("should throw if a bad context is passed", async () => {
+    const params = {
+      ...goodParams,
+      "event.context": 123
+    };
+
+    expect(async () => await validate(params)).to.throw;
+  });
+  it("should throw if no context is passed", async () => {
+    const params = {
+      ...goodParams,
+      "event.context": undefined
     };
 
     expect(async () => await validate(params)).to.throw;
