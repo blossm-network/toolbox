@@ -24,5 +24,4 @@ module.exports = async params => {
       delete params.event.fact.command[property];
     }
   }
-  params.event.fact.command.issuedTimestamp;
 };
