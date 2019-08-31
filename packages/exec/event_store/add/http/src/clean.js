@@ -1,6 +1,4 @@
 module.exports = async params => {
-  params.event.fact.createdTimestamp;
-
   for (const property in params.event.fact) {
     if (
       property != "root" &&
