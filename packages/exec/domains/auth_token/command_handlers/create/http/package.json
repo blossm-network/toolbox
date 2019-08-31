@@ -1,7 +1,7 @@
 {
   "name": "@sustainer-network/create-auth-token-command-handler",
   "description": "Creates an auth token.",
-  "version": "0.0.40",
+  "version": "0.0.41",
   "scripts": {
     "test": "mocha --recursive"
   },
@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@sustainer-network/authorize-command": "^0.0.8",
-    "@sustainer-network/clean-command": "^0.0.4",
+    "@sustainer-network/clean-command": "^0.0.5",
     "@sustainer-network/consts": "^0.0.1",
     "@sustainer-network/create-event": "^0.0.17",
     "@sustainer-network/datetime": "^0.0.2",
@@ -21,7 +21,7 @@
     "@sustainer-network/jwt": "^0.0.3",
     "@sustainer-network/normalize-command": "^0.0.6",
     "@sustainer-network/uuid": "^0.0.1",
-    "@sustainer-network/validate-command": "^0.0.8",
+    "@sustainer-network/validate-command": "^0.0.9",
     "@sustainer-network/validator": "^0.0.4"
   },
   "devDependencies": {
