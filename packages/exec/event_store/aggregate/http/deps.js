@@ -1,1 +1,1 @@
-exports.eventStore = require("@sustainer-network/event-store");
+exports.eventStore = require("@sustainers/event-store");

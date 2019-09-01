@@ -1,5 +1,5 @@
-const { string: stringValidator } = require("@sustainer-network/validation");
-const emailValidator = require("@sustainer-network/email-validator");
+const { string: stringValidator } = require("@sustainers/validation");
+const emailValidator = require("@sustainers/email-validator");
 
 module.exports = (value, { optional } = {}) => {
   return stringValidator({

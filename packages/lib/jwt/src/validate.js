@@ -1,4 +1,4 @@
-const { unauthorized } = require("@sustainer-network/errors");
+const { unauthorized } = require("@sustainers/errors");
 const { decodeJwt } = require("../deps");
 
 module.exports = async ({ token, verifyFn }) => {

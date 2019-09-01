@@ -1,9 +1,9 @@
 {
-  "name": "@sustainer-network/request",
-  "version": "0.0.14",
+  "name": "@sustainers/request",
+  "version": "0.0.0",
   "description": "Http access.",
   "main": "index.js",
-  "author": "sustainernetwork.org",
+  "author": "sustainers.net",
   "engines": {
     "node": ">= 10.16.0"
   },

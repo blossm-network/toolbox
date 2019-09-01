@@ -1,4 +1,4 @@
-const { stringArray: stringArrayValidator } = require("@sustainer-network/validation");
+const { stringArray: stringArrayValidator } = require("@sustainers/validation");
 
 module.exports = (stringArray, { fn, optional } = {}) => {
   return stringArrayValidator({

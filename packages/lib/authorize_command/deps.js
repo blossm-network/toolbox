@@ -1,3 +1,3 @@
-const { validate } = require("@sustainer-network/jwt");
+const { validate } = require("@sustainers/jwt");
 
 exports.validate = validate;

@@ -1,6 +1,6 @@
 const { expect } = require("chai").use(require("sinon-chai"));
 const { restore, replace, fake } = require("sinon");
-const transports = require("@sustainer-network/log-transports");
+const transports = require("@sustainers/log-transports");
 
 const { verbose } = require("../index");
 

@@ -1,5 +1,5 @@
-const request = require("@sustainer-network/request");
-const datetime = require("@sustainer-network/datetime");
+const request = require("@sustainers/request");
+const datetime = require("@sustainers/datetime");
 
 module.exports = {
   add: async ({

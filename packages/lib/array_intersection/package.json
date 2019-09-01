@@ -1,9 +1,9 @@
 {
-  "name": "@sustainer-network/array-intersection",
-  "version": "0.0.1",
+  "name": "@sustainers/array-intersection",
+  "version": "0.0.0",
   "description": "Finds the items in common between two arrays.",
   "main": "index.js",
-  "author": "sustainernetwork.org",
+  "author": "sustainers.net",
   "engines": {
     "node": ">= 10.16.0"
   },

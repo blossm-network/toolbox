@@ -1,5 +1,5 @@
-const { findError, string } = require("@sustainer-network/validator");
-const { badRequest } = require("@sustainer-network/errors");
+const { findError, string } = require("@sustainers/validator");
+const { badRequest } = require("@sustainers/errors");
 
 module.exports = async params => {
   const systemInputError = findError([

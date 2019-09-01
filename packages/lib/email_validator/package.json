@@ -1,9 +1,9 @@
 {
-  "name": "@sustainer-network/email-validator",
-  "version": "0.0.1",
+  "name": "@sustainers/email-validator",
+  "version": "0.0.0",
   "description": "Email address validation.",
   "main": "index.js",
-  "author": "sustainernetwork.org",
+  "author": "sustainers.net",
   "engines": {
     "node": ">= 10.16.0"
   },

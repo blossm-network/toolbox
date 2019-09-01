@@ -1,6 +1,6 @@
 const deps = require("../deps");
 
-const { SECONDS_IN_DAY } = require("@sustainer-network/consts");
+const { SECONDS_IN_DAY } = require("@sustainers/consts");
 
 const NINETY_DAYS = 90 * SECONDS_IN_DAY;
 

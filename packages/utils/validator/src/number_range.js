@@ -1,4 +1,4 @@
-const { number: numberValidator } = require("@sustainer-network/validation");
+const { number: numberValidator } = require("@sustainers/validation");
 const isNumberInRange = require("./_is_number_in_range");
 const numberTooBigMessage = require("./_number_too_big_message");
 const numberTooSmallMessage = require("./_number_too_small_message");

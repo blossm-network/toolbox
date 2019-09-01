@@ -1,11 +1,11 @@
 //src: https://pkgstore.datahub.io/core/country-list/data_json/data/8c458f2d15d9f2119654b29ede6e45b8/data_json.json
 
-const { string: stringValidator } = require("@sustainer-network/validation");
+const { string: stringValidator } = require("@sustainers/validation");
 
 module.exports = (string, { optional } = {}) => {
   return stringValidator({
     value: string,
-    message: code => `${code  } is not a country code.`,
+    message: code => `${code} is not a country code.`,
     fn: code => codes.includes(code.toUpperCase()),
     optional
   });

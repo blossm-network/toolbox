@@ -1,9 +1,9 @@
 {
-  "name": "@sustainer-network/command-info-from-req",
-  "version": "0.0.2",
+  "name": "@sustainers/command-info-from-req",
+  "version": "0.0.0",
   "description": "Finds the command name, domain, and service from the hostname of a request.",
   "main": "index.js",
-  "author": "sustainernetwork.org",
+  "author": "sustainers.net",
   "engines": {
     "node": ">= 10.16.0"
   },

@@ -1,9 +1,9 @@
 {
-  "name": "@sustainer-network/event-bus",
-  "version": "0.0.6",
+  "name": "@sustainers/event-bus",
+  "version": "0.0.0",
   "description": "Publishes an event to PubSub.",
   "main": "index.js",
-  "author": "sustainernetwork.org",
+  "author": "sustainers.net",
   "engines": {
     "node": ">= 10.16.0"
   },

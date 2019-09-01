@@ -1,9 +1,9 @@
 {
-  "name": "@sustainer-network/kms",
-  "version": "0.0.2",
+  "name": "@sustainers/kms",
+  "version": "0.0.0",
   "description": "Tools for assymetricly decrypting a payload.",
   "main": "index.js",
-  "author": "sustainernetwork.org",
+  "author": "sustainers.net",
   "engines": {
     "node": ">= 10.16.0"
   },

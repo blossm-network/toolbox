@@ -90,7 +90,7 @@ describe("Kms verify", () => {
   it("should sign and verify correctly", async () => {
     const message = "I am a message";
 
-    process.env.GCP_PROJECT = "staging-sustainernetwork";
+    process.env.GCP_PROJECT = "staging-sustainers";
     const signature = await sign(message);
     const result = await verify({ message, signature });
     expect(result).to.be.true;
@@ -98,7 +98,7 @@ describe("Kms verify", () => {
   it("should fail if messages dont match", async () => {
     const message = "I am a message";
 
-    process.env.GCP_PROJECT = "staging-sustainernetwork";
+    process.env.GCP_PROJECT = "staging-sustainers";
     const signature = await sign(message);
     const result = await verify({ message: `${message}-`, signature });
     expect(result).to.be.false;

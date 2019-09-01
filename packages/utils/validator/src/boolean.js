@@ -1,4 +1,4 @@
-const { boolean: booleanValidator } = require("@sustainer-network/validation");
+const { boolean: booleanValidator } = require("@sustainers/validation");
 
 module.exports = (boolean, { fn, optional } = {}) => {
   return booleanValidator({

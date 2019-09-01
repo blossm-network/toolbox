@@ -1,1 +1,1 @@
-exports.nonce = require("@sustainer-network/nonce");
+exports.nonce = require("@sustainers/nonce");

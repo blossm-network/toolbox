@@ -1,9 +1,9 @@
 {
-  "name": "@sustainer-network/command-middleware",
-  "version": "0.0.1",
+  "name": "@sustainers/command-middleware",
+  "version": "0.0.0",
   "description": "Command middleware.",
   "main": "index.js",
-  "author": "sustainernetwork.org",
+  "author": "sustainers.net",
   "engines": {
     "node": ">= 10.16.0"
   },

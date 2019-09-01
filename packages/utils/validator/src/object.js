@@ -1,4 +1,4 @@
-const { object: objectValidator } = require("@sustainer-network/validation");
+const { object: objectValidator } = require("@sustainers/validation");
 
 module.exports = (object, { fn, optional } = {}) => {
   return objectValidator({

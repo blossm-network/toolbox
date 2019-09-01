@@ -1,6 +1,6 @@
 const deps = require("./deps");
-const { unauthorized } = require("@sustainer-network/errors");
-const intersection = require("@sustainer-network/array-intersection");
+const { unauthorized } = require("@sustainers/errors");
+const intersection = require("@sustainers/array-intersection");
 
 const WILDCARD = "*";
 

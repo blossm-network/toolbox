@@ -1,4 +1,4 @@
-const { string: stringValidator } = require("@sustainer-network/validation");
+const { string: stringValidator } = require("@sustainers/validation");
 
 const maxPasswordLength = 30;
 const minPasswordLength = 8;

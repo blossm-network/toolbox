@@ -1,9 +1,9 @@
 {
-  "name": "@sustainer-network/errors",
-  "version": "0.0.1",
+  "name": "@sustainers/errors",
+  "version": "0.0.0",
   "description": "A library of errors that can be thrown by the network.",
   "main": "index.js",
-  "author": "sustainernetwork.org",
+  "author": "sustainers.net",
   "engines": {
     "node": ">= 10.16.0"
   },

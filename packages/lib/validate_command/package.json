@@ -1,9 +1,9 @@
 {
-  "name": "@sustainer-network/validate-command",
-  "version": "0.0.10",
+  "name": "@sustainers/validate-command",
+  "version": "0.0.0",
   "description": "Validates the paramaters found in command requests.",
   "main": "index.js",
-  "author": "sustainernetwork.org",
+  "author": "sustainers.net",
   "engines": {
     "node": ">= 10.16.0"
   },
@@ -11,10 +11,10 @@
     "access": "public"
   },
   "dependencies": {
-    "@sustainer-network/consts": "^0.0.1",
-    "@sustainer-network/datetime": "^0.0.2",
-    "@sustainer-network/errors": "^0.0.1",
-    "@sustainer-network/validator": "^0.0.4"
+    "@sustainers/consts": "*",
+    "@sustainers/datetime": "*",
+    "@sustainers/errors": "*",
+    "@sustainers/validator": "*"
   },
   "scripts": {
     "test": "mocha"

@@ -1,9 +1,9 @@
 {
-  "name": "@sustainer-network/validator",
-  "version": "0.0.4",
+  "name": "@sustainers/validator",
+  "version": "0.0.0",
   "description": "Value validation for common and custom types.",
   "main": "index.js",
-  "author": "sustainer-network",
+  "author": "sustainers.net",
   "engines": {
     "node": ">= 10.16.0"
   },
@@ -11,10 +11,10 @@
     "access": "public"
   },
   "dependencies": {
-    "@sustainer-network/consts": "^0.0.1",
-    "@sustainer-network/email-validator": "^0.0.1",
-    "@sustainer-network/phone-number": "^0.0.3",
-    "@sustainer-network/validation": "^0.0.2"
+    "@sustainers/consts": "*",
+    "@sustainers/email-validator": "*",
+    "@sustainers/phone-number": "*",
+    "@sustainers/validation": "*"
   },
   "scripts": {
     "test": "mocha"

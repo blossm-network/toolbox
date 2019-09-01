@@ -1,4 +1,4 @@
-const datetime = require("@sustainer-network/datetime");
+const datetime = require("@sustainers/datetime");
 const deps = require("./deps");
 
 module.exports = async ({

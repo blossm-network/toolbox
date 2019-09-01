@@ -1,6 +1,6 @@
 const { expect } = require("chai").use(require("sinon-chai"));
 const { useFakeTimers } = require("sinon");
-const datetime = require("@sustainer-network/datetime");
+const datetime = require("@sustainers/datetime");
 const validateCommand = require("..");
 
 const now = new Date();

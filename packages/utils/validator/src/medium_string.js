@@ -1,4 +1,4 @@
-const { string: stringValidator } = require("@sustainer-network/validation");
+const { string: stringValidator } = require("@sustainers/validation");
 const stringTooLongMessage = require("./_string_too_long_message");
 const stringIsNotEmpty = require("./_string_is_not_empty");
 const stringEmptyMessage = require("./_string_empty_message");

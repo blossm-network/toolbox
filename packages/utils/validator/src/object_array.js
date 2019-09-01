@@ -1,6 +1,4 @@
-const {
-  objectArray: objectArrayValidator
-} = require("@sustainer-network/validation");
+const { objectArray: objectArrayValidator } = require("@sustainers/validation");
 
 module.exports = (objectArray, { optional } = {}) => {
   return objectArrayValidator({

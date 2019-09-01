@@ -1,4 +1,4 @@
-const { number: numberValidator } = require("@sustainer-network/validation");
+const { number: numberValidator } = require("@sustainers/validation");
 
 module.exports = (number, { fn, optional } = {}) => {
   return numberValidator({

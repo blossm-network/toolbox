@@ -1,1 +1,1 @@
-exports.makeUuid = require("@sustainer-network/uuid");
+exports.makeUuid = require("@sustainers/uuid");

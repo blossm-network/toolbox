@@ -4,9 +4,9 @@ const {
   objectArray,
   object,
   string
-} = require("@sustainer-network/validator");
+} = require("@sustainers/validator");
 
-const { badRequest } = require("@sustainer-network/errors");
+const { badRequest } = require("@sustainers/errors");
 
 module.exports = async payload => {
   const systemInputError = findError([

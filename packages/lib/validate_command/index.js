@@ -1,12 +1,7 @@
-const {
-  object,
-  string,
-  number,
-  findError
-} = require("@sustainer-network/validator");
-const { badRequest, conflict } = require("@sustainer-network/errors");
-const { fineTimestamp } = require("@sustainer-network/datetime");
-const { SECONDS_IN_DAY } = require("@sustainer-network/consts");
+const { object, string, number, findError } = require("@sustainers/validator");
+const { badRequest, conflict } = require("@sustainers/errors");
+const { fineTimestamp } = require("@sustainers/datetime");
+const { SECONDS_IN_DAY } = require("@sustainers/consts");
 
 module.exports = async params => {
   const systemInputError = findError([

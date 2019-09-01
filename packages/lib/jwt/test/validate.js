@@ -1,7 +1,7 @@
 const { expect } = require("chai").use(require("chai-as-promised"));
 const { fake } = require("sinon");
 
-const { unauthorized } = require("@sustainer-network/errors");
+const { unauthorized } = require("@sustainers/errors");
 const deps = require("../deps");
 
 const { create, validate } = require("..");

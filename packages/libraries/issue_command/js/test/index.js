@@ -3,9 +3,9 @@ const { expect } = require("chai")
   .use(require("sinon-chai"));
 const { restore, replace, fake, useFakeTimers } = require("sinon");
 const issueCommand = require("../index");
-const request = require("@sustainer-network/request");
+const request = require("@sustainers/request");
 
-const datetime = require("@sustainer-network/datetime");
+const datetime = require("@sustainers/datetime");
 
 let clock;
 
