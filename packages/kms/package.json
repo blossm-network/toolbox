@@ -1,6 +1,6 @@
 {
   "name": "@sustainers/kms",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Tools for assymetricly decrypting a payload.",
   "main": "index.js",
   "author": "sustainers.net",

@@ -1,7 +1,7 @@
 {
   "name": "@sustainers/create-auth-token-command-handler",
   "description": "Creates an auth token.",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "scripts": {
     "test": "mocha --recursive"
   },
@@ -12,17 +12,17 @@
     "access": "public"
   },
   "dependencies": {
-    "@sustainers/authorize-command": "*",
-    "@sustainers/clean-command": "*",
-    "@sustainers/consts": "*",
-    "@sustainers/create-event": "*",
-    "@sustainers/datetime": "*",
-    "@sustainers/errors": "*",
-    "@sustainers/jwt": "*",
-    "@sustainers/normalize-command": "*",
-    "@sustainers/uuid": "*",
-    "@sustainers/validate-command": "*",
-    "@sustainers/validator": "*"
+    "@sustainers/authorize-command": "^0.0.1",
+    "@sustainers/clean-command": "^0.0.1",
+    "@sustainers/consts": "^0.0.1",
+    "@sustainers/create-event": "^0.0.1",
+    "@sustainers/datetime": "^0.0.1",
+    "@sustainers/errors": "^0.0.1",
+    "@sustainers/jwt": "^0.0.1",
+    "@sustainers/normalize-command": "^0.0.1",
+    "@sustainers/uuid": "^0.0.1",
+    "@sustainers/validate-command": "^0.0.1",
+    "@sustainers/validator": "^0.0.1"
   },
   "devDependencies": {
     "mocha": "^6.1.4",

@@ -1,7 +1,7 @@
 {
   "name": "@sustainers/event-store-aggregate-service",
   "description": "Hydrate an event store aggregate root.",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "scripts": {
     "test": "mocha --recursive",
     "check-packages": "yarn clean && yarn compile && yarn test"
@@ -10,9 +10,9 @@
     "access": "public"
   },
   "dependencies": {
-    "@sustainers/errors": "*",
-    "@sustainers/event-store": "*",
-    "@sustainers/validator": "*"
+    "@sustainers/errors": "^0.0.1",
+    "@sustainers/event-store": "^0.0.1",
+    "@sustainers/validator": "^0.0.1"
   },
   "devDependencies": {
     "mocha": "^6.1.4",

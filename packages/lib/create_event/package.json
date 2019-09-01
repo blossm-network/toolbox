@@ -1,6 +1,6 @@
 {
   "name": "@sustainers/create-event",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Creates a normalized event.",
   "main": "index.js",
   "author": "sustainers.net",
@@ -11,7 +11,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@sustainers/uuid": "*"
+    "@sustainers/uuid": "^0.0.1"
   },
   "scripts": {
     "test": "mocha"

@@ -1,6 +1,6 @@
 {
   "name": "@sustainers/logger",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Logging tools.",
   "main": "index.js",
   "author": "sustainers.net",
@@ -11,7 +11,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@sustainers/log-transports": "*"
+    "@sustainers/log-transports": "^0.0.1"
   },
   "scripts": {
     "test": "mocha"

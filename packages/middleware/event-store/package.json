@@ -1,6 +1,6 @@
 {
   "name": "@sustainers/event-store-middleware",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Event store middleware.",
   "main": "index.js",
   "author": "sustainers.net",
