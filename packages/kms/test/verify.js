@@ -10,10 +10,6 @@ const pem = "some-pem";
 const message = "some message";
 const signature = "some-signature";
 
-process.env.GOOGLE_APPLICATION_CREDENTIALS =
-  process.env.GOOGLE_APPLICATION_CREDENTIALS ||
-  "/Users/joao/.config/gcloud/core-staging-3ea7929ce368.json";
-
 describe("Kms verify", () => {
   beforeEach(() => {
     process.env.GCP_PROJECT = gcpProject;
