@@ -1,0 +1,24 @@
+{
+  "name": "@sustainers/authorize",
+  "version": "0.0.0",
+  "description": "Authorize requests.",
+  "main": "index.js",
+  "author": "sustainers.net",
+  "engines": {
+    "node": ">= 10.16.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@sustainers/array-intersection": "^0.0.1",
+    "@sustainers/jwt": "^0.0.1",
+    "@sustainers/tokens-from-req": "*"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "devDependencies": {
+    "mocha": "^6.1.4"
+  }
+}

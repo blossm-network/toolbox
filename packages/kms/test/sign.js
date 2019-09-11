@@ -37,8 +37,8 @@ describe("Kms sign", () => {
     expect(pathFake).to.have.been.calledWith(
       gcpProject,
       "global",
-      "auth-token",
-      "sign",
+      "core",
+      "auth",
       "1"
     );
     expect(result).to.equal(signature);

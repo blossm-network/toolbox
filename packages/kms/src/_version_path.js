@@ -5,8 +5,8 @@ module.exports = () => {
   return client.cryptoKeyVersionPath(
     process.env.GCP_PROJECT,
     "global",
-    "auth-token",
-    "sign",
+    "core",
+    "auth",
     "1"
   );
 };

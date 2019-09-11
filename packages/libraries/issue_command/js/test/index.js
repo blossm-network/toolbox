@@ -2,21 +2,27 @@ const { expect } = require("chai")
   .use(require("chai-datetime"))
   .use(require("sinon-chai"));
 const { restore, replace, fake, useFakeTimers } = require("sinon");
-const issueCommand = require("../index");
-const request = require("@sustainers/request");
-
 const datetime = require("@sustainers/datetime");
+
+const deps = require("../deps");
+const issueCommand = require("..");
 
 let clock;
 
 const now = new Date();
 
-const protocol = "https://";
+const action = "some-action!";
+const domain = "some-domain!";
+
+const payload = { a: 1 };
+const trace = "some-trace";
+const source = "some-source";
+
+const context = { c: 2 };
 
 describe("Issue command", () => {
   beforeEach(() => {
     clock = useFakeTimers(now.getTime());
-    process.env.NODE_ENV = "production";
   });
   afterEach(() => {
     clock.restore();
@@ -25,87 +31,48 @@ describe("Issue command", () => {
 
   it("should call with the correct params", async () => {
     const post = fake();
-    replace(request, "post", post);
+    const operation = fake.returns({
+      post
+    });
+    replace(deps, "operation", operation);
 
-    const action = "some-action!";
-    const domain = "some-domain!";
-    const service = "some-service!";
+    await issueCommand({ action, domain })
+      .with(payload, { trace, source })
+      .in(context);
 
-    const payload = { a: 1 };
-
-    await issueCommand({ action, domain, service }).with(payload);
-
-    expect(post).to.have.been.calledWith(
-      `${protocol}${action}.${domain}.${service}.sustainer.network`,
-      {
+    expect(operation).to.have.been.calledWith(`${action}.${domain}`);
+    expect(post).to.have.been.calledWith({
+      data: {
         payload,
-        issuedTimestamp: datetime.fineTimestamp()
-      }
-    );
+        header: {
+          issued: datetime.fineTimestamp(),
+          trace,
+          source
+        }
+      },
+      context
+    });
   });
-  it("should call with the correct params in staging", async () => {
+  it("should call with the correct optional params", async () => {
     const post = fake();
-    replace(request, "post", post);
+    const operation = fake.returns({
+      post
+    });
+    replace(deps, "operation", operation);
 
-    process.env.NODE_ENV = "staging";
+    await issueCommand({ action, domain })
+      .with(payload)
+      .in(context);
 
-    const action = "some-action!";
-    const domain = "some-domain!";
-    const service = "some-service!";
-
-    const payload = { a: 1 };
-
-    await issueCommand({ action, domain, service }).with(payload);
-
-    expect(post).to.have.been.calledWith(
-      `${protocol}${action}.${domain}.${service}.staging.sustainer.network`,
-      {
+    expect(operation).to.have.been.calledWith(`${action}.${domain}`);
+    expect(post).to.have.been.calledWith({
+      data: {
         payload,
-        issuedTimestamp: datetime.fineTimestamp()
-      }
-    );
-  });
-
-  it("should call with the correct params with req", async () => {
-    const post = fake();
-    replace(request, "post", post);
-
-    const sourceCommand = {
-      id: "some-id!",
-      action: "some-action!",
-      domain: "some-domain!",
-      service: "some-service!"
-    };
-
-    const payload = { a: 1 };
-
-    const traceId = "traceId!";
-    const issuerInfo = {
-      a: 1,
-      b: 2
-    };
-
-    const params = {
-      traceId,
-      sourceCommand,
-      issuerInfo
-    };
-
-    const action = "an-action";
-    const domain = "a-domain";
-    const service = "a-service";
-
-    await issueCommand({ action, domain, service }).with(payload, { params });
-
-    expect(post).to.have.been.calledWith(
-      `${protocol}${action}.${domain}.${service}.sustainer.network`,
-      {
-        payload,
-        traceId,
-        sourceCommand,
-        issuedTimestamp: datetime.fineTimestamp(),
-        issuerInfo
-      }
-    );
+        header: {
+          issued: datetime.fineTimestamp()
+        }
+      },
+      context
+    });
   });
 });

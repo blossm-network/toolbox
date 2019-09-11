@@ -1,26 +1,22 @@
-const request = require("@sustainers/request");
 const datetime = require("@sustainers/datetime");
 
-module.exports = ({ action, domain, service }) => {
+const deps = require("./deps");
+
+module.exports = ({ action, domain }) => {
   return {
-    with: async (payload, { params } = {}) => {
-      const data = { payload };
-      if (params) {
-        data.traceId = params.traceId;
-        data.issuerInfo = params.issuerInfo;
-        data.sourceCommand = params.sourceCommand;
-      }
+    with: (payload, { trace, source } = {}) => {
+      const header = {
+        issued: datetime.fineTimestamp(),
+        ...(trace != undefined && { trace }),
+        ...(source != undefined && { source })
+      };
 
-      data.issuedTimestamp = datetime.fineTimestamp();
+      const data = { payload, header };
 
-      const isStaging = process.env.NODE_ENV == "staging";
-
-      await request.post(
-        `https://${action}.${domain}.${service}${
-          isStaging ? ".staging" : ""
-        }.sustainer.network`,
-        data
-      );
+      return {
+        in: async context =>
+          await deps.operation(`${action}.${domain}`).post({ data, context })
+      };
     }
   };
 };

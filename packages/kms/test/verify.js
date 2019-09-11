@@ -10,6 +10,9 @@ const pem = "some-pem";
 const message = "some message";
 const signature = "some-signature";
 
+process.env.GOOGLE_APPLICATION_CREDENTIALS =
+  "/Users/joao/.config/gcloud/core-staging-3ea7929ce368.json";
+
 describe("Kms verify", () => {
   beforeEach(() => {
     process.env.GCP_PROJECT = gcpProject;
@@ -52,8 +55,8 @@ describe("Kms verify", () => {
     expect(pathFake).to.have.been.calledWith(
       gcpProject,
       "global",
-      "auth-token",
-      "sign",
+      "core",
+      "auth",
       "1"
     );
     expect(createVerifyFake).to.have.been.calledWith("SHA256");
@@ -90,7 +93,7 @@ describe("Kms verify", () => {
   it("should sign and verify correctly", async () => {
     const message = "I am a message";
 
-    process.env.GCP_PROJECT = "staging-sustainers";
+    process.env.GCP_PROJECT = "smn-core-staging";
     const signature = await sign(message);
     const result = await verify({ message, signature });
     expect(result).to.be.true;
@@ -98,7 +101,7 @@ describe("Kms verify", () => {
   it("should fail if messages dont match", async () => {
     const message = "I am a message";
 
-    process.env.GCP_PROJECT = "staging-sustainers";
+    process.env.GCP_PROJECT = "smn-core-staging";
     const signature = await sign(message);
     const result = await verify({ message: `${message}-`, signature });
     expect(result).to.be.false;

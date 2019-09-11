@@ -1,0 +1,32 @@
+{
+  "name": "@sustainers/core-gateway",
+  "description": "Relays commands from the internet to internal services.",
+  "version": "0.0.0",
+  "scripts": {
+    "test": "mocha --recursive"
+  },
+  "engines": {
+    "node": ">= 10.16.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@sustainers/authorize-command": "^0.0.1",
+    "@sustainers/clean-command": "^0.0.1",
+    "@sustainers/consts": "^0.0.1",
+    "@sustainers/create-event": "^0.0.1",
+    "@sustainers/datetime": "^0.0.1",
+    "@sustainers/errors": "^0.0.1",
+    "@sustainers/jwt": "^0.0.1",
+    "@sustainers/normalize-command": "^0.0.1",
+    "@sustainers/uuid": "^0.0.1",
+    "@sustainers/validate-command": "^0.0.1",
+    "@sustainers/validator": "^0.0.1"
+  },
+  "devDependencies": {
+    "mocha": "^6.1.4",
+    "sinon": "^7.3.2",
+    "sinon-chai": "^3.3.0"
+  }
+}

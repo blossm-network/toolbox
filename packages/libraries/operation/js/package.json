@@ -1,9 +1,9 @@
 {
-  "name": "@sustainers/issue-command-js",
-  "description": "Issues a command.",
-  "version": "0.0.1",
+  "name": "@sustainers/operation-js",
+  "description": "Calls an operation on a service within the network.",
+  "version": "0.0.0",
   "main": "index.js",
-  "author": "sustainers.net",
+  "author": "sustainers.market",
   "engines": {
     "node": ">= 10.16.0"
   },
@@ -14,8 +14,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@sustainers/datetime": "^0.0.1",
-    "@sustainers/operation-js": "*"
+    "@sustainers/request": "^0.0.1"
   },
   "devDependencies": {
     "chai-datetime": "^1.5.0",
