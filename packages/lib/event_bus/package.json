@@ -1,6 +1,6 @@
 {
   "name": "@sustainers/event-bus",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Publishes an event to PubSub.",
   "main": "index.js",
   "author": "sustainers.market",

@@ -1,6 +1,6 @@
 {
   "name": "@sustainers/normalize-command",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Normalizes the paramaters found in command requests.",
   "main": "index.js",
   "author": "sustainers.market",
@@ -11,7 +11,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@sustainers/nonce": "^0.0.1"
+    "@sustainers/nonce": "^0.0.2"
   },
   "scripts": {
     "test": "mocha"

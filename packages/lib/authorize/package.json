@@ -1,6 +1,6 @@
 {
   "name": "@sustainers/authorize",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Authorize requests.",
   "main": "index.js",
   "author": "sustainers.market",
@@ -11,9 +11,9 @@
     "access": "public"
   },
   "dependencies": {
-    "@sustainers/array-intersection": "^0.0.1",
-    "@sustainers/jwt": "^0.0.1",
-    "@sustainers/tokens-from-req": "*"
+    "@sustainers/array-intersection": "^0.0.2",
+    "@sustainers/jwt": "^0.0.2",
+    "@sustainers/tokens-from-req": "^0.0.2"
   },
   "scripts": {
     "test": "mocha"

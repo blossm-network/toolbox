@@ -1,6 +1,6 @@
 {
   "name": "@sustainers/middleware",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Standard middleware for the network.",
   "main": "index.js",
   "author": "sustainers.market",

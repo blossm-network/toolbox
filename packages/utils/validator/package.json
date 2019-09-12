@@ -1,6 +1,6 @@
 {
   "name": "@sustainers/validator",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Value validation for common and custom types.",
   "main": "index.js",
   "author": "sustainers.market",
@@ -11,10 +11,10 @@
     "access": "public"
   },
   "dependencies": {
-    "@sustainers/consts": "^0.0.1",
-    "@sustainers/email-validator": "^0.0.1",
+    "@sustainers/consts": "^0.0.2",
+    "@sustainers/email-validator": "^0.0.2",
     "@sustainers/phone-number": "^0.0.1",
-    "@sustainers/validation": "^0.0.1"
+    "@sustainers/validation": "^0.0.2"
   },
   "scripts": {
     "test": "mocha"

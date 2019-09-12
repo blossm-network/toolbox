@@ -1,6 +1,6 @@
 {
   "name": "@sustainers/tokens-from-req",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Parses the jwt Bearer token and the Basic Auth token from the Authorization header of the request.",
   "main": "index.js",
   "author": "sustainers.market",
