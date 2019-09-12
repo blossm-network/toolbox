@@ -1,7 +1,7 @@
 {
   "name": "@sustainers/core-gateway",
   "description": "Relays commands from the internet to internal services.",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "scripts": {
     "test": "mocha --recursive"
   },
