@@ -1,6 +1,6 @@
 {
   "name": "@sustainers/validate-command",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Validates the paramaters found in command requests.",
   "main": "index.js",
   "author": "sustainers.net",
