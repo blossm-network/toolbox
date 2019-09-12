@@ -7,45 +7,34 @@ describe("Clean command", () => {
 
     const params = {
       bogus: 1,
-      payload,
-      sourceCommand: {
-        bogus: 3
-      }
+      header: {
+        nope: 2,
+        source: {
+          bogus: 3
+        }
+      },
+      payload
     };
 
     await cleanCommand(params);
 
     expect(params).to.deep.equal({
       payload,
-      sourceCommand: {}
+      header: {
+        source: {}
+      }
     });
   });
   it("should add a payload", async () => {
-    const params = {};
-
-    await cleanCommand(params);
-
-    expect(params).to.deep.equal({
-      payload: {}
-    });
-  });
-  it("should clean remove unwanted issuerInfo fields", async () => {
-    const id = "issuerId!";
-    const ip = "123";
     const params = {
-      issuerInfo: {
-        id,
-        ip,
-        a: 3,
-        b: "23"
-      }
+      header: {}
     };
 
     await cleanCommand(params);
 
-    expect(params.issuerInfo).to.deep.equal({
-      id,
-      ip
+    expect(params).to.deep.equal({
+      header: {},
+      payload: {}
     });
   });
 });

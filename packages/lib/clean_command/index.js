@@ -1,26 +1,20 @@
 module.exports = async params => {
   for (const property in params) {
-    if (
-      property != "payload" &&
-      property != "issuerInfo" &&
-      property != "issuedTimestamp" &&
-      property != "traceId" &&
-      property != "sourceCommand"
-    ) {
+    if (property != "payload" && property != "header") {
       delete params[property];
     }
   }
 
   params.payload = params.payload || {};
 
-  for (const property in params.issuerInfo) {
-    if (property != "id" && property != "ip") {
-      delete params.issuerInfo[property];
+  for (const property in params.header) {
+    if (property != "issued" && property != "trace" && property != "source") {
+      delete params.header[property];
     }
   }
 
-  if (params.sourceCommand != undefined) {
-    for (const property in params.sourceCommand) {
+  if (params.header.source != undefined) {
+    for (const property in params.header.source) {
       if (
         property != "id" &&
         property != "action" &&
@@ -28,7 +22,7 @@ module.exports = async params => {
         property != "service" &&
         property != "network"
       ) {
-        delete params.sourceCommand[property];
+        delete params.header.source[property];
       }
     }
   }
