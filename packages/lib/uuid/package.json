@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "Creates a uuid.",
   "main": "index.js",
-  "author": "sustainers.net",
+  "author": "sustainers.market",
   "engines": {
     "node": ">= 10.16.0"
   },

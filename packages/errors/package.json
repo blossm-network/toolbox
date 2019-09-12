@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "A library of errors that can be thrown by the network.",
   "main": "index.js",
-  "author": "sustainers.net",
+  "author": "sustainers.market",
   "engines": {
     "node": ">= 10.16.0"
   },

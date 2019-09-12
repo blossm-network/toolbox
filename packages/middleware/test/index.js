@@ -5,7 +5,7 @@ const middleware = require("..");
 
 const sandbox = createSandbox();
 
-describe("Command middleware", () => {
+describe("Middleware", () => {
   afterEach(() => {
     restore();
     sandbox.restore();

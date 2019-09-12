@@ -3,7 +3,7 @@
   "description": "Issues a command.",
   "version": "0.0.5",
   "main": "index.js",
-  "author": "sustainers.net",
+  "author": "sustainers.market",
   "engines": {
     "node": ">= 10.16.0"
   },

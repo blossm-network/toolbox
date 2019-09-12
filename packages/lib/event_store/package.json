@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "Add events and hydrate aggregate roots from a big table store.",
   "main": "index.js",
-  "author": "sustainers.net",
+  "author": "sustainers.market",
   "engines": {
     "node": ">= 10.16.0"
   },

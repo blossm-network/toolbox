@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "Finds the command name, domain, and service from the hostname of a request.",
   "main": "index.js",
-  "author": "sustainers.net",
+  "author": "sustainers.market",
   "engines": {
     "node": ">= 10.16.0"
   },
