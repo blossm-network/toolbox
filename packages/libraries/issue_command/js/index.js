@@ -13,7 +13,7 @@ module.exports = ({ action, domain }) => {
       return {
         in: async context =>
           await request.post(
-            `https://${process.env.SERVICE}.command.${process.env.NETWORK}/${action}.${domain}`,
+            `https://${process.env.SERVICE}.command.${process.env.NETWORK}/${domain}/${action}`,
             {
               payload,
               header,

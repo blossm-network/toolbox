@@ -41,7 +41,7 @@ describe("Issue command", () => {
       .in(context);
 
     expect(post).to.have.been.calledWith(
-      `https://${service}.command.${network}/${action}.${domain}`,
+      `https://${service}.command.${network}/${domain}/${action}`,
       {
         payload,
         header: {
@@ -62,7 +62,7 @@ describe("Issue command", () => {
       .in(context);
 
     expect(post).to.have.been.calledWith(
-      `https://${service}.command.${network}/${action}.${domain}`,
+      `https://${service}.command.${network}/${domain}/${action}`,
       {
         payload,
         header: {
