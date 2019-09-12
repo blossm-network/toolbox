@@ -24,7 +24,7 @@ const context = { c: 2 };
 
 describe("Issue command", () => {
   beforeEach(() => {
-    (process.env.SERVICE = service), (process.env.NETWORK = network);
+    process.env.SERVICE = service;
     clock = useFakeTimers(now.getTime());
   });
   afterEach(() => {
@@ -36,7 +36,7 @@ describe("Issue command", () => {
     const post = fake();
     replace(request, "post", post);
 
-    await issueCommand({ action, domain })
+    await issueCommand({ action, domain, network })
       .with(payload, { trace, source })
       .in(context);
 
@@ -57,7 +57,7 @@ describe("Issue command", () => {
     const post = fake();
     replace(request, "post", post);
 
-    await issueCommand({ action, domain })
+    await issueCommand({ action, domain, network })
       .with(payload)
       .in(context);
 
