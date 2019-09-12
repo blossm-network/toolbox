@@ -1,6 +1,5 @@
 const datetime = require("@sustainers/datetime");
-
-const deps = require("./deps");
+const request = require("@sustainers/request");
 
 module.exports = ({ action, domain }) => {
   return {
@@ -11,11 +10,16 @@ module.exports = ({ action, domain }) => {
         ...(source != undefined && { source })
       };
 
-      const data = { payload, header };
-
       return {
         in: async context =>
-          await deps.operation(`${action}.${domain}`).post({ data, context })
+          await request.post(
+            `https://${process.env.SERVICE}.command.${process.env.NETWORK}/${action}.${domain}`,
+            {
+              payload,
+              header,
+              context
+            }
+          )
       };
     }
   };
