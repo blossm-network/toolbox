@@ -1,7 +1,8 @@
 const datetime = require("@sustainers/datetime");
-const request = require("@sustainers/request");
 
-module.exports = ({ action, domain, network }) => {
+const deps = require("./deps");
+
+module.exports = ({ action, domain, service, network }) => {
   return {
     with: (payload, { trace, source } = {}) => {
       const header = {
@@ -10,16 +11,17 @@ module.exports = ({ action, domain, network }) => {
         ...(source != undefined && { source })
       };
 
+      const data = { payload, header };
+
       return {
         in: async context =>
-          await request.post(
-            `https://${process.env.SERVICE}.command.${network}/${domain}/${action}`,
-            {
-              payload,
-              header,
+          await deps
+            .operation(`${action}.${domain}`)
+            .post({
+              data,
               context
-            }
-          )
+            })
+            .on({ service, network })
       };
     }
   };

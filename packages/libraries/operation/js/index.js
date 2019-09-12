@@ -2,21 +2,23 @@ const request = require("@sustainers/request");
 
 module.exports = operation => {
   return {
-    post: async ({ data, context }) =>
-      await request.post(
-        `https://${operation}.${process.env.SERVICE}.${process.env.NETWORK}`,
-        {
-          ...data,
-          context
-        }
-      ),
-    get: async ({ data, context }) =>
-      await request.get(
-        `https://${operation}.${process.env.SERVICE}.${process.env.NETWORK}`,
-        {
-          ...data,
-          context
-        }
-      )
+    post: ({ data, context }) => {
+      return {
+        on: async ({ service, network }) =>
+          await request.post(`https://${operation}.${service}.${network}`, {
+            ...data,
+            context
+          })
+      };
+    },
+    get: ({ data, context }) => {
+      return {
+        on: async ({ service, network }) =>
+          await request.get(`https://${operation}.${service}.${network}`, {
+            ...data,
+            context
+          })
+      };
+    }
   };
 };

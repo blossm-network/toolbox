@@ -3,8 +3,8 @@ const { expect } = require("chai")
   .use(require("sinon-chai"));
 const { restore, replace, fake, useFakeTimers } = require("sinon");
 const datetime = require("@sustainers/datetime");
-const request = require("@sustainers/request");
 
+const deps = require("../deps");
 const issueCommand = require("..");
 
 let clock;
@@ -24,7 +24,6 @@ const context = { c: 2 };
 
 describe("Issue command", () => {
   beforeEach(() => {
-    process.env.SERVICE = service;
     clock = useFakeTimers(now.getTime());
   });
   afterEach(() => {
@@ -33,43 +32,57 @@ describe("Issue command", () => {
   });
 
   it("should call with the correct params", async () => {
-    const post = fake();
-    replace(request, "post", post);
+    const on = fake();
+    const post = fake.returns({
+      on
+    });
+    const operation = fake.returns({
+      post
+    });
+    replace(deps, "operation", operation);
 
-    await issueCommand({ action, domain, network })
+    await issueCommand({ action, domain, service, network })
       .with(payload, { trace, source })
       .in(context);
 
-    expect(post).to.have.been.calledWith(
-      `https://${service}.command.${network}/${domain}/${action}`,
-      {
+    expect(operation).to.have.been.calledWith(`${action}.${domain}`);
+    expect(post).to.have.been.calledWith({
+      data: {
         payload,
         header: {
           issued: datetime.fineTimestamp(),
           trace,
           source
-        },
-        context
-      }
-    );
+        }
+      },
+      context
+    });
+    expect(on).to.have.been.calledWith({ service, network });
   });
   it("should call with the correct optional params", async () => {
-    const post = fake();
-    replace(request, "post", post);
+    const on = fake();
+    const post = fake.returns({
+      on
+    });
+    const operation = fake.returns({
+      post
+    });
+    replace(deps, "operation", operation);
 
-    await issueCommand({ action, domain, network })
+    await issueCommand({ action, domain, service, network })
       .with(payload)
       .in(context);
 
-    expect(post).to.have.been.calledWith(
-      `https://${service}.command.${network}/${domain}/${action}`,
-      {
+    expect(operation).to.have.been.calledWith(`${action}.${domain}`);
+    expect(post).to.have.been.calledWith({
+      data: {
         payload,
         header: {
           issued: datetime.fineTimestamp()
-        },
-        context
-      }
-    );
+        }
+      },
+      context
+    });
+    expect(on).to.have.been.calledWith({ service, network });
   });
 });
