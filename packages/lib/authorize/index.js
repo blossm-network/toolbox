@@ -1,38 +1,23 @@
-const deps = require("./deps");
 const { unauthorized } = require("@sustainers/errors");
 const intersection = require("@sustainers/array-intersection");
 
 const WILDCARD = "*";
 
 module.exports = async ({
-  req,
-  verifyFn,
+  path,
+  claims: { context, principle },
   scopesLookupFn,
   priviledgesLookupFn = null,
   root = null,
-  domain = null,
-  requiresToken = true
+  domain = null
 }) => {
-  const tokens = deps.tokensFromReq(req);
-  if (tokens.bearer == undefined) {
-    if (requiresToken) throw unauthorized.tokenInvalid;
-    return {};
-  }
-
-  const data = await deps.validate({
-    token: tokens.bearer,
-    verifyFn
-  });
-
-  const { context, principle } = data;
-
   //Do the scopes and the context allow the provided service, network, domain, and action combo?
   if (context.network !== process.env.NETWORK) throw unauthorized.tokenInvalid;
 
   if (context.service !== process.env.SERVICE) throw unauthorized.tokenInvalid;
 
   const [priviledges, scopes] = await Promise.all([
-    priviledgesLookupFn ? priviledgesLookupFn({ path: req.path }) : null,
+    priviledgesLookupFn ? priviledgesLookupFn({ path }) : null,
     scopesLookupFn({ principle })
   ]);
 

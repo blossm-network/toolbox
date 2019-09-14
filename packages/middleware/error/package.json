@@ -1,0 +1,23 @@
+{
+  "name": "@sustainers/error-middleware",
+  "version": "0.0.0",
+  "description": "Error middleware for the network.",
+  "main": "index.js",
+  "author": "sustainers.market",
+  "engines": {
+    "node": ">= 10.16.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "dependencies": {
+    "express-async-handler": "^1.1.4",
+    "@sustainers/logger": "*"
+  },
+  "devDependencies": {
+    "mocha": "^6.1.4"
+  }
+}

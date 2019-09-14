@@ -1,0 +1,23 @@
+{
+  "name": "@sustainers/express-middleware",
+  "version": "0.0.0",
+  "description": "Express middleware for the network.",
+  "main": "index.js",
+  "author": "sustainers.market",
+  "engines": {
+    "node": ">= 10.16.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cookie-parser": "^1.4.4"
+  },
+  "devDependencies": {
+    "mocha": "^6.1.4"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "name": "@sustainers/authenticate",
+  "version": "0.0.0",
+  "description": "Authenticate requests.",
+  "main": "index.js",
+  "author": "sustainers.market",
+  "engines": {
+    "node": ">= 10.16.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@sustainers/jwt": "^0.0.2",
+    "@sustainers/tokens-from-req": "^0.0.2"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "devDependencies": {
+    "mocha": "^6.1.4"
+  }
+}

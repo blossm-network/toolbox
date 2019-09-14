@@ -1,7 +1,7 @@
 {
-  "name": "@sustainers/middleware",
-  "version": "0.0.1",
-  "description": "Standard middleware for the network.",
+  "name": "@sustainers/authentication-middleware",
+  "version": "0.0.0",
+  "description": "Authentication middleware for the network.",
   "main": "index.js",
   "author": "sustainers.market",
   "engines": {
@@ -14,7 +14,9 @@
     "test": "mocha"
   },
   "dependencies": {
-    "body-parser": "^1.19.0"
+    "express-async-handler": "^1.1.4",
+    "@sustainers/kms": "*",
+    "@sustainers/authenticate": "*"
   },
   "devDependencies": {
     "mocha": "^6.1.4"
