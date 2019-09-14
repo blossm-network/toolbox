@@ -14,7 +14,7 @@
     "test": "mocha"
   },
   "dependencies": {
-    "lodash": "4.17.11"
+    "lodash": "^4.17.11"
   },
   "devDependencies": {
     "mocha": "^6.1.4"
