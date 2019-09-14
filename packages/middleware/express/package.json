@@ -1,6 +1,6 @@
 {
   "name": "@sustainers/express-middleware",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Express middleware for the network.",
   "main": "index.js",
   "author": "sustainers.market",

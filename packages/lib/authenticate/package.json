@@ -1,6 +1,6 @@
 {
   "name": "@sustainers/authenticate",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Authenticate requests.",
   "main": "index.js",
   "author": "sustainers.market",
@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@sustainers/jwt": "^0.0.2",
-    "@sustainers/tokens-from-req": "^0.0.2"
+    "@sustainers/tokens-from-req": "^0.0.3"
   },
   "scripts": {
     "test": "mocha"
