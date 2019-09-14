@@ -9,7 +9,7 @@ describe("Middleware", () => {
   });
   it("should call correctly", async () => {
     const bodyParserUseableJson = "some-useable";
-    const cookieParserUseableJson = "some-other-usable";
+    const cookieParserUseableJson = "another-other-usable";
 
     const jsonBodyParserFake = fake.returns(bodyParserUseableJson);
     const cookieParserFake = fake.returns(cookieParserUseableJson);
