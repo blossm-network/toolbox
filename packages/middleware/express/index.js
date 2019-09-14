@@ -1,7 +1,6 @@
-const bodyParser = require("body-parser");
-const cookieParser = require("cookie-parser");
+const deps = require("./deps");
 
 module.exports = app => {
-  app.use(bodyParser.json());
-  app.use(cookieParser);
+  app.use(deps.jsonBodyParser());
+  app.use(deps.cookieParser());
 };

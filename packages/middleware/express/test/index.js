@@ -1,27 +1,26 @@
 const { expect } = require("chai").use(require("sinon-chai"));
-const { restore, fake, createSandbox } = require("sinon");
-const bodyParser = require("body-parser");
-const cookieParser = require("cookie-parser");
+const { restore, fake, replace } = require("sinon");
+const deps = require("../deps");
 const middleware = require("..");
-
-const sandbox = createSandbox();
 
 describe("Middleware", () => {
   afterEach(() => {
     restore();
-    sandbox.restore();
   });
   it("should call correctly", async () => {
     const bodyParserUseableJson = "some-useable";
-    sandbox.replaceGetter(bodyParser, "json", () => () =>
-      bodyParserUseableJson
-    );
+    const cookieParserUseableJson = "some-other-usable";
+
+    const jsonBodyParserFake = fake.returns(bodyParserUseableJson);
+    const cookieParserFake = fake.returns(cookieParserUseableJson);
+    replace(deps, "jsonBodyParser", jsonBodyParserFake);
+    replace(deps, "cookieParser", cookieParserFake);
     const useFake = fake();
     const app = {
       use: useFake
     };
     await middleware(app);
     expect(useFake).to.have.been.calledWith(bodyParserUseableJson);
-    expect(useFake).to.have.been.calledWith(cookieParser);
+    expect(useFake).to.have.been.calledWith(cookieParserUseableJson);
   });
 });
