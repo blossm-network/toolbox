@@ -14,10 +14,8 @@
     "test": "mocha"
   },
   "dependencies": {
-    "@sustainers/authorize": "^0.0.5",
     "@sustainers/errors": "*",
-    "cors": "^2.8.5",
-    "express-async-handler": "^1.1.4"
+    "cors": "^2.8.5"
   },
   "devDependencies": {
     "mocha": "^6.1.4"
