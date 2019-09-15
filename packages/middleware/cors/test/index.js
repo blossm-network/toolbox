@@ -24,7 +24,8 @@ describe("Cors middleware", () => {
       origin: "*",
       methods: "GET,POST",
       preflightContinue: false,
-      optionsSuccessStatus: 204
+      optionsSuccessStatus: 204,
+      credentials: true
     });
     expect(useFake).to.have.been.calledWith(corsResult);
     expect(optionsFake).to.have.been.calledWith("*", corsResult);

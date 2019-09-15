@@ -6,7 +6,8 @@ module.exports = app => {
       origin: "*",
       methods: "GET,POST",
       preflightContinue: false,
-      optionsSuccessStatus: 204
+      optionsSuccessStatus: 204,
+      credentials: true
     })
   );
   app.options("*", deps.cors());
