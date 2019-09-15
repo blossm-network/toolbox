@@ -1,9 +1,9 @@
 const deps = require("./deps");
 
-module.exports = app => {
+module.exports = ({ app, whitelist }) => {
   app.use(
     deps.cors({
-      origin: "http://localhost:3000",
+      origin: deps.whitelist(whitelist).check,
       methods: "GET,POST",
       preflightContinue: false,
       optionsSuccessStatus: 204,
