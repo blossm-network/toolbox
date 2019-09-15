@@ -13,9 +13,6 @@ module.exports = operation => {
           const headers = {
             Authorization: `Bearer ${await tokenFn({ url })}`
           };
-          logger.info("headers with toke: ", {
-            headers
-          });
           return await request.post(
             url,
             {

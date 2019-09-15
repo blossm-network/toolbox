@@ -19,7 +19,7 @@ describe("Gcp token", () => {
     const result = await gcpToken({ url });
 
     expect(getFake).to.have.been.calledWith(
-      `http://metadata/computeMetadata/v1/instance/service-accounts/default/identity?audience=${url}`,
+      `https://metadata/computeMetadata/v1/instance/service-accounts/default/identity?audience=${url}`,
       null,
       { "Metadata-Flavor": "Google" }
     );
