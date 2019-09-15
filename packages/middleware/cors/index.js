@@ -3,7 +3,7 @@ const deps = require("./deps");
 module.exports = app => {
   app.use(
     deps.cors({
-      // origin: "*",
+      origin: "*",
       methods: "GET,POST",
       preflightContinue: false,
       optionsSuccessStatus: 204,
