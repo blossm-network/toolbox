@@ -7,5 +7,7 @@ module.exports = async ({ url }) => {
 
   const headers = { "Metadata-Flavor": "Google" };
 
-  return await deps.get(metadataServerTokenUrl + url, null, headers);
+  const response = await deps.get(metadataServerTokenUrl + url, null, headers);
+
+  return response.body;
 };

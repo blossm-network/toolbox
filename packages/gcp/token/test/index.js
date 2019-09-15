@@ -8,17 +8,21 @@ describe("Gcp token", () => {
     restore();
   });
   it("should call correctly", async () => {
-    const response = "some-response";
+    const body = "some-body";
+    const response = {
+      body
+    };
     const getFake = fake.returns(response);
     replace(deps, "get", getFake);
 
     const url = "some-url";
-    await gcpToken({ url });
+    const result = await gcpToken({ url });
 
     expect(getFake).to.have.been.calledWith(
       `http://metadata/computeMetadata/v1/instance/service-accounts/default/identity?audience=${url}`,
       null,
       { "Metadata-Flavor": "Google" }
     );
+    expect(result).to.equal(body);
   });
 });
