@@ -20,9 +20,12 @@ describe("Error middleware", () => {
     const res = {
       status: statusFake
     };
-    await errorMiddleware(err, req, res);
+
+    const nextFake = fake();
+    await errorMiddleware(err, req, res, nextFake);
     expect(statusFake).to.have.been.calledWith(statusCode);
     expect(sendFake).to.have.been.calledWith(err);
+    expect(nextFake).to.have.been.calledWith();
   });
   it("should call correctly with no status code", async () => {
     const req = {};
@@ -35,9 +38,13 @@ describe("Error middleware", () => {
     const res = {
       status: statusFake
     };
-    await errorMiddleware(err, req, res);
+
+    const nextFake = fake();
+
+    await errorMiddleware(err, req, res, nextFake);
     expect(statusFake).to.have.been.calledWith(500);
     expect(sendFake).to.have.been.calledWith(err);
+    expect(nextFake).to.have.been.calledWith();
   });
   it("should remove the token correctly if unauthorized", async () => {
     const req = {};
@@ -55,10 +62,12 @@ describe("Error middleware", () => {
       status: statusFake,
       clearCookie: clearCookieFake
     };
-    await errorMiddleware(err, req, res);
+    const nextFake = fake();
+    await errorMiddleware(err, req, res, nextFake);
     expect(statusFake).to.have.been.calledWith(statusCode);
     expect(sendFake).to.have.been.calledWith(err);
     expect(clearCookieFake).to.have.been.calledWith("token");
+    expect(nextFake).to.have.been.calledWith();
   });
   it("should call correctly with headers already sent", async () => {
     const req = {};

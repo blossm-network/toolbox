@@ -14,8 +14,7 @@
     "test": "mocha"
   },
   "dependencies": {
-    "@sustainers/logger": "*",
-    "express-async-handler": "^1.1.4"
+    "@sustainers/logger": "*"
   },
   "devDependencies": {
     "mocha": "^6.1.4"
