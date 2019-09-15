@@ -2,7 +2,7 @@ const asyncHandler = require("express-async-handler");
 const deps = require("./deps");
 const temp = require("./temp");
 
-module.exports = asyncHandler(async req => {
+module.exports = asyncHandler(async (req, _, next) => {
   const context = await deps.authorize({
     path: req.path,
     claims: req.claims,
@@ -11,4 +11,5 @@ module.exports = asyncHandler(async req => {
   });
 
   req.context = context;
+  next();
 });

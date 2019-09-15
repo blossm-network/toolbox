@@ -24,7 +24,8 @@ describe("Authorization middleware", () => {
     const authorizationFake = fake.returns(context);
     replace(deps, "authorize", authorizationFake);
 
-    await authorizationMiddleware(req);
+    const nextFake = fake();
+    await authorizationMiddleware(req, null, nextFake);
 
     expect(authorizationFake).to.have.been.calledWith({
       path,
@@ -34,5 +35,26 @@ describe("Authorization middleware", () => {
     });
 
     expect(req.context).to.deep.equal(context);
+    expect(nextFake).to.have.been.calledOnce;
+  });
+  it("should throw correctly", async () => {
+    const claims = "some-claims";
+    const path = "some-path";
+    const params = {
+      domain: "some-domain"
+    };
+    const req = {
+      path,
+      params,
+      claims
+    };
+
+    const authorizationFake = fake.rejects(new Error());
+    replace(deps, "authorize", authorizationFake);
+
+    const nextFake = fake();
+
+    expect(async () => await authorizationMiddleware(req, null, nextFake)).to
+      .throw;
   });
 });
