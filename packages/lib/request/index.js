@@ -22,9 +22,13 @@ exports.post = async (url, params, headers) =>
     )
   );
 
-exports.get = (url, params) =>
-  new Promise((resolve, reject) =>
-    deps.request(addParamsToUrl(url, params), (err, response, body) =>
+exports.get = (url, params, headers) => {
+  const options = {
+    url: addParamsToUrl(url, params),
+    headers
+  };
+  return new Promise((resolve, reject) =>
+    deps.request(options, (err, response, body) =>
       err
         ? reject(err)
         : resolve({
@@ -35,3 +39,4 @@ exports.get = (url, params) =>
         })
     )
   );
+};

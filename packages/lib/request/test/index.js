@@ -54,8 +54,8 @@ describe("Request", () => {
       how: ["are", "you"],
       andy: [0, "ur dogs?"]
     };
-    replace(deps, "request", (fullUrl, callback) => {
-      expect(fullUrl).to.equal(
+    replace(deps, "request", (options, callback) => {
+      expect(options.url).to.equal(
         `${url}?andy=0&andy=ur%20dogs%3F&hello=there&how=are&how=you`
       );
       callback(null, response, body);
@@ -64,14 +64,32 @@ describe("Request", () => {
     const reply = await request.get(url, params);
     expect(reply).to.deep.equal({ ...response, body });
   });
+  it("should call get with correct params and header", async () => {
+    const params = {
+      hello: "there",
+      how: ["are", "you"],
+      andy: [0, "ur dogs?"]
+    };
+    const headers = "some-header!";
+    replace(deps, "request", (options, callback) => {
+      expect(options.url).to.equal(
+        `${url}?andy=0&andy=ur%20dogs%3F&hello=there&how=are&how=you`
+      );
+      expect(options.headers).to.equal(headers);
+      callback(null, response, body);
+    });
+    const url = "http://google.com";
+    const reply = await request.get(url, params, headers);
+    expect(reply).to.deep.equal({ ...response, body });
+  });
   it("should call get with correct string params", async () => {
     const params = {
       hello: "there",
       how: "are",
       you: "now"
     };
-    replace(deps, "request", (fullUrl, callback) => {
-      expect(fullUrl).to.equal(`${url}?hello=there&how=are&you=now`);
+    replace(deps, "request", (options, callback) => {
+      expect(options.url).to.equal(`${url}?hello=there&how=are&you=now`);
       callback(null, response, body);
     });
     const url = "http://google.com";
@@ -79,8 +97,8 @@ describe("Request", () => {
     expect(reply).to.deep.equal({ ...response, body });
   });
   it("should call get with no params", async () => {
-    replace(deps, "request", (fullUrl, callback) => {
-      expect(fullUrl).to.equal(url);
+    replace(deps, "request", (options, callback) => {
+      expect(options.url).to.equal(url);
       callback(null, response, body);
     });
     const url = "http://google.com";
