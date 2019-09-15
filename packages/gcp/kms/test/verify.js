@@ -17,10 +17,10 @@ const signature = "some-signature";
 describe("Kms verify", () => {
   beforeEach(() => {
     process.env.GCP_PROJECT = gcpProject;
-    process.env.KEY_RING = keyRing;
-    process.env.KEY = key;
-    process.env.KEY_LOCATION = keyLocation;
-    process.env.KEY_VERSION = keyVersion;
+    process.env.GCP_KMS_KEY_RING = keyRing;
+    process.env.GCP_KMS_KEY = key;
+    process.env.GCP_KMS_KEY_LOCATION = keyLocation;
+    process.env.GCP_KMS_KEY_VERSION = keyVersion;
   });
   afterEach(() => {
     restore();
@@ -99,10 +99,10 @@ describe("Kms verify", () => {
     const message = "I am a message";
 
     process.env.GCP_PROJECT = "smn-core-staging";
-    process.env.KEY_LOCATION = "global";
-    process.env.KEY_RING = "core";
-    process.env.KEY = "auth";
-    process.env.KEY_VERSION = "1";
+    process.env.GCP_KMS_KEY_LOCATION = "global";
+    process.env.GCP_KMS_KEY_RING = "core";
+    process.env.GCP_KMS_KEY = "auth";
+    process.env.GCP_KMS_KEY_VERSION = "1";
     const signature = await sign(message);
     const result = await verify({ message, signature });
     expect(result).to.be.true;
@@ -111,10 +111,10 @@ describe("Kms verify", () => {
     const message = "I am a message";
 
     process.env.GCP_PROJECT = "smn-core-staging";
-    process.env.KEY_LOCATION = "global";
-    process.env.KEY_RING = "core";
-    process.env.KEY = "auth";
-    process.env.KEY_VERSION = "1";
+    process.env.GCP_KMS_KEY_LOCATION = "global";
+    process.env.GCP_KMS_KEY_RING = "core";
+    process.env.GCP_KMS_KEY = "auth";
+    process.env.GCP_KMS_KEY_VERSION = "1";
     const signature = await sign(message);
     const result = await verify({ message: `${message}-`, signature });
     expect(result).to.be.false;

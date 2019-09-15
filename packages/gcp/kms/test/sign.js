@@ -15,10 +15,10 @@ const message = "This is my message to sign";
 describe("Kms sign", () => {
   beforeEach(() => {
     process.env.GCP_PROJECT = gcpProject;
-    process.env.KEY_RING = keyRing;
-    process.env.KEY = key;
-    process.env.KEY_LOCATION = keyLocation;
-    process.env.KEY_VERSION = keyVersion;
+    process.env.GCP_KMS_KEY_RING = keyRing;
+    process.env.GCP_KMS_KEY = key;
+    process.env.GCP_KMS_KEY_LOCATION = keyLocation;
+    process.env.GCP_KMS_KEY_VERSION = keyVersion;
   });
   afterEach(() => {
     restore();
