@@ -1,6 +1,6 @@
 {
   "name": "@sustainers/authentication-middleware",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Authentication middleware for the network.",
   "main": "index.js",
   "author": "sustainers.market",
