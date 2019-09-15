@@ -6,11 +6,19 @@ const { sign } = require("..");
 const kms = require("@google-cloud/kms");
 
 const gcpProject = "some-gcp-project";
+const keyRing = "some-key-ring";
+const key = "some-key";
+const keyLocation = "some-key-location";
+const keyVersion = "some-key-version";
 
 const message = "This is my message to sign";
 describe("Kms sign", () => {
   beforeEach(() => {
     process.env.GCP_PROJECT = gcpProject;
+    process.env.KEY_RING = keyRing;
+    process.env.KEY = key;
+    process.env.KEY_LOCATION = keyLocation;
+    process.env.KEY_VERSION = keyVersion;
   });
   afterEach(() => {
     restore();
@@ -36,10 +44,10 @@ describe("Kms sign", () => {
     const result = await sign(message);
     expect(pathFake).to.have.been.calledWith(
       gcpProject,
-      "global",
-      "core",
-      "auth",
-      "1"
+      keyLocation,
+      keyRing,
+      key,
+      keyVersion
     );
     expect(result).to.equal(signature);
     expect(signFake).to.have.been.calledWith({

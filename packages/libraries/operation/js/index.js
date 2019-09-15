@@ -2,22 +2,33 @@ const request = require("@sustainers/request");
 
 module.exports = operation => {
   return {
-    post: ({ data, context }) => {
+    post: ({ data, context, tokenFn }) => {
       return {
-        on: async ({ service, network }) =>
-          await request.post(`https://${operation}.${service}.${network}`, {
-            ...data,
-            context
-          })
+        on: async ({ service, network }) => {
+          const url = `https://${operation}.${service}.${network}`;
+          return await request.post(
+            url,
+            {
+              ...data,
+              context
+            },
+            {
+              Authorization: `Bearer ${await tokenFn({ url })}`
+            }
+          );
+        }
       };
     },
-    get: ({ data, context }) => {
+    get: ({ data, context, tokenFn }) => {
       return {
-        on: async ({ service, network }) =>
-          await request.get(`https://${operation}.${service}.${network}`, {
+        on: async ({ service, network }) => {
+          const url = `https://${operation}.${service}.${network}`;
+          return await request.get(url, {
             ...data,
-            context
-          })
+            context,
+            access_token: await tokenFn({ url })
+          });
+        }
       };
     }
   };

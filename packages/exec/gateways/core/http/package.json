@@ -14,7 +14,6 @@
   "dependencies": {
     "@sustainers/authorize-command": "^0.0.4",
     "@sustainers/clean-command": "^0.0.4",
-    "@sustainers/consts": "^0.0.2",
     "@sustainers/create-event": "^0.0.2",
     "@sustainers/datetime": "^0.0.2",
     "@sustainers/errors": "^0.0.3",

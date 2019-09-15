@@ -1,6 +1,6 @@
 {
-  "name": "@sustainers/kms",
-  "version": "0.0.3",
+  "name": "@sustainers/gcp-kms",
+  "version": "0.0.0",
   "description": "Tools for assymetricly decrypting a payload.",
   "main": "index.js",
   "author": "sustainers.market",

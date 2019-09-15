@@ -1,20 +1,20 @@
 module.exports = async params => {
   for (const property in params) {
-    if (property != "payload" && property != "header") {
+    if (property != "payload" && property != "headers") {
       delete params[property];
     }
   }
 
   params.payload = params.payload || {};
 
-  for (const property in params.header) {
+  for (const property in params.headers) {
     if (property != "issued" && property != "trace" && property != "source") {
-      delete params.header[property];
+      delete params.headers[property];
     }
   }
 
-  if (params.header.source != undefined) {
-    for (const property in params.header.source) {
+  if (params.headers.source != undefined) {
+    for (const property in params.headers.source) {
       if (
         property != "id" &&
         property != "action" &&
@@ -22,7 +22,7 @@ module.exports = async params => {
         property != "service" &&
         property != "network"
       ) {
-        delete params.header.source[property];
+        delete params.headers.source[property];
       }
     }
   }

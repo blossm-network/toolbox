@@ -5,7 +5,7 @@ const { SECONDS_IN_DAY } = require("@sustainers/consts");
 
 module.exports = async params => {
   const systemInputError = findError([
-    object(params.header),
+    object(params.headers),
     object(params.payload, { optional: true })
   ]);
 
@@ -13,19 +13,19 @@ module.exports = async params => {
     throw badRequest.message(systemInputError.message);
   }
 
-  const headerSystemInputError = findError([
-    string(params.header.trace, { optional: true }),
-    object(params.header.source, { optional: true }),
-    number(params.header.issued)
+  const headersSystemInputError = findError([
+    string(params.headers.trace, { optional: true }),
+    object(params.headers.source, { optional: true }),
+    number(params.headers.issued)
   ]);
 
-  if (headerSystemInputError) {
-    throw badRequest.message(headerSystemInputError.message);
+  if (headersSystemInputError) {
+    throw badRequest.message(headersSystemInputError.message);
   }
 
   if (
-    fineTimestamp() < params.header.issued ||
-    fineTimestamp() - params.header.issued > SECONDS_IN_DAY * 1000
+    fineTimestamp() < params.headers.issued ||
+    fineTimestamp() - params.headers.issued > SECONDS_IN_DAY * 1000
   ) {
     throw badRequest.message("The issued timestamp seems incorrect.");
   }

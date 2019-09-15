@@ -19,6 +19,7 @@ const network = "some-network";
 const payload = { a: 1 };
 const trace = "some-trace";
 const source = "some-source";
+const tokenFn = "some-token-fn";
 
 const context = { c: 2 };
 
@@ -42,20 +43,21 @@ describe("Issue command", () => {
     replace(deps, "operation", operation);
 
     await issueCommand({ action, domain, service, network })
-      .with(payload, { trace, source })
+      .with({ payload, trace, source, tokenFn })
       .in(context);
 
     expect(operation).to.have.been.calledWith(`${action}.${domain}`);
     expect(post).to.have.been.calledWith({
       data: {
         payload,
-        header: {
+        headers: {
           issued: datetime.fineTimestamp(),
           trace,
           source
         }
       },
-      context
+      context,
+      tokenFn
     });
     expect(on).to.have.been.calledWith({ service, network });
   });
@@ -70,18 +72,19 @@ describe("Issue command", () => {
     replace(deps, "operation", operation);
 
     await issueCommand({ action, domain, service, network })
-      .with(payload)
+      .with({ payload, tokenFn })
       .in(context);
 
     expect(operation).to.have.been.calledWith(`${action}.${domain}`);
     expect(post).to.have.been.calledWith({
       data: {
         payload,
-        header: {
+        headers: {
           issued: datetime.fineTimestamp()
         }
       },
-      context
+      context,
+      tokenFn
     });
     expect(on).to.have.been.calledWith({ service, network });
   });

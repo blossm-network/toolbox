@@ -7,7 +7,7 @@ describe("Clean command", () => {
 
     const params = {
       bogus: 1,
-      header: {
+      headers: {
         nope: 2,
         source: {
           bogus: 3
@@ -20,20 +20,20 @@ describe("Clean command", () => {
 
     expect(params).to.deep.equal({
       payload,
-      header: {
+      headers: {
         source: {}
       }
     });
   });
   it("should add a payload", async () => {
     const params = {
-      header: {}
+      headers: {}
     };
 
     await cleanCommand(params);
 
     expect(params).to.deep.equal({
-      header: {},
+      headers: {},
       payload: {}
     });
   });

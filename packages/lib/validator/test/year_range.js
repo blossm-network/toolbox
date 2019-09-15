@@ -11,7 +11,7 @@ describe("Valid year", () => {
 
 describe("Invalid year", () => {
   it("should contain one error if the number is out of range", () => {
-    const invalidNumber = 2050;
+    const invalidNumber = 2150;
     const response = yearRange(invalidNumber);
     expect(response.errors).to.have.lengthOf(1);
   });

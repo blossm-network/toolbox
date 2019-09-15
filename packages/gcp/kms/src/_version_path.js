@@ -4,9 +4,9 @@ module.exports = () => {
   const client = new kms.KeyManagementServiceClient();
   return client.cryptoKeyVersionPath(
     process.env.GCP_PROJECT,
-    "global",
-    "core",
-    "auth",
-    "1"
+    process.env.KEY_LOCATION,
+    process.env.KEY_RING,
+    process.env.KEY,
+    process.env.KEY_VERSION
   );
 };

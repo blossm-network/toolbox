@@ -1,6 +1,6 @@
 const findError = require("./find_error");
 const object = require("./object");
-const shortString = require("./short_string");
+const string = require("./string");
 
 module.exports = (name, { optional, lastNameOptional } = {}) => {
   const err = findError([object(name, { optional })]);
@@ -10,8 +10,8 @@ module.exports = (name, { optional, lastNameOptional } = {}) => {
   if (name == undefined) return;
 
   const nameErr = findError([
-    shortString(name.first, "First name"),
-    shortString(name.last, "Last name", { optional: lastNameOptional })
+    string(name.first),
+    string(name.last, { optional: lastNameOptional })
   ]);
 
   if (nameErr) return nameErr;

@@ -1,5 +1,5 @@
 const asyncHandler = require("express-async-handler");
-const kms = require("@sustainers/kms");
+const kms = require("@sustainers/gcp-kms");
 
 const deps = require("./deps");
 

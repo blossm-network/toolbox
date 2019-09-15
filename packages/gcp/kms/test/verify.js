@@ -6,6 +6,10 @@ const crypto = require("crypto");
 const kms = require("@google-cloud/kms");
 
 const gcpProject = "some-gcp-project";
+const keyRing = "some-key-ring";
+const key = "some-key";
+const keyLocation = "some-key-location";
+const keyVersion = "some-key-version";
 const pem = "some-pem";
 const message = "some message";
 const signature = "some-signature";
@@ -13,6 +17,10 @@ const signature = "some-signature";
 describe("Kms verify", () => {
   beforeEach(() => {
     process.env.GCP_PROJECT = gcpProject;
+    process.env.KEY_RING = keyRing;
+    process.env.KEY = key;
+    process.env.KEY_LOCATION = keyLocation;
+    process.env.KEY_VERSION = keyVersion;
   });
   afterEach(() => {
     restore();
@@ -51,10 +59,10 @@ describe("Kms verify", () => {
     expect(result).to.equal(isVerified);
     expect(pathFake).to.have.been.calledWith(
       gcpProject,
-      "global",
-      "core",
-      "auth",
-      "1"
+      keyLocation,
+      keyRing,
+      key,
+      keyVersion
     );
     expect(createVerifyFake).to.have.been.calledWith("SHA256");
     expect(getKeyFake).to.have.been.calledWith({ name: path });
@@ -91,6 +99,10 @@ describe("Kms verify", () => {
     const message = "I am a message";
 
     process.env.GCP_PROJECT = "smn-core-staging";
+    process.env.KEY_LOCATION = "global";
+    process.env.KEY_RING = "core";
+    process.env.KEY = "auth";
+    process.env.KEY_VERSION = "1";
     const signature = await sign(message);
     const result = await verify({ message, signature });
     expect(result).to.be.true;
@@ -99,6 +111,10 @@ describe("Kms verify", () => {
     const message = "I am a message";
 
     process.env.GCP_PROJECT = "smn-core-staging";
+    process.env.KEY_LOCATION = "global";
+    process.env.KEY_RING = "core";
+    process.env.KEY = "auth";
+    process.env.KEY_VERSION = "1";
     const signature = await sign(message);
     const result = await verify({ message: `${message}-`, signature });
     expect(result).to.be.false;

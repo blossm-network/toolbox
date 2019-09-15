@@ -11,9 +11,6 @@ const fnArray = require("./src/function_array");
 const buffer = require("./src/buffer");
 const countryCode = require("./src/country_code");
 const password = require("./src/password");
-const shortString = require("./src/short_string");
-const mediumString = require("./src/medium_string");
-const longString = require("./src/long_string");
 const numbersEqual = require("./src/numbers_equal");
 const numberRange = require("./src/number_range");
 const scheduleIntervalRange = require("./src/schedule_interval_range");
@@ -47,9 +44,6 @@ module.exports = {
   buffer,
   countryCode,
   password,
-  shortString,
-  mediumString,
-  longString,
   numbersEqual,
   numberRange,
   scheduleIntervalRange,

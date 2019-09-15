@@ -1,6 +1,6 @@
 const { expect } = require("chai").use(require("sinon-chai"));
 const { restore, fake, replace } = require("sinon");
-const kms = require("@sustainers/kms");
+const kms = require("@sustainers/gcp-kms");
 const deps = require("../deps");
 const authenticationMiddleware = require("..");
 
