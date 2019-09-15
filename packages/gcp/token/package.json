@@ -1,6 +1,6 @@
 {
   "name": "@sustainers/gcp-token",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Create a token for an audience within the network.",
   "main": "index.js",
   "author": "sustainers.market",
@@ -14,7 +14,7 @@
     "test": "mocha"
   },
   "dependencies": {
-    "@sustainers/request": "*"
+    "@sustainers/request": "^0.0.3"
   },
   "devDependencies": {
     "mocha": "^6.1.4"
