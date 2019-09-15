@@ -15,8 +15,10 @@ describe("Gcp token", () => {
     const getFake = fake.returns(response);
     replace(deps, "get", getFake);
 
-    const url = "some-url";
-    const result = await gcpToken({ url });
+    const operation = "some.url";
+    const result = await gcpToken({ operation });
+
+    const url = "https://url-some-ixixyzl3ea-uc.a.run.app";
 
     expect(getFake).to.have.been.calledWith(
       `https://metadata/computeMetadata/v1/instance/service-accounts/default/identity?audience=${url}`,

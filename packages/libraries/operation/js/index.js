@@ -8,10 +8,10 @@ module.exports = operation => {
         on: async ({ service, network }) => {
           const url = `https://${operation}.${service}.${network}`;
           logger.info("toke: ", {
-            token: await tokenFn({ url })
+            token: await tokenFn({ operation })
           });
           const headers = {
-            Authorization: `Bearer ${await tokenFn({ url })}`
+            Authorization: `Bearer ${await tokenFn({ operation })}`
           };
           return await request.post(
             url,
@@ -31,7 +31,7 @@ module.exports = operation => {
           return await request.get(url, {
             ...data,
             context,
-            access_token: await tokenFn({ url })
+            access_token: await tokenFn({ operation })
           });
         }
       };

@@ -46,7 +46,7 @@ describe("Operation", () => {
       }
     );
     expect(tokenFnFake).to.have.been.calledWith({
-      url: `https://${op}.${service}.${network}`
+      operation: op
     });
   });
 
@@ -65,7 +65,7 @@ describe("Operation", () => {
       access_token: token
     });
     expect(tokenFnFake).to.have.been.calledWith({
-      url: `https://${op}.${service}.${network}`
+      operation: op
     });
   });
 });
