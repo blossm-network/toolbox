@@ -21,7 +21,7 @@ describe("Cors middleware", () => {
     await corsMiddleware(app);
 
     expect(corsFake).to.have.been.calledWith({
-      origin: "*",
+      origin: "http://localhost:3000",
       methods: "GET,POST",
       preflightContinue: false,
       optionsSuccessStatus: 204,
