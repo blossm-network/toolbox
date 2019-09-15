@@ -15,7 +15,6 @@
   },
   "dependencies": {
     "@sustainers/errors": "^0.0.4",
-    "@sustainers/logger": "^0.0.3",
     "cors": "^2.8.5"
   },
   "devDependencies": {

@@ -14,7 +14,6 @@
     "access": "public"
   },
   "dependencies": {
-    "@sustainers/logger": "*",
     "@sustainers/request": "^0.0.3"
   },
   "devDependencies": {

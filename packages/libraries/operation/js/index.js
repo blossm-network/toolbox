@@ -1,5 +1,4 @@
 const request = require("@sustainers/request");
-const logger = require("@sustainers/logger");
 
 module.exports = operation => {
   return {
@@ -7,19 +6,15 @@ module.exports = operation => {
       return {
         on: async ({ service, network }) => {
           const url = `https://${operation}.${service}.${network}`;
-          logger.info("toke: ", {
-            token: await tokenFn({ operation })
-          });
-          const headers = {
-            Authorization: `Bearer ${await tokenFn({ operation })}`
-          };
           return await request.post(
             url,
             {
               ...data,
               context
             },
-            headers
+            {
+              Authorization: `Bearer ${await tokenFn({ operation })}`
+            }
           );
         }
       };
