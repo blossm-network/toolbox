@@ -16,6 +16,7 @@
   "dependencies": {
     "@sustainers/error-middleware": "^0.0.6",
     "@sustainers/express-middleware": "*",
+    "@sustainers/operation-js": "*",
     "@sustainers/logger": "^0.0.4",
     "express": "^4.17.1",
     "express-async-handler": "^1.1.4",
