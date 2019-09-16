@@ -33,7 +33,7 @@ describe("Get views", () => {
       .with({ query, tokenFn })
       .in(context);
 
-    expect(operation).to.have.been.calledWith(`${id}.${domain}`);
+    expect(operation).to.have.been.calledWith(`${id}.view-store.${domain}`);
     expect(get).to.have.been.calledWith({
       data: query,
       context,

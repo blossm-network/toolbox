@@ -6,7 +6,7 @@ module.exports = ({ id, domain, service, network }) => {
       return {
         in: async context =>
           await deps
-            .operation(`${id}.${domain}`)
+            .operation(`${id}.view-store.${domain}`)
             .get({ data: query, tokenFn, context })
             .on({ service, network })
       };
