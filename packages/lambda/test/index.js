@@ -34,7 +34,7 @@ describe("Lamba", () => {
     replace(deps, "asyncHandler", asyncHandlerFake);
     replace(deps, "expressMiddleware", expressMiddlewareFake);
 
-    const result = lambda(fn).post();
+    const result = lambda().post(fn);
 
     expect(result).to.equal(app);
     expect(postFake).to.have.been.calledWith("/", asyncFn);
@@ -64,7 +64,7 @@ describe("Lamba", () => {
     replace(deps, "asyncHandler", asyncHandlerFake);
     replace(deps, "expressMiddleware", expressMiddlewareFake);
 
-    const result = lambda(fn, { path: newPath, port: newPort }).post();
+    const result = lambda({ port: newPort }).post(fn, { path: newPath });
 
     expect(result).to.equal(app);
     expect(postFake).to.have.been.calledWith(newPath, asyncFn);
@@ -92,7 +92,7 @@ describe("Lamba", () => {
     replace(deps, "asyncHandler", asyncHandlerFake);
     replace(deps, "expressMiddleware", expressMiddlewareFake);
 
-    const result = lambda(fn).post();
+    const result = lambda().post(fn);
 
     expect(result).to.equal(app);
     expect(postFake).to.have.been.calledWith("/", asyncFn);
@@ -112,6 +112,7 @@ describe("Lamba", () => {
     const expressFake = fake.returns(app);
     replace(deps, "express", expressFake);
 
+    const newPort = "some-new-port";
     const asyncFn = "some-fn";
     const asyncHandlerFake = fake.returns(asyncFn);
     const expressMiddlewareFake = fake();
@@ -119,7 +120,7 @@ describe("Lamba", () => {
     replace(deps, "asyncHandler", asyncHandlerFake);
     replace(deps, "expressMiddleware", expressMiddlewareFake);
 
-    const result = lambda(fn).post();
+    const result = lambda({ port: newPort }).post(fn);
 
     expect(result).to.equal(app);
     expect(postFake).to.have.been.calledWith("/", asyncFn);
@@ -146,7 +147,7 @@ describe("Lamba", () => {
     replace(deps, "asyncHandler", asyncHandlerFake);
     replace(deps, "expressMiddleware", expressMiddlewareFake);
 
-    const result = lambda(fn).get();
+    const result = lambda().get(fn);
 
     expect(result).to.equal(app);
     expect(getFake).to.have.been.calledWith("/", asyncFn);
