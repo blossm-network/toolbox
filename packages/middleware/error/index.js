@@ -1,8 +1,7 @@
 const logger = require("@sustainers/logger");
-const asyncHandler = require("express-async-handler");
 
-module.exports = asyncHandler(async (err, _, res, next) => {
-  if (res.headersSent) throw err;
+module.exports = (err, _, res, next) => {
+  if (res.headersSent) return next(err);
   logger.error("An error occured: ", { err, stack: err.stack });
 
   //If unauthorized, remove cookie;
@@ -10,4 +9,4 @@ module.exports = asyncHandler(async (err, _, res, next) => {
 
   res.status(err.statusCode || 500).send(err);
   next();
-});
+};
