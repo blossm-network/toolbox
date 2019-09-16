@@ -1,6 +1,6 @@
 {
   "name": "@sustainers/error-middleware",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Error middleware for the network.",
   "main": "index.js",
   "author": "sustainers.market",
@@ -14,7 +14,7 @@
     "test": "mocha"
   },
   "dependencies": {
-    "@sustainers/logger": "^0.0.3"
+    "@sustainers/logger": "^0.0.4"
   },
   "devDependencies": {
     "mocha": "^6.1.4"

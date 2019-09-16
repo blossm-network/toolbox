@@ -1,7 +1,7 @@
 {
   "name": "@sustainers/lambda",
   "description": "Exposes an express function to run.",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "main": "index.js",
   "author": "sustainers.market",
   "engines": {
@@ -14,12 +14,12 @@
     "access": "public"
   },
   "dependencies": {
+    "@sustainers/error-middleware": "^0.0.6",
+    "@sustainers/express-middleware": "*",
+    "@sustainers/logger": "^0.0.4",
     "express": "^4.17.1",
     "express-async-handler": "^1.1.4",
-    "localenv": "^0.2.2",
-    "@sustainers/logger": "*",
-    "@sustainers/express-middleware": "*",
-    "@sustainers/error-middleware": "*"
+    "localenv": "^0.2.2"
   },
   "devDependencies": {
     "chai-datetime": "^1.5.0",
