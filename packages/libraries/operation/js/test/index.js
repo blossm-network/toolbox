@@ -59,11 +59,16 @@ describe("Operation", () => {
       .get({ data, context, tokenFn: tokenFnFake })
       .on({ service, network });
 
-    expect(get).to.have.been.calledWith(`https://${op}.${service}.${network}`, {
-      ...data,
-      context,
-      access_token: token
-    });
+    expect(get).to.have.been.calledWith(
+      `https://${op}.${service}.${network}`,
+      {
+        ...data,
+        context
+      },
+      {
+        Authorization: `Bearer ${token}`
+      }
+    );
     expect(tokenFnFake).to.have.been.calledWith({
       operation: op
     });

@@ -23,11 +23,16 @@ module.exports = operation => {
       return {
         on: async ({ service, network }) => {
           const url = `https://${operation}.${service}.${network}`;
-          return await request.get(url, {
-            ...data,
-            context,
-            access_token: await tokenFn({ operation })
-          });
+          return await request.get(
+            url,
+            {
+              ...data,
+              context
+            },
+            {
+              Authorization: `Bearer ${await tokenFn({ operation })}`
+            }
+          );
         }
       };
     }
