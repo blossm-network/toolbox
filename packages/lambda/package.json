@@ -1,0 +1,30 @@
+{
+  "name": "@sustainers/lambda",
+  "description": "Exposes an express function to run.",
+  "version": "0.0.0",
+  "main": "index.js",
+  "author": "sustainers.market",
+  "engines": {
+    "node": ">= 10.16.0"
+  },
+  "scripts": {
+    "test": "mocha --recursive"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "express-async-handler": "^1.1.4",
+    "localenv": "^0.2.2",
+    "@sustainers/logger": "*",
+    "@sustainers/express-middleware": "*",
+    "@sustainers/error-middleware": "*"
+  },
+  "devDependencies": {
+    "chai-datetime": "^1.5.0",
+    "mocha": "^6.1.4",
+    "sinon": "^7.3.2",
+    "sinon-chai": "^3.3.0"
+  }
+}

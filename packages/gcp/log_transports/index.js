@@ -9,7 +9,11 @@ const loggerTransports = createLogger({
     new LoggingWinston({
       serviceContext: {
         service: process.env.SERVICE,
-        version: "0"
+        version: "0",
+        ...(process.env.NODE_ENV == "local" && {
+          project: process.env.GCP_PROJECT,
+          keyFilename: process.env.GOOGLE_APPLICATION_CREDENTIALS
+        })
       }
     }),
     //
