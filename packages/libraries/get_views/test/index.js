@@ -20,25 +20,26 @@ describe("Get views", () => {
   });
 
   it("should call with the correct params", async () => {
-    const on = fake();
-    const get = fake.returns({
-      on
+    const withFake = fake();
+    const inFake = fake.returns({
+      with: withFake
     });
-    const operation = fake.returns({
-      get
+    const getFake = fake.returns({
+      in: inFake
     });
-    replace(deps, "operation", operation);
+    const operationFake = fake.returns({
+      get: getFake
+    });
+    replace(deps, "operation", operationFake);
 
     await getViews({ id, domain, service, network })
-      .with({ query, tokenFn })
-      .in(context);
+      .for(query)
+      .in(context)
+      .with(tokenFn);
 
-    expect(operation).to.have.been.calledWith(`${id}.view-store.${domain}`);
-    expect(get).to.have.been.calledWith({
-      data: query,
-      context,
-      tokenFn
-    });
-    expect(on).to.have.been.calledWith({ service, network });
+    expect(operationFake).to.have.been.calledWith(`${id}.view-store.${domain}`);
+    expect(getFake).to.have.been.calledWith(query);
+    expect(inFake).to.have.been.calledWith({ context, service, network });
+    expect(withFake).to.have.been.calledWith({ tokenFn });
   });
 });

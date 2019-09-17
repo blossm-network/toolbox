@@ -4,7 +4,7 @@ const deps = require("./deps");
 
 module.exports = ({ action, domain, service, network }) => {
   return {
-    with: ({ payload, trace, source, tokenFn }) => {
+    issue: (payload, { trace, source } = {}) => {
       const headers = {
         issued: datetime.fineTimestamp(),
         ...(trace != undefined && { trace }),
@@ -14,15 +14,16 @@ module.exports = ({ action, domain, service, network }) => {
       const data = { payload, headers };
 
       return {
-        in: async context =>
-          await deps
-            .operation(`${action}.${domain}`)
-            .post({
-              data,
-              context,
-              tokenFn
-            })
-            .on({ service, network })
+        in: context => {
+          return {
+            with: async tokenFn =>
+              await deps
+                .operation(`${action}.${domain}`)
+                .post(data)
+                .in({ context, service, network })
+                .with({ tokenFn })
+          };
+        }
       };
     }
   };

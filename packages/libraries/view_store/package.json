@@ -1,7 +1,7 @@
 {
-  "name": "@sustainers/issue-command-js",
-  "description": "Issues a command.",
-  "version": "0.0.11",
+  "name": "@sustainers/view-store-js",
+  "description": "Interact with the view store.",
+  "version": "0.0.0",
   "main": "index.js",
   "author": "sustainers.market",
   "engines": {
@@ -14,7 +14,6 @@
     "access": "public"
   },
   "dependencies": {
-    "@sustainers/datetime": "^0.0.2",
     "@sustainers/operation-js": "^0.0.8"
   },
   "devDependencies": {

@@ -1,13 +1,13 @@
 const deps = require("./deps");
 const addParamsToUrl = require("./src/add_params_to_url");
 
-exports.post = async (url, params, headers) =>
+const common = async ({ method, url, params, headers }) =>
   new Promise((resolve, reject) =>
     deps.request(
       {
         url,
-        method: "POST",
-        json: params,
+        method,
+        ...(params != undefined && { json: params }),
         ...(headers != undefined && { headers })
       },
       (err, response, body) =>
@@ -22,21 +22,14 @@ exports.post = async (url, params, headers) =>
     )
   );
 
-exports.get = (url, params, headers) => {
-  const options = {
-    url: addParamsToUrl(url, params),
-    headers
-  };
-  return new Promise((resolve, reject) =>
-    deps.request(options, (err, response, body) =>
-      err
-        ? reject(err)
-        : resolve({
-          headers: response.headers,
-          statusCode: response.statusCode,
-          statusMessage: response.statusMessage,
-          body
-        })
-    )
-  );
-};
+exports.post = async (url, params, headers) =>
+  await common({ method: "POST", url, params, headers });
+
+exports.put = async (url, params, headers) =>
+  await common({ method: "PUT", url, params, headers });
+
+exports.delete = async (url, headers) =>
+  await common({ method: "DELETE", url, headers });
+
+exports.get = async (url, params, headers) =>
+  await common({ method: "GET", url: addParamsToUrl(url, params), headers });

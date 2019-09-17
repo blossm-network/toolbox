@@ -47,6 +47,32 @@ describe("Request", () => {
     const reply = await request.post(url, params, reqHeaders);
     expect(reply).to.deep.equal({ ...response, body });
   });
+  it("should call put with correct params", async () => {
+    const params = { hello: "there" };
+    const url = "http://google.com";
+    replace(deps, "request", (options, callback) => {
+      expect(options).to.deep.equal({
+        url,
+        method: "PUT",
+        json: params
+      });
+      callback(null, response, body);
+    });
+    const reply = await request.put(url, params);
+    expect(reply).to.deep.equal({ ...response, body });
+  });
+  it("should call delete with correct params", async () => {
+    const url = "http://google.com";
+    replace(deps, "request", (options, callback) => {
+      expect(options).to.deep.equal({
+        url,
+        method: "DELETE"
+      });
+      callback(null, response, body);
+    });
+    const reply = await request.delete(url);
+    expect(reply).to.deep.equal({ ...response, body });
+  });
 
   it("should call get with correct params", async () => {
     const params = {
