@@ -39,11 +39,10 @@ describe("Get views", () => {
       .in(context)
       .with(tokenFn);
 
-    expect(operationFake).to.have.been.calledWith("view-store");
+    expect(operationFake).to.have.been.calledWith(`${id}.view-store.${domain}`);
     expect(postFake).to.have.been.calledWith(properties);
     expect(inFake).to.have.been.calledWith({ context, service, network });
     expect(withFake).to.have.been.calledWith({
-      path: `/${domain}/${id}`,
       tokenFn
     });
   });
@@ -65,11 +64,10 @@ describe("Get views", () => {
       .in(context)
       .with(tokenFn);
 
-    expect(operationFake).to.have.been.calledWith("view-store");
+    expect(operationFake).to.have.been.calledWith(`${id}.view-store.${domain}`);
     expect(getFake).to.have.been.calledWith(query);
     expect(inFake).to.have.been.calledWith({ context, service, network });
     expect(withFake).to.have.been.calledWith({
-      path: `/${domain}/${id}`,
       tokenFn
     });
   });
@@ -91,11 +89,10 @@ describe("Get views", () => {
       .in(context)
       .with(tokenFn);
 
-    expect(operationFake).to.have.been.calledWith("view-store");
+    expect(operationFake).to.have.been.calledWith(`${id}.view-store.${domain}`);
     expect(putFake).to.have.been.calledWith(root, properties);
     expect(inFake).to.have.been.calledWith({ context, service, network });
     expect(withFake).to.have.been.calledWith({
-      path: `/${domain}/${id}`,
       tokenFn
     });
   });
@@ -117,11 +114,10 @@ describe("Get views", () => {
       .in(context)
       .with(tokenFn);
 
-    expect(operationFake).to.have.been.calledWith("view-store");
+    expect(operationFake).to.have.been.calledWith(`${id}.view-store.${domain}`);
     expect(deleteFake).to.have.been.calledWith(root);
     expect(inFake).to.have.been.calledWith({ context, service, network });
     expect(withFake).to.have.been.calledWith({
-      path: `/${domain}/${id}`,
       tokenFn
     });
   });

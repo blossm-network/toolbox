@@ -1,46 +1,57 @@
-const request = require("@sustainers/request");
 const datetime = require("@sustainers/datetime");
 
-module.exports = {
-  add: async ({
-    context,
-    fact: { root, topic, version, traceId, command },
-    payload
-  }) => {
-    const isStaging = process.env.NODE_ENV == "staging";
-    const event = {
-      context,
-      fact: {
-        root,
-        topic,
-        version,
-        createdTimestamp: datetime.fineTimestamp(),
-        ...(traceId && { traceId }),
-        command: {
-          id: command.id,
-          action: command.action,
-          domain: command.domain,
-          service: command.service,
-          issuedTimestamp: command.issuedTimestamp
-        }
-      },
-      payload
-    };
+const deps = require("./deps");
 
-    await request.post(
-      `https://add.event-store.core${
-        isStaging ? ".staging" : ""
-      }.sustainer.network`,
-      { event, domain: command.domain, service: command.service }
-    );
-  },
-  aggregate: async ({ root, domain, service }) => {
-    const isStaging = process.env.NODE_ENV == "staging";
-    await request.get(
-      `https://aggregate.event-store.core${
-        isStaging ? ".staging" : ""
-      }.sustainer.network`,
-      { root, domain, service }
-    );
-  }
+module.exports = ({ service, network }) => {
+  return {
+    add: ({ headers: { root, topic, version, trace, command }, payload }) => {
+      return {
+        in: context => {
+          return {
+            with: async tokenFn => {
+              const event = {
+                context,
+                headers: {
+                  root,
+                  topic,
+                  version,
+                  created: datetime.fineTimestamp(),
+                  ...(trace && { trace }),
+                  command: {
+                    id: command.id,
+                    action: command.action,
+                    domain: command.domain,
+                    service: command.service,
+                    issued: command.issued
+                  }
+                },
+                payload
+              };
+
+              await deps
+                .operation("event-store")
+                .post(event)
+                .in({ context, service, network })
+                .with({ tokenFn });
+            }
+          };
+        }
+      };
+    },
+    aggregate: root => {
+      return {
+        in: context => {
+          return {
+            with: async tokenFn => {
+              await deps
+                .operation("event-store")
+                .get(root)
+                .in({ context, service, network })
+                .with({ tokenFn });
+            }
+          };
+        }
+      };
+    }
+  };
 };
