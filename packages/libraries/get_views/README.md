@@ -1,1 +1,0 @@
-Gets views.
