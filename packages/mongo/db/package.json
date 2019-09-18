@@ -1,0 +1,27 @@
+{
+  "name": "@sustainers/mongodb",
+  "version": "0.0.0",
+  "description": "Read and write from a MongoDB database.",
+  "main": "index.js",
+  "author": "sustainers.market",
+  "engines": {
+    "node": ">= 10.16.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "dependencies": {
+    "@sustainers/url-encode-query-data": "*",
+    "mongoose": "^5.5.12",
+    "restify-errors": "^8.0.0"
+  },
+  "devDependencies": {
+    "chai-as-promised": "^7.1.1",
+    "mocha": "^6.1.4",
+    "sinon": "^7.3.2",
+    "sinon-chai": "^3.3.0"
+  }
+}

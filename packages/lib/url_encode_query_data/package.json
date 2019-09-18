@@ -1,0 +1,22 @@
+{
+  "name": "@sustainers/url-encode-query-data",
+  "version": "0.0.0",
+  "description": "Encodes query data into a url.",
+  "main": "index.js",
+  "author": "sustainers.market",
+  "engines": {
+    "node": ">= 10.16.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "dependencies": {
+    "lodash": "4.17.11"
+  },
+  "devDependencies": {
+    "mocha": "^6.1.4"
+  }
+}
