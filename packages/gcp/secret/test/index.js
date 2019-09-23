@@ -33,11 +33,9 @@ describe("Secrets", () => {
     expect(unlinkFake).to.have.been.calledOnce;
     expect(result).to.equal(theSecret);
   });
-  // it("should throw correctly", async () => {
-  //   const storage = function() {};
-  //   const bucketFake = fake.rejects("some error");
-  //   storage.prototype.bucket = bucketFake;
-  //   replace(deps, "storage", storage);
-  //   expect(async () => await download({ bucket, file })).to.throw;
-  // });
+  it("should throw correctly", async () => {
+    const downloadFake = fake.rejects("some error");
+    replace(deps, "download", downloadFake);
+    expect(async () => await secret(name)).to.throw;
+  });
 });
