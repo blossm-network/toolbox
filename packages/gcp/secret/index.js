@@ -4,7 +4,10 @@ const logger = require("@sustainers/logger");
 module.exports = async name => {
   logger.info("CHECKPOINT inSecret");
   const file = `${name}.txt.encrypted`;
-  logger.info("CHECKPOINT looking for file: ", { file });
+  logger.info("CHECKPOINT looking for file: ", {
+    file,
+    bucket: process.env.GCP_SECRET_BUCKET
+  });
   await deps.download({ bucket: process.env.GCP_SECRET_BUCKET, file });
   logger.info("CHECKPOINT file downloaded: ");
   const encrypted = await deps.readFile(file);
