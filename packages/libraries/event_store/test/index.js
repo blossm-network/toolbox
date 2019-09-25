@@ -1,9 +1,8 @@
 const { expect } = require("chai")
   .use(require("chai-datetime"))
   .use(require("sinon-chai"));
-const { restore, replace, fake } = require("sinon");
+const { restore, replace, fake, useFakeTimers } = require("sinon");
 const eventStore = require("..");
-const { useFakeTimers } = require("sinon");
 
 const deps = require("../deps");
 const datetime = require("@sustainers/datetime");

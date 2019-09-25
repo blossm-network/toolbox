@@ -46,7 +46,7 @@ module.exports = ({
   schema,
   indexes,
   mixins = [],
-  version,
+  version = 1,
   connection: {
     urlProtocol,
     user,
@@ -94,14 +94,12 @@ module.exports = ({
 
   formattedMixins(base).forEach(mixin => mixin(store));
 
-  if (version != undefined) {
-    store.add({
-      version: {
-        type: Number,
-        default: version
-      }
-    });
-  }
+  store.add({
+    version: {
+      type: Number,
+      default: version
+    }
+  });
 
   const storeName = `${name}.${version}`;
   return mongoose.model(storeName, store, name);

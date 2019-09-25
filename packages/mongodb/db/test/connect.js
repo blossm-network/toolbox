@@ -1,9 +1,9 @@
 const { expect } = require("chai").use(require("sinon-chai"));
 const { restore, replace, replaceGetter, fake } = require("sinon");
 const mongoose = require("mongoose");
-const urlEncodeQueryData = require("@sustainers/url-encode-query-data");
 
 const { connect } = require("../index");
+const deps = require("../deps");
 
 const urlProtocol = "protocol";
 const user = "user";
@@ -13,20 +13,27 @@ const database = "db";
 
 const baseConnectionString = `${urlProtocol}://${user}:${password}@${host}/${database}`;
 
+const onFake = fake();
+const onceFake = fake();
+const connectFake = fake();
+const connectionFake = fake.returns({
+  on: onFake,
+  once: onceFake
+});
+
 describe("Connects", () => {
   afterEach(() => {
     restore();
   });
   beforeEach(() => {
-    replace(mongoose, "connect", fake());
-    replace(mongoose.connection, "on", fake());
-    replace(mongoose.connection, "once", fake());
+    replace(mongoose, "connect", connectFake);
+    replaceGetter(mongoose, "connection", connectionFake);
   });
 
   it("it should connect if all the params are normal, and ommittable params omitted", () => {
     connect({ urlProtocol, user, password, host, database });
 
-    expect(mongoose.connect).to.have.been.calledWith(baseConnectionString, {
+    expect(connectFake).to.have.been.calledWith(baseConnectionString, {
       useNewUrlParser: true,
       useCreateIndex: true,
       autoIndex: false,
@@ -54,8 +61,8 @@ describe("Connects", () => {
       autoIndex
     });
 
-    expect(mongoose.connect).to.have.been.calledWith(
-      `${baseConnectionString}?${urlEncodeQueryData(parameters)}`,
+    expect(connectFake).to.have.been.calledWith(
+      `${baseConnectionString}?${deps.urlEncodeQueryData(parameters)}`,
       {
         useNewUrlParser: true,
         useCreateIndex: true,
@@ -77,7 +84,7 @@ describe("Connects", () => {
       onError
     });
 
-    expect(mongoose.connection.on).to.have.been.calledWith("error", onError);
+    expect(onFake).to.have.been.calledWith("error", onError);
   });
 
   it("it pass along the onError callback", () => {
@@ -92,7 +99,7 @@ describe("Connects", () => {
       onOpen
     });
 
-    expect(mongoose.connection.once).to.have.been.calledWith("open", onOpen);
+    expect(onceFake).to.have.been.calledWith("open", onOpen);
   });
 });
 

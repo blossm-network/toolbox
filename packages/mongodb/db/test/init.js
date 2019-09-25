@@ -1,5 +1,5 @@
 const { expect } = require("chai").use(require("sinon-chai"));
-const { restore, replace, fake } = require("sinon");
+const { restore, replace, replaceGetter, fake } = require("sinon");
 const mongoose = require("mongoose");
 
 const { init } = require("../index");
@@ -17,80 +17,109 @@ schema1[commonKey] = { type: String, default: schema1Value };
 const mixin0 = { schema: schema0 };
 const mixin1 = { schema: schema1 };
 
+const addFake = fake();
+const schemaFake = fake.returns({
+  add: addFake
+});
+const modelObject = "some-model-object";
+const modelFake = fake.returns(modelObject);
+
 describe("Returns a model", () => {
+  beforeEach(() => {
+    replace(mongoose, "model", modelFake);
+  });
   afterEach(() => {
-    mongoose.models = {};
-    mongoose.modelSchemas = {};
+    restore();
   });
 
   it("it should return a model object that is instatiatable", () => {
-    const name = "collection";
-
+    replace(mongoose, "Schema", schemaFake);
     const mixins = [mixin0, mixin1];
-    const modelObject = init({ name, mixins });
 
-    expect(new modelObject()).to.exist;
+    const result = init({ name, mixins });
+
+    expect(result).to.equal(modelObject);
+    expect(modelFake).to.have.been.calledWith(`${name}.1`);
+    expect(addFake).to.have.been.calledWith({
+      version: {
+        type: Number,
+        default: 1
+      }
+    });
+    expect(addFake).to.have.been.calledWith({
+      key: schema0[commonKey]
+    });
+    expect(addFake).to.have.been.calledWith({
+      key: schema1[commonKey]
+    });
   });
 
-  it("it should apply the mixin schema to the model", () => {
-    const name = "collection";
-    const mixins = [mixin1];
-
-    const modelObject = init({ name, mixins });
-
-    const modelObjectInstance = new modelObject();
-    expect(modelObjectInstance[commonKey]).to.equal(schema1Value);
-  });
   it("it should apply the version to the model", () => {
-    const version = 1;
+    replace(mongoose, "Schema", schemaFake);
+    const version = 2;
 
     const name = "collection";
     const mixins = [];
 
-    const modelObject = init({
+    const result = init({
       name,
       mixins,
       version
     });
 
-    const modelObjectInstance = new modelObject();
-    expect(modelObjectInstance.version).to.equal(version);
+    expect(result).to.equal(modelObject);
+    expect(modelFake).to.have.been.calledWith(`${name}.2`);
   });
 
   it("it should apply mixins in the correct order", () => {
-    const version = 1;
-
-    const mixins = [mixin0, mixin1];
-    const modelObject = init({
-      name,
-      mixins,
-      version
+    const obj = {};
+    const addFake = mixin => Object.assign(obj, mixin);
+    const schemaFake = fake.returns({
+      add: addFake
     });
 
-    const modelObjectInstance = new modelObject();
-    expect(modelObjectInstance[commonKey]).to.equal(schema1Value);
+    replace(mongoose, "Schema", schemaFake);
+
+    const mixins = [mixin0, mixin1];
+
+    init({
+      name,
+      mixins
+    });
+
+    expect(obj[commonKey].default).to.equal(schema1Value);
   });
 
   it("it should apply mixins in the correct order if a base is provided", () => {
-    const version = 1;
-
-    const name = "collection";
-
-    const mixins = [mixin1];
-    const modelObject = init({
-      name,
-      schema: schema0,
-      mixins,
-      version
+    const obj = {};
+    const addFake = mixin => Object.assign(obj, mixin);
+    const schemaFake = fake.returns({
+      add: addFake
     });
 
-    const modelObjectInstance = new modelObject();
-    expect(modelObjectInstance[commonKey]).to.equal(schema0Value);
+    replace(mongoose, "Schema", schemaFake);
+
+    const mixins = [mixin1];
+
+    init({
+      name,
+      schema: schema0,
+      mixins
+    });
+
+    expect(obj[commonKey].default).to.equal(schema0Value);
   });
   it("it should connect if a connection string is passed in", () => {
-    replace(mongoose, "connect", fake());
-    replace(mongoose.connection, "on", fake());
-    replace(mongoose.connection, "once", fake());
+    replace(mongoose, "Schema", schemaFake);
+    const onFake = fake();
+    const onceFake = fake();
+    const connectFake = fake();
+    const connectionFake = fake.returns({
+      on: onFake,
+      once: onceFake
+    });
+    replace(mongoose, "connect", connectFake);
+    replaceGetter(mongoose, "connection", connectionFake);
     const name = "collection";
 
     const mixins = [mixin0, mixin1];
@@ -101,7 +130,7 @@ describe("Returns a model", () => {
     const host = "host";
     const database = "db";
 
-    const modelObject = init({
+    const result = init({
       name,
       mixins,
       connection: {
@@ -113,28 +142,19 @@ describe("Returns a model", () => {
       }
     });
 
-    expect(new modelObject()).to.exist;
+    expect(result).to.equal(modelObject);
 
     const baseConnectionString = `${urlProtocol}://${user}:${password}@${host}/${database}`;
 
-    expect(mongoose.connect).to.have.been.calledWith(baseConnectionString, {
+    expect(connectFake).to.have.been.calledWith(baseConnectionString, {
       useNewUrlParser: true,
       useCreateIndex: true,
       autoIndex: false,
       poolSize: 10
     });
-
-    restore();
   });
-});
-
-describe("Throws if no name", () => {
-  afterEach(() => {
-    mongoose.models = {};
-    mongoose.modelSchemas = {};
-  });
-
   it("it should throw if it doesnt have a name", () => {
+    replace(mongoose, "Schema", schemaFake);
     const mixin1 = { viewMethods: { x: () => 0 } };
     const mixin2 = { viewMethods: { y: () => 0 } };
 

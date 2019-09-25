@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
-const urlEncodeQueryData = require("@sustainers/url-encode-query-data");
+
+const deps = require("../deps");
 
 module.exports = ({
   urlProtocol,
@@ -15,7 +16,7 @@ module.exports = ({
 }) => {
   let connectionString = `${urlProtocol}://${user}:${password}@${host}/${database}`;
 
-  const queryString = urlEncodeQueryData(parameters);
+  const queryString = deps.urlEncodeQueryData(parameters);
 
   if (queryString.length > 0) connectionString += `?${queryString}`;
 

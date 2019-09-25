@@ -13,9 +13,7 @@ module.exports = async message => {
 
   const [{ signature }] = await client.asymmetricSign({
     name: versionPath(),
-    digest: {
-      sha256: digest
-    }
+    digest: { sha256: digest }
   });
 
   return signature;

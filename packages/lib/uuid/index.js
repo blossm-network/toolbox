@@ -1,1 +1,3 @@
-module.exports = require("./src/uuid");
+const { v4 } = require("uuid");
+
+module.exports = v4;
