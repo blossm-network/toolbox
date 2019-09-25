@@ -9,8 +9,7 @@ module.exports = async ({ message, key, ring, location, project }) => {
   logger.info("SOME RESULT: ", {
     result,
     plaintext: result.plaintext.data,
-    plaintextString: result.plaintext.toString(),
-    string: result.plaintext.data.toString()
+    plaintextString: result.plaintext.toString()
   });
-  return result.plaintext.data.toString();
+  return result.plaintext.toString();
 };

@@ -22,7 +22,7 @@ describe("Kms decrypt", () => {
     kmsClient.prototype.cryptoKeyPath = pathFake;
     const decrpytedMessage = "some-decrypted-message";
     const decryptFake = fake.returns([
-      { plaintext: { data: Buffer.from(decrpytedMessage) } }
+      { plaintext: Buffer.from(decrpytedMessage) }
     ]);
     kmsClient.prototype.decrypt = decryptFake;
     replace(kms, "KeyManagementServiceClient", kmsClient);
