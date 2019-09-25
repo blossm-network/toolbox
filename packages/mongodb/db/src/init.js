@@ -103,6 +103,6 @@ module.exports = ({
     });
   }
 
-  const storeName = `${name}-${version}`;
+  const storeName = `${name}.${version}`;
   return mongoose.model(storeName, store, name);
 };
