@@ -29,7 +29,7 @@ describe("Kms decrypt", () => {
     expect(result).to.equal(decrpytedMessage);
     expect(decryptFake).to.have.been.calledWith({
       name: path,
-      message
+      ciphertext: message
     });
   });
   it("should throw correctly", async () => {
