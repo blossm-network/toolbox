@@ -21,7 +21,9 @@ describe("Kms decrypt", () => {
     const kmsClient = function() {};
     kmsClient.prototype.cryptoKeyPath = pathFake;
     const decrpytedMessage = "some-decrypted-message";
-    const decryptFake = fake.returns([decrpytedMessage]);
+    const decryptFake = fake.returns([
+      { plaintext: { data: Buffer.from(decrpytedMessage) } }
+    ]);
     kmsClient.prototype.decrypt = decryptFake;
     replace(kms, "KeyManagementServiceClient", kmsClient);
     const result = await decrypt({ message, key, ring, location, project });
