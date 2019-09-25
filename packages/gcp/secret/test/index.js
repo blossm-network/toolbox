@@ -3,11 +3,18 @@ const { restore, replace, fake } = require("sinon");
 const secret = require("..");
 const deps = require("../deps");
 
-const name = "some-secret-name";
 const bucket = "some-bucket";
-process.env.GCP_SECRET_BUCKET = bucket;
+const name = "some-key-name";
+const ring = "some-key-ring";
+const location = "some-key-location";
+const project = "some-project";
 const encrypted = "some-encrpyted-secret";
 const theSecret = "some-secret";
+
+process.env.GCP_SECRET_BUCKET = bucket;
+process.env.GCP_KMS_SECRET_BUCKET_KEY_RING = ring;
+process.env.GCP_KMS_SECRET_BUCKET_KEY_LOCATION = location;
+process.env.GCP_PROJECT = project;
 
 describe("Secrets", () => {
   afterEach(() => {
@@ -29,7 +36,13 @@ describe("Secrets", () => {
       file: `${name}.txt.encrypted`
     });
     expect(readFileFake).to.have.been.calledWith(`${name}.txt.encrypted`);
-    expect(decryptFake).to.have.been.calledWith(encrypted);
+    expect(decryptFake).to.have.been.calledWith({
+      message: encrypted,
+      key: name,
+      ring,
+      location,
+      project
+    });
     expect(unlinkFake).to.have.been.calledOnce;
     expect(result).to.equal(theSecret);
   });

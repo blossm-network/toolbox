@@ -4,20 +4,14 @@ const { decrypt } = require("..");
 
 const kms = require("@google-cloud/kms");
 
-const gcpProject = "some-gcp-project";
-const keyRing = "some-key-ring";
+const project = "some-gcp-project";
+const ring = "some-key-ring";
 const key = "some-key";
-const keyLocation = "some-key-location";
+const location = "some-key-location";
 
 const message = "This is my message to sign";
 
 describe("Kms decrypt", () => {
-  beforeEach(() => {
-    process.env.GCP_PROJECT = gcpProject;
-    process.env.GCP_KMS_KEY_RING = keyRing;
-    process.env.GCP_KMS_KEY = key;
-    process.env.GCP_KMS_KEY_LOCATION = keyLocation;
-  });
   afterEach(() => {
     restore();
   });
@@ -30,13 +24,8 @@ describe("Kms decrypt", () => {
     const decryptFake = fake.returns([decrpytedMessage]);
     kmsClient.prototype.decrypt = decryptFake;
     replace(kms, "KeyManagementServiceClient", kmsClient);
-    const result = await decrypt(message);
-    expect(pathFake).to.have.been.calledWith(
-      gcpProject,
-      keyLocation,
-      keyRing,
-      key
-    );
+    const result = await decrypt({ message, key, ring, location, project });
+    expect(pathFake).to.have.been.calledWith(project, location, ring, key);
     expect(result).to.equal(decrpytedMessage);
     expect(decryptFake).to.have.been.calledWith({
       name: path,

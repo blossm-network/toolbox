@@ -1,11 +1,8 @@
 const kms = require("@google-cloud/kms");
 
-const keyPath = require("./_key_path");
-
-module.exports = async message => {
+module.exports = async ({ message, key, ring, location, project }) => {
   const client = new kms.KeyManagementServiceClient();
-
-  const [result] = await client.decrypt({ name: keyPath(), message });
-
+  const name = client.cryptoKeyPath(project, location, ring, key);
+  const [result] = await client.decrypt({ name, message });
   return result;
 };
