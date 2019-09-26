@@ -14,7 +14,8 @@
     "test": "mocha"
   },
   "dependencies": {
-    "@sustainers/request": "^0.0.4"
+    "@sustainers/request": "^0.0.4",
+    "@sustainers/logger": "*"
   },
   "devDependencies": {
     "mocha": "^6.1.4"

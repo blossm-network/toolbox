@@ -1,4 +1,5 @@
 const deps = require("./deps");
+const logger = require("@sustainers/logger");
 
 const server = () => {
   switch (process.env.NODE_ENV) {
@@ -25,6 +26,7 @@ module.exports = async ({ operation }) => {
 
   const url = `https://${operationName}-${server()}-uc.a.run.app`;
 
+  logger.info("url is: ", { url, full: metadataServerTokenUrl + url, headers });
   const response = await deps.get(metadataServerTokenUrl + url, null, headers);
 
   return response.body;
