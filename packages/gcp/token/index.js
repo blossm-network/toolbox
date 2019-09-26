@@ -29,5 +29,6 @@ module.exports = async ({ operation }) => {
   logger.info("url is: ", { url, full: metadataServerTokenUrl + url, headers });
   const response = await deps.get(metadataServerTokenUrl + url, null, headers);
 
+  logger.info("res: ", { response });
   return response.body;
 };
