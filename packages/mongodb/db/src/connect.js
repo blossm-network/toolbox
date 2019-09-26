@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 
+const logger = require("@sustainers/logger");
 const deps = require("../deps");
 
 module.exports = ({
@@ -19,6 +20,8 @@ module.exports = ({
   const queryString = deps.urlEncodeQueryData(parameters);
 
   if (queryString.length > 0) connectionString += `?${queryString}`;
+
+  logger.info("connect string: ", { connectionString });
 
   mongoose.connect(connectionString, {
     useNewUrlParser: true,
