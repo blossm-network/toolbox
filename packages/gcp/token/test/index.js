@@ -51,4 +51,26 @@ describe("Gcp token", () => {
     );
     expect(result).to.equal(body);
   });
+  it("should call correctly in sandbox", async () => {
+    process.env.NODE_ENV = "production";
+
+    const body = "some-body";
+    const response = {
+      body
+    };
+    const getFake = fake.returns(response);
+    replace(deps, "get", getFake);
+
+    const operation = "some.url";
+    const result = await gcpToken({ operation });
+
+    const url = "https://url-some-qzhmgyrp2q-uc.a.run.app";
+
+    expect(getFake).to.have.been.calledWith(
+      `http://metadata/computeMetadata/v1/instance/service-accounts/default/identity?audience=${url}`,
+      null,
+      { "Metadata-Flavor": "Google" }
+    );
+    expect(result).to.equal(body);
+  });
 });
