@@ -34,6 +34,25 @@ describe("Kms decrypt", () => {
       ciphertext: message
     });
   });
+  it("should decrypt correctly with new lines removed", async () => {
+    const path = "some-path";
+    const pathFake = fake.returns(path);
+    const kmsClient = function() {};
+    kmsClient.prototype.cryptoKeyPath = pathFake;
+    const decrpytedMessage = "some-decrypted-message";
+    const decryptFake = fake.returns([
+      { plaintext: Buffer.from(`${decrpytedMessage}\n`) }
+    ]);
+    kmsClient.prototype.decrypt = decryptFake;
+    replace(kms, "KeyManagementServiceClient", kmsClient);
+    const result = await decrypt({ message, key, ring, location, project });
+    expect(pathFake).to.have.been.calledWith(project, location, ring, key);
+    expect(result).to.equal(decrpytedMessage);
+    expect(decryptFake).to.have.been.calledWith({
+      name: path,
+      ciphertext: message
+    });
+  });
   it("should throw correctly", async () => {
     const path = "some-path";
     const pathFake = fake.returns(path);
