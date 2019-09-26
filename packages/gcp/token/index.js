@@ -7,8 +7,10 @@ const server = () => {
     return "p3u6hkyfwa";
   case "sandbox":
     return "ixixyzl3ea";
+  case "production":
+    return "qzhmgyrp2q";
   default:
-    return "ixixyzl3ea";
+    return "p3u6hkyfwa";
   }
 };
 
