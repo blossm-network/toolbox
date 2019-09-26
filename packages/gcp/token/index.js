@@ -1,5 +1,16 @@
 const deps = require("./deps");
 
+const server = () => {
+  switch (process.env.NODE_ENV) {
+  case "staging":
+    return "p3u6hkyfwa";
+  case "sandbox":
+    return "ixixyzl3ea";
+  default:
+    return "ixixyzl3ea";
+  }
+};
+
 ///https://cloud.google.com/run/docs/authenticating/service-to-service
 module.exports = async ({ operation }) => {
   const metadataServerTokenUrl =
@@ -12,7 +23,7 @@ module.exports = async ({ operation }) => {
     .reverse()
     .join("-");
 
-  const url = `https://${operationName}-ixixyzl3ea-uc.a.run.app`;
+  const url = `https://${operationName}-${server()}-uc.a.run.app`;
 
   const response = await deps.get(metadataServerTokenUrl + url, null, headers);
 
