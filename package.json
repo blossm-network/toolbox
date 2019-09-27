@@ -1,5 +1,5 @@
 {
-  "name": "@sustainer-network/js",
+  "name": "@sustainers/js",
   "description": "The Sustainer Network codebase.",
   "version": "0.0.0",
   "private": true,
@@ -8,13 +8,13 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sustainer-network/sustainer-network-js.git"
+    "url": "git+https://github.com/sustainers-market/sustainers-market-js.git"
   },
   "author": "sustainernetwork.org",
   "bugs": {
-    "url": "https://github.com/sustainer-network/sustainer-network-js/issues"
+    "url": "https://github.com/sustainers-market/sustainers-market-js/issues"
   },
-  "homepage": "https://github.com/sustainer-network/sustainer-network-js#readme",
+  "homepage": "https://github.com/sustainers-market/sustainers-market-js#readme",
   "engines": {
     "node": ">= 10.16.0"
   },
