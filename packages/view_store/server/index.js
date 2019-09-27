@@ -4,7 +4,7 @@ const deps = require("./deps");
 
 let _viewStore;
 
-const viewStore = async config => {
+const viewStore = async ({ schema, indexes }) => {
   if (_viewStore != undefined) {
     logger.info("Thank you existing database.");
     return _viewStore;
@@ -12,7 +12,8 @@ const viewStore = async config => {
 
   _viewStore = deps.store({
     name: `${process.env.DOMAIN}.${process.env.ID}`,
-    ...config,
+    schema,
+    indexes,
     connection: {
       user: process.env.MONGODB_USER,
       password: await deps.secret("mongodb"),
@@ -27,8 +28,24 @@ const viewStore = async config => {
   return _viewStore;
 };
 
-module.exports = async (config, { getFn, postFn, putFn } = {}) => {
-  const store = await viewStore(config);
+module.exports = async (
+  { schema, indexes } = {},
+  { getFn, postFn, putFn } = {}
+) => {
+  if (schema) {
+    schema.id = { type: String, required: true };
+    schema.created = { type: Number, required: true };
+    schema.modified = { type: Number, required: true };
+  }
+
+  if (indexes) {
+    indexes.push([{ guid: 1 }]);
+    indexes.push([{ created: 1 }]);
+    indexes.push([{ modified: 1 }]);
+  }
+
+  const store = await viewStore({ schema, indexes });
+
   deps
     .server()
     .get(deps.get({ store, ...(getFn && { fn: getFn }) }))

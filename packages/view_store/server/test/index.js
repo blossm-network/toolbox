@@ -10,7 +10,8 @@ let clock;
 
 const now = new Date();
 
-const config = { a: 1 };
+const schema = { a: 1 };
+const indexes = ["some-index"];
 
 const domain = "some-domain";
 const id = "some-id";
@@ -76,12 +77,23 @@ describe("View store", () => {
     const viewStoreDeleteFake = fake.returns(viewStoreDeleteResult);
     replace(deps, "delete", viewStoreDeleteFake);
 
-    await viewStore(config);
+    await viewStore({ schema, indexes });
 
     expect(storeFake).to.have.been.calledWith(
       match({
         name: `${domain}.${id}`,
-        a: 1,
+        schema: {
+          a: 1,
+          id: { type: String, required: true },
+          created: { type: Number, required: true },
+          modified: { type: Number, required: true }
+        },
+        indexes: [
+          "some-index",
+          [{ guid: 1 }],
+          [{ created: 1 }],
+          [{ modified: 1 }]
+        ],
         connection: {
           user,
           password,
@@ -108,7 +120,7 @@ describe("View store", () => {
     expect(viewStorePutFake).to.have.been.calledWith({ store });
     expect(viewStoreDeleteFake).to.have.been.calledWith({ store });
 
-    await viewStore(config);
+    await viewStore();
     expect(storeFake).to.have.been.calledOnce;
   });
   it("should call with the correct params with passed in fns", async () => {
@@ -157,7 +169,7 @@ describe("View store", () => {
     const postFn = "some-post-fn";
     const putFn = "some-put-fn";
 
-    await viewStore(config, { getFn, postFn, putFn });
+    await viewStore({ schema, indexes }, { getFn, postFn, putFn });
 
     expect(getFake).to.have.been.calledWith(viewStoreGetResult);
     expect(postFake).to.have.been.calledWith(viewStorePostResult);
