@@ -148,6 +148,7 @@ describe("Returns a model", () => {
       useNewUrlParser: true,
       useCreateIndex: true,
       useUnifiedTopology: true,
+      useFindAndModify: false,
       autoIndex: false,
       poolSize: 10
     });

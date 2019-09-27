@@ -36,6 +36,7 @@ describe("Connects", () => {
       useNewUrlParser: true,
       useCreateIndex: true,
       useUnifiedTopology: true,
+      useFindAndModify: false,
       autoIndex: false,
       poolSize: 10
     });
@@ -66,6 +67,7 @@ describe("Connects", () => {
         useNewUrlParser: true,
         useCreateIndex: true,
         useUnifiedTopology: true,
+        useFindAndModify: false,
         autoIndex,
         poolSize
       }
