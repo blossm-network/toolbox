@@ -7,7 +7,6 @@ const count = require("./src/operations/count");
 const updateMany = require("./src/operations/update_many");
 const connect = require("./src/connect");
 const store = require("./src/store");
-const mixedSchemaType = require("./src/mixed_schema_type");
 
 module.exports = {
   find,
@@ -18,6 +17,5 @@ module.exports = {
   count,
   updateMany,
   connect,
-  store,
-  mixedSchemaType
+  store
 };
