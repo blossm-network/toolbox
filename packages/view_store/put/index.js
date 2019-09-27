@@ -17,11 +17,11 @@ module.exports = ({ store, fn }) => {
       modified: deps.fineTimestamp()
     };
 
-    await store.write({
+    const view = await store.write({
       query: { id: req.params.id },
       update
     });
 
-    res.send();
+    res.send(view);
   };
 };

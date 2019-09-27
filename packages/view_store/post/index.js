@@ -13,11 +13,11 @@ module.exports = ({ store, fn }) => {
       created: now
     };
 
-    await store.write({
+    const view = await store.write({
       query: { id },
       update
     });
 
-    res.send();
+    res.send(view);
   };
 };

@@ -11,7 +11,7 @@ let clock;
 
 const now = new Date();
 
-const objs = "some-objs";
+const view = "some-view";
 const id = "some-id";
 const body = {
   a: 1,
@@ -33,7 +33,7 @@ describe("View store put", () => {
   });
 
   it("should call with the correct params", async () => {
-    const writeFake = fake.returns(objs);
+    const writeFake = fake.returns(view);
     const store = {
       write: writeFake
     };
@@ -57,11 +57,11 @@ describe("View store put", () => {
         }
       }
     });
-    expect(sendFake).to.have.been.calledOnce;
+    expect(sendFake).to.have.been.calledWith(view);
   });
 
   it("should call with the correct params", async () => {
-    const writeFake = fake.returns(objs);
+    const writeFake = fake.returns(view);
     const store = {
       write: writeFake
     };
@@ -88,10 +88,10 @@ describe("View store put", () => {
       }
     });
     expect(fnFake).to.have.been.calledWith(body);
-    expect(sendFake).to.have.been.calledOnce;
+    expect(sendFake).to.have.been.calledWith(view);
   });
   it("should throw if id is missing", async () => {
-    const writeFake = fake.returns(objs);
+    const writeFake = fake.returns(view);
     const store = {
       write: writeFake
     };
