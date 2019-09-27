@@ -1,6 +1,6 @@
 {
   "name": "@sustainers/mongodb-database",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Read and write from a MongoDB database.",
   "main": "index.js",
   "author": "sustainers.market",
