@@ -3,7 +3,6 @@ const mongoose = require("mongoose");
 const deps = require("../deps");
 
 module.exports = ({
-  urlProtocol,
   user,
   password,
   host,
@@ -14,7 +13,7 @@ module.exports = ({
   onError = null,
   onOpen = null
 }) => {
-  let connectionString = `${urlProtocol}://${user}:${password}@${host}/${database}`;
+  let connectionString = `mongodb+srv://${user}:${password}@${host}/${database}`;
 
   const queryString = deps.urlEncodeQueryData(parameters);
 

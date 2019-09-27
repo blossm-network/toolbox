@@ -5,13 +5,12 @@ const mongoose = require("mongoose");
 const { connect } = require("../index");
 const deps = require("../deps");
 
-const urlProtocol = "protocol";
 const user = "user";
 const password = "pass";
 const host = "host";
 const database = "db";
 
-const baseConnectionString = `${urlProtocol}://${user}:${password}@${host}/${database}`;
+const baseConnectionString = `mongodb+srv://${user}:${password}@${host}/${database}`;
 
 const onFake = fake();
 const onceFake = fake();
@@ -31,7 +30,7 @@ describe("Connects", () => {
   });
 
   it("it should connect if all the params are normal, and ommittable params omitted", () => {
-    connect({ urlProtocol, user, password, host, database });
+    connect({ user, password, host, database });
 
     expect(connectFake).to.have.been.calledWith(baseConnectionString, {
       useNewUrlParser: true,
@@ -52,7 +51,6 @@ describe("Connects", () => {
     const autoIndex = true;
 
     connect({
-      urlProtocol,
       user,
       password,
       host,
@@ -78,7 +76,6 @@ describe("Connects", () => {
     const onError = name => name;
 
     connect({
-      urlProtocol,
       user,
       password,
       host,
@@ -93,7 +90,6 @@ describe("Connects", () => {
     const onOpen = () => true;
 
     connect({
-      urlProtocol,
       user,
       password,
       host,
@@ -115,8 +111,6 @@ describe("Returns the right object", () => {
     replace(mongoose, "connect", fake());
     replaceGetter(mongoose, "connection", fake.returns(returnValue));
 
-    expect(connect({ urlProtocol, user, password, host, database })).to.equal(
-      returnValue
-    );
+    expect(connect({ user, password, host, database })).to.equal(returnValue);
   });
 });

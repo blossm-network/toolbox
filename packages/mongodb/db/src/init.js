@@ -48,7 +48,6 @@ module.exports = ({
   mixins = [],
   version = 1,
   connection: {
-    urlProtocol,
     user,
     password,
     host,
@@ -64,14 +63,12 @@ module.exports = ({
     throw new InternalServerError("View store needs a name.");
 
   if (
-    urlProtocol != undefined &&
     user != undefined &&
     password != undefined &&
     host != undefined &&
     database != undefined
   ) {
     connect({
-      urlProtocol,
       user,
       password,
       host,

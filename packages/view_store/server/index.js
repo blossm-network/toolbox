@@ -10,7 +10,6 @@ const viewStore = async config => {
     name: `${process.env.DOMAIN}.${process.env.ID}`,
     ...config,
     connection: {
-      urlProtocol: process.env.MONGODB_URL_PROTOCOL,
       user: process.env.MONGODB_USER,
       password: await deps.secret("mongodb"),
       host: process.env.MONGODB_HOST,

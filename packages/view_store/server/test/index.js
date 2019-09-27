@@ -14,7 +14,6 @@ const config = { a: 1 };
 
 const domain = "some-domain";
 const id = "some-id";
-const urlProtocol = "some-url-protocol";
 const user = "some-db-user";
 const host = "some-host";
 const database = "some-db";
@@ -22,7 +21,6 @@ const password = "some-password";
 
 process.env.DOMAIN = domain;
 process.env.ID = id;
-process.env.MONGODB_URL_PROTOCOL = urlProtocol;
 process.env.MONGODB_USER = user;
 process.env.MONGODB_HOST = host;
 process.env.MONGODB_DATABASE = database;
@@ -85,7 +83,6 @@ describe("View store", () => {
         name: `${domain}.${id}`,
         a: 1,
         connection: {
-          urlProtocol,
           user,
           password,
           host,

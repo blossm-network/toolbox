@@ -124,7 +124,6 @@ describe("Returns a model", () => {
 
     const mixins = [mixin0, mixin1];
 
-    const urlProtocol = "protocol";
     const user = "user";
     const password = "pass";
     const host = "host";
@@ -134,7 +133,6 @@ describe("Returns a model", () => {
       name,
       mixins,
       connection: {
-        urlProtocol,
         user,
         password,
         host,
@@ -144,7 +142,7 @@ describe("Returns a model", () => {
 
     expect(result).to.equal(modelObject);
 
-    const baseConnectionString = `${urlProtocol}://${user}:${password}@${host}/${database}`;
+    const baseConnectionString = `mongodb+srv://${user}:${password}@${host}/${database}`;
 
     expect(connectFake).to.have.been.calledWith(baseConnectionString, {
       useNewUrlParser: true,
