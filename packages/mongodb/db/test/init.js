@@ -149,6 +149,7 @@ describe("Returns a model", () => {
     expect(connectFake).to.have.been.calledWith(baseConnectionString, {
       useNewUrlParser: true,
       useCreateIndex: true,
+      useUnifiedTopology: true,
       autoIndex: false,
       poolSize: 10
     });

@@ -8,8 +8,8 @@ module.exports = () => {
   const app = deps.express();
   deps.expressMiddleware(app);
 
-  const listen = ({ port = 3000 } = {}) => {
-    port = process.env.PORT || port;
+  const listen = ({ port } = {}) => {
+    port = port || process.env.PORT || 3000;
     app.use(deps.errorMiddleware);
     app.listen(port);
     logger.info("Thank you server.", { port });

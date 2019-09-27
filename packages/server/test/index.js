@@ -92,7 +92,6 @@ describe("Lamba", () => {
 
     const newPath = "some-new-path";
     const newPort = "some-new-port";
-    delete process.env.PORT;
     const asyncFn = "some-fn";
     const asyncHandlerFake = fake.returns(asyncFn);
     const expressMiddlewareFake = fake();
@@ -139,36 +138,6 @@ describe("Lamba", () => {
     expect(asyncHandlerFake).to.have.been.calledWith(fn);
     expect(useFake).to.have.been.calledWith(deps.errorMiddleware);
     expect(listenFake).to.have.been.calledWith(3000);
-  });
-  it("should call post with prioritizing env port", async () => {
-    const useFake = fake();
-    const listenFake = fake();
-    const postFake = fake();
-    const app = {
-      use: useFake,
-      listen: listenFake,
-      post: postFake
-    };
-    const expressFake = fake.returns(app);
-    replace(deps, "express", expressFake);
-
-    const newPort = "some-new-port";
-    const asyncFn = "some-fn";
-    const asyncHandlerFake = fake.returns(asyncFn);
-    const expressMiddlewareFake = fake();
-
-    replace(deps, "asyncHandler", asyncHandlerFake);
-    replace(deps, "expressMiddleware", expressMiddlewareFake);
-
-    const result = server()
-      .post(fn)
-      .listen({ port: newPort });
-
-    expect(result).to.equal(app);
-    expect(postFake).to.have.been.calledWith("/", asyncFn);
-    expect(asyncHandlerFake).to.have.been.calledWith(fn);
-    expect(useFake).to.have.been.calledWith(deps.errorMiddleware);
-    expect(listenFake).to.have.been.calledWith(port);
   });
   it("should call get with the correct params", async () => {
     const useFake = fake();
