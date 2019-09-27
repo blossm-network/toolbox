@@ -5,7 +5,11 @@ const deps = require("./deps");
 let _viewStore;
 
 const viewStore = async config => {
-  if (_viewStore != undefined) return _viewStore;
+  if (_viewStore != undefined) {
+    logger.info("Thank you existing database.");
+    return _viewStore;
+  }
+
   _viewStore = deps.db({
     name: `${process.env.DOMAIN}.${process.env.ID}`,
     ...config,
