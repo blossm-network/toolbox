@@ -2,7 +2,7 @@ const { expect } = require("chai").use(require("sinon-chai"));
 const { restore, replace, replaceGetter, fake } = require("sinon");
 const mongoose = require("mongoose");
 
-const { init } = require("../index");
+const { store } = require("../index");
 
 const name = "collection";
 const commonKey = "key";
@@ -36,7 +36,7 @@ describe("Returns a model", () => {
     replace(mongoose, "Schema", schemaFake);
     const mixins = [mixin0, mixin1];
 
-    const result = init({ name, mixins });
+    const result = store({ name, mixins });
 
     expect(result).to.equal(modelObject);
     expect(modelFake).to.have.been.calledWith(`${name}.1`);
@@ -61,7 +61,7 @@ describe("Returns a model", () => {
     const name = "collection";
     const mixins = [];
 
-    const result = init({
+    const result = store({
       name,
       mixins,
       version
@@ -82,7 +82,7 @@ describe("Returns a model", () => {
 
     const mixins = [mixin0, mixin1];
 
-    init({
+    store({
       name,
       mixins
     });
@@ -101,7 +101,7 @@ describe("Returns a model", () => {
 
     const mixins = [mixin1];
 
-    init({
+    store({
       name,
       schema: schema0,
       mixins
@@ -129,7 +129,7 @@ describe("Returns a model", () => {
     const host = "host";
     const database = "db";
 
-    const result = init({
+    const result = store({
       name,
       mixins,
       connection: {
@@ -159,6 +159,6 @@ describe("Returns a model", () => {
 
     const mixins = [mixin1, mixin2];
 
-    expect(() => init({ mixins })).to.throw();
+    expect(() => store({ mixins })).to.throw();
   });
 });

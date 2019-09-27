@@ -1,10 +1,12 @@
 const { expect } = require("chai").use(require("sinon-chai"));
-const { restore, fake } = require("sinon");
+const { restore, replace, fake } = require("sinon");
 
 const del = require("..");
+const deps = require("../deps");
 
 const objs = "some-objs";
 const id = "some-id";
+const store = "some-store";
 
 describe("View store delete", () => {
   afterEach(() => {
@@ -13,9 +15,11 @@ describe("View store delete", () => {
 
   it("should call with the correct params", async () => {
     const removeFake = fake.returns(objs);
-    const store = {
+    const db = {
       remove: removeFake
     };
+    replace(deps, "db", db);
+
     const params = {
       id
     };
@@ -29,6 +33,7 @@ describe("View store delete", () => {
     };
     await del({ store })(req, res);
     expect(removeFake).to.have.been.calledWith({
+      store,
       query: {
         id
       }
@@ -37,9 +42,11 @@ describe("View store delete", () => {
   });
   it("should throw if missing id params", async () => {
     const removeFake = fake.returns(objs);
-    const store = {
+    const db = {
       remove: removeFake
     };
+    replace(deps, "db", db);
+
     const params = {};
     const req = {
       params

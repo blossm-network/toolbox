@@ -10,7 +10,7 @@ const viewStore = async config => {
     return _viewStore;
   }
 
-  _viewStore = deps.db({
+  _viewStore = deps.store({
     name: `${process.env.DOMAIN}.${process.env.ID}`,
     ...config,
     connection: {

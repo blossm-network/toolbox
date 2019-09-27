@@ -36,8 +36,8 @@ describe("View store", () => {
 
   it("should call with the correct params", async () => {
     const store = "some-store";
-    const dbFake = fake.returns(store);
-    replace(deps, "db", dbFake);
+    const storeFake = fake.returns(store);
+    replace(deps, "store", storeFake);
 
     const secretFake = fake.returns(password);
     replace(deps, "secret", secretFake);
@@ -78,7 +78,7 @@ describe("View store", () => {
 
     await viewStore(config);
 
-    expect(dbFake).to.have.been.calledWith(
+    expect(storeFake).to.have.been.calledWith(
       match({
         name: `${domain}.${id}`,
         a: 1,
@@ -109,12 +109,12 @@ describe("View store", () => {
     expect(viewStoreDeleteFake).to.have.been.calledWith({ store });
 
     await viewStore(config);
-    expect(dbFake).to.have.been.calledOnce;
+    expect(storeFake).to.have.been.calledOnce;
   });
   it("should call with the correct params with passed in fns", async () => {
     const store = "some-store";
-    const dbFake = fake.returns(store);
-    replace(deps, "db", dbFake);
+    const storeFake = fake.returns(store);
+    replace(deps, "store", storeFake);
 
     const secretFake = fake.returns(password);
     replace(deps, "secret", secretFake);

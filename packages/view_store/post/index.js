@@ -2,7 +2,8 @@ const deps = require("./deps");
 
 module.exports = ({ store, fn }) => {
   return async (req, res) => {
-    const id = deps.uuid();
+    const id = (req.params && req.params.id) || deps.uuid();
+
     const now = deps.fineTimestamp();
 
     const update = fn ? fn(req.body) : { $set: req.body };
@@ -13,9 +14,16 @@ module.exports = ({ store, fn }) => {
       created: now
     };
 
-    const view = await store.write({
+    const view = await deps.db.write({
+      store,
       query: { id },
-      update
+      update,
+      options: {
+        upsert: true,
+        new: true,
+        runValidators: true,
+        setDefaultsOnInsert: true
+      }
     });
 
     res.send(view);

@@ -17,9 +17,15 @@ module.exports = ({ store, fn }) => {
       modified: deps.fineTimestamp()
     };
 
-    const view = await store.write({
+    const view = await deps.db.write({
+      store,
       query: { id: req.params.id },
-      update
+      update,
+      options: {
+        upsert: false,
+        new: true,
+        runValidators: true
+      }
     });
 
     res.send(view);

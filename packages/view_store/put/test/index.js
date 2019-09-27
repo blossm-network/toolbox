@@ -2,7 +2,7 @@ const { expect } = require("chai")
   .use(require("chai-datetime"))
   .use(require("sinon-chai"));
 
-const { restore, fake, useFakeTimers } = require("sinon");
+const { restore, replace, fake, useFakeTimers } = require("sinon");
 
 const put = require("..");
 const deps = require("../deps");
@@ -22,6 +22,7 @@ const body = {
 const params = {
   id
 };
+const store = "some-store";
 
 describe("View store put", () => {
   beforeEach(() => {
@@ -34,9 +35,11 @@ describe("View store put", () => {
 
   it("should call with the correct params", async () => {
     const writeFake = fake.returns(view);
-    const store = {
+    const db = {
       write: writeFake
     };
+    replace(deps, "db", db);
+
     const req = {
       params,
       body
@@ -48,13 +51,20 @@ describe("View store put", () => {
     };
 
     await put({ store })(req, res);
+
     expect(writeFake).to.have.been.calledWith({
+      store,
       query: { id },
       update: {
         $set: {
           a: 1,
           modified: deps.fineTimestamp()
         }
+      },
+      options: {
+        upsert: false,
+        new: true,
+        runValidators: true
       }
     });
     expect(sendFake).to.have.been.calledWith(view);
@@ -62,9 +72,11 @@ describe("View store put", () => {
 
   it("should call with the correct params", async () => {
     const writeFake = fake.returns(view);
-    const store = {
+    const db = {
       write: writeFake
     };
+    replace(deps, "db", db);
+
     const req = {
       params,
       body
@@ -79,12 +91,18 @@ describe("View store put", () => {
     await put({ store, fn: fnFake })(req, res);
 
     expect(writeFake).to.have.been.calledWith({
+      store,
       query: { id },
       update: {
         $set: {
           b: 2,
           modified: deps.fineTimestamp()
         }
+      },
+      options: {
+        upsert: false,
+        new: true,
+        runValidators: true
       }
     });
     expect(fnFake).to.have.been.calledWith(body);
@@ -92,9 +110,12 @@ describe("View store put", () => {
   });
   it("should throw if id is missing", async () => {
     const writeFake = fake.returns(view);
-    const store = {
+    const db = {
       write: writeFake
     };
+
+    replace(deps, "db", db);
+
     const req = {
       params: {},
       body

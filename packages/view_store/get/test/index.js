@@ -1,13 +1,15 @@
 const { expect } = require("chai").use(require("sinon-chai"));
-const { restore, fake } = require("sinon");
+const { restore, replace, fake } = require("sinon");
 
 const get = require("..");
+const deps = require("../deps");
 
 const objs = "some-objs";
 const query = {
   a: 1
 };
 const id = "some-id";
+const store = "some-store";
 
 describe("View store get", () => {
   afterEach(() => {
@@ -15,10 +17,12 @@ describe("View store get", () => {
   });
 
   it("should call with the correct params", async () => {
-    const findFake = fake.returns(objs);
-    const store = {
-      find: findFake
+    const findOneFake = fake.returns(objs);
+    const db = {
+      findOne: findOneFake
     };
+    replace(deps, "db", db);
+
     const params = {
       id
     };
@@ -32,17 +36,21 @@ describe("View store get", () => {
       send: sendFake
     };
     await get({ store })(req, res);
-    expect(findFake).to.have.been.calledWith({
-      a: 1,
-      id
+    expect(findOneFake).to.have.been.calledWith({
+      store,
+      query: {
+        id
+      }
     });
     expect(sendFake).to.have.been.calledWith(objs);
   });
   it("should call with the correct params if no id", async () => {
     const findFake = fake.returns(objs);
-    const store = {
+    const db = {
       find: findFake
     };
+    replace(deps, "db", db);
+
     const params = {};
     const req = {
       query,
@@ -55,15 +63,19 @@ describe("View store get", () => {
     };
     await get({ store })(req, res);
     expect(findFake).to.have.been.calledWith({
-      a: 1
+      store,
+      query: {
+        a: 1
+      }
     });
     expect(sendFake).to.have.been.calledWith(objs);
   });
   it("should call with the correct params if a fn is passed in", async () => {
-    const findFake = fake.returns(objs);
-    const store = {
-      find: findFake
+    const findOneFake = fake.returns(objs);
+    const db = {
+      findOne: findOneFake
     };
+    replace(deps, "db", db);
     const params = {
       id
     };
@@ -80,9 +92,11 @@ describe("View store get", () => {
     const fnFake = fake.returns({ b: 2 });
     await get({ store, fn: fnFake })(req, res);
     expect(fnFake).to.have.been.calledWith(query);
-    expect(findFake).to.have.been.calledWith({
-      b: 2,
-      id
+    expect(findOneFake).to.have.been.calledWith({
+      store,
+      query: {
+        id
+      }
     });
     expect(sendFake).to.have.been.calledWith(objs);
   });

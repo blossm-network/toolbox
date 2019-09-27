@@ -18,6 +18,7 @@ const body = {
   modified: "even-more-bogus"
 };
 const uuid = "some-uuid";
+const store = "some-store";
 
 describe("View store post", () => {
   beforeEach(() => {
@@ -30,9 +31,11 @@ describe("View store post", () => {
 
   it("should call with the correct params", async () => {
     const writeFake = fake.returns(view);
-    const store = {
+    const db = {
       write: writeFake
     };
+    replace(deps, "db", db);
+
     const req = {
       body
     };
@@ -46,6 +49,7 @@ describe("View store post", () => {
     replace(deps, "uuid", uuidFake);
     await post({ store })(req, res);
     expect(writeFake).to.have.been.calledWith({
+      store,
       query: { id: uuid },
       update: {
         $set: {
@@ -54,16 +58,68 @@ describe("View store post", () => {
           modified: deps.fineTimestamp(),
           created: deps.fineTimestamp()
         }
+      },
+      options: {
+        upsert: true,
+        new: true,
+        runValidators: true,
+        setDefaultsOnInsert: true
       }
     });
     expect(sendFake).to.have.been.calledWith(view);
   });
 
-  it("should call with the correct params", async () => {
+  it("should call with the correct params with passed in id", async () => {
     const writeFake = fake.returns(view);
-    const store = {
+    const db = {
       write: writeFake
     };
+    replace(deps, "db", db);
+
+    const id = "some-root-id";
+    const req = {
+      body,
+      params: {
+        id
+      }
+    };
+
+    const sendFake = fake();
+    const res = {
+      send: sendFake
+    };
+
+    const uuidFake = fake.returns(uuid);
+    replace(deps, "uuid", uuidFake);
+    await post({ store })(req, res);
+    expect(writeFake).to.have.been.calledWith({
+      store,
+      query: { id },
+      update: {
+        $set: {
+          a: 1,
+          id,
+          modified: deps.fineTimestamp(),
+          created: deps.fineTimestamp()
+        }
+      },
+      options: {
+        upsert: true,
+        new: true,
+        runValidators: true,
+        setDefaultsOnInsert: true
+      }
+    });
+    expect(sendFake).to.have.been.calledWith(view);
+  });
+
+  it("should call with the correct params with fn", async () => {
+    const writeFake = fake.returns(view);
+    const db = {
+      write: writeFake
+    };
+    replace(deps, "db", db);
+
     const req = {
       body
     };
@@ -80,6 +136,7 @@ describe("View store post", () => {
     await post({ store, fn: fnFake })(req, res);
 
     expect(writeFake).to.have.been.calledWith({
+      store,
       query: { id: uuid },
       update: {
         $set: {
@@ -88,6 +145,12 @@ describe("View store post", () => {
           modified: deps.fineTimestamp(),
           created: deps.fineTimestamp()
         }
+      },
+      options: {
+        upsert: true,
+        new: true,
+        runValidators: true,
+        setDefaultsOnInsert: true
       }
     });
     expect(fnFake).to.have.been.calledWith(body);

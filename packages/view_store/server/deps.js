@@ -1,5 +1,5 @@
 const server = require("@sustainers/server");
-const { init } = require("@sustainers/mongodb-database");
+const { store } = require("@sustainers/mongodb-database");
 const secret = require("@sustainers/gcp-secret");
 const { fineTimestamp } = require("@sustainers/datetime");
 const get = require("@sustainers/view-store-get");
@@ -8,7 +8,7 @@ const put = require("@sustainers/view-store-put");
 const del = require("@sustainers/view-store-delete");
 
 exports.secret = secret;
-exports.db = init;
+exports.store = store;
 exports.server = server;
 exports.fineTimestamp = fineTimestamp;
 exports.get = get;
