@@ -39,7 +39,7 @@ module.exports = async (
   }
 
   if (indexes) {
-    indexes.push([{ guid: 1 }]);
+    indexes.push([{ uuid: 1 }]);
     indexes.push([{ created: 1 }]);
     indexes.push([{ modified: 1 }]);
   }

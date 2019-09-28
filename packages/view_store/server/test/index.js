@@ -90,7 +90,7 @@ describe("View store", () => {
         },
         indexes: [
           "some-index",
-          [{ guid: 1 }],
+          [{ uuid: 1 }],
           [{ created: 1 }],
           [{ modified: 1 }]
         ],
