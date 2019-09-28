@@ -1,6 +1,6 @@
 const { expect } = require("chai").use(require("sinon-chai"));
 const { useFakeTimers } = require("sinon");
-const datetime = require("@sustainers/datetime");
+const { string: stringDate, stringFromDate } = require("@sustainers/datetime");
 const validateCommand = require("..");
 
 const now = new Date();
@@ -9,7 +9,7 @@ const goodParams = {
   payload: { a: 1 },
   headers: {
     trace: "trace!",
-    issued: datetime.fineTimestamp() - 2
+    issued: stringDate()
   }
 };
 
@@ -87,7 +87,7 @@ describe("Validate command", () => {
   it("should throw if a future issued is passed", async () => {
     const params = {
       ...goodParams,
-      "headers.issued": datetime.fineTimestamp + 1
+      "headers.issued": stringFromDate(new Date(now.getTime() + 60000))
     };
 
     expect(async () => await validateCommand(params)).to.throw;
@@ -95,7 +95,7 @@ describe("Validate command", () => {
   it("should throw if a distant past issued is passed", async () => {
     const params = {
       ...goodParams,
-      "headers.issued": 123
+      "headers.issued": stringFromDate(new Date(234))
     };
 
     expect(async () => await validateCommand(params)).to.throw;

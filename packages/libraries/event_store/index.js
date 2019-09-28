@@ -1,4 +1,4 @@
-const datetime = require("@sustainers/datetime");
+const { string: dateString } = require("@sustainers/datetime");
 
 const deps = require("./deps");
 
@@ -15,7 +15,7 @@ module.exports = ({ service, network }) => {
                   root,
                   topic,
                   version,
-                  created: datetime.fineTimestamp(),
+                  created: dateString(),
                   ...(trace && { trace }),
                   command: {
                     id: command.id,

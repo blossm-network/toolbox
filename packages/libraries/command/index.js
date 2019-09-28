@@ -1,4 +1,4 @@
-const datetime = require("@sustainers/datetime");
+const { string: dateString } = require("@sustainers/datetime");
 
 const deps = require("./deps");
 
@@ -6,7 +6,7 @@ module.exports = ({ action, domain, service, network }) => {
   return {
     issue: (payload, { trace, source } = {}) => {
       const headers = {
-        issued: datetime.fineTimestamp(),
+        issued: dateString(),
         ...(trace != undefined && { trace }),
         ...(source != undefined && { source })
       };

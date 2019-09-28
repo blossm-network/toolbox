@@ -1,29 +1,29 @@
-const datetime = require("@sustainers/datetime");
+const { string: stringDate } = require("@sustainers/datetime");
 const deps = require("./deps");
 
 module.exports = async ({
   root,
   payload,
   version,
-  traceId,
+  trace,
   context,
-  command: { id, issuedTimestamp }
+  command: { id, issued }
 } = {}) => {
   return {
-    ...(context != undefined && { context }),
-    fact: {
+    headers: {
       root: root || (await deps.makeUuid()),
+      ...(context != undefined && { context }),
       topic: `did-${process.env.ACTION}.${process.env.DOMAIN}.${process.env.SERVICE}.${process.env.NETWORK}`,
       version,
-      traceId,
-      createdTimestamp: datetime.fineTimestamp(),
+      trace,
+      created: stringDate(),
       command: {
         id,
         action: process.env.ACTION,
         domain: process.env.DOMAIN,
         service: process.env.SERVICE,
         network: process.env.NETWORK,
-        issuedTimestamp
+        issued
       }
     },
     payload

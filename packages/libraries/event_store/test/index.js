@@ -5,7 +5,7 @@ const { restore, replace, fake, useFakeTimers } = require("sinon");
 const eventStore = require("..");
 
 const deps = require("../deps");
-const datetime = require("@sustainers/datetime");
+const { string: dateString } = require("@sustainers/datetime");
 
 let clock;
 
@@ -91,7 +91,7 @@ describe("Event store", () => {
           issued: commandIssuedTimestamp
         },
         trace,
-        created: datetime.fineTimestamp()
+        created: dateString()
       },
       payload
     });
@@ -146,7 +146,7 @@ describe("Event store", () => {
           id: commandId,
           issued: commandIssuedTimestamp
         },
-        created: datetime.fineTimestamp()
+        created: dateString()
       },
       payload
     });

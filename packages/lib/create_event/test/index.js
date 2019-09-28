@@ -1,20 +1,20 @@
 const { expect } = require("chai").use(require("sinon-chai"));
 const { restore, replace, fake, useFakeTimers } = require("sinon");
 const createEvent = require("../");
-const datetime = require("@sustainers/datetime");
+const { string: stringDate } = require("@sustainers/datetime");
 const deps = require("../deps");
 
 let clock;
 
 const now = new Date();
 
-const traceId = "tradeId!";
+const trace = "trade!";
 const commandId = "command-id!";
 const commandAction = "command-action!";
 const commandDomain = "command-domain!";
 const commandService = "command-service!";
 const commandNetwork = "command-network!";
-const commandIssuedTimestamp = 23;
+const commandIssued = "some-date";
 const root = "root!";
 const context = "some-context";
 
@@ -35,11 +35,11 @@ describe("Create event", () => {
   });
   it("should get called with expected params", async () => {
     const value = await createEvent({
-      traceId,
+      trace,
       context,
       command: {
         id: commandId,
-        issuedTimestamp: commandIssuedTimestamp
+        issued: commandIssued
       },
       root,
       payload,
@@ -47,20 +47,20 @@ describe("Create event", () => {
     });
 
     expect(value).to.deep.equal({
-      context,
-      fact: {
+      headers: {
         root,
+        context,
         topic: `did-${commandAction}.${commandDomain}.${commandService}.${commandNetwork}`,
         version,
-        traceId,
-        createdTimestamp: datetime.fineTimestamp(),
+        trace,
+        created: stringDate(),
         command: {
           id: commandId,
           action: commandAction,
           domain: commandDomain,
           service: commandService,
           network: commandNetwork,
-          issuedTimestamp: commandIssuedTimestamp
+          issued: commandIssued
         }
       },
       payload
@@ -72,10 +72,10 @@ describe("Create event", () => {
     replace(deps, "makeUuid", fake.returns(newUuid));
 
     const value = await createEvent({
-      traceId,
+      trace,
       command: {
         id: commandId,
-        issuedTimestamp: commandIssuedTimestamp
+        issued: commandIssued
       },
       context,
       payload,
@@ -83,20 +83,20 @@ describe("Create event", () => {
     });
 
     expect(value).to.deep.equal({
-      context,
-      fact: {
+      headers: {
         root: newUuid,
+        context,
         topic: `did-${commandAction}.${commandDomain}.${commandService}.${commandNetwork}`,
         version,
-        traceId,
-        createdTimestamp: datetime.fineTimestamp(),
+        trace,
+        created: stringDate(),
         command: {
           id: commandId,
           action: commandAction,
           domain: commandDomain,
           service: commandService,
           network: commandNetwork,
-          issuedTimestamp: commandIssuedTimestamp
+          issued: commandIssued
         }
       },
       payload
@@ -104,11 +104,11 @@ describe("Create event", () => {
   });
   it("should get called with expected params if authorized is missing", async () => {
     const value = await createEvent({
-      traceId,
+      trace,
       context,
       command: {
         id: commandId,
-        issuedTimestamp: commandIssuedTimestamp
+        issued: commandIssued
       },
       root,
       payload,
@@ -116,20 +116,20 @@ describe("Create event", () => {
     });
 
     expect(value).to.deep.equal({
-      context,
-      fact: {
+      headers: {
         root,
+        context,
         topic: `did-${commandAction}.${commandDomain}.${commandService}.${commandNetwork}`,
         version,
-        traceId,
-        createdTimestamp: datetime.fineTimestamp(),
+        trace,
+        created: stringDate(),
         command: {
           id: commandId,
           action: commandAction,
           domain: commandDomain,
           service: commandService,
           network: commandNetwork,
-          issuedTimestamp: commandIssuedTimestamp
+          issued: commandIssued
         }
       },
       payload
@@ -137,10 +137,10 @@ describe("Create event", () => {
   });
   it("should get called with expected params if context is missing", async () => {
     const value = await createEvent({
-      traceId,
+      trace,
       command: {
         id: commandId,
-        issuedTimestamp: commandIssuedTimestamp
+        issued: commandIssued
       },
       root,
       payload,
@@ -148,19 +148,19 @@ describe("Create event", () => {
     });
 
     expect(value).to.deep.equal({
-      fact: {
+      headers: {
         root,
         topic: `did-${commandAction}.${commandDomain}.${commandService}.${commandNetwork}`,
         version,
-        traceId,
-        createdTimestamp: datetime.fineTimestamp(),
+        trace,
+        created: stringDate(),
         command: {
           id: commandId,
           action: commandAction,
           domain: commandDomain,
           service: commandService,
           network: commandNetwork,
-          issuedTimestamp: commandIssuedTimestamp
+          issued: commandIssued
         }
       },
       payload

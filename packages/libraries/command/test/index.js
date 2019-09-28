@@ -2,7 +2,7 @@ const { expect } = require("chai")
   .use(require("chai-datetime"))
   .use(require("sinon-chai"));
 const { restore, replace, fake, useFakeTimers } = require("sinon");
-const datetime = require("@sustainers/datetime");
+const { string: dateString } = require("@sustainers/datetime");
 
 const deps = require("../deps");
 const command = require("..");
@@ -54,7 +54,7 @@ describe("Issue command", () => {
     expect(postFake).to.have.been.calledWith({
       payload,
       headers: {
-        issued: datetime.fineTimestamp(),
+        issued: dateString(),
         trace,
         source
       }
@@ -84,7 +84,7 @@ describe("Issue command", () => {
     expect(postFake).to.have.been.calledWith({
       payload,
       headers: {
-        issued: datetime.fineTimestamp()
+        issued: dateString()
       }
     });
     expect(inFake).to.have.been.calledWith({ context, service, network });

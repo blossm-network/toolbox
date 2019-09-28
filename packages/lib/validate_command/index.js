@@ -1,4 +1,4 @@
-const { object, string, number, findError } = require("@sustainers/validator");
+const { object, string, date, findError } = require("@sustainers/validator");
 const { badRequest } = require("@sustainers/errors");
 const { fineTimestamp } = require("@sustainers/datetime");
 const { SECONDS_IN_DAY } = require("@sustainers/consts");
@@ -16,7 +16,7 @@ module.exports = async params => {
   const headersSystemInputError = findError([
     string(params.headers.trace, { optional: true }),
     object(params.headers.source, { optional: true }),
-    number(params.headers.issued)
+    date(params.headers.issued)
   ]);
 
   if (headersSystemInputError) {

@@ -21,6 +21,7 @@ const yearRange = require("./src/year_range");
 const dayTimeRange = require("./src/day_time_range");
 const percentRange = require("./src/percent_range");
 const name = require("./src/name");
+const date = require("./src/date");
 const location = require("./src/location");
 const dateComponents = require("./src/date_components");
 const positiveNumber = require("./src/positive_number");
@@ -44,6 +45,7 @@ module.exports = {
   buffer,
   countryCode,
   password,
+  date,
   numbersEqual,
   numberRange,
   scheduleIntervalRange,
