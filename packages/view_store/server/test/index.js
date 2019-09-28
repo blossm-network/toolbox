@@ -84,7 +84,7 @@ describe("View store", () => {
         name: `${domain}.${id}`,
         schema: {
           a: 1,
-          id: { type: String, required: true },
+          id: { type: String, required: true, unique: true },
           created: { type: Number, required: true },
           modified: { type: Number, required: true }
         },
