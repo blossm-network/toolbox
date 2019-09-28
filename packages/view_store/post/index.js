@@ -2,7 +2,7 @@ const deps = require("./deps");
 
 module.exports = ({ store, fn }) => {
   return async (req, res) => {
-    const id = (req.params && req.params.id) || deps.uuid();
+    const id = deps.uuid();
 
     const now = deps.fineTimestamp();
 

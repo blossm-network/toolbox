@@ -71,52 +71,6 @@ describe("View store post", () => {
     expect(sendFake).to.have.been.calledWith(view);
   });
 
-  it("should call with the correct params with passed in id", async () => {
-    const writeFake = fake.returns(view);
-    const db = {
-      write: writeFake
-    };
-    replace(deps, "db", db);
-
-    const id = "some-root-id";
-    const req = {
-      body,
-      params: {
-        id
-      }
-    };
-
-    const sendFake = fake();
-    const res = {
-      send: sendFake
-    };
-
-    const uuidFake = fake.returns(uuid);
-    replace(deps, "uuid", uuidFake);
-    await post({ store })(req, res);
-    expect(writeFake).to.have.been.calledWith({
-      store,
-      query: { id },
-      update: {
-        $set: {
-          a: 1,
-          id,
-          modified: deps.fineTimestamp(),
-          created: deps.fineTimestamp()
-        }
-      },
-      options: {
-        lean: true,
-        omitUndefined: true,
-        upsert: true,
-        new: true,
-        runValidators: true,
-        setDefaultsOnInsert: true
-      }
-    });
-    expect(sendFake).to.have.been.calledWith(view);
-  });
-
   it("should call with the correct params with fn", async () => {
     const writeFake = fake.returns(view);
     const db = {
