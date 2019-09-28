@@ -33,7 +33,7 @@ module.exports = async (
   { getFn, postFn, putFn } = {}
 ) => {
   if (schema) {
-    schema.id = { type: String, required: true };
+    schema.uuid = { type: String, required: true };
     schema.created = { type: Number, required: true };
     schema.modified = { type: Number, required: true };
   }

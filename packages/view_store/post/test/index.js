@@ -13,7 +13,7 @@ const now = new Date();
 const view = "some-view";
 const body = {
   a: 1,
-  id: "some-bogus",
+  uuid: "some-bogus",
   created: "more-bogus",
   modified: "even-more-bogus"
 };
@@ -50,11 +50,11 @@ describe("View store post", () => {
     await post({ store })(req, res);
     expect(writeFake).to.have.been.calledWith({
       store,
-      query: { id: uuid },
+      query: { uuid },
       update: {
         $set: {
           a: 1,
-          id: uuid,
+          uuid,
           modified: deps.fineTimestamp(),
           created: deps.fineTimestamp()
         }
@@ -96,11 +96,11 @@ describe("View store post", () => {
     await post({ store })(req, res);
     expect(writeFake).to.have.been.calledWith({
       store,
-      query: { id },
+      query: { uuid: id },
       update: {
         $set: {
           a: 1,
-          id,
+          uuid: id,
           modified: deps.fineTimestamp(),
           created: deps.fineTimestamp()
         }
@@ -141,11 +141,11 @@ describe("View store post", () => {
 
     expect(writeFake).to.have.been.calledWith({
       store,
-      query: { id: uuid },
+      query: { uuid },
       update: {
         $set: {
           b: 2,
-          id: uuid,
+          uuid,
           modified: deps.fineTimestamp(),
           created: deps.fineTimestamp()
         }
