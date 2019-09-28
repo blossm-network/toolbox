@@ -1,7 +1,7 @@
 {
   "name": "@sustainers/command-js",
   "description": "Issues a command.",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "main": "index.js",
   "author": "sustainers.market",
   "engines": {
@@ -14,7 +14,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@sustainers/datetime": "^0.0.2",
+    "@sustainers/datetime": "^0.0.3",
     "@sustainers/operation-js": "^0.0.9"
   },
   "devDependencies": {
