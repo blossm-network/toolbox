@@ -1,7 +1,7 @@
 {
   "name": "@sustainers/view-store-post",
   "description": "A view store POST handler.",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "main": "index.js",
   "author": "sustainers.market",
   "engines": {
@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@sustainers/datetime": "*",
-    "@sustainers/mongodb-database": "^0.0.13",
+    "@sustainers/mongodb-database": "^0.0.14",
     "@sustainers/uuid": "^0.0.3"
   },
   "devDependencies": {
