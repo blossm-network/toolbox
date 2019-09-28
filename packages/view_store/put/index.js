@@ -22,6 +22,8 @@ module.exports = ({ store, fn }) => {
       query: { id: req.params.id },
       update,
       options: {
+        lean: true,
+        omitUndefined: true,
         upsert: false,
         new: true,
         runValidators: true

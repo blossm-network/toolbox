@@ -40,6 +40,9 @@ describe("View store get", () => {
       store,
       query: {
         id
+      },
+      options: {
+        lean: true
       }
     });
     expect(sendFake).to.have.been.calledWith(objs);
@@ -66,6 +69,9 @@ describe("View store get", () => {
       store,
       query: {
         a: 1
+      },
+      options: {
+        lean: true
       }
     });
     expect(sendFake).to.have.been.calledWith(objs);
@@ -96,6 +102,9 @@ describe("View store get", () => {
       store,
       query: {
         id
+      },
+      options: {
+        lean: true
       }
     });
     expect(sendFake).to.have.been.calledWith(objs);

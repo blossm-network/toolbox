@@ -10,40 +10,18 @@ describe("Find", () => {
   });
   it("it should return the correct result with all optional parameters omitted", async () => {
     const execResult = 4;
-    const execFake = fake.returns(execResult);
-    const skipFake = fake.returns({
-      exec: execFake
-    });
-    const findFake = fake.returns({
-      skip: skipFake
-    });
+    const findFake = fake.returns(execResult);
     const store = {
-      find: findFake,
-      skip: skipFake,
-      exec: execFake
+      find: findFake
     };
     const result = await find({ store, query });
 
     expect(result).to.equal(execResult);
-    expect(findFake).to.have.been.calledWith(query);
-    expect(skipFake).to.have.been.calledWith(0);
-    expect(execFake).to.have.been.calledOnce;
+    expect(findFake).to.have.been.calledWith(query, null, {});
   });
   it("it should return the correct result with all optional parameters included", async () => {
     const execResult = 4;
-    const execFake = fake.returns(execResult);
-    const sortFake = fake();
-    const selectFake = fake();
-    const limitFake = fake();
-    const skipFake = fake.returns({
-      exec: execFake,
-      sort: sortFake,
-      select: selectFake,
-      limit: limitFake
-    });
-    const findFake = fake.returns({
-      skip: skipFake
-    });
+    const findFake = fake.returns(execResult);
     const store = {
       find: findFake
     };
@@ -52,6 +30,7 @@ describe("Find", () => {
     const select = "some-select";
     const skip = "some-skip";
     const pageSize = "some-page-size";
+    const options = { a: 1 };
 
     const result = await find({
       store,
@@ -59,15 +38,16 @@ describe("Find", () => {
       sort,
       select,
       skip,
-      pageSize
+      pageSize,
+      options
     });
 
     expect(result).to.equal(execResult);
-    expect(findFake).to.have.been.calledWith(query);
-    expect(skipFake).to.have.been.calledWith(skip);
-    expect(execFake).to.have.been.calledOnce;
-    expect(selectFake).to.have.been.calledWith(select);
-    expect(sortFake).to.have.been.calledWith(sort);
-    expect(limitFake).to.have.been.calledWith(pageSize);
+    expect(findFake).to.have.been.calledWith(query, select, {
+      skip,
+      sort,
+      limit: pageSize,
+      a: 1
+    });
   });
 });

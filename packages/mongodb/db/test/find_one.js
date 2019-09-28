@@ -12,36 +12,27 @@ describe("Find one", () => {
 
   it("it should return the correct result", async () => {
     const execResult = 4;
-    const execFake = fake.returns(execResult);
-    const findOneFake = fake.returns({
-      exec: execFake
-    });
+    const findOneFake = fake.returns(execResult);
     const store = {
       findOne: findOneFake
     };
     const result = await findOne({ store, query });
 
     expect(result).to.equal(execResult);
-    expect(findOneFake).to.have.been.calledWith(query);
-    expect(execFake).to.have.been.calledOnce;
+    expect(findOneFake).to.have.been.calledWith(query, null, null);
   });
   it("it should return the correct result if select is passed", async () => {
     const execResult = 4;
-    const execFake = fake.returns(execResult);
-    const selectFake = fake();
-    const findOneFake = fake.returns({
-      exec: execFake,
-      select: selectFake
-    });
+    const findOneFake = fake.returns(execResult);
 
     const store = {
       findOne: findOneFake
     };
 
-    const result = await findOne({ store, query, select });
+    const options = "some-options";
+    const result = await findOne({ store, query, select, options });
 
-    expect(selectFake).to.have.been.calledWith(select);
-    expect(findOneFake).to.have.been.calledWith(query);
+    expect(findOneFake).to.have.been.calledWith(query, select, options);
     expect(result).to.equal(execResult);
   });
 });

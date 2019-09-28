@@ -62,6 +62,8 @@ describe("View store put", () => {
         }
       },
       options: {
+        lean: true,
+        omitUndefined: true,
         upsert: false,
         new: true,
         runValidators: true
@@ -100,6 +102,8 @@ describe("View store put", () => {
         }
       },
       options: {
+        lean: true,
+        omitUndefined: true,
         upsert: false,
         new: true,
         runValidators: true

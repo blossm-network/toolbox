@@ -60,6 +60,8 @@ describe("View store post", () => {
         }
       },
       options: {
+        lean: true,
+        omitUndefined: true,
         upsert: true,
         new: true,
         runValidators: true,
@@ -104,6 +106,8 @@ describe("View store post", () => {
         }
       },
       options: {
+        lean: true,
+        omitUndefined: true,
         upsert: true,
         new: true,
         runValidators: true,
@@ -147,6 +151,8 @@ describe("View store post", () => {
         }
       },
       options: {
+        lean: true,
+        omitUndefined: true,
         upsert: true,
         new: true,
         runValidators: true,

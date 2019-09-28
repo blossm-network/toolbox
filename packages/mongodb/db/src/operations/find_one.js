@@ -1,7 +1,3 @@
-module.exports = async ({ store, query, select }) => {
-  const operation = store.findOne(query);
-
-  if (select != undefined) operation.select(select);
-
-  return await operation.exec();
+module.exports = async ({ store, query, select = null, options = null }) => {
+  return await store.findOne(query, select, options);
 };

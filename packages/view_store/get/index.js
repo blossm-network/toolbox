@@ -10,12 +10,18 @@ module.exports = ({ store, fn }) => {
           query: {
             ...query,
             ...(req.params.id && { id: req.params.id })
+          },
+          options: {
+            lean: true
           }
         })
         : await deps.db.findOne({
           store,
           query: {
             ...(req.params.id && { id: req.params.id })
+          },
+          options: {
+            lean: true
           }
         });
     res.send(results);

@@ -19,6 +19,8 @@ module.exports = ({ store, fn }) => {
       query: { id },
       update,
       options: {
+        lean: true,
+        omitUndefined: true,
         upsert: true,
         new: true,
         runValidators: true,
