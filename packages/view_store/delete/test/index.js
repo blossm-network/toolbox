@@ -4,9 +4,9 @@ const { restore, replace, fake } = require("sinon");
 const del = require("..");
 const deps = require("../deps");
 
-const objs = "some-objs";
 const id = "some-id";
 const store = "some-store";
+const deletedCount = 3;
 
 describe("View store delete", () => {
   afterEach(() => {
@@ -14,7 +14,7 @@ describe("View store delete", () => {
   });
 
   it("should call with the correct params", async () => {
-    const removeFake = fake.returns(objs);
+    const removeFake = fake.returns({ deletedCount });
     const db = {
       remove: removeFake
     };
@@ -38,10 +38,10 @@ describe("View store delete", () => {
         id
       }
     });
-    expect(sendFake).to.have.been.calledOnce;
+    expect(sendFake).to.have.been.calledWith({ deletedCount });
   });
   it("should throw if missing id params", async () => {
-    const removeFake = fake.returns(objs);
+    const removeFake = fake.returns({ deletedCount });
     const db = {
       remove: removeFake
     };
