@@ -24,9 +24,10 @@ module.exports = ({ store, fn }) => {
       options: {
         lean: true,
         omitUndefined: true,
-        upsert: false,
+        upsert: true,
         new: true,
-        runValidators: true
+        runValidators: true,
+        setDefaultsOnInsert: true
       }
     });
 

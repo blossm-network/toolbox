@@ -64,9 +64,10 @@ describe("View store put", () => {
       options: {
         lean: true,
         omitUndefined: true,
-        upsert: false,
+        upsert: true,
         new: true,
-        runValidators: true
+        runValidators: true,
+        setDefaultsOnInsert: true
       }
     });
     expect(sendFake).to.have.been.calledWith(view);
@@ -104,9 +105,10 @@ describe("View store put", () => {
       options: {
         lean: true,
         omitUndefined: true,
-        upsert: false,
+        upsert: true,
         new: true,
-        runValidators: true
+        runValidators: true,
+        setDefaultsOnInsert: true
       }
     });
     expect(fnFake).to.have.been.calledWith(body);

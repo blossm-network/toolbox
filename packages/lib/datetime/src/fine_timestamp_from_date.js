@@ -1,3 +1,1 @@
-module.exports = date => {
-  return Math.floor(date.getTime());
-};
+module.exports = date => Math.floor(date.getTime());
