@@ -84,13 +84,13 @@ describe("View store", () => {
         name: `${domain}.${id}`,
         schema: {
           a: 1,
-          uuid: { type: String, required: true },
+          id: { type: String, required: true },
           created: { type: Number, required: true },
           modified: { type: Number, required: true }
         },
         indexes: [
           "some-index",
-          [{ uuid: 1 }],
+          [{ id: 1 }],
           [{ created: 1 }],
           [{ modified: 1 }]
         ],

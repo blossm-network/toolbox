@@ -33,13 +33,13 @@ module.exports = async (
   { getFn, postFn, putFn } = {}
 ) => {
   if (schema) {
-    schema.uuid = { type: String, required: true };
+    schema.id = { type: String, required: true };
     schema.created = { type: Number, required: true };
     schema.modified = { type: Number, required: true };
   }
 
   if (indexes) {
-    indexes.push([{ uuid: 1 }]);
+    indexes.push([{ id: 1 }]);
     indexes.push([{ created: 1 }]);
     indexes.push([{ modified: 1 }]);
   }

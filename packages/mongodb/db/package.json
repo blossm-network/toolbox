@@ -14,7 +14,6 @@
     "test": "mocha"
   },
   "dependencies": {
-    "@sustainers/logger": "*",
     "@sustainers/url-encode-query-data": "^0.0.1",
     "mongoose": "^5.7.1",
     "restify-errors": "^8.0.0"
