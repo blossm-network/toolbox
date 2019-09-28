@@ -70,8 +70,6 @@ describe("Throws", () => {
 
     const fnFake = fake();
 
-    await expect(forEach({ store, query, fn: fnFake })).to.be.rejectedWith(
-      error
-    );
+    expect(async () => await forEach({ store, query, fn: fnFake })).to.throw;
   });
 });
