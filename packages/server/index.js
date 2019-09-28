@@ -25,7 +25,7 @@ module.exports = () => {
       app.put(path, deps.asyncHandler(fn));
       return { ...methods, listen };
     },
-    get: (fn, { path = "/:id" } = {}) => {
+    get: (fn, { path = "/:id?" } = {}) => {
       app.get(path, deps.asyncHandler(fn));
       return { ...methods, listen };
     },

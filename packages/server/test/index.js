@@ -163,7 +163,7 @@ describe("Lamba", () => {
       .listen();
 
     expect(result).to.equal(app);
-    expect(getFake).to.have.been.calledWith("/:id", asyncFn);
+    expect(getFake).to.have.been.calledWith("/:id?", asyncFn);
     expect(asyncHandlerFake).to.have.been.calledWith(fn);
     expect(useFake).to.have.been.calledWith(deps.errorMiddleware);
     expect(listenFake).to.have.been.calledWith(port);
