@@ -15,6 +15,6 @@ module.exports = ({ store }) => {
 
     if (!result) throw notFound.root;
 
-    res.send(result);
+    res.send(result.value);
   };
 };

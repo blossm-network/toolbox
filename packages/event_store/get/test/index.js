@@ -4,7 +4,8 @@ const { restore, replace, fake } = require("sinon");
 const get = require("..");
 const deps = require("../deps");
 
-const objs = "some-objs";
+const obj = "some-objs";
+const found = { value: obj };
 const root = "some-root";
 const store = "some-store";
 
@@ -14,7 +15,7 @@ describe("Event store get", () => {
   });
 
   it("should call with the correct params", async () => {
-    const findOneFake = fake.returns(objs);
+    const findOneFake = fake.returns(found);
     const db = {
       findOne: findOneFake
     };
@@ -41,10 +42,10 @@ describe("Event store get", () => {
         lean: true
       }
     });
-    expect(sendFake).to.have.been.calledWith(objs);
+    expect(sendFake).to.have.been.calledWith(obj);
   });
   it("should throw correctly if not found", async () => {
-    const findOneFake = fake.returns(objs);
+    const findOneFake = fake.returns(found);
     const db = {
       findOne: findOneFake
     };
