@@ -10,18 +10,14 @@ describe("Remove", () => {
   });
   it("it should return correctly", async () => {
     const execResult = 4;
-    const execFake = fake.returns(execResult);
-    const removeFake = fake.returns({
-      exec: execFake
-    });
+    const deleteOneFake = fake.returns(execResult);
     const store = {
-      remove: removeFake,
-      exec: execFake
+      deleteOne: deleteOneFake
     };
 
     const result = await remove({ store, query });
 
     expect(result).to.equal(execResult);
-    expect(removeFake).to.have.been.calledWith(query);
+    expect(deleteOneFake).to.have.been.calledWith(query);
   });
 });
