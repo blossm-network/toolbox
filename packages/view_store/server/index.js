@@ -34,8 +34,8 @@ module.exports = async (
 ) => {
   if (schema) {
     schema.id = { type: String, required: true, unique: true };
-    schema.created = { type: Number, required: true };
-    schema.modified = { type: Number, required: true };
+    schema.created = { type: String, required: true };
+    schema.modified = { type: String, required: true };
   }
 
   if (indexes) {
