@@ -6,7 +6,7 @@ module.exports = ({ store }) => {
     const result = await deps.db.findOne({
       store,
       query: {
-        "value.headers.root": req.params.root
+        _id: req.params.root
       },
       options: {
         lean: true

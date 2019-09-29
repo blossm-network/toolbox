@@ -5,17 +5,14 @@ const reduce = require("..");
 describe("Event store reduce", () => {
   it("should call with the correct params", async () => {
     const key = "some-key";
-    const values = [
-      { payload: { a: 1, b: 2 }, _metadata: { count: 1 } },
-      { payload: { a: 2, c: 3 }, _metadata: { count: 1 } }
-    ];
+    const values = [{ state: { a: 1, b: 2 } }, { state: { a: 2, c: 3 } }];
     const aggregate = reduce(key, values);
     expect(aggregate).to.deep.equal({
       headers: {
-        root: key
+        root: key,
+        events: 2
       },
-      metadata: { count: 2 },
-      payload: {
+      state: {
         a: 2,
         b: 2,
         c: 3
@@ -28,10 +25,10 @@ describe("Event store reduce", () => {
     const aggregate = reduce(key, values);
     expect(aggregate).to.deep.equal({
       headers: {
-        root: key
+        root: key,
+        events: 0
       },
-      payload: {},
-      metadata: { count: 0 }
+      state: {}
     });
   });
 });
