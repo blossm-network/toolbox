@@ -1,7 +1,9 @@
-module.exports = async ({ store, query, mapFn, reduceFn, finalizeFn, out }) => {
-  return await store.mapReduce(mapFn, reduceFn, {
-    query,
+module.exports = async ({ store, query, map, reduce, finalize, out }) => {
+  return await store.mapReduce({
+    map,
+    reduce,
     out,
-    finalize: finalizeFn
+    ...(query && { query }),
+    ...(finalize && { finalize })
   });
 };

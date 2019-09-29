@@ -1,4 +1,4 @@
-module.exports = () => {
+module.exports = `() => {
   const key = this.headers.root;
   const value = {
     ...this.payload,
@@ -6,7 +6,5 @@ module.exports = () => {
       count: 0
     }
   };
-
-  //eslint-disable-next-line
   emit(key, value);
-};
+}`;
