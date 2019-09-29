@@ -1,6 +1,8 @@
 module.exports = function(key, values) {
   const base = {
-    root: key,
+    headers: {
+      root: key
+    },
     payload: {},
     metadata: {
       count: 0
@@ -8,13 +10,12 @@ module.exports = function(key, values) {
   };
 
   const reducer = (reduced, value) => {
-    return {
-      root: reduced.root,
-      payload: { ...reduced.payload, ...value.payload },
-      metadata: {
-        count: reduced.metadata.count + 1
-      }
+    reduced.payload = {
+      ...reduced.payload,
+      ...value.payload
     };
+    reduced.metadata.count++;
+    return reduced;
   };
 
   return values.reduce(reducer, base);

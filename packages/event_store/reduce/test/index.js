@@ -11,7 +11,9 @@ describe("Event store reduce", () => {
     ];
     const aggregate = reduce(key, values);
     expect(aggregate).to.deep.equal({
-      root: key,
+      headers: {
+        root: key
+      },
       metadata: { count: 2 },
       payload: {
         a: 2,
@@ -25,7 +27,9 @@ describe("Event store reduce", () => {
     const values = [];
     const aggregate = reduce(key, values);
     expect(aggregate).to.deep.equal({
-      root: key,
+      headers: {
+        root: key
+      },
       payload: {},
       metadata: { count: 0 }
     });
