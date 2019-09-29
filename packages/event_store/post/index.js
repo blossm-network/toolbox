@@ -1,5 +1,4 @@
 const deps = require("./deps");
-const logger = require("@sustainers/logger");
 
 module.exports = ({ store, aggregateStoreName }) => {
   return async (req, res) => {
@@ -29,8 +28,6 @@ module.exports = ({ store, aggregateStoreName }) => {
       }
     });
 
-    logger.info("dun writing: ");
-
     await deps.db.mapReduce({
       store,
       query: { id },
@@ -38,8 +35,6 @@ module.exports = ({ store, aggregateStoreName }) => {
       reduce: deps.reduce,
       out: { reduce: aggregateStoreName }
     });
-
-    logger.info("dun aggregating: ");
 
     res.status(204).send();
   };
