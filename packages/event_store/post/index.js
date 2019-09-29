@@ -31,7 +31,7 @@ module.exports = ({ store, aggregateStoreName }) => {
 
     logger.info("dun writing: ");
 
-    const r = await deps.db.mapReduce({
+    await deps.db.mapReduce({
       store,
       query: { id },
       map: deps.normalize,
@@ -39,7 +39,7 @@ module.exports = ({ store, aggregateStoreName }) => {
       out: { reduce: aggregateStoreName }
     });
 
-    logger.info("r: ", { r });
+    logger.info("dun aggregating: ");
 
     res.status(204).send();
   };

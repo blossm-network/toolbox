@@ -1,4 +1,4 @@
-module.exports = (key, values) => {
+module.exports = function(key, values) {
   const base = {
     root: key,
     _metadata: {
