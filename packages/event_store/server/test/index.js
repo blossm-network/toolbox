@@ -94,7 +94,7 @@ describe("Event store", () => {
       schema: {
         a: 1,
         id: { type: String, required: true, unique: true },
-        created: { type: Number, required: true }
+        created: { type: String, required: true }
       },
       indexes: [[{ id: 1 }], [{ "headers.root": 1 }], [{ created: 1 }]]
     });

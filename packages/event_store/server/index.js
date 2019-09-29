@@ -48,7 +48,7 @@ const aggregateStore = async ({ schema, indexes }) => {
 module.exports = async ({ schema } = {}) => {
   if (schema) {
     schema.id = { type: String, required: true, unique: true };
-    schema.created = { type: Number, required: true };
+    schema.created = { type: String, required: true };
   }
 
   const indexes = [[{ id: 1 }], [{ "headers.root": 1 }], [{ created: 1 }]];
