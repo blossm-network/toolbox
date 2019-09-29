@@ -15,6 +15,28 @@ const eventStore = async () => {
 
   _eventStore = deps.store({
     name: `${process.env.DOMAIN}`,
+    schema: {
+      id: { type: String, required: true },
+      created: { type: String, required: true },
+      payload: { type: Object, required: true },
+      headers: {
+        root: { type: String, required: true },
+        topic: { type: String, required: true },
+        version: { type: Number, required: true },
+        trace: { type: String },
+        context: { type: Object },
+        created: { type: String, required: true },
+        command: {
+          id: { type: String, required: true },
+          action: { type: String, required: true },
+          domain: { type: String, required: true },
+          service: { type: String, required: true },
+          network: { type: String, required: true },
+          issued: { type: String, required: true }
+        }
+      }
+    },
+    indexes: [[{ id: 1 }]],
     connection: {
       user: process.env.MONGODB_USER,
       password: await deps.secret("mongodb"),
@@ -30,7 +52,7 @@ const eventStore = async () => {
   return _eventStore;
 };
 
-const aggregateStore = async ({ schema, indexes }) => {
+const aggregateStore = async ({ schema }) => {
   if (_aggregateStore != undefined) {
     logger.info("Thank you existing aggregate store database.");
     return _aggregateStore;
@@ -39,22 +61,15 @@ const aggregateStore = async ({ schema, indexes }) => {
   _aggregateStore = deps.store({
     name: aggregateStoreName,
     schema,
-    indexes
+    indexes: [[{ "headers.root": 1 }]]
   });
 
   return _aggregateStore;
 };
 
 module.exports = async ({ schema } = {}) => {
-  if (schema) {
-    schema.id = { type: String, required: true, unique: true };
-    schema.created = { type: String, required: true };
-  }
-
-  const indexes = [[{ id: 1 }], [{ "headers.root": 1 }], [{ created: 1 }]];
-
   const eStore = await eventStore();
-  const aStore = await aggregateStore({ schema, indexes });
+  const aStore = await aggregateStore({ schema });
 
   deps
     .server()

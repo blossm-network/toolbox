@@ -75,6 +75,28 @@ describe("Event store", () => {
     expect(storeFake).to.have.been.calledWith(
       match({
         name: domain,
+        schema: {
+          id: { type: String, required: true },
+          created: { type: String, required: true },
+          payload: { type: Object, required: true },
+          headers: {
+            root: { type: String, required: true },
+            topic: { type: String, required: true },
+            version: { type: Number, required: true },
+            trace: { type: String },
+            context: { type: Object },
+            created: { type: String, required: true },
+            command: {
+              id: { type: String, required: true },
+              action: { type: String, required: true },
+              domain: { type: String, required: true },
+              service: { type: String, required: true },
+              network: { type: String, required: true },
+              issued: { type: String, required: true }
+            }
+          }
+        },
+        indexes: [[{ id: 1 }]],
         connection: {
           user,
           password,
@@ -92,11 +114,9 @@ describe("Event store", () => {
     expect(storeFake).to.have.been.calledWith({
       name: `${domain}.aggregate`,
       schema: {
-        a: 1,
-        id: { type: String, required: true, unique: true },
-        created: { type: String, required: true }
+        a: 1
       },
-      indexes: [[{ id: 1 }], [{ "headers.root": 1 }], [{ created: 1 }]]
+      indexes: [[{ "headers.root": 1 }]]
     });
     expect(secretFake).to.have.been.calledWith("mongodb");
     expect(listenFake).to.have.been.calledOnce;
