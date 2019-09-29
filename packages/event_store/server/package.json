@@ -15,8 +15,8 @@
   },
   "dependencies": {
     "@sustainers/datetime": "^0.0.3",
-    "@sustainers/event-store-get": "^0.0.14",
-    "@sustainers/event-store-post": "^0.0.18",
+    "@sustainers/event-store-get": "*",
+    "@sustainers/event-store-post": "*",
     "@sustainers/gcp-secret": "^0.0.13",
     "@sustainers/logger": "*",
     "@sustainers/mongodb-database": "^0.0.20",
