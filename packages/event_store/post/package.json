@@ -1,7 +1,7 @@
 {
   "name": "@sustainers/event-store-post",
   "description": "An event store POST handler.",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "main": "index.js",
   "author": "sustainers.market",
   "engines": {
@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@sustainers/datetime": "^0.0.3",
-    "@sustainers/mongodb-database": "^0.0.16",
+    "@sustainers/mongodb-database": "^0.0.17",
     "@sustainers/uuid": "^0.0.3"
   },
   "devDependencies": {
