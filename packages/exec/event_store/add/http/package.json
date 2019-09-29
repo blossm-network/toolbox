@@ -1,7 +1,7 @@
 {
   "name": "@sustainers/event-store-add-service",
   "description": "Add to an event store.",
-  "version": "0.0.28",
+  "version": "0.0.29",
   "scripts": {
     "test": "mocha --recursive",
     "check-packages": "yarn clean && yarn compile && yarn test"
@@ -12,7 +12,7 @@
   "dependencies": {
     "@sustainers/errors": "^0.0.6",
     "@sustainers/event-bus": "^0.0.3",
-    "@sustainers/event-store": "^0.0.25",
+    "@sustainers/event-store": "^0.0.26",
     "@sustainers/validator": "^0.0.4"
   },
   "devDependencies": {
