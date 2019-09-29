@@ -29,6 +29,8 @@ module.exports = ({ store, aggregateStoreName }) => {
       }
     });
 
+    logger.info("dun writing: ");
+
     const r = await deps.db.mapReduce({
       store,
       query: { id },
