@@ -75,8 +75,8 @@ describe("Event store post", () => {
     expect(mapReduceFake).to.have.been.calledWith({
       store,
       query: { id: uuid },
-      mapFn: deps.normalize,
-      reduceFn: deps.reduce,
+      map: deps.normalize,
+      reduce: deps.reduce,
       out: { reduce: aggregateStoreName }
     });
     expect(statusFake).to.have.been.calledWith(204);

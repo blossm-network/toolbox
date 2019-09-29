@@ -31,8 +31,8 @@ module.exports = ({ store, aggregateStoreName }) => {
     await deps.db.mapReduce({
       store,
       query: { id },
-      mapFn: deps.normalize,
-      reduceFn: deps.reduce,
+      map: deps.normalize,
+      reduce: deps.reduce,
       out: { reduce: aggregateStoreName }
     });
 
