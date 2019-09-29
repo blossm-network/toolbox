@@ -47,7 +47,6 @@ module.exports = ({
   indexes,
   mixins = [],
   version = 1,
-  strict = true,
   connection: {
     user,
     password,
@@ -88,7 +87,7 @@ module.exports = ({
     mixins
   };
 
-  const store = new mongoose.Schema({}, { strict });
+  const store = new mongoose.Schema({}, { strict: schema != undefined });
 
   formattedMixins(base).forEach(mixin => mixin(store));
 

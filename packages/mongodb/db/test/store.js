@@ -46,29 +46,6 @@ describe("Returns a model", () => {
         default: 1
       }
     });
-    expect(schemaFake).to.have.been.calledWith({}, { strict: true });
-    expect(addFake).to.have.been.calledWith({
-      key: schema0[commonKey]
-    });
-    expect(addFake).to.have.been.calledWith({
-      key: schema1[commonKey]
-    });
-  });
-
-  it("it should return a model object that is instatiatable with strict false", () => {
-    replace(mongoose, "Schema", schemaFake);
-    const mixins = [mixin0, mixin1];
-
-    const result = store({ name, mixins, strict: false });
-
-    expect(result).to.equal(modelObject);
-    expect(modelFake).to.have.been.calledWith(`${name}.1`);
-    expect(addFake).to.have.been.calledWith({
-      version: {
-        type: Number,
-        default: 1
-      }
-    });
     expect(schemaFake).to.have.been.calledWith({}, { strict: false });
     expect(addFake).to.have.been.calledWith({
       key: schema0[commonKey]
@@ -132,6 +109,7 @@ describe("Returns a model", () => {
     });
 
     expect(obj[commonKey].default).to.equal(schema0Value);
+    expect(schemaFake).to.have.been.calledWith({}, { strict: true });
   });
   it("it should connect if a connection string is passed in", () => {
     replace(mongoose, "Schema", schemaFake);

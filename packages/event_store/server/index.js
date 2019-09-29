@@ -15,7 +15,6 @@ const eventStore = async () => {
 
   _eventStore = deps.store({
     name: `${process.env.DOMAIN}`,
-    strict: false,
     connection: {
       user: process.env.MONGODB_USER,
       password: await deps.secret("mongodb"),

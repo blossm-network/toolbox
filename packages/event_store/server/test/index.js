@@ -75,7 +75,6 @@ describe("Event store", () => {
     expect(storeFake).to.have.been.calledWith(
       match({
         name: domain,
-        strict: false,
         connection: {
           user,
           password,
