@@ -30,7 +30,8 @@ describe("Map reduce", () => {
     expect(mapReduceFake).to.have.been.calledWith({
       map,
       reduce,
-      out
+      out,
+      resolveToObject: true
     });
   });
   it("it should return correctly with added optional params", async () => {
@@ -53,6 +54,7 @@ describe("Map reduce", () => {
     expect(mapReduceFake).to.have.been.calledWith({
       map,
       reduce,
+      resolveToObject: true,
       query,
       out,
       finalize
