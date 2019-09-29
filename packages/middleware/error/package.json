@@ -1,6 +1,6 @@
 {
   "name": "@sustainers/error-middleware",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Error middleware for the network.",
   "main": "index.js",
   "author": "sustainers.market",
