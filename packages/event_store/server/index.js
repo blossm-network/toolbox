@@ -73,7 +73,7 @@ module.exports = async ({ schema } = {}) => {
 
   deps
     .server()
-    .get(deps.get({ store: aStore }))
+    .get(deps.get({ store: aStore }), { path: "/:root" })
     .post(deps.post({ store: eStore, aggregateStoreName }))
     .listen();
 };

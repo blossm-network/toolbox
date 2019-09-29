@@ -121,7 +121,9 @@ describe("Event store", () => {
     expect(secretFake).to.have.been.calledWith("mongodb");
     expect(listenFake).to.have.been.calledOnce;
     expect(serverFake).to.have.been.calledOnce;
-    expect(getFake).to.have.been.calledWith(viewStoreGetResult);
+    expect(getFake).to.have.been.calledWith(viewStoreGetResult, {
+      path: "/:root"
+    });
     expect(postFake).to.have.been.calledWith(viewStorePostResult);
     expect(viewStoreGetFake).to.have.been.calledWith({ store: aStore });
     expect(viewStorePostFake).to.have.been.calledWith({
