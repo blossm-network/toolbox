@@ -16,7 +16,7 @@ const eventStore = async () => {
   _eventStore = deps.store({
     name: `${process.env.DOMAIN}`,
     schema: {
-      id: { type: String, required: true },
+      id: { type: String, required: true, unique: true },
       created: { type: String, required: true },
       payload: { type: Object, required: true },
       headers: {
