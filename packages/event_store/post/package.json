@@ -17,8 +17,8 @@
     "@sustainers/datetime": "^0.0.3",
     "@sustainers/logger": "*",
     "@sustainers/mongodb-database": "^0.0.20",
-    "@sustainers/normalize": "*",
-    "@sustainers/reduce": "*",
+    "@sustainers/event-store-normalize": "*",
+    "@sustainers/event-store-reduce": "*",
     "@sustainers/uuid": "^0.0.3"
   },
   "devDependencies": {
