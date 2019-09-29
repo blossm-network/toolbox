@@ -1,8 +1,10 @@
 module.exports = () => {
   const key = this.headers.root;
   const value = {
-    ...this,
-    count: 0
+    ...this.payload,
+    _metadata: {
+      count: 0
+    }
   };
 
   //eslint-disable-next-line
