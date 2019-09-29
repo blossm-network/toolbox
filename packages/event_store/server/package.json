@@ -19,10 +19,8 @@
     "@sustainers/logger": "*",
     "@sustainers/mongodb-database": "^0.0.20",
     "@sustainers/server": "^0.0.4",
-    "@sustainers/view-store-delete": "^0.0.15",
-    "@sustainers/view-store-get": "^0.0.14",
-    "@sustainers/view-store-post": "^0.0.18",
-    "@sustainers/view-store-put": "^0.0.16"
+    "@sustainers/event-store-get": "^0.0.14",
+    "@sustainers/event-store-post": "^0.0.18"
   },
   "devDependencies": {
     "chai-datetime": "^1.5.0",
