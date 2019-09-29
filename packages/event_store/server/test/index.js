@@ -116,7 +116,7 @@ describe("Event store", () => {
       schema: {
         a: 1
       },
-      indexes: [[{ "headers.root": 1 }]]
+      indexes: [[{ "value.headers.root": 1 }]]
     });
     expect(secretFake).to.have.been.calledWith("mongodb");
     expect(listenFake).to.have.been.calledOnce;

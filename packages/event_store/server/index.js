@@ -61,7 +61,7 @@ const aggregateStore = async ({ schema }) => {
   _aggregateStore = deps.store({
     name: aggregateStoreName,
     schema,
-    indexes: [[{ "headers.root": 1 }]]
+    indexes: [[{ "value.headers.root": 1 }]]
   });
 
   return _aggregateStore;

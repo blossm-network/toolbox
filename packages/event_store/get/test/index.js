@@ -35,7 +35,7 @@ describe("Event store get", () => {
     expect(findOneFake).to.have.been.calledWith({
       store,
       query: {
-        "headers.root": root
+        "value.headers.root": root
       },
       options: {
         lean: true
