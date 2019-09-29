@@ -109,4 +109,26 @@ describe("View store get", () => {
     });
     expect(sendFake).to.have.been.calledWith(objs);
   });
+  it("should throw correctly if not found", async () => {
+    const findOneFake = fake();
+    const db = {
+      findOne: findOneFake
+    };
+    replace(deps, "db", db);
+
+    const params = {
+      id
+    };
+    const req = {
+      query,
+      params
+    };
+
+    const sendFake = fake();
+    const res = {
+      send: sendFake
+    };
+
+    expect(async () => await get({ store })(req, res)).to.throw;
+  });
 });

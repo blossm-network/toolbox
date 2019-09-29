@@ -14,10 +14,10 @@ module.exports = ({ store, fn }) => {
     const update = fn ? fn(req.body) : { $set: req.body };
     update.$set = {
       ...update.$set,
-      modified: deps.fineTimestamp()
+      modified: deps.dateString()
     };
 
-    const view = await deps.db.write({
+    await deps.db.write({
       store,
       query: { id: req.params.id },
       update,
@@ -31,6 +31,6 @@ module.exports = ({ store, fn }) => {
       }
     });
 
-    res.send(view);
+    res.status(204).send();
   };
 };

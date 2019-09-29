@@ -1,17 +1,17 @@
 const deps = require("./deps");
 
-module.exports = ({ store, fn }) => {
+module.exports = ({ store, aggregateStoreName }) => {
   return async (req, res) => {
     const id = deps.uuid();
 
     const now = deps.dateString();
 
-    const update = fn ? fn(req.body) : { $set: req.body };
-    update.$set = {
-      ...update.$set,
-      id,
-      modified: now,
-      created: now
+    const update = {
+      $set: {
+        ...req.body,
+        id,
+        created: now
+      }
     };
 
     await deps.db.write({
@@ -26,6 +26,14 @@ module.exports = ({ store, fn }) => {
         runValidators: true,
         setDefaultsOnInsert: true
       }
+    });
+
+    await deps.db.mapReduce({
+      store,
+      query: { id },
+      mapFn: deps.normalize,
+      reduceFn: deps.reduce,
+      out: { reduce: aggregateStoreName }
     });
 
     res.status(204).send();

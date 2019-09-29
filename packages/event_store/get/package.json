@@ -1,7 +1,7 @@
 {
-  "name": "@sustainers/view-store-get",
-  "description": "A view store GET handler.",
-  "version": "0.0.9",
+  "name": "@sustainers/event-store-get",
+  "description": "An event store GET handler.",
+  "version": "0.0.0",
   "main": "index.js",
   "author": "sustainers.market",
   "engines": {

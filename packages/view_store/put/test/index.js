@@ -46,8 +46,11 @@ describe("View store put", () => {
     };
 
     const sendFake = fake();
-    const res = {
+    const statusFake = fake.returns({
       send: sendFake
+    });
+    const res = {
+      status: statusFake
     };
 
     await put({ store })(req, res);
@@ -58,7 +61,7 @@ describe("View store put", () => {
       update: {
         $set: {
           a: 1,
-          modified: deps.fineTimestamp()
+          modified: deps.dateString()
         }
       },
       options: {
@@ -70,7 +73,7 @@ describe("View store put", () => {
         setDefaultsOnInsert: true
       }
     });
-    expect(sendFake).to.have.been.calledWith(view);
+    expect(sendFake).to.have.been.calledOnce;
   });
 
   it("should call with the correct params", async () => {
@@ -86,8 +89,11 @@ describe("View store put", () => {
     };
 
     const sendFake = fake();
-    const res = {
+    const statusFake = fake.returns({
       send: sendFake
+    });
+    const res = {
+      status: statusFake
     };
 
     const fnFake = fake.returns({ $set: { b: 2 } });
@@ -99,7 +105,7 @@ describe("View store put", () => {
       update: {
         $set: {
           b: 2,
-          modified: deps.fineTimestamp()
+          modified: deps.dateString()
         }
       },
       options: {
@@ -112,7 +118,8 @@ describe("View store put", () => {
       }
     });
     expect(fnFake).to.have.been.calledWith(body);
-    expect(sendFake).to.have.been.calledWith(view);
+    expect(statusFake).to.have.been.calledWith(204);
+    expect(sendFake).to.have.been.calledOnce;
   });
   it("should throw if id is missing", async () => {
     const writeFake = fake.returns(view);
@@ -128,8 +135,11 @@ describe("View store put", () => {
     };
 
     const sendFake = fake();
-    const res = {
+    const statusFake = fake.returns({
       send: sendFake
+    });
+    const res = {
+      status: statusFake
     };
 
     const fnFake = fake.returns({ $set: { b: 2 } });

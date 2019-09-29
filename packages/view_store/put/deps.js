@@ -1,5 +1,5 @@
-const { fineTimestamp } = require("@sustainers/datetime");
+const { string: dateString } = require("@sustainers/datetime");
 const { write } = require("@sustainers/mongodb-database");
 
-exports.fineTimestamp = fineTimestamp;
+exports.dateString = dateString;
 exports.db = { write };

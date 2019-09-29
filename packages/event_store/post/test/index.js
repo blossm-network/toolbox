@@ -10,17 +10,17 @@ let clock;
 
 const now = new Date();
 
-const view = "some-view";
+const aggregateStoreName = "some-aggregate-store-name";
+
 const body = {
   a: 1,
   id: "some-bogus",
-  created: "more-bogus",
-  modified: "even-more-bogus"
+  created: "more-bogus"
 };
 const uuid = "some-uuid";
 const store = "some-store";
 
-describe("View store post", () => {
+describe("Event store post", () => {
   beforeEach(() => {
     clock = useFakeTimers(now.getTime());
   });
@@ -30,9 +30,11 @@ describe("View store post", () => {
   });
 
   it("should call with the correct params", async () => {
-    const writeFake = fake.returns(view);
+    const writeFake = fake();
+    const mapReduceFake = fake();
     const db = {
-      write: writeFake
+      write: writeFake,
+      mapReduce: mapReduceFake
     };
     replace(deps, "db", db);
 
@@ -50,7 +52,7 @@ describe("View store post", () => {
 
     const uuidFake = fake.returns(uuid);
     replace(deps, "uuid", uuidFake);
-    await post({ store })(req, res);
+    await post({ store, aggregateStoreName })(req, res);
     expect(writeFake).to.have.been.calledWith({
       store,
       query: { id: uuid },
@@ -58,7 +60,6 @@ describe("View store post", () => {
         $set: {
           a: 1,
           id: uuid,
-          modified: deps.dateString(),
           created: deps.dateString()
         }
       },
@@ -71,13 +72,22 @@ describe("View store post", () => {
         setDefaultsOnInsert: true
       }
     });
+    expect(mapReduceFake).to.have.been.calledWith({
+      store,
+      query: { id: uuid },
+      mapFn: deps.normalize,
+      reduceFn: deps.reduce,
+      out: { reduce: aggregateStoreName }
+    });
+    expect(statusFake).to.have.been.calledWith(204);
     expect(sendFake).to.have.been.calledOnce;
   });
-
-  it("should call with the correct params with fn", async () => {
-    const writeFake = fake.returns(view);
+  it("should throw correctly", async () => {
+    const writeFake = fake.rejects(new Error());
+    const mapReduceFake = fake();
     const db = {
-      write: writeFake
+      write: writeFake,
+      mapReduce: mapReduceFake
     };
     replace(deps, "db", db);
 
@@ -86,65 +96,13 @@ describe("View store post", () => {
     };
 
     const sendFake = fake();
-    const statusFake = fake.returns({
-      send: sendFake
-    });
-    const res = {
-      status: statusFake
-    };
-
-    const uuidFake = fake.returns(uuid);
-    replace(deps, "uuid", uuidFake);
-
-    const fnFake = fake.returns({ $set: { b: 2 } });
-    await post({ store, fn: fnFake })(req, res);
-
-    expect(writeFake).to.have.been.calledWith({
-      store,
-      query: { id: uuid },
-      update: {
-        $set: {
-          b: 2,
-          id: uuid,
-          modified: deps.dateString(),
-          created: deps.dateString()
-        }
-      },
-      options: {
-        lean: true,
-        omitUndefined: true,
-        upsert: true,
-        new: true,
-        runValidators: true,
-        setDefaultsOnInsert: true
-      }
-    });
-    expect(fnFake).to.have.been.calledWith(body);
-    expect(statusFake).to.have.been.calledWith(204);
-    expect(sendFake).to.have.been.calledOnce;
-  });
-  it("should throw correctly", async () => {
-    const writeFake = fake.rejects(new Error());
-    const db = {
-      write: writeFake
-    };
-    replace(deps, "db", db);
-
-    const req = {
-      body
-    };
-
-    const statusFake = fake();
-    const sendFake = fake.returns({
-      status: statusFake
-    });
-
     const res = {
       send: sendFake
     };
 
     const uuidFake = fake.returns(uuid);
     replace(deps, "uuid", uuidFake);
-    expect(async () => await post({ store })(req, res)).to.throw;
+    expect(async () => await post({ store, aggregateStoreName })(req, res)).to
+      .throw;
   });
 });
