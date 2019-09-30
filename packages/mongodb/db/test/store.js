@@ -39,11 +39,11 @@ describe("Returns a model", () => {
     const result = store({ name, mixins });
 
     expect(result).to.equal(modelObject);
-    expect(modelFake).to.have.been.calledWith(`${name}.1`);
+    expect(modelFake).to.have.been.calledWith(`${name}.0`);
     expect(addFake).to.have.been.calledWith({
       version: {
         type: Number,
-        default: 1
+        default: 0
       }
     });
     expect(schemaFake).to.have.been.calledWith({}, { strict: false });

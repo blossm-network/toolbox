@@ -46,7 +46,7 @@ module.exports = ({
   schema,
   indexes,
   mixins = [],
-  version = 1,
+  version = 0,
   connection: {
     user,
     password,
