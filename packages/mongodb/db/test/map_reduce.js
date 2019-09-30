@@ -30,7 +30,6 @@ describe("Map reduce", () => {
     expect(mapReduceFake).to.have.been.calledWith({
       map,
       reduce,
-      jsMode: true,
       out,
       resolveToObject: true
     });
@@ -55,7 +54,6 @@ describe("Map reduce", () => {
     expect(mapReduceFake).to.have.been.calledWith({
       map,
       reduce,
-      jsMode: true,
       resolveToObject: true,
       query,
       out,

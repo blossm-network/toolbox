@@ -3,7 +3,6 @@ module.exports = async ({ store, query, map, reduce, finalize, out }) => {
     map,
     reduce,
     out,
-    jsMode: true,
     resolveToObject: true,
     ...(query && { query }),
     ...(finalize && { finalize })
