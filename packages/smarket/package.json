@@ -1,0 +1,26 @@
+{
+  "name": "@sustainers/smarket",
+  "version": "0.0.0",
+  "description": "A command line tool for interacting with a Sustainer's Market Network",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 0"
+  },
+  "bin": {
+    "@sustainers/smarket": "bin/smarket",
+    "smarket": "bin/smarket"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "author": "sustainers.market",
+  "dependencies": {
+    "@sustainers/normalize-cli": "*",
+    "any-json": "^3.1.0",
+    "chalk": "^2.4.2",
+    "esm": "^3.2.25",
+    "fs-extra": "^8.1.0",
+    "ncp": "^2.0.0",
+    "yaml": "^1.7.0"
+  }
+}
