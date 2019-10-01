@@ -35,21 +35,18 @@ const copySrc = async (p, workingDir) => {
 };
 
 const convertPackage = async workingDir => {
-  const op = spawnSync("any-json", ["dependencies.yaml", "dependencies.json"], {
-    cwd: workingDir
-  });
-  if (op.failed) {
-    return Promise.reject(new Error("Failed to convert package to json"));
-  }
-
   const dependenciesPath = path.resolve(workingDir, "dependencies.json");
-  const packagePath = path.resolve(workingDir, "package.json");
 
   const package = {
-    ...require(packagePath),
-    ...require(dependenciesPath)
+    main: "index.js",
+    scripts: {
+      start: "node index.js",
+      test: "mocha --recursive || exit 0"
+    },
+    ...yaml.parse(fs.readFileSync(dependenciesPath, "utf8"))
   };
 
+  const packagePath = path.resolve(workingDir, "package.json");
   fs.writeFileSync(packagePath, JSON.stringify(package));
 };
 
