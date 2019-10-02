@@ -1,6 +1,6 @@
 {
   "name": "@sustainers/smarket",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A command line tool for interacting with a Sustainer's Market Network",
   "main": "index.js",
   "scripts": {
@@ -15,8 +15,8 @@
   },
   "author": "sustainers.market",
   "dependencies": {
-    "@sustainers/normalize-cli": "^0.0.1",
-    "@sustainers/robo-say": "*",
+    "@sustainers/normalize-cli": "^0.0.2",
+    "@sustainers/robo-say": "^0.0.1",
     "any-json": "^3.1.0",
     "chalk": "^2.4.2",
     "esm": "^3.2.25",
