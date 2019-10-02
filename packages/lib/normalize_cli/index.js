@@ -1,3 +1,4 @@
+const roboSay = require("@sustainers/robo-say");
 const arg = require("arg");
 const { prompt } = require("inquirer");
 const { red } = require("chalk");
@@ -45,7 +46,9 @@ const validate = async ({ entrypointType, choices, options }) => {
     if (options.skipPrompts || !choices) {
       //eslint-disable-next-line no-console
       console.error(
-        `%s A ${entrypointType} must be specified.`,
+        roboSay(
+          `You didn't tell me the ${entrypointType} you want. Add it then give it another go.`
+        ),
         red.bold("ERROR")
       );
       process.exit(1);
@@ -53,7 +56,9 @@ const validate = async ({ entrypointType, choices, options }) => {
       const answers = await prompt({
         type: "list",
         name: "entrypoint",
-        message: `Please choose from which ${entrypointType} you'd like to run`,
+        message: roboSay(
+          `Which of these ${entrypointType}'s do you wanna run?`
+        ),
         choices
       });
 
@@ -62,8 +67,12 @@ const validate = async ({ entrypointType, choices, options }) => {
   } else if (choices && !choices.includes(options.entrypoint)) {
     //eslint-disable-next-line no-console
     console.error(
-      `%s Invalid ${entrypointType}. Choose from [${choices.join(", ")}]`,
-      red.bold("ERROR")
+      roboSay(
+        `I don't understand that ${entrypointType}. My tiny brain only understands these [${choices.join(
+          ", "
+        )}]`
+      ),
+      red.bold("shucks")
     );
     process.exit(1);
   }

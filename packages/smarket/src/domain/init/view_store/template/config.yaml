@@ -1,3 +1,5 @@
+#
+# This file is required.
 # Give your view-store an id, speficy which domain it's for, write the view store's schema, and specify what it should be indexed by in config.yaml.
 #
 # How to write a schema -> https://mongoosejs.com/docs/schematypes.html
@@ -7,6 +9,7 @@
 # How to write indexes -> https://mongoosejs.com/docs/guide.html#indexes
 # Queries to the store that aren't indexed will be rejected.
 # In other words, full collection scans are not allowed.
+#
 
 id: some-id
 domain: some-domain
@@ -14,4 +17,4 @@ domain: some-domain
 schema:
   name: String
 
-indexes: []
+indexes: [[{ name: 1 }]]

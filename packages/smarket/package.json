@@ -16,6 +16,7 @@
   "author": "sustainers.market",
   "dependencies": {
     "@sustainers/normalize-cli": "^0.0.1",
+    "@sustainers/robo-say": "*",
     "any-json": "^3.1.0",
     "chalk": "^2.4.2",
     "esm": "^3.2.25",

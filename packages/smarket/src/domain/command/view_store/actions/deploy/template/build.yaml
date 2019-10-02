@@ -26,7 +26,6 @@ steps:
       - -t
       - us.gcr.io/${_GCP_PROJECT}-staging/${_DOMAIN}.view-store.${_ID}
       - --build-arg
-      - convertPackage=false
       - .
   - name: docker/compose:1.15.0
     args:

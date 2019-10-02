@@ -11,9 +11,6 @@ module.exports = async args => {
     args
   });
 
-  //eslint-disable-next-line no-console
-  console.log("in view store: ", { input });
-
   switch (input.action) {
   case "deploy":
     return deploy(input.args);

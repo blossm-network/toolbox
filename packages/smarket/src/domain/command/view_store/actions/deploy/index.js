@@ -1,4 +1,5 @@
 const normalize = require("@sustainers/normalize-cli");
+const roboSay = require("@sustainers/robo-say");
 const fs = require("fs-extra");
 const { spawnSync } = require("child_process");
 const yaml = require("yaml");
@@ -16,7 +17,12 @@ const copyTemplate = async workingDir => {
     await access(templateDir, fs.constants.R_OK);
   } catch (err) {
     //eslint-disable-next-line no-console
-    console.error("%s Invalid template name", red.bold("ERROR"));
+    console.error(
+      roboSay(
+        "Something is not working in my insides, I can't seem to find my own complete view store template! Reach out to bugs@sustainers.market please, it's in everyone's best interest.",
+        red.bold("shucks")
+      )
+    );
     process.exit(1);
   }
   await copy(`${templateDir}`, workingDir);
@@ -28,7 +34,12 @@ const copySrc = async (p, workingDir) => {
     await access(srcDir, fs.constants.R_OK);
   } catch (err) {
     //eslint-disable-next-line no-console
-    console.error("%s Invalid path", red.bold("ERROR"));
+    console.error(
+      roboSay(
+        "I couldn't make out the path you gave me. Double check it's correct and give it another go."
+      ),
+      red.bold("shucks")
+    );
     process.exit(1);
   }
   await copy(srcDir, workingDir, { clobber: false });
@@ -55,7 +66,14 @@ const convertConfig = async workingDir => {
     cwd: workingDir
   });
   if (op.failed) {
-    return Promise.reject(new Error("Failed to convert config to json"));
+    //eslint-disable-next-line no-console
+    console.error(
+      roboSay(
+        "Rats! I couldn't read your config.yaml. Make sure it's formatted correctly and give it another go. If you think I've got a bug in me, reach out to bugs@sustainers.market please and thank youu"
+      ),
+      red.bold("shucks")
+    );
+    process.exit(1);
   }
 };
 
@@ -103,6 +121,19 @@ const deploy = async (workingDir, env) => {
 };
 
 module.exports = async args => {
+  //eslint-disable-next-line no-console
+  console.log(
+    roboSay(
+      "Got it, you want me to deploy a view store. Hang tight while I crank this out."
+    )
+  );
+  //eslint-disable-next-line no-console
+  console.log(
+    roboSay(
+      "It might take 5 minutes or so, maybe 4 on a good day. Either way that's still practically magic."
+    )
+  );
+
   const input = await normalize({
     entrypointType: "path",
     args,
@@ -116,36 +147,26 @@ module.exports = async args => {
     ]
   });
 
-  //eslint-disable-next-line no-console
-  console.log("parsed input: ", { input });
-
   const workingDir = path.resolve(__dirname, "tmp");
 
-  //eslint-disable-next-line no-console
-  console.log("working dir will be: ", { workingDir });
-
   fs.mkdirSync(workingDir);
-  //eslint-disable-next-line no-console
-  console.log("dir made: ");
   await copyTemplate(workingDir);
-  //eslint-disable-next-line no-console
-  console.log("copied template");
   await copySrc(input.path, workingDir);
-  //eslint-disable-next-line no-console
-  console.log("copied src");
   await convertPackage(workingDir);
-  //eslint-disable-next-line no-console
-  console.log("converted src");
   await convertConfig(workingDir);
-  //eslint-disable-next-line no-console
-  console.log("converted config");
   await configure(workingDir);
-  //eslint-disable-next-line no-console
-  console.log("configured src");
   await deploy(workingDir, input.env);
 
   fs.removeSync(workingDir);
 
   //eslint-disable-next-line no-console
-  console.log("%s Nice!", green.bold("DONE"));
+  console.log(roboSay("Gottem'"), green.bold("perfect"));
+  //eslint-disable-next-line no-console
+  console.log(
+    roboSay(
+      "Congrats again on a new view store, my writer boss want's me to convey to you legitimate stoke."
+    )
+  );
+  //eslint-disable-next-line no-console
+  console.log(roboSay("I'll be here whenever you need me next."));
 };
