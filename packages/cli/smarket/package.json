@@ -1,6 +1,6 @@
 {
   "name": "@sustainers/smarket",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A command line tool for interacting with a Sustainer's Market Network",
   "main": "index.js",
   "scripts": {
@@ -15,10 +15,10 @@
   },
   "author": "sustainers.market",
   "dependencies": {
-    "@sustainers/normalize-cli": "*",
-    "@sustainers/merge-cli-template": "*",
-    "@sustainers/deploy-cli-template": "*",
-    "@sustainers/robo-say": "^0.0.1",
+    "@sustainers/deploy-cli-template": "^0.0.1",
+    "@sustainers/merge-cli-template": "^0.0.1",
+    "@sustainers/normalize-cli": "^0.0.3",
+    "@sustainers/robo-say": "^0.0.2",
     "chalk": "^2.4.2",
     "fs-extra": "^8.1.0"
   }
