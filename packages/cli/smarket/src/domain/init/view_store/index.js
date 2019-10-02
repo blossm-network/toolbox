@@ -10,7 +10,7 @@ const copy = promisify(ncp);
 
 module.exports = async () => {
   //eslint-disable-next-line no-console
-  console.log(roboSay("Got it, you want me to initialize view store code."));
+  console.log(roboSay("Got it, you want me to initialize a view store code."));
   //eslint-disable-next-line no-console
   console.log(roboSay("I should have this ready in no time."));
 
@@ -35,7 +35,9 @@ module.exports = async () => {
   //eslint-disable-next-line no-console
   console.log(roboSay("Gottem'"), green.bold("perfect"));
   //eslint-disable-next-line no-console
-  console.log(roboSay("Enjoy making this view store, sounds like fun."));
+  console.log(
+    roboSay("I hope you enjoy making this view store, sounds like fun.")
+  );
   //eslint-disable-next-line no-console
   console.log(
     roboSay("Hit me up when you wanna deploy --> command view-store deploy .")

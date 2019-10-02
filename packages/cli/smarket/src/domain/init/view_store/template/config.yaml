@@ -1,6 +1,6 @@
 #
 # This file is required.
-# Give your view-store an id, speficy which domain it's for, write the view store's schema, and specify what it should be indexed by in config.yaml.
+# Give your view-store an id, speficy which domain it's for, write the view store's schema, and specify what it should be indexed by.
 #
 # How to write a schema -> https://mongoosejs.com/docs/schematypes.html
 # Types and validators should always be specified,

@@ -1,12 +1,11 @@
-const normalize = require("@sustainers/normalize-cli");
 const roboSay = require("@sustainers/robo-say");
 const fs = require("fs-extra");
+const ncp = require("ncp");
+const { promisify } = require("util");
 const { spawnSync } = require("child_process");
 const yaml = require("yaml");
-const ncp = require("ncp");
 const path = require("path");
-const { green, red } = require("chalk");
-const { promisify } = require("util");
+const { red } = require("chalk");
 
 const access = promisify(fs.access);
 const copy = promisify(ncp);
@@ -99,74 +98,10 @@ const configure = async workingDir => {
   fs.writeFileSync(buildPath, yaml.stringify(build));
 };
 
-const deploy = async (workingDir, env) => {
-  const buildPath = path.resolve(workingDir, "build.yaml");
-  const { substitutions } = yaml.parse(fs.readFileSync(buildPath, "utf8"));
-
-  spawnSync(
-    "gcloud",
-    [
-      "builds",
-      "submit",
-      ".",
-      "--config=build.yaml",
-      `--substitutions=_ENVIRONMENT=${env}`,
-      `--project=${substitutions._GCP_PROJECT}`
-    ],
-    {
-      stdio: [process.stdin, process.stdout, process.stderr],
-      cwd: workingDir
-    }
-  );
-};
-
-module.exports = async args => {
-  //eslint-disable-next-line no-console
-  console.log(
-    roboSay(
-      "Got it, you want me to deploy a view store. Hang tight while I crank this out."
-    )
-  );
-  //eslint-disable-next-line no-console
-  console.log(
-    roboSay(
-      "It might take 5 minutes or so, maybe 4 on a good day. Either way that's still practically magic."
-    )
-  );
-
-  const input = await normalize({
-    entrypointType: "path",
-    args,
-    flags: [
-      {
-        name: "env",
-        type: String,
-        short: "e",
-        default: "staging"
-      }
-    ]
-  });
-
-  const workingDir = path.resolve(__dirname, "tmp");
-
-  fs.mkdirSync(workingDir);
+module.exports = async (workingDir, input) => {
   await copyTemplate(workingDir);
   await copySrc(input.path, workingDir);
   await convertPackage(workingDir);
   await convertConfig(workingDir);
   await configure(workingDir);
-  await deploy(workingDir, input.env);
-
-  fs.removeSync(workingDir);
-
-  //eslint-disable-next-line no-console
-  console.log(roboSay("Gottem'"), green.bold("perfect"));
-  //eslint-disable-next-line no-console
-  console.log(
-    roboSay(
-      "Congrats again on a new view store, my writer boss want's me to convey to you legitimate stoke."
-    )
-  );
-  //eslint-disable-next-line no-console
-  console.log(roboSay("I'll be here whenever you need me next."));
 };

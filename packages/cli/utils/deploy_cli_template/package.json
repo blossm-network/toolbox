@@ -1,0 +1,23 @@
+{
+  "name": "@sustainers/deploy-cli-template",
+  "version": "0.0.0",
+  "description": "Deploys a template to cloud build.",
+  "main": "index.js",
+  "author": "sustainers.market",
+  "engines": {
+    "node": ">= 10.16.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 0"
+  },
+  "dependencies": {
+    "fs-extra": "*",
+    "yaml": "*"
+  },
+  "devDependencies": {
+    "mocha": "^6.1.4"
+  }
+}
