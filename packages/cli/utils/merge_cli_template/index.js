@@ -12,8 +12,6 @@ const copy = promisify(ncp);
 
 const copyTemplate = async (templateDir, workingDir) => {
   const template = path.resolve(templateDir, "template");
-  //eslint-disable-next-line no-console
-  console.log("template dir: ", template);
   try {
     await access(template, fs.constants.R_OK);
   } catch (err) {
@@ -49,19 +47,31 @@ const copySrc = async (p, workingDir) => {
 };
 
 const convertPackage = async workingDir => {
-  const dependenciesPath = path.resolve(workingDir, "dependencies.json");
+  const dependenciesPath = path.resolve(workingDir, "dependencies.yaml");
 
-  const package = {
-    main: "index.js",
-    scripts: {
-      start: "node index.js",
-      test: "mocha --recursive || exit 0"
-    },
-    ...yaml.parse(fs.readFileSync(dependenciesPath, "utf8"))
-  };
+  try {
+    const package = {
+      main: "index.js",
+      scripts: {
+        start: "node index.js",
+        test: "mocha --recursive || exit 0"
+      },
+      ...yaml.parse(fs.readFileSync(dependenciesPath, "utf8"))
+    };
 
-  const packagePath = path.resolve(workingDir, "package.json");
-  fs.writeFileSync(packagePath, JSON.stringify(package));
+    const packagePath = path.resolve(workingDir, "package.json");
+    fs.writeFileSync(packagePath, JSON.stringify(package));
+  } catch (e) {
+    //eslint-disable-next-line no-console
+    console.error(
+      roboSay(
+        "I couldn't make out the dependency path you gave me. Double check it's correct and give it another go."
+      ),
+      red.bold("shucks")
+    );
+    fs.removeSync(workingDir);
+    process.exit(1);
+  }
 };
 
 const convertConfig = async workingDir => {
