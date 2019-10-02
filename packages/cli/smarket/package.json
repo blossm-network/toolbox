@@ -19,6 +19,7 @@
     "@sustainers/merge-cli-template": "^0.0.1",
     "@sustainers/normalize-cli": "^0.0.3",
     "@sustainers/robo-say": "^0.0.2",
+    "esm": "^3.2.25",
     "chalk": "^2.4.2",
     "fs-extra": "^8.1.0"
   }

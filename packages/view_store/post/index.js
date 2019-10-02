@@ -6,7 +6,8 @@ module.exports = ({ store, fn }) => {
 
     const now = deps.dateString();
 
-    const update = fn ? fn(req.body) : { $set: req.body };
+    const { update } = fn ? fn(req.body) : { update: { $set: req.body } };
+
     update.$set = {
       ...update.$set,
       id,

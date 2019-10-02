@@ -76,6 +76,40 @@ describe("View store get", () => {
     });
     expect(sendFake).to.have.been.calledWith(objs);
   });
+  it("should call with the correct params if no id with sort in query", async () => {
+    const findFake = fake.returns(objs);
+    const db = {
+      find: findFake
+    };
+    replace(deps, "db", db);
+
+    const params = {};
+    const sort = { someKey: 3 };
+    const req = {
+      query: {
+        ...query,
+        sort
+      },
+      params
+    };
+
+    const sendFake = fake();
+    const res = {
+      send: sendFake
+    };
+    await get({ store })(req, res);
+    expect(findFake).to.have.been.calledWith({
+      store,
+      query: {
+        a: 1
+      },
+      sort,
+      options: {
+        lean: true
+      }
+    });
+    expect(sendFake).to.have.been.calledWith(objs);
+  });
   it("should call with the correct params if a fn is passed in", async () => {
     const findOneFake = fake.returns(objs);
     const db = {
@@ -95,7 +129,7 @@ describe("View store get", () => {
       send: sendFake
     };
 
-    const fnFake = fake.returns({ b: 2 });
+    const fnFake = fake.returns({ query: { b: 2 } });
     await get({ store, fn: fnFake })(req, res);
     expect(fnFake).to.have.been.calledWith(query);
     expect(findOneFake).to.have.been.calledWith({
@@ -103,6 +137,39 @@ describe("View store get", () => {
       query: {
         id
       },
+      options: {
+        lean: true
+      }
+    });
+    expect(sendFake).to.have.been.calledWith(objs);
+  });
+  it("should call with the correct params if a fn is passed in with sort", async () => {
+    const findFake = fake.returns(objs);
+    const db = {
+      find: findFake
+    };
+    replace(deps, "db", db);
+    const params = {};
+    const req = {
+      query,
+      params
+    };
+
+    const sendFake = fake();
+    const res = {
+      send: sendFake
+    };
+
+    const sort = "some-sort";
+    const fnFake = fake.returns({ query: { b: 2 }, sort });
+    await get({ store, fn: fnFake })(req, res);
+    expect(fnFake).to.have.been.calledWith(query);
+    expect(findFake).to.have.been.calledWith({
+      store,
+      query: {
+        b: 2
+      },
+      sort,
       options: {
         lean: true
       }

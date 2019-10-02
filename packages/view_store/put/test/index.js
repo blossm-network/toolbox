@@ -96,7 +96,7 @@ describe("View store put", () => {
       status: statusFake
     };
 
-    const fnFake = fake.returns({ $set: { b: 2 } });
+    const fnFake = fake.returns({ update: { $set: { b: 2 } } });
     await put({ store, fn: fnFake })(req, res);
 
     expect(writeFake).to.have.been.calledWith({

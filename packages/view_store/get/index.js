@@ -3,7 +3,12 @@ const { notFound } = require("@sustainers/errors");
 
 module.exports = ({ store, fn }) => {
   return async (req, res) => {
-    const query = fn ? fn(req.query) : req.query;
+    const querySort = req.query && req.query.sort;
+    delete req.query.sort;
+
+    const { query, sort } = fn
+      ? fn(req.query)
+      : { query: req.query, sort: querySort };
 
     if (req.params.id == undefined) {
       const results = await deps.db.find({
@@ -12,6 +17,7 @@ module.exports = ({ store, fn }) => {
           ...query,
           ...(req.params.id && { id: req.params.id })
         },
+        ...(sort && { sort }),
         options: {
           lean: true
         }

@@ -35,7 +35,7 @@ module.exports = async () => {
   await copy(templateDirectory, targetDirectory, { clobber: false });
 
   //eslint-disable-next-line no-console
-  console.log(roboSay("Gottem'"), green.bold("perfect"));
+  console.log(roboSay("Done, no problem"), green.bold("perfect"));
   //eslint-disable-next-line no-console
   console.log(
     roboSay("I hope you enjoy making this event store, sounds like fun.")

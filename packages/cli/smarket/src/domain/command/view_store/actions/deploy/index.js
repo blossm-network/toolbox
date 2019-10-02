@@ -41,7 +41,7 @@ module.exports = async args => {
   fs.removeSync(workingDir);
 
   //eslint-disable-next-line no-console
-  console.log(roboSay("Gottem'"), green.bold("perfect"));
+  console.log(roboSay("Done, no problem"), green.bold("perfect"));
   //eslint-disable-next-line no-console
   console.log(
     roboSay(

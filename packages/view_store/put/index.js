@@ -11,7 +11,8 @@ module.exports = ({ store, fn }) => {
     delete req.body.created;
     delete req.body.modified;
 
-    const update = fn ? fn(req.body) : { $set: req.body };
+    const { update } = fn ? fn(req.body) : { update: { $set: req.body } };
+
     update.$set = {
       ...update.$set,
       modified: deps.dateString()
