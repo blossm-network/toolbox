@@ -10,13 +10,7 @@ module.exports = async args => {
   //eslint-disable-next-line no-console
   console.log(
     roboSay(
-      "Got it, you want me to deploy a view store. Hang tight while I crank this out."
-    )
-  );
-  //eslint-disable-next-line no-console
-  console.log(
-    roboSay(
-      "It might take 5 minutes or so, maybe 4 on a good day. Either way that's still practically magic."
+      "Deploying a view store... It might take 5 minutes or so, maybe 4 on a good day."
     )
   );
 
@@ -41,13 +35,5 @@ module.exports = async args => {
   fs.removeSync(workingDir);
 
   //eslint-disable-next-line no-console
-  console.log(roboSay("Done, no problem"), green.bold("perfect"));
-  //eslint-disable-next-line no-console
-  console.log(
-    roboSay(
-      "Congrats again on a new view store, my writer boss want's me to convey to you legitimate stoke."
-    )
-  );
-  //eslint-disable-next-line no-console
-  console.log(roboSay("I'll be here whenever you need me next."));
+  console.log(roboSay("Woohoo!"), green.bold("done"));
 };

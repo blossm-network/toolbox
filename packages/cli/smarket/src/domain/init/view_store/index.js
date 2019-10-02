@@ -10,9 +10,7 @@ const copy = promisify(ncp);
 
 module.exports = async () => {
   //eslint-disable-next-line no-console
-  console.log(roboSay("Got it, you want me to initialize a view store code."));
-  //eslint-disable-next-line no-console
-  console.log(roboSay("I should have this ready in no time."));
+  console.log(roboSay("Initializing a view store codebase..."));
 
   const targetDirectory = process.cwd();
   const templateDirectory = path.resolve(__dirname, "template");
@@ -23,8 +21,8 @@ module.exports = async () => {
     //eslint-disable-next-line no-console
     console.error(
       roboSay(
-        "Something is not working in my insides, I can't seem to find my own view store template! Reach out to bugs@sustainers.market please, it's in everyone's best interest.",
-        red.bold("shucks")
+        "The view store template is unreachable. Reach out to bugs@sustainers.market please, it's in everyone's best interest.",
+        red.bold("internal error")
       )
     );
     process.exit(1);
@@ -33,17 +31,13 @@ module.exports = async () => {
   await copy(templateDirectory, targetDirectory, { clobber: false });
 
   //eslint-disable-next-line no-console
-  console.log(roboSay("Done, no problem"), green.bold("perfect"));
+  console.log(roboSay("Woohoo!"), green.bold("done"));
   //eslint-disable-next-line no-console
   console.log(
-    roboSay("I hope you enjoy making this view store, sounds like fun.")
+    roboSay(
+      "When you wanna deploy, type --> `smarket command view-store deploy .`"
+    )
   );
-  //eslint-disable-next-line no-console
-  console.log(
-    roboSay("Hit me up when you wanna deploy --> command view-store deploy .")
-  );
-  //eslint-disable-next-line no-console
-  console.log(roboSay("Hasta luego"));
 
   return true;
 };

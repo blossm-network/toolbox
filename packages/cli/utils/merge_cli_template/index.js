@@ -18,8 +18,8 @@ const copyTemplate = async (templateDir, workingDir) => {
     //eslint-disable-next-line no-console
     console.error(
       roboSay(
-        "Something is not working in my insides, I can't seem to find my own complete view store template! Reach out to bugs@sustainers.market please, it's in everyone's best interest.",
-        red.bold("shucks")
+        "Full view store template not found. Reach out to bugs@sustainers.market please, it's in everyone's best interest.",
+        red.bold("internal error")
       )
     );
     fs.removeSync(workingDir);
@@ -36,9 +36,9 @@ const copySrc = async (p, workingDir) => {
     //eslint-disable-next-line no-console
     console.error(
       roboSay(
-        "I couldn't make out the path you gave me. Double check it's correct and give it another go."
+        "The provided path isn't reachable. Double check it's correct and give it another go."
       ),
-      red.bold("shucks")
+      red.bold("error")
     );
     fs.removeSync(workingDir);
     process.exit(1);
@@ -65,9 +65,9 @@ const convertPackage = async workingDir => {
     //eslint-disable-next-line no-console
     console.error(
       roboSay(
-        "I couldn't make out the dependency path you gave me. Double check it's correct and give it another go."
+        "The dependencies.yaml file isn't parseable. Double check it's correct and give it another go."
       ),
-      red.bold("shucks")
+      red.bold("error")
     );
     fs.removeSync(workingDir);
     process.exit(1);
@@ -82,9 +82,9 @@ const convertConfig = async workingDir => {
     //eslint-disable-next-line no-console
     console.error(
       roboSay(
-        "Rats! I couldn't read your config.yaml. Make sure it's formatted correctly and give it another go. If you think I've got a bug in me, reach out to bugs@sustainers.market please and thank youu"
+        "Your config.yaml isn't parseable. Make sure it's formatted correctly and give it another go."
       ),
-      red.bold("shucks")
+      red.bold("error")
     );
     fs.removeSync(workingDir);
     process.exit(1);

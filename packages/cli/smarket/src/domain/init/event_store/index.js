@@ -10,11 +10,7 @@ const copy = promisify(ncp);
 
 module.exports = async () => {
   //eslint-disable-next-line no-console
-  console.log(
-    roboSay("Got it, you want me to initialize an event store code.")
-  );
-  //eslint-disable-next-line no-console
-  console.log(roboSay("Easy peasy"));
+  console.log(roboSay("Initializing an event store codebase..."));
 
   const targetDirectory = process.cwd();
   const templateDirectory = path.resolve(__dirname, "template");
@@ -25,8 +21,8 @@ module.exports = async () => {
     //eslint-disable-next-line no-console
     console.error(
       roboSay(
-        "Something is not working in my insides, I can't seem to find my own view store template! Reach out to bugs@sustainers.market please, it's in everyone's best interest.",
-        red.bold("shucks")
+        "The event store template is unreachable. Reach out to bugs@sustainers.market please, it's in everyone's best interest.",
+        red.bold("internal error")
       )
     );
     process.exit(1);
@@ -35,17 +31,13 @@ module.exports = async () => {
   await copy(templateDirectory, targetDirectory, { clobber: false });
 
   //eslint-disable-next-line no-console
-  console.log(roboSay("Done, no problem"), green.bold("perfect"));
+  console.log(roboSay("Woohoo!"), green.bold("done"));
   //eslint-disable-next-line no-console
   console.log(
-    roboSay("I hope you enjoy making this event store, sounds like fun.")
+    roboSay(
+      "When you wanna deploy, type `smarket command event-store deploy .`"
+    )
   );
-  //eslint-disable-next-line no-console
-  console.log(
-    roboSay("Say hello when you wanna deploy --> command event-store deploy .")
-  );
-  //eslint-disable-next-line no-console
-  console.log(roboSay("Bye"));
 
   return true;
 };

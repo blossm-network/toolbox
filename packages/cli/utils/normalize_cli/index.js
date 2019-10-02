@@ -49,7 +49,7 @@ const validate = async ({ entrypointType, choices, options }) => {
         roboSay(
           `You didn't tell me the ${entrypointType} you want. Add it then give it another go.`
         ),
-        red.bold("ERROR")
+        red.bold("error")
       );
       process.exit(1);
     } else {
@@ -68,7 +68,7 @@ const validate = async ({ entrypointType, choices, options }) => {
     //eslint-disable-next-line no-console
     console.error(
       roboSay(
-        `I don't understand that ${entrypointType}. My tiny brain only understands these [${choices.join(
+        `This ${entrypointType} isn't recognized. Choose from one of these [${choices.join(
           ", "
         )}]`
       ),
