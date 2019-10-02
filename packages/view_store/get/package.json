@@ -1,7 +1,7 @@
 {
   "name": "@sustainers/view-store-get",
   "description": "A view store GET handler.",
-  "version": "0.0.17",
+  "version": "0.0.18",
   "main": "index.js",
   "author": "sustainers.market",
   "engines": {

@@ -1,7 +1,7 @@
 {
   "name": "@sustainers/view-store-post",
   "description": "A view store POST handler.",
-  "version": "0.0.21",
+  "version": "0.0.22",
   "main": "index.js",
   "author": "sustainers.market",
   "engines": {
