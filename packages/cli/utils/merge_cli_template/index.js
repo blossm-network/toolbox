@@ -10,12 +10,12 @@ const { red } = require("chalk");
 const access = promisify(fs.access);
 const copy = promisify(ncp);
 
-const copyTemplate = async (currentDir, workingDir) => {
-  const templateDir = path.resolve(currentDir, "template");
+const copyTemplate = async (templateDir, workingDir) => {
+  const template = path.resolve(templateDir, "template");
   //eslint-disable-next-line no-console
-  console.log("template dir: ", templateDir);
+  console.log("template dir: ", template);
   try {
-    await access(templateDir, fs.constants.R_OK);
+    await access(template, fs.constants.R_OK);
   } catch (err) {
     //eslint-disable-next-line no-console
     console.error(
@@ -27,7 +27,7 @@ const copyTemplate = async (currentDir, workingDir) => {
     fs.removeSync(workingDir);
     process.exit(1);
   }
-  await copy(`${templateDir}`, workingDir);
+  await copy(template, workingDir);
 };
 
 const copySrc = async (p, workingDir) => {
@@ -103,8 +103,8 @@ const configure = async workingDir => {
   fs.writeFileSync(buildPath, yaml.stringify(build));
 };
 
-module.exports = async (workingDir, input) => {
-  await copyTemplate(workingDir);
+module.exports = async (templateDir, workingDir, input) => {
+  await copyTemplate(templateDir, workingDir);
   await copySrc(input.path, workingDir);
   await convertPackage(workingDir);
   await convertConfig(workingDir);
