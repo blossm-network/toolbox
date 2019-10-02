@@ -1,12 +1,11 @@
 substitutions:
   # OPTIONAL TODO:
-  #   Remove the comment arrows from the two lines following this comment and
-  #   change the values so that they describe this repo's service.
+  #   Remove the comment arrows from the line following this comment and
+  #   change the value so that it describes this repo's service.
   #
   # OPTIONAL TODO:
   #   Replace any other substitution with other values.
 
-  _ID: ${ID} # <--
   _DOMAIN: ${DOMAIN} # <--
 
   _SERVICE: core
@@ -25,7 +24,6 @@ steps:
       - build
       - -t
       - us.gcr.io/${_GCP_PROJECT}-staging/${_DOMAIN}.view-store.${_ID}
-      - --build-arg
       - .
   - name: docker/compose:1.15.0
     args:
