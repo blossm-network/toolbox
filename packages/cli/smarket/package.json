@@ -18,7 +18,7 @@
     "@sustainers/deploy-cli-template": "^0.0.1",
     "@sustainers/merge-cli-template": "^0.0.1",
     "@sustainers/normalize-cli": "^0.0.4",
-    "@sustainers/robo-say": "^0.0.3",
+    "@sustainers/robo-say": "*",
     "chalk": "^2.4.2",
     "esm": "^3.2.25",
     "fs-extra": "^8.1.0"
