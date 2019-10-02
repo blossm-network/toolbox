@@ -1,12 +1,13 @@
 substitutions:
   # OPTIONAL TODO:
-  #   Remove the comment arrows from the line following this comment and
-  #   change the value so that it describes this repo's service.
+  #   If you plan on hosting a sandbox environment,
+  #   remove the comment arrow from the line following this comment and
+  #   change the values so that it describes this repo's service.
   #
   # OPTIONAL TODO:
   #   Replace any other substitution with other values.
 
-  _DOMAIN: ${DOMAIN} # <--
+  _DOMAIN: some-domain # <--
 
   _SERVICE: core
   _NETWORK: sm.network
@@ -23,7 +24,9 @@ steps:
     args:
       - build
       - -t
-      - us.gcr.io/${_GCP_PROJECT}-staging/${_DOMAIN}.view-store.${_ID}
+      - us.gcr.io/${_GCP_PROJECT}-staging/${_DOMAIN}.event-store
+      - --build-arg
+      - convertPackage=false
       - .
   - name: docker/compose:1.15.0
     args:
@@ -33,7 +36,6 @@ steps:
       - NETWORK=staging.${_NETWORK}
       - SERVICE=${_SERVICE}
       - DOMAIN=${_DOMAIN}
-      - ID=${_ID}
       - GCP_PROJECT=${_GCP_PROJECT}-staging
       - GCP_REGION=${_GCP_REGION}
   - name: docker/compose:1.15.0
@@ -49,19 +51,19 @@ steps:
   - name: gcr.io/cloud-builders/docker
     args:
       - push
-      - us.gcr.io/${_GCP_PROJECT}-${_ENVIRONMENT}/${_DOMAIN}.view-store.${_ID}
+      - us.gcr.io/${_GCP_PROJECT}-${_ENVIRONMENT}/${_DOMAIN}.event-store
   - name: gcr.io/cloud-builders/gcloud
     args:
       - beta
       - run
       - deploy
-      - ${_DOMAIN}-view-store-${_ID}
-      - --image=us.gcr.io/${_GCP_PROJECT}-${_ENVIRONMENT}/${_DOMAIN}.view-store.${_ID}
+      - ${_DOMAIN}-event-store
+      - --image=us.gcr.io/${_GCP_PROJECT}-${_ENVIRONMENT}/${_DOMAIN}.event-store
       - --platform=managed
       - --memory=${_MEMORY}
       - --project=${_GCP_PROJECT}-${_ENVIRONMENT}
       - --region=${_GCP_REGION}
-      - --set-env-vars=NODE_ENV=staging,NETWORK=${_ENVIRONMENT}.${_NETWORK},SERVICE=${_SERVICE},DOMAIN=${_DOMAIN},ID=${_ID},GCP_PROJECT=${_GCP_PROJECT}-${_ENVIRONMENT},GCP_REGION=${_GCP_REGION},GCP_SECRET_BUCKET=smn-${_ENVIRONMENT}-secrets,MONGODB_USER=gcp-${_ENVIRONMENT},MONGODB_HOST=sandbox-ggjlv.gcp.mongodb.net
+      - --set-env-vars=NODE_ENV=staging,NETWORK=${_ENVIRONMENT}.${_NETWORK},SERVICE=${_SERVICE},DOMAIN=${_DOMAIN},GCP_PROJECT=${_GCP_PROJECT}-${_ENVIRONMENT},GCP_REGION=${_GCP_REGION},GCP_SECRET_BUCKET=smn-${_ENVIRONMENT}-secrets,MONGODB_USER=gcp-${_ENVIRONMENT},MONGODB_HOST=${_ENVIRONMENT}-ggjlv.gcp.mongodb.net
   - name: gcr.io/cloud-builders/gcloud
     args:
       - beta
@@ -79,7 +81,7 @@ steps:
       - transaction
       - add
       - ghs.googlehosted.com.
-      - --name=${_ID}.view-store.${_DOMAIN}.${_SERVICE}.${_ENVIRONMENT}.${_NETWORK}
+      - --name=event-store.${_DOMAIN}.${_SERVICE}.${_ENVIRONMENT}.${_NETWORK}
       - --zone=${_GCP_DNS_ZONE}
       - --type=CNAME
       - --ttl=86400
@@ -99,4 +101,4 @@ steps:
     entrypoint: bash
     args:
       - -c
-      - gcloud beta run domain-mappings create --platform=managed --service=${_DOMAIN}-view-store-${_ID} --domain=${_ID}.view-store.${_DOMAIN}.${_SERVICE}.${_ENVIRONMENT}.${_NETWORK} --project=${_GCP_PROJECT}-${_ENVIRONMENT} --region=${_GCP_REGION} || exit 0
+      - gcloud beta run domain-mappings create --platform=managed --service=${_DOMAIN}-event-store --domain=event-store.${_DOMAIN}.${_SERVICE}.${_ENVIRONMENT}.${_NETWORK} --project=${_GCP_PROJECT}-${_ENVIRONMENT} --region=${_GCP_REGION} || exit 0
