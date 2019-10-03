@@ -1,6 +1,6 @@
 {
   "name": "@sustainers/gcp-token",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "description": "Create a token for an audience within the network.",
   "main": "index.js",
   "author": "sustainers.market",
