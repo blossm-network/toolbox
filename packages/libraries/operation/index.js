@@ -8,15 +8,18 @@ const common = ({ method, operation, root, data }) => {
           const url = `https://${operation}.${service}.${network}${path}${
             root != undefined ? `/${root}` : ""
           }`;
+          const token = await tokenFn({ operation });
           return await method(
             url,
             {
               ...(data != undefined && { ...data }),
               context
             },
-            {
-              Authorization: `Bearer ${await tokenFn({ operation })}`
-            }
+            token
+              ? {
+                Authorization: `Bearer ${token}`
+              }
+              : undefined
           );
         }
       };
