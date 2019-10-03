@@ -32,5 +32,6 @@ module.exports = async ({ operation }) => {
   const response = await deps.get(metadataServerTokenUrl + url, null, headers);
 
   logger.info("res: ", { response });
+  if (response.statusCode >= 300) return null;
   return response.body;
 };

@@ -51,7 +51,7 @@ describe("Gcp token", () => {
     );
     expect(result).to.equal(body);
   });
-  it("should call correctly in sandbox", async () => {
+  it("should call correctly in production", async () => {
     process.env.NODE_ENV = "production";
 
     const body = "some-body";
@@ -72,5 +72,26 @@ describe("Gcp token", () => {
       { "Metadata-Flavor": "Google" }
     );
     expect(result).to.equal(body);
+  });
+  it("should call correctly with error", async () => {
+    process.env.NODE_ENV = "staging";
+
+    const response = {
+      statusCode: 300
+    };
+    const getFake = fake.returns(response);
+    replace(deps, "get", getFake);
+
+    const operation = "some.url";
+    const result = await gcpToken({ operation });
+
+    const url = "https://url-some-p3u6hkyfwa-uc.a.run.app";
+
+    expect(getFake).to.have.been.calledWith(
+      `http://metadata/computeMetadata/v1/instance/service-accounts/default/identity?audience=${url}`,
+      null,
+      { "Metadata-Flavor": "Google" }
+    );
+    expect(result).to.be.null;
   });
 });
