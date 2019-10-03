@@ -23,9 +23,9 @@ services:
     image: us.gcr.io/${GCP_PROJECT}/event-store.${DOMAIN}:latest
     container_name: ${DOMAIN}.event-store.${SERVICE}.${NETWORK}
     ports:
-      - "27017:27017"
+      - "3001:3001"
     environment:
-      PORT: "27017"
+      PORT: "3001"
       NODE_ENV: staging
       NETWORK:
       SERVICE:

@@ -83,7 +83,7 @@ describe("Operation", () => {
       .with({ path, tokenFn: tokenFnFake });
 
     expect(post).to.have.been.calledWith(
-      `http://${op}.${service}.${network}${path}`,
+      `http://${op}.${service}.${network}${path}:3001`,
       {
         ...data,
         context
@@ -157,7 +157,7 @@ describe("Operation", () => {
       .with({ path, tokenFn: tokenFnFake });
 
     expect(put).to.have.been.calledWith(
-      `http://${op}.${service}.${network}${path}/${root}`,
+      `http://${op}.${service}.${network}${path}:3001/${root}`,
       {
         ...data,
         context
