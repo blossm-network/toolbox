@@ -5,8 +5,6 @@ const request = require("@sustainers/request");
 
 const url = "http://command-handler:3000";
 
-process.env.NODE_ENV = "staging";
-
 describe("Command handler store", () => {
   it("should return successfully", async () => {
     const response0 = await request.post(url, {

@@ -4,8 +4,6 @@ const request = require("@sustainers/request");
 
 const url = "http://view-store:3000";
 
-process.env.NODE_ENV = "staging";
-
 describe("View store", () => {
   const id = "some-id";
   it("should return successfully", async () => {
