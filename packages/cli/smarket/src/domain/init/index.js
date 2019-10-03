@@ -4,12 +4,14 @@ const commandHandler = require("./command_handler");
 const eventHandler = require("./event_handler");
 const eventStore = require("./event_store");
 const viewStore = require("./view_store");
+const gateway = require("./gateway");
 
 const templates = [
   "command-handler",
   "event-handler",
   "view-store",
-  "event-store"
+  "event-store",
+  "gateway"
 ];
 
 module.exports = async args => {
@@ -27,5 +29,7 @@ module.exports = async args => {
     return eventStore(input.args);
   case "view-store":
     return viewStore(input.args);
+  case "gateway":
+    return gateway(input.args);
   }
 };
