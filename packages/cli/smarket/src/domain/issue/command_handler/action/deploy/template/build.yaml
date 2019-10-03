@@ -32,10 +32,6 @@ steps:
       - up
       - -d
     env:
-      - CONTAINER_PORT=3000
-      - CONTAINER_NAME=command-handler
-      - LOCAL_NETWORK_PORT=3001
-      - NETWORK=local
       - SERVICE=${_SERVICE}
       - DOMAIN=${_DOMAIN}
       - ACTION=${_ACTION}

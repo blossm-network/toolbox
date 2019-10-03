@@ -185,7 +185,7 @@ describe("Event store", () => {
       .with(tokenFn);
 
     expect(operationFake).to.have.been.calledWith(`${domain}.event-store`);
-    expect(getFake).to.have.been.calledWith(root);
+    expect(getFake).to.have.been.calledWith({ root });
     expect(inFake).to.have.been.calledWith({ context, service, network });
     expect(withFake).to.have.been.calledWith({ tokenFn });
   });

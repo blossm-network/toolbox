@@ -4,10 +4,12 @@ const eventStore = require("@sustainers/event-store-js");
 
 const request = require("@sustainers/request");
 
-const url = `http://${process.env.CONTAINER_NAME}:${process.env.CONTAINER_PORT}`;
+const url = "http://command-handler:3000";
 
 describe("Command handler store", () => {
   it("should return successfully", async () => {
+    //eslint-disable-next-line no-console
+    console.log("url: ", { url });
     const response = await request.post(url, {
       headers: {
         issued: stringDate()
