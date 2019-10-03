@@ -1,6 +1,6 @@
 const normalize = require("@sustainers/normalize-cli");
-const { init, command } = require("./domain");
-const domains = ["init", "command"];
+const { init, issue } = require("./domain");
+const domains = ["init", "issue"];
 
 exports.cli = async rawArgs => {
   const input = await normalize({
@@ -12,7 +12,7 @@ exports.cli = async rawArgs => {
   switch (input.domain) {
   case "init":
     return init(input.args);
-  case "command":
-    return command(input.args);
+  case "issue":
+    return issue(input.args);
   }
 };

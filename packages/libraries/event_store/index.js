@@ -2,7 +2,7 @@ const { string: dateString } = require("@sustainers/datetime");
 
 const deps = require("./deps");
 
-module.exports = ({ service, network }) => {
+module.exports = ({ domain, service, network }) => {
   return {
     add: ({ headers: { root, topic, version, trace, command }, payload }) => {
       return {
@@ -17,6 +17,9 @@ module.exports = ({ service, network }) => {
                   version,
                   created: dateString(),
                   ...(trace && { trace }),
+                  domain,
+                  service,
+                  network,
                   command: {
                     id: command.id,
                     action: command.action,
@@ -29,7 +32,7 @@ module.exports = ({ service, network }) => {
               };
 
               await deps
-                .operation("event-store")
+                .operation(`event-store.${domain}`)
                 .post(event)
                 .in({ context, service, network })
                 .with({ tokenFn });

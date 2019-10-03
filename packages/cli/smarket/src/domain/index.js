@@ -1,7 +1,7 @@
 const init = require("./init");
-const command = require("./command");
+const issue = require("./issue");
 
 module.exports = {
   init,
-  command
+  issue
 };

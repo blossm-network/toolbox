@@ -26,6 +26,7 @@ const commandService = "command-service";
 const commandIssuedTimestamp = 234;
 const service = "the-service-the-event-was-triggered-in";
 const network = "some-network";
+const domain = "the-domain-the-event-was-triggered-in";
 
 const context = "some-context";
 const tokenFn = "some-token-fn";
@@ -55,7 +56,7 @@ describe("Event store", () => {
 
     const trace = "trace";
 
-    await eventStore({ service, network })
+    await eventStore({ domain, service, network })
       .add({
         context,
         headers: {
@@ -63,6 +64,9 @@ describe("Event store", () => {
           topic,
           version,
           trace,
+          domain,
+          service,
+          network,
           command: {
             action: commandAction,
             domain: commandDomain,
@@ -76,13 +80,16 @@ describe("Event store", () => {
       .in(context)
       .with(tokenFn);
 
-    expect(operationFake).to.have.been.calledWith("event-store");
+    expect(operationFake).to.have.been.calledWith(`event-store.${domain}`);
     expect(postFake).to.have.been.calledWith({
       context,
       headers: {
         root,
         topic,
         version,
+        domain,
+        service,
+        network,
         command: {
           id: commandId,
           action: commandAction,
@@ -112,7 +119,7 @@ describe("Event store", () => {
     });
     replace(deps, "operation", operationFake);
 
-    await eventStore({ service, network })
+    await eventStore({ domain, service, network })
       .add({
         context,
         headers: {
@@ -132,13 +139,16 @@ describe("Event store", () => {
       .in(context)
       .with(tokenFn);
 
-    expect(operationFake).to.have.been.calledWith("event-store");
+    expect(operationFake).to.have.been.calledWith(`event-store.${domain}`);
     expect(postFake).to.have.been.calledWith({
       context,
       headers: {
         root,
         topic,
         version,
+        domain,
+        service,
+        network,
         command: {
           action: commandAction,
           domain: commandDomain,
