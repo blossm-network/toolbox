@@ -1,7 +1,7 @@
 {
   "name": "@sustainers/event-store-js",
   "description": "Access to an event store.",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "scripts": {
     "test": "mocha --recursive"
   },
@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@sustainers/datetime": "^0.0.3",
-    "@sustainers/operation-js": "^0.0.13",
+    "@sustainers/operation-js": "^0.0.14",
     "@sustainers/request": "^0.0.4"
   },
   "devDependencies": {
