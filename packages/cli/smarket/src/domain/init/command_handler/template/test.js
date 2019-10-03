@@ -17,7 +17,9 @@ describe("Command handler store", () => {
         name: "some-name"
       }
     });
-    expect(response0.statusCode).to.equal(204);
+    //eslint-disable-next-line no-console
+    console.log("response body: ", response0.body);
+    expect(response0.statusCode).to.equal(200);
   });
   // it("should return an error if incorrect params", async () => {
   //   const response = await request.post(url, { name: 1 });

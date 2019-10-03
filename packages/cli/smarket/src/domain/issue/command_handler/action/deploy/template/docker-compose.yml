@@ -5,6 +5,8 @@ services:
     container_name: command-handler
     ports:
       - "3000:3000"
+    depends_on:
+      - event-store
     environment:
       PORT: "3000"
       NODE_ENV: staging
@@ -21,9 +23,9 @@ services:
     image: us.gcr.io/${GCP_PROJECT}/event-store.${DOMAIN}:latest
     container_name: ${DOMAIN}.event-store.${SERVICE}.${NETWORK}
     ports:
-      - "3001:3001"
+      - "27017:27017"
     environment:
-      PORT: "3001"
+      PORT: "27017"
       NODE_ENV: staging
       NETWORK:
       SERVICE:
