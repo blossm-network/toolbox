@@ -24,6 +24,7 @@ module.exports = ({ version, mainFn, validateFn, cleanFn }) => {
     });
     await deps
       .eventStore({
+        domain: process.env.DOMAIN,
         service: process.env.SERVICE,
         network: process.env.NETWORK
       })

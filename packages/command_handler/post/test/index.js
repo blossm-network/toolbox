@@ -102,6 +102,7 @@ describe("Command handler post", () => {
       }
     });
     expect(eventStoreFake).to.have.been.calledWith({
+      domain,
       service,
       network
     });
@@ -169,6 +170,7 @@ describe("Command handler post", () => {
       }
     });
     expect(eventStoreFake).to.have.been.calledWith({
+      domain,
       service,
       network
     });
