@@ -135,6 +135,30 @@ describe("Operation", () => {
       operation: op
     });
   });
+  it("should call get with the correct params with root", async () => {
+    const get = fake();
+    replace(request, "get", get);
+
+    const tokenFnFake = fake.returns(token);
+    await operation(op)
+      .get({ ...data, root })
+      .in({ context, service, network })
+      .with({ tokenFn: tokenFnFake });
+
+    expect(get).to.have.been.calledWith(
+      `http://${op}.${service}.${network}/${root}`,
+      {
+        ...data,
+        context
+      },
+      {
+        Authorization: `Bearer ${token}`
+      }
+    );
+    expect(tokenFnFake).to.have.been.calledWith({
+      operation: op
+    });
+  });
   it("should call put with the correct params", async () => {
     const put = fake();
     replace(request, "put", put);

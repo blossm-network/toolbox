@@ -32,6 +32,10 @@ module.exports = operation => {
     post: data => common({ method: request.post, operation, data }),
     put: (root, data) => common({ method: request.put, operation, root, data }),
     delete: root => common({ method: request.delete, operation, root }),
-    get: query => common({ method: request.get, operation, data: query })
+    get: query => {
+      const root = query.root;
+      delete query.root;
+      return common({ method: request.get, operation, root, data: query });
+    }
   };
 };
