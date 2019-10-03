@@ -34,9 +34,7 @@ module.exports = async () => {
   console.log(roboSay("Woohoo!"), green.bold("done"));
   //eslint-disable-next-line no-console
   console.log(
-    roboSay(
-      "When you wanna deploy, type `smarket command event-store deploy .`"
-    )
+    roboSay("When you wanna deploy, type `smarket issue event-store deploy .`")
   );
 
   return true;

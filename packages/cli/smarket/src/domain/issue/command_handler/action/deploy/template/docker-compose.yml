@@ -10,7 +10,7 @@ services:
     environment:
       PORT: "3000"
       NODE_ENV: local
-      NETWORK: local
+      NETWORK: local:80
       SERVICE:
       DOMAIN:
       ACTION:

@@ -80,7 +80,7 @@ describe("Event store", () => {
       .in(context)
       .with(tokenFn);
 
-    expect(operationFake).to.have.been.calledWith(`event-store.${domain}`);
+    expect(operationFake).to.have.been.calledWith(`${domain}.event-store`);
     expect(postFake).to.have.been.calledWith({
       context,
       headers: {
@@ -139,7 +139,7 @@ describe("Event store", () => {
       .in(context)
       .with(tokenFn);
 
-    expect(operationFake).to.have.been.calledWith(`event-store.${domain}`);
+    expect(operationFake).to.have.been.calledWith(`${domain}.event-store`);
     expect(postFake).to.have.been.calledWith({
       context,
       headers: {
@@ -179,12 +179,12 @@ describe("Event store", () => {
 
     const root = "user";
 
-    await eventStore({ service, network })
+    await eventStore({ domain, service, network })
       .aggregate(root)
       .in(context)
       .with(tokenFn);
 
-    expect(operationFake).to.have.been.calledWith("event-store");
+    expect(operationFake).to.have.been.calledWith(`${domain}.event-store`);
     expect(getFake).to.have.been.calledWith(root);
     expect(inFake).to.have.been.calledWith({ context, service, network });
     expect(withFake).to.have.been.calledWith({ tokenFn });

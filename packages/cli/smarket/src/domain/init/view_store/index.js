@@ -35,7 +35,7 @@ module.exports = async () => {
   //eslint-disable-next-line no-console
   console.log(
     roboSay(
-      "When you wanna deploy, type --> `smarket command view-store deploy .`"
+      "When you wanna deploy, type --> `smarket issue view-store deploy .`"
     )
   );
 
