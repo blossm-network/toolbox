@@ -1,7 +1,6 @@
 substitutions:
   # OPTIONAL TODO:
-  #   If you plan on hosting a sandbox environment,
-  #   remove the comment arrow from the line following this comment and
+  #   Remove the comment arrow from the line following this comment and
   #   change the values so that it describes this repo's service.
   #
   # OPTIONAL TODO:
@@ -31,11 +30,13 @@ steps:
       - up
       - -d
     env:
-      - NETWORK=staging.${_NETWORK}
       - SERVICE=${_SERVICE}
       - DOMAIN=${_DOMAIN}
       - GCP_PROJECT=${_GCP_PROJECT}-staging
       - GCP_REGION=${_GCP_REGION}
+      - GCP_SECRET_BUCKET=smn-staging-secrets
+      - MONGODB_USER=gcp-staging
+      - MONGODB_HOST=staging-ggjlv.gcp.mongodb.net
   - name: docker/compose:1.15.0
     args:
       - ps

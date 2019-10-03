@@ -32,12 +32,12 @@ steps:
       - up
       - -d
     env:
-      - NETWORK=staging.${_NETWORK}
       - SERVICE=${_SERVICE}
       - DOMAIN=${_DOMAIN}
       - ACTION=${_ACTION}
       - GCP_PROJECT=${_GCP_PROJECT}-staging
       - GCP_REGION=${_GCP_REGION}
+      - GCP_SECRET_BUCKET=smn-staging-secrets
   - name: docker/compose:1.15.0
     args:
       - ps

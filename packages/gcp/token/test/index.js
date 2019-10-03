@@ -73,6 +73,20 @@ describe("Gcp token", () => {
     );
     expect(result).to.equal(body);
   });
+  it("should call correctly in another environment", async () => {
+    process.env.NODE_ENV = "local";
+
+    const body = "some-body";
+    const response = {
+      body
+    };
+    const getFake = fake.returns(response);
+    replace(deps, "get", getFake);
+
+    const operation = "some.url";
+    const result = await gcpToken({ operation });
+    expect(result).to.be.null;
+  });
   it("should call correctly with error", async () => {
     process.env.NODE_ENV = "staging";
 

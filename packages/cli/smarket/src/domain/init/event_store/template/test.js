@@ -3,9 +3,7 @@ const uuid = require("@sustainers/uuid");
 
 const request = require("@sustainers/request");
 
-const url = "http://staged:3000";
-
-process.env.NODE_ENV = "staging";
+const url = "http://event-store:3000";
 
 /**
  *

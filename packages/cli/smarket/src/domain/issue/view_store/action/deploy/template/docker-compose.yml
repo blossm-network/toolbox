@@ -1,24 +1,24 @@
 version: "3"
 services:
-  staged:
+  view-store:
     image: us.gcr.io/${GCP_PROJECT}/view-store.${DOMAIN}.${ID}:latest
-    container_name: staged
+    container_name: view-store
     ports:
       - "3000:3000"
     environment:
       PORT: "3000"
-      NODE_ENV: staging
-      NETWORK:
+      NODE_ENV: local
+      NETWORK: local
       SERVICE:
       DOMAIN:
       ID:
       GCP_PROJECT:
       GCP_REGION:
-      GCP_SECRET_BUCKET: smn-staging-secrets
       GCP_KMS_SECRET_BUCKET_KEY_LOCATION:
       GCP_KMS_SECRET_BUCKET_KEY_RING:
-      MONGODB_USER: gcp-staging
-      MONGODB_HOST: staging-ggjlv.gcp.mongodb.net
+      GCP_SECRET_BUCKET:
+      MONGODB_USER:
+      MONGODB_HOST:
 
 networks:
   default:

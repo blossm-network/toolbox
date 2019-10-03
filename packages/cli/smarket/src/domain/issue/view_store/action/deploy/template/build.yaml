@@ -31,12 +31,14 @@ steps:
       - up
       - -d
     env:
-      - NETWORK=staging.${_NETWORK}
       - SERVICE=${_SERVICE}
       - DOMAIN=${_DOMAIN}
       - ID=${_ID}
       - GCP_PROJECT=${_GCP_PROJECT}-staging
       - GCP_REGION=${_GCP_REGION}
+      - GCP_SECRET_BUCKET=smn-staging-secrets
+      - MONGODB_USER=gcp-staging
+      - MONGODB_HOST=staging-ggjlv.gcp.mongodb.net
   - name: docker/compose:1.15.0
     args:
       - ps
@@ -62,7 +64,7 @@ steps:
       - --memory=${_MEMORY}
       - --project=${_GCP_PROJECT}-${_ENVIRONMENT}
       - --region=${_GCP_REGION}
-      - --set-env-vars=NODE_ENV=staging,NETWORK=${_ENVIRONMENT}.${_NETWORK},SERVICE=${_SERVICE},DOMAIN=${_DOMAIN},ID=${_ID},GCP_PROJECT=${_GCP_PROJECT}-${_ENVIRONMENT},GCP_REGION=${_GCP_REGION},GCP_SECRET_BUCKET=smn-${_ENVIRONMENT}-secrets,MONGODB_USER=gcp-${_ENVIRONMENT},MONGODB_HOST=sandbox-ggjlv.gcp.mongodb.net
+      - --set-env-vars=NODE_ENV=staging,NETWORK=${_ENVIRONMENT}.${_NETWORK},SERVICE=${_SERVICE},DOMAIN=${_DOMAIN},ID=${_ID},GCP_PROJECT=${_GCP_PROJECT}-${_ENVIRONMENT},GCP_REGION=${_GCP_REGION},GCP_SECRET_BUCKET=smn-${_ENVIRONMENT}-secrets,MONGODB_USER=gcp-${_ENVIRONMENT},MONGODB_HOST=${_ENVIRONMENT}-ggjlv.gcp.mongodb.net
   - name: gcr.io/cloud-builders/gcloud
     args:
       - beta

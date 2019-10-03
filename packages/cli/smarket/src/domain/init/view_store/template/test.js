@@ -2,7 +2,7 @@ const { expect } = require("chai");
 
 const request = require("@sustainers/request");
 
-const url = "http://staged:3000";
+const url = "http://view-store:3000";
 
 process.env.NODE_ENV = "staging";
 
