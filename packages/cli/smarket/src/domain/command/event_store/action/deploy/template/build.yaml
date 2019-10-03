@@ -24,7 +24,7 @@ steps:
     args:
       - build
       - -t
-      - us.gcr.io/${_GCP_PROJECT}-staging/${_DOMAIN}.event-store
+      - us.gcr.io/${_GCP_PROJECT}-staging/event-store.${_DOMAIN}
       - .
   - name: docker/compose:1.15.0
     args:
@@ -49,14 +49,14 @@ steps:
   - name: gcr.io/cloud-builders/docker
     args:
       - push
-      - us.gcr.io/${_GCP_PROJECT}-${_ENVIRONMENT}/${_DOMAIN}.event-store
+      - us.gcr.io/${_GCP_PROJECT}-${_ENVIRONMENT}/event-store.${_DOMAIN}
   - name: gcr.io/cloud-builders/gcloud
     args:
       - beta
       - run
       - deploy
-      - ${_DOMAIN}-event-store
-      - --image=us.gcr.io/${_GCP_PROJECT}-${_ENVIRONMENT}/${_DOMAIN}.event-store
+      - event-store-${_DOMAIN}
+      - --image=us.gcr.io/${_GCP_PROJECT}-${_ENVIRONMENT}/event-store.${_DOMAIN}
       - --platform=managed
       - --memory=${_MEMORY}
       - --project=${_GCP_PROJECT}-${_ENVIRONMENT}
@@ -79,7 +79,7 @@ steps:
       - transaction
       - add
       - ghs.googlehosted.com.
-      - --name=event-store.${_DOMAIN}.${_SERVICE}.${_ENVIRONMENT}.${_NETWORK}
+      - --name=${_DOMAIN}.event-store.${_SERVICE}.${_ENVIRONMENT}.${_NETWORK}
       - --zone=${_GCP_DNS_ZONE}
       - --type=CNAME
       - --ttl=86400
@@ -99,4 +99,4 @@ steps:
     entrypoint: bash
     args:
       - -c
-      - gcloud beta run domain-mappings create --platform=managed --service=${_DOMAIN}-event-store --domain=event-store.${_DOMAIN}.${_SERVICE}.${_ENVIRONMENT}.${_NETWORK} --project=${_GCP_PROJECT}-${_ENVIRONMENT} --region=${_GCP_REGION} || exit 0
+      - gcloud beta run domain-mappings create --platform=managed --service=event-store-${_DOMAIN} --domain=${_DOMAIN}.event-store.${_SERVICE}.${_ENVIRONMENT}.${_NETWORK} --project=${_GCP_PROJECT}-${_ENVIRONMENT} --region=${_GCP_REGION} || exit 0

@@ -24,7 +24,7 @@ steps:
     args:
       - build
       - -t
-      - us.gcr.io/${_GCP_PROJECT}-staging/${_DOMAIN}.view-store.${_ID}
+      - us.gcr.io/${_GCP_PROJECT}-staging/view-store.${_DOMAIN}.${_ID}
       - .
   - name: docker/compose:1.15.0
     args:
@@ -50,14 +50,14 @@ steps:
   - name: gcr.io/cloud-builders/docker
     args:
       - push
-      - us.gcr.io/${_GCP_PROJECT}-${_ENVIRONMENT}/${_DOMAIN}.view-store.${_ID}
+      - us.gcr.io/${_GCP_PROJECT}-${_ENVIRONMENT}/view-store.${_DOMAIN}.${_ID}
   - name: gcr.io/cloud-builders/gcloud
     args:
       - beta
       - run
       - deploy
-      - ${_DOMAIN}-view-store-${_ID}
-      - --image=us.gcr.io/${_GCP_PROJECT}-${_ENVIRONMENT}/${_DOMAIN}.view-store.${_ID}
+      - view-store-${_DOMAIN}-${_ID}
+      - --image=us.gcr.io/${_GCP_PROJECT}-${_ENVIRONMENT}/view-store.${_DOMAIN}.${_ID}
       - --platform=managed
       - --memory=${_MEMORY}
       - --project=${_GCP_PROJECT}-${_ENVIRONMENT}
@@ -80,7 +80,7 @@ steps:
       - transaction
       - add
       - ghs.googlehosted.com.
-      - --name=${_ID}.view-store.${_DOMAIN}.${_SERVICE}.${_ENVIRONMENT}.${_NETWORK}
+      - --name=${_ID}.${_DOMAIN}.view-store.${_SERVICE}.${_ENVIRONMENT}.${_NETWORK}
       - --zone=${_GCP_DNS_ZONE}
       - --type=CNAME
       - --ttl=86400
@@ -100,4 +100,4 @@ steps:
     entrypoint: bash
     args:
       - -c
-      - gcloud beta run domain-mappings create --platform=managed --service=${_DOMAIN}-view-store-${_ID} --domain=${_ID}.view-store.${_DOMAIN}.${_SERVICE}.${_ENVIRONMENT}.${_NETWORK} --project=${_GCP_PROJECT}-${_ENVIRONMENT} --region=${_GCP_REGION} || exit 0
+      - gcloud beta run domain-mappings create --platform=managed --service=view-store-${_DOMAIN}-${_ID} --domain=${_ID}.${_DOMAIN}.view-store.${_SERVICE}.${_ENVIRONMENT}.${_NETWORK} --project=${_GCP_PROJECT}-${_ENVIRONMENT} --region=${_GCP_REGION} || exit 0

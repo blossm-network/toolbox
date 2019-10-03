@@ -1,7 +1,7 @@
 version: "3"
 services:
   staged:
-    image: us.gcr.io/${GCP_PROJECT}/${DOMAIN}.event-store:latest
+    image: us.gcr.io/${GCP_PROJECT}/event-store.${DOMAIN}:latest
     container_name: staged
     ports:
       - "3000:3000"
