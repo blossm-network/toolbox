@@ -1,7 +1,7 @@
 {
   "name": "@sustainers/server",
   "description": "Exposes an express function to run.",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "main": "index.js",
   "author": "sustainers.market",
   "engines": {
@@ -14,9 +14,9 @@
     "access": "public"
   },
   "dependencies": {
-    "@sustainers/error-middleware": "^0.0.9",
+    "@sustainers/error-middleware": "^0.0.10",
     "@sustainers/express-middleware": "*",
-    "@sustainers/logger": "^0.0.4",
+    "@sustainers/logger": "^0.0.5",
     "express": "^4.17.1",
     "express-async-handler": "^1.1.4",
     "localenv": "^0.2.2"
