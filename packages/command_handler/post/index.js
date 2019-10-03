@@ -32,6 +32,9 @@ module.exports = ({ version, mainFn, validateFn, cleanFn }) => {
       .in(req.context)
       .with(deps.gcpToken);
 
-    res.status(response ? 200 : 204).send(response);
+    res.status(200).send({
+      ...response,
+      root: event.headers.root
+    });
   };
 };

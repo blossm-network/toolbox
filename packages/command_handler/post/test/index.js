@@ -8,7 +8,12 @@ const payload = "some-payload";
 const cleanedPayload = "some-cleaned-payload";
 const eventPayload = "some-event-payload";
 const response = "some-response";
-const event = "some-event";
+const root = "some-root";
+const event = {
+  headers: {
+    root
+  }
+};
 const context = "some-context";
 const trace = "some-trace";
 const id = "some-id";
@@ -110,7 +115,7 @@ describe("Command handler post", () => {
     expect(inFake).to.have.been.calledWith(context);
     expect(withFake).to.have.been.calledWith(deps.gcpToken);
     expect(statusFake).to.have.been.calledWith(200);
-    expect(sendFake).to.have.been.calledWith(response);
+    expect(sendFake).to.have.been.calledWith({ root, ...response });
   });
   it("should call with the correct params with no clean or validate and empty response", async () => {
     const createEventFake = fake.returns(event);
@@ -177,8 +182,10 @@ describe("Command handler post", () => {
     expect(addFake).to.have.been.calledWith(event);
     expect(inFake).to.have.been.calledWith(context);
     expect(withFake).to.have.been.calledWith(deps.gcpToken);
-    expect(statusFake).to.have.been.calledWith(204);
-    expect(sendFake).to.have.been.calledOnce;
+    expect(statusFake).to.have.been.calledWith(200);
+    expect(sendFake).to.have.been.calledWith({
+      root
+    });
   });
   it("should throw correctly", async () => {
     const createEventFake = fake.rejects(new Error());
