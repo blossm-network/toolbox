@@ -2,15 +2,15 @@ version: "3"
 services:
   command-handler:
     image: us.gcr.io/${GCP_PROJECT}/${DOMAIN}.${ACTION}:latest
-    container_name: command-handler
+    container_name: ${CONTAINER_NAME}
     ports:
-      - "3000:3000"
+      - "${CONTAINER_PORT}:${CONTAINER_PORT}"
     depends_on:
       - event-store
     environment:
-      PORT: "3000"
+      PORT: "${CONTAINER_PORT}"
       NODE_ENV: local
-      NETWORK: local:80
+      NETWORK:
       SERVICE:
       DOMAIN:
       ACTION:
@@ -24,11 +24,11 @@ services:
     image: us.gcr.io/${GCP_PROJECT}/event-store.${DOMAIN}:latest
     container_name: ${DOMAIN}.event-store.${SERVICE}.local
     ports:
-      - "80:80"
+      - "${LOCAL_NETWORK_PORT}:${LOCAL_NETWORK_PORT}"
     environment:
-      PORT: "80"
+      PORT: "${LOCAL_NETWORK_PORT}"
       NODE_ENV: local
-      NETWORK: local
+      NETWORK: ${NETWORK}:${LOCAL_NETWORK_PORT}
       SERVICE:
       DOMAIN:
       GCP_PROJECT:

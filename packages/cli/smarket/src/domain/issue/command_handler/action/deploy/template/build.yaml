@@ -32,6 +32,10 @@ steps:
       - up
       - -d
     env:
+      - CONTAINER_PORT=3000
+      - CONTAINER_NAME=command-handler
+      - LOCAL_NETWORK_PORT=3001
+      - NETWORK=local
       - SERVICE=${_SERVICE}
       - DOMAIN=${_DOMAIN}
       - ACTION=${_ACTION}
@@ -45,6 +49,12 @@ steps:
     entrypoint: yarn
     args:
       - test
+    env:
+      - CONTAINER_PORT=3000
+      - CONTAINER_NAME=command-handler
+      - NETWORK=local:80
+      - SERVICE=${_SERVICE}
+      - DOMAIN=${_DOMAIN}
   - name: docker/compose:1.15.0
     args:
       - logs

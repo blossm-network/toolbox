@@ -7,3 +7,4 @@ devDependencies:
   "chai": "^4.2.0"
   "@sustainers/datetime": "*"
   "@sustainers/request": "*"
+  "@sustainers/event-store": "*"

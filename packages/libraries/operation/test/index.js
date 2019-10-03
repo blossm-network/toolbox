@@ -51,6 +51,20 @@ describe("Operation", () => {
       operation: op
     });
   });
+  it("should call post with the correct params with no token", async () => {
+    const post = fake();
+    replace(request, "post", post);
+
+    await operation(op)
+      .post(data)
+      .in({ context, service, network })
+      .with();
+
+    expect(post).to.have.been.calledWith(`http://${op}.${service}.${network}`, {
+      ...data,
+      context
+    });
+  });
 
   it("should call post with the correct params with no token", async () => {
     const post = fake();
