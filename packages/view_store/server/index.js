@@ -28,10 +28,7 @@ const viewStore = async ({ schema, indexes }) => {
   return _viewStore;
 };
 
-module.exports = async (
-  { schema, indexes } = {},
-  { getFn, postFn, putFn } = {}
-) => {
+module.exports = async ({ schema, indexes, getFn, postFn, putFn } = {}) => {
   if (schema) {
     schema.id = { type: String, required: true, unique: true };
     schema.created = { type: String, required: true };

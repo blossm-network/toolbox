@@ -91,7 +91,7 @@ const convertConfig = async workingDir => {
   }
 };
 
-const configure = async workingDir => {
+const configure = async (workingDir, customConfigFn) => {
   const configPath = path.resolve(workingDir, "config.json");
   const config = require(configPath);
 
@@ -100,7 +100,7 @@ const configure = async workingDir => {
 
   build.substitutions = {
     ...build.substitutions,
-    _ID: config.id,
+    ...(customConfigFn && customConfigFn(config)),
     _DOMAIN: config.domain,
     ...(config.service && { _SERVICE: config.service }),
     ...(config.network && { _NETWORK: config.network }),
@@ -113,10 +113,10 @@ const configure = async workingDir => {
   fs.writeFileSync(buildPath, yaml.stringify(build));
 };
 
-module.exports = async (templateDir, workingDir, input) => {
+module.exports = async ({ templateDir, workingDir, input, customConfigFn }) => {
   await copyTemplate(templateDir, workingDir);
   await copySrc(input.path, workingDir);
   await convertPackage(workingDir);
   await convertConfig(workingDir);
-  await configure(workingDir);
+  await configure(workingDir, customConfigFn);
 };

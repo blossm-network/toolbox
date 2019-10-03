@@ -10,7 +10,7 @@ module.exports = async args => {
   //eslint-disable-next-line no-console
   console.log(
     roboSay(
-      "Deploying your view store... It might take 5 minutes or so, maybe 4 on a good day."
+      "Deploying your command handler... It might take 5 minutes or so, maybe 4 on a good day."
     )
   );
 
@@ -36,7 +36,7 @@ module.exports = async args => {
     input,
     customConfigFn: config => {
       return {
-        _ID: config.id
+        _ACTION: config.action
       };
     }
   });

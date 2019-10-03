@@ -7,11 +7,10 @@ const put = fs.existsSync("./put") && require("./put");
 
 const config = require("./config.json");
 
-module.exports = viewStore(
-  { schema: config.schema, indexes: config.indexes },
-  {
-    ...(get && { getFn: get }),
-    ...(post && { postFn: post }),
-    ...(put && { putFn: put })
-  }
-);
+module.exports = viewStore({
+  schema: config.schema,
+  indexes: config.indexes,
+  ...(get && { getFn: get }),
+  ...(post && { postFn: post }),
+  ...(put && { putFn: put })
+});

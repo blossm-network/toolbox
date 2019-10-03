@@ -6,14 +6,6 @@ const url = "http://staged:3000";
 
 process.env.NODE_ENV = "staging";
 
-/**
- *
- * TODO:
- *   Write integration tests that verify the schema and indexes you added.
- *   Add tests for PUT, GET, and DELETE methods, and make sure to test
- *   error states and edge cases.
- *
- */
 describe("View store", () => {
   const id = "some-id";
   it("should return successfully", async () => {

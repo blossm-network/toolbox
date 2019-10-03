@@ -10,7 +10,7 @@ module.exports = async args => {
   //eslint-disable-next-line no-console
   console.log(
     roboSay(
-      "Deploying an event store... It might take 5 minutes or so, maybe 4 on a good day."
+      "Deploying your event store... It might take 5 minutes or so, maybe 4 on a good day."
     )
   );
 
@@ -30,7 +30,7 @@ module.exports = async args => {
   const workingDir = path.resolve(__dirname, "tmp");
 
   fs.mkdirSync(workingDir);
-  await mergeCliTemplate(__dirname, workingDir, input);
+  await mergeCliTemplate({ templateDir: __dirname, workingDir, input });
   await deployCliTemplate(workingDir, input.env);
   fs.removeSync(workingDir);
 

@@ -6,7 +6,6 @@ services:
     ports:
       - "3000:3000"
     environment:
-      SHOULD_SKIP_PACKAGE_CONVERT:
       PORT: "3000"
       NODE_ENV: staging
       NETWORK:

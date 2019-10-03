@@ -1,0 +1,27 @@
+{
+  "name": "@sustainers/command-handler-post",
+  "description": "A command handler server POST handler.",
+  "version": "0.0.0",
+  "main": "index.js",
+  "author": "sustainers.market",
+  "engines": {
+    "node": ">= 10.16.0"
+  },
+  "scripts": {
+    "test": "mocha --recursive"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@sustainers/create-event": "*",
+    "@sustainers/event-store-js": "*",
+    "@sustainers/gcp-token": "*"
+  },
+  "devDependencies": {
+    "chai-datetime": "^1.5.0",
+    "mocha": "^6.1.4",
+    "sinon": "^7.3.2",
+    "sinon-chai": "^3.3.0"
+  }
+}

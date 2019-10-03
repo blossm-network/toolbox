@@ -1,0 +1,223 @@
+const { expect } = require("chai").use(require("sinon-chai"));
+const { restore, fake, replace } = require("sinon");
+
+const post = require("..");
+const deps = require("../deps");
+
+const payload = "some-payload";
+const cleanedPayload = "some-cleaned-payload";
+const eventPayload = "some-event-payload";
+const response = "some-response";
+const event = "some-event";
+const context = "some-context";
+const trace = "some-trace";
+const id = "some-id";
+const issued = "some-issued";
+const headers = {
+  trace,
+  id,
+  issued
+};
+
+const version = 0;
+
+const action = "some-action";
+const domain = "some-domain";
+const service = "some-service";
+const network = "some-network";
+
+process.env.ACTION = action;
+process.env.DOMAIN = domain;
+process.env.SERVICE = service;
+process.env.NETWORK = network;
+
+describe("Command handler post", () => {
+  afterEach(() => {
+    restore();
+  });
+
+  it("should call with the correct params", async () => {
+    const validateFnFake = fake();
+    const cleanFnFake = fake.returns(cleanedPayload);
+
+    const createEventFake = fake.returns(event);
+    replace(deps, "createEvent", createEventFake);
+
+    const withFake = fake();
+    const inFake = fake.returns({
+      with: withFake
+    });
+    const addFake = fake.returns({
+      in: inFake
+    });
+    const eventStoreFake = fake.returns({
+      add: addFake
+    });
+    const mainFnFake = fake.returns({
+      payload: eventPayload,
+      response
+    });
+    replace(deps, "eventStore", eventStoreFake);
+    const req = {
+      context,
+      body: {
+        payload,
+        headers
+      }
+    };
+
+    const sendFake = fake();
+    const statusFake = fake.returns({
+      send: sendFake
+    });
+    const res = {
+      status: statusFake
+    };
+
+    await post({
+      version,
+      mainFn: mainFnFake,
+      validateFn: validateFnFake,
+      cleanFn: cleanFnFake
+    })(req, res);
+
+    expect(cleanFnFake).to.have.been.calledWith(payload);
+    expect(validateFnFake).to.have.been.calledWith(cleanedPayload);
+    expect(mainFnFake).to.have.been.calledWith({
+      payload: cleanedPayload,
+      context
+    });
+    expect(createEventFake).to.have.been.calledWith({
+      payload: eventPayload,
+      trace,
+      context,
+      version,
+      command: {
+        id,
+        issued,
+        action,
+        domain,
+        service,
+        network
+      }
+    });
+    expect(eventStoreFake).to.have.been.calledWith({
+      service,
+      network
+    });
+    expect(addFake).to.have.been.calledWith(event);
+    expect(inFake).to.have.been.calledWith(context);
+    expect(withFake).to.have.been.calledWith(deps.gcpToken);
+    expect(statusFake).to.have.been.calledWith(200);
+    expect(sendFake).to.have.been.calledWith(response);
+  });
+  it("should call with the correct params with no clean or validate and empty response", async () => {
+    const createEventFake = fake.returns(event);
+    replace(deps, "createEvent", createEventFake);
+
+    const withFake = fake();
+    const inFake = fake.returns({
+      with: withFake
+    });
+    const addFake = fake.returns({
+      in: inFake
+    });
+    const eventStoreFake = fake.returns({
+      add: addFake
+    });
+    const mainFnFake = fake.returns({
+      payload: eventPayload
+    });
+    replace(deps, "eventStore", eventStoreFake);
+    const req = {
+      context,
+      body: {
+        payload,
+        headers
+      }
+    };
+
+    const sendFake = fake();
+    const statusFake = fake.returns({
+      send: sendFake
+    });
+    const res = {
+      status: statusFake
+    };
+
+    await post({
+      version,
+      mainFn: mainFnFake
+    })(req, res);
+
+    expect(mainFnFake).to.have.been.calledWith({
+      payload,
+      context
+    });
+    expect(createEventFake).to.have.been.calledWith({
+      payload: eventPayload,
+      trace,
+      context,
+      version,
+      command: {
+        id,
+        issued,
+        action,
+        domain,
+        service,
+        network
+      }
+    });
+    expect(eventStoreFake).to.have.been.calledWith({
+      service,
+      network
+    });
+    expect(addFake).to.have.been.calledWith(event);
+    expect(inFake).to.have.been.calledWith(context);
+    expect(withFake).to.have.been.calledWith(deps.gcpToken);
+    expect(statusFake).to.have.been.calledWith(204);
+    expect(sendFake).to.have.been.calledOnce;
+  });
+  it("should throw correctly", async () => {
+    const createEventFake = fake.rejects(new Error());
+    replace(deps, "createEvent", createEventFake);
+
+    const withFake = fake();
+    const inFake = fake.returns({
+      with: withFake
+    });
+    const addFake = fake.returns({
+      in: inFake
+    });
+    const eventStoreFake = fake.returns({
+      add: addFake
+    });
+    const mainFnFake = fake.returns({
+      payload: eventPayload
+    });
+    replace(deps, "eventStore", eventStoreFake);
+    const req = {
+      context,
+      body: {
+        payload,
+        headers
+      }
+    };
+
+    const sendFake = fake();
+    const statusFake = fake.returns({
+      send: sendFake
+    });
+    const res = {
+      status: statusFake
+    };
+
+    expect(
+      async () =>
+        await post({
+          version,
+          mainFn: mainFnFake
+        })(req, res)
+    ).to.throw;
+  });
+});

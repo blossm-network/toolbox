@@ -169,7 +169,7 @@ describe("View store", () => {
     const postFn = "some-post-fn";
     const putFn = "some-put-fn";
 
-    await viewStore({ schema, indexes }, { getFn, postFn, putFn });
+    await viewStore({ schema, indexes, getFn, postFn, putFn });
 
     expect(getFake).to.have.been.calledWith(viewStoreGetResult);
     expect(postFake).to.have.been.calledWith(viewStorePostResult);
