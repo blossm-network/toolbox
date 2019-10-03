@@ -1,13 +1,13 @@
 const request = require("@sustainers/request");
 
-const common = ({ method, operation, root, data }) => {
+const common = ({ method, operation, /*root,*/ data }) => {
   return {
-    in: ({ context, service, network }) => {
+    in: ({ context /*service, network*/ }) => {
       return {
-        with: async ({ path = "", tokenFn }) => {
-          const url = `http://${operation}.${service}.${network}:3001${path}${
-            root != undefined ? `/${root}` : ""
-          }`;
+        with: async ({ /*path = "",*/ tokenFn }) => {
+          const url = "http://event-store:3001"; //`http://${operation}.${service}.${network}:3001${path}${
+          //   root != undefined ? `/${root}` : ""
+          // }`;
           const token = await tokenFn({ operation });
           return await method(
             url,

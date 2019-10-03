@@ -38,7 +38,7 @@ describe("Operation", () => {
       .with({ tokenFn: tokenFnFake });
 
     expect(post).to.have.been.calledWith(
-      `http://${op}.${service}.${network}:3001`,
+      "http://event-store:3001", // `http://${op}.${service}.${network}:3001`,
       {
         ...data,
         context
@@ -63,7 +63,7 @@ describe("Operation", () => {
       .with({ tokenFn: emptyTokenFake });
 
     expect(post).to.have.been.calledWith(
-      `http://${op}.${service}.${network}:3001`,
+      "http://event-store:3001", //`http://${op}.${service}.${network}:3001`,
       {
         ...data,
         context
@@ -86,7 +86,7 @@ describe("Operation", () => {
       .with({ path, tokenFn: tokenFnFake });
 
     expect(post).to.have.been.calledWith(
-      `http://${op}.${service}.${network}:3001${path}`,
+      "http://event-store:3001", //`http://${op}.${service}.${network}:3001${path}`,
       {
         ...data,
         context
@@ -111,7 +111,7 @@ describe("Operation", () => {
       .with({ tokenFn: tokenFnFake });
 
     expect(get).to.have.been.calledWith(
-      `http://${op}.${service}.${network}:3001`,
+      "http://event-store:3001", //`http://${op}.${service}.${network}:3001`,
       {
         ...data,
         context
@@ -135,7 +135,7 @@ describe("Operation", () => {
       .with({ tokenFn: tokenFnFake });
 
     expect(put).to.have.been.calledWith(
-      `http://${op}.${service}.${network}:3001/${root}`,
+      "http://event-store:3001", //`http://${op}.${service}.${network}:3001/${root}`,
       {
         ...data,
         context
@@ -160,7 +160,7 @@ describe("Operation", () => {
       .with({ path, tokenFn: tokenFnFake });
 
     expect(put).to.have.been.calledWith(
-      `http://${op}.${service}.${network}:3001${path}/${root}`,
+      "http://event-store:3001", //`http://${op}.${service}.${network}:3001${path}/${root}`,
       {
         ...data,
         context
@@ -184,7 +184,7 @@ describe("Operation", () => {
       .with({ tokenFn: tokenFnFake });
 
     expect(del).to.have.been.calledWith(
-      `http://${op}.${service}.${network}:3001/${root}`,
+      "http://event-store:3001", // `http://${op}.${service}.${network}:3001/${root}`,
       {
         context
       },
