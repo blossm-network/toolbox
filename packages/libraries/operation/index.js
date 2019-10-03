@@ -5,7 +5,7 @@ const common = ({ method, operation, root, data }) => {
     in: ({ context, service, network }) => {
       return {
         with: async ({ path = "", tokenFn }) => {
-          const url = `http://${operation}.${service}.${network}${path}:3001${
+          const url = `http://${operation}.${service}.${network}:3001${path}${
             root != undefined ? `/${root}` : ""
           }`;
           const token = await tokenFn({ operation });
