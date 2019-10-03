@@ -11,7 +11,6 @@ services:
       NETWORK:
       SERVICE:
       DOMAIN:
-      ID:
       GCP_PROJECT:
       GCP_REGION:
       GCP_SECRET_BUCKET: smn-staging-secrets

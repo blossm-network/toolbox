@@ -21,11 +21,11 @@ services:
       GCP_KMS_SECRET_BUCKET_KEY_RING:
   event-store:
     image: us.gcr.io/${GCP_PROJECT}/event-store.${DOMAIN}:latest
-    container_name: ${DOMAIN}.event-store.${SERVICE}.${NETWORK}
+    container_name: event-store
     ports:
-      - "3001:3001"
+      - "80:80"
     environment:
-      PORT: "3001"
+      PORT: "80"
       NODE_ENV: staging
       NETWORK:
       SERVICE:
@@ -36,6 +36,8 @@ services:
       GCP_SECRET_BUCKET: smn-staging-secrets
       GCP_KMS_SECRET_BUCKET_KEY_LOCATION:
       GCP_KMS_SECRET_BUCKET_KEY_RING:
+      MONGODB_USER: gcp-staging
+      MONGODB_HOST: staging-ggjlv.gcp.mongodb.net
 
 networks:
   default:
