@@ -4,7 +4,7 @@ const eventStore = require("@sustainers/event-store-js");
 
 const request = require("@sustainers/request");
 
-const url = "http://command-handler:3000";
+const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 
 describe("Command handler store itegration tests", () => {
   it("should return successfully", async () => {

@@ -1,15 +1,15 @@
 version: "3"
 services:
   command-handler:
-    image: us.gcr.io/${GCP_PROJECT}/${DOMAIN}.${ACTION}:latest
-    container_name: ${CONTAINER_NAME}
+    image: ${CONTAINER_REGISTRY}/${DOMAIN}.${ACTION}:latest
+    container_name: ${MAIN_CONTAINER_NAME}
     ports:
-      - "3000:3000"
+      - ${PORT}
     depends_on:
       - event-store
     environment:
-      PORT: "3000"
-      NODE_ENV: local
+      PORT: ${PORT}
+      NODE_ENV:
       NETWORK:
       SERVICE:
       DOMAIN:
@@ -21,13 +21,13 @@ services:
       GCP_KMS_SECRET_BUCKET_KEY_RING:
 
   event-store:
-    image: us.gcr.io/${GCP_PROJECT}/event-store.${DOMAIN}:latest
-    container_name: ${DOMAIN}.event-store.${SERVICE}.local
+    image: ${CONTAINER_REGISTRY}/event-store.${DOMAIN}:latest
+    container_name: ${DOMAIN}.event-store.${SERVICE}.${NETWORK}
     ports:
-      - "80:80"
+      - ${PORT}
     environment:
-      PORT: "80"
-      NODE_ENV: local
+      PORT: ${PORT}
+      NODE_ENV:
       NETWORK:
       SERVICE:
       DOMAIN:
