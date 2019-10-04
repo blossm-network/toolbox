@@ -1,0 +1,26 @@
+version: "3"
+services:
+  view-store:
+    image: us.gcr.io/${GCP_PROJECT}/view-store.${DOMAIN}.${ID}:latest
+    container_name: view-store
+    ports:
+      - "3000:3000"
+    environment:
+      PORT: "3000"
+      NODE_ENV: local
+      NETWORK: local
+      SERVICE:
+      DOMAIN:
+      ID:
+      GCP_PROJECT:
+      GCP_REGION:
+      GCP_KMS_SECRET_BUCKET_KEY_LOCATION:
+      GCP_KMS_SECRET_BUCKET_KEY_RING:
+      GCP_SECRET_BUCKET:
+      MONGODB_USER:
+      MONGODB_HOST:
+
+networks:
+  default:
+    external:
+      name: cloudbuild

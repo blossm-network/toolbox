@@ -1,0 +1,103 @@
+substitutions:
+  # OPTIONAL TODO:
+  #   Remove the comment arrow from the line following this comment and
+  #   change the values so that it describes this repo's service.
+  #
+  # OPTIONAL TODO:
+  #   Replace any other substitution with other values.
+
+  _DOMAIN: some-domain # <--
+
+  _SERVICE: core
+  _NETWORK: sm.network
+  _GCP_PROJECT: smn-core
+  _GCP_REGION: us-central1
+  _GCP_DNS_ZONE: network
+  _MEMORY: 128Mi
+steps:
+  - name: node:10.16.0
+    entrypoint: yarn
+    args:
+      - install
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - -t
+      - us.gcr.io/${_GCP_PROJECT}-staging/event-store.${_DOMAIN}
+      - .
+  - name: docker/compose:1.15.0
+    args:
+      - up
+      - -d
+    env:
+      - SERVICE=${_SERVICE}
+      - DOMAIN=${_DOMAIN}
+      - GCP_PROJECT=${_GCP_PROJECT}-staging
+      - GCP_REGION=${_GCP_REGION}
+      - GCP_SECRET_BUCKET=smn-staging-secrets
+      - MONGODB_USER=gcp-staging
+      - MONGODB_HOST=staging-ggjlv.gcp.mongodb.net
+  - name: docker/compose:1.15.0
+    args:
+      - ps
+  - name: node:10.16.0
+    entrypoint: yarn
+    args:
+      - test
+  - name: docker/compose:1.15.0
+    args:
+      - logs
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - push
+      - us.gcr.io/${_GCP_PROJECT}-${_ENVIRONMENT}/event-store.${_DOMAIN}
+  - name: gcr.io/cloud-builders/gcloud
+    args:
+      - beta
+      - run
+      - deploy
+      - event-store-${_DOMAIN}
+      - --image=us.gcr.io/${_GCP_PROJECT}-${_ENVIRONMENT}/event-store.${_DOMAIN}
+      - --platform=managed
+      - --memory=${_MEMORY}
+      - --project=${_GCP_PROJECT}-${_ENVIRONMENT}
+      - --region=${_GCP_REGION}
+      - --set-env-vars=NODE_ENV=staging,NETWORK=${_ENVIRONMENT}.${_NETWORK},SERVICE=${_SERVICE},DOMAIN=${_DOMAIN},GCP_PROJECT=${_GCP_PROJECT}-${_ENVIRONMENT},GCP_REGION=${_GCP_REGION},GCP_SECRET_BUCKET=smn-${_ENVIRONMENT}-secrets,MONGODB_USER=gcp-${_ENVIRONMENT},MONGODB_HOST=${_ENVIRONMENT}-ggjlv.gcp.mongodb.net
+  - name: gcr.io/cloud-builders/gcloud
+    args:
+      - beta
+      - dns
+      - record-sets
+      - transaction
+      - start
+      - --zone=${_GCP_DNS_ZONE}
+      - --project=${_GCP_PROJECT}
+  - name: gcr.io/cloud-builders/gcloud
+    args:
+      - beta
+      - dns
+      - record-sets
+      - transaction
+      - add
+      - ghs.googlehosted.com.
+      - --name=${_DOMAIN}.event-store.${_SERVICE}.${_ENVIRONMENT}.${_NETWORK}
+      - --zone=${_GCP_DNS_ZONE}
+      - --type=CNAME
+      - --ttl=86400
+      - --project=${_GCP_PROJECT}
+  - name: gcr.io/cloud-builders/gcloud
+    entrypoint: bash
+    args:
+      - -c
+      - gcloud beta dns record-sets transaction execute --zone=${_GCP_DNS_ZONE} --project=${_GCP_PROJECT} || exit 0
+
+  - name: gcr.io/cloud-builders/gcloud
+    entrypoint: bash
+    args:
+      - -c
+      - gcloud beta dns record-sets transaction abort --zone=${_GCP_DNS_ZONE} --project=${_GCP_PROJECT} || exit 0
+  - name: gcr.io/cloud-builders/gcloud
+    entrypoint: bash
+    args:
+      - -c
+      - gcloud beta run domain-mappings create --platform=managed --service=event-store-${_DOMAIN} --domain=${_DOMAIN}.event-store.${_SERVICE}.${_ENVIRONMENT}.${_NETWORK} --project=${_GCP_PROJECT}-${_ENVIRONMENT} --region=${_GCP_REGION} || exit 0

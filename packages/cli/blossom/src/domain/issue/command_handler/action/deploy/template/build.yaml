@@ -1,0 +1,115 @@
+substitutions:
+  # OPTIONAL TODO:
+  #   If you plan on hosting a sandbox environment,
+  #   remove the comment arrow from the line following this comment and
+  #   change the values so that it describes this repo's service.
+  #
+  # OPTIONAL TODO:
+  #   Replace any other substitution with other values.
+
+  _ACTION: some-action # <--
+  _DOMAIN: some-domain # <--
+
+  _SERVICE: core
+  _NETWORK: sm.network
+  _GCP_PROJECT: smn-core
+  _GCP_REGION: us-central1
+  _GCP_DNS_ZONE: network
+  _MEMORY: 128Mi
+steps:
+  - name: node:10.16.0
+    entrypoint: yarn
+    args:
+      - install
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - -t
+      - us.gcr.io/${_GCP_PROJECT}-staging/${_DOMAIN}.${_ACTION}
+      - .
+  - name: docker/compose:1.15.0
+    args:
+      - up
+      - -d
+    env:
+      - SERVICE=${_SERVICE}
+      - DOMAIN=${_DOMAIN}
+      - ACTION=${_ACTION}
+      - GCP_PROJECT=${_GCP_PROJECT}-staging
+      - GCP_REGION=${_GCP_REGION}
+      - GCP_SECRET_BUCKET=smn-staging-secrets
+  - name: docker/compose:1.15.0
+    args:
+      - ps
+  - name: node:10.16.0
+    entrypoint: yarn
+    args:
+      - test
+    env:
+      - CONTAINER_PORT=3000
+      - CONTAINER_NAME=command-handler
+      - NETWORK=local:80
+      - SERVICE=${_SERVICE}
+      - DOMAIN=${_DOMAIN}
+  - name: docker/compose:1.15.0
+    args:
+      - logs
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - push
+      - us.gcr.io/${_GCP_PROJECT}-${_ENVIRONMENT}/${_DOMAIN}.${_ACTION}
+  - name: gcr.io/cloud-builders/gcloud
+    args:
+      - beta
+      - run
+      - deploy
+      - ${_DOMAIN}-${_ACTION}
+      - --image=us.gcr.io/${_GCP_PROJECT}-${_ENVIRONMENT}/${_DOMAIN}.${_ACTION}
+      - --platform=managed
+      - --memory=${_MEMORY}
+      - --project=${_GCP_PROJECT}-${_ENVIRONMENT}
+      - --region=${_GCP_REGION}
+      - --set-env-vars=NODE_ENV=staging,NETWORK=${_ENVIRONMENT}.${_NETWORK},SERVICE=${_SERVICE},DOMAIN=${_DOMAIN},ACTION=${_ACTION},GCP_PROJECT=${_GCP_PROJECT}-${_ENVIRONMENT},GCP_REGION=${_GCP_REGION},GCP_SECRET_BUCKET=smn-${_ENVIRONMENT}-secrets
+  - name: gcr.io/cloud-builders/gcloud
+    args:
+      - beta
+      - dns
+      - record-sets
+      - transaction
+      - start
+      - --zone=${_GCP_DNS_ZONE}
+      - --project=${_GCP_PROJECT}
+  - name: gcr.io/cloud-builders/gcloud
+    args:
+      - beta
+      - dns
+      - record-sets
+      - transaction
+      - add
+      - ghs.googlehosted.com.
+      - --name=${_ACTION}.${_DOMAIN}.${_SERVICE}.${_ENVIRONMENT}.${_NETWORK}
+      - --zone=${_GCP_DNS_ZONE}
+      - --type=CNAME
+      - --ttl=86400
+      - --project=${_GCP_PROJECT}
+  - name: gcr.io/cloud-builders/gcloud
+    entrypoint: bash
+    args:
+      - -c
+      - gcloud beta dns record-sets transaction execute --zone=${_GCP_DNS_ZONE} --project=${_GCP_PROJECT} || exit 0
+
+  - name: gcr.io/cloud-builders/gcloud
+    entrypoint: bash
+    args:
+      - -c
+      - gcloud beta dns record-sets transaction abort --zone=${_GCP_DNS_ZONE} --project=${_GCP_PROJECT} || exit 0
+  - name: gcr.io/cloud-builders/gcloud
+    entrypoint: bash
+    args:
+      - -c
+      - gcloud beta run domain-mappings create --platform=managed --service=${_DOMAIN}-${_ACTION} --domain=${_ACTION}.${_DOMAIN}.${_SERVICE}.${_ENVIRONMENT}.${_NETWORK} --project=${_GCP_PROJECT}-${_ENVIRONMENT} --region=${_GCP_REGION} || exit 0
+  - name: gcr.io/cloud-builders/gcloud
+    entrypoint: bash
+    args:
+      - -c
+      - gcloud pubsub topics create did-${_ACTION}.${_DOMAIN}.${_SERVICE} --project=staging-${_GCP_PROJECT} || exit 0

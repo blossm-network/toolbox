@@ -54,8 +54,8 @@ const convertPackage = async workingDir => {
       main: "index.js",
       scripts: {
         start: "node index.js",
-        "tests:unit": "mocha --recursive tests/unit",
-        "tests:integration": "mocha --recursive tests/integration"
+        "test:unit": "mocha --recursive test/unit",
+        "test:integration": "mocha --recursive test/integration"
       },
       ...yaml.parse(fs.readFileSync(dependenciesPath, "utf8"))
     };

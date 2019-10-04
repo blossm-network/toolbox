@@ -1,0 +1,26 @@
+{
+  "name": "@sustainers/blossom",
+  "version": "0.0.36",
+  "description": "A command line tool for interacting with a Sustainer's Market Network",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 0"
+  },
+  "bin": {
+    "@sustainers/blossom": "bin/blossom",
+    "blossom": "bin/blossom"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "author": "sustainers.market",
+  "dependencies": {
+    "@sustainers/deploy-cli-template": "^0.0.1",
+    "@sustainers/merge-cli-template": "^0.0.7",
+    "@sustainers/normalize-cli": "^0.0.6",
+    "@sustainers/robo-say": "*",
+    "chalk": "^2.4.2",
+    "esm": "^3.2.25",
+    "fs-extra": "^8.1.0"
+  }
+}
