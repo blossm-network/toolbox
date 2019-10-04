@@ -47,7 +47,8 @@ describe("Get views", () => {
     });
   });
   it("should call read with the correct params", async () => {
-    const withFake = fake();
+    const views = "some-views";
+    const withFake = fake.returns(views);
     const inFake = fake.returns({
       with: withFake
     });
@@ -59,7 +60,7 @@ describe("Get views", () => {
     });
     replace(deps, "operation", operationFake);
 
-    await viewStore({ id, domain, service, network })
+    const result = await viewStore({ id, domain, service, network })
       .read(query)
       .in(context)
       .with(tokenFn);
@@ -70,6 +71,7 @@ describe("Get views", () => {
     expect(withFake).to.have.been.calledWith({
       tokenFn
     });
+    expect(result).to.equal(views);
   });
   it("should call update with the correct params", async () => {
     const withFake = fake();

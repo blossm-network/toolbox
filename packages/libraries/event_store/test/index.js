@@ -165,7 +165,8 @@ describe("Event store", () => {
   });
 
   it("should call aggregate with the right params", async () => {
-    const withFake = fake();
+    const aggregate = "some-aggregate";
+    const withFake = fake.returns(aggregate);
     const inFake = fake.returns({
       with: withFake
     });
@@ -179,7 +180,7 @@ describe("Event store", () => {
 
     const root = "user";
 
-    await eventStore({ domain, service, network })
+    const result = await eventStore({ domain, service, network })
       .aggregate(root)
       .in(context)
       .with(tokenFn);
@@ -188,5 +189,6 @@ describe("Event store", () => {
     expect(getFake).to.have.been.calledWith({ root });
     expect(inFake).to.have.been.calledWith({ context, service, network });
     expect(withFake).to.have.been.calledWith({ tokenFn });
+    expect(result).to.equal(aggregate);
   });
 });

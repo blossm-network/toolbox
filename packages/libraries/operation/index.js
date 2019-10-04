@@ -9,8 +9,7 @@ const common = ({ method, operation, root, data }) => {
             root != undefined ? `/${root}` : ""
           }`;
           const token = tokenFn ? await tokenFn({ operation }) : null;
-          //eslint-disable-next-line no-console
-          console.log("bout to send: ", { url, data, token });
+
           return await method(
             url,
             {
