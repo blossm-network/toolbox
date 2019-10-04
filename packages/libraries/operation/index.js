@@ -27,7 +27,7 @@ const common = ({ method, operation, root, data }) => {
             throw {
               statusCode: response.statusCode,
               statusMessage: response.statusMessage,
-              body: response.body
+              body: JSON.parse(response.body)
             };
           }
           if (response.statusCode != 200) return null;

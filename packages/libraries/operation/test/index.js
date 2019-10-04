@@ -254,11 +254,11 @@ describe("Operation", () => {
   it("should throw correctly", async () => {
     const statusCode = 400;
     const statusMessage = "some-status-message";
-    const errBody = "some-error-body";
+    const errBody = { some: "err" };
     const del = fake.rejects({
       statusCode,
       statusMessage,
-      body: errBody
+      body: JSON.stringify(errBody)
     });
     replace(request, "delete", del);
 
