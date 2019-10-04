@@ -43,8 +43,6 @@ describe("Command handler store itegration tests", () => {
       }
     });
 
-    //eslint-disable-next-line no-console
-    console.log("response: ", response);
     expect(response.statusCode).to.equal(400);
   });
 });

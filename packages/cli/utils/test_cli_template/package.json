@@ -1,0 +1,20 @@
+{
+  "name": "@sustainers/test-cli-template",
+  "version": "0.0.0",
+  "description": "Tests a template.",
+  "main": "index.js",
+  "author": "sustainers.market",
+  "engines": {
+    "node": ">= 10.16.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 0"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "mocha": "^6.1.4"
+  }
+}

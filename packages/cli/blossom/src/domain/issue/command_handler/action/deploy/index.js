@@ -2,6 +2,7 @@ const normalize = require("@sustainers/normalize-cli");
 const roboSay = require("@sustainers/robo-say");
 const mergeCliTemplate = require("@sustainers/merge-cli-template");
 const deployCliTemplate = require("@sustainers/deploy-cli-template");
+const testCliTemplate = require("@sustainers/test-cli-template");
 const fs = require("fs-extra");
 const path = require("path");
 const { green } = require("chalk");
@@ -18,6 +19,12 @@ module.exports = async args => {
     entrypointType: "path",
     args,
     flags: [
+      {
+        name: "test-only",
+        short: "t",
+        type: Boolean,
+        default: false
+      },
       {
         name: "env",
         type: String,
@@ -41,7 +48,11 @@ module.exports = async args => {
       };
     }
   });
-  await deployCliTemplate(workingDir, input.env);
+  await testCliTemplate(workingDir);
+
+  if (!input.testOnly) {
+    await deployCliTemplate(workingDir, input.env);
+  }
   fs.removeSync(workingDir);
 
   //eslint-disable-next-line no-console
