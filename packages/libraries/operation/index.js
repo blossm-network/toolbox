@@ -30,7 +30,7 @@ const common = ({ method, operation, root, data }) => {
               body: JSON.parse(response.body)
             };
           }
-          if (response.statusCode != 200) return null;
+          if (response.statusCode == 204) return null;
 
           return JSON.parse(response.body);
         }

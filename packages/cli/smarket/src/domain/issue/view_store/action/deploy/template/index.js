@@ -1,9 +1,9 @@
 const fs = require("fs");
 const viewStore = require("@sustainers/view-store");
 
-const get = fs.existsSync("./get") && require("./get");
-const post = fs.existsSync("./post") && require("./post");
-const put = fs.existsSync("./put") && require("./put");
+const get = fs.existsSync("./get.js") && require("./get");
+const post = fs.existsSync("./post.js") && require("./post");
+const put = fs.existsSync("./put.js") && require("./put");
 
 const config = require("./config.json");
 

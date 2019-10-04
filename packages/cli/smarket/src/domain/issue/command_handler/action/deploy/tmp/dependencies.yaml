@@ -1,0 +1,10 @@
+dependencies:
+  "@sustainers/command-handler": "*"
+  "@sustainers/validator": "*"
+
+devDependencies:
+  "mocha": "^6.1.4"
+  "chai": "^4.2.0"
+  "@sustainers/datetime": "*"
+  "@sustainers/request": "*"
+  "@sustainers/event-store": "*"

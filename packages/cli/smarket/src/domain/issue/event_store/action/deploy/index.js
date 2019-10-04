@@ -29,6 +29,7 @@ module.exports = async args => {
 
   const workingDir = path.resolve(__dirname, "tmp");
 
+  fs.removeSync(workingDir);
   fs.mkdirSync(workingDir);
   await mergeCliTemplate({ templateDir: __dirname, workingDir, input });
   await deployCliTemplate(workingDir, input.env);
