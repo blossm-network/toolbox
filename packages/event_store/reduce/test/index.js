@@ -9,9 +9,15 @@ describe("Event store reduce", () => {
     const otherModified = 4;
     const lastModified = 5;
     const values = [
-      { state: { a: 1, b: 2 }, headers: { modified: otherModified } },
-      { state: { a: 4, d: 3 }, headers: { modified: lastModified } },
-      { state: { a: 2, b: 3, c: 3 }, headers: { modified: firstModified } }
+      {
+        state: { a: 1, b: 2 },
+        headers: { modified: otherModified, events: 1 }
+      },
+      { state: { a: 4, d: 3 }, headers: { modified: lastModified, events: 1 } },
+      {
+        state: { a: 2, b: 3, c: 3 },
+        headers: { modified: firstModified, events: 1 }
+      }
     ];
     const aggregate = reduce(key, values);
     expect(aggregate).to.deep.equal({
@@ -34,9 +40,12 @@ describe("Event store reduce", () => {
     const otherModified = 4;
     const lastModified = 5;
     const values = [
-      { state: { a: 4, d: 3 }, headers: { modified: lastModified } },
-      { state: { a: 2, b: 3, c: 3 }, headers: { modified: firstModified } },
-      { state: { a: 1, b: 2 }, headers: { modified: otherModified } }
+      { state: { a: 4, d: 3 }, headers: { modified: lastModified, events: 1 } },
+      {
+        state: { a: 2, b: 3, c: 3 },
+        headers: { modified: firstModified, events: 1 }
+      },
+      { state: { a: 1, b: 2 }, headers: { modified: otherModified, events: 1 } }
     ];
     const aggregate = reduce(key, values);
     expect(aggregate).to.deep.equal({

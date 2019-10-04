@@ -13,7 +13,7 @@ module.exports = function(key, values) {
       ...reduced.state,
       ...value.state
     };
-    reduced.headers.events++;
+    reduced.headers.events += value.headers.events;
     reduced.headers.modified = value.headers.modified;
     return reduced;
   };

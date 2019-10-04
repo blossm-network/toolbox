@@ -8,14 +8,13 @@ const url = "http://command-handler:3000";
 
 describe("Command handler store", () => {
   it("should return successfully", async () => {
-    //eslint-disable-next-line no-console
-    console.log("url: ", { url });
+    const name = "Some-name";
     const response = await request.post(url, {
       headers: {
         issued: stringDate()
       },
       payload: {
-        name: "Some-name"
+        name
       }
     });
     //eslint-disable-next-line no-console
@@ -38,7 +37,8 @@ describe("Command handler store", () => {
     //eslint-disable-next-line no-console
     console.log("aggregate: ", aggregate);
 
-    expect(aggregate.root).to.equal(root);
+    expect(aggregate.headers.root).to.equal(root);
+    expect(aggregate.state.name).to.equal(name.toLowerCase());
     expect(response.statusCode).to.equal(200);
   });
   // it("should return an error if incorrect params", async () => {
