@@ -1,7 +1,7 @@
 {
   "name": "@sustainers/command-handler",
   "description": "A command handler server.",
-  "version": "0.0.18",
+  "version": "0.0.19",
   "main": "index.js",
   "author": "sustainers.market",
   "engines": {
@@ -14,7 +14,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@sustainers/command-handler-post": "^0.0.17",
+    "@sustainers/command-handler-post": "^0.0.18",
     "@sustainers/server": "^0.0.7"
   },
   "devDependencies": {
