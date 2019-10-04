@@ -7,6 +7,9 @@ const clean = fs.existsSync("./clean") && require("./clean");
 
 const config = require("./config.json");
 
+//eslint-disable-next-line no-console
+console.log("clean is: ", clean);
+
 module.exports = commandHandler({
   version: config.version,
   mainFn: main,
