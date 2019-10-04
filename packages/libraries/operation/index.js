@@ -23,8 +23,13 @@ const common = ({ method, operation, root, data }) => {
               : undefined
           );
 
-          //eslint-disable-next-line no-console
-          console.log("RESPNSE: ", response);
+          if (response.statusCode >= 300) {
+            throw {
+              statusCode: response.statusCode,
+              statusMessage: response.statusMessage,
+              body: response.body
+            };
+          }
           if (response.statusCode != 200) return null;
 
           return JSON.parse(response.body);

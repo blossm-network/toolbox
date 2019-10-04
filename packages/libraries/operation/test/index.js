@@ -251,4 +251,24 @@ describe("Operation", () => {
     });
     expect(result).to.be.null;
   });
+  it("should throw correctly", async () => {
+    const statusCode = 400;
+    const statusMessage = "some-status-message";
+    const errBody = "some-error-body";
+    const del = fake.rejects({
+      statusCode,
+      statusMessage,
+      body: errBody
+    });
+    replace(request, "delete", del);
+
+    const tokenFnFake = fake.returns(token);
+    expect(
+      async () =>
+        await operation(op)
+          .delete(root)
+          .in({ context, service, network })
+          .with({ tokenFn: tokenFnFake })
+    ).to.throw;
+  });
 });
