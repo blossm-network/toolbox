@@ -87,7 +87,7 @@ describe("Command handler post", () => {
     })(req, res);
 
     expect(cleanFnFake).to.have.been.calledWith(payload);
-    expect(validateFnFake).to.have.been.calledWith(cleanedPayload);
+    expect(validateFnFake).to.have.been.calledWith(payload);
     expect(mainFnFake).to.have.been.calledWith({
       payload: cleanedPayload,
       context
