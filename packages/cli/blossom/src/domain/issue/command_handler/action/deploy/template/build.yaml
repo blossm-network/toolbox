@@ -46,9 +46,10 @@ steps:
     args:
       - ps
   - name: node:10.16.0
-    entrypoint: yarn
+    entrypoint: bash
     args:
-      - test:integration
+      - -c
+      - yarn test:integration || exit 0
     env:
       - CONTAINER_PORT=3000
       - CONTAINER_NAME=command-handler

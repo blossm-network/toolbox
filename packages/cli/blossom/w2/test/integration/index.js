@@ -43,16 +43,8 @@ describe("Command handler store itegration tests", () => {
       }
     });
 
-    const root = JSON.parse(response.body).root;
-    const aggregate = await eventStore({
-      domain: process.env.DOMAIN,
-      service: process.env.SERVICE,
-      network: process.env.NETWORK
-    })
-      .aggregate(root)
-      .in({})
-      .with();
-
-    expect(aggregate.statusCode).to.equal(400);
+    //eslint-disable-next-line no-console
+    console.log("response: ", response);
+    expect(response.statusCode).to.equal(400);
   });
 });
