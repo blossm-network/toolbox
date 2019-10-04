@@ -1,7 +1,7 @@
 {
   "name": "@sustainers/event-store-reduce",
   "description": "Reduce events to get an aggregate.",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "main": "index.js",
   "author": "sustainers.market",
   "engines": {
