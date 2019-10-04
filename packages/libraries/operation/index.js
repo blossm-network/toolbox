@@ -10,7 +10,7 @@ const common = ({ method, operation, root, data }) => {
           }`;
           const token = tokenFn ? await tokenFn({ operation }) : null;
 
-          return await method(
+          const response = await method(
             url,
             {
               ...(data != undefined && { ...data }),
@@ -22,6 +22,10 @@ const common = ({ method, operation, root, data }) => {
               }
               : undefined
           );
+
+          if (response.statusCode != 200) return null;
+
+          return JSON.parse(response.body);
         }
       };
     }
