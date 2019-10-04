@@ -1,4 +1,5 @@
 const request = require("@sustainers/request");
+const errors = require("@sustainers/errors");
 
 const common = ({ method, operation, root, data }) => {
   return {
@@ -24,11 +25,12 @@ const common = ({ method, operation, root, data }) => {
           );
 
           if (response.statusCode >= 300) {
-            throw {
+            throw errors.construct({
               statusCode: response.statusCode,
-              statusMessage: response.statusMessage,
-              ...(response.body && { body: response.body })
-            };
+              message: response.body
+                ? JSON.parse(response.body).message || "Not specified"
+                : null
+            });
           }
           if (response.statusCode == 204) return null;
 

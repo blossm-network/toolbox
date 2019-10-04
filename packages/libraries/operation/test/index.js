@@ -251,24 +251,79 @@ describe("Operation", () => {
     });
     expect(result).to.be.null;
   });
-  it("should throw correctly", async () => {
-    const statusCode = 400;
+  it("should return error correctly", async () => {
+    const errorStatusCode = 400;
     const statusMessage = "some-status-message";
-    const errBody = { some: "err" };
-    const del = fake.rejects({
-      statusCode,
+    const errorMessage = "some-error-message";
+    const errBody = { message: errorMessage };
+    const del = fake.returns({
+      statusCode: errorStatusCode,
       statusMessage,
       body: JSON.stringify(errBody)
     });
     replace(request, "delete", del);
 
     const tokenFnFake = fake.returns(token);
-    expect(
-      async () =>
-        await operation(op)
-          .delete(root)
-          .in({ context, service, network })
-          .with({ tokenFn: tokenFnFake })
-    ).to.throw;
+    try {
+      await operation(op)
+        .delete(root)
+        .in({ context, service, network })
+        .with({ tokenFn: tokenFnFake });
+
+      expect(3).to.equal(4);
+    } catch (e) {
+      expect(e.message).to.equal(errorMessage);
+      expect(e.body.code).to.equal("BadRequest");
+      expect(e).to.exist;
+    }
+  });
+  it("should return error correctly without message", async () => {
+    const errorStatusCode = 400;
+    const statusMessage = "some-status-message";
+    const errBody = { some: "err" };
+    const del = fake.returns({
+      statusCode: errorStatusCode,
+      statusMessage,
+      body: JSON.stringify(errBody)
+    });
+    replace(request, "delete", del);
+
+    const tokenFnFake = fake.returns(token);
+    try {
+      await operation(op)
+        .delete(root)
+        .in({ context, service, network })
+        .with({ tokenFn: tokenFnFake });
+
+      expect(3).to.equal(4);
+    } catch (e) {
+      expect(e.message).to.equal("Not specified");
+      expect(e.body.code).to.equal("BadRequest");
+      expect(e).to.exist;
+    }
+  });
+  it("should throw correctly", async () => {
+    const errorStatusCode = 400;
+    const statusMessage = "some-status-message";
+    const errBody = { some: "err" };
+    const del = fake.rejects({
+      statusCode: errorStatusCode,
+      statusMessage,
+      body: JSON.stringify(errBody)
+    });
+    replace(request, "delete", del);
+
+    const tokenFnFake = fake.returns(token);
+    try {
+      await operation(op)
+        .delete(root)
+        .in({ context, service, network })
+        .with({ tokenFn: tokenFnFake });
+
+      //shouldnt be called
+      expect(3).to.equal(4);
+    } catch (e) {
+      expect(e).to.exist;
+    }
   });
 });
