@@ -21,6 +21,10 @@ steps:
     entrypoint: yarn
     args:
       - install
+  - name: node:10.16.0
+    entrypoint: yarn
+    args:
+      - test:unit
   - name: gcr.io/cloud-builders/docker
     args:
       - build
@@ -44,7 +48,7 @@ steps:
   - name: node:10.16.0
     entrypoint: yarn
     args:
-      - test
+      - test:integration
     env:
       - CONTAINER_PORT=3000
       - CONTAINER_NAME=command-handler

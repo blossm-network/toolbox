@@ -1,7 +1,0 @@
-dependencies:
-  "@sustainers/view-store": "*"
-
-devDependencies:
-  "mocha": "^6.1.4"
-  "chai": "^4.2.0"
-  "@sustainers/request": "*"
