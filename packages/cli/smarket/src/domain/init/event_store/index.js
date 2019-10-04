@@ -28,7 +28,7 @@ module.exports = async () => {
     process.exit(1);
   }
 
-  await copy(templateDirectory, targetDirectory, { clobber: false });
+  await copy(templateDirectory, targetDirectory, { clobber: true });
 
   //eslint-disable-next-line no-console
   console.log(roboSay("Woohoo!"), green.bold("done"));
