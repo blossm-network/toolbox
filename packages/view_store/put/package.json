@@ -1,7 +1,7 @@
 {
   "name": "@sustainers/view-store-put",
   "description": "A view store PUT handler.",
-  "version": "0.0.20",
+  "version": "0.0.21",
   "main": "index.js",
   "author": "sustainers.market",
   "engines": {
@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@sustainers/datetime": "^0.0.3",
-    "@sustainers/errors": "^0.0.6",
+    "@sustainers/errors": "^0.0.7",
     "@sustainers/mongodb-database": "^0.0.23"
   },
   "devDependencies": {

@@ -1,7 +1,7 @@
 {
   "name": "@sustainers/operation-js",
   "description": "Calls an operation on a service within the network.",
-  "version": "0.0.23",
+  "version": "0.0.24",
   "main": "index.js",
   "author": "sustainers.market",
   "engines": {
@@ -14,8 +14,8 @@
     "access": "public"
   },
   "dependencies": {
-    "@sustainers/request": "^0.0.4",
-    "@sustainers/errors": "*"
+    "@sustainers/errors": "^0.0.7",
+    "@sustainers/request": "^0.0.4"
   },
   "devDependencies": {
     "chai-datetime": "^1.5.0",
