@@ -2,7 +2,7 @@ version: "3"
 services:
   command-handler:
     image: us.gcr.io/${GCP_PROJECT}/${DOMAIN}.${ACTION}:latest
-    container_name: command-handler
+    container_name: ${CONTAINER_NAME}
     ports:
       - "3000:3000"
     depends_on:
@@ -10,7 +10,7 @@ services:
     environment:
       PORT: "3000"
       NODE_ENV: local
-      NETWORK: local:80
+      NETWORK:
       SERVICE:
       DOMAIN:
       ACTION:
@@ -28,7 +28,7 @@ services:
     environment:
       PORT: "80"
       NODE_ENV: local
-      NETWORK: local:80
+      NETWORK:
       SERVICE:
       DOMAIN:
       GCP_PROJECT:
@@ -36,8 +36,8 @@ services:
       GCP_SECRET_BUCKET:
       GCP_KMS_SECRET_BUCKET_KEY_LOCATION:
       GCP_KMS_SECRET_BUCKET_KEY_RING:
-      MONGODB_USER: gcp-staging
-      MONGODB_HOST: staging-ggjlv.gcp.mongodb.net
+      MONGODB_USER:
+      MONGODB_HOST:
 
 networks:
   default:

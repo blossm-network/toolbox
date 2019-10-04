@@ -9,12 +9,7 @@ const { green } = require("chalk");
 
 module.exports = async args => {
   //eslint-disable-next-line no-console
-  console.log(
-    roboSay(
-      "Deploying your command handler... It might take 5 minutes or so, maybe 4 on a good day."
-    )
-  );
-
+  console.log(roboSay("Running your tests..."));
   const input = await normalize({
     entrypointType: "path",
     args,
@@ -48,9 +43,16 @@ module.exports = async args => {
       };
     }
   });
+
   await testCliTemplate(workingDir);
 
   if (!input.testOnly) {
+    //eslint-disable-next-line no-console
+    console.log(
+      roboSay(
+        "Deploying your command handler... It might take 5 minutes or so, maybe 4 on a good day."
+      )
+    );
     await deployCliTemplate(workingDir, input.env);
   }
   fs.removeSync(workingDir);

@@ -1,7 +1,7 @@
 const fs = require("fs");
 const { expect } = require("chai").use(require("sinon-chai"));
 
-const put = fs.existsSync("../put.js") && require("../put");
+const put = fs.existsSync("../../put.js") && require("../../put");
 
 describe("View store put tests", () => {
   if (!put) return;

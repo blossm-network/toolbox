@@ -24,6 +24,9 @@ const common = ({ method, operation, root, data }) => {
               : undefined
           );
 
+          //eslint-disable-next-line no-console
+          console.log("RESPONSE: ", { url, response });
+
           if (response.statusCode >= 300) {
             throw errors.construct({
               statusCode: response.statusCode,

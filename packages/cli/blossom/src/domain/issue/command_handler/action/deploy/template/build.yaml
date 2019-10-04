@@ -29,27 +29,40 @@ steps:
     args:
       - build
       - -t
-      - us.gcr.io/${_GCP_PROJECT}-staging/${_DOMAIN}.${_ACTION}
+      - us.gcr.io/${_GCP_PROJECT}-${_ENVIRONMENT}/${_DOMAIN}.${_ACTION}
       - .
-  - name: docker/compose:1.15.0
-    args:
-      - up
-      - -d
-    env:
-      - SERVICE=${_SERVICE}
-      - DOMAIN=${_DOMAIN}
-      - ACTION=${_ACTION}
-      - GCP_PROJECT=${_GCP_PROJECT}-staging
-      - GCP_REGION=${_GCP_REGION}
-      - GCP_SECRET_BUCKET=smn-staging-secrets
-  - name: docker/compose:1.15.0
-    args:
-      - ps
   - name: node:10.16.0
     entrypoint: bash
     args:
       - -c
-      - yarn test:integration || exit 0
+      - |
+        cat >> .env <<- EOM
+        ENVIRONMENT=${_ENVIRONMENT}
+        CONTAINER_PORT=3000
+        CONTAINER_NAME=command-handler
+        LOCAL_NETWORK_PORT=80
+        CONTAINER_REGISTRY=us.gcr.io/${_GCP_PROJECT}-${_ENVIRONMENT}
+        NETWORK="local:80"
+        SERVICE=${_SERVICE}
+        DOMAIN=${_DOMAIN}
+        ACTION=${_ACTION}
+        GCP_PROJECT=${_GCP_PROJECT}-staging
+        GCP_REGION=${_GCP_REGION}
+        GCP_SECRET_BUCKET=smn-staging-secrets
+        MONGODB_USER=gcp-staging
+        MONGODB_HOST=staging-ggjlv.gcp.mongodb.net
+        EOM
+  - name: docker/compose:1.15.0
+    args:
+      - up
+      - -d
+  - name: docker/compose:1.15.0
+    args:
+      - ps
+  - name: node:10.16.0
+    entrypoint: yarn
+    args:
+      - test:integration
     env:
       - CONTAINER_PORT=3000
       - CONTAINER_NAME=command-handler

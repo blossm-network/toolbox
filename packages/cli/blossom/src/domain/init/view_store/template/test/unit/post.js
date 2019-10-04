@@ -1,7 +1,7 @@
 const fs = require("fs");
 const { expect } = require("chai").use(require("sinon-chai"));
 
-const post = fs.existsSync("../post.js") && require("../post");
+const post = fs.existsSync("../../post.js") && require("../../post");
 
 describe("View store post tests", () => {
   if (!post) return;
