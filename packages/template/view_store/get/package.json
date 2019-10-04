@@ -1,7 +1,7 @@
 {
   "name": "@sustainers/view-store-get",
   "description": "A view store GET handler.",
-  "version": "0.0.19",
+  "version": "0.0.20",
   "main": "index.js",
   "author": "sustainers.market",
   "engines": {
@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@sustainers/errors": "^0.0.7",
-    "@sustainers/mongodb-database": "^0.0.23"
+    "@sustainers/mongodb-database": "^0.0.24"
   },
   "devDependencies": {
     "chai-datetime": "^1.5.0",
