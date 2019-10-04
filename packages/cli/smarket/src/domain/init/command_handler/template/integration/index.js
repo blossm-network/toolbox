@@ -6,7 +6,7 @@ const request = require("@sustainers/request");
 
 const url = "http://command-handler:3000";
 
-describe("Command handler store", () => {
+describe("Command handler store itegration tests", () => {
   it("should return successfully", async () => {
     const name = "Some-name";
     const response = await request.post(url, {
@@ -18,15 +18,6 @@ describe("Command handler store", () => {
       }
     });
 
-    //eslint-disable-next-line no-console
-    console.log("res: ", response);
-    //eslint-disable-next-line no-console
-    console.log("response body: ", {
-      body: response.body,
-      service: process.env.SERVICE,
-      network: process.env.NETWORK,
-      domain: process.env.DOMAIN
-    });
     const root = JSON.parse(response.body).root;
     const aggregate = await eventStore({
       domain: process.env.DOMAIN,
@@ -37,15 +28,31 @@ describe("Command handler store", () => {
       .in({})
       .with();
 
-    //eslint-disable-next-line no-console
-    console.log("aggregate: ", aggregate);
-
     expect(aggregate.headers.root).to.equal(root);
     expect(aggregate.state.name).to.equal(name.toLowerCase());
     expect(response.statusCode).to.equal(200);
   });
-  // it("should return an error if incorrect params", async () => {
-  //   const response = await request.post(url, { name: 1 });
-  //   expect(response.statusCode).to.be.at.least(400);
-  // });
+  it("should return an error if incorrect params", async () => {
+    const name = 3;
+    const response = await request.post(url, {
+      headers: {
+        issued: stringDate()
+      },
+      payload: {
+        name
+      }
+    });
+
+    const root = JSON.parse(response.body).root;
+    const aggregate = await eventStore({
+      domain: process.env.DOMAIN,
+      service: process.env.SERVICE,
+      network: process.env.NETWORK
+    })
+      .aggregate(root)
+      .in({})
+      .with();
+
+    expect(aggregate.statusCode).to.equal(400);
+  });
 });
