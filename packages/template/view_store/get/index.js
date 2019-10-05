@@ -40,6 +40,8 @@ module.exports = ({ store, fn = defaultFn }) => {
 
       //eslint-disable-next-line no-console
       console.log("more stuff: ", {
+        store,
+        collectionName: store.collectionName,
         results,
         query: {
           ...query,
