@@ -3,12 +3,24 @@ const { notFound } = require("@sustainers/errors");
 
 module.exports = ({ store, fn }) => {
   return async (req, res) => {
+    //eslint-disable-next-line no-console
+    console.log("req.query: ", {
+      query: req.query,
+      body: req.body,
+      params: req.params
+    });
     const querySort = req.query && req.query.sort;
     delete req.query.sort;
 
     const { query, sort } = fn
       ? fn(req.query)
       : { query: req.query, sort: querySort };
+
+    //eslint-disable-next-line no-console
+    console.log("stuff: ", {
+      query,
+      sort
+    });
 
     if (req.params.id == undefined) {
       const results = await deps.db.find({
