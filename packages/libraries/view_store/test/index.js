@@ -12,6 +12,7 @@ const network = "some-network";
 const tokenFn = "some-token-fn";
 
 const query = "some-query";
+const sort = "some-sort";
 const properties = "some-params";
 const root = "some-root";
 const context = { c: 2 };
@@ -61,12 +62,12 @@ describe("Get views", () => {
     replace(deps, "operation", operationFake);
 
     const result = await viewStore({ id, domain, service, network })
-      .read(query)
+      .read({ query, sort })
       .in(context)
       .with(tokenFn);
 
     expect(operationFake).to.have.been.calledWith(`${id}.${domain}.view-store`);
-    expect(getFake).to.have.been.calledWith(query);
+    expect(getFake).to.have.been.calledWith({ query, sort });
     expect(inFake).to.have.been.calledWith({ context, service, network });
     expect(withFake).to.have.been.calledWith({
       tokenFn

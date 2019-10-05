@@ -19,7 +19,7 @@ describe("Command handler store unit tests", () => {
   it("should return successfully", async () => {
     const payload = "some-payload";
 
-    const result = main({ payload });
+    const result = await main({ payload });
     expect(result).to.deep.equal({ payload });
   });
 });

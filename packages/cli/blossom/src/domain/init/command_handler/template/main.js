@@ -11,7 +11,7 @@
  *
  */
 
-module.exports = ({ payload, context }) => {
+module.exports = async ({ payload, context }) => {
   //eslint-disable-next-line no-console
   console.log("Do something with: ", { payload, context });
 

@@ -33,9 +33,7 @@ module.exports = async () => {
   //eslint-disable-next-line no-console
   console.log(roboSay("Woohoo!"), green.bold("done"));
   //eslint-disable-next-line no-console
-  console.log(
-    roboSay("When you wanna deploy, type `blossom issue event-store deploy .`")
-  );
+  console.log(roboSay("When you wanna deploy, type `blossom deploy`"));
 
   return true;
 };

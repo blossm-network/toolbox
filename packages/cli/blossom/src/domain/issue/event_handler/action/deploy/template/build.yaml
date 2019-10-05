@@ -4,11 +4,16 @@ substitutions:
   #   remove the comment arrow from the line following this comment and
   #   change the values so that it describes this repo's service.
   #
+  #   The target is the unique name of the entity that will be operated on by this event handler.
+  #
   # OPTIONAL TODO:
   #   Replace any other substitution with other values.
 
   _ACTION: some-action # <--
   _DOMAIN: some-domain # <--
+  _TARGET_CONTEXT: view-store #<--
+  _TARGET_DOMAIN: some-domain #<--
+  _TARGET_ID: some-id #<--
 
   _SERVICE: core
   _NETWORK: sm.network
@@ -26,11 +31,15 @@ steps:
     entrypoint: yarn
     args:
       - test:unit
+  - name: node:10.16.0
+    entrypoint: bash
+    args:
+      - npx @sustainers/blossom deploy ./test/integration/view_store
   - name: gcr.io/cloud-builders/docker
     args:
       - build
       - -t
-      - us.gcr.io/${_GCP_PROJECT}-${_ENVIRONMENT}/${_DOMAIN}.${_ACTION}
+      - us.gcr.io/${_GCP_PROJECT}-${_ENVIRONMENT}/${_TARGET_CONTEXT}.${_TARGET_DOMAIN}.${_TARGET_ID}.${_DOMAIN}.did-${_ACTION}
       - .
   - name: node:10.16.0
     entrypoint: bash
@@ -42,6 +51,9 @@ steps:
         SERVICE=${_SERVICE}
         DOMAIN=${_DOMAIN}
         ACTION=${_ACTION}
+        TARGET_ID=${_TARGET_ID}
+        TARGET_DOMAIN=${_TARGET_DOMAIN}
+        TARGET_CONTEXT=${_TARGET_CONTEXT}
         NODE_ENV=local
         PORT=80
         MAIN_CONTAINER_NAME=main
@@ -69,25 +81,28 @@ steps:
       - SERVICE=${_SERVICE}
       - DOMAIN=${_DOMAIN}
       - ACTION=${_ACTION}
+      - TARGET_ID=${_TARGET_ID}
+      - TARGET_DOMAIN=${_TARGET_DOMAIN}
+      - TARGET_CONTEXT=${_TARGET_CONTEXT}
   - name: docker/compose:1.15.0
     args:
       - logs
   - name: gcr.io/cloud-builders/docker
     args:
       - push
-      - us.gcr.io/${_GCP_PROJECT}-${_ENVIRONMENT}/${_DOMAIN}.${_ACTION}
+      - us.gcr.io/${_GCP_PROJECT}-${_ENVIRONMENT}/${_TARGET_CONTEXT}.${_TARGET_DOMAIN}.${_TARGET_ID}.${_DOMAIN}.did-${_ACTION}
   - name: gcr.io/cloud-builders/gcloud
     args:
       - beta
       - run
       - deploy
-      - ${_DOMAIN}-${_ACTION}
-      - --image=us.gcr.io/${_GCP_PROJECT}-${_ENVIRONMENT}/${_DOMAIN}.${_ACTION}
+      - ${_TARGET_CONTEXT}-${_TARGET_DOMAIN}-${_TARGET_ID}-${_DOMAIN}-did-${_ACTION}
+      - --image=us.gcr.io/${_GCP_PROJECT}-${_ENVIRONMENT}/${_TARGET_CONTEXT}.${_TARGET_DOMAIN}.${_TARGET_ID}${_DOMAIN}.did-${_ACTION}
       - --platform=managed
       - --memory=${_MEMORY}
       - --project=${_GCP_PROJECT}-${_ENVIRONMENT}
       - --region=${_GCP_REGION}
-      - --set-env-vars=NODE_ENV=staging,NETWORK=${_ENVIRONMENT}.${_NETWORK},SERVICE=${_SERVICE},DOMAIN=${_DOMAIN},ACTION=${_ACTION},GCP_PROJECT=${_GCP_PROJECT}-${_ENVIRONMENT},GCP_REGION=${_GCP_REGION},GCP_SECRET_BUCKET=smn-${_ENVIRONMENT}-secrets
+      - --set-env-vars=NODE_ENV=staging,NETWORK=${_ENVIRONMENT}.${_NETWORK},SERVICE=${_SERVICE},TARGET_CONTEXT=${_TARGET_CONTEXT},TARGET_DOMAIN=${_TARGET_DOMAIN},TARGET_ID=${_TARGET_ID},DOMAIN=${_DOMAIN},ACTION=${_ACTION},GCP_PROJECT=${_GCP_PROJECT}-${_ENVIRONMENT},GCP_REGION=${_GCP_REGION},GCP_SECRET_BUCKET=smn-${_ENVIRONMENT}-secrets
   - name: gcr.io/cloud-builders/gcloud
     args:
       - beta
@@ -105,7 +120,7 @@ steps:
       - transaction
       - add
       - ghs.googlehosted.com.
-      - --name=${_ACTION}.${_DOMAIN}.${_SERVICE}.${_ENVIRONMENT}.${_NETWORK}
+      - --name=did-${_ACTION}.${_DOMAIN}.${_TARGET_ID}.${_TARGET_DOMAIN}.${_TARGET_CONTEXT}.${_SERVICE}.${_ENVIRONMENT}.${_NETWORK}
       - --zone=${_GCP_DNS_ZONE}
       - --type=CNAME
       - --ttl=86400
@@ -124,9 +139,24 @@ steps:
     entrypoint: bash
     args:
       - -c
-      - gcloud beta run domain-mappings create --platform=managed --service=${_DOMAIN}-${_ACTION} --domain=${_ACTION}.${_DOMAIN}.${_SERVICE}.${_ENVIRONMENT}.${_NETWORK} --project=${_GCP_PROJECT}-${_ENVIRONMENT} --region=${_GCP_REGION} || exit 0
+      - gcloud beta run domain-mappings create --platform=managed --service=${_DOMAIN}-${_ACTION} --domain=did-${_ACTION}.${_DOMAIN}.${_TARGET_ID}.${_TARGET_DOMAIN}.${_TARGET_CONTEXT}.${_SERVICE}.${_ENVIRONMENT}.${_NETWORK} --project=${_GCP_PROJECT}-${_ENVIRONMENT} --region=${_GCP_REGION} || exit 0
   - name: gcr.io/cloud-builders/gcloud
-    entrypoint: bash
     args:
-      - -c
-      - gcloud pubsub topics create did-${_ACTION}.${_DOMAIN}.${_SERVICE} --project=staging-${_GCP_PROJECT} || exit 0
+      - beta
+      - run
+      - services
+      - add-iam-policy-binding
+      - ${_TARGET_CONTEXT}.${_TARGET_DOMAIN}.${_TARGET_ID}.${_DOMAIN}.did-${ACTION}
+      - --member=serviceAccount:cloud-run-pubsub-invoker@${GCP_PROJECT}-${_ENVIRONMENT}.iam.gserviceaccount.com
+      - --role=roles/run.invoker
+  - name: gcr.io/cloud-builders/gcloud
+    args:
+      - beta
+      - pubsub
+      - subscriptions
+      - create
+      - ${_TARGET_CONTEXT}.${_TARGET_DOMAIN}.${_TARGET_ID}.${_DOMAIN}.did-${ACTION}
+      - --topic
+      - did-${_ACTION}.${_DOMAIN}.${_TARGET_ID}.${_TARGET_DOMAIN}.${_TARGET_CONTEXT}.${_SERVICE}.${_ENVIRONMENT}.${_NETWORK}
+      - --push-endpoint=did-${_ACTION}.${_DOMAIN}.${_SERVICE}.${_ENVIRONMENT}.${_NETWORK}
+      - --push-auth-service-account=cloud-run-pubsub-invoker@${GCP_PROJECT}-${_ENVIRONMENT}.iam.gserviceaccount.com

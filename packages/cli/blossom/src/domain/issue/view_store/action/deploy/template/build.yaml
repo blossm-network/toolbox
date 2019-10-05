@@ -37,14 +37,14 @@ steps:
       - -c
       - |
         cat >> .env <<- EOM
-        NODE_ENV=local
-        PORT=80
-        MAIN_CONTAINER_NAME=main
-        CONTAINER_REGISTRY=us.gcr.io/${_GCP_PROJECT}-${_ENVIRONMENT}
         NETWORK=local
         SERVICE=${_SERVICE}
         DOMAIN=${_DOMAIN}
         ID=${_ID}
+        NODE_ENV=local
+        PORT=80
+        MAIN_CONTAINER_NAME=main
+        CONTAINER_REGISTRY=us.gcr.io/${_GCP_PROJECT}-${_ENVIRONMENT}
         GCP_PROJECT=${_GCP_PROJECT}-staging
         GCP_REGION=${_GCP_REGION}
         GCP_SECRET_BUCKET=smn-staging-secrets
