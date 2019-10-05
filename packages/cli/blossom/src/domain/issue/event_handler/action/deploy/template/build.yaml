@@ -35,7 +35,7 @@ steps:
     entrypoint: bash
     args:
       - -c
-      - npx @sustainers/blossom deploy ./test/integration/view_store
+      - npm install -g @sustainers/blossom && blossom deploy ./test/integration/view_store
   - name: gcr.io/cloud-builders/docker
     args:
       - build
