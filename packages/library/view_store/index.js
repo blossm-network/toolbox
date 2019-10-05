@@ -8,7 +8,7 @@ module.exports = ({ id, domain, service, network }) => {
           return {
             with: async tokenFn =>
               await deps
-                .operation(`${id}.${domain}.view-store`)
+                .operation(`${id}.${domain}.vs`)
                 .post(properties)
                 .in({ context, service, network })
                 .with({ tokenFn })
@@ -22,7 +22,7 @@ module.exports = ({ id, domain, service, network }) => {
           return {
             with: async tokenFn =>
               await deps
-                .operation(`${id}.${domain}.view-store`)
+                .operation(`${id}.${domain}.vs`)
                 .get(query)
                 .in({ context, service, network })
                 .with({ tokenFn })
@@ -36,7 +36,7 @@ module.exports = ({ id, domain, service, network }) => {
           return {
             with: async tokenFn =>
               await deps
-                .operation(`${id}.${domain}.view-store`)
+                .operation(`${id}.${domain}.vs`)
                 .put(root, properties)
                 .in({ context, service, network })
                 .with({ tokenFn })
@@ -50,7 +50,7 @@ module.exports = ({ id, domain, service, network }) => {
           return {
             with: async tokenFn =>
               await deps
-                .operation(`${id}.${domain}.view-store`)
+                .operation(`${id}.${domain}.vs`)
                 .delete(root)
                 .in({ context, service, network })
                 .with({ tokenFn })

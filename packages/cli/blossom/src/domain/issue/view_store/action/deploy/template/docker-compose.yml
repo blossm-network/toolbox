@@ -1,7 +1,7 @@
 version: "3"
 services:
   main:
-    image: ${CONTAINER_REGISTRY}/view-store.${DOMAIN}.${ID}:latest
+    image: ${CONTAINER_REGISTRY}/vs.${DOMAIN}.${ID}:latest
     container_name: ${MAIN_CONTAINER_NAME}
     ports:
       - ${PORT}

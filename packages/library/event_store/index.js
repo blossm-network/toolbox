@@ -32,7 +32,7 @@ module.exports = ({ domain, service, network }) => {
               };
 
               await deps
-                .operation(`${domain}.event-store`)
+                .operation(`${domain}.es`)
                 .post(event)
                 .in({ context, service, network })
                 .with({ tokenFn });
@@ -47,7 +47,7 @@ module.exports = ({ domain, service, network }) => {
           return {
             with: async tokenFn =>
               await deps
-                .operation(`${domain}.event-store`)
+                .operation(`${domain}.es`)
                 .get({ root })
                 .in({ context, service, network })
                 .with({ tokenFn })

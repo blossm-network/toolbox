@@ -80,7 +80,7 @@ describe("Event store", () => {
       .in(context)
       .with(tokenFn);
 
-    expect(operationFake).to.have.been.calledWith(`${domain}.event-store`);
+    expect(operationFake).to.have.been.calledWith(`${domain}.es`);
     expect(postFake).to.have.been.calledWith({
       context,
       headers: {
@@ -139,7 +139,7 @@ describe("Event store", () => {
       .in(context)
       .with(tokenFn);
 
-    expect(operationFake).to.have.been.calledWith(`${domain}.event-store`);
+    expect(operationFake).to.have.been.calledWith(`${domain}.es`);
     expect(postFake).to.have.been.calledWith({
       context,
       headers: {
@@ -185,7 +185,7 @@ describe("Event store", () => {
       .in(context)
       .with(tokenFn);
 
-    expect(operationFake).to.have.been.calledWith(`${domain}.event-store`);
+    expect(operationFake).to.have.been.calledWith(`${domain}.es`);
     expect(getFake).to.have.been.calledWith({ root });
     expect(inFake).to.have.been.calledWith({ context, service, network });
     expect(withFake).to.have.been.calledWith({ tokenFn });

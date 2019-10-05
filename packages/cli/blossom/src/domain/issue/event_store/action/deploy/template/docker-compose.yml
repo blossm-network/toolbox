@@ -1,7 +1,7 @@
 version: "3"
 services:
   event-store:
-    image: ${CONTAINER_REGISTRY}/event-store.${DOMAIN}:latest
+    image: ${CONTAINER_REGISTRY}/es.${DOMAIN}:latest
     container_name: ${MAIN_CONTAINER_NAME}
     ports:
       - ${PORT}
