@@ -1,12 +1,16 @@
 const deps = require("./deps");
 
-module.exports = ({ store, fn }) => {
+const defaultFn = body => {
+  return { update: { $set: body } };
+};
+
+module.exports = ({ store, fn = defaultFn }) => {
   return async (req, res) => {
     const id = deps.uuid();
 
     const now = deps.dateString();
 
-    const { update } = fn ? fn(req.body) : { update: { $set: req.body } };
+    const { update } = fn(req.body);
 
     update.$set = {
       ...update.$set,
