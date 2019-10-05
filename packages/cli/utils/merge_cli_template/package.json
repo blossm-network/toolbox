@@ -1,6 +1,6 @@
 {
   "name": "@sustainers/merge-cli-template",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "Merges the contents of a file with a template.",
   "main": "index.js",
   "author": "sustainers.market",
@@ -14,7 +14,7 @@
     "test": "echo \"Error: no test specified\" && exit 0"
   },
   "dependencies": {
-    "@sustainers/hash-string": "*",
+    "@sustainers/hash-string": "^0.0.1",
     "any-json": "^3.1.0",
     "chalk": "^2.4.2",
     "fs-extra": "^8.1.0",
