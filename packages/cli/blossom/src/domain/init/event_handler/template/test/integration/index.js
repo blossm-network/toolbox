@@ -17,6 +17,8 @@ describe("Event handler store integration tests", () => {
       }
     });
 
+    expect(response.statusCode).to.equal(204);
+
     const [view] = await viewStore({
       id: process.env.TARGET_ID,
       domain: process.env.TARGET_DOMAIN,
@@ -28,7 +30,18 @@ describe("Event handler store integration tests", () => {
       .with();
 
     expect(view.name).to.equal(name);
-    expect(response.statusCode).to.equal(200);
+
+    const deletedResult = await viewStore({
+      id: process.env.TARGET_ID,
+      domain: process.env.TARGET_DOMAIN,
+      service: process.env.SERVICE,
+      network: process.env.NETWORK
+    })
+      .delete(view.id)
+      .in({})
+      .with();
+
+    expect(deletedResult.deletedCount).to.equal(1);
   });
   // it("should return an error if incorrect params", async () => {
   //   const name = 3;

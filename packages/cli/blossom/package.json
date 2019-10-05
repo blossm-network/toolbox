@@ -20,6 +20,7 @@
     "@sustainers/normalize-cli": "^0.0.8",
     "@sustainers/robo-say": "*",
     "@sustainers/test-cli-template": "^0.0.2",
+    "@sustainers/hash-string": "*",
     "chalk": "^2.4.2",
     "esm": "^3.2.25",
     "fs-extra": "^8.1.0"

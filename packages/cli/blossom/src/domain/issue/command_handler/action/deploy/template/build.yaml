@@ -30,7 +30,7 @@ steps:
     args:
       - build
       - -t
-      - us.gcr.io/${_GCP_PROJECT}-${_ENVIRONMENT}/${_DOMAIN}.${_ACTION}
+      - us.gcr.io/${_GCP_PROJECT}${_ENV_NAME_SPECIFIER}/${_DOMAIN}.${_ACTION}
       - .
   - name: node:10.16.0
     entrypoint: bash
@@ -45,7 +45,7 @@ steps:
         NODE_ENV=local
         PORT=80
         MAIN_CONTAINER_NAME=main
-        CONTAINER_REGISTRY=us.gcr.io/${_GCP_PROJECT}-${_ENVIRONMENT}
+        CONTAINER_REGISTRY=us.gcr.io/${_GCP_PROJECT}${_ENV_NAME_SPECIFIER}
         GCP_PROJECT=${_GCP_PROJECT}-staging
         GCP_REGION=${_GCP_REGION}
         GCP_SECRET_BUCKET=smn-staging-secrets
@@ -75,19 +75,19 @@ steps:
   - name: gcr.io/cloud-builders/docker
     args:
       - push
-      - us.gcr.io/${_GCP_PROJECT}-${_ENVIRONMENT}/${_DOMAIN}.${_ACTION}
+      - us.gcr.io/${_GCP_PROJECT}${_ENV_NAME_SPECIFIER}/${_DOMAIN}.${_ACTION}
   - name: gcr.io/cloud-builders/gcloud
     args:
       - beta
       - run
       - deploy
       - ${_DOMAIN}-${_ACTION}
-      - --image=us.gcr.io/${_GCP_PROJECT}-${_ENVIRONMENT}/${_DOMAIN}.${_ACTION}
+      - --image=us.gcr.io/${_GCP_PROJECT}${_ENV_NAME_SPECIFIER}/${_DOMAIN}.${_ACTION}
       - --platform=managed
       - --memory=${_MEMORY}
-      - --project=${_GCP_PROJECT}-${_ENVIRONMENT}
+      - --project=${_GCP_PROJECT}${_ENV_NAME_SPECIFIER}
       - --region=${_GCP_REGION}
-      - --set-env-vars=NODE_ENV=staging,NETWORK=${_ENVIRONMENT}.${_NETWORK},SERVICE=${_SERVICE},DOMAIN=${_DOMAIN},ACTION=${_ACTION},GCP_PROJECT=${_GCP_PROJECT}-${_ENVIRONMENT},GCP_REGION=${_GCP_REGION},GCP_SECRET_BUCKET=smn-${_ENVIRONMENT}-secrets
+      - --set-env-vars=NODE_ENV=${_NODE_ENV},NETWORK=${_ENV_URI_SPECIFIER}${_NETWORK},SERVICE=${_SERVICE},DOMAIN=${_DOMAIN},ACTION=${_ACTION},GCP_PROJECT=${_GCP_PROJECT}${_ENV_NAME_SPECIFIER},GCP_REGION=${_GCP_REGION},GCP_SECRET_BUCKET=smn${_ENV_NAME_SPECIFIER}-secrets
   - name: gcr.io/cloud-builders/gcloud
     args:
       - beta
@@ -105,7 +105,7 @@ steps:
       - transaction
       - add
       - ghs.googlehosted.com.
-      - --name=${_ACTION}.${_DOMAIN}.${_SERVICE}.${_ENVIRONMENT}.${_NETWORK}
+      - --name=${_ACTION}.${_DOMAIN}.${_SERVICE}.${_ENV_URI_SPECIFIER}${_NETWORK}
       - --zone=${_GCP_DNS_ZONE}
       - --type=CNAME
       - --ttl=86400
@@ -124,9 +124,9 @@ steps:
     entrypoint: bash
     args:
       - -c
-      - gcloud beta run domain-mappings create --platform=managed --service=${_DOMAIN}-${_ACTION} --domain=${_ACTION}.${_DOMAIN}.${_SERVICE}.${_ENVIRONMENT}.${_NETWORK} --project=${_GCP_PROJECT}-${_ENVIRONMENT} --region=${_GCP_REGION} || exit 0
+      - gcloud beta run domain-mappings create --platform=managed --service=${_DOMAIN}-${_ACTION} --domain=${_ACTION}.${_DOMAIN}.${_SERVICE}.${_ENV_URI_SPECIFIER}${_NETWORK} --project=${_GCP_PROJECT}${_ENV_NAME_SPECIFIER} --region=${_GCP_REGION} || exit 0
   - name: gcr.io/cloud-builders/gcloud
     entrypoint: bash
     args:
       - -c
-      - gcloud pubsub topics create did-${_ACTION}.${_DOMAIN}.${_SERVICE} --project=staging-${_GCP_PROJECT} || exit 0
+      - gcloud pubsub topics create did-${_ACTION}.${_DOMAIN}.${_SERVICE}.${_ENV_URI_SPECIFIER}${_NETWORK} --project=${_GCP_PROJECT}${_ENV_NAME_SPECIFIER} || exit 0

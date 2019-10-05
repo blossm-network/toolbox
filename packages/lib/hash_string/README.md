@@ -1,0 +1,1 @@
+Hashes a string.

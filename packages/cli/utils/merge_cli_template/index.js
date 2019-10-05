@@ -45,7 +45,26 @@ const copySrc = async (p, workingDir) => {
   await copy(srcDir, workingDir, { clobber: false });
 };
 
-const configure = async (workingDir, customConfigFn) => {
+const envUriSpecifier = env => {
+  switch (env) {
+  case "sandbox":
+  case "staging":
+    return `${env}.`;
+  default:
+    return "";
+  }
+};
+
+const envNameSpecifier = env => {
+  switch (env) {
+  case "sandbox":
+  case "staging":
+    return `-${env}`;
+  default:
+    return "";
+  }
+};
+const configure = async (workingDir, customConfigFn, env) => {
   const configPath = path.resolve(workingDir, "blossom.yaml");
 
   try {
@@ -77,14 +96,20 @@ const configure = async (workingDir, customConfigFn) => {
 
     build.substitutions = {
       ...build.substitutions,
-      ...(customConfigFn && customConfigFn(config)),
+
       _DOMAIN: config.domain,
       ...(config.service && { _SERVICE: config.service }),
       ...(config.network && { _NETWORK: config.network }),
       ...(config.gcpProject && { _GCP_PROJECT: config.gcpProject }),
       ...(config.gcpRegion && { _GCP_REGION: config.gcpRegion }),
       ...(config.gcpDnsZone && { _GCP_DNS_ZONE: config.gcpDnsZone }),
-      ...(config.memory && { _MEMORY: config.memory })
+      ...(config.memory && { _MEMORY: config.memory }),
+
+      ...(customConfigFn && customConfigFn(config)),
+
+      _NODE_ENV: env,
+      _ENV_NAME_SPECIFIER: envNameSpecifier(env),
+      _ENV_URI_SPECIFIER: envUriSpecifier(env)
     };
     fs.writeFileSync(buildPath, yaml.stringify(build));
   } catch (e) {
@@ -103,5 +128,5 @@ const configure = async (workingDir, customConfigFn) => {
 module.exports = async ({ templateDir, workingDir, input, customConfigFn }) => {
   await copyTemplate(templateDir, workingDir);
   await copySrc(input.path, workingDir);
-  await configure(workingDir, customConfigFn);
+  await configure(workingDir, customConfigFn, input.env);
 };

@@ -29,7 +29,7 @@ steps:
     args:
       - build
       - -t
-      - us.gcr.io/${_GCP_PROJECT}-${_ENVIRONMENT}/view-store.${_DOMAIN}.${_ID}
+      - us.gcr.io/${_GCP_PROJECT}${_ENV_NAME_SPECIFIER}/vs.${_DOMAIN}.${_ID}
       - .
   - name: node:10.16.0
     entrypoint: bash
@@ -44,7 +44,7 @@ steps:
         NODE_ENV=local
         PORT=80
         MAIN_CONTAINER_NAME=main
-        CONTAINER_REGISTRY=us.gcr.io/${_GCP_PROJECT}-${_ENVIRONMENT}
+        CONTAINER_REGISTRY=us.gcr.io/${_GCP_PROJECT}${_ENV_NAME_SPECIFIER}
         GCP_PROJECT=${_GCP_PROJECT}-staging
         GCP_REGION=${_GCP_REGION}
         GCP_SECRET_BUCKET=smn-staging-secrets
@@ -74,19 +74,19 @@ steps:
   - name: gcr.io/cloud-builders/docker
     args:
       - push
-      - us.gcr.io/${_GCP_PROJECT}-${_ENVIRONMENT}/view-store.${_DOMAIN}.${_ID}
+      - us.gcr.io/${_GCP_PROJECT}${_ENV_NAME_SPECIFIER}/vs.${_DOMAIN}.${_ID}
   - name: gcr.io/cloud-builders/gcloud
     args:
       - beta
       - run
       - deploy
-      - view-store-${_DOMAIN}-${_ID}
-      - --image=us.gcr.io/${_GCP_PROJECT}-${_ENVIRONMENT}/view-store.${_DOMAIN}.${_ID}
+      - vs-${_DOMAIN}-${_ID}
+      - --image=us.gcr.io/${_GCP_PROJECT}${_ENV_NAME_SPECIFIER}/vs.${_DOMAIN}.${_ID}
       - --platform=managed
       - --memory=${_MEMORY}
-      - --project=${_GCP_PROJECT}-${_ENVIRONMENT}
+      - --project=${_GCP_PROJECT}${_ENV_NAME_SPECIFIER}
       - --region=${_GCP_REGION}
-      - --set-env-vars=NODE_ENV=staging,NETWORK=${_ENVIRONMENT}.${_NETWORK},SERVICE=${_SERVICE},DOMAIN=${_DOMAIN},ID=${_ID},GCP_PROJECT=${_GCP_PROJECT}-${_ENVIRONMENT},GCP_REGION=${_GCP_REGION},GCP_SECRET_BUCKET=smn-${_ENVIRONMENT}-secrets,MONGODB_USER=gcp-${_ENVIRONMENT},MONGODB_HOST=${_ENVIRONMENT}-ggjlv.gcp.mongodb.net
+      - --set-env-vars=NODE_ENV=${_NODE_ENV},NETWORK=${_ENV_URI_SPECIFIER}${_NETWORK},SERVICE=${_SERVICE},DOMAIN=${_DOMAIN},ID=${_ID},GCP_PROJECT=${_GCP_PROJECT}${_ENV_NAME_SPECIFIER},GCP_REGION=${_GCP_REGION},GCP_SECRET_BUCKET=smn${_ENV_NAME_SPECIFIER}-secrets,MONGODB_USER=gcp${_ENV_NAME_SPECIFIER},MONGODB_HOST=${_NODE_ENV}-ggjlv.gcp.mongodb.net
   - name: gcr.io/cloud-builders/gcloud
     args:
       - beta
@@ -104,7 +104,7 @@ steps:
       - transaction
       - add
       - ghs.googlehosted.com.
-      - --name=${_ID}.${_DOMAIN}.view-store.${_SERVICE}.${_ENVIRONMENT}.${_NETWORK}
+      - --name=${_ID}.${_DOMAIN}.vs.${_SERVICE}.${_ENV_URI_SPECIFIER}${_NETWORK}
       - --zone=${_GCP_DNS_ZONE}
       - --type=CNAME
       - --ttl=86400
@@ -124,4 +124,4 @@ steps:
     entrypoint: bash
     args:
       - -c
-      - gcloud beta run domain-mappings create --platform=managed --service=view-store-${_DOMAIN}-${_ID} --domain=${_ID}.${_DOMAIN}.view-store.${_SERVICE}.${_ENVIRONMENT}.${_NETWORK} --project=${_GCP_PROJECT}-${_ENVIRONMENT} --region=${_GCP_REGION} || exit 0
+      - gcloud beta run domain-mappings create --platform=managed --service=vs-${_DOMAIN}-${_ID} --domain=${_ID}.${_DOMAIN}.vs.${_SERVICE}.${_ENV_URI_SPECIFIER}${_NETWORK} --project=${_GCP_PROJECT}${_ENV_NAME_SPECIFIER} --region=${_GCP_REGION} || exit 0
