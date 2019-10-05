@@ -1,7 +1,7 @@
 {
   "name": "@sustainers/view-store-js",
   "description": "Interact with the view store.",
-  "version": "0.0.23",
+  "version": "0.0.24",
   "main": "index.js",
   "author": "sustainers.market",
   "engines": {
@@ -14,7 +14,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@sustainers/operation-js": "^0.0.28"
+    "@sustainers/operation-js": "^0.0.29"
   },
   "devDependencies": {
     "chai-datetime": "^1.5.0",
