@@ -1,0 +1,49 @@
+version: "3"
+services:
+  main:
+    image: ${CONTAINER_REGISTRY}/${TARGET_CONTEXT}.${TARGET_DOMAIN}.${TARGET_ID}.${DOMAIN}.did-${ACTION}:latest
+    container_name: ${MAIN_CONTAINER_NAME}
+    ports:
+      - ${PORT}
+    depends_on:
+      - target
+    environment:
+      PORT:
+      NODE_ENV:
+      NETWORK:
+      SERVICE:
+      DOMAIN:
+      ACTION:
+      TARGET_ID:
+      TARGET_DOMAIN:
+      TARGET_CONTEXT:
+      GCP_PROJECT:
+      GCP_REGION:
+      GCP_SECRET_BUCKET:
+      GCP_KMS_SECRET_BUCKET_KEY_LOCATION:
+      GCP_KMS_SECRET_BUCKET_KEY_RING:
+
+  target:
+    image: ${CONTAINER_REGISTRY}/${TARGET_CONTEXT}.${TARGET_DOMAIN}.${TARGET_ID}:latest
+    container_name: ${TARGET_ID}.${TARGET_DOMAIN}.${TARGET_CONTEXT}.${SERVICE}.${NETWORK}
+    ports:
+      - ${PORT}
+    environment:
+      PORT:
+      NODE_ENV:
+      NETWORK:
+      SERVICE:
+      DOMAIN: ${TARGET_DOMAIN}
+      ID: ${TARGET_ID}
+      GCP_PROJECT:
+      GCP_REGION:
+      GCP_SECRET_BUCKET:
+      GCP_KMS_SECRET_BUCKET_KEY_LOCATION:
+      GCP_KMS_SECRET_BUCKET_KEY_RING:
+      MONGODB_USER:
+      MONGODB_HOST:
+
+networks:
+  default:
+    external:
+      name: cloudbuild
