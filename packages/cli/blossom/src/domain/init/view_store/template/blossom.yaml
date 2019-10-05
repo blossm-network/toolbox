@@ -27,6 +27,7 @@ devDependencies:
   "chai": "^4.2.0"
   "sinon-chai": "^3.3.0"
   "@sustainers/request": "*"
+  "@sustainers/uuid": "*"
 
 #don't change
 context: view-store

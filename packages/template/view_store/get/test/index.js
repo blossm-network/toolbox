@@ -76,7 +76,7 @@ describe("View store get", () => {
     });
     expect(sendFake).to.have.been.calledWith(objs);
   });
-  it("should call with the correct params if no id with sort in query", async () => {
+  it("should call with the correct params if no id with sort and context in query", async () => {
     const findFake = fake.returns(objs);
     const db = {
       find: findFake
@@ -85,10 +85,12 @@ describe("View store get", () => {
 
     const params = {};
     const sort = { someKey: 3 };
+    const context = { someContext: 4 };
     const req = {
       query: {
         ...query,
-        sort
+        sort,
+        context
       },
       params
     };

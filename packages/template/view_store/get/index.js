@@ -1,7 +1,14 @@
 const deps = require("./deps");
 const { notFound } = require("@sustainers/errors");
 
-module.exports = ({ store, fn }) => {
+const defaultFn = query => {
+  const querySort = query && query.sort;
+  delete query.sort;
+  delete query.context;
+  return { query, sort: querySort };
+};
+
+module.exports = ({ store, fn = defaultFn }) => {
   return async (req, res) => {
     //eslint-disable-next-line no-console
     console.log("req.query: ", {
@@ -9,12 +16,8 @@ module.exports = ({ store, fn }) => {
       body: req.body,
       params: req.params
     });
-    const querySort = req.query && req.query.sort;
-    delete req.query.sort;
 
-    const { query, sort } = fn
-      ? fn(req.query)
-      : { query: req.query, sort: querySort };
+    const { query, sort } = fn(req.query);
 
     //eslint-disable-next-line no-console
     console.log("stuff: ", {
