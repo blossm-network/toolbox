@@ -1,6 +1,6 @@
 {
   "name": "@sustainers/normalize-cli",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Normalizes arguments passed in to smarket",
   "main": "index.js",
   "author": "sustainers.market",
