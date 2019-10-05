@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@sustainers/create-event": "*",
-    "@sustainers/error": "*",
+    "@sustainers/errors": "*",
     "@sustainers/event-store-js": "^0.0.31",
     "@sustainers/gcp-token": "^0.0.15"
   },
