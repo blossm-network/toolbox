@@ -33,9 +33,7 @@ describe("Command handler post", () => {
       mainFn: mainFnFake
     })(req, res);
 
-    expect(mainFnFake).to.have.been.calledWith({
-      event
-    });
+    expect(mainFnFake).to.have.been.calledWith(event);
     expect(statusFake).to.have.been.calledWith(204);
     expect(sendFake).to.have.been.calledOnce;
   });

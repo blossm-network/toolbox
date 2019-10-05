@@ -20,7 +20,7 @@ module.exports = ({ mainFn }) => {
       throw badRequest.badMessage;
     }
 
-    await mainFn({ event: event(req) });
+    await mainFn(event(req));
 
     res.status(204).send();
   };

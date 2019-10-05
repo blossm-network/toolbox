@@ -10,7 +10,7 @@ describe("Event handler store integration tests", () => {
     const name = "Some-name";
     const response = await request.post(url, {
       message: {
-        data: Buffer.from(JSON.stringify({ name }))
+        data: Buffer.from(JSON.stringify({ payload: { name } }))
       }
     });
 
