@@ -37,6 +37,20 @@ module.exports = ({ store, fn = defaultFn }) => {
           lean: true
         }
       });
+
+      //eslint-disable-next-line no-console
+      console.log("more stuff: ", {
+        results,
+        query: {
+          ...query,
+          ...(req.params.id && { id: req.params.id })
+        },
+        ...(sort && { sort }),
+        options: {
+          lean: true
+        }
+      });
+
       res.send(results);
     } else {
       const result = await deps.db.findOne({

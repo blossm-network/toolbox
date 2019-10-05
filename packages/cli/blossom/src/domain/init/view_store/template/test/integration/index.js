@@ -1,11 +1,12 @@
 const { expect } = require("chai");
 
 const request = require("@sustainers/request");
+const uuid = require("@sustainers/uuid");
 
 const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 
 describe("View store", () => {
-  const id = "some-id";
+  const id = uuid();
   it("should return successfully", async () => {
     const response0 = await request.put(`${url}/${id}`, {
       name: "some-name"
