@@ -16,14 +16,14 @@ module.exports = ({ id, domain, service, network }) => {
         }
       };
     },
-    read: ({ query, sort }) => {
+    read: query => {
       return {
         in: context => {
           return {
             with: async tokenFn =>
               await deps
                 .operation(`${id}.${domain}.view-store`)
-                .get({ query, sort })
+                .get(query)
                 .in({ context, service, network })
                 .with({ tokenFn })
           };
