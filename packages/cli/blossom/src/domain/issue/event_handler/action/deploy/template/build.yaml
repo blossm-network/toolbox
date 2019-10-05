@@ -23,17 +23,18 @@ substitutions:
   _MEMORY: 128Mi
 
 steps:
-  - name: node:10.16.0
-    entrypoint: yarn
-    args:
-      - install
-  - name: node:10.16.0
-    entrypoint: yarn
-    args:
-      - test:unit
+  # - name: node:10.16.0
+  #   entrypoint: yarn
+  #   args:
+  #     - install
+  # - name: node:10.16.0
+  #   entrypoint: yarn
+  #   args:
+  #     - test:unit
   - name: node:10.16.0
     entrypoint: bash
     args:
+      - -c
       - npx @sustainers/blossom deploy ./test/integration/view_store
   - name: gcr.io/cloud-builders/docker
     args:
@@ -146,8 +147,8 @@ steps:
       - run
       - services
       - add-iam-policy-binding
-      - ${_TARGET_CONTEXT}.${_TARGET_DOMAIN}.${_TARGET_ID}.${_DOMAIN}.did-${ACTION}
-      - --member=serviceAccount:cloud-run-pubsub-invoker@${GCP_PROJECT}-${_ENVIRONMENT}.iam.gserviceaccount.com
+      - ${_TARGET_CONTEXT}.${_TARGET_DOMAIN}.${_TARGET_ID}.${_DOMAIN}.did-${_ACTION}
+      - --member=serviceAccount:cloud-run-pubsub-invoker@${_GCP_PROJECT}-${_ENVIRONMENT}.iam.gserviceaccount.com
       - --role=roles/run.invoker
   - name: gcr.io/cloud-builders/gcloud
     args:
@@ -155,8 +156,8 @@ steps:
       - pubsub
       - subscriptions
       - create
-      - ${_TARGET_CONTEXT}.${_TARGET_DOMAIN}.${_TARGET_ID}.${_DOMAIN}.did-${ACTION}
+      - ${_TARGET_CONTEXT}.${_TARGET_DOMAIN}.${_TARGET_ID}.${_DOMAIN}.did-${_ACTION}
       - --topic
       - did-${_ACTION}.${_DOMAIN}.${_TARGET_ID}.${_TARGET_DOMAIN}.${_TARGET_CONTEXT}.${_SERVICE}.${_ENVIRONMENT}.${_NETWORK}
       - --push-endpoint=did-${_ACTION}.${_DOMAIN}.${_SERVICE}.${_ENVIRONMENT}.${_NETWORK}
-      - --push-auth-service-account=cloud-run-pubsub-invoker@${GCP_PROJECT}-${_ENVIRONMENT}.iam.gserviceaccount.com
+      - --push-auth-service-account=cloud-run-pubsub-invoker@${_GCP_PROJECT}-${_ENVIRONMENT}.iam.gserviceaccount.com

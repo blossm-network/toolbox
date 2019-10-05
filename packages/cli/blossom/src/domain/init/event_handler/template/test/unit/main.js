@@ -1,4 +1,4 @@
-const gcpToken = require("@sustainers/gcpToken");
+const gcpToken = require("@sustainers/gcp-token");
 const { expect } = require("chai")
   .use(require("chai-datetime"))
   .use(require("sinon-chai"));
@@ -42,6 +42,7 @@ describe("Event handler store unit tests", () => {
     const payload = { name };
 
     await main({ payload });
+
     expect(viewStoreFake).to.have.been.calledWith({
       id: targetId,
       domain: targetDomain,

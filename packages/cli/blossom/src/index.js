@@ -9,6 +9,24 @@ const { init, issue } = require("./domain");
 
 const domains = ["init", "issue"];
 
+const tryShortcuts = input => {
+  const inputPath = input.args.length == 1 ? input.args[0] : ".";
+  const configPath = path.resolve(process.cwd(), inputPath, "blossom.yaml");
+  const config = yaml.parse(fs.readFileSync(configPath, "utf8"));
+
+  if (!config.context) throw "Context not set.";
+
+  const args = [config.context];
+  if (input.domain == "test") {
+    args.push("deploy");
+    args.push("--test-only");
+  } else {
+    args.push(input.domain);
+  }
+  args.push(...input.args);
+  issue(args);
+};
+
 const forward = input => {
   switch (input.domain) {
   case "init":
@@ -16,31 +34,19 @@ const forward = input => {
   case "issue":
     return issue(input.args);
   default: {
-    const configPath = path.resolve(process.cwd(), "blossom.yaml");
-    const config = yaml.parse(fs.readFileSync(configPath, "utf8"));
-
-    if (config.context) {
-      const args = [config.context];
-      if (input.domain == "test") {
-        args.push("deploy");
-        args.push("--test-only");
-      } else {
-        args.push(input.domain);
-      }
-      args.push(...input.args);
-      issue(args);
-      return;
+    try {
+      tryShortcuts(input);
+    } catch (e) {
+      //eslint-disable-next-line no-console
+      console.error(
+        roboSay(
+          `This domain isn't recognized. Choose from one of these [${domains.join(
+            ", "
+          )}], or from one of these shortcuts [deploy, test]`
+        ),
+        red.bold("error")
+      );
     }
-
-    //eslint-disable-next-line no-console
-    console.error(
-      roboSay(
-        `This domain isn't recognized. Choose from one of these [${domains.join(
-          ", "
-        )}]`
-      ),
-      red.bold("error")
-    );
   }
   }
 };

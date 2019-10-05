@@ -8,15 +8,15 @@
  *
  */
 
-const gcpToken = require("@sustainers/gcpToken");
+const gcpToken = require("@sustainers/gcp-token");
 
 /**
  * Add services that should be faked
  * in tests in the deps file.
  */
-const deps = require("../deps");
+const deps = require("./deps");
 
-module.exports = ({ event }) => {
+module.exports = event => {
   //eslint-disable-next-line no-console
   console.log("Do something with: ", { event });
 
