@@ -6,7 +6,7 @@ services:
     ports:
       - ${PORT}
     environment:
-      PORT: ${PORT}
+      PORT:
       NODE_ENV:
       NETWORK:
       SERVICE:
