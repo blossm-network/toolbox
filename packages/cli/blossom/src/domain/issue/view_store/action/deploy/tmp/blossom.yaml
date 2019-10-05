@@ -1,0 +1,32 @@
+#
+# This file is required.
+# Give your view-store an id, specify which domain it's for, write the view store's schema, and specify what it should be indexed by.
+#
+# How to write a schema -> https://mongoosejs.com/docs/schematypes.html
+# Types and validators should always be specified,
+# and default values and required flags should be set if intended.
+#
+# How to write indexes -> https://mongoosejs.com/docs/guide.html#indexes
+# Queries to the store that aren't indexed will be rejected.
+# In other words, full collection scans are not allowed.
+#
+
+id: some-id
+domain: some-domain
+
+schema:
+  name: String
+
+indexes: [[{ name: 1 }]]
+
+dependencies:
+  "@sustainers/view-store": "*"
+
+devDependencies:
+  "mocha": "^6.1.4"
+  "chai": "^4.2.0"
+  "sinon-chai": "^3.3.0"
+  "@sustainers/request": "*"
+
+#don't change
+context: view-store

@@ -45,11 +45,13 @@ const copySrc = async (p, workingDir) => {
   await copy(srcDir, workingDir, { clobber: false });
 };
 
-const convertPackage = async workingDir => {
+const configure = async (workingDir, customConfigFn) => {
   const configPath = path.resolve(workingDir, "blossom.yaml");
 
   try {
     const config = yaml.parse(fs.readFileSync(configPath, "utf8"));
+
+    //Write package.json
     const package = {
       main: "index.js",
       scripts: {
@@ -60,9 +62,31 @@ const convertPackage = async workingDir => {
       dependencies: config.dependencies,
       devDependencies: config.devDependencies
     };
-
     const packagePath = path.resolve(workingDir, "package.json");
     fs.writeFileSync(packagePath, JSON.stringify(package));
+
+    //Write new config
+    delete config.dependencies;
+    delete config.devDependencies;
+    const newConfigPath = path.resolve(workingDir, "config.json");
+    fs.writeFileSync(newConfigPath, JSON.stringify(config));
+
+    //Write build.yaml
+    const buildPath = path.resolve(workingDir, "build.yaml");
+    const build = yaml.parse(fs.readFileSync(buildPath, "utf8"));
+
+    build.substitutions = {
+      ...build.substitutions,
+      ...(customConfigFn && customConfigFn(config)),
+      _DOMAIN: config.domain,
+      ...(config.service && { _SERVICE: config.service }),
+      ...(config.network && { _NETWORK: config.network }),
+      ...(config.gcpProject && { _GCP_PROJECT: config.gcpProject }),
+      ...(config.gcpRegion && { _GCP_REGION: config.gcpRegion }),
+      ...(config.gcpDnsZone && { _GCP_DNS_ZONE: config.gcpDnsZone }),
+      ...(config.memory && { _MEMORY: config.memory })
+    };
+    fs.writeFileSync(buildPath, yaml.stringify(build));
   } catch (e) {
     //eslint-disable-next-line no-console
     console.error(
@@ -76,31 +100,8 @@ const convertPackage = async workingDir => {
   }
 };
 
-const configure = async (workingDir, customConfigFn) => {
-  const configPath = path.resolve(workingDir, "blossom.yaml");
-  const config = yaml.parse(fs.readFileSync(configPath, "utf8"));
-
-  const buildPath = path.resolve(workingDir, "build.yaml");
-  const build = yaml.parse(fs.readFileSync(buildPath, "utf8"));
-
-  build.substitutions = {
-    ...build.substitutions,
-    ...(customConfigFn && customConfigFn(config)),
-    _DOMAIN: config.domain,
-    ...(config.service && { _SERVICE: config.service }),
-    ...(config.network && { _NETWORK: config.network }),
-    ...(config.gcpProject && { _GCP_PROJECT: config.gcpProject }),
-    ...(config.gcpRegion && { _GCP_REGION: config.gcpRegion }),
-    ...(config.gcpDnsZone && { _GCP_DNS_ZONE: config.gcpDnsZone }),
-    ...(config.memory && { _MEMORY: config.memory })
-  };
-
-  fs.writeFileSync(buildPath, yaml.stringify(build));
-};
-
 module.exports = async ({ templateDir, workingDir, input, customConfigFn }) => {
   await copyTemplate(templateDir, workingDir);
   await copySrc(input.path, workingDir);
-  await convertPackage(workingDir);
   await configure(workingDir, customConfigFn);
 };
