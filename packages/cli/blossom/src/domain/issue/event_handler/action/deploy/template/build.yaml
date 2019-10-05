@@ -163,5 +163,5 @@ steps:
       - ${_TARGET_CONTEXT}-${_TARGET_DOMAIN}-${_TARGET_ID}-${_DOMAIN}-did-${_ACTION}${_ENV_NAME_SPECIFIER}
       - --topic=did-${_ACTION}.${_DOMAIN}.${_SERVICE}.${_ENV_URI_SPECIFIER}${_NETWORK}
       - --push-endpoint=https://did-${_ACTION}.${_DOMAIN}.${_TARGET_HASH}.${_SERVICE}.${_ENV_URI_SPECIFIER}${_NETWORK}
-      - --push-auth-service-account=cloud-run-pubsub-invoker@${_GCP_PROJECT}${_ENV_NAME_SPECIFIER}.iam.gserviceaccount.com
+      - --push-auth-service-account=cloud-run-pubsub-invoker@${_GCP_PROJECT}.iam.gserviceaccount.com
       - --project=${_GCP_PROJECT} #should be the same project where the network is hosted

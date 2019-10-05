@@ -3,7 +3,7 @@ const { spawnSync } = require("child_process");
 const yaml = require("yaml");
 const path = require("path");
 
-module.exports = async (workingDir, env) => {
+module.exports = async workingDir => {
   const buildPath = path.resolve(workingDir, "build.yaml");
   const { substitutions } = yaml.parse(fs.readFileSync(buildPath, "utf8"));
 
@@ -14,7 +14,6 @@ module.exports = async (workingDir, env) => {
       "submit",
       ".",
       "--config=build.yaml",
-      `--substitutions=_ENVIRONMENT=${env}`,
       `--project=${substitutions._GCP_PROJECT}`
     ],
     {

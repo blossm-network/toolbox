@@ -66,7 +66,7 @@ module.exports = async args => {
         "Deploying your event handler... It might take 5 minutes or so, maybe 4 on a good day."
       )
     );
-    await deployCliTemplate(workingDir, input.env);
+    await deployCliTemplate(workingDir);
   }
   fs.removeSync(workingDir);
 
