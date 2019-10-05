@@ -6,7 +6,7 @@ services:
     ports:
       - ${PORT}
     depends_on:
-      - view-store
+      - target
     environment:
       PORT:
       NODE_ENV:
