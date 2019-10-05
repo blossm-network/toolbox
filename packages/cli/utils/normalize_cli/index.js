@@ -8,7 +8,10 @@ const camelCased = str =>
     return g[1].toUpperCase();
   });
 
-const parseArgs = (rawArgs, { permissive = true, flags = [] } = {}) => {
+const parseArgs = (
+  rawArgs,
+  { permissive = true, flags = [], entrypointDefault } = {}
+) => {
   const flagArgs = flags.reduce((map, flag) => {
     return {
       ...map,
@@ -36,7 +39,7 @@ const parseArgs = (rawArgs, { permissive = true, flags = [] } = {}) => {
         [camelCased(flag.name)]: args[`--${flag.name}`] || flag.default
       };
     }, {}),
-    entrypoint: args._[0],
+    entrypoint: args._[0] || entrypointDefault,
     args: args._.slice(1)
   };
 };
@@ -86,11 +89,17 @@ const format = (options, { entrypointType } = {}) => {
   return options;
 };
 
-module.exports = async ({ entrypointType, choices, args, flags }) => {
+module.exports = async ({
+  entrypointType,
+  entrypointDefault,
+  choices,
+  args,
+  flags
+}) => {
   const options = await validate({
     entrypointType,
     choices,
-    options: parseArgs(args, { flags })
+    options: parseArgs(args, { flags, entrypointDefault })
   });
   return format(options, { entrypointType });
 };

@@ -13,6 +13,7 @@ module.exports = async args => {
 
   const input = await normalize({
     entrypointType: "path",
+    entrypointDefault: ".",
     args,
     flags: [
       {

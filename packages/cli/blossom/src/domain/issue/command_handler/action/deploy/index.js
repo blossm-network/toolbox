@@ -12,6 +12,7 @@ module.exports = async args => {
   console.log(roboSay("Running your tests..."));
   const input = await normalize({
     entrypointType: "path",
+    entrypointDefault: ".",
     args,
     flags: [
       {

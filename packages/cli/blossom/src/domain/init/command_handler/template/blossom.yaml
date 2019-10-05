@@ -24,3 +24,6 @@ devDependencies:
   "@sustainers/datetime": "*"
   "@sustainers/request": "*"
   "@sustainers/event-store": "*"
+
+#don't change
+context: command-handler

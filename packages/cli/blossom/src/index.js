@@ -20,8 +20,8 @@ const forward = input => {
     const config = yaml.parse(fs.readFileSync(configPath, "utf8"));
 
     if (config.domain && config.domain != input.domain) {
-      input.args.unshift(config.domain);
-      issue(input);
+      issue([config.context, input.domain, ...input.args]);
+      return;
     }
 
     //eslint-disable-next-line no-console
