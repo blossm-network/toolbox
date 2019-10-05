@@ -19,8 +19,16 @@ const forward = input => {
     const configPath = path.resolve(process.cwd(), "blossom.yaml");
     const config = yaml.parse(fs.readFileSync(configPath, "utf8"));
 
-    if (config.domain && config.domain != input.domain) {
-      issue([config.context, input.domain, ...input.args]);
+    if (config.context) {
+      const args = [config.context];
+      if (input.domain == "test") {
+        args.push("deploy");
+        args.push("--test-only");
+      } else {
+        args.push(input.domain);
+      }
+      args.push(...input.args);
+      issue(args);
       return;
     }
 

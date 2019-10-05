@@ -1,0 +1,26 @@
+{
+  "name": "@sustainers/event-handler",
+  "description": "An event handler server.",
+  "version": "0.0.0",
+  "main": "index.js",
+  "author": "sustainers.market",
+  "engines": {
+    "node": ">= 10.16.0"
+  },
+  "scripts": {
+    "test": "mocha --recursive"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@sustainers/event-handler-post": "*",
+    "@sustainers/server": "^0.0.8"
+  },
+  "devDependencies": {
+    "chai-datetime": "^1.5.0",
+    "mocha": "^6.1.4",
+    "sinon": "^7.3.2",
+    "sinon-chai": "^3.3.0"
+  }
+}
