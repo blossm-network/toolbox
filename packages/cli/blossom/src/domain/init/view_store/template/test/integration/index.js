@@ -7,14 +7,10 @@ const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 describe("View store", () => {
   const id = "some-id";
   it("should return successfully", async () => {
-    //eslint-disable-next-line no-console
-    console.log("url: ", url);
     const response0 = await request.put(`${url}/${id}`, {
       name: "some-name"
     });
 
-    //eslint-disable-next-line no-console
-    console.log("res0: ", url);
     expect(response0.statusCode).to.equal(204);
 
     const response1 = await request.put(`${url}/${id}`, {

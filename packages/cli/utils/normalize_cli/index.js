@@ -72,7 +72,7 @@ const validate = async ({ entrypointType, choices, options }) => {
           ", "
         )}]`
       ),
-      red.bold("shucks")
+      red.bold("error")
     );
     process.exit(1);
   }

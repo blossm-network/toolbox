@@ -1,3 +1,16 @@
+#
+# This file is required.
+#
+# Give your command-handler an action name,
+# specify which domain it's for,
+# and set which version of the event to create.
+#
+
+action: some-action
+domain: some-domain
+
+version: 0
+
 dependencies:
   "@sustainers/command-handler": "*"
   "@sustainers/validator": "*"

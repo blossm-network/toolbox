@@ -1,4 +1,4 @@
-const { expect } = require("chai").use(require("sinon-chai"));
+const { expect } = require("chai");
 
 describe("Event store get tests", () => {
   it("Nothing to test", async () => {
