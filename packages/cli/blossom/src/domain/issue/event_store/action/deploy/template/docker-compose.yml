@@ -1,21 +1,21 @@
 version: "3"
 services:
   event-store:
-    image: us.gcr.io/${GCP_PROJECT}/event-store.${DOMAIN}:latest
-    container_name: event-store
+    image: ${CONTAINER_REGISTRY}/event-store.${DOMAIN}:latest
+    container_name: ${MAIN_CONTAINER_NAME}
     ports:
-      - "3000:3000"
+      - ${PORT}
     environment:
-      PORT: "3000"
-      NODE_ENV: local
-      NETWORK: local
+      PORT: ${PORT}
+      NODE_ENV:
+      NETWORK:
       SERVICE:
       DOMAIN:
       GCP_PROJECT:
       GCP_REGION:
+      GCP_SECRET_BUCKET:
       GCP_KMS_SECRET_BUCKET_KEY_LOCATION:
       GCP_KMS_SECRET_BUCKET_KEY_RING:
-      GCP_SECRET_BUCKET:
       MONGODB_USER:
       MONGODB_HOST:
 

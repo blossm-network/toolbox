@@ -1,0 +1,14 @@
+{
+  "id": "some-id",
+  "domain": "some-domain",
+  "schema": {
+    "name": "String"
+  },
+  "indexes": [
+    [
+      {
+        "name": 1
+      }
+    ]
+  ]
+}

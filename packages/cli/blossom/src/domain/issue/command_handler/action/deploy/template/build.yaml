@@ -32,7 +32,7 @@ steps:
     args:
       - build
       - -t
-      - us.gcr.io/${_GCP_PROJECT}-staging/${_DOMAIN}.${_ACTION}
+      - us.gcr.io/${_GCP_PROJECT}-${_ENVIRONMENT}/${_DOMAIN}.${_ACTION}
       - .
   - name: node:10.16.0
     entrypoint: bash
@@ -44,7 +44,6 @@ steps:
         PORT=80
         MAIN_CONTAINER_NAME=${_MAIN_CONTAINER_NAME}
         CONTAINER_REGISTRY=us.gcr.io/${_GCP_PROJECT}-${_ENVIRONMENT}
-        ENVIRONMENT=${_ENVIRONMENT}
         NETWORK=${_LOCAL_NETWORK}
         SERVICE=${_SERVICE}
         DOMAIN=${_DOMAIN}
@@ -71,6 +70,7 @@ steps:
       - NETWORK=${_LOCAL_NETWORK}
       - SERVICE=${_SERVICE}
       - DOMAIN=${_DOMAIN}
+      - ACTION=${_ACTION}
   - name: docker/compose:1.15.0
     args:
       - logs

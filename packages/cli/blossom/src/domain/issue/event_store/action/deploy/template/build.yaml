@@ -14,36 +14,59 @@ substitutions:
   _GCP_REGION: us-central1
   _GCP_DNS_ZONE: network
   _MEMORY: 128Mi
+
+  _LOCAL_NETWORK: local
+  _MAIN_CONTAINER_NAME: main
 steps:
   - name: node:10.16.0
     entrypoint: yarn
     args:
       - install
+  - name: node:10.16.0
+    entrypoint: yarn
+    args:
+      - test:unit
   - name: gcr.io/cloud-builders/docker
     args:
       - build
       - -t
-      - us.gcr.io/${_GCP_PROJECT}-staging/event-store.${_DOMAIN}
+      - us.gcr.io/${_GCP_PROJECT}-${_ENVIRONMENT}/event-store.${_DOMAIN}
       - .
+  - name: node:10.16.0
+    entrypoint: bash
+    args:
+      - -c
+      - |
+        cat >> .env <<- EOM
+        NODE_ENV=local
+        PORT=80
+        MAIN_CONTAINER_NAME=${_MAIN_CONTAINER_NAME}
+        CONTAINER_REGISTRY=us.gcr.io/${_GCP_PROJECT}-${_ENVIRONMENT}
+        NETWORK=${_LOCAL_NETWORK}
+        SERVICE=${_SERVICE}
+        DOMAIN=${_DOMAIN}
+        GCP_PROJECT=${_GCP_PROJECT}-staging
+        GCP_REGION=${_GCP_REGION}
+        GCP_SECRET_BUCKET=smn-staging-secrets
+        MONGODB_USER=gcp-staging
+        MONGODB_HOST=staging-ggjlv.gcp.mongodb.net
+        EOM
   - name: docker/compose:1.15.0
     args:
       - up
       - -d
-    env:
-      - SERVICE=${_SERVICE}
-      - DOMAIN=${_DOMAIN}
-      - GCP_PROJECT=${_GCP_PROJECT}-staging
-      - GCP_REGION=${_GCP_REGION}
-      - GCP_SECRET_BUCKET=smn-staging-secrets
-      - MONGODB_USER=gcp-staging
-      - MONGODB_HOST=staging-ggjlv.gcp.mongodb.net
   - name: docker/compose:1.15.0
     args:
       - ps
   - name: node:10.16.0
     entrypoint: yarn
     args:
-      - test
+      - test:integration
+    env:
+      - MAIN_CONTAINER_NAME=${_MAIN_CONTAINER_NAME}
+      - NETWORK=${_LOCAL_NETWORK}
+      - SERVICE=${_SERVICE}
+      - DOMAIN=${_DOMAIN}
   - name: docker/compose:1.15.0
     args:
       - logs

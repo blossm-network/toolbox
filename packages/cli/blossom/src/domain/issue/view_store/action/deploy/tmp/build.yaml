@@ -1,21 +1,12 @@
 substitutions:
-  # OPTIONAL TODO:
-  #   Remove the comment arrows from the two lines following this comment and
-  #   change the values so that they describe this repo's service.
-  #
-  # OPTIONAL TODO:
-  #   Replace any other substitution with other values.
-
-  _ID: ${ID} # <--
-  _DOMAIN: ${DOMAIN} # <--
-
+  _ID: some-id
+  _DOMAIN: some-domain
   _SERVICE: core
   _NETWORK: sm.network
   _GCP_PROJECT: smn-core
   _GCP_REGION: us-central1
   _GCP_DNS_ZONE: network
   _MEMORY: 128Mi
-
   _LOCAL_NETWORK: local
   _MAIN_CONTAINER_NAME: main
 steps:
@@ -117,15 +108,20 @@ steps:
     entrypoint: bash
     args:
       - -c
-      - gcloud beta dns record-sets transaction execute --zone=${_GCP_DNS_ZONE} --project=${_GCP_PROJECT} || exit 0
-
+      - gcloud beta dns record-sets transaction execute --zone=${_GCP_DNS_ZONE}
+        --project=${_GCP_PROJECT} || exit 0
   - name: gcr.io/cloud-builders/gcloud
     entrypoint: bash
     args:
       - -c
-      - gcloud beta dns record-sets transaction abort --zone=${_GCP_DNS_ZONE} --project=${_GCP_PROJECT} || exit 0
+      - gcloud beta dns record-sets transaction abort --zone=${_GCP_DNS_ZONE}
+        --project=${_GCP_PROJECT} || exit 0
   - name: gcr.io/cloud-builders/gcloud
     entrypoint: bash
     args:
       - -c
-      - gcloud beta run domain-mappings create --platform=managed --service=view-store-${_DOMAIN}-${_ID} --domain=${_ID}.${_DOMAIN}.view-store.${_SERVICE}.${_ENVIRONMENT}.${_NETWORK} --project=${_GCP_PROJECT}-${_ENVIRONMENT} --region=${_GCP_REGION} || exit 0
+      - gcloud beta run domain-mappings create --platform=managed
+        --service=view-store-${_DOMAIN}-${_ID}
+        --domain=${_ID}.${_DOMAIN}.view-store.${_SERVICE}.${_ENVIRONMENT}.${_NETWORK}
+        --project=${_GCP_PROJECT}-${_ENVIRONMENT} --region=${_GCP_REGION} ||
+        exit 0

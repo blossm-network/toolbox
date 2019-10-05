@@ -14,7 +14,7 @@ describe("View store", () => {
     });
 
     //eslint-disable-next-line no-console
-    console.log("res0: ", url);
+    console.log("res0: ", response0);
     expect(response0.statusCode).to.equal(204);
 
     const response1 = await request.put(`${url}/${id}`, {

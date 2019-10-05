@@ -4,6 +4,15 @@ module.exports = async name => {
   const file = `${name}.txt.encrypted`;
   await deps.download({ bucket: process.env.GCP_SECRET_BUCKET, file });
   const encrypted = await deps.readFile(file);
+  //eslint-disable-next-line no-console
+  console.log("secret:", {
+    file,
+    encrypted,
+    ring: process.env.GCP_KMS_SECRET_BUCKET_KEY_RING,
+    key: name,
+    location: process.env.GCP_KMS_SECRET_BUCKET_KEY_LOCATION,
+    project: process.env.GCP_PROJECT
+  });
   const [secret] = await Promise.all([
     deps.decrypt({
       message: encrypted,
