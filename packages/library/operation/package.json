@@ -1,7 +1,7 @@
 {
   "name": "@sustainers/operation-js",
   "description": "Calls an operation on a service within the network.",
-  "version": "0.0.33",
+  "version": "0.0.34",
   "main": "index.js",
   "author": "sustainers.market",
   "engines": {
@@ -17,7 +17,7 @@
     "@sustainers/errors": "^0.0.8",
     "@sustainers/hash-string": "*",
     "@sustainers/request": "^0.0.4",
-    "@sustainers/service-name-consts": "^0.0.1",
+    "@sustainers/service-name-consts": "^0.0.2",
     "@sustainers/trim-string": "^0.0.1"
   },
   "devDependencies": {
