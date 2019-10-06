@@ -22,7 +22,7 @@ services:
       GCP_KMS_SECRET_BUCKET_KEY_RING:
 
   event-store:
-    image: ${CONTAINER_REGISTRY}/${SERVICE}.event-store.${DOMAIN}:latest
+    image: ${STAGING_CONTAINER_REGISTRY}/${SERVICE}.event-store.${DOMAIN}:latest
     container_name: ${EVENT_STORE_HASH}.${NETWORK}
     ports:
       - ${PORT}

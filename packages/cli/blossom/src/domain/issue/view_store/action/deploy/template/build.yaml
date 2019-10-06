@@ -87,7 +87,7 @@ steps:
       - transaction
       - start
       - --zone=${_GCP_DNS_ZONE}
-      - --project=${_GCP_PROJECT}${_ENV_NAME_SPECIFIER}
+      - --project=${_GCP_PROJECT}
   - name: gcr.io/cloud-builders/gcloud
     args:
       - beta
@@ -100,20 +100,28 @@ steps:
       - --zone=${_GCP_DNS_ZONE}
       - --type=CNAME
       - --ttl=86400
-      - --project=${_GCP_PROJECT}${_ENV_NAME_SPECIFIER}
+      - --project=${_GCP_PROJECT}
   - name: gcr.io/cloud-builders/gcloud
     entrypoint: bash
     args:
       - -c
-      - gcloud beta dns record-sets transaction execute --zone=${_GCP_DNS_ZONE} --project=${_GCP_PROJECT}${_ENV_NAME_SPECIFIER} || exit 0
-
+      - gcloud beta dns record-sets transaction execute
+        --zone=${_GCP_DNS_ZONE}
+        --project=${_GCP_PROJECT} || exit 0
   - name: gcr.io/cloud-builders/gcloud
     entrypoint: bash
     args:
       - -c
-      - gcloud beta dns record-sets transaction abort --zone=${_GCP_DNS_ZONE} --project=${_GCP_PROJECT}${_ENV_NAME_SPECIFIER} || exit 0
+      - gcloud beta dns record-sets transaction abort
+        --zone=${_GCP_DNS_ZONE}
+        --project=${_GCP_PROJECT} || exit 0
   - name: gcr.io/cloud-builders/gcloud
     entrypoint: bash
     args:
       - -c
-      - gcloud beta run domain-mappings create --platform=managed --service=${_GCP_REGION}-${_OPERATION_HASH} --domain=${_OPERATION_HASH}.${_GCP_REGION}.${_ENV_URI_SPECIFIER}${_NETWORK} --project=${_GCP_PROJECT}${_ENV_NAME_SPECIFIER} --region=${_GCP_REGION} || exit 0
+      - gcloud beta run domain-mappings create
+        --platform=managed
+        --service=${_GCP_REGION}-${_OPERATION_HASH}
+        --domain=${_OPERATION_HASH}.${_GCP_REGION}.${_ENV_URI_SPECIFIER}${_NETWORK}
+        --project=${_GCP_PROJECT}${_ENV_NAME_SPECIFIER}
+        --region=${_GCP_REGION} || exit 0

@@ -40,6 +40,7 @@ steps:
         PORT=80
         MAIN_CONTAINER_NAME=main
         CONTAINER_REGISTRY=us.gcr.io/${_GCP_PROJECT}${_ENV_NAME_SPECIFIER}
+        STAGING_CONTAINER_REGISTRY=us.gcr.io/${_GCP_PROJECT}-staging
         GCP_PROJECT=${_GCP_PROJECT}-staging
         GCP_REGION=${_GCP_REGION}
         GCP_SECRET_BUCKET=smn-staging-secrets
@@ -54,10 +55,9 @@ steps:
     args:
       - ps
   - name: node:10.16.0
-    entrypoint: bash
+    entrypoint: yarn
     args:
-      - -c
-      - yarn test:integration || exit 0
+      - test:integration
     env:
       - MAIN_CONTAINER_NAME=main
       - NETWORK=local
@@ -87,7 +87,7 @@ steps:
       - --project=${_GCP_PROJECT}${_ENV_NAME_SPECIFIER}
       - --region=${_GCP_REGION}
       - --set-env-vars=NODE_ENV=${_NODE_ENV},NETWORK=${_GCP_REGION}.${_ENV_URI_SPECIFIER}${_NETWORK},SERVICE=${_SERVICE},CONTEXT=${_CONTEXT},TARGET_CONTEXT=${_TARGET_CONTEXT},DOMAIN=${_DOMAIN},ACTION=${_ACTION},TARGET_DOMAIN=${_TARGET_DOMAIN},TARGET_ID=${_TARGET_ID},GCP_PROJECT=${_GCP_PROJECT}${_ENV_NAME_SPECIFIER},GCP_REGION=${_GCP_REGION},GCP_SECRET_BUCKET=smn${_ENV_NAME_SPECIFIER}-secrets
-      - --labels=service=${_SERVICE},context=${_CONTEXT},domain=${_DOMAIN},action=${_ACTION},TARGET_CONTEXT=${_TARGET_CONTEXT},TARGET_DOMAIN=${_TARGET_DOMAIN},TARGET_ID=${_TARGET_ID}
+      - --labels=service=${_SERVICE},context=${_CONTEXT},domain=${_DOMAIN},action=${_ACTION},target-context=${_TARGET_CONTEXT},target-domain=${_TARGET_DOMAIN},target-id=${_TARGET_ID}
   - name: gcr.io/cloud-builders/gcloud
     args:
       - beta
@@ -96,7 +96,7 @@ steps:
       - transaction
       - start
       - --zone=${_GCP_DNS_ZONE}
-      - --project=${_GCP_PROJECT}${_ENV_NAME_SPECIFIER}
+      - --project=${_GCP_PROJECT}
   - name: gcr.io/cloud-builders/gcloud
     args:
       - beta
@@ -109,22 +109,31 @@ steps:
       - --zone=${_GCP_DNS_ZONE}
       - --type=CNAME
       - --ttl=86400
-      - --project=${_GCP_PROJECT}${_ENV_NAME_SPECIFIER}
+      - --project=${_GCP_PROJECT}
   - name: gcr.io/cloud-builders/gcloud
     entrypoint: bash
     args:
       - -c
-      - gcloud beta dns record-sets transaction execute --zone=${_GCP_DNS_ZONE} --project=${_GCP_PROJECT}${_ENV_NAME_SPECIFIER} || exit 0
+      - gcloud beta dns record-sets transaction execute
+        --zone=${_GCP_DNS_ZONE}
+        --project=${_GCP_PROJECT} || exit 0
   - name: gcr.io/cloud-builders/gcloud
     entrypoint: bash
     args:
       - -c
-      - gcloud beta dns record-sets transaction abort --zone=${_GCP_DNS_ZONE} --project=${_GCP_PROJECT}${_ENV_NAME_SPECIFIER} || exit 0
+      - gcloud beta dns record-sets transaction abort
+        --zone=${_GCP_DNS_ZONE}
+        --project=${_GCP_PROJECT} || exit 0
   - name: gcr.io/cloud-builders/gcloud
     entrypoint: bash
     args:
       - -c
-      - gcloud beta run domain-mappings create --platform=managed --service=${_GCP_REGION}-${_OPERATION_HASH} --domain=${_OPERATION_HASH}.${_GCP_REGION}.${_ENV_URI_SPECIFIER}${_NETWORK} --project=${_GCP_PROJECT}${_ENV_NAME_SPECIFIER} --region=${_GCP_REGION} || exit 0
+      - gcloud beta run domain-mappings create
+        --platform=managed
+        --service=${_GCP_REGION}-${_OPERATION_HASH}
+        --domain=${_OPERATION_HASH}.${_GCP_REGION}.${_ENV_URI_SPECIFIER}${_NETWORK}
+        --project=${_GCP_PROJECT}${_ENV_NAME_SPECIFIER}
+        --region=${_GCP_REGION} || exit 0
   - name: gcr.io/cloud-builders/gcloud
     args:
       - beta
@@ -140,16 +149,17 @@ steps:
     entrypoint: bash
     args:
       - -c
-      - gcloud pubsub topics create did-${_ACTION}.${_DOMAIN}.${_SERVICE}.${_ENV_URI_SPECIFIER}${_NETWORK} --project=${_GCP_PROJECT}${_ENV_NAME_SPECIFIER} || exit 0
+      - gcloud pubsub topics create
+        did-${_ACTION}.${_DOMAIN}.${_SERVICE}.${_ENV_URI_SPECIFIER}${_NETWORK}
+        --project=${_GCP_PROJECT}${_ENV_NAME_SPECIFIER} || exit 0
   - name: gcr.io/cloud-builders/gcloud
+    entrypoint: bash
     args:
-      - beta
-      - pubsub
-      - subscriptions
-      - create
-      - ${_SERVICE}-${_CONTEXT}-${_OPERATION_HASH}
-      - --topic=did-${_ACTION}.${_DOMAIN}.${_SERVICE}.${_ENV_URI_SPECIFIER}${_NETWORK}
-      - --push-endpoint=https://${_OPERATION_HASH}.${_GCP_REGION}.${_ENV_URI_SPECIFIER}${_NETWORK}
-      - --push-auth-service-account=cloud-run-pubsub-invoker@${_GCP_PROJECT}${_ENV_NAME_SPECIFIER}.iam.gserviceaccount.com
-      - --project=${_GCP_PROJECT}${_ENV_NAME_SPECIFIER}
-      - --labels=service=${_SERVICE},context=${_CONTEXT},domain=${_DOMAIN},action=${_ACTION},target-context=${_TARGET_CONTEXT},target-domain=${_TARGET_DOMAIN},target-id=${_TARGET_ID}
+      - -c
+      - gcloud beta pubsub subscriptions create
+        ${_SERVICE}-${_CONTEXT}-${_OPERATION_HASH}
+        --topic=did-${_ACTION}.${_DOMAIN}.${_SERVICE}.${_ENV_URI_SPECIFIER}${_NETWORK}
+        --push-endpoint=https://${_OPERATION_HASH}.${_GCP_REGION}.${_ENV_URI_SPECIFIER}${_NETWORK}
+        --push-auth-service-account=cloud-run-pubsub-invoker@${_GCP_PROJECT}${_ENV_NAME_SPECIFIER}.iam.gserviceaccount.com
+        --project=${_GCP_PROJECT}${_ENV_NAME_SPECIFIER}
+        --labels=service=${_SERVICE},context=${_CONTEXT},domain=${_DOMAIN},action=${_ACTION},target-context=${_TARGET_CONTEXT},target-domain=${_TARGET_DOMAIN},target-id=${_TARGET_ID} || exit 0

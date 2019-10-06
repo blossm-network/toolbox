@@ -25,7 +25,7 @@ services:
       GCP_KMS_SECRET_BUCKET_KEY_RING:
 
   target:
-    image: ${CONTAINER_REGISTRY}/${SERVICE}.${TARGET_CONTEXT}.${TARGET_DOMAIN}.${TARGET_ID}:latest
+    image: ${STAGING_CONTAINER_REGISTRY}/${SERVICE}.${TARGET_CONTEXT}.${TARGET_DOMAIN}.${TARGET_ID}:latest
     container_name: ${TARGET_HASH}.${NETWORK}
     ports:
       - ${PORT}
