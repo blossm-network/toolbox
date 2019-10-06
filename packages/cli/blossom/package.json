@@ -16,6 +16,7 @@
   "author": "sustainers.market",
   "dependencies": {
     "@sustainers/deploy-cli-template": "^0.0.6",
+    "@sustainers/init-cli-template": "*",
     "@sustainers/hash-string": "^0.0.1",
     "@sustainers/normalize-cli": "^0.0.8",
     "@sustainers/robo-say": "*",
