@@ -1,6 +1,6 @@
 {
   "name": "@sustainers/authorize-command",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "Authorize command requests.",
   "main": "index.js",
   "author": "sustainers.market",
@@ -11,7 +11,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@sustainers/array-intersection": "^0.0.3",
+    "@sustainers/array-intersection": "^0.0.4",
     "@sustainers/jwt": "^0.0.9"
   },
   "scripts": {

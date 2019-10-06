@@ -1,6 +1,6 @@
 {
   "name": "@sustainers/trim-string",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Trims a string to a fixed length and optionally adds three dots to the end.",
   "main": "index.js",
   "author": "sustainers.market",
@@ -13,7 +13,6 @@
   "scripts": {
     "test": "mocha"
   },
-  "dependencies": {},
   "devDependencies": {
     "mocha": "^6.1.4"
   }

@@ -1,6 +1,6 @@
 {
   "name": "@sustainers/duration-consts",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Constants that describe durations.",
   "main": "index.js",
   "author": "sustainers.market",
