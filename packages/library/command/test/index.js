@@ -50,7 +50,11 @@ describe("Issue command", () => {
       .in(context)
       .with(tokenFn);
 
-    expect(operationFake).to.have.been.calledWith(`${action}.${domain}`);
+    expect(operationFake).to.have.been.calledWith(
+      action,
+      domain,
+      "command-handler"
+    );
     expect(postFake).to.have.been.calledWith({
       payload,
       headers: {
@@ -80,7 +84,7 @@ describe("Issue command", () => {
       .in(context)
       .with(tokenFn);
 
-    expect(operationFake).to.have.been.calledWith(`${action}.${domain}`);
+    expect(operationFake).to.have.been.calledWith(action, domain);
     expect(postFake).to.have.been.calledWith({
       payload,
       headers: {

@@ -64,7 +64,7 @@ const envNameSpecifier = env => {
     return "";
   }
 };
-const configure = async (workingDir, customConfigFn, env) => {
+const configure = async (workingDir, configFn, env) => {
   const configPath = path.resolve(workingDir, "blossom.yaml");
 
   try {
@@ -99,13 +99,14 @@ const configure = async (workingDir, customConfigFn, env) => {
 
       _DOMAIN: config.domain,
       ...(config.service && { _SERVICE: config.service }),
+      ...(config.context && { _CONTEXT: config.context }),
       ...(config.network && { _NETWORK: config.network }),
       ...(config.gcpProject && { _GCP_PROJECT: config.gcpProject }),
       ...(config.gcpRegion && { _GCP_REGION: config.gcpRegion }),
       ...(config.gcpDnsZone && { _GCP_DNS_ZONE: config.gcpDnsZone }),
       ...(config.memory && { _MEMORY: config.memory }),
 
-      ...(customConfigFn && customConfigFn(config)),
+      ...(configFn && configFn(config)),
 
       _NODE_ENV: env,
       _ENV_NAME_SPECIFIER: envNameSpecifier(env),
@@ -125,8 +126,8 @@ const configure = async (workingDir, customConfigFn, env) => {
   }
 };
 
-module.exports = async ({ templateDir, workingDir, input, customConfigFn }) => {
+module.exports = async ({ templateDir, workingDir, input, configFn }) => {
   await copyTemplate(templateDir, workingDir);
   await copySrc(input.path, workingDir);
-  await configure(workingDir, customConfigFn, input.env);
+  await configure(workingDir, configFn, input.env);
 };

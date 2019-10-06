@@ -1,15 +1,20 @@
-const request = require("@sustainers/request");
 const errors = require("@sustainers/errors");
+
+const deps = require("./deps");
 
 const common = ({ method, operation, root, data }) => {
   return {
     in: ({ context, service, network }) => {
       return {
         with: async ({ path = "", tokenFn } = {}) => {
-          const url = `http://${operation}.${service}.${network}${path}${
+          const operationHash = deps
+            .hash(operation.join("") + service)
+            .toString();
+
+          const url = `http://${operationHash}.${network}${path}${
             root != undefined ? `/${root}` : ""
           }`;
-          const token = tokenFn ? await tokenFn({ operation }) : null;
+          const token = tokenFn ? await tokenFn(operationHash) : null;
 
           const response = await method(
             url,
@@ -43,15 +48,15 @@ const common = ({ method, operation, root, data }) => {
   };
 };
 
-module.exports = operation => {
+module.exports = (...operation) => {
   return {
-    post: data => common({ method: request.post, operation, data }),
-    put: (root, data) => common({ method: request.put, operation, root, data }),
-    delete: root => common({ method: request.delete, operation, root }),
+    post: data => common({ method: deps.post, operation, data }),
+    put: (root, data) => common({ method: deps.put, operation, root, data }),
+    delete: root => common({ method: deps.delete, operation, root }),
     get: query => {
       const root = query.root;
       delete query.root;
-      return common({ method: request.get, operation, root, data: query });
+      return common({ method: deps.get, operation, root, data: query });
     }
   };
 };

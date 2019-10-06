@@ -1,21 +1,4 @@
 substitutions:
-  # OPTIONAL TODO:
-  #   If you plan on hosting a sandbox environment,
-  #   remove the comment arrow from the line following this comment and
-  #   change the values so that it describes this repo's service.
-  #
-  #   The target is the unique name of the entity that will be operated on by this event handler.
-  #
-  # OPTIONAL TODO:
-  #   Replace any other substitution with other values.
-
-  _ACTION: some-action # <--
-  _DOMAIN: some-domain # <--
-  _TARGET_ID: some-id #<--
-  _TARGET_DOMAIN: some-domain #<--
-  _TARGET_CONTEXT: vs #<--
-  _TARGET_HASH: some-hash #<--
-
   _SERVICE: core
   _NETWORK: sm.network
   _GCP_PROJECT: smn-core
@@ -36,7 +19,7 @@ steps:
     args:
       - build
       - -t
-      - us.gcr.io/${_GCP_PROJECT}${_ENV_NAME_SPECIFIER}/${_TARGET_CONTEXT}.${_TARGET_DOMAIN}.${_TARGET_ID}.${_DOMAIN}.did-${_ACTION}
+      - us.gcr.io/${_GCP_PROJECT}${_ENV_NAME_SPECIFIER}/${_SERVICE}.${_CONTEXT}.${_OPERATION_HASH}
       - .
   - name: node:10.16.0
     entrypoint: bash
@@ -46,11 +29,14 @@ steps:
         cat >> .env <<- EOM
         NETWORK=local
         SERVICE=${_SERVICE}
+        CONTEXT=${_CONTEXT}
         DOMAIN=${_DOMAIN}
         ACTION=${_ACTION}
+        OPERATION_HASH=${_OPERATION_HASH}
         TARGET_ID=${_TARGET_ID}
         TARGET_DOMAIN=${_TARGET_DOMAIN}
         TARGET_CONTEXT=${_TARGET_CONTEXT}
+        TARGET_HASH=${_TARGET_HASH}
         NODE_ENV=local
         PORT=80
         MAIN_CONTAINER_NAME=main
@@ -77,30 +63,32 @@ steps:
       - MAIN_CONTAINER_NAME=main
       - NETWORK=local
       - SERVICE=${_SERVICE}
+      - CONTEXT=${_CONTEXT}
       - DOMAIN=${_DOMAIN}
       - ACTION=${_ACTION}
-      - TARGET_ID=${_TARGET_ID}
-      - TARGET_DOMAIN=${_TARGET_DOMAIN}
       - TARGET_CONTEXT=${_TARGET_CONTEXT}
+      - TARGET_DOMAIN=${_TARGET_DOMAIN}
+      - TARGET_ID=${_TARGET_ID}
   - name: docker/compose:1.15.0
     args:
       - logs
   - name: gcr.io/cloud-builders/docker
     args:
       - push
-      - us.gcr.io/${_GCP_PROJECT}${_ENV_NAME_SPECIFIER}/${_TARGET_CONTEXT}.${_TARGET_DOMAIN}.${_TARGET_ID}.${_DOMAIN}.did-${_ACTION}
+      - us.gcr.io/${_GCP_PROJECT}${_ENV_NAME_SPECIFIER}/${_SERVICE}.${_CONTEXT}.${_OPERATION_HASH}
   - name: gcr.io/cloud-builders/gcloud
     args:
       - beta
       - run
       - deploy
-      - ${_TARGET_CONTEXT}-${_TARGET_DOMAIN}-${_TARGET_ID}-${_DOMAIN}-did-${_ACTION}
-      - --image=us.gcr.io/${_GCP_PROJECT}${_ENV_NAME_SPECIFIER}/${_TARGET_CONTEXT}.${_TARGET_DOMAIN}.${_TARGET_ID}.${_DOMAIN}.did-${_ACTION}
+      - ${_GCP_REGION}-${_OPERATION_HASH}
+      - --image=us.gcr.io/${_GCP_PROJECT}${_ENV_NAME_SPECIFIER}/${_SERVICE}.${_CONTEXT}.${_OPERATION_HASH}
       - --platform=managed
       - --memory=${_MEMORY}
       - --project=${_GCP_PROJECT}${_ENV_NAME_SPECIFIER}
       - --region=${_GCP_REGION}
-      - --set-env-vars=NODE_ENV=${_NODE_ENV},NETWORK=${_ENV_URI_SPECIFIER}${_NETWORK},SERVICE=${_SERVICE},TARGET_CONTEXT=${_TARGET_CONTEXT},TARGET_DOMAIN=${_TARGET_DOMAIN},TARGET_ID=${_TARGET_ID},DOMAIN=${_DOMAIN},ACTION=${_ACTION},GCP_PROJECT=${_GCP_PROJECT}${_ENV_NAME_SPECIFIER},GCP_REGION=${_GCP_REGION},GCP_SECRET_BUCKET=smn${_ENV_NAME_SPECIFIER}-secrets
+      - --set-env-vars=NODE_ENV=${_NODE_ENV},NETWORK=${_GCP_REGION}.${_ENV_URI_SPECIFIER}${_NETWORK},SERVICE=${_SERVICE},CONTEXT=${_CONTEXT},TARGET_CONTEXT=${_TARGET_CONTEXT},DOMAIN=${_DOMAIN},ACTION=${_ACTION},TARGET_DOMAIN=${_TARGET_DOMAIN},TARGET_ID=${_TARGET_ID},GCP_PROJECT=${_GCP_PROJECT}${_ENV_NAME_SPECIFIER},GCP_REGION=${_GCP_REGION},GCP_SECRET_BUCKET=smn${_ENV_NAME_SPECIFIER}-secrets
+      - --labels=NETWORK=${_NETWORK},SERVICE=${_SERVICE},CONTEXT=${_CONTEXT},DOMAIN=${_DOMAIN},ACTION=${_ACTION},TARGET_CONTEXT=${_TARGET_CONTEXT},TARGET_DOMAIN=${_TARGET_DOMAIN},TARGET_ID=${_TARGET_ID}
   - name: gcr.io/cloud-builders/gcloud
     args:
       - beta
@@ -109,7 +97,7 @@ steps:
       - transaction
       - start
       - --zone=${_GCP_DNS_ZONE}
-      - --project=${_GCP_PROJECT}
+      - --project=${_GCP_PROJECT}${_ENV_NAME_SPECIFIER}
   - name: gcr.io/cloud-builders/gcloud
     args:
       - beta
@@ -118,33 +106,33 @@ steps:
       - transaction
       - add
       - ghs.googlehosted.com.
-      - --name=did-${_ACTION}.${_DOMAIN}.${_TARGET_HASH}.${_SERVICE}.${_ENV_URI_SPECIFIER}${_NETWORK}
+      - --name=${_OPERATION_HASH}.${_GCP_REGION}.${_ENV_URI_SPECIFIER}${_NETWORK}
       - --zone=${_GCP_DNS_ZONE}
       - --type=CNAME
       - --ttl=86400
-      - --project=${_GCP_PROJECT}
+      - --project=${_GCP_PROJECT}${_ENV_NAME_SPECIFIER}
   - name: gcr.io/cloud-builders/gcloud
     entrypoint: bash
     args:
       - -c
-      - gcloud beta dns record-sets transaction execute --zone=${_GCP_DNS_ZONE} --project=${_GCP_PROJECT} || exit 0
+      - gcloud beta dns record-sets transaction execute --zone=${_GCP_DNS_ZONE} --project=${_GCP_PROJECT}${_ENV_NAME_SPECIFIER} || exit 0
   - name: gcr.io/cloud-builders/gcloud
     entrypoint: bash
     args:
       - -c
-      - gcloud beta dns record-sets transaction abort --zone=${_GCP_DNS_ZONE} --project=${_GCP_PROJECT} || exit 0
+      - gcloud beta dns record-sets transaction abort --zone=${_GCP_DNS_ZONE} --project=${_GCP_PROJECT}${_ENV_NAME_SPECIFIER} || exit 0
   - name: gcr.io/cloud-builders/gcloud
     entrypoint: bash
     args:
       - -c
-      - gcloud beta run domain-mappings create --platform=managed --service=${_TARGET_CONTEXT}-${_TARGET_DOMAIN}-${_TARGET_ID}-${_DOMAIN}-did-${_ACTION} --domain=did-${_ACTION}.${_DOMAIN}.${_TARGET_HASH}.${_SERVICE}.${_ENV_URI_SPECIFIER}${_NETWORK} --project=${_GCP_PROJECT}${_ENV_NAME_SPECIFIER} --region=${_GCP_REGION} || exit 0
+      - gcloud beta run domain-mappings create --platform=managed --service=${_GCP_REGION}-${_OPERATION_HASH} --domain=${_OPERATION_HASH}.${_GCP_REGION}.${_ENV_URI_SPECIFIER}${_NETWORK} --project=${_GCP_PROJECT}${_ENV_NAME_SPECIFIER} --region=${_GCP_REGION} || exit 0
   - name: gcr.io/cloud-builders/gcloud
     args:
       - beta
       - run
       - services
       - add-iam-policy-binding
-      - ${_TARGET_CONTEXT}-${_TARGET_DOMAIN}-${_TARGET_ID}-${_DOMAIN}-did-${_ACTION}
+      - ${_GCP_REGION}-${_OPERATION_HASH}
       - --member=serviceAccount:cloud-run-pubsub-invoker@${_GCP_PROJECT}${_ENV_NAME_SPECIFIER}.iam.gserviceaccount.com
       - --role=roles/run.invoker
       - --project=${_GCP_PROJECT}${_ENV_NAME_SPECIFIER}
@@ -160,8 +148,9 @@ steps:
       - pubsub
       - subscriptions
       - create
-      - ${_TARGET_CONTEXT}-${_TARGET_DOMAIN}-${_TARGET_ID}-${_DOMAIN}-did-${_ACTION}${_ENV_NAME_SPECIFIER}
+      - ${_SERVICE}-${_CONTEXT}-${_OPERATION_HASH}
       - --topic=did-${_ACTION}.${_DOMAIN}.${_SERVICE}.${_ENV_URI_SPECIFIER}${_NETWORK}
-      - --push-endpoint=https://did-${_ACTION}.${_DOMAIN}.${_TARGET_HASH}.${_SERVICE}.${_ENV_URI_SPECIFIER}${_NETWORK}
-      - --push-auth-service-account=cloud-run-pubsub-invoker@${_GCP_PROJECT}.iam.gserviceaccount.com
-      - --project=${_GCP_PROJECT} #should be the same project where the network is hosted
+      - --push-endpoint=https://${_OPERATION_HASH}.${_GCP_REGION}.${_ENV_URI_SPECIFIER}${_NETWORK}
+      - --push-auth-service-account=cloud-run-pubsub-invoker@${_GCP_PROJECT}${_ENV_NAME_SPECIFIER}.iam.gserviceaccount.com
+      - --project=${_GCP_PROJECT}${_ENV_NAME_SPECIFIER}
+      - --labels=NETWORK=${_NETWORK},SERVICE=${_SERVICE},CONTEXT=${_CONTEXT},DOMAIN=${_DOMAIN},ACTION=${_ACTION},TARGET_CONTEXT=${_TARGET_CONTEXT},TARGET_DOMAIN=${_TARGET_DOMAIN},TARGET_ID=${_TARGET_ID}

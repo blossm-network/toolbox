@@ -1,7 +1,7 @@
 version: "3"
 services:
   event-store:
-    image: ${CONTAINER_REGISTRY}/es.${DOMAIN}:latest
+    image: ${CONTAINER_REGISTRY}/${SERVICE}.${CONTEXT}.${OPERATION_HASH}:latest
     container_name: ${MAIN_CONTAINER_NAME}
     ports:
       - ${PORT}
@@ -10,6 +10,7 @@ services:
       NODE_ENV:
       NETWORK:
       SERVICE:
+      CONTEXT:
       DOMAIN:
       GCP_PROJECT:
       GCP_REGION:

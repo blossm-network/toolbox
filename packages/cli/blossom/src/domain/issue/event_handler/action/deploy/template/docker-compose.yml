@@ -1,7 +1,7 @@
 version: "3"
 services:
   main:
-    image: ${CONTAINER_REGISTRY}/${TARGET_CONTEXT}.${TARGET_DOMAIN}.${TARGET_ID}.${DOMAIN}.did-${ACTION}:latest
+    image: ${CONTAINER_REGISTRY}/${SERVICE}.${CONTEXT}.${OPERATION_HASH}:latest
     container_name: ${MAIN_CONTAINER_NAME}
     ports:
       - ${PORT}
@@ -12,6 +12,7 @@ services:
       NODE_ENV:
       NETWORK:
       SERVICE:
+      CONTEXT:
       DOMAIN:
       ACTION:
       TARGET_ID:
@@ -24,8 +25,8 @@ services:
       GCP_KMS_SECRET_BUCKET_KEY_RING:
 
   target:
-    image: ${CONTAINER_REGISTRY}/${TARGET_CONTEXT}.${TARGET_DOMAIN}.${TARGET_ID}:latest
-    container_name: ${TARGET_ID}.${TARGET_DOMAIN}.${TARGET_CONTEXT}.${SERVICE}.${NETWORK}
+    image: ${CONTAINER_REGISTRY}/${SERVICE}.${TARGET_CONTEXT}.${TARGET_HASH}:latest
+    container_name: ${TARGET_HASH}.${GCP_PROJECT}.${NETWORK}
     ports:
       - ${PORT}
     environment:
@@ -33,6 +34,7 @@ services:
       NODE_ENV:
       NETWORK:
       SERVICE:
+      CONTEXT: ${TARGET_CONTEXT}
       DOMAIN: ${TARGET_DOMAIN}
       ID: ${TARGET_ID}
       GCP_PROJECT:

@@ -18,7 +18,7 @@ module.exports = ({ action, domain, service, network }) => {
           return {
             with: async tokenFn =>
               await deps
-                .operation(`${action}.${domain}`)
+                .operation(action, domain, "command-handler")
                 .post(data)
                 .in({ context, service, network })
                 .with({ tokenFn })

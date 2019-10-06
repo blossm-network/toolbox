@@ -1,21 +1,10 @@
 substitutions:
-  # OPTIONAL TODO:
-  #   Remove the comment arrows from the two lines following this comment and
-  #   change the values so that they describe this repo's service.
-  #
-  # OPTIONAL TODO:
-  #   Replace any other substitution with other values.
-
-  _ID: ${ID} # <--
-  _DOMAIN: ${DOMAIN} # <--
-
   _SERVICE: core
   _NETWORK: sm.network
   _GCP_PROJECT: smn-core
   _GCP_REGION: us-central1
   _GCP_DNS_ZONE: network
   _MEMORY: 128Mi
-
 steps:
   - name: node:10.16.0
     entrypoint: yarn
@@ -29,7 +18,7 @@ steps:
     args:
       - build
       - -t
-      - us.gcr.io/${_GCP_PROJECT}${_ENV_NAME_SPECIFIER}/vs.${_DOMAIN}.${_ID}
+      - us.gcr.io/${_GCP_PROJECT}${_ENV_NAME_SPECIFIER}/${_SERVICE}.${_CONTEXT}.${_OPERATION_HASH}
       - .
   - name: node:10.16.0
     entrypoint: bash
@@ -39,7 +28,9 @@ steps:
         cat >> .env <<- EOM
         NETWORK=local
         SERVICE=${_SERVICE}
+        CONTEXT=${_CONTEXT}
         DOMAIN=${_DOMAIN}
+        OPERATION_HASH=${_OPERATION_HASH}
         ID=${_ID}
         NODE_ENV=local
         PORT=80
@@ -66,6 +57,7 @@ steps:
       - MAIN_CONTAINER_NAME=main
       - NETWORK=local
       - SERVICE=${_SERVICE}
+      - CONTEXT=${_CONTEXT}
       - DOMAIN=${_DOMAIN}
       - ID=${_ID}
   - name: docker/compose:1.15.0
@@ -74,19 +66,20 @@ steps:
   - name: gcr.io/cloud-builders/docker
     args:
       - push
-      - us.gcr.io/${_GCP_PROJECT}${_ENV_NAME_SPECIFIER}/vs.${_DOMAIN}.${_ID}
+      - us.gcr.io/${_GCP_PROJECT}${_ENV_NAME_SPECIFIER}/${_SERVICE}.${_CONTEXT}.${_OPERATION_HASH}
   - name: gcr.io/cloud-builders/gcloud
     args:
       - beta
       - run
       - deploy
-      - vs-${_DOMAIN}-${_ID}
-      - --image=us.gcr.io/${_GCP_PROJECT}${_ENV_NAME_SPECIFIER}/vs.${_DOMAIN}.${_ID}
+      - ${_GCP_REGION}-${_OPERATION_HASH}
+      - --image=us.gcr.io/${_GCP_PROJECT}${_ENV_NAME_SPECIFIER}/${_SERVICE}.${_CONTEXT}.${_OPERATION_HASH}
       - --platform=managed
       - --memory=${_MEMORY}
       - --project=${_GCP_PROJECT}${_ENV_NAME_SPECIFIER}
       - --region=${_GCP_REGION}
-      - --set-env-vars=NODE_ENV=${_NODE_ENV},NETWORK=${_ENV_URI_SPECIFIER}${_NETWORK},SERVICE=${_SERVICE},DOMAIN=${_DOMAIN},ID=${_ID},GCP_PROJECT=${_GCP_PROJECT}${_ENV_NAME_SPECIFIER},GCP_REGION=${_GCP_REGION},GCP_SECRET_BUCKET=smn${_ENV_NAME_SPECIFIER}-secrets,MONGODB_USER=gcp${_ENV_NAME_SPECIFIER},MONGODB_HOST=${_NODE_ENV}-ggjlv.gcp.mongodb.net
+      - --set-env-vars=NODE_ENV=${_NODE_ENV},NETWORK=${_GCP_REGION}.${_ENV_URI_SPECIFIER}${_NETWORK},SERVICE=${_SERVICE},CONTEXT=${_CONTEXT},DOMAIN=${_DOMAIN},ID=${_ID},GCP_PROJECT=${_GCP_PROJECT}${_ENV_NAME_SPECIFIER},GCP_REGION=${_GCP_REGION},GCP_SECRET_BUCKET=smn${_ENV_NAME_SPECIFIER}-secrets,MONGODB_USER=gcp${_ENV_NAME_SPECIFIER},MONGODB_HOST=${_NODE_ENV}-ggjlv.gcp.mongodb.net
+      - --labels=NETWORK=${_NETWORK},SERVICE=${_SERVICE},CONTEXT=${_CONTEXT},DOMAIN=${_DOMAIN},ID=${_ID}
   - name: gcr.io/cloud-builders/gcloud
     args:
       - beta
@@ -95,7 +88,7 @@ steps:
       - transaction
       - start
       - --zone=${_GCP_DNS_ZONE}
-      - --project=${_GCP_PROJECT}
+      - --project=${_GCP_PROJECT}${_ENV_NAME_SPECIFIER}
   - name: gcr.io/cloud-builders/gcloud
     args:
       - beta
@@ -104,24 +97,24 @@ steps:
       - transaction
       - add
       - ghs.googlehosted.com.
-      - --name=${_ID}.${_DOMAIN}.vs.${_SERVICE}.${_ENV_URI_SPECIFIER}${_NETWORK}
+      - --name=${_OPERATION_HASH}.${_GCP_REGION}.${_ENV_URI_SPECIFIER}${_NETWORK}
       - --zone=${_GCP_DNS_ZONE}
       - --type=CNAME
       - --ttl=86400
-      - --project=${_GCP_PROJECT}
+      - --project=${_GCP_PROJECT}${_ENV_NAME_SPECIFIER}
   - name: gcr.io/cloud-builders/gcloud
     entrypoint: bash
     args:
       - -c
-      - gcloud beta dns record-sets transaction execute --zone=${_GCP_DNS_ZONE} --project=${_GCP_PROJECT} || exit 0
+      - gcloud beta dns record-sets transaction execute --zone=${_GCP_DNS_ZONE} --project=${_GCP_PROJECT}${_ENV_NAME_SPECIFIER} || exit 0
 
   - name: gcr.io/cloud-builders/gcloud
     entrypoint: bash
     args:
       - -c
-      - gcloud beta dns record-sets transaction abort --zone=${_GCP_DNS_ZONE} --project=${_GCP_PROJECT} || exit 0
+      - gcloud beta dns record-sets transaction abort --zone=${_GCP_DNS_ZONE} --project=${_GCP_PROJECT}${_ENV_NAME_SPECIFIER} || exit 0
   - name: gcr.io/cloud-builders/gcloud
     entrypoint: bash
     args:
       - -c
-      - gcloud beta run domain-mappings create --platform=managed --service=vs-${_DOMAIN}-${_ID} --domain=${_ID}.${_DOMAIN}.vs.${_SERVICE}.${_ENV_URI_SPECIFIER}${_NETWORK} --project=${_GCP_PROJECT}${_ENV_NAME_SPECIFIER} --region=${_GCP_REGION} || exit 0
+      - gcloud beta run domain-mappings create --platform=managed --service=${_GCP_REGION}-${_OPERATION_HASH} --domain=${_OPERATION_HASH}.${_GCP_REGION}.${_ENV_URI_SPECIFIER}${_NETWORK} --project=${_GCP_PROJECT}${_ENV_NAME_SPECIFIER} --region=${_GCP_REGION} || exit 0

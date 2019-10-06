@@ -14,8 +14,13 @@
     "test": "echo \"Error: no test specified\" && exit 0"
   },
   "dependencies": {
-    "fs-extra": "*",
-    "yaml": "*"
+    "@sustainers/normalize-cli": "*",
+    "@sustainers/robo-say": "*",
+    "@sustainers/merge-cli-template": "*",
+    "@sustainers/test-cli-template": "*",
+    "chalk": "^2.4.2",
+    "fs-extra": "^8.1.0",
+    "yaml": "^1.7.0"
   },
   "devDependencies": {
     "mocha": "^6.1.4"

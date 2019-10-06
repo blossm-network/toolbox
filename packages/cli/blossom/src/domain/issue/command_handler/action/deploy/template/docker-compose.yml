@@ -1,7 +1,7 @@
 version: "3"
 services:
   main:
-    image: ${CONTAINER_REGISTRY}/${DOMAIN}.${ACTION}:latest
+    image: ${CONTAINER_REGISTRY}/${SERVICE}.${CONTEXT}.${OPERATION_HASH}:latest
     container_name: ${MAIN_CONTAINER_NAME}
     ports:
       - ${PORT}
@@ -12,6 +12,7 @@ services:
       NODE_ENV:
       NETWORK:
       SERVICE:
+      CONTEXT:
       DOMAIN:
       ACTION:
       GCP_PROJECT:
@@ -21,8 +22,8 @@ services:
       GCP_KMS_SECRET_BUCKET_KEY_RING:
 
   event-store:
-    image: ${CONTAINER_REGISTRY}/es.${DOMAIN}:latest
-    container_name: ${DOMAIN}.es.${SERVICE}.${NETWORK}
+    image: ${CONTAINER_REGISTRY}/${SERVICE}.event-store.${EVENT_STORE_HASH}:latest
+    container_name: ${EVENT_STORE_HASH}.${GCP_REGION}.${NETWORK}
     ports:
       - ${PORT}
     environment:
@@ -30,6 +31,7 @@ services:
       NODE_ENV:
       NETWORK:
       SERVICE:
+      CONTEXT: event-store
       DOMAIN:
       GCP_PROJECT:
       GCP_REGION:

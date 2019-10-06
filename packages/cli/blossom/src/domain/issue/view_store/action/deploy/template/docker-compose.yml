@@ -1,7 +1,7 @@
 version: "3"
 services:
   main:
-    image: ${CONTAINER_REGISTRY}/vs.${DOMAIN}.${ID}:latest
+    image: ${CONTAINER_REGISTRY}/${SERVICE}.${CONTEXT}.${OPERATION_HASH}:latest
     container_name: ${MAIN_CONTAINER_NAME}
     ports:
       - ${PORT}
@@ -9,6 +9,7 @@ services:
       PORT:
       NODE_ENV:
       NETWORK:
+      CONTEXT:
       SERVICE:
       DOMAIN:
       ID:

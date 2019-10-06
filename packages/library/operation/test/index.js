@@ -3,7 +3,8 @@ const { expect } = require("chai")
   .use(require("sinon-chai"));
 const { restore, replace, fake, useFakeTimers } = require("sinon");
 const operation = require("..");
-const request = require("@sustainers/request");
+
+const deps = require("../deps");
 
 let clock;
 
@@ -11,9 +12,11 @@ const now = new Date();
 
 const data = { a: 1, context: 3 };
 const context = { b: 4 };
-const op = "some.operation";
+const opPart1 = "oppartone";
+const opPart2 = "oppartone";
 const token = "some-token";
 const root = "some-root";
+const hash = "some-hash";
 
 const network = "some-network";
 const service = "some-service";
@@ -40,16 +43,22 @@ describe("Operation", () => {
 
   it("should call post with the correct params", async () => {
     const post = fake.returns(response);
-    replace(request, "post", post);
+    replace(deps, "post", post);
+
+    const toStringFake = fake.returns(hash);
+    const hashFake = fake.returns({
+      toString: toStringFake
+    });
+    replace(deps, "hash", hashFake);
 
     const tokenFnFake = fake.returns(token);
-    const result = await operation(op)
+    const result = await operation(opPart1, opPart2)
       .post(data)
       .in({ context, service, network })
       .with({ tokenFn: tokenFnFake });
 
     expect(post).to.have.been.calledWith(
-      `http://${op}.${service}.${network}`,
+      `http://${hash}.${network}`,
       {
         ...data,
         context
@@ -58,60 +67,78 @@ describe("Operation", () => {
         Authorization: `Bearer ${token}`
       }
     );
-    expect(tokenFnFake).to.have.been.calledWith({
-      operation: op
-    });
+    expect(hashFake).to.have.been.calledWith(opPart1 + opPart2 + service);
+    expect(tokenFnFake).to.have.been.calledWith(hash);
     expect(result).to.be.null;
   });
   it("should call post with the correct params with no token", async () => {
     const post = fake.returns(response);
-    replace(request, "post", post);
+    replace(deps, "post", post);
 
-    const result = await operation(op)
+    const toStringFake = fake.returns(hash);
+    const hashFake = fake.returns({
+      toString: toStringFake
+    });
+    replace(deps, "hash", hashFake);
+
+    const result = await operation(opPart1, opPart2)
       .post(data)
       .in({ context, service, network })
       .with();
 
-    expect(post).to.have.been.calledWith(`http://${op}.${service}.${network}`, {
+    expect(post).to.have.been.calledWith(`http://${hash}.${network}`, {
       ...data,
       context
     });
+    expect(hashFake).to.have.been.calledWith(opPart1 + opPart2 + service);
     expect(result).to.be.null;
   });
 
   it("should call post with the correct params with no token", async () => {
     const post = fake.returns(response);
-    replace(request, "post", post);
+    replace(deps, "post", post);
 
     const emptyTokenFake = fake();
-    const result = await operation(op)
+
+    const toStringFake = fake.returns(hash);
+    const hashFake = fake.returns({
+      toString: toStringFake
+    });
+    replace(deps, "hash", hashFake);
+
+    const result = await operation(opPart1, opPart2)
       .post(data)
       .in({ context, service, network })
       .with({ tokenFn: emptyTokenFake });
 
-    expect(post).to.have.been.calledWith(`http://${op}.${service}.${network}`, {
+    expect(post).to.have.been.calledWith(`http://${hash}.${network}`, {
       ...data,
       context
     });
-    expect(emptyTokenFake).to.have.been.calledWith({
-      operation: op
-    });
+    expect(hashFake).to.have.been.calledWith(opPart1 + opPart2 + service);
+    expect(emptyTokenFake).to.have.been.calledWith(hash);
     expect(result).to.be.null;
   });
 
   it("should call post with the correct params with path", async () => {
     const post = fake.returns(response);
-    replace(request, "post", post);
+    replace(deps, "post", post);
+
+    const toStringFake = fake.returns(hash);
+    const hashFake = fake.returns({
+      toString: toStringFake
+    });
+    replace(deps, "hash", hashFake);
 
     const tokenFnFake = fake.returns(token);
     const path = "/some/path";
-    const result = await operation(op)
+    const result = await operation(opPart1, opPart2)
       .post(data)
       .in({ context, service, network })
       .with({ path, tokenFn: tokenFnFake });
 
     expect(post).to.have.been.calledWith(
-      `http://${op}.${service}.${network}${path}`,
+      `http://${hash}.${network}${path}`,
       {
         ...data,
         context
@@ -120,24 +147,29 @@ describe("Operation", () => {
         Authorization: `Bearer ${token}`
       }
     );
-    expect(tokenFnFake).to.have.been.calledWith({
-      operation: op
-    });
+    expect(hashFake).to.have.been.calledWith(opPart1 + opPart2 + service);
+    expect(tokenFnFake).to.have.been.calledWith(hash);
     expect(result).to.be.null;
   });
 
   it("should call get with the correct params", async () => {
     const get = fake.returns(bodyResponse);
-    replace(request, "get", get);
+    replace(deps, "get", get);
+
+    const toStringFake = fake.returns(hash);
+    const hashFake = fake.returns({
+      toString: toStringFake
+    });
+    replace(deps, "hash", hashFake);
 
     const tokenFnFake = fake.returns(token);
-    const result = await operation(op)
+    const result = await operation(opPart1, opPart2)
       .get(data)
       .in({ context, service, network })
       .with({ tokenFn: tokenFnFake });
 
     expect(get).to.have.been.calledWith(
-      `http://${op}.${service}.${network}`,
+      `http://${hash}.${network}`,
       {
         ...data,
         context
@@ -146,23 +178,28 @@ describe("Operation", () => {
         Authorization: `Bearer ${token}`
       }
     );
-    expect(tokenFnFake).to.have.been.calledWith({
-      operation: op
-    });
+    expect(hashFake).to.have.been.calledWith(opPart1 + opPart2 + service);
+    expect(tokenFnFake).to.have.been.calledWith(hash);
     expect(result).to.deep.equal(body);
   });
   it("should call get with the correct params with root", async () => {
     const get = fake.returns(bodyResponse);
-    replace(request, "get", get);
+    replace(deps, "get", get);
+
+    const toStringFake = fake.returns(hash);
+    const hashFake = fake.returns({
+      toString: toStringFake
+    });
+    replace(deps, "hash", hashFake);
 
     const tokenFnFake = fake.returns(token);
-    const result = await operation(op)
+    const result = await operation(opPart1, opPart2)
       .get({ ...data, root })
       .in({ context, service, network })
       .with({ tokenFn: tokenFnFake });
 
     expect(get).to.have.been.calledWith(
-      `http://${op}.${service}.${network}/${root}`,
+      `http://${hash}.${network}/${root}`,
       {
         ...data,
         context
@@ -171,23 +208,28 @@ describe("Operation", () => {
         Authorization: `Bearer ${token}`
       }
     );
-    expect(tokenFnFake).to.have.been.calledWith({
-      operation: op
-    });
+    expect(hashFake).to.have.been.calledWith(opPart1 + opPart2 + service);
+    expect(tokenFnFake).to.have.been.calledWith(hash);
     expect(result).to.deep.equal(body);
   });
   it("should call put with the correct params", async () => {
     const put = fake.returns(response);
-    replace(request, "put", put);
+    replace(deps, "put", put);
+
+    const toStringFake = fake.returns(hash);
+    const hashFake = fake.returns({
+      toString: toStringFake
+    });
+    replace(deps, "hash", hashFake);
 
     const tokenFnFake = fake.returns(token);
-    const result = await operation(op)
+    const result = await operation(opPart1, opPart2)
       .put(root, data)
       .in({ context, service, network })
       .with({ tokenFn: tokenFnFake });
 
     expect(put).to.have.been.calledWith(
-      `http://${op}.${service}.${network}/${root}`,
+      `http://${hash}.${network}/${root}`,
       {
         ...data,
         context
@@ -196,24 +238,29 @@ describe("Operation", () => {
         Authorization: `Bearer ${token}`
       }
     );
-    expect(tokenFnFake).to.have.been.calledWith({
-      operation: op
-    });
+    expect(hashFake).to.have.been.calledWith(opPart1 + opPart2 + service);
+    expect(tokenFnFake).to.have.been.calledWith(hash);
     expect(result).to.be.null;
   });
   it("should call put with the correct params with path", async () => {
     const put = fake.returns(response);
-    replace(request, "put", put);
+    replace(deps, "put", put);
+
+    const toStringFake = fake.returns(hash);
+    const hashFake = fake.returns({
+      toString: toStringFake
+    });
+    replace(deps, "hash", hashFake);
 
     const tokenFnFake = fake.returns(token);
     const path = "/some/path";
-    const result = await operation(op)
+    const result = await operation(opPart1, opPart2)
       .put(root, data)
       .in({ context, service, network })
       .with({ path, tokenFn: tokenFnFake });
 
     expect(put).to.have.been.calledWith(
-      `http://${op}.${service}.${network}${path}/${root}`,
+      `http://${hash}.${network}${path}/${root}`,
       {
         ...data,
         context
@@ -222,23 +269,28 @@ describe("Operation", () => {
         Authorization: `Bearer ${token}`
       }
     );
-    expect(tokenFnFake).to.have.been.calledWith({
-      operation: op
-    });
+    expect(hashFake).to.have.been.calledWith(opPart1 + opPart2 + service);
+    expect(tokenFnFake).to.have.been.calledWith(hash);
     expect(result).to.be.null;
   });
   it("should call delete with the correct params", async () => {
     const del = fake.returns(response);
-    replace(request, "delete", del);
+    replace(deps, "delete", del);
+
+    const toStringFake = fake.returns(hash);
+    const hashFake = fake.returns({
+      toString: toStringFake
+    });
+    replace(deps, "hash", hashFake);
 
     const tokenFnFake = fake.returns(token);
-    const result = await operation(op)
+    const result = await operation(opPart1, opPart2)
       .delete(root)
       .in({ context, service, network })
       .with({ tokenFn: tokenFnFake });
 
     expect(del).to.have.been.calledWith(
-      `http://${op}.${service}.${network}/${root}`,
+      `http://${hash}.${network}/${root}`,
       {
         context
       },
@@ -246,9 +298,8 @@ describe("Operation", () => {
         Authorization: `Bearer ${token}`
       }
     );
-    expect(tokenFnFake).to.have.been.calledWith({
-      operation: op
-    });
+    expect(hashFake).to.have.been.calledWith(opPart1 + opPart2 + service);
+    expect(tokenFnFake).to.have.been.calledWith(hash);
     expect(result).to.be.null;
   });
   it("should return error correctly", async () => {
@@ -261,11 +312,17 @@ describe("Operation", () => {
       statusMessage,
       body: JSON.stringify(errBody)
     });
-    replace(request, "delete", del);
+    replace(deps, "delete", del);
+
+    const toStringFake = fake.returns(hash);
+    const hashFake = fake.returns({
+      toString: toStringFake
+    });
+    replace(deps, "hash", hashFake);
 
     const tokenFnFake = fake.returns(token);
     try {
-      await operation(op)
+      await operation(opPart1, opPart2)
         .delete(root)
         .in({ context, service, network })
         .with({ tokenFn: tokenFnFake });
@@ -286,11 +343,14 @@ describe("Operation", () => {
       statusMessage,
       body: JSON.stringify(errBody)
     });
-    replace(request, "delete", del);
+    replace(deps, "delete", del);
+
+    const hashFake = fake.returns(hash);
+    replace(deps, "hash", hashFake);
 
     const tokenFnFake = fake.returns(token);
     try {
-      await operation(op)
+      await operation(opPart1, opPart2)
         .delete(root)
         .in({ context, service, network })
         .with({ tokenFn: tokenFnFake });
@@ -311,11 +371,14 @@ describe("Operation", () => {
       statusMessage,
       body: JSON.stringify(errBody)
     });
-    replace(request, "delete", del);
+    replace(deps, "delete", del);
+
+    const hashFake = fake.returns(hash);
+    replace(deps, "hash", hashFake);
 
     const tokenFnFake = fake.returns(token);
     try {
-      await operation(op)
+      await operation(opPart1, opPart2)
         .delete(root)
         .in({ context, service, network })
         .with({ tokenFn: tokenFnFake });
