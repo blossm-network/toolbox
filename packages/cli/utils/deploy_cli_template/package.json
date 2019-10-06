@@ -1,6 +1,6 @@
 {
   "name": "@sustainers/deploy-cli-template",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Deploys a template to cloud build.",
   "main": "index.js",
   "author": "sustainers.market",
@@ -14,9 +14,9 @@
     "test": "echo \"Error: no test specified\" && exit 0"
   },
   "dependencies": {
+    "@sustainers/merge-cli-template": "^0.0.12",
     "@sustainers/normalize-cli": "*",
     "@sustainers/robo-say": "*",
-    "@sustainers/merge-cli-template": "*",
     "@sustainers/test-cli-template": "*",
     "chalk": "^2.4.2",
     "fs-extra": "^8.1.0",
