@@ -1,0 +1,1 @@
+Constants that describe durations.

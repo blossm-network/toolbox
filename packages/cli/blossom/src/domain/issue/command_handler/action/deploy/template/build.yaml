@@ -74,7 +74,7 @@ steps:
       - beta
       - run
       - deploy
-      - ${_GCP_REGION}-${_OPERATION_HASH}
+      - ${_GCP_REGION}-${_OPERATION_NAME}-${_OPERATION_HASH}
       - --image=us.gcr.io/${_GCP_PROJECT}${_ENV_NAME_SPECIFIER}/${_SERVICE}.${_CONTEXT}.${_DOMAIN}.${_ACTION}
       - --platform=managed
       - --memory=${_MEMORY}

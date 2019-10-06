@@ -1,4 +1,5 @@
 const errors = require("@sustainers/errors");
+const { MAX_LENGTH } = "@sustainers/service-name-consts";
 
 const deps = require("./deps");
 
@@ -7,14 +8,20 @@ const common = ({ method, operation, root, data }) => {
     in: ({ context, service, network }) => {
       return {
         with: async ({ path = "", tokenFn } = {}) => {
-          const operationHash = deps
-            .hash(operation.join("") + service)
-            .toString();
+          const hash = deps.hash(operation.join("") + service).toString();
 
-          const url = `http://${operationHash}.${network}${path}${
+          const url = `http://${hash}.${network}${path}${
             root != undefined ? `/${root}` : ""
           }`;
-          const token = tokenFn ? await tokenFn(operationHash) : null;
+          const token = tokenFn
+            ? await tokenFn({
+              hash,
+              name: deps.trim(
+                `${service}-${operation.reverse().join("-")}`,
+                MAX_LENGTH
+              )
+            })
+            : null;
 
           const response = await method(
             url,

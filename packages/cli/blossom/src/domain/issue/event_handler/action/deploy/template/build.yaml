@@ -80,7 +80,7 @@ steps:
       - beta
       - run
       - deploy
-      - ${_GCP_REGION}-${_OPERATION_HASH}
+      - ${_GCP_REGION}-${_OPERATION_NAME}-${_OPERATION_HASH}
       - --image=us.gcr.io/${_GCP_PROJECT}${_ENV_NAME_SPECIFIER}/${_SERVICE}.${_CONTEXT}.${_DOMAIN}.did-${_ACTION}.${_TARGET_CONTEXT}.${_TARGET_DOMAIN}.${_TARGET_ID}
       - --platform=managed
       - --memory=${_MEMORY}
@@ -140,7 +140,7 @@ steps:
       - run
       - services
       - add-iam-policy-binding
-      - ${_GCP_REGION}-${_OPERATION_HASH}
+      - ${_GCP_REGION}-${_OPERATION_NAME}-${_OPERATION_HASH}
       - --member=serviceAccount:cloud-run-pubsub-invoker@${_GCP_PROJECT}${_ENV_NAME_SPECIFIER}.iam.gserviceaccount.com
       - --role=roles/run.invoker
       - --project=${_GCP_PROJECT}${_ENV_NAME_SPECIFIER}

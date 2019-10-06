@@ -1,1 +1,3 @@
-module.exports = require("./src/array_intersection");
+const { intersection } = require("lodash");
+
+module.exports = (...array) => intersection(...array);

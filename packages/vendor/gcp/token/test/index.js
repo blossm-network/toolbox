@@ -3,9 +3,10 @@ const { restore, fake, replace } = require("sinon");
 const deps = require("../deps");
 const gcpToken = require("..");
 
-const operationHash = "some-operation-hash";
+const hash = "some-operation-hash";
 
 const gcpRegion = "some-region";
+const name = "some-name";
 
 process.env.GCP_REGION = gcpRegion;
 
@@ -23,9 +24,9 @@ describe("Gcp token", () => {
     const getFake = fake.returns(response);
     replace(deps, "get", getFake);
 
-    const result = await gcpToken(operationHash);
+    const result = await gcpToken({ hash, name });
 
-    const url = `https://${gcpRegion}-${operationHash}-p3u6hkyfwa-uc.a.run.app`;
+    const url = `https://${gcpRegion}-${name}-${hash}-p3u6hkyfwa-uc.a.run.app`;
 
     expect(getFake).to.have.been.calledWith(
       `http://metadata/computeMetadata/v1/instance/service-accounts/default/identity?audience=${url}`,
@@ -44,9 +45,9 @@ describe("Gcp token", () => {
     const getFake = fake.returns(response);
     replace(deps, "get", getFake);
 
-    const result = await gcpToken(operationHash);
+    const result = await gcpToken({ hash, name });
 
-    const url = `https://${gcpRegion}-${operationHash}-ixixyzl3ea-uc.a.run.app`;
+    const url = `https://${gcpRegion}-${name}-${hash}-ixixyzl3ea-uc.a.run.app`;
 
     expect(getFake).to.have.been.calledWith(
       `http://metadata/computeMetadata/v1/instance/service-accounts/default/identity?audience=${url}`,
@@ -65,9 +66,9 @@ describe("Gcp token", () => {
     const getFake = fake.returns(response);
     replace(deps, "get", getFake);
 
-    const result = await gcpToken(operationHash);
+    const result = await gcpToken({ hash, name });
 
-    const url = `https://${gcpRegion}-${operationHash}-qzhmgyrp2q-uc.a.run.app`;
+    const url = `https://${gcpRegion}-${name}-${hash}-qzhmgyrp2q-uc.a.run.app`;
 
     expect(getFake).to.have.been.calledWith(
       `http://metadata/computeMetadata/v1/instance/service-accounts/default/identity?audience=${url}`,
@@ -86,7 +87,7 @@ describe("Gcp token", () => {
     const getFake = fake.returns(response);
     replace(deps, "get", getFake);
 
-    const result = await gcpToken(operationHash);
+    const result = await gcpToken({ hash, name });
     expect(result).to.be.null;
   });
   it("should call correctly with error", async () => {
@@ -98,9 +99,9 @@ describe("Gcp token", () => {
     const getFake = fake.returns(response);
     replace(deps, "get", getFake);
 
-    const result = await gcpToken(operationHash);
+    const result = await gcpToken({ hash, name });
 
-    const url = `https://${gcpRegion}-${operationHash}-p3u6hkyfwa-uc.a.run.app`;
+    const url = `https://${gcpRegion}-${name}-${hash}-p3u6hkyfwa-uc.a.run.app`;
 
     expect(getFake).to.have.been.calledWith(
       `http://metadata/computeMetadata/v1/instance/service-accounts/default/identity?audience=${url}`,

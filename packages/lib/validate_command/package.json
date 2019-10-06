@@ -11,7 +11,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@sustainers/consts": "^0.0.2",
+    "@sustainers/duration-consts": "*",
     "@sustainers/datetime": "^0.0.3",
     "@sustainers/errors": "^0.0.8",
     "@sustainers/validator": "^0.0.4"

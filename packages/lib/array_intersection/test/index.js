@@ -1,5 +1,5 @@
 const { expect } = require("chai");
-const arrayIntersection = require("../index");
+const arrayIntersection = require("..");
 
 describe("Intersection", () => {
   it("should return the common items if one exist", () => {

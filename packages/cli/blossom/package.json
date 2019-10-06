@@ -19,6 +19,8 @@
     "@sustainers/hash-string": "^0.0.1",
     "@sustainers/normalize-cli": "^0.0.8",
     "@sustainers/robo-say": "*",
+    "@sustainers/trim-string": "*",
+    "@sustainers/service-name-consts": "*",
     "chalk": "^2.4.2",
     "esm": "^3.2.25"
   }

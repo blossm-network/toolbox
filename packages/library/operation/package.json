@@ -15,6 +15,8 @@
   },
   "dependencies": {
     "@sustainers/errors": "^0.0.8",
+    "@sustainers/service-name-consts": "*",
+    "@sustainers/trim-string": "*",
     "@sustainers/hash-string": "*",
     "@sustainers/request": "^0.0.4"
   },

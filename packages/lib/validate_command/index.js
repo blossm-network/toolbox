@@ -1,7 +1,7 @@
 const { object, string, date, findError } = require("@sustainers/validator");
 const { badRequest } = require("@sustainers/errors");
 const { fineTimestamp } = require("@sustainers/datetime");
-const { SECONDS_IN_DAY } = require("@sustainers/consts");
+const { SECONDS_IN_DAY } = require("@sustainers/duration-consts");
 
 module.exports = async params => {
   const systemInputError = findError([

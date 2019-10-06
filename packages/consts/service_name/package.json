@@ -1,0 +1,16 @@
+{
+  "name": "@sustainers/service-name-consts",
+  "version": "0.0.0",
+  "description": "Constants that confine a service name.",
+  "main": "index.js",
+  "author": "sustainers.market",
+  "engines": {
+    "node": ">= 10.16.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "echo 'no tests'"
+  }
+}

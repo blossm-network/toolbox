@@ -1,7 +1,7 @@
 {
-  "name": "@sustainers/consts",
-  "version": "0.0.2",
-  "description": "Constants that confine the app.",
+  "name": "@sustainers/duration-consts",
+  "version": "0.0.0",
+  "description": "Constants that describe durations.",
   "main": "index.js",
   "author": "sustainers.market",
   "engines": {

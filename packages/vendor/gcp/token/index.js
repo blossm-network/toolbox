@@ -15,7 +15,7 @@ const serverId = () => {
 };
 
 ///https://cloud.google.com/run/docs/authenticating/service-to-service
-module.exports = async operationHash => {
+module.exports = async ({ name, hash }) => {
   const id = serverId();
 
   if (!id) return null;
@@ -25,7 +25,7 @@ module.exports = async operationHash => {
 
   const headers = { "Metadata-Flavor": "Google" };
 
-  const url = `https://${process.env.GCP_REGION}-${operationHash}-${id}-uc.a.run.app`;
+  const url = `https://${process.env.GCP_REGION}-${name}-${hash}-${id}-uc.a.run.app`;
 
   logger.info("url is: ", { url, full: metadataServerTokenUrl + url, headers });
   const response = await deps.get(metadataServerTokenUrl + url, null, headers);

@@ -1,3 +1,4 @@
+const { MAX_LENGTH } = "@sustainers/service-name-consts";
 const { expect } = require("chai")
   .use(require("chai-datetime"))
   .use(require("sinon-chai"));
@@ -17,6 +18,7 @@ const opPart2 = "oppartone";
 const token = "some-token";
 const root = "some-root";
 const hash = "some-hash";
+const trimmed = "some-trimmed";
 
 const network = "some-network";
 const service = "some-service";
@@ -51,6 +53,9 @@ describe("Operation", () => {
     });
     replace(deps, "hash", hashFake);
 
+    const trimFake = fake.returns(trimmed);
+    replace(deps, "trim", trimFake);
+
     const tokenFnFake = fake.returns(token);
     const result = await operation(opPart1, opPart2)
       .post(data)
@@ -67,8 +72,15 @@ describe("Operation", () => {
         Authorization: `Bearer ${token}`
       }
     );
+    expect(trimFake).to.have.been.calledWith(
+      `${service}-${opPart2}-${opPart1}`,
+      MAX_LENGTH
+    );
     expect(hashFake).to.have.been.calledWith(opPart1 + opPart2 + service);
-    expect(tokenFnFake).to.have.been.calledWith(hash);
+    expect(tokenFnFake).to.have.been.calledWith({
+      hash,
+      name: trimmed
+    });
     expect(result).to.be.null;
   });
   it("should call post with the correct params with no token", async () => {
@@ -81,6 +93,9 @@ describe("Operation", () => {
     });
     replace(deps, "hash", hashFake);
 
+    const trimFake = fake.returns(trimmed);
+    replace(deps, "trim", trimFake);
+
     const result = await operation(opPart1, opPart2)
       .post(data)
       .in({ context, service, network })
@@ -90,6 +105,7 @@ describe("Operation", () => {
       ...data,
       context
     });
+    expect(trimFake).to.have.not.been.called;
     expect(hashFake).to.have.been.calledWith(opPart1 + opPart2 + service);
     expect(result).to.be.null;
   });
@@ -106,6 +122,9 @@ describe("Operation", () => {
     });
     replace(deps, "hash", hashFake);
 
+    const trimFake = fake.returns(trimmed);
+    replace(deps, "trim", trimFake);
+
     const result = await operation(opPart1, opPart2)
       .post(data)
       .in({ context, service, network })
@@ -116,7 +135,14 @@ describe("Operation", () => {
       context
     });
     expect(hashFake).to.have.been.calledWith(opPart1 + opPart2 + service);
-    expect(emptyTokenFake).to.have.been.calledWith(hash);
+    expect(trimFake).to.have.been.calledWith(
+      `${service}-${opPart2}-${opPart1}`,
+      MAX_LENGTH
+    );
+    expect(emptyTokenFake).to.have.been.calledWith({
+      hash,
+      name: trimmed
+    });
     expect(result).to.be.null;
   });
 
@@ -129,6 +155,9 @@ describe("Operation", () => {
       toString: toStringFake
     });
     replace(deps, "hash", hashFake);
+
+    const trimFake = fake.returns(trimmed);
+    replace(deps, "trim", trimFake);
 
     const tokenFnFake = fake.returns(token);
     const path = "/some/path";
@@ -148,7 +177,14 @@ describe("Operation", () => {
       }
     );
     expect(hashFake).to.have.been.calledWith(opPart1 + opPart2 + service);
-    expect(tokenFnFake).to.have.been.calledWith(hash);
+    expect(trimFake).to.have.been.calledWith(
+      `${service}-${opPart2}-${opPart1}`,
+      MAX_LENGTH
+    );
+    expect(tokenFnFake).to.have.been.calledWith({
+      hash,
+      name: trimmed
+    });
     expect(result).to.be.null;
   });
 
@@ -161,6 +197,9 @@ describe("Operation", () => {
       toString: toStringFake
     });
     replace(deps, "hash", hashFake);
+
+    const trimFake = fake.returns(trimmed);
+    replace(deps, "trim", trimFake);
 
     const tokenFnFake = fake.returns(token);
     const result = await operation(opPart1, opPart2)
@@ -179,7 +218,14 @@ describe("Operation", () => {
       }
     );
     expect(hashFake).to.have.been.calledWith(opPart1 + opPart2 + service);
-    expect(tokenFnFake).to.have.been.calledWith(hash);
+    expect(trimFake).to.have.been.calledWith(
+      `${service}-${opPart2}-${opPart1}`,
+      MAX_LENGTH
+    );
+    expect(tokenFnFake).to.have.been.calledWith({
+      hash,
+      name: trimmed
+    });
     expect(result).to.deep.equal(body);
   });
   it("should call get with the correct params with root", async () => {
@@ -191,6 +237,9 @@ describe("Operation", () => {
       toString: toStringFake
     });
     replace(deps, "hash", hashFake);
+
+    const trimFake = fake.returns(trimmed);
+    replace(deps, "trim", trimFake);
 
     const tokenFnFake = fake.returns(token);
     const result = await operation(opPart1, opPart2)
@@ -208,8 +257,15 @@ describe("Operation", () => {
         Authorization: `Bearer ${token}`
       }
     );
+    expect(trimFake).to.have.been.calledWith(
+      `${service}-${opPart2}-${opPart1}`,
+      MAX_LENGTH
+    );
     expect(hashFake).to.have.been.calledWith(opPart1 + opPart2 + service);
-    expect(tokenFnFake).to.have.been.calledWith(hash);
+    expect(tokenFnFake).to.have.been.calledWith({
+      hash,
+      name: trimmed
+    });
     expect(result).to.deep.equal(body);
   });
   it("should call put with the correct params", async () => {
@@ -221,6 +277,9 @@ describe("Operation", () => {
       toString: toStringFake
     });
     replace(deps, "hash", hashFake);
+
+    const trimFake = fake.returns(trimmed);
+    replace(deps, "trim", trimFake);
 
     const tokenFnFake = fake.returns(token);
     const result = await operation(opPart1, opPart2)
@@ -238,8 +297,15 @@ describe("Operation", () => {
         Authorization: `Bearer ${token}`
       }
     );
+    expect(trimFake).to.have.been.calledWith(
+      `${service}-${opPart2}-${opPart1}`,
+      MAX_LENGTH
+    );
     expect(hashFake).to.have.been.calledWith(opPart1 + opPart2 + service);
-    expect(tokenFnFake).to.have.been.calledWith(hash);
+    expect(tokenFnFake).to.have.been.calledWith({
+      hash,
+      name: trimmed
+    });
     expect(result).to.be.null;
   });
   it("should call put with the correct params with path", async () => {
@@ -251,6 +317,9 @@ describe("Operation", () => {
       toString: toStringFake
     });
     replace(deps, "hash", hashFake);
+
+    const trimFake = fake.returns(trimmed);
+    replace(deps, "trim", trimFake);
 
     const tokenFnFake = fake.returns(token);
     const path = "/some/path";
@@ -269,8 +338,15 @@ describe("Operation", () => {
         Authorization: `Bearer ${token}`
       }
     );
+    expect(trimFake).to.have.been.calledWith(
+      `${service}-${opPart2}-${opPart1}`,
+      MAX_LENGTH
+    );
     expect(hashFake).to.have.been.calledWith(opPart1 + opPart2 + service);
-    expect(tokenFnFake).to.have.been.calledWith(hash);
+    expect(tokenFnFake).to.have.been.calledWith({
+      hash,
+      name: trimmed
+    });
     expect(result).to.be.null;
   });
   it("should call delete with the correct params", async () => {
@@ -282,6 +358,9 @@ describe("Operation", () => {
       toString: toStringFake
     });
     replace(deps, "hash", hashFake);
+
+    const trimFake = fake.returns(trimmed);
+    replace(deps, "trim", trimFake);
 
     const tokenFnFake = fake.returns(token);
     const result = await operation(opPart1, opPart2)
@@ -298,8 +377,15 @@ describe("Operation", () => {
         Authorization: `Bearer ${token}`
       }
     );
+    expect(trimFake).to.have.been.calledWith(
+      `${service}-${opPart2}-${opPart1}`,
+      MAX_LENGTH
+    );
     expect(hashFake).to.have.been.calledWith(opPart1 + opPart2 + service);
-    expect(tokenFnFake).to.have.been.calledWith(hash);
+    expect(tokenFnFake).to.have.been.calledWith({
+      hash,
+      name: trimmed
+    });
     expect(result).to.be.null;
   });
   it("should return error correctly", async () => {
@@ -319,6 +405,9 @@ describe("Operation", () => {
       toString: toStringFake
     });
     replace(deps, "hash", hashFake);
+
+    const trimFake = fake.returns(trimmed);
+    replace(deps, "trim", trimFake);
 
     const tokenFnFake = fake.returns(token);
     try {
@@ -348,6 +437,9 @@ describe("Operation", () => {
     const hashFake = fake.returns(hash);
     replace(deps, "hash", hashFake);
 
+    const trimFake = fake.returns(trimmed);
+    replace(deps, "trim", trimFake);
+
     const tokenFnFake = fake.returns(token);
     try {
       await operation(opPart1, opPart2)
@@ -375,6 +467,9 @@ describe("Operation", () => {
 
     const hashFake = fake.returns(hash);
     replace(deps, "hash", hashFake);
+
+    const trimFake = fake.returns(trimmed);
+    replace(deps, "trim", trimFake);
 
     const tokenFnFake = fake.returns(token);
     try {
