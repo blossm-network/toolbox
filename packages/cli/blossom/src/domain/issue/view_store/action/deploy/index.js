@@ -1,10 +1,9 @@
 const deployCliTemplate = require("@sustainers/deploy-cli-template");
 const hash = require("@sustainers/hash-string");
-const path = require("path");
 
 module.exports = deployCliTemplate({
   domain: "view-store",
-  workingDir: path.resolve(__dirname, "tmp"),
+  dir: __dirname,
   configFn: config => {
     return {
       _ID: config.id,

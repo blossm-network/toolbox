@@ -28,7 +28,7 @@ const build = async workingDir => {
   );
 };
 
-module.exports = ({ domain, workingDir, configFn }) => async args => {
+module.exports = ({ domain, dir, configFn }) => async args => {
   //eslint-disable-next-line no-console
   console.log(roboSay("Running your tests..."));
 
@@ -52,10 +52,12 @@ module.exports = ({ domain, workingDir, configFn }) => async args => {
     ]
   });
 
+  const workingDir = path.resolve(dir, "tmp");
+
   fs.removeSync(workingDir);
   fs.mkdirSync(workingDir);
   await mergeCliTemplate({
-    templateDir: __dirname,
+    templateDir: dir,
     workingDir,
     input,
     configFn
