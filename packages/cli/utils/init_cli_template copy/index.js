@@ -19,7 +19,7 @@ module.exports = ({ domain, dir }) => async args => {
     args
   });
 
-  const targetDirectory = process.resolve(process.cwd(), input.path);
+  const targetDirectory = path.resolve(process.cwd(), input.path);
   if (!fs.existsSync(targetDirectory)) fs.mkdirSync(targetDirectory);
   const templateDirectory = path.resolve(dir, "template");
 

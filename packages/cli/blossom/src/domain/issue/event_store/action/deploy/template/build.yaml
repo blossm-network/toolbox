@@ -120,7 +120,7 @@ steps:
       - -c
       - gcloud beta run domain-mappings create
         --platform=managed
-        --service=${_GCP_REGION}-${_OPERATION_HASH}
+        --service=${_GCP_REGION}-${_OPERATION_NAME}-${_OPERATION_HASH}
         --domain=${_OPERATION_HASH}.${_GCP_REGION}.${_ENV_URI_SPECIFIER}${_NETWORK}
         --project=${_GCP_PROJECT}${_ENV_NAME_SPECIFIER}
         --region=${_GCP_REGION} || exit 0
