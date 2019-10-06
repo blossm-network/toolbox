@@ -98,7 +98,7 @@ const configure = async (workingDir, configFn, env) => {
       ...build.substitutions,
 
       _DOMAIN: config.domain,
-      ...(config.service && { _SERVICE: config.service }),
+      _SERVICE: config.service,
       ...(config.context && { _CONTEXT: config.context }),
       ...(config.network && { _NETWORK: config.network }),
       ...(config.gcpProject && { _GCP_PROJECT: config.gcpProject }),

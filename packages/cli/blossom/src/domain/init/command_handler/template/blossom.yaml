@@ -25,5 +25,7 @@ devDependencies:
   "@sustainers/request": "*"
   "@sustainers/event-store-js": "*"
 
+service: core
+
 #don't change
 context: command-handler

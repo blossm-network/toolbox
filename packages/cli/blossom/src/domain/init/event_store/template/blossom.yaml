@@ -27,5 +27,7 @@ devDependencies:
   "@sustainers/request": "*"
   "@sustainers/uuid": "*"
 
+service: core
+
 #don't change
 context: event-store

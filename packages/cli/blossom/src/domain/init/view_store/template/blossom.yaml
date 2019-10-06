@@ -29,5 +29,7 @@ devDependencies:
   "@sustainers/request": "*"
   "@sustainers/uuid": "*"
 
+service: core
+
 #don't change
 context: view-store

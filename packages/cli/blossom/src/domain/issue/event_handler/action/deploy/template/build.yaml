@@ -1,5 +1,4 @@
 substitutions:
-  _SERVICE: core
   _NETWORK: sm.network
   _GCP_PROJECT: smn-core
   _GCP_REGION: us-central1
@@ -19,7 +18,7 @@ steps:
     args:
       - build
       - -t
-      - us.gcr.io/${_GCP_PROJECT}${_ENV_NAME_SPECIFIER}/${_SERVICE}.${_CONTEXT}.${_OPERATION_HASH}
+      - us.gcr.io/${_GCP_PROJECT}${_ENV_NAME_SPECIFIER}/${_SERVICE}.${_CONTEXT}.${_DOMAIN}.did-${_ACTION}.${_TARGET_CONTEXT}.${_TARGET_DOMAIN}.${_TARGET_ID}
       - .
   - name: node:10.16.0
     entrypoint: bash
@@ -75,20 +74,20 @@ steps:
   - name: gcr.io/cloud-builders/docker
     args:
       - push
-      - us.gcr.io/${_GCP_PROJECT}${_ENV_NAME_SPECIFIER}/${_SERVICE}.${_CONTEXT}.${_OPERATION_HASH}
+      - us.gcr.io/${_GCP_PROJECT}${_ENV_NAME_SPECIFIER}/${_SERVICE}.${_CONTEXT}.${_DOMAIN}.did-${_ACTION}.${_TARGET_CONTEXT}.${_TARGET_DOMAIN}.${_TARGET_ID}
   - name: gcr.io/cloud-builders/gcloud
     args:
       - beta
       - run
       - deploy
       - ${_GCP_REGION}-${_OPERATION_HASH}
-      - --image=us.gcr.io/${_GCP_PROJECT}${_ENV_NAME_SPECIFIER}/${_SERVICE}.${_CONTEXT}.${_OPERATION_HASH}
+      - --image=us.gcr.io/${_GCP_PROJECT}${_ENV_NAME_SPECIFIER}/${_SERVICE}.${_CONTEXT}.${_DOMAIN}.did-${_ACTION}.${_TARGET_CONTEXT}.${_TARGET_DOMAIN}.${_TARGET_ID}
       - --platform=managed
       - --memory=${_MEMORY}
       - --project=${_GCP_PROJECT}${_ENV_NAME_SPECIFIER}
       - --region=${_GCP_REGION}
       - --set-env-vars=NODE_ENV=${_NODE_ENV},NETWORK=${_GCP_REGION}.${_ENV_URI_SPECIFIER}${_NETWORK},SERVICE=${_SERVICE},CONTEXT=${_CONTEXT},TARGET_CONTEXT=${_TARGET_CONTEXT},DOMAIN=${_DOMAIN},ACTION=${_ACTION},TARGET_DOMAIN=${_TARGET_DOMAIN},TARGET_ID=${_TARGET_ID},GCP_PROJECT=${_GCP_PROJECT}${_ENV_NAME_SPECIFIER},GCP_REGION=${_GCP_REGION},GCP_SECRET_BUCKET=smn${_ENV_NAME_SPECIFIER}-secrets
-      - --labels=NETWORK=${_NETWORK},SERVICE=${_SERVICE},CONTEXT=${_CONTEXT},DOMAIN=${_DOMAIN},ACTION=${_ACTION},TARGET_CONTEXT=${_TARGET_CONTEXT},TARGET_DOMAIN=${_TARGET_DOMAIN},TARGET_ID=${_TARGET_ID}
+      - --labels=service=${_SERVICE},context=${_CONTEXT},domain=${_DOMAIN},action=${_ACTION},TARGET_CONTEXT=${_TARGET_CONTEXT},TARGET_DOMAIN=${_TARGET_DOMAIN},TARGET_ID=${_TARGET_ID}
   - name: gcr.io/cloud-builders/gcloud
     args:
       - beta
@@ -153,4 +152,4 @@ steps:
       - --push-endpoint=https://${_OPERATION_HASH}.${_GCP_REGION}.${_ENV_URI_SPECIFIER}${_NETWORK}
       - --push-auth-service-account=cloud-run-pubsub-invoker@${_GCP_PROJECT}${_ENV_NAME_SPECIFIER}.iam.gserviceaccount.com
       - --project=${_GCP_PROJECT}${_ENV_NAME_SPECIFIER}
-      - --labels=NETWORK=${_NETWORK},SERVICE=${_SERVICE},CONTEXT=${_CONTEXT},DOMAIN=${_DOMAIN},ACTION=${_ACTION},TARGET_CONTEXT=${_TARGET_CONTEXT},TARGET_DOMAIN=${_TARGET_DOMAIN},TARGET_ID=${_TARGET_ID}
+      - --labels=service=${_SERVICE},context=${_CONTEXT},domain=${_DOMAIN},action=${_ACTION},target-context=${_TARGET_CONTEXT},target-domain=${_TARGET_DOMAIN},target-id=${_TARGET_ID}

@@ -8,9 +8,9 @@
 action: some-action
 domain: some-domain
 target:
-  id: target-id
-  domain: target-domain
-  context: vs
+  id: some-target-id
+  domain: some-target-domain
+  context: view-store
 
 version: 0
 
@@ -28,6 +28,8 @@ devDependencies:
   "@sustainers/request": "*"
   "@sustainers/gcp-token": "*"
   "@sustainers/view-store-js": "*"
+
+service: core
 
 #don't change
 context: event-handler
