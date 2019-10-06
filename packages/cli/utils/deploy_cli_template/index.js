@@ -28,7 +28,7 @@ const build = async workingDir => {
   );
 };
 
-module.exports = ({ domain, configFn }) => async args => {
+module.exports = ({ domain, workingDir, configFn }) => async args => {
   //eslint-disable-next-line no-console
   console.log(roboSay("Running your tests..."));
 
@@ -51,8 +51,6 @@ module.exports = ({ domain, configFn }) => async args => {
       }
     ]
   });
-
-  const workingDir = path.resolve(__dirname, "tmp");
 
   fs.removeSync(workingDir);
   fs.mkdirSync(workingDir);
