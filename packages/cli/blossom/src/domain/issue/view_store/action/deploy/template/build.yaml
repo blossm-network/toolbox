@@ -17,7 +17,7 @@ steps:
     args:
       - build
       - -t
-      - us.gcr.io/${_GCP_PROJECT}${_ENV_NAME_SPECIFIER}/${_SERVICE}.${_CONTEXT}.${_DOMAIN}.${_ID}
+      - us.gcr.io/${_GCP_PROJECT}${_ENV_NAME_SPECIFIER}/${_SERVICE}.${_CONTEXT}.${_DOMAIN}.${_NAME}
       - .
   - name: node:10.16.0
     entrypoint: bash
@@ -30,7 +30,7 @@ steps:
         CONTEXT=${_CONTEXT}
         DOMAIN=${_DOMAIN}
         OPERATION_HASH=${_OPERATION_HASH}
-        ID=${_ID}
+        NAME=${_NAME}
         NODE_ENV=local
         PORT=80
         MAIN_CONTAINER_NAME=main
@@ -58,27 +58,27 @@ steps:
       - SERVICE=${_SERVICE}
       - CONTEXT=${_CONTEXT}
       - DOMAIN=${_DOMAIN}
-      - ID=${_ID}
+      - NAME=${_NAME}
   - name: docker/compose:1.15.0
     args:
       - logs
   - name: gcr.io/cloud-builders/docker
     args:
       - push
-      - us.gcr.io/${_GCP_PROJECT}${_ENV_NAME_SPECIFIER}/${_SERVICE}.${_CONTEXT}.${_DOMAIN}.${_ID}
+      - us.gcr.io/${_GCP_PROJECT}${_ENV_NAME_SPECIFIER}/${_SERVICE}.${_CONTEXT}.${_DOMAIN}.${_NAME}
   - name: gcr.io/cloud-builders/gcloud
     args:
       - beta
       - run
       - deploy
       - ${_GCP_REGION}-${_OPERATION_NAME}-${_OPERATION_HASH}
-      - --image=us.gcr.io/${_GCP_PROJECT}${_ENV_NAME_SPECIFIER}/${_SERVICE}.${_CONTEXT}.${_DOMAIN}.${_ID}
+      - --image=us.gcr.io/${_GCP_PROJECT}${_ENV_NAME_SPECIFIER}/${_SERVICE}.${_CONTEXT}.${_DOMAIN}.${_NAME}
       - --platform=managed
       - --memory=${_MEMORY}
       - --project=${_GCP_PROJECT}${_ENV_NAME_SPECIFIER}
       - --region=${_GCP_REGION}
-      - --set-env-vars=NODE_ENV=${_NODE_ENV},NETWORK=${_GCP_REGION}.${_ENV_URI_SPECIFIER}${_NETWORK},SERVICE=${_SERVICE},CONTEXT=${_CONTEXT},DOMAIN=${_DOMAIN},ID=${_ID},GCP_PROJECT=${_GCP_PROJECT}${_ENV_NAME_SPECIFIER},GCP_REGION=${_GCP_REGION},GCP_SECRET_BUCKET=smn${_ENV_NAME_SPECIFIER}-secrets,MONGODB_USER=gcp${_ENV_NAME_SPECIFIER},MONGODB_HOST=${_NODE_ENV}-ggjlv.gcp.mongodb.net
-      - --labels=service=${_SERVICE},context=${_CONTEXT},domain=${_DOMAIN},id=${_ID},hash=${_OPERATION_HASH}
+      - --set-env-vars=NODE_ENV=${_NODE_ENV},NETWORK=${_GCP_REGION}.${_ENV_URI_SPECIFIER}${_NETWORK},SERVICE=${_SERVICE},CONTEXT=${_CONTEXT},DOMAIN=${_DOMAIN},NAME=${_NAME},GCP_PROJECT=${_GCP_PROJECT}${_ENV_NAME_SPECIFIER},GCP_REGION=${_GCP_REGION},GCP_SECRET_BUCKET=smn${_ENV_NAME_SPECIFIER}-secrets,MONGODB_USER=gcp${_ENV_NAME_SPECIFIER},MONGODB_HOST=${_NODE_ENV}-ggjlv.gcp.mongodb.net
+      - --labels=service=${_SERVICE},context=${_CONTEXT},domain=${_DOMAIN},name=${_NAME},hash=${_OPERATION_HASH}
   - name: gcr.io/cloud-builders/gcloud
     args:
       - beta

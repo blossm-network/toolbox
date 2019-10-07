@@ -8,7 +8,7 @@ module.exports = deployCliTemplate({
   dir: __dirname,
   configFn: config => {
     return {
-      _ID: config.id,
+      _NAME: config.name,
       _OPERATION_NAME: trim(
         `${config.service}-${config.context}-${config.domain}-${config.id}`,
         MAX_LENGTH

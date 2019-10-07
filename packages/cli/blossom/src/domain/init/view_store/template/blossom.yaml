@@ -1,6 +1,6 @@
 #
 # This file is required.
-# Give your view-store an id, specify which domain it's for, write the view store's schema, and specify what it should be indexed by.
+# Give your view-store a unique name, specify which domain it's for, write the view store's schema, and specify what it should be indexed by.
 #
 # How to write a schema -> https://mongoosejs.com/docs/schematypes.html
 # Types and validators should always be specified,
@@ -11,7 +11,7 @@
 # In other words, full collection scans are not allowed.
 #
 
-id: some-id
+name: some-name
 domain: some-domain
 
 schema:

@@ -28,7 +28,7 @@ module.exports = deployCliTemplate({
           config.target.context +
           config.service
       ).toString(),
-      _TARGET_ID: config.target.id,
+      _TARGET_NAME: config.target.name,
       _TARGET_DOMAIN: config.target.domain,
       _TARGET_CONTEXT: config.target.context
     };

@@ -8,7 +8,7 @@
 action: some-action
 domain: some-domain
 target:
-  id: some-target-id
+  name: some-target-name
   domain: some-target-domain
   context: view-store
 

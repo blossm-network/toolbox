@@ -1,7 +1,7 @@
 version: "3"
 services:
   main:
-    image: ${CONTAINER_REGISTRY}/${SERVICE}.${CONTEXT}.${DOMAIN}.${ID}:latest
+    image: ${CONTAINER_REGISTRY}/${SERVICE}.${CONTEXT}.${DOMAIN}.${NAME}:latest
     container_name: ${MAIN_CONTAINER_NAME}
     ports:
       - ${PORT}
@@ -12,7 +12,7 @@ services:
       CONTEXT:
       SERVICE:
       DOMAIN:
-      ID:
+      NAME:
       GCP_PROJECT:
       GCP_REGION:
       GCP_SECRET_BUCKET:
