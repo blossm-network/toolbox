@@ -1,7 +1,7 @@
 module.exports = req => {
   const headers = req.headers;
   const authorization = headers.authorization;
-  const { token } = req.cookies;
+  const { token } = req.cookies || {};
 
   const tokens = {
     ...(token != undefined && { cookie: token })
