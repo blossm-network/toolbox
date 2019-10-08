@@ -1,6 +1,8 @@
 const { expect } = require("chai");
 const tokensFromReq = require("..");
 
+const cookieKey = "some-key";
+
 describe("Tokens from req", () => {
   it("should return the correct bearer token.", () => {
     const token = "some-token-name";
@@ -17,10 +19,10 @@ describe("Tokens from req", () => {
     const req = {
       headers: {},
       cookies: {
-        token
+        [cookieKey]: token
       }
     };
-    expect(tokensFromReq(req)).to.deep.equal({ cookie: token });
+    expect(tokensFromReq(req, { cookieKey })).to.deep.equal({ cookie: token });
   });
   it("should return the correct basic token.", () => {
     const token = "some-token-name";
@@ -40,10 +42,10 @@ describe("Tokens from req", () => {
         authorization: `Bearer ${otherToken}`
       },
       cookies: {
-        token
+        [cookieKey]: token
       }
     };
-    expect(tokensFromReq(req)).to.deep.equal({
+    expect(tokensFromReq(req, { cookieKey })).to.deep.equal({
       cookie: token,
       bearer: otherToken
     });

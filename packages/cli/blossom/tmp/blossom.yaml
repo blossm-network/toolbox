@@ -1,0 +1,24 @@
+#
+# This file is required.
+#
+# Give your event-handler the action that it's subscribed to, with it's domain,
+# and a unique name of the target that will be operated on by this event handler.
+#
+
+service: core
+
+version: 0
+
+dependencies:
+  "@sustainers/gateway": "*"
+
+devDependencies:
+  "mocha": "^6.1.4"
+  "chai": "^4.2.0"
+  "sinon": "^7.3.2"
+  "sinon-chai": "^3.3.0"
+  "chai-datetime": "^1.5.0"
+  "@sustainers/datetime": "*"
+
+#don't change
+context: gateway
