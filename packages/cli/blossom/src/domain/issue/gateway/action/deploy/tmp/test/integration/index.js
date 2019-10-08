@@ -10,16 +10,14 @@ describe("Gateway integration tests", () => {
     const payload = {
       a: 1
     };
-    // const domain = "some-domain";
-    // const action = "some-action";
-    const response = await request.post(`${url}/auth`, {
+    const domain = "some-domain";
+    const action = "some-action";
+    const response = await request.post(`${url}/command/${domain}/${action}`, {
       payload,
       headers: {
         issued: stringDate()
       }
     });
-    //eslint-disable-next-line no-console
-    console.log("response: ", response);
     expect(response.statusCode).to.equal(204);
   });
   // it("should return an error if incorrect params", async () => {

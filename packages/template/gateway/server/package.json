@@ -16,8 +16,9 @@
   "dependencies": {
     "@sustainers/authentication-middleware": "^0.0.22",
     "@sustainers/authorization-middleware": "^0.0.12",
-    "@sustainers/gateway-get": "^0.0.1",
-    "@sustainers/gateway-post": "^0.0.1",
+    "@sustainers/gateway-command": "*",
+    "@sustainers/gateway-view-store": "*",
+    "@sustainers/gateway-command-store": "*",
     "@sustainers/server": "^0.0.11"
   },
   "devDependencies": {
