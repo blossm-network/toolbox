@@ -16,6 +16,7 @@
   "dependencies": {
     "@sustainers/authentication-middleware": "^0.0.22",
     "@sustainers/authorization-middleware": "^0.0.12",
+    "@sustainers/cors-middleware": "*",
     "@sustainers/gateway-auth": "*",
     "@sustainers/gateway-command": "*",
     "@sustainers/gateway-view-store": "*",
