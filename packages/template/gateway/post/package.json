@@ -1,7 +1,7 @@
 {
   "name": "@sustainers/gateway-post",
   "description": "A gateway server POST handler.",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "main": "index.js",
   "author": "sustainers.market",
   "engines": {
@@ -14,9 +14,9 @@
     "access": "public"
   },
   "dependencies": {
-    "@sustainers/normalize-command": "*",
-    "@sustainers/gcp-token": "*",
     "@sustainers/command-js": "*",
+    "@sustainers/gcp-token": "*",
+    "@sustainers/normalize-command": "^0.0.3",
     "@sustainers/validate-command": "*"
   },
   "devDependencies": {
