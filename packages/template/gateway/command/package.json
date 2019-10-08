@@ -1,7 +1,7 @@
 {
   "name": "@sustainers/gateway-command",
   "description": "A gateway server command POST handler.",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "main": "index.js",
   "author": "sustainers.market",
   "engines": {

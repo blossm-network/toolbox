@@ -1,7 +1,7 @@
 {
   "name": "@sustainers/gateway-view-store",
   "description": "A gateway server view store GET handler.",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "main": "index.js",
   "author": "sustainers.market",
   "engines": {
