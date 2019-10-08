@@ -1,6 +1,6 @@
 {
   "name": "@sustainers/authorization-middleware",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "description": "Authorization middleware for the network.",
   "main": "index.js",
   "author": "sustainers.market",
@@ -14,7 +14,7 @@
     "test": "mocha"
   },
   "dependencies": {
-    "@sustainers/authorize": "^0.0.12",
+    "@sustainers/authorize": "^0.0.13",
     "express-async-handler": "^1.1.4"
   },
   "devDependencies": {
