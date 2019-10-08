@@ -14,10 +14,10 @@ module.exports = deployCliTemplate({
       _OPERATION_NAME: trim(`${config.service}-${config.context}`, MAX_LENGTH),
       _TEST_ACTION: testAction,
       _TEST_DOMAIN: testDomain,
-      COMMAND_HANDLER_HASH: hash(
+      _COMMAND_HANDLER_HASH: hash(
         `${config.action}${config.domain}command-handler${config.service}`
       ).toString(),
-      EVENT_STORE_HASH: hash(
+      _EVENT_STORE_HASH: hash(
         `${config.domain}event-store${config.service}`
       ).toString()
     };
