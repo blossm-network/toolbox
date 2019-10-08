@@ -1,6 +1,6 @@
 {
   "name": "@sustainers/init-cli-template",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Initializes a deployable template.",
   "main": "index.js",
   "author": "sustainers.market",

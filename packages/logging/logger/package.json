@@ -1,6 +1,6 @@
 {
   "name": "@sustainers/logger",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Logging tools.",
   "main": "index.js",
   "author": "sustainers.market",
@@ -11,7 +11,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@sustainers/gcp-log-transports": "^0.0.5"
+    "@sustainers/gcp-log-transports": "^0.0.6"
   },
   "scripts": {
     "test": "mocha"

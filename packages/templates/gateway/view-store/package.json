@@ -1,7 +1,7 @@
 {
   "name": "@sustainers/gateway-view-store",
   "description": "A gateway server view store GET handler.",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "main": "index.js",
   "author": "sustainers.market",
   "engines": {
@@ -14,8 +14,8 @@
     "access": "public"
   },
   "dependencies": {
-    "@sustainers/gcp-token": "*",
-    "@sustainers/view-store-js": "^0.0.32"
+    "@sustainers/gcp-token": "^0.0.18",
+    "@sustainers/view-store-js": "^0.0.33"
   },
   "devDependencies": {
     "chai-datetime": "^1.5.0",

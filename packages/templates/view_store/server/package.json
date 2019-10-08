@@ -1,7 +1,7 @@
 {
   "name": "@sustainers/view-store",
   "description": "A view store server.",
-  "version": "0.0.50",
+  "version": "0.0.51",
   "main": "index.js",
   "author": "sustainers.market",
   "engines": {
@@ -14,13 +14,13 @@
     "access": "public"
   },
   "dependencies": {
-    "@sustainers/gcp-secret": "^0.0.17",
-    "@sustainers/logger": "^0.0.7",
-    "@sustainers/server": "^0.0.11",
-    "@sustainers/view-store-delete": "^0.0.21",
-    "@sustainers/view-store-get": "^0.0.25",
-    "@sustainers/view-store-post": "^0.0.25",
-    "@sustainers/view-store-put": "^0.0.24"
+    "@sustainers/gcp-secret": "^0.0.18",
+    "@sustainers/logger": "^0.0.8",
+    "@sustainers/server": "^0.0.12",
+    "@sustainers/view-store-delete": "^0.0.22",
+    "@sustainers/view-store-get": "^0.0.26",
+    "@sustainers/view-store-post": "^0.0.26",
+    "@sustainers/view-store-put": "^0.0.25"
   },
   "devDependencies": {
     "chai-datetime": "^1.5.0",
