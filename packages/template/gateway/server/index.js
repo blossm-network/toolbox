@@ -20,7 +20,17 @@ module.exports = async () => {
     })
     .post(deps.command(), {
       path: "/command/:domain/:action",
-      preMiddleware: [authentication, authorization]
+      preMiddleware: [
+        (req, res, next) => {
+          //eslint-disable-next-line no-console
+          console.log("req headers is: ", req.headers);
+          //eslint-disable-next-line no-console
+          console.log("req cookies is: ", req.cookies);
+          next();
+        },
+        authentication,
+        authorization
+      ]
     })
     .get(deps.viewStore(), {
       path: "/view/:domain/:name",

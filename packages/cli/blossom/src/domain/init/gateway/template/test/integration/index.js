@@ -10,17 +10,36 @@ describe("Gateway integration tests", () => {
     const payload = {
       a: 1
     };
-    // const domain = "some-domain";
-    // const action = "some-action";
-    const response = await request.post(`${url}/auth`, {
+    const domain = "some-domain";
+    const action = "some-action";
+    const response0 = await request.post(`${url}/auth`, {
       payload,
       headers: {
         issued: stringDate()
       }
     });
     //eslint-disable-next-line no-console
-    console.log("response: ", response);
-    expect(response.statusCode).to.equal(204);
+    console.log("response: ", response0);
+    const cookies = response0.headers["set-cookie"];
+    //eslint-disable-next-line no-console
+    console.log("cookies: ", cookies);
+
+    expect(response0.statusCode).to.equal(204);
+    const response1 = await request.post(
+      `${url}/command/${domain}/${action}`,
+      {
+        payload,
+        headers: {
+          issued: stringDate()
+        }
+      },
+      {
+        Cookie: cookies
+      }
+    );
+    //eslint-disable-next-line no-console
+    console.log("response1: ", response1);
+    expect(response0.statusCode).to.equal(204);
   });
   // it("should return an error if incorrect params", async () => {
   //   const response = await post(address, {});
