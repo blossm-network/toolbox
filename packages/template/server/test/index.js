@@ -139,7 +139,7 @@ describe("Lamba", () => {
     expect(useFake).to.have.been.calledWith(deps.errorMiddleware);
     expect(listenFake).to.have.been.calledWith(3000);
   });
-  it("should call post with the correct params with middleware", async () => {
+  it("should call post with the correct params with hooks", async () => {
     const useFake = fake();
     const listenFake = fake();
     const postFake = fake();
@@ -158,20 +158,54 @@ describe("Lamba", () => {
     replace(deps, "asyncHandler", asyncHandlerFake);
     replace(deps, "expressMiddleware", expressMiddlewareFake);
 
-    const pre = "some-pre-middleware";
-    const post = "some-post-middleware";
+    const prehookFake = fake();
+    const posthookFake = fake();
 
-    const result = server({ premiddleware: [pre], postmiddleware: [post] })
+    const result = server({ prehook: prehookFake, posthook: posthookFake })
       .post(fn)
       .listen();
 
     expect(result).to.equal(app);
     expect(postFake).to.have.been.calledWith("/", asyncFn);
     expect(asyncHandlerFake).to.have.been.calledWith(fn);
-    expect(useFake.firstCall).to.have.calledWith(pre);
-    expect(useFake.secondCall).to.have.been.calledWith(post);
+    expect(useFake).to.have.been.calledWith(deps.errorMiddleware);
+    expect(listenFake).to.have.been.calledWith(port);
+  });
+  it("should call post with the correct params with premiddleware", async () => {
+    const useFake = fake();
+    const listenFake = fake();
+    const postFake = fake();
+    const app = {
+      use: useFake,
+      listen: listenFake,
+      post: postFake
+    };
+    const expressFake = fake.returns(app);
+    replace(deps, "express", expressFake);
+
+    const asyncFn = "some-fn";
+    const asyncHandlerFake = fake.returns(asyncFn);
+    const expressMiddlewareFake = fake();
+
+    replace(deps, "asyncHandler", asyncHandlerFake);
+    replace(deps, "expressMiddleware", expressMiddlewareFake);
+
+    const preMiddleware = "some-premiddleware";
+    const postMiddleware = "some-postmiddleware";
+
+    const result = server()
+      .post(fn, {
+        preMiddleware: [preMiddleware],
+        postMiddleware: [postMiddleware]
+      })
+      .listen();
+
+    expect(result).to.equal(app);
+    expect(postFake).to.have.been.calledWith("/", asyncFn);
+    expect(asyncHandlerFake).to.have.been.calledWith(fn);
+    expect(useFake.firstCall).to.have.been.calledWith(preMiddleware);
+    expect(useFake.secondCall).to.have.been.calledWith(postMiddleware);
     expect(useFake.thirdCall).to.have.been.calledWith(deps.errorMiddleware);
-    // expect(useFake).to.have.been.callOrder(pre, post, deps.errorMiddleware);
     expect(listenFake).to.have.been.calledWith(port);
   });
   it("should call get with the correct params", async () => {
@@ -203,6 +237,43 @@ describe("Lamba", () => {
     expect(useFake).to.have.been.calledWith(deps.errorMiddleware);
     expect(listenFake).to.have.been.calledWith(port);
   });
+  it("should call get with the correct params with premiddleware", async () => {
+    const useFake = fake();
+    const listenFake = fake();
+    const getFake = fake();
+    const app = {
+      use: useFake,
+      listen: listenFake,
+      get: getFake
+    };
+    const expressFake = fake.returns(app);
+    replace(deps, "express", expressFake);
+
+    const asyncFn = "some-fn";
+    const asyncHandlerFake = fake.returns(asyncFn);
+    const expressMiddlewareFake = fake();
+
+    replace(deps, "asyncHandler", asyncHandlerFake);
+    replace(deps, "expressMiddleware", expressMiddlewareFake);
+
+    const preMiddleware = "some-premiddleware";
+    const postMiddleware = "some-postmiddleware";
+
+    const result = server()
+      .get(fn, {
+        preMiddleware: [preMiddleware],
+        postMiddleware: [postMiddleware]
+      })
+      .listen();
+
+    expect(result).to.equal(app);
+    expect(getFake).to.have.been.calledWith("/:id?", asyncFn);
+    expect(asyncHandlerFake).to.have.been.calledWith(fn);
+    expect(useFake.firstCall).to.have.been.calledWith(preMiddleware);
+    expect(useFake.secondCall).to.have.been.calledWith(postMiddleware);
+    expect(useFake.thirdCall).to.have.been.calledWith(deps.errorMiddleware);
+    expect(listenFake).to.have.been.calledWith(port);
+  });
   it("should call put with the correct params", async () => {
     const useFake = fake();
     const listenFake = fake();
@@ -222,14 +293,22 @@ describe("Lamba", () => {
     replace(deps, "asyncHandler", asyncHandlerFake);
     replace(deps, "expressMiddleware", expressMiddlewareFake);
 
+    const preMiddleware = "some-premiddleware";
+    const postMiddleware = "some-postmiddleware";
+
     const result = server()
-      .put(fn)
+      .put(fn, {
+        preMiddleware: [preMiddleware],
+        postMiddleware: [postMiddleware]
+      })
       .listen();
 
     expect(result).to.equal(app);
     expect(putFake).to.have.been.calledWith("/:id", asyncFn);
     expect(asyncHandlerFake).to.have.been.calledWith(fn);
-    expect(useFake).to.have.been.calledWith(deps.errorMiddleware);
+    expect(useFake.firstCall).to.have.been.calledWith(preMiddleware);
+    expect(useFake.secondCall).to.have.been.calledWith(postMiddleware);
+    expect(useFake.thirdCall).to.have.been.calledWith(deps.errorMiddleware);
     expect(listenFake).to.have.been.calledWith(port);
   });
   it("should call delete with the correct params", async () => {
@@ -259,6 +338,43 @@ describe("Lamba", () => {
     expect(deleteFake).to.have.been.calledWith("/:id", asyncFn);
     expect(asyncHandlerFake).to.have.been.calledWith(fn);
     expect(useFake).to.have.been.calledWith(deps.errorMiddleware);
+    expect(listenFake).to.have.been.calledWith(port);
+  });
+  it("should call delete with the correct params with premiddleware", async () => {
+    const useFake = fake();
+    const listenFake = fake();
+    const deleteFake = fake();
+    const app = {
+      use: useFake,
+      listen: listenFake,
+      delete: deleteFake
+    };
+    const expressFake = fake.returns(app);
+    replace(deps, "express", expressFake);
+
+    const asyncFn = "some-fn";
+    const asyncHandlerFake = fake.returns(asyncFn);
+    const expressMiddlewareFake = fake();
+
+    replace(deps, "asyncHandler", asyncHandlerFake);
+    replace(deps, "expressMiddleware", expressMiddlewareFake);
+
+    const preMiddleware = "some-premiddleware";
+    const postMiddleware = "some-postmiddleware";
+
+    const result = server()
+      .delete(fn, {
+        preMiddleware: [preMiddleware],
+        postMiddleware: [postMiddleware]
+      })
+      .listen();
+
+    expect(result).to.equal(app);
+    expect(deleteFake).to.have.been.calledWith("/:id", asyncFn);
+    expect(asyncHandlerFake).to.have.been.calledWith(fn);
+    expect(useFake.firstCall).to.have.been.calledWith(preMiddleware);
+    expect(useFake.secondCall).to.have.been.calledWith(postMiddleware);
+    expect(useFake.thirdCall).to.have.been.calledWith(deps.errorMiddleware);
     expect(listenFake).to.have.been.calledWith(port);
   });
 });

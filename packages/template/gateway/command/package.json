@@ -1,7 +1,7 @@
 {
-  "name": "@sustainers/gateway-get",
-  "description": "A gateway server GET handler.",
-  "version": "0.0.1",
+  "name": "@sustainers/gateway-command",
+  "description": "A gateway server command POST handler.",
+  "version": "0.0.0",
   "main": "index.js",
   "author": "sustainers.market",
   "engines": {
@@ -14,8 +14,10 @@
     "access": "public"
   },
   "dependencies": {
+    "@sustainers/command-js": "*",
     "@sustainers/gcp-token": "*",
-    "@sustainers/view-store-js": "^0.0.32"
+    "@sustainers/normalize-command": "^0.0.3",
+    "@sustainers/validate-command": "*"
   },
   "devDependencies": {
     "chai-datetime": "^1.5.0",

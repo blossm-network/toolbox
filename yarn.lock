@@ -1178,6 +1178,24 @@
   resolved "https://registry.yarnpkg.com/@sinonjs/text-encoding/-/text-encoding-0.7.1.tgz#8da5c6530915653f3a1f38fd5f101d8c3f8079c5"
   integrity sha512-+iTbntw2IZPb/anVDbypzfQa+ay64MW0Zo8aJ8gZPWMMK6/OubMVb6lUPMagqjOPnmtauXnFCACVl3O7ogjeqQ==
 
+"@sustainers/gateway-get@^0.0.1":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@sustainers/gateway-get/-/gateway-get-0.0.1.tgz#041055b1b23c9ae1c1dd89398372e6776fafaf36"
+  integrity sha512-kfD6En3EEUORyI9zeaYvYqnGA9jC5fKdKzSsQxlN9yiiuKnMqY2PczKM1DIlbjxtFuqK+yP1rtZVrwfaG4DJZA==
+  dependencies:
+    "@sustainers/gcp-token" "*"
+    "@sustainers/view-store-js" "^0.0.32"
+
+"@sustainers/gateway-post@^0.0.1":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@sustainers/gateway-post/-/gateway-post-0.0.1.tgz#cf437781b3609cfabb3d03ccaaaa79a1692a414e"
+  integrity sha512-IKFL75PBU9EZaeOEqOWMJwwpTY5JAF7x+N9K/Kp0eYE+TEstvUeNpoG+JRhN7vxg+GzHznCYWXUDwyV98VyfLQ==
+  dependencies:
+    "@sustainers/command-js" "*"
+    "@sustainers/gcp-token" "*"
+    "@sustainers/normalize-command" "^0.0.3"
+    "@sustainers/validate-command" "*"
+
 "@types/duplexify@^3.6.0":
   version "3.6.0"
   resolved "https://registry.yarnpkg.com/@types/duplexify/-/duplexify-3.6.0.tgz#dfc82b64bd3a2168f5bd26444af165bf0237dcd8"
