@@ -1,6 +1,6 @@
 const deps = require("./deps");
 
-module.exports = async ({ version, mainFn, validateFn, cleanFn } = {}) => {
+module.exports = async ({ version, mainFn, validateFn, normalizeFn } = {}) => {
   deps
     .server()
     .post(
@@ -8,7 +8,7 @@ module.exports = async ({ version, mainFn, validateFn, cleanFn } = {}) => {
         version,
         mainFn,
         ...(validateFn && { validateFn }),
-        ...(cleanFn && { cleanFn })
+        ...(normalizeFn && { normalizeFn })
       })
     )
     .listen();

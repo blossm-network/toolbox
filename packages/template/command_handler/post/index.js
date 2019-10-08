@@ -1,9 +1,9 @@
 const deps = require("./deps");
 
-module.exports = ({ version, mainFn, validateFn, cleanFn }) => {
+module.exports = ({ version, mainFn, validateFn, normalizeFn }) => {
   return async (req, res) => {
     if (validateFn) await validateFn(req.body.payload);
-    if (cleanFn) req.body.payload = await cleanFn(req.body.payload);
+    if (normalizeFn) req.body.payload = await normalizeFn(req.body.payload);
     const { payload, response } = await mainFn({
       payload: req.body.payload,
       context: req.context

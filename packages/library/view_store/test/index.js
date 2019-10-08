@@ -4,7 +4,7 @@ const { restore, replace, fake } = require("sinon");
 const deps = require("../deps");
 const viewStore = require("..");
 
-const id = "some-id!";
+const name = "some-name!";
 const domain = "some-domain!";
 const service = "some-service";
 const network = "some-network";
@@ -34,12 +34,12 @@ describe("Get views", () => {
     });
     replace(deps, "operation", operationFake);
 
-    await viewStore({ id, domain, service, network })
+    await viewStore({ name, domain, service, network })
       .create(properties)
       .in(context)
       .with(tokenFn);
 
-    expect(operationFake).to.have.been.calledWith(id, domain, "view-store");
+    expect(operationFake).to.have.been.calledWith(name, domain, "view-store");
     expect(postFake).to.have.been.calledWith(properties);
     expect(inFake).to.have.been.calledWith({ context, service, network });
     expect(withFake).to.have.been.calledWith({
@@ -60,12 +60,12 @@ describe("Get views", () => {
     });
     replace(deps, "operation", operationFake);
 
-    const result = await viewStore({ id, domain, service, network })
+    const result = await viewStore({ name, domain, service, network })
       .read(query)
       .in(context)
       .with(tokenFn);
 
-    expect(operationFake).to.have.been.calledWith(id, domain, "view-store");
+    expect(operationFake).to.have.been.calledWith(name, domain, "view-store");
     expect(getFake).to.have.been.calledWith(query);
     expect(inFake).to.have.been.calledWith({ context, service, network });
     expect(withFake).to.have.been.calledWith({
@@ -86,12 +86,12 @@ describe("Get views", () => {
     });
     replace(deps, "operation", operationFake);
 
-    await viewStore({ id, domain, service, network })
+    await viewStore({ name, domain, service, network })
       .update(root, properties)
       .in(context)
       .with(tokenFn);
 
-    expect(operationFake).to.have.been.calledWith(id, domain, "view-store");
+    expect(operationFake).to.have.been.calledWith(name, domain, "view-store");
     expect(putFake).to.have.been.calledWith(root, properties);
     expect(inFake).to.have.been.calledWith({ context, service, network });
     expect(withFake).to.have.been.calledWith({
@@ -111,12 +111,12 @@ describe("Get views", () => {
     });
     replace(deps, "operation", operationFake);
 
-    await viewStore({ id, domain, service, network })
+    await viewStore({ name, domain, service, network })
       .delete(root)
       .in(context)
       .with(tokenFn);
 
-    expect(operationFake).to.have.been.calledWith(id, domain, "view-store");
+    expect(operationFake).to.have.been.calledWith(name, domain, "view-store");
     expect(deleteFake).to.have.been.calledWith(root);
     expect(inFake).to.have.been.calledWith({ context, service, network });
     expect(withFake).to.have.been.calledWith({

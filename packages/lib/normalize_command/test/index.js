@@ -3,6 +3,12 @@ const { restore, replace, fake } = require("sinon");
 const normalizeCommand = require("../");
 const deps = require("../deps");
 
+const payload = "some-payload";
+
+const issued = "some-issued";
+const trace = "some-trace";
+const source = "some-source";
+
 describe("Normalize command", () => {
   afterEach(() => {
     restore();
@@ -12,72 +18,45 @@ describe("Normalize command", () => {
     replace(deps, "nonce", fake.returns(newNonce));
 
     const params = {
-      action: "some-action",
-      domain: "some-domain",
-      service: "some-service"
+      payload,
+      headers: {
+        issued,
+        trace,
+        source
+      }
     };
 
-    await normalizeCommand(params);
+    const result = await normalizeCommand(params);
 
-    expect(params).to.deep.equal({
-      ...params,
-      id: newNonce,
-      sourceCommand: {
+    expect(result).to.deep.equal({
+      headers: {
         id: newNonce,
-        action: params.action,
-        domain: params.domain,
-        service: params.service
-      }
+        issued,
+        trace,
+        source
+      },
+      payload
     });
   });
-  it("should get called with expected params and passed in command", async () => {
-    const newNonce = "newNonce!";
-    replace(deps, "nonce", fake.returns(newNonce));
-    const sourceCommandId = "command-id!";
-    const sourceCommandAction = "command-action!";
-    const sourceCommandDomain = "command-domain!";
-    const sourceCommandService = "command-service!";
-
-    const params = {
-      action: "some-action",
-      domain: "some-domain",
-      service: "some-service",
-      sourceCommand: {
-        action: sourceCommandAction,
-        domain: sourceCommandDomain,
-        service: sourceCommandService,
-        id: sourceCommandId
-      }
-    };
-
-    await normalizeCommand(params);
-
-    expect(params).to.deep.equal({
-      ...params,
-      id: newNonce
-    });
-  });
-  it("should get called with expected params", async () => {
+  it("should get called with expected params with optionals omitted", async () => {
     const newNonce = "newNonce!";
     replace(deps, "nonce", fake.returns(newNonce));
 
     const params = {
-      action: "some-action",
-      domain: "some-domain",
-      service: "some-service"
+      payload,
+      headers: {
+        issued
+      }
     };
 
-    await normalizeCommand(params);
+    const result = await normalizeCommand(params);
 
-    expect(params).to.deep.equal({
-      ...params,
-      id: newNonce,
-      sourceCommand: {
+    expect(result).to.deep.equal({
+      headers: {
         id: newNonce,
-        action: params.action,
-        domain: params.domain,
-        service: params.service
-      }
+        issued
+      },
+      payload
     });
   });
 });

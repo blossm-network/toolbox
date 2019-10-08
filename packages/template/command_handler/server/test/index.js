@@ -6,7 +6,7 @@ const commandHandler = require("..");
 
 const mainFn = "some-main-fn";
 const validateFn = "some-validate-fn";
-const cleanFn = "some-clean-fn";
+const normalizeFn = "some-normalize-fn";
 const version = "some-version";
 
 describe("Command handler", () => {
@@ -28,7 +28,7 @@ describe("Command handler", () => {
     const commandHandlerPostFake = fake.returns(commandHandlerPostResult);
     replace(deps, "post", commandHandlerPostFake);
 
-    await commandHandler({ version, mainFn, validateFn, cleanFn });
+    await commandHandler({ version, mainFn, validateFn, normalizeFn });
 
     expect(listenFake).to.have.been.calledOnce;
     expect(serverFake).to.have.been.calledOnce;
@@ -37,7 +37,7 @@ describe("Command handler", () => {
       version,
       mainFn,
       validateFn,
-      cleanFn
+      normalizeFn
     });
   });
   it("should call with the correct params with optionals omitted", async () => {

@@ -43,7 +43,7 @@ describe("Command handler post", () => {
 
   it("should call with the correct params", async () => {
     const validateFnFake = fake();
-    const cleanFnFake = fake.returns(cleanedPayload);
+    const normalizeFnFake = fake.returns(cleanedPayload);
 
     const createEventFake = fake.returns(event);
     replace(deps, "createEvent", createEventFake);
@@ -83,10 +83,10 @@ describe("Command handler post", () => {
       version,
       mainFn: mainFnFake,
       validateFn: validateFnFake,
-      cleanFn: cleanFnFake
+      normalizeFn: normalizeFnFake
     })(req, res);
 
-    expect(cleanFnFake).to.have.been.calledWith(payload);
+    expect(normalizeFnFake).to.have.been.calledWith(payload);
     expect(validateFnFake).to.have.been.calledWith(payload);
     expect(mainFnFake).to.have.been.calledWith({
       payload: cleanedPayload,

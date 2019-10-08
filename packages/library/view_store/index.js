@@ -1,6 +1,6 @@
 const deps = require("./deps");
 
-module.exports = ({ id, domain, service, network }) => {
+module.exports = ({ name, domain, service, network }) => {
   return {
     create: properties => {
       return {
@@ -8,7 +8,7 @@ module.exports = ({ id, domain, service, network }) => {
           return {
             with: async tokenFn =>
               await deps
-                .operation(id, domain, "view-store")
+                .operation(name, domain, "view-store")
                 .post(properties)
                 .in({ context, service, network })
                 .with({ tokenFn })
@@ -22,7 +22,7 @@ module.exports = ({ id, domain, service, network }) => {
           return {
             with: async tokenFn =>
               await deps
-                .operation(id, domain, "view-store")
+                .operation(name, domain, "view-store")
                 .get(query)
                 .in({ context, service, network })
                 .with({ tokenFn })
@@ -36,7 +36,7 @@ module.exports = ({ id, domain, service, network }) => {
           return {
             with: async tokenFn =>
               await deps
-                .operation(id, domain, "view-store")
+                .operation(name, domain, "view-store")
                 .put(root, properties)
                 .in({ context, service, network })
                 .with({ tokenFn })
@@ -50,7 +50,7 @@ module.exports = ({ id, domain, service, network }) => {
           return {
             with: async tokenFn =>
               await deps
-                .operation(id, domain, "view-store")
+                .operation(name, domain, "view-store")
                 .delete(root)
                 .in({ context, service, network })
                 .with({ tokenFn })

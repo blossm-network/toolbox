@@ -4,12 +4,14 @@ const logger = require("@sustainers/logger");
 
 const deps = require("./deps");
 
-module.exports = () => {
+module.exports = ({ premiddleware = [], postmiddleware = [] } = {}) => {
   const app = deps.express();
+  premiddleware.forEach(middleware => app.use(middleware));
   deps.expressMiddleware(app);
 
   const listen = ({ port } = {}) => {
     port = port || process.env.PORT || 3000;
+    postmiddleware.forEach(middleware => app.use(middleware));
     app.use(deps.errorMiddleware);
     app.listen(port);
     logger.info("Thank you server.", { port });
