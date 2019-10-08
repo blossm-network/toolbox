@@ -1,7 +1,7 @@
 {
   "name": "@sustainers/gateway",
   "description": "A gateway server.",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "main": "index.js",
   "author": "sustainers.market",
   "engines": {
@@ -17,8 +17,8 @@
     "@sustainers/authentication-middleware": "^0.0.22",
     "@sustainers/authorization-middleware": "^0.0.12",
     "@sustainers/gateway-command": "*",
-    "@sustainers/gateway-view-store": "*",
     "@sustainers/gateway-command-store": "*",
+    "@sustainers/gateway-view-store": "*",
     "@sustainers/server": "^0.0.11"
   },
   "devDependencies": {
