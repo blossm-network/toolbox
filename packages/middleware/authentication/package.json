@@ -1,6 +1,6 @@
 {
   "name": "@sustainers/authentication-middleware",
-  "version": "0.0.22",
+  "version": "0.0.23",
   "description": "Authentication middleware for the network.",
   "main": "index.js",
   "author": "sustainers.market",
@@ -14,7 +14,7 @@
     "test": "mocha"
   },
   "dependencies": {
-    "@sustainers/authenticate": "^0.0.9",
+    "@sustainers/authenticate": "^0.0.10",
     "@sustainers/gcp-kms": "^0.0.14",
     "express-async-handler": "^1.1.4"
   },

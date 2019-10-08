@@ -1,7 +1,7 @@
 {
   "name": "@sustainers/gateway-auth",
   "description": "A gateway server auth POST handler.",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "main": "index.js",
   "author": "sustainers.market",
   "engines": {
