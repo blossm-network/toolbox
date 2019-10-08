@@ -5,7 +5,7 @@ const yaml = require("yaml");
 const path = require("path");
 const { red } = require("chalk");
 
-const { init, issue } = require("./domain");
+const { init, issue } = require("./domains");
 
 const domains = ["init", "issue"];
 

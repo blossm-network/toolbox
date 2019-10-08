@@ -2,7 +2,7 @@ const { expect } = require("chai").use(require("sinon-chai"));
 const { restore, replace, fake } = require("sinon");
 
 const deps = require("../deps");
-const server = require("..");
+const server = require("../../server");
 
 const port = "some-port";
 const fn = "some-fn";

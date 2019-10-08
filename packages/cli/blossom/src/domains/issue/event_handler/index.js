@@ -1,6 +1,6 @@
 const normalize = require("@sustainers/normalize-cli");
 
-const { deploy } = require("./action");
+const { deploy } = require("./actions");
 
 const actions = ["deploy"];
 
