@@ -47,7 +47,7 @@ describe("Gateway post", () => {
       payload: normalizedPayload,
       headers
     });
-    replace(deps, "clean", normalizeFake);
+    replace(deps, "normalize", normalizeFake);
 
     const withFake = fake();
     const inFake = fake.returns({
@@ -97,8 +97,8 @@ describe("Gateway post", () => {
     const validateFake = fake.returns(event);
     replace(deps, "validate", validateFake);
 
-    const cleanFake = fake.returns({ payload: normalizedPayload, headers });
-    replace(deps, "clean", cleanFake);
+    const normalizeFake = fake.returns({ payload: normalizedPayload, headers });
+    replace(deps, "normalize", normalizeFake);
 
     const errMessage = "some-err-message";
     const withFake = fake.throws(new Error(errMessage));
