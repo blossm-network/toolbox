@@ -1,7 +1,7 @@
 {
   "name": "@sustainers/gateway-auth",
   "description": "A gateway server auth POST handler.",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "main": "index.js",
   "author": "sustainers.market",
   "engines": {
@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@sustainers/normalize-command": "^0.0.3",
-    "@sustainers/validate-command": "*"
+    "@sustainers/validate-command": "^0.0.13"
   },
   "devDependencies": {
     "chai-datetime": "^1.5.0",

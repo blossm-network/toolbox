@@ -1,7 +1,7 @@
 {
   "name": "@sustainers/gateway",
   "description": "A gateway server.",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "main": "index.js",
   "author": "sustainers.market",
   "engines": {
@@ -14,12 +14,12 @@
     "access": "public"
   },
   "dependencies": {
-    "@sustainers/authentication-middleware": "^0.0.24",
-    "@sustainers/authorization-middleware": "^0.0.13",
-    "@sustainers/cors-middleware": "*",
-    "@sustainers/gateway-auth": "^0.0.4",
-    "@sustainers/gateway-command": "^0.0.2",
-    "@sustainers/gateway-view-store": "^0.0.2",
+    "@sustainers/authentication-middleware": "^0.0.25",
+    "@sustainers/authorization-middleware": "^0.0.14",
+    "@sustainers/cors-middleware": "^0.0.18",
+    "@sustainers/gateway-auth": "^0.0.5",
+    "@sustainers/gateway-command": "^0.0.3",
+    "@sustainers/gateway-view-store": "^0.0.3",
     "@sustainers/server": "^0.0.12"
   },
   "devDependencies": {

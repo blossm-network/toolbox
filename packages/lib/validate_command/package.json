@@ -1,6 +1,6 @@
 {
   "name": "@sustainers/validate-command",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "description": "Validates the paramaters found in command requests.",
   "main": "index.js",
   "author": "sustainers.market",
@@ -13,7 +13,7 @@
   "dependencies": {
     "@sustainers/datetime": "^0.0.3",
     "@sustainers/duration-consts": "^0.0.1",
-    "@sustainers/errors": "^0.0.8",
+    "@sustainers/errors": "^0.0.9",
     "@sustainers/validator": "^0.0.4"
   },
   "scripts": {
