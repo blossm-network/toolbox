@@ -10,43 +10,12 @@ const defaultFn = query => {
 
 module.exports = ({ store, fn = defaultFn }) => {
   return async (req, res) => {
-    //eslint-disable-next-line no-console
-    console.log("req.query: ", {
-      query: req.query,
-      body: req.body,
-      params: req.params
-    });
-
     const { query, sort } = fn(req.query);
-
-    //eslint-disable-next-line no-console
-    console.log("stuff: ", {
-      query,
-      sort
-    });
 
     if (req.params.id == undefined) {
       const results = await deps.db.find({
         store,
-        query: {
-          ...query,
-          ...(req.params.id && { id: req.params.id })
-        },
-        ...(sort && { sort }),
-        options: {
-          lean: true
-        }
-      });
-
-      //eslint-disable-next-line no-console
-      console.log("more stuff: ", {
-        store,
-        collectionName: store.collectionName,
-        results,
-        query: {
-          ...query,
-          ...(req.params.id && { id: req.params.id })
-        },
+        query,
         ...(sort && { sort }),
         options: {
           lean: true
@@ -65,7 +34,7 @@ module.exports = ({ store, fn = defaultFn }) => {
         }
       });
 
-      if (!result) throw notFound.root;
+      if (!result) throw notFound.id;
       res.send(result);
     }
   };

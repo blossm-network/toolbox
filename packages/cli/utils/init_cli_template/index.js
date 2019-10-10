@@ -15,7 +15,7 @@ module.exports = ({ domain, dir }) => async args => {
 
   const input = await normalize({
     entrypointType: "path",
-    entrypointDefault: ".",
+    entrypointDefault: domain,
     args
   });
 

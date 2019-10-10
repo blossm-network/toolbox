@@ -73,6 +73,34 @@ describe("Get views", () => {
     });
     expect(result).to.equal(views);
   });
+  it("should call stream with the correct params", async () => {
+    const views = "some-views";
+    const withFake = fake.returns(views);
+    const inFake = fake.returns({
+      with: withFake
+    });
+    const getFake = fake.returns({
+      in: inFake
+    });
+    const operationFake = fake.returns({
+      get: getFake
+    });
+    replace(deps, "operation", operationFake);
+
+    const result = await viewStore({ name, domain, service, network })
+      .stream(query)
+      .in(context)
+      .with(tokenFn);
+
+    expect(operationFake).to.have.been.calledWith(name, domain, "view-store");
+    expect(getFake).to.have.been.calledWith(query);
+    expect(inFake).to.have.been.calledWith({ context, service, network });
+    expect(withFake).to.have.been.calledWith({
+      path: "/stream",
+      tokenFn
+    });
+    expect(result).to.equal(views);
+  });
   it("should call update with the correct params", async () => {
     const withFake = fake();
     const inFake = fake.returns({

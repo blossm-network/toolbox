@@ -30,6 +30,20 @@ module.exports = ({ name, domain, service, network }) => {
         }
       };
     },
+    stream: query => {
+      return {
+        in: context => {
+          return {
+            with: async tokenFn =>
+              await deps
+                .operation(name, domain, "view-store")
+                .get(query)
+                .in({ context, service, network })
+                .with({ path: "/stream", tokenFn })
+          };
+        }
+      };
+    },
     update: (root, properties) => {
       return {
         in: context => {

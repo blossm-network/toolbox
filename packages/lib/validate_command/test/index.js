@@ -30,7 +30,14 @@ describe("Validate command", () => {
       ...goodParams,
       headers: 123
     };
-    expect(async () => await validateCommand(params)).to.throw;
+    try {
+      await validateCommand(params);
+
+      //shouldn't be called
+      expect(2).to.equal(1);
+    } catch (e) {
+      expect(e.statusCode).to.equal(400);
+    }
   });
   it("should throw if a no header is passed", async () => {
     const params = {

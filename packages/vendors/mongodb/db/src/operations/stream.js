@@ -1,4 +1,4 @@
-module.exports = ({
+module.exports = async ({
   store,
   query,
   sort = null,
@@ -7,12 +7,10 @@ module.exports = ({
   pageSize = null,
   options = null
 }) => {
-  const op = store.find(query, select, {
+  return store.find(query, select, {
     ...(skip && { skip }),
     ...(sort && { sort }),
     ...(pageSize && { limit: pageSize }),
     ...options
   });
-
-  return op;
 };

@@ -19,6 +19,7 @@
     "@sustainers/server": "^0.0.12",
     "@sustainers/view-store-delete": "^0.0.22",
     "@sustainers/view-store-get": "^0.0.26",
+    "@sustainers/view-store-stream": "*",
     "@sustainers/view-store-post": "^0.0.26",
     "@sustainers/view-store-put": "^0.0.25"
   },

@@ -53,17 +53,24 @@ describe("View store", () => {
     const postFake = fake.returns({
       put: putFake
     });
-    const getFake = fake.returns({
+    const secondGetFake = fake.returns({
       post: postFake
     });
+    const firstGetFake = fake.returns({
+      get: secondGetFake
+    });
     const serverFake = fake.returns({
-      get: getFake
+      get: firstGetFake
     });
     replace(deps, "server", serverFake);
 
     const viewStoreGetResult = "some-get-result";
     const viewStoreGetFake = fake.returns(viewStoreGetResult);
     replace(deps, "get", viewStoreGetFake);
+
+    const viewStoreStreamResult = "some-stream-result";
+    const viewStoreStreamFake = fake.returns(viewStoreStreamResult);
+    replace(deps, "stream", viewStoreStreamFake);
 
     const viewStorePostResult = "some-post-result";
     const viewStorePostFake = fake.returns(viewStorePostResult);
@@ -111,7 +118,8 @@ describe("View store", () => {
     expect(secretFake).to.have.been.calledWith("mongodb");
     expect(listenFake).to.have.been.calledOnce;
     expect(serverFake).to.have.been.calledOnce;
-    expect(getFake).to.have.been.calledWith(viewStoreGetResult);
+    expect(firstGetFake).to.have.been.calledWith(viewStoreGetResult);
+    expect(secondGetFake).to.have.been.calledWith(viewStoreStreamResult);
     expect(postFake).to.have.been.calledWith(viewStorePostResult);
     expect(putFake).to.have.been.calledWith(viewStorePutResult);
     expect(deleteFake).to.have.been.calledWith(viewStoreDeleteResult);
@@ -141,8 +149,11 @@ describe("View store", () => {
     const postFake = fake.returns({
       put: putFake
     });
-    const getFake = fake.returns({
+    const secondGetFake = fake.returns({
       post: postFake
+    });
+    const getFake = fake.returns({
+      get: secondGetFake
     });
     const serverFake = fake.returns({
       get: getFake
@@ -152,6 +163,10 @@ describe("View store", () => {
     const viewStoreGetResult = "some-get-result";
     const viewStoreGetFake = fake.returns(viewStoreGetResult);
     replace(deps, "get", viewStoreGetFake);
+
+    const viewStoreStreamResult = "some-stream-result";
+    const viewStoreStreamFake = fake.returns(viewStoreStreamResult);
+    replace(deps, "stream", viewStoreStreamFake);
 
     const viewStorePostResult = "some-post-result";
     const viewStorePostFake = fake.returns(viewStorePostResult);

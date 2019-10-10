@@ -1,14 +1,23 @@
+const deps = require("./deps");
+const gcpToken = require("@sustainers/gcp-token");
+
 module.exports = () => {
   return async (req, res) => {
+    const { token } = deps
+      .command({
+        action: "create",
+        domain: "auth-token",
+        service: process.env.SERVICE,
+        network: process.env.NETWORK
+      })
+      .issue({ payload: {}, headers: {} })
+      .in()
+      .with(gcpToken);
     res
-      .cookie(
-        `${process.env.SERVICE}-session`,
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
-        {
-          httpOnly: true,
-          secure: process.env.NODE_ENV != "local"
-        }
-      )
+      .cookie(`${process.env.SERVICE}-session`, token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV != "local"
+      })
       .status(204)
       .send();
   };

@@ -1,6 +1,8 @@
 const { expect } = require("chai").use(require("sinon-chai"));
 const { restore, replace, fake } = require("sinon");
 
+const { notFound } = require("@sustainers/errors");
+
 const get = require("..");
 const deps = require("../deps");
 
@@ -198,6 +200,10 @@ describe("View store get", () => {
       send: sendFake
     };
 
-    expect(async () => await get({ store })(req, res)).to.throw;
+    try {
+      await get({ store })(req, res);
+    } catch (e) {
+      expect(e).to.equal(notFound.id);
+    }
   });
 });

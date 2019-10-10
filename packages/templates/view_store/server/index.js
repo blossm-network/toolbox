@@ -46,6 +46,9 @@ module.exports = async ({ schema, indexes, getFn, postFn, putFn } = {}) => {
   deps
     .server()
     .get(deps.get({ store, ...(getFn && { fn: getFn }) }))
+    .get(deps.stream({ store, ...(getFn && { fn: getFn }) }), {
+      path: "/stream"
+    })
     .post(deps.post({ store, ...(postFn && { fn: postFn }) }))
     .put(deps.put({ store, ...(putFn && { fn: putFn }) }))
     .delete(deps.delete({ store }))
