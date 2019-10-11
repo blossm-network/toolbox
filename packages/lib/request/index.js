@@ -42,7 +42,19 @@ exports.stream = async (url, params, onResponse, headers) =>
         method: "GET",
         ...(headers != undefined && { headers })
       })
-      .on("response", onResponse)
-      .on("error", reject)
-      .on("end", resolve)
+      .on("response", res => {
+        //eslint-disable-next-line no-console
+        console.log("res!: ", { res });
+        onResponse(res);
+      })
+      .on("error", e => {
+        //eslint-disable-next-line no-console
+        console.log("e: ", { e });
+        reject(e);
+      })
+      .on("end", () => {
+        //eslint-disable-next-line no-console
+        console.log("done! ");
+        resolve();
+      })
   );

@@ -19,14 +19,20 @@ describe("View store", () => {
     });
     expect(response1.statusCode).to.equal(204);
 
+    //eslint-disable-next-line no-console
+    console.log("bout to 1");
     const response2 = await request.get(`${url}/${id}`);
     expect(response2.statusCode).to.equal(200);
     expect(JSON.parse(response2.body).name).to.equal("some-other-name");
 
+    //eslint-disable-next-line no-console
+    console.log("bout to 2");
     const response3 = await request.get(url);
     expect(response3.statusCode).to.equal(200);
     expect(JSON.parse(response3.body)[0].name).to.equal("some-other-name");
 
+    //eslint-disable-next-line no-console
+    console.log("bout to");
     await request.stream(`${url}/stream`, null, data => {
       //eslint-disable-next-line no-console
       console.log("GOT A DATA: ", data);
@@ -38,6 +44,8 @@ describe("View store", () => {
         "some-other-name"
       );
     });
+    //eslint-disable-next-line no-console
+    console.log("done");
 
     const response4 = await request.delete(`${url}/${id}`);
     expect(response4.statusCode).to.equal(200);
