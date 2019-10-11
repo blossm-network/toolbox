@@ -1,6 +1,6 @@
 {
   "name": "@sustainers/request",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Http access.",
   "main": "index.js",
   "author": "sustainers.market",
