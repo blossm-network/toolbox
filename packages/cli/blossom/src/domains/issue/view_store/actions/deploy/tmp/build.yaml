@@ -4,6 +4,15 @@ substitutions:
   _GCP_REGION: us-central1
   _GCP_DNS_ZONE: network
   _MEMORY: 128Mi
+  _DOMAIN: some-domain
+  _SERVICE: core
+  _CONTEXT: view-store
+  _NAME: some-name
+  _OPERATION_NAME: core-view-store-some-domain-un
+  _OPERATION_HASH: "167140514"
+  _NODE_ENV: staging
+  _ENV_NAME_SPECIFIER: -staging
+  _ENV_URI_SPECIFIER: staging.
 steps:
   - name: node:10.16.0
     entrypoint: yarn
@@ -107,23 +116,20 @@ steps:
     entrypoint: bash
     args:
       - -c
-      - gcloud beta dns record-sets transaction execute
-        --zone=${_GCP_DNS_ZONE}
+      - gcloud beta dns record-sets transaction execute --zone=${_GCP_DNS_ZONE}
         --project=${_GCP_PROJECT} || exit 0
   - name: gcr.io/cloud-builders/gcloud
     entrypoint: bash
     args:
       - -c
-      - gcloud beta dns record-sets transaction abort
-        --zone=${_GCP_DNS_ZONE}
+      - gcloud beta dns record-sets transaction abort --zone=${_GCP_DNS_ZONE}
         --project=${_GCP_PROJECT} || exit 0
   - name: gcr.io/cloud-builders/gcloud
     entrypoint: bash
     args:
       - -c
-      - gcloud beta run domain-mappings create
-        --platform=managed
+      - gcloud beta run domain-mappings create --platform=managed
         --service=${_GCP_REGION}-${_OPERATION_NAME}-${_OPERATION_HASH}
         --domain=${_OPERATION_HASH}.${_GCP_REGION}.${_ENV_URI_SPECIFIER}${_NETWORK}
-        --project=${_GCP_PROJECT}${_ENV_NAME_SPECIFIER}
-        --region=${_GCP_REGION} || exit 0
+        --project=${_GCP_PROJECT}${_ENV_NAME_SPECIFIER} --region=${_GCP_REGION}
+        || exit 0

@@ -24,9 +24,9 @@ describe("View store stream", () => {
 
     const cursorFake = fake.returns({
       eachAsync: async (fn, options) => {
-        const view = "some-view";
+        const view = { a: 1 };
         await fn(view);
-        expect(writeFake).to.have.been.calledWith(view);
+        expect(writeFake).to.have.been.calledWith(JSON.stringify(view));
         expect(options).to.deep.equal({ parallel: 1 });
       }
     });
@@ -66,9 +66,9 @@ describe("View store stream", () => {
 
     const cursorFake = fake.returns({
       eachAsync: async (fn, options) => {
-        const view = "some-view";
+        const view = { a: 1 };
         await fn(view);
-        expect(writeFake).to.have.been.calledWith(view);
+        expect(writeFake).to.have.been.calledWith(JSON.stringify(view));
         expect(options).to.deep.equal({ parallel: 2 });
       }
     });

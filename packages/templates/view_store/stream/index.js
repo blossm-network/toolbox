@@ -28,7 +28,9 @@ module.exports = ({ store, fn = defaultFn }) => {
 
     //eslint-disable-next-line no-console
     console.log("cursor gotten: ");
-    await cursor.eachAsync(view => res.write(view), { parallel });
+    await cursor.eachAsync(view => res.write(JSON.stringify(view)), {
+      parallel
+    });
     //eslint-disable-next-line no-console
     console.log("dun streaming: ");
     res.end();
