@@ -141,7 +141,7 @@ describe("Request", () => {
       switch (status) {
       case "error":
         return { on: onFn };
-      case "data":
+      case "request":
         fn(body);
         return { on: onFn };
       case "end":
@@ -174,7 +174,7 @@ describe("Request", () => {
       case "error":
         fn(new Error(errMessage));
         return;
-      case "data":
+      case "request":
         fn(body);
         return { on: onFn };
       case "end":
