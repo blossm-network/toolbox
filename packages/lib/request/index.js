@@ -34,7 +34,7 @@ exports.delete = async (url, headers) =>
 exports.get = async (url, params, headers) =>
   await common({ method: "GET", url: addParamsToUrl(url, params), headers });
 
-exports.stream = async (url, params, onResponse, headers) =>
+exports.stream = async (url, params, onData, headers) =>
   new Promise((resolve, reject) =>
     deps
       .request({
@@ -42,10 +42,10 @@ exports.stream = async (url, params, onResponse, headers) =>
         method: "GET",
         ...(headers != undefined && { headers })
       })
-      .on("response", res => {
+      .on("data", data => {
         //eslint-disable-next-line no-console
-        console.log("res!: ", { res, url: addParamsToUrl(url, params) });
-        onResponse(res);
+        console.log("data!: ", { data, url: addParamsToUrl(url, params) });
+        onData(data);
       })
       .on("error", e => {
         //eslint-disable-next-line no-console

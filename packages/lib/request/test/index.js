@@ -141,7 +141,7 @@ describe("Request", () => {
       switch (status) {
       case "error":
         return { on: onFn };
-      case "response":
+      case "data":
         fn(body);
         return { on: onFn };
       case "end":
@@ -158,9 +158,9 @@ describe("Request", () => {
       };
     });
     const url = "http://google.com";
-    const onResponseFake = fake();
-    await request.stream(url, params, onResponseFake);
-    expect(onResponseFake).to.have.been.calledWith(body);
+    const onDataFake = fake();
+    await request.stream(url, params, onDataFake);
+    expect(onDataFake).to.have.been.calledWith(body);
   });
   it("should throw in stream correctly", async () => {
     const params = {
@@ -174,7 +174,7 @@ describe("Request", () => {
       case "error":
         fn(new Error(errMessage));
         return;
-      case "response":
+      case "data":
         fn(body);
         return { on: onFn };
       case "end":
@@ -191,9 +191,9 @@ describe("Request", () => {
       };
     });
     const url = "http://google.com";
-    const onResponseFake = fake();
+    const onDataFake = fake();
     try {
-      await request.stream(url, params, onResponseFake);
+      await request.stream(url, params, onDataFake);
 
       //shouldn't be called
       expect(0).to.equal(1);
