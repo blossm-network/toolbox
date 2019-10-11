@@ -22,39 +22,27 @@ const common = async ({ method, url, params, headers }) =>
     )
   );
 
-exports.post = async (url, params, headers) =>
-  await common({ method: "POST", url, params, headers });
+exports.post = async (url, { body, headers } = {}) =>
+  await common({ method: "POST", url, params: body, headers });
 
-exports.put = async (url, params, headers) =>
-  await common({ method: "PUT", url, params, headers });
+exports.put = async (url, { body, headers } = {}) =>
+  await common({ method: "PUT", url, params: body, headers });
 
-exports.delete = async (url, headers) =>
+exports.delete = async (url, { headers } = {}) =>
   await common({ method: "DELETE", url, headers });
 
-exports.get = async (url, params, headers) =>
-  await common({ method: "GET", url: addParamsToUrl(url, params), headers });
+exports.get = async (url, { query, headers } = {}) =>
+  await common({ method: "GET", url: addParamsToUrl(url, query), headers });
 
-exports.stream = async (url, params, onData, headers) =>
+exports.stream = async (url, onData, { query, headers } = {}) =>
   new Promise((resolve, reject) =>
     deps
       .request({
-        url: addParamsToUrl(url, params),
+        url: addParamsToUrl(url, query),
         method: "GET",
         ...(headers != undefined && { headers })
       })
-      .on("data", data => {
-        //eslint-disable-next-line no-console
-        console.log("data!: ", { data, url: addParamsToUrl(url, params) });
-        onData(data);
-      })
-      .on("error", e => {
-        //eslint-disable-next-line no-console
-        console.log("e: ", { e, url: addParamsToUrl(url, params) });
-        reject(e);
-      })
-      .on("end", () => {
-        //eslint-disable-next-line no-console
-        console.log("done! ", { url: addParamsToUrl(url, params) });
-        resolve();
-      })
+      .on("data", onData)
+      .on("error", reject)
+      .on("end", resolve)
   );

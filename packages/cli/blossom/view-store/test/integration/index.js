@@ -46,6 +46,6 @@ describe("View store", () => {
   });
   it("should return an error if incorrect params", async () => {
     const response = await request.post(url, { body: { name: 1 } });
-    expect(response.statusCode).to.be(400);
+    expect(response.statusCode).to.equal(400);
   });
 });

@@ -13,8 +13,6 @@ module.exports = ({ store, fn = defaultFn }) => {
   return async (req, res) => {
     const { query, sort, parallel } = fn(req.query);
 
-    //eslint-disable-next-line no-console
-    console.log("bout to stream: ", { query, sort, parallel });
     const cursor = deps.db
       .find({
         store,
@@ -26,13 +24,10 @@ module.exports = ({ store, fn = defaultFn }) => {
       })
       .cursor();
 
-    //eslint-disable-next-line no-console
-    console.log("cursor gotten: ");
     await cursor.eachAsync(view => res.write(JSON.stringify(view)), {
       parallel
     });
-    //eslint-disable-next-line no-console
-    console.log("dun streaming: ");
+
     res.end();
   };
 };

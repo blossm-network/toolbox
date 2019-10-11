@@ -13,9 +13,11 @@ describe("Gateway integration tests", () => {
     const domain = "some-domain";
     const action = "some-action";
     const response0 = await request.post(`${url}/auth`, {
-      payload,
-      headers: {
-        issued: stringDate()
+      body: {
+        payload,
+        headers: {
+          issued: stringDate()
+        }
       }
     });
     //eslint-disable-next-line no-console
@@ -25,18 +27,17 @@ describe("Gateway integration tests", () => {
     console.log("cookies: ", cookies);
 
     expect(response0.statusCode).to.equal(204);
-    const response1 = await request.post(
-      `${url}/command/${domain}/${action}`,
-      {
+    const response1 = await request.post(`${url}/command/${domain}/${action}`, {
+      body: {
         payload,
         headers: {
           issued: stringDate()
         }
       },
-      {
+      headers: {
         Cookie: cookies
       }
-    );
+    });
     //eslint-disable-next-line no-console
     console.log("response1: ", response1);
     expect(response0.statusCode).to.equal(204);

@@ -10,11 +10,13 @@ describe("Command handler store integration tests", () => {
   it("should return successfully", async () => {
     const name = "Some-name";
     const response = await request.post(url, {
-      headers: {
-        issued: stringDate()
-      },
-      payload: {
-        name
+      body: {
+        headers: {
+          issued: stringDate()
+        },
+        payload: {
+          name
+        }
       }
     });
 
@@ -35,11 +37,13 @@ describe("Command handler store integration tests", () => {
   it("should return an error if incorrect params", async () => {
     const name = 3;
     const response = await request.post(url, {
-      headers: {
-        issued: stringDate()
-      },
-      payload: {
-        name
+      body: {
+        headers: {
+          issued: stringDate()
+        },
+        payload: {
+          name
+        }
       }
     });
 

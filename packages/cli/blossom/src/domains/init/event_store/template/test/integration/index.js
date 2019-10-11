@@ -27,22 +27,24 @@ describe("Event store", () => {
     const issued = "now";
 
     const response0 = await request.post(url, {
-      headers: {
-        root,
-        topic,
-        version,
-        created,
-        command: {
-          id,
-          action,
-          domain,
-          service,
-          network,
-          issued
+      body: {
+        headers: {
+          root,
+          topic,
+          version,
+          created,
+          command: {
+            id,
+            action,
+            domain,
+            service,
+            network,
+            issued
+          }
+        },
+        payload: {
+          name: "some-name"
         }
-      },
-      payload: {
-        name: "some-name"
       }
     });
 
@@ -54,22 +56,24 @@ describe("Event store", () => {
     expect(JSON.parse(response1.body).state.name).to.equal("some-name");
 
     const response2 = await request.post(url, {
-      headers: {
-        root,
-        topic,
-        version,
-        created,
-        command: {
-          id,
-          action,
-          domain,
-          service,
-          network,
-          issued
+      body: {
+        headers: {
+          root,
+          topic,
+          version,
+          created,
+          command: {
+            id,
+            action,
+            domain,
+            service,
+            network,
+            issued
+          }
+        },
+        payload: {
+          name: "some-other-name"
         }
-      },
-      payload: {
-        name: "some-other-name"
       }
     });
     expect(response2.statusCode).to.equal(204);

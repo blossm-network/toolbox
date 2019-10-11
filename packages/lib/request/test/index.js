@@ -28,7 +28,7 @@ describe("Request", () => {
       });
       callback(null, response, body);
     });
-    const reply = await request.post(url, params);
+    const reply = await request.post(url, { body: params });
     expect(reply).to.deep.equal({ ...response, body });
   });
   it("should call post with correct params with header", async () => {
@@ -44,7 +44,10 @@ describe("Request", () => {
       });
       callback(null, response, body);
     });
-    const reply = await request.post(url, params, reqHeaders);
+    const reply = await request.post(url, {
+      body: params,
+      headers: reqHeaders
+    });
     expect(reply).to.deep.equal({ ...response, body });
   });
   it("should call put with correct params", async () => {
@@ -58,7 +61,7 @@ describe("Request", () => {
       });
       callback(null, response, body);
     });
-    const reply = await request.put(url, params);
+    const reply = await request.put(url, { body: params });
     expect(reply).to.deep.equal({ ...response, body });
   });
   it("should call delete with correct params", async () => {
@@ -87,7 +90,7 @@ describe("Request", () => {
       callback(null, response, body);
     });
     const url = "http://google.com";
-    const reply = await request.get(url, params);
+    const reply = await request.get(url, { query: params });
     expect(reply).to.deep.equal({ ...response, body });
   });
   it("should call get with correct params and header", async () => {
@@ -105,7 +108,7 @@ describe("Request", () => {
       callback(null, response, body);
     });
     const url = "http://google.com";
-    const reply = await request.get(url, params, headers);
+    const reply = await request.get(url, { query: params, headers });
     expect(reply).to.deep.equal({ ...response, body });
   });
   it("should call get with correct string params", async () => {
@@ -119,7 +122,7 @@ describe("Request", () => {
       callback(null, response, body);
     });
     const url = "http://google.com";
-    const reply = await request.get(url, params);
+    const reply = await request.get(url, { query: params });
     expect(reply).to.deep.equal({ ...response, body });
   });
   it("should call get with no params", async () => {
@@ -159,7 +162,7 @@ describe("Request", () => {
     });
     const url = "http://google.com";
     const onDataFake = fake();
-    await request.stream(url, params, onDataFake);
+    await request.stream(url, onDataFake, { query: params });
     expect(onDataFake).to.have.been.calledWith(body);
   });
   it("should throw in stream correctly", async () => {
@@ -193,7 +196,7 @@ describe("Request", () => {
     const url = "http://google.com";
     const onDataFake = fake();
     try {
-      await request.stream(url, params, onDataFake);
+      await request.stream(url, onDataFake, { query: params });
 
       //shouldn't be called
       expect(0).to.equal(1);
