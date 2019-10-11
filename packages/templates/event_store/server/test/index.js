@@ -13,14 +13,12 @@ const schema = { a: 1 };
 const indexes = ["some-index"];
 
 const domain = "some-domain";
-const id = "some-id";
 const user = "some-db-user";
 const host = "some-host";
 const database = "some-db";
 const password = "some-password";
 
 process.env.DOMAIN = domain;
-process.env.ID = id;
 process.env.MONGODB_USER = user;
 process.env.MONGODB_HOST = host;
 process.env.MONGODB_DATABASE = database;

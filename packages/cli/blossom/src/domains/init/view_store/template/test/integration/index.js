@@ -31,11 +31,14 @@ describe("View store", () => {
     expect(response3.statusCode).to.equal(200);
     expect(JSON.parse(response3.body)[0].name).to.equal("some-other-name");
 
-    await request.stream(`${url}/stream`, null, data => {
+    let counter = 0;
+    await request.stream(`${url}/stream`, data => {
+      counter++;
       expect(JSON.parse(data.toString().trim()).name).to.equal(
         "some-other-name"
       );
     });
+    expect(counter).to.equal(1);
 
     const response4 = await request.delete(`${url}/${id}`);
     expect(response4.statusCode).to.equal(200);
@@ -45,7 +48,9 @@ describe("View store", () => {
     expect(response5.statusCode).to.equal(404);
   });
   it("should return an error if incorrect params", async () => {
-    const response = await request.post(url, { body: { name: 1 } });
-    expect(response.statusCode).to.be(400);
+    const response = await request.post(url, { body: { name: { a: 1 } } });
+    //eslint-disable-next-line no-console
+    console.log("res: ", response);
+    expect(response.statusCode).to.be.at.least(400);
   });
 });

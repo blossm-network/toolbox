@@ -14,14 +14,14 @@ const schema = { a: 1 };
 const indexes = ["some-index"];
 
 const domain = "some-domain";
-const id = "some-id";
+const name = "some-name";
 const user = "some-db-user";
 const host = "some-host";
 const database = "some-db";
 const password = "some-password";
 
 process.env.DOMAIN = domain;
-process.env.ID = id;
+process.env.NAME = name;
 process.env.MONGODB_USER = user;
 process.env.MONGODB_HOST = host;
 process.env.MONGODB_DATABASE = database;
@@ -88,7 +88,7 @@ describe("View store", () => {
 
     expect(storeFake).to.have.been.calledWith(
       match({
-        name: `${domain}.${id}`,
+        name: `${domain}.${name}`,
         schema: {
           a: 1,
           id: { type: String, required: true, unique: true },

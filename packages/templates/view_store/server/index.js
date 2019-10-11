@@ -11,7 +11,7 @@ const viewStore = async ({ schema, indexes }) => {
   }
 
   _viewStore = deps.store({
-    name: `${process.env.DOMAIN}.${process.env.ID}`,
+    name: `${process.env.DOMAIN}.${process.env.NAME}`,
     schema,
     indexes,
     connection: {
