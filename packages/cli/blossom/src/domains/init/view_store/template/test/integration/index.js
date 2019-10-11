@@ -27,6 +27,12 @@ describe("View store", () => {
     expect(response3.statusCode).to.equal(200);
     expect(JSON.parse(response3.body)[0].name).to.equal("some-other-name");
 
+    await request.stream(`${url}/stream`, null, data => {
+      //eslint-disable-next-line no-console
+      console.log("GOT A DATA: ", data);
+      expect(JSON.parse(data).name).to.equal("some-other-name");
+    });
+
     const response4 = await request.delete(`${url}/${id}`);
     expect(response4.statusCode).to.equal(200);
     expect(JSON.parse(response4.body).deletedCount).to.equal(1);

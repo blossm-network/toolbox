@@ -1,5 +1,5 @@
 const { expect } = require("chai").use(require("sinon-chai"));
-const { restore, replace } = require("sinon");
+const { restore, replace, fake } = require("sinon");
 const deps = require("../deps");
 const request = require("..");
 
@@ -130,5 +130,75 @@ describe("Request", () => {
     const url = "http://google.com";
     const reply = await request.get(url);
     expect(reply).to.deep.equal({ ...response, body });
+  });
+  it("should call stream with correct params", async () => {
+    const params = {
+      hello: "there",
+      how: ["are", "you"],
+      andy: [0, "ur dogs?"]
+    };
+    const onFn = (status, fn) => {
+      switch (status) {
+      case "error":
+        return { on: onFn };
+      case "data":
+        fn(body);
+        return { on: onFn };
+      case "end":
+        fn();
+        break;
+      }
+    };
+    replace(deps, "request", options => {
+      expect(options.url).to.equal(
+        `${url}?andy=0&andy=ur%20dogs%3F&hello=there&how=are&how=you`
+      );
+      return {
+        on: onFn
+      };
+    });
+    const url = "http://google.com";
+    const onDataFake = fake();
+    await request.stream(url, params, onDataFake);
+    expect(onDataFake).to.have.been.calledWith(body);
+  });
+  it("should throw in stream correctly", async () => {
+    const params = {
+      hello: "there",
+      how: ["are", "you"],
+      andy: [0, "ur dogs?"]
+    };
+    const errMessage = "some-error-message";
+    const onFn = (status, fn) => {
+      switch (status) {
+      case "error":
+        fn(new Error(errMessage));
+        return;
+      case "data":
+        fn(body);
+        return { on: onFn };
+      case "end":
+        fn();
+        break;
+      }
+    };
+    replace(deps, "request", options => {
+      expect(options.url).to.equal(
+        `${url}?andy=0&andy=ur%20dogs%3F&hello=there&how=are&how=you`
+      );
+      return {
+        on: onFn
+      };
+    });
+    const url = "http://google.com";
+    const onDataFake = fake();
+    try {
+      await request.stream(url, params, onDataFake);
+
+      //shouldn't be called
+      expect(0).to.equal(1);
+    } catch (e) {
+      expect(e.message).to.equal(errMessage);
+    }
   });
 });
