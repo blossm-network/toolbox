@@ -49,8 +49,6 @@ describe("View store", () => {
   });
   it("should return an error if incorrect params", async () => {
     const response = await request.post(url, { body: { name: { a: 1 } } });
-    //eslint-disable-next-line no-console
-    console.log("res: ", response);
-    expect(response.statusCode).to.be.at.least(400);
+    expect(response.statusCode).to.equal(500);
   });
 });
