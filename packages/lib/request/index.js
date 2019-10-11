@@ -42,7 +42,7 @@ exports.stream = async (url, params, onResponse, headers) =>
         method: "GET",
         ...(headers != undefined && { headers })
       })
-      .on("reponse", onResponse)
+      .on("response", onResponse)
       .on("error", reject)
       .on("end", resolve)
   );
