@@ -44,17 +44,17 @@ exports.stream = async (url, params, onResponse, headers) =>
       })
       .on("response", res => {
         //eslint-disable-next-line no-console
-        console.log("res!: ", { res });
+        console.log("res!: ", { res, url: addParamsToUrl(url, params) });
         onResponse(res);
       })
       .on("error", e => {
         //eslint-disable-next-line no-console
-        console.log("e: ", { e });
+        console.log("e: ", { e, url: addParamsToUrl(url, params) });
         reject(e);
       })
       .on("end", () => {
         //eslint-disable-next-line no-console
-        console.log("done! ");
+        console.log("done! ", { url: addParamsToUrl(url, params) });
         resolve();
       })
   );
