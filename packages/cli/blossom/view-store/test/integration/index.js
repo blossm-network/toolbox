@@ -30,7 +30,14 @@ describe("View store", () => {
     await request.stream(`${url}/stream`, null, data => {
       //eslint-disable-next-line no-console
       console.log("GOT A DATA: ", data);
-      expect(JSON.parse(data).name).to.equal("some-other-name");
+      //eslint-disable-next-line no-console
+      console.log("GOT A DATA to string: ", data.toString());
+      //eslint-disable-next-line no-console
+      console.log("GOT A DATA to string trimmed: ", data.toString().trim());
+
+      expect(JSON.parse(data.toString().trim()).name).to.equal(
+        "some-other-name"
+      );
     });
 
     const response4 = await request.delete(`${url}/${id}`);

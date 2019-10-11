@@ -118,8 +118,8 @@ describe("View store", () => {
     expect(secretFake).to.have.been.calledWith("mongodb");
     expect(listenFake).to.have.been.calledOnce;
     expect(serverFake).to.have.been.calledOnce;
-    expect(firstGetFake).to.have.been.calledWith(viewStoreGetResult);
-    expect(secondGetFake).to.have.been.calledWith(viewStoreStreamResult);
+    expect(secondGetFake).to.have.been.calledWith(viewStoreGetResult);
+    expect(firstGetFake).to.have.been.calledWith(viewStoreStreamResult);
     expect(postFake).to.have.been.calledWith(viewStorePostResult);
     expect(putFake).to.have.been.calledWith(viewStorePutResult);
     expect(deleteFake).to.have.been.calledWith(viewStoreDeleteResult);
@@ -186,7 +186,8 @@ describe("View store", () => {
 
     await viewStore({ schema, indexes, getFn, postFn, putFn });
 
-    expect(getFake).to.have.been.calledWith(viewStoreGetResult);
+    expect(secondGetFake).to.have.been.calledWith(viewStoreGetResult);
+    expect(getFake).to.have.been.calledWith(viewStoreStreamResult);
     expect(postFake).to.have.been.calledWith(viewStorePostResult);
     expect(putFake).to.have.been.calledWith(viewStorePutResult);
     expect(deleteFake).to.have.been.calledWith(viewStoreDeleteResult);
