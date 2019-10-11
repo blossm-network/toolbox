@@ -1,7 +1,7 @@
 {
   "name": "@sustainers/event-store",
   "description": "An event store server.",
-  "version": "0.0.46",
+  "version": "0.0.47",
   "main": "index.js",
   "author": "sustainers.market",
   "engines": {
@@ -15,11 +15,11 @@
   },
   "dependencies": {
     "@sustainers/datetime": "^0.0.3",
-    "@sustainers/event-store-get": "^0.0.19",
-    "@sustainers/event-store-post": "^0.0.26",
+    "@sustainers/event-store-get": "^0.0.20",
+    "@sustainers/event-store-post": "^0.0.27",
     "@sustainers/gcp-secret": "^0.0.18",
     "@sustainers/logger": "^0.0.8",
-    "@sustainers/mongodb-database": "^0.0.27",
+    "@sustainers/mongodb-database": "^0.0.28",
     "@sustainers/server": "^0.0.12"
   },
   "devDependencies": {
