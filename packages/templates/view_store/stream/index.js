@@ -13,16 +13,18 @@ module.exports = ({ store, fn = defaultFn }) => {
   return async (req, res) => {
     const { query, sort, parallel } = fn(req.query);
 
-    const cursor = deps.db.find({
-      store,
-      query,
-      ...(sort && { sort }),
-      options: {
-        lean: true
-      }
-    });
+    const cursor = deps.db
+      .find({
+        store,
+        query,
+        ...(sort && { sort }),
+        options: {
+          lean: true
+        }
+      })
+      .cursor();
 
-    cursor.eachAsync(view => res.write(view), { parallel });
+    await cursor.eachAsync(view => res.write(view), { parallel });
     res.end();
   };
 };

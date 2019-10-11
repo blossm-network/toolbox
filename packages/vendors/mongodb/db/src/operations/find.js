@@ -6,13 +6,10 @@ module.exports = ({
   skip = 0,
   pageSize = null,
   options = null
-}) => {
-  const op = store.find(query, select, {
+}) =>
+  store.find(query, select, {
     ...(skip && { skip }),
     ...(sort && { sort }),
     ...(pageSize && { limit: pageSize }),
     ...options
   });
-
-  return op;
-};

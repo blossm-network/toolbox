@@ -22,7 +22,7 @@ describe("View store stream", () => {
       end: endFake
     };
 
-    const findFake = fake.returns({
+    const cursorFake = fake.returns({
       eachAsync: async (fn, options) => {
         const view = "some-view";
         await fn(view);
@@ -30,6 +30,11 @@ describe("View store stream", () => {
         expect(options).to.deep.equal({ parallel: 1 });
       }
     });
+
+    const findFake = fake.returns({
+      cursor: cursorFake
+    });
+
     const db = {
       find: findFake
     };
@@ -51,40 +56,7 @@ describe("View store stream", () => {
     });
     expect(endFake).to.have.been.calledWith();
   });
-  // it("should call with the correct params if a fn is passed in", async () => {
-  //   const findOneFake = fake.returns(objs);
-  //   const db = {
-  //     findOne: findOneFake
-  //   };
-  //   replace(deps, "db", db);
-  //   const params = {
-  //     id
-  //   };
-  //   const req = {
-  //     query,
-  //     params
-  //   };
-
-  //   const sendFake = fake();
-  //   const res = {
-  //     send: sendFake
-  //   };
-
-  //   const fnFake = fake.returns({ query: { b: 2 } });
-  //   await get({ store, fn: fnFake })(req, res);
-  //   expect(fnFake).to.have.been.calledWith(query);
-  //   expect(findOneFake).to.have.been.calledWith({
-  //     store,
-  //     query: {
-  //       id
-  //     },
-  //     options: {
-  //       lean: true
-  //     }
-  //   });
-  //   expect(sendFake).to.have.been.calledWith(objs);
-  // });
-  it("should call with the correct params", async () => {
+  it("should call with the correct params with fn", async () => {
     const writeFake = fake();
     const endFake = fake();
     const res = {
@@ -92,86 +64,17 @@ describe("View store stream", () => {
       end: endFake
     };
 
-    const findFake = fake.returns({
+    const cursorFake = fake.returns({
       eachAsync: async (fn, options) => {
         const view = "some-view";
         await fn(view);
         expect(writeFake).to.have.been.calledWith(view);
-        expect(options).to.deep.equal({ parallel: 1 });
+        expect(options).to.deep.equal({ parallel: 2 });
       }
     });
-    const db = {
-      find: findFake
-    };
-    replace(deps, "db", db);
-
-    const req = {
-      query
-    };
-
-    const fnFake = fake.returns({ query: { b: 2 } });
-    await stream({ store, fn: fnFake })(req, res);
-
-    expect(fnFake).to.have.been.calledWith(query);
-    expect(findFake).to.have.been.calledWith({
-      store,
-      query: {
-        b: 2
-      },
-      options: {
-        lean: true
-      }
-    });
-    expect(endFake).to.have.been.calledWith();
-  });
-  // it("should call with the correct params if a fn is passed in with sort", async () => {
-  //   const findFake = fake.returns(objs);
-  //   const db = {
-  //     find: findFake
-  //   };
-  //   replace(deps, "db", db);
-  //   const params = {};
-  //   const req = {
-  //     query,
-  //     params
-  //   };
-
-  //   const sendFake = fake();
-  //   const res = {
-  //     send: sendFake
-  //   };
-
-  //   const sort = "some-sort";
-  //   const fnFake = fake.returns({ query: { b: 2 }, sort });
-  //   await get({ store, fn: fnFake })(req, res);
-  //   expect(fnFake).to.have.been.calledWith(query);
-  //   expect(findFake).to.have.been.calledWith({
-  //     store,
-  //     query: {
-  //       b: 2
-  //     },
-  //     sort,
-  //     options: {
-  //       lean: true
-  //     }
-  //   });
-  //   expect(sendFake).to.have.been.calledWith(objs);
-  // });
-  it("should call with the correct params", async () => {
-    const writeFake = fake();
-    const endFake = fake();
-    const res = {
-      write: writeFake,
-      end: endFake
-    };
 
     const findFake = fake.returns({
-      eachAsync: async (fn, options) => {
-        const view = "some-view";
-        await fn(view);
-        expect(writeFake).to.have.been.calledWith(view);
-        expect(options).to.deep.equal({ parallel: 1 });
-      }
+      cursor: cursorFake
     });
     const db = {
       find: findFake
@@ -183,7 +86,7 @@ describe("View store stream", () => {
     };
 
     const sort = "some-sort";
-    const fnFake = fake.returns({ query: { b: 2 }, sort });
+    const fnFake = fake.returns({ query: { b: 2 }, sort, parallel: 2 });
     await stream({ store, fn: fnFake })(req, res);
 
     expect(fnFake).to.have.been.calledWith(query);
@@ -199,7 +102,7 @@ describe("View store stream", () => {
     });
     expect(endFake).to.have.been.calledWith();
   });
-  it("should call with the correct params", async () => {
+  it("should throw correctly", async () => {
     const writeFake = fake();
     const endFake = fake();
     const res = {
