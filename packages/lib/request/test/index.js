@@ -158,9 +158,9 @@ describe("Request", () => {
       };
     });
     const url = "http://google.com";
-    const onDataFake = fake();
-    await request.stream(url, params, onDataFake);
-    expect(onDataFake).to.have.been.calledWith(body);
+    const onResponseFake = fake();
+    await request.stream(url, params, onResponseFake);
+    expect(onResponseFake).to.have.been.calledWith(body);
   });
   it("should throw in stream correctly", async () => {
     const params = {
@@ -191,9 +191,9 @@ describe("Request", () => {
       };
     });
     const url = "http://google.com";
-    const onDataFake = fake();
+    const onResponseFake = fake();
     try {
-      await request.stream(url, params, onDataFake);
+      await request.stream(url, params, onResponseFake);
 
       //shouldn't be called
       expect(0).to.equal(1);

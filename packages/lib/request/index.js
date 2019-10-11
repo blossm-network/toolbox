@@ -34,7 +34,7 @@ exports.delete = async (url, headers) =>
 exports.get = async (url, params, headers) =>
   await common({ method: "GET", url: addParamsToUrl(url, params), headers });
 
-exports.stream = async (url, params, onData, headers) =>
+exports.stream = async (url, params, onResponse, headers) =>
   new Promise((resolve, reject) =>
     deps
       .request({
@@ -42,7 +42,7 @@ exports.stream = async (url, params, onData, headers) =>
         method: "GET",
         ...(headers != undefined && { headers })
       })
-      .on("data", onData)
+      .on("reponse", onResponse)
       .on("error", reject)
       .on("end", resolve)
   );
