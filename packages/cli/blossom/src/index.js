@@ -10,6 +10,7 @@ const { init, issue } = require("./domains");
 const domains = ["init", "issue"];
 
 const tryShortcuts = input => {
+  console.log("input: ", input);
   const inputPath =
     input.positionalArgs.length > 0 ? input.positionalArgs[0] : ".";
   const configPath = path.resolve(process.cwd(), inputPath, "blossom.yaml");
