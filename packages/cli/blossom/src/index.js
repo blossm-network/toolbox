@@ -10,7 +10,8 @@ const { init, issue } = require("./domains");
 const domains = ["init", "issue"];
 
 const tryShortcuts = input => {
-  const inputPath = input.args.length == 1 ? input.args[0] : ".";
+  const inputPath =
+    input.positionalArgs.length > 0 ? input.positionalArgs[0] : ".";
   const configPath = path.resolve(process.cwd(), inputPath, "blossom.yaml");
   const config = yaml.parse(fs.readFileSync(configPath, "utf8"));
 

@@ -32,11 +32,6 @@ const parseArgs = (
     }
   );
 
-  console.log("flag: ", flags);
-  console.log("mapped: ", flags.map(flag => [flag.name, flag.short]));
-  console.log("flat: ", flags.map(flag => [flag.name, flag.short]).flat());
-  const flattenedFlags = flags.map(flag => [flag.name, flag.short]).flat();
-
   return {
     ...flags.reduce((map, flag) => {
       return {
@@ -45,7 +40,8 @@ const parseArgs = (
       };
     }, {}),
     entrypoint: args._[0] || entrypointDefault,
-    args: args._.slice(1).filter(arg => !flattenedFlags.includes(arg))
+    args: args._.slice(1),
+    positionalArgs: args._.slice(1).filter(arg => arg[0] != "-")
   };
 };
 
