@@ -17,13 +17,16 @@ const tryShortcuts = input => {
   if (!config.context) throw "Context not set.";
 
   const args = [config.context];
+  console.log("input: ", input);
   if (input.domain == "test") {
     args.push("deploy");
     args.push("--test-only");
   } else {
     args.push(input.domain);
   }
+  console.log("args1: ", args);
   args.push(...input.args);
+  console.log("args: ", args);
   issue(args);
 };
 
