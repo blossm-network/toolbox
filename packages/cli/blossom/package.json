@@ -1,6 +1,6 @@
 {
   "name": "@sustainers/blossom",
-  "version": "0.0.104",
+  "version": "0.0.105",
   "description": "A command line tool for interacting with a Sustainer's Market Network",
   "main": "index.js",
   "scripts": {
@@ -15,10 +15,10 @@
   },
   "author": "sustainers.market",
   "dependencies": {
-    "@sustainers/deploy-cli-template": "^0.0.15",
+    "@sustainers/deploy-cli-template": "^0.0.16",
     "@sustainers/hash-string": "^0.0.1",
-    "@sustainers/init-cli-template": "^0.0.8",
-    "@sustainers/normalize-cli": "^0.0.12",
+    "@sustainers/init-cli-template": "^0.0.9",
+    "@sustainers/normalize-cli": "^0.0.13",
     "@sustainers/robo-say": "*",
     "@sustainers/service-name-consts": "^0.0.2",
     "@sustainers/trim-string": "^0.0.1",
