@@ -1,6 +1,6 @@
 {
   "name": "@sustainers/init-cli-template",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Initializes a deployable template.",
   "main": "index.js",
   "author": "sustainers.market",
@@ -14,7 +14,7 @@
     "test": "echo \"Error: no test specified\" && exit 0"
   },
   "dependencies": {
-    "@sustainers/normalize-cli": "^0.0.11",
+    "@sustainers/normalize-cli": "^0.0.12",
     "@sustainers/robo-say": "*",
     "chalk": "^2.4.2",
     "ncp": "^2.0.0"
