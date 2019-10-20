@@ -32,8 +32,6 @@ const parseArgs = (
     }
   );
 
-  console.log("positional: ", args._.slice(1).filter(arg => arg[0] != "-"));
-
   return {
     ...flags.reduce((map, flag) => {
       return {

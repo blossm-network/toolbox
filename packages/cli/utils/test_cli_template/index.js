@@ -1,7 +1,7 @@
 const { spawnSync } = require("child_process");
 
-module.exports = async (workingDir, { shouldInstall }) => {
-  if (shouldInstall) {
+module.exports = async (workingDir, { install }) => {
+  if (install) {
     const spawnInstall = spawnSync("yarn", ["install"], {
       stdio: [process.stdin, process.stdout, process.stderr],
       cwd: workingDir

@@ -58,7 +58,6 @@ module.exports = ({ domain, dir, configFn }) => async args => {
     ]
   });
 
-  console.log("input: ", input);
   const workingDir = path.resolve(dir, "tmp");
 
   fs.removeSync(workingDir);
