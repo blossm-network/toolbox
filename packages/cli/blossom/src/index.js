@@ -10,7 +10,6 @@ const { init, issue } = require("./domains");
 const domains = ["init", "issue"];
 
 const tryShortcuts = input => {
-  console.log("input: ", input);
   const inputPath = input.args.length == 1 ? input.args[0] : ".";
   const configPath = path.resolve(process.cwd(), inputPath, "blossom.yaml");
   const config = yaml.parse(fs.readFileSync(configPath, "utf8"));
@@ -18,6 +17,12 @@ const tryShortcuts = input => {
   if (!config.context) throw "Context not set.";
 
   const args = [config.context];
+  switch (input.domain) {
+  case "test":
+    break;
+  case "deploy":
+    break;
+  }
   if (input.domain == "test") {
     args.push("deploy");
     args.push("--test-only");
@@ -25,7 +30,6 @@ const tryShortcuts = input => {
     args.push(input.domain);
   }
   args.push(...input.args);
-  console.log("args: ", args);
   issue(args);
 };
 
