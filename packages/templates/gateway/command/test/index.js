@@ -49,15 +49,12 @@ describe("Gateway post", () => {
     });
     replace(deps, "normalize", normalizeFake);
 
-    const withFake = fake();
-    const inFake = fake.returns({
-      with: withFake
-    });
-    const issueFake = fake.returns({
-      in: inFake
+    const issueFake = fake();
+    const setFake = fake.returns({
+      issue: issueFake
     });
     const commandFake = fake.returns({
-      issue: issueFake
+      set: setFake
     });
     replace(deps, "command", commandFake);
     const req = {
@@ -88,8 +85,10 @@ describe("Gateway post", () => {
       network
     });
     expect(issueFake).to.have.been.calledWith(normalizedPayload, headers);
-    expect(inFake).to.have.been.calledWith(context);
-    expect(withFake).to.have.been.calledWith(deps.gcpToken);
+    expect(setFake).to.have.been.calledWith({
+      context,
+      tokenFn: deps.gcpToken
+    });
     expect(statusFake).to.have.been.calledWith(204);
     expect(sendFake).to.have.been.calledWith();
   });
@@ -101,15 +100,12 @@ describe("Gateway post", () => {
     replace(deps, "normalize", normalizeFake);
 
     const errMessage = "some-err-message";
-    const withFake = fake.throws(new Error(errMessage));
-    const inFake = fake.returns({
-      with: withFake
-    });
-    const issueFake = fake.returns({
-      in: inFake
+    const issueFake = fake.throws(new Error(errMessage));
+    const setFake = fake.returns({
+      issue: issueFake
     });
     const commandFake = fake.returns({
-      issue: issueFake
+      set: setFake
     });
     replace(deps, "command", commandFake);
     const req = {

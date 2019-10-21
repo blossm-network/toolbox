@@ -11,9 +11,8 @@ module.exports = () => {
         service: process.env.SERVICE,
         network: process.env.NETWORK
       })
-      .issue(payload, headers)
-      .in(req.context)
-      .with(deps.gcpToken);
+      .set({ context: req.context, tokenFn: deps.gcpToken })
+      .issue(payload, headers);
 
     res.status(204).send();
   };

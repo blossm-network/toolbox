@@ -22,15 +22,12 @@ describe("Gateway post", () => {
   });
 
   it("should call with the correct params", async () => {
-    const withFake = fake.returns(response);
-    const inFake = fake.returns({
-      with: withFake
-    });
-    const readFake = fake.returns({
-      in: inFake
+    const readFake = fake.returns(response);
+    const setFake = fake.returns({
+      read: readFake
     });
     const viewStoreFake = fake.returns({
-      read: readFake
+      set: setFake
     });
     replace(deps, "viewStore", viewStoreFake);
     const req = {
@@ -56,21 +53,20 @@ describe("Gateway post", () => {
       network
     });
     expect(readFake).to.have.been.calledWith(query);
-    expect(inFake).to.have.been.calledWith(context);
-    expect(withFake).to.have.been.calledWith(deps.gcpToken);
+    expect(setFake).to.have.been.calledWith({
+      context,
+      tokenFn: deps.gcpToken
+    });
     expect(sendFake).to.have.been.calledWith(response);
   });
   it("should throw correctly", async () => {
     const errMessage = "some-err-message";
-    const withFake = fake.rejects(new Error(errMessage));
-    const inFake = fake.returns({
-      with: withFake
-    });
-    const readFake = fake.returns({
-      in: inFake
+    const readFake = fake.rejects(new Error(errMessage));
+    const setFake = fake.returns({
+      read: readFake
     });
     const viewStoreFake = fake.returns({
-      read: readFake
+      set: setFake
     });
     replace(deps, "viewStore", viewStoreFake);
 

@@ -22,16 +22,14 @@ module.exports = ({ version, mainFn, validateFn, normalizeFn }) => {
         network: process.env.NETWORK
       }
     });
-    console.log("event is: ", event);
     await deps
       .eventStore({
         domain: process.env.DOMAIN,
         service: process.env.SERVICE,
         network: process.env.NETWORK
       })
-      .add(event)
-      .in(req.context)
-      .with(deps.gcpToken);
+      .set({ context: req.context, tokenFn: deps.gcpToken })
+      .add(event);
 
     res.status(200).send({
       ...response,

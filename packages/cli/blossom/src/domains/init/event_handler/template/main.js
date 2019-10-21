@@ -30,9 +30,8 @@ module.exports = event => {
       service: process.env.SERVICE,
       network: process.env.NETWORK
     })
+    .set({ context, tokenFn: gcpToken })
     .create({
       name: event.payload.name
-    })
-    .in(context)
-    .with(gcpToken);
+    });
 };

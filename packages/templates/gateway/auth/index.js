@@ -10,9 +10,8 @@ module.exports = () => {
         service: process.env.SERVICE,
         network: process.env.NETWORK
       })
-      .issue({ payload: {}, headers: {} })
-      .in()
-      .with(gcpToken);
+      .set({ tokenFn: gcpToken })
+      .issue({ payload: {}, headers: {} });
     res
       .cookie(`${process.env.SERVICE}-session`, token, {
         httpOnly: true,

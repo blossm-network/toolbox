@@ -57,6 +57,7 @@ describe("Event store", () => {
     const trace = "trace";
 
     await eventStore({ domain, service, network })
+      .set({ context, tokenFn })
       .add({
         context,
         headers: {
@@ -76,9 +77,7 @@ describe("Event store", () => {
           }
         },
         payload
-      })
-      .in(context)
-      .with(tokenFn);
+      });
 
     expect(operationFake).to.have.been.calledWith(domain, "event-store");
     expect(postFake).to.have.been.calledWith({
@@ -119,29 +118,25 @@ describe("Event store", () => {
     });
     replace(deps, "operation", operationFake);
 
-    await eventStore({ domain, service, network })
-      .add({
-        context,
-        headers: {
-          root,
-          topic,
-          command: {
-            action: commandAction,
-            domain: commandDomain,
-            service: commandService,
-            id: commandId,
-            issued: commandIssuedTimestamp
-          },
-          version
+    await eventStore({ domain, service, network }).add({
+      context,
+      headers: {
+        root,
+        topic,
+        command: {
+          action: commandAction,
+          domain: commandDomain,
+          service: commandService,
+          id: commandId,
+          issued: commandIssuedTimestamp
         },
-        payload
-      })
-      .in(context)
-      .with(tokenFn);
+        version
+      },
+      payload
+    });
 
     expect(operationFake).to.have.been.calledWith(domain, "event-store");
     expect(postFake).to.have.been.calledWith({
-      context,
       headers: {
         root,
         topic,
@@ -160,8 +155,8 @@ describe("Event store", () => {
       },
       payload
     });
-    expect(inFake).to.have.been.calledWith({ context, service, network });
-    expect(withFake).to.have.been.calledWith({ tokenFn });
+    expect(inFake).to.have.been.calledWith({ service, network });
+    expect(withFake).to.have.been.calledWith();
   });
 
   it("should call aggregate with the right params", async () => {
@@ -181,14 +176,39 @@ describe("Event store", () => {
     const root = "user";
 
     const result = await eventStore({ domain, service, network })
-      .aggregate(root)
-      .in(context)
-      .with(tokenFn);
+      .set({ context, tokenFn })
+      .aggregate(root);
 
     expect(operationFake).to.have.been.calledWith(domain, "event-store");
     expect(getFake).to.have.been.calledWith({ root });
     expect(inFake).to.have.been.calledWith({ context, service, network });
     expect(withFake).to.have.been.calledWith({ tokenFn });
+    expect(result).to.equal(aggregate);
+  });
+  it("should call aggregate with the right params with optionals missing", async () => {
+    const aggregate = "some-aggregate";
+    const withFake = fake.returns(aggregate);
+    const inFake = fake.returns({
+      with: withFake
+    });
+    const getFake = fake.returns({
+      in: inFake
+    });
+    const operationFake = fake.returns({
+      get: getFake
+    });
+    replace(deps, "operation", operationFake);
+
+    const root = "user";
+
+    const result = await eventStore({ domain, service, network }).aggregate(
+      root
+    );
+
+    expect(operationFake).to.have.been.calledWith(domain, "event-store");
+    expect(getFake).to.have.been.calledWith({ root });
+    expect(inFake).to.have.been.calledWith({ service, network });
+    expect(withFake).to.have.been.calledWith();
     expect(result).to.equal(aggregate);
   });
 });

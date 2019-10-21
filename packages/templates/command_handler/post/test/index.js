@@ -48,15 +48,12 @@ describe("Command handler post", () => {
     const createEventFake = fake.returns(event);
     replace(deps, "createEvent", createEventFake);
 
-    const withFake = fake();
-    const inFake = fake.returns({
-      with: withFake
-    });
-    const addFake = fake.returns({
-      in: inFake
+    const addFake = fake();
+    const setFake = fake.returns({
+      add: addFake
     });
     const eventStoreFake = fake.returns({
-      add: addFake
+      set: setFake
     });
     const mainFnFake = fake.returns({
       payload: eventPayload,
@@ -112,8 +109,10 @@ describe("Command handler post", () => {
       network
     });
     expect(addFake).to.have.been.calledWith(event);
-    expect(inFake).to.have.been.calledWith(context);
-    expect(withFake).to.have.been.calledWith(deps.gcpToken);
+    expect(setFake).to.have.been.calledWith({
+      context,
+      tokenFn: deps.gcpToken
+    });
     expect(statusFake).to.have.been.calledWith(200);
     expect(sendFake).to.have.been.calledWith({ root, ...response });
   });
@@ -121,15 +120,12 @@ describe("Command handler post", () => {
     const createEventFake = fake.returns(event);
     replace(deps, "createEvent", createEventFake);
 
-    const withFake = fake();
-    const inFake = fake.returns({
-      with: withFake
-    });
-    const addFake = fake.returns({
-      in: inFake
+    const addFake = fake();
+    const setFake = fake.returns({
+      add: addFake
     });
     const eventStoreFake = fake.returns({
-      add: addFake
+      set: setFake
     });
     const mainFnFake = fake.returns({
       payload: eventPayload
@@ -180,8 +176,10 @@ describe("Command handler post", () => {
       network
     });
     expect(addFake).to.have.been.calledWith(event);
-    expect(inFake).to.have.been.calledWith(context);
-    expect(withFake).to.have.been.calledWith(deps.gcpToken);
+    expect(setFake).to.have.been.calledWith({
+      context,
+      tokenFn: deps.gcpToken
+    });
     expect(statusFake).to.have.been.calledWith(200);
     expect(sendFake).to.have.been.calledWith({
       root
@@ -191,15 +189,12 @@ describe("Command handler post", () => {
     const createEventFake = fake.rejects(new Error());
     replace(deps, "createEvent", createEventFake);
 
-    const withFake = fake();
-    const inFake = fake.returns({
-      with: withFake
-    });
-    const addFake = fake.returns({
-      in: inFake
+    const addFake = fake();
+    const setFake = fake.returns({
+      add: addFake
     });
     const eventStoreFake = fake.returns({
-      add: addFake
+      set: setFake
     });
     const mainFnFake = fake.returns({
       payload: eventPayload

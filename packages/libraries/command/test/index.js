@@ -46,9 +46,8 @@ describe("Issue command", () => {
     replace(deps, "operation", operationFake);
 
     await command({ action, domain, service, network })
-      .issue(payload, { trace, source })
-      .in(context)
-      .with(tokenFn);
+      .set({ context, tokenFn })
+      .issue(payload, { trace, source });
 
     expect(operationFake).to.have.been.calledWith(
       action,
@@ -79,10 +78,7 @@ describe("Issue command", () => {
     });
     replace(deps, "operation", operationFake);
 
-    await command({ action, domain, service, network })
-      .issue(payload)
-      .in(context)
-      .with(tokenFn);
+    await command({ action, domain, service, network }).issue(payload);
 
     expect(operationFake).to.have.been.calledWith(action, domain);
     expect(postFake).to.have.been.calledWith({
@@ -91,7 +87,7 @@ describe("Issue command", () => {
         issued: dateString()
       }
     });
-    expect(inFake).to.have.been.calledWith({ context, service, network });
-    expect(withFake).to.have.been.calledWith({ tokenFn });
+    expect(inFake).to.have.been.calledWith({ service, network });
+    expect(withFake).to.have.been.calledWith();
   });
 });

@@ -66,8 +66,6 @@ describe("Gateway integration tests", () => {
   //     network: process.env.NETWORK
   //   })
   //     .read({ name })
-  //     .in({})
-  //     .with();
 
   //   expect(view.name).to.equal(name);
 
@@ -78,8 +76,6 @@ describe("Gateway integration tests", () => {
   //     network: process.env.NETWORK
   //   })
   //     .delete(view.id)
-  //     .in({})
-  //     .with();
 
   //   expect(deletedResult.deletedCount).to.equal(1);
   // });

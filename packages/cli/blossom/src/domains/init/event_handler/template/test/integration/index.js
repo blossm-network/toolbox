@@ -26,10 +26,7 @@ describe("Event handler store integration tests", () => {
       domain: process.env.TARGET_DOMAIN,
       service: process.env.SERVICE,
       network: process.env.NETWORK
-    })
-      .read({ name })
-      .in({})
-      .with();
+    }).read({ name });
 
     expect(view.name).to.equal(name);
 
@@ -38,10 +35,7 @@ describe("Event handler store integration tests", () => {
       domain: process.env.TARGET_DOMAIN,
       service: process.env.SERVICE,
       network: process.env.NETWORK
-    })
-      .delete(view.id)
-      .in({})
-      .with();
+    }).delete(view.id);
 
     expect(deletedResult.deletedCount).to.equal(1);
   });
