@@ -1,6 +1,6 @@
 {
   "name": "@sustainers/test-cli-template",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Tests a template.",
   "main": "index.js",
   "author": "sustainers.market",
@@ -14,8 +14,7 @@
     "test": "echo \"Error: no test specified\" && exit 0"
   },
   "dependencies": {
-    "chalk": "^2.4.2",
-    "ncp": "^2.0.0"
+    "chalk": "^2.4.2"
   },
   "devDependencies": {
     "mocha": "^6.1.4"
