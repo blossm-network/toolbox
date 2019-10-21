@@ -44,12 +44,6 @@ module.exports = ({ domain, dir, configFn }) => async args => {
         default: false
       },
       {
-        name: "install",
-        short: "i",
-        type: Boolean,
-        default: false
-      },
-      {
         name: "env",
         type: String,
         short: "e",
@@ -69,7 +63,7 @@ module.exports = ({ domain, dir, configFn }) => async args => {
     configFn
   });
 
-  await testCliTemplate(workingDir, { install: input.install });
+  await testCliTemplate({ workingDir, input });
 
   if (!input.testOnly) {
     //eslint-disable-next-line no-console
