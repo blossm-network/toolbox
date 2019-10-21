@@ -1,6 +1,6 @@
 {
   "name": "@sustainers/test-cli-template",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Tests a template.",
   "main": "index.js",
   "author": "sustainers.market",
