@@ -24,7 +24,6 @@ const installDependenciesIfNeeded = async (workingDir, input) => {
 
   const srcDir = path.resolve(process.cwd(), input.path);
 
-  console.log("bout to copy: ");
   fs.copyFileSync(
     path.resolve(workingDir, lockFile),
     path.resolve(srcDir, lockFile)
@@ -33,14 +32,10 @@ const installDependenciesIfNeeded = async (workingDir, input) => {
   const modules = "node_modules";
   const modulesPath = path.resolve(srcDir, modules);
 
-  console.log("mods: ", modulesPath);
-
   fs.removeSync(modulesPath);
   fs.mkdirSync(modulesPath);
-  console.log("dir made: ");
 
   await copy(path.resolve(workingDir, modules), modulesPath);
-  console.log("copied: ");
 };
 
 module.exports = async ({ workingDir, input }) => {
