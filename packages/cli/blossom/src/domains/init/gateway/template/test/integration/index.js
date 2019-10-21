@@ -20,6 +20,7 @@ describe("Gateway integration tests", () => {
         }
       }
     });
+
     //eslint-disable-next-line no-console
     console.log("response: ", response0);
     const cookies = response0.headers["set-cookie"];
