@@ -23,18 +23,17 @@ const common = ({ method, operation, root, data }) => {
             })
             : null;
 
-          const response = await method(
-            url,
-            {
+          const response = await method(url, {
+            body: {
               ...(data != undefined && { ...data }),
               context
             },
-            token
-              ? {
+            ...(token && {
+              headers: {
                 Authorization: `Bearer ${token}`
               }
-              : undefined
-          );
+            })
+          });
 
           //eslint-disable-next-line no-console
           console.log("response: ", { url, response });

@@ -62,16 +62,15 @@ describe("Operation", () => {
       .in({ context, service, network })
       .with({ tokenFn: tokenFnFake });
 
-    expect(post).to.have.been.calledWith(
-      `http://${hash}.${network}`,
-      {
+    expect(post).to.have.been.calledWith(`http://${hash}.${network}`, {
+      body: {
         ...data,
         context
       },
-      {
+      headers: {
         Authorization: `Bearer ${token}`
       }
-    );
+    });
     expect(trimFake).to.have.been.calledWith(
       `${service}-${opPart2}-${opPart1}`,
       MAX_LENGTH
@@ -102,8 +101,10 @@ describe("Operation", () => {
       .with();
 
     expect(post).to.have.been.calledWith(`http://${hash}.${network}`, {
-      ...data,
-      context
+      body: {
+        ...data,
+        context
+      }
     });
     expect(trimFake).to.have.not.been.called;
     expect(hashFake).to.have.been.calledWith(opPart1 + opPart2 + service);
@@ -131,8 +132,10 @@ describe("Operation", () => {
       .with({ tokenFn: emptyTokenFake });
 
     expect(post).to.have.been.calledWith(`http://${hash}.${network}`, {
-      ...data,
-      context
+      body: {
+        ...data,
+        context
+      }
     });
     expect(hashFake).to.have.been.calledWith(opPart1 + opPart2 + service);
     expect(trimFake).to.have.been.calledWith(
@@ -166,16 +169,15 @@ describe("Operation", () => {
       .in({ context, service, network })
       .with({ path, tokenFn: tokenFnFake });
 
-    expect(post).to.have.been.calledWith(
-      `http://${hash}.${network}${path}`,
-      {
+    expect(post).to.have.been.calledWith(`http://${hash}.${network}${path}`, {
+      body: {
         ...data,
         context
       },
-      {
+      headers: {
         Authorization: `Bearer ${token}`
       }
-    );
+    });
     expect(hashFake).to.have.been.calledWith(opPart1 + opPart2 + service);
     expect(trimFake).to.have.been.calledWith(
       `${service}-${opPart2}-${opPart1}`,
@@ -207,16 +209,15 @@ describe("Operation", () => {
       .in({ context, service, network })
       .with({ tokenFn: tokenFnFake });
 
-    expect(get).to.have.been.calledWith(
-      `http://${hash}.${network}`,
-      {
+    expect(get).to.have.been.calledWith(`http://${hash}.${network}`, {
+      body: {
         ...data,
         context
       },
-      {
+      headers: {
         Authorization: `Bearer ${token}`
       }
-    );
+    });
     expect(hashFake).to.have.been.calledWith(opPart1 + opPart2 + service);
     expect(trimFake).to.have.been.calledWith(
       `${service}-${opPart2}-${opPart1}`,
@@ -247,16 +248,15 @@ describe("Operation", () => {
       .in({ context, service, network })
       .with({ tokenFn: tokenFnFake });
 
-    expect(get).to.have.been.calledWith(
-      `http://${hash}.${network}/${root}`,
-      {
+    expect(get).to.have.been.calledWith(`http://${hash}.${network}/${root}`, {
+      body: {
         ...data,
         context
       },
-      {
+      headers: {
         Authorization: `Bearer ${token}`
       }
-    );
+    });
     expect(trimFake).to.have.been.calledWith(
       `${service}-${opPart2}-${opPart1}`,
       MAX_LENGTH
@@ -287,16 +287,15 @@ describe("Operation", () => {
       .in({ context, service, network })
       .with({ tokenFn: tokenFnFake });
 
-    expect(put).to.have.been.calledWith(
-      `http://${hash}.${network}/${root}`,
-      {
+    expect(put).to.have.been.calledWith(`http://${hash}.${network}/${root}`, {
+      body: {
         ...data,
         context
       },
-      {
+      headers: {
         Authorization: `Bearer ${token}`
       }
-    );
+    });
     expect(trimFake).to.have.been.calledWith(
       `${service}-${opPart2}-${opPart1}`,
       MAX_LENGTH
@@ -331,11 +330,13 @@ describe("Operation", () => {
     expect(put).to.have.been.calledWith(
       `http://${hash}.${network}${path}/${root}`,
       {
-        ...data,
-        context
-      },
-      {
-        Authorization: `Bearer ${token}`
+        body: {
+          ...data,
+          context
+        },
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
       }
     );
     expect(trimFake).to.have.been.calledWith(
@@ -368,15 +369,14 @@ describe("Operation", () => {
       .in({ context, service, network })
       .with({ tokenFn: tokenFnFake });
 
-    expect(del).to.have.been.calledWith(
-      `http://${hash}.${network}/${root}`,
-      {
+    expect(del).to.have.been.calledWith(`http://${hash}.${network}/${root}`, {
+      body: {
         context
       },
-      {
+      headers: {
         Authorization: `Bearer ${token}`
       }
-    );
+    });
     expect(trimFake).to.have.been.calledWith(
       `${service}-${opPart2}-${opPart1}`,
       MAX_LENGTH
