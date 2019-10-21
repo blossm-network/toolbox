@@ -22,6 +22,7 @@ module.exports = ({ version, mainFn, validateFn, normalizeFn }) => {
         network: process.env.NETWORK
       }
     });
+    console.log("event is: ", event);
     await deps
       .eventStore({
         domain: process.env.DOMAIN,

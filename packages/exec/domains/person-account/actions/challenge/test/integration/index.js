@@ -21,7 +21,7 @@ describe("Command handler store integration tests", () => {
     });
 
     const root = JSON.parse(response.body).root;
-
+      console.log("res back: ", response);
     const aggregate = await eventStore({
       domain: process.env.DOMAIN,
       service: process.env.SERVICE,
@@ -31,6 +31,7 @@ describe("Command handler store integration tests", () => {
       .in({})
       .with();
 
+      console.log("ag back: ", aggregate);
     expect(aggregate.headers.root).to.equal(root);
     expect(aggregate.state.name).to.equal(name.toLowerCase());
     expect(response.statusCode).to.equal(200);

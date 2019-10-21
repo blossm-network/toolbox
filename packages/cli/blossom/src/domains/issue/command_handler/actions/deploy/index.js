@@ -4,7 +4,7 @@ const trim = require("@sustainers/trim-string");
 const { MAX_LENGTH } = require("@sustainers/service-name-consts");
 
 module.exports = deployCliTemplate({
-  domain: "event-handler",
+  domain: "command-handler",
   dir: __dirname,
   configFn: config => {
     return {

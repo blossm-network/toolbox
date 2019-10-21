@@ -11,7 +11,7 @@
 # In other words, full collection scans are not allowed.
 #
 
-domain: some-domain
+domain: person-account
 
 schema:
   name: String

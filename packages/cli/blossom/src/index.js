@@ -64,6 +64,5 @@ exports.cli = async rawArgs => {
     args: rawArgs.slice(2)
   });
 
-  console.log("input: ", input);
   forward(input);
 };
