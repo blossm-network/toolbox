@@ -2,15 +2,13 @@ const roboSay = require("@sustainers/robo-say");
 const { spawnSync } = require("child_process");
 const path = require("path");
 const fs = require("fs");
-const { promisify } = require("util");
 const { red } = require("chalk");
 
-const ncp = require("ncp");
-const copy = promisify(ncp);
-
 const installDependenciesIfNeeded = (workingDir, input) => {
+  const lockFile = "yarn.lock";
+
   const srcDir = path.resolve(process.cwd(), input.path);
-  const lock = path.resolve(workingDir, "yarn.lock");
+  const lock = path.resolve(workingDir, lockFile);
 
   console.log("srcDir: ", srcDir);
   console.log("lock: ", lock);
@@ -19,17 +17,21 @@ const installDependenciesIfNeeded = (workingDir, input) => {
       console.log("exists");
       return;
     }
+    console.log("does not exists");
 
     const spawnInstall = spawnSync("yarn", ["install"], {
       stdio: [process.stdin, process.stdout, process.stderr],
       cwd: workingDir
     });
 
+    console.log("spawn is: ", spawnInstall);
     if (spawnInstall.stderr) process.exitCode = 1;
 
-    const newLock = path.resolve(workingDir, "yarn.lock");
+    console.log("hm");
+    const newLock = path.resolve(workingDir, lockFile);
+    const destination = path.resolve(srcDir, lockFile);
     console.log("new lock: ", newLock);
-    copy(newLock, srcDir);
+    fs.copyFileSync(newLock, destination);
   } catch (err) {
     //eslint-disable-next-line no-console
     console.error(
