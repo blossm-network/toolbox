@@ -1,7 +1,7 @@
 {
   "name": "@sustainers/event-store-post",
   "description": "An event store POST handler.",
-  "version": "0.0.29",
+  "version": "0.0.30",
   "main": "index.js",
   "author": "sustainers.market",
   "engines": {
