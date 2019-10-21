@@ -101,9 +101,11 @@ const configure = async (workingDir, configFn, env) => {
       ...(config.service && { _SERVICE: config.service }),
       ...(config.context && { _CONTEXT: config.context }),
       ...(config.network && { _NETWORK: config.network }),
-      ...(config.gcpProject && { _GCP_PROJECT: config.gcpProject }),
-      ...(config.gcpRegion && { _GCP_REGION: config.gcpRegion }),
-      ...(config.gcpDnsZone && { _GCP_DNS_ZONE: config.gcpDnsZone }),
+      ...(config["gcp-project"] && { _GCP_PROJECT: config }),
+      ...(config["gcp-region"] && { _GCP_REGION: config["gcp-region"] }),
+      ...(config["gcp-dns-zone"] && {
+        _GCP_DNS_ZONE: config["gcp-dns-zone"]
+      }),
       ...(config.memory && { _MEMORY: config.memory }),
 
       ...(configFn && configFn(config)),
