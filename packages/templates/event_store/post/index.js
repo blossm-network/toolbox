@@ -14,6 +14,8 @@ module.exports = ({ store, aggregateStoreName }) => {
       }
     };
 
+    console.log("req body is: ", req.body);
+    console.log("update is: ", update);
     await deps.db.write({
       store,
       query: { id },

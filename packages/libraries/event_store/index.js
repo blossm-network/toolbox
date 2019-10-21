@@ -31,6 +31,7 @@ module.exports = ({ domain, service, network }) => {
                 payload
               };
 
+              console.log("posting: ", event);
               await deps
                 .operation(domain, "event-store")
                 .post(event)
