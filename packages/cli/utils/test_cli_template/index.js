@@ -3,7 +3,7 @@ const { spawnSync } = require("child_process");
 const path = require("path");
 const { promisify } = require("util");
 const ncp = require("ncp");
-const fs = require("fs");
+const fs = require("fs-extra");
 const { red } = require("chalk");
 
 const copy = promisify(ncp);
@@ -24,6 +24,7 @@ const installDependenciesIfNeeded = async (workingDir, input) => {
 
   const srcDir = path.resolve(process.cwd(), input.path);
 
+  console.log("bout to copy: ");
   fs.copyFileSync(
     path.resolve(workingDir, lockFile),
     path.resolve(srcDir, lockFile)
