@@ -1,6 +1,6 @@
 {
   "name": "@sustainers/cors-middleware",
-  "version": "0.0.18",
+  "version": "0.0.19",
   "description": "Cors middleware for the network.",
   "main": "index.js",
   "author": "sustainers.market",
