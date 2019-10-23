@@ -1,0 +1,26 @@
+{
+  "name": "@sustainers/view-gateway-get",
+  "description": "A view gateway server GET handler.",
+  "version": "0.0.0",
+  "main": "index.js",
+  "author": "sustainers.market",
+  "engines": {
+    "node": ">= 10.16.0"
+  },
+  "scripts": {
+    "test": "mocha --recursive"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@sustainers/view-store-js": "^0.0.38",
+    "@sustainers/gcp-token": "^0.0.24"
+  },
+  "devDependencies": {
+    "chai-datetime": "^1.5.0",
+    "mocha": "^6.1.4",
+    "sinon": "^7.3.2",
+    "sinon-chai": "^3.3.0"
+  }
+}

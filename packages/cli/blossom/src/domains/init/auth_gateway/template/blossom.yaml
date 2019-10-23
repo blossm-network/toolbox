@@ -1,0 +1,27 @@
+#
+# This file is required.
+# It's URL will be [service].[network]
+#
+# Optionally, give your gateway a name. This will change your URL to be [name].[service].[network]
+#
+
+service: core
+
+whitelist: 
+  - "127.0.0.1",
+  - `https://${process.env.network}`
+
+dependencies:
+  "@sustainers/auth-gateway": "*"
+
+devDependencies:
+  "mocha": "^6.1.4"
+  "chai": "^4.2.0"
+  "sinon": "^7.3.2"
+  "sinon-chai": "^3.3.0"
+  "chai-datetime": "^1.5.0"
+  "@sustainers/datetime": "*"
+  "@sustainers/request": "*"
+
+#don't change
+context: auth-gateway

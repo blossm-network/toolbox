@@ -1,8 +1,10 @@
 const { expect } = require("chai").use(require("sinon-chai"));
 const { restore, fake, replace } = require("sinon");
 const deps = require("../deps");
-const temp = require("../temp");
 const authorizationMiddleware = require("..");
+
+const scopesLookupFn = "some-scopes-lookup-fn";
+const priviledgesLookupFn = "some-priv-lookup-fn";
 
 describe("Authorization middleware", () => {
   afterEach(() => {
@@ -25,12 +27,17 @@ describe("Authorization middleware", () => {
     replace(deps, "authorize", authorizationFake);
 
     const nextFake = fake();
-    await authorizationMiddleware(req, null, nextFake);
+    await authorizationMiddleware({ scopesLookupFn, priviledgesLookupFn })(
+      req,
+      null,
+      nextFake
+    );
 
     expect(authorizationFake).to.have.been.calledWith({
       path,
       claims,
-      scopesLookupFn: temp,
+      scopesLookupFn,
+      priviledgesLookupFn,
       domain: params.domain
     });
 

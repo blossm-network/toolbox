@@ -6,6 +6,10 @@ const corsMiddleware = require("..");
 const corsResult = "some-result";
 const whitelist = ["some-origin"];
 const check = "some-check";
+const method0 = "some-method";
+const method1 = "some-other-method";
+const methods = [method0, method1];
+
 describe("Cors middleware", () => {
   afterEach(() => {
     restore();
@@ -24,11 +28,11 @@ describe("Cors middleware", () => {
       use: useFake,
       options: optionsFake
     };
-    await corsMiddleware({ app, whitelist });
+    await corsMiddleware({ app, whitelist, methods });
 
     expect(corsFake).to.have.been.calledWith({
       origin: check,
-      methods: "GET,POST",
+      methods: `${method0},${method1}`,
       preflightContinue: false,
       optionsSuccessStatus: 204,
       credentials: false
@@ -51,11 +55,11 @@ describe("Cors middleware", () => {
       use: useFake,
       options: optionsFake
     };
-    await corsMiddleware({ app, whitelist, credentials: true });
+    await corsMiddleware({ app, whitelist, credentials: true, methods });
 
     expect(corsFake).to.have.been.calledWith({
       origin: check,
-      methods: "GET,POST",
+      methods: `${method0},${method1}`,
       preflightContinue: false,
       optionsSuccessStatus: 204,
       credentials: true

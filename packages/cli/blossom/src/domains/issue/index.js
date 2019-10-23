@@ -4,14 +4,14 @@ const eventStore = require("./event_store");
 const viewStore = require("./view_store");
 const commandHandler = require("./command_handler");
 const eventHandler = require("./event_handler");
-const gateway = require("./gateway");
+const authGateway = require("./auth_gateway");
 
 const domains = [
   "view-store",
   "event-store",
   "command-handler",
   "event-handler",
-  "gateway"
+  "auth-gateway"
 ];
 
 module.exports = async args => {
@@ -30,7 +30,7 @@ module.exports = async args => {
     return commandHandler(input.args);
   case "event-handler":
     return eventHandler(input.args);
-  case "gateway":
-    return gateway(input.args);
+  case "auth-gateway":
+    return authGateway(input.args);
   }
 };
