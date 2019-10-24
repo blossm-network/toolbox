@@ -1,6 +1,6 @@
 {
   "name": "@sustainers/random-int",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Returns a random integer within the given bounds.",
   "main": "index.js",
   "author": "sustainers.market",

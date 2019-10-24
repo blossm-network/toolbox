@@ -1,6 +1,6 @@
 {
   "name": "@sustainers/cors-middleware",
-  "version": "0.0.19",
+  "version": "0.0.20",
   "description": "Cors middleware for the network.",
   "main": "index.js",
   "author": "sustainers.market",
@@ -14,7 +14,7 @@
     "test": "mocha"
   },
   "dependencies": {
-    "@sustainers/errors": "^0.0.9",
+    "@sustainers/errors": "^0.0.10",
     "cors": "^2.8.5"
   },
   "devDependencies": {

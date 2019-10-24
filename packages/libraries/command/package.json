@@ -1,7 +1,7 @@
 {
   "name": "@sustainers/command-js",
   "description": "Issues a command.",
-  "version": "0.0.38",
+  "version": "0.0.39",
   "main": "index.js",
   "author": "sustainers.market",
   "engines": {
@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@sustainers/datetime": "^0.0.3",
-    "@sustainers/operation-js": "^0.0.44"
+    "@sustainers/operation-js": "^0.0.45"
   },
   "devDependencies": {
     "chai-datetime": "^1.5.0",

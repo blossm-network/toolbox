@@ -1,7 +1,7 @@
 {
   "name": "@sustainers/view-store-delete",
   "description": "A view store DELETE handler.",
-  "version": "0.0.25",
+  "version": "0.0.26",
   "main": "index.js",
   "author": "sustainers.market",
   "engines": {
@@ -14,7 +14,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@sustainers/errors": "^0.0.9",
+    "@sustainers/errors": "^0.0.10",
     "@sustainers/mongodb-database": "^0.0.29"
   },
   "devDependencies": {

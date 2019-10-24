@@ -1,6 +1,6 @@
 {
   "name": "@sustainers/random-int-of-length",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Creates a random in that has the specified number of characters.",
   "main": "index.js",
   "author": "sustainers.market",
