@@ -45,7 +45,8 @@ describe("Event store", () => {
         payload: {
           code: "some-code",
           phone: "some-phone",
-          token: "some-token"
+          issued: "some-date",
+          principle: "some-principle"
         }
       }
     });
@@ -57,7 +58,10 @@ describe("Event store", () => {
     expect(response1.statusCode).to.equal(200);
     expect(JSON.parse(response1.body).state.code).to.equal("some-code");
     expect(JSON.parse(response1.body).state.phone).to.equal("some-phone");
-    expect(JSON.parse(response1.body).state.token).to.equal("some-token");
+    expect(JSON.parse(response1.body).state.issued).to.equal("some-date");
+    expect(JSON.parse(response1.body).state.principle).to.equal(
+      "some-principle"
+    );
 
     const response2 = await request.post(url, {
       body: {

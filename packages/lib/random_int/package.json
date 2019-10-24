@@ -1,0 +1,19 @@
+{
+  "name": "@sustainers/random-int",
+  "version": "0.0.0",
+  "description": "Returns a random integer within the given bounds.",
+  "main": "index.js",
+  "author": "sustainers.market",
+  "engines": {
+    "node": ">= 10.16.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "devDependencies": {
+    "mocha": "^6.1.4"
+  }
+}

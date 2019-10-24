@@ -1,0 +1,22 @@
+{
+  "name": "@sustainers/random-int-of-length",
+  "version": "0.0.0",
+  "description": "Creates a random in that has the specified number of characters.",
+  "main": "index.js",
+  "author": "sustainers.market",
+  "engines": {
+    "node": ">= 10.16.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "dependencies": {
+    "@roof/random-int": "^0.0.5"
+  },
+  "devDependencies": {
+    "mocha": "^6.1.4"
+  }
+}

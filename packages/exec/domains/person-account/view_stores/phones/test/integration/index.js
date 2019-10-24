@@ -10,7 +10,8 @@ describe("View store", () => {
   it("should return successfully", async () => {
     const response0 = await request.put(`${url}/${id}`, {
       body: {
-        phone: "some-phone"
+        phone: "some-phone",
+        principle: "some-principle"
       }
     });
 
@@ -26,6 +27,7 @@ describe("View store", () => {
     const response2 = await request.get(`${url}/${id}`);
     expect(response2.statusCode).to.equal(200);
     expect(JSON.parse(response2.body).phone).to.equal("some-other-phone");
+    expect(JSON.parse(response2.body).principle).to.equal("some-principle");
 
     const response3 = await request.get(url);
     expect(response3.statusCode).to.equal(200);

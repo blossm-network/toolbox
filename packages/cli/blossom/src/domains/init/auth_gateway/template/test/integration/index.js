@@ -8,7 +8,7 @@ const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 
 describe("Command handler store integration tests", () => {
   it("should return successfully", async () => {
-    const response = await request.post(`${url}/challenge/create`, {
+    const response = await request.post(`${url}/challenge/issue`, {
       body: {
         phone: "some-test-phone"
       }

@@ -5,15 +5,7 @@ const request = require("@sustainers/request");
 
 const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 
-/**
- *
- * TODO:
- *   Write integration tests that verify the schema and indexes you added.
- *   Add tests for POST and GET methods, and make sure to test
- *   error states and edge cases.
- *
- */
-describe("Event store", () => {
+describe("Event store integration tests", () => {
   it("should return successfully", async () => {
     const root = uuid();
     const topic = "some-topic";

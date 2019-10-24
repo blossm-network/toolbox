@@ -1,21 +1,9 @@
-#
-# This file is required.
-# Give your view-store a unique name, specify which domain it's for, write the view store's schema, and specify what it should be indexed by.
-#
-# How to write a schema -> https://mongoosejs.com/docs/schematypes.html
-# Types and validators should always be specified,
-# and default values and required flags should be set if intended.
-#
-# How to write indexes -> https://mongoosejs.com/docs/guide.html#indexes
-# Queries to the store that aren't indexed will be rejected.
-# In other words, full collection scans are not allowed.
-#
-
 name: phones
 domain: person-account
 
 schema:
   phone: String
+  principle: String
 
 indexes: [[{ phone: 1 }]]
 

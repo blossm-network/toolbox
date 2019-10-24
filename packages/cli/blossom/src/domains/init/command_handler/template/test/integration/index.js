@@ -6,7 +6,7 @@ const request = require("@sustainers/request");
 
 const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 
-describe("Command handler store integration tests", () => {
+describe("Command handler integration tests", () => {
   it("should return successfully", async () => {
     const name = "Some-name";
     const response = await request.post(url, {

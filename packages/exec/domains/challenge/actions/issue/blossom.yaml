@@ -14,6 +14,14 @@ version: 0
 dependencies:
   "@sustainers/command-handler": "*"
   "@sustainers/validator": "*"
+  "@sustainers/phone-number": "*"
+  "@sustainers/jwt": "*"
+  "@sustainers/gcp-kms": "*"
+  "@sustainers/duration-consts": "*"
+  "@sustainers/uuid": "*"
+  "@sustainers/datetime": "*"
+  "@sustainers/random-int-of-length": "*"
+  "@sustainers/errors": "*"
 
 devDependencies:
   "mocha": "^6.1.4"

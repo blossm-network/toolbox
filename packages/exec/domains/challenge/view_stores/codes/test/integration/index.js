@@ -11,7 +11,8 @@ describe("View store", () => {
     const response0 = await request.put(`${url}/${id}`, {
       body: {
         code: "some-code",
-        phone: "some-phone"
+        phone: "some-phone",
+        expires: "some-date"
       }
     });
 
@@ -27,6 +28,8 @@ describe("View store", () => {
     const response2 = await request.get(`${url}/${id}`);
     expect(response2.statusCode).to.equal(200);
     expect(JSON.parse(response2.body).code).to.equal("some-other-code");
+    expect(JSON.parse(response2.body).phone).to.equal("some-phone");
+    expect(JSON.parse(response2.body).expires).to.equal("some-date");
 
     const response3 = await request.get(url);
     expect(response3.statusCode).to.equal(200);

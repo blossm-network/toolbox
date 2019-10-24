@@ -1006,6 +1006,10 @@
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@protobufjs/utf8/-/utf8-1.1.0.tgz#a777360b5b39a1a2e5106f8e858f2fd2d060c570"
 
+"@roof/random-int@^0.0.5":
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/@roof/random-int/-/random-int-0.0.5.tgz#eca257acf12da3bf52bd57cce4587e2f241e6a49"
+
 "@samverschueren/stream-to-observable@^0.3.0":
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/@samverschueren/stream-to-observable/-/stream-to-observable-0.3.0.tgz#ecdf48d532c58ea477acfcab80348424f8d0662f"

@@ -15,8 +15,9 @@ domain: challenge
 
 schema:
   code: String
+  issued: String
+  principle: String
   phone: String
-  token: String
 
 dependencies:
   "@sustainers/event-store": "*"

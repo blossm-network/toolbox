@@ -24,10 +24,10 @@ const installDependenciesIfNeeded = async (workingDir, input) => {
 
   const srcDir = path.resolve(process.cwd(), input.path);
 
-  fs.copyFileSync(
-    path.resolve(workingDir, lockFile),
-    path.resolve(srcDir, lockFile)
-  );
+  // fs.copyFileSync(
+  //   path.resolve(workingDir, lockFile),
+  //   path.resolve(srcDir, lockFile)
+  // );
 
   const modules = "node_modules";
   const modulesPath = path.resolve(srcDir, modules);
@@ -42,6 +42,7 @@ module.exports = async ({ workingDir, input }) => {
   try {
     await installDependenciesIfNeeded(workingDir, input);
   } catch (err) {
+    console.log(err);
     //eslint-disable-next-line no-console
     console.error(
       roboSay(
