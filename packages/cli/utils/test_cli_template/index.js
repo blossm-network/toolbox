@@ -20,14 +20,17 @@ const installDependenciesIfNeeded = async (workingDir, input) => {
     cwd: workingDir
   });
 
-  if (spawnInstall.stderr) process.exitCode = 1;
+  if (spawnInstall.stderr) {
+    process.exitCode = 1;
+    throw "Install failed. It's likely that a package wasn't found.";
+  }
 
   const srcDir = path.resolve(process.cwd(), input.path);
 
-  // fs.copyFileSync(
-  //   path.resolve(workingDir, lockFile),
-  //   path.resolve(srcDir, lockFile)
-  // );
+  fs.copyFileSync(
+    path.resolve(workingDir, lockFile),
+    path.resolve(srcDir, lockFile)
+  );
 
   const modules = "node_modules";
   const modulesPath = path.resolve(srcDir, modules);
@@ -42,7 +45,8 @@ module.exports = async ({ workingDir, input }) => {
   try {
     await installDependenciesIfNeeded(workingDir, input);
   } catch (err) {
-    console.log(err);
+    //eslint-disable-next-line no-console
+    console.error(err);
     //eslint-disable-next-line no-console
     console.error(
       roboSay(
