@@ -1,7 +1,7 @@
 {
   "name": "@sustainers/event-store-get",
   "description": "An event store GET handler.",
-  "version": "0.0.22",
+  "version": "0.0.23",
   "main": "index.js",
   "author": "sustainers.market",
   "engines": {
@@ -14,7 +14,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@sustainers/errors": "^0.0.10",
+    "@sustainers/errors": "^0.0.11",
     "@sustainers/mongodb-database": "^0.0.29"
   },
   "devDependencies": {
