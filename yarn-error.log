@@ -2,7 +2,7 @@ Arguments:
   /usr/local/bin/node /usr/local/bin/yarn install --mutex network:42424 --non-interactive
 
 PATH: 
-  /Users/joao/Documents/repos/sm/node_modules/.bin:/Users/joao/Documents/repos/node_modules/.bin:/Users/joao/Documents/node_modules/.bin:/Users/joao/node_modules/.bin:/Users/node_modules/.bin:/node_modules/.bin:/usr/local/bin:/Users/joao/Documents/repos/sm/node_modules/.bin:/Users/joao/.config/yarn/link/node_modules/.bin:/Users/joao/Documents/repos/sm/node_modules/.bin:/Users/joao/Documents/repos/sm/node_modules/.bin:/Users/joao/.config/yarn/link/node_modules/.bin:/Users/joao/Documents/repos/sm/node_modules/.bin:/usr/local/libexec/lib/node_modules/npm/bin/node-gyp-bin:/usr/local/lib/node_modules/npm/bin/node-gyp-bin:/usr/local/bin/node_modules/npm/bin/node-gyp-bin:/usr/local/bin:/Users/joao/.google-cloud-sdk/bin:/Users/joao/.flutter_build/bin:/Users/joao/.yarn/bin:/Users/joao/.config/yarn/global/node_modules/.bin:/Users/joao/.mongo/bin:/Developer/adt-bundle/sdk/tools:/Developer/adt-bundle/sdk/platform-tools:/usr/local/bin:/Users/joao/.google-cloud-sdk/bin:/Users/joao/.flutter_build/bin:/Users/joao/.yarn/bin:/Users/joao/.config/yarn/global/node_modules/.bin:/Users/joao/.mongo/bin:/Developer/adt-bundle/sdk/tools:/Developer/adt-bundle/sdk/platform-tools:/usr/local/bin:/Users/joao/.google-cloud-sdk/bin:/Users/joao/.flutter_build/bin:/Users/joao/.yarn/bin:/Users/joao/.config/yarn/global/node_modules/.bin:/Users/joao/.mongo/bin:/Developer/adt-bundle/sdk/tools:/Developer/adt-bundle/sdk/platform-tools:/usr/local/bin:/Users/joao/.google-cloud-sdk/bin:/Users/joao/.flutter_build/bin:/Users/joao/.yarn/bin:/Users/joao/.config/yarn/global/node_modules/.bin:/Users/joao/.mongo/bin:/Developer/adt-bundle/sdk/tools:/Developer/adt-bundle/sdk/platform-tools:/usr/local/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin:/Library/Apple/bin:/Users/joao/.google-cloud-sdk/bin:/Users/joao/.flutter_build/bin:/Users/joao/.yarn/bin:/Users/joao/.config/yarn/global/node_modules/.bin:/Users/joao/.mongo/bin:/Users/joao/.nvm/versions/node/v8.6.0/bin:/Developer/adt-bundle/sdk/tools:/Developer/adt-bundle/sdk/platform-tools
+  /Users/joao/Documents/repos/sm/node_modules/.bin:/Users/joao/Documents/repos/node_modules/.bin:/Users/joao/Documents/node_modules/.bin:/Users/joao/node_modules/.bin:/Users/node_modules/.bin:/node_modules/.bin:/usr/local/bin:/Users/joao/Documents/repos/sm/node_modules/.bin:/Users/joao/.config/yarn/link/node_modules/.bin:/Users/joao/Documents/repos/sm/node_modules/.bin:/Users/joao/Documents/repos/sm/node_modules/.bin:/Users/joao/.config/yarn/link/node_modules/.bin:/Users/joao/Documents/repos/sm/node_modules/.bin:/usr/local/libexec/lib/node_modules/npm/bin/node-gyp-bin:/usr/local/lib/node_modules/npm/bin/node-gyp-bin:/usr/local/bin/node_modules/npm/bin/node-gyp-bin:/usr/local/bin:/Users/joao/.google-cloud-sdk/bin:/Users/joao/.flutter_build/bin:/Users/joao/.yarn/bin:/Users/joao/.config/yarn/global/node_modules/.bin:/Users/joao/.mongo/bin:/Developer/adt-bundle/sdk/tools:/Developer/adt-bundle/sdk/platform-tools:/usr/local/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin:/Library/Apple/bin:/Users/joao/.google-cloud-sdk/bin:/Users/joao/.flutter_build/bin:/Users/joao/.yarn/bin:/Users/joao/.config/yarn/global/node_modules/.bin:/Users/joao/.mongo/bin:/Users/joao/.nvm/versions/node/v8.6.0/bin:/Developer/adt-bundle/sdk/tools:/Developer/adt-bundle/sdk/platform-tools
 
 Yarn version: 
   1.3.2
@@ -1123,6 +1123,13 @@ Lockfile:
   "@sinonjs/text-encoding@^0.7.1":
     version "0.7.1"
     resolved "https://registry.yarnpkg.com/@sinonjs/text-encoding/-/text-encoding-0.7.1.tgz#8da5c6530915653f3a1f38fd5f101d8c3f8079c5"
+  
+  "@sustainers/errors@^0.0.9":
+    version "0.0.9"
+    resolved "https://registry.yarnpkg.com/@sustainers/errors/-/errors-0.0.9.tgz#501b1b21dbc9e0f27b315ca7ccebf7b38b409c7f"
+    dependencies:
+      common-tags "^1.8.0"
+      restify-errors "^8.0.0"
   
   "@sustainers/operation-js@^0.0.40":
     version "0.0.40"
@@ -7545,14 +7552,4 @@ Lockfile:
       toposort "^2.0.2"
 
 Trace: 
-  Error: https://registry.yarnpkg.com/@sustainers%2fview-gateway-get: Not found
-      at Request.params.callback [as _callback] (/usr/local/lib/node_modules/yarn/lib/cli.js:62098:18)
-      at Request.self.callback (/usr/local/lib/node_modules/yarn/lib/cli.js:123085:22)
-      at Request.emit (events.js:198:13)
-      at Request.<anonymous> (/usr/local/lib/node_modules/yarn/lib/cli.js:124068:10)
-      at Request.emit (events.js:198:13)
-      at IncomingMessage.<anonymous> (/usr/local/lib/node_modules/yarn/lib/cli.js:123988:12)
-      at Object.onceWrapper (events.js:286:20)
-      at IncomingMessage.emit (events.js:203:15)
-      at endReadableNT (_stream_readable.js:1145:12)
-      at process._tickCallback (internal/process/next_tick.js:63:19)
+  Error: EINVAL: invalid argument, mkdir '/Users/joao/Documents/repos/sm/node_modules/@sustainers/view-gateway-get/node_modules/@sustainers'

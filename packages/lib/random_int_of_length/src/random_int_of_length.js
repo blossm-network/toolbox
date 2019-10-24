@@ -1,4 +1,4 @@
-const randomInt = require("@roof/random-int");
+const randomInt = require("@sustainers/random-int");
 
 module.exports = length => {
   let numberString = "";

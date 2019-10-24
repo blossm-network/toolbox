@@ -20,10 +20,7 @@ const installDependenciesIfNeeded = async (workingDir, input) => {
     cwd: workingDir
   });
 
-  if (spawnInstall.stderr) {
-    process.exitCode = 1;
-    throw "Install failed. It's likely that a package wasn't found.";
-  }
+  if (spawnInstall.stderr) process.exitCode = 1;
 
   const srcDir = path.resolve(process.cwd(), input.path);
 

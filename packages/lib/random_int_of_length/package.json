@@ -14,7 +14,7 @@
     "test": "mocha"
   },
   "dependencies": {
-    "@roof/random-int": "^0.0.5"
+    "@sustainers/random-int": "*"
   },
   "devDependencies": {
     "mocha": "^6.1.4"

@@ -1006,10 +1006,6 @@
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@protobufjs/utf8/-/utf8-1.1.0.tgz#a777360b5b39a1a2e5106f8e858f2fd2d060c570"
 
-"@roof/random-int@^0.0.5":
-  version "0.0.5"
-  resolved "https://registry.yarnpkg.com/@roof/random-int/-/random-int-0.0.5.tgz#eca257acf12da3bf52bd57cce4587e2f241e6a49"
-
 "@samverschueren/stream-to-observable@^0.3.0":
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/@samverschueren/stream-to-observable/-/stream-to-observable-0.3.0.tgz#ecdf48d532c58ea477acfcab80348424f8d0662f"
@@ -1044,29 +1040,6 @@
 "@sinonjs/text-encoding@^0.7.1":
   version "0.7.1"
   resolved "https://registry.yarnpkg.com/@sinonjs/text-encoding/-/text-encoding-0.7.1.tgz#8da5c6530915653f3a1f38fd5f101d8c3f8079c5"
-
-"@sustainers/operation-js@^0.0.40":
-  version "0.0.40"
-  resolved "https://registry.yarnpkg.com/@sustainers/operation-js/-/operation-js-0.0.40.tgz#c1ba114256d2c9ff02c5f22a986470d701ca3796"
-  dependencies:
-    "@sustainers/errors" "^0.0.9"
-    "@sustainers/hash-string" "*"
-    "@sustainers/request" "^0.0.8"
-    "@sustainers/service-name-consts" "^0.0.2"
-    "@sustainers/trim-string" "^0.0.1"
-
-"@sustainers/request@^0.0.8":
-  version "0.0.8"
-  resolved "https://registry.yarnpkg.com/@sustainers/request/-/request-0.0.8.tgz#a63d800a48759e3a659566db78e5dc5d180fb9d0"
-  dependencies:
-    query-string "^6.8.1"
-    request "^1.2.0"
-
-"@sustainers/view-store-js@^0.0.38":
-  version "0.0.38"
-  resolved "https://registry.yarnpkg.com/@sustainers/view-store-js/-/view-store-js-0.0.38.tgz#81dd7a68b57c686c341306165230a55707baccf6"
-  dependencies:
-    "@sustainers/operation-js" "^0.0.40"
 
 "@types/duplexify@^3.6.0":
   version "3.6.0"
