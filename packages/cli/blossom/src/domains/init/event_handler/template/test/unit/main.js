@@ -20,7 +20,7 @@ process.env.TARGET_DOMAIN = targetDomain;
 process.env.SERVICE = service;
 process.env.NETWORK = network;
 
-describe("Event handler store unit tests", () => {
+describe("Event handler unit tests", () => {
   beforeEach(() => {
     clock = useFakeTimers(now.getTime());
   });

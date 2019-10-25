@@ -21,6 +21,7 @@ dependencies:
   "@sustainers/uuid": "*"
   "@sustainers/datetime": "*"
   "@sustainers/random-int-of-length": "*"
+  "@sustainers/twilio-send-sms": "*"
   "@sustainers/errors": "*"
 
 devDependencies:

@@ -8,7 +8,7 @@
 // let clock;
 // const now = new Date();
 
-describe("Command handler store unit tests", () => {
+describe("Command handler ", () => {
   // beforeEach(() => {
   //   clock = useFakeTimers(now.getTime());
   // });

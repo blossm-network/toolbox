@@ -1,21 +1,17 @@
 const roboSay = require("@sustainers/robo-say");
 const { spawnSync } = require("child_process");
 const path = require("path");
-const { promisify } = require("util");
-const ncp = require("ncp");
 const fs = require("fs-extra");
 const { red } = require("chalk");
 
-const copy = promisify(ncp);
-
 const installDependenciesIfNeeded = async (workingDir, input) => {
-  const lockFile = "yarn.lock";
+  const lockFile = "package-lock.json";
 
   const lock = path.resolve(workingDir, lockFile);
 
   if (fs.existsSync(lock)) return;
 
-  const spawnInstall = spawnSync("yarn", ["install"], {
+  const spawnInstall = spawnSync("npm", ["install"], {
     stdio: [process.stdin, process.stdout, process.stderr],
     cwd: workingDir
   });
@@ -28,14 +24,6 @@ const installDependenciesIfNeeded = async (workingDir, input) => {
     path.resolve(workingDir, lockFile),
     path.resolve(srcDir, lockFile)
   );
-
-  const modules = "node_modules";
-  const modulesPath = path.resolve(srcDir, modules);
-
-  fs.removeSync(modulesPath);
-  fs.mkdirSync(modulesPath);
-
-  await copy(path.resolve(workingDir, modules), modulesPath);
 };
 
 module.exports = async ({ workingDir, input }) => {

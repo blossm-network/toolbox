@@ -4,6 +4,9 @@ const { create: createJwt } = require("@sustainers/jwt");
 const { sign } = require("@sustainers/gcp-kms");
 const uuid = require("@sustainers/uuid");
 const randomIntOfLength = require("@sustainers/random-int-of-length");
+const sms = require("@sustainers/twilio-sms");
+const secret = require("@sustainers/gcp-secret");
+
 const {
   moment,
   stringFromDate,
@@ -19,3 +22,5 @@ exports.moment = moment;
 exports.stringFromDate = stringFromDate;
 exports.stringDate = stringDate;
 exports.randomIntOfLength = randomIntOfLength;
+exports.sms = sms;
+exports.secret = secret;

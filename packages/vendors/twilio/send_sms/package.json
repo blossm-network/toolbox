@@ -1,7 +1,7 @@
 {
-  "name": "@sustainers/event-bus",
-  "version": "0.0.6",
-  "description": "Publishes an event to PubSub.",
+  "name": "@sustainers/twilio-sms",
+  "version": "0.0.0",
+  "description": "Sms functionality.",
   "main": "index.js",
   "author": "sustainers.market",
   "engines": {
@@ -14,9 +14,10 @@
     "test": "mocha"
   },
   "dependencies": {
-    "@google-cloud/pubsub": "^0.31.1"
+    "twilio": "^3.36.0"
   },
   "devDependencies": {
+    "chai": "^4.2.0",
     "mocha": "^6.1.4",
     "sinon": "^7.3.2",
     "sinon-chai": "^3.3.0"
