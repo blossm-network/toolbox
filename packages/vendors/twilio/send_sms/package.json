@@ -1,6 +1,6 @@
 {
   "name": "@sustainers/twilio-sms",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Sms functionality.",
   "main": "index.js",
   "author": "sustainers.market",
