@@ -1,7 +1,7 @@
 {
   "name": "@sustainers/command-gateway-post",
   "description": "A command gateway server POST handler.",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "main": "index.js",
   "author": "sustainers.market",
   "engines": {
@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@sustainers/command-js": "^0.0.42",
-    "@sustainers/gcp-token": "^0.0.25",
+    "@sustainers/gcp-token": "^0.0.26",
     "@sustainers/normalize-command": "^0.0.3",
     "@sustainers/validate-command": "^0.0.15"
   },
