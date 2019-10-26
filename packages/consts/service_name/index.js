@@ -1,3 +1,3 @@
 module.exports = {
-  MAX_LENGTH: 30
+  MAX_LENGTH: 25
 };

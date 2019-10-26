@@ -18,7 +18,7 @@ const token = "some-token";
 const root = "some-root";
 const hash = "some-hash";
 const trimmed = "some-trimmed";
-const MAX_LENGTH = 30;
+const MAX_LENGTH = 25;
 
 const network = "some-network";
 const service = "some-service";
