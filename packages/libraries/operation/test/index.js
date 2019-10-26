@@ -1,4 +1,3 @@
-const { MAX_LENGTH } = "@sustainers/service-name-consts";
 const { expect } = require("chai")
   .use(require("chai-datetime"))
   .use(require("sinon-chai"));
@@ -14,11 +13,12 @@ const now = new Date();
 const data = { a: 1, context: 3 };
 const context = { b: 4 };
 const opPart1 = "oppartone";
-const opPart2 = "oppartone";
+const opPart2 = "opparttwo";
 const token = "some-token";
 const root = "some-root";
 const hash = "some-hash";
 const trimmed = "some-trimmed";
+const MAX_LENGTH = 30;
 
 const network = "some-network";
 const service = "some-service";
