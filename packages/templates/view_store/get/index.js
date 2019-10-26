@@ -10,12 +10,6 @@ const defaultFn = query => {
 
 module.exports = ({ store, fn = defaultFn }) => {
   return async (req, res) => {
-    //eslint-disable-next-line no-console
-    console.log("req info is: ", {
-      query: req.query,
-      params: req.params,
-      body: req.body
-    });
     const { query, sort } = fn(req.query);
 
     if (req.params.id == undefined) {
