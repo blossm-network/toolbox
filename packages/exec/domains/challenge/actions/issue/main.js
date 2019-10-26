@@ -75,7 +75,7 @@ module.exports = async ({ payload, context }) => {
   sms.send({
     to: personAccount.phone,
     from: "+14157700262",
-    body: `${code} is your Roof verification code. Enter it in the Roof app to let us know its really you.`
+    body: `${code} is your Roof verification code. Enter it in the Roof app to let us know it's really you.`
   });
 
   //Send the token to the requester so they can access the answer command.
