@@ -1,7 +1,7 @@
 {
   "name": "@sustainers/view-store",
   "description": "A view store server.",
-  "version": "0.0.61",
+  "version": "0.0.62",
   "main": "index.js",
   "author": "sustainers.market",
   "engines": {
@@ -18,7 +18,7 @@
     "@sustainers/logger": "^0.0.8",
     "@sustainers/server": "^0.0.12",
     "@sustainers/view-store-delete": "^0.0.27",
-    "@sustainers/view-store-get": "^0.0.31",
+    "@sustainers/view-store-get": "^0.0.32",
     "@sustainers/view-store-post": "^0.0.29",
     "@sustainers/view-store-put": "^0.0.30",
     "@sustainers/view-store-stream": "^0.0.8"
