@@ -18,6 +18,9 @@ const serverId = () => {
 module.exports = async ({ name, hash }) => {
   const id = serverId();
 
+  //eslint-disable-next-line no-console
+  console.log("env: ", { env: process.env.NODE_ENV, id });
+
   if (!id) return null;
 
   const metadataServerTokenUrl =
