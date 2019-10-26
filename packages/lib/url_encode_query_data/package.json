@@ -1,6 +1,6 @@
 {
   "name": "@sustainers/url-encode-query-data",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Encodes query data into a url.",
   "main": "index.js",
   "author": "sustainers.market",

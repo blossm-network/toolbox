@@ -1,6 +1,6 @@
 {
   "name": "@sustainers/mongodb-database",
-  "version": "0.0.29",
+  "version": "0.0.30",
   "description": "Read and write from a MongoDB database.",
   "main": "index.js",
   "author": "sustainers.market",
@@ -14,7 +14,7 @@
     "test": "mocha"
   },
   "dependencies": {
-    "@sustainers/url-encode-query-data": "^0.0.1",
+    "@sustainers/url-encode-query-data": "^0.0.2",
     "mongoose": "^5.7.1",
     "restify-errors": "^8.0.0"
   },
