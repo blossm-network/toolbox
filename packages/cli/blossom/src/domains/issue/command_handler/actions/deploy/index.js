@@ -8,9 +8,6 @@ module.exports = deployCliTemplate({
   dir: __dirname,
   configFn: config => {
     return {
-      _AUTHENTICATION: config["allow-unauthenticated"]
-        ? "--allow-unauthenticated"
-        : "--no-allow-unauthenticated",
       _ACTION: config.action,
       _OPERATION_HASH: hash(
         config.action + config.domain + config.context + config.service
@@ -18,10 +15,7 @@ module.exports = deployCliTemplate({
       _OPERATION_NAME: trim(
         `${config.service}-${config.context}-${config.domain}-${config.action}`,
         MAX_LENGTH
-      ),
-      _EVENT_STORE_HASH: hash(
-        `${config.domain}event-store${config.service}`
-      ).toString()
+      )
     };
   }
 });

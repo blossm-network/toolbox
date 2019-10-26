@@ -5,12 +5,14 @@
 # and a unique name of the target that will be operated on by this event handler.
 #
 
+name: some-name
 action: some-action
 domain: some-domain
-target:
-  name: some-name
-  domain: some-domain
-  context: view-store
+
+targets:
+  - name: some-name
+    domain: some-domain
+    context: view-store
 
 version: 0
 
