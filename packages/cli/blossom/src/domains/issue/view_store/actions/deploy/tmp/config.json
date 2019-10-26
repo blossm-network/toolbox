@@ -1,8 +1,0 @@
-{
-  "name": "phones",
-  "domain": "person-account",
-  "schema": { "phone": "String", "principle": "String" },
-  "indexes": [[{ "phone": 1 }]],
-  "service": "core",
-  "context": "view-store"
-}
