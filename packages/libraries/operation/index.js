@@ -23,6 +23,8 @@ const common = ({ method, operation, root, data }) => {
             })
             : null;
 
+          //eslint-disable-next-line no-console
+          console.log("token: ", { tokenFn, token });
           const response = await method(url, {
             body: {
               ...(data != undefined && { ...data }),
