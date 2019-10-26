@@ -1,0 +1,12 @@
+{
+  "action": "some-action",
+  "domain": "some-domain",
+  "target": {
+    "name": "some-name",
+    "domain": "some-domain",
+    "context": "view-store"
+  },
+  "version": 0,
+  "service": "core",
+  "context": "event-handler"
+}

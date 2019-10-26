@@ -27,10 +27,8 @@ module.exports = async ({ name, hash }) => {
 
   const url = `https://${process.env.GCP_REGION}-${name}-${hash}-${id}-uc.a.run.app`;
 
-  //eslint-disable-next-line no-console
-  console.log("url is: ", { url, full: metadataServerTokenUrl + url, headers });
   logger.info("url is: ", { url, full: metadataServerTokenUrl + url, headers });
-  const response = await deps.get(metadataServerTokenUrl + url, null, headers);
+  const response = await deps.get(metadataServerTokenUrl + url, { headers });
 
   logger.info("res: ", { response });
   if (response.statusCode >= 300) return null;
