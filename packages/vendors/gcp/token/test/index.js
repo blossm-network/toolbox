@@ -30,8 +30,7 @@ describe("Gcp token", () => {
 
     expect(getFake).to.have.been.calledWith(
       `http://metadata/computeMetadata/v1/instance/service-accounts/default/identity?audience=${url}`,
-      null,
-      { "Metadata-Flavor": "Google" }
+      { headers: { "Metadata-Flavor": "Google" } }
     );
     expect(result).to.equal(body);
   });
@@ -51,8 +50,7 @@ describe("Gcp token", () => {
 
     expect(getFake).to.have.been.calledWith(
       `http://metadata/computeMetadata/v1/instance/service-accounts/default/identity?audience=${url}`,
-      null,
-      { "Metadata-Flavor": "Google" }
+      { headers: { "Metadata-Flavor": "Google" } }
     );
     expect(result).to.equal(body);
   });
@@ -72,8 +70,7 @@ describe("Gcp token", () => {
 
     expect(getFake).to.have.been.calledWith(
       `http://metadata/computeMetadata/v1/instance/service-accounts/default/identity?audience=${url}`,
-      null,
-      { "Metadata-Flavor": "Google" }
+      { headers: { "Metadata-Flavor": "Google" } }
     );
     expect(result).to.equal(body);
   });
@@ -105,8 +102,7 @@ describe("Gcp token", () => {
 
     expect(getFake).to.have.been.calledWith(
       `http://metadata/computeMetadata/v1/instance/service-accounts/default/identity?audience=${url}`,
-      null,
-      { "Metadata-Flavor": "Google" }
+      { headers: { "Metadata-Flavor": "Google" } }
     );
     expect(result).to.be.null;
   });
