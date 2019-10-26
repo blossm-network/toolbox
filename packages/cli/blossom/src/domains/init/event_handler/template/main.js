@@ -8,8 +8,6 @@
  *
  */
 
-const gcpToken = require("@sustainers/gcp-token");
-
 /**
  * Add services that should be faked
  * in tests in the deps file.
@@ -30,8 +28,8 @@ module.exports = event => {
       service: process.env.SERVICE,
       network: process.env.NETWORK
     })
-    .set({ context, tokenFn: gcpToken })
-    .create({
+    .set({ context, tokenFn: deps.gcpToken })
+    .update(event.headers.root, {
       name: event.payload.name
     });
 };

@@ -26,7 +26,7 @@ steps:
       - -c
       - |
         cat >> .env <<- EOM
-        NETWORK=local
+        NETWORK=${_GCP_REGION}.${_ENV_URI_SPECIFIER}${_NETWORK} #${_NETWORK} #local
         SERVICE=${_SERVICE}
         CONTEXT=${_CONTEXT}
         DOMAIN=${_DOMAIN}
@@ -60,7 +60,7 @@ steps:
       - test:integration
     env:
       - MAIN_CONTAINER_NAME=main
-      - NETWORK=local
+      - NETWORK=${_GCP_REGION}.${_ENV_URI_SPECIFIER}${_NETWORK} #${_NETWORK} #local
       - SERVICE=${_SERVICE}
       - CONTEXT=${_CONTEXT}
       - DOMAIN=${_DOMAIN}

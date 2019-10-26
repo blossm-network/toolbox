@@ -4,3 +4,4 @@
  */
 
 exports.viewStore = require("@sustainers/view-store-js");
+exports.gcpToken = require("@sustainers/gcp-token");

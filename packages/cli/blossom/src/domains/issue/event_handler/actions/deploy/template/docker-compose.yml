@@ -5,8 +5,8 @@ services:
     container_name: ${MAIN_CONTAINER_NAME}
     ports:
       - ${PORT}
-    depends_on:
-      - target
+    # depends_on:
+    #   - target
     environment:
       PORT:
       NODE_ENV:
@@ -23,27 +23,26 @@ services:
       GCP_SECRET_BUCKET:
       GCP_KMS_SECRET_BUCKET_KEY_LOCATION:
       GCP_KMS_SECRET_BUCKET_KEY_RING:
-
-  target:
-    image: ${STAGING_CONTAINER_REGISTRY}/${SERVICE}.${TARGET_CONTEXT}.${TARGET_DOMAIN}.${TARGET_NAME}:latest
-    container_name: ${TARGET_HASH}.${NETWORK}
-    ports:
-      - ${PORT}
-    environment:
-      PORT:
-      NODE_ENV:
-      NETWORK:
-      SERVICE:
-      CONTEXT: ${TARGET_CONTEXT}
-      DOMAIN: ${TARGET_DOMAIN}
-      NAME: ${TARGET_NAME}
-      GCP_PROJECT:
-      GCP_REGION:
-      GCP_SECRET_BUCKET:
-      GCP_KMS_SECRET_BUCKET_KEY_LOCATION:
-      GCP_KMS_SECRET_BUCKET_KEY_RING:
-      MONGODB_USER:
-      MONGODB_HOST:
+  # target:
+  #   image: ${STAGING_CONTAINER_REGISTRY}/${SERVICE}.${TARGET_CONTEXT}.${TARGET_DOMAIN}.${TARGET_NAME}:latest
+  #   container_name: ${TARGET_HASH}.${NETWORK}
+  #   ports:
+  #     - ${PORT}
+  #   environment:
+  #     PORT:
+  #     NODE_ENV:
+  #     NETWORK:
+  #     SERVICE:
+  #     CONTEXT: ${TARGET_CONTEXT}
+  #     DOMAIN: ${TARGET_DOMAIN}
+  #     NAME: ${TARGET_NAME}
+  #     GCP_PROJECT:
+  #     GCP_REGION:
+  #     GCP_SECRET_BUCKET:
+  #     GCP_KMS_SECRET_BUCKET_KEY_LOCATION:
+  #     GCP_KMS_SECRET_BUCKET_KEY_RING:
+  #     MONGODB_USER:
+  #     MONGODB_HOST:
 
 networks:
   default:

@@ -8,8 +8,8 @@
 action: some-action
 domain: some-domain
 target:
-  name: some-target-name
-  domain: some-target-domain
+  name: some-name
+  domain: some-domain
   context: view-store
 
 version: 0
@@ -17,6 +17,7 @@ version: 0
 dependencies:
   "@sustainers/event-handler": "*"
   "@sustainers/view-store-js": "*"
+  "@sustainers/gcp-token": "*"
 
 devDependencies:
   "mocha": "^6.1.4"
@@ -28,6 +29,7 @@ devDependencies:
   "@sustainers/request": "*"
   "@sustainers/gcp-token": "*"
   "@sustainers/view-store-js": "*"
+  "@sustainers/uuid": "*"
 
 service: core
 

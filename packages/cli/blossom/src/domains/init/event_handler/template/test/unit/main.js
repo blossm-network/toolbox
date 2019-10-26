@@ -1,4 +1,3 @@
-const gcpToken = require("@sustainers/gcp-token");
 const { expect } = require("chai")
   .use(require("chai-datetime"))
   .use(require("sinon-chai"));
@@ -29,22 +28,20 @@ describe("Event handler unit tests", () => {
     restore();
   });
   it("should return successfully", async () => {
-    const withFake = fake();
-    const inFake = fake.returns({
-      with: withFake
-    });
-    const createFake = fake.returns({
-      in: inFake
+    const updateFake = fake();
+    const setFake = fake.returns({
+      update: updateFake
     });
     const viewStoreFake = fake.returns({
-      create: createFake
+      set: setFake
     });
     replace(deps, "viewStore", viewStoreFake);
 
     const name = "some-name";
     const context = "some-context";
+    const root = "some-root";
     const payload = { name };
-    const headers = { context };
+    const headers = { root, context };
 
     await main({ payload, headers });
 
@@ -54,10 +51,12 @@ describe("Event handler unit tests", () => {
       service,
       network
     });
-    expect(createFake).to.have.been.calledWith({
+    expect(setFake).to.have.been.calledWith({
+      context,
+      tokenFn: deps.gcpToken
+    });
+    expect(updateFake).to.have.been.calledWith(root, {
       name
     });
-    expect(inFake).to.have.been.calledWith(context);
-    expect(withFake).to.have.been.calledWith(gcpToken);
   });
 });

@@ -19,6 +19,8 @@ module.exports = async ({ payload, context }) => {
   //Create the root for this challenge.
   const root = await deps.uuid();
 
+  //eslint-disable-next-line no-console
+  console.log("1");
   //Check to see if the phone is recognized
   const personAccounts = await deps
     .viewStore({
@@ -30,6 +32,8 @@ module.exports = async ({ payload, context }) => {
     .set({ context, tokenFn: deps.gcpToken })
     .read({ phone: payload.phone });
 
+  //eslint-disable-next-line no-console
+  console.log("2");
   if (personAccounts.length == 0) throw conflict.phoneNotRecognized;
   if (personAccounts.length != 1) throw internalServer.multiplePhonesFound;
 
@@ -58,7 +62,8 @@ module.exports = async ({ payload, context }) => {
       name: "codes",
       domain: "challenge",
       service: process.env.SERVICE,
-      network: process.env.NETWORK
+      // network: process.env.NETWORK
+      network: "staging.sm.network" //process.env.NETWORK
     })
     .set({ context, tokenFn: deps.gcpToken })
     .update(root, {
