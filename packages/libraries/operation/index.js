@@ -1,5 +1,5 @@
 const errors = require("@sustainers/errors");
-const { MAX_LENGTH } = "@sustainers/service-name-consts";
+const { MAX_LENGTH } = require("@sustainers/service-name-consts");
 
 const deps = require("./deps");
 
