@@ -20,7 +20,7 @@
     "@sustainers/init-cli-template": "^0.0.9",
     "@sustainers/normalize-cli": "^0.0.13",
     "@sustainers/robo-say": "*",
-    "@sustainers/service-name-consts": "^0.0.3",
+    "@sustainers/service-name-consts": "*",
     "@sustainers/trim-string": "^0.0.1",
     "chalk": "^2.4.2",
     "esm": "^3.2.25"
