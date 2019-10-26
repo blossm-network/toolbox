@@ -1,6 +1,6 @@
 {
   "name": "@sustainers/service-name-consts",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Constants that confine a service name.",
   "main": "index.js",
   "author": "sustainers.market",
