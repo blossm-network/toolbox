@@ -8,14 +8,14 @@ const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 
 describe("Command handler store integration tests", () => {
   it("should return successfully", async () => {
-    const name = "Some-name";
+    const phone = "919-357-1144";
     const response = await request.post(url, {
       body: {
         headers: {
           issued: stringDate()
         },
         payload: {
-          name
+          phone
         }
       }
     });
@@ -29,22 +29,22 @@ describe("Command handler store integration tests", () => {
     }).aggregate(root);
 
     expect(aggregate.headers.root).to.equal(root);
-    expect(aggregate.state.name).to.equal(name.toLowerCase());
+    expect(aggregate.state.phone).to.equal("+19193571144");
     expect(response.statusCode).to.equal(200);
   });
   it("should return an error if incorrect params", async () => {
-    const name = 3;
+    const phone = 3;
     const response = await request.post(url, {
       body: {
         headers: {
           issued: stringDate()
         },
         payload: {
-          name
+          phone
         }
       }
     });
 
-    expect(response.statusCode).to.equal(400);
+    expect(response.statusCode).to.equal(409);
   });
 });

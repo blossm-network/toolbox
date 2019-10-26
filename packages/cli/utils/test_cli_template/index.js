@@ -16,7 +16,10 @@ const installDependenciesIfNeeded = async (workingDir, input) => {
     cwd: workingDir
   });
 
-  if (spawnInstall.stderr) process.exitCode = 1;
+  if (spawnInstall.stderr) {
+    process.exitCode = 1;
+    throw "Couldn't install packages";
+  }
 
   const srcDir = path.resolve(process.cwd(), input.path);
 
@@ -46,5 +49,8 @@ module.exports = async ({ workingDir, input }) => {
     cwd: workingDir
   });
 
-  if (spawnTest.stderr) process.exitCode = 1;
+  if (spawnTest.stderr) {
+    process.exitCode = 1;
+    throw "Tests failed";
+  }
 };

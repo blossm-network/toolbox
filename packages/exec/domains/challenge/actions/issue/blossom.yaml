@@ -21,8 +21,10 @@ dependencies:
   "@sustainers/uuid": "*"
   "@sustainers/datetime": "*"
   "@sustainers/random-int-of-length": "*"
-  "@sustainers/twilio-send-sms": "*"
+  "@sustainers/twilio-sms": "*"
+  "@sustainers/view-store-js": "*"
   "@sustainers/errors": "*"
+  "@sustainers/gcp-secret": "*"
 
 devDependencies:
   "mocha": "^6.1.4"

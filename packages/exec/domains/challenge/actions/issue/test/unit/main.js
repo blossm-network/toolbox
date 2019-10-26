@@ -137,7 +137,7 @@ describe("Command handler unit tests", () => {
     expect(smsSendFake).to.have.been.calledWith({
       to: phone,
       from: "+14157700262",
-      body: `${code} is your Roof verification code. Enter it in the Roof app to let us know its really you.`
+      body: `${code} is your Roof verification code. Enter it in the Roof app to let us know it's really you.`
     });
   });
   it("should throw correctly", async () => {

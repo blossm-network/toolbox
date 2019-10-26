@@ -31,18 +31,22 @@ describe("View store", () => {
     expect(JSON.parse(response2.body).phone).to.equal("some-phone");
     expect(JSON.parse(response2.body).expires).to.equal("some-date");
 
-    const response3 = await request.get(url);
+    const response3 = await request.get(`${url}?code=some-other-code`);
     expect(response3.statusCode).to.equal(200);
     expect(JSON.parse(response3.body)[0].code).to.equal("some-other-code");
 
+    const response4 = await request.get(url);
+    expect(response4.statusCode).to.equal(200);
+    expect(JSON.parse(response4.body)[0].code).to.equal("some-other-code");
+
     const id2 = uuid();
-    const response4 = await request.put(`${url}/${id2}`, {
+    const response5 = await request.put(`${url}/${id2}`, {
       body: {
         code: "some-other-code"
       }
     });
 
-    expect(response4.statusCode).to.equal(204);
+    expect(response5.statusCode).to.equal(204);
 
     let counter = 0;
     await request.stream(`${url}/stream`, data => {
@@ -53,16 +57,16 @@ describe("View store", () => {
     });
     expect(counter).to.equal(2);
 
-    const response5 = await request.delete(`${url}/${id}`);
-    expect(response5.statusCode).to.equal(200);
-    expect(JSON.parse(response5.body).deletedCount).to.equal(1);
-
-    const response6 = await request.delete(`${url}/${id2}`);
+    const response6 = await request.delete(`${url}/${id}`);
     expect(response6.statusCode).to.equal(200);
     expect(JSON.parse(response6.body).deletedCount).to.equal(1);
 
-    const response7 = await request.get(`${url}/${id}`);
-    expect(response7.statusCode).to.equal(404);
+    const response7 = await request.delete(`${url}/${id2}`);
+    expect(response7.statusCode).to.equal(200);
+    expect(JSON.parse(response7.body).deletedCount).to.equal(1);
+
+    const response8 = await request.get(`${url}/${id}`);
+    expect(response8.statusCode).to.equal(404);
   });
 
   it("should return an error if incorrect params", async () => {
