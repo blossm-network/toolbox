@@ -15,7 +15,10 @@
 const deps = require("./deps");
 
 module.exports = event => {
-  const root = event.headers.root;
+  //eslint-disable-next-line no-console
+  console.log("Do something with: ", { event });
+
+  // const root = event.headers.root;
   const context = event.headers.context;
 
   deps
@@ -26,7 +29,7 @@ module.exports = event => {
       network: process.env.NETWORK
     })
     .set({ context, tokenFn: deps.gcpToken })
-    .update(root, {
+    .update(event.headers.root, {
       name: event.payload.name
     });
 };

@@ -10,11 +10,11 @@ module.exports = deployCliTemplate({
     return {
       _NAME: config.name,
       _OPERATION_NAME: trim(
-        `${config.service}-${config.context}-${config.domain}-${config.id}`,
+        `${config.service}-${config.context}-${config.domain}-${config.name}`,
         MAX_LENGTH
       ),
       _OPERATION_HASH: hash(
-        config.id + config.domain + config.context + config.service
+        config.name + config.domain + config.context + config.service
       ).toString()
     };
   }
