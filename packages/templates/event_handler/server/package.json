@@ -1,7 +1,7 @@
 {
   "name": "@sustainers/event-handler",
   "description": "An event handler server.",
-  "version": "0.0.31",
+  "version": "0.0.32",
   "main": "index.js",
   "author": "sustainers.market",
   "engines": {
@@ -14,7 +14,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@sustainers/event-handler-post": "^0.0.28",
+    "@sustainers/event-handler-post": "^0.0.29",
     "@sustainers/server": "^0.0.12"
   },
   "devDependencies": {

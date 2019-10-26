@@ -1,7 +1,7 @@
 {
   "name": "@sustainers/command-gateway",
   "description": "A gateway server that manages command issuing access.",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "main": "index.js",
   "author": "sustainers.market",
   "engines": {
@@ -16,7 +16,7 @@
   "dependencies": {
     "@sustainers/authentication-middleware": "^0.0.27",
     "@sustainers/authorization-middleware": "^0.0.17",
-    "@sustainers/command-gateway-post": "^0.0.8",
+    "@sustainers/command-gateway-post": "^0.0.9",
     "@sustainers/cors-middleware": "^0.0.21",
     "@sustainers/server": "^0.0.12"
   },
