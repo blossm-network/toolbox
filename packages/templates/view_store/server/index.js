@@ -31,8 +31,16 @@ const viewStore = async ({ schema, indexes }) => {
 module.exports = async ({ schema, indexes, getFn, postFn, putFn } = {}) => {
   if (schema) {
     schema.id = { type: String, required: true, unique: true };
-    schema.created = { type: String, required: true };
-    schema.modified = { type: String, required: true };
+    schema.created = {
+      type: String,
+      required: true,
+      default: () => deps.stringDate()
+    };
+    schema.modified = {
+      type: String,
+      required: true,
+      default: () => deps.stringDate()
+    };
   }
 
   if (indexes) {

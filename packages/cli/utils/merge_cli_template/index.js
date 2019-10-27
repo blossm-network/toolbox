@@ -119,27 +119,27 @@ const writeCompose = (config, workingDir) => {
   const composePath = path.resolve(workingDir, "docker-compose.yml");
   const compose = yaml.parse(fs.readFileSync(composePath, "utf8"));
 
-  const containerRegistry = "us.gcr.io/${_GCP_PROJECT}-staging";
+  const containerRegistry = "us.gcr.io/${GCP_PROJECT}";
   const common = { ports: ["${PORT}"] };
   const commonEnvironment = {
-    PORT: null,
-    NODE_ENV: null,
-    NETWORK: null,
-    SERVICE: null,
-    GCP_PROJECT: null,
-    GCP_REGION: null,
-    GCP_SECRET_BUCKET: null,
-    GCP_KMS_SECRET_BUCKET_KEY_LOCATION: null,
-    GCP_KMS_SECRET_BUCKET_KEY_RING: null
+    PORT: "${PORT}",
+    NODE_ENV: "${NODE_ENV}",
+    NETWORK: "${NETWORK}",
+    SERVICE: "${SERVICE}",
+    GCP_PROJECT: "${GCP_PROJECT}",
+    GCP_REGION: "${GCP_REGION}",
+    GCP_SECRET_BUCKET: "${GCP_SECRET_BUCKET}",
+    GCP_KMS_SECRET_BUCKET_KEY_LOCATION: "${GCP_KMS_SECRET_BUCKET_KEY_LOCATION}",
+    GCP_KMS_SECRET_BUCKET_KEY_RING: "${GCP_KMS_SECRET_BUCKET_KEY_RING}"
   };
   const commonStoreEnvironment = {
-    MONGODB_USER: null,
-    MONGODB_HOST: null
+    MONGODB_USER: "${MONGODB_USER}",
+    MONGODB_HOST: "${MONGODB_HOST}"
   };
 
   let services = {};
   const dependsOn = [];
-  for (const target in config.targets) {
+  for (const target of config.targets) {
     switch (target.context) {
     case "view-store":
       {
@@ -147,7 +147,7 @@ const writeCompose = (config, workingDir) => {
           target.name + target.domain + target.context + config.service
         ).toString();
 
-        const key = `${target.name}-${target.domain}-${target.services}`;
+        const key = `${target.name}-${target.domain}-${config.service}`;
         services = {
           ...services,
           [key]: {
@@ -172,7 +172,7 @@ const writeCompose = (config, workingDir) => {
           target.domain + target.context + config.service
         ).toString();
 
-        const key = `${target.domain}-${target.services}`;
+        const key = `${target.domain}-${config.service}`;
         services = {
           ...services,
           [key]: {
@@ -195,7 +195,7 @@ const writeCompose = (config, workingDir) => {
         const targetHash = hash(
           target.action + target.domain + target.context + config.service
         ).toString();
-        const key = `${target.action}-${target.domain}-${target.service}`;
+        const key = `${target.action}-${target.domain}-${config.service}`;
         services = {
           ...services,
           [key]: {
@@ -219,31 +219,11 @@ const writeCompose = (config, workingDir) => {
   compose.services = {
     main: {
       ...compose.services.main,
-      depends_on: dependsOn,
-      ports: ["${PORT}"],
-      environment: {
-        ...compose.services.main,
-        port: "${PORT}"
-      }
+      depends_on: dependsOn
     },
-    ...services.map(service => {
-      return {
-        ...service,
-        environment: {
-          ...service.environment,
-          PORT: null,
-          NODE_ENV: null,
-          NETWORK: null,
-          SERVICE: null,
-          GCP_PROJECT: null,
-          GCP_REGION: null,
-          GCP_SECRET_BUCKET: null,
-          GCP_KMS_SECRET_BUCKET_KEY_LOCATION: null,
-          GCP_KMS_SECRET_BUCKET_KEY_RING: null
-        }
-      };
-    })
+    ...services
   };
+
   fs.writeFileSync(composePath, yaml.stringify(compose));
 };
 
@@ -260,6 +240,8 @@ const configure = async (workingDir, configFn, env) => {
     writeBuild(config, workingDir, configFn, env);
     writeCompose(config, workingDir);
   } catch (e) {
+    //eslint-disable-next-line no-console
+    console.error(e);
     //eslint-disable-next-line no-console
     console.error(
       roboSay(

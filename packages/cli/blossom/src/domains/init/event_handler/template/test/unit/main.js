@@ -9,13 +9,9 @@ const main = require("../../main");
 let clock;
 const now = new Date();
 
-const targetName = "some-target-name";
-const targetDomain = "some-target-domain";
 const service = "some-service";
 const network = "some-network";
 
-process.env.TARGET_NAME = targetName;
-process.env.TARGET_DOMAIN = targetDomain;
 process.env.SERVICE = service;
 process.env.NETWORK = network;
 
@@ -46,8 +42,8 @@ describe("Event handler unit tests", () => {
     await main({ payload, headers });
 
     expect(viewStoreFake).to.have.been.calledWith({
-      name: targetName,
-      domain: targetDomain,
+      name: "some-name",
+      domain: "some-domain",
       service,
       network
     });

@@ -6,6 +6,7 @@ const stream = require("@sustainers/view-store-stream");
 const post = require("@sustainers/view-store-post");
 const put = require("@sustainers/view-store-put");
 const del = require("@sustainers/view-store-delete");
+const { string: stringDate } = require("@sustainers/datetime");
 
 exports.secret = secret;
 exports.store = store;
@@ -15,3 +16,4 @@ exports.stream = stream;
 exports.post = post;
 exports.put = put;
 exports.delete = del;
+exports.stringDate = stringDate;

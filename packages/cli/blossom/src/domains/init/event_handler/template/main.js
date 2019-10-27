@@ -20,8 +20,8 @@ module.exports = event => {
 
   deps
     .viewStore({
-      name: process.env.TARGET_NAME,
-      domain: process.env.TARGET_DOMAIN,
+      name: "some-name",
+      domain: "some-domain",
       service: process.env.SERVICE,
       network: process.env.NETWORK
     })

@@ -37,7 +37,6 @@ steps:
         PORT=80
         MAIN_CONTAINER_NAME=main
         CONTAINER_REGISTRY=us.gcr.io/${_GCP_PROJECT}${_ENV_NAME_SPECIFIER}
-        STAGING_CONTAINER_REGISTRY=us.gcr.io/${_GCP_PROJECT}-staging
         GCP_PROJECT=${_GCP_PROJECT}-staging
         GCP_REGION=${_GCP_REGION}
         GCP_SECRET_BUCKET=smn-staging-secrets

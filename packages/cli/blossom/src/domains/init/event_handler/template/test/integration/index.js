@@ -25,8 +25,8 @@ describe("Event handler integration tests", () => {
     expect(response.statusCode).to.equal(204);
 
     const [view] = await viewStore({
-      name: process.env.TARGET_NAME,
-      domain: process.env.TARGET_DOMAIN,
+      name: "some-name",
+      domain: "some-domain",
       service: process.env.SERVICE,
       network: process.env.NETWORK
     }).read({ name });
@@ -34,8 +34,8 @@ describe("Event handler integration tests", () => {
     expect(view.name).to.equal(name);
 
     const deletedResult = await viewStore({
-      name: process.env.TARGET_NAME,
-      domain: process.env.TARGET_DOMAIN,
+      name: "some-name",
+      domain: "some-domain",
       service: process.env.SERVICE,
       network: process.env.NETWORK
     }).delete(view.id);

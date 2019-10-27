@@ -84,6 +84,10 @@ describe("View store", () => {
     const viewStoreDeleteFake = fake.returns(viewStoreDeleteResult);
     replace(deps, "delete", viewStoreDeleteFake);
 
+    const stringDate = "some-date";
+    const stringDateFake = fake.returns(stringDate);
+    replace(deps, "stringDate", stringDateFake);
+
     await viewStore({ schema, indexes });
 
     expect(storeFake).to.have.been.calledWith(
@@ -92,8 +96,22 @@ describe("View store", () => {
         schema: {
           a: 1,
           id: { type: String, required: true, unique: true },
-          created: { type: String, required: true },
-          modified: { type: String, required: true }
+          created: {
+            type: String,
+            required: true,
+            default: match(fn => {
+              const date = fn();
+              return date == stringDate;
+            })
+          },
+          modified: {
+            type: String,
+            required: true,
+            default: match(fn => {
+              const date = fn();
+              return date == stringDate;
+            })
+          }
         },
         indexes: [
           "some-index",
