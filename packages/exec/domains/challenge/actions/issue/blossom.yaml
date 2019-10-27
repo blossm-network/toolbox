@@ -1,15 +1,13 @@
-#
-# This file is required.
-#
-# Give your command-handler an action name,
-# specify which domain it's for,
-# and set which version of the event to create.
-#
-
 action: issue
 domain: challenge
 
 targets:
+  - name: phones
+    domain: person-account
+    context: view-store
+  - name: codes
+    domain: challenge
+    context: view-store
   - domain: challenge
     context: event-store
 

@@ -21,7 +21,7 @@ describe("View store", () => {
     const parsedBody1 = JSON.parse(response1.body);
     expect(response1.statusCode).to.equal(200);
     expect(parsedBody1.phone).to.equal("some-phone");
-    expect(parsedBody1.princple).to.equal("some-principle");
+    expect(parsedBody1.principle).to.equal("some-principle");
 
     const response2 = await request.put(`${url}/${id}`, {
       body: {

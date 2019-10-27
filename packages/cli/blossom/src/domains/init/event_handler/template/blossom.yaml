@@ -2,7 +2,7 @@
 # This file is required.
 #
 # Give your event-handler the action that it's subscribed to, with it's domain,
-# and a unique name of the target that will be operated on by this event handler.
+# and a unique name that describes it.
 #
 
 name: some-name

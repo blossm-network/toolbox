@@ -62,8 +62,7 @@ module.exports = async ({ payload, context }) => {
       name: "codes",
       domain: "challenge",
       service: process.env.SERVICE,
-      // network: process.env.NETWORK
-      network: "staging.sm.network" //process.env.NETWORK
+      network: process.env.NETWORK
     })
     .set({ context, tokenFn: deps.gcpToken })
     .update(root, {
