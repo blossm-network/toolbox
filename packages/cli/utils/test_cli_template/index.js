@@ -1,17 +1,18 @@
 const roboSay = require("@sustainers/robo-say");
 const { spawnSync } = require("child_process");
-const path = require("path");
-const fs = require("fs-extra");
+// const path = require("path");
+// const fs = require("fs-extra");
 const { red } = require("chalk");
 
-const installDependenciesIfNeeded = async (workingDir, input) => {
-  const lockFile = "package-lock.json";
+const installDependenciesIfNeeded = async workingDir => {
+  //} (workingDir, input) => {
+  // const lockFile = "package-lock.json";
 
-  const lock = path.resolve(workingDir, lockFile);
+  // const lock = path.resolve(workingDir, lockFile);
 
-  if (fs.existsSync(lock)) return;
+  // if (fs.existsSync(lock)) return;
 
-  const spawnInstall = spawnSync("npm", ["install"], {
+  const spawnInstall = spawnSync("yarn", ["bootstrap"], {
     stdio: [process.stdin, process.stdout, process.stderr],
     cwd: workingDir
   });
@@ -21,12 +22,12 @@ const installDependenciesIfNeeded = async (workingDir, input) => {
     throw "Couldn't install packages";
   }
 
-  const srcDir = path.resolve(process.cwd(), input.path);
+  // const srcDir = path.resolve(process.cwd(), input.path);
 
-  fs.copyFileSync(
-    path.resolve(workingDir, lockFile),
-    path.resolve(srcDir, lockFile)
-  );
+  // fs.copyFileSync(
+  //   path.resolve(workingDir, lockFile),
+  //   path.resolve(srcDir, lockFile)
+  // );
 };
 
 module.exports = async ({ workingDir, input }) => {
