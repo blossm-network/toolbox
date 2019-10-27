@@ -6,21 +6,19 @@ const request = require("@sustainers/request");
 
 const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 
-describe("Command handler store integration tests", () => {
+describe("Command handler integration tests", () => {
   it("should return successfully", async () => {
-    const phone = "919-357-1144";
-    // console.log("0: ", { url });
+    const name = "A-name";
     const response = await request.post(url, {
       body: {
         headers: {
           issued: stringDate()
         },
         payload: {
-          phone
+          name
         }
       }
     });
-    // console.log("response: ", response);
 
     const root = JSON.parse(response.body).root;
 
@@ -31,22 +29,22 @@ describe("Command handler store integration tests", () => {
     }).aggregate(root);
 
     expect(aggregate.headers.root).to.equal(root);
-    expect(aggregate.state.phone).to.equal("+19193571144");
+    expect(aggregate.state.name).to.equal(name.toLowerCase());
     expect(response.statusCode).to.equal(200);
   });
   it("should return an error if incorrect params", async () => {
-    const phone = 3;
+    const name = 3;
     const response = await request.post(url, {
       body: {
         headers: {
           issued: stringDate()
         },
         payload: {
-          phone
+          name
         }
       }
     });
 
-    expect(response.statusCode).to.equal(409);
+    expect(response.statusCode).to.equal(400);
   });
 });

@@ -8,12 +8,26 @@ const CODE_LENGTH = 6;
 
 let sms;
 
-module.exports = async ({ payload, context }) => {
-  if (!sms) {
+const fn = () => {
+  try {
     sms = deps.sms(
       deps.secret("twilio-account-sid"),
       deps.secret("twilio-auth-token")
     );
+  } catch (e) {
+    //eslint-disable-next-line no-console
+    console.log(e);
+  }
+};
+module.exports = async ({ payload, context }) => {
+  //eslint-disable-next-line no-console
+  console.log("0");
+  if (!sms) {
+    fn();
+    // sms = deps.sms(
+    //   deps.secret("twilio-account-sid"),
+    //   deps.secret("twilio-auth-token")
+    // );
   }
 
   //Create the root for this challenge.

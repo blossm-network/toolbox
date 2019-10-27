@@ -1,3 +1,2 @@
-const twilio = require("twilio");
-
-exports.twilio = twilio;
+exports.twilio = (accountSid, authToken) =>
+  require("twilio")(accountSid, authToken);
