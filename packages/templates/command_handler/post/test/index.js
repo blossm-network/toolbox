@@ -116,6 +116,86 @@ describe("Command handler post", () => {
     expect(statusFake).to.have.been.calledWith(200);
     expect(sendFake).to.have.been.calledWith({ root, ...response });
   });
+  it("should call with the correct params with root passed in", async () => {
+    const validateFnFake = fake();
+    const normalizeFnFake = fake.returns(cleanedPayload);
+
+    const createEventFake = fake.returns(event);
+    replace(deps, "createEvent", createEventFake);
+
+    const addFake = fake();
+    const setFake = fake.returns({
+      add: addFake
+    });
+    const eventStoreFake = fake.returns({
+      set: setFake
+    });
+    const mainFnFake = fake.returns({
+      payload: eventPayload,
+      response
+    });
+    replace(deps, "eventStore", eventStoreFake);
+    const currentRoot = "current-root";
+    const req = {
+      context,
+      body: {
+        payload,
+        headers: {
+          ...headers,
+          root: currentRoot
+        }
+      }
+    };
+
+    const sendFake = fake();
+    const statusFake = fake.returns({
+      send: sendFake
+    });
+    const res = {
+      status: statusFake
+    };
+
+    await post({
+      version,
+      mainFn: mainFnFake,
+      validateFn: validateFnFake,
+      normalizeFn: normalizeFnFake
+    })(req, res);
+
+    expect(normalizeFnFake).to.have.been.calledWith(payload);
+    expect(validateFnFake).to.have.been.calledWith(payload);
+    expect(mainFnFake).to.have.been.calledWith({
+      payload: cleanedPayload,
+      context
+    });
+    expect(createEventFake).to.have.been.calledWith({
+      root: currentRoot,
+      payload: eventPayload,
+      trace,
+      context,
+      version,
+      command: {
+        id,
+        issued,
+        action,
+        domain,
+        service,
+        network
+      }
+    });
+    expect(eventStoreFake).to.have.been.calledWith({
+      domain,
+      service,
+      network
+    });
+    expect(addFake).to.have.been.calledWith(event);
+    expect(setFake).to.have.been.calledWith({
+      context,
+      tokenFn: deps.gcpToken
+    });
+    expect(statusFake).to.have.been.calledWith(200);
+    expect(sendFake).to.have.been.calledWith({ root, ...response });
+  });
   it("should call with the correct params with no clean or validate and empty response", async () => {
     const createEventFake = fake.returns(event);
     replace(deps, "createEvent", createEventFake);

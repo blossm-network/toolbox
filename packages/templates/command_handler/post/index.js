@@ -9,6 +9,7 @@ module.exports = ({ version, mainFn, validateFn, normalizeFn }) => {
       context: req.context
     });
     const event = await deps.createEvent({
+      ...(req.body.headers.root && { root: req.body.headers.root }),
       payload,
       trace: req.body.headers.trace,
       context: req.context,
