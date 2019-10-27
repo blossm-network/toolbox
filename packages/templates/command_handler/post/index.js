@@ -3,7 +3,11 @@ const deps = require("./deps");
 module.exports = ({ version, mainFn, validateFn, normalizeFn }) => {
   return async (req, res) => {
     if (validateFn) await validateFn(req.body.payload);
+    //eslint-disable-next-line
+    console.log("normalize: ", { payload: req.body.payload, normalizeFn });
     if (normalizeFn) req.body.payload = await normalizeFn(req.body.payload);
+    //eslint-disable-next-line
+    console.log("post normalize: ", { payload: req.body.payload });
     const { payload, response } = await mainFn({
       payload: req.body.payload,
       context: req.context

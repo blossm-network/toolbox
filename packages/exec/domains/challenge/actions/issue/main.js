@@ -8,26 +8,14 @@ const CODE_LENGTH = 6;
 
 let sms;
 
-const fn = () => {
-  try {
-    sms = deps.sms(
-      deps.secret("twilio-account-sid"),
-      deps.secret("twilio-auth-token")
-    );
-  } catch (e) {
-    //eslint-disable-next-line no-console
-    console.log(e);
-  }
-};
 module.exports = async ({ payload, context }) => {
   //eslint-disable-next-line no-console
   console.log("0");
   if (!sms) {
-    fn();
-    // sms = deps.sms(
-    //   deps.secret("twilio-account-sid"),
-    //   deps.secret("twilio-auth-token")
-    // );
+    sms = deps.sms(
+      await deps.secret("twilio-account-sid"),
+      await deps.secret("twilio-auth-token")
+    );
   }
 
   //Create the root for this challenge.
@@ -47,7 +35,7 @@ module.exports = async ({ payload, context }) => {
     .read({ phone: payload.phone });
 
   //eslint-disable-next-line no-console
-  console.log("2");
+  console.log("2: ", personAccounts);
   if (personAccounts.length == 0) throw conflict.phoneNotRecognized;
   if (personAccounts.length != 1) throw internalServer.multiplePhonesFound;
 

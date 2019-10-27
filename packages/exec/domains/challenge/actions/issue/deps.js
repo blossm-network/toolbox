@@ -22,5 +22,5 @@ exports.moment = moment;
 exports.stringFromDate = stringFromDate;
 exports.stringDate = stringDate;
 exports.randomIntOfLength = randomIntOfLength;
-exports.sms = sms;
 exports.secret = secret;
+exports.sms = sms;

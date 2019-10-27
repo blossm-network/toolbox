@@ -37,6 +37,7 @@ devDependencies:
   "@sustainers/datetime": "*"
   "@sustainers/request": "*"
   "@sustainers/event-store-js": "*"
+  "@sustainers/uuid": "*"
 
 service: core
 
