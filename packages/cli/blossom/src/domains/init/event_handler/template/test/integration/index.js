@@ -11,7 +11,7 @@ const context = "some-context";
 
 describe("Event handler integration tests", () => {
   it("should return successfully", async () => {
-    const name = "Some-name";
+    const name = "A-name";
     const response = await request.post(url, {
       body: {
         message: {
@@ -24,21 +24,24 @@ describe("Event handler integration tests", () => {
 
     expect(response.statusCode).to.equal(204);
 
-    const [view] = await viewStore({
+    const res = await viewStore({
       name: "some-name",
       domain: "some-domain",
       service: process.env.SERVICE,
       network: process.env.NETWORK
     }).read({ name });
 
-    expect(view.name).to.equal(name);
+    //eslint-disable-next-line no-console
+    console.log("res: ", res);
+
+    expect(res[0].name).to.equal(name);
 
     const deletedResult = await viewStore({
       name: "some-name",
       domain: "some-domain",
       service: process.env.SERVICE,
       network: process.env.NETWORK
-    }).delete(view.id);
+    }).delete(res[0].id);
 
     expect(deletedResult.deletedCount).to.equal(1);
   });

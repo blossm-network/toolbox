@@ -8,7 +8,7 @@ const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 
 describe("Command handler integration tests", () => {
   it("should return successfully", async () => {
-    const name = "Some-name";
+    const name = "A-name";
     const response = await request.post(url, {
       body: {
         headers: {
