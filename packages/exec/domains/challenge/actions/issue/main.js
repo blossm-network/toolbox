@@ -9,8 +9,6 @@ const CODE_LENGTH = 6;
 let sms;
 
 module.exports = async ({ payload, context }) => {
-  //eslint-disable-next-line no-console
-  console.log("0");
   if (!sms) {
     sms = deps.sms(
       await deps.secret("twilio-account-sid"),
@@ -21,8 +19,6 @@ module.exports = async ({ payload, context }) => {
   //Create the root for this challenge.
   const root = await deps.uuid();
 
-  //eslint-disable-next-line no-console
-  console.log("1");
   //Check to see if the phone is recognized
   const personAccounts = await deps
     .viewStore({
@@ -34,8 +30,6 @@ module.exports = async ({ payload, context }) => {
     .set({ context, tokenFn: deps.gcpToken })
     .read({ phone: payload.phone });
 
-  //eslint-disable-next-line no-console
-  console.log("2: ", personAccounts);
   if (personAccounts.length == 0) throw conflict.phoneNotRecognized;
   if (personAccounts.length != 1) throw internalServer.multiplePhonesFound;
 
@@ -52,7 +46,13 @@ module.exports = async ({ payload, context }) => {
     payload: {
       root
     },
-    signFn: deps.sign
+    signFn: deps.sign({
+      ring: process.env.SERVICE,
+      key: "challenge",
+      location: "global",
+      version: "1",
+      project: process.env.GCP_PROJECT
+    })
   });
 
   //Create a challenge code.

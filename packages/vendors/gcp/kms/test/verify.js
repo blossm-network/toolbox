@@ -5,23 +5,21 @@ const crypto = require("crypto");
 
 const kms = require("@google-cloud/kms");
 
-const gcpProject = "some-gcp-project";
-const keyRing = "some-key-ring";
+const project = "some-gcp-project";
+const ring = "some-key-ring";
 const key = "some-key";
-const keyLocation = "some-key-location";
-const keyVersion = "some-key-version";
+const location = "some-key-location";
+const version = "some-key-version";
 const pem = "some-pem";
 const message = "some message";
 const signature = "some-signature";
 
+const actualProject = "smn-core-staging";
+const actualLocation = "global";
+const actualRing = "core";
+const actualKey = "auth";
+const actualVersion = "1";
 describe("Kms verify", () => {
-  beforeEach(() => {
-    process.env.GCP_PROJECT = gcpProject;
-    process.env.GCP_KMS_KEY_RING = keyRing;
-    process.env.GCP_KMS_KEY = key;
-    process.env.GCP_KMS_KEY_LOCATION = keyLocation;
-    process.env.GCP_KMS_KEY_VERSION = keyVersion;
-  });
   afterEach(() => {
     restore();
   });
@@ -30,10 +28,23 @@ describe("Kms verify", () => {
     const pathFake = fake.returns(path);
     const kmsClient = function() {};
     kmsClient.prototype.cryptoKeyVersionPath = pathFake;
-    const getKeyFake = fake.rejects("some-error");
+
+    const errorMessage = "some-error-message";
+    const getKeyFake = fake.rejects(new Error(errorMessage));
     kmsClient.prototype.getPublicKey = getKeyFake;
     replace(kms, "KeyManagementServiceClient", kmsClient);
-    expect(async () => await verify({ message, signature })).to.throw;
+
+    try {
+      await verify({ key, ring, location, version, project })({
+        message,
+        signature
+      });
+
+      //shouldn't be called
+      expect(1).to.equal(2);
+    } catch (e) {
+      expect(e.message).to.equal(errorMessage);
+    }
   });
   it("should get the public key correctly", async () => {
     const path = "some-path";
@@ -54,15 +65,18 @@ describe("Kms verify", () => {
     });
     replace(crypto, "createVerify", createVerifyFake);
 
-    const result = await verify({ message, signature });
+    const result = await verify({ key, ring, location, version, project })({
+      message,
+      signature
+    });
 
     expect(result).to.equal(isVerified);
     expect(pathFake).to.have.been.calledWith(
-      gcpProject,
-      keyLocation,
-      keyRing,
+      project,
+      location,
+      ring,
       key,
-      keyVersion
+      version
     );
     expect(createVerifyFake).to.have.been.calledWith("SHA256");
     expect(getKeyFake).to.have.been.calledWith({ name: path });
@@ -86,7 +100,10 @@ describe("Kms verify", () => {
       update: updateFake
     });
     replace(crypto, "createVerify", createVerifyFake);
-    const result = await verify({ message, signature });
+    const result = await verify({ key, ring, location, version, project })({
+      message,
+      signature
+    });
 
     expect(result).to.equal(isVerified);
     expect(getKeyFake).to.have.not.been.called;
@@ -98,25 +115,44 @@ describe("Kms verify", () => {
   it("should sign and verify correctly", async () => {
     const message = "I am a message";
 
-    process.env.GCP_PROJECT = "smn-core-staging";
-    process.env.GCP_KMS_KEY_LOCATION = "global";
-    process.env.GCP_KMS_KEY_RING = "core";
-    process.env.GCP_KMS_KEY = "auth";
-    process.env.GCP_KMS_KEY_VERSION = "1";
-    const signature = await sign(message);
-    const result = await verify({ message, signature });
+    const signature = await sign({
+      key: actualKey,
+      ring: actualRing,
+      location: actualLocation,
+      version: actualVersion,
+      project: actualProject
+    })(message);
+    const result = await verify({
+      key: actualKey,
+      ring: actualRing,
+      location: actualLocation,
+      version: actualVersion,
+      project: actualProject
+    })({
+      message,
+      signature
+    });
     expect(result).to.be.true;
   });
   it("should fail if messages dont match", async () => {
     const message = "I am a message";
-
-    process.env.GCP_PROJECT = "smn-core-staging";
-    process.env.GCP_KMS_KEY_LOCATION = "global";
-    process.env.GCP_KMS_KEY_RING = "core";
-    process.env.GCP_KMS_KEY = "auth";
-    process.env.GCP_KMS_KEY_VERSION = "1";
-    const signature = await sign(message);
-    const result = await verify({ message: `${message}-`, signature });
+    const signature = await sign({
+      key: actualKey,
+      ring: actualRing,
+      location: actualLocation,
+      version: actualVersion,
+      project: actualProject
+    })(message);
+    const result = await verify({
+      key: actualKey,
+      ring: actualRing,
+      location: actualLocation,
+      version: actualVersion,
+      project: actualProject
+    })({
+      message: `${message}-`,
+      signature
+    });
     expect(result).to.be.false;
   });
 });

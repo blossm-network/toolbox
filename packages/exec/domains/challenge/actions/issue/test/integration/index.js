@@ -21,7 +21,8 @@ describe("Command handler store integration tests", () => {
         service: process.env.SERVICE,
         network: process.env.NETWORK
       })
-      .update(root, { phone });
+      //phone should be already formatted in the view store.
+      .update(root, { phone: "+19193571144" });
 
     const response = await request.post(url, {
       body: {
@@ -34,28 +35,18 @@ describe("Command handler store integration tests", () => {
         }
       }
     });
-    //eslint-disable-next-line
-    console.log("rezzy: ", response);
 
-    //eslint-disable-next-line
-    console.log("root: ", root);
     const aggregate = await eventStore({
       domain: process.env.DOMAIN,
       service: process.env.SERVICE,
       network: process.env.NETWORK
     }).aggregate(root);
 
-    //eslint-disable-next-line
-    console.log("agg: ", aggregate);
-
     expect(response.statusCode).to.equal(200);
     expect(aggregate.headers.root).to.equal(root);
     expect(aggregate.state.phone).to.equal("+19193571144");
 
-    //eslint-disable-next-line
-    console.log("next");
-
-    const response1 = await deps
+    const { deletedCount } = await deps
       .viewStore({
         name: "phones",
         domain: "person-account",
@@ -64,11 +55,7 @@ describe("Command handler store integration tests", () => {
       })
       .delete(root);
 
-    //eslint-disable-next-line
-    console.log("rezzy1: ", response1);
-    const parsedBody1 = JSON.parse(response1.body);
-    expect(response1.statusCode).to.equal(200);
-    expect(parsedBody1.deletedCount).to.equal(1);
+    expect(deletedCount).to.equal(1);
   });
   it("should return an error if incorrect params", async () => {
     const phone = 3;
@@ -82,8 +69,6 @@ describe("Command handler store integration tests", () => {
         }
       }
     });
-
-    // console.log(response.body);
 
     expect(response.statusCode).to.equal(409);
   });

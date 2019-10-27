@@ -4,7 +4,6 @@ module.exports = async name => {
   const file = `${name}.txt.encrypted`;
   await deps.download({ bucket: process.env.GCP_SECRET_BUCKET, file });
   const encrypted = await deps.readFile(file);
-  // console.log("encrypted: ", encrypted);
   const [secret] = await Promise.all([
     deps.decrypt({
       message: encrypted,
@@ -16,6 +15,5 @@ module.exports = async name => {
     deps.unlink(file)
   ]);
 
-  // console.log("secret: ", secret);
   return secret;
 };

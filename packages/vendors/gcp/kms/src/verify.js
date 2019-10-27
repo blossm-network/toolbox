@@ -1,22 +1,33 @@
 const crypto = require("crypto");
 
-const versionPath = require("./_version_path");
 const kms = require("@google-cloud/kms");
 
 let publicKeys = {};
 
-module.exports = async ({ message, signature }) => {
-  if (publicKeys[process.env.GCP_PROJECT] == undefined) {
+module.exports = ({ key, ring, location, version, project }) => async ({
+  message,
+  signature
+}) => {
+  if (publicKeys[project] == undefined) {
     const client = new kms.KeyManagementServiceClient();
+
+    const versionPath = client.cryptoKeyVersionPath(
+      project,
+      location,
+      ring,
+      key,
+      version
+    );
+
     const [{ pem }] = await client.getPublicKey({
-      name: versionPath()
+      name: versionPath
     });
 
-    publicKeys[process.env.GCP_PROJECT] = pem;
+    publicKeys[project] = pem;
   }
 
   return crypto
     .createVerify("SHA256")
     .update(message)
-    .verify(publicKeys[process.env.GCP_PROJECT], signature, "uncompressed");
+    .verify(publicKeys[project], signature, "uncompressed");
 };

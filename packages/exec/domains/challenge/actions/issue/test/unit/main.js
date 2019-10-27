@@ -25,9 +25,11 @@ const network = "some-network";
 const token = "some-token";
 const code = "some-code";
 const secret = "some-secret";
+const project = "some-projectl";
 
 process.env.SERVICE = service;
 process.env.NETWORK = network;
+process.env.GCP_PROJECT = project;
 
 describe("Command handler unit tests", () => {
   beforeEach(() => {
@@ -65,6 +67,10 @@ describe("Command handler unit tests", () => {
       set: setFake
     });
     replace(deps, "viewStore", viewStoreFake);
+
+    const signature = "some-signature";
+    const signFake = fake.returns(signature);
+    replace(deps, "sign", signFake);
 
     const createJwtFake = fake.returns(token);
     replace(deps, "createJwt", createJwtFake);
@@ -104,6 +110,13 @@ describe("Command handler unit tests", () => {
       service,
       network
     });
+    expect(signFake).to.have.been.calledWith({
+      ring: service,
+      key: "challenge",
+      location: "global",
+      version: "1",
+      project
+    });
     expect(createJwtFake).to.have.been.calledWith({
       options: {
         issuer: `issue.challenge.${service}.${network}`,
@@ -114,7 +127,7 @@ describe("Command handler unit tests", () => {
       payload: {
         root
       },
-      signFn: deps.sign
+      signFn: signature
     });
     expect(randomIntFake).to.have.been.calledWith(6);
     expect(

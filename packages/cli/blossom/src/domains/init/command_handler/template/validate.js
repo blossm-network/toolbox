@@ -15,7 +15,7 @@
 const { findError, string } = require("@sustainers/validator");
 const { badRequest, conflict } = require("@sustainers/errors");
 
-module.exports = payload => {
+module.exports = async payload => {
   const systemInputError = findError([string(payload.name)]);
   if (systemInputError) throw badRequest.message(systemInputError.message);
 

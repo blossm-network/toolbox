@@ -1,6 +1,6 @@
 const { format } = require("@sustainers/phone-number");
 
-module.exports = payload => {
+module.exports = async payload => {
   return {
     phone: format(payload.phone)
   };

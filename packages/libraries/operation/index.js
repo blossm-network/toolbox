@@ -1,5 +1,6 @@
 const errors = require("@sustainers/errors");
 const { MAX_LENGTH } = require("@sustainers/service-name-consts");
+const logger = require("@sustainers/logger");
 
 const deps = require("./deps");
 
@@ -36,10 +37,7 @@ const common = ({ method, operation, root, data }) => {
           });
 
           if (response.statusCode >= 300) {
-            //eslint-disable-next-line no-console
-            console.log("response: ", response);
-            //eslint-disable-next-line no-console
-            console.log("url: ", url);
+            logger.info("response errored: ", { response, url });
             throw errors.construct({
               statusCode: response.statusCode,
               message: response.body

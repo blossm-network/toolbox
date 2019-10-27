@@ -5,21 +5,14 @@ const { sign } = require("..");
 
 const kms = require("@google-cloud/kms");
 
-const gcpProject = "some-gcp-project";
-const keyRing = "some-key-ring";
+const project = "some-gcp-project";
+const ring = "some-key-ring";
 const key = "some-key";
-const keyLocation = "some-key-location";
-const keyVersion = "some-key-version";
+const location = "some-key-location";
+const version = "some-key-version";
 
 const message = "This is my message to sign";
 describe("Kms sign", () => {
-  beforeEach(() => {
-    process.env.GCP_PROJECT = gcpProject;
-    process.env.GCP_KMS_KEY_RING = keyRing;
-    process.env.GCP_KMS_KEY = key;
-    process.env.GCP_KMS_KEY_LOCATION = keyLocation;
-    process.env.GCP_KMS_KEY_VERSION = keyVersion;
-  });
   afterEach(() => {
     restore();
   });
@@ -41,13 +34,15 @@ describe("Kms sign", () => {
       }
     });
     replace(crypto, "createHash", createHashFake);
-    const result = await sign(message);
+    const result = await sign({ ring, key, location, version, project })(
+      message
+    );
     expect(pathFake).to.have.been.calledWith(
-      gcpProject,
-      keyLocation,
-      keyRing,
+      project,
+      location,
+      ring,
       key,
-      keyVersion
+      version
     );
     expect(result).to.equal(signature);
     expect(signFake).to.have.been.calledWith({
@@ -62,7 +57,9 @@ describe("Kms sign", () => {
     const pathFake = fake.returns(path);
     const kmsClient = function() {};
     kmsClient.prototype.cryptoKeyVersionPath = pathFake;
-    const signFake = fake.rejects("some error");
+
+    const errorMessage = "some-error-message";
+    const signFake = fake.rejects(new Error(errorMessage));
     kmsClient.prototype.asymmetricSign = signFake;
     replace(kms, "KeyManagementServiceClient", kmsClient);
     const sha256 = "some-sha256-digest";
@@ -74,6 +71,13 @@ describe("Kms sign", () => {
       }
     });
     replace(crypto, "createHash", createHashFake);
-    expect(async () => await sign(message)).to.throw;
+    try {
+      await sign({ key, ring, location, version, project })(message);
+
+      //shouldn't be called
+      expect(1).to.equal(2);
+    } catch (e) {
+      expect(e.message).to.equal(errorMessage);
+    }
   });
 });
