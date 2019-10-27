@@ -16,49 +16,58 @@ describe("View store integration tests", () => {
 
     expect(response0.statusCode).to.equal(204);
 
-    const response1 = await request.put(`${url}/${id}`, {
+    const response1 = await request.get(`${url}/${id}`);
+    const parsedBody1 = JSON.parse(response1.body);
+    expect(response1.statusCode).to.equal(200);
+    expect(parsedBody1.name).to.equal("some-name");
+
+    const response2 = await request.put(`${url}/${id}`, {
       body: {
         name: "some-other-name"
       }
     });
-    expect(response1.statusCode).to.equal(204);
 
-    const response2 = await request.get(`${url}/${id}`);
-    expect(response2.statusCode).to.equal(200);
-    expect(JSON.parse(response2.body).name).to.equal("some-other-name");
+    expect(response2.statusCode).to.equal(204);
 
-    const response3 = await request.get(url);
+    const response3 = await request.get(`${url}/${id}`);
+    const parsedBody3 = JSON.parse(response3.body);
     expect(response3.statusCode).to.equal(200);
-    expect(JSON.parse(response3.body)[0].name).to.equal("some-other-name");
+    expect(parsedBody3.name).to.equal("some-other-name");
+
+    const response4 = await request.get(url);
+    const parsedBody4 = JSON.parse(response4.body);
+    expect(response4.statusCode).to.equal(200);
+    expect(parsedBody4[0].name).to.equal("some-other-name");
 
     const id2 = uuid();
-    const response4 = await request.put(`${url}/${id2}`, {
+    const response5 = await request.put(`${url}/${id2}`, {
       body: {
         name: "some-other-name"
       }
     });
 
-    expect(response4.statusCode).to.equal(204);
+    expect(response5.statusCode).to.equal(204);
 
     let counter = 0;
     await request.stream(`${url}/stream`, data => {
       counter++;
-      expect(JSON.parse(data.toString().trim()).name).to.equal(
-        "some-other-name"
-      );
+      const parsedData = JSON.parse(data.toString().trim());
+      expect(parsedData.name).to.equal("some-other-name");
     });
     expect(counter).to.equal(2);
 
-    const response5 = await request.delete(`${url}/${id}`);
-    expect(response5.statusCode).to.equal(200);
-    expect(JSON.parse(response5.body).deletedCount).to.equal(1);
-
-    const response6 = await request.delete(`${url}/${id2}`);
+    const response6 = await request.delete(`${url}/${id}`);
+    const parsedBody6 = JSON.parse(response6.body);
     expect(response6.statusCode).to.equal(200);
-    expect(JSON.parse(response6.body).deletedCount).to.equal(1);
+    expect(parsedBody6.deletedCount).to.equal(1);
 
-    const response7 = await request.get(`${url}/${id}`);
-    expect(response7.statusCode).to.equal(404);
+    const response7 = await request.delete(`${url}/${id2}`);
+    const parsedBody7 = JSON.parse(response7.body);
+    expect(response7.statusCode).to.equal(200);
+    expect(parsedBody7.deletedCount).to.equal(1);
+
+    const response8 = await request.get(`${url}/${id}`);
+    expect(response8.statusCode).to.equal(404);
   });
 
   it("should return an error if incorrect params", async () => {

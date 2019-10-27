@@ -43,9 +43,10 @@ describe("Event store integration tests", () => {
     expect(response0.statusCode).to.equal(204);
 
     const response1 = await request.get(`${url}/${root}`);
+    const parsedBody1 = JSON.parse(response1.body);
 
     expect(response1.statusCode).to.equal(200);
-    expect(JSON.parse(response1.body).state.name).to.equal("some-name");
+    expect(parsedBody1.state.name).to.equal("some-name");
 
     const response2 = await request.post(url, {
       body: {
@@ -71,12 +72,13 @@ describe("Event store integration tests", () => {
     expect(response2.statusCode).to.equal(204);
 
     const response3 = await request.get(`${url}/${root}`);
+    const parsedBody3 = JSON.parse(response3.body);
 
     expect(response3.statusCode).to.equal(200);
-    expect(JSON.parse(response3.body).state.name).to.equal("some-other-name");
+    expect(parsedBody3.state.name).to.equal("some-other-name");
   });
-  // it("should return an error if incorrect params", async () => {
-  //   const response = await request.post(url, { name: 1 });
-  //   expect(response.statusCode).to.be.at.least(400);
-  // });
+  it("should return an error if incorrect params", async () => {
+    const response = await request.post(url, { name: 1 });
+    expect(response.statusCode).to.be.at.least(400);
+  });
 });

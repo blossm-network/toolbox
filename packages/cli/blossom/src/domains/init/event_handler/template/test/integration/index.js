@@ -24,24 +24,21 @@ describe("Event handler integration tests", () => {
 
     expect(response.statusCode).to.equal(204);
 
-    const res = await viewStore({
+    const [view] = await viewStore({
       name: "some-name",
       domain: "some-domain",
       service: process.env.SERVICE,
       network: process.env.NETWORK
     }).read({ name });
 
-    //eslint-disable-next-line no-console
-    console.log("res: ", res);
-
-    expect(res[0].name).to.equal(name);
+    expect(view.name).to.equal(name);
 
     const deletedResult = await viewStore({
       name: "some-name",
       domain: "some-domain",
       service: process.env.SERVICE,
       network: process.env.NETWORK
-    }).delete(res[0].id);
+    }).delete(view.id);
 
     expect(deletedResult.deletedCount).to.equal(1);
   });

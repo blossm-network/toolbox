@@ -9,6 +9,10 @@
 action: issue
 domain: challenge
 
+targets:
+  - domain: challenge
+    context: event-store
+
 version: 0
 
 dependencies:
