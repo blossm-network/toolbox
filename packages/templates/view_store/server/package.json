@@ -1,7 +1,7 @@
 {
   "name": "@sustainers/view-store",
   "description": "A view store server.",
-  "version": "0.0.67",
+  "version": "0.0.68",
   "main": "index.js",
   "author": "sustainers.market",
   "engines": {
@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@sustainers/datetime": "*",
-    "@sustainers/gcp-secret": "^0.0.19",
+    "@sustainers/gcp-secret": "^0.0.20",
     "@sustainers/logger": "^0.0.8",
     "@sustainers/server": "^0.0.12",
     "@sustainers/view-store-delete": "^0.0.28",
