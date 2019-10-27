@@ -1,6 +1,6 @@
 {
   "name": "@sustainers/merge-cli-template",
-  "version": "0.0.17",
+  "version": "0.0.18",
   "description": "Merges the contents of a file with a template.",
   "main": "index.js",
   "author": "sustainers.market",
