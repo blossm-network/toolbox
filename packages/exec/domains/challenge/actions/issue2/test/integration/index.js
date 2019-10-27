@@ -45,9 +45,15 @@ describe("Command handler store integration tests", () => {
       network: process.env.NETWORK
     }).aggregate(root);
 
+    //eslint-disable-next-line
+    console.log("agg: ", aggregate);
+
+    expect(response.statusCode).to.equal(200);
     expect(aggregate.headers.root).to.equal(root);
     expect(aggregate.state.phone).to.equal("+19193571144");
-    expect(response.statusCode).to.equal(200);
+
+    //eslint-disable-next-line
+    console.log("next");
 
     const response1 = await deps
       .viewStore({
@@ -58,6 +64,8 @@ describe("Command handler store integration tests", () => {
       })
       .delete(root);
 
+    //eslint-disable-next-line
+    console.log("rezzy1: ", response1);
     const parsedBody1 = JSON.parse(response1.body);
     expect(response1.statusCode).to.equal(200);
     expect(parsedBody1.deletedCount).to.equal(1);
