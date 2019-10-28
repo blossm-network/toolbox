@@ -12,11 +12,13 @@
 
 // module.exports = body => {
 //   return {
-//     $set: {
-//       name: body.firstName + body.lastName
-//     },
-//     $addToSet: {
-//       things: body.thing
+//     update: {
+//       $set: {
+//         name: body.firstName + body.lastName
+//       },
+//       $addToSet: {
+//         things: body.thing
+//       }
 //     }
 //   };
 // };

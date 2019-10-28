@@ -6,10 +6,10 @@ schema:
     type:
       - type:
           type: String
-          required: true
+          # required: true
         root:
           type: String
-          required: true
+          # required: true
     default: []
 
 dependencies:

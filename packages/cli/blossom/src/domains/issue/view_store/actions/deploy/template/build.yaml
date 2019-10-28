@@ -49,10 +49,9 @@ steps:
     args:
       - ps
   - name: node:10.16.0
-    entrypoint: bash
+    entrypoint: yarn
     args:
-      - -c
-      - yarn test:integration || exit 0
+      - test:integration
     env:
       - MAIN_CONTAINER_NAME=main
       - NETWORK=local
@@ -63,7 +62,6 @@ steps:
   - name: docker/compose:1.15.0
     args:
       - logs
-      - --follow
   - name: gcr.io/cloud-builders/docker
     args:
       - push

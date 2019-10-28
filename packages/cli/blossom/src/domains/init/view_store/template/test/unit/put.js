@@ -1,7 +1,10 @@
 const fs = require("fs");
+const path = require("path");
 const { expect } = require("chai").use(require("sinon-chai"));
 
-const put = fs.existsSync("../../put.js") && require("../../put");
+const put =
+  fs.existsSync(path.resolve(__dirname, "../../put.js")) &&
+  require("../../put");
 
 describe("View store put tests", () => {
   if (!put) return;

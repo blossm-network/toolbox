@@ -59,7 +59,7 @@ describe("View store integration tests", () => {
     expect(response3.statusCode).to.equal(204);
 
     const response4 = await request.get(`${url}/${id}`);
-    const parsedBody4 = JSON.parse(response3.body);
+    const parsedBody4 = JSON.parse(response4.body);
     expect(response4.statusCode).to.equal(200);
     expect(parsedBody4.contexts.length).to.equal(0);
 
@@ -78,7 +78,7 @@ describe("View store integration tests", () => {
   });
 
   it("should return an error if incorrect params", async () => {
-    const response = await request.post(url, { body: { contexts: { a: 1 } } });
+    const response = await request.post(url, { body: { contexts: 3 } });
     expect(response.statusCode).to.equal(500);
   });
 });
