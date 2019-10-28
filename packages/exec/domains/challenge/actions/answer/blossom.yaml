@@ -1,11 +1,3 @@
-#
-# This file is required.
-#
-# Give your command-handler an action name,
-# specify which domain it's for,
-# and set which version of the event to create.
-#
-
 action: answer
 domain: challenge
 
@@ -18,6 +10,12 @@ version: 0
 dependencies:
   "@sustainers/command-handler": "*"
   "@sustainers/validator": "*"
+  "@sustainers/duration-consts": "*"
+  "@sustainers/errors": "*"
+  "@sustainers/view-store-js": "*"
+  "@sustainers/gcp-token": "*"
+  "@sustainers/jwt": "*"
+  "@sustainers/gcp-kms": "*"
 
 devDependencies:
   "mocha": "^6.1.4"

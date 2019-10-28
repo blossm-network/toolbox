@@ -17,7 +17,7 @@ describe("Command handler store integration tests", () => {
     await deps
       .viewStore({
         name: "phones",
-        domain: "person-account",
+        domain: "person",
         service: process.env.SERVICE,
         network: process.env.NETWORK
       })
@@ -49,7 +49,7 @@ describe("Command handler store integration tests", () => {
     const { deletedCount } = await deps
       .viewStore({
         name: "phones",
-        domain: "person-account",
+        domain: "person",
         service: process.env.SERVICE,
         network: process.env.NETWORK
       })

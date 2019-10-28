@@ -9,11 +9,13 @@ const deps = require("../../deps");
 let clock;
 const now = new Date();
 const root = "some-root";
-const principle = "some-account-principle";
-const phone = "some-account-phone";
-const personAccount = {
+const principle = "some-person-principle";
+const personId = "some-person-id";
+const phone = "some-person-phone";
+const person = {
   principle,
-  phone
+  phone,
+  id: personId
 };
 const payloadPhone = "some-payload-phone";
 const payload = {
@@ -52,7 +54,7 @@ describe("Command handler unit tests", () => {
     const uuidFake = fake.returns(root);
     replace(deps, "uuid", uuidFake);
 
-    const readFake = fake.returns([personAccount]);
+    const readFake = fake.returns([person]);
     const updateFake = fake();
     const setFake = stub()
       .onFirstCall()
@@ -81,6 +83,7 @@ describe("Command handler unit tests", () => {
     const result = await main({ payload, context });
 
     expect(result).to.deep.equal({
+      root,
       payload: {
         code,
         principle,
@@ -100,7 +103,7 @@ describe("Command handler unit tests", () => {
     expect(setFake).to.have.been.calledTwice;
     expect(viewStoreFake).to.have.been.calledWith({
       name: "phones",
-      domain: "person-account",
+      domain: "person",
       service,
       network
     });
@@ -125,7 +128,11 @@ describe("Command handler unit tests", () => {
         expiresIn: 180
       },
       payload: {
-        root
+        principle,
+        context: {
+          person: personId,
+          challenge: root
+        }
       },
       signFn: signature
     });
@@ -185,25 +192,6 @@ describe("Command handler unit tests", () => {
       expect(2).to.equal(3);
     } catch (e) {
       expect(e.statusCode).to.equal(409);
-    }
-  });
-  it("should throw correctly if multiple phones found", async () => {
-    const readFake = fake.returns([personAccount, personAccount]);
-    const setFake = fake.returns({
-      read: readFake
-    });
-    const viewStoreFake = fake.returns({
-      set: setFake
-    });
-    replace(deps, "viewStore", viewStoreFake);
-
-    try {
-      await main({ payload, context });
-
-      //shouldn't be called
-      expect(2).to.equal(3);
-    } catch (e) {
-      expect(e.statusCode).to.equal(500);
     }
   });
 });

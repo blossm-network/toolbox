@@ -7,22 +7,22 @@ module.exports = async ({
   version,
   trace,
   context,
-  command: { id, issued }
+  command: { id, issued, action, domain, service, network }
 } = {}) => {
   return {
     headers: {
       root: root || (await deps.makeUuid()),
       ...(context != undefined && { context }),
-      topic: `did-${process.env.ACTION}.${process.env.DOMAIN}.${process.env.SERVICE}.${process.env.NETWORK}`,
+      topic: `did-${action}.${domain}.${service}.${network}`,
       version,
       trace,
       created: stringDate(),
       command: {
         id,
-        action: process.env.ACTION,
-        domain: process.env.DOMAIN,
-        service: process.env.SERVICE,
-        network: process.env.NETWORK,
+        action,
+        domain,
+        service,
+        network,
         issued
       }
     },

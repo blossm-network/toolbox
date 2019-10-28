@@ -24,10 +24,6 @@ const version = 0;
 describe("Create event", () => {
   beforeEach(() => {
     clock = useFakeTimers(now.getTime());
-    process.env.ACTION = commandAction;
-    process.env.DOMAIN = commandDomain;
-    process.env.SERVICE = commandService;
-    process.env.NETWORK = commandNetwork;
   });
   afterEach(() => {
     clock.restore();
@@ -39,7 +35,11 @@ describe("Create event", () => {
       context,
       command: {
         id: commandId,
-        issued: commandIssued
+        issued: commandIssued,
+        action: commandAction,
+        domain: commandDomain,
+        service: commandService,
+        network: commandNetwork
       },
       root,
       payload,
@@ -75,7 +75,11 @@ describe("Create event", () => {
       trace,
       command: {
         id: commandId,
-        issued: commandIssued
+        issued: commandIssued,
+        action: commandAction,
+        domain: commandDomain,
+        service: commandService,
+        network: commandNetwork
       },
       context,
       payload,
@@ -108,7 +112,11 @@ describe("Create event", () => {
       context,
       command: {
         id: commandId,
-        issued: commandIssued
+        issued: commandIssued,
+        action: commandAction,
+        domain: commandDomain,
+        service: commandService,
+        network: commandNetwork
       },
       root,
       payload,
@@ -140,7 +148,11 @@ describe("Create event", () => {
       trace,
       command: {
         id: commandId,
-        issued: commandIssued
+        issued: commandIssued,
+        action: commandAction,
+        domain: commandDomain,
+        service: commandService,
+        network: commandNetwork
       },
       root,
       payload,

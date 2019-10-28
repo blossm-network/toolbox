@@ -1,4 +1,4 @@
-const { conflict, internalServer } = require("@sustainers/errors");
+const { conflict } = require("@sustainers/errors");
 const { SECONDS_IN_MINUTE } = require("@sustainers/duration-consts");
 
 const deps = require("./deps");
@@ -9,6 +9,7 @@ const CODE_LENGTH = 6;
 let sms;
 
 module.exports = async ({ payload, context }) => {
+  //Lazily load up the sms connection.
   if (!sms) {
     sms = deps.sms(
       await deps.secret("twilio-account-sid"),
@@ -16,35 +17,36 @@ module.exports = async ({ payload, context }) => {
     );
   }
 
-  //Create the root for this challenge.
-  const root = await deps.uuid();
-
   //Check to see if the phone is recognized
-  const personAccounts = await deps
+  const [person] = await deps
     .viewStore({
       name: "phones",
-      domain: "person-account",
+      domain: "person",
       service: process.env.SERVICE,
       network: process.env.NETWORK
     })
     .set({ context, tokenFn: deps.gcpToken })
     .read({ phone: payload.phone });
 
-  if (personAccounts.length == 0) throw conflict.phoneNotRecognized;
-  if (personAccounts.length != 1) throw internalServer.multiplePhonesFound;
+  if (!person) throw conflict.phoneNotRecognized;
 
-  const personAccount = personAccounts[0];
+  //Create the root for this challenge.
+  const root = await deps.uuid();
 
   //Create a token that can only access the answer challenge command.
   const token = await deps.createJwt({
     options: {
       issuer: `issue.challenge.${process.env.SERVICE}.${process.env.NETWORK}`,
-      subject: personAccount.principle,
+      subject: person.principle,
       audience: `auth.${process.env.SERVICE}.${process.env.NETWORK}/challenge/answer`,
       expiresIn: THREE_MINUTES
     },
     payload: {
-      root
+      principle: person.principle,
+      context: {
+        person: person.id,
+        challenge: root
+      }
     },
     signFn: deps.sign({
       ring: process.env.SERVICE,
@@ -79,17 +81,18 @@ module.exports = async ({ payload, context }) => {
 
   //Send the code.
   sms.send({
-    to: personAccount.phone,
+    to: person.phone,
     from: "+14157700262",
     body: `${code} is your Roof verification code. Enter it in the Roof app to let us know it's really you.`
   });
 
   //Send the token to the requester so they can access the answer command.
   return {
+    root,
     payload: {
       code,
-      principle: personAccount.principle,
-      phone: personAccount.phone,
+      principle: person.principle,
+      phone: person.phone,
       issued: deps.stringDate()
     },
     response: { token }

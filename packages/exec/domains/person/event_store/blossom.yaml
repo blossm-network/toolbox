@@ -1,0 +1,20 @@
+domain: person
+
+schema:
+  name: String
+
+indexes: [[{ name: 1 }]]
+
+dependencies:
+  "@sustainers/event-store": "*"
+
+devDependencies:
+  "mocha": "^6.1.4"
+  "chai": "^4.2.0"
+  "@sustainers/request": "*"
+  "@sustainers/uuid": "*"
+
+service: core
+
+#don't change
+context: event-store

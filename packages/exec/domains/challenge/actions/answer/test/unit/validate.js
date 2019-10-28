@@ -3,7 +3,7 @@ const { expect } = require("chai").use(require("sinon-chai"));
 const validate = require("../../validate");
 
 const goodPayload = {
-  name: "some-name"
+  code: "some-code"
 };
 
 describe("Command handler store validator tests", () => {
@@ -13,14 +13,14 @@ describe("Command handler store validator tests", () => {
   it("should throw if bad name is passed", async () => {
     const payload = {
       ...goodPayload,
-      name: 123
+      code: 123
     };
 
     try {
       await validate(payload);
       expect(0).to.equal(1);
     } catch (e) {
-      expect(e.statusCode).to.equal(400);
+      expect(e.statusCode).to.equal(409);
     }
   });
 });

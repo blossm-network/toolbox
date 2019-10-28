@@ -33,7 +33,6 @@ describe("Event store", () => {
     clock.restore();
     restore();
   });
-
   it("should call with the correct params", async () => {
     const eStore = "some-event-store";
     const aStore = "some-aggregate-store";
@@ -42,12 +41,9 @@ describe("Event store", () => {
       .returns(eStore)
       .onCall(1)
       .returns(aStore);
-
     replace(deps, "store", storeFake);
-
     const secretFake = fake.returns(password);
     replace(deps, "secret", secretFake);
-
     const listenFake = fake();
     const postFake = fake.returns({
       listen: listenFake
@@ -59,17 +55,13 @@ describe("Event store", () => {
       get: getFake
     });
     replace(deps, "server", serverFake);
-
     const viewStoreGetResult = "some-get-result";
     const viewStoreGetFake = fake.returns(viewStoreGetResult);
     replace(deps, "get", viewStoreGetFake);
-
     const viewStorePostResult = "some-post-result";
     const viewStorePostFake = fake.returns(viewStorePostResult);
     replace(deps, "post", viewStorePostFake);
-
     await eventStore({ schema, indexes });
-
     expect(storeFake).to.have.been.calledWith(
       match({
         name: domain,
@@ -128,7 +120,6 @@ describe("Event store", () => {
       store: eStore,
       aggregateStoreName: `${domain}.aggregate`
     });
-
     await eventStore();
     expect(storeFake).to.have.been.calledTwice;
   });

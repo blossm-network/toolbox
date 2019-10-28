@@ -16,8 +16,6 @@ domain: some-domain
 schema:
   name: String
 
-indexes: [[{ name: 1 }]]
-
 dependencies:
   "@sustainers/event-store": "*"
 

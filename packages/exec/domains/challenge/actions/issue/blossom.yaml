@@ -3,7 +3,7 @@ domain: challenge
 
 targets:
   - name: phones
-    domain: person-account
+    domain: person
     context: view-store
   - name: codes
     domain: challenge

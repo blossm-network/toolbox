@@ -1,5 +1,5 @@
 name: phones
-domain: person-account
+domain: person
 
 schema:
   phone: String

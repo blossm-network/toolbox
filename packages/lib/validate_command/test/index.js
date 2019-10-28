@@ -8,6 +8,7 @@ const now = new Date();
 const goodParams = {
   payload: { a: 1 },
   headers: {
+    root: "some-root",
     trace: "trace!",
     issued: stringDate()
   }
@@ -73,6 +74,20 @@ describe("Validate command", () => {
     const params = {
       ...goodParams,
       "headers.trace": undefined
+    };
+    expect(await validateCommand(params)).to.not.throw;
+  });
+  it("should throw if a bad root is passed", async () => {
+    const params = {
+      ...goodParams,
+      "headers.root": 123
+    };
+    expect(async () => await validateCommand(params)).to.throw;
+  });
+  it("should allow no root is passed", async () => {
+    const params = {
+      ...goodParams,
+      "headers.root": undefined
     };
     expect(await validateCommand(params)).to.not.throw;
   });

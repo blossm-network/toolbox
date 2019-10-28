@@ -4,12 +4,13 @@ module.exports = ({ version, mainFn, validateFn, normalizeFn }) => {
   return async (req, res) => {
     if (validateFn) await validateFn(req.body.payload);
     if (normalizeFn) req.body.payload = await normalizeFn(req.body.payload);
-    const { payload, response } = await mainFn({
+    const { payload, root = req.body.headers.root, response } = await mainFn({
       payload: req.body.payload,
+      ...(req.body.headers.root && { root: req.body.headers.root }),
       context: req.context
     });
     const event = await deps.createEvent({
-      ...(req.body.headers.root && { root: req.body.headers.root }),
+      ...(root && { root }),
       payload,
       trace: req.body.headers.trace,
       context: req.context,

@@ -15,6 +15,7 @@ module.exports = async params => {
 
   const headersSystemInputError = findError([
     string(params.headers.trace, { optional: true }),
+    string(params.headers.root, { optional: true }),
     object(params.headers.source, { optional: true }),
     date(params.headers.issued)
   ]);
