@@ -1,7 +1,7 @@
 {
   "name": "@sustainers/view-store-stream",
   "description": "A view store GET handler for streaming results.",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "main": "index.js",
   "author": "sustainers.market",
   "engines": {
@@ -14,7 +14,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@sustainers/errors": "^0.0.11",
+    "@sustainers/errors": "^0.0.12",
     "@sustainers/mongodb-database": "^0.0.30"
   },
   "devDependencies": {

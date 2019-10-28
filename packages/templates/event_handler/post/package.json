@@ -1,7 +1,7 @@
 {
   "name": "@sustainers/event-handler-post",
   "description": "An event handler server POST handler.",
-  "version": "0.0.33",
+  "version": "0.0.34",
   "main": "index.js",
   "author": "sustainers.market",
   "engines": {
@@ -14,9 +14,9 @@
     "access": "public"
   },
   "dependencies": {
-    "@sustainers/create-event": "*",
-    "@sustainers/errors": "^0.0.11",
-    "@sustainers/event-store-js": "^0.0.57",
+    "@sustainers/create-event": "^0.0.5",
+    "@sustainers/errors": "^0.0.12",
+    "@sustainers/event-store-js": "^0.0.58",
     "@sustainers/gcp-token": "^0.0.28"
   },
   "devDependencies": {
