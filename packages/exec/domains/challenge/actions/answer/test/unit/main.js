@@ -211,18 +211,29 @@ describe("Command handler unit tests", () => {
       signFn: signature
     });
   });
+  it("should throw correctly", async () => {
+    const errorMessage = "some-error";
+    const readFake = fake.rejects(errorMessage);
+    const setFake = fake.returns({
+      read: readFake
+    });
+    const viewStoreFake = fake.returns({
+      set: setFake
+    });
+    replace(deps, "viewStore", viewStoreFake);
+    try {
+      await main({ payload, context });
+      //shouldn't be called
+      expect(2).to.equal(3);
+    } catch (e) {
+      expect(e.message).to.equal(errorMessage);
+    }
+  });
   it("should throw correctly if no challenge is found", async () => {
-    const readOneFake = fake.returns([]);
-    const readTwoFake = fake.returns([person]);
-    const setFake = stub()
-      .onFirstCall()
-      .returns({
-        read: readOneFake
-      })
-      .onSecondCall()
-      .returns({
-        read: readTwoFake
-      });
+    const readFake = fake.returns([]);
+    const setFake = fake.returns({
+      read: readFake
+    });
     const viewStoreFake = fake.returns({
       set: setFake
     });
@@ -236,33 +247,55 @@ describe("Command handler unit tests", () => {
       expect(e.message).to.equal("This code isn't recognized.");
     }
   });
-  it("should throw correctly", async () => {
-    // const errorMessage = "some-error";
-    // const uuidFake = fake.rejects(new Error(errorMessage));
-    // replace(deps, "uuid", uuidFake);
-    // try {
-    //   await main({ payload, context });
-    //   //shouldn't be called
-    //   expect(2).to.equal(3);
-    // } catch (e) {
-    //   expect(e.message).to.equal(errorMessage);
-    // }
+  it("should throw correctly if a challenge is with the wrong code", async () => {
+    const readFake = fake.returns([
+      {
+        ...challenge,
+        code: "bogus",
+        expires: deps.stringDate()
+      }
+    ]);
+    const setFake = fake.returns({
+      read: readFake
+    });
+    const viewStoreFake = fake.returns({
+      set: setFake
+    });
+    replace(deps, "viewStore", viewStoreFake);
+
+    try {
+      await main({ payload, context });
+      //shouldn't be called
+      expect(2).to.equal(3);
+    } catch (e) {
+      expect(e.message).to.equal("This code isn't right.");
+    }
   });
-  it("should throw correctly if no phones found", async () => {
-    // const readFake = fake.returns([]);
-    // const setFake = fake.returns({
-    //   read: readFake
-    // });
-    // const viewStoreFake = fake.returns({
-    //   set: setFake
-    // });
-    // replace(deps, "viewStore", viewStoreFake);
-    // try {
-    //   await main({ payload, context });
-    //   //shouldn't be called
-    //   expect(2).to.equal(3);
-    // } catch (e) {
-    //   expect(e.statusCode).to.equal(409);
-    // }
+  it("should throw correctly if a challenge is expired", async () => {
+    const readFake = fake.returns([
+      {
+        ...challenge,
+        expires: deps
+          .moment()
+          .subtract(1, "s")
+          .toDate()
+          .toISOString()
+      }
+    ]);
+    const setFake = fake.returns({
+      read: readFake
+    });
+    const viewStoreFake = fake.returns({
+      set: setFake
+    });
+    replace(deps, "viewStore", viewStoreFake);
+
+    try {
+      await main({ payload, context });
+      //shouldn't be called
+      expect(2).to.equal(3);
+    } catch (e) {
+      expect(e.message).to.equal("This code expired.");
+    }
   });
 });
