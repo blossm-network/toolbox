@@ -17,6 +17,9 @@ module.exports = async ({ payload, context }) => {
     );
   }
 
+  //eslint-disable-next-line no-console
+  console.log("in issue payload is: ", payload);
+
   //Check to see if the phone is recognized
   const [person] = await deps
     .viewStore({
