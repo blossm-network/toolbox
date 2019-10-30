@@ -40,6 +40,9 @@ devDependencies:
   "@sustainers/request": "*"
   "@sustainers/event-store-js": "*"
   "@sustainers/command-js": "*"
+  "@sustainers/twilio-sms": "*"
+  "@sustainers/gcp-secret": "*"
+  "@sustainers/uuid": "*"
 
 service: core
 
