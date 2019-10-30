@@ -11,11 +11,15 @@ const media = "some-media";
 const accountSid = "some-account-sid";
 const authToken = "some-auth-token";
 
+const sentAfter = "some-sent-after";
+const sentBefore = "some-sent-before";
+const limit = "some-limit";
+
 describe("Twilio sms", () => {
   afterEach(() => {
     restore();
   });
-  it("it should execute correctly", async () => {
+  it("it should execute send correctly", async () => {
     const createFake = fake();
     const twilioFake = fake.returns({
       messages: {
@@ -36,7 +40,7 @@ describe("Twilio sms", () => {
       mediaUrl: media
     });
   });
-  it("it should execute correctly with optionals omitted", async () => {
+  it("it should execute send correctly with optionals omitted", async () => {
     const createFake = fake();
     const twilioFake = fake.returns({
       messages: {
@@ -54,6 +58,48 @@ describe("Twilio sms", () => {
       to,
       from,
       body
+    });
+  });
+  it("it should execute list correctly", async () => {
+    const messages = "some-messages";
+    const listFake = fake.returns(messages);
+    const twilioFake = fake.returns({
+      messages: {
+        list: listFake
+      }
+    });
+    replace(deps, "twilio", twilioFake);
+    const client = await sms(accountSid, authToken);
+
+    expect(twilioFake).to.have.been.calledWith(accountSid, authToken);
+
+    const result = await client.list({ sentAfter, sentBefore, limit });
+
+    expect(result).to.equal(messages);
+    expect(listFake).to.have.been.calledWith({
+      dateSentAfter: sentAfter,
+      dateSentBefore: sentBefore,
+      limit
+    });
+  });
+  it("it should execute list correctly with optionals omitted", async () => {
+    const messages = "some-messages";
+    const listFake = fake.returns(messages);
+    const twilioFake = fake.returns({
+      messages: {
+        list: listFake
+      }
+    });
+    replace(deps, "twilio", twilioFake);
+    const client = await sms(accountSid, authToken);
+
+    expect(twilioFake).to.have.been.calledWith(accountSid, authToken);
+
+    const result = await client.list();
+
+    expect(result).to.equal(messages);
+    expect(listFake).to.have.been.calledWith({
+      limit: 20
     });
   });
   it("it should throw correctly", async () => {
