@@ -31,6 +31,8 @@ module.exports = async ({ payload, context }) => {
     .set({ context, tokenFn: deps.gcpToken })
     .read({ phone: payload.phone });
 
+  //eslint-disable-next-line no-console
+  console.log("person is: ", person);
   if (!person) throw conflict.phoneNotRecognized;
 
   //Create the root for this challenge.
