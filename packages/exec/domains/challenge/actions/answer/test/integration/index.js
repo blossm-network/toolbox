@@ -1,50 +1,61 @@
 const { expect } = require("chai");
-const { string: stringDate } = require("@sustainers/datetime");
-const eventStore = require("@sustainers/event-store-js");
+// const { string: stringDate } = require("@sustainers/datetime");
+// const eventStore = require("@sustainers/event-store-js");
+const command = require("@sustainers/command-js");
 
-const request = require("@sustainers/request");
+// const request = require("@sustainers/request");
 
-const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
+// const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 
 describe("Command handler store integration tests", () => {
   it("should return successfully", async () => {
-    const name = "Some-name";
-    const response = await request.post(url, {
-      body: {
-        headers: {
-          issued: stringDate()
-        },
-        payload: {
-          name
-        }
-      }
-    });
-
-    const root = JSON.parse(response.body).root;
-
-    const aggregate = await eventStore({
-      domain: process.env.DOMAIN,
+    const { token } = await command({
+      action: "issue",
+      domain: "challenge",
       service: process.env.SERVICE,
       network: process.env.NETWORK
-    }).aggregate(root);
-
-    expect(aggregate.headers.root).to.equal(root);
-    expect(aggregate.state.name).to.equal(name.toLowerCase());
-    expect(response.statusCode).to.equal(200);
-  });
-  it("should return an error if incorrect params", async () => {
-    const name = 3;
-    const response = await request.post(url, {
-      body: {
-        headers: {
-          issued: stringDate()
-        },
-        payload: {
-          name
-        }
-      }
+    }).issue({
+      phone: "9193571144"
     });
 
-    expect(response.statusCode).to.equal(400);
+    // console.log("token: ", token);
+    expect(token).to.equal(2);
+    // const name = "Some-name";
+    // const response = await request.post(url, {
+    //   body: {
+    //     headers: {
+    //       issued: stringDate()
+    //     },
+    //     payload: {
+    //       name
+    //     }
+    //   }
+    // });
+
+    // const root = JSON.parse(response.body).root;
+
+    // const aggregate = await eventStore({
+    //   domain: process.env.DOMAIN,
+    //   service: process.env.SERVICE,
+    //   network: process.env.NETWORK
+    // }).aggregate(root);
+
+    // expect(aggregate.headers.root).to.equal(root);
+    // expect(aggregate.state.name).to.equal(name.toLowerCase());
+    // expect(response.statusCode).to.equal(200);
+  });
+  it("should return an error if incorrect params", async () => {
+    // const name = 3;
+    // const response = await request.post(url, {
+    //   body: {
+    //     headers: {
+    //       issued: stringDate()
+    //     },
+    //     payload: {
+    //       name
+    //     }
+    //   }
+    // });
+    // expect(response.statusCode).to.equal(400);
   });
 });

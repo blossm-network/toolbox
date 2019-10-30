@@ -9,7 +9,7 @@ const deps = require("../../deps");
 
 const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 
-const root = uuid();
+const personRoot = uuid();
 
 describe("Command handler store integration tests", () => {
   it("should return successfully", async () => {
@@ -22,12 +22,11 @@ describe("Command handler store integration tests", () => {
         network: process.env.NETWORK
       })
       //phone should be already formatted in the view store.
-      .update(root, { phone: "+19193571144" });
+      .update(personRoot, { phone: "+19193571144" });
 
     const response = await request.post(url, {
       body: {
         headers: {
-          root,
           issued: stringDate()
         },
         payload: {
@@ -36,14 +35,16 @@ describe("Command handler store integration tests", () => {
       }
     });
 
+    expect(response.statusCode).to.equal(200);
+    const parsedBody = JSON.parse(response.body);
+
     const aggregate = await eventStore({
       domain: process.env.DOMAIN,
       service: process.env.SERVICE,
       network: process.env.NETWORK
-    }).aggregate(root);
+    }).aggregate(parsedBody.root);
 
-    expect(response.statusCode).to.equal(200);
-    expect(aggregate.headers.root).to.equal(root);
+    expect(aggregate.headers.root).to.equal(parsedBody.root);
     expect(aggregate.state.phone).to.equal("+19193571144");
 
     const { deletedCount } = await deps
@@ -53,7 +54,7 @@ describe("Command handler store integration tests", () => {
         service: process.env.SERVICE,
         network: process.env.NETWORK
       })
-      .delete(root);
+      .delete(personRoot);
 
     expect(deletedCount).to.equal(1);
   });

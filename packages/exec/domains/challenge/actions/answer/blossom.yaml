@@ -10,6 +10,13 @@ targets:
   - name: codes
     domain: challenge
     context: view-store
+  ##unfold later
+  - action: issue
+    domain: challenge
+    context: command-handler
+  - name: phones
+    domain: person
+    context: view-store
 
 version: 0
 
@@ -32,6 +39,7 @@ devDependencies:
   "@sustainers/datetime": "*"
   "@sustainers/request": "*"
   "@sustainers/event-store-js": "*"
+  "@sustainers/command-js": "*"
 
 service: core
 

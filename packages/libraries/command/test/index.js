@@ -33,7 +33,8 @@ describe("Issue command", () => {
   });
 
   it("should call with the correct params", async () => {
-    const withFake = fake();
+    const response = "some-response";
+    const withFake = fake.returns(response);
     const inFake = fake.returns({
       with: withFake
     });
@@ -45,10 +46,11 @@ describe("Issue command", () => {
     });
     replace(deps, "operation", operationFake);
 
-    await command({ action, domain, service, network })
+    const result = await command({ action, domain, service, network })
       .set({ context, tokenFn })
       .issue(payload, { trace, source });
 
+    expect(result).to.equal(response);
     expect(operationFake).to.have.been.calledWith(
       action,
       domain,
@@ -66,7 +68,8 @@ describe("Issue command", () => {
     expect(withFake).to.have.been.calledWith({ tokenFn });
   });
   it("should call with the correct optional params", async () => {
-    const withFake = fake();
+    const response = "some-response";
+    const withFake = fake.returns(response);
     const inFake = fake.returns({
       with: withFake
     });
@@ -78,8 +81,11 @@ describe("Issue command", () => {
     });
     replace(deps, "operation", operationFake);
 
-    await command({ action, domain, service, network }).issue(payload);
+    const result = await command({ action, domain, service, network }).issue(
+      payload
+    );
 
+    expect(result).to.equal(response);
     expect(operationFake).to.have.been.calledWith(action, domain);
     expect(postFake).to.have.been.calledWith({
       payload,

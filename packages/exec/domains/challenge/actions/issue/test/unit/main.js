@@ -162,9 +162,14 @@ describe("Command handler unit tests", () => {
   });
   it("should throw correctly", async () => {
     const errorMessage = "some-error";
-    const uuidFake = fake.rejects(new Error(errorMessage));
-
-    replace(deps, "uuid", uuidFake);
+    const readFake = fake.rejects(new Error(errorMessage));
+    const setFake = fake.returns({
+      read: readFake
+    });
+    const viewStoreFake = fake.returns({
+      set: setFake
+    });
+    replace(deps, "viewStore", viewStoreFake);
 
     try {
       await main({ payload, context });
