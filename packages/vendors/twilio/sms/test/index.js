@@ -73,13 +73,14 @@ describe("Twilio sms", () => {
 
     expect(twilioFake).to.have.been.calledWith(accountSid, authToken);
 
-    const result = await client.list({ sentAfter, sentBefore, limit });
+    const result = await client.list({ sentAfter, sentBefore, limit, to });
 
     expect(result).to.equal(messages);
     expect(listFake).to.have.been.calledWith({
       dateSentAfter: sentAfter,
       dateSentBefore: sentBefore,
-      limit
+      limit,
+      to
     });
   });
   it("it should execute list correctly with optionals omitted", async () => {

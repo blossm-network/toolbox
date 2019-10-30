@@ -10,10 +10,11 @@ module.exports = (accountSid, authToken) => {
         body,
         ...(media && { mediaUrl: media })
       }),
-    list: async ({ sentAfter, sentBefore, limit = 20 } = {}) =>
+    list: async ({ sentAfter, sentBefore, limit = 20, to } = {}) =>
       await messages.list({
         ...(sentAfter && { dateSentAfter: sentAfter }),
         ...(sentBefore && { dateSentBefore: sentBefore }),
+        ...(to && { to }),
         ...(limit && { limit })
       })
   };

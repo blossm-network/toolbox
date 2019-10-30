@@ -17,9 +17,6 @@ module.exports = async ({ payload, context }) => {
     );
   }
 
-  //eslint-disable-next-line no-console
-  console.log("in issue payload is: ", payload);
-
   //Check to see if the phone is recognized
   const [person] = await deps
     .viewStore({
@@ -31,8 +28,6 @@ module.exports = async ({ payload, context }) => {
     .set({ context, tokenFn: deps.gcpToken })
     .read({ phone: payload.phone });
 
-  //eslint-disable-next-line no-console
-  console.log("person is: ", person);
   if (!person) throw conflict.phoneNotRecognized;
 
   //Create the root for this challenge.

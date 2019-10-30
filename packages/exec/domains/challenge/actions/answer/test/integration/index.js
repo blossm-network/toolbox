@@ -1,14 +1,14 @@
 const { expect } = require("chai");
-// const { string: stringDate } = require("@sustainers/datetime");
-// const eventStore = require("@sustainers/event-store-js");
+const { string: stringDate } = require("@sustainers/datetime");
+const eventStore = require("@sustainers/event-store-js");
 const command = require("@sustainers/command-js");
 const sms = require("@sustainers/twilio-sms");
 const secret = require("@sustainers/gcp-secret");
 const uuid = require("@sustainers/uuid");
 
-// const request = require("@sustainers/request");
+const request = require("@sustainers/request");
 
-// const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
+const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 const deps = require("../../deps");
 
 const personRoot = uuid();
@@ -28,7 +28,7 @@ describe("Command handler store integration tests", () => {
 
     const sentAfter = new Date();
 
-    const { token } = await command({
+    const { token, root } = await command({
       action: "issue",
       domain: "challenge",
       service: process.env.SERVICE,
@@ -40,38 +40,63 @@ describe("Command handler store integration tests", () => {
     //eslint-disable-next-line no-console
     console.log("token: ", token);
 
-    const messages = await sms(
+    const [message] = await sms(
       await secret("twilio-account-sid"),
       await secret("twilio-auth-token")
     ).list({ sentAfter, limit: 1 });
 
     //eslint-disable-next-line no-console
-    console.log("messages: ", messages);
+    console.log("message: ", message);
+    const code = message.body.substr(0, 6);
 
-    expect(token).to.equal(2);
-    // const name = "Some-name";
-    // const response = await request.post(url, {
-    //   body: {
-    //     headers: {
-    //       issued: stringDate()
-    //     },
-    //     payload: {
-    //       name
-    //     }
-    //   }
-    // });
+    //eslint-disable-next-line no-console
+    console.log("code: ", code);
 
-    // const root = JSON.parse(response.body).root;
+    const response = await request.post(url, {
+      body: {
+        headers: {
+          issued: stringDate()
+        },
+        payload: {
+          code
+        },
+        context: {
+          challenge: root
+        }
+      }
+    });
 
-    // const aggregate = await eventStore({
-    //   domain: process.env.DOMAIN,
-    //   service: process.env.SERVICE,
-    //   network: process.env.NETWORK
-    // }).aggregate(root);
+    //eslint-disable-next-line no-console
+    console.log("rezzy: ", response);
 
-    // expect(aggregate.headers.root).to.equal(root);
-    // expect(aggregate.state.name).to.equal(name.toLowerCase());
-    // expect(response.statusCode).to.equal(200);
+    expect(response.statusCode).to.equal(200);
+    const parsedBody = JSON.parse(response.body);
+
+    const aggregate = await eventStore({
+      domain: process.env.DOMAIN,
+      service: process.env.SERVICE,
+      network: process.env.NETWORK
+    }).aggregate(parsedBody.root);
+
+    //eslint-disable-next-line no-console
+    console.log("aggy: ", aggregate);
+
+    expect(aggregate.headers.root).to.equal(parsedBody.root);
+    expect(aggregate.state.phone).to.equal("+12513332037");
+
+    const { deletedCount } = await deps
+      .viewStore({
+        name: "phones",
+        domain: "person",
+        service: process.env.SERVICE,
+        network: process.env.NETWORK
+      })
+      .delete(personRoot);
+
+    //eslint-disable-next-line no-console
+    console.log("del count: ", deletedCount);
+
+    expect(deletedCount).to.equal(1);
   });
   it("should return an error if incorrect params", async () => {
     // const name = 3;

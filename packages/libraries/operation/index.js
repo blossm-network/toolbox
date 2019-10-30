@@ -24,14 +24,6 @@ const common = ({ method, operation, root, data }) => {
             })
             : null;
 
-          //eslint-disable-next-line no-console
-          console.log("body in operation: ", {
-            body: {
-              ...(data != undefined && { ...data }),
-              context
-            },
-            url
-          });
           const response = await method(url, {
             body: {
               ...(data != undefined && { ...data }),
