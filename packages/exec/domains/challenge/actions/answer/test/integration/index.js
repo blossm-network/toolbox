@@ -2,8 +2,8 @@ const { expect } = require("chai");
 // const { string: stringDate } = require("@sustainers/datetime");
 // const eventStore = require("@sustainers/event-store-js");
 const command = require("@sustainers/command-js");
-// const sms = require("@sustainers/twilio-sms");
-// const secret = require("@sustainers/gcp-secret");
+const sms = require("@sustainers/twilio-sms");
+const secret = require("@sustainers/gcp-secret");
 const uuid = require("@sustainers/uuid");
 
 // const request = require("@sustainers/request");
@@ -26,7 +26,7 @@ describe("Command handler store integration tests", () => {
       //phone should be already formatted in the view store.
       .update(personRoot, { phone: "+12513332037" });
 
-    // const sentAfter = new Date();
+    const sentAfter = new Date();
 
     const { token } = await command({
       action: "issue",
@@ -37,16 +37,17 @@ describe("Command handler store integration tests", () => {
       phone
     });
 
-    // console.log("token: ", token);
+    //eslint-disable-next-line no-console
+    console.log("token: ", token);
 
-    // console.log("env: ", { env: process.env });
+    const messages = await sms(
+      await secret("twilio-account-sid"),
+      await secret("twilio-auth-token")
+    ).list({ sentAfter, limit: 1 });
 
-    // const messages = await sms(
-    //   await secret("twilio-account-sid"),
-    //   await secret("twilio-auth-token")
-    // ).list({ sentAfter, limit: 1 });
+    //eslint-disable-next-line no-console
+    console.log("messages: ", messages);
 
-    // console.log("messages: ", messages);
     expect(token).to.equal(2);
     // const name = "Some-name";
     // const response = await request.post(url, {
