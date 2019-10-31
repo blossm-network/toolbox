@@ -36,5 +36,5 @@ module.exports = ({ key, ring, location, version, project }) => async ({
   return crypto
     .createVerify("SHA256")
     .update(message)
-    .verify(publicKeys[project], signature); //, "uncompressed");
+    .verify(publicKeys[project], signature, "utf8");
 };
