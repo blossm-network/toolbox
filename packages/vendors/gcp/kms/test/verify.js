@@ -81,7 +81,7 @@ describe("Kms verify", () => {
     expect(createVerifyFake).to.have.been.calledWith("SHA256");
     expect(getKeyFake).to.have.been.calledWith({ name: path });
     expect(updateFake).to.have.been.calledWith(message);
-    expect(verifyFake).to.have.been.calledWith(pem, signature, "uncompressed");
+    expect(verifyFake).to.have.been.calledWith(pem, signature); //, "uncompressed");
   });
   it("shouldn't call the service if the key has already been retrieved", async () => {
     const path = "some-path";
@@ -108,7 +108,7 @@ describe("Kms verify", () => {
     expect(result).to.equal(isVerified);
     expect(getKeyFake).to.have.not.been.called;
     expect(updateFake).to.have.been.calledWith(message);
-    expect(verifyFake).to.have.been.calledWith(pem, signature, "uncompressed");
+    expect(verifyFake).to.have.been.calledWith(pem, signature); //, "uncompressed");
     expect(pathFake).to.have.not.been.called;
   });
 

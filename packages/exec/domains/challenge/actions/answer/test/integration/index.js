@@ -5,8 +5,8 @@ const command = require("@sustainers/command-js");
 const sms = require("@sustainers/twilio-sms");
 const secret = require("@sustainers/gcp-secret");
 const uuid = require("@sustainers/uuid");
-const { validate } = require("@sustainers/jwt");
-const { verify: verifyJwt } = require("@sustainers/gcp-kms");
+const { validate: validateJwt } = require("@sustainers/jwt");
+const { verify } = require("@sustainers/gcp-kms");
 
 const request = require("@sustainers/request");
 
@@ -39,9 +39,9 @@ describe("Command handler store integration tests", () => {
       phone
     });
 
-    const jwt = await validate({
+    const jwt = await validateJwt({
       token,
-      verifyFn: verifyJwt({
+      verifyFn: verify({
         ring: process.env.SERVICE,
         key: "challenge",
         location: "global",
