@@ -156,28 +156,28 @@ describe("Kms verify", () => {
     });
     expect(result).to.be.false;
   });
-  // it("tmp", async () => {
-  //   const message =
-  //     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb250ZXh0Ijp7InBlcnNvbiI6IjE5MGRiZTJlLTljNWUtNDAzZC1iNDRiLWViZjI4ZjBiYjgyMyIsImNoYWxsZW5nZSI6IjhhNTU2ZWZlLTkwM2QtNDA5NS1hMzQyLTdhMmE1MzMyMWJkZCJ9LCJpc3MiOiJpc3N1ZS5jaGFsbGVuZ2UuY29yZS5sb2NhbCIsImF1ZCI6ImF1dGguY29yZS5sb2NhbC9jaGFsbGVuZ2UvYW5zd2VyIiwiZXhwIjoxNTcyNTYyOTQyLCJpYXQiOjE1NzI1NjI3NjIsImp0aSI6MTU3MjU2Mjc2MjE5OTAwfQ";
-  //   const signature = await sign({
-  //     key: actualKey,
-  //     ring: actualRing,
-  //     location: actualLocation,
-  //     version: actualVersion,
-  //     project: actualProject
-  //   })(message);
-  //   // console.log("sig: ", signature);
-  //   // console.log("expected sig: W29iamVjdCBQcm9taXNlXQ");
-  //   const result = await verify({
-  //     key: actualKey,
-  //     ring: actualRing,
-  //     location: actualLocation,
-  //     version: actualVersion,
-  //     project: actualProject
-  //   })({
-  //     message,
-  //     signature: signature.toString("base64")
-  //   });
-  //   expect(result).to.be.true;
-  // });
+  it("tmp", async () => {
+    const message =
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb250ZXh0Ijp7InBlcnNvbiI6IjE5MGRiZTJlLTljNWUtNDAzZC1iNDRiLWViZjI4ZjBiYjgyMyIsImNoYWxsZW5nZSI6IjhhNTU2ZWZlLTkwM2QtNDA5NS1hMzQyLTdhMmE1MzMyMWJkZCJ9LCJpc3MiOiJpc3N1ZS5jaGFsbGVuZ2UuY29yZS5sb2NhbCIsImF1ZCI6ImF1dGguY29yZS5sb2NhbC9jaGFsbGVuZ2UvYW5zd2VyIiwiZXhwIjoxNTcyNTYyOTQyLCJpYXQiOjE1NzI1NjI3NjIsImp0aSI6MTU3MjU2Mjc2MjE5OTAwfQ";
+    const signature = await sign({
+      key: actualKey,
+      ring: actualRing,
+      location: actualLocation,
+      version: actualVersion,
+      project: actualProject
+    })(message);
+    // console.log("sig: ", signature);
+    // console.log("expected sig: W29iamVjdCBQcm9taXNlXQ");
+    const result = await verify({
+      key: actualKey,
+      ring: actualRing,
+      location: actualLocation,
+      version: actualVersion,
+      project: actualProject
+    })({
+      message,
+      signature
+    });
+    expect(result).to.be.true;
+  });
 });

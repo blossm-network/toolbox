@@ -13,7 +13,7 @@ const personRoot = uuid();
 
 describe("Command handler store integration tests", () => {
   it("should return successfully", async () => {
-    const phone = "919-357-1144";
+    const phone = "125-133-32037";
     await deps
       .viewStore({
         name: "phones",
@@ -22,7 +22,7 @@ describe("Command handler store integration tests", () => {
         network: process.env.NETWORK
       })
       //phone should be already formatted in the view store.
-      .update(personRoot, { phone: "+19193571144" });
+      .update(personRoot, { phone: "+12513332037" });
 
     const response = await request.post(url, {
       body: {
@@ -45,7 +45,7 @@ describe("Command handler store integration tests", () => {
     }).aggregate(parsedBody.root);
 
     expect(aggregate.headers.root).to.equal(parsedBody.root);
-    expect(aggregate.state.phone).to.equal("+19193571144");
+    expect(aggregate.state.phone).to.equal("+12513332037");
 
     const { deletedCount } = await deps
       .viewStore({
