@@ -166,8 +166,7 @@ describe("Kms verify", () => {
       version: actualVersion,
       project: actualProject
     })(message);
-    // console.log("sig: ", signature);
-    // console.log("expected sig: W29iamVjdCBQcm9taXNlXQ");
+
     const result = await verify({
       key: actualKey,
       ring: actualRing,

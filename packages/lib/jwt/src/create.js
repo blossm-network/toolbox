@@ -30,16 +30,8 @@ module.exports = async ({
   );
   const token = `${encodedHeader}.${encodedPayload}`;
 
-  //eslint-disable-next-line no-console
-  console.log("in jwt toke data is : ", token);
-
   const signature = await signFn(token);
   const encodedSignature = cleanBase64(signature);
-
-  //eslint-disable-next-line no-console
-  console.log("in jwt toke sig is : ", signature);
-  //eslint-disable-next-line no-console
-  console.log("in jwt encoded toke sig is : ", encodedSignature);
 
   return `${token}.${encodedSignature}`;
 };

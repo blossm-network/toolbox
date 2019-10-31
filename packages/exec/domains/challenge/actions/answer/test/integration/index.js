@@ -39,7 +39,6 @@ describe("Command handler store integration tests", () => {
       phone
     });
 
-    // console.log("TOKEN IS: ", token);
     const jwt = await validateJwt({
       token,
       verifyFn: verify({
@@ -50,8 +49,6 @@ describe("Command handler store integration tests", () => {
         project: process.env.GCP_PROJECT
       })
     });
-
-    // console.log("JWT IS: ", jwt);
 
     const [message] = await sms(
       await secret("twilio-account-sid"),
