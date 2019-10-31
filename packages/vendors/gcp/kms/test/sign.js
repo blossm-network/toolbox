@@ -22,7 +22,7 @@ describe("Kms sign", () => {
     const kmsClient = function() {};
     kmsClient.prototype.cryptoKeyVersionPath = pathFake;
     const signature = "some-sig";
-    const signFake = fake.returns([{ signature }]);
+    const signFake = fake.returns([{ signature: Buffer.from(signature) }]);
     kmsClient.prototype.asymmetricSign = signFake;
     replace(kms, "KeyManagementServiceClient", kmsClient);
     const sha256 = "some-sha256-digest";
@@ -44,7 +44,7 @@ describe("Kms sign", () => {
       key,
       version
     );
-    expect(result).to.equal(signature);
+    expect(result).to.equal(Buffer.from(signature).toString("base64"));
     expect(signFake).to.have.been.calledWith({
       name: path,
       digest: {

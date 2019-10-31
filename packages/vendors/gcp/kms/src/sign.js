@@ -28,5 +28,5 @@ module.exports = ({
     digest: { sha256: digest }
   });
 
-  return signature;
+  return signature.toString("base64");
 };

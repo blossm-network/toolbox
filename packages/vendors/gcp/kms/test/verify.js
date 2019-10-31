@@ -19,6 +19,7 @@ const actualLocation = "global";
 const actualRing = "core";
 const actualKey = "auth";
 const actualVersion = "1";
+
 describe("Kms verify", () => {
   afterEach(() => {
     restore();
@@ -81,7 +82,7 @@ describe("Kms verify", () => {
     expect(createVerifyFake).to.have.been.calledWith("SHA256");
     expect(getKeyFake).to.have.been.calledWith({ name: path });
     expect(updateFake).to.have.been.calledWith(message);
-    expect(verifyFake).to.have.been.calledWith(pem, signature, "utf8");
+    expect(verifyFake).to.have.been.calledWith(pem, signature, "base64");
   });
   it("shouldn't call the service if the key has already been retrieved", async () => {
     const path = "some-path";
@@ -108,7 +109,7 @@ describe("Kms verify", () => {
     expect(result).to.equal(isVerified);
     expect(getKeyFake).to.have.not.been.called;
     expect(updateFake).to.have.been.calledWith(message);
-    expect(verifyFake).to.have.been.calledWith(pem, signature, "utf8");
+    expect(verifyFake).to.have.been.calledWith(pem, signature, "base64");
     expect(pathFake).to.have.not.been.called;
   });
 
@@ -130,7 +131,7 @@ describe("Kms verify", () => {
       project: actualProject
     })({
       message,
-      signature
+      signature: signature.toString("base64")
     });
     expect(result).to.be.true;
   });
@@ -151,7 +152,7 @@ describe("Kms verify", () => {
       project: actualProject
     })({
       message: `${message}-`,
-      signature
+      signature: signature.toString("base64")
     });
     expect(result).to.be.false;
   });
