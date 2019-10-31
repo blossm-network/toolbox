@@ -5,6 +5,8 @@ const command = require("@sustainers/command-js");
 const sms = require("@sustainers/twilio-sms");
 const secret = require("@sustainers/gcp-secret");
 const uuid = require("@sustainers/uuid");
+const { validate } = require("@sustainers/jwt");
+const { verify: verifyJwt } = require("@sustainers/gcp-kms");
 
 const request = require("@sustainers/request");
 
@@ -37,37 +39,41 @@ describe("Command handler store integration tests", () => {
       phone
     });
 
-    //eslint-disable-next-line no-console
-    console.log("token: ", token);
+    const jwt = await validate({
+      token,
+      verifyFn: verifyJwt({
+        ring: process.env.SERVICE,
+        key: "challenge",
+        location: "global",
+        version: "1",
+        project: process.env.GCP_PROJECT
+      })
+    });
+
+    // console.log("JWT IS: ", jwt);
 
     const [message] = await sms(
       await secret("twilio-account-sid"),
       await secret("twilio-auth-token")
-    ).list({ sentAfter, limit: 1 });
+    ).list({ sentAfter, limit: 1, to: "+12513332037" });
 
-    //eslint-disable-next-line no-console
-    console.log("message: ", message);
     const code = message.body.substr(0, 6);
-
-    //eslint-disable-next-line no-console
-    console.log("code: ", code);
 
     const response = await request.post(url, {
       body: {
         headers: {
-          issued: stringDate()
+          issued: stringDate(),
+          root
         },
         payload: {
           code
         },
         context: {
-          challenge: root
+          challenge: root,
+          person: jwt.person
         }
       }
     });
-
-    //eslint-disable-next-line no-console
-    console.log("rezzy: ", response);
 
     expect(response.statusCode).to.equal(200);
     const parsedBody = JSON.parse(response.body);
@@ -77,9 +83,6 @@ describe("Command handler store integration tests", () => {
       service: process.env.SERVICE,
       network: process.env.NETWORK
     }).aggregate(parsedBody.root);
-
-    //eslint-disable-next-line no-console
-    console.log("aggy: ", aggregate);
 
     expect(aggregate.headers.root).to.equal(parsedBody.root);
     expect(aggregate.state.phone).to.equal("+12513332037");
@@ -93,23 +96,20 @@ describe("Command handler store integration tests", () => {
       })
       .delete(personRoot);
 
-    //eslint-disable-next-line no-console
-    console.log("del count: ", deletedCount);
-
     expect(deletedCount).to.equal(1);
   });
   it("should return an error if incorrect params", async () => {
-    // const name = 3;
-    // const response = await request.post(url, {
-    //   body: {
-    //     headers: {
-    //       issued: stringDate()
-    //     },
-    //     payload: {
-    //       name
-    //     }
-    //   }
-    // });
-    // expect(response.statusCode).to.equal(400);
+    const code = { a: 1 };
+    const response = await request.post(url, {
+      body: {
+        headers: {
+          issued: stringDate()
+        },
+        payload: {
+          code
+        }
+      }
+    });
+    expect(response.statusCode).to.equal(409);
   });
 });

@@ -43,6 +43,8 @@ devDependencies:
   "@sustainers/twilio-sms": "*"
   "@sustainers/gcp-secret": "*"
   "@sustainers/uuid": "*"
+  "@sustainers/jwt": "*"
+  "@sustainers/gcp-kms": "*"
 
 service: core
 

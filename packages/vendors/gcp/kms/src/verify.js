@@ -26,6 +26,13 @@ module.exports = ({ key, ring, location, version, project }) => async ({
     publicKeys[project] = pem;
   }
 
+  //eslint-disable-next-line no-console
+  console.log("kms: ", {
+    project,
+    key: publicKeys[project],
+    message,
+    signature
+  });
   return crypto
     .createVerify("SHA256")
     .update(message)

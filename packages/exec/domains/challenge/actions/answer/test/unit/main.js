@@ -53,12 +53,10 @@ describe("Command handler unit tests", () => {
     restore();
   });
   it("should return successfully", async () => {
-    const readOneFake = fake.returns([
-      {
-        ...challenge,
-        expires: deps.stringDate()
-      }
-    ]);
+    const readOneFake = fake.returns({
+      ...challenge,
+      expires: deps.stringDate()
+    });
     const readTwoFake = fake.returns([person]);
     const setFake = stub()
       .onFirstCall()
@@ -110,7 +108,7 @@ describe("Command handler unit tests", () => {
     });
     expect(signFake).to.have.been.calledWith({
       ring: service,
-      key: "answer",
+      key: "auth",
       location: "global",
       version: "1",
       project
@@ -133,12 +131,10 @@ describe("Command handler unit tests", () => {
     });
   });
   it("should return successfully if no person is found", async () => {
-    const readOneFake = fake.returns([
-      {
-        ...challenge,
-        expires: deps.stringDate()
-      }
-    ]);
+    const readOneFake = fake.returns({
+      ...challenge,
+      expires: deps.stringDate()
+    });
     const readTwoFake = fake.returns([]);
     const setFake = stub()
       .onFirstCall()
@@ -190,7 +186,7 @@ describe("Command handler unit tests", () => {
     });
     expect(signFake).to.have.been.calledWith({
       ring: service,
-      key: "answer",
+      key: "auth",
       location: "global",
       version: "1",
       project
@@ -230,7 +226,7 @@ describe("Command handler unit tests", () => {
     }
   });
   it("should throw correctly if no challenge is found", async () => {
-    const readFake = fake.returns([]);
+    const readFake = fake.returns();
     const setFake = fake.returns({
       read: readFake
     });
@@ -248,13 +244,11 @@ describe("Command handler unit tests", () => {
     }
   });
   it("should throw correctly if a challenge is with the wrong code", async () => {
-    const readFake = fake.returns([
-      {
-        ...challenge,
-        code: "bogus",
-        expires: deps.stringDate()
-      }
-    ]);
+    const readFake = fake.returns({
+      ...challenge,
+      code: "bogus",
+      expires: deps.stringDate()
+    });
     const setFake = fake.returns({
       read: readFake
     });
@@ -272,16 +266,14 @@ describe("Command handler unit tests", () => {
     }
   });
   it("should throw correctly if a challenge is expired", async () => {
-    const readFake = fake.returns([
-      {
-        ...challenge,
-        expires: deps
-          .moment()
-          .subtract(1, "s")
-          .toDate()
-          .toISOString()
-      }
-    ]);
+    const readFake = fake.returns({
+      ...challenge,
+      expires: deps
+        .moment()
+        .subtract(1, "s")
+        .toDate()
+        .toISOString()
+    });
     const setFake = fake.returns({
       read: readFake
     });
