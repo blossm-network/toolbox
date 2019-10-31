@@ -1,6 +1,6 @@
 {
   "name": "@sustainers/authenticate",
-  "version": "0.0.14",
+  "version": "0.0.15",
   "description": "Authenticate requests.",
   "main": "index.js",
   "author": "sustainers.market",
@@ -11,7 +11,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@sustainers/jwt": "^0.0.13",
+    "@sustainers/jwt": "^0.0.14",
     "@sustainers/tokens-from-req": "^0.0.5"
   },
   "scripts": {
