@@ -26,8 +26,13 @@ module.exports = async ({
   );
   const encodedPayload = base64url(stringifiedPayload);
   const token = `${encodedHeader}.${encodedPayload}`;
-  const stringifiedSignature = deps.Utf8.parse(signFn(token));
+  const stringifiedSignature = deps.Utf8.parse(await signFn(token));
   const encodedSignature = base64url(stringifiedSignature);
+
+  //eslint-disable-next-line no-console
+  console.log("sig: ", encodedSignature);
+  //eslint-disable-next-line no-console
+  console.log("token payload: ", token);
 
   return `${token}.${encodedSignature}`;
 };
