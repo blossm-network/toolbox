@@ -39,6 +39,7 @@ describe("Command handler store integration tests", () => {
       phone
     });
 
+    // console.log("TOKEN IS: ", token);
     const jwt = await validateJwt({
       token,
       verifyFn: verify({
