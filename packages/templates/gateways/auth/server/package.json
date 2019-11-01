@@ -1,7 +1,7 @@
 {
   "name": "@sustainers/auth-gateway",
   "description": "A gateway server that manages token distribution.",
-  "version": "0.0.24",
+  "version": "0.0.25",
   "main": "index.js",
   "author": "sustainers.market",
   "engines": {
@@ -14,8 +14,8 @@
     "access": "public"
   },
   "dependencies": {
-    "@sustainers/authentication-middleware": "^0.0.36",
-    "@sustainers/authorization-middleware": "^0.0.21",
+    "@sustainers/authentication-middleware": "^0.0.37",
+    "@sustainers/authorization-middleware": "^0.0.22",
     "@sustainers/command-gateway-post": "^0.0.17",
     "@sustainers/command-js": "^0.0.50",
     "@sustainers/cors-middleware": "^0.0.22",

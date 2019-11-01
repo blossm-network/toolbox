@@ -1,6 +1,6 @@
 {
   "name": "@sustainers/jwt",
-  "version": "0.0.16",
+  "version": "0.0.17",
   "description": "JWT token creating and validating.",
   "main": "index.js",
   "author": "sustainers.market",
