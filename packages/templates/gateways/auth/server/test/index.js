@@ -1,11 +1,11 @@
 const { expect } = require("chai").use(require("sinon-chai"));
 const { restore, replace, fake, stub, match } = require("sinon");
-const authentication = require("@sustainers/authentication-middleware");
 
 const deps = require("../deps");
 const gateway = require("..");
 const whitelist = "some-whitelist";
 const scopesLookupFn = "some-lookup-fn";
+const verifyFn = "some-verify-fn";
 
 describe("Auth gateway", () => {
   afterEach(() => {
@@ -14,6 +14,10 @@ describe("Auth gateway", () => {
   it("should call with the correct params", async () => {
     const corsMiddlewareFake = fake();
     replace(deps, "corsMiddleware", corsMiddlewareFake);
+
+    const authenticationResult = "some-authentication";
+    const authenticationFake = fake.returns(authenticationResult);
+    replace(deps, "authentication", authenticationFake);
 
     const authorizationResult = "some-authorization";
     const authorizationFake = fake.returns(authorizationResult);
@@ -38,7 +42,7 @@ describe("Auth gateway", () => {
     gatewayPostFake.onSecondCall().returns(gatewayAnswerChallengeResult);
     replace(deps, "post", gatewayPostFake);
 
-    await gateway({ whitelist, scopesLookupFn });
+    await gateway({ whitelist, scopesLookupFn, verifyFn });
 
     expect(listenFake).to.have.been.calledWith();
     expect(serverFake).to.have.been.calledWith({
@@ -57,9 +61,10 @@ describe("Auth gateway", () => {
       gatewayAnswerChallengeResult,
       {
         path: "/challenge/answer",
-        preMiddleware: [authentication, authorizationResult]
+        preMiddleware: [authenticationResult, authorizationResult]
       }
     );
+    expect(authenticationFake).to.have.been.calledWith({ verifyFn });
     expect(authorizationFake).to.have.been.calledWith({ scopesLookupFn });
     expect(postFake).to.have.been.calledWith(gatewayIssueChallengeResult, {
       path: "/challenge/issue"

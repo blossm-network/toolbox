@@ -1,5 +1,4 @@
 const deps = require("./deps");
-const authentication = require("@sustainers/authentication-middleware");
 
 module.exports = async ({ whitelist, scopesLookupFn, verifyFn }) => {
   deps
@@ -18,7 +17,7 @@ module.exports = async ({ whitelist, scopesLookupFn, verifyFn }) => {
     .post(deps.post({ action: "answer", domain: "challenge" }), {
       path: "/challenge/answer",
       preMiddleware: [
-        authentication(verifyFn),
+        deps.authentication({ verifyFn }),
         deps.authorization({ scopesLookupFn })
       ]
     })

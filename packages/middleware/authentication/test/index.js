@@ -18,7 +18,7 @@ describe("Authentication middleware", () => {
 
     const nextFake = fake();
 
-    await authenticationMiddleware(verifyFn)(req, null, nextFake);
+    await authenticationMiddleware({ verifyFn })(req, null, nextFake);
 
     expect(authenticateFake).to.have.been.calledWith({
       req,
