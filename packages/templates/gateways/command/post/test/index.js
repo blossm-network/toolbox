@@ -4,7 +4,7 @@ const { restore, replace, fake } = require("sinon");
 const deps = require("../deps");
 const post = require("..");
 
-const token = "some-token";
+const response = "some-reponse";
 const payload = "some-payload";
 const headers = "some-headers";
 const body = "some-body";
@@ -27,7 +27,7 @@ describe("Command gateway post", () => {
     const normalizeFake = fake.returns({ payload, headers });
     replace(deps, "normalize", normalizeFake);
 
-    const issueFake = fake.returns({ token });
+    const issueFake = fake.returns(response);
     const setFake = fake.returns({
       issue: issueFake
     });
@@ -66,9 +66,7 @@ describe("Command gateway post", () => {
     expect(setFake).to.have.been.calledWith({ tokenFn: deps.gcpToken });
     expect(issueFake).to.have.been.calledWith(payload, headers);
     expect(statusFake).to.have.been.calledWith(200);
-    expect(sendFake).to.have.been.calledWith({
-      token
-    });
+    expect(sendFake).to.have.been.calledWith(response);
   });
   it("should call with the correct params when action and domain passed in url with args as well", async () => {
     const validateFake = fake();
@@ -77,7 +75,7 @@ describe("Command gateway post", () => {
     const normalizeFake = fake.returns({ payload, headers });
     replace(deps, "normalize", normalizeFake);
 
-    const issueFake = fake.returns({ token });
+    const issueFake = fake.returns(response);
     const setFake = fake.returns({
       issue: issueFake
     });
@@ -116,9 +114,7 @@ describe("Command gateway post", () => {
     expect(setFake).to.have.been.calledWith({ tokenFn: deps.gcpToken });
     expect(issueFake).to.have.been.calledWith(payload, headers);
     expect(statusFake).to.have.been.calledWith(200);
-    expect(sendFake).to.have.been.calledWith({
-      token
-    });
+    expect(sendFake).to.have.been.calledWith(response);
   });
   it("should call with the correct params when action and domain passed in only args", async () => {
     const validateFake = fake();
@@ -127,7 +123,7 @@ describe("Command gateway post", () => {
     const normalizeFake = fake.returns({ payload, headers });
     replace(deps, "normalize", normalizeFake);
 
-    const issueFake = fake.returns({ token });
+    const issueFake = fake.returns(response);
     const setFake = fake.returns({
       issue: issueFake
     });
@@ -163,9 +159,7 @@ describe("Command gateway post", () => {
     expect(setFake).to.have.been.calledWith({ tokenFn: deps.gcpToken });
     expect(issueFake).to.have.been.calledWith(payload, headers);
     expect(statusFake).to.have.been.calledWith(200);
-    expect(sendFake).to.have.been.calledWith({
-      token
-    });
+    expect(sendFake).to.have.been.calledWith(response);
   });
   it("should throw correctly", async () => {
     const errorMessage = "error-message";

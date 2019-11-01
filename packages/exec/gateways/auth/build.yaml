@@ -31,7 +31,6 @@ steps:
         CONTEXT=${_CONTEXT}
         NAME=${_NAME}
         OPERATION_HASH=${_OPERATION_HASH}
-        EVENT_STORE_HASH=${_EVENT_STORE_HASH}
         NODE_ENV=local
         PORT=80
         MAIN_CONTAINER_NAME=main
@@ -76,7 +75,7 @@ steps:
       - --image=us.gcr.io/${_GCP_PROJECT}${_ENV_NAME_SPECIFIER}/${_SERVICE}.${_CONTEXT}${_NAME_REVERSE_URL_SPECIFIER}
       - --platform=managed
       - --memory=${_MEMORY}
-      - ${_AUTHENTICATION}
+      - --allow-unauthenticated
       - --project=${_GCP_PROJECT}${_ENV_NAME_SPECIFIER}
       - --region=${_GCP_REGION}
       - --set-env-vars=NODE_ENV=${_NODE_ENV},NETWORK=${_GCP_REGION}.${_ENV_URI_SPECIFIER}${_NETWORK},SERVICE=${_SERVICE},CONTEXT=${_CONTEXT},NAME=${_NAME},GCP_PROJECT=${_GCP_PROJECT}${_ENV_NAME_SPECIFIER},GCP_REGION=${_GCP_REGION},GCP_SECRET_BUCKET=smn${_ENV_NAME_SPECIFIER}-secrets

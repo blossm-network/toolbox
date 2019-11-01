@@ -1,14 +1,12 @@
 #
 # This file is required.
-# It's URL will be [service].[network]
-#
-# Optionally, give your gateway a name. This will change your URL to be [name].[service].[network]
+# It's URL will be [name].[network]
 #
 
-service: auth
+name: auth
 
 dependencies:
-  "@sustainers/gateway": "*"
+  "@sustainers/auth-gateway": "*"
 
 devDependencies:
   "mocha": "^6.1.4"
@@ -18,6 +16,8 @@ devDependencies:
   "chai-datetime": "^1.5.0"
   "@sustainers/datetime": "*"
   "@sustainers/request": "*"
+
+service: core
 
 #don't change
 context: gateway

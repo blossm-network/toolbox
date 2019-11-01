@@ -1,5 +1,5 @@
 // const fs = require("fs");
-const gateway = require("@sustainers/gateway");
+const gateway = require("@sustainers/auth-gateway");
 
 // const main = require("./main.js");
 // const validate = fs.existsSync("./validate.js") && require("./validate");

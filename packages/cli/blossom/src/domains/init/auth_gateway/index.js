@@ -1,2 +1,2 @@
 const init = require("@sustainers/init-cli-template");
-module.exports = init({ domain: "gateway", dir: __dirname });
+module.exports = init({ domain: "auth-gateway", dir: __dirname });

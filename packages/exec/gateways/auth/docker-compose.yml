@@ -21,26 +21,6 @@ services:
       GCP_KMS_SECRET_BUCKET_KEY_LOCATION:
       GCP_KMS_SECRET_BUCKET_KEY_RING:
 
-  event-store:
-    image: ${STAGING_CONTAINER_REGISTRY}/${SERVICE}.event-store.${DOMAIN}:latest
-    container_name: ${EVENT_STORE_HASH}.${NETWORK}
-    ports:
-      - ${PORT}
-    environment:
-      PORT:
-      NODE_ENV:
-      NETWORK:
-      SERVICE:
-      CONTEXT: event-store
-      DOMAIN:
-      GCP_PROJECT:
-      GCP_REGION:
-      GCP_SECRET_BUCKET:
-      GCP_KMS_SECRET_BUCKET_KEY_LOCATION:
-      GCP_KMS_SECRET_BUCKET_KEY_RING:
-      MONGODB_USER:
-      MONGODB_HOST:
-
 networks:
   default:
     external:

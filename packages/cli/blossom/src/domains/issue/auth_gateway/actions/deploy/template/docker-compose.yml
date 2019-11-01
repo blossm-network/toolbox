@@ -1,45 +1,23 @@
 version: "3"
 services:
   main:
-    image: ${CONTAINER_REGISTRY}/${SERVICE}.${CONTEXT}.${DOMAIN}.${ACTION}:latest
+    image: ${CONTAINER_REGISTRY}/${SERVICE}.${CONTEXT}:latest
     container_name: ${MAIN_CONTAINER_NAME}
     ports:
       - ${PORT}
-    depends_on:
-      - event-store
     environment:
-      PORT:
-      NODE_ENV:
-      NETWORK:
-      SERVICE:
-      CONTEXT:
-      DOMAIN:
-      ACTION:
-      GCP_PROJECT:
-      GCP_REGION:
-      GCP_SECRET_BUCKET:
-      GCP_KMS_SECRET_BUCKET_KEY_LOCATION:
-      GCP_KMS_SECRET_BUCKET_KEY_RING:
-
-  event-store:
-    image: ${STAGING_CONTAINER_REGISTRY}/${SERVICE}.event-store.${DOMAIN}:latest
-    container_name: ${EVENT_STORE_HASH}.${NETWORK}
-    ports:
-      - ${PORT}
-    environment:
-      PORT:
-      NODE_ENV:
-      NETWORK:
-      SERVICE:
-      CONTEXT: event-store
-      DOMAIN:
-      GCP_PROJECT:
-      GCP_REGION:
-      GCP_SECRET_BUCKET:
-      GCP_KMS_SECRET_BUCKET_KEY_LOCATION:
-      GCP_KMS_SECRET_BUCKET_KEY_RING:
-      MONGODB_USER:
-      MONGODB_HOST:
+      PORT: ${PORT}
+      NODE_ENV: ${NODE_ENV}
+      NETWORK: ${NETWORK}
+      SERVICE: ${SERVICE}
+      CONTEXT: ${CONTEXT}
+      DOMAIN: ${DOMAIN}
+      ACTION: ${ACTION}
+      GCP_PROJECT: ${GCP_PROJECT}
+      GCP_REGION: ${GCP_REGION}
+      GCP_SECRET_BUCKET: ${GCP_SECRET_BUCKET}
+      GCP_KMS_SECRET_BUCKET_KEY_LOCATION: ${GCP_KMS_SECRET_BUCKET_KEY_LOCATION}
+      GCP_KMS_SECRET_BUCKET_KEY_RING: ${GCP_KMS_SECRET_BUCKET_KEY_RING}
 
 networks:
   default:
