@@ -1,8 +1,9 @@
 const { expect } = require("chai").use(require("sinon-chai"));
 const { restore, fake, replace } = require("sinon");
-const kms = require("@sustainers/gcp-kms");
 const deps = require("../deps");
 const authenticationMiddleware = require("..");
+
+const verifyFn = "some-verify-fn";
 
 describe("Authentication middleware", () => {
   afterEach(() => {
@@ -16,13 +17,12 @@ describe("Authentication middleware", () => {
     replace(deps, "authenticate", authenticateFake);
 
     const nextFake = fake();
-    await authenticationMiddleware(req, null, nextFake);
+
+    await authenticationMiddleware(verifyFn)(req, null, nextFake);
 
     expect(authenticateFake).to.have.been.calledWith({
       req,
-      verifyFn: kms.verify,
-      //temporary
-      requiresToken: false
+      verifyFn
     });
     expect(req.claims).to.deep.equal(claims);
     expect(nextFake).to.have.been.calledOnce;
@@ -30,12 +30,14 @@ describe("Authentication middleware", () => {
   it("should throw correctly", async () => {
     const req = {};
 
-    const authenticateFake = fake.rejects(new Error());
+    const errorMessage = "some-error-message";
+    const error = new Error(errorMessage);
+    const authenticateFake = fake.rejects(error);
     replace(deps, "authenticate", authenticateFake);
 
     const nextFake = fake();
 
-    expect(async () => await authenticationMiddleware(req, null, nextFake)).to
-      .throw;
+    await authenticationMiddleware(verifyFn)(req, null, nextFake);
+    expect(nextFake).to.have.been.calledWith(error);
   });
 });

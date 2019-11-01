@@ -1,7 +1,7 @@
 const deps = require("./deps");
 const authentication = require("@sustainers/authentication-middleware");
 
-module.exports = async ({ whitelist, scopesLookupFn }) => {
+module.exports = async ({ whitelist, scopesLookupFn, verifyFn }) => {
   deps
     .server({
       prehook: app =>
@@ -17,7 +17,10 @@ module.exports = async ({ whitelist, scopesLookupFn }) => {
     })
     .post(deps.post({ action: "answer", domain: "challenge" }), {
       path: "/challenge/answer",
-      preMiddleware: [authentication, deps.authorization({ scopesLookupFn })]
+      preMiddleware: [
+        authentication(verifyFn),
+        deps.authorization({ scopesLookupFn })
+      ]
     })
     .listen();
 };

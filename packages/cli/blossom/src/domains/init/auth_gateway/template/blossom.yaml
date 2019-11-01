@@ -26,8 +26,10 @@ targets:
   - name: phones
     domain: person
     context: view-store
+
 dependencies:
   "@sustainers/auth-gateway": "*"
+  "@sustainers/gcp-kms": "*"
 
 devDependencies:
   "mocha": "^6.1.4"

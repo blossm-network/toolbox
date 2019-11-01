@@ -56,6 +56,10 @@ steps:
       - NETWORK=local
       - SERVICE=${_SERVICE}
       - CONTEXT=${_CONTEXT}
+      - GCP_SECRET_BUCKET=smn-staging-secrets
+      - GCP_KMS_SECRET_BUCKET_KEY_LOCATION=global
+      - GCP_KMS_SECRET_BUCKET_KEY_RING=secret-bucket
+      - GCP_PROJECT=smn-core-staging
   - name: docker/compose:1.15.0
     args:
       - logs

@@ -11,6 +11,15 @@ module.exports = async ({
   root = null,
   domain = null
 }) => {
+  //eslint-disable-next-line no-console
+  console.log("IN AUTHOR LIB tokens: ", {
+    path,
+    context,
+    principle,
+    root,
+    domain
+  });
+
   //Do the scopes and the context allow the provided service, network, domain, and action combo?
   if (context.network !== process.env.NETWORK) throw unauthorized.tokenInvalid;
 

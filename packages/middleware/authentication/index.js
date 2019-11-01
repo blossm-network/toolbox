@@ -1,16 +1,19 @@
 const asyncHandler = require("express-async-handler");
-const kms = require("@sustainers/gcp-kms");
 
 const deps = require("./deps");
 
-module.exports = asyncHandler(async (req, _, next) => {
-  const claims = await deps.authenticate({
-    req,
-    verifyFn: kms.verify,
-    //temporary
-    requiresToken: false
-  });
+module.exports = verifyFn =>
+  asyncHandler(async (req, _, next) => {
+    //eslint-disable-next-line no-console
+    console.log("IN AUTHEN MIDDLEWARE");
+    const claims = await deps.authenticate({
+      req,
+      verifyFn
+    });
 
-  req.claims = claims;
-  next();
-});
+    //eslint-disable-next-line no-console
+    console.log("IN AUTHEN MIDDLEWARE claims: ", claims);
+
+    req.claims = claims;
+    next();
+  });
