@@ -1,7 +1,13 @@
 const asyncHandler = require("express-async-handler");
 const deps = require("./deps");
 
-module.exports = ({ scopesLookupFn, priviledgesLookupFn }) =>
+module.exports = ({
+  domain,
+  service,
+  network,
+  scopesLookupFn,
+  priviledgesLookupFn
+}) =>
   asyncHandler(async (req, _, next) => {
     //eslint-disable-next-line no-console
     console.log("IN AUTHOR MIDDLEWARE");
@@ -10,7 +16,9 @@ module.exports = ({ scopesLookupFn, priviledgesLookupFn }) =>
       claims: req.claims,
       scopesLookupFn,
       priviledgesLookupFn,
-      domain: req.params.domain
+      domain,
+      service,
+      network
     });
 
     //eslint-disable-next-line no-console

@@ -9,9 +9,9 @@
  * command requires.
  */
 
-module.exports = async ({ principle, context }) => {
+module.exports = async ({ domain, action }) => {
   //eslint-disable-next-line no-console
-  console.log("Do something with: ", { principle, context });
+  console.log("Do something with: ", { domain, action });
 
-  return ["challenge:answer"];
+  return [];
 };

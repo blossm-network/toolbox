@@ -9,9 +9,13 @@
  * command requires.
  */
 
-module.exports = async ({ principle, context }) => {
+module.exports = async ({ path }) => {
   //eslint-disable-next-line no-console
-  console.log("Do something with: ", { principle, context });
-
-  return ["challenge:answer"];
+  console.log("Do something with: ", { path });
+  const pathParts = path.split("/");
+  const action = pathParts[pathParts.length - 1];
+  switch (action) {
+  case "answer":
+    return ["answer"];
+  }
 };

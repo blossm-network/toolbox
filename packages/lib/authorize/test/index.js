@@ -27,10 +27,6 @@ const claims = {
 };
 
 describe("Authorize", () => {
-  beforeEach(() => {
-    process.env.SERVICE = service;
-    process.env.NETWORK = network;
-  });
   afterEach(() => {
     restore();
   });
@@ -45,7 +41,9 @@ describe("Authorize", () => {
       scopesLookupFn,
       priviledgesLookupFn,
       root,
-      domain
+      domain,
+      service,
+      network
     });
 
     expect(priviledgesLookupFn).to.have.been.calledWith({ path });
@@ -68,7 +66,9 @@ describe("Authorize", () => {
       claims,
       scopesLookupFn,
       priviledgesLookupFn,
-      root
+      root,
+      service,
+      network
     });
 
     expect(priviledgesLookupFn).to.have.been.calledWith({ path });
@@ -92,7 +92,9 @@ describe("Authorize", () => {
       scopesLookupFn,
       priviledgesLookupFn,
       root,
-      domain
+      domain,
+      service,
+      network
     });
 
     expect(priviledgesLookupFn).to.have.been.calledWith({ path });
@@ -126,7 +128,9 @@ describe("Authorize", () => {
       scopesLookupFn,
       priviledgesLookupFn,
       root,
-      domain
+      domain,
+      service,
+      network
     });
 
     expect(priviledgesLookupFn).to.have.been.calledWith({ path });
@@ -149,7 +153,9 @@ describe("Authorize", () => {
       claims,
       scopesLookupFn,
       root,
-      domain
+      domain,
+      service,
+      network
     });
 
     expect(priviledgesLookupFn).to.have.been.calledWith({ path });
@@ -174,7 +180,9 @@ describe("Authorize", () => {
           claims,
           scopesLookupFn,
           root,
-          domain
+          domain,
+          service,
+          network
         })
     ).to.throw;
   });
@@ -190,7 +198,9 @@ describe("Authorize", () => {
           claims,
           scopesLookupFn,
           root,
-          domain
+          domain,
+          service,
+          network
         })
     ).to.throw;
   });
@@ -205,7 +215,9 @@ describe("Authorize", () => {
           claims,
           scopesLookupFn,
           root,
-          domain
+          domain,
+          service,
+          network
         })
     ).to.throw;
   });
@@ -213,8 +225,6 @@ describe("Authorize", () => {
     const scopes = [`${domain}:${joinedPriviledges}:${root}`];
     const scopesLookupFn = fake.returns(scopes);
 
-    process.env.SERVICE = "bogus";
-
     expect(
       async () =>
         await authorize({
@@ -222,7 +232,9 @@ describe("Authorize", () => {
           claims,
           scopesLookupFn,
           root,
-          domain
+          domain,
+          service: "bogus",
+          network
         })
     ).to.throw;
   });
@@ -230,8 +242,6 @@ describe("Authorize", () => {
     const scopes = [`${domain}:${joinedPriviledges}:${root}`];
     const scopesLookupFn = fake.returns(scopes);
 
-    process.env.NETWORK = "bogus";
-
     expect(
       async () =>
         await authorize({
@@ -239,7 +249,9 @@ describe("Authorize", () => {
           claims,
           scopesLookupFn,
           root,
-          domain
+          domain,
+          service,
+          network: "bogus"
         })
     ).to.throw;
   });
@@ -254,7 +266,9 @@ describe("Authorize", () => {
           claims,
           scopesLookupFn,
           root,
-          domain
+          domain,
+          service,
+          network
         })
     ).to.throw;
   });

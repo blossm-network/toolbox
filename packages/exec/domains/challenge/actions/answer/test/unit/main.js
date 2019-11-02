@@ -124,7 +124,9 @@ describe("Command handler unit tests", () => {
         principle: contextPrinciple,
         context: {
           person: contextPerson,
-          [contextType]: contextRoot
+          [contextType]: contextRoot,
+          service,
+          network
         }
       },
       signFn: signature
@@ -201,7 +203,9 @@ describe("Command handler unit tests", () => {
       payload: {
         principle: contextPrinciple,
         context: {
-          person: contextPerson
+          person: contextPerson,
+          service,
+          network
         }
       },
       signFn: signature

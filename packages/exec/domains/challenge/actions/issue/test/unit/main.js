@@ -131,7 +131,9 @@ describe("Command handler unit tests", () => {
         principle,
         context: {
           person: personId,
-          challenge: root
+          challenge: root,
+          service,
+          network
         }
       },
       signFn: signature

@@ -4,8 +4,17 @@ const { restore, replace, fake, stub, match } = require("sinon");
 const deps = require("../deps");
 const gateway = require("..");
 const whitelist = "some-whitelist";
-const scopesLookupFn = "some-lookup-fn";
+const scopesLookupFn = "some-scopes-lookup-fn";
+const priviledgesLookupFn = "some-priv-lookup-fn";
 const verifyFn = "some-verify-fn";
+
+const domain = "some-domain";
+const service = "some-service";
+const network = "some-network";
+
+process.env.DOMAIN = domain;
+process.env.SERVICE = service;
+process.env.NETWORK = network;
 
 describe("Auth gateway", () => {
   afterEach(() => {
@@ -42,7 +51,7 @@ describe("Auth gateway", () => {
     gatewayPostFake.onSecondCall().returns(gatewayAnswerChallengeResult);
     replace(deps, "post", gatewayPostFake);
 
-    await gateway({ whitelist, scopesLookupFn, verifyFn });
+    await gateway({ whitelist, scopesLookupFn, priviledgesLookupFn, verifyFn });
 
     expect(listenFake).to.have.been.calledWith();
     expect(serverFake).to.have.been.calledWith({
@@ -60,14 +69,20 @@ describe("Auth gateway", () => {
     expect(secondPostFake).to.have.been.calledWith(
       gatewayAnswerChallengeResult,
       {
-        path: "/challenge/answer",
+        path: `/${domain}/answer`,
         preMiddleware: [authenticationResult, authorizationResult]
       }
     );
     expect(authenticationFake).to.have.been.calledWith({ verifyFn });
-    expect(authorizationFake).to.have.been.calledWith({ scopesLookupFn });
+    expect(authorizationFake).to.have.been.calledWith({
+      domain,
+      service,
+      network,
+      scopesLookupFn,
+      priviledgesLookupFn
+    });
     expect(postFake).to.have.been.calledWith(gatewayIssueChallengeResult, {
-      path: "/challenge/issue"
+      path: `/${domain}/issue`
     });
   });
   it("should throw correctly", async () => {
@@ -75,7 +90,7 @@ describe("Auth gateway", () => {
     const serverFake = fake.throws(new Error(errorMessage));
     replace(deps, "server", serverFake);
     try {
-      await gateway({ whitelist, scopesLookupFn });
+      await gateway({ whitelist, scopesLookupFn, priviledgesLookupFn });
       //shouldn't be called
       expect(2).to.equal(1);
     } catch (e) {
