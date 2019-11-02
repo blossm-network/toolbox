@@ -1,6 +1,6 @@
 {
   "name": "@sustainers/authenticate",
-  "version": "0.0.19",
+  "version": "0.0.20",
   "description": "Authenticate requests.",
   "main": "index.js",
   "author": "sustainers.market",
