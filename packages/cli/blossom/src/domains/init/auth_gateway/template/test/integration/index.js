@@ -65,12 +65,14 @@ describe("Command handler store integration tests", () => {
       body: {
         headers: {
           issued: stringDate(),
-          root,
-          authorization: `Bearer ${token}`
+          root
         },
         payload: {
           code
         }
+      },
+      headers: {
+        authorization: `Bearer ${token}`
       }
     });
 
