@@ -20,6 +20,7 @@ const payload = { a: 1 };
 const trace = "some-trace";
 const source = "some-source";
 const tokenFn = "some-token-fn";
+const issued = "some-issued";
 
 const context = { c: 2 };
 
@@ -48,7 +49,7 @@ describe("Issue command", () => {
 
     const result = await command({ action, domain, service, network })
       .set({ context, tokenFn })
-      .issue(payload, { trace, source });
+      .issue(payload, { trace, source, issued });
 
     expect(result).to.equal(response);
     expect(operationFake).to.have.been.calledWith(
@@ -59,7 +60,7 @@ describe("Issue command", () => {
     expect(postFake).to.have.been.calledWith({
       payload,
       headers: {
-        issued: dateString(),
+        issued,
         trace,
         source
       }

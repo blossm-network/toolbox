@@ -19,6 +19,13 @@ module.exports = async ({ payload, context }) => {
 
   //Throw if no challenge recognized or if the code is not right.
   if (!challenge) throw conflict.codeNotRecognized;
+
+  //eslint-disable-next-line no-console
+  console.log("in answer, payload is: ", { payload });
+
+  //eslint-disable-next-line no-console
+  console.log("in answer, challenge is: ", { challenge, context });
+
   if (challenge.code != payload.code) throw conflict.wrongCode;
 
   //Throw if the challenge is expired.

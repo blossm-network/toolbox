@@ -100,18 +100,18 @@ describe("Command handler store integration tests", () => {
 
     expect(deletedCount).to.equal(1);
   });
-  // it("should return an error if incorrect params", async () => {
-  //   const code = { a: 1 };
-  //   const response = await request.post(url, {
-  //     body: {
-  //       headers: {
-  //         issued: stringDate()
-  //       },
-  //       payload: {
-  //         code
-  //       }
-  //     }
-  //   });
-  //   expect(response.statusCode).to.equal(409);
-  // });
+  it("should return an error if incorrect params", async () => {
+    const phone = { a: 1 };
+    const response = await request.post(`${url}/challenge/issue`, {
+      body: {
+        headers: {
+          issued: stringDate()
+        },
+        payload: {
+          phone
+        }
+      }
+    });
+    expect(response.statusCode).to.equal(409);
+  });
 });

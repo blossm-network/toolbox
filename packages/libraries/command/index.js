@@ -5,10 +5,10 @@ const deps = require("./deps");
 module.exports = ({ action, domain, service, network }) => {
   const issue = ({ context, tokenFn } = {}) => async (
     payload,
-    { trace, source } = {}
+    { trace, source, issued } = {}
   ) => {
     const headers = {
-      issued: dateString(),
+      issued: issued || dateString(),
       ...(trace != undefined && { trace }),
       ...(source != undefined && { source })
     };
