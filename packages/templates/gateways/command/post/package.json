@@ -1,7 +1,7 @@
 {
   "name": "@sustainers/command-gateway-post",
   "description": "A command gateway server POST handler.",
-  "version": "0.0.18",
+  "version": "0.0.19",
   "main": "index.js",
   "author": "sustainers.market",
   "engines": {
