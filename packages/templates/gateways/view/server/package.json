@@ -1,7 +1,7 @@
 {
   "name": "@sustainers/view-gateway",
   "description": "A gateway server that manages view access.",
-  "version": "0.0.29",
+  "version": "0.0.30",
   "main": "index.js",
   "author": "sustainers.market",
   "engines": {
@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@sustainers/authentication-middleware": "^0.0.39",
-    "@sustainers/authorization-middleware": "^0.0.26",
+    "@sustainers/authorization-middleware": "^0.0.27",
     "@sustainers/cors-middleware": "^0.0.22",
     "@sustainers/server": "^0.0.12",
     "@sustainers/view-gateway-get": "^0.0.16"
