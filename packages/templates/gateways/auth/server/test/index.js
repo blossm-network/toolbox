@@ -8,11 +8,9 @@ const scopesLookupFn = "some-scopes-lookup-fn";
 const priviledgesLookupFn = "some-priv-lookup-fn";
 const verifyFn = "some-verify-fn";
 
-const domain = "some-domain";
 const service = "some-service";
 const network = "some-network";
 
-process.env.DOMAIN = domain;
 process.env.SERVICE = service;
 process.env.NETWORK = network;
 
@@ -69,20 +67,20 @@ describe("Auth gateway", () => {
     expect(secondPostFake).to.have.been.calledWith(
       gatewayAnswerChallengeResult,
       {
-        path: `/${domain}/answer`,
+        path: "/challenge/answer",
         preMiddleware: [authenticationResult, authorizationResult]
       }
     );
     expect(authenticationFake).to.have.been.calledWith({ verifyFn });
     expect(authorizationFake).to.have.been.calledWith({
-      domain,
+      domain: "challenge",
       service,
       network,
       scopesLookupFn,
       priviledgesLookupFn
     });
     expect(postFake).to.have.been.calledWith(gatewayIssueChallengeResult, {
-      path: `/${domain}/issue`
+      path: "/challenge/issue"
     });
   });
   it("should throw correctly", async () => {

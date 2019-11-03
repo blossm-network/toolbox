@@ -16,15 +16,15 @@ module.exports = async ({
           methods: ["POST"]
         })
     })
-    .post(deps.post({ action: "issue", domain: process.env.DOMAIN }), {
-      path: `/${process.env.DOMAIN}/issue`
+    .post(deps.post({ action: "issue", domain: "challenge" }), {
+      path: "/challenge/issue"
     })
-    .post(deps.post({ action: "answer", domain: process.env.DOMAIN }), {
-      path: `/${process.env.DOMAIN}/answer`,
+    .post(deps.post({ action: "answer", domain: "challenge" }), {
+      path: "/challenge/answer",
       preMiddleware: [
         deps.authentication({ verifyFn }),
         deps.authorization({
-          domain: process.env.DOMAIN,
+          domain: "challenge",
           service: process.env.SERVICE,
           network: process.env.NETWORK,
           scopesLookupFn,
