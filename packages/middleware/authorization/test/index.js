@@ -22,7 +22,7 @@ describe("Authorization middleware", () => {
       claims
     };
 
-    const authorizationFake = fake.returns(context);
+    const authorizationFake = fake.returns({ context });
     replace(deps, "authorize", authorizationFake);
 
     const nextFake = fake();

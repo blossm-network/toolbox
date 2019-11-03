@@ -11,7 +11,7 @@ module.exports = ({
   asyncHandler(async (req, _, next) => {
     //eslint-disable-next-line no-console
     console.log("IN AUTHOR MIDDLEWARE");
-    const context = await deps.authorize({
+    const policy = await deps.authorize({
       path: req.path,
       claims: req.claims,
       scopesLookupFn,
@@ -24,6 +24,6 @@ module.exports = ({
     //eslint-disable-next-line no-console
     console.log("IN AUTHOR MIDDLEWARE context: ", context);
 
-    req.context = context;
+    req.context = policy.context;
     next();
   });
