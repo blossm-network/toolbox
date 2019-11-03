@@ -22,7 +22,7 @@ module.exports = ({
     });
 
     //eslint-disable-next-line no-console
-    console.log("IN AUTHOR MIDDLEWARE context: ", context);
+    console.log("IN AUTHOR MIDDLEWARE context: ", policy.context);
 
     req.context = policy.context;
     next();
