@@ -63,7 +63,10 @@ describe("Command gateway post", () => {
       service,
       network
     });
-    expect(setFake).to.have.been.calledWith({ tokenFn: deps.gcpToken });
+    expect(setFake).to.have.been.calledWith({
+      tokenFn: deps.gcpToken,
+      context
+    });
     expect(issueFake).to.have.been.calledWith(payload, headers);
     expect(statusFake).to.have.been.calledWith(200);
     expect(sendFake).to.have.been.calledWith(response);
@@ -111,7 +114,10 @@ describe("Command gateway post", () => {
       service,
       network
     });
-    expect(setFake).to.have.been.calledWith({ tokenFn: deps.gcpToken });
+    expect(setFake).to.have.been.calledWith({
+      tokenFn: deps.gcpToken,
+      context
+    });
     expect(issueFake).to.have.been.calledWith(payload, headers);
     expect(statusFake).to.have.been.calledWith(200);
     expect(sendFake).to.have.been.calledWith(response);
@@ -156,7 +162,10 @@ describe("Command gateway post", () => {
       service,
       network
     });
-    expect(setFake).to.have.been.calledWith({ tokenFn: deps.gcpToken });
+    expect(setFake).to.have.been.calledWith({
+      tokenFn: deps.gcpToken,
+      context
+    });
     expect(issueFake).to.have.been.calledWith(payload, headers);
     expect(statusFake).to.have.been.calledWith(200);
     expect(sendFake).to.have.been.calledWith(response);

@@ -5,6 +5,7 @@ module.exports = ({ version, mainFn, validateFn, normalizeFn }) => {
     if (validateFn) await validateFn(req.body.payload);
     if (normalizeFn) req.body.payload = await normalizeFn(req.body.payload);
 
+    //TODO gateway should send context to command handler
     //Add req.body.context as a fallback for internal testing without a gateway.
     const context = req.context || req.body.context;
 

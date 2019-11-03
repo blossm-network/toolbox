@@ -173,103 +173,112 @@ describe("Authorize", () => {
 
     const scopesLookupFn = fake.returns(scopes);
 
-    expect(
-      async () =>
-        await authorize({
-          path,
-          claims,
-          scopesLookupFn,
-          root,
-          domain,
-          service,
-          network
-        })
-    ).to.throw;
+    try {
+      await authorize({
+        path,
+        claims,
+        scopesLookupFn,
+        priviledgesLookupFn,
+        root,
+        domain,
+        service,
+        network
+      });
+
+      //shouldnt be called;
+      expect(1).to.equal(2);
+    } catch (e) {
+      expect(e.statusCode).to.equal(401);
+      expect(e.message).to.equal("Invalid token");
+    }
   });
   it("should not authorize if theres a mismatch in root", async () => {
     const scopes = [`${domain}:${joinedPriviledges}:bogus`];
 
     const scopesLookupFn = fake.returns(scopes);
 
-    expect(
-      async () =>
-        await authorize({
-          path,
-          claims,
-          scopesLookupFn,
-          root,
-          domain,
-          service,
-          network
-        })
-    ).to.throw;
+    try {
+      await authorize({
+        path,
+        claims,
+        scopesLookupFn,
+        root,
+        domain,
+        service,
+        network
+      });
+
+      //shouldnt be called;
+      expect(1).to.equal(2);
+    } catch (e) {
+      expect(e.statusCode).to.equal(401);
+      expect(e.message).to.equal("Invalid token");
+    }
   });
   it("should not authorize if theres a mismatch in domain", async () => {
     const scopes = [`bogus:${joinedPriviledges}:${root}`];
     const scopesLookupFn = fake.returns(scopes);
 
-    expect(
-      async () =>
-        await authorize({
-          path,
-          claims,
-          scopesLookupFn,
-          root,
-          domain,
-          service,
-          network
-        })
-    ).to.throw;
+    try {
+      await authorize({
+        path,
+        claims,
+        scopesLookupFn,
+        root,
+        domain,
+        service,
+        network
+      });
+
+      //shouldnt be called;
+      expect(1).to.equal(2);
+    } catch (e) {
+      expect(e.statusCode).to.equal(401);
+      expect(e.message).to.equal("Invalid token");
+    }
   });
   it("should not authorize if theres a mismatch in service", async () => {
     const scopes = [`${domain}:${joinedPriviledges}:${root}`];
     const scopesLookupFn = fake.returns(scopes);
 
-    expect(
-      async () =>
-        await authorize({
-          path,
-          claims,
-          scopesLookupFn,
-          root,
-          domain,
-          service: "bogus",
-          network
-        })
-    ).to.throw;
+    try {
+      await authorize({
+        path,
+        claims,
+        scopesLookupFn,
+        root,
+        domain,
+        service: "bogus",
+        network
+      });
+
+      //shouldnt be called;
+      expect(1).to.equal(2);
+    } catch (e) {
+      expect(e.statusCode).to.equal(401);
+      expect(e.message).to.equal("Invalid token");
+    }
   });
   it("should not authorize if theres a mismatch in network", async () => {
     const scopes = [`${domain}:${joinedPriviledges}:${root}`];
     const scopesLookupFn = fake.returns(scopes);
 
-    expect(
-      async () =>
-        await authorize({
-          path,
-          claims,
-          scopesLookupFn,
-          root,
-          domain,
-          service,
-          network: "bogus"
-        })
-    ).to.throw;
-  });
-  it("should not authorize if there is no token", async () => {
-    const scopes = [`${domain}:${joinedPriviledges}:${root}`];
-    const scopesLookupFn = fake.returns(scopes);
+    try {
+      await authorize({
+        path,
+        claims,
+        scopesLookupFn,
+        root,
+        domain,
+        service,
+        network: "bogus"
+      });
 
-    expect(
-      async () =>
-        await authorize({
-          path,
-          claims,
-          scopesLookupFn,
-          root,
-          domain,
-          service,
-          network
-        })
-    ).to.throw;
+      //shouldnt be called;
+      expect(1).to.equal(2);
+    } catch (e) {
+      expect(e.statusCode).to.equal(401);
+      expect(e.message).to.equal("Invalid token");
+    }
   });
 });

@@ -10,7 +10,7 @@ module.exports = ({ action, domain } = {}) => async (req, res) => {
       service: process.env.SERVICE,
       network: process.env.NETWORK
     })
-    .set({ tokenFn: deps.gcpToken })
+    .set({ tokenFn: deps.gcpToken, context: req.context })
     .issue(payload, headers);
 
   res.status(200).send(response);
