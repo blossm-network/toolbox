@@ -13,15 +13,6 @@ module.exports = async ({
   network,
   service
 }) => {
-  //eslint-disable-next-line no-console
-  console.log("IN AUTHOR LIB tokens: ", {
-    path,
-    context,
-    principle,
-    root,
-    domain
-  });
-
   //Do the scopes and the context allow the provided service, network, domain, and action combo?
   if (context.network !== network || context.service !== service)
     throw unauthorized.tokenInvalid;
@@ -32,12 +23,6 @@ module.exports = async ({
     priviledgesLookupFn ? priviledgesLookupFn({ path }) : null,
     scopesLookupFn({ principle })
   ]);
-
-  //eslint-disable-next-line no-console
-  console.log("IN AUTHOR LIB fns: ", {
-    priviledges,
-    scopes
-  });
 
   const satisfiedScopes = scopes.filter(scope => {
     const [scopeDomain, scopePriviledges, scopeRoot] = scope.split(":");
@@ -59,11 +44,6 @@ module.exports = async ({
       intersection(scopePriviledges.split(","), priviledges).length == 0;
 
     return !domainViolated && !rootViolated && !priviledgesViolated;
-  });
-
-  //eslint-disable-next-line no-console
-  console.log("Satisfied scopes: ", {
-    satisfiedScopes
   });
 
   if (satisfiedScopes.length == 0) throw unauthorized.tokenInvalid;

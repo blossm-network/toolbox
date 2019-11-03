@@ -12,8 +12,6 @@ module.exports = ({ store, fn = defaultFn }) => {
   return async (req, res) => {
     const { query, sort } = fn(req.query);
 
-    //eslint-disable-next-line no-console
-    console.log("GETTING IN VIEW STORE: ", { query, sort, params: req.params });
     if (req.params.id == undefined) {
       const results = await deps.db.find({
         store,

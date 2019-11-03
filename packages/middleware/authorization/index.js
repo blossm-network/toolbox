@@ -9,8 +9,6 @@ module.exports = ({
   priviledgesLookupFn
 }) =>
   asyncHandler(async (req, _, next) => {
-    //eslint-disable-next-line no-console
-    console.log("IN AUTHOR MIDDLEWARE");
     const policy = await deps.authorize({
       path: req.path,
       claims: req.claims,
@@ -20,9 +18,6 @@ module.exports = ({
       service,
       network
     });
-
-    //eslint-disable-next-line no-console
-    console.log("IN AUTHOR MIDDLEWARE context: ", policy.context);
 
     req.context = policy.context;
     next();

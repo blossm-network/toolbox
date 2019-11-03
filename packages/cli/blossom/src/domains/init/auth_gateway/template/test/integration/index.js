@@ -14,8 +14,6 @@ const personRoot = uuid();
 
 describe("Command handler store integration tests", () => {
   it("should return successfully", async () => {
-    //eslint-disable-next-line no-console
-    console.log("0");
     const phone = "251-333-2037";
     await viewStore({
       name: "phones",
@@ -25,9 +23,6 @@ describe("Command handler store integration tests", () => {
     })
       //phone should be already formatted in the view store.
       .update(personRoot, { phone: "+12513332037" });
-
-    //eslint-disable-next-line no-console
-    console.log("1");
 
     const sentAfter = new Date();
 
@@ -42,14 +37,8 @@ describe("Command handler store integration tests", () => {
       }
     });
 
-    //eslint-disable-next-line no-console
-    console.log("response0: ", response0);
-
     expect(response0.statusCode).to.equal(200);
     const { token, root } = JSON.parse(response0.body);
-
-    //eslint-disable-next-line no-console
-    console.log("stuff: ", { token, root });
 
     const [message] = await sms(
       await secret("twilio-account-sid"),
@@ -57,9 +46,6 @@ describe("Command handler store integration tests", () => {
     ).list({ sentAfter, limit: 1, to: "+12513332037" });
 
     const code = message.body.substr(0, 6);
-
-    //eslint-disable-next-line no-console
-    console.log("code: ", code);
 
     const response1 = await request.post(`${url}/challenge/answer`, {
       body: {
@@ -76,20 +62,17 @@ describe("Command handler store integration tests", () => {
       }
     });
 
-    //eslint-disable-next-line no-console
-    console.log("response1: ", response1);
-
     expect(response1.statusCode).to.equal(200);
     const parsedBody = JSON.parse(response1.body);
 
     const aggregate = await eventStore({
-      domain: process.env.DOMAIN,
+      domain: "challenge",
       service: process.env.SERVICE,
       network: process.env.NETWORK
     }).aggregate(parsedBody.root);
 
     expect(aggregate.headers.root).to.equal(parsedBody.root);
-    expect(aggregate.state.phone).to.equal("+12513332037");
+    expect(aggregate.state.answered).to.exist;
 
     const { deletedCount } = await viewStore({
       name: "phones",

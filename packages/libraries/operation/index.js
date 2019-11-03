@@ -24,8 +24,6 @@ const common = ({ method, operation, root, data }) => {
             })
             : null;
 
-          //eslint-disable-next-line no-console
-          console.log("GETTING IN OP URL: ", { url });
           const response = await method(url, {
             body: {
               ...(data != undefined && { ...data }),
@@ -64,8 +62,6 @@ module.exports = (...operation) => {
     get: query => {
       const root = query.root;
       delete query.root;
-      //eslint-disable-next-line no-console
-      console.log("GETTING IN OP: ", { root, query });
       return common({ method: deps.get, operation, root, data: query });
     }
   };
