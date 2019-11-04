@@ -1,6 +1,6 @@
 {
   "name": "@sustainers/validate-command",
-  "version": "0.0.16",
+  "version": "0.0.17",
   "description": "Validates the paramaters found in command requests.",
   "main": "index.js",
   "author": "sustainers.market",
@@ -12,16 +12,16 @@
   },
   "dependencies": {
     "@sustainers/duration-consts": "^0.0.1",
-    "@sustainers/errors": "^0.0.12",
-    "@sustainers/validator": "^0.0.4"
+    "@sustainers/errors": "^0.0.13",
+    "@sustainers/validator": "^0.0.5"
   },
   "scripts": {
     "test": "mocha"
   },
   "devDependencies": {
+    "@sustainers/datetime": "^0.0.3",
     "mocha": "^6.1.4",
     "sinon": "^7.3.2",
-    "sinon-chai": "^3.3.0",
-    "@sustainers/datetime": "^0.0.3"
+    "sinon-chai": "^3.3.0"
   }
 }

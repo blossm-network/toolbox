@@ -1,6 +1,6 @@
 {
   "name": "@sustainers/gcp-event-store",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Add events and hydrate aggregate roots from a big table store.",
   "main": "index.js",
   "author": "sustainers.market",

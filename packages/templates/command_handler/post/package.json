@@ -1,7 +1,7 @@
 {
   "name": "@sustainers/command-handler-post",
   "description": "A command handler server POST handler.",
-  "version": "0.0.72",
+  "version": "0.0.73",
   "main": "index.js",
   "author": "sustainers.market",
   "engines": {
@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@sustainers/create-event": "^0.0.5",
-    "@sustainers/event-store-js": "^0.0.62",
+    "@sustainers/event-store-js": "^0.0.63",
     "@sustainers/gcp-token": "^0.0.28"
   },
   "devDependencies": {
