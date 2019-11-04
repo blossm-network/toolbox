@@ -31,9 +31,24 @@ describe("Download", () => {
   });
   it("should throw correctly", async () => {
     const storage = function() {};
-    const bucketFake = fake.rejects("some error");
+    const error = new Error("some-error");
+    const downloadFake = fake.rejects(error);
+    const fileFake = fake.returns({
+      download: downloadFake
+    });
+
+    const bucketFake = fake.returns({
+      file: fileFake
+    });
     storage.prototype.bucket = bucketFake;
     replace(deps, "storage", storage);
-    expect(async () => await download({ bucket, file })).to.throw;
+    try {
+      await download({ bucket, file });
+
+      //shouldn't get called
+      expect(1).to.equal(0);
+    } catch (e) {
+      expect(e).to.equal(error);
+    }
   });
 });

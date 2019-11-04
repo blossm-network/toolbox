@@ -101,11 +101,12 @@ describe("Event store hydrate", () => {
     expect(result).to.be.null;
   });
   it("should call hydrate and throw error if needed", async () => {
+    const error = new Error("some-error");
     const readStringFake = fake.returns({
       on: (status, fn) => {
         switch (status) {
         case "error":
-          fn(new Error());
+          fn(error);
           break;
         case "data":
           fn({ data: goodData });
@@ -135,7 +136,14 @@ describe("Event store hydrate", () => {
 
     const root = "root";
 
-    expect(async () => await eventStore({ store }).hydrate(root)).to.throw;
+    try {
+      await eventStore({ store }).hydrate(root);
+
+      //shouldn't get called
+      expect(1).to.equal(0);
+    } catch (e) {
+      expect(e).to.equal(error);
+    }
   });
   it("should call hydrate with the correct params and correct reducing if exists", async () => {
     const payload0 = {

@@ -1,6 +1,5 @@
 const { object, string, date, findError } = require("@sustainers/validator");
 const { badRequest } = require("@sustainers/errors");
-const { fineTimestamp } = require("@sustainers/datetime");
 const { SECONDS_IN_DAY } = require("@sustainers/duration-consts");
 
 module.exports = async params => {
@@ -25,8 +24,9 @@ module.exports = async params => {
   }
 
   if (
-    fineTimestamp() < params.headers.issued ||
-    fineTimestamp() - params.headers.issued > SECONDS_IN_DAY * 1000
+    new Date() < new Date(params.headers.issued) ||
+    new Date().getTime() - new Date(params.headers.issued).getTime() >
+      SECONDS_IN_DAY * 1000
   ) {
     throw badRequest.message("The issued timestamp seems incorrect.");
   }

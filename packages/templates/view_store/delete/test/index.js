@@ -56,6 +56,15 @@ describe("View store delete", () => {
     const res = {
       send: sendFake
     };
-    expect(async () => await del({ store })(req, res)).to.throw;
+
+    try {
+      await del({ store })(req, res);
+
+      //shouldn't get called
+      expect(1).to.equal(0);
+    } catch (e) {
+      expect(e.statusCode).to.equal(400);
+      expect(e.message).to.equal("Missing id url parameter");
+    }
   });
 });

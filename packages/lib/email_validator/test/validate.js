@@ -1,5 +1,5 @@
 const { expect } = require("chai");
-const { validate } = require("..");
+const validate = require("..");
 
 describe("Valid emails", () => {
   it("should not throw when given a valid email", () => {
@@ -18,7 +18,12 @@ describe("Valid emails", () => {
       "firstname-lastname@domain.com"
     ];
     validEmails.forEach(validEmail => {
-      expect(() => validate(validEmail)).to.not.throw();
+      try {
+        validate(validEmail);
+      } catch (e) {
+        //shouldn't be called;
+        expect(1).to.equal(0);
+      }
     });
   });
 });
@@ -45,9 +50,14 @@ describe("Invalid emails", () => {
       "email@[123.123.123.123]"
     ];
     invalidEmails.forEach(invalidEmail => {
-      expect(() => validate(invalidEmail)).to.throw(
-        `${invalidEmail} is not a valid email.`
-      );
+      try {
+        validate(invalidEmail);
+
+        //shouldn't get called
+        expect(1).to.equal(0);
+      } catch (message) {
+        expect(message).to.equal(`${invalidEmail} is not a valid email.`);
+      }
     });
   });
 });

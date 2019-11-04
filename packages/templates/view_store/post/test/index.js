@@ -124,7 +124,8 @@ describe("View store post", () => {
     expect(sendFake).to.have.been.calledOnce;
   });
   it("should throw correctly", async () => {
-    const writeFake = fake.rejects(new Error());
+    const error = new Error("some-error");
+    const writeFake = fake.rejects(error);
     const db = {
       write: writeFake
     };
@@ -145,6 +146,13 @@ describe("View store post", () => {
 
     const uuidFake = fake.returns(uuid);
     replace(deps, "uuid", uuidFake);
-    expect(async () => await post({ store })(req, res)).to.throw;
+    try {
+      await post({ store })(req, res);
+
+      //shouldn't get called
+      expect(1).to.equal(0);
+    } catch (e) {
+      expect(e).to.equal(error);
+    }
   });
 });

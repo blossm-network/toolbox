@@ -47,8 +47,16 @@ describe("Secrets", () => {
     expect(result).to.equal(theSecret);
   });
   it("should throw correctly", async () => {
-    const downloadFake = fake.rejects("some error");
+    const error = new Error("some-error");
+    const downloadFake = fake.rejects(error);
     replace(deps, "download", downloadFake);
-    expect(async () => await secret(name)).to.throw;
+    try {
+      await secret(name);
+
+      //shouldn't get called
+      expect(1).to.equal(0);
+    } catch (e) {
+      expect(e).to.equal(error);
+    }
   });
 });

@@ -81,6 +81,8 @@ describe("Error middleware", () => {
       status: statusFake,
       headersSent: "some"
     };
-    expect(async () => await errorMiddleware(err, req, res)).to.throw;
+    const nextFake = fake();
+    await errorMiddleware(err, req, res, nextFake);
+    expect(nextFake).to.have.been.calledWith(err);
   });
 });

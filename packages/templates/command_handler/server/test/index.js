@@ -15,7 +15,8 @@ describe("Command handler", () => {
   });
 
   it("should call with the correct params", async () => {
-    const listenFake = fake();
+    const returnValue = "some-return-value";
+    const listenFake = fake.returns(returnValue);
     const postFake = fake.returns({
       listen: listenFake
     });
@@ -28,10 +29,16 @@ describe("Command handler", () => {
     const commandHandlerPostFake = fake.returns(commandHandlerPostResult);
     replace(deps, "post", commandHandlerPostFake);
 
-    await commandHandler({ version, mainFn, validateFn, normalizeFn });
+    const result = await commandHandler({
+      version,
+      mainFn,
+      validateFn,
+      normalizeFn
+    });
 
-    expect(listenFake).to.have.been.calledOnce;
-    expect(serverFake).to.have.been.calledOnce;
+    expect(result).to.equal(returnValue);
+    expect(listenFake).to.have.been.calledWith();
+    expect(serverFake).to.have.been.calledWith();
     expect(postFake).to.have.been.calledWith(commandHandlerPostResult);
     expect(commandHandlerPostFake).to.have.been.calledWith({
       version,
@@ -56,8 +63,8 @@ describe("Command handler", () => {
 
     await commandHandler({ version, mainFn });
 
-    expect(listenFake).to.have.been.calledOnce;
-    expect(serverFake).to.have.been.calledOnce;
+    expect(listenFake).to.have.been.calledWith();
+    expect(serverFake).to.have.been.calledWith();
     expect(postFake).to.have.been.calledWith(commandHandlerPostResult);
     expect(commandHandlerPostFake).to.have.been.calledWith({
       version,
@@ -65,7 +72,11 @@ describe("Command handler", () => {
     });
   });
   it("should throw correctly", async () => {
-    const postFake = fake.rejects(new Error());
+    const error = new Error("some-message");
+    const listenFake = fake.rejects(error);
+    const postFake = fake.returns({
+      listen: listenFake
+    });
     const serverFake = fake.returns({
       post: postFake
     });
@@ -75,6 +86,13 @@ describe("Command handler", () => {
     const commandHandlerPostFake = fake.returns(commandHandlerPostResult);
     replace(deps, "post", commandHandlerPostFake);
 
-    expect(async () => await commandHandler({ version, mainFn })).to.throw;
+    try {
+      await commandHandler({ version, mainFn });
+
+      //shouldn't get called
+      expect(1).to.equal(0);
+    } catch (e) {
+      expect(e).to.equal(error);
+    }
   });
 });

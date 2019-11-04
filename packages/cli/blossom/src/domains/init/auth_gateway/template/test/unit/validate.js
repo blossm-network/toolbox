@@ -8,7 +8,12 @@
 
 describe("Command handler store validator tests", () => {
   // it("should handle correct payload correctly", async () => {
-  //   expect(await validate(goodPayload)).to.not.throw;
+  // try {
+  //   await validate(goodPayload);
+  // } catch (e) {
+  //   //shouldn't be called;
+  //   expect(1).to.equal(0);
+  // }
   // });
   // it("should throw if bad name is passed", async () => {
   //   const payload = {

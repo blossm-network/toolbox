@@ -11,7 +11,6 @@
     "access": "public"
   },
   "dependencies": {
-    "@sustainers/datetime": "^0.0.3",
     "@sustainers/duration-consts": "^0.0.1",
     "@sustainers/errors": "^0.0.12",
     "@sustainers/validator": "^0.0.4"
@@ -22,6 +21,7 @@
   "devDependencies": {
     "mocha": "^6.1.4",
     "sinon": "^7.3.2",
-    "sinon-chai": "^3.3.0"
+    "sinon-chai": "^3.3.0",
+    "@sustainers/datetime": "^0.0.3"
   }
 }

@@ -162,6 +162,13 @@ describe("Returns a model", () => {
 
     const mixins = [mixin1, mixin2];
 
-    expect(() => store({ mixins })).to.throw();
+    try {
+      store({ mixins });
+
+      //shouldn't get called
+      expect(1).to.equal(0);
+    } catch (e) {
+      expect(e.message).to.equal("View store needs a name");
+    }
   });
 });

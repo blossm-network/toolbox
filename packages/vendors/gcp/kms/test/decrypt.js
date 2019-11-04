@@ -58,9 +58,17 @@ describe("Kms decrypt", () => {
     const pathFake = fake.returns(path);
     const kmsClient = function() {};
     kmsClient.prototype.cryptoKeyPath = pathFake;
-    const decryptFake = fake.rejects("some error");
+    const error = new Error("some-error");
+    const decryptFake = fake.rejects(error);
     kmsClient.prototype.decrypt = decryptFake;
     replace(kms, "KeyManagementServiceClient", kmsClient);
-    expect(async () => await decrypt(message)).to.throw;
+    try {
+      await decrypt(message);
+
+      //shouldn't get called
+      expect(1).to.equal(0);
+    } catch (e) {
+      expect(e).to.equal(error);
+    }
   });
 });

@@ -60,7 +60,7 @@ module.exports = ({
   } = {}
 }) => {
   if (name == undefined || name.length == 0)
-    throw new InternalServerError("View store needs a name.");
+    throw new InternalServerError("View store needs a name");
 
   if (
     user != undefined &&

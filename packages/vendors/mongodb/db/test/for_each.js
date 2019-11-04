@@ -44,7 +44,7 @@ describe("For each", () => {
 
 describe("Throws", () => {
   it("it should throw if an error function is passed", async () => {
-    const error = Error("no good");
+    const error = new Error("no good");
     const data = "some-data";
     const on = (param, fn) => {
       switch (param) {
@@ -70,6 +70,13 @@ describe("Throws", () => {
 
     const fnFake = fake();
 
-    expect(async () => await forEach({ store, query, fn: fnFake })).to.throw;
+    try {
+      await forEach({ store, query, fn: fnFake });
+
+      //shouldn't get called
+      expect(1).to.equal(0);
+    } catch (e) {
+      expect(e).to.equal(error);
+    }
   });
 });

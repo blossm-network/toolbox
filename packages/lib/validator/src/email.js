@@ -6,7 +6,7 @@ module.exports = (value, { optional } = {}) => {
     value,
     message: () =>
       "This email isn't formatted right, maybe it’s a typo? Try again after making a change to it.",
-    fn: emailValidator.validate,
+    fn: emailValidator,
     optional
   });
 };
