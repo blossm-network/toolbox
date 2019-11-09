@@ -5,9 +5,9 @@ const yaml = require("yaml");
 const path = require("path");
 const { red } = require("chalk");
 
-const { init, issue } = require("./domains");
+const { begin, init, issue } = require("./domains");
 
-const domains = ["init", "issue"];
+const domains = ["begin", "init", "issue"];
 
 const tryShortcuts = input => {
   const inputPath =
@@ -36,6 +36,8 @@ const tryShortcuts = input => {
 
 const forward = input => {
   switch (input.domain) {
+  case "begin":
+    return begin(input.args);
   case "init":
     return init(input.args);
   case "issue":

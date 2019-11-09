@@ -7,8 +7,34 @@ const camelCased = str =>
   str.replace(/-([a-z])/g, function(g) {
     return g[1].toUpperCase();
   });
+const flagValue = async (flag, args) => {
+  const value = args[`--${flag.name}`] || flag.default;
+  if (value) return value;
 
-const parseArgs = (
+  if (flag.choices) {
+    const { flagValue } = await prompt({
+      type: "list",
+      name: "flagValue",
+      message: roboSay(`Which of these ${flag.name}'s do you wanna set?`),
+      choices: flag.choices
+    });
+
+    return flagValue;
+  }
+
+  if (flag.required) {
+    //eslint-disable-next-line no-console
+    console.error(
+      roboSay(
+        `You didn't give me a ${flag.name} flag. Add it then give it another go.`
+      ),
+      red.bold("error")
+    );
+    process.exit(1);
+  }
+};
+
+const parseArgs = async (
   rawArgs,
   { permissive = true, flags = [], entrypointDefault } = {}
 ) => {
@@ -32,13 +58,17 @@ const parseArgs = (
     }
   );
 
+  for (const flag of flags) flag.value = await flagValue(flag, args);
+
+  const formattedFlags = flags.reduce((map, flag) => {
+    return {
+      ...map,
+      [camelCased(flag.name)]: flag.value
+    };
+  }, {});
+
   return {
-    ...flags.reduce((map, flag) => {
-      return {
-        ...map,
-        [camelCased(flag.name)]: args[`--${flag.name}`] || flag.default
-      };
-    }, {}),
+    ...formattedFlags,
     entrypoint: args._[0] || entrypointDefault,
     args: args._.slice(1),
     positionalArgs: args._.slice(1).filter(arg => arg[0] != "-")
@@ -100,7 +130,7 @@ module.exports = async ({
   const options = await validate({
     entrypointType,
     choices,
-    options: parseArgs(args, { flags, entrypointDefault })
+    options: await parseArgs(args, { flags, entrypointDefault })
   });
   return format(options, { entrypointType });
 };
