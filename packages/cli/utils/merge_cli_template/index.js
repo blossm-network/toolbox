@@ -228,7 +228,7 @@ const writeCompose = (config, workingDir) => {
 };
 
 const configure = async (workingDir, configFn, env) => {
-  const configPath = path.resolve(workingDir, "blossom.yaml");
+  const configPath = path.resolve(workingDir, "blossm.yaml");
 
   try {
     const config = yaml.parse(fs.readFileSync(configPath, "utf8"));
@@ -245,7 +245,7 @@ const configure = async (workingDir, configFn, env) => {
     //eslint-disable-next-line no-console
     console.error(
       roboSay(
-        "blossom.yaml isn't parseable. Double check it's correct and give it another go."
+        "blossm.yaml isn't parseable. Double check it's correct and give it another go."
       ),
       red.bold("error")
     );

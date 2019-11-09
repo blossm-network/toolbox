@@ -41,7 +41,7 @@ module.exports = ({ domain, dir }) => async args => {
   //eslint-disable-next-line no-console
   console.log(roboSay("Woohoo!"), green.bold("done"));
   //eslint-disable-next-line no-console
-  console.log(roboSay("When you wanna deploy, type `blossom deploy`"));
+  console.log(roboSay("When you wanna deploy, type `blossm deploy`"));
 
   return true;
 };
