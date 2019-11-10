@@ -58,14 +58,19 @@ describe("Event store get", () => {
       send: sendFake
     };
 
+    const error = "some-error";
+    const rootNotFoundFake = fake.returns(error);
+    replace(deps, "notFoundError", {
+      root: rootNotFoundFake
+    });
+
     try {
       await get({ store })(req, res);
 
       //shouldn't be called
       expect(2).to.equal(1);
     } catch (e) {
-      expect(e.statusCode).to.equal(404);
-      expect(e.message).to.equal("Root not found.");
+      expect(e).to.equal(error);
     }
   });
 });

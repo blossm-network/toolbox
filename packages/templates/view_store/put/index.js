@@ -1,14 +1,12 @@
 const deps = require("./deps");
 
-const { badRequest } = require("@blossm/errors");
-
 const defaultFn = body => {
   return { update: { $set: body } };
 };
 
 module.exports = ({ store, fn = defaultFn }) => {
   return async (req, res) => {
-    if (req.params.id == undefined) throw badRequest.missingId();
+    if (req.params.id == undefined) throw deps.badRequestError.missingId();
 
     // Can't set the id, created, or modified.
     delete req.body.id;

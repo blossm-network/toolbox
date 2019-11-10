@@ -1,5 +1,5 @@
 const { expect } = require("chai").use(require("sinon-chai"));
-const { restore, fake } = require("sinon");
+const { restore, fake, replace } = require("sinon");
 
 const authorize = require("..");
 
@@ -25,6 +25,8 @@ const claims = {
   context,
   principle
 };
+
+const deps = require("../deps");
 
 describe("Authorize", () => {
   afterEach(() => {
@@ -173,6 +175,12 @@ describe("Authorize", () => {
 
     const scopesLookupFn = fake.returns(scopes);
 
+    const error = "some-error";
+    const tokenInvalidFake = fake.returns(error);
+    replace(deps, "unauthorizedError", {
+      tokenInvalid: tokenInvalidFake
+    });
+
     try {
       await authorize({
         path,
@@ -188,8 +196,7 @@ describe("Authorize", () => {
       //shouldnt be called;
       expect(1).to.equal(2);
     } catch (e) {
-      expect(e.statusCode).to.equal(401);
-      expect(e.message).to.equal("Invalid token");
+      expect(e).to.equal(error);
     }
   });
   it("should not authorize if theres a mismatch in root", async () => {
@@ -197,6 +204,12 @@ describe("Authorize", () => {
 
     const scopesLookupFn = fake.returns(scopes);
 
+    const error = "some-error";
+    const tokenInvalidFake = fake.returns(error);
+    replace(deps, "unauthorizedError", {
+      tokenInvalid: tokenInvalidFake
+    });
+
     try {
       await authorize({
         path,
@@ -211,14 +224,19 @@ describe("Authorize", () => {
       //shouldnt be called;
       expect(1).to.equal(2);
     } catch (e) {
-      expect(e.statusCode).to.equal(401);
-      expect(e.message).to.equal("Invalid token");
+      expect(e).to.equal(e);
     }
   });
   it("should not authorize if theres a mismatch in domain", async () => {
     const scopes = [`bogus:${joinedPriviledges}:${root}`];
     const scopesLookupFn = fake.returns(scopes);
 
+    const error = "some-error";
+    const tokenInvalidFake = fake.returns(error);
+    replace(deps, "unauthorizedError", {
+      tokenInvalid: tokenInvalidFake
+    });
+
     try {
       await authorize({
         path,
@@ -233,13 +251,18 @@ describe("Authorize", () => {
       //shouldnt be called;
       expect(1).to.equal(2);
     } catch (e) {
-      expect(e.statusCode).to.equal(401);
-      expect(e.message).to.equal("Invalid token");
+      expect(e).to.equal(error);
     }
   });
   it("should not authorize if theres a mismatch in service", async () => {
     const scopes = [`${domain}:${joinedPriviledges}:${root}`];
     const scopesLookupFn = fake.returns(scopes);
+
+    const error = "some-error";
+    const tokenInvalidFake = fake.returns(error);
+    replace(deps, "unauthorizedError", {
+      tokenInvalid: tokenInvalidFake
+    });
 
     try {
       await authorize({
@@ -255,13 +278,18 @@ describe("Authorize", () => {
       //shouldnt be called;
       expect(1).to.equal(2);
     } catch (e) {
-      expect(e.statusCode).to.equal(401);
-      expect(e.message).to.equal("Invalid token");
+      expect(e).to.equal(error);
     }
   });
   it("should not authorize if theres a mismatch in network", async () => {
     const scopes = [`${domain}:${joinedPriviledges}:${root}`];
     const scopesLookupFn = fake.returns(scopes);
+
+    const error = "some-error";
+    const tokenInvalidFake = fake.returns(error);
+    replace(deps, "unauthorizedError", {
+      tokenInvalid: tokenInvalidFake
+    });
 
     try {
       await authorize({
@@ -277,8 +305,7 @@ describe("Authorize", () => {
       //shouldnt be called;
       expect(1).to.equal(2);
     } catch (e) {
-      expect(e.statusCode).to.equal(401);
-      expect(e.message).to.equal("Invalid token");
+      expect(e).to.equal(error);
     }
   });
 });

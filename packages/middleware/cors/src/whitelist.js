@@ -1,4 +1,4 @@
-const { unauthorized } = require("@blossm/errors");
+const deps = require("../deps");
 
 module.exports = whitelist => {
   return {
@@ -6,7 +6,7 @@ module.exports = whitelist => {
       if (!origin || whitelist.indexOf(origin) !== -1) {
         callback(null, true);
       } else {
-        callback(unauthorized.cors());
+        callback(deps.unauthorizedError.cors());
       }
     }
   };

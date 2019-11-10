@@ -1,7 +1,8 @@
 const { UnauthorizedError } = require("restify-errors");
 
 module.exports = {
-  tokenInvalid: () => new UnauthorizedError("Invalid token"),
-  tokenExpired: () => new UnauthorizedError("Token expired"),
-  cors: () => new UnauthorizedError("Not allowed by CORS")
+  tokenInvalid: () => new UnauthorizedError("Invalid token."),
+  tokenExpired: () => new UnauthorizedError("Token expired."),
+  cors: () => new UnauthorizedError("Not allowed by CORS."),
+  message: message => new UnauthorizedError(message)
 };

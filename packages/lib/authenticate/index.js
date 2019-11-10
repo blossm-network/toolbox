@@ -1,5 +1,4 @@
 const deps = require("./deps");
-const { unauthorized } = require("@blossm/errors");
 
 module.exports = async ({ req, verifyFn, requiresToken = true }) => {
   const tokens = deps.tokensFromReq(req);
@@ -7,7 +6,7 @@ module.exports = async ({ req, verifyFn, requiresToken = true }) => {
   const jwt = tokens.bearer || tokens.cookie;
 
   if (jwt == undefined) {
-    if (requiresToken) throw unauthorized.tokenInvalid();
+    if (requiresToken) throw deps.unauthorizedError.tokenInvalid();
     return {};
   }
 

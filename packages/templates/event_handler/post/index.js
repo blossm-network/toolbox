@@ -1,4 +1,4 @@
-const { badRequest } = require("@blossm/errors");
+const deps = require("./deps");
 
 const event = req => {
   try {
@@ -7,17 +7,17 @@ const event = req => {
       .trim();
     return JSON.parse(eventString);
   } catch (e) {
-    throw badRequest.badEvent();
+    throw deps.badRequestError.badEvent();
   }
 };
 
 module.exports = ({ mainFn }) => {
   return async (req, res) => {
     if (!req.body) {
-      throw badRequest.missingMessage();
+      throw deps.badRequestError.missingMessage();
     }
     if (!req.body.message) {
-      throw badRequest.badMessage();
+      throw deps.badRequestError.badMessage();
     }
 
     await mainFn(event(req));

@@ -1,5 +1,6 @@
-const { unauthorized } = require("@blossm/errors");
 const { decodeJwt } = require("../deps");
+
+const deps = require("../deps");
 
 module.exports = async ({ token, verifyFn }) => {
   const [header, payload, signature] = token.split(".");
@@ -9,7 +10,7 @@ module.exports = async ({ token, verifyFn }) => {
     signature
   });
 
-  if (!isVerified) throw unauthorized.tokenInvalid();
+  if (!isVerified) throw deps.unauthorizedError.tokenInvalid();
 
   return decodeJwt(token);
 };

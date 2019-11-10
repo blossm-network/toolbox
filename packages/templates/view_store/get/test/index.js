@@ -198,11 +198,16 @@ describe("View store get", () => {
       send: sendFake
     };
 
+    const error = "some-error";
+    const idNotFoundFake = fake.returns(error);
+    replace(deps, "notFoundError", {
+      id: idNotFoundFake
+    });
+
     try {
       await get({ store })(req, res);
     } catch (e) {
-      expect(e.statusCode).to.equal(404);
-      expect(e.message).to.equal("Id not found.");
+      expect(e).to.equal(error);
     }
   });
 });

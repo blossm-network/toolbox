@@ -24,6 +24,8 @@ const schemaFake = fake.returns({
 const modelObject = "some-model-object";
 const modelFake = fake.returns(modelObject);
 
+const deps = require("../deps");
+
 describe("Returns a model", () => {
   beforeEach(() => {
     replace(mongoose, "model", modelFake);
@@ -162,13 +164,22 @@ describe("Returns a model", () => {
 
     const mixins = [mixin1, mixin2];
 
+    const error = "some-error";
+    const internalServerMessageErrorFake = fake.returns(error);
+    replace(deps, "internalServerError", {
+      message: internalServerMessageErrorFake
+    });
+
     try {
       store({ mixins });
 
       //shouldn't get called
       expect(1).to.equal(0);
     } catch (e) {
-      expect(e.message).to.equal("View store needs a name");
+      expect(internalServerMessageErrorFake).to.have.been.calledWith(
+        "View store needs a name."
+      );
+      expect(e).to.equal(error);
     }
   });
 });

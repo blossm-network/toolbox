@@ -7,15 +7,15 @@ describe("Errors exist", () => {
     expect(error.message).to.contain("123");
   });
   it("should return an error if present", () => {
-    const errMessage = "Im an error";
-    const err = Error(errMessage);
+    const errorMessage = "Im an error";
+    const err = Error(errorMessage);
     const error = findError([err, string(""), string("")]);
-    expect(error.message).to.equal(errMessage);
+    expect(error.message).to.equal(errorMessage);
   });
   it("should return an error if a message present", () => {
-    const errMessage = "Im an error";
-    const error = findError([errMessage, string(""), string("")]);
-    expect(error.message).to.equal(errMessage);
+    const errorMessage = "Im an error";
+    const error = findError([errorMessage, string(""), string("")]);
+    expect(error.message).to.equal(errorMessage);
   });
 });
 

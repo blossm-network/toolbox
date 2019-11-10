@@ -171,11 +171,11 @@ describe("Request", () => {
       how: ["are", "you"],
       andy: [0, "ur dogs?"]
     };
-    const errMessage = "some-error-message";
+    const errorMessage = "some-error-message";
     const onFn = (status, fn) => {
       switch (status) {
       case "error":
-        fn(new Error(errMessage));
+        fn(new Error(errorMessage));
         return;
       case "data":
         fn(body);
@@ -201,7 +201,7 @@ describe("Request", () => {
       //shouldn't be called
       expect(0).to.equal(1);
     } catch (e) {
-      expect(e.message).to.equal(errMessage);
+      expect(e.message).to.equal(errorMessage);
     }
   });
 });

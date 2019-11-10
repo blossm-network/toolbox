@@ -7,10 +7,16 @@
   "engines": {
     "node": ">= 10.16.0"
   },
+  "scripts": {
+    "test": "mocha"
+  },
   "publishConfig": {
     "access": "public"
   },
   "dependencies": {
     "restify-errors": "^8.0.0"
+  },
+  "devDependencies": {
+    "mocha": "^6.1.4"
   }
 }

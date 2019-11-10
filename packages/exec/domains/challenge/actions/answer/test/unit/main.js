@@ -239,12 +239,18 @@ describe("Command handler unit tests", () => {
     });
     replace(deps, "viewStore", viewStoreFake);
 
+    const error = "some-error";
+    const codeNotRecognizedFake = fake.returns(error);
+    replace(deps, "conflictError", {
+      codeNotRecognized: codeNotRecognizedFake
+    });
+
     try {
       await main({ payload, context });
       //shouldn't be called
       expect(2).to.equal(3);
     } catch (e) {
-      expect(e.message).to.equal("This code isn't recognized.");
+      expect(e).to.equal(error);
     }
   });
   it("should throw correctly if a challenge is with the wrong code", async () => {
@@ -261,12 +267,18 @@ describe("Command handler unit tests", () => {
     });
     replace(deps, "viewStore", viewStoreFake);
 
+    const error = "some-error";
+    const badCodeFake = fake.returns(error);
+    replace(deps, "conflictError", {
+      badCode: badCodeFake
+    });
+
     try {
       await main({ payload, context });
       //shouldn't be called
       expect(2).to.equal(3);
     } catch (e) {
-      expect(e.message).to.equal("This code isn't right.");
+      expect(e).to.equal(error);
     }
   });
   it("should throw correctly if a challenge is expired", async () => {
@@ -286,12 +298,18 @@ describe("Command handler unit tests", () => {
     });
     replace(deps, "viewStore", viewStoreFake);
 
+    const error = "some-error";
+    const codeExpiredFake = fake.returns(error);
+    replace(deps, "conflictError", {
+      codeExpired: codeExpiredFake
+    });
+
     try {
       await main({ payload, context });
       //shouldn't be called
       expect(2).to.equal(3);
     } catch (e) {
-      expect(e.message).to.equal("This code expired.");
+      expect(e).to.equal(error);
     }
   });
 });

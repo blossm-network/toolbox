@@ -13,12 +13,14 @@
  */
 
 const { findError, string } = require("@blossm/validator");
-const { badRequest, conflict } = require("@blossm/errors");
+
+const deps = require("./deps");
 
 module.exports = async payload => {
   const systemInputError = findError([string(payload.name)]);
-  if (systemInputError) throw badRequest.message(systemInputError.message);
+  if (systemInputError)
+    throw deps.badRequestError.message(systemInputError.message);
 
   const userInputError = findError([string(payload.name)]);
-  if (userInputError) throw conflict.message(userInputError.message);
+  if (userInputError) throw deps.conflictError.message(userInputError.message);
 };

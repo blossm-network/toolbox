@@ -62,6 +62,12 @@ describe("Authorize", () => {
     replace(deps, "tokensFromReq", fake.returns({}));
     replace(deps, "validate", fake.returns(claims));
 
+    const error = "some-error";
+    const tokenInvalidFake = fake.returns(error);
+    replace(deps, "unauthorizedError", {
+      tokenInvalid: tokenInvalidFake
+    });
+
     try {
       await authorize({
         req,
@@ -71,8 +77,7 @@ describe("Authorize", () => {
       //shouldn't get called
       expect(1).to.equal(0);
     } catch (e) {
-      expect(e.statusCode).to.equal(401);
-      expect(e.message).to.equal("Invalid token");
+      expect(e).to.equal(error);
     }
   });
 

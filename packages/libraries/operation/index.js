@@ -1,4 +1,3 @@
-const errors = require("@blossm/errors");
 const { MAX_LENGTH } = require("@blossm/service-name-consts");
 const logger = require("@blossm/logger");
 
@@ -38,7 +37,7 @@ const common = ({ method, operation, root, data }) => {
 
           if (response.statusCode >= 300) {
             logger.info("response errored: ", { response, url });
-            throw errors.construct({
+            throw deps.constructError({
               statusCode: response.statusCode,
               message: response.body
                 ? JSON.parse(response.body).message || "Not specified"

@@ -24,8 +24,8 @@ describe("Logging", () => {
     replace(transports, "error", fake());
 
     const message = "Debug message";
-    const errMessage = "Error message";
-    const err = Error(errMessage);
+    const errorMessage = "Error message";
+    const err = Error(errorMessage);
 
     error(message, { err });
 
@@ -36,8 +36,8 @@ describe("Logging", () => {
     replace(transports, "error", fake());
 
     const message = "Debug message";
-    const errMessage = "Error message";
-    const err = Error(errMessage);
+    const errorMessage = "Error message";
+    const err = Error(errorMessage);
     const metadataWithError = { err, key: "value" };
 
     error(message, metadataWithError);

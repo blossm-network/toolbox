@@ -110,8 +110,8 @@ describe("View store stream", () => {
       end: endFake
     };
 
-    const errMessage = "some-error";
-    const findFake = fake.throws(new Error(errMessage));
+    const errorMessage = "some-error";
+    const findFake = fake.throws(new Error(errorMessage));
     const db = {
       find: findFake
     };
@@ -130,7 +130,7 @@ describe("View store stream", () => {
       //shouldn't be called
       expect(2).to.equal(1);
     } catch (e) {
-      expect(e.message).to.equal(errMessage);
+      expect(e.message).to.equal(errorMessage);
     }
   });
 });

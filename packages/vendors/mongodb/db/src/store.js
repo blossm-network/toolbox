@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
-const { InternalServerError } = require("restify-errors");
 
 const connect = require("./connect");
+const deps = require("../deps");
 
 const unravelMixins = ({ schema = {}, indexes = [], mixins = [] }) => {
   const mixin = {
@@ -60,7 +60,7 @@ module.exports = ({
   } = {}
 }) => {
   if (name == undefined || name.length == 0)
-    throw new InternalServerError("View store needs a name");
+    throw deps.internalServerError.message("View store needs a name.");
 
   if (
     user != undefined &&

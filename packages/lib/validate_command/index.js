@@ -1,6 +1,7 @@
 const { object, string, date, findError } = require("@blossm/validator");
-const { badRequest } = require("@blossm/errors");
 const { SECONDS_IN_DAY } = require("@blossm/duration-consts");
+
+const deps = require("./deps");
 
 module.exports = async params => {
   const systemInputError = findError([
@@ -9,7 +10,7 @@ module.exports = async params => {
   ]);
 
   if (systemInputError) {
-    throw badRequest.message(systemInputError.message);
+    throw deps.badRequestError.message(systemInputError.message);
   }
 
   const headersSystemInputError = findError([
@@ -20,7 +21,7 @@ module.exports = async params => {
   ]);
 
   if (headersSystemInputError) {
-    throw badRequest.message(headersSystemInputError.message);
+    throw deps.badRequestError.message(headersSystemInputError.message);
   }
 
   if (
@@ -28,6 +29,6 @@ module.exports = async params => {
     new Date().getTime() - new Date(params.headers.issued).getTime() >
       SECONDS_IN_DAY * 1000
   ) {
-    throw badRequest.message("The issued timestamp seems incorrect.");
+    throw deps.badRequestError.message("The issued timestamp seems incorrect.");
   }
 };

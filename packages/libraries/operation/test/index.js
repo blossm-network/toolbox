@@ -410,6 +410,11 @@ describe("Operation", () => {
     replace(deps, "trim", trimFake);
 
     const tokenFnFake = fake.returns(token);
+
+    const error = "some-error";
+    const constructErrorFake = fake.returns(error);
+    replace(deps, "constructError", constructErrorFake);
+
     try {
       await operation(opPart1, opPart2)
         .delete(root)
@@ -418,9 +423,11 @@ describe("Operation", () => {
 
       expect(3).to.equal(4);
     } catch (e) {
-      expect(e.message).to.equal(errorMessage);
-      expect(e.body.code).to.equal("BadRequest");
-      expect(e).to.exist;
+      expect(constructErrorFake).to.have.been.calledWith({
+        statusCode: errorStatusCode,
+        message: errorMessage
+      });
+      expect(e).to.equal(error);
     }
   });
   it("should return error correctly without message", async () => {
@@ -441,6 +448,11 @@ describe("Operation", () => {
     replace(deps, "trim", trimFake);
 
     const tokenFnFake = fake.returns(token);
+
+    const error = "some-error";
+    const constructErrorFake = fake.returns(error);
+    replace(deps, "constructError", constructErrorFake);
+
     try {
       await operation(opPart1, opPart2)
         .delete(root)
@@ -449,9 +461,11 @@ describe("Operation", () => {
 
       expect(3).to.equal(4);
     } catch (e) {
-      expect(e.message).to.equal("Not specified");
-      expect(e.body.code).to.equal("BadRequest");
-      expect(e).to.exist;
+      expect(constructErrorFake).to.have.been.calledWith({
+        statusCode: errorStatusCode,
+        message: "Not specified"
+      });
+      expect(e).to.equal(error);
     }
   });
   it("should throw correctly", async () => {
@@ -472,6 +486,7 @@ describe("Operation", () => {
     replace(deps, "trim", trimFake);
 
     const tokenFnFake = fake.returns(token);
+
     try {
       await operation(opPart1, opPart2)
         .delete(root)

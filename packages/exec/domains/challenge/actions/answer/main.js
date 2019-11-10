@@ -1,4 +1,3 @@
-const { conflict } = require("@blossm/errors");
 const { SECONDS_IN_DAY } = require("@blossm/duration-consts");
 
 const deps = require("./deps");
@@ -18,14 +17,15 @@ module.exports = async ({ payload, context }) => {
     .read({ root: context.challenge });
 
   //Throw if no challenge recognized or if the code is not right.
-  if (!challenge) throw conflict.codeNotRecognized();
+  if (!challenge) throw deps.conflictError.codeNotRecognized();
 
-  if (challenge.code != payload.code) throw conflict.wrongCode();
+  if (challenge.code != payload.code) throw deps.conflictError.wrongCode();
 
   //Throw if the challenge is expired.
   const now = new Date();
 
-  if (Date.parse(challenge.expires) < now) throw conflict.codeExpired();
+  if (Date.parse(challenge.expires) < now)
+    throw deps.conflictError.codeExpired();
 
   //Lookup the contexts that the requesting person is in.
   const [person] = await deps
