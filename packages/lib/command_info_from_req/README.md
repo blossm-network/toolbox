@@ -1,1 +1,0 @@
-Finds the command name from the hostname of a request. For instance, the command name for `change-account-email.command.domain.io` is `change-account-email`. The `command` subdomain must be a part of the host.
