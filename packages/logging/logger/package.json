@@ -1,6 +1,6 @@
 {
   "name": "@blossm/logger",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Logging tools.",
   "main": "index.js",
   "author": "blossm.network",
@@ -11,7 +11,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/gcp-log-transports": "*"
+    "@blossm/gcp-log-transports": "^0.0.1"
   },
   "scripts": {
     "test": "mocha"

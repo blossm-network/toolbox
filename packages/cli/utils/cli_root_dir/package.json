@@ -1,6 +1,6 @@
 {
   "name": "@blossm/cli-root-dir",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Finds the nearest root blossm directory.",
   "main": "index.js",
   "author": "blossm.network",
@@ -15,8 +15,8 @@
   },
   "dependencies": {
     "chalk": "^2.4.2",
-    "ncp": "^2.0.0",
-    "find-up": "^4.1.0"
+    "find-up": "^4.1.0",
+    "ncp": "^2.0.0"
   },
   "devDependencies": {
     "mocha": "^6.1.4"

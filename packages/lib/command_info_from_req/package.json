@@ -1,6 +1,6 @@
 {
   "name": "@blossm/command-info-from-req",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Finds the command name, domain, and service from the hostname of a request.",
   "main": "index.js",
   "author": "blossm.network",

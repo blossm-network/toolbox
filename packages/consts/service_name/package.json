@@ -1,6 +1,6 @@
 {
   "name": "@blossm/service-name-consts",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Constants that confine a service name.",
   "main": "index.js",
   "author": "blossm.network",

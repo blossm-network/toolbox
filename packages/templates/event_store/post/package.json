@@ -1,7 +1,7 @@
 {
   "name": "@blossm/event-store-post",
   "description": "An event store POST handler.",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -14,11 +14,11 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/datetime": "*",
-    "@blossm/event-store-normalize": "*",
-    "@blossm/event-store-reduce": "*",
-    "@blossm/mongodb-database": "*",
-    "@blossm/uuid": "*"
+    "@blossm/datetime": "^0.0.1",
+    "@blossm/event-store-normalize": "^0.0.1",
+    "@blossm/event-store-reduce": "^0.0.1",
+    "@blossm/mongodb-database": "^0.0.1",
+    "@blossm/uuid": "^0.0.1"
   },
   "devDependencies": {
     "chai-datetime": "^1.5.0",
