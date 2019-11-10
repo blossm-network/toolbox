@@ -1,7 +1,7 @@
 {
   "name": "@blossm/view-gateway-get",
   "description": "A view gateway server GET handler.",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -14,8 +14,8 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/gcp-token": "^0.0.1",
-    "@blossm/view-store-js": "^0.0.1"
+    "@blossm/gcp-token": "^0.0.2",
+    "@blossm/view-store-js": "^0.0.2"
   },
   "devDependencies": {
     "chai-datetime": "^1.5.0",

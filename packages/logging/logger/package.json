@@ -1,6 +1,6 @@
 {
   "name": "@blossm/logger",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Logging tools.",
   "main": "index.js",
   "author": "blossm.network",
