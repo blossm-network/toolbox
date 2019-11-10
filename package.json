@@ -55,8 +55,5 @@
       "prettier-eslint --write",
       "git add"
     ]
-  },
-  "dependencies": {
-    "node-pre-gyp": "^0.13.0"
   }
 }
