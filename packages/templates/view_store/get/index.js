@@ -1,5 +1,5 @@
 const deps = require("./deps");
-const { notFound } = require("@sustainers/errors");
+const { notFound } = require("@blossm/errors");
 
 const defaultFn = query => {
   const querySort = query && query.sort;
@@ -34,7 +34,7 @@ module.exports = ({ store, fn = defaultFn }) => {
         }
       });
 
-      if (!result) throw notFound.id;
+      if (!result) throw notFound.id();
       res.send(result);
     }
   };

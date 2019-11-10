@@ -1,14 +1,14 @@
 const { expect } = require("chai");
-const { string: stringDate } = require("@sustainers/datetime");
-const eventStore = require("@sustainers/event-store-js");
-const command = require("@sustainers/command-js");
-const sms = require("@sustainers/twilio-sms");
-const secret = require("@sustainers/gcp-secret");
-const uuid = require("@sustainers/uuid");
-const { validate: validateJwt } = require("@sustainers/jwt");
-const { verify } = require("@sustainers/gcp-kms");
+const { string: stringDate } = require("@blossm/datetime");
+const eventStore = require("@blossm/event-store-js");
+const command = require("@blossm/command-js");
+const sms = require("@blossm/twilio-sms");
+const secret = require("@blossm/gcp-secret");
+const uuid = require("@blossm/uuid");
+const { validate: validateJwt } = require("@blossm/jwt");
+const { verify } = require("@blossm/gcp-kms");
 
-const request = require("@sustainers/request");
+const request = require("@blossm/request");
 
 const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 const deps = require("../../deps");

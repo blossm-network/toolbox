@@ -1,9 +1,9 @@
 {
-  "name": "@sustainers/command-gateway",
+  "name": "@blossm/command-gateway",
   "description": "A gateway server that manages command issuing access.",
-  "version": "0.0.34",
+  "version": "0.0.0",
   "main": "index.js",
-  "author": "sustainers.market",
+  "author": "blossm.network",
   "engines": {
     "node": ">= 10.16.0"
   },
@@ -14,11 +14,11 @@
     "access": "public"
   },
   "dependencies": {
-    "@sustainers/authentication-middleware": "^0.0.40",
-    "@sustainers/authorization-middleware": "^0.0.29",
-    "@sustainers/command-gateway-post": "^0.0.22",
-    "@sustainers/cors-middleware": "^0.0.23",
-    "@sustainers/server": "^0.0.13"
+    "@blossm/authentication-middleware": "*",
+    "@blossm/authorization-middleware": "*",
+    "@blossm/command-gateway-post": "*",
+    "@blossm/cors-middleware": "*",
+    "@blossm/server": "*"
   },
   "devDependencies": {
     "chai-datetime": "^1.5.0",

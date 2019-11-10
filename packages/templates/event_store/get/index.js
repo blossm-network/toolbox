@@ -1,5 +1,5 @@
 const deps = require("./deps");
-const { notFound } = require("@sustainers/errors");
+const { notFound } = require("@blossm/errors");
 
 module.exports = ({ store }) => {
   return async (req, res) => {
@@ -13,7 +13,7 @@ module.exports = ({ store }) => {
       }
     });
 
-    if (!result) throw notFound.root;
+    if (!result) throw notFound.root();
 
     res.send(result.value);
   };

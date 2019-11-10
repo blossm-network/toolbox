@@ -20,14 +20,14 @@ schema:
 indexes: [[{ name: 1 }]]
 
 dependencies:
-  "@sustainers/view-store": "*"
+  "@blossm/view-store": "*"
 
 devDependencies:
   "mocha": "^6.1.4"
   "chai": "^4.2.0"
   "sinon-chai": "^3.3.0"
-  "@sustainers/request": "*"
-  "@sustainers/uuid": "*"
+  "@blossm/request": "*"
+  "@blossm/uuid": "*"
 
 service: core
 

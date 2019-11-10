@@ -1,4 +1,4 @@
-const { badRequest } = require("@sustainers/errors");
+const { badRequest } = require("@blossm/errors");
 
 const event = req => {
   try {
@@ -7,17 +7,17 @@ const event = req => {
       .trim();
     return JSON.parse(eventString);
   } catch (e) {
-    throw badRequest.badEvent;
+    throw badRequest.badEvent();
   }
 };
 
 module.exports = ({ mainFn }) => {
   return async (req, res) => {
     if (!req.body) {
-      throw badRequest.missingMessage;
+      throw badRequest.missingMessage();
     }
     if (!req.body.message) {
-      throw badRequest.badMessage;
+      throw badRequest.badMessage();
     }
 
     await mainFn(event(req));

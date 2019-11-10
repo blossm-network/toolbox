@@ -1,1 +1,1 @@
-Sms functionalit.
+Sms functionality.

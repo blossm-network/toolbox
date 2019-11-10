@@ -1,8 +1,8 @@
-const uuid = require("@sustainers/uuid");
-const { string: dateString } = require("@sustainers/datetime");
-const { write, mapReduce } = require("@sustainers/mongodb-database");
-const normalize = require("@sustainers/event-store-normalize");
-const reduce = require("@sustainers/event-store-reduce");
+const uuid = require("@blossm/uuid");
+const { string: dateString } = require("@blossm/datetime");
+const { write, mapReduce } = require("@blossm/mongodb-database");
+const normalize = require("@blossm/event-store-normalize");
+const reduce = require("@blossm/event-store-reduce");
 
 exports.uuid = uuid;
 exports.dateString = dateString;

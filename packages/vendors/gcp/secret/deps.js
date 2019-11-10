@@ -1,5 +1,5 @@
-const { decrypt } = require("@sustainers/gcp-kms");
-const { download } = require("@sustainers/gcp-storage");
+const { decrypt } = require("@blossm/gcp-kms");
+const { download } = require("@blossm/gcp-storage");
 const { readFile, unlink } = require("fs");
 const { promisify } = require("util");
 

@@ -1,9 +1,9 @@
 {
-  "name": "@sustainers/event-store-normalize",
+  "name": "@blossm/event-store-normalize",
   "description": "Normalize an event so that it is reduceable.",
-  "version": "0.0.14",
+  "version": "0.0.0",
   "main": "index.js",
-  "author": "sustainers.market",
+  "author": "blossm.network",
   "engines": {
     "node": ">= 10.16.0"
   },

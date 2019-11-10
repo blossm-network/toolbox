@@ -1,6 +1,6 @@
 const { expect } = require("chai").use(require("sinon-chai"));
 const { restore, replace, fake, match } = require("sinon");
-const authentication = require("@sustainers/authentication-middleware");
+const authentication = require("@blossm/authentication-middleware");
 
 const deps = require("../deps");
 const gateway = require("..");

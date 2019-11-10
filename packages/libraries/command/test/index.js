@@ -2,7 +2,7 @@ const { expect } = require("chai")
   .use(require("chai-datetime"))
   .use(require("sinon-chai"));
 const { restore, replace, fake, useFakeTimers } = require("sinon");
-const { string: dateString } = require("@sustainers/datetime");
+const { string: dateString } = require("@blossm/datetime");
 
 const deps = require("../deps");
 const command = require("..");

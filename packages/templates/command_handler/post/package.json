@@ -1,9 +1,9 @@
 {
-  "name": "@sustainers/command-handler-post",
+  "name": "@blossm/command-handler-post",
   "description": "A command handler server POST handler.",
-  "version": "0.0.73",
+  "version": "0.0.0",
   "main": "index.js",
-  "author": "sustainers.market",
+  "author": "blossm.network",
   "engines": {
     "node": ">= 10.16.0"
   },
@@ -14,9 +14,9 @@
     "access": "public"
   },
   "dependencies": {
-    "@sustainers/create-event": "^0.0.5",
-    "@sustainers/event-store-js": "^0.0.63",
-    "@sustainers/gcp-token": "^0.0.28"
+    "@blossm/create-event": "*",
+    "@blossm/event-store-js": "*",
+    "@blossm/gcp-token": "*"
   },
   "devDependencies": {
     "chai-datetime": "^1.5.0",

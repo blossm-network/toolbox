@@ -1,4 +1,4 @@
-const logger = require("@sustainers/logger");
+const logger = require("@blossm/logger");
 
 const deps = require("./deps");
 

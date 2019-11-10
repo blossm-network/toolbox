@@ -1,9 +1,9 @@
 {
-  "name": "@sustainers/view-store-get",
+  "name": "@blossm/view-store-get",
   "description": "A view store GET handler.",
-  "version": "0.0.38",
+  "version": "0.0.0",
   "main": "index.js",
-  "author": "sustainers.market",
+  "author": "blossm.network",
   "engines": {
     "node": ">= 10.16.0"
   },
@@ -14,8 +14,8 @@
     "access": "public"
   },
   "dependencies": {
-    "@sustainers/errors": "^0.0.13",
-    "@sustainers/mongodb-database": "^0.0.31"
+    "@blossm/errors": "*",
+    "@blossm/mongodb-database": "*"
   },
   "devDependencies": {
     "chai-datetime": "^1.5.0",

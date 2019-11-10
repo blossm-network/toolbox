@@ -1,18 +1,18 @@
 const fs = require("fs-extra");
 const path = require("path");
 const { prompt } = require("inquirer");
-const normalize = require("@sustainers/normalize-cli");
-const roboSay = require("@sustainers/robo-say");
+const normalize = require("@blossm/normalize-cli");
+const roboSay = require("@blossm/robo-say");
 
 const create = async input => {
-  const blossomDir = path.resolve(process.cwd(), input.path);
-  if (fs.existsSync(blossomDir)) {
+  const blossmDir = path.resolve(process.cwd(), input.path);
+  if (fs.existsSync(blossmDir)) {
     const { flag } = await prompt({
       type: "Boolean",
       name: "flag",
       default: true,
       message: roboSay(
-        "There's already a blossom directory here. Do you really want to overwrite it?"
+        "There's already a blossm directory here. Do you really want to overwrite it?"
       )
     });
 
@@ -23,12 +23,12 @@ const create = async input => {
     }
   }
 
-  fs.removeSync(blossomDir);
-  fs.mkdirSync(blossomDir);
+  fs.removeSync(blossmDir);
+  fs.mkdirSync(blossmDir);
 
-  const blossomHiddenDir = path.resolve(blossomDir, ".blossom");
+  const blossmHiddenDir = path.resolve(blossmDir, ".blossm");
 
-  fs.mkdirSync(blossomHiddenDir);
+  fs.mkdirSync(blossmHiddenDir);
 
   const config = {
     providers: {
@@ -44,14 +44,14 @@ const create = async input => {
     }
   };
 
-  const configPath = path.resolve(blossomHiddenDir, "config.json");
+  const configPath = path.resolve(blossmHiddenDir, "config.json");
   fs.writeFileSync(configPath, JSON.stringify(config));
 };
 
 module.exports = async args => {
   const input = await normalize({
     entrypointType: "path",
-    entrypointDefault: "blossom",
+    entrypointDefault: "blossm",
     args,
     flags: [
       {

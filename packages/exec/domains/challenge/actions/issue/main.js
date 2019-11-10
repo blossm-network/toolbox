@@ -1,5 +1,5 @@
-const { conflict } = require("@sustainers/errors");
-const { SECONDS_IN_MINUTE } = require("@sustainers/duration-consts");
+const { conflict } = require("@blossm/errors");
+const { SECONDS_IN_MINUTE } = require("@blossm/duration-consts");
 
 const deps = require("./deps");
 
@@ -28,7 +28,7 @@ module.exports = async ({ payload, context }) => {
     .set({ context, tokenFn: deps.gcpToken })
     .read({ phone: payload.phone });
 
-  if (!person) throw conflict.phoneNotRecognized;
+  if (!person) throw conflict.phoneNotRecognized();
 
   //Create the root for this challenge.
   const root = await deps.uuid();

@@ -1,4 +1,4 @@
-const eventStore = require("@sustainers/event-store");
+const eventStore = require("@blossm/event-store");
 
 const config = require("./config.json");
 

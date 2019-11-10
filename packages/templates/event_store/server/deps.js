@@ -1,9 +1,9 @@
-const server = require("@sustainers/server");
-const { store } = require("@sustainers/mongodb-database");
-const secret = require("@sustainers/gcp-secret");
-const { string: dateString } = require("@sustainers/datetime");
-const get = require("@sustainers/event-store-get");
-const post = require("@sustainers/event-store-post");
+const server = require("@blossm/server");
+const { store } = require("@blossm/mongodb-database");
+const secret = require("@blossm/gcp-secret");
+const { string: dateString } = require("@blossm/datetime");
+const get = require("@blossm/event-store-get");
+const post = require("@blossm/event-store-post");
 
 exports.secret = secret;
 exports.store = store;

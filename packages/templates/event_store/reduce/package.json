@@ -1,9 +1,9 @@
 {
-  "name": "@sustainers/event-store-reduce",
+  "name": "@blossm/event-store-reduce",
   "description": "Reduce events to get an aggregate.",
-  "version": "0.0.10",
+  "version": "0.0.0",
   "main": "index.js",
-  "author": "sustainers.market",
+  "author": "blossm.network",
   "engines": {
     "node": ">= 10.16.0"
   },

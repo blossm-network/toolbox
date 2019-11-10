@@ -1,9 +1,9 @@
 {
-  "name": "@sustainers/event-bus",
-  "version": "0.0.7",
+  "name": "@blossm/event-bus",
+  "version": "0.0.0",
   "description": "Publishes an event to PubSub.",
   "main": "index.js",
-  "author": "sustainers.market",
+  "author": "blossm.network",
   "engines": {
     "node": ">= 10.16.0"
   },

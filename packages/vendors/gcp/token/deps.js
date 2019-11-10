@@ -1,3 +1,3 @@
-const { get } = require("@sustainers/request");
+const { get } = require("@blossm/request");
 
 exports.get = get;

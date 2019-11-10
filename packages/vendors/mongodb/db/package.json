@@ -1,9 +1,9 @@
 {
-  "name": "@sustainers/mongodb-database",
-  "version": "0.0.31",
+  "name": "@blossm/mongodb-database",
+  "version": "0.0.0",
   "description": "Read and write from a MongoDB database.",
   "main": "index.js",
-  "author": "sustainers.market",
+  "author": "blossm.network",
   "engines": {
     "node": ">= 10.16.0"
   },
@@ -14,7 +14,7 @@
     "test": "mocha"
   },
   "dependencies": {
-    "@sustainers/url-encode-query-data": "^0.0.2",
+    "@blossm/url-encode-query-data": "*",
     "mongoose": "^5.7.1",
     "restify-errors": "^8.0.0"
   },

@@ -1,7 +1,6 @@
 const { expect } = require("chai").use(require("chai-as-promised"));
 const { fake } = require("sinon");
 
-const { unauthorized } = require("@sustainers/errors");
 const deps = require("../deps");
 
 const { create, validate } = require("..");
@@ -42,8 +41,15 @@ describe("Validate", () => {
     const sig = "some-signature";
     const token = await create({ options, payload, signFn: () => sig });
     const verifyFn = fake.returns(false);
-    await expect(validate({ token, verifyFn })).to.be.rejectedWith(
-      unauthorized.tokenInvalid
-    );
+
+    try {
+      await validate({ token, verifyFn });
+
+      //shouldn't be called.
+      expect(1).to.equal(2);
+    } catch (e) {
+      expect(e.statusCode).to.equal(401);
+      expect(e.message).to.equal("Invalid token");
+    }
   });
 });

@@ -1,9 +1,9 @@
 {
-  "name": "@sustainers/cors-middleware",
-  "version": "0.0.23",
+  "name": "@blossm/cors-middleware",
+  "version": "0.0.0",
   "description": "Cors middleware for the network.",
   "main": "index.js",
-  "author": "sustainers.market",
+  "author": "blossm.network",
   "engines": {
     "node": ">= 10.16.0"
   },
@@ -14,7 +14,7 @@
     "test": "mocha"
   },
   "dependencies": {
-    "@sustainers/errors": "^0.0.13",
+    "@blossm/errors": "*",
     "cors": "^2.8.5"
   },
   "devDependencies": {

@@ -1,4 +1,4 @@
-const roboSay = require("@sustainers/robo-say");
+const roboSay = require("@blossm/robo-say");
 const arg = require("arg");
 const { prompt } = require("inquirer");
 const { red } = require("chalk");

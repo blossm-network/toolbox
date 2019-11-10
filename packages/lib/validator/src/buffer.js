@@ -1,4 +1,4 @@
-const { object: objectValidator } = require("@sustainers/validation");
+const { object: objectValidator } = require("@blossm/validation");
 
 module.exports = (buffer, { optional } = {}) => {
   return objectValidator({

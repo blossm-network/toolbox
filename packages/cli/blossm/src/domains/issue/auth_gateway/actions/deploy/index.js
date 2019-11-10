@@ -1,4 +1,4 @@
-const deployCliTemplate = require("@sustainers/deploy-cli-template");
+const deployCliTemplate = require("@blossm/deploy-cli-template");
 
 module.exports = deployCliTemplate({
   domain: "auth-gateway",

@@ -1,4 +1,4 @@
-const { string: stringValidator } = require("@sustainers/validation");
+const { string: stringValidator } = require("@blossm/validation");
 
 const regex = /^[+-]?([0-9]*[.])?[0-9]+$/;
 

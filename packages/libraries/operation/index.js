@@ -1,6 +1,6 @@
-const errors = require("@sustainers/errors");
-const { MAX_LENGTH } = require("@sustainers/service-name-consts");
-const logger = require("@sustainers/logger");
+const errors = require("@blossm/errors");
+const { MAX_LENGTH } = require("@blossm/service-name-consts");
+const logger = require("@blossm/logger");
 
 const deps = require("./deps");
 

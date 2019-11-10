@@ -1,9 +1,9 @@
 {
-  "name": "@sustainers/event-handler-post",
+  "name": "@blossm/event-handler-post",
   "description": "An event handler server POST handler.",
-  "version": "0.0.39",
+  "version": "0.0.0",
   "main": "index.js",
-  "author": "sustainers.market",
+  "author": "blossm.network",
   "engines": {
     "node": ">= 10.16.0"
   },
@@ -14,10 +14,10 @@
     "access": "public"
   },
   "dependencies": {
-    "@sustainers/create-event": "^0.0.5",
-    "@sustainers/errors": "^0.0.13",
-    "@sustainers/event-store-js": "^0.0.63",
-    "@sustainers/gcp-token": "^0.0.28"
+    "@blossm/create-event": "*",
+    "@blossm/errors": "*",
+    "@blossm/event-store-js": "*",
+    "@blossm/gcp-token": "*"
   },
   "devDependencies": {
     "chai-datetime": "^1.5.0",

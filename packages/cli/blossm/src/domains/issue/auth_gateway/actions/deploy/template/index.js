@@ -1,5 +1,5 @@
-const gateway = require("@sustainers/auth-gateway");
-const { verify } = require("@sustainers/gcp-kms");
+const gateway = require("@blossm/auth-gateway");
+const { verify } = require("@blossm/gcp-kms");
 
 const priviledges = require("./priviledges.js");
 const scopes = require("./scopes.js");

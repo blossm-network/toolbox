@@ -1,6 +1,6 @@
-const { object, string, date, findError } = require("@sustainers/validator");
-const { badRequest } = require("@sustainers/errors");
-const { SECONDS_IN_DAY } = require("@sustainers/duration-consts");
+const { object, string, date, findError } = require("@blossm/validator");
+const { badRequest } = require("@blossm/errors");
+const { SECONDS_IN_DAY } = require("@blossm/duration-consts");
 
 module.exports = async params => {
   const systemInputError = findError([

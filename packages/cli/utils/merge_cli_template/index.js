@@ -1,5 +1,5 @@
-const roboSay = require("@sustainers/robo-say");
-const hash = require("@sustainers/hash-string");
+const roboSay = require("@blossm/robo-say");
+const hash = require("@blossm/hash-string");
 const fs = require("fs-extra");
 const ncp = require("ncp");
 const { promisify } = require("util");
@@ -18,7 +18,7 @@ const copyTemplate = async (templateDir, workingDir) => {
     //eslint-disable-next-line no-console
     console.error(
       roboSay(
-        "Full view store template not found. Reach out to bugs@sustainers.market please, it's in everyone's best interest.",
+        "Full view store template not found. Reach out to bugs@blossm.market please, it's in everyone's best interest.",
         red.bold("internal error")
       )
     );

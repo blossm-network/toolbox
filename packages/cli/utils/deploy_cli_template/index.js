@@ -1,7 +1,7 @@
-const normalize = require("@sustainers/normalize-cli");
-const roboSay = require("@sustainers/robo-say");
-const mergeCliTemplate = require("@sustainers/merge-cli-template");
-const testCliTemplate = require("@sustainers/test-cli-template");
+const normalize = require("@blossm/normalize-cli");
+const roboSay = require("@blossm/robo-say");
+const mergeCliTemplate = require("@blossm/merge-cli-template");
+const testCliTemplate = require("@blossm/test-cli-template");
 const fs = require("fs-extra");
 const { spawnSync } = require("child_process");
 const yaml = require("yaml");

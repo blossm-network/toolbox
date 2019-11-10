@@ -1,5 +1,5 @@
-const server = require("@sustainers/server");
-const post = require("@sustainers/command-handler-post");
+const server = require("@blossm/server");
+const post = require("@blossm/command-handler-post");
 
 exports.server = server;
 exports.post = post;

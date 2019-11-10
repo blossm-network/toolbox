@@ -1,4 +1,4 @@
-const { string: dateString } = require("@sustainers/datetime");
+const { string: dateString } = require("@blossm/datetime");
 
 const deps = require("./deps");
 

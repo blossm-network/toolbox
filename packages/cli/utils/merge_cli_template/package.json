@@ -1,9 +1,9 @@
 {
-  "name": "@sustainers/merge-cli-template",
-  "version": "0.0.20",
+  "name": "@blossm/merge-cli-template",
+  "version": "0.0.0",
   "description": "Merges the contents of a file with a template.",
   "main": "index.js",
-  "author": "sustainers.market",
+  "author": "blossm.network",
   "engines": {
     "node": ">= 10.16.0"
   },
@@ -14,7 +14,7 @@
     "test": "echo \"Error: no test specified\" && exit 0"
   },
   "dependencies": {
-    "@sustainers/hash-string": "^0.0.1",
+    "@blossm/hash-string": "*",
     "any-json": "^3.1.0",
     "chalk": "^2.4.2",
     "fs-extra": "^8.1.0",

@@ -1,8 +1,8 @@
 const { expect } = require("chai");
-const { string: stringDate } = require("@sustainers/datetime");
-const eventStore = require("@sustainers/event-store-js");
+const { string: stringDate } = require("@blossm/datetime");
+const eventStore = require("@blossm/event-store-js");
 
-const request = require("@sustainers/request");
+const request = require("@blossm/request");
 
 const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 

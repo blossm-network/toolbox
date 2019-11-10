@@ -1,1 +1,1 @@
-exports.operation = require("@sustainers/operation-js");
+exports.operation = require("@blossm/operation-js");

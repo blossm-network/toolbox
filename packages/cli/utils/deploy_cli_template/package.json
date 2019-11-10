@@ -1,9 +1,9 @@
 {
-  "name": "@sustainers/deploy-cli-template",
-  "version": "0.0.34",
+  "name": "@blossm/deploy-cli-template",
+  "version": "0.0.0",
   "description": "Deploys a template to cloud build.",
   "main": "index.js",
-  "author": "sustainers.market",
+  "author": "blossm.network",
   "engines": {
     "node": ">= 10.16.0"
   },
@@ -14,10 +14,10 @@
     "test": "echo \"Error: no test specified\" && exit 0"
   },
   "dependencies": {
-    "@sustainers/merge-cli-template": "^0.0.20",
-    "@sustainers/normalize-cli": "^0.0.13",
-    "@sustainers/robo-say": "*",
-    "@sustainers/test-cli-template": "^0.0.18",
+    "@blossm/merge-cli-template": "*",
+    "@blossm/normalize-cli": "*",
+    "@blossm/robo-say": "*",
+    "@blossm/test-cli-template": "*",
     "chalk": "^2.4.2",
     "fs-extra": "^8.1.0",
     "yaml": "^1.7.0"

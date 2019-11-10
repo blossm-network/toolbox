@@ -1,27 +1,27 @@
 {
-  "name": "@sustainers/blossm",
-  "version": "0.0.165",
-  "description": "A command line tool for interacting with a Sustainer's Market Network",
+  "name": "@blossm/cli",
+  "version": "0.0.0",
+  "description": "A command line tool for interacting with a blossm network",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 0"
   },
   "bin": {
-    "@sustainers/blossm": "bin/blossm",
+    "@blossm/blossm": "bin/blossm",
     "blossm": "bin/blossm"
   },
   "publishConfig": {
     "access": "public"
   },
-  "author": "sustainers.market",
+  "author": "blossm.network",
   "dependencies": {
-    "@sustainers/deploy-cli-template": "^0.0.34",
-    "@sustainers/hash-string": "^0.0.1",
-    "@sustainers/init-cli-template": "^0.0.10",
-    "@sustainers/normalize-cli": "^0.0.13",
-    "@sustainers/robo-say": "*",
-    "@sustainers/service-name-consts": "*",
-    "@sustainers/trim-string": "^0.0.1",
+    "@blossm/deploy-cli-template": "*",
+    "@blossm/hash-string": "*",
+    "@blossm/init-cli-template": "*",
+    "@blossm/normalize-cli": "*",
+    "@blossm/robo-say": "*",
+    "@blossm/service-name-consts": "*",
+    "@blossm/trim-string": "*",
     "chalk": "^2.4.2",
     "esm": "^3.2.25"
   }

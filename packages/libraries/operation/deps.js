@@ -1,6 +1,6 @@
-const hashString = require("@sustainers/hash-string");
-const { post, put, get, delete: del } = require("@sustainers/request");
-const trim = require("@sustainers/trim-string");
+const hashString = require("@blossm/hash-string");
+const { post, put, get, delete: del } = require("@blossm/request");
+const trim = require("@blossm/trim-string");
 
 exports.hash = hashString;
 exports.post = post;

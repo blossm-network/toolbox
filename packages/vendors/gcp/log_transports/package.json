@@ -1,9 +1,9 @@
 {
-  "name": "@sustainers/gcp-log-transports",
-  "version": "0.0.6",
+  "name": "@blossm/gcp-log-transports",
+  "version": "0.0.0",
   "description": "Destinations to publish logs to.",
   "main": "index.js",
-  "author": "sustainers.market",
+  "author": "blossm.network",
   "engines": {
     "node": ">= 10.16.0"
   },

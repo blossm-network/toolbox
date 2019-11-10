@@ -1,4 +1,4 @@
-const { numberArray: numberArrayValidator } = require("@sustainers/validation");
+const { numberArray: numberArrayValidator } = require("@blossm/validation");
 
 module.exports = (numberArray, { optional } = {}) => {
   return numberArrayValidator({

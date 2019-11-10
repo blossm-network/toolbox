@@ -1,5 +1,5 @@
 const fs = require("fs");
-const viewStore = require("@sustainers/view-store");
+const viewStore = require("@blossm/view-store");
 
 const get = fs.existsSync("./get.js") && require("./get");
 const post = fs.existsSync("./post.js") && require("./post");

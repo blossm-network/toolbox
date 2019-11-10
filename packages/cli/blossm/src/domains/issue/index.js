@@ -1,4 +1,4 @@
-const normalize = require("@sustainers/normalize-cli");
+const normalize = require("@blossm/normalize-cli");
 
 const eventStore = require("./event_store");
 const viewStore = require("./view_store");

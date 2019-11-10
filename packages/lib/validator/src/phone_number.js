@@ -1,5 +1,5 @@
-const { string: stringValidator } = require("@sustainers/validation");
-const phoneNumber = require("@sustainers/phone-number");
+const { string: stringValidator } = require("@blossm/validation");
+const phoneNumber = require("@blossm/phone-number");
 
 module.exports = (value, { optional } = {}) => {
   return stringValidator({

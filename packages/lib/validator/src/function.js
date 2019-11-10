@@ -1,4 +1,4 @@
-const { fn: fnValidator } = require("@sustainers/validation");
+const { fn: fnValidator } = require("@blossm/validation");
 
 module.exports = (fn, { optional } = {}) => {
   return fnValidator({

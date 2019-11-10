@@ -1,9 +1,9 @@
 {
-  "name": "@sustainers/gcp-storage",
-  "version": "0.0.5",
+  "name": "@blossm/gcp-storage",
+  "version": "0.0.0",
   "description": "Tools for accessing stored files.",
   "main": "index.js",
-  "author": "sustainers.market",
+  "author": "blossm.network",
   "engines": {
     "node": ">= 10.16.0"
   },

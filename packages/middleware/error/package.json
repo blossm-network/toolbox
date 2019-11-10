@@ -1,9 +1,9 @@
 {
-  "name": "@sustainers/error-middleware",
-  "version": "0.0.14",
+  "name": "@blossm/error-middleware",
+  "version": "0.0.0",
   "description": "Error middleware for the network.",
   "main": "index.js",
-  "author": "sustainers.market",
+  "author": "blossm.network",
   "engines": {
     "node": ">= 10.16.0"
   },
@@ -14,7 +14,7 @@
     "test": "mocha"
   },
   "dependencies": {
-    "@sustainers/logger": "^0.0.8"
+    "@blossm/logger": "*"
   },
   "devDependencies": {
     "mocha": "^6.1.4"

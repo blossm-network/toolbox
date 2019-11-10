@@ -1,9 +1,9 @@
 {
-  "name": "@sustainers/email-validator",
-  "version": "0.0.3",
+  "name": "@blossm/email-validator",
+  "version": "0.0.0",
   "description": "Email address validation.",
   "main": "index.js",
-  "author": "sustainers.market",
+  "author": "blossm.network",
   "engines": {
     "node": ">= 10.16.0"
   },

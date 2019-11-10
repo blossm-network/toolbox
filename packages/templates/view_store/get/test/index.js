@@ -1,8 +1,6 @@
 const { expect } = require("chai").use(require("sinon-chai"));
 const { restore, replace, fake } = require("sinon");
 
-const { notFound } = require("@sustainers/errors");
-
 const get = require("..");
 const deps = require("../deps");
 
@@ -203,7 +201,8 @@ describe("View store get", () => {
     try {
       await get({ store })(req, res);
     } catch (e) {
-      expect(e).to.equal(notFound.id);
+      expect(e.statusCode).to.equal(404);
+      expect(e.message).to.equal("Id not found.");
     }
   });
 });

@@ -16,9 +16,9 @@ targets:
 version: 0
 
 dependencies:
-  "@sustainers/command-handler": "*"
-  "@sustainers/validator": "*"
-  "@sustainers/errors": "*"
+  "@blossm/command-handler": "*"
+  "@blossm/validator": "*"
+  "@blossm/errors": "*"
 
 devDependencies:
   "mocha": "^6.1.4"
@@ -26,9 +26,9 @@ devDependencies:
   "sinon": "^7.3.2"
   "sinon-chai": "^3.3.0"
   "chai-datetime": "^1.5.0"
-  "@sustainers/datetime": "*"
-  "@sustainers/request": "*"
-  "@sustainers/event-store-js": "*"
+  "@blossm/datetime": "*"
+  "@blossm/request": "*"
+  "@blossm/event-store-js": "*"
 
 service: core
 

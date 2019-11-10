@@ -1,3 +1,3 @@
-const { remove } = require("@sustainers/mongodb-database");
+const { remove } = require("@blossm/mongodb-database");
 
 exports.db = { remove };

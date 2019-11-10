@@ -1,9 +1,9 @@
 {
-  "name": "@sustainers/tokens-from-req",
-  "version": "0.0.5",
+  "name": "@blossm/tokens-from-req",
+  "version": "0.0.0",
   "description": "Parses the jwt Bearer token and the Basic Auth token from the Authorization header of the request.",
   "main": "index.js",
-  "author": "sustainers.market",
+  "author": "blossm.network",
   "engines": {
     "node": ">= 10.16.0"
   },

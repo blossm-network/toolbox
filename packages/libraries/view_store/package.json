@@ -1,9 +1,9 @@
 {
-  "name": "@sustainers/view-store-js",
+  "name": "@blossm/view-store-js",
   "description": "Interact with the view store.",
-  "version": "0.0.57",
+  "version": "0.0.0",
   "main": "index.js",
-  "author": "sustainers.market",
+  "author": "blossm.network",
   "engines": {
     "node": ">= 10.16.0"
   },
@@ -14,7 +14,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@sustainers/operation-js": "^0.0.58"
+    "@blossm/operation-js": "*"
   },
   "devDependencies": {
     "chai-datetime": "^1.5.0",

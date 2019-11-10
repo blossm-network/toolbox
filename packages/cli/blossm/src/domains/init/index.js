@@ -1,4 +1,4 @@
-const normalize = require("@sustainers/normalize-cli");
+const normalize = require("@blossm/normalize-cli");
 
 const commandHandler = require("./command_handler");
 const eventHandler = require("./event_handler");

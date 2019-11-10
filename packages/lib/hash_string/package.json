@@ -1,9 +1,9 @@
 {
-  "name": "@sustainers/hash-string",
-  "version": "0.0.1",
+  "name": "@blossm/hash-string",
+  "version": "0.0.0",
   "description": "Hashes a string.",
   "main": "index.js",
-  "author": "sustainers.market",
+  "author": "blossm.network",
   "engines": {
     "node": ">= 10.16.0"
   },

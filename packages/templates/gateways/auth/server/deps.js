@@ -1,9 +1,9 @@
-const post = require("@sustainers/command-gateway-post");
-const server = require("@sustainers/server");
-const gcpToken = require("@sustainers/gcp-token");
-const corsMiddleware = require("@sustainers/cors-middleware");
-const authorization = require("@sustainers/authorization-middleware");
-const authentication = require("@sustainers/authentication-middleware");
+const post = require("@blossm/command-gateway-post");
+const server = require("@blossm/server");
+const gcpToken = require("@blossm/gcp-token");
+const corsMiddleware = require("@blossm/cors-middleware");
+const authorization = require("@blossm/authorization-middleware");
+const authentication = require("@blossm/authentication-middleware");
 
 exports.post = post;
 exports.server = server;

@@ -1,9 +1,9 @@
 {
-  "name": "@sustainers/jwt",
-  "version": "0.0.18",
+  "name": "@blossm/jwt",
+  "version": "0.0.0",
   "description": "JWT token creating and validating.",
   "main": "index.js",
-  "author": "sustainers.market",
+  "author": "blossm.network",
   "engines": {
     "node": ">= 10.16.0"
   },
@@ -11,9 +11,9 @@
     "access": "public"
   },
   "dependencies": {
-    "@sustainers/datetime": "^0.0.3",
-    "@sustainers/errors": "^0.0.13",
-    "@sustainers/nonce": "^0.0.2",
+    "@blossm/datetime": "*",
+    "@blossm/errors": "*",
+    "@blossm/nonce": "*",
     "jwt-decode": "^2.2.0"
   },
   "scripts": {

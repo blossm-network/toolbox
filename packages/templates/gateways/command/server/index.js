@@ -1,5 +1,5 @@
 const deps = require("./deps");
-const authentication = require("@sustainers/authentication-middleware");
+const authentication = require("@blossm/authentication-middleware");
 
 module.exports = async ({ whitelist, scopesLookupFn }) => {
   deps

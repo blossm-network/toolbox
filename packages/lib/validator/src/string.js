@@ -1,4 +1,4 @@
-const { string: stringValidator } = require("@sustainers/validation");
+const { string: stringValidator } = require("@blossm/validation");
 
 const stringIsNotEmpty = require("./_string_is_not_empty");
 const stringEmptyMessage = require("./_string_empty_message");

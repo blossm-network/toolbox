@@ -1,4 +1,4 @@
-const { string: stringValidator } = require("@sustainers/validation");
+const { string: stringValidator } = require("@blossm/validation");
 const findError = require("./find_error");
 const number = require("./number");
 

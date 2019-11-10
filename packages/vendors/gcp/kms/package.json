@@ -1,9 +1,9 @@
 {
-  "name": "@sustainers/gcp-kms",
-  "version": "0.0.24",
+  "name": "@blossm/gcp-kms",
+  "version": "0.0.0",
   "description": "Tools for asymetricly decrypting a payload.",
   "main": "index.js",
-  "author": "sustainers.market",
+  "author": "blossm.network",
   "engines": {
     "node": ">= 10.16.0"
   },

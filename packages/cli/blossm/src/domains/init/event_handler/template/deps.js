@@ -3,5 +3,5 @@
  * in this file.
  */
 
-exports.viewStore = require("@sustainers/view-store-js");
-exports.gcpToken = require("@sustainers/gcp-token");
+exports.viewStore = require("@blossm/view-store-js");
+exports.gcpToken = require("@blossm/gcp-token");

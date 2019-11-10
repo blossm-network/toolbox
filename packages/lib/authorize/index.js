@@ -1,5 +1,5 @@
-const { unauthorized } = require("@sustainers/errors");
-const intersection = require("@sustainers/array-intersection");
+const { unauthorized } = require("@blossm/errors");
+const intersection = require("@blossm/array-intersection");
 
 const WILDCARD = "*";
 
@@ -15,7 +15,7 @@ module.exports = async ({
 }) => {
   //Do the scopes and the context allow the provided service, network, domain, and action combo?
   if (context.network !== network || context.service !== service)
-    throw unauthorized.tokenInvalid;
+    throw unauthorized.tokenInvalid();
 
   //priviledges lookup fn returns the priviledges that the path needs.
   //scopes lookup fn returns the scopes that the principle has.
@@ -46,7 +46,7 @@ module.exports = async ({
     return !domainViolated && !rootViolated && !priviledgesViolated;
   });
 
-  if (satisfiedScopes.length == 0) throw unauthorized.tokenInvalid;
+  if (satisfiedScopes.length == 0) throw unauthorized.tokenInvalid();
 
   return {
     context: {

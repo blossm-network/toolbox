@@ -1,4 +1,4 @@
-const roboSay = require("@sustainers/robo-say");
+const roboSay = require("@blossm/robo-say");
 const { spawnSync } = require("child_process");
 const path = require("path");
 const fs = require("fs-extra");
@@ -50,7 +50,7 @@ module.exports = async ({ workingDir, input }) => {
     //eslint-disable-next-line no-console
     console.error(
       roboSay(
-        "I couldn't install the dependencies needed to run tests. Reach out to bugs@sustainers.market please, it's in everyone's best interest.",
+        "I couldn't install the dependencies needed to run tests. Reach out to bugs@blossm.market please, it's in everyone's best interest.",
         red.bold("internal error")
       )
     );

@@ -1,4 +1,4 @@
-const { string: stringDate } = require("@sustainers/datetime");
+const { string: stringDate } = require("@blossm/datetime");
 const deps = require("./deps");
 
 module.exports = async ({

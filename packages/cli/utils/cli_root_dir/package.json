@@ -1,9 +1,9 @@
 {
-  "name": "@sustainers/cli-root-dir",
+  "name": "@blossm/cli-root-dir",
   "version": "0.0.0",
   "description": "Finds the nearest root blossm directory.",
   "main": "index.js",
-  "author": "sustainers.market",
+  "author": "blossm.network",
   "engines": {
     "node": ">= 10.16.0"
   },

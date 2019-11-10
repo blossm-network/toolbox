@@ -1,6 +1,6 @@
 const { expect } = require("chai").use(require("sinon-chai"));
 const { restore, replace, fake } = require("sinon");
-const transports = require("@sustainers/gcp-log-transports");
+const transports = require("@blossm/gcp-log-transports");
 
 const { info } = require("../index");
 

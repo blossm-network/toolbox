@@ -1,5 +1,5 @@
 const deps = require("./deps");
-const logger = require("@sustainers/logger");
+const logger = require("@blossm/logger");
 
 const serverId = () => {
   switch (process.env.NODE_ENV) {

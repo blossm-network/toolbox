@@ -1,9 +1,9 @@
 {
-  "name": "@sustainers/authentication-middleware",
-  "version": "0.0.40",
+  "name": "@blossm/authentication-middleware",
+  "version": "0.0.0",
   "description": "Authentication middleware for the network.",
   "main": "index.js",
-  "author": "sustainers.market",
+  "author": "blossm.network",
   "engines": {
     "node": ">= 10.16.0"
   },
@@ -14,8 +14,8 @@
     "test": "mocha"
   },
   "dependencies": {
-    "@sustainers/authenticate": "^0.0.21",
-    "@sustainers/gcp-kms": "^0.0.24",
+    "@blossm/authenticate": "*",
+    "@blossm/gcp-kms": "*",
     "express-async-handler": "^1.1.4"
   },
   "devDependencies": {

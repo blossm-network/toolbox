@@ -5,7 +5,7 @@ const { restore, replace, fake, useFakeTimers } = require("sinon");
 const eventStore = require("..");
 
 const deps = require("../deps");
-const { string: dateString } = require("@sustainers/datetime");
+const { string: dateString } = require("@blossm/datetime");
 
 let clock;
 

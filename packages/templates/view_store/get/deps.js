@@ -1,3 +1,3 @@
-const { find, findOne } = require("@sustainers/mongodb-database");
+const { find, findOne } = require("@blossm/mongodb-database");
 
 exports.db = { find, findOne };

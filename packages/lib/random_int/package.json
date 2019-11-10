@@ -1,9 +1,9 @@
 {
-  "name": "@sustainers/random-int",
-  "version": "0.0.1",
+  "name": "@blossm/random-int",
+  "version": "0.0.0",
   "description": "Returns a random integer within the given bounds.",
   "main": "index.js",
-  "author": "sustainers.market",
+  "author": "blossm.network",
   "engines": {
     "node": ">= 10.16.0"
   },

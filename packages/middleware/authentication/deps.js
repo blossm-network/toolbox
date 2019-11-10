@@ -1,1 +1,1 @@
-exports.authenticate = require("@sustainers/authenticate");
+exports.authenticate = require("@blossm/authenticate");

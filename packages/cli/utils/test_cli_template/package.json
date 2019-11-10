@@ -1,9 +1,9 @@
 {
-  "name": "@sustainers/test-cli-template",
-  "version": "0.0.18",
+  "name": "@blossm/test-cli-template",
+  "version": "0.0.0",
   "description": "Tests a template.",
   "main": "index.js",
-  "author": "sustainers.market",
+  "author": "blossm.network",
   "engines": {
     "node": ">= 10.16.0"
   },

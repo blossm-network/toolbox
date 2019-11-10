@@ -1,4 +1,4 @@
-const { format } = require("@sustainers/phone-number");
+const { format } = require("@blossm/phone-number");
 
 module.exports = async payload => {
   return {

@@ -1,7 +1,7 @@
 const { expect } = require("chai");
-const uuid = require("@sustainers/uuid");
+const uuid = require("@blossm/uuid");
 
-const request = require("@sustainers/request");
+const request = require("@blossm/request");
 
 const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 

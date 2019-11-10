@@ -6,13 +6,13 @@ schema:
 indexes: [[{ name: 1 }]]
 
 dependencies:
-  "@sustainers/event-store": "*"
+  "@blossm/event-store": "*"
 
 devDependencies:
   "mocha": "^6.1.4"
   "chai": "^4.2.0"
-  "@sustainers/request": "*"
-  "@sustainers/uuid": "*"
+  "@blossm/request": "*"
+  "@blossm/uuid": "*"
 
 service: core
 

@@ -1,4 +1,4 @@
-const logger = require("@sustainers/logger");
+const logger = require("@blossm/logger");
 
 module.exports = (err, _, res, next) => {
   if (res.headersSent) return next(err);

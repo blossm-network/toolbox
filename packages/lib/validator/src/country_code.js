@@ -1,6 +1,6 @@
 //src: https://pkgstore.datahub.io/core/country-list/data_json/data/8c458f2d15d9f2119654b29ede6e45b8/data_json.json
 
-const { string: stringValidator } = require("@sustainers/validation");
+const { string: stringValidator } = require("@blossm/validation");
 
 module.exports = (string, { optional } = {}) => {
   return stringValidator({

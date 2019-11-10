@@ -1,12 +1,12 @@
-const server = require("@sustainers/server");
-const { store } = require("@sustainers/mongodb-database");
-const secret = require("@sustainers/gcp-secret");
-const get = require("@sustainers/view-store-get");
-const stream = require("@sustainers/view-store-stream");
-const post = require("@sustainers/view-store-post");
-const put = require("@sustainers/view-store-put");
-const del = require("@sustainers/view-store-delete");
-const { string: stringDate } = require("@sustainers/datetime");
+const server = require("@blossm/server");
+const { store } = require("@blossm/mongodb-database");
+const secret = require("@blossm/gcp-secret");
+const get = require("@blossm/view-store-get");
+const stream = require("@blossm/view-store-stream");
+const post = require("@blossm/view-store-post");
+const put = require("@blossm/view-store-put");
+const del = require("@blossm/view-store-delete");
+const { string: stringDate } = require("@blossm/datetime");
 
 exports.secret = secret;
 exports.store = store;

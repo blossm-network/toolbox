@@ -1,8 +1,8 @@
 const { expect } = require("chai");
-const viewStore = require("@sustainers/view-store-js");
-const uuid = require("@sustainers/uuid");
+const viewStore = require("@blossm/view-store-js");
+const uuid = require("@blossm/uuid");
 
-const request = require("@sustainers/request");
+const request = require("@blossm/request");
 
 const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 

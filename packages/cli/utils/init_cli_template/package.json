@@ -1,9 +1,9 @@
 {
-  "name": "@sustainers/init-cli-template",
-  "version": "0.0.10",
+  "name": "@blossm/init-cli-template",
+  "version": "0.0.0",
   "description": "Initializes a deployable template.",
   "main": "index.js",
-  "author": "sustainers.market",
+  "author": "blossm.network",
   "engines": {
     "node": ">= 10.16.0"
   },
@@ -14,8 +14,8 @@
     "test": "echo \"Error: no test specified\" && exit 0"
   },
   "dependencies": {
-    "@sustainers/normalize-cli": "^0.0.13",
-    "@sustainers/robo-say": "*",
+    "@blossm/normalize-cli": "*",
+    "@blossm/robo-say": "*",
     "chalk": "^2.4.2",
     "ncp": "^2.0.0"
   },

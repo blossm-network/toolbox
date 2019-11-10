@@ -1,9 +1,9 @@
 {
-  "name": "@sustainers/express-middleware",
-  "version": "0.0.3",
+  "name": "@blossm/express-middleware",
+  "version": "0.0.0",
   "description": "Express middleware for the network.",
   "main": "index.js",
-  "author": "sustainers.market",
+  "author": "blossm.network",
   "engines": {
     "node": ">= 10.16.0"
   },

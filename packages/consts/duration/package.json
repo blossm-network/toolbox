@@ -1,9 +1,9 @@
 {
-  "name": "@sustainers/duration-consts",
-  "version": "0.0.1",
+  "name": "@blossm/duration-consts",
+  "version": "0.0.0",
   "description": "Constants that describe durations.",
   "main": "index.js",
-  "author": "sustainers.market",
+  "author": "blossm.network",
   "engines": {
     "node": ">= 10.16.0"
   },

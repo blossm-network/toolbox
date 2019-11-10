@@ -1,5 +1,5 @@
 const fs = require("fs");
-const commandHandler = require("@sustainers/command-handler");
+const commandHandler = require("@blossm/command-handler");
 
 const main = require("./main.js");
 const validate = fs.existsSync("./validate.js") && require("./validate");

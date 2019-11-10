@@ -1,8 +1,6 @@
 const { expect } = require("chai").use(require("sinon-chai"));
 const { restore, replace, fake } = require("sinon");
 
-const { notFound } = require("@sustainers/errors");
-
 const get = require("..");
 const deps = require("../deps");
 
@@ -66,7 +64,8 @@ describe("Event store get", () => {
       //shouldn't be called
       expect(2).to.equal(1);
     } catch (e) {
-      expect(e).to.equal(notFound.root);
+      expect(e.statusCode).to.equal(404);
+      expect(e.message).to.equal("Root not found.");
     }
   });
 });

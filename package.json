@@ -1,6 +1,6 @@
 {
-  "name": "@sustainers/js",
-  "description": "The Sustainer Network codebase.",
+  "name": "@blossm/blossm",
+  "description": "The Blossm codebase.",
   "version": "0.0.0",
   "private": true,
   "workspaces": [
@@ -8,13 +8,13 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sustainers-market/sustainers-market-js.git"
+    "url": "git+https://github.com/blossm-network/blossm.git"
   },
-  "author": "sustainernetwork.org",
+  "author": "blossm.network",
   "bugs": {
-    "url": "https://github.com/sustainers-market/sustainers-market-js/issues"
+    "url": "https://github.com/blossm-network/blossm/issues"
   },
-  "homepage": "https://github.com/sustainers-market/sustainers-market-js#readme",
+  "homepage": "https://github.com/blossm-network/blossm#readme",
   "engines": {
     "node": ">= 10.16.0"
   },

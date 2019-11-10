@@ -1,1 +1,1 @@
-exports.nonce = require("@sustainers/nonce");
+exports.nonce = require("@blossm/nonce");

@@ -17,9 +17,9 @@ targets:
 version: 0
 
 dependencies:
-  "@sustainers/event-handler": "*"
-  "@sustainers/view-store-js": "*"
-  "@sustainers/gcp-token": "*"
+  "@blossm/event-handler": "*"
+  "@blossm/view-store-js": "*"
+  "@blossm/gcp-token": "*"
 
 devDependencies:
   "mocha": "^6.1.4"
@@ -27,11 +27,11 @@ devDependencies:
   "sinon": "^7.3.2"
   "sinon-chai": "^3.3.0"
   "chai-datetime": "^1.5.0"
-  "@sustainers/datetime": "*"
-  "@sustainers/request": "*"
-  "@sustainers/gcp-token": "*"
-  "@sustainers/view-store-js": "*"
-  "@sustainers/uuid": "*"
+  "@blossm/datetime": "*"
+  "@blossm/request": "*"
+  "@blossm/gcp-token": "*"
+  "@blossm/view-store-js": "*"
+  "@blossm/uuid": "*"
 
 service: core
 

@@ -1,6 +1,6 @@
-const uuid = require("@sustainers/uuid");
-const { string: dateString } = require("@sustainers/datetime");
-const { write } = require("@sustainers/mongodb-database");
+const uuid = require("@blossm/uuid");
+const { string: dateString } = require("@blossm/datetime");
+const { write } = require("@blossm/mongodb-database");
 
 exports.uuid = uuid;
 exports.dateString = dateString;

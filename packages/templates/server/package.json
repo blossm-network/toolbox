@@ -1,9 +1,9 @@
 {
-  "name": "@sustainers/server",
+  "name": "@blossm/server",
   "description": "Exposes an express function to run.",
-  "version": "0.0.13",
+  "version": "0.0.0",
   "main": "index.js",
-  "author": "sustainers.market",
+  "author": "blossm.network",
   "engines": {
     "node": ">= 10.16.0"
   },
@@ -14,9 +14,9 @@
     "access": "public"
   },
   "dependencies": {
-    "@sustainers/error-middleware": "^0.0.14",
-    "@sustainers/express-middleware": "*",
-    "@sustainers/logger": "^0.0.8",
+    "@blossm/error-middleware": "*",
+    "@blossm/express-middleware": "*",
+    "@blossm/logger": "*",
     "express": "^4.17.1",
     "express-async-handler": "^1.1.4",
     "localenv": "^0.2.2"

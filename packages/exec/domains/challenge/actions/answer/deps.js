@@ -1,8 +1,8 @@
-const viewStore = require("@sustainers/view-store-js");
-const gcpToken = require("@sustainers/gcp-token");
-const { create: createJwt } = require("@sustainers/jwt");
-const { sign } = require("@sustainers/gcp-kms");
-const { string: stringDate, moment } = require("@sustainers/datetime");
+const viewStore = require("@blossm/view-store-js");
+const gcpToken = require("@blossm/gcp-token");
+const { create: createJwt } = require("@blossm/jwt");
+const { sign } = require("@blossm/gcp-kms");
+const { string: stringDate, moment } = require("@blossm/datetime");
 
 exports.viewStore = viewStore;
 exports.gcpToken = gcpToken;

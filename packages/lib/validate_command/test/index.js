@@ -1,6 +1,6 @@
 const { expect } = require("chai").use(require("sinon-chai"));
 const { useFakeTimers } = require("sinon");
-const { string: stringDate, stringFromDate } = require("@sustainers/datetime");
+const { string: stringDate, stringFromDate } = require("@blossm/datetime");
 const validateCommand = require("..");
 
 const now = new Date();

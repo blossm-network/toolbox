@@ -21,14 +21,14 @@ targets:
 version: 0
 
 dependencies:
-  "@sustainers/command-handler": "*"
-  "@sustainers/validator": "*"
-  "@sustainers/duration-consts": "*"
-  "@sustainers/errors": "*"
-  "@sustainers/view-store-js": "*"
-  "@sustainers/gcp-token": "*"
-  "@sustainers/jwt": "*"
-  "@sustainers/gcp-kms": "*"
+  "@blossm/command-handler": "*"
+  "@blossm/validator": "*"
+  "@blossm/duration-consts": "*"
+  "@blossm/errors": "*"
+  "@blossm/view-store-js": "*"
+  "@blossm/gcp-token": "*"
+  "@blossm/jwt": "*"
+  "@blossm/gcp-kms": "*"
 
 devDependencies:
   "mocha": "^6.1.4"
@@ -36,15 +36,15 @@ devDependencies:
   "sinon": "^7.3.2"
   "sinon-chai": "^3.3.0"
   "chai-datetime": "^1.5.0"
-  "@sustainers/datetime": "*"
-  "@sustainers/request": "*"
-  "@sustainers/event-store-js": "*"
-  "@sustainers/command-js": "*"
-  "@sustainers/twilio-sms": "*"
-  "@sustainers/gcp-secret": "*"
-  "@sustainers/uuid": "*"
-  "@sustainers/jwt": "*"
-  "@sustainers/gcp-kms": "*"
+  "@blossm/datetime": "*"
+  "@blossm/request": "*"
+  "@blossm/event-store-js": "*"
+  "@blossm/command-js": "*"
+  "@blossm/twilio-sms": "*"
+  "@blossm/gcp-secret": "*"
+  "@blossm/uuid": "*"
+  "@blossm/jwt": "*"
+  "@blossm/gcp-kms": "*"
 
 service: core
 

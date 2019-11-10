@@ -1,5 +1,5 @@
-const normalize = require("@sustainers/normalize-cli");
-const roboSay = require("@sustainers/robo-say");
+const normalize = require("@blossm/normalize-cli");
+const roboSay = require("@blossm/robo-say");
 const fs = require("fs");
 const yaml = require("yaml");
 const path = require("path");

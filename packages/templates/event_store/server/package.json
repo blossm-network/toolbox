@@ -1,9 +1,9 @@
 {
-  "name": "@sustainers/event-store",
+  "name": "@blossm/event-store",
   "description": "An event store server.",
-  "version": "0.0.65",
+  "version": "0.0.0",
   "main": "index.js",
-  "author": "sustainers.market",
+  "author": "blossm.network",
   "engines": {
     "node": ">= 10.16.0"
   },
@@ -14,13 +14,13 @@
     "access": "public"
   },
   "dependencies": {
-    "@sustainers/datetime": "^0.0.3",
-    "@sustainers/event-store-get": "^0.0.26",
-    "@sustainers/event-store-post": "^0.0.32",
-    "@sustainers/gcp-secret": "^0.0.28",
-    "@sustainers/logger": "^0.0.8",
-    "@sustainers/mongodb-database": "^0.0.31",
-    "@sustainers/server": "^0.0.13"
+    "@blossm/datetime": "*",
+    "@blossm/event-store-get": "*",
+    "@blossm/event-store-post": "*",
+    "@blossm/gcp-secret": "*",
+    "@blossm/logger": "*",
+    "@blossm/mongodb-database": "*",
+    "@blossm/server": "*"
   },
   "devDependencies": {
     "chai-datetime": "^1.5.0",

@@ -1,7 +1,7 @@
 const { expect } = require("chai").use(require("sinon-chai"));
 const { restore, replace, fake, useFakeTimers } = require("sinon");
 const createEvent = require("../");
-const { string: stringDate } = require("@sustainers/datetime");
+const { string: stringDate } = require("@blossm/datetime");
 const deps = require("../deps");
 
 let clock;

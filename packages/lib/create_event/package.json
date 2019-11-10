@@ -1,9 +1,9 @@
 {
-  "name": "@sustainers/create-event",
-  "version": "0.0.5",
+  "name": "@blossm/create-event",
+  "version": "0.0.0",
   "description": "Creates a normalized event.",
   "main": "index.js",
-  "author": "sustainers.market",
+  "author": "blossm.network",
   "engines": {
     "node": ">= 10.16.0"
   },
@@ -11,7 +11,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@sustainers/uuid": "^0.0.3"
+    "@blossm/uuid": "*"
   },
   "scripts": {
     "test": "mocha"

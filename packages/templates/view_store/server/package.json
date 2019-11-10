@@ -1,9 +1,9 @@
 {
-  "name": "@sustainers/view-store",
+  "name": "@blossm/view-store",
   "description": "A view store server.",
-  "version": "0.0.79",
+  "version": "0.0.0",
   "main": "index.js",
-  "author": "sustainers.market",
+  "author": "blossm.network",
   "engines": {
     "node": ">= 10.16.0"
   },
@@ -14,15 +14,15 @@
     "access": "public"
   },
   "dependencies": {
-    "@sustainers/datetime": "*",
-    "@sustainers/gcp-secret": "^0.0.28",
-    "@sustainers/logger": "^0.0.8",
-    "@sustainers/server": "^0.0.13",
-    "@sustainers/view-store-delete": "^0.0.30",
-    "@sustainers/view-store-get": "^0.0.38",
-    "@sustainers/view-store-post": "^0.0.31",
-    "@sustainers/view-store-put": "^0.0.33",
-    "@sustainers/view-store-stream": "^0.0.11"
+    "@blossm/datetime": "*",
+    "@blossm/gcp-secret": "*",
+    "@blossm/logger": "*",
+    "@blossm/server": "*",
+    "@blossm/view-store-delete": "*",
+    "@blossm/view-store-get": "*",
+    "@blossm/view-store-post": "*",
+    "@blossm/view-store-put": "*",
+    "@blossm/view-store-stream": "*"
   },
   "devDependencies": {
     "chai-datetime": "^1.5.0",

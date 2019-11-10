@@ -1,9 +1,9 @@
 {
-  "name": "@sustainers/view-store-delete",
+  "name": "@blossm/view-store-delete",
   "description": "A view store DELETE handler.",
-  "version": "0.0.30",
+  "version": "0.0.0",
   "main": "index.js",
-  "author": "sustainers.market",
+  "author": "blossm.network",
   "engines": {
     "node": ">= 10.16.0"
   },
@@ -14,8 +14,8 @@
     "access": "public"
   },
   "dependencies": {
-    "@sustainers/errors": "^0.0.13",
-    "@sustainers/mongodb-database": "^0.0.31"
+    "@blossm/errors": "*",
+    "@blossm/mongodb-database": "*"
   },
   "devDependencies": {
     "chai-datetime": "^1.5.0",
