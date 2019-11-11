@@ -1,6 +1,6 @@
 {
   "name": "@blossm/gcp-kms",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Tools for asymetricly decrypting a payload.",
   "main": "index.js",
   "author": "blossm.network",
@@ -17,9 +17,9 @@
     "@google-cloud/kms": "^1.3.2"
   },
   "devDependencies": {
+    "dotenv": "^8.2.0",
     "mocha": "^6.1.4",
     "sinon": "^7.3.2",
-    "sinon-chai": "^3.3.0",
-    "dotenv": "^8.2.0"
+    "sinon-chai": "^3.3.0"
   }
 }
