@@ -1,6 +1,6 @@
 {
   "name": "@blossm/validator",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Value validation for common and custom types.",
   "main": "index.js",
   "author": "blossm.network",
@@ -12,9 +12,9 @@
   },
   "dependencies": {
     "@blossm/email-validator": "^0.0.2",
+    "@blossm/errors": "^0.0.4",
     "@blossm/phone-number": "^0.0.2",
-    "@blossm/validation": "^0.0.2",
-    "@blossm/errors": "*"
+    "@blossm/validation": "^0.0.3"
   },
   "scripts": {
     "test": "mocha --recursive"

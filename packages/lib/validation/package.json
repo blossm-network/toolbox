@@ -1,6 +1,6 @@
 {
   "name": "@blossm/validation",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Value validation for common types.",
   "main": "index.js",
   "author": "blossm.network",

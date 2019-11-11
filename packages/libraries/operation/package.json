@@ -1,7 +1,7 @@
 {
   "name": "@blossm/operation-js",
   "description": "Calls an operation on a service within the network.",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -14,7 +14,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/errors": "^0.0.3",
+    "@blossm/errors": "^0.0.4",
     "@blossm/hash-string": "^0.0.2",
     "@blossm/logger": "^0.0.3",
     "@blossm/request": "^0.0.3",
