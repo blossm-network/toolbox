@@ -11,7 +11,7 @@
     "access": "public"
   },
   "scripts": {
-    "test": "mocha"
+    "test": "mocha --recursive"
   },
   "dependencies": {
     "uuid": "^3.3.2"

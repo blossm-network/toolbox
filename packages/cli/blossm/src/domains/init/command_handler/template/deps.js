@@ -3,7 +3,6 @@
  * in this file.
  */
 
-const { badRequest, conflict } = require("@blossm/errors");
+const { badRequest } = require("@blossm/errors");
 
 exports.badRequestError = badRequest;
-exports.conflictError = conflict;

@@ -11,7 +11,7 @@
     "access": "public"
   },
   "scripts": {
-    "test": "mocha"
+    "test": "mocha --recursive"
   },
   "dependencies": {
     "@blossm/authorize": "^0.0.2",

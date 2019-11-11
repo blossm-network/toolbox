@@ -1,42 +1,82 @@
-const { refinement } = require("tcomb-validation");
+const { refinement, list } = require("tcomb-validation");
 
 const process = require("./_process");
 
-module.exports = ({ value, refinementType, message, fn, optional }) => {
-  if (fn == undefined) return process(value, refinementType, optional);
+module.exports = ({
+  value,
+  isArray,
+  baseFn,
+  baseMessageFn = (error, title) => {
+    if (!title) return error.message;
+    return `This ${title} doesn't look right. Reach out to us if you think something's wrong.`;
+  },
+  refinementFn,
+  refinementMessageFn,
+  title,
+  optional
+}) => {
+  const baseThrowingMessage = (value, _, context) => {
+    try {
+      baseFn(value);
+    } catch (e) {
+      return baseMessageFn(e, context.title);
+    }
+  };
+
+  baseFn.getValidationErrorMessage = baseThrowingMessage;
+
+  const transformedBaseFn = !isArray
+    ? baseFn
+    : (() => {
+      const arrayBaseFn = list(baseFn);
+      arrayBaseFn.getValidationErrorMessage = (value, _, context) => {
+        try {
+          arrayBaseFn(value);
+        } catch (e) {
+          return baseMessageFn(e, context.title);
+        }
+      };
+      return arrayBaseFn;
+    })();
 
   //If the passed in function throws, return a falsey message;
-  const throwingFn = v => {
-    try {
-      const fnValue = fn(v);
+  const throwingFn = !refinementFn
+    ? null
+    : v => {
+      try {
+        const fnValue = refinementFn(v);
 
-      if (fnValue != undefined) return fnValue;
+        if (fnValue != undefined) return fnValue;
 
-      //return true if the function doesn't have a return value but doesnt throw.
-      return true;
-    } catch (e) {
-      return false;
-    }
-  };
+        //return true if the function doesn't have a return value but doesnt throw.
+        return true;
+      } catch (e) {
+        return false;
+      }
+    };
 
-  //If the fn throws and a message wasn't passed in, use the thrown message;
-  const throwingMessage = value => {
-    if (message != undefined) return message(value);
+  const validatorFn = !throwingFn
+    ? transformedBaseFn
+    : (() => {
+      const refinedFn = refinement(transformedBaseFn, throwingFn);
+      //If the fn throws and a message wasn't passed in, use the thrown message;
+      refinedFn.getValidationErrorMessage = (value, _, context) => {
+        if (refinementMessageFn) {
+          const resolvedMessage = refinementMessageFn(value, title);
+          if (resolvedMessage) return resolvedMessage;
+        }
 
-    try {
-      //Allow the fn to throw.
-      fn(value);
-    } catch (error) {
-      const isString = typeof error == "string";
+        try {
+          refinementFn(value);
+        } catch (e) {
+          const isString = typeof e == "string";
+          if (isString) return e;
+          else if (e.message) return e.message;
+          else return baseMessageFn(e, context.title);
+        }
+      };
+      return refinedFn;
+    })();
 
-      if (isString) return error;
-      else if (error.message != undefined) return error.message;
-    }
-  };
-
-  const validator = refinement(refinementType, throwingFn);
-
-  validator.getValidationErrorMessage = throwingMessage;
-
-  return process(value, validator, optional);
+  return process(value, validatorFn, { title }, optional);
 };

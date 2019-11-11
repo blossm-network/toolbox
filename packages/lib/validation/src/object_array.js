@@ -1,12 +1,22 @@
-const { list, Object } = require("tcomb-validation");
+const { Object: tObject } = require("tcomb-validation");
 const validator = require("./_validator");
 
-module.exports = ({ value, message, fn, optional }) => {
+module.exports = ({
+  value,
+  refinementFn,
+  baseMessageFn,
+  refinementMessageFn,
+  title,
+  optional
+}) => {
   return validator({
     value,
-    refinementType: list(Object),
-    message,
-    fn,
+    isArray: true,
+    baseFn: tObject,
+    baseMessageFn,
+    refinementMessageFn,
+    refinementFn,
+    title,
     optional
   });
 };

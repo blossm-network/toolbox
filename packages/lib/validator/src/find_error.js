@@ -1,6 +1,5 @@
 module.exports = results => {
-  for (let i = 0; i < results.length; i++) {
-    let result = results[i];
+  for (const result of results) {
     if (result == undefined) {
       continue;
     } else if (result.isValid != undefined) {

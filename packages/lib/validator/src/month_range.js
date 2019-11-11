@@ -1,10 +1,10 @@
 const numberRange = require("./number_range");
 
-module.exports = (number, { optional } = {}) => {
-  return numberRange(number, {
+module.exports = (number, { baseMessageFn, title = "month", optional } = {}) =>
+  numberRange(number, {
     lowerBound: 0,
     upperBound: 11,
-    title: "Month",
+    baseMessageFn,
+    title,
     optional
   });
-};

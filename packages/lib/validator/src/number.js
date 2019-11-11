@@ -1,9 +1,14 @@
 const { number: numberValidator } = require("@blossm/validation");
 
-module.exports = (number, { fn, optional } = {}) => {
-  return numberValidator({
+module.exports = (
+  number,
+  { baseMessageFn, refinementMessageFn, refinementFn, title, optional } = {}
+) =>
+  numberValidator({
     value: number,
+    title,
+    baseMessageFn,
+    refinementMessageFn,
     optional,
-    fn
+    refinementFn
   });
-};

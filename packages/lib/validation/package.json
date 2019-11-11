@@ -14,7 +14,7 @@
     "tcomb-validation": "^3.4.1"
   },
   "scripts": {
-    "test": "mocha"
+    "test": "mocha --recursive"
   },
   "devDependencies": {
     "mocha": "^6.1.4"

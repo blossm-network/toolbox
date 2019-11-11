@@ -17,15 +17,15 @@ module.exports = async ({ payload, context }) => {
     .read({ root: context.challenge });
 
   //Throw if no challenge recognized or if the code is not right.
-  if (!challenge) throw deps.conflictError.codeNotRecognized();
+  if (!challenge) throw deps.badRequestError.codeNotRecognized();
 
-  if (challenge.code != payload.code) throw deps.conflictError.wrongCode();
+  if (challenge.code != payload.code) throw deps.badRequestError.wrongCode();
 
   //Throw if the challenge is expired.
   const now = new Date();
 
   if (Date.parse(challenge.expires) < now)
-    throw deps.conflictError.codeExpired();
+    throw deps.badRequestError.codeExpired();
 
   //Lookup the contexts that the requesting person is in.
   const [person] = await deps

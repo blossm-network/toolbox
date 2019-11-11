@@ -63,6 +63,14 @@ describe("Invalid string", () => {
       expect(response.errors).to.have.lengthOf(1);
     });
   });
+  it("should contain one error if something other than a string is passed in with a title", () => {
+    const title = "some-title";
+    invalidStrings.forEach(invalidString => {
+      let response = string(invalidString, { title });
+      expect(response.errors).to.have.lengthOf(1);
+      expect(response.errors[0].message).to.include(title);
+    });
+  });
 });
 
 describe("Invalid optional string", () => {

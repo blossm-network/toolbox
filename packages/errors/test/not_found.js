@@ -1,7 +1,7 @@
 const { expect } = require("chai");
 const { notFound } = require("..");
 
-describe("Not found", () => {
+describe("Bad request", () => {
   it("root correct", () => {
     const error = notFound.root();
     expect(error.message).to.equal("Root not found.");

@@ -2,14 +2,19 @@
 
 const { string: stringValidator } = require("@blossm/validation");
 
-module.exports = (string, { optional } = {}) => {
-  return stringValidator({
+module.exports = (
+  string,
+  { baseMessageFn, title = "country code", optional } = {}
+) =>
+  stringValidator({
     value: string,
-    message: code => `${code} is not a country code.`,
-    fn: code => codes.includes(code.toUpperCase()),
+    title,
+    baseMessageFn,
+    refinementMessageFn: (_, title) =>
+      `This ${title.toLowerCase()} is not a valid two-letter country code.`,
+    refinementFn: code => codes.includes(code.toUpperCase()),
     optional
   });
-};
 
 const codes = [
   "AF",

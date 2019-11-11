@@ -42,6 +42,40 @@ describe("Invalid string", () => {
       expect(response.errors).to.have.lengthOf(1);
     });
   });
+  it("should contain one error if something other than a string is passed in with message", () => {
+    const message = "This is a bad string";
+    invalidStrings.forEach(invalidString => {
+      let response = string({
+        value: invalidString,
+        baseMessageFn: () => message
+      });
+      expect(response.errors).to.have.lengthOf(1);
+      expect(response.errors[0].message).to.equal(message);
+    });
+  });
+  it("should contain one error if something other than a string is passed in with message and title", () => {
+    const title = "some-title";
+    invalidStrings.forEach(invalidString => {
+      let response = string({
+        title,
+        value: invalidString,
+        baseMessageFn: (e, title) => {
+          expect(e).to.exist;
+          return title;
+        }
+      });
+      expect(response.errors).to.have.lengthOf(1);
+      expect(response.errors[0].message).to.equal(title);
+    });
+  });
+  it("should contain one error if something other than a string is passed in with title response", () => {
+    const title = "some-title";
+    invalidStrings.forEach(invalidString => {
+      let response = string({ value: invalidString, title });
+      expect(response.errors).to.have.lengthOf(1);
+      expect(response.errors[0].message).to.include(title);
+    });
+  });
 });
 
 describe("Invalid optional string", () => {
@@ -55,8 +89,8 @@ describe("Invalid optional string", () => {
 
 describe("Valid string that doesn't satisfy refinement", () => {
   it("should contain one error if a string is passed in that doesn't satisfy the refinement function", () => {
-    const fn = value => value != validString;
-    const response = string({ value: validString, fn });
+    const refinementFn = value => value != validString;
+    const response = string({ value: validString, refinementFn });
     expect(response.errors).to.have.lengthOf(1);
   });
 });
@@ -64,33 +98,50 @@ describe("Valid string that doesn't satisfy refinement", () => {
 describe("Error message", () => {
   it("should contain one error with the specified message if an invalid string is passed in", () => {
     const incorrectString = validString;
-    const fn = value => value != validString;
+    const refinementFn = value => value != validString;
     const message = "This is a bad string";
     const response = string({
       value: incorrectString,
-      message: () => message,
-      fn
+      refinementMessageFn: () => message,
+      refinementFn
     });
     expect(response.errors[0].message).to.equal(message);
   });
 
+  it("should contain one error with the specified message if an invalid string is passed in with title", () => {
+    const incorrectString = validString;
+    const refinementFn = value => value != validString;
+    const title = "some-title";
+    const response = string({
+      title,
+      value: incorrectString,
+      refinementMessageFn: (value, title) => `${value}${title}`,
+      refinementFn
+    });
+    expect(response.errors[0].message).to.equal(`${incorrectString}${title}`);
+  });
+
   it("should throw an error with the thrown message if an invalid string is passed in without a message and the refinement function throws", () => {
     const message = "This is a bad string";
-    const fn = () => {
+    const refinementFn = () => {
       throw message;
     };
 
-    const response = string({ value: validString, fn });
+    const response = string({ value: validString, refinementFn });
 
     expect(response.errors[0].message).to.equal(message);
   });
   it("should throw an error with the passed in message if an invalid string is passed in with a message and the refinement function throws", () => {
     const message = "This is a bad string";
-    const fn = () => {
+    const refinementFn = () => {
       throw "bogus";
     };
 
-    const response = string({ value: validString, message: () => message, fn });
+    const response = string({
+      value: validString,
+      refinementMessageFn: () => message,
+      refinementFn
+    });
 
     expect(response.errors[0].message).to.equal(message);
   });

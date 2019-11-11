@@ -2,15 +2,13 @@ const { string: stringValidator } = require("@blossm/validation");
 const findError = require("./find_error");
 const number = require("./number");
 
-module.exports = (value, { optional } = {}) => {
-  return stringValidator({
+module.exports = (value, { baseMessageFn, title = "date", optional } = {}) =>
+  stringValidator({
     value,
-    message: () =>
-      "This date couldn't be parsed. Try again after making a change to it.",
-    fn: value => {
-      const nameErr = findError([number(Date.parse(value))]);
-      return nameErr == undefined;
-    },
+    title,
+    baseMessageFn,
+    refinementMessageFn: (_, title) =>
+      `This ${title.toLowerCase()} couldn't be parsed. Try again after making a change to it.`,
+    refinementFn: value => !findError([number(Date.parse(value))]),
     optional
   });
-};

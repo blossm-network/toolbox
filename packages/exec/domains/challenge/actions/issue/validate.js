@@ -3,6 +3,8 @@ const { findError, phoneNumber } = require("@blossm/validator");
 const deps = require("./deps");
 
 module.exports = payload => {
-  const userInputError = findError([phoneNumber(payload.phone)]);
-  if (userInputError) throw deps.conflictError.message(userInputError.message);
+  const error = findError([
+    phoneNumber(payload.phone, { title: "phone number" })
+  ]);
+  if (error) throw deps.badRequestError.message(error.message);
 };

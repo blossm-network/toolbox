@@ -27,7 +27,7 @@ module.exports = async ({ payload, context }) => {
     .set({ context, tokenFn: deps.gcpToken })
     .read({ phone: payload.phone });
 
-  if (!person) throw deps.conflictError.phoneNotRecognized();
+  if (!person) throw deps.badRequestError.phoneNotRecognized();
 
   //Create the root for this challenge.
   const root = await deps.uuid();

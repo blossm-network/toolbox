@@ -18,11 +18,6 @@ describe("Construct", () => {
     expect(error.message).to.equal(message);
     expect(error.statusCode).to.equal(404);
   });
-  it("409 correct", () => {
-    const error = construct({ statusCode: 409, message });
-    expect(error.message).to.equal(message);
-    expect(error.statusCode).to.equal(409);
-  });
   it("500 correct", () => {
     const error = construct({ statusCode: 500, message });
     expect(error.message).to.equal(message);

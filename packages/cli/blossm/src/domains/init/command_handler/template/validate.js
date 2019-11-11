@@ -8,8 +8,7 @@
  * The function takes in the payload param from the request (req.body.payload),
  * and is responsible for throwing an error if a value wasn't sent as expected.
  *
- * Throw a badRequest error to return a 401 to the client, and
- * a conflict error to return a 409. Conflict errors suggest the user should see the error message.
+ * Throw a badRequest error to return a 400 to the client with a descriptive message.
  */
 
 const { findError, string } = require("@blossm/validator");
@@ -17,10 +16,6 @@ const { findError, string } = require("@blossm/validator");
 const deps = require("./deps");
 
 module.exports = async payload => {
-  const systemInputError = findError([string(payload.name)]);
-  if (systemInputError)
-    throw deps.badRequestError.message(systemInputError.message);
-
-  const userInputError = findError([string(payload.name)]);
-  if (userInputError) throw deps.conflictError.message(userInputError.message);
+  const error = findError([string(payload.name, { title: "name" })]);
+  if (error) throw deps.badRequestError.message(error.message);
 };

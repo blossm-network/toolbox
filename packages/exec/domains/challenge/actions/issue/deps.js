@@ -6,7 +6,7 @@ const uuid = require("@blossm/uuid");
 const randomIntOfLength = require("@blossm/random-int-of-length");
 const sms = require("@blossm/twilio-sms");
 const secret = require("@blossm/gcp-secret");
-const { conflict } = require("@blossm/errors");
+const { badRequest } = require("@blossm/errors");
 
 const {
   moment,
@@ -25,4 +25,4 @@ exports.stringDate = stringDate;
 exports.randomIntOfLength = randomIntOfLength;
 exports.secret = secret;
 exports.sms = sms;
-exports.conflictError = conflict;
+exports.badRequestError = badRequest;

@@ -73,7 +73,7 @@ describe("View store integration tests", () => {
     expect(parsedBody8.deletedCount).to.equal(1);
 
     const response9 = await request.get(`${url}/${id}`);
-    expect(response9.statusCode).to.equal(404);
+    expect(response9.statusCode).to.equal(400);
   });
 
   it("should return an error if incorrect params", async () => {

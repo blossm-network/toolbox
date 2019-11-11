@@ -1,6 +1,21 @@
-const { Boolean } = require("tcomb-validation");
+const { Boolean: tBoolean } = require("tcomb-validation");
 const validator = require("./_validator");
 
-module.exports = ({ value, message, fn, optional }) => {
-  return validator({ value, refinementType: Boolean, message, fn, optional });
+module.exports = ({
+  value,
+  baseMessageFn,
+  refinementMessageFn,
+  refinementFn,
+  title,
+  optional
+}) => {
+  return validator({
+    value,
+    baseFn: tBoolean,
+    baseMessageFn,
+    refinementMessageFn,
+    refinementFn,
+    title,
+    optional
+  });
 };

@@ -42,27 +42,31 @@ let isFormattedCorrectly = string => {
   );
 };
 
-module.exports = (value, { optional } = {}) => {
-  return stringValidator({
+module.exports = (
+  value,
+  { baseMessageFn, title = "password", optional } = {}
+) =>
+  stringValidator({
     value,
-    fn: password => {
+    title,
+    baseMessageFn,
+    refinementFn: password => {
       return (
         isLongEnough(password) &&
         isShortEnough(password) &&
         isFormattedCorrectly(password)
       );
     },
-    message: password => {
+    refinementMessageFn: (password, title) => {
       if (!isLongEnough(password)) {
-        return `Your password should be more than ${minPasswordLength} characters. Add some characters to make it more secure.`;
+        return `This ${title} should be more than ${minPasswordLength} characters. Add some characters to make it more secure.`;
       }
       if (!isShortEnough(password)) {
-        return `Your password should be less than ${maxPasswordLength} characters. Give this another try after cutting some characters.`;
+        return `This ${title} should be less than ${maxPasswordLength} characters. Give this another try after cutting some characters.`;
       }
       if (!isFormattedCorrectly(password)) {
-        return "Your password should have a number, letter, and symbol. It’s safer that way!";
+        return `This ${password} should have a number, letter, and symbol. It’s safer that way.`;
       }
     },
     optional
   });
-};

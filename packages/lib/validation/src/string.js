@@ -1,6 +1,21 @@
-const { String } = require("tcomb-validation");
+const { String: tString } = require("tcomb-validation");
 const validator = require("./_validator");
 
-module.exports = ({ value, message, fn, optional }) => {
-  return validator({ value, refinementType: String, message, fn, optional });
+module.exports = ({
+  value,
+  baseMessageFn,
+  refinementMessageFn,
+  refinementFn,
+  title,
+  optional
+}) => {
+  return validator({
+    value,
+    baseFn: tString,
+    baseMessageFn,
+    refinementMessageFn,
+    refinementFn,
+    title,
+    optional
+  });
 };

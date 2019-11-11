@@ -16,7 +16,7 @@
     "@blossm/validator": "^0.0.2"
   },
   "scripts": {
-    "test": "mocha"
+    "test": "mocha --recursive"
   },
   "devDependencies": {
     "@blossm/datetime": "^0.0.1",

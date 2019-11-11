@@ -14,7 +14,7 @@
     "moment": "^2.24.0"
   },
   "scripts": {
-    "test": "mocha"
+    "test": "mocha --recursive"
   },
   "devDependencies": {
     "chai-as-promised": "^7.1.1",

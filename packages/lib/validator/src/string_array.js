@@ -1,9 +1,14 @@
 const { stringArray: stringArrayValidator } = require("@blossm/validation");
 
-module.exports = (stringArray, { fn, optional } = {}) => {
-  return stringArrayValidator({
+module.exports = (
+  stringArray,
+  { baseMessageFn, refinementFn, refinementMessageFn, title, optional } = {}
+) =>
+  stringArrayValidator({
     value: stringArray,
     optional,
-    fn
+    title,
+    baseMessageFn,
+    refinementMessageFn,
+    refinementFn
   });
-};

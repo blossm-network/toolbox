@@ -11,7 +11,7 @@
     "access": "public"
   },
   "scripts": {
-    "test": "mocha"
+    "test": "mocha --recursive"
   },
   "devDependencies": {
     "mocha": "^6.1.4"

@@ -14,7 +14,7 @@
     "@blossm/nonce": "^0.0.1"
   },
   "scripts": {
-    "test": "mocha"
+    "test": "mocha --recursive"
   },
   "devDependencies": {
     "mocha": "^6.1.4",

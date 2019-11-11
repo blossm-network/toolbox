@@ -1,8 +1,14 @@
 const { fn: fnValidator } = require("@blossm/validation");
 
-module.exports = (fn, { optional } = {}) => {
-  return fnValidator({
+module.exports = (
+  fn,
+  { baseMessageFn, refinementFn, refinementMessageFn, title, optional } = {}
+) =>
+  fnValidator({
     value: fn,
-    optional
+    title,
+    optional,
+    refinementFn,
+    refinementMessageFn,
+    baseMessageFn
   });
-};

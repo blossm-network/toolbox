@@ -1,9 +1,14 @@
 const { object: objectValidator } = require("@blossm/validation");
 
-module.exports = (object, { fn, optional } = {}) => {
-  return objectValidator({
+module.exports = (
+  object,
+  { baseMessageFn, refinementFn, refinementMessageFn, title, optional } = {}
+) =>
+  objectValidator({
     value: object,
-    optional,
-    fn
+    title,
+    baseMessageFn,
+    refinementMessageFn,
+    refinementFn,
+    optional
   });
-};

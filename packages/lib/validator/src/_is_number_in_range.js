@@ -1,3 +1,2 @@
-module.exports = ({ number, lowerBound, upperBound }) => {
-  return number >= lowerBound && number <= upperBound;
-};
+module.exports = ({ number, lowerBound, upperBound }) =>
+  number >= lowerBound && number <= upperBound;

@@ -14,7 +14,7 @@
     "nonce": "^1.0.4"
   },
   "scripts": {
-    "test": "mocha"
+    "test": "mocha --recursive"
   },
   "devDependencies": {
     "mocha": "^6.1.4"

@@ -5,8 +5,8 @@ const yearRange = require("./year_range");
 const findError = require("./find_error");
 const object = require("./object");
 
-module.exports = (dateComponents, { optional } = {}) => {
-  const err = findError([object(dateComponents, { optional })]);
+module.exports = (dateComponents, { title = "date", optional } = {}) => {
+  const err = findError([object(dateComponents, { optional, title })]);
   if (err) return err;
 
   if (dateComponents == undefined) return;

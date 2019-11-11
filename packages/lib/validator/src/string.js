@@ -13,18 +13,19 @@ module.exports = (
 
   return stringValidator({
     value,
-    fn: string => {
+    title,
+    refinementFn: string => {
       return (
         (fn == undefined || fn(string)) &&
         (shouldAllowEmptyString || stringIsNotEmpty(string)) &&
         isWithinBounds(string)
       );
     },
-    message: string => {
-      if (!optional && !stringIsNotEmpty(string)) {
+    refinementMessageFn: (value, title) => {
+      if (!optional && !stringIsNotEmpty(value)) {
         return stringEmptyMessage(title);
       }
-      if (!isWithinBounds(string)) {
+      if (!isWithinBounds(value)) {
         return stringTooLongMessage({
           title,
           max: maxLength

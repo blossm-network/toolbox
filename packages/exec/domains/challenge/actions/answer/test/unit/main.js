@@ -241,7 +241,7 @@ describe("Command handler unit tests", () => {
 
     const error = "some-error";
     const codeNotRecognizedFake = fake.returns(error);
-    replace(deps, "conflictError", {
+    replace(deps, "badRequestError", {
       codeNotRecognized: codeNotRecognizedFake
     });
 
@@ -269,7 +269,7 @@ describe("Command handler unit tests", () => {
 
     const error = "some-error";
     const badCodeFake = fake.returns(error);
-    replace(deps, "conflictError", {
+    replace(deps, "badRequestError", {
       badCode: badCodeFake
     });
 
@@ -300,7 +300,7 @@ describe("Command handler unit tests", () => {
 
     const error = "some-error";
     const codeExpiredFake = fake.returns(error);
-    replace(deps, "conflictError", {
+    replace(deps, "badRequestError", {
       codeExpired: codeExpiredFake
     });
 
