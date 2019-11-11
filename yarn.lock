@@ -4311,9 +4311,10 @@ lcid@^1.0.0:
   dependencies:
     invert-kv "^1.0.0"
 
-lerna@^3.16.4:
+lerna@^3.18.4:
   version "3.18.4"
   resolved "https://registry.yarnpkg.com/lerna/-/lerna-3.18.4.tgz#132858cabb8fc8393341ddddbbbd85dd0ca82a79"
+  integrity sha512-DiU53cvMxaU07Bj2HwBwUQ2O3c/ORNq/QwKj1vGJH4vSkZSTUxPryp2baSNlt8PmnLNXOVpw0vOTRkEF+6n/cA==
   dependencies:
     "@lerna/add" "3.18.4"
     "@lerna/bootstrap" "3.18.4"

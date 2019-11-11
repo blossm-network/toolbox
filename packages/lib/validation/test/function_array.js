@@ -41,10 +41,12 @@ describe("Invalid function array", () => {
     expect(response.errors).to.have.lengthOf(1);
     expect(response.errors[0].message).to.equal(message);
   });
-  it("should contain one error if array has values that are not functions with message and title", () => {
+  it("should contain one error if array has values that are not functions with message, title, and path", () => {
     const title = "some-title";
+    const path = "some-path";
     const response = fnArray({
       title,
+      path,
       value: invalidFunctionArray,
       baseMessageFn: (e, title) => {
         expect(e).to.exist;
@@ -53,6 +55,7 @@ describe("Invalid function array", () => {
     });
     expect(response.errors).to.have.lengthOf(1);
     expect(response.errors[0].message).to.equal(title);
+    expect(response.errors[0].path[0]).to.equal(path);
   });
   it("should contain one error if not array with message", () => {
     const message = "This is a bad fn";

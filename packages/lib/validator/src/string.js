@@ -6,7 +6,7 @@ const stringTooLongMessage = require("./_string_too_long_message");
 
 module.exports = (
   value,
-  { fn, optional, title, maxLength, shouldAllowEmptyString = true } = {}
+  { fn, optional, title, path, maxLength, shouldAllowEmptyString = true } = {}
 ) => {
   const isWithinBounds = string =>
     maxLength == undefined || string.length <= maxLength;
@@ -14,6 +14,7 @@ module.exports = (
   return stringValidator({
     value,
     title,
+    path,
     refinementFn: string => {
       return (
         (fn == undefined || fn(string)) &&

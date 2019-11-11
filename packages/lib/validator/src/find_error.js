@@ -17,5 +17,11 @@ module.exports = results => {
 
   if (!errors.length) return null;
 
-  return deps.invalidArgumentError.validationFailed({ info: { errors } });
+  return deps.invalidArgumentError.validationFailed({
+    info: {
+      errors: errors.map(e => {
+        return { message: e.message, path: e.path[0] };
+      })
+    }
+  });
 };

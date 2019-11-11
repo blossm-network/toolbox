@@ -53,11 +53,13 @@ describe("Invalid string", () => {
       expect(response.errors[0].message).to.equal(message);
     });
   });
-  it("should contain one error if something other than a string is passed in with message and title", () => {
+  it("should contain one error if something other than a string is passed in with message, title, and path", () => {
     const title = "some-title";
+    const path = "some-path";
     invalidStrings.forEach(invalidString => {
       let response = string({
         title,
+        path,
         value: invalidString,
         baseMessageFn: (e, title) => {
           expect(e).to.exist;
@@ -66,6 +68,7 @@ describe("Invalid string", () => {
       });
       expect(response.errors).to.have.lengthOf(1);
       expect(response.errors[0].message).to.equal(title);
+      expect(response.errors[0].path[0]).to.equal(path);
     });
   });
   it("should contain one error if something other than a string is passed in with title response", () => {

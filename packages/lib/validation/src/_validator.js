@@ -13,6 +13,7 @@ module.exports = ({
   refinementFn,
   refinementMessageFn,
   title,
+  path,
   optional
 }) => {
   const baseThrowingMessage = (value, _, context) => {
@@ -78,5 +79,9 @@ module.exports = ({
       return refinedFn;
     })();
 
-  return process(value, validatorFn, { title }, optional);
+  return process(value, validatorFn, {
+    context: { title },
+    ...(path && { path: [path] }),
+    optional
+  });
 };

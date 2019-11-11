@@ -14,6 +14,8 @@
 const { findError, string } = require("@blossm/validator");
 
 module.exports = async payload => {
-  const error = findError([string(payload.name, { title: "name" })]);
+  const error = findError([
+    string(payload.name, { title: "name", path: "payload.name" })
+  ]);
   if (error) throw error;
 };

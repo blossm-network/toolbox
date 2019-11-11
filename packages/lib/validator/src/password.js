@@ -44,11 +44,12 @@ let isFormattedCorrectly = string => {
 
 module.exports = (
   value,
-  { baseMessageFn, title = "password", optional } = {}
+  { baseMessageFn, title = "password", path, optional } = {}
 ) =>
   stringValidator({
     value,
     title,
+    path,
     baseMessageFn,
     refinementFn: password => {
       return (

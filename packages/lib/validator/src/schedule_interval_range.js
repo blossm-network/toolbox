@@ -4,12 +4,13 @@ const numberRange = require("./number_range");
 
 module.exports = (
   number,
-  { baseMessageFn, title = "interval", optional } = {}
+  { baseMessageFn, title = "interval", path, optional } = {}
 ) =>
   numberRange(number, {
     lowerBound: 0,
     upperBound: maxAllowedInterval,
     baseMessageFn,
     title,
+    path,
     optional
   });

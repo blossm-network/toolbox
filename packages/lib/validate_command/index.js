@@ -4,25 +4,40 @@ const { SECONDS_IN_DAY } = require("@blossm/duration-consts");
 const deps = require("./deps");
 
 module.exports = async params => {
-  const systemInputError = findError([
-    object(params.headers, { title: "headers" }),
-    object(params.payload, { optional: true, title: "payload" })
+  const error = findError([
+    object(params.headers, { title: "headers", path: "headers" }),
+    object(params.payload, {
+      optional: true,
+      title: "payload",
+      path: "payload"
+    })
   ]);
 
-  if (systemInputError) {
-    throw deps.badRequestError.message(systemInputError.message);
-  }
+  if (error) throw error;
 
-  const headersSystemInputError = findError([
-    string(params.headers.trace, { optional: true, title: "trace" }),
-    string(params.headers.root, { optional: true, title: "root" }),
-    object(params.headers.source, { optional: true, title: "source" }),
-    date(params.headers.issued, { title: "issued date" })
+  const headersError = findError([
+    string(params.headers.trace, {
+      optional: true,
+      title: "trace",
+      path: "headers.trace"
+    }),
+    string(params.headers.root, {
+      optional: true,
+      title: "root",
+      path: "headers.root"
+    }),
+    object(params.headers.source, {
+      optional: true,
+      title: "source",
+      path: "headers.source"
+    }),
+    date(params.headers.issued, {
+      title: "issued date",
+      headers: "headers.issued"
+    })
   ]);
 
-  if (headersSystemInputError) {
-    throw deps.badRequestError.message(headersSystemInputError.message);
-  }
+  if (headersError) throw headersError;
 
   if (
     new Date() < new Date(params.headers.issued) ||

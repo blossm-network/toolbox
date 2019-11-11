@@ -41,10 +41,12 @@ describe("Invalid boolean array", () => {
     expect(response.errors).to.have.lengthOf(1);
     expect(response.errors[0].message).to.equal(message);
   });
-  it("should contain one error if array has values that are not booleans with message and title", () => {
+  it("should contain one error if array has values that are not booleans with message, title, and path", () => {
     const title = "some-title";
+    const path = "some-path";
     const response = booleanArray({
       title,
+      path,
       value: invalidBooleanArray,
       baseMessageFn: (e, title) => {
         expect(e).to.exist;
@@ -53,6 +55,7 @@ describe("Invalid boolean array", () => {
     });
     expect(response.errors).to.have.lengthOf(1);
     expect(response.errors[0].message).to.equal(title);
+    expect(response.errors[0].path[0]).to.equal(path);
   });
   it("should contain one error if not array with message", () => {
     const message = "This is a bad boolean";

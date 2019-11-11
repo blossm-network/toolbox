@@ -5,11 +5,19 @@ const numberTooSmallMessage = require("./_number_too_small_message");
 
 module.exports = (
   number,
-  { baseMessageFn, lowerBound, upperBound, title = "range", optional } = {}
+  {
+    baseMessageFn,
+    lowerBound,
+    upperBound,
+    title = "range",
+    path,
+    optional
+  } = {}
 ) =>
   numberValidator({
     value: number,
     title,
+    path,
     baseMessageFn,
     refinementFn: number => isNumberInRange({ number, lowerBound, upperBound }),
     refinementMessageFn: (number, title) => {

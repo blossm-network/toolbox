@@ -42,7 +42,7 @@ describe("Validate command", () => {
       //shouldn't be called
       expect(2).to.equal(1);
     } catch (e) {
-      expect(e.statusCode).to.equal(400);
+      expect(e.statusCode).to.equal(409);
     }
   });
   it("should throw if a no header is passed", async () => {
@@ -56,7 +56,7 @@ describe("Validate command", () => {
       //shouldn't get called
       expect(1).to.equal(0);
     } catch (e) {
-      expect(e.statusCode).to.equal(400);
+      expect(e.statusCode).to.equal(409);
     }
   });
   it("should throw if a bad source is passed", async () => {
@@ -74,7 +74,7 @@ describe("Validate command", () => {
       //shouldn't get called
       expect(1).to.equal(0);
     } catch (e) {
-      expect(e.statusCode).to.equal(400);
+      expect(e.statusCode).to.equal(409);
     }
   });
   it("should not throw if a no source is passed", async () => {
@@ -107,7 +107,7 @@ describe("Validate command", () => {
       //shouldn't get called
       expect(1).to.equal(0);
     } catch (e) {
-      expect(e.statusCode).to.equal(400);
+      expect(e.statusCode).to.equal(409);
     }
   });
   it("should allow no trace is passed", async () => {
@@ -139,7 +139,7 @@ describe("Validate command", () => {
       //shouldn't get called
       expect(1).to.equal(0);
     } catch (e) {
-      expect(e.statusCode).to.equal(400);
+      expect(e.statusCode).to.equal(409);
     }
   });
   it("should allow no root is passed", async () => {
@@ -171,7 +171,7 @@ describe("Validate command", () => {
       //shouldn't get called
       expect(1).to.equal(0);
     } catch (e) {
-      expect(e.statusCode).to.equal(400);
+      expect(e.statusCode).to.equal(409);
     }
   });
   it("should throw if a no issued timestamp is passed", async () => {
@@ -189,7 +189,7 @@ describe("Validate command", () => {
       //shouldn't get called
       expect(1).to.equal(0);
     } catch (e) {
-      expect(e.statusCode).to.equal(400);
+      expect(e.statusCode).to.equal(409);
     }
   });
   it("should throw if a future issued is passed", async () => {
@@ -239,7 +239,7 @@ describe("Validate command", () => {
       //shouldn't get called
       expect(1).to.equal(0);
     } catch (e) {
-      expect(e.statusCode).to.equal(400);
+      expect(e.statusCode).to.equal(409);
     }
   });
   it("should not throw if a no payload is passed", async () => {
