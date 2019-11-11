@@ -1,6 +1,6 @@
 {
   "name": "@blossm/authorize",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Authorize requests.",
   "main": "index.js",
   "author": "blossm.network",
@@ -11,9 +11,9 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/array-intersection": "^0.0.1",
-    "@blossm/jwt": "^0.0.2",
-    "@blossm/tokens-from-req": "^0.0.1"
+    "@blossm/array-intersection": "^0.0.2",
+    "@blossm/jwt": "^0.0.3",
+    "@blossm/tokens-from-req": "^0.0.2"
   },
   "scripts": {
     "test": "mocha --recursive"

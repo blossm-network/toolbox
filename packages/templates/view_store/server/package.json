@@ -1,7 +1,7 @@
 {
   "name": "@blossm/view-store",
   "description": "A view store server.",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -14,15 +14,15 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/datetime": "^0.0.1",
+    "@blossm/datetime": "^0.0.2",
     "@blossm/gcp-secret": "^0.0.1",
-    "@blossm/logger": "^0.0.2",
-    "@blossm/server": "^0.0.2",
-    "@blossm/view-store-delete": "^0.0.2",
-    "@blossm/view-store-get": "^0.0.2",
-    "@blossm/view-store-post": "^0.0.2",
-    "@blossm/view-store-put": "^0.0.2",
-    "@blossm/view-store-stream": "^0.0.2"
+    "@blossm/logger": "^0.0.3",
+    "@blossm/server": "^0.0.3",
+    "@blossm/view-store-delete": "^0.0.3",
+    "@blossm/view-store-get": "^0.0.3",
+    "@blossm/view-store-post": "^0.0.3",
+    "@blossm/view-store-put": "^0.0.3",
+    "@blossm/view-store-stream": "^0.0.3"
   },
   "devDependencies": {
     "chai-datetime": "^1.5.0",
