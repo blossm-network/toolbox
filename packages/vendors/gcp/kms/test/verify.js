@@ -14,10 +14,10 @@ const pem = "some-pem";
 const message = "some message";
 const signature = "some-signature";
 
-const actualProject = "smn-core-staging";
+const actualProject = "blossm";
 const actualLocation = "global";
-const actualRing = "core";
-const actualKey = "auth";
+const actualRing = "test-ring";
+const actualKey = "test-key";
 const actualVersion = "1";
 
 describe("Kms verify", () => {
