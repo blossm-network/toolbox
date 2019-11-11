@@ -10,7 +10,7 @@ module.exports = async ({ token, verifyFn }) => {
     signature
   });
 
-  if (!isVerified) throw deps.unauthorizedError.tokenInvalid();
+  if (!isVerified) throw deps.invalidCredentialsError.tokenInvalid();
 
   return decodeJwt(token);
 };

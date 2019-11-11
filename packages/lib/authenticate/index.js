@@ -6,7 +6,7 @@ module.exports = async ({ req, verifyFn, requiresToken = true }) => {
   const jwt = tokens.bearer || tokens.cookie;
 
   if (jwt == undefined) {
-    if (requiresToken) throw deps.unauthorizedError.tokenInvalid();
+    if (requiresToken) throw deps.invalidCredentialsError.tokenInvalid();
     return {};
   }
 

@@ -12,7 +12,7 @@ module.exports = ({ store }) => {
       }
     });
 
-    if (!result) throw deps.notFoundError.root();
+    if (!result) throw deps.resourceNotFoundError.root();
 
     res.send(result.value);
   };

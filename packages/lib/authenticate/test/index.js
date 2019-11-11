@@ -64,7 +64,7 @@ describe("Authorize", () => {
 
     const error = "some-error";
     const tokenInvalidFake = fake.returns(error);
-    replace(deps, "unauthorizedError", {
+    replace(deps, "invalidCredentialsError", {
       tokenInvalid: tokenInvalidFake
     });
 

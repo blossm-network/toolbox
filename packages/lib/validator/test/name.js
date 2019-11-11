@@ -18,7 +18,7 @@ describe("Invalid name", () => {
       first: 2,
       last: "asdf"
     };
-    const response = name(invalidName);
+    const response = name(invalidName, { title: "sug" });
     expect(response.message).to.exist;
   });
 });

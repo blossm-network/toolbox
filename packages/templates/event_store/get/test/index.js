@@ -60,7 +60,7 @@ describe("Event store get", () => {
 
     const error = "some-error";
     const rootNotFoundFake = fake.returns(error);
-    replace(deps, "notFoundError", {
+    replace(deps, "resourceNotFoundError", {
       root: rootNotFoundFake
     });
 

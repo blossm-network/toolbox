@@ -13,7 +13,8 @@
   "dependencies": {
     "@blossm/email-validator": "^0.0.2",
     "@blossm/phone-number": "^0.0.2",
-    "@blossm/validation": "^0.0.2"
+    "@blossm/validation": "^0.0.2",
+    "@blossm/errors": "*"
   },
   "scripts": {
     "test": "mocha --recursive"

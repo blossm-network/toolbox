@@ -16,7 +16,7 @@ module.exports = async ({
 }) => {
   //Do the scopes and the context allow the provided service, network, domain, and action combo?
   if (context.network !== network || context.service !== service)
-    throw deps.unauthorizedError.tokenInvalid();
+    throw deps.invalidCredentialsError.tokenInvalid();
 
   //priviledges lookup fn returns the priviledges that the path needs.
   //scopes lookup fn returns the scopes that the principle has.
@@ -47,7 +47,8 @@ module.exports = async ({
     return !domainViolated && !rootViolated && !priviledgesViolated;
   });
 
-  if (satisfiedScopes.length == 0) throw deps.unauthorizedError.tokenInvalid();
+  if (satisfiedScopes.length == 0)
+    throw deps.invalidCredentialsError.tokenInvalid();
 
   return {
     context: {

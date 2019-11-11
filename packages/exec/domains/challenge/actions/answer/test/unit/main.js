@@ -241,7 +241,7 @@ describe("Command handler unit tests", () => {
 
     const error = "some-error";
     const codeNotRecognizedFake = fake.returns(error);
-    replace(deps, "badRequestError", {
+    replace(deps, "invalidArgumentError", {
       codeNotRecognized: codeNotRecognizedFake
     });
 

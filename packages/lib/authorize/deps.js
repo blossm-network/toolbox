@@ -1,3 +1,3 @@
-const { unauthorized } = require("@blossm/errors");
+const { invalidCredentials } = require("@blossm/errors");
 
-exports.unauthorizedError = unauthorized;
+exports.invalidCredentialsError = invalidCredentials;

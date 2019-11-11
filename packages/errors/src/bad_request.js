@@ -1,14 +1,22 @@
 const { BadRequestError } = require("restify-errors");
 
+const toJSON = require("./_to_json");
+
 module.exports = {
-  missingId: () => new BadRequestError("Missing id url parameter."),
-  missingMessage: () => new BadRequestError("No Pub/Sub message received."),
-  badMessage: () => new BadRequestError("Invalid Pub/Sub message format."),
-  badEvent: () => new BadRequestError("Invalid event format."),
-  phoneNotRecognized: () =>
-    new BadRequestError("This phone number isn't recognized."),
-  codeNotRecognized: () => new BadRequestError("This code isn't recognized."),
-  codeExpired: () => new BadRequestError("This code expired."),
-  wrongCode: () => new BadRequestError("This code isn't right."),
-  message: message => new BadRequestError(message)
+  missingId: ({ cause, info } = {}) =>
+    new BadRequestError({ cause, info, toJSON }, "Missing id url parameter."),
+  missingMessage: ({ cause, info } = {}) =>
+    new BadRequestError(
+      { cause, info, toJSON },
+      "No Pub/Sub message received."
+    ),
+  badMessage: ({ cause, info } = {}) =>
+    new BadRequestError(
+      { cause, info, toJSON },
+      "Invalid Pub/Sub message format."
+    ),
+  badEvent: ({ cause, info } = {}) =>
+    new BadRequestError({ cause, info, toJSON }, "Invalid event format."),
+  message: (message, { cause, info } = {}) =>
+    new BadRequestError({ cause, info, toJSON }, message)
 };

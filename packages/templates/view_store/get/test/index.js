@@ -199,9 +199,9 @@ describe("View store get", () => {
     };
 
     const error = "some-error";
-    const idNotFoundFake = fake.returns(error);
-    replace(deps, "notFoundError", {
-      id: idNotFoundFake
+    const viewIdNotFoundFake = fake.returns(error);
+    replace(deps, "resourceNotFoundError", {
+      viewId: viewIdNotFoundFake
     });
 
     try {

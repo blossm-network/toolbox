@@ -33,7 +33,7 @@ module.exports = ({ store, fn = defaultFn }) => {
         }
       });
 
-      if (!result) throw deps.notFoundError.id();
+      if (!result) throw deps.resourceNotFoundError.viewId();
       res.send(result);
     }
   };

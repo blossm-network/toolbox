@@ -13,9 +13,7 @@
 
 const { findError, string } = require("@blossm/validator");
 
-const deps = require("./deps");
-
 module.exports = async payload => {
   const error = findError([string(payload.name, { title: "name" })]);
-  if (error) throw deps.badRequestError.message(error.message);
+  if (error) throw error;
 };

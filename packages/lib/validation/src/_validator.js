@@ -8,7 +8,7 @@ module.exports = ({
   baseFn,
   baseMessageFn = (error, title) => {
     if (!title) return error.message;
-    return `This ${title} doesn't look right. Reach out to us if you think something's wrong.`;
+    return `This ${title} doesn't look right.`;
   },
   refinementFn,
   refinementMessageFn,

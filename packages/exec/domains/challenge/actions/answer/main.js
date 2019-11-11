@@ -17,7 +17,7 @@ module.exports = async ({ payload, context }) => {
     .read({ root: context.challenge });
 
   //Throw if no challenge recognized or if the code is not right.
-  if (!challenge) throw deps.badRequestError.codeNotRecognized();
+  if (!challenge) throw deps.invalidArgumentError.codeNotRecognized();
 
   if (challenge.code != payload.code) throw deps.badRequestError.wrongCode();
 
