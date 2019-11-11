@@ -1,3 +1,11 @@
+//ovveride process.env with local .env file.
+const fs = require("fs");
+const dotenv = require("dotenv");
+const envConfig = dotenv.parse(fs.readFileSync(".env"));
+for (const k in envConfig) {
+  process.env[k] = envConfig[k];
+}
+
 const { expect } = require("chai").use(require("sinon-chai"));
 const { restore, replace, fake } = require("sinon");
 const { sign, verify } = require("..");

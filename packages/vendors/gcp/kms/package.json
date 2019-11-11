@@ -19,6 +19,7 @@
   "devDependencies": {
     "mocha": "^6.1.4",
     "sinon": "^7.3.2",
-    "sinon-chai": "^3.3.0"
+    "sinon-chai": "^3.3.0",
+    "dotenv": "^8.2.0"
   }
 }
