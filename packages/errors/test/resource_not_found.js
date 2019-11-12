@@ -25,8 +25,8 @@ describe("Bad request", () => {
     });
   });
   it("view id correct", () => {
-    const error = resourceNotFound.viewId();
-    expect(error.message).to.equal("This view ID wasn't found.");
+    const error = resourceNotFound.view();
+    expect(error.message).to.equal("This view wasn't found.");
     expect(error.statusCode).to.equal(404);
     expect(error.toJSON()).to.deep.equal({
       statusCode: 404,
@@ -36,13 +36,13 @@ describe("Bad request", () => {
     });
   });
   it("id correct with props", () => {
-    const error = resourceNotFound.viewId({ cause, info });
+    const error = resourceNotFound.view({ cause, info });
     expect(error.toJSON()).to.deep.equal({
       statusCode: 404,
       code: "ResourceNotFound",
       info,
       cause,
-      message: "This view ID wasn't found."
+      message: "This view wasn't found."
     });
   });
   it("message correct", () => {

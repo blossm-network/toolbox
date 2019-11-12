@@ -8,10 +8,10 @@ module.exports = {
       { cause, info, toJSON },
       "This root wasn't found."
     ),
-  viewId: ({ cause, info } = {}) =>
+  view: ({ cause, info } = {}) =>
     new ResourceNotFoundError(
       { cause, info, toJSON },
-      "This view ID wasn't found."
+      "This view wasn't found."
     ),
   message: (message, { cause, info } = {}) =>
     new ResourceNotFoundError({ cause, info, toJSON }, message)
