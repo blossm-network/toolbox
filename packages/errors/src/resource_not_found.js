@@ -4,9 +4,15 @@ const toJSON = require("./_to_json");
 
 module.exports = {
   root: ({ cause, info } = {}) =>
-    new ResourceNotFoundError({ cause, info, toJSON }, "Root not found."),
+    new ResourceNotFoundError(
+      { cause, info, toJSON },
+      "This root wasn't found."
+    ),
   viewId: ({ cause, info } = {}) =>
-    new ResourceNotFoundError({ cause, info, toJSON }, "View ID not found."),
+    new ResourceNotFoundError(
+      { cause, info, toJSON },
+      "This view ID wasn't found."
+    ),
   message: (message, { cause, info } = {}) =>
     new ResourceNotFoundError({ cause, info, toJSON }, message)
 };
