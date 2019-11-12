@@ -32,7 +32,7 @@ describe("Bad request", () => {
       statusCode: 404,
       code: "ResourceNotFound",
       info: {},
-      message: "This view ID wasn't found."
+      message: "This view wasn't found."
     });
   });
   it("id correct with props", () => {
