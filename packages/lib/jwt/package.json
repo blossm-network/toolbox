@@ -1,6 +1,6 @@
 {
   "name": "@blossm/jwt",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "JWT token creating and validating.",
   "main": "index.js",
   "author": "blossm.network",
@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@blossm/datetime": "^0.0.2",
-    "@blossm/errors": "^0.0.5",
+    "@blossm/errors": "^0.0.6",
     "@blossm/nonce": "^0.0.2",
     "jwt-decode": "^2.2.0"
   },
