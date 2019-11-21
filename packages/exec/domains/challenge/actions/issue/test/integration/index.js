@@ -71,6 +71,6 @@ describe("Command handler store integration tests", () => {
       }
     });
 
-    expect(response.statusCode).to.equal(400);
+    expect(response.statusCode).to.equal(409);
   });
 });

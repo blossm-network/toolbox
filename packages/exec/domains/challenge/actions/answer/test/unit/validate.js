@@ -25,7 +25,7 @@ describe("Command handler store validator tests", () => {
       await validate(payload);
       expect(0).to.equal(1);
     } catch (e) {
-      expect(e.statusCode).to.equal(400);
+      expect(e.statusCode).to.equal(409);
     }
   });
 });

@@ -16,7 +16,10 @@ const viewStore = async ({ schema, indexes }) => {
     indexes,
     connection: {
       user: process.env.MONGODB_USER,
-      password: await deps.secret("mongodb"),
+      password:
+        process.env.NODE_ENV == "local"
+          ? process.env.MONGODB_USER_PASSWORD
+          : await deps.secret("mongodb"),
       host: process.env.MONGODB_HOST,
       database: process.env.MONGODB_DATABASE,
       parameters: { authSource: "admin", retryWrites: true, w: "majority" },
@@ -43,13 +46,16 @@ module.exports = async ({ schema, indexes, getFn, postFn, putFn } = {}) => {
     };
   }
 
+  const allIndexes = [[{ id: 1 }], [{ created: 1 }], [{ modified: 1 }]];
+
   if (indexes) {
-    indexes.push([{ id: 1 }]);
-    indexes.push([{ created: 1 }]);
-    indexes.push([{ modified: 1 }]);
+    allIndexes.push(...indexes);
   }
 
-  const store = await viewStore({ schema, indexes });
+  const store = await viewStore({
+    schema,
+    indexes: allIndexes
+  });
 
   deps
     .server()

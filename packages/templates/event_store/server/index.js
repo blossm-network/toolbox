@@ -39,7 +39,10 @@ const eventStore = async () => {
     indexes: [[{ id: 1 }]],
     connection: {
       user: process.env.MONGODB_USER,
-      password: await deps.secret("mongodb"),
+      password:
+        process.env.NODE_ENV == "local"
+          ? process.env.MONGODB_USER_PASSWORD
+          : await deps.secret("mongodb"),
       host: process.env.MONGODB_HOST,
       database: process.env.MONGODB_DATABASE,
       parameters: { authSource: "admin", retryWrites: true, w: "majority" },

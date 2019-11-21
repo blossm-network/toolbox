@@ -18,6 +18,7 @@ const tryShortcuts = input => {
   if (!config.context) throw "Context not set.";
 
   const args = [config.context];
+
   switch (input.domain) {
   case "test":
     break;

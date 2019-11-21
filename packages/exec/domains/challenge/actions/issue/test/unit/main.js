@@ -198,7 +198,7 @@ describe("Command handler unit tests", () => {
       //shouldn't be called
       expect(2).to.equal(3);
     } catch (e) {
-      expect(e.statusCode).to.equal(400);
+      expect(e.statusCode).to.equal(409);
     }
   });
 });

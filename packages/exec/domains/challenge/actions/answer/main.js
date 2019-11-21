@@ -19,7 +19,8 @@ module.exports = async ({ payload, context }) => {
   //Throw if no challenge recognized or if the code is not right.
   if (!challenge) throw deps.invalidArgumentError.codeNotRecognized();
 
-  if (challenge.code != payload.code) throw deps.badRequestError.wrongCode();
+  if (challenge.code != payload.code)
+    throw deps.invalidArgumentError.wrongCode();
 
   //Throw if the challenge is expired.
   const now = new Date();

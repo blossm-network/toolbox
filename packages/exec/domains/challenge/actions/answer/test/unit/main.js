@@ -268,9 +268,9 @@ describe("Command handler unit tests", () => {
     replace(deps, "viewStore", viewStoreFake);
 
     const error = "some-error";
-    const badCodeFake = fake.returns(error);
-    replace(deps, "badRequestError", {
-      badCode: badCodeFake
+    const wrongCodeFake = fake.returns(error);
+    replace(deps, "invalidArgumentError", {
+      wrongCode: wrongCodeFake
     });
 
     try {
