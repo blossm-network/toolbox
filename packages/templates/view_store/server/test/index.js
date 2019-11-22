@@ -12,6 +12,7 @@ const now = new Date();
 const schema = { a: 1 };
 const indexes = ["some-index"];
 
+const protocol = "some-db-protocol";
 const domain = "some-domain";
 const name = "some-name";
 const user = "some-db-user";
@@ -22,6 +23,7 @@ const password = "some-password";
 
 process.env.DOMAIN = domain;
 process.env.NAME = name;
+process.env.MONGODB_PROTOCOL = protocol;
 process.env.MONGODB_USER = user;
 process.env.MONGODB_USER_PASSWORD = userPassword;
 process.env.MONGODB_HOST = host;
@@ -124,6 +126,7 @@ describe("View store", () => {
           "some-index"
         ],
         connection: {
+          protocol,
           user,
           password,
           host,
@@ -234,6 +237,7 @@ describe("View store", () => {
         },
         indexes: [[{ id: 1 }], [{ created: 1 }], [{ modified: 1 }]],
         connection: {
+          protocol,
           user,
           password,
           host,
@@ -349,6 +353,7 @@ describe("View store", () => {
           "some-index"
         ],
         connection: {
+          protocol,
           user,
           password,
           host,

@@ -48,6 +48,7 @@ module.exports = ({
   mixins = [],
   version = 0,
   connection: {
+    protocol,
     user,
     password,
     host,
@@ -69,6 +70,7 @@ module.exports = ({
     database != undefined
   ) {
     connect({
+      protocol,
       user,
       password,
       host,

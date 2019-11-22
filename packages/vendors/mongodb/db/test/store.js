@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 
 const { store } = require("../index");
 
+const protocol = "some-protocol";
 const name = "collection";
 const commonKey = "key";
 const schema0 = {};
@@ -137,6 +138,7 @@ describe("Returns a model", () => {
       name,
       mixins,
       connection: {
+        protocol,
         user,
         password,
         host,
@@ -146,7 +148,7 @@ describe("Returns a model", () => {
 
     expect(result).to.equal(modelObject);
 
-    const baseConnectionString = `mongodb+srv://${user}:${password}@${host}/${database}`;
+    const baseConnectionString = `${protocol}://${user}:${password}@${host}/${database}`;
 
     expect(connectFake).to.have.been.calledWith(baseConnectionString, {
       useNewUrlParser: true,

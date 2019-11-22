@@ -14,12 +14,14 @@ const indexes = ["some-index"];
 
 const domain = "some-domain";
 const user = "some-db-user";
+const protocol = "some-db-protocol";
 const userPassword = "some-db-user-password";
 const host = "some-host";
 const database = "some-db";
 const password = "some-password";
 
 process.env.DOMAIN = domain;
+process.env.MONGODB_PROTOCOL = protocol;
 process.env.MONGODB_USER = user;
 process.env.MONGODB_USER_PASSWORD = userPassword;
 process.env.MONGODB_HOST = host;
@@ -91,6 +93,7 @@ describe("Event store", () => {
         },
         indexes: [[{ id: 1 }]],
         connection: {
+          protocol,
           user,
           password,
           host,
@@ -183,6 +186,7 @@ describe("Event store", () => {
         },
         indexes: [[{ id: 1 }]],
         connection: {
+          protocol,
           user,
           password: userPassword,
           host,

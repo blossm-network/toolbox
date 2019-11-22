@@ -38,6 +38,7 @@ const eventStore = async () => {
     },
     indexes: [[{ id: 1 }]],
     connection: {
+      protocol: process.env.MONGODB_PROTOCOL,
       user: process.env.MONGODB_USER,
       password:
         process.env.NODE_ENV == "local"
