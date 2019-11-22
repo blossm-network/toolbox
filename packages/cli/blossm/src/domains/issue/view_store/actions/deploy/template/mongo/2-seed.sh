@@ -1,6 +1,6 @@
-use $MONGO_INITDB_DATABASE
-db.auth('$MONGO_USER', '$MONGO_PASS')
-use $MONGO_DATABASE
+use $MONGODB_INITDB_DATABASE
+db.auth('$MONGODB_USER', '$MONGODB_PASS')
+use $MONGODB_DATABASE
 
 let res = [
   db.container.drop(),
