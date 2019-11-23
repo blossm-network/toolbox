@@ -22,6 +22,7 @@ services:
       MONGODB_HOST: ${MONGODB_HOST}
   mongo:
     build: ./mongo
+    # image: mongo:latest
     environment:
       - MONGODB_INITDB_ROOT_USERNAME=${MONGODB_ADMIN_USER}
       - MONGODB_INITDB_ROOT_PASSWORD=${MONGODB_ADMIN_USER_PASSWORD}
@@ -31,6 +32,7 @@ services:
       - MONGODB_USER_PASSWORD=${MONGODB_USER_PASSWORD}
     volumes:
       - mongodata:/data/db
+      # - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
     ports:
       - "27017:27017"
 volumes:

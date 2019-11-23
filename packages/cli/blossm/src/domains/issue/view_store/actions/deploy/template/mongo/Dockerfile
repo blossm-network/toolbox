@@ -7,6 +7,7 @@
 
 FROM mongo:4.0.9
 
-COPY 1-init.sh /docker-entrypoint-initdb.d/
+COPY mongo-init.sh /docker-entrypoint-initdb.d/
+# COPY 1-init.sh /docker-entrypoint-initdb.d/
 # COPY 2-seed.sh /docker-entrypoint-initdb.d/
 

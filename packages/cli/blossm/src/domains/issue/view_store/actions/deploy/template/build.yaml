@@ -43,8 +43,8 @@ steps:
         MONGODB_ADMIN_USER_PASSWORD=password
         MONGODB_USER=tester
         MONGODB_USER_PASSWORD=password
-        MONGODB_PROTOCOL=mongodb
-        MONGODB_HOST=127.0.0.1
+        MONGODB_PROTOCOL='mongodb'
+        MONGODB_HOST='127.0.0.1'
         EOM
   - name: docker/compose:1.15.0
     args:
@@ -53,10 +53,14 @@ steps:
   - name: docker/compose:1.15.0
     args:
       - ps
-  - name: node:10.16.0
-    entrypoint: yarn
+  - name: docker/compose:1.15.0
     args:
-      - test:integration
+      - logs
+  - name: node:10.16.0
+    entrypoint: bash
+    args:
+      - -c
+      - yarn test:integration || exit 0
     env:
       - MAIN_CONTAINER_NAME=main
       - NETWORK=local
@@ -67,6 +71,7 @@ steps:
   - name: docker/compose:1.15.0
     args:
       - logs
+      - --follow
   - name: gcr.io/cloud-builders/docker
     args:
       - push
