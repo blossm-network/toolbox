@@ -5,6 +5,8 @@ services:
     container_name: ${MAIN_CONTAINER_NAME}
     ports:
       - ${PORT}
+    depends_on:
+      - mongo
     environment:
       PORT: ${PORT}
       NODE_ENV: ${NODE_ENV}
