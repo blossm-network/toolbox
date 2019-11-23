@@ -8,16 +8,13 @@ const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 describe("View store integration tests", () => {
   const id = uuid();
   it("should return successfully", async () => {
-    // console.log("1");
     const response0 = await request.put(`${url}/${id}`, {
       body: {
         name: "some-name"
       }
     });
 
-    // console.log("2");
     expect(response0.statusCode).to.equal(204);
-    // console.log("3");
 
     const response1 = await request.get(`${url}/${id}`);
     const parsedBody1 = JSON.parse(response1.body);

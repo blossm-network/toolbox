@@ -60,6 +60,17 @@ module.exports = ({
     onOpen
   } = {}
 }) => {
+  //eslint-disable-next-line no-console
+  console.log("making db: ", {
+    protocol,
+    user,
+    password,
+    host,
+    database,
+    parameters,
+    poolSize,
+    autoIndex
+  });
   if (name == undefined || name.length == 0)
     throw deps.internalServerError.message("View store needs a name.");
 
@@ -67,6 +78,7 @@ module.exports = ({
     user != undefined &&
     password != undefined &&
     host != undefined &&
+    protocol != undefined &&
     database != undefined
   ) {
     connect({
