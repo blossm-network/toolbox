@@ -9,7 +9,7 @@ module.exports = {
     ecmaVersion: 2018
   },
   extends: ["eslint:recommended", "prettier"],
-  plugins: ["import", "prettier"],
+  plugins: ["import"],
   rules: {
     "import/no-unresolved": 2,
     "import/no-cycle": 2,

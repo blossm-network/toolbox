@@ -113,6 +113,27 @@ const writeBuild = (config, workingDir, configFn, env) => {
   fs.writeFileSync(buildPath, yaml.stringify(build));
 };
 
+// const db = () => {
+//   return {
+//     mongodb: {
+//       image: "mongo:latest",
+//       container_name: "mongodb",
+//       environment: {
+//         MONGODB_INITDB_ROOT_USERNAME: "${MONGODB_ADMIN_USER}",
+//         MONGODB_INITDB_ROOT_PASSWORD: "${MONGODB_ADMIN_USER_PASSWORD}",
+//         MONGODB_INITDB_DATABASE: "${MONGODB_ADMIN_DATABASE}",
+//         MONGODB_DATABASE: "${MONGODB_DATABASE}",
+//         MONGODB_USER: "${MONGODB_USER}",
+//         MONGODB_USER_PASSWORD: "${MONGODB_USER_PASSWORD}"
+//       },
+//       volumes: [
+//         "./mongodb-init.sh:/docker-entrypoint-initdb.d/mongodb-init.sh:ro"
+//       ],
+//       ports: ["27017:27017"]
+//     }
+//   };
+// };
+
 const writeCompose = (config, workingDir) => {
   if (!config.targets) return;
 
@@ -139,6 +160,8 @@ const writeCompose = (config, workingDir) => {
 
   let services = {};
   const dependsOn = [];
+  let includeDatabase = false;
+  const databaseServiceKey = "db";
   for (const target of config.targets) {
     switch (target.context) {
     case "view-store":
@@ -154,6 +177,7 @@ const writeCompose = (config, workingDir) => {
             ...common,
             image: `${containerRegistry}/\${SERVICE}.${target.context}.${target.domain}.${target.name}:latest`,
             container_name: `${targetHash}.\${NETWORK}`,
+            depends_on: [databaseServiceKey],
             environment: {
               ...commonEnvironment,
               ...commonStoreEnvironment,
@@ -164,6 +188,7 @@ const writeCompose = (config, workingDir) => {
           }
         };
         dependsOn.push(key);
+        includeDatabase = true;
       }
       break;
     case "event-store":
@@ -179,6 +204,7 @@ const writeCompose = (config, workingDir) => {
             ...common,
             image: `${containerRegistry}/\${SERVICE}.${target.context}.${target.domain}:latest`,
             container_name: `${targetHash}.\${NETWORK}`,
+            depends_on: [databaseServiceKey],
             environment: {
               ...commonEnvironment,
               ...commonStoreEnvironment,
@@ -188,6 +214,7 @@ const writeCompose = (config, workingDir) => {
           }
         };
         dependsOn.push(key);
+        includeDatabase = true;
       }
       break;
     case "command-handler":
@@ -219,9 +246,31 @@ const writeCompose = (config, workingDir) => {
   compose.services = {
     main: {
       ...compose.services.main,
-      depends_on: [...(compose.services.main.depends_on || []), ...dependsOn]
+      depends_on: [
+        ...(compose.services.main.depends_on || []),
+        ...dependsOn,
+        "mongodb"
+      ]
     },
-    ...services
+    ...services,
+    ...(includeDatabase && {
+      [databaseServiceKey]: {
+        image: "mongo:latest",
+        container_name: "mongodb",
+        environment: {
+          MONGODB_INITDB_ROOT_USERNAME: "${MONGODB_ADMIN_USER}",
+          MONGODB_INITDB_ROOT_PASSWORD: "${MONGODB_ADMIN_USER_PASSWORD}",
+          MONGODB_INITDB_DATABASE: "${MONGODB_ADMIN_DATABASE}",
+          MONGODB_DATABASE: "${MONGODB_DATABASE}",
+          MONGODB_USER: "${MONGODB_USER}",
+          MONGODB_USER_PASSWORD: "${MONGODB_USER_PASSWORD}"
+        },
+        volumes: [
+          "./mongodb-init.sh:/docker-entrypoint-initdb.d/mongodb-init.sh:ro"
+        ],
+        ports: ["27017:27017"]
+      }
+    })
   };
 
   fs.writeFileSync(composePath, yaml.stringify(compose));

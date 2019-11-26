@@ -44,7 +44,7 @@ steps:
         MONGODB_USER=tester
         MONGODB_USER_PASSWORD=password
         MONGODB_PROTOCOL=mongodb
-        MONGODB_HOST=mongo
+        MONGODB_HOST=mongodb
         EOM
   - name: docker/compose:1.15.0
     args:

@@ -37,8 +37,13 @@ steps:
         GCP_PROJECT=${_GCP_PROJECT}-staging
         GCP_REGION=${_GCP_REGION}
         GCP_SECRET_BUCKET=smn-staging-secrets
-        MONGODB_USER=gcp-staging
-        MONGODB_HOST=staging-ggjlv.gcp.mongodb.net
+        MONGODB_ADMIN_DATABASE=admin
+        MONGODB_ADMIN_USER=admin
+        MONGODB_ADMIN_USER_PASSWORD=password
+        MONGODB_USER=tester
+        MONGODB_USER_PASSWORD=password
+        MONGODB_PROTOCOL=mongodb
+        MONGODB_HOST=mongodb
         EOM
   - name: docker/compose:1.15.0
     args:
@@ -75,7 +80,7 @@ steps:
       - --memory=${_MEMORY}
       - --project=${_GCP_PROJECT}${_ENV_NAME_SPECIFIER}
       - --region=${_GCP_REGION}
-      - --set-env-vars=NODE_ENV=${_NODE_ENV},NETWORK=${_GCP_REGION}.${_ENV_URI_SPECIFIER}${_NETWORK},SERVICE=${_SERVICE},CONTEXT=${_CONTEXT},DOMAIN=${_DOMAIN},GCP_PROJECT=${_GCP_PROJECT}${_ENV_NAME_SPECIFIER},GCP_REGION=${_GCP_REGION},GCP_SECRET_BUCKET=smn${_ENV_NAME_SPECIFIER}-secrets,MONGODB_USER=gcp${_ENV_NAME_SPECIFIER},MONGODB_HOST=${_NODE_ENV}-ggjlv.gcp.mongodb.net
+      - --set-env-vars=NODE_ENV=${_NODE_ENV},NETWORK=${_GCP_REGION}.${_ENV_URI_SPECIFIER}${_NETWORK},SERVICE=${_SERVICE},CONTEXT=${_CONTEXT},DOMAIN=${_DOMAIN},GCP_PROJECT=${_GCP_PROJECT}${_ENV_NAME_SPECIFIER},GCP_REGION=${_GCP_REGION},GCP_SECRET_BUCKET=smn${_ENV_NAME_SPECIFIER}-secrets,MONGODB_USER=gcp${_ENV_NAME_SPECIFIER},MONGODB_HOST=${_NODE_ENV}-ggjlv.gcp.mongodb.net,MONGODB_PROTOCOL=mongodb+srv
       - --labels=service=${_SERVICE},context=${_CONTEXT},domain=${_DOMAIN},hash=${_OPERATION_HASH}
   - name: gcr.io/cloud-builders/gcloud
     args:
