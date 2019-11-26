@@ -135,8 +135,6 @@ const writeBuild = (config, workingDir, configFn, env) => {
 // };
 
 const writeCompose = (config, workingDir) => {
-  if (!config.targets) return;
-
   const composePath = path.resolve(workingDir, "docker-compose.yml");
   const compose = yaml.parse(fs.readFileSync(composePath, "utf8"));
 
@@ -241,6 +239,13 @@ const writeCompose = (config, workingDir) => {
       }
       break;
     }
+  }
+
+  switch (config.context) {
+  case "view-store":
+  case "event-store":
+    includeDatabase = true;
+    dependsOn.push(databaseServiceKey);
   }
 
   compose.services = {
