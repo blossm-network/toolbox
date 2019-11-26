@@ -43,26 +43,28 @@ const copySrc = async (p, workingDir) => {
     fs.removeSync(workingDir);
     process.exit(1);
   }
-  await copy(srcDir, workingDir, { clobber: false });
+  await copy(srcDir, workingDir, {
+    clobber: false
+  });
 };
 
 const envUriSpecifier = env => {
   switch (env) {
-  case "sandbox":
-  case "staging":
-    return `${env}.`;
-  default:
-    return "";
+    case "sandbox":
+    case "staging":
+      return `${env}.`;
+    default:
+      return "";
   }
 };
 
 const envNameSpecifier = env => {
   switch (env) {
-  case "sandbox":
-  case "staging":
-    return `-${env}`;
-  default:
-    return "";
+    case "sandbox":
+    case "staging":
+      return `-${env}`;
+    default:
+      return "";
   }
 };
 
@@ -86,6 +88,83 @@ const writePackage = (config, workingDir) => {
   fs.writeFileSync(packagePath, JSON.stringify(package));
 };
 
+const mainService = context => {
+  const common = {
+    container_name: "${MAIN_CONTAINER_NAME}",
+    ports: ["${PORT}"],
+    environment: {
+      PORT: "${PORT}",
+      NODE_ENV: "${NODE_ENV}",
+      NETWORK: "${NETWORK}",
+      CONTEXT: "${CONTEXT}",
+      SERVICE: "${SERVICE}",
+      GCP_PROJECT: "${GCP_PROJECT}",
+      GCP_REGION: "${GCP_REGION}",
+      GCP_SECRET_BUCKET: "${GCP_SECRET_BUCKET}",
+      GCP_KMS_SECRET_BUCKET_KEY_LOCATION:
+        "${GCP_KMS_SECRET_BUCKET_KEY_LOCATION}",
+      GCP_KMS_SECRET_BUCKET_KEY_RING: "${GCP_KMS_SECRET_BUCKET_KEY_RING}"
+    }
+  };
+  const commonDatabaseEnv = {
+    MONGODB_USER: "${MONGODB_USER}",
+    MONGODB_HOST: "${MONGODB_HOST}",
+    MONGODB_USER_PASSWORD: "${MONGODB_USER_PASSWORD}",
+    MONGODB_PROTOCOL: "${MONGODB_PROTOCOL}"
+  };
+
+  const commonImagePrefix = "${CONTAINER_REGISTRY}/${SERVICE}.${CONTEXT}";
+
+  switch (context) {
+    case "view-store":
+      return {
+        image: `${commonImagePrefix}.\${DOMAIN}.\${NAME}:latest`,
+        ...common,
+        environment: {
+          NAME: "${NAME}",
+          DOMAIN: "${DOMAIN}",
+          ...common.environment,
+          ...commonDatabaseEnv
+        }
+      };
+    case "event-store":
+      return {
+        image: `${commonImagePrefix}.\${DOMAIN}:latest`,
+        ...common,
+        environment: {
+          DOMAIN: "${DOMAIN}",
+          ...common.environment,
+          ...commonDatabaseEnv
+        }
+      };
+    case "command-handler":
+      return {
+        image: `${commonImagePrefix}.\${DOMAIN}.\${ACTION}:latest`,
+        ...common,
+        environment: {
+          ...common.environment,
+          DOMAIN: "${DOMAIN}",
+          ACTION: "${ACTION}"
+        }
+      };
+    case "event-handler":
+      return {
+        image: `${commonImagePrefix}.\${DOMAIN}.did-\${ACTION}.\${NAME}:latest`,
+        ...common,
+        environment: {
+          ...common.environment,
+          DOMAIN: "${DOMAIN}",
+          ACTION: "${ACTION}"
+        }
+      };
+    case "auth-gateway":
+      return {
+        image: `${commonImagePrefix}:latest`,
+        ...common
+      };
+  }
+};
+
 const writeBuild = (config, workingDir, configFn, env) => {
   const buildPath = path.resolve(workingDir, "build.yaml");
   const build = yaml.parse(fs.readFileSync(buildPath, "utf8"));
@@ -93,16 +172,30 @@ const writeBuild = (config, workingDir, configFn, env) => {
   build.substitutions = {
     ...build.substitutions,
 
-    ...(config.domain && { _DOMAIN: config.domain }),
-    ...(config.service && { _SERVICE: config.service }),
-    ...(config.context && { _CONTEXT: config.context }),
-    ...(config.network && { _NETWORK: config.network }),
-    ...(config["gcp-project"] && { _GCP_PROJECT: config }),
-    ...(config["gcp-region"] && { _GCP_REGION: config["gcp-region"] }),
+    ...(config.domain && {
+      _DOMAIN: config.domain
+    }),
+    ...(config.service && {
+      _SERVICE: config.service
+    }),
+    ...(config.context && {
+      _CONTEXT: config.context
+    }),
+    ...(config.network && {
+      _NETWORK: config.network
+    }),
+    ...(config["gcp-project"] && {
+      _GCP_PROJECT: config
+    }),
+    ...(config["gcp-region"] && {
+      _GCP_REGION: config["gcp-region"]
+    }),
     ...(config["gcp-dns-zone"] && {
       _GCP_DNS_ZONE: config["gcp-dns-zone"]
     }),
-    ...(config.memory && { _MEMORY: config.memory }),
+    ...(config.memory && {
+      _MEMORY: config.memory
+    }),
 
     ...(configFn && configFn(config)),
 
@@ -113,33 +206,11 @@ const writeBuild = (config, workingDir, configFn, env) => {
   fs.writeFileSync(buildPath, yaml.stringify(build));
 };
 
-// const db = () => {
-//   return {
-//     mongodb: {
-//       image: "mongo:latest",
-//       container_name: "mongodb",
-//       environment: {
-//         MONGODB_INITDB_ROOT_USERNAME: "${MONGODB_ADMIN_USER}",
-//         MONGODB_INITDB_ROOT_PASSWORD: "${MONGODB_ADMIN_USER_PASSWORD}",
-//         MONGODB_INITDB_DATABASE: "${MONGODB_ADMIN_DATABASE}",
-//         MONGODB_DATABASE: "${MONGODB_DATABASE}",
-//         MONGODB_USER: "${MONGODB_USER}",
-//         MONGODB_USER_PASSWORD: "${MONGODB_USER_PASSWORD}"
-//       },
-//       volumes: [
-//         "./mongodb-init.sh:/docker-entrypoint-initdb.d/mongodb-init.sh:ro"
-//       ],
-//       ports: ["27017:27017"]
-//     }
-//   };
-// };
-
 const writeCompose = (config, workingDir) => {
-  const composePath = path.resolve(workingDir, "docker-compose.yml");
-  const compose = yaml.parse(fs.readFileSync(composePath, "utf8"));
-
   const containerRegistry = "us.gcr.io/${GCP_PROJECT}";
-  const common = { ports: ["${PORT}"] };
+  const common = {
+    ports: ["${PORT}"]
+  };
   const commonEnvironment = {
     PORT: "${PORT}",
     NODE_ENV: "${NODE_ENV}",
@@ -160,120 +231,132 @@ const writeCompose = (config, workingDir) => {
   const dependsOn = [];
   let includeDatabase = false;
   const databaseServiceKey = "db";
-  for (const target of config.targets) {
+  for (const target of config.targets || []) {
+    const commonServiceImagePrefix = `${containerRegistry}/\${SERVICE}.${target.context}`;
     switch (target.context) {
-    case "view-store":
-      {
-        const targetHash = hash(
-          target.name + target.domain + target.context + config.service
-        ).toString();
+      case "view-store":
+        {
+          const targetHash = hash(
+            target.name + target.domain + target.context + config.service
+          ).toString();
 
-        const key = `${target.name}-${target.domain}-${config.service}`;
-        services = {
-          ...services,
-          [key]: {
-            ...common,
-            image: `${containerRegistry}/\${SERVICE}.${target.context}.${target.domain}.${target.name}:latest`,
-            container_name: `${targetHash}.\${NETWORK}`,
-            depends_on: [databaseServiceKey],
-            environment: {
-              ...commonEnvironment,
-              ...commonStoreEnvironment,
-              CONTEXT: target.context,
-              DOMAIN: target.domain,
-              NAME: target.name
+          const key = `${target.name}-${target.domain}-${config.service}`;
+          services = {
+            ...services,
+            [key]: {
+              ...common,
+              image: `${commonServiceImagePrefix}.${target.domain}.${target.name}:latest`,
+              container_name: `${targetHash}.\${NETWORK}`,
+              depends_on: [databaseServiceKey],
+              environment: {
+                ...commonEnvironment,
+                ...commonStoreEnvironment,
+                CONTEXT: target.context,
+                DOMAIN: target.domain,
+                NAME: target.name
+              }
             }
-          }
-        };
-        dependsOn.push(key);
-        includeDatabase = true;
-      }
-      break;
-    case "event-store":
-      {
-        const targetHash = hash(
-          target.domain + target.context + config.service
-        ).toString();
+          };
+          dependsOn.push(key);
+          includeDatabase = true;
+        }
+        break;
+      case "event-store":
+        {
+          const targetHash = hash(
+            target.domain + target.context + config.service
+          ).toString();
 
-        const key = `${target.domain}-${config.service}`;
-        services = {
-          ...services,
-          [key]: {
-            ...common,
-            image: `${containerRegistry}/\${SERVICE}.${target.context}.${target.domain}:latest`,
-            container_name: `${targetHash}.\${NETWORK}`,
-            depends_on: [databaseServiceKey],
-            environment: {
-              ...commonEnvironment,
-              ...commonStoreEnvironment,
-              CONTEXT: target.context,
-              DOMAIN: target.domain
+          const key = `${target.domain}-${config.service}`;
+          services = {
+            ...services,
+            [key]: {
+              ...common,
+              image: `${commonServiceImagePrefix}.${target.domain}:latest`,
+              container_name: `${targetHash}.\${NETWORK}`,
+              depends_on: [databaseServiceKey],
+              environment: {
+                ...commonEnvironment,
+                ...commonStoreEnvironment,
+                CONTEXT: target.context,
+                DOMAIN: target.domain
+              }
             }
-          }
-        };
-        dependsOn.push(key);
-        includeDatabase = true;
-      }
-      break;
-    case "command-handler":
-      {
-        const targetHash = hash(
-          target.action + target.domain + target.context + config.service
-        ).toString();
-        const key = `${target.action}-${target.domain}-${config.service}`;
-        services = {
-          ...services,
-          [key]: {
-            ...common,
-            image: `${containerRegistry}/\${SERVICE}.${target.context}.${target.domain}.${target.action}:latest`,
-            container_name: `${targetHash}.\${NETWORK}`,
-            environment: {
-              ...commonEnvironment,
-              CONTEXT: target.context,
-              DOMAIN: target.domain,
-              ACTION: target.action
+          };
+          dependsOn.push(key);
+          includeDatabase = true;
+        }
+        break;
+      case "command-handler":
+        {
+          const targetHash = hash(
+            target.action + target.domain + target.context + config.service
+          ).toString();
+          const key = `${target.action}-${target.domain}-${config.service}`;
+          services = {
+            ...services,
+            [key]: {
+              ...common,
+              image: `${commonServiceImagePrefix}.${target.domain}.${target.action}:latest`,
+              container_name: `${targetHash}.\${NETWORK}`,
+              environment: {
+                ...commonEnvironment,
+                CONTEXT: target.context,
+                DOMAIN: target.domain,
+                ACTION: target.action
+              }
             }
-          }
-        };
-        dependsOn.push(key);
-      }
-      break;
+          };
+          dependsOn.push(key);
+        }
+        break;
     }
   }
 
   switch (config.context) {
-  case "view-store":
-  case "event-store":
-    includeDatabase = true;
-    dependsOn.push(databaseServiceKey);
+    case "view-store":
+    case "event-store":
+      includeDatabase = true;
+      dependsOn.push(databaseServiceKey);
   }
 
-  compose.services = {
-    main: {
-      ...compose.services.main,
-      depends_on: [...(compose.services.main.depends_on || []), ...dependsOn]
+  const compose = {
+    version: "3",
+    services: {
+      main: {
+        ...mainService(config.context),
+        depends_on: dependsOn
+      },
+      ...services,
+      ...(includeDatabase && {
+        [databaseServiceKey]: {
+          image: "mongo:latest",
+          container_name: "mongodb",
+          environment: {
+            MONGODB_INITDB_ROOT_USERNAME: "${MONGODB_ADMIN_USER}",
+            MONGODB_INITDB_ROOT_PASSWORD: "${MONGODB_ADMIN_USER_PASSWORD}",
+            MONGODB_INITDB_DATABASE: "${MONGODB_ADMIN_DATABASE}",
+            MONGODB_DATABASE: "${MONGODB_DATABASE}",
+            MONGODB_USER: "${MONGODB_USER}",
+            MONGODB_USER_PASSWORD: "${MONGODB_USER_PASSWORD}"
+          },
+          volumes: [
+            "./mongodb-init.sh:/docker-entrypoint-initdb.d/mongodb-init.sh:ro"
+          ],
+          ports: ["27017:27017"]
+        }
+      })
     },
-    ...services,
-    ...(includeDatabase && {
-      [databaseServiceKey]: {
-        image: "mongo:latest",
-        container_name: "mongodb",
-        environment: {
-          MONGODB_INITDB_ROOT_USERNAME: "${MONGODB_ADMIN_USER}",
-          MONGODB_INITDB_ROOT_PASSWORD: "${MONGODB_ADMIN_USER_PASSWORD}",
-          MONGODB_INITDB_DATABASE: "${MONGODB_ADMIN_DATABASE}",
-          MONGODB_DATABASE: "${MONGODB_DATABASE}",
-          MONGODB_USER: "${MONGODB_USER}",
-          MONGODB_USER_PASSWORD: "${MONGODB_USER_PASSWORD}"
-        },
-        volumes: [
-          "./mongodb-init.sh:/docker-entrypoint-initdb.d/mongodb-init.sh:ro"
-        ],
-        ports: ["27017:27017"]
+    networks: {
+      default: {
+        external: {
+          name: "cloudbuild"
+        }
       }
-    })
+    }
   };
 
+  const composePath = path.resolve(workingDir, "docker-compose.yaml");
   fs.writeFileSync(composePath, yaml.stringify(compose));
 };
 
