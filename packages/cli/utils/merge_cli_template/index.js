@@ -219,7 +219,7 @@ const writeCompose = (config, workingDir) => {
   compose.services = {
     main: {
       ...compose.services.main,
-      depends_on: [...compose.services.main.depends_on, ...dependsOn]
+      depends_on: [...(compose.services.main.depends_on || []), ...dependsOn]
     },
     ...services
   };
