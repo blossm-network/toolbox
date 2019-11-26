@@ -246,11 +246,7 @@ const writeCompose = (config, workingDir) => {
   compose.services = {
     main: {
       ...compose.services.main,
-      depends_on: [
-        ...(compose.services.main.depends_on || []),
-        ...dependsOn,
-        "mongodb"
-      ]
+      depends_on: [...(compose.services.main.depends_on || []), ...dependsOn]
     },
     ...services,
     ...(includeDatabase && {
