@@ -5,6 +5,11 @@ const dockerComposeImage = "docker/compose:1.15.0";
 const dockerImage = "gcr.io/cloud-builders/docker";
 const gcloudImage = "gcr.io/cloud-builders/gcloud";
 
+const standardInternalDomain =
+  "${_OPERATION_HASH}.${_GCP_REGION}.${_ENV_URI_SPECIFIER}${_NETWORK}";
+const standardServiceName =
+  "${_GCP_REGION}-${_OPERATION_NAME}-${_OPERATION_HASH}";
+
 const yarnInstall = {
   name: nodeImage,
   entrypoint: "yarn",
@@ -15,25 +20,32 @@ const unitTest = {
   entrypoint: "yarn",
   args: ["test:unit"]
 };
-const buildImage = ({ name }) => {
+const buildImage = ({ extension } = {}) => {
   return {
     name: dockerImage,
-    args: ["build", "-t", `us.gcr.io/\${_GCP_PROJECT}\${_ENV_NAME_SPECIFIER}/\${_SERVICE}.\${_CONTEXT}${name}`, "."]
+    args: [
+      "build",
+      "-t",
+      `us.gcr.io/\${_GCP_PROJECT}\${_ENV_NAME_SPECIFIER}/\${_SERVICE}.\${_CONTEXT}${
+        extension ? `.${extension}` : ""
+      }`,
+      "."
+    ]
   };
 };
-const writeEnv = {
-  name: nodeImage,
-  entrypoint: "bash",
-  args: [
-    "-c",
-    stripIndents`
+const writeEnv = ({ custom = "" } = {}) => {
+  return {
+    name: nodeImage,
+    entrypoint: "bash",
+    args: [
+      "-c",
+      stripIndents`
     cat >> .env <<- EOM
     NETWORK=local
     SERVICE=\${_SERVICE}
     CONTEXT=\${_CONTEXT}
-    DOMAIN=\${_DOMAIN}
+    ${custom}
     OPERATION_HASH=\${_OPERATION_HASH}
-    NAME=\${_NAME}
     NODE_ENV=local
     PORT=80
     MAIN_CONTAINER_NAME=main
@@ -49,7 +61,8 @@ const writeEnv = {
     MONGODB_PROTOCOL=mongodb
     MONGODB_HOST=mongodb
     EOM`
-  ]
+    ]
+  };
 };
 const dockerComposeUp = {
   name: dockerComposeImage,
@@ -65,7 +78,13 @@ const integrationTests = env => {
     name: nodeImage,
     entrypoint: "yarn",
     args: ["test:integration"],
-    env: ["MAIN_CONTAINER_NAME=main", "NETWORK=local", "SERVICE=${_SERVICE}", "CONTEXT=${_CONTEXT}", ...env]
+    env: [
+      "MAIN_CONTAINER_NAME=main",
+      "NETWORK=local",
+      "SERVICE=${_SERVICE}",
+      "CONTEXT=${_CONTEXT}",
+      ...(env || [])
+    ]
   };
 };
 const dockerComposeLogs = {
@@ -73,24 +92,34 @@ const dockerComposeLogs = {
   args: ["logs"]
 };
 
-const dockerPush = ({ name }) => {
+const dockerPush = ({ extension = "" } = {}) => {
   return {
     name: dockerImage,
-    args: ["push", `us.gcr.io/\${_GCP_PROJECT}\${_ENV_NAME_SPECIFIER}/\${_SERVICE}.\${_CONTEXT}${name}`]
+    args: [
+      "push",
+      `us.gcr.io/\${_GCP_PROJECT}\${_ENV_NAME_SPECIFIER}/\${_SERVICE}.\${_CONTEXT}${extension}`
+    ]
   };
 };
 
-const deployServer = ({ name, env, labels }) => {
+const deployService = ({
+  service = "${_GCP_REGION}-${_OPERATION_NAME}-${_OPERATION_HASH}",
+  extension = "",
+  env = "",
+  labels = "",
+  allowUnauthenticated = false
+} = {}) => {
   return {
     name: gcloudImage,
     args: [
       "beta",
       "run",
       "deploy",
-      "${_GCP_REGION}-${_OPERATION_NAME}-${_OPERATION_HASH}",
-      `--image=us.gcr.io/\${_GCP_PROJECT}\${_ENV_NAME_SPECIFIER}/\${_SERVICE}.\${_CONTEXT}${name}`,
+      service,
+      `--image=us.gcr.io/\${_GCP_PROJECT}\${_ENV_NAME_SPECIFIER}/\${_SERVICE}.\${_CONTEXT}${extension}`,
       "--platform=managed",
       "--memory=${_MEMORY}",
+      ...(allowUnauthenticated ? ["--allow-unauthenticated"] : []),
       "--project=${_GCP_PROJECT}${_ENV_NAME_SPECIFIER}",
       "--region=${_GCP_REGION}",
       `--set-env-vars=NODE_ENV=\${_NODE_ENV},NETWORK=\${_GCP_REGION}.\${_ENV_URI_SPECIFIER}\${_NETWORK},SERVICE=\${_SERVICE},CONTEXT=\${_CONTEXT},GCP_PROJECT=\${_GCP_PROJECT}\${_ENV_NAME_SPECIFIER},GCP_REGION=\${_GCP_REGION},GCP_SECRET_BUCKET=smn\${_ENV_NAME_SPECIFIER}-secrets,${env}`,
@@ -101,7 +130,56 @@ const deployServer = ({ name, env, labels }) => {
 
 const startDnsTransaction = {
   name: gcloudImage,
-  args: ["beta", "dns", "record-sets", "transaction", "start", "--zone=${_GCP_DNS_ZONE}", "--project=${_GCP_PROJECT}"]
+  args: [
+    "beta",
+    "dns",
+    "record-sets",
+    "transaction",
+    "start",
+    "--zone=${_GCP_DNS_ZONE}",
+    "--project=${_GCP_PROJECT}"
+  ]
+};
+
+const addPubSubPolicy = {
+  name: gcloudImage,
+  args: [
+    "beta",
+    "run",
+    "services",
+    "add-iam-policy-binding",
+    "${_GCP_REGION}-${_OPERATION_NAME}-${_OPERATION_HASH}",
+    "--member=serviceAccount:cloud-run-pubsub-invoker@${_GCP_PROJECT}${_ENV_NAME_SPECIFIER}.iam.gserviceaccount.com",
+    "--role=roles/run.invoker",
+    "--project=${_GCP_PROJECT}${_ENV_NAME_SPECIFIER}",
+    "--region=${_GCP_REGION}"
+  ]
+};
+
+const createPubsubTopic = {
+  name: gcloudImage,
+  entrypoint: "bash",
+  args: [
+    "-c",
+    stripIndents`gcloud pubsub topics create
+      did-\${_ACTION}.\${_DOMAIN}.\${_SERVICE}.\${_ENV_URI_SPECIFIER}\${_NETWORK}
+      --project=\${_GCP_PROJECT}\${_ENV_NAME_SPECIFIER} || exit 0`
+  ]
+};
+
+const createPubsubSubscription = {
+  name: gcloudImage,
+  entrypoint: "bash",
+  args: [
+    "-c",
+    stripIndents`gcloud beta pubsub subscriptions create
+       \${_SERVICE}-\${_CONTEXT}-\${_OPERATION_HASH}
+       --topic=did-\${_ACTION}.\${_DOMAIN}.\${_SERVICE}.\${_ENV_URI_SPECIFIER}\${_NETWORK}
+       --push-endpoint=https://\${_OPERATION_HASH}.\${_GCP_REGION}.\${_ENV_URI_SPECIFIER}\${_NETWORK}
+       --push-auth-service-account=cloud-run-pubsub-invoker@\${_GCP_PROJECT}\${_ENV_NAME_SPECIFIER}.iam.gserviceaccount.com
+       --project=\${_GCP_PROJECT}\${_ENV_NAME_SPECIFIER}
+       --labels=service=\${_SERVICE},context=\${_CONTEXT},domain=\${_DOMAIN},action=\${_ACTION},name=\${_NAME},hash=\${_OPERATION_HASH} || exit 0`
+  ]
 };
 
 const addDnsTransaction = {
@@ -145,48 +223,189 @@ const abortDnsTransaction = {
   ]
 };
 
-const mapDomain = {
-  name: gcloudImage,
-  entrypoint: "bash",
-  args: [
-    "-c",
-    stripIndents`
+const mapDomain = ({ service, domain }) => {
+  return {
+    name: gcloudImage,
+    entrypoint: "bash",
+    args: [
+      "-c",
+      stripIndents`
     gcloud beta run domain-mappings create
     --platform=managed
-    --domain=\${_OPERATION_HASH}.\${_GCP_REGION}.\${_ENV_URI_SPECIFIER}\${_NETWORK}
-    --service=\${_GCP_REGION}-\${_OPERATION_NAME}-\${_OPERATION_HASH}
+    --service=${service}
+    --domain=${domain}
     --project=\${_GCP_PROJECT}\${_ENV_NAME_SPECIFIER}
     --region=\${_GCP_REGION} || exit 0`
-  ]
+    ]
+  };
 };
 
 module.exports = ({ config }) => {
   switch (config.context) {
     case "view-store": {
-      const imageName = "${_DOMAIN}.${_NAME}";
+      const imageExtension = "${_DOMAIN}.${_NAME}";
       return [
         yarnInstall,
         unitTest,
-        buildImage({ name: imageName }),
-        writeEnv,
+        buildImage({ extension: imageExtension }),
+        writeEnv({
+          custom: stripIndents`
+            DOMAIN=\${_DOMAIN}
+            NAME=\${_NAME}`
+        }),
         dockerComposeUp,
         dockerComposeProcesses,
         integrationTests(["DOMAIN=${_DOMAIN}", "NAME=${_NAME}"]),
         dockerComposeLogs,
-        dockerPush({ name: imageName }),
-        deployServer({
-          name: imageName,
+        dockerPush({ extension: imageExtension }),
+        deployService({
+          extension: imageExtension,
+          service: standardServiceName,
           env:
             "DOMAIN=${_DOMAIN},NAME=${_NAME},MONGODB_USER=gcp${_ENV_NAME_SPECIFIER},MONGODB_HOST=${_NODE_ENV}-ggjlv.gcp.mongodb.net,MONGODB_PROTOCOL=mongodb+srv",
-          labels: `domain=\${_DOMAIN},name=\${_NAME}`
+          labels: "domain=${_DOMAIN},name=${_NAME}"
         }),
         startDnsTransaction,
         addDnsTransaction,
         executeDnsTransaction,
         abortDnsTransaction,
-        mapDomain
+        mapDomain({
+          service: standardServiceName,
+          domain: standardInternalDomain
+        })
       ];
     }
-    case "event-store":
+    case "event-store": {
+      const imageExtension = "${_DOMAIN}";
+      return [
+        yarnInstall,
+        unitTest,
+        buildImage({ extension: imageExtension }),
+        writeEnv({
+          custom: stripIndents`
+            DOMAIN=\${_DOMAIN}`
+        }),
+        dockerComposeUp,
+        dockerComposeProcesses,
+        integrationTests(["DOMAIN=${_DOMAIN}"]),
+        dockerComposeLogs,
+        dockerPush({ extension: imageExtension }),
+        deployService({
+          service: standardServiceName,
+          extension: imageExtension,
+          env:
+            "DOMAIN=${_DOMAIN},MONGODB_USER=gcp${_ENV_NAME_SPECIFIER},MONGODB_HOST=${_NODE_ENV}-ggjlv.gcp.mongodb.net,MONGODB_PROTOCOL=mongodb+srv",
+          labels: "domain=${_DOMAIN}"
+        }),
+        startDnsTransaction,
+        addDnsTransaction,
+        executeDnsTransaction,
+        abortDnsTransaction,
+        mapDomain({
+          service: standardServiceName,
+          domain: standardInternalDomain
+        })
+      ];
+    }
+    case "event-handler": {
+      const imageExtension = "${_DOMAIN}.did-${_ACTION}.${_NAME}";
+      return [
+        yarnInstall,
+        unitTest,
+        buildImage({ extension: imageExtension }),
+        writeEnv({
+          custom: stripIndents`
+            DOMAIN=\${_DOMAIN}
+            ACTION=\${_ACTION}
+            NAME=\${_NAME}`
+        }),
+        dockerComposeUp,
+        dockerComposeProcesses,
+        integrationTests([
+          "DOMAIN=${_DOMAIN}",
+          "ACTION=${_ACTION}",
+          "NAME=${_NAME}"
+        ]),
+        dockerComposeLogs,
+        dockerPush({ extension: imageExtension }),
+        deployService({
+          service: standardServiceName,
+          extension: imageExtension,
+          env: "DOMAIN=${_DOMAIN},ACTION=${_ACTION},NAME=${_NAME}",
+          labels: "domain=${_DOMAIN},action=${_ACTION},name=${_NAME}"
+        }),
+        startDnsTransaction,
+        addDnsTransaction,
+        executeDnsTransaction,
+        abortDnsTransaction,
+        mapDomain({
+          service: standardServiceName,
+          domain: standardInternalDomain
+        }),
+        addPubSubPolicy,
+        createPubsubTopic,
+        createPubsubSubscription
+      ];
+    }
+    case "command-handler": {
+      const imageExtension = "${_DOMAIN}.${_ACTION}";
+      return [
+        yarnInstall,
+        unitTest,
+        buildImage(
+          { extension: imageExtension },
+          writeEnv({
+            custom: stripIndents`
+            DOMAIN=\${_DOMAIN}
+            ACTION=\${_ACTION}`
+          })
+        ),
+        dockerComposeUp,
+        dockerComposeProcesses,
+        integrationTests(["DOMAIN=${_DOMAIN}", "ACTION=${_ACTION}"]),
+        dockerComposeLogs,
+        dockerPush({ extension: imageExtension }),
+        deployService({
+          service: standardServiceName,
+          extension: imageExtension,
+          env: "DOMAIN=${_DOMAIN},ACTION=${_ACTION}",
+          labels: "domain=${_DOMAIN},action=${_ACTION}"
+        }),
+        startDnsTransaction,
+        addDnsTransaction,
+        executeDnsTransaction,
+        abortDnsTransaction,
+        mapDomain({
+          service: standardServiceName,
+          domain: standardInternalDomain
+        }),
+        createPubsubTopic
+      ];
+    }
+    case "auth-gateway": {
+      return [
+        yarnInstall,
+        unitTest,
+        buildImage(),
+        writeEnv(),
+        dockerComposeUp,
+        dockerComposeProcesses,
+        integrationTests(),
+        dockerComposeLogs,
+        dockerPush(),
+        deployService({
+          service: "${_GCP_REGION}-${_SERVICE}-${_CONTEXT}",
+          allowUnauthenticated: true
+        }),
+        startDnsTransaction,
+        addDnsTransaction,
+        executeDnsTransaction,
+        abortDnsTransaction,
+        mapDomain({
+          service: "${_GCP_REGION}-${_SERVICE}-${_CONTEXT}",
+          domain: "auth.${_ENV_URI_SPECIFIER}${_NETWORK}"
+        })
+      ];
+    }
   }
 };
