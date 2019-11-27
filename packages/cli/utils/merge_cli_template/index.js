@@ -37,7 +37,9 @@ const copySrc = async (p, workingDir) => {
   } catch (err) {
     //eslint-disable-next-line no-console
     console.error(
-      roboSay("The provided path isn't reachable. Double check it's correct and give it another go."),
+      roboSay(
+        "The provided path isn't reachable. Double check it's correct and give it another go."
+      ),
       red.bold("error")
     );
     fs.removeSync(workingDir);
@@ -85,7 +87,9 @@ const configure = async (workingDir, configFn, env) => {
     console.error(e);
     //eslint-disable-next-line no-console
     console.error(
-      roboSay("blossm.yaml isn't parseable. Double check it's correct and give it another go."),
+      roboSay(
+        "blossm.yaml isn't parseable. Double check it's correct and give it another go."
+      ),
       red.bold("error")
     );
     fs.removeSync(workingDir);

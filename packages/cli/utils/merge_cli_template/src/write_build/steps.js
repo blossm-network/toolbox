@@ -44,7 +44,6 @@ const writeEnv = ({ custom = "" } = {}) => {
     NETWORK=local
     SERVICE=\${_SERVICE}
     CONTEXT=\${_CONTEXT}
-    ${custom}
     OPERATION_HASH=\${_OPERATION_HASH}
     NODE_ENV=local
     PORT=80
@@ -60,6 +59,8 @@ const writeEnv = ({ custom = "" } = {}) => {
     MONGODB_USER_PASSWORD=password
     MONGODB_PROTOCOL=mongodb
     MONGODB_HOST=mongodb
+    MONGODB_DATABASE=testing
+    ${custom}
     EOM`
     ]
   };
@@ -87,24 +88,40 @@ const integrationTests = env => {
     ]
   };
 };
+const lenientIntegrationTests = env => {
+  return {
+    name: nodeImage,
+    entrypoint: "bash",
+    args: ["-c", "yarn test:integration || exit 0"],
+    env: [
+      "MAIN_CONTAINER_NAME=main",
+      "NETWORK=local",
+      "SERVICE=${_SERVICE}",
+      "CONTEXT=${_CONTEXT}",
+      ...(env || [])
+    ]
+  };
+};
 const dockerComposeLogs = {
   name: dockerComposeImage,
   args: ["logs"]
 };
 
-const dockerPush = ({ extension = "" } = {}) => {
+const dockerPush = ({ extension } = {}) => {
   return {
     name: dockerImage,
     args: [
       "push",
-      `us.gcr.io/\${_GCP_PROJECT}\${_ENV_NAME_SPECIFIER}/\${_SERVICE}.\${_CONTEXT}${extension}`
+      `us.gcr.io/\${_GCP_PROJECT}\${_ENV_NAME_SPECIFIER}/\${_SERVICE}.\${_CONTEXT}${
+        extension ? `.${extension}` : ""
+      }`
     ]
   };
 };
 
 const deployService = ({
   service = "${_GCP_REGION}-${_OPERATION_NAME}-${_OPERATION_HASH}",
-  extension = "",
+  extension,
   env = "",
   labels = "",
   allowUnauthenticated = false
@@ -116,7 +133,9 @@ const deployService = ({
       "run",
       "deploy",
       service,
-      `--image=us.gcr.io/\${_GCP_PROJECT}\${_ENV_NAME_SPECIFIER}/\${_SERVICE}.\${_CONTEXT}${extension}`,
+      `--image=us.gcr.io/\${_GCP_PROJECT}\${_ENV_NAME_SPECIFIER}/\${_SERVICE}.\${_CONTEXT}${
+        extension ? `.${extension}` : ""
+      }`,
       "--platform=managed",
       "--memory=${_MEMORY}",
       ...(allowUnauthenticated ? ["--allow-unauthenticated"] : []),
@@ -321,7 +340,8 @@ module.exports = ({ config }) => {
         }),
         dockerComposeUp,
         dockerComposeProcesses,
-        integrationTests([
+        dockerComposeLogs,
+        lenientIntegrationTests([
           "DOMAIN=${_DOMAIN}",
           "ACTION=${_ACTION}",
           "NAME=${_NAME}"

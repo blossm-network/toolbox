@@ -15,12 +15,12 @@ const common = ({ method, operation, root, data }) => {
           }`;
           const token = tokenFn
             ? await tokenFn({
-              hash,
-              name: deps.trim(
-                `${service}-${operation.reverse().join("-")}`,
-                MAX_LENGTH
-              )
-            })
+                hash,
+                name: deps.trim(
+                  `${service}-${operation.reverse().join("-")}`,
+                  MAX_LENGTH
+                )
+              })
             : null;
 
           const response = await method(url, {
@@ -35,6 +35,7 @@ const common = ({ method, operation, root, data }) => {
             })
           });
 
+          logger.info("response : ", { response, url });
           if (response.statusCode >= 300) {
             logger.info("response errored: ", { response, url });
             throw deps.constructError({

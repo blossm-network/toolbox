@@ -20,7 +20,10 @@ module.exports = ({ config, databaseServiceKey }) => {
   };
   const commonStoreEnvironment = {
     MONGODB_USER: "${MONGODB_USER}",
-    MONGODB_HOST: "${MONGODB_HOST}"
+    MONGODB_HOST: "${MONGODB_HOST}",
+    MONGODB_USER_PASSWORD: "${MONGODB_USER_PASSWORD}",
+    MONGODB_PROTOCOL: "${MONGODB_PROTOCOL}",
+    MONGODB_DATABASE: "${MONGODB_DATABASE}"
   };
   let services = {};
   let includeDatabase = false;
@@ -29,7 +32,9 @@ module.exports = ({ config, databaseServiceKey }) => {
     switch (target.context) {
       case "view-store":
         {
-          const targetHash = hash(target.name + target.domain + target.context + config.service).toString();
+          const targetHash = hash(
+            target.name + target.domain + target.context + config.service
+          ).toString();
 
           const key = `${target.name}-${target.domain}-${config.service}`;
           services = {
@@ -53,7 +58,9 @@ module.exports = ({ config, databaseServiceKey }) => {
         break;
       case "event-store":
         {
-          const targetHash = hash(target.domain + target.context + config.service).toString();
+          const targetHash = hash(
+            target.domain + target.context + config.service
+          ).toString();
 
           const key = `${target.domain}-${config.service}`;
           services = {
@@ -76,7 +83,9 @@ module.exports = ({ config, databaseServiceKey }) => {
         break;
       case "command-handler":
         {
-          const targetHash = hash(target.action + target.domain + target.context + config.service).toString();
+          const targetHash = hash(
+            target.action + target.domain + target.context + config.service
+          ).toString();
           const key = `${target.action}-${target.domain}-${config.service}`;
           services = {
             ...services,
@@ -97,5 +106,8 @@ module.exports = ({ config, databaseServiceKey }) => {
     }
   }
 
-  return { ...services, ...(includeDatabase ? { [databaseServiceKey]: databaseService } : []) };
+  return {
+    ...services,
+    ...(includeDatabase ? { [databaseServiceKey]: databaseService } : [])
+  };
 };

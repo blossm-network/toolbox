@@ -26,7 +26,10 @@ module.exports = (config, workingDir) => {
     services: {
       main: {
         ...mainService(config.context),
-        depends_on: [...Object.keys(_targetServices), ...(_includeDatabase ? [databaseServiceKey] : [])]
+        depends_on: [
+          ...(_includeDatabase ? [databaseServiceKey] : []),
+          ...Object.keys(_targetServices)
+        ]
       },
       ..._targetServices,
       ...(_includeDatabase && {

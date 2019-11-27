@@ -11,10 +11,12 @@ module.exports = context => {
       GCP_PROJECT: "${GCP_PROJECT}",
       GCP_REGION: "${GCP_REGION}",
       GCP_SECRET_BUCKET: "${GCP_SECRET_BUCKET}",
-      GCP_KMS_SECRET_BUCKET_KEY_LOCATION: "${GCP_KMS_SECRET_BUCKET_KEY_LOCATION}",
+      GCP_KMS_SECRET_BUCKET_KEY_LOCATION:
+        "${GCP_KMS_SECRET_BUCKET_KEY_LOCATION}",
       GCP_KMS_SECRET_BUCKET_KEY_RING: "${GCP_KMS_SECRET_BUCKET_KEY_RING}"
     }
   };
+
   const commonDatabaseEnv = {
     MONGODB_USER: "${MONGODB_USER}",
     MONGODB_HOST: "${MONGODB_HOST}",
@@ -63,7 +65,8 @@ module.exports = context => {
         environment: {
           ...common.environment,
           DOMAIN: "${DOMAIN}",
-          ACTION: "${ACTION}"
+          ACTION: "${ACTION}",
+          NAME: "${NAME}"
         }
       };
     case "auth-gateway":
