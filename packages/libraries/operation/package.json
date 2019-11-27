@@ -1,7 +1,7 @@
 {
   "name": "@blossm/operation-js",
   "description": "Calls an operation on a service within the network.",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
