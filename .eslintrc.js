@@ -11,15 +11,14 @@ module.exports = {
   extends: ["eslint:recommended", "prettier"],
   plugins: ["import", "prettier"],
   rules: {
-    "comma-dangle": ["error", "never"],
     "import/no-unresolved": 2,
     "import/no-cycle": 2,
-    "no-useless-escape": "off",
     "prefer-template": 2,
-    indent: ["error", 2],
-    "linebreak-style": ["error", "unix"],
-    quotes: ["error", "double"],
-    semi: ["error", "always"],
-    "object-shorthand": ["error", "always"]
+    "prettier/prettier": [
+      "error",
+      {
+        printWidth: 120
+      }
+    ]
   }
 };

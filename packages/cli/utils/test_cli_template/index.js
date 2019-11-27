@@ -27,10 +27,7 @@ const installDependenciesIfNeeded = async (workingDir, input) => {
 
   const srcDir = path.resolve(process.cwd(), input.path);
 
-  fs.copyFileSync(
-    path.resolve(workingDir, lockFile),
-    path.resolve(srcDir, lockFile)
-  );
+  fs.copyFileSync(path.resolve(workingDir, lockFile), path.resolve(srcDir, lockFile));
 
   const modules = "node_modules";
   const modulesPath = path.resolve(srcDir, modules);
@@ -50,7 +47,7 @@ module.exports = async ({ workingDir, input }) => {
     //eslint-disable-next-line no-console
     console.error(
       roboSay(
-        "I couldn't install the dependencies needed to run tests. Reach out to bugs@blossm.market please, it's in everyone's best interest.",
+        "I couldn't install the dependencies needed to run tests. Reach out to bugs@blossm.network please, it's in everyone's best interest.",
         red.bold("internal error")
       )
     );
