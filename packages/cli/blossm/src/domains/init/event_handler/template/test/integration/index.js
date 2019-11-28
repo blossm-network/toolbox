@@ -1,3 +1,4 @@
+require("localenv");
 const { expect } = require("chai");
 const viewStore = require("@blossm/view-store-js");
 const uuid = require("@blossm/uuid");

@@ -42,8 +42,7 @@ module.exports = (config, workingDir) => {
           name: "cloudbuild"
         }
       }
-    },
-    volumes: { "db-data": null }
+    }
   };
 
   const composePath = path.resolve(workingDir, "docker-compose.yaml");

@@ -13,23 +13,6 @@ const eventStore = async () => {
     return _eventStore;
   }
 
-  //eslint-disable-next-line no-console
-  console.log("shaking db: ", {
-    name: `${process.env.DOMAIN}.${process.env.NAME}`,
-    connection: {
-      protocol: process.env.MONGODB_PROTOCOL,
-      user: process.env.MONGODB_USER,
-      password:
-        process.env.NODE_ENV == "local"
-          ? process.env.MONGODB_USER_PASSWORD
-          : await deps.secret("mongodb"),
-      host: process.env.MONGODB_HOST,
-      database: process.env.MONGODB_DATABASE,
-      parameters: { authSource: "admin", retryWrites: true, w: "majority" },
-      autoIndex: true
-    }
-  });
-
   _eventStore = deps.store({
     name: `${process.env.DOMAIN}`,
     schema: {
@@ -66,27 +49,7 @@ const eventStore = async () => {
       parameters: { authSource: "admin", retryWrites: true, w: "majority" },
       autoIndex: true,
       onOpen: () => logger.info("Thank you database."),
-      onError: async err =>
-        logger.error("Database has errored.", {
-          err,
-          name: `${process.env.DOMAIN}.${process.env.NAME}`,
-          connection: {
-            protocol: process.env.MONGODB_PROTOCOL,
-            user: process.env.MONGODB_USER,
-            password:
-              process.env.NODE_ENV == "local"
-                ? process.env.MONGODB_USER_PASSWORD
-                : await deps.secret("mongodb"),
-            host: process.env.MONGODB_HOST,
-            database: process.env.MONGODB_DATABASE,
-            parameters: {
-              authSource: "admin",
-              retryWrites: true,
-              w: "majority"
-            },
-            autoIndex: true
-          }
-        })
+      onError: err => logger.error("Database has errored.", { err })
     }
   });
 

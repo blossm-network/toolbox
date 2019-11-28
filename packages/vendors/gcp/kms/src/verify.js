@@ -11,15 +11,6 @@ module.exports = ({ key, ring, location, version, project }) => async ({
   if (publicKeys[project] == undefined) {
     const client = new kms.KeyManagementServiceClient();
 
-    //eslint-disable-next-line no-console
-    console.log("slurp: ", {
-      project,
-      location,
-      ring,
-      key,
-      version
-    });
-
     const versionPath = client.cryptoKeyVersionPath(
       project,
       location,

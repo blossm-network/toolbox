@@ -9,9 +9,6 @@ module.exports = {
     MONGODB_USER: "${MONGODB_USER}",
     MONGODB_USER_PASSWORD: "${MONGODB_USER_PASSWORD}"
   },
-  volumes: [
-    "./mongodb-init.sh:/docker-entrypoint-initdb.d/mongodb-init.sh:ro",
-    "db-data:/data/db"
-  ],
+  volumes: ["./mongodb-init.sh:/docker-entrypoint-initdb.d/mongodb-init.sh:ro"],
   ports: ["27017:27017"]
 };

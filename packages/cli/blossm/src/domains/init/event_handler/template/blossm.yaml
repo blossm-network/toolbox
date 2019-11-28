@@ -22,6 +22,7 @@ dependencies:
   "@blossm/gcp-token": "*"
 
 devDependencies:
+  "localenv": "^0.2.2"
   "mocha": "^6.1.4"
   "chai": "^4.2.0"
   "sinon": "^7.3.2"

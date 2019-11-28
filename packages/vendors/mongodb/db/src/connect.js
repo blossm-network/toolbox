@@ -20,9 +20,6 @@ module.exports = ({
 
   if (queryString.length > 0) connectionString += `?${queryString}`;
 
-  //eslint-disable-next-line no-console
-  console.log("connection string: ", connectionString);
-
   mongoose.connect(connectionString, {
     useNewUrlParser: true,
     useCreateIndex: true,

@@ -1,16 +1,15 @@
 const deps = require("./deps");
-const logger = require("@blossm/logger");
 
 const serverId = () => {
   switch (process.env.NODE_ENV) {
-  case "staging":
-    return "p3u6hkyfwa";
-  case "sandbox":
-    return "ixixyzl3ea";
-  case "production":
-    return "qzhmgyrp2q";
-  default:
-    return null;
+    case "staging":
+      return "p3u6hkyfwa";
+    case "sandbox":
+      return "ixixyzl3ea";
+    case "production":
+      return "qzhmgyrp2q";
+    default:
+      return null;
   }
 };
 
@@ -27,10 +26,8 @@ module.exports = async ({ name, hash }) => {
 
   const url = `https://${process.env.GCP_REGION}-${name}-${hash}-${id}-uc.a.run.app`;
 
-  logger.info("url is: ", { url, full: metadataServerTokenUrl + url, headers });
   const response = await deps.get(metadataServerTokenUrl + url, { headers });
 
-  logger.info("res: ", { response });
   if (response.statusCode >= 300) return null;
   return response.body;
 };

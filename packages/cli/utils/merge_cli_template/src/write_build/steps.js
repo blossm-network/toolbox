@@ -75,22 +75,16 @@ const dockerComposeProcesses = {
   args: ["ps"]
 };
 
-const integrationTests = ({ env, strict = true } = {}) => {
+const integrationTests = ({ strict = true } = {}) => {
   return {
     name: nodeImage,
     entrypoint: strict ? "yarn" : "bash",
     args: strict
       ? ["test:integration"]
-      : ["-c", "yarn test:integration || exit 0"],
-    env: [
-      "MAIN_CONTAINER_NAME=main",
-      "NETWORK=local",
-      "SERVICE=${_SERVICE}",
-      "CONTEXT=${_CONTEXT}",
-      ...(env || [])
-    ]
+      : ["-c", "yarn test:integration || exit 0"]
   };
 };
+
 const dockerComposeLogs = {
   name: dockerComposeImage,
   args: ["logs"]
@@ -271,7 +265,7 @@ module.exports = ({ config }) => {
         }),
         dockerComposeUp,
         dockerComposeProcesses,
-        integrationTests({ env: ["DOMAIN=${_DOMAIN}", "NAME=${_NAME}"] }),
+        integrationTests(),
         dockerComposeLogs,
         dockerPush({ extension: imageExtension }),
         deployService({
@@ -304,7 +298,7 @@ module.exports = ({ config }) => {
         }),
         dockerComposeUp,
         dockerComposeProcesses,
-        integrationTests({ env: ["DOMAIN=${_DOMAIN}"] }),
+        integrationTests(),
         dockerComposeLogs,
         dockerPush({ extension: imageExtension }),
         deployService({
@@ -340,9 +334,7 @@ module.exports = ({ config }) => {
         dockerComposeUp,
         dockerComposeProcesses,
         dockerComposeLogs,
-        integrationTests({
-          env: ["DOMAIN=${_DOMAIN}", "ACTION=${_ACTION}", "NAME=${_NAME}"]
-        }),
+        integrationTests(),
         dockerComposeLogs,
         dockerPush({ extension: imageExtension }),
         deployService({
@@ -379,7 +371,7 @@ module.exports = ({ config }) => {
         }),
         dockerComposeUp,
         dockerComposeProcesses,
-        integrationTests({ env: ["DOMAIN=${_DOMAIN}", "ACTION=${_ACTION}"] }),
+        integrationTests(),
         dockerComposeLogs,
         dockerPush({ extension: imageExtension }),
         deployService({

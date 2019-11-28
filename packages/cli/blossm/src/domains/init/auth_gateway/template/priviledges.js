@@ -15,7 +15,7 @@ module.exports = async ({ path }) => {
   const pathParts = path.split("/");
   const action = pathParts[pathParts.length - 1];
   switch (action) {
-  case "answer":
-    return ["answer"];
+    case "answer":
+      return ["answer"];
   }
 };
