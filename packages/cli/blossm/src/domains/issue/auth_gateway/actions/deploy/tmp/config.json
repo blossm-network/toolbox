@@ -1,0 +1,13 @@
+{
+  "whitelist": ["127.0.0.1", "https://${process.env.NETWORK}"],
+  "targets": [
+    { "action": "issue", "domain": "challenge", "context": "command-handler" },
+    { "action": "answer", "domain": "challenge", "context": "command-handler" },
+    { "domain": "challenge", "context": "event-store" },
+    { "name": "contexts", "domain": "person", "context": "view-store" },
+    { "name": "codes", "domain": "challenge", "context": "view-store" },
+    { "name": "phones", "domain": "person", "context": "view-store" }
+  ],
+  "service": "core",
+  "context": "auth-gateway"
+}
