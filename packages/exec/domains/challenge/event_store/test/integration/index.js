@@ -1,3 +1,4 @@
+require("localenv");
 const { expect } = require("chai");
 const uuid = require("@blossm/uuid");
 
