@@ -24,9 +24,7 @@ const viewStore = async ({ schema, indexes }) => {
       host: process.env.MONGODB_HOST,
       database: process.env.MONGODB_DATABASE,
       parameters: { authSource: "admin", retryWrites: true, w: "majority" },
-      autoIndex: true,
-      onOpen: () => logger.info("Thank you database."),
-      onError: err => logger.error("Database has errored.", { err })
+      autoIndex: true
     }
   });
   return _viewStore;

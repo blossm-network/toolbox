@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const logger = require("@blossm/logger");
 
 const deps = require("../deps");
 
@@ -11,8 +12,8 @@ module.exports = ({
   parameters = {},
   poolSize = 10,
   autoIndex = false,
-  onError = null,
-  onOpen = null
+  onOpen = () => logger.info("Thank you database."),
+  onError = err => logger.error("Database has errored.", { err })
 }) => {
   let connectionString = `${protocol}://${user}:${password}@${host}/${database}`;
 

@@ -47,9 +47,7 @@ const eventStore = async () => {
       host: process.env.MONGODB_HOST,
       database: process.env.MONGODB_DATABASE,
       parameters: { authSource: "admin", retryWrites: true, w: "majority" },
-      autoIndex: true,
-      onOpen: () => logger.info("Thank you database."),
-      onError: err => logger.error("Database has errored.", { err })
+      autoIndex: true
     }
   });
 
@@ -74,6 +72,11 @@ const aggregateStore = async ({ schema }) => {
 module.exports = async ({ schema } = {}) => {
   const eStore = await eventStore();
   const aStore = await aggregateStore({ schema });
+
+  eventStore({
+    eventStore,
+    aggregateStore
+  });
 
   deps
     .server()

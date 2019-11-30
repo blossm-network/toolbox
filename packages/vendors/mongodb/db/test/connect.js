@@ -113,12 +113,20 @@ describe("Returns the right object", () => {
   });
 
   it("it should connect if all the params are normal, and ommittable params omitted", () => {
-    const returnValue = "pumpkin";
+    const onceFake = fake();
+    const onFake = fake();
+    const returnValue = {
+      on: onFake,
+      once: onceFake
+    };
     replace(mongoose, "connect", fake());
     replaceGetter(mongoose, "connection", fake.returns(returnValue));
 
     expect(connect({ protocol, user, password, host, database })).to.equal(
       returnValue
     );
+
+    expect(onceFake).to.have.been.calledOnce;
+    expect(onFake).to.have.been.calledOnce;
   });
 });
