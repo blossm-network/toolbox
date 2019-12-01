@@ -51,7 +51,9 @@ module.exports = async ({ payload, context }) => {
         ...(person &&
           person.contexts.length == 1 && {
             [person.contexts[0].type]: person.contexts[0].root
-          })
+          }),
+        service: process.env.SERVICE,
+        network: process.env.NETWORK
       }
     },
     signFn: deps.sign({

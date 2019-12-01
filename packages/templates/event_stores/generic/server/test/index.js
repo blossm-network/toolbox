@@ -1,13 +1,7 @@
-const { expect } = require("chai")
-  .use(require("chai-datetime"))
-  .use(require("sinon-chai"));
-const { restore, replace, fake, useFakeTimers } = require("sinon");
+const { expect } = require("chai").use(require("sinon-chai"));
+const { restore, replace, fake } = require("sinon");
 
 const deps = require("../deps");
-
-let clock;
-
-const now = new Date();
 
 const findOneFn = "some-find-on-fn";
 const writeFn = "some-write-fn";
@@ -16,10 +10,8 @@ const mapReduceFn = "some-map-reduce-fn";
 describe("Event store", () => {
   beforeEach(() => {
     delete require.cache[require.resolve("..")];
-    clock = useFakeTimers(now.getTime());
   });
   afterEach(() => {
-    clock.restore();
     restore();
   });
   it("should call with the correct params", async () => {

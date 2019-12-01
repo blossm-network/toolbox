@@ -103,15 +103,11 @@ describe("Command handler unit tests", () => {
     expect(setFake).to.have.been.calledTwice;
     expect(viewStoreFake).to.have.been.calledWith({
       name: "phones",
-      domain: "person",
-      service,
-      network
+      domain: "person"
     });
     expect(viewStoreFake).to.have.been.calledWith({
       name: "codes",
-      domain: "challenge",
-      service,
-      network
+      domain: "challenge"
     });
     expect(signFake).to.have.been.calledWith({
       ring: service,

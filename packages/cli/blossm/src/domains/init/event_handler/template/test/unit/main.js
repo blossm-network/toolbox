@@ -43,9 +43,7 @@ describe("Event handler unit tests", () => {
 
     expect(viewStoreFake).to.have.been.calledWith({
       name: "some-name",
-      domain: "some-domain",
-      service,
-      network
+      domain: "some-domain"
     });
     expect(setFake).to.have.been.calledWith({
       context,

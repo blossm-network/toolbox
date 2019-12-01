@@ -1,22 +1,14 @@
-const { expect } = require("chai")
-  .use(require("chai-datetime"))
-  .use(require("sinon-chai"));
-const { restore, replace, fake, useFakeTimers } = require("sinon");
+const { expect } = require("chai").use(require("sinon-chai"));
+const { restore, replace, fake } = require("sinon");
 
 const deps = require("../deps");
-
-let clock;
-
-const now = new Date();
 
 describe("View store", () => {
   beforeEach(() => {
     delete require.cache[require.resolve("..")];
     process.env.NODE_ENV = "some-env";
-    clock = useFakeTimers(now.getTime());
   });
   afterEach(() => {
-    clock.restore();
     restore();
   });
 
@@ -63,10 +55,6 @@ describe("View store", () => {
     const viewStoreDeleteResult = "some-delete-result";
     const viewStoreDeleteFake = fake.returns(viewStoreDeleteResult);
     replace(deps, "delete", viewStoreDeleteFake);
-
-    const stringDate = "some-date";
-    const stringDateFake = fake.returns(stringDate);
-    replace(deps, "stringDate", stringDateFake);
 
     const streamFn = "some-stream-fn";
     const findFn = "some-find-fn";
@@ -151,10 +139,6 @@ describe("View store", () => {
     const viewStoreDeleteResult = "some-delete-result";
     const viewStoreDeleteFake = fake.returns(viewStoreDeleteResult);
     replace(deps, "delete", viewStoreDeleteFake);
-
-    const stringDate = "some-date";
-    const stringDateFake = fake.returns(stringDate);
-    replace(deps, "stringDate", stringDateFake);
 
     const streamFn = "some-stream-fn";
     const findFn = "some-find-fn";

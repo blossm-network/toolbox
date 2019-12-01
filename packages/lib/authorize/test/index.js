@@ -43,9 +43,7 @@ describe("Authorize", () => {
       scopesLookupFn,
       priviledgesLookupFn,
       root,
-      domain,
-      service,
-      network
+      domain
     });
 
     expect(priviledgesLookupFn).to.have.been.calledWith({ path });
@@ -68,9 +66,7 @@ describe("Authorize", () => {
       claims,
       scopesLookupFn,
       priviledgesLookupFn,
-      root,
-      service,
-      network
+      root
     });
 
     expect(priviledgesLookupFn).to.have.been.calledWith({ path });
@@ -94,9 +90,7 @@ describe("Authorize", () => {
       scopesLookupFn,
       priviledgesLookupFn,
       root,
-      domain,
-      service,
-      network
+      domain
     });
 
     expect(priviledgesLookupFn).to.have.been.calledWith({ path });
@@ -130,9 +124,7 @@ describe("Authorize", () => {
       scopesLookupFn,
       priviledgesLookupFn,
       root,
-      domain,
-      service,
-      network
+      domain
     });
 
     expect(priviledgesLookupFn).to.have.been.calledWith({ path });
@@ -155,9 +147,7 @@ describe("Authorize", () => {
       claims,
       scopesLookupFn,
       root,
-      domain,
-      service,
-      network
+      domain
     });
 
     expect(priviledgesLookupFn).to.have.been.calledWith({ path });
