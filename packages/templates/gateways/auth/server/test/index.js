@@ -74,8 +74,6 @@ describe("Auth gateway", () => {
     expect(authenticationFake).to.have.been.calledWith({ verifyFn });
     expect(authorizationFake).to.have.been.calledWith({
       domain: "challenge",
-      service,
-      network,
       scopesLookupFn,
       priviledgesLookupFn
     });

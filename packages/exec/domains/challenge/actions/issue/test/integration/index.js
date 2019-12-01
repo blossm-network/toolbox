@@ -18,9 +18,7 @@ describe("Command handler store integration tests", () => {
     await deps
       .viewStore({
         name: "phones",
-        domain: "person",
-        service: process.env.SERVICE,
-        network: process.env.NETWORK
+        domain: "person"
       })
       //phone should be already formatted in the view store.
       .update(personRoot, { phone: "+12513332037" });
@@ -40,9 +38,7 @@ describe("Command handler store integration tests", () => {
     const parsedBody = JSON.parse(response.body);
 
     const aggregate = await eventStore({
-      domain: process.env.DOMAIN,
-      service: process.env.SERVICE,
-      network: process.env.NETWORK
+      domain: process.env.DOMAIN
     }).aggregate(parsedBody.root);
 
     expect(aggregate.headers.root).to.equal(parsedBody.root);
@@ -51,9 +47,7 @@ describe("Command handler store integration tests", () => {
     const { deletedCount } = await deps
       .viewStore({
         name: "phones",
-        domain: "person",
-        service: process.env.SERVICE,
-        network: process.env.NETWORK
+        domain: "person"
       })
       .delete(personRoot);
 

@@ -6,9 +6,7 @@ module.exports = ({ action, domain } = {}) => async (req, res) => {
   const response = await deps
     .command({
       action: req.params.action || action,
-      domain: req.params.domain || domain,
-      service: process.env.SERVICE,
-      network: process.env.NETWORK
+      domain: req.params.domain || domain
     })
     .set({ tokenFn: deps.gcpToken, context: req.context })
     .issue(payload, headers);

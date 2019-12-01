@@ -24,9 +24,7 @@ describe("Command handler integration tests", () => {
     const root = JSON.parse(response.body).root;
 
     const aggregate = await eventStore({
-      domain: process.env.DOMAIN,
-      service: process.env.SERVICE,
-      network: process.env.NETWORK
+      domain: process.env.DOMAIN
     }).aggregate(root);
 
     expect(aggregate.headers.root).to.equal(root);

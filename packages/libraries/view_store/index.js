@@ -5,31 +5,51 @@ module.exports = ({ name, domain, service, network }) => {
     await deps
       .operation(name, domain, "view-store")
       .post(properties)
-      .in({ ...(context && { context }), service, network })
+      .in({
+        ...(context && { context }),
+        ...(service && { service }),
+        ...(network && { network })
+      })
       .with({ tokenFn });
   const read = ({ context, tokenFn } = {}) => async query =>
     await deps
       .operation(name, domain, "view-store")
       .get(query)
-      .in({ ...(context && { context }), service, network })
+      .in({
+        ...(context && { context }),
+        ...(service && { service }),
+        ...(network && { network })
+      })
       .with({ tokenFn });
   const stream = ({ context, tokenFn } = {}) => async query =>
     await deps
       .operation(name, domain, "view-store")
       .get(query)
-      .in({ ...(context && { context }), service, network })
+      .in({
+        ...(context && { context }),
+        ...(service && { service }),
+        ...(network && { network })
+      })
       .with({ path: "/stream", ...(tokenFn && { tokenFn }) });
   const update = ({ context, tokenFn } = {}) => async (root, properties) =>
     await deps
       .operation(name, domain, "view-store")
       .put(root, properties)
-      .in({ ...(context && { context }), service, network })
+      .in({
+        ...(context && { context }),
+        ...(service && { service }),
+        ...(network && { network })
+      })
       .with({ tokenFn });
   const del = ({ context, tokenFn } = {}) => async root =>
     await deps
       .operation(name, domain, "view-store")
       .delete(root)
-      .in({ ...(context && { context }), service, network })
+      .in({
+        ...(context && { context }),
+        ...(service && { service }),
+        ...(network && { network })
+      })
       .with({ tokenFn });
   return {
     set: ({ context, tokenFn }) => {

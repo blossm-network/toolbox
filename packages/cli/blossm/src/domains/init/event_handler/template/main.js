@@ -21,9 +21,7 @@ module.exports = async event => {
   await deps
     .viewStore({
       name: "some-name",
-      domain: "some-domain",
-      service: process.env.SERVICE,
-      network: process.env.NETWORK
+      domain: "some-domain"
     })
     .set({ context, tokenFn: deps.gcpToken })
     .update(root, {

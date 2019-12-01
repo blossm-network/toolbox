@@ -59,9 +59,7 @@ describe("Command gateway post", () => {
     expect(normalizeFake).to.have.been.calledWith(body);
     expect(commandFake).to.have.been.calledWith({
       action,
-      domain,
-      service,
-      network
+      domain
     });
     expect(setFake).to.have.been.calledWith({
       tokenFn: deps.gcpToken,
@@ -110,9 +108,7 @@ describe("Command gateway post", () => {
     expect(normalizeFake).to.have.been.calledWith(body);
     expect(commandFake).to.have.been.calledWith({
       action,
-      domain,
-      service,
-      network
+      domain
     });
     expect(setFake).to.have.been.calledWith({
       tokenFn: deps.gcpToken,
@@ -158,9 +154,7 @@ describe("Command gateway post", () => {
     expect(normalizeFake).to.have.been.calledWith(body);
     expect(commandFake).to.have.been.calledWith({
       action,
-      domain,
-      service,
-      network
+      domain
     });
     expect(setFake).to.have.been.calledWith({
       tokenFn: deps.gcpToken,

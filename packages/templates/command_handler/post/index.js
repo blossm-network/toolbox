@@ -30,11 +30,7 @@ module.exports = ({ version, mainFn, validateFn, normalizeFn }) => {
       }
     });
     await deps
-      .eventStore({
-        domain: process.env.DOMAIN,
-        service: process.env.SERVICE,
-        network: process.env.NETWORK
-      })
+      .eventStore({ domain: process.env.DOMAIN })
       .set({ context, tokenFn: deps.gcpToken })
       .add(event);
 

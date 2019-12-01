@@ -82,9 +82,7 @@ describe("Issue command", () => {
     });
     replace(deps, "operation", operationFake);
 
-    const result = await command({ action, domain, service, network }).issue(
-      payload
-    );
+    const result = await command({ action, domain }).issue(payload);
 
     expect(result).to.equal(response);
     expect(operationFake).to.have.been.calledWith(action, domain);
@@ -94,7 +92,7 @@ describe("Issue command", () => {
         issued: dateString()
       }
     });
-    expect(inFake).to.have.been.calledWith({ service, network });
+    expect(inFake).to.have.been.calledWith({});
     expect(withFake).to.have.been.calledWith();
   });
 });

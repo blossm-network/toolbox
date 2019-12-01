@@ -5,7 +5,11 @@ const deps = require("./deps");
 
 const common = ({ method, operation, root, data }) => {
   return {
-    in: ({ context, service, network }) => {
+    in: ({
+      context,
+      service = process.env.SERVICE,
+      network = process.env.NETWORK
+    }) => {
       return {
         with: async ({ path = "", tokenFn } = {}) => {
           const hash = deps.hash(operation.join("") + service).toString();

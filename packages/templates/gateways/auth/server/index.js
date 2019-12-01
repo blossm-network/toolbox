@@ -25,8 +25,6 @@ module.exports = async ({
         deps.authentication({ verifyFn }),
         deps.authorization({
           domain: "challenge",
-          service: process.env.SERVICE,
-          network: process.env.NETWORK,
           scopesLookupFn,
           priviledgesLookupFn
         })

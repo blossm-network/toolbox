@@ -46,9 +46,7 @@ describe("View gateway get", () => {
 
     expect(viewStoreFake).to.have.been.calledWith({
       name,
-      domain,
-      service,
-      network
+      domain
     });
     expect(setFake).to.have.been.calledWith({
       context,

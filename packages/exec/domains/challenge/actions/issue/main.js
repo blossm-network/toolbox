@@ -20,9 +20,7 @@ module.exports = async ({ payload, context }) => {
   const [person] = await deps
     .viewStore({
       name: "phones",
-      domain: "person",
-      service: process.env.SERVICE,
-      network: process.env.NETWORK
+      domain: "person"
     })
     .set({ context, tokenFn: deps.gcpToken })
     .read({ phone: payload.phone });
@@ -44,9 +42,7 @@ module.exports = async ({ payload, context }) => {
       principle: person.principle,
       context: {
         person: person.id,
-        challenge: root,
-        service: process.env.SERVICE,
-        network: process.env.NETWORK
+        challenge: root
       }
     },
     signFn: deps.sign({
@@ -65,9 +61,7 @@ module.exports = async ({ payload, context }) => {
   await deps
     .viewStore({
       name: "codes",
-      domain: "challenge",
-      service: process.env.SERVICE,
-      network: process.env.NETWORK
+      domain: "challenge"
     })
     .set({ context, tokenFn: deps.gcpToken })
     .update(root, {

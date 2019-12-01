@@ -31,6 +31,11 @@ const domain = "the-domain-the-event-was-triggered-in";
 const context = "some-context";
 const tokenFn = "some-token-fn";
 
+const envNetwork = "some-env-network";
+const envService = "some-env-service";
+process.env.NETWORK = envNetwork;
+process.env.SERVICE = envService;
+
 describe("Event store", () => {
   beforeEach(() => {
     clock = useFakeTimers(now.getTime());
@@ -118,7 +123,7 @@ describe("Event store", () => {
     });
     replace(deps, "operation", operationFake);
 
-    await eventStore({ domain, service, network }).add({
+    await eventStore({ domain }).add({
       context,
       headers: {
         root,
@@ -142,8 +147,8 @@ describe("Event store", () => {
         topic,
         version,
         domain,
-        service,
-        network,
+        service: envService,
+        network: envNetwork,
         command: {
           action: commandAction,
           domain: commandDomain,
@@ -155,7 +160,10 @@ describe("Event store", () => {
       },
       payload
     });
-    expect(inFake).to.have.been.calledWith({ service, network });
+    expect(inFake).to.have.been.calledWith({
+      service: envService,
+      network: envNetwork
+    });
     expect(withFake).to.have.been.calledWith();
   });
 

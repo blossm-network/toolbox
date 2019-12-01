@@ -58,11 +58,11 @@ describe("Get views", () => {
     });
     replace(deps, "operation", operationFake);
 
-    await viewStore({ name, domain, service, network }).create(properties);
+    await viewStore({ name, domain }).create(properties);
 
     expect(operationFake).to.have.been.calledWith(name, domain, "view-store");
     expect(postFake).to.have.been.calledWith(properties);
-    expect(inFake).to.have.been.calledWith({ service, network });
+    expect(inFake).to.have.been.calledWith({});
     expect(withFake).to.have.been.calledWith();
   });
   it("should call read with the correct params", async () => {

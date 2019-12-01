@@ -17,7 +17,11 @@ module.exports = ({ action, domain, service, network }) => {
     return await deps
       .operation(action, domain, "command-handler")
       .post(data)
-      .in({ ...(context && { context }), service, network })
+      .in({
+        ...(context && { context }),
+        ...(service && { service }),
+        ...(network && { network })
+      })
       .with({ tokenFn });
   };
 

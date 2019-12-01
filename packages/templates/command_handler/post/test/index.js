@@ -104,9 +104,7 @@ describe("Command handler post", () => {
       }
     });
     expect(eventStoreFake).to.have.been.calledWith({
-      domain,
-      service,
-      network
+      domain
     });
     expect(addFake).to.have.been.calledWith(event);
     expect(setFake).to.have.been.calledWith({
@@ -179,9 +177,7 @@ describe("Command handler post", () => {
       }
     });
     expect(eventStoreFake).to.have.been.calledWith({
-      domain,
-      service,
-      network
+      domain
     });
     expect(addFake).to.have.been.calledWith(event);
     expect(setFake).to.have.been.calledWith({
@@ -260,9 +256,7 @@ describe("Command handler post", () => {
       }
     });
     expect(eventStoreFake).to.have.been.calledWith({
-      domain,
-      service,
-      network
+      domain
     });
     expect(addFake).to.have.been.calledWith(event);
     expect(setFake).to.have.been.calledWith({
@@ -338,9 +332,7 @@ describe("Command handler post", () => {
       }
     });
     expect(eventStoreFake).to.have.been.calledWith({
-      domain,
-      service,
-      network
+      domain
     });
     expect(addFake).to.have.been.calledWith(event);
     expect(setFake).to.have.been.calledWith({
@@ -404,11 +396,7 @@ describe("Command handler post", () => {
         network
       }
     });
-    expect(eventStoreFake).to.have.been.calledWith({
-      domain,
-      service,
-      network
-    });
+    expect(eventStoreFake).to.have.been.calledWith({ domain });
     expect(addFake).to.have.been.calledWith(event);
     expect(setFake).to.have.been.calledWith({
       context,

@@ -34,6 +34,11 @@ const bodyResponse = {
   statusCode: 200
 };
 
+const envNetwork = "some-env-network";
+const envService = "some-env-service";
+process.env.NETWORK = envNetwork;
+process.env.SERVICE = envService;
+
 describe("Operation", () => {
   beforeEach(() => {
     clock = useFakeTimers(now.getTime());
@@ -76,6 +81,45 @@ describe("Operation", () => {
       MAX_LENGTH
     );
     expect(hashFake).to.have.been.calledWith(opPart1 + opPart2 + service);
+    expect(tokenFnFake).to.have.been.calledWith({
+      hash,
+      name: trimmed
+    });
+    expect(result).to.be.null;
+  });
+  it("should call post with the correct params with env network and servicej", async () => {
+    const post = fake.returns(response);
+    replace(deps, "post", post);
+
+    const toStringFake = fake.returns(hash);
+    const hashFake = fake.returns({
+      toString: toStringFake
+    });
+    replace(deps, "hash", hashFake);
+
+    const trimFake = fake.returns(trimmed);
+    replace(deps, "trim", trimFake);
+
+    const tokenFnFake = fake.returns(token);
+    const result = await operation(opPart1, opPart2)
+      .post(data)
+      .in({ context })
+      .with({ tokenFn: tokenFnFake });
+
+    expect(post).to.have.been.calledWith(`http://${hash}.${envNetwork}`, {
+      body: {
+        ...data,
+        context
+      },
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+    expect(trimFake).to.have.been.calledWith(
+      `${envService}-${opPart2}-${opPart1}`,
+      MAX_LENGTH
+    );
+    expect(hashFake).to.have.been.calledWith(opPart1 + opPart2 + envService);
     expect(tokenFnFake).to.have.been.calledWith({
       hash,
       name: trimmed

@@ -3,8 +3,8 @@ const deps = require("./deps");
 
 module.exports = ({
   domain,
-  service,
-  network,
+  service = process.env.SERVICE,
+  network = process.env.NETWORK,
   scopesLookupFn,
   priviledgesLookupFn
 }) =>

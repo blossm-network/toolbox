@@ -9,9 +9,7 @@ module.exports = async ({ payload, context }) => {
   const challenge = await deps
     .viewStore({
       name: "codes",
-      domain: "challenge",
-      service: process.env.SERVICE,
-      network: process.env.NETWORK
+      domain: "challenge"
     })
     .set({ context, tokenFn: deps.gcpToken })
     .read({ root: context.challenge });
@@ -32,9 +30,7 @@ module.exports = async ({ payload, context }) => {
   const [person] = await deps
     .viewStore({
       name: "contexts",
-      domain: "person",
-      service: process.env.SERVICE,
-      network: process.env.NETWORK
+      domain: "person"
     })
     .set({ context, tokenFn: deps.gcpToken })
     .read({ code: payload.code });
@@ -54,10 +50,8 @@ module.exports = async ({ payload, context }) => {
         //If the person is in only one context, add it to the token.
         ...(person &&
           person.contexts.length == 1 && {
-          [person.contexts[0].type]: person.contexts[0].root
-        }),
-        service: process.env.SERVICE,
-        network: process.env.NETWORK
+            [person.contexts[0].type]: person.contexts[0].root
+          })
       }
     },
     signFn: deps.sign({

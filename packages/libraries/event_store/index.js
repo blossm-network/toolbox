@@ -2,7 +2,11 @@ const { string: dateString } = require("@blossm/datetime");
 
 const deps = require("./deps");
 
-module.exports = ({ domain, service, network } = {}) => {
+module.exports = ({
+  domain,
+  service = process.env.SERVICE,
+  network = process.env.NETWORK
+} = {}) => {
   const add = ({ context, tokenFn } = {}) => async ({
     headers: { root, topic, version, trace, command },
     payload
