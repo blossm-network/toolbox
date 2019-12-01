@@ -1,7 +1,7 @@
 {
   "name": "@blossm/command-js",
   "description": "Issues a command.",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@blossm/datetime": "^0.0.2",
-    "@blossm/operation-js": "^0.0.9"
+    "@blossm/operation-js": "^0.0.10"
   },
   "devDependencies": {
     "chai-datetime": "^1.5.0",
