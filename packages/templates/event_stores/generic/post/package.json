@@ -15,9 +15,6 @@
   },
   "dependencies": {
     "@blossm/datetime": "^0.0.2",
-    "@blossm/event-store-normalize": "^0.0.1",
-    "@blossm/event-store-reduce": "^0.0.1",
-    "@blossm/mongodb-database": "^0.0.10",
     "@blossm/uuid": "^0.0.2"
   },
   "devDependencies": {

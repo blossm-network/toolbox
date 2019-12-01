@@ -7,18 +7,13 @@ const deps = require("../deps");
 const obj = "some-objs";
 const found = { value: obj };
 const root = "some-root";
-const store = "some-store";
 
 describe("Event store get", () => {
   afterEach(() => {
     restore();
   });
   it("should call with the correct params", async () => {
-    const findOneFake = fake.returns(found);
-    const db = {
-      findOne: findOneFake
-    };
-    replace(deps, "db", db);
+    const findOneFnFake = fake.returns(found);
     const params = {
       root
     };
@@ -29,34 +24,21 @@ describe("Event store get", () => {
     const res = {
       send: sendFake
     };
-    await get({ store })(req, res);
-    expect(findOneFake).to.have.been.calledWith({
-      store,
-      query: {
-        "value.headers.root": root
-      },
-      options: {
-        lean: true
-      }
+    await get({ findOneFn: findOneFnFake })(req, res);
+    expect(findOneFnFake).to.have.been.calledWith({
+      root
     });
     expect(sendFake).to.have.been.calledWith(obj);
   });
   it("should throw correctly if not found", async () => {
-    const findOneFake = fake();
-    const db = {
-      findOne: findOneFake
-    };
-    replace(deps, "db", db);
+    const findOneFnFake = fake();
     const params = {
       root
     };
     const req = {
       params
     };
-    const sendFake = fake();
-    const res = {
-      send: sendFake
-    };
+    const res = {};
 
     const error = "some-error";
     const rootNotFoundFake = fake.returns(error);
@@ -65,7 +47,7 @@ describe("Event store get", () => {
     });
 
     try {
-      await get({ store })(req, res);
+      await get({ findOneFn: findOneFnFake })(req, res);
 
       //shouldn't be called
       expect(2).to.equal(1);

@@ -13,7 +13,7 @@ const eventStore = async () => {
     return _eventStore;
   }
 
-  _eventStore = deps.store({
+  _eventStore = deps.db.store({
     name: `${process.env.DOMAIN}`,
     schema: {
       id: { type: String, required: true, unique: true },
@@ -60,7 +60,7 @@ const aggregateStore = async ({ schema }) => {
     return _aggregateStore;
   }
 
-  _aggregateStore = deps.store({
+  _aggregateStore = deps.db.store({
     name: aggregateStoreName,
     schema,
     indexes: [[{ "value.headers.root": 1 }]]
@@ -73,14 +73,46 @@ module.exports = async ({ schema } = {}) => {
   const eStore = await eventStore();
   const aStore = await aggregateStore({ schema });
 
-  eventStore({
-    eventStore,
-    aggregateStore
-  });
+  const writeFn = async ({ id, data }) =>
+    deps.db.write({
+      store: eStore,
+      query: { id },
+      update: {
+        $set: data
+      },
+      options: {
+        lean: true,
+        omitUndefined: true,
+        upsert: true,
+        new: true,
+        runValidators: true,
+        setDefaultsOnInsert: true
+      }
+    });
 
-  deps
-    .server()
-    .get(deps.get({ store: aStore }), { path: "/:root" })
-    .post(deps.post({ store: eStore, aggregateStoreName }))
-    .listen();
+  const mapReduceFn = async ({ id }) =>
+    await deps.db.mapReduce({
+      store: eStore,
+      query: { id },
+      map: deps.normalize,
+      reduce: deps.reduce,
+      out: { reduce: aggregateStoreName }
+    });
+
+  const findOneFn = async ({ root }) =>
+    await deps.db.findOne({
+      store: aStore,
+      query: {
+        "value.headers.root": root
+      },
+      options: {
+        lean: true
+      }
+    });
+
+  deps.eventStore({
+    findOneFn,
+    writeFn,
+    mapReduceFn
+  });
 };

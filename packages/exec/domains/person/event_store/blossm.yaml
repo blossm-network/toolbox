@@ -6,7 +6,7 @@ schema:
 indexes: [[{ name: 1 }]]
 
 dependencies:
-  "@blossm/event-store": "*"
+  "@blossm/mongodb-view-store": "*"
 
 devDependencies:
   "localenv": "^0.2.2"

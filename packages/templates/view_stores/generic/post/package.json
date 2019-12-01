@@ -1,0 +1,26 @@
+{
+  "name": "@blossm/view-store-post",
+  "description": "A view store POST handler.",
+  "version": "0.0.10",
+  "main": "index.js",
+  "author": "blossm.network",
+  "engines": {
+    "node": ">= 10.16.0"
+  },
+  "scripts": {
+    "test": "mocha --recursive"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@blossm/datetime": "^0.0.2",
+    "@blossm/uuid": "^0.0.2"
+  },
+  "devDependencies": {
+    "chai-datetime": "^1.5.0",
+    "mocha": "^6.1.4",
+    "sinon": "^7.3.2",
+    "sinon-chai": "^3.3.0"
+  }
+}

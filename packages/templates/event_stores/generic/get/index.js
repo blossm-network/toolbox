@@ -1,15 +1,9 @@
 const deps = require("./deps");
 
-module.exports = ({ store }) => {
+module.exports = ({ findOneFn }) => {
   return async (req, res) => {
-    const result = await deps.db.findOne({
-      store,
-      query: {
-        "value.headers.root": req.params.root
-      },
-      options: {
-        lean: true
-      }
+    const result = await findOneFn({
+      root: req.params.root
     });
 
     if (!result) throw deps.resourceNotFoundError.root();

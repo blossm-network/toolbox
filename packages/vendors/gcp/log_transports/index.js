@@ -6,12 +6,16 @@ const loggerTransports = createLogger({
   format: format.json(),
   transports: [
     // Logs to stack driver.
-    new LoggingWinston({
-      serviceContext: {
-        service: process.env.SERVICE,
-        version: "0"
-      }
-    }),
+    ...(["production", "sandbox", "staging"].includes(process.env.NODE_ENV)
+      ? [
+          new LoggingWinston({
+            serviceContext: {
+              service: process.env.SERVICE,
+              version: "0"
+            }
+          })
+        ]
+      : []),
     //
     // Log to the `console` with the format:
     // `${info.level}: ${info.message} JSON.stringify({ ...rest }) `

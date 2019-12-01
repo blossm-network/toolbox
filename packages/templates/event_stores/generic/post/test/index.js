@@ -10,15 +10,12 @@ let clock;
 
 const now = new Date();
 
-const aggregateStoreName = "some-aggregate-store-name";
-
 const body = {
   a: 1,
   id: "some-bogus",
   created: "more-bogus"
 };
 const uuid = "some-uuid";
-const store = "some-store";
 
 describe("Event store post", () => {
   beforeEach(() => {
@@ -30,13 +27,8 @@ describe("Event store post", () => {
   });
 
   it("should call with the correct params", async () => {
-    const writeFake = fake();
-    const mapReduceFake = fake();
-    const db = {
-      write: writeFake,
-      mapReduce: mapReduceFake
-    };
-    replace(deps, "db", db);
+    const writeFnFake = fake();
+    const mapReduceFnFake = fake();
 
     const req = {
       body
@@ -52,57 +44,45 @@ describe("Event store post", () => {
 
     const uuidFake = fake.returns(uuid);
     replace(deps, "uuid", uuidFake);
-    await post({ store, aggregateStoreName })(req, res);
-    expect(writeFake).to.have.been.calledWith({
-      store,
-      query: { id: uuid },
-      update: {
-        $set: {
-          a: 1,
-          id: uuid,
-          created: deps.dateString()
-        }
-      },
-      options: {
-        lean: true,
-        omitUndefined: true,
-        upsert: true,
-        new: true,
-        runValidators: true,
-        setDefaultsOnInsert: true
+    await post({ writeFn: writeFnFake, mapReduceFn: mapReduceFnFake })(
+      req,
+      res
+    );
+    expect(writeFnFake).to.have.been.calledWith({
+      id: uuid,
+      data: {
+        a: 1,
+        id: uuid,
+        created: deps.dateString()
       }
     });
-    expect(mapReduceFake).to.have.been.calledWith({
-      store,
-      query: { id: uuid },
-      map: deps.normalize,
-      reduce: deps.reduce,
-      out: { reduce: aggregateStoreName }
+    expect(mapReduceFnFake).to.have.been.calledWith({
+      id: uuid
     });
     expect(statusFake).to.have.been.calledWith(204);
     expect(sendFake).to.have.been.calledOnce;
   });
   it("should throw correctly", async () => {
-    const writeFake = fake.rejects(new Error());
-    const mapReduceFake = fake();
-    const db = {
-      write: writeFake,
-      mapReduce: mapReduceFake
-    };
-    replace(deps, "db", db);
+    const error = new Error();
+    const writeFnFake = fake.rejects(error);
+    const mapReduceFnFake = fake();
 
     const req = {
       body
     };
 
-    const sendFake = fake();
-    const res = {
-      send: sendFake
-    };
+    const res = {};
 
     const uuidFake = fake.returns(uuid);
     replace(deps, "uuid", uuidFake);
-    expect(async () => await post({ store, aggregateStoreName })(req, res)).to
-      .throw;
+
+    try {
+      await post({ writeFn: writeFnFake, mapReduceFn: mapReduceFnFake })(
+        req,
+        res
+      );
+    } catch (e) {
+      expect(e).to.equal(error);
+    }
   });
 });

@@ -19,7 +19,6 @@
     "@blossm/event-store-post": "^0.0.10",
     "@blossm/gcp-secret": "^0.0.8",
     "@blossm/logger": "^0.0.3",
-    "@blossm/mongodb-database": "^0.0.10",
     "@blossm/server": "^0.0.3"
   },
   "devDependencies": {

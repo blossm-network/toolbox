@@ -2,7 +2,7 @@ const { expect } = require("chai");
 
 const reduce = require("..");
 
-describe("Event store reduce", () => {
+describe("Mongodb event store reduce", () => {
   it("should call with the correct params", async () => {
     const key = "some-key";
     const firstModified = 3;

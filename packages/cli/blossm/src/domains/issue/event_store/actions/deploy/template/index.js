@@ -1,4 +1,4 @@
-const eventStore = require("@blossm/event-store");
+const eventStore = require("@blossm/mongodb-event-store");
 
 const config = require("./config.json");
 
