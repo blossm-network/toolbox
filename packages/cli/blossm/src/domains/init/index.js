@@ -21,15 +21,15 @@ module.exports = async args => {
     args
   });
   switch (input.template) {
-  case "command-handler":
-    return commandHandler(input.args);
-  case "event-handler":
-    return eventHandler(input.args);
-  case "event-store":
-    return eventStore(input.args);
-  case "view-store":
-    return viewStore(input.args);
-  case "auth-gateway":
-    return authGateway(input.args);
+    case "command-handler":
+      return commandHandler(input.args);
+    case "event-handler":
+      return eventHandler(input.args);
+    case "event-store":
+      return eventStore(input.args);
+    case "view-store":
+      return viewStore(input.args);
+    case "auth-gateway":
+      return authGateway(input.args);
   }
 };

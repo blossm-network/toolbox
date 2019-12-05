@@ -5,7 +5,7 @@ const normalize = require("@blossm/normalize-cli");
 const roboSay = require("@blossm/robo-say");
 
 const create = async input => {
-  const blossmDir = path.resolve(process.cwd(), input.path);
+  const blossmDir = path.resolve(process.cwd(), input.network);
   if (fs.existsSync(blossmDir)) {
     const { flag } = await prompt({
       type: "Boolean",
@@ -31,9 +31,10 @@ const create = async input => {
   fs.mkdirSync(blossmHiddenDir);
 
   const config = {
+    network: input.network,
     providers: {
       cloud: {
-        type: input.cloudProvider
+        [input.cloud]: {}
       },
       viewStore: {
         type: input.viewStoreProvider
@@ -50,30 +51,15 @@ const create = async input => {
 
 module.exports = async args => {
   const input = await normalize({
-    entrypointType: "path",
-    entrypointDefault: "blossm",
+    entrypointType: "network",
     args,
     flags: [
       {
-        name: "cloud-provider",
+        name: "cloud",
         short: "c",
+        choices: ["gcp"],
         type: String,
-        required: true,
-        choices: ["gcp"]
-      },
-      {
-        name: "view-store-provider",
-        type: String,
-        short: "v",
-        required: true,
-        choices: ["mongodb"]
-      },
-      {
-        name: "event-store-provider",
-        type: String,
-        short: "e",
-        required: true,
-        choices: ["mongodb"]
+        required: true
       }
     ]
   });

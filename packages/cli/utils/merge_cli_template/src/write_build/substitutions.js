@@ -1,3 +1,5 @@
+const rootDir = require("@blossm/cli-root-dir");
+
 const envUriSpecifier = env => {
   switch (env) {
     case "sandbox":
@@ -19,12 +21,16 @@ const envNameSpecifier = env => {
 };
 
 module.exports = ({ config, configFn, env }) => {
+  const blossmConfig = rootDir.config();
   return {
-    _NETWORK: "sm.network",
-    _GCP_PROJECT: "smn-core",
-    _GCP_REGION: "us-central1",
-    _GCP_DNS_ZONE: "network",
-    _MEMORY: "128Mi",
+    _NETWORK: config.network || blossmConfig.network,
+    _GCP_PROJECT:
+      config["gcp-project"] || blossmConfig.providers.cloud.gcp.project,
+    _GCP_REGION:
+      config["gcp-region"] || blossmConfig.providers.cloud.gcp.region,
+    _GCP_DNS_ZONE:
+      config["gcp-dns-zone"] || blossmConfig.providers.cloud.gcp.dnsZone,
+    _MEMORY: config.memory || blossmConfig.providers.cloud.gcp.memory,
     ...(config.domain && {
       _DOMAIN: config.domain
     }),
@@ -33,21 +39,6 @@ module.exports = ({ config, configFn, env }) => {
     }),
     ...(config.context && {
       _CONTEXT: config.context
-    }),
-    ...(config.network && {
-      _NETWORK: config.network
-    }),
-    ...(config["gcp-project"] && {
-      _GCP_PROJECT: config
-    }),
-    ...(config["gcp-region"] && {
-      _GCP_REGION: config["gcp-region"]
-    }),
-    ...(config["gcp-dns-zone"] && {
-      _GCP_DNS_ZONE: config["gcp-dns-zone"]
-    }),
-    ...(config.memory && {
-      _MEMORY: config.memory
     }),
 
     ...(configFn && configFn(config)),

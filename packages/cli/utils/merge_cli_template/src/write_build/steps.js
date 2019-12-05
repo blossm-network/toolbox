@@ -1,5 +1,7 @@
 const { stripIndents, oneLine } = require("common-tags");
 
+const rootDir = require("@blossm/cli-root-dir");
+
 const nodeImage = "node:10.16.0";
 const dockerComposeImage = "docker/compose:1.15.0";
 const dockerImage = "gcr.io/cloud-builders/docker";
@@ -250,6 +252,7 @@ const mapDomain = ({ service, uri }) => {
 };
 
 module.exports = ({ config }) => {
+  const blossmConfig = rootDir.config();
   switch (config.context) {
     case "view-store": {
       const imageExtension = "${_DOMAIN}.${_NAME}";
@@ -271,8 +274,7 @@ module.exports = ({ config }) => {
         deployService({
           extension: imageExtension,
           service: standardServiceName,
-          env:
-            "DOMAIN=${_DOMAIN},NAME=${_NAME},MONGODB_USER=gcp${_ENV_NAME_SPECIFIER},MONGODB_HOST=${_NODE_ENV}-ggjlv.gcp.mongodb.net,MONGODB_PROTOCOL=mongodb+srv",
+          env: `DOMAIN=\${_DOMAIN},NAME=\${_NAME},MONGODB_USER=${blossmConfig.vendors.viewStore.mongodb.user}\${_ENV_NAME_SPECIFIER},MONGODB_HOST=\${_NODE_ENV}-${blossmConfig.vendors.viewStore.mongodb.host},MONGODB_PROTOCOL=${blossmConfig.vendors.viewStore.mongodb.protocol}`,
           labels: "domain=${_DOMAIN},name=${_NAME},hash=${_OPERATION_HASH}"
         }),
         startDnsTransaction,
@@ -304,8 +306,7 @@ module.exports = ({ config }) => {
         deployService({
           service: standardServiceName,
           extension: imageExtension,
-          env:
-            "DOMAIN=${_DOMAIN},MONGODB_USER=gcp${_ENV_NAME_SPECIFIER},MONGODB_HOST=${_NODE_ENV}-ggjlv.gcp.mongodb.net,MONGODB_PROTOCOL=mongodb+srv",
+          env: `DOMAIN=\${_DOMAIN},MONGODB_USER=${blossmConfig.vendors.eventStore.mongodb.user}\${_ENV_NAME_SPECIFIER},MONGODB_HOST=\${_NODE_ENV}-${blossmConfig.vendors.eventStore.mongodb.host},MONGODB_PROTOCOL=${blossmConfig.vendors.eventStore.mongodb.protocol}`,
           labels: "domain=${_DOMAIN},hash=${_OPERATION_HASH}"
         }),
         startDnsTransaction,

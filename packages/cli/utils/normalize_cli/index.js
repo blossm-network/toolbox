@@ -15,7 +15,9 @@ const flagValue = async (flag, args) => {
     const { flagValue } = await prompt({
       type: "list",
       name: "flagValue",
-      message: roboSay(`Which of these ${flag.name}'s do you wanna set?`),
+      message: roboSay(
+        `Which of these ${flag.name}'s do you wanna use by default?`
+      ),
       choices: flag.choices
     });
 
@@ -46,33 +48,44 @@ const parseArgs = async (
     };
   }, {});
 
-  const args = arg(
-    {
-      "--skip-prompts": Boolean,
-      "-s": "--skip-prompts",
-      ...flagArgs
-    },
-    {
-      argv: rawArgs,
-      permissive
-    }
-  );
+  try {
+    const args = arg(
+      {
+        "--skip-prompts": Boolean,
+        "-s": "--skip-prompts",
+        ...flagArgs
+      },
+      {
+        argv: rawArgs,
+        permissive
+      }
+    );
 
-  for (const flag of flags) flag.value = await flagValue(flag, args);
+    for (const flag of flags) flag.value = await flagValue(flag, args);
 
-  const formattedFlags = flags.reduce((map, flag) => {
+    const formattedFlags = flags.reduce((map, flag) => {
+      return {
+        ...map,
+        [camelCased(flag.name)]: flag.value
+      };
+    }, {});
+
     return {
-      ...map,
-      [camelCased(flag.name)]: flag.value
+      ...formattedFlags,
+      entrypoint: args._[0] || entrypointDefault,
+      args: args._.slice(1),
+      positionalArgs: args._.slice(1).filter(arg => arg[0] != "-")
     };
-  }, {});
-
-  return {
-    ...formattedFlags,
-    entrypoint: args._[0] || entrypointDefault,
-    args: args._.slice(1),
-    positionalArgs: args._.slice(1).filter(arg => arg[0] != "-")
-  };
+  } catch (e) {
+    //eslint-disable-next-line no-console
+    console.error(
+      roboSay(
+        `I couldn't read the command. Flags should be set like \`--flag=flagValue\`, \`--flag flagValue\`, or \`-f flagValue\``
+      ),
+      red.bold("error")
+    );
+    process.exit(1);
+  }
 };
 
 const validate = async ({ entrypointType, choices, options }) => {

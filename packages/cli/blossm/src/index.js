@@ -5,9 +5,9 @@ const yaml = require("yaml");
 const path = require("path");
 const { red } = require("chalk");
 
-const { begin, init, issue } = require("./domains");
+const { config, begin, init, issue, set } = require("./domains");
 
-const domains = ["begin", "init", "issue"];
+const domains = ["begin", "config", "init", "issue", "set"];
 
 const tryShortcuts = input => {
   const inputPath =
@@ -20,10 +20,10 @@ const tryShortcuts = input => {
   const args = [config.context];
 
   switch (input.domain) {
-  case "test":
-    break;
-  case "deploy":
-    break;
+    case "test":
+      break;
+    case "deploy":
+      break;
   }
   if (input.domain == "test") {
     args.push("deploy");
@@ -37,27 +37,31 @@ const tryShortcuts = input => {
 
 const forward = input => {
   switch (input.domain) {
-  case "begin":
-    return begin(input.args);
-  case "init":
-    return init(input.args);
-  case "issue":
-    return issue(input.args);
-  default: {
-    try {
-      tryShortcuts(input);
-    } catch (e) {
-      //eslint-disable-next-line no-console
-      console.error(
-        roboSay(
-          `This domain isn't recognized. Choose from one of these [${domains.join(
-            ", "
-          )}], or from one of these shortcuts [deploy, test]`
-        ),
-        red.bold("error")
-      );
+    case "begin":
+      return begin(input.args);
+    case "config":
+      return config(input.args);
+    case "init":
+      return init(input.args);
+    case "issue":
+      return issue(input.args);
+    case "set":
+      return set(input.args);
+    default: {
+      try {
+        tryShortcuts(input);
+      } catch (e) {
+        //eslint-disable-next-line no-console
+        console.error(
+          roboSay(
+            `This domain isn't recognized. Choose from one of these [${domains.join(
+              ", "
+            )}], or from one of these shortcuts [deploy, test]`
+          ),
+          red.bold("error")
+        );
+      }
     }
-  }
   }
 };
 

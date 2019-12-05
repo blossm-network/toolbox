@@ -10,7 +10,7 @@ module.exports = ({ config, workingDir, configFn, env }) => {
 
   const build = {
     substitutions: substitutions({ config, configFn, env }),
-    steps: steps({ config })
+    steps: steps({ config, env })
   };
 
   fs.writeFileSync(buildPath, yaml.stringify(build));
