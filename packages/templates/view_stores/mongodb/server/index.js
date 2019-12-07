@@ -95,6 +95,8 @@ module.exports = async ({ schema, indexes, getFn, postFn, putFn } = {}) => {
   const writeFn = async ({ id, data }) => {
     const update = {};
     const setKey = "$set";
+    //eslint-disable-next-line
+    console.log("pre data: ", data);
     for (const key of Object.keys(data)) {
       if (key.charAt(0) == "$") {
         update[key] = {
@@ -108,6 +110,8 @@ module.exports = async ({ schema, indexes, getFn, postFn, putFn } = {}) => {
         };
       }
     }
+    //eslint-disable-next-line
+    console.log("postl update: ", udpate);
     return await deps.db.write({
       store,
       query: { id },

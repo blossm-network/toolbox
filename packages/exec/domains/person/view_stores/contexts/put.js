@@ -1,6 +1,6 @@
 module.exports = body => {
   return {
-    update: {
+    data: {
       ...(body.add && {
         $push: {
           contexts: body.add

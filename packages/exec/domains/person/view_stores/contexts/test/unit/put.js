@@ -13,8 +13,8 @@ describe("View store put tests", () => {
   if (!put) return;
   it("should convert correctly", async () => {
     const body = { add, remove };
-    const { update } = put(body);
-    expect(update).to.deep.equal({
+    const { data } = put(body);
+    expect(data).to.deep.equal({
       $push: {
         contexts: add
       },
@@ -27,7 +27,7 @@ describe("View store put tests", () => {
   });
   it("should convert correctly with nothing specified", async () => {
     const body = {};
-    const { update } = put(body);
-    expect(update).to.deep.equal({});
+    const { data } = put(body);
+    expect(data).to.deep.equal({});
   });
 });
