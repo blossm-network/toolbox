@@ -42,7 +42,9 @@ module.exports = async ({ payload, context }) => {
       principle: person.principle,
       context: {
         person: person.id,
-        challenge: root
+        challenge: root,
+        service: process.env.SERVICE,
+        network: process.env.NETWORK
       }
     },
     signFn: deps.sign({

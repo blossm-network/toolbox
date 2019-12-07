@@ -42,7 +42,7 @@ const findTargetsForTarget = (target, dir) => {
 const findTargets = (targets, dir, totalTargets) => {
   const newTargets = [];
   for (const target of targets) {
-    const foundTargets = findTargetsForTarget(target).filter(t => {
+    const foundTargets = findTargetsForTarget(target, dir).filter(t => {
       for (const s of newTargets) {
         if (targetsEqual(s, t)) return false;
       }

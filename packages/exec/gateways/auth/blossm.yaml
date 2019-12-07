@@ -14,6 +14,9 @@ targets:
   - action: answer
     domain: challenge
     context: command-handler
+  - name: phones
+    domain: person
+    context: view-store
   ##unfold later
   # - domain: challenge
   #   context: event-store
@@ -22,9 +25,6 @@ targets:
   #   context: view-store
   # - name: codes
   #   domain: challenge
-  #   context: view-store
-  # - name: phones
-  #   domain: person
   #   context: view-store
 
 dependencies:

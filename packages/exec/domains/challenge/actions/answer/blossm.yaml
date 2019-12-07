@@ -10,10 +10,10 @@ targets:
   - name: codes
     domain: challenge
     context: view-store
+  - action: issue
+    domain: challenge
+    context: command-handler
   ##unfold later
-  # - action: issue
-  #   domain: challenge
-  #   context: command-handler
   # - name: phones
   #   domain: person
   #   context: view-store
