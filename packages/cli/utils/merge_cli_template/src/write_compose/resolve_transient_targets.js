@@ -31,9 +31,12 @@ const findTargetsForTarget = (target, dir) => {
         return blossmConfig.targets || [];
       }
     } else if (fs.statSync(filePath).isDirectory()) {
-      return findTargets(target, filePath);
+      const targets = findTargetsForTarget(target, filePath);
+      if (targets.length > 0) return targets;
     }
   }
+
+  return [];
 };
 
 const findTargets = (targets, dir, totalTargets) => {

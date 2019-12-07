@@ -1,0 +1,6 @@
+{
+  "network": "sm.network",
+  "viewStore": "mongodb",
+  "eventStore": "mongodb",
+  "cloud": "gcp"
+}

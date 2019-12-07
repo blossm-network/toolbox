@@ -11,32 +11,28 @@ module.exports = {
     const oldConfig = require(configPath);
     const newConfig = {
       network: config.network || oldConfig.network,
-      ...(config.vendors
+      vendors: config.vendors
         ? {
-            vendors: {
-              cloud: {
-                ...oldConfig.vendors.cloud,
-                ...config.vendors.cloud
-              },
-              viewStore: {
-                ...oldConfig.vendors.viewStore,
-                ...config.vendors.viewStore
-              },
-              eventStore: {
-                ...oldConfig.vendors.eventStore,
-                ...config.vendors.eventStore
-              }
+            cloud: {
+              ...oldConfig.vendors.cloud,
+              ...config.vendors.cloud
+            },
+            viewStore: {
+              ...oldConfig.vendors.viewStore,
+              ...config.vendors.viewStore
+            },
+            eventStore: {
+              ...oldConfig.vendors.eventStore,
+              ...config.vendors.eventStore
             }
           }
-        : oldConfig.vendors),
-      ...(config.defaults
+        : oldConfig.vendors,
+      defaults: config.defaults
         ? {
-            defaults: {
-              ...oldConfig.defaults,
-              ...config.defaults
-            }
+            ...oldConfig.defaults,
+            ...config.defaults
           }
-        : oldConfig.defaults)
+        : oldConfig.defaults
     };
 
     fs.writeFileSync(configPath, JSON.stringify(newConfig));
