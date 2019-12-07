@@ -25,12 +25,11 @@ module.exports = ({ config, configFn, env }) => {
   return {
     _NETWORK: config.network || blossmConfig.network,
     _GCP_PROJECT:
-      config["gcp-project"] || blossmConfig.providers.cloud.gcp.project,
-    _GCP_REGION:
-      config["gcp-region"] || blossmConfig.providers.cloud.gcp.region,
+      config["gcp-project"] || blossmConfig.vendors.cloud.gcp.project,
+    _GCP_REGION: config["gcp-region"] || blossmConfig.vendors.cloud.gcp.region,
     _GCP_DNS_ZONE:
-      config["gcp-dns-zone"] || blossmConfig.providers.cloud.gcp.dnsZone,
-    _MEMORY: config.memory || blossmConfig.providers.cloud.gcp.memory,
+      config["gcp-dns-zone"] || blossmConfig.vendors.cloud.gcp.dnsZone,
+    _MEMORY: config.memory || blossmConfig.vendors.cloud.gcp.memory,
     ...(config.domain && {
       _DOMAIN: config.domain
     }),

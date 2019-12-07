@@ -10,20 +10,33 @@ module.exports = {
     const configPath = path.resolve(blossmDir, "config.json");
     const oldConfig = require(configPath);
     const newConfig = {
-      providers: {
-        cloud: {
-          ...oldConfig.providers.cloud,
-          ...config.providers.cloud
-        },
-        viewStore: {
-          ...oldConfig.providers.viewStore,
-          ...config.providers.viewStore
-        },
-        eventStore: {
-          ...oldConfig.providers.eventStore,
-          ...config.providers.eventStore
-        }
-      }
+      network: config.network || oldConfig.network,
+      ...(config.vendors
+        ? {
+            vendors: {
+              cloud: {
+                ...oldConfig.vendors.cloud,
+                ...config.vendors.cloud
+              },
+              viewStore: {
+                ...oldConfig.vendors.viewStore,
+                ...config.vendors.viewStore
+              },
+              eventStore: {
+                ...oldConfig.vendors.eventStore,
+                ...config.vendors.eventStore
+              }
+            }
+          }
+        : oldConfig.vendors),
+      ...(config.defaults
+        ? {
+            defaults: {
+              ...oldConfig.defaults,
+              ...config.defaults
+            }
+          }
+        : oldConfig.defaults)
     };
 
     fs.writeFileSync(configPath, JSON.stringify(newConfig));

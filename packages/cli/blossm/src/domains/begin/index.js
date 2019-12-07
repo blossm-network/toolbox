@@ -32,7 +32,7 @@ const create = async input => {
 
   const config = {
     network: input.network,
-    providers: {
+    vendors: {
       cloud: {
         [input.cloud]: {}
       },

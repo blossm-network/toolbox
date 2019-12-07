@@ -11,12 +11,12 @@ targets:
     domain: challenge
     context: view-store
   ##unfold later
-  - action: issue
-    domain: challenge
-    context: command-handler
-  - name: phones
-    domain: person
-    context: view-store
+  # - action: issue
+  #   domain: challenge
+  #   context: command-handler
+  # - name: phones
+  #   domain: person
+  #   context: view-store
 
 version: 0
 

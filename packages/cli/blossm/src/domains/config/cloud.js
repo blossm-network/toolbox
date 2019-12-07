@@ -3,12 +3,12 @@ const rootDir = require("@blossm/cli-root-dir");
 const { prompt } = require("inquirer");
 const roboSay = require("@blossm/robo-say");
 
-const providers = ["gcp"];
+const vendors = ["gcp"];
 
 module.exports = async args => {
   const input = await normalize({
-    entrypointType: "provider",
-    choices: providers,
+    entrypointType: "vendor",
+    choices: vendors,
     args,
     flags: [
       {
@@ -77,11 +77,11 @@ module.exports = async args => {
     input.dnsZone = dnsZone;
   }
 
-  switch (input.provider) {
+  switch (input.vendor) {
     case "gcp":
       {
         rootDir.saveConfig({
-          providers: {
+          vendors: {
             cloud: {
               gcp: {
                 ...(input.project && { project: input.project }),

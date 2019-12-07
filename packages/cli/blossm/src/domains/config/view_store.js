@@ -35,7 +35,7 @@ module.exports = async args => {
         `What's the root name of accessing user? (Blossm will assume the full user's name is \`{root}-{NODE_ENV}\`, where NODE_ENV is either "production", "sandbox", or "staging".)`
       )
     });
-    input.project = user;
+    input.user = user;
   }
   if (!input.host) {
     const { host } = await prompt({
@@ -58,11 +58,11 @@ module.exports = async args => {
   }
 
   rootDir.saveConfig({
-    providers: {
+    vendors: {
       viewStore: {
         mongodb: {
           ...(input.user && { user: input.user }),
-          ...(input.host && { password: input.host }),
+          ...(input.host && { host: input.host }),
           ...(input.protocol && { database: input.protocol })
         }
       }
