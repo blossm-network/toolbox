@@ -111,7 +111,7 @@ module.exports = async ({ schema, indexes, getFn, postFn, putFn } = {}) => {
       }
     }
     //eslint-disable-next-line
-    console.log("postl update: ", udpate);
+    console.log("postl update: ", update);
     return await deps.db.write({
       store,
       query: { id },
