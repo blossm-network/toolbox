@@ -13,10 +13,6 @@ targets:
   - action: issue
     domain: challenge
     context: command-handler
-  ##unfold later
-  # - name: phones
-  #   domain: person
-  #   context: view-store
 
 version: 0
 

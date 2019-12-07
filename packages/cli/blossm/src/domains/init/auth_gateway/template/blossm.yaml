@@ -14,18 +14,9 @@ targets:
   - action: answer
     domain: challenge
     context: command-handler
-  ##unfold later
-  # - domain: challenge
-  #   context: event-store
-  # - name: contexts
-  #   domain: person
-  #   context: view-store
-  # - name: codes
-  #   domain: challenge
-  #   context: view-store
-  # - name: phones
-  #   domain: person
-  #   context: view-store
+  - name: phones
+    domain: person
+    context: view-store
 
 dependencies:
   "@blossm/auth-gateway": "*"
