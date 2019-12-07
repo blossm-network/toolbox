@@ -1,6 +1,32 @@
 {
   "network": "sm.network",
-  "viewStore": "mongodb",
-  "eventStore": "mongodb",
-  "cloud": "gcp"
+  "vendors": {
+    "cloud": {
+      "gcp": {
+        "project": "smn-core",
+        "region": "us-central1",
+        "memory": "128Mi",
+        "dnsZone": "network"
+      }
+    },
+    "viewStore": {
+      "mongodb": {
+        "user": "gcp",
+        "host": "ggjlv.gcp.mongodb.net",
+        "database": "mongodb+srv"
+      }
+    },
+    "eventStore": {
+      "mongodb": {
+        "user": "gcp",
+        "host": "ggjlv.gcp.mongodb.net",
+        "database": "mongodb+srv"
+      }
+    }
+  },
+  "defaults": {
+    "viewStore": "mongodb",
+    "eventStore": "mongodb",
+    "cloud": "gcp"
+  }
 }
