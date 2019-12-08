@@ -22,7 +22,7 @@ module.exports = async ({
   //scopes lookup fn returns the scopes that the principle has.
   const [priviledges, scopes] = await Promise.all([
     priviledgesLookupFn ? priviledgesLookupFn({ path }) : null,
-    scopesLookupFn({ principle })
+    scopesLookupFn({ principle, context })
   ]);
 
   const satisfiedScopes = scopes.filter(scope => {

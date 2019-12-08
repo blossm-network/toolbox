@@ -49,7 +49,7 @@ describe("Authorize", () => {
     });
 
     expect(priviledgesLookupFn).to.have.been.calledWith({ path });
-    expect(scopesLookupFn).to.have.been.calledWith({ principle });
+    expect(scopesLookupFn).to.have.been.calledWith({ principle, context });
     expect(document).to.deep.equal({
       context: {
         ...context,
@@ -74,7 +74,7 @@ describe("Authorize", () => {
     });
 
     expect(priviledgesLookupFn).to.have.been.calledWith({ path });
-    expect(scopesLookupFn).to.have.been.calledWith({ principle });
+    expect(scopesLookupFn).to.have.been.calledWith({ principle, context });
     expect(document).to.deep.equal({
       context: {
         ...context,
@@ -100,7 +100,7 @@ describe("Authorize", () => {
     });
 
     expect(priviledgesLookupFn).to.have.been.calledWith({ path });
-    expect(scopesLookupFn).to.have.been.calledWith({ principle });
+    expect(scopesLookupFn).to.have.been.calledWith({ principle, context });
     expect(document).to.deep.equal({
       context: {
         ...context,
@@ -136,7 +136,7 @@ describe("Authorize", () => {
     });
 
     expect(priviledgesLookupFn).to.have.been.calledWith({ path });
-    expect(scopesLookupFn).to.have.been.calledWith({ principle });
+    expect(scopesLookupFn).to.have.been.calledWith({ principle, context });
     expect(document).to.deep.equal({
       context: {
         ...context,
@@ -161,7 +161,7 @@ describe("Authorize", () => {
     });
 
     expect(priviledgesLookupFn).to.have.been.calledWith({ path });
-    expect(scopesLookupFn).to.have.been.calledWith({ principle });
+    expect(scopesLookupFn).to.have.been.calledWith({ principle, context });
     expect(document).to.deep.equal({
       context: {
         ...context,
