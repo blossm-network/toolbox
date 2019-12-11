@@ -1,0 +1,16 @@
+{
+  "network": "sustainers.market",
+  "vendors": {
+    "cloud": {
+      "gcp": {
+        "project": "smn-core",
+        "region": "us-central1",
+        "memory": "128Mi",
+        "dnsZone": "network"
+      }
+    },
+    "viewStore": {},
+    "eventStore": {}
+  },
+  "defaults": { "cloud": "gcp" }
+}

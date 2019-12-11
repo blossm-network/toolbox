@@ -392,6 +392,39 @@ module.exports = ({ config }) => {
         createPubsubTopic
       ];
     }
+    case "job": {
+      const imageExtension = "${_DOMAIN}.${_NAME}";
+      return [
+        yarnInstall,
+        unitTest,
+        buildImage({ extension: imageExtension }),
+        writeEnv({
+          custom: stripIndents`
+            OPERATION_HASH=\${_OPERATION_HASH}
+            DOMAIN=\${_DOMAIN}
+            NAME=\${_NAME}`
+        }),
+        dockerComposeUp,
+        dockerComposeProcesses,
+        integrationTests(),
+        dockerComposeLogs,
+        dockerPush({ extension: imageExtension }),
+        deployService({
+          service: standardServiceName,
+          extension: imageExtension,
+          env: "DOMAIN=${_DOMAIN},NAME=${_NAME}",
+          labels: "domain=${_DOMAIN},name=${_NAME},hash=${_OPERATION_HASH}"
+        }),
+        startDnsTransaction,
+        addDnsTransaction({ uri: standardInternalUri }),
+        executeDnsTransaction,
+        abortDnsTransaction,
+        mapDomain({
+          service: standardServiceName,
+          uri: standardInternalUri
+        })
+      ];
+    }
     case "auth-gateway": {
       const authService = "${_GCP_REGION}-${_SERVICE}-${_CONTEXT}";
       const authUri = "auth.${_ENV_URI_SPECIFIER}${_NETWORK}";

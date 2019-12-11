@@ -5,13 +5,19 @@ const viewStore = require("./view_store");
 const commandHandler = require("./command_handler");
 const eventHandler = require("./event_handler");
 const authGateway = require("./auth_gateway");
+const commandGateway = require("./command_gateway");
+const viewGateway = require("./view_gateway");
+const job = require("./job");
 
 const domains = [
   "view-store",
   "event-store",
   "command-handler",
   "event-handler",
-  "auth-gateway"
+  "auth-gateway",
+  "command-gateway",
+  "view-gateway",
+  "job"
 ];
 
 module.exports = async args => {
@@ -32,5 +38,11 @@ module.exports = async args => {
       return eventHandler(input.args);
     case "auth-gateway":
       return authGateway(input.args);
+    case "command-gateway":
+      return commandGateway(input.args);
+    case "view-gateway":
+      return viewGateway(input.args);
+    case "job":
+      return job(input.args);
   }
 };

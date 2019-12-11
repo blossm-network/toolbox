@@ -69,6 +69,16 @@ module.exports = context => {
           NAME: "${NAME}"
         }
       };
+    case "job":
+      return {
+        image: `${commonImagePrefix}.\${DOMAIN}.\${NAME}:latest`,
+        ...common,
+        environment: {
+          ...common.environment,
+          DOMAIN: "${DOMAIN}",
+          NAME: "${NAME}"
+        }
+      };
     case "auth-gateway":
       return {
         image: `${commonImagePrefix}:latest`,
