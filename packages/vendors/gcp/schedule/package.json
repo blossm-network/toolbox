@@ -1,0 +1,24 @@
+{
+  "name": "@blossm/gcp-schedule",
+  "version": "0.0.0",
+  "description": "Schedules a job.",
+  "main": "index.js",
+  "author": "blossm.network",
+  "engines": {
+    "node": ">= 10.16.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "mocha --recursive"
+  },
+  "dependencies": {
+    "@google-cloud/scheduler": "^1.3.3"
+  },
+  "devDependencies": {
+    "mocha": "^6.1.4",
+    "sinon": "^7.3.2",
+    "sinon-chai": "^3.3.0"
+  }
+}

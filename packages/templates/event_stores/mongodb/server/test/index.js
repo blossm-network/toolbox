@@ -34,6 +34,8 @@ const id = "some-id";
 const data = "some-data";
 const mapReduceResult = "some-result";
 
+const publishFn = "some-publish-fn";
+
 describe("Mongodb event store", () => {
   beforeEach(() => {
     delete require.cache[require.resolve("..")];
@@ -73,7 +75,7 @@ describe("Mongodb event store", () => {
     };
     replace(deps, "db", db);
 
-    await mongodbEventStore({ schema });
+    await mongodbEventStore({ schema, publishFn });
     expect(storeFake).to.have.been.calledWith({
       name: domain,
       schema: {
@@ -165,7 +167,8 @@ describe("Mongodb event store", () => {
           out: { reduce: `${domain}.aggregate` }
         });
         return expect(result).to.equal(mapReduceResult);
-      })
+      }),
+      publishFn
     });
     await mongodbEventStore();
     expect(storeFake).to.have.been.calledTwice;
@@ -187,7 +190,7 @@ describe("Mongodb event store", () => {
     const eventStoreFake = fake();
     replace(deps, "eventStore", eventStoreFake);
 
-    await eventStore({ schema });
+    await eventStore({ schema, publishFn });
     expect(storeFake).to.have.been.calledWith({
       name: domain,
       schema: {

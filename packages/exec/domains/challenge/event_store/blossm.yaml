@@ -21,6 +21,7 @@ schema:
 
 dependencies:
   "@blossm/mongodb-event-store": "*"
+  "@blossm/gcp-event-bus": "*"
 
 devDependencies:
   "localenv": "^0.2.2"

@@ -1,19 +1,12 @@
 require("localenv");
 const { expect } = require("chai");
 const uuid = require("@blossm/uuid");
+const { subscribe } = require("@blossm/pubsub");
 
 const request = require("@blossm/request");
 
 const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 
-/**
- *
- * TODO:
- *   Write integration tests that verify the schema and indexes you added.
- *   Add tests for POST and GET methods, and make sure to test
- *   error states and edge cases.
- *
- */
 describe("Event store", () => {
   it("should return successfully", async () => {
     const root = uuid();
@@ -26,6 +19,15 @@ describe("Event store", () => {
     const service = "some-service";
     const network = "some-network";
     const issued = "now";
+
+    subscribe({
+      topic,
+      name: "some-sub",
+      fn: (err, subscription, apiResponse) => {
+        //eslint-disable-next-line
+        console.log("stuff: ", { err, subscription, apiResponse });
+      }
+    });
 
     const response0 = await request.post(url, {
       body: {

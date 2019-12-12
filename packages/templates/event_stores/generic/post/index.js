@@ -1,6 +1,6 @@
 const deps = require("./deps");
 
-module.exports = ({ writeFn, mapReduceFn }) => {
+module.exports = ({ writeFn, mapReduceFn, publishFn }) => {
   return async (req, res) => {
     const id = deps.uuid();
 
@@ -14,6 +14,7 @@ module.exports = ({ writeFn, mapReduceFn }) => {
 
     await writeFn({ id, data });
     await mapReduceFn({ id });
+    await publishFn(data);
 
     res.status(204).send();
   };

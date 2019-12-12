@@ -1,7 +1,7 @@
 {
-  "name": "@blossm/event-bus",
-  "version": "0.0.2",
-  "description": "Publishes an event to PubSub.",
+  "name": "@blossm/gcp-pubsub",
+  "version": "0.0.0",
+  "description": "Publishes to PubSub.",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {

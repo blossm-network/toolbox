@@ -29,6 +29,7 @@ describe("Event store post", () => {
   it("should call with the correct params", async () => {
     const writeFnFake = fake();
     const mapReduceFnFake = fake();
+    const publishFnFake = fake();
 
     const req = {
       body
@@ -44,10 +45,11 @@ describe("Event store post", () => {
 
     const uuidFake = fake.returns(uuid);
     replace(deps, "uuid", uuidFake);
-    await post({ writeFn: writeFnFake, mapReduceFn: mapReduceFnFake })(
-      req,
-      res
-    );
+    await post({
+      writeFn: writeFnFake,
+      mapReduceFn: mapReduceFnFake,
+      publishFn: publishFnFake
+    })(req, res);
     expect(writeFnFake).to.have.been.calledWith({
       id: uuid,
       data: {
@@ -59,6 +61,11 @@ describe("Event store post", () => {
     expect(mapReduceFnFake).to.have.been.calledWith({
       id: uuid
     });
+    expect(publishFnFake).to.have.been.calledWith({
+      a: 1,
+      id: uuid,
+      created: deps.dateString()
+    });
     expect(statusFake).to.have.been.calledWith(204);
     expect(sendFake).to.have.been.calledOnce;
   });
@@ -66,6 +73,7 @@ describe("Event store post", () => {
     const error = new Error();
     const writeFnFake = fake.rejects(error);
     const mapReduceFnFake = fake();
+    const publishFnFake = fake();
 
     const req = {
       body
@@ -77,10 +85,11 @@ describe("Event store post", () => {
     replace(deps, "uuid", uuidFake);
 
     try {
-      await post({ writeFn: writeFnFake, mapReduceFn: mapReduceFnFake })(
-        req,
-        res
-      );
+      await post({
+        writeFn: writeFnFake,
+        mapReduceFn: mapReduceFnFake,
+        publishFn: publishFnFake
+      })(req, res);
     } catch (e) {
       expect(e).to.equal(error);
     }

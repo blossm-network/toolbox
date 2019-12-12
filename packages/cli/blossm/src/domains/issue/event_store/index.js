@@ -12,7 +12,7 @@ module.exports = async args => {
   });
 
   switch (input.action) {
-  case "deploy":
-    return deploy(input.args);
+    case "deploy":
+      return deploy(input.args);
   }
 };

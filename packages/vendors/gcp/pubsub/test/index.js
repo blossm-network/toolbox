@@ -4,16 +4,23 @@ const gcp = require("@google-cloud/pubsub");
 
 let eventBus;
 const result = "random";
-const topic = "some_topic";
-let publish = fake.returns(result);
+const topic = "some-topic";
+const name = "some-name";
+const fn = "some-fn";
+const publishFake = fake.returns(result);
+const createFake = fake();
+const subscriptionFake = fake.returns({
+  create: createFake
+});
 
-describe("Event bus", () => {
+describe("Pub sub", () => {
   before(() => {
     const pubsub = function() {};
     pubsub.prototype.topic = t => {
       expect(t).to.equal(topic);
       return {
-        publish
+        publish: publishFake,
+        subscription: subscriptionFake
       };
     };
 
@@ -36,7 +43,9 @@ describe("Event bus", () => {
     };
 
     const value = await eventBus.publish(event);
-    expect(publish).to.have.been.calledWith(Buffer.from(JSON.stringify(event)));
+    expect(publishFake).to.have.been.calledWith(
+      Buffer.from(JSON.stringify(event))
+    );
     expect(value).to.equal(result);
   });
   it("should call publish with the correct params and add a payload if missing", async () => {
@@ -46,7 +55,14 @@ describe("Event bus", () => {
 
     const event = { fact, payload: {} };
     const value = await eventBus.publish({ fact });
-    expect(publish).to.have.been.calledWith(Buffer.from(JSON.stringify(event)));
+    expect(publishFake).to.have.been.calledWith(
+      Buffer.from(JSON.stringify(event))
+    );
     expect(value).to.equal(result);
+  });
+  it("should call subscribe with the correct params", async () => {
+    await eventBus.subscribe({ topic, name, fn });
+    expect(subscriptionFake).to.have.been.calledWith(name);
+    expect(createFake).to.have.been.calledWith(fn);
   });
 });

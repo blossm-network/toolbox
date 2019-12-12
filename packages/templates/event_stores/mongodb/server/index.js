@@ -69,7 +69,7 @@ const aggregateStore = async ({ schema }) => {
   return _aggregateStore;
 };
 
-module.exports = async ({ schema } = {}) => {
+module.exports = async ({ schema, publishFn } = {}) => {
   const eStore = await eventStore();
   const aStore = await aggregateStore({ schema });
 
@@ -113,6 +113,7 @@ module.exports = async ({ schema } = {}) => {
   deps.eventStore({
     findOneFn,
     writeFn,
-    mapReduceFn
+    mapReduceFn,
+    publishFn
   });
 };
