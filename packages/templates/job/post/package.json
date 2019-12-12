@@ -1,7 +1,7 @@
 {
   "name": "@blossm/job-post",
   "description": "A job server POST handler.",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
