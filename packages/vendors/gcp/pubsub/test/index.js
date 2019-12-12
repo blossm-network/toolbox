@@ -4,11 +4,13 @@ const gcp = require("@google-cloud/pubsub");
 
 let eventBus;
 const result = "random";
+const topicCreateResult = "some-topic-create-result";
 const topic = "some-topic";
 const name = "some-name";
 const fn = "some-fn";
 const publishFake = fake.returns(result);
 const createFake = fake();
+const createTopicFake = fake.returns(topicCreateResult);
 const subscriptionFake = fake.returns({
   create: createFake
 });
@@ -19,6 +21,7 @@ describe("Pub sub", () => {
     pubsub.prototype.topic = t => {
       expect(t).to.equal(topic);
       return {
+        create: createTopicFake,
         publish: publishFake,
         subscription: subscriptionFake
       };
@@ -64,5 +67,10 @@ describe("Pub sub", () => {
     await eventBus.subscribe({ topic, name, fn });
     expect(subscriptionFake).to.have.been.calledWith(name);
     expect(createFake).to.have.been.calledWith(fn);
+  });
+  it("should call create topic with the correct params", async () => {
+    const result = await eventBus.create(topic);
+    expect(createTopicFake).to.have.been.calledWith();
+    expect(result).to.equal(topicCreateResult);
   });
 });

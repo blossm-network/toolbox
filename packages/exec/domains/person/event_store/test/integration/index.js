@@ -1,7 +1,7 @@
 require("localenv");
 const { expect } = require("chai");
 const uuid = require("@blossm/uuid");
-const { subscribe } = require("@blossm/pubsub");
+const { subscribe } = require("@blossm/gcp-pubsub");
 
 const request = require("@blossm/request");
 

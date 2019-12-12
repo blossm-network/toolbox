@@ -16,3 +16,8 @@ exports.subscribe = async ({ topic, name, fn }) => {
   const subscription = pubsub.topic(topic).subscription(name);
   subscription.create(fn);
 };
+
+exports.create = async name => {
+  const topic = pubsub.topic(name);
+  return await topic.create();
+};
