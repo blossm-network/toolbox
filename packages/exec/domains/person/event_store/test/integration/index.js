@@ -1,7 +1,12 @@
 require("localenv");
 const { expect } = require("chai");
 const uuid = require("@blossm/uuid");
-const { subscribe, create } = require("@blossm/gcp-pubsub");
+const {
+  subscribe,
+  create,
+  delete: del,
+  unsubscribe
+} = require("@blossm/gcp-pubsub");
 
 const request = require("@blossm/request");
 
@@ -20,11 +25,17 @@ describe("Event store", () => {
     const network = "some-network";
     const issued = "now";
 
+    await unsubscribe({ topic, name: "some-sub" });
+    await del(topic);
     await create(topic);
     await subscribe({
       topic,
       name: "some-sub",
       fn: (err, subscription, apiResponse) => {
+        subscription.once("message", event => {
+          //eslint-disable-next-line
+          console.log("ayo: ", { event });
+        });
         //eslint-disable-next-line
         console.log("stuff: ", { err, subscription, apiResponse });
       }
