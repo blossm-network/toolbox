@@ -1,7 +1,7 @@
 {
   "name": "@blossm/job",
   "description": "A generic job server.",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -14,7 +14,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/job-post": "^0.0.1",
+    "@blossm/job-post": "^0.0.2",
     "@blossm/server": "^0.0.4"
   },
   "devDependencies": {

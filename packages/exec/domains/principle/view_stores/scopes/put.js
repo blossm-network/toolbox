@@ -10,15 +10,19 @@
  *
  */
 
-// module.exports = body => {
-//   return {
-//     data: {
-//       $set: {
-//         name: body.firstName + body.lastName
-//       },
-//       $addToSet: {
-//         things: body.thing
-//       }
-//     }
-//   };
-// };
+module.exports = body => {
+  return {
+    data: {
+      ...(body.add && {
+        $push: {
+          scopes: body.add
+        }
+      }),
+      ...(body.remove && {
+        $pull: {
+          scopes: body.remove
+        }
+      })
+    }
+  };
+};

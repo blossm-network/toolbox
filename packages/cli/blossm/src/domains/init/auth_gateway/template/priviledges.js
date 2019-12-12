@@ -9,7 +9,6 @@
  * command requires.
  */
 
-//rename priviledges.js to required_roles.js
 module.exports = async ({ path }) => {
   //eslint-disable-next-line no-console
   console.log("Do something with: ", { path });

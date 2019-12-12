@@ -13,5 +13,11 @@ module.exports = async ({ principle, context }) => {
   //eslint-disable-next-line no-console
   console.log("Do something with: ", { principle, context });
 
+  // return await viewStore({
+  //   name: "scopes",
+  //   domain: "principle"
+  // }).get({ principle });
+
+  // return scopes;
   return ["challenge:answer"];
 };
