@@ -19,5 +19,10 @@ exports.subscribe = async ({ topic, name, fn }) => {
 
 exports.create = async name => {
   const topic = pubsub.topic(name);
-  return await topic.create();
+  try {
+    return await topic.create();
+  } catch (err) {
+    //eslint-disable-next-line
+    console.log(err);
+  }
 };

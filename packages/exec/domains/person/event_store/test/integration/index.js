@@ -1,7 +1,7 @@
 require("localenv");
 const { expect } = require("chai");
 const uuid = require("@blossm/uuid");
-const { subscribe } = require("@blossm/gcp-pubsub");
+const { subscribe, create } = require("@blossm/gcp-pubsub");
 
 const request = require("@blossm/request");
 
@@ -20,7 +20,8 @@ describe("Event store", () => {
     const network = "some-network";
     const issued = "now";
 
-    subscribe({
+    await create(topic);
+    await subscribe({
       topic,
       name: "some-sub",
       fn: (err, subscription, apiResponse) => {
