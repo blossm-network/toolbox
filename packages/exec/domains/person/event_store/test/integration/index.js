@@ -25,9 +25,17 @@ describe("Event store", () => {
     const network = "some-network";
     const issued = "now";
 
+    //eslint-disable-next-line
+    console.log("1");
     await unsubscribe({ topic, name: "some-sub" });
+    //eslint-disable-next-line
+    console.log("2");
     await del(topic);
+    //eslint-disable-next-line
+    console.log("3");
     await create(topic);
+    //eslint-disable-next-line
+    console.log("4");
     await subscribe({
       topic,
       name: "some-sub",

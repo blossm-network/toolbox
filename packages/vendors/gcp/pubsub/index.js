@@ -7,7 +7,7 @@ exports.publish = async data => {
   const string = JSON.stringify(data);
   const buffer = Buffer.from(string);
 
-  const id = await pubsub.topic(data.fact.topic).publish(buffer);
+  const id = await pubsub.topic(data.headers.topic).publish(buffer);
 
   return id;
 };
