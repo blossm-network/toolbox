@@ -12,7 +12,7 @@
 
 // module.exports = body => {
 //   return {
-//     update: {
+//     data: {
 //       $set: {
 //         name: body.firstName + body.lastName
 //       },
