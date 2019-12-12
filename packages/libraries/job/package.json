@@ -1,7 +1,7 @@
 {
   "name": "@blossm/job-js",
   "description": "Schedules a job.",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
