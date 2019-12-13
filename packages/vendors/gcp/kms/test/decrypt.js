@@ -1,6 +1,6 @@
 const { expect } = require("chai").use(require("sinon-chai"));
 const { restore, replace, fake } = require("sinon");
-const { decrypt } = require("..");
+const { decrypt, encrypt } = require("..");
 
 const kms = require("@google-cloud/kms");
 
@@ -10,6 +10,11 @@ const key = "some-key";
 const location = "some-key-location";
 
 const message = "This is my message to sign";
+
+const actualProject = "blossm";
+const actualLocation = "global";
+const actualRing = "test-ring";
+const actualKey = "test-sym-key";
 
 describe("Kms decrypt", () => {
   afterEach(() => {
@@ -71,4 +76,46 @@ describe("Kms decrypt", () => {
       expect(e).to.equal(error);
     }
   });
+  it("should encrypt and decrypt correctly", async () => {
+    const message = "I am a message";
+
+    const ciphertext = await encrypt({
+      message,
+      key: actualKey,
+      ring: actualRing,
+      location: actualLocation,
+      project: actualProject
+    });
+
+    const plaintext = await decrypt({
+      key: actualKey,
+      ring: actualRing,
+      location: actualLocation,
+      project: actualProject,
+      message: ciphertext
+    });
+
+    expect(plaintext).to.equal(message);
+  });
+  // it("should fail if messages dont match", async () => {
+  //   const message = "I am a message";
+  //   const signature = await sign({
+  //     key: actualKey,
+  //     ring: actualRing,
+  //     location: actualLocation,
+  //     version: actualVersion,
+  //     project: actualProject
+  //   })(message);
+  //   const result = await verify({
+  //     key: actualKey,
+  //     ring: actualRing,
+  //     location: actualLocation,
+  //     version: actualVersion,
+  //     project: actualProject
+  //   })({
+  //     message: `${message}-`,
+  //     signature: signature.toString("base64")
+  //   });
+  //   expect(result).to.be.false;
+  // });
 });
