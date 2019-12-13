@@ -14,7 +14,6 @@ devDependencies:
   "mocha": "^6.1.4"
   "chai": "^4.2.0"
   "@blossm/request": "*"
-  "@blossm/gcp-pubsub": "*"
   "@blossm/uuid": "*"
 
 service: core

@@ -4,6 +4,8 @@ const pubsub = new PubSub();
 exports.publish = async data => {
   if (data.payload == undefined) data.payload = {};
 
+  //eslint-disable-next-line
+  console.log("publishing: ", { topic: data.headers.topic, data });
   const string = JSON.stringify(data);
   const buffer = Buffer.from(string);
 

@@ -61,7 +61,7 @@ const writePackage = (config, workingDir) => {
     scripts: {
       start: "node index.js",
       "test:unit": "mocha --recursive test/unit",
-      "test:integration": "mocha --recursive test/integration --timeout 10000"
+      "test:integration": "mocha --recursive test/integration --timeout 20000"
     },
     dependencies: config.dependencies,
     devDependencies: config.devDependencies
