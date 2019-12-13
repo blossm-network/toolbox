@@ -24,6 +24,8 @@ exports.subscribe = async ({ topic, name, fn }) => {
 exports.unsubscribe = async ({ topic, name }) => {
   const subscription = pubsub.topic(topic).subscription(name);
   const [exists] = await subscription.exists();
+  //eslint-disable-next-line
+  console.log("unsub exists: ", exists);
   if (!exists) return;
   await subscription.delete();
 };
