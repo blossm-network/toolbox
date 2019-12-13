@@ -104,9 +104,12 @@ describe("Event store", () => {
     await subscribe({
       topic,
       name: sub,
-      fn: (_, subscription) => {
+      fn: (err, subscription) => {
+        //eslint-disable-next-line
+        console.log("err: ", err);
         //eslint-disable-next-line
         console.log("wasssup!: ", subscription);
+        if (!subscription) return done();
         subscription.once("message", async event => {
           //eslint-disable-next-line
           console.log("hello: ", { event, data: event.data });
