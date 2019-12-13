@@ -12,22 +12,28 @@ const request = require("@blossm/request");
 
 const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 
+const topic = "some-topic";
+const sub = "some-sub";
+const version = 0;
+const created = "now";
+const id = "some-id";
+const action = "some-action";
+const domain = "some-domain";
+const service = "some-service";
+const network = "some-network";
+const issued = "now";
+const name = "some-name";
 describe("Event store", () => {
+  before(async () => {
+    await create(topic);
+  });
+  after(async () => {
+    await del(topic);
+  });
+
   it("should return successfully", async () => {
     const root = uuid();
-    const topic = "some-topic";
-    const sub = "some-sub";
-    const version = 0;
-    const created = "now";
-    const id = "some-id";
-    const action = "some-action";
-    const domain = "some-domain";
-    const service = "some-service";
-    const network = "some-network";
-    const issued = "now";
-    const name = "some-name";
 
-    await create(topic);
     await subscribe({
       topic,
       name: sub,
@@ -91,23 +97,10 @@ describe("Event store", () => {
     expect(response3.statusCode).to.equal(200);
     expect(JSON.parse(response3.body).state.name).to.equal("some-other-name");
     await unsubscribe({ topic, name: sub });
-    await del(topic);
   });
   it("should publish event successfully", async done => {
     const root = uuid();
-    const topic = "some-topic";
-    const sub = "some-sub";
-    const version = 0;
-    const created = "now";
-    const id = "some-id";
-    const action = "some-action";
-    const domain = "some-domain";
-    const service = "some-service";
-    const network = "some-network";
-    const issued = "now";
-    const name = "some-name";
 
-    await create(topic);
     await subscribe({
       topic,
       name: sub,
@@ -160,5 +153,7 @@ describe("Event store", () => {
         }
       }
     });
+
+    await unsubscribe({ topic, name: sub });
   });
 });

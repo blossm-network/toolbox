@@ -12,6 +12,8 @@ module.exports = ({ writeFn, mapReduceFn, publishFn }) => {
       created: now
     };
 
+    //eslint-disable-next-line
+    console.log("in DB: ", { id, data });
     await writeFn({ id, data });
     await mapReduceFn({ id });
     await publishFn(data);
