@@ -1,71 +1,219 @@
-// const { expect } = require("chai").use(require("sinon-chai"));
-// const { restore, replace, fake } = require("sinon");
-// const gcp = require("@google-cloud/pubsub");
+const { expect } = require("chai").use(require("sinon-chai"));
+const { restore, replace, fake } = require("sinon");
+const gcp = require("@google-cloud/pubsub");
 
-// let eventBus;
-// const result = "random";
-// const topicCreateResult = "some-topic-create-result";
-// const topic = "some-topic";
-// const name = "some-name";
-// const fn = "some-fn";
-// const publishFake = fake.returns(result);
-// const createFake = fake();
-// const createTopicFake = fake.returns(topicCreateResult);
-// const subscriptionFake = fake.returns({
-//   create: createFake
-// });
+let eventBus;
+const result = "random";
+const topic = "some-topic";
+const name = "some-name";
+const fn = "some-fn";
+const publishFake = fake.returns(result);
 
 describe("Pub sub", () => {
-  // before(() => {
-  //   const pubsub = function() {};
-  //   pubsub.prototype.topic = t => {
-  //     expect(t).to.equal(topic);
-  //     return {
-  //       create: createTopicFake,
-  //       publish: publishFake,
-  //       subscription: subscriptionFake
-  //     };
-  //   };
-  //   replace(gcp, "PubSub", pubsub);
-  //   eventBus = require("..");
-  // });
-  // after(() => {
-  //   restore();
-  // });
-  // it("should call publish with the correct params", async () => {
-  //   const event = {
-  //     fact: {
-  //       topic
-  //     },
-  //     payload: {
-  //       a: 1
-  //     }
-  //   };
-  //   const value = await eventBus.publish(event);
-  //   expect(publishFake).to.have.been.calledWith(
-  //     Buffer.from(JSON.stringify(event))
-  //   );
-  //   expect(value).to.equal(result);
-  // });
-  // it("should call publish with the correct params and add a payload if missing", async () => {
-  //   const fact = {
-  //     topic
-  //   };
-  //   const event = { fact, payload: {} };
-  //   const value = await eventBus.publish({ fact });
-  //   expect(publishFake).to.have.been.calledWith(
-  //     Buffer.from(JSON.stringify(event))
-  //   );
-  //   expect(value).to.equal(result);
-  // });
-  // it("should call subscribe with the correct params", async () => {
-  //   await eventBus.subscribe({ topic, name, fn });
-  //   expect(subscriptionFake).to.have.been.calledWith(name);
-  //   expect(createFake).to.have.been.calledWith(fn);
-  // });
-  // it("should call create topic with the correct params", async () => {
-  //   const result = await eventBus.create(topic);
-  //   expect(createTopicFake).to.have.been.calledWith();
-  //   expect(result).to.equal(topicCreateResult);
-  // });
+  beforeEach(() => {
+    delete require.cache[require.resolve("..")];
+  });
+  afterEach(() => {
+    restore();
+  });
+  it("should call publish with the correct params", async () => {
+    const pubsub = function() {};
+    pubsub.prototype.topic = t => {
+      expect(t).to.equal(topic);
+      return {
+        publish: publishFake
+      };
+    };
+    replace(gcp, "PubSub", pubsub);
+    eventBus = require("..");
+    const data = {
+      headers: {
+        topic
+      },
+      payload: {
+        a: 1
+      }
+    };
+    const value = await eventBus.publish(data);
+    expect(publishFake).to.have.been.calledWith(
+      Buffer.from(JSON.stringify(data))
+    );
+    expect(value).to.equal(result);
+  });
+  it("should call publish with the correct params and add a payload if missing", async () => {
+    const pubsub = function() {};
+    pubsub.prototype.topic = t => {
+      expect(t).to.equal(topic);
+      return {
+        publish: publishFake
+      };
+    };
+    replace(gcp, "PubSub", pubsub);
+    eventBus = require("..");
+    const headers = {
+      topic
+    };
+    const value = await eventBus.publish({ headers });
+    expect(publishFake).to.have.been.calledWith(
+      Buffer.from(JSON.stringify({ headers: { topic }, payload: {} }))
+    );
+    expect(value).to.equal(result);
+  });
+  it("should call subscribe with the correct params", async () => {
+    const pubsub = function() {};
+    const existsFake = fake.returns([false]);
+    const createFake = fake();
+    const subscriptionFake = fake.returns({
+      create: createFake,
+      exists: existsFake
+    });
+    pubsub.prototype.topic = t => {
+      expect(t).to.equal(topic);
+      return {
+        subscription: subscriptionFake
+      };
+    };
+    replace(gcp, "PubSub", pubsub);
+    eventBus = require("..");
+    await eventBus.subscribe({ topic, name, fn });
+    expect(subscriptionFake).to.have.been.calledWith(name);
+    expect(existsFake).to.have.been.calledWith();
+    expect(createFake).to.have.been.calledWith(fn);
+  });
+  it("should call subscribe with the correct params if already exists", async () => {
+    const pubsub = function() {};
+    const existsFake = fake.returns([true]);
+    const deleteFake = fake();
+    const createFake = fake();
+    const subscriptionFake = fake.returns({
+      create: createFake,
+      delete: deleteFake,
+      exists: existsFake
+    });
+    pubsub.prototype.topic = t => {
+      expect(t).to.equal(topic);
+      return {
+        subscription: subscriptionFake
+      };
+    };
+    replace(gcp, "PubSub", pubsub);
+    eventBus = require("..");
+    await eventBus.subscribe({ topic, name, fn });
+    expect(subscriptionFake).to.have.been.calledWith(name);
+    expect(existsFake).to.have.been.calledWith();
+    expect(deleteFake).to.have.been.calledWith();
+    expect(createFake).to.have.been.calledWith(fn);
+  });
+  it("should call unsubscribe with the correct params", async () => {
+    const pubsub = function() {};
+    const existsFake = fake.returns([true]);
+    const deleteFake = fake();
+    const subscriptionFake = fake.returns({
+      delete: deleteFake,
+      exists: existsFake
+    });
+    pubsub.prototype.topic = t => {
+      expect(t).to.equal(topic);
+      return {
+        subscription: subscriptionFake
+      };
+    };
+    replace(gcp, "PubSub", pubsub);
+    eventBus = require("..");
+    await eventBus.unsubscribe({ topic, name, fn });
+    expect(subscriptionFake).to.have.been.calledWith(name);
+    expect(existsFake).to.have.been.calledWith();
+    expect(deleteFake).to.have.been.calledWith();
+  });
+  it("should call unsubscribe with the correct params if doesn't exists", async () => {
+    const pubsub = function() {};
+    const existsFake = fake.returns([false]);
+    const deleteFake = fake();
+    const createFake = fake();
+    const subscriptionFake = fake.returns({
+      create: createFake,
+      delete: deleteFake,
+      exists: existsFake
+    });
+    pubsub.prototype.topic = t => {
+      expect(t).to.equal(topic);
+      return {
+        subscription: subscriptionFake
+      };
+    };
+    replace(gcp, "PubSub", pubsub);
+    eventBus = require("..");
+    await eventBus.unsubscribe({ topic, name, fn });
+    expect(subscriptionFake).to.have.been.calledWith(name);
+    expect(existsFake).to.have.been.calledWith();
+    expect(deleteFake).to.have.not.been.called;
+  });
+  it("should call create topic with the correct params", async () => {
+    const pubsub = function() {};
+    const existsFake = fake.returns([false]);
+    const createFake = fake();
+    pubsub.prototype.topic = t => {
+      expect(t).to.equal(topic);
+      return {
+        create: createFake,
+        exists: existsFake
+      };
+    };
+    replace(gcp, "PubSub", pubsub);
+    eventBus = require("..");
+    await eventBus.create(topic);
+    expect(existsFake).to.have.been.calledWith();
+    expect(createFake).to.have.been.calledWith();
+  });
+  it("should call create topic with the correct params if exists", async () => {
+    const pubsub = function() {};
+    const existsFake = fake.returns([true]);
+    const createFake = fake();
+    pubsub.prototype.topic = t => {
+      expect(t).to.equal(topic);
+      return {
+        create: createFake,
+        exists: existsFake
+      };
+    };
+    replace(gcp, "PubSub", pubsub);
+    eventBus = require("..");
+    await eventBus.create(topic);
+    expect(existsFake).to.have.been.calledWith();
+    expect(createFake).to.not.have.been.calledWith();
+  });
+  it("should call delete topic with the correct params", async () => {
+    const pubsub = function() {};
+    const existsFake = fake.returns([true]);
+    const deleteFake = fake();
+    pubsub.prototype.topic = t => {
+      expect(t).to.equal(topic);
+      return {
+        delete: deleteFake,
+        exists: existsFake
+      };
+    };
+    replace(gcp, "PubSub", pubsub);
+    eventBus = require("..");
+    await eventBus.delete(topic);
+    expect(existsFake).to.have.been.calledWith();
+    expect(deleteFake).to.have.been.calledWith();
+  });
+  it("should call create topic with the correct params if exists", async () => {
+    const pubsub = function() {};
+    const existsFake = fake.returns([false]);
+    const deleteFake = fake();
+    pubsub.prototype.topic = t => {
+      expect(t).to.equal(topic);
+      return {
+        delete: deleteFake,
+        exists: existsFake
+      };
+    };
+    replace(gcp, "PubSub", pubsub);
+    eventBus = require("..");
+    await eventBus.delete(topic);
+    expect(existsFake).to.have.been.calledWith();
+    expect(deleteFake).to.not.have.been.calledWith();
+  });
 });

@@ -1,12 +1,12 @@
-const hashString = require("@blossm/hash-string");
 const { post, put, get, delete: del } = require("@blossm/request");
-const trim = require("@blossm/trim-string");
 const { construct } = require("@blossm/errors");
+const serviceToken = require("@blossm/service-token");
+const serviceUrl = require("@blossm/service-url");
 
-exports.hash = hashString;
 exports.post = post;
 exports.put = put;
 exports.get = get;
 exports.delete = del;
-exports.trim = trim;
 exports.constructError = construct;
+exports.serviceUrl = serviceUrl;
+exports.serviceToken = serviceToken;

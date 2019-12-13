@@ -34,12 +34,6 @@ describe("Event store", () => {
   it("should return successfully", async () => {
     const root = uuid();
 
-    await subscribe({
-      topic,
-      name: sub,
-      fn: () => {}
-    });
-
     const response0 = await request.post(url, {
       body: {
         headers: {
@@ -96,67 +90,51 @@ describe("Event store", () => {
 
     expect(response3.statusCode).to.equal(200);
     expect(JSON.parse(response3.body).state.name).to.equal("some-other-name");
-    await unsubscribe({ topic, name: sub });
   });
-  it("should publish event successfully", async done => {
+
+  it("should publish event successfully", done => {
     const root = uuid();
 
-    await subscribe({
+    subscribe({
       topic,
       name: sub,
       fn: (err, subscription) => {
-        //eslint-disable-next-line
-        console.log("err: ", err);
-        //eslint-disable-next-line
-        console.log("wasssup!: ", subscription);
         if (!subscription) return done();
         subscription.once("message", async event => {
-          //eslint-disable-next-line
-          console.log("hello: ", { event, data: event.data });
           const eventString = Buffer.from(event.data, "base64")
             .toString()
             .trim();
 
-          //eslint-disable-next-line
-          console.log("eventString: ", eventString);
           const json = JSON.parse(eventString);
-          //eslint-disable-next-line
-          console.log("json: ", json);
 
           expect(json.payload.name).to.equal(name);
-
           await unsubscribe({ topic, name: sub });
-          await del(topic);
 
           done();
         });
-      }
-    });
 
-    //eslint-disable-next-line
-    console.log("awaiting");
-    await request.post(url, {
-      body: {
-        headers: {
-          root,
-          topic,
-          version,
-          created,
-          command: {
-            id,
-            action,
-            domain,
-            service,
-            network,
-            issued
+        request.post(url, {
+          body: {
+            headers: {
+              root,
+              topic,
+              version,
+              created,
+              command: {
+                id,
+                action,
+                domain,
+                service,
+                network,
+                issued
+              }
+            },
+            payload: {
+              name
+            }
           }
-        },
-        payload: {
-          name
-        }
+        });
       }
     });
-
-    await unsubscribe({ topic, name: sub });
   });
 });

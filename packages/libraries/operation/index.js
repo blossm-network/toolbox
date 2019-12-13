@@ -1,4 +1,3 @@
-const { MAX_LENGTH } = require("@blossm/service-name-consts");
 const logger = require("@blossm/logger");
 
 const deps = require("./deps");
@@ -11,22 +10,19 @@ const common = ({ method, operation, root, data }) => {
       network = process.env.NETWORK
     }) => {
       return {
-        with: async ({ path = "", tokenFn } = {}) => {
-          const hash = deps.hash(operation.join("") + service).toString();
-
-          const url = `http://${hash}.${network}${path}${
-            root != undefined ? `/${root}` : ""
-          }`;
-          const token = tokenFn
-            ? await tokenFn({
-                hash,
-                name: deps.trim(
-                  `${service}-${operation.reverse().join("-")}`,
-                  MAX_LENGTH
-                )
-              })
-            : null;
-
+        with: async ({ path, tokenFn } = {}) => {
+          const token = await deps.serviceToken({
+            tokenFn,
+            service,
+            operation
+          });
+          const url = deps.serviceUrl({
+            operation,
+            service,
+            network,
+            ...(path && { path }),
+            ...(root && { root })
+          });
           const response = await method(url, {
             body: {
               ...(data != undefined && { ...data }),

@@ -1,0 +1,26 @@
+{
+  "name": "@blossm/service-token",
+  "version": "0.0.0",
+  "description": "Creates a token to access a service.",
+  "main": "index.js",
+  "author": "blossm.network",
+  "engines": {
+    "node": ">= 10.16.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "mocha --recursive"
+  },
+  "dependencies": {
+    "@blossm/service-hash": "*",
+    "@blossm/trim-string": "*",
+    "@blossm/service-name-consts": "*"
+  },
+  "devDependencies": {
+    "mocha": "^6.1.4",
+    "sinon": "^7.3.2",
+    "sinon-chai": "^3.3.0"
+  }
+}
