@@ -2,7 +2,7 @@ const fs = require("fs-extra");
 const { prompt } = require("inquirer");
 const normalize = require("@blossm/normalize-cli");
 const roboSay = require("@blossm/robo-say");
-const { encrypt } = require("@blossm/gcp-kms");
+const { encrypt, create: createKey } = require("@blossm/gcp-kms");
 const { upload } = require("@blossm/gcp-storage");
 const rootDir = require("@blossm/cli-root-dir");
 
@@ -18,14 +18,20 @@ const environmentSuffix = env => {
 };
 
 const create = async input => {
-  const name = input.name;
-  const message = input.message;
   const environment = input.environment;
 
   const blossmConfig = rootDir.config();
+  await createKey({
+    id: input.name,
+    project: `${blossmConfig.vendors.cloud.gcp.project}${environmentSuffix(
+      environment
+    )}`,
+    ring: "secret-bucket",
+    location: "global"
+  });
   const ciphertext = await encrypt({
-    message,
-    key: name,
+    message: input.message,
+    key: input.name,
     ring: "secret-bucket",
     location: "global",
     project: `${blossmConfig.vendors.cloud.gcp.project}${environmentSuffix(
@@ -40,7 +46,7 @@ const create = async input => {
   await fs.writeFile(filename, ciphertext);
   await upload({
     file: filename,
-    bucket: `${blossmConfig.vendors.cloud.gcp.secretBucket}${environmentSuffix(
+    bucket: `${blossmConfig.vendors.cloud.gcp.secretsBucket}${environmentSuffix(
       environment
     )}`
   });
@@ -70,13 +76,13 @@ module.exports = async args => {
       }
     ]
   });
-  if (!input.messsage) {
-    const { messsage } = await prompt({
+  if (!input.message) {
+    const { message } = await prompt({
       type: "string",
-      name: "messsage",
+      name: "message",
       message: roboSay(`What's the secret?`)
     });
-    input.messsage = messsage;
+    input.message = message;
   }
   if (!input.environment) {
     const { environment } = await prompt({

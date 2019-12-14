@@ -97,25 +97,4 @@ describe("Kms decrypt", () => {
 
     expect(plaintext).to.equal(message);
   });
-  // it("should fail if messages dont match", async () => {
-  //   const message = "I am a message";
-  //   const signature = await sign({
-  //     key: actualKey,
-  //     ring: actualRing,
-  //     location: actualLocation,
-  //     version: actualVersion,
-  //     project: actualProject
-  //   })(message);
-  //   const result = await verify({
-  //     key: actualKey,
-  //     ring: actualRing,
-  //     location: actualLocation,
-  //     version: actualVersion,
-  //     project: actualProject
-  //   })({
-  //     message: `${message}-`,
-  //     signature: signature.toString("base64")
-  //   });
-  //   expect(result).to.be.false;
-  // });
 });

@@ -6,7 +6,8 @@
         "project": "smn-core",
         "region": "us-central1",
         "memory": "128Mi",
-        "dnsZone": "network"
+        "dnsZone": "network",
+        "secretsBucket": "smn-secrets"
       }
     },
     "viewStore": {},

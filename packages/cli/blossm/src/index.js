@@ -9,8 +9,8 @@ const config = require("./config");
 const begin = require("./begin");
 const init = require("./init");
 const issue = require("./issue");
-const set = require("/.set");
-const secret = require("/.secret");
+const set = require("./set");
+const secret = require("./secret");
 
 const domains = ["begin", "config", "init", "issue", "set"];
 

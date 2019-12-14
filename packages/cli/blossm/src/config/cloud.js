@@ -81,15 +81,15 @@ module.exports = async args => {
     });
     input.dnsZone = dnsZone;
   }
-  if (!input.secretBucket) {
-    const { secretBucket } = await prompt({
+  if (!input.secretsBucket) {
+    const { secretsBucket } = await prompt({
       type: "string",
-      name: "secretBucket",
+      name: "secretsBucket",
       message: roboSay(
         `In what bucket will encrypted secrets be stored? (Blossm will assume the full bucket name is \`{name}{NODE_ENV}\`, where NODE_ENV is either "", "-sandbox", or "-staging".)`
       )
     });
-    input.secretBucket = secretBucket;
+    input.secretsBucket = secretsBucket;
   }
 
   switch (input.vendor) {
@@ -103,7 +103,9 @@ module.exports = async args => {
                 ...(input.region && { region: input.region }),
                 ...(input.memory && { memory: input.memory }),
                 ...(input.dnsZone && { dnsZone: input.dnsZone }),
-                ...(input.secretBucket && { secretBucket: input.secretBucket })
+                ...(input.secretsBucket && {
+                  secretsBucket: input.secretsBucket
+                })
               }
             }
           }
