@@ -1,6 +1,6 @@
 const normalize = require("@blossm/normalize-cli");
 
-const { deploy } = require("./actions");
+const deploy = require("./deploy");
 
 const actions = ["deploy"];
 

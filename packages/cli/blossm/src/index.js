@@ -5,7 +5,12 @@ const yaml = require("yaml");
 const path = require("path");
 const { red } = require("chalk");
 
-const { config, begin, init, issue, set } = require("./domains");
+const config = require("./config");
+const begin = require("./begin");
+const init = require("./init");
+const issue = require("./issue");
+const set = require("/.set");
+const secret = require("/.secret");
 
 const domains = ["begin", "config", "init", "issue", "set"];
 
@@ -45,6 +50,8 @@ const forward = input => {
       return init(input.args);
     case "issue":
       return issue(input.args);
+    case "secret":
+      return secret(input.args);
     case "set":
       return set(input.args);
     default: {

@@ -27,8 +27,13 @@ module.exports = async args => {
         type: String
       },
       {
-        name: "dnsZone",
+        name: "dns-zone",
         short: "d",
+        type: String
+      },
+      {
+        name: "secret-bucket",
+        short: "s",
         type: String
       }
     ]
@@ -39,7 +44,7 @@ module.exports = async args => {
       type: "string",
       name: "project",
       message: roboSay(
-        `What's the root name of your gcp project? (Blossm will assume the full project name is \`{root}-{NODE_ENV}\`, where NODE_ENV is either "production", "sandbox", or "staging".)`
+        `What's the root name of your gcp project? (Blossm will assume the full project name is \`{root}{NODE_ENV}\`, where NODE_ENV is either "", "-sandbox", or "-staging".)`
       )
     });
     input.project = project;
@@ -76,6 +81,16 @@ module.exports = async args => {
     });
     input.dnsZone = dnsZone;
   }
+  if (!input.secretBucket) {
+    const { secretBucket } = await prompt({
+      type: "string",
+      name: "secretBucket",
+      message: roboSay(
+        `In what bucket will encrypted secrets be stored? (Blossm will assume the full bucket name is \`{name}{NODE_ENV}\`, where NODE_ENV is either "", "-sandbox", or "-staging".)`
+      )
+    });
+    input.secretBucket = secretBucket;
+  }
 
   switch (input.vendor) {
     case "gcp":
@@ -87,7 +102,8 @@ module.exports = async args => {
                 ...(input.project && { project: input.project }),
                 ...(input.region && { region: input.region }),
                 ...(input.memory && { memory: input.memory }),
-                ...(input.dnsZone && { dnsZone: input.dnsZone })
+                ...(input.dnsZone && { dnsZone: input.dnsZone }),
+                ...(input.secretBucket && { secretBucket: input.secretBucket })
               }
             }
           }

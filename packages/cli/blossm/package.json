@@ -22,6 +22,9 @@
     "@blossm/robo-say": "^0.0.1",
     "@blossm/service-name-consts": "^0.0.1",
     "@blossm/trim-string": "^0.0.2",
+    "@blossm/gcp-kms": "*",
+    "@blossm/gcp-storage": "*",
+    "@blossm/cli-root-dir": "*",
     "chalk": "^2.4.2",
     "esm": "^3.2.25"
   }

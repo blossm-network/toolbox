@@ -1,6 +1,6 @@
 const normalize = require("@blossm/normalize-cli");
 
-const { deploy } = require("./actions");
+const deploy = require("./deploy");
 
 const actions = ["deploy"];
 
@@ -12,7 +12,7 @@ module.exports = async args => {
   });
 
   switch (input.action) {
-  case "deploy":
-    return deploy(input.args);
+    case "deploy":
+      return deploy(input.args);
   }
 };
