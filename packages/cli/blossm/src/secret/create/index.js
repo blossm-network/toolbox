@@ -29,6 +29,7 @@ const create = async input => {
     ring: "secret-bucket",
     location: "global"
   });
+
   const ciphertext = await encrypt({
     message: input.message,
     key: input.name,
@@ -39,10 +40,7 @@ const create = async input => {
     )}`
   });
 
-  //eslint-disable-next-line no-console
-  console.log("cipher: ", ciphertext);
-
-  const filename = "tmp.txt";
+  const filename = `${input.name}.txt.encrypted`;
   await fs.writeFile(filename, ciphertext);
   await upload({
     file: filename,
@@ -50,9 +48,6 @@ const create = async input => {
       environment
     )}`
   });
-
-  //eslint-disable-next-line no-console
-  console.log("uploaded");
 
   await fs.unlink(filename);
 };
