@@ -99,7 +99,7 @@ describe("Event store", () => {
       topic,
       name: sub,
       fn: (err, subscription) => {
-        if (!subscription) return done();
+        if (!subscription) throw "Subscription wasn't made";
         subscription.once("message", async event => {
           const eventString = Buffer.from(event.data, "base64")
             .toString()

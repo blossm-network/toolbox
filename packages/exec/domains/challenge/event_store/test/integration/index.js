@@ -1,32 +1,38 @@
 require("localenv");
 const { expect } = require("chai");
 const uuid = require("@blossm/uuid");
+const {
+  subscribe,
+  create,
+  delete: del,
+  unsubscribe
+} = require("@blossm/gcp-pubsub");
 
 const request = require("@blossm/request");
 
 const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 
-/**
- *
- * TODO:
- *   Write integration tests that verify the schema and indexes you added.
- *   Add tests for POST and GET methods, and make sure to test
- *   error states and edge cases.
- *
- */
+const topic = "some-topic";
+const sub = "some-sub";
+const version = 0;
+const created = "now";
+const id = "some-id";
+const action = "some-action";
+const domain = "some-domain";
+const service = "some-service";
+const network = "some-network";
+const issued = "now";
+
 describe("Event store", () => {
+  before(async () => {
+    await create(topic);
+  });
+  after(async () => {
+    await del(topic);
+  });
+
   it("should return successfully", async () => {
     const root = uuid();
-    const topic = "some-topic";
-    const version = 0;
-    const created = "now";
-    const id = "some-id";
-    const action = "some-action";
-    const domain = "some-domain";
-    const service = "some-service";
-    const network = "some-network";
-    const issued = "now";
-
     const response0 = await request.post(url, {
       body: {
         headers: {
@@ -92,8 +98,55 @@ describe("Event store", () => {
     expect(response3.statusCode).to.equal(200);
     expect(JSON.parse(response3.body).state.code).to.equal("some-other-code");
   });
-  // it("should return an error if incorrect params", async () => {
-  //   const response = await request.post(url, { name: 1 });
-  //   expect(response.statusCode).to.be.at.least(400);
-  // });
+  it("should publish event successfully", done => {
+    const root = uuid();
+
+    subscribe({
+      topic,
+      name: sub,
+      fn: (err, subscription) => {
+        if (!subscription) throw "Subscription wasn't made";
+        subscription.once("message", async event => {
+          const eventString = Buffer.from(event.data, "base64")
+            .toString()
+            .trim();
+
+          const json = JSON.parse(eventString);
+
+          expect(json.payload.code).to.equal("some-code");
+          expect(json.payload.phone).to.equal("some-phone");
+          expect(json.payload.issued).to.equal("some-date");
+          expect(json.payload.principle).to.equal("some-principle");
+          await unsubscribe({ topic, name: sub });
+
+          done();
+        });
+
+        request.post(url, {
+          body: {
+            headers: {
+              root,
+              topic,
+              version,
+              created,
+              command: {
+                id,
+                action,
+                domain,
+                service,
+                network,
+                issued
+              }
+            },
+            payload: {
+              code: "some-code",
+              phone: "some-phone",
+              issued: "some-date",
+              principle: "some-principle"
+            }
+          }
+        });
+      }
+    });
+  });
 });
