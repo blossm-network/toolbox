@@ -26,5 +26,6 @@
     "@blossm/trim-string": "^0.0.2",
     "chalk": "^2.4.2",
     "esm": "^3.2.25"
-  }
+  },
+  "gitHead": "a8357c97d55c17d975ef82d6e2248722d9f72b88"
 }
