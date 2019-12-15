@@ -16,7 +16,7 @@
   "author": "blossm.network",
   "dependencies": {
     "@blossm/cli-root-dir": "*",
-    "@blossm/deploy-cli-template": "^0.0.32",
+    "@blossm/deploy-cli-template": "*",
     "@blossm/gcp-secret": "^0.0.14",
     "@blossm/hash-string": "^0.0.2",
     "@blossm/init-cli-template": "*",

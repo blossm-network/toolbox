@@ -14,7 +14,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/event-handler-post": "^0.0.15",
+    "@blossm/event-handler-post": "*",
     "@blossm/server": "^0.0.4"
   },
   "devDependencies": {
