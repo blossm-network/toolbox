@@ -1,6 +1,6 @@
 {
   "name": "@blossm/deploy-cli-template",
-  "version": "0.0.29",
+  "version": "0.0.30",
   "description": "Deploys a template to cloud build.",
   "main": "index.js",
   "author": "blossm.network",
@@ -25,5 +25,5 @@
   "devDependencies": {
     "mocha": "^6.1.4"
   },
-  "gitHead": "08de69e95bc485d06872fda9d25d391d79f4d5a5"
+  "gitHead": "cfdabd347aa356a9d93147d03c570d1642d55fd2"
 }
