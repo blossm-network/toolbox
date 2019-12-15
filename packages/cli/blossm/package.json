@@ -1,6 +1,6 @@
 {
   "name": "@blossm/cli",
-  "version": "0.0.50",
+  "version": "0.0.51",
   "description": "A command line tool for interacting with a blossm network",
   "main": "index.js",
   "scripts": {
@@ -27,5 +27,5 @@
     "chalk": "^2.4.2",
     "esm": "^3.2.25"
   },
-  "gitHead": "38a4a41aea0d389081f472dda61b0609448d1c0a"
+  "gitHead": "cc7d57d795fd85d6c40c50741792b3760072effc"
 }
