@@ -1,7 +1,7 @@
 {
   "name": "@blossm/mongodb-event-store",
   "description": "A mongodb event store server.",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -28,5 +28,5 @@
     "sinon": "^7.3.2",
     "sinon-chai": "^3.3.0"
   },
-  "gitHead": "adbefa2659a6f72a14c68b47a730d60fb8ba1831"
+  "gitHead": "7a2f5d6cb7297d22649d185623897b4cd334235e"
 }
