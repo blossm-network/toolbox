@@ -57,7 +57,7 @@ module.exports = ({ domain, dir, configFn }) => async args => {
   fs.removeSync(workingDir);
   fs.mkdirSync(workingDir);
   await mergeCliTemplate({
-    templateDir: dir,
+    scriptDir: dir,
     workingDir,
     input,
     configFn

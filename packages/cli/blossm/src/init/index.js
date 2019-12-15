@@ -1,47 +1,68 @@
+const fs = require("fs-extra");
+const path = require("path");
+const { prompt } = require("inquirer");
 const normalize = require("@blossm/normalize-cli");
+const roboSay = require("@blossm/robo-say");
 
-const commandHandler = require("./command_handler");
-const eventHandler = require("./event_handler");
-const eventStore = require("./event_store");
-const viewStore = require("./view_store");
-const authGateway = require("./auth_gateway");
-const commandGateway = require("./command_gateway");
-const viewGateway = require("./view_gateway");
-const job = require("./job");
+const create = async input => {
+  const blossmDir = path.resolve(process.cwd(), input.network);
+  if (fs.existsSync(blossmDir)) {
+    const { flag } = await prompt({
+      type: "Boolean",
+      name: "flag",
+      default: true,
+      message: roboSay(
+        "There's already a blossm directory here. Do you really want to overwrite it?"
+      )
+    });
 
-const templates = [
-  "command-handler",
-  "event-handler",
-  "view-store",
-  "event-store",
-  "auth-gateway",
-  "command-gateway",
-  "view-gateway",
-  "job"
-];
+    if (!flag) {
+      //eslint-disable-next-line no-console
+      console.log(roboSay("Got it. I left everything untouched."));
+      process.exit(1);
+    }
+  }
+
+  fs.removeSync(blossmDir);
+  fs.mkdirSync(blossmDir);
+
+  const blossmHiddenDir = path.resolve(blossmDir, ".blossm");
+
+  fs.mkdirSync(blossmHiddenDir);
+
+  const config = {
+    network: input.network,
+    vendors: {
+      cloud: {
+        [input.cloud]: {}
+      },
+      viewStore: {
+        type: input.viewStoreProvider
+      },
+      eventStore: {
+        type: input.eventStoreProvider
+      }
+    }
+  };
+
+  const configPath = path.resolve(blossmHiddenDir, "config.json");
+  fs.writeFileSync(configPath, JSON.stringify(config));
+};
 
 module.exports = async args => {
   const input = await normalize({
-    entrypointType: "template",
-    choices: templates,
-    args
+    entrypointType: "network",
+    args,
+    flags: [
+      {
+        name: "cloud",
+        short: "c",
+        choices: ["gcp"],
+        type: String,
+        required: true
+      }
+    ]
   });
-  switch (input.template) {
-    case "command-handler":
-      return commandHandler(input.args);
-    case "event-handler":
-      return eventHandler(input.args);
-    case "event-store":
-      return eventStore(input.args);
-    case "view-store":
-      return viewStore(input.args);
-    case "auth-gateway":
-      return authGateway(input.args);
-    case "command-gateway":
-      return commandGateway(input.args);
-    case "view-gateway":
-      return viewGateway(input.args);
-    case "job":
-      return job(input.args);
-  }
+
+  create(input);
 };

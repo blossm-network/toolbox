@@ -12,6 +12,24 @@ const copy = promisify(ncp);
 const writeCompose = require("./src/write_compose");
 const writeBuild = require("./src/write_build");
 
+const copyScript = async (scriptDir, workingDir) => {
+  const scripts = path.resolve(scriptDir, "src");
+  try {
+    await access(scripts, fs.constants.R_OK);
+  } catch (err) {
+    //eslint-disable-next-line no-console
+    console.error(
+      roboSay(
+        "Full view store scripts not found. Reach out to bugs@blossm.network please, it's in everyone's best interest.",
+        red.bold("internal error")
+      )
+    );
+    fs.removeSync(workingDir);
+    process.exit(1);
+  }
+  await copy(scripts, workingDir);
+};
+
 const copyTemplate = async (templateDir, workingDir) => {
   const template = path.resolve(templateDir, "template");
   try {
@@ -20,7 +38,7 @@ const copyTemplate = async (templateDir, workingDir) => {
     //eslint-disable-next-line no-console
     console.error(
       roboSay(
-        "Full view store template not found. Reach out to bugs@blossm.network please, it's in everyone's best interest.",
+        "The deploy template not found. Reach out to bugs@blossm.network please, it's in everyone's best interest.",
         red.bold("internal error")
       )
     );
@@ -30,7 +48,7 @@ const copyTemplate = async (templateDir, workingDir) => {
   await copy(template, workingDir);
 };
 
-const copySrc = async (p, workingDir) => {
+const copySource = async (p, workingDir) => {
   const srcDir = path.resolve(process.cwd(), p);
   try {
     await access(srcDir, fs.constants.R_OK);
@@ -97,8 +115,9 @@ const configure = async (workingDir, configFn, env) => {
   }
 };
 
-module.exports = async ({ templateDir, workingDir, input, configFn }) => {
-  await copyTemplate(templateDir, workingDir);
-  await copySrc(input.path, workingDir);
+module.exports = async ({ scriptDir, workingDir, input, configFn }) => {
+  await copyTemplate(__dirname, workingDir);
+  await copyScript(scriptDir, workingDir);
+  await copySource(input.path, workingDir);
   await configure(workingDir, configFn, input.env);
 };

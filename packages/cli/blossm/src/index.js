@@ -6,13 +6,32 @@ const path = require("path");
 const { red } = require("chalk");
 
 const config = require("./config");
-const begin = require("./begin");
 const init = require("./init");
-const issue = require("./issue");
 const set = require("./set");
 const secret = require("./secret");
+const commandHandler = require("../command_handler/init");
+const eventHandler = require("../event_handler/init");
+const eventStore = require("../event_store/init");
+const viewStore = require("../view_store/init");
+const authGateway = require("../auth_gateway/init");
+const commandGateway = require("../command_gateway/init");
+const viewGateway = require("../view_gateway/init");
+const job = require("../job/init");
 
-const domains = ["begin", "config", "init", "issue", "set"];
+const domains = [
+  "begin",
+  "config",
+  "init",
+  "set",
+  "command-handler",
+  "event-handler",
+  "view-store",
+  "event-store",
+  "auth-gateway",
+  "command-gateway",
+  "view-gateway",
+  "job"
+];
 
 const tryShortcuts = input => {
   const inputPath =
@@ -22,14 +41,8 @@ const tryShortcuts = input => {
 
   if (!config.context) throw "Context not set.";
 
-  const args = [config.context];
+  const args = [];
 
-  switch (input.domain) {
-    case "test":
-      break;
-    case "deploy":
-      break;
-  }
   if (input.domain == "test") {
     args.push("deploy");
     args.push("--test-only");
@@ -37,23 +50,53 @@ const tryShortcuts = input => {
     args.push(input.domain);
   }
   args.push(...input.args);
-  issue(args);
+
+  switch (config.context) {
+    case "command-handler":
+      return commandHandler(input.args);
+    case "event-handler":
+      return eventHandler(input.args);
+    case "event-store":
+      return eventStore(input.args);
+    case "view-store":
+      return viewStore(input.args);
+    case "auth-gateway":
+      return authGateway(input.args);
+    case "command-gateway":
+      return commandGateway(input.args);
+    case "view-gateway":
+      return viewGateway(input.args);
+    case "job":
+      return job(input.args);
+  }
 };
 
 const forward = input => {
   switch (input.domain) {
-    case "begin":
-      return begin(input.args);
-    case "config":
-      return config(input.args);
     case "init":
       return init(input.args);
-    case "issue":
-      return issue(input.args);
+    case "config":
+      return config(input.args);
     case "secret":
       return secret(input.args);
     case "set":
       return set(input.args);
+    case "command-handler":
+      return commandHandler(input.args);
+    case "event-handler":
+      return eventHandler(input.args);
+    case "event-store":
+      return eventStore(input.args);
+    case "view-store":
+      return viewStore(input.args);
+    case "auth-gateway":
+      return authGateway(input.args);
+    case "command-gateway":
+      return commandGateway(input.args);
+    case "view-gateway":
+      return viewGateway(input.args);
+    case "job":
+      return job(input.args);
     default: {
       try {
         tryShortcuts(input);
