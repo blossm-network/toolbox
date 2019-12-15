@@ -1,7 +1,7 @@
 {
   "name": "@blossm/command-handler",
   "description": "A command handler server.",
-  "version": "0.0.14",
+  "version": "0.0.15",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -23,5 +23,5 @@
     "sinon": "^7.3.2",
     "sinon-chai": "^3.3.0"
   },
-  "gitHead": "fe931a0b332ab491062ba0c35fd8fbc151d367ff"
+  "gitHead": "3f70b3b52178d38630ffe679b550a798a33849a5"
 }
