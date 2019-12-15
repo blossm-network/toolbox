@@ -4,7 +4,7 @@ const { string: stringDate } = require("@blossm/datetime");
 const eventStore = require("@blossm/event-store-js");
 const viewStore = require("@blossm/view-store-js");
 const sms = require("@blossm/twilio-sms");
-const secret = require("@blossm/gcp-secret");
+const { get: secret } = require("@blossm/gcp-secret");
 const uuid = require("@blossm/uuid");
 
 const request = require("@blossm/request");

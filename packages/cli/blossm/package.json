@@ -17,8 +17,7 @@
   "dependencies": {
     "@blossm/cli-root-dir": "*",
     "@blossm/deploy-cli-template": "^0.0.25",
-    "@blossm/gcp-kms": "^0.0.12",
-    "@blossm/gcp-storage": "*",
+    "@blossm/gcp-secret": "*",
     "@blossm/hash-string": "^0.0.2",
     "@blossm/init-cli-template": "^0.0.4",
     "@blossm/normalize-cli": "^0.0.2",

@@ -1,9 +1,7 @@
-const fs = require("fs-extra");
 const { prompt } = require("inquirer");
 const normalize = require("@blossm/normalize-cli");
 const roboSay = require("@blossm/robo-say");
-const { encrypt, create: createKey } = require("@blossm/gcp-kms");
-const { upload } = require("@blossm/gcp-storage");
+const { create: createSecret } = require("@blossm/gcp-secret");
 const rootDir = require("@blossm/cli-root-dir");
 
 const environmentSuffix = env => {
@@ -21,35 +19,16 @@ const create = async input => {
   const environment = input.environment;
 
   const blossmConfig = rootDir.config();
-  await createKey({
-    id: input.name,
+  await createSecret(input.name, input.message, {
     project: `${blossmConfig.vendors.cloud.gcp.project}${environmentSuffix(
       environment
     )}`,
     ring: "secret-bucket",
-    location: "global"
-  });
-
-  const ciphertext = await encrypt({
-    message: input.message,
-    key: input.name,
-    ring: "secret-bucket",
     location: "global",
-    project: `${blossmConfig.vendors.cloud.gcp.project}${environmentSuffix(
-      environment
-    )}`
-  });
-
-  const filename = `${input.name}.txt.encrypted`;
-  await fs.writeFile(filename, ciphertext);
-  await upload({
-    file: filename,
     bucket: `${blossmConfig.vendors.cloud.gcp.secretsBucket}${environmentSuffix(
       environment
     )}`
   });
-
-  await fs.unlink(filename);
 };
 
 module.exports = async args => {

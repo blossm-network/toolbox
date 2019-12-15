@@ -5,7 +5,7 @@ const {
   write,
   remove
 } = require("@blossm/mongodb-database");
-const secret = require("@blossm/gcp-secret");
+const { get: secret } = require("@blossm/gcp-secret");
 const { string: stringDate } = require("@blossm/datetime");
 const viewStore = require("@blossm/view-store");
 

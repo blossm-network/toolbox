@@ -14,6 +14,7 @@ module.exports = {
     "import/no-unresolved": 2,
     "import/no-cycle": 2,
     "prefer-template": 2,
+    "object-shorthand": 2,
     "prettier/prettier": [
       "error",
       {

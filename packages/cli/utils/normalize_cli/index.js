@@ -7,6 +7,7 @@ const camelCased = str =>
   str.replace(/-([a-z])/g, function(g) {
     return g[1].toUpperCase();
   });
+
 const flagValue = async (flag, args) => {
   const value = args[`--${flag.name}`] || flag.default;
   if (value) return value;

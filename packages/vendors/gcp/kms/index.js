@@ -3,5 +3,5 @@ module.exports = {
   verify: require("./src/verify"),
   decrypt: require("./src/decrypt"),
   encrypt: require("./src/encrypt"),
-  create: require("./src/create")
+  createKey: require("./src/create_key")
 };

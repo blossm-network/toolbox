@@ -1,6 +1,6 @@
 const { expect } = require("chai").use(require("sinon-chai"));
 const { restore, replace, fake } = require("sinon");
-const { create } = require("..");
+const { createKey } = require("..");
 
 const kms = require("@google-cloud/kms");
 
@@ -21,7 +21,7 @@ describe("Kms create", () => {
     const createCryptoKeyFake = fake.returns();
     kmsClient.prototype.createCryptoKey = createCryptoKeyFake;
     replace(kms, "KeyManagementServiceClient", kmsClient);
-    const result = await create({ id, ring, location, project });
+    const result = await createKey({ id, ring, location, project });
     expect(pathFake).to.have.been.calledWith(project, location, ring);
     expect(result).to.be.undefined;
     expect(createCryptoKeyFake).to.have.been.calledWith({

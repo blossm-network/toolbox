@@ -4,7 +4,7 @@ const {
   mapReduce,
   findOne
 } = require("@blossm/mongodb-database");
-const secret = require("@blossm/gcp-secret");
+const { get: secret } = require("@blossm/gcp-secret");
 const { string: dateString } = require("@blossm/datetime");
 const eventStore = require("@blossm/event-store");
 const normalize = require("@blossm/mongodb-event-store-normalize");
