@@ -10,8 +10,24 @@
         "secretsBucket": "smn-secrets"
       }
     },
-    "viewStore": {},
-    "eventStore": {}
+    "viewStore": {
+      "mongodb": {
+        "user": "gcp",
+        "host": "ggjlv.gcp.mongodb.net",
+        "database": "mongodb+srv"
+      }
+    },
+    "eventStore": {
+      "mongodb": {
+        "user": "gcp",
+        "host": "ggjlv.gcp.mongodb.net",
+        "database": "mongodb+srv"
+      }
+    }
   },
-  "defaults": { "cloud": "gcp" }
+  "defaults": {
+    "cloud": "gcp",
+    "viewStore": "mongodb",
+    "eventStore": "mongodb"
+  }
 }

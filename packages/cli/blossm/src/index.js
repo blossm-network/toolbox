@@ -9,14 +9,14 @@ const config = require("./config");
 const init = require("./init");
 const set = require("./set");
 const secret = require("./secret");
-const commandHandler = require("../command_handler/init");
-const eventHandler = require("../event_handler/init");
-const eventStore = require("../event_store/init");
-const viewStore = require("../view_store/init");
-const authGateway = require("../auth_gateway/init");
-const commandGateway = require("../command_gateway/init");
-const viewGateway = require("../view_gateway/init");
-const job = require("../job/init");
+const commandHandler = require("./command_handler");
+const eventHandler = require("./event_handler");
+const eventStore = require("./event_store");
+const viewStore = require("./view_store");
+const authGateway = require("./auth_gateway");
+const commandGateway = require("./command_gateway");
+const viewGateway = require("./view_gateway");
+const job = require("./job");
 
 const domains = [
   "begin",
@@ -53,21 +53,21 @@ const tryShortcuts = input => {
 
   switch (config.context) {
     case "command-handler":
-      return commandHandler(input.args);
+      return commandHandler(args);
     case "event-handler":
-      return eventHandler(input.args);
+      return eventHandler(args);
     case "event-store":
-      return eventStore(input.args);
+      return eventStore(args);
     case "view-store":
-      return viewStore(input.args);
+      return viewStore(args);
     case "auth-gateway":
-      return authGateway(input.args);
+      return authGateway(args);
     case "command-gateway":
-      return commandGateway(input.args);
+      return commandGateway(args);
     case "view-gateway":
-      return viewGateway(input.args);
+      return viewGateway(args);
     case "job":
-      return job(input.args);
+      return job(args);
   }
 };
 

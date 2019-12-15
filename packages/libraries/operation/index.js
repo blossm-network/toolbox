@@ -23,6 +23,9 @@ const common = ({ method, operation, root, data }) => {
             ...(path && { path }),
             ...(root && { root })
           });
+
+          //eslint-disable-next-line
+          console.log("STUFF: ", { token, url });
           const response = await method(url, {
             body: {
               ...(data != undefined && { ...data }),

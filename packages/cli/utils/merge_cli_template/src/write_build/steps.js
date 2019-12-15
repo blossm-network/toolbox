@@ -13,11 +13,11 @@ const standardInternalUri =
 const standardServiceName =
   "${_GCP_REGION}-${_OPERATION_NAME}-${_OPERATION_HASH}";
 
-// const yarnInstall = {
-//   name: nodeImage,
-//   entrypoint: "yarn",
-//   args: ["install"]
-// };
+const yarnInstall = {
+  name: nodeImage,
+  entrypoint: "yarn",
+  args: ["install"]
+};
 const unitTest = {
   name: nodeImage,
   entrypoint: "yarn",
@@ -257,7 +257,7 @@ module.exports = ({ config }) => {
     case "view-store": {
       const imageExtension = "${_DOMAIN}.${_NAME}";
       return [
-        // yarnInstall,
+        yarnInstall,
         unitTest,
         buildImage({ extension: imageExtension }),
         writeEnv({
@@ -268,7 +268,7 @@ module.exports = ({ config }) => {
         }),
         dockerComposeUp,
         dockerComposeProcesses,
-        integrationTests(),
+        integrationTests({ strict: false }),
         dockerComposeLogs,
         dockerPush({ extension: imageExtension }),
         deployService({
@@ -290,7 +290,7 @@ module.exports = ({ config }) => {
     case "event-store": {
       const imageExtension = "${_DOMAIN}";
       return [
-        // yarnInstall,
+        yarnInstall,
         unitTest,
         buildImage({ extension: imageExtension }),
         writeEnv({
@@ -322,7 +322,7 @@ module.exports = ({ config }) => {
     case "event-handler": {
       const imageExtension = "${_DOMAIN}.did-${_ACTION}.${_NAME}";
       return [
-        // yarnInstall,
+        yarnInstall,
         unitTest,
         buildImage({ extension: imageExtension }),
         writeEnv({
@@ -361,7 +361,7 @@ module.exports = ({ config }) => {
     case "command-handler": {
       const imageExtension = "${_DOMAIN}.${_ACTION}";
       return [
-        // yarnInstall,
+        yarnInstall,
         unitTest,
         buildImage({ extension: imageExtension }),
         writeEnv({
@@ -395,7 +395,7 @@ module.exports = ({ config }) => {
     case "job": {
       const imageExtension = "${_DOMAIN}.${_NAME}";
       return [
-        // yarnInstall,
+        yarnInstall,
         unitTest,
         buildImage({ extension: imageExtension }),
         writeEnv({
@@ -429,7 +429,7 @@ module.exports = ({ config }) => {
       const authService = "${_GCP_REGION}-${_SERVICE}-${_CONTEXT}";
       const authUri = "auth.${_ENV_URI_SPECIFIER}${_NETWORK}";
       return [
-        // yarnInstall,
+        yarnInstall,
         unitTest,
         buildImage(),
         writeEnv(),
