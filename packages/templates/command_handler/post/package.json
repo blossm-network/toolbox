@@ -1,7 +1,7 @@
 {
   "name": "@blossm/command-handler-post",
   "description": "A command handler server POST handler.",
-  "version": "0.0.16",
+  "version": "0.0.17",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -24,5 +24,5 @@
     "sinon": "^7.3.2",
     "sinon-chai": "^3.3.0"
   },
-  "gitHead": "cc65edffa69b3445a7fc5f40838b2c51971c19f8"
+  "gitHead": "c8f52ba3ce0a69069e94b003c2f878583c3a527b"
 }
