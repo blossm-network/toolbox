@@ -14,7 +14,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/command-handler-post": "^0.0.14",
+    "@blossm/command-handler-post": "^0.0.15",
     "@blossm/server": "^0.0.4"
   },
   "devDependencies": {
@@ -23,5 +23,5 @@
     "sinon": "^7.3.2",
     "sinon-chai": "^3.3.0"
   },
-  "gitHead": "7a2f5d6cb7297d22649d185623897b4cd334235e"
+  "gitHead": "d0d928670edd4c7706eb0db7f3a9e29c888f5e9a"
 }
