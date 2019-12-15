@@ -19,7 +19,7 @@
     "@blossm/deploy-cli-template": "^0.0.29",
     "@blossm/gcp-secret": "^0.0.14",
     "@blossm/hash-string": "^0.0.2",
-    "@blossm/init-cli-template": "^0.0.5",
+    "@blossm/init-cli-template": "*",
     "@blossm/normalize-cli": "^0.0.3",
     "@blossm/robo-say": "^0.0.1",
     "@blossm/service-name-consts": "^0.0.1",
