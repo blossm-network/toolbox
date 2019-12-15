@@ -1,7 +1,7 @@
 {
   "name": "@blossm/view-gateway",
   "description": "A gateway server that manages view access.",
-  "version": "0.0.28",
+  "version": "0.0.29",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -26,5 +26,5 @@
     "sinon": "^7.3.2",
     "sinon-chai": "^3.3.0"
   },
-  "gitHead": "3f70b3b52178d38630ffe679b550a798a33849a5"
+  "gitHead": "baffea3c8ea79bae8c3aace147b322e200dacaa5"
 }
