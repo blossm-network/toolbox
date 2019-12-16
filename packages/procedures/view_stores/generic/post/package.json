@@ -1,7 +1,7 @@
 {
   "name": "@blossm/view-store-post",
   "description": "A view store POST handler.",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
