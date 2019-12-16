@@ -17,7 +17,7 @@
     "@blossm/authentication-middleware": "^0.0.21",
     "@blossm/authorization-middleware": "^0.0.10",
     "@blossm/command-gateway-post": "^0.0.23",
-    "@blossm/command-rpc": "^0.0.8",
+    "@blossm/command-rpc": "*",
     "@blossm/cors-middleware": "^0.0.7",
     "@blossm/gcp-token": "^0.0.5",
     "@blossm/server": "^0.0.4"
@@ -28,5 +28,5 @@
     "sinon": "^7.3.2",
     "sinon-chai": "^3.3.0"
   },
-  "gitHead": "30962ef2ebf530ab1949c1f5e3a6e1aa1cb02ea2"
+  "gitHead": "6ca9c0ed5dd75b91161de9f831299b2b889a78cd"
 }
