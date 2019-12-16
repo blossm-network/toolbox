@@ -12,8 +12,8 @@ const now = new Date();
 
 const data = { a: 1, context: 3 };
 const context = { b: 4 };
-const procedurePart1 = "some-operation1";
-const procedurePart2 = "some-operation2";
+const procedurePart1 = "some-procedure1";
+const procedurePart2 = "some-procedure2";
 const token = "some-token";
 const root = "some-root";
 const tokenFn = "some-token-fn";
