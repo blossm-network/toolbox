@@ -1,6 +1,6 @@
 {
   "name": "@blossm/authorize",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "Authorize requests.",
   "main": "index.js",
   "author": "blossm.network",
@@ -20,5 +20,6 @@
   },
   "devDependencies": {
     "mocha": "^6.1.4"
-  }
+  },
+  "gitHead": "adea2987134464955cd12859cd35ff5c3d885a14"
 }

@@ -14,7 +14,7 @@
     "test": "mocha --recursive"
   },
   "dependencies": {
-    "@blossm/authorize": "^0.0.9",
+    "@blossm/authorize": "*",
     "express-async-handler": "^1.1.4"
   },
   "devDependencies": {
