@@ -1,4 +1,4 @@
-const viewStore = require("@blossm/view-store-js");
+const viewStore = require("@blossm/view-store-rpc");
 const gcpToken = require("@blossm/gcp-token");
 const { create: createJwt } = require("@blossm/jwt");
 const { sign } = require("@blossm/gcp-kms");

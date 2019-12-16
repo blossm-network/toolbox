@@ -54,10 +54,10 @@ describe("Event store", () => {
     const postFake = fake.returns({
       in: inFake
     });
-    const operationFake = fake.returns({
+    const rpcFake = fake.returns({
       post: postFake
     });
-    replace(deps, "operation", operationFake);
+    replace(deps, "rpc", rpcFake);
 
     const trace = "trace";
 
@@ -84,7 +84,7 @@ describe("Event store", () => {
         payload
       });
 
-    expect(operationFake).to.have.been.calledWith(domain, "event-store");
+    expect(rpcFake).to.have.been.calledWith(domain, "event-store");
     expect(postFake).to.have.been.calledWith({
       context,
       headers: {
@@ -118,10 +118,10 @@ describe("Event store", () => {
     const postFake = fake.returns({
       in: inFake
     });
-    const operationFake = fake.returns({
+    const rpcFake = fake.returns({
       post: postFake
     });
-    replace(deps, "operation", operationFake);
+    replace(deps, "rpc", rpcFake);
 
     await eventStore({ domain }).add({
       context,
@@ -140,7 +140,7 @@ describe("Event store", () => {
       payload
     });
 
-    expect(operationFake).to.have.been.calledWith(domain, "event-store");
+    expect(rpcFake).to.have.been.calledWith(domain, "event-store");
     expect(postFake).to.have.been.calledWith({
       headers: {
         root,
@@ -176,10 +176,10 @@ describe("Event store", () => {
     const getFake = fake.returns({
       in: inFake
     });
-    const operationFake = fake.returns({
+    const rpcFake = fake.returns({
       get: getFake
     });
-    replace(deps, "operation", operationFake);
+    replace(deps, "rpc", rpcFake);
 
     const root = "user";
 
@@ -187,7 +187,7 @@ describe("Event store", () => {
       .set({ context, tokenFn })
       .aggregate(root);
 
-    expect(operationFake).to.have.been.calledWith(domain, "event-store");
+    expect(rpcFake).to.have.been.calledWith(domain, "event-store");
     expect(getFake).to.have.been.calledWith({ root });
     expect(inFake).to.have.been.calledWith({ context, service, network });
     expect(withFake).to.have.been.calledWith({ tokenFn });
@@ -202,10 +202,10 @@ describe("Event store", () => {
     const getFake = fake.returns({
       in: inFake
     });
-    const operationFake = fake.returns({
+    const rpcFake = fake.returns({
       get: getFake
     });
-    replace(deps, "operation", operationFake);
+    replace(deps, "rpc", rpcFake);
 
     const root = "user";
 
@@ -213,7 +213,7 @@ describe("Event store", () => {
       root
     );
 
-    expect(operationFake).to.have.been.calledWith(domain, "event-store");
+    expect(rpcFake).to.have.been.calledWith(domain, "event-store");
     expect(getFake).to.have.been.calledWith({ root });
     expect(inFake).to.have.been.calledWith({ service, network });
     expect(withFake).to.have.been.calledWith();

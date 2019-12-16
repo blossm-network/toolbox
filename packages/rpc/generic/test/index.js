@@ -12,8 +12,8 @@ const now = new Date();
 
 const data = { a: 1, context: 3 };
 const context = { b: 4 };
-const opPart1 = "some-operation1";
-const opPart2 = "some-operation2";
+const procedurePart1 = "some-operation1";
+const procedurePart2 = "some-operation2";
 const token = "some-token";
 const root = "some-root";
 const tokenFn = "some-token-fn";
@@ -57,7 +57,7 @@ describe("Operation", () => {
     const serviceUrlFake = fake.returns(url);
     replace(deps, "serviceUrl", serviceUrlFake);
 
-    const result = await operation(opPart1, opPart2)
+    const result = await operation(procedurePart1, procedurePart2)
       .post(data)
       .in({ context, service, network })
       .with({ tokenFn });
@@ -74,10 +74,10 @@ describe("Operation", () => {
     expect(serviceTokenFake).to.have.been.calledWith({
       tokenFn,
       service,
-      operation: [opPart1, opPart2]
+      procedure: [procedurePart1, procedurePart2]
     });
     expect(serviceUrlFake).to.have.been.calledWith({
-      operation: [opPart1, opPart2],
+      procedure: [procedurePart1, procedurePart2],
       service,
       network
     });
@@ -93,7 +93,7 @@ describe("Operation", () => {
     const serviceUrlFake = fake.returns(url);
     replace(deps, "serviceUrl", serviceUrlFake);
 
-    const result = await operation(opPart1, opPart2)
+    const result = await operation(procedurePart1, procedurePart2)
       .post(data)
       .in({ context })
       .with({ tokenFn });
@@ -101,10 +101,10 @@ describe("Operation", () => {
     expect(serviceTokenFake).to.have.been.calledWith({
       tokenFn,
       service: envService,
-      operation: [opPart1, opPart2]
+      procedure: [procedurePart1, procedurePart2]
     });
     expect(serviceUrlFake).to.have.been.calledWith({
-      operation: [opPart1, opPart2],
+      procedure: [procedurePart1, procedurePart2],
       service: envService,
       network: envNetwork
     });
@@ -120,7 +120,7 @@ describe("Operation", () => {
     const serviceUrlFake = fake.returns(url);
     replace(deps, "serviceUrl", serviceUrlFake);
 
-    const result = await operation(opPart1, opPart2)
+    const result = await operation(procedurePart1, procedurePart2)
       .post(data)
       .in({ context, service, network })
       .with();
@@ -145,7 +145,7 @@ describe("Operation", () => {
     replace(deps, "serviceUrl", serviceUrlFake);
 
     const path = "/some/path";
-    const result = await operation(opPart1, opPart2)
+    const result = await operation(procedurePart1, procedurePart2)
       .post(data)
       .in({ context, service, network })
       .with({ path, tokenFn });
@@ -162,10 +162,10 @@ describe("Operation", () => {
     expect(serviceTokenFake).to.have.been.calledWith({
       tokenFn,
       service,
-      operation: [opPart1, opPart2]
+      procedure: [procedurePart1, procedurePart2]
     });
     expect(serviceUrlFake).to.have.been.calledWith({
-      operation: [opPart1, opPart2],
+      procedure: [procedurePart1, procedurePart2],
       service,
       network,
       path
@@ -183,7 +183,7 @@ describe("Operation", () => {
     const serviceUrlFake = fake.returns(url);
     replace(deps, "serviceUrl", serviceUrlFake);
 
-    const result = await operation(opPart1, opPart2)
+    const result = await operation(procedurePart1, procedurePart2)
       .get(data)
       .in({ context, service, network })
       .with({ tokenFn });
@@ -200,10 +200,10 @@ describe("Operation", () => {
     expect(serviceTokenFake).to.have.been.calledWith({
       tokenFn,
       service,
-      operation: [opPart1, opPart2]
+      procedure: [procedurePart1, procedurePart2]
     });
     expect(serviceUrlFake).to.have.been.calledWith({
-      operation: [opPart1, opPart2],
+      procedure: [procedurePart1, procedurePart2],
       service,
       network
     });
@@ -219,7 +219,7 @@ describe("Operation", () => {
     const serviceUrlFake = fake.returns(url);
     replace(deps, "serviceUrl", serviceUrlFake);
 
-    const result = await operation(opPart1, opPart2)
+    const result = await operation(procedurePart1, procedurePart2)
       .get({ ...data, root })
       .in({ context, service, network })
       .with({ tokenFn });
@@ -236,10 +236,10 @@ describe("Operation", () => {
     expect(serviceTokenFake).to.have.been.calledWith({
       tokenFn,
       service,
-      operation: [opPart1, opPart2]
+      procedure: [procedurePart1, procedurePart2]
     });
     expect(serviceUrlFake).to.have.been.calledWith({
-      operation: [opPart1, opPart2],
+      procedure: [procedurePart1, procedurePart2],
       service,
       network,
       root
@@ -256,7 +256,7 @@ describe("Operation", () => {
     const serviceUrlFake = fake.returns(url);
     replace(deps, "serviceUrl", serviceUrlFake);
 
-    const result = await operation(opPart1, opPart2)
+    const result = await operation(procedurePart1, procedurePart2)
       .put(root, data)
       .in({ context, service, network })
       .with({ tokenFn });
@@ -274,10 +274,10 @@ describe("Operation", () => {
     expect(serviceTokenFake).to.have.been.calledWith({
       tokenFn,
       service,
-      operation: [opPart1, opPart2]
+      procedure: [procedurePart1, procedurePart2]
     });
     expect(serviceUrlFake).to.have.been.calledWith({
-      operation: [opPart1, opPart2],
+      procedure: [procedurePart1, procedurePart2],
       service,
       network,
       root
@@ -295,7 +295,7 @@ describe("Operation", () => {
     replace(deps, "serviceUrl", serviceUrlFake);
 
     const path = "/some/path";
-    const result = await operation(opPart1, opPart2)
+    const result = await operation(procedurePart1, procedurePart2)
       .put(root, data)
       .in({ context, service, network })
       .with({ path, tokenFn });
@@ -312,10 +312,10 @@ describe("Operation", () => {
     expect(serviceTokenFake).to.have.been.calledWith({
       tokenFn,
       service,
-      operation: [opPart1, opPart2]
+      procedure: [procedurePart1, procedurePart2]
     });
     expect(serviceUrlFake).to.have.been.calledWith({
-      operation: [opPart1, opPart2],
+      procedure: [procedurePart1, procedurePart2],
       service,
       network,
       root,
@@ -333,7 +333,7 @@ describe("Operation", () => {
     const serviceUrlFake = fake.returns(url);
     replace(deps, "serviceUrl", serviceUrlFake);
 
-    const result = await operation(opPart1, opPart2)
+    const result = await operation(procedurePart1, procedurePart2)
       .delete(root)
       .in({ context, service, network })
       .with({ tokenFn });
@@ -349,10 +349,10 @@ describe("Operation", () => {
     expect(serviceTokenFake).to.have.been.calledWith({
       tokenFn,
       service,
-      operation: [opPart1, opPart2]
+      procedure: [procedurePart1, procedurePart2]
     });
     expect(serviceUrlFake).to.have.been.calledWith({
-      operation: [opPart1, opPart2],
+      procedure: [procedurePart1, procedurePart2],
       service,
       network,
       root
@@ -382,7 +382,7 @@ describe("Operation", () => {
     replace(deps, "constructError", constructErrorFake);
 
     try {
-      await operation(opPart1, opPart2)
+      await operation(procedurePart1, procedurePart2)
         .delete(root)
         .in({ context, service, network })
         .with({ tokenFn });
@@ -418,7 +418,7 @@ describe("Operation", () => {
     replace(deps, "constructError", constructErrorFake);
 
     try {
-      await operation(opPart1, opPart2)
+      await operation(procedurePart1, procedurePart2)
         .delete(root)
         .in({ context, service, network })
         .with({ tokenFn });
@@ -450,7 +450,7 @@ describe("Operation", () => {
     replace(deps, "serviceUrl", serviceUrlFake);
 
     try {
-      await operation(opPart1, opPart2)
+      await operation(procedurePart1, procedurePart2)
         .delete(root)
         .in({ context, service, network })
         .with({ tokenFn });

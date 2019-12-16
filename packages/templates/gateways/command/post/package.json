@@ -14,7 +14,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/command-js": "^0.0.14",
+    "@blossm/command-rpc": "*",
     "@blossm/gcp-token": "^0.0.5",
     "@blossm/normalize-command": "^0.0.2",
     "@blossm/validate-command": "^0.0.8"

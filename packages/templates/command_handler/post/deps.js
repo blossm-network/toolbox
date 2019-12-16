@@ -1,5 +1,5 @@
 const createEvent = require("@blossm/create-event");
-const eventStore = require("@blossm/event-store-js");
+const eventStore = require("@blossm/event-store-rpc");
 const gcpToken = require("@blossm/gcp-token");
 
 exports.createEvent = createEvent;

@@ -15,7 +15,7 @@ module.exports = ({ action, domain, service, network }) => {
 
     const data = { payload, headers };
     return await deps
-      .operation(action, domain, "command-handler")
+      .rpc(action, domain, "command-handler")
       .post(data)
       .in({
         ...(context && { context }),

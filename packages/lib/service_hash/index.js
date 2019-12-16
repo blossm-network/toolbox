@@ -1,4 +1,4 @@
 const deps = require("./deps");
 
-module.exports = ({ operation, service }) =>
-  deps.hash(operation.join("") + service).toString();
+module.exports = ({ procedure, service }) =>
+  deps.hash(procedure.join("") + service).toString();

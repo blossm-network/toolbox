@@ -34,7 +34,7 @@ module.exports = ({
     };
 
     await deps
-      .operation(domain, "event-store")
+      .rpc(domain, "event-store")
       .post(event)
       .in({ ...(context && { context }), service, network })
       .with({ tokenFn });
@@ -42,7 +42,7 @@ module.exports = ({
 
   const aggregate = ({ context, tokenFn } = {}) => async root =>
     await deps
-      .operation(domain, "event-store")
+      .rpc(domain, "event-store")
       .get({ root })
       .in({ ...(context && { context }), service, network })
       .with({ tokenFn });

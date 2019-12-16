@@ -1,7 +1,7 @@
 {
-  "name": "@blossm/command-handler-post",
-  "description": "A command handler server POST handler.",
-  "version": "0.0.18",
+  "name": "@blossm/view-store-rpc",
+  "description": "Interact with the view store.",
+  "version": "0.0.17",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -14,15 +14,12 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/create-event": "^0.0.2",
-    "@blossm/event-store-rpc": "*",
-    "@blossm/gcp-token": "^0.0.5"
+    "@blossm/rpc": "*"
   },
   "devDependencies": {
     "chai-datetime": "^1.5.0",
     "mocha": "^6.1.4",
     "sinon": "^7.3.2",
     "sinon-chai": "^3.3.0"
-  },
-  "gitHead": "2e01bd87bd0411afa5cdee214ed3e42e2a35f810"
+  }
 }

@@ -1,8 +1,8 @@
 require("localenv");
 const { expect } = require("chai");
 const { string: stringDate } = require("@blossm/datetime");
-const eventStore = require("@blossm/event-store-js");
-const viewStore = require("@blossm/view-store-js");
+const eventStore = require("@blossm/event-store-rpc");
+const viewStore = require("@blossm/view-store-rpc");
 const sms = require("@blossm/twilio-sms");
 const { get: secret } = require("@blossm/gcp-secret");
 const uuid = require("@blossm/uuid");

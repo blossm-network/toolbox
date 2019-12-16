@@ -17,7 +17,7 @@
     "@blossm/authentication-middleware": "^0.0.20",
     "@blossm/authorization-middleware": "^0.0.9",
     "@blossm/command-gateway-post": "^0.0.15",
-    "@blossm/command-js": "^0.0.14",
+    "@blossm/command-rpc": "*",
     "@blossm/cors-middleware": "^0.0.7",
     "@blossm/gcp-token": "^0.0.5",
     "@blossm/server": "^0.0.4"

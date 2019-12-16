@@ -4,7 +4,7 @@ module.exports = ({ name, domain, service, network }) => {
   const issue = ({ context, tokenFn } = {}) => async payload => {
     const data = { payload };
     return await deps
-      .operation(name, domain, "job")
+      .rpc(name, domain, "job")
       .post(data)
       .in({
         ...(context && { context }),

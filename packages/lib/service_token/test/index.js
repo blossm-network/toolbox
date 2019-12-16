@@ -5,10 +5,10 @@ const serviceToken = require("..");
 const deps = require("../deps");
 
 const hash = 12345;
-const operation0 = "some-operation0";
-const operation1 = "some-operation1";
-const operation2 = "some-operation2";
-const operation = [operation0, operation1, operation2];
+const procedure0 = "some-procedure0";
+const procedure1 = "some-procedure1";
+const procedure2 = "some-procedure2";
+const procedure = [procedure0, procedure1, procedure2];
 const service = "some-service";
 const trimmed = "some-trimmed";
 const token = "some-token";
@@ -27,9 +27,9 @@ describe("Service token", () => {
     const result = await serviceToken({
       tokenFn: tokenFnFake,
       service,
-      operation
+      procedure
     });
-    expect(hashFake).to.have.been.calledWith({ operation, service });
+    expect(hashFake).to.have.been.calledWith({ procedure, service });
     expect(trimFake).to.have.been.calledWith(
       "some-service-some-operation2-some-operation1-some-operation0",
       25

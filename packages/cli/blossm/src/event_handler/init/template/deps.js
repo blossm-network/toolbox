@@ -3,5 +3,5 @@
  * in this file.
  */
 
-exports.viewStore = require("@blossm/view-store-js");
+exports.viewStore = require("@blossm/view-store-rpc");
 exports.gcpToken = require("@blossm/gcp-token");

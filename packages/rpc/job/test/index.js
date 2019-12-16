@@ -38,17 +38,17 @@ describe("Issue command", () => {
     const postFake = fake.returns({
       in: inFake
     });
-    const operationFake = fake.returns({
+    const rpcFake = fake.returns({
       post: postFake
     });
-    replace(deps, "operation", operationFake);
+    replace(deps, "rpc", rpcFake);
 
     const result = await command({ name, domain, service, network })
       .set({ context, tokenFn })
       .issue(payload);
 
     expect(result).to.equal(response);
-    expect(operationFake).to.have.been.calledWith(name, domain, "job");
+    expect(rpcFake).to.have.been.calledWith(name, domain, "job");
     expect(postFake).to.have.been.calledWith({
       payload
     });
@@ -64,15 +64,15 @@ describe("Issue command", () => {
     const postFake = fake.returns({
       in: inFake
     });
-    const operationFake = fake.returns({
+    const rpcFake = fake.returns({
       post: postFake
     });
-    replace(deps, "operation", operationFake);
+    replace(deps, "rpc", rpcFake);
 
     const result = await command({ name, domain }).issue(payload);
 
     expect(result).to.equal(response);
-    expect(operationFake).to.have.been.calledWith(name, domain);
+    expect(rpcFake).to.have.been.calledWith(name, domain);
     expect(postFake).to.have.been.calledWith({
       payload
     });

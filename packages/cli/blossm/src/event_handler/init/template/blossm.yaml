@@ -18,7 +18,7 @@ version: 0
 
 dependencies:
   "@blossm/event-handler": "*"
-  "@blossm/view-store-js": "*"
+  "@blossm/view-store-rpc": "*"
   "@blossm/gcp-token": "*"
 
 devDependencies:
@@ -31,7 +31,7 @@ devDependencies:
   "@blossm/datetime": "*"
   "@blossm/request": "*"
   "@blossm/gcp-token": "*"
-  "@blossm/view-store-js": "*"
+  "@blossm/view-store-rpc": "*"
   "@blossm/uuid": "*"
 
 service: core

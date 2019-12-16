@@ -1,6 +1,6 @@
 const deps = require("./deps");
 
-module.exports = ({ operation, service, network, path = "", root }) =>
-  `http://${deps.hash({ operation, service })}.${network}${path}${
+module.exports = ({ procedure, service, network, path = "", root }) =>
+  `http://${deps.hash({ procedure, service })}.${network}${path}${
     root != undefined ? `/${root}` : ""
   }`;

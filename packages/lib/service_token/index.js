@@ -1,12 +1,12 @@
 const deps = require("./deps");
 const { MAX_LENGTH } = require("@blossm/service-name-consts");
 
-module.exports = async ({ tokenFn, service, operation }) =>
+module.exports = async ({ tokenFn, service, procedure }) =>
   tokenFn
     ? await tokenFn({
-        hash: deps.hash({ operation, service }),
+        hash: deps.hash({ procedure, service }),
         name: deps.trim(
-          `${service}-${operation.reverse().join("-")}`,
+          `${service}-${procedure.reverse().join("-")}`,
           MAX_LENGTH
         )
       })

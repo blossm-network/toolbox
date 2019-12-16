@@ -5,10 +5,10 @@ const serviceHash = require("..");
 const deps = require("../deps");
 
 const hash = 12345;
-const operation0 = "some-operation0";
-const operation1 = "some-operation1";
-const operation2 = "some-operation2";
-const operation = [operation0, operation1, operation2];
+const procedure0 = "some-procedure0";
+const procedure1 = "some-procedure1";
+const procedure2 = "some-procedure2";
+const procedure = [procedure0, procedure1, procedure2];
 const service = "some-service";
 
 describe("Service hash", () => {
@@ -17,9 +17,9 @@ describe("Service hash", () => {
     const hashFake = fake.returns(hash);
     replace(deps, "hash", hashFake);
 
-    const result = serviceHash({ operation, service });
+    const result = serviceHash({ procedure, service });
     expect(hashFake).to.have.been.calledWith(
-      `${operation0}${operation1}${operation2}${service}`
+      `${procedure0}${procedure1}${procedure2}${service}`
     );
     expect(result).to.equal("12345");
   });

@@ -1,7 +1,7 @@
 require("localenv");
 const { expect } = require("chai");
 const { string: stringDate } = require("@blossm/datetime");
-const eventStore = require("@blossm/event-store-js");
+const eventStore = require("@blossm/event-store-rpc");
 const uuid = require("@blossm/uuid");
 
 const request = require("@blossm/request");

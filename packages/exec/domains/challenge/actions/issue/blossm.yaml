@@ -24,7 +24,7 @@ dependencies:
   "@blossm/datetime": "*"
   "@blossm/random-int-of-length": "*"
   "@blossm/twilio-sms": "*"
-  "@blossm/view-store-js": "*"
+  "@blossm/view-store-rpc": "*"
   "@blossm/errors": "*"
   "@blossm/gcp-secret": "*"
 
@@ -36,7 +36,7 @@ devDependencies:
   "sinon-chai": "^3.3.0"
   "chai-datetime": "^1.5.0"
   "@blossm/request": "*"
-  "@blossm/event-store-js": "*"
+  "@blossm/event-store-rpc": "*"
 
 service: core
 
