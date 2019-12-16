@@ -1,7 +1,7 @@
 {
   "name": "@blossm/command-handler",
   "description": "A command handler server.",
-  "version": "0.0.17",
+  "version": "0.0.18",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -14,7 +14,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/command-handler-post": "^0.0.18",
+    "@blossm/command-handler-post": "^0.0.19",
     "@blossm/server": "^0.0.4"
   },
   "devDependencies": {
