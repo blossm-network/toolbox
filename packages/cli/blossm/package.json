@@ -1,7 +1,7 @@
 {
   "name": "@blossm/cli",
   "version": "0.0.54",
-  "description": "A command line tool for interacting with a blossm network",
+  "description": "A command line tool for interacting with a blossm network.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 0"
