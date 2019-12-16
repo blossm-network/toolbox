@@ -6,6 +6,8 @@ const defaultFn = body => {
 
 module.exports = ({ writeFn, fn = defaultFn }) => {
   return async (req, res) => {
+    //eslint-disable-next-line
+    console.log("1: ", req.params.id);
     if (req.params.id == undefined) throw deps.badRequestError.missingId();
 
     // Can't set the id, created, or modified.
@@ -20,11 +22,15 @@ module.exports = ({ writeFn, fn = defaultFn }) => {
       modified: deps.dateString()
     };
 
+    //eslint-disable-next-line
+    console.log("2: ", data);
     await writeFn({
       id: req.params.id,
       data
     });
 
+    //eslint-disable-next-line
+    console.log("3");
     res.status(204).send();
   };
 };

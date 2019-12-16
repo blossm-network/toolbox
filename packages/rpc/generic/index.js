@@ -11,15 +11,6 @@ const common = ({ method, procedure, root, data }) => {
     }) => {
       return {
         with: async ({ path, tokenFn } = {}) => {
-          //eslint-disable-next-line
-          console.log("GONNA STUFF: ", {
-            tokenFn,
-            service,
-            procedure,
-            network,
-            path,
-            root
-          });
           const token = await deps.serviceToken({
             tokenFn,
             service,
@@ -33,8 +24,6 @@ const common = ({ method, procedure, root, data }) => {
             ...(root && { root })
           });
 
-          //eslint-disable-next-line
-          console.log("STUFF: ", { token, url });
           const response = await method(url, {
             body: {
               ...(data != undefined && { ...data }),
