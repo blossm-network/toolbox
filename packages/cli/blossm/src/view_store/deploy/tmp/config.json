@@ -1,0 +1,8 @@
+{
+  "name": "some-name",
+  "domain": "some-domain",
+  "schema": { "name": "String" },
+  "indexes": [[{ "name": 1 }]],
+  "service": "core",
+  "context": "view-store"
+}

@@ -93,6 +93,8 @@ module.exports = async ({ schema, indexes, getFn, postFn, putFn } = {}) => {
     });
 
   const writeFn = async ({ id, data }) => {
+    //eslint-disable-next-line
+    console.log("writing: ", { id, data });
     const update = {};
     const setKey = "$set";
     for (const key of Object.keys(data)) {
@@ -108,6 +110,8 @@ module.exports = async ({ schema, indexes, getFn, postFn, putFn } = {}) => {
         };
       }
     }
+    //eslint-disable-next-line
+    console.log("new update: ", { update });
     return await deps.db.write({
       store,
       query: { id },
