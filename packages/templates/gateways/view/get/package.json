@@ -14,8 +14,8 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/gcp-token": "^0.0.5",
-    "@blossm/view-store-rpc": "^0.0.26"
+    "@blossm/gcp-token": "*",
+    "@blossm/view-store-rpc": "*"
   },
   "devDependencies": {
     "chai-datetime": "^1.5.0",
