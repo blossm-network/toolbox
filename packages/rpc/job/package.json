@@ -14,7 +14,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/rpc": "^0.0.8"
+    "@blossm/rpc": "*"
   },
   "devDependencies": {
     "chai-datetime": "^1.5.0",
@@ -22,5 +22,5 @@
     "sinon": "^7.3.2",
     "sinon-chai": "^3.3.0"
   },
-  "gitHead": "d424b059fe3b0b9e993a5a27e94f67fd56f121b9"
+  "gitHead": "dc02f9ca71739d9ea8889e5c38ec4fb65347a5eb"
 }
