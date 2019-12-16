@@ -11,9 +11,9 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/array-intersection": "^0.0.2",
-    "@blossm/jwt": "^0.0.7",
-    "@blossm/tokens-from-req": "^0.0.3"
+    "@blossm/array-intersection": "*",
+    "@blossm/jwt": "*",
+    "@blossm/tokens-from-req": "*"
   },
   "scripts": {
     "test": "mocha --recursive"

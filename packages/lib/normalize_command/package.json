@@ -11,7 +11,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/nonce": "^0.0.2"
+    "@blossm/nonce": "*"
   },
   "scripts": {
     "test": "mocha --recursive"

@@ -14,9 +14,9 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/error-middleware": "^0.0.4",
-    "@blossm/express-middleware": "^0.0.2",
-    "@blossm/logger": "^0.0.4",
+    "@blossm/error-middleware": "*",
+    "@blossm/express-middleware": "*",
+    "@blossm/logger": "*",
     "express": "^4.17.1",
     "express-async-handler": "^1.1.4",
     "localenv": "^0.2.2"

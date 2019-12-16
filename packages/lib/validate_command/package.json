@@ -11,15 +11,15 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/duration-consts": "^0.0.1",
-    "@blossm/errors": "^0.0.7",
-    "@blossm/validator": "^0.0.8"
+    "@blossm/duration-consts": "*",
+    "@blossm/errors": "*",
+    "@blossm/validator": "*"
   },
   "scripts": {
     "test": "mocha --recursive"
   },
   "devDependencies": {
-    "@blossm/datetime": "^0.0.2",
+    "@blossm/datetime": "*",
     "mocha": "^6.1.4",
     "sinon": "^7.3.2",
     "sinon-chai": "^3.3.0"

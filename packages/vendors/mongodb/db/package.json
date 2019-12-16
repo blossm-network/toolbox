@@ -14,8 +14,8 @@
     "test": "mocha --recursive"
   },
   "dependencies": {
-    "@blossm/errors": "^0.0.7",
-    "@blossm/url-encode-query-data": "^0.0.2",
+    "@blossm/errors": "*",
+    "@blossm/url-encode-query-data": "*",
     "mongoose": "^5.7.1",
     "restify-errors": "^8.0.0"
   },

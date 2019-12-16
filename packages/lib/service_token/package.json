@@ -14,7 +14,7 @@
     "test": "mocha --recursive"
   },
   "dependencies": {
-    "@blossm/service-hash": "^0.0.6",
+    "@blossm/service-hash": "*",
     "@blossm/service-name-consts": "*",
     "@blossm/trim-string": "*"
   },

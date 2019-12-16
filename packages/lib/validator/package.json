@@ -11,10 +11,10 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/email-validator": "^0.0.2",
-    "@blossm/errors": "^0.0.7",
-    "@blossm/phone-number": "^0.0.2",
-    "@blossm/validation": "^0.0.4"
+    "@blossm/email-validator": "*",
+    "@blossm/errors": "*",
+    "@blossm/phone-number": "*",
+    "@blossm/validation": "*"
   },
   "scripts": {
     "test": "mocha --recursive"

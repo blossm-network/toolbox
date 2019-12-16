@@ -16,14 +16,14 @@
   "author": "blossm.network",
   "dependencies": {
     "@blossm/cli-root-dir": "*",
-    "@blossm/deploy-cli-template": "^0.0.36",
-    "@blossm/gcp-secret": "^0.0.17",
-    "@blossm/hash-string": "^0.0.2",
-    "@blossm/init-cli-template": "^0.0.8",
-    "@blossm/normalize-cli": "^0.0.3",
-    "@blossm/robo-say": "^0.0.1",
-    "@blossm/service-name-consts": "^0.0.1",
-    "@blossm/trim-string": "^0.0.2",
+    "@blossm/deploy-cli-template": "*",
+    "@blossm/gcp-secret": "*",
+    "@blossm/hash-string": "*",
+    "@blossm/init-cli-template": "*",
+    "@blossm/normalize-cli": "*",
+    "@blossm/robo-say": "*",
+    "@blossm/service-name-consts": "*",
+    "@blossm/trim-string": "*",
     "chalk": "^2.4.2",
     "esm": "^3.2.25"
   }

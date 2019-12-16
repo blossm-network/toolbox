@@ -11,7 +11,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/gcp-log-transports": "^0.0.2"
+    "@blossm/gcp-log-transports": "*"
   },
   "scripts": {
     "test": "mocha --recursive"

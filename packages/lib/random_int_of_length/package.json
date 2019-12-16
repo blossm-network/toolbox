@@ -14,7 +14,7 @@
     "test": "mocha --recursive"
   },
   "dependencies": {
-    "@blossm/random-int": "^0.0.2"
+    "@blossm/random-int": "*"
   },
   "devDependencies": {
     "mocha": "^6.1.4"

@@ -14,8 +14,8 @@
     "test": "mocha --recursive"
   },
   "dependencies": {
-    "@blossm/authenticate": "^0.0.10",
-    "@blossm/gcp-kms": "^0.0.15",
+    "@blossm/authenticate": "*",
+    "@blossm/gcp-kms": "*",
     "express-async-handler": "^1.1.4"
   },
   "devDependencies": {

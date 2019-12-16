@@ -14,10 +14,10 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/event-store-get": "^0.0.12",
-    "@blossm/event-store-post": "^0.0.13",
-    "@blossm/logger": "^0.0.4",
-    "@blossm/server": "^0.0.4"
+    "@blossm/event-store-get": "*",
+    "@blossm/event-store-post": "*",
+    "@blossm/logger": "*",
+    "@blossm/server": "*"
   },
   "devDependencies": {
     "chai-datetime": "^1.5.0",

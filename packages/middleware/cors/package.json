@@ -14,7 +14,7 @@
     "test": "mocha --recursive"
   },
   "dependencies": {
-    "@blossm/errors": "^0.0.7",
+    "@blossm/errors": "*",
     "cors": "^2.8.5"
   },
   "devDependencies": {

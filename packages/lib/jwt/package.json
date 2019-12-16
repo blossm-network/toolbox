@@ -11,9 +11,9 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/datetime": "^0.0.2",
-    "@blossm/errors": "^0.0.7",
-    "@blossm/nonce": "^0.0.2",
+    "@blossm/datetime": "*",
+    "@blossm/errors": "*",
+    "@blossm/nonce": "*",
     "jwt-decode": "^2.2.0"
   },
   "scripts": {

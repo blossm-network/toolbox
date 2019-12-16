@@ -14,7 +14,7 @@
     "test": "echo \"Error: no test specified\" && exit 0"
   },
   "dependencies": {
-    "@blossm/robo-say": "^0.0.1",
+    "@blossm/robo-say": "*",
     "arg": "^4.1.1",
     "chalk": "^2.4.2",
     "inquirer": "^7.0.0"
