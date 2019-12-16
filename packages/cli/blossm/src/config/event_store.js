@@ -64,7 +64,7 @@ module.exports = async args => {
         mongodb: {
           ...(input.user && { user: input.user }),
           ...(input.host && { host: input.host }),
-          ...(input.protocol && { database: input.protocol })
+          ...(input.protocol && { protocol: input.protocol })
         }
       }
     }

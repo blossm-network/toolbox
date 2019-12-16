@@ -14,14 +14,14 @@
       "mongodb": {
         "user": "gcp",
         "host": "ggjlv.gcp.mongodb.net",
-        "database": "mongodb+srv"
+        "protocol": "mongodb+srv"
       }
     },
     "eventStore": {
       "mongodb": {
         "user": "gcp",
         "host": "ggjlv.gcp.mongodb.net",
-        "database": "mongodb+srv"
+        "protocol": "mongodb+srv"
       }
     }
   },
