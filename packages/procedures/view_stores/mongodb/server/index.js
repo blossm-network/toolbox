@@ -5,6 +5,25 @@ const deps = require("./deps");
 let _viewStore;
 
 const viewStore = async ({ schema, indexes }) => {
+  //eslint-disable-next-line
+  console.log("connecting: ", {
+    name: `${process.env.DOMAIN}.${process.env.NAME}`,
+    schema,
+    indexes,
+    connection: {
+      protocol: process.env.MONGODB_PROTOCOL,
+      user: process.env.MONGODB_USER,
+      password:
+        process.env.NODE_ENV == "local"
+          ? process.env.MONGODB_USER_PASSWORD
+          : await deps.secret("mongodb"),
+      host: process.env.MONGODB_HOST,
+      database: process.env.MONGODB_DATABASE,
+      parameters: { authSource: "admin", retryWrites: true, w: "majority" },
+      autoIndex: true
+    }
+  });
+
   if (_viewStore != undefined) {
     logger.info("Thank you existing database.");
     return _viewStore;
@@ -93,8 +112,6 @@ module.exports = async ({ schema, indexes, getFn, postFn, putFn } = {}) => {
     });
 
   const writeFn = async ({ id, data }) => {
-    //eslint-disable-next-line
-    console.log("writing: ", { id, data });
     const update = {};
     const setKey = "$set";
     for (const key of Object.keys(data)) {
@@ -110,8 +127,6 @@ module.exports = async ({ schema, indexes, getFn, postFn, putFn } = {}) => {
         };
       }
     }
-    //eslint-disable-next-line
-    console.log("new update: ", { update });
     return await deps.db.write({
       store,
       query: { id },
