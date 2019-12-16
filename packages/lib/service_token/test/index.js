@@ -31,7 +31,7 @@ describe("Service token", () => {
     });
     expect(hashFake).to.have.been.calledWith({ procedure, service });
     expect(trimFake).to.have.been.calledWith(
-      "some-service-some-operation2-some-operation1-some-operation0",
+      "some-service-some-procedure2-some-procedure1-some-procedure0",
       25
     );
     expect(result).to.equal(token);

@@ -18,13 +18,12 @@
     "@blossm/authorization-middleware": "^0.0.9",
     "@blossm/cors-middleware": "^0.0.7",
     "@blossm/server": "^0.0.4",
-    "@blossm/view-gateway-get": "^0.0.15"
+    "@blossm/view-gateway-get": "*"
   },
   "devDependencies": {
     "chai-datetime": "^1.5.0",
     "mocha": "^6.1.4",
     "sinon": "^7.3.2",
     "sinon-chai": "^3.3.0"
-  },
-  "gitHead": "baffea3c8ea79bae8c3aace147b322e200dacaa5"
+  }
 }

@@ -1,1 +1,0 @@
-Initializes a deployable template.

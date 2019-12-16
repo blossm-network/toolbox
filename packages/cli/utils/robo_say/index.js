@@ -1,1 +1,0 @@
-module.exports = line => `🤖 ᛫•⦁◦ ${line}`;
