@@ -1,6 +1,6 @@
 {
   "name": "@blossm/gcp-token",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Create a token for an audience within the network.",
   "main": "index.js",
   "author": "blossm.network",
@@ -14,7 +14,7 @@
     "test": "mocha --recursive"
   },
   "dependencies": {
-    "@blossm/logger": "*",
+    "@blossm/logger": "^0.0.5",
     "@blossm/request": "*"
   },
   "devDependencies": {
