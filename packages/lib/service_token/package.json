@@ -1,6 +1,6 @@
 {
   "name": "@blossm/service-token",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Creates a token to access a service.",
   "main": "index.js",
   "author": "blossm.network",
@@ -14,7 +14,7 @@
     "test": "mocha --recursive"
   },
   "dependencies": {
-    "@blossm/service-hash": "^0.0.3",
+    "@blossm/service-hash": "^0.0.4",
     "@blossm/service-name-consts": "*",
     "@blossm/trim-string": "*"
   },

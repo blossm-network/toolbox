@@ -1,7 +1,7 @@
 {
   "name": "@blossm/auth-gateway",
   "description": "A gateway server that manages token distribution.",
-  "version": "0.0.30",
+  "version": "0.0.31",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -16,8 +16,8 @@
   "dependencies": {
     "@blossm/authentication-middleware": "^0.0.20",
     "@blossm/authorization-middleware": "^0.0.9",
-    "@blossm/command-gateway-post": "^0.0.18",
-    "@blossm/command-rpc": "^0.0.3",
+    "@blossm/command-gateway-post": "^0.0.19",
+    "@blossm/command-rpc": "^0.0.4",
     "@blossm/cors-middleware": "^0.0.7",
     "@blossm/gcp-token": "^0.0.5",
     "@blossm/server": "^0.0.4"
