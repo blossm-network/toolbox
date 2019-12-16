@@ -1,7 +1,7 @@
 {
   "name": "@blossm/job-rpc",
   "description": "Schedules a job.",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -22,5 +22,5 @@
     "sinon": "^7.3.2",
     "sinon-chai": "^3.3.0"
   },
-  "gitHead": "68a6edd17afcb52807fcbb712a67d12bb74a134d"
+  "gitHead": "30962ef2ebf530ab1949c1f5e3a6e1aa1cb02ea2"
 }
