@@ -14,7 +14,7 @@
     "test": "mocha --recursive"
   },
   "dependencies": {
-    "@blossm/service-hash": "^0.0.4"
+    "@blossm/service-hash": "^0.0.5"
   },
   "devDependencies": {
     "mocha": "^6.1.4",
