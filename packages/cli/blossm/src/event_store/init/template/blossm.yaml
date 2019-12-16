@@ -1,0 +1,33 @@
+#
+# This file is required.
+# Specify which domain your event store for, write it's schema, and specify what it should be indexed by.
+#
+# How to write a schema -> https://mongoosejs.com/docs/schematypes.html
+# Types and validators should always be specified,
+# and default values and required flags should be set if intended.
+#
+# How to write indexes -> https://mongoosejs.com/docs/guide.html#indexes
+# Queries to the store that aren't indexed will be rejected.
+# In other words, full collection scans are not allowed.
+#
+
+domain: some-domain
+
+schema:
+  name: String
+
+dependencies:
+  "@blossm/mongodb-view-store": "*"
+  "@blossm/gcp-pubsub": "*"
+
+devDependencies:
+  "localenv": "^0.2.2"
+  "mocha": "^6.1.4"
+  "chai": "^4.2.0"
+  "@blossm/request": "*"
+  "@blossm/uuid": "*"
+
+service: core
+
+#don't change
+context: event-store
