@@ -1,0 +1,506 @@
+0 silly argv { _: [ 'version' ],
+0 silly argv   lernaVersion: '3.19.0',
+0 silly argv   '$0': '/Users/joao/blossm/blossm/node_modules/.bin/lerna',
+0 silly argv   bump: 'patch' }
+1 notice cli v3.19.0
+2 verbose rootPath /Users/joao/blossm/blossm
+3 info versioning independent
+4 silly isAnythingCommitted
+5 verbose isAnythingCommitted 1
+6 silly currentBranch
+7 verbose currentBranch master
+8 silly remoteBranchExists
+9 silly isBehindUpstream
+10 silly isBehindUpstream master is behind origin/master by 0 commit(s) and ahead by 1
+11 silly hasTags
+12 verbose hasTags true
+13 silly git-describe.sync "@blossm/auth-gateway@0.0.32-1-g441998df" => {"lastTagName":"@blossm/auth-gateway@0.0.32","lastVersion":"0.0.32","refCount":"1","sha":"441998df","isDirty":false}
+14 info Looking for changed packages since @blossm/auth-gateway@0.0.32
+15 info ignoring diff in paths matching [ '*.md' ]
+16 silly checking diff packages/cli/blossm
+17 silly found diff in packages/cli/blossm/package.json
+18 verbose filtered diff [ 'packages/cli/blossm/package.json' ]
+19 silly checking diff packages/cli/utils/cli_root_dir
+20 silly no diff found in @blossm/cli-root-dir
+21 silly checking diff packages/cli/utils/deploy_cli_template
+22 silly found diff in packages/cli/utils/deploy_cli_template/package.json
+23 verbose filtered diff [ 'packages/cli/utils/deploy_cli_template/package.json' ]
+24 silly checking diff packages/cli/utils/init_cli_template
+25 silly found diff in packages/cli/utils/init_cli_template/package.json
+26 verbose filtered diff [ 'packages/cli/utils/init_cli_template/package.json' ]
+27 silly checking diff packages/cli/utils/merge_cli_template
+28 silly found diff in packages/cli/utils/merge_cli_template/package.json
+29 verbose filtered diff [ 'packages/cli/utils/merge_cli_template/package.json' ]
+30 silly checking diff packages/cli/utils/normalize_cli
+31 silly no diff found in @blossm/normalize-cli
+32 silly checking diff packages/cli/utils/robo_say
+33 silly no diff found in @blossm/robo-say
+34 silly checking diff packages/cli/utils/test_cli_template
+35 silly no diff found in @blossm/test-cli-template
+36 silly checking diff packages/consts/duration
+37 silly no diff found in @blossm/duration-consts
+38 silly checking diff packages/consts/service_name
+39 silly no diff found in @blossm/service-name-consts
+40 silly checking diff packages/errors
+41 silly no diff found in @blossm/errors
+42 silly checking diff packages/lib/array_intersection
+43 silly no diff found in @blossm/array-intersection
+44 silly checking diff packages/lib/authenticate
+45 silly no diff found in @blossm/authenticate
+46 silly checking diff packages/lib/authorize
+47 silly no diff found in @blossm/authorize
+48 silly checking diff packages/lib/create_event
+49 silly no diff found in @blossm/create-event
+50 silly checking diff packages/lib/datetime
+51 silly no diff found in @blossm/datetime
+52 silly checking diff packages/lib/email_validator
+53 silly no diff found in @blossm/email-validator
+54 silly checking diff packages/lib/hash_string
+55 silly no diff found in @blossm/hash-string
+56 silly checking diff packages/lib/jwt
+57 silly no diff found in @blossm/jwt
+58 silly checking diff packages/lib/nonce
+59 silly no diff found in @blossm/nonce
+60 silly checking diff packages/lib/normalize_command
+61 silly no diff found in @blossm/normalize-command
+62 silly checking diff packages/lib/phone_number
+63 silly no diff found in @blossm/phone-number
+64 silly checking diff packages/lib/random_int
+65 silly no diff found in @blossm/random-int
+66 silly checking diff packages/lib/random_int_of_length
+67 silly no diff found in @blossm/random-int-of-length
+68 silly checking diff packages/lib/request
+69 silly no diff found in @blossm/request
+70 silly checking diff packages/lib/service_hash
+71 silly no diff found in @blossm/service-hash
+72 silly checking diff packages/lib/service_token
+73 silly no diff found in @blossm/service-token
+74 silly checking diff packages/lib/service_url
+75 silly no diff found in @blossm/service-url
+76 silly checking diff packages/lib/tokens_from_req
+77 silly found diff in packages/lib/tokens_from_req/package.json
+78 verbose filtered diff [ 'packages/lib/tokens_from_req/package.json' ]
+79 silly checking diff packages/lib/trim_string
+80 silly no diff found in @blossm/trim-string
+81 silly checking diff packages/lib/url_encode_query_data
+82 silly no diff found in @blossm/url-encode-query-data
+83 silly checking diff packages/lib/uuid
+84 silly no diff found in @blossm/uuid
+85 silly checking diff packages/lib/validate_command
+86 silly no diff found in @blossm/validate-command
+87 silly checking diff packages/lib/validation
+88 silly no diff found in @blossm/validation
+89 silly checking diff packages/lib/validator
+90 silly no diff found in @blossm/validator
+91 silly checking diff packages/logging/logger
+92 silly no diff found in @blossm/logger
+93 silly checking diff packages/middleware/authentication
+94 silly found diff in packages/middleware/authentication/package.json
+95 verbose filtered diff [ 'packages/middleware/authentication/package.json' ]
+96 silly checking diff packages/middleware/authorization
+97 silly no diff found in @blossm/authorization-middleware
+98 silly checking diff packages/middleware/cors
+99 silly no diff found in @blossm/cors-middleware
+100 silly checking diff packages/middleware/error
+101 silly no diff found in @blossm/error-middleware
+102 silly checking diff packages/middleware/express
+103 silly no diff found in @blossm/express-middleware
+104 silly checking diff packages/rpc/command
+105 silly found diff in packages/rpc/command/package.json
+106 verbose filtered diff [ 'packages/rpc/command/package.json' ]
+107 silly checking diff packages/rpc/event_store
+108 silly found diff in packages/rpc/event_store/package.json
+109 verbose filtered diff [ 'packages/rpc/event_store/package.json' ]
+110 silly checking diff packages/rpc/generic
+111 silly found diff in packages/rpc/generic/package.json
+112 verbose filtered diff [ 'packages/rpc/generic/package.json' ]
+113 silly checking diff packages/rpc/job
+114 silly found diff in packages/rpc/job/package.json
+115 verbose filtered diff [ 'packages/rpc/job/package.json' ]
+116 silly checking diff packages/rpc/view_store
+117 silly found diff in packages/rpc/view_store/package.json
+118 verbose filtered diff [ 'packages/rpc/view_store/package.json' ]
+119 silly checking diff packages/templates/command_handler/post
+120 silly found diff in packages/templates/command_handler/post/package.json
+121 verbose filtered diff [ 'packages/templates/command_handler/post/package.json' ]
+122 silly checking diff packages/templates/command_handler/server
+123 silly found diff in packages/templates/command_handler/server/package.json
+124 verbose filtered diff [ 'packages/templates/command_handler/server/package.json' ]
+125 silly checking diff packages/templates/event_handler/post
+126 silly found diff in packages/templates/event_handler/post/package.json
+127 verbose filtered diff [ 'packages/templates/event_handler/post/package.json' ]
+128 silly checking diff packages/templates/event_handler/server
+129 silly found diff in packages/templates/event_handler/server/package.json
+130 verbose filtered diff [ 'packages/templates/event_handler/server/package.json' ]
+131 silly checking diff packages/templates/event_stores/generic/get
+132 silly no diff found in @blossm/event-store-get
+133 silly checking diff packages/templates/event_stores/generic/post
+134 silly no diff found in @blossm/event-store-post
+135 silly checking diff packages/templates/event_stores/generic/server
+136 silly no diff found in @blossm/event-store
+137 silly checking diff packages/templates/event_stores/mongodb/normalize
+138 silly no diff found in @blossm/mongodb-event-store-normalize
+139 silly checking diff packages/templates/event_stores/mongodb/reduce
+140 silly no diff found in @blossm/mongodb-event-store-reduce
+141 silly checking diff packages/templates/event_stores/mongodb/server
+142 silly found diff in packages/templates/event_stores/mongodb/server/package.json
+143 verbose filtered diff [ 'packages/templates/event_stores/mongodb/server/package.json' ]
+144 silly checking diff packages/templates/gateways/auth/server
+145 silly found diff in packages/templates/gateways/auth/server/package.json
+146 verbose filtered diff [ 'packages/templates/gateways/auth/server/package.json' ]
+147 silly checking diff packages/templates/gateways/command/post
+148 silly found diff in packages/templates/gateways/command/post/package.json
+149 verbose filtered diff [ 'packages/templates/gateways/command/post/package.json' ]
+150 silly checking diff packages/templates/gateways/command/server
+151 silly found diff in packages/templates/gateways/command/server/package.json
+152 verbose filtered diff [ 'packages/templates/gateways/command/server/package.json' ]
+153 silly checking diff packages/templates/gateways/view/get
+154 silly found diff in packages/templates/gateways/view/get/package.json
+155 verbose filtered diff [ 'packages/templates/gateways/view/get/package.json' ]
+156 silly checking diff packages/templates/gateways/view/server
+157 silly found diff in packages/templates/gateways/view/server/package.json
+158 verbose filtered diff [ 'packages/templates/gateways/view/server/package.json' ]
+159 silly checking diff packages/templates/job/post
+160 silly no diff found in @blossm/job-post
+161 silly checking diff packages/templates/job/server
+162 silly no diff found in @blossm/job
+163 silly checking diff packages/templates/server
+164 silly no diff found in @blossm/server
+165 silly checking diff packages/templates/view_stores/generic/delete
+166 silly no diff found in @blossm/view-store-delete
+167 silly checking diff packages/templates/view_stores/generic/get
+168 silly no diff found in @blossm/view-store-get
+169 silly checking diff packages/templates/view_stores/generic/post
+170 silly no diff found in @blossm/view-store-post
+171 silly checking diff packages/templates/view_stores/generic/put
+172 silly no diff found in @blossm/view-store-put
+173 silly checking diff packages/templates/view_stores/generic/server
+174 silly found diff in packages/templates/view_stores/generic/server/package.json
+175 verbose filtered diff [ 'packages/templates/view_stores/generic/server/package.json' ]
+176 silly checking diff packages/templates/view_stores/generic/stream
+177 silly no diff found in @blossm/view-store-stream
+178 silly checking diff packages/templates/view_stores/mongodb/server
+179 silly found diff in packages/templates/view_stores/mongodb/server/package.json
+180 verbose filtered diff [ 'packages/templates/view_stores/mongodb/server/package.json' ]
+181 silly checking diff packages/vendors/gcp/event_store
+182 silly no diff found in @blossm/gcp-event-store
+183 silly checking diff packages/vendors/gcp/kms
+184 silly found diff in packages/vendors/gcp/kms/package.json
+185 verbose filtered diff [ 'packages/vendors/gcp/kms/package.json' ]
+186 silly checking diff packages/vendors/gcp/log_transports
+187 silly no diff found in @blossm/gcp-log-transports
+188 silly checking diff packages/vendors/gcp/pubsub
+189 silly no diff found in @blossm/gcp-pubsub
+190 silly checking diff packages/vendors/gcp/schedule
+191 silly no diff found in @blossm/gcp-schedule
+192 silly checking diff packages/vendors/gcp/secret
+193 silly no diff found in @blossm/gcp-secret
+194 silly checking diff packages/vendors/gcp/storage
+195 silly no diff found in @blossm/gcp-storage
+196 silly checking diff packages/vendors/gcp/token
+197 silly no diff found in @blossm/gcp-token
+198 silly checking diff packages/vendors/mongodb/db
+199 silly no diff found in @blossm/mongodb-database
+200 silly checking diff packages/vendors/twilio/sms
+201 silly no diff found in @blossm/twilio-sms
+202 verbose updated @blossm/cli
+203 verbose updated @blossm/deploy-cli-template
+204 verbose updated @blossm/init-cli-template
+205 verbose updated @blossm/merge-cli-template
+206 verbose updated @blossm/authenticate
+207 verbose updated @blossm/authorize
+208 verbose updated @blossm/tokens-from-req
+209 verbose updated @blossm/authentication-middleware
+210 verbose updated @blossm/authorization-middleware
+211 verbose updated @blossm/command-rpc
+212 verbose updated @blossm/event-store-rpc
+213 verbose updated @blossm/rpc
+214 verbose updated @blossm/job-rpc
+215 verbose updated @blossm/view-store-rpc
+216 verbose updated @blossm/command-handler-post
+217 verbose updated @blossm/command-handler
+218 verbose updated @blossm/event-handler-post
+219 verbose updated @blossm/event-handler
+220 verbose updated @blossm/mongodb-event-store
+221 verbose updated @blossm/auth-gateway
+222 verbose updated @blossm/command-gateway-post
+223 verbose updated @blossm/command-gateway
+224 verbose updated @blossm/view-gateway-get
+225 verbose updated @blossm/view-gateway
+226 verbose updated @blossm/view-store
+227 verbose updated @blossm/mongodb-view-store
+228 verbose updated @blossm/gcp-kms
+229 verbose updated @blossm/gcp-secret
+230 verbose git-describe undefined => "@blossm/auth-gateway@0.0.32-1-g441998df"
+231 silly git-describe parsed => {"lastTagName":"@blossm/auth-gateway@0.0.32","lastVersion":"0.0.32","refCount":"1","sha":"441998df","isDirty":false}
+232 info execute Skipping releases
+233 silly lifecycle "preversion" starting in "@blossm/blossm"
+234 info lifecycle @blossm/blossm@0.0.0~preversion: @blossm/blossm@0.0.0
+235 warn lifecycle The node binary used for scripts is /var/folders/td/1z2wysyx391gm5_235h7rvsm0000gn/T/yarn--1576463218638-0.16665747646442686/node but npm is using /usr/local/bin/node itself. Use the `--scripts-prepend-node-path` option to include the path for the node binary npm was executed with.
+236 verbose lifecycle @blossm/blossm@0.0.0~preversion: unsafe-perm in lifecycle true
+237 verbose lifecycle @blossm/blossm@0.0.0~preversion: PATH: /Users/joao/blossm/blossm/node_modules/npm-lifecycle/node-gyp-bin:/Users/joao/blossm/blossm/node_modules/.bin:/var/folders/td/1z2wysyx391gm5_235h7rvsm0000gn/T/yarn--1576463218638-0.16665747646442686:/Users/joao/blossm/blossm/node_modules/.bin:/Users/joao/.config/yarn/link/node_modules/.bin:/Users/joao/blossm/blossm/node_modules/.bin:/usr/local/libexec/lib/node_modules/npm/bin/node-gyp-bin:/usr/local/lib/node_modules/npm/bin/node-gyp-bin:/usr/local/bin/node_modules/npm/bin/node-gyp-bin:/Users/joao/.google-cloud-sdk/bin:/Users/joao/.flutter_build/bin:/Users/joao/.yarn/bin:/Users/joao/.config/yarn/global/node_modules/.bin:/Users/joao/.mongo/bin:/Developer/adt-bundle/sdk/tools:/Developer/adt-bundle/sdk/platform-tools:/usr/local/bin:/Users/joao/.google-cloud-sdk/bin:/Users/joao/.flutter_build/bin:/Users/joao/.yarn/bin:/Users/joao/.config/yarn/global/node_modules/.bin:/Users/joao/.mongo/bin:/Developer/adt-bundle/sdk/tools:/Developer/adt-bundle/sdk/platform-tools:/usr/local/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Users/joao/.google-cloud-sdk/bin:/Users/joao/.flutter_build/bin:/Users/joao/.yarn/bin:/Users/joao/.config/yarn/global/node_modules/.bin:/Users/joao/.mongo/bin:/Users/joao/.nvm/versions/node/v8.6.0/bin:/Developer/adt-bundle/sdk/tools:/Developer/adt-bundle/sdk/platform-tools
+238 verbose lifecycle @blossm/blossm@0.0.0~preversion: CWD: /Users/joao/blossm/blossm
+239 silly lifecycle @blossm/blossm@0.0.0~preversion: Args: [ '-c', 'yarn test' ]
+240 silly lifecycle @blossm/blossm@0.0.0~preversion: Returned: code: 0  signal: null
+241 silly lifecycle "preversion" finished in "@blossm/blossm"
+242 silly lifecycle No script for "preversion" in "@blossm/init-cli-template", continuing
+243 silly lifecycle No script for "preversion" in "@blossm/merge-cli-template", continuing
+244 silly lifecycle No script for "preversion" in "@blossm/tokens-from-req", continuing
+245 silly lifecycle No script for "preversion" in "@blossm/rpc", continuing
+246 silly lifecycle No script for "preversion" in "@blossm/gcp-kms", continuing
+247 silly lifecycle No script for "version" in "@blossm/merge-cli-template", continuing
+248 silly lifecycle No script for "preversion" in "@blossm/deploy-cli-template", continuing
+249 silly lifecycle No script for "version" in "@blossm/rpc", continuing
+250 silly lifecycle No script for "preversion" in "@blossm/command-rpc", continuing
+251 silly lifecycle No script for "preversion" in "@blossm/event-store-rpc", continuing
+252 silly lifecycle No script for "preversion" in "@blossm/job-rpc", continuing
+253 silly lifecycle No script for "preversion" in "@blossm/view-store-rpc", continuing
+254 silly lifecycle No script for "version" in "@blossm/tokens-from-req", continuing
+255 silly lifecycle No script for "preversion" in "@blossm/authenticate", continuing
+256 silly lifecycle No script for "version" in "@blossm/gcp-kms", continuing
+257 silly lifecycle No script for "preversion" in "@blossm/authorize", continuing
+258 silly lifecycle No script for "version" in "@blossm/init-cli-template", continuing
+259 silly lifecycle No script for "preversion" in "@blossm/gcp-secret", continuing
+260 silly lifecycle No script for "version" in "@blossm/job-rpc", continuing
+261 silly lifecycle No script for "version" in "@blossm/authenticate", continuing
+262 silly lifecycle No script for "preversion" in "@blossm/authentication-middleware", continuing
+263 silly lifecycle No script for "version" in "@blossm/command-rpc", continuing
+264 silly lifecycle No script for "preversion" in "@blossm/command-gateway-post", continuing
+265 silly lifecycle No script for "version" in "@blossm/event-store-rpc", continuing
+266 silly lifecycle No script for "preversion" in "@blossm/command-handler-post", continuing
+267 silly lifecycle No script for "preversion" in "@blossm/event-handler-post", continuing
+268 silly lifecycle No script for "version" in "@blossm/view-store-rpc", continuing
+269 silly lifecycle No script for "preversion" in "@blossm/view-gateway-get", continuing
+270 silly lifecycle No script for "version" in "@blossm/authorize", continuing
+271 silly lifecycle No script for "preversion" in "@blossm/authorization-middleware", continuing
+272 silly lifecycle No script for "version" in "@blossm/deploy-cli-template", continuing
+273 silly lifecycle No script for "version" in "@blossm/authentication-middleware", continuing
+274 silly lifecycle No script for "version" in "@blossm/gcp-secret", continuing
+275 silly lifecycle No script for "preversion" in "@blossm/cli", continuing
+276 silly lifecycle No script for "preversion" in "@blossm/mongodb-event-store", continuing
+277 silly lifecycle No script for "preversion" in "@blossm/view-store", continuing
+278 silly lifecycle No script for "version" in "@blossm/event-handler-post", continuing
+279 silly lifecycle No script for "preversion" in "@blossm/event-handler", continuing
+280 silly lifecycle No script for "version" in "@blossm/command-handler-post", continuing
+281 silly lifecycle No script for "preversion" in "@blossm/command-handler", continuing
+282 silly lifecycle No script for "version" in "@blossm/authorization-middleware", continuing
+283 silly lifecycle No script for "version" in "@blossm/command-gateway-post", continuing
+284 silly lifecycle No script for "preversion" in "@blossm/auth-gateway", continuing
+285 silly lifecycle No script for "preversion" in "@blossm/command-gateway", continuing
+286 silly lifecycle No script for "version" in "@blossm/view-gateway-get", continuing
+287 silly lifecycle No script for "preversion" in "@blossm/view-gateway", continuing
+288 silly lifecycle No script for "version" in "@blossm/cli", continuing
+289 silly lifecycle No script for "version" in "@blossm/event-handler", continuing
+290 silly lifecycle No script for "version" in "@blossm/view-store", continuing
+291 silly lifecycle No script for "preversion" in "@blossm/mongodb-view-store", continuing
+292 silly lifecycle No script for "version" in "@blossm/mongodb-event-store", continuing
+293 silly lifecycle No script for "version" in "@blossm/command-handler", continuing
+294 silly lifecycle No script for "version" in "@blossm/auth-gateway", continuing
+295 silly lifecycle No script for "version" in "@blossm/command-gateway", continuing
+296 silly lifecycle No script for "version" in "@blossm/view-gateway", continuing
+297 silly lifecycle No script for "version" in "@blossm/mongodb-view-store", continuing
+298 silly lifecycle "version" starting in "@blossm/blossm"
+299 info lifecycle @blossm/blossm@0.0.0~version: @blossm/blossm@0.0.0
+300 verbose lifecycle @blossm/blossm@0.0.0~version: unsafe-perm in lifecycle true
+301 verbose lifecycle @blossm/blossm@0.0.0~version: PATH: /Users/joao/blossm/blossm/node_modules/npm-lifecycle/node-gyp-bin:/Users/joao/blossm/blossm/node_modules/.bin:/var/folders/td/1z2wysyx391gm5_235h7rvsm0000gn/T/yarn--1576463218638-0.16665747646442686:/Users/joao/blossm/blossm/node_modules/.bin:/Users/joao/.config/yarn/link/node_modules/.bin:/Users/joao/blossm/blossm/node_modules/.bin:/usr/local/libexec/lib/node_modules/npm/bin/node-gyp-bin:/usr/local/lib/node_modules/npm/bin/node-gyp-bin:/usr/local/bin/node_modules/npm/bin/node-gyp-bin:/Users/joao/.google-cloud-sdk/bin:/Users/joao/.flutter_build/bin:/Users/joao/.yarn/bin:/Users/joao/.config/yarn/global/node_modules/.bin:/Users/joao/.mongo/bin:/Developer/adt-bundle/sdk/tools:/Developer/adt-bundle/sdk/platform-tools:/usr/local/bin:/Users/joao/.google-cloud-sdk/bin:/Users/joao/.flutter_build/bin:/Users/joao/.yarn/bin:/Users/joao/.config/yarn/global/node_modules/.bin:/Users/joao/.mongo/bin:/Developer/adt-bundle/sdk/tools:/Developer/adt-bundle/sdk/platform-tools:/usr/local/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Users/joao/.google-cloud-sdk/bin:/Users/joao/.flutter_build/bin:/Users/joao/.yarn/bin:/Users/joao/.config/yarn/global/node_modules/.bin:/Users/joao/.mongo/bin:/Users/joao/.nvm/versions/node/v8.6.0/bin:/Developer/adt-bundle/sdk/tools:/Developer/adt-bundle/sdk/platform-tools
+302 verbose lifecycle @blossm/blossm@0.0.0~version: CWD: /Users/joao/blossm/blossm
+303 silly lifecycle @blossm/blossm@0.0.0~version: Args: [ '-c', 'auto-changelog && git add CHANGELOG.md' ]
+304 silly lifecycle @blossm/blossm@0.0.0~version: Returned: code: 0  signal: null
+305 silly lifecycle "version" finished in "@blossm/blossm"
+306 silly gitAdd [ '/Users/joao/blossm/blossm/packages/cli/utils/merge_cli_template/package.json',
+306 silly gitAdd   '/Users/joao/blossm/blossm/packages/rpc/generic/package.json',
+306 silly gitAdd   '/Users/joao/blossm/blossm/packages/lib/tokens_from_req/package.json',
+306 silly gitAdd   '/Users/joao/blossm/blossm/packages/vendors/gcp/kms/package.json',
+306 silly gitAdd   '/Users/joao/blossm/blossm/packages/cli/utils/init_cli_template/package.json',
+306 silly gitAdd   '/Users/joao/blossm/blossm/packages/rpc/job/package.json',
+306 silly gitAdd   '/Users/joao/blossm/blossm/packages/lib/authenticate/package.json',
+306 silly gitAdd   '/Users/joao/blossm/blossm/packages/rpc/command/package.json',
+306 silly gitAdd   '/Users/joao/blossm/blossm/packages/rpc/event_store/package.json',
+306 silly gitAdd   '/Users/joao/blossm/blossm/packages/rpc/view_store/package.json',
+306 silly gitAdd   '/Users/joao/blossm/blossm/packages/lib/authorize/package.json',
+306 silly gitAdd   '/Users/joao/blossm/blossm/packages/cli/utils/deploy_cli_template/package.json',
+306 silly gitAdd   '/Users/joao/blossm/blossm/packages/middleware/authentication/package.json',
+306 silly gitAdd   '/Users/joao/blossm/blossm/packages/vendors/gcp/secret/package.json',
+306 silly gitAdd   '/Users/joao/blossm/blossm/packages/templates/event_handler/post/package.json',
+306 silly gitAdd   '/Users/joao/blossm/blossm/packages/templates/command_handler/post/package.json',
+306 silly gitAdd   '/Users/joao/blossm/blossm/packages/middleware/authorization/package.json',
+306 silly gitAdd   '/Users/joao/blossm/blossm/packages/templates/gateways/command/post/package.json',
+306 silly gitAdd   '/Users/joao/blossm/blossm/packages/templates/gateways/view/get/package.json',
+306 silly gitAdd   '/Users/joao/blossm/blossm/packages/cli/blossm/package.json',
+306 silly gitAdd   '/Users/joao/blossm/blossm/packages/templates/event_handler/server/package.json',
+306 silly gitAdd   '/Users/joao/blossm/blossm/packages/templates/view_stores/generic/server/package.json',
+306 silly gitAdd   '/Users/joao/blossm/blossm/packages/templates/event_stores/mongodb/server/package.json',
+306 silly gitAdd   '/Users/joao/blossm/blossm/packages/templates/command_handler/server/package.json',
+306 silly gitAdd   '/Users/joao/blossm/blossm/packages/templates/gateways/auth/server/package.json',
+306 silly gitAdd   '/Users/joao/blossm/blossm/packages/templates/gateways/command/server/package.json',
+306 silly gitAdd   '/Users/joao/blossm/blossm/packages/templates/gateways/view/server/package.json',
+306 silly gitAdd   '/Users/joao/blossm/blossm/packages/templates/view_stores/mongodb/server/package.json' ]
+307 silly gitCommit Publish
+307 silly gitCommit
+307 silly gitCommit  - @blossm/cli@0.0.57
+307 silly gitCommit  - @blossm/deploy-cli-template@0.0.34
+307 silly gitCommit  - @blossm/init-cli-template@0.0.8
+307 silly gitCommit  - @blossm/merge-cli-template@0.0.29
+307 silly gitCommit  - @blossm/authenticate@0.0.8
+307 silly gitCommit  - @blossm/authorize@0.0.9
+307 silly gitCommit  - @blossm/tokens-from-req@0.0.3
+307 silly gitCommit  - @blossm/authentication-middleware@0.0.21
+307 silly gitCommit  - @blossm/authorization-middleware@0.0.10
+307 silly gitCommit  - @blossm/command-rpc@0.0.6
+307 silly gitCommit  - @blossm/event-store-rpc@0.0.6
+307 silly gitCommit  - @blossm/rpc@0.0.6
+307 silly gitCommit  - @blossm/job-rpc@0.0.6
+307 silly gitCommit  - @blossm/view-store-rpc@0.0.23
+307 silly gitCommit  - @blossm/command-handler-post@0.0.24
+307 silly gitCommit  - @blossm/command-handler@0.0.23
+307 silly gitCommit  - @blossm/event-handler-post@0.0.23
+307 silly gitCommit  - @blossm/event-handler@0.0.22
+307 silly gitCommit  - @blossm/mongodb-event-store@0.0.14
+307 silly gitCommit  - @blossm/auth-gateway@0.0.33
+307 silly gitCommit  - @blossm/command-gateway-post@0.0.21
+307 silly gitCommit  - @blossm/command-gateway@0.0.33
+307 silly gitCommit  - @blossm/view-gateway-get@0.0.26
+307 silly gitCommit  - @blossm/view-gateway@0.0.36
+307 silly gitCommit  - @blossm/view-store@0.0.28
+307 silly gitCommit  - @blossm/mongodb-view-store@0.0.13
+307 silly gitCommit  - @blossm/gcp-kms@0.0.15
+307 silly gitCommit  - @blossm/gcp-secret@0.0.15
+308 verbose git [ 'commit',
+308 verbose git   '-F',
+308 verbose git   '/private/var/folders/td/1z2wysyx391gm5_235h7rvsm0000gn/T/93c21b75-941c-430e-ba82-21e4fdc3922c/lerna-commit.txt' ]
+309 silly gitTag @blossm/cli@0.0.57
+310 verbose git [ 'tag', '@blossm/cli@0.0.57', '-m', '@blossm/cli@0.0.57' ]
+311 silly gitTag @blossm/deploy-cli-template@0.0.34
+312 verbose git [ 'tag',
+312 verbose git   '@blossm/deploy-cli-template@0.0.34',
+312 verbose git   '-m',
+312 verbose git   '@blossm/deploy-cli-template@0.0.34' ]
+313 silly gitTag @blossm/init-cli-template@0.0.8
+314 verbose git [ 'tag',
+314 verbose git   '@blossm/init-cli-template@0.0.8',
+314 verbose git   '-m',
+314 verbose git   '@blossm/init-cli-template@0.0.8' ]
+315 silly gitTag @blossm/merge-cli-template@0.0.29
+316 verbose git [ 'tag',
+316 verbose git   '@blossm/merge-cli-template@0.0.29',
+316 verbose git   '-m',
+316 verbose git   '@blossm/merge-cli-template@0.0.29' ]
+317 silly gitTag @blossm/authenticate@0.0.8
+318 verbose git [ 'tag',
+318 verbose git   '@blossm/authenticate@0.0.8',
+318 verbose git   '-m',
+318 verbose git   '@blossm/authenticate@0.0.8' ]
+319 silly gitTag @blossm/authorize@0.0.9
+320 verbose git [ 'tag',
+320 verbose git   '@blossm/authorize@0.0.9',
+320 verbose git   '-m',
+320 verbose git   '@blossm/authorize@0.0.9' ]
+321 silly gitTag @blossm/tokens-from-req@0.0.3
+322 verbose git [ 'tag',
+322 verbose git   '@blossm/tokens-from-req@0.0.3',
+322 verbose git   '-m',
+322 verbose git   '@blossm/tokens-from-req@0.0.3' ]
+323 silly gitTag @blossm/authentication-middleware@0.0.21
+324 verbose git [ 'tag',
+324 verbose git   '@blossm/authentication-middleware@0.0.21',
+324 verbose git   '-m',
+324 verbose git   '@blossm/authentication-middleware@0.0.21' ]
+325 silly gitTag @blossm/authorization-middleware@0.0.10
+326 verbose git [ 'tag',
+326 verbose git   '@blossm/authorization-middleware@0.0.10',
+326 verbose git   '-m',
+326 verbose git   '@blossm/authorization-middleware@0.0.10' ]
+327 silly gitTag @blossm/command-rpc@0.0.6
+328 verbose git [ 'tag',
+328 verbose git   '@blossm/command-rpc@0.0.6',
+328 verbose git   '-m',
+328 verbose git   '@blossm/command-rpc@0.0.6' ]
+329 silly gitTag @blossm/event-store-rpc@0.0.6
+330 verbose git [ 'tag',
+330 verbose git   '@blossm/event-store-rpc@0.0.6',
+330 verbose git   '-m',
+330 verbose git   '@blossm/event-store-rpc@0.0.6' ]
+331 silly gitTag @blossm/rpc@0.0.6
+332 verbose git [ 'tag', '@blossm/rpc@0.0.6', '-m', '@blossm/rpc@0.0.6' ]
+333 silly gitTag @blossm/job-rpc@0.0.6
+334 verbose git [ 'tag', '@blossm/job-rpc@0.0.6', '-m', '@blossm/job-rpc@0.0.6' ]
+335 silly gitTag @blossm/view-store-rpc@0.0.23
+336 verbose git [ 'tag',
+336 verbose git   '@blossm/view-store-rpc@0.0.23',
+336 verbose git   '-m',
+336 verbose git   '@blossm/view-store-rpc@0.0.23' ]
+337 silly gitTag @blossm/command-handler-post@0.0.24
+338 verbose git [ 'tag',
+338 verbose git   '@blossm/command-handler-post@0.0.24',
+338 verbose git   '-m',
+338 verbose git   '@blossm/command-handler-post@0.0.24' ]
+339 silly gitTag @blossm/command-handler@0.0.23
+340 verbose git [ 'tag',
+340 verbose git   '@blossm/command-handler@0.0.23',
+340 verbose git   '-m',
+340 verbose git   '@blossm/command-handler@0.0.23' ]
+341 silly gitTag @blossm/event-handler-post@0.0.23
+342 verbose git [ 'tag',
+342 verbose git   '@blossm/event-handler-post@0.0.23',
+342 verbose git   '-m',
+342 verbose git   '@blossm/event-handler-post@0.0.23' ]
+343 silly gitTag @blossm/event-handler@0.0.22
+344 verbose git [ 'tag',
+344 verbose git   '@blossm/event-handler@0.0.22',
+344 verbose git   '-m',
+344 verbose git   '@blossm/event-handler@0.0.22' ]
+345 silly gitTag @blossm/mongodb-event-store@0.0.14
+346 verbose git [ 'tag',
+346 verbose git   '@blossm/mongodb-event-store@0.0.14',
+346 verbose git   '-m',
+346 verbose git   '@blossm/mongodb-event-store@0.0.14' ]
+347 silly gitTag @blossm/auth-gateway@0.0.33
+348 verbose git [ 'tag',
+348 verbose git   '@blossm/auth-gateway@0.0.33',
+348 verbose git   '-m',
+348 verbose git   '@blossm/auth-gateway@0.0.33' ]
+349 silly gitTag @blossm/command-gateway-post@0.0.21
+350 verbose git [ 'tag',
+350 verbose git   '@blossm/command-gateway-post@0.0.21',
+350 verbose git   '-m',
+350 verbose git   '@blossm/command-gateway-post@0.0.21' ]
+351 silly gitTag @blossm/command-gateway@0.0.33
+352 verbose git [ 'tag',
+352 verbose git   '@blossm/command-gateway@0.0.33',
+352 verbose git   '-m',
+352 verbose git   '@blossm/command-gateway@0.0.33' ]
+353 silly gitTag @blossm/view-gateway-get@0.0.26
+354 verbose git [ 'tag',
+354 verbose git   '@blossm/view-gateway-get@0.0.26',
+354 verbose git   '-m',
+354 verbose git   '@blossm/view-gateway-get@0.0.26' ]
+355 silly gitTag @blossm/view-gateway@0.0.36
+356 verbose git [ 'tag',
+356 verbose git   '@blossm/view-gateway@0.0.36',
+356 verbose git   '-m',
+356 verbose git   '@blossm/view-gateway@0.0.36' ]
+357 silly gitTag @blossm/view-store@0.0.28
+358 verbose git [ 'tag',
+358 verbose git   '@blossm/view-store@0.0.28',
+358 verbose git   '-m',
+358 verbose git   '@blossm/view-store@0.0.28' ]
+359 silly gitTag @blossm/mongodb-view-store@0.0.13
+360 verbose git [ 'tag',
+360 verbose git   '@blossm/mongodb-view-store@0.0.13',
+360 verbose git   '-m',
+360 verbose git   '@blossm/mongodb-view-store@0.0.13' ]
+361 silly gitTag @blossm/gcp-kms@0.0.15
+362 verbose git [ 'tag',
+362 verbose git   '@blossm/gcp-kms@0.0.15',
+362 verbose git   '-m',
+362 verbose git   '@blossm/gcp-kms@0.0.15' ]
+363 silly gitTag @blossm/gcp-secret@0.0.15
+364 verbose git [ 'tag',
+364 verbose git   '@blossm/gcp-secret@0.0.15',
+364 verbose git   '-m',
+364 verbose git   '@blossm/gcp-secret@0.0.15' ]
+365 error Error: Command failed: git tag @blossm/deploy-cli-template@0.0.34 -m @blossm/deploy-cli-template@0.0.34
+365 error fatal: tag '@blossm/deploy-cli-template@0.0.34' already exists
+365 error
+365 error     at makeError (/Users/joao/blossm/blossm/node_modules/execa/index.js:174:9)
+365 error     at Promise.all.then.arr (/Users/joao/blossm/blossm/node_modules/execa/index.js:278:16)
