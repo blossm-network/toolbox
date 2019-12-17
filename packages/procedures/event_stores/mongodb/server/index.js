@@ -73,7 +73,9 @@ module.exports = async ({ schema, publishFn } = {}) => {
   const eStore = await eventStore();
   const aStore = await aggregateStore({ schema });
 
-  const writeFn = async ({ id, data }) =>
+  const writeFn = async ({ id, data }) => {
+    //eslint-disable-next-line no-console
+    console.log("writing event: ", data);
     deps.db.write({
       store: eStore,
       query: { id },
@@ -89,6 +91,7 @@ module.exports = async ({ schema, publishFn } = {}) => {
         setDefaultsOnInsert: true
       }
     });
+  };
 
   const mapReduceFn = async ({ id }) =>
     await deps.db.mapReduce({

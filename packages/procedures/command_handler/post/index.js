@@ -15,7 +15,7 @@ module.exports = ({ version, mainFn, validateFn, normalizeFn }) => {
     });
 
     //eslint-disable-next-line
-    console.log("env: ", process.env);
+    console.log("NET: ", process.env.NETWORK);
 
     const event = await deps.createEvent({
       ...(root && { root }),
