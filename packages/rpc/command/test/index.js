@@ -48,8 +48,8 @@ describe("Issue command", () => {
     });
     replace(deps, "rpc", rpcFake);
 
-    const nonceFake = fake.returns(id);
-    replace(deps, "nonce", nonceFake);
+    const uuidFake = fake.returns(id);
+    replace(deps, "uuid", uuidFake);
 
     const result = await command({ action, domain, service, network })
       .set({ context, tokenFn })
@@ -83,8 +83,8 @@ describe("Issue command", () => {
     });
     replace(deps, "rpc", rpcFake);
 
-    const nonceFake = fake.returns(id);
-    replace(deps, "nonce", nonceFake);
+    const uuidFake = fake.returns(id);
+    replace(deps, "uuid", uuidFake);
 
     const result = await command({ action, domain }).issue(payload);
 

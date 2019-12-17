@@ -31,7 +31,8 @@ describe("Command handler store integration tests", () => {
     const response = await request.post(url, {
       body: {
         headers: {
-          issued: stringDate()
+          issued: stringDate(),
+          id: uuid()
         },
         payload: {
           phone
@@ -63,7 +64,8 @@ describe("Command handler store integration tests", () => {
     const response = await request.post(url, {
       body: {
         headers: {
-          issued: stringDate()
+          issued: stringDate(),
+          id: uuid()
         },
         payload: {
           phone

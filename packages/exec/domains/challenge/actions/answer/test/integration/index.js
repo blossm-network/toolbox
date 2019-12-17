@@ -61,6 +61,7 @@ describe("Command handler store integration tests", () => {
       body: {
         headers: {
           issued: stringDate(),
+          id: uuid(),
           root
         },
         payload: {
@@ -97,7 +98,8 @@ describe("Command handler store integration tests", () => {
     const response = await request.post(url, {
       body: {
         headers: {
-          issued: stringDate()
+          issued: stringDate(),
+          id: uuid()
         },
         payload: {
           code

@@ -13,7 +13,7 @@
   "dependencies": {
     "@blossm/datetime": "*",
     "@blossm/errors": "*",
-    "@blossm/nonce": "*",
+    "@blossm/uuid": "*",
     "jwt-decode": "^2.2.0"
   },
   "scripts": {

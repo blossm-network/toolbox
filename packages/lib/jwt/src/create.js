@@ -23,7 +23,7 @@ module.exports = async ({
     sub: subject,
     exp: deps.timestamp() + expiresIn,
     iat: deps.timestamp(),
-    jti: deps.nonce()
+    jti: deps.uuid()
   });
   const encodedPayload = cleanBase64(
     Buffer.from(stringifiedPayload).toString("base64")
