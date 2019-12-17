@@ -1,10 +1,10 @@
 const gateway = require("@blossm/auth-gateway");
 const { verify } = require("@blossm/gcp-kms");
 
-const priviledges = require("./priviledges.js.js.js");
-const scopes = require("./scopes.js.js.js");
+const priviledges = require("./priviledges.js");
+const scopes = require("./scopes.js");
 
-const config = require("./config.json.js.js");
+const config = require("./config.json");
 
 module.exports = gateway({
   whitelist: config.whitelist,
