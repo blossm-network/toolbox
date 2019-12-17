@@ -1,7 +1,7 @@
 {
   "name": "@blossm/event-handler",
   "description": "An event handler server.",
-  "version": "0.0.31",
+  "version": "0.0.32",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -14,7 +14,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/event-handler-post": "^0.0.32",
+    "@blossm/event-handler-post": "^0.0.33",
     "@blossm/server": "^0.0.6"
   },
   "devDependencies": {
