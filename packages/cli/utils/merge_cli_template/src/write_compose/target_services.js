@@ -1,12 +1,8 @@
 const hash = require("@blossm/service-hash");
 
 const databaseService = require("./database_service");
-const resolveTransientTargets = require("./resolve_transient_targets");
 
 module.exports = ({ config, databaseServiceKey }) => {
-  const allTargets = config.targets
-    ? [...config.targets, ...resolveTransientTargets(config.targets)]
-    : [];
   const containerRegistry = "us.gcr.io/${GCP_PROJECT}";
   const common = {
     ports: ["${PORT}"]
@@ -31,7 +27,7 @@ module.exports = ({ config, databaseServiceKey }) => {
   };
   let services = {};
   let includeDatabase = false;
-  for (const target of allTargets) {
+  for (const target of config.targets) {
     const commonServiceImagePrefix = `${containerRegistry}/\${SERVICE}.${target.context}`;
     switch (target.context) {
       case "view-store":

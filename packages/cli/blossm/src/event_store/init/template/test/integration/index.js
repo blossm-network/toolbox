@@ -24,12 +24,9 @@ const network = "some-network";
 const issued = "now";
 
 describe("Event store integration tests", () => {
-  before(async () => {
-    await create(topic);
-  });
-  after(async () => {
-    await del(topic);
-  });
+  before(async () => await create(topic));
+  after(async () => await del(topic));
+
   it("should return successfully", async () => {
     const root = uuid();
 

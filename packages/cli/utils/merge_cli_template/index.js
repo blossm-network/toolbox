@@ -11,6 +11,7 @@ const copy = promisify(ncp);
 
 const writeCompose = require("./src/write_compose");
 const writeBuild = require("./src/write_build");
+const resolveTransientTargets = require("./resolve_transient_targets");
 
 const copyScript = async (scriptDir, workingDir) => {
   const scripts = path.resolve(scriptDir, "src");
@@ -68,8 +69,29 @@ const copySource = async (p, workingDir) => {
   });
 };
 
+const topicsForTargets = config =>
+  (config.targets || [])
+    .filter(t => t.context == "command-handler")
+    .map(t => `did-${t.action}.${t.domain}.${t.service}.${config.network}`)
+    .concat(
+      config.context == "command-handler"
+        ? [
+            `did-${config.action}.${config.domain}.${config.service}.${config.network}`
+          ]
+        : []
+    );
+
 const writeConfig = (config, workingDir) => {
   const newConfigPath = path.resolve(workingDir, "config.json");
+  config.targets = config.targets
+    ? [...config.targets, ...resolveTransientTargets(config.targets)]
+    : [];
+
+  config.topics = topicsForTargets(config);
+
+  //eslint-disable-next-line
+  console.log("topics: ", config.topics);
+
   fs.writeFileSync(newConfigPath, JSON.stringify(config));
 };
 

@@ -14,10 +14,12 @@ const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 
 const personRoot = uuid();
 
-const topics = [];
+const config = require("./../config.js");
+
 describe("Command handler store integration tests", () => {
-  before(async () => await Promise.all([create(topics[0]), create(topics[1])]));
-  after(async () => await Promise.all([del(topics[0]), del(topics[1])]));
+  before(async () => await Promise.all(config.topics.map(t => create(t))));
+  after(async () => await Promise.all(config.topics.map(t => del(t))));
+
   it("should return successfully", async () => {
     const phone = "251-333-2037";
     await viewStore({

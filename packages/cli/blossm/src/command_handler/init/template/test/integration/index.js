@@ -10,11 +10,11 @@ const request = require("@blossm/request");
 const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 const name = "A-name";
 
-const topic = `did-${process.env.ACTION}.${process.env.DOMAIN}.${process.env.SERVICE}.${process.env.NETWORK}`;
+const config = require("./../config.js");
 
 describe("Command handler integration tests", () => {
-  before(async () => await create(topic));
-  after(async () => await del(topic));
+  before(async () => await Promise.all(config.topics.map(t => create(t))));
+  after(async () => await Promise.all(config.topics.map(t => del(t))));
 
   it("should return successfully", async () => {
     const response = await request.post(url, {
