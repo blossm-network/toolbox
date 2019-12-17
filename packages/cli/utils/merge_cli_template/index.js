@@ -1,4 +1,5 @@
 const roboSay = require("@blossm/robo-say");
+const rootDir = require("@blossm/cli-root-dir");
 const fs = require("fs-extra");
 const ncp = require("ncp");
 const { promisify } = require("util");
@@ -69,17 +70,24 @@ const copySource = async (p, workingDir) => {
   });
 };
 
-const topicsForTargets = config =>
-  (config.targets || [])
+const topicsForTargets = config => {
+  const blossmConfig = rootDir.config();
+  return (config.targets || [])
     .filter(t => t.context == "command-handler")
-    .map(t => `did-${t.action}.${t.domain}.${t.service}.${config.network}`)
+    .map(
+      t =>
+        `did-${t.action}.${t.domain}.${t.service || config.service}.${
+          blossmConfig.network
+        }`
+    )
     .concat(
       config.context == "command-handler"
         ? [
-            `did-${config.action}.${config.domain}.${config.service}.${config.network}`
+            `did-${config.action}.${config.domain}.${config.service}.${blossmConfig.network}`
           ]
         : []
     );
+};
 
 const writeConfig = (config, workingDir) => {
   const newConfigPath = path.resolve(workingDir, "config.json");
