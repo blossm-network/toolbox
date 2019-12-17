@@ -4,7 +4,7 @@ const { string: stringDate } = require("@blossm/datetime");
 const eventStore = require("@blossm/event-store-rpc");
 const command = require("@blossm/command-rpc");
 const sms = require("@blossm/twilio-sms");
-const secret = require("@blossm/gcp-secret");
+const { get: secret } = require("@blossm/gcp-secret");
 const uuid = require("@blossm/uuid");
 const { validate: validateJwt } = require("@blossm/jwt");
 const { verify } = require("@blossm/gcp-kms");
@@ -18,11 +18,14 @@ const deps = require("../../deps");
 const personRoot = uuid();
 const phone = "251-333-2037";
 
-const topic = `did-${process.env.ACTION}.${process.env.DOMAIN}.${process.env.SERVICE}.${process.env.NETWORK}`;
+const topics = [
+  `did-${process.env.ACTION}.${process.env.DOMAIN}.${process.env.SERVICE}.${process.env.NETWORK}`,
+  `did-issue.${process.env.DOMAIN}.${process.env.SERVICE}.${process.env.NETWORK}`
+];
 
 describe("Command handler store integration tests", () => {
-  before(async () => await create(topic));
-  after(async () => await del(topic));
+  before(async () => await Promise.all([create(topics[0]), create(topics[1])]));
+  after(async () => await Promise.all([del(topics[0]), del(topics[1])]));
 
   it("should return successfully", async () => {
     await deps
