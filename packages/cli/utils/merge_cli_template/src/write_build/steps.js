@@ -434,7 +434,7 @@ module.exports = ({ config }) => {
         writeEnv(),
         dockerComposeUp,
         dockerComposeProcesses,
-        integrationTests({ strict: false }),
+        integrationTests(),
         dockerComposeLogs,
         dockerPush(),
         deployService({

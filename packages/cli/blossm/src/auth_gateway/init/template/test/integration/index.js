@@ -6,6 +6,7 @@ const viewStore = require("@blossm/view-store-rpc");
 const sms = require("@blossm/twilio-sms");
 const { get: secret } = require("@blossm/gcp-secret");
 const uuid = require("@blossm/uuid");
+const { create, delete: del } = require("@blossm/gcp-pubsub");
 
 const request = require("@blossm/request");
 
@@ -13,7 +14,10 @@ const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 
 const personRoot = uuid();
 
+const topics = [];
 describe("Command handler store integration tests", () => {
+  before(async () => await Promise.all([create(topics[0]), create(topics[1])]));
+  after(async () => await Promise.all([del(topics[0]), del(topics[1])]));
   it("should return successfully", async () => {
     const phone = "251-333-2037";
     await viewStore({
