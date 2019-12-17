@@ -23,4 +23,8 @@ describe("Service hash", () => {
     );
     expect(result).to.equal("12345");
   });
+  // it("should return the correct output", () => {
+  //   const result = serviceHash({ procedure: ["challenge", "event-store"], service: "core" });
+  //     console.log("result: ", result);
+  // });
 });

@@ -3,7 +3,6 @@ const { expect } = require("chai");
 const { string: stringDate } = require("@blossm/datetime");
 const eventStore = require("@blossm/event-store-rpc");
 const uuid = require("@blossm/uuid");
-const nonce = require("@blossm/nonce");
 const { create, delete: del } = require("@blossm/gcp-pubsub");
 
 const request = require("@blossm/request");
@@ -32,8 +31,7 @@ describe("Command handler store integration tests", () => {
     const response = await request.post(url, {
       body: {
         headers: {
-          issued: stringDate(),
-          id: nonce()
+          issued: stringDate()
         },
         payload: {
           phone
@@ -65,8 +63,7 @@ describe("Command handler store integration tests", () => {
     const response = await request.post(url, {
       body: {
         headers: {
-          issued: stringDate(),
-          id: nonce()
+          issued: stringDate()
         },
         payload: {
           phone

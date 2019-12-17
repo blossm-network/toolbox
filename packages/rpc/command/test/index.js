@@ -21,6 +21,7 @@ const trace = "some-trace";
 const source = "some-source";
 const tokenFn = "some-token-fn";
 const issued = "some-issued";
+const id = "some-id";
 
 const context = { c: 2 };
 
@@ -47,6 +48,9 @@ describe("Issue command", () => {
     });
     replace(deps, "rpc", rpcFake);
 
+    const nonceFake = fake.returns(id);
+    replace(deps, "nonce", nonceFake);
+
     const result = await command({ action, domain, service, network })
       .set({ context, tokenFn })
       .issue(payload, { trace, source, issued });
@@ -58,7 +62,8 @@ describe("Issue command", () => {
       headers: {
         issued,
         trace,
-        source
+        source,
+        id
       }
     });
     expect(inFake).to.have.been.calledWith({ context, service, network });
@@ -78,6 +83,9 @@ describe("Issue command", () => {
     });
     replace(deps, "rpc", rpcFake);
 
+    const nonceFake = fake.returns(id);
+    replace(deps, "nonce", nonceFake);
+
     const result = await command({ action, domain }).issue(payload);
 
     expect(result).to.equal(response);
@@ -85,7 +93,8 @@ describe("Issue command", () => {
     expect(postFake).to.have.been.calledWith({
       payload,
       headers: {
-        issued: dateString()
+        issued: dateString(),
+        id
       }
     });
     expect(inFake).to.have.been.calledWith({});

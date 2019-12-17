@@ -8,6 +8,7 @@ module.exports = ({ action, domain, service, network }) => {
     { trace, source, issued } = {}
   ) => {
     const headers = {
+      id: deps.nonce(),
       issued: issued || dateString(),
       ...(trace != undefined && { trace }),
       ...(source != undefined && { source })

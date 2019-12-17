@@ -2,7 +2,11 @@ const roboSay = require("@blossm/robo-say");
 const { spawnSync } = require("child_process");
 const path = require("path");
 const fs = require("fs-extra");
+const { promisify } = require("util");
+const ncp = require("ncp");
 const { red } = require("chalk");
+
+const copy = promisify(ncp);
 
 const installDependenciesIfNeeded = async (workingDir, input) => {
   const lockFile = "package-lock.json";
@@ -27,6 +31,15 @@ const installDependenciesIfNeeded = async (workingDir, input) => {
     path.resolve(workingDir, lockFile),
     path.resolve(srcDir, lockFile)
   );
+
+  const modules = "node_modules";
+  path.resolve(srcDir, lockFile);
+  const modulesPath = path.resolve(srcDir, modules);
+
+  fs.removeSync(modulesPath);
+  fs.mkdirSync(modulesPath);
+
+  await copy(path.resolve(workingDir, modules), modulesPath);
 };
 
 module.exports = async ({ workingDir, input }) => {

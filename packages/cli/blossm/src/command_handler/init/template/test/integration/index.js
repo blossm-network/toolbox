@@ -1,7 +1,6 @@
 require("localenv");
 const { expect } = require("chai");
 const { string: stringDate } = require("@blossm/datetime");
-const nonce = require("@blossm/nonce");
 const eventStore = require("@blossm/event-store-rpc");
 const { create, delete: del } = require("@blossm/gcp-pubsub");
 
@@ -20,8 +19,7 @@ describe("Command handler integration tests", () => {
     const response = await request.post(url, {
       body: {
         headers: {
-          issued: stringDate(),
-          id: nonce()
+          issued: stringDate()
         },
         payload: {
           name
@@ -44,8 +42,7 @@ describe("Command handler integration tests", () => {
     const response = await request.post(url, {
       body: {
         headers: {
-          issued: stringDate(),
-          id: nonce()
+          issued: stringDate()
         },
         payload: {
           name

@@ -10,9 +10,6 @@
   "publishConfig": {
     "access": "public"
   },
-  "dependencies": {
-    "@blossm/nonce": "*"
-  },
   "scripts": {
     "test": "mocha --recursive"
   },

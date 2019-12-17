@@ -15,7 +15,8 @@
   },
   "dependencies": {
     "@blossm/datetime": "*",
-    "@blossm/rpc": "^0.0.15"
+    "@blossm/rpc": "^0.0.15",
+    "@blossm/nonce": "*"
   },
   "devDependencies": {
     "chai-datetime": "^1.5.0",

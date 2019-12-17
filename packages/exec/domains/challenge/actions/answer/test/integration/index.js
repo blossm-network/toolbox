@@ -6,7 +6,6 @@ const command = require("@blossm/command-rpc");
 const sms = require("@blossm/twilio-sms");
 const secret = require("@blossm/gcp-secret");
 const uuid = require("@blossm/uuid");
-const nonce = require("@blossm/nonce");
 const { validate: validateJwt } = require("@blossm/jwt");
 const { verify } = require("@blossm/gcp-kms");
 const { create, delete: del } = require("@blossm/gcp-pubsub");
@@ -62,7 +61,6 @@ describe("Command handler store integration tests", () => {
       body: {
         headers: {
           issued: stringDate(),
-          id: nonce(),
           root
         },
         payload: {

@@ -1,7 +1,6 @@
 const { expect } = require("chai").use(require("sinon-chai"));
-const { restore, replace, fake } = require("sinon");
+const { restore } = require("sinon");
 const normalizeCommand = require("../");
-const deps = require("../deps");
 
 const payload = "some-payload";
 
@@ -14,9 +13,6 @@ describe("Normalize command", () => {
     restore();
   });
   it("should get called with expected params", async () => {
-    const newNonce = "newNonce!";
-    replace(deps, "nonce", fake.returns(newNonce));
-
     const params = {
       payload,
       headers: {
@@ -30,7 +26,6 @@ describe("Normalize command", () => {
 
     expect(result).to.deep.equal({
       headers: {
-        id: newNonce,
         issued,
         trace,
         source
@@ -39,9 +34,6 @@ describe("Normalize command", () => {
     });
   });
   it("should get called with expected params with optionals omitted", async () => {
-    const newNonce = "newNonce!";
-    replace(deps, "nonce", fake.returns(newNonce));
-
     const params = {
       payload,
       headers: {
@@ -53,7 +45,6 @@ describe("Normalize command", () => {
 
     expect(result).to.deep.equal({
       headers: {
-        id: newNonce,
         issued
       },
       payload
