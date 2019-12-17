@@ -23,6 +23,7 @@ const commandId = "commandId";
 const commandAction = "command-action";
 const commandDomain = "command-domain";
 const commandService = "command-service";
+const commandNetwork = "command-network";
 const commandIssuedTimestamp = 234;
 const service = "the-service-the-event-was-triggered-in";
 const network = "some-network";
@@ -70,13 +71,11 @@ describe("Event store", () => {
           topic,
           version,
           trace,
-          domain,
-          service,
-          network,
           command: {
             action: commandAction,
             domain: commandDomain,
             service: commandService,
+            network: commandNetwork,
             id: commandId,
             issued: commandIssuedTimestamp
           }
@@ -86,19 +85,17 @@ describe("Event store", () => {
 
     expect(rpcFake).to.have.been.calledWith(domain, "event-store");
     expect(postFake).to.have.been.calledWith({
-      context,
       headers: {
         root,
+        context,
         topic,
         version,
-        domain,
-        service,
-        network,
         command: {
           id: commandId,
           action: commandAction,
           domain: commandDomain,
           service: commandService,
+          network: commandNetwork,
           issued: commandIssuedTimestamp
         },
         trace,
@@ -124,14 +121,15 @@ describe("Event store", () => {
     replace(deps, "rpc", rpcFake);
 
     await eventStore({ domain }).add({
-      context,
       headers: {
         root,
+        context,
         topic,
         command: {
           action: commandAction,
           domain: commandDomain,
           service: commandService,
+          network: commandNetwork,
           id: commandId,
           issued: commandIssuedTimestamp
         },
@@ -146,13 +144,11 @@ describe("Event store", () => {
         root,
         topic,
         version,
-        domain,
-        service: envService,
-        network: envNetwork,
         command: {
           action: commandAction,
           domain: commandDomain,
           service: commandService,
+          network: commandNetwork,
           id: commandId,
           issued: commandIssuedTimestamp
         },

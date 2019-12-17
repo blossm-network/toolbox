@@ -23,8 +23,8 @@ const eventStore = async () => {
         root: { type: String, required: true },
         topic: { type: String, required: true },
         version: { type: Number, required: true },
-        trace: { type: String },
         context: { type: Object },
+        trace: { type: String },
         created: { type: String, required: true },
         command: {
           id: { type: String, required: true },

@@ -12,21 +12,19 @@ module.exports = ({
     payload
   }) => {
     const event = {
-      ...(context && { context }),
       headers: {
         root,
         topic,
         version,
         created: dateString(),
+        ...(context && { context }),
         ...(trace && { trace }),
-        domain,
-        service,
-        network,
         command: {
           id: command.id,
           action: command.action,
           domain: command.domain,
           service: command.service,
+          network: command.network,
           issued: command.issued
         }
       },
