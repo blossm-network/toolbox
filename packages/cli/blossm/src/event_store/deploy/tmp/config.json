@@ -1,0 +1,6 @@
+{
+  "domain": "some-domain",
+  "schema": { "name": "String" },
+  "service": "core",
+  "context": "event-store"
+}

@@ -300,7 +300,7 @@ module.exports = ({ config }) => {
         }),
         dockerComposeUp,
         dockerComposeProcesses,
-        integrationTests(),
+        integrationTests({ strict: false }),
         dockerComposeLogs,
         dockerPush({ extension: imageExtension }),
         deployService({
