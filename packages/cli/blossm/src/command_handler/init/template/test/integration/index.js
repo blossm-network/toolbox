@@ -16,8 +16,9 @@ const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 const name = "A-name";
 const sub = "some-sub";
 
+const topic = `did-${process.env.ACTION}.${process.env.DOMAIN}.${process.env.SERVICE}.${process.env.NETWORK}`;
+
 describe("Command handler integration tests", () => {
-  const topic = `did-${process.env.ACTION}.${process.env.DOMAIN}.${process.env.SERVICE}.${process.env.NETWORK}`;
   before(async () => {
     await create(topic);
   });
@@ -51,7 +52,7 @@ describe("Command handler integration tests", () => {
     subscribe({
       topic,
       name: sub,
-      fn: (_, subscription) => {
+      fn: async (_, subscription) => {
         if (!subscription) throw "Subscription wasn't made";
         subscription.once("message", async event => {
           const eventString = Buffer.from(event.data, "base64")

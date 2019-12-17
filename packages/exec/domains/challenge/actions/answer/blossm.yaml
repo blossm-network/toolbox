@@ -42,6 +42,8 @@ devDependencies:
   "@blossm/uuid": "*"
   "@blossm/jwt": "*"
   "@blossm/gcp-kms": "*"
+  "@blossm/gcp-pubsub": "*"
+  "@blossm/nonce": "*"
 
 service: core
 
