@@ -334,7 +334,6 @@ module.exports = ({ config }) => {
         }),
         dockerComposeUp,
         dockerComposeProcesses,
-        dockerComposeLogs,
         integrationTests(),
         dockerComposeLogs,
         dockerPush({ extension: imageExtension }),
@@ -372,7 +371,7 @@ module.exports = ({ config }) => {
         }),
         dockerComposeUp,
         dockerComposeProcesses,
-        integrationTests({ strict: false }),
+        integrationTests(),
         dockerComposeLogs,
         dockerPush({ extension: imageExtension }),
         deployService({
