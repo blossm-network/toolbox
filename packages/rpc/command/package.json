@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@blossm/datetime": "*",
-    "@blossm/nonce": "*",
+    "@blossm/uuid": "*",
     "@blossm/rpc": "^0.0.16"
   },
   "devDependencies": {

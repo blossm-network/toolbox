@@ -1,2 +1,2 @@
 exports.rpc = require("@blossm/rpc");
-exports.nonce = require("@blossm/nonce");
+exports.uuid = require("@blossm/uuid");

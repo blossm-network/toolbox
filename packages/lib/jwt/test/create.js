@@ -23,8 +23,8 @@ describe("Create", () => {
     restore();
   });
   it("it should create a jwt token if all variables are passed in", async () => {
-    const nonce = "some-nonce";
-    replace(deps, "nonce", fake.returns(nonce));
+    const uuid = "some-uuid";
+    replace(deps, "uuid", fake.returns(uuid));
     const issuer = "some-issuer";
     const subject = "some-subject";
     const audience = "some-audience";
@@ -60,7 +60,7 @@ describe("Create", () => {
       sub: subject,
       exp: deps.timestamp() + expiresIn,
       iat: deps.timestamp(),
-      jti: nonce
+      jti: uuid
     });
     const encodedPayload = base64url(
       Buffer.from(stringifiedPayload).toString("base64")
