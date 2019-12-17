@@ -11,7 +11,7 @@ const copy = promisify(ncp);
 
 const writeCompose = require("./src/write_compose");
 const writeBuild = require("./src/write_build");
-const resolveTransientTargets = require("./resolve_transient_targets");
+const resolveTransientTargets = require("./src/resolve_transient_targets");
 
 const copyScript = async (scriptDir, workingDir) => {
   const scripts = path.resolve(scriptDir, "src");
