@@ -1,4 +1,4 @@
-const hash = require("@blossm/hash-string");
+const hash = require("@blossm/service-hash");
 
 const databaseService = require("./database_service");
 const resolveTransientTargets = require("./resolve_transient_targets");
@@ -36,9 +36,10 @@ module.exports = ({ config, databaseServiceKey }) => {
     switch (target.context) {
       case "view-store":
         {
-          const targetHash = hash(
-            target.name + target.domain + target.context + config.service
-          ).toString();
+          const targetHash = hash({
+            procedure: [target.name, target.domain, target.context],
+            service: config.service
+          });
 
           const key = `${target.name}-${target.domain}-${config.service}`;
           services = {
@@ -62,9 +63,10 @@ module.exports = ({ config, databaseServiceKey }) => {
         break;
       case "event-store":
         {
-          const targetHash = hash(
-            target.domain + target.context + config.service
-          ).toString();
+          const targetHash = hash({
+            procedure: [target.domain, target.context],
+            service: config.service
+          });
 
           const key = `${target.domain}-${config.service}`;
           services = {
@@ -87,9 +89,10 @@ module.exports = ({ config, databaseServiceKey }) => {
         break;
       case "command-handler":
         {
-          const targetHash = hash(
-            target.action + target.domain + target.context + config.service
-          ).toString();
+          const targetHash = hash({
+            procedure: [target.action, target.domain, target.context],
+            service: config.service
+          });
           const key = `${target.action}-${target.domain}-${config.service}`;
           services = {
             ...services,

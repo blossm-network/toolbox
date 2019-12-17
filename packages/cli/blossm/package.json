@@ -18,7 +18,7 @@
     "@blossm/cli-root-dir": "*",
     "@blossm/deploy-cli-template": "^0.0.43",
     "@blossm/gcp-secret": "^0.0.18",
-    "@blossm/hash-string": "*",
+    "@blossm/service-hash": "*",
     "@blossm/init-cli-template": "^0.0.9",
     "@blossm/normalize-cli": "^0.0.4",
     "@blossm/robo-say": "*",
