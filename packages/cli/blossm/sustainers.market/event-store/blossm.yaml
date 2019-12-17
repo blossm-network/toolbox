@@ -17,7 +17,7 @@ schema:
   name: String
 
 dependencies:
-  "@blossm/mongodb-view-store": "*"
+  "@blossm/mongodb-event-store": "*"
   "@blossm/gcp-pubsub": "*"
 
 devDependencies:
