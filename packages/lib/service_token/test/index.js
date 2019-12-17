@@ -34,6 +34,12 @@ describe("Service token", () => {
       "some-service-some-procedure2-some-procedure1-some-procedure0",
       25
     );
+    //doesn't mutate the origianl procedure.
+    expect(procedure).to.deep.equal([
+      "some-procedure0",
+      "some-procedure1",
+      "some-procedure2"
+    ]);
     expect(result).to.equal(token);
   });
 });

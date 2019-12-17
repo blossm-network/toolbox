@@ -6,7 +6,10 @@ module.exports = async ({ tokenFn, service, procedure }) =>
     ? await tokenFn({
         hash: deps.hash({ procedure, service }),
         name: deps.trim(
-          `${service}-${procedure.reverse().join("-")}`,
+          `${service}-${procedure
+            .slice()
+            .reverse()
+            .join("-")}`,
           MAX_LENGTH
         )
       })
