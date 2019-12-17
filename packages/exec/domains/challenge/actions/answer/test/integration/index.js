@@ -9,18 +9,12 @@ const uuid = require("@blossm/uuid");
 const nonce = require("@blossm/nonce");
 const { validate: validateJwt } = require("@blossm/jwt");
 const { verify } = require("@blossm/gcp-kms");
-const {
-  subscribe,
-  create,
-  delete: del,
-  unsubscribe
-} = require("@blossm/gcp-pubsub");
+const { create, delete: del } = require("@blossm/gcp-pubsub");
 
 const request = require("@blossm/request");
 
 const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 const deps = require("../../deps");
-const sub = "some-sub";
 
 const personRoot = uuid();
 const phone = "251-333-2037";
@@ -28,8 +22,10 @@ const phone = "251-333-2037";
 const topic = `did-${process.env.ACTION}.${process.env.DOMAIN}.${process.env.SERVICE}.${process.env.NETWORK}`;
 
 describe("Command handler store integration tests", () => {
-  before(async () => {
-    await create(topic);
+  before(async () => await create(topic));
+  after(async () => await del(topic));
+
+  it("should return successfully", async () => {
     await deps
       .viewStore({
         name: "phones",
@@ -37,19 +33,6 @@ describe("Command handler store integration tests", () => {
       })
       //phone should be already formatted in the view store.
       .update(personRoot, { phone: "+12513332037" });
-  });
-  after(async () => {
-    await del(topic);
-    const { deletedCount } = await deps
-      .viewStore({
-        name: "phones",
-        domain: "person"
-      })
-      .delete(personRoot);
-
-    expect(deletedCount).to.equal(1);
-  });
-  it("should return successfully", async () => {
     const sentAfter = new Date();
 
     const { token, root } = await command({
@@ -101,69 +84,15 @@ describe("Command handler store integration tests", () => {
 
     expect(aggregate.headers.root).to.equal(parsedBody.root);
     expect(aggregate.state.phone).to.equal("+12513332037");
-  });
-  it("should publish event successfully", done => {
-    subscribe({
-      topic,
-      name: sub,
-      fn: async (_, subscription) => {
-        if (!subscription) throw "Subscription wasn't made";
-        subscription.once("message", async event => {
-          const eventString = Buffer.from(event.data, "base64")
-            .toString()
-            .trim();
 
-          const json = JSON.parse(eventString);
+    const { deletedCount } = await deps
+      .viewStore({
+        name: "phones",
+        domain: "person"
+      })
+      .delete(personRoot);
 
-          expect(json.payload.code).to.equal(code);
-          await unsubscribe({ topic, name: sub });
-
-          done();
-        });
-
-        const sentAfter = new Date();
-
-        const { token, root } = await command({
-          action: "issue",
-          domain: "challenge"
-        }).issue({ phone });
-
-        const jwt = await validateJwt({
-          token,
-          verifyFn: verify({
-            ring: process.env.SERVICE,
-            key: "challenge",
-            location: "global",
-            version: "1",
-            project: process.env.GCP_PROJECT
-          })
-        });
-
-        const [message] = await sms(
-          await secret("twilio-account-sid"),
-          await secret("twilio-auth-token")
-        ).list({ sentAfter, limit: 1, to: "+12513332037" });
-
-        const code = message.body.substr(0, 6);
-
-        request.post(url, {
-          body: {
-            headers: {
-              issued: stringDate(),
-              id: nonce(),
-              root
-            },
-            payload: {
-              code
-            },
-            context: {
-              challenge: root,
-              person: jwt.person
-            }
-          }
-        });
-      }
-    });
+    expect(deletedCount).to.equal(1);
   });
   it("should return an error if incorrect params", async () => {
     const code = { a: 1 };
