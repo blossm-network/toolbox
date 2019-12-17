@@ -72,7 +72,7 @@ const copySource = async (p, workingDir) => {
 
 const topicsForTargets = config => {
   const blossmConfig = rootDir.config();
-  return (config.targets || [])
+  const array = (config.targets || [])
     .filter(t => t.context == "command-handler")
     .map(
       t =>
@@ -87,6 +87,7 @@ const topicsForTargets = config => {
           ]
         : []
     );
+  return [...new Set(array)];
 };
 
 const writeConfig = (config, workingDir) => {
