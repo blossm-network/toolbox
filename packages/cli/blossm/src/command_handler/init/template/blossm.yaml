@@ -29,6 +29,7 @@ devDependencies:
   "chai-datetime": "^1.5.0"
   "@blossm/datetime": "*"
   "@blossm/request": "*"
+  "@blossm/nonce": "*"
   "@blossm/event-store-rpc": "*"
 
 service: core
