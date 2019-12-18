@@ -4,7 +4,7 @@ const { string: stringDate } = require("@blossm/datetime");
 
 const request = require("@blossm/request");
 
-const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
+const url = "http://main";
 
 describe("Command handler integration tests", () => {
   it("should return successfully", async () => {

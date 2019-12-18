@@ -24,7 +24,7 @@ module.exports = ({
       "run",
       "deploy",
       `${serviceName}`,
-      `--image=us.gcr.io/${project}${envNameSpecifier}${service}.${context}${
+      `--image=us.gcr.io/${project}${envNameSpecifier}/${service}.${context}${
         extension ? `.${extension}` : ""
       }`,
       "--platform=managed",
