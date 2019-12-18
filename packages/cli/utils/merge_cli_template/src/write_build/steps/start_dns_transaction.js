@@ -1,4 +1,4 @@
-module.exports = ({ dnsZone }) => {
+module.exports = ({ dnsZone, project }) => {
   return {
     name: "gcr.io/cloud-builders/gcloud",
     args: [
@@ -8,7 +8,7 @@ module.exports = ({ dnsZone }) => {
       "transaction",
       "start",
       `--zone=${dnsZone}`,
-      "--project=${_GCP_PROJECT}"
+      `--project=${project}`
     ]
   };
 };

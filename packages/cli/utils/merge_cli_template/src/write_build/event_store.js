@@ -24,6 +24,7 @@ module.exports = ({
   env,
   serviceName,
   uri,
+  operationHash,
   secretBucket,
   secretBucketKeyLocation,
   secretBucketKeyRing,
@@ -66,9 +67,9 @@ module.exports = ({
       envNameSpecifier,
       nodeEnv: env,
       env: `DOMAIN=${domain},MONGODB_DATABASE=event-store,MONGODB_USER=${mongodbUser}${envNameSpecifier},MONGODB_HOST=${env}-${mongodbHost},MONGODB_PROTOCOL=${mongodbProtocol}`,
-      labels: "domain=${_DOMAIN},hash=${_OPERATION_HASH}"
+      labels: `domain=${domain},hash=${operationHash}`
     }),
-    startDnsTransaction,
+    startDnsTransaction({ dnsZone, project }),
     addDnsTransaction({ uri, dnsZone, project }),
     executeDnsTransaction({ dnsZone, project }),
     abortDnsTransaction({ dnsZone, project }),

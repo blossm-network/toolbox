@@ -61,7 +61,7 @@ module.exports = ({
       env: `DOMAIN=${domain},NAME=${name}`,
       labels: `domain=${domain},name=${name},hash=${operationHash}`
     }),
-    startDnsTransaction,
+    startDnsTransaction({ dnsZone, project }),
     addDnsTransaction({ uri, dnsZone, project }),
     executeDnsTransaction({ dnsZone, project }),
     abortDnsTransaction({ dnsZone, project }),

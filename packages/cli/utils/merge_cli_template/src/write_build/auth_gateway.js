@@ -63,7 +63,7 @@ module.exports = ({
       envNameSpecifier,
       envUriSpecifier
     }),
-    startDnsTransaction,
+    startDnsTransaction({ dnsZone, project }),
     addDnsTransaction({ uri: authUri, dnsZone, project }),
     executeDnsTransaction({ dnsZone, project }),
     abortDnsTransaction({ dnsZone, project }),

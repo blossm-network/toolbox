@@ -32,7 +32,6 @@ module.exports = ({
   context,
   env,
   operationHash,
-  operationName,
   secretBucket,
   secretBucketKeyLocation,
   secretBucketKeyRing
@@ -76,7 +75,7 @@ module.exports = ({
       env: `DOMAIN=${domain},ACTION=${action},NAME=${name}`,
       labels: `domain=${domain},action=${action},name=${name},hash=${operationHash}`
     }),
-    startDnsTransaction,
+    startDnsTransaction({ dnsZone, project }),
     addDnsTransaction({ uri, dnsZone, project }),
     executeDnsTransaction({ dnsZone, project }),
     abortDnsTransaction({ dnsZone, project }),
@@ -89,8 +88,7 @@ module.exports = ({
     }),
     addPubSubPolicy({
       region,
-      operationName,
-      operationHash,
+      serviceName,
       project,
       envNameSpecifier
     }),

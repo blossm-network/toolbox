@@ -33,7 +33,7 @@ module.exports = ({
       `--project=${project}${envNameSpecifier}`,
       `--region=${region}`,
       `--set-env-vars=NODE_ENV=${nodeEnv},NETWORK=${region}.${envUriSpecifier}${network},SERVICE=${service},CONTEXT=${context},GCP_PROJECT=${project}${envNameSpecifier},GCP_REGION=${region},GCP_SECRET_BUCKET=${secretBucket},GCP_KMS_SECRET_BUCKET_KEY_LOCATION=${secretBucketKeyLocation},GCP_KMS_SECRET_BUCKET_KEY_RING=${secretBucketKeyRing},${env}`,
-      `--labels=service=\${_SERVICE},context=\${_CONTEXT},${labels}`
+      `--labels=service=${service},context=${context},${labels}`
     ]
   };
 };

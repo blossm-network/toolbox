@@ -71,13 +71,14 @@ const steps = ({
         context,
         env,
         serviceName,
+        operationHash,
         uri,
         secretBucket,
         secretBucketKeyLocation,
         secretBucketKeyRing,
-        mongodbUser: blossmConfig.vendors.viewStore.mongodb.user,
-        mongodbHost: blossmConfig.vendors.viewStore.mongodb.host,
-        mongodbProtocol: blossmConfig.vendors.viewStore.mongodb.protocol
+        mongodbUser: blossmConfig.vendors.eventStore.mongodb.user,
+        mongodbHost: blossmConfig.vendors.eventStore.mongodb.host,
+        mongodbProtocol: blossmConfig.vendors.eventStore.mongodb.protocol
       });
     case "event-handler":
       return eventHandler({
@@ -93,7 +94,6 @@ const steps = ({
         service,
         context,
         operationHash,
-        operationName,
         env,
         serviceName,
         uri,
@@ -175,6 +175,7 @@ module.exports = ({
   service,
   operationHash,
   operationName,
+  env,
   uri,
   secretBucket,
   secretBucketKeyLocation,
@@ -197,6 +198,7 @@ module.exports = ({
       envNameSpecifier,
       dnsZone,
       service,
+      env,
       operationHash,
       operationName,
       uri,
