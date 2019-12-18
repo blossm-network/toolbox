@@ -47,11 +47,16 @@ module.exports = ({
     dockerComposeLogs,
     dockerPush({ extension: imageExtension }),
     deploy({
-      service: serviceName,
+      serviceName,
+      context,
+      service,
       extension: imageExtension,
       secretBucket,
       secretBucketKeyLocation,
       secretBucketKeyRing,
+      region,
+      project,
+      envNameSpecifier,
       nodeEnv: env,
       env: `DOMAIN=${domain},NAME=${name}`,
       labels: `domain=${domain},name=${name},hash=${operationHash}`
@@ -61,7 +66,7 @@ module.exports = ({
     executeDnsTransaction({ dnsZone, project }),
     abortDnsTransaction({ dnsZone, project }),
     mapDomain({
-      service: serviceName,
+      serviceName,
       uri,
       project,
       envNameSpecifier,

@@ -54,11 +54,16 @@ module.exports = ({
       context
     }),
     deploy({
-      service: serviceName,
+      serviceName,
+      context,
+      service,
       extension: imageExtension,
       secretBucket,
       secretBucketKeyLocation,
       secretBucketKeyRing,
+      region,
+      project,
+      envNameSpecifier,
       nodeEnv: env,
       env: `DOMAIN=${domain},MONGODB_DATABASE=event-store,MONGODB_USER=${mongodbUser}${envNameSpecifier},MONGODB_HOST=${env}-${mongodbHost},MONGODB_PROTOCOL=${mongodbProtocol}`,
       labels: "domain=${_DOMAIN},hash=${_OPERATION_HASH}"
@@ -68,7 +73,7 @@ module.exports = ({
     executeDnsTransaction({ dnsZone, project }),
     abortDnsTransaction({ dnsZone, project }),
     mapDomain({
-      service: serviceName,
+      serviceName,
       uri,
       project,
       envNameSpecifier,

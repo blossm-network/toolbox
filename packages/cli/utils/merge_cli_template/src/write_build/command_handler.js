@@ -23,11 +23,11 @@ module.exports = ({
   envUriSpecifier,
   envNameSpecifier,
   uri,
-  serviceName,
   dnsZone,
   service,
   env,
   operationHash,
+  serviceName,
   context,
   secretBucket,
   secretBucketKeyLocation,
@@ -56,11 +56,18 @@ module.exports = ({
       context
     }),
     deploy({
+      serviceName,
+      context,
       service,
       extension: imageExtension,
       secretBucket,
       secretBucketKeyLocation,
       secretBucketKeyRing,
+      region,
+      project,
+      network,
+      envNameSpecifier,
+      envUriSpecifier,
       nodeEnv: env,
       env: `DOMAIN=${domain},ACTION=${action}`,
       labels: `domain=${domain},action=${action},hash=${operationHash}`
@@ -70,11 +77,11 @@ module.exports = ({
     executeDnsTransaction({ dnsZone, project }),
     abortDnsTransaction({ dnsZone, project }),
     mapDomain({
-      service: serviceName,
       uri,
       project,
       envNameSpecifier,
-      region
+      region,
+      serviceName
     }),
     createPubsubTopic({
       action,

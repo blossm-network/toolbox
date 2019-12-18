@@ -6,8 +6,7 @@ module.exports = ({
   memory,
   envNameSpecifier,
   envUriSpecifier,
-  operationName,
-  operationHash,
+  serviceName,
   secretBucket,
   secretBucketKeyLocation,
   secretBucketKeyRing,
@@ -23,7 +22,7 @@ module.exports = ({
       "beta",
       "run",
       "deploy",
-      `${region}-${operationName}-${operationHash}`,
+      `${serviceName}`,
       `--image=us.gcr.io/${project}${envNameSpecifier}${service}.${context}${
         extension ? `.${extension}` : ""
       }`,

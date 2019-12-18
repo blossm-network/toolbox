@@ -60,12 +60,19 @@ module.exports = ({
       context
     }),
     deploy({
-      service: serviceName,
+      serviceName,
+      context,
+      service,
       extension: imageExtension,
       secretBucket,
       secretBucketKeyLocation,
       secretBucketKeyRing,
       nodeEnv: env,
+      region,
+      project,
+      network,
+      envNameSpecifier,
+      envUriSpecifier,
       env: `DOMAIN=${domain},ACTION=${action},NAME=${name}`,
       labels: `domain=${domain},action=${action},name=${name},hash=${operationHash}`
     }),
@@ -74,7 +81,7 @@ module.exports = ({
     executeDnsTransaction({ dnsZone, project }),
     abortDnsTransaction({ dnsZone, project }),
     mapDomain({
-      service: serviceName,
+      serviceName,
       uri,
       project,
       envNameSpecifier,

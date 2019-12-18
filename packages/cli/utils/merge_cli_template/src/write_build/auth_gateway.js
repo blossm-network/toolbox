@@ -49,23 +49,30 @@ module.exports = ({
       context
     }),
     deploy({
-      service: authServiceName,
+      serviceName: authServiceName,
       allowUnauthenticated: true,
+      context,
+      service,
       secretBucket,
       secretBucketKeyLocation,
       secretBucketKeyRing,
-      nodeEnv: env
+      nodeEnv: env,
+      region,
+      project,
+      network,
+      envNameSpecifier,
+      envUriSpecifier
     }),
     startDnsTransaction,
     addDnsTransaction({ uri: authUri, dnsZone, project }),
     executeDnsTransaction({ dnsZone, project }),
     abortDnsTransaction({ dnsZone, project }),
     mapDomain({
-      service: authServiceName,
       uri: authUri,
       project,
       envNameSpecifier,
-      region
+      region,
+      serviceName: authServiceName
     })
   ];
 };
