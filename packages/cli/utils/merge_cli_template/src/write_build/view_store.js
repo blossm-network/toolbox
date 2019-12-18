@@ -37,31 +37,7 @@ module.exports = ({
   uri
 }) => {
   const imageExtension = `${domain}.${name}`;
-  //eslint-disable-next-line
-  console.log({
-    region,
-    domain,
-    name,
-    project,
-    network,
-    memory,
-    envUriSpecifier,
-    envNameSpecifier,
-    dnsZone,
-    service,
-    context,
-    operationHash,
-    serviceName,
-    secretBucket,
-    secretBucketKeyLocation,
-    secretBucketKeyRing,
-    mongodbUser,
-    mongodbHost,
-    mongodbProtocol,
-    env,
-    uri
-  });
-  return [
+  const steps = [
     yarnInstall,
     unitTest,
     buildImage({
@@ -112,4 +88,10 @@ module.exports = ({
       region
     })
   ];
+  //eslint-disable-next-line
+  console.log({
+    steps
+  });
+
+  return steps;
 };
