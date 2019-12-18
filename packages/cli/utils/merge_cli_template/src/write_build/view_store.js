@@ -1,4 +1,4 @@
-const yarnInstall = require("./steps/yarn_installnstall");
+const yarnInstall = require("./steps/yarn_install");
 const unitTest = require("./steps/unit_tests");
 const buildImage = require("./steps/build_image");
 const dockerComposeUp = require("./steps/docker_compose_up");
