@@ -181,6 +181,7 @@ const configure = async (workingDir, configFn, env) => {
       action,
       name,
       project,
+      context,
       network,
       memory,
       envUriSpecifier: envUriSpecifier(env),
