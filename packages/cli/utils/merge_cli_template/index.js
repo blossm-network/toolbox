@@ -204,7 +204,7 @@ const configure = async (workingDir, configFn, env) => {
       service,
       project,
       region,
-      containerRegistery: `us.gcr.io/${project}${envNameSpecifier}`,
+      containerRegistery: `us.gcr.io/${project}${envNameSpecifier(env)}`,
       domain,
       name,
       action,
