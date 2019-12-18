@@ -6,7 +6,7 @@ module.exports = ({
   context
 } = {}) => {
   return {
-    name: "docker/compose:1.15.0",
+    name: "gcr.io/cloud-builders/docker",
     args: [
       "build",
       "-t",

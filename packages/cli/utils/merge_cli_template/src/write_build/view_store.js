@@ -37,7 +37,7 @@ module.exports = ({
   uri
 }) => {
   const imageExtension = `${domain}.${name}`;
-  const steps = [
+  return [
     yarnInstall,
     unitTest,
     buildImage({
@@ -88,10 +88,4 @@ module.exports = ({
       region
     })
   ];
-  //eslint-disable-next-line
-  console.log({
-    steps
-  });
-
-  return steps;
 };
