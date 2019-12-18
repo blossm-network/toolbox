@@ -4,14 +4,13 @@ const roboSay = require("@blossm/robo-say");
 const { create: createSecret } = require("@blossm/gcp-secret");
 const rootDir = require("@blossm/cli-root-dir");
 
-const environmentSuffix = env => {
+const envNameSpecifier = env => {
   switch (env) {
-    case "production":
-      return "";
     case "sandbox":
-      return "-sandbox";
     case "staging":
-      return "-staging";
+      return `-${env}`;
+    default:
+      return "";
   }
 };
 
@@ -20,14 +19,14 @@ const create = async input => {
 
   const blossmConfig = rootDir.config();
   await createSecret(input.name, input.message, {
-    project: `${blossmConfig.vendors.cloud.gcp.project}${environmentSuffix(
+    project: `${blossmConfig.vendors.cloud.gcp.project}${envNameSpecifier(
       environment
     )}`,
     ring: "secret-bucket",
     location: "global",
-    bucket: `${blossmConfig.vendors.cloud.gcp.secretsBucket}${environmentSuffix(
+    bucket: `${blossmConfig.vendors.cloud.gcp.secretsBucket}${envNameSpecifier(
       environment
-    )}`
+    )}-secrets`
   });
 };
 

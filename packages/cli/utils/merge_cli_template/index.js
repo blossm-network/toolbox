@@ -10,6 +10,26 @@ const { red } = require("chalk");
 const access = promisify(fs.access);
 const copy = promisify(ncp);
 
+const envUriSpecifier = env => {
+  switch (env) {
+    case "sandbox":
+    case "staging":
+      return `${env}.`;
+    default:
+      return "";
+  }
+};
+
+const envNameSpecifier = env => {
+  switch (env) {
+    case "sandbox":
+    case "staging":
+      return `-${env}`;
+    default:
+      return "";
+  }
+};
+
 const writeCompose = require("./src/write_compose");
 const writeBuild = require("./src/write_build");
 const resolveTransientTargets = require("./src/resolve_transient_targets");
@@ -98,9 +118,6 @@ const writeConfig = (config, workingDir) => {
 
   config.topics = topicsForTargets(config);
 
-  //eslint-disable-next-line
-  console.log("topics: ", config.topics);
-
   fs.writeFileSync(newConfigPath, JSON.stringify(config));
 };
 
@@ -129,8 +146,71 @@ const configure = async (workingDir, configFn, env) => {
     delete config.dependencies;
     delete config.devDependencies;
     writeConfig(config, workingDir);
-    writeBuild({ config, workingDir, configFn, env });
-    writeCompose(config, workingDir);
+
+    const blossmConfig = rootDir.config();
+
+    const region =
+      config["gcp-region"] || blossmConfig.vendors.cloud.gcp.region;
+    const project =
+      config["gcp-project"] || blossmConfig.vendors.cloud.gcp.project;
+    const network = config.network || blossmConfig.network;
+    const dnsZone =
+      config["gcp-dns-zone"] || blossmConfig.vendors.cloud.gcp.dnsZone;
+
+    const memory = config.memory || blossmConfig.vendors.cloud.gcp.memory;
+    const domain = config.domain;
+    const service = config.service;
+    const context = config.context;
+    const action = config.action;
+    const name = config.name;
+
+    const secretBucket = env =>
+      `${blossmConfig.vendors.cloud.gcp.secretsBucket}${envNameSpecifier(
+        env
+      )}-secrets`;
+    const secretBucketKeyLocation = "global";
+    const secretBucketKeyRing = "secret-bucket";
+
+    writeBuild({
+      config,
+      workingDir,
+      configFn,
+      env,
+      region,
+      domain,
+      action,
+      name,
+      project,
+      network,
+      memory,
+      envUriSpecifier: envUriSpecifier(env),
+      envNameSpecifier: envNameSpecifier(env),
+      dnsZone,
+      service,
+      secretBucket: secretBucket(env),
+      secretBucketKeyLocation,
+      secretBucketKeyRing,
+      ...configFn(config)
+    });
+
+    writeCompose({
+      config,
+      workingDir,
+      context,
+      port: 80,
+      mainContainerName: "main",
+      network,
+      service,
+      project,
+      region,
+      containerRegistery: `us.gcr.io/${project}${envNameSpecifier}`,
+      domain,
+      name,
+      action,
+      secretBucket: secretBucket("staging"),
+      secretBucketKeyLocation,
+      secretBucketKeyRing
+    });
   } catch (e) {
     //eslint-disable-next-line no-console
     console.error(e);

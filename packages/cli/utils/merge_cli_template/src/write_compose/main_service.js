@@ -1,73 +1,93 @@
-module.exports = context => {
+module.exports = ({
+  context,
+  port,
+  mainContainerName,
+  network,
+  service,
+  project,
+  region,
+  containerRegister,
+  domain,
+  name,
+  env,
+  action,
+  secretBucket,
+  secretBucketKeyLocation,
+  secretBucketKeyRing,
+  mongodbUser,
+  mongodbUserPassword,
+  mongodbHost,
+  mongodbDatabase,
+  mongodbProtocol
+}) => {
   const common = {
-    container_name: "${MAIN_CONTAINER_NAME}",
-    ports: ["${PORT}"],
+    container_name: `${mainContainerName}`,
+    ports: [`${port}`],
     environment: {
-      PORT: "${PORT}",
-      NODE_ENV: "${NODE_ENV}",
-      NETWORK: "${NETWORK}",
-      CONTEXT: "${CONTEXT}",
-      SERVICE: "${SERVICE}",
-      GCP_PROJECT: "${GCP_PROJECT}",
-      GCP_REGION: "${GCP_REGION}",
-      GCP_SECRET_BUCKET: "${GCP_SECRET_BUCKET}",
-      GCP_KMS_SECRET_BUCKET_KEY_LOCATION:
-        "${GCP_KMS_SECRET_BUCKET_KEY_LOCATION}",
-      GCP_KMS_SECRET_BUCKET_KEY_RING: "${GCP_KMS_SECRET_BUCKET_KEY_RING}"
+      PORT: `${port}`,
+      NODE_ENV: `${env}`,
+      NETWORK: `${network}`,
+      CONTEXT: `${context}`,
+      SERVICE: `${service}`,
+      GCP_PROJECT: `${project}`,
+      GCP_REGION: `${region}`,
+      GCP_SECRET_BUCKET: `${secretBucket}`,
+      GCP_KMS_SECRET_BUCKET_KEY_LOCATION: `${secretBucketKeyLocation}`,
+      GCP_KMS_SECRET_BUCKET_KEY_RING: `${secretBucketKeyRing}`
     }
   };
 
   const commonDatabaseEnv = {
-    MONGODB_USER: "${MONGODB_USER}",
-    MONGODB_HOST: "${MONGODB_HOST}",
-    MONGODB_USER_PASSWORD: "${MONGODB_USER_PASSWORD}",
-    MONGODB_DATABASE: "${MONGODB_DATABASE}",
-    MONGODB_PROTOCOL: "${MONGODB_PROTOCOL}"
+    MONGODB_USER: `${mongodbUser}`,
+    MONGODB_HOST: `${mongodbHost}`,
+    MONGODB_USER_PASSWORD: `${mongodbUserPassword}`,
+    MONGODB_DATABASE: `${mongodbDatabase}`,
+    MONGODB_PROTOCOL: `${mongodbProtocol}`
   };
 
-  const commonImagePrefix = "${CONTAINER_REGISTRY}/${SERVICE}.${CONTEXT}";
+  const commonImagePrefix = `${containerRegister}/${service}.${context}`;
 
   switch (context) {
     case "view-store":
       return {
-        image: `${commonImagePrefix}.\${DOMAIN}.\${NAME}:latest`,
+        image: `${commonImagePrefix}.${domain}.${name}:latest`,
         ...common,
         environment: {
-          NAME: "${NAME}",
-          DOMAIN: "${DOMAIN}",
+          NAME: `${name}`,
+          DOMAIN: `${domain}`,
           ...common.environment,
           ...commonDatabaseEnv
         }
       };
     case "event-store":
       return {
-        image: `${commonImagePrefix}.\${DOMAIN}:latest`,
+        image: `${commonImagePrefix}.${domain}:latest`,
         ...common,
         environment: {
-          DOMAIN: "${DOMAIN}",
+          DOMAIN: `${domain}`,
           ...common.environment,
           ...commonDatabaseEnv
         }
       };
     case "command-handler":
       return {
-        image: `${commonImagePrefix}.\${DOMAIN}.\${ACTION}:latest`,
+        image: `${commonImagePrefix}.${domain}.${action}:latest`,
         ...common,
         environment: {
           ...common.environment,
-          DOMAIN: "${DOMAIN}",
-          ACTION: "${ACTION}"
+          DOMAIN: `${domain}`,
+          ACTION: `${action}`
         }
       };
     case "event-handler":
       return {
-        image: `${commonImagePrefix}.\${DOMAIN}.did-\${ACTION}.\${NAME}:latest`,
+        image: `${commonImagePrefix}.${domain}.did-${action}.${name}:latest`,
         ...common,
         environment: {
           ...common.environment,
-          DOMAIN: "${DOMAIN}",
-          ACTION: "${ACTION}",
-          NAME: "${NAME}"
+          DOMAIN: `${domain}`,
+          ACTION: `${action}`,
+          NAME: `${name}`
         }
       };
     case "job":
@@ -76,8 +96,8 @@ module.exports = context => {
         ...common,
         environment: {
           ...common.environment,
-          DOMAIN: "${DOMAIN}",
-          NAME: "${NAME}"
+          DOMAIN: `${domain}`,
+          NAME: `${name}`
         }
       };
     case "auth-gateway":

@@ -1,16 +1,206 @@
 const fs = require("fs-extra");
 const yaml = require("yaml");
 const path = require("path");
+const rootDir = require("@blossm/cli-root-dir");
 
-const substitutions = require("./substitutions");
-const steps = require("./steps");
+const viewStore = require("./view_store");
+const authGateway = require("./auth_gateway");
+const commandHandler = require("./command_handler");
+const eventHandler = require("./event_handler");
+const eventStore = require("./event_store");
+const job = require("./job");
 
-module.exports = ({ config, workingDir, configFn, env }) => {
+const steps = ({
+  config,
+  region,
+  domain,
+  action,
+  name,
+  project,
+  network,
+  memory,
+  envUriSpecifier,
+  envNameSpecifier,
+  dnsZone,
+  service,
+  env,
+  operationHash,
+  operationName,
+  secretBucket,
+  secretBucketKeyLocation,
+  secretBucketKeyRing
+}) => {
+  const serviceName = `${region}-${operationName}-${operationHash}`;
+  const uri = `${operationHash}.${region}.${envUriSpecifier}${network}`;
+  const blossmConfig = rootDir.config();
+  switch (config.context) {
+    case "view-store":
+      return viewStore({
+        region,
+        domain,
+        name,
+        project,
+        network,
+        memory,
+        envUriSpecifier,
+        envNameSpecifier,
+        dnsZone,
+        service,
+        context,
+        operationHash,
+        operationName,
+        serviceName,
+        env,
+        uri,
+        secretBucket,
+        secretBucketKeyLocation,
+        secretBucketKeyRing,
+        mongodbUser: blossmConfig.vendors.viewStore.mongodb.user,
+        mongodbHost: blossmConfig.vendors.viewStore.mongodb.host,
+        mongodbProtocol: blossmConfig.vendors.viewStore.mongodb.protocol
+      });
+    case "event-store":
+      return eventStore({
+        domain,
+        region,
+        project,
+        envNameSpecifier,
+        dnsZone,
+        service,
+        context,
+        env,
+        serviceName,
+        uri,
+        secretBucket,
+        secretBucketKeyLocation,
+        secretBucketKeyRing,
+        mongodbUser: blossmConfig.vendors.viewStore.mongodb.user,
+        mongodbHost: blossmConfig.vendors.viewStore.mongodb.host,
+        mongodbProtocol: blossmConfig.vendors.viewStore.mongodb.protocol
+      });
+    case "event-handler":
+      return eventHandler({
+        action,
+        region,
+        domain,
+        name,
+        project,
+        network,
+        envUriSpecifier,
+        envNameSpecifier,
+        dnsZone,
+        service,
+        context,
+        operationHash,
+        operationName,
+        env,
+        serviceName,
+        uri,
+        secretBucket,
+        secretBucketKeyLocation,
+        secretBucketKeyRing
+      });
+    case "command-handler":
+      return commandHandler({
+        action,
+        region,
+        domain,
+        project,
+        network,
+        envUriSpecifier,
+        envNameSpecifier,
+        dnsZone,
+        service,
+        context,
+        env,
+        serviceName,
+        uri,
+        secretBucket,
+        secretBucketKeyLocation,
+        secretBucketKeyRing
+      });
+    case "job":
+      return job({
+        name,
+        domain,
+        region,
+        project,
+        envNameSpecifier,
+        dnsZone,
+        service,
+        context,
+        operationHash,
+        env,
+        serviceName,
+        uri,
+        secretBucket,
+        secretBucketKeyLocation,
+        secretBucketKeyRing
+      });
+    case "auth-gateway":
+      return authGateway({
+        region,
+        project,
+        envNameSpecifier,
+        envUriSpecifier,
+        dnsZone,
+        env,
+        service,
+        context,
+        network,
+        secretBucket,
+        secretBucketKeyLocation,
+        secretBucketKeyRing
+      });
+  }
+};
+
+module.exports = ({
+  config,
+  workingDir,
+  region,
+  domain,
+  action,
+  name,
+  project,
+  network,
+  memory,
+  envUriSpecifier,
+  envNameSpecifier,
+  dnsZone,
+  service,
+  operationHash,
+  operationName,
+  serviceName,
+  uri,
+  secretBucket,
+  secretBucketKeyLocation,
+  secretBucketKeyRing
+}) => {
   const buildPath = path.resolve(workingDir, "build.yaml");
 
   const build = {
-    substitutions: substitutions({ config, configFn, env }),
-    steps: steps({ config, env })
+    steps: steps({
+      config,
+      region,
+      domain,
+      action,
+      name,
+      project,
+      network,
+      memory,
+      envUriSpecifier,
+      envNameSpecifier,
+      dnsZone,
+      service,
+      operationHash,
+      operationName,
+      serviceName,
+      uri,
+      secretBucket,
+      secretBucketKeyLocation,
+      secretBucketKeyRing
+    })
   };
 
   fs.writeFileSync(buildPath, yaml.stringify(build));

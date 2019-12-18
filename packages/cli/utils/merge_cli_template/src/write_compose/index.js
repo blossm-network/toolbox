@@ -17,15 +17,73 @@ const includeDatabase = config => {
   return false;
 };
 
-module.exports = (config, workingDir) => {
+module.exports = ({
+  config,
+  workingDir,
+  context,
+  port,
+  mainContainerName,
+  network,
+  service,
+  project,
+  region,
+  containerRegister,
+  domain,
+  name,
+  action,
+  secretBucketKeyLocation,
+  secretBucketKeyRing
+}) => {
+  const secretBucket = "smn-staging-secrets";
+  const mongodbUser = "tester";
+  const mongodbUserPassword = "password";
+  const mongodbProtocol = "mongodb";
+  const mongodbHost = "mongodb";
+  const mongodbDatabase = "testing";
+  const env = "local";
+
   const _includeDatabase = includeDatabase(config);
 
-  const _targetServices = targetServices({ config, databaseServiceKey });
+  const _targetServices = targetServices({
+    config,
+    databaseServiceKey,
+    project,
+    port,
+    env,
+    network,
+    service,
+    region,
+    secretBucket,
+    secretBucketKeyLocation,
+    secretBucketKeyRing
+  });
+
   const compose = {
     version: "3",
     services: {
       main: {
-        ...mainService(config.context),
+        ...mainService({
+          context,
+          port,
+          mainContainerName,
+          network,
+          service,
+          project,
+          region,
+          env,
+          containerRegister,
+          domain,
+          name,
+          action,
+          secretBucket,
+          secretBucketKeyLocation,
+          secretBucketKeyRing,
+          mongodbUser,
+          mongodbHost,
+          mongodbUserPassword,
+          mongodbDatabase,
+          mongodbProtocol
+        }),
         depends_on: [
           ...(_includeDatabase ? [databaseServiceKey] : []),
           ...Object.keys(_targetServices)
@@ -33,7 +91,14 @@ module.exports = (config, workingDir) => {
       },
       ..._targetServices,
       ...(_includeDatabase && {
-        [databaseServiceKey]: databaseService
+        [databaseServiceKey]: databaseService({
+          adminUser: "admin",
+          adminUserPassword: "password",
+          adminDatabase: "admin",
+          database: mongodbDatabase,
+          user: mongodbUser,
+          userPassword: mongodbUserPassword
+        })
       })
     },
     networks: {

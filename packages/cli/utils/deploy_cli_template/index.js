@@ -4,13 +4,12 @@ const mergeCliTemplate = require("@blossm/merge-cli-template");
 const testCliTemplate = require("@blossm/test-cli-template");
 const fs = require("fs-extra");
 const { spawnSync } = require("child_process");
-const yaml = require("yaml");
+const rootDir = require("@blossm/cli-root-dir");
 const path = require("path");
 const { green } = require("chalk");
 
 const build = async workingDir => {
-  const buildPath = path.resolve(workingDir, "build.yaml");
-  const { substitutions } = yaml.parse(fs.readFileSync(buildPath, "utf8"));
+  const blossmConfig = rootDir.config();
 
   spawnSync(
     "gcloud",
@@ -19,7 +18,7 @@ const build = async workingDir => {
       "submit",
       ".",
       "--config=build.yaml",
-      `--project=${substitutions._GCP_PROJECT}`
+      `--project=${blossmConfig.vendors.cloud.gcp.project}`
     ],
     {
       stdio: [process.stdin, process.stdout, process.stderr],

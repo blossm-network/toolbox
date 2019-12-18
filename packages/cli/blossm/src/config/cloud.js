@@ -32,7 +32,7 @@ module.exports = async args => {
         type: String
       },
       {
-        name: "secret-bucket",
+        name: "secrets-bucket",
         short: "s",
         type: String
       }
@@ -86,7 +86,7 @@ module.exports = async args => {
       type: "string",
       name: "secretsBucket",
       message: roboSay(
-        `In what bucket will encrypted secrets be stored? (Blossm will assume the full bucket name is \`{name}{NODE_ENV}\`, where NODE_ENV is either "", "-sandbox", or "-staging".)`
+        `In what bucket will encrypted secrets be stored? (Blossm will assume the full bucket name is \`{name}{NODE_ENV}-secrets\`, where NODE_ENV is either "", "-sandbox", or "-staging".)`
       )
     });
     input.secretsBucket = secretsBucket;

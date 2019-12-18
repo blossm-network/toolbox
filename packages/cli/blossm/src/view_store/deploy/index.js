@@ -8,12 +8,12 @@ module.exports = deployCliTemplate({
   dir: __dirname,
   configFn: config => {
     return {
-      _NAME: config.name,
-      _OPERATION_NAME: trim(
+      name: config.name,
+      operationName: trim(
         `${config.service}-${config.context}-${config.domain}-${config.name}`,
         MAX_LENGTH
       ),
-      _OPERATION_HASH: hash({
+      operationHash: hash({
         procedure: [config.name, config.domain, config.context],
         service: config.service
       })

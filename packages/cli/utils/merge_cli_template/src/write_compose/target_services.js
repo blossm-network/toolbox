@@ -2,33 +2,53 @@ const hash = require("@blossm/service-hash");
 
 const databaseService = require("./database_service");
 
-module.exports = ({ config, databaseServiceKey }) => {
-  const containerRegistry = "us.gcr.io/${GCP_PROJECT}";
+module.exports = ({
+  config,
+  databaseServiceKey,
+  project,
+  port,
+  env,
+  network,
+  service,
+  region,
+  secretBucket,
+  secretBucketKeyLocation,
+  secretBucketKeyRing
+}) => {
+  const containerRegistry = `us.gcr.io/${project}`;
   const common = {
-    ports: ["${PORT}"]
+    ports: [`${port}`]
   };
   const commonEnvironment = {
-    PORT: "${PORT}",
-    NODE_ENV: "${NODE_ENV}",
-    NETWORK: "${NETWORK}",
-    SERVICE: "${SERVICE}",
-    GCP_PROJECT: "${GCP_PROJECT}",
-    GCP_REGION: "${GCP_REGION}",
-    GCP_SECRET_BUCKET: "${GCP_SECRET_BUCKET}",
-    GCP_KMS_SECRET_BUCKET_KEY_LOCATION: "${GCP_KMS_SECRET_BUCKET_KEY_LOCATION}",
-    GCP_KMS_SECRET_BUCKET_KEY_RING: "${GCP_KMS_SECRET_BUCKET_KEY_RING}"
+    PORT: `${port}`,
+    NODE_ENV: `${env}`,
+    NETWORK: `${network}`,
+    SERVICE: `${service}`,
+    GCP_PROJECT: `${project}`,
+    GCP_REGION: `${region}`,
+    GCP_SECRET_BUCKET: `${secretBucket}`,
+    GCP_KMS_SECRET_BUCKET_KEY_LOCATION: `${secretBucketKeyLocation}`,
+    GCP_KMS_SECRET_BUCKET_KEY_RING: `${secretBucketKeyRing}`
   };
-  const commonStoreEnvironment = {
-    MONGODB_USER: "${MONGODB_USER}",
-    MONGODB_HOST: "${MONGODB_HOST}",
-    MONGODB_USER_PASSWORD: "${MONGODB_USER_PASSWORD}",
-    MONGODB_PROTOCOL: "${MONGODB_PROTOCOL}",
-    MONGODB_DATABASE: "${MONGODB_DATABASE}"
+  const commonStoreEnvironment = ({
+    user,
+    host,
+    userPassword,
+    protocol,
+    database
+  }) => {
+    return {
+      MONGODB_USER: `${user}`,
+      MONGODB_HOST: `${host}`,
+      MONGODB_USER_PASSWORD: `${userPassword}`,
+      MONGODB_PROTOCOL: `${protocol}`,
+      MONGODB_DATABASE: `${database}`
+    };
   };
   let services = {};
   let includeDatabase = false;
   for (const target of config.targets) {
-    const commonServiceImagePrefix = `${containerRegistry}/\${SERVICE}.${target.context}`;
+    const commonServiceImagePrefix = `${containerRegistry}/${service}.${target.context}`;
     switch (target.context) {
       case "view-store":
         {
@@ -43,7 +63,7 @@ module.exports = ({ config, databaseServiceKey }) => {
             [key]: {
               ...common,
               image: `${commonServiceImagePrefix}.${target.domain}.${target.name}:latest`,
-              container_name: `${targetHash}.\${NETWORK}`,
+              container_name: `${targetHash}.${network}`,
               depends_on: [databaseServiceKey],
               environment: {
                 ...commonEnvironment,
@@ -70,7 +90,7 @@ module.exports = ({ config, databaseServiceKey }) => {
             [key]: {
               ...common,
               image: `${commonServiceImagePrefix}.${target.domain}:latest`,
-              container_name: `${targetHash}.\${NETWORK}`,
+              container_name: `${targetHash}.${network}`,
               depends_on: [databaseServiceKey],
               environment: {
                 ...commonEnvironment,
@@ -95,7 +115,7 @@ module.exports = ({ config, databaseServiceKey }) => {
             [key]: {
               ...common,
               image: `${commonServiceImagePrefix}.${target.domain}.${target.action}:latest`,
-              container_name: `${targetHash}.\${NETWORK}`,
+              container_name: `${targetHash}.${network}`,
               environment: {
                 ...commonEnvironment,
                 CONTEXT: target.context,

@@ -18,14 +18,11 @@ const deps = require("../../deps");
 const personRoot = uuid();
 const phone = "251-333-2037";
 
-const topics = [
-  `did-${process.env.ACTION}.${process.env.DOMAIN}.${process.env.SERVICE}.${process.env.NETWORK}`,
-  `did-issue.${process.env.DOMAIN}.${process.env.SERVICE}.${process.env.NETWORK}`
-];
+const config = require("./../config.js");
 
 describe("Command handler store integration tests", () => {
-  before(async () => await Promise.all([create(topics[0]), create(topics[1])]));
-  after(async () => await Promise.all([del(topics[0]), del(topics[1])]));
+  before(async () => await Promise.all(config.topics.map(t => create(t))));
+  after(async () => await Promise.all(config.topics.map(t => del(t))));
 
   it("should return successfully", async () => {
     await deps
