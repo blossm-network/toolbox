@@ -6,7 +6,7 @@ module.exports = ({
   service,
   project,
   region,
-  containerRegister,
+  containerRegistery,
   domain,
   name,
   env,
@@ -45,7 +45,7 @@ module.exports = ({
     MONGODB_PROTOCOL: `${mongodbProtocol}`
   };
 
-  const commonImagePrefix = `${containerRegister}/${service}.${context}`;
+  const commonImagePrefix = `${containerRegistery}/${service}.${context}`;
 
   switch (context) {
     case "view-store":
