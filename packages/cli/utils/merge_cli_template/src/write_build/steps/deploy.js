@@ -3,6 +3,7 @@ module.exports = ({
   project,
   service,
   network,
+  context,
   memory,
   envNameSpecifier,
   envUriSpecifier,
