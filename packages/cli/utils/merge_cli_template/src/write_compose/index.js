@@ -113,5 +113,7 @@ module.exports = ({
   const composePath = path.resolve(workingDir, "docker-compose.yaml");
   //eslint-disable-next-line
   console.log("compose: ", compose);
+  //eslint-disable-next-line
+  console.log("db: ", compose.services.db);
   fs.writeFileSync(composePath, yaml.stringify(compose));
 };
