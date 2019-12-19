@@ -34,6 +34,8 @@ module.exports = ({
   secretBucketKeyLocation,
   secretBucketKeyRing
 }) => {
+  //eslint-disable-next-line
+  console.log("THE CONFIG: ", { config });
   const secretBucket = "smn-staging-secrets";
   const mongodbUser = "tester";
   const mongodbUserPassword = "password";
