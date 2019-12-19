@@ -221,6 +221,25 @@ const configure = async (workingDir, configFn, env) => {
       ...configFn(config)
     });
 
+    //eslint-disable-next-line no-console
+    console.log("stoof: ", {
+      config,
+      workingDir,
+      context,
+      port: 80,
+      mainContainerName: "main",
+      network,
+      service,
+      project,
+      region,
+      containerRegistery,
+      domain,
+      name,
+      action,
+      secretBucket: secretBucket("staging"),
+      secretBucketKeyLocation,
+      secretBucketKeyRing
+    });
     writeCompose({
       config,
       workingDir,
@@ -255,8 +274,16 @@ const configure = async (workingDir, configFn, env) => {
 };
 
 module.exports = async ({ scriptDir, workingDir, input, configFn }) => {
+  //eslint-disable-next-line no-console
+  console.log("q: ", { __dirname, workingDir });
   await copyTemplate(__dirname, workingDir);
+  //eslint-disable-next-line no-console
+  console.log("w: ", { scriptDir, workingDir });
   await copyScript(scriptDir, workingDir);
+  //eslint-disable-next-line no-console
+  console.log("e: ", { path: input.path, workingDir });
   await copySource(input.path, workingDir);
+  //eslint-disable-next-line no-console
+  console.log("r: ", { workingDir, configFn, env: input.env });
   await configure(workingDir, configFn, input.env);
 };
