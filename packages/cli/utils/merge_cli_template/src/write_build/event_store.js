@@ -52,6 +52,7 @@ module.exports = ({
       containerRegistery,
       mainContainerName,
       project,
+      context,
       region,
       service,
       secretBucket,

@@ -12,6 +12,7 @@ const addDnsTransaction = require("./steps/add_dns_transaction");
 const executeDnsTransaction = require("./steps/execute_dns_transaction");
 const abortDnsTransaction = require("./steps/abort_dns_transaction");
 const mapDomain = require("./steps/map_domain");
+const writeEnv = require("./steps/write_env");
 
 module.exports = ({
   region,
@@ -20,6 +21,7 @@ module.exports = ({
   envNameSpecifier,
   envUriSpecifier,
   containerRegistery,
+  mainContainerName,
   dnsZone,
   service,
   context,
@@ -38,6 +40,17 @@ module.exports = ({
       containerRegistery,
       service,
       context
+    }),
+    writeEnv({
+      containerRegistery,
+      mainContainerName,
+      project,
+      region,
+      context,
+      service,
+      secretBucket,
+      secretBucketKeyRing,
+      secretBucketKeyLocation
     }),
     dockerComposeUp,
     dockerComposeProcesses,
