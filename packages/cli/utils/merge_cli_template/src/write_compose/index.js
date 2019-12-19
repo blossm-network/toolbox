@@ -40,6 +40,9 @@ module.exports = ({
   const mongodbProtocol = "mongodb";
   const mongodbHost = "mongodb";
   const mongodbDatabase = "testing";
+  const mongodbAdminUser = "admin";
+  const mongodbAdminUserPassword = "password";
+  const mongodbAdminDatabase = "admin";
   const env = "local";
 
   const _includeDatabase = includeDatabase(config);
@@ -55,7 +58,13 @@ module.exports = ({
     region,
     secretBucket,
     secretBucketKeyLocation,
-    secretBucketKeyRing
+    secretBucketKeyRing,
+    mongodbAdminUser,
+    mongodbAdminUserPassword,
+    mongodbAdminDatabase,
+    mongodbDatabase,
+    mongodbUser,
+    mongodbUserPassword
   });
 
   const compose = {
@@ -92,9 +101,9 @@ module.exports = ({
       ..._targetServices,
       ...(_includeDatabase && {
         [databaseServiceKey]: databaseService({
-          adminUser: "admin",
-          adminUserPassword: "password",
-          adminDatabase: "admin",
+          adminUser: mongodbAdminUser,
+          adminUserPassword: mongodbAdminUserPassword,
+          adminDatabase: mongodbAdminDatabase,
           database: mongodbDatabase,
           user: mongodbUser,
           userPassword: mongodbUserPassword

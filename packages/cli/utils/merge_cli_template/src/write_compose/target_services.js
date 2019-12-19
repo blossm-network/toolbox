@@ -13,7 +13,13 @@ module.exports = ({
   region,
   secretBucket,
   secretBucketKeyLocation,
-  secretBucketKeyRing
+  secretBucketKeyRing,
+  mongodbAdminUser,
+  mongodbAdminUserPassword,
+  mongodbAdminDatabase,
+  mongodbDatabase,
+  mongodbUser,
+  mongodbUserPassword
 }) => {
   const containerRegistry = `us.gcr.io/${project}`;
   const common = {
@@ -128,9 +134,19 @@ module.exports = ({
         break;
     }
   }
-
   return {
     ...services,
-    ...(includeDatabase ? { [databaseServiceKey]: databaseService } : [])
+    ...(includeDatabase
+      ? {
+          [databaseServiceKey]: databaseService({
+            adminUser: mongodbAdminUser,
+            adminUserPassword: mongodbAdminUserPassword,
+            adminDatabase: mongodbAdminDatabase,
+            database: mongodbDatabase,
+            user: mongodbUser,
+            userPassword: mongodbUserPassword
+          })
+        }
+      : [])
   };
 };
