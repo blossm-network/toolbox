@@ -120,6 +120,7 @@ const steps = ({
         envUriSpecifier,
         envNameSpecifier,
         containerRegistery,
+        operationHash,
         dnsZone,
         service,
         context,
