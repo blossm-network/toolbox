@@ -47,7 +47,35 @@ module.exports = ({
   };
   let services = {};
   let includeDatabase = false;
+  //eslint-disable-next-line no-console
+  console.log("all: ", {
+    config,
+    databaseServiceKey,
+    project,
+    port,
+    env,
+    network,
+    service,
+    region,
+    containerRegistery,
+    secretBucket,
+    secretBucketKeyLocation,
+    secretBucketKeyRing,
+    mongodbAdminUser,
+    mongodbAdminUserPassword,
+    mongodbAdminDatabase,
+    mongodbDatabase,
+    mongodbHost,
+    mongodbProtocol,
+    mongodbUser,
+    mongodbUserPassword
+  });
   for (const target of config.targets) {
+    //eslint-disable-next-line
+    console.log("asdasdf: ", {
+      procedure: [target.domain, target.context],
+      service: config.service
+    });
     const commonServiceImagePrefix = `${containerRegistery}/${service}.${target.context}`;
     switch (target.context) {
       case "view-store":
