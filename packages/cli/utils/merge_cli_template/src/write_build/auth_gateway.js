@@ -44,8 +44,7 @@ module.exports = ({
     integrationTests(),
     dockerComposeLogs,
     dockerPush({
-      project,
-      envNameSpecifier,
+      containerRegistery,
       service,
       context
     }),

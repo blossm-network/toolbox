@@ -46,7 +46,7 @@ module.exports = ({
     dockerComposeProcesses,
     integrationTests(),
     dockerComposeLogs,
-    dockerPush({ extension: imageExtension }),
+    dockerPush({ extension: imageExtension, containerRegistery, service }),
     deploy({
       serviceName,
       context,

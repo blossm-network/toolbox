@@ -51,8 +51,7 @@ module.exports = ({
     dockerComposeLogs,
     dockerPush({
       extension: imageExtension,
-      project,
-      envNameSpecifier,
+      containerRegistery,
       service,
       context
     }),

@@ -43,8 +43,7 @@ module.exports = ({
     unitTest,
     buildImage({
       extension: imageExtension,
-      project,
-      envNameSpecifier,
+      containerRegistery,
       service,
       context
     }),
