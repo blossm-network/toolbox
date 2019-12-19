@@ -17,8 +17,6 @@ describe("Command handler unit tests", () => {
     restore();
   });
   it("should return successfully", async () => {
-    //eslint-disable-next-line
-    console.log("H@$$@I");
     const payload = "some-payload";
 
     const result = await main({ payload });

@@ -4,8 +4,6 @@ const normalize = require("../../normalize");
 
 describe("Command handler store normalize tests", () => {
   it("should clean correctly", async () => {
-    //eslint-disable-next-line
-    console.log("HI");
     const payload = {
       name: "Some-name",
       bogus: "nope"

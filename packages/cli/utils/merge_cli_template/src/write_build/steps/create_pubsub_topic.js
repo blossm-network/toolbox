@@ -10,6 +10,7 @@ module.exports = ({
   envNameSpecifier
 }) => {
   return {
+    name: "gcr.io/cloud-builders/gcloud",
     entrypoint: "bash",
     args: [
       "-c",

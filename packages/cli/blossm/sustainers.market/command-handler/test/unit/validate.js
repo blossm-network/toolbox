@@ -8,8 +8,6 @@ const goodPayload = {
 
 describe("Command handler store validator tests", () => {
   it("should handle correct payload correctly", async () => {
-    //eslint-disable-next-line
-    console.log("H@@I");
     try {
       await validate(goodPayload);
     } catch (e) {
@@ -18,8 +16,6 @@ describe("Command handler store validator tests", () => {
     }
   });
   it("should throw if bad name is passed", async () => {
-    //eslint-disable-next-line
-    console.log("H@@I");
     const payload = {
       ...goodPayload,
       name: 123
