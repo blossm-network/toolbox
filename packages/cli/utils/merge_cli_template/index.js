@@ -173,6 +173,30 @@ const configure = async (workingDir, configFn, env) => {
 
     const containerRegistery = `us.gcr.io/${project}${envNameSpecifier(env)}`;
 
+    //eslint-disable-next-line no-console
+    console.log("stubb: ", {
+      config,
+      workingDir,
+      configFn,
+      env,
+      region,
+      domain,
+      action,
+      name,
+      project,
+      context,
+      network,
+      memory,
+      containerRegistery,
+      envUriSpecifier: envUriSpecifier(env),
+      envNameSpecifier: envNameSpecifier(env),
+      dnsZone,
+      service,
+      secretBucket: secretBucket(env),
+      secretBucketKeyLocation,
+      secretBucketKeyRing,
+      ...configFn(config)
+    });
     writeBuild({
       config,
       workingDir,
