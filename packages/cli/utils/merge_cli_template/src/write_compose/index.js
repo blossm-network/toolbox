@@ -65,7 +65,9 @@ module.exports = ({
     mongodbAdminDatabase,
     mongodbDatabase,
     mongodbUser,
-    mongodbUserPassword
+    mongodbUserPassword,
+    mongodbHost,
+    mongodbProtocol
   });
 
   const compose = {

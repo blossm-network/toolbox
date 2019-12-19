@@ -22,7 +22,7 @@ describe("Command handler integration tests", () => {
       body: {
         headers: {
           issued: stringDate(),
-          id: uuid
+          id: uuid()
         },
         payload: {
           name

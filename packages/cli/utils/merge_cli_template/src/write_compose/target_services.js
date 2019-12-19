@@ -19,6 +19,8 @@ module.exports = ({
   mongodbAdminUserPassword,
   mongodbAdminDatabase,
   mongodbDatabase,
+  mongodbHost,
+  mongodbProtocol,
   mongodbUser,
   mongodbUserPassword
 }) => {
@@ -36,20 +38,12 @@ module.exports = ({
     GCP_KMS_SECRET_BUCKET_KEY_LOCATION: `${secretBucketKeyLocation}`,
     GCP_KMS_SECRET_BUCKET_KEY_RING: `${secretBucketKeyRing}`
   };
-  const commonStoreEnvironment = ({
-    user,
-    host,
-    userPassword,
-    protocol,
-    database
-  }) => {
-    return {
-      MONGODB_USER: `${user}`,
-      MONGODB_HOST: `${host}`,
-      MONGODB_USER_PASSWORD: `${userPassword}`,
-      MONGODB_PROTOCOL: `${protocol}`,
-      MONGODB_DATABASE: `${database}`
-    };
+  const commonStoreEnvironment = {
+    MONGODB_USER: `${mongodbUser}`,
+    MONGODB_HOST: `${mongodbHost}`,
+    MONGODB_USER_PASSWORD: `${mongodbUserPassword}`,
+    MONGODB_PROTOCOL: `${mongodbProtocol}`,
+    MONGODB_DATABASE: `${mongodbDatabase}`
   };
   let services = {};
   let includeDatabase = false;
