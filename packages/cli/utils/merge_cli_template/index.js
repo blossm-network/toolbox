@@ -91,20 +91,14 @@ const copySource = async (p, workingDir) => {
 };
 
 const topicsForTargets = config => {
-  const blossmConfig = rootDir.config();
   const array = (config.targets || [])
     .filter(t => t.context == "command-handler")
     .map(
-      t =>
-        `did-${t.action}.${t.domain}.${t.service || config.service}.${
-          blossmConfig.network
-        }`
+      t => `did-${t.action}.${t.domain}.${t.service || config.service}.local`
     )
     .concat(
       config.context == "command-handler"
-        ? [
-            `did-${config.action}.${config.domain}.${config.service}.${blossmConfig.network}`
-          ]
+        ? [`did-${config.action}.${config.domain}.${config.service}.local`]
         : []
     );
   return [...new Set(array)];
