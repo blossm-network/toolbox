@@ -225,5 +225,8 @@ module.exports = ({
     })
   };
 
+  //eslint-disable-next-line
+  console.log("build: ", build);
+
   fs.writeFileSync(buildPath, yaml.stringify(build));
 };
