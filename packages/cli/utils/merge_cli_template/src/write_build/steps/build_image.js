@@ -1,16 +1,10 @@
-module.exports = ({
-  extension,
-  project,
-  envNameSpecifier,
-  service,
-  context
-} = {}) => {
+module.exports = ({ extension, containerRegistery, service, context } = {}) => {
   return {
     name: "gcr.io/cloud-builders/docker",
     args: [
       "build",
       "-t",
-      `us.gcr.io/${project}${envNameSpecifier}/${service}.${context}${
+      `${containerRegistery}/${service}.${context}${
         extension ? `.${extension}` : ""
       }`,
       "."

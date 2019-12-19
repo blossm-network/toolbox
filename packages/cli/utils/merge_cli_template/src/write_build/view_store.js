@@ -22,6 +22,7 @@ module.exports = ({
   memory,
   envUriSpecifier,
   envNameSpecifier,
+  containerRegistery,
   dnsZone,
   service,
   context,
@@ -53,8 +54,7 @@ module.exports = ({
     dockerComposeLogs,
     dockerPush({
       extension: imageExtension,
-      project,
-      envNameSpecifier,
+      containerRegistery,
       service,
       context
     }),

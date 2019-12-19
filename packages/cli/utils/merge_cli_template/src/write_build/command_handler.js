@@ -22,6 +22,7 @@ module.exports = ({
   network,
   envUriSpecifier,
   envNameSpecifier,
+  containerRegistery,
   uri,
   dnsZone,
   service,
@@ -39,8 +40,7 @@ module.exports = ({
     unitTest,
     buildImage({
       extension: imageExtension,
-      project,
-      envNameSpecifier,
+      containerRegistery,
       service,
       context
     }),

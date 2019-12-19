@@ -171,6 +171,8 @@ const configure = async (workingDir, configFn, env) => {
     const secretBucketKeyLocation = "global";
     const secretBucketKeyRing = "secret-bucket";
 
+    const containerRegistery = `us.gcr.io/${project}${envNameSpecifier(env)}`;
+
     writeBuild({
       config,
       workingDir,
@@ -184,6 +186,7 @@ const configure = async (workingDir, configFn, env) => {
       context,
       network,
       memory,
+      containerRegistery,
       envUriSpecifier: envUriSpecifier(env),
       envNameSpecifier: envNameSpecifier(env),
       dnsZone,
@@ -204,7 +207,7 @@ const configure = async (workingDir, configFn, env) => {
       service,
       project,
       region,
-      containerRegistery: `us.gcr.io/${project}${envNameSpecifier(env)}`,
+      containerRegistery,
       domain,
       name,
       action,

@@ -25,6 +25,7 @@ module.exports = ({
   env,
   operationHash,
   serviceName,
+  containerRegistery,
   uri,
   secretBucket,
   secretBucketKeyLocation,
@@ -36,8 +37,7 @@ module.exports = ({
     unitTest,
     buildImage({
       extension: imageExtension,
-      project,
-      envNameSpecifier,
+      containerRegistery,
       service,
       context
     }),

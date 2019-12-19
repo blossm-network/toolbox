@@ -19,6 +19,7 @@ module.exports = ({
   network,
   envNameSpecifier,
   envUriSpecifier,
+  containerRegistery,
   dnsZone,
   service,
   context,
@@ -33,8 +34,7 @@ module.exports = ({
     yarnInstall,
     unitTest,
     buildImage({
-      project,
-      envNameSpecifier,
+      containerRegistery,
       service,
       context
     }),
