@@ -18,7 +18,7 @@ const deps = require("../../deps");
 const personRoot = uuid();
 const phone = "251-333-2037";
 
-const config = require("./../../config.js");
+const config = require("./../../config.json");
 
 describe("Command handler store integration tests", () => {
   before(async () => await Promise.all(config.topics.map(t => create(t))));

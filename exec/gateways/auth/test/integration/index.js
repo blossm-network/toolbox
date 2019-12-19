@@ -13,7 +13,7 @@ const request = require("@blossm/request");
 const url = "http://main";
 
 const personRoot = uuid();
-const config = require("./../../config.js");
+const config = require("./../../config.json");
 
 describe("Auth gateway integration tests", () => {
   before(async () => await Promise.all(config.topics.map(t => create(t))));

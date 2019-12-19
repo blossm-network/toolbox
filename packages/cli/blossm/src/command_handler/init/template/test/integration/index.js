@@ -11,7 +11,7 @@ const url = "http://main";
 
 const name = "A-name";
 
-const config = require("./../../config.js");
+const config = require("./../../config.json");
 
 describe("Command handler integration tests", () => {
   before(async () => await Promise.all(config.topics.map(t => create(t))));
