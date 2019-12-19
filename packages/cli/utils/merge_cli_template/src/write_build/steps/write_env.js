@@ -29,9 +29,10 @@ module.exports = ({
     GCP_SECRET_BUCKET=${secretBucket}
     GCP_KMS_SECRET_BUCKET_KEY_RING=${secretBucketKeyRing}
     GCP_KMS_SECRET_BUCKET_KEY_LOCATION=${secretBucketKeyLocation}
-    ${Object.entries(custom)
-      .reduce((string, [key, value]) => (string += `${key}=${value}\n`), "")
-      .replace(/,/g, "")}
+    ${Object.entries(custom).reduce(
+      (string, [key, value]) => (string += `${key}=${value}\n`),
+      ""
+    )}
     EOM`
     ]
   };
