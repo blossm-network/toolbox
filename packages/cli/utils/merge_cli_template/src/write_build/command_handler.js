@@ -6,6 +6,7 @@ const dockerComposeProcesses = require("./steps/docker_compose_processes");
 const integrationTests = require("./steps/integration_tests");
 const dockerComposeLogs = require("./steps/docker_compose_logs");
 const dockerPush = require("./steps/docker_push");
+const writeEnv = require("./steps/write_env");
 const deploy = require("./steps/deploy");
 const startDnsTransaction = require("./steps/start_dns_transaction");
 const createPubsubTopic = require("./steps/create_pubsub_topic");
@@ -20,6 +21,7 @@ module.exports = ({
   domain,
   project,
   network,
+  mainContainerName,
   envUriSpecifier,
   envNameSpecifier,
   containerRegistery,
@@ -44,6 +46,16 @@ module.exports = ({
       containerRegistery,
       service,
       context
+    }),
+    writeEnv({
+      containerRegistery,
+      mainContainerName,
+      project,
+      region,
+      secretBucket,
+      secretBucketKeyRing,
+      secretBucketKeyLocation,
+      custom: { ACTION: action, DOMAIN: domain }
     }),
     dockerComposeUp,
     dockerComposeProcesses,

@@ -167,6 +167,8 @@ const configure = async (workingDir, configFn, env) => {
 
     const containerRegistery = `us.gcr.io/${project}${envNameSpecifier(env)}`;
 
+    const mainContainerName = "main";
+
     writeBuild({
       config,
       workingDir,
@@ -180,6 +182,7 @@ const configure = async (workingDir, configFn, env) => {
       context,
       network,
       memory,
+      mainContainerName,
       containerRegistery,
       envUriSpecifier: envUriSpecifier(env),
       envNameSpecifier: envNameSpecifier(env),
@@ -196,7 +199,7 @@ const configure = async (workingDir, configFn, env) => {
       workingDir,
       context,
       port: 80,
-      mainContainerName: "main",
+      mainContainerName,
       network: "local",
       service,
       project,
