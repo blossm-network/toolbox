@@ -203,7 +203,7 @@ const configure = async (workingDir, configFn, env) => {
       context,
       port: 80,
       mainContainerName: "main",
-      network,
+      network: "local",
       service,
       project,
       region,
