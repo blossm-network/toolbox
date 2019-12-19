@@ -121,6 +121,7 @@ module.exports = ({
       operationHash,
       action,
       domain,
+      context,
       region,
       envUriSpecifier,
       network,

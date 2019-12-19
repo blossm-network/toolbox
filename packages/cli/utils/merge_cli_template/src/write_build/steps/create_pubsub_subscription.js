@@ -5,6 +5,7 @@ module.exports = ({
   operationHash,
   action,
   domain,
+  context,
   envUriSpecifier,
   network,
   project,
