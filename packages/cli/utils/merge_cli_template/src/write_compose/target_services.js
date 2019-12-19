@@ -11,6 +11,7 @@ module.exports = ({
   network,
   service,
   region,
+  containerRegistery,
   secretBucket,
   secretBucketKeyLocation,
   secretBucketKeyRing,
@@ -21,7 +22,6 @@ module.exports = ({
   mongodbUser,
   mongodbUserPassword
 }) => {
-  const containerRegistry = `us.gcr.io/${project}`;
   const common = {
     ports: [`${port}`]
   };
@@ -54,7 +54,7 @@ module.exports = ({
   let services = {};
   let includeDatabase = false;
   for (const target of config.targets) {
-    const commonServiceImagePrefix = `${containerRegistry}/${service}.${target.context}`;
+    const commonServiceImagePrefix = `${containerRegistery}/${service}.${target.context}`;
     switch (target.context) {
       case "view-store":
         {
