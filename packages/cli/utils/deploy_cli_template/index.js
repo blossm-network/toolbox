@@ -31,8 +31,6 @@ module.exports = ({ domain, dir, configFn }) => async args => {
   //eslint-disable-next-line no-console
   console.log(roboSay("Running your tests..."));
 
-  //eslint-disable-next-line no-console
-  console.log("1");
   const input = await normalize({
     entrypointType: "path",
     entrypointDefault: ".",
@@ -52,8 +50,6 @@ module.exports = ({ domain, dir, configFn }) => async args => {
       }
     ]
   });
-  //eslint-disable-next-line no-console
-  console.log("2");
 
   const workingDir = path.resolve(dir, "tmp");
 
