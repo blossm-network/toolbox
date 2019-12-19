@@ -7,7 +7,7 @@
         "region": "us-central1",
         "memory": "128Mi",
         "dnsZone": "network",
-        "secretsBucket": "smn-secrets"
+        "secretsBucket": "smn"
       }
     },
     "viewStore": {
