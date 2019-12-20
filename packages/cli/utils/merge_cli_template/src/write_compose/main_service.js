@@ -29,7 +29,7 @@ module.exports = ({
       NETWORK: `${network}`,
       CONTEXT: `${context}`,
       SERVICE: `${service}`,
-      GCP_PROJECT: `${project}`,
+      GCP_PROJECT: `${project}-staging`,
       GCP_REGION: `${region}`,
       GCP_SECRET_BUCKET: `${secretBucket}`,
       GCP_KMS_SECRET_BUCKET_KEY_LOCATION: `${secretBucketKeyLocation}`,
