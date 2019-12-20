@@ -40,6 +40,21 @@ module.exports = ({
   uri
 }) => {
   const imageExtension = `${domain}.${name}`;
+  //eslint-disable-next-line
+  console.log("asdf: ", {
+    env: writeEnv({
+      containerRegistery,
+      mainContainerName,
+      project,
+      region,
+      context,
+      service,
+      secretBucket,
+      secretBucketKeyRing,
+      secretBucketKeyLocation,
+      custom: { NAME: name, DOMAIN: domain }
+    })
+  });
   return [
     yarnInstall,
     unitTest,

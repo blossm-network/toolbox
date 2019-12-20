@@ -6,6 +6,9 @@ const uuid = require("@blossm/uuid");
 
 const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 
+//eslint-disable-next-line
+console.log("URL: ", url);
+
 describe("View store integration tests", () => {
   const id = uuid();
   it("should return successfully", async () => {
