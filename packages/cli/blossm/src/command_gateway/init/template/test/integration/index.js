@@ -9,7 +9,7 @@ const uuid = require("@blossm/uuid");
 
 const request = require("@blossm/request");
 
-const url = "http://main";
+const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 
 const personRoot = uuid();
 

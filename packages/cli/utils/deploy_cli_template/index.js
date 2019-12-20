@@ -61,13 +61,8 @@ module.exports = ({ domain, dir, configFn }) => async args => {
     input,
     configFn
   });
-  //eslint-disable-next-line no-console
-  console.log("3");
 
   await testCliTemplate({ workingDir, input });
-
-  //eslint-disable-next-line no-console
-  console.log("4");
 
   if (!input.testOnly) {
     //eslint-disable-next-line no-console

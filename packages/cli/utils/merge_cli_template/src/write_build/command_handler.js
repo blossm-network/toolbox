@@ -38,7 +38,7 @@ module.exports = ({
   secretBucketKeyRing
 }) => {
   const imageExtension = `${domain}.${action}`;
-  const steps = [
+  return [
     yarnInstall,
     unitTest,
     buildImage({
@@ -108,8 +108,4 @@ module.exports = ({
       envNameSpecifier
     })
   ];
-
-  //eslint-disable-next-line
-  console.log("steps: ", steps);
-  return steps;
 };

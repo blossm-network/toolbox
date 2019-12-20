@@ -4,7 +4,7 @@ const { expect } = require("chai");
 const request = require("@blossm/request");
 const uuid = require("@blossm/uuid");
 
-const url = "http://main";
+const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 
 const scope = "some-type";
 

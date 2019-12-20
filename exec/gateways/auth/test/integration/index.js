@@ -10,7 +10,7 @@ const { create, delete: del } = require("@blossm/gcp-pubsub");
 
 const request = require("@blossm/request");
 
-const url = "http://main";
+const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 
 const personRoot = uuid();
 const config = require("./../../config.json");
