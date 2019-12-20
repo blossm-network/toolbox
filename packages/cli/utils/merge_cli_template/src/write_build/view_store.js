@@ -40,6 +40,27 @@ module.exports = ({
   uri
 }) => {
   const imageExtension = `${domain}.${name}`;
+  //eslint-disable-next-line no-console
+  console.log("deploy step: ", {
+    dep: deploy({
+      serviceName,
+      extension: imageExtension,
+      region,
+      project,
+      context,
+      service,
+      network,
+      memory,
+      envNameSpecifier,
+      envUriSpecifier,
+      secretBucket,
+      secretBucketKeyLocation,
+      secretBucketKeyRing,
+      nodeEnv: env,
+      env: `DOMAIN=${domain},NAME=${name},MONGODB_DATABASE=view-store,MONGODB_USER=${mongodbUser}${envNameSpecifier},MONGODB_HOST=${env}-${mongodbHost},MONGODB_PROTOCOL=${mongodbProtocol}`,
+      labels: `domain=${domain},name=${name},hash=${operationHash}`
+    })
+  });
   return [
     yarnInstall,
     unitTest,
