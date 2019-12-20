@@ -8,4 +8,6 @@ module.exports = ({ procedure, service }) => {
     procedure,
     service
   });
+
+  return hash;
 };
