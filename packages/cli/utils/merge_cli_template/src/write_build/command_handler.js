@@ -38,6 +38,28 @@ module.exports = ({
   secretBucketKeyRing
 }) => {
   const imageExtension = `${domain}.${action}`;
+
+  //eslint-disable-next-line
+  console.log("asdf: ", {
+    env: deploy({
+      serviceName,
+      context,
+      service,
+      extension: imageExtension,
+      secretBucket,
+      secretBucketKeyLocation,
+      secretBucketKeyRing,
+      region,
+      memory,
+      project,
+      network,
+      envNameSpecifier,
+      envUriSpecifier,
+      nodeEnv: env,
+      env: `DOMAIN=${domain},ACTION=${action}`,
+      labels: `domain=${domain},action=${action},hash=${operationHash}`
+    })
+  });
   return [
     yarnInstall,
     unitTest,
