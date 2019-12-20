@@ -24,6 +24,19 @@ const common = ({ method, procedure, root, data }) => {
             ...(root && { root })
           });
 
+          //eslint-disable-next-line
+          console.log("asdf: ", {
+            tokenFn,
+            service,
+            procedure,
+            network,
+            token,
+            url,
+            data,
+            context,
+            ...(path && { path }),
+            ...(root && { root })
+          });
           const response = await method(url, {
             body: {
               ...(data != undefined && { ...data }),
