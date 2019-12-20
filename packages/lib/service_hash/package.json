@@ -1,6 +1,6 @@
 {
   "name": "@blossm/service-hash",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "description": "Returns a hash representing an operation.",
   "main": "index.js",
   "author": "blossm.network",
