@@ -6,21 +6,22 @@
         "project": "smn-core",
         "region": "us-central1",
         "memory": "128Mi",
-        "dnsZone": "network"
+        "dnsZone": "network",
+        "secretsBucket": "smn"
       }
     },
     "viewStore": {
       "mongodb": {
         "user": "gcp",
         "host": "ggjlv.gcp.mongodb.net",
-        "database": "mongodb+srv"
+        "protocol": "mongodb+srv"
       }
     },
     "eventStore": {
       "mongodb": {
         "user": "gcp",
         "host": "ggjlv.gcp.mongodb.net",
-        "database": "mongodb+srv"
+        "protocol": "mongodb+srv"
       }
     }
   },
