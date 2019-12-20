@@ -169,32 +169,6 @@ const configure = async (workingDir, configFn, env) => {
 
     const mainContainerName = "main";
 
-    //eslint-disable-next-line no-console
-    console.log("asdf: ", {
-      config,
-      workingDir,
-      configFn,
-      env,
-      region,
-      domain,
-      action,
-      name,
-      project,
-      context,
-      network,
-      memory,
-      mainContainerName,
-      containerRegistery,
-      envUriSpecifier: envUriSpecifier(env),
-      envNameSpecifier: envNameSpecifier(env),
-      dnsZone,
-      service,
-      secretBucket: secretBucket(env),
-      secretBucketKeyLocation,
-      secretBucketKeyRing,
-      ...configFn(config),
-      port: 80
-    });
     writeBuild({
       config,
       workingDir,
