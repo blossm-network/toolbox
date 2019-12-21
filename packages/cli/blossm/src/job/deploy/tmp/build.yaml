@@ -1,0 +1,108 @@
+steps:
+  - name: node:10.16.0
+    entrypoint: yarn
+    args:
+      - install
+  - name: node:10.16.0
+    entrypoint: yarn
+    args:
+      - test:unit
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - -t
+      - us.gcr.io/smn-core-staging/core.job.some-domain.some-action
+      - .
+  - name: node:10.16.0
+    entrypoint: bash
+    args:
+      - -c
+      - |-
+        cat >> .env <<- EOM
+        NETWORK=local
+        SERVICE=core
+        CONTEXT=job
+        MAIN_CONTAINER_NAME=main
+        CONTAINER_REGISTRY=us.gcr.io/smn-core-staging
+        GCP_PROJECT=smn-core-staging
+        GCP_REGION=us-central1
+        GCP_SECRET_BUCKET=smn-staging-secrets
+        GCP_KMS_SECRET_BUCKET_KEY_RING=secret-bucket
+        GCP_KMS_SECRET_BUCKET_KEY_LOCATION=global
+        NAME=some-action
+        DOMAIN=some-domain
+
+        EOM
+  - name: docker/compose:1.15.0
+    args:
+      - up
+      - -d
+  - name: docker/compose:1.15.0
+    args:
+      - ps
+  - name: node:10.16.0
+    entrypoint: yarn
+    args:
+      - test:integration
+  - name: docker/compose:1.15.0
+    args:
+      - logs
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - push
+      - us.gcr.io/smn-core-staging/core.undefined.some-domain.some-action
+  - name: gcr.io/cloud-builders/gcloud
+    args:
+      - beta
+      - run
+      - deploy
+      - us-central1-undefined-undefined
+      - --image=us.gcr.io/smn-core-staging/core.job.some-domain.some-action
+      - --platform=managed
+      - --memory=128Mi
+      - --project=smn-core-staging
+      - --region=us-central1
+      - --set-env-vars=NODE_ENV=staging,NETWORK=us-central1.undefinedundefined,SERVICE=core,CONTEXT=job,GCP_PROJECT=smn-core-staging,GCP_REGION=us-central1,GCP_SECRET_BUCKET=smn-staging-secrets,GCP_KMS_SECRET_BUCKET_KEY_LOCATION=global,GCP_KMS_SECRET_BUCKET_KEY_RING=secret-bucket,DOMAIN=some-domain,NAME=some-action
+      - --labels=service=core,context=job,domain=some-domain,name=some-action,hash=undefined
+  - name: gcr.io/cloud-builders/gcloud
+    args:
+      - beta
+      - dns
+      - record-sets
+      - transaction
+      - start
+      - --zone=network
+      - --project=smn-core
+  - name: gcr.io/cloud-builders/gcloud
+    args:
+      - beta
+      - dns
+      - record-sets
+      - transaction
+      - add
+      - ghs.googlehosted.com.
+      - --name=undefined.us-central1.staging.sm.network
+      - --zone=network
+      - --type=CNAME
+      - --ttl=86400
+      - --project=smn-core
+  - name: gcr.io/cloud-builders/gcloud
+    entrypoint: bash
+    args:
+      - -c
+      - gcloud beta dns record-sets transaction execute --zone=network
+        --project=smn-core || exit 0
+  - name: gcr.io/cloud-builders/gcloud
+    entrypoint: bash
+    args:
+      - -c
+      - gcloud beta dns record-sets transaction abort --zone=network
+        --project=smn-core || exit 0
+  - name: gcr.io/cloud-builders/gcloud
+    entrypoint: bash
+    args:
+      - -c
+      - gcloud beta run domain-mappings create --platform=managed
+        --service=us-central1-undefined-undefined
+        --domain=undefined.us-central1.staging.sm.network
+        --project=smn-core-staging --region=us-central1 || exit 0

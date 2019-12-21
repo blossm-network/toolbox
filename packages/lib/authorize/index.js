@@ -5,10 +5,9 @@ const deps = require("./deps");
 const WILDCARD = "*";
 
 module.exports = async ({
-  path,
   claims: { context, principle },
-  scopesLookupFn,
-  priviledgesLookupFn = null,
+  permissionsLookupFn,
+  priviledges = [],
   root = null,
   domain = null,
   network,
@@ -18,42 +17,41 @@ module.exports = async ({
   if (context.network !== network || context.service !== service)
     throw deps.invalidCredentialsError.tokenInvalid();
 
-  //priviledges lookup fn returns the priviledges that the path needs.
-  //scopes lookup fn returns the scopes that the principle has.
-  const [priviledges, scopes] = await Promise.all([
-    priviledgesLookupFn ? priviledgesLookupFn({ path }) : null,
-    scopesLookupFn({ principle, context })
-  ]);
+  const permissions = await permissionsLookupFn({ principle, context });
 
-  const satisfiedScopes = scopes.filter(scope => {
-    const [scopeDomain, scopePriviledges, scopeRoot] = scope.split(":");
+  const satisfiedPermissions = permissions.filter(permission => {
+    const [
+      permissionDomain,
+      permissionPriviledges,
+      permissionRoot
+    ] = permission.split(":");
 
     const domainViolated =
-      scopeDomain != WILDCARD &&
+      permissionDomain != WILDCARD &&
       domain != undefined &&
-      !scopeDomain.split(",").includes(domain);
+      !permissionDomain.split(",").includes(domain);
 
     const rootViolated =
-      scopeRoot != undefined &&
-      scopeRoot != WILDCARD &&
+      permissionRoot != undefined &&
+      permissionRoot != WILDCARD &&
       root != undefined &&
-      !scopeRoot.split(",").includes(root);
+      !permissionRoot.split(",").includes(root);
 
     const priviledgesViolated =
-      scopePriviledges != WILDCARD &&
+      permissionPriviledges != WILDCARD &&
       priviledges != undefined &&
-      intersection(scopePriviledges.split(","), priviledges).length == 0;
+      intersection(permissionPriviledges.split(","), priviledges).length == 0;
 
     return !domainViolated && !rootViolated && !priviledgesViolated;
   });
 
-  if (satisfiedScopes.length == 0)
+  if (satisfiedPermissions.length == 0)
     throw deps.invalidCredentialsError.tokenInvalid();
 
   return {
     context: {
       ...context,
-      scopes: satisfiedScopes,
+      permissions: satisfiedPermissions,
       principle
     }
   };

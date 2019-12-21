@@ -34,6 +34,27 @@ module.exports = ({
   secretBucketKeyLocation,
   secretBucketKeyRing
 }) => {
+  //eslint-disable-next-line
+  console.log("asdf: ", {
+    name,
+    domain,
+    region,
+    project,
+    envNameSpecifier,
+    dnsZone,
+    service,
+    context,
+    env,
+    operationHash,
+    serviceName,
+    memory,
+    containerRegistery,
+    mainContainerName,
+    uri,
+    secretBucket,
+    secretBucketKeyLocation,
+    secretBucketKeyRing
+  });
   const imageExtension = `${domain}.${name}`;
   return [
     yarnInstall,
@@ -60,7 +81,12 @@ module.exports = ({
     dockerComposeProcesses,
     integrationTests(),
     dockerComposeLogs,
-    dockerPush({ extension: imageExtension, containerRegistery, service }),
+    dockerPush({
+      extension: imageExtension,
+      containerRegistery,
+      service,
+      context
+    }),
     deploy({
       serviceName,
       context,

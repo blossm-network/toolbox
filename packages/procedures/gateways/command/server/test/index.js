@@ -1,19 +1,23 @@
 const { expect } = require("chai").use(require("sinon-chai"));
 const { restore, replace, fake, match } = require("sinon");
-const authentication = require("@blossm/authentication-middleware");
 
 const deps = require("../deps");
 const gateway = require("..");
 const whitelist = "some-whitelist";
-const scopesLookupFn = "some-lookup-fn";
+const permissionsLookupFn = "some-permissions-fn";
+const verifyFn = "some-verify-fn";
 
-describe("View gateway", () => {
+describe("Command gateway", () => {
   afterEach(() => {
     restore();
   });
   it("should call with the correct params", async () => {
     const corsMiddlewareFake = fake();
     replace(deps, "corsMiddleware", corsMiddlewareFake);
+
+    const authenticationResult = "some-authentication";
+    const authenticationFake = fake.returns(authenticationResult);
+    replace(deps, "authentication", authenticationFake);
 
     const authorizationResult = "some-authorization";
     const authorizationFake = fake.returns(authorizationResult);
@@ -32,7 +36,11 @@ describe("View gateway", () => {
     const gatewayPostFake = fake.returns(gatewayPostResult);
     replace(deps, "post", gatewayPostFake);
 
-    await gateway({ whitelist, scopesLookupFn });
+    const priviledges = "some-priviledges";
+    const action = "some-action";
+    const commands = [{ action, priviledges }];
+
+    await gateway({ commands, whitelist, permissionsLookupFn, verifyFn });
 
     expect(listenFake).to.have.been.calledWith();
     expect(serverFake).to.have.been.calledWith({
@@ -48,17 +56,74 @@ describe("View gateway", () => {
       })
     });
     expect(postFake).to.have.been.calledWith(gatewayPostResult, {
-      path: "/:domain/:action",
-      preMiddleware: [authentication, authorizationResult]
+      path: `/${action}`,
+      preMiddleware: [authenticationResult, authorizationResult]
     });
-    expect(authorizationFake).to.have.been.calledWith({ scopesLookupFn });
+    expect(authenticationFake).to.have.been.calledWith({ verifyFn });
+    expect(authorizationFake).to.have.been.calledWith({
+      permissionsLookupFn,
+      priviledges
+    });
+  });
+  it("should call with the correct params with multiple commands", async () => {
+    const corsMiddlewareFake = fake();
+    replace(deps, "corsMiddleware", corsMiddlewareFake);
+
+    const authenticationResult = "some-authentication";
+    const authenticationFake = fake.returns(authenticationResult);
+    replace(deps, "authentication", authenticationFake);
+
+    const authorizationResult = "some-authorization";
+    const authorizationFake = fake.returns(authorizationResult);
+    replace(deps, "authorization", authorizationFake);
+
+    const listenFake = fake();
+    const secondPostFake = fake.returns({
+      listen: listenFake
+    });
+    const postFake = fake.returns({
+      post: secondPostFake
+    });
+    const serverFake = fake.returns({
+      post: postFake
+    });
+    replace(deps, "server", serverFake);
+
+    const gatewayPostResult = "some-post-result";
+    const gatewayPostFake = fake.returns(gatewayPostResult);
+    replace(deps, "post", gatewayPostFake);
+
+    const priviledges = "some-priviledges";
+    const action1 = "some-action1";
+    const action2 = "some-action2";
+    const commands = [
+      { action: action1, priviledges: "none" },
+      { action: action2, priviledges }
+    ];
+
+    await gateway({ commands, whitelist, permissionsLookupFn, verifyFn });
+
+    expect(postFake).to.have.been.calledWith(gatewayPostResult, {
+      path: `/${action1}`
+    });
+    expect(secondPostFake).to.have.been.calledWith(gatewayPostResult, {
+      path: `/${action2}`,
+      preMiddleware: [authenticationResult, authorizationResult]
+    });
+    expect(authenticationFake).to.have.been.calledWith({ verifyFn });
+    expect(authorizationFake).to.have.been.calledOnce;
+    expect(authorizationFake).to.have.been.calledWith({
+      permissionsLookupFn,
+      priviledges
+    });
+    expect(authorizationFake).to.have.been.calledOnce;
   });
   it("should throw correctly", async () => {
     const errorMessage = "error-message";
     const serverFake = fake.throws(new Error(errorMessage));
     replace(deps, "server", serverFake);
     try {
-      await gateway({ whitelist, scopesLookupFn });
+      await gateway({ commands: [], whitelist, permissionsLookupFn });
       //shouldn't be called
       expect(2).to.equal(1);
     } catch (e) {

@@ -13,7 +13,7 @@ const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 
 const personRoot = uuid();
 
-describe("Command handler store integration tests", () => {
+describe("Command gateway integration tests", () => {
   it("should return successfully", async () => {
     const phone = "251-333-2037";
     await viewStore({
@@ -25,7 +25,7 @@ describe("Command handler store integration tests", () => {
 
     const sentAfter = new Date();
 
-    const response0 = await request.post(`${url}/challenge/issue`, {
+    const response0 = await request.post(`${url}/issue`, {
       body: {
         headers: {
           issued: stringDate()
@@ -46,7 +46,7 @@ describe("Command handler store integration tests", () => {
 
     const code = message.body.substr(0, 6);
 
-    const response1 = await request.post(`${url}/challenge/answer`, {
+    const response1 = await request.post(`${url}/answer`, {
       body: {
         headers: {
           issued: stringDate(),
@@ -80,7 +80,7 @@ describe("Command handler store integration tests", () => {
   });
   it("should return an error if incorrect params", async () => {
     const phone = { a: 1 };
-    const response = await request.post(`${url}/challenge/issue`, {
+    const response = await request.post(`${url}/issue`, {
       body: {
         headers: {
           issued: stringDate()

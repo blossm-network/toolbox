@@ -16,7 +16,7 @@ const personRoot = uuid();
 
 const config = require("./../../config.json");
 
-describe("Command handler store integration tests", () => {
+describe("Auth gateway integration tests", () => {
   before(async () => await Promise.all(config.topics.map(t => create(t))));
   after(async () => await Promise.all(config.topics.map(t => del(t))));
 

@@ -3,8 +3,8 @@ const { restore, fake, replace } = require("sinon");
 const deps = require("../deps");
 const authorizationMiddleware = require("..");
 
-const scopesLookupFn = "some-scopes-lookup-fn";
-const priviledgesLookupFn = "some-priv-lookup-fn";
+const permissionsLookupFn = "some-permissions-lookup-fn";
+const priviledges = "some-priv";
 const domain = "some-domain";
 const service = "some-service";
 const network = "some-network";
@@ -35,15 +35,15 @@ describe("Authorization middleware", () => {
       domain,
       service,
       network,
-      scopesLookupFn,
-      priviledgesLookupFn
+      permissionsLookupFn,
+      priviledges
     })(req, null, nextFake);
 
     expect(authorizationFake).to.have.been.calledWith({
       path,
       claims,
-      scopesLookupFn,
-      priviledgesLookupFn,
+      permissionsLookupFn,
+      priviledges,
       domain,
       service,
       network
@@ -67,15 +67,15 @@ describe("Authorization middleware", () => {
     const nextFake = fake();
     await authorizationMiddleware({
       domain,
-      scopesLookupFn,
-      priviledgesLookupFn
+      permissionsLookupFn,
+      priviledges
     })(req, null, nextFake);
 
     expect(authorizationFake).to.have.been.calledWith({
       path,
       claims,
-      scopesLookupFn,
-      priviledgesLookupFn,
+      permissionsLookupFn,
+      priviledges,
       domain,
       service: envService,
       network: envNetwork
@@ -102,8 +102,8 @@ describe("Authorization middleware", () => {
       domain,
       service,
       network,
-      scopesLookupFn,
-      priviledgesLookupFn
+      permissionsLookupFn,
+      priviledges
     })(req, null, nextFake);
 
     expect(nextFake).to.have.been.calledWith(error);

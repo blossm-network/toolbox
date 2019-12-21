@@ -5,15 +5,15 @@ module.exports = ({
   domain,
   service = process.env.SERVICE,
   network = process.env.NETWORK,
-  scopesLookupFn,
-  priviledgesLookupFn
+  permissionsLookupFn,
+  priviledges
 }) =>
   asyncHandler(async (req, _, next) => {
     const policy = await deps.authorize({
       path: req.path,
       claims: req.claims,
-      scopesLookupFn,
-      priviledgesLookupFn,
+      permissionsLookupFn,
+      priviledges,
       domain,
       service,
       network

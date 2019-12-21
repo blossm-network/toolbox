@@ -3,20 +3,25 @@
 # It's URL will be auth.[network]
 #
 
+domain: some-domain
+
+commands: 
+  - action: some-action
+    priviledges: [some-permission] 
+  - action: some-other-action
+    priviledges: none 
+
 whitelist:
   - "127.0.0.1"
   - "https://${process.env.NETWORK}"
 
 targets:
-  - action: issue
-    domain: challenge
+  - action: some-action 
+    domain: some-domain 
     context: command-handler
-  - action: answer
-    domain: challenge
+  - action: some-other-action 
+    domain: some-domain 
     context: command-handler
-  - name: phones
-    domain: person
-    context: view-store
 
 dependencies:
   "@blossm/auth-gateway": "*"

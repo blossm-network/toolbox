@@ -1,0 +1,25 @@
+version: "3"
+services:
+  main:
+    image: us.gcr.io/smn-core-staging/core.job.${DOMAIN}.${NAME}:latest
+    container_name: main
+    ports:
+      - "80"
+    environment:
+      PORT: "80"
+      NODE_ENV: local
+      NETWORK: local
+      CONTEXT: job
+      SERVICE: core
+      GCP_PROJECT: smn-core-staging
+      GCP_REGION: us-central1
+      GCP_SECRET_BUCKET: smn-staging-secrets
+      GCP_KMS_SECRET_BUCKET_KEY_LOCATION: global
+      GCP_KMS_SECRET_BUCKET_KEY_RING: secret-bucket
+      DOMAIN: some-domain
+      NAME: some-action
+    depends_on: []
+networks:
+  default:
+    external:
+      name: cloudbuild

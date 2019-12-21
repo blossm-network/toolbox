@@ -10,7 +10,6 @@ const root = "some-root";
 const priviledges = ["some-priviledges"];
 const path = "some-path";
 
-const priviledgesLookupFn = fake.returns(priviledges);
 const joinedPriviledges = priviledges.join(",");
 
 const principle = "some-priciple-root";
@@ -33,84 +32,81 @@ describe("Authorize", () => {
     restore();
   });
   it("should authorize all wildcards", async () => {
-    const scopes = ["*:*:*"];
+    const permissions = ["*:*:*"];
 
-    const scopesLookupFn = fake.returns(scopes);
+    const permissionsLookupFn = fake.returns(permissions);
 
     const document = await authorize({
       path,
       claims,
-      scopesLookupFn,
-      priviledgesLookupFn,
+      permissionsLookupFn,
+      priviledges,
       root,
       domain,
       service,
       network
     });
 
-    expect(priviledgesLookupFn).to.have.been.calledWith({ path });
-    expect(scopesLookupFn).to.have.been.calledWith({ principle, context });
+    expect(permissionsLookupFn).to.have.been.calledWith({ principle, context });
     expect(document).to.deep.equal({
       context: {
         ...context,
-        scopes,
+        permissions,
         principle
       }
     });
   });
   it("should authorize with no domain", async () => {
-    const scopes = [`bogus:${joinedPriviledges}:${root}`];
+    const permissions = [`bogus:${joinedPriviledges}:${root}`];
 
-    const scopesLookupFn = fake.returns(scopes);
+    const permissionsLookupFn = fake.returns(permissions);
 
     const document = await authorize({
       path,
       claims,
-      scopesLookupFn,
-      priviledgesLookupFn,
+      permissionsLookupFn,
+      priviledges,
       root,
       service,
       network
     });
 
-    expect(priviledgesLookupFn).to.have.been.calledWith({ path });
-    expect(scopesLookupFn).to.have.been.calledWith({ principle, context });
+    expect(permissionsLookupFn).to.have.been.calledWith({ principle, context });
     expect(document).to.deep.equal({
       context: {
         ...context,
-        scopes,
+        permissions,
         principle
       }
     });
   });
-  it("should authorize with matching scope", async () => {
-    const scopes = [`${domain}:${joinedPriviledges}:${root}`];
+  it("should authorize with matching permission", async () => {
+    const permissions = [`${domain}:${joinedPriviledges}:${root}`];
 
-    const scopesLookupFn = fake.returns(scopes);
+    const permissionsLookupFn = fake.returns(permissions);
 
     const document = await authorize({
       path,
       claims,
-      scopesLookupFn,
-      priviledgesLookupFn,
+      permissionsLookupFn,
+      priviledges,
       root,
       domain,
       service,
       network
     });
 
-    expect(priviledgesLookupFn).to.have.been.calledWith({ path });
-    expect(scopesLookupFn).to.have.been.calledWith({ principle, context });
+    expect(permissionsLookupFn).to.have.been.calledWith({ principle, context });
     expect(document).to.deep.equal({
       context: {
         ...context,
-        scopes,
+        permissions,
         principle
       }
     });
   });
-  it("should authorize with multiple matching scopes", async () => {
-    const scopes = [
+  it("should authorize with multiple matching permissions", async () => {
+    const permissions = [
       `${domain}:${joinedPriviledges}:${root}`,
       `*:${joinedPriviledges}:${root}`,
       `${domain}:*:${root}`,
@@ -122,58 +118,32 @@ describe("Authorize", () => {
       `${domain},some-other:${joinedPriviledges}`
     ];
 
-    const scopesLookupFn = fake.returns(scopes);
+    const permissionsLookupFn = fake.returns(permissions);
 
     const document = await authorize({
       path,
       claims,
-      scopesLookupFn,
-      priviledgesLookupFn,
+      permissionsLookupFn,
+      priviledges,
       root,
       domain,
       service,
       network
     });
 
-    expect(priviledgesLookupFn).to.have.been.calledWith({ path });
-    expect(scopesLookupFn).to.have.been.calledWith({ principle, context });
+    expect(permissionsLookupFn).to.have.been.calledWith({ principle, context });
     expect(document).to.deep.equal({
       context: {
         ...context,
-        scopes,
-        principle
-      }
-    });
-  });
-  it("should authorize without priviledges", async () => {
-    const scopes = ["*:bogus:*"];
-
-    const scopesLookupFn = fake.returns(scopes);
-
-    const document = await authorize({
-      path,
-      claims,
-      scopesLookupFn,
-      root,
-      domain,
-      service,
-      network
-    });
-
-    expect(priviledgesLookupFn).to.have.been.calledWith({ path });
-    expect(scopesLookupFn).to.have.been.calledWith({ principle, context });
-    expect(document).to.deep.equal({
-      context: {
-        ...context,
-        scopes,
+        permissions,
         principle
       }
     });
   });
   it("should not authorize if theres a mismatch in priviledges", async () => {
-    const scopes = [`${domain}:bogus:${root}`];
+    const permissions = [`${domain}:bogus:${root}`];
 
-    const scopesLookupFn = fake.returns(scopes);
+    const permissionsLookupFn = fake.returns(permissions);
 
     const error = "some-error";
     const tokenInvalidFake = fake.returns(error);
@@ -185,8 +155,8 @@ describe("Authorize", () => {
       await authorize({
         path,
         claims,
-        scopesLookupFn,
-        priviledgesLookupFn,
+        permissionsLookupFn,
+        priviledges,
         root,
         domain,
         service,
@@ -200,9 +170,9 @@ describe("Authorize", () => {
     }
   });
   it("should not authorize if theres a mismatch in root", async () => {
-    const scopes = [`${domain}:${joinedPriviledges}:bogus`];
+    const permissions = [`${domain}:${joinedPriviledges}:bogus`];
 
-    const scopesLookupFn = fake.returns(scopes);
+    const permissionsLookupFn = fake.returns(permissions);
 
     const error = "some-error";
     const tokenInvalidFake = fake.returns(error);
@@ -214,7 +184,7 @@ describe("Authorize", () => {
       await authorize({
         path,
         claims,
-        scopesLookupFn,
+        permissionsLookupFn,
         root,
         domain,
         service,
@@ -228,8 +198,8 @@ describe("Authorize", () => {
     }
   });
   it("should not authorize if theres a mismatch in domain", async () => {
-    const scopes = [`bogus:${joinedPriviledges}:${root}`];
-    const scopesLookupFn = fake.returns(scopes);
+    const permissions = [`bogus:${joinedPriviledges}:${root}`];
+    const permissionsLookupFn = fake.returns(permissions);
 
     const error = "some-error";
     const tokenInvalidFake = fake.returns(error);
@@ -241,7 +211,7 @@ describe("Authorize", () => {
       await authorize({
         path,
         claims,
-        scopesLookupFn,
+        permissionsLookupFn,
         root,
         domain,
         service,
@@ -255,8 +225,8 @@ describe("Authorize", () => {
     }
   });
   it("should not authorize if theres a mismatch in service", async () => {
-    const scopes = [`${domain}:${joinedPriviledges}:${root}`];
-    const scopesLookupFn = fake.returns(scopes);
+    const permissions = [`${domain}:${joinedPriviledges}:${root}`];
+    const permissionsLookupFn = fake.returns(permissions);
 
     const error = "some-error";
     const tokenInvalidFake = fake.returns(error);
@@ -268,7 +238,7 @@ describe("Authorize", () => {
       await authorize({
         path,
         claims,
-        scopesLookupFn,
+        permissionsLookupFn,
         root,
         domain,
         service: "bogus",
@@ -282,8 +252,8 @@ describe("Authorize", () => {
     }
   });
   it("should not authorize if theres a mismatch in network", async () => {
-    const scopes = [`${domain}:${joinedPriviledges}:${root}`];
-    const scopesLookupFn = fake.returns(scopes);
+    const permissions = [`${domain}:${joinedPriviledges}:${root}`];
+    const permissionsLookupFn = fake.returns(permissions);
 
     const error = "some-error";
     const tokenInvalidFake = fake.returns(error);
@@ -295,11 +265,39 @@ describe("Authorize", () => {
       await authorize({
         path,
         claims,
-        scopesLookupFn,
+        permissionsLookupFn,
         root,
         domain,
         service,
         network: "bogus"
+      });
+
+      //shouldnt be called;
+      expect(1).to.equal(2);
+    } catch (e) {
+      expect(e).to.equal(error);
+    }
+  });
+  it("should not authorize without priviledges", async () => {
+    const permissions = ["*:bogus:*"];
+
+    const permissionsLookupFn = fake.returns(permissions);
+
+    const error = "some-error";
+    const tokenInvalidFake = fake.returns(error);
+    replace(deps, "invalidCredentialsError", {
+      tokenInvalid: tokenInvalidFake
+    });
+
+    try {
+      await authorize({
+        path,
+        claims,
+        permissionsLookupFn,
+        root,
+        domain,
+        service,
+        network
       });
 
       //shouldnt be called;
