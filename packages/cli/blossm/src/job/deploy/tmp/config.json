@@ -1,9 +1,0 @@
-{
-  "name": "some-action",
-  "domain": "some-domain",
-  "version": 0,
-  "service": "core",
-  "context": "job",
-  "targets": [],
-  "topics": []
-}
