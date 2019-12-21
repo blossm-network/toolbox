@@ -34,27 +34,6 @@ module.exports = ({
   secretBucketKeyLocation,
   secretBucketKeyRing
 }) => {
-  //eslint-disable-next-line
-  console.log("asdf: ", {
-    name,
-    domain,
-    region,
-    project,
-    envNameSpecifier,
-    dnsZone,
-    service,
-    context,
-    env,
-    operationHash,
-    serviceName,
-    memory,
-    containerRegistery,
-    mainContainerName,
-    uri,
-    secretBucket,
-    secretBucketKeyLocation,
-    secretBucketKeyRing
-  });
   const imageExtension = `${domain}.${name}`;
   return [
     yarnInstall,
