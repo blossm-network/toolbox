@@ -76,13 +76,12 @@ module.exports = ({
       containerRegistery,
       nodeEnv: env,
       memory,
+      domain,
       region,
       project,
       network,
       envNameSpecifier,
-      envUriSpecifier,
-      env: `DOMAIN=${domain}`,
-      labels: `domain=${domain},hash=${operationHash}`
+      envUriSpecifier
     }),
     startDnsTransaction({ dnsZone, project }),
     addDnsTransaction({ uri: authUri, dnsZone, project }),
