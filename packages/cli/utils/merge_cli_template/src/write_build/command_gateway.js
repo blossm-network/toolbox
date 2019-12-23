@@ -35,10 +35,12 @@ module.exports = ({
   secretBucketKeyRing
 }) => {
   const authUri = `${domain}.${service}.${envUriSpecifier}${network}`;
+  const imageExtension = domain;
   return [
     yarnInstall,
     unitTest,
     buildImage({
+      extension: imageExtension,
       containerRegistery,
       service,
       context
@@ -61,11 +63,13 @@ module.exports = ({
     integrationTests(),
     dockerComposeLogs,
     dockerPush({
+      extension: imageExtension,
       containerRegistery,
       service,
       context
     }),
     deploy({
+      extension: imageExtension,
       serviceName,
       allowUnauthenticated: true,
       context,

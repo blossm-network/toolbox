@@ -45,4 +45,4 @@ devDependencies:
 service: core
 
 #don't change
-context: auth-gateway
+context: command-gateway
