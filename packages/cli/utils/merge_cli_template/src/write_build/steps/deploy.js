@@ -27,7 +27,7 @@ module.exports = ({
       "run",
       "deploy",
       `${serviceName}`,
-      `--image=${containerRegistery}/${service}.${extension}.${context}`,
+      `--image=${containerRegistery}/${service}.${context}.${extension}`,
       "--platform=managed",
       `--memory=${memory}`,
       ...(allowUnauthenticated ? ["--allow-unauthenticated"] : []),
