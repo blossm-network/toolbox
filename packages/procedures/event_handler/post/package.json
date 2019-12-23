@@ -1,7 +1,7 @@
 {
   "name": "@blossm/event-handler-post",
   "description": "An event handler server POST handler.",
-  "version": "0.0.44",
+  "version": "0.0.45",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -14,9 +14,9 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/create-event": "^0.0.5",
+    "@blossm/create-event": "^0.0.6",
     "@blossm/errors": "*",
-    "@blossm/event-store-rpc": "^0.0.26",
+    "@blossm/event-store-rpc": "^0.0.27",
     "@blossm/gcp-token": "^0.0.6"
   },
   "devDependencies": {
