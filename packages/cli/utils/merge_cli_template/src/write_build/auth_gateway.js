@@ -31,7 +31,7 @@ module.exports = ({
   secretBucketKeyLocation,
   secretBucketKeyRing
 }) => {
-  const authServiceName = `${region}.${service}.${context}`;
+  const authServiceName = `${region}.${service}`;
   const authUri = `auth.${envUriSpecifier}${network}`;
   return [
     yarnInstall,

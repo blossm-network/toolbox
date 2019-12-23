@@ -37,7 +37,7 @@ module.exports = ({
   secretBucketKeyLocation,
   secretBucketKeyRing
 }) => {
-  const imageExtension = `${domain}.${action}.${context}`;
+  const imageExtension = `${domain}.${action}`;
 
   return [
     yarnInstall,
