@@ -52,13 +52,13 @@ module.exports = ({
       containerRegistery,
       mainContainerName,
       project,
+      domain,
       context,
       region,
       service,
       secretBucket,
       secretBucketKeyRing,
-      secretBucketKeyLocation,
-      custom: { DOMAIN: domain }
+      secretBucketKeyLocation
     }),
     dockerComposeUp,
     dockerComposeProcesses,
