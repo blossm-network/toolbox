@@ -3,6 +3,7 @@ const { stripIndents } = require("common-tags");
 module.exports = ({
   containerRegistery,
   mainContainerName,
+  domain,
   service,
   context,
   project,
@@ -20,6 +21,7 @@ module.exports = ({
       stripIndents`
     cat >> .env <<- EOM
     NETWORK=local
+    DOMAIN=${domain}
     SERVICE=${service}
     CONTEXT=${context}
     MAIN_CONTAINER_NAME=${mainContainerName}
