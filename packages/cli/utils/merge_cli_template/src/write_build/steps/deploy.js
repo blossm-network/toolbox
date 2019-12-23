@@ -1,10 +1,13 @@
 module.exports = ({
   region,
   project,
+  domain,
   service,
   network,
   context,
   memory,
+  operationHash,
+  containerRegistery,
   envNameSpecifier,
   envUriSpecifier,
   serviceName,
@@ -24,16 +27,14 @@ module.exports = ({
       "run",
       "deploy",
       `${serviceName}`,
-      `--image=us.gcr.io/${project}${envNameSpecifier}/${service}.${context}${
-        extension ? `.${extension}` : ""
-      }`,
+      `--image=${containerRegistery}/${service}.${extension}.${context}`,
       "--platform=managed",
       `--memory=${memory}`,
       ...(allowUnauthenticated ? ["--allow-unauthenticated"] : []),
       `--project=${project}${envNameSpecifier}`,
       `--region=${region}`,
-      `--set-env-vars=NODE_ENV=${nodeEnv},NETWORK=${region}.${envUriSpecifier}${network},SERVICE=${service},CONTEXT=${context},GCP_PROJECT=${project}${envNameSpecifier},GCP_REGION=${region},GCP_SECRET_BUCKET=${secretBucket},GCP_KMS_SECRET_BUCKET_KEY_LOCATION=${secretBucketKeyLocation},GCP_KMS_SECRET_BUCKET_KEY_RING=${secretBucketKeyRing},${env}`,
-      `--labels=service=${service},context=${context},${labels}`
+      `--set-env-vars=NODE_ENV=${nodeEnv},NETWORK=${region}.${envUriSpecifier}${network},SERVICE=${service},CONTEXT=${context},DOMAIN=${domain},GCP_PROJECT=${project}${envNameSpecifier},GCP_REGION=${region},GCP_SECRET_BUCKET=${secretBucket},GCP_KMS_SECRET_BUCKET_KEY_LOCATION=${secretBucketKeyLocation},GCP_KMS_SECRET_BUCKET_KEY_RING=${secretBucketKeyRing},${env}`,
+      `--labels=service=${service},context=${context},domain=${domain},hash=${operationHash},${labels}`
     ]
   };
 };

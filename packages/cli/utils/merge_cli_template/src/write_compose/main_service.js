@@ -26,6 +26,7 @@ module.exports = ({
     environment: {
       PORT: `${port}`,
       NODE_ENV: `${env}`,
+      DOMAIN: `${domain}`,
       NETWORK: `${network}`,
       CONTEXT: `${context}`,
       SERVICE: `${service}`,
@@ -54,7 +55,6 @@ module.exports = ({
         ...common,
         environment: {
           NAME: `${name}`,
-          DOMAIN: `${domain}`,
           ...common.environment,
           ...commonDatabaseEnv
         }
@@ -64,7 +64,6 @@ module.exports = ({
         image: `${commonImagePrefix}.${domain}:latest`,
         ...common,
         environment: {
-          DOMAIN: `${domain}`,
           ...common.environment,
           ...commonDatabaseEnv
         }
@@ -75,7 +74,6 @@ module.exports = ({
         ...common,
         environment: {
           ...common.environment,
-          DOMAIN: `${domain}`,
           ACTION: `${action}`
         }
       };
@@ -85,7 +83,6 @@ module.exports = ({
         ...common,
         environment: {
           ...common.environment,
-          DOMAIN: `${domain}`,
           ACTION: `${action}`,
           NAME: `${name}`
         }
@@ -96,9 +93,13 @@ module.exports = ({
         ...common,
         environment: {
           ...common.environment,
-          DOMAIN: `${domain}`,
           NAME: `${name}`
         }
+      };
+    case "command-gateway":
+      return {
+        image: `${commonImagePrefix}:latest`,
+        ...common
       };
     case "auth-gateway":
       return {

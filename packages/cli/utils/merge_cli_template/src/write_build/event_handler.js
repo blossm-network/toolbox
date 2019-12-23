@@ -40,7 +40,7 @@ module.exports = ({
   secretBucketKeyLocation,
   secretBucketKeyRing
 }) => {
-  const imageExtension = `${domain}.did-${action}.${name}`;
+  const imageExtension = `${domain}.did-${action}.${name}.${context}`;
   return [
     yarnInstall,
     unitTest,
@@ -80,15 +80,18 @@ module.exports = ({
       secretBucket,
       secretBucketKeyLocation,
       secretBucketKeyRing,
+      containerRegistery,
       nodeEnv: env,
+      domain,
+      operationHash,
       memory,
       region,
       project,
       network,
       envNameSpecifier,
       envUriSpecifier,
-      env: `DOMAIN=${domain},ACTION=${action},NAME=${name}`,
-      labels: `domain=${domain},action=${action},name=${name},hash=${operationHash}`
+      env: `ACTION=${action},NAME=${name}`,
+      labels: `action=${action},name=${name}`
     }),
     startDnsTransaction({ dnsZone, project }),
     addDnsTransaction({ uri, dnsZone, project }),

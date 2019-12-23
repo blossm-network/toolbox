@@ -21,29 +21,24 @@ module.exports = ({
   network,
   envNameSpecifier,
   envUriSpecifier,
+  containerRegistery,
+  mainContainerName,
+  operationHash,
+  serviceName,
   dnsZone,
   service,
   context,
   memory,
   env,
-  serviceName,
-  containerRegistery,
-  mainContainerName,
-  uri,
-  operationHash,
   secretBucket,
   secretBucketKeyLocation,
-  secretBucketKeyRing,
-  mongodbUser,
-  mongodbHost,
-  mongodbProtocol
+  secretBucketKeyRing
 }) => {
-  const imageExtension = `${domain}.${context}`;
+  const authUri = `${domain}.${service}.${envUriSpecifier}${network}`;
   return [
     yarnInstall,
     unitTest,
     buildImage({
-      extension: imageExtension,
       containerRegistery,
       service,
       context
@@ -51,55 +46,54 @@ module.exports = ({
     writeEnv({
       containerRegistery,
       mainContainerName,
+      domain,
       project,
-      context,
       region,
+      context,
+      operationHash,
       service,
       secretBucket,
       secretBucketKeyRing,
-      secretBucketKeyLocation,
-      custom: { DOMAIN: domain }
+      secretBucketKeyLocation
     }),
     dockerComposeUp,
     dockerComposeProcesses,
     integrationTests(),
     dockerComposeLogs,
     dockerPush({
-      extension: imageExtension,
       containerRegistery,
       service,
       context
     }),
     deploy({
       serviceName,
+      allowUnauthenticated: true,
       context,
       service,
-      extension: imageExtension,
       secretBucket,
       secretBucketKeyLocation,
       secretBucketKeyRing,
       containerRegistery,
-      domain,
-      operationHash,
-      region,
+      nodeEnv: env,
       memory,
+      region,
       project,
+      network,
       envNameSpecifier,
       envUriSpecifier,
-      network,
-      nodeEnv: env,
-      env: `MONGODB_DATABASE=event-store,MONGODB_USER=${mongodbUser}${envNameSpecifier},MONGODB_HOST=${env}-${mongodbHost},MONGODB_PROTOCOL=${mongodbProtocol}`
+      env: `DOMAIN=${domain}`,
+      labels: `domain=${domain},hash=${operationHash}`
     }),
     startDnsTransaction({ dnsZone, project }),
-    addDnsTransaction({ uri, dnsZone, project }),
+    addDnsTransaction({ uri: authUri, dnsZone, project }),
     executeDnsTransaction({ dnsZone, project }),
     abortDnsTransaction({ dnsZone, project }),
     mapDomain({
-      serviceName,
-      uri,
+      uri: authUri,
       project,
       envNameSpecifier,
-      region
+      region,
+      serviceName
     })
   ];
 };

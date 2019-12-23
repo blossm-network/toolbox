@@ -4,9 +4,7 @@ module.exports = ({ extension, containerRegistery, service, context } = {}) => {
     args: [
       "build",
       "-t",
-      `${containerRegistery}/${service}.${context}${
-        extension ? `.${extension}` : ""
-      }`,
+      `${containerRegistery}/${service}.${extension}.${context}`,
       "."
     ]
   };

@@ -39,7 +39,7 @@ module.exports = ({
   env,
   uri
 }) => {
-  const imageExtension = `${domain}.${name}`;
+  const imageExtension = `${domain}.${name}.${context}`;
   return [
     yarnInstall,
     unitTest,
@@ -76,18 +76,21 @@ module.exports = ({
       extension: imageExtension,
       region,
       project,
+      domain,
+      operationHash,
       context,
       service,
       network,
       memory,
+      containerRegistery,
       envNameSpecifier,
       envUriSpecifier,
       secretBucket,
       secretBucketKeyLocation,
       secretBucketKeyRing,
       nodeEnv: env,
-      env: `DOMAIN=${domain},NAME=${name},MONGODB_DATABASE=view-store,MONGODB_USER=${mongodbUser}${envNameSpecifier},MONGODB_HOST=${env}-${mongodbHost},MONGODB_PROTOCOL=${mongodbProtocol}`,
-      labels: `domain=${domain},name=${name},hash=${operationHash}`
+      env: `NAME=${name},MONGODB_DATABASE=view-store,MONGODB_USER=${mongodbUser}${envNameSpecifier},MONGODB_HOST=${env}-${mongodbHost},MONGODB_PROTOCOL=${mongodbProtocol}`,
+      labels: `name=${name}`
     }),
     startDnsTransaction({ dnsZone, project }),
     addDnsTransaction({ uri, dnsZone, project }),
