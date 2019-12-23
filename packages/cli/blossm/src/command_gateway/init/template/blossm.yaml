@@ -41,6 +41,7 @@ devDependencies:
   "@blossm/twilio-sms": "*"
   "@blossm/gcp-secret": "*"
   "@blossm/uuid": "*"
+  "@blossm/gcp-pubsub": "*"
 
 service: core
 

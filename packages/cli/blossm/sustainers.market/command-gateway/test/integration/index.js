@@ -27,11 +27,6 @@ describe("Command gateway integration tests", () => {
       }
     });
 
-    //eslint-disable-next-line
-    console.log("body: ", {
-      body: response.body
-    });
-
     const root = JSON.parse(response.body).root;
 
     const aggregate = await eventStore({
