@@ -46,12 +46,12 @@ module.exports = ({
     MONGODB_PROTOCOL: `${mongodbProtocol}`
   };
 
-  const commonImagePrefix = `${containerRegistery}/${service}.${context}`;
+  const commonImagePrefix = `${containerRegistery}/${service}.${context}.${domain}`;
 
   switch (context) {
     case "view-store":
       return {
-        image: `${commonImagePrefix}.${domain}.${name}:latest`,
+        image: `${commonImagePrefix}.${name}:latest`,
         ...common,
         environment: {
           NAME: `${name}`,
@@ -61,7 +61,7 @@ module.exports = ({
       };
     case "event-store":
       return {
-        image: `${commonImagePrefix}.${domain}:latest`,
+        image: `${commonImagePrefix}:latest`,
         ...common,
         environment: {
           ...common.environment,
@@ -70,7 +70,7 @@ module.exports = ({
       };
     case "command-handler":
       return {
-        image: `${commonImagePrefix}.${domain}.${action}:latest`,
+        image: `${commonImagePrefix}.${action}:latest`,
         ...common,
         environment: {
           ...common.environment,
@@ -79,7 +79,7 @@ module.exports = ({
       };
     case "event-handler":
       return {
-        image: `${commonImagePrefix}.${domain}.did-${action}.${name}:latest`,
+        image: `${commonImagePrefix}.did-${action}.${name}:latest`,
         ...common,
         environment: {
           ...common.environment,
@@ -89,7 +89,7 @@ module.exports = ({
       };
     case "job":
       return {
-        image: `${commonImagePrefix}.\${DOMAIN}.\${NAME}:latest`,
+        image: `${commonImagePrefix}.${name}:latest`,
         ...common,
         environment: {
           ...common.environment,
