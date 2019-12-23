@@ -37,7 +37,13 @@ const common = ({ method, procedure, root, data }) => {
           });
 
           if (response.statusCode >= 300) {
-            logger.info("response errored: ", { response, url });
+            logger.info("response errored: ", {
+              response,
+              url,
+              data,
+              context,
+              token
+            });
             throw deps.constructError({
               statusCode: response.statusCode,
               message: response.body

@@ -11,7 +11,7 @@ module.exports = async ({
 } = {}) => {
   return {
     headers: {
-      root: root || (await deps.makeUuid()),
+      root: root || (await deps.uuid()),
       ...(context != undefined && { context }),
       topic: `did-${action}.${domain}.${service}.${network}`,
       version,

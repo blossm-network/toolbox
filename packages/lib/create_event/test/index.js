@@ -69,7 +69,7 @@ describe("Create event", () => {
 
   it("should get called with expected params if root is missin", async () => {
     const newUuid = "newUuid!";
-    replace(deps, "makeUuid", fake.returns(newUuid));
+    replace(deps, "uuid", fake.returns(newUuid));
 
     const value = await createEvent({
       trace,
