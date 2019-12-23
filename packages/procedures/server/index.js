@@ -23,36 +23,38 @@ module.exports = ({ prehook, posthook } = {}) => {
       fn,
       { path = "/", preMiddleware = [], postMiddleware = [] } = {}
     ) => {
-      preMiddleware.forEach(m => app.use(m));
-      app.post(path, deps.asyncHandler(fn));
-      postMiddleware.forEach(m => app.use(m));
+      app.post(
+        path,
+        ...preMiddleware,
+        deps.asyncHandler(fn),
+        ...postMiddleware
+      );
       return { ...methods, listen };
     },
     put: (
       fn,
       { path = "/:id", preMiddleware = [], postMiddleware = [] } = {}
     ) => {
-      preMiddleware.forEach(m => app.use(m));
-      app.put(path, deps.asyncHandler(fn));
-      postMiddleware.forEach(m => app.use(m));
+      app.put(path, ...preMiddleware, deps.asyncHandler(fn), ...postMiddleware);
       return { ...methods, listen };
     },
     get: (
       fn,
       { path = "/:id?", preMiddleware = [], postMiddleware = [] } = {}
     ) => {
-      preMiddleware.forEach(m => app.use(m));
-      app.get(path, deps.asyncHandler(fn));
-      postMiddleware.forEach(m => app.use(m));
+      app.get(path, ...preMiddleware, deps.asyncHandler(fn), ...postMiddleware);
       return { ...methods, listen };
     },
     delete: (
       fn,
       { path = "/:id", preMiddleware = [], postMiddleware = [] } = {}
     ) => {
-      preMiddleware.forEach(m => app.use(m));
-      app.delete(path, deps.asyncHandler(fn));
-      postMiddleware.forEach(m => app.use(m));
+      app.delete(
+        path,
+        ...preMiddleware,
+        deps.asyncHandler(fn),
+        ...postMiddleware
+      );
       return { ...methods, listen };
     }
   };

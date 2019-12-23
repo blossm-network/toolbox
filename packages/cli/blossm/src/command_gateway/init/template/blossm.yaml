@@ -24,7 +24,7 @@ targets:
     context: command-handler
 
 dependencies:
-  "@blossm/auth-gateway": "*"
+  "@blossm/command-gateway": "*"
   "@blossm/gcp-kms": "*"
 
 devDependencies:

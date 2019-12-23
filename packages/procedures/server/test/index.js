@@ -201,11 +201,14 @@ describe("Lamba", () => {
       .listen();
 
     expect(result).to.equal(app);
-    expect(postFake).to.have.been.calledWith("/", asyncFn);
+    expect(postFake).to.have.been.calledWith(
+      "/",
+      preMiddleware,
+      asyncFn,
+      postMiddleware
+    );
     expect(asyncHandlerFake).to.have.been.calledWith(fn);
-    expect(useFake.firstCall).to.have.been.calledWith(preMiddleware);
-    expect(useFake.secondCall).to.have.been.calledWith(postMiddleware);
-    expect(useFake.thirdCall).to.have.been.calledWith(deps.errorMiddleware);
+    expect(useFake).to.have.been.calledWith(deps.errorMiddleware);
     expect(listenFake).to.have.been.calledWith(port);
   });
   it("should call get with the correct params", async () => {
@@ -267,11 +270,14 @@ describe("Lamba", () => {
       .listen();
 
     expect(result).to.equal(app);
-    expect(getFake).to.have.been.calledWith("/:id?", asyncFn);
+    expect(getFake).to.have.been.calledWith(
+      "/:id?",
+      preMiddleware,
+      asyncFn,
+      postMiddleware
+    );
     expect(asyncHandlerFake).to.have.been.calledWith(fn);
-    expect(useFake.firstCall).to.have.been.calledWith(preMiddleware);
-    expect(useFake.secondCall).to.have.been.calledWith(postMiddleware);
-    expect(useFake.thirdCall).to.have.been.calledWith(deps.errorMiddleware);
+    expect(useFake).to.have.been.calledWith(deps.errorMiddleware);
     expect(listenFake).to.have.been.calledWith(port);
   });
   it("should call put with the correct params", async () => {
@@ -304,11 +310,14 @@ describe("Lamba", () => {
       .listen();
 
     expect(result).to.equal(app);
-    expect(putFake).to.have.been.calledWith("/:id", asyncFn);
+    expect(putFake).to.have.been.calledWith(
+      "/:id",
+      preMiddleware,
+      asyncFn,
+      postMiddleware
+    );
     expect(asyncHandlerFake).to.have.been.calledWith(fn);
-    expect(useFake.firstCall).to.have.been.calledWith(preMiddleware);
-    expect(useFake.secondCall).to.have.been.calledWith(postMiddleware);
-    expect(useFake.thirdCall).to.have.been.calledWith(deps.errorMiddleware);
+    expect(useFake).to.have.been.calledWith(deps.errorMiddleware);
     expect(listenFake).to.have.been.calledWith(port);
   });
   it("should call delete with the correct params", async () => {
@@ -370,11 +379,14 @@ describe("Lamba", () => {
       .listen();
 
     expect(result).to.equal(app);
-    expect(deleteFake).to.have.been.calledWith("/:id", asyncFn);
+    expect(deleteFake).to.have.been.calledWith(
+      "/:id",
+      preMiddleware,
+      asyncFn,
+      postMiddleware
+    );
     expect(asyncHandlerFake).to.have.been.calledWith(fn);
-    expect(useFake.firstCall).to.have.been.calledWith(preMiddleware);
-    expect(useFake.secondCall).to.have.been.calledWith(postMiddleware);
-    expect(useFake.thirdCall).to.have.been.calledWith(deps.errorMiddleware);
+    expect(useFake).to.have.been.calledWith(deps.errorMiddleware);
     expect(listenFake).to.have.been.calledWith(port);
   });
 });

@@ -17,6 +17,8 @@ module.exports = async ({
   });
 
   for (const command of commands) {
+    //eslint-disable-next-line
+    console.log("command: ", { command });
     server = server.post(deps.post(), {
       path: `/${command.action}`,
       ...(command.priviledges != "none" && {
