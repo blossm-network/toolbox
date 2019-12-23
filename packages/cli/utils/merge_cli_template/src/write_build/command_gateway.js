@@ -46,7 +46,6 @@ module.exports = ({
       context
     }),
     writeEnv({
-      containerRegistery,
       mainContainerName,
       domain,
       project,
@@ -60,7 +59,7 @@ module.exports = ({
     }),
     dockerComposeUp,
     dockerComposeProcesses,
-    integrationTests(),
+    integrationTests({ strict: false }),
     dockerComposeLogs,
     dockerPush({
       extension: imageExtension,

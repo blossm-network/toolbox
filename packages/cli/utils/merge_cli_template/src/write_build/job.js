@@ -46,7 +46,6 @@ module.exports = ({
       context
     }),
     writeEnv({
-      containerRegistery,
       mainContainerName,
       project,
       domain,

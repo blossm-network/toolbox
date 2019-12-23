@@ -1,7 +1,6 @@
 const { stripIndents } = require("common-tags");
 
 module.exports = ({
-  containerRegistery,
   mainContainerName,
   domain,
   service,
@@ -25,7 +24,6 @@ module.exports = ({
     SERVICE=${service}
     CONTEXT=${context}
     MAIN_CONTAINER_NAME=${mainContainerName}
-    CONTAINER_REGISTRY=${containerRegistery}
     GCP_PROJECT=${project}-staging
     GCP_REGION=${region}
     GCP_SECRET_BUCKET=${secretBucket}
