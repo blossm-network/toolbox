@@ -38,7 +38,7 @@ module.exports = ({
   mongodbHost,
   mongodbProtocol
 }) => {
-  const imageExtension = `${domain}`;
+  const imageExtension = domain;
   return [
     yarnInstall,
     unitTest,
