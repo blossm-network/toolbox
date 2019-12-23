@@ -1,0 +1,22 @@
+const gateway = require("@blossm/command-gateway");
+const viewStore = require("@blossm/view-store-rpc");
+const { verify } = require("@blossm/gcp-kms");
+
+const config = require("./config.json");
+
+module.exports = gateway({
+  commands: config.commands,
+  whitelist: config.whitelist,
+  permissionsLookupFn: principle =>
+    viewStore({
+      name: "permissions",
+      domain: "principle"
+    }).get({ principle }),
+  verifyFn: verify({
+    ring: process.env.SERVICE,
+    key: "challenge",
+    location: "global",
+    version: "1",
+    project: process.env.GCP_PROJECT
+  })
+});

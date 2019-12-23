@@ -2,6 +2,7 @@ const deps = require("./deps");
 
 module.exports = async ({
   commands,
+  domain = process.env.DOMAIN,
   whitelist,
   permissionsLookupFn,
   verifyFn
@@ -17,9 +18,7 @@ module.exports = async ({
   });
 
   for (const command of commands) {
-    //eslint-disable-next-line
-    console.log("command: ", { command });
-    server = server.post(deps.post(), {
+    server = server.post(deps.post({ action: command.action, domain }), {
       path: `/${command.action}`,
       ...(command.priviledges != "none" && {
         preMiddleware: [
