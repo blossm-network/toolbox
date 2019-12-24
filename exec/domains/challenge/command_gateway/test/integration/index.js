@@ -31,7 +31,7 @@ describe("Command gateway integration tests", () => {
     }).update(principleRoot, { add: ["challenge:answer"] });
 
     //eslint-disable-next-line
-    console.log("2");
+    console.log("2: ", principleRoot);
 
     const phone = "251-333-2037";
     await viewStore({

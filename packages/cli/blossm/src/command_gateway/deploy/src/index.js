@@ -8,6 +8,9 @@ module.exports = gateway({
   commands: config.commands,
   whitelist: config.whitelist,
   permissionsLookupFn: async ({ principle }) => {
+    //eslint-disable-next-line
+    console.log("principle: ", principle);
+
     const { permissions } = (
       await viewStore({
         name: "permissions",
