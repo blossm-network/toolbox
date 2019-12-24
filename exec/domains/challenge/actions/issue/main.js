@@ -35,7 +35,7 @@ module.exports = async ({ payload, context }) => {
     options: {
       issuer: `issue.challenge.${process.env.SERVICE}.${process.env.NETWORK}`,
       subject: person.principle,
-      audience: `auth.${process.env.SERVICE}.${process.env.NETWORK}/challenge/answer`,
+      audience: `challenge.${process.env.SERVICE}.${process.env.NETWORK}/answer`,
       expiresIn: THREE_MINUTES
     },
     payload: {

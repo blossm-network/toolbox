@@ -8,10 +8,12 @@ module.exports = gateway({
   commands: config.commands,
   whitelist: config.whitelist,
   permissionsLookupFn: async principle => {
-    const { permissions } = await viewStore({
-      name: "permissions",
-      domain: "principle"
-    }).get({ principle });
+    const { permissions } = (
+      await viewStore({
+        name: "permissions",
+        domain: "principle"
+      })
+    ).read({ principle });
 
     return permissions;
   },

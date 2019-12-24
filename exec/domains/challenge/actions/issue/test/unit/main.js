@@ -120,7 +120,7 @@ describe("Command handler unit tests", () => {
       options: {
         issuer: `issue.challenge.${service}.${network}`,
         subject: principle,
-        audience: `auth.${service}.${network}/challenge/answer`,
+        audience: `challenge.${service}.${network}/answer`,
         expiresIn: 180
       },
       payload: {

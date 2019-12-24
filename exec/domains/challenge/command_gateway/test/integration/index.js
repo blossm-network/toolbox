@@ -28,7 +28,7 @@ describe("Command gateway integration tests", () => {
     await viewStore({
       name: "permissions",
       domain: "principle"
-    }).update(principleRoot, { add: ["answer"] });
+    }).update(principleRoot, { add: ["challenge:answer"] });
 
     //eslint-disable-next-line
     console.log("2");
