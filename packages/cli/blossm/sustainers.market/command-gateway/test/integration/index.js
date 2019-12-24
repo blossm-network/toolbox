@@ -37,6 +37,20 @@ describe("Command gateway integration tests", () => {
     expect(aggregate.state.name).to.equal(name.toLowerCase());
     expect(response.statusCode).to.equal(200);
   });
+  it("should return an error if accessing command that requires auth", async () => {
+    const response = await request.post(`${url}/some-action`, {
+      body: {
+        headers: {
+          issued: stringDate()
+        },
+        payload: {
+          name
+        }
+      }
+    });
+
+    expect(response.statusCode).to.equal(401);
+  });
   it("should return an error if incorrect params with no auth", async () => {
     const name = 3;
     const response = await request.post(`${url}/some-other-action`, {
