@@ -7,7 +7,7 @@ const config = require("./config.json");
 module.exports = gateway({
   commands: config.commands,
   whitelist: config.whitelist,
-  permissionsLookupFn: async principle => {
+  permissionsLookupFn: async ({ principle }) => {
     const { permissions } = (
       await viewStore({
         name: "permissions",
@@ -15,7 +15,9 @@ module.exports = gateway({
       })
     ).read({ principle });
 
-    return permissions;
+    //eslint-disable-next-line
+    console.log("permissions: ", persmission);
+    return permissions || [];
   },
   verifyFn: verify({
     ring: process.env.SERVICE,

@@ -17,7 +17,7 @@ module.exports = async ({
   if (context.network !== network || context.service !== service)
     throw deps.invalidCredentialsError.tokenInvalid();
 
-  const permissions = await permissionsLookupFn({ principle, context });
+  const permissions = await permissionsLookupFn(principle);
 
   const satisfiedPermissions = permissions.filter(permission => {
     const [
