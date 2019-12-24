@@ -58,7 +58,7 @@ describe("Command gateway integration tests", () => {
     });
 
     //eslint-disable-next-line
-    console.log("4");
+    console.log("4: ", response0);
 
     expect(response0.statusCode).to.equal(200);
     const { token, root } = JSON.parse(response0.body);
@@ -68,10 +68,10 @@ describe("Command gateway integration tests", () => {
       await secret("twilio-auth-token")
     ).list({ sentAfter, limit: 1, to: "+12513332037" });
 
-    //eslint-disable-next-line
-    console.log("5");
-
     const code = message.body.substr(0, 6);
+
+    //eslint-disable-next-line
+    console.log("5: ", code);
 
     const response1 = await request.post(`${url}/answer`, {
       body: {
@@ -89,7 +89,7 @@ describe("Command gateway integration tests", () => {
     });
 
     //eslint-disable-next-line
-    console.log("6");
+    console.log("6", response1);
 
     expect(response1.statusCode).to.equal(200);
     const parsedBody = JSON.parse(response1.body);

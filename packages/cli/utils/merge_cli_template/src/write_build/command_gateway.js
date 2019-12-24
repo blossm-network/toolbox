@@ -59,7 +59,7 @@ module.exports = ({
     }),
     dockerComposeUp,
     dockerComposeProcesses,
-    integrationTests(),
+    integrationTests({ strict: false }),
     dockerComposeLogs,
     dockerPush({
       extension: imageExtension,

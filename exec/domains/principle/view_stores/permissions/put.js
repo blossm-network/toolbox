@@ -15,12 +15,12 @@ module.exports = body => {
     data: {
       ...(body.add && {
         $push: {
-          scopes: body.add
+          permissions: body.add
         }
       }),
       ...(body.remove && {
         $pull: {
-          scopes: body.remove
+          permissions: body.remove
         }
       })
     }

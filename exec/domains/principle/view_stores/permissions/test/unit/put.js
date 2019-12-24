@@ -17,10 +17,10 @@ describe("View store put tests", () => {
     const { data } = put(body);
     expect(data).to.deep.equal({
       $push: {
-        scopes: add
+        permissions: add
       },
       $pull: {
-        scopes: remove
+        permissions: remove
       }
     });
   });

@@ -22,6 +22,12 @@ targets:
   - action: answer
     domain: challenge
     context: command-handler
+  - name: phones
+    domain: person
+    context: view-store
+  - name: permissions
+    domain: principle
+    context: view-store
 
 dependencies:
   "@blossm/command-gateway": "*"

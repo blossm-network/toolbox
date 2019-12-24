@@ -11,11 +11,11 @@
 # In other words, full collection scans are not allowed.
 #
 
-name: scopes 
+name: permissions 
 domain: principle
 
 schema:
-  scopes: [String]
+  permissions: [String]
 
 dependencies:
   "@blossm/mongodb-view-store": "*"
