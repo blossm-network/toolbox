@@ -11,16 +11,14 @@ module.exports = gateway({
     //eslint-disable-next-line
     console.log("principle: ", principle);
 
-    const { permissions } = (
-      await viewStore({
-        name: "permissions",
-        domain: "principle"
-      })
-    ).read({ root: principle });
+    const p = await viewStore({
+      name: "permissions",
+      domain: "principle"
+    }).read({ root: principle });
 
     //eslint-disable-next-line
-    console.log("permissions: ", permissions);
-    return permissions || [];
+    console.log("permissions: ", p);
+    return p.permissions || [];
   },
   verifyFn: verify({
     ring: process.env.SERVICE,
