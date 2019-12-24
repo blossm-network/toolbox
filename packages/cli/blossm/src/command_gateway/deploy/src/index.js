@@ -7,11 +7,14 @@ const config = require("./config.json");
 module.exports = gateway({
   commands: config.commands,
   whitelist: config.whitelist,
-  permissionsLookupFn: principle =>
-    viewStore({
+  permissionsLookupFn: async principle => {
+    const { permissions } = await viewStore({
       name: "permissions",
       domain: "principle"
-    }).get({ principle }),
+    }).get({ principle });
+
+    return permissions;
+  },
   verifyFn: verify({
     ring: process.env.SERVICE,
     key: "challenge",
