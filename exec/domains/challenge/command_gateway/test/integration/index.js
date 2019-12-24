@@ -22,16 +22,10 @@ describe("Command gateway integration tests", () => {
   after(async () => await Promise.all(config.topics.map(t => del(t))));
 
   it("should return successfully", async () => {
-    //eslint-disable-next-line
-    console.log("1");
-
     await viewStore({
       name: "permissions",
       domain: "principle"
     }).update(principleRoot, { add: ["challenge:answer"] });
-
-    //eslint-disable-next-line
-    console.log("2: ", principleRoot);
 
     const phone = "251-333-2037";
     await viewStore({
@@ -40,9 +34,6 @@ describe("Command gateway integration tests", () => {
     })
       //phone should be already formatted in the view store.
       .update(personRoot, { principle: principleRoot, phone: "+12513332037" });
-
-    //eslint-disable-next-line
-    console.log("3");
 
     const sentAfter = new Date();
 
@@ -57,9 +48,6 @@ describe("Command gateway integration tests", () => {
       }
     });
 
-    //eslint-disable-next-line
-    console.log("4: ", response0);
-
     expect(response0.statusCode).to.equal(200);
     const { token, root } = JSON.parse(response0.body);
 
@@ -69,9 +57,6 @@ describe("Command gateway integration tests", () => {
     ).list({ sentAfter, limit: 1, to: "+12513332037" });
 
     const code = message.body.substr(0, 6);
-
-    //eslint-disable-next-line
-    console.log("5: ", code);
 
     const response1 = await request.post(`${url}/answer`, {
       body: {
@@ -87,9 +72,6 @@ describe("Command gateway integration tests", () => {
         authorization: `Bearer ${token}`
       }
     });
-
-    //eslint-disable-next-line
-    console.log("6", response1);
 
     expect(response1.statusCode).to.equal(200);
     const parsedBody = JSON.parse(response1.body);

@@ -8,17 +8,12 @@ module.exports = gateway({
   commands: config.commands,
   whitelist: config.whitelist,
   permissionsLookupFn: async ({ principle }) => {
-    //eslint-disable-next-line
-    console.log("principle: ", principle);
-
-    const p = await viewStore({
+    const { permissions } = await viewStore({
       name: "permissions",
       domain: "principle"
     }).read({ root: principle });
 
-    //eslint-disable-next-line
-    console.log("permissions: ", p);
-    return p.permissions || [];
+    return permissions || [];
   },
   verifyFn: verify({
     ring: process.env.SERVICE,
