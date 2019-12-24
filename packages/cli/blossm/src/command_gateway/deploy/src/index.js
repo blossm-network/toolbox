@@ -16,7 +16,7 @@ module.exports = gateway({
     ).read({ principle });
 
     //eslint-disable-next-line
-    console.log("permissions: ", persmissions);
+    console.log("permissions: ", permissions);
     return permissions || [];
   },
   verifyFn: verify({
