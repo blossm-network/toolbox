@@ -16,7 +16,7 @@ module.exports = gateway({
         name: "permissions",
         domain: "principle"
       })
-    ).read({ principle });
+    ).read({ root: principle });
 
     //eslint-disable-next-line
     console.log("permissions: ", permissions);
