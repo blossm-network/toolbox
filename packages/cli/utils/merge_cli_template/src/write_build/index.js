@@ -260,6 +260,8 @@ module.exports = ({
     domain
   });
 
+  //eslint-disable-next-line
+  console.log("1 i: ", { i });
   const build = {
     steps: steps({
       imageExtension: i,
@@ -291,6 +293,6 @@ module.exports = ({
   fs.writeFileSync(buildPath, yaml.stringify(build));
 
   return {
-    imageName: `${containerRegistery}/${service}.${context}.${imageExtension}`
+    imageName: `${containerRegistery}/${service}.${context}.${i}`
   };
 };
