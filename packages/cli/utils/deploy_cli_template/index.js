@@ -62,9 +62,6 @@ module.exports = ({ domain, dir, configFn }) => async args => {
     configFn
   });
 
-  //eslint-disable-next-line
-  console.log("image name: ", { imageName });
-
   await testCliTemplate({ workingDir, input, imageName });
 
   if (!input.testOnly) {
