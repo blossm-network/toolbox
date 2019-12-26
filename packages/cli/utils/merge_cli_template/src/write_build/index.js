@@ -168,6 +168,7 @@ const steps = ({
       });
     case "command-gateway":
       return commandGateway({
+        imageExtension,
         region,
         project,
         envNameSpecifier,
@@ -216,6 +217,7 @@ const imageExtension = ({ domain, name, action, context }) => {
     case "view-store":
       return `${domain}.${name}`;
     case "event-store":
+    case "command-gateway":
       return domain;
     case "event-handler":
       return `${domain}.did-${action}.${name}`;
