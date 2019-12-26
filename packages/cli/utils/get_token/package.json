@@ -1,6 +1,6 @@
 {
   "name": "@blossm/get-token",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Gets a token for a development environment.",
   "main": "index.js",
   "author": "blossm.network",
@@ -14,12 +14,12 @@
     "test": "echo \"Error: no test specified\" && exit 0"
   },
   "dependencies": {
-    "@blossm/view-store-rpc": "*",
     "@blossm/command-rpc": "*",
-    "@blossm/twilio-sms": "*",
-    "@blossm/jwt": "*",
+    "@blossm/gcp-kms": "*",
     "@blossm/gcp-secret": "*",
-    "@blossm/gcp-kms": "*"
+    "@blossm/jwt": "*",
+    "@blossm/twilio-sms": "*",
+    "@blossm/view-store-rpc": "*"
   },
   "devDependencies": {
     "mocha": "^6.1.4"
