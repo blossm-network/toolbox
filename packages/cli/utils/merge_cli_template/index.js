@@ -194,9 +194,6 @@ const configure = async (workingDir, configFn, env) => {
       ...configFn(config)
     });
 
-    //eslint-disable-next-line
-    console.log("1 image name: ", { imageName });
-
     writeCompose({
       config,
       workingDir,

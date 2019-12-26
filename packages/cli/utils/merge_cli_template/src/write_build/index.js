@@ -262,8 +262,6 @@ module.exports = ({
     domain
   });
 
-  //eslint-disable-next-line
-  console.log("1 i: ", { i });
   const build = {
     steps: steps({
       imageExtension: i,

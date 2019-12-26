@@ -67,6 +67,20 @@ module.exports = async ({ workingDir, input, imageName }) => {
     throw "Tests failed";
   }
 
+  const spawnNetwork = spawnSync(
+    "docker",
+    ["network", "create", "cloudbuild"],
+    {
+      stdio: [process.stdin, process.stdout, process.stderr],
+      cwd: workingDir
+    }
+  );
+
+  if (spawnNetwork.stderr) {
+    process.exitCode = 1;
+    throw "Creating a network failed";
+  }
+
   const spawnBuild = spawnSync("docker", ["build", "-t", `${imageName}`, "."], {
     stdio: [process.stdin, process.stdout, process.stderr],
     cwd: workingDir
@@ -87,15 +101,15 @@ module.exports = async ({ workingDir, input, imageName }) => {
     throw "Up failed";
   }
 
-  const spawnPs = spawnSync("docker-compose", ["ps"], {
-    stdio: [process.stdin, process.stdout, process.stderr],
-    cwd: workingDir
-  });
+  // const spawnPs = spawnSync("docker-compose", ["ps"], {
+  //   stdio: [process.stdin, process.stdout, process.stderr],
+  //   cwd: workingDir
+  // });
 
-  if (spawnPs.stderr) {
-    process.exitCode = 1;
-    throw "Logging failed";
-  }
+  // if (spawnPs.stderr) {
+  //   process.exitCode = 1;
+  //   throw "Logging failed";
+  // }
 
   const spawnIntegrationTest = spawnSync("yarn", ["test:integration"], {
     stdio: [process.stdin, process.stdout, process.stderr],
