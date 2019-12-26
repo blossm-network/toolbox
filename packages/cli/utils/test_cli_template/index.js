@@ -91,7 +91,7 @@ module.exports = async ({ workingDir, input, imageName }) => {
     throw "Build failed";
   }
 
-  const spawnUp = spawnSync("docker-compose", ["up"], {
+  const spawnUp = spawnSync("docker-compose", ["up", "-d"], {
     stdio: [process.stdin, process.stdout, process.stderr],
     cwd: workingDir
   });
@@ -101,15 +101,15 @@ module.exports = async ({ workingDir, input, imageName }) => {
     throw "Up failed";
   }
 
-  // const spawnPs = spawnSync("docker-compose", ["ps"], {
-  //   stdio: [process.stdin, process.stdout, process.stderr],
-  //   cwd: workingDir
-  // });
+  const spawnPs = spawnSync("docker-compose", ["ps"], {
+    stdio: [process.stdin, process.stdout, process.stderr],
+    cwd: workingDir
+  });
 
-  // if (spawnPs.stderr) {
-  //   process.exitCode = 1;
-  //   throw "Logging failed";
-  // }
+  if (spawnPs.stderr) {
+    process.exitCode = 1;
+    throw "Logging failed";
+  }
 
   const spawnIntegrationTest = spawnSync("yarn", ["test:integration"], {
     stdio: [process.stdin, process.stdout, process.stderr],
