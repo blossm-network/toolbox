@@ -22,6 +22,18 @@ targets:
   - action: some-other-action
     domain: some-domain
     context: command-handler
+  - action: issue
+    domain: challenge
+    context: command-handler
+  - action: answer
+    domain: challenge
+    context: command-handler
+  - name: permissions
+    domain: principle
+    context: view-store
+  - name: phones
+    domain: person
+    context: view-store
 
 dependencies:
   "@blossm/command-gateway": "*"

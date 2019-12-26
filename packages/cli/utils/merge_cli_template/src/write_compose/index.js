@@ -112,14 +112,14 @@ module.exports = ({
           userPassword: mongodbUserPassword
         })
       })
-    },
-    networks: {
-      default: {
-        external: {
-          name: "cloudbuild"
-        }
-      }
     }
+    // networks: {
+    //   default: {
+    //     external: {
+    //       name: "cloudbuild"
+    //     }
+    //   }
+    // }
   };
 
   const composePath = path.resolve(workingDir, "docker-compose.yaml");
