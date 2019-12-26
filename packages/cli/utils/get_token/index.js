@@ -15,7 +15,7 @@ module.exports = async ({ permissions, issueFn, answerFn }) => {
   await viewStore({
     name: "permissions",
     domain: "principle"
-  }).update(principleRoot, { add: [["challenge:answer", ...permissions]] });
+  }).update(principleRoot, { add: ["challenge:answer", ...permissions] });
   await viewStore({
     name: "phones",
     domain: "person"
