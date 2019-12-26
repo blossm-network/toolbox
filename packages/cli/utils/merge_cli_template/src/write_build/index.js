@@ -254,7 +254,7 @@ module.exports = ({
   const buildPath = path.resolve(workingDir, "build.yaml");
 
   const i = imageExtension({
-    contex: config.context,
+    context: config.context,
     action,
     name,
     domain

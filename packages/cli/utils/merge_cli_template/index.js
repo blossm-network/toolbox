@@ -237,5 +237,5 @@ module.exports = async ({ scriptDir, workingDir, input, configFn }) => {
   await copySource(input.path, workingDir);
   const { imageName } = await configure(workingDir, configFn, input.env);
 
-  return imageName;
+  return { imageName };
 };
