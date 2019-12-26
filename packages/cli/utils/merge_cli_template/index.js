@@ -181,7 +181,7 @@ const configure = async (workingDir, configFn, env) => {
       MAIN_CONTAINER_NAME=${mainContainerName}
       GCP_PROJECT=${project}-staging
       GCP_REGION=${region}
-      GCP_SECRET_BUCKET=${secretBucket}
+      GCP_SECRET_BUCKET=${secretBucket(env)}
       GCP_KMS_SECRET_BUCKET_KEY_RING=${secretBucketKeyRing}
       GCP_KMS_SECRET_BUCKET_KEY_LOCATION=${secretBucketKeyLocation}
       ACTION=${action}
