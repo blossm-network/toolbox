@@ -291,8 +291,4 @@ module.exports = ({
   };
 
   fs.writeFileSync(buildPath, yaml.stringify(build));
-
-  return {
-    imageName: `${containerRegistery}/${service}.${context}.${i}`
-  };
 };

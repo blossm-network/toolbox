@@ -5,7 +5,6 @@ const ncp = require("ncp");
 const { promisify } = require("util");
 const yaml = require("yaml");
 const path = require("path");
-const { stripIndents } = require("common-tags");
 const { red } = require("chalk");
 
 const access = promisify(fs.access);
@@ -170,26 +169,7 @@ const configure = async (workingDir, configFn, env) => {
 
     const mainContainerName = "main";
 
-    fs.writeFileSync(
-      path.resolve(workingDir, ".env"),
-      stripIndents`
-      EOM
-      NETWORK=local
-      DOMAIN=${domain}
-      SERVICE=${service}
-      CONTEXT=${context}
-      MAIN_CONTAINER_NAME=${mainContainerName}
-      GCP_PROJECT=${project}-staging
-      GCP_REGION=${region}
-      GCP_SECRET_BUCKET=${secretBucket(env)}
-      GCP_KMS_SECRET_BUCKET_KEY_RING=${secretBucketKeyRing}
-      GCP_KMS_SECRET_BUCKET_KEY_LOCATION=${secretBucketKeyLocation}
-      ACTION=${action}
-      NAME=${name}
-      `
-    );
-
-    const { imageName } = writeBuild({
+    writeBuild({
       config,
       workingDir,
       configFn,
@@ -232,7 +212,6 @@ const configure = async (workingDir, configFn, env) => {
       secretBucketKeyLocation,
       secretBucketKeyRing
     });
-    return { imageName };
   } catch (e) {
     //eslint-disable-next-line no-console
     console.error(e);
@@ -252,7 +231,5 @@ module.exports = async ({ scriptDir, workingDir, input, configFn }) => {
   await copyTemplate(__dirname, workingDir);
   await copyScript(scriptDir, workingDir);
   await copySource(input.path, workingDir);
-  const { imageName } = await configure(workingDir, configFn, input.env);
-
-  return { imageName };
+  await configure(workingDir, configFn, input.env);
 };

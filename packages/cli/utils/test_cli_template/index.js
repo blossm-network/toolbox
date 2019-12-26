@@ -42,7 +42,7 @@ const installDependenciesIfNeeded = async (workingDir, input) => {
   await copy(path.resolve(workingDir, modules), modulesPath);
 };
 
-module.exports = async ({ workingDir, input, imageName }) => {
+module.exports = async ({ workingDir, input }) => {
   try {
     await installDependenciesIfNeeded(workingDir, input);
   } catch (err) {
@@ -65,63 +65,5 @@ module.exports = async ({ workingDir, input, imageName }) => {
   if (spawnTest.stderr) {
     process.exitCode = 1;
     throw "Tests failed";
-  }
-
-  const spawnNetwork = spawnSync(
-    "docker",
-    ["network", "create", "cloudbuild"],
-    {
-      stdio: [process.stdin, process.stdout, process.stderr],
-      cwd: workingDir
-    }
-  );
-
-  if (spawnNetwork.stderr) {
-    process.exitCode = 1;
-    throw "Creating a network failed";
-  }
-
-  const spawnBuild = spawnSync("docker", ["build", "-t", `${imageName}`, "."], {
-    stdio: [process.stdin, process.stdout, process.stderr],
-    cwd: workingDir
-  });
-
-  if (spawnBuild.stderr) {
-    process.exitCode = 1;
-    throw "Build failed";
-  }
-
-  const spawnUp = spawnSync("docker-compose", ["up", "-d"], {
-    stdio: [process.stdin, process.stdout, process.stderr],
-    cwd: workingDir
-  });
-
-  if (spawnUp.stderr) {
-    process.exitCode = 1;
-    throw "Up failed";
-  }
-
-  const spawnPs = spawnSync("docker-compose", ["ps"], {
-    stdio: [process.stdin, process.stdout, process.stderr],
-    cwd: workingDir
-  });
-
-  if (spawnPs.stderr) {
-    process.exitCode = 1;
-    throw "Logging failed";
-  }
-
-  const spawnIntegrationTest = spawnSync(
-    "docker-compose",
-    ["run", "main", "yarn", "test:integration"],
-    {
-      stdio: [process.stdin, process.stdout, process.stderr],
-      cwd: workingDir
-    }
-  );
-
-  if (spawnIntegrationTest.stderr) {
-    process.exitCode = 1;
-    throw "Integration tests failed";
   }
 };
