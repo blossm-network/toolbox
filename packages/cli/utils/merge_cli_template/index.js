@@ -6,7 +6,6 @@ const { promisify } = require("util");
 const yaml = require("yaml");
 const path = require("path");
 const { stripIndents } = require("common-tags");
-const { spawnSync } = require("child_process");
 const { red } = require("chalk");
 
 const access = promisify(fs.access);
@@ -132,57 +131,6 @@ const writePackage = (config, workingDir) => {
   fs.writeFileSync(packagePath, JSON.stringify(package));
 };
 
-const writeEnv = ({
-  workingDir,
-  mainContainerName,
-  domain,
-  service,
-  context,
-  project,
-  region,
-  secretBucket,
-  secretBucketKeyRing,
-  secretBucketKeyLocation,
-  custom = {}
-} = {}) => {
-  const spawnWriteEnv = spawnSync(
-    "cat",
-    [
-      ">>",
-      ".env",
-      "<<-",
-      "EOM",
-
-      stripIndents`
-    cat >> .env <<- EOM
-    NETWORK=local
-    DOMAIN=${domain}
-    SERVICE=${service}
-    CONTEXT=${context}
-    MAIN_CONTAINER_NAME=${mainContainerName}
-    GCP_PROJECT=${project}-staging
-    GCP_REGION=${region}
-    GCP_SECRET_BUCKET=${secretBucket}
-    GCP_KMS_SECRET_BUCKET_KEY_RING=${secretBucketKeyRing}
-    GCP_KMS_SECRET_BUCKET_KEY_LOCATION=${secretBucketKeyLocation}
-    ${Object.entries(custom).reduce(
-      (string, [key, value]) => (string += `${key}=${value}\n`),
-      ""
-    )}
-    EOM`
-    ],
-    {
-      stdio: [process.stdin, process.stdout, process.stderr],
-      cwd: workingDir
-    }
-  );
-
-  if (spawnWriteEnv.stderr) {
-    process.exitCode = 1;
-    throw "Couldn't write env";
-  }
-};
-
 const configure = async (workingDir, configFn, env) => {
   const configPath = path.resolve(workingDir, "blossm.yaml");
 
@@ -222,22 +170,24 @@ const configure = async (workingDir, configFn, env) => {
 
     const mainContainerName = "main";
 
-    writeEnv({
-      workingDir,
-      mainContainerName,
-      domain,
-      service,
-      context,
-      project,
-      region,
-      secretBucket,
-      secretBucketKeyRing,
-      secretBucketKeyLocation,
-      custom: {
-        ACTION: action,
-        NAME: name
-      }
-    });
+    fs.writeFileSync(
+      path.resolve(workingDir, ".env"),
+      stripIndents`
+      EOM
+      NETWORK=local
+      DOMAIN=${domain}
+      SERVICE=${service}
+      CONTEXT=${context}
+      MAIN_CONTAINER_NAME=${mainContainerName}
+      GCP_PROJECT=${project}-staging
+      GCP_REGION=${region}
+      GCP_SECRET_BUCKET=${secretBucket}
+      GCP_KMS_SECRET_BUCKET_KEY_RING=${secretBucketKeyRing}
+      GCP_KMS_SECRET_BUCKET_KEY_LOCATION=${secretBucketKeyLocation}
+      ACTION=${action}
+      NAME=${name}
+      `
+    );
 
     const { imageName } = writeBuild({
       config,
