@@ -1,6 +1,6 @@
 {
   "name": "@blossm/deploy-cli-template",
-  "version": "0.0.130",
+  "version": "0.0.131",
   "description": "Deploys a template to cloud build.",
   "main": "index.js",
   "author": "blossm.network",
@@ -14,7 +14,7 @@
     "test": "echo \"Error: no test specified\" && exit 0"
   },
   "dependencies": {
-    "@blossm/merge-cli-template": "^0.0.121",
+    "@blossm/merge-cli-template": "^0.0.122",
     "@blossm/normalize-cli": "^0.0.4",
     "@blossm/robo-say": "*",
     "@blossm/test-cli-template": "^0.0.9",
