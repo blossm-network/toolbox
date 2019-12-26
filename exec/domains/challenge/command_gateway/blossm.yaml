@@ -43,11 +43,8 @@ devDependencies:
   "@blossm/datetime": "*"
   "@blossm/request": "*"
   "@blossm/event-store-rpc": "*"
-  "@blossm/view-store-rpc": "*"
-  "@blossm/twilio-sms": "*"
-  "@blossm/gcp-secret": "*"
-  "@blossm/uuid": "*"
   "@blossm/gcp-pubsub": "*"
+  "@blossm/get-token": "*"
 
 service: core
 

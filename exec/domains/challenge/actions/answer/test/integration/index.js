@@ -77,6 +77,8 @@ describe("Command handler store integration tests", () => {
     expect(response.statusCode).to.equal(200);
     const parsedBody = JSON.parse(response.body);
 
+    expect(parsedBody.token).to.exist;
+
     const aggregate = await eventStore({
       domain: process.env.DOMAIN
     }).aggregate(parsedBody.root);

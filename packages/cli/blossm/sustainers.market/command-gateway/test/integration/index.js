@@ -3,6 +3,7 @@ const { expect } = require("chai");
 const { string: stringDate } = require("@blossm/datetime");
 const eventStore = require("@blossm/event-store-rpc");
 const { create, delete: del } = require("@blossm/gcp-pubsub");
+const getToken = require("@blossm/get-token");
 
 const request = require("@blossm/request");
 
@@ -37,7 +38,49 @@ describe("Command gateway integration tests", () => {
     expect(aggregate.state.name).to.equal(name.toLowerCase());
     expect(response.statusCode).to.equal(200);
   });
-  it("should return an error if accessing command that requires auth", async () => {
+  it("should return successfully with auth", async () => {
+    const response = await request.post(`${url}/some-action`, {
+      body: {
+        headers: {
+          issued: stringDate(),
+          authorization: `Bearer ${await getToken({
+            permissions: ["some-priviledge"]
+          })}`
+        },
+        payload: {
+          name
+        }
+      }
+    });
+
+    const root = JSON.parse(response.body).root;
+
+    const aggregate = await eventStore({
+      domain: process.env.DOMAIN
+    }).aggregate(root);
+
+    expect(aggregate.headers.root).to.equal(root);
+    expect(aggregate.state.name).to.equal(name.toLowerCase());
+    expect(response.statusCode).to.equal(200);
+  });
+  it("should return an error if accessing command that requires auth with bad permissions", async () => {
+    const response = await request.post(`${url}/some-action`, {
+      body: {
+        headers: {
+          issued: stringDate(),
+          authorization: `Bearer ${await getToken({
+            permissions: ["some-bogus-priviledge"]
+          })}`
+        },
+        payload: {
+          name
+        }
+      }
+    });
+
+    expect(response.statusCode).to.equal(401);
+  });
+  it("should return an error if accessing command that requires auth with no token", async () => {
     const response = await request.post(`${url}/some-action`, {
       body: {
         headers: {

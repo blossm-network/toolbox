@@ -1,0 +1,27 @@
+{
+  "name": "@blossm/get-token",
+  "version": "0.0.0",
+  "description": "Gets a token for a development environment.",
+  "main": "index.js",
+  "author": "blossm.network",
+  "engines": {
+    "node": ">= 10.16.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 0"
+  },
+  "dependencies": {
+    "@blossm/view-store-rpc": "*",
+    "@blossm/command-rpc": "*",
+    "@blossm/twilio-sms": "*",
+    "@blossm/jwt": "*",
+    "@blossm/gcp-secret": "*",
+    "@blossm/gcp-kms": "*"
+  },
+  "devDependencies": {
+    "mocha": "^6.1.4"
+  }
+}
