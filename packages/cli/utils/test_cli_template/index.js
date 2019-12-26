@@ -111,10 +111,14 @@ module.exports = async ({ workingDir, input, imageName }) => {
     throw "Logging failed";
   }
 
-  const spawnIntegrationTest = spawnSync("yarn", ["test:integration"], {
-    stdio: [process.stdin, process.stdout, process.stderr],
-    cwd: workingDir
-  });
+  const spawnIntegrationTest = spawnSync(
+    "docker-compose",
+    ["run", "main", "yarn", "test:integration"],
+    {
+      stdio: [process.stdin, process.stdout, process.stderr],
+      cwd: workingDir
+    }
+  );
 
   if (spawnIntegrationTest.stderr) {
     process.exitCode = 1;
