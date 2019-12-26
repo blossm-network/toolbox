@@ -55,14 +55,14 @@ module.exports = ({ domain, dir, configFn }) => async args => {
 
   fs.removeSync(workingDir);
   fs.mkdirSync(workingDir);
-  await mergeCliTemplate({
+  const { imageName } = await mergeCliTemplate({
     scriptDir: dir,
     workingDir,
     input,
     configFn
   });
 
-  await testCliTemplate({ workingDir, input });
+  await testCliTemplate({ workingDir, input, imageName });
 
   if (!input.testOnly) {
     //eslint-disable-next-line no-console

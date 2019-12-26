@@ -32,7 +32,8 @@ const steps = ({
   operationName,
   secretBucket,
   secretBucketKeyLocation,
-  secretBucketKeyRing
+  secretBucketKeyRing,
+  imageExtension
 }) => {
   const serviceName = `${region}-${operationName}-${operationHash}`;
   const uri = `${operationHash}.${region}.${envUriSpecifier}${network}`;
@@ -40,6 +41,7 @@ const steps = ({
   switch (config.context) {
     case "view-store":
       return viewStore({
+        imageExtension,
         region,
         domain,
         name,
@@ -67,6 +69,7 @@ const steps = ({
       });
     case "event-store":
       return eventStore({
+        imageExtension,
         domain,
         region,
         project,
@@ -92,6 +95,7 @@ const steps = ({
       });
     case "event-handler":
       return eventHandler({
+        imageExtension,
         action,
         region,
         domain,
@@ -117,6 +121,7 @@ const steps = ({
       });
     case "command-handler":
       return commandHandler({
+        imageExtension,
         action,
         region,
         domain,
@@ -140,6 +145,7 @@ const steps = ({
       });
     case "job":
       return job({
+        imageExtension,
         name,
         domain,
         region,
@@ -205,6 +211,21 @@ const steps = ({
   }
 };
 
+const imageExtension = ({ domain, name, action, context }) => {
+  switch (context) {
+    case "view-store":
+      return `${domain}.${name}`;
+    case "event-store":
+      return domain;
+    case "event-handler":
+      return `${domain}.did-${action}.${name}`;
+    case "command-handler":
+      return `${domain}.${action}`;
+    case "job":
+      return `${domain}.${name}`;
+  }
+};
+
 module.exports = ({
   config,
   workingDir,
@@ -232,8 +253,16 @@ module.exports = ({
 }) => {
   const buildPath = path.resolve(workingDir, "build.yaml");
 
+  const i = imageExtension({
+    contex: config.context,
+    action,
+    name,
+    domain
+  });
+
   const build = {
     steps: steps({
+      imageExtension: i,
       config,
       region,
       domain,
@@ -260,4 +289,8 @@ module.exports = ({
   };
 
   fs.writeFileSync(buildPath, yaml.stringify(build));
+
+  return {
+    imageName: `${containerRegistery}/${service}.${context}.${imageExtension}`
+  };
 };

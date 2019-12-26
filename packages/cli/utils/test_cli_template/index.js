@@ -42,7 +42,7 @@ const installDependenciesIfNeeded = async (workingDir, input) => {
   await copy(path.resolve(workingDir, modules), modulesPath);
 };
 
-module.exports = async ({ workingDir, input }) => {
+module.exports = async ({ workingDir, input, imageName }) => {
   try {
     await installDependenciesIfNeeded(workingDir, input);
   } catch (err) {
@@ -65,5 +65,45 @@ module.exports = async ({ workingDir, input }) => {
   if (spawnTest.stderr) {
     process.exitCode = 1;
     throw "Tests failed";
+  }
+
+  const spawnBuild = spawnSync("docker", ["build", "-t", `${imageName}`, "."], {
+    stdio: [process.stdin, process.stdout, process.stderr],
+    cwd: workingDir
+  });
+
+  if (spawnBuild.stderr) {
+    process.exitCode = 1;
+    throw "Build failed";
+  }
+
+  const spawnUp = spawnSync("docker-compose", ["up"], {
+    stdio: [process.stdin, process.stdout, process.stderr],
+    cwd: workingDir
+  });
+
+  if (spawnUp.stderr) {
+    process.exitCode = 1;
+    throw "Up failed";
+  }
+
+  const spawnPs = spawnSync("docker-compose", ["ps"], {
+    stdio: [process.stdin, process.stdout, process.stderr],
+    cwd: workingDir
+  });
+
+  if (spawnPs.stderr) {
+    process.exitCode = 1;
+    throw "Logging failed";
+  }
+
+  const spawnIntegrationTest = spawnSync("yarn", ["test:integration"], {
+    stdio: [process.stdin, process.stdout, process.stderr],
+    cwd: workingDir
+  });
+
+  if (spawnIntegrationTest.stderr) {
+    process.exitCode = 1;
+    throw "Integration tests failed";
   }
 };

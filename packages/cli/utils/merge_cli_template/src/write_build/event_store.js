@@ -36,9 +36,9 @@ module.exports = ({
   secretBucketKeyRing,
   mongodbUser,
   mongodbHost,
-  mongodbProtocol
+  mongodbProtocol,
+  imageExtension
 }) => {
-  const imageExtension = domain;
   return [
     yarnInstall,
     unitTest,

@@ -33,9 +33,9 @@ module.exports = ({
   uri,
   secretBucket,
   secretBucketKeyLocation,
-  secretBucketKeyRing
+  secretBucketKeyRing,
+  imageExtension
 }) => {
-  const imageExtension = `${domain}.${name}`;
   return [
     yarnInstall,
     unitTest,

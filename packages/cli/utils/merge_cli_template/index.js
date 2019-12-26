@@ -169,7 +169,7 @@ const configure = async (workingDir, configFn, env) => {
 
     const mainContainerName = "main";
 
-    writeBuild({
+    const { imageName } = writeBuild({
       config,
       workingDir,
       configFn,
@@ -212,6 +212,7 @@ const configure = async (workingDir, configFn, env) => {
       secretBucketKeyLocation,
       secretBucketKeyRing
     });
+    return { imageName };
   } catch (e) {
     //eslint-disable-next-line no-console
     console.error(e);
@@ -231,5 +232,7 @@ module.exports = async ({ scriptDir, workingDir, input, configFn }) => {
   await copyTemplate(__dirname, workingDir);
   await copyScript(scriptDir, workingDir);
   await copySource(input.path, workingDir);
-  await configure(workingDir, configFn, input.env);
+  const { imageName } = await configure(workingDir, configFn, input.env);
+
+  return imageName;
 };
