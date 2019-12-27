@@ -33,6 +33,8 @@ describe("Command gateway integration tests", () => {
       return { token, root };
     };
     const answerFn = async ({ code, root, token }) => {
+      //eslint-disable-next-line
+      console.log("toke: ", toke);
       const response1 = await request.post(`${url}/answer`, {
         body: {
           headers: {
