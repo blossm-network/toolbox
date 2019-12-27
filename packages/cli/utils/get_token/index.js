@@ -11,7 +11,7 @@ const personRoot = uuid();
 const principleRoot = uuid();
 const phone = "251-333-2037";
 
-module.exports = async ({ permissions, issueFn, answerFn }) => {
+module.exports = async ({ permissions = [], issueFn, answerFn }) => {
   //eslint-disable-next-line
   console.log("principle: ", principleRoot);
 
