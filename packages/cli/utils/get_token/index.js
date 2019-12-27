@@ -12,16 +12,21 @@ const principleRoot = uuid();
 const phone = "251-333-2037";
 
 module.exports = async ({ permissions, issueFn, answerFn }) => {
+  //eslint-disable-next-line
+  console.log("principle: ", principleRoot);
+
   await viewStore({
     name: "permissions",
     domain: "principle"
   }).update(principleRoot, { add: ["challenge:answer", ...permissions] });
+
   await viewStore({
     name: "phones",
     domain: "person"
   })
     //phone should be already formatted in the view store.
     .update(personRoot, { phone: "+12513332037" });
+
   const sentAfter = new Date();
 
   const { token, root } = issueFn

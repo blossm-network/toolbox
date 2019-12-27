@@ -54,7 +54,6 @@ describe("Command gateway integration tests", () => {
     };
 
     const { token, root } = await getToken({
-      permissions: ["challenge:answer"],
       issueFn,
       answerFn
     });
