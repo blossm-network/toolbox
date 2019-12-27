@@ -50,7 +50,7 @@ module.exports = async ({ permissions, issueFn, answerFn }) => {
   const code = message.body.substr(0, 6);
 
   const { token: answerToken } = answerFn
-    ? await answerFn({ code })
+    ? await answerFn({ code, root })
     : await command({
         action: "answer",
         domain: "challenge"
