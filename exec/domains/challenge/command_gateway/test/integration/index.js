@@ -32,7 +32,7 @@ describe("Command gateway integration tests", () => {
       const { token, root } = JSON.parse(response0.body);
       return { token, root };
     };
-    const answerFn = async ({ code, root }) => {
+    const answerFn = async ({ code, root, token }) => {
       const response1 = await request.post(`${url}/answer`, {
         body: {
           headers: {
@@ -48,9 +48,9 @@ describe("Command gateway integration tests", () => {
         }
       });
       expect(response1.statusCode).to.equal(200);
-      const { token } = JSON.parse(response1.body);
+      const { token: newToken } = JSON.parse(response1.body);
 
-      return { root, token };
+      return { root, token: newToken };
     };
 
     const { token, root } = await getToken({
