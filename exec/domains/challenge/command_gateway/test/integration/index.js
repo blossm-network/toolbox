@@ -17,7 +17,7 @@ describe("Command gateway integration tests", () => {
 
   it("should return successfully", async () => {
     const issueFn = async ({ phone }) => {
-      const response0 = await request.post(`${url}/issue`, {
+      const response = await request.post(`${url}/issue`, {
         body: {
           headers: {
             issued: stringDate()
@@ -28,16 +28,16 @@ describe("Command gateway integration tests", () => {
         }
       });
 
-      expect(response0.statusCode).to.equal(200);
+      expect(response.statusCode).to.equal(200);
       //eslint-disable-next-line
-      console.log("issue response body: ", JSON.parse(response0.body));
-      const { token, root } = JSON.parse(response0.body);
+      console.log("issue response body: ", JSON.parse(response.body));
+      const { token, root } = JSON.parse(response.body);
       return { token, root };
     };
     const answerFn = async ({ code, root, token }) => {
       //eslint-disable-next-line
       console.log("tokeee: ", { token, code, root });
-      const response1 = await request.post(`${url}/answer`, {
+      const response = await request.post(`${url}/answer`, {
         body: {
           root,
           headers: {
@@ -51,8 +51,8 @@ describe("Command gateway integration tests", () => {
           authorization: `Bearer ${token}`
         }
       });
-      expect(response1.statusCode).to.equal(200);
-      const { token: newToken } = JSON.parse(response1.body);
+      expect(response.statusCode).to.equal(200);
+      const { token: newToken } = JSON.parse(response.body);
 
       return { root, token: newToken };
     };

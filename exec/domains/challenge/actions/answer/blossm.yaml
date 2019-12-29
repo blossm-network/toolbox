@@ -43,6 +43,7 @@ devDependencies:
   "@blossm/jwt": "*"
   "@blossm/gcp-kms": "*"
   "@blossm/gcp-pubsub": "*"
+  "@blossm/get-token": "*"
 
 service: core
 

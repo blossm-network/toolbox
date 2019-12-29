@@ -59,7 +59,7 @@ module.exports = async ({ permissions = [], issueFn, answerFn }) => {
   console.log("DAS ROOT: ", root);
 
   const { token: answerToken } = answerFn
-    ? await answerFn({ code, root, token })
+    ? await answerFn({ code, root, token, person: jwt.person })
     : await command({
         action: "answer",
         domain: "challenge"
