@@ -16,7 +16,8 @@ module.exports = ({
       priviledges,
       domain,
       service,
-      network
+      network,
+      ...(req.body.root && { root: req.body.root })
     });
 
     req.context = policy.context;

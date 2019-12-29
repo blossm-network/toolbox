@@ -12,18 +12,12 @@ const principleRoot = uuid();
 const phone = "251-333-2037";
 
 module.exports = async ({ permissions = [], issueFn, answerFn }) => {
-  await Promise.all([
-    viewStore({
-      name: "permissions",
-      domain: "principle"
-    }).update(principleRoot, { add: ["challenge:answer", ...permissions] }),
-    viewStore({
-      name: "phones",
-      domain: "person"
-    })
-      //phone should be already formatted in the view store.
-      .update(personRoot, { principle: principleRoot, phone: "+12513332037" })
-  ]);
+  await viewStore({
+    name: "phones",
+    domain: "person"
+  })
+    //phone should be already formatted in the view store.
+    .update(personRoot, { principle: principleRoot, phone: "+12513332037" });
 
   const sentAfter = new Date();
 
@@ -58,6 +52,13 @@ module.exports = async ({ permissions = [], issueFn, answerFn }) => {
   //eslint-disable-next-line
   console.log("DAS ROOT: ", root);
 
+  await viewStore({
+    name: "permissions",
+    domain: "principle"
+  }).update(principleRoot, {
+    add: [`challenge:answer:${root}`, ...permissions]
+  });
+
   const { token: answerToken } = answerFn
     ? await answerFn({ code, root, token, person: jwt.person })
     : await command({
@@ -70,9 +71,12 @@ module.exports = async ({ permissions = [], issueFn, answerFn }) => {
             person: jwt.person
           }
         })
-        .issue({
-          code
-        });
+        .issue(
+          {
+            code
+          },
+          { root }
+        );
 
   return { token: answerToken, root };
 };

@@ -14,6 +14,8 @@ const envService = "some-env-service";
 process.env.NETWORK = envNetwork;
 process.env.SERVICE = envService;
 
+const root = "some-root";
+
 describe("Authorization middleware", () => {
   afterEach(() => {
     restore();
@@ -24,7 +26,10 @@ describe("Authorization middleware", () => {
     const path = "some-path";
     const req = {
       path,
-      claims
+      claims,
+      body: {
+        root
+      }
     };
 
     const authorizationFake = fake.returns({ context });
@@ -43,6 +48,7 @@ describe("Authorization middleware", () => {
       path,
       claims,
       permissionsLookupFn,
+      root,
       priviledges,
       domain,
       service,
@@ -58,7 +64,8 @@ describe("Authorization middleware", () => {
     const path = "some-path";
     const req = {
       path,
-      claims
+      claims,
+      body: {}
     };
 
     const authorizationFake = fake.returns({ context });
@@ -89,7 +96,8 @@ describe("Authorization middleware", () => {
     const path = "some-path";
     const req = {
       path,
-      claims
+      claims,
+      body: {}
     };
 
     const error = new Error();
