@@ -68,5 +68,5 @@ module.exports = async ({ permissions = [], issueFn, answerFn }) => {
         }
       });
 
-  return answerToken;
+  return { token: answerToken, root };
 };
