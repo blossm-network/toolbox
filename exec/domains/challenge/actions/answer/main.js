@@ -5,9 +5,6 @@ const deps = require("./deps");
 const NINETY_DAYS = 90 * SECONDS_IN_DAY;
 
 module.exports = async ({ payload, root, context }) => {
-  //eslint-disable-next-line
-  console.log("answering: ", { root, payload });
-
   //Look for the challenge being answered.
   const challenge = await deps
     .viewStore({
@@ -16,9 +13,6 @@ module.exports = async ({ payload, root, context }) => {
     })
     .set({ context, tokenFn: deps.gcpToken })
     .read({ root });
-
-  //eslint-disable-next-line
-  console.log("challenge: ", { challenge });
 
   //Throw if no challenge recognized or if the code is not right.
   if (!challenge) throw deps.invalidArgumentError.codeNotRecognized();

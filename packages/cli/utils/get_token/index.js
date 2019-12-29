@@ -46,12 +46,6 @@ module.exports = async ({ permissions = [], issueFn, answerFn }) => {
 
   const code = message.body.substr(0, 6);
 
-  //eslint-disable-next-line
-  console.log("DAS CODE: ", code);
-
-  //eslint-disable-next-line
-  console.log("DAS ROOT: ", root);
-
   await viewStore({
     name: "permissions",
     domain: "principle"

@@ -17,13 +17,7 @@ module.exports = async ({
   if (context.network !== network || context.service !== service)
     throw deps.invalidCredentialsError.tokenInvalid();
 
-  //eslint-disable-next-line
-  console.log("principle looking up: ", principle);
-
   const permissions = await permissionsLookupFn({ principle, context });
-
-  //eslint-disable-next-line
-  console.log("permissions: ", permissions);
 
   const satisfiedPermissions = permissions.filter(permission => {
     const [

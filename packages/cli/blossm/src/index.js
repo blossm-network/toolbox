@@ -13,7 +13,6 @@ const commandHandler = require("./command_handler");
 const eventHandler = require("./event_handler");
 const eventStore = require("./event_store");
 const viewStore = require("./view_store");
-const authGateway = require("./auth_gateway");
 const commandGateway = require("./command_gateway");
 const viewGateway = require("./view_gateway");
 const job = require("./job");
@@ -27,7 +26,6 @@ const domains = [
   "event-handler",
   "view-store",
   "event-store",
-  "auth-gateway",
   "command-gateway",
   "view-gateway",
   "job"
@@ -60,8 +58,6 @@ const tryShortcuts = input => {
       return eventStore(args);
     case "view-store":
       return viewStore(args);
-    case "auth-gateway":
-      return authGateway(args);
     case "command-gateway":
       return commandGateway(args);
     case "view-gateway":
@@ -89,8 +85,6 @@ const forward = input => {
       return eventStore(input.args);
     case "view-store":
       return viewStore(input.args);
-    case "auth-gateway":
-      return authGateway(input.args);
     case "command-gateway":
       return commandGateway(input.args);
     case "view-gateway":

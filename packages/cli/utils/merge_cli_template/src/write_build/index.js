@@ -4,7 +4,6 @@ const path = require("path");
 const rootDir = require("@blossm/cli-root-dir");
 
 const viewStore = require("./view_store");
-const authGateway = require("./auth_gateway");
 const commandGateway = require("./command_gateway");
 const commandHandler = require("./command_handler");
 const eventHandler = require("./event_handler");
@@ -185,26 +184,6 @@ const steps = ({
         operationHash,
         operationName,
         serviceName,
-        secretBucket,
-        secretBucketKeyLocation,
-        secretBucketKeyRing
-      });
-    case "auth-gateway":
-      return authGateway({
-        region,
-        project,
-        envNameSpecifier,
-        envUriSpecifier,
-        containerRegistery,
-        mainContainerName,
-        dnsZone,
-        memory,
-        env,
-        service,
-        context,
-        network,
-        operationHash,
-        operationName,
         secretBucket,
         secretBucketKeyLocation,
         secretBucketKeyRing
