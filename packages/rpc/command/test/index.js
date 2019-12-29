@@ -25,6 +25,8 @@ const id = "some-id";
 
 const context = { c: 2 };
 
+const root = "some-root";
+
 describe("Issue command", () => {
   beforeEach(() => {
     clock = useFakeTimers(now.getTime());
@@ -53,7 +55,7 @@ describe("Issue command", () => {
 
     const result = await command({ action, domain, service, network })
       .set({ context, tokenFn })
-      .issue(payload, { trace, source, issued });
+      .issue(payload, { trace, source, issued, root });
 
     expect(result).to.equal(response);
     expect(rpcFake).to.have.been.calledWith(action, domain, "command-handler");
@@ -64,7 +66,8 @@ describe("Issue command", () => {
         trace,
         source,
         id
-      }
+      },
+      root
     });
     expect(inFake).to.have.been.calledWith({ context, service, network });
     expect(withFake).to.have.been.calledWith({ tokenFn });

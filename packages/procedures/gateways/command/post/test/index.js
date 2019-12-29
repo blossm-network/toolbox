@@ -13,6 +13,8 @@ const network = "some-network";
 const action = "some-action";
 const domain = "some-domain";
 
+const root = "some-root";
+
 process.env.SERVICE = service;
 process.env.NETWORK = network;
 
@@ -24,7 +26,7 @@ describe("Command gateway post", () => {
     const validateFake = fake();
     replace(deps, "validate", validateFake);
 
-    const normalizeFake = fake.returns({ payload, headers });
+    const normalizeFake = fake.returns({ payload, headers, root });
     replace(deps, "normalize", normalizeFake);
 
     const issueFake = fake.returns(response);
@@ -62,7 +64,7 @@ describe("Command gateway post", () => {
       tokenFn: deps.gcpToken,
       context
     });
-    expect(issueFake).to.have.been.calledWith(payload, headers);
+    expect(issueFake).to.have.been.calledWith(payload, { ...headers, root });
     expect(statusFake).to.have.been.calledWith(200);
     expect(sendFake).to.have.been.calledWith(response);
   });

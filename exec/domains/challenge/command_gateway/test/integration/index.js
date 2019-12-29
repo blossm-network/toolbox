@@ -39,9 +39,9 @@ describe("Command gateway integration tests", () => {
       console.log("tokeee: ", { token, code, root });
       const response1 = await request.post(`${url}/answer`, {
         body: {
+          root,
           headers: {
-            issued: stringDate(),
-            root
+            issued: stringDate()
           },
           payload: {
             code

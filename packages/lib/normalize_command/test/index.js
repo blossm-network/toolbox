@@ -11,6 +11,8 @@ const trace = "some-trace";
 const source = "some-source";
 const uuid = "some-uuid";
 
+const root = "some-root";
+
 describe("Normalize command", () => {
   afterEach(() => {
     restore();
@@ -19,6 +21,7 @@ describe("Normalize command", () => {
     const uuidFake = fake.returns(uuid);
     replace(deps, "uuid", uuidFake);
     const params = {
+      root,
       payload,
       headers: {
         issued,
@@ -30,6 +33,7 @@ describe("Normalize command", () => {
     const result = await normalizeCommand(params);
 
     expect(result).to.deep.equal({
+      root,
       headers: {
         id: uuid,
         issued,

@@ -1,6 +1,7 @@
 const deps = require("./deps");
 module.exports = async params => {
   return {
+    ...(params.root && { root: params.root }),
     payload: params.payload || {},
     headers: {
       id: deps.uuid(),
