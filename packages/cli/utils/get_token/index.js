@@ -52,6 +52,9 @@ module.exports = async ({ permissions = [], issueFn, answerFn }) => {
 
   const code = message.body.substr(0, 6);
 
+  //eslint-disable-next-line
+  console.log("DAS CODE: ", code);
+
   const { token: answerToken } = answerFn
     ? await answerFn({ code, root, token })
     : await command({
