@@ -11,12 +11,12 @@ const now = new Date();
 const contextPrinciple = "some-context-principle";
 const personId = "some-person-id";
 const contextType = "some-context-type";
-const contextRoot = "some-context-root";
+const challengeRoot = "some-challenge-root";
 const person = {
   contexts: [
     {
       type: contextType,
-      root: contextRoot
+      root: challengeRoot
     }
   ],
   id: personId
@@ -79,7 +79,7 @@ describe("Command handler unit tests", () => {
     const createJwtFake = fake.returns(token);
     replace(deps, "createJwt", createJwtFake);
 
-    const result = await main({ payload, context });
+    const result = await main({ payload, root: challengeRoot, context });
 
     expect(result).to.deep.equal({
       payload: {
@@ -87,7 +87,7 @@ describe("Command handler unit tests", () => {
       },
       response: { token }
     });
-    expect(readOneFake).to.have.been.calledWith({ root: contextChallenge });
+    expect(readOneFake).to.have.been.calledWith({ root: challengeRoot });
     expect(readTwoFake).to.have.been.calledWith({ code });
     expect(setFake).to.have.been.calledWith({
       context,
@@ -120,7 +120,7 @@ describe("Command handler unit tests", () => {
         principle: contextPrinciple,
         context: {
           person: contextPerson,
-          [contextType]: contextRoot,
+          [contextType]: challengeRoot,
           service,
           network
         }
@@ -155,7 +155,7 @@ describe("Command handler unit tests", () => {
     const createJwtFake = fake.returns(token);
     replace(deps, "createJwt", createJwtFake);
 
-    const result = await main({ payload, context });
+    const result = await main({ payload, root: challengeRoot, context });
 
     expect(result).to.deep.equal({
       payload: {
@@ -163,7 +163,7 @@ describe("Command handler unit tests", () => {
       },
       response: { token }
     });
-    expect(readOneFake).to.have.been.calledWith({ root: contextChallenge });
+    expect(readOneFake).to.have.been.calledWith({ root: challengeRoot });
     expect(readTwoFake).to.have.been.calledWith({ code });
     expect(setFake).to.have.been.calledWith({
       context,
@@ -266,7 +266,7 @@ describe("Command handler unit tests", () => {
     });
 
     try {
-      await main({ payload, context });
+      await main({ payload, root: challengeRoot, context });
       //shouldn't be called
       expect(2).to.equal(3);
     } catch (e) {
@@ -297,7 +297,7 @@ describe("Command handler unit tests", () => {
     });
 
     try {
-      await main({ payload, context });
+      await main({ payload, root: challengeRoot, context });
       //shouldn't be called
       expect(2).to.equal(3);
     } catch (e) {

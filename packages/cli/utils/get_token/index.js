@@ -12,9 +12,6 @@ const principleRoot = uuid();
 const phone = "251-333-2037";
 
 module.exports = async ({ permissions = [], issueFn, answerFn }) => {
-  //eslint-disable-next-line
-  console.log("principle: ", principleRoot);
-
   await Promise.all([
     viewStore({
       name: "permissions",

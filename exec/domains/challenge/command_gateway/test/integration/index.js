@@ -60,13 +60,17 @@ describe("Command gateway integration tests", () => {
       answerFn
     });
 
-    expect(root).to.exist();
-    expect(token).to.exist();
+    //eslint-disable-next-line
+    console.log("yikes: ", { root, token });
+    expect(root).to.exist;
+    expect(token).to.exist;
 
     const aggregate = await eventStore({
       domain: "challenge"
     }).aggregate(root);
 
+    //eslint-disable-next-line
+    console.log("aggregate: ", aggregate);
     expect(aggregate.headers.root).to.equal(root);
     expect(aggregate.state.answered).to.exist;
   });
