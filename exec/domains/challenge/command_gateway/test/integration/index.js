@@ -29,14 +29,10 @@ describe("Command gateway integration tests", () => {
       });
 
       expect(response.statusCode).to.equal(200);
-      //eslint-disable-next-line
-      console.log("issue response body: ", JSON.parse(response.body));
       const { token, root } = JSON.parse(response.body);
       return { token, root };
     };
     const answerFn = async ({ code, root, token }) => {
-      //eslint-disable-next-line
-      console.log("tokeee: ", { token, code, root });
       const response = await request.post(`${url}/answer`, {
         body: {
           root,
@@ -62,8 +58,6 @@ describe("Command gateway integration tests", () => {
       answerFn
     });
 
-    //eslint-disable-next-line
-    console.log("yikes: ", { root, token });
     expect(root).to.exist;
     expect(token).to.exist;
 
@@ -71,8 +65,6 @@ describe("Command gateway integration tests", () => {
       domain: "challenge"
     }).aggregate(root);
 
-    //eslint-disable-next-line
-    console.log("aggregate: ", aggregate);
     expect(aggregate.headers.root).to.equal(root);
     expect(aggregate.state.answered).to.exist;
   });
