@@ -210,11 +210,9 @@ describe("Command handler post", () => {
     const req = {
       context,
       body: {
+        root: currentRoot,
         payload,
-        headers: {
-          ...headers,
-          root: currentRoot
-        }
+        headers
       }
     };
 
@@ -290,6 +288,7 @@ describe("Command handler post", () => {
     const req = {
       context,
       body: {
+        root,
         payload,
         headers
       }
@@ -314,6 +313,7 @@ describe("Command handler post", () => {
     expect(validateFnFake).to.have.been.calledWith(payload);
     expect(mainFnFake).to.have.been.calledWith({
       payload: cleanedPayload,
+      root,
       context
     });
     expect(createEventFake).to.have.been.calledWith({
