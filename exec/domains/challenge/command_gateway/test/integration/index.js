@@ -29,12 +29,14 @@ describe("Command gateway integration tests", () => {
       });
 
       expect(response0.statusCode).to.equal(200);
+      //eslint-disable-next-line
+      console.log("issue response body: ", JSON.parse(response0.body));
       const { token, root } = JSON.parse(response0.body);
       return { token, root };
     };
     const answerFn = async ({ code, root, token }) => {
       //eslint-disable-next-line
-      console.log("tokeee: ", { token, code });
+      console.log("tokeee: ", { token, code, root });
       const response1 = await request.post(`${url}/answer`, {
         body: {
           headers: {

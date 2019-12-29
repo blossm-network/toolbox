@@ -55,18 +55,24 @@ module.exports = async ({ permissions = [], issueFn, answerFn }) => {
   //eslint-disable-next-line
   console.log("DAS CODE: ", code);
 
+  //eslint-disable-next-line
+  console.log("DAS ROOT: ", root);
+
   const { token: answerToken } = answerFn
     ? await answerFn({ code, root, token })
     : await command({
         action: "answer",
         domain: "challenge"
-      }).issue({
-        code,
-        context: {
-          challenge: root,
-          person: jwt.person
-        }
-      });
+      })
+        .set({
+          context: {
+            challenge: root,
+            person: jwt.person
+          }
+        })
+        .issue({
+          code
+        });
 
   return { token: answerToken, root };
 };
