@@ -9,7 +9,7 @@ module.exports = ({ version, mainFn, validateFn, normalizeFn }) => {
     const context = req.context || req.body.context;
 
     //eslint-disable-next-line
-    console.log("eek: ", req.body.headers);
+    console.log("eek: ", req.body);
     const { payload, root = req.body.headers.root, response } = await mainFn({
       payload: req.body.payload,
       ...(req.body.headers.root && { root: req.body.headers.root }),
