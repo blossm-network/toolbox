@@ -25,6 +25,7 @@ targets:
 
 dependencies:
   "@blossm/command-gateway": "*"
+  "@blossm/view-store-rpc": "*"
   "@blossm/gcp-kms": "*"
 
 devDependencies:
@@ -37,7 +38,6 @@ devDependencies:
   "@blossm/datetime": "*"
   "@blossm/request": "*"
   "@blossm/event-store-rpc": "*"
-  "@blossm/view-store-rpc": "*"
   "@blossm/twilio-sms": "*"
   "@blossm/gcp-secret": "*"
   "@blossm/uuid": "*"
