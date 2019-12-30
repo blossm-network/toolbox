@@ -3,22 +3,28 @@
 # It's URL will be auth.[network]
 #
 
+domain: some-domain
+
+stores:
+  - name: some-name
+    priviledges: [some-permission]
+  - name: some-other-name
+    priviledges: none
+
 whitelist:
   - "127.0.0.1"
   - "https://${process.env.NETWORK}"
 
 targets:
-  - action: issue
-    domain: challenge
-    context: command-handler
-  - action: answer
-    domain: challenge
-    context: command-handler
-  - name: phones
-    domain: person
+  - name: some-name
+    domain: some-domain
+    context: view-store
+  - name: some-other-name
+    domain: some-domain
     context: view-store
 
 dependencies:
+  "@blossm/view-gateway": "*"
   "@blossm/gcp-kms": "*"
 
 devDependencies:
@@ -30,11 +36,11 @@ devDependencies:
   "chai-datetime": "^1.5.0"
   "@blossm/datetime": "*"
   "@blossm/request": "*"
-  "@blossm/event-store-rpc": "*"
   "@blossm/view-store-rpc": "*"
   "@blossm/twilio-sms": "*"
   "@blossm/gcp-secret": "*"
   "@blossm/uuid": "*"
+  "@blossm/gcp-pubsub": "*"
 
 service: core
 

@@ -5,6 +5,7 @@ const rootDir = require("@blossm/cli-root-dir");
 
 const viewStore = require("./view_store");
 const commandGateway = require("./command_gateway");
+const viewGateway = require("./view_gateway");
 const commandHandler = require("./command_handler");
 const eventHandler = require("./event_handler");
 const eventStore = require("./event_store");
@@ -167,6 +168,29 @@ const steps = ({
       });
     case "command-gateway":
       return commandGateway({
+        imageExtension,
+        region,
+        project,
+        envNameSpecifier,
+        envUriSpecifier,
+        containerRegistery,
+        mainContainerName,
+        dnsZone,
+        memory,
+        env,
+        service,
+        domain,
+        context,
+        network,
+        operationHash,
+        operationName,
+        serviceName,
+        secretBucket,
+        secretBucketKeyLocation,
+        secretBucketKeyRing
+      });
+    case "view-gateway":
+      return viewGateway({
         imageExtension,
         region,
         project,

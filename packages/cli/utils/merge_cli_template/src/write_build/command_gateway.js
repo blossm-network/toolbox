@@ -34,7 +34,7 @@ module.exports = ({
   secretBucketKeyRing,
   imageExtension
 }) => {
-  const authUri = `${domain}.${service}.${envUriSpecifier}${network}`;
+  const authUri = `command.${domain}.${service}.${envUriSpecifier}${network}`;
   return [
     yarnInstall,
     unitTest,

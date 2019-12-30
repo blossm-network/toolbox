@@ -1,7 +1,12 @@
 const deps = require("./deps");
-const authentication = require("@blossm/authentication-middleware");
 
-module.exports = async ({ stores, whitelist, scopesLookupFn }) => {
+module.exports = async ({
+  stores,
+  domain = process.env.DOMAIN,
+  whitelist,
+  permissionsLookupFn,
+  verifyFn
+}) => {
   let server = deps.server({
     prehook: app =>
       deps.corsMiddleware({
@@ -13,10 +18,16 @@ module.exports = async ({ stores, whitelist, scopesLookupFn }) => {
   });
 
   for (const store of stores) {
-    server = server.get(deps.get(), {
+    server = server.get(deps.get({ name: store.name, domain }), {
       path: `/${store.name}`,
-      ...(!store.public && {
-        preMiddleware: [authentication, deps.authorization({ scopesLookupFn })]
+      ...(store.priviledges != "none" && {
+        preMiddleware: [
+          deps.authentication({ verifyFn }),
+          deps.authorization({
+            permissionsLookupFn,
+            priviledges: store.priviledges
+          })
+        ]
       })
     });
   }

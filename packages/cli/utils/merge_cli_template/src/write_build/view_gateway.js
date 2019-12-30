@@ -15,6 +15,7 @@ const mapDomain = require("./steps/map_domain");
 const writeEnv = require("./steps/write_env");
 
 module.exports = ({
+  domain,
   region,
   project,
   network,
@@ -22,6 +23,7 @@ module.exports = ({
   envUriSpecifier,
   containerRegistery,
   mainContainerName,
+  serviceName,
   dnsZone,
   service,
   context,
@@ -29,20 +31,22 @@ module.exports = ({
   env,
   secretBucket,
   secretBucketKeyLocation,
-  secretBucketKeyRing
+  secretBucketKeyRing,
+  imageExtension
 }) => {
-  const authServiceName = `${region}.${service}`;
-  const authUri = `auth.${envUriSpecifier}${network}`;
+  const authUri = `views.${domain}.${service}.${envUriSpecifier}${network}`;
   return [
     yarnInstall,
     unitTest,
     buildImage({
+      extension: imageExtension,
       containerRegistery,
       service,
       context
     }),
     writeEnv({
       mainContainerName,
+      domain,
       project,
       region,
       context,
@@ -56,12 +60,14 @@ module.exports = ({
     integrationTests(),
     dockerComposeLogs,
     dockerPush({
+      extension: imageExtension,
       containerRegistery,
       service,
       context
     }),
     deploy({
-      serviceName: authServiceName,
+      extension: imageExtension,
+      serviceName,
       allowUnauthenticated: true,
       context,
       service,
@@ -71,6 +77,7 @@ module.exports = ({
       containerRegistery,
       nodeEnv: env,
       memory,
+      domain,
       region,
       project,
       network,
@@ -86,7 +93,7 @@ module.exports = ({
       project,
       envNameSpecifier,
       region,
-      serviceName: authServiceName
+      serviceName
     })
   ];
 };
