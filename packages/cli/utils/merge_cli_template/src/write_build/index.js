@@ -12,7 +12,6 @@ const eventStore = require("./event_store");
 const job = require("./job");
 
 const steps = ({
-  config,
   region,
   domain,
   action,
@@ -38,7 +37,7 @@ const steps = ({
   const serviceName = `${region}-${operationName}-${operationHash}`;
   const uri = `${operationHash}.${region}.${envUriSpecifier}${network}`;
   const blossmConfig = rootDir.config();
-  switch (config.context) {
+  switch (context) {
     case "view-store":
       return viewStore({
         imageExtension,
@@ -221,6 +220,7 @@ const imageExtension = ({ domain, name, action, context }) => {
       return `${domain}.${name}`;
     case "event-store":
     case "command-gateway":
+    case "view-gateway":
       return domain;
     case "event-handler":
       return `${domain}.did-${action}.${name}`;
@@ -232,7 +232,6 @@ const imageExtension = ({ domain, name, action, context }) => {
 };
 
 module.exports = ({
-  config,
   workingDir,
   region,
   domain,
@@ -259,7 +258,7 @@ module.exports = ({
   const buildPath = path.resolve(workingDir, "build.yaml");
 
   const i = imageExtension({
-    context: config.context,
+    context,
     action,
     name,
     domain
@@ -268,7 +267,6 @@ module.exports = ({
   const build = {
     steps: steps({
       imageExtension: i,
-      config,
       region,
       domain,
       action,

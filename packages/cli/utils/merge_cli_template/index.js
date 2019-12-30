@@ -170,7 +170,6 @@ const configure = async (workingDir, configFn, env) => {
     const mainContainerName = "main";
 
     writeBuild({
-      config,
       workingDir,
       configFn,
       env,
