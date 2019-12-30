@@ -6,13 +6,8 @@ const get = require("..");
 
 const results = "some-result";
 const query = "some-query";
-const service = "some-service";
-const network = "some-network";
 const name = "some-name";
 const domain = "some-domain";
-
-process.env.SERVICE = service;
-process.env.NETWORK = network;
 
 describe("View gateway get", () => {
   afterEach(() => {
@@ -30,19 +25,18 @@ describe("View gateway get", () => {
 
     const req = {
       context,
-      query,
-      params: {
-        name,
-        domain
-      }
+      query
     };
 
     const sendFake = fake();
-    const res = {
+    const statusFake = fake.returns({
       send: sendFake
+    });
+    const res = {
+      status: statusFake
     };
 
-    await get()(req, res);
+    await get({ name, domain })(req, res);
 
     expect(viewStoreFake).to.have.been.calledWith({
       name,
@@ -68,20 +62,19 @@ describe("View gateway get", () => {
 
     const req = {
       context,
-      query,
-      params: {
-        name,
-        domain
-      }
+      query
     };
 
     const sendFake = fake();
-    const res = {
+    const statusFake = fake.returns({
       send: sendFake
+    });
+    const res = {
+      status: statusFake
     };
 
     try {
-      await get()(req, res);
+      await get({ name, domain })(req, res);
       //shouldn't be called
       expect(2).to.equal(1);
     } catch (e) {

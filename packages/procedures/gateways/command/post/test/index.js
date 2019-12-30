@@ -8,15 +8,10 @@ const response = "some-reponse";
 const payload = "some-payload";
 const headers = "some-headers";
 const body = "some-body";
-const service = "some-service";
-const network = "some-network";
 const action = "some-action";
 const domain = "some-domain";
 
 const root = "some-root";
-
-process.env.SERVICE = service;
-process.env.NETWORK = network;
 
 describe("Command gateway post", () => {
   afterEach(() => {

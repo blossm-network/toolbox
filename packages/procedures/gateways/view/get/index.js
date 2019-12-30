@@ -1,13 +1,13 @@
 const deps = require("./deps");
 
-module.exports = () => async (req, res) => {
+module.exports = ({ name, domain } = {}) => async (req, res) => {
   const response = await deps
     .viewStore({
-      name: req.params.name,
-      domain: req.params.domain
+      name,
+      domain
     })
-    .set({ context: req.context, tokenFn: deps.gcpToken })
+    .set({ tokenFn: deps.gcpToken, context: req.context })
     .read(req.query);
 
-  res.send(response);
+  res.status(200).send(response);
 };
