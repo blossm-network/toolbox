@@ -97,11 +97,7 @@ module.exports = ({
         }
       };
     case "command-gateway":
-      return {
-        image: `${commonImagePrefix}:latest`,
-        ...common
-      };
-    case "auth-gateway":
+    case "view-gateway":
       return {
         image: `${commonImagePrefix}:latest`,
         ...common

@@ -4,7 +4,7 @@ const trim = require("@blossm/trim-string");
 const { MAX_LENGTH } = require("@blossm/service-name-consts");
 
 module.exports = deployCliTemplate({
-  domain: "command-gateway",
+  domain: "view-gateway",
   dir: __dirname,
   configFn: config => {
     return {

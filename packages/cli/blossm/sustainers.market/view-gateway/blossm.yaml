@@ -5,10 +5,10 @@
 
 domain: some-domain
 
-commands:
-  - action: some-action
+stores:
+  - name: some-name
     priviledges: [some-permission]
-  - action: some-other-action
+  - name: some-other-name
     priviledges: none
 
 whitelist:
@@ -16,15 +16,15 @@ whitelist:
   - "https://${process.env.NETWORK}"
 
 targets:
-  - action: some-action
+  - name: some-name
     domain: some-domain
-    context: command-handler
-  - action: some-other-action
+    context: view-store
+  - name: some-other-name
     domain: some-domain
-    context: command-handler
+    context: view-store
 
 dependencies:
-  "@blossm/command-gateway": "*"
+  "@blossm/view-gateway": "*"
   "@blossm/gcp-kms": "*"
 
 devDependencies:
@@ -36,7 +36,6 @@ devDependencies:
   "chai-datetime": "^1.5.0"
   "@blossm/datetime": "*"
   "@blossm/request": "*"
-  "@blossm/event-store-rpc": "*"
   "@blossm/view-store-rpc": "*"
   "@blossm/twilio-sms": "*"
   "@blossm/gcp-secret": "*"
@@ -46,4 +45,4 @@ devDependencies:
 service: core
 
 #don't change
-context: command-gateway
+context: view-gateway
