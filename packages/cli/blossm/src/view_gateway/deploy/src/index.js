@@ -1,4 +1,4 @@
-const gateway = require("@blossm/command-gateway");
+const gateway = require("@blossm/view-gateway");
 const viewStore = require("@blossm/view-store-rpc");
 const { verify } = require("@blossm/gcp-kms");
 
