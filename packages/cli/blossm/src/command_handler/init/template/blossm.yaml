@@ -22,7 +22,7 @@ invalid:
 
 targets:
 
-dependencies:
+dependencies: {}
 
 devDependencies:
   "localenv": "^0.2.2"

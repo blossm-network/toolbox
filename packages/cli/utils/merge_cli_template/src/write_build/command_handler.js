@@ -1,5 +1,6 @@
 const yarnInstall = require("./steps/yarn_install");
 const unitTest = require("./steps/unit_tests");
+const baseUnitTest = require("./steps/base_unit_tests");
 const buildImage = require("./steps/build_image");
 const dockerComposeUp = require("./steps/docker_compose_up");
 const dockerComposeProcesses = require("./steps/docker_compose_processes");
@@ -41,6 +42,7 @@ module.exports = ({
 }) => {
   return [
     yarnInstall,
+    baseUnitTest,
     unitTest,
     buildImage({
       extension: imageExtension,

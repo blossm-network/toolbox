@@ -21,7 +21,7 @@ examples:
   - name: some-name
   - name: some-other-name
 
-dependencies:
+dependencies: {}
 
 #No need to require @blossm/gcp-pubsub, it's required by default internally.
 devDependencies:

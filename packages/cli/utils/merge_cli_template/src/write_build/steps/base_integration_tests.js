@@ -3,7 +3,7 @@ module.exports = ({ strict = true } = {}) => {
     name: "node:10.16.0",
     entrypoint: strict ? "yarn" : "bash",
     args: strict
-      ? ["test:integration"]
-      : ["-c", "yarn test:integration || exit 0"]
+      ? ["base-test:integration"]
+      : ["-c", "yarn test:base-integration || exit 0"]
   };
 };
