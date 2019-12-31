@@ -4,6 +4,7 @@
 #
 
 domain: some-domain
+service: core
 
 stores:
   - name: some-name
@@ -14,14 +15,6 @@ stores:
 whitelist:
   - "127.0.0.1"
   - "https://${process.env.NETWORK}"
-
-targets:
-  - name: some-name
-    domain: some-domain
-    context: view-store
-  - name: some-other-name
-    domain: some-domain
-    context: view-store
 
 dependencies:
   "@blossm/view-gateway": "*"
@@ -41,8 +34,6 @@ devDependencies:
   "@blossm/gcp-secret": "*"
   "@blossm/uuid": "*"
   "@blossm/gcp-pubsub": "*"
-
-service: core
 
 #don't change
 context: view-gateway

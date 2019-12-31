@@ -4,6 +4,7 @@
 #
 
 domain: some-domain
+service: core
 
 commands:
   - action: some-action
@@ -14,14 +15,6 @@ commands:
 whitelist:
   - "127.0.0.1"
   - "https://${process.env.NETWORK}"
-
-targets:
-  - action: some-action
-    domain: some-domain
-    context: command-handler
-  - action: some-other-action
-    domain: some-domain
-    context: command-handler
 
 dependencies:
   "@blossm/command-gateway": "*"
@@ -42,8 +35,6 @@ devDependencies:
   "@blossm/gcp-secret": "*"
   "@blossm/uuid": "*"
   "@blossm/gcp-pubsub": "*"
-
-service: core
 
 #don't change
 context: command-gateway

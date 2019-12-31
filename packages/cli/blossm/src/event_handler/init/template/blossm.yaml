@@ -8,6 +8,7 @@
 name: some-name
 action: some-action
 domain: some-domain
+service: core
 
 targets:
   - name: some-name
@@ -33,8 +34,6 @@ devDependencies:
   "@blossm/gcp-token": "*"
   "@blossm/view-store-rpc": "*"
   "@blossm/uuid": "*"
-
-service: core
 
 #don't change
 context: event-handler

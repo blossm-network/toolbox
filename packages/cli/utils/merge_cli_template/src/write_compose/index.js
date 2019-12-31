@@ -55,6 +55,7 @@ module.exports = ({
     env,
     network,
     service,
+    domain,
     region,
     containerRegistery,
     secretBucket,

@@ -8,6 +8,7 @@
 
 action: some-action
 domain: some-domain
+service: core
 
 targets:
   - domain: some-domain
@@ -32,8 +33,6 @@ devDependencies:
   "@blossm/event-store-rpc": "*"
   "@blossm/gcp-pubsub": "*"
   "@blossm/uuid": "*"
-
-service: core
 
 #don't change
 context: command-handler

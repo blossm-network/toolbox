@@ -2,6 +2,59 @@ const hash = require("@blossm/service-hash");
 
 const databaseService = require("./database_service");
 
+const targets = ({ config, domain }) => {
+  const getTokenTargets = [
+    {
+      name: "answer",
+      domain: "challenge",
+      context: "command-handler"
+    },
+    {
+      name: "issue",
+      domain: "challenge",
+      context: "command-handler"
+    },
+    {
+      name: "permissions",
+      domain: "principle",
+      context: "view-store"
+    },
+    {
+      name: "person",
+      domain: "phones",
+      context: "view-store"
+    }
+  ];
+  switch (config.context) {
+    case "command-gateway":
+      return [
+        ...config.targets,
+        ...getTokenTargets,
+        config.commands.map(command => {
+          return {
+            action: command.action,
+            domain,
+            context: "command-handler"
+          };
+        })
+      ];
+    case "view-gateway":
+      return [
+        ...config.targets,
+        ...getTokenTargets,
+        config.stores.map(store => {
+          return {
+            name: store.name,
+            domain,
+            context: "view-store"
+          };
+        })
+      ];
+    default:
+      return config.targets;
+  }
+};
+
 module.exports = ({
   config,
   databaseServiceKey,
@@ -9,6 +62,7 @@ module.exports = ({
   port,
   env,
   network,
+  domain,
   service,
   region,
   containerRegistery,
@@ -47,7 +101,7 @@ module.exports = ({
   };
   let services = {};
   let includeDatabase = false;
-  for (const target of config.targets) {
+  for (const target of targets({ config, domain })) {
     const commonServiceImagePrefix = `${containerRegistery}/${service}.${target.context}`;
     switch (target.context) {
       case "view-store":
