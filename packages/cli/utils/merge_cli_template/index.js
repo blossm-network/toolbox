@@ -127,7 +127,10 @@ const writePackage = ({ config, baseConfig, workingDir }) => {
       "test:integration": "mocha --recursive test/integration --timeout 20000"
     },
     dependencies: { ...baseConfig.dependencies, ...config.dependencies },
-    devDependencies: { ...baseConfig.dependencies, ...config.devDependencies }
+    devDependencies: {
+      ...baseConfig.devDependencies,
+      ...config.devDependencies
+    }
   };
   //eslint-disable-next-line no-console
   console.log("package: ", package);
