@@ -17,10 +17,13 @@ service: core
 schema:
   name: String
 
-dependencies:
-  "@blossm/mongodb-event-store": "*"
-  "@blossm/gcp-pubsub": "*"
+examples:
+  - name: some-name
+  - name: some-other-name
 
+dependencies:
+
+#No need to require @blossm/gcp-pubsub, it's required by default internally.
 devDependencies:
   "localenv": "^0.2.2"
   "mocha": "^6.1.4"

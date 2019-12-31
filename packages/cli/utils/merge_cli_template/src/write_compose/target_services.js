@@ -26,11 +26,13 @@ const targets = ({ config, domain }) => {
     }
   ];
   switch (config.context) {
+    case "command-handler":
+      return [...config.targets, { domain, context: "event-store" }];
     case "command-gateway":
       return [
         ...config.targets,
         ...getTokenTargets,
-        config.commands.map(command => {
+        ...config.commands.map(command => {
           return {
             action: command.action,
             domain,
@@ -42,7 +44,7 @@ const targets = ({ config, domain }) => {
       return [
         ...config.targets,
         ...getTokenTargets,
-        config.stores.map(store => {
+        ...config.stores.map(store => {
           return {
             name: store.name,
             domain,

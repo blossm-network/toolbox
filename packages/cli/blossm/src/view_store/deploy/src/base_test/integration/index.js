@@ -19,13 +19,14 @@ const queryString = (properties, example) => {
 };
 
 describe("View store base integration tests", () => {
-  const id = uuid();
+  const example0 = examples[0];
+  const example1 = examples[1];
+  it("should have examples", () => {
+    expect(example0).to.exist;
+    expect(example1).to.exist;
+  });
   it("should return successfully", async () => {
-    expect(examples.length).to.be.atLeast(2);
-
-    const example0 = examples[0];
-    const example1 = examples[1];
-
+    const id = uuid();
     const response0 = await request.put(`${url}/${id}`, {
       body: example0
     });

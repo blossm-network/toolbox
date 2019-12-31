@@ -9,17 +9,20 @@
 action: some-action
 domain: some-domain
 service: core
-
-targets:
-  - domain: some-domain
-    context: event-store
-
 version: 0
 
+examples:
+  - payload:
+      name: Some-name
+    normalized:
+      name: some-name
+
+invalid:
+  name: 3
+
+targets:
+
 dependencies:
-  "@blossm/command-handler": "*"
-  "@blossm/validator": "*"
-  "@blossm/errors": "*"
 
 devDependencies:
   "localenv": "^0.2.2"
