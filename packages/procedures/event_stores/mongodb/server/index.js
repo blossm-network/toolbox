@@ -7,7 +7,22 @@ const aggregateStoreName = `${process.env.DOMAIN}.aggregate`;
 let _eventStore;
 let _aggregateStore;
 
-const eventStore = async () => {
+//make all properties not required since events may
+//not contain the full schema.
+const formatSchema = ({ schema }) => {
+  const newSchema = {};
+  for (const property in schema) {
+    newSchema[property] =
+      typeof schema[property] == "object" && schema[property].type != undefined
+        ? schema[property]
+        : {
+            type: schema[property]
+          };
+    newSchema[property].required = false;
+  }
+  return newSchema;
+};
+const eventStore = async schema => {
   if (_eventStore != undefined) {
     logger.info("Thank you existing event store database.");
     return _eventStore;
@@ -18,7 +33,7 @@ const eventStore = async () => {
     schema: {
       id: { type: String, required: true, unique: true },
       created: { type: String, required: true },
-      payload: { type: Object, required: true },
+      payload: formatSchema(schema),
       headers: {
         root: { type: String, required: true },
         topic: { type: String, required: true },
@@ -62,7 +77,16 @@ const aggregateStore = async ({ schema }) => {
 
   _aggregateStore = deps.db.store({
     name: aggregateStoreName,
-    schema,
+    schema: {
+      value: {
+        headers: {
+          root: { type: String, required: true },
+          modified: { type: Number, required: true },
+          events: { type: Number, required: true }
+        },
+        state: schema
+      }
+    },
     indexes: [[{ "value.headers.root": 1 }]]
   });
 
@@ -70,7 +94,7 @@ const aggregateStore = async ({ schema }) => {
 };
 
 module.exports = async ({ schema, publishFn } = {}) => {
-  const eStore = await eventStore();
+  const eStore = await eventStore({ schema });
   const aStore = await aggregateStore({ schema });
 
   const writeFn = async ({ id, data }) =>

@@ -64,7 +64,7 @@ describe("Event store integration tests", () => {
     expect(response1.statusCode).to.equal(200);
 
     const parsedBody1 = JSON.parse(response1.body);
-    for (const property of example0) {
+    for (const property in example0) {
       expect(parsedBody1.state[property]).to.equal(example0[property]);
     }
 
@@ -93,7 +93,7 @@ describe("Event store integration tests", () => {
     expect(response3.statusCode).to.equal(200);
 
     const parsedBody3 = JSON.parse(response3.body);
-    for (const property of example1) {
+    for (const property in example1) {
       expect(parsedBody3.state[property]).to.equal(example1[property]);
     }
   });
@@ -113,7 +113,7 @@ describe("Event store integration tests", () => {
 
           const json = JSON.parse(eventString);
 
-          for (const property of example0) {
+          for (const property in example0) {
             expect(json.payload[property]).to.equal(example0[property]);
           }
 
@@ -173,6 +173,11 @@ describe("Event store integration tests", () => {
           payload: { [property]: badValue }
         }
       });
+      const response3 = await request.get(`${url}/${root}`);
+      expect(response3.statusCode).to.equal(200);
+
+      // const parsedBody3 = JSON.parse(response3.body);
+      // console.log("parsed: ", parsedBody3);
       expect(response.statusCode).to.equal(500);
       return;
     }

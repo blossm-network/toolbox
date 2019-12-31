@@ -12,7 +12,7 @@ const { examples, indexes } = require("../../config.json");
 
 const queryString = (properties, example) => {
   let string = "";
-  for (const property of properties) {
+  for (const property in properties) {
     string += `${property}=${example[property]}`;
   }
   return string;
@@ -62,7 +62,7 @@ describe("View store base integration tests", () => {
 
       const parsedBody4 = JSON.parse(response4.body);
       for (const key in example1) {
-        expect(parsedBody4[key]).to.equal(example1[key]);
+        expect(parsedBody4[0][key]).to.equal(example1[key]);
       }
     }
 
@@ -98,24 +98,14 @@ describe("View store base integration tests", () => {
   });
 
   it("should return an error if incorrect params", async () => {
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log("running base tests");
-
     //Grab a property from the schema and pass a wrong value to it.
     for (const property in schema) {
-      //TODO
-      //eslint-disable-next-line no-console
-      console.log("property: ", property);
       const badValue =
         schema[property] == "String" ||
         (typeof schema[property] == "object" &&
           schema[property]["type"] == "String")
           ? { a: 1 } //pass an object to a String property
           : "some-string"; // or, pass a string to a non-String property
-      //TODO
-      //eslint-disable-next-line no-console
-      console.log("bad value: ", badValue);
       const response = await request.post(url, {
         body: { [property]: badValue }
       });

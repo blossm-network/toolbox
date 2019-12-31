@@ -9,7 +9,7 @@ let clock;
 
 const now = new Date();
 
-const schema = { a: 1 };
+const schema = { a: String };
 
 const domain = "some-domain";
 const user = "some-db-user";
@@ -81,7 +81,7 @@ describe("Mongodb event store", () => {
       schema: {
         id: { type: String, required: true, unique: true },
         created: { type: String, required: true },
-        payload: { type: Object, required: true },
+        payload: { a: { type: String, required: false } },
         headers: {
           root: { type: String, required: true },
           topic: { type: String, required: true },
@@ -117,7 +117,14 @@ describe("Mongodb event store", () => {
     expect(storeFake).to.have.been.calledWith({
       name: `${domain}.aggregate`,
       schema: {
-        a: 1
+        value: {
+          headers: {
+            root: { type: String, required: true },
+            modified: { type: Number, required: true },
+            events: { type: Number, required: true }
+          },
+          state: schema
+        }
       },
       indexes: [[{ "value.headers.root": 1 }]]
     });
@@ -196,7 +203,7 @@ describe("Mongodb event store", () => {
       schema: {
         id: { type: String, required: true, unique: true },
         created: { type: String, required: true },
-        payload: { type: Object, required: true },
+        payload: { a: { type: String, required: false } },
         headers: {
           root: { type: String, required: true },
           topic: { type: String, required: true },
@@ -232,11 +239,102 @@ describe("Mongodb event store", () => {
     expect(storeFake).to.have.been.calledWith({
       name: `${domain}.aggregate`,
       schema: {
-        a: 1
+        value: {
+          headers: {
+            root: { type: String, required: true },
+            modified: { type: Number, required: true },
+            events: { type: Number, required: true }
+          },
+          state: schema
+        }
       },
       indexes: [[{ "value.headers.root": 1 }]]
     });
     await eventStore();
     expect(storeFake).to.have.been.calledTwice;
+  });
+  it("should call with the correct params with schema formatted with object property", async () => {
+    const mongodbEventStore = require("..");
+    const eStore = "some-event-store";
+    const aStore = "some-aggregate-store";
+    const storeFake = stub()
+      .onCall(0)
+      .returns(eStore)
+      .onCall(1)
+      .returns(aStore);
+
+    const secretFake = fake.returns(password);
+    replace(deps, "secret", secretFake);
+
+    const eventStoreFake = fake();
+    replace(deps, "eventStore", eventStoreFake);
+
+    const findOneFake = fake.returns(found);
+
+    const writeFake = fake.returns(writeResult);
+    const mapReduceFake = fake.returns(mapReduceResult);
+
+    const db = {
+      findOne: findOneFake,
+      write: writeFake,
+      store: storeFake,
+      mapReduce: mapReduceFake
+    };
+    replace(deps, "db", db);
+
+    const schema = { a: { type: String } };
+    await mongodbEventStore({ schema, publishFn });
+    expect(storeFake).to.have.been.calledWith({
+      name: domain,
+      schema: {
+        id: { type: String, required: true, unique: true },
+        created: { type: String, required: true },
+        payload: { a: { type: String, required: false } },
+        headers: {
+          root: { type: String, required: true },
+          topic: { type: String, required: true },
+          version: { type: Number, required: true },
+          trace: { type: String },
+          context: { type: Object },
+          created: { type: String, required: true },
+          command: {
+            id: { type: String, required: true },
+            action: { type: String, required: true },
+            domain: { type: String, required: true },
+            service: { type: String, required: true },
+            network: { type: String, required: true },
+            issued: { type: String, required: true }
+          }
+        }
+      },
+      indexes: [[{ id: 1 }]],
+      connection: {
+        protocol,
+        user,
+        password,
+        host,
+        database,
+        parameters: {
+          authSource: "admin",
+          retryWrites: true,
+          w: "majority"
+        },
+        autoIndex: true
+      }
+    });
+    expect(storeFake).to.have.been.calledWith({
+      name: `${domain}.aggregate`,
+      schema: {
+        value: {
+          headers: {
+            root: { type: String, required: true },
+            modified: { type: Number, required: true },
+            events: { type: Number, required: true }
+          },
+          state: schema
+        }
+      },
+      indexes: [[{ "value.headers.root": 1 }]]
+    });
   });
 });
