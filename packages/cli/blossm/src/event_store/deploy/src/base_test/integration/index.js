@@ -173,13 +173,7 @@ describe("Event store integration tests", () => {
           payload: { [property]: badValue }
         }
       });
-      const response3 = await request.get(`${url}/${root}`);
-      expect(response3.statusCode).to.equal(200);
-
-      // const parsedBody3 = JSON.parse(response3.body);
-      // console.log("parsed: ", parsedBody3);
       expect(response.statusCode).to.equal(500);
-      return;
     }
   });
 });
