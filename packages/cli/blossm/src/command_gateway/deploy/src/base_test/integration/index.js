@@ -39,6 +39,7 @@ describe("Command gateway integration tests", () => {
         })
       });
 
+      // console.log("errr: ", JSON.parse(response0.body));
       // console.log("response.body", JSON.parse(response0.body));
       expect(response0.statusCode).to.not.equal(401);
       expect(response0.statusCode).to.be.lessThan(500);

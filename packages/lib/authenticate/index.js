@@ -5,6 +5,8 @@ module.exports = async ({ req, verifyFn, requiresToken = true }) => {
 
   const jwt = tokens.bearer || tokens.cookie;
 
+  //eslint-disable-next-line
+  console.log("meeeehhh: ", { tokens, jwt, requiresToken });
   if (jwt == undefined) {
     if (requiresToken) throw deps.invalidCredentialsError.tokenInvalid();
     return {};

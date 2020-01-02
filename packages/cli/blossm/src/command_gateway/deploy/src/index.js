@@ -14,7 +14,7 @@ module.exports = gateway({
     }).read({ root: principle });
 
     //eslint-disable-next-line
-    console.log("yung permissions: ", { process, permissions });
+    console.log("yung permissions: ", { principle, permissions });
     return permissions || [];
   },
   verifyFn: verify({
