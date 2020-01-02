@@ -13,6 +13,8 @@ module.exports = gateway({
       domain: "principle"
     }).read({ root: principle });
 
+    //eslint-disable-next-line
+    console.log("yung permissions: ", { process, permissions });
     return permissions || [];
   },
   verifyFn: verify({
