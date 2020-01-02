@@ -20,8 +20,8 @@ const targets = ({ config, domain }) => {
       context: "view-store"
     },
     {
-      name: "person",
-      domain: "phones",
+      name: "phones",
+      domain: "person",
       context: "view-store"
     }
   ];
