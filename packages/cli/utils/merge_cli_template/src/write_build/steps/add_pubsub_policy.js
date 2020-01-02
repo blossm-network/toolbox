@@ -8,6 +8,7 @@ module.exports = ({ region, serviceName, project, envNameSpecifier }) => {
       "add-iam-policy-binding",
       `${serviceName}`,
       `--member=serviceAccount:cloud-run-pubsub-invoker@${project}${envNameSpecifier}.iam.gserviceaccount.com`,
+      "--platform=managed",
       "--role=roles/run.invoker",
       `--project=${project}${envNameSpecifier}`,
       `--region=${region}`

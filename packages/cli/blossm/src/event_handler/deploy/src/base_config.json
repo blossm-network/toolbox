@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "@blossm/event-handler": "*"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0"
+  }
+}
