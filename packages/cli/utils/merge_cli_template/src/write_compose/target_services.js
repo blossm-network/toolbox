@@ -37,6 +37,7 @@ const targets = ({ config, domain }) => {
       return [
         ...config.targets,
         ...getTokenTargets,
+        { domain, context: "event-store" },
         ...config.commands.map(command => {
           return {
             action: command.action,
