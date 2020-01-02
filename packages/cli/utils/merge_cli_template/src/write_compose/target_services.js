@@ -2,8 +2,23 @@ const hash = require("@blossm/service-hash");
 
 const databaseService = require("./database_service");
 
+const eventStoreTargets = ({ targets }) => {
+  let result = [];
+  for (const target of targets) {
+    if (
+      target.context == "command-handler" &&
+      ![...targets, ...result].some(
+        t => t.context == "event-store" && t.domain == target.domain
+      )
+    ) {
+      result.push({ context: "event-store", domain: target.domain });
+    }
+  }
+  return result;
+};
+
 const targets = ({ config, domain }) => {
-  const getTokenTargets = [
+  const tokenTargets = [
     {
       action: "answer",
       domain: "challenge",
@@ -13,6 +28,10 @@ const targets = ({ config, domain }) => {
       action: "issue",
       domain: "challenge",
       context: "command-handler"
+    },
+    {
+      domain: "challenge",
+      context: "event-store"
     },
     {
       name: "permissions",
@@ -30,14 +49,17 @@ const targets = ({ config, domain }) => {
       context: "view-store"
     }
   ];
+
   switch (config.context) {
     case "command-handler":
-      return [...config.targets, { domain, context: "event-store" }];
-    case "command-gateway":
       return [
         ...config.targets,
-        ...getTokenTargets,
-        { domain, context: "event-store" },
+        ...eventStoreTargets({ config }),
+        { domain, context: "event-store" }
+      ];
+    case "command-gateway": {
+      const targets = [
+        ...tokenTargets,
         ...config.commands.map(command => {
           return {
             action: command.action,
@@ -46,10 +68,11 @@ const targets = ({ config, domain }) => {
           };
         })
       ];
+      return [...eventStoreTargets({ targets }), ...targets];
+    }
     case "view-gateway":
       return [
-        ...config.targets,
-        ...getTokenTargets,
+        ...tokenTargets,
         ...config.stores.map(store => {
           return {
             name: store.name,
