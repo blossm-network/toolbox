@@ -33,16 +33,15 @@ module.exports = async ({ payload, context }) => {
   //Create a token that can only access the answer challenge command.
   const token = await deps.createJwt({
     options: {
-      issuer: `issue.challenge.${process.env.SERVICE}.${process.env.NETWORK}`,
+      issuer: `challenge.${process.env.SERVICE}.${process.env.NETWORK}/issue`,
       subject: person.principle,
-      audience: `challenge.${process.env.SERVICE}.${process.env.NETWORK}/answer`,
+      audience: `command.challenge.${process.env.SERVICE}.${process.env.NETWORK}/answer`,
       expiresIn: THREE_MINUTES
     },
     payload: {
       principle: person.principle,
       context: {
         person: person.id,
-        challenge: root,
         service: process.env.SERVICE,
         network: process.env.NETWORK
       }

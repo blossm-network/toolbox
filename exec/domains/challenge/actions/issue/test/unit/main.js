@@ -118,16 +118,15 @@ describe("Command handler unit tests", () => {
     });
     expect(createJwtFake).to.have.been.calledWith({
       options: {
-        issuer: `issue.challenge.${service}.${network}`,
+        issuer: `challenge.${service}.${network}/issue`,
         subject: principle,
-        audience: `challenge.${service}.${network}/answer`,
+        audience: `command.challenge.${service}.${network}/answer`,
         expiresIn: 180
       },
       payload: {
         principle,
         context: {
           person: personId,
-          challenge: root,
           service,
           network
         }

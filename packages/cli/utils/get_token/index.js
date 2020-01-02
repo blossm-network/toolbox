@@ -63,7 +63,7 @@ module.exports = async ({ permissions = [], issueFn, answerFn }) => {
   });
 
   const { token: answerToken } = answerFn
-    ? await answerFn({ code, root, token, person: jwt.person })
+    ? await answerFn({ code, root, token, person: jwt.context.person })
     : await command({
         action: "answer",
         domain: "challenge"
@@ -71,7 +71,7 @@ module.exports = async ({ permissions = [], issueFn, answerFn }) => {
         .set({
           context: {
             principle: principleRoot,
-            person: jwt.person
+            person: jwt.context.person
           }
         })
         .issue(
