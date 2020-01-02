@@ -6,10 +6,10 @@
 domain: some-domain
 service: core
 
-stores:
-  - name: some-name
+commands:
+  - action: some-action
     priviledges: [some-permission]
-  - name: some-other-name
+  - action: some-other-action
     priviledges: none
 
 whitelist:
@@ -21,4 +21,4 @@ devDependencies:
   "chai": "^4.2.0"
 
 #don't change
-context: view-gateway
+context: command-gateway

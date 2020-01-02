@@ -10,6 +10,10 @@ const { red } = require("chalk");
 const access = promisify(fs.access);
 const copy = promisify(ncp);
 
+const writeCompose = require("./src/write_compose");
+const writeBuild = require("./src/write_build");
+const resolveTransientTargets = require("./src/resolve_transient_targets");
+
 const envUriSpecifier = env => {
   switch (env) {
     case "sandbox":
@@ -29,10 +33,6 @@ const envNameSpecifier = env => {
       return "";
   }
 };
-
-const writeCompose = require("./src/write_compose");
-const writeBuild = require("./src/write_build");
-const resolveTransientTargets = require("./src/resolve_transient_targets");
 
 const copyScript = async (scriptDir, workingDir) => {
   const scripts = path.resolve(scriptDir, "src");
@@ -91,6 +91,20 @@ const copySource = async (p, workingDir) => {
 };
 
 const topicsForTargets = config => {
+  //eslint-disable-next-line
+  console.log(
+    "meh: ",
+    config.context == "command-gateway"
+      ? config.commands.map(
+          command =>
+            `did-${command.action}.${config.domain}.${config.service}.local`
+        )
+      : []
+  );
+  //eslint-disable-next-line
+  console.log("config: ", {
+    config
+  });
   const array = (config.targets || [])
     .filter(t => t.context == "command-handler")
     .map(
@@ -99,6 +113,14 @@ const topicsForTargets = config => {
     .concat(
       config.context == "command-handler"
         ? [`did-${config.action}.${config.domain}.${config.service}.local`]
+        : []
+    )
+    .concat(
+      config.context == "command-gateway"
+        ? config.commands.map(
+            command =>
+              `did-${command.action}.${config.domain}.${config.service}.local`
+          )
         : []
     );
   return [...new Set(array)];
