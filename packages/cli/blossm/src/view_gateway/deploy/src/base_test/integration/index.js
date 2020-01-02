@@ -11,13 +11,20 @@ const root = "some-root";
 
 describe("View gateway integration tests", () => {
   it("should return successfully", async () => {
-    const requiredPriviledges = stores.reduce((privs, command) => {
+    const requiredPermissions = stores.reduce((permissions, command) => {
       return command.priviledges == "none"
-        ? privs
-        : [...privs, command.priviledges];
+        ? permissions
+        : [
+            ...new Set([
+              ...permissions,
+              ...command.priviledges.map(
+                priviledge => `${process.env.DOMAIN}:${priviledge}`
+              )
+            ])
+          ];
     }, []);
 
-    const token = await getToken({ priviledges: requiredPriviledges });
+    const token = await getToken({ permissions: requiredPermissions });
 
     for (const store of stores) {
       const response0 = await request.get(
@@ -28,7 +35,9 @@ describe("View gateway integration tests", () => {
           }
         },
         ...(store.priviledges != "none" && {
-          authorization: `Bearer ${token}`
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
         })
       );
 
@@ -52,7 +61,7 @@ describe("View gateway integration tests", () => {
           }
         },
         {
-          authorization: "Bearer bogus"
+          Authorization: "Bearer bogusHeader.bogusPayload.bogusSignature"
         }
       );
 

@@ -19,7 +19,7 @@ module.exports = gateway({
   },
   verifyFn: verify({
     ring: process.env.SERVICE,
-    key: "challenge",
+    key: "auth",
     location: "global",
     version: "1",
     project: process.env.GCP_PROJECT

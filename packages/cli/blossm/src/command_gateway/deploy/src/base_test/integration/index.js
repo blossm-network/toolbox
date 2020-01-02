@@ -13,18 +13,22 @@ describe("Command gateway integration tests", () => {
   before(async () => await Promise.all(topics.map(t => create(t))));
   after(async () => await Promise.all(topics.map(t => del(t))));
   it("should return successfully", async () => {
-    const requiredPriviledges = commands.reduce((privs, command) => {
+    const requiredPermissions = commands.reduce((permissions, command) => {
       return command.priviledges == "none"
-        ? privs
-        : [...new Set([...privs, ...command.priviledges])];
+        ? permissions
+        : [
+            ...new Set([
+              ...permissions,
+              ...command.priviledges.map(
+                priviledge => `${process.env.DOMAIN}:${priviledge}`
+              )
+            ])
+          ];
     }, []);
 
-    // console.log("req priv: ", { requiredPriviledges });
-    const { token } = await getToken({ priviledges: requiredPriviledges });
+    const { token } = await getToken({ permissions: requiredPermissions });
 
-    // console.log("token: ", token);
     for (const command of commands) {
-      // console.log("command: ", command);
       const response0 = await request.post(`${url}/${command.action}`, {
         body: {
           headers: {
@@ -39,8 +43,6 @@ describe("Command gateway integration tests", () => {
         })
       });
 
-      // console.log("errr: ", JSON.parse(response0.body));
-      // console.log("response.body", JSON.parse(response0.body));
       expect(response0.statusCode).to.not.equal(401);
       expect(response0.statusCode).to.be.lessThan(500);
 
@@ -64,7 +66,7 @@ describe("Command gateway integration tests", () => {
           payload: {}
         },
         headers: {
-          authorization: "Bearer bogus"
+          Authorization: "Bearer bogusHeader.bogusPayload.bogusSignature"
         }
       });
 
