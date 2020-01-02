@@ -16,27 +16,30 @@ describe("Command gateway integration tests", () => {
     const requiredPriviledges = commands.reduce((privs, command) => {
       return command.priviledges == "none"
         ? privs
-        : [...privs, command.priviledges];
+        : [...new Set([...privs, ...command.priviledges])];
     }, []);
 
-    const token = await getToken({ priviledges: requiredPriviledges });
+    // console.log("req priv: ", { requiredPriviledges });
+    const { token } = await getToken({ priviledges: requiredPriviledges });
 
+    // console.log("token: ", token);
     for (const command of commands) {
-      const response0 = await request.post(
-        `${url}/${command.action}`,
-        {
-          body: {
-            headers: {
-              issued: stringDate()
-            },
-            payload: {}
-          }
+      // console.log("command: ", command);
+      const response0 = await request.post(`${url}/${command.action}`, {
+        body: {
+          headers: {
+            issued: stringDate()
+          },
+          payload: {}
         },
         ...(command.priviledges != "none" && {
-          authorization: `Bearer ${token}`
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
         })
-      );
+      });
 
+      // console.log("response.body", JSON.parse(response0.body));
       expect(response0.statusCode).to.not.equal(401);
       expect(response0.statusCode).to.be.lessThan(500);
 
@@ -52,20 +55,17 @@ describe("Command gateway integration tests", () => {
 
       expect(response1.statusCode).to.equal(401);
 
-      const response2 = await request.post(
-        `${url}/${command.action}`,
-        {
-          body: {
-            headers: {
-              issued: stringDate()
-            },
-            payload: {}
-          }
+      const response2 = await request.post(`${url}/${command.action}`, {
+        body: {
+          headers: {
+            issued: stringDate()
+          },
+          payload: {}
         },
-        {
+        headers: {
           authorization: "Bearer bogus"
         }
-      );
+      });
 
       expect(response2.statusCode).to.equal(401);
     }
