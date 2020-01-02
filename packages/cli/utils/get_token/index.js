@@ -19,9 +19,6 @@ module.exports = async ({ permissions = [], issueFn, answerFn }) => {
     //phone should be already formatted in the view store.
     .update(personRoot, { principle: principleRoot, phone: "+12513332037" });
 
-  //eslint-disable-next-line
-  console.log(" p root: ", principleRoot);
-
   const sentAfter = new Date();
 
   const { token, root } = issueFn
@@ -30,9 +27,6 @@ module.exports = async ({ permissions = [], issueFn, answerFn }) => {
         action: "issue",
         domain: "challenge"
       }).issue({ phone });
-
-  //eslint-disable-next-line
-  console.log("issue token: ", token);
 
   const jwt = await validateJwt({
     token,
@@ -44,9 +38,6 @@ module.exports = async ({ permissions = [], issueFn, answerFn }) => {
       project: process.env.GCP_PROJECT
     })
   });
-
-  //eslint-disable-next-line
-  console.log("jwt: ", jwt);
 
   const [message] = await sms(
     await secret("twilio-account-sid"),

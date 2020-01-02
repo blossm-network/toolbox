@@ -10,9 +10,6 @@ module.exports = async ({ token, verifyFn }) => {
     signature
   });
 
-  //eslint-disable-next-line
-  console.log("isVerified?: ", isVerified);
-
   if (!isVerified) throw deps.invalidCredentialsError.tokenInvalid();
 
   return decodeJwt(token);

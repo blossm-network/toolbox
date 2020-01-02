@@ -91,24 +91,6 @@ const copySource = async (p, workingDir) => {
 };
 
 const topicsForTargets = config => {
-  //eslint-disable-next-line
-  console.log(
-    "meh: ",
-    config.context == "command-gateway"
-      ? [
-          ...config.commands.map(
-            command =>
-              `did-${command.action}.${config.domain}.${config.service}.local`
-          ),
-          "did-issue.challenge.core.local",
-          "did-answer.challenge.core.local"
-        ]
-      : []
-  );
-  //eslint-disable-next-line
-  console.log("config: ", {
-    config
-  });
   const array = (config.targets || [])
     .filter(t => t.context == "command-handler")
     .map(

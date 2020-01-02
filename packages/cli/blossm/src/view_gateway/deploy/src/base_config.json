@@ -9,6 +9,7 @@
     "chai": "^4.2.0",
     "@blossm/request": "*",
     "@blossm/datetime": "*",
-    "@blossm/get-token": "*"
+    "@blossm/get-token": "*",
+    "@blossm/gcp-pubsub": "*"
   }
 }
