@@ -95,10 +95,14 @@ const topicsForTargets = config => {
   console.log(
     "meh: ",
     config.context == "command-gateway"
-      ? config.commands.map(
-          command =>
-            `did-${command.action}.${config.domain}.${config.service}.local`
-        )
+      ? [
+          ...config.commands.map(
+            command =>
+              `did-${command.action}.${config.domain}.${config.service}.local`
+          ),
+          "did-issue.challenge.core.local",
+          "did-answer.challenge.core.local"
+        ]
       : []
   );
   //eslint-disable-next-line
@@ -117,10 +121,14 @@ const topicsForTargets = config => {
     )
     .concat(
       config.context == "command-gateway"
-        ? config.commands.map(
-            command =>
-              `did-${command.action}.${config.domain}.${config.service}.local`
-          )
+        ? [
+            ...config.commands.map(
+              command =>
+                `did-${command.action}.${config.domain}.${config.service}.local`
+            ),
+            "did-issue.challenge.core.local",
+            "did-answer.challenge.core.local"
+          ]
         : []
     );
   return [...new Set(array)];
