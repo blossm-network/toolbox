@@ -1,6 +1,6 @@
 const { expect } = require("chai").use(require("sinon-chai"));
 
-const normalize = require("../../../../init/template/normalize");
+const normalize = require("../../normalize");
 
 const { examples } = require("../../config.json");
 

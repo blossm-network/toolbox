@@ -1,6 +1,6 @@
 const { expect } = require("chai").use(require("sinon-chai"));
 
-const validate = require("../../../../init/template/validate");
+const validate = require("../../validate");
 
 const { examples, invalid } = require("../../config.json");
 

@@ -57,6 +57,16 @@ module.exports = async ({ workingDir, input }) => {
     );
   }
 
+  const spawnBaseTest = spawnSync("yarn", ["test:base-unit"], {
+    stdio: [process.stdin, process.stdout, process.stderr],
+    cwd: workingDir
+  });
+
+  if (spawnBaseTest.stderr) {
+    process.exitCode = 1;
+    throw "Tests failed";
+  }
+
   const spawnTest = spawnSync("yarn", ["test:unit"], {
     stdio: [process.stdin, process.stdout, process.stderr],
     cwd: workingDir
