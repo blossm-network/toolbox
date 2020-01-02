@@ -5,12 +5,12 @@ const databaseService = require("./database_service");
 const targets = ({ config, domain }) => {
   const getTokenTargets = [
     {
-      name: "answer",
+      action: "answer",
       domain: "challenge",
       context: "command-handler"
     },
     {
-      name: "issue",
+      action: "issue",
       domain: "challenge",
       context: "command-handler"
     },

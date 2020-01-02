@@ -6,7 +6,7 @@ const { examples } = require("../../config.json");
 
 describe("Command handler store normalize tests", () => {
   it("should clean correctly", async () => {
-    for (const { payload, normalized } in examples) {
+    for (const { payload, normalized } of examples) {
       const cleanedPayload = await normalize({
         ...payload,
         bogusPropertyasdf: "nope"

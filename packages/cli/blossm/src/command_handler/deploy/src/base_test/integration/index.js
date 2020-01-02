@@ -40,7 +40,7 @@ describe("Command handler integration tests", () => {
     }).aggregate(root);
 
     expect(aggregate.headers.root).to.equal(root);
-    for (const property of example0.payload) {
+    for (const property in example0.payload) {
       expect(aggregate.state[property]).to.equal(example0.normalized[property]);
     }
   });

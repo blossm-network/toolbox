@@ -11,7 +11,7 @@ describe("Command handler store validator tests", () => {
   });
   it("should handle correct payload correctly", async () => {
     try {
-      for (const { payload } in examples) {
+      for (const { payload } of examples) {
         await validate(payload);
       }
     } catch (e) {
@@ -41,7 +41,7 @@ describe("Command handler store validator tests", () => {
     }
   };
   it("should throw if bad param is passed", async () => {
-    for (const property of invalid) {
+    for (const property in invalid) {
       if (typeof property == "object")
         return await checkInvalidNextedObject({
           property,
