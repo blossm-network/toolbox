@@ -47,6 +47,11 @@ const targets = ({ config, domain }) => {
       name: "phones",
       domain: "person",
       context: "view-store"
+    },
+    {
+      name: "contexts",
+      domain: "person",
+      context: "view-store"
     }
   ];
 
