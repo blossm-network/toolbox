@@ -158,8 +158,8 @@ const writePackage = ({ config, baseConfig, workingDir }) => {
       "test:unit": "mocha --recursive test/unit",
       "test:base-unit": "mocha --recursive base_test/unit",
       "test:base-integration":
-        "mocha --recursive base_test/integration --timeout 20000",
-      "test:integration": "mocha --recursive test/integration --timeout 20000"
+        "mocha --recursive base_test/integration --timeout 40000",
+      "test:integration": "mocha --recursive test/integration --timeout 40000"
     },
     dependencies,
     devDependencies

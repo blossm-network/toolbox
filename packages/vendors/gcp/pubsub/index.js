@@ -27,18 +27,10 @@ exports.unsubscribe = async ({ topic, name }) => {
 };
 
 exports.create = async name => {
-  //eslint-disable-next-line
-  console.log("creating topic: ", name);
   const topic = pubsub.topic(name);
-  //eslint-disable-next-line
-  console.log("topic is: ", topic);
   const [exists] = await topic.exists();
-  //eslint-disable-next-line
-  console.log("exists: ", exists);
   if (exists) return;
   await topic.create();
-  //eslint-disable-next-line
-  console.log("dun: ");
 };
 
 exports.delete = async name => {
