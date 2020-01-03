@@ -2,7 +2,7 @@ const { expect } = require("chai").use(require("sinon-chai"));
 
 const validate = require("../../validate");
 
-const { examples, invalid } = require("../../config.json");
+const { testing } = require("../../config.json");
 
 const checkInvalidNestedObject = async ({ property, invalid, example }) => {
   for (const prop in invalid[property]) {
@@ -26,13 +26,13 @@ const checkInvalidNestedObject = async ({ property, invalid, example }) => {
 };
 
 describe("Command handler store validator tests", () => {
-  const example0 = examples[0];
+  const example0 = testing.examples[0];
   it("should have at least one example", async () => {
     expect(example0).to.exist;
   });
   it("should handle correct payload correctly", async () => {
     try {
-      for (const { payload } of examples) {
+      for (const { payload } of testing.examples) {
         await validate(payload);
       }
     } catch (e) {
@@ -42,7 +42,7 @@ describe("Command handler store validator tests", () => {
   });
 
   it("should throw if bad param is passed", async () => {
-    for (const value of invalid) {
+    for (const value of testing.invalid) {
       for (const property in value) {
         if (typeof property == "object")
           return await checkInvalidNestedObject({
@@ -53,7 +53,7 @@ describe("Command handler store validator tests", () => {
 
         const payload = {
           ...example0,
-          [property]: invalid[property]
+          [property]: testing.invalid[property]
         };
 
         try {

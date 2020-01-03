@@ -10,15 +10,13 @@ const request = require("@blossm/request");
 
 const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 
-const { examples, topics, invalid } = require("./../../config.json");
-
 const { testing } = require("../../config.json");
 
 describe("Command handler integration tests", () => {
-  const example0 = examples[0];
+  const example0 = testing.examples[0];
 
-  before(async () => await Promise.all(topics.map(t => create(t))));
-  after(async () => await Promise.all(topics.map(t => del(t))));
+  before(async () => await Promise.all(testing.topics.map(t => create(t))));
+  after(async () => await Promise.all(testing.topics.map(t => del(t))));
 
   it("should have at least one example", async () => {
     expect(example0).to.exist;
@@ -26,12 +24,18 @@ describe("Command handler integration tests", () => {
   it("should return successfully", async () => {
     if (testing.prep) {
       for (const operation of testing.prep) {
+        //eslint-disable-next-line
+        console.log("op: ", operation);
         await viewStore({
           name: operation.name,
           domain: operation.domain
         }).create(operation.state);
       }
     }
+
+    //eslint-disable-next-line
+    console.log("url: ", url);
+
     const response = await request.post(url, {
       body: {
         root: testing.root,
@@ -66,7 +70,7 @@ describe("Command handler integration tests", () => {
           issued: stringDate(),
           id: uuid()
         },
-        payload: invalid
+        payload: testing.invalid
       }
     });
 

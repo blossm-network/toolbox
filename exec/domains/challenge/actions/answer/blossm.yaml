@@ -1,5 +1,6 @@
 action: answer
 domain: challenge
+service: core
 version: 0
 
 dependencies:
@@ -29,11 +30,6 @@ devDependencies:
   "@blossm/gcp-kms": "*"
   "@blossm/gcp-pubsub": "*"
   "@blossm/get-token": "*"
-
-service: core
-
-#don't change
-context: command-handler
 
 testing:
   examples:
@@ -65,12 +61,7 @@ testing:
     - name: codes
       domain: challenge
       context: view-store
-    - action: issue
-      domain: challenge
-      context: command-handler
-    - name: phones
-      domain: person
-      context: view-store
-    - name: permissions
-      domain: principle
-      context: view-store
+
+#don't change
+context: command-handler
+
