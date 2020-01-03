@@ -1,6 +1,6 @@
 {
   "name": "@blossm/get-token",
-  "version": "0.0.22",
+  "version": "0.0.23",
   "description": "Gets a token for a development environment.",
   "main": "index.js",
   "author": "blossm.network",
@@ -17,7 +17,7 @@
     "@blossm/command-rpc": "^0.0.32",
     "@blossm/gcp-kms": "*",
     "@blossm/gcp-secret": "*",
-    "@blossm/jwt": "^0.0.12",
+    "@blossm/jwt": "^0.0.13",
     "@blossm/twilio-sms": "*",
     "@blossm/view-store-rpc": "^0.0.45"
   },
