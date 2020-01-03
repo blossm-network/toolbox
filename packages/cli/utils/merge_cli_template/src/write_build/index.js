@@ -32,7 +32,11 @@ const steps = ({
   secretBucket,
   secretBucketKeyLocation,
   secretBucketKeyRing,
-  imageExtension
+  imageExtension,
+  runUnitTests,
+  runBaseUnitTests,
+  runIntegrationTests,
+  runBaseIntegrationTests
 }) => {
   const serviceName = `${region}-${operationName}-${operationHash}`;
   const uri = `${operationHash}.${region}.${envUriSpecifier}${network}`;
@@ -64,7 +68,11 @@ const steps = ({
         secretBucketKeyRing,
         mongodbUser: blossmConfig.vendors.viewStore.mongodb.user,
         mongodbHost: blossmConfig.vendors.viewStore.mongodb.host,
-        mongodbProtocol: blossmConfig.vendors.viewStore.mongodb.protocol
+        mongodbProtocol: blossmConfig.vendors.viewStore.mongodb.protocol,
+        runUnitTests,
+        runBaseUnitTests,
+        runIntegrationTests,
+        runBaseIntegrationTests
       });
     case "event-store":
       return eventStore({
@@ -90,7 +98,11 @@ const steps = ({
         secretBucketKeyRing,
         mongodbUser: blossmConfig.vendors.eventStore.mongodb.user,
         mongodbHost: blossmConfig.vendors.eventStore.mongodb.host,
-        mongodbProtocol: blossmConfig.vendors.eventStore.mongodb.protocol
+        mongodbProtocol: blossmConfig.vendors.eventStore.mongodb.protocol,
+        runUnitTests,
+        runBaseUnitTests,
+        runIntegrationTests,
+        runBaseIntegrationTests
       });
     case "event-handler":
       return eventHandler({
@@ -116,7 +128,11 @@ const steps = ({
         uri,
         secretBucket,
         secretBucketKeyLocation,
-        secretBucketKeyRing
+        secretBucketKeyRing,
+        runUnitTests,
+        runBaseUnitTests,
+        runIntegrationTests,
+        runBaseIntegrationTests
       });
     case "command-handler":
       return commandHandler({
@@ -140,7 +156,11 @@ const steps = ({
         uri,
         secretBucket,
         secretBucketKeyLocation,
-        secretBucketKeyRing
+        secretBucketKeyRing,
+        runUnitTests,
+        runBaseUnitTests,
+        runIntegrationTests,
+        runBaseIntegrationTests
       });
     case "job":
       return job({
@@ -163,7 +183,11 @@ const steps = ({
         uri,
         secretBucket,
         secretBucketKeyLocation,
-        secretBucketKeyRing
+        secretBucketKeyRing,
+        runUnitTests,
+        runBaseUnitTests,
+        runIntegrationTests,
+        runBaseIntegrationTests
       });
     case "command-gateway":
       return commandGateway({
@@ -186,7 +210,11 @@ const steps = ({
         serviceName,
         secretBucket,
         secretBucketKeyLocation,
-        secretBucketKeyRing
+        secretBucketKeyRing,
+        runUnitTests,
+        runBaseUnitTests,
+        runIntegrationTests,
+        runBaseIntegrationTests
       });
     case "view-gateway":
       return viewGateway({
@@ -209,7 +237,11 @@ const steps = ({
         serviceName,
         secretBucket,
         secretBucketKeyLocation,
-        secretBucketKeyRing
+        secretBucketKeyRing,
+        runUnitTests,
+        runBaseUnitTests,
+        runIntegrationTests,
+        runBaseIntegrationTests
       });
   }
 };
@@ -264,6 +296,17 @@ module.exports = ({
     domain
   });
 
+  const runUnitTests = fs.existsSync(path.resolve(workingDir, "test/unit"));
+  const runBaseUnitTests = fs.existsSync(
+    path.resolve(workingDir, "test/base_unit")
+  );
+  const runIntegrationTests = fs.existsSync(
+    path.resolve(workingDir, "test/integration")
+  );
+  const runBaseIntegrationTests = fs.existsSync(
+    path.resolve(workingDir, "base_test/integration")
+  );
+
   const build = {
     steps: steps({
       imageExtension: i,
@@ -287,7 +330,11 @@ module.exports = ({
       uri,
       secretBucket,
       secretBucketKeyLocation,
-      secretBucketKeyRing
+      secretBucketKeyRing,
+      runUnitTests,
+      runBaseUnitTests,
+      runIntegrationTests,
+      runBaseIntegrationTests
     })
   };
 
