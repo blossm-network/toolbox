@@ -11,6 +11,7 @@ commands:
     priviledges: none
   - action: answer
     priviledges: [answer]
+    key: challenge
 
 whitelist:
   - "127.0.0.1"

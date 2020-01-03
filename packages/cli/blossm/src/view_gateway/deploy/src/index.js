@@ -15,11 +15,12 @@ module.exports = gateway({
 
     return permissions || [];
   },
-  verifyFn: verify({
-    ring: process.env.SERVICE,
-    key: "auth",
-    location: "global",
-    version: "1",
-    project: process.env.GCP_PROJECT
-  })
+  verifyFn: ({ key }) =>
+    verify({
+      ring: process.env.SERVICE,
+      key,
+      location: "global",
+      version: "1",
+      project: process.env.GCP_PROJECT
+    })
 });

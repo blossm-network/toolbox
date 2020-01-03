@@ -6,7 +6,6 @@ const gateway = require("..");
 const whitelist = "some-whitelist";
 const permissionsLookupFn = "some-permissions-fn";
 const domain = "some-domain";
-const verifyFn = "some-verify-fn";
 
 process.env.DOMAIN = domain;
 
@@ -43,7 +42,15 @@ describe("View gateway", () => {
     const name = "some-name";
     const stores = [{ name, priviledges }];
 
-    await gateway({ stores, whitelist, permissionsLookupFn, verifyFn });
+    const verifyFnResult = "some-verify-fn";
+    const verifyFnFake = fake.returns(verifyFnResult);
+
+    await gateway({
+      stores,
+      whitelist,
+      permissionsLookupFn,
+      verifyFn: verifyFnFake
+    });
 
     expect(gatewayGetFake).to.have.been.calledWith({ name, domain });
     expect(gatewayGetFake).to.have.been.calledOnce;
@@ -64,11 +71,58 @@ describe("View gateway", () => {
       path: `/${name}`,
       preMiddleware: [authenticationResult, authorizationResult]
     });
-    expect(authenticationFake).to.have.been.calledWith({ verifyFn });
+    expect(authenticationFake).to.have.been.calledWith({
+      verifyFn: verifyFnResult
+    });
+    expect(verifyFnFake).to.have.been.calledWith({ key: "auth" });
     expect(authorizationFake).to.have.been.calledWith({
       permissionsLookupFn,
       priviledges
     });
+  });
+  it("should call with the correct params with store key", async () => {
+    const corsMiddlewareFake = fake();
+    replace(deps, "corsMiddleware", corsMiddlewareFake);
+
+    const authenticationResult = "some-authentication";
+    const authenticationFake = fake.returns(authenticationResult);
+    replace(deps, "authentication", authenticationFake);
+
+    const authorizationResult = "some-authorization";
+    const authorizationFake = fake.returns(authorizationResult);
+    replace(deps, "authorization", authorizationFake);
+
+    const listenFake = fake();
+    const getFake = fake.returns({
+      listen: listenFake
+    });
+    const serverFake = fake.returns({
+      get: getFake
+    });
+    replace(deps, "server", serverFake);
+
+    const gatewayGetResult = "some-get-result";
+    const gatewayGetFake = fake.returns(gatewayGetResult);
+    replace(deps, "get", gatewayGetFake);
+
+    const priviledges = "some-priviledges";
+    const name = "some-name";
+    const key = "some-key";
+    const stores = [{ name, priviledges, key }];
+
+    const verifyFnResult = "some-verify-fn";
+    const verifyFnFake = fake.returns(verifyFnResult);
+
+    await gateway({
+      stores,
+      whitelist,
+      permissionsLookupFn,
+      verifyFn: verifyFnFake
+    });
+    expect(authenticationFake).to.have.been.calledWith({
+      verifyFn: verifyFnResult
+    });
+    expect(verifyFnFake).to.have.been.calledWith({ key });
   });
   it("should call with the correct params with multiple stores", async () => {
     const corsMiddlewareFake = fake();
@@ -106,7 +160,15 @@ describe("View gateway", () => {
       { name: name2, priviledges }
     ];
 
-    await gateway({ stores, whitelist, permissionsLookupFn, verifyFn });
+    const verifyFnResult = "some-verify-fn";
+    const verifyFnFake = fake.returns(verifyFnResult);
+
+    await gateway({
+      stores,
+      whitelist,
+      permissionsLookupFn,
+      verifyFn: verifyFnFake
+    });
 
     expect(gatewayGetFake).to.have.been.calledWith({
       name: name1,
@@ -124,7 +186,10 @@ describe("View gateway", () => {
       path: `/${name2}`,
       preMiddleware: [authenticationResult, authorizationResult]
     });
-    expect(authenticationFake).to.have.been.calledWith({ verifyFn });
+    expect(authenticationFake).to.have.been.calledWith({
+      verifyFn: verifyFnResult
+    });
+    expect(verifyFnFake).to.have.been.calledWith({ key: "auth" });
     expect(authorizationFake).to.have.been.calledOnce;
     expect(authorizationFake).to.have.been.calledWith({
       permissionsLookupFn,
@@ -162,12 +227,16 @@ describe("View gateway", () => {
     const stores = [{ name, priviledges }];
 
     const otherDomain = "some-other-domain";
+
+    const verifyFnResult = "some-verify-fn";
+    const verifyFnFake = fake.returns(verifyFnResult);
+
     await gateway({
       stores,
       domain: otherDomain,
       whitelist,
       permissionsLookupFn,
-      verifyFn
+      verifyFn: verifyFnFake
     });
 
     expect(gatewayGetFake).to.have.been.calledWith({

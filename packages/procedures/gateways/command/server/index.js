@@ -22,7 +22,9 @@ module.exports = async ({
       path: `/${command.action}`,
       ...(command.priviledges != "none" && {
         preMiddleware: [
-          deps.authentication({ verifyFn }),
+          deps.authentication({
+            verifyFn: verifyFn({ key: command.key || "auth" })
+          }),
           deps.authorization({
             permissionsLookupFn,
             priviledges: command.priviledges
