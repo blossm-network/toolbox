@@ -298,7 +298,7 @@ module.exports = ({
 
   const runUnitTests = fs.existsSync(path.resolve(workingDir, "test/unit"));
   const runBaseUnitTests = fs.existsSync(
-    path.resolve(workingDir, "test/base_unit")
+    path.resolve(workingDir, "base_test/unit")
   );
   const runIntegrationTests = fs.existsSync(
     path.resolve(workingDir, "test/integration")
