@@ -3,31 +3,6 @@ domain: challenge
 service: core
 version: 0
 
-examples:
-  - payload:
-      phone: "919 555 1144"
-    normalized:
-      phone: "+19195551144"
-
-invalid:
-  - phone: "919"
-  - phone: 919
-  - phone: false
-
-prep:
-  name: phones
-  domain: person
-  state: 
-    phone: "+19195551144"
-
-targets:
-  - name: phones
-    domain: person
-    context: view-store
-  - name: codes
-    domain: challenge
-    context: view-store
-
 dependencies:
   "@blossm/validator": "*"
   "@blossm/phone-number": "*"
@@ -52,6 +27,32 @@ devDependencies:
   "@blossm/request": "*"
   "@blossm/event-store-rpc": "*"
   "@blossm/gcp-pubsub": "*"
+
+testing:
+  examples:
+    - payload:
+        phone: "919 555 1144"
+      normalized:
+        phone: "+19195551144"
+
+  invalid:
+    - phone: "919"
+    - phone: 919
+    - phone: false
+
+  prep:
+    - name: phones
+      domain: person
+      state: 
+        phone: "+19195551144"
+
+  targets:
+    - name: phones
+      domain: person
+      context: view-store
+    - name: codes
+      domain: challenge
+      context: view-store
 
 #don't change
 context: command-handler

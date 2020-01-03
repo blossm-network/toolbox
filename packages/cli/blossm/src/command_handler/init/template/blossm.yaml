@@ -11,19 +11,6 @@ domain: some-domain
 service: core
 version: 0
 
-examples:
-  - payload:
-      name: Some-name
-    normalized:
-      name: some-name
-
-invalid:
-  name: 3
-
-prep:
-
-targets:
-
 devDependencies:
   "localenv": "^0.2.2"
   "mocha": "^6.1.4"
@@ -36,6 +23,20 @@ devDependencies:
   "@blossm/event-store-rpc": "*"
   "@blossm/gcp-pubsub": "*"
   "@blossm/uuid": "*"
+
+testing:
+  examples:
+    - payload:
+        name: Some-name
+      normalized:
+        name: some-name
+
+  invalid:
+    name: 3
+
+  prep:
+
+  targets:
 
 #don't change
 context: command-handler

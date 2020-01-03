@@ -58,8 +58,8 @@ const targets = ({ config, domain }) => {
   switch (config.context) {
     case "command-handler":
       return [
-        ...config.targets,
-        ...eventStoreTargets({ targets: config.targets }),
+        ...config.testing.targets,
+        ...eventStoreTargets({ targets: config.testing.targets }),
         { domain, context: "event-store" }
       ];
     case "command-gateway": {
@@ -87,7 +87,7 @@ const targets = ({ config, domain }) => {
         })
       ];
     default:
-      return config.targets;
+      return config.testing.targets;
   }
 };
 

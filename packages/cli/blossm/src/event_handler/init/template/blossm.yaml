@@ -9,12 +9,6 @@ name: some-name
 action: some-action
 domain: some-domain
 service: core
-
-targets:
-  - name: some-name
-    domain: some-domain
-    context: view-store
-
 version: 0
 
 dependencies:
@@ -32,6 +26,12 @@ devDependencies:
   "@blossm/gcp-token": "*"
   "@blossm/view-store-rpc": "*"
   "@blossm/uuid": "*"
+
+testing:
+  targets:
+    - name: some-name
+      domain: some-domain
+      context: view-store
 
 #don't change
 context: event-handler

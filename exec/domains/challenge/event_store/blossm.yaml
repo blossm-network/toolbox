@@ -7,22 +7,23 @@ schema:
   principle: String
   phone: String
 
-examples:
-  - code: "123456"
-    issued: "2020-01-03T00:02:12+00:00"
-    principle: some-root
-    phone: "+19195551144"
-  - code: "234567"
-    issued: "2020-01-03T00:02:10+00:00"
-    principle: some-other-root
-    phone: "+19195554411"
-
 devDependencies:
   "localenv": "^0.2.2"
   "mocha": "^6.1.4"
   "chai": "^4.2.0"
   "@blossm/request": "*"
   "@blossm/uuid": "*"
+
+testing:
+  examples:
+    - code: "123456"
+      issued: "2020-01-03T00:02:12+00:00"
+      principle: some-root
+      phone: "+19195551144"
+    - code: "234567"
+      issued: "2020-01-03T00:02:10+00:00"
+      principle: some-other-root
+      phone: "+19195554411"
 
 #don't change
 context: event-store

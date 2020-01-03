@@ -8,11 +8,11 @@ const request = require("@blossm/request");
 
 const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 
-const config = require("./../../config.json");
+const { testing } = require("./../../config.json");
 
 describe("Command gateway integration tests", () => {
-  before(async () => await Promise.all(config.topics.map(t => create(t))));
-  after(async () => await Promise.all(config.topics.map(t => del(t))));
+  before(async () => await Promise.all(testing.topics.map(t => create(t))));
+  after(async () => await Promise.all(testing.topics.map(t => del(t))));
 
   it("should return successfully", async () => {
     const issueFn = async ({ phone }) => {

@@ -2,31 +2,6 @@ action: answer
 domain: challenge
 version: 0
 
-examples:
-  - payload:
-      code: 123456
-    normalized:
-      code: 123456
-
-invalid: bad
-
-targets:
-  - name: contexts
-    domain: person
-    context: view-store
-  - name: codes
-    domain: challenge
-    context: view-store
-  - action: issue
-    domain: challenge
-    context: command-handler
-  - name: phones
-    domain: person
-    context: view-store
-  - name: permissions
-    domain: principle
-    context: view-store
-
 dependencies:
   "@blossm/validator": "*"
   "@blossm/duration-consts": "*"
@@ -59,3 +34,43 @@ service: core
 
 #don't change
 context: command-handler
+
+testing:
+  examples:
+    - payload:
+        code: "123456"
+      normalized:
+        code: "123456"
+
+  invalid: bad
+
+  root: some-root
+
+  context: 
+      principle: some-principle-root
+      person: some-person-root
+
+  prep:
+    - name: codes 
+      domain: challenge 
+      state: 
+        root: some-root 
+        code: "123456"
+        expires: "30000-12-31T00:00:00+00:00"
+
+  targets:
+    - name: contexts
+      domain: person
+      context: view-store
+    - name: codes
+      domain: challenge
+      context: view-store
+    - action: issue
+      domain: challenge
+      context: command-handler
+    - name: phones
+      domain: person
+      context: view-store
+    - name: permissions
+      domain: principle
+      context: view-store

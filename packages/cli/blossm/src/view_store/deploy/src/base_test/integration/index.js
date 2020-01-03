@@ -8,7 +8,7 @@ const uuid = require("@blossm/uuid");
 
 const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 
-const { examples, indexes = [] } = require("../../config.json");
+const { testing, indexes = [] } = require("../../config.json");
 
 const queryString = (properties, example) => {
   let string = "";
@@ -19,8 +19,8 @@ const queryString = (properties, example) => {
 };
 
 describe("View store base integration tests", () => {
-  const example0 = examples[0];
-  const example1 = examples[1];
+  const example0 = testing.examples[0];
+  const example1 = testing.examples[1];
 
   it("should have examples", () => {
     expect(example0).to.exist;

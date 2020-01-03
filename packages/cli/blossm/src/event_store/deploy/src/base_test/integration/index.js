@@ -3,7 +3,7 @@ const { expect } = require("chai");
 const request = require("@blossm/request");
 const uuid = require("@blossm/uuid");
 
-const { domain, service, examples, schema } = require("../../config.json");
+const { domain, service, testing, schema } = require("../../config.json");
 
 const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 
@@ -24,8 +24,8 @@ const network = "some-network";
 const issued = "now";
 
 describe("Event store integration tests", () => {
-  const example0 = examples[0];
-  const example1 = examples[1];
+  const example0 = testing.examples[0];
+  const example1 = testing.examples[1];
 
   before(async () => await create(topic));
   after(async () => await del(topic));

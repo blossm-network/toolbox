@@ -91,7 +91,7 @@ const copySource = async (p, workingDir) => {
 };
 
 const topicsForTargets = config => {
-  const array = (config.targets || [])
+  const array = (config.testing.targets || [])
     .filter(t => t.context == "command-handler")
     .map(
       t => `did-${t.action}.${t.domain}.${t.service || config.service}.local`
@@ -121,11 +121,18 @@ const topicsForTargets = config => {
 
 const writeConfig = (config, workingDir) => {
   const newConfigPath = path.resolve(workingDir, "config.json");
-  config.targets = config.targets
-    ? [...config.targets, ...resolveTransientTargets(config.targets)]
-    : [];
+  if (!config.testing) config.testing = {};
+  config.testing = {
+    ...config.testing,
+    targets: config.testing.targets
+      ? [
+          ...config.testing.targets,
+          ...resolveTransientTargets(config.testing.targets)
+        ]
+      : []
+  };
 
-  config.topics = topicsForTargets(config);
+  config.testing.topics = topicsForTargets(config);
 
   fs.writeFileSync(newConfigPath, JSON.stringify(config));
 };

@@ -6,7 +6,7 @@ module.exports = ({ version, mainFn, validateFn, normalizeFn }) => {
     if (normalizeFn) req.body.payload = await normalizeFn(req.body.payload);
 
     //Add req.body.context as a fallback for internal testing without a gateway.
-    const context = req.context || req.body.context;
+    const context = req.body.context;
 
     const { payload, root = req.body.root, response } = await mainFn({
       payload: req.body.payload,

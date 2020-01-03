@@ -1,6 +1,6 @@
 #
 # This file is required.
-# It's URL will be auth.[network]
+# It's URL will be command.[domain].[service].[network]
 #
 
 domain: some-domain

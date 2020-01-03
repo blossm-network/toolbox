@@ -5,13 +5,13 @@ const getToken = require("@blossm/get-token");
 const { create, delete: del } = require("@blossm/gcp-pubsub");
 
 const request = require("@blossm/request");
-const { commands, topics } = require("./../../config.json");
+const { commands, testing } = require("./../../config.json");
 
 const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 
 describe("Command gateway integration tests", () => {
-  before(async () => await Promise.all(topics.map(t => create(t))));
-  after(async () => await Promise.all(topics.map(t => del(t))));
+  before(async () => await Promise.all(testing.topics.map(t => create(t))));
+  after(async () => await Promise.all(testing.topics.map(t => del(t))));
   it("should return successfully", async () => {
     const requiredPermissions = commands.reduce((permissions, command) => {
       return command.priviledges == "none"

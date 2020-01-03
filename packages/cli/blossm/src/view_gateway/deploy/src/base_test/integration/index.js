@@ -4,15 +4,15 @@ const getToken = require("@blossm/get-token");
 const { create, delete: del } = require("@blossm/gcp-pubsub");
 
 const request = require("@blossm/request");
-const { stores, topics } = require("./../../config.json");
+const { stores, testing } = require("./../../config.json");
 
 const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 
 const root = "some-root";
 
 describe("View gateway integration tests", () => {
-  before(async () => await Promise.all(topics.map(t => create(t))));
-  after(async () => await Promise.all(topics.map(t => del(t))));
+  before(async () => await Promise.all(testing.topics.map(t => create(t))));
+  after(async () => await Promise.all(testing.topics.map(t => del(t))));
   it("should return successfully", async () => {
     const requiredPermissions = stores.reduce((permissions, command) => {
       return command.priviledges == "none"

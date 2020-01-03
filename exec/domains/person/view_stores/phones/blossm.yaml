@@ -1,15 +1,10 @@
 name: phones
 domain: person
+service: core
 
 schema:
   phone: String
   principle: String
-
-examples:
-  - phone: "19195551144"
-    principle: some-root
-  - phone: "19195554411"
-    principle: some-other-root
 
 indexes: [[{ phone: 1 }]]
 
@@ -21,7 +16,13 @@ devDependencies:
   "@blossm/request": "*"
   "@blossm/uuid": "*"
 
-service: core
+testing:
+  examples:
+    - phone: "19195551144"
+      principle: some-root
+    - phone: "19195554411"
+      principle: some-other-root
+
 
 #don't change
 context: view-store

@@ -12,7 +12,7 @@ const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 
 const { examples, topics, invalid } = require("./../../config.json");
 
-const { prep } = require("../../config.json");
+const { testing } = require("../../config.json");
 
 describe("Command handler integration tests", () => {
   const example0 = examples[0];
@@ -24,10 +24,8 @@ describe("Command handler integration tests", () => {
     expect(example0).to.exist;
   });
   it("should return successfully", async () => {
-    if (prep) {
-      for (const operation of prep) {
-        //eslint-disable-next-line
-        console.log("operation: ", operation);
+    if (testing.prep) {
+      for (const operation of testing.prep) {
         await viewStore({
           name: operation.name,
           domain: operation.domain
@@ -36,23 +34,27 @@ describe("Command handler integration tests", () => {
     }
     const response = await request.post(url, {
       body: {
+        root: testing.root,
         headers: {
           issued: stringDate(),
           id: uuid()
         },
+        context: testing.context,
         payload: example0.payload
       }
     });
 
     expect(response.statusCode).to.equal(200);
 
-    const root = JSON.parse(response.body).root;
+    const responseRoot = JSON.parse(response.body).root;
+
+    if (testing.root) expect(responseRoot).to.equal(testing.root);
 
     const aggregate = await eventStore({
       domain: process.env.DOMAIN
-    }).aggregate(root);
+    }).aggregate(responseRoot);
 
-    expect(aggregate.headers.root).to.equal(root);
+    expect(aggregate.headers.root).to.equal(responseRoot);
     for (const property in example0.payload) {
       expect(aggregate.state[property]).to.equal(example0.normalized[property]);
     }

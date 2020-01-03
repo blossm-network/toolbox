@@ -4,10 +4,6 @@ service: core
 schema:
   name: String
 
-examples:
-  - name: Jo
-  - name: Tyler
-
 indexes: [[{ name: 1 }]]
 
 devDependencies:
@@ -16,6 +12,11 @@ devDependencies:
   "chai": "^4.2.0"
   "@blossm/request": "*"
   "@blossm/uuid": "*"
+
+testing:
+  examples:
+    - name: Jo
+    - name: Tyler
 
 #don't change
 context: event-store

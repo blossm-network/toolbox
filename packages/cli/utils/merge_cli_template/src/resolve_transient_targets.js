@@ -28,7 +28,7 @@ const findTargetsForTarget = (target, dir) => {
       //If the domain is not the same, the target wont be in this directory.
       if (blossmConfig.domain != target.domain) return [];
       if (targetIsConfig(target, blossmConfig)) {
-        return blossmConfig.targets || [];
+        return blossmConfig.testing.targets || [];
       }
     } else if (fs.statSync(filePath).isDirectory()) {
       const targets = findTargetsForTarget(target, filePath);
