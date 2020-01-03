@@ -62,9 +62,9 @@ module.exports = ({ domain, dir, configFn }) => async args => {
     configFn
   });
 
-  await testCliTemplate({ workingDir, input });
-
-  if (!input.testOnly) {
+  if (input.testOnly) {
+    await testCliTemplate({ workingDir, input });
+  } else {
     //eslint-disable-next-line no-console
     console.log(
       roboSay(
@@ -75,6 +75,7 @@ module.exports = ({ domain, dir, configFn }) => async args => {
     );
     await build(workingDir);
   }
+
   fs.removeSync(workingDir);
 
   //eslint-disable-next-line no-console
