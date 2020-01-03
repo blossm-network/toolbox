@@ -1,6 +1,6 @@
 {
   "name": "@blossm/authorization-middleware",
-  "version": "0.0.23",
+  "version": "0.0.24",
   "description": "Authorization middleware for the network.",
   "main": "index.js",
   "author": "blossm.network",
@@ -14,7 +14,7 @@
     "test": "mocha --recursive"
   },
   "dependencies": {
-    "@blossm/authorize": "^0.0.21",
+    "@blossm/authorize": "^0.0.22",
     "express-async-handler": "^1.1.4"
   },
   "devDependencies": {
