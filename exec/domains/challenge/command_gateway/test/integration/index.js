@@ -15,6 +15,8 @@ describe("Command gateway integration tests", () => {
   after(async () => await Promise.all(testing.topics.map(t => del(t))));
   it("should return successfully", async () => {
     const issueFn = async ({ phone }) => {
+      //eslint-disable-next-line
+      console.log("bout to issue: ", { phone });
       const response = await request.post(`${url}/issue`, {
         body: {
           headers: {
@@ -27,9 +29,13 @@ describe("Command gateway integration tests", () => {
       });
       expect(response.statusCode).to.equal(200);
       const { token, root } = JSON.parse(response.body);
+      //eslint-disable-next-line
+      console.log("dun issuing: ", { token, root });
       return { token, root };
     };
     const answerFn = async ({ code, root, token }) => {
+      //eslint-disable-next-line
+      console.log("bout to answer: ", { code, root, token });
       const response = await request.post(`${url}/answer`, {
         body: {
           root,
@@ -44,8 +50,12 @@ describe("Command gateway integration tests", () => {
           Authorization: `Bearer ${token}`
         }
       });
+      //eslint-disable-next-line
+      console.log("body: ", { body: JSON.parse(response.body) });
       expect(response.statusCode).to.equal(200);
       const { token: newToken } = JSON.parse(response.body);
+      //eslint-disable-next-line
+      console.log("dun answering: ", { token });
       return { root, token: newToken };
     };
     const { token, root } = await getToken({
