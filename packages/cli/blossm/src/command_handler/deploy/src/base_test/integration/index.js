@@ -22,14 +22,14 @@ describe("Command handler integration tests", () => {
     expect(example0).to.exist;
   });
   it("should return successfully", async () => {
-    if (testing.prep) {
-      for (const operation of testing.prep) {
+    if (testing.state) {
+      for (const state of testing.state) {
         //eslint-disable-next-line
         console.log("op: ", operation);
         await viewStore({
-          name: operation.name,
-          domain: operation.domain
-        }).create(operation.state);
+          name: state.store.name,
+          domain: state.store.domain
+        }).update(state.store.root, state.value);
       }
     }
 

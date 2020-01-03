@@ -12,7 +12,7 @@ const copy = promisify(ncp);
 
 const writeCompose = require("./src/write_compose");
 const writeBuild = require("./src/write_build");
-const resolveTransientTargets = require("./src/resolve_transient_targets");
+const resolveTransientProcedures = require("./src/resolve_transient_procedures");
 
 const envUriSpecifier = env => {
   switch (env) {
@@ -90,8 +90,8 @@ const copySource = async (p, workingDir) => {
   });
 };
 
-const topicsForTargets = config => {
-  const array = (config.testing.targets || [])
+const topicsForProcedures = config => {
+  const array = (config.testing.procedures || [])
     .filter(t => t.context == "command-handler")
     .map(
       t => `did-${t.action}.${t.domain}.${t.service || config.service}.local`
@@ -124,15 +124,15 @@ const writeConfig = (config, workingDir) => {
   if (!config.testing) config.testing = {};
   config.testing = {
     ...config.testing,
-    targets: config.testing.targets
+    procedures: config.testing.procedures
       ? [
-          ...config.testing.targets,
-          ...resolveTransientTargets(config.testing.targets)
+          ...config.testing.procedures,
+          ...resolveTransientProcedures(config.testing.procedures)
         ]
       : []
   };
 
-  config.testing.topics = topicsForTargets(config);
+  config.testing.topics = topicsForProcedures(config);
 
   fs.writeFileSync(newConfigPath, JSON.stringify(config));
 };

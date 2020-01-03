@@ -20,7 +20,7 @@ examples:
 invalid:
   name: 3
 
-targets:
+procedures:
 
 devDependencies:
   "localenv": "^0.2.2"

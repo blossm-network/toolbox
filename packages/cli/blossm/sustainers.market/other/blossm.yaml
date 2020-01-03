@@ -9,9 +9,10 @@
 action: some-other-action
 domain: some-domain
 
-targets:
-  - domain: some-domain
-    context: event-store
+testing:
+  procedures:
+    - domain: some-domain
+      context: event-store
 
 version: 0
 

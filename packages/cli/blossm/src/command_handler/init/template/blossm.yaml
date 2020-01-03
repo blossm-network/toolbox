@@ -34,9 +34,9 @@ testing:
   invalid:
     name: 3
 
-  prep:
+  state:
 
-  targets:
+  procedures:
 
 #don't change
 context: command-handler

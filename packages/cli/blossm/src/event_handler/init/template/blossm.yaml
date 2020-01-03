@@ -28,7 +28,7 @@ devDependencies:
   "@blossm/uuid": "*"
 
 testing:
-  targets:
+  procedures:
     - name: some-name
       domain: some-domain
       context: view-store

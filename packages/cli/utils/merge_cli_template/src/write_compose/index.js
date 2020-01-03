@@ -3,7 +3,7 @@ const yaml = require("yaml");
 const path = require("path");
 
 const mainService = require("./main_service");
-const targetServices = require("./target_services");
+const procedureServices = require("./procedure_services");
 const databaseService = require("./database_service");
 
 const databaseServiceKey = "db";
@@ -47,7 +47,7 @@ module.exports = ({
 
   const _includeDatabase = includeDatabase(config);
 
-  const _targetServices = targetServices({
+  const _procedureServices = procedureServices({
     config,
     databaseServiceKey,
     project,
@@ -99,10 +99,10 @@ module.exports = ({
         }),
         depends_on: [
           ...(_includeDatabase ? [databaseServiceKey] : []),
-          ...Object.keys(_targetServices)
+          ...Object.keys(_procedureServices)
         ]
       },
-      ..._targetServices,
+      ..._procedureServices,
       ...(_includeDatabase && {
         [databaseServiceKey]: databaseService({
           adminUser: mongodbAdminUser,

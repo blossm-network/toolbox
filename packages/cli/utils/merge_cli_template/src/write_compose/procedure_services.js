@@ -2,23 +2,23 @@ const hash = require("@blossm/service-hash");
 
 const databaseService = require("./database_service");
 
-const eventStoreTargets = ({ targets }) => {
+const eventStoreProcedures = ({ procedures }) => {
   let result = [];
-  for (const target of targets) {
+  for (const procedure of procedures) {
     if (
-      target.context == "command-handler" &&
-      ![...targets, ...result].some(
-        t => t.context == "event-store" && t.domain == target.domain
+      procedure.context == "command-handler" &&
+      ![...procedures, ...result].some(
+        p => p.context == "event-store" && p.domain == procedure.domain
       )
     ) {
-      result.push({ context: "event-store", domain: target.domain });
+      result.push({ context: "event-store", domain: procedure.domain });
     }
   }
   return result;
 };
 
-const targets = ({ config, domain }) => {
-  const tokenTargets = [
+const procedures = ({ config, domain }) => {
+  const tokenProcedures = [
     {
       action: "answer",
       domain: "challenge",
@@ -58,13 +58,13 @@ const targets = ({ config, domain }) => {
   switch (config.context) {
     case "command-handler":
       return [
-        ...config.testing.targets,
-        ...eventStoreTargets({ targets: config.testing.targets }),
+        ...config.testing.procedures,
+        ...eventStoreProcedures({ procedures: config.testing.procedures }),
         { domain, context: "event-store" }
       ];
     case "command-gateway": {
-      const targets = [
-        ...tokenTargets,
+      const procedures = [
+        ...tokenProcedures,
         ...config.commands.map(command => {
           return {
             action: command.action,
@@ -73,11 +73,11 @@ const targets = ({ config, domain }) => {
           };
         })
       ];
-      return [...eventStoreTargets({ targets }), ...targets];
+      return [...eventStoreProcedures({ procedures }), ...procedures];
     }
     case "view-gateway":
       return [
-        ...tokenTargets,
+        ...tokenProcedures,
         ...config.stores.map(store => {
           return {
             name: store.name,
@@ -87,7 +87,7 @@ const targets = ({ config, domain }) => {
         })
       ];
     default:
-      return config.testing.targets;
+      return config.testing.procedures;
   }
 };
 
@@ -137,30 +137,30 @@ module.exports = ({
   };
   let services = {};
   let includeDatabase = false;
-  for (const target of targets({ config, domain })) {
-    const commonServiceImagePrefix = `${containerRegistery}/${service}.${target.context}`;
-    switch (target.context) {
+  for (const procedure of procedures({ config, domain })) {
+    const commonServiceImagePrefix = `${containerRegistery}/${service}.${procedure.context}`;
+    switch (procedure.context) {
       case "view-store":
         {
-          const targetHash = hash({
-            procedure: [target.name, target.domain, target.context],
+          const procedureHash = hash({
+            procedure: [procedure.name, procedure.domain, procedure.context],
             service: config.service
           });
 
-          const key = `${target.name}-${target.domain}-${config.service}`;
+          const key = `${procedure.name}-${procedure.domain}-${config.service}`;
           services = {
             ...services,
             [key]: {
               ...common,
-              image: `${commonServiceImagePrefix}.${target.domain}.${target.name}:latest`,
-              container_name: `${targetHash}.${network}`,
+              image: `${commonServiceImagePrefix}.${procedure.domain}.${procedure.name}:latest`,
+              container_name: `${procedureHash}.${network}`,
               depends_on: [databaseServiceKey],
               environment: {
                 ...commonEnvironment,
                 ...commonStoreEnvironment,
-                CONTEXT: target.context,
-                DOMAIN: target.domain,
-                NAME: target.name
+                CONTEXT: procedure.context,
+                DOMAIN: procedure.domain,
+                NAME: procedure.name
               }
             }
           };
@@ -169,24 +169,24 @@ module.exports = ({
         break;
       case "event-store":
         {
-          const targetHash = hash({
-            procedure: [target.domain, target.context],
+          const procedureHash = hash({
+            procedure: [procedure.domain, procedure.context],
             service: config.service
           });
 
-          const key = `${target.domain}-${config.service}`;
+          const key = `${procedure.domain}-${config.service}`;
           services = {
             ...services,
             [key]: {
               ...common,
-              image: `${commonServiceImagePrefix}.${target.domain}:latest`,
-              container_name: `${targetHash}.${network}`,
+              image: `${commonServiceImagePrefix}.${procedure.domain}:latest`,
+              container_name: `${procedureHash}.${network}`,
               depends_on: [databaseServiceKey],
               environment: {
                 ...commonEnvironment,
                 ...commonStoreEnvironment,
-                CONTEXT: target.context,
-                DOMAIN: target.domain
+                CONTEXT: procedure.context,
+                DOMAIN: procedure.domain
               }
             }
           };
@@ -195,22 +195,22 @@ module.exports = ({
         break;
       case "command-handler":
         {
-          const targetHash = hash({
-            procedure: [target.action, target.domain, target.context],
+          const procedureHash = hash({
+            procedure: [procedure.action, procedure.domain, procedure.context],
             service: config.service
           });
-          const key = `${target.action}-${target.domain}-${config.service}`;
+          const key = `${procedure.action}-${procedure.domain}-${config.service}`;
           services = {
             ...services,
             [key]: {
               ...common,
-              image: `${commonServiceImagePrefix}.${target.domain}.${target.action}:latest`,
-              container_name: `${targetHash}.${network}`,
+              image: `${commonServiceImagePrefix}.${procedure.domain}.${procedure.action}:latest`,
+              container_name: `${procedureHash}.${network}`,
               environment: {
                 ...commonEnvironment,
-                CONTEXT: target.context,
-                DOMAIN: target.domain,
-                ACTION: target.action
+                CONTEXT: procedure.context,
+                DOMAIN: procedure.domain,
+                ACTION: procedure.action
               }
             }
           };

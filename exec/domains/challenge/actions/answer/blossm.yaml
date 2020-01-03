@@ -46,21 +46,23 @@ testing:
       principle: some-principle-root
       person: some-person-root
 
-  prep:
-    - name: codes 
-      domain: challenge 
-      state: 
-        root: some-root 
-        code: "123456"
-        expires: "30000-12-31T00:00:00+00:00"
-
-  targets:
+  procedures:
     - name: contexts
       domain: person
       context: view-store
     - name: codes
       domain: challenge
       context: view-store
+
+  state:
+    - store:
+        name: codes 
+        domain: challenge 
+      root: some-root 
+      value: 
+        code: "123456"
+        expires: "30000-12-31T00:00:00+00:00"
+
 
 #don't change
 context: command-handler

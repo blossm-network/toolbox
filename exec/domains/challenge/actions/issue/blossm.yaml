@@ -40,13 +40,16 @@ testing:
     - phone: 919
     - phone: false
 
-  prep:
-    - name: phones
-      domain: person
+  state:
+    - store:
+        name: phones
+        domain: person
+      root: some-root
       state: 
         phone: "+19195551144"
+        principle: some-principle
 
-  targets:
+  procedures:
     - name: phones
       domain: person
       context: view-store
