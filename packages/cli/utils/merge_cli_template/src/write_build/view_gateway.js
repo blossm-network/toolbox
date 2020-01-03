@@ -1,7 +1,7 @@
 const yarnInstall = require("./steps/yarn_install");
 const buildImage = require("./steps/build_image");
-const unitTest = require("./steps/unit_tests");
-const baseUnitTest = require("./steps/base_unit_tests");
+const unitTests = require("./steps/unit_tests");
+const baseUnitTests = require("./steps/base_unit_tests");
 const dockerComposeUp = require("./steps/docker_compose_up");
 const dockerComposeProcesses = require("./steps/docker_compose_processes");
 const baseIntegrationTests = require("./steps/base_integration_tests");
@@ -43,8 +43,8 @@ module.exports = ({
   const authUri = `views.${domain}.${service}.${envUriSpecifier}${network}`;
   return [
     yarnInstall,
-    ...(runUnitTests && [unitTest]),
-    ...(runBaseUnitTests && [baseUnitTest]),
+    ...(runUnitTests ? [unitTests] : []),
+    ...(runBaseUnitTests ? [baseUnitTests] : []),
     buildImage({
       extension: imageExtension,
       containerRegistery,
@@ -64,8 +64,8 @@ module.exports = ({
     }),
     dockerComposeUp,
     dockerComposeProcesses,
-    ...(runBaseIntegrationTests && [baseIntegrationTests()]),
-    ...(runIntegrationTests && [integrationTests()]),
+    ...(runBaseIntegrationTests ? [baseIntegrationTests()] : []),
+    ...(runIntegrationTests ? [integrationTests()] : []),
     dockerComposeLogs,
     dockerPush({
       extension: imageExtension,
