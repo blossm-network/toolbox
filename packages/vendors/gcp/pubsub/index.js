@@ -38,7 +38,7 @@ exports.create = async name => {
   if (exists) return;
   await topic.create();
   //eslint-disable-next-line
-  console.log("dun: ", dun);
+  console.log("dun: ");
 };
 
 exports.delete = async name => {
