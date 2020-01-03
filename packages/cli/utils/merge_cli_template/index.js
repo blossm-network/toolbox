@@ -162,7 +162,6 @@ const configure = async (workingDir, configFn, env) => {
   try {
     const config = yaml.parse(fs.readFileSync(configPath, "utf8"));
     const baseConfig = require(baseConfigPath);
-    //Write package.json
     writePackage({ config, baseConfig, workingDir });
     delete config.dependencies;
     delete config.devDependencies;

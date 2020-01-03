@@ -21,8 +21,6 @@ examples:
   - name: some-name
   - name: some-other-name
 
-dependencies: {}
-
 #No need to require @blossm/gcp-pubsub, it's required by default internally.
 devDependencies:
   "localenv": "^0.2.2"

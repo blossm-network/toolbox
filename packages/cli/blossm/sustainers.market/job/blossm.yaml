@@ -11,8 +11,7 @@ domain: some-domain
 
 version: 0
 
-dependencies:
-  "@blossm/job": "*"
+dependencies: {}
 
 devDependencies:
   "mocha": "^6.1.4"

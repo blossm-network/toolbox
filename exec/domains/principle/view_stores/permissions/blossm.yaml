@@ -13,9 +13,20 @@
 
 name: permissions 
 domain: principle
+service: core
 
 schema:
   permissions: [String]
+
+examples:
+  - put:
+      add: "some-permission" 
+    result: 
+      permissions: ["some-permission"]
+  - put:
+      add: "some-other-permission" 
+    result: 
+      permissions: ["some-permissions", "some-other-permission"]
 
 dependencies:
   "@blossm/mongodb-view-store": "*"
@@ -27,8 +38,6 @@ devDependencies:
   "sinon-chai": "^3.3.0"
   "@blossm/request": "*"
   "@blossm/uuid": "*"
-
-service: core
 
 #don't change
 context: view-store

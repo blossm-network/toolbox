@@ -21,6 +21,7 @@ const queryString = (properties, example) => {
 describe("View store base integration tests", () => {
   const example0 = examples[0];
   const example1 = examples[1];
+
   it("should have examples", () => {
     expect(example0).to.exist;
     expect(example1).to.exist;
@@ -28,7 +29,7 @@ describe("View store base integration tests", () => {
   it("should return successfully", async () => {
     const id = uuid();
     const response0 = await request.put(`${url}/${id}`, {
-      body: example0
+      body: example0.put || example0
     });
 
     expect(response0.statusCode).to.equal(204);
@@ -37,12 +38,12 @@ describe("View store base integration tests", () => {
     const parsedBody1 = JSON.parse(response1.body);
 
     expect(response1.statusCode).to.equal(200);
-    for (const key in example0) {
-      expect(parsedBody1[key]).to.equal(example0[key]);
+    for (const key in example0.result || example0) {
+      expect(parsedBody1[key]).to.equal((example0.result || example0)[key]);
     }
 
     const response2 = await request.put(`${url}/${id}`, {
-      body: example1
+      body: example1.put || example1
     });
 
     expect(response2.statusCode).to.equal(204);
@@ -50,19 +51,24 @@ describe("View store base integration tests", () => {
     const response3 = await request.get(`${url}/${id}`);
     const parsedBody3 = JSON.parse(response3.body);
     expect(response3.statusCode).to.equal(200);
-    for (const key in example1) {
-      expect(parsedBody3[key]).to.equal(example1[key]);
+    for (const key in example1.result || example1) {
+      expect(parsedBody3[key]).to.equal((example1.result || example1)[key]);
     }
 
     ///Test indexes
     for (const index of indexes) {
-      const _queryString = queryString(index[0], example1);
+      const _queryString = queryString(
+        index[0],
+        example1.query || example1.result || example1
+      );
       const response4 = await request.get(`${url}?${_queryString}`);
       expect(response4.statusCode).to.equal(200);
 
       const parsedBody4 = JSON.parse(response4.body);
-      for (const key in example1) {
-        expect(parsedBody4[0][key]).to.equal(example1[key]);
+      for (const key in example1.result || example1) {
+        expect(parsedBody4[0][key]).to.equal(
+          (example1.result || example1)[key]
+        );
       }
     }
 
@@ -70,22 +76,22 @@ describe("View store base integration tests", () => {
     const response5 = await request.get(url);
     const parsedBody5 = JSON.parse(response5.body);
     expect(response5.statusCode).to.equal(200);
-    for (const key in example1) {
-      expect(parsedBody5[0][key]).to.equal(example1[key]);
+    for (const key in example1.result || example1) {
+      expect(parsedBody5[0][key]).to.equal((example1.result || example1)[key]);
     }
 
     //Test streaming
     const id2 = uuid();
     const response6 = await request.put(`${url}/${id2}`, {
-      body: example1
+      body: example1.put || example1
     });
     expect(response6.statusCode).to.equal(204);
     let counter = 0;
     await request.stream(`${url}/stream`, data => {
       counter++;
       const parsedData = JSON.parse(data.toString().trim());
-      for (const key in example1) {
-        expect(parsedData[key]).to.equal(example1[key]);
+      for (const key in example1.result || example1) {
+        expect(parsedData[key]).to.equal((example1.result || example1)[key]);
       }
     });
     expect(counter).to.equal(2);
