@@ -8,7 +8,7 @@ const uuid = require("@blossm/uuid");
 
 const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 
-const { examples, indexes } = require("../../config.json");
+const { examples, indexes = [] } = require("../../config.json");
 
 const queryString = (properties, example) => {
   let string = "";
@@ -39,7 +39,9 @@ describe("View store base integration tests", () => {
 
     expect(response1.statusCode).to.equal(200);
     for (const key in example0.result || example0) {
-      expect(parsedBody1[key]).to.equal((example0.result || example0)[key]);
+      expect(parsedBody1[key]).to.deep.equal(
+        (example0.result || example0)[key]
+      );
     }
 
     const response2 = await request.put(`${url}/${id}`, {
@@ -52,7 +54,17 @@ describe("View store base integration tests", () => {
     const parsedBody3 = JSON.parse(response3.body);
     expect(response3.statusCode).to.equal(200);
     for (const key in example1.result || example1) {
-      expect(parsedBody3[key]).to.equal((example1.result || example1)[key]);
+      if (typeof parsedBody3[key] == "object") {
+        expect(parsedBody3._id).to.be.a.string;
+        delete parsedBody3[key]._id;
+        expect(parsedBody3[key]).to.deep.equal(
+          (example1.result || example1)[key]
+        );
+      } else {
+        expect(parsedBody3[key]).to.deep.equal(
+          (example1.result || example1)[key]
+        );
+      }
     }
 
     ///Test indexes
@@ -66,7 +78,7 @@ describe("View store base integration tests", () => {
 
       const parsedBody4 = JSON.parse(response4.body);
       for (const key in example1.result || example1) {
-        expect(parsedBody4[0][key]).to.equal(
+        expect(parsedBody4[0][key]).to.deep.equal(
           (example1.result || example1)[key]
         );
       }
@@ -77,30 +89,38 @@ describe("View store base integration tests", () => {
     const parsedBody5 = JSON.parse(response5.body);
     expect(response5.statusCode).to.equal(200);
     for (const key in example1.result || example1) {
-      expect(parsedBody5[0][key]).to.equal((example1.result || example1)[key]);
+      expect(parsedBody5[0][key]).to.deep.equal(
+        (example1.result || example1)[key]
+      );
     }
 
     //Test streaming
     const id2 = uuid();
     const response6 = await request.put(`${url}/${id2}`, {
-      body: example1.put || example1
+      body: example0.put || example1
     });
     expect(response6.statusCode).to.equal(204);
+    const response7 = await request.put(`${url}/${id2}`, {
+      body: example1.put || example1
+    });
+    expect(response7.statusCode).to.equal(204);
     let counter = 0;
     await request.stream(`${url}/stream`, data => {
       counter++;
       const parsedData = JSON.parse(data.toString().trim());
       for (const key in example1.result || example1) {
-        expect(parsedData[key]).to.equal((example1.result || example1)[key]);
+        expect(parsedData[key]).to.deep.equal(
+          (example1.result || example1)[key]
+        );
       }
     });
     expect(counter).to.equal(2);
 
     //Test delete
-    const response7 = await request.delete(`${url}/${id}`);
-    const parsedBody7 = JSON.parse(response7.body);
-    expect(response7.statusCode).to.equal(200);
-    expect(parsedBody7.deletedCount).to.equal(1);
+    const response8 = await request.delete(`${url}/${id}`);
+    const parsedBody8 = JSON.parse(response8.body);
+    expect(response8.statusCode).to.equal(200);
+    expect(parsedBody8.deletedCount).to.equal(1);
   });
 
   it("should return an error if incorrect params", async () => {

@@ -22,11 +22,14 @@ examples:
   - put:
       add: "some-permission" 
     result: 
-      permissions: ["some-permission"]
+      permissions: 
+        - "some-permission"
   - put:
       add: "some-other-permission" 
     result: 
-      permissions: ["some-permissions", "some-other-permission"]
+      permissions: 
+        - "some-permission"
+        - "some-other-permission"
 
 dependencies:
   "@blossm/mongodb-view-store": "*"

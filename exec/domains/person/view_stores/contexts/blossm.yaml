@@ -14,12 +14,24 @@ schema:
     default: []
 
 examples:
-  - contexts:
-      type: organization
-      root: some-root
-  - contexts:
-      type: home
-      root: some-other-root
+  - put:
+      add:
+        type: some-type 
+        root: some-root
+    result:
+      contexts:
+        - type: some-type 
+          root: some-root
+  - put:
+      add:
+        type: some-other-type 
+        root: some-other-root
+    result:
+      contexts:
+        - type: some-type 
+          root: some-root
+        - type: some-other-type 
+          root: some-other-root
 
 devDependencies:
   "localenv": "^0.2.2"

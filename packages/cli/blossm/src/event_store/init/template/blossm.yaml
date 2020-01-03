@@ -17,6 +17,7 @@ service: core
 schema:
   name: String
 
+#must add at least 2 examples
 examples:
   - name: some-name
   - name: some-other-name

@@ -6,9 +6,9 @@ schema:
   principle: String
 
 examples:
-  - phone: +19195551144
+  - phone: "19195551144"
     principle: some-root
-  - phone: +19195554411
+  - phone: "19195554411"
     principle: some-other-root
 
 indexes: [[{ phone: 1 }]]

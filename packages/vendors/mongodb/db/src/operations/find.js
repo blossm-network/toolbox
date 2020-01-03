@@ -7,9 +7,13 @@ module.exports = ({
   pageSize = null,
   options = null
 }) =>
-  store.find(query, select, {
-    ...(skip && { skip }),
-    ...(sort && { sort }),
-    ...(pageSize && { limit: pageSize }),
-    ...options
-  });
+  store.find(
+    query,
+    { ...select, _id: 0 },
+    {
+      ...(skip && { skip }),
+      ...(sort && { sort }),
+      ...(pageSize && { limit: pageSize }),
+      ...options
+    }
+  );

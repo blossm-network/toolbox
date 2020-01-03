@@ -18,8 +18,10 @@ service: core
 schema:
   name: String
 
+#optional. Remove if querying only by root, created date, or modified date 
 indexes: [[{ name: 1 }]]
 
+#must add at least 2 examples
 examples:
   - name: some-name
   - name: some-other-name
