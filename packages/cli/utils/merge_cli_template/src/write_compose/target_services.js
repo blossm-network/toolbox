@@ -59,7 +59,7 @@ const targets = ({ config, domain }) => {
     case "command-handler":
       return [
         ...config.targets,
-        ...eventStoreTargets({ config }),
+        ...eventStoreTargets({ targets: config.targets }),
         { domain, context: "event-store" }
       ];
     case "command-gateway": {
