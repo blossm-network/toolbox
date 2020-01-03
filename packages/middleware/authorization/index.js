@@ -9,6 +9,15 @@ module.exports = ({
   priviledges
 }) =>
   asyncHandler(async (req, _, next) => {
+    //eslint-disable-next-line
+    console.log("authorizing: ", {
+      domain,
+      service,
+      network,
+      permissionsLookupFn,
+      priviledges,
+      body: req.body
+    });
     const policy = await deps.authorize({
       path: req.path,
       claims: req.claims,
@@ -20,6 +29,8 @@ module.exports = ({
       ...(req.body.root && { root: req.body.root })
     });
 
+    //eslint-disable-next-line
+    console.log("policy: ", policy);
     req.context = policy.context;
     next();
   });
