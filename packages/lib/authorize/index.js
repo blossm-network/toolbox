@@ -13,19 +13,11 @@ module.exports = async ({
   network,
   service
 }) => {
-  //eslint-disable-next-line
-  console.log("context: ", { context, network, service });
   //Do the scopes and the context allow the provided service, network, domain, and action combo?
   if (context.network !== network || context.service !== service)
     throw deps.invalidCredentialsError.tokenInvalid();
 
   const permissions = await permissionsLookupFn({ principle, context });
-
-  //eslint-disable-next-line
-  console.log("permsss: ", { permissions });
-
-  //eslint-disable-next-line
-  console.log("privs: ", { priviledges });
 
   const satisfiedPermissions = permissions.filter(permission => {
     const [

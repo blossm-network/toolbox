@@ -13,8 +13,6 @@ module.exports = gateway({
       domain: "principle"
     }).read({ root: principle });
 
-    //eslint-disable-next-line
-    console.log("perms: ", permissions);
     return permissions || [];
   },
   verifyFn: ({ key }) =>

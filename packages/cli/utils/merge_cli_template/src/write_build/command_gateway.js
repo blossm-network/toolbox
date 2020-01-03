@@ -65,7 +65,7 @@ module.exports = ({
     dockerComposeUp,
     dockerComposeProcesses,
     ...(runBaseIntegrationTests ? [baseIntegrationTests()] : []),
-    ...(runIntegrationTests ? [integrationTests({ strict: false })] : []),
+    ...(runIntegrationTests ? [integrationTests()] : []),
     dockerComposeLogs,
     dockerPush({
       extension: imageExtension,

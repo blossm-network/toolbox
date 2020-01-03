@@ -44,8 +44,12 @@ describe("Command gateway integration tests", () => {
           Authorization: `Bearer ${token}`
         }
       });
+      //eslint-disable-next-line
+      console.log("body: ", { body: JSON.parse(response.body) });
       expect(response.statusCode).to.equal(200);
       const { token: newToken } = JSON.parse(response.body);
+      //eslint-disable-next-line
+      console.log("dun answering: ", { token });
       return { root, token: newToken };
     };
     const { token, root } = await getToken({
