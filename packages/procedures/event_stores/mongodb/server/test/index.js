@@ -119,7 +119,7 @@ describe("Mongodb event store", () => {
       schema: {
         value: {
           headers: {
-            root: { type: String, required: true },
+            root: { type: String, required: true, unique: true },
             modified: { type: Number, required: true },
             events: { type: Number, required: true }
           },
@@ -241,7 +241,7 @@ describe("Mongodb event store", () => {
       schema: {
         value: {
           headers: {
-            root: { type: String, required: true },
+            root: { type: String, required: true, unique: true },
             modified: { type: Number, required: true },
             events: { type: Number, required: true }
           },
@@ -327,7 +327,7 @@ describe("Mongodb event store", () => {
       schema: {
         value: {
           headers: {
-            root: { type: String, required: true },
+            root: { type: String, required: true, unique: true },
             modified: { type: Number, required: true },
             events: { type: Number, required: true }
           },

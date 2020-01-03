@@ -30,10 +30,17 @@ devDependencies:
 
 testing:
   examples:
-    - payload:
-        phone: "919 555 1144"
-      normalized:
-        phone: "+19195551144"
+    ok:
+      - payload:
+          phone: "919 555 1144"
+        normalized:
+          phone: "+19195551144"
+    bad:
+      - payload:
+          phone: "919 555 1133"
+        normalized:
+          phone: "+19195551133"
+        code: 409
 
   invalid:
     - phone: "919"
@@ -41,13 +48,14 @@ testing:
     - phone: false
 
   state:
-    - store:
-        name: phones
-        domain: person
-      root: some-root
-      value: 
-        phone: "+19195551144"
-        principle: some-principle
+    ok:
+      - store:
+          name: phones
+          domain: person
+        root: some-root
+        value: 
+          phone: "+19195551144"
+          principle: some-principle
 
   procedures:
     - name: phones

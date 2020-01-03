@@ -3,7 +3,7 @@ module.exports = function(key, values) {
     headers: {
       root: key,
       modified: 0,
-      events: 0
+      version: 0
     },
     state: {}
   };
@@ -13,7 +13,7 @@ module.exports = function(key, values) {
       ...reduced.state,
       ...value.state
     };
-    reduced.headers.events += value.headers.events;
+    reduced.headers.version += value.headers.version;
     reduced.headers.modified = value.headers.modified;
     return reduced;
   };

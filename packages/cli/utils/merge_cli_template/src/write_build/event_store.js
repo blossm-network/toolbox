@@ -1,10 +1,8 @@
 const yarnInstall = require("./steps/yarn_install");
-const unitTest = require("./steps/unit_tests");
 const buildImage = require("./steps/build_image");
 const dockerComposeUp = require("./steps/docker_compose_up");
 const dockerComposeProcesses = require("./steps/docker_compose_processes");
 const baseIntegrationTests = require("./steps/base_integration_tests");
-const integrationTests = require("./steps/integration_tests");
 const dockerComposeLogs = require("./steps/docker_compose_logs");
 const dockerPush = require("./steps/docker_push");
 const deploy = require("./steps/deploy");
@@ -42,7 +40,6 @@ module.exports = ({
 }) => {
   return [
     yarnInstall,
-    unitTest,
     buildImage({
       extension: imageExtension,
       containerRegistery,
@@ -63,7 +60,6 @@ module.exports = ({
     dockerComposeUp,
     dockerComposeProcesses,
     baseIntegrationTests(),
-    integrationTests(),
     dockerComposeLogs,
     dockerPush({
       extension: imageExtension,

@@ -33,10 +33,17 @@ devDependencies:
 
 testing:
   examples:
-    - payload:
-        code: "123456"
-      normalized:
-        code: "123456"
+    ok:
+      - payload:
+          code: "123456"
+        normalized:
+          code: "123456"
+    bad:
+      - payload:
+          code: "223456"
+        normalized:
+          code: "223456"
+        code: 409
 
   invalid: bad
 
@@ -55,13 +62,23 @@ testing:
       context: view-store
 
   state:
-    - store:
-        name: codes 
-        domain: challenge 
-      root: some-root 
-      value: 
-        code: "123456"
-        expires: "30000-12-31T00:00:00+00:00"
+    ok:
+      - store:
+          name: codes 
+          domain: challenge 
+        root: some-root 
+        value: 
+          code: "123456"
+          expires: "30000-12-31T00:00:00+00:00"
+    bad:
+      - store:
+          name: codes 
+          domain: challenge 
+        root: some-root 
+        value: 
+          code: "123456"
+          expires: "2019-12-31T00:00:00+00:00"
+        code: 400
 
   event:
     answered:

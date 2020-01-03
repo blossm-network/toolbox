@@ -13,17 +13,17 @@ const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 const { testing } = require("../../config.json");
 
 describe("Command handler integration tests", () => {
-  const example0 = testing.examples[0];
+  const okExample0 = testing.examples.ok[0];
 
   before(async () => await Promise.all(testing.topics.map(t => create(t))));
   after(async () => await Promise.all(testing.topics.map(t => del(t))));
 
   it("should have at least one example", async () => {
-    expect(example0).to.exist;
+    expect(okExample0).to.exist;
   });
   it("should return successfully", async () => {
-    if (testing.state) {
-      for (const state of testing.state) {
+    if (testing.state && testing.state.ok) {
+      for (const state of testing.state.ok) {
         await viewStore({
           name: state.store.name,
           domain: state.store.domain
@@ -41,7 +41,7 @@ describe("Command handler integration tests", () => {
           id: uuid()
         },
         context: testing.context,
-        payload: example0.payload
+        payload: okExample0.payload
       }
     });
 
@@ -71,6 +71,48 @@ describe("Command handler integration tests", () => {
           testing.event[property]
         );
     }
+  });
+  it("should return an error if payload is bad", async () => {
+    if (!testing.state || testing.examples.bad) return;
+
+    for (const state of testing.state.bad.reverse()) {
+      await viewStore({
+        name: state.store.name,
+        domain: state.store.domain
+      }).update(state.root, state.value);
+      const response = await request.post(url, {
+        body: {
+          headers: {
+            issued: stringDate(),
+            id: uuid()
+          },
+          payload: okExample0.payload
+        }
+      });
+
+      expect(response.statusCode).to.equal(state.code);
+    }
+  });
+  it("should return an error if bad state", async () => {
+    if (!testing.state.bad) return;
+    const parallelFns = [];
+    for (const badExample of testing.examples.bad || []) {
+      parallelFns.push(async () => {
+        const response = await request.post(url, {
+          body: {
+            headers: {
+              issued: stringDate(),
+              id: uuid()
+            },
+            payload: badExample.payload
+          }
+        });
+
+        expect(response.statusCode).to.equal(badExample.code);
+      });
+    }
+
+    await Promise.all(parallelFns);
   });
   it("should return an error if incorrect params", async () => {
     const response = await request.post(url, {

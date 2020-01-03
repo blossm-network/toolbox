@@ -26,13 +26,16 @@ const checkInvalidNestedObject = async ({ property, invalid, example }) => {
 };
 
 describe("Command handler store validator tests", () => {
-  const example0 = testing.examples[0];
+  const example0 = testing.examples.ok[0];
   it("should have at least one example", async () => {
     expect(example0).to.exist;
   });
   it("should handle correct payload correctly", async () => {
     try {
-      for (const { payload } of testing.examples) {
+      for (const { payload } of [
+        ...testing.examples.ok,
+        ...testing.examples.bad
+      ]) {
         await validate(payload);
       }
     } catch (e) {
@@ -41,7 +44,7 @@ describe("Command handler store validator tests", () => {
     }
   });
 
-  it("should throw if bad param is passed", async () => {
+  it("should throw if invalid param is passed", async () => {
     for (const value of testing.invalid) {
       for (const property in value) {
         if (typeof property == "object")

@@ -5,7 +5,6 @@ const buildImage = require("./steps/build_image");
 const dockerComposeUp = require("./steps/docker_compose_up");
 const dockerComposeProcesses = require("./steps/docker_compose_processes");
 const baseIntegrationTests = require("./steps/base_integration_tests");
-const integrationTests = require("./steps/integration_tests");
 const dockerComposeLogs = require("./steps/docker_compose_logs");
 const dockerPush = require("./steps/docker_push");
 const writeEnv = require("./steps/write_env");
@@ -65,7 +64,6 @@ module.exports = ({
     dockerComposeUp,
     dockerComposeProcesses,
     baseIntegrationTests(),
-    integrationTests(),
     dockerComposeLogs,
     dockerPush({
       extension: imageExtension,

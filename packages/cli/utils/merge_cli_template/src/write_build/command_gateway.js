@@ -1,5 +1,4 @@
 const yarnInstall = require("./steps/yarn_install");
-const unitTest = require("./steps/unit_tests");
 const buildImage = require("./steps/build_image");
 const dockerComposeUp = require("./steps/docker_compose_up");
 const dockerComposeProcesses = require("./steps/docker_compose_processes");
@@ -38,7 +37,6 @@ module.exports = ({
   const authUri = `command.${domain}.${service}.${envUriSpecifier}${network}`;
   return [
     yarnInstall,
-    unitTest,
     buildImage({
       extension: imageExtension,
       containerRegistery,

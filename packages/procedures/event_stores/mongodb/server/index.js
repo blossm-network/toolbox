@@ -80,7 +80,7 @@ const aggregateStore = async ({ schema }) => {
     schema: {
       value: {
         headers: {
-          root: { type: String, required: true },
+          root: { type: String, required: true, unique: true },
           modified: { type: Number, required: true },
           events: { type: Number, required: true }
         },
