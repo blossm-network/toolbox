@@ -49,8 +49,10 @@ describe("Command handler integration tests", () => {
 
     const parsedBody = JSON.parse(response.body);
 
-    for (const value of testing.response || []) {
+    for (const value in testing.response || []) {
       expect(parsedBody[value]).to.exist;
+      if (testing.response[value])
+        expect(parsedBody[value]).to.deep.equal(testing.response[value]);
     }
 
     expect(parsedBody.root).to.exist;
