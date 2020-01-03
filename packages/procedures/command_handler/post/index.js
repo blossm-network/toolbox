@@ -5,20 +5,17 @@ module.exports = ({ version, mainFn, validateFn, normalizeFn }) => {
     if (validateFn) await validateFn(req.body.payload);
     if (normalizeFn) req.body.payload = await normalizeFn(req.body.payload);
 
-    //Add req.body.context as a fallback for internal testing without a gateway.
-    const context = req.body.context;
-
     const { payload, root = req.body.root, response } = await mainFn({
       payload: req.body.payload,
       ...(req.body.root && { root: req.body.root }),
-      context
+      context: req.body.context
     });
 
     const event = await deps.createEvent({
       ...(root && { root }),
       payload,
       trace: req.body.headers.trace,
-      context,
+      context: req.body.context,
       version,
       command: {
         id: req.body.headers.id,
@@ -31,7 +28,7 @@ module.exports = ({ version, mainFn, validateFn, normalizeFn }) => {
     });
     await deps
       .eventStore({ domain: process.env.DOMAIN })
-      .set({ context, tokenFn: deps.gcpToken })
+      .set({ context: req.body.context, tokenFn: deps.gcpToken })
       .add(event);
 
     res.status(200).send({
