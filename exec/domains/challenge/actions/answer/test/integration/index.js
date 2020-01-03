@@ -48,19 +48,4 @@ describe("Command handler store integration tests", () => {
     expect(token).to.exist;
     expect(root).to.exist;
   });
-  it("should return an error if incorrect params", async () => {
-    const code = { a: 1 };
-    const response = await request.post(url, {
-      body: {
-        headers: {
-          issued: stringDate(),
-          id: uuid()
-        },
-        payload: {
-          code
-        }
-      }
-    });
-    expect(response.statusCode).to.equal(409);
-  });
 });

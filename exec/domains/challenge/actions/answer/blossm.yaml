@@ -1,9 +1,16 @@
 action: answer
 domain: challenge
+version: 0
+
+examples:
+  - payload:
+      code: 123456
+    normalized:
+      code: 123456
+
+invalid: bad
 
 targets:
-  - domain: challenge
-    context: event-store
   - name: contexts
     domain: person
     context: view-store
@@ -20,10 +27,7 @@ targets:
     domain: principle
     context: view-store
 
-version: 0
-
 dependencies:
-  "@blossm/command-handler": "*"
   "@blossm/validator": "*"
   "@blossm/duration-consts": "*"
   "@blossm/errors": "*"

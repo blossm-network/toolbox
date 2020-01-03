@@ -1,5 +1,6 @@
 name: contexts
 domain: person
+service: core
 
 schema:
   contexts:
@@ -12,8 +13,13 @@ schema:
           required: true
     default: []
 
-dependencies:
-  "@blossm/mongodb-view-store": "*"
+examples:
+  - contexts:
+      type: organization
+      root: some-root
+  - contexts:
+      type: home
+      root: some-other-root
 
 devDependencies:
   "localenv": "^0.2.2"
@@ -22,8 +28,6 @@ devDependencies:
   "sinon-chai": "^3.3.0"
   "@blossm/request": "*"
   "@blossm/uuid": "*"
-
-service: core
 
 #don't change
 context: view-store

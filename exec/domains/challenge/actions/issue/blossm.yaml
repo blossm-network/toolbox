@@ -1,5 +1,15 @@
 action: issue
 domain: challenge
+version: 0
+
+examples:
+  - payload:
+      phone: 919 555 1144
+    normalized:
+      phone: "+19195551144"
+
+invalid:
+  phone: 919
 
 targets:
   - name: phones
@@ -8,13 +18,8 @@ targets:
   - name: codes
     domain: challenge
     context: view-store
-  - domain: challenge
-    context: event-store
-
-version: 0
 
 dependencies:
-  "@blossm/command-handler": "*"
   "@blossm/validator": "*"
   "@blossm/phone-number": "*"
   "@blossm/jwt": "*"

@@ -1,13 +1,14 @@
 domain: person
+service: core
 
 schema:
   name: String
 
-indexes: [[{ name: 1 }]]
+examples:
+  - name: Jo
+  - name: Tyler
 
-dependencies:
-  "@blossm/mongodb-event-store": "*"
-  "@blossm/gcp-pubsub": "*"
+indexes: [[{ name: 1 }]]
 
 devDependencies:
   "localenv": "^0.2.2"
@@ -15,8 +16,6 @@ devDependencies:
   "chai": "^4.2.0"
   "@blossm/request": "*"
   "@blossm/uuid": "*"
-
-service: core
 
 #don't change
 context: event-store

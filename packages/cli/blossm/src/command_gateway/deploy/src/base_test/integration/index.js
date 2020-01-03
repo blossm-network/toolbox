@@ -28,49 +28,59 @@ describe("Command gateway integration tests", () => {
 
     const { token } = await getToken({ permissions: requiredPermissions });
 
+    const parallelFns = [];
     for (const command of commands) {
-      const response0 = await request.post(`${url}/${command.action}`, {
-        body: {
-          headers: {
-            issued: stringDate()
+      parallelFns.push(async () => {
+        const response0 = await request.post(`${url}/${command.action}`, {
+          body: {
+            headers: {
+              issued: stringDate()
+            },
+            payload: {}
           },
-          payload: {}
-        },
-        ...(command.priviledges != "none" && {
-          headers: {
-            Authorization: `Bearer ${token}`
+          ...(command.priviledges != "none" && {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          })
+        });
+
+        expect(response0.statusCode).to.not.equal(401);
+        expect(response0.statusCode).to.be.lessThan(500);
+      });
+
+      if (command.priviledges == "none") continue;
+
+      parallelFns.push(async () => {
+        const response1 = await request.post(`${url}/${command.action}`, {
+          body: {
+            headers: {
+              issued: stringDate()
+            },
+            payload: {}
           }
-        })
+        });
+
+        expect(response1.statusCode).to.equal(401);
       });
 
-      expect(response0.statusCode).to.not.equal(401);
-      expect(response0.statusCode).to.be.lessThan(500);
-
-      if (command.priviledges == "none") return;
-      const response1 = await request.post(`${url}/${command.action}`, {
-        body: {
-          headers: {
-            issued: stringDate()
+      parallelFns.push(async () => {
+        const response2 = await request.post(`${url}/${command.action}`, {
+          body: {
+            headers: {
+              issued: stringDate()
+            },
+            payload: {}
           },
-          payload: {}
-        }
-      });
-
-      expect(response1.statusCode).to.equal(401);
-
-      const response2 = await request.post(`${url}/${command.action}`, {
-        body: {
           headers: {
-            issued: stringDate()
-          },
-          payload: {}
-        },
-        headers: {
-          Authorization: "Bearer bogusHeader.bogusPayload.bogusSignature"
-        }
-      });
+            Authorization: "Bearer bogusHeader.bogusPayload.bogusSignature"
+          }
+        });
 
-      expect(response2.statusCode).to.equal(401);
+        expect(response2.statusCode).to.equal(401);
+      });
     }
+
+    await Promise.all(parallelFns);
   });
 });

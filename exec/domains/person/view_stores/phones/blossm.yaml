@@ -5,10 +5,13 @@ schema:
   phone: String
   principle: String
 
-indexes: [[{ phone: 1 }]]
+examples:
+  - phone: +19195551144
+    principle: some-root
+  - phone: +19195554411
+    principle: some-other-root
 
-dependencies:
-  "@blossm/mongodb-view-store": "*"
+indexes: [[{ phone: 1 }]]
 
 devDependencies:
   "localenv": "^0.2.2"

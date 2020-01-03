@@ -1,7 +1,6 @@
 require("localenv");
 const { expect } = require("chai");
 const { string: stringDate } = require("@blossm/datetime");
-const eventStore = require("@blossm/event-store-rpc");
 const getToken = require("@blossm/get-token");
 const { create, delete: del } = require("@blossm/gcp-pubsub");
 
@@ -60,26 +59,5 @@ describe("Command gateway integration tests", () => {
 
     expect(root).to.exist;
     expect(token).to.exist;
-
-    const aggregate = await eventStore({
-      domain: "challenge"
-    }).aggregate(root);
-
-    expect(aggregate.headers.root).to.equal(root);
-    expect(aggregate.state.answered).to.exist;
-  });
-  it("should return an error if incorrect params", async () => {
-    const phone = { a: 1 };
-    const response = await request.post(`${url}/issue`, {
-      body: {
-        headers: {
-          issued: stringDate()
-        },
-        payload: {
-          phone
-        }
-      }
-    });
-    expect(response.statusCode).to.equal(409);
   });
 });

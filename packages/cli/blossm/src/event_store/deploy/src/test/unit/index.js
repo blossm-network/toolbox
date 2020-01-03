@@ -1,5 +1,6 @@
 const { expect } = require("chai");
-describe("View store integration tests", () => {
+
+describe("Event store tests", () => {
   it("Nothing to test", async () => {
     expect(1).to.equal(1);
   });

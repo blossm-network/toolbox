@@ -49,30 +49,5 @@ describe("Command handler store integration tests", () => {
 
     expect(aggregate.headers.root).to.equal(parsedBody.root);
     expect(aggregate.state.phone).to.equal("+12513332037");
-
-    const { deletedCount } = await deps
-      .viewStore({
-        name: "phones",
-        domain: "person"
-      })
-      .delete(personRoot);
-
-    expect(deletedCount).to.equal(1);
-  });
-  it("should return an error if incorrect params", async () => {
-    const phone = 3;
-    const response = await request.post(url, {
-      body: {
-        headers: {
-          issued: stringDate(),
-          id: uuid()
-        },
-        payload: {
-          phone
-        }
-      }
-    });
-
-    expect(response.statusCode).to.equal(409);
   });
 });

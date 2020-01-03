@@ -141,14 +141,16 @@ const writePackage = ({ config, baseConfig, workingDir }) => {
         "mocha --recursive base_test/integration --timeout 20000",
       "test:integration": "mocha --recursive test/integration --timeout 20000"
     },
-    dependencies: { ...baseConfig.dependencies, ...config.dependencies },
+    dependencies: {
+      ...baseConfig.dependencies,
+      ...(config.dependencies || {})
+    },
     devDependencies: {
       ...baseConfig.devDependencies,
       ...config.devDependencies
     }
   };
-  //eslint-disable-next-line no-console
-  console.log("package: ", package);
+
   const packagePath = path.resolve(workingDir, "package.json");
   fs.writeFileSync(packagePath, JSON.stringify(package));
 };
@@ -157,17 +159,9 @@ const configure = async (workingDir, configFn, env) => {
   const configPath = path.resolve(workingDir, "blossm.yaml");
   const baseConfigPath = path.resolve(workingDir, "base_config.json");
 
-  //TODO
-  //eslint-disable-next-line no-console
-  console.log("base config path: ", baseConfigPath);
-
   try {
     const config = yaml.parse(fs.readFileSync(configPath, "utf8"));
-    //eslint-disable-next-line no-console
-    console.log("config: ", config);
     const baseConfig = require(baseConfigPath);
-    //eslint-disable-next-line no-console
-    console.log("base config: ", baseConfig);
     //Write package.json
     writePackage({ config, baseConfig, workingDir });
     delete config.dependencies;

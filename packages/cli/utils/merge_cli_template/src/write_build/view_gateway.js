@@ -58,7 +58,7 @@ module.exports = ({
     }),
     dockerComposeUp,
     dockerComposeProcesses,
-    baseIntegrationTests({ strict: false }),
+    baseIntegrationTests(),
     integrationTests(),
     dockerComposeLogs,
     dockerPush({
