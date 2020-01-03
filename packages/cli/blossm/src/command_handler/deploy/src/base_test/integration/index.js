@@ -4,12 +4,15 @@ const { string: stringDate } = require("@blossm/datetime");
 const eventStore = require("@blossm/event-store-rpc");
 const uuid = require("@blossm/uuid");
 const { create, delete: del } = require("@blossm/gcp-pubsub");
+const viewStore = require("@blossm/view-store-rpc");
 
 const request = require("@blossm/request");
 
 const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 
 const { examples, topics, invalid } = require("./../../config.json");
+
+const { prep } = require("../../config.json");
 
 describe("Command handler integration tests", () => {
   const example0 = examples[0];
@@ -21,6 +24,16 @@ describe("Command handler integration tests", () => {
     expect(example0).to.exist;
   });
   it("should return successfully", async () => {
+    if (prep) {
+      for (const operation of prep) {
+        //eslint-disable-next-line
+        console.log("operation: ", operation);
+        await viewStore({
+          name: operation.name,
+          domain: operation.domain
+        }).create(operation.state);
+      }
+    }
     const response = await request.post(url, {
       body: {
         headers: {

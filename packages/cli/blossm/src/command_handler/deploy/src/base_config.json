@@ -15,6 +15,7 @@
     "@blossm/event-store-rpc": "*",
     "@blossm/request": "*",
     "@blossm/gcp-pubsub": "*",
-    "@blossm/uuid": "*"
+    "@blossm/uuid": "*",
+    "@blossm/view-store-rpc": "*"
   }
 }

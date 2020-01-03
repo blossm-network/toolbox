@@ -131,6 +131,19 @@ const writeConfig = (config, workingDir) => {
 };
 
 const writePackage = ({ config, baseConfig, workingDir }) => {
+  const dependencies = {
+    ...baseConfig.dependencies,
+    ...(config.dependencies || {})
+  };
+  const devDependencies = {
+    ...baseConfig.devDependencies,
+    ...config.devDependencies
+  };
+
+  for (const key in dependencies) {
+    if (key in devDependencies) delete devDependencies[key];
+  }
+
   const package = {
     main: "index.js",
     scripts: {
@@ -141,14 +154,8 @@ const writePackage = ({ config, baseConfig, workingDir }) => {
         "mocha --recursive base_test/integration --timeout 20000",
       "test:integration": "mocha --recursive test/integration --timeout 20000"
     },
-    dependencies: {
-      ...baseConfig.dependencies,
-      ...(config.dependencies || {})
-    },
-    devDependencies: {
-      ...baseConfig.devDependencies,
-      ...config.devDependencies
-    }
+    dependencies,
+    devDependencies
   };
 
   const packagePath = path.resolve(workingDir, "package.json");

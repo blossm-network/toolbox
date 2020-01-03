@@ -20,6 +20,8 @@ examples:
 invalid:
   name: 3
 
+prep:
+
 targets:
 
 devDependencies:

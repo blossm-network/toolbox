@@ -1,15 +1,24 @@
 action: issue
 domain: challenge
+service: core
 version: 0
 
 examples:
   - payload:
-      phone: 919 555 1144
+      phone: "919 555 1144"
     normalized:
       phone: "+19195551144"
 
 invalid:
-  phone: 919
+  - phone: "919"
+  - phone: 919
+  - phone: false
+
+prep:
+  name: phones
+  domain: person
+  state: 
+    phone: "+19195551144"
 
 targets:
   - name: phones
@@ -43,8 +52,6 @@ devDependencies:
   "@blossm/request": "*"
   "@blossm/event-store-rpc": "*"
   "@blossm/gcp-pubsub": "*"
-
-service: core
 
 #don't change
 context: command-handler
