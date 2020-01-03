@@ -22,8 +22,6 @@ invalid:
 
 targets:
 
-dependencies: {}
-
 devDependencies:
   "localenv": "^0.2.2"
   "mocha": "^6.1.4"
