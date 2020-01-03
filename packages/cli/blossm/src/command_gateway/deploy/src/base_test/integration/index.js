@@ -10,8 +10,20 @@ const { commands, testing } = require("./../../config.json");
 const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 
 describe("Command gateway integration tests", () => {
-  before(async () => await Promise.all(testing.topics.map(t => create(t))));
-  after(async () => await Promise.all(testing.topics.map(t => del(t))));
+  before(async () => {
+    //eslint-disable-next-line
+    console.log("before 1");
+    await Promise.all(testing.topics.map(t => create(t)));
+    //eslint-disable-next-line
+    console.log("before 2");
+  });
+  after(async () => {
+    //eslint-disable-next-line
+    console.log("after 1");
+    await Promise.all(testing.topics.map(t => del(t)));
+    //eslint-disable-next-line
+    console.log("after 2");
+  });
   it("should return successfully", async () => {
     const requiredPermissions = commands.reduce((permissions, command) => {
       return command.priviledges == "none"
