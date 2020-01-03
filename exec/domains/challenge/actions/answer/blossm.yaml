@@ -63,6 +63,9 @@ testing:
         code: "123456"
         expires: "30000-12-31T00:00:00+00:00"
 
+  event:
+    answered:
+
 
 #don't change
 context: command-handler

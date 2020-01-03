@@ -38,5 +38,7 @@ testing:
 
   procedures:
 
+  response:
+
 #don't change
 context: command-handler

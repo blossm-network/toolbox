@@ -24,23 +24,20 @@ describe("Command handler integration tests", () => {
   it("should return successfully", async () => {
     if (testing.state) {
       for (const state of testing.state) {
-        //eslint-disable-next-line
-        console.log("op: ", operation);
         await viewStore({
           name: state.store.name,
           domain: state.store.domain
-        }).update(state.store.root, state.value);
+        }).update(state.root, state.value);
       }
     }
-
-    //eslint-disable-next-line
-    console.log("url: ", url);
 
     const response = await request.post(url, {
       body: {
         root: testing.root,
         headers: {
+          //In non-test environments, the command issuer sets the issued date.
           issued: stringDate(),
+          //In non-test environments, a gateway adds an id.
           id: uuid()
         },
         context: testing.context,
@@ -50,17 +47,27 @@ describe("Command handler integration tests", () => {
 
     expect(response.statusCode).to.equal(200);
 
-    const responseRoot = JSON.parse(response.body).root;
+    const parsedBody = JSON.parse(response.body);
 
-    if (testing.root) expect(responseRoot).to.equal(testing.root);
+    for (const value of testing.response || []) {
+      expect(parsedBody[value]).to.exist;
+    }
+
+    expect(parsedBody.root).to.exist;
+
+    if (testing.root) expect(parsedBody.root).to.equal(testing.root);
 
     const aggregate = await eventStore({
       domain: process.env.DOMAIN
-    }).aggregate(responseRoot);
+    }).aggregate(parsedBody.root);
 
-    expect(aggregate.headers.root).to.equal(responseRoot);
-    for (const property in example0.payload) {
-      expect(aggregate.state[property]).to.equal(example0.normalized[property]);
+    expect(aggregate.headers.root).to.equal(parsedBody.root);
+    for (const property in testing.event) {
+      expect(aggregate.state[property]).to.exist;
+      if (testing.event[property])
+        expect(aggregate.state[property]).to.deep.equal(
+          testing.event[property]
+        );
     }
   });
   it("should return an error if incorrect params", async () => {

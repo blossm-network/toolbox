@@ -3,9 +3,10 @@ service: core
 
 schema:
   code: String
-  issued: String
   principle: String
   phone: String
+  issued: String
+  answered: String
 
 devDependencies:
   "localenv": "^0.2.2"

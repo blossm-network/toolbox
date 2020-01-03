@@ -45,7 +45,7 @@ testing:
         name: phones
         domain: person
       root: some-root
-      state: 
+      value: 
         phone: "+19195551144"
         principle: some-principle
 
@@ -56,6 +56,12 @@ testing:
     - name: codes
       domain: challenge
       context: view-store
+
+  event:
+    code:
+    issued:
+    phone: "+19195551144"
+    principle: some-principle
 
 #don't change
 context: command-handler
