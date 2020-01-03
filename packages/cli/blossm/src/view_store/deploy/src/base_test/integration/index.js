@@ -54,17 +54,9 @@ describe("View store base integration tests", () => {
     const parsedBody3 = JSON.parse(response3.body);
     expect(response3.statusCode).to.equal(200);
     for (const key in example1.result || example1) {
-      if (typeof parsedBody3[key] == "object") {
-        expect(parsedBody3._id).to.be.a.string;
-        delete parsedBody3[key]._id;
-        expect(parsedBody3[key]).to.deep.equal(
-          (example1.result || example1)[key]
-        );
-      } else {
-        expect(parsedBody3[key]).to.deep.equal(
-          (example1.result || example1)[key]
-        );
-      }
+      expect(parsedBody3[key]).to.deep.equal(
+        (example1.result || example1)[key]
+      );
     }
 
     ///Test indexes

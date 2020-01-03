@@ -9,7 +9,7 @@ let clock;
 
 const now = new Date();
 
-const schema = { a: 1 };
+const schema = { a: 1, b: { c: 2 } };
 const indexes = ["some-index"];
 
 const protocol = "some-db-protocol";
@@ -102,6 +102,10 @@ describe("View store", () => {
       name: `${domain}.${name}`,
       schema: {
         a: 1,
+        b: {
+          c: 2,
+          _id: false
+        },
         id: { type: String, required: true, unique: true },
         created: {
           type: String,
@@ -216,6 +220,106 @@ describe("View store", () => {
     await mongodbViewStore();
     expect(storeFake).to.have.been.calledOnce;
   });
+  it("should call with the correct params with no id's in nested objs", async () => {
+    const mongodbViewStore = require("..");
+    const store = "some-store";
+    const storeFake = fake.returns(store);
+    const findOneFake = fake.returns(foundObj);
+
+    const cursorFake = fake.returns({
+      eachAsync: async (fn, options) => {
+        const view = { a: 1 };
+        await fn(view);
+        expect(fnFake).to.have.been.calledWith(view);
+        expect(options).to.deep.equal({ parallel });
+        return foundObjs;
+      }
+    });
+
+    const foundObjs = {
+      cursor: cursorFake
+    };
+    const findFake = fake.returns(foundObjs);
+    const writeFake = fake.returns(writeResult);
+    const removeFake = fake.returns(removeResult);
+
+    const db = {
+      store: storeFake,
+      findOne: findOneFake,
+      find: findFake,
+      write: writeFake,
+      remove: removeFake
+    };
+    replace(deps, "db", db);
+
+    const secretFake = fake.returns(password);
+    replace(deps, "secret", secretFake);
+
+    const stringDate = "some-date";
+    const stringDateFake = fake.returns(stringDate);
+    replace(deps, "stringDate", stringDateFake);
+
+    const viewStoreFake = fake();
+    replace(deps, "viewStore", viewStoreFake);
+
+    const getFn = "some-get-fn";
+    const postFn = "some-post-fn";
+    const putFn = "some-put-fn";
+
+    const schema = {
+      a: 1,
+      b: { c: 2 },
+      d: { type: String },
+      e: { type: [{ type: { type: String } }] },
+      f: [{ g: 1 }]
+    };
+    await mongodbViewStore({ schema, indexes, getFn, postFn, putFn });
+
+    expect(storeFake).to.have.been.calledWith({
+      name: `${domain}.${name}`,
+      schema: {
+        a: 1,
+        b: {
+          c: 2,
+          _id: false
+        },
+        d: { type: String },
+        e: { type: [{ type: { type: String }, _id: false }] },
+        f: [{ g: 1, _id: false }],
+        id: { type: String, required: true, unique: true },
+        created: {
+          type: String,
+          required: true,
+          default: match(fn => {
+            const date = fn();
+            return date == stringDate;
+          })
+        },
+        modified: {
+          type: String,
+          required: true,
+          default: match(fn => {
+            const date = fn();
+            return date == stringDate;
+          })
+        }
+      },
+      indexes: [[{ id: 1 }], [{ created: 1 }], [{ modified: 1 }], "some-index"],
+      connection: {
+        protocol,
+        user,
+        password,
+        host,
+        database,
+        parameters: {
+          authSource: "admin",
+          retryWrites: true,
+          w: "majority"
+        },
+        autoIndex: true
+      }
+    });
+  });
   it("should call with the correct params without fns", async () => {
     const mongodbViewStore = require("..");
     const store = "some-store";
@@ -264,6 +368,10 @@ describe("View store", () => {
       name: `${domain}.${name}`,
       schema: {
         a: 1,
+        b: {
+          c: 2,
+          _id: false
+        },
         id: { type: String, required: true, unique: true },
         created: {
           type: String,
@@ -423,6 +531,10 @@ describe("View store", () => {
       name: `${domain}.${name}`,
       schema: {
         a: 1,
+        b: {
+          c: 2,
+          _id: false
+        },
         id: { type: String, required: true, unique: true },
         created: {
           type: String,
