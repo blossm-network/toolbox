@@ -1,7 +1,7 @@
 {
   "name": "@blossm/command-gateway",
   "description": "A gateway server that manages command issuing access.",
-  "version": "0.0.75",
+  "version": "0.0.76",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
