@@ -58,23 +58,6 @@ module.exports = async ({ payload, context }) => {
   //Create a challenge code.
   const code = deps.randomIntOfLength(CODE_LENGTH);
 
-  //Synchronously save the code to a view store before sending the message.
-  await deps
-    .viewStore({
-      name: "codes",
-      domain: "challenge"
-    })
-    .set({ context, tokenFn: deps.gcpToken })
-    .update(root, {
-      code,
-      expires: deps.stringFromDate(
-        deps
-          .moment()
-          .add(THREE_MINUTES, "s")
-          .toDate()
-      )
-    });
-
   //Send the code.
   sms.send({
     to: person.phone,
@@ -89,7 +72,8 @@ module.exports = async ({ payload, context }) => {
       code,
       principle: person.principle,
       phone: person.phone,
-      issued: deps.stringDate()
+      issued: deps.stringDate(),
+      expires: THREE_MINUTES
     },
     response: { token }
   };

@@ -3,6 +3,8 @@
     "@blossm/event-handler": "*"
   },
   "devDependencies": {
-    "chai": "^4.2.0"
+    "chai": "^4.2.0",
+    "@blossm/request": "*",
+    "@blossm/view-store-rpc": "*"
   }
 }

@@ -27,24 +27,31 @@ describe("Event handler unit tests", () => {
     });
     replace(deps, "viewStore", viewStoreFake);
 
-    const name = "some-name";
+    const code = "some-code";
     const context = "some-context";
     const root = "some-root";
-    const payload = { name };
+    const expires = 180;
+    const payload = { code, expires };
     const headers = { root, context };
 
     await main({ payload, headers });
 
     expect(viewStoreFake).to.have.been.calledWith({
-      name: "some-name",
-      domain: "some-domain"
+      name: "codes",
+      domain: "challenge"
     });
     expect(setFake).to.have.been.calledWith({
       context,
       tokenFn: deps.gcpToken
     });
     expect(updateFake).to.have.been.calledWith(root, {
-      name
+      code,
+      expires: deps.stringFromDate(
+        deps
+          .moment()
+          .add(3, "m")
+          .toDate()
+      )
     });
   });
 });
