@@ -6,15 +6,19 @@ module.exports = ({ writeFn, mapReduceFn, publishFn }) => {
 
     const now = deps.dateString();
 
-    const data = {
+    const event = {
       ...req.body,
       id,
       created: now
     };
 
-    await writeFn({ id, data });
+    //eslint-disable-next-line
+    console.log("prewrite event: ", event);
+    const writtenEvent = await writeFn({ id, data: event });
+    //eslint-disable-next-line
+    console.log("written event: ", writtenEvent);
     await mapReduceFn({ id });
-    await publishFn(data);
+    await publishFn(writtenEvent);
 
     res.status(204).send();
   };

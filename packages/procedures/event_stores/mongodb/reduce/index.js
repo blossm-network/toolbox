@@ -2,7 +2,7 @@ module.exports = function(key, values) {
   const base = {
     headers: {
       root: key,
-      modified: 0,
+      created: 0,
       version: 0
     },
     state: {}
@@ -14,12 +14,12 @@ module.exports = function(key, values) {
       ...value.state
     };
     reduced.headers.version += value.headers.version;
-    reduced.headers.modified = value.headers.modified;
+    reduced.headers.created = value.headers.modificreateded;
     return reduced;
   };
 
   values.sort(
-    (a, b) => Date.parse(a.headers.modified) - Date.parse(b.headers.modified)
+    (a, b) => Date.parse(a.headers.created) - Date.parse(b.headers.created)
   );
   return values.reduce(reducer, base);
 };
