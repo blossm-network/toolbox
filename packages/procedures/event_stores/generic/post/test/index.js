@@ -27,7 +27,8 @@ describe("Event store post", () => {
   });
 
   it("should call with the correct params", async () => {
-    const writeFnFake = fake();
+    const writeResult = "some-write-result";
+    const writeFnFake = fake.returns(writeResult);
     const mapReduceFnFake = fake();
     const publishFnFake = fake();
 
@@ -61,11 +62,7 @@ describe("Event store post", () => {
     expect(mapReduceFnFake).to.have.been.calledWith({
       id: uuid
     });
-    expect(publishFnFake).to.have.been.calledWith({
-      a: 1,
-      id: uuid,
-      created: deps.dateString()
-    });
+    expect(publishFnFake).to.have.been.calledWith(writeResult);
     expect(statusFake).to.have.been.calledWith(204);
     expect(sendFake).to.have.been.calledOnce;
   });

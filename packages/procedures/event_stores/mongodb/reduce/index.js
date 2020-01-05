@@ -14,7 +14,7 @@ module.exports = function(key, values) {
       ...value.state
     };
     reduced.headers.version += value.headers.version;
-    reduced.headers.created = value.headers.modificreateded;
+    reduced.headers.created = value.headers.created;
     return reduced;
   };
 
