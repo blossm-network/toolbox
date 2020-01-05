@@ -1,7 +1,7 @@
 const { expect } = require("chai")
   .use(require("chai-datetime"))
   .use(require("sinon-chai"));
-const { restore, replace, fake, useFakeTimers, stub } = require("sinon");
+const { restore, replace, fake, useFakeTimers } = require("sinon");
 
 const main = require("../../main");
 const deps = require("../../deps");
@@ -9,13 +9,13 @@ const deps = require("../../deps");
 let clock;
 const now = new Date();
 const root = "some-root";
-const principle = "some-person-principle";
-const personId = "some-person-id";
-const phone = "some-person-phone";
-const person = {
+const principle = "some-user-principle";
+const userId = "some-user-id";
+const phone = "some-user-phone";
+const user = {
   principle,
   phone,
-  id: personId
+  id: userId
 };
 const payloadPhone = "some-payload-phone";
 const payload = {
@@ -54,17 +54,10 @@ describe("Command handler unit tests", () => {
     const uuidFake = fake.returns(root);
     replace(deps, "uuid", uuidFake);
 
-    const readFake = fake.returns([person]);
-    const updateFake = fake();
-    const setFake = stub()
-      .onFirstCall()
-      .returns({
-        read: readFake
-      })
-      .onSecondCall()
-      .returns({
-        update: updateFake
-      });
+    const readFake = fake.returns([user]);
+    const setFake = fake.returns({
+      read: readFake
+    });
     const viewStoreFake = fake.returns({
       set: setFake
     });
@@ -88,7 +81,8 @@ describe("Command handler unit tests", () => {
         code,
         principle,
         phone,
-        issued: new Date().toISOString()
+        issued: new Date().toISOString(),
+        expires: 180
       },
       response: { token }
     });
@@ -100,14 +94,9 @@ describe("Command handler unit tests", () => {
       context,
       tokenFn: deps.gcpToken
     });
-    expect(setFake).to.have.been.calledTwice;
     expect(viewStoreFake).to.have.been.calledWith({
       name: "phones",
-      domain: "person"
-    });
-    expect(viewStoreFake).to.have.been.calledWith({
-      name: "codes",
-      domain: "challenge"
+      domain: "user"
     });
     expect(signFake).to.have.been.calledWith({
       ring: service,
@@ -126,7 +115,7 @@ describe("Command handler unit tests", () => {
       payload: {
         principle,
         context: {
-          person: personId,
+          user: userId,
           service,
           network
         }
@@ -142,15 +131,6 @@ describe("Command handler unit tests", () => {
           .toDate() - new Date()
       )
     ).to.equal(180000);
-    expect(updateFake).to.have.been.calledWith(root, {
-      code,
-      expires: deps.stringFromDate(
-        deps
-          .moment()
-          .add(3, "m")
-          .toDate()
-      )
-    });
     expect(smsSendFake).to.have.been.calledWith({
       to: phone,
       from: "+14157700262",

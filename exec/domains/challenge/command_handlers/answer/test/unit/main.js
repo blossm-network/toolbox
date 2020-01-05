@@ -9,17 +9,17 @@ const deps = require("../../deps");
 let clock;
 const now = new Date();
 const contextPrinciple = "some-context-principle";
-const personId = "some-person-id";
+const userId = "some-user-id";
 const contextType = "some-context-type";
 const challengeRoot = "some-challenge-root";
-const person = {
+const user = {
   contexts: [
     {
       type: contextType,
       root: challengeRoot
     }
   ],
-  id: personId
+  id: userId
 };
 const code = "some-code";
 const challenge = {
@@ -29,11 +29,11 @@ const payload = {
   code
 };
 const contextChallenge = "some-challenge-context";
-const contextPerson = "some-context-person";
+const contextuser = "some-context-user";
 const context = {
   principle: contextPrinciple,
   challenge: contextChallenge,
-  person: contextPerson
+  user: contextuser
 };
 const service = "some-service";
 const network = "some-network";
@@ -57,7 +57,7 @@ describe("Command handler unit tests", () => {
       ...challenge,
       expires: deps.stringDate()
     });
-    const readTwoFake = fake.returns([person]);
+    const readTwoFake = fake.returns([user]);
     const setFake = stub()
       .onFirstCall()
       .returns({
@@ -100,7 +100,7 @@ describe("Command handler unit tests", () => {
     });
     expect(viewStoreFake).to.have.been.calledWith({
       name: "contexts",
-      domain: "person"
+      domain: "user"
     });
     expect(signFake).to.have.been.calledWith({
       ring: service,
@@ -119,7 +119,7 @@ describe("Command handler unit tests", () => {
       payload: {
         principle: contextPrinciple,
         context: {
-          person: contextPerson,
+          user: contextuser,
           [contextType]: challengeRoot,
           service,
           network
@@ -128,7 +128,7 @@ describe("Command handler unit tests", () => {
       signFn: signature
     });
   });
-  it("should return successfully if no person is found", async () => {
+  it("should return successfully if no user is found", async () => {
     const readOneFake = fake.returns({
       ...challenge,
       expires: deps.stringDate()
@@ -176,7 +176,7 @@ describe("Command handler unit tests", () => {
     });
     expect(viewStoreFake).to.have.been.calledWith({
       name: "contexts",
-      domain: "person"
+      domain: "user"
     });
     expect(signFake).to.have.been.calledWith({
       ring: service,
@@ -195,7 +195,7 @@ describe("Command handler unit tests", () => {
       payload: {
         principle: contextPrinciple,
         context: {
-          person: contextPerson,
+          user: contextuser,
           service,
           network
         }

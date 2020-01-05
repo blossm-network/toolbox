@@ -1,4 +1,4 @@
-domain: person
+domain: user
 service: core
 
 schema:

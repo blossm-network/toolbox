@@ -51,7 +51,7 @@ testing:
     ok:
       - store:
           name: phones
-          domain: person
+          domain: user
         root: some-root
         value: 
           phone: "+19195551144"
@@ -59,7 +59,7 @@ testing:
 
   procedures:
     - name: phones
-      domain: person
+      domain: user
       context: view-store
     - name: codes
       domain: challenge

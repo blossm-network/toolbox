@@ -7,17 +7,17 @@ const { verify } = require("@blossm/gcp-kms");
 
 const uuid = require("@blossm/uuid");
 
-const personRoot = uuid();
+const userRoot = uuid();
 const principleRoot = uuid();
 const phone = "251-333-2037";
 
 module.exports = async ({ permissions = [], issueFn, answerFn }) => {
   await viewStore({
     name: "phones",
-    domain: "person"
+    domain: "user"
   })
     //phone should be already formatted in the view store.
-    .update(personRoot, { principle: principleRoot, phone: "+12513332037" });
+    .update(userRoot, { principle: principleRoot, phone: "+12513332037" });
 
   const sentAfter = new Date();
 
@@ -54,7 +54,7 @@ module.exports = async ({ permissions = [], issueFn, answerFn }) => {
   });
 
   const { token: answerToken } = answerFn
-    ? await answerFn({ code, root, token, person: jwt.context.person })
+    ? await answerFn({ code, root, token, user: jwt.context.user })
     : await command({
         action: "answer",
         domain: "challenge"
@@ -62,7 +62,7 @@ module.exports = async ({ permissions = [], issueFn, answerFn }) => {
         .set({
           context: {
             principle: principleRoot,
-            person: jwt.context.person
+            user: jwt.context.user
           }
         })
         .issue(

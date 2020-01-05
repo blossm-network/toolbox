@@ -1,5 +1,5 @@
 name: contexts
-domain: person
+domain: user
 service: core
 
 schema:

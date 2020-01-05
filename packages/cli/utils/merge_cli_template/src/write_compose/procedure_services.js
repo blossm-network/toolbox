@@ -45,12 +45,12 @@ const procedures = ({ config, domain }) => {
     },
     {
       name: "phones",
-      domain: "person",
+      domain: "user",
       context: "view-store"
     },
     {
       name: "contexts",
-      domain: "person",
+      domain: "user",
       context: "view-store"
     }
   ];

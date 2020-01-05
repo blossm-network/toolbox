@@ -26,11 +26,11 @@ module.exports = async ({ payload, root, context }) => {
   if (Date.parse(challenge.expires) < now)
     throw deps.badRequestError.codeExpired();
 
-  //Lookup the contexts that the requesting person is in.
-  const [person] = await deps
+  //Lookup the contexts that the requesting user is in.
+  const [user] = await deps
     .viewStore({
       name: "contexts",
-      domain: "person"
+      domain: "user"
     })
     .set({ context, tokenFn: deps.gcpToken })
     .read({ code: payload.code });
@@ -46,11 +46,11 @@ module.exports = async ({ payload, root, context }) => {
     payload: {
       principle: context.principle,
       context: {
-        person: context.person,
-        //If the person is in only one context, add it to the token.
-        ...(person &&
-          person.contexts.length == 1 && {
-            [person.contexts[0].type]: person.contexts[0].root
+        user: context.user,
+        //If the user is in only one context, add it to the token.
+        ...(user &&
+          user.contexts.length == 1 && {
+            [user.contexts[0].type]: user.contexts[0].root
           }),
         service: process.env.SERVICE,
         network: process.env.NETWORK

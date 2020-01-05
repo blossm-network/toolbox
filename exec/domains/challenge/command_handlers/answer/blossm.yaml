@@ -51,11 +51,11 @@ testing:
 
   context: 
       principle: some-principle-root
-      person: some-person-root
+      user: some-user-root
 
   procedures:
     - name: contexts
-      domain: person
+      domain: user
       context: view-store
     - name: codes
       domain: challenge
