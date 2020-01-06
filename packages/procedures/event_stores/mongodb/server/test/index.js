@@ -132,48 +132,51 @@ describe("Mongodb event store", () => {
     expect(eventStoreFake).to.have.been.calledWith({
       findOneFn: match(async fn => {
         const result = await fn({ root });
-        expect(findOneFake).to.have.been.calledWith({
-          store: aStore,
-          query: {
-            "value.headers.root": root
-          },
-          options: {
-            lean: true
-          }
-        });
-        return expect(result).to.equal(found);
+        return (
+          expect(findOneFake).to.have.been.calledWith({
+            store: aStore,
+            query: {
+              "value.headers.root": root
+            },
+            options: {
+              lean: true
+            }
+          }) && expect(result).to.equal(found)
+        );
       }),
       writeFn: match(async fn => {
         const result = await fn({ id, data });
-        expect(writeFake).to.have.been.calledWith({
-          store: eStore,
-          query: {
-            id
-          },
-          update: {
-            $set: data
-          },
-          options: {
-            lean: true,
-            omitUndefined: true,
-            upsert: true,
-            new: true,
-            runValidators: true,
-            setDefaultsOnInsert: true
-          }
-        });
-        return expect(result).to.equal(writeResult);
+        return (
+          writeFake.calledWith({
+            store: eStore,
+            query: {
+              id
+            },
+            update: {
+              $set: data
+            },
+            options: {
+              lean: true,
+              omitUndefined: true,
+              upsert: true,
+              new: true,
+              runValidators: true,
+              setDefaultsOnInsert: true
+            }
+          }) && result == writeResult
+        );
       }),
       mapReduceFn: match(async fn => {
         const result = await fn({ id });
-        expect(mapReduceFake).to.have.been.calledWith({
-          store: eStore,
-          query: { id },
-          map: deps.normalize,
-          reduce: deps.reduce,
-          out: { reduce: `${domain}.aggregate` }
-        });
-        return expect(result).to.equal(mapReduceResult);
+        return (
+          mapReduceFake.calledWith({
+            store: eStore,
+            query: { id },
+            map: deps.normalize,
+            reduce: deps.reduce,
+            out: { reduce: `${domain}.aggregate` }
+          }) && result == mapReduceResult
+        );
       }),
       publishFn
     });

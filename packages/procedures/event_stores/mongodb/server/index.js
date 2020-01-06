@@ -115,6 +115,7 @@ module.exports = async ({ schema, publishFn } = {}) => {
     });
     delete result._id;
     delete result.__v;
+    // return result;
   };
 
   const mapReduceFn = async ({ id }) =>

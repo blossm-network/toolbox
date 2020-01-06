@@ -35,8 +35,7 @@ describe("View store stream", () => {
         const view = { a: 1 };
         const result = fn(view);
         return (
-          expect(result).to.equal(writeResult) &&
-          expect(writeFake).to.have.been.calledWith(JSON.stringify(view))
+          result == writeResult && writeFake.calledWith(JSON.stringify(view))
         );
       })
     });
@@ -68,8 +67,7 @@ describe("View store stream", () => {
         const view = { a: 1 };
         const result = fn(view);
         return (
-          expect(result).to.equal(writeResult) &&
-          expect(writeFake).to.have.been.calledWith(JSON.stringify(view))
+          result == writeResult && writeFake.calledWith(JSON.stringify(view))
         );
       })
     });

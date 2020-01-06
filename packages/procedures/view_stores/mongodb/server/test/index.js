@@ -148,7 +148,7 @@ describe("View store", () => {
       findOneFn: match(async fn => {
         const result = await fn({ id });
         return (
-          expect(findOneFake).to.have.been.calledWith({
+          findOneFake.calledWith({
             store,
             query: {
               id
@@ -156,39 +156,39 @@ describe("View store", () => {
             options: {
               lean: true
             }
-          }) && expect(result).to.equal(foundObj)
+          }) && result == foundObj
         );
       }),
       findFn: match(async fn => {
         const result = await fn({ query, sort });
         return (
-          expect(findFake).to.have.been.calledWith({
+          findFake.calledWith({
             store,
             query,
             sort,
             options: {
               lean: true
             }
-          }) && expect(result).to.equal(foundObjs)
+          }) && result == foundObjs
         );
       }),
       streamFn: match(async fn => {
         const result = await fn({ query, sort, parallel, fn: fnFake });
         return (
-          expect(findFake).to.have.been.calledWith({
+          findFake.calledWith({
             store,
             query,
             sort,
             options: {
               lean: true
             }
-          }) && expect(result).to.equal(foundObjs)
+          }) && result == foundObjs
         );
       }),
       writeFn: match(async fn => {
         const result = await fn({ id, data });
         return (
-          expect(writeFake).to.have.been.calledWith({
+          writeFake.calledWith({
             store,
             query: { id },
             update: {
@@ -202,18 +202,18 @@ describe("View store", () => {
               runValidators: true,
               setDefaultsOnInsert: true
             }
-          }) && expect(result).to.equal(writeResult)
+          }) && result == writeResult
         );
       }),
       removeFn: match(async fn => {
         const result = await fn({ id });
         return (
-          expect(removeFake).to.have.been.calledWith({
+          removeFake.calledWith({
             store,
             query: {
               id
             }
-          }) && expect(result).to.equal(removeResult)
+          }) && result == removeResult
         );
       })
     });
@@ -411,7 +411,7 @@ describe("View store", () => {
       findOneFn: match(async fn => {
         const result = await fn({ id });
         return (
-          expect(findOneFake).to.have.been.calledWith({
+          findOneFake.calledWith({
             store,
             query: {
               id
@@ -419,39 +419,39 @@ describe("View store", () => {
             options: {
               lean: true
             }
-          }) && expect(result).to.equal(foundObj)
+          }) && result == foundObj
         );
       }),
       findFn: match(async fn => {
         const result = await fn({ query, sort });
         return (
-          expect(findFake).to.have.been.calledWith({
+          findFake.calledWith({
             store,
             query,
             sort,
             options: {
               lean: true
             }
-          }) && expect(result).to.equal(foundObjs)
+          }) && result == foundObjs
         );
       }),
       streamFn: match(async fn => {
         const result = await fn({ query, sort, parallel, fn: fnFake });
         return (
-          expect(findFake).to.have.been.calledWith({
+          findFake.calledWith({
             store,
             query,
             sort,
             options: {
               lean: true
             }
-          }) && expect(result).to.equal(foundObjs)
+          }) && result == foundObjs
         );
       }),
       writeFn: match(async fn => {
         const result = await fn({ id, data });
         return (
-          expect(writeFake).to.have.been.calledWith({
+          writeFake.calledWith({
             store,
             query: { id },
             update: {
@@ -465,18 +465,18 @@ describe("View store", () => {
               runValidators: true,
               setDefaultsOnInsert: true
             }
-          }) && expect(result).to.equal(writeResult)
+          }) && result == writeResult
         );
       }),
       removeFn: match(async fn => {
         const result = await fn({ id });
         return (
-          expect(removeFake).to.have.been.calledWith({
+          removeFake.calledWith({
             store,
             query: {
               id
             }
-          }) && expect(result).to.equal(removeResult)
+          }) && result == removeResult
         );
       })
     });
@@ -574,7 +574,7 @@ describe("View store", () => {
       findOneFn: match(async fn => {
         const result = await fn({ id });
         return (
-          expect(findOneFake).to.have.been.calledWith({
+          findOneFake.calledWith({
             store,
             query: {
               id
@@ -582,33 +582,33 @@ describe("View store", () => {
             options: {
               lean: true
             }
-          }) && expect(result).to.equal(foundObj)
+          }) && result == foundObj
         );
       }),
       findFn: match(async fn => {
         const result = await fn({ query, sort });
         return (
-          expect(findFake).to.have.been.calledWith({
+          findFake.calledWith({
             store,
             query,
             sort,
             options: {
               lean: true
             }
-          }) && expect(result).to.equal(foundObjs)
+          }) && result == foundObjs
         );
       }),
       streamFn: match(async fn => {
         const result = await fn({ query, sort, parallel, fn: fnFake });
         return (
-          expect(findFake).to.have.been.calledWith({
+          findFake.calledWith({
             store,
             query,
             sort,
             options: {
               lean: true
             }
-          }) && expect(result).to.equal(foundObjs)
+          }) && result == foundObjs
         );
       }),
       writeFn: match(async fn => {
@@ -623,7 +623,7 @@ describe("View store", () => {
           }
         });
         return (
-          expect(writeFake).to.have.been.calledWith({
+          writeFake.calledWith({
             store,
             query: { id },
             update: {
@@ -641,18 +641,18 @@ describe("View store", () => {
               runValidators: true,
               setDefaultsOnInsert: true
             }
-          }) && expect(result).to.equal(writeResult)
+          }) && result == writeResult
         );
       }),
       removeFn: match(async fn => {
         const result = await fn({ id });
-        expect(removeFake).to.have.been.calledWith({
+        removeFake.calledWith({
           store,
           query: {
             id
           }
         });
-        return expect(result).to.equal(removeResult);
+        return result == removeResult;
       })
     });
     await mongodbViewStore();
