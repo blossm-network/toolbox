@@ -97,8 +97,8 @@ module.exports = async ({ schema, publishFn } = {}) => {
   const eStore = await eventStore({ schema });
   const aStore = await aggregateStore({ schema });
 
-  const writeFn = async ({ id, data }) =>
-    deps.db.write({
+  const writeFn = async ({ id, data }) => {
+    const result = await deps.db.write({
       store: eStore,
       query: { id },
       update: {
@@ -113,6 +113,9 @@ module.exports = async ({ schema, publishFn } = {}) => {
         setDefaultsOnInsert: true
       }
     });
+    delete result._id;
+    delete result.__v;
+  };
 
   const mapReduceFn = async ({ id }) =>
     await deps.db.mapReduce({

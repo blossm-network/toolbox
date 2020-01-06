@@ -29,7 +29,7 @@ process.env.MONGODB_DATABASE = database;
 const obj = "some-objs";
 const found = { value: obj };
 const root = "some-root";
-const writeResult = "some-write-result";
+const writeResult = { a: 1 };
 const id = "some-id";
 const data = "some-data";
 const mapReduceResult = "some-result";
@@ -64,7 +64,7 @@ describe("Mongodb event store", () => {
 
     const findOneFake = fake.returns(found);
 
-    const writeFake = fake.returns(writeResult);
+    const writeFake = fake.returns({ ...writeResult, __v: 3, _id: 4 });
     const mapReduceFake = fake.returns(mapReduceResult);
 
     const db = {
@@ -271,7 +271,7 @@ describe("Mongodb event store", () => {
 
     const findOneFake = fake.returns(found);
 
-    const writeFake = fake.returns(writeResult);
+    const writeFake = fake.returns({ ...writeResult, __v: 3, _id: 4 });
     const mapReduceFake = fake.returns(mapReduceResult);
 
     const db = {

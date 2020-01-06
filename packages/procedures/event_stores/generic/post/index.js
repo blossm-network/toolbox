@@ -12,11 +12,7 @@ module.exports = ({ writeFn, mapReduceFn, publishFn }) => {
       created: now
     };
 
-    //eslint-disable-next-line
-    console.log("prewrite event: ", event);
     const writtenEvent = await writeFn({ id, data: event });
-    //eslint-disable-next-line
-    console.log("written event: ", writtenEvent);
     await mapReduceFn({ id });
     await publishFn(writtenEvent);
 
