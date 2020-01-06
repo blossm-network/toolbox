@@ -76,6 +76,7 @@ describe("Mongodb event store", () => {
     replace(deps, "db", db);
 
     await mongodbEventStore({ schema, publishFn });
+
     expect(storeFake).to.have.been.calledWith({
       name: domain,
       schema: {
@@ -130,56 +131,62 @@ describe("Mongodb event store", () => {
     });
     expect(secretFake).to.have.been.calledWith("mongodb");
     expect(eventStoreFake).to.have.been.calledWith({
-      findOneFn: match(async fn => {
-        const result = await fn({ root });
-        return (
-          expect(findOneFake).to.have.been.calledWith({
-            store: aStore,
-            query: {
-              "value.headers.root": root
-            },
-            options: {
-              lean: true
-            }
-          }) && expect(result).to.equal(found)
-        );
-      }),
-      writeFn: match(async fn => {
-        const result = await fn({ id, data });
-        return (
-          writeFake.calledWith({
-            store: eStore,
-            query: {
-              id
-            },
-            update: {
-              $set: data
-            },
-            options: {
-              lean: true,
-              omitUndefined: true,
-              upsert: true,
-              new: true,
-              runValidators: true,
-              setDefaultsOnInsert: true
-            }
-          }) && result == writeResult
-        );
-      }),
-      mapReduceFn: match(async fn => {
-        const result = await fn({ id });
-        return (
-          mapReduceFake.calledWith({
-            store: eStore,
-            query: { id },
-            map: deps.normalize,
-            reduce: deps.reduce,
-            out: { reduce: `${domain}.aggregate` }
-          }) && result == mapReduceResult
-        );
-      }),
+      findOneFn: match(fn => expect(fn({ id })).to.exist),
+      writeFn: match(fn => expect(fn({ id, data })).to.exist),
+      mapReduceFn: match(fn => expect(fn({ id })).to.exist),
       publishFn
     });
+
+    const findOneFnResult = await eventStoreFake.lastCall.lastArg.findOneFn({
+      root
+    });
+
+    expect(findOneFake).to.have.been.calledWith({
+      store: aStore,
+      query: {
+        "value.headers.root": root
+      },
+      options: {
+        lean: true
+      }
+    });
+    expect(findOneFnResult).to.equal(found);
+
+    const writeFnResult = await eventStoreFake.lastCall.lastArg.writeFn({
+      id,
+      data
+    });
+    expect(writeFake).to.have.been.calledWith({
+      store: eStore,
+      query: {
+        id
+      },
+      update: {
+        $set: data
+      },
+      options: {
+        lean: true,
+        omitUndefined: true,
+        upsert: true,
+        new: true,
+        runValidators: true,
+        setDefaultsOnInsert: true
+      }
+    });
+    expect(writeFnResult).to.deep.equal(writeResult);
+
+    const mapReduceFnResult = await eventStoreFake.lastCall.lastArg.mapReduceFn(
+      { id }
+    );
+    expect(mapReduceFake).to.have.been.calledWith({
+      store: eStore,
+      query: { id },
+      map: deps.normalize,
+      reduce: deps.reduce,
+      out: { reduce: `${domain}.aggregate` }
+    });
+    expect(mapReduceFnResult).to.equal(mapReduceResult);
+
     await mongodbEventStore();
     expect(storeFake).to.have.been.calledTwice;
   });
@@ -287,6 +294,7 @@ describe("Mongodb event store", () => {
 
     const schema = { a: { type: String } };
     await mongodbEventStore({ schema, publishFn });
+
     expect(storeFake).to.have.been.calledWith({
       name: domain,
       schema: {
