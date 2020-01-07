@@ -8,7 +8,7 @@ module.exports = ({ writeFn, mapReduceFn, publishFn, findOneFn }) => {
 
     const {
       headers: { lastEventNumber }
-    } = await findOneFn({ root });
+    } = (await findOneFn({ root })) || { headers: { lastEventNumber: 0 } };
 
     const number = lastEventNumber + 1;
 

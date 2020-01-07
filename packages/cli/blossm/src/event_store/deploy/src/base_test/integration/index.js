@@ -78,6 +78,8 @@ describe("Event store integration tests", () => {
             topic,
             version,
             created,
+            action,
+            domain,
             command: {
               id,
               action,
@@ -127,21 +129,25 @@ describe("Event store integration tests", () => {
 
         request.post(url, {
           body: {
-            headers: {
-              root,
-              topic,
-              version,
-              created,
-              command: {
-                id,
+            event: {
+              headers: {
+                root,
+                topic,
+                version,
+                created,
                 action,
                 domain,
-                service,
-                network,
-                issued
-              }
-            },
-            payload: example0
+                command: {
+                  id,
+                  action,
+                  domain,
+                  service,
+                  network,
+                  issued
+                }
+              },
+              payload: example0
+            }
           }
         });
       }
@@ -160,11 +166,43 @@ describe("Event store integration tests", () => {
 
       const response = await request.post(url, {
         body: {
+          event: {
+            headers: {
+              root,
+              topic,
+              version,
+              created,
+              action,
+              domain,
+              command: {
+                id,
+                action,
+                domain,
+                service,
+                network,
+                issued
+              }
+            },
+            payload: { [property]: badValue }
+          }
+        }
+      });
+      expect(response.statusCode).to.equal(500);
+    }
+  });
+  it("should return an error if bad number", async () => {
+    const root = uuid();
+
+    const response = await request.post(url, {
+      body: {
+        event: {
           headers: {
             root,
             topic,
             version,
             created,
+            action,
+            domain,
             command: {
               id,
               action,
@@ -174,10 +212,11 @@ describe("Event store integration tests", () => {
               issued
             }
           },
-          payload: { [property]: badValue }
-        }
-      });
-      expect(response.statusCode).to.equal(500);
-    }
+          payload: example0
+        },
+        number: 2
+      }
+    });
+    expect(response.statusCode).to.equal(412);
   });
 });

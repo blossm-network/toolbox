@@ -83,6 +83,56 @@ describe("Event store post", () => {
     expect(statusFake).to.have.been.calledWith(204);
     expect(sendFake).to.have.been.calledOnce;
   });
+  it("should call with last event number as 0 if there is no aggregate", async () => {
+    const writeResult = "some-write-result";
+    const writeFnFake = fake.returns(writeResult);
+    const mapReduceFnFake = fake();
+    const publishFnFake = fake();
+    const findOneFnFake = fake.returns(null);
+
+    const req = {
+      body: {
+        event
+      }
+    };
+
+    const sendFake = fake();
+    const statusFake = fake.returns({
+      send: sendFake
+    });
+    const res = {
+      status: statusFake
+    };
+
+    const uuidFake = fake.returns(uuid);
+    replace(deps, "uuid", uuidFake);
+    await post({
+      writeFn: writeFnFake,
+      mapReduceFn: mapReduceFnFake,
+      publishFn: publishFnFake,
+      findOneFn: findOneFnFake
+    })(req, res);
+    expect(writeFnFake).to.have.been.calledWith({
+      id: uuid,
+      data: {
+        a: 1,
+        headers: {
+          b: 2,
+          root,
+          number: 1,
+          numberRoot: `${1}_${root}`
+        },
+        id: uuid,
+        created: deps.dateString()
+      }
+    });
+    expect(mapReduceFnFake).to.have.been.calledWith({
+      id: uuid
+    });
+    expect(publishFnFake).to.have.been.calledWith(writeResult);
+    expect(statusFake).to.have.been.calledWith(204);
+    expect(sendFake).to.have.been.calledOnce;
+  });
   it("should throw if event number is incorrect", async () => {
     const writeResult = "some-write-result";
     const writeFnFake = fake.returns(writeResult);
