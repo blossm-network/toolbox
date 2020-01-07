@@ -1,7 +1,7 @@
 {
   "name": "@blossm/mongodb-event-store-normalize",
   "description": "Normalize an event so that it is reduceable.",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
