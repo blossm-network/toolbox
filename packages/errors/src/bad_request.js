@@ -10,6 +10,8 @@ module.exports = {
       { cause, info, toJSON },
       "No Pub/Sub message received."
     ),
+  badRoot: ({ cause, info } = {}) =>
+    new BadRequestError({ cause, info, toJSON }, `Invalid root.`),
   badMessage: ({ cause, info } = {}) =>
     new BadRequestError(
       { cause, info, toJSON },

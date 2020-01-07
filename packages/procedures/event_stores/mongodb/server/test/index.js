@@ -85,6 +85,8 @@ describe("Mongodb event store", () => {
         payload: { a: { type: String, required: false } },
         headers: {
           root: { type: String, required: true },
+          number: { type: Number, required: true },
+          numberRoot: { type: Number, required: true, unique: true },
           topic: { type: String, required: true },
           version: { type: Number, required: true },
           trace: { type: String },
@@ -100,7 +102,7 @@ describe("Mongodb event store", () => {
           }
         }
       },
-      indexes: [[{ id: 1 }]],
+      indexes: [[{ id: 1 }], [{ "headers.root": 1, "headers.number": -1 }]],
       connection: {
         protocol,
         user,
@@ -150,7 +152,7 @@ describe("Mongodb event store", () => {
         lean: true
       }
     });
-    expect(findOneFnResult).to.equal(found);
+    expect(findOneFnResult).to.equal(obj);
 
     const writeFnResult = await eventStoreFake.lastCall.lastArg.writeFn({
       id,
@@ -216,6 +218,8 @@ describe("Mongodb event store", () => {
         payload: { a: { type: String, required: false } },
         headers: {
           root: { type: String, required: true },
+          number: { type: Number, required: true },
+          numberRoot: { type: Number, required: true, unique: true },
           topic: { type: String, required: true },
           version: { type: Number, required: true },
           trace: { type: String },
@@ -231,7 +235,7 @@ describe("Mongodb event store", () => {
           }
         }
       },
-      indexes: [[{ id: 1 }]],
+      indexes: [[{ id: 1 }], [{ "headers.root": 1, "headers.number": -1 }]],
       connection: {
         protocol,
         user,
@@ -303,6 +307,8 @@ describe("Mongodb event store", () => {
         payload: { a: { type: String, required: false } },
         headers: {
           root: { type: String, required: true },
+          number: { type: Number, required: true },
+          numberRoot: { type: Number, required: true, unique: true },
           topic: { type: String, required: true },
           version: { type: Number, required: true },
           trace: { type: String },
@@ -318,7 +324,7 @@ describe("Mongodb event store", () => {
           }
         }
       },
-      indexes: [[{ id: 1 }]],
+      indexes: [[{ id: 1 }], [{ "headers.root": 1, "headers.number": -1 }]],
       connection: {
         protocol,
         user,

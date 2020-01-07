@@ -6,6 +6,7 @@ const invalidCredentials = require("./src/invalid_credentials");
 const forbidden = require("./src/forbidden");
 const invalidArgument = require("./src/invalid_argument");
 const construct = require("./src/construct");
+const preconditionFailed = require("./src/precondition_failed");
 
 module.exports = {
   badRequest,
@@ -15,5 +16,6 @@ module.exports = {
   invalidCredentials,
   invalidArgument,
   forbidden,
-  unauthorized
+  unauthorized,
+  preconditionFailed
 };

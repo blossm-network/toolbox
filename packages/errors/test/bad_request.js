@@ -44,6 +44,21 @@ describe("Bad request", () => {
       cause
     });
   });
+  it("badRoot correct", () => {
+    const error = badRequest.badRoot();
+    expect(error.message).to.equal("Invalid root.");
+    expect(error.statusCode).to.equal(400);
+  });
+  it("badRoot correct with props", () => {
+    const error = badRequest.badRoot({ cause, info });
+    expect(error.toJSON()).to.deep.equal({
+      info,
+      statusCode: 400,
+      code: "BadRequest",
+      message: "Invalid root.",
+      cause
+    });
+  });
   it("badEvent correct", () => {
     const error = badRequest.badEvent();
     expect(error.statusCode).to.equal(400);

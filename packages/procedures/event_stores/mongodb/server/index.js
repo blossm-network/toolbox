@@ -36,6 +36,8 @@ const eventStore = async schema => {
       payload: formatSchema(schema),
       headers: {
         root: { type: String, required: true },
+        number: { type: Number, required: true },
+        numberRoot: { type: Number, required: true, unique: true },
         topic: { type: String, required: true },
         version: { type: Number, required: true },
         context: { type: Object },
@@ -51,7 +53,7 @@ const eventStore = async schema => {
         }
       }
     },
-    indexes: [[{ id: 1 }]],
+    indexes: [[{ id: 1 }], [{ "headers.root": 1, "headers.number": -1 }]],
     connection: {
       protocol: process.env.MONGODB_PROTOCOL,
       user: process.env.MONGODB_USER,
@@ -127,8 +129,8 @@ module.exports = async ({ schema, publishFn } = {}) => {
       out: { reduce: aggregateStoreName }
     });
 
-  const findOneFn = async ({ root }) =>
-    await deps.db.findOne({
+  const findOneFn = async ({ root }) => {
+    const aggregate = await deps.db.findOne({
       store: aStore,
       query: {
         "value.headers.root": root
@@ -137,6 +139,9 @@ module.exports = async ({ schema, publishFn } = {}) => {
         lean: true
       }
     });
+
+    return aggregate.value;
+  };
 
   deps.eventStore({
     findOneFn,

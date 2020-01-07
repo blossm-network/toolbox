@@ -9,6 +9,6 @@ module.exports = async ({
   deps
     .server()
     .get(deps.get({ findOneFn }), { path: "/:root" })
-    .post(deps.post({ writeFn, mapReduceFn, publishFn }))
+    .post(deps.post({ writeFn, mapReduceFn, publishFn, findOneFn }))
     .listen();
 };

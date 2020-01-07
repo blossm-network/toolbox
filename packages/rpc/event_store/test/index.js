@@ -31,6 +31,7 @@ const domain = "the-domain-the-event-was-triggered-in";
 
 const context = "some-context";
 const tokenFn = "some-token-fn";
+const number = "some-number";
 
 const envNetwork = "some-env-network";
 const envService = "some-env-service";
@@ -64,44 +65,50 @@ describe("Event store", () => {
 
     await eventStore({ domain, service, network })
       .set({ context, tokenFn })
-      .add({
-        context,
+      .add(
+        {
+          context,
+          headers: {
+            root,
+            topic,
+            version,
+            trace,
+            command: {
+              action: commandAction,
+              domain: commandDomain,
+              service: commandService,
+              network: commandNetwork,
+              id: commandId,
+              issued: commandIssuedTimestamp
+            }
+          },
+          payload
+        },
+        { number }
+      );
+
+    expect(rpcFake).to.have.been.calledWith(domain, "event-store");
+    expect(postFake).to.have.been.calledWith({
+      event: {
         headers: {
           root,
+          context,
           topic,
           version,
-          trace,
           command: {
+            id: commandId,
             action: commandAction,
             domain: commandDomain,
             service: commandService,
             network: commandNetwork,
-            id: commandId,
             issued: commandIssuedTimestamp
-          }
+          },
+          trace,
+          created: dateString()
         },
         payload
-      });
-
-    expect(rpcFake).to.have.been.calledWith(domain, "event-store");
-    expect(postFake).to.have.been.calledWith({
-      headers: {
-        root,
-        context,
-        topic,
-        version,
-        command: {
-          id: commandId,
-          action: commandAction,
-          domain: commandDomain,
-          service: commandService,
-          network: commandNetwork,
-          issued: commandIssuedTimestamp
-        },
-        trace,
-        created: dateString()
       },
-      payload
+      number
     });
     expect(inFake).to.have.been.calledWith({ context, service, network });
     expect(withFake).to.have.been.calledWith({ tokenFn });
@@ -140,21 +147,23 @@ describe("Event store", () => {
 
     expect(rpcFake).to.have.been.calledWith(domain, "event-store");
     expect(postFake).to.have.been.calledWith({
-      headers: {
-        root,
-        topic,
-        version,
-        command: {
-          action: commandAction,
-          domain: commandDomain,
-          service: commandService,
-          network: commandNetwork,
-          id: commandId,
-          issued: commandIssuedTimestamp
+      event: {
+        headers: {
+          root,
+          topic,
+          version,
+          command: {
+            action: commandAction,
+            domain: commandDomain,
+            service: commandService,
+            network: commandNetwork,
+            id: commandId,
+            issued: commandIssuedTimestamp
+          },
+          created: dateString()
         },
-        created: dateString()
-      },
-      payload
+        payload
+      }
     });
     expect(inFake).to.have.been.calledWith({
       service: envService,

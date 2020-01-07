@@ -23,7 +23,7 @@ module.exports = ({
     --topic=did-${action}.${domain}.${service}.${envUriSpecifier}${network}
     --push-endpoint=https://${operationHash}.${region}.${envUriSpecifier}${network}
     --push-auth-service-account=cloud-run-pubsub-invoker@${project}${envNameSpecifier}.iam.gserviceaccount.com
-    --project=${project}${envNameSpecifier}
+    --topic-project=${project}${envNameSpecifier}
     --labels=service=${service},context=${context},domain=${domain},action=${action},name=${name},hash=${operationHash} || exit 0
     `
     ]

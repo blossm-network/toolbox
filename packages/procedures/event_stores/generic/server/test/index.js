@@ -45,7 +45,8 @@ describe("Event store", () => {
     expect(eventStorePostFake).to.have.been.calledWith({
       writeFn,
       mapReduceFn,
-      publishFn
+      publishFn,
+      findOneFn
     });
   });
 });

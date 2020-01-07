@@ -7,10 +7,10 @@ module.exports = ({
   service = process.env.SERVICE,
   network = process.env.NETWORK
 } = {}) => {
-  const add = ({ context, tokenFn } = {}) => async ({
-    headers: { root, topic, version, trace, command },
-    payload
-  }) => {
+  const add = ({ context, tokenFn } = {}) => async (
+    { headers: { root, topic, version, trace, command }, payload },
+    { number } = {}
+  ) => {
     const event = {
       headers: {
         root,
@@ -33,7 +33,7 @@ module.exports = ({
 
     await deps
       .rpc(domain, "event-store")
-      .post(event)
+      .post({ event, ...(number && { number }) })
       .in({ ...(context && { context }), service, network })
       .with({ tokenFn });
   };

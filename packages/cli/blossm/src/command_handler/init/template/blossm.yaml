@@ -9,7 +9,6 @@
 action: some-action
 domain: some-domain
 service: core
-version: 0
 
 devDependencies:
   "localenv": "^0.2.2"
