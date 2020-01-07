@@ -120,7 +120,7 @@ describe("Event store post", () => {
           b: 2,
           root,
           number: 0,
-          numberRoot: `${1}_${root}`
+          numberRoot: `${0}_${root}`
         },
         id: uuid,
         created: deps.dateString()
