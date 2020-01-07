@@ -8,6 +8,6 @@ module.exports = ({ findOneFn }) => {
 
     if (!result) throw deps.resourceNotFoundError.root();
 
-    res.send(result.value);
+    res.send(result);
   };
 };
