@@ -21,6 +21,9 @@ const context = "some-context";
 const payload = { a: 1 };
 const version = 0;
 
+const action = "some-action";
+const domain = "some-domain";
+
 describe("Create event", () => {
   beforeEach(() => {
     clock = useFakeTimers(now.getTime());
@@ -33,6 +36,8 @@ describe("Create event", () => {
     const value = await createEvent({
       trace,
       context,
+      action,
+      domain,
       command: {
         id: commandId,
         issued: commandIssued,
@@ -50,7 +55,7 @@ describe("Create event", () => {
       headers: {
         root,
         context,
-        topic: `did-${commandAction}.${commandDomain}.${commandService}.${commandNetwork}`,
+        topic: `did-${action}.${domain}.${commandService}.${commandNetwork}`,
         version,
         trace,
         created: stringDate(),
@@ -67,12 +72,14 @@ describe("Create event", () => {
     });
   });
 
-  it("should get called with expected params if root is missin", async () => {
+  it("should get called with expected params if root is missing", async () => {
     const newUuid = "newUuid!";
     replace(deps, "uuid", fake.returns(newUuid));
 
     const value = await createEvent({
       trace,
+      action,
+      domain,
       command: {
         id: commandId,
         issued: commandIssued,
@@ -90,7 +97,7 @@ describe("Create event", () => {
       headers: {
         root: newUuid,
         context,
-        topic: `did-${commandAction}.${commandDomain}.${commandService}.${commandNetwork}`,
+        topic: `did-${action}.${domain}.${commandService}.${commandNetwork}`,
         version,
         trace,
         created: stringDate(),
@@ -110,6 +117,8 @@ describe("Create event", () => {
     const value = await createEvent({
       trace,
       context,
+      action,
+      domain,
       command: {
         id: commandId,
         issued: commandIssued,
@@ -127,7 +136,7 @@ describe("Create event", () => {
       headers: {
         root,
         context,
-        topic: `did-${commandAction}.${commandDomain}.${commandService}.${commandNetwork}`,
+        topic: `did-${action}.${domain}.${commandService}.${commandNetwork}`,
         version,
         trace,
         created: stringDate(),
@@ -146,6 +155,8 @@ describe("Create event", () => {
   it("should get called with expected params if context is missing", async () => {
     const value = await createEvent({
       trace,
+      action,
+      domain,
       command: {
         id: commandId,
         issued: commandIssued,
@@ -162,7 +173,7 @@ describe("Create event", () => {
     expect(value).to.deep.equal({
       headers: {
         root,
-        topic: `did-${commandAction}.${commandDomain}.${commandService}.${commandNetwork}`,
+        topic: `did-${action}.${domain}.${commandService}.${commandNetwork}`,
         version,
         trace,
         created: stringDate(),

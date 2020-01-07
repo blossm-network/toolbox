@@ -40,21 +40,23 @@ describe("Event store integration tests", () => {
 
     const response0 = await request.post(url, {
       body: {
-        headers: {
-          root,
-          topic,
-          version,
-          created,
-          command: {
-            id,
-            action,
-            domain,
-            service,
-            network,
-            issued
-          }
-        },
-        payload: example0
+        event: {
+          headers: {
+            root,
+            topic,
+            version,
+            created,
+            command: {
+              id,
+              action,
+              domain,
+              service,
+              network,
+              issued
+            }
+          },
+          payload: example0
+        }
       }
     });
 
@@ -70,21 +72,23 @@ describe("Event store integration tests", () => {
 
     const response2 = await request.post(url, {
       body: {
-        headers: {
-          root,
-          topic,
-          version,
-          created,
-          command: {
-            id,
-            action,
-            domain,
-            service,
-            network,
-            issued
-          }
-        },
-        payload: example1
+        event: {
+          headers: {
+            root,
+            topic,
+            version,
+            created,
+            command: {
+              id,
+              action,
+              domain,
+              service,
+              network,
+              issued
+            }
+          },
+          payload: example1
+        }
       }
     });
     expect(response2.statusCode).to.equal(204);

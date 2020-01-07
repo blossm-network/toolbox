@@ -7,7 +7,16 @@ module.exports = async ({
   version,
   trace,
   context,
-  command: { id, issued, action, domain, service, network }
+  action,
+  domain,
+  command: {
+    id,
+    issued,
+    action: commandAction,
+    domain: commandDomain,
+    service,
+    network
+  }
 } = {}) => {
   return {
     headers: {
@@ -19,8 +28,8 @@ module.exports = async ({
       created: stringDate(),
       command: {
         id,
-        action,
-        domain,
+        action: commandAction,
+        domain: commandDomain,
         service,
         network,
         issued
