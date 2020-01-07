@@ -6,11 +6,9 @@ module.exports = ({ writeFn, mapReduceFn, publishFn, findOneFn }) => {
   return async (req, res) => {
     const root = req.body.event.headers.root;
 
-    const {
-      headers: { lastEventNumber }
-    } = (await findOneFn({ root })) || { headers: { lastEventNumber: 0 } };
+    const aggregate = await findOneFn({ root });
 
-    const number = lastEventNumber + 1;
+    const number = aggregate ? aggregate.headers.lastEventNumber + 1 : 0;
 
     if (req.body.number && req.body.number != number)
       throw preconditionFailed.eventNumberIncorrect({

@@ -119,7 +119,7 @@ describe("Event store post", () => {
         headers: {
           b: 2,
           root,
-          number: 1,
+          number: 0,
           numberRoot: `${1}_${root}`
         },
         id: uuid,

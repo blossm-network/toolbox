@@ -86,7 +86,7 @@ describe("Mongodb event store", () => {
         headers: {
           root: { type: String, required: true },
           number: { type: Number, required: true },
-          numberRoot: { type: Number, required: true, unique: true },
+          numberRoot: { type: String, required: true, unique: true },
           topic: { type: String, required: true },
           version: { type: Number, required: true },
           trace: { type: String },
@@ -236,7 +236,7 @@ describe("Mongodb event store", () => {
         headers: {
           root: { type: String, required: true },
           number: { type: Number, required: true },
-          numberRoot: { type: Number, required: true, unique: true },
+          numberRoot: { type: String, required: true, unique: true },
           topic: { type: String, required: true },
           version: { type: Number, required: true },
           trace: { type: String },
@@ -373,7 +373,7 @@ describe("Mongodb event store", () => {
         headers: {
           root: { type: String, required: true },
           number: { type: Number, required: true },
-          numberRoot: { type: Number, required: true, unique: true },
+          numberRoot: { type: String, required: true, unique: true },
           topic: { type: String, required: true },
           version: { type: Number, required: true },
           trace: { type: String },
@@ -466,7 +466,7 @@ describe("Mongodb event store", () => {
         headers: {
           root: { type: String, required: true },
           number: { type: Number, required: true },
-          numberRoot: { type: Number, required: true, unique: true },
+          numberRoot: { type: String, required: true, unique: true },
           topic: { type: String, required: true },
           version: { type: Number, required: true },
           trace: { type: String },
