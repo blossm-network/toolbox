@@ -53,7 +53,11 @@ const eventStore = async schema => {
         }
       }
     },
-    indexes: [[{ id: 1 }], [{ "headers.root": 1, "headers.number": -1 }]],
+    indexes: [
+      [{ id: 1 }],
+      [{ root: 1 }],
+      [{ "headers.root": 1, "headers.number": -1 }]
+    ],
     connection: {
       protocol: process.env.MONGODB_PROTOCOL,
       user: process.env.MONGODB_USER,
@@ -140,7 +144,7 @@ module.exports = async ({ schema, publishFn } = {}) => {
       }
     });
 
-    return aggregate.value;
+    return aggregate ? aggregate.value : null;
   };
 
   deps.eventStore({
