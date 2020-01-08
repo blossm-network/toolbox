@@ -15,10 +15,6 @@ module.exports = function(key, values) {
     return reduced;
   };
 
-  values.sort(
-    (a, b) =>
-      Date.parse(a.headers.lastEventNumber) -
-      Date.parse(b.headers.lastEventNumber)
-  );
+  values.sort((a, b) => a.headers.lastEventNumber - b.headers.lastEventNumber);
   return values.reduce(reducer, base);
 };

@@ -55,7 +55,7 @@ const eventStore = async schema => {
     },
     indexes: [
       [{ id: 1 }],
-      [{ root: 1 }],
+      [{ "headers.root": 1 }],
       [{ "headers.root": 1, "headers.number": -1 }]
     ],
     connection: {
