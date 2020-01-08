@@ -16,6 +16,8 @@ module.exports = function(key, values) {
     return reduced;
   };
 
+  //eslint-disable-next-line
+  console.log("VALUES: ", values);
   values.sort(
     (a, b) =>
       Date.parse(a.headers.lastEventNumber) -
