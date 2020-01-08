@@ -42,6 +42,7 @@ module.exports = async ({ payload, context }) => {
       principle: user.principle,
       context: {
         user: user.id,
+        challenge: root,
         service: process.env.SERVICE,
         network: process.env.NETWORK
       }

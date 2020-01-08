@@ -30,7 +30,7 @@ module.exports = async ({ permissions = [], issueFn, answerFn }) => {
   console.log("Added phone to vs");
   const sentAfter = new Date();
 
-  const { token, root } = issueFn
+  const { token } = issueFn
     ? await issueFn({ phone })
     : await command({
         action: "issue",
@@ -38,7 +38,7 @@ module.exports = async ({ permissions = [], issueFn, answerFn }) => {
       }).issue({ phone });
 
   //eslint-disable-next-line
-  console.log("issued challenge: ", { token, root });
+  console.log("issued challenge: ", { token });
 
   const jwt = await validateJwt({
     token,
@@ -63,7 +63,7 @@ module.exports = async ({ permissions = [], issueFn, answerFn }) => {
   await viewStore({
     name: "codes",
     domain: "challenge"
-  }).update(root, {
+  }).update(jwt.context.challenge, {
     code,
     expires: stringFromDate(
       moment()
@@ -79,14 +79,19 @@ module.exports = async ({ permissions = [], issueFn, answerFn }) => {
     name: "permissions",
     domain: "principle"
   }).update(principleRoot, {
-    add: [`challenge:answer:${root}`, ...permissions]
+    add: [`challenge:answer:${jwt.context.challenge}`, ...permissions]
   });
 
   //eslint-disable-next-line
   console.log("Added permissions");
 
   const { token: answerToken } = answerFn
-    ? await answerFn({ code, root, token, user: jwt.context.user })
+    ? await answerFn({
+        code,
+        root: jwt.context.challenge,
+        token,
+        user: jwt.context.user
+      })
     : await command({
         action: "answer",
         domain: "challenge"
@@ -101,10 +106,10 @@ module.exports = async ({ permissions = [], issueFn, answerFn }) => {
           {
             code
           },
-          { root }
+          { root: jwt.context.challenge }
         );
 
   //eslint-disable-next-line
   console.log("Answered: ", { token });
-  return { token: answerToken, root };
+  return { token: answerToken };
 };

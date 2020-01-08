@@ -48,11 +48,10 @@ describe("Command gateway integration tests", () => {
       const { token: newToken } = JSON.parse(response.body);
       return { root, token: newToken };
     };
-    const { token, root } = await getToken({
+    const { token } = await getToken({
       issueFn,
       answerFn
     });
-    expect(root).to.exist;
     expect(token).to.exist;
   });
 });
