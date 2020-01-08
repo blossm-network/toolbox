@@ -35,44 +35,62 @@ module.exports = ({ mainFn, validateFn, normalizeFn }) => {
       aggregateFn
     });
 
-    const roots = [];
+    const synchronousFns = [];
+    let asynchronousFns = [];
     for (const {
       root,
       payload,
       correctNumber,
       version = 0,
+      async = true,
       action = process.env.ACTION,
       domain = process.env.DOMAIN
     } of events) {
-      const event = await deps.createEvent({
-        ...(root && { root }),
-        payload,
-        trace: req.body.headers.trace,
-        context: req.body.context,
-        version,
-        action,
-        domain,
-        command: {
-          id: req.body.headers.id,
-          issued: req.body.headers.issued,
-          action: process.env.ACTION,
-          domain: process.env.DOMAIN,
-          service: process.env.SERVICE,
-          network: process.env.NETWORK
-        }
-      });
+      const fn = async () => {
+        const event = await deps.createEvent({
+          ...(root && { root }),
+          payload,
+          trace: req.body.headers.trace,
+          context: req.body.context,
+          version,
+          action,
+          domain,
+          command: {
+            id: req.body.headers.id,
+            issued: req.body.headers.issued,
+            action: process.env.ACTION,
+            domain: process.env.DOMAIN,
+            service: process.env.SERVICE,
+            network: process.env.NETWORK
+          }
+        });
 
-      await deps
-        .eventStore({ domain })
-        .set({ context: req.body.context, tokenFn: deps.gcpToken })
-        .add(event, { number: correctNumber });
+        await deps
+          .eventStore({ domain })
+          .set({ context: req.body.context, tokenFn: deps.gcpToken })
+          .add(event, { number: correctNumber });
+      };
 
-      roots.push(event.headers.root);
+      if (async) {
+        asynchronousFns.push(fn);
+      } else {
+        synchronousFns.push(
+          async () => await Promise.all(asynchronousFns.map(f => f()))
+        );
+        synchronousFns.push(fn);
+        asynchronousFns = [];
+      }
     }
 
-    res.status(200).send({
-      ...response,
-      roots
-    });
+    for (const fn of [
+      ...synchronousFns,
+      ...(asynchronousFns.length > 0
+        ? [async () => await Promise.all(asynchronousFns.map(f => f()))]
+        : [])
+    ]) {
+      await fn();
+    }
+
+    res.status(200).send(response);
   };
 };

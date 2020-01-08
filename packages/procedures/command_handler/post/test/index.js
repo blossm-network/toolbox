@@ -151,7 +151,7 @@ describe("Command handler post", () => {
     });
     expect(setFake).to.have.been.calledThrice;
     expect(statusFake).to.have.been.calledWith(200);
-    expect(sendFake).to.have.been.calledWith({ roots: [root], ...response });
+    expect(sendFake).to.have.been.calledWith(response);
   });
   it("should call with the correct params with root and version passed in", async () => {
     const validateFnFake = fake();
@@ -268,7 +268,7 @@ describe("Command handler post", () => {
     });
     expect(setFake).to.have.been.calledThrice;
     expect(statusFake).to.have.been.calledWith(200);
-    expect(sendFake).to.have.been.calledWith({ roots: [root], ...response });
+    expect(sendFake).to.have.been.calledWith(response);
   });
   it("should call with the correct params with no clean or validate, correctNubmer, and empty response", async () => {
     const createEventFake = fake.returns(event);
@@ -370,7 +370,7 @@ describe("Command handler post", () => {
     });
     expect(setFake).to.have.been.calledThrice;
     expect(statusFake).to.have.been.calledWith(200);
-    expect(sendFake).to.have.been.calledWith({ roots: [root], ...response });
+    expect(sendFake).to.have.been.calledWith(response);
   });
   it("should call with the correct params without default action, domain, service, and networks", async () => {
     const validateFnFake = fake();
@@ -494,7 +494,7 @@ describe("Command handler post", () => {
     });
     expect(setFake).to.have.been.calledThrice;
     expect(statusFake).to.have.been.calledWith(200);
-    expect(sendFake).to.have.been.calledWith({ roots: [root], ...response });
+    expect(sendFake).to.have.been.calledWith(response);
   });
   it("should call with the correct params with no events", async () => {
     const validateFnFake = fake();
@@ -573,7 +573,7 @@ describe("Command handler post", () => {
     expect(eventStoreFake).to.have.been.calledTwice;
     expect(setFake).to.have.been.calledTwice;
     expect(statusFake).to.have.been.calledWith(200);
-    expect(sendFake).to.have.been.calledWith({ roots: [], ...response });
+    expect(sendFake).to.have.been.calledWith(response);
   });
   it("should call with the correct params with many events", async () => {
     const validateFnFake = fake();
@@ -708,9 +708,79 @@ describe("Command handler post", () => {
     });
     expect(setFake).to.have.been.callCount(4);
     expect(statusFake).to.have.been.calledWith(200);
-    expect(sendFake).to.have.been.calledWith({
-      roots: [root, root],
-      ...response
+    expect(sendFake).to.have.been.calledWith(response);
+  });
+  it("should call with the correct params with many events both sync and async", async () => {
+    const validateFnFake = fake();
+    const normalizeFnFake = fake.returns(cleanedPayload);
+
+    const createEventFake = fake.returns(event);
+    replace(deps, "createEvent", createEventFake);
+
+    const addFake = fake();
+    const aggregateResult = {
+      headers: {
+        lastEventNumber
+      },
+      state
+    };
+    const aggregateFake = fake.returns(aggregateResult);
+    const setFake = fake.returns({
+      add: addFake,
+      aggregate: aggregateFake
     });
+    const eventStoreFake = fake.returns({
+      set: setFake
+    });
+
+    const otherEventPayload = "some-other-event-payload";
+    const otherOtherEventPayload = "some-other-other-event-payload";
+    const otherCorrectNumber = "some-other-correct-number";
+    const otherOtherCorrectNumber = "some-other-other-correct-number";
+    const events = [
+      {
+        payload: eventPayload,
+        correctNumber
+      },
+      {
+        payload: otherEventPayload,
+        correctNumber: otherCorrectNumber,
+        async: false
+      },
+      {
+        payload: otherOtherEventPayload,
+        correctNumber: otherOtherCorrectNumber
+      }
+    ];
+    const mainFnFake = fake.returns({
+      events,
+      response
+    });
+    replace(deps, "eventStore", eventStoreFake);
+    const req = {
+      body: {
+        context,
+        payload,
+        headers
+      }
+    };
+
+    const sendFake = fake();
+    const statusFake = fake.returns({
+      send: sendFake
+    });
+    const res = {
+      status: statusFake
+    };
+
+    await post({
+      mainFn: mainFnFake,
+      validateFn: validateFnFake,
+      normalizeFn: normalizeFnFake
+    })(req, res);
+
+    expect(createEventFake.thirdCall).to.have.been.calledAfter(
+      addFake.secondCall
+    );
   });
 });

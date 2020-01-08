@@ -1,0 +1,21 @@
+{
+  "action": "some-action",
+  "domain": "some-domain",
+  "service": "core",
+  "testing": {
+    "examples": {
+      "ok": [
+        {
+          "payload": { "name": "Some-name" },
+          "normalized": { "name": "some-name" }
+        }
+      ]
+    },
+    "invalid": [{ "name": 3 }],
+    "state": null,
+    "procedures": [],
+    "response": null,
+    "topics": ["did-some-action.some-domain.core.local"]
+  },
+  "context": "command-handler"
+}
