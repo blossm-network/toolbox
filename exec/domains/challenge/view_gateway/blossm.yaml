@@ -1,0 +1,22 @@
+#
+# This file is required.
+# It's URL will be auth.[network]
+#
+
+domain: challenge
+service: core
+
+stores:
+  - name: codes
+    priviledges: none
+
+whitelist:
+  - "127.0.0.1"
+  - "https://${process.env.NETWORK}"
+
+devDependencies:
+  "mocha": "^6.1.4"
+  "chai": "^4.2.0"
+
+#don't change
+context: view-gateway

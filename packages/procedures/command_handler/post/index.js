@@ -42,7 +42,6 @@ module.exports = ({ mainFn, validateFn, normalizeFn }) => {
       payload,
       correctNumber,
       version = 0,
-      async = true,
       action = process.env.ACTION,
       domain = process.env.DOMAIN
     } of events) {
@@ -71,7 +70,7 @@ module.exports = ({ mainFn, validateFn, normalizeFn }) => {
           .add(event, { number: correctNumber });
       };
 
-      if (async) {
+      if (correctNumber == undefined) {
         asynchronousFns.push(fn);
       } else {
         synchronousFns.push(

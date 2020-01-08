@@ -9,7 +9,7 @@ module.exports = ({
 }) =>
   store.find(
     query,
-    { ...select, _id: 0 },
+    { ...select, _id: 0, __v: 0 },
     {
       ...(skip && { skip }),
       ...(sort && { sort }),

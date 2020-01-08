@@ -844,21 +844,16 @@ describe("Command handler post", () => {
 
     const otherEventPayload = "some-other-event-payload";
     const otherOtherEventPayload = "some-other-other-event-payload";
-    const otherCorrectNumber = "some-other-correct-number";
-    const otherOtherCorrectNumber = "some-other-other-correct-number";
     const events = [
       {
-        payload: eventPayload,
-        correctNumber
+        payload: eventPayload
       },
       {
         payload: otherEventPayload,
-        correctNumber: otherCorrectNumber,
-        async: false
+        correctNumber
       },
       {
-        payload: otherOtherEventPayload,
-        correctNumber: otherOtherCorrectNumber
+        payload: otherOtherEventPayload
       }
     ];
     const mainFnFake = fake.returns({

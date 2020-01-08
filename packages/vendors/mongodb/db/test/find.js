@@ -17,7 +17,7 @@ describe("Find", () => {
     const result = await find({ store, query });
 
     expect(result).to.equal(execResult);
-    expect(findFake).to.have.been.calledWith(query, { _id: 0 }, {});
+    expect(findFake).to.have.been.calledWith(query, { _id: 0, __v: 0 }, {});
   });
   it("it should return the correct result with all optional parameters included", async () => {
     const execResult = 4;
@@ -45,7 +45,7 @@ describe("Find", () => {
     expect(result).to.equal(execResult);
     expect(findFake).to.have.been.calledWith(
       query,
-      { ...select, _id: 0 },
+      { ...select, _id: 0, __v: 0 },
       {
         skip,
         sort,
