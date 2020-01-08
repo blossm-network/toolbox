@@ -75,8 +75,7 @@ describe("Mongodb event store reduce", () => {
     const aggregate = reduce(key, values);
     expect(aggregate).to.deep.equal({
       headers: {
-        root: key,
-        lastEventNumber: 0
+        root: key
       },
       state: {}
     });
