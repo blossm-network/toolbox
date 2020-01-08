@@ -8,10 +8,6 @@ module.exports = ({ writeFn, mapReduceFn, publishFn, findOneFn }) => {
 
     const aggregate = await findOneFn({ root });
 
-    //eslint-disable-next-line
-    console.log("payload is: ", req.body.event.payload);
-    //eslint-disable-next-line
-    console.log("aggregate is: ", aggregate);
     const number = aggregate ? aggregate.headers.lastEventNumber + 1 : 0;
 
     if (req.body.number && req.body.number != number)
@@ -35,12 +31,7 @@ module.exports = ({ writeFn, mapReduceFn, publishFn, findOneFn }) => {
     };
 
     const writtenEvent = await writeFn({ id, data: event });
-    //eslint-disable-next-line
-    console.log("written event: ", writtenEvent);
     await mapReduceFn({ id });
-    const aggregate2 = await findOneFn({ root });
-    //eslint-disable-next-line
-    console.log("aggregate again is: ", aggregate2);
     await publishFn(writtenEvent);
 
     res.status(204).send();

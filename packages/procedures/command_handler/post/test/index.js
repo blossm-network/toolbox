@@ -153,6 +153,115 @@ describe("Command handler post", () => {
     expect(statusFake).to.have.been.calledWith(200);
     expect(sendFake).to.have.been.calledWith(response);
   });
+  it("should call with the correct params with no response", async () => {
+    const validateFnFake = fake();
+    const normalizeFnFake = fake.returns(cleanedPayload);
+
+    const createEventFake = fake.returns(event);
+    replace(deps, "createEvent", createEventFake);
+
+    const addFake = fake();
+    const aggregateResult = {
+      headers: {
+        lastEventNumber
+      },
+      state
+    };
+    const aggregateFake = fake.returns(aggregateResult);
+    const setFake = fake.returns({
+      add: addFake,
+      aggregate: aggregateFake
+    });
+    const eventStoreFake = fake.returns({
+      set: setFake
+    });
+
+    const events = [
+      {
+        payload: eventPayload,
+        correctNumber
+      }
+    ];
+    const mainFnFake = fake.returns({
+      events
+    });
+    replace(deps, "eventStore", eventStoreFake);
+    const req = {
+      body: {
+        context,
+        payload,
+        headers
+      }
+    };
+
+    const sendFake = fake();
+    const statusFake = fake.returns({
+      send: sendFake
+    });
+    const res = {
+      status: statusFake
+    };
+
+    await post({
+      mainFn: mainFnFake,
+      validateFn: validateFnFake,
+      normalizeFn: normalizeFnFake
+    })(req, res);
+
+    expect(normalizeFnFake).to.have.been.calledWith(payload);
+    expect(validateFnFake).to.have.been.calledWith(payload);
+    expect(mainFnFake).to.have.been.calledWith({
+      payload: cleanedPayload,
+      context,
+      aggregateFn: match(fn => expect(fn()).to.exist)
+    });
+
+    const aggregateFnResult = await mainFnFake.lastCall.lastArg.aggregateFn(
+      root
+    );
+    expect(eventStoreFake).to.have.been.calledWith({
+      domain,
+      service,
+      network
+    });
+    expect(setFake).to.have.been.calledWith({
+      context,
+      tokenFn: deps.gcpToken
+    });
+    expect(aggregateFake).to.have.been.calledWith(root);
+    expect(aggregateFnResult).to.deep.equal({
+      lastEventNumber,
+      aggregate: state
+    });
+    expect(createEventFake).to.have.been.calledWith({
+      payload: eventPayload,
+      trace,
+      context,
+      action,
+      domain,
+      version: 0,
+      command: {
+        id,
+        issued,
+        action,
+        domain,
+        service,
+        network
+      }
+    });
+    expect(eventStoreFake).to.have.been.calledWith({
+      domain
+    });
+    expect(eventStoreFake).to.have.been.calledThrice;
+    expect(addFake).to.have.been.calledWith(event, { number: correctNumber });
+    expect(setFake).to.have.been.calledWith({
+      context,
+      tokenFn: deps.gcpToken
+    });
+    expect(setFake).to.have.been.calledThrice;
+    expect(statusFake).to.have.been.calledWith(204);
+    expect(sendFake).to.have.been.calledWith();
+  });
   it("should call with the correct params with root and version passed in", async () => {
     const validateFnFake = fake();
     const normalizeFnFake = fake.returns(cleanedPayload);

@@ -91,6 +91,6 @@ module.exports = ({ mainFn, validateFn, normalizeFn }) => {
       await fn();
     }
 
-    res.status(200).send(response);
+    res.status(response ? 200 : 204).send(response);
   };
 };
