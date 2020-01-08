@@ -117,9 +117,9 @@ describe("Command handler unit tests", () => {
         expiresIn: 180
       },
       payload: {
-        principle,
         context: {
           user: userId,
+          challenge: root,
           service,
           network
         }

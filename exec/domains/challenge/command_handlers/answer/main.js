@@ -44,7 +44,6 @@ module.exports = async ({ payload, root, context }) => {
       expiresIn: NINETY_DAYS
     },
     payload: {
-      principle: context.principle,
       context: {
         user: context.user,
         //If the user is in only one context, add it to the token.

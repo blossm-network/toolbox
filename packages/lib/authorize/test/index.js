@@ -22,7 +22,7 @@ const context = {
 
 const claims = {
   context,
-  principle
+  sub: principle
 };
 
 const deps = require("../deps");

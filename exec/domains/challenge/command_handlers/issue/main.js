@@ -39,7 +39,6 @@ module.exports = async ({ payload, context }) => {
       expiresIn: THREE_MINUTES
     },
     payload: {
-      principle: user.principle,
       context: {
         user: user.id,
         challenge: root,
