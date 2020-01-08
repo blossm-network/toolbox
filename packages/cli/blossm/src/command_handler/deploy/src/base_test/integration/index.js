@@ -94,7 +94,7 @@ describe("Command handler integration tests", () => {
     }
   });
   it("should return an error if bad state", async () => {
-    if (!testing.state.bad) return;
+    if (!testing.state || !testing.state.bad) return;
     const parallelFns = [];
     for (const badExample of testing.examples.bad || []) {
       parallelFns.push(async () => {

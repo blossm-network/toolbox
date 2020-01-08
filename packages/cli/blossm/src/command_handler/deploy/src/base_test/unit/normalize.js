@@ -11,7 +11,7 @@ describe("Command handler store normalize tests", () => {
   it("should clean correctly", async () => {
     for (const { payload, normalized } of [
       ...testing.examples.ok,
-      ...testing.examples.bad
+      ...(testing.examples.bad || [])
     ]) {
       const cleanedPayload = await normalize({
         ...payload,

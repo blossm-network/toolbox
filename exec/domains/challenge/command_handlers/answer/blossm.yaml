@@ -45,7 +45,9 @@ testing:
           code: "223456"
         code: 409
 
-  invalid: bad
+  invalid: 
+    - code: 
+        a: 1
 
   root: some-root
 

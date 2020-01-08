@@ -34,7 +34,7 @@ describe("Command handler store validator tests", () => {
     try {
       for (const { payload } of [
         ...testing.examples.ok,
-        ...testing.examples.bad
+        ...(testing.examples.bad || [])
       ]) {
         await validate(payload);
       }

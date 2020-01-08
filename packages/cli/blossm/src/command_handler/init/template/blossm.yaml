@@ -25,13 +25,14 @@ devDependencies:
 
 testing:
   examples:
+    ok:
     - payload:
         name: Some-name
       normalized:
         name: some-name
 
   invalid:
-    name: 3
+    - name: 3
 
   state:
 

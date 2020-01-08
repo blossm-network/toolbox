@@ -130,6 +130,7 @@ describe("Command handler post", () => {
       context,
       action,
       domain,
+      version: 0,
       command: {
         id,
         issued,
@@ -152,7 +153,7 @@ describe("Command handler post", () => {
     expect(statusFake).to.have.been.calledWith(200);
     expect(sendFake).to.have.been.calledWith({ roots: [root], ...response });
   });
-  it("should call with the correct params with root passed in", async () => {
+  it("should call with the correct params with root and version passed in", async () => {
     const validateFnFake = fake();
     const normalizeFnFake = fake.returns(cleanedPayload);
 
@@ -175,9 +176,11 @@ describe("Command handler post", () => {
       set: setFake
     });
 
+    const version = "some-version";
     const events = [
       {
         root: eventRoot,
+        version,
         payload: eventPayload,
         correctNumber
       }
@@ -244,6 +247,7 @@ describe("Command handler post", () => {
       context,
       action,
       domain,
+      version,
       command: {
         id,
         issued,
@@ -345,6 +349,7 @@ describe("Command handler post", () => {
       context,
       action,
       domain,
+      version: 0,
       command: {
         id,
         issued,
@@ -468,6 +473,7 @@ describe("Command handler post", () => {
       context,
       action: eventAction,
       domain: eventDomain,
+      version: 0,
       command: {
         id,
         issued,
@@ -662,6 +668,7 @@ describe("Command handler post", () => {
       context,
       action,
       domain,
+      version: 0,
       command: {
         id,
         issued,
@@ -677,6 +684,7 @@ describe("Command handler post", () => {
       context,
       action,
       domain,
+      version: 0,
       command: {
         id,
         issued,

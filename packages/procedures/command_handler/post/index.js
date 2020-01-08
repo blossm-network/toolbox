@@ -40,6 +40,7 @@ module.exports = ({ mainFn, validateFn, normalizeFn }) => {
       root,
       payload,
       correctNumber,
+      version = 0,
       action = process.env.ACTION,
       domain = process.env.DOMAIN
     } of events) {
@@ -48,6 +49,7 @@ module.exports = ({ mainFn, validateFn, normalizeFn }) => {
         payload,
         trace: req.body.headers.trace,
         context: req.body.context,
+        version,
         action,
         domain,
         command: {
