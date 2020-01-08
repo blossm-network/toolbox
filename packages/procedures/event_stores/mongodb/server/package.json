@@ -1,7 +1,7 @@
 {
   "name": "@blossm/mongodb-event-store",
   "description": "A mongodb event store server.",
-  "version": "0.0.43",
+  "version": "0.0.44",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -15,12 +15,12 @@
   },
   "dependencies": {
     "@blossm/datetime": "*",
-    "@blossm/event-store": "^0.0.35",
+    "@blossm/event-store": "^0.0.36",
     "@blossm/gcp-secret": "^0.0.22",
     "@blossm/logger": "^0.0.5",
     "@blossm/mongodb-database": "^0.0.17",
     "@blossm/mongodb-event-store-normalize": "^0.0.5",
-    "@blossm/mongodb-event-store-reduce": "^0.0.5"
+    "@blossm/mongodb-event-store-reduce": "^0.0.6"
   },
   "devDependencies": {
     "chai-datetime": "^1.5.0",
