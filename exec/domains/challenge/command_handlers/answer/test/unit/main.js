@@ -206,7 +206,6 @@ describe("Command handler unit tests", () => {
         expiresIn: 7776000
       },
       payload: {
-        principle: contextPrinciple,
         context: {
           user: contextuser,
           service,
