@@ -7,7 +7,7 @@ describe("Mongodb event store reduce", () => {
     const key = "some-key";
     const firstNumber = 3;
     const otherNumber = 4;
-    const number = 5;
+    const lastNumber = 5;
     const values = [
       {
         state: { a: 1, b: 2 },
@@ -15,7 +15,7 @@ describe("Mongodb event store reduce", () => {
       },
       {
         state: { a: 4, d: 3 },
-        headers: { lastEventNumber: number }
+        headers: { lastEventNumber: lastNumber }
       },
       {
         state: { a: 2, b: 3, c: 3 },
@@ -26,7 +26,7 @@ describe("Mongodb event store reduce", () => {
     expect(aggregate).to.deep.equal({
       headers: {
         root: key,
-        lastEventNumber: 5
+        lastEventNumber: lastNumber
       },
       state: {
         a: 4,
@@ -40,11 +40,11 @@ describe("Mongodb event store reduce", () => {
     const key = "some-key";
     const firstNumber = 3;
     const otherNumber = 4;
-    const number = 5;
+    const lastNumber = 5;
     const values = [
       {
         state: { a: 4, d: 3 },
-        headers: { lastEventNumber: number }
+        headers: { lastEventNumber: lastNumber }
       },
       {
         state: { a: 2, b: 3, c: 3 },
@@ -59,7 +59,7 @@ describe("Mongodb event store reduce", () => {
     expect(aggregate).to.deep.equal({
       headers: {
         root: key,
-        lastEventNumber: 5
+        lastEventNumber: lastNumber
       },
       state: {
         a: 4,

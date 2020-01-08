@@ -36,6 +36,9 @@ module.exports = ({ writeFn, mapReduceFn, publishFn, findOneFn }) => {
 
     const writtenEvent = await writeFn({ id, data: event });
     await mapReduceFn({ id });
+    const aggregate2 = await findOneFn({ root });
+    //eslint-disable-next-line
+    console.log("aggregate again is: ", aggregate2);
     await publishFn(writtenEvent);
 
     res.status(204).send();
