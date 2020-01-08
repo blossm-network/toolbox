@@ -7,9 +7,9 @@ domain: some-domain
 service: core
 
 stores:
-  - name: some-name
-    priviledges: [some-permission]
   - name: some-other-name
+    priviledges: [some-permission]
+  - name: some-name
     priviledges: none
 
 whitelist:

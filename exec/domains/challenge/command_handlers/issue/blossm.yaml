@@ -65,11 +65,8 @@ testing:
       domain: challenge
       context: view-store
 
-  event:
-    code:
-    issued:
-    phone: "+19195551144"
-    principle: some-principle
+  response:
+    token:
 
 #don't change
 context: command-handler

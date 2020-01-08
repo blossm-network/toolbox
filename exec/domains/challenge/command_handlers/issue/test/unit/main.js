@@ -76,14 +76,18 @@ describe("Command handler unit tests", () => {
     const result = await main({ payload, context });
 
     expect(result).to.deep.equal({
-      root,
-      payload: {
-        code,
-        principle,
-        phone,
-        issued: new Date().toISOString(),
-        expires: 180
-      },
+      events: [
+        {
+          root,
+          payload: {
+            code,
+            principle,
+            phone,
+            issued: new Date().toISOString(),
+            expires: 180
+          }
+        }
+      ],
       response: { token }
     });
     expect(readFake).to.have.been.calledWith({ phone: payloadPhone });

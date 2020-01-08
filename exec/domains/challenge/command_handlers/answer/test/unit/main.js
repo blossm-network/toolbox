@@ -79,12 +79,21 @@ describe("Command handler unit tests", () => {
     const createJwtFake = fake.returns(token);
     replace(deps, "createJwt", createJwtFake);
 
-    const result = await main({ payload, root: challengeRoot, context });
+    const result = await main({
+      payload,
+      root: challengeRoot,
+      context
+    });
 
     expect(result).to.deep.equal({
-      payload: {
-        answered: deps.stringDate()
-      },
+      events: [
+        {
+          payload: {
+            answered: deps.stringDate()
+          },
+          root: challengeRoot
+        }
+      ],
       response: { token }
     });
     expect(readOneFake).to.have.been.calledWith({ root: challengeRoot });
@@ -158,9 +167,14 @@ describe("Command handler unit tests", () => {
     const result = await main({ payload, root: challengeRoot, context });
 
     expect(result).to.deep.equal({
-      payload: {
-        answered: deps.stringDate()
-      },
+      events: [
+        {
+          root: challengeRoot,
+          payload: {
+            answered: deps.stringDate()
+          }
+        }
+      ],
       response: { token }
     });
     expect(readOneFake).to.have.been.calledWith({ root: challengeRoot });

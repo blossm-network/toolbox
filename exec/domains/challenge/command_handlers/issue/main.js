@@ -58,6 +58,9 @@ module.exports = async ({ payload, context }) => {
   //Create a challenge code.
   const code = deps.randomIntOfLength(CODE_LENGTH);
 
+  //eslint-disable-next-line
+  console.log("Issuing code: ", { code });
+
   //Send the code.
   sms.send({
     to: user.phone,
@@ -67,14 +70,18 @@ module.exports = async ({ payload, context }) => {
 
   //Send the token to the requester so they can access the answer command.
   return {
-    root,
-    payload: {
-      code,
-      principle: user.principle,
-      phone: user.phone,
-      issued: deps.stringDate(),
-      expires: THREE_MINUTES
-    },
+    events: [
+      {
+        payload: {
+          code,
+          principle: user.principle,
+          phone: user.phone,
+          issued: deps.stringDate(),
+          expires: THREE_MINUTES
+        },
+        root
+      }
+    ],
     response: { token }
   };
 };

@@ -65,5 +65,8 @@ module.exports = async ({ payload, root, context }) => {
     })
   });
 
-  return { payload: { answered: deps.stringDate() }, response: { token } };
+  return {
+    events: [{ root, payload: { answered: deps.stringDate() } }],
+    response: { token }
+  };
 };
