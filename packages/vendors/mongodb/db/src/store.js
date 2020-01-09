@@ -90,7 +90,10 @@ module.exports = ({
     mixins
   };
 
-  const store = new mongoose.Schema({}, { strict: schema != undefined });
+  const store = new mongoose.Schema(
+    {},
+    { strict: schema != undefined, typePojoToMixed: false }
+  );
 
   formattedMixins(base).forEach(mixin => mixin(store));
 

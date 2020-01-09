@@ -28,10 +28,6 @@ const eventStore = async schema => {
     return _eventStore;
   }
 
-  //eslint-disable-next-line
-  console.log("schema: ", schema);
-  //eslint-disable-next-line
-  console.log("formatted: ", formatSchema(schema));
   _eventStore = deps.db.store({
     name: `${process.env.DOMAIN}`,
     schema: {

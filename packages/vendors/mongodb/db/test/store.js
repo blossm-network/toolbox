@@ -49,7 +49,10 @@ describe("Returns a model", () => {
         default: 0
       }
     });
-    expect(schemaFake).to.have.been.calledWith({}, { strict: false });
+    expect(schemaFake).to.have.been.calledWith(
+      {},
+      { strict: false, typePojoToMixed: false }
+    );
     expect(addFake).to.have.been.calledWith({
       key: schema0[commonKey]
     });
@@ -112,7 +115,10 @@ describe("Returns a model", () => {
     });
 
     expect(obj[commonKey].default).to.equal(schema0Value);
-    expect(schemaFake).to.have.been.calledWith({}, { strict: true });
+    expect(schemaFake).to.have.been.calledWith(
+      {},
+      { strict: true, typePojoToMixed: false }
+    );
   });
   it("it should connect if a connection string is passed in", () => {
     replace(mongoose, "Schema", schemaFake);
