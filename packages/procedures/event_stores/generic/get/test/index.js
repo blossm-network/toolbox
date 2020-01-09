@@ -48,7 +48,7 @@ describe("Event store get", () => {
     try {
       await get({ findOneFn: findOneFnFake })(req, res);
 
-      //shouldn't be called
+      //shouldn't get called
       expect(2).to.equal(1);
     } catch (e) {
       expect(e).to.equal(error);

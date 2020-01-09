@@ -9,7 +9,7 @@ describe("Valid emails", () => {
       "firstname.lastname@domain.com",
       "email@subdomain.domain.com",
       "firstname+lastname@domain.com",
-      "\"email\"@domain.com",
+      '"email"@domain.com',
       "1234567890@domain.com",
       "email@domain-one.com",
       "_______@domain.com",
@@ -21,7 +21,7 @@ describe("Valid emails", () => {
       try {
         validate(validEmail);
       } catch (e) {
-        //shouldn't be called;
+        //shouldn't get called
         expect(1).to.equal(0);
       }
     });

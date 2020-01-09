@@ -17,7 +17,7 @@ const checkInvalidNestedObject = async ({ property, invalid, example }) => {
     try {
       await validate(payload);
 
-      //shouldn't be called.
+      //shouldn't get called.
       expect(0).to.equal(1);
     } catch (e) {
       expect(e.statusCode).to.equal(409);
@@ -39,7 +39,7 @@ describe("Command handler store validator tests", () => {
         await validate(payload);
       }
     } catch (e) {
-      //shouldn't be called.
+      //shouldn't get called.
       expect(1).to.equal(0);
     }
   });
@@ -62,7 +62,7 @@ describe("Command handler store validator tests", () => {
         try {
           await validate(payload);
 
-          //shouldn't be called.
+          //shouldn't get called.
           expect(0).to.equal(1);
         } catch (e) {
           expect(e.statusCode).to.equal(409);

@@ -27,7 +27,7 @@ describe("Validate command", () => {
     try {
       validateCommand(goodParams);
     } catch (e) {
-      //shouldn't be called;
+      //shouldn't get called
       expect(1).to.equal(0);
     }
   });
@@ -39,7 +39,7 @@ describe("Validate command", () => {
     try {
       await validateCommand(params);
 
-      //shouldn't be called
+      //shouldn't get called
       expect(2).to.equal(1);
     } catch (e) {
       expect(e.statusCode).to.equal(409);
@@ -89,7 +89,7 @@ describe("Validate command", () => {
     try {
       validateCommand(params);
     } catch (e) {
-      //shouldn't be called;
+      //shouldn't get called
       expect(1).to.equal(0);
     }
   });
@@ -121,7 +121,7 @@ describe("Validate command", () => {
     try {
       validateCommand(params);
     } catch (e) {
-      //shouldn't be called;
+      //shouldn't get called
       expect(1).to.equal(0);
     }
   });
@@ -153,7 +153,7 @@ describe("Validate command", () => {
     try {
       validateCommand(params);
     } catch (e) {
-      //shouldn't be called;
+      //shouldn't get called
       expect(1).to.equal(0);
     }
   });
@@ -250,7 +250,7 @@ describe("Validate command", () => {
     try {
       validateCommand(params);
     } catch (e) {
-      //shouldn't be called;
+      //shouldn't get called
       expect(1).to.equal(0);
     }
   });

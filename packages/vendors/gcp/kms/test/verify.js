@@ -52,7 +52,7 @@ describe("Kms verify", () => {
         signature
       });
 
-      //shouldn't be called
+      //shouldn't get called
       expect(1).to.equal(2);
     } catch (e) {
       expect(e.message).to.equal(errorMessage);

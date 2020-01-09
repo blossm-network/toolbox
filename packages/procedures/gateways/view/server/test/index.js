@@ -250,7 +250,7 @@ describe("View gateway", () => {
     replace(deps, "server", serverFake);
     try {
       await gateway({ stores: [], whitelist, permissionsLookupFn });
-      //shouldn't be called
+      //shouldn't get called
       expect(2).to.equal(1);
     } catch (e) {
       expect(e.message).to.equal(errorMessage);

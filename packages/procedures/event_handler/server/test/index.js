@@ -35,8 +35,9 @@ describe("Event handler", () => {
     });
   });
   it("should throw correctly", async () => {
-    const listenFake = fake();
-    const postFake = fake.rejects({
+    const errorMessage = "error-message";
+    const listenFake = fake.throws(new Error(errorMessage));
+    const postFake = fake.returns({
       listen: listenFake
     });
     const serverFake = fake.returns({
@@ -54,7 +55,7 @@ describe("Event handler", () => {
       //shouldnt call
       expect(2).to.equal(1);
     } catch (e) {
-      expect(e).to.exist;
+      expect(e.message).to.equal(errorMessage);
     }
   });
 });

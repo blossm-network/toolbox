@@ -227,7 +227,7 @@ describe("Command handler unit tests", () => {
     replace(deps, "viewStore", viewStoreFake);
     try {
       await main({ payload, context });
-      //shouldn't be called
+      //shouldn't get called
       expect(2).to.equal(3);
     } catch (e) {
       expect(e.message).to.equal(errorMessage);
@@ -251,7 +251,7 @@ describe("Command handler unit tests", () => {
 
     try {
       await main({ payload, context });
-      //shouldn't be called
+      //shouldn't get called
       expect(2).to.equal(3);
     } catch (e) {
       expect(e).to.equal(error);
@@ -279,7 +279,7 @@ describe("Command handler unit tests", () => {
 
     try {
       await main({ payload, root: challengeRoot, context });
-      //shouldn't be called
+      //shouldn't get called
       expect(2).to.equal(3);
     } catch (e) {
       expect(e).to.equal(error);
@@ -310,7 +310,7 @@ describe("Command handler unit tests", () => {
 
     try {
       await main({ payload, root: challengeRoot, context });
-      //shouldn't be called
+      //shouldn't get called
       expect(2).to.equal(3);
     } catch (e) {
       expect(e).to.equal(error);

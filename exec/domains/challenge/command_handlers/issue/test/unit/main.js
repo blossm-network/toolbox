@@ -155,7 +155,7 @@ describe("Command handler unit tests", () => {
     try {
       await main({ payload, context });
 
-      //shouldn't be called
+      //shouldn't get called
       expect(2).to.equal(3);
     } catch (e) {
       expect(e.message).to.equal(errorMessage);
@@ -174,7 +174,7 @@ describe("Command handler unit tests", () => {
     try {
       await main({ payload, context });
 
-      //shouldn't be called
+      //shouldn't get called
       expect(2).to.equal(3);
     } catch (e) {
       expect(e.statusCode).to.equal(409);

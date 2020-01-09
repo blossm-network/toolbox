@@ -8,6 +8,7 @@ const commandGateway = require("./command_gateway");
 const viewGateway = require("./view_gateway");
 const commandHandler = require("./command_handler");
 const eventHandler = require("./event_handler");
+const projection = require("./projection");
 const eventStore = require("./event_store");
 const job = require("./job");
 
@@ -16,6 +17,7 @@ const steps = ({
   domain,
   action,
   name,
+  event,
   project,
   network,
   memory,
@@ -48,6 +50,7 @@ const steps = ({
         region,
         domain,
         name,
+        event,
         project,
         network,
         memory,
@@ -116,7 +119,36 @@ const steps = ({
         envUriSpecifier,
         envNameSpecifier,
         containerRegistery,
-        eventHandler,
+        mainContainerName,
+        dnsZone,
+        service,
+        memory,
+        context,
+        operationHash,
+        env,
+        serviceName,
+        uri,
+        secretBucket,
+        secretBucketKeyLocation,
+        secretBucketKeyRing,
+        runUnitTests,
+        runBaseUnitTests,
+        runIntegrationTests,
+        runBaseIntegrationTests
+      });
+    case "projection":
+      return projection({
+        imageExtension,
+        action,
+        region,
+        domain,
+        name,
+        event,
+        project,
+        network,
+        envUriSpecifier,
+        envNameSpecifier,
+        containerRegistery,
         mainContainerName,
         dnsZone,
         service,
@@ -246,7 +278,7 @@ const steps = ({
   }
 };
 
-const imageExtension = ({ domain, name, action, context }) => {
+const imageExtension = ({ domain, name, action, event, context }) => {
   switch (context) {
     case "view-store":
       return `${domain}.${name}`;
@@ -256,6 +288,8 @@ const imageExtension = ({ domain, name, action, context }) => {
       return domain;
     case "event-handler":
       return `${domain}.did-${action}.${name}`;
+    case "projection":
+      return `${domain}.${name}.did-${event.action}.${event.domain}`;
     case "command-handler":
       return `${domain}.${action}`;
     case "job":
@@ -268,6 +302,7 @@ module.exports = ({
   region,
   domain,
   action,
+  event,
   name,
   project,
   network,
@@ -293,7 +328,8 @@ module.exports = ({
     context,
     action,
     name,
-    domain
+    domain,
+    event
   });
 
   const runUnitTests = fs.existsSync(path.resolve(workingDir, "test/unit"));
@@ -314,6 +350,7 @@ module.exports = ({
       domain,
       action,
       name,
+      event,
       project,
       network,
       memory,

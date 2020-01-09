@@ -142,14 +142,14 @@ describe("Request", () => {
     };
     const onFn = (status, fn) => {
       switch (status) {
-      case "error":
-        return { on: onFn };
-      case "data":
-        fn(body);
-        return { on: onFn };
-      case "end":
-        fn();
-        break;
+        case "error":
+          return { on: onFn };
+        case "data":
+          fn(body);
+          return { on: onFn };
+        case "end":
+          fn();
+          break;
       }
     };
     replace(deps, "request", options => {
@@ -174,15 +174,15 @@ describe("Request", () => {
     const errorMessage = "some-error-message";
     const onFn = (status, fn) => {
       switch (status) {
-      case "error":
-        fn(new Error(errorMessage));
-        return;
-      case "data":
-        fn(body);
-        return { on: onFn };
-      case "end":
-        fn();
-        break;
+        case "error":
+          fn(new Error(errorMessage));
+          return;
+        case "data":
+          fn(body);
+          return { on: onFn };
+        case "end":
+          fn();
+          break;
       }
     };
     replace(deps, "request", options => {
@@ -198,7 +198,7 @@ describe("Request", () => {
     try {
       await request.stream(url, onDataFake, { query: params });
 
-      //shouldn't be called
+      //shouldn't get called
       expect(0).to.equal(1);
     } catch (e) {
       expect(e.message).to.equal(errorMessage);

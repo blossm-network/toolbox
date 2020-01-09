@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "@blossm/projection": "*"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "@blossm/request": "*",
+    "@blossm/view-store-rpc": "*"
+  }
+}

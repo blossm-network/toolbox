@@ -51,7 +51,7 @@ describe("Validate", () => {
     try {
       await validate({ token, verifyFn });
 
-      //shouldn't be called.
+      //shouldn't get called.
       expect(1).to.equal(2);
     } catch (e) {
       expect(e).to.equal(error);

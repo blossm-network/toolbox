@@ -1,17 +1,19 @@
 const { oneLine } = require("common-tags");
 
 module.exports = ({
+  name,
   service,
-  operationHash,
-  action,
   domain,
+  operationHash,
+  eventAction,
+  eventDomain,
+  eventService,
   context,
   envUriSpecifier,
   network,
   project,
   region,
-  envNameSpecifier,
-  name
+  envNameSpecifier
 }) => {
   return {
     name: "gcr.io/cloud-builders/gcloud",
@@ -20,11 +22,11 @@ module.exports = ({
       "-c",
       oneLine`
     gcloud beta pubsub subscriptions create ${service}-${context}-${operationHash}
-    --topic=did-${action}.${domain}.${service}.${envUriSpecifier}${network}
+    --topic=did-${eventAction}.${eventDomain}.${eventService}.${envUriSpecifier}${network}
     --push-endpoint=https://${operationHash}.${region}.${envUriSpecifier}${network}
     --push-auth-service-account=cloud-run-pubsub-invoker@${project}${envNameSpecifier}.iam.gserviceaccount.com
     --topic-project=${project}${envNameSpecifier}
-    --labels=service=${service},context=${context},domain=${domain},action=${action},name=${name},hash=${operationHash} || exit 0
+    --labels=service=${service},context=${context},domain=${domain},name=${name},event-action=${eventAction},event-domain=${eventDomain},event-service=${eventService},hash=${operationHash} || exit 0
     `
     ]
   };

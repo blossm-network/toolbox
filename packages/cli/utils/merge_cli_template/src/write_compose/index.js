@@ -31,6 +31,7 @@ module.exports = ({
   domain,
   name,
   action,
+  event,
   secretBucketKeyLocation,
   secretBucketKeyRing
 }) => {
@@ -88,6 +89,7 @@ module.exports = ({
           domain,
           name,
           action,
+          event,
           secretBucket,
           secretBucketKeyLocation,
           secretBucketKeyRing,

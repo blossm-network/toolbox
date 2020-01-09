@@ -197,6 +197,7 @@ const configure = async (workingDir, configFn, env) => {
     const context = config.context;
     const action = config.action;
     const name = config.name;
+    const event = config.event;
 
     const secretBucket = env =>
       `${blossmConfig.vendors.cloud.gcp.secretsBucket}${envNameSpecifier(
@@ -217,6 +218,7 @@ const configure = async (workingDir, configFn, env) => {
       domain,
       action,
       name,
+      event,
       project,
       context,
       network,
@@ -247,6 +249,7 @@ const configure = async (workingDir, configFn, env) => {
       domain,
       name,
       action,
+      event,
       secretBucket: secretBucket("staging"),
       secretBucketKeyLocation,
       secretBucketKeyRing

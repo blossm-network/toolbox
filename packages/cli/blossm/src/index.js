@@ -11,6 +11,7 @@ const set = require("./set");
 const secret = require("./secret");
 const commandHandler = require("./command_handler");
 const eventHandler = require("./event_handler");
+const projection = require("./projection");
 const eventStore = require("./event_store");
 const viewStore = require("./view_store");
 const commandGateway = require("./command_gateway");
@@ -24,6 +25,7 @@ const domains = [
   "set",
   "command-handler",
   "event-handler",
+  "projection",
   "view-store",
   "event-store",
   "command-gateway",
@@ -54,6 +56,8 @@ const tryShortcuts = input => {
       return commandHandler(args);
     case "event-handler":
       return eventHandler(args);
+    case "projection":
+      return projection(args);
     case "event-store":
       return eventStore(args);
     case "view-store":
@@ -81,6 +85,8 @@ const forward = input => {
       return commandHandler(input.args);
     case "event-handler":
       return eventHandler(input.args);
+    case "projection":
+      return projection(input.args);
     case "event-store":
       return eventStore(input.args);
     case "view-store":

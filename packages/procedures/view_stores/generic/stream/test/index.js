@@ -90,7 +90,7 @@ describe("View store stream", () => {
     try {
       await stream({ streamFn: streamFake })(req, res);
 
-      //shouldn't be called
+      //shouldn't get called
       expect(2).to.equal(1);
     } catch (e) {
       expect(e.message).to.equal(errorMessage);

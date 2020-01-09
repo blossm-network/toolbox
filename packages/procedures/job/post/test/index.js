@@ -69,7 +69,7 @@ describe("Command handler post", () => {
         mainFn: mainFnFake
       })(req, res);
 
-      //shouldn't be called
+      //shouldn't get called
       expect(1).to.equal(2);
     } catch (e) {
       expect(e.message).to.equal(errorMessage);

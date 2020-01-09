@@ -9,6 +9,7 @@ module.exports = ({
   containerRegistery,
   domain,
   name,
+  event,
   env,
   action,
   secretBucket,
@@ -85,6 +86,18 @@ module.exports = ({
           ...common.environment,
           ACTION: `${action}`,
           NAME: `${name}`
+        }
+      };
+    case "projection":
+      return {
+        image: `${commonImagePrefix}.did-${event.action}.${event.domain}:latest`,
+        ...common,
+        environment: {
+          ...common.environment,
+          NAME: `${name}`,
+          EVENT_ACTION: `${event.action}`,
+          EVENT_DOMAIN: `${event.domain}`,
+          EVENT_SERVICE: `${event.service}`
         }
       };
     case "job":
