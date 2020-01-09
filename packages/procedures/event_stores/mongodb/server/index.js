@@ -129,8 +129,8 @@ const aggregateStore = async ({ schema }) => {
 };
 
 module.exports = async ({ schema, publishFn } = {}) => {
-  const eStore = await eventStore({ schema: removeIds(schema) });
-  const aStore = await aggregateStore({ schema: removeIds(schema) });
+  const eStore = await eventStore({ schema: removeIds({ schema }) });
+  const aStore = await aggregateStore({ schema: removeIds({ schema }) });
 
   const writeFn = async ({ id, data }) => {
     const result = await deps.db.write({
