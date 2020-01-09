@@ -8,7 +8,7 @@ const commandGateway = require("./command_gateway");
 const viewGateway = require("./view_gateway");
 const commandHandler = require("./command_handler");
 const eventHandler = require("./event_handler");
-const eventStore = require("./event_handlere");
+const eventStore = require("./event_store");
 const job = require("./job");
 
 const steps = ({
