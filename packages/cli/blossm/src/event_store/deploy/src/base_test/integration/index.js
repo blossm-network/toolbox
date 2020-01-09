@@ -67,7 +67,7 @@ describe("Event store integration tests", () => {
 
     const parsedBody1 = JSON.parse(response1.body);
     for (const property in example0) {
-      expect(parsedBody1.state[property]).to.equal(example0[property]);
+      expect(parsedBody1.state[property]).to.deep.equal(example0[property]);
     }
 
     const response2 = await request.post(url, {
