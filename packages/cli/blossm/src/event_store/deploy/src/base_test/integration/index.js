@@ -153,41 +153,86 @@ describe("Event store integration tests", () => {
       }
     });
   });
-  it("should return an error if incorrect params", async () => {
+
+  const testIncorrectParams = async payload => {
     const root = uuid();
-    //Grab a property from the schema and pass a wrong value to it.
+    //eslint-disable-next-line
+    console.log("payload: ", payload);
+    const response = await request.post(url, {
+      body: {
+        event: {
+          headers: {
+            root,
+            topic,
+            version,
+            created,
+            action,
+            domain,
+            command: {
+              id,
+              action,
+              domain,
+              service,
+              network,
+              issued
+            }
+          },
+          payload
+        }
+      }
+    });
+    expect(response.statusCode).to.equal(500);
+  };
+
+  const badObjectValue = async (key, schema) => {
+    //eslint-disable-next-line
+    console.log("nested: ", { key, schema });
     for (const property in schema) {
+      //eslint-disable-next-line
+      console.log("bad object prop: ", property);
       const badValue =
         schema[property] == "String" ||
         (typeof schema[property] == "object" &&
-          schema[property]["type"] == "String")
+          (schema[property]["type"] == "String" ||
+            (typeof schema[property]["type"] == "object" &&
+              schema[property]["type"]["type"] == "String")))
           ? { a: 1 } //pass an object to a String property
           : "some-string"; // or, pass a string to a non-String property
 
-      const response = await request.post(url, {
-        body: {
-          event: {
-            headers: {
-              root,
-              topic,
-              version,
-              created,
-              action,
-              domain,
-              command: {
-                id,
-                action,
-                domain,
-                service,
-                network,
-                issued
-              }
-            },
-            payload: { [property]: badValue }
-          }
-        }
+      await testIncorrectParams({
+        ...example0,
+        [key]: { [property]: badValue }
       });
-      expect(response.statusCode).to.equal(500);
+    }
+  };
+
+  it("should return an error if incorrect params", async () => {
+    //Grab a property from the schema and pass a wrong value to it.
+    for (const property in schema) {
+      //eslint-disable-next-line
+      console.log("property: ", property);
+
+      let badValue;
+      if (
+        typeof schema[property] == "object" &&
+        schema[property]["type"] == undefined
+      ) {
+        badValue = await badObjectValue(property, schema[property]);
+        return;
+      } else {
+        badValue =
+          schema[property] == "String" ||
+          (typeof schema[property] == "object" &&
+            (schema[property]["type"] == "String" ||
+              (typeof schema[property]["type"] == "object" &&
+                schema[property]["type"]["type"] == "String")))
+            ? { a: 1 } //pass an object to a String property
+            : "some-string"; // or, pass a string to a non-String property
+      }
+
+      //eslint-disable-next-line
+      console.log("bad value: ", badValue);
+      await testIncorrectParams({ ...example0, [property]: badValue });
     }
   });
   it("should return an error if bad number", async () => {
