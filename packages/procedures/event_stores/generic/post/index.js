@@ -4,9 +4,6 @@ const { preconditionFailed } = require("@blossm/errors");
 
 module.exports = ({ writeFn, mapReduceFn, publishFn, findOneFn }) => {
   return async (req, res) => {
-    //eslint-disable-next-line
-    console.log("in event store: ", req.body);
-
     const root = req.body.event.headers.root;
 
     const aggregate = await findOneFn({ root });
@@ -33,13 +30,7 @@ module.exports = ({ writeFn, mapReduceFn, publishFn, findOneFn }) => {
       created: now
     };
 
-    //eslint-disable-next-line
-    console.log("event : ", event);
-
     const writtenEvent = await writeFn({ id, data: event });
-
-    //eslint-disable-next-line
-    console.log("writtenEvent : ", writtenEvent);
 
     await mapReduceFn({ id });
     await publishFn(writtenEvent);

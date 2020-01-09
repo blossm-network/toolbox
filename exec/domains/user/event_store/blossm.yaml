@@ -6,8 +6,8 @@ schema:
 
 testing:
   examples:
-    - phone: +19195551144
-    - phone: +19195551155
+    - phone: "+19195551144"
+    - phone: "+19195551155"
 
 #don't change
 context: event-store

@@ -146,9 +146,7 @@ describe("Event store integration tests", () => {
                   issued
                 }
               },
-              payload: {
-                event: example0
-              }
+              payload: example0
             }
           }
         });
