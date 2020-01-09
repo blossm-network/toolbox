@@ -40,7 +40,7 @@ module.exports = ({
   runIntegrationTests,
   runBaseIntegrationTests
 }) => {
-  const authUri = `views.${domain}.${service}.${envUriSpecifier}${network}`;
+  const authUri = `view.${domain}.${service}.${envUriSpecifier}${network}`;
   return [
     yarnInstall,
     ...(runUnitTests ? [unitTests] : []),
