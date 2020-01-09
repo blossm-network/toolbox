@@ -1,6 +1,6 @@
 {
   "name": "@blossm/validate-command",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "Validates the paramaters found in command requests.",
   "main": "index.js",
   "author": "blossm.network",
@@ -13,7 +13,7 @@
   "dependencies": {
     "@blossm/duration-consts": "*",
     "@blossm/errors": "^0.0.8",
-    "@blossm/validator": "^0.0.10"
+    "@blossm/validator": "^0.0.11"
   },
   "scripts": {
     "test": "mocha --recursive"
