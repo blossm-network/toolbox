@@ -90,7 +90,7 @@ module.exports = ({
       };
     case "projection":
       return {
-        image: `${commonImagePrefix}.did-${event.action}.${event.domain}:latest`,
+        image: `${commonImagePrefix}.${name}.did-${event.action}.${event.domain}:latest`,
         ...common,
         environment: {
           ...common.environment,
