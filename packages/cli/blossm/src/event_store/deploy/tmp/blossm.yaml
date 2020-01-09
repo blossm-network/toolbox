@@ -1,0 +1,13 @@
+domain: user 
+service: core
+
+schema:
+  phone: String
+
+testing:
+  examples:
+    - phone: +19195551144
+    - phone: +19195551155
+
+#don't change
+context: event-store
