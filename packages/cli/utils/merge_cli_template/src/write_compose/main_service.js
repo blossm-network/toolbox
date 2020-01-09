@@ -79,15 +79,6 @@ module.exports = ({
         }
       };
     case "event-handler":
-      return {
-        image: `${commonImagePrefix}.did-${action}.${name}:latest`,
-        ...common,
-        environment: {
-          ...common.environment,
-          ACTION: `${action}`,
-          NAME: `${name}`
-        }
-      };
     case "projection":
       return {
         image: `${commonImagePrefix}.${name}.did-${event.action}.${event.domain}:latest`,

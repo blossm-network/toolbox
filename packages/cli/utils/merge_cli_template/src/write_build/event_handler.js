@@ -20,10 +20,10 @@ const mapDomain = require("./steps/map_domain");
 const writeEnv = require("./steps/write_env");
 
 module.exports = ({
-  action,
   region,
   domain,
   name,
+  event,
   project,
   network,
   envUriSpecifier,
@@ -67,7 +67,12 @@ module.exports = ({
       secretBucket,
       secretBucketKeyRing,
       secretBucketKeyLocation,
-      custom: { ACTION: action, NAME: name }
+      custom: {
+        NAME: name,
+        EVENT_ACTION: event.action,
+        EVENT_DOMAIN: event.domain,
+        EVENT_SERVICE: event.service
+      }
     }),
     dockerComposeUp,
     dockerComposeProcesses,
@@ -98,8 +103,8 @@ module.exports = ({
       network,
       envNameSpecifier,
       envUriSpecifier,
-      env: `ACTION=${action},NAME=${name}`,
-      labels: `action=${action},name=${name}`
+      env: `NAME=${name},EVENT_ACTION=${event.action},EVENT_DOMAIN=${event.domain},EVENT_SERVICE=${event.service}`,
+      labels: `name=${name},event-action=${event.action},event-domain=${event.domain},event-service=${event.service}`
     }),
     startDnsTransaction({ dnsZone, project }),
     addDnsTransaction({ uri, dnsZone, project }),
@@ -119,26 +124,28 @@ module.exports = ({
       envNameSpecifier
     }),
     createPubsubTopic({
-      action,
-      domain,
-      service,
+      action: event.action,
+      domain: event.domain,
+      service: event.service,
       envUriSpecifier,
       network,
       project,
       envNameSpecifier
     }),
     createPubsubSubscription({
+      name,
+      domain,
       service,
       operationHash,
-      action,
-      domain,
+      eventAction: event.action,
+      eventDomain: event.domain,
+      eventService: event.service,
       context,
       region,
       envUriSpecifier,
       network,
       project,
-      envNameSpecifier,
-      name
+      envNameSpecifier
     })
   ];
 };

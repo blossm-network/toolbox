@@ -8,8 +8,7 @@ const commandGateway = require("./command_gateway");
 const viewGateway = require("./view_gateway");
 const commandHandler = require("./command_handler");
 const eventHandler = require("./event_handler");
-const projection = require("./projection");
-const eventStore = require("./event_store");
+const eventStore = require("./event_handlere");
 const job = require("./job");
 
 const steps = ({
@@ -108,36 +107,8 @@ const steps = ({
         runBaseIntegrationTests
       });
     case "event-handler":
-      return eventHandler({
-        imageExtension,
-        action,
-        region,
-        domain,
-        name,
-        project,
-        network,
-        envUriSpecifier,
-        envNameSpecifier,
-        containerRegistery,
-        mainContainerName,
-        dnsZone,
-        service,
-        memory,
-        context,
-        operationHash,
-        env,
-        serviceName,
-        uri,
-        secretBucket,
-        secretBucketKeyLocation,
-        secretBucketKeyRing,
-        runUnitTests,
-        runBaseUnitTests,
-        runIntegrationTests,
-        runBaseIntegrationTests
-      });
     case "projection":
-      return projection({
+      return eventHandler({
         imageExtension,
         action,
         region,
@@ -287,7 +258,6 @@ const imageExtension = ({ domain, name, action, event, context }) => {
     case "view-gateway":
       return domain;
     case "event-handler":
-      return `${domain}.did-${action}.${name}`;
     case "projection":
       return `${domain}.${name}.did-${event.action}.${event.domain}`;
     case "command-handler":

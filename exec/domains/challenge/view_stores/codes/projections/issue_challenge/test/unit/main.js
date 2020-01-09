@@ -3,6 +3,7 @@ const { expect } = require("chai")
   .use(require("sinon-chai"));
 const { restore, useFakeTimers } = require("sinon");
 
+const deps = require("../../deps");
 const main = require("../../main");
 
 let clock;
@@ -17,14 +18,20 @@ describe("Event handler unit tests", () => {
     restore();
   });
   it("should return successfully", async () => {
-    const name = "some-name";
-    const context = "some-context";
-    const root = "some-root";
-    const payload = { name };
-    const headers = { root, context };
+    const code = "some-code";
+    const expires = 180;
+    const payload = { code, expires };
 
-    await main({ payload, headers });
+    const result = await main({ payload });
 
-    expect(1).to.equal(1);
+    expect(result).to.deep.equal({
+      code,
+      expires: deps.stringFromDate(
+        deps
+          .moment()
+          .add(3, "m")
+          .toDate()
+      )
+    });
   });
 });
