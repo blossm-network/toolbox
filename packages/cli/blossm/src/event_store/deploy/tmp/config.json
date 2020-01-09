@@ -1,0 +1,41 @@
+{
+  "domain": "session",
+  "service": "core",
+  "schema": {
+    "user": "String",
+    "device": {
+      "os": "String",
+      "version": "String",
+      "hardware": "String",
+      "manufacturer": "String",
+      "id": "String"
+    }
+  },
+  "testing": {
+    "examples": [
+      {
+        "user": "some-user-root",
+        "device": {
+          "os": "iOS",
+          "version": 10,
+          "hardware": "iPhone 8",
+          "manufacturer": "Apple",
+          "id": "some-device-id"
+        }
+      },
+      {
+        "user": "some-other-user-root",
+        "device": {
+          "os": "Android",
+          "version": 10,
+          "hardware": "Pixel 3",
+          "manufacturer": "Google",
+          "id": "some-other-device-id"
+        }
+      }
+    ],
+    "procedures": [],
+    "topics": []
+  },
+  "context": "event-store"
+}
