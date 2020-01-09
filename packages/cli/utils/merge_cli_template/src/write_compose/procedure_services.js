@@ -62,6 +62,11 @@ const procedures = ({ config, domain }) => {
         ...eventStoreProcedures({ procedures: config.testing.procedures }),
         { domain, context: "event-store" }
       ];
+    case "projection":
+      return [
+        ...config.testing.procedures,
+        { name: config.name, domain, context: "view-store" }
+      ];
     case "command-gateway": {
       const procedures = [
         ...tokenProcedures,

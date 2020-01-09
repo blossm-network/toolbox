@@ -27,38 +27,40 @@ describe("Projection integration tests", () => {
 
       expect(response.statusCode).to.equal(204);
 
-      for (const result of example.results) {
-        parallelFns.push(async () => {
-          const v = await viewStore({
-            name,
-            domain
-          }).read(result.root ? { root: result.root } : result.query);
+      parallelFns.push(async () => {
+        const v = await viewStore({
+          name,
+          domain
+        }).read(
+          example.result.root
+            ? { root: example.result.root }
+            : example.result.query
+        );
 
-          if (result.value) {
-            for (const property in result.value) {
-              expect(v[property]).to.exist;
-              if (result.value[property] != undefined) {
-                expect(v[property]).to.deep.equal(result.value[property]);
-              }
-            }
-          } else if (result.values) {
-            expect(result.values.length).to.equal(v.length);
-            for (const value of result.values) {
-              expect(
-                v.some(view => {
-                  for (const property in value) {
-                    expect(view[property]).to.exist;
-                    if (value[property] != undefined) {
-                      expect(view[property]).to.deep.equal(value[property]);
-                    }
-                  }
-                })
-              );
+        if (example.result.value) {
+          for (const property in example.result.value) {
+            expect(v[property]).to.exist;
+            if (example.result.value[property] != undefined) {
+              expect(v[property]).to.deep.equal(example.result.value[property]);
             }
           }
-        });
-      }
+        } else if (example.result.values) {
+          expect(example.result.values.length).to.equal(v.length);
+          for (const value of example.result.values) {
+            expect(
+              v.some(view => {
+                for (const property in value) {
+                  expect(view[property]).to.exist;
+                  if (value[property] != undefined) {
+                    expect(view[property]).to.deep.equal(value[property]);
+                  }
+                }
+              })
+            );
+          }
+        }
+      });
     }
-    await Promise.all(parallelFns);
+    await Promise.all(parallelFns.map(fn => fn()));
   });
 });

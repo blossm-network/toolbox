@@ -24,5 +24,17 @@ devDependencies:
   "@blossm/request": "*"
   "@blossm/uuid": "*"
 
+testing:
+  examples:
+    - root: some-root
+
+      payload:
+        name: some-name
+
+      result:
+        root: some-root 
+        value: 
+          name: some-name
+
 #don't change
 context: projection
