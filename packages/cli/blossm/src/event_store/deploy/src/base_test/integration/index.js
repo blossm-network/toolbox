@@ -100,7 +100,7 @@ describe("Event store integration tests", () => {
 
     const parsedBody3 = JSON.parse(response3.body);
     for (const property in example1) {
-      expect(parsedBody3.state[property]).to.equal(example1[property]);
+      expect(parsedBody3.state[property]).to.deep.equal(example1[property]);
     }
   });
 
