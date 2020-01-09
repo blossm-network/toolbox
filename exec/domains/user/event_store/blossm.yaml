@@ -1,22 +1,13 @@
-domain: user
+domain: user 
 service: core
 
 schema:
-  name: String
-
-indexes: [[{ name: 1 }]]
-
-devDependencies:
-  "localenv": "^0.2.2"
-  "mocha": "^6.1.4"
-  "chai": "^4.2.0"
-  "@blossm/request": "*"
-  "@blossm/uuid": "*"
+  phone: String
 
 testing:
   examples:
-    - name: Jo
-    - name: Tyler
+    - phone: +19195551144
+    - phone: +19195551155
 
 #don't change
 context: event-store

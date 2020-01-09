@@ -17,14 +17,6 @@ service: core
 schema:
   name: String
 
-#No need to require @blossm/gcp-pubsub, it's required by default internally.
-devDependencies:
-  "localenv": "^0.2.2"
-  "mocha": "^6.1.4"
-  "chai": "^4.2.0"
-  "@blossm/request": "*"
-  "@blossm/uuid": "*"
-
 testing:
   #must add at least 2 examples
   examples:
