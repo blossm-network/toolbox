@@ -120,7 +120,7 @@ describe("Event store integration tests", () => {
           const json = JSON.parse(eventString);
 
           for (const property in example0) {
-            expect(json.payload[property]).to.equal(example0[property]);
+            expect(json.payload[property]).to.deep.equal(example0[property]);
           }
 
           await unsubscribe({ topic, name: sub });
