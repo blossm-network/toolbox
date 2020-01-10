@@ -184,21 +184,19 @@ describe("Event store integration tests", () => {
     expect(response.statusCode).to.equal(500);
   };
 
-  const badObjectValue = async (key, schema) => {
-    //eslint-disable-next-line
-    console.log("nested: ", { key, schema });
-    for (const property in schema) {
-      //eslint-disable-next-line
-      console.log("bad object prop: ", property);
-      const badValue =
-        schema[property] == "String" ||
-        (typeof schema[property] == "object" &&
-          (schema[property]["type"] == "String" ||
-            (typeof schema[property]["type"] == "object" &&
-              schema[property]["type"]["type"] == "String")))
-          ? { a: 1 } //pass an object to a String property
-          : "some-string"; // or, pass a string to a non-String property
+  const findBadValue = (schema, property) => {
+    return schema[property] == "String" ||
+      (typeof schema[property] == "object" &&
+        (schema[property]["type"] == "String" ||
+          (typeof schema[property]["type"] == "object" &&
+            schema[property]["type"]["type"] == "String")))
+      ? { a: 1 } //pass an object to a String property
+      : "some-string"; // or, pass a string to a non-String property
+  };
 
+  const badObjectValue = async (key, schema) => {
+    for (const property in schema) {
+      const badValue = findBadValue(schema, property);
       await testIncorrectParams({
         ...example0,
         [key]: { [property]: badValue }
@@ -209,9 +207,6 @@ describe("Event store integration tests", () => {
   it("should return an error if incorrect params", async () => {
     //Grab a property from the schema and pass a wrong value to it.
     for (const property in schema) {
-      //eslint-disable-next-line
-      console.log("property: ", property);
-
       let badValue;
       if (
         typeof schema[property] == "object" &&
@@ -220,21 +215,13 @@ describe("Event store integration tests", () => {
         badValue = await badObjectValue(property, schema[property]);
         return;
       } else {
-        badValue =
-          schema[property] == "String" ||
-          (typeof schema[property] == "object" &&
-            (schema[property]["type"] == "String" ||
-              (typeof schema[property]["type"] == "object" &&
-                schema[property]["type"]["type"] == "String")))
-            ? { a: 1 } //pass an object to a String property
-            : "some-string"; // or, pass a string to a non-String property
+        badValue = findBadValue(schema, property);
       }
 
-      //eslint-disable-next-line
-      console.log("bad value: ", badValue);
       await testIncorrectParams({ ...example0, [property]: badValue });
     }
   });
+
   it("should return an error if bad number", async () => {
     const root = uuid();
 

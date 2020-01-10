@@ -30,36 +30,6 @@ const viewStore = async ({ schema, indexes }) => {
   return _viewStore;
 };
 
-const removeIds = ({ schema, subdocumentsOnly = true }) => {
-  for (const property in schema) {
-    if (
-      schema[property] instanceof Array &&
-      typeof schema[property][0] == "object"
-    ) {
-      schema[property][0] = removeIds({
-        schema: schema[property][0],
-        subdocumentsOnly: false
-      });
-    } else if (
-      typeof schema[property] == "object" &&
-      schema[property].type instanceof Array
-    ) {
-      schema[property].type[0] = removeIds({
-        schema: schema[property].type[0],
-        subdocumentsOnly: false
-      });
-    } else if (
-      typeof schema[property] == "object" &&
-      schema[property].type == undefined
-    ) {
-      schema[property]._id = false;
-    }
-  }
-
-  if (!subdocumentsOnly) schema._id = false;
-  return schema;
-};
-
 module.exports = async ({ schema, indexes, getFn, postFn, putFn } = {}) => {
   if (schema) {
     schema.id = { type: String, required: true, unique: true };
@@ -82,7 +52,7 @@ module.exports = async ({ schema, indexes, getFn, postFn, putFn } = {}) => {
   }
 
   const store = await viewStore({
-    schema: removeIds({ schema }),
+    schema: deps.removeIds({ schema }),
     indexes: allIndexes
   });
 

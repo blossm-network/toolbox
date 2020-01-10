@@ -22,35 +22,7 @@ const formatSchema = ({ schema }) => {
   }
   return newSchema;
 };
-const removeIds = ({ schema, subdocumentsOnly = true }) => {
-  for (const property in schema) {
-    if (
-      schema[property] instanceof Array &&
-      typeof schema[property][0] == "object"
-    ) {
-      schema[property][0] = removeIds({
-        schema: schema[property][0],
-        subdocumentsOnly: false
-      });
-    } else if (
-      typeof schema[property] == "object" &&
-      schema[property].type instanceof Array
-    ) {
-      schema[property].type[0] = removeIds({
-        schema: schema[property].type[0],
-        subdocumentsOnly: false
-      });
-    } else if (
-      typeof schema[property] == "object" &&
-      schema[property].type == undefined
-    ) {
-      schema[property]._id = false;
-    }
-  }
 
-  if (!subdocumentsOnly) schema._id = false;
-  return schema;
-};
 const eventStore = async schema => {
   if (_eventStore != undefined) {
     logger.info("Thank you existing event store database.");
@@ -129,8 +101,8 @@ const aggregateStore = async ({ schema }) => {
 };
 
 module.exports = async ({ schema, publishFn } = {}) => {
-  const eStore = await eventStore({ schema: removeIds({ schema }) });
-  const aStore = await aggregateStore({ schema: removeIds({ schema }) });
+  const eStore = await eventStore({ schema: deps.removeIds({ schema }) });
+  const aStore = await aggregateStore({ schema: deps.removeIds({ schema }) });
 
   const writeFn = async ({ id, data }) => {
     const result = await deps.db.write({
