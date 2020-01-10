@@ -156,8 +156,6 @@ describe("Event store integration tests", () => {
 
   const testIncorrectParams = async payload => {
     const root = uuid();
-    //eslint-disable-next-line
-    console.log("payload: ", payload);
     const response = await request.post(url, {
       body: {
         event: {
