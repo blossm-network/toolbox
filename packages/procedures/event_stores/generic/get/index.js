@@ -1,12 +1,13 @@
 const deps = require("./deps");
 
-module.exports = ({ findOneFn }) => {
+module.exports = ({ aggregateFn }) => {
   return async (req, res) => {
-    const result = await findOneFn({
-      root: req.params.root
-    });
+    const result = await aggregateFn(req.params.root);
 
-    if (!result) throw deps.resourceNotFoundError.root();
+    if (!result)
+      throw deps.resourceNotFoundError.root({
+        info: { root: req.params.root }
+      });
 
     res.send(result);
   };

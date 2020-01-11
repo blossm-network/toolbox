@@ -19,8 +19,6 @@
     "@blossm/gcp-secret": "^0.0.23",
     "@blossm/logger": "^0.0.5",
     "@blossm/mongodb-database": "^0.0.19",
-    "@blossm/mongodb-event-store-normalize": "^0.0.5",
-    "@blossm/mongodb-event-store-reduce": "^0.0.9",
     "@blossm/remove-ids-from-mongodb-schema": "^0.0.1"
   },
   "devDependencies": {

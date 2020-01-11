@@ -2,10 +2,10 @@ const logger = require("@blossm/logger");
 
 const deps = require("./deps");
 
-const aggregateStoreName = `${process.env.DOMAIN}.aggregate`;
+const snapshotStoreName = `${process.env.DOMAIN}.snapshots`;
 
 let _eventStore;
-let _aggregateStore;
+let _snapshotStore;
 
 //make all properties not required since events may
 //not contain the full schema.
@@ -33,12 +33,11 @@ const eventStore = async schema => {
     name: `${process.env.DOMAIN}`,
     schema: {
       id: { type: String, required: true, unique: true },
-      created: { type: String, required: true },
+      saved: { type: String, required: true },
       payload: formatSchema(schema),
       headers: {
         root: { type: String, required: true },
         number: { type: Number, required: true },
-        numberRoot: { type: String, required: true, unique: true },
         topic: { type: String, required: true },
         version: { type: Number, required: true },
         context: { type: Object },
@@ -76,40 +75,43 @@ const eventStore = async schema => {
   return _eventStore;
 };
 
-const aggregateStore = async ({ schema }) => {
-  if (_aggregateStore != undefined) {
-    logger.info("Thank you existing aggregate store database.");
-    return _aggregateStore;
+const snapshotStore = async ({ schema }) => {
+  if (_snapshotStore != undefined) {
+    logger.info("Thank you existing snapshot store database.");
+    return _snapshotStore;
   }
 
-  _aggregateStore = deps.db.store({
-    name: aggregateStoreName,
+  _snapshotStore = deps.db.store({
+    name: snapshotStoreName,
     schema: {
-      value: {
-        headers: {
-          root: { type: String, required: true, unique: true },
-          modified: { type: Number, required: true },
-          events: { type: Number, required: true }
-        },
-        state: schema
-      }
+      headers: {
+        root: { type: String, required: true, unique: true },
+        created: { type: Number, required: true },
+        lastEventNumber: { type: Number, required: true }
+      },
+      payload: schema
     },
     indexes: [[{ "value.headers.root": 1 }]]
   });
 
-  return _aggregateStore;
+  return _snapshotStore;
 };
 
-module.exports = async ({ schema, publishFn } = {}) => {
+module.exports = async ({
+  schema,
+  publishFn
+  // archiveSnapshotFn,
+  // archiveEventsFn
+} = {}) => {
   const eStore = await eventStore({ schema: deps.removeIds({ schema }) });
-  const aStore = await aggregateStore({ schema: deps.removeIds({ schema }) });
+  const sStore = await snapshotStore({ schema: deps.removeIds({ schema }) });
 
-  const writeFn = async ({ id, data }) => {
+  const saveEventFn = async event => {
     const result = await deps.db.write({
       store: eStore,
-      query: { id },
+      query: { id: event.id },
       update: {
-        $set: data
+        $set: event
       },
       options: {
         lean: true,
@@ -125,33 +127,106 @@ module.exports = async ({ schema, publishFn } = {}) => {
     return result;
   };
 
-  const mapReduceFn = async ({ id }) =>
-    await deps.db.mapReduce({
-      store: eStore,
-      query: { id },
-      map: deps.normalize,
-      reduce: deps.reduce,
-      out: { reduce: aggregateStoreName }
-    });
+  // const saveSnapshotFn = async snapshot => {
+  //   const savedSnapshot = await deps.db.write({
+  //     store: sStore,
+  //     query: { "headers.root": snapshot.headers.root },
+  //     update: {
+  //       $set: snapshot
+  //     },
+  //     options: {
+  //       lean: true,
+  //       omitUndefined: true,
+  //       upsert: true,
+  //       new: true,
+  //       runValidators: false,
+  //       setDefaultsOnInsert: false
+  //     }
+  //   });
 
-  const findOneFn = async ({ root }) => {
-    const aggregate = await deps.db.findOne({
-      store: aStore,
-      query: {
-        "value.headers.root": root
-      },
-      options: {
-        lean: true
-      }
-    });
+  //   await Promise.all([
+  //     archiveSnapshotFn({
+  //       root: savedSnapshot.headers.root,
+  //       snapshot: savedSnapshot
+  //     }),
+  //     cleanOldEvents({
+  //       root: savedSnapshot.headers.root,
+  //       number: savedSnapshot.headers.lastEventNumber
+  //     })
+  //   ]);
+  // };
 
-    return aggregate ? aggregate.value : null;
+  // const cleanOldEvents = async ({ root, number }) => {
+  //   const query = {
+  //     "headers.root": root,
+  //     "headers.number": {
+  //       $lte: number
+  //     }
+  //   };
+
+  //   const events = deps.db.find({
+  //     store: eStore,
+  //     query,
+  //     sort: {
+  //       "headers.number": 1
+  //     },
+  //     options: {
+  //       lean: true
+  //     }
+  //   });
+
+  //   await archiveEventsFn({ root, events });
+  //   await deps.db.remove({
+  //     store: eStore,
+  //     query
+  //   });
+  // };
+
+  const aggregateFn = async ({ root }) => {
+    const [events, snapshot] = await Promise.all([
+      deps.db.find({
+        store: eStore,
+        query: {
+          "headers.root": root
+        },
+        sort: {
+          "headers.number": -1
+        },
+        options: {
+          lean: true
+        }
+      }),
+      deps.db.findOne({
+        store: sStore,
+        query: {
+          "headers.root": root
+        },
+        options: {
+          lean: true
+        }
+      })
+    ]);
+
+    const aggregate = events
+      .filter(event =>
+        snapshot
+          ? event.headers.number > snapshot.headers.lastEventNumber
+          : true
+      )
+      .reduce((accumulator, value) => {
+        return {
+          ...accumulator,
+          ...value
+        };
+      }, snapshot || {});
+
+    return aggregate;
   };
 
   deps.eventStore({
-    findOneFn,
-    writeFn,
-    mapReduceFn,
+    aggregateFn,
+    saveEventFn,
+    // saveSnapshotFn,
     publishFn
   });
 };

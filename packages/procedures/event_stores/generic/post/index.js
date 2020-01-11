@@ -2,20 +2,18 @@ const deps = require("./deps");
 
 const { preconditionFailed } = require("@blossm/errors");
 
-module.exports = ({ writeFn, mapReduceFn, publishFn, findOneFn }) => {
+module.exports = ({ createEventFn, createAggregateFn, publishFn }) => {
   return async (req, res) => {
     const root = req.body.event.headers.root;
 
-    const aggregate = await findOneFn({ root });
+    const aggregate = await createAggregateFn(root);
 
-    const number = aggregate ? aggregate.headers.lastEventNumber + 1 : 0;
+    const number = aggregate ? aggregate.headers.number + 1 : 0;
 
     if (req.body.number && req.body.number != number)
       throw preconditionFailed.eventNumberIncorrect({
         info: { expected: req.body.number, actual: number }
       });
-
-    const id = deps.uuid();
 
     const now = deps.dateString();
 
@@ -23,17 +21,15 @@ module.exports = ({ writeFn, mapReduceFn, publishFn, findOneFn }) => {
       ...req.body.event,
       headers: {
         ...req.body.event.headers,
-        number,
-        numberRoot: `${number}_${root}`
+        number
       },
-      id,
-      created: now
+      id: `${root}_${number}`,
+      saved: now
     };
 
-    const writtenEvent = await writeFn({ id, data: event });
+    const savedEvent = await createEventFn(event);
 
-    await mapReduceFn({ id });
-    await publishFn(writtenEvent);
+    await publishFn(savedEvent);
 
     res.status(204).send();
   };

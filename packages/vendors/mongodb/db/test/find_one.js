@@ -19,11 +19,7 @@ describe("Find one", () => {
     const result = await findOne({ store, query });
 
     expect(result).to.equal(execResult);
-    expect(findOneFake).to.have.been.calledWith(
-      query,
-      { _id: 0, __v: 0 },
-      null
-    );
+    expect(findOneFake).to.have.been.calledWith(query, { _id: 0, __v: 0 }, {});
   });
   it("it should return the correct result if select is passed", async () => {
     const execResult = 4;
@@ -33,13 +29,13 @@ describe("Find one", () => {
       findOne: findOneFake
     };
 
-    const options = "some-options";
-    const result = await findOne({ store, query, select, options });
+    const sort = "some-sort";
+    const result = await findOne({ store, query, select, sort });
 
     expect(findOneFake).to.have.been.calledWith(
       query,
       { ...select, _id: 0, __v: 0 },
-      options
+      { sort }
     );
     expect(result).to.equal(execResult);
   });

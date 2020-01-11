@@ -5,6 +5,8 @@ const { mapReduce } = require("..");
 const query = "some-query";
 const map = "some-map-fn";
 const reduce = "some-reduce-fn";
+const limit = "some-limit";
+const sort = "some-sort";
 const finalize = "some-finalize-fn";
 const out = "some-out";
 
@@ -44,8 +46,10 @@ describe("Map reduce", () => {
     const result = await mapReduce({
       store,
       query,
+      sort,
       map,
       reduce,
+      limit,
       finalize,
       out
     });
@@ -54,8 +58,10 @@ describe("Map reduce", () => {
     expect(mapReduceFake).to.have.been.calledWith({
       map,
       reduce,
+      sort,
       resolveToObject: true,
       query,
+      limit,
       out,
       finalize
     });

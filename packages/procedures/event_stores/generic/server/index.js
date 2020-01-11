@@ -1,14 +1,20 @@
 const deps = require("./deps");
 
 module.exports = async ({
-  findOneFn,
-  writeFn,
-  mapReduceFn,
+  aggregateFn,
+  createEventFn,
+  createAggregateFn,
   publishFn
 } = {}) => {
   deps
     .server()
-    .get(deps.get({ findOneFn }), { path: "/:root" })
-    .post(deps.post({ writeFn, mapReduceFn, publishFn, findOneFn }))
+    .get(deps.get({ aggregateFn }), { path: "/:root" })
+    .post(
+      deps.post({
+        createEventFn,
+        createAggregateFn,
+        publishFn
+      })
+    )
     .listen();
 };
