@@ -1,7 +1,7 @@
 const { expect } = require("chai")
   .use(require("chai-datetime"))
   .use(require("sinon-chai"));
-const { restore, fake, replace, useFakeTimers } = require("sinon");
+const { restore, fake, useFakeTimers } = require("sinon");
 
 const post = require("..");
 const deps = require("../deps");
@@ -16,13 +16,10 @@ const event = {
     b: 2,
     root
   },
-  a: 1,
-  id: "some-bogus",
-  created: "more-bogus"
+  a: 1
 };
-const uuid = "some-uuid";
 const lastEventNumber = 4;
-const found = { headers: { lastEventNumber } };
+const aggregate = { headers: { lastEventNumber } };
 
 describe("Event store post", () => {
   beforeEach(() => {
@@ -34,11 +31,10 @@ describe("Event store post", () => {
   });
 
   it("should call with the correct params", async () => {
-    const writeResult = "some-write-result";
-    const writeFnFake = fake.returns(writeResult);
-    const mapReduceFnFake = fake();
+    const writtenEvent = "some-written-event";
+    const saveEventFnFake = fake.returns(writtenEvent);
+    const aggregateFnFake = fake.returns(aggregate);
     const publishFnFake = fake();
-    const findOneFnFake = fake.returns(found);
 
     const req = {
       body: {
@@ -54,41 +50,31 @@ describe("Event store post", () => {
       status: statusFake
     };
 
-    const uuidFake = fake.returns(uuid);
-    replace(deps, "uuid", uuidFake);
     await post({
-      writeFn: writeFnFake,
-      mapReduceFn: mapReduceFnFake,
-      publishFn: publishFnFake,
-      findOneFn: findOneFnFake
+      saveEventFn: saveEventFnFake,
+      aggregateFn: aggregateFnFake,
+      publishFn: publishFnFake
     })(req, res);
-    expect(writeFnFake).to.have.been.calledWith({
-      id: uuid,
-      data: {
-        a: 1,
-        headers: {
-          b: 2,
-          root,
-          number: lastEventNumber + 1,
-          numberRoot: `${lastEventNumber + 1}_${root}`
-        },
-        id: uuid,
-        created: deps.dateString()
+    expect(saveEventFnFake).to.have.been.calledWith({
+      id: `${root}_${lastEventNumber + 1}`,
+      saved: deps.dateString(),
+      a: 1,
+      headers: {
+        b: 2,
+        root,
+        number: lastEventNumber + 1
       }
     });
-    expect(mapReduceFnFake).to.have.been.calledWith({
-      id: uuid
-    });
-    expect(publishFnFake).to.have.been.calledWith(writeResult);
+    expect(aggregateFnFake).to.have.been.calledWith(root);
+    expect(publishFnFake).to.have.been.calledWith(writtenEvent);
     expect(statusFake).to.have.been.calledWith(204);
     expect(sendFake).to.have.been.calledOnce;
   });
   it("should call with last event number as 0 if there is no aggregate", async () => {
-    const writeResult = "some-write-result";
-    const writeFnFake = fake.returns(writeResult);
-    const mapReduceFnFake = fake();
+    const writtenEvent = "some-written-event";
+    const saveEventFnFake = fake.returns(writtenEvent);
+    const aggregateFnFake = fake();
     const publishFnFake = fake();
-    const findOneFnFake = fake.returns(null);
 
     const req = {
       body: {
@@ -104,41 +90,31 @@ describe("Event store post", () => {
       status: statusFake
     };
 
-    const uuidFake = fake.returns(uuid);
-    replace(deps, "uuid", uuidFake);
     await post({
-      writeFn: writeFnFake,
-      mapReduceFn: mapReduceFnFake,
-      publishFn: publishFnFake,
-      findOneFn: findOneFnFake
+      saveEventFn: saveEventFnFake,
+      aggregateFn: aggregateFnFake,
+      publishFn: publishFnFake
     })(req, res);
-    expect(writeFnFake).to.have.been.calledWith({
-      id: uuid,
-      data: {
-        a: 1,
-        headers: {
-          b: 2,
-          root,
-          number: 0,
-          numberRoot: `${0}_${root}`
-        },
-        id: uuid,
-        created: deps.dateString()
+    expect(saveEventFnFake).to.have.been.calledWith({
+      id: `${root}_${0}`,
+      saved: deps.dateString(),
+      a: 1,
+      headers: {
+        b: 2,
+        root,
+        number: 0
       }
     });
-    expect(mapReduceFnFake).to.have.been.calledWith({
-      id: uuid
-    });
-    expect(publishFnFake).to.have.been.calledWith(writeResult);
+    expect(aggregateFnFake).to.have.been.calledWith(root);
+    expect(publishFnFake).to.have.been.calledWith(writtenEvent);
     expect(statusFake).to.have.been.calledWith(204);
     expect(sendFake).to.have.been.calledOnce;
   });
   it("should throw if event number is incorrect", async () => {
-    const writeResult = "some-write-result";
-    const writeFnFake = fake.returns(writeResult);
-    const mapReduceFnFake = fake();
+    const writtenEvent = "some-written-event";
+    const saveEventFnFake = fake.returns(writtenEvent);
+    const aggregateFnFake = fake();
     const publishFnFake = fake();
-    const findOneFnFake = fake.returns(found);
 
     const req = {
       body: {
@@ -149,10 +125,9 @@ describe("Event store post", () => {
 
     try {
       await post({
-        writeFn: writeFnFake,
-        mapReduceFn: mapReduceFnFake,
-        publishFn: publishFnFake,
-        findOneFn: findOneFnFake
+        saveEventFn: saveEventFnFake,
+        aggregateFn: aggregateFnFake,
+        publishFn: publishFnFake
       })(req);
     } catch (e) {
       expect(e.statusCode).to.equal(412);
@@ -161,10 +136,10 @@ describe("Event store post", () => {
 
   it("should throw correctly", async () => {
     const error = new Error();
-    const writeFnFake = fake();
-    const mapReduceFnFake = fake();
+    const writtenEvent = "some-written-event";
+    const saveEventFnFake = fake.returns(writtenEvent);
+    const aggregateFnFake = fake.rejects(error);
     const publishFnFake = fake();
-    const findOneFnFake = fake.rejects(error);
 
     const req = {
       body: {
@@ -172,18 +147,12 @@ describe("Event store post", () => {
       }
     };
 
-    const res = {};
-
-    const uuidFake = fake.returns(uuid);
-    replace(deps, "uuid", uuidFake);
-
     try {
       await post({
-        writeFn: writeFnFake,
-        mapReduceFn: mapReduceFnFake,
-        publishFn: publishFnFake,
-        findOneFn: findOneFnFake
-      })(req, res);
+        saveEventFn: saveEventFnFake,
+        aggregateFn: aggregateFnFake,
+        publishFn: publishFnFake
+      })(req);
     } catch (e) {
       expect(e).to.equal(error);
     }

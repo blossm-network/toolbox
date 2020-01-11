@@ -2,13 +2,13 @@ const deps = require("./deps");
 
 const { preconditionFailed } = require("@blossm/errors");
 
-module.exports = ({ createEventFn, createAggregateFn, publishFn }) => {
+module.exports = ({ saveEventFn, aggregateFn, publishFn }) => {
   return async (req, res) => {
     const root = req.body.event.headers.root;
 
-    const aggregate = await createAggregateFn(root);
+    const aggregate = await aggregateFn(root);
 
-    const number = aggregate ? aggregate.headers.number + 1 : 0;
+    const number = aggregate ? aggregate.headers.lastEventNumber + 1 : 0;
 
     if (req.body.number && req.body.number != number)
       throw preconditionFailed.eventNumberIncorrect({
@@ -27,7 +27,7 @@ module.exports = ({ createEventFn, createAggregateFn, publishFn }) => {
       saved: now
     };
 
-    const savedEvent = await createEventFn(event);
+    const savedEvent = await saveEventFn(event);
 
     await publishFn(savedEvent);
 

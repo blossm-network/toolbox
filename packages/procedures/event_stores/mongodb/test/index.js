@@ -9,7 +9,7 @@ let clock;
 
 const now = new Date();
 
-const schema = { a: String };
+const schema = "some-schema";
 
 const domain = "some-domain";
 const user = "some-db-user";
@@ -26,9 +26,15 @@ process.env.MONGODB_USER_PASSWORD = userPassword;
 process.env.MONGODB_HOST = host;
 process.env.MONGODB_DATABASE = database;
 
-const obj = "some-objs";
-const found = { value: obj };
+const findResult = [
+  { payload: { b: 2, c: 2 }, headers: { number: 1 } },
+  { payload: { c: 3, d: 4 }, headers: { number: 2 } }
+];
 const root = "some-root";
+const findOneResult = {
+  state: { a: 1, b: 1 },
+  headers: { lastEventNumber: 0, root }
+};
 const writeResult = { a: 1 };
 const id = "some-id";
 const data = "some-data";
@@ -49,12 +55,12 @@ describe("Mongodb event store", () => {
   it("should call with the correct params", async () => {
     const mongodbEventStore = require("..");
     const eStore = "some-event-store";
-    const aStore = "some-aggregate-store";
+    const sStore = "some-snapshot-store";
     const storeFake = stub()
       .onCall(0)
       .returns(eStore)
       .onCall(1)
-      .returns(aStore);
+      .returns(sStore);
 
     const secretFake = fake.returns(password);
     replace(deps, "secret", secretFake);
@@ -62,12 +68,24 @@ describe("Mongodb event store", () => {
     const eventStoreFake = fake();
     replace(deps, "eventStore", eventStoreFake);
 
-    const findOneFake = fake.returns(found);
+    const findFake = fake.returns(findResult);
+    const findOneFake = fake.returns(findOneResult);
 
     const writeFake = fake.returns({ ...writeResult, __v: 3, _id: 4 });
     const mapReduceFake = fake.returns(mapReduceResult);
 
+    const eventStoreSchema = { a: String };
+    const snapshotStoreSchema = "some-snapshot-schema";
+    const removeIdsFake = stub()
+      .onCall(0)
+      .returns(eventStoreSchema)
+      .onCall(1)
+      .returns(snapshotStoreSchema);
+
+    replace(deps, "removeIds", removeIdsFake);
+
     const db = {
+      find: findFake,
       findOne: findOneFake,
       write: writeFake,
       store: storeFake,
@@ -77,16 +95,19 @@ describe("Mongodb event store", () => {
 
     await mongodbEventStore({ schema, publishFn });
 
+    expect(removeIdsFake).to.have.been.calledWith({
+      schema
+    });
+    expect(removeIdsFake).to.have.been.calledTwice;
     expect(storeFake).to.have.been.calledWith({
       name: domain,
       schema: {
         id: { type: String, required: true, unique: true },
-        created: { type: String, required: true },
+        saved: { type: String, required: true },
         payload: { a: { type: String, required: false } },
         headers: {
           root: { type: String, required: true },
           number: { type: Number, required: true },
-          numberRoot: { type: String, required: true, unique: true },
           topic: { type: String, required: true },
           version: { type: Number, required: true },
           trace: { type: String },
@@ -121,54 +142,169 @@ describe("Mongodb event store", () => {
         autoIndex: true
       }
     });
-    expect(storeFake).to.have.been.calledWith({
-      name: `${domain}.aggregate`,
-      schema: {
-        value: {
-          headers: {
-            root: { type: String, required: true, unique: true },
-            modified: { type: Number, required: true },
-            events: { type: Number, required: true }
-          },
-          state: schema
+    it("should call with the correct params with no aggregate", async () => {
+      const mongodbEventStore = require("..");
+      const eStore = "some-event-store";
+      const sStore = "some-snapshot-store";
+      const storeFake = stub()
+        .onCall(0)
+        .returns(eStore)
+        .onCall(1)
+        .returns(sStore);
+
+      const secretFake = fake.returns(password);
+      replace(deps, "secret", secretFake);
+
+      const eventStoreFake = fake();
+      replace(deps, "eventStore", eventStoreFake);
+
+      const findFake = fake.returns(findResult);
+      const findOneFake = fake();
+
+      const writeFake = fake.returns({ ...writeResult, __v: 3, _id: 4 });
+      const mapReduceFake = fake.returns(mapReduceResult);
+
+      const eventStoreSchema = { a: String };
+      const snapshotStoreSchema = "some-snapshot-schema";
+      const removeIdsFake = stub()
+        .onCall(0)
+        .returns(eventStoreSchema)
+        .onCall(1)
+        .returns(snapshotStoreSchema);
+
+      replace(deps, "removeIds", removeIdsFake);
+
+      const db = {
+        find: findFake,
+        findOne: findOneFake,
+        write: writeFake,
+        store: storeFake,
+        mapReduce: mapReduceFake
+      };
+      replace(deps, "db", db);
+
+      await mongodbEventStore({ schema, publishFn });
+
+      const aggregateFnResult = await eventStoreFake.lastCall.lastArg.aggregateFn(
+        root
+      );
+
+      expect(findFake).to.have.been.calledWith({
+        store: eStore,
+        query: {
+          "headers.root": root
+        },
+        sort: {
+          "headers.number": -1
+        },
+        options: {
+          lean: true
         }
+      });
+      expect(findOneFake).to.have.been.calledWith({
+        store: sStore,
+        query: {
+          "headers.root": root
+        },
+        options: {
+          lean: true
+        }
+      });
+      expect(aggregateFnResult).to.deep.equal({
+        state: { b: 2, c: 3, d: 4 },
+        headers: { root }
+      });
+
+      const event = {
+        id
+      };
+      const saveEventFnResult = await eventStoreFake.lastCall.lastArg.saveEventFn(
+        event
+      );
+      expect(writeFake).to.have.been.calledWith({
+        store: eStore,
+        query: {
+          id
+        },
+        update: {
+          $set: event
+        },
+        options: {
+          lean: true,
+          omitUndefined: true,
+          upsert: true,
+          new: true,
+          runValidators: true,
+          setDefaultsOnInsert: true
+        }
+      });
+      expect(saveEventFnResult).to.deep.equal(writeResult);
+
+      await mongodbEventStore();
+      expect(storeFake).to.have.been.calledTwice;
+    });
+    expect(storeFake).to.have.been.calledWith({
+      name: `${domain}.snapshots`,
+      schema: {
+        created: { type: Number, required: true },
+        headers: {
+          root: { type: String, required: true, unique: true },
+          lastEventNumber: { type: Number, required: true }
+        },
+        state: snapshotStoreSchema
       },
-      indexes: [[{ "value.headers.root": 1 }]]
+      indexes: [[{ "headers.root": 1 }]]
     });
     expect(secretFake).to.have.been.calledWith("mongodb");
     expect(eventStoreFake).to.have.been.calledWith({
-      findOneFn: match(fn => expect(fn({ id })).to.exist),
-      writeFn: match(fn => expect(fn({ id, data })).to.exist),
-      mapReduceFn: match(fn => expect(fn({ id })).to.exist),
+      aggregateFn: match(fn => expect(fn({ id })).to.exist),
+      saveEventFn: match(fn => expect(fn({ id, data })).to.exist),
       publishFn
     });
 
-    const findOneFnResult = await eventStoreFake.lastCall.lastArg.findOneFn({
+    const aggregateFnResult = await eventStoreFake.lastCall.lastArg.aggregateFn(
       root
-    });
+    );
 
-    expect(findOneFake).to.have.been.calledWith({
-      store: aStore,
+    expect(findFake).to.have.been.calledWith({
+      store: eStore,
       query: {
-        "value.headers.root": root
+        "headers.root": root
+      },
+      sort: {
+        "headers.number": -1
       },
       options: {
         lean: true
       }
     });
-    expect(findOneFnResult).to.equal(obj);
-
-    const writeFnResult = await eventStoreFake.lastCall.lastArg.writeFn({
-      id,
-      data
+    expect(findOneFake).to.have.been.calledWith({
+      store: sStore,
+      query: {
+        "headers.root": root
+      },
+      options: {
+        lean: true
+      }
     });
+    expect(aggregateFnResult).to.deep.equal({
+      state: { a: 1, b: 2, c: 3, d: 4 },
+      headers: { root, lastEventNumber: 2 }
+    });
+
+    const event = {
+      id
+    };
+    const saveEventFnResult = await eventStoreFake.lastCall.lastArg.saveEventFn(
+      event
+    );
     expect(writeFake).to.have.been.calledWith({
       store: eStore,
       query: {
         id
       },
       update: {
-        $set: data
+        $set: event
       },
       options: {
         lean: true,
@@ -179,32 +315,20 @@ describe("Mongodb event store", () => {
         setDefaultsOnInsert: true
       }
     });
-    expect(writeFnResult).to.deep.equal(writeResult);
-
-    const mapReduceFnResult = await eventStoreFake.lastCall.lastArg.mapReduceFn(
-      { id }
-    );
-    expect(mapReduceFake).to.have.been.calledWith({
-      store: eStore,
-      query: { id },
-      map: deps.normalize,
-      reduce: deps.reduce,
-      out: { reduce: `${domain}.aggregate` }
-    });
-    expect(mapReduceFnResult).to.equal(mapReduceResult);
+    expect(saveEventFnResult).to.deep.equal(writeResult);
 
     await mongodbEventStore();
     expect(storeFake).to.have.been.calledTwice;
   });
-  it("should call with the correct params if aggregate is null", async () => {
+  it("should call with the correct params in local env", async () => {
     const mongodbEventStore = require("..");
     const eStore = "some-event-store";
-    const aStore = "some-aggregate-store";
+    const sStore = "some-snapshot-store";
     const storeFake = stub()
       .onCall(0)
       .returns(eStore)
       .onCall(1)
-      .returns(aStore);
+      .returns(sStore);
 
     const secretFake = fake.returns(password);
     replace(deps, "secret", secretFake);
@@ -212,168 +336,44 @@ describe("Mongodb event store", () => {
     const eventStoreFake = fake();
     replace(deps, "eventStore", eventStoreFake);
 
-    const findOneFake = fake.returns(null);
+    const findFake = fake.returns(findResult);
+    const findOneFake = fake.returns(findOneResult);
 
     const writeFake = fake.returns({ ...writeResult, __v: 3, _id: 4 });
     const mapReduceFake = fake.returns(mapReduceResult);
 
+    const eventStoreSchema = { a: String };
+    const snapshotStoreSchema = "some-snapshot-schema";
+    const removeIdsFake = stub()
+      .onCall(0)
+      .returns(eventStoreSchema)
+      .onCall(1)
+      .returns(snapshotStoreSchema);
+
+    replace(deps, "removeIds", removeIdsFake);
+
     const db = {
+      find: findFake,
       findOne: findOneFake,
       write: writeFake,
       store: storeFake,
       mapReduce: mapReduceFake
     };
     replace(deps, "db", db);
-
-    await mongodbEventStore({ schema, publishFn });
-
-    expect(storeFake).to.have.been.calledWith({
-      name: domain,
-      schema: {
-        id: { type: String, required: true, unique: true },
-        created: { type: String, required: true },
-        payload: { a: { type: String, required: false } },
-        headers: {
-          root: { type: String, required: true },
-          number: { type: Number, required: true },
-          numberRoot: { type: String, required: true, unique: true },
-          topic: { type: String, required: true },
-          version: { type: Number, required: true },
-          trace: { type: String },
-          context: { type: Object },
-          created: { type: String, required: true },
-          command: {
-            id: { type: String, required: true },
-            action: { type: String, required: true },
-            domain: { type: String, required: true },
-            service: { type: String, required: true },
-            network: { type: String, required: true },
-            issued: { type: String, required: true }
-          }
-        }
-      },
-      indexes: [
-        [{ id: 1 }],
-        [{ "headers.root": 1 }],
-        [{ "headers.root": 1, "headers.number": -1 }]
-      ],
-      connection: {
-        protocol,
-        user,
-        password,
-        host,
-        database,
-        parameters: {
-          authSource: "admin",
-          retryWrites: true,
-          w: "majority"
-        },
-        autoIndex: true
-      }
-    });
-    expect(storeFake).to.have.been.calledWith({
-      name: `${domain}.aggregate`,
-      schema: {
-        value: {
-          headers: {
-            root: { type: String, required: true, unique: true },
-            modified: { type: Number, required: true },
-            events: { type: Number, required: true }
-          },
-          state: schema
-        }
-      },
-      indexes: [[{ "value.headers.root": 1 }]]
-    });
-    expect(secretFake).to.have.been.calledWith("mongodb");
-    expect(eventStoreFake).to.have.been.calledWith({
-      findOneFn: match(fn => expect(fn({ id })).to.exist),
-      writeFn: match(fn => expect(fn({ id, data })).to.exist),
-      mapReduceFn: match(fn => expect(fn({ id })).to.exist),
-      publishFn
-    });
-
-    const findOneFnResult = await eventStoreFake.lastCall.lastArg.findOneFn({
-      root
-    });
-
-    expect(findOneFake).to.have.been.calledWith({
-      store: aStore,
-      query: {
-        "value.headers.root": root
-      },
-      options: {
-        lean: true
-      }
-    });
-    expect(findOneFnResult).to.equal(null);
-
-    const writeFnResult = await eventStoreFake.lastCall.lastArg.writeFn({
-      id,
-      data
-    });
-    expect(writeFake).to.have.been.calledWith({
-      store: eStore,
-      query: {
-        id
-      },
-      update: {
-        $set: data
-      },
-      options: {
-        lean: true,
-        omitUndefined: true,
-        upsert: true,
-        new: true,
-        runValidators: true,
-        setDefaultsOnInsert: true
-      }
-    });
-    expect(writeFnResult).to.deep.equal(writeResult);
-
-    const mapReduceFnResult = await eventStoreFake.lastCall.lastArg.mapReduceFn(
-      { id }
-    );
-    expect(mapReduceFake).to.have.been.calledWith({
-      store: eStore,
-      query: { id },
-      map: deps.normalize,
-      reduce: deps.reduce,
-      out: { reduce: `${domain}.aggregate` }
-    });
-    expect(mapReduceFnResult).to.equal(mapReduceResult);
-
-    await mongodbEventStore();
-    expect(storeFake).to.have.been.calledTwice;
-  });
-  it("should call with the correct params in local environment", async () => {
-    const eventStore = require("..");
-    const eStore = "some-event-store";
-    const aStore = "some-aggregate-store";
 
     process.env.NODE_ENV = "local";
 
-    const storeFake = stub()
-      .onCall(0)
-      .returns(eStore)
-      .onCall(1)
-      .returns(aStore);
-    replace(deps.db, "store", storeFake);
+    await mongodbEventStore({ schema, publishFn });
 
-    const eventStoreFake = fake();
-    replace(deps, "eventStore", eventStoreFake);
-
-    await eventStore({ schema, publishFn });
     expect(storeFake).to.have.been.calledWith({
       name: domain,
       schema: {
         id: { type: String, required: true, unique: true },
-        created: { type: String, required: true },
+        saved: { type: String, required: true },
         payload: { a: { type: String, required: false } },
         headers: {
           root: { type: String, required: true },
           number: { type: Number, required: true },
-          numberRoot: { type: String, required: true, unique: true },
           topic: { type: String, required: true },
           version: { type: Number, required: true },
           trace: { type: String },
@@ -408,32 +408,16 @@ describe("Mongodb event store", () => {
         autoIndex: true
       }
     });
-    expect(storeFake).to.have.been.calledWith({
-      name: `${domain}.aggregate`,
-      schema: {
-        value: {
-          headers: {
-            root: { type: String, required: true, unique: true },
-            modified: { type: Number, required: true },
-            events: { type: Number, required: true }
-          },
-          state: schema
-        }
-      },
-      indexes: [[{ "value.headers.root": 1 }]]
-    });
-    await eventStore();
-    expect(storeFake).to.have.been.calledTwice;
   });
-  it("should call with the correct params with schema formatted with object property", async () => {
+  it("should call with the correct params when schema has object property", async () => {
     const mongodbEventStore = require("..");
     const eStore = "some-event-store";
-    const aStore = "some-aggregate-store";
+    const sStore = "some-snapshot-store";
     const storeFake = stub()
       .onCall(0)
       .returns(eStore)
       .onCall(1)
-      .returns(aStore);
+      .returns(sStore);
 
     const secretFake = fake.returns(password);
     replace(deps, "secret", secretFake);
@@ -441,12 +425,24 @@ describe("Mongodb event store", () => {
     const eventStoreFake = fake();
     replace(deps, "eventStore", eventStoreFake);
 
-    const findOneFake = fake.returns(found);
+    const findFake = fake.returns(findResult);
+    const findOneFake = fake.returns(findOneResult);
 
     const writeFake = fake.returns({ ...writeResult, __v: 3, _id: 4 });
     const mapReduceFake = fake.returns(mapReduceResult);
 
+    const eventStoreSchema = { a: { type: String } };
+    const snapshotStoreSchema = "some-snapshot-schema";
+    const removeIdsFake = stub()
+      .onCall(0)
+      .returns(eventStoreSchema)
+      .onCall(1)
+      .returns(snapshotStoreSchema);
+
+    replace(deps, "removeIds", removeIdsFake);
+
     const db = {
+      find: findFake,
       findOne: findOneFake,
       write: writeFake,
       store: storeFake,
@@ -454,19 +450,21 @@ describe("Mongodb event store", () => {
     };
     replace(deps, "db", db);
 
-    const schema = { a: { type: String } };
     await mongodbEventStore({ schema, publishFn });
 
+    expect(removeIdsFake).to.have.been.calledWith({
+      schema
+    });
+    expect(removeIdsFake).to.have.been.calledTwice;
     expect(storeFake).to.have.been.calledWith({
       name: domain,
       schema: {
         id: { type: String, required: true, unique: true },
-        created: { type: String, required: true },
+        saved: { type: String, required: true },
         payload: { a: { type: String, required: false } },
         headers: {
           root: { type: String, required: true },
           number: { type: Number, required: true },
-          numberRoot: { type: String, required: true, unique: true },
           topic: { type: String, required: true },
           version: { type: Number, required: true },
           trace: { type: String },
@@ -500,20 +498,6 @@ describe("Mongodb event store", () => {
         },
         autoIndex: true
       }
-    });
-    expect(storeFake).to.have.been.calledWith({
-      name: `${domain}.aggregate`,
-      schema: {
-        value: {
-          headers: {
-            root: { type: String, required: true, unique: true },
-            modified: { type: Number, required: true },
-            events: { type: Number, required: true }
-          },
-          state: schema
-        }
-      },
-      indexes: [[{ "value.headers.root": 1 }]]
     });
   });
 });

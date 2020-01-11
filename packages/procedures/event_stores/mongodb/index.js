@@ -84,14 +84,14 @@ const snapshotStore = async ({ schema }) => {
   _snapshotStore = deps.db.store({
     name: snapshotStoreName,
     schema: {
+      created: { type: Number, required: true },
       headers: {
         root: { type: String, required: true, unique: true },
-        created: { type: Number, required: true },
         lastEventNumber: { type: Number, required: true }
       },
-      payload: schema
+      state: schema
     },
-    indexes: [[{ "value.headers.root": 1 }]]
+    indexes: [[{ "headers.root": 1 }]]
   });
 
   return _snapshotStore;
@@ -182,7 +182,7 @@ module.exports = async ({
   //   });
   // };
 
-  const aggregateFn = async ({ root }) => {
+  const aggregateFn = async root => {
     const [events, snapshot] = await Promise.all([
       deps.db.find({
         store: eStore,
@@ -213,12 +213,24 @@ module.exports = async ({
           ? event.headers.number > snapshot.headers.lastEventNumber
           : true
       )
-      .reduce((accumulator, value) => {
-        return {
-          ...accumulator,
-          ...value
-        };
-      }, snapshot || {});
+      .reduce(
+        (accumulator, event) => {
+          return {
+            headers: {
+              root: accumulator.headers.root,
+              lastEventNumber: event.headers.number
+            },
+            state: {
+              ...accumulator.state,
+              ...event.payload
+            }
+          };
+        },
+        {
+          headers: snapshot ? snapshot.headers : { root },
+          state: snapshot ? snapshot.state : {}
+        }
+      );
 
     return aggregate;
   };

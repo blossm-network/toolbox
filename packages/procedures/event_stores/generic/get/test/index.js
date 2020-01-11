@@ -12,7 +12,7 @@ describe("Event store get", () => {
     restore();
   });
   it("should call with the correct params", async () => {
-    const findOneFnFake = fake.returns(found);
+    const aggregateFnFake = fake.returns(found);
     const params = {
       root
     };
@@ -23,14 +23,12 @@ describe("Event store get", () => {
     const res = {
       send: sendFake
     };
-    await get({ findOneFn: findOneFnFake })(req, res);
-    expect(findOneFnFake).to.have.been.calledWith({
-      root
-    });
+    await get({ aggregateFn: aggregateFnFake })(req, res);
+    expect(aggregateFnFake).to.have.been.calledWith(root);
     expect(sendFake).to.have.been.calledWith(found);
   });
   it("should throw correctly if not found", async () => {
-    const findOneFnFake = fake();
+    const aggregateFnFake = fake();
     const params = {
       root
     };
@@ -46,7 +44,7 @@ describe("Event store get", () => {
     });
 
     try {
-      await get({ findOneFn: findOneFnFake })(req, res);
+      await get({ aggregateFn: aggregateFnFake })(req, res);
 
       //shouldn't get called
       expect(2).to.equal(1);
