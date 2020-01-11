@@ -1,7 +1,7 @@
 {
   "name": "@blossm/event-store-get",
   "description": "An event store GET handler.",
-  "version": "0.0.17",
+  "version": "0.0.18",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
