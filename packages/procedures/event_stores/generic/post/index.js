@@ -30,7 +30,7 @@ module.exports = ({ saveEventFn, aggregateFn, publishFn }) => {
         ...req.body.event.headers,
         number
       },
-      id: `${root}_${number}`,
+      id: `${root}_${0}`,
       saved: now
     };
 
