@@ -71,7 +71,7 @@ describe("Mongodb event store", () => {
     const findFake = fake.returns(findResult);
     const findOneFake = fake.returns(findOneResult);
 
-    const createFake = fake.returns({ ...createResult, __v: 3, _id: 4 });
+    const createFake = fake.returns([{ ...createResult, __v: 3, _id: 4 }]);
     const mapReduceFake = fake.returns(mapReduceResult);
 
     const eventStoreSchema = { a: String };
@@ -225,7 +225,7 @@ describe("Mongodb event store", () => {
     const findFake = fake.returns(findResult);
     const findOneFake = fake();
 
-    const createFake = fake.returns({ ...createResult, __v: 3, _id: 4 });
+    const createFake = fake.returns([{ ...createResult, __v: 3, _id: 4 }]);
     const mapReduceFake = fake.returns(mapReduceResult);
 
     const eventStoreSchema = { a: String };
@@ -298,7 +298,7 @@ describe("Mongodb event store", () => {
     const findFake = fake.returns([]);
     const findOneFake = fake();
 
-    const createFake = fake.returns({ ...createResult, __v: 3, _id: 4 });
+    const createFake = fake.returns([{ ...createResult, __v: 3, _id: 4 }]);
     const mapReduceFake = fake.returns(mapReduceResult);
 
     const eventStoreSchema = { a: String };
@@ -371,7 +371,7 @@ describe("Mongodb event store", () => {
     const findFake = fake.returns(findResult);
     const findOneFake = fake.returns(findOneResult);
 
-    const createFake = fake.returns({ ...createResult, __v: 3, _id: 4 });
+    const createFake = fake.returns([{ ...createResult, __v: 3, _id: 4 }]);
     const mapReduceFake = fake.returns(mapReduceResult);
 
     const eventStoreSchema = { a: String };
@@ -460,7 +460,7 @@ describe("Mongodb event store", () => {
     const findFake = fake.returns(findResult);
     const findOneFake = fake.returns(findOneResult);
 
-    const createFake = fake.returns({ ...createResult, __v: 3, _id: 4 });
+    const createFake = fake.returns([{ ...createResult, __v: 3, _id: 4 }]);
     const mapReduceFake = fake.returns(mapReduceResult);
 
     const eventStoreSchema = { a: { type: String } };

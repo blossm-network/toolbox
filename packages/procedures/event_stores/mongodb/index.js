@@ -109,7 +109,7 @@ module.exports = async ({
   const saveEventFn = async event => {
     //eslint-disable-next-line
     console.log("will create data: ", event);
-    const result = await deps.db.create({
+    const [result] = await deps.db.create({
       store: eStore,
       data: event
     });
