@@ -107,21 +107,30 @@ module.exports = async ({
   const sStore = await snapshotStore({ schema: deps.removeIds({ schema }) });
 
   const saveEventFn = async event => {
-    const result = await deps.db.write({
+    //eslint-disable-next-line
+    console.log("will create data: ", event);
+    const result = await deps.db.create({
       store: eStore,
-      query: { id: event.id },
-      update: {
-        $set: event
-      },
-      options: {
-        lean: true,
-        omitUndefined: true,
-        upsert: true,
-        new: true,
-        runValidators: true,
-        setDefaultsOnInsert: true
-      }
+      data: event
     });
+
+    //eslint-disable-next-line
+    console.log("created result: ", result);
+    // const result = await deps.db.write({
+    //   store: eStore,
+    //   query: { id: event.id },
+    //   update: {
+    //     $set: event
+    //   },
+    //   options: {
+    //     lean: true,
+    //     omitUndefined: true,
+    //     upsert: true,
+    //     new: true,
+    //     runValidators: true,
+    //     setDefaultsOnInsert: true
+    //   }
+    // });
     delete result._id;
     delete result.__v;
     return result;

@@ -35,7 +35,7 @@ const findOneResult = {
   state: { a: 1, b: 1 },
   headers: { lastEventNumber: 0, root }
 };
-const writeResult = { a: 1 };
+const createResult = { a: 1 };
 const id = "some-id";
 const data = "some-data";
 const mapReduceResult = "some-result";
@@ -71,7 +71,7 @@ describe("Mongodb event store", () => {
     const findFake = fake.returns(findResult);
     const findOneFake = fake.returns(findOneResult);
 
-    const writeFake = fake.returns({ ...writeResult, __v: 3, _id: 4 });
+    const createFake = fake.returns({ ...createResult, __v: 3, _id: 4 });
     const mapReduceFake = fake.returns(mapReduceResult);
 
     const eventStoreSchema = { a: String };
@@ -87,7 +87,7 @@ describe("Mongodb event store", () => {
     const db = {
       find: findFake,
       findOne: findOneFake,
-      write: writeFake,
+      create: createFake,
       store: storeFake,
       mapReduce: mapReduceFake
     };
@@ -197,24 +197,11 @@ describe("Mongodb event store", () => {
     const saveEventFnResult = await eventStoreFake.lastCall.lastArg.saveEventFn(
       event
     );
-    expect(writeFake).to.have.been.calledWith({
+    expect(createFake).to.have.been.calledWith({
       store: eStore,
-      query: {
-        id
-      },
-      update: {
-        $set: event
-      },
-      options: {
-        lean: true,
-        omitUndefined: true,
-        upsert: true,
-        new: true,
-        runValidators: true,
-        setDefaultsOnInsert: true
-      }
+      data: event
     });
-    expect(saveEventFnResult).to.deep.equal(writeResult);
+    expect(saveEventFnResult).to.deep.equal(createResult);
 
     await mongodbEventStore();
     expect(storeFake).to.have.been.calledTwice;
@@ -238,7 +225,7 @@ describe("Mongodb event store", () => {
     const findFake = fake.returns(findResult);
     const findOneFake = fake();
 
-    const writeFake = fake.returns({ ...writeResult, __v: 3, _id: 4 });
+    const createFake = fake.returns({ ...createResult, __v: 3, _id: 4 });
     const mapReduceFake = fake.returns(mapReduceResult);
 
     const eventStoreSchema = { a: String };
@@ -254,7 +241,7 @@ describe("Mongodb event store", () => {
     const db = {
       find: findFake,
       findOne: findOneFake,
-      write: writeFake,
+      create: createFake,
       store: storeFake,
       mapReduce: mapReduceFake
     };
@@ -311,7 +298,7 @@ describe("Mongodb event store", () => {
     const findFake = fake.returns([]);
     const findOneFake = fake();
 
-    const writeFake = fake.returns({ ...writeResult, __v: 3, _id: 4 });
+    const createFake = fake.returns({ ...createResult, __v: 3, _id: 4 });
     const mapReduceFake = fake.returns(mapReduceResult);
 
     const eventStoreSchema = { a: String };
@@ -327,7 +314,7 @@ describe("Mongodb event store", () => {
     const db = {
       find: findFake,
       findOne: findOneFake,
-      write: writeFake,
+      create: createFake,
       store: storeFake,
       mapReduce: mapReduceFake
     };
@@ -384,7 +371,7 @@ describe("Mongodb event store", () => {
     const findFake = fake.returns(findResult);
     const findOneFake = fake.returns(findOneResult);
 
-    const writeFake = fake.returns({ ...writeResult, __v: 3, _id: 4 });
+    const createFake = fake.returns({ ...createResult, __v: 3, _id: 4 });
     const mapReduceFake = fake.returns(mapReduceResult);
 
     const eventStoreSchema = { a: String };
@@ -400,7 +387,7 @@ describe("Mongodb event store", () => {
     const db = {
       find: findFake,
       findOne: findOneFake,
-      write: writeFake,
+      create: createFake,
       store: storeFake,
       mapReduce: mapReduceFake
     };
@@ -473,7 +460,7 @@ describe("Mongodb event store", () => {
     const findFake = fake.returns(findResult);
     const findOneFake = fake.returns(findOneResult);
 
-    const writeFake = fake.returns({ ...writeResult, __v: 3, _id: 4 });
+    const createFake = fake.returns({ ...createResult, __v: 3, _id: 4 });
     const mapReduceFake = fake.returns(mapReduceResult);
 
     const eventStoreSchema = { a: { type: String } };
@@ -489,7 +476,7 @@ describe("Mongodb event store", () => {
     const db = {
       find: findFake,
       findOne: findOneFake,
-      write: writeFake,
+      create: createFake,
       store: storeFake,
       mapReduce: mapReduceFake
     };

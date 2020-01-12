@@ -1,6 +1,6 @@
 const {
   store,
-  write,
+  create,
   mapReduce,
   findOne,
   find
@@ -13,5 +13,5 @@ const removeIds = require("@blossm/remove-ids-from-mongodb-schema");
 exports.secret = secret;
 exports.dateString = dateString;
 exports.eventStore = eventStore;
-exports.db = { store, write, mapReduce, findOne, find };
+exports.db = { store, create, mapReduce, findOne, find };
 exports.removeIds = removeIds;
