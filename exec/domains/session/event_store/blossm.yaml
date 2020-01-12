@@ -14,7 +14,6 @@ schema:
 # events are begin, continue, end
 
 testing:
-  #must add at least 2 examples
   examples:
     - user: some-user-root
       device:
