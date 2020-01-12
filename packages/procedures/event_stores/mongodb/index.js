@@ -207,6 +207,9 @@ module.exports = async ({
       })
     ]);
 
+    //eslint-disable-next-line
+    console.log("EVENTS: ", events);
+
     if (!events.length && !snapshot) return null;
 
     const aggregate = events
@@ -217,6 +220,8 @@ module.exports = async ({
       )
       .reduce(
         (accumulator, event) => {
+          //eslint-disable-next-line
+          console.log("accumulator event: ", event);
           return {
             headers: {
               root: accumulator.headers.root,
