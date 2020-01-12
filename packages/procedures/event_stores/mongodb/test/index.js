@@ -126,7 +126,7 @@ describe("Mongodb event store", () => {
       indexes: [
         [{ id: 1 }],
         [{ "headers.root": 1 }],
-        [{ "headers.root": 1, "headers.number": -1 }]
+        [{ "headers.root": 1, "headers.number": 1 }]
       ],
       connection: {
         protocol,
@@ -171,7 +171,7 @@ describe("Mongodb event store", () => {
         "headers.root": root
       },
       sort: {
-        "headers.number": -1
+        "headers.number": 1
       },
       options: {
         lean: true
@@ -272,7 +272,7 @@ describe("Mongodb event store", () => {
         "headers.root": root
       },
       sort: {
-        "headers.number": -1
+        "headers.number": 1
       },
       options: {
         lean: true
@@ -345,7 +345,7 @@ describe("Mongodb event store", () => {
         "headers.root": root
       },
       sort: {
-        "headers.number": -1
+        "headers.number": 1
       },
       options: {
         lean: true
@@ -437,7 +437,7 @@ describe("Mongodb event store", () => {
       indexes: [
         [{ id: 1 }],
         [{ "headers.root": 1 }],
-        [{ "headers.root": 1, "headers.number": -1 }]
+        [{ "headers.root": 1, "headers.number": 1 }]
       ],
       connection: {
         protocol,
@@ -528,7 +528,7 @@ describe("Mongodb event store", () => {
       indexes: [
         [{ id: 1 }],
         [{ "headers.root": 1 }],
-        [{ "headers.root": 1, "headers.number": -1 }]
+        [{ "headers.root": 1, "headers.number": 1 }]
       ],
       connection: {
         protocol,

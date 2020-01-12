@@ -56,7 +56,7 @@ const eventStore = async schema => {
     indexes: [
       [{ id: 1 }],
       [{ "headers.root": 1 }],
-      [{ "headers.root": 1, "headers.number": -1 }]
+      [{ "headers.root": 1, "headers.number": 1 }]
     ],
     connection: {
       protocol: process.env.MONGODB_PROTOCOL,
@@ -190,7 +190,7 @@ module.exports = async ({
           "headers.root": root
         },
         sort: {
-          "headers.number": -1
+          "headers.number": 1
         },
         options: {
           lean: true
