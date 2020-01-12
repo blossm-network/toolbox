@@ -207,6 +207,8 @@ module.exports = async ({
       })
     ]);
 
+    if (!events.length && !snapshot) return null;
+
     const aggregate = events
       .filter(event =>
         snapshot
