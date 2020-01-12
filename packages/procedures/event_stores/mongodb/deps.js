@@ -2,7 +2,8 @@ const {
   store,
   write,
   mapReduce,
-  findOne
+  findOne,
+  find
 } = require("@blossm/mongodb-database");
 const { get: secret } = require("@blossm/gcp-secret");
 const { string: dateString } = require("@blossm/datetime");
@@ -12,5 +13,5 @@ const removeIds = require("@blossm/remove-ids-from-mongodb-schema");
 exports.secret = secret;
 exports.dateString = dateString;
 exports.eventStore = eventStore;
-exports.db = { store, write, mapReduce, findOne };
+exports.db = { store, write, mapReduce, findOne, find };
 exports.removeIds = removeIds;
