@@ -1,14 +1,9 @@
-#
-# This file is required.
-# It's URL will be auth.[network]
-#
-
 domain: challenge
 service: core
 
 commands:
   - action: issue
-    priviledges: none
+    protected: false 
   - action: answer
     priviledges: [answer]
     key: challenge

@@ -10,7 +10,7 @@ commands:
   - action: some-action
     priviledges: [some-permission]
   - action: some-other-action
-    priviledges: none
+    protected: false
 
 whitelist:
   - "127.0.0.1"

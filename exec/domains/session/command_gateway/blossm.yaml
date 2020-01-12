@@ -3,7 +3,7 @@ service: core
 
 commands:
   - action: start
-    priviledges: none
+    protected: false
 
 whitelist:
   - "127.0.0.1"

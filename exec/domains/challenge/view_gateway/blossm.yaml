@@ -8,7 +8,7 @@ service: core
 
 stores:
   - name: codes
-    priviledges: none
+    protected: false 
 
 whitelist:
   - "127.0.0.1"

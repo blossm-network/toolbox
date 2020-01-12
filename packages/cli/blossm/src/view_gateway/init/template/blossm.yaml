@@ -10,7 +10,7 @@ stores:
   - name: some-name
     priviledges: [some-permission]
   - name: some-other-name
-    priviledges: none
+    protected: false
 
 whitelist:
   - "127.0.0.1"

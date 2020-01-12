@@ -154,7 +154,7 @@ describe("Command gateway", () => {
     const action1 = "some-action1";
     const action2 = "some-action2";
     const commands = [
-      { action: action1, priviledges: "none" },
+      { action: action1, protected: false },
       { action: action2, priviledges }
     ];
 

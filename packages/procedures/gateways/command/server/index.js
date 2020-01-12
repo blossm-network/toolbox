@@ -17,17 +17,22 @@ module.exports = async ({
       })
   });
 
-  for (const command of commands) {
-    server = server.post(deps.post({ action: command.action, domain }), {
-      path: `/${command.action}`,
-      ...(command.priviledges != "none" && {
+  for (const {
+    action,
+    key = "auth",
+    priviledges,
+    protected = true
+  } of commands) {
+    server = server.post(deps.post({ action, domain }), {
+      path: `/${action}`,
+      ...(protected && {
         preMiddleware: [
           deps.authentication({
-            verifyFn: verifyFn({ key: command.key || "auth" })
+            verifyFn: verifyFn({ key })
           }),
           deps.authorization({
             permissionsLookupFn,
-            priviledges: command.priviledges
+            priviledges
           })
         ]
       })

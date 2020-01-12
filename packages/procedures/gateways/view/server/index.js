@@ -17,17 +17,17 @@ module.exports = async ({
       })
   });
 
-  for (const store of stores) {
-    server = server.get(deps.get({ name: store.name, domain }), {
-      path: `/${store.name}`,
-      ...(store.priviledges != "none" && {
+  for (const { name, key = "auth", priviledges, protected = true } of stores) {
+    server = server.get(deps.get({ name, domain }), {
+      path: `/${name}`,
+      ...(protected && {
         preMiddleware: [
           deps.authentication({
-            verifyFn: verifyFn({ key: store.key || "auth" })
+            verifyFn: verifyFn({ key })
           }),
           deps.authorization({
             permissionsLookupFn,
-            priviledges: store.priviledges
+            priviledges
           })
         ]
       })

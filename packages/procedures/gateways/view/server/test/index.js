@@ -156,7 +156,7 @@ describe("View gateway", () => {
     const name1 = "some-name1";
     const name2 = "some-name2";
     const stores = [
-      { name: name1, priviledges: "none" },
+      { name: name1, protected: false },
       { name: name2, priviledges }
     ];
 

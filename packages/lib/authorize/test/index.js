@@ -56,6 +56,31 @@ describe("Authorize", () => {
       }
     });
   });
+  it("should authorize all wildcards", async () => {
+    const permissions = ["*:*:*"];
+
+    const permissionsLookupFn = fake.returns(permissions);
+
+    const document = await authorize({
+      path,
+      claims,
+      permissionsLookupFn,
+      priviledges,
+      root,
+      domain,
+      service,
+      network
+    });
+
+    expect(permissionsLookupFn).to.have.been.calledWith({ principle, context });
+    expect(document).to.deep.equal({
+      context: {
+        ...context,
+        permissions,
+        principle
+      }
+    });
+  });
   it("should authorize with no domain", async () => {
     const permissions = [`bogus:${joinedPriviledges}:${root}`];
 
@@ -305,5 +330,44 @@ describe("Authorize", () => {
     } catch (e) {
       expect(e).to.equal(error);
     }
+  });
+  it("should authorize with priviledges as none", async () => {
+    const permissions = ["*:bogus:*"];
+
+    const permissionsLookupFn = fake.returns(permissions);
+
+    const document = await authorize({
+      path,
+      claims,
+      permissionsLookupFn,
+      root,
+      priviledges: "none",
+      domain,
+      service,
+      network
+    });
+    expect(permissionsLookupFn).to.have.been.calledWith({ principle, context });
+    expect(document).to.deep.equal({
+      context: {
+        ...context,
+        permissions,
+        principle
+      }
+    });
+  });
+  it("should authorize with no sub and priviledges as none", async () => {
+    const document = await authorize({
+      path,
+      claims: {
+        context
+      },
+      priviledges: "none",
+      root,
+      domain,
+      service,
+      network
+    });
+
+    expect(document).to.deep.equal({ context });
   });
 });
