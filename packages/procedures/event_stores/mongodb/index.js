@@ -1,4 +1,5 @@
 const logger = require("@blossm/logger");
+const { preconditionFailed } = require("@blossm/errors");
 
 const deps = require("./deps");
 
@@ -107,13 +108,23 @@ module.exports = async ({
   const sStore = await snapshotStore({ schema: deps.removeIds({ schema }) });
 
   const saveEventFn = async event => {
-    const [result] = await deps.db.create({
-      store: eStore,
-      data: event
-    });
-    delete result._id;
-    delete result.__v;
-    return result;
+    try {
+      const [result] = await deps.db.create({
+        store: eStore,
+        data: event
+      });
+      delete result._id;
+      delete result.__v;
+      return result;
+    } catch (e) {
+      if (e.code == "11000" && e.keyPattern.id == 1) {
+        throw preconditionFailed.eventNumberDuplicate({
+          info: { number: event.headers.number }
+        });
+      } else {
+        throw e;
+      }
+    }
   };
 
   // const saveSnapshotFn = async snapshot => {

@@ -230,15 +230,14 @@ describe("Event store integration tests", () => {
     expect(response.statusCode).to.equal(412);
   });
   it("should return an error if two simultaneous events are attempted", async () => {
-    const root0 = uuid();
-    const root1 = uuid();
+    const root = uuid();
 
     const [response0, response1] = await Promise.all([
       request.post(url, {
         body: {
           event: {
             headers: {
-              root: root0,
+              root,
               topic,
               version,
               created,
@@ -262,7 +261,7 @@ describe("Event store integration tests", () => {
         body: {
           event: {
             headers: {
-              root: root1,
+              root,
               topic,
               version,
               created,
@@ -282,8 +281,6 @@ describe("Event store integration tests", () => {
         }
       })
     ]);
-    // console.log("response 0: ", response0);
-    // console.log("response 1: ", response1);
     expect(response0.statusCode).to.equal(204);
     expect(response1.statusCode).to.equal(500);
   });

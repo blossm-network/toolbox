@@ -8,6 +8,11 @@ module.exports = {
       { cause, info, toJSON },
       "Event number incorrect."
     ),
+  eventNumberDuplicate: ({ cause, info } = {}) =>
+    new PreconditionFailedError(
+      { cause, info, toJSON },
+      "Event number duplicate."
+    ),
   message: (message, { cause, info } = {}) =>
     new PreconditionFailedError({ cause, info, toJSON }, message)
 };

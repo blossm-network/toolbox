@@ -38,7 +38,6 @@ const findOneResult = {
 const createResult = { a: 1 };
 const id = "some-id";
 const data = "some-data";
-const mapReduceResult = "some-result";
 
 const publishFn = "some-publish-fn";
 
@@ -72,7 +71,6 @@ describe("Mongodb event store", () => {
     const findOneFake = fake.returns(findOneResult);
 
     const createFake = fake.returns([{ ...createResult, __v: 3, _id: 4 }]);
-    const mapReduceFake = fake.returns(mapReduceResult);
 
     const eventStoreSchema = { a: String };
     const snapshotStoreSchema = "some-snapshot-schema";
@@ -88,8 +86,7 @@ describe("Mongodb event store", () => {
       find: findFake,
       findOne: findOneFake,
       create: createFake,
-      store: storeFake,
-      mapReduce: mapReduceFake
+      store: storeFake
     };
     replace(deps, "db", db);
 
@@ -206,6 +203,65 @@ describe("Mongodb event store", () => {
     await mongodbEventStore();
     expect(storeFake).to.have.been.calledTwice;
   });
+  it("should throw correct error when events have a duplicate id", async () => {
+    const mongodbEventStore = require("..");
+    const eStore = "some-event-store";
+    const sStore = "some-snapshot-store";
+    const storeFake = stub()
+      .onCall(0)
+      .returns(eStore)
+      .onCall(1)
+      .returns(sStore);
+
+    const secretFake = fake.returns(password);
+    replace(deps, "secret", secretFake);
+
+    const eventStoreFake = fake();
+    replace(deps, "eventStore", eventStoreFake);
+
+    class DuplicateError extends Error {
+      constructor() {
+        super();
+        this.code = "11000";
+        this.keyPattern = { id: 1 };
+      }
+    }
+    const createFake = fake.throws(new DuplicateError());
+
+    const eventStoreSchema = { a: String };
+    const snapshotStoreSchema = "some-snapshot-schema";
+    const removeIdsFake = stub()
+      .onCall(0)
+      .returns(eventStoreSchema)
+      .onCall(1)
+      .returns(snapshotStoreSchema);
+
+    replace(deps, "removeIds", removeIdsFake);
+
+    const db = {
+      create: createFake,
+      store: storeFake
+    };
+    replace(deps, "db", db);
+
+    await mongodbEventStore({ schema, publishFn });
+
+    const event = {
+      id,
+      headers: {
+        number: "some-number"
+      }
+    };
+
+    try {
+      await eventStoreFake.lastCall.lastArg.saveEventFn(event);
+
+      //shouldn't get called
+      expect(1).to.equal(2);
+    } catch (e) {
+      expect(e.statusCode).to.equal(412);
+    }
+  });
   it("should call with the correct params with no aggregate", async () => {
     const mongodbEventStore = require("..");
     const eStore = "some-event-store";
@@ -226,7 +282,6 @@ describe("Mongodb event store", () => {
     const findOneFake = fake();
 
     const createFake = fake.returns([{ ...createResult, __v: 3, _id: 4 }]);
-    const mapReduceFake = fake.returns(mapReduceResult);
 
     const eventStoreSchema = { a: String };
     const snapshotStoreSchema = "some-snapshot-schema";
@@ -242,8 +297,7 @@ describe("Mongodb event store", () => {
       find: findFake,
       findOne: findOneFake,
       create: createFake,
-      store: storeFake,
-      mapReduce: mapReduceFake
+      store: storeFake
     };
     replace(deps, "db", db);
 
@@ -299,7 +353,6 @@ describe("Mongodb event store", () => {
     const findOneFake = fake();
 
     const createFake = fake.returns([{ ...createResult, __v: 3, _id: 4 }]);
-    const mapReduceFake = fake.returns(mapReduceResult);
 
     const eventStoreSchema = { a: String };
     const snapshotStoreSchema = "some-snapshot-schema";
@@ -315,8 +368,7 @@ describe("Mongodb event store", () => {
       find: findFake,
       findOne: findOneFake,
       create: createFake,
-      store: storeFake,
-      mapReduce: mapReduceFake
+      store: storeFake
     };
     replace(deps, "db", db);
 
@@ -372,7 +424,6 @@ describe("Mongodb event store", () => {
     const findOneFake = fake.returns(findOneResult);
 
     const createFake = fake.returns([{ ...createResult, __v: 3, _id: 4 }]);
-    const mapReduceFake = fake.returns(mapReduceResult);
 
     const eventStoreSchema = { a: String };
     const snapshotStoreSchema = "some-snapshot-schema";
@@ -388,8 +439,7 @@ describe("Mongodb event store", () => {
       find: findFake,
       findOne: findOneFake,
       create: createFake,
-      store: storeFake,
-      mapReduce: mapReduceFake
+      store: storeFake
     };
     replace(deps, "db", db);
 
@@ -461,7 +511,6 @@ describe("Mongodb event store", () => {
     const findOneFake = fake.returns(findOneResult);
 
     const createFake = fake.returns([{ ...createResult, __v: 3, _id: 4 }]);
-    const mapReduceFake = fake.returns(mapReduceResult);
 
     const eventStoreSchema = { a: { type: String } };
     const snapshotStoreSchema = "some-snapshot-schema";
@@ -477,8 +526,7 @@ describe("Mongodb event store", () => {
       find: findFake,
       findOne: findOneFake,
       create: createFake,
-      store: storeFake,
-      mapReduce: mapReduceFake
+      store: storeFake
     };
     replace(deps, "db", db);
 

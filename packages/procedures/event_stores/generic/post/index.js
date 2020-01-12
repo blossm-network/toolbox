@@ -8,14 +8,7 @@ module.exports = ({ saveEventFn, aggregateFn, publishFn }) => {
 
     const aggregate = await aggregateFn(root);
 
-    //eslint-disable-next-line
-    console.log(
-      "lastEventNumber is: ",
-      aggregate ? aggregate.headers.lastEventNumber : null
-    );
     const number = aggregate ? aggregate.headers.lastEventNumber + 1 : 0;
-    //eslint-disable-next-line
-    console.log("new number is: ", number);
 
     if (req.body.number && req.body.number != number)
       throw preconditionFailed.eventNumberIncorrect({
@@ -30,12 +23,11 @@ module.exports = ({ saveEventFn, aggregateFn, publishFn }) => {
         ...req.body.event.headers,
         number
       },
-      id: `${root}_${0}`,
+      id: `${root}_${number}`,
       saved: now
     };
 
     const savedEvent = await saveEventFn(event);
-
     await publishFn(savedEvent);
 
     res.status(204).send();

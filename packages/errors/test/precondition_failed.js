@@ -17,6 +17,18 @@ describe("Precondition failed", () => {
     expect(error.cause()).to.deep.equal(cause);
     expect(error.statusCode).to.equal(412);
   });
+  it("eventNumberDuplicate correct", () => {
+    const error = preconditionFailed.eventNumberDuplicate();
+    expect(error.message).to.equal("Event number duplicate.");
+    expect(error.statusCode).to.equal(412);
+  });
+  it("eventNumberDuplicate correct with props", () => {
+    const error = preconditionFailed.eventNumberDuplicate({ cause, info });
+    expect(error.message).to.equal("Event number duplicate.");
+    expect(error.toJSON().info).to.deep.equal(info);
+    expect(error.cause()).to.deep.equal(cause);
+    expect(error.statusCode).to.equal(412);
+  });
   it("message correct", () => {
     const message = "some-message";
     const error = preconditionFailed.message(message);
