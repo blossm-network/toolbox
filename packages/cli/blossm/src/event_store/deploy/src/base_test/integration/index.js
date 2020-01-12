@@ -282,6 +282,6 @@ describe("Event store integration tests", () => {
       })
     ]);
     expect(response0.statusCode).to.equal(204);
-    expect(response1.statusCode).to.equal(500);
+    expect(response1.statusCode).to.equal(412);
   });
 });
