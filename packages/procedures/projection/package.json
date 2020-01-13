@@ -1,7 +1,7 @@
 {
   "name": "@blossm/projection",
   "description": "A projection event handler server.",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -14,7 +14,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/event-handler": "^0.0.56",
+    "@blossm/event-handler": "^0.0.57",
     "@blossm/gcp-token": "^0.0.8",
     "@blossm/view-store-rpc": "^0.0.50"
   },
