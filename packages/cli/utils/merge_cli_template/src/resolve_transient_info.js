@@ -40,7 +40,10 @@ const findProceduresAndEventsForProcedure = (procedure, dir) => {
       if (procedureIsConfig(procedure, blossmConfig)) {
         if (blossmConfig.context == "command-handler") {
           //eslint-disable-next-line
-          console.log("this is it: ", blossmConfig);
+          console.log("this is it: ", {
+            blossmConfig,
+            events: eventsForCommandHandler(blossmConfig)
+          });
         }
         return {
           procedures: blossmConfig.testing.procedures || [],
@@ -71,6 +74,8 @@ const findProceduresAndEvents = (procedures, dir, allProcedures, allEvents) => {
       procedures: foundProcedures,
       events: foundEvents
     } = findProceduresAndEventsForProcedure(procedure, dir);
+    //eslint-disable-next-line
+    console.log("found events: ", { foundEvents, procedure });
     const filteredFoundProcedures = foundProcedures.filter(p => {
       for (const s of newProcedures) {
         if (objectsEqual(s, p)) return false;
@@ -85,6 +90,8 @@ const findProceduresAndEvents = (procedures, dir, allProcedures, allEvents) => {
     });
     newProcedures.push(...filteredFoundProcedures);
     newEvents.push(...filteredFoundEvents);
+    //eslint-disable-next-line
+    console.log("new events: ", { newEvents });
   }
 
   const procedureDifference = newProcedures.filter(p => {
@@ -101,8 +108,14 @@ const findProceduresAndEvents = (procedures, dir, allProcedures, allEvents) => {
     return true;
   });
 
+  //eslint-disable-next-line
+  console.log("event diff: ", { eventDifference });
+
   if (procedureDifference.length == 0)
-    return { procedures: allProcedures, events: allEvents };
+    return {
+      procedures: allProcedures,
+      events: [...allEvents, ...eventDifference]
+    };
 
   return findProceduresAndEvents(
     procedureDifference,
