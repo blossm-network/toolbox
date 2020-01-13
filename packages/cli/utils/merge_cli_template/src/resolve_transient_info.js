@@ -36,7 +36,8 @@ const findProceduresAndEventsForProcedure = (procedure, dir) => {
       const blossmConfig = yaml.parse(fs.readFileSync(filePath, "utf8"));
 
       //If the domain is not the same, the procedure wont be in this directory.
-      if (blossmConfig.domain != procedure.domain) return [];
+      if (blossmConfig.domain != procedure.domain)
+        return { procedures: [], events: [] };
       if (procedureIsConfig(procedure, blossmConfig)) {
         return {
           procedures: blossmConfig.testing.procedures || [],
