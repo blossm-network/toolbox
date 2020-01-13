@@ -28,6 +28,10 @@ module.exports = ({ saveEventFn, aggregateFn, publishFn }) => {
     };
 
     const savedEvent = await saveEventFn(event);
+    //eslint-disable-next-line
+    console.log("event to publish: ", {
+      event: savedEvent
+    });
     await publishFn(savedEvent);
 
     res.status(204).send();
