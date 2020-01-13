@@ -142,8 +142,6 @@ module.exports = ({
   let services = {};
   let includeDatabase = false;
   for (const procedure of config.testing.procedures) {
-    //eslint-disable-next-line
-    console.log("resolving: ", procedure);
     const commonServiceImagePrefix = `${containerRegistery}/${service}.${procedure.context}`;
     switch (procedure.context) {
       case "view-store":

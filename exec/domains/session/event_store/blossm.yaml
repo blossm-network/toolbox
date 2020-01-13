@@ -1,6 +1,5 @@
 domain: session
 service: core
-memory: 256Mi
 
 schema:
   user: String

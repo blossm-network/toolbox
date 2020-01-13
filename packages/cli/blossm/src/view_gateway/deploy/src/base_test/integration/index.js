@@ -20,9 +20,11 @@ describe("View gateway integration tests", () => {
         : [
             ...new Set([
               ...permissions,
-              ...command.priviledges.map(
-                priviledge => `${process.env.DOMAIN}:${priviledge}`
-              )
+              ...(command.priviledges
+                ? command.priviledges.map(
+                    priviledge => `${process.env.DOMAIN}:${priviledge}`
+                  )
+                : [])
             ])
           ];
     }, []);
