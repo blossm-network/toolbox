@@ -12,7 +12,7 @@ const copy = promisify(ncp);
 
 const writeCompose = require("./src/write_compose");
 const writeBuild = require("./src/write_build");
-const resolveTransientProcedures = require("./src/resolve_transient_procedures");
+const resolveTransientInfo = require("./src/resolve_transient_info");
 
 const envUriSpecifier = env => {
   switch (env) {
@@ -90,23 +90,14 @@ const copySource = async (p, workingDir) => {
   });
 };
 
-const topicsForProcedures = config => {
-  const array = (config.testing.procedures || [])
-    .filter(t => t.context == "command-handler")
-    .map(t => `did-${t.action}.${t.domain}.${t.service || config.service}`)
+const topicsForProcedures = (config, events) => {
+  const array = (events || [])
+    .map(e => `did-${e.action}.${e.domain}.${e.service || config.service}`)
     .concat(
       config.context == "command-handler"
-        ? [`did-${config.action}.${config.domain}.${config.service}`]
-        : []
-    )
-    .concat(
-      config.context == "command-gateway"
-        ? [
-            ...config.commands.map(
-              command =>
-                `did-${command.action}.${config.domain}.${config.service}`
-            )
-          ]
+        ? config.events
+          ? config.events.map(e => `did-${e.action}.${e.domain}.${e.service}`)
+          : [`did-${config.action}.${config.domain}.${config.service}`]
         : []
     )
     .concat(
@@ -117,20 +108,126 @@ const topicsForProcedures = config => {
   return [...new Set(array)];
 };
 
+const eventStoreProcedures = ({ procedures }) => {
+  let result = [];
+  for (const procedure of procedures) {
+    if (
+      procedure.context == "command-handler" &&
+      ![...procedures, ...result].some(
+        p => p.context == "event-store" && p.domain == procedure.domain
+      )
+    ) {
+      result.push({ context: "event-store", domain: procedure.domain });
+    }
+  }
+  return result;
+};
+
+const addDefaultProcedures = ({ config }) => {
+  const tokenProcedures = [
+    {
+      action: "answer",
+      domain: "challenge",
+      context: "command-handler"
+    },
+    {
+      action: "issue",
+      domain: "challenge",
+      context: "command-handler"
+    },
+    {
+      domain: "challenge",
+      context: "event-store"
+    },
+    {
+      name: "permissions",
+      domain: "principle",
+      context: "view-store"
+    },
+    {
+      name: "codes",
+      domain: "challenge",
+      context: "view-store"
+    },
+    {
+      name: "phones",
+      domain: "user",
+      context: "view-store"
+    },
+    {
+      name: "contexts",
+      domain: "user",
+      context: "view-store"
+    }
+  ];
+
+  switch (config.context) {
+    case "command-handler":
+      return [
+        ...config.testing.procedures,
+        ...eventStoreProcedures({ procedures: config.testing.procedures }),
+        { domain: config.domain, context: "event-store" }
+      ];
+    case "projection":
+      return [
+        ...config.testing.procedures,
+        { name: config.name, domain: config.domain, context: "view-store" }
+      ];
+    case "command-gateway": {
+      const procedures = [
+        ...tokenProcedures,
+        ...config.commands.map(command => {
+          return {
+            action: command.action,
+            domain: config.domain,
+            context: "command-handler"
+          };
+        })
+      ];
+      return [...eventStoreProcedures({ procedures }), ...procedures];
+    }
+    case "view-gateway":
+      return [
+        ...tokenProcedures,
+        ...config.stores.map(store => {
+          return {
+            name: store.name,
+            domain: config.domain,
+            context: "view-store"
+          };
+        })
+      ];
+    default:
+      return config.testing.procedures;
+  }
+};
+
 const writeConfig = (config, workingDir) => {
   const newConfigPath = path.resolve(workingDir, "config.json");
   if (!config.testing) config.testing = {};
+
+  //eslint-disable-next-line
+  console.log("procedures is: ", config.testing.procedures);
+  //eslint-disable-next-line
+  console.log(
+    "add defaults procedures give me: ",
+    addDefaultProcedures(config.testing.procedures)
+  );
+
+  const { procedures, events } = resolveTransientInfo(
+    addDefaultProcedures(config.testing.procedures)
+  );
+  //eslint-disable-next-line
+  console.log("resolving transients give me: ", { procedures, events });
+
   config.testing = {
     ...config.testing,
     procedures: config.testing.procedures
-      ? [
-          ...config.testing.procedures,
-          ...resolveTransientProcedures(config.testing.procedures)
-        ]
+      ? [...config.testing.procedures, ...procedures]
       : []
   };
 
-  config.testing.topics = topicsForProcedures(config);
+  config.testing.topics = topicsForProcedures(config, events);
 
   fs.writeFileSync(newConfigPath, JSON.stringify(config));
 };

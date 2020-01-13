@@ -58,9 +58,6 @@ module.exports = async ({ payload, context }) => {
   //Create a challenge code.
   const code = deps.randomIntOfLength(CODE_LENGTH);
 
-  //eslint-disable-next-line
-  console.log("Issuing code: ", { code });
-
   //Send the code.
   sms.send({
     to: user.phone,

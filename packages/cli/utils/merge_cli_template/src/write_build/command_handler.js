@@ -113,8 +113,6 @@ module.exports = ({
       action,
       domain,
       service,
-      envUriSpecifier,
-      network,
       project,
       envNameSpecifier
     })

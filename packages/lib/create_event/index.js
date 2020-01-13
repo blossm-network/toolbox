@@ -18,13 +18,6 @@ module.exports = async ({
     network
   }
 } = {}) => {
-  //eslint-disable-next-line
-  console.log("creating event: ", {
-    action,
-    domain,
-    service,
-    network
-  });
   return {
     headers: {
       root: root || (await deps.uuid()),

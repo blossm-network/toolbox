@@ -2,99 +2,99 @@ const hash = require("@blossm/service-hash");
 
 const databaseService = require("./database_service");
 
-const eventStoreProcedures = ({ procedures }) => {
-  let result = [];
-  for (const procedure of procedures) {
-    if (
-      procedure.context == "command-handler" &&
-      ![...procedures, ...result].some(
-        p => p.context == "event-store" && p.domain == procedure.domain
-      )
-    ) {
-      result.push({ context: "event-store", domain: procedure.domain });
-    }
-  }
-  return result;
-};
+// const eventStoreProcedures = ({ procedures }) => {
+//   let result = [];
+//   for (const procedure of procedures) {
+//     if (
+//       procedure.context == "command-handler" &&
+//       ![...procedures, ...result].some(
+//         p => p.context == "event-store" && p.domain == procedure.domain
+//       )
+//     ) {
+//       result.push({ context: "event-store", domain: procedure.domain });
+//     }
+//   }
+//   return result;
+// };
 
-const procedures = ({ config, domain }) => {
-  const tokenProcedures = [
-    {
-      action: "answer",
-      domain: "challenge",
-      context: "command-handler"
-    },
-    {
-      action: "issue",
-      domain: "challenge",
-      context: "command-handler"
-    },
-    {
-      domain: "challenge",
-      context: "event-store"
-    },
-    {
-      name: "permissions",
-      domain: "principle",
-      context: "view-store"
-    },
-    {
-      name: "codes",
-      domain: "challenge",
-      context: "view-store"
-    },
-    {
-      name: "phones",
-      domain: "user",
-      context: "view-store"
-    },
-    {
-      name: "contexts",
-      domain: "user",
-      context: "view-store"
-    }
-  ];
+// const procedures = ({ config, domain }) => {
+//   const tokenProcedures = [
+//     {
+//       action: "answer",
+//       domain: "challenge",
+//       context: "command-handler"
+//     },
+//     {
+//       action: "issue",
+//       domain: "challenge",
+//       context: "command-handler"
+//     },
+//     {
+//       domain: "challenge",
+//       context: "event-store"
+//     },
+//     {
+//       name: "permissions",
+//       domain: "principle",
+//       context: "view-store"
+//     },
+//     {
+//       name: "codes",
+//       domain: "challenge",
+//       context: "view-store"
+//     },
+//     {
+//       name: "phones",
+//       domain: "user",
+//       context: "view-store"
+//     },
+//     {
+//       name: "contexts",
+//       domain: "user",
+//       context: "view-store"
+//     }
+//   ];
 
-  switch (config.context) {
-    case "command-handler":
-      return [
-        ...config.testing.procedures,
-        ...eventStoreProcedures({ procedures: config.testing.procedures }),
-        { domain, context: "event-store" }
-      ];
-    case "projection":
-      return [
-        ...config.testing.procedures,
-        { name: config.name, domain, context: "view-store" }
-      ];
-    case "command-gateway": {
-      const procedures = [
-        ...tokenProcedures,
-        ...config.commands.map(command => {
-          return {
-            action: command.action,
-            domain,
-            context: "command-handler"
-          };
-        })
-      ];
-      return [...eventStoreProcedures({ procedures }), ...procedures];
-    }
-    case "view-gateway":
-      return [
-        ...tokenProcedures,
-        ...config.stores.map(store => {
-          return {
-            name: store.name,
-            domain,
-            context: "view-store"
-          };
-        })
-      ];
-    default:
-      return config.testing.procedures;
-  }
-};
+//   switch (config.context) {
+//     case "command-handler":
+//       return [
+//         ...config.testing.procedures,
+//         ...eventStoreProcedures({ procedures: config.testing.procedures }),
+//         { domain, context: "event-store" }
+//       ];
+//     case "projection":
+//       return [
+//         ...config.testing.procedures,
+//         { name: config.name, domain, context: "view-store" }
+//       ];
+//     case "command-gateway": {
+//       const procedures = [
+//         ...tokenProcedures,
+//         ...config.commands.map(command => {
+//           return {
+//             action: command.action,
+//             domain,
+//             context: "command-handler"
+//           };
+//         })
+//       ];
+//       return [...eventStoreProcedures({ procedures }), ...procedures];
+//     }
+//     case "view-gateway":
+//       return [
+//         ...tokenProcedures,
+//         ...config.stores.map(store => {
+//           return {
+//             name: store.name,
+//             domain,
+//             context: "view-store"
+//           };
+//         })
+//       ];
+//     default:
+//       return config.testing.procedures;
+//   }
+// };
 
 module.exports = ({
   config,
@@ -103,7 +103,6 @@ module.exports = ({
   port,
   env,
   network,
-  domain,
   service,
   region,
   containerRegistery,
@@ -142,7 +141,9 @@ module.exports = ({
   };
   let services = {};
   let includeDatabase = false;
-  for (const procedure of procedures({ config, domain })) {
+  for (const procedure of config.testing.procedures) {
+    //eslint-disable-next-line
+    console.log("resolving: ", procedure);
     const commonServiceImagePrefix = `${containerRegistery}/${service}.${procedure.context}`;
     switch (procedure.context) {
       case "view-store":
