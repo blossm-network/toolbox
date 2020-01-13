@@ -18,12 +18,12 @@ const objectsEqual = (obj0, obj1) => {
   return true;
 };
 
-const eventsForCommandHandler = handler =>
-  handler.events || [
+const eventsForCommandHandler = config =>
+  config.testing.events || [
     {
-      action: handler.action,
-      domain: handler.domain,
-      service: handler.service
+      action: config.action,
+      domain: config.domain,
+      service: config.service
     }
   ];
 
@@ -38,6 +38,10 @@ const findProceduresAndEventsForProcedure = (procedure, dir) => {
       if (blossmConfig.domain != procedure.domain)
         return { procedures: [], events: [] };
       if (procedureIsConfig(procedure, blossmConfig)) {
+        if (blossmConfig.context == "command-handler") {
+          //eslint-disable-next-line
+          console.log("this is it: ", blossmConfig);
+        }
         return {
           procedures: blossmConfig.testing.procedures || [],
           events:

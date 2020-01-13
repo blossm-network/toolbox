@@ -225,19 +225,17 @@ const writeConfig = (config, workingDir) => {
 
   config.testing = {
     ...config.testing,
-    procedures: config.testing.procedures
-      ? [...config.testing.procedures, ...procedures]
-      : [],
+    procedures,
     topics: topicsForProcedures(config, events)
   };
 
   //eslint-disable-next-line
   console.log("all: ", {
-    procedures: config.testing.procedures
-      ? [...config.testing.procedures, ...procedures]
-      : [],
+    procedures,
     topics: topicsForProcedures(config, events)
   });
+
+  delete config.testing.events;
 
   fs.writeFileSync(newConfigPath, JSON.stringify(config));
 };
