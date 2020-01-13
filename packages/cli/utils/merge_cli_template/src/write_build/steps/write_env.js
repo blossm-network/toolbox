@@ -20,6 +20,7 @@ module.exports = ({
       stripIndents`
     cat >> .env <<- EOM
     NETWORK=local
+    NODE_ENV=local
     DOMAIN=${domain}
     SERVICE=${service}
     CONTEXT=${context}
