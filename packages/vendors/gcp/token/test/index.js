@@ -28,7 +28,9 @@ describe("Gcp token", () => {
 
     const url = `https://${gcpRegion}-${name}-${hash}-p3u6hkyfwa-uc.a.run.app`;
 
-    expect(getFake).to.have.been.calledWith(
+    expect(
+      getFake
+    ).to.have.been.calledWith(
       `http://metadata/computeMetadata/v1/instance/service-accounts/default/identity?audience=${url}`,
       { headers: { "Metadata-Flavor": "Google" } }
     );
@@ -48,7 +50,9 @@ describe("Gcp token", () => {
 
     const url = `https://${gcpRegion}-${name}-${hash}-ixixyzl3ea-uc.a.run.app`;
 
-    expect(getFake).to.have.been.calledWith(
+    expect(
+      getFake
+    ).to.have.been.calledWith(
       `http://metadata/computeMetadata/v1/instance/service-accounts/default/identity?audience=${url}`,
       { headers: { "Metadata-Flavor": "Google" } }
     );
@@ -68,7 +72,9 @@ describe("Gcp token", () => {
 
     const url = `https://${gcpRegion}-${name}-${hash}-qzhmgyrp2q-uc.a.run.app`;
 
-    expect(getFake).to.have.been.calledWith(
+    expect(
+      getFake
+    ).to.have.been.calledWith(
       `http://metadata/computeMetadata/v1/instance/service-accounts/default/identity?audience=${url}`,
       { headers: { "Metadata-Flavor": "Google" } }
     );
@@ -100,7 +106,9 @@ describe("Gcp token", () => {
 
     const url = `https://${gcpRegion}-${name}-${hash}-p3u6hkyfwa-uc.a.run.app`;
 
-    expect(getFake).to.have.been.calledWith(
+    expect(
+      getFake
+    ).to.have.been.calledWith(
       `http://metadata/computeMetadata/v1/instance/service-accounts/default/identity?audience=${url}`,
       { headers: { "Metadata-Flavor": "Google" } }
     );

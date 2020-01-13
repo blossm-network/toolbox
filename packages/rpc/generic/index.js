@@ -16,6 +16,8 @@ const common = ({ method, procedure, root, data }) => {
             service,
             procedure
           });
+          //eslint-disable-next-line
+          console.log("NODE ENV: ", process.env.NODE_ENV);
           const url = deps.serviceUrl({
             procedure,
             service,
@@ -23,6 +25,8 @@ const common = ({ method, procedure, root, data }) => {
             ...(path && { path }),
             ...(root && { root })
           });
+          //eslint-disable-next-line
+          console.log("URL is: ", url);
 
           const response = await method(url, {
             body: {
