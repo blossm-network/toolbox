@@ -29,7 +29,7 @@ module.exports = async ({
     headers: {
       root: root || (await deps.uuid()),
       ...(context != undefined && { context }),
-      topic: `did-${action}.${domain}.${service}.${network}`,
+      topic: `did-${action}.${domain}.${service}`,
       version,
       trace,
       created: stringDate(),

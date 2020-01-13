@@ -22,7 +22,7 @@ module.exports = ({
       "-c",
       oneLine`
     gcloud beta pubsub subscriptions create ${service}-${context}-${operationHash}
-    --topic=did-${eventAction}.${eventDomain}.${eventService}.${envUriSpecifier}${network}
+    --topic=did-${eventAction}.${eventDomain}.${eventService}
     --push-endpoint=https://${operationHash}.${region}.${envUriSpecifier}${network}
     --push-auth-service-account=cloud-run-pubsub-invoker@${project}${envNameSpecifier}.iam.gserviceaccount.com
     --topic-project=${project}${envNameSpecifier}

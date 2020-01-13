@@ -55,7 +55,7 @@ describe("Create event", () => {
       headers: {
         root,
         context,
-        topic: `did-${action}.${domain}.${commandService}.${commandNetwork}`,
+        topic: `did-${action}.${domain}.${commandService}`,
         version,
         trace,
         created: stringDate(),
@@ -97,7 +97,7 @@ describe("Create event", () => {
       headers: {
         root: newUuid,
         context,
-        topic: `did-${action}.${domain}.${commandService}.${commandNetwork}`,
+        topic: `did-${action}.${domain}.${commandService}`,
         version,
         trace,
         created: stringDate(),
@@ -136,7 +136,7 @@ describe("Create event", () => {
       headers: {
         root,
         context,
-        topic: `did-${action}.${domain}.${commandService}.${commandNetwork}`,
+        topic: `did-${action}.${domain}.${commandService}`,
         version,
         trace,
         created: stringDate(),
@@ -173,7 +173,7 @@ describe("Create event", () => {
     expect(value).to.deep.equal({
       headers: {
         root,
-        topic: `did-${action}.${domain}.${commandService}.${commandNetwork}`,
+        topic: `did-${action}.${domain}.${commandService}`,
         version,
         trace,
         created: stringDate(),

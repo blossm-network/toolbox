@@ -93,12 +93,10 @@ const copySource = async (p, workingDir) => {
 const topicsForProcedures = config => {
   const array = (config.testing.procedures || [])
     .filter(t => t.context == "command-handler")
-    .map(
-      t => `did-${t.action}.${t.domain}.${t.service || config.service}.local`
-    )
+    .map(t => `did-${t.action}.${t.domain}.${t.service || config.service}`)
     .concat(
       config.context == "command-handler"
-        ? [`did-${config.action}.${config.domain}.${config.service}.local`]
+        ? [`did-${config.action}.${config.domain}.${config.service}`]
         : []
     )
     .concat(
@@ -106,14 +104,14 @@ const topicsForProcedures = config => {
         ? [
             ...config.commands.map(
               command =>
-                `did-${command.action}.${config.domain}.${config.service}.local`
+                `did-${command.action}.${config.domain}.${config.service}`
             )
           ]
         : []
     )
     .concat(
       config.context == "command-gateway" || config.context == "view-gateway"
-        ? ["did-issue.challenge.core.local", "did-answer.challenge.core.local"]
+        ? ["did-issue.challenge.core", "did-answer.challenge.core"]
         : []
     );
   return [...new Set(array)];
