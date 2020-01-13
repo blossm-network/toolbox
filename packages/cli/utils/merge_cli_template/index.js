@@ -95,8 +95,10 @@ const topicsForProcedures = (config, events) => {
     .map(e => `did-${e.action}.${e.domain}.${e.service || config.service}`)
     .concat(
       config.context == "command-handler"
-        ? config.events
-          ? config.events.map(e => `did-${e.action}.${e.domain}.${e.service}`)
+        ? config.testing.events
+          ? config.testing.events.map(
+              e => `did-${e.action}.${e.domain}.${e.service}`
+            )
           : [`did-${config.action}.${config.domain}.${config.service}`]
         : []
     )
@@ -225,10 +227,17 @@ const writeConfig = (config, workingDir) => {
     ...config.testing,
     procedures: config.testing.procedures
       ? [...config.testing.procedures, ...procedures]
-      : []
+      : [],
+    topics: topicsForProcedures(config, events)
   };
 
-  config.testing.topics = topicsForProcedures(config, events);
+  //eslint-disable-next-line
+  console.log("all: ", {
+    procedures: config.testing.procedures
+      ? [...config.testing.procedures, ...procedures]
+      : [],
+    topics: topicsForProcedures(config, events)
+  });
 
   fs.writeFileSync(newConfigPath, JSON.stringify(config));
 };

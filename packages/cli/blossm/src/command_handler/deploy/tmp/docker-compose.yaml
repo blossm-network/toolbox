@@ -1,0 +1,65 @@
+version: "3"
+services:
+  main:
+    image: us.gcr.io/smn-core-staging/core.command-handler.session.start:latest
+    container_name: main
+    ports:
+      - "80"
+    environment:
+      PORT: "80"
+      NODE_ENV: local
+      DOMAIN: session
+      NETWORK: local
+      CONTEXT: command-handler
+      SERVICE: core
+      GCP_PROJECT: smn-core-staging
+      GCP_REGION: us-central1
+      GCP_SECRET_BUCKET: smn-staging-secrets
+      GCP_KMS_SECRET_BUCKET_KEY_LOCATION: global
+      GCP_KMS_SECRET_BUCKET_KEY_RING: secret-bucket
+      ACTION: start
+    depends_on:
+      - session-core
+      - db
+  session-core:
+    ports:
+      - "80"
+    image: us.gcr.io/smn-core-staging/core.event-store.session:latest
+    container_name: 471181726.local
+    depends_on:
+      - db
+    environment:
+      PORT: "80"
+      NODE_ENV: local
+      NETWORK: local
+      SERVICE: core
+      GCP_PROJECT: smn-core-staging
+      GCP_REGION: us-central1
+      GCP_SECRET_BUCKET: smn-staging-secrets
+      GCP_KMS_SECRET_BUCKET_KEY_LOCATION: global
+      GCP_KMS_SECRET_BUCKET_KEY_RING: secret-bucket
+      MONGODB_USER: tester
+      MONGODB_HOST: mongodb
+      MONGODB_USER_PASSWORD: password
+      MONGODB_PROTOCOL: mongodb
+      MONGODB_DATABASE: testing
+      CONTEXT: event-store
+      DOMAIN: session
+  db:
+    image: mongo:latest
+    container_name: mongodb
+    environment:
+      MONGODB_INITDB_ROOT_USERNAME: admin
+      MONGODB_INITDB_ROOT_PASSWORD: password
+      MONGODB_INITDB_DATABASE: admin
+      MONGODB_DATABASE: testing
+      MONGODB_USER: tester
+      MONGODB_USER_PASSWORD: password
+    volumes:
+      - ./mongodb-init.sh:/docker-entrypoint-initdb.d/mongodb-init.sh:ro
+    ports:
+      - 27017:27017
+networks:
+  default:
+    external:
+      name: cloudbuild

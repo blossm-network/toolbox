@@ -1,0 +1,12 @@
+const fs = require("fs");
+const commandHandler = require("@blossm/command-handler");
+
+const main = require("./main.js");
+const validate = fs.existsSync("./validate.js") && require("./validate");
+const normalize = fs.existsSync("./normalize.js") && require("./normalize");
+
+module.exports = commandHandler({
+  mainFn: main,
+  ...(validate && { validateFn: validate }),
+  ...(normalize && { normalizeFn: normalize })
+});
