@@ -198,13 +198,14 @@ const addDefaultProcedures = ({ config }) => {
         })
       ];
     default:
-      return config.testing.procedures || [];
+      return config.testing.procedures;
   }
 };
 
 const writeConfig = (config, workingDir) => {
   const newConfigPath = path.resolve(workingDir, "config.json");
   if (!config.testing) config.testing = {};
+  if (!config.testing.procedures) config.testing.procedures = [];
 
   //eslint-disable-next-line
   console.log("procedures is: ", config.testing.procedures);
