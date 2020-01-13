@@ -1,6 +1,6 @@
 {
   "name": "@blossm/service-url",
-  "version": "0.0.21",
+  "version": "0.0.22",
   "description": "Returns a url for a service.",
   "main": "index.js",
   "author": "blossm.network",
