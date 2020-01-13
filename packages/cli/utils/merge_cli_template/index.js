@@ -198,7 +198,7 @@ const addDefaultProcedures = ({ config }) => {
         })
       ];
     default:
-      return config.testing.procedures;
+      return config.testing.procedures || [];
   }
 };
 
@@ -211,11 +211,11 @@ const writeConfig = (config, workingDir) => {
   //eslint-disable-next-line
   console.log(
     "add defaults procedures give me: ",
-    addDefaultProcedures(config.testing.procedures)
+    addDefaultProcedures({ config })
   );
 
   const { procedures, events } = resolveTransientInfo(
-    addDefaultProcedures(config.testing.procedures)
+    addDefaultProcedures({ config })
   );
   //eslint-disable-next-line
   console.log("resolving transients give me: ", { procedures, events });
