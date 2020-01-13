@@ -1,0 +1,17 @@
+domain: session
+service: core
+
+commands:
+  - action: start
+    protected: false
+
+whitelist:
+  - "127.0.0.1"
+  - "https://${process.env.NETWORK}"
+
+devDependencies:
+  "mocha": "^6.1.4"
+  "chai": "^4.2.0"
+
+#don't change
+context: command-gateway

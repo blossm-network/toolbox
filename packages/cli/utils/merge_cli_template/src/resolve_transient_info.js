@@ -51,7 +51,8 @@ const findProceduresAndEventsForProcedure = (procedure, dir) => {
         procedure,
         filePath
       );
-      if (procedures.length > 0) return { procedures, events };
+      if (procedures.length > 0 || events.length > 0)
+        return { procedures, events };
     }
   }
 
@@ -72,14 +73,14 @@ const findProceduresAndEvents = (procedures, dir, allProcedures, allEvents) => {
       }
       return true;
     });
-    const filteredFoundEvents = foundEvents.filter(t => {
+    const filteredFoundEvents = foundEvents.filter(e => {
       for (const s of newEvents) {
-        if (objectsEqual(s, t)) return false;
+        if (objectsEqual(s, e)) return false;
       }
       return true;
     });
-    allProcedures.push(...filteredFoundProcedures);
-    allEvents.push(...filteredFoundEvents);
+    newProcedures.push(...filteredFoundProcedures);
+    newEvents.push(...filteredFoundEvents);
   }
 
   const procedureDifference = newProcedures.filter(p => {
@@ -89,9 +90,9 @@ const findProceduresAndEvents = (procedures, dir, allProcedures, allEvents) => {
     return true;
   });
 
-  const eventDifference = newEvents.filter(t => {
-    for (const topic of allEvents) {
-      if (objectsEqual(topic, t)) return false;
+  const eventDifference = newEvents.filter(e => {
+    for (const event of allEvents) {
+      if (objectsEqual(event, e)) return false;
     }
     return true;
   });

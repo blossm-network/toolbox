@@ -1,0 +1,33 @@
+{
+  "domain": "session",
+  "service": "core",
+  "commands": [{ "action": "start", "protected": false }],
+  "whitelist": ["127.0.0.1", "https://${process.env.NETWORK}"],
+  "context": "command-gateway",
+  "testing": {
+    "procedures": [
+      { "context": "event-store", "domain": "session" },
+      {
+        "action": "answer",
+        "domain": "challenge",
+        "context": "command-handler"
+      },
+      {
+        "action": "issue",
+        "domain": "challenge",
+        "context": "command-handler"
+      },
+      { "domain": "challenge", "context": "event-store" },
+      { "name": "permissions", "domain": "principle", "context": "view-store" },
+      { "name": "codes", "domain": "challenge", "context": "view-store" },
+      { "name": "phones", "domain": "user", "context": "view-store" },
+      { "name": "contexts", "domain": "user", "context": "view-store" },
+      { "action": "start", "domain": "session", "context": "command-handler" },
+      { "name": "contexts", "domain": "user", "context": "view-store" },
+      { "name": "codes", "domain": "challenge", "context": "view-store" },
+      { "name": "phones", "domain": "user", "context": "view-store" },
+      { "name": "codes", "domain": "challenge", "context": "view-store" }
+    ],
+    "topics": ["did-answer.challenge.core", "did-issue.challenge.core"]
+  }
+}
