@@ -13,7 +13,7 @@ const root = "some-root";
 
 describe("Service url", () => {
   beforeEach(() => {
-    process.env.NETWORK = "some-network";
+    process.env.NODE_ENV = "some-network";
   });
   afterEach(restore);
   it("should return the correct output", () => {
@@ -28,7 +28,7 @@ describe("Service url", () => {
     const hashFake = fake.returns(hash);
     replace(deps, "hash", hashFake);
 
-    process.env.NETWORK = "local";
+    process.env.NODE_ENV = "local";
     const result = serviceUrl({ procedure, service, network, path, root });
     expect(hashFake).to.have.been.calledWith({ procedure, service });
     expect(result).to.equal(`http://${hash}.some-network/some-path/some-root`);
