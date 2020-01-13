@@ -18,7 +18,7 @@ const objectsEqual = (obj0, obj1) => {
   return true;
 };
 
-const eventsForCommandHandler = handler => {
+const eventsForCommandHandler = handler =>
   handler.events || [
     {
       action: handler.action,
@@ -26,7 +26,6 @@ const eventsForCommandHandler = handler => {
       service: handler.service
     }
   ];
-};
 
 const findProceduresAndEventsForProcedure = (procedure, dir) => {
   for (const file of fs.readdirSync(dir)) {
