@@ -1,7 +1,7 @@
 {
   "name": "@blossm/command-gateway-post",
   "description": "A command gateway server POST handler.",
-  "version": "0.0.54",
+  "version": "0.0.55",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -14,8 +14,8 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/command-rpc": "^0.0.36",
-    "@blossm/gcp-token": "^0.0.7",
+    "@blossm/command-rpc": "^0.0.37",
+    "@blossm/gcp-token": "^0.0.8",
     "@blossm/normalize-command": "^0.0.6",
     "@blossm/validate-command": "^0.0.13"
   },
