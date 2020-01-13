@@ -209,31 +209,15 @@ const writeConfig = (config, workingDir) => {
   if (!config.testing) config.testing = {};
   if (!config.testing.procedures) config.testing.procedures = [];
 
-  //eslint-disable-next-line
-  console.log("procedures is: ", config.testing.procedures);
-  //eslint-disable-next-line
-  console.log(
-    "add defaults procedures give me: ",
-    addDefaultProcedures({ config })
-  );
-
   const { procedures, events } = resolveTransientInfo(
     addDefaultProcedures({ config })
   );
-  //eslint-disable-next-line
-  console.log("resolving transients give me: ", { procedures, events });
 
   config.testing = {
     ...config.testing,
     procedures,
     topics: topicsForProcedures(config, events)
   };
-
-  //eslint-disable-next-line
-  console.log("all: ", {
-    procedures,
-    topics: topicsForProcedures(config, events)
-  });
 
   delete config.testing.events;
 
