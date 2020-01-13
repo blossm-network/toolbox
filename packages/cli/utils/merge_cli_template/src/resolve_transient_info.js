@@ -64,7 +64,7 @@ const findProceduresAndEvents = (procedures, dir, allProcedures, allEvents) => {
   const newEvents = [];
   for (const procedure of procedures) {
     const {
-      procedure: foundProcedures,
+      procedures: foundProcedures,
       events: foundEvents
     } = findProceduresAndEventsForProcedure(procedure, dir);
     const filteredFoundProcedures = foundProcedures.filter(p => {
