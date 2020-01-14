@@ -14,7 +14,7 @@ const {
   unsubscribe
 } = require("@blossm/gcp-pubsub");
 
-const topic = "some-topic";
+const topic = `some-topic.${process.env.DOMAIN}.${process.env.SERVICE}`;
 const sub = "some-sub";
 const version = 0;
 const created = "now";
@@ -281,7 +281,12 @@ describe("Event store integration tests", () => {
         }
       })
     ]);
-    expect(response0.statusCode).to.equal(204);
-    expect(response1.statusCode).to.equal(412);
+
+    if (response0.statusCode == 204) {
+      expect(response1.statusCode).to.equal(412);
+    } else {
+      expect(response0.statusCode).to.equal(412);
+      expect(response1.statusCode).to.equal(204);
+    }
   });
 });
