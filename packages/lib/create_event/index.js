@@ -9,14 +9,15 @@ module.exports = async ({
   context,
   action,
   domain,
+  service,
   idempotency,
   command: {
     id,
     issued,
     action: commandAction,
     domain: commandDomain,
-    service,
-    network
+    service: commandService,
+    network: commandNetwork
   }
 } = {}) => {
   return {
@@ -32,8 +33,8 @@ module.exports = async ({
         id,
         action: commandAction,
         domain: commandDomain,
-        service,
-        network,
+        service: commandService,
+        network: commandNetwork,
         issued
       }
     },

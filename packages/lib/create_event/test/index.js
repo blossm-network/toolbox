@@ -24,6 +24,7 @@ const version = 0;
 
 const action = "some-action";
 const domain = "some-domain";
+const service = "some-service";
 
 describe("Create event", () => {
   beforeEach(() => {
@@ -39,6 +40,7 @@ describe("Create event", () => {
       context,
       action,
       domain,
+      service,
       command: {
         id: commandId,
         issued: commandIssued,
@@ -58,7 +60,7 @@ describe("Create event", () => {
         root,
         idempotency,
         context,
-        topic: `did-${action}.${domain}.${commandService}`,
+        topic: `did-${action}.${domain}.${service}`,
         version,
         trace,
         created: stringDate(),
@@ -92,6 +94,7 @@ describe("Create event", () => {
       trace,
       action,
       domain,
+      service,
       command: {
         id: commandId,
         issued: commandIssued,
@@ -109,7 +112,7 @@ describe("Create event", () => {
         root: rootUuid,
         idempotency: idempUuid,
         context,
-        topic: `did-${action}.${domain}.${commandService}`,
+        topic: `did-${action}.${domain}.${service}`,
         version: 0,
         trace,
         created: stringDate(),
@@ -131,6 +134,7 @@ describe("Create event", () => {
       context,
       action,
       domain,
+      service,
       idempotency,
       command: {
         id: commandId,
@@ -150,7 +154,7 @@ describe("Create event", () => {
         root,
         idempotency,
         context,
-        topic: `did-${action}.${domain}.${commandService}`,
+        topic: `did-${action}.${domain}.${service}`,
         version,
         trace,
         created: stringDate(),
@@ -171,6 +175,7 @@ describe("Create event", () => {
       trace,
       action,
       domain,
+      service,
       command: {
         id: commandId,
         issued: commandIssued,
@@ -189,7 +194,7 @@ describe("Create event", () => {
       headers: {
         root,
         idempotency,
-        topic: `did-${action}.${domain}.${commandService}`,
+        topic: `did-${action}.${domain}.${service}`,
         version,
         trace,
         created: stringDate(),
