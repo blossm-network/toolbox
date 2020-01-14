@@ -33,9 +33,6 @@ module.exports = async ({ permissions = [], issueFn, answerFn }) => {
     service: process.env.SERVICE
   });
 
-  //eslint-disable-next-line
-  console.log("in get token, event: ", userEvent);
-
   await eventStore({
     domain: "user"
   }).add(userEvent);
@@ -96,8 +93,9 @@ module.exports = async ({ permissions = [], issueFn, answerFn }) => {
     service: process.env.SERVICE
   });
 
-  //eslint-disable-next-line
-  console.log("in get token, challenge event: ", principleEvent);
+  await eventStore({
+    domain: "principle"
+  }).add(principleEvent);
 
   const { token: answerToken } = answerFn
     ? await answerFn({
