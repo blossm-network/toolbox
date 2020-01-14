@@ -1,10 +1,12 @@
 const viewStore = require("@blossm/view-store-rpc");
+const eventStore = require("@blossm/event-store-rpc");
 const command = require("@blossm/command-rpc");
 const sms = require("@blossm/twilio-sms");
 const { validate: validateJwt } = require("@blossm/jwt");
 const { get: secret } = require("@blossm/gcp-secret");
 const { verify } = require("@blossm/gcp-kms");
 const { stringFromDate, moment } = require("@blossm/datetime");
+const createEvent = require("@blossm/create-event");
 
 const uuid = require("@blossm/uuid");
 
@@ -20,19 +22,23 @@ module.exports = async ({ permissions = [], issueFn, answerFn }) => {
     //phone should be already formatted in the view store.
     .update(userRoot, { principle: principleRoot, phone: "+12513332037" });
 
-  // await eventStore({
-  //   domain: "user"
-  // }).add(
-  //   createEvent({
-  //     root: userRoot,
-  //     payload: {
-  //       phone
-  //     },
-  //     action: "save-phone-number",
-  //     domain: process.env.DOMAIN,
-  //     service: process.env.SERVICE
-  //   })
-  // );
+  const userEvent = await createEvent({
+    root: userRoot,
+    payload: {
+      principle: principleRoot,
+      phone
+    },
+    action: "save-phone-number",
+    domain: "user",
+    service: process.env.SERVICE
+  });
+
+  //eslint-disable-next-line
+  console.log("in get token, event: ", event);
+
+  await eventStore({
+    domain: "user"
+  }).add(userEvent);
 
   const sentAfter = new Date();
 
@@ -73,12 +79,43 @@ module.exports = async ({ permissions = [], issueFn, answerFn }) => {
     )
   });
 
+  const challengeEvent = await createEvent({
+    root: jwt.context.challenge,
+    payload: {
+      code,
+      expires: stringFromDate(
+        moment()
+          .add(30, "s")
+          .toDate()
+      )
+    },
+    action: "save-code",
+    domain: "challenge",
+    service: process.env.SERVICE
+  });
+
+  //eslint-disable-next-line
+  console.log("in get token, challenge event: ", challengeEvent);
+
   await viewStore({
     name: "permissions",
     domain: "principle"
   }).update(principleRoot, {
     add: [`challenge:answer:${jwt.context.challenge}`, ...permissions]
   });
+
+  const principleEvent = await createEvent({
+    root: principleRoot,
+    payload: {
+      permissions: [`challenge:answer:${jwt.context.challenge}`, ...permissions]
+    },
+    action: "add-permissions",
+    domain: "principle",
+    service: process.env.SERVICE
+  });
+
+  //eslint-disable-next-line
+  console.log("in get token, challenge event: ", principleEvent);
 
   const { token: answerToken } = answerFn
     ? await answerFn({

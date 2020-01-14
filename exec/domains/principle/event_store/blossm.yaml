@@ -1,0 +1,13 @@
+domain: principle
+service: core
+
+schema:
+  permissions: [String]
+
+testing:
+  examples:
+    - permissions: [some-permission, some-other-permission]
+    - permissions: [permissions]
+
+#don't change
+context: event-store
