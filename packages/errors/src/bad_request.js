@@ -19,6 +19,11 @@ module.exports = {
     ),
   badEvent: ({ cause, info } = {}) =>
     new BadRequestError({ cause, info, toJSON }, "Invalid event format."),
+  wrongEventStore: ({ cause, info } = {}) =>
+    new BadRequestError(
+      { cause, info, toJSON },
+      "This event store can't accept this event."
+    ),
   message: (message, { cause, info } = {}) =>
     new BadRequestError({ cause, info, toJSON }, message)
 };

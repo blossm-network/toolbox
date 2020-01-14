@@ -72,7 +72,7 @@ describe("Create event", () => {
     });
   });
 
-  it("should get called with expected params if root is missing", async () => {
+  it("should get called with expected params if root and version are missing", async () => {
     const newUuid = "newUuid!";
     replace(deps, "uuid", fake.returns(newUuid));
 
@@ -89,8 +89,7 @@ describe("Create event", () => {
         network: commandNetwork
       },
       context,
-      payload,
-      version
+      payload
     });
 
     expect(value).to.deep.equal({
@@ -98,7 +97,7 @@ describe("Create event", () => {
         root: newUuid,
         context,
         topic: `did-${action}.${domain}.${commandService}`,
-        version,
+        version: 0,
         trace,
         created: stringDate(),
         command: {

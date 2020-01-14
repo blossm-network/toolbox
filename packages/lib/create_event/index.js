@@ -4,7 +4,7 @@ const deps = require("./deps");
 module.exports = async ({
   root,
   payload,
-  version,
+  version = 0,
   trace,
   context,
   action,

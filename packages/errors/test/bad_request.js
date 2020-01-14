@@ -79,6 +79,26 @@ describe("Bad request", () => {
       cause
     });
   });
+  it("wrongEventStore correct", () => {
+    const error = badRequest.wrongEventStore();
+    expect(error.statusCode).to.equal(400);
+    expect(error.toJSON()).to.deep.equal({
+      statusCode: 400,
+      info: {},
+      code: "BadRequest",
+      message: "This event store can't accept this event."
+    });
+  });
+  it("wrongEventStore correct with props", () => {
+    const error = badRequest.wrongEventStore({ cause, info });
+    expect(error.toJSON()).to.deep.equal({
+      info,
+      statusCode: 400,
+      code: "BadRequest",
+      message: "This event store can't accept this event.",
+      cause
+    });
+  });
   it("message correct", () => {
     const message = "some-message";
     const error = badRequest.message(message);

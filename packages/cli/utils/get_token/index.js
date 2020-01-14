@@ -20,6 +20,19 @@ module.exports = async ({ permissions = [], issueFn, answerFn }) => {
     //phone should be already formatted in the view store.
     .update(userRoot, { principle: principleRoot, phone: "+12513332037" });
 
+  // await eventStore({
+  //   domain: "user"
+  // }).add(
+  //   createEvent({
+  //     root: userRoot,
+  //     payload: {
+  //       phone
+  //     },
+  //     action: "save-phone-number",
+  //     domain: "user"
+  //   })
+  // );
+
   const sentAfter = new Date();
 
   const { token } = issueFn
