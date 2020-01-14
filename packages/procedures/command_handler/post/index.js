@@ -54,6 +54,7 @@ module.exports = ({ mainFn, validateFn, normalizeFn }) => {
           version,
           action,
           domain,
+          service: process.env.SERVICE,
           idempotency: req.body.headers.idempotency,
           command: {
             id: req.body.headers.id,

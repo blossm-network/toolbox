@@ -133,6 +133,7 @@ describe("Command handler post", () => {
       context,
       action,
       domain,
+      service,
       version: 0,
       idempotency,
       command: {
@@ -243,6 +244,7 @@ describe("Command handler post", () => {
       context,
       action,
       domain,
+      service,
       version: 0,
       idempotency,
       command: {
@@ -361,6 +363,7 @@ describe("Command handler post", () => {
       context,
       action,
       domain,
+      service,
       version,
       idempotency,
       command: {
@@ -464,6 +467,7 @@ describe("Command handler post", () => {
       context,
       action,
       domain,
+      service,
       version: 0,
       idempotency,
       command: {
@@ -589,6 +593,7 @@ describe("Command handler post", () => {
       context,
       action: eventAction,
       domain: eventDomain,
+      service,
       version: 0,
       idempotency,
       command: {
@@ -785,6 +790,7 @@ describe("Command handler post", () => {
       context,
       action,
       domain,
+      service,
       version: 0,
       idempotency,
       command: {
@@ -802,6 +808,7 @@ describe("Command handler post", () => {
       context,
       action,
       domain,
+      service,
       version: 0,
       idempotency,
       command: {

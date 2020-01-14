@@ -29,7 +29,8 @@ module.exports = async ({ permissions = [], issueFn, answerFn }) => {
   //       phone
   //     },
   //     action: "save-phone-number",
-  //     domain: "user"
+  //     domain: process.env.DOMAIN,
+  //     service: process.env.SERVICE
   //   })
   // );
 
