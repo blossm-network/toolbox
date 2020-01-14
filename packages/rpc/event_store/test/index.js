@@ -134,14 +134,6 @@ describe("Event store", () => {
         root,
         context,
         topic,
-        command: {
-          action: commandAction,
-          domain: commandDomain,
-          service: commandService,
-          network: commandNetwork,
-          id: commandId,
-          issued: commandIssuedTimestamp
-        },
         version
       },
       payload
@@ -154,14 +146,6 @@ describe("Event store", () => {
           root,
           topic,
           version,
-          command: {
-            action: commandAction,
-            domain: commandDomain,
-            service: commandService,
-            network: commandNetwork,
-            id: commandId,
-            issued: commandIssuedTimestamp
-          },
           created: dateString()
         },
         payload

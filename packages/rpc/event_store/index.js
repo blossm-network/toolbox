@@ -19,14 +19,7 @@ module.exports = ({
         created: dateString(),
         ...(context && { context }),
         ...(trace && { trace }),
-        command: {
-          id: command.id,
-          action: command.action,
-          domain: command.domain,
-          service: command.service,
-          network: command.network,
-          issued: command.issued
-        }
+        ...(command && { command })
       },
       payload
     };
