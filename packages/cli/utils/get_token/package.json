@@ -1,6 +1,6 @@
 {
   "name": "@blossm/get-token",
-  "version": "0.0.36",
+  "version": "0.0.37",
   "description": "Gets a token for a development environment.",
   "main": "index.js",
   "author": "blossm.network",
@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@blossm/command-rpc": "^0.0.39",
-    "@blossm/create-event": "*",
+    "@blossm/create-event": "^0.0.16",
     "@blossm/event-store-rpc": "*",
     "@blossm/gcp-kms": "^0.0.20",
     "@blossm/gcp-secret": "^0.0.23",
