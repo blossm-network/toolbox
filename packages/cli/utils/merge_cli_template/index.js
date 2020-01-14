@@ -104,7 +104,13 @@ const topicsForProcedures = (config, events) => {
     )
     .concat(
       config.context == "command-gateway" || config.context == "view-gateway"
-        ? ["did-issue.challenge.core", "did-answer.challenge.core"]
+        ? [
+            "did-issue.challenge.core",
+            "did-answer.challenge.core",
+            "did-save-phone-number.user.core",
+            "did-save-code.challenge.core",
+            "did-add-permissions.principle.core"
+          ]
         : []
     );
   return [...new Set(array)];

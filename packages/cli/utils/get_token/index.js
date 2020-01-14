@@ -79,24 +79,6 @@ module.exports = async ({ permissions = [], issueFn, answerFn }) => {
     )
   });
 
-  const challengeEvent = await createEvent({
-    root: jwt.context.challenge,
-    payload: {
-      code,
-      expires: stringFromDate(
-        moment()
-          .add(30, "s")
-          .toDate()
-      )
-    },
-    action: "save-code",
-    domain: "challenge",
-    service: process.env.SERVICE
-  });
-
-  //eslint-disable-next-line
-  console.log("in get token, challenge event: ", challengeEvent);
-
   await viewStore({
     name: "permissions",
     domain: "principle"
