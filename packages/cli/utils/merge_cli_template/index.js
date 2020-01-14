@@ -147,9 +147,17 @@ const addDefaultProcedures = ({ config }) => {
       context: "view-store"
     },
     {
+      domain: "principle",
+      context: "event-store"
+    },
+    {
       name: "codes",
       domain: "challenge",
       context: "view-store"
+    },
+    {
+      domain: "user",
+      context: "event-store"
     },
     {
       name: "phones",

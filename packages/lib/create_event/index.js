@@ -16,12 +16,12 @@ module.exports = async ({
   return {
     headers: {
       root: root || (await deps.uuid()),
-      ...(context != undefined && { context }),
       topic: `did-${action}.${domain}.${service}`,
       version,
-      trace,
       created: stringDate(),
       idempotency: idempotency || (await deps.uuid()),
+      ...(context != undefined && { context }),
+      ...(trace != undefined && { trace }),
       ...(command && {
         command: {
           id: command.id,
