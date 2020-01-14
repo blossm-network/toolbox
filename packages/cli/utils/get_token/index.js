@@ -34,7 +34,7 @@ module.exports = async ({ permissions = [], issueFn, answerFn }) => {
   });
 
   //eslint-disable-next-line
-  console.log("in get token, event: ", event);
+  console.log("in get token, event: ", userEvent);
 
   await eventStore({
     domain: "user"
