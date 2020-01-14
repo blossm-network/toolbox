@@ -1,5 +1,5 @@
 const { expect } = require("chai").use(require("sinon-chai"));
-const { restore, replace, fake, useFakeTimers } = require("sinon");
+const { restore, replace, stub, useFakeTimers } = require("sinon");
 const createEvent = require("../");
 const { string: stringDate } = require("@blossm/datetime");
 const deps = require("../deps");
@@ -17,6 +17,7 @@ const commandNetwork = "command-network!";
 const commandIssued = "some-date";
 const root = "root!";
 const context = "some-context";
+const idempotency = "some-idempotency";
 
 const payload = { a: 1 };
 const version = 0;
@@ -47,6 +48,7 @@ describe("Create event", () => {
         network: commandNetwork
       },
       root,
+      idempotency,
       payload,
       version
     });
@@ -54,6 +56,7 @@ describe("Create event", () => {
     expect(value).to.deep.equal({
       headers: {
         root,
+        idempotency,
         context,
         topic: `did-${action}.${domain}.${commandService}`,
         version,
@@ -72,9 +75,18 @@ describe("Create event", () => {
     });
   });
 
-  it("should get called with expected params if root and version are missing", async () => {
-    const newUuid = "newUuid!";
-    replace(deps, "uuid", fake.returns(newUuid));
+  it("should get called with expected params if root, idempotency, and version are missing", async () => {
+    const rootUuid = "rootUuid!";
+    const idempUuid = "idemptUuid!";
+    replace(
+      deps,
+      "uuid",
+      stub()
+        .onFirstCall()
+        .returns(rootUuid)
+        .onCall(1)
+        .returns(idempUuid)
+    );
 
     const value = await createEvent({
       trace,
@@ -94,7 +106,8 @@ describe("Create event", () => {
 
     expect(value).to.deep.equal({
       headers: {
-        root: newUuid,
+        root: rootUuid,
+        idempotency: idempUuid,
         context,
         topic: `did-${action}.${domain}.${commandService}`,
         version: 0,
@@ -118,6 +131,7 @@ describe("Create event", () => {
       context,
       action,
       domain,
+      idempotency,
       command: {
         id: commandId,
         issued: commandIssued,
@@ -134,6 +148,7 @@ describe("Create event", () => {
     expect(value).to.deep.equal({
       headers: {
         root,
+        idempotency,
         context,
         topic: `did-${action}.${domain}.${commandService}`,
         version,
@@ -165,6 +180,7 @@ describe("Create event", () => {
         network: commandNetwork
       },
       root,
+      idempotency,
       payload,
       version
     });
@@ -172,6 +188,7 @@ describe("Create event", () => {
     expect(value).to.deep.equal({
       headers: {
         root,
+        idempotency,
         topic: `did-${action}.${domain}.${commandService}`,
         version,
         trace,

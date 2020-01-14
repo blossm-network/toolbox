@@ -9,6 +9,7 @@ module.exports = async ({
   context,
   action,
   domain,
+  idempotency,
   command: {
     id,
     issued,
@@ -26,6 +27,7 @@ module.exports = async ({
       version,
       trace,
       created: stringDate(),
+      idempotency: idempotency || (await deps.uuid()),
       command: {
         id,
         action: commandAction,

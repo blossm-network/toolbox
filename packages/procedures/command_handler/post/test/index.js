@@ -22,10 +22,13 @@ const context = "some-context";
 const trace = "some-trace";
 const id = "some-id";
 const issued = "some-issued";
+const idempotency = "some-idempotency";
+
 const headers = {
   trace,
   id,
-  issued
+  issued,
+  idempotency
 };
 
 const action = "some-action";
@@ -131,6 +134,7 @@ describe("Command handler post", () => {
       action,
       domain,
       version: 0,
+      idempotency,
       command: {
         id,
         issued,
@@ -240,6 +244,7 @@ describe("Command handler post", () => {
       action,
       domain,
       version: 0,
+      idempotency,
       command: {
         id,
         issued,
@@ -357,6 +362,7 @@ describe("Command handler post", () => {
       action,
       domain,
       version,
+      idempotency,
       command: {
         id,
         issued,
@@ -459,6 +465,7 @@ describe("Command handler post", () => {
       action,
       domain,
       version: 0,
+      idempotency,
       command: {
         id,
         issued,
@@ -583,6 +590,7 @@ describe("Command handler post", () => {
       action: eventAction,
       domain: eventDomain,
       version: 0,
+      idempotency,
       command: {
         id,
         issued,
@@ -778,6 +786,7 @@ describe("Command handler post", () => {
       action,
       domain,
       version: 0,
+      idempotency,
       command: {
         id,
         issued,
@@ -794,6 +803,7 @@ describe("Command handler post", () => {
       action,
       domain,
       version: 0,
+      idempotency,
       command: {
         id,
         issued,

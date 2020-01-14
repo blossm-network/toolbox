@@ -110,7 +110,7 @@ describe("Mongodb event store", () => {
           trace: { type: String },
           context: { type: Object },
           created: { type: String, required: true },
-          idempotency: { type: String, required: true },
+          idempotency: { type: String, required: true, unique: true },
           command: {
             type: {
               id: { type: String, required: true },
@@ -978,7 +978,7 @@ describe("Mongodb event store", () => {
           trace: { type: String },
           context: { type: Object },
           created: { type: String, required: true },
-          idempotency: { type: String, required: true },
+          idempotency: { type: String, required: true, unique: true },
           command: {
             type: {
               id: { type: String, required: true },
@@ -1071,7 +1071,7 @@ describe("Mongodb event store", () => {
           trace: { type: String },
           context: { type: Object },
           created: { type: String, required: true },
-          idempotency: { type: String, required: true },
+          idempotency: { type: String, required: true, unique: true },
           command: {
             type: {
               id: { type: String, required: true },

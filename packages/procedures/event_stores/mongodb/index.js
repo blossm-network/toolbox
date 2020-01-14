@@ -44,7 +44,7 @@ const eventStore = async schema => {
         context: { type: Object },
         trace: { type: String },
         created: { type: String, required: true },
-        idempotency: { type: String, required: true },
+        idempotency: { type: String, required: true, unique: true },
         command: {
           type: {
             id: { type: String, required: true },
