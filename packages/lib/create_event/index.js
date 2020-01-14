@@ -11,14 +11,7 @@ module.exports = async ({
   domain,
   service,
   idempotency,
-  command: {
-    id,
-    issued,
-    action: commandAction,
-    domain: commandDomain,
-    service: commandService,
-    network: commandNetwork
-  }
+  command
 } = {}) => {
   return {
     headers: {
@@ -29,14 +22,16 @@ module.exports = async ({
       trace,
       created: stringDate(),
       idempotency: idempotency || (await deps.uuid()),
-      command: {
-        id,
-        action: commandAction,
-        domain: commandDomain,
-        service: commandService,
-        network: commandNetwork,
-        issued
-      }
+      ...(command && {
+        command: {
+          id: command.id,
+          action: command.action,
+          domain: command.domain,
+          service: command.service,
+          network: command.network,
+          issued: command.issued
+        }
+      })
     },
     payload
   };
