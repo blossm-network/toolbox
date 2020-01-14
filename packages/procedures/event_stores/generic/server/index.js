@@ -1,9 +1,14 @@
 const deps = require("./deps");
 
-module.exports = async ({ aggregateFn, saveEventFn, publishFn } = {}) => {
+module.exports = async ({
+  aggregateFn,
+  saveEventFn,
+  queryFn,
+  publishFn
+} = {}) => {
   deps
     .server()
-    .get(deps.get({ aggregateFn }), { path: "/:root" })
+    .get(deps.get({ aggregateFn, queryFn }), { path: "/:root" })
     .post(
       deps.post({
         saveEventFn,

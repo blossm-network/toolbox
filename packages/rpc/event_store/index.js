@@ -45,14 +45,23 @@ module.exports = ({
       .in({ ...(context && { context }), service, network })
       .with({ tokenFn });
 
+  const query = ({ context, tokenFn } = {}) => async query =>
+    await deps
+      .rpc(domain, "event-store")
+      .get(query)
+      .in({ ...(context && { context }), service, network })
+      .with({ tokenFn });
+
   return {
     set: ({ context, tokenFn } = {}) => {
       return {
         add: add({ context, tokenFn }),
+        query: query({ context, tokenFn }),
         aggregate: aggregate({ context, tokenFn })
       };
     },
     add: add(),
-    aggregate: aggregate()
+    aggregate: aggregate(),
+    query: query()
   };
 };

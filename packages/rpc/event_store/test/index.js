@@ -33,6 +33,8 @@ const context = "some-context";
 const tokenFn = "some-token-fn";
 const number = "some-number";
 
+const query = "some-query";
+
 const envNetwork = "some-env-network";
 const envService = "some-env-service";
 process.env.NETWORK = envNetwork;
@@ -220,6 +222,52 @@ describe("Event store", () => {
 
     expect(rpcFake).to.have.been.calledWith(domain, "event-store");
     expect(getFake).to.have.been.calledWith({ root });
+    expect(inFake).to.have.been.calledWith({ service, network });
+    expect(withFake).to.have.been.calledWith();
+    expect(result).to.equal(aggregate);
+  });
+  it("should call query with the right params", async () => {
+    const aggregate = "some-aggregate";
+    const withFake = fake.returns(aggregate);
+    const inFake = fake.returns({
+      with: withFake
+    });
+    const getFake = fake.returns({
+      in: inFake
+    });
+    const rpcFake = fake.returns({
+      get: getFake
+    });
+    replace(deps, "rpc", rpcFake);
+
+    const result = await eventStore({ domain, service, network })
+      .set({ context, tokenFn })
+      .query(query);
+
+    expect(rpcFake).to.have.been.calledWith(domain, "event-store");
+    expect(getFake).to.have.been.calledWith(query);
+    expect(inFake).to.have.been.calledWith({ context, service, network });
+    expect(withFake).to.have.been.calledWith({ tokenFn });
+    expect(result).to.equal(aggregate);
+  });
+  it("should call aggregate with the right params with optionals missing", async () => {
+    const aggregate = "some-aggregate";
+    const withFake = fake.returns(aggregate);
+    const inFake = fake.returns({
+      with: withFake
+    });
+    const getFake = fake.returns({
+      in: inFake
+    });
+    const rpcFake = fake.returns({
+      get: getFake
+    });
+    replace(deps, "rpc", rpcFake);
+
+    const result = await eventStore({ domain, service, network }).query(query);
+
+    expect(rpcFake).to.have.been.calledWith(domain, "event-store");
+    expect(getFake).to.have.been.calledWith(query);
     expect(inFake).to.have.been.calledWith({ service, network });
     expect(withFake).to.have.been.calledWith();
     expect(result).to.equal(aggregate);

@@ -44,6 +44,7 @@ const eventStore = async schema => {
         context: { type: Object },
         trace: { type: String },
         created: { type: String, required: true },
+        idempotency: { type: String, required: true },
         command: {
           id: { type: String, required: true },
           action: { type: String, required: true },
@@ -96,6 +97,36 @@ const snapshotStore = async ({ schema }) => {
   });
 
   return _snapshotStore;
+};
+
+const isSimpleQuery = query => {
+  for (const property in query) {
+    switch (typeof query[property]) {
+      case "string":
+      case "number":
+      case "boolean":
+        break;
+      default:
+        return false;
+    }
+  }
+  return true;
+};
+
+const doesMatchQuery = ({ state, query }) => {
+  try {
+    for (const property in query) {
+      const propertyParts = property.split(".");
+      let value = {
+        ...state
+      };
+      for (const part of propertyParts) value = value[part];
+      if (value != query[property]) return false;
+    }
+    return true;
+  } catch (e) {
+    return false;
+  }
 };
 
 module.exports = async ({
@@ -237,9 +268,61 @@ module.exports = async ({
     return aggregate;
   };
 
+  const queryFn = async query => {
+    const [snapshots, events] = await Promise.all([
+      deps.db.find({
+        store: sStore,
+        query: {
+          payload: query
+        },
+        options: {
+          lean: true
+        }
+      }),
+      deps.db.find({
+        store: eStore,
+        query: {
+          payload: query
+        },
+        options: {
+          lean: true
+        }
+      })
+    ]);
+
+    if (snapshots.length == 0 && events.length == 0) return [];
+    if (events.length == 0) {
+      const aggregates = await Promise.all(
+        snapshots.map(snapshot => aggregateFn(snapshot.headers.root))
+      );
+
+      return aggregates;
+    }
+
+    const candidateRoots = [
+      ...new Set([
+        ...snapshots.map(snapshot => snapshot.headers.root),
+        ...events.map(event => event.headers.root)
+      ])
+    ];
+
+    const aggregates = await Promise.all(
+      candidateRoots.map(root => aggregateFn(root))
+    );
+
+    if (!isSimpleQuery(query))
+      throw "Complex queries are not supported on aggregates at this time.";
+
+    const filteredAggregates = aggregates.filter(aggregate =>
+      doesMatchQuery({ state: aggregate.state, query })
+    );
+    return filteredAggregates;
+  };
+
   deps.eventStore({
     aggregateFn,
     saveEventFn,
+    queryFn,
     // saveSnapshotFn,
     publishFn
   });
