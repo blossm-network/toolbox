@@ -208,6 +208,109 @@ describe("Mongodb event store", () => {
     await mongodbEventStore();
     expect(storeFake).to.have.been.calledTwice;
   });
+  it("should call with the correct params with indexes", async () => {
+    const mongodbEventStore = require("..");
+    const eStore = "some-event-store";
+    const sStore = "some-snapshot-store";
+    const storeFake = stub()
+      .onCall(0)
+      .returns(eStore)
+      .onCall(1)
+      .returns(sStore);
+
+    const secretFake = fake.returns(password);
+    replace(deps, "secret", secretFake);
+
+    const eventStoreFake = fake();
+    replace(deps, "eventStore", eventStoreFake);
+
+    const findFake = fake.returns(findResult);
+    const findOneFake = fake.returns(findOneResult);
+
+    const createFake = fake.returns([{ ...createResult, __v: 3, _id: 4 }]);
+
+    const eventStoreSchema = { a: String };
+    const snapshotStoreSchema = "some-snapshot-schema";
+    const removeIdsFake = stub()
+      .onCall(0)
+      .returns(eventStoreSchema)
+      .onCall(1)
+      .returns(snapshotStoreSchema);
+
+    replace(deps, "removeIds", removeIdsFake);
+
+    const db = {
+      find: findFake,
+      findOne: findOneFake,
+      create: createFake,
+      store: storeFake
+    };
+    replace(deps, "db", db);
+
+    const index = "some-index";
+    await mongodbEventStore({ schema, indexes: [index], publishFn });
+
+    expect(storeFake).to.have.been.calledWith({
+      name: domain,
+      schema: {
+        id: { type: String, required: true, unique: true },
+        saved: { type: String, required: true },
+        payload: { a: { type: String, required: false } },
+        headers: {
+          root: { type: String, required: true },
+          number: { type: Number, required: true },
+          topic: { type: String, required: true },
+          version: { type: Number, required: true },
+          trace: { type: String },
+          context: { type: Object },
+          created: { type: String, required: true },
+          idempotency: { type: String, required: true, unique: true },
+          command: {
+            type: {
+              id: { type: String, required: true },
+              action: { type: String, required: true },
+              domain: { type: String, required: true },
+              service: { type: String, required: true },
+              network: { type: String, required: true },
+              issued: { type: String, required: true }
+            },
+            default: null
+          }
+        }
+      },
+      indexes: [
+        [{ id: 1 }],
+        [{ "headers.root": 1 }],
+        [{ "headers.root": 1, "headers.number": 1 }],
+        index
+      ],
+      connection: {
+        protocol,
+        user,
+        password,
+        host,
+        database,
+        parameters: {
+          authSource: "admin",
+          retryWrites: true,
+          w: "majority"
+        },
+        autoIndex: true
+      }
+    });
+    expect(storeFake).to.have.been.calledWith({
+      name: `${domain}.snapshots`,
+      schema: {
+        created: { type: Number, required: true },
+        headers: {
+          root: { type: String, required: true, unique: true },
+          lastEventNumber: { type: Number, required: true }
+        },
+        state: snapshotStoreSchema
+      },
+      indexes: [[{ "headers.root": 1 }], index]
+    });
+  });
   it("should call query with the correct params with snapshot and events found", async () => {
     const mongodbEventStore = require("..");
     const eStore = "some-event-store";

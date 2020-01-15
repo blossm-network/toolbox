@@ -5,6 +5,8 @@ schema:
   phone: String
   principle: String
 
+indexes: [[{ phone: 1 }]]
+
 testing:
   examples:
     - phone: "+19195551144"

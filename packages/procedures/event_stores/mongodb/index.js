@@ -10,7 +10,7 @@ let _snapshotStore;
 
 //make all properties not required since events may
 //not contain the full schema.
-const formatSchema = ({ schema }) => {
+const formatSchema = schema => {
   const newSchema = {};
   for (const property in schema) {
     newSchema[property] =
@@ -24,7 +24,7 @@ const formatSchema = ({ schema }) => {
   return newSchema;
 };
 
-const eventStore = async schema => {
+const eventStore = async ({ schema, indexes }) => {
   if (_eventStore != undefined) {
     logger.info("Thank you existing event store database.");
     return _eventStore;
@@ -61,7 +61,8 @@ const eventStore = async schema => {
     indexes: [
       [{ id: 1 }],
       [{ "headers.root": 1 }],
-      [{ "headers.root": 1, "headers.number": 1 }]
+      [{ "headers.root": 1, "headers.number": 1 }],
+      ...indexes
     ],
     connection: {
       protocol: process.env.MONGODB_PROTOCOL,
@@ -80,7 +81,7 @@ const eventStore = async schema => {
   return _eventStore;
 };
 
-const snapshotStore = async ({ schema }) => {
+const snapshotStore = async ({ schema, indexes }) => {
   if (_snapshotStore != undefined) {
     logger.info("Thank you existing snapshot store database.");
     return _snapshotStore;
@@ -96,7 +97,7 @@ const snapshotStore = async ({ schema }) => {
       },
       state: schema
     },
-    indexes: [[{ "headers.root": 1 }]]
+    indexes: [[{ "headers.root": 1 }], ...indexes]
   });
 
   return _snapshotStore;
@@ -120,12 +121,19 @@ const doesMatchQuery = ({ state, query }) => {
 
 module.exports = async ({
   schema,
+  indexes = [],
   publishFn
   // archiveSnapshotFn,
   // archiveEventsFn
 } = {}) => {
-  const eStore = await eventStore({ schema: deps.removeIds({ schema }) });
-  const sStore = await snapshotStore({ schema: deps.removeIds({ schema }) });
+  const eStore = await eventStore({
+    schema: deps.removeIds({ schema }),
+    indexes
+  });
+  const sStore = await snapshotStore({
+    schema: deps.removeIds({ schema }),
+    indexes
+  });
 
   const saveEventFn = async event => {
     try {
