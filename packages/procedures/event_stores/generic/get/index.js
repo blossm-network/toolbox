@@ -14,7 +14,10 @@ module.exports = ({ aggregateFn, queryFn }) => {
 
       res.send(result);
     } else {
-      const results = await queryFn(req.query);
+      const results = await queryFn({
+        key: req.query.key,
+        value: req.query.value
+      });
       res.send(results);
     }
   };

@@ -38,10 +38,10 @@ module.exports = ({
       .in({ ...(context && { context }), service, network })
       .with({ tokenFn });
 
-  const query = ({ context, tokenFn } = {}) => async query =>
+  const query = ({ context, tokenFn } = {}) => async ({ key, value }) =>
     await deps
       .rpc(domain, "event-store")
-      .get(query)
+      .get({ key, value })
       .in({ ...(context && { context }), service, network })
       .with({ tokenFn });
 

@@ -30,7 +30,12 @@ describe("Event store get", () => {
   it("should call with the correct params without root", async () => {
     const queryFnFake = fake.returns(found);
     const params = {};
-    const query = "some-query";
+    const key = "some-key";
+    const value = "some-value";
+    const query = {
+      key,
+      value
+    };
     const req = {
       params,
       query

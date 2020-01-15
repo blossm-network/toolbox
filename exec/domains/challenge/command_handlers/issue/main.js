@@ -22,7 +22,7 @@ module.exports = async ({ payload, context }) => {
       domain: "user"
     })
     .set({ context, tokenFn: deps.gcpToken })
-    .query({ phone: payload.phone });
+    .query({ key: "phone", value: payload.phone });
 
   //eslint-disable-next-line
   console.log("inmain res: ", res);

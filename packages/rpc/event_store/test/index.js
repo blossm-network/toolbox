@@ -33,7 +33,10 @@ const context = "some-context";
 const tokenFn = "some-token-fn";
 const number = "some-number";
 
-const query = "some-query";
+const query = {
+  key: "some-key",
+  value: "some-value"
+};
 
 const envNetwork = "some-env-network";
 const envService = "some-env-service";

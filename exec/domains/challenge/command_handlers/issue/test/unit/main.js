@@ -90,7 +90,10 @@ describe("Command handler unit tests", () => {
       ],
       response: { token }
     });
-    expect(queryFake).to.have.been.calledWith({ phone: payloadPhone });
+    expect(queryFake).to.have.been.calledWith({
+      key: "phone",
+      value: payloadPhone
+    });
     expect(secretFake).to.have.been.calledWith("twilio-account-sid");
     expect(secretFake).to.have.been.calledWith("twilio-auth-token");
     expect(smsFake).to.have.been.calledWith(secret, secret);
