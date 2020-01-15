@@ -3,7 +3,13 @@ const { expect } = require("chai");
 const request = require("@blossm/request");
 const uuid = require("@blossm/uuid");
 
-const { domain, service, testing, schema } = require("../../config.json");
+const {
+  domain,
+  service,
+  testing,
+  schema,
+  indexes
+} = require("../../config.json");
 
 const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 
@@ -101,6 +107,18 @@ describe("Event store integration tests", () => {
     const parsedBody3 = JSON.parse(response3.body);
     for (const property in example1) {
       expect(parsedBody3.state[property]).to.deep.equal(example1[property]);
+    }
+    ///Test indexes
+    for (const index of indexes) {
+      const response4 = await request.get(
+        `${url}?$key=${index}&value=${example1[index]}`
+      );
+      expect(response4.statusCode).to.equal(200);
+
+      const parsedBody4 = JSON.parse(response4.body);
+      for (const key in example1.result || example1) {
+        expect(parsedBody4[0].state[key]).to.deep.equal(example1[key]);
+      }
     }
   });
 

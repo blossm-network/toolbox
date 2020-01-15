@@ -62,7 +62,13 @@ const eventStore = async ({ schema, indexes }) => {
       [{ id: 1 }],
       [{ "headers.root": 1 }],
       [{ "headers.root": 1, "headers.number": 1 }],
-      ...indexes
+      ...(indexes.length == 0
+        ? []
+        : [
+            indexes.map(index => {
+              return { [index]: 1 };
+            })
+          ])
     ],
     connection: {
       protocol: process.env.MONGODB_PROTOCOL,
@@ -97,7 +103,16 @@ const snapshotStore = async ({ schema, indexes }) => {
       },
       state: schema
     },
-    indexes: [[{ "headers.root": 1 }], ...indexes]
+    indexes: [
+      [{ "headers.root": 1 }],
+      ...(indexes.length == 0
+        ? []
+        : [
+            indexes.map(index => {
+              return { [index]: 1 };
+            })
+          ])
+    ]
   });
 
   return _snapshotStore;

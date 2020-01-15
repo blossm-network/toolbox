@@ -13,6 +13,7 @@ const { testing, indexes = [] } = require("../../config.json");
 const queryString = (properties, example) => {
   let string = "";
   for (const property in properties) {
+    if (string.length > 0) string += "&";
     string += `${property}=${example[property]}`;
   }
   return string;

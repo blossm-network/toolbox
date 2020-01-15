@@ -5,7 +5,7 @@ schema:
   phone: String
   principle: String
 
-indexes: [[{ phone: 1 }]]
+indexes: [phone]
 
 testing:
   examples:

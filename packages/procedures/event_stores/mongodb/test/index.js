@@ -282,7 +282,7 @@ describe("Mongodb event store", () => {
         [{ id: 1 }],
         [{ "headers.root": 1 }],
         [{ "headers.root": 1, "headers.number": 1 }],
-        index
+        [{ [index]: 1 }]
       ],
       connection: {
         protocol,
@@ -308,7 +308,7 @@ describe("Mongodb event store", () => {
         },
         state: snapshotStoreSchema
       },
-      indexes: [[{ "headers.root": 1 }], index]
+      indexes: [[{ "headers.root": 1 }], [{ [index]: 1 }]]
     });
   });
   it("should call query with the correct params with snapshot and events found", async () => {
