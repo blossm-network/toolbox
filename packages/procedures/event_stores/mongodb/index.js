@@ -102,20 +102,6 @@ const snapshotStore = async ({ schema }) => {
   return _snapshotStore;
 };
 
-const isSimpleQuery = query => {
-  for (const property in query) {
-    switch (typeof query[property]) {
-      case "string":
-      case "number":
-      case "boolean":
-        break;
-      default:
-        return false;
-    }
-  }
-  return true;
-};
-
 const doesMatchQuery = ({ state, query }) => {
   try {
     for (const property in query) {
@@ -271,12 +257,14 @@ module.exports = async ({
     return aggregate;
   };
 
-  const queryFn = async query => {
+  const queryFn = async ({ key, value }) => {
+    //eslint-disable-next-line no-console
+    console.log("query fn: ", { key, value });
     const [snapshots, events] = await Promise.all([
       deps.db.find({
         store: sStore,
         query: {
-          payload: query
+          [`payload.${key}`]: value
         },
         options: {
           lean: true
@@ -285,13 +273,15 @@ module.exports = async ({
       deps.db.find({
         store: eStore,
         query: {
-          payload: query
+          [`payload.${key}`]: value
         },
         options: {
           lean: true
         }
       })
     ]);
+    //eslint-disable-next-line no-console
+    console.log("results: ", { snapshots, events });
 
     if (snapshots.length == 0 && events.length == 0) return [];
     if (events.length == 0) {
@@ -313,11 +303,8 @@ module.exports = async ({
       candidateRoots.map(root => aggregateFn(root))
     );
 
-    if (!isSimpleQuery(query))
-      throw "Complex queries are not supported on aggregates at this time.";
-
     const filteredAggregates = aggregates.filter(aggregate =>
-      doesMatchQuery({ state: aggregate.state, query })
+      doesMatchQuery({ state: aggregate.state, query: { [key]: value } })
     );
     return filteredAggregates;
   };

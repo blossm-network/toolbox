@@ -17,12 +17,17 @@ module.exports = async ({ payload, context }) => {
   }
 
   //Check to see if the phone is recognized
-  const [user] = await deps
+  const res = await deps
     .eventStore({
       domain: "user"
     })
     .set({ context, tokenFn: deps.gcpToken })
     .query({ phone: payload.phone });
+
+  //eslint-disable-next-line
+  console.log("inmain res: ", res);
+
+  const user = res[0];
 
   if (!user) throw deps.invalidArgumentError.phoneNotRecognized();
 

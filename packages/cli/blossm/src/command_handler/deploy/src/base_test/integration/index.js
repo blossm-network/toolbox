@@ -41,6 +41,9 @@ describe("Command handler integration tests", () => {
           domain: state.store.domain,
           service: process.env.SERVICE
         });
+
+        //eslint-disable-next-line
+        console.log("adding state event: ", stateEvent);
         await eventStore({
           domain: state.store.domain
         }).add(stateEvent);
@@ -61,6 +64,8 @@ describe("Command handler integration tests", () => {
       }
     });
 
+    //eslint-disable-next-line
+    console.log("RES: ", response);
     expect(response.statusCode).to.equal(testing.response ? 200 : 204);
 
     if (!testing.response) return;

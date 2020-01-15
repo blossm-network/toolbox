@@ -159,7 +159,7 @@ describe("Mongodb event store", () => {
     expect(eventStoreFake).to.have.been.calledWith({
       aggregateFn: match(fn => expect(fn({ id })).to.exist),
       saveEventFn: match(fn => expect(fn({ id, data })).to.exist),
-      queryFn: match(fn => expect(fn({ a: 1 })).to.exist),
+      queryFn: match(fn => expect(fn({ key: "a", value: 1 })).to.exist),
       publishFn
     });
 
@@ -271,14 +271,16 @@ describe("Mongodb event store", () => {
 
     await mongodbEventStore({ schema, publishFn });
 
-    const query = { a: 1 };
-    const queryFnResult = await eventStoreFake.lastCall.lastArg.queryFn(query);
+    const queryFnResult = await eventStoreFake.lastCall.lastArg.queryFn({
+      key: "a",
+      value: 1
+    });
     expect(findFake).to.have.callCount(4);
     expect(findOneFake).to.have.callCount(2);
     expect(findFake).to.have.been.calledWith({
       store: eStore,
       query: {
-        payload: query
+        "payload.a": 1
       },
       options: {
         lean: true
@@ -369,15 +371,17 @@ describe("Mongodb event store", () => {
 
     await mongodbEventStore({ schema, publishFn });
 
-    const query = { a: 1 };
-    const queryFnResult = await eventStoreFake.lastCall.lastArg.queryFn(query);
+    const queryFnResult = await eventStoreFake.lastCall.lastArg.queryFn({
+      key: "a",
+      value: 1
+    });
     expect(findFake).to.have.callCount(3);
     expect(findOneFake).to.have.callCount(1);
 
     expect(findFake).to.have.been.calledWith({
       store: eStore,
       query: {
-        payload: query
+        "payload.a": 1
       },
       options: {
         lean: true
@@ -479,14 +483,16 @@ describe("Mongodb event store", () => {
 
     await mongodbEventStore({ schema, publishFn });
 
-    const query = { "a.b.c": 1, d: "sure", e: true };
-    const queryFnResult = await eventStoreFake.lastCall.lastArg.queryFn(query);
+    const queryFnResult = await eventStoreFake.lastCall.lastArg.queryFn({
+      key: "a.b.c",
+      value: 1
+    });
     expect(findFake).to.have.callCount(4);
     expect(findOneFake).to.have.callCount(2);
     expect(findFake).to.have.been.calledWith({
       store: eStore,
       query: {
-        payload: query
+        "payload.a.b.c": 1
       },
       options: {
         lean: true
@@ -578,8 +584,10 @@ describe("Mongodb event store", () => {
 
     await mongodbEventStore({ schema, publishFn });
 
-    const query = { a: 1 };
-    const queryFnResult = await eventStoreFake.lastCall.lastArg.queryFn(query);
+    const queryFnResult = await eventStoreFake.lastCall.lastArg.queryFn({
+      key: "a",
+      value: 1
+    });
     expect(findFake).to.have.callCount(4);
     expect(findOneFake).to.have.callCount(2);
 
@@ -634,91 +642,13 @@ describe("Mongodb event store", () => {
 
     await mongodbEventStore({ schema, publishFn });
 
-    const query = { a: 1 };
-    const queryFnResult = await eventStoreFake.lastCall.lastArg.queryFn(query);
+    const queryFnResult = await eventStoreFake.lastCall.lastArg.queryFn({
+      key: "a",
+      value: 1
+    });
     expect(findFake).to.have.callCount(2);
 
     expect(queryFnResult).to.deep.equal([]);
-  });
-  it("should throw calling query with the correct params with complex query", async () => {
-    const mongodbEventStore = require("..");
-    const eStore = "some-event-store";
-    const sStore = "some-snapshot-store";
-    const storeFake = stub()
-      .onCall(0)
-      .returns(eStore)
-      .onCall(1)
-      .returns(sStore);
-
-    const secretFake = fake.returns(password);
-    replace(deps, "secret", secretFake);
-
-    const eventStoreFake = fake();
-    replace(deps, "eventStore", eventStoreFake);
-
-    const snapshotRoot = "some-snapshot-root";
-    const eventRoot = "some-event-root";
-    const findSnapshotResult = [{ headers: { root: snapshotRoot } }];
-    const findEventResult = [
-      { headers: { root: eventRoot } },
-      { headers: { root: eventRoot } }
-    ];
-    const findFake = stub()
-      .onCall(0)
-      .returns(findSnapshotResult)
-      .onCall(1)
-      .returns(findEventResult)
-      .onCall(2)
-      .returns(findResult)
-      .onCall(3)
-      .returns(findResult);
-
-    const bogusRoot = "some-bogus-root";
-    const bogusFindOneResult = {
-      state: { a: 3, b: 1 },
-      headers: { lastEventNumber: 0, root: bogusRoot }
-    };
-    const findOneFake = stub()
-      .onCall(0)
-      .returns(findOneResult)
-      .onCall(1)
-      .returns(bogusFindOneResult);
-
-    const eventStoreSchema = { a: String };
-    const snapshotStoreSchema = "some-snapshot-schema";
-    const removeIdsFake = stub()
-      .onCall(0)
-      .returns(eventStoreSchema)
-      .onCall(1)
-      .returns(snapshotStoreSchema);
-
-    replace(deps, "removeIds", removeIdsFake);
-
-    const db = {
-      find: findFake,
-      findOne: findOneFake,
-      store: storeFake
-    };
-    replace(deps, "db", db);
-
-    await mongodbEventStore({ schema, publishFn });
-
-    const query = {
-      a: {
-        $lt: 4
-      }
-    };
-
-    try {
-      await eventStoreFake.lastCall.lastArg.queryFn(query);
-
-      //shouldn't get called
-      expect(1).to.equal(2);
-    } catch (e) {
-      expect(e).to.equal(
-        "Complex queries are not supported on aggregates at this time."
-      );
-    }
   });
   it("should throw correct error when events have a duplicate id", async () => {
     const mongodbEventStore = require("..");
