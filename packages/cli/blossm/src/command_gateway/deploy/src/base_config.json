@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "@blossm/command-gateway": "*",
-    "@blossm/view-store-rpc": "*",
+    "@blossm/event-store-rpc": "*",
     "@blossm/gcp-kms": "*"
   },
   "devDependencies": {

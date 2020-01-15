@@ -54,14 +54,14 @@ describe("Command handler unit tests", () => {
     const uuidFake = fake.returns(root);
     replace(deps, "uuid", uuidFake);
 
-    const readFake = fake.returns([user]);
+    const queryFake = fake.returns([user]);
     const setFake = fake.returns({
-      read: readFake
+      query: queryFake
     });
-    const viewStoreFake = fake.returns({
+    const eventStoreFake = fake.returns({
       set: setFake
     });
-    replace(deps, "viewStore", viewStoreFake);
+    replace(deps, "eventStore", eventStoreFake);
 
     const signature = "some-signature";
     const signFake = fake.returns(signature);
@@ -90,7 +90,7 @@ describe("Command handler unit tests", () => {
       ],
       response: { token }
     });
-    expect(readFake).to.have.been.calledWith({ phone: payloadPhone });
+    expect(queryFake).to.have.been.calledWith({ phone: payloadPhone });
     expect(secretFake).to.have.been.calledWith("twilio-account-sid");
     expect(secretFake).to.have.been.calledWith("twilio-auth-token");
     expect(smsFake).to.have.been.calledWith(secret, secret);
@@ -98,8 +98,7 @@ describe("Command handler unit tests", () => {
       context,
       tokenFn: deps.gcpToken
     });
-    expect(viewStoreFake).to.have.been.calledWith({
-      name: "phones",
+    expect(eventStoreFake).to.have.been.calledWith({
       domain: "user"
     });
     expect(signFake).to.have.been.calledWith({
@@ -143,14 +142,14 @@ describe("Command handler unit tests", () => {
   });
   it("should throw correctly", async () => {
     const errorMessage = "some-error";
-    const readFake = fake.rejects(new Error(errorMessage));
+    const queryFake = fake.rejects(new Error(errorMessage));
     const setFake = fake.returns({
-      read: readFake
+      query: queryFake
     });
-    const viewStoreFake = fake.returns({
+    const eventStoreFake = fake.returns({
       set: setFake
     });
-    replace(deps, "viewStore", viewStoreFake);
+    replace(deps, "eventStore", eventStoreFake);
 
     try {
       await main({ payload, context });
@@ -162,14 +161,14 @@ describe("Command handler unit tests", () => {
     }
   });
   it("should throw correctly if no phones found", async () => {
-    const readFake = fake.returns([]);
+    const queryFake = fake.returns([]);
     const setFake = fake.returns({
-      read: readFake
+      query: queryFake
     });
-    const viewStoreFake = fake.returns({
+    const eventStoreFake = fake.returns({
       set: setFake
     });
-    replace(deps, "viewStore", viewStoreFake);
+    replace(deps, "eventStore", eventStoreFake);
 
     try {
       await main({ payload, context });

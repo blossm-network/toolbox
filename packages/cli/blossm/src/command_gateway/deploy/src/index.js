@@ -1,5 +1,5 @@
 const gateway = require("@blossm/command-gateway");
-const viewStore = require("@blossm/view-store-rpc");
+const eventStore = require("@blossm/event-store-rpc");
 const { verify } = require("@blossm/gcp-kms");
 
 const config = require("./config.json");
@@ -8,12 +8,11 @@ module.exports = gateway({
   commands: config.commands,
   whitelist: config.whitelist,
   permissionsLookupFn: async ({ principle }) => {
-    const { permissions } = await viewStore({
-      name: "permissions",
+    const aggregate = await eventStore({
       domain: "principle"
-    }).read({ root: principle });
+    }).aggregate(principle);
 
-    return permissions || [];
+    return aggregate ? aggregate.state.permissions : [];
   },
   verifyFn: ({ key }) =>
     verify({

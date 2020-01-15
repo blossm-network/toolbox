@@ -7,33 +7,31 @@ const NINETY_DAYS = 90 * SECONDS_IN_DAY;
 module.exports = async ({ payload, root, context }) => {
   //Look for the challenge being answered.
   const challenge = await deps
-    .viewStore({
-      name: "codes",
+    .eventStore({
       domain: "challenge"
     })
     .set({ context, tokenFn: deps.gcpToken })
-    .read({ root });
+    .aggregate(root);
 
   //Throw if no challenge recognized or if the code is not right.
   if (!challenge) throw deps.invalidArgumentError.codeNotRecognized();
 
-  if (challenge.code != payload.code)
+  if (challenge.state.code != payload.code)
     throw deps.invalidArgumentError.wrongCode();
 
   //Throw if the challenge is expired.
   const now = new Date();
 
-  if (Date.parse(challenge.expires) < now)
+  if (Date.parse(challenge.state.expires) < now)
     throw deps.badRequestError.codeExpired();
 
   //Lookup the contexts that the requesting user is in.
-  const [user] = await deps
-    .viewStore({
-      name: "contexts",
+  const user = await deps
+    .eventStore({
       domain: "user"
     })
     .set({ context, tokenFn: deps.gcpToken })
-    .read({ code: payload.code });
+    .aggregate(context.user);
 
   //Create a token that can access commands and views.
   const token = await deps.createJwt({
@@ -48,8 +46,8 @@ module.exports = async ({ payload, root, context }) => {
         user: context.user,
         //If the user is in only one context, add it to the token.
         ...(user &&
-          user.contexts.length == 1 && {
-            [user.contexts[0].type]: user.contexts[0].root
+          user.state.contexts.length == 1 && {
+            [user.state.contexts[0].type]: user.state.contexts[0].root
           }),
         service: process.env.SERVICE,
         network: process.env.NETWORK

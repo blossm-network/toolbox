@@ -53,24 +53,26 @@ describe("Command handler unit tests", () => {
     restore();
   });
   it("should return successfully", async () => {
-    const readOneFake = fake.returns({
-      ...challenge,
-      expires: deps.stringDate()
+    const aggregateFake = fake.returns({
+      state: {
+        ...challenge,
+        expires: deps.stringDate()
+      }
     });
-    const readTwoFake = fake.returns([user]);
+    const otherAggregateFake = fake.returns({ state: user });
     const setFake = stub()
       .onFirstCall()
       .returns({
-        read: readOneFake
+        aggregate: aggregateFake
       })
       .onSecondCall()
       .returns({
-        read: readTwoFake
+        aggregate: otherAggregateFake
       });
-    const viewStoreFake = fake.returns({
+    const eventStoreFake = fake.returns({
       set: setFake
     });
-    replace(deps, "viewStore", viewStoreFake);
+    replace(deps, "eventStore", eventStoreFake);
 
     const signature = "some-signature";
     const signFake = fake.returns(signature);
@@ -96,19 +98,17 @@ describe("Command handler unit tests", () => {
       ],
       response: { token }
     });
-    expect(readOneFake).to.have.been.calledWith({ root: challengeRoot });
-    expect(readTwoFake).to.have.been.calledWith({ code });
+    expect(aggregateFake).to.have.been.calledWith(challengeRoot);
+    expect(otherAggregateFake).to.have.been.calledWith(contextuser);
     expect(setFake).to.have.been.calledWith({
       context,
       tokenFn: deps.gcpToken
     });
     expect(setFake).to.have.been.calledTwice;
-    expect(viewStoreFake).to.have.been.calledWith({
-      name: "codes",
+    expect(eventStoreFake).to.have.been.calledWith({
       domain: "challenge"
     });
-    expect(viewStoreFake).to.have.been.calledWith({
-      name: "contexts",
+    expect(eventStoreFake).to.have.been.calledWith({
       domain: "user"
     });
     expect(signFake).to.have.been.calledWith({
@@ -137,24 +137,26 @@ describe("Command handler unit tests", () => {
     });
   });
   it("should return successfully if no user is found", async () => {
-    const readOneFake = fake.returns({
-      ...challenge,
-      expires: deps.stringDate()
+    const aggregateFake = fake.returns({
+      state: {
+        ...challenge,
+        expires: deps.stringDate()
+      }
     });
-    const readTwoFake = fake.returns([]);
+    const otherAggregateFake = fake.returns();
     const setFake = stub()
       .onFirstCall()
       .returns({
-        read: readOneFake
+        aggregate: aggregateFake
       })
       .onSecondCall()
       .returns({
-        read: readTwoFake
+        aggregate: otherAggregateFake
       });
-    const viewStoreFake = fake.returns({
+    const eventStoreFake = fake.returns({
       set: setFake
     });
-    replace(deps, "viewStore", viewStoreFake);
+    replace(deps, "eventStore", eventStoreFake);
 
     const signature = "some-signature";
     const signFake = fake.returns(signature);
@@ -176,19 +178,17 @@ describe("Command handler unit tests", () => {
       ],
       response: { token }
     });
-    expect(readOneFake).to.have.been.calledWith({ root: challengeRoot });
-    expect(readTwoFake).to.have.been.calledWith({ code });
+    expect(aggregateFake).to.have.been.calledWith(challengeRoot);
+    expect(otherAggregateFake).to.have.been.calledWith(contextuser);
     expect(setFake).to.have.been.calledWith({
       context,
       tokenFn: deps.gcpToken
     });
     expect(setFake).to.have.been.calledTwice;
-    expect(viewStoreFake).to.have.been.calledWith({
-      name: "codes",
+    expect(eventStoreFake).to.have.been.calledWith({
       domain: "challenge"
     });
-    expect(viewStoreFake).to.have.been.calledWith({
-      name: "contexts",
+    expect(eventStoreFake).to.have.been.calledWith({
       domain: "user"
     });
     expect(signFake).to.have.been.calledWith({
@@ -217,14 +217,14 @@ describe("Command handler unit tests", () => {
   });
   it("should throw correctly", async () => {
     const errorMessage = "some-error";
-    const readFake = fake.rejects(errorMessage);
+    const aggregateFake = fake.rejects(errorMessage);
     const setFake = fake.returns({
-      read: readFake
+      aggregate: aggregateFake
     });
-    const viewStoreFake = fake.returns({
+    const eventStoreFake = fake.returns({
       set: setFake
     });
-    replace(deps, "viewStore", viewStoreFake);
+    replace(deps, "eventStore", eventStoreFake);
     try {
       await main({ payload, context });
       //shouldn't get called
@@ -234,14 +234,14 @@ describe("Command handler unit tests", () => {
     }
   });
   it("should throw correctly if no challenge is found", async () => {
-    const readFake = fake.returns();
+    const aggregateFake = fake.returns();
     const setFake = fake.returns({
-      read: readFake
+      aggregate: aggregateFake
     });
-    const viewStoreFake = fake.returns({
+    const eventStoreFake = fake.returns({
       set: setFake
     });
-    replace(deps, "viewStore", viewStoreFake);
+    replace(deps, "eventStore", eventStoreFake);
 
     const error = "some-error";
     const codeNotRecognizedFake = fake.returns(error);
@@ -258,18 +258,20 @@ describe("Command handler unit tests", () => {
     }
   });
   it("should throw correctly if a challenge is with the wrong code", async () => {
-    const readFake = fake.returns({
-      ...challenge,
-      code: "bogus",
-      expires: deps.stringDate()
+    const aggregateFake = fake.returns({
+      state: {
+        ...challenge,
+        code: "bogus",
+        expires: deps.stringDate()
+      }
     });
     const setFake = fake.returns({
-      read: readFake
+      aggregate: aggregateFake
     });
-    const viewStoreFake = fake.returns({
+    const eventStoreFake = fake.returns({
       set: setFake
     });
-    replace(deps, "viewStore", viewStoreFake);
+    replace(deps, "eventStore", eventStoreFake);
 
     const error = "some-error";
     const wrongCodeFake = fake.returns(error);
@@ -286,21 +288,23 @@ describe("Command handler unit tests", () => {
     }
   });
   it("should throw correctly if a challenge is expired", async () => {
-    const readFake = fake.returns({
-      ...challenge,
-      expires: deps
-        .moment()
-        .subtract(1, "s")
-        .toDate()
-        .toISOString()
+    const aggregateFake = fake.returns({
+      state: {
+        ...challenge,
+        expires: deps
+          .moment()
+          .subtract(1, "s")
+          .toDate()
+          .toISOString()
+      }
     });
     const setFake = fake.returns({
-      read: readFake
+      aggregate: aggregateFake
     });
-    const viewStoreFake = fake.returns({
+    const eventStoreFake = fake.returns({
       set: setFake
     });
-    replace(deps, "viewStore", viewStoreFake);
+    replace(deps, "eventStore", eventStoreFake);
 
     const error = "some-error";
     const codeExpiredFake = fake.returns(error);

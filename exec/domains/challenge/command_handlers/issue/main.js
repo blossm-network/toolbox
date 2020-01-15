@@ -18,12 +18,11 @@ module.exports = async ({ payload, context }) => {
 
   //Check to see if the phone is recognized
   const [user] = await deps
-    .viewStore({
-      name: "phones",
+    .eventStore({
       domain: "user"
     })
     .set({ context, tokenFn: deps.gcpToken })
-    .read({ phone: payload.phone });
+    .query({ phone: payload.phone });
 
   if (!user) throw deps.invalidArgumentError.phoneNotRecognized();
 
