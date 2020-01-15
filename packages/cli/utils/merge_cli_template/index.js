@@ -108,7 +108,6 @@ const topicsForProcedures = (config, events) => {
             "did-issue.challenge.core",
             "did-answer.challenge.core",
             "did-save-phone-number.user.core",
-            "did-save-code.challenge.core",
             "did-add-permissions.principle.core"
           ]
         : []
