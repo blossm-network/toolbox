@@ -50,7 +50,6 @@ testing:
   state:
     ok:
       - store:
-          name: phones
           domain: user
         root: some-root
         value: 
@@ -58,12 +57,10 @@ testing:
           principle: some-principle
 
   procedures:
-    - name: phones
-      domain: user
-      context: view-store
-    - name: codes
-      domain: challenge
-      context: view-store
+    - domain: user
+      context: event-store
+    - domain: challenge
+      context: event-store
 
   response:
     token:

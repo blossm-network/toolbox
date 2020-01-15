@@ -38,7 +38,7 @@ describe("Event store", () => {
     expect(listenFake).to.have.been.calledOnce;
     expect(serverFake).to.have.been.calledOnce;
     expect(getFake).to.have.been.calledWith(eventStoreGetResult, {
-      path: "/:root"
+      path: "/:root?"
     });
     expect(postFake).to.have.been.calledWith(eventStorePostResult);
     expect(eventStoreGetFake).to.have.been.calledWith({ aggregateFn, queryFn });

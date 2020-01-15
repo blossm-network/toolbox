@@ -3,7 +3,8 @@ const { expect } = require("chai");
 const { string: stringDate } = require("@blossm/datetime");
 const uuid = require("@blossm/uuid");
 const { create, delete: del } = require("@blossm/gcp-pubsub");
-const viewStore = require("@blossm/view-store-rpc");
+const eventStore = require("@blossm/event-store-rpc");
+const createEvent = require("@blossm/create-event");
 
 const request = require("@blossm/request");
 
@@ -11,11 +12,18 @@ const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 
 const { testing } = require("../../config.json");
 
+const testingAction = "some-test-action";
+
+const stateTopics = [];
+
 describe("Command handler integration tests", () => {
   const okExample0 = testing.examples.ok[0];
 
   before(async () => await Promise.all(testing.topics.map(t => create(t))));
-  after(async () => await Promise.all(testing.topics.map(t => del(t))));
+  after(
+    async () =>
+      await Promise.all([...testing.topics.map(t => del(t)), ...stateTopics])
+  );
 
   it("should have at least one example", async () => {
     expect(okExample0).to.exist;
@@ -23,10 +31,19 @@ describe("Command handler integration tests", () => {
   it("should return successfully", async () => {
     if (testing.state && testing.state.ok) {
       for (const state of testing.state.ok) {
-        await viewStore({
-          name: state.store.name,
+        const topic = `did-${testingAction}.${state.store.domain}.${process.env.SERVICE}`;
+        stateTopics.push(topic);
+        await create(topic);
+        const stateEvent = await createEvent({
+          root: state.root,
+          payload: state.value,
+          action: testingAction,
+          domain: state.store.domain,
+          service: process.env.SERVICE
+        });
+        await eventStore({
           domain: state.store.domain
-        }).update(state.root, state.value);
+        }).add(stateEvent);
       }
     }
 
@@ -60,10 +77,19 @@ describe("Command handler integration tests", () => {
     if (!testing.state || testing.examples.bad) return;
 
     for (const state of testing.state.bad.reverse()) {
-      await viewStore({
-        name: state.store.name,
+      const topic = `did-${testingAction}.${state.store.domain}.${process.env.SERVICE}`;
+      stateTopics.push(topic);
+      await create(topic);
+      const stateEvent = await createEvent({
+        root: state.root,
+        payload: state.value,
+        action: testingAction,
+        domain: state.store.domain,
+        service: process.env.SERVICE
+      });
+      await eventStore({
         domain: state.store.domain
-      }).update(state.root, state.value);
+      }).add(stateEvent);
       const response = await request.post(url, {
         body: {
           headers: {

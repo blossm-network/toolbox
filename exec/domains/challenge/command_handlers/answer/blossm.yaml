@@ -56,17 +56,14 @@ testing:
       user: some-user-root
 
   procedures:
-    - name: contexts
-      domain: user
-      context: view-store
-    - name: codes
-      domain: challenge
-      context: view-store
+    - domain: user
+      context: event-store
+    - domain: challenge
+      context: event-store
 
   state:
     ok:
       - store:
-          name: codes 
           domain: challenge 
         root: some-root 
         value: 
@@ -74,7 +71,6 @@ testing:
           expires: "30000-12-31T00:00:00+00:00"
     bad:
       - store:
-          name: codes 
           domain: challenge 
         root: some-root 
         value: 
