@@ -16,6 +16,9 @@ module.exports = async ({
   return {
     headers: {
       root: root || (await deps.uuid()),
+      action,
+      domain,
+      service,
       topic: `did-${action}.${domain}.${service}`,
       version,
       created: stringDate(),

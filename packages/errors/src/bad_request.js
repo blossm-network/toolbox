@@ -12,6 +12,16 @@ module.exports = {
     ),
   badRoot: ({ cause, info } = {}) =>
     new BadRequestError({ cause, info, toJSON }, `Invalid root.`),
+  eventHandlerNotSpecified: ({ cause, info } = {}) =>
+    new BadRequestError(
+      { cause, info, toJSON },
+      `Event handler not specified.`
+    ),
+  incompleteQuery: ({ cause, info } = {}) =>
+    new BadRequestError(
+      { cause, info, toJSON },
+      `The query is missing a key or value.`
+    ),
   badMessage: ({ cause, info } = {}) =>
     new BadRequestError(
       { cause, info, toJSON },

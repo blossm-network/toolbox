@@ -19,7 +19,10 @@
     "@blossm/gcp-secret": "^0.0.23",
     "@blossm/logger": "^0.0.5",
     "@blossm/mongodb-database": "^0.0.24",
-    "@blossm/remove-ids-from-mongodb-schema": "^0.0.1"
+    "@blossm/remove-ids-from-mongodb-schema": "^0.0.1",
+    "@blossm/mongodb-event-store-save-event": "*",
+    "@blossm/mongodb-event-store-aggregate": "*",
+    "@blossm/mongodb-event-store-query": "*"
   },
   "devDependencies": {
     "chai-datetime": "^1.5.0",

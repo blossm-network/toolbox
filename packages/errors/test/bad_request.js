@@ -29,6 +29,30 @@ describe("Bad request", () => {
     expect(error.cause()).to.deep.equal(cause);
     expect(error.statusCode).to.equal(400);
   });
+  it("eventHandlerNotSpecified correct", () => {
+    const error = badRequest.eventHandlerNotSpecified();
+    expect(error.message).to.equal("Event handler not specified.");
+    expect(error.statusCode).to.equal(400);
+  });
+  it("eventHandlerNotSpecified correct with props", () => {
+    const error = badRequest.eventHandlerNotSpecified({ cause, info });
+    expect(error.message).to.equal("Event handler not specified.");
+    expect(error.toJSON().info).to.deep.equal(info);
+    expect(error.cause()).to.deep.equal(cause);
+    expect(error.statusCode).to.equal(400);
+  });
+  it("incompleteQuery correct", () => {
+    const error = badRequest.incompleteQuery();
+    expect(error.message).to.equal("The query is missing a key or value.");
+    expect(error.statusCode).to.equal(400);
+  });
+  it("incompleteQuery correct with props", () => {
+    const error = badRequest.incompleteQuery({ cause, info });
+    expect(error.message).to.equal("The query is missing a key or value.");
+    expect(error.toJSON().info).to.deep.equal(info);
+    expect(error.cause()).to.deep.equal(cause);
+    expect(error.statusCode).to.equal(400);
+  });
   it("badMessage correct", () => {
     const error = badRequest.badMessage();
     expect(error.message).to.equal("Invalid Pub/Sub message format.");
