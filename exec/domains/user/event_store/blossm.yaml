@@ -4,6 +4,7 @@ service: core
 schema:
   phone: String
   principle: String
+  contexts: [String]
 
 indexes: [phone]
 
