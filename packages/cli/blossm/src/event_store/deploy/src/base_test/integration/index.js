@@ -110,12 +110,16 @@ describe("Event store integration tests", () => {
     }
     ///Test indexes
     for (const index of indexes) {
+      //eslint-disable-next-line
+      console.log("getting value: ", { example1, val: example1[index], index });
       const response4 = await request.get(
-        `${url}?$key=${index}&value=${example1[index]}`
+        `${url}?key=${index}&value=\\${example1[index]}`
       );
       expect(response4.statusCode).to.equal(200);
 
       const parsedBody4 = JSON.parse(response4.body);
+      //eslint-disable-next-line
+      console.log("PARSED BODY: ", parsedBody4);
       for (const key in example1.result || example1) {
         expect(parsedBody4[0].state[key]).to.deep.equal(example1[key]);
       }
