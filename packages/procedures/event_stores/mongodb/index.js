@@ -281,8 +281,6 @@ module.exports = async ({
   };
 
   const queryFn = async ({ key, value }) => {
-    //eslint-disable-next-line no-console
-    console.log("query fn: ", { key, value });
     const [snapshots, events] = await Promise.all([
       deps.db.find({
         store: sStore,
@@ -303,8 +301,6 @@ module.exports = async ({
         }
       })
     ]);
-    //eslint-disable-next-line no-console
-    console.log("results: ", { snapshots, events });
 
     if (snapshots.length == 0 && events.length == 0) return [];
     if (events.length == 0) {

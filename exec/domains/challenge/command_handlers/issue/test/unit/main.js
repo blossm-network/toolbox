@@ -84,7 +84,11 @@ describe("Command handler unit tests", () => {
             principle,
             phone,
             issued: new Date().toISOString(),
-            expires: 180
+            expires: deps
+              .moment()
+              .add(180, "s")
+              .toDate()
+              .toISOString()
           }
         }
       ],

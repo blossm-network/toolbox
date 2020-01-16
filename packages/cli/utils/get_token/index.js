@@ -73,6 +73,7 @@ module.exports = async ({ permissions = [], issueFn, answerFn }) => {
       moment()
         .add(30, "s")
         .toDate()
+        .toISOString()
     )
   });
 

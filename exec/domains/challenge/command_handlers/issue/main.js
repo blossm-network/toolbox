@@ -24,9 +24,6 @@ module.exports = async ({ payload, context }) => {
     .set({ context, tokenFn: deps.gcpToken })
     .query({ key: "phone", value: payload.phone });
 
-  //eslint-disable-next-line
-  console.log("inmain res: ", res);
-
   const user = res[0];
 
   if (!user) throw deps.invalidArgumentError.phoneNotRecognized();
@@ -78,7 +75,11 @@ module.exports = async ({ payload, context }) => {
           principle: user.principle,
           phone: user.phone,
           issued: deps.stringDate(),
-          expires: THREE_MINUTES
+          expires: deps
+            .moment()
+            .add(THREE_MINUTES, "s")
+            .toDate()
+            .toISOString()
         },
         root
       }

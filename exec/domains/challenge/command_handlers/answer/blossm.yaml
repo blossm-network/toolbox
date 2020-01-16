@@ -68,14 +68,14 @@ testing:
         root: some-root 
         value: 
           code: "123456"
-          expires: "30000-12-31T00:00:00+00:00"
+          expires: 30000-12-31T00:00:00+00Z
     bad:
       - store:
           domain: challenge 
         root: some-root 
         value: 
           code: "123456"
-          expires: "2019-12-31T00:00:00+00:00"
+          expires: 2019-12-31T00:00:00+00Z
         code: 400
 
   response:

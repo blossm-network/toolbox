@@ -39,8 +39,6 @@ module.exports = ({
       .with({ tokenFn });
 
   const query = ({ context, tokenFn } = {}) => async ({ key, value }) => {
-    //eslint-disable-next-line no-console
-    console.log("key val: ", { key, value });
     return await deps
       .rpc(domain, "event-store")
       .get({ key, value })

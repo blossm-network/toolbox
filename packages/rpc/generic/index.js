@@ -25,13 +25,6 @@ const common = ({ method, dataParam, procedure, root, data }) => {
             ...(root && { root })
           });
 
-          //eslint-disable-next-line no-console
-          console.log("data: ", data);
-          //eslint-disable-next-line no-console
-          console.log("body: ", {
-            ...(data != undefined && { ...data }),
-            context
-          });
           const response = await method(url, {
             [dataParam]: {
               ...(data != undefined && { ...data }),

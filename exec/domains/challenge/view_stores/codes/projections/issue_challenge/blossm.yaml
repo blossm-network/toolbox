@@ -24,7 +24,7 @@ testing:
 
       payload:
         code: some-code
-        expires: 3600
+        expires: 2020-01-03T00:02:13+00Z
 
       result:
         root: some-root 

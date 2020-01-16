@@ -5,7 +5,7 @@ service: core
 schema:
   code: String
   phone: String
-  expires: String
+  expires: Date
 
 indexes: [[{ code: 1 }]]
 
@@ -21,10 +21,10 @@ testing:
   examples:
     - code: "123456"
       phone: "+19195551144"
-      expires: "2020-01-03T00:02:12+00:00"
+      expires: 2020-01-03T00:02:12+00Z
     - code: "234567"
       phone: "+19195554411"
-      expires: "2020-01-03T00:02:10+00:00"
+      expires: 2020-01-03T00:02:10+00Z
 
 #don't change
 context: view-store

@@ -5,9 +5,9 @@ schema:
   code: String
   principle: String
   phone: String
-  issued: String
+  issued: Date
   answered: String
-  expires: Number
+  expires: Date
 
 devDependencies:
   "localenv": "^0.2.2"
@@ -19,15 +19,15 @@ devDependencies:
 testing:
   examples:
     - code: "123456"
-      issued: "2020-01-03T00:02:12+00:00"
+      issued: "2020-01-03T00:02:12+00Z"
       principle: some-root
       phone: "+19195551144"
-      expires: 3600
+      expires: "2020-01-03T00:02:15+000Z"
     - code: "234567"
-      issued: "2020-01-03T00:02:10+00:00"
+      issued: "2020-01-03T00:02:10+00Z"
       principle: some-other-root
       phone: "+19195554411"
-      expires: 4600
+      expires: "2020-01-03T00:02:13+000Z"
 
 #don't change
 context: event-store
