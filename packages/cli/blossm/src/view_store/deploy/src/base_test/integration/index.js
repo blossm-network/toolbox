@@ -1,5 +1,6 @@
 require("localenv");
 const { expect } = require("chai");
+const queryString = require("query-string");
 
 const request = require("@blossm/request");
 
@@ -10,13 +11,12 @@ const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 
 const { testing, indexes = [] } = require("../../config.json");
 
-const queryString = (properties, example) => {
-  let string = "";
+const makeQuery = (properties, example) => {
+  let obj = {};
   for (const property in properties) {
-    if (string.length > 0) string += "&";
-    string += `${property}=${example[property]}`;
+    obj[property] = example[property];
   }
-  return string;
+  return queryString.stringify(obj);
 };
 
 describe("View store base integration tests", () => {
@@ -62,7 +62,7 @@ describe("View store base integration tests", () => {
 
     ///Test indexes
     for (const index of indexes) {
-      const _queryString = queryString(
+      const _queryString = makeQuery(
         index[0],
         example1.query || example1.result || example1
       );

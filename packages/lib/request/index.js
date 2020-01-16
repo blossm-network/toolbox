@@ -14,11 +14,11 @@ const common = async ({ method, url, params, headers }) =>
         err
           ? reject(err)
           : resolve({
-            headers: response.headers,
-            statusCode: response.statusCode,
-            statusMessage: response.statusMessage,
-            body
-          })
+              headers: response.headers,
+              statusCode: response.statusCode,
+              statusMessage: response.statusMessage,
+              body
+            })
     )
   );
 
