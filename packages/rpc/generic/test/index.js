@@ -189,7 +189,7 @@ describe("Operation", () => {
       .with({ tokenFn });
 
     expect(get).to.have.been.calledWith(url, {
-      body: {
+      query: {
         ...data,
         context
       },

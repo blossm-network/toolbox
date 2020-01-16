@@ -74,7 +74,8 @@ module.exports = (...procedure) => {
       common({ method: deps.post, dataParam: "body", procedure, data }),
     put: (root, data) =>
       common({ method: deps.put, dataParam: "body", procedure, root, data }),
-    delete: root => common({ method: deps.delete, procedure, root }),
+    delete: root =>
+      common({ method: deps.delete, dataParam: "body", procedure, root }),
     get: query => {
       const root = query.root;
       delete query.root;
