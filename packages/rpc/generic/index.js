@@ -27,6 +27,11 @@ const common = ({ method, procedure, root, data }) => {
 
           //eslint-disable-next-line no-console
           console.log("data: ", data);
+          //eslint-disable-next-line no-console
+          console.log("body: ", {
+            ...(data != undefined && { ...data }),
+            context
+          });
           const response = await method(url, {
             body: {
               ...(data != undefined && { ...data }),
