@@ -1,7 +1,7 @@
 {
   "name": "@blossm/command-rpc",
   "description": "Issues a command.",
-  "version": "0.0.44",
+  "version": "0.0.45",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@blossm/datetime": "*",
-    "@blossm/rpc": "^0.0.42",
+    "@blossm/rpc": "^0.0.43",
     "@blossm/uuid": "*"
   },
   "devDependencies": {
