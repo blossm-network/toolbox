@@ -1,6 +1,5 @@
 require("localenv");
 const { expect } = require("chai");
-const queryString = require("query-string");
 
 const request = require("@blossm/request");
 
@@ -16,7 +15,7 @@ const makeQuery = (properties, example) => {
   for (const property in properties) {
     obj[property] = example[property];
   }
-  return queryString.stringify(obj);
+  return obj;
 };
 
 describe("View store base integration tests", () => {
@@ -62,11 +61,11 @@ describe("View store base integration tests", () => {
 
     ///Test indexes
     for (const index of indexes) {
-      const _queryString = makeQuery(
+      const query = makeQuery(
         index[0],
         example1.query || example1.result || example1
       );
-      const response4 = await request.get(`${url}?${_queryString}`);
+      const response4 = await request.get(url, { query });
       expect(response4.statusCode).to.equal(200);
 
       const parsedBody4 = JSON.parse(response4.body);

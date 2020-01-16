@@ -1,6 +1,5 @@
 require("localenv");
 const { expect } = require("chai");
-const queryString = require("query-string");
 const request = require("@blossm/request");
 const uuid = require("@blossm/uuid");
 
@@ -110,13 +109,13 @@ describe("Event store integration tests", () => {
       expect(parsedBody3.state[property]).to.deep.equal(example1[property]);
     }
     ///Test indexes
-    for (const index of indexes) {
-      const response4 = await request.get(
-        `${url}?${queryString.stringify({
+    for (const index of indexes || []) {
+      const response4 = await request.get(url, {
+        query: {
           key: [index],
           value: example1[index]
-        })}`
-      );
+        }
+      });
       expect(response4.statusCode).to.equal(200);
 
       const parsedBody4 = JSON.parse(response4.body);

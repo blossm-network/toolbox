@@ -7,7 +7,6 @@
     "localenv": "^0.2.2",
     "mocha": "^6.1.4",
     "chai": "^4.2.0",
-    "query-string": "6.9.0",
     "@blossm/request": "*",
     "@blossm/uuid": "*"
   }
