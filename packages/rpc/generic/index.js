@@ -2,7 +2,7 @@ const logger = require("@blossm/logger");
 
 const deps = require("./deps");
 
-const common = ({ method, procedure, root, data }) => {
+const common = ({ method, dataParam, procedure, root, data }) => {
   return {
     in: ({
       context,
@@ -33,7 +33,7 @@ const common = ({ method, procedure, root, data }) => {
             context
           });
           const response = await method(url, {
-            body: {
+            [dataParam]: {
               ...(data != undefined && { ...data }),
               context
             },
@@ -70,13 +70,21 @@ const common = ({ method, procedure, root, data }) => {
 
 module.exports = (...procedure) => {
   return {
-    post: data => common({ method: deps.post, procedure, data }),
-    put: (root, data) => common({ method: deps.put, procedure, root, data }),
+    post: data =>
+      common({ method: deps.post, dataParam: "body", procedure, data }),
+    put: (root, data) =>
+      common({ method: deps.put, dataParam: "body", procedure, root, data }),
     delete: root => common({ method: deps.delete, procedure, root }),
     get: query => {
       const root = query.root;
       delete query.root;
-      return common({ method: deps.get, procedure, root, data: query });
+      return common({
+        method: deps.get,
+        dataParam: "query",
+        procedure,
+        root,
+        data: query
+      });
     }
   };
 };
