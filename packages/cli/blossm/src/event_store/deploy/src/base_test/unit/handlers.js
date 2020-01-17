@@ -1,4 +1,4 @@
-const { expect } = require("chai").use(require("sinon-chai"));
+const { expect } = require("chai");
 
 const { testing } = require("../../config.json");
 
