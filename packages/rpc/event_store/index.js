@@ -11,9 +11,9 @@ module.exports = ({
     {
       headers: {
         root,
-        action,
-        domain,
-        service,
+        action: eventAction,
+        domain: eventDomain,
+        service: eventService,
         topic,
         version,
         trace,
@@ -27,9 +27,9 @@ module.exports = ({
       headers: {
         root,
         topic,
-        action,
-        domain,
-        service,
+        action: eventAction,
+        domain: eventDomain,
+        service: eventService,
         version,
         created: dateString(),
         ...(context && { context }),
