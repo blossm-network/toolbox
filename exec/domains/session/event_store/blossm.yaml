@@ -4,7 +4,7 @@ service: core
 schema:
   user: String
   # Device information should be send directly from the device.
-  device: 
+  device:
     os: String
     version: String
     hardware: String
@@ -14,6 +14,8 @@ schema:
 # events are begin, continue, end
 
 testing:
+  action: start
+
   examples:
     - user: some-user-root
       device:
@@ -27,7 +29,7 @@ testing:
         os: Android
         version: "10"
         hardware: "Pixel 3"
-        manufacturer: Google 
+        manufacturer: Google
         id: some-other-device-id
 
 #don't change
