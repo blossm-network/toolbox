@@ -2,6 +2,16 @@ action: start
 domain: session
 service: core
 
+payload:
+  device:
+    type: object
+    properties:
+      os: string
+      version: string
+      hardware: string
+      manufacturer: string
+      id: string
+
 dependencies:
   "@blossm/jwt": "*"
   "@blossm/gcp-kms": "*"
@@ -23,27 +33,27 @@ devDependencies:
 testing:
   examples:
     ok:
-    - payload:
-        device:
-          os: "iOS"
-          version: "10"
-          hardware: "iPhone"
-          manufacturer: "apple"
-          id: "some-id"
-      normalized:
-        device:
-          os: "iOS"
-          version: "10"
-          hardware: "iPhone"
-          manufacturer: "apple"
-          id: "some-id"
+      - payload:
+          device:
+            os: "iOS"
+            version: "10"
+            hardware: "iPhone"
+            manufacturer: "apple"
+            id: "some-id"
+        normalized:
+          device:
+            os: "iOS"
+            version: "10"
+            hardware: "iPhone"
+            manufacturer: "apple"
+            id: "some-id"
 
   invalid:
     - device:
-        os: { a: 1}
-        version: { a: 1}
+        os: { a: 1 }
+        version: { a: 1 }
         hardware: { a: 1 }
-        manufacturer: { a: 1}
+        manufacturer: { a: 1 }
         id: { a: 1 }
 
   state:

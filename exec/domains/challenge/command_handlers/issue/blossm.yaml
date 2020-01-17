@@ -3,6 +3,11 @@ domain: challenge
 service: core
 version: 0
 
+payload:
+  phone:
+    type: phoneNumber
+    title: phone number
+
 dependencies:
   "@blossm/validator": "*"
   "@blossm/phone-number": "*"
@@ -52,7 +57,7 @@ testing:
       - store:
           domain: user
         root: some-root
-        value: 
+        value:
           phone: "+19195551144"
           principle: some-principle
 

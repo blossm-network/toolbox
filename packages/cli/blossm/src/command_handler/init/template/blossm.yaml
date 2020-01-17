@@ -10,6 +10,10 @@ action: some-action
 domain: some-domain
 service: core
 
+payload:
+  name:
+    type: string
+
 devDependencies:
   "localenv": "^0.2.2"
   "mocha": "^6.1.4"
@@ -25,10 +29,10 @@ devDependencies:
 testing:
   examples:
     ok:
-    - payload:
-        name: Some-name
-      normalized:
-        name: some-name
+      - payload:
+          name: Some-name
+        normalized:
+          name: some-name
 
   invalid:
     - name: 3

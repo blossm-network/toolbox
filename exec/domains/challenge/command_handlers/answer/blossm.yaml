@@ -3,6 +3,10 @@ domain: challenge
 service: core
 version: 0
 
+payload:
+  code:
+    type: string
+
 dependencies:
   "@blossm/validator": "*"
   "@blossm/duration-consts": "*"
@@ -45,15 +49,15 @@ testing:
           code: "223456"
         code: 409
 
-  invalid: 
-    - code: 
+  invalid:
+    - code:
         a: 1
 
   root: some-root
 
-  context: 
-      principle: some-principle-root
-      user: some-user-root
+  context:
+    principle: some-principle-root
+    user: some-user-root
 
   procedures:
     - domain: user
@@ -64,21 +68,21 @@ testing:
   state:
     ok:
       - store:
-          domain: challenge 
-        root: some-root 
-        value: 
+          domain: challenge
+        root: some-root
+        value:
           code: "123456"
           expires: 9999-12-31T00:00:00.000Z
       - store:
-          domain: user 
-        root: some-user-root 
-        value: 
+          domain: user
+        root: some-user-root
+        value:
           contexts: [some-context]
     bad:
       - store:
-          domain: challenge 
-        root: some-root 
-        value: 
+          domain: challenge
+        root: some-root
+        value:
           code: "123456"
           expires: 2019-12-31T00:00:00.000Z
         code: 400
@@ -86,7 +90,5 @@ testing:
   response:
     token:
 
-
 #don't change
 context: command-handler
-
