@@ -20,8 +20,12 @@ schema:
 testing:
   #must add at least 2 examples
   examples:
-    - name: some-name
-    - name: some-other-name
+    - action: some-action
+      payload:
+        name: some-name
+    - action: some-other-action
+      payload:
+        name: some-other-name
 
 #don't change
 context: event-store

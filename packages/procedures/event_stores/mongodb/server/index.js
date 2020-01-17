@@ -144,7 +144,8 @@ module.exports = async ({
       handlers
     }),
     saveEventFn: deps.saveEvent({
-      eventStore: eStore
+      eventStore: eStore,
+      handlers
     }),
     queryFn: deps.query({
       eventStore: eStore,

@@ -1,4 +1,4 @@
-domain: user 
+domain: user
 service: core
 
 schema:
@@ -10,10 +10,14 @@ indexes: [phone]
 
 testing:
   examples:
-    - phone: "+19195551144"
-      principle: some-principle-root
-    - phone: "+19195551155"
-      principle: some-other-principle-root
+    - action: save-phone-number
+    - payload:
+        phone: "+19195551144"
+        principle: some-principle-root
+    - action: save-phone-number
+      payload:
+        phone: "+19195551155"
+        principle: some-other-principle-root
 
 #don't change
 context: event-store

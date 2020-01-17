@@ -5,7 +5,7 @@ const sms = require("@blossm/twilio-sms");
 const { validate: validateJwt } = require("@blossm/jwt");
 const { get: secret } = require("@blossm/gcp-secret");
 const { verify } = require("@blossm/gcp-kms");
-const { stringFromDate, moment } = require("@blossm/datetime");
+// const { stringFromDate, moment } = require("@blossm/datetime");
 const createEvent = require("@blossm/create-event");
 
 const uuid = require("@blossm/uuid");
@@ -15,12 +15,12 @@ const principleRoot = uuid();
 const phone = "251-333-2037";
 
 module.exports = async ({ permissions = [], issueFn, answerFn }) => {
-  await viewStore({
-    name: "phones",
-    domain: "user"
-  })
-    //phone should be already formatted in the view store.
-    .update(userRoot, { principle: principleRoot, phone: "+12513332037" });
+  // await viewStore({
+  //   name: "phones",
+  //   domain: "user"
+  // })
+  //   //phone should be already formatted in the view store.
+  //   .update(userRoot, { principle: principleRoot, phone: "+12513332037" });
 
   const userEvent = await createEvent({
     root: userRoot,
@@ -64,18 +64,18 @@ module.exports = async ({ permissions = [], issueFn, answerFn }) => {
 
   const code = message.body.substr(0, 6);
 
-  await viewStore({
-    name: "codes",
-    domain: "challenge"
-  }).update(jwt.context.challenge, {
-    code,
-    expires: stringFromDate(
-      moment()
-        .add(30, "s")
-        .toDate()
-        .toISOString()
-    )
-  });
+  // await viewStore({
+  //   name: "codes",
+  //   domain: "challenge"
+  // }).update(jwt.context.challenge, {
+  //   code,
+  //   expires: stringFromDate(
+  //     moment()
+  //       .add(30, "s")
+  //       .toDate()
+  //       .toISOString()
+  //   )
+  // });
 
   await viewStore({
     name: "permissions",

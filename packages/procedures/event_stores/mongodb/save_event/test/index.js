@@ -8,6 +8,9 @@ const deps = require("../deps");
 const createResult = { a: 1 };
 const id = "some-id";
 
+const action = "some-action";
+const handlers = { [action]: () => {} };
+
 describe("Mongodb event store create event", () => {
   afterEach(() => {
     restore();
@@ -23,9 +26,13 @@ describe("Mongodb event store create event", () => {
     replace(deps, "db", db);
 
     const event = {
-      id
+      id,
+      headers: {
+        action
+      }
     };
-    const saveEventFnResult = await saveEvent({ eventStore })(event);
+
+    const saveEventFnResult = await saveEvent({ eventStore, handlers })(event);
     expect(createFake).to.have.been.calledWith({
       store: eventStore,
       data: event
@@ -52,16 +59,43 @@ describe("Mongodb event store create event", () => {
     const event = {
       id,
       headers: {
+        action,
         number: "some-number"
       }
     };
     try {
-      await saveEvent({ eventStore })(event);
+      await saveEvent({ eventStore, handlers })(event);
 
       //shouldn't get called
       expect(1).to.equal(2);
     } catch (e) {
       expect(e.statusCode).to.equal(412);
+    }
+  });
+  it("should throw if adding event with unrecognized action", async () => {
+    const eventStore = "some-event-store";
+
+    const createFake = fake.returns([{ ...createResult, __v: 3, _id: 4 }]);
+
+    const db = {
+      create: createFake
+    };
+    replace(deps, "db", db);
+
+    const event = {
+      id,
+      headers: {
+        action: "bogus",
+        number: "some-number"
+      }
+    };
+    try {
+      await saveEvent({ eventStore, handlers })(event);
+
+      //shouldn't get called
+      expect(1).to.equal(2);
+    } catch (e) {
+      expect(e.statusCode).to.equal(400);
     }
   });
 });

@@ -10,7 +10,13 @@
  */
 
 module.exports = {
-  "some-action": (state, payload) => {
+  add: (state, payload) => {
+    return {
+      ...state,
+      ...payload
+    };
+  },
+  remove: (state, payload) => {
     return {
       ...state,
       ...payload

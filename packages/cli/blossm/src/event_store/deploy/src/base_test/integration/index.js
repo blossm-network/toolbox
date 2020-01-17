@@ -7,21 +7,21 @@ const {
   domain,
   service,
   testing,
-  // schema,
+  schema,
   indexes
 } = require("../../config.json");
 
 const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 
 const {
-  // subscribe,
+  subscribe,
   create,
-  delete: del
-  // unsubscribe
+  delete: del,
+  unsubscribe
 } = require("@blossm/gcp-pubsub");
 
 const topic = `some-topic.${process.env.DOMAIN}.${process.env.SERVICE}`;
-// const sub = "some-sub";
+const sub = "some-sub";
 const version = 0;
 const created = "now";
 const id = "some-id";
@@ -44,14 +44,13 @@ describe("Event store integration tests", () => {
   it("should return successfully", async () => {
     const root = uuid();
 
-    // console.log("action: ", testing.action);
     const response0 = await request.post(url, {
       body: {
         event: {
           headers: {
             root,
             topic,
-            action: testing.action,
+            action: example0.action,
             domain,
             service,
             version,
@@ -65,7 +64,7 @@ describe("Event store integration tests", () => {
               issued
             }
           },
-          payload: example0
+          payload: example0.payload
         }
       }
     });
@@ -73,12 +72,13 @@ describe("Event store integration tests", () => {
     expect(response0.statusCode).to.equal(204);
 
     const response1 = await request.get(`${url}/${root}`);
-    // console.log("res: ", response1);
     expect(response1.statusCode).to.equal(200);
 
     const parsedBody1 = JSON.parse(response1.body);
-    for (const property in example0) {
-      expect(parsedBody1.state[property]).to.deep.equal(example0[property]);
+    for (const property in example0.payload) {
+      expect(parsedBody1.state[property]).to.deep.equal(
+        example0.payload[property]
+      );
     }
 
     const response2 = await request.post(url, {
@@ -89,6 +89,174 @@ describe("Event store integration tests", () => {
             topic,
             version,
             created,
+            action: example1.action,
+            domain,
+            service,
+            command: {
+              id,
+              action,
+              domain,
+              service,
+              network,
+              issued
+            }
+          },
+          payload: example1.payload
+        }
+      }
+    });
+    expect(response2.statusCode).to.equal(204);
+
+    const response3 = await request.get(`${url}/${root}`);
+    expect(response3.statusCode).to.equal(200);
+
+    const parsedBody3 = JSON.parse(response3.body);
+    for (const property in example1) {
+      expect(parsedBody3.state[property]).to.deep.equal(
+        example1.payload[property]
+      );
+    }
+    ///Test indexes
+    for (const index of indexes || []) {
+      const response4 = await request.get(url, {
+        query: {
+          key: [index],
+          value: example1.payload[index]
+        }
+      });
+      expect(response4.statusCode).to.equal(200);
+
+      const parsedBody4 = JSON.parse(response4.body);
+      for (const key in example1.result || example1) {
+        expect(parsedBody4[0].state[key]).to.deep.equal(example1.payload[key]);
+      }
+    }
+  });
+
+  it("should publish event successfully", done => {
+    const root = uuid();
+    subscribe({
+      topic,
+      name: sub,
+      fn: (_, subscription) => {
+        if (!subscription) throw "Subscription wasn't made";
+        subscription.once("message", async event => {
+          const eventString = Buffer.from(event.data, "base64")
+            .toString()
+            .trim();
+          const json = JSON.parse(eventString);
+          for (const property in example0.payload) {
+            expect(json.payload[property]).to.deep.equal(
+              example0.payload[property]
+            );
+          }
+          await unsubscribe({ topic, name: sub });
+          done();
+        });
+        request.post(url, {
+          body: {
+            event: {
+              headers: {
+                root,
+                topic,
+                version,
+                created,
+                action: example0.action,
+                domain,
+                service,
+                command: { id, action, domain, service, network, issued }
+              },
+              payload: example0.payload
+            }
+          }
+        });
+      }
+    });
+  });
+  const testIncorrectParams = async ({ payload, action }) => {
+    const root = uuid();
+    const response = await request.post(url, {
+      body: {
+        event: {
+          headers: {
+            root,
+            topic,
+            version,
+            created,
+            action,
+            domain,
+            service,
+            command: { id, action, domain, service, network, issued }
+          },
+          payload
+        }
+      }
+    });
+    expect(response.statusCode).to.equal(500);
+  };
+
+  const findBadValue = (schema, property) => {
+    return schema[property] == "String" ||
+      (typeof schema[property] == "object" &&
+        (schema[property]["type"] == "String" ||
+          (typeof schema[property]["type"] == "object" &&
+            schema[property]["type"]["type"] == "String")))
+      ? { a: 1 } //pass an object to a String property
+      : "some-string"; // or, pass a string to a non-String property
+  };
+
+  const badObjectValue = async (key, schema) => {
+    for (const property in schema) {
+      const badValue = findBadValue(schema, property);
+      await testIncorrectParams({
+        payload: {
+          ...example0.payload,
+          [key]: { [property]: badValue }
+        },
+        action: example0.action
+      });
+    }
+  };
+
+  it("should return an error if incorrect params", async () => {
+    //Grab a property from the schema and pass a wrong value to it.
+    for (const property in schema) {
+      let badValue;
+      if (
+        typeof schema[property] == "object" &&
+        schema[property]["type"] == undefined
+      ) {
+        badValue = await badObjectValue(property, schema[property]);
+        return;
+      } else {
+        badValue = findBadValue(schema, property);
+      }
+
+      const [exampleToUse] = testing.examples.filter(
+        example => example.payload[property] != undefined
+      );
+
+      if (!exampleToUse)
+        throw "There's no example to test this incorrect param.";
+
+      await testIncorrectParams({
+        payload: { ...exampleToUse.payload, [property]: badValue },
+        action: exampleToUse.action
+      });
+    }
+  });
+
+  it("should return an error if bad number", async () => {
+    const root = uuid();
+
+    const response = await request.post(url, {
+      body: {
+        event: {
+          headers: {
+            root,
+            topic,
+            version,
+            created,
             action: testing.action,
             domain,
             service,
@@ -101,224 +269,103 @@ describe("Event store integration tests", () => {
               issued
             }
           },
-          payload: example1
+          payload: example0
+        },
+        number: 2
+      }
+    });
+    expect(response.statusCode).to.equal(412);
+  });
+  it("should return an error if two simultaneous events are attempted", async () => {
+    const root = uuid();
+
+    const [response0, response1] = await Promise.all([
+      request.post(url, {
+        body: {
+          event: {
+            headers: {
+              root,
+              topic,
+              version,
+              created,
+              action: example0.action,
+              domain,
+              service,
+              command: {
+                id,
+                action,
+                domain,
+                service,
+                network,
+                issued
+              }
+            },
+            payload: example0.payload
+          }
+        }
+      }),
+
+      request.post(url, {
+        body: {
+          event: {
+            headers: {
+              root,
+              topic,
+              version,
+              created,
+              action: example0.action,
+              domain,
+              service,
+              command: {
+                id,
+                action,
+                domain,
+                service,
+                network,
+                issued
+              }
+            },
+            payload: example0.payload
+          }
+        }
+      })
+    ]);
+
+    if (response0.statusCode == 204) {
+      expect(response1.statusCode).to.equal(412);
+    } else {
+      expect(response0.statusCode).to.equal(412);
+      expect(response1.statusCode).to.equal(204);
+    }
+  });
+  it("should return an error if action is not recognized", async () => {
+    const root = uuid();
+
+    const response = await request.post(url, {
+      body: {
+        event: {
+          headers: {
+            root,
+            topic,
+            version,
+            created,
+            action: "bogus",
+            domain,
+            service,
+            command: {
+              id,
+              action,
+              domain,
+              service,
+              network,
+              issued
+            }
+          },
+          payload: example0.payload
         }
       }
     });
-    expect(response2.statusCode).to.equal(204);
 
-    const response3 = await request.get(`${url}/${root}`);
-    expect(response3.statusCode).to.equal(200);
-
-    const parsedBody3 = JSON.parse(response3.body);
-    for (const property in example1) {
-      expect(parsedBody3.state[property]).to.deep.equal(example1[property]);
-    }
-    ///Test indexes
-    for (const index of indexes || []) {
-      const response4 = await request.get(url, {
-        query: {
-          key: [index],
-          value: example1[index]
-        }
-      });
-      expect(response4.statusCode).to.equal(200);
-
-      const parsedBody4 = JSON.parse(response4.body);
-      for (const key in example1.result || example1) {
-        expect(parsedBody4[0].state[key]).to.deep.equal(example1[key]);
-      }
-    }
+    expect(response.statusCode).to.equal(400);
   });
-
-  // it("should publish event successfully", done => {
-  //   const root = uuid();
-  //   subscribe({
-  //     topic,
-  //     name: sub,
-  //     fn: (_, subscription) => {
-  //       if (!subscription) throw "Subscription wasn't made";
-  //       subscription.once("message", async event => {
-  //         const eventString = Buffer.from(event.data, "base64")
-  //           .toString()
-  //           .trim();
-  //         const json = JSON.parse(eventString);
-  //         for (const property in example0) {
-  //           expect(json.payload[property]).to.deep.equal(example0[property]);
-  //         }
-  //         await unsubscribe({ topic, name: sub });
-  //         done();
-  //       });
-  //       request.post(url, {
-  //         body: {
-  //           event: {
-  //             headers: {
-  //               root,
-  //               topic,
-  //               version,
-  //               created,
-  //               action: testing.action,
-  //               domain,
-  //               service,
-  //               command: { id, action, domain, service, network, issued }
-  //             },
-  //             payload: example0
-  //           }
-  //         }
-  //       });
-  //     }
-  //   });
-  // });
-  // const testIncorrectParams = async payload => {
-  //   const root = uuid();
-  //   const response = await request.post(url, {
-  //     body: {
-  //       event: {
-  //         headers: {
-  //           root,
-  //           topic,
-  //           version,
-  //           created,
-  //           action: testing.action,
-  //           domain,
-  //           service,
-  //           command: { id, action, domain, service, network, issued }
-  //         },
-  //         payload
-  //       }
-  //     }
-  //   });
-  //   expect(response.statusCode).to.equal(500);
-  // };
-
-  // const findBadValue = (schema, property) => {
-  //   return schema[property] == "String" ||
-  //     (typeof schema[property] == "object" &&
-  //       (schema[property]["type"] == "String" ||
-  //         (typeof schema[property]["type"] == "object" &&
-  //           schema[property]["type"]["type"] == "String")))
-  //     ? { a: 1 } //pass an object to a String property
-  //     : "some-string"; // or, pass a string to a non-String property
-  // };
-
-  // const badObjectValue = async (key, schema) => {
-  //   for (const property in schema) {
-  //     const badValue = findBadValue(schema, property);
-  //     await testIncorrectParams({
-  //       ...example0,
-  //       [key]: { [property]: badValue }
-  //     });
-  //   }
-  // };
-
-  // it("should return an error if incorrect params", async () => {
-  //   //Grab a property from the schema and pass a wrong value to it.
-  //   for (const property in schema) {
-  //     let badValue;
-  //     if (
-  //       typeof schema[property] == "object" &&
-  //       schema[property]["type"] == undefined
-  //     ) {
-  //       badValue = await badObjectValue(property, schema[property]);
-  //       return;
-  //     } else {
-  //       badValue = findBadValue(schema, property);
-  //     }
-
-  //     await testIncorrectParams({ ...example0, [property]: badValue });
-  //   }
-  // });
-
-  // it("should return an error if bad number", async () => {
-  //   const root = uuid();
-
-  //   const response = await request.post(url, {
-  //     body: {
-  //       event: {
-  //         headers: {
-  //           root,
-  //           topic,
-  //           version,
-  //           created,
-  //           action: testing.action,
-  //           domain,
-  //           service,
-  //           command: {
-  //             id,
-  //             action,
-  //             domain,
-  //             service,
-  //             network,
-  //             issued
-  //           }
-  //         },
-  //         payload: example0
-  //       },
-  //       number: 2
-  //     }
-  //   });
-  //   expect(response.statusCode).to.equal(412);
-  // });
-  // it("should return an error if two simultaneous events are attempted", async () => {
-  //   const root = uuid();
-
-  //   const [response0, response1] = await Promise.all([
-  //     request.post(url, {
-  //       body: {
-  //         event: {
-  //           headers: {
-  //             root,
-  //             topic,
-  //             version,
-  //             created,
-  //             action: testing.action,
-  //             domain,
-  //             service,
-  //             command: {
-  //               id,
-  //               action,
-  //               domain,
-  //               service,
-  //               network,
-  //               issued
-  //             }
-  //           },
-  //           payload: example0
-  //         }
-  //       }
-  //     }),
-
-  //     request.post(url, {
-  //       body: {
-  //         event: {
-  //           headers: {
-  //             root,
-  //             topic,
-  //             version,
-  //             created,
-  //             action: testing.action,
-  //             domain,
-  //             service,
-  //             command: {
-  //               id,
-  //               action,
-  //               domain,
-  //               service,
-  //               network,
-  //               issued
-  //             }
-  //           },
-  //           payload: example0
-  //         }
-  //       }
-  //     })
-  //   ]);
-
-  //   if (response0.statusCode == 204) {
-  //     expect(response1.statusCode).to.equal(412);
-  //   } else {
-  //     expect(response0.statusCode).to.equal(412);
-  //     expect(response1.statusCode).to.equal(204);
-  //   }
-  // });
 });

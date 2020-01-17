@@ -150,7 +150,10 @@ describe("Mongodb event store", () => {
     });
     expect(secretFake).to.have.been.calledWith("mongodb");
 
-    expect(saveEventFake).to.have.been.calledWith({ eventStore: eStore });
+    expect(saveEventFake).to.have.been.calledWith({
+      eventStore: eStore,
+      handlers
+    });
     expect(aggregateFake).to.have.been.calledWith({
       eventStore: eStore,
       snapshotStore: sStore,

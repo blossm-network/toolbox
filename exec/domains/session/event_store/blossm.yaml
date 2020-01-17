@@ -11,26 +11,27 @@ schema:
     manufacturer: String
     id: String
 
-# events are begin, continue, end
-
 testing:
-  action: start
-
   examples:
-    - user: some-user-root
-      device:
-        os: iOS
-        version: "10"
-        hardware: "iPhone 8"
-        manufacturer: Apple
-        id: some-device-id
-    - user: some-other-user-root
-      device:
-        os: Android
-        version: "10"
-        hardware: "Pixel 3"
-        manufacturer: Google
-        id: some-other-device-id
+    - action: start
+      payload:
+        user: some-user-root
+        device:
+          os: iOS
+          version: "10"
+          hardware: "iPhone 8"
+          manufacturer: Apple
+          id: some-device-id
+
+    - action: start
+      payload:
+        user: some-other-user-root
+        device:
+          os: Android
+          version: "10"
+          hardware: "Pixel 3"
+          manufacturer: Google
+          id: some-other-device-id
 
 #don't change
 context: event-store

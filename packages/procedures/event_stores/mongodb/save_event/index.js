@@ -1,8 +1,19 @@
 const deps = require("./deps");
 
-const { preconditionFailed } = require("@blossm/errors");
+const { preconditionFailed, badRequest } = require("@blossm/errors");
 
-module.exports = ({ eventStore }) => async event => {
+module.exports = ({ eventStore, handlers }) => async event => {
+  //eslint-disable-next-line
+  console.log("ADDING EVENT: ", { event, handlers });
+  const handler = handlers[event.headers.action];
+
+  if (!handler)
+    throw badRequest.eventHandlerNotSpecified({
+      info: {
+        action: event.headers.action
+      }
+    });
+
   try {
     const [result] = await deps.db.create({
       store: eventStore,

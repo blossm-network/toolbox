@@ -6,8 +6,12 @@ schema:
 
 testing:
   examples:
-    - permissions: [some-permission, some-other-permission]
-    - permissions: [permissions]
+    - action: "add"
+      payload:
+        permissions: [some-permission, some-other-permission]
+    - action: "remove"
+      payload:
+        permissions: [some-permissions]
 
 #don't change
 context: event-store
