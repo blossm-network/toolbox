@@ -105,6 +105,7 @@ describe("Event store integration tests", () => {
         }
       }
     });
+
     expect(response2.statusCode).to.equal(204);
 
     const response3 = await request.get(`${url}/${root}`);
@@ -237,7 +238,7 @@ describe("Event store integration tests", () => {
       );
 
       if (!exampleToUse)
-        throw "There's no example to test this incorrect param.";
+        throw `There's no example to test the incorrect ${property} param.`;
 
       await testIncorrectParams({
         payload: { ...exampleToUse.payload, [property]: badValue },

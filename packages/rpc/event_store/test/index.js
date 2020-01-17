@@ -19,6 +19,9 @@ const payload = {
 const root = "root";
 const topic = "topic";
 const version = "version";
+const eventAction = "some-event-action";
+const eventDomain = "some-event-domain";
+const eventService = "some-event-service";
 const commandId = "commandId";
 const commandAction = "command-action";
 const commandDomain = "command-domain";
@@ -76,6 +79,9 @@ describe("Event store", () => {
           headers: {
             root,
             topic,
+            action: eventAction,
+            domain: eventDomain,
+            service: eventService,
             version,
             trace,
             command: {
@@ -99,6 +105,9 @@ describe("Event store", () => {
           root,
           context,
           topic,
+          action: eventAction,
+          domain: eventDomain,
+          service: eventService,
           version,
           command: {
             id: commandId,
@@ -137,6 +146,9 @@ describe("Event store", () => {
         root,
         context,
         topic,
+        action: eventAction,
+        domain: eventDomain,
+        service: eventService,
         version
       },
       payload
@@ -148,6 +160,9 @@ describe("Event store", () => {
         headers: {
           root,
           topic,
+          action: eventAction,
+          domain: eventDomain,
+          service: eventService,
           version,
           created: dateString()
         },

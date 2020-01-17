@@ -12,8 +12,6 @@ const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 
 const { testing } = require("../../config.json");
 
-const testingAction = "some-test-action";
-
 const stateTopics = [];
 
 describe("Command handler integration tests", () => {
@@ -31,13 +29,13 @@ describe("Command handler integration tests", () => {
   it("should return successfully", async () => {
     if (testing.state && testing.state.ok) {
       for (const state of testing.state.ok) {
-        const topic = `did-${testingAction}.${state.store.domain}.${process.env.SERVICE}`;
+        const topic = `did-${state.action}.${state.store.domain}.${process.env.SERVICE}`;
         stateTopics.push(topic);
         await create(topic);
         const stateEvent = await createEvent({
           root: state.root,
           payload: state.value,
-          action: testingAction,
+          action: state.action,
           domain: state.store.domain,
           service: process.env.SERVICE
         });
@@ -78,13 +76,13 @@ describe("Command handler integration tests", () => {
     if (!testing.state || testing.examples.bad) return;
 
     for (const state of testing.state.bad.reverse()) {
-      const topic = `did-${testingAction}.${state.store.domain}.${process.env.SERVICE}`;
+      const topic = `did-${state.action}.${state.store.domain}.${process.env.SERVICE}`;
       stateTopics.push(topic);
       await create(topic);
       const stateEvent = await createEvent({
         root: state.root,
         payload: state.value,
-        action: testingAction,
+        action: state.action,
         domain: state.store.domain,
         service: process.env.SERVICE
       });

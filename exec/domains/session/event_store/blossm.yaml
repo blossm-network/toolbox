@@ -33,5 +33,16 @@ testing:
           manufacturer: Google
           id: some-other-device-id
 
+  handlers:
+    - action: start
+      examples:
+        - payload:
+            device:
+              os: Android
+              version: "10"
+              hardware: "Pixel 3"
+              manufacturer: Google
+              id: some-device-id
+
 #don't change
 context: event-store

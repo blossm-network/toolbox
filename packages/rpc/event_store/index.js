@@ -8,13 +8,28 @@ module.exports = ({
   network = process.env.NETWORK
 } = {}) => {
   const add = ({ context, tokenFn } = {}) => async (
-    { headers: { root, topic, version, trace, command }, payload },
+    {
+      headers: {
+        root,
+        action,
+        domain,
+        service,
+        topic,
+        version,
+        trace,
+        command
+      },
+      payload
+    },
     { number } = {}
   ) => {
     const event = {
       headers: {
         root,
         topic,
+        action,
+        domain,
+        service,
         version,
         created: dateString(),
         ...(context && { context }),

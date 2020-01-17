@@ -11,13 +11,33 @@ indexes: [phone]
 testing:
   examples:
     - action: save-phone-number
-    - payload:
+      payload:
         phone: "+19195551144"
         principle: some-principle-root
     - action: save-phone-number
       payload:
         phone: "+19195551155"
         principle: some-other-principle-root
+
+  handlers:
+    - action: save-phone-number
+      examples:
+        - state:
+            phone: "+19195551133"
+          payload:
+            phone: "+19195551144"
+            principle: some-principle-root
+          result:
+            phone: "+19195551144"
+            principle: some-principle-root
+    - action: add-context
+      examples:
+        - state:
+            context: "some-temp"
+          payload:
+            context: "some-other-temp"
+          result:
+            context: "some-other-temp"
 
 #don't change
 context: event-store

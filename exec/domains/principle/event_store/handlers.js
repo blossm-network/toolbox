@@ -10,13 +10,13 @@
  */
 
 module.exports = {
-  add: (state, payload) => {
+  "add-permissions": (state, payload) => {
     return {
       ...state,
       ...payload
     };
   },
-  remove: (state, payload) => {
+  "remove-permissions": (state, payload) => {
     return {
       ...state,
       ...payload

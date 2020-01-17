@@ -3,8 +3,6 @@ const deps = require("./deps");
 const { preconditionFailed, badRequest } = require("@blossm/errors");
 
 module.exports = ({ eventStore, handlers }) => async event => {
-  //eslint-disable-next-line
-  console.log("ADDING EVENT: ", { event, handlers });
   const handler = handlers[event.headers.action];
 
   if (!handler)

@@ -27,5 +27,15 @@ testing:
       payload:
         name: some-other-name
 
+  handlers:
+    - action: some-action
+      examples:
+        - state:
+            name: some-name
+          payload:
+            name: some-other-name
+          result:
+            name: some-other-name
+
 #don't change
 context: event-store

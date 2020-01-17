@@ -57,6 +57,7 @@ testing:
       - store:
           domain: user
         root: some-root
+        action: save-phone-number
         value:
           phone: "+19195551144"
           principle: some-principle

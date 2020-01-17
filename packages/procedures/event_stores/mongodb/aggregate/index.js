@@ -35,8 +35,6 @@ module.exports = ({ eventStore, snapshotStore, handlers }) => async root => {
     )
     .reduce(
       (accumulator, event) => {
-        //eslint-disable-next-line
-        console.log("REDUCING EVENT: ", { event, handlers });
         const handler = handlers[event.headers.action];
 
         if (!handler)
