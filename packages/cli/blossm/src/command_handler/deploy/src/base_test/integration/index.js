@@ -93,6 +93,7 @@ describe("Command handler integration tests", () => {
       await eventStore({ domain }).add(stateEvent);
       const response = await request.post(url, {
         body: {
+          root: testing.root,
           headers: {
             issued: stringDate(),
             id: uuid()

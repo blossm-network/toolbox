@@ -308,7 +308,7 @@ describe("Command handler unit tests", () => {
 
     const error = "some-error";
     const codeExpiredFake = fake.returns(error);
-    replace(deps, "badRequestError", {
+    replace(deps, "invalidArgumentError", {
       codeExpired: codeExpiredFake
     });
 

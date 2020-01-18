@@ -81,10 +81,11 @@ testing:
     bad:
       - domain: challenge
         root: some-root
+        action: answer
         payload:
           code: "123456"
           expires: 2019-12-31T00:00:00.000Z
-        code: 400
+        code: 409
 
   response:
     token:

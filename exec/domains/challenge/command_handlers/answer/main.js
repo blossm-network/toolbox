@@ -23,7 +23,7 @@ module.exports = async ({ payload, root, context }) => {
   const now = new Date();
 
   if (Date.parse(challenge.state.expires) < now)
-    throw deps.badRequestError.codeExpired();
+    throw deps.invalidArgumentError.codeExpired();
 
   //Lookup the contexts that the requesting user is in.
   const user = await deps
