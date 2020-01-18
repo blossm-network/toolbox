@@ -82,8 +82,8 @@ describe("Command handler post", () => {
     });
     replace(deps, "eventStore", eventStoreFake);
     const req = {
+      context,
       body: {
-        context,
         payload,
         headers
       }
@@ -195,8 +195,8 @@ describe("Command handler post", () => {
     });
     replace(deps, "eventStore", eventStoreFake);
     const req = {
+      context,
       body: {
-        context,
         payload,
         headers
       }
@@ -255,8 +255,8 @@ describe("Command handler post", () => {
     });
     replace(deps, "eventStore", eventStoreFake);
     const req = {
+      context,
       body: {
-        context,
         payload,
         headers
       }
@@ -371,8 +371,8 @@ describe("Command handler post", () => {
     replace(deps, "eventStore", eventStoreFake);
     const currentRoot = "current-root";
     const req = {
+      context,
       body: {
-        context,
         root: currentRoot,
         payload,
         headers
@@ -482,8 +482,8 @@ describe("Command handler post", () => {
     });
     replace(deps, "eventStore", eventStoreFake);
     const req = {
+      context,
       body: {
-        context,
         payload,
         headers
       }
@@ -595,8 +595,8 @@ describe("Command handler post", () => {
     });
     replace(deps, "eventStore", eventStoreFake);
     const req = {
+      context,
       body: {
-        context,
         payload,
         headers
       }
@@ -709,8 +709,8 @@ describe("Command handler post", () => {
     });
     replace(deps, "eventStore", eventStoreFake);
     const req = {
+      context,
       body: {
-        context,
         payload,
         headers
       }
@@ -801,8 +801,8 @@ describe("Command handler post", () => {
     });
     replace(deps, "eventStore", eventStoreFake);
     const req = {
+      context,
       body: {
-        context,
         payload,
         headers
       }
@@ -942,8 +942,8 @@ describe("Command handler post", () => {
     });
     replace(deps, "eventStore", eventStoreFake);
     const req = {
+      context,
       body: {
-        context,
         payload,
         headers
       }

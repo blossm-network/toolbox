@@ -40,7 +40,7 @@ module.exports = async ({ payload, context }) => {
     },
     payload: {
       context: {
-        ...(identity && { identity: identity.id }),
+        ...(identity && { identity: identity.root }),
         challenge: root,
         service: process.env.SERVICE,
         network: process.env.NETWORK
@@ -78,7 +78,8 @@ module.exports = async ({ payload, context }) => {
             .moment()
             .add(THREE_MINUTES, "s")
             .toDate()
-            .toISOString()
+            .toISOString(),
+          ...(context.events && { events: context.events })
         },
         root
       }
