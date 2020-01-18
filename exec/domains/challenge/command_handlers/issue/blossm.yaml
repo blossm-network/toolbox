@@ -52,13 +52,12 @@ testing:
     - phone: 919
     - phone: false
 
-  state:
+  pre:
     ok:
-      - store:
-          domain: user
+      - domain: user
         root: some-root
         action: save-phone-number
-        value:
+        payload:
           phone: "+19195551144"
           principle: some-principle
 

@@ -65,26 +65,23 @@ testing:
     - domain: challenge
       context: event-store
 
-  state:
+  pre:
     ok:
-      - store:
-          domain: challenge
+      - domain: challenge
         root: some-root
         action: answer
-        value:
+        payload:
           code: "123456"
           expires: 9999-12-31T00:00:00.000Z
-      - store:
-          domain: user
+      - domain: user
         root: some-user-root
         action: add-context
-        value:
+        payload:
           contexts: [some-context]
     bad:
-      - store:
-          domain: challenge
+      - domain: challenge
         root: some-root
-        value:
+        payload:
           code: "123456"
           expires: 2019-12-31T00:00:00.000Z
         code: 400

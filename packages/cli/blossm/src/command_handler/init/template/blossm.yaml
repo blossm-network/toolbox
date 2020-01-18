@@ -37,7 +37,7 @@ testing:
   invalid:
     - name: 3
 
-  state:
+  pre:
 
   procedures:
 

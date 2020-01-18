@@ -56,7 +56,7 @@ testing:
         manufacturer: { a: 1 }
         id: { a: 1 }
 
-  state:
+  pre:
 
   procedures:
 

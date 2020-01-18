@@ -27,22 +27,20 @@ describe("Command handler integration tests", () => {
     expect(okExample0).to.exist;
   });
   it("should return successfully", async () => {
-    if (testing.state && testing.state.ok) {
-      for (const state of testing.state.ok) {
-        const topic = `did-${state.action}.${state.store.domain}.${process.env.SERVICE}`;
+    if (testing.pre && testing.pre.ok) {
+      for (const { action, domain, root, payload } of testing.pre.ok) {
+        const topic = `did-${action}.${domain}.${process.env.SERVICE}`;
         stateTopics.push(topic);
         await create(topic);
         const stateEvent = await createEvent({
-          root: state.root,
-          payload: state.value,
-          action: state.action,
-          domain: state.store.domain,
+          root,
+          payload,
+          action,
+          domain,
           service: process.env.SERVICE
         });
 
-        await eventStore({
-          domain: state.store.domain
-        }).add(stateEvent);
+        await eventStore({ domain }).add(stateEvent);
       }
     }
 
@@ -73,22 +71,26 @@ describe("Command handler integration tests", () => {
     }
   });
   it("should return an error if bad state", async () => {
-    if (!testing.state || testing.examples.bad) return;
+    if (!testing.pre || !testing.pre.bad) return;
 
-    for (const state of testing.state.bad.reverse()) {
-      const topic = `did-${state.action}.${state.store.domain}.${process.env.SERVICE}`;
+    for (const {
+      action,
+      domain,
+      root,
+      payload,
+      code
+    } of testing.pre.bad.reverse()) {
+      const topic = `did-${action}.${domain}.${process.env.SERVICE}`;
       stateTopics.push(topic);
       await create(topic);
       const stateEvent = await createEvent({
-        root: state.root,
-        payload: state.value,
-        action: state.action,
-        domain: state.store.domain,
+        root,
+        payload,
+        action,
+        domain,
         service: process.env.SERVICE
       });
-      await eventStore({
-        domain: state.store.domain
-      }).add(stateEvent);
+      await eventStore({ domain }).add(stateEvent);
       const response = await request.post(url, {
         body: {
           headers: {
@@ -99,7 +101,7 @@ describe("Command handler integration tests", () => {
         }
       });
 
-      expect(response.statusCode).to.equal(state.code);
+      expect(response.statusCode).to.equal(code);
     }
   });
   it("should return an error if payload is bad", async () => {
