@@ -8,6 +8,7 @@ const payload = "some-payload";
 const eventPayload = "some-event-payload";
 const eventRoot = "some-event-root";
 const cleanedPayload = "some-cleaned-payload";
+const filledPayload = "some-filled-payload";
 const response = "some-response";
 const root = "some-root";
 const lastEventNumber = "some-last-event-number";
@@ -157,6 +158,68 @@ describe("Command handler post", () => {
     expect(setFake).to.have.been.calledThrice;
     expect(statusFake).to.have.been.calledWith(200);
     expect(sendFake).to.have.been.calledWith(response);
+  });
+  it("should call with the correct params will fillFn", async () => {
+    const validateFnFake = fake();
+    const fillFnFake = fake.returns(filledPayload);
+    const normalizeFnFake = fake.returns(cleanedPayload);
+
+    const createEventFake = fake.returns(event);
+    replace(deps, "createEvent", createEventFake);
+
+    const addFake = fake();
+    const aggregateResult = {
+      headers: {
+        lastEventNumber
+      },
+      state
+    };
+    const aggregateFake = fake.returns(aggregateResult);
+    const setFake = fake.returns({
+      add: addFake,
+      aggregate: aggregateFake
+    });
+    const eventStoreFake = fake.returns({
+      set: setFake
+    });
+
+    const events = [
+      {
+        payload: eventPayload,
+        correctNumber
+      }
+    ];
+    const mainFnFake = fake.returns({
+      events,
+      response
+    });
+    replace(deps, "eventStore", eventStoreFake);
+    const req = {
+      body: {
+        context,
+        payload,
+        headers
+      }
+    };
+
+    const sendFake = fake();
+    const statusFake = fake.returns({
+      send: sendFake
+    });
+    const res = {
+      status: statusFake
+    };
+
+    await post({
+      mainFn: mainFnFake,
+      validateFn: validateFnFake,
+      normalizeFn: normalizeFnFake,
+      fillFn: fillFnFake
+    })(req, res);
+
+    expect(fillFnFake).to.have.been.calledWith(payload);
+    expect(normalizeFnFake).to.have.been.calledWith(filledPayload);
+    expect(validateFnFake).to.have.been.calledWith(payload);
   });
   it("should call with the correct params with no response", async () => {
     const validateFnFake = fake();

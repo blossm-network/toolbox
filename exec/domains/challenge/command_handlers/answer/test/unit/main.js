@@ -9,17 +9,17 @@ const deps = require("../../deps");
 let clock;
 const now = new Date();
 const contextPrinciple = "some-context-principle";
-const userId = "some-user-id";
+const identityId = "some-identity-id";
 const contextType = "some-context-type";
 const challengeRoot = "some-challenge-root";
-const user = {
+const identity = {
   contexts: [
     {
       type: contextType,
       root: challengeRoot
     }
   ],
-  id: userId
+  id: identityId
 };
 const code = "some-code";
 const challenge = {
@@ -29,11 +29,11 @@ const payload = {
   code
 };
 const contextChallenge = "some-challenge-context";
-const contextuser = "some-context-user";
+const contextIdentity = "some-context-identity";
 const context = {
   principle: contextPrinciple,
   challenge: contextChallenge,
-  user: contextuser
+  identity: contextIdentity
 };
 const service = "some-service";
 const network = "some-network";
@@ -59,7 +59,7 @@ describe("Command handler unit tests", () => {
         expires: deps.stringDate()
       }
     });
-    const otherAggregateFake = fake.returns({ state: user });
+    const otherAggregateFake = fake.returns({ state: identity });
     const setFake = stub()
       .onFirstCall()
       .returns({
@@ -99,7 +99,7 @@ describe("Command handler unit tests", () => {
       response: { token }
     });
     expect(aggregateFake).to.have.been.calledWith(challengeRoot);
-    expect(otherAggregateFake).to.have.been.calledWith(contextuser);
+    expect(otherAggregateFake).to.have.been.calledWith(contextIdentity);
     expect(setFake).to.have.been.calledWith({
       context,
       tokenFn: deps.gcpToken
@@ -109,7 +109,7 @@ describe("Command handler unit tests", () => {
       domain: "challenge"
     });
     expect(eventStoreFake).to.have.been.calledWith({
-      domain: "user"
+      domain: "identity"
     });
     expect(signFake).to.have.been.calledWith({
       ring: service,
@@ -127,7 +127,7 @@ describe("Command handler unit tests", () => {
       },
       payload: {
         context: {
-          user: contextuser,
+          identity: contextIdentity,
           [contextType]: challengeRoot,
           service,
           network
@@ -136,7 +136,7 @@ describe("Command handler unit tests", () => {
       signFn: signature
     });
   });
-  it("should return successfully if no user is found", async () => {
+  it("should return successfully if no identity is found", async () => {
     const aggregateFake = fake.returns({
       state: {
         ...challenge,
@@ -179,7 +179,7 @@ describe("Command handler unit tests", () => {
       response: { token }
     });
     expect(aggregateFake).to.have.been.calledWith(challengeRoot);
-    expect(otherAggregateFake).to.have.been.calledWith(contextuser);
+    expect(otherAggregateFake).to.have.been.calledWith(contextIdentity);
     expect(setFake).to.have.been.calledWith({
       context,
       tokenFn: deps.gcpToken
@@ -189,7 +189,7 @@ describe("Command handler unit tests", () => {
       domain: "challenge"
     });
     expect(eventStoreFake).to.have.been.calledWith({
-      domain: "user"
+      domain: "identity"
     });
     expect(signFake).to.have.been.calledWith({
       ring: service,
@@ -207,7 +207,7 @@ describe("Command handler unit tests", () => {
       },
       payload: {
         context: {
-          user: contextuser,
+          identity: contextIdentity,
           service,
           network
         }

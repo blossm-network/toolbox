@@ -1,4 +1,4 @@
-domain: user
+domain: identity
 service: core
 
 schema:
@@ -14,10 +14,12 @@ testing:
       payload:
         phone: "+19195551144"
         principle: some-principle-root
+        contexts: []
     - action: save-phone-number
       payload:
         phone: "+19195551155"
         principle: some-other-principle-root
+        contexts: [some-context-root]
 
   handlers:
     - action: save-phone-number

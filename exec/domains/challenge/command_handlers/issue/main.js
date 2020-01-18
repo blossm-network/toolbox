@@ -17,16 +17,15 @@ module.exports = async ({ payload, context }) => {
   }
 
   //Check to see if the phone is recognized
-  const res = await deps
+  const [identity] = await deps
     .eventStore({
-      domain: "user"
+      domain: "identity"
     })
     .set({ context, tokenFn: deps.gcpToken })
     .query({ key: "phone", value: payload.phone });
 
-  const user = res[0];
-
-  if (!user) throw deps.invalidArgumentError.phoneNotRecognized();
+  if (!identity && payload.exists)
+    throw deps.invalidArgumentError.phoneNotRecognized();
 
   //Create the root for this challenge.
   const root = await deps.uuid();
@@ -35,13 +34,13 @@ module.exports = async ({ payload, context }) => {
   const token = await deps.createJwt({
     options: {
       issuer: `challenge.${process.env.SERVICE}.${process.env.NETWORK}/issue`,
-      subject: user.principle,
+      ...(identity && { subject: identity.principle }),
       audience: `command.challenge.${process.env.SERVICE}.${process.env.NETWORK}/answer`,
       expiresIn: THREE_MINUTES
     },
     payload: {
       context: {
-        user: user.id,
+        ...(identity && { identity: identity.id }),
         challenge: root,
         service: process.env.SERVICE,
         network: process.env.NETWORK
@@ -61,7 +60,7 @@ module.exports = async ({ payload, context }) => {
 
   //Send the code.
   sms.send({
-    to: user.phone,
+    to: payload.phone,
     from: "+14157700262",
     body: `${code} is your verification code. Enter it in the app to let us know it's really you.`
   });
@@ -72,8 +71,8 @@ module.exports = async ({ payload, context }) => {
       {
         payload: {
           code,
-          principle: user.principle,
-          phone: user.phone,
+          ...(identity && { principle: identity.principle }),
+          phone: payload.phone,
           issued: deps.stringDate(),
           expires: deps
             .moment()

@@ -9,13 +9,13 @@ const deps = require("../../deps");
 let clock;
 const now = new Date();
 const root = "some-root";
-const principle = "some-user-principle";
-const userId = "some-user-id";
-const phone = "some-user-phone";
-const user = {
+const principle = "some-identity-principle";
+const identityId = "some-identity-id";
+const phone = "some-identity-phone";
+const identity = {
   principle,
   phone,
-  id: userId
+  id: identityId
 };
 const payloadPhone = "some-payload-phone";
 const payload = {
@@ -54,7 +54,7 @@ describe("Command handler unit tests", () => {
     const uuidFake = fake.returns(root);
     replace(deps, "uuid", uuidFake);
 
-    const queryFake = fake.returns([user]);
+    const queryFake = fake.returns([identity]);
     const setFake = fake.returns({
       query: queryFake
     });
@@ -106,7 +106,7 @@ describe("Command handler unit tests", () => {
       tokenFn: deps.gcpToken
     });
     expect(eventStoreFake).to.have.been.calledWith({
-      domain: "user"
+      domain: "identity"
     });
     expect(signFake).to.have.been.calledWith({
       ring: service,
@@ -124,7 +124,7 @@ describe("Command handler unit tests", () => {
       },
       payload: {
         context: {
-          user: userId,
+          identity: identityId,
           challenge: root,
           service,
           network

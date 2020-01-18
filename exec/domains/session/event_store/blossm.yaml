@@ -2,7 +2,7 @@ domain: session
 service: core
 
 schema:
-  user: String
+  identity: String
   # Device information should be send directly from the device.
   device:
     os: String
@@ -15,7 +15,7 @@ testing:
   examples:
     - action: start
       payload:
-        user: some-user-root
+        identity: some-identity-root
         device:
           os: iOS
           version: "10"
@@ -25,7 +25,7 @@ testing:
 
     - action: start
       payload:
-        user: some-other-user-root
+        identity: some-other-identity-root
         device:
           os: Android
           version: "10"

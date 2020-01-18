@@ -25,13 +25,13 @@ module.exports = async ({ payload, root, context }) => {
   if (Date.parse(challenge.state.expires) < now)
     throw deps.invalidArgumentError.codeExpired();
 
-  //Lookup the contexts that the requesting user is in.
-  const user = await deps
+  //Lookup the contexts that the requesting identity is in.
+  const identity = await deps
     .eventStore({
-      domain: "user"
+      domain: "identity"
     })
     .set({ context, tokenFn: deps.gcpToken })
-    .aggregate(context.user);
+    .aggregate(context.identity);
 
   //Create a token that can access commands and views.
   const token = await deps.createJwt({
@@ -43,11 +43,11 @@ module.exports = async ({ payload, root, context }) => {
     },
     payload: {
       context: {
-        user: context.user,
-        //If the user is in only one context, add it to the token.
-        ...(user &&
-          user.state.contexts.length == 1 && {
-            [user.state.contexts[0].type]: user.state.contexts[0].root
+        identity: context.identity,
+        //If the identity is in only one context, add it to the token.
+        ...(identity &&
+          identity.state.contexts.length == 1 && {
+            [identity.state.contexts[0].type]: identity.state.contexts[0].root
           }),
         service: process.env.SERVICE,
         network: process.env.NETWORK

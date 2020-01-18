@@ -57,10 +57,10 @@ testing:
 
   context:
     principle: some-principle-root
-    user: some-user-root
+    identity: some-identity-root
 
   procedures:
-    - domain: user
+    - domain: identity
       context: event-store
     - domain: challenge
       context: event-store
@@ -73,8 +73,8 @@ testing:
         payload:
           code: "123456"
           expires: 9999-12-31T00:00:00.000Z
-      - domain: user
-        root: some-user-root
+      - domain: identity
+        root: some-identity-root
         action: add-context
         payload:
           contexts: [some-context]

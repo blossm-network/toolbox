@@ -7,6 +7,9 @@ payload:
   phone:
     type: phoneNumber
     title: phone number
+  exists: # If true, there must be an `identity` with the provided phone number.
+    type: boolean
+    default: true
 
 dependencies:
   "@blossm/validator": "*"
@@ -38,6 +41,7 @@ testing:
     ok:
       - payload:
           phone: "919 555 1144"
+          exists: true
         normalized:
           phone: "+19195551144"
     bad:
@@ -51,18 +55,20 @@ testing:
     - phone: "919"
     - phone: 919
     - phone: false
+    - exists: 919
 
   pre:
     ok:
-      - domain: user
+      - domain: identity
         root: some-root
         action: save-phone-number
         payload:
           phone: "+19195551144"
           principle: some-principle
+    bad:
 
   procedures:
-    - domain: user
+    - domain: identity
       context: event-store
     - domain: challenge
       context: event-store
