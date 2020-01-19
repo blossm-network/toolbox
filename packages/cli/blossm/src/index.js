@@ -35,7 +35,10 @@ const domains = [
 
 const tryShortcuts = input => {
   const inputPath =
-    input.positionalArgs.length > 0 ? input.positionalArgs[0] : ".";
+    input.positionalArgs.length >
+    input.args.filter(a => a.startsWith("-")).length
+      ? input.positionalArgs[0]
+      : ".";
   const configPath = path.resolve(process.cwd(), inputPath, "blossm.yaml");
   const config = yaml.parse(fs.readFileSync(configPath, "utf8"));
 

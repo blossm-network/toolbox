@@ -41,8 +41,6 @@ const parseArgs = async (
   rawArgs,
   { permissive = true, flags = [], entrypointDefault } = {}
 ) => {
-  //eslint-disable-next-line
-  console.log("raw: ", { rawArgs, flags });
   const flagArgs = flags.reduce((map, flag) => {
     return {
       ...map,
@@ -51,8 +49,6 @@ const parseArgs = async (
     };
   }, {});
 
-  //eslint-disable-next-line
-  console.log("flag args: ", { flagArgs });
   try {
     const args = arg(
       {
@@ -65,9 +61,6 @@ const parseArgs = async (
         permissive
       }
     );
-
-    //eslint-disable-next-line
-    console.log("args: ", { args, flags });
 
     for (const flag of flags) flag.value = await flagValue(flag, args);
 

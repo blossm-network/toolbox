@@ -49,10 +49,10 @@ module.exports = ({ domain, dir, configFn }) => async args => {
         default: "staging"
       },
       {
-        name: "strict",
+        name: "allow-fail",
         type: Boolean,
-        short: "s",
-        default: true
+        short: "a",
+        default: false
       }
     ]
   });
