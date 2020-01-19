@@ -22,14 +22,10 @@ module.exports = async ({ payload, context, aggregateFn }) => {
   if (Date.parse(challenge.expires) < now)
     throw deps.invalidArgumentError.codeExpired();
 
-  //eslint-disable-next-line
-  console.log("condext: ", context);
   //Lookup the contexts that the requesting identity is in.
-  const { aggregate: identity } = aggregateFn(context.identity, {
+  const { aggregate: identity } = await aggregateFn(context.identity, {
     domain: "identity"
   });
-  //eslint-disable-next-line
-  console.log("iden: ", identity);
 
   //Create a token that can access commands and views.
   const token = await deps.createJwt({

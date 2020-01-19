@@ -4,13 +4,9 @@ const { badRequest } = require("@blossm/errors");
 
 module.exports = ({ mainFn, validateFn, normalizeFn, fillFn }) => {
   return async (req, res) => {
-    //eslint-disable-next-line
-    console.log("req body: ", req.body);
     if (validateFn) await validateFn(req.body.payload);
     if (fillFn) req.body.payload = await fillFn(req.body.payload);
     if (normalizeFn) req.body.payload = await normalizeFn(req.body.payload);
-    //eslint-disable-next-line
-    console.log("processed body: ", req.body);
 
     const aggregateFn = async (
       root,
@@ -25,11 +21,6 @@ module.exports = ({ mainFn, validateFn, normalizeFn, fillFn }) => {
         .set({ context: req.body.context, tokenFn: deps.gcpToken })
         .aggregate(root);
 
-      //eslint-disable-next-line
-      console.log("aggregate: ", {
-        aggregate,
-        root
-      });
       if (!aggregate) throw badRequest.badRoot({ info: { root } });
 
       return {
