@@ -354,5 +354,8 @@ module.exports = async ({ scriptDir, workingDir, input, configFn }) => {
   await copyTemplate(__dirname, workingDir);
   await copyScript(scriptDir, workingDir);
   await copySource(input.path, workingDir);
-  await configure(workingDir, configFn, input.env, !input["allow-fail"]);
+
+  //eslint-disable-next-line
+  console.log("input");
+  await configure(workingDir, configFn, input.env, !input.allowFail);
 };

@@ -9,7 +9,7 @@ const createEvent = require("@blossm/create-event");
 
 const uuid = require("@blossm/uuid");
 
-const phone = "251-333-2037";
+const phone = "+12513332037";
 
 module.exports = async ({ permissions = [], issueFn, answerFn }) => {
   const identityRoot = await uuid();
