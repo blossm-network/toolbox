@@ -83,10 +83,10 @@ describe("Command handler post", () => {
     });
     replace(deps, "eventStore", eventStoreFake);
     const req = {
-      context,
       body: {
         payload,
-        headers
+        headers,
+        context
       }
     };
 
@@ -196,10 +196,10 @@ describe("Command handler post", () => {
     });
     replace(deps, "eventStore", eventStoreFake);
     const req = {
-      context,
       body: {
         payload,
-        headers
+        headers,
+        context
       }
     };
 
@@ -256,10 +256,10 @@ describe("Command handler post", () => {
     });
     replace(deps, "eventStore", eventStoreFake);
     const req = {
-      context,
       body: {
         payload,
-        headers
+        headers,
+        context
       }
     };
 
@@ -372,12 +372,12 @@ describe("Command handler post", () => {
     replace(deps, "eventStore", eventStoreFake);
     const currentRoot = "current-root";
     const req = {
-      context,
       body: {
         root: currentRoot,
         payload,
         headers,
-        options
+        options,
+        context
       }
     };
 
@@ -485,10 +485,10 @@ describe("Command handler post", () => {
     });
     replace(deps, "eventStore", eventStoreFake);
     const req = {
-      context,
       body: {
         payload,
-        headers
+        headers,
+        context
       }
     };
 
@@ -598,10 +598,10 @@ describe("Command handler post", () => {
     });
     replace(deps, "eventStore", eventStoreFake);
     const req = {
-      context,
       body: {
         payload,
-        headers
+        headers,
+        context
       }
     };
 
@@ -712,10 +712,10 @@ describe("Command handler post", () => {
     });
     replace(deps, "eventStore", eventStoreFake);
     const req = {
-      context,
       body: {
         payload,
-        headers
+        headers,
+        context
       }
     };
 
@@ -804,10 +804,10 @@ describe("Command handler post", () => {
     });
     replace(deps, "eventStore", eventStoreFake);
     const req = {
-      context,
       body: {
         payload,
-        headers
+        headers,
+        context
       }
     };
 
@@ -945,10 +945,10 @@ describe("Command handler post", () => {
     });
     replace(deps, "eventStore", eventStoreFake);
     const req = {
-      context,
       body: {
         payload,
-        headers
+        headers,
+        context
       }
     };
 

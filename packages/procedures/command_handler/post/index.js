@@ -4,9 +4,13 @@ const { badRequest } = require("@blossm/errors");
 
 module.exports = ({ mainFn, validateFn, normalizeFn, fillFn }) => {
   return async (req, res) => {
+    //eslint-disable-next-line
+    console.log("req body: ", req.body);
     if (validateFn) await validateFn(req.body.payload);
     if (fillFn) req.body.payload = await fillFn(req.body.payload);
     if (normalizeFn) req.body.payload = await normalizeFn(req.body.payload);
+    //eslint-disable-next-line
+    console.log("processed body: ", req.body);
 
     const aggregateFn = async (
       root,
@@ -18,7 +22,7 @@ module.exports = ({ mainFn, validateFn, normalizeFn, fillFn }) => {
     ) => {
       const aggregate = await deps
         .eventStore({ domain, service, network })
-        .set({ context: req.context, tokenFn: deps.gcpToken })
+        .set({ context: req.body.context, tokenFn: deps.gcpToken })
         .aggregate(root);
 
       if (!aggregate) throw badRequest.badRoot({ info: { root } });
@@ -33,7 +37,7 @@ module.exports = ({ mainFn, validateFn, normalizeFn, fillFn }) => {
       payload: req.body.payload,
       ...(req.body.root && { root: req.body.root }),
       ...(req.body.options && { options: req.body.options }),
-      context: req.context,
+      context: req.body.context,
       aggregateFn
     });
 
@@ -52,7 +56,7 @@ module.exports = ({ mainFn, validateFn, normalizeFn, fillFn }) => {
           ...(root && { root }),
           payload,
           trace: req.body.headers.trace,
-          context: req.context,
+          context: req.body.context,
           version,
           action,
           domain,
@@ -70,7 +74,7 @@ module.exports = ({ mainFn, validateFn, normalizeFn, fillFn }) => {
 
         await deps
           .eventStore({ domain })
-          .set({ context: req.context, tokenFn: deps.gcpToken })
+          .set({ context: req.body.context, tokenFn: deps.gcpToken })
           .add(event, { number: correctNumber });
       };
 

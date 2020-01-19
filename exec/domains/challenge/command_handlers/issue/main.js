@@ -17,6 +17,8 @@ module.exports = async ({
   context,
   options: { events, exists = true } = {}
 }) => {
+  //eslint-disable-next-line
+  console.log("yung context: ", { context, events });
   // Lazily load up the sms connection.
   if (!sms) {
     sms = deps.sms(
