@@ -34,12 +34,29 @@ module.exports = async ({ permissions = [], issueFn, answerFn }) => {
 
   const sentAfter = new Date();
 
+  const { token: anonymousToken } = await command({
+    action: "start",
+    domain: "session"
+  }).issue({
+    device: {
+      os: "test",
+      hardware: "test",
+      manufacturer: "test",
+      id: "test"
+    }
+  });
+
+  //eslint-disable-next-line
+  console.log("anonymous: ", anonymousToken);
+
   const { token } = issueFn
-    ? await issueFn({ phone })
+    ? await issueFn({ phone, token: anonymousToken })
     : await command({
         action: "issue",
         domain: "challenge"
-      }).issue({ phone });
+      })
+        .set({ context: {} })
+        .issue({ phone });
 
   const jwt = await validateJwt({
     token,

@@ -8,13 +8,13 @@ const request = require("@blossm/request");
 
 const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 
-const { testing } = require("../../config.json.js");
+const { testing } = require("../../config.json");
 
 describe("Command gateway integration tests", () => {
   before(async () => await Promise.all(testing.topics.map(t => create(t))));
   after(async () => await Promise.all(testing.topics.map(t => del(t))));
   it("should return successfully", async () => {
-    const issueFn = async ({ phone }) => {
+    const issueFn = async ({ phone, token: anonymousToken }) => {
       const response = await request.post(`${url}/issue`, {
         body: {
           headers: {
@@ -23,6 +23,9 @@ describe("Command gateway integration tests", () => {
           payload: {
             phone
           }
+        },
+        headers: {
+          Authorization: `Bearer ${anonymousToken}`
         }
       });
       expect(response.statusCode).to.equal(200);
