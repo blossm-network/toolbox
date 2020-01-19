@@ -60,7 +60,7 @@ testing:
     ok:
       - domain: identity
         root: some-root
-        action: save-phone-number
+        action: attempt-register
         payload:
           phone: "+19195551144"
           principle: some-principle

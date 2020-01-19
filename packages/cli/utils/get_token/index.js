@@ -1,4 +1,3 @@
-const viewStore = require("@blossm/view-store-rpc");
 const eventStore = require("@blossm/event-store-rpc");
 const command = require("@blossm/command-rpc");
 const sms = require("@blossm/twilio-sms");
@@ -10,32 +9,25 @@ const createEvent = require("@blossm/create-event");
 
 const uuid = require("@blossm/uuid");
 
-const userRoot = uuid();
+const identityRoot = uuid();
 const principleRoot = uuid();
 const phone = "251-333-2037";
 
 module.exports = async ({ permissions = [], issueFn, answerFn }) => {
-  // await viewStore({
-  //   name: "phones",
-  //   domain: "user"
-  // })
-  //   //phone should be already formatted in the view store.
-  //   .update(userRoot, { principle: principleRoot, phone: "+12513332037" });
-
-  const userEvent = await createEvent({
-    root: userRoot,
+  const identityEvent = await createEvent({
+    root: identityRoot,
     payload: {
       principle: principleRoot,
       phone
     },
-    action: "save-phone-number",
-    domain: "user",
+    action: "attempt-register",
+    domain: "identity",
     service: process.env.SERVICE
   });
 
   await eventStore({
-    domain: "user"
-  }).add(userEvent);
+    domain: "identity"
+  }).add(identityEvent);
 
   const sentAfter = new Date();
 
@@ -64,26 +56,6 @@ module.exports = async ({ permissions = [], issueFn, answerFn }) => {
 
   const code = message.body.substr(0, 6);
 
-  // await viewStore({
-  //   name: "codes",
-  //   domain: "challenge"
-  // }).update(jwt.context.challenge, {
-  //   code,
-  //   expires: stringFromDate(
-  //     moment()
-  //       .add(30, "s")
-  //       .toDate()
-  //       .toISOString()
-  //   )
-  // });
-
-  await viewStore({
-    name: "permissions",
-    domain: "principle"
-  }).update(principleRoot, {
-    add: [`challenge:answer:${jwt.context.challenge}`, ...permissions]
-  });
-
   const principleEvent = await createEvent({
     root: principleRoot,
     payload: {
@@ -103,7 +75,7 @@ module.exports = async ({ permissions = [], issueFn, answerFn }) => {
         code,
         root: jwt.context.challenge,
         token,
-        user: jwt.context.user
+        identity: jwt.context.identity
       })
     : await command({
         action: "answer",
@@ -112,7 +84,7 @@ module.exports = async ({ permissions = [], issueFn, answerFn }) => {
         .set({
           context: {
             principle: principleRoot,
-            user: jwt.context.user
+            identity: jwt.context.identity
           }
         })
         .issue({ code }, { root: jwt.context.challenge });

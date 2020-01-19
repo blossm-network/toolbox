@@ -20,8 +20,7 @@
     "@blossm/gcp-kms": "^0.0.20",
     "@blossm/gcp-secret": "^0.0.23",
     "@blossm/jwt": "^0.0.18",
-    "@blossm/twilio-sms": "*",
-    "@blossm/view-store-rpc": "^0.0.59"
+    "@blossm/twilio-sms": "*"
   },
   "devDependencies": {
     "mocha": "^6.1.4"

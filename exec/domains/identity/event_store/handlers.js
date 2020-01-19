@@ -14,7 +14,7 @@ module.exports = {
   "add-contexts": (state, payload) => {
     return {
       ...state,
-      contexts: [...state.contexts, ...payload.contexts]
+      contexts: [...(state.contexts || []), ...payload.contexts]
     };
   }
 };

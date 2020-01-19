@@ -107,7 +107,7 @@ const topicsForProcedures = (config, events) => {
         ? [
             "did-issue.challenge.core",
             "did-answer.challenge.core",
-            "did-save-phone-number.user.core",
+            "did-attempt-register.identity.core",
             "did-add-permissions.principle.core"
           ]
         : []
@@ -147,32 +147,12 @@ const addDefaultProcedures = ({ config }) => {
       context: "event-store"
     },
     {
-      name: "permissions",
-      domain: "principle",
-      context: "view-store"
-    },
-    {
       domain: "principle",
       context: "event-store"
     },
     {
-      name: "codes",
-      domain: "challenge",
-      context: "view-store"
-    },
-    {
-      domain: "user",
+      domain: "identity",
       context: "event-store"
-    },
-    {
-      name: "phones",
-      domain: "user",
-      context: "view-store"
-    },
-    {
-      name: "contexts",
-      domain: "user",
-      context: "view-store"
     }
   ];
 
