@@ -5,6 +5,11 @@ const { preconditionFailed, badRequest } = require("@blossm/errors");
 module.exports = ({ eventStore, handlers }) => async event => {
   const handler = handlers[event.headers.action];
 
+  //eslint-disable-next-line
+  console.log("HANDLERS: ", handlers);
+  //eslint-disable-next-line
+  console.log("event: ", event);
+
   if (!handler)
     throw badRequest.eventHandlerNotSpecified({
       info: {
