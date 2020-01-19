@@ -83,7 +83,13 @@ testing:
           expires: 9999-12-31T00:00:00.000Z
       - domain: identity
         root: some-identity-root
-        action: add-context
+        action: attempt-register
+        payload:
+          principle: some-principle-root
+          phone: "+19195551144"
+      - domain: identity
+        root: some-identity-root
+        action: add-contexts
         payload:
           contexts: [some-context]
     bad:
