@@ -32,6 +32,7 @@ module.exports = ({ mainFn, validateFn, normalizeFn, fillFn }) => {
     const { events = [], response } = await mainFn({
       payload: req.body.payload,
       ...(req.body.root && { root: req.body.root }),
+      ...(req.body.options && { options: req.body.options }),
       context: req.context,
       aggregateFn
     });

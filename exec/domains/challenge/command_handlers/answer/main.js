@@ -4,14 +4,11 @@ const deps = require("./deps");
 
 const NINETY_DAYS = 90 * SECONDS_IN_DAY;
 
-module.exports = async ({ payload, root, context }) => {
+module.exports = async ({ payload, context, aggregateFn }) => {
+  const root = context.challenge;
+
   //Look for the challenge being answered.
-  const challenge = await deps
-    .eventStore({
-      domain: "challenge"
-    })
-    .set({ context, tokenFn: deps.gcpToken })
-    .aggregate(root);
+  const { aggregate: challenge, lastEventNumber } = await aggregateFn(root);
 
   //Throw if no challenge recognized or if the code is not right.
   if (!challenge) throw deps.invalidArgumentError.codeNotRecognized();
@@ -26,28 +23,25 @@ module.exports = async ({ payload, root, context }) => {
     throw deps.invalidArgumentError.codeExpired();
 
   //Lookup the contexts that the requesting identity is in.
-  const identity = await deps
-    .eventStore({
-      domain: "identity"
-    })
-    .set({ context, tokenFn: deps.gcpToken })
-    .aggregate(context.identity);
+  const { aggregate: identity } = aggregateFn(context.identity, {
+    domain: "identity"
+  });
 
   //Create a token that can access commands and views.
   const token = await deps.createJwt({
     options: {
       issuer: `answer.challenge.${process.env.SERVICE}.${process.env.NETWORK}`,
-      subject: context.principle,
+      subject: identity.principle,
       audience: `${process.env.SERVICE}.${process.env.NETWORK}`,
       expiresIn: NINETY_DAYS
     },
     payload: {
       context: {
-        identity: context.identity,
+        identity: identity.root,
         //If the identity is in only one context, add it to the token.
         ...(identity &&
-          identity.state.contexts.length == 1 && {
-            [identity.state.contexts[0].type]: identity.state.contexts[0].root
+          identity.contexts.length == 1 && {
+            [identity.contexts[0].type]: identity.contexts[0].root
           }),
         service: process.env.SERVICE,
         network: process.env.NETWORK
@@ -63,7 +57,16 @@ module.exports = async ({ payload, root, context }) => {
   });
 
   return {
-    events: [{ root, payload: { answered: deps.stringDate() } }],
+    events: [
+      {
+        root,
+        payload: {
+          answered: deps.stringDate()
+        },
+        correctNumber: lastEventNumber + 1
+      },
+      ...(challenge.events || [])
+    ],
     response: { token }
   };
 };

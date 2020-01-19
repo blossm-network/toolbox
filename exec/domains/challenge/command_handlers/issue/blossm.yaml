@@ -12,7 +12,6 @@ payload:
     default: true
 
 dependencies:
-  "@blossm/validator": "*"
   "@blossm/phone-number": "*"
   "@blossm/jwt": "*"
   "@blossm/gcp-kms": "*"

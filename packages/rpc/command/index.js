@@ -5,7 +5,7 @@ const deps = require("./deps");
 module.exports = ({ action, domain, service, network }) => {
   const issue = ({ context, tokenFn } = {}) => async (
     payload,
-    { trace, source, issued, root } = {}
+    { trace, source, issued, root, options } = {}
   ) => {
     const headers = {
       id: deps.uuid(),
@@ -14,7 +14,12 @@ module.exports = ({ action, domain, service, network }) => {
       ...(source != undefined && { source })
     };
 
-    const data = { payload, headers, ...(root && { root }) };
+    const data = {
+      payload,
+      headers,
+      ...(root && { root }),
+      ...(options && { options })
+    };
     return await deps
       .rpc(action, domain, "command-handler")
       .post(data)

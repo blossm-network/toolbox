@@ -1,14 +1,19 @@
-const { SECONDS_IN_MINUTE } = require("@blossm/duration-consts");
+const {
+  SECONDS_IN_HOUR,
+  SECONDS_IN_MINUTE
+} = require("@blossm/duration-consts");
 
 const deps = require("./deps");
 
+const ONE_HOUR = SECONDS_IN_HOUR;
 const THREE_MINUTES = 3 * SECONDS_IN_MINUTE;
+
 const CODE_LENGTH = 6;
 
 let sms;
 
-module.exports = async ({ payload, context }) => {
-  //Lazily load up the sms connection.
+module.exports = async ({ payload, context, options: { events } = {} }) => {
+  // Lazily load up the sms connection.
   if (!sms) {
     sms = deps.sms(
       await deps.secret("twilio-account-sid"),
@@ -16,7 +21,7 @@ module.exports = async ({ payload, context }) => {
     );
   }
 
-  //Check to see if the phone is recognized
+  // Check to see if the phone is recognized
   const [identity] = await deps
     .eventStore({
       domain: "identity"
@@ -27,19 +32,21 @@ module.exports = async ({ payload, context }) => {
   if (!identity && payload.exists)
     throw deps.invalidArgumentError.phoneNotRecognized();
 
-  //Create the root for this challenge.
+  // Create the root for this challenge.
   const root = await deps.uuid();
 
-  //Create a token that can only access the answer challenge command.
+  // Create a token that can only access the answer challenge command.
   const token = await deps.createJwt({
     options: {
       issuer: `challenge.${process.env.SERVICE}.${process.env.NETWORK}/issue`,
-      ...(identity && { subject: identity.principle }),
-      audience: `command.challenge.${process.env.SERVICE}.${process.env.NETWORK}/answer`,
-      expiresIn: THREE_MINUTES
+      // Only add a subject to this token if the context has a principle.
+      ...(context.principle && { subject: context.principle }),
+      audience: `${process.env.SERVICE}.${process.env.NETWORK}`,
+      expiresIn: ONE_HOUR
     },
     payload: {
       context: {
+        ...context,
         ...(identity && { identity: identity.root }),
         challenge: root,
         service: process.env.SERVICE,
@@ -55,17 +62,17 @@ module.exports = async ({ payload, context }) => {
     })
   });
 
-  //Create a challenge code.
+  // Create a challenge code.
   const code = deps.randomIntOfLength(CODE_LENGTH);
 
-  //Send the code.
+  // Send the code.
   sms.send({
     to: payload.phone,
     from: "+14157700262",
     body: `${code} is your verification code. Enter it in the app to let us know it's really you.`
   });
 
-  //Send the token to the requester so they can access the answer command.
+  // Send the token to the requester so they can access the answer command.
   return {
     events: [
       {
@@ -79,9 +86,10 @@ module.exports = async ({ payload, context }) => {
             .add(THREE_MINUTES, "s")
             .toDate()
             .toISOString(),
-          ...(context.events && { events: context.events })
+          ...(events && { events })
         },
-        root
+        root,
+        correctNumber: 0
       }
     ],
     response: { token }

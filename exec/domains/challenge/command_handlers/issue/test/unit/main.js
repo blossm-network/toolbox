@@ -10,18 +10,21 @@ let clock;
 const now = new Date();
 const root = "some-root";
 const principle = "some-identity-principle";
-const identityId = "some-identity-id";
+const identityRoot = "some-identity-root";
 const phone = "some-identity-phone";
 const identity = {
   principle,
   phone,
-  id: identityId
+  root: identityRoot
 };
 const payloadPhone = "some-payload-phone";
 const payload = {
   phone: payloadPhone
 };
-const context = "some-context";
+const contextPrinciple = "some-context-principle";
+const context = {
+  principle: contextPrinciple
+};
 const service = "some-service";
 const network = "some-network";
 const token = "some-token";
@@ -78,11 +81,12 @@ describe("Command handler unit tests", () => {
     expect(result).to.deep.equal({
       events: [
         {
+          correctNumber: 0,
           root,
           payload: {
             code,
             principle,
-            phone,
+            phone: payloadPhone,
             issued: new Date().toISOString(),
             expires: deps
               .moment()
@@ -118,13 +122,14 @@ describe("Command handler unit tests", () => {
     expect(createJwtFake).to.have.been.calledWith({
       options: {
         issuer: `challenge.${service}.${network}/issue`,
-        subject: principle,
-        audience: `command.challenge.${service}.${network}/answer`,
-        expiresIn: 180
+        subject: contextPrinciple,
+        audience: `${service}.${network}`,
+        expiresIn: 3600
       },
       payload: {
         context: {
-          identity: identityId,
+          principle: contextPrinciple,
+          identity: identityRoot,
           challenge: root,
           service,
           network
@@ -142,7 +147,7 @@ describe("Command handler unit tests", () => {
       )
     ).to.equal(180000);
     expect(smsSendFake).to.have.been.calledWith({
-      to: phone,
+      to: payloadPhone,
       from: "+14157700262",
       body: `${code} is your verification code. Enter it in the app to let us know it's really you.`
     });
@@ -178,12 +183,107 @@ describe("Command handler unit tests", () => {
     replace(deps, "eventStore", eventStoreFake);
 
     try {
-      await main({ payload, context });
+      await main({
+        payload: {
+          ...payload,
+          exists: true
+        },
+        context
+      });
 
       //shouldn't get called
       expect(2).to.equal(3);
     } catch (e) {
       expect(e.statusCode).to.equal(409);
     }
+  });
+  it("should not throw if no phones found and exist is false, no principle, and context events", async () => {
+    const secretFake = fake.returns(secret);
+    replace(deps, "secret", secretFake);
+
+    const smsSendFake = fake();
+    const smsFake = fake.returns({
+      send: smsSendFake
+    });
+    replace(deps, "sms", smsFake);
+
+    const uuidFake = fake.returns(root);
+    replace(deps, "uuid", uuidFake);
+
+    const queryFake = fake.returns([]);
+    const setFake = fake.returns({
+      query: queryFake
+    });
+    const eventStoreFake = fake.returns({
+      set: setFake
+    });
+    replace(deps, "eventStore", eventStoreFake);
+
+    const signature = "some-signature";
+    const signFake = fake.returns(signature);
+    replace(deps, "sign", signFake);
+
+    const createJwtFake = fake.returns(token);
+    replace(deps, "createJwt", createJwtFake);
+
+    const randomIntFake = fake.returns(code);
+    replace(deps, "randomIntOfLength", randomIntFake);
+
+    const options = { events: [{ a: 1 }, { b: 2 }] };
+    const context = { c: 3 };
+    const result = await main({
+      payload: {
+        ...payload,
+        exists: false
+      },
+      context,
+      options
+    });
+
+    expect(result).to.deep.equal({
+      response: {
+        token
+      },
+      events: [
+        {
+          correctNumber: 0,
+          root,
+          payload: {
+            code,
+            phone: payloadPhone,
+            issued: new Date().toISOString(),
+            expires: deps
+              .moment()
+              .add(180, "s")
+              .toDate()
+              .toISOString(),
+            events: [
+              {
+                a: 1
+              },
+              {
+                b: 2
+              }
+            ]
+          }
+        }
+      ]
+    });
+    expect(createJwtFake).to.have.been.calledWith({
+      options: {
+        issuer: `challenge.${service}.${network}/issue`,
+        audience: `${service}.${network}`,
+        expiresIn: 3600
+      },
+      payload: {
+        context: {
+          c: 3,
+          challenge: root,
+          service,
+          network
+        }
+      },
+      signFn: signature
+    });
   });
 });

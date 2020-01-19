@@ -1,4 +1,4 @@
-action: save-phone-number
+action: register
 domain: identity
 service: core
 
@@ -6,6 +6,11 @@ payload:
   phone:
     type: phoneNumber
     title: phone number
+
+dependencies:
+  "@blossm/phone-number": "*"
+  "@blossm/uuid": "*"
+  "@blossm/command-rpc": "*"
 
 devDependencies:
   "localenv": "^0.2.2"

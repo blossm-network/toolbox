@@ -115,12 +115,7 @@ module.exports = async ({ permissions = [], issueFn, answerFn }) => {
             user: jwt.context.user
           }
         })
-        .issue(
-          {
-            code
-          },
-          { root: jwt.context.challenge }
-        );
+        .issue({ code }, { root: jwt.context.challenge });
 
   return { token: answerToken };
 };

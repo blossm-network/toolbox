@@ -13,6 +13,7 @@ const response = "some-response";
 const root = "some-root";
 const lastEventNumber = "some-last-event-number";
 const state = "some-state";
+const options = "some-options";
 const event = {
   headers: {
     root
@@ -332,7 +333,7 @@ describe("Command handler post", () => {
     expect(statusFake).to.have.been.calledWith(204);
     expect(sendFake).to.have.been.calledWith();
   });
-  it("should call with the correct params with root and version passed in", async () => {
+  it("should call with the correct params with root, options, version passed in", async () => {
     const validateFnFake = fake();
     const normalizeFnFake = fake.returns(cleanedPayload);
 
@@ -375,7 +376,8 @@ describe("Command handler post", () => {
       body: {
         root: currentRoot,
         payload,
-        headers
+        headers,
+        options
       }
     };
 
@@ -398,6 +400,7 @@ describe("Command handler post", () => {
     expect(mainFnFake).to.have.been.calledWith({
       payload: cleanedPayload,
       root: currentRoot,
+      options,
       context,
       aggregateFn: match(fn => expect(fn()).to.exist)
     });

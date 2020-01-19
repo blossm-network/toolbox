@@ -12,7 +12,9 @@ const validateObject = ({ object, expectation, path }) => {
     const error = validator.findError([
       validator[expectation[property].type || "object"](object[property], {
         title: expectation[property].title || property,
-        path: `${path}.${property}`
+        path: `${path}.${property}`,
+        optional:
+          expectation[property].optional || expectation[property].default
       })
     ]);
     if (error) throw error;

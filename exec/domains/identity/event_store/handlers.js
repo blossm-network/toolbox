@@ -1,14 +1,20 @@
 module.exports = {
-  "save-phone-number": (state, payload) => {
+  register: (state, payload) => {
     return {
       ...state,
       ...payload
     };
   },
-  "add-context": (state, payload) => {
+  "attempt-register": (state, payload) => {
     return {
       ...state,
       ...payload
+    };
+  },
+  "add-contexts": (state, payload) => {
+    return {
+      ...state,
+      contexts: [...state.contexts, ...payload.contexts]
     };
   }
 };

@@ -17,6 +17,7 @@ const service = "some-service";
 const network = "some-network";
 
 const payload = { a: 1 };
+const options = "some-options";
 const trace = "some-trace";
 const source = "some-source";
 const tokenFn = "some-token-fn";
@@ -55,7 +56,7 @@ describe("Issue command", () => {
 
     const result = await command({ action, domain, service, network })
       .set({ context, tokenFn })
-      .issue(payload, { trace, source, issued, root });
+      .issue(payload, { trace, source, issued, root, options });
 
     expect(result).to.equal(response);
     expect(rpcFake).to.have.been.calledWith(action, domain, "command-handler");
@@ -67,7 +68,8 @@ describe("Issue command", () => {
         source,
         id
       },
-      root
+      root,
+      options
     });
     expect(inFake).to.have.been.calledWith({ context, service, network });
     expect(withFake).to.have.been.calledWith({ tokenFn });
