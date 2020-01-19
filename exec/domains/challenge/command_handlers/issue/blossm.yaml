@@ -7,9 +7,6 @@ payload:
   phone:
     type: phoneNumber
     title: phone number
-  exists: # If true, there must be an `identity` with the provided phone number.
-    type: boolean
-    default: true
 
 dependencies:
   "@blossm/phone-number": "*"
@@ -40,9 +37,18 @@ testing:
     ok:
       - payload:
           phone: "919 555 1144"
-          exists: true
+        context:
+          a: 1
         normalized:
           phone: "+19195551144"
+      - payload:
+          phone: "919 555 1144"
+        normalized:
+          phone: "+19195551144"
+        options:
+          events: [some-events]
+        context:
+          principle: some-principle
     bad:
       - payload:
           phone: "919 555 1133"
@@ -54,7 +60,6 @@ testing:
     - phone: "919"
     - phone: 919
     - phone: false
-    - exists: 919
 
   pre:
     ok:

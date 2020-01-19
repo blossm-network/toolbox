@@ -53,7 +53,8 @@ describe("Command handler integration tests", () => {
           //In non-test environments, a gateway adds an id.
           id: uuid()
         },
-        context: testing.context,
+        options: okExample0.options,
+        context: okExample0.context,
         payload: okExample0.payload
       }
     });

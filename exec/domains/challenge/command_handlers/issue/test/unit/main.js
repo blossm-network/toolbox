@@ -185,8 +185,7 @@ describe("Command handler unit tests", () => {
     try {
       await main({
         payload: {
-          ...payload,
-          exists: true
+          ...payload
         },
         context
       });
@@ -229,12 +228,11 @@ describe("Command handler unit tests", () => {
     const randomIntFake = fake.returns(code);
     replace(deps, "randomIntOfLength", randomIntFake);
 
-    const options = { events: [{ a: 1 }, { b: 2 }] };
+    const options = { exists: false, events: [{ a: 1 }, { b: 2 }] };
     const context = { c: 3 };
     const result = await main({
       payload: {
-        ...payload,
-        exists: false
+        ...payload
       },
       context,
       options

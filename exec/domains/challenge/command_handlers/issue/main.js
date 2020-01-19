@@ -12,7 +12,11 @@ const CODE_LENGTH = 6;
 
 let sms;
 
-module.exports = async ({ payload, context, options: { events } = {} }) => {
+module.exports = async ({
+  payload,
+  context,
+  options: { events, exists = true } = {}
+}) => {
   // Lazily load up the sms connection.
   if (!sms) {
     sms = deps.sms(
@@ -29,8 +33,7 @@ module.exports = async ({ payload, context, options: { events } = {} }) => {
     .set({ context, tokenFn: deps.gcpToken })
     .query({ key: "phone", value: payload.phone });
 
-  if (!identity && payload.exists)
-    throw deps.invalidArgumentError.phoneNotRecognized();
+  if (!identity && exists) throw deps.invalidArgumentError.phoneNotRecognized();
 
   // Create the root for this challenge.
   const root = await deps.uuid();
