@@ -9,11 +9,11 @@ const createEvent = require("@blossm/create-event");
 
 const uuid = require("@blossm/uuid");
 
-const identityRoot = uuid();
-const principleRoot = uuid();
 const phone = "251-333-2037";
 
 module.exports = async ({ permissions = [], issueFn, answerFn }) => {
+  const identityRoot = await uuid();
+  const principleRoot = await uuid();
   const identityEvent = await createEvent({
     root: identityRoot,
     payload: {
@@ -24,6 +24,9 @@ module.exports = async ({ permissions = [], issueFn, answerFn }) => {
     domain: "identity",
     service: process.env.SERVICE
   });
+
+  //eslint-disable-next-line
+  console.log("identity event: ", event);
 
   await eventStore({
     domain: "identity"

@@ -8,7 +8,7 @@ const request = require("@blossm/request");
 
 const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 
-const { testing } = require("./../../config.json");
+const { testing } = require("../../config.json.js");
 
 describe("Command gateway integration tests", () => {
   before(async () => await Promise.all(testing.topics.map(t => create(t))));

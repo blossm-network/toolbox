@@ -1,0 +1,44 @@
+domain: context
+service: core
+
+schema:
+  root: String
+  domain: String
+  service: String
+  network: String
+
+testing:
+  examples:
+    - action: create
+      payload:
+        root: some-context-root
+        domain: some-domain
+        service: some-service
+        network: some-network
+    - action: enter
+      payload: {}
+
+  handlers:
+    - action: create
+      examples:
+        - payload:
+            root: some-context-root
+            domain: some-domain
+            service: some-service
+            network: some-network
+    - action: enter
+      examples:
+        - state:
+            root: some-context-root
+            domain: some-domain
+            service: some-service
+            network: some-network
+          payload: {}
+          result:
+            root: some-context-root
+            domain: some-domain
+            service: some-service
+            network: some-network
+
+#don't change
+context: event-store

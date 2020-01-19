@@ -1,0 +1,42 @@
+action: create
+domain: context
+service: core
+
+payload:
+  root: string
+  domain: string
+  service: string
+  network: string
+
+devDependencies:
+  "mocha": "^6.1.4"
+  "chai": "^4.2.0"
+
+testing:
+  examples:
+    ok:
+      - payload:
+          root: some-root
+          domain: some-domain
+          service: some-service
+          network: some-network
+        normalized:
+          root: some-root
+          domain: some-domain
+          service: some-service
+          network: some-network
+
+  invalid:
+    - root: 3
+    - domain: 3
+    - service: 3
+    - network: 3
+
+  pre:
+
+  procedures:
+
+  response:
+
+#don't change
+context: command-handler

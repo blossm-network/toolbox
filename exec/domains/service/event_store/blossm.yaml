@@ -1,0 +1,27 @@
+domain: service
+service: core
+
+schema:
+  name: String
+
+testing:
+  examples:
+    - action: create
+      payload:
+        name: some-name
+    - action: create
+      payload:
+        name: some-other-name
+
+  handlers:
+    - action: create
+      examples:
+        - state:
+            name: some-name
+          payload:
+            name: some-other-name
+          result:
+            name: some-other-name
+
+#don't change
+context: event-store
