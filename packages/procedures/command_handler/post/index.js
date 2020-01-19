@@ -21,6 +21,16 @@ module.exports = ({ mainFn, validateFn, normalizeFn, fillFn }) => {
         .set({ context: req.body.context, tokenFn: deps.gcpToken })
         .aggregate(root);
 
+      //eslint-disable-next-line
+      console.log("aggregate fn: ", {
+        aggregate,
+        headers: aggregate.headers,
+        root,
+        domain,
+        service,
+        network
+      });
+
       if (!aggregate) throw badRequest.badRoot({ info: { root } });
 
       return {
@@ -68,10 +78,6 @@ module.exports = ({ mainFn, validateFn, normalizeFn, fillFn }) => {
           }
         });
 
-        //eslint-disable-next-line
-        console.log("saving event: ", event);
-        //eslint-disable-next-line
-        console.log("action: ", process.env.ACTION);
         await deps
           .eventStore({ domain })
           .set({ context: req.body.context, tokenFn: deps.gcpToken })
