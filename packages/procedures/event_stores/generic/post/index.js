@@ -32,6 +32,8 @@ module.exports = ({ saveEventFn, aggregateFn, publishFn }) => {
 
     const now = deps.dateString();
 
+    //eslint-disable-next-line
+    console.log("posting event: ", req.body.event);
     const event = {
       ...req.body.event,
       headers: {

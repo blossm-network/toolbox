@@ -39,6 +39,9 @@ module.exports = ({
       payload
     };
 
+    //eslint-disable-next-line
+    console.log("rpc event: ", event);
+
     await deps
       .rpc(domain, "event-store")
       .post({ event, ...(number && { number }) })
