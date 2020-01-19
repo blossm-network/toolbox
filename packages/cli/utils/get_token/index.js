@@ -41,6 +41,7 @@ module.exports = async ({ permissions = [], issueFn, answerFn }) => {
     device: {
       os: "test",
       hardware: "test",
+      version: "test",
       manufacturer: "test",
       id: "test"
     }
