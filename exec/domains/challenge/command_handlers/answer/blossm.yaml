@@ -42,22 +42,30 @@ testing:
           code: "123456"
         normalized:
           code: "123456"
+        context:
+          challenge: some-root
+          identity: some-identity-root
     bad:
+      - payload:
+          code: "123456"
+        normalized:
+          code: "123456"
+        context:
+          challenge: some-bad-root
+          identity: some-identity-root
+        code: 400
       - payload:
           code: "223456"
         normalized:
           code: "223456"
+        context:
+          challenge: some-root
+          identity: some-identity-root
         code: 409
 
   invalid:
     - code:
         a: 1
-
-  root: some-root
-
-  context:
-    principle: some-principle-root
-    identity: some-identity-root
 
   procedures:
     - domain: identity

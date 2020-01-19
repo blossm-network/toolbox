@@ -8,18 +8,18 @@ module.exports = async ({ payload, context, aggregateFn }) => {
   const root = context.challenge;
 
   //Look for the challenge being answered.
-  const { aggregate: challenge, lastEventNumber } = await aggregateFn(root);
+  const { aggregate: challenge } = await aggregateFn(root);
 
   //Throw if no challenge recognized or if the code is not right.
   if (!challenge) throw deps.invalidArgumentError.codeNotRecognized();
 
-  if (challenge.state.code != payload.code)
+  if (challenge.code != payload.code)
     throw deps.invalidArgumentError.wrongCode();
 
   //Throw if the challenge is expired.
   const now = new Date();
 
-  if (Date.parse(challenge.state.expires) < now)
+  if (Date.parse(challenge.expires) < now)
     throw deps.invalidArgumentError.codeExpired();
 
   //Lookup the contexts that the requesting identity is in.
@@ -37,12 +37,13 @@ module.exports = async ({ payload, context, aggregateFn }) => {
     },
     payload: {
       context: {
-        identity: identity.root,
         //If the identity is in only one context, add it to the token.
         ...(identity &&
           identity.contexts.length == 1 && {
-            [identity.contexts[0].type]: identity.contexts[0].root
+            context: identity.contexts[0]
           }),
+        ...context,
+        identity: identity.root,
         service: process.env.SERVICE,
         network: process.env.NETWORK
       }
@@ -63,7 +64,7 @@ module.exports = async ({ payload, context, aggregateFn }) => {
         payload: {
           answered: deps.stringDate()
         },
-        correctNumber: lastEventNumber + 1
+        correctNumber: 1
       },
       ...(challenge.events || [])
     ],
