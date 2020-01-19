@@ -44,7 +44,8 @@ module.exports = ({
   runUnitTests,
   runBaseUnitTests,
   runIntegrationTests,
-  runBaseIntegrationTests
+  runBaseIntegrationTests,
+  strict
 }) => {
   return [
     yarnInstall,
@@ -70,8 +71,8 @@ module.exports = ({
     }),
     dockerComposeUp,
     dockerComposeProcesses,
-    ...(runBaseIntegrationTests ? [baseIntegrationTests()] : []),
-    ...(runIntegrationTests ? [integrationTests()] : []),
+    ...(runBaseIntegrationTests ? [baseIntegrationTests({ strict })] : []),
+    ...(runIntegrationTests ? [integrationTests({ strict })] : []),
     dockerComposeLogs,
     dockerPush({
       extension: imageExtension,

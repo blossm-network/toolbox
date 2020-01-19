@@ -37,7 +37,8 @@ const steps = ({
   runUnitTests,
   runBaseUnitTests,
   runIntegrationTests,
-  runBaseIntegrationTests
+  runBaseIntegrationTests,
+  strict
 }) => {
   const serviceName = `${region}-${operationName}-${operationHash}`;
   const uri = `${operationHash}.${region}.${envUriSpecifier}${network}`;
@@ -74,7 +75,8 @@ const steps = ({
         runUnitTests,
         runBaseUnitTests,
         runIntegrationTests,
-        runBaseIntegrationTests
+        runBaseIntegrationTests,
+        strict
       });
     case "event-store":
       return eventStore({
@@ -104,7 +106,8 @@ const steps = ({
         runUnitTests,
         runBaseUnitTests,
         runIntegrationTests,
-        runBaseIntegrationTests
+        runBaseIntegrationTests,
+        strict
       });
     case "event-handler":
     case "projection":
@@ -135,7 +138,8 @@ const steps = ({
         runUnitTests,
         runBaseUnitTests,
         runIntegrationTests,
-        runBaseIntegrationTests
+        runBaseIntegrationTests,
+        strict
       });
     case "command-handler":
       return commandHandler({
@@ -163,7 +167,8 @@ const steps = ({
         runUnitTests,
         runBaseUnitTests,
         runIntegrationTests,
-        runBaseIntegrationTests
+        runBaseIntegrationTests,
+        strict
       });
     case "job":
       return job({
@@ -190,7 +195,8 @@ const steps = ({
         runUnitTests,
         runBaseUnitTests,
         runIntegrationTests,
-        runBaseIntegrationTests
+        runBaseIntegrationTests,
+        strict
       });
     case "command-gateway":
       return commandGateway({
@@ -217,7 +223,8 @@ const steps = ({
         runUnitTests,
         runBaseUnitTests,
         runIntegrationTests,
-        runBaseIntegrationTests
+        runBaseIntegrationTests,
+        strict
       });
     case "view-gateway":
       return viewGateway({
@@ -244,7 +251,8 @@ const steps = ({
         runUnitTests,
         runBaseUnitTests,
         runIntegrationTests,
-        runBaseIntegrationTests
+        runBaseIntegrationTests,
+        strict
       });
   }
 };
@@ -290,7 +298,8 @@ module.exports = ({
   uri,
   secretBucket,
   secretBucketKeyLocation,
-  secretBucketKeyRing
+  secretBucketKeyRing,
+  strict
 }) => {
   const buildPath = path.resolve(workingDir, "build.yaml");
 
@@ -341,7 +350,8 @@ module.exports = ({
       runUnitTests,
       runBaseUnitTests,
       runIntegrationTests,
-      runBaseIntegrationTests
+      runBaseIntegrationTests,
+      strict
     })
   };
 

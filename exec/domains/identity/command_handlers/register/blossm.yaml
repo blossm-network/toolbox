@@ -25,6 +25,14 @@ devDependencies:
   "@blossm/uuid": "*"
 
 testing:
+  events:
+    - action: attempt-register
+      domain: identity
+      service: core
+    - action: add-permissions
+      domain: principle
+      service: core
+
   examples:
     ok:
       - payload:
@@ -46,6 +54,11 @@ testing:
   pre:
 
   procedures:
+    - action: issue
+      domain: challenge
+      context: command-handler
+    - domain: principle
+      context: event-store
 
   response:
     token:

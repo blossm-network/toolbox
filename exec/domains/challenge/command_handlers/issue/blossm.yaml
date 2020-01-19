@@ -70,6 +70,7 @@ testing:
           phone: "+19195551144"
           principle: some-principle
     bad:
+      - code: 409
 
   procedures:
     - domain: identity

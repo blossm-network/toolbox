@@ -38,7 +38,8 @@ module.exports = ({
   runUnitTests,
   runBaseUnitTests,
   runIntegrationTests,
-  runBaseIntegrationTests
+  runBaseIntegrationTests,
+  strict
 }) => {
   const authUri = `command.${domain}.${service}.${envUriSpecifier}${network}`;
   return [
@@ -64,8 +65,8 @@ module.exports = ({
     }),
     dockerComposeUp,
     dockerComposeProcesses,
-    ...(runBaseIntegrationTests ? [baseIntegrationTests()] : []),
-    ...(runIntegrationTests ? [integrationTests()] : []),
+    ...(runBaseIntegrationTests ? [baseIntegrationTests({ strict })] : []),
+    ...(runIntegrationTests ? [integrationTests({ strict })] : []),
     dockerComposeLogs,
     dockerPush({
       extension: imageExtension,

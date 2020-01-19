@@ -47,6 +47,12 @@ module.exports = ({ domain, dir, configFn }) => async args => {
         type: String,
         short: "e",
         default: "staging"
+      },
+      {
+        name: "strict",
+        type: Boolean,
+        short: "s",
+        default: true
       }
     ]
   });

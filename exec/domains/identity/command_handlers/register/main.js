@@ -31,16 +31,16 @@ module.exports = async ({ payload, context }) => {
     })
     .issue(
       {
-        phone: payload.phone,
-        exists: false
+        phone: payload.phone
       },
-      { options: { events } }
+      { options: { events, exists: false } }
     );
 
   return {
     events: [
       {
         action: "add-permissions",
+        domain: "principle",
         payload: { permissions: [`identity:admin:${identityRoot}`] },
         root: principleRoot,
         correctNumber: 0
