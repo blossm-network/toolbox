@@ -72,6 +72,8 @@ module.exports = async ({
     })
   });
 
+  //eslint-disable-next-line
+  console.log("in issue, token: ", token);
   // Create a challenge code.
   const code = deps.randomIntOfLength(CODE_LENGTH);
 
