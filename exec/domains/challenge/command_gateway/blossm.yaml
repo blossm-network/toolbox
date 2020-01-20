@@ -3,7 +3,7 @@ service: core
 
 commands:
   - action: issue
-    protected: false 
+    priviledges: none
   - action: answer
     priviledges: [answer]
     key: challenge

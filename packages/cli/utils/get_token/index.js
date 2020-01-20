@@ -44,6 +44,9 @@ module.exports = async ({ permissions = [], issueFn, answerFn }) => {
     }
   });
 
+  //eslint-disable-next-line
+  console.log("anonymous token: ", anonymousToken);
+
   const { token } = issueFn
     ? await issueFn({ phone, token: anonymousToken })
     : await command({
@@ -52,6 +55,9 @@ module.exports = async ({ permissions = [], issueFn, answerFn }) => {
       })
         .set({ context: {} })
         .issue({ phone });
+
+  //eslint-disable-next-line
+  console.log("issue token: ", token);
 
   const jwt = await validateJwt({
     token,
@@ -103,6 +109,9 @@ module.exports = async ({ permissions = [], issueFn, answerFn }) => {
           }
         })
         .issue({ code });
+
+  //eslint-disable-next-line
+  console.log("answer token: ", answerToken);
 
   return { token: answerToken };
 };

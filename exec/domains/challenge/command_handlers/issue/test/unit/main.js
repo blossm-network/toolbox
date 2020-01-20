@@ -228,8 +228,9 @@ describe("Command handler unit tests", () => {
     const randomIntFake = fake.returns(code);
     replace(deps, "randomIntOfLength", randomIntFake);
 
+    const contextIdentity = "some-context-identity";
     const options = { exists: false, events: [{ a: 1 }, { b: 2 }] };
-    const context = { c: 3 };
+    const context = { c: 3, identity: contextIdentity };
     const result = await main({
       payload: {
         ...payload
