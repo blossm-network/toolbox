@@ -50,7 +50,9 @@ module.exports = async ({
       context: {
         identity: identityRoot,
         principle: principleRoot,
-        ...context
+        ...context,
+        service: process.env.SERVICE,
+        network: process.env.NETWORK
       }
     })
     .issue({

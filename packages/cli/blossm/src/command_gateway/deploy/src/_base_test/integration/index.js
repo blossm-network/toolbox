@@ -40,11 +40,12 @@ describe("Command gateway integration tests", () => {
             },
             payload: {}
           },
-          ...(command.priviledges != "none" && {
-            headers: {
-              Authorization: `Bearer ${token}`
-            }
-          })
+          ...(command.protected === undefined ||
+            (command.protected === true && {
+              headers: {
+                Authorization: `Bearer ${token}`
+              }
+            }))
         });
 
         expect(response0.statusCode).to.not.equal(401);

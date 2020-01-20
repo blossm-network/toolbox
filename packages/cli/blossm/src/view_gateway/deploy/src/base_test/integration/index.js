@@ -38,11 +38,12 @@ describe("View gateway integration tests", () => {
           body: {
             root
           },
-          ...(store.priviledges != "none" && {
-            headers: {
-              Authorization: `Bearer ${token}`
-            }
-          })
+          ...(store.protected === undefined ||
+            (store.protected === true && {
+              headers: {
+                Authorization: `Bearer ${token}`
+              }
+            }))
         });
         expect(response0.statusCode).to.not.equal(401);
         expect(response0.statusCode).to.be.lessThan(500);
