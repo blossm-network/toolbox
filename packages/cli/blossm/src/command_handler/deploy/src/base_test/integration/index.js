@@ -16,6 +16,7 @@ const stateTopics = [];
 
 describe("Command handler integration tests", () => {
   const okExample0 = testing.examples.ok[0];
+  const okExample1 = testing.examples.ok[1];
 
   before(async () => await Promise.all(testing.topics.map(t => create(t))));
   after(
@@ -25,45 +26,6 @@ describe("Command handler integration tests", () => {
 
   it("should have at least one example", async () => {
     expect(okExample0).to.exist;
-  });
-  it("should return an error if bad state", async () => {
-    if (!testing.pre || !testing.pre.bad) return;
-
-    for (const {
-      action,
-      domain,
-      root,
-      payload,
-      code
-    } of testing.pre.bad.reverse()) {
-      if (action) {
-        const topic = `did-${action}.${domain}.${process.env.SERVICE}`;
-        stateTopics.push(topic);
-        await create(topic);
-        const stateEvent = await createEvent({
-          root,
-          payload,
-          action,
-          domain,
-          service: process.env.SERVICE
-        });
-        await eventStore({ domain }).add(stateEvent);
-      }
-      const response = await request.post(url, {
-        body: {
-          root: testing.root,
-          headers: {
-            issued: stringDate(),
-            id: uuid()
-          },
-          payload: okExample0.payload,
-          options: okExample0.options,
-          context: okExample0.context
-        }
-      });
-
-      expect(response.statusCode).to.equal(code);
-    }
   });
   it("should return successfully", async () => {
     if (testing.pre && testing.pre.ok) {
@@ -108,6 +70,47 @@ describe("Command handler integration tests", () => {
       expect(parsedBody[value]).to.exist;
       if (testing.response[value])
         expect(parsedBody[value]).to.deep.equal(testing.response[value]);
+    }
+  });
+  it("should return an error if bad state", async () => {
+    if (!testing.pre || !testing.pre.bad) return;
+
+    expect(okExample1).to.exist;
+
+    for (const {
+      action,
+      domain,
+      root,
+      payload,
+      code
+    } of testing.pre.bad.reverse()) {
+      if (action) {
+        const topic = `did-${action}.${domain}.${process.env.SERVICE}`;
+        stateTopics.push(topic);
+        await create(topic);
+        const stateEvent = await createEvent({
+          root,
+          payload,
+          action,
+          domain,
+          service: process.env.SERVICE
+        });
+        await eventStore({ domain }).add(stateEvent);
+      }
+      const response = await request.post(url, {
+        body: {
+          root: testing.root,
+          headers: {
+            issued: stringDate(),
+            id: uuid()
+          },
+          payload: okExample1.payload,
+          options: okExample1.options,
+          context: okExample1.context
+        }
+      });
+
+      expect(response.statusCode).to.equal(code);
     }
   });
   it("should return an error if payload is bad", async () => {

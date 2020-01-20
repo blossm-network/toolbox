@@ -42,9 +42,9 @@ testing:
         normalized:
           phone: "+19195551144"
       - payload:
-          phone: "919 555 1144"
+          phone: "919 555 1122"
         normalized:
-          phone: "+19195551144"
+          phone: "+19195551122"
         options:
           events: [some-events]
         context:

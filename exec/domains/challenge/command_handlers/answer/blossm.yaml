@@ -45,6 +45,13 @@ testing:
         context:
           challenge: some-root
           identity: some-identity-root
+      - payload:
+          code: "123456"
+        normalized:
+          code: "123456"
+        context:
+          challenge: some-other-root
+          identity: some-identity-root
     bad:
       - payload:
           code: "123456"
@@ -77,7 +84,7 @@ testing:
     ok:
       - domain: challenge
         root: some-root
-        action: answer
+        action: issue
         payload:
           code: "123456"
           expires: 9999-12-31T00:00:00.000Z
@@ -94,8 +101,8 @@ testing:
           contexts: [some-context]
     bad:
       - domain: challenge
-        root: some-root
-        action: answer
+        root: some-other-root
+        action: issue
         payload:
           code: "123456"
           expires: 2019-12-31T00:00:00.000Z

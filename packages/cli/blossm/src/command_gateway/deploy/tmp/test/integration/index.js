@@ -29,12 +29,13 @@ describe("Command gateway integration tests", () => {
         }
       });
       expect(response.statusCode).to.equal(200);
-      const { token } = JSON.parse(response.body);
-      return { token };
+      const { token, root } = JSON.parse(response.body);
+      return { token, root };
     };
-    const answerFn = async ({ code, token }) => {
+    const answerFn = async ({ code, root, token }) => {
       const response = await request.post(`${url}/answer`, {
         body: {
+          root,
           headers: {
             issued: stringDate()
           },
@@ -48,7 +49,7 @@ describe("Command gateway integration tests", () => {
       });
       expect(response.statusCode).to.equal(200);
       const { token: newToken } = JSON.parse(response.body);
-      return { token: newToken };
+      return { root, token: newToken };
     };
     const { token } = await getToken({
       issueFn,

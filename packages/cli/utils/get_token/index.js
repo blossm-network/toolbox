@@ -47,9 +47,6 @@ module.exports = async ({ permissions = [], issueFn, answerFn }) => {
     }
   });
 
-  //eslint-disable-next-line
-  console.log("anonymous: ", anonymousToken);
-
   const { token } = issueFn
     ? await issueFn({ phone, token: anonymousToken })
     : await command({
@@ -94,7 +91,6 @@ module.exports = async ({ permissions = [], issueFn, answerFn }) => {
   const { token: answerToken } = answerFn
     ? await answerFn({
         code,
-        root: jwt.context.challenge,
         token,
         identity: jwt.context.identity
       })
@@ -104,11 +100,12 @@ module.exports = async ({ permissions = [], issueFn, answerFn }) => {
       })
         .set({
           context: {
+            challenge: jwt.context.challenge,
             principle: principleRoot,
             identity: jwt.context.identity
           }
         })
-        .issue({ code }, { root: jwt.context.challenge });
+        .issue({ code });
 
   return { token: answerToken };
 };
