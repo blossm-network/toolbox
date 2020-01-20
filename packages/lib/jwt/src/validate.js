@@ -11,7 +11,7 @@ module.exports = async ({ token, verifyFn }) => {
   });
 
   //eslint-disable-next-line
-  console.log("HERE 2: ", !isVerified);
+  console.log("HERE 2: ", { verified: !isVerified, token });
   if (!isVerified) throw deps.invalidCredentialsError.tokenInvalid();
 
   //eslint-disable-next-line

@@ -80,17 +80,4 @@ describe("Authorize", () => {
       expect(e).to.equal(error);
     }
   });
-
-  it("should authorize with no token and not strict", async () => {
-    replace(deps, "tokensFromReq", fake.returns({}));
-    replace(deps, "validate", fake.returns(claims));
-
-    const result = await authorize({
-      req,
-      verifyFn,
-      requiresToken: false
-    });
-
-    expect(result).to.deep.equal({});
-  });
 });

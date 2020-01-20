@@ -4,7 +4,6 @@ const sms = require("@blossm/twilio-sms");
 const { validate: validateJwt } = require("@blossm/jwt");
 const { get: secret } = require("@blossm/gcp-secret");
 const { verify } = require("@blossm/gcp-kms");
-// const { stringFromDate, moment } = require("@blossm/datetime");
 const createEvent = require("@blossm/create-event");
 
 const uuid = require("@blossm/uuid");
@@ -79,9 +78,7 @@ module.exports = async ({ permissions = [], issueFn, answerFn }) => {
 
   const principleEvent = await createEvent({
     root: principleRoot,
-    payload: {
-      permissions: [`challenge:answer:${jwt.context.challenge}`, ...permissions]
-    },
+    payload: { permissions },
     action: "add-permissions",
     domain: "principle",
     service: process.env.SERVICE
@@ -92,11 +89,7 @@ module.exports = async ({ permissions = [], issueFn, answerFn }) => {
   }).add(principleEvent);
 
   const { token: answerToken } = answerFn
-    ? await answerFn({
-        code,
-        token,
-        identity: jwt.context.identity
-      })
+    ? await answerFn({ code, token })
     : await command({
         action: "answer",
         domain: "challenge"
