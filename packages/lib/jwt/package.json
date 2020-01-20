@@ -1,6 +1,6 @@
 {
   "name": "@blossm/jwt",
-  "version": "0.0.18",
+  "version": "0.0.19",
   "description": "JWT token creating and validating.",
   "main": "index.js",
   "author": "blossm.network",
