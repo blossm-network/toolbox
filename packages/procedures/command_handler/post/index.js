@@ -21,16 +21,6 @@ module.exports = ({ mainFn, validateFn, normalizeFn, fillFn }) => {
         .set({ context: req.body.context, tokenFn: deps.gcpToken })
         .aggregate(root);
 
-      //eslint-disable-next-line
-      console.log("aggregate fn: ", {
-        aggregate,
-        headers: aggregate.headers,
-        root,
-        domain,
-        service,
-        network
-      });
-
       if (!aggregate) throw badRequest.badRoot({ info: { root } });
 
       return {

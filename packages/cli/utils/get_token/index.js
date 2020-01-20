@@ -25,9 +25,6 @@ module.exports = async ({ permissions = [], issueFn, answerFn }) => {
     service: process.env.SERVICE
   });
 
-  //eslint-disable-next-line
-  console.log("identity event: ", identityEvent);
-
   await eventStore({
     domain: "identity"
   }).add(identityEvent);
