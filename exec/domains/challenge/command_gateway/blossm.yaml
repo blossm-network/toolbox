@@ -20,6 +20,8 @@ devDependencies:
   "@blossm/request": "*"
   "@blossm/gcp-pubsub": "*"
   "@blossm/get-token": "*"
+  "@blossm/twilio-sms": "*"
+  "@blossm/gcp-secret": "*"
 
 #don't change
 context: command-gateway

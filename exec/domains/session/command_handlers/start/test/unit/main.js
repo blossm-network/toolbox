@@ -63,7 +63,7 @@ describe("Command handler unit tests", () => {
     });
     expect(createJwtFake).to.have.been.calledWith({
       options: {
-        issuer: `start.session.${service}.${network}`,
+        issuer: `session.${service}.${network}/start`,
         audience: `${service}.${network}`,
         expiresIn: 7776000
       },
@@ -115,7 +115,7 @@ describe("Command handler unit tests", () => {
     });
     expect(createJwtFake).to.have.been.calledWith({
       options: {
-        issuer: `start.session.${service}.${network}`,
+        issuer: `session.${service}.${network}/start`,
         subject: principle,
         audience: `${service}.${network}`,
         expiresIn: 7776000

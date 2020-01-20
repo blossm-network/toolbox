@@ -127,7 +127,7 @@ describe("Command handler unit tests", () => {
       options: {
         issuer: `challenge.${service}.${network}/issue`,
         subject: contextPrinciple,
-        audience: `${service}.${network}`,
+        audience: `challenge.${service}.${network}/answer`,
         expiresIn: 3600
       },
       payload: {
@@ -274,7 +274,7 @@ describe("Command handler unit tests", () => {
     expect(createJwtFake).to.have.been.calledWith({
       options: {
         issuer: `challenge.${service}.${network}/issue`,
-        audience: `${service}.${network}`,
+        audience: `challenge.${service}.${network}/answer`,
         expiresIn: 3600
       },
       payload: {

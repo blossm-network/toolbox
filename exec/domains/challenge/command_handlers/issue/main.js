@@ -54,7 +54,7 @@ module.exports = async ({
       issuer: `challenge.${process.env.SERVICE}.${process.env.NETWORK}/issue`,
       // Only add a subject to this token if the context has a principle.
       ...(context.principle && { subject: context.principle }),
-      audience: `${process.env.SERVICE}.${process.env.NETWORK}`,
+      audience: `challenge.${process.env.SERVICE}.${process.env.NETWORK}/answer`,
       expiresIn: ONE_HOUR
     },
     payload: {

@@ -15,12 +15,9 @@
   },
   "dependencies": {
     "@blossm/command-rpc": "^0.0.47",
-    "@blossm/create-event": "^0.0.18",
     "@blossm/event-store-rpc": "^0.0.50",
-    "@blossm/gcp-kms": "^0.0.20",
-    "@blossm/gcp-secret": "^0.0.23",
-    "@blossm/jwt": "^0.0.20",
-    "@blossm/twilio-sms": "*"
+    "@blossm/uuid": "*",
+    "@blossm/create-event": "*"
   },
   "devDependencies": {
     "mocha": "^6.1.4"
