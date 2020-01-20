@@ -13,6 +13,11 @@ module.exports = async ({
   network,
   service
 }) => {
+  //eslint-disable-next-line
+  console.log(
+    "HERE 0: ",
+    context.network !== network || context.service !== service
+  );
   //Do the scopes and the context allow the provided service, network, domain, and action combo?
   if (context.network !== network || context.service !== service)
     throw deps.invalidCredentialsError.tokenInvalid();
@@ -47,6 +52,8 @@ module.exports = async ({
     return !domainViolated && !rootViolated && !priviledgesViolated;
   });
 
+  //eslint-disable-next-line
+  console.log("HERE 1: ", satisfiedPermissions.length == 0);
   if (satisfiedPermissions.length == 0)
     throw deps.invalidCredentialsError.tokenInvalid();
 

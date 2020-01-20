@@ -40,6 +40,9 @@ module.exports = async ({
     .set({ context, tokenFn: deps.gcpToken })
     .query({ key: "phone", value: payload.phone });
 
+  //eslint-disable-next-line
+  console.log("in issue, identity: ", identity);
+
   if (!identity && exists) throw deps.invalidArgumentError.phoneNotRecognized();
 
   // Create the root for this challenge.
@@ -57,7 +60,7 @@ module.exports = async ({
     payload: {
       context: {
         ...context,
-        ...(identity && { identity: identity.root }),
+        ...(identity && { identity: identity.headers.root }),
         challenge: root,
         service: process.env.SERVICE,
         network: process.env.NETWORK
@@ -90,7 +93,7 @@ module.exports = async ({
       {
         payload: {
           code,
-          ...(identity && { principle: identity.principle }),
+          ...(identity && { principle: identity.state.principle }),
           phone: payload.phone,
           issued: deps.stringDate(),
           expires: deps

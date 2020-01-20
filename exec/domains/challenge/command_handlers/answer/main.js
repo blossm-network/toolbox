@@ -13,10 +13,12 @@ module.exports = async ({ payload, context, aggregateFn }) => {
   const root = context.challenge;
 
   //Look for the challenge being answered.
-  const { aggregate: challenge } = await aggregateFn(root);
+  const aggregateResult = await aggregateFn(root);
 
   //Throw if no challenge recognized or if the code is not right.
-  if (!challenge) throw deps.invalidArgumentError.codeNotRecognized();
+  if (!aggregateResult) throw deps.invalidArgumentError.codeNotRecognized();
+
+  const challenge = aggregateResult.aggregate;
 
   if (challenge.code != payload.code)
     throw deps.invalidArgumentError.wrongCode();
@@ -48,7 +50,7 @@ module.exports = async ({ payload, context, aggregateFn }) => {
             context: identity.contexts[0]
           }),
         ...context,
-        identity: identity.root,
+        identity: context.identity,
         service: process.env.SERVICE,
         network: process.env.NETWORK
       }

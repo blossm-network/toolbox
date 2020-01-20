@@ -46,6 +46,8 @@ describe("Command gateway integration tests", () => {
           Authorization: `Bearer ${token}`
         }
       });
+      //eslint-disable-next-line
+      console.log("response: ", response);
       expect(response.statusCode).to.equal(200);
       const { token: newToken } = JSON.parse(response.body);
       return { token: newToken };

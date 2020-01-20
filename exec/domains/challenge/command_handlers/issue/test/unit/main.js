@@ -13,9 +13,13 @@ const principle = "some-identity-principle";
 const identityRoot = "some-identity-root";
 const phone = "some-identity-phone";
 const identity = {
-  principle,
-  phone,
-  root: identityRoot
+  headers: {
+    root: identityRoot
+  },
+  state: {
+    principle,
+    phone
+  }
 };
 const payloadPhone = "some-payload-phone";
 const payload = {
@@ -228,9 +232,8 @@ describe("Command handler unit tests", () => {
     const randomIntFake = fake.returns(code);
     replace(deps, "randomIntOfLength", randomIntFake);
 
-    const contextIdentity = "some-context-identity";
     const options = { exists: false, events: [{ a: 1 }, { b: 2 }] };
-    const context = { c: 3, identity: contextIdentity };
+    const context = { c: 3 };
     const result = await main({
       payload: {
         ...payload
