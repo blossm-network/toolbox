@@ -20,7 +20,6 @@ describe("Command gateway integration tests", () => {
     const { token: anonymousToken } = await getToken({ phone });
     expect(anonymousToken).to.exist;
 
-    //eslint-disable-next-line
     const sentAfter = new Date();
     const response = await request.post(`${url}/issue`, {
       body: {
@@ -62,7 +61,6 @@ describe("Command gateway integration tests", () => {
     expect(response1.statusCode).to.equal(200);
     const { token: answerToken } = JSON.parse(response1.body);
 
-    //eslint-disable-next-line
-    console.log("answer token: ", answerToken);
+    expect(answerToken).to.exist;
   });
 });

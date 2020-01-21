@@ -27,7 +27,7 @@ module.exports = async ({ payload, context }) => {
         identity: identityRoot,
         principle: principleRoot
       },
-      token: deps.gcpToken
+      tokenFn: deps.gcpToken
     })
     .issue(
       {

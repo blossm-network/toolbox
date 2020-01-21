@@ -14,15 +14,12 @@ module.exports = gateway({
 
     return aggregate ? aggregate.state.permissions : [];
   },
-  verifyFn: ({ key }) => {
-    //eslint-disable-next-line
-    console.log("key: ", key);
-    return verify({
+  verifyFn: ({ key }) =>
+    verify({
       ring: process.env.SERVICE,
       key,
       location: "global",
       version: "1",
       project: process.env.GCP_PROJECT
-    });
-  }
+    })
 });

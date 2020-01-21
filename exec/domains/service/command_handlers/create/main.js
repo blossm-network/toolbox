@@ -12,7 +12,7 @@ module.exports = async ({ payload, context }) => {
       action: "create",
       domain: "context"
     })
-    .set({ context, token: deps.gcpToken })
+    .set({ context, tokenFn: deps.gcpToken })
     .issue(
       {
         root: serviceRoot,

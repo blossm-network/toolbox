@@ -91,7 +91,7 @@ describe("Command handler unit tests", () => {
         identity: identityRoot,
         principle: principleRoot
       },
-      token: deps.gcpToken
+      tokenFn: deps.gcpToken
     });
   });
 });

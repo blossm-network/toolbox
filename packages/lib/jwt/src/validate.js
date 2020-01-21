@@ -11,11 +11,7 @@ module.exports = async ({ token, verifyFn }) => {
     signature: base64url.toBase64(signature)
   });
 
-  //eslint-disable-next-line
-  console.log("HERE 2: ", { verified: !isVerified, token });
   if (!isVerified) throw deps.invalidCredentialsError.tokenInvalid();
 
-  //eslint-disable-next-line
-  console.log("decoded: ", decodeJwt(token));
   return decodeJwt(token);
 };

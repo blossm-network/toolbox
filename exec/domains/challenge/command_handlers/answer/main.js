@@ -5,11 +5,6 @@ const deps = require("./deps");
 const NINETY_DAYS = 90 * SECONDS_IN_DAY;
 
 module.exports = async ({ payload, context, aggregateFn }) => {
-  //eslint-disable-next-line
-  console.log("In answer: ", {
-    payload,
-    context
-  });
   const root = context.challenge;
 
   //Look for the challenge being answered.

@@ -17,13 +17,6 @@ module.exports = async ({
   context,
   options: { events, exists = true } = {}
 }) => {
-  //eslint-disable-next-line
-  console.log("In issue: ", {
-    payload,
-    context,
-    events,
-    exists
-  });
   // Lazily load up the sms connection.
   if (!sms) {
     sms = deps.sms(
@@ -39,9 +32,6 @@ module.exports = async ({
     })
     .set({ context, tokenFn: deps.gcpToken })
     .query({ key: "phone", value: payload.phone });
-
-  //eslint-disable-next-line
-  console.log("in issue, identity: ", identity);
 
   if (!identity && exists) throw deps.invalidArgumentError.phoneNotRecognized();
 
@@ -75,8 +65,6 @@ module.exports = async ({
     })
   });
 
-  //eslint-disable-next-line
-  console.log("in issue, token: ", token);
   // Create a challenge code.
   const code = deps.randomIntOfLength(CODE_LENGTH);
 

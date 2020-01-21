@@ -11,14 +11,6 @@ module.exports = async ({
     typ: "JWT"
   };
 
-  //eslint-disable-next-line
-  console.log("creating jwt:", {
-    issuer,
-    subject,
-    audience,
-    expiresIn,
-    payload
-  });
   const stringifiedHeader = JSON.stringify(header);
   const encodedHeader = base64url.fromBase64(
     Buffer.from(stringifiedHeader).toString("base64")
@@ -33,8 +25,7 @@ module.exports = async ({
     iat: deps.timestamp(),
     jti: deps.uuid()
   });
-  //eslint-disable-next-line
-  console.log("stringified payload:", stringifiedPayload);
+
   const encodedPayload = base64url.fromBase64(
     Buffer.from(stringifiedPayload).toString("base64")
   );

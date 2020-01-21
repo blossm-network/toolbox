@@ -8,15 +8,6 @@ module.exports = ({
   version,
   project
 }) => async message => {
-  //eslint-disable-next-line
-  console.log("signing: ", {
-    key,
-    ring,
-    location,
-    version,
-    project,
-    message
-  });
   const client = new kms.KeyManagementServiceClient();
 
   const digest = crypto
@@ -37,7 +28,5 @@ module.exports = ({
     digest: { sha256: digest }
   });
 
-  //eslint-disable-next-line
-  console.log("resulting sig: ", signature.toString("base64"));
   return signature.toString("base64");
 };
