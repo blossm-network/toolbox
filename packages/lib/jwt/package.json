@@ -1,6 +1,6 @@
 {
   "name": "@blossm/jwt",
-  "version": "0.0.22",
+  "version": "0.0.23",
   "description": "JWT token creating and validating.",
   "main": "index.js",
   "author": "blossm.network",
@@ -14,8 +14,8 @@
     "@blossm/datetime": "*",
     "@blossm/errors": "^0.0.11",
     "@blossm/uuid": "*",
-    "jwt-decode": "^2.2.0",
-    "base64url": "^3.0.1"
+    "base64url": "^3.0.1",
+    "jwt-decode": "^2.2.0"
   },
   "scripts": {
     "test": "mocha --recursive"
