@@ -8,6 +8,16 @@ module.exports = ({ key, ring, location, version, project }) => async ({
   message,
   signature
 }) => {
+  //eslint-disable-next-line
+  console.log("verifying sig: ", {
+    key,
+    ring,
+    location,
+    version,
+    project,
+    message,
+    signature
+  });
   if (publicKeys[project] == undefined) {
     const client = new kms.KeyManagementServiceClient();
 
@@ -25,6 +35,9 @@ module.exports = ({ key, ring, location, version, project }) => async ({
 
     publicKeys[project] = pem;
   }
+
+  //eslint-disable-next-line
+  console.log("verifying pem: ", publicKeys[project]);
 
   return crypto
     .createVerify("SHA256")

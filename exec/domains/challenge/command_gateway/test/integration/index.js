@@ -17,12 +17,13 @@ describe("Command gateway integration tests", () => {
   before(async () => await Promise.all(testing.topics.map(t => create(t))));
   after(async () => await Promise.all(testing.topics.map(t => del(t))));
   it("should return successfully", async () => {
-    const { token: anonymousToken } = await getToken();
+    const { token: anonymousToken } = await getToken({ phone });
     expect(anonymousToken).to.exist;
 
     //eslint-disable-next-line no-console
     console.log("anonymous token: ", anonymousToken);
 
+    const sentAfter = new Date();
     const response = await request.post(`${url}/issue`, {
       body: {
         headers: {
@@ -45,7 +46,7 @@ describe("Command gateway integration tests", () => {
     const [message] = await sms(
       await secret("twilio-account-sid"),
       await secret("twilio-auth-token")
-    ).list({ sentAfter: new Date(), limit: 1, to: "+12513332037" });
+    ).list({ sentAfter, limit: 1, to: phone });
 
     const code = message.body.substr(0, 6);
 
