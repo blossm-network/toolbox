@@ -2,9 +2,7 @@ require("localenv");
 const { expect } = require("chai");
 const { string: stringDate } = require("@blossm/datetime");
 const { create, delete: del } = require("@blossm/gcp-pubsub");
-//eslint-disable-next-line
 const sms = require("@blossm/twilio-sms");
-//eslint-disable-next-line
 const { get: secret } = require("@blossm/gcp-secret");
 const getToken = require("@blossm/get-token");
 const request = require("@blossm/request");
@@ -38,33 +36,33 @@ describe("Command gateway integration tests", () => {
       }
     });
     expect(response.statusCode).to.equal(200);
-    // const { token } = JSON.parse(response.body);
+    const { token } = JSON.parse(response.body);
 
-    // const [message] = await sms(
-    //   await secret("twilio-account-sid"),
-    //   await secret("twilio-auth-token")
-    // ).list({ sentAfter, limit: 1, to: phone });
+    const [message] = await sms(
+      await secret("twilio-account-sid"),
+      await secret("twilio-auth-token")
+    ).list({ sentAfter, limit: 1, to: phone });
 
-    // const code = message.body.substr(0, 6);
+    const code = message.body.substr(0, 6);
 
-    // const response1 = await request.post(`${url}/answer`, {
-    //   body: {
-    //     headers: {
-    //       issued: stringDate()
-    //     },
-    //     payload: {
-    //       code
-    //     }
-    //   },
-    //   headers: {
-    //     Authorization: `Bearer ${token}`
-    //   }
-    // });
+    const response1 = await request.post(`${url}/answer`, {
+      body: {
+        headers: {
+          issued: stringDate()
+        },
+        payload: {
+          code
+        }
+      },
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
 
-    // expect(response1.statusCode).to.equal(200);
-    // const { token: answerToken } = JSON.parse(response1.body);
+    expect(response1.statusCode).to.equal(200);
+    const { token: answerToken } = JSON.parse(response1.body);
 
-    // //eslint-disable-next-line
-    // console.log("answer token: ", answerToken);
+    //eslint-disable-next-line
+    console.log("answer token: ", answerToken);
   });
 });
