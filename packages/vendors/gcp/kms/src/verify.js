@@ -18,7 +18,8 @@ module.exports = ({ key, ring, location, version, project }) => async ({
     message,
     signature
   });
-  if (publicKeys[project] == undefined) {
+  const instanceKey = `${project}.${ring}.${key}`;
+  if (publicKeys[instanceKey] == undefined) {
     const client = new kms.KeyManagementServiceClient();
 
     const versionPath = client.cryptoKeyVersionPath(
@@ -33,7 +34,7 @@ module.exports = ({ key, ring, location, version, project }) => async ({
       name: versionPath
     });
 
-    publicKeys[project] = pem;
+    publicKeys[instanceKey] = pem;
   }
 
   //eslint-disable-next-line
@@ -42,5 +43,5 @@ module.exports = ({ key, ring, location, version, project }) => async ({
   return crypto
     .createVerify("SHA256")
     .update(message)
-    .verify(publicKeys[project], signature, "base64");
+    .verify(publicKeys[instanceKey], signature, "base64");
 };
