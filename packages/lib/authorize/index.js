@@ -22,7 +22,14 @@ module.exports = async ({
   if (context.network !== network || context.service !== service)
     throw deps.invalidCredentialsError.tokenInvalid();
 
-  if (priviledges == "none" && !sub) return { context };
+  if (priviledges == "none")
+    return {
+      context: {
+        ...context,
+        permissions: [],
+        ...(sub && { principle: sub })
+      }
+    };
 
   const permissions = await permissionsLookupFn({ principle: sub, context });
 
@@ -46,7 +53,6 @@ module.exports = async ({
 
     const priviledgesViolated =
       permissionPriviledges != WILDCARD &&
-      priviledges != "none" &&
       intersection(permissionPriviledges.split(","), priviledges).length == 0;
 
     return !domainViolated && !rootViolated && !priviledgesViolated;

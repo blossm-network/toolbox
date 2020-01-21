@@ -346,11 +346,10 @@ describe("Authorize", () => {
       service,
       network
     });
-    expect(permissionsLookupFn).to.have.been.calledWith({ principle, context });
     expect(document).to.deep.equal({
       context: {
         ...context,
-        permissions,
+        permissions: [],
         principle
       }
     });
@@ -368,6 +367,11 @@ describe("Authorize", () => {
       network
     });
 
-    expect(document).to.deep.equal({ context });
+    expect(document).to.deep.equal({
+      context: {
+        ...context,
+        permissions: []
+      }
+    });
   });
 });
