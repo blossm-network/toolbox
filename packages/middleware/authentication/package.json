@@ -1,6 +1,6 @@
 {
   "name": "@blossm/authentication-middleware",
-  "version": "0.0.41",
+  "version": "0.0.42",
   "description": "Authentication middleware for the network.",
   "main": "index.js",
   "author": "blossm.network",
@@ -14,7 +14,7 @@
     "test": "mocha --recursive"
   },
   "dependencies": {
-    "@blossm/authenticate": "^0.0.23",
+    "@blossm/authenticate": "^0.0.24",
     "@blossm/gcp-kms": "^0.0.21",
     "express-async-handler": "^1.1.4"
   },
