@@ -1,5 +1,6 @@
 const { expect } = require("chai").use(require("chai-as-promised"));
 const { fake, replace } = require("sinon");
+const base64url = require("base64url");
 
 const deps = require("../deps");
 
@@ -22,7 +23,7 @@ describe("Validate", () => {
     const [header, payload, signature] = token.split(".");
     expect(verifyFn).to.have.been.calledWith({
       message: `${header}.${payload}`,
-      signature
+      signature: base64url.toBase64(signature)
     });
     expect(validatedToken).to.deep.equal(deps.decodeJwt(token));
   });

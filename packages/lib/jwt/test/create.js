@@ -2,10 +2,10 @@ const { expect } = require("chai")
   .use(require("sinon-chai"))
   .use(require("chai-datetime"));
 const { restore, replace, useFakeTimers, fake } = require("sinon");
+const base64url = require("base64url");
 
 const { create } = require("..");
 
-// const base64url = require("../src/clean_base64");
 const deps = require("../deps");
 
 const expiresIn = 300;
@@ -49,10 +49,9 @@ describe("Create", () => {
     };
 
     const stringifiedHeader = JSON.stringify(header);
-    const encodedHeader = Buffer.from(stringifiedHeader).toString("base64");
-    // const encodedHeader = base64url(
-    //   Buffer.from(stringifiedHeader).toString("base64")
-    // );
+    const encodedHeader = base64url.fromBase64(
+      Buffer.from(stringifiedHeader).toString("base64")
+    );
     const stringifiedPayload = JSON.stringify({
       root,
       a: 1,
@@ -63,15 +62,13 @@ describe("Create", () => {
       iat: deps.timestamp(),
       jti: uuid
     });
-    const encodedPayload = Buffer.from(stringifiedPayload).toString("base64");
-    // const encodedPayload = base64url(
-    //   Buffer.from(stringifiedPayload).toString("base64")
-    // );
+    const encodedPayload = base64url.fromBase64(
+      Buffer.from(stringifiedPayload).toString("base64")
+    );
     const token = `${encodedHeader}.${encodedPayload}`;
 
     expect(signFnFake).to.have.been.calledWith(token);
 
-    expect(result).to.equal(`${token}.${signature}`);
-    // expect(result).to.equal(`${token}.${base64url(signature)}`);
+    expect(result).to.equal(`${token}.${base64url.fromBase64(signature)}`);
   });
 });

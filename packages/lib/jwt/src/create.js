@@ -1,5 +1,5 @@
 const deps = require("../deps");
-// const cleanBase64 = require("./clean_base64");
+const base64url = require("base64url");
 
 module.exports = async ({
   options: { issuer, subject, audience, expiresIn },
@@ -20,10 +20,9 @@ module.exports = async ({
     payload
   });
   const stringifiedHeader = JSON.stringify(header);
-  // const encodedHeader = cleanBase64(
-  //   Buffer.from(stringifiedHeader).toString("base64")
-  // );
-  const encodedHeader = Buffer.from(stringifiedHeader).toString("base64");
+  const encodedHeader = base64url.fromBase64(
+    Buffer.from(stringifiedHeader).toString("base64")
+  );
 
   const stringifiedPayload = JSON.stringify({
     ...payload,
@@ -36,15 +35,13 @@ module.exports = async ({
   });
   //eslint-disable-next-line
   console.log("stringified payload:", stringifiedPayload);
-  // const encodedPayload = cleanBase64(
-  //   Buffer.from(stringifiedPayload).toString("base64")
-  // );
-  const encodedPayload = Buffer.from(stringifiedPayload).toString("base64");
+  const encodedPayload = base64url.fromBase64(
+    Buffer.from(stringifiedPayload).toString("base64")
+  );
   const token = `${encodedHeader}.${encodedPayload}`;
 
   const signature = await signFn(token);
-  // const encodedSignature = cleanBase64(signature);
-  const encodedSignature = signature;
+  const encodedSignature = base64url.fromBase64(signature);
 
   return `${token}.${encodedSignature}`;
 };

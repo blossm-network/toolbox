@@ -1,3 +1,4 @@
+const base64url = require("base64url");
 const { decodeJwt } = require("../deps");
 
 const deps = require("../deps");
@@ -7,7 +8,7 @@ module.exports = async ({ token, verifyFn }) => {
 
   const isVerified = await verifyFn({
     message: `${header}.${payload}`,
-    signature
+    signature: base64url.toBase64(signature)
   });
 
   //eslint-disable-next-line
