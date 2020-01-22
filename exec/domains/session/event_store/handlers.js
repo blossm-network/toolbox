@@ -2,13 +2,13 @@ module.exports = {
   start: (state, payload) => {
     return {
       ...state,
-      ...payload
-    };
-  },
-  extend: (state, payload) => {
-    return {
-      ...state,
-      extended: [...(state.extended || []), ...payload.extended]
+      ...payload,
+      ...(payload.context && {
+        contexts: {
+          current: payload.context,
+          all: [payload.context]
+        }
+      })
     };
   },
   upgrade: (state, payload) => {
@@ -17,10 +17,20 @@ module.exports = {
       ...payload
     };
   },
-  end: (state, payload) => {
+  logout: (state, payload) => {
     return {
       ...state,
-      ...payload
+      ...payload,
+      terminated: true
+    };
+  },
+  "switch-context": (state, payload) => {
+    return {
+      ...state,
+      contexts: {
+        current: payload.context,
+        all: [...(state.contexts ? state.contexts.all : []), payload.context]
+      }
     };
   }
 };

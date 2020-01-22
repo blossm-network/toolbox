@@ -6,7 +6,7 @@ module.exports = async ({ root, payload, context }) => {
   const token = await deps.createJwt({
     options: {
       issuer: `session.${process.env.SERVICE}.${process.env.NETWORK}/switch-context`,
-      subject: payload.principle,
+      subject: context.principle,
       audience: `${process.env.SERVICE}.${process.env.NETWORK}`,
       expiresIn: ONE_HOUR
     },

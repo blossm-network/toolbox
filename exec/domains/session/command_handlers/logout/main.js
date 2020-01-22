@@ -5,7 +5,9 @@ const { badRequest } = require("@blossm/errors");
 module.exports = async ({ root, aggregateFn }) => {
   const { aggregate } = await aggregateFn(root);
 
-  if (aggregate.ended) throw badRequest.sessionAlreadyEnded;
+  if (aggregate.terminated) throw badRequest.sessionAlreadyTerminated;
 
-  return { events: [{ ended: deps.stringDate() }] };
+  return {
+    events: [{ root, payload: { loggedout: deps.stringDate() } }]
+  };
 };

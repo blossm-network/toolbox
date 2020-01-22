@@ -41,7 +41,7 @@ module.exports = ({ mainFn, validateFn, normalizeFn, fillFn }) => {
     let asynchronousFns = [];
     for (const {
       root,
-      payload,
+      payload = {},
       correctNumber,
       version = 0,
       action = process.env.ACTION,

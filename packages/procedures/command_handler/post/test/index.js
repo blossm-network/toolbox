@@ -333,7 +333,7 @@ describe("Command handler post", () => {
     expect(statusFake).to.have.been.calledWith(204);
     expect(sendFake).to.have.been.calledWith();
   });
-  it("should call with the correct params with root, options, version passed in", async () => {
+  it("should call with the correct params with root, options, version passed in, and no payload", async () => {
     const validateFnFake = fake();
     const normalizeFnFake = fake.returns(cleanedPayload);
 
@@ -361,7 +361,6 @@ describe("Command handler post", () => {
       {
         root: eventRoot,
         version,
-        payload: eventPayload,
         correctNumber
       }
     ];
@@ -424,7 +423,7 @@ describe("Command handler post", () => {
     });
     expect(createEventFake).to.have.been.calledWith({
       root: eventRoot,
-      payload: eventPayload,
+      payload: {},
       trace,
       context,
       action,

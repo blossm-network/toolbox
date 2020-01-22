@@ -1,8 +1,10 @@
 const deps = require("./deps");
 
 module.exports = async ({ payload, context }) => {
-  const identityRoot = deps.uuid();
-  const principleRoot = deps.uuid();
+  const [identityRoot, principleRoot] = await Promise.all([
+    deps.uuid(),
+    context.principle || deps.uuid() // A principle may already have access to contexts.
+  ]);
 
   const events = [
     {
@@ -10,7 +12,8 @@ module.exports = async ({ payload, context }) => {
       action: "register",
       domain: "identity",
       payload: {
-        phone: payload.phone
+        phone: payload.phone,
+        principle: principleRoot
       },
       correctNumber: 1
     }
@@ -47,10 +50,7 @@ module.exports = async ({ payload, context }) => {
       },
       {
         action: "attempt-register",
-        payload: {
-          phone: payload.phone,
-          principle: principleRoot
-        },
+        payload: {},
         root: identityRoot,
         correctNumber: 0
       }

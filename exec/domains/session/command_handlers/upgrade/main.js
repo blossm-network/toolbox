@@ -6,7 +6,7 @@ const deps = require("./deps");
 module.exports = async ({ root, payload, context, aggregateFn }) => {
   const { aggregate } = await aggregateFn(root);
 
-  if (aggregate.principle != undefined) throw badRequest.sessionAlreadyUpgraded;
+  if (aggregate.upgraded) throw badRequest.sessionAlreadyUpgraded;
 
   const token = await deps.createJwt({
     options: {
@@ -26,7 +26,12 @@ module.exports = async ({ root, payload, context, aggregateFn }) => {
   });
 
   return {
-    events: [{ root, upgraded: deps.stringDate() }],
+    events: [
+      {
+        root,
+        payload: { upgraded: deps.stringDate(), principle: context.principle }
+      }
+    ],
     response: { token }
   };
 };

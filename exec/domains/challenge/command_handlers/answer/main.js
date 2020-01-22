@@ -24,8 +24,10 @@ module.exports = async ({ payload, context, aggregateFn }) => {
   if (Date.parse(challenge.expires) < now)
     throw deps.invalidArgumentError.codeExpired();
 
-  //Lookup the contexts that the requesting identity is in.
-  const { aggregate: identity } = await aggregateFn(context.identity, {
+  //Lookup the contexts that the requesting identity is in to get the principle.
+  const {
+    aggregate: { principle }
+  } = await aggregateFn(context.identity, {
     domain: "identity"
   });
 
@@ -33,19 +35,13 @@ module.exports = async ({ payload, context, aggregateFn }) => {
   const token = await deps.createJwt({
     options: {
       issuer: `answer.challenge.${process.env.SERVICE}.${process.env.NETWORK}`,
-      subject: identity.principle,
+      subject: principle,
       audience: `${process.env.SERVICE}.${process.env.NETWORK}`,
       expiresIn: NINETY_DAYS
     },
     payload: {
       context: {
-        //If the identity is in only one context, add it to the token.
-        ...(identity &&
-          identity.contexts.length == 1 && {
-            context: identity.contexts[0]
-          }),
         ...context,
-        identity: context.identity,
         service: process.env.SERVICE,
         network: process.env.NETWORK
       }

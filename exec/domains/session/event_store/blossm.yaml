@@ -2,9 +2,12 @@ domain: session
 service: core
 
 schema:
-  context: String # Optional. If set, the session can access this context.
-  continued: [Date]
+  started: Date
   ended: Date
+  previous: String
+  contexts:
+    current: String
+    all: [String]
   device: # Device information should be send directly from the device.
     os: String
     version: String
@@ -24,6 +27,7 @@ testing:
           id: some-device-id
     - action: start
       payload:
+        previous: some-previous-session-root
         context: some-context-root
         device:
           os: Android
@@ -36,25 +40,34 @@ testing:
     - action: start
       examples:
         - payload:
+            started: 2021-01-03T00:02:15.000Z
             device:
               os: Android
               version: "10"
               hardware: "Pixel 3"
               manufacturer: Google
               id: some-device-id
-    - action: extend
-      examples:
         - state: {}
           payload:
-            extended: 2020-01-03T00:02:15.000Z
+            started: 2021-01-03T00:02:15.000Z
+            context: some-context-root
+            device:
+              os: Android
+              version: "10"
+              hardware: "Pixel 3"
+              manufacturer: Google
+              id: some-device-id
           result:
-            extended: [2020-01-03T00:02:15.000Z]
-        - state:
-            extended: [2021-01-03T00:02:15.000Z]
-          payload:
-            extended: 2020-01-03T00:02:15.000Z
-          result:
-            extended: [2020-01-03T00:02:15.000Z, 2021-01-03T00:02:15.000Z]
+            started: 2021-01-03T00:02:15.000Z
+            contexts:
+              current: some-context-root
+              all: [some-context-root]
+            device:
+              os: Android
+              version: "10"
+              hardware: "Pixel 3"
+              manufacturer: Google
+              id: some-device-id
     - action: upgrade
       examples:
         - payload:
@@ -64,6 +77,24 @@ testing:
       examples:
         - payload:
             ended: 2021-01-03T00:02:15.000Z
+    - action: switch-context
+      examples:
+        - state: {}
+          payload:
+            context: some-context-root
+          result:
+            contexts:
+              current: some-context-root,
+              all: [some-context-root]
+        - state:
+            current: some-context-root,
+            all: [some-context-root]
+          payload:
+            context: some-other-context-root
+          result:
+            contexts:
+              current: some-other-context-root,
+              all: [some-context-root, some-other-context-root]
 
 #don't change
 context: event-store
