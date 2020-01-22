@@ -8,11 +8,7 @@ const sms = require("@blossm/twilio-sms");
 const { get: secret } = require("@blossm/gcp-secret");
 const { invalidArgument } = require("@blossm/errors");
 
-const {
-  moment,
-  stringFromDate,
-  string: stringDate
-} = require("@blossm/datetime");
+const { moment, string: stringDate } = require("@blossm/datetime");
 
 exports.eventStore = eventStore;
 exports.gcpToken = gcpToken;
@@ -20,7 +16,6 @@ exports.createJwt = createJwt;
 exports.sign = sign;
 exports.uuid = uuid;
 exports.moment = moment;
-exports.stringFromDate = stringFromDate;
 exports.stringDate = stringDate;
 exports.randomIntOfLength = randomIntOfLength;
 exports.secret = secret;

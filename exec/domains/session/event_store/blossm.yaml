@@ -2,9 +2,10 @@ domain: session
 service: core
 
 schema:
-  identity: String
-  # Device information should be send directly from the device.
-  device:
+  context: String # Optional. If set, the session can access this context.
+  continued: [Date]
+  ended: Date
+  device: # Device information should be send directly from the device.
     os: String
     version: String
     hardware: String
@@ -15,17 +16,15 @@ testing:
   examples:
     - action: start
       payload:
-        identity: some-identity-root
         device:
           os: iOS
           version: "10"
           hardware: "iPhone 8"
           manufacturer: Apple
           id: some-device-id
-
     - action: start
       payload:
-        identity: some-other-identity-root
+        context: some-context-root
         device:
           os: Android
           version: "10"
@@ -43,6 +42,28 @@ testing:
               hardware: "Pixel 3"
               manufacturer: Google
               id: some-device-id
+    - action: extend
+      examples:
+        - state: {}
+          payload:
+            extended: 2020-01-03T00:02:15.000Z
+          result:
+            extended: [2020-01-03T00:02:15.000Z]
+        - state:
+            extended: [2021-01-03T00:02:15.000Z]
+          payload:
+            extended: 2020-01-03T00:02:15.000Z
+          result:
+            extended: [2020-01-03T00:02:15.000Z, 2021-01-03T00:02:15.000Z]
+    - action: upgrade
+      examples:
+        - payload:
+            principle: some-principle-root
+            upgraded: 2021-01-03T00:02:15.000Z
+    - action: end
+      examples:
+        - payload:
+            ended: 2021-01-03T00:02:15.000Z
 
 #don't change
 context: event-store

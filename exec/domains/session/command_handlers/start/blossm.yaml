@@ -17,6 +17,7 @@ dependencies:
   "@blossm/gcp-kms": "*"
   "@blossm/uuid": "*"
   "@blossm/duration-consts": "*"
+  "@blossm/datetime": "*"
 
 devDependencies:
   "localenv": "^0.2.2"

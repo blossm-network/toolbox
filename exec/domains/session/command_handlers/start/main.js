@@ -30,5 +30,8 @@ module.exports = async ({ payload, context }) => {
     })
   });
 
-  return { events: [{ payload, root }], response: { token } };
+  return {
+    events: [{ started: deps.stringDate(), payload, root }],
+    response: { token }
+  };
 };
