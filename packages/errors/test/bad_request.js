@@ -83,6 +83,21 @@ describe("Bad request", () => {
       cause
     });
   });
+  it("sessionTerminated correct", () => {
+    const error = badRequest.badRoot();
+    expect(error.message).to.equal("This session is terminated.");
+    expect(error.statusCode).to.equal(400);
+  });
+  it("sessionTerminated correct with props", () => {
+    const error = badRequest.badRoot({ cause, info });
+    expect(error.toJSON()).to.deep.equal({
+      info,
+      statusCode: 400,
+      code: "BadRequest",
+      message: "This session is terminated.",
+      cause
+    });
+  });
   it("badEvent correct", () => {
     const error = badRequest.badEvent();
     expect(error.statusCode).to.equal(400);

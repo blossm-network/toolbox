@@ -32,6 +32,8 @@ testing:
   invalid:
     - name: 3
 
+  root: some-root
+
   pre:
 
   procedures:

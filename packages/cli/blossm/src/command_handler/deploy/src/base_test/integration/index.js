@@ -75,7 +75,7 @@ describe("Command handler integration tests", () => {
   it("should return an error if bad state", async () => {
     if (!testing.pre || !testing.pre.bad) return;
 
-    expect(okExample1).to.exist;
+    const example = okExample1 || okExample0;
 
     for (const {
       action,
@@ -104,9 +104,9 @@ describe("Command handler integration tests", () => {
             issued: stringDate(),
             id: uuid()
           },
-          payload: okExample1.payload,
-          options: okExample1.options,
-          context: okExample1.context
+          payload: example.payload,
+          options: example.options,
+          context: example.context
         }
       });
 

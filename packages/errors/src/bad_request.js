@@ -12,6 +12,8 @@ module.exports = {
     ),
   badRoot: ({ cause, info } = {}) =>
     new BadRequestError({ cause, info, toJSON }, `Invalid root.`),
+  sessionTerminated: ({ cause, info } = {}) =>
+    new BadRequestError({ cause, info, toJSON }, `This session is terminated.`),
   eventHandlerNotSpecified: ({ cause, info } = {}) =>
     new BadRequestError(
       { cause, info, toJSON },

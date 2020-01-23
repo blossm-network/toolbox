@@ -133,26 +133,12 @@ const eventStoreProcedures = ({ procedures }) => {
 const addDefaultProcedures = ({ config }) => {
   const tokenProcedures = [
     {
-      action: "answer",
-      domain: "challenge",
-      context: "command-handler"
-    },
-    {
-      action: "issue",
-      domain: "challenge",
-      context: "command-handler"
-    },
-    {
       action: "start",
       domain: "session",
       context: "command-handler"
     },
     {
       domain: "session",
-      context: "event-store"
-    },
-    {
-      domain: "challenge",
       context: "event-store"
     },
     {
