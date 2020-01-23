@@ -33,6 +33,7 @@ describe("Command handler integration tests", () => {
         const topic = `did-${action}.${domain}.${process.env.SERVICE}`;
         stateTopics.push(topic);
         await create(topic);
+        // console.log("pre: ", { action, domain, root, payload });
         const stateEvent = await createEvent({
           root,
           payload,
@@ -40,6 +41,7 @@ describe("Command handler integration tests", () => {
           domain,
           service: process.env.SERVICE
         });
+        // console.log("event: ", { stateEvent });
 
         await eventStore({ domain }).add(stateEvent);
       }

@@ -1,5 +1,6 @@
 module.exports = {
   start: (state, payload) => {
+    // console.log("start handler: ", { state, payload });
     const context = payload.context;
     delete payload.context;
     return {
@@ -20,6 +21,8 @@ module.exports = {
     };
   },
   logout: (state, payload) => {
+    // console.log("logout handler: ", { state, payload });
+
     return {
       ...state,
       ...payload,
@@ -27,6 +30,7 @@ module.exports = {
     };
   },
   "switch-context": (state, payload) => {
+    // console.log("switch handler: ", { state, payload });
     return {
       ...state,
       contexts: {
