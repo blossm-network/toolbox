@@ -6,9 +6,7 @@ schema:
   loggedout: Date
   terminated: Boolean
   previous: String
-  contexts:
-    current: String
-    all: [String]
+  context: String
   device: # Device information should be send directly from the device.
     os: String
     version: String

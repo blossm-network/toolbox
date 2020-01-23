@@ -1,7 +1,5 @@
 module.exports = {
   start: (state, payload) => {
-    //eslint-disable-next-line
-    console.log("start handler: ", { state, payload });
     const context = payload.context;
     delete payload.context;
     return {
@@ -22,9 +20,6 @@ module.exports = {
     };
   },
   logout: (state, payload) => {
-    //eslint-disable-next-line
-    console.log("logout handler: ", { state, payload });
-
     return {
       ...state,
       ...payload,
@@ -32,8 +27,6 @@ module.exports = {
     };
   },
   "switch-context": (state, payload) => {
-    //eslint-disable-next-line
-    console.log("switch handler: ", { state, payload });
     return {
       ...state,
       contexts: {

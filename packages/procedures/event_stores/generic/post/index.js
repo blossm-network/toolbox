@@ -8,10 +8,6 @@ module.exports = ({ saveEventFn, aggregateFn, publishFn }) => {
     const topicDomain = topicParts[1];
     const topicService = topicParts[2];
 
-    //eslint-disable-next-line
-    console.log("received event: ", {
-      event: req.body.event
-    });
     if (
       topicDomain != process.env.DOMAIN ||
       topicService != process.env.SERVICE
@@ -47,11 +43,7 @@ module.exports = ({ saveEventFn, aggregateFn, publishFn }) => {
       saved: now
     };
 
-    //eslint-disable-next-line
-    console.log("bout tobe saved event: ", event);
     const savedEvent = await saveEventFn(event);
-    //eslint-disable-next-line
-    console.log("saved event: ", savedEvent);
     await publishFn(savedEvent);
 
     res.status(204).send();

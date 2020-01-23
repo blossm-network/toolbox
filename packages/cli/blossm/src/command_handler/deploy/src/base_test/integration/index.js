@@ -57,8 +57,8 @@ describe("Command handler integration tests", () => {
           id: uuid()
         },
         options: okExample0.options,
-        context: okExample0.normalized,
-        payload: okExample0.payload
+        context: okExample0.context,
+        payload: okExample0.normalized
       }
     });
 
@@ -97,8 +97,6 @@ describe("Command handler integration tests", () => {
           domain,
           service: process.env.SERVICE
         });
-        //eslint-disable-next-line
-        console.log("saving state event: ", stateEvent);
         await eventStore({ domain }).add(stateEvent);
       }
       const response = await request.post(url, {

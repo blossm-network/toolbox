@@ -4,12 +4,8 @@ const { badRequest } = require("@blossm/errors");
 const deps = require("./deps");
 
 module.exports = async ({ root, payload, context, aggregateFn }) => {
-  //eslint-disable-next-line
-  console.log("1: ", { root, payload, context });
   const { aggregate } = await aggregateFn(root);
   if (aggregate.terminated) throw badRequest.sessionTerminated();
-  //eslint-disable-next-line
-  console.log("2");
 
   const token = await deps.createJwt({
     options: {
