@@ -19,9 +19,8 @@ schema:
 testing:
   examples:
     - action: start
-      started:
       payload:
-        start: 2020-12-31T00:00:00.000Z
+        started: 2020-12-31T00:00:00.000Z
         device:
           os: iOS
           version: "10"
@@ -30,7 +29,7 @@ testing:
           id: some-device-id
     - action: start
       payload:
-        start: 2020-12-31T00:00:00.000Z
+        started: 2020-12-31T00:00:00.000Z
         previous: some-previous-session-root
         context: some-context-root
         device:
