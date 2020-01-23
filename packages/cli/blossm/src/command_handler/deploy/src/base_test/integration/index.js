@@ -57,7 +57,7 @@ describe("Command handler integration tests", () => {
           id: uuid()
         },
         options: okExample0.options,
-        context: okExample0.context,
+        context: okExample0.normalized,
         payload: okExample0.payload
       }
     });
@@ -106,7 +106,7 @@ describe("Command handler integration tests", () => {
             issued: stringDate(),
             id: uuid()
           },
-          payload: example.payload,
+          payload: example.normalized,
           options: example.options,
           context: example.context
         }

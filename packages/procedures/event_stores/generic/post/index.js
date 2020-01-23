@@ -8,6 +8,10 @@ module.exports = ({ saveEventFn, aggregateFn, publishFn }) => {
     const topicDomain = topicParts[1];
     const topicService = topicParts[2];
 
+    //eslint-disable-next-line
+    console.log("received event: ", {
+      event: req.body.event
+    });
     if (
       topicDomain != process.env.DOMAIN ||
       topicService != process.env.SERVICE
