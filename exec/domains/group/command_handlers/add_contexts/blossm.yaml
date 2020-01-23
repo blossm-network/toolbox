@@ -1,40 +1,34 @@
-action: create
-domain: service
+action: add-contexts
+domain: group
 service: core
 
 payload:
-  name:
-    type: string
+  contexts:
+    type: stringArray
 
 devDependencies:
-  "localenv": "^0.2.2"
   "mocha": "^6.1.4"
   "chai": "^4.2.0"
   "sinon": "^7.3.2"
   "sinon-chai": "^3.3.0"
   "chai-datetime": "^1.5.0"
-  "@blossm/datetime": "*"
-  "@blossm/request": "*"
-  "@blossm/gcp-pubsub": "*"
-  "@blossm/uuid": "*"
 
 testing:
   examples:
     ok:
       - payload:
-          name: Some-name
+          contexts: [some-context-root]
         normalized:
-          name: Some-name
+          contexts: [some-context-root]
 
   invalid:
-    - name: 3
+    - contexts: 3
 
   pre:
 
   procedures:
 
   response:
-    token:
 
 #don't change
 context: command-handler

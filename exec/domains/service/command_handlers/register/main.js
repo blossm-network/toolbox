@@ -7,9 +7,10 @@ module.exports = async ({ payload, context }) => {
     context.principle || deps.uuid()
   ]);
 
+  //just log event instead of a command handler.
   const { token } = await deps
     .command({
-      action: "create",
+      action: "register",
       domain: "context"
     })
     .set({ context, tokenFn: deps.gcpToken })
@@ -23,16 +24,15 @@ module.exports = async ({ payload, context }) => {
       { root: contextRoot }
     );
 
-  // const { token } = await deps
-  //   .command({
-  //     action: "enter",
-  //     domain: "context"
-  //   })
-  //   .set({ context, token: deps.gcpToken })
-  //   .issue({}, { root: contextRoot });
-
   return {
     events: [
+      {
+        root: serviceRoot,
+        payload: {
+          name: payload.name
+        },
+        correctNumber: 0
+      },
       {
         root: principleRoot,
         action: "add-permissions",
@@ -40,14 +40,6 @@ module.exports = async ({ payload, context }) => {
         payload: {
           permissions: [`service:admin:${serviceRoot}`]
         }
-      },
-      {
-        root: serviceRoot,
-        payload: {
-          context: contextRoot,
-          name: payload.name
-        },
-        correctNumber: 0
       }
     ],
     response: { token }

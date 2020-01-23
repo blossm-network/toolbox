@@ -1,12 +1,14 @@
 module.exports = {
   start: (state, payload) => {
+    const context = payload.context;
+    delete payload.context;
     return {
       ...state,
       ...payload,
-      ...(payload.context && {
+      ...(context && {
         contexts: {
-          current: payload.context,
-          all: [payload.context]
+          current: context,
+          all: [context]
         }
       })
     };

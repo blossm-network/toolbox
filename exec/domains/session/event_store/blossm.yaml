@@ -3,7 +3,8 @@ service: core
 
 schema:
   started: Date
-  ended: Date
+  loggedout: Date
+  terminated: Boolean
   previous: String
   contexts:
     current: String
@@ -18,7 +19,9 @@ schema:
 testing:
   examples:
     - action: start
+      started:
       payload:
+        start: 2020-12-31T00:00:00.000Z
         device:
           os: iOS
           version: "10"
@@ -27,6 +30,7 @@ testing:
           id: some-device-id
     - action: start
       payload:
+        start: 2020-12-31T00:00:00.000Z
         previous: some-previous-session-root
         context: some-context-root
         device:
@@ -35,6 +39,12 @@ testing:
           hardware: "Pixel 3"
           manufacturer: Google
           id: some-other-device-id
+    - action: logout
+      payload:
+        loggedout: 2020-12-31T00:00:00.000Z
+    - action: switch-context
+      payload:
+        context: some-context-root
 
   handlers:
     - action: start
@@ -50,6 +60,8 @@ testing:
         - state: {}
           payload:
             started: 2021-01-03T00:02:15.000Z
+            upgraded: 2021-01-03T00:02:15.000Z
+            principle: some-principle-root
             context: some-context-root
             device:
               os: Android
@@ -59,6 +71,8 @@ testing:
               id: some-device-id
           result:
             started: 2021-01-03T00:02:15.000Z
+            upgraded: 2021-01-03T00:02:15.000Z
+            principle: some-principle-root
             contexts:
               current: some-context-root
               all: [some-context-root]
@@ -73,10 +87,14 @@ testing:
         - payload:
             principle: some-principle-root
             upgraded: 2021-01-03T00:02:15.000Z
-    - action: end
+    - action: logout
       examples:
-        - payload:
-            ended: 2021-01-03T00:02:15.000Z
+        - state: {}
+          payload:
+            loggedout: 2021-01-03T00:02:15.000Z
+          result:
+            loggedout: 2021-01-03T00:02:15.000Z
+            terminated: true
     - action: switch-context
       examples:
         - state: {}
@@ -84,16 +102,17 @@ testing:
             context: some-context-root
           result:
             contexts:
-              current: some-context-root,
+              current: some-context-root
               all: [some-context-root]
         - state:
-            current: some-context-root,
-            all: [some-context-root]
+            contexts:
+              current: some-context-root
+              all: [some-context-root]
           payload:
             context: some-other-context-root
           result:
             contexts:
-              current: some-other-context-root,
+              current: some-other-context-root
               all: [some-context-root, some-other-context-root]
 
 #don't change

@@ -50,7 +50,6 @@ module.exports = async ({ payload, context }) => {
       },
       {
         action: "attempt-register",
-        payload: {},
         root: identityRoot,
         correctNumber: 0
       }

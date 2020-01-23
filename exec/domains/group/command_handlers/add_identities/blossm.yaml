@@ -1,18 +1,10 @@
-#
-# This file is required.
-#
-# Give your command-handler an action name,
-# specify which domain it's for,
-# and set which version of the event to create.
-#
-
-action: some-action
-domain: some-domain
+action: add-identities
+domain: group
 service: core
 
 payload:
-  name:
-    type: string
+  identities:
+    type: stringArray
 
 devDependencies:
   "mocha": "^6.1.4"
@@ -25,12 +17,12 @@ testing:
   examples:
     ok:
       - payload:
-          name: Some-name
+          identities: [some-identity-root]
         normalized:
-          name: some-name
+          name: [some-identity-root]
 
   invalid:
-    - name: 3
+    - identities: 3
 
   pre:
 
