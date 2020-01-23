@@ -97,6 +97,8 @@ describe("Command handler integration tests", () => {
           domain,
           service: process.env.SERVICE
         });
+        //eslint-disable-next-line
+        console.log("saving state event: ", stateEvent);
         await eventStore({ domain }).add(stateEvent);
       }
       const response = await request.post(url, {

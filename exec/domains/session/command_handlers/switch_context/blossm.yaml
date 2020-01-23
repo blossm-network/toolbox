@@ -45,7 +45,7 @@ testing:
       - domain: session
         root: some-root
         action: logout
-        payload: {}
+        payload: { loggedout: 2019-12-31T00:00:00.000Z }
         code: 400
 
   procedures:
