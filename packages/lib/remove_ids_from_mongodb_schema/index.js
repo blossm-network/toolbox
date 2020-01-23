@@ -20,6 +20,12 @@ const removeIds = ({ schema, subdocumentsOnly = true }) => {
       typeof schema[property] == "object" &&
       schema[property].type == undefined
     ) {
+      for (const key in schema[property]) {
+        schema[property][key] = removeIds({
+          schema: schema[property][key],
+          subdocumentsOnly: false
+        });
+      }
       schema[property]._id = false;
     }
   }

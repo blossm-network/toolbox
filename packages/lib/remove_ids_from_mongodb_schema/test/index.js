@@ -6,7 +6,8 @@ const schema = {
   b: { c: 2 },
   d: { type: String },
   e: { type: [{ type: { type: String } }] },
-  f: [{ g: 1 }]
+  f: [{ g: 1 }],
+  g: { a: { b: 1 } }
 };
 
 describe("Remove ids from nested schema", () => {
@@ -20,7 +21,8 @@ describe("Remove ids from nested schema", () => {
       },
       d: { type: String },
       e: { type: [{ type: { type: String }, _id: false }] },
-      f: [{ g: 1, _id: false }]
+      f: [{ g: 1, _id: false }],
+      g: { a: { b: 1, _id: false }, _id: false }
     });
   });
 });

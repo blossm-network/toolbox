@@ -47,7 +47,11 @@ module.exports = ({ saveEventFn, aggregateFn, publishFn }) => {
       saved: now
     };
 
+    //eslint-disable-next-line
+    console.log("bout tobe saved event: ", event);
     const savedEvent = await saveEventFn(event);
+    //eslint-disable-next-line
+    console.log("saved event: ", savedEvent);
     await publishFn(savedEvent);
 
     res.status(204).send();
