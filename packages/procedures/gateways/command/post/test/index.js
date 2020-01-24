@@ -10,6 +10,8 @@ const headers = "some-headers";
 const body = "some-body";
 const action = "some-action";
 const domain = "some-domain";
+const context = "some-context";
+const session = "some-session";
 
 const root = "some-root";
 
@@ -35,6 +37,7 @@ describe("Command gateway post", () => {
 
     const req = {
       context,
+      session,
       body,
       params: {}
     };
@@ -57,7 +60,8 @@ describe("Command gateway post", () => {
     });
     expect(setFake).to.have.been.calledWith({
       tokenFn: deps.gcpToken,
-      context
+      context,
+      session
     });
     expect(issueFake).to.have.been.calledWith(payload, { ...headers, root });
     expect(statusFake).to.have.been.calledWith(200);

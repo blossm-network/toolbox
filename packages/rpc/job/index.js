@@ -1,13 +1,14 @@
 const deps = require("./deps");
 
 module.exports = ({ name, domain, service, network }) => {
-  const issue = ({ context, tokenFn } = {}) => async payload => {
+  const issue = ({ context, session, tokenFn } = {}) => async payload => {
     const data = { payload };
     return await deps
       .rpc(name, domain, "job")
       .post(data)
       .in({
         ...(context && { context }),
+        ...(session && { session }),
         ...(service && { service }),
         ...(network && { network })
       })
@@ -15,9 +16,9 @@ module.exports = ({ name, domain, service, network }) => {
   };
 
   return {
-    set: ({ context, tokenFn }) => {
+    set: ({ context, session, tokenFn }) => {
       return {
-        issue: issue({ context, tokenFn })
+        issue: issue({ context, session, tokenFn })
       };
     },
     issue: issue()

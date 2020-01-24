@@ -10,7 +10,22 @@ describe("Authentication middleware", () => {
     restore();
   });
   it("should call correctly", async () => {
-    const claims = "some-claims";
+    const iss = "some-iss";
+    const aud = "some-aud";
+    const sub = "some-sub";
+    const exp = "some-exp";
+    const iat = "some-iat";
+    const jti = "some-jti";
+    const context = "some-context";
+    const claims = {
+      context,
+      iss,
+      aud,
+      sub,
+      exp,
+      iat,
+      jti
+    };
     const req = {};
 
     const authenticateFake = fake.returns(claims);
@@ -24,7 +39,15 @@ describe("Authentication middleware", () => {
       req,
       verifyFn
     });
-    expect(req.claims).to.deep.equal(claims);
+    expect(req.context).to.deep.equal(context);
+    expect(req.session).to.deep.equal({
+      iss,
+      aud,
+      sub,
+      exp,
+      iat,
+      jti
+    });
     expect(nextFake).to.have.been.calledOnce;
   });
   it("should throw correctly", async () => {

@@ -25,6 +25,7 @@ const issued = "some-issued";
 const id = "some-id";
 
 const context = { c: 2 };
+const session = "some-session";
 
 const root = "some-root";
 
@@ -55,7 +56,7 @@ describe("Issue command", () => {
     replace(deps, "uuid", uuidFake);
 
     const result = await command({ action, domain, service, network })
-      .set({ context, tokenFn })
+      .set({ context, session, tokenFn })
       .issue(payload, { trace, source, issued, root, options });
 
     expect(result).to.equal(response);
@@ -71,7 +72,12 @@ describe("Issue command", () => {
       root,
       options
     });
-    expect(inFake).to.have.been.calledWith({ context, service, network });
+    expect(inFake).to.have.been.calledWith({
+      context,
+      session,
+      service,
+      network
+    });
     expect(withFake).to.have.been.calledWith({ tokenFn });
   });
   it("should call with the correct optional params", async () => {

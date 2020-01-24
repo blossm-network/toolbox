@@ -69,7 +69,7 @@ describe("Command handler unit tests", () => {
       options: {
         issuer: `session.${service}.${network}/start`,
         audience: `${service}.${network}`,
-        expiresIn: 3600
+        expiresIn: 7776000
       },
       payload: {
         context: {
@@ -127,7 +127,7 @@ describe("Command handler unit tests", () => {
       options: {
         issuer: `session.${service}.${network}/start`,
         audience: `${service}.${network}`,
-        expiresIn: 3600
+        expiresIn: 7776000
       },
       payload: {
         context: {
@@ -188,7 +188,7 @@ describe("Command handler unit tests", () => {
       options: {
         issuer: `session.${service}.${network}/start`,
         audience: `${service}.${network}`,
-        expiresIn: 3600
+        expiresIn: 7776000
       },
       payload: {
         context: {
@@ -258,7 +258,7 @@ describe("Command handler unit tests", () => {
         issuer: `session.${service}.${network}/start`,
         subject: principle,
         audience: `${service}.${network}`,
-        expiresIn: 3600
+        expiresIn: 7776000
       },
       payload: {
         context: {

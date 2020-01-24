@@ -5,7 +5,8 @@ const deps = require("./deps");
 const WILDCARD = "*";
 
 module.exports = async ({
-  claims: { context, sub },
+  session: { sub },
+  context,
   permissionsLookupFn,
   priviledges = [],
   root = null,
@@ -19,11 +20,8 @@ module.exports = async ({
 
   if (priviledges == "none")
     return {
-      context: {
-        ...context,
-        permissions: [],
-        ...(sub && { principle: sub })
-      }
+      permissions: [],
+      ...(sub && { principle: sub })
     };
 
   const permissions = await permissionsLookupFn({ principle: sub, context });
@@ -57,10 +55,7 @@ module.exports = async ({
     throw deps.invalidCredentialsError.tokenInvalid();
 
   return {
-    context: {
-      ...context,
-      permissions: satisfiedPermissions,
-      principle: sub
-    }
+    permissions: satisfiedPermissions,
+    principle: sub
   };
 };

@@ -5,6 +5,7 @@ module.exports = async ({
   domain = process.env.DOMAIN,
   whitelist,
   permissionsLookupFn,
+  terminatedSessionCheckFn,
   verifyFn
 }) => {
   let server = deps.server({
@@ -27,6 +28,7 @@ module.exports = async ({
           }),
           deps.authorization({
             permissionsLookupFn,
+            terminatedSessionCheckFn,
             priviledges
           })
         ]

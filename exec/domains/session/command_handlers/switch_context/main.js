@@ -1,18 +1,17 @@
-const { SECONDS_IN_HOUR: ONE_HOUR } = require("@blossm/duration-consts");
 const { badRequest } = require("@blossm/errors");
 
 const deps = require("./deps");
 
-module.exports = async ({ root, payload, context, aggregateFn }) => {
+module.exports = async ({ root, payload, context, session, aggregateFn }) => {
   const { aggregate } = await aggregateFn(root);
   if (aggregate.terminated) throw badRequest.sessionTerminated();
 
   const token = await deps.createJwt({
     options: {
-      issuer: `session.${process.env.SERVICE}.${process.env.NETWORK}/switch-context`,
-      subject: context.principle,
-      audience: `${process.env.SERVICE}.${process.env.NETWORK}`,
-      expiresIn: ONE_HOUR
+      issuer: session.iss,
+      subject: session.sub,
+      audience: session.aud,
+      expiresIn: Date.parse(session.exp) - deps.fineTimestamp()
     },
     payload: {
       context: {
@@ -32,7 +31,6 @@ module.exports = async ({ root, payload, context, aggregateFn }) => {
     })
   });
 
-  // console.log("das payload: ", payload);
   return {
     events: [{ root, payload }],
     response: { token }

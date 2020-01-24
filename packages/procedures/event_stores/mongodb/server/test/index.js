@@ -102,6 +102,16 @@ describe("Mongodb event store", () => {
           service: { type: String, required: true },
           trace: { type: String },
           context: { type: Object },
+          session: {
+            type: {
+              iss: String,
+              aud: String,
+              sub: String,
+              exp: String,
+              iat: String,
+              jti: String
+            }
+          },
           created: { type: String, required: true },
           idempotency: { type: String, required: true, unique: true },
           command: {
@@ -234,6 +244,16 @@ describe("Mongodb event store", () => {
           service: { type: String, required: true },
           trace: { type: String },
           context: { type: Object },
+          session: {
+            type: {
+              iss: String,
+              aud: String,
+              sub: String,
+              exp: String,
+              iat: String,
+              jti: String
+            }
+          },
           created: { type: String, required: true },
           idempotency: { type: String, required: true, unique: true },
           command: {
@@ -343,6 +363,16 @@ describe("Mongodb event store", () => {
           service: { type: String, required: true },
           trace: { type: String },
           context: { type: Object },
+          session: {
+            type: {
+              iss: String,
+              aud: String,
+              sub: String,
+              exp: String,
+              iat: String,
+              jti: String
+            }
+          },
           created: { type: String, required: true },
           idempotency: { type: String, required: true, unique: true },
           command: {
@@ -440,6 +470,16 @@ describe("Mongodb event store", () => {
           service: { type: String, required: true },
           trace: { type: String },
           context: { type: Object },
+          session: {
+            type: {
+              iss: String,
+              aud: String,
+              sub: String,
+              exp: String,
+              iat: String,
+              jti: String
+            }
+          },
           created: { type: String, required: true },
           idempotency: { type: String, required: true, unique: true },
           command: {

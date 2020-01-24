@@ -44,6 +44,16 @@ const eventStore = async ({ schema, indexes }) => {
         service: { type: String, required: true },
         version: { type: Number, required: true },
         context: { type: Object },
+        session: {
+          type: {
+            iss: String,
+            aud: String,
+            sub: String,
+            exp: String,
+            iat: String,
+            jti: String
+          }
+        },
         trace: { type: String },
         created: { type: String, required: true },
         idempotency: { type: String, required: true, unique: true },

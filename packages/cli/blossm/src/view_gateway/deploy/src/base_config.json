@@ -2,7 +2,8 @@
   "dependencies": {
     "@blossm/view-gateway": "*",
     "@blossm/event-store-rpc": "*",
-    "@blossm/gcp-kms": "*"
+    "@blossm/gcp-kms": "*",
+    "@blossm/errors": "*"
   },
   "devDependencies": {
     "localenv": "^0.2.2",

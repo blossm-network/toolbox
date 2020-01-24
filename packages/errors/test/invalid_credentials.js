@@ -36,6 +36,25 @@ describe("Invalid credentials", () => {
       message: "This token is expired."
     });
   });
+  it("tokenTerminated correct", () => {
+    const error = invalidCredentials.tokenTerminated();
+    expect(error.toJSON()).to.deep.equal({
+      statusCode: 401,
+      code: "InvalidCredentials",
+      info: {},
+      message: "This token has already been terminated."
+    });
+  });
+  it("tokenTerminated correct with props", () => {
+    const error = invalidCredentials.tokenTerminated({ cause, info });
+    expect(error.toJSON()).to.deep.equal({
+      statusCode: 401,
+      code: "InvalidCredentials",
+      info,
+      cause,
+      message: "This token has already been terminated."
+    });
+  });
   it("phoneNotRecognized correct", () => {
     const error = invalidCredentials.phoneNotRecognized();
     expect(error.toJSON()).to.deep.equal({

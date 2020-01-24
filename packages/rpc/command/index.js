@@ -3,7 +3,7 @@ const { string: dateString } = require("@blossm/datetime");
 const deps = require("./deps");
 
 module.exports = ({ action, domain, service, network }) => {
-  const issue = ({ context, tokenFn } = {}) => async (
+  const issue = ({ context, session, tokenFn } = {}) => async (
     payload,
     { trace, source, issued, root, options } = {}
   ) => {
@@ -25,6 +25,7 @@ module.exports = ({ action, domain, service, network }) => {
       .post(data)
       .in({
         ...(context && { context }),
+        ...(session && { session }),
         ...(service && { service }),
         ...(network && { network })
       })
@@ -32,9 +33,9 @@ module.exports = ({ action, domain, service, network }) => {
   };
 
   return {
-    set: ({ context, tokenFn }) => {
+    set: ({ context, session, tokenFn }) => {
       return {
-        issue: issue({ context, tokenFn })
+        issue: issue({ context, session, tokenFn })
       };
     },
     issue: issue()

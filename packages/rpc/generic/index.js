@@ -6,6 +6,7 @@ const common = ({ method, dataParam, procedure, root, data }) => {
   return {
     in: ({
       context,
+      session,
       service = process.env.SERVICE,
       network = process.env.NETWORK
     }) => {
@@ -28,7 +29,8 @@ const common = ({ method, dataParam, procedure, root, data }) => {
           const response = await method(url, {
             [dataParam]: {
               ...(data != undefined && { ...data }),
-              context
+              ...(context && { context }),
+              ...(session && { session })
             },
             ...(token && {
               headers: {

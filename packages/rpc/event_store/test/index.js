@@ -33,6 +33,7 @@ const network = "some-network";
 const domain = "the-domain-the-event-was-triggered-in";
 
 const context = "some-context";
+const session = "some-session";
 const tokenFn = "some-token-fn";
 const number = "some-number";
 
@@ -40,11 +41,6 @@ const query = {
   key: "some-key",
   value: "some-value"
 };
-
-const envNetwork = "some-env-network";
-const envService = "some-env-service";
-process.env.NETWORK = envNetwork;
-process.env.SERVICE = envService;
 
 describe("Event store", () => {
   beforeEach(() => {
@@ -72,10 +68,9 @@ describe("Event store", () => {
     const trace = "trace";
 
     await eventStore({ domain, service, network })
-      .set({ context, tokenFn })
+      .set({ context, session, tokenFn })
       .add(
         {
-          context,
           headers: {
             root,
             topic,
@@ -104,6 +99,7 @@ describe("Event store", () => {
         headers: {
           root,
           context,
+          session,
           topic,
           action: eventAction,
           domain: eventDomain,
@@ -124,7 +120,12 @@ describe("Event store", () => {
       },
       number
     });
-    expect(inFake).to.have.been.calledWith({ context, service, network });
+    expect(inFake).to.have.been.calledWith({
+      context,
+      session,
+      service,
+      network
+    });
     expect(withFake).to.have.been.calledWith({ tokenFn });
   });
 
@@ -144,7 +145,6 @@ describe("Event store", () => {
     await eventStore({ domain }).add({
       headers: {
         root,
-        context,
         topic,
         action: eventAction,
         domain: eventDomain,
@@ -169,10 +169,7 @@ describe("Event store", () => {
         payload
       }
     });
-    expect(inFake).to.have.been.calledWith({
-      service: envService,
-      network: envNetwork
-    });
+    expect(inFake).to.have.been.calledWith({});
     expect(withFake).to.have.been.calledWith();
   });
 
@@ -193,12 +190,17 @@ describe("Event store", () => {
     const root = "user";
 
     const result = await eventStore({ domain, service, network })
-      .set({ context, tokenFn })
+      .set({ context, session, tokenFn })
       .aggregate(root);
 
     expect(rpcFake).to.have.been.calledWith(domain, "event-store");
     expect(getFake).to.have.been.calledWith({ root });
-    expect(inFake).to.have.been.calledWith({ context, service, network });
+    expect(inFake).to.have.been.calledWith({
+      context,
+      session,
+      service,
+      network
+    });
     expect(withFake).to.have.been.calledWith({ tokenFn });
     expect(result).to.equal(aggregate);
   });
@@ -243,12 +245,17 @@ describe("Event store", () => {
     replace(deps, "rpc", rpcFake);
 
     const result = await eventStore({ domain, service, network })
-      .set({ context, tokenFn })
+      .set({ context, session, tokenFn })
       .query(query);
 
     expect(rpcFake).to.have.been.calledWith(domain, "event-store");
     expect(getFake).to.have.been.calledWith(query);
-    expect(inFake).to.have.been.calledWith({ context, service, network });
+    expect(inFake).to.have.been.calledWith({
+      context,
+      session,
+      service,
+      network
+    });
     expect(withFake).to.have.been.calledWith({ tokenFn });
     expect(result).to.equal(aggregate);
   });

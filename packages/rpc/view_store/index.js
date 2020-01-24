@@ -1,64 +1,72 @@
 const deps = require("./deps");
 
 module.exports = ({ name, domain, service, network }) => {
-  const create = ({ context, tokenFn } = {}) => async properties =>
+  const create = ({ context, session, tokenFn } = {}) => async properties =>
     await deps
       .rpc(name, domain, "view-store")
       .post(properties)
       .in({
         ...(context && { context }),
+        ...(session && { session }),
         ...(service && { service }),
         ...(network && { network })
       })
       .with({ tokenFn });
-  const read = ({ context, tokenFn } = {}) => async query =>
+  const read = ({ context, session, tokenFn } = {}) => async query =>
     await deps
       .rpc(name, domain, "view-store")
       .get(query)
       .in({
         ...(context && { context }),
+        ...(session && { session }),
         ...(service && { service }),
         ...(network && { network })
       })
       .with({ tokenFn });
-  const stream = ({ context, tokenFn } = {}) => async query =>
+  const stream = ({ context, session, tokenFn } = {}) => async query =>
     await deps
       .rpc(name, domain, "view-store")
       .get(query)
       .in({
         ...(context && { context }),
+        ...(session && { session }),
         ...(service && { service }),
         ...(network && { network })
       })
       .with({ path: "/stream", ...(tokenFn && { tokenFn }) });
-  const update = ({ context, tokenFn } = {}) => async (root, properties) =>
+  const update = ({ context, session, tokenFn } = {}) => async (
+    root,
+    properties
+  ) =>
     await deps
       .rpc(name, domain, "view-store")
       .put(root, properties)
       .in({
         ...(context && { context }),
+        ...(session && { session }),
         ...(service && { service }),
         ...(network && { network })
       })
       .with({ tokenFn });
-  const del = ({ context, tokenFn } = {}) => async root =>
+  const del = ({ context, session, tokenFn } = {}) => async root =>
     await deps
       .rpc(name, domain, "view-store")
       .delete(root)
       .in({
         ...(context && { context }),
+        ...(session && { session }),
         ...(service && { service }),
         ...(network && { network })
       })
       .with({ tokenFn });
   return {
-    set: ({ context, tokenFn }) => {
+    set: ({ context, session, tokenFn }) => {
       return {
-        create: create({ context, tokenFn }),
-        read: read({ context, tokenFn }),
-        stream: stream({ context, tokenFn }),
-        update: update({ context, tokenFn }),
-        delete: del({ context, tokenFn })
+        create: create({ context, session, tokenFn }),
+        read: read({ context, session, tokenFn }),
+        stream: stream({ context, session, tokenFn }),
+        update: update({ context, session, tokenFn }),
+        delete: del({ context, session, tokenFn })
       };
     },
     create: create(),

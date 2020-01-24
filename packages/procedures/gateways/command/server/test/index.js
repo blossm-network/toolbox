@@ -5,6 +5,7 @@ const deps = require("../deps");
 const gateway = require("..");
 const whitelist = "some-whitelist";
 const permissionsLookupFn = "some-permissions-fn";
+const terminatedSessionCheckFn = "some-terminated-session-check-fn";
 const domain = "some-domain";
 
 process.env.DOMAIN = domain;
@@ -49,6 +50,7 @@ describe("Command gateway", () => {
       commands,
       whitelist,
       permissionsLookupFn,
+      terminatedSessionCheckFn,
       verifyFn: verifyFnFake
     });
 
@@ -77,6 +79,7 @@ describe("Command gateway", () => {
     expect(verifyFnFake).to.have.been.calledWith({ key: "auth" });
     expect(authorizationFake).to.have.been.calledWith({
       permissionsLookupFn,
+      terminatedSessionCheckFn,
       priviledges
     });
   });
@@ -117,6 +120,7 @@ describe("Command gateway", () => {
       commands,
       whitelist,
       permissionsLookupFn,
+      terminatedSessionCheckFn,
       verifyFn: verifyFnFake
     });
 
@@ -165,6 +169,7 @@ describe("Command gateway", () => {
       commands,
       whitelist,
       permissionsLookupFn,
+      terminatedSessionCheckFn,
       verifyFn: verifyFnFake
     });
 
@@ -191,6 +196,7 @@ describe("Command gateway", () => {
     expect(authorizationFake).to.have.been.calledOnce;
     expect(authorizationFake).to.have.been.calledWith({
       permissionsLookupFn,
+      terminatedSessionCheckFn,
       priviledges
     });
     expect(authorizationFake).to.have.been.calledOnce;
@@ -234,6 +240,7 @@ describe("Command gateway", () => {
       domain: otherDomain,
       whitelist,
       permissionsLookupFn,
+      terminatedSessionCheckFn,
       verifyFn: verifyFnFake
     });
 
@@ -247,7 +254,12 @@ describe("Command gateway", () => {
     const serverFake = fake.throws(new Error(errorMessage));
     replace(deps, "server", serverFake);
     try {
-      await gateway({ commands: [], whitelist, permissionsLookupFn });
+      await gateway({
+        commands: [],
+        whitelist,
+        permissionsLookupFn,
+        terminatedSessionCheckFn
+      });
       //shouldn't get called
       expect(2).to.equal(1);
     } catch (e) {

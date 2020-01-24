@@ -8,6 +8,8 @@ const results = "some-result";
 const query = "some-query";
 const name = "some-name";
 const domain = "some-domain";
+const context = "some-context";
+const session = "some-session";
 
 describe("View gateway get", () => {
   afterEach(() => {
@@ -25,6 +27,7 @@ describe("View gateway get", () => {
 
     const req = {
       context,
+      session,
       query
     };
 
@@ -44,6 +47,7 @@ describe("View gateway get", () => {
     });
     expect(setFake).to.have.been.calledWith({
       context,
+      session,
       tokenFn: deps.gcpToken
     });
     expect(readFake).to.have.been.calledWith(query);

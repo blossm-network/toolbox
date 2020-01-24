@@ -21,6 +21,7 @@ const event = {
 };
 const correctNumber = 4;
 const context = "some-context";
+const session = "some-session";
 const trace = "some-trace";
 const id = "some-id";
 const issued = "some-issued";
@@ -86,7 +87,8 @@ describe("Command handler post", () => {
       body: {
         payload,
         headers,
-        context
+        context,
+        session
       }
     };
 
@@ -109,6 +111,7 @@ describe("Command handler post", () => {
     expect(mainFnFake).to.have.been.calledWith({
       payload: cleanedPayload,
       context,
+      session,
       aggregateFn: match(fn => expect(fn()).to.exist)
     });
 
@@ -122,6 +125,7 @@ describe("Command handler post", () => {
     });
     expect(setFake).to.have.been.calledWith({
       context,
+      session,
       tokenFn: deps.gcpToken
     });
     expect(aggregateFake).to.have.been.calledWith(root);
@@ -132,7 +136,6 @@ describe("Command handler post", () => {
     expect(createEventFake).to.have.been.calledWith({
       payload: eventPayload,
       trace,
-      context,
       action,
       domain,
       service,
@@ -154,6 +157,7 @@ describe("Command handler post", () => {
     expect(addFake).to.have.been.calledWith(event, { number: correctNumber });
     expect(setFake).to.have.been.calledWith({
       context,
+      session,
       tokenFn: deps.gcpToken
     });
     expect(setFake).to.have.been.calledThrice;
@@ -199,7 +203,8 @@ describe("Command handler post", () => {
       body: {
         payload,
         headers,
-        context
+        context,
+        session
       }
     };
 
@@ -259,7 +264,8 @@ describe("Command handler post", () => {
       body: {
         payload,
         headers,
-        context
+        context,
+        session
       }
     };
 
@@ -282,6 +288,7 @@ describe("Command handler post", () => {
     expect(mainFnFake).to.have.been.calledWith({
       payload: cleanedPayload,
       context,
+      session,
       aggregateFn: match(fn => expect(fn()).to.exist)
     });
 
@@ -295,6 +302,7 @@ describe("Command handler post", () => {
     });
     expect(setFake).to.have.been.calledWith({
       context,
+      session,
       tokenFn: deps.gcpToken
     });
     expect(aggregateFake).to.have.been.calledWith(root);
@@ -305,7 +313,6 @@ describe("Command handler post", () => {
     expect(createEventFake).to.have.been.calledWith({
       payload: eventPayload,
       trace,
-      context,
       action,
       domain,
       service,
@@ -327,13 +334,14 @@ describe("Command handler post", () => {
     expect(addFake).to.have.been.calledWith(event, { number: correctNumber });
     expect(setFake).to.have.been.calledWith({
       context,
+      session,
       tokenFn: deps.gcpToken
     });
     expect(setFake).to.have.been.calledThrice;
     expect(statusFake).to.have.been.calledWith(204);
     expect(sendFake).to.have.been.calledWith();
   });
-  it("should call with the correct params with root, options, version passed in, and no payload", async () => {
+  it("should call with the correct params with root, options, session,j version passed in, and no payload", async () => {
     const validateFnFake = fake();
     const normalizeFnFake = fake.returns(cleanedPayload);
 
@@ -376,7 +384,8 @@ describe("Command handler post", () => {
         payload,
         headers,
         options,
-        context
+        context,
+        session
       }
     };
 
@@ -401,6 +410,7 @@ describe("Command handler post", () => {
       root: currentRoot,
       options,
       context,
+      session,
       aggregateFn: match(fn => expect(fn()).to.exist)
     });
 
@@ -414,6 +424,7 @@ describe("Command handler post", () => {
     });
     expect(setFake).to.have.been.calledWith({
       context,
+      session,
       tokenFn: deps.gcpToken
     });
     expect(aggregateFake).to.have.been.calledWith(root);
@@ -425,7 +436,6 @@ describe("Command handler post", () => {
       root: eventRoot,
       payload: {},
       trace,
-      context,
       action,
       domain,
       service,
@@ -447,6 +457,7 @@ describe("Command handler post", () => {
     expect(addFake).to.have.been.calledWith(event, { number: correctNumber });
     expect(setFake).to.have.been.calledWith({
       context,
+      session,
       tokenFn: deps.gcpToken
     });
     expect(setFake).to.have.been.calledThrice;
@@ -487,7 +498,8 @@ describe("Command handler post", () => {
       body: {
         payload,
         headers,
-        context
+        context,
+        session
       }
     };
 
@@ -506,6 +518,7 @@ describe("Command handler post", () => {
     expect(mainFnFake).to.have.been.calledWith({
       payload,
       context,
+      session,
       aggregateFn: match(fn => expect(fn()).to.exist)
     });
 
@@ -519,6 +532,7 @@ describe("Command handler post", () => {
     });
     expect(setFake).to.have.been.calledWith({
       context,
+      session,
       tokenFn: deps.gcpToken
     });
     expect(aggregateFake).to.have.been.calledWith(root);
@@ -529,7 +543,6 @@ describe("Command handler post", () => {
     expect(createEventFake).to.have.been.calledWith({
       payload: eventPayload,
       trace,
-      context,
       action,
       domain,
       service,
@@ -551,6 +564,7 @@ describe("Command handler post", () => {
     expect(addFake).to.have.been.calledWith(event);
     expect(setFake).to.have.been.calledWith({
       context,
+      session,
       tokenFn: deps.gcpToken
     });
     expect(setFake).to.have.been.calledThrice;
@@ -600,7 +614,8 @@ describe("Command handler post", () => {
       body: {
         payload,
         headers,
-        context
+        context,
+        session
       }
     };
 
@@ -623,6 +638,7 @@ describe("Command handler post", () => {
     expect(mainFnFake).to.have.been.calledWith({
       payload: cleanedPayload,
       context,
+      session,
       aggregateFn: match(fn => expect(fn()).to.exist)
     });
 
@@ -645,6 +661,7 @@ describe("Command handler post", () => {
     });
     expect(setFake).to.have.been.calledWith({
       context,
+      session,
       tokenFn: deps.gcpToken
     });
     expect(aggregateFake).to.have.been.calledWith(root);
@@ -655,7 +672,6 @@ describe("Command handler post", () => {
     expect(createEventFake).to.have.been.calledWith({
       payload: eventPayload,
       trace,
-      context,
       action: eventAction,
       domain: eventDomain,
       service,
@@ -677,6 +693,7 @@ describe("Command handler post", () => {
     expect(addFake).to.have.been.calledWith(event, { number: correctNumber });
     expect(setFake).to.have.been.calledWith({
       context,
+      session,
       tokenFn: deps.gcpToken
     });
     expect(setFake).to.have.been.calledThrice;
@@ -714,7 +731,8 @@ describe("Command handler post", () => {
       body: {
         payload,
         headers,
-        context
+        context,
+        session
       }
     };
 
@@ -737,6 +755,7 @@ describe("Command handler post", () => {
     expect(mainFnFake).to.have.been.calledWith({
       payload: cleanedPayload,
       context,
+      session,
       aggregateFn: match(fn => expect(fn()).to.exist)
     });
 
@@ -750,6 +769,7 @@ describe("Command handler post", () => {
     });
     expect(setFake).to.have.been.calledWith({
       context,
+      session,
       tokenFn: deps.gcpToken
     });
     expect(aggregateFake).to.have.been.calledWith(root);
@@ -806,7 +826,8 @@ describe("Command handler post", () => {
       body: {
         payload,
         headers,
-        context
+        context,
+        session
       }
     };
 
@@ -829,6 +850,7 @@ describe("Command handler post", () => {
     expect(mainFnFake).to.have.been.calledWith({
       payload: cleanedPayload,
       context,
+      session,
       aggregateFn: match(fn => expect(fn()).to.exist)
     });
 
@@ -842,6 +864,7 @@ describe("Command handler post", () => {
     });
     expect(setFake).to.have.been.calledWith({
       context,
+      session,
       tokenFn: deps.gcpToken
     });
     expect(aggregateFake).to.have.been.calledWith(root);
@@ -852,7 +875,6 @@ describe("Command handler post", () => {
     expect(createEventFake).to.have.been.calledWith({
       payload: eventPayload,
       trace,
-      context,
       action,
       domain,
       service,
@@ -870,7 +892,6 @@ describe("Command handler post", () => {
     expect(createEventFake).to.have.been.calledWith({
       payload: otherEventPayload,
       trace,
-      context,
       action,
       domain,
       service,
@@ -895,6 +916,7 @@ describe("Command handler post", () => {
     });
     expect(setFake).to.have.been.calledWith({
       context,
+      session,
       tokenFn: deps.gcpToken
     });
     expect(setFake).to.have.been.callCount(4);
@@ -947,7 +969,8 @@ describe("Command handler post", () => {
       body: {
         payload,
         headers,
-        context
+        context,
+        session
       }
     };
 

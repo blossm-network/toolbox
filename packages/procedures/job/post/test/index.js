@@ -47,6 +47,40 @@ describe("Command handler post", () => {
     expect(statusFake).to.have.been.calledWith(204);
     expect(sendFake).to.have.been.calledWith();
   });
+  it("should call with the correct params with context and session", async () => {
+    const mainFnFake = fake();
+
+    const session = "some-session";
+    const context = "some-context";
+
+    const req = {
+      body: {
+        payload,
+        session,
+        context
+      }
+    };
+
+    const sendFake = fake();
+    const statusFake = fake.returns({
+      send: sendFake
+    });
+    const res = {
+      status: statusFake
+    };
+
+    await post({
+      mainFn: mainFnFake
+    })(req, res);
+
+    expect(mainFnFake).to.have.been.calledWith({
+      payload,
+      context,
+      session
+    });
+    expect(statusFake).to.have.been.calledWith(204);
+    expect(sendFake).to.have.been.calledWith();
+  });
   it("should throw correctly", async () => {
     const errorMessage = "some-error-message";
     const mainFnFake = fake.rejects(new Error(errorMessage));

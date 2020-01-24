@@ -6,7 +6,6 @@ module.exports = async ({
   payload,
   version = 0,
   trace,
-  context,
   action,
   domain,
   service,
@@ -23,7 +22,6 @@ module.exports = async ({
       version,
       created: stringDate(),
       idempotency: idempotency || (await deps.uuid()),
-      ...(context != undefined && { context }),
       ...(trace != undefined && { trace }),
       ...(command && {
         command: {

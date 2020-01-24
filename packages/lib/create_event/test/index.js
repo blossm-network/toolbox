@@ -16,7 +16,6 @@ const commandService = "command-service!";
 const commandNetwork = "command-network!";
 const commandIssued = "some-date";
 const root = "root!";
-const context = "some-context";
 const idempotency = "some-idempotency";
 
 const payload = { a: 1 };
@@ -37,7 +36,6 @@ describe("Create event", () => {
   it("should get called with expected params", async () => {
     const value = await createEvent({
       trace,
-      context,
       action,
       domain,
       service,
@@ -59,7 +57,6 @@ describe("Create event", () => {
       headers: {
         root,
         idempotency,
-        context,
         action,
         domain,
         service,
@@ -106,7 +103,6 @@ describe("Create event", () => {
         service: commandService,
         network: commandNetwork
       },
-      context,
       payload
     });
 
@@ -114,7 +110,6 @@ describe("Create event", () => {
       headers: {
         root: rootUuid,
         idempotency: idempUuid,
-        context,
         action,
         domain,
         service,
@@ -137,7 +132,6 @@ describe("Create event", () => {
   it("should get called with expected params if authorized is missing", async () => {
     const value = await createEvent({
       trace,
-      context,
       action,
       domain,
       service,
@@ -159,7 +153,6 @@ describe("Create event", () => {
       headers: {
         root,
         idempotency,
-        context,
         action,
         domain,
         service,
@@ -179,7 +172,7 @@ describe("Create event", () => {
       payload
     });
   });
-  it("should get called with expected params if context is missing", async () => {
+  it("should get called with expected params if context and session are missing", async () => {
     const value = await createEvent({
       trace,
       action,

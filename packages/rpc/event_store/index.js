@@ -2,12 +2,8 @@ const { string: dateString } = require("@blossm/datetime");
 
 const deps = require("./deps");
 
-module.exports = ({
-  domain,
-  service = process.env.SERVICE,
-  network = process.env.NETWORK
-} = {}) => {
-  const add = ({ context, tokenFn } = {}) => async (
+module.exports = ({ domain, service, network } = {}) => {
+  const add = ({ context, session, tokenFn } = {}) => async (
     {
       headers: {
         root,
@@ -33,6 +29,7 @@ module.exports = ({
         version,
         created: dateString(),
         ...(context && { context }),
+        ...(session && { session }),
         ...(trace && { trace }),
         ...(command && { command })
       },
@@ -42,31 +39,53 @@ module.exports = ({
     await deps
       .rpc(domain, "event-store")
       .post({ event, ...(number && { number }) })
-      .in({ ...(context && { context }), service, network })
+      .in({
+        ...(context && { context }),
+        ...(session && { session }),
+        ...(service && { service }),
+        ...(network && { network })
+      })
       .with({ tokenFn });
   };
 
-  const aggregate = ({ context, tokenFn } = {}) => async root =>
+  const aggregate = ({ context, session, tokenFn } = {}) => async root =>
     await deps
       .rpc(domain, "event-store")
       .get({ root })
-      .in({ ...(context && { context }), service, network })
+      .in({
+        ...(context && { context }),
+        ...(session && { session }),
+        ...(service && { service }),
+        ...(network && { network })
+      })
       .with({ tokenFn });
 
-  const query = ({ context, tokenFn } = {}) => async ({ key, value }) => {
+  const query = ({ context, session, tokenFn } = {}) => async ({
+    key,
+    value
+  }) => {
     return await deps
       .rpc(domain, "event-store")
       .get({ key, value })
-      .in({ ...(context && { context }), service, network })
+      .in({
+        ...(context && { context }),
+        ...(session && { session }),
+        ...(service && { service }),
+        ...(network && { network })
+      })
       .with({ tokenFn });
   };
 
   return {
-    set: ({ context, tokenFn } = {}) => {
+    set: ({ context, session, tokenFn } = {}) => {
       return {
-        add: add({ context, tokenFn }),
-        query: query({ context, tokenFn }),
-        aggregate: aggregate({ context, tokenFn })
+        add: add({ context, session, tokenFn }),
+        query: query({
+          ...(context && { context }),
+          ...(session && { session }),
+          tokenFn
+        }),
+        aggregate: aggregate({ context, session, tokenFn })
       };
     },
     add: add(),

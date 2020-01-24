@@ -18,7 +18,11 @@ module.exports = ({ mainFn, validateFn, normalizeFn, fillFn }) => {
     ) => {
       const aggregate = await deps
         .eventStore({ domain, service, network })
-        .set({ context: req.body.context, tokenFn: deps.gcpToken })
+        .set({
+          context: req.body.context,
+          session: req.body.session,
+          tokenFn: deps.gcpToken
+        })
         .aggregate(root);
 
       if (!aggregate) throw badRequest.badRoot({ info: { root } });
@@ -33,6 +37,7 @@ module.exports = ({ mainFn, validateFn, normalizeFn, fillFn }) => {
       payload: req.body.payload,
       ...(req.body.root && { root: req.body.root }),
       ...(req.body.options && { options: req.body.options }),
+      session: req.body.session,
       context: req.body.context,
       aggregateFn
     });
@@ -52,7 +57,6 @@ module.exports = ({ mainFn, validateFn, normalizeFn, fillFn }) => {
           ...(root && { root }),
           payload,
           trace: req.body.headers.trace,
-          context: req.body.context,
           version,
           action,
           domain,
@@ -70,7 +74,11 @@ module.exports = ({ mainFn, validateFn, normalizeFn, fillFn }) => {
 
         await deps
           .eventStore({ domain })
-          .set({ context: req.body.context, tokenFn: deps.gcpToken })
+          .set({
+            context: req.body.context,
+            session: req.body.session,
+            tokenFn: deps.gcpToken
+          })
           .add(event, { number: correctNumber });
       };
 

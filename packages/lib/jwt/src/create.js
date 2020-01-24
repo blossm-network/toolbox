@@ -21,8 +21,8 @@ module.exports = async ({
     iss: issuer,
     aud: audience,
     sub: subject,
-    exp: deps.timestamp() + expiresIn,
-    iat: deps.timestamp(),
+    exp: deps.stringFromDate(new Date(deps.fineTimestamp() + expiresIn)),
+    iat: deps.stringDate(),
     jti: deps.uuid()
   });
 

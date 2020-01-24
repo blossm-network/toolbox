@@ -1,8 +1,13 @@
-const { expect } = require("chai").use(require("sinon-chai"));
-const { restore, replace, fake } = require("sinon");
+const { expect } = require("chai")
+  .use(require("chai-datetime"))
+  .use(require("sinon-chai"));
+const { restore, replace, fake, useFakeTimers } = require("sinon");
 
 const main = require("../../main");
 const deps = require("../../deps");
+
+let clock;
+const now = new Date();
 
 const newContext = "some-new-context";
 const payload = {
@@ -15,11 +20,22 @@ const project = "some-projectl";
 const root = "some-root";
 const principle = "some-principle";
 const identity = "some-identity";
-const session = "some-session";
+const contextSession = "some-context-session";
 const context = {
   principle,
   identity,
-  session
+  session: contextSession
+};
+
+const iss = "some-iss";
+const aud = "some-aud";
+const sub = "some-sub";
+const exp = deps.stringFromDate(new Date(deps.fineTimestamp() + 300));
+const session = {
+  iss,
+  aud,
+  sub,
+  exp
 };
 
 process.env.SERVICE = service;
@@ -27,7 +43,11 @@ process.env.NETWORK = network;
 process.env.GCP_PROJECT = project;
 
 describe("Command handler unit tests", () => {
+  beforeEach(() => {
+    clock = useFakeTimers(now.getTime());
+  });
   afterEach(() => {
+    clock.restore();
     restore();
   });
   it("should return successfully", async () => {
@@ -44,6 +64,7 @@ describe("Command handler unit tests", () => {
       payload,
       root,
       context,
+      session,
       aggregateFn: aggregateFake
     });
 
@@ -66,15 +87,15 @@ describe("Command handler unit tests", () => {
     });
     expect(createJwtFake).to.have.been.calledWith({
       options: {
-        issuer: `session.${service}.${network}/switch-context`,
-        subject: principle,
-        audience: `${service}.${network}`,
-        expiresIn: 3600
+        issuer: iss,
+        subject: sub,
+        audience: aud,
+        expiresIn: Date.parse(exp) - deps.fineTimestamp()
       },
       payload: {
         context: {
           identity,
-          session,
+          session: contextSession,
           context: newContext,
           service,
           network
@@ -116,7 +137,13 @@ describe("Command handler unit tests", () => {
     replace(deps, "createJwt", createJwtFake);
     const aggregateFake = fake.returns({ aggregate: { terminated: false } });
     try {
-      await main({ payload, root, context, aggregateFn: aggregateFake });
+      await main({
+        payload,
+        root,
+        context,
+        session,
+        aggregateFn: aggregateFake
+      });
       //shouldn't get called
       expect(2).to.equal(3);
     } catch (e) {

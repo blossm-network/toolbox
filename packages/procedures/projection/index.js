@@ -8,7 +8,11 @@ module.exports = async ({ fn, name, domain = process.env.DOMAIN } = {}) => {
           name,
           domain
         })
-        .set({ context: event.headers.context, tokenFn: deps.gcpToken })
+        .set({
+          context: event.headers.context,
+          session: event.headers.session,
+          tokenFn: deps.gcpToken
+        })
         .update(event.headers.root, {
           ...(event.headers.trace && { trace: event.headers.trace }),
           ...(await fn(event))

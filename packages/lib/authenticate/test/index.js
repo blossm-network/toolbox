@@ -1,5 +1,6 @@
 const { expect } = require("chai").use(require("sinon-chai"));
 const { restore, replace, fake } = require("sinon");
+const { string: stringDate } = require("@blossm/datetime");
 
 const deps = require("../deps");
 
@@ -15,7 +16,10 @@ const bearer = "bearer-some";
 const tokens = {
   bearer
 };
-const claims = "some-claims";
+
+const claims = {
+  exp: stringDate()
+};
 
 describe("Authorize", () => {
   afterEach(() => {

@@ -13,6 +13,11 @@ module.exports = {
       { cause, info, toJSON },
       "This token is expired."
     ),
+  tokenTerminated: ({ cause, info } = {}) =>
+    new InvalidCredentialsError(
+      { cause, info, toJSON },
+      "This token has already been terminated."
+    ),
   phoneNotRecognized: ({ cause, info } = {}) =>
     new InvalidCredentialsError(
       { cause, info, toJSON },

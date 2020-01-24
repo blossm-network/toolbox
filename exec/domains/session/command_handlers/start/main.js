@@ -1,4 +1,6 @@
-const { SECONDS_IN_HOUR: ONE_HOUR } = require("@blossm/duration-consts");
+const { SECONDS_IN_DAY } = require("@blossm/duration-consts");
+
+const NINETY_DAYS = 90 * SECONDS_IN_DAY;
 
 const deps = require("./deps");
 
@@ -19,7 +21,7 @@ module.exports = async ({ payload, context, aggregateFn }) => {
       issuer: `session.${process.env.SERVICE}.${process.env.NETWORK}/start`,
       ...(context && context.principle && { subject: context.principle }),
       audience: `${process.env.SERVICE}.${process.env.NETWORK}`,
-      expiresIn: ONE_HOUR
+      expiresIn: NINETY_DAYS
     },
     payload: {
       context: {
