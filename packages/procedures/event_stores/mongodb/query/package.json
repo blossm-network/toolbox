@@ -1,7 +1,7 @@
 {
   "name": "@blossm/mongodb-event-store-query",
   "description": "A mongodb event store server query function.",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -14,9 +14,9 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/errors": "^0.0.13",
-    "@blossm/mongodb-database": "^0.0.28",
-    "@blossm/mongodb-event-store-aggregate": "^0.0.8"
+    "@blossm/errors": "^0.0.14",
+    "@blossm/mongodb-database": "^0.0.29",
+    "@blossm/mongodb-event-store-aggregate": "^0.0.9"
   },
   "devDependencies": {
     "chai-datetime": "^1.5.0",

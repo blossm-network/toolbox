@@ -1,6 +1,6 @@
 {
   "name": "@blossm/validator",
-  "version": "0.0.17",
+  "version": "0.0.18",
   "description": "Value validation for common and custom types.",
   "main": "index.js",
   "author": "blossm.network",
@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@blossm/email-validator": "^0.0.3",
-    "@blossm/errors": "^0.0.13",
+    "@blossm/errors": "^0.0.14",
     "@blossm/phone-number": "*",
     "@blossm/validation": "^0.0.5"
   },
