@@ -10,8 +10,6 @@ module.exports = {
       { cause, info, toJSON },
       "No Pub/Sub message received."
     ),
-  badRoot: ({ cause, info } = {}) =>
-    new BadRequestError({ cause, info, toJSON }, `Invalid root.`),
   sessionTerminated: ({ cause, info } = {}) =>
     new BadRequestError({ cause, info, toJSON }, `This session is terminated.`),
   eventHandlerNotSpecified: ({ cause, info } = {}) =>

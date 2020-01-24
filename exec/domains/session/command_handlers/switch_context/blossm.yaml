@@ -27,8 +27,24 @@ testing:
           context: some-context-root
         context:
           session: some-session-root
-          principle: some-principle-root
           identity: some-identity-root
+        session:
+          iss: some-iss
+          aud: some-aud
+          sub: some-sub
+          exp: 20000
+      - payload:
+          context: some-other-context-root
+        normalized:
+          context: some-other-context-root
+        context:
+          session: some-session-root
+          identity: some-identity-root
+        session:
+          iss: some-iss
+          aud: some-aud
+          sub: some-sub
+          exp: 20000
 
   invalid:
     - context: { a: 1 }
@@ -41,14 +57,29 @@ testing:
         root: some-root
         action: start
         payload: {}
+      - domain: context
+        root: some-context-root
+        action: register
+        payload:
+          domain: some-context-domain
+          root: some-context-root
     bad:
       - domain: session
         root: some-root
         action: logout
         payload: { loggedout: 2019-12-31T00:00:00.000Z }
         code: 400
+      - domain: context
+        root: some-bogus-context-root
+        action: register
+        payload:
+          domain: some-context-domain
+          root: some-context-root
+        code: 400
 
   procedures:
+    - domain: context
+      context: event-store
 
   response:
     token:

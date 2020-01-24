@@ -341,7 +341,7 @@ describe("Command handler post", () => {
     expect(statusFake).to.have.been.calledWith(204);
     expect(sendFake).to.have.been.calledWith();
   });
-  it("should call with the correct params with root, options, session,j version passed in, and no payload", async () => {
+  it("should call with the correct params with root, options, session, version passed in, and no payload", async () => {
     const validateFnFake = fake();
     const normalizeFnFake = fake.returns(cleanedPayload);
 

@@ -68,21 +68,6 @@ describe("Bad request", () => {
       cause
     });
   });
-  it("badRoot correct", () => {
-    const error = badRequest.badRoot();
-    expect(error.message).to.equal("Invalid root.");
-    expect(error.statusCode).to.equal(400);
-  });
-  it("badRoot correct with props", () => {
-    const error = badRequest.badRoot({ cause, info });
-    expect(error.toJSON()).to.deep.equal({
-      info,
-      statusCode: 400,
-      code: "BadRequest",
-      message: "Invalid root.",
-      cause
-    });
-  });
   it("sessionTerminated correct", () => {
     const error = badRequest.sessionTerminated();
     expect(error.message).to.equal("This session is terminated.");

@@ -1,9 +1,8 @@
 module.exports = {
-  create: (state, payload) => {
+  register: (state, payload) => {
     return {
       ...state,
       ...payload
     };
-  },
-  enter: state => state
+  }
 };

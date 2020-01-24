@@ -9,7 +9,6 @@ dependencies:
   "@blossm/jwt": "*"
   "@blossm/gcp-kms": "*"
   "@blossm/datetime": "*"
-  "@blossm/duration-consts": "*"
   "@blossm/errors": "*"
 
 devDependencies:

@@ -1,7 +1,7 @@
 const { expect } = require("chai")
   .use(require("chai-datetime"))
   .use(require("sinon-chai"));
-const { restore, replace, fake, useFakeTimers } = require("sinon");
+const { restore, replace, fake, stub, useFakeTimers } = require("sinon");
 
 const main = require("../../main");
 const deps = require("../../deps");
@@ -14,18 +14,17 @@ const payload = {
   context: newContext
 };
 const service = "some-service";
-const network = "some-network";
 const token = "some-token";
 const project = "some-projectl";
 const root = "some-root";
-const principle = "some-principle";
 const identity = "some-identity";
 const contextSession = "some-context-session";
 const context = {
-  principle,
   identity,
   session: contextSession
 };
+const contextAggregateRoot = "some-context-aggregate-root";
+const contextAggregateDomain = "some-context-aggregate-domain";
 
 const iss = "some-iss";
 const aud = "some-aud";
@@ -39,7 +38,6 @@ const session = {
 };
 
 process.env.SERVICE = service;
-process.env.NETWORK = network;
 process.env.GCP_PROJECT = project;
 
 describe("Command handler unit tests", () => {
@@ -58,7 +56,16 @@ describe("Command handler unit tests", () => {
     const createJwtFake = fake.returns(token);
     replace(deps, "createJwt", createJwtFake);
 
-    const aggregateFake = fake.returns({ aggregate: { terminated: false } });
+    const aggregateFake = stub()
+      .onFirstCall()
+      .returns({ aggregate: { terminated: false } })
+      .onSecondCall()
+      .returns({
+        aggregate: {
+          domain: contextAggregateDomain,
+          root: contextAggregateRoot
+        }
+      });
 
     const result = await main({
       payload,
@@ -78,6 +85,8 @@ describe("Command handler unit tests", () => {
       response: { token }
     });
     expect(aggregateFake).to.have.been.calledWith(root);
+    expect(aggregateFake).to.have.been.calledWith(newContext);
+    expect(aggregateFake).to.have.been.calledTwice;
     expect(signFake).to.have.been.calledWith({
       ring: service,
       key: "auth",
@@ -97,8 +106,8 @@ describe("Command handler unit tests", () => {
           identity,
           session: contextSession,
           context: newContext,
-          service,
-          network
+          domain: contextAggregateDomain,
+          root: contextAggregateRoot
         }
       },
       signFn: signature
@@ -112,7 +121,16 @@ describe("Command handler unit tests", () => {
     const createJwtFake = fake.returns(token);
     replace(deps, "createJwt", createJwtFake);
 
-    const aggregateFake = fake.returns({ aggregate: { terminated: true } });
+    const aggregateFake = stub()
+      .onFirstCall()
+      .returns({ aggregate: { terminated: true } })
+      .onSecondCall()
+      .returns({
+        aggregate: {
+          domain: contextAggregateDomain,
+          root: contextAggregateRoot
+        }
+      });
 
     try {
       await main({
@@ -135,7 +153,18 @@ describe("Command handler unit tests", () => {
     const errorMessage = "some-error";
     const createJwtFake = fake.rejects(errorMessage);
     replace(deps, "createJwt", createJwtFake);
-    const aggregateFake = fake.returns({ aggregate: { terminated: false } });
+
+    const aggregateFake = stub()
+      .onFirstCall()
+      .returns({ aggregate: { terminated: false } })
+      .onSecondCall()
+      .returns({
+        aggregate: {
+          domain: contextAggregateDomain,
+          root: contextAggregateRoot
+        }
+      });
+
     try {
       await main({
         payload,

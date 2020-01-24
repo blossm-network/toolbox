@@ -1,7 +1,5 @@
 const deps = require("./deps");
 
-const { badRequest } = require("@blossm/errors");
-
 module.exports = ({ mainFn, validateFn, normalizeFn, fillFn }) => {
   return async (req, res) => {
     if (validateFn) await validateFn(req.body.payload);
@@ -24,8 +22,6 @@ module.exports = ({ mainFn, validateFn, normalizeFn, fillFn }) => {
           tokenFn: deps.gcpToken
         })
         .aggregate(root);
-
-      if (!aggregate) throw badRequest.badRoot({ info: { root } });
 
       return {
         lastEventNumber: aggregate.headers.lastEventNumber,

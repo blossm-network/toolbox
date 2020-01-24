@@ -3,8 +3,14 @@ const { badRequest } = require("@blossm/errors");
 const deps = require("./deps");
 
 module.exports = async ({ root, payload, context, session, aggregateFn }) => {
+  // TODO very that the principle is allowed to switch
+
   const { aggregate } = await aggregateFn(root);
   if (aggregate.terminated) throw badRequest.sessionTerminated();
+
+  const { aggregate: contextAggregate } = await aggregateFn(payload.context, {
+    domain: "context"
+  });
 
   const token = await deps.createJwt({
     options: {
@@ -15,11 +21,10 @@ module.exports = async ({ root, payload, context, session, aggregateFn }) => {
     },
     payload: {
       context: {
-        identity: context.identity,
+        ...context,
         context: payload.context,
-        session: context.session,
-        service: process.env.SERVICE,
-        network: process.env.NETWORK
+        domain: contextAggregate.domain,
+        root: contextAggregate.root
       }
     },
     signFn: deps.sign({

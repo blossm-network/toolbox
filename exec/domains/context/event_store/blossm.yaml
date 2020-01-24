@@ -9,24 +9,28 @@ schema:
 
 testing:
   examples:
-    - action: create
+    - action: register
       payload:
         root: some-context-root
         domain: some-domain
         service: some-service
         network: some-network
-    - action: enter
-      payload: {}
+    - action: register
+      payload:
+        root: some-other-context-root
+        domain: some-other-domain
+        service: some-other-service
+        network: some-other-network
 
   handlers:
-    - action: create
+    - action: register
       examples:
         - payload:
             root: some-context-root
             domain: some-domain
             service: some-service
             network: some-network
-    - action: enter
+    - action: register
       examples:
         - state:
             root: some-context-root

@@ -33,7 +33,6 @@ describe("Command handler integration tests", () => {
         const topic = `did-${action}.${domain}.${process.env.SERVICE}`;
         stateTopics.push(topic);
         await create(topic);
-        // console.log("pre: ", { action, domain, root, payload });
         const stateEvent = await createEvent({
           root,
           payload,
@@ -41,7 +40,6 @@ describe("Command handler integration tests", () => {
           domain,
           service: process.env.SERVICE
         });
-        // console.log("event: ", { stateEvent });
 
         await eventStore({ domain }).add(stateEvent);
       }
@@ -58,7 +56,8 @@ describe("Command handler integration tests", () => {
         },
         options: okExample0.options,
         context: okExample0.context,
-        payload: okExample0.normalized
+        payload: okExample0.normalized,
+        session: okExample0.session
       }
     });
 
@@ -108,7 +107,8 @@ describe("Command handler integration tests", () => {
           },
           payload: example.normalized,
           options: example.options,
-          context: example.context
+          context: example.context,
+          session: example.session
         }
       });
 

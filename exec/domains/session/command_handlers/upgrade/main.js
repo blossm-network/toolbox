@@ -1,19 +1,18 @@
-const { SECONDS_IN_HOUR: ONE_HOUR } = require("@blossm/duration-consts");
 const { badRequest } = require("@blossm/errors");
 
 const deps = require("./deps");
 
-module.exports = async ({ root, payload, context, aggregateFn }) => {
+module.exports = async ({ root, payload, context, session, aggregateFn }) => {
   const { aggregate } = await aggregateFn(root);
 
   if (aggregate.upgraded) throw badRequest.sessionAlreadyUpgraded;
 
   const token = await deps.createJwt({
     options: {
-      issuer: `session.${process.env.SERVICE}.${process.env.NETWORK}/upgrade`,
+      issuer: session.iss,
       subject: payload.principle,
-      audience: `${process.env.SERVICE}.${process.env.NETWORK}`,
-      expiresIn: ONE_HOUR
+      audience: session.aud,
+      expiresIn: Date.parse(session.exp) - deps.fineTimestamp()
     },
     payload: { context },
     signFn: deps.sign({
@@ -29,7 +28,7 @@ module.exports = async ({ root, payload, context, aggregateFn }) => {
     events: [
       {
         root,
-        payload: { upgraded: deps.stringDate(), principle: context.principle }
+        payload: { upgraded: deps.stringDate(), principle: payload.principle }
       }
     ],
     response: { token }
