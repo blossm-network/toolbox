@@ -1,6 +1,6 @@
 {
   "name": "@blossm/authenticate",
-  "version": "0.0.31",
+  "version": "0.0.32",
   "description": "Authenticate requests.",
   "main": "index.js",
   "author": "blossm.network",
@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@blossm/datetime": "*",
-    "@blossm/jwt": "^0.0.28",
+    "@blossm/jwt": "^0.0.29",
     "@blossm/tokens-from-req": "*"
   },
   "scripts": {
