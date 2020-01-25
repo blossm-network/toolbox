@@ -5,7 +5,8 @@ const deps = require("./deps");
 module.exports = async ({ root, payload, context, session, aggregateFn }) => {
   const { aggregate } = await aggregateFn(root);
 
-  if (aggregate.upgraded) throw badRequest.sessionAlreadyUpgraded;
+  if (aggregate.terminated) throw badRequest.sessionTerminated();
+  if (aggregate.upgraded) throw badRequest.sessionAlreadyUpgraded();
 
   const token = await deps.createJwt({
     options: {

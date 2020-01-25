@@ -8,17 +8,29 @@ const deps = require("../../deps");
 
 let clock;
 const now = new Date();
-const code = "some-code";
+
+const principle = "some-principle";
 const payload = {
-  code
+  principle
 };
 const service = "some-service";
-const network = "some-network";
 const token = "some-token";
 const project = "some-projectl";
+const root = "some-root";
+const context = "some-context";
+
+const iss = "some-iss";
+const aud = "some-aud";
+const sub = "some-sub";
+const exp = deps.stringFromDate(new Date(deps.fineTimestamp() + 300));
+const session = {
+  iss,
+  aud,
+  sub,
+  exp
+};
 
 process.env.SERVICE = service;
-process.env.NETWORK = network;
 process.env.GCP_PROJECT = project;
 
 describe("Command handler unit tests", () => {
@@ -37,75 +49,31 @@ describe("Command handler unit tests", () => {
     const createJwtFake = fake.returns(token);
     replace(deps, "createJwt", createJwtFake);
 
-    const root = "some-root";
-    const uuidFake = fake.returns(root);
-    replace(deps, "uuid", uuidFake);
-
-    const result = await main({
-      payload
+    const aggregateFake = fake.returns({
+      aggregate: { terminated: false, upgraded: false }
     });
 
-    expect(result).to.deep.equal({
-      events: [
-        {
-          payload,
-          root
-        }
-      ],
-      response: { token }
-    });
-    expect(signFake).to.have.been.calledWith({
-      ring: service,
-      key: "auth",
-      location: "global",
-      version: "1",
-      project
-    });
-    expect(createJwtFake).to.have.been.calledWith({
-      options: {
-        issuer: `session.${service}.${network}/start`,
-        audience: `${service}.${network}`,
-        expiresIn: 7776000
-      },
-      payload: {
-        context: {
-          service,
-          network
-        }
-      },
-      signFn: signature
-    });
-  });
-  it("should return successfully if there is a context", async () => {
-    const signature = "some-signature";
-    const signFake = fake.returns(signature);
-    replace(deps, "sign", signFake);
-
-    const createJwtFake = fake.returns(token);
-    replace(deps, "createJwt", createJwtFake);
-
-    const root = "some-root";
-    const uuidFake = fake.returns(root);
-    replace(deps, "uuid", uuidFake);
-
-    const principle = "some-principle";
-    const context = {
-      principle
-    };
     const result = await main({
       payload,
-      context
+      root,
+      context,
+      session,
+      aggregateFn: aggregateFake
     });
 
     expect(result).to.deep.equal({
       events: [
         {
-          payload,
+          payload: {
+            ...payload,
+            upgraded: deps.stringDate()
+          },
           root
         }
       ],
       response: { token }
     });
+    expect(aggregateFake).to.have.been.calledWith(root);
     expect(signFake).to.have.been.calledWith({
       ring: service,
       key: "auth",
@@ -115,10 +83,10 @@ describe("Command handler unit tests", () => {
     });
     expect(createJwtFake).to.have.been.calledWith({
       options: {
-        issuer: `session.${service}.${network}/start`,
+        issuer: iss,
         subject: principle,
-        audience: `${service}.${network}`,
-        expiresIn: 7776000
+        audience: aud,
+        expiresIn: Date.parse(exp) - deps.fineTimestamp()
       },
       payload: {
         context
@@ -126,12 +94,75 @@ describe("Command handler unit tests", () => {
       signFn: signature
     });
   });
-  it("should throw correctly", async () => {
-    const errorMessage = "some-error";
-    const uuidFake = fake.rejects(errorMessage);
-    replace(deps, "uuid", uuidFake);
+  it("should throw correctly if session terminated", async () => {
+    const signature = "some-signature";
+    const signFake = fake.returns(signature);
+    replace(deps, "sign", signFake);
+
+    const createJwtFake = fake.returns(token);
+    replace(deps, "createJwt", createJwtFake);
+
+    const aggregateFake = fake.returns({ aggregate: { terminated: true } });
+
     try {
-      await main({ payload });
+      await main({
+        payload,
+        root,
+        context,
+        aggregateFn: aggregateFake
+      });
+      //shouldn't get called
+      expect(2).to.equal(3);
+    } catch (e) {
+      expect(e.statusCode).to.equal(400);
+    }
+  });
+  it("should throw correctly if session has already been upgraded", async () => {
+    const signature = "some-signature";
+    const signFake = fake.returns(signature);
+    replace(deps, "sign", signFake);
+
+    const createJwtFake = fake.returns(token);
+    replace(deps, "createJwt", createJwtFake);
+
+    const aggregateFake = fake.returns({
+      aggregate: { terminated: false, upgraded: true }
+    });
+
+    try {
+      await main({
+        payload,
+        root,
+        context,
+        aggregateFn: aggregateFake
+      });
+      //shouldn't get called
+      expect(2).to.equal(3);
+    } catch (e) {
+      expect(e.statusCode).to.equal(400);
+    }
+  });
+  it("should throw correctly", async () => {
+    const signature = "some-signature";
+    const signFake = fake.returns(signature);
+    replace(deps, "sign", signFake);
+
+    const errorMessage = "some-error";
+    const createJwtFake = fake.rejects(errorMessage);
+    replace(deps, "createJwt", createJwtFake);
+
+    const aggregateFake = fake.returns({
+      aggregate: { terminated: false, upgraded: false }
+    });
+
+    try {
+      await main({
+        payload,
+        root,
+        context,
+        session,
+        aggregateFn: aggregateFake
+      });
       //shouldn't get called
       expect(2).to.equal(3);
     } catch (e) {

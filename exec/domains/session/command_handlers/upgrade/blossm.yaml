@@ -3,7 +3,7 @@ domain: session
 service: core
 
 payload:
-  principle: String
+  principle: string
 
 dependencies:
   "@blossm/jwt": "*"
@@ -12,13 +12,11 @@ dependencies:
   "@blossm/errors": "*"
 
 devDependencies:
-  "localenv": "^0.2.2"
   "mocha": "^6.1.4"
   "chai": "^4.2.0"
   "sinon": "^7.3.2"
   "sinon-chai": "^3.3.0"
   "chai-datetime": "^1.5.0"
-  "@blossm/request": "*"
 
 testing:
   examples:
@@ -27,11 +25,34 @@ testing:
           principle: some-principle-root
         normalized:
           principle: some-principle-root
+        session:
+          iss: some-iss
+          aud: some-aud
+          sub: some-sub
+          exp: 20000
 
   invalid:
-    - principle: 3
+    - principle: { a: 1 }
+
+  root: some-root
 
   pre:
+    ok:
+      - domain: session
+        root: some-root
+        action: start
+        payload: {}
+    bad:
+      - domain: session
+        root: some-root
+        action: logout
+        payload: { loggedout: 2019-12-31T00:00:00.000Z }
+        code: 400
+      - domain: session
+        root: some-root
+        action: upgrade
+        payload: { upgraded: 2019-12-31T00:00:00.000Z }
+        code: 400
 
   procedures:
 

@@ -75,7 +75,7 @@ testing:
         payload:
           domain: some-context-domain
           root: some-context-root
-        code: 400
+        code: 404
 
   procedures:
     - domain: context

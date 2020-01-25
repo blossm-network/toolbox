@@ -4,6 +4,8 @@ service: core
 commands:
   - action: start
     protected: false
+  - action: switch-context
+    priviledges: [~context]
 
 whitelist:
   - "127.0.0.1"

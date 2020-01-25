@@ -83,6 +83,36 @@ describe("Bad request", () => {
       cause
     });
   });
+  it("sessionAlreadyTerminated correct", () => {
+    const error = badRequest.sessionAlreadyTerminated();
+    expect(error.message).to.equal("This session has already been terminated.");
+    expect(error.statusCode).to.equal(400);
+  });
+  it("sessionAlreadyTerminated correct with props", () => {
+    const error = badRequest.sessionAlreadyTerminated({ cause, info });
+    expect(error.toJSON()).to.deep.equal({
+      info,
+      statusCode: 400,
+      code: "BadRequest",
+      message: "This session has already been terminated.",
+      cause
+    });
+  });
+  it("sessionAlreadyUpgraded correct", () => {
+    const error = badRequest.sessionAlreadyUpgraded();
+    expect(error.message).to.equal("This session has already been upgraded.");
+    expect(error.statusCode).to.equal(400);
+  });
+  it("sessionAlreadyUpgraded correct with props", () => {
+    const error = badRequest.sessionAlreadyUpgraded({ cause, info });
+    expect(error.toJSON()).to.deep.equal({
+      info,
+      statusCode: 400,
+      code: "BadRequest",
+      message: "This session has already been upgraded.",
+      cause
+    });
+  });
   it("badEvent correct", () => {
     const error = badRequest.badEvent();
     expect(error.statusCode).to.equal(400);

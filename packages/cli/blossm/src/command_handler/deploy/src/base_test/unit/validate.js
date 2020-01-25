@@ -45,6 +45,7 @@ describe("Command handler store validator tests", () => {
   });
 
   it("should throw if invalid param is passed", async () => {
+    if (!testing.invalid) return;
     for (const value of testing.invalid) {
       for (const property in value) {
         if (typeof property == "object")

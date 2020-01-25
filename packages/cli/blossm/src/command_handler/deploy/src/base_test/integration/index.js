@@ -137,13 +137,14 @@ describe("Command handler integration tests", () => {
     await Promise.all(parallelFns);
   });
   it("should return an error if incorrect params", async () => {
+    if (!testing.invalid || !testing.invalid[0]) return;
     const response = await request.post(url, {
       body: {
         headers: {
           issued: stringDate(),
           id: uuid()
         },
-        payload: testing.invalid
+        payload: testing.invalid[0]
       }
     });
 

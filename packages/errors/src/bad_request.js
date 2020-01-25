@@ -12,6 +12,16 @@ module.exports = {
     ),
   sessionTerminated: ({ cause, info } = {}) =>
     new BadRequestError({ cause, info, toJSON }, `This session is terminated.`),
+  sessionAlreadyTerminated: ({ cause, info } = {}) =>
+    new BadRequestError(
+      { cause, info, toJSON },
+      `This session has already been terminated.`
+    ),
+  sessionAlreadyUpgraded: ({ cause, info } = {}) =>
+    new BadRequestError(
+      { cause, info, toJSON },
+      `This session has already been upgraded.`
+    ),
   eventHandlerNotSpecified: ({ cause, info } = {}) =>
     new BadRequestError(
       { cause, info, toJSON },
