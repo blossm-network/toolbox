@@ -58,8 +58,12 @@ describe("Command handler unit tests", () => {
 
     const aggregateFake = stub()
       .onFirstCall()
-      .returns({ aggregate: { terminated: false } })
+      .returns({
+        aggregate: { permissions: [`context:some-priviledges:${newContext}`] }
+      })
       .onSecondCall()
+      .returns({ aggregate: { terminated: false } })
+      .onThirdCall()
       .returns({
         aggregate: {
           domain: contextAggregateDomain,
@@ -84,9 +88,10 @@ describe("Command handler unit tests", () => {
       ],
       response: { token }
     });
+    expect(aggregateFake).to.have.been.calledWith(sub);
     expect(aggregateFake).to.have.been.calledWith(root);
     expect(aggregateFake).to.have.been.calledWith(newContext);
-    expect(aggregateFake).to.have.been.calledTwice;
+    expect(aggregateFake).to.have.callCount(3);
     expect(signFake).to.have.been.calledWith({
       ring: service,
       key: "auth",
@@ -113,6 +118,34 @@ describe("Command handler unit tests", () => {
       signFn: signature
     });
   });
+  it("should throw correctly if context isnt accessible", async () => {
+    const signature = "some-signature";
+    const signFake = fake.returns(signature);
+    replace(deps, "sign", signFake);
+
+    const createJwtFake = fake.returns(token);
+    replace(deps, "createJwt", createJwtFake);
+
+    const aggregateFake = stub()
+      .onFirstCall()
+      .returns({
+        aggregate: { permissions: [`context:some-priviledges:bogus`] }
+      });
+
+    try {
+      await main({
+        payload,
+        root,
+        context,
+        session,
+        aggregateFn: aggregateFake
+      });
+      //shouldn't get called
+      expect(2).to.equal(3);
+    } catch (e) {
+      expect(e.statusCode).to.equal(401);
+    }
+  });
   it("should throw correctly if session terminated", async () => {
     const signature = "some-signature";
     const signFake = fake.returns(signature);
@@ -123,8 +156,12 @@ describe("Command handler unit tests", () => {
 
     const aggregateFake = stub()
       .onFirstCall()
-      .returns({ aggregate: { terminated: true } })
+      .returns({
+        aggregate: { permissions: [`context:some-priviledges:${newContext}`] }
+      })
       .onSecondCall()
+      .returns({ aggregate: { terminated: true } })
+      .onThirdCall()
       .returns({
         aggregate: {
           domain: contextAggregateDomain,
@@ -137,6 +174,7 @@ describe("Command handler unit tests", () => {
         payload,
         root,
         context,
+        session,
         aggregateFn: aggregateFake
       });
       //shouldn't get called
@@ -156,8 +194,12 @@ describe("Command handler unit tests", () => {
 
     const aggregateFake = stub()
       .onFirstCall()
-      .returns({ aggregate: { terminated: false } })
+      .returns({
+        aggregate: { permissions: [`context:some-priviledges:${newContext}`] }
+      })
       .onSecondCall()
+      .returns({ aggregate: { terminated: false } })
+      .onThirdCall()
       .returns({
         aggregate: {
           domain: contextAggregateDomain,

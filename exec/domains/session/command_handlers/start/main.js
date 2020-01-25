@@ -15,7 +15,7 @@ module.exports = async ({ payload, context, aggregateFn }) => {
     if (previousSessionAggregate.terminated) context = null;
   }
 
-  // Create a token that is valid for one hour.
+  // Create a long-lived token.
   const token = await deps.createJwt({
     options: {
       issuer: `session.${process.env.SERVICE}.${process.env.NETWORK}/start`,

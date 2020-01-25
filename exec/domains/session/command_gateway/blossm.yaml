@@ -4,8 +4,11 @@ service: core
 commands:
   - action: start
     protected: false
+  - action: logout
+    priviledges: [admin]
   - action: switch-context
-    priviledges: [~context]
+    # Nested array priviledges should be interpretted as AND
+    priviledges: [[admin, "context:*:&context"]]
 
 whitelist:
   - "127.0.0.1"

@@ -4,9 +4,11 @@ service: core
 schema:
   started: Date
   loggedout: Date
+  upgraded: Date
   terminated: Boolean
   previous: String
   context: String
+  principle: String
   device: # Device information should be send directly from the device.
     os: String
     version: String
