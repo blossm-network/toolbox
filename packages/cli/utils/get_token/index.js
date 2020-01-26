@@ -8,7 +8,11 @@ module.exports = async ({
   context = {},
   phone = "+19195551144"
 } = {}) => {
-  const [identityRoot, principleRoot] = await Promise.all([uuid(), uuid()]);
+  const [identityRoot, principleRoot, sessionRoot] = await Promise.all([
+    uuid(),
+    uuid(),
+    uuid()
+  ]);
 
   // Create the identity for the token.
   await eventStore({
@@ -42,30 +46,50 @@ module.exports = async ({
   );
 
   // Start a session for the identity.
-  const { token } = await command({
+  await command({
     action: "start",
+    domain: "session"
+  }).issue({
+    device: {
+      os: "test",
+      hardware: "test",
+      version: "test",
+      manufacturer: "test",
+      id: "test"
+    }
+  });
+
+  // Add a session.
+  await eventStore({
+    domain: "session"
+  }).add(
+    await createEvent({
+      root: sessionRoot,
+      payload: {},
+      action: "start",
+      domain: "session",
+      service: process.env.SERVICE
+    })
+  );
+
+  const { token } = await command({
+    action: "upgrade",
     domain: "session"
   })
     .set({
-      context: {
-        identity: identityRoot,
-        principle: principleRoot,
-        ...context,
-        service: process.env.SERVICE,
-        network: process.env.NETWORK
+      context,
+      session: {
+        iss: `sesstion.${process.env.SERVICE}.${process.env.NETWORK}/start`,
+        aud: `${process.env.SERVICE}.${process.env.NETWORK}`,
+        exp: " 2999-12-31T00:00:00.000Z"
       }
-      // No need to include a tokenFn because this should
-      // only be called in testing.
     })
-    .issue({
-      device: {
-        os: "test",
-        hardware: "test",
-        version: "test",
-        manufacturer: "test",
-        id: "test"
-      }
-    });
+    .issue(
+      {
+        principle: principleRoot
+      },
+      { root: sessionRoot }
+    );
 
   return { token };
 };

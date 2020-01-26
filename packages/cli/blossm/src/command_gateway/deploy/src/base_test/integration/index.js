@@ -14,15 +14,18 @@ describe("Command gateway integration tests", () => {
   after(async () => await Promise.all(testing.topics.map(t => del(t))));
   it("should return successfully", async () => {
     const requiredPermissions = commands.reduce((permissions, command) => {
-      return command.priviledges == "none"
+      return command.permissions == "none"
         ? permissions
         : [
             ...new Set([
               ...permissions,
-              ...(command.priviledges
-                ? command.priviledges.map(
-                    priviledge => `${process.env.DOMAIN}:${priviledge}`
-                  )
+              ...(command.permissions
+                ? command.permissions.map(permission => {
+                    const permissionComponents = permission.split(":");
+                    return permissionComponents.length == 1
+                      ? `${process.env.DOMAIN}:${permissionComponents[0]}`
+                      : `${permissionComponents[0]}:${permissionComponents[1]}`;
+                  })
                 : [])
             ])
           ];
@@ -52,7 +55,7 @@ describe("Command gateway integration tests", () => {
         expect(response0.statusCode).to.be.lessThan(500);
       });
 
-      if (command.priviledges == "none") continue;
+      if (command.permissions == "none") continue;
 
       parallelFns.push(async () => {
         const response1 = await request.post(`${url}/${command.action}`, {
