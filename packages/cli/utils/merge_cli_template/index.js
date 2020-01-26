@@ -133,7 +133,7 @@ const eventStoreProcedures = ({ procedures }) => {
 const addDefaultProcedures = ({ config }) => {
   const tokenProcedures = [
     {
-      action: "start",
+      action: "upgrade",
       domain: "session",
       context: "command-handler"
     },
