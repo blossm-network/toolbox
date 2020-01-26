@@ -1,11 +1,12 @@
 const deps = require("./deps");
 
-const { badRequest } = require("@blossm/errors");
-
 module.exports = async ({ root, aggregateFn }) => {
+  // Get the aggregate for this session.
   const { aggregate } = await aggregateFn(root);
 
-  if (aggregate.terminated) throw badRequest.sessionAlreadyTerminated();
+  // Check to see if this session has already been terminated.
+  if (aggregate.terminated)
+    throw deps.badRequestError.sessionAlreadyTerminated();
 
   return {
     events: [{ root, payload: { loggedout: deps.stringDate() } }]

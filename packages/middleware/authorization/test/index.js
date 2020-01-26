@@ -4,7 +4,7 @@ const deps = require("../deps");
 const authorizationMiddleware = require("..");
 
 const permissionsLookupFn = "some-permissions-lookup-fn";
-const priviledges = "some-priv";
+const permissions = "some-permissions";
 const domain = "some-domain";
 const service = "some-service";
 const network = "some-network";
@@ -47,7 +47,7 @@ describe("Authorization middleware", () => {
       network,
       permissionsLookupFn,
       terminatedSessionCheckFn: terminatedSessionCheckFake,
-      priviledges
+      permissions
     })(req, null, nextFake);
 
     expect(authorizationFake).to.have.been.calledWith({
@@ -56,7 +56,7 @@ describe("Authorization middleware", () => {
       session: reqSession,
       permissionsLookupFn,
       root,
-      priviledges,
+      permissions,
       domain,
       service,
       network
@@ -86,7 +86,7 @@ describe("Authorization middleware", () => {
       domain,
       permissionsLookupFn,
       terminatedSessionCheckFn: terminatedSessionCheckFake,
-      priviledges
+      permissions
     })(req, null, nextFake);
 
     expect(authorizationFake).to.have.been.calledWith({
@@ -94,7 +94,7 @@ describe("Authorization middleware", () => {
       session: reqSession,
       context: otherContext,
       permissionsLookupFn,
-      priviledges,
+      permissions,
       domain,
       service: envService,
       network: envNetwork
@@ -126,7 +126,7 @@ describe("Authorization middleware", () => {
       network,
       permissionsLookupFn,
       terminatedSessionCheckFn: terminatedSessionCheckFake,
-      priviledges
+      permissions
     })(req, null, nextFake);
 
     expect(nextFake).to.have.been.calledWith(error);
@@ -157,7 +157,7 @@ describe("Authorization middleware", () => {
       network,
       permissionsLookupFn,
       terminatedSessionCheckFn: terminatedSessionCheckFake,
-      priviledges
+      permissions
     })(req, null, nextFake);
 
     expect(nextFake).to.have.been.calledWith(error);

@@ -5,11 +5,9 @@ schema:
   started: Date
   loggedout: Date
   upgraded: Date
-  terminated: Boolean
-  previous: String
   context: String
   principle: String
-  device: # Device information should be send directly from the device.
+  device:
     os: String
     version: String
     hardware: String
@@ -72,9 +70,7 @@ testing:
             started: 2021-01-03T00:02:15.000Z
             upgraded: 2021-01-03T00:02:15.000Z
             principle: some-principle-root
-            contexts:
-              current: some-context-root
-              all: [some-context-root]
+            context: some-context-root
             device:
               os: Android
               version: "10"
@@ -96,23 +92,8 @@ testing:
             terminated: true
     - action: switch-context
       examples:
-        - state: {}
-          payload:
+        - payload:
             context: some-context-root
-          result:
-            contexts:
-              current: some-context-root
-              all: [some-context-root]
-        - state:
-            contexts:
-              current: some-context-root
-              all: [some-context-root]
-          payload:
-            context: some-other-context-root
-          result:
-            contexts:
-              current: some-other-context-root
-              all: [some-context-root, some-other-context-root]
 
 #don't change
 context: event-store

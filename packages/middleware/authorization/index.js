@@ -7,7 +7,7 @@ module.exports = ({
   network = process.env.NETWORK,
   permissionsLookupFn,
   terminatedSessionCheckFn,
-  priviledges
+  permissions
 }) =>
   asyncHandler(async (req, _, next) => {
     const [policy] = await Promise.all([
@@ -16,7 +16,7 @@ module.exports = ({
         context: req.context,
         session: req.session,
         permissionsLookupFn,
-        priviledges,
+        permissions,
         domain,
         service,
         network,

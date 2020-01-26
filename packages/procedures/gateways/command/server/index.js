@@ -21,7 +21,7 @@ module.exports = async ({
   for (const {
     action,
     key = "auth",
-    priviledges,
+    permissions,
     protected = true
   } of commands) {
     server = server.post(deps.post({ action, domain }), {
@@ -34,7 +34,7 @@ module.exports = async ({
           deps.authorization({
             permissionsLookupFn,
             terminatedSessionCheckFn,
-            priviledges
+            permissions
           })
         ]
       })

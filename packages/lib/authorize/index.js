@@ -8,7 +8,7 @@ module.exports = async ({
   session: { sub },
   context,
   permissionsLookupFn,
-  priviledges = [],
+  permissions = [],
   root = null,
   domain = null,
   network,
@@ -18,38 +18,66 @@ module.exports = async ({
   if (context.network !== network || context.service !== service)
     throw deps.invalidCredentialsError.tokenInvalid();
 
-  if (priviledges == "none")
+  if (permissions == "none")
     return {
       permissions: [],
       ...(sub && { principle: sub })
     };
 
-  const permissions = await permissionsLookupFn({ principle: sub, context });
-
-  const satisfiedPermissions = permissions.filter(permission => {
-    const [
-      permissionDomain,
-      permissionPriviledges,
-      permissionRoot
-    ] = permission.split(":");
-
-    const domainViolated =
-      permissionDomain != WILDCARD &&
-      domain != undefined &&
-      !permissionDomain.split(",").includes(domain);
-
-    const rootViolated =
-      permissionRoot != undefined &&
-      permissionRoot != WILDCARD &&
-      root != undefined &&
-      !permissionRoot.split(",").includes(root);
-
-    const priviledgesViolated =
-      permissionPriviledges != WILDCARD &&
-      intersection(permissionPriviledges.split(","), priviledges).length == 0;
-
-    return !domainViolated && !rootViolated && !priviledgesViolated;
+  const principlePermissions = await permissionsLookupFn({
+    principle: sub,
+    context
   });
+
+  const satisfiedPermissions = principlePermissions.filter(
+    principlePermission => {
+      const [
+        principlePermissionDomain,
+        principlePermissionPriviledges,
+        principlePermissionRoot
+      ] = principlePermission.split(":");
+
+      for (const permission of permissions) {
+        const permissionComponents = permission.split(":");
+
+        const permissionDomain =
+          permissionComponents.length > 1 ? permissionComponents[0] : domain;
+
+        const domainViolated =
+          principlePermissionDomain != WILDCARD &&
+          permissionDomain != undefined &&
+          !principlePermissionDomain == permissionDomain;
+
+        let permissionRoot =
+          permissionComponents.length > 2 ? permissionComponents[2] : root;
+
+        if (permissionRoot.startsWith("$"))
+          permissionRoot = context[permissionRoot.substring(1)];
+
+        const rootViolated =
+          principlePermissionRoot != undefined &&
+          principlePermissionRoot != WILDCARD &&
+          permissionRoot != undefined &&
+          !principlePermissionRoot.split(",").includes(permissionRoot);
+
+        const permissionPriviledges =
+          permissionComponents.length == 1
+            ? permissionComponents[0]
+            : permissionComponents[1];
+
+        const priviledgesViolated =
+          principlePermissionPriviledges != WILDCARD &&
+          intersection(
+            principlePermissionPriviledges.split(","),
+            permissionPriviledges.split(",")
+          ).length == 0;
+
+        if (!domainViolated && !rootViolated && !priviledgesViolated)
+          return true;
+      }
+      return false;
+    }
+  );
 
   if (satisfiedPermissions.length == 0)
     throw deps.invalidCredentialsError.tokenInvalid();

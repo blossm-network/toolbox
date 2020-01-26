@@ -1,30 +1,37 @@
-const { badRequest, unauthorized } = require("@blossm/errors");
-
 const deps = require("./deps");
 
-const canAccessContext = ({ principle, root }) =>
-  principle.permissions.some(
-    priviledge =>
-      priviledge.startsWith("context:") && priviledge.endsWith(`:${root}`)
-  );
-
 module.exports = async ({ root, payload, context, session, aggregateFn }) => {
-  const { aggregate: principleAggregate } = await aggregateFn(session.sub);
-  if (
-    !canAccessContext({
-      principle: principleAggregate,
-      root: payload.context
+  // Get aggregates for the principle, this session, and the context to be switched in to.
+  const [
+    { aggregate: principleAggregate },
+    { aggregate },
+    { aggregate: contextAggregate }
+  ] = await Promise.all([
+    aggregateFn(session.sub, {
+      domain: "principle"
+    }),
+    aggregateFn(root),
+    aggregateFn(payload.context, {
+      domain: "context"
     })
+  ]);
+
+  // Check to see if the principle has access to the context being switched in to.
+  if (
+    !principleAggregate.permissions.some(
+      priviledge =>
+        priviledge.startsWith("context:") &&
+        priviledge.endsWith(`:${payload.context}`)
+    )
   )
-    throw unauthorized.context({ info: { context: payload.context } });
+    throw deps.unauthorizedError.context({
+      info: { context: payload.context }
+    });
 
-  const { aggregate } = await aggregateFn(root);
-  if (aggregate.terminated) throw badRequest.sessionTerminated();
+  // Check to see if this session has already been terminated.
+  if (aggregate.terminated) throw deps.badRequestError.sessionTerminated();
 
-  const { aggregate: contextAggregate } = await aggregateFn(payload.context, {
-    domain: "context"
-  });
-
+  // Create a new token inheriting from the current session.
   const token = await deps.createJwt({
     options: {
       issuer: session.iss,

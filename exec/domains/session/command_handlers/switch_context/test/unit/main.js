@@ -88,9 +88,13 @@ describe("Command handler unit tests", () => {
       ],
       response: { token }
     });
-    expect(aggregateFake).to.have.been.calledWith(sub);
+    expect(aggregateFake).to.have.been.calledWith(sub, {
+      domain: "principle"
+    });
     expect(aggregateFake).to.have.been.calledWith(root);
-    expect(aggregateFake).to.have.been.calledWith(newContext);
+    expect(aggregateFake).to.have.been.calledWith(newContext, {
+      domain: "context"
+    });
     expect(aggregateFake).to.have.callCount(3);
     expect(signFake).to.have.been.calledWith({
       ring: service,
@@ -126,10 +130,25 @@ describe("Command handler unit tests", () => {
     const createJwtFake = fake.returns(token);
     replace(deps, "createJwt", createJwtFake);
 
+    const error = "some-error";
+    const contextFake = fake.returns(error);
+    replace(deps, "unauthorizedError", {
+      context: contextFake
+    });
+
     const aggregateFake = stub()
       .onFirstCall()
       .returns({
         aggregate: { permissions: [`context:some-priviledges:bogus`] }
+      })
+      .onSecondCall()
+      .returns({ aggregate: { terminated: false } })
+      .onThirdCall()
+      .returns({
+        aggregate: {
+          domain: contextAggregateDomain,
+          root: contextAggregateRoot
+        }
       });
 
     try {
@@ -143,7 +162,7 @@ describe("Command handler unit tests", () => {
       //shouldn't get called
       expect(2).to.equal(3);
     } catch (e) {
-      expect(e.statusCode).to.equal(401);
+      expect(e).to.equal(error);
     }
   });
   it("should throw correctly if session terminated", async () => {
@@ -169,6 +188,12 @@ describe("Command handler unit tests", () => {
         }
       });
 
+    const error = "some-error";
+    const sessionTerminatedFake = fake.returns(error);
+    replace(deps, "badRequestError", {
+      sessionTerminated: sessionTerminatedFake
+    });
+
     try {
       await main({
         payload,
@@ -180,7 +205,7 @@ describe("Command handler unit tests", () => {
       //shouldn't get called
       expect(2).to.equal(3);
     } catch (e) {
-      expect(e.statusCode).to.equal(400);
+      expect(e).to.equal(error);
     }
   });
   it("should throw correctly", async () => {

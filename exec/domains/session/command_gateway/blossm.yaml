@@ -5,10 +5,9 @@ commands:
   - action: start
     protected: false
   - action: logout
-    priviledges: [admin]
+    permissions: [admin]
   - action: switch-context
-    # Nested array priviledges should be interpretted as AND
-    priviledges: [[admin, "context:*:&context"]]
+    permissions: [admin]
 
 whitelist:
   - "127.0.0.1"

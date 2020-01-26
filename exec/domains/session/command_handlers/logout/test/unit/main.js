@@ -1,7 +1,7 @@
 const { expect } = require("chai")
   .use(require("chai-datetime"))
   .use(require("sinon-chai"));
-const { restore, fake, useFakeTimers } = require("sinon");
+const { restore, fake, replace, useFakeTimers } = require("sinon");
 
 const main = require("../../main");
 const deps = require("../../deps");
@@ -38,12 +38,17 @@ describe("Command handler unit tests", () => {
   });
   it("should throw correctly if aggregate has already been terminated", async () => {
     const aggregateFake = fake.returns({ aggregate: { terminated: true } });
+    const error = "some-error";
+    const sessionAlreadyTerminatedFake = fake.returns(error);
+    replace(deps, "badRequestError", {
+      sessionAlreadyTerminated: sessionAlreadyTerminatedFake
+    });
     try {
       await main({ root, aggregateFn: aggregateFake });
       //shouldn't get called
       expect(2).to.equal(3);
     } catch (e) {
-      expect(e.statusCode).to.equal(400);
+      expect(e).to.equal(error);
     }
   });
   it("should throw correctly", async () => {

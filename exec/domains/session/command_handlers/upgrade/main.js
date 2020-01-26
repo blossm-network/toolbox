@@ -1,13 +1,18 @@
-const { badRequest } = require("@blossm/errors");
-
 const deps = require("./deps");
 
 module.exports = async ({ root, payload, context, session, aggregateFn }) => {
-  const { aggregate } = await aggregateFn(root);
+  // Get the aggregate for this session.
+  const { aggregate: sessionAggregate } = await aggregateFn(root);
 
-  if (aggregate.terminated) throw badRequest.sessionTerminated();
-  if (aggregate.upgraded) throw badRequest.sessionAlreadyUpgraded();
+  // Check to see if this session has already been terminated.
+  if (sessionAggregate.terminated)
+    throw deps.badRequestError.sessionTerminated();
 
+  // Check to see if this session has already been upgraded.
+  if (sessionAggregate.upgraded)
+    throw deps.badRequestError.sessionAlreadyUpgraded();
+
+  // Create a new token inheriting from the current session.
   const token = await deps.createJwt({
     options: {
       issuer: session.iss,

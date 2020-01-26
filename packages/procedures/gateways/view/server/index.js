@@ -18,7 +18,7 @@ module.exports = async ({
       })
   });
 
-  for (const { name, key = "auth", priviledges, protected = true } of stores) {
+  for (const { name, key = "auth", permissions, protected = true } of stores) {
     server = server.get(deps.get({ name, domain }), {
       path: `/${name}`,
       ...(protected && {
@@ -29,7 +29,7 @@ module.exports = async ({
           deps.authorization({
             permissionsLookupFn,
             terminatedSessionCheckFn,
-            priviledges
+            permissions
           })
         ]
       })

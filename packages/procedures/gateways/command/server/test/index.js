@@ -39,9 +39,9 @@ describe("Command gateway", () => {
     const gatewayPostFake = fake.returns(gatewayPostResult);
     replace(deps, "post", gatewayPostFake);
 
-    const priviledges = "some-priviledges";
+    const permissions = "some-permissions";
     const action = "some-action";
-    const commands = [{ action, priviledges }];
+    const commands = [{ action, permissions }];
 
     const verifyFnResult = "some-verify-fn";
     const verifyFnFake = fake.returns(verifyFnResult);
@@ -80,7 +80,7 @@ describe("Command gateway", () => {
     expect(authorizationFake).to.have.been.calledWith({
       permissionsLookupFn,
       terminatedSessionCheckFn,
-      priviledges
+      permissions
     });
   });
   it("should call with the correct params with a command key", async () => {
@@ -108,10 +108,10 @@ describe("Command gateway", () => {
     const gatewayPostFake = fake.returns(gatewayPostResult);
     replace(deps, "post", gatewayPostFake);
 
-    const priviledges = "some-priviledges";
+    const permissions = "some-permissions";
     const action = "some-action";
     const key = "some-key";
-    const commands = [{ action, priviledges, key }];
+    const commands = [{ action, permissions, key }];
 
     const verifyFnResult = "some-verify-fn";
     const verifyFnFake = fake.returns(verifyFnResult);
@@ -154,12 +154,12 @@ describe("Command gateway", () => {
     const gatewayPostFake = fake.returns(gatewayPostResult);
     replace(deps, "post", gatewayPostFake);
 
-    const priviledges = "some-priviledges";
+    const permissions = "some-permissions";
     const action1 = "some-action1";
     const action2 = "some-action2";
     const commands = [
       { action: action1, protected: false },
-      { action: action2, priviledges }
+      { action: action2, permissions }
     ];
 
     const verifyFnResult = "some-verify-fn";
@@ -197,7 +197,7 @@ describe("Command gateway", () => {
     expect(authorizationFake).to.have.been.calledWith({
       permissionsLookupFn,
       terminatedSessionCheckFn,
-      priviledges
+      permissions
     });
     expect(authorizationFake).to.have.been.calledOnce;
   });
@@ -226,9 +226,9 @@ describe("Command gateway", () => {
     const gatewayPostFake = fake.returns(gatewayPostResult);
     replace(deps, "post", gatewayPostFake);
 
-    const priviledges = "some-priviledges";
+    const permissions = "some-permissions";
     const action = "some-action";
-    const commands = [{ action, priviledges }];
+    const commands = [{ action, permissions }];
 
     const otherDomain = "some-other-domain";
 

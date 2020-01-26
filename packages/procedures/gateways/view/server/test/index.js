@@ -39,9 +39,9 @@ describe("View gateway", () => {
     const gatewayGetFake = fake.returns(gatewayGetResult);
     replace(deps, "get", gatewayGetFake);
 
-    const priviledges = "some-priviledges";
+    const permissions = "some-permissions";
     const name = "some-name";
-    const stores = [{ name, priviledges }];
+    const stores = [{ name, permissions }];
 
     const verifyFnResult = "some-verify-fn";
     const verifyFnFake = fake.returns(verifyFnResult);
@@ -80,7 +80,7 @@ describe("View gateway", () => {
     expect(authorizationFake).to.have.been.calledWith({
       permissionsLookupFn,
       terminatedSessionCheckFn,
-      priviledges
+      permissions
     });
   });
   it("should call with the correct params with store key", async () => {
@@ -108,10 +108,10 @@ describe("View gateway", () => {
     const gatewayGetFake = fake.returns(gatewayGetResult);
     replace(deps, "get", gatewayGetFake);
 
-    const priviledges = "some-priviledges";
+    const permissions = "some-permissions";
     const name = "some-name";
     const key = "some-key";
-    const stores = [{ name, priviledges, key }];
+    const stores = [{ name, permissions, key }];
 
     const verifyFnResult = "some-verify-fn";
     const verifyFnFake = fake.returns(verifyFnResult);
@@ -156,12 +156,12 @@ describe("View gateway", () => {
     const gatewayGetFake = fake.returns(gatewayGetResult);
     replace(deps, "get", gatewayGetFake);
 
-    const priviledges = "some-priviledges";
+    const permissions = "some-permissions";
     const name1 = "some-name1";
     const name2 = "some-name2";
     const stores = [
       { name: name1, protected: false },
-      { name: name2, priviledges }
+      { name: name2, permissions }
     ];
 
     const verifyFnResult = "some-verify-fn";
@@ -199,7 +199,7 @@ describe("View gateway", () => {
     expect(authorizationFake).to.have.been.calledWith({
       permissionsLookupFn,
       terminatedSessionCheckFn,
-      priviledges
+      permissions
     });
     expect(authorizationFake).to.have.been.calledOnce;
   });
@@ -228,9 +228,9 @@ describe("View gateway", () => {
     const gatewayGetFake = fake.returns(gatewayGetResult);
     replace(deps, "get", gatewayGetFake);
 
-    const priviledges = "some-priviledges";
+    const permissions = "some-permissions";
     const name = "some-name";
-    const stores = [{ name, priviledges }];
+    const stores = [{ name, permissions }];
 
     const otherDomain = "some-other-domain";
 

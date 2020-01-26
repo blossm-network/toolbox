@@ -40,30 +40,7 @@ describe("Authorize", () => {
       session,
       context,
       permissionsLookupFn,
-      priviledges,
-      root,
-      domain,
-      service,
-      network
-    });
-
-    expect(permissionsLookupFn).to.have.been.calledWith({ principle, context });
-    expect(document).to.deep.equal({
-      permissions,
-      principle
-    });
-  });
-  it("should authorize all wildcards", async () => {
-    const permissions = ["*:*:*"];
-
-    const permissionsLookupFn = fake.returns(permissions);
-
-    const document = await authorize({
-      path,
-      session,
-      context,
-      permissionsLookupFn,
-      priviledges,
+      permissions: priviledges,
       root,
       domain,
       service,
@@ -86,13 +63,85 @@ describe("Authorize", () => {
       session,
       context,
       permissionsLookupFn,
-      priviledges,
+      permissions: priviledges,
       root,
       service,
       network
     });
 
     expect(permissionsLookupFn).to.have.been.calledWith({ principle, context });
+    expect(document).to.deep.equal({
+      permissions,
+      principle
+    });
+  });
+  it("should authorize with matching permission and domain from permission", async () => {
+    const permissions = [`some-other-domain:some-other-priviledge`];
+
+    const permissionsLookupFn = fake.returns(permissions);
+
+    const document = await authorize({
+      path,
+      session,
+      context,
+      permissionsLookupFn,
+      permissions: ["some-other-domain:some-other-priviledge"],
+      root,
+      service,
+      network
+    });
+
+    expect(permissionsLookupFn).to.have.been.calledWith({ principle, context });
+    expect(document).to.deep.equal({
+      permissions,
+      principle
+    });
+  });
+  it("should authorize with matching permission, domain, and root from permission", async () => {
+    const permissions = [
+      `some-other-domain:some-other-priviledge:some-other-root`
+    ];
+
+    const permissionsLookupFn = fake.returns(permissions);
+
+    const document = await authorize({
+      path,
+      session,
+      context,
+      permissionsLookupFn,
+      permissions: ["some-other-domain:some-other-priviledge:some-other-root"],
+      root,
+      service,
+      network
+    });
+
+    expect(permissionsLookupFn).to.have.been.calledWith({ principle, context });
+    expect(document).to.deep.equal({
+      permissions,
+      principle
+    });
+  });
+  it("should authorize with matching permission, domain, and root from permission using $ tag", async () => {
+    const permissions = [
+      `some-other-domain:some-other-priviledge:some-context-root`
+    ];
+
+    const permissionsLookupFn = fake.returns(permissions);
+
+    const document = await authorize({
+      path,
+      session,
+      context: {
+        ...context,
+        "context-param": "some-context-root"
+      },
+      permissionsLookupFn,
+      permissions: ["some-other-domain:some-other-priviledge:$context-param"],
+      root,
+      service,
+      network
+    });
+
     expect(document).to.deep.equal({
       permissions,
       principle
@@ -108,7 +157,7 @@ describe("Authorize", () => {
       session,
       context,
       permissionsLookupFn,
-      priviledges,
+      permissions: priviledges,
       root,
       domain,
       service,
@@ -141,7 +190,7 @@ describe("Authorize", () => {
       session,
       context,
       permissionsLookupFn,
-      priviledges,
+      permissions: priviledges,
       root,
       domain,
       service,
@@ -171,7 +220,7 @@ describe("Authorize", () => {
         session,
         context,
         permissionsLookupFn,
-        priviledges,
+        permissions: priviledges,
         root,
         domain,
         service,
@@ -326,7 +375,7 @@ describe("Authorize", () => {
       expect(e).to.equal(error);
     }
   });
-  it("should authorize with priviledges as none", async () => {
+  it("should authorize with permissions as none", async () => {
     const permissions = ["*:bogus:*"];
 
     const permissionsLookupFn = fake.returns(permissions);
@@ -337,7 +386,7 @@ describe("Authorize", () => {
       context,
       permissionsLookupFn,
       root,
-      priviledges: "none",
+      permissions: "none",
       domain,
       service,
       network
@@ -347,12 +396,12 @@ describe("Authorize", () => {
       principle
     });
   });
-  it("should authorize with no sub and priviledges as none", async () => {
+  it("should authorize with no sub and permissions as none", async () => {
     const document = await authorize({
       path,
       context,
       session: {},
-      priviledges: "none",
+      permissions: "none",
       root,
       domain,
       service,

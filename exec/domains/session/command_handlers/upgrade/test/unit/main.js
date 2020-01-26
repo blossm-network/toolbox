@@ -104,29 +104,10 @@ describe("Command handler unit tests", () => {
 
     const aggregateFake = fake.returns({ aggregate: { terminated: true } });
 
-    try {
-      await main({
-        payload,
-        root,
-        context,
-        aggregateFn: aggregateFake
-      });
-      //shouldn't get called
-      expect(2).to.equal(3);
-    } catch (e) {
-      expect(e.statusCode).to.equal(400);
-    }
-  });
-  it("should throw correctly if session has already been upgraded", async () => {
-    const signature = "some-signature";
-    const signFake = fake.returns(signature);
-    replace(deps, "sign", signFake);
-
-    const createJwtFake = fake.returns(token);
-    replace(deps, "createJwt", createJwtFake);
-
-    const aggregateFake = fake.returns({
-      aggregate: { terminated: false, upgraded: true }
+    const error = "some-error";
+    const sessionTerminatedFake = fake.returns(error);
+    replace(deps, "badRequestError", {
+      sessionTerminated: sessionTerminatedFake
     });
 
     try {
@@ -139,7 +120,39 @@ describe("Command handler unit tests", () => {
       //shouldn't get called
       expect(2).to.equal(3);
     } catch (e) {
-      expect(e.statusCode).to.equal(400);
+      expect(e).to.equal(error);
+    }
+  });
+
+  it("should throw correctly if session has already been upgraded", async () => {
+    const signature = "some-signature";
+    const signFake = fake.returns(signature);
+    replace(deps, "sign", signFake);
+
+    const createJwtFake = fake.returns(token);
+    replace(deps, "createJwt", createJwtFake);
+
+    const aggregateFake = fake.returns({
+      aggregate: { terminated: false, upgraded: true }
+    });
+
+    const error = "some-error";
+    const sessionAlreadyUpgradedFake = fake.returns(error);
+    replace(deps, "badRequestError", {
+      sessionAlreadyUpgraded: sessionAlreadyUpgradedFake
+    });
+
+    try {
+      await main({
+        payload,
+        root,
+        context,
+        aggregateFn: aggregateFake
+      });
+      //shouldn't get called
+      expect(2).to.equal(3);
+    } catch (e) {
+      expect(e).to.equal(error);
     }
   });
   it("should throw correctly", async () => {

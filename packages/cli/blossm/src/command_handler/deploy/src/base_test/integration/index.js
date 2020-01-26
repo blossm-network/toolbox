@@ -16,7 +16,6 @@ const stateTopics = [];
 
 describe("Command handler integration tests", () => {
   const okExample0 = testing.examples.ok[0];
-  const okExample1 = testing.examples.ok[1];
 
   before(async () => await Promise.all(testing.topics.map(t => create(t))));
   after(
@@ -76,15 +75,16 @@ describe("Command handler integration tests", () => {
   it("should return an error if bad state", async () => {
     if (!testing.pre || !testing.pre.bad) return;
 
-    const example = okExample1 || okExample0;
-
     for (const {
       action,
       domain,
       root,
       payload,
+      example = 0,
       code
     } of testing.pre.bad.reverse()) {
+      const _example = testing.examples.ok[example];
+      if (!_example) throw `Example ${example} not found.`;
       if (action) {
         const topic = `did-${action}.${domain}.${process.env.SERVICE}`;
         stateTopics.push(topic);
@@ -105,10 +105,10 @@ describe("Command handler integration tests", () => {
             issued: stringDate(),
             id: uuid()
           },
-          payload: example.normalized,
-          options: example.options,
-          context: example.context,
-          session: example.session
+          payload: _example.normalized,
+          options: _example.options,
+          context: _example.context,
+          session: _example.session
         }
       });
 

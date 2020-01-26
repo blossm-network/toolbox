@@ -1,16 +1,8 @@
 module.exports = {
   start: (state, payload) => {
-    const context = payload.context;
-    delete payload.context;
     return {
       ...state,
-      ...payload,
-      ...(context && {
-        contexts: {
-          current: context,
-          all: [context]
-        }
-      })
+      ...payload
     };
   },
   upgrade: (state, payload) => {
@@ -29,10 +21,7 @@ module.exports = {
   "switch-context": (state, payload) => {
     return {
       ...state,
-      contexts: {
-        current: payload.context,
-        all: [...(state.contexts ? state.contexts.all : []), payload.context]
-      }
+      ...payload
     };
   }
 };
