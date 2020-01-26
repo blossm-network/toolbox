@@ -81,7 +81,7 @@ module.exports = async ({
       session: {
         iss: `sesstion.${process.env.SERVICE}.${process.env.NETWORK}/start`,
         aud: `${process.env.SERVICE}.${process.env.NETWORK}`,
-        exp: " 2999-12-31T00:00:00.000Z"
+        exp: "9999-12-31T00:00:00.000Z"
       }
     })
     .issue(
