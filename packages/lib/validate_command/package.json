@@ -1,6 +1,6 @@
 {
   "name": "@blossm/validate-command",
-  "version": "0.0.20",
+  "version": "0.0.21",
   "description": "Validates the paramaters found in command requests.",
   "main": "index.js",
   "author": "blossm.network",
@@ -11,7 +11,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/duration-consts": "*",
+    "@blossm/duration-consts": "^0.0.2",
     "@blossm/errors": "^0.0.16",
     "@blossm/validator": "^0.0.20"
   },

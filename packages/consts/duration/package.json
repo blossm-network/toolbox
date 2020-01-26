@@ -1,6 +1,6 @@
 {
   "name": "@blossm/duration-consts",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Constants that describe durations.",
   "main": "index.js",
   "author": "blossm.network",
