@@ -4,6 +4,62 @@ const deps = require("./deps");
 
 const WILDCARD = "*";
 
+const domainViolated = ({
+  permissionComponents,
+  domain,
+  principlePermissionDomain
+}) => {
+  const permissionDomain =
+    permissionComponents.length > 1 ? permissionComponents[0] : domain;
+
+  return (
+    principlePermissionDomain != WILDCARD &&
+    permissionDomain != undefined &&
+    !principlePermissionDomain == permissionDomain
+  );
+};
+
+const rootViolated = ({
+  permissionComponents,
+  root,
+  principlePermissionRoot,
+  context
+}) => {
+  let permissionRoot =
+    permissionComponents.length > 2 ? permissionComponents[2] : root;
+
+  if (permissionRoot.startsWith("$")) {
+    const key = permissionRoot.substring(1);
+    if (!context[key]) return true;
+    permissionRoot = context[key];
+  }
+
+  return (
+    principlePermissionRoot != undefined &&
+    principlePermissionRoot != WILDCARD &&
+    permissionRoot != undefined &&
+    !principlePermissionRoot.split(",").includes(permissionRoot)
+  );
+};
+
+const priviledgesViolated = ({
+  permissionComponents,
+  principlePermissionPriviledges
+}) => {
+  const permissionPriviledges =
+    permissionComponents.length == 1
+      ? permissionComponents[0]
+      : permissionComponents[1];
+
+  return (
+    principlePermissionPriviledges != WILDCARD &&
+    intersection(
+      principlePermissionPriviledges.split(","),
+      permissionPriviledges.split(",")
+    ).length == 0
+  );
+};
+
 module.exports = async ({
   session: { sub },
   context,
@@ -40,42 +96,23 @@ module.exports = async ({
       for (const permission of permissions) {
         const permissionComponents = permission.split(":");
 
-        const permissionDomain =
-          permissionComponents.length > 1 ? permissionComponents[0] : domain;
-
-        const domainViolated =
-          principlePermissionDomain != WILDCARD &&
-          permissionDomain != undefined &&
-          !principlePermissionDomain == permissionDomain;
-
-        let permissionRoot =
-          permissionComponents.length > 2 ? permissionComponents[2] : root;
-
-        if (permissionRoot.startsWith("$")) {
-          const key = permissionRoot.substring(1);
-          if (!context[key]) continue;
-          permissionRoot = context[key];
-        }
-
-        const rootViolated =
-          principlePermissionRoot != undefined &&
-          principlePermissionRoot != WILDCARD &&
-          permissionRoot != undefined &&
-          !principlePermissionRoot.split(",").includes(permissionRoot);
-
-        const permissionPriviledges =
-          permissionComponents.length == 1
-            ? permissionComponents[0]
-            : permissionComponents[1];
-
-        const priviledgesViolated =
-          principlePermissionPriviledges != WILDCARD &&
-          intersection(
-            principlePermissionPriviledges.split(","),
-            permissionPriviledges.split(",")
-          ).length == 0;
-
-        if (!domainViolated && !rootViolated && !priviledgesViolated)
+        if (
+          !domainViolated({
+            permissionComponents,
+            domain,
+            principlePermissionDomain
+          }) &&
+          !rootViolated({
+            permissionComponents,
+            root,
+            principlePermissionRoot,
+            context
+          }) &&
+          !priviledgesViolated({
+            permissionComponents,
+            principlePermissionPriviledges
+          })
+        )
           return true;
       }
       return false;
