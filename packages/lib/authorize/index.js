@@ -51,8 +51,11 @@ module.exports = async ({
         let permissionRoot =
           permissionComponents.length > 2 ? permissionComponents[2] : root;
 
-        if (permissionRoot.startsWith("$"))
-          permissionRoot = context[permissionRoot.substring(1)];
+        if (permissionRoot.startsWith("$")) {
+          const key = permissionRoot.substring(1);
+          if (!context[key]) continue;
+          permissionRoot = context[key];
+        }
 
         const rootViolated =
           principlePermissionRoot != undefined &&

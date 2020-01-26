@@ -375,6 +375,37 @@ describe("Authorize", () => {
       expect(e).to.equal(error);
     }
   });
+  it("should not authorize if $ tag isnt found", async () => {
+    const permissions = [
+      `some-other-domain:some-other-priviledge:some-context-root`
+    ];
+
+    const permissionsLookupFn = fake.returns(permissions);
+
+    const error = "some-error";
+    const tokenInvalidFake = fake.returns(error);
+    replace(deps, "invalidCredentialsError", {
+      tokenInvalid: tokenInvalidFake
+    });
+
+    try {
+      await authorize({
+        path,
+        session,
+        context,
+        permissionsLookupFn,
+        permissions: ["some-other-domain:some-other-priviledge:$context-param"],
+        root,
+        service,
+        network
+      });
+
+      //shouldnt be called;
+      expect(1).to.equal(2);
+    } catch (e) {
+      expect(e).to.equal(error);
+    }
+  });
   it("should authorize with permissions as none", async () => {
     const permissions = ["*:bogus:*"];
 
