@@ -15,7 +15,9 @@ let sms;
 module.exports = async ({
   payload,
   context,
-  options: { events, exists = true } = {}
+  // `events` are any events to submit once the challenge is answered.
+  // `principle` is the principle to set as the subject of the session token.
+  options: { events, principle } = {}
 }) => {
   // Lazily load up the sms connection.
   if (!sms) {
@@ -25,15 +27,16 @@ module.exports = async ({
     );
   }
 
-  // Check to see if the phone is recognized
-  const [identity] = await deps
-    .eventStore({
-      domain: "identity"
-    })
-    .set({ context, tokenFn: deps.gcpToken })
-    .query({ key: "phone", value: payload.phone });
+  // Check to see if the phone is recognized.
+  // If identity and principle roots are passed in, use theme as the identity instead.
+  const [identity] = principle
+    ? [{ state: { principle } }]
+    : await deps
+        .eventStore({ domain: "identity" })
+        .set({ context, tokenFn: deps.gcpToken })
+        .query({ key: "phone", value: payload.phone });
 
-  if (!identity && exists) throw deps.invalidArgumentError.phoneNotRecognized();
+  if (!identity) throw deps.invalidArgumentError.phoneNotRecognized();
 
   // Create the root for this challenge.
   const root = await deps.uuid();
@@ -48,7 +51,6 @@ module.exports = async ({
     payload: {
       context: {
         ...context,
-        ...(identity && { identity: identity.headers.root }),
         challenge: root,
         service: process.env.SERVICE,
         network: process.env.NETWORK
@@ -79,7 +81,7 @@ module.exports = async ({
       {
         payload: {
           code,
-          ...(identity && { principle: identity.state.principle }),
+          principle: identity.state.principle,
           phone: payload.phone,
           issued: deps.stringDate(),
           expires: deps

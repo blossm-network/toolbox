@@ -2,7 +2,7 @@ const { expect } = require("chai");
 
 const hashString = require("..");
 
-describe("Hash", () => {
+describe("Hash string", () => {
   it("it should create a unique hash", async () => {
     const someString = "some-string";
     const someOtherString = "some-other-string";

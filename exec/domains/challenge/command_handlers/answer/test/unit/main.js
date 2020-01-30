@@ -1,7 +1,7 @@
 const { expect } = require("chai")
   .use(require("chai-datetime"))
   .use(require("sinon-chai"));
-const { restore, replace, fake, useFakeTimers, stub } = require("sinon");
+const { restore, replace, fake, useFakeTimers } = require("sinon");
 
 const main = require("../../main");
 const deps = require("../../deps");
@@ -9,17 +9,11 @@ const deps = require("../../deps");
 let clock;
 const now = new Date();
 const contextPrinciple = "some-context-principle";
-const identityRoot = "some-identity-root";
-const identityContext = "some-identity-context";
-const identityPrinciple = "some-identity-principle";
-const identity = {
-  contexts: [identityContext],
-  root: identityRoot,
-  principle: identityPrinciple
-};
+const challengePrinciple = "some-challenge-principle";
 const code = "some-code";
 const challenge = {
-  code
+  code,
+  principle: challengePrinciple
 };
 const payload = {
   code
@@ -49,16 +43,12 @@ describe("Command handler unit tests", () => {
     restore();
   });
   it("should return successfully", async () => {
-    const aggregateFake = stub()
-      .onFirstCall()
-      .returns({
-        aggregate: {
-          ...challenge,
-          expires: deps.stringDate()
-        }
-      })
-      .onSecondCall()
-      .returns({ aggregate: identity });
+    const aggregateFake = fake.returns({
+      aggregate: {
+        ...challenge,
+        expires: deps.stringDate()
+      }
+    });
 
     const signature = "some-signature";
     const signFake = fake.returns(signature);
@@ -86,10 +76,6 @@ describe("Command handler unit tests", () => {
       response: { token }
     });
     expect(aggregateFake).to.have.been.calledWith(contextChallenge);
-    expect(aggregateFake).to.have.been.calledWith(contextIdentity, {
-      domain: "identity"
-    });
-    expect(aggregateFake).to.have.been.calledTwice;
     expect(signFake).to.have.been.calledWith({
       ring: service,
       key: "auth",
@@ -100,13 +86,13 @@ describe("Command handler unit tests", () => {
     expect(createJwtFake).to.have.been.calledWith({
       options: {
         issuer: `answer.challenge.${service}.${network}`,
-        subject: identityPrinciple,
+        subject: challengePrinciple,
         audience: `${service}.${network}`,
         expiresIn: 7776000
       },
       payload: {
         context: {
-          context: identityContext,
+          ...context,
           principle: contextPrinciple,
           challenge: contextChallenge,
           identity: contextIdentity,
@@ -117,33 +103,6 @@ describe("Command handler unit tests", () => {
       signFn: signature
     });
   });
-  it("should throw if no identity is found", async () => {
-    const aggregateFake = stub()
-      .onFirstCall()
-      .returns({
-        aggregate: {
-          ...challenge,
-          expires: deps.stringDate()
-        }
-      })
-      .onSecondCall()
-      .returns();
-
-    const signature = "some-signature";
-    const signFake = fake.returns(signature);
-    replace(deps, "sign", signFake);
-
-    const createJwtFake = fake.returns(token);
-    replace(deps, "createJwt", createJwtFake);
-
-    try {
-      await main({ payload, context, aggregateFn: aggregateFake });
-      //shouldn't get called
-      expect(2).to.equal(3);
-    } catch (e) {
-      expect(e).to.exist;
-    }
-  });
   it("should throw correctly", async () => {
     const errorMessage = "some-error";
     const aggregateFake = fake.rejects(errorMessage);
@@ -153,23 +112,6 @@ describe("Command handler unit tests", () => {
       expect(2).to.equal(3);
     } catch (e) {
       expect(e.message).to.equal(errorMessage);
-    }
-  });
-  it("should throw correctly if no challenge is found", async () => {
-    const aggregateFake = fake.returns();
-
-    const error = "some-error";
-    const codeNotRecognizedFake = fake.returns(error);
-    replace(deps, "invalidArgumentError", {
-      codeNotRecognized: codeNotRecognizedFake
-    });
-
-    try {
-      await main({ payload, context, aggregateFn: aggregateFake });
-      //shouldn't get called
-      expect(2).to.equal(3);
-    } catch (e) {
-      expect(e).to.equal(error);
     }
   });
   it("should throw correctly if a challenge is with the wrong code", async () => {

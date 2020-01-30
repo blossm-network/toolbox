@@ -1,15 +1,16 @@
-action: upgrade
+action: save
 domain: session
 service: core
 
 payload:
-  principle: string
+  email: email
 
 dependencies:
-  "@blossm/jwt": "*"
-  "@blossm/gcp-kms": "*"
-  "@blossm/datetime": "*"
-  "@blossm/errors": "*"
+  "@blossm/command-rpc": "*"
+  "@blossm/event-store-rpc": "*"
+  "@blossm/difference": "*"
+  "@blossm/hash": "*"
+  "@blossm/uuid": "*"
 
 devDependencies:
   "mocha": "^6.1.4"
@@ -22,18 +23,27 @@ testing:
   examples:
     ok:
       - payload:
-          principle: some-principle-root
+          email: some@email.com
         normalized:
-          principle: some-principle-root
+          email: some@email.com
         session:
           iss: some-iss
           aud: some-aud
           sub: some-sub
           exp: 20000
+      - payload:
+          email: some@email.com
+        normalized:
+          email: some@email.com
+        session:
+          iss: some-iss
+          aud: some-aud
+          exp: 20000
 
   invalid:
-    - principle:
+    - email:
         a: 1
+    - email: asdf
 
   root: some-root
 

@@ -1,0 +1,22 @@
+{
+  "name": "@blossm/crypt",
+  "version": "0.0.0",
+  "description": "Crypt functions for hashing and comparing.",
+  "main": "index.js",
+  "author": "blossm.network",
+  "engines": {
+    "node": ">= 10.16.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "bcrypt": "^3.0.7"
+  },
+  "scripts": {
+    "test": "mocha --recursive"
+  },
+  "devDependencies": {
+    "mocha": "^6.1.4"
+  }
+}

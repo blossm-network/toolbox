@@ -8,11 +8,6 @@ module.exports = {
       { cause, info, toJSON },
       "This phone number isn't recognized."
     ),
-  codeNotRecognized: ({ cause, info } = {}) =>
-    new InvalidArgumentError(
-      { cause, info, toJSON },
-      "This code isn't recognized."
-    ),
   codeExpired: ({ cause, info } = {}) =>
     new InvalidArgumentError({ cause, info, toJSON }, "This code expired."),
   wrongCode: ({ cause, info } = {}) =>

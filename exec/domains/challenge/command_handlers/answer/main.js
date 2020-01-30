@@ -8,34 +8,24 @@ module.exports = async ({ payload, context, aggregateFn }) => {
   const root = context.challenge;
 
   //Look for the challenge being answered.
-  const aggregateResult = await aggregateFn(root);
+  const { aggregate: challengeAggregate } = await aggregateFn(root);
 
-  //Throw if no challenge recognized or if the code is not right.
-  if (!aggregateResult) throw deps.invalidArgumentError.codeNotRecognized();
-
-  const challenge = aggregateResult.aggregate;
-
-  if (challenge.code != payload.code)
+  // Throw if the code is wrong.
+  if (challengeAggregate.code != payload.code)
     throw deps.invalidArgumentError.wrongCode();
 
   //Throw if the challenge is expired.
   const now = new Date();
 
-  if (Date.parse(challenge.expires) < now)
+  // Throw if the code is expired.
+  if (Date.parse(challengeAggregate.expires) < now)
     throw deps.invalidArgumentError.codeExpired();
-
-  //Lookup the contexts that the requesting identity is in to get the principle.
-  const {
-    aggregate: { principle }
-  } = await aggregateFn(context.identity, {
-    domain: "identity"
-  });
 
   //Create a token that can access commands and views.
   const token = await deps.createJwt({
     options: {
       issuer: `answer.challenge.${process.env.SERVICE}.${process.env.NETWORK}`,
-      subject: principle,
+      subject: challengeAggregate.principle,
       audience: `${process.env.SERVICE}.${process.env.NETWORK}`,
       expiresIn: NINETY_DAYS
     },
@@ -64,7 +54,7 @@ module.exports = async ({ payload, context, aggregateFn }) => {
         },
         correctNumber: 1
       },
-      ...(challenge.events || [])
+      ...(challengeAggregate.events || [])
     ],
     response: { token }
   };

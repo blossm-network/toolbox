@@ -5,9 +5,11 @@ commands:
   - action: start
     protected: false
   - action: logout
-    permissions: [admin]
+    permissions:
+      - admin
   - action: switch-context
-    permissions: [admin]
+    permissions:
+      - admin
 
 whitelist:
   - "127.0.0.1"

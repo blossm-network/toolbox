@@ -51,11 +51,16 @@ testing:
 
   invalid:
     - device:
-        os: { a: 1 }
-        version: { a: 1 }
-        hardware: { a: 1 }
-        manufacturer: { a: 1 }
-        id: { a: 1 }
+        os:
+          a: 1
+        version:
+          a: 1
+        hardware:
+          a: 1
+        manufacturer:
+          a: 1
+        id:
+          a: 1
 
   pre:
 

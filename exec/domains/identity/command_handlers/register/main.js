@@ -1,9 +1,11 @@
 const deps = require("./deps");
 
-module.exports = async ({ payload, context }) => {
+module.exports = async ({ payload, context, session }) => {
+  // Create roots for the identity, and determine what root should be used for the principle.
+  // If the session has a subject, use it as the principle root. If not, make one.
   const [identityRoot, principleRoot] = await Promise.all([
     deps.uuid(),
-    context.principle || deps.uuid() // A principle may already have access to contexts.
+    session.sub || deps.uuid()
   ]);
 
   const events = [
@@ -34,9 +36,11 @@ module.exports = async ({ payload, context }) => {
     })
     .issue(
       {
-        phone: payload.phone
+        phone: payload.phone,
+        email: payload.email,
+        username: "tmp"
       },
-      { options: { events, exists: false } }
+      { options: { events, principle: principleRoot } }
     );
 
   return {
@@ -46,11 +50,6 @@ module.exports = async ({ payload, context }) => {
         domain: "principle",
         payload: { permissions: [`identity:admin:${identityRoot}`] },
         root: principleRoot,
-        correctNumber: 0
-      },
-      {
-        action: "attempt-register",
-        root: identityRoot,
         correctNumber: 0
       }
     ],

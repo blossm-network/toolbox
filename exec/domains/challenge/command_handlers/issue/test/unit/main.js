@@ -25,10 +25,7 @@ const payloadPhone = "some-payload-phone";
 const payload = {
   phone: payloadPhone
 };
-const contextPrinciple = "some-context-principle";
-const context = {
-  principle: contextPrinciple
-};
+const context = { a: 1 };
 const service = "some-service";
 const network = "some-network";
 const token = "some-token";
@@ -126,14 +123,12 @@ describe("Command handler unit tests", () => {
     expect(createJwtFake).to.have.been.calledWith({
       options: {
         issuer: `challenge.${service}.${network}/issue`,
-        subject: contextPrinciple,
         audience: `challenge.${service}.${network}/answer`,
         expiresIn: 3600
       },
       payload: {
         context: {
-          principle: contextPrinciple,
-          identity: identityRoot,
+          ...context,
           challenge: root,
           service,
           network
@@ -155,6 +150,92 @@ describe("Command handler unit tests", () => {
       from: "+14157700262",
       body: `${code} is your verification code. Enter it in the app to let us know it's really you.`
     });
+  });
+  it("should return successfully if identity is passed in as an option", async () => {
+    const secretFake = fake.returns(secret);
+    replace(deps, "secret", secretFake);
+
+    const smsSendFake = fake();
+    const smsFake = fake.returns({
+      send: smsSendFake
+    });
+    replace(deps, "sms", smsFake);
+
+    const uuidFake = fake.returns(root);
+    replace(deps, "uuid", uuidFake);
+
+    const signature = "some-signature";
+    const signFake = fake.returns(signature);
+    replace(deps, "sign", signFake);
+
+    const createJwtFake = fake.returns(token);
+    replace(deps, "createJwt", createJwtFake);
+
+    const randomIntFake = fake.returns(code);
+    replace(deps, "randomIntOfLength", randomIntFake);
+
+    const optionsPrincipleRoot = "some-options-principle-root";
+
+    const result = await main({
+      payload,
+      context,
+      options: {
+        principle: optionsPrincipleRoot
+      }
+    });
+
+    expect(result).to.deep.equal({
+      events: [
+        {
+          correctNumber: 0,
+          root,
+          payload: {
+            code,
+            principle: optionsPrincipleRoot,
+            phone: payloadPhone,
+            issued: new Date().toISOString(),
+            expires: deps
+              .moment()
+              .add(180, "s")
+              .toDate()
+              .toISOString()
+          }
+        }
+      ],
+      response: { token }
+    });
+    expect(signFake).to.have.been.calledWith({
+      ring: service,
+      key: "challenge",
+      location: "global",
+      version: "1",
+      project
+    });
+    expect(createJwtFake).to.have.been.calledWith({
+      options: {
+        issuer: `challenge.${service}.${network}/issue`,
+        audience: `challenge.${service}.${network}/answer`,
+        expiresIn: 3600
+      },
+      payload: {
+        context: {
+          ...context,
+          challenge: root,
+          service,
+          network
+        }
+      },
+      signFn: signature
+    });
+    expect(randomIntFake).to.have.been.calledWith(6);
+    expect(
+      Math.abs(
+        deps
+          .moment()
+          .add(3, "m")
+          .toDate() - new Date()
+      )
+    ).to.equal(180000);
   });
   it("should throw correctly", async () => {
     const errorMessage = "some-error";
@@ -200,7 +281,7 @@ describe("Command handler unit tests", () => {
       expect(e.statusCode).to.equal(409);
     }
   });
-  it("should not throw if no phones found and exist is false, no principle, and context events", async () => {
+  it("should return successfully with context events", async () => {
     const secretFake = fake.returns(secret);
     replace(deps, "secret", secretFake);
 
@@ -213,7 +294,7 @@ describe("Command handler unit tests", () => {
     const uuidFake = fake.returns(root);
     replace(deps, "uuid", uuidFake);
 
-    const queryFake = fake.returns([]);
+    const queryFake = fake.returns([identity]);
     const setFake = fake.returns({
       query: queryFake
     });
@@ -232,7 +313,7 @@ describe("Command handler unit tests", () => {
     const randomIntFake = fake.returns(code);
     replace(deps, "randomIntOfLength", randomIntFake);
 
-    const options = { exists: false, events: [{ a: 1 }, { b: 2 }] };
+    const options = { events: [{ a: 1 }, { b: 2 }] };
     const context = { c: 3 };
     const result = await main({
       payload: {
@@ -253,6 +334,7 @@ describe("Command handler unit tests", () => {
           payload: {
             code,
             phone: payloadPhone,
+            principle,
             issued: new Date().toISOString(),
             expires: deps
               .moment()

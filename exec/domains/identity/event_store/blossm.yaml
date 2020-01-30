@@ -3,16 +3,20 @@ service: core
 
 schema:
   phone: String
+  email: String
   principle: String
   contexts: [String]
 
-indexes: [phone]
+indexes:
+  - phone
+  - email
 
 testing:
   examples:
     - action: add-contexts
       payload:
-        contexts: [some-context]
+        contexts:
+          - some-context
     - action: attempt-register
       payload:
         phone: "+19195551155"
@@ -43,11 +47,15 @@ testing:
     - action: add-contexts
       examples:
         - state:
-            contexts: ["some-context"]
+            contexts:
+              - some-context
           payload:
-            contexts: ["some-other-context"]
+            contexts:
+              - some-other-context
           result:
-            contexts: ["some-context", "some-other-context"]
+            contexts:
+              - some-context
+              - some-other-context
 
 #don't change
 context: event-store

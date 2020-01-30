@@ -24,25 +24,6 @@ describe("Bad request", () => {
       message: "This phone number isn't recognized."
     });
   });
-  it("codeNotRecognized correct", () => {
-    const error = invalidArgument.codeNotRecognized();
-    expect(error.toJSON()).to.deep.equal({
-      statusCode: 409,
-      code: "InvalidArgument",
-      info: {},
-      message: "This code isn't recognized."
-    });
-  });
-  it("codeNotRecognized correct with props", () => {
-    const error = invalidArgument.codeNotRecognized({ cause, info });
-    expect(error.toJSON()).to.deep.equal({
-      statusCode: 409,
-      code: "InvalidArgument",
-      info,
-      cause,
-      message: "This code isn't recognized."
-    });
-  });
   it("codeExpired correct", () => {
     const error = invalidArgument.codeExpired();
     expect(error.toJSON()).to.deep.equal({
