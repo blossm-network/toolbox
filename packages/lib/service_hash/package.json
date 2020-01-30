@@ -1,6 +1,6 @@
 {
   "name": "@blossm/service-hash",
-  "version": "0.0.22",
+  "version": "0.0.23",
   "description": "Returns a hash representing an operation.",
   "main": "index.js",
   "author": "blossm.network",
@@ -14,7 +14,7 @@
     "test": "mocha --recursive"
   },
   "dependencies": {
-    "@blossm/hash-string": "*"
+    "@blossm/hash-string": "^0.0.3"
   },
   "devDependencies": {
     "mocha": "^6.1.4",
