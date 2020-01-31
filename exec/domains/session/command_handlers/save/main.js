@@ -25,7 +25,7 @@ const getEventsForPermissionsMerge = async ({
       sessionPrincipleAggregate.permissions
     ).length == 0
   )
-    return [];
+    return { events: [], principleRoot };
 
   return {
     events: [
@@ -78,7 +78,7 @@ module.exports = async ({ payload, context, session, aggregateFn }) => {
   if (identity) {
     // Don't log an event or issue a challange if
     // the identity's root is already set as the session's subject.
-    if (identity.state.principle == session.sub) return { events: [] };
+    if (identity.state.principle == session.sub) return {};
   }
 
   // If an identity is found, merge the permissions given to the session's subject

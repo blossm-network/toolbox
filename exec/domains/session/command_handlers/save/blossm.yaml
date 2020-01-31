@@ -8,7 +8,7 @@ payload:
 dependencies:
   "@blossm/command-rpc": "*"
   "@blossm/event-store-rpc": "*"
-  "@blossm/difference": "*"
+  "@blossm/array-difference": "*"
   "@blossm/crypt": "*"
   "@blossm/uuid": "*"
 
