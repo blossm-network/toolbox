@@ -1,10 +1,6 @@
-const { SECONDS_IN_DAY } = require("@blossm/duration-consts");
-
 const deps = require("./deps");
 
-const NINETY_DAYS = 90 * SECONDS_IN_DAY;
-
-module.exports = async ({ payload, context, aggregateFn }) => {
+module.exports = async ({ payload, context, session, aggregateFn }) => {
   const root = context.challenge;
 
   //Look for the challenge being answered.
@@ -22,28 +18,18 @@ module.exports = async ({ payload, context, aggregateFn }) => {
     throw deps.invalidArgumentError.codeExpired();
 
   //Create a token that can access commands and views.
-  const token = await deps.createJwt({
-    options: {
-      issuer: `answer.challenge.${process.env.SERVICE}.${process.env.NETWORK}`,
-      subject: challengeAggregate.principle,
-      audience: `${process.env.SERVICE}.${process.env.NETWORK}`,
-      expiresIn: NINETY_DAYS
-    },
-    payload: {
-      context: {
-        ...context,
-        service: process.env.SERVICE,
-        network: process.env.NETWORK
-      }
-    },
-    signFn: deps.sign({
-      ring: process.env.SERVICE,
-      key: "auth",
-      location: "global",
-      version: "1",
-      project: process.env.GCP_PROJECT
+  const { token } = await deps
+    .command({
+      domain: "session",
+      action: "upgrade"
     })
-  });
+    .set({ context, session, tokenFn: deps.gcpToken })
+    .issue(
+      {
+        principle: challengeAggregate.principle
+      },
+      { root: context.session }
+    );
 
   return {
     events: [

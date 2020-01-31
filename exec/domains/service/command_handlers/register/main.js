@@ -1,19 +1,18 @@
 const deps = require("./deps");
 
-module.exports = async ({ payload, context }) => {
-  const [serviceRoot, contextRoot, principleRoot] = await Promise.all([
+module.exports = async ({ payload, context, session }) => {
+  const [serviceRoot, contextRoot] = await Promise.all([
     deps.uuid(),
-    deps.uuid(),
-    context.principle || deps.uuid()
+    deps.uuid()
   ]);
 
   //just log event instead of a command handler.
-  const { token } = await deps
+  const response = await deps
     .command({
       action: "register",
       domain: "context"
     })
-    .set({ context, tokenFn: deps.gcpToken })
+    .set({ context, session, tokenFn: deps.gcpToken })
     .issue(
       {
         root: serviceRoot,
@@ -29,19 +28,12 @@ module.exports = async ({ payload, context }) => {
       {
         root: serviceRoot,
         payload: {
-          name: payload.name
+          name: payload.name,
+          context: contextRoot
         },
         correctNumber: 0
-      },
-      {
-        root: principleRoot,
-        action: "add-permissions",
-        domain: "principle",
-        payload: {
-          permissions: [`service:admin:${serviceRoot}`]
-        }
       }
     ],
-    response: { token }
+    ...(response && { response })
   };
 };

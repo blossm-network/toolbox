@@ -1,5 +1,7 @@
+const { format } = require("@blossm/phone-number");
+
 module.exports = payload => {
   return {
-    email: payload.email
+    phone: format(payload.phone)
   };
 };

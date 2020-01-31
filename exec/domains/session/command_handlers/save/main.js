@@ -44,10 +44,10 @@ const getEventsForPermissionsMerge = async ({
 
 const getEventsForIdentityRegistering = async ({ subject, payload }) => {
   // Create a new root.
-  const [identityRoot, principleRoot, hashedEmail] = await Promise.all([
+  const [identityRoot, principleRoot, hashedPhone] = await Promise.all([
     deps.uuid(),
     subject || deps.uuid(),
-    deps.hash(payload.email)
+    deps.hash(payload.phone)
   ]);
 
   return {
@@ -57,8 +57,16 @@ const getEventsForIdentityRegistering = async ({ subject, payload }) => {
         domain: "identity",
         root: identityRoot,
         payload: {
-          email: hashedEmail,
+          phone: hashedPhone,
           principle: principleRoot
+        }
+      },
+      {
+        action: "principle",
+        domain: "add-permissions",
+        root: principleRoot,
+        payload: {
+          permissions: [`identity:admin:${identityRoot}`]
         }
       }
     ],
@@ -67,13 +75,13 @@ const getEventsForIdentityRegistering = async ({ subject, payload }) => {
 };
 
 module.exports = async ({ payload, context, session, aggregateFn }) => {
-  // Check to see if there is an identity with the provided email.
+  // Check to see if there is an identity with the provided phone.
   const [identity] = await deps
     .eventStore({
       domain: "identity"
     })
     .set({ context, tokenFn: deps.gcpToken })
-    .query({ key: "email", value: payload.email });
+    .query({ key: "phone", value: payload.phone });
 
   if (identity) {
     // Don't log an event or issue a challange if
@@ -109,7 +117,7 @@ module.exports = async ({ payload, context, session, aggregateFn }) => {
       }
     })
     .issue({
-      email: payload.email
+      phone: payload.phone
     });
 
   return { response: { token } };

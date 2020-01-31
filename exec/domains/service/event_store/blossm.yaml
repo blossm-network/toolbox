@@ -3,25 +3,31 @@ service: core
 
 schema:
   name: String
+  context: String
 
 testing:
   examples:
     - action: create
       payload:
         name: some-name
+        context: some-context
     - action: create
       payload:
         name: some-other-name
+        context: some-other-context
 
   handlers:
     - action: create
       examples:
         - state:
             name: some-name
+            context: some-context
           payload:
             name: some-other-name
+            context: some-other-context
           result:
             name: some-other-name
+            context: some-other-context
 
 #don't change
 context: event-store

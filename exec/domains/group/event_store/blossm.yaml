@@ -3,16 +3,15 @@ service: core
 
 schema:
   identities: [String]
-  contexts: [String]
 
 testing:
   examples:
     - action: add-identities
       payload:
         identities: [some-identity-root]
-    - action: add-contexts
+    - action: add-identities
       payload:
-        contexts: [some-context-root]
+        identities: [some-other-identity-root]
 
   handlers:
     - action: add-identities
@@ -25,16 +24,6 @@ testing:
             identities: [some-identity-root, some-other-identity-root]
         - payload:
             identities: [some-identity-root]
-    - action: add-contexts
-      examples:
-        - state:
-            contexts: [some-context-root]
-          payload:
-            contexts: [some-other-context-root]
-          result:
-            contexts: [some-context-root, some-other-context-root]
-        - payload:
-            contexts: [some-context-root]
 
 #don't change
 context: event-store

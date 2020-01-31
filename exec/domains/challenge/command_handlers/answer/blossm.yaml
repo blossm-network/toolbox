@@ -9,12 +9,10 @@ payload:
 
 dependencies:
   "@blossm/validator": "*"
-  "@blossm/duration-consts": "*"
   "@blossm/errors": "*"
   "@blossm/view-store-rpc": "*"
+  "@blossm/command-rpc": "*"
   "@blossm/gcp-token": "*"
-  "@blossm/jwt": "*"
-  "@blossm/gcp-kms": "*"
 
 devDependencies:
   "localenv": "^0.2.2"
@@ -30,7 +28,6 @@ devDependencies:
   "@blossm/twilio-sms": "*"
   "@blossm/gcp-secret": "*"
   "@blossm/uuid": "*"
-  "@blossm/jwt": "*"
   "@blossm/gcp-kms": "*"
   "@blossm/gcp-pubsub": "*"
   "@blossm/get-token": "*"
@@ -44,14 +41,24 @@ testing:
           code: "123456"
         context:
           challenge: some-root
-          identity: some-identity-root
+          session: some-session-root
+        session:
+          iss: some-iss
+          aud: some-aud
+          sub: some-sub
+          exp: 20000
       - payload:
           code: "123456"
         normalized:
           code: "123456"
         context:
           challenge: some-other-root
-          identity: some-identity-root
+          session: some-session-root
+        session:
+          iss: some-iss
+          aud: some-aud
+          sub: some-sub
+          exp: 20000
     bad:
       - payload:
           code: "123456"
@@ -59,7 +66,12 @@ testing:
           code: "123456"
         context:
           challenge: some-bad-root
-          identity: some-identity-root
+          session: some-session-root
+        session:
+          iss: some-iss
+          aud: some-aud
+          sub: some-sub
+          exp: 20000
         code: 400
       - payload:
           code: "223456"
@@ -67,7 +79,12 @@ testing:
           code: "223456"
         context:
           challenge: some-root
-          identity: some-identity-root
+          session: some-session-root
+        session:
+          iss: some-iss
+          aud: some-aud
+          sub: some-sub
+          exp: 20000
         code: 409
 
   invalid:
@@ -79,6 +96,9 @@ testing:
       context: event-store
     - domain: challenge
       context: event-store
+    - domain: session
+      action: upgrade
+      context: command-handler
 
   pre:
     ok:
@@ -88,17 +108,13 @@ testing:
         payload:
           code: "123456"
           expires: 9999-12-31T00:00:00.000Z
-      - domain: identity
-        root: some-identity-root
-        action: attempt-register
+          principle: some-challenge-principle-root
+      - domain: session
+        root: some-session-root
+        action: start
         payload:
-          principle: some-principle-root
-          phone: "+19195551144"
-      - domain: identity
-        root: some-identity-root
-        action: add-contexts
-        payload:
-          contexts: [some-context]
+          device:
+            os: some-os
     bad:
       - domain: challenge
         root: some-other-root
@@ -106,6 +122,7 @@ testing:
         payload:
           code: "123456"
           expires: 2019-12-31T00:00:00.000Z
+        example: 1
         code: 409
 
   response:

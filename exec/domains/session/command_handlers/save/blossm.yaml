@@ -3,7 +3,7 @@ domain: session
 service: core
 
 payload:
-  email: email
+  phone: phoneNumber
 
 dependencies:
   "@blossm/command-rpc": "*"
@@ -11,6 +11,7 @@ dependencies:
   "@blossm/array-difference": "*"
   "@blossm/crypt": "*"
   "@blossm/uuid": "*"
+  "@blossm/phone-number": "*"
 
 devDependencies:
   "mocha": "^6.1.4"
@@ -23,15 +24,15 @@ testing:
   examples:
     ok:
       - payload:
-          email: some@email.com
+          phone: "1 (919) 555-1144"
         normalized:
-          email: some@email.com
+          phone: "+19195551144"
         session:
           sub: some-sub
       - payload:
-          email: some@email.com
+          phone: "1 (919) 555-1144"
         normalized:
-          email: some@email.com
+          phone: "+19195551144"
         session: {}
 
   invalid:
@@ -47,7 +48,7 @@ testing:
         root: some-identity
         action: register
         payload:
-          email: some-email
+          phone: "+19195551144"
           principle: some-identity-principle
       - domain: principle
         root: some-identity-principle
@@ -70,6 +71,7 @@ testing:
       context: command-handler
 
   response:
+    token:
 
 #don't change
 context: command-handler

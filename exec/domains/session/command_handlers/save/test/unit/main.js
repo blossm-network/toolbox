@@ -9,8 +9,8 @@ const deps = require("../../deps");
 let clock;
 const now = new Date();
 
-const email = "some-email";
-const payload = { email };
+const phone = "some-phone";
+const payload = { phone };
 const token = "some-token";
 const context = "some-context";
 
@@ -81,7 +81,7 @@ describe("Command handler unit tests", () => {
       context,
       tokenFn: deps.gcpToken
     });
-    expect(queryFake).to.have.been.calledWith({ key: "email", value: email });
+    expect(queryFake).to.have.been.calledWith({ key: "phone", value: phone });
     expect(aggregateFake).to.have.been.calledWith(principle, {
       domain: "principle"
     });
@@ -110,7 +110,7 @@ describe("Command handler unit tests", () => {
         ]
       }
     });
-    expect(issueFake).to.have.been.calledWith({ email });
+    expect(issueFake).to.have.been.calledWith({ phone });
   });
   it("should return successfully if identity is found and there are no new permissions to add", async () => {
     const queryFake = fake.returns([identity]);
@@ -157,7 +157,7 @@ describe("Command handler unit tests", () => {
       context,
       tokenFn: deps.gcpToken
     });
-    expect(queryFake).to.have.been.calledWith({ key: "email", value: email });
+    expect(queryFake).to.have.been.calledWith({ key: "phone", value: phone });
     expect(aggregateFake).to.have.been.calledWith(principle, {
       domain: "principle"
     });
@@ -177,7 +177,7 @@ describe("Command handler unit tests", () => {
         events: []
       }
     });
-    expect(issueFake).to.have.been.calledWith({ email });
+    expect(issueFake).to.have.been.calledWith({ phone });
   });
   it("should return successfully if principle not found with no subject", async () => {
     const queryFake = fake.returns([]);
@@ -199,8 +199,8 @@ describe("Command handler unit tests", () => {
       .returns(principleRoot);
     replace(deps, "uuid", uuidFake);
 
-    const emailHash = "some-email-hash";
-    const hashFake = fake.returns(emailHash);
+    const phoneHash = "some-phone-hash";
+    const hashFake = fake.returns(phoneHash);
     replace(deps, "hash", hashFake);
 
     const issueFake = fake.returns({ token });
@@ -227,8 +227,8 @@ describe("Command handler unit tests", () => {
       context,
       tokenFn: deps.gcpToken
     });
-    expect(queryFake).to.have.been.calledWith({ key: "email", value: email });
-    expect(hashFake).to.have.been.calledWith(email);
+    expect(queryFake).to.have.been.calledWith({ key: "phone", value: phone });
+    expect(hashFake).to.have.been.calledWith(phone);
     expect(commandFake).to.have.been.calledWith({
       action: "issue",
       domain: "challenge"
@@ -244,14 +244,22 @@ describe("Command handler unit tests", () => {
             domain: "identity",
             root: identityRoot,
             payload: {
-              email: emailHash,
+              phone: phoneHash,
               principle: principleRoot
+            }
+          },
+          {
+            action: "principle",
+            domain: "add-permissions",
+            root: principleRoot,
+            payload: {
+              permissions: [`identity:admin:${identityRoot}`]
             }
           }
         ]
       }
     });
-    expect(issueFake).to.have.been.calledWith({ email });
+    expect(issueFake).to.have.been.calledWith({ phone });
   });
   it("should return successfully if principle not found with subject", async () => {
     const queryFake = fake.returns([]);
@@ -268,8 +276,8 @@ describe("Command handler unit tests", () => {
     const uuidFake = fake.returns(identityRoot);
     replace(deps, "uuid", uuidFake);
 
-    const emailHash = "some-email-hash";
-    const hashFake = fake.returns(emailHash);
+    const phoneHash = "some-phone-hash";
+    const hashFake = fake.returns(phoneHash);
     replace(deps, "hash", hashFake);
 
     const issueFake = fake.returns({ token });
@@ -296,8 +304,8 @@ describe("Command handler unit tests", () => {
       context,
       tokenFn: deps.gcpToken
     });
-    expect(queryFake).to.have.been.calledWith({ key: "email", value: email });
-    expect(hashFake).to.have.been.calledWith(email);
+    expect(queryFake).to.have.been.calledWith({ key: "phone", value: phone });
+    expect(hashFake).to.have.been.calledWith(phone);
     expect(commandFake).to.have.been.calledWith({
       action: "issue",
       domain: "challenge"
@@ -313,14 +321,22 @@ describe("Command handler unit tests", () => {
             domain: "identity",
             root: identityRoot,
             payload: {
-              email: emailHash,
+              phone: phoneHash,
               principle: sub
+            }
+          },
+          {
+            action: "principle",
+            domain: "add-permissions",
+            root: sub,
+            payload: {
+              permissions: [`identity:admin:${identityRoot}`]
             }
           }
         ]
       }
     });
-    expect(issueFake).to.have.been.calledWith({ email });
+    expect(issueFake).to.have.been.calledWith({ phone });
   });
   it("should return nothing if sub is the identity's principle", async () => {
     const queryFake = fake.returns([{ state: { principle: sub } }]);
@@ -340,92 +356,28 @@ describe("Command handler unit tests", () => {
 
     expect(result).to.deep.equal({});
   });
-  // it("should throw correctly if session terminated", async () => {
-  //   const signature = "some-signature";
-  //   const signFake = fake.returns(signature);
-  //   replace(deps, "sign", signFake);
+  it("should throw correctly", async () => {
+    const errorMessage = "some-error";
 
-  //   const createJwtFake = fake.returns(token);
-  //   replace(deps, "createJwt", createJwtFake);
+    const queryFake = fake.rejects(errorMessage);
+    const setFake = fake.returns({
+      query: queryFake
+    });
+    const eventStoreFake = fake.returns({
+      set: setFake
+    });
+    replace(deps, "eventStore", eventStoreFake);
 
-  //   const aggregateFake = fake.returns({ aggregate: { terminated: true } });
-
-  //   const error = "some-error";
-  //   const sessionTerminatedFake = fake.returns(error);
-  //   replace(deps, "badRequestError", {
-  //     sessionTerminated: sessionTerminatedFake
-  //   });
-
-  //   try {
-  //     await main({
-  //       payload,
-  //       root,
-  //       context,
-  //       aggregateFn: aggregateFake
-  //     });
-  //     //shouldn't get called
-  //     expect(2).to.equal(3);
-  //   } catch (e) {
-  //     expect(e).to.equal(error);
-  //   }
-  // });
-
-  // it("should throw correctly if session has already been upgraded", async () => {
-  //   const signature = "some-signature";
-  //   const signFake = fake.returns(signature);
-  //   replace(deps, "sign", signFake);
-
-  //   const createJwtFake = fake.returns(token);
-  //   replace(deps, "createJwt", createJwtFake);
-
-  //   const aggregateFake = fake.returns({
-  //     aggregate: { terminated: false, upgraded: true }
-  //   });
-
-  //   const error = "some-error";
-  //   const sessionAlreadyUpgradedFake = fake.returns(error);
-  //   replace(deps, "badRequestError", {
-  //     sessionAlreadyUpgraded: sessionAlreadyUpgradedFake
-  //   });
-
-  //   try {
-  //     await main({
-  //       payload,
-  //       root,
-  //       context,
-  //       aggregateFn: aggregateFake
-  //     });
-  //     //shouldn't get called
-  //     expect(2).to.equal(3);
-  //   } catch (e) {
-  //     expect(e).to.equal(error);
-  //   }
-  // });
-  // it("should throw correctly", async () => {
-  //   const signature = "some-signature";
-  //   const signFake = fake.returns(signature);
-  //   replace(deps, "sign", signFake);
-
-  //   const errorMessage = "some-error";
-  //   const createJwtFake = fake.rejects(errorMessage);
-  //   replace(deps, "createJwt", createJwtFake);
-
-  //   const aggregateFake = fake.returns({
-  //     aggregate: { terminated: false, upgraded: false }
-  //   });
-
-  //   try {
-  //     await main({
-  //       payload,
-  //       root,
-  //       context,
-  //       session,
-  //       aggregateFn: aggregateFake
-  //     });
-  //     //shouldn't get called
-  //     expect(2).to.equal(3);
-  //   } catch (e) {
-  //     expect(e.message).to.equal(errorMessage);
-  //   }
-  // });
+    try {
+      await main({
+        payload,
+        context,
+        session
+      });
+      //shouldn't get called
+      expect(2).to.equal(3);
+    } catch (e) {
+      expect(e.message).to.equal(errorMessage);
+    }
+  });
 });

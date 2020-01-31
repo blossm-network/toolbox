@@ -3,8 +3,7 @@ domain: service
 service: core
 
 payload:
-  name:
-    type: string
+  name: string
 
 devDependencies:
   "localenv": "^0.2.2"

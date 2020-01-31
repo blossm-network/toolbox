@@ -8,22 +8,21 @@ const deps = require("../../deps");
 
 let clock;
 const now = new Date();
-const contextPrinciple = "some-context-principle";
 const challengePrinciple = "some-challenge-principle";
 const code = "some-code";
 const challenge = {
   code,
   principle: challengePrinciple
 };
+const session = "some-session";
 const payload = {
   code
 };
 const contextChallenge = "some-challenge-context";
-const contextIdentity = "some-context-identity";
+const sessionRoot = "some-session-root";
 const context = {
-  principle: contextPrinciple,
   challenge: contextChallenge,
-  identity: contextIdentity
+  session: sessionRoot
 };
 const service = "some-service";
 const network = "some-network";
@@ -50,16 +49,19 @@ describe("Command handler unit tests", () => {
       }
     });
 
-    const signature = "some-signature";
-    const signFake = fake.returns(signature);
-    replace(deps, "sign", signFake);
-
-    const createJwtFake = fake.returns(token);
-    replace(deps, "createJwt", createJwtFake);
+    const issueFake = fake.returns({ token });
+    const setFake = fake.returns({
+      issue: issueFake
+    });
+    const commandFake = fake.returns({
+      set: setFake
+    });
+    replace(deps, "command", commandFake);
 
     const result = await main({
       payload,
       context,
+      session,
       aggregateFn: aggregateFake
     });
 
@@ -76,38 +78,27 @@ describe("Command handler unit tests", () => {
       response: { token }
     });
     expect(aggregateFake).to.have.been.calledWith(contextChallenge);
-    expect(signFake).to.have.been.calledWith({
-      ring: service,
-      key: "auth",
-      location: "global",
-      version: "1",
-      project
+    expect(commandFake).to.have.been.calledWith({
+      domain: "session",
+      action: "upgrade"
     });
-    expect(createJwtFake).to.have.been.calledWith({
-      options: {
-        issuer: `answer.challenge.${service}.${network}`,
-        subject: challengePrinciple,
-        audience: `${service}.${network}`,
-        expiresIn: 7776000
-      },
-      payload: {
-        context: {
-          ...context,
-          principle: contextPrinciple,
-          challenge: contextChallenge,
-          identity: contextIdentity,
-          service,
-          network
-        }
-      },
-      signFn: signature
+    expect(setFake).to.have.been.calledWith({
+      context,
+      session,
+      tokenFn: deps.gcpToken
     });
+    expect(issueFake).to.have.been.calledWith(
+      {
+        principle: challengePrinciple
+      },
+      { root: sessionRoot }
+    );
   });
   it("should throw correctly", async () => {
     const errorMessage = "some-error";
     const aggregateFake = fake.rejects(errorMessage);
     try {
-      await main({ payload, context, aggregateFn: aggregateFake });
+      await main({ payload, context, session, aggregateFn: aggregateFake });
       //shouldn't get called
       expect(2).to.equal(3);
     } catch (e) {
@@ -130,7 +121,7 @@ describe("Command handler unit tests", () => {
     });
 
     try {
-      await main({ payload, context, aggregateFn: aggregateFake });
+      await main({ payload, context, session, aggregateFn: aggregateFake });
       //shouldn't get called
       expect(2).to.equal(3);
     } catch (e) {
@@ -159,6 +150,7 @@ describe("Command handler unit tests", () => {
       await main({
         payload,
         context,
+        session,
         aggregateFn: aggregateFake
       });
       //shouldn't get called

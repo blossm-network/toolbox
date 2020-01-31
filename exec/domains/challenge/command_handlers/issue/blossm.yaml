@@ -67,6 +67,7 @@ testing:
           principle: some-principle
     bad:
       - code: 409
+        example: 1
 
   procedures:
     - domain: identity
