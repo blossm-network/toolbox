@@ -30,8 +30,8 @@ const getEventsForPermissionsMerge = async ({
   return {
     events: [
       {
-        action: "principle",
-        domain: "add-permissions",
+        domain: "principle",
+        action: "add-permissions",
         root: principleRoot,
         payload: {
           permissions: sessionPrincipleAggregate.permissions
@@ -101,8 +101,9 @@ module.exports = async ({ payload, context, session, aggregateFn }) => {
       domain: "challenge"
     })
     .set({
+      context,
+      tokenFn: deps.gcpToken,
       options: {
-        exists: false,
         principle: principleRoot,
         events
       }

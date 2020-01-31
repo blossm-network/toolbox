@@ -9,7 +9,7 @@ dependencies:
   "@blossm/command-rpc": "*"
   "@blossm/event-store-rpc": "*"
   "@blossm/difference": "*"
-  "@blossm/hash": "*"
+  "@blossm/crypt": "*"
   "@blossm/uuid": "*"
 
 devDependencies:

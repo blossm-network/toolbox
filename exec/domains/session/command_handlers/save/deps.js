@@ -1,7 +1,7 @@
 const command = require("@blossm/command-rpc");
 const eventStore = require("@blossm/event-store-rpc");
 const difference = require("@blossm/difference");
-const hash = require("@blossm/hash");
+const { hash } = require("@blossm/crypt");
 const uuid = require("@blossm/uuid");
 
 exports.command = command;
