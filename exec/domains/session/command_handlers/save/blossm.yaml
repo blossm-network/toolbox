@@ -27,18 +27,12 @@ testing:
         normalized:
           email: some@email.com
         session:
-          iss: some-iss
-          aud: some-aud
           sub: some-sub
-          exp: 20000
       - payload:
           email: some@email.com
         normalized:
           email: some@email.com
-        session:
-          iss: some-iss
-          aud: some-aud
-          exp: 20000
+        session: {}
 
   invalid:
     - email:
@@ -49,28 +43,33 @@ testing:
 
   pre:
     ok:
-      - domain: session
-        root: some-root
-        action: start
-        payload: {}
-    bad:
-      - domain: session
-        root: some-root
-        action: logout
+      - domain: identity
+        root: some-identity
+        action: register
         payload:
-          loggedout: 2019-12-31T00:00:00.000Z
-        code: 400
-      - domain: session
-        root: some-root
-        action: upgrade
+          email: some-email
+          principle: some-identity-principle
+      - domain: principle
+        root: some-identity-principle
+        action: add-permissions
         payload:
-          upgraded: 2019-12-31T00:00:00.000Z
-        code: 400
+          permissions: some-permissions
+      - domain: principle
+        root: some-sub
+        action: add-permissions
+        payload:
+          permissions: some-other-permissions
 
   procedures:
+    - domain: principle
+      context: event-store
+    - domain: identity
+      context: event-store
+    - domain: challenge
+      action: issue
+      context: command-handler
 
   response:
-    token:
 
 #don't change
 context: command-handler

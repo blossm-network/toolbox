@@ -10,6 +10,9 @@ commands:
   - action: switch-context
     permissions:
       - admin
+  - action: save
+    permissions:
+      - admin
 
 whitelist:
   - "127.0.0.1"
