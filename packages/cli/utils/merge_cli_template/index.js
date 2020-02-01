@@ -105,9 +105,9 @@ const topicsForProcedures = (config, events) => {
     .concat(
       config.context == "command-gateway" || config.context == "view-gateway"
         ? [
-            "did-issue.challenge.core",
-            "did-answer.challenge.core",
-            "did-attempt-register.identity.core",
+            "did-start.session.core",
+            "did-upgrade.session.core",
+            "did-register.identity.core",
             "did-add-permissions.principle.core"
           ]
         : []
@@ -132,11 +132,6 @@ const eventStoreProcedures = ({ procedures }) => {
 
 const addDefaultProcedures = ({ config }) => {
   const tokenProcedures = [
-    // {
-    //   action: "start",
-    //   domain: "session",
-    //   context: "command-handler"
-    // },
     {
       action: "upgrade",
       domain: "session",
