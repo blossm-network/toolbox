@@ -20,8 +20,6 @@ describe("Command gateway integration tests", () => {
     const { token: anonymousToken } = await getToken({ phone });
     expect(anonymousToken).to.exist;
 
-    //eslint-disable-next-line
-    console.log("token: ", anonymousToken);
     const sentAfter = new Date();
     const response = await request.post(`${url}/issue`, {
       body: {

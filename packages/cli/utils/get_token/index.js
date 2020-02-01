@@ -80,7 +80,8 @@ module.exports = async ({
       context: {
         service: process.env.SERVICE,
         network: process.env.NETWORK,
-        ...context
+        ...context,
+        session: sessionRoot
       },
       session: {
         iss: `session.${process.env.SERVICE}.${process.env.NETWORK}/upgrade`,

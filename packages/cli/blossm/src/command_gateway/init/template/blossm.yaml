@@ -8,7 +8,7 @@ service: core
 
 commands:
   - action: some-action
-    priviledges: [some-permission]
+    permissions: [some-permission]
   - action: some-other-action
     protected: false
 

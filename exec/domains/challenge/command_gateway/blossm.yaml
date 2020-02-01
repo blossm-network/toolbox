@@ -3,9 +3,9 @@ service: core
 
 commands:
   - action: issue
-    priviledges: none
+    permissions: none
   - action: answer
-    priviledges: none
+    permissions: none
     key: challenge
 
 whitelist:

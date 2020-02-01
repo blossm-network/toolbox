@@ -8,7 +8,7 @@ service: core
 
 stores:
   - name: some-name
-    priviledges: [some-permission]
+    permissions: [some-permission]
   - name: some-other-name
     protected: false
 
