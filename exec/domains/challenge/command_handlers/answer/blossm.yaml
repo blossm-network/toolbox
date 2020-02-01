@@ -42,11 +42,6 @@ testing:
         context:
           challenge: some-root
           session: some-session-root
-        session:
-          iss: some-iss
-          aud: some-aud
-          sub: some-sub
-          exp: 20000
       - payload:
           code: "123456"
         normalized:
@@ -54,11 +49,6 @@ testing:
         context:
           challenge: some-other-root
           session: some-session-root
-        session:
-          iss: some-iss
-          aud: some-aud
-          sub: some-sub
-          exp: 20000
     bad:
       - payload:
           code: "123456"
@@ -67,11 +57,6 @@ testing:
         context:
           challenge: some-bad-root
           session: some-session-root
-        session:
-          iss: some-iss
-          aud: some-aud
-          sub: some-sub
-          exp: 20000
         code: 400
       - payload:
           code: "223456"
@@ -80,11 +65,6 @@ testing:
         context:
           challenge: some-root
           session: some-session-root
-        session:
-          iss: some-iss
-          aud: some-aud
-          sub: some-sub
-          exp: 20000
         code: 409
 
   invalid:
@@ -109,6 +89,10 @@ testing:
           code: "123456"
           expires: 9999-12-31T00:00:00.000Z
           principle: some-challenge-principle-root
+          session:
+            iss: some-iss
+            aud: some-aud
+            exp: 9999-12-31T00:00:00.000Z
       - domain: session
         root: some-session-root
         action: start

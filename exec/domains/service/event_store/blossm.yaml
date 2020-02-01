@@ -3,6 +3,7 @@ service: core
 
 schema:
   name: String
+  group: String
   context: String
 
 testing:
@@ -10,10 +11,12 @@ testing:
     - action: create
       payload:
         name: some-name
+        group: some-group
         context: some-context
     - action: create
       payload:
         name: some-other-name
+        group: some-group
         context: some-other-context
 
   handlers:
@@ -21,12 +24,14 @@ testing:
       examples:
         - state:
             name: some-name
+            group: some-group
             context: some-context
           payload:
             name: some-other-name
             context: some-other-context
           result:
             name: some-other-name
+            group: some-group
             context: some-other-context
 
 #don't change

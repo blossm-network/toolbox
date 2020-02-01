@@ -8,6 +8,11 @@ schema:
   issued: Date
   answered: String
   expires: Date
+  session:
+    exp: Date
+    iss: String
+    sub: String
+    aud: String
 
 devDependencies:
   "localenv": "^0.2.2"
@@ -24,6 +29,11 @@ testing:
         principle: some-root
         phone: "+19195551144"
         expires: 2020-01-03T00:02:15.000Z
+        session:
+          exp: 2020-01-03T00:02:15.000Z
+          aud: some-audience
+          sub: some-subject
+          iss: 2020-01-03T00:02:15.000Z
     - action: "answer"
       payload:
         code: "234567"
@@ -36,6 +46,11 @@ testing:
             principle: some-root
             phone: "+19195551144"
             expires: 2020-01-03T00:02:15.000Z
+            session:
+              exp: 2020-01-03T00:02:15.000Z
+              aud: some-audience
+              sub: some-subject
+              iss: 2020-01-03T00:02:15.000Z
     - action: answer
       examples:
         - payload:

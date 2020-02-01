@@ -15,6 +15,7 @@ let sms;
 module.exports = async ({
   payload,
   context,
+  session,
   // `events` are any events to submit once the challenge is answered.
   // `principle` is the principle to set as the subject of the session token.
   options: { events, principle } = {}
@@ -37,6 +38,11 @@ module.exports = async ({
         .query({ key: "phone", value: payload.phone });
 
   if (!identity) throw deps.invalidArgumentError.phoneNotRecognized();
+
+  if (session.sub && session.sub != identity.state.principle)
+    throw deps.badRequestError.message(
+      "This principle can't be challenged during the current session."
+    );
 
   // Create the root for this challenge.
   const root = await deps.uuid();
@@ -82,6 +88,7 @@ module.exports = async ({
         payload: {
           code,
           principle: identity.state.principle,
+          session,
           phone: payload.phone,
           issued: deps.stringDate(),
           expires: deps

@@ -60,8 +60,5 @@ describe("Command gateway integration tests", () => {
     });
 
     expect(response1.statusCode).to.equal(200);
-    const { token: answerToken } = JSON.parse(response1.body);
-
-    expect(answerToken).to.exist;
   });
 });

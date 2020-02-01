@@ -2,7 +2,6 @@ domain: context
 service: core
 
 schema:
-  group: String
   root: String
   domain: String
   service: String
@@ -12,14 +11,12 @@ testing:
   examples:
     - action: register
       payload:
-        group: some-group-root
         root: some-context-root
         domain: some-domain
         service: some-service
         network: some-network
     - action: register
       payload:
-        group: some-other-group-root
         root: some-other-context-root
         domain: some-other-domain
         service: some-other-service
@@ -29,7 +26,6 @@ testing:
     - action: register
       examples:
         - payload:
-            group: some-group-root
             root: some-context-root
             domain: some-domain
             service: some-service

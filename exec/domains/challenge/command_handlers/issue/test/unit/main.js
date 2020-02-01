@@ -32,6 +32,9 @@ const token = "some-token";
 const code = "some-code";
 const secret = "some-secret";
 const project = "some-projectl";
+const session = {
+  iss: "some-iss"
+};
 
 process.env.SERVICE = service;
 process.env.NETWORK = network;
@@ -77,7 +80,7 @@ describe("Command handler unit tests", () => {
     const randomIntFake = fake.returns(code);
     replace(deps, "randomIntOfLength", randomIntFake);
 
-    const result = await main({ payload, context });
+    const result = await main({ payload, context, session });
 
     expect(result).to.deep.equal({
       events: [
@@ -87,6 +90,7 @@ describe("Command handler unit tests", () => {
           payload: {
             code,
             principle,
+            session,
             phone: payloadPhone,
             issued: new Date().toISOString(),
             expires: deps
@@ -174,11 +178,12 @@ describe("Command handler unit tests", () => {
     const randomIntFake = fake.returns(code);
     replace(deps, "randomIntOfLength", randomIntFake);
 
-    const optionsPrincipleRoot = "some-options-principle-root";
+    const optionsPrincipleRoot = principle;
 
     const result = await main({
       payload,
       context,
+      session,
       options: {
         principle: optionsPrincipleRoot
       }
@@ -193,6 +198,7 @@ describe("Command handler unit tests", () => {
             code,
             principle: optionsPrincipleRoot,
             phone: payloadPhone,
+            session,
             issued: new Date().toISOString(),
             expires: deps
               .moment()
@@ -249,7 +255,7 @@ describe("Command handler unit tests", () => {
     replace(deps, "eventStore", eventStoreFake);
 
     try {
-      await main({ payload, context });
+      await main({ payload, context, session });
 
       //shouldn't get called
       expect(2).to.equal(3);
@@ -267,18 +273,64 @@ describe("Command handler unit tests", () => {
     });
     replace(deps, "eventStore", eventStoreFake);
 
+    const error = "some-error";
+    replace(deps, "invalidArgumentError", {
+      phoneNotRecognized: fake.returns(error)
+    });
     try {
       await main({
-        payload: {
-          ...payload
-        },
+        payload,
+        session,
         context
       });
 
       //shouldn't get called
       expect(2).to.equal(3);
     } catch (e) {
-      expect(e.statusCode).to.equal(409);
+      expect(e).to.equal(error);
+    }
+  });
+  it("should throw correctly if session.sub doesn't match the identity's principle", async () => {
+    const secretFake = fake.returns(secret);
+    replace(deps, "secret", secretFake);
+
+    const smsSendFake = fake();
+    const smsFake = fake.returns({
+      send: smsSendFake
+    });
+    replace(deps, "sms", smsFake);
+
+    const uuidFake = fake.returns(root);
+    replace(deps, "uuid", uuidFake);
+
+    const queryFake = fake.returns([identity]);
+    const setFake = fake.returns({
+      query: queryFake
+    });
+    const eventStoreFake = fake.returns({
+      set: setFake
+    });
+    replace(deps, "eventStore", eventStoreFake);
+
+    const error = "some-error";
+    const messageFake = fake.returns(error);
+    replace(deps, "badRequestError", {
+      message: messageFake
+    });
+    try {
+      await main({
+        payload,
+        context,
+        session: { sub: "some-bogus" }
+      });
+
+      //shouldn't get called
+      expect(2).to.equal(3);
+    } catch (e) {
+      expect(messageFake).to.have.been.calledWith(
+        "This principle can't be challenged during the current session."
+      );
+      expect(e).to.equal(error);
     }
   });
   it("should return successfully with context events", async () => {
@@ -316,9 +368,8 @@ describe("Command handler unit tests", () => {
     const options = { events: [{ a: 1 }, { b: 2 }] };
     const context = { c: 3 };
     const result = await main({
-      payload: {
-        ...payload
-      },
+      payload,
+      session,
       context,
       options
     });
@@ -336,6 +387,7 @@ describe("Command handler unit tests", () => {
             phone: payloadPhone,
             principle,
             issued: new Date().toISOString(),
+            session,
             expires: deps
               .moment()
               .add(180, "s")

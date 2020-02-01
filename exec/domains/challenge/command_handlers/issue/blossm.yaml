@@ -35,6 +35,9 @@ testing:
           phone: "919 555 1144"
         context:
           a: 1
+        session:
+          iss: some-iss
+          sub: some-principle
         normalized:
           phone: "+19195551144"
       - payload:
@@ -45,6 +48,9 @@ testing:
           events: [some-events]
         context:
           principle: some-principle
+        session:
+          iss: some-iss
+          sub: some-principle
     bad:
       - payload:
           phone: "919 555 1133"

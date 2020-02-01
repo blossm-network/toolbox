@@ -10,11 +10,18 @@ let clock;
 const now = new Date();
 const challengePrinciple = "some-challenge-principle";
 const code = "some-code";
+const exp = "some-exp";
+const iss = "some-iss";
+const aud = "some-aud";
 const challenge = {
   code,
-  principle: challengePrinciple
+  principle: challengePrinciple,
+  session: {
+    exp,
+    iss,
+    aud
+  }
 };
-const session = "some-session";
 const payload = {
   code
 };
@@ -61,7 +68,6 @@ describe("Command handler unit tests", () => {
     const result = await main({
       payload,
       context,
-      session,
       aggregateFn: aggregateFake
     });
 
@@ -84,7 +90,11 @@ describe("Command handler unit tests", () => {
     });
     expect(setFake).to.have.been.calledWith({
       context,
-      session,
+      session: {
+        iss,
+        exp,
+        aud
+      },
       tokenFn: deps.gcpToken
     });
     expect(issueFake).to.have.been.calledWith(
@@ -94,11 +104,49 @@ describe("Command handler unit tests", () => {
       { root: sessionRoot }
     );
   });
+  it("should return successfully if context.sub is provided.", async () => {
+    const aggregateFake = fake.returns({
+      aggregate: {
+        ...challenge,
+        session: {
+          sub: "some-sub"
+        },
+        expires: deps.stringDate()
+      }
+    });
+
+    const issueFake = fake.returns({ token });
+    const setFake = fake.returns({
+      issue: issueFake
+    });
+    const commandFake = fake.returns({
+      set: setFake
+    });
+    replace(deps, "command", commandFake);
+
+    const result = await main({
+      payload,
+      context,
+      aggregateFn: aggregateFake
+    });
+
+    expect(result).to.deep.equal({
+      events: [
+        {
+          payload: {
+            answered: deps.stringDate()
+          },
+          root: contextChallenge,
+          correctNumber: 1
+        }
+      ]
+    });
+  });
   it("should throw correctly", async () => {
     const errorMessage = "some-error";
     const aggregateFake = fake.rejects(errorMessage);
     try {
-      await main({ payload, context, session, aggregateFn: aggregateFake });
+      await main({ payload, context, aggregateFn: aggregateFake });
       //shouldn't get called
       expect(2).to.equal(3);
     } catch (e) {
@@ -121,7 +169,7 @@ describe("Command handler unit tests", () => {
     });
 
     try {
-      await main({ payload, context, session, aggregateFn: aggregateFake });
+      await main({ payload, context, aggregateFn: aggregateFake });
       //shouldn't get called
       expect(2).to.equal(3);
     } catch (e) {
@@ -150,7 +198,6 @@ describe("Command handler unit tests", () => {
       await main({
         payload,
         context,
-        session,
         aggregateFn: aggregateFake
       });
       //shouldn't get called
