@@ -24,7 +24,7 @@ module.exports = async ({
         principle: principleRoot,
         phone
       },
-      action: "attempt-register",
+      action: "register",
       domain: "identity",
       service: process.env.SERVICE
     })
@@ -45,19 +45,19 @@ module.exports = async ({
     })
   );
 
-  // Start a session for the identity.
-  await command({
-    action: "start",
-    domain: "session"
-  }).issue({
-    device: {
-      os: "test",
-      hardware: "test",
-      version: "test",
-      manufacturer: "test",
-      id: "test"
-    }
-  });
+  // // Start a session for the identity.
+  // await command({
+  //   action: "start",
+  //   domain: "session"
+  // }).issue({
+  //   device: {
+  //     os: "test",
+  //     hardware: "test",
+  //     version: "test",
+  //     manufacturer: "test",
+  //     id: "test"
+  //   }
+  // });
 
   // Add a session.
   await eventStore({
@@ -77,9 +77,13 @@ module.exports = async ({
     domain: "session"
   })
     .set({
-      context,
+      context: {
+        service: process.env.SERVICE,
+        network: process.env.NETWORK,
+        ...context
+      },
       session: {
-        iss: `sesstion.${process.env.SERVICE}.${process.env.NETWORK}/start`,
+        iss: `session.${process.env.SERVICE}.${process.env.NETWORK}/upgrade`,
         aud: `${process.env.SERVICE}.${process.env.NETWORK}`,
         exp: "9999-12-31T00:00:00.000Z"
       }
