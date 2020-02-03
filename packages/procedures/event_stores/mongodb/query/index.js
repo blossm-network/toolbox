@@ -70,7 +70,7 @@ module.exports = ({ eventStore, snapshotStore, handlers }) => async ({
   ];
 
   //eslint-disable-next-line
-  console.log({ candidates });
+  console.log({ candidateRoots });
   const aggregates = await Promise.all(
     candidateRoots.map(root => aggregateFn(root))
   );
