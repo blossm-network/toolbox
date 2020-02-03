@@ -258,6 +258,7 @@ describe("Command handler unit tests", () => {
               root: identityRoot,
               payload: {
                 phone: phoneHash,
+                id,
                 principle: principleRoot
               }
             },
@@ -339,6 +340,7 @@ describe("Command handler unit tests", () => {
               root: identityRoot,
               payload: {
                 phone: phoneHash,
+                id,
                 principle: sub
               }
             },

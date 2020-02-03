@@ -28,6 +28,9 @@ module.exports = async ({
     );
   }
 
+  //eslint-disable-next-line
+  console.log("payload: ", payload);
+
   // Check to see if the phone is recognized.
   // If identity and principle roots are passed in, use theme as the identity instead.
   const [identity] = principle
@@ -37,8 +40,14 @@ module.exports = async ({
         .set({ context, tokenFn: deps.gcpToken })
         .query({ key: "id", value: payload.id });
 
-  if (!identity) throw deps.invalidArgumentError.phoneNotRecognized();
+  //eslint-disable-next-line
+  console.log("identity: ", identity);
+  if (!identity)
+    throw deps.invalidArgumentError.phoneNotRecognized({
+      info: { id: payload.id }
+    });
 
+  //TODO: compase identity.state.phone to payload.phone
   if (session.sub && session.sub != identity.state.principle)
     throw deps.badRequestError.message(
       "This principle can't be challenged during the current session."

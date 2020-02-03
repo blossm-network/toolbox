@@ -7,9 +7,7 @@ payload:
   phone:
     type: phoneNumber
     title: phone number
-  username:
-    type: string
-    unique: true
+  id: string
 
 dependencies:
   "@blossm/phone-number": "*"
@@ -36,17 +34,21 @@ testing:
   examples:
     ok:
       - payload:
+          id: some-id
           phone: "919 555 1144"
+        normalized:
+          phone: "+19195551144"
+          id: some-id
         context:
           a: 1
         session:
           iss: some-iss
           sub: some-principle
-        normalized:
-          phone: "+19195551144"
       - payload:
+          id: some-other-id
           phone: "919 555 1122"
         normalized:
+          id: some-other-id
           phone: "+19195551122"
         options:
           events: [some-events]
@@ -57,12 +59,16 @@ testing:
           sub: some-principle
     bad:
       - payload:
+          id: another-id
           phone: "919 555 1133"
         normalized:
+          id: another-id
           phone: "+19195551133"
         code: 409
 
   invalid:
+    - id:  
+        a: 1
     - phone: "919"
     - phone: 919
     - phone: false
@@ -71,9 +77,24 @@ testing:
     ok:
       - domain: identity
         root: some-root
-        action: attempt-register
+        action: register
         payload:
+          id: some-id
           phone: "+19195551144"
+          principle: some-principle
+      - domain: identity
+        root: some-root
+        action: register
+        payload:
+          id: some-other-id
+          phone: "+19195551122"
+          principle: some-principle
+      - domain: identity
+        root: some-root
+        action: register
+        payload:
+          id: another-id
+          phone: "+19195551133"
           principle: some-principle
     bad:
       - code: 409

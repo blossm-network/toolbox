@@ -58,6 +58,7 @@ const getEventsForIdentityRegistering = async ({ subject, payload }) => {
         root: identityRoot,
         payload: {
           phone: hashedPhone,
+          id: payload.id,
           principle: principleRoot
         }
       },

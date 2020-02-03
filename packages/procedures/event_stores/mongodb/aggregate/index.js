@@ -37,6 +37,8 @@ module.exports = ({ eventStore, snapshotStore, handlers }) => async root => {
       (accumulator, event) => {
         const handler = handlers[event.headers.action];
 
+        //eslint-disable-next-line
+        console.log({ aggregatingEvent: event });
         if (!handler)
           throw badRequest.eventHandlerNotSpecified({
             info: {
