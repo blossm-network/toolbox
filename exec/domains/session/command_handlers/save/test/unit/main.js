@@ -67,6 +67,8 @@ describe("Command handler unit tests", () => {
 
     replace(deps, "command", commandFake);
 
+    replace(deps, "compare", fake.returns(true));
+
     const result = await main({
       payload,
       context,
@@ -80,6 +82,7 @@ describe("Command handler unit tests", () => {
     expect(eventStoreFake).to.have.been.calledWith({ domain: "identity" });
     expect(setFake).to.have.been.calledWith({
       context,
+      session,
       tokenFn: deps.gcpToken
     });
     expect(queryFake).to.have.been.calledWith({ key: "id", value: id });
@@ -96,10 +99,11 @@ describe("Command handler unit tests", () => {
     });
     expect(anotherSetFake).to.have.been.calledWith({
       context,
+      session,
       tokenFn: deps.gcpToken
     });
     expect(issueFake).to.have.been.calledWith(
-      { id },
+      { id, phone },
       {
         options: {
           principle,
@@ -147,6 +151,8 @@ describe("Command handler unit tests", () => {
 
     replace(deps, "command", commandFake);
 
+    replace(deps, "compare", fake.returns(true));
+
     const result = await main({
       payload,
       context,
@@ -160,6 +166,7 @@ describe("Command handler unit tests", () => {
     expect(eventStoreFake).to.have.been.calledWith({ domain: "identity" });
     expect(setFake).to.have.been.calledWith({
       context,
+      session,
       tokenFn: deps.gcpToken
     });
     expect(queryFake).to.have.been.calledWith({ key: "id", value: id });
@@ -176,6 +183,7 @@ describe("Command handler unit tests", () => {
     });
     expect(anotherSetFake).to.have.been.calledWith({
       context,
+      session,
       tokenFn: deps.gcpToken
     });
     expect(issueFake).to.have.been.calledWith(
@@ -222,6 +230,8 @@ describe("Command handler unit tests", () => {
 
     replace(deps, "command", commandFake);
 
+    replace(deps, "compare", fake.returns(true));
+
     const result = await main({
       payload,
       context,
@@ -234,6 +244,7 @@ describe("Command handler unit tests", () => {
     expect(eventStoreFake).to.have.been.calledWith({ domain: "identity" });
     expect(setFake).to.have.been.calledWith({
       context,
+      session: {},
       tokenFn: deps.gcpToken
     });
     expect(queryFake).to.have.been.calledWith({ key: "id", value: id });
@@ -244,6 +255,7 @@ describe("Command handler unit tests", () => {
     });
     expect(anotherSetFake).to.have.been.calledWith({
       context,
+      session: {},
       tokenFn: deps.gcpToken
     });
     expect(issueFake).to.have.been.calledWith(
@@ -303,6 +315,7 @@ describe("Command handler unit tests", () => {
     });
 
     replace(deps, "command", commandFake);
+    replace(deps, "compare", fake.returns(true));
 
     const result = await main({
       payload,
@@ -316,6 +329,7 @@ describe("Command handler unit tests", () => {
     expect(eventStoreFake).to.have.been.calledWith({ domain: "identity" });
     expect(setFake).to.have.been.calledWith({
       context,
+      session,
       tokenFn: deps.gcpToken
     });
     expect(queryFake).to.have.been.calledWith({ key: "id", value: id });
@@ -326,6 +340,7 @@ describe("Command handler unit tests", () => {
     });
     expect(anotherSetFake).to.have.been.calledWith({
       context,
+      session,
       tokenFn: deps.gcpToken
     });
     expect(issueFake).to.have.been.calledWith(
@@ -367,6 +382,7 @@ describe("Command handler unit tests", () => {
       set: setFake
     });
     replace(deps, "eventStore", eventStoreFake);
+    replace(deps, "compare", fake.returns(true));
 
     const result = await main({
       payload,
@@ -388,6 +404,7 @@ describe("Command handler unit tests", () => {
     });
     replace(deps, "eventStore", eventStoreFake);
 
+    replace(deps, "compare", fake.returns(true));
     try {
       await main({
         payload,
@@ -398,6 +415,52 @@ describe("Command handler unit tests", () => {
       expect(2).to.equal(3);
     } catch (e) {
       expect(e.message).to.equal(errorMessage);
+    }
+  });
+  it("should throw if compare fails", async () => {
+    const queryFake = fake.returns([identity]);
+    const setFake = fake.returns({
+      query: queryFake
+    });
+    const eventStoreFake = fake.returns({
+      set: setFake
+    });
+    replace(deps, "eventStore", eventStoreFake);
+
+    const aggregateFake = stub()
+      .onFirstCall()
+      .returns({
+        aggregate: principleAggregate
+      })
+      .onSecondCall()
+      .returns({
+        aggregate: sessionPrincipleAggregate
+      });
+
+    const issueFake = fake.returns({ token });
+    const anotherSetFake = fake.returns({
+      issue: issueFake
+    });
+    const commandFake = fake.returns({
+      set: anotherSetFake
+    });
+
+    replace(deps, "command", commandFake);
+
+    replace(deps, "compare", fake.returns(false));
+
+    try {
+      await main({
+        payload,
+        context,
+        session,
+        aggregateFn: aggregateFake
+      });
+
+      //shouldn't get called
+      expect(2).to.equal(3);
+    } catch (e) {
+      expect(e.message).to.equal("This phone number isn't right.");
     }
   });
 });

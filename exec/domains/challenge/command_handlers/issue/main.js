@@ -98,8 +98,6 @@ module.exports = async ({
           code,
           principle: identity.state.principle,
           session,
-          phone: deps.hash(payload.phone),
-          id: payload.id,
           issued: deps.stringDate(),
           expires: deps
             .moment()

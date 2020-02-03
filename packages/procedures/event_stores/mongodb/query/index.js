@@ -3,6 +3,8 @@ const deps = require("./deps");
 const { badRequest } = require("@blossm/errors");
 
 const doesMatchQuery = ({ state, query }) => {
+  //eslint-disable-next-line
+  console.log({ state, query });
   try {
     for (const property in query) {
       const propertyParts = property.split(".");

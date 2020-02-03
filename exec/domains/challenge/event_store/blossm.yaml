@@ -5,7 +5,6 @@ memory: 256Mi
 schema:
   code: String
   principle: String
-  phone: String
   issued: Date
   answered: String
   expires: Date
@@ -28,7 +27,6 @@ testing:
       payload:
         issued: 2020-01-03T00:02:12.000Z
         principle: some-root
-        phone: "+19195551144"
         expires: 2020-01-03T00:02:15.000Z
         session:
           exp: 2020-01-03T00:02:15.000Z
@@ -45,7 +43,6 @@ testing:
         - payload:
             issued: 2020-01-03T00:02:12.000Z
             principle: some-root
-            phone: "+19195551144"
             expires: 2020-01-03T00:02:15.000Z
             session:
               exp: 2020-01-03T00:02:15.000Z

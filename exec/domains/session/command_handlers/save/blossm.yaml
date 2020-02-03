@@ -3,6 +3,7 @@ domain: session
 service: core
 
 payload:
+  id: string
   phone: phoneNumber
 
 dependencies:
@@ -13,6 +14,7 @@ dependencies:
   "@blossm/uuid": "*"
   "@blossm/phone-number": "*"
   "@blossm/gcp-token": "*"
+  "@blossm/errors": "*"
 
 devDependencies:
   "mocha": "^6.1.4"
@@ -25,21 +27,25 @@ testing:
   examples:
     ok:
       - payload:
+          id: some-id
           phone: "1 (919) 555-1144"
         normalized:
+          id: some-id
           phone: "+19195551144"
         session:
           sub: some-sub
       - payload:
+          id: some-other-id
           phone: "1 (919) 555-1144"
         normalized:
+          id: some-other-id
           phone: "+19195551144"
         session: {}
 
   invalid:
-    - email:
+    - phone:
         a: 1
-    - email: asdf
+    - phone: asdf
 
   root: some-root
 
@@ -49,8 +55,16 @@ testing:
         root: some-identity
         action: register
         payload:
+          id: some-id
           phone: "+19195551144"
-          principle: some-identity-principle
+          principle: some-sub
+      - domain: identity
+        root: some-other-identity
+        action: register
+        payload:
+          id: some-other-id
+          phone: "+19195551144"
+          principle: some-sub
       - domain: principle
         root: some-identity-principle
         action: add-permissions
@@ -72,7 +86,6 @@ testing:
       context: command-handler
 
   response:
-    token:
 
 #don't change
 context: command-handler

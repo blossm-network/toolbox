@@ -2,6 +2,7 @@ const { format } = require("@blossm/phone-number");
 
 module.exports = payload => {
   return {
-    phone: format(payload.phone)
+    phone: format(payload.phone),
+    id: payload.id
   };
 };

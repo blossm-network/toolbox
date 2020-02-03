@@ -63,10 +63,6 @@ describe("Command handler unit tests", () => {
     const uuidFake = fake.returns(root);
     replace(deps, "uuid", uuidFake);
 
-    const hashedPhone = "some-hashed-phone";
-    const hashFake = fake.returns(hashedPhone);
-    replace(deps, "hash", hashFake);
-
     const queryFake = fake.returns([identity]);
     const setFake = fake.returns({
       query: queryFake
@@ -97,8 +93,6 @@ describe("Command handler unit tests", () => {
             code,
             principle,
             session,
-            phone: hashedPhone,
-            id,
             issued: new Date().toISOString(),
             expires: deps
               .moment()
@@ -175,10 +169,6 @@ describe("Command handler unit tests", () => {
     const uuidFake = fake.returns(root);
     replace(deps, "uuid", uuidFake);
 
-    const hashedPhone = "some-hashed-phone";
-    const hashFake = fake.returns(hashedPhone);
-    replace(deps, "hash", hashFake);
-
     const signature = "some-signature";
     const signFake = fake.returns(signature);
     replace(deps, "sign", signFake);
@@ -208,8 +198,6 @@ describe("Command handler unit tests", () => {
           payload: {
             code,
             principle: optionsPrincipleRoot,
-            phone: hashedPhone,
-            id,
             session,
             issued: new Date().toISOString(),
             expires: deps
@@ -266,9 +254,6 @@ describe("Command handler unit tests", () => {
     });
     replace(deps, "eventStore", eventStoreFake);
 
-    const hashedPhone = "some-hashed-phone";
-    const hashFake = fake.returns(hashedPhone);
-    replace(deps, "hash", hashFake);
     try {
       await main({ payload, context, session });
 
@@ -293,9 +278,6 @@ describe("Command handler unit tests", () => {
       phoneNotRecognized: fake.returns(error)
     });
 
-    const hashedPhone = "some-hashed-phone";
-    const hashFake = fake.returns(hashedPhone);
-    replace(deps, "hash", hashFake);
     try {
       await main({
         payload,
@@ -321,10 +303,6 @@ describe("Command handler unit tests", () => {
 
     const uuidFake = fake.returns(root);
     replace(deps, "uuid", uuidFake);
-
-    const hashedPhone = "some-hashed-phone";
-    const hashFake = fake.returns(hashedPhone);
-    replace(deps, "hash", hashFake);
 
     const queryFake = fake.returns([identity]);
     const setFake = fake.returns({
@@ -369,10 +347,6 @@ describe("Command handler unit tests", () => {
     const uuidFake = fake.returns(root);
     replace(deps, "uuid", uuidFake);
 
-    const hashedPhone = "some-hashed-phone";
-    const hashFake = fake.returns(hashedPhone);
-    replace(deps, "hash", hashFake);
-
     const queryFake = fake.returns([identity]);
     const setFake = fake.returns({
       query: queryFake
@@ -411,8 +385,6 @@ describe("Command handler unit tests", () => {
           root,
           payload: {
             code,
-            phone: hashedPhone,
-            id,
             principle,
             issued: new Date().toISOString(),
             session,

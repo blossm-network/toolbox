@@ -81,7 +81,7 @@ module.exports = async ({ payload, context, session, aggregateFn }) => {
     .eventStore({
       domain: "identity"
     })
-    .set({ context, tokenFn: deps.gcpToken })
+    .set({ context, session, tokenFn: deps.gcpToken })
     .query({ key: "id", value: payload.id });
 
   if (identity) {
