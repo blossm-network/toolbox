@@ -55,6 +55,6 @@ module.exports = async ({ payload, context, session }) => {
         }
       }
     ],
-    ...(token && { token })
+    ...(token && { response: { token } })
   };
 };

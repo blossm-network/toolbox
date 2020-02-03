@@ -1,17 +1,9 @@
-domain: session
+domain: service
 service: core
 
 commands:
-  - action: start
-    protected: false
-  - action: save
+  - action: register
     permissions: none
-  - action: logout
-    permissions:
-      - admin
-  - action: switch-context
-    permissions:
-      - admin
 
 whitelist:
   - "127.0.0.1"

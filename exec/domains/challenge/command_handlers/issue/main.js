@@ -35,7 +35,7 @@ module.exports = async ({
     : await deps
         .eventStore({ domain: "identity" })
         .set({ context, tokenFn: deps.gcpToken })
-        .query({ key: "phone", value: payload.phone });
+        .query({ key: "id", value: payload.id });
 
   if (!identity) throw deps.invalidArgumentError.phoneNotRecognized();
 
@@ -89,7 +89,8 @@ module.exports = async ({
           code,
           principle: identity.state.principle,
           session,
-          phone: payload.phone,
+          phone: deps.hash(payload.phone),
+          id: payload.id,
           issued: deps.stringDate(),
           expires: deps
             .moment()

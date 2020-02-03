@@ -12,6 +12,7 @@ dependencies:
   "@blossm/crypt": "*"
   "@blossm/uuid": "*"
   "@blossm/phone-number": "*"
+  "@blossm/gcp-token": "*"
 
 devDependencies:
   "mocha": "^6.1.4"

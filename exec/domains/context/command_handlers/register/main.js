@@ -1,11 +1,8 @@
-const deps = require("./../deps");
+const deps = require("./deps");
 
 module.exports = async ({ payload, root, context, session }) => {
   // Create a root for the context, and determine what root should be used for the principle.
-  const [contextRoot, principleRoot] = await Promise.all([
-    root || deps.uuid(),
-    session.sub || deps.uuid()
-  ]);
+  const principleRoot = session.sub || (await deps.uuid());
 
   // Give the principle admin priviledges to this context.
   const events = [
@@ -14,11 +11,11 @@ module.exports = async ({ payload, root, context, session }) => {
       action: "add-permissions",
       root: principleRoot,
       payload: {
-        permissions: [`context:admin:${contextRoot}`]
+        permissions: [`context:admin:${root}`]
       }
     },
     {
-      root: contextRoot,
+      root,
       payload
     }
   ];
@@ -34,8 +31,8 @@ module.exports = async ({ payload, root, context, session }) => {
       domain: "session",
       action: "upgrade"
     })
-    .set({ context, session, tokenFn: deps.tokenFn })
-    .issue({ principle: principleRoot });
+    .set({ context, session, tokenFn: deps.gcpToken })
+    .issue({ principle: principleRoot }, { root: context.session });
 
   return { events, response: { ...response, token } };
 };

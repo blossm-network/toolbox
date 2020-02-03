@@ -8,11 +8,26 @@ payload:
   service: string
   network: string
 
+dependencies:
+  "@blossm/command-rpc": "*"
+  "@blossm/uuid": "*"
+  "@blossm/gcp-token": "*"
+
 devDependencies:
   "mocha": "^6.1.4"
   "chai": "^4.2.0"
+  "sinon": "^7.3.2"
+  "sinon-chai": "^3.3.0"
 
 testing:
+  events:
+    - action: register
+      domain: context
+      service: core 
+    - action: add-permissions 
+      domain: principle 
+      service: core 
+
   examples:
     ok:
       - payload:
@@ -25,6 +40,12 @@ testing:
           domain: some-domain
           service: some-service
           network: some-network
+        context:
+          session: some-session-root
+        session:
+          iss: some-iss
+          aud: some-aud
+          exp: 9999-12-31T00:00:00.000
 
   invalid:
     - root: 3
@@ -33,10 +54,24 @@ testing:
     - network: 3
 
   pre:
+    ok:
+      - domain: session
+        root: some-session-root
+        action: start
+        payload:
+          device:
+            os: some-os
 
   procedures:
+    - action: upgrade
+      domain: session
+      context: command-handler
+    - domain: principle 
+      context: event-store
 
   response:
+    principle:
+    token:
 
 #don't change
 context: command-handler

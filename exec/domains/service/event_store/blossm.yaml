@@ -8,19 +8,19 @@ schema:
 
 testing:
   examples:
-    - action: create
+    - action: register 
       payload:
         name: some-name
         group: some-group
         context: some-context
-    - action: create
+    - action: register
       payload:
         name: some-other-name
         group: some-group
         context: some-other-context
 
   handlers:
-    - action: create
+    - action: register
       examples:
         - state:
             name: some-name

@@ -19,6 +19,7 @@ const formatSchema = schema => {
             type: schema[property]
           };
     newSchema[property].required = false;
+    newSchema[property].unique = false;
   }
   return newSchema;
 };

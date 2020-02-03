@@ -9,8 +9,9 @@ const deps = require("../../deps");
 let clock;
 const now = new Date();
 
+const id = "some-id";
 const phone = "some-phone";
-const payload = { phone };
+const payload = { id, phone };
 const token = "some-token";
 const context = "some-context";
 
@@ -81,7 +82,7 @@ describe("Command handler unit tests", () => {
       context,
       tokenFn: deps.gcpToken
     });
-    expect(queryFake).to.have.been.calledWith({ key: "phone", value: phone });
+    expect(queryFake).to.have.been.calledWith({ key: "id", value: id });
     expect(aggregateFake).to.have.been.calledWith(principle, {
       domain: "principle"
     });
@@ -95,22 +96,26 @@ describe("Command handler unit tests", () => {
     });
     expect(anotherSetFake).to.have.been.calledWith({
       context,
-      tokenFn: deps.gcpToken,
-      options: {
-        principle,
-        events: [
-          {
-            action: "add-permissions",
-            domain: "principle",
-            root: principle,
-            payload: {
-              permissions: ["some-other-permission"]
-            }
-          }
-        ]
-      }
+      tokenFn: deps.gcpToken
     });
-    expect(issueFake).to.have.been.calledWith({ phone });
+    expect(issueFake).to.have.been.calledWith(
+      { id },
+      {
+        options: {
+          principle,
+          events: [
+            {
+              action: "add-permissions",
+              domain: "principle",
+              root: principle,
+              payload: {
+                permissions: ["some-other-permission"]
+              }
+            }
+          ]
+        }
+      }
+    );
   });
   it("should return successfully if identity is found and there are no new permissions to add", async () => {
     const queryFake = fake.returns([identity]);
@@ -157,7 +162,7 @@ describe("Command handler unit tests", () => {
       context,
       tokenFn: deps.gcpToken
     });
-    expect(queryFake).to.have.been.calledWith({ key: "phone", value: phone });
+    expect(queryFake).to.have.been.calledWith({ key: "id", value: id });
     expect(aggregateFake).to.have.been.calledWith(principle, {
       domain: "principle"
     });
@@ -171,13 +176,17 @@ describe("Command handler unit tests", () => {
     });
     expect(anotherSetFake).to.have.been.calledWith({
       context,
-      tokenFn: deps.gcpToken,
-      options: {
-        principle,
-        events: []
-      }
+      tokenFn: deps.gcpToken
     });
-    expect(issueFake).to.have.been.calledWith({ phone });
+    expect(issueFake).to.have.been.calledWith(
+      { phone, id },
+      {
+        options: {
+          principle,
+          events: []
+        }
+      }
+    );
   });
   it("should return successfully if principle not found with no subject", async () => {
     const queryFake = fake.returns([]);
@@ -227,7 +236,7 @@ describe("Command handler unit tests", () => {
       context,
       tokenFn: deps.gcpToken
     });
-    expect(queryFake).to.have.been.calledWith({ key: "phone", value: phone });
+    expect(queryFake).to.have.been.calledWith({ key: "id", value: id });
     expect(hashFake).to.have.been.calledWith(phone);
     expect(commandFake).to.have.been.calledWith({
       action: "issue",
@@ -235,31 +244,35 @@ describe("Command handler unit tests", () => {
     });
     expect(anotherSetFake).to.have.been.calledWith({
       context,
-      tokenFn: deps.gcpToken,
-      options: {
-        principle: principleRoot,
-        events: [
-          {
-            action: "register",
-            domain: "identity",
-            root: identityRoot,
-            payload: {
-              phone: phoneHash,
-              principle: principleRoot
-            }
-          },
-          {
-            action: "principle",
-            domain: "add-permissions",
-            root: principleRoot,
-            payload: {
-              permissions: [`identity:admin:${identityRoot}`]
-            }
-          }
-        ]
-      }
+      tokenFn: deps.gcpToken
     });
-    expect(issueFake).to.have.been.calledWith({ phone });
+    expect(issueFake).to.have.been.calledWith(
+      { id, phone },
+      {
+        options: {
+          principle: principleRoot,
+          events: [
+            {
+              action: "register",
+              domain: "identity",
+              root: identityRoot,
+              payload: {
+                phone: phoneHash,
+                principle: principleRoot
+              }
+            },
+            {
+              action: "principle",
+              domain: "add-permissions",
+              root: principleRoot,
+              payload: {
+                permissions: [`identity:admin:${identityRoot}`]
+              }
+            }
+          ]
+        }
+      }
+    );
   });
   it("should return successfully if principle not found with subject", async () => {
     const queryFake = fake.returns([]);
@@ -304,7 +317,7 @@ describe("Command handler unit tests", () => {
       context,
       tokenFn: deps.gcpToken
     });
-    expect(queryFake).to.have.been.calledWith({ key: "phone", value: phone });
+    expect(queryFake).to.have.been.calledWith({ key: "id", value: id });
     expect(hashFake).to.have.been.calledWith(phone);
     expect(commandFake).to.have.been.calledWith({
       action: "issue",
@@ -312,32 +325,37 @@ describe("Command handler unit tests", () => {
     });
     expect(anotherSetFake).to.have.been.calledWith({
       context,
-      tokenFn: deps.gcpToken,
-      options: {
-        principle: sub,
-        events: [
-          {
-            action: "register",
-            domain: "identity",
-            root: identityRoot,
-            payload: {
-              phone: phoneHash,
-              principle: sub
-            }
-          },
-          {
-            action: "principle",
-            domain: "add-permissions",
-            root: sub,
-            payload: {
-              permissions: [`identity:admin:${identityRoot}`]
-            }
-          }
-        ]
-      }
+      tokenFn: deps.gcpToken
     });
-    expect(issueFake).to.have.been.calledWith({ phone });
+    expect(issueFake).to.have.been.calledWith(
+      { id, phone },
+      {
+        options: {
+          principle: sub,
+          events: [
+            {
+              action: "register",
+              domain: "identity",
+              root: identityRoot,
+              payload: {
+                phone: phoneHash,
+                principle: sub
+              }
+            },
+            {
+              action: "principle",
+              domain: "add-permissions",
+              root: sub,
+              payload: {
+                permissions: [`identity:admin:${identityRoot}`]
+              }
+            }
+          ]
+        }
+      }
+    );
   });
+
   it("should return nothing if sub is the identity's principle", async () => {
     const queryFake = fake.returns([{ state: { principle: sub } }]);
     const setFake = fake.returns({

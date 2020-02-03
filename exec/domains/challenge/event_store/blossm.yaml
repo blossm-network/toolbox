@@ -1,5 +1,6 @@
 domain: challenge
 service: core
+memory: 256Mi
 
 schema:
   code: String

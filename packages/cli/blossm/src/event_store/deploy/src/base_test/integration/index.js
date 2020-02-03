@@ -117,12 +117,14 @@ describe("Event store integration tests", () => {
         example1.payload[property]
       );
     }
+
     ///Test indexes
     for (const index of indexes || []) {
+      const example = testing.examples.find(e => e.payload[index]);
       const response4 = await request.get(url, {
         query: {
           key: [index],
-          value: example1.payload[index]
+          value: example.payload[index]
         }
       });
       expect(response4.statusCode).to.equal(200);
@@ -313,7 +315,7 @@ describe("Event store integration tests", () => {
               topic,
               version,
               created,
-              action: example0.action,
+              action: example1.action,
               domain,
               service,
               command: {
@@ -325,7 +327,7 @@ describe("Event store integration tests", () => {
                 issued
               }
             },
-            payload: example0.payload
+            payload: example1.payload
           }
         }
       })

@@ -2,6 +2,7 @@ const gateway = require("@blossm/command-gateway");
 const eventStore = require("@blossm/event-store-rpc");
 const { verify } = require("@blossm/gcp-kms");
 const { invalidCredentials } = require("@blossm/errors");
+const gcpToken = require("@blossm/gcp-token");
 
 const config = require("./config.json");
 
@@ -11,14 +12,18 @@ module.exports = gateway({
   permissionsLookupFn: async ({ principle }) => {
     const aggregate = await eventStore({
       domain: "principle"
-    }).aggregate(principle);
+    })
+      .set({ tokenFn: gcpToken })
+      .aggregate(principle);
 
     return aggregate ? aggregate.state.permissions : [];
   },
   terminatedSessionCheckFn: async ({ session }) => {
     const aggregate = await eventStore({
       domain: "session"
-    }).aggregate(session);
+    })
+      .set({ tokenFn: gcpToken })
+      .aggregate(session);
 
     if (aggregate.state.terminated) throw invalidCredentials.tokenTerminated();
   },

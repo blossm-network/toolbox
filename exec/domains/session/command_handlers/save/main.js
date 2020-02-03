@@ -81,9 +81,12 @@ module.exports = async ({ payload, context, session, aggregateFn }) => {
       domain: "identity"
     })
     .set({ context, tokenFn: deps.gcpToken })
-    .query({ key: "phone", value: payload.phone });
+    .query({ key: "id", value: payload.id });
 
   if (identity) {
+    if (!deps.compare(identity.state.phone, payload.phone))
+      throw deps.invalidArgumentError.message("This phone number isn't right.");
+
     // Don't log an event or issue a challange if
     // the identity's root is already set as the session's subject.
     if (identity.state.principle == session.sub) return {};
@@ -110,15 +113,21 @@ module.exports = async ({ payload, context, session, aggregateFn }) => {
     })
     .set({
       context,
-      tokenFn: deps.gcpToken,
-      options: {
-        principle: principleRoot,
-        events
-      }
+      session,
+      tokenFn: deps.gcpToken
     })
-    .issue({
-      phone: payload.phone
-    });
+    .issue(
+      {
+        id: payload.id,
+        phone: payload.phone
+      },
+      {
+        options: {
+          principle: principleRoot,
+          events
+        }
+      }
+    );
 
   return { response: { token } };
 };

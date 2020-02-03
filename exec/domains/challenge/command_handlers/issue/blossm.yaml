@@ -7,6 +7,9 @@ payload:
   phone:
     type: phoneNumber
     title: phone number
+  username:
+    type: string
+    unique: true
 
 dependencies:
   "@blossm/phone-number": "*"
@@ -19,6 +22,7 @@ dependencies:
   "@blossm/twilio-sms": "*"
   "@blossm/event-store-rpc": "*"
   "@blossm/errors": "*"
+  "@blossm/crypt": "*"
   "@blossm/gcp-secret": "*"
 
 devDependencies:

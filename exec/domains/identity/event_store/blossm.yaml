@@ -4,46 +4,43 @@ service: core
 schema:
   phone: String
   email: String
+  id: 
+    type: String
+    unique: true
   principle: String
   contexts: [String]
 
 indexes:
-  - phone
-  - email
+  - id 
 
 testing:
   examples:
+    - action: register
+      payload:
+        phone: "+19195551155"
+        principle: some-principle
+        email: some-email
+        id: some-id
     - action: add-contexts
       payload:
         contexts:
           - some-context
-    - action: attempt-register
-      payload:
-        phone: "+19195551155"
-        principle: some-principle
-    - action: register
-      payload:
-        phone: "+19195551155"
 
   handlers:
-    - action: attempt-register
-      examples:
-        - state:
-            phone: "+19195551133"
-          payload:
-            phone: "+19195551144"
-            principle: some-principle-root
-          result:
-            phone: "+19195551144"
-            principle: some-principle-root
     - action: register
       examples:
         - state:
+            id: some-id
             phone: "+19195551133"
+            principle: some-principle-root
           payload:
+            id: some-other-id
             phone: "+19195551144"
+            principle: some-other-principle-root
           result:
+            id: some-other-id
             phone: "+19195551144"
+            principle: some-other-principle-root
     - action: add-contexts
       examples:
         - state:

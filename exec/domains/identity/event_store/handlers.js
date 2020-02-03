@@ -5,12 +5,6 @@ module.exports = {
       ...payload
     };
   },
-  "attempt-register": (state, payload) => {
-    return {
-      ...state,
-      ...payload
-    };
-  },
   "add-contexts": (state, payload) => {
     return {
       ...state,
