@@ -74,7 +74,7 @@ const eventStore = async ({ schema, indexes }) => {
     indexes: [
       [{ id: 1 }],
       [{ "headers.root": 1 }],
-      [{ "headers.root": 1, "headers.number": 1 }],
+      [{ "headers.root": 1, "headers.number": 1, _id: 1, __v: 1 }],
       ...(indexes.length == 0
         ? []
         : [
