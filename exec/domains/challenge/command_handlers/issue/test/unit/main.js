@@ -129,7 +129,7 @@ describe("Command handler unit tests", () => {
       options: {
         issuer: `challenge.${service}.${network}/issue`,
         audience: `challenge.${service}.${network}/answer`,
-        expiresIn: 3600
+        expiresIn: 3600000
       },
       payload: {
         context: {
@@ -221,7 +221,7 @@ describe("Command handler unit tests", () => {
       options: {
         issuer: `challenge.${service}.${network}/issue`,
         audience: `challenge.${service}.${network}/answer`,
-        expiresIn: 3600
+        expiresIn: 3600000
       },
       payload: {
         context: {
@@ -409,7 +409,7 @@ describe("Command handler unit tests", () => {
       options: {
         issuer: `challenge.${service}.${network}/issue`,
         audience: `challenge.${service}.${network}/answer`,
-        expiresIn: 3600
+        expiresIn: 3600000
       },
       payload: {
         context: {

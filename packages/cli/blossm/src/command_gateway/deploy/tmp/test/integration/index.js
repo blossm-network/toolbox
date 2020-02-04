@@ -8,7 +8,6 @@ const getToken = require("@blossm/get-token");
 const request = require("@blossm/request");
 
 const phone = "+12513332037";
-const id = "some-id";
 
 const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 
@@ -18,7 +17,7 @@ describe("Command gateway integration tests", () => {
   before(async () => await Promise.all(testing.topics.map(t => create(t))));
   after(async () => await Promise.all(testing.topics.map(t => del(t))));
   it("should return successfully", async () => {
-    const { token: anonymousToken } = await getToken({ phone, id });
+    const { token: anonymousToken } = await getToken({ phone });
     expect(anonymousToken).to.exist;
 
     const sentAfter = new Date();
@@ -28,8 +27,7 @@ describe("Command gateway integration tests", () => {
           issued: stringDate()
         },
         payload: {
-          phone,
-          id
+          phone
         }
       },
       headers: {

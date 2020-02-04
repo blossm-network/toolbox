@@ -17,7 +17,8 @@
     "@blossm/command-rpc": "^0.0.53",
     "@blossm/create-event": "^0.0.19",
     "@blossm/event-store-rpc": "^0.0.58",
-    "@blossm/uuid": "*"
+    "@blossm/uuid": "*",
+    "@blossm/crypt": "*"
   },
   "devDependencies": {
     "mocha": "^6.1.4"

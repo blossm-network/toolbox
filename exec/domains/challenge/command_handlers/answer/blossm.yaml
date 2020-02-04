@@ -1,7 +1,6 @@
 action: answer
 domain: challenge
 service: core
-version: 0
 
 payload:
   code:

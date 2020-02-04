@@ -2,11 +2,13 @@ const eventStore = require("@blossm/event-store-rpc");
 const command = require("@blossm/command-rpc");
 const uuid = require("@blossm/uuid");
 const createEvent = require("@blossm/create-event");
+const { hash } = require("@blossm/crypt");
 
 module.exports = async ({
   permissions = [],
   context = {},
-  phone = "+19195551144"
+  phone = "+19195551144",
+  id
 } = {}) => {
   const [identityRoot, principleRoot, sessionRoot] = await Promise.all([
     uuid(),
@@ -22,7 +24,8 @@ module.exports = async ({
       root: identityRoot,
       payload: {
         principle: principleRoot,
-        phone
+        phone: hash(phone),
+        id
       },
       action: "register",
       domain: "identity",
@@ -44,20 +47,6 @@ module.exports = async ({
       service: process.env.SERVICE
     })
   );
-
-  // // Start a session for the identity.
-  // await command({
-  //   action: "start",
-  //   domain: "session"
-  // }).issue({
-  //   device: {
-  //     os: "test",
-  //     hardware: "test",
-  //     version: "test",
-  //     manufacturer: "test",
-  //     id: "test"
-  //   }
-  // });
 
   // Add a session.
   await eventStore({

@@ -1,7 +1,7 @@
 action: issue
 domain: challenge
 service: core
-version: 0
+memory: 256Mi
 
 payload:
   phone:

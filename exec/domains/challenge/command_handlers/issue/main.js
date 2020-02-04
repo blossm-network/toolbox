@@ -1,11 +1,11 @@
 const {
-  SECONDS_IN_HOUR,
+  MILLISECONDS_IN_HOUR,
   SECONDS_IN_MINUTE
 } = require("@blossm/duration-consts");
 
 const deps = require("./deps");
 
-const ONE_HOUR = SECONDS_IN_HOUR;
+const ONE_HOUR = MILLISECONDS_IN_HOUR;
 const THREE_MINUTES = 3 * SECONDS_IN_MINUTE;
 
 const CODE_LENGTH = 6;
@@ -28,9 +28,6 @@ module.exports = async ({
     );
   }
 
-  //eslint-disable-next-line
-  console.log("payload: ", payload);
-
   // Check to see if the phone is recognized.
   // If identity and principle roots are passed in, use theme as the identity instead.
   const [identity] = principle
@@ -40,8 +37,6 @@ module.exports = async ({
         .set({ context, tokenFn: deps.gcpToken })
         .query({ key: "id", value: payload.id });
 
-  //eslint-disable-next-line
-  console.log("identity: ", identity);
   if (!identity)
     throw deps.invalidArgumentError.phoneNotRecognized({
       info: { id: payload.id }

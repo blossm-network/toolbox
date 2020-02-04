@@ -3,6 +3,7 @@
     "@blossm/view-gateway": "*",
     "@blossm/event-store-rpc": "*",
     "@blossm/gcp-kms": "*",
+    "@blossm/gcp-token": "*",
     "@blossm/errors": "*"
   },
   "devDependencies": {

@@ -3,8 +3,6 @@ const deps = require("./deps");
 const { badRequest } = require("@blossm/errors");
 
 const doesMatchQuery = ({ state, query }) => {
-  //eslint-disable-next-line
-  console.log({ state, query });
   try {
     for (const property in query) {
       const propertyParts = property.split(".");
@@ -27,8 +25,6 @@ module.exports = ({ eventStore, snapshotStore, handlers }) => async ({
   if (!key || !value)
     throw badRequest.incompleteQuery({ info: { key, value } });
 
-  //eslint-disable-next-line
-  console.log({ key, value });
   const [snapshots, events] = await Promise.all([
     deps.db.find({
       store: snapshotStore,
@@ -50,8 +46,6 @@ module.exports = ({ eventStore, snapshotStore, handlers }) => async ({
     })
   ]);
 
-  //eslint-disable-next-line
-  console.log({ events });
   if (snapshots.length == 0 && events.length == 0) return [];
 
   const aggregateFn = deps.aggregate({ eventStore, snapshotStore, handlers });
@@ -71,18 +65,13 @@ module.exports = ({ eventStore, snapshotStore, handlers }) => async ({
     ])
   ];
 
-  //eslint-disable-next-line
-  console.log({ candidateRoots });
   const aggregates = await Promise.all(
     candidateRoots.map(root => aggregateFn(root))
   );
 
-  //eslint-disable-next-line
-  console.log({ aggregates });
   const filteredAggregates = aggregates.filter(aggregate =>
     doesMatchQuery({ state: aggregate.state, query: { [key]: value } })
   );
-  //eslint-disable-next-line
-  console.log({ filteredAggregates });
+
   return filteredAggregates;
 };
