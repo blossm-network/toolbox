@@ -11,5 +11,5 @@ module.exports = ({ action, domain } = {}) => async (req, res) => {
     .set({ tokenFn: deps.gcpToken, context: req.context, session: req.session })
     .issue(payload, { ...headers, root });
 
-  res.status(200).send(response);
+  res.status(response ? 200 : 204).send(response);
 };

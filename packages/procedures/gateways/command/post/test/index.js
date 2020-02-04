@@ -67,6 +67,54 @@ describe("Command gateway post", () => {
     expect(statusFake).to.have.been.calledWith(200);
     expect(sendFake).to.have.been.calledWith(response);
   });
+  it("should call with the correct params if response is empty", async () => {
+    const validateFake = fake();
+    replace(deps, "validate", validateFake);
+
+    const normalizeFake = fake.returns({ payload, headers, root });
+    replace(deps, "normalize", normalizeFake);
+
+    const issueFake = fake.returns();
+    const setFake = fake.returns({
+      issue: issueFake
+    });
+    const commandFake = fake.returns({
+      set: setFake
+    });
+    replace(deps, "command", commandFake);
+
+    const req = {
+      context,
+      session,
+      body,
+      params: {}
+    };
+
+    const sendFake = fake();
+    const statusFake = fake.returns({
+      send: sendFake
+    });
+    const res = {
+      status: statusFake
+    };
+
+    await post({ action, domain })(req, res);
+
+    expect(validateFake).to.have.been.calledWith(body);
+    expect(normalizeFake).to.have.been.calledWith(body);
+    expect(commandFake).to.have.been.calledWith({
+      action,
+      domain
+    });
+    expect(setFake).to.have.been.calledWith({
+      tokenFn: deps.gcpToken,
+      context,
+      session
+    });
+    expect(issueFake).to.have.been.calledWith(payload, { ...headers, root });
+    expect(statusFake).to.have.been.calledWith(204);
+    expect(sendFake).to.have.been.calledWith();
+  });
   it("should throw correctly", async () => {
     const errorMessage = "error-message";
     const validateFake = fake.throws(new Error(errorMessage));
