@@ -24,7 +24,7 @@ module.exports = async ({
       root: identityRoot,
       payload: {
         principle: principleRoot,
-        phone: hash(phone),
+        phone: await hash(phone),
         id
       },
       action: "register",
