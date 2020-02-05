@@ -46,7 +46,9 @@ describe("Command gateway post", () => {
     const statusFake = fake.returns({
       send: sendFake
     });
+    const cookieFake = fake();
     const res = {
+      cookie: cookieFake,
       status: statusFake
     };
 
@@ -94,8 +96,10 @@ describe("Command gateway post", () => {
     const statusFake = fake.returns({
       send: sendFake
     });
+    const cookieFake = fake();
     const res = {
-      status: statusFake
+      status: statusFake,
+      cookie: cookieFake
     };
 
     await post({ action, domain })(req, res);
@@ -129,8 +133,10 @@ describe("Command gateway post", () => {
     const statusFake = fake.returns({
       send: sendFake
     });
+    const cookieFake = fake();
     const res = {
-      status: statusFake
+      status: statusFake,
+      cookie: cookieFake
     };
 
     try {
