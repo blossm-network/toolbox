@@ -61,7 +61,7 @@ module.exports = async ({
     })
   );
 
-  const { token } = await command({
+  const { tokens } = await command({
     action: "upgrade",
     domain: "session"
   })
@@ -85,5 +85,5 @@ module.exports = async ({
       { root: sessionRoot }
     );
 
-  return { token };
+  return { tokens };
 };
