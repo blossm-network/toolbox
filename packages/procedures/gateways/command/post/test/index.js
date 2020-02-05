@@ -4,7 +4,7 @@ const { restore, replace, fake } = require("sinon");
 const deps = require("../deps");
 const post = require("..");
 
-const response = "some-reponse";
+const response = { a: 1 };
 const payload = "some-payload";
 const headers = "some-headers";
 const body = "some-body";
@@ -26,7 +26,10 @@ describe("Command gateway post", () => {
     const normalizeFake = fake.returns({ payload, headers, root });
     replace(deps, "normalize", normalizeFake);
 
-    const issueFake = fake.returns(response);
+    const issueFake = fake.returns({
+      ...response,
+      tokens: { a: 1 }
+    });
     const setFake = fake.returns({
       issue: issueFake
     });
@@ -104,6 +107,67 @@ describe("Command gateway post", () => {
 
     await post({ action, domain })(req, res);
 
+    expect(validateFake).to.have.been.calledWith(body);
+    expect(normalizeFake).to.have.been.calledWith(body);
+    expect(commandFake).to.have.been.calledWith({
+      action,
+      domain
+    });
+    expect(setFake).to.have.been.calledWith({
+      tokenFn: deps.gcpToken,
+      context,
+      session
+    });
+    expect(issueFake).to.have.been.calledWith(payload, { ...headers, root });
+    expect(statusFake).to.have.been.calledWith(204);
+    expect(sendFake).to.have.been.calledWith();
+  });
+  it("should call with the correct params if tokens is in the response", async () => {
+    const validateFake = fake();
+    replace(deps, "validate", validateFake);
+
+    const normalizeFake = fake.returns({ payload, headers, root });
+    replace(deps, "normalize", normalizeFake);
+
+    const token1 = "some-token";
+    const token2 = "some-other-token";
+    const issueFake = fake.returns({ tokens: { token1, token2 } });
+    const setFake = fake.returns({
+      issue: issueFake
+    });
+    const commandFake = fake.returns({
+      set: setFake
+    });
+    replace(deps, "command", commandFake);
+
+    const req = {
+      context,
+      session,
+      body,
+      params: {}
+    };
+
+    const sendFake = fake();
+    const statusFake = fake.returns({
+      send: sendFake
+    });
+    const cookieFake = fake();
+    const res = {
+      cookie: cookieFake,
+      status: statusFake
+    };
+
+    await post({ action, domain })(req, res);
+
+    expect(cookieFake).to.have.been.calledTwice;
+    expect(cookieFake).to.have.been.calledWith("token1", token1, {
+      httpOnly: true,
+      secure: true
+    });
+    expect(cookieFake).to.have.been.calledWith("token2", token2, {
+      httpOnly: true,
+      secure: true
+    });
     expect(validateFake).to.have.been.calledWith(body);
     expect(normalizeFake).to.have.been.calledWith(body);
     expect(commandFake).to.have.been.calledWith({

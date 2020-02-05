@@ -1,5 +1,6 @@
 domain: context
 service: core
+memory: 256Mi
 
 schema:
   root: String
