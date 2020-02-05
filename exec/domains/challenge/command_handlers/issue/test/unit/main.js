@@ -102,7 +102,7 @@ describe("Command handler unit tests", () => {
           }
         }
       ],
-      response: { token }
+      response: { tokens: { challenge: token } }
     });
     expect(queryFake).to.have.been.calledWith({
       key: "id",
@@ -208,7 +208,7 @@ describe("Command handler unit tests", () => {
           }
         }
       ],
-      response: { token }
+      response: { tokens: { challenge: token } }
     });
     expect(signFake).to.have.been.calledWith({
       ring: service,
@@ -376,9 +376,7 @@ describe("Command handler unit tests", () => {
     });
 
     expect(result).to.deep.equal({
-      response: {
-        token
-      },
+      response: { tokens: { challenge: token } },
       events: [
         {
           correctNumber: 0,

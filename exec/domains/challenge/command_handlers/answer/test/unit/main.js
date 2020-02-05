@@ -33,7 +33,7 @@ const context = {
 };
 const service = "some-service";
 const network = "some-network";
-const token = "some-token";
+const tokens = "some-tokens";
 const project = "some-projectl";
 
 process.env.SERVICE = service;
@@ -56,7 +56,7 @@ describe("Command handler unit tests", () => {
       }
     });
 
-    const issueFake = fake.returns({ token });
+    const issueFake = fake.returns({ tokens });
     const setFake = fake.returns({
       issue: issueFake
     });
@@ -81,7 +81,7 @@ describe("Command handler unit tests", () => {
           correctNumber: 1
         }
       ],
-      response: { token }
+      response: { tokens }
     });
     expect(aggregateFake).to.have.been.calledWith(contextChallenge);
     expect(commandFake).to.have.been.calledWith({
@@ -115,7 +115,7 @@ describe("Command handler unit tests", () => {
       }
     });
 
-    const issueFake = fake.returns({ token });
+    const issueFake = fake.returns({ tokens });
     const setFake = fake.returns({
       issue: issueFake
     });

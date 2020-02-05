@@ -105,6 +105,6 @@ module.exports = async ({
         correctNumber: 0
       }
     ],
-    response: { token }
+    response: { tokens: { challenge: token } }
   };
 };

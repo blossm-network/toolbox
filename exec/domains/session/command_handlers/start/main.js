@@ -42,6 +42,6 @@ module.exports = async ({ payload }) => {
         correctNumber: 0
       }
     ],
-    response: { token }
+    response: { tokens: { session: token } }
   };
 };

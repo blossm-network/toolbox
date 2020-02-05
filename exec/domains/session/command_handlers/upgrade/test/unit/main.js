@@ -71,7 +71,7 @@ describe("Command handler unit tests", () => {
           root
         }
       ],
-      response: { token }
+      response: { tokens: { session: token } }
     });
     expect(aggregateFake).to.have.been.calledWith(root);
     expect(signFake).to.have.been.calledWith({

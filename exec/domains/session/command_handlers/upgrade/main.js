@@ -37,6 +37,6 @@ module.exports = async ({ root, payload, context, session, aggregateFn }) => {
         payload: { upgraded: deps.stringDate(), principle: payload.principle }
       }
     ],
-    response: { token }
+    response: { tokens: { session: token } }
   };
 };

@@ -67,7 +67,7 @@ testing:
   procedures:
 
   response:
-    token:
+    tokens:
 
 #don't change
 context: command-handler

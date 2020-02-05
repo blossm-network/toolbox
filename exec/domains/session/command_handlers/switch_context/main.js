@@ -58,6 +58,6 @@ module.exports = async ({ root, payload, context, session, aggregateFn }) => {
 
   return {
     events: [{ root, payload }],
-    response: { token }
+    response: { tokens: { session: token } }
   };
 };

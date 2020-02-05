@@ -95,7 +95,7 @@ testing:
       context: event-store
 
   response:
-    token:
+    tokens:
 
 #don't change
 context: command-handler

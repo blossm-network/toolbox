@@ -81,20 +81,20 @@ testing:
           id: some-id
           phone: "+19195551144"
           principle: some-principle
-      - domain: identity
-        root: some-other-root
-        action: register
-        payload:
-          id: some-other-id
-          phone: "+19195551122"
-          principle: some-principle
-      - domain: identity
-        root: another-root
-        action: register
-        payload:
-          id: another-id
-          phone: "+19195551133"
-          principle: some-principle
+      # - domain: identity
+      #   root: some-other-root
+      #   action: register
+      #   payload:
+      #     id: some-other-id
+      #     phone: "+19195551122"
+      #     principle: some-principle
+      # - domain: identity
+      #   root: another-root
+      #   action: register
+      #   payload:
+      #     id: another-id
+      #     phone: "+19195551133"
+      #     principle: some-principle
     bad:
       - code: 409
         example: 1
@@ -106,7 +106,7 @@ testing:
       context: event-store
 
   response:
-    token:
+    tokens:
 
 #don't change
 context: command-handler

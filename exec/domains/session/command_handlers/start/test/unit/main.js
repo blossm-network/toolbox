@@ -56,7 +56,7 @@ describe("Command handler unit tests", () => {
           correctNumber: 0
         }
       ],
-      response: { token }
+      response: { tokens: { session: token } }
     });
     expect(signFake).to.have.been.calledWith({
       ring: service,

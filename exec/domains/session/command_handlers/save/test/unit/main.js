@@ -12,7 +12,7 @@ const now = new Date();
 const id = "some-id";
 const phone = "some-phone";
 const payload = { id, phone };
-const token = "some-token";
+const tokens = "some-tokens";
 const context = "some-context";
 
 const sub = "some-sub";
@@ -57,7 +57,7 @@ describe("Command handler unit tests", () => {
         aggregate: sessionPrincipleAggregate
       });
 
-    const issueFake = fake.returns({ token });
+    const issueFake = fake.returns({ tokens });
     const anotherSetFake = fake.returns({
       issue: issueFake
     });
@@ -77,7 +77,7 @@ describe("Command handler unit tests", () => {
     });
 
     expect(result).to.deep.equal({
-      response: { token }
+      response: { tokens }
     });
     expect(eventStoreFake).to.have.been.calledWith({ domain: "identity" });
     expect(setFake).to.have.been.calledWith({
@@ -141,7 +141,7 @@ describe("Command handler unit tests", () => {
         aggregate: principleAggregate
       });
 
-    const issueFake = fake.returns({ token });
+    const issueFake = fake.returns({ tokens });
     const anotherSetFake = fake.returns({
       issue: issueFake
     });
@@ -161,7 +161,7 @@ describe("Command handler unit tests", () => {
     });
 
     expect(result).to.deep.equal({
-      response: { token }
+      response: { tokens }
     });
     expect(eventStoreFake).to.have.been.calledWith({ domain: "identity" });
     expect(setFake).to.have.been.calledWith({
@@ -220,7 +220,7 @@ describe("Command handler unit tests", () => {
     const hashFake = fake.returns(phoneHash);
     replace(deps, "hash", hashFake);
 
-    const issueFake = fake.returns({ token });
+    const issueFake = fake.returns({ tokens });
     const anotherSetFake = fake.returns({
       issue: issueFake
     });
@@ -239,7 +239,7 @@ describe("Command handler unit tests", () => {
     });
 
     expect(result).to.deep.equal({
-      response: { token }
+      response: { tokens }
     });
     expect(eventStoreFake).to.have.been.calledWith({ domain: "identity" });
     expect(setFake).to.have.been.calledWith({
@@ -306,7 +306,7 @@ describe("Command handler unit tests", () => {
     const hashFake = fake.returns(phoneHash);
     replace(deps, "hash", hashFake);
 
-    const issueFake = fake.returns({ token });
+    const issueFake = fake.returns({ tokens });
     const anotherSetFake = fake.returns({
       issue: issueFake
     });
@@ -324,7 +324,7 @@ describe("Command handler unit tests", () => {
     });
 
     expect(result).to.deep.equal({
-      response: { token }
+      response: { tokens }
     });
     expect(eventStoreFake).to.have.been.calledWith({ domain: "identity" });
     expect(setFake).to.have.been.calledWith({
@@ -437,7 +437,7 @@ describe("Command handler unit tests", () => {
         aggregate: sessionPrincipleAggregate
       });
 
-    const issueFake = fake.returns({ token });
+    const issueFake = fake.returns({ tokens });
     const anotherSetFake = fake.returns({
       issue: issueFake
     });

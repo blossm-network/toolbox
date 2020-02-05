@@ -107,7 +107,7 @@ module.exports = async ({ payload, context, session, aggregateFn }) => {
         payload
       });
 
-  const { token } = await deps
+  const { tokens } = await deps
     .command({
       action: "issue",
       domain: "challenge"
@@ -130,5 +130,5 @@ module.exports = async ({ payload, context, session, aggregateFn }) => {
       }
     );
 
-  return { response: { token } };
+  return { response: { tokens } };
 };

@@ -40,8 +40,6 @@ describe("Command handler integration tests", () => {
           service: process.env.SERVICE
         });
 
-        //eslint-disable-next-line
-        console.log("state event: ", stateEvent);
         await eventStore({ domain }).add(stateEvent);
       }
     }
@@ -62,8 +60,6 @@ describe("Command handler integration tests", () => {
       }
     });
 
-    //eslint-disable-next-line
-    console.log("res: ", response);
     expect(response.statusCode).to.equal(testing.response ? 200 : 204);
 
     if (!testing.response) return;
@@ -76,82 +72,82 @@ describe("Command handler integration tests", () => {
         expect(parsedBody[value]).to.deep.equal(testing.response[value]);
     }
   });
-  // it("should return an error if bad state", async () => {
-  //   if (!testing.pre || !testing.pre.bad) return;
+  it("should return an error if bad state", async () => {
+    if (!testing.pre || !testing.pre.bad) return;
 
-  //   for (const {
-  //     action,
-  //     domain,
-  //     root,
-  //     payload,
-  //     example = 0,
-  //     code
-  //   } of testing.pre.bad.reverse()) {
-  //     const _example = testing.examples.ok[example];
-  //     if (!_example) throw `Example ${example} not found.`;
-  //     if (action) {
-  //       const topic = `did-${action}.${domain}.${process.env.SERVICE}`;
-  //       stateTopics.push(topic);
-  //       await create(topic);
-  //       const stateEvent = await createEvent({
-  //         root,
-  //         payload,
-  //         action,
-  //         domain,
-  //         service: process.env.SERVICE
-  //       });
-  //       await eventStore({ domain }).add(stateEvent);
-  //     }
-  //     const response = await request.post(url, {
-  //       body: {
-  //         root: testing.root,
-  //         headers: {
-  //           issued: stringDate(),
-  //           id: uuid()
-  //         },
-  //         payload: _example.normalized,
-  //         options: _example.options,
-  //         context: _example.context,
-  //         session: _example.session
-  //       }
-  //     });
+    for (const {
+      action,
+      domain,
+      root,
+      payload,
+      example = 0,
+      code
+    } of testing.pre.bad.reverse()) {
+      const _example = testing.examples.ok[example];
+      if (!_example) throw `Example ${example} not found.`;
+      if (action) {
+        const topic = `did-${action}.${domain}.${process.env.SERVICE}`;
+        stateTopics.push(topic);
+        await create(topic);
+        const stateEvent = await createEvent({
+          root,
+          payload,
+          action,
+          domain,
+          service: process.env.SERVICE
+        });
+        await eventStore({ domain }).add(stateEvent);
+      }
+      const response = await request.post(url, {
+        body: {
+          root: testing.root,
+          headers: {
+            issued: stringDate(),
+            id: uuid()
+          },
+          payload: _example.normalized,
+          options: _example.options,
+          context: _example.context,
+          session: _example.session
+        }
+      });
 
-  //     expect(response.statusCode).to.equal(code);
-  //   }
-  // });
-  // it("should return an error if payload is bad", async () => {
-  //   if (!testing.state || !testing.state.bad) return;
-  //   const parallelFns = [];
-  //   for (const badExample of testing.examples.bad || []) {
-  //     parallelFns.push(async () => {
-  //       const response = await request.post(url, {
-  //         body: {
-  //           headers: {
-  //             issued: stringDate(),
-  //             id: uuid()
-  //           },
-  //           payload: badExample.payload
-  //         }
-  //       });
+      expect(response.statusCode).to.equal(code);
+    }
+  });
+  it("should return an error if payload is bad", async () => {
+    if (!testing.state || !testing.state.bad) return;
+    const parallelFns = [];
+    for (const badExample of testing.examples.bad || []) {
+      parallelFns.push(async () => {
+        const response = await request.post(url, {
+          body: {
+            headers: {
+              issued: stringDate(),
+              id: uuid()
+            },
+            payload: badExample.payload
+          }
+        });
 
-  //       expect(response.statusCode).to.equal(badExample.code);
-  //     });
-  //   }
+        expect(response.statusCode).to.equal(badExample.code);
+      });
+    }
 
-  //   await Promise.all(parallelFns);
-  // });
-  // it("should return an error if incorrect params", async () => {
-  //   if (!testing.invalid || !testing.invalid[0]) return;
-  //   const response = await request.post(url, {
-  //     body: {
-  //       headers: {
-  //         issued: stringDate(),
-  //         id: uuid()
-  //       },
-  //       payload: testing.invalid[0]
-  //     }
-  //   });
+    await Promise.all(parallelFns);
+  });
+  it("should return an error if incorrect params", async () => {
+    if (!testing.invalid || !testing.invalid[0]) return;
+    const response = await request.post(url, {
+      body: {
+        headers: {
+          issued: stringDate(),
+          id: uuid()
+        },
+        payload: testing.invalid[0]
+      }
+    });
 
-  //   expect(response.statusCode).to.equal(409);
-  // });
+    expect(response.statusCode).to.equal(409);
+  });
 });

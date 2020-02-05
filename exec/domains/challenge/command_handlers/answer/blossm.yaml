@@ -109,7 +109,7 @@ testing:
         code: 409
 
   response:
-    token:
+    tokens:
 
 #don't change
 context: command-handler
