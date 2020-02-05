@@ -18,9 +18,7 @@ describe("Command gateway integration tests", () => {
   before(async () => await Promise.all(testing.topics.map(t => create(t))));
   after(async () => await Promise.all(testing.topics.map(t => del(t))));
   it("should return successfully", async () => {
-    const {
-      tokens: { session: anonymousToken }
-    } = await getToken({ phone, id });
+    const { token: anonymousToken } = await getToken({ phone, id });
     expect(anonymousToken).to.exist;
 
     const sentAfter = new Date();
