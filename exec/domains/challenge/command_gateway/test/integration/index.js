@@ -38,7 +38,9 @@ describe("Command gateway integration tests", () => {
     });
 
     expect(response.statusCode).to.equal(200);
-    const { token } = JSON.parse(response.body);
+    const {
+      tokens: { challenge: token }
+    } = JSON.parse(response.body);
 
     const [message] = await sms(
       await secret("twilio-account-sid"),
@@ -61,6 +63,6 @@ describe("Command gateway integration tests", () => {
       }
     });
 
-    expect(response1.statusCode).to.equal(200);
+    expect(response1.statusCode).to.equal(204);
   });
 });
