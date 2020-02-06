@@ -18,7 +18,10 @@ const validateObject = ({ object, expectation, path }) => {
       })
     ]);
     if (error) throw error;
-    if (expectation[property].type == "object") {
+    if (
+      expectation[property].type == "object" &&
+      !(expectation[property] instanceof Array)
+    ) {
       validateObject({
         object: object[property],
         expectation: expectation[property].properties,

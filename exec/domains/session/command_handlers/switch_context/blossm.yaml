@@ -19,74 +19,18 @@ devDependencies:
   "chai-datetime": "^1.5.0"
 
 testing:
-  examples:
+  validate:
     ok:
-      - payload:
-          context: some-context-root
-        normalized:
-          context: some-context-root
-        context:
-          session: some-session-root
-          identity: some-identity-root
-        session:
-          iss: some-iss
-          aud: some-aud
-          sub: some-sub
-          exp: 20000
-      - payload:
-          context: some-context-root
-        normalized:
-          context: some-context-root
-        context:
-          session: some-session-root
-          identity: some-identity-root
-        session:
-          iss: some-iss
-          aud: some-aud
-          sub: some-other-sub
-          exp: 20000
-
-  invalid:
-    - context:
-        a: 1
-
-  root: some-root
-
-  pre:
-    ok:
-      - domain: session
-        root: some-root
-        action: start
-        payload: {}
-      - domain: context
-        root: some-context-root
-        action: register
-        payload:
-          domain: some-context-domain
-          root: some-context-root
-      - domain: principle
-        root: some-sub
-        action: add-permissions
-        payload:
-          permissions:
-            - "context:some-priviledges:some-context-root"
-            - "context:some-priviledges:some-other-context-root"
+      - context: some-context-root
     bad:
-      - domain: principle
-        root: some-other-sub
-        action: add-permissions
-        payload:
-          permissions:
-            - bogus
-        code: 401
-        example: 1
-      - domain: session
-        root: some-root
-        action: logout
-        payload:
-          loggedout: 2019-12-31T00:00:00.000Z
-        code: 400
-        example: 0
+      - context:
+          a: 1
+
+  normalize:
+    - payload:
+        context: some-context-root
+      normalized:
+        context: some-context-root
 
   procedures:
     - domain: context
@@ -94,8 +38,66 @@ testing:
     - domain: principle
       context: event-store
 
-  response:
-    tokens:
+  steps:
+    - pre:
+        - domain: session
+          root: some-root
+          action: start
+          payload: {}
+        - domain: context
+          root: some-context-root
+          action: register
+          payload:
+            domain: some-context-domain
+            root: some-context-root
+        - domain: principle
+          root: some-principle-root
+          action: add-permissions
+          payload:
+            permissions:
+              - context:some-priviledges:some-context-root
+      root: some-root
+      payload: 
+        context: some-context-root
+      session:
+        iss: some-iss
+        aud: some-aud
+        sub: some-principle-root
+        exp: 20000
+      response:
+        tokens:
+          session:
+    - pre:
+        - domain: principle
+          root: some-other-principle-root
+          action: add-permissions
+          payload:
+            permissions:
+              - bogus
+      root: some-root
+      payload: 
+        context: some-context-root
+      session:
+        iss: some-iss
+        aud: some-aud
+        sub: some-other-principle-root
+        exp: 20000
+      code: 401
+    - pre:
+      - domain: session
+        root: some-root
+        action: logout
+        payload:
+          loggedout: 2019-12-31T00:00:00.000Z
+      root: some-root
+      payload: 
+        context: some-context-root
+      session:
+        iss: some-iss
+        aud: some-aud
+        sub: some-principle-root
+        exp: 20000
+      code: 400
 
 #don't change
 context: command-handler

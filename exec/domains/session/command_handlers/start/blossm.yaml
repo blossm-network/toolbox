@@ -10,7 +10,6 @@ payload:
       version: string
       hardware: string
       manufacturer: string
-      id: string
 
 dependencies:
   "@blossm/jwt": "*"
@@ -20,54 +19,65 @@ dependencies:
   "@blossm/datetime": "*"
 
 devDependencies:
-  "localenv": "^0.2.2"
   "mocha": "^6.1.4"
   "chai": "^4.2.0"
   "sinon": "^7.3.2"
   "sinon-chai": "^3.3.0"
   "chai-datetime": "^1.5.0"
-  "@blossm/datetime": "*"
-  "@blossm/request": "*"
-  "@blossm/gcp-pubsub": "*"
-  "@blossm/uuid": "*"
 
 testing:
-  examples:
+  validate:
     ok:
+      - device:
+          os: "iOS"
+          version: "10"
+          hardware: "iPhone"
+          manufacturer: "apple"
+    bad:
+      - device:
+          os:
+            a: 1
+      - device:
+          version:
+            a: 1
+      - device:
+          hardware:
+            a: 1
+      - device:
+          manufacturer:
+            a: 1
+
+  normalize:
       - payload:
           device:
             os: "iOS"
             version: "10"
             hardware: "iPhone"
             manufacturer: "apple"
-            id: "some-id"
         normalized:
           device:
             os: "iOS"
             version: "10"
             hardware: "iPhone"
             manufacturer: "apple"
-            id: "some-id"
-
-  invalid:
-    - device:
-        os:
-          a: 1
-        version:
-          a: 1
-        hardware:
-          a: 1
-        manufacturer:
-          a: 1
-        id:
-          a: 1
-
-  pre:
-
+  
   procedures:
 
-  response:
-    tokens:
+  steps:
+    - pre:
+      root:
+      payload:
+        device:
+          os: "iOS"
+          version: "10"
+          hardware: "iPhone"
+          manufacturer: "apple"
+      session:
+      context:
+      options:
+      response:
+        tokens:
+          session:
 
 #don't change
 context: command-handler

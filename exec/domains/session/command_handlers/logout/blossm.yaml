@@ -16,32 +16,30 @@ devDependencies:
   "chai-datetime": "^1.5.0"
 
 testing:
-  examples:
-    ok:
-      - payload: {}
-        normalized: {}
+  validate:
+    ok: 
+      - {}
+  
+  normalize:
+    - payload: {}
+      normalized: {}
 
-  invalid:
-
-  root: some-root
-
-  pre:
-    ok:
+  steps:
+  - pre:
       - domain: session
         root: some-root
         action: start
         payload: {}
-    bad:
+    root: some-root
+    code: 204
+  - pre:
       - domain: session
         root: some-root
         action: logout
         payload:
           loggedout: 2019-12-31T00:00:00.000Z
-        code: 400
-
-  procedures:
-
-  response:
+    root: some-root
+    code: 400
 
 #don't change
 context: command-handler

@@ -4,8 +4,7 @@ module.exports = async payload => {
       os: payload.device.os,
       version: payload.device.version,
       hardware: payload.device.hardware,
-      manufacturer: payload.device.manufacturer,
-      id: payload.device.id
+      manufacturer: payload.device.manufacturer
     }
   };
 };

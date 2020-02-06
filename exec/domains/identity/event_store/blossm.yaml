@@ -8,7 +8,6 @@ schema:
     type: String
     unique: true
   principle: String
-  contexts: [String]
 
 indexes:
   - id 
@@ -21,10 +20,6 @@ testing:
         principle: some-principle
         email: some-email
         id: some-id
-    - action: add-contexts
-      payload:
-        contexts:
-          - some-context
 
   handlers:
     - action: register
@@ -41,18 +36,6 @@ testing:
             id: some-other-id
             phone: "+19195551144"
             principle: some-other-principle-root
-    - action: add-contexts
-      examples:
-        - state:
-            contexts:
-              - some-context
-          payload:
-            contexts:
-              - some-other-context
-          result:
-            contexts:
-              - some-context
-              - some-other-context
 
 #don't change
 context: event-store
