@@ -76,7 +76,7 @@ const getEventsForIdentityRegistering = async ({ subject, payload }) => {
 };
 
 module.exports = async ({ payload, context, session, aggregateFn }) => {
-  // Check to see if there is an identity with the provided phone.
+  // Check to see if there is an identity with the provided id.
   const [identity] = await deps
     .eventStore({
       domain: "identity"
@@ -85,7 +85,7 @@ module.exports = async ({ payload, context, session, aggregateFn }) => {
     .query({ key: "id", value: payload.id });
 
   if (identity) {
-    if (!deps.compare(identity.state.phone, payload.phone))
+    if (!(await deps.compare(payload.phone, identity.state.phone)))
       throw deps.invalidArgumentError.message("This phone number isn't right.");
 
     // Don't log an event or issue a challange if
@@ -114,7 +114,10 @@ module.exports = async ({ payload, context, session, aggregateFn }) => {
     })
     .set({
       context,
-      session,
+      session: {
+        ...session,
+        sub: principleRoot
+      },
       tokenFn: deps.gcpToken
     })
     .issue(

@@ -24,57 +24,26 @@ devDependencies:
   "chai-datetime": "^1.5.0"
 
 testing:
-  examples:
+  validate:
     ok:
-      - payload:
-          id: some-id
-          phone: "1 (919) 555-1144"
-        normalized:
-          id: some-id
-          phone: "+19195551144"
-        session:
-          sub: some-sub
-      - payload:
-          id: some-other-id
-          phone: "1 (919) 555-1144"
-        normalized:
-          id: some-other-id
-          phone: "+19195551144"
-        session: {}
+      - id: some-id
+        phone: "1 (919) 555-1144"
+      - id: some-id
+        phone: "19195551144"
+      - id: some-id
+        phone: "+19195551144"
+    bad:
+      - phone:
+          a: 1
+      - phone: asdf
 
-  invalid:
-    - phone:
-        a: 1
-    - phone: asdf
-
-  root: some-root
-
-  pre:
-    ok:
-      - domain: identity
-        root: some-identity
-        action: register
-        payload:
-          id: some-id
-          phone: "+19195551144"
-          principle: some-sub
-      - domain: identity
-        root: some-other-identity
-        action: register
-        payload:
-          id: some-other-id
-          phone: "+19195551144"
-          principle: some-sub
-      - domain: principle
-        root: some-identity-principle
-        action: add-permissions
-        payload:
-          permissions: some-permissions
-      - domain: principle
-        root: some-sub
-        action: add-permissions
-        payload:
-          permissions: some-other-permissions
+  normalize:
+    - payload:
+        id: some-id
+        phone: "1 (919) 555-1144"
+      normalized:
+        id: some-id
+        phone: "+19195551144"
 
   procedures:
     - domain: principle
@@ -85,7 +54,68 @@ testing:
       action: issue
       context: command-handler
 
-  response:
+  steps:
+    - pre:
+      - domain: identity
+        root: some-identity-root
+        action: register
+        payload:
+          id: some-identity-id
+          phone: "#+19195551144"
+          principle: some-sub
+      payload: 
+        id: some-identity-id
+        phone: "+19195551133"
+      code: 409
+    - pre:
+      - domain: identity
+        root: some-other-identity-root
+        action: register
+        payload:
+          id: some-other-identity-id
+          phone: "#+19195551155"
+          principle: some-principle-root
+      payload: 
+        id: some-other-identity-id
+        phone: "+19195551155"
+      session:
+        sub: some-principle-root
+      response:
+    - pre:
+      payload: 
+        id: new-identity-id
+        phone: "+19195551144"
+      session:
+        sub: some-principle-root
+      response:
+        tokens:
+          challenge:
+    - pre:
+      - domain: principle 
+        root: some-principle-root
+        action: add-permissions
+        payload:
+          permissions: some-permission
+      - domain: principle 
+        root: some-other-principle-root
+        action: add-permissions
+        payload:
+          permissions: some-other-permission
+      - domain: identity
+        root: yet-another-identity-root
+        action: register
+        payload:
+          id: yet-another-identity-id
+          phone: "#+19195551177"
+          principle: some-principle-root
+      payload: 
+        id: yet-another-identity-id
+        phone: "+19195551177"
+      session:
+        sub: some-other-principle-root
+      response:
+        tokens:
+          challenge:
 
 #don't change
 context: command-handler

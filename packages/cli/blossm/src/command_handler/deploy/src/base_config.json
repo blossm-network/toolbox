@@ -2,6 +2,7 @@
   "dependencies": {
     "@blossm/command-handler": "*",
     "@blossm/validator": "*",
+    "@blossm/crypt": "*",
     "@blossm/errors": "*"
   },
   "devDependencies": {

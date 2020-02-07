@@ -19,48 +19,54 @@ devDependencies:
   "chai-datetime": "^1.5.0"
 
 testing:
-  examples:
+  validate:
     ok:
-      - payload:
-          principle: some-principle-root
-        normalized:
-          principle: some-principle-root
-        session:
-          iss: some-iss
-          aud: some-aud
-          sub: some-sub
-          exp: 9999-12-31T00:00:00.000
-
-  invalid:
-    - principle:
-        a: 1
-
-  root: some-root
-
-  pre:
-    ok:
+      - principle: some-principle-root
+    bad:
+      - principle:
+          a: 1
+  normalize:
+    - payload:
+        principle: some-principle-root
+      normalized:
+        principle: some-principle-root
+  
+  steps:
+    - pre:
       - domain: session
         root: some-root
         action: start
         payload: {}
-    bad:
+      payload:
+        principle: some-principle-root
+      root: some-root
+      session:
+        iss: some-iss
+        aud: some-aud
+        exp: 9999-12-31T00:00:00.000
+      response:
+        tokens:
+          session:
+    - pre:
       - domain: session
-        root: some-root
-        action: logout
-        payload:
-          loggedout: 2019-12-31T00:00:00.000Z
-        code: 400
-      - domain: session
-        root: some-root
+        root: some-other-root
         action: upgrade
         payload:
           upgraded: 2019-12-31T00:00:00.000Z
-        code: 400
-
-  procedures:
-
-  response:
-    tokens:
+      payload:
+        principle: some-principle-root
+      root: some-other-root
+      code: 400
+    - pre:
+      - domain: session
+        root: yet-another-root
+        action: logout
+        payload:
+          loggedout: 2019-12-31T00:00:00.000Z
+      payload:
+        principle: some-principle-root
+      root: yet-another-root
+      code: 400
 
 #don't change
 context: command-handler
