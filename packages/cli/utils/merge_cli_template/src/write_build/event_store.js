@@ -118,7 +118,7 @@ module.exports = ({
         service,
         project,
         envNameSpecifier
-      })()
+      })
     )
   ];
 };
