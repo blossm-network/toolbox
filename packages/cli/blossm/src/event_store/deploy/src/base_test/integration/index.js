@@ -235,9 +235,11 @@ describe("Event store integration tests", () => {
         badValue = findBadValue(schema, property);
       }
 
-      const [exampleToUse] = testing.examples.filter(
-        example => example.payload[property] != undefined
-      );
+      const [exampleToUse] = [
+        example0,
+        example1,
+        ...(testing.examples.more || [])
+      ].filter(example => example.payload[property] != undefined);
 
       if (!exampleToUse) return;
 
