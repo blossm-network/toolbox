@@ -120,7 +120,7 @@ describe("Event store integration tests", () => {
 
     ///Test indexes
     for (const index of indexes || []) {
-      const example = testing.examples.find(e => e.payload[index]);
+      const example = [example1, example0].find(e => e.payload[index]);
       const response4 = await request.get(url, {
         query: {
           key: [index],

@@ -9,7 +9,7 @@ module.exports = async ({ payload, context, session }) => {
   ]);
 
   // Register the context.
-  const { token, principle } = await deps
+  const { tokens, principle } = await deps
     .command({
       action: "register",
       domain: "context"
@@ -55,6 +55,6 @@ module.exports = async ({ payload, context, session }) => {
         }
       }
     ],
-    ...(token && { response: { token } })
+    ...(tokens && { response: { tokens } })
   };
 };

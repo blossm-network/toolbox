@@ -11,6 +11,7 @@ schema:
 
 indexes:
   - id 
+  - principle
 
 testing:
   examples:
@@ -20,6 +21,12 @@ testing:
         principle: some-principle
         email: some-email
         id: some-id
+    - action: register
+      payload:
+        phone: "+19195551133"
+        principle: some-other-principle
+        email: some-other-email
+        id: some-other-id
 
   handlers:
     - action: register

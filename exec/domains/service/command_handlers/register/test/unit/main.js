@@ -39,9 +39,9 @@ describe("Command handler unit tests", () => {
 
     replace(deps, "uuid", uuidFake);
 
-    const token = "some-token";
+    const tokens = "some-tokens";
     const principle = "some-principle";
-    const issueFake = fake.returns({ token, principle });
+    const issueFake = fake.returns({ tokens, principle });
     const setFake = fake.returns({
       issue: issueFake
     });
@@ -81,7 +81,7 @@ describe("Command handler unit tests", () => {
           }
         }
       ],
-      response: { token }
+      response: { tokens }
     });
     expect(commandFake).to.have.been.calledWith({
       action: "register",

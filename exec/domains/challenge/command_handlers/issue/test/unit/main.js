@@ -21,6 +21,7 @@ const identity = {
     phone
   }
 };
+
 const payloadPhone = "some-payload-phone";
 const id = "some-id";
 const payload = {
@@ -63,6 +64,9 @@ describe("Command handler unit tests", () => {
     const uuidFake = fake.returns(root);
     replace(deps, "uuid", uuidFake);
 
+    const compareFake = fake.returns(true);
+    replace(deps, "compare", compareFake);
+
     const queryFake = fake.returns([identity]);
     const setFake = fake.returns({
       query: queryFake
@@ -104,6 +108,7 @@ describe("Command handler unit tests", () => {
       ],
       response: { tokens: { challenge: token } }
     });
+    expect(compareFake).to.have.been.calledWith(payloadPhone, phone);
     expect(queryFake).to.have.been.calledWith({
       key: "id",
       value: id
@@ -181,6 +186,9 @@ describe("Command handler unit tests", () => {
 
     const optionsPrincipleRoot = principle;
 
+    const compareFake = fake.returns(true);
+    replace(deps, "compare", compareFake);
+
     const result = await main({
       payload,
       context,
@@ -190,6 +198,7 @@ describe("Command handler unit tests", () => {
       }
     });
 
+    expect(compareFake).to.not.have.been.called;
     expect(result).to.deep.equal({
       events: [
         {
@@ -291,6 +300,51 @@ describe("Command handler unit tests", () => {
       expect(e).to.equal(error);
     }
   });
+  it("should throw correctly if phone number comparing fails.", async () => {
+    const secretFake = fake.returns(secret);
+    replace(deps, "secret", secretFake);
+
+    const smsSendFake = fake();
+    const smsFake = fake.returns({
+      send: smsSendFake
+    });
+    replace(deps, "sms", smsFake);
+
+    const uuidFake = fake.returns(root);
+    replace(deps, "uuid", uuidFake);
+
+    const queryFake = fake.returns([identity]);
+    const setFake = fake.returns({
+      query: queryFake
+    });
+    const eventStoreFake = fake.returns({
+      set: setFake
+    });
+    replace(deps, "eventStore", eventStoreFake);
+
+    const compareFake = fake.returns(false);
+    replace(deps, "compare", compareFake);
+
+    const error = "some-error";
+    const messageFake = fake.returns(error);
+    replace(deps, "badRequestError", {
+      message: messageFake
+    });
+    try {
+      await main({
+        payload,
+        context
+      });
+
+      //shouldn't get called
+      expect(2).to.equal(3);
+    } catch (e) {
+      expect(messageFake).to.have.been.calledWith(
+        "This phone number can't be used to challenge."
+      );
+      expect(e).to.equal(error);
+    }
+  });
   it("should throw correctly if session.sub doesn't match the identity's principle", async () => {
     const secretFake = fake.returns(secret);
     replace(deps, "secret", secretFake);
@@ -312,6 +366,9 @@ describe("Command handler unit tests", () => {
       set: setFake
     });
     replace(deps, "eventStore", eventStoreFake);
+
+    const compareFake = fake.returns(true);
+    replace(deps, "compare", compareFake);
 
     const error = "some-error";
     const messageFake = fake.returns(error);
@@ -365,6 +422,9 @@ describe("Command handler unit tests", () => {
 
     const randomIntFake = fake.returns(code);
     replace(deps, "randomIntOfLength", randomIntFake);
+
+    const compareFake = fake.returns(true);
+    replace(deps, "compare", compareFake);
 
     const options = { events: [{ a: 1 }, { b: 2 }] };
     const context = { c: 3 };

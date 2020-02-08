@@ -28,39 +28,29 @@ testing:
       domain: principle 
       service: core 
 
-  examples:
+  validate:
     ok:
-      - payload:
-          root: some-root
-          domain: some-domain
-          service: some-service
-          network: some-network
-        normalized:
-          root: some-root
-          domain: some-domain
-          service: some-service
-          network: some-network
-        context:
-          session: some-session-root
-        session:
-          iss: some-iss
-          aud: some-aud
-          exp: 9999-12-31T00:00:00.000
+      - root: some-root
+        domain: some-domain
+        service: some-service
+        network: some-network
+    bad:
+      - root: 3
+      - domain: 3
+      - service: 3
+      - network: 3
 
-  invalid:
-    - root: 3
-    - domain: 3
-    - service: 3
-    - network: 3
-
-  pre:
-    ok:
-      - domain: session
-        root: some-session-root
-        action: start
-        payload:
-          device:
-            os: some-os
+  normalize:
+    - payload:
+        root: some-root
+        domain: some-domain
+        service: some-service
+        network: some-network
+      normalized:
+        root: some-root
+        domain: some-domain
+        service: some-service
+        network: some-network
 
   procedures:
     - action: upgrade
@@ -69,9 +59,50 @@ testing:
     - domain: principle 
       context: event-store
 
-  response:
-    principle:
-    token:
+  steps:
+    - pre:
+        - domain: session
+          root: some-session-root
+          action: start
+          payload:
+            device:
+              os: some-os
+      payload:
+        root: some-root
+        domain: some-domain
+        service: some-service
+        network: some-network
+      context:
+        session: some-session-root
+      session:
+        iss: some-iss
+        aud: some-aud
+        exp: 9999-12-31T00:00:00.000
+      response:
+        principle:
+        tokens:
+          session:
+    - pre:
+        - domain: session
+          root: some-other-session-root
+          action: start
+          payload:
+            device:
+              os: some-os
+      payload:
+        root: some-root
+        domain: some-domain
+        service: some-service
+        network: some-network
+      context:
+        session: some-other-session-root
+      session:
+        iss: some-iss
+        aud: some-aud
+        sub: some-sub
+        exp: 9999-12-31T00:00:00.000
+      response:
+        principle: some-sub
 
 #don't change
 context: command-handler

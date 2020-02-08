@@ -86,7 +86,13 @@ const executeStep = async step => {
     }
   });
 
-  expect(response.statusCode).to.equal(step.response ? 200 : step.code || 204);
+  const correctCode = step.response ? 200 : step.code || 204;
+  if (response.statusCode != correctCode) {
+    //eslint-disable-next-line
+    console.log("response: ", response);
+  }
+
+  expect(response.statusCode).to.equal(correctCode);
 
   if (!step.response) return;
 
@@ -106,7 +112,12 @@ describe("Command handler integration tests", () => {
   );
 
   it("should return successfully", async () => {
-    for (const step of testing.steps) await executeStep(step);
+    let i = 0;
+    for (const step of testing.steps) {
+      //eslint-disable-next-line no-console
+      console.log("Executing step ", i++);
+      await executeStep(step);
+    }
   });
 
   it("should return an error if incorrect params", async () => {

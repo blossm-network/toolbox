@@ -41,7 +41,14 @@ testing:
         name: Some-name
 
   steps:
-    - payload:
+    - pre:
+      - domain: session
+        root: some-session-root
+        action: start
+        payload:
+          device:
+            os: some-os
+      payload:
         name: Some-name
       context:
         session: some-session-root
@@ -49,18 +56,22 @@ testing:
         iss: some-iss
         aud: some-aud
         exp: 9999-12-31T00:00:00.000
-
-  pre:
-    ok:
+    - pre:
       - domain: session
-        root: some-session-root
+        root: some-other-session-root
         action: start
         payload:
           device:
             os: some-os
-        response:
-          tokens:
-            session:
+      payload:
+        name: Some-name
+      context:
+        session: some-other-session-root
+      session:
+        iss: some-iss
+        aud: some-aud
+        sub: some-sub
+        exp: 9999-12-31T00:00:00.000
 
   procedures:
     - action: register
@@ -70,10 +81,6 @@ testing:
       context: event-store
     - domain: group
       context: event-store
-    #   # The one below shouldnt be needed. should be automatic
-    # - domain: session 
-    #   context: event-store
-
 
 #don't change
 context: command-handler

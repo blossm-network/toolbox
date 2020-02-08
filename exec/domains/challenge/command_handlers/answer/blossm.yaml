@@ -32,43 +32,18 @@ devDependencies:
   "@blossm/get-token": "*"
 
 testing:
-  examples:
+  validate:
     ok:
-      - payload:
-          code: "123456"
-        normalized:
-          code: "123456"
-        context:
-          challenge: some-root
-          session: some-session-root
-      - payload:
-          code: "123456"
-        normalized:
-          code: "123456"
-        context:
-          challenge: some-other-root
-          session: some-session-root
+      - code: "123456"
     bad:
-      - payload:
-          code: "123456"
-        normalized:
-          code: "123456"
-        context:
-          challenge: some-bad-root
-          session: some-session-root
-        code: 400
-      - payload:
-          code: "223456"
-        normalized:
-          code: "223456"
-        context:
-          challenge: some-root
-          session: some-session-root
-        code: 409
-
-  invalid:
-    - code:
-        a: 1
+      - code:
+          a: 1
+  
+  normalize:
+    - payload:
+        code: "123456"
+      normalized:
+        code: "123456"
 
   procedures:
     - domain: identity
@@ -79,8 +54,8 @@ testing:
       action: upgrade
       context: command-handler
 
-  pre:
-    ok:
+  steps:
+    - pre:
       - domain: challenge
         root: some-root
         action: issue
@@ -98,18 +73,62 @@ testing:
         payload:
           device:
             os: some-os
-    bad:
+      payload:
+        code: "123456"
+      context:
+        challenge: some-root
+        session: some-session-root
+      response:
+        tokens:
+          session:
+    - pre:
       - domain: challenge
         root: some-other-root
         action: issue
         payload:
-          code: "123456"
+          code: "234567"
+          expires: 9999-12-31T00:00:00.000Z
+          principle: some-challenge-principle-root
+          session:
+            iss: some-iss
+            aud: some-aud
+            sub: some-sub
+            exp: 9999-12-31T00:00:00.000Z
+      - domain: session
+        root: some-other-session-root
+        action: start
+        payload:
+          device:
+            os: some-os
+      payload:
+        code: "234567"
+      context:
+        challenge: some-other-root
+        session: some-other-session-root
+    - pre:
+      - domain: challenge
+        root: another-root
+        action: issue
+        payload:
+          code: "345678"
           expires: 2019-12-31T00:00:00.000Z
-        example: 1
-        code: 409
-
-  response:
-    tokens:
+      payload:
+        code: "345678"
+      context:
+        challenge: another-root
+      code: 409
+    - pre:
+      - domain: challenge
+        root: yet-another-root
+        action: issue
+        payload:
+          code: "345678"
+          expires: 9999-12-31T00:00:00.000Z
+      context:
+        challenge: yet-another-root
+      payload:
+        code: "11111"
+      code: 409
 
 #don't change
 context: command-handler

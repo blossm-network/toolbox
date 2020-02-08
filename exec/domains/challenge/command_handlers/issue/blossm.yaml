@@ -7,7 +7,9 @@ payload:
   phone:
     type: phoneNumber
     title: phone number
-  id: string
+  id: 
+    type: string
+    optional: true
 
 dependencies:
   "@blossm/phone-number": "*"
@@ -20,6 +22,7 @@ dependencies:
   "@blossm/twilio-sms": "*"
   "@blossm/event-store-rpc": "*"
   "@blossm/errors": "*"
+  "@blossm/crypt": "*"
   "@blossm/gcp-secret": "*"
 
 devDependencies:
@@ -30,60 +33,26 @@ devDependencies:
   "chai-datetime": "^1.5.0"
 
 testing:
-  examples:
+  validate:
     ok:
-      - payload:
-          id: some-id
-          phone: "919 555 1144"
-        normalized:
-          phone: "+19195551144"
-          id: some-id
-        context:
+      - id: some-id
+        phone: "919 555 1144"
+      - id: some-id
+        phone: "(919) 555 1144"
+    bad:
+      - id:  
           a: 1
-        session:
-          iss: some-iss
-          sub: some-principle
-      - payload:
-          id: some-other-id
-          phone: "919 555 1122"
-        normalized:
-          id: some-other-id
-          phone: "+19195551122"
-        options:
-          events: [some-events]
-        context:
-          principle: some-principle
-        session:
-          iss: some-iss
-          sub: some-principle
-    bad:
-      - payload:
-          id: another-id
-          phone: "919 555 1133"
-        normalized:
-          id: another-id
-          phone: "+19195551133"
-        code: 409
-
-  invalid:
-    - id:  
-        a: 1
-    - phone: "919"
-    - phone: 919
-    - phone: false
-
-  pre:
-    ok:
-      - domain: identity
-        root: some-root
-        action: register
-        payload:
-          id: some-id
-          phone: "+19195551144"
-          principle: some-principle
-    bad:
-      - code: 409
-        example: 1
+      - phone: "919"
+      - phone: 919
+      - phone: false
+  
+  normalize:
+    - payload:
+        id: some-id
+        phone: "919 555 1144"
+      normalized:
+        phone: "+19195551144"
+        id: some-id
 
   procedures:
     - domain: identity
@@ -91,8 +60,68 @@ testing:
     - domain: challenge
       context: event-store
 
-  response:
-    tokens:
+  steps:
+    - payload:
+        id: some-id
+        phone: "(919) 555 1144"
+      code: 409
+    - options:
+        principle: some-principle-root
+      payload:
+        phone: "(919) 555 1133"
+      session:
+        sub: some-principle-root
+      response:
+        tokens:
+          challenge:
+    - options:
+        principle: some-principle-root
+      payload:
+        phone: "(919) 555 1133"
+      session:
+        sub: some-whack-principle-root
+      code: 400
+    - pre:
+      - domain: identity
+        root: some-identity-root
+        action: register
+        payload:
+          id: some-id
+          phone: "#+19195551144"
+          principle: some-principle
+      payload:
+        id: some-id
+        phone: "+19195551144"
+      session:
+        sub: some-sub
+      code: 400
+    - pre:
+      - domain: identity
+        root: some-other-identity-root
+        action: register
+        payload:
+          id: some-other-id
+          phone: "#+19195551144"
+          principle: some-other-principle
+      payload:
+        id: some-other-id
+        phone: "+19195551144"
+      session: {}
+      response:
+        tokens:
+          challenge:
+    - pre:
+      - domain: identity
+        root: yet-another-identity-root
+        action: register
+        payload:
+          id: yet-another-id
+          phone: "+19195551144"
+          principle: yet-another-principle
+      payload:
+        id: some-id
+        phone: "+19195551133"
+      code: 400
 
 #don't change
 context: command-handler

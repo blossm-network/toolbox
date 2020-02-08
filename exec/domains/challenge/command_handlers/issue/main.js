@@ -42,7 +42,11 @@ module.exports = async ({
       info: { id: payload.id }
     });
 
-  //TODO: compase identity.state.phone to payload.phone
+  if (!principle && !(await deps.compare(payload.phone, identity.state.phone)))
+    throw deps.badRequestError.message(
+      "This phone number can't be used to challenge."
+    );
+
   if (session.sub && session.sub != identity.state.principle)
     throw deps.badRequestError.message(
       "This principle can't be challenged during the current session."

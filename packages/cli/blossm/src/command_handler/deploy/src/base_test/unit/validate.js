@@ -42,14 +42,15 @@ const createBadPayload = ({ bad, ok }) => {
   let payload = { ...bad };
 
   for (const property in ok) {
-    payload[property] = bad[property]
-      ? typeof ok[property] == "object" && !(ok[property] instanceof Array)
-        ? createBadPayload({
-            bad: bad[property],
-            ok: ok[property]
-          })
-        : (payload[property] = bad[property])
-      : (payload[property] = ok[property]);
+    payload[property] =
+      bad[property] != undefined
+        ? typeof ok[property] == "object" && !(ok[property] instanceof Array)
+          ? createBadPayload({
+              bad: bad[property],
+              ok: ok[property]
+            })
+          : (payload[property] = bad[property])
+        : (payload[property] = ok[property]);
   }
 
   return payload;
