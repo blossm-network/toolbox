@@ -27,6 +27,23 @@ const eventsForCommandHandler = config =>
     }
   ];
 
+const resolveTransientProcedures = config => {
+  switch (config.context) {
+    case "command-handler":
+      return [
+        ...config.testing.procedures,
+        { domain: config.domain, context: "event-store" }
+      ];
+    case "projects":
+      return [
+        ...config.testing.procedures,
+        { name: config.name, domain: config.domain, context: "view-store" }
+      ];
+    default:
+      return config.testing.procedures || [];
+  }
+};
+
 const findProceduresAndEventsForProcedure = (procedure, dir) => {
   for (const file of fs.readdirSync(dir)) {
     const filePath = path.join(dir, file);
@@ -39,7 +56,7 @@ const findProceduresAndEventsForProcedure = (procedure, dir) => {
         return { procedures: [], events: [] };
       if (procedureIsConfig(procedure, blossmConfig)) {
         return {
-          procedures: blossmConfig.testing.procedures || [],
+          procedures: resolveTransientProcedures(blossmConfig),
           events:
             blossmConfig.context == "command-handler"
               ? eventsForCommandHandler(blossmConfig)

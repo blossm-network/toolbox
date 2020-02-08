@@ -116,6 +116,37 @@ testing:
       response:
         tokens:
           challenge:
+    - pre:
+      - domain: principle 
+        root: some-principle-root_1
+        action: add-permissions
+        payload:
+          permissions: some-permission
+      - domain: principle 
+        root: some-other-principle-root_1
+        action: add-permissions
+        payload:
+          permissions: some-other-permission
+      - domain: identity
+        root: yet-another-identity-root_1
+        action: register
+        payload:
+          id: yet-another-identity-id_1
+          phone: "#+19195551177"
+          principle: some-principle-root_1
+      - domain: identity
+        root: any-identity-root_1
+        action: register
+        payload:
+          id: doesnt-matter
+          phone: "#+19195551177"
+          principle: some-other-principle-root_1
+      payload: 
+        id: yet-another-identity-id_1
+        phone: "+19195551177"
+      session:
+        sub: some-other-principle-root_1
+      code: 400
 
 #don't change
 context: command-handler

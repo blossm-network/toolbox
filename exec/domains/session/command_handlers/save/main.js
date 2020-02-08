@@ -88,9 +88,24 @@ module.exports = async ({ payload, context, session, aggregateFn }) => {
     if (!(await deps.compare(payload.phone, identity.state.phone)))
       throw deps.invalidArgumentError.message("This phone number isn't right.");
 
-    // Don't log an event or issue a challange if
-    // the identity's root is already set as the session's subject.
-    if (identity.state.principle == session.sub) return {};
+    if (session.sub) {
+      // Don't log an event or issue a challange if
+      // the identity's root is already set as the session's subject.
+      if (identity.state.principle == session.sub) return {};
+
+      // If the current session .
+      const [subjectIdentity] = await deps
+        .eventStore({
+          domain: "identity"
+        })
+        .set({ context, session, tokenFn: deps.gcpToken })
+        .query({ key: "principle", value: session.sub });
+
+      if (subjectIdentity)
+        throw deps.badRequestError.message(
+          "The session is already saved to a different identity."
+        );
+    }
   }
 
   // If an identity is found, merge the permissions given to the session's subject

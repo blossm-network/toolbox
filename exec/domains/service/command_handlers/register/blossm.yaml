@@ -27,22 +27,28 @@ testing:
     - action: add-identities
       domain: group
       service: core
-
-  examples:
+  
+  validate:
     ok:
-      - payload:
-          name: Some-name
-        normalized:
-          name: Some-name
-        context:
-          session: some-session-root
-        session:
-          iss: some-iss
-          aud: some-aud
-          exp: 9999-12-31T00:00:00.000
+      - name: Some-name
+    bad:
+      - name: 3
+      
+  normalize:
+    - payload:
+        name: Some-name
+      normalized:
+        name: Some-name
 
-  invalid:
-    - name: 3
+  steps:
+    - payload:
+        name: Some-name
+      context:
+        session: some-session-root
+      session:
+        iss: some-iss
+        aud: some-aud
+        exp: 9999-12-31T00:00:00.000
 
   pre:
     ok:
@@ -52,6 +58,9 @@ testing:
         payload:
           device:
             os: some-os
+        response:
+          tokens:
+            service:
 
   procedures:
     - action: register
@@ -65,8 +74,6 @@ testing:
     - domain: session 
       context: event-store
 
-  response:
-    token:
 
 #don't change
 context: command-handler

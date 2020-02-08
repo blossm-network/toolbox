@@ -39,12 +39,20 @@ describe("Command handler unit tests", () => {
   });
   it("should return successfully if identity is found", async () => {
     const queryFake = fake.returns([identity]);
+    const otherQueryFake = fake.returns([]);
     const setFake = fake.returns({
       query: queryFake
     });
-    const eventStoreFake = fake.returns({
-      set: setFake
+    const otherSetFake = fake.returns({
+      query: otherQueryFake
     });
+    const eventStoreFake = stub()
+      .onFirstCall()
+      .returns({
+        set: setFake
+      })
+      .onSecondCall()
+      .returns({ set: otherSetFake });
     replace(deps, "eventStore", eventStoreFake);
 
     const aggregateFake = stub()
@@ -126,12 +134,20 @@ describe("Command handler unit tests", () => {
   });
   it("should return successfully if identity is found and there are no new permissions to add", async () => {
     const queryFake = fake.returns([identity]);
+    const otherQueryFake = fake.returns([]);
     const setFake = fake.returns({
       query: queryFake
     });
-    const eventStoreFake = fake.returns({
-      set: setFake
+    const otherSetFake = fake.returns({
+      query: otherQueryFake
     });
+    const eventStoreFake = stub()
+      .onFirstCall()
+      .returns({
+        set: setFake
+      })
+      .onSecondCall()
+      .returns({ set: otherSetFake });
     replace(deps, "eventStore", eventStoreFake);
 
     const aggregateFake = stub()
