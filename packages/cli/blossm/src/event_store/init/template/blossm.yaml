@@ -13,6 +13,7 @@
 
 domain: some-domain
 service: core
+memory: 256Mi
 
 schema:
   name: String

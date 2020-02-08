@@ -30,8 +30,8 @@ const network = "some-network";
 const issued = "now";
 
 describe("Event store integration tests", () => {
-  const example0 = testing.examples[0];
-  const example1 = testing.examples[1];
+  const example0 = testing.examples.first;
+  const example1 = testing.examples.second;
 
   before(async () => await create(topic));
   after(async () => await del(topic));

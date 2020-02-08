@@ -14,11 +14,12 @@
 name: some-name
 domain: some-domain
 service: core
+memory: 256Mi
 
 schema:
   name: String
 
-#optional. Remove if querying only by root, created date, or modified date 
+#optional. Remove if querying only by root, created date, or modified date
 indexes: [[{ name: 1 }]]
 
 devDependencies:

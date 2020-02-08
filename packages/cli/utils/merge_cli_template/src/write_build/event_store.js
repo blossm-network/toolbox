@@ -13,6 +13,7 @@ const startDnsTransaction = require("./steps/start_dns_transaction");
 const addDnsTransaction = require("./steps/add_dns_transaction");
 const executeDnsTransaction = require("./steps/execute_dns_transaction");
 const abortDnsTransaction = require("./steps/abort_dns_transaction");
+const createPubsubTopic = require("./steps/create_pubsub_topic");
 const mapDomain = require("./steps/map_domain");
 const writeEnv = require("./steps/write_env");
 
@@ -44,6 +45,7 @@ module.exports = ({
   runBaseUnitTests,
   runIntegrationTests,
   runBaseIntegrationTests,
+  topics,
   strict
 }) => {
   return [
@@ -108,6 +110,15 @@ module.exports = ({
       project,
       envNameSpecifier,
       region
-    })
+    }),
+    ...topics.map(t =>
+      createPubsubTopic({
+        action: t,
+        domain,
+        service,
+        project,
+        envNameSpecifier
+      })()
+    )
   ];
 };

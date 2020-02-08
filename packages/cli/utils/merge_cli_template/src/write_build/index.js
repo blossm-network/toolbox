@@ -38,6 +38,7 @@ const steps = ({
   runBaseUnitTests,
   runIntegrationTests,
   runBaseIntegrationTests,
+  topics,
   strict
 }) => {
   const serviceName = `${region}-${operationName}-${operationHash}`;
@@ -107,6 +108,7 @@ const steps = ({
         runBaseUnitTests,
         runIntegrationTests,
         runBaseIntegrationTests,
+        topics,
         strict
       });
     case "event-handler":
@@ -299,6 +301,7 @@ module.exports = ({
   secretBucket,
   secretBucketKeyLocation,
   secretBucketKeyRing,
+  topics,
   strict
 }) => {
   const buildPath = path.resolve(workingDir, "build.yaml");
@@ -351,6 +354,7 @@ module.exports = ({
       runBaseUnitTests,
       runIntegrationTests,
       runBaseIntegrationTests,
+      topics,
       strict
     })
   };
