@@ -60,7 +60,7 @@ testing:
             os: some-os
         response:
           tokens:
-            service:
+            session:
 
   procedures:
     - action: register
@@ -70,9 +70,9 @@ testing:
       context: event-store
     - domain: group
       context: event-store
-      # The one below shouldnt be needed. should be automatic
-    - domain: session 
-      context: event-store
+    #   # The one below shouldnt be needed. should be automatic
+    # - domain: session 
+    #   context: event-store
 
 
 #don't change

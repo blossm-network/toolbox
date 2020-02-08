@@ -31,12 +31,12 @@ const resolveTransientProcedures = config => {
   switch (config.context) {
     case "command-handler":
       return [
-        ...config.testing.procedures,
+        ...(config.testing.procedures || []),
         { domain: config.domain, context: "event-store" }
       ];
     case "projects":
       return [
-        ...config.testing.procedures,
+        ...(config.testing.procedures || []),
         { name: config.name, domain: config.domain, context: "view-store" }
       ];
     default:
