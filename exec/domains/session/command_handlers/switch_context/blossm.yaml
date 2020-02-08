@@ -1,4 +1,4 @@
-action: switch-context
+name: switch-context
 domain: session
 service: core
 

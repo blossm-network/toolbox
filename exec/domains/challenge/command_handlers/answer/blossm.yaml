@@ -1,4 +1,4 @@
-action: answer
+name: answer
 domain: challenge
 service: core
 

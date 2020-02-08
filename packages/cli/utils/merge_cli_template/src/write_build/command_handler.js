@@ -11,14 +11,13 @@ const dockerPush = require("./steps/docker_push");
 const writeEnv = require("./steps/write_env");
 const deploy = require("./steps/deploy");
 const startDnsTransaction = require("./steps/start_dns_transaction");
-const createPubsubTopic = require("./steps/create_pubsub_topic");
 const addDnsTransaction = require("./steps/add_dns_transaction");
 const executeDnsTransaction = require("./steps/execute_dns_transaction");
 const abortDnsTransaction = require("./steps/abort_dns_transaction");
 const mapDomain = require("./steps/map_domain");
 
 module.exports = ({
-  action,
+  name,
   region,
   domain,
   project,
@@ -65,7 +64,7 @@ module.exports = ({
       secretBucket,
       secretBucketKeyRing,
       secretBucketKeyLocation,
-      custom: { ACTION: action }
+      custom: { NAME: name }
     }),
     dockerComposeUp,
     dockerComposeProcesses,
@@ -96,8 +95,8 @@ module.exports = ({
       envNameSpecifier,
       envUriSpecifier,
       nodeEnv: env,
-      env: `ACTION=${action}`,
-      labels: `action=${action}`
+      env: `NAME=${name}`,
+      labels: `name=${name}`
     }),
     startDnsTransaction({ dnsZone, project }),
     addDnsTransaction({ uri, dnsZone, project }),
@@ -109,13 +108,6 @@ module.exports = ({
       envNameSpecifier,
       region,
       serviceName
-    }),
-    createPubsubTopic({
-      action,
-      domain,
-      service,
-      project,
-      envNameSpecifier
     })
   ];
 };

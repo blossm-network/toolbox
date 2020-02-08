@@ -18,14 +18,14 @@ const objectsEqual = (obj0, obj1) => {
   return true;
 };
 
-const eventsForCommandHandler = config =>
-  config.testing.events || [
-    {
-      action: config.action,
+const eventsForStore = config =>
+  config.actions.map(action => {
+    return {
+      action,
       domain: config.domain,
       service: config.service
-    }
-  ];
+    };
+  });
 
 const resolveTransientProcedures = config => {
   switch (config.context) {
@@ -58,8 +58,8 @@ const findProceduresAndEventsForProcedure = (procedure, dir) => {
         return {
           procedures: resolveTransientProcedures(blossmConfig),
           events:
-            blossmConfig.context == "command-handler"
-              ? eventsForCommandHandler(blossmConfig)
+            blossmConfig.context == "event-store"
+              ? eventsForStore(blossmConfig)
               : []
         };
       }

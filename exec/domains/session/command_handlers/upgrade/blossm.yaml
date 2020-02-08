@@ -1,4 +1,4 @@
-action: upgrade
+name: upgrade
 domain: session
 service: core
 

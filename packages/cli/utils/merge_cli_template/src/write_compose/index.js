@@ -30,7 +30,6 @@ module.exports = ({
   containerRegistery,
   domain,
   name,
-  action,
   event,
   secretBucketKeyLocation,
   secretBucketKeyRing
@@ -87,7 +86,6 @@ module.exports = ({
           containerRegistery,
           domain,
           name,
-          action,
           event,
           secretBucket,
           secretBucketKeyLocation,

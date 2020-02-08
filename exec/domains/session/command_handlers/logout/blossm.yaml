@@ -1,4 +1,4 @@
-action: logout
+name: logout
 domain: session
 service: core
 

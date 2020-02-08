@@ -4,12 +4,17 @@ service: core
 schema:
   identities: [String]
 
+actions:
+  - add-identities
+
 testing:
   examples:
-    - action: add-identities
+    first: 
+      action: add-identities
       payload:
         identities: [some-identity-root]
-    - action: add-identities
+    second:
+      action: add-identities
       payload:
         identities: [some-other-identity-root]
 

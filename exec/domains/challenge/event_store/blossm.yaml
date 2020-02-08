@@ -14,7 +14,7 @@ schema:
     sub: String
     aud: String
 
-events:
+actions:
   - issue
   - answer
 

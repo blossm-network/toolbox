@@ -14,7 +14,6 @@ const job = require("./job");
 const steps = ({
   region,
   domain,
-  action,
   name,
   event,
   project,
@@ -38,7 +37,7 @@ const steps = ({
   runBaseUnitTests,
   runIntegrationTests,
   runBaseIntegrationTests,
-  topics,
+  actions,
   strict
 }) => {
   const serviceName = `${region}-${operationName}-${operationHash}`;
@@ -108,14 +107,13 @@ const steps = ({
         runBaseUnitTests,
         runIntegrationTests,
         runBaseIntegrationTests,
-        topics,
+        actions,
         strict
       });
     case "event-handler":
     case "projection":
       return eventHandler({
         imageExtension,
-        action,
         region,
         domain,
         name,
@@ -146,7 +144,7 @@ const steps = ({
     case "command-handler":
       return commandHandler({
         imageExtension,
-        action,
+        name,
         region,
         domain,
         project,
@@ -259,7 +257,7 @@ const steps = ({
   }
 };
 
-const imageExtension = ({ domain, name, action, event, context }) => {
+const imageExtension = ({ domain, name, event, context }) => {
   switch (context) {
     case "view-store":
       return `${domain}.${name}`;
@@ -271,7 +269,6 @@ const imageExtension = ({ domain, name, action, event, context }) => {
     case "projection":
       return `${domain}.${name}.did-${event.action}.${event.domain}`;
     case "command-handler":
-      return `${domain}.${action}`;
     case "job":
       return `${domain}.${name}`;
   }
@@ -281,7 +278,6 @@ module.exports = ({
   workingDir,
   region,
   domain,
-  action,
   event,
   name,
   project,
@@ -301,14 +297,13 @@ module.exports = ({
   secretBucket,
   secretBucketKeyLocation,
   secretBucketKeyRing,
-  topics,
+  actions,
   strict
 }) => {
   const buildPath = path.resolve(workingDir, "build.yaml");
 
   const i = imageExtension({
     context,
-    action,
     name,
     domain,
     event
@@ -330,7 +325,6 @@ module.exports = ({
       imageExtension: i,
       region,
       domain,
-      action,
       name,
       event,
       project,
@@ -354,7 +348,7 @@ module.exports = ({
       runBaseUnitTests,
       runIntegrationTests,
       runBaseIntegrationTests,
-      topics,
+      actions,
       strict
     })
   };

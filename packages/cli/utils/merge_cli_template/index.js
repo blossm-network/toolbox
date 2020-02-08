@@ -270,10 +270,9 @@ const configure = async (workingDir, configFn, env, strict) => {
     const domain = config.domain;
     const service = config.service;
     const context = config.context;
-    const action = config.action;
     const name = config.name;
     const event = config.event;
-    const events = config.events;
+    const actions = config.actions;
 
     const secretBucket = env =>
       `${blossmConfig.vendors.cloud.gcp.secretsBucket}${envNameSpecifier(
@@ -292,7 +291,6 @@ const configure = async (workingDir, configFn, env, strict) => {
       env,
       region,
       domain,
-      action,
       name,
       event,
       project,
@@ -308,7 +306,7 @@ const configure = async (workingDir, configFn, env, strict) => {
       secretBucket: secretBucket(env),
       secretBucketKeyLocation,
       secretBucketKeyRing,
-      topics: events,
+      actions,
       strict,
       ...configFn(config)
     });
@@ -326,7 +324,6 @@ const configure = async (workingDir, configFn, env, strict) => {
       containerRegistery,
       domain,
       name,
-      action,
       event,
       secretBucket: secretBucket("staging"),
       secretBucketKeyLocation,

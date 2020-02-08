@@ -13,15 +13,20 @@ indexes:
   - id 
   - principle
 
+actions:
+  - register
+
 testing:
   examples:
-    - action: register
+    first:
+      action: register
       payload:
         phone: "+19195551155"
         principle: some-principle
         email: some-email
         id: some-id
-    - action: register
+    second:
+      action: register
       payload:
         phone: "+19195551133"
         principle: some-other-principle

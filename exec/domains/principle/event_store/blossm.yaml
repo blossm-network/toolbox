@@ -5,17 +5,22 @@ memory: 256Mi
 schema:
   permissions: [String]
 
+actions:
+  - add-permissions
+
 dependencies:
   "@blossm/array-difference": "*"
 
 testing:
   examples:
-    - action: add-permissions
+    first:
+      action: add-permissions
       payload:
         permissions:
           - some-permission
           - some-other-permission
-    - action: remove-permissions
+    second:
+      action: remove-permissions
       payload:
         permissions:
           - some-permissions
@@ -33,11 +38,6 @@ testing:
             permissions:
               - some-permission
               - some-other-permission
-    - action: add-permissions
-      examples:
-          - payload:
-            permissions:
-              - some-permission
     - action: remove-permissions
       examples:
         - state:

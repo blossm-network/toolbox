@@ -1,4 +1,4 @@
-action: register
+name: register
 domain: context
 service: core
 

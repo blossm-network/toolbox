@@ -11,7 +11,6 @@ module.exports = ({
   name,
   event,
   env,
-  action,
   secretBucket,
   secretBucketKeyLocation,
   secretBucketKeyRing,
@@ -71,11 +70,11 @@ module.exports = ({
       };
     case "command-handler":
       return {
-        image: `${commonImagePrefix}.${action}:latest`,
+        image: `${commonImagePrefix}.${name}:latest`,
         ...common,
         environment: {
           ...common.environment,
-          ACTION: `${action}`
+          NAME: `${name}`
         }
       };
     case "event-handler":

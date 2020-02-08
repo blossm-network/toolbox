@@ -1,4 +1,4 @@
-action: save
+name: save
 domain: session
 service: core
 

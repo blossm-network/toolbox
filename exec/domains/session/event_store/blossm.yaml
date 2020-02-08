@@ -15,9 +15,17 @@ schema:
     manufacturer: String
     id: String
 
+actions:
+  - logout
+  - start
+  - save
+  - upgrade
+  - switch-context
+
 testing:
   examples:
-    - action: start
+    first:
+      action: start
       payload:
         started: 2020-12-31T00:00:00.000Z
         device:
@@ -26,7 +34,8 @@ testing:
           hardware: "iPhone 8"
           manufacturer: Apple
           id: some-device-id
-    - action: start
+    second:
+      action: start
       payload:
         started: 2020-12-31T00:00:00.000Z
         previous: some-previous-session-root
@@ -37,12 +46,13 @@ testing:
           hardware: "Pixel 3"
           manufacturer: Google
           id: some-other-device-id
-    - action: logout
-      payload:
-        loggedout: 2020-12-31T00:00:00.000Z
-    - action: switch-context
-      payload:
-        context: some-context-root
+    more:
+      - action: logout
+        payload:
+          loggedout: 2020-12-31T00:00:00.000Z
+      - action: switch-context
+        payload:
+          context: some-context-root
 
   handlers:
     - action: start

@@ -1,4 +1,4 @@
-action: start
+name: start
 domain: session
 service: core
 

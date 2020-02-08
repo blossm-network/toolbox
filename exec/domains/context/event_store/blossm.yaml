@@ -8,15 +8,20 @@ schema:
   service: String
   network: String
 
+actions:
+  - register
+
 testing:
   examples:
-    - action: register
+    first:
+      action: register
       payload:
         root: some-context-root
         domain: some-domain
         service: some-service
         network: some-network
-    - action: register
+    second:
+      action: register
       payload:
         root: some-other-context-root
         domain: some-other-domain

@@ -45,7 +45,7 @@ module.exports = ({
   runBaseUnitTests,
   runIntegrationTests,
   runBaseIntegrationTests,
-  topics,
+  actions,
   strict
 }) => {
   return [
@@ -111,9 +111,9 @@ module.exports = ({
       envNameSpecifier,
       region
     }),
-    ...topics.map(t =>
+    ...actions.map(action =>
       createPubsubTopic({
-        action: t,
+        action,
         domain,
         service,
         project,

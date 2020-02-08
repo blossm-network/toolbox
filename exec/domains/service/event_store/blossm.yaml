@@ -6,14 +6,19 @@ schema:
   group: String
   context: String
 
+actions:
+  - register
+
 testing:
   examples:
-    - action: register 
+    first:
+      action: register 
       payload:
         name: some-name
         group: some-group
         context: some-context
-    - action: register
+    second:
+      action: register
       payload:
         name: some-other-name
         group: some-group
