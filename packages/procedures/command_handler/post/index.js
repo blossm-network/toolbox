@@ -1,33 +1,17 @@
 const deps = require("./deps");
 
-module.exports = ({ mainFn, validateFn, normalizeFn, fillFn }) => {
+module.exports = ({
+  mainFn,
+  validateFn,
+  normalizeFn,
+  fillFn,
+  aggregateFn,
+  addFn
+}) => {
   return async (req, res) => {
     if (validateFn) await validateFn(req.body.payload);
     if (fillFn) req.body.payload = await fillFn(req.body.payload);
     if (normalizeFn) req.body.payload = await normalizeFn(req.body.payload);
-
-    const aggregateFn = async (
-      root,
-      {
-        domain = process.env.DOMAIN,
-        service = process.env.SERVICE,
-        network = process.env.NETWORK
-      } = {}
-    ) => {
-      const aggregate = await deps
-        .eventStore({ domain, service, network })
-        .set({
-          context: req.body.context,
-          session: req.body.session,
-          tokenFn: deps.gcpToken
-        })
-        .aggregate(root);
-
-      return {
-        lastEventNumber: aggregate.headers.lastEventNumber,
-        aggregate: aggregate.state
-      };
-    };
 
     const { events = [], response } = await mainFn({
       payload: req.body.payload,
@@ -35,7 +19,10 @@ module.exports = ({ mainFn, validateFn, normalizeFn, fillFn }) => {
       ...(req.body.options && { options: req.body.options }),
       session: req.body.session,
       context: req.body.context,
-      aggregateFn
+      aggregateFn: aggregateFn({
+        context: req.body.context,
+        session: req.body.session
+      })
     });
 
     const synchronousFns = [];
@@ -69,14 +56,13 @@ module.exports = ({ mainFn, validateFn, normalizeFn, fillFn }) => {
           }
         });
 
-        await deps
-          .eventStore({ domain })
-          .set({
-            context: req.body.context,
-            session: req.body.session,
-            tokenFn: deps.gcpToken
-          })
-          .add(event, { number: correctNumber });
+        await addFn({
+          domain,
+          context: req.body.context,
+          session: req.body.session,
+          event,
+          ...(correctNumber && { number: correctNumber })
+        });
       };
 
       if (async) {

@@ -5,8 +5,10 @@ const deps = require("../deps");
 const commandHandler = require("..");
 
 const mainFn = "some-main-fn";
+const aggregateFn = "some-aggregate-fn";
 const validateFn = "some-validate-fn";
 const normalizeFn = "some-normalize-fn";
+const fillFn = "some-fill-fn";
 const version = "some-version";
 
 describe("Command handler", () => {
@@ -32,8 +34,10 @@ describe("Command handler", () => {
     const result = await commandHandler({
       version,
       mainFn,
+      aggregateFn,
       validateFn,
-      normalizeFn
+      normalizeFn,
+      fillFn
     });
 
     expect(result).to.equal(returnValue);
@@ -43,8 +47,10 @@ describe("Command handler", () => {
     expect(commandHandlerPostFake).to.have.been.calledWith({
       version,
       mainFn,
+      aggregateFn,
       validateFn,
-      normalizeFn
+      normalizeFn,
+      fillFn
     });
   });
   it("should call with the correct params with optionals omitted", async () => {
@@ -61,14 +67,15 @@ describe("Command handler", () => {
     const commandHandlerPostFake = fake.returns(commandHandlerPostResult);
     replace(deps, "post", commandHandlerPostFake);
 
-    await commandHandler({ version, mainFn });
+    await commandHandler({ version, mainFn, aggregateFn });
 
     expect(listenFake).to.have.been.calledWith();
     expect(serverFake).to.have.been.calledWith();
     expect(postFake).to.have.been.calledWith(commandHandlerPostResult);
     expect(commandHandlerPostFake).to.have.been.calledWith({
       version,
-      mainFn
+      mainFn,
+      aggregateFn
     });
   });
   it("should throw correctly", async () => {
@@ -87,7 +94,7 @@ describe("Command handler", () => {
     replace(deps, "post", commandHandlerPostFake);
 
     try {
-      await commandHandler({ version, mainFn });
+      await commandHandler({ version, mainFn, aggregateFn });
 
       //shouldn't get called
       expect(1).to.equal(0);
