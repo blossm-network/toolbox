@@ -23,7 +23,7 @@ const eventAction = "some-event-action";
 const eventDomain = "some-event-domain";
 const eventService = "some-event-service";
 const commandId = "commandId";
-const commandAction = "command-action";
+const commandName = "command-name";
 const commandDomain = "command-domain";
 const commandService = "command-service";
 const commandNetwork = "command-network";
@@ -80,7 +80,7 @@ describe("Event store", () => {
             version,
             trace,
             command: {
-              action: commandAction,
+              name: commandName,
               domain: commandDomain,
               service: commandService,
               network: commandNetwork,
@@ -107,7 +107,7 @@ describe("Event store", () => {
           version,
           command: {
             id: commandId,
-            action: commandAction,
+            name: commandName,
             domain: commandDomain,
             service: commandService,
             network: commandNetwork,

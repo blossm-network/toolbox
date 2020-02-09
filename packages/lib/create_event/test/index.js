@@ -10,7 +10,7 @@ const now = new Date();
 
 const trace = "trade!";
 const commandId = "command-id!";
-const commandAction = "command-action!";
+const commandName = "command-name!";
 const commandDomain = "command-domain!";
 const commandService = "command-service!";
 const commandNetwork = "command-network!";
@@ -42,7 +42,7 @@ describe("Create event", () => {
       command: {
         id: commandId,
         issued: commandIssued,
-        action: commandAction,
+        name: commandName,
         domain: commandDomain,
         service: commandService,
         network: commandNetwork
@@ -66,7 +66,7 @@ describe("Create event", () => {
         created: stringDate(),
         command: {
           id: commandId,
-          action: commandAction,
+          name: commandName,
           domain: commandDomain,
           service: commandService,
           network: commandNetwork,
@@ -98,7 +98,7 @@ describe("Create event", () => {
       command: {
         id: commandId,
         issued: commandIssued,
-        action: commandAction,
+        name: commandName,
         domain: commandDomain,
         service: commandService,
         network: commandNetwork
@@ -119,7 +119,7 @@ describe("Create event", () => {
         created: stringDate(),
         command: {
           id: commandId,
-          action: commandAction,
+          name: commandName,
           domain: commandDomain,
           service: commandService,
           network: commandNetwork,
@@ -139,7 +139,7 @@ describe("Create event", () => {
       command: {
         id: commandId,
         issued: commandIssued,
-        action: commandAction,
+        name: commandName,
         domain: commandDomain,
         service: commandService,
         network: commandNetwork
@@ -162,7 +162,7 @@ describe("Create event", () => {
         created: stringDate(),
         command: {
           id: commandId,
-          action: commandAction,
+          name: commandName,
           domain: commandDomain,
           service: commandService,
           network: commandNetwork,
@@ -181,7 +181,7 @@ describe("Create event", () => {
       command: {
         id: commandId,
         issued: commandIssued,
-        action: commandAction,
+        name: commandName,
         domain: commandDomain,
         service: commandService,
         network: commandNetwork
@@ -205,7 +205,7 @@ describe("Create event", () => {
         created: stringDate(),
         command: {
           id: commandId,
-          action: commandAction,
+          name: commandName,
           domain: commandDomain,
           service: commandService,
           network: commandNetwork,

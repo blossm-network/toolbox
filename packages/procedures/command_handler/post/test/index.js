@@ -7,6 +7,7 @@ const deps = require("../deps");
 const payload = "some-payload";
 const eventPayload = "some-event-payload";
 const eventRoot = "some-event-root";
+const eventAction = "some-event-action";
 const cleanedPayload = "some-cleaned-payload";
 const filledPayload = "some-filled-payload";
 const response = "some-response";
@@ -34,12 +35,12 @@ const headers = {
   idempotency
 };
 
-const action = "some-action";
+const name = "some-name";
 const domain = "some-domain";
 const service = "some-service";
 const network = "some-network";
 
-process.env.ACTION = action;
+process.env.NAME = name;
 process.env.DOMAIN = domain;
 process.env.SERVICE = service;
 process.env.NETWORK = network;
@@ -75,6 +76,7 @@ describe("Command handler post", () => {
     const events = [
       {
         payload: eventPayload,
+        action: eventAction,
         correctNumber
       }
     ];
@@ -136,7 +138,7 @@ describe("Command handler post", () => {
     expect(createEventFake).to.have.been.calledWith({
       payload: eventPayload,
       trace,
-      action,
+      action: eventAction,
       domain,
       service,
       version: 0,
@@ -144,7 +146,7 @@ describe("Command handler post", () => {
       command: {
         id,
         issued,
-        action,
+        name,
         domain,
         service,
         network
@@ -191,6 +193,7 @@ describe("Command handler post", () => {
     const events = [
       {
         payload: eventPayload,
+        action: eventAction,
         correctNumber
       }
     ];
@@ -253,6 +256,7 @@ describe("Command handler post", () => {
     const events = [
       {
         payload: eventPayload,
+        action: eventAction,
         correctNumber
       }
     ];
@@ -313,7 +317,7 @@ describe("Command handler post", () => {
     expect(createEventFake).to.have.been.calledWith({
       payload: eventPayload,
       trace,
-      action,
+      action: eventAction,
       domain,
       service,
       version: 0,
@@ -321,7 +325,7 @@ describe("Command handler post", () => {
       command: {
         id,
         issued,
-        action,
+        name,
         domain,
         service,
         network
@@ -368,6 +372,7 @@ describe("Command handler post", () => {
     const events = [
       {
         root: eventRoot,
+        action: eventAction,
         version,
         correctNumber
       }
@@ -436,7 +441,7 @@ describe("Command handler post", () => {
       root: eventRoot,
       payload: {},
       trace,
-      action,
+      action: eventAction,
       domain,
       service,
       version,
@@ -444,7 +449,7 @@ describe("Command handler post", () => {
       command: {
         id,
         issued,
-        action,
+        name,
         domain,
         service,
         network
@@ -486,7 +491,8 @@ describe("Command handler post", () => {
 
     const events = [
       {
-        payload: eventPayload
+        payload: eventPayload,
+        action: eventAction
       }
     ];
     const mainFnFake = fake.returns({
@@ -543,7 +549,7 @@ describe("Command handler post", () => {
     expect(createEventFake).to.have.been.calledWith({
       payload: eventPayload,
       trace,
-      action,
+      action: eventAction,
       domain,
       service,
       version: 0,
@@ -551,7 +557,7 @@ describe("Command handler post", () => {
       command: {
         id,
         issued,
-        action,
+        name,
         domain,
         service,
         network
@@ -594,7 +600,6 @@ describe("Command handler post", () => {
       set: setFake
     });
 
-    const eventAction = "some-other-event-action";
     const eventDomain = "some-other-event-domain";
 
     const events = [
@@ -680,7 +685,7 @@ describe("Command handler post", () => {
       command: {
         id,
         issued,
-        action,
+        name,
         domain,
         service,
         network
@@ -806,14 +811,17 @@ describe("Command handler post", () => {
     });
 
     const otherEventPayload = "some-other-event-payload";
+    const otherEventAction = "some-other-event-action";
     const otherCorrectNumber = "some-other-correct-number";
     const events = [
       {
         payload: eventPayload,
+        action: eventAction,
         correctNumber
       },
       {
         payload: otherEventPayload,
+        action: otherEventAction,
         correctNumber: otherCorrectNumber
       }
     ];
@@ -875,7 +883,7 @@ describe("Command handler post", () => {
     expect(createEventFake).to.have.been.calledWith({
       payload: eventPayload,
       trace,
-      action,
+      action: eventAction,
       domain,
       service,
       version: 0,
@@ -883,7 +891,7 @@ describe("Command handler post", () => {
       command: {
         id,
         issued,
-        action,
+        name,
         domain,
         service,
         network
@@ -892,7 +900,7 @@ describe("Command handler post", () => {
     expect(createEventFake).to.have.been.calledWith({
       payload: otherEventPayload,
       trace,
-      action,
+      action: otherEventAction,
       domain,
       service,
       version: 0,
@@ -900,7 +908,7 @@ describe("Command handler post", () => {
       command: {
         id,
         issued,
-        action,
+        name,
         domain,
         service,
         network
@@ -947,14 +955,18 @@ describe("Command handler post", () => {
     });
 
     const otherEventPayload = "some-other-event-payload";
+    const otherEventAction = "some-other-event-action";
     const otherOtherEventPayload = "some-other-other-event-payload";
     const events = [
       {
-        payload: eventPayload
+        payload: eventPayload,
+        action: eventAction
       },
       {
         payload: otherEventPayload,
-        correctNumber
+        action: otherEventAction,
+        correctNumber,
+        async: false
       },
       {
         payload: otherOtherEventPayload

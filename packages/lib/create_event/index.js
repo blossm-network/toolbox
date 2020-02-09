@@ -26,7 +26,7 @@ module.exports = async ({
       ...(command && {
         command: {
           id: command.id,
-          action: command.action,
+          name: command.name,
           domain: command.domain,
           service: command.service,
           network: command.network,

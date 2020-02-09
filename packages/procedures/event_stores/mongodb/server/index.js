@@ -61,7 +61,7 @@ const eventStore = async ({ schema, indexes }) => {
         command: {
           type: {
             id: { type: String, required: true },
-            action: { type: String, required: true },
+            name: { type: String, required: true },
             domain: { type: String, required: true },
             service: { type: String, required: true },
             network: { type: String, required: true },

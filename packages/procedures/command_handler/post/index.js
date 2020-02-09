@@ -44,8 +44,9 @@ module.exports = ({ mainFn, validateFn, normalizeFn, fillFn }) => {
       root,
       payload = {},
       correctNumber,
+      async = true,
       version = 0,
-      action = process.env.ACTION,
+      action,
       domain = process.env.DOMAIN
     } of events) {
       const fn = async () => {
@@ -61,7 +62,7 @@ module.exports = ({ mainFn, validateFn, normalizeFn, fillFn }) => {
           command: {
             id: req.body.headers.id,
             issued: req.body.headers.issued,
-            action: process.env.ACTION,
+            name: process.env.NAME,
             domain: process.env.DOMAIN,
             service: process.env.SERVICE,
             network: process.env.NETWORK
@@ -78,7 +79,7 @@ module.exports = ({ mainFn, validateFn, normalizeFn, fillFn }) => {
           .add(event, { number: correctNumber });
       };
 
-      if (correctNumber == undefined) {
+      if (async) {
         asynchronousFns.push(fn);
       } else {
         synchronousFns.push(
