@@ -6,6 +6,7 @@ module.exports = async ({
   validateFn,
   normalizeFn,
   aggregateFn,
+  addFn,
   fillFn
 } = {}) =>
   deps
@@ -15,6 +16,7 @@ module.exports = async ({
         version,
         mainFn,
         aggregateFn,
+        addFn,
         ...(fillFn && { fillFn }),
         ...(validateFn && { validateFn }),
         ...(normalizeFn && { normalizeFn })
