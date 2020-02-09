@@ -20,14 +20,6 @@ devDependencies:
   "sinon-chai": "^3.3.0"
 
 testing:
-  events:
-    - action: register
-      domain: context
-      service: core 
-    - action: add-permissions 
-      domain: principle 
-      service: core 
-
   validate:
     ok:
       - root: some-root
@@ -53,7 +45,7 @@ testing:
         network: some-network
 
   procedures:
-    - action: upgrade
+    - name: upgrade
       domain: session
       context: command-handler
     - domain: principle 

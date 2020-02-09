@@ -15,6 +15,7 @@ dependencies:
   "@blossm/phone-number": "*"
   "@blossm/jwt": "*"
   "@blossm/gcp-kms": "*"
+  "@blossm/gcp-token": "*"
   "@blossm/duration-consts": "*"
   "@blossm/uuid": "*"
   "@blossm/datetime": "*"

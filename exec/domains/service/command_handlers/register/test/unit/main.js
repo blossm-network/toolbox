@@ -73,6 +73,7 @@ describe("Command handler unit tests", () => {
           root: groupRoot
         },
         {
+          action: "register",
           root: serviceRoot,
           payload: {
             name,

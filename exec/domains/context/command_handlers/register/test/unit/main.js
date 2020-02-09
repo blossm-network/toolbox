@@ -44,7 +44,7 @@ describe("Command handler unit tests", () => {
             permissions: [`context:admin:${root}`]
           }
         },
-        { payload, root }
+        { action: "register", payload, root }
       ],
       response: {
         principle: uuid,
@@ -98,7 +98,7 @@ describe("Command handler unit tests", () => {
             permissions: [`context:admin:${root}`]
           }
         },
-        { payload, root }
+        { action: "register", payload, root }
       ],
       response: {
         principle: "some-sub"

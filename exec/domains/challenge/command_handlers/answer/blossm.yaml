@@ -51,7 +51,7 @@ testing:
     - domain: challenge
       context: event-store
     - domain: session
-      action: upgrade
+      name: upgrade
       context: command-handler
 
   steps:

@@ -47,6 +47,7 @@ module.exports = async ({ payload, context, session }) => {
         root: groupRoot
       },
       {
+        action: "register",
         root: serviceRoot,
         payload: {
           name: payload.name,

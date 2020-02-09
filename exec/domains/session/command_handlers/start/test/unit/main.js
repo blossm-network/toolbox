@@ -52,6 +52,7 @@ describe("Command handler unit tests", () => {
             ...payload,
             started: deps.stringDate()
           },
+          action: "start",
           root,
           correctNumber: 0
         }

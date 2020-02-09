@@ -61,20 +61,13 @@ testing:
             hardware: "iPhone"
             manufacturer: "apple"
   
-  procedures:
-
   steps:
-    - pre:
-      root:
-      payload:
+    - payload:
         device:
           os: "iOS"
-          version: "10"
+          version: "11"
           hardware: "iPhone"
           manufacturer: "apple"
-      session:
-      context:
-      options:
       response:
         tokens:
           session:

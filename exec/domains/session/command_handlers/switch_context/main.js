@@ -57,7 +57,7 @@ module.exports = async ({ root, payload, context, session, aggregateFn }) => {
   });
 
   return {
-    events: [{ root, payload }],
+    events: [{ action: "switch-context", root, payload }],
     response: { tokens: { session: token } }
   };
 };

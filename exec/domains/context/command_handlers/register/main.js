@@ -15,6 +15,7 @@ module.exports = async ({ payload, root, context, session }) => {
       }
     },
     {
+      action: "register",
       root,
       payload
     }

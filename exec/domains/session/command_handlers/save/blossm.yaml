@@ -51,7 +51,7 @@ testing:
     - domain: identity
       context: event-store
     - domain: challenge
-      action: issue
+      name: issue
       context: command-handler
 
   steps:

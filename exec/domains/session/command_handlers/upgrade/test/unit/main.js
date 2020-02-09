@@ -64,6 +64,7 @@ describe("Command handler unit tests", () => {
     expect(result).to.deep.equal({
       events: [
         {
+          action: "upgrade",
           payload: {
             ...payload,
             upgraded: deps.stringDate()

@@ -35,6 +35,7 @@ module.exports = async ({ payload }) => {
     events: [
       {
         root,
+        action: "start",
         payload: {
           ...payload,
           started: deps.stringDate()

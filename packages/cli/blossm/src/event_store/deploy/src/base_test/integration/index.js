@@ -25,9 +25,9 @@ const sub = "some-sub";
 const version = 0;
 const created = "now";
 const id = "some-id";
-const action = "some-action";
 const network = "some-network";
 const issued = "now";
+const name = "some-command-name";
 
 describe("Event store integration tests", () => {
   const example0 = testing.examples.first;
@@ -57,7 +57,7 @@ describe("Event store integration tests", () => {
             created,
             command: {
               id,
-              action,
+              name,
               domain,
               service,
               network,
@@ -94,7 +94,7 @@ describe("Event store integration tests", () => {
             service,
             command: {
               id,
-              action,
+              name,
               domain,
               service,
               network,
@@ -167,7 +167,7 @@ describe("Event store integration tests", () => {
                 action: example0.action,
                 domain,
                 service,
-                command: { id, action, domain, service, network, issued }
+                command: { id, name, domain, service, network, issued }
               },
               payload: example0.payload
             }
@@ -189,7 +189,7 @@ describe("Event store integration tests", () => {
             action,
             domain,
             service,
-            command: { id, action, domain, service, network, issued }
+            command: { id, name, domain, service, network, issued }
           },
           payload
         }
@@ -266,7 +266,7 @@ describe("Event store integration tests", () => {
             service,
             command: {
               id,
-              action,
+              name,
               domain,
               service,
               network,
@@ -297,7 +297,7 @@ describe("Event store integration tests", () => {
               service,
               command: {
                 id,
-                action,
+                name,
                 domain,
                 service,
                 network,
@@ -322,7 +322,7 @@ describe("Event store integration tests", () => {
               service,
               command: {
                 id,
-                action,
+                name,
                 domain,
                 service,
                 network,
@@ -358,7 +358,7 @@ describe("Event store integration tests", () => {
             service,
             command: {
               id,
-              action,
+              name,
               domain,
               service,
               network,

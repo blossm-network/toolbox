@@ -34,6 +34,7 @@ module.exports = async ({ root, payload, context, session, aggregateFn }) => {
     events: [
       {
         root,
+        action: "upgrade",
         payload: { upgraded: deps.stringDate(), principle: payload.principle }
       }
     ],

@@ -17,17 +17,6 @@ devDependencies:
   "sinon-chai": "^3.3.0"
 
 testing:
-  events:
-    - action: register
-      domain: service
-      service: core
-    - action: add-permissions
-      domain: principle
-      service: core
-    - action: add-identities
-      domain: group
-      service: core
-  
   validate:
     ok:
       - name: Some-name
@@ -39,6 +28,15 @@ testing:
         name: Some-name
       normalized:
         name: Some-name
+
+  procedures:
+    - name: register
+      domain: context
+      context: command-handler
+    - domain: principle
+      context: event-store
+    - domain: group
+      context: event-store
 
   steps:
     - pre:
@@ -56,6 +54,9 @@ testing:
         iss: some-iss
         aud: some-aud
         exp: 9999-12-31T00:00:00.000
+      response:
+        tokens:
+          session:
     - pre:
       - domain: session
         root: some-other-session-root
@@ -72,15 +73,6 @@ testing:
         aud: some-aud
         sub: some-sub
         exp: 9999-12-31T00:00:00.000
-
-  procedures:
-    - action: register
-      domain: context
-      context: command-handler
-    - domain: principle
-      context: event-store
-    - domain: group
-      context: event-store
 
 #don't change
 context: command-handler

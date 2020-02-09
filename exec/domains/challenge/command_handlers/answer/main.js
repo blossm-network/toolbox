@@ -20,6 +20,7 @@ module.exports = async ({ payload, context, aggregateFn }) => {
   const events = [
     {
       root,
+      action: "answer",
       payload: {
         answered: deps.stringDate()
       },

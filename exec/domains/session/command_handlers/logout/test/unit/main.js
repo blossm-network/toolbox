@@ -29,6 +29,7 @@ describe("Command handler unit tests", () => {
       events: [
         {
           root,
+          action: "logout",
           payload: {
             loggedout: deps.stringDate()
           }

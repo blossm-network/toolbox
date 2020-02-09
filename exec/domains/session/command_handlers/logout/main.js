@@ -9,6 +9,8 @@ module.exports = async ({ root, aggregateFn }) => {
     throw deps.badRequestError.sessionAlreadyTerminated();
 
   return {
-    events: [{ root, payload: { loggedout: deps.stringDate() } }]
+    events: [
+      { root, action: "logout", payload: { loggedout: deps.stringDate() } }
+    ]
   };
 };

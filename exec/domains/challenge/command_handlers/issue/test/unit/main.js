@@ -91,7 +91,7 @@ describe("Command handler unit tests", () => {
     expect(result).to.deep.equal({
       events: [
         {
-          correctNumber: 0,
+          action: "issue",
           root,
           payload: {
             code,
@@ -202,7 +202,7 @@ describe("Command handler unit tests", () => {
     expect(result).to.deep.equal({
       events: [
         {
-          correctNumber: 0,
+          action: "issue",
           root,
           payload: {
             code,
@@ -439,7 +439,7 @@ describe("Command handler unit tests", () => {
       response: { tokens: { challenge: token } },
       events: [
         {
-          correctNumber: 0,
+          action: "issue",
           root,
           payload: {
             code,

@@ -82,6 +82,7 @@ describe("Command handler unit tests", () => {
     expect(result).to.deep.equal({
       events: [
         {
+          action: "switch-context",
           payload,
           root
         }

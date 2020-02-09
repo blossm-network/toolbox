@@ -93,6 +93,7 @@ module.exports = async ({
   return {
     events: [
       {
+        action: "issue",
         payload: {
           code,
           principle: identity.state.principle,
@@ -105,8 +106,7 @@ module.exports = async ({
             .toISOString(),
           ...(events && { events })
         },
-        root,
-        correctNumber: 0
+        root
       }
     ],
     response: { tokens: { challenge: token } }

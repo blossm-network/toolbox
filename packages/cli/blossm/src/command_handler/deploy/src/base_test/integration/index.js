@@ -42,7 +42,10 @@ const formattedPayload = async payload => {
       !(payload[property] instanceof Array)
     ) {
       result[property] = await formattedPayload(payload[property]);
-    } else if (payload[property].startsWith("#")) {
+    } else if (
+      typeof payload[property] == "string" &&
+      payload[property].startsWith("#")
+    ) {
       result[property] = await hash(
         payload[property].substring(payload[property].indexOf("#") + 1)
       );
@@ -70,6 +73,7 @@ const executeStep = async step => {
       await eventStore({ domain }).add(stateEvent);
     }
   }
+
   const response = await request.post(url, {
     body: {
       root: step.root,
