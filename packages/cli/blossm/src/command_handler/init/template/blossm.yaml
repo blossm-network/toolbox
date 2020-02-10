@@ -1,12 +1,11 @@
 #
 # This file is required.
 #
-# Give your command-handler an action name,
-# specify which domain it's for,
-# and set which version of the event to create.
+# Give your command-handler a name,
+# and specify which domain and service it's for.
 #
 
-action: some-action
+name: some-name
 domain: some-domain
 service: core
 
@@ -22,23 +21,27 @@ devDependencies:
   "chai-datetime": "^1.5.0"
 
 testing:
-  examples:
+  validate:
     ok:
-      - payload:
-          name: Some-name
-        normalized:
-          name: some-name
+      name: Some-name
+    bad:
+      name: 3
 
-  invalid:
-    - name: 3
-
-  root: some-root
-
-  pre:
+  normalize:
+    - payload:
+        name: Some-name
+      normalized:
+        name: Some-name
 
   procedures:
 
-  response:
+  steps:
+    pre:
+    payload:
+    context:
+    session:
+    root:
+    response:
 
 #don't change
 context: command-handler

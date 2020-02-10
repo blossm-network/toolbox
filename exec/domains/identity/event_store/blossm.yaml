@@ -1,5 +1,6 @@
 domain: identity
 service: core
+memory: 256Mi
 
 schema:
   phone: String

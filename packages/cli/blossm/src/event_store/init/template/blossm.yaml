@@ -18,15 +18,20 @@ memory: 256Mi
 schema:
   name: String
 
+actions:
+  - some-action
+
 testing:
-  #must add at least 2 examples
   examples:
-    - action: some-action
+    first:
+      action: some-action
       payload:
         name: some-name
-    - action: some-other-action
+    second:
+      action: some-other-action
       payload:
         name: some-other-name
+    more: []
 
   handlers:
     - action: some-action

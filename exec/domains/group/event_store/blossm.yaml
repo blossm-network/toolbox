@@ -1,5 +1,6 @@
 domain: group
 service: core
+memory: 256Mi
 
 schema:
   identities: [String]
