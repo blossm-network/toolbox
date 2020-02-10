@@ -8,6 +8,10 @@ const objs = "some-objs";
 const query = {
   a: 1
 };
+const sort = "some-sort";
+const context = "some-context";
+const session = "some-session";
+
 const id = "some-id";
 
 describe("View store get", () => {
@@ -22,7 +26,11 @@ describe("View store get", () => {
       id
     };
     const req = {
-      query,
+      query: {
+        sort,
+        context,
+        session
+      },
       params
     };
 
@@ -32,16 +40,21 @@ describe("View store get", () => {
     };
     await get({ findOneFn: findOneFake })(req, res);
     expect(findOneFake).to.have.been.calledWith({
-      id
+      id,
+      sort,
+      context,
+      session
     });
     expect(sendFake).to.have.been.calledWith(objs);
   });
-  it("should call with the correct params if no id", async () => {
-    const findFake = fake.returns(objs);
+  it("should call with the correct params with optionals left out", async () => {
+    const findOneFake = fake.returns(objs);
 
-    const params = {};
+    const params = {
+      id
+    };
     const req = {
-      query,
+      query: {},
       params
     };
 
@@ -49,24 +62,19 @@ describe("View store get", () => {
     const res = {
       send: sendFake
     };
-    await get({ findFn: findFake })(req, res);
-    expect(findFake).to.have.been.calledWith({
-      query: {
-        a: 1
-      }
-    });
+    await get({ findOneFn: findOneFake })(req, res);
+    expect(findOneFake).to.have.been.calledWith({ id });
     expect(sendFake).to.have.been.calledWith(objs);
   });
-  it("should call with the correct params if no id with sort and context in query", async () => {
+  it("should call with the correct params if no id", async () => {
     const findFake = fake.returns(objs);
 
     const params = {};
-    const sort = { someKey: 3 };
-    const context = { someContext: 4 };
     const req = {
       query: {
-        ...query,
+        query,
         sort,
+        session,
         context
       },
       params
@@ -78,18 +86,37 @@ describe("View store get", () => {
     };
     await get({ findFn: findFake })(req, res);
     expect(findFake).to.have.been.calledWith({
-      query: {
-        a: 1
-      },
-      sort
+      query,
+      sort,
+      session,
+      context
     });
+    expect(sendFake).to.have.been.calledWith(objs);
+  });
+  it("should call with the correct params if no id with optionals omitted", async () => {
+    const findFake = fake.returns(objs);
+
+    const params = {};
+    const req = {
+      query: { query },
+      params
+    };
+
+    const sendFake = fake();
+    const res = {
+      send: sendFake
+    };
+    await get({ findFn: findFake })(req, res);
+    expect(findFake).to.have.been.calledWith({ query });
     expect(sendFake).to.have.been.calledWith(objs);
   });
   it("should call with the correct params if a fn is passed in", async () => {
     const findFake = fake.returns(objs);
     const params = {};
     const req = {
-      query,
+      query: {
+        query
+      },
       params
     };
 
@@ -102,32 +129,6 @@ describe("View store get", () => {
     await get({ findFn: findFake, fn: fnFake })(req, res);
     expect(fnFake).to.have.been.calledWith(query);
     expect(findFake).to.have.been.calledWith({ query: { b: 2 } });
-    expect(sendFake).to.have.been.calledWith(objs);
-  });
-  it("should call with the correct params if a fn is passed in with sort", async () => {
-    const findFake = fake.returns(objs);
-
-    const params = {};
-    const req = {
-      query,
-      params
-    };
-
-    const sendFake = fake();
-    const res = {
-      send: sendFake
-    };
-
-    const sort = "some-sort";
-    const fnFake = fake.returns({ query: { b: 2 }, sort });
-    await get({ findFn: findFake, fn: fnFake })(req, res);
-    expect(fnFake).to.have.been.calledWith(query);
-    expect(findFake).to.have.been.calledWith({
-      query: {
-        b: 2
-      },
-      sort
-    });
     expect(sendFake).to.have.been.calledWith(objs);
   });
   it("should throw correctly if not found", async () => {

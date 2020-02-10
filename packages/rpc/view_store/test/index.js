@@ -12,6 +12,7 @@ const network = "some-network";
 const tokenFn = "some-token-fn";
 
 const query = "some-query";
+const sort = "some-sort";
 const properties = "some-params";
 const root = "some-root";
 const context = { c: 2 };
@@ -81,10 +82,10 @@ describe("Get views", () => {
 
     const result = await viewStore({ name, domain, service, network })
       .set({ context, tokenFn })
-      .read(query);
+      .read({ query, sort });
 
     expect(rpcFake).to.have.been.calledWith(name, domain, "view-store");
-    expect(getFake).to.have.been.calledWith(query);
+    expect(getFake).to.have.been.calledWith({ query, sort });
     expect(inFake).to.have.been.calledWith({ context, service, network });
     expect(withFake).to.have.been.calledWith({
       tokenFn
@@ -105,12 +106,12 @@ describe("Get views", () => {
     });
     replace(deps, "rpc", rpcFake);
 
-    const result = await viewStore({ name, domain, service, network }).read(
+    const result = await viewStore({ name, domain, service, network }).read({
       query
-    );
+    });
 
     expect(rpcFake).to.have.been.calledWith(name, domain, "view-store");
-    expect(getFake).to.have.been.calledWith(query);
+    expect(getFake).to.have.been.calledWith({ query });
     expect(inFake).to.have.been.calledWith({ service, network });
     expect(withFake).to.have.been.calledWith();
     expect(result).to.equal(views);
@@ -131,10 +132,10 @@ describe("Get views", () => {
 
     const result = await viewStore({ name, domain, service, network })
       .set({ context, tokenFn })
-      .stream(query);
+      .stream({ query, sort });
 
     expect(rpcFake).to.have.been.calledWith(name, domain, "view-store");
-    expect(getFake).to.have.been.calledWith(query);
+    expect(getFake).to.have.been.calledWith({ query, sort });
     expect(inFake).to.have.been.calledWith({ context, service, network });
     expect(withFake).to.have.been.calledWith({
       path: "/stream",
@@ -156,12 +157,12 @@ describe("Get views", () => {
     });
     replace(deps, "rpc", rpcFake);
 
-    const result = await viewStore({ name, domain, service, network }).stream(
+    const result = await viewStore({ name, domain, service, network }).stream({
       query
-    );
+    });
 
     expect(rpcFake).to.have.been.calledWith(name, domain, "view-store");
-    expect(getFake).to.have.been.calledWith(query);
+    expect(getFake).to.have.been.calledWith({ query });
     expect(inFake).to.have.been.calledWith({ service, network });
     expect(withFake).to.have.been.calledWith({
       path: "/stream"

@@ -12,10 +12,13 @@ module.exports = ({ name, domain, service, network }) => {
         ...(network && { network })
       })
       .with({ tokenFn });
-  const read = ({ context, session, tokenFn } = {}) => async query =>
+  const read = ({ context, session, tokenFn } = {}) => async ({
+    query,
+    sort
+  }) =>
     await deps
       .rpc(name, domain, "view-store")
-      .get(query)
+      .get({ query, ...(sort && { sort }) })
       .in({
         ...(context && { context }),
         ...(session && { session }),
@@ -23,10 +26,13 @@ module.exports = ({ name, domain, service, network }) => {
         ...(network && { network })
       })
       .with({ tokenFn });
-  const stream = ({ context, session, tokenFn } = {}) => async query =>
+  const stream = ({ context, session, tokenFn } = {}) => async ({
+    query,
+    sort
+  }) =>
     await deps
       .rpc(name, domain, "view-store")
-      .get(query)
+      .get({ query, sort })
       .in({
         ...(context && { context }),
         ...(session && { session }),
