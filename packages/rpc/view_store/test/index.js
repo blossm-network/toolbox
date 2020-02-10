@@ -42,9 +42,7 @@ describe("Get views", () => {
     expect(rpcFake).to.have.been.calledWith(name, domain, "view-store");
     expect(postFake).to.have.been.calledWith(properties);
     expect(inFake).to.have.been.calledWith({ context, service, network });
-    expect(withFake).to.have.been.calledWith({
-      tokenFn
-    });
+    expect(withFake).to.have.been.calledWith({ tokenFn });
   });
   it("should call create with the correct params and optionals omitted", async () => {
     const withFake = fake();

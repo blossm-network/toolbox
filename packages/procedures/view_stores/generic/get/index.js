@@ -1,10 +1,8 @@
 const deps = require("./deps");
 
-const defaultFn = query => {
-  return { query };
-};
+const defaultQueryFn = ({ query }) => query;
 
-module.exports = ({ findFn, findOneFn, fn = defaultFn }) => {
+module.exports = ({ findFn, findOneFn, queryFn = defaultQueryFn }) => {
   return async (req, res) => {
     if (req.params.id) {
       const result = await findOneFn({
@@ -17,7 +15,10 @@ module.exports = ({ findFn, findOneFn, fn = defaultFn }) => {
       if (!result) throw deps.resourceNotFoundError.view();
       res.send(result);
     } else {
-      const { query } = fn(req.query.query);
+      const query = queryFn({
+        query: req.query.query,
+        ...(req.query.context && { context: req.query.context })
+      });
       const results = await findFn({
         query,
         ...(req.query.sort && { sort: req.query.sort }),

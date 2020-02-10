@@ -14,9 +14,9 @@
  *
  */
 
-// module.exports = query => {
-//   return {
-//     query: { name: query.firstName + query.lastName },
-//     sort: { created: 1, age: -1 }
-//   };
-// };
+module.exports = ({ query, context }) => {
+  return {
+    name: query.firstName + query.lastName,
+    identity: context.identity
+  };
+};

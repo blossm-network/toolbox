@@ -110,12 +110,13 @@ describe("View store get", () => {
     expect(findFake).to.have.been.calledWith({ query });
     expect(sendFake).to.have.been.calledWith(objs);
   });
-  it("should call with the correct params if a fn is passed in", async () => {
+  it("should call with the correct params if a queryFn is passed in", async () => {
     const findFake = fake.returns(objs);
     const params = {};
     const req = {
       query: {
-        query
+        query,
+        context
       },
       params
     };
@@ -125,10 +126,10 @@ describe("View store get", () => {
       send: sendFake
     };
 
-    const fnFake = fake.returns({ query: { b: 2 } });
-    await get({ findFn: findFake, fn: fnFake })(req, res);
-    expect(fnFake).to.have.been.calledWith(query);
-    expect(findFake).to.have.been.calledWith({ query: { b: 2 } });
+    const queryFnFake = fake.returns({ b: 2 });
+    await get({ findFn: findFake, queryFn: queryFnFake })(req, res);
+    expect(queryFnFake).to.have.been.calledWith({ query, context });
+    expect(findFake).to.have.been.calledWith({ query: { b: 2 }, context });
     expect(sendFake).to.have.been.calledWith(objs);
   });
   it("should throw correctly if not found", async () => {
