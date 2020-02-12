@@ -9,9 +9,8 @@ const get =
 describe("View store get tests", () => {
   if (!get) return;
   it("should convert correctly", async () => {
-    const query = { some: "query" };
-    const result = get(query);
-    expect(result.query).to.equal(0);
-    expect(result.sort).to.equal(1);
+    const context = { identity: "some-identity" };
+    const result = get({ context });
+    expect(result).to.deep.equal({ identity: "some-identity" });
   });
 });

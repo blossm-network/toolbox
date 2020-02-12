@@ -19,10 +19,47 @@ devDependencies:
 
 testing:
   examples:
-    - name: some-name
-      identity: some-identity
-    - name: some-other-name
-      identity: some-other-identity
+    id:
+      first:
+        - put:
+            identity: some-identity
+            name: some-name
+          get:
+            identity: some-identity
+            name: some-name
+      second:
+        - put:
+            identity: some-other-identity
+            name: some-other-name
+          get:
+            identity: some-other-identity
+            name: some-other-name
+    index:
+      put:
+        name: some-name
+        identity: some-identity
+      context:
+        identity: some-identity
+      get: 
+        name: some-name
+        identity: some-identity
+    stream:
+      first:
+        put:
+          name: some-name
+          identity: some-identity
+        get: 
+          name: some-name
+          identity: some-identity
+      second:
+        put:
+          name: some-other-name
+          identity: some-other-identity
+        get: 
+          name: some-other-name
+          identity: some-other-identity
+      context:
+        identity: some-identity
 
 #don't change
 context: view-store

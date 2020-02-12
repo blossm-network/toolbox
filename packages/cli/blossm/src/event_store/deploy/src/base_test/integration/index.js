@@ -42,7 +42,7 @@ describe("Event store integration tests", () => {
   });
 
   it("should return successfully", async () => {
-    const root = uuid();
+    const root = await uuid();
 
     const response0 = await request.post(url, {
       body: {
@@ -136,8 +136,8 @@ describe("Event store integration tests", () => {
     }
   });
 
-  it("should publish event successfully", done => {
-    const root = uuid();
+  it("should publish event successfully", async done => {
+    const root = await uuid();
     subscribe({
       topic,
       name: sub,
@@ -177,7 +177,7 @@ describe("Event store integration tests", () => {
     });
   });
   const testIncorrectParams = async ({ payload, action }) => {
-    const root = uuid();
+    const root = await uuid();
     const response = await request.post(url, {
       body: {
         event: {
@@ -251,7 +251,7 @@ describe("Event store integration tests", () => {
   });
 
   it("should return an error if bad number", async () => {
-    const root = uuid();
+    const root = await uuid();
 
     const response = await request.post(url, {
       body: {
@@ -281,7 +281,7 @@ describe("Event store integration tests", () => {
     expect(response.statusCode).to.equal(412);
   });
   it("should return an error if two simultaneous events are attempted", async () => {
-    const root = uuid();
+    const root = await uuid();
 
     const [response0, response1] = await Promise.all([
       request.post(url, {
@@ -343,7 +343,7 @@ describe("Event store integration tests", () => {
     }
   });
   it("should return an error if action is not recognized", async () => {
-    const root = uuid();
+    const root = await uuid();
 
     const response = await request.post(url, {
       body: {

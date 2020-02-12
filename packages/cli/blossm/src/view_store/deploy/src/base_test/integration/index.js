@@ -19,17 +19,15 @@ const makeQuery = (properties, example) => {
 };
 
 describe("View store base integration tests", () => {
-  const example0 = testing.examples[0];
-  const example1 = testing.examples[1];
-
-  it("should have examples", () => {
+  const testIdQueries = async () => {
+    const example0 = testing.examples.id.first;
+    const example1 = testing.examples.id.second;
     expect(example0).to.exist;
     expect(example1).to.exist;
-  });
-  it("should return successfully", async () => {
-    const id = uuid();
+
+    const id = await uuid();
     const response0 = await request.put(`${url}/${id}`, {
-      body: example0.put || example0
+      body: example0.put
     });
 
     expect(response0.statusCode).to.equal(204);
@@ -38,14 +36,12 @@ describe("View store base integration tests", () => {
     const parsedBody1 = JSON.parse(response1.body);
 
     expect(response1.statusCode).to.equal(200);
-    for (const key in example0.result || example0) {
-      expect(parsedBody1[key]).to.deep.equal(
-        (example0.result || example0)[key]
-      );
+    for (const key in example0.get) {
+      expect(parsedBody1[key]).to.deep.equal(example0.get[key]);
     }
 
     const response2 = await request.put(`${url}/${id}`, {
-      body: example1.put || example1
+      body: example1.put
     });
 
     expect(response2.statusCode).to.equal(204);
@@ -53,66 +49,99 @@ describe("View store base integration tests", () => {
     const response3 = await request.get(`${url}/${id}`);
     const parsedBody3 = JSON.parse(response3.body);
     expect(response3.statusCode).to.equal(200);
-    for (const key in example1.result || example1) {
-      expect(parsedBody3[key]).to.deep.equal(
-        (example1.result || example1)[key]
-      );
+    for (const key in example1.get) {
+      expect(parsedBody3[key]).to.deep.equal(example1.get[key]);
     }
+
+    const response4 = await request.delete(`${url}/${id}`);
+    const parsedBody4 = JSON.parse(response4.body);
+    expect(response4.statusCode).to.equal(200);
+    expect(parsedBody4.deletedCount).to.equal(1);
+  };
+
+  const testIndexes = async () => {
+    const example0 = testing.examples.index;
+    expect(example0).to.exist;
+
+    const id = await uuid();
+
+    const response = await request.put(`${url}/${id}`, {
+      body: example0.put
+    });
+
+    expect(response.statusCode).to.equal(204);
 
     ///Test indexes
     for (const index of indexes) {
-      const query = makeQuery(
-        index[0],
-        example1.query || example1.result || example1
-      );
-      const response4 = await request.get(url, { query });
-      expect(response4.statusCode).to.equal(200);
+      const query = makeQuery(index[0], example0.query);
+      const response1 = await request.get(url, {
+        query: {
+          query,
+          context: example0.context
+        }
+      });
+      expect(response1.statusCode).to.equal(200);
 
-      const parsedBody4 = JSON.parse(response4.body);
-      for (const key in example1.result || example1) {
-        expect(parsedBody4[0][key]).to.deep.equal(
-          (example1.result || example1)[key]
-        );
+      const parsedBody4 = JSON.parse(response1.body);
+      for (const key in example0.get) {
+        expect(parsedBody4[0][key]).to.deep.equal(example0.get[key]);
       }
     }
+  };
 
-    //Test get with no query
-    const response5 = await request.get(url);
-    const parsedBody5 = JSON.parse(response5.body);
-    expect(response5.statusCode).to.equal(200);
-    for (const key in example1.result || example1) {
-      expect(parsedBody5[0][key]).to.deep.equal(
-        (example1.result || example1)[key]
-      );
-    }
+  const testStreaming = async () => {
+    const example0 = testing.examples.stream.first;
+    const example1 = testing.examples.stream.second;
+    const context = testing.examples.stream.context;
+    const query = testing.examples.stream.query;
 
-    //Test streaming
-    const id2 = uuid();
-    const response6 = await request.put(`${url}/${id2}`, {
-      body: example0.put || example1
-    });
-    expect(response6.statusCode).to.equal(204);
-    const response7 = await request.put(`${url}/${id2}`, {
-      body: example1.put || example1
-    });
-    expect(response7.statusCode).to.equal(204);
-    let counter = 0;
-    await request.stream(`${url}/stream`, data => {
-      counter++;
-      const parsedData = JSON.parse(data.toString().trim());
-      for (const key in example1.result || example1) {
-        expect(parsedData[key]).to.deep.equal(
-          (example1.result || example1)[key]
-        );
-      }
-    });
-    expect(counter).to.equal(2);
+    expect(example0).to.exist;
+    expect(example1).to.exist;
 
-    //Test delete
-    const response8 = await request.delete(`${url}/${id}`);
-    const parsedBody8 = JSON.parse(response8.body);
-    expect(response8.statusCode).to.equal(200);
-    expect(parsedBody8.deletedCount).to.equal(1);
+    const id0 = await uuid();
+    const id1 = await uuid();
+
+    const response = await request.put(`${url}/${id0}`, {
+      body: example0.put
+    });
+    expect(response.statusCode).to.equal(204);
+    const response1 = await request.put(`${url}/${id1}`, {
+      body: example1.put
+    });
+    expect(response1.statusCode).to.equal(204);
+    let ids = [];
+    await request.stream(
+      `${url}/stream`,
+      data => {
+        // eslint-disable-next-line no-console
+        console.log({ data });
+        ids.push(data.id);
+        const parsedData = JSON.parse(data.toString().trim());
+
+        if (data.id == id0) {
+          for (const key in example0.get) {
+            expect(parsedData[key]).to.deep.equal(example0.get[key]);
+          }
+        }
+        if (data.id == id1) {
+          for (const key in example1.get) {
+            expect(parsedData[key]).to.deep.equal(example1.get[key]);
+          }
+        }
+      },
+      { query: { query, context } }
+    );
+    expect(ids).to.include(id0);
+    expect(ids).to.include(id1);
+  };
+
+  const testDelete = async () => {};
+
+  it("should return successfully", async () => {
+    await testIdQueries();
+    await testIndexes();
+    await testStreaming();
+    await testDelete();
   });
 
   it("should return an error if incorrect params", async () => {
