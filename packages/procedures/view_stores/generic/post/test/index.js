@@ -76,8 +76,8 @@ describe("View store post", () => {
     const uuidFake = fake.returns(uuid);
     replace(deps, "uuid", uuidFake);
 
-    const fnFake = fake.returns({ data: { b: 2 } });
-    await post({ writeFn: writeFake, fn: fnFake })(req, res);
+    const fnFake = fake.returns({ b: 2 });
+    await post({ writeFn: writeFake, dataFn: fnFake })(req, res);
 
     expect(writeFake).to.have.been.calledWith({
       id: uuid,

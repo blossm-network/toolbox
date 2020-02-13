@@ -4,11 +4,11 @@ service: core
 
 payload:
   name: string
-  avatar:
-    type: object
-    properties:
-      url: imageUrl
-    optional: true
+  # avatar:
+  #   type: object
+  #   properties:
+  #     url: imageUrl
+  #   optional: true
 
 dependencies:
   "@blossm/command-rpc": "*"
@@ -25,23 +25,23 @@ testing:
   validate:
     ok:
       - name: Some-name
-        avatar: 
-          url: https://media.giphy.com/media/3o72EWdzDI0wgdAq7S/giphy.gif
+        # avatar:
+        #   url: https://media.giphy.com/media/3o72EWdzDI0wgdAq7S/giphy.gif
       - name: Some-name
     bad:
       - name: 3
-      - avatar: 
-          url: some-non-url
-      
+      # - avatar:
+      #     url: some-non-url
+
   normalize:
     - payload:
         name: Some-name
-        avatar: 
-          url: https://media.giphy.com/media/3o72EWdzDI0wgdAq7S/giphy.gif
+        # avatar:
+        #   url: https://media.giphy.com/media/3o72EWdzDI0wgdAq7S/giphy.gif
       normalized:
         name: Some-name
-        avatar: 
-          url: https://media.giphy.com/media/3o72EWdzDI0wgdAq7S/giphy.gif
+        # avatar:
+        #   url: https://media.giphy.com/media/3o72EWdzDI0wgdAq7S/giphy.gif
 
   procedures:
     - name: register
@@ -54,12 +54,12 @@ testing:
 
   steps:
     - pre:
-      - domain: session
-        root: some-session-root
-        action: start
-        payload:
-          device:
-            os: some-os
+        - domain: session
+          root: some-session-root
+          action: start
+          payload:
+            device:
+              os: some-os
       payload:
         name: Some-name
       context:
@@ -72,12 +72,12 @@ testing:
         tokens:
           session:
     - pre:
-      - domain: session
-        root: some-other-session-root
-        action: start
-        payload:
-          device:
-            os: some-os
+        - domain: session
+          root: some-other-session-root
+          action: start
+          payload:
+            device:
+              os: some-os
       payload:
         name: Some-name
       context:

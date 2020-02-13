@@ -61,9 +61,8 @@ describe("View store", () => {
     const findOneFn = "some-find-one-fn";
     const writeFn = "some-write-fn";
     const removeFn = "some-remove-fn";
-    const getFn = "some-get-fn";
-    const postFn = "some-post-fn";
-    const putFn = "some-put-fn";
+    const queryFn = "some-query-fn";
+    const dataFn = "some-data-fn";
 
     await viewStore({
       streamFn,
@@ -71,9 +70,8 @@ describe("View store", () => {
       findOneFn,
       writeFn,
       removeFn,
-      getFn,
-      postFn,
-      putFn
+      queryFn,
+      dataFn
     });
 
     expect(listenFake).to.have.been.calledOnce;
@@ -85,15 +83,21 @@ describe("View store", () => {
     expect(deleteFake).to.have.been.calledWith(viewStoreDeleteResult);
     expect(viewStoreStreamFake).to.have.been.calledWith({
       streamFn,
-      fn: getFn
+      queryFn
     });
     expect(viewStoreGetFake).to.have.been.calledWith({
       findFn,
       findOneFn,
-      fn: getFn
+      queryFn
     });
-    expect(viewStorePostFake).to.have.been.calledWith({ writeFn, fn: postFn });
-    expect(viewStorePutFake).to.have.been.calledWith({ writeFn, fn: putFn });
+    expect(viewStorePostFake).to.have.been.calledWith({
+      writeFn,
+      dataFn
+    });
+    expect(viewStorePutFake).to.have.been.calledWith({
+      writeFn,
+      dataFn
+    });
     expect(viewStoreDeleteFake).to.have.been.calledWith({ removeFn });
   });
   it("should call with the correct params with optionals missing", async () => {

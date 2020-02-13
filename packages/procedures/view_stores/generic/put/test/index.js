@@ -77,7 +77,7 @@ describe("View store put", () => {
     };
 
     const fnFake = fake.returns({ data: { b: 2 } });
-    await put({ writeFn: writeFake, fn: fnFake })(req, res);
+    await put({ writeFn: writeFake, dataFn: fnFake })(req, res);
 
     expect(writeFake).to.have.been.calledWith({
       id,

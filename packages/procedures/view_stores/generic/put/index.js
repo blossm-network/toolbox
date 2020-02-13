@@ -4,7 +4,7 @@ const defaultFn = body => {
   return { data: body };
 };
 
-module.exports = ({ writeFn, fn = defaultFn }) => {
+module.exports = ({ writeFn, dataFn = defaultFn }) => {
   return async (req, res) => {
     if (req.params.id == undefined) throw deps.badRequestError.missingId();
 
@@ -13,7 +13,7 @@ module.exports = ({ writeFn, fn = defaultFn }) => {
     delete req.body.created;
     delete req.body.modified;
 
-    const { data: customData } = fn(req.body);
+    const customData = dataFn(req.body);
 
     const data = {
       ...customData,

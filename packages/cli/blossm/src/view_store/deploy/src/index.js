@@ -1,14 +1,14 @@
 const fs = require("fs");
 const viewStore = require("@blossm/mongodb-view-store");
 
-const get = fs.existsSync("./get.js") && require("./get");
-const put = fs.existsSync("./put.js") && require("./put");
+const query = fs.existsSync("./query.js") && require("./query");
+const data = fs.existsSync("./data.js") && require("./data");
 
 const config = require("./config.json");
 
 module.exports = viewStore({
   schema: config.schema,
   indexes: config.indexes,
-  ...(get && { getFn: get }),
-  ...(put && { putFn: put })
+  ...(query && { queryFn: query }),
+  ...(data && { dataFn: data })
 });
