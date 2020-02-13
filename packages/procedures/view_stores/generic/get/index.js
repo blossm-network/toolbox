@@ -8,7 +8,8 @@ module.exports = ({ findFn, findOneFn, queryFn = defaultQueryFn }) => {
     //eslint-disable-next-line no-console
     console.log({
       query: req.query,
-      params: req.params
+      params: req.params,
+      body: req.body
     });
     if (req.params.id) {
       const result = await findOneFn({

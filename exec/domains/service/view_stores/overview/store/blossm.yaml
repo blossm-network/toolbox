@@ -52,6 +52,7 @@ testing:
         #   url: some-avatar-url
       context:
         identity: some-identity
+      query: {}
       get:
         name: some-name
         identity: some-identity

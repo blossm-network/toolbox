@@ -86,7 +86,7 @@ describe("Request", () => {
     };
     replace(deps, "request", (options, callback) => {
       expect(options.url).to.equal(
-        `${url}?andy=0&andy=ur%20dogs%3F&dandy=a%3D1&hello=there&how=are&how=you`
+        `${url}?hello=there&how%5B0%5D=are&how%5B1%5D=you&andy%5B0%5D=0&andy%5B1%5D=ur%20dogs%3F&dandy%5Ba%5D=1`
       );
       callback(null, response, body);
     });
@@ -103,7 +103,7 @@ describe("Request", () => {
     const headers = "some-header!";
     replace(deps, "request", (options, callback) => {
       expect(options.url).to.equal(
-        `${url}?andy=0&andy=ur%20dogs%3F&hello=there&how=are&how=you`
+        `${url}?hello=there&how%5B0%5D=are&how%5B1%5D=you&andy%5B0%5D=0&andy%5B1%5D=ur%20dogs%3F`
       );
       expect(options.headers).to.equal(headers);
       callback(null, response, body);
@@ -155,7 +155,7 @@ describe("Request", () => {
     };
     replace(deps, "request", options => {
       expect(options.url).to.equal(
-        `${url}?andy=0&andy=ur%20dogs%3F&hello=there&how=are&how=you`
+        `${url}?hello=there&how%5B0%5D=are&how%5B1%5D=you&andy%5B0%5D=0&andy%5B1%5D=ur%20dogs%3F`
       );
       return {
         on: onFn
@@ -188,7 +188,7 @@ describe("Request", () => {
     };
     replace(deps, "request", options => {
       expect(options.url).to.equal(
-        `${url}?andy=0&andy=ur%20dogs%3F&hello=there&how=are&how=you`
+        `${url}?hello=there&how%5B0%5D=are&how%5B1%5D=you&andy%5B0%5D=0&andy%5B1%5D=ur%20dogs%3F`
       );
       return {
         on: onFn

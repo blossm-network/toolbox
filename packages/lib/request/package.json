@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "query-string": "^6.8.1",
+    "qs": "^6.9.1",
     "request": "^1.2.0"
   },
   "devDependencies": {

@@ -73,7 +73,7 @@ describe("View store base integration tests", () => {
 
     ///Test indexes
     for (const index of indexes) {
-      const query = makeQuery(index[0], example0.get);
+      const query = makeQuery(index[0], example0.query);
       const response1 = await request.get(url, {
         query: {
           query,
