@@ -1,10 +1,11 @@
 name: overview
-domain: context
+domain: service 
 service: core
 memory: 256Mi
 
 schema:
   name: String
+  avatar: String
   identity: String
 
 indexes: [[{ identity: 1 }]]
@@ -24,40 +25,50 @@ testing:
         - put:
             identity: some-identity
             name: some-name
+            avatar: some-avatar-url
           get:
             identity: some-identity
             name: some-name
+            avatar: some-avatar-url
       second:
         - put:
             identity: some-other-identity
             name: some-other-name
+            avatar: some-other-avatar-url
           get:
             identity: some-other-identity
             name: some-other-name
+            avatar: some-other-avatar-url
     index:
       put:
         name: some-name
         identity: some-identity
+        avatar: some-avatar-url
       context:
         identity: some-identity
       get: 
         name: some-name
         identity: some-identity
+        avatar: some-avatar-url
     stream:
       first:
         put:
           name: some-name
           identity: some-identity
+          avatar: some-avatar-url
         get: 
           name: some-name
           identity: some-identity
+          avatar: some-avatar-url
       second:
         put:
           name: some-other-name
           identity: some-other-identity
+          avatar: some-other-avatar-url
         get: 
           name: some-other-name
           identity: some-other-identity
+          avatar: some-other-avatar-url
       context:
         identity: some-identity
 

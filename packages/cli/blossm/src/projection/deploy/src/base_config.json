@@ -1,6 +1,8 @@
 {
   "dependencies": {
-    "@blossm/projection": "*"
+    "@blossm/event-handler": "*",
+    "@blossm/view-store-rpc": "*",
+    "@blossm/gcp-token": "*"
   },
   "devDependencies": {
     "chai": "^4.2.0",

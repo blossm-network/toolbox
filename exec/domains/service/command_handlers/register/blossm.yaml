@@ -4,6 +4,11 @@ service: core
 
 payload:
   name: string
+  avatar:
+    type: object
+    properties:
+      url: string
+    optional: true
 
 dependencies:
   "@blossm/command-rpc": "*"
@@ -20,14 +25,22 @@ testing:
   validate:
     ok:
       - name: Some-name
+        avatar: 
+          url: https://some.url
+      - name: Some-name
     bad:
       - name: 3
+      - avatar: some-non-url
       
   normalize:
     - payload:
         name: Some-name
+        avatar: 
+          url: https://some.url
       normalized:
         name: Some-name
+        avatar: 
+          url: https://some.url
 
   procedures:
     - name: register

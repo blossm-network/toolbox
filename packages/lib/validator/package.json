@@ -14,7 +14,8 @@
     "@blossm/email-validator": "^0.0.3",
     "@blossm/errors": "^0.0.17",
     "@blossm/phone-number": "*",
-    "@blossm/validation": "^0.0.5"
+    "@blossm/validation": "^0.0.5",
+    "is-image-url": "1.1.8"
   },
   "scripts": {
     "test": "mocha --recursive"

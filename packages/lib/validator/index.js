@@ -30,6 +30,7 @@ const findErrorInArray = require("./src/find_error_in_array");
 const email = require("./src/email");
 const phoneNumber = require("./src/phone_number");
 const numeric = require("./src/numeric");
+const imageUrl = require("./src/image_url");
 
 module.exports = {
   string,
@@ -63,5 +64,6 @@ module.exports = {
   findErrorInArray,
   email,
   phoneNumber,
-  numeric
+  numeric,
+  imageUrl
 };
