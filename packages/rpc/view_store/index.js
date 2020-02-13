@@ -32,7 +32,7 @@ module.exports = ({ name, domain, service, network }) => {
   }) =>
     await deps
       .rpc(name, domain, "view-store")
-      .get({ query, sort })
+      .get({ query, ...(sort && { sort }) })
       .in({
         ...(context && { context }),
         ...(session && { session }),

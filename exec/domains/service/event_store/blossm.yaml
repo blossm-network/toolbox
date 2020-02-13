@@ -4,6 +4,8 @@ memory: 256Mi
 
 schema:
   name: String
+  avatar:
+    url: String
   group: String
   context: String
 
@@ -16,12 +18,16 @@ testing:
       action: register 
       payload:
         name: some-name
+        avatar:
+          url: some-avatar
         group: some-group
         context: some-context
     second:
       action: register
       payload:
         name: some-other-name
+        avatar:
+          url: some-other-avatar
         group: some-group
         context: some-other-context
 
@@ -30,13 +36,19 @@ testing:
       examples:
         - state:
             name: some-name
+            avatar:
+              url: some-avatar
             group: some-group
             context: some-context
           payload:
             name: some-other-name
+            avatar:
+              url: some-other-avatar
             context: some-other-context
           result:
             name: some-other-name
+            avatar:
+              url: some-other-avatar
             group: some-group
             context: some-other-context
 

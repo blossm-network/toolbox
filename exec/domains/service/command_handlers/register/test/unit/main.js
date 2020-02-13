@@ -103,6 +103,76 @@ describe("Command handler unit tests", () => {
       { root: contextRoot }
     );
   });
+  it("should return successfully with avatar", async () => {
+    const groupRoot = "some-group-root";
+    const serviceRoot = "some-service-root";
+    const contextRoot = "some-context-root";
+
+    const uuidFake = stub()
+      .onFirstCall()
+      .returns(groupRoot)
+      .onSecondCall()
+      .returns(serviceRoot)
+      .onThirdCall()
+      .returns(contextRoot);
+
+    replace(deps, "uuid", uuidFake);
+
+    const tokens = "some-tokens";
+    const principle = "some-principle";
+    const issueFake = fake.returns({ tokens, principle });
+    const setFake = fake.returns({
+      issue: issueFake
+    });
+    const commandFake = fake.returns({
+      set: setFake
+    });
+    replace(deps, "command", commandFake);
+
+    const url = "some-url";
+    const result = await main({
+      payload: {
+        ...payload,
+        avatar: { url }
+      },
+      context,
+      session
+    });
+    expect(result).to.deep.equal({
+      events: [
+        {
+          domain: "principle",
+          action: "add-permissions",
+          root: principle,
+          payload: {
+            permissions: [
+              `group:admin:${groupRoot}`,
+              `service:admin:${serviceRoot}`
+            ]
+          }
+        },
+        {
+          domain: "group",
+          action: "add-identities",
+          payload: {
+            identities: [identity]
+          },
+          root: groupRoot
+        },
+        {
+          action: "register",
+          root: serviceRoot,
+          payload: {
+            name,
+            avatar: { url },
+            group: groupRoot,
+            context: contextRoot
+          }
+        }
+      ],
+      response: { tokens }
+    });
+  });
   it("should throw correctly", async () => {
     const errorMessage = "some-error";
     const uuidFake = fake.rejects(errorMessage);

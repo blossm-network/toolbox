@@ -51,9 +51,11 @@ module.exports = async ({ payload, context, session }) => {
         root: serviceRoot,
         payload: {
           name: payload.name,
-          avatar: {
-            url: payload.avatar.url
-          },
+          ...(payload.avatar && {
+            avatar: {
+              ...(payload.avatar.url && { url: payload.avatar.url })
+            }
+          }),
           group: groupRoot,
           context: contextRoot
         }

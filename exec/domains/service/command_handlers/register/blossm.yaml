@@ -7,7 +7,7 @@ payload:
   avatar:
     type: object
     properties:
-      url: string
+      url: imageUrl
     optional: true
 
 dependencies:
@@ -26,21 +26,22 @@ testing:
     ok:
       - name: Some-name
         avatar: 
-          url: https://some.url
+          url: https://media.giphy.com/media/3o72EWdzDI0wgdAq7S/giphy.gif
       - name: Some-name
     bad:
       - name: 3
-      - avatar: some-non-url
+      - avatar: 
+          url: some-non-url
       
   normalize:
     - payload:
         name: Some-name
         avatar: 
-          url: https://some.url
+          url: https://media.giphy.com/media/3o72EWdzDI0wgdAq7S/giphy.gif
       normalized:
         name: Some-name
         avatar: 
-          url: https://some.url
+          url: https://media.giphy.com/media/3o72EWdzDI0wgdAq7S/giphy.gif
 
   procedures:
     - name: register
