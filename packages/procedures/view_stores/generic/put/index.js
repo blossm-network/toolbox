@@ -1,8 +1,6 @@
 const deps = require("./deps");
 
-const defaultFn = body => {
-  return { data: body };
-};
+const defaultFn = body => body;
 
 module.exports = ({ writeFn, dataFn = defaultFn }) => {
   return async (req, res) => {
