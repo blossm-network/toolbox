@@ -81,11 +81,12 @@ describe("Request", () => {
     const params = {
       hello: "there",
       how: ["are", "you"],
-      andy: [0, "ur dogs?"]
+      andy: [0, "ur dogs?"],
+      dandy: { a: 1 }
     };
     replace(deps, "request", (options, callback) => {
       expect(options.url).to.equal(
-        `${url}?andy=0&andy=ur%20dogs%3F&hello=there&how=are&how=you`
+        `${url}?andy=0&andy=ur%20dogs%3F&dandy=a%3D1&hello=there&how=are&how=you`
       );
       callback(null, response, body);
     });
