@@ -73,7 +73,7 @@ describe("View store base integration tests", () => {
 
     ///Test indexes
     for (const index of indexes) {
-      const query = makeQuery(index[0], example0.query);
+      const query = makeQuery(index[0], example0.get);
       const response1 = await request.get(url, {
         query: {
           query,
@@ -113,10 +113,8 @@ describe("View store base integration tests", () => {
     await request.stream(
       `${url}/stream`,
       data => {
-        // eslint-disable-next-line no-console
-        console.log({ data });
-        ids.push(data.id);
         const parsedData = JSON.parse(data.toString().trim());
+        ids.push(parsedData.id);
 
         if (data.id == id0) {
           for (const key in example0.get) {

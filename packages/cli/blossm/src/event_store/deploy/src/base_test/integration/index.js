@@ -136,12 +136,11 @@ describe("Event store integration tests", () => {
     }
   });
 
-  it("should publish event successfully", async done => {
-    const root = await uuid();
+  it("should publish event successfully", done => {
     subscribe({
       topic,
       name: sub,
-      fn: (_, subscription) => {
+      fn: async (_, subscription) => {
         if (!subscription) throw "Subscription wasn't made";
         subscription.once("message", async event => {
           const eventString = Buffer.from(event.data, "base64")
@@ -156,6 +155,7 @@ describe("Event store integration tests", () => {
           await unsubscribe({ topic, name: sub });
           done();
         });
+        const root = await uuid();
         request.post(url, {
           body: {
             event: {

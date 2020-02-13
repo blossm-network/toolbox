@@ -25,17 +25,9 @@ module.exports = async ({ name, hash }) => {
   const headers = { "Metadata-Flavor": "Google" };
 
   const url = `https://${process.env.GCP_REGION}-${name}-${hash}-${id}-uc.a.run.app`;
-  //eslint-disable-next-line
-  console.log({
-    url
-  });
 
   const response = await deps.get(metadataServerTokenUrl + url, { headers });
 
-  //eslint-disable-next-line
-  console.log({
-    body: response.body
-  });
   if (response.statusCode >= 300) return null;
   return response.body;
 };
