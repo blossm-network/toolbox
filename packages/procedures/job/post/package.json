@@ -1,7 +1,7 @@
 {
   "name": "@blossm/job-post",
   "description": "A job server POST handler.",
-  "version": "0.0.16",
+  "version": "0.0.17",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -14,7 +14,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/gcp-token": "^0.0.12"
+    "@blossm/gcp-token": "^0.0.13"
   },
   "devDependencies": {
     "chai-datetime": "^1.5.0",
