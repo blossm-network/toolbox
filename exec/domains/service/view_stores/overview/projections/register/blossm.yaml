@@ -1,10 +1,10 @@
-name: registered
-domain: service 
+name: overview
+domain: service
 service: core
 
 event:
   action: register
-  domain: service 
+  domain: service
   service: core
 
 devDependencies:
@@ -19,16 +19,15 @@ devDependencies:
 testing:
   examples:
     - root: some-root
-      
       payload:
         name: some-name
-        avatar: some-name
-      
+        # avatar: some-name
       context:
-
+        identity: some-identity
       result:
-        root: some-root 
-        value: 
+        root: some-root
+        value:
+          identity: some-identity
           name: some-name
 
 #don't change

@@ -18,15 +18,16 @@ describe("Event handler unit tests", () => {
   });
   it("should return successfully", async () => {
     const name = "some-name";
+    const identity = "some-identity";
     const payload = { name };
-    // const context = "some-context";
-    // const root = "some-root";
-    // const headers = { root, context };
+    const context = { identity };
+    const headers = { context };
 
-    const response = await main({ payload });
+    const response = await main({ payload, headers });
 
     expect(response).to.deep.equal({
-      name
+      name,
+      identity
     });
   });
 });

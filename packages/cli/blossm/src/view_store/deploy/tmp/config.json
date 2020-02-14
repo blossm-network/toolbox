@@ -1,0 +1,58 @@
+{
+  "name": "overview",
+  "domain": "service",
+  "service": "core",
+  "memory": "256Mi",
+  "schema": { "name": "String", "identity": "String" },
+  "indexes": [[{ "identity": 1 }]],
+  "testing": {
+    "examples": {
+      "id": {
+        "first": [
+          {
+            "put": { "identity": "some-identity", "name": "some-name" },
+            "get": { "identity": "some-identity", "name": "some-name" }
+          }
+        ],
+        "second": [
+          {
+            "put": {
+              "identity": "some-other-identity",
+              "name": "some-other-name"
+            },
+            "get": {
+              "identity": "some-other-identity",
+              "name": "some-other-name"
+            }
+          }
+        ]
+      },
+      "index": {
+        "put": { "name": "some-name", "identity": "some-identity" },
+        "context": { "identity": "some-identity" },
+        "query": {},
+        "get": { "name": "some-name", "identity": "some-identity" }
+      },
+      "stream": {
+        "first": {
+          "put": { "name": "some-name", "identity": "some-identity" },
+          "get": { "name": "some-name", "identity": "some-identity" }
+        },
+        "second": {
+          "put": {
+            "name": "some-other-name",
+            "identity": "some-other-identity"
+          },
+          "get": {
+            "name": "some-other-name",
+            "identity": "some-other-identity"
+          }
+        },
+        "context": { "identity": "some-identity" }
+      }
+    },
+    "procedures": [],
+    "topics": []
+  },
+  "context": "view-store"
+}
