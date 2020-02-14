@@ -1,17 +1,10 @@
-#
-# This file is required.
-# It's URL will be auth.[network]
-#
-
-domain: some-domain
+domain: service
 service: core
 
 stores:
-  - name: some-name
+  - name: overview
     permissions: 
-      - some-permission
-  - name: some-other-name
-    protected: false
+      - admin
 
 whitelist:
   - "127.0.0.1"
