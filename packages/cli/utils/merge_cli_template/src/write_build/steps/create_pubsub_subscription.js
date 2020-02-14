@@ -9,10 +9,10 @@ module.exports = ({
   eventDomain,
   eventService,
   context,
-  // envUriSpecifier,
-  // network,
+  envUriSpecifier,
+  network,
   project,
-  // region,
+  region,
   envNameSpecifier
 }) => {
   return {
@@ -23,7 +23,8 @@ module.exports = ({
       oneLine`
     gcloud beta pubsub subscriptions create ${service}-${context}-${operationHash}
     --topic=did-${eventAction}.${eventDomain}.${eventService}
-    --push-endpoint=https://us-central1-core-projection-overview--3823312914-p3u6hkyfwa-uc.a.run.app
+    --push-endpoint=https://${operationHash}.${region}.${envUriSpecifier}${network}
+    --push-auth-token-audience=https://${operationHash}.${region}.${envUriSpecifier}${network}
     --push-auth-service-account=cloud-run-pubsub-invoker@${project}${envNameSpecifier}.iam.gserviceaccount.com
     --topic-project=${project}${envNameSpecifier}
     --expiration-period=never
@@ -34,5 +35,3 @@ module.exports = ({
     ]
   };
 };
-
-//    https://${operationHash}.${region}.${envUriSpecifier}${network}
