@@ -7,6 +7,7 @@ const { spawnSync } = require("child_process");
 const rootDir = require("@blossm/cli-root-dir");
 const path = require("path");
 const { green } = require("chalk");
+const os = require("os");
 
 const build = async workingDir => {
   const blossmConfig = rootDir.config();
@@ -28,9 +29,6 @@ const build = async workingDir => {
 };
 
 module.exports = ({ domain, dir, configFn }) => async args => {
-  //eslint-disable-next-line no-console
-  console.log(roboSay("Running your tests..."));
-
   const input = await normalize({
     entrypointType: "path",
     entrypointDefault: ".",
@@ -57,10 +55,10 @@ module.exports = ({ domain, dir, configFn }) => async args => {
     ]
   });
 
-  const workingDir = path.resolve(dir, "tmp");
+  const workingDir = fs.mkdtempSync(path.join(os.tmpdir(), "blossm-"));
+  //eslint-disable-next-line no-console
+  console.log(roboSay(`Assembling template into ${workingDir}...`));
 
-  fs.removeSync(workingDir);
-  fs.mkdirSync(workingDir);
   await mergeCliTemplate({
     scriptDir: dir,
     workingDir,
@@ -69,6 +67,8 @@ module.exports = ({ domain, dir, configFn }) => async args => {
   });
 
   if (input.testOnly) {
+    //eslint-disable-next-line no-console
+    console.log(roboSay("Running your tests..."));
     await testCliTemplate({ workingDir, input });
   } else {
     //eslint-disable-next-line no-console
