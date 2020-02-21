@@ -132,6 +132,92 @@ describe("Command handler post", () => {
     expect(statusFake).to.have.been.calledWith(200);
     expect(sendFake).to.have.been.calledWith(response);
   });
+  it("should call with the correct params with thenFn", async () => {
+    const validateFnFake = fake();
+    const normalizeFnFake = fake.returns(cleanedPayload);
+
+    const createEventFake = fake.returns(event);
+    replace(deps, "createEvent", createEventFake);
+
+    const events = [
+      {
+        payload: eventPayload,
+        action: eventAction,
+        correctNumber
+      }
+    ];
+    const thenFnFake = fake();
+    const mainFnFake = fake.returns({
+      events,
+      response,
+      thenFn: thenFnFake
+    });
+    const req = {
+      body: {
+        payload,
+        headers,
+        context,
+        session
+      }
+    };
+
+    const sendFake = fake();
+    const statusFake = fake.returns({
+      send: sendFake
+    });
+    const res = {
+      status: statusFake
+    };
+
+    const addFnFake = fake();
+    const aggregateFnFake = fake.returns(aggregateFn);
+
+    await post({
+      mainFn: mainFnFake,
+      validateFn: validateFnFake,
+      normalizeFn: normalizeFnFake,
+      addFn: addFnFake,
+      aggregateFn: aggregateFnFake
+    })(req, res);
+
+    expect(thenFnFake).to.have.been.calledOnce;
+    expect(aggregateFnFake).to.have.been.calledWith({ context, session });
+    expect(normalizeFnFake).to.have.been.calledWith(payload);
+    expect(validateFnFake).to.have.been.calledWith(payload);
+    expect(mainFnFake).to.have.been.calledWith({
+      payload: cleanedPayload,
+      context,
+      session,
+      aggregateFn
+    });
+
+    expect(createEventFake).to.have.been.calledWith({
+      payload: eventPayload,
+      trace,
+      action: eventAction,
+      domain,
+      service,
+      version: 0,
+      idempotency,
+      command: {
+        id,
+        issued,
+        name,
+        domain,
+        service,
+        network
+      }
+    });
+    expect(addFnFake).to.have.been.calledWith({
+      domain,
+      context,
+      session,
+      event,
+      number: correctNumber
+    });
+    expect(statusFake).to.have.been.calledWith(200);
+    expect(sendFake).to.have.been.calledWith(response);
+  });
   it("should call with the correct params will fillFn", async () => {
     const validateFnFake = fake();
     const fillFnFake = fake.returns(filledPayload);

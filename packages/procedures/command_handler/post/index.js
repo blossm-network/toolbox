@@ -13,7 +13,7 @@ module.exports = ({
     if (fillFn) req.body.payload = await fillFn(req.body.payload);
     if (normalizeFn) req.body.payload = await normalizeFn(req.body.payload);
 
-    const { events = [], response } = await mainFn({
+    const { events = [], response, thenFn } = await mainFn({
       payload: req.body.payload,
       ...(req.body.root && { root: req.body.root }),
       ...(req.body.options && { options: req.body.options }),
@@ -84,6 +84,8 @@ module.exports = ({
     ]) {
       await fn();
     }
+
+    if (thenFn) await thenFn();
 
     res.status(response ? 200 : 204).send(response);
   };
