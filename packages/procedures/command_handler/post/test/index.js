@@ -132,7 +132,7 @@ describe("Command handler post", () => {
     expect(statusFake).to.have.been.calledWith(200);
     expect(sendFake).to.have.been.calledWith(response);
   });
-  it("should call with the correct params with thenFn", async () => {
+  it("should call with the correct params with sideEffectsFn", async () => {
     const validateFnFake = fake();
     const normalizeFnFake = fake.returns(cleanedPayload);
 
@@ -146,11 +146,11 @@ describe("Command handler post", () => {
         correctNumber
       }
     ];
-    const thenFnFake = fake();
+    const sideEffectsFnFake = fake();
     const mainFnFake = fake.returns({
       events,
       response,
-      thenFn: thenFnFake
+      sideEffectsFn: sideEffectsFnFake
     });
     const req = {
       body: {
@@ -180,7 +180,7 @@ describe("Command handler post", () => {
       aggregateFn: aggregateFnFake
     })(req, res);
 
-    expect(thenFnFake).to.have.been.calledOnce;
+    expect(sideEffectsFnFake).to.have.been.calledOnce;
     expect(aggregateFnFake).to.have.been.calledWith({ context, session });
     expect(normalizeFnFake).to.have.been.calledWith(payload);
     expect(validateFnFake).to.have.been.calledWith(payload);
