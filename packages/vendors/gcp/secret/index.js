@@ -12,9 +12,14 @@ exports.get = async (
   const file = `${key}.txt.encrypted`;
   await deps.download({ bucket, file });
   const encrypted = await deps.readFile(file);
+  //eslint-disable-next-line no-console
+  console.log({
+    encrypted,
+    trimmed: encrypted.trim()
+  });
   const [secret] = await Promise.all([
     deps.decrypt({
-      message: encrypted,
+      message: encrypted.trim(),
       ring,
       key,
       location,
