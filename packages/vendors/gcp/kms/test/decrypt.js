@@ -36,7 +36,7 @@ describe("Kms decrypt", () => {
     expect(result).to.equal(decrpytedMessage);
     expect(decryptFake).to.have.been.calledWith({
       name: path,
-      ciphertext: message
+      ciphertext: Buffer.from(message, "base64")
     });
   });
   it("should decrypt correctly with new lines removed", async () => {
@@ -55,7 +55,7 @@ describe("Kms decrypt", () => {
     expect(result).to.equal(decrpytedMessage);
     expect(decryptFake).to.have.been.calledWith({
       name: path,
-      ciphertext: message
+      ciphertext: Buffer.from(message, "base64")
     });
   });
   it("should throw correctly", async () => {
@@ -68,7 +68,7 @@ describe("Kms decrypt", () => {
     kmsClient.prototype.decrypt = decryptFake;
     replace(kms, "KeyManagementServiceClient", kmsClient);
     try {
-      await decrypt(message);
+      await decrypt({ message });
 
       //shouldn't get called
       expect(1).to.equal(0);
