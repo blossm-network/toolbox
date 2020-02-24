@@ -2,12 +2,14 @@ const deps = require("./deps");
 
 const serverId = () => {
   switch (process.env.NODE_ENV) {
+    case "development":
+      return process.env.GCP_DEVELOPMENT_PROJECT_ID; //"p3u6hkyfwa";
     case "staging":
-      return "p3u6hkyfwa";
+      return process.env.GCP_STAGING_PROJECT_ID; //"p3u6hkyfwa";
     case "sandbox":
-      return "ixixyzl3ea";
+      return process.env.GCP_SANDBOX_PROJECT_ID; //"ixixyzl3ea";
     case "production":
-      return "qzhmgyrp2q";
+      return process.env.GCP_PRODUCTION_PROJECT_ID; //"qzhmgyrp2q";
     default:
       return null;
   }

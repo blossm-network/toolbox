@@ -1,7 +1,6 @@
 name: overview
 domain: service
 service: core
-memory: 256Mi
 
 schema:
   name: String

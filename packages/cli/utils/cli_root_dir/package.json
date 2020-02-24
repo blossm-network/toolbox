@@ -16,6 +16,7 @@
   "dependencies": {
     "chalk": "^2.4.2",
     "find-up": "^4.1.0",
+    "yaml": "^1.7.0",
     "ncp": "^2.0.0"
   },
   "devDependencies": {

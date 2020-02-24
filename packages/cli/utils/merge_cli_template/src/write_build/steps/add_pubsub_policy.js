@@ -1,4 +1,4 @@
-module.exports = ({ region, serviceName, project, envNameSpecifier }) => {
+module.exports = ({ region, serviceName, project }) => {
   return {
     name: "gcr.io/cloud-builders/gcloud",
     args: [
@@ -7,10 +7,10 @@ module.exports = ({ region, serviceName, project, envNameSpecifier }) => {
       "services",
       "add-iam-policy-binding",
       `${serviceName}`,
-      `--member=serviceAccount:cloud-run-pubsub-invoker@${project}${envNameSpecifier}.iam.gserviceaccount.com`,
+      `--member=serviceAccount:cloud-run-pubsub-invoker@${project}.iam.gserviceaccount.com`,
       "--platform=managed",
       "--role=roles/run.invoker",
-      `--project=${project}${envNameSpecifier}`,
+      `--project=${project}`,
       `--region=${region}`
     ]
   };

@@ -1,5 +1,5 @@
 const { oneLine } = require("common-tags");
-module.exports = ({ serviceName, uri, project, envNameSpecifier, region }) => {
+module.exports = ({ serviceName, uri, project, region }) => {
   return {
     name: "gcr.io/cloud-builders/gcloud",
     entrypoint: "bash",
@@ -10,7 +10,7 @@ module.exports = ({ serviceName, uri, project, envNameSpecifier, region }) => {
       --platform=managed
       --service=${serviceName}
       --domain=${uri}
-      --project=${project}${envNameSpecifier}
+      --project=${project}
       --region=${region} || exit 0
       `
     ]

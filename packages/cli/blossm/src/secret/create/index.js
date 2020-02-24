@@ -4,29 +4,45 @@ const roboSay = require("@blossm/robo-say");
 const { create: createSecret } = require("@blossm/gcp-secret");
 const rootDir = require("@blossm/cli-root-dir");
 
-const envNameSpecifier = env => {
+const envProject = ({ env, config }) => {
   switch (env) {
+    case "production":
+      return config.vendors.cloud.gcp.projects.production;
     case "sandbox":
+      return config.vendors.cloud.gcp.projects.sandbox;
     case "staging":
-      return `-${env}`;
+      return config.vendors.cloud.gcp.projects.staging;
+    case "development":
+      return config.vendors.cloud.gcp.projects.development;
+    default:
+      return "";
+  }
+};
+
+const envSecretsBucket = ({ env, config }) => {
+  switch (env) {
+    case "production":
+      return config.vendors.cloud.gcp.secretsBuckets.production;
+    case "sandbox":
+      return config.vendors.cloud.gcp.secretsBuckets.sandbox;
+    case "staging":
+      return config.vendors.cloud.gcp.secretsBuckets.staging;
+    case "development":
+      return config.vendors.cloud.gcp.secretsBuckets.development;
     default:
       return "";
   }
 };
 
 const create = async input => {
-  const environment = input.environment;
+  const env = input.env;
 
   const blossmConfig = rootDir.config();
   await createSecret(input.name, input.message, {
-    project: `${blossmConfig.vendors.cloud.gcp.project}${envNameSpecifier(
-      environment
-    )}`,
+    project: envProject({ config: blossmConfig, env }),
     ring: "secret-bucket",
     location: "global",
-    bucket: `${blossmConfig.vendors.cloud.gcp.secretsBucket}${envNameSpecifier(
-      environment
-    )}-secrets`
+    bucket: envSecretsBucket({ config: blossmConfig, env })
   });
 };
 
@@ -37,15 +53,15 @@ module.exports = async args => {
     flags: [
       {
         name: "message",
-        short: "-m",
+        short: "m",
         type: String
       },
       {
-        name: "environment",
-        short: "-e",
+        name: "env",
+        short: "e",
         type: String,
-        choices: ["production", "sandbox", "staging"],
-        default: "staging"
+        choices: ["production", "sandbox", "staging", "development"],
+        default: "development"
       }
     ]
   });
@@ -57,14 +73,14 @@ module.exports = async args => {
     });
     input.message = message;
   }
-  if (!input.environment) {
-    const { environment } = await prompt({
+  if (!input.env) {
+    const { env } = await prompt({
       type: "list",
-      choices: ["production", "sandbox", "staging"],
-      name: "environment",
-      message: roboSay(`What's environment is this for?`)
+      choices: ["production", "sandbox", "staging", "development"],
+      name: "env",
+      message: roboSay(`What environment is this for?`)
     });
-    input.environment = environment;
+    input.env = env;
   }
 
   create(input);

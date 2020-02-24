@@ -9,7 +9,22 @@ const path = require("path");
 const { green } = require("chalk");
 const os = require("os");
 
-const build = async workingDir => {
+const envProject = ({ env, config }) => {
+  switch (env) {
+    case "production":
+      return config.vendors.cloud.gcp.projects.production;
+    case "sandbox":
+      return config.vendors.cloud.gcp.projects.sandbox;
+    case "staging":
+      return config.vendors.cloud.gcp.projects.staging;
+    case "development":
+      return config.vendors.cloud.gcp.projects.development;
+    default:
+      return "";
+  }
+};
+
+const build = async ({ workingDir, env }) => {
   const blossmConfig = rootDir.config();
 
   spawnSync(
@@ -19,7 +34,7 @@ const build = async workingDir => {
       "submit",
       ".",
       "--config=build.yaml",
-      `--project=${blossmConfig.vendors.cloud.gcp.project}`
+      `--project=${envProject({ config: blossmConfig, env })}`
     ],
     {
       stdio: [process.stdin, process.stdout, process.stderr],
@@ -44,7 +59,8 @@ module.exports = ({ domain, dir, configFn }) => async args => {
         name: "env",
         type: String,
         short: "e",
-        default: "staging"
+        choices: ["production", "sandbox", "staging", "development"],
+        default: "development"
       },
       {
         name: "allow-fail",
@@ -66,24 +82,32 @@ module.exports = ({ domain, dir, configFn }) => async args => {
     configFn
   });
 
-  if (input.testOnly) {
-    //eslint-disable-next-line no-console
-    console.log(roboSay("Running your tests..."));
-    await testCliTemplate({ workingDir, input });
-  } else {
-    //eslint-disable-next-line no-console
-    console.log(
-      roboSay(
-        `Deploying your ${domain
-          .split("-")
-          .join(" ")}... It might take 5 minutes or so, maybe 4 on a good day.`
-      )
-    );
-    await build(workingDir);
+  try {
+    if (input.testOnly) {
+      //eslint-disable-next-line no-console
+      console.log(roboSay("Running your tests..."));
+      await testCliTemplate({ workingDir, input });
+      fs.removeSync(workingDir);
+      //eslint-disable-next-line no-console
+      console.log(roboSay("Woohoo!"), green.bold("done"));
+    } else {
+      //eslint-disable-next-line no-console
+      console.log(
+        roboSay(
+          `Deploying your ${domain
+            .split("-")
+            .join(
+              " "
+            )}... It might take 5 minutes or so, maybe 4 on a good day.`
+        )
+      );
+
+      await build({ workingDir, env: input.env });
+      fs.removeSync(workingDir);
+      //eslint-disable-next-line no-console
+      console.log(roboSay("Woohoo!"), green.bold("done"));
+    }
+  } catch (e) {
+    fs.removeSync(workingDir);
   }
-
-  fs.removeSync(workingDir);
-
-  //eslint-disable-next-line no-console
-  console.log(roboSay("Woohoo!"), green.bold("done"));
 };

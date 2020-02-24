@@ -27,7 +27,6 @@ module.exports = ({
   project,
   network,
   envUriSpecifier,
-  envNameSpecifier,
   containerRegistery,
   mainContainerName,
   memory,
@@ -79,74 +78,72 @@ module.exports = ({
     dockerComposeProcesses,
     ...(runBaseIntegrationTests ? [baseIntegrationTests({ strict })] : []),
     ...(runIntegrationTests ? [integrationTests({ strict })] : []),
-    dockerComposeLogs,
-    dockerPush({
-      extension: imageExtension,
-      containerRegistery,
-      service,
-      context
-    }),
-    deploy({
-      serviceName,
-      context,
-      service,
-      extension: imageExtension,
-      secretBucket,
-      secretBucketKeyLocation,
-      secretBucketKeyRing,
-      containerRegistery,
-      nodeEnv: env,
-      domain,
-      operationHash,
-      memory,
-      region,
-      project,
-      network,
-      envNameSpecifier,
-      envUriSpecifier,
-      env: `NAME=${name},EVENT_ACTION=${event.action},EVENT_DOMAIN=${event.domain},EVENT_SERVICE=${event.service}`,
-      labels: `name=${name},event-action=${event.action},event-domain=${event.domain},event-service=${event.service}`
-    }),
-    startDnsTransaction({ dnsZone, project }),
-    addDnsTransaction({ uri, dnsZone, project }),
-    executeDnsTransaction({ dnsZone, project }),
-    abortDnsTransaction({ dnsZone, project }),
-    mapDomain({
-      serviceName,
-      uri,
-      project,
-      envNameSpecifier,
-      region
-    }),
-    addPubSubPolicy({
-      region,
-      serviceName,
-      project,
-      envNameSpecifier
-    }),
-    createPubsubTopic({
-      action: event.action,
-      domain: event.domain,
-      service: event.service,
-      envUriSpecifier,
-      network,
-      project,
-      envNameSpecifier
-    }),
-    createPubsubSubscription({
-      name,
-      domain,
-      service,
-      operationHash,
-      eventAction: event.action,
-      eventDomain: event.domain,
-      eventService: event.service,
-      context,
-      region,
-      envUriSpecifier,
-      network,
-      project,
-      envNameSpecifier
-    })
+    ...(strict
+      ? [
+          dockerPush({
+            extension: imageExtension,
+            containerRegistery,
+            service,
+            context
+          }),
+          deploy({
+            serviceName,
+            context,
+            service,
+            extension: imageExtension,
+            secretBucket,
+            secretBucketKeyLocation,
+            secretBucketKeyRing,
+            containerRegistery,
+            nodeEnv: env,
+            domain,
+            operationHash,
+            memory,
+            region,
+            project,
+            network,
+            envUriSpecifier,
+            env: `NAME=${name},EVENT_ACTION=${event.action},EVENT_DOMAIN=${event.domain},EVENT_SERVICE=${event.service}`,
+            labels: `name=${name},event-action=${event.action},event-domain=${event.domain},event-service=${event.service}`
+          }),
+          startDnsTransaction({ dnsZone, project }),
+          addDnsTransaction({ uri, dnsZone, project }),
+          executeDnsTransaction({ dnsZone, project }),
+          abortDnsTransaction({ dnsZone, project }),
+          mapDomain({
+            serviceName,
+            uri,
+            project,
+            region
+          }),
+          addPubSubPolicy({
+            region,
+            serviceName,
+            project
+          }),
+          createPubsubTopic({
+            action: event.action,
+            domain: event.domain,
+            service: event.service,
+            envUriSpecifier,
+            network,
+            project
+          }),
+          createPubsubSubscription({
+            name,
+            domain,
+            service,
+            operationHash,
+            eventAction: event.action,
+            eventDomain: event.domain,
+            eventService: event.service,
+            context,
+            region,
+            envUriSpecifier,
+            network,
+            project
+          })
+        ]
+      : [dockerComposeLogs])
   ];
 };

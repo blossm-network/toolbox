@@ -1,6 +1,5 @@
 domain: group
 service: core
-memory: 256Mi
 
 schema:
   identities: [String]
@@ -10,7 +9,7 @@ actions:
 
 testing:
   examples:
-    first: 
+    first:
       action: add-identities
       payload:
         identities: [some-identity-root]

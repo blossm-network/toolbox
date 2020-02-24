@@ -1,6 +1,6 @@
 const { oneLine } = require("common-tags");
 
-module.exports = ({ action, domain, service, project, envNameSpecifier }) => {
+module.exports = ({ action, domain, service, project }) => {
   return {
     name: "gcr.io/cloud-builders/gcloud",
     entrypoint: "bash",
@@ -8,7 +8,7 @@ module.exports = ({ action, domain, service, project, envNameSpecifier }) => {
       "-c",
       oneLine`
     gcloud pubsub topics create did-${action}.${domain}.${service}
-    --project=${project}${envNameSpecifier} || exit 0
+    --project=${project} || exit 0
     `
     ]
   };

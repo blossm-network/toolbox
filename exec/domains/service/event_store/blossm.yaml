@@ -1,6 +1,5 @@
 domain: service
 service: core
-memory: 256Mi
 
 schema:
   name: String
@@ -15,7 +14,7 @@ actions:
 testing:
   examples:
     first:
-      action: register 
+      action: register
       payload:
         name: some-name
         avatar:

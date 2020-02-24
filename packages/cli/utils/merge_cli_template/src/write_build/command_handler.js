@@ -24,7 +24,6 @@ module.exports = ({
   network,
   mainContainerName,
   envUriSpecifier,
-  envNameSpecifier,
   containerRegistery,
   uri,
   dnsZone,
@@ -70,44 +69,45 @@ module.exports = ({
     dockerComposeProcesses,
     ...(runBaseIntegrationTests ? [baseIntegrationTests({ strict })] : []),
     ...(runIntegrationTests ? [integrationTests({ strict })] : []),
-    dockerComposeLogs,
-    dockerPush({
-      extension: imageExtension,
-      containerRegistery,
-      service,
-      context
-    }),
-    deploy({
-      serviceName,
-      context,
-      service,
-      extension: imageExtension,
-      secretBucket,
-      secretBucketKeyLocation,
-      secretBucketKeyRing,
-      containerRegistery,
-      domain,
-      operationHash,
-      region,
-      memory,
-      project,
-      network,
-      envNameSpecifier,
-      envUriSpecifier,
-      nodeEnv: env,
-      env: `NAME=${name}`,
-      labels: `name=${name}`
-    }),
-    startDnsTransaction({ dnsZone, project }),
-    addDnsTransaction({ uri, dnsZone, project }),
-    executeDnsTransaction({ dnsZone, project }),
-    abortDnsTransaction({ dnsZone, project }),
-    mapDomain({
-      uri,
-      project,
-      envNameSpecifier,
-      region,
-      serviceName
-    })
+    ...(strict
+      ? [
+          dockerPush({
+            extension: imageExtension,
+            containerRegistery,
+            service,
+            context
+          }),
+          deploy({
+            serviceName,
+            context,
+            service,
+            extension: imageExtension,
+            secretBucket,
+            secretBucketKeyLocation,
+            secretBucketKeyRing,
+            containerRegistery,
+            domain,
+            operationHash,
+            region,
+            memory,
+            project,
+            network,
+            envUriSpecifier,
+            nodeEnv: env,
+            env: `NAME=${name}`,
+            labels: `name=${name}`
+          }),
+          startDnsTransaction({ dnsZone, project }),
+          addDnsTransaction({ uri, dnsZone, project }),
+          executeDnsTransaction({ dnsZone, project }),
+          abortDnsTransaction({ dnsZone, project }),
+          mapDomain({
+            uri,
+            project,
+            region,
+            serviceName
+          })
+        ]
+      : [dockerComposeLogs])
   ];
 };

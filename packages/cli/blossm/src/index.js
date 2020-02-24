@@ -5,9 +5,7 @@ const yaml = require("yaml");
 const path = require("path");
 const { red } = require("chalk");
 
-const config = require("./config");
 const init = require("./init");
-const set = require("./set");
 const secret = require("./secret");
 const commandHandler = require("./command_handler");
 const eventHandler = require("./event_handler");
@@ -78,12 +76,8 @@ const forward = input => {
   switch (input.domain) {
     case "init":
       return init(input.args);
-    case "config":
-      return config(input.args);
     case "secret":
       return secret(input.args);
-    case "set":
-      return set(input.args);
     case "command-handler":
       return commandHandler(input.args);
     case "event-handler":

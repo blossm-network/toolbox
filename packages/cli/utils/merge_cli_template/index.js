@@ -18,20 +18,111 @@ const envUriSpecifier = env => {
   switch (env) {
     case "sandbox":
     case "staging":
+    case "development":
       return `${env}.`;
     default:
       return "";
   }
 };
 
-const envNameSpecifier = env => {
+const envProject = ({ env, config }) => {
   switch (env) {
+    case "production":
+      return config.vendors.cloud.gcp.projects.production;
     case "sandbox":
+      return config.vendors.cloud.gcp.projects.sandbox;
     case "staging":
-      return `-${env}`;
+      return config.vendors.cloud.gcp.projects.staging;
+    case "development":
+      return config.vendors.cloud.gcp.projects.development;
     default:
       return "";
   }
+};
+
+const envSecretsBucket = ({ env, config }) => {
+  switch (env) {
+    case "production":
+      return config.vendors.cloud.gcp.secretsBuckets.production;
+    case "sandbox":
+      return config.vendors.cloud.gcp.secretsBuckets.sandbox;
+    case "staging":
+      return config.vendors.cloud.gcp.secretsBuckets.staging;
+    case "development":
+      return config.vendors.cloud.gcp.secretsBuckets.development;
+    default:
+      return "";
+  }
+};
+
+const envMongodbUser = ({ env, config, context }) => {
+  switch (context) {
+    case "view-store":
+      switch (env) {
+        case "production":
+          return config.vendors.viewStore.mongodb.users.production;
+        case "sandbox":
+          return config.vendors.viewStore.mongodb.users.sandbox;
+        case "staging":
+          return config.vendors.viewStore.mongodb.users.staging;
+        case "development":
+          return config.vendors.viewStore.mongodb.users.development;
+        default:
+          return "";
+      }
+    case "event-store":
+      switch (env) {
+        case "production":
+          return config.vendors.eventStore.mongodb.users.production;
+        case "sandbox":
+          return config.vendors.eventStore.mongodb.users.sandbox;
+        case "staging":
+          return config.vendors.eventStore.mongodb.users.staging;
+        case "development":
+          return config.vendors.eventStore.mongodb.users.development;
+        default:
+          return "";
+      }
+  }
+};
+
+const envMongodbHost = ({ env, config, context }) => {
+  switch (context) {
+    case "view-store":
+      switch (env) {
+        case "production":
+          return config.vendors.viewStore.mongodb.hosts.production;
+        case "sandbox":
+          return config.vendors.viewStore.mongodb.hosts.sandbox;
+        case "staging":
+          return config.vendors.viewStore.mongodb.hosts.staging;
+        case "development":
+          return config.vendors.viewStore.mongodb.hosts.development;
+        default:
+          return "";
+      }
+    case "event-store":
+      switch (env) {
+        case "production":
+          return config.vendors.eventStore.mongodb.hosts.production;
+        case "sandbox":
+          return config.vendors.eventStore.mongodb.hosts.sandbox;
+        case "staging":
+          return config.vendors.eventStore.mongodb.hosts.staging;
+        case "development":
+          return config.vendors.eventStore.mongodb.hosts.development;
+        default:
+          return "";
+      }
+  }
+};
+
+const configMemory = ({ config, blossmConfig }) => {
+  if (config.memory) return config.memory;
+  return (
+    blossmConfig.vendors.cloud.gcp.defaults.memoryOverrides[config.context] ||
+    blossmConfig.vendors.cloud.gcp.defaults.memory
+  );
 };
 
 const copyScript = async (scriptDir, workingDir) => {
@@ -257,16 +348,14 @@ const configure = async (workingDir, configFn, env, strict) => {
     writeConfig(config, workingDir);
 
     const blossmConfig = rootDir.config();
+    const project = envProject({ env, config: blossmConfig });
 
     const region =
-      config["gcp-region"] || blossmConfig.vendors.cloud.gcp.region;
-    const project =
-      config["gcp-project"] || blossmConfig.vendors.cloud.gcp.project;
+      config["gcp-region"] || blossmConfig.vendors.cloud.gcp.defaults.region;
     const network = config.network || blossmConfig.network;
     const dnsZone =
       config["gcp-dns-zone"] || blossmConfig.vendors.cloud.gcp.dnsZone;
 
-    const memory = config.memory || blossmConfig.vendors.cloud.gcp.memory;
     const domain = config.domain;
     const service = config.service;
     const context = config.context;
@@ -274,14 +363,11 @@ const configure = async (workingDir, configFn, env, strict) => {
     const event = config.event;
     const actions = config.actions;
 
-    const secretBucket = env =>
-      `${blossmConfig.vendors.cloud.gcp.secretsBucket}${envNameSpecifier(
-        env
-      )}-secrets`;
+    const secretBucket = envSecretsBucket({ env, config: blossmConfig });
     const secretBucketKeyLocation = "global";
     const secretBucketKeyRing = "secret-bucket";
 
-    const containerRegistery = `us.gcr.io/${project}${envNameSpecifier(env)}`;
+    const containerRegistery = `us.gcr.io/${project}`;
 
     const mainContainerName = "main";
 
@@ -296,14 +382,15 @@ const configure = async (workingDir, configFn, env, strict) => {
       project,
       context,
       network,
-      memory,
+      memory: configMemory({ config, blossmConfig }),
+      mongodbUser: envMongodbUser({ env, config: blossmConfig, context }),
+      mongodbHost: envMongodbHost({ env, config: blossmConfig, context }),
       mainContainerName,
       containerRegistery,
       envUriSpecifier: envUriSpecifier(env),
-      envNameSpecifier: envNameSpecifier(env),
       dnsZone,
       service,
-      secretBucket: secretBucket(env),
+      secretBucket,
       secretBucketKeyLocation,
       secretBucketKeyRing,
       actions,
@@ -325,7 +412,7 @@ const configure = async (workingDir, configFn, env, strict) => {
       domain,
       name,
       event,
-      secretBucket: secretBucket("staging"),
+      secretBucket,
       secretBucketKeyLocation,
       secretBucketKeyRing
     });

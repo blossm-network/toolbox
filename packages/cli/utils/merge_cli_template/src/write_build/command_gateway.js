@@ -21,7 +21,6 @@ module.exports = ({
   region,
   project,
   network,
-  envNameSpecifier,
   envUriSpecifier,
   containerRegistery,
   mainContainerName,
@@ -67,42 +66,43 @@ module.exports = ({
     dockerComposeProcesses,
     ...(runBaseIntegrationTests ? [baseIntegrationTests({ strict })] : []),
     ...(runIntegrationTests ? [integrationTests({ strict })] : []),
-    dockerComposeLogs,
-    dockerPush({
-      extension: imageExtension,
-      containerRegistery,
-      service,
-      context
-    }),
-    deploy({
-      extension: imageExtension,
-      serviceName,
-      allowUnauthenticated: true,
-      context,
-      service,
-      secretBucket,
-      secretBucketKeyLocation,
-      secretBucketKeyRing,
-      containerRegistery,
-      nodeEnv: env,
-      memory,
-      domain,
-      region,
-      project,
-      network,
-      envNameSpecifier,
-      envUriSpecifier
-    }),
-    startDnsTransaction({ dnsZone, project }),
-    addDnsTransaction({ uri: authUri, dnsZone, project }),
-    executeDnsTransaction({ dnsZone, project }),
-    abortDnsTransaction({ dnsZone, project }),
-    mapDomain({
-      uri: authUri,
-      project,
-      envNameSpecifier,
-      region,
-      serviceName
-    })
+    ...(strict
+      ? [
+          dockerPush({
+            extension: imageExtension,
+            containerRegistery,
+            service,
+            context
+          }),
+          deploy({
+            extension: imageExtension,
+            serviceName,
+            allowUnauthenticated: true,
+            context,
+            service,
+            secretBucket,
+            secretBucketKeyLocation,
+            secretBucketKeyRing,
+            containerRegistery,
+            nodeEnv: env,
+            memory,
+            domain,
+            region,
+            project,
+            network,
+            envUriSpecifier
+          }),
+          startDnsTransaction({ dnsZone, project }),
+          addDnsTransaction({ uri: authUri, dnsZone, project }),
+          executeDnsTransaction({ dnsZone, project }),
+          abortDnsTransaction({ dnsZone, project }),
+          mapDomain({
+            uri: authUri,
+            project,
+            region,
+            serviceName
+          })
+        ]
+      : [dockerComposeLogs])
   ];
 };

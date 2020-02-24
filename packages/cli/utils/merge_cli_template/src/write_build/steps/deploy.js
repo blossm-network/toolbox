@@ -8,7 +8,6 @@ module.exports = ({
   memory,
   operationHash,
   containerRegistery,
-  envNameSpecifier,
   envUriSpecifier,
   serviceName,
   secretBucket,
@@ -31,9 +30,9 @@ module.exports = ({
       "--platform=managed",
       `--memory=${memory}`,
       ...(allowUnauthenticated ? ["--allow-unauthenticated"] : []),
-      `--project=${project}${envNameSpecifier}`,
+      `--project=${project}`,
       `--region=${region}`,
-      `--set-env-vars=NODE_ENV=${nodeEnv},NETWORK=${region}.${envUriSpecifier}${network},SERVICE=${service},CONTEXT=${context},DOMAIN=${domain},GCP_PROJECT=${project}${envNameSpecifier},GCP_REGION=${region},GCP_SECRET_BUCKET=${secretBucket},GCP_KMS_SECRET_BUCKET_KEY_LOCATION=${secretBucketKeyLocation},GCP_KMS_SECRET_BUCKET_KEY_RING=${secretBucketKeyRing},${env}`,
+      `--set-env-vars=NODE_ENV=${nodeEnv},NETWORK=${region}.${envUriSpecifier}${network},SERVICE=${service},CONTEXT=${context},DOMAIN=${domain},GCP_PROJECT=${project},GCP_REGION=${region},GCP_SECRET_BUCKET=${secretBucket},GCP_KMS_SECRET_BUCKET_KEY_LOCATION=${secretBucketKeyLocation},GCP_KMS_SECRET_BUCKET_KEY_RING=${secretBucketKeyRing},${env}`,
       `--labels=service=${service},context=${context},domain=${domain},hash=${operationHash},${labels}`
     ]
   };

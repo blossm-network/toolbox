@@ -22,7 +22,6 @@ module.exports = ({
   region,
   project,
   network,
-  envNameSpecifier,
   envUriSpecifier,
   dnsZone,
   service,
@@ -73,52 +72,52 @@ module.exports = ({
     dockerComposeProcesses,
     ...(runBaseIntegrationTests ? [baseIntegrationTests({ strict })] : []),
     ...(runIntegrationTests ? [integrationTests({ strict })] : []),
-    dockerComposeLogs,
-    dockerPush({
-      extension: imageExtension,
-      containerRegistery,
-      service,
-      context
-    }),
-    deploy({
-      serviceName,
-      context,
-      service,
-      extension: imageExtension,
-      secretBucket,
-      secretBucketKeyLocation,
-      secretBucketKeyRing,
-      containerRegistery,
-      domain,
-      operationHash,
-      region,
-      memory,
-      project,
-      envNameSpecifier,
-      envUriSpecifier,
-      network,
-      nodeEnv: env,
-      env: `MONGODB_DATABASE=event-store,MONGODB_USER=${mongodbUser}${envNameSpecifier},MONGODB_HOST=${env}-${mongodbHost},MONGODB_PROTOCOL=${mongodbProtocol}`
-    }),
-    startDnsTransaction({ dnsZone, project }),
-    addDnsTransaction({ uri, dnsZone, project }),
-    executeDnsTransaction({ dnsZone, project }),
-    abortDnsTransaction({ dnsZone, project }),
-    mapDomain({
-      serviceName,
-      uri,
-      project,
-      envNameSpecifier,
-      region
-    }),
-    ...actions.map(action =>
-      createPubsubTopic({
-        action,
-        domain,
-        service,
-        project,
-        envNameSpecifier
-      })
-    )
+    ...(strict
+      ? [
+          dockerPush({
+            extension: imageExtension,
+            containerRegistery,
+            service,
+            context
+          }),
+          deploy({
+            serviceName,
+            context,
+            service,
+            extension: imageExtension,
+            secretBucket,
+            secretBucketKeyLocation,
+            secretBucketKeyRing,
+            containerRegistery,
+            domain,
+            operationHash,
+            region,
+            memory,
+            project,
+            envUriSpecifier,
+            network,
+            nodeEnv: env,
+            env: `MONGODB_DATABASE=event-store,MONGODB_USER=${mongodbUser},MONGODB_HOST=${mongodbHost},MONGODB_PROTOCOL=${mongodbProtocol}`
+          }),
+          startDnsTransaction({ dnsZone, project }),
+          addDnsTransaction({ uri, dnsZone, project }),
+          executeDnsTransaction({ dnsZone, project }),
+          abortDnsTransaction({ dnsZone, project }),
+          mapDomain({
+            serviceName,
+            uri,
+            project,
+            region
+          }),
+          ...actions.map(action =>
+            createPubsubTopic({
+              action,
+              domain,
+              service,
+              project
+            })
+          )
+        ]
+      : [dockerComposeLogs])
   ];
 };

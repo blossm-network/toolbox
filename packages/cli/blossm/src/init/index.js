@@ -26,42 +26,16 @@ const create = async input => {
   fs.removeSync(blossmDir);
   fs.mkdirSync(blossmDir);
 
-  const blossmHiddenDir = path.resolve(blossmDir, ".blossm");
+  const templateConfigPath = path.resolve(__dirname, "config.yaml");
+  const destinationConfigPath = path.resolve(blossmDir, "config.yaml");
 
-  fs.mkdirSync(blossmHiddenDir);
-
-  const config = {
-    network: input.network,
-    vendors: {
-      cloud: {
-        [input.cloud]: {}
-      },
-      viewStore: {
-        type: input.viewStoreProvider
-      },
-      eventStore: {
-        type: input.eventStoreProvider
-      }
-    }
-  };
-
-  const configPath = path.resolve(blossmHiddenDir, "config.json");
-  fs.writeFileSync(configPath, JSON.stringify(config));
+  fs.copyFileSync(templateConfigPath, destinationConfigPath);
 };
 
 module.exports = async args => {
   const input = await normalize({
     entrypointType: "network",
-    args,
-    flags: [
-      {
-        name: "cloud",
-        short: "c",
-        choices: ["gcp"],
-        type: String,
-        required: true
-      }
-    ]
+    args
   });
 
   create(input);

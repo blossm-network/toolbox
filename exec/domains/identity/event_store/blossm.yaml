@@ -1,17 +1,16 @@
 domain: identity
 service: core
-memory: 256Mi
 
 schema:
   phone: String
   email: String
-  id: 
+  id:
     type: String
     unique: true
   principle: String
 
 indexes:
-  - id 
+  - id
   - principle
 
 actions:

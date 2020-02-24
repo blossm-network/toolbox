@@ -1,6 +1,5 @@
 domain: principle
 service: core
-memory: 256Mi
 
 schema:
   permissions: [String]

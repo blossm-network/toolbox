@@ -24,7 +24,6 @@ module.exports = ({
   network,
   memory,
   envUriSpecifier,
-  envNameSpecifier,
   containerRegistery,
   mainContainerName,
   dnsZone,
@@ -73,44 +72,45 @@ module.exports = ({
     dockerComposeProcesses,
     ...(runBaseIntegrationTests ? [baseIntegrationTests({ strict })] : []),
     ...(runIntegrationTests ? [integrationTests({ strict })] : []),
-    dockerComposeLogs,
-    dockerPush({
-      extension: imageExtension,
-      containerRegistery,
-      service,
-      context
-    }),
-    deploy({
-      serviceName,
-      extension: imageExtension,
-      region,
-      project,
-      domain,
-      operationHash,
-      context,
-      service,
-      network,
-      memory,
-      containerRegistery,
-      envNameSpecifier,
-      envUriSpecifier,
-      secretBucket,
-      secretBucketKeyLocation,
-      secretBucketKeyRing,
-      nodeEnv: env,
-      env: `NAME=${name},MONGODB_DATABASE=view-store,MONGODB_USER=${mongodbUser}${envNameSpecifier},MONGODB_HOST=${env}-${mongodbHost},MONGODB_PROTOCOL=${mongodbProtocol}`,
-      labels: `name=${name}`
-    }),
-    startDnsTransaction({ dnsZone, project }),
-    addDnsTransaction({ uri, dnsZone, project }),
-    executeDnsTransaction({ dnsZone, project }),
-    abortDnsTransaction({ dnsZone, project }),
-    mapDomain({
-      serviceName,
-      uri,
-      project,
-      envNameSpecifier,
-      region
-    })
+    ...(strict
+      ? [
+          dockerPush({
+            extension: imageExtension,
+            containerRegistery,
+            service,
+            context
+          }),
+          deploy({
+            serviceName,
+            extension: imageExtension,
+            region,
+            project,
+            domain,
+            operationHash,
+            context,
+            service,
+            network,
+            memory,
+            containerRegistery,
+            envUriSpecifier,
+            secretBucket,
+            secretBucketKeyLocation,
+            secretBucketKeyRing,
+            nodeEnv: env,
+            env: `NAME=${name},MONGODB_DATABASE=view-store,MONGODB_USER=${mongodbUser},MONGODB_HOST=${mongodbHost},MONGODB_PROTOCOL=${mongodbProtocol}`,
+            labels: `name=${name}`
+          }),
+          startDnsTransaction({ dnsZone, project }),
+          addDnsTransaction({ uri, dnsZone, project }),
+          executeDnsTransaction({ dnsZone, project }),
+          abortDnsTransaction({ dnsZone, project }),
+          mapDomain({
+            serviceName,
+            uri,
+            project,
+            region
+          })
+        ]
+      : [dockerComposeLogs])
   ];
 };
