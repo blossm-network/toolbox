@@ -23,7 +23,7 @@ describe("Secrets", () => {
   });
   it("should return the correct secret for get", async () => {
     const downloadFake = fake();
-    const readFileFake = fake.returns(encrypted);
+    const readFileFake = fake.returns({ trim: () => encrypted });
     const decryptFake = fake.returns(secret);
     const unlinkFake = fake();
     replace(deps, "download", downloadFake);
@@ -49,7 +49,7 @@ describe("Secrets", () => {
   });
   it("should return the correct secret with passed in options in get", async () => {
     const downloadFake = fake();
-    const readFileFake = fake.returns(encrypted);
+    const readFileFake = fake.returns({ trim: () => encrypted });
     const decryptFake = fake.returns(secret);
     const unlinkFake = fake();
     replace(deps, "download", downloadFake);
