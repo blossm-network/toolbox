@@ -20,11 +20,14 @@ exports.get = async (
     project,
     file,
     encrypted,
+    alt: await deps.readFile(file, "base64"),
+    string: encrypted.toString(),
+    trimmedS: encrypted.toString().trim && encrypted.toString().trim(),
     trimmed: encrypted && encrypted.trim && encrypted.trim()
   });
   const [secret] = await Promise.all([
     deps.decrypt({
-      message: encrypted.trim(),
+      message: encrypted.toString().trim(),
       ring,
       key,
       location,
