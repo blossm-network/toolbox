@@ -11,7 +11,7 @@ let clock;
 
 const now = new Date();
 
-const action = "some-action!";
+const name = "some-nmae!";
 const domain = "some-domain!";
 const service = "some-service";
 const network = "some-network";
@@ -55,12 +55,12 @@ describe("Issue command", () => {
     const uuidFake = fake.returns(id);
     replace(deps, "uuid", uuidFake);
 
-    const result = await command({ action, domain, service, network })
+    const result = await command({ name, domain, service, network })
       .set({ context, session, tokenFn })
       .issue(payload, { trace, source, issued, root, options });
 
     expect(result).to.equal(response);
-    expect(rpcFake).to.have.been.calledWith(action, domain, "command-handler");
+    expect(rpcFake).to.have.been.calledWith(name, domain, "command-handler");
     expect(postFake).to.have.been.calledWith({
       payload,
       headers: {
@@ -97,10 +97,10 @@ describe("Issue command", () => {
     const uuidFake = fake.returns(id);
     replace(deps, "uuid", uuidFake);
 
-    const result = await command({ action, domain }).issue(payload);
+    const result = await command({ name, domain }).issue(payload);
 
     expect(result).to.equal(response);
-    expect(rpcFake).to.have.been.calledWith(action, domain);
+    expect(rpcFake).to.have.been.calledWith(name, domain);
     expect(postFake).to.have.been.calledWith({
       payload,
       headers: {
