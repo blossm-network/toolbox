@@ -55,7 +55,7 @@ describe("View gateway get", () => {
   });
   it("should throw correctly", async () => {
     const errorMessage = "error-message";
-    const readFake = fake.throws(new Error(errorMessage));
+    const readFake = fake.rejects(new Error(errorMessage));
     const setFake = fake.returns({
       read: readFake
     });

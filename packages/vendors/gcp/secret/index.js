@@ -1,5 +1,18 @@
 const deps = require("./deps");
 
+const createKeyIfNeeded = async ({ key, project, ring, location }) => {
+  try {
+    await deps.createKey({
+      id: key,
+      project,
+      ring,
+      location
+    });
+  } catch (e) {
+    return;
+  }
+};
+
 exports.get = async (
   key,
   {
@@ -12,19 +25,6 @@ exports.get = async (
   const file = `${key}.txt.encrypted`;
   await deps.download({ bucket, file });
   const encrypted = await deps.readFile(file);
-  //eslint-disable-next-line no-console
-  console.log({
-    bucket,
-    location,
-    ring,
-    project,
-    file,
-    encrypted,
-    alt: await deps.readFile(file, "base64"),
-    string: encrypted.toString(),
-    trimmedS: encrypted.toString().trim && encrypted.toString().trim(),
-    trimmed: encrypted && encrypted.trim && encrypted.trim()
-  });
   const [secret] = await Promise.all([
     deps.decrypt({
       message: encrypted.toString().trim(),
@@ -49,8 +49,8 @@ exports.create = async (
     bucket = process.env.GCP_SECRET_BUCKET
   } = {}
 ) => {
-  await deps.createKey({
-    id: key,
+  await createKeyIfNeeded({
+    key,
     project,
     ring,
     location

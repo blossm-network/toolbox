@@ -136,6 +136,43 @@ describe("Secrets", () => {
     expect(unlinkFake).to.have.been.calledWith(`${key}.txt.encrypted`);
     expect(result).to.be.undefined;
   });
+  it("should create the correct secret if creating a key throws", async () => {
+    const createKeyFake = fake.rejects("some-error");
+    const uploadFake = fake();
+    const writeFileFake = fake();
+    const encryptFake = fake.returns(cipher);
+    const unlinkFake = fake();
+    replace(deps, "createKey", createKeyFake);
+    replace(deps, "upload", uploadFake);
+    replace(deps, "writeFile", writeFileFake);
+    replace(deps, "encrypt", encryptFake);
+    replace(deps, "unlink", unlinkFake);
+
+    const result = await create(key, secret);
+    expect(createKeyFake).to.have.been.calledWith({
+      id: key,
+      project,
+      ring,
+      location
+    });
+    expect(encryptFake).to.have.been.calledWith({
+      message: secret,
+      key,
+      ring,
+      location,
+      project
+    });
+    expect(writeFileFake).to.have.been.calledWith(
+      `${key}.txt.encrypted`,
+      cipher
+    );
+    expect(uploadFake).to.have.been.calledWith({
+      file: `${key}.txt.encrypted`,
+      bucket
+    });
+    expect(unlinkFake).to.have.been.calledWith(`${key}.txt.encrypted`);
+    expect(result).to.be.undefined;
+  });
   it("should create the correct secret with passed in params", async () => {
     const createKeyFake = fake();
     const uploadFake = fake();
@@ -180,8 +217,8 @@ describe("Secrets", () => {
   });
   it("should throw correctly with create", async () => {
     const error = new Error("some-error");
-    const createKeyFake = fake.rejects(error);
-    replace(deps, "createKey", createKeyFake);
+    const encryptFake = fake.rejects(error);
+    replace(deps, "encrypt", encryptFake);
     try {
       await create(key, secret);
 

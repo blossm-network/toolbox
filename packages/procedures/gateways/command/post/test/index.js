@@ -186,7 +186,7 @@ describe("Command gateway post", () => {
   });
   it("should throw correctly", async () => {
     const errorMessage = "error-message";
-    const validateFake = fake.throws(new Error(errorMessage));
+    const validateFake = fake.rejects(new Error(errorMessage));
     replace(deps, "validate", validateFake);
 
     const req = {

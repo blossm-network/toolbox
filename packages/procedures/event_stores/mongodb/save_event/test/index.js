@@ -49,7 +49,7 @@ describe("Mongodb event store create event", () => {
         this.keyPattern = { id: 1 };
       }
     }
-    const createFake = fake.throws(new DuplicateError());
+    const createFake = fake.rejects(new DuplicateError());
 
     const db = {
       create: createFake

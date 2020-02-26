@@ -75,7 +75,7 @@ describe("View store stream", () => {
   });
   it("should throw correctly", async () => {
     const errorMessage = "some-error";
-    const streamFake = fake.throws(new Error(errorMessage));
+    const streamFake = fake.rejects(new Error(errorMessage));
     const writeFake = fake.returns(writeResult);
     const endFake = fake();
     const res = {
