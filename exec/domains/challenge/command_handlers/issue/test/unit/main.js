@@ -124,7 +124,7 @@ describe("Command handler unit tests", () => {
       domain: "identity"
     });
     expect(signFake).to.have.been.calledWith({
-      ring: service,
+      ring: "jwt",
       key: "challenge",
       location: "global",
       version: "1",
@@ -220,7 +220,7 @@ describe("Command handler unit tests", () => {
       response: { tokens: { challenge: token } }
     });
     expect(signFake).to.have.been.calledWith({
-      ring: service,
+      ring: "jwt",
       key: "challenge",
       location: "global",
       version: "1",

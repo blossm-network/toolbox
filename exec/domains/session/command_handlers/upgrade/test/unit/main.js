@@ -13,7 +13,6 @@ const principle = "some-principle";
 const payload = {
   principle
 };
-const service = "some-service";
 const token = "some-token";
 const project = "some-projectl";
 const root = "some-root";
@@ -30,7 +29,6 @@ const session = {
   exp
 };
 
-process.env.SERVICE = service;
 process.env.GCP_PROJECT = project;
 
 describe("Command handler unit tests", () => {
@@ -76,8 +74,8 @@ describe("Command handler unit tests", () => {
     });
     expect(aggregateFake).to.have.been.calledWith(root);
     expect(signFake).to.have.been.calledWith({
-      ring: service,
-      key: "auth",
+      ring: "jwt",
+      key: "session",
       location: "global",
       version: "1",
       project

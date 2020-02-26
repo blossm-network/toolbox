@@ -60,8 +60,8 @@ describe("Command handler unit tests", () => {
       response: { tokens: { session: token } }
     });
     expect(signFake).to.have.been.calledWith({
-      ring: service,
-      key: "auth",
+      ring: "jwt",
+      key: "session",
       location: "global",
       version: "1",
       project

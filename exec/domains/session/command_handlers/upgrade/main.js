@@ -22,8 +22,8 @@ module.exports = async ({ root, payload, context, session, aggregateFn }) => {
     },
     payload: { context },
     signFn: deps.sign({
-      ring: process.env.SERVICE,
-      key: "auth",
+      ring: "jwt",
+      key: "session",
       location: "global",
       version: "1",
       project: process.env.GCP_PROJECT

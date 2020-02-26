@@ -76,7 +76,7 @@ describe("View gateway", () => {
     expect(authenticationFake).to.have.been.calledWith({
       verifyFn: verifyFnResult
     });
-    expect(verifyFnFake).to.have.been.calledWith({ key: "auth" });
+    expect(verifyFnFake).to.have.been.calledWith({ key: "session" });
     expect(authorizationFake).to.have.been.calledWith({
       permissionsLookupFn,
       terminatedSessionCheckFn,
@@ -194,7 +194,7 @@ describe("View gateway", () => {
     expect(authenticationFake).to.have.been.calledWith({
       verifyFn: verifyFnResult
     });
-    expect(verifyFnFake).to.have.been.calledWith({ key: "auth" });
+    expect(verifyFnFake).to.have.been.calledWith({ key: "session" });
     expect(authorizationFake).to.have.been.calledOnce;
     expect(authorizationFake).to.have.been.calledWith({
       permissionsLookupFn,

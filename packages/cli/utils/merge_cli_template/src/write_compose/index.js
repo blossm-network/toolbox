@@ -32,9 +32,9 @@ module.exports = ({
   name,
   event,
   secretBucketKeyLocation,
-  secretBucketKeyRing
+  secretBucketKeyRing,
+  secretBucket
 }) => {
-  const secretBucket = "smn-staging-secrets";
   const mongodbUser = "tester";
   const mongodbUserPassword = "password";
   const mongodbProtocol = "mongodb";

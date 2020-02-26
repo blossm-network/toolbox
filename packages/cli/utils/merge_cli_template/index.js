@@ -259,7 +259,7 @@ const addDefaultProcedures = ({ config }) => {
         ...tokenProcedures,
         ...config.commands.map(command => {
           return {
-            action: command.action,
+            name: command.name,
             domain: config.domain,
             context: "command-handler"
           };

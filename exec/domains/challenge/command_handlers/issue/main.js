@@ -71,7 +71,7 @@ module.exports = async ({
       }
     },
     signFn: deps.sign({
-      ring: process.env.SERVICE,
+      ring: "jwt",
       key: "challenge",
       location: "global",
       version: "1",
