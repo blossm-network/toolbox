@@ -2,7 +2,7 @@ const { string: dateString } = require("@blossm/datetime");
 
 const deps = require("./deps");
 
-module.exports = ({ action, domain, service, network }) => {
+module.exports = ({ name, domain, service, network }) => {
   const issue = ({ context, session, tokenFn } = {}) => async (
     payload,
     { trace, source, issued, root, options } = {}
@@ -21,7 +21,7 @@ module.exports = ({ action, domain, service, network }) => {
       ...(options && { options })
     };
     return await deps
-      .rpc(action, domain, "command-handler")
+      .rpc(name, domain, "command-handler")
       .post(data)
       .in({
         ...(context && { context }),
