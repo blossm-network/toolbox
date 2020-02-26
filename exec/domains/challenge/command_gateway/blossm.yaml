@@ -2,9 +2,9 @@ domain: challenge
 service: core
 
 commands:
-  - action: issue
+  - name: issue
     permissions: none
-  - action: answer
+  - name: answer
     permissions: none
     key: challenge
 

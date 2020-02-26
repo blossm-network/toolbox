@@ -29,7 +29,7 @@ module.exports = gateway({
   },
   verifyFn: ({ key }) =>
     verify({
-      ring: process.env.SERVICE,
+      ring: "jwt",
       key,
       location: "global",
       version: "1",

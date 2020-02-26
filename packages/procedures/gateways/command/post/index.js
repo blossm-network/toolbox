@@ -1,11 +1,11 @@
 const deps = require("./deps");
 
-module.exports = ({ action, domain } = {}) => async (req, res) => {
+module.exports = ({ name, domain } = {}) => async (req, res) => {
   await deps.validate(req.body);
   const { root, payload, headers } = await deps.normalize(req.body);
   let response = await deps
     .command({
-      action,
+      name,
       domain
     })
     .set({ tokenFn: deps.gcpToken, context: req.context, session: req.session })

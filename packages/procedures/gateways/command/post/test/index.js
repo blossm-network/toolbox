@@ -8,7 +8,7 @@ const response = { a: 1 };
 const payload = "some-payload";
 const headers = "some-headers";
 const body = "some-body";
-const action = "some-action";
+const name = "some-name";
 const domain = "some-domain";
 const context = "some-context";
 const session = "some-session";
@@ -55,12 +55,12 @@ describe("Command gateway post", () => {
       status: statusFake
     };
 
-    await post({ action, domain })(req, res);
+    await post({ name, domain })(req, res);
 
     expect(validateFake).to.have.been.calledWith(body);
     expect(normalizeFake).to.have.been.calledWith(body);
     expect(commandFake).to.have.been.calledWith({
-      action,
+      name,
       domain
     });
     expect(setFake).to.have.been.calledWith({
@@ -105,12 +105,12 @@ describe("Command gateway post", () => {
       cookie: cookieFake
     };
 
-    await post({ action, domain })(req, res);
+    await post({ name, domain })(req, res);
 
     expect(validateFake).to.have.been.calledWith(body);
     expect(normalizeFake).to.have.been.calledWith(body);
     expect(commandFake).to.have.been.calledWith({
-      action,
+      name,
       domain
     });
     expect(setFake).to.have.been.calledWith({
@@ -157,7 +157,7 @@ describe("Command gateway post", () => {
       status: statusFake
     };
 
-    await post({ action, domain })(req, res);
+    await post({ name, domain })(req, res);
 
     expect(cookieFake).to.have.been.calledTwice;
     expect(cookieFake).to.have.been.calledWith("token1", token1, {
@@ -171,7 +171,7 @@ describe("Command gateway post", () => {
     expect(validateFake).to.have.been.calledWith(body);
     expect(normalizeFake).to.have.been.calledWith(body);
     expect(commandFake).to.have.been.calledWith({
-      action,
+      name,
       domain
     });
     expect(setFake).to.have.been.calledWith({
@@ -205,7 +205,7 @@ describe("Command gateway post", () => {
     };
 
     try {
-      await post({ action, domain })(req, res);
+      await post({ name, domain })(req, res);
       //shouldn't get called
       expect(2).to.equal(1);
     } catch (e) {
