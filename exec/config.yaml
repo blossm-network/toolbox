@@ -11,7 +11,7 @@ vendors:
         production:
         sandbox:
         staging:
-        development: "3286424246"
+        development: qtb65uu5eq
       dnsZone: network
       secretsBuckets:
         production: production-secrets-268920
@@ -22,8 +22,8 @@ vendors:
         region: us-central1
         memory: 128Mi
         memoryOverrides:
-          eventStore: 256Mi
-          viewStore: 256Mi
+          event-store: 256Mi
+          view-store: 256Mi
   viewStore:
     mongodb:
       users:

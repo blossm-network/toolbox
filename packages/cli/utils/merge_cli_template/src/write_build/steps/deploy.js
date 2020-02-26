@@ -13,6 +13,7 @@ module.exports = ({
   secretBucket,
   secretBucketKeyLocation,
   secretBucketKeyRing,
+  computeUrlId,
   extension,
   nodeEnv,
   env = "",
@@ -32,7 +33,7 @@ module.exports = ({
       ...(allowUnauthenticated ? ["--allow-unauthenticated"] : []),
       `--project=${project}`,
       `--region=${region}`,
-      `--set-env-vars=NODE_ENV=${nodeEnv},NETWORK=${region}.${envUriSpecifier}${network},SERVICE=${service},CONTEXT=${context},DOMAIN=${domain},GCP_PROJECT=${project},GCP_REGION=${region},GCP_SECRET_BUCKET=${secretBucket},GCP_KMS_SECRET_BUCKET_KEY_LOCATION=${secretBucketKeyLocation},GCP_KMS_SECRET_BUCKET_KEY_RING=${secretBucketKeyRing},${env}`,
+      `--set-env-vars=NODE_ENV=${nodeEnv},NETWORK=${region}.${envUriSpecifier}${network},SERVICE=${service},CONTEXT=${context},DOMAIN=${domain},GCP_PROJECT=${project},GCP_REGION=${region},GCP_SECRET_BUCKET=${secretBucket},GCP_KMS_SECRET_BUCKET_KEY_LOCATION=${secretBucketKeyLocation},GCP_KMS_SECRET_BUCKET_KEY_RING=${secretBucketKeyRing},GCP_COMPUTE_URL_ID=${computeUrlId},${env}`,
       `--labels=service=${service},context=${context},domain=${domain},hash=${operationHash},${labels}`
     ]
   };
