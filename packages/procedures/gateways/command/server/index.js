@@ -19,13 +19,13 @@ module.exports = async ({
   });
 
   for (const {
-    action,
+    name,
     key = "auth",
     permissions,
     protected = true
   } of commands) {
-    server = server.post(deps.post({ action, domain }), {
-      path: `/${action}`,
+    server = server.post(deps.post({ name, domain }), {
+      path: `/${name}`,
       ...(protected && {
         preMiddleware: [
           deps.authentication({
