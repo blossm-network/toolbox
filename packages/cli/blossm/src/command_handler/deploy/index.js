@@ -8,7 +8,7 @@ module.exports = deployCliTemplate({
   dir: __dirname,
   configFn: config => {
     return {
-      action: config.action,
+      name: config.name,
       operationHash: hash({
         procedure: [config.name, config.domain, config.context],
         service: config.service

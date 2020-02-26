@@ -36,7 +36,7 @@ module.exports = async ({ payload, context, aggregateFn }) => {
   const { tokens } = await deps
     .command({
       domain: "session",
-      action: "upgrade"
+      name: "upgrade"
     })
     .set({
       context,

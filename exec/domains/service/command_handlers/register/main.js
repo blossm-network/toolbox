@@ -11,7 +11,7 @@ module.exports = async ({ payload, context, session }) => {
   // Register the context.
   const { tokens, principle } = await deps
     .command({
-      action: "register",
+      name: "register",
       domain: "context"
     })
     .set({ context, session, tokenFn: deps.gcpToken })

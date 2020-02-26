@@ -102,7 +102,7 @@ describe("Command handler unit tests", () => {
     });
     expect(aggregateFake).to.have.been.calledTwice;
     expect(commandFake).to.have.been.calledWith({
-      action: "issue",
+      name: "issue",
       domain: "challenge"
     });
     expect(anotherSetFake).to.have.been.calledWith({
@@ -197,7 +197,7 @@ describe("Command handler unit tests", () => {
     });
     expect(aggregateFake).to.have.been.calledTwice;
     expect(commandFake).to.have.been.calledWith({
-      action: "issue",
+      name: "issue",
       domain: "challenge"
     });
     expect(anotherSetFake).to.have.been.calledWith({
@@ -272,7 +272,7 @@ describe("Command handler unit tests", () => {
     expect(queryFake).to.have.been.calledWith({ key: "id", value: id });
     expect(hashFake).to.have.been.calledWith(phone);
     expect(commandFake).to.have.been.calledWith({
-      action: "issue",
+      name: "issue",
       domain: "challenge"
     });
     expect(anotherSetFake).to.have.been.calledWith({
@@ -359,7 +359,7 @@ describe("Command handler unit tests", () => {
     expect(queryFake).to.have.been.calledWith({ key: "id", value: id });
     expect(hashFake).to.have.been.calledWith(phone);
     expect(commandFake).to.have.been.calledWith({
-      action: "issue",
+      name: "issue",
       domain: "challenge"
     });
     expect(anotherSetFake).to.have.been.calledWith({

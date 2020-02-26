@@ -85,7 +85,7 @@ describe("Command handler unit tests", () => {
       response: { tokens }
     });
     expect(commandFake).to.have.been.calledWith({
-      action: "register",
+      name: "register",
       domain: "context"
     });
     expect(setFake).to.have.been.calledWith({

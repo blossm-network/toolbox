@@ -87,7 +87,7 @@ describe("Command handler unit tests", () => {
     expect(aggregateFake).to.have.been.calledWith(contextChallenge);
     expect(commandFake).to.have.been.calledWith({
       domain: "session",
-      action: "upgrade"
+      name: "upgrade"
     });
     expect(setFake).to.have.been.calledWith({
       context,

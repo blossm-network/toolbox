@@ -7,10 +7,10 @@ domain: some-domain
 service: core
 
 commands:
-  - action: some-action
-    permissions: 
+  - name: some-name
+    permissions:
       - some-permission
-  - action: some-other-action
+  - name: some-other-name
     protected: false
 
 whitelist:

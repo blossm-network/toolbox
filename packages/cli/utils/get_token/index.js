@@ -62,7 +62,7 @@ module.exports = async ({
   );
 
   const { tokens } = await command({
-    action: "upgrade",
+    name: "upgrade",
     domain: "session"
   })
     .set({

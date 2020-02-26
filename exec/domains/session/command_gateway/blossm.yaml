@@ -2,14 +2,14 @@ domain: session
 service: core
 
 commands:
-  - action: start
+  - name: start
     protected: false
-  - action: save
+  - name: save
     permissions: none
-  - action: logout
+  - name: logout
     permissions:
       - admin
-  - action: switch-context
+  - name: switch-context
     permissions:
       - admin
 

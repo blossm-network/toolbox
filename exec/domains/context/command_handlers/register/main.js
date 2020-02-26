@@ -30,7 +30,7 @@ module.exports = async ({ payload, root, context, session }) => {
   const { tokens } = await deps
     .command({
       domain: "session",
-      action: "upgrade"
+      name: "upgrade"
     })
     .set({ context, session, tokenFn: deps.gcpToken })
     .issue({ principle: principleRoot }, { root: context.session });

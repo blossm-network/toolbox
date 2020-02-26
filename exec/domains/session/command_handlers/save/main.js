@@ -124,7 +124,7 @@ module.exports = async ({ payload, context, session, aggregateFn }) => {
 
   const { tokens } = await deps
     .command({
-      action: "issue",
+      name: "issue",
       domain: "challenge"
     })
     .set({

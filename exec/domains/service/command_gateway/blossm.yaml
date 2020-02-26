@@ -2,7 +2,7 @@ domain: service
 service: core
 
 commands:
-  - action: register
+  - name: register
     permissions: none
 
 whitelist:
