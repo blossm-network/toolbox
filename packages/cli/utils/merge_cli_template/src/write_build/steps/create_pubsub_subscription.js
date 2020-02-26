@@ -5,6 +5,7 @@ module.exports = ({
   service,
   domain,
   operationHash,
+  operationName,
   eventAction,
   eventDomain,
   eventService,
@@ -22,7 +23,7 @@ module.exports = ({
     gcloud beta pubsub subscriptions create ${service}-${context}-${operationHash}
     --topic=did-${eventAction}.${eventDomain}.${eventService}
     --push-endpoint=https://${region}-${name}-${operationHash}-${computeUrlId}-uc.a.run.app 
-    --push-auth-token-audience=https://${region}-${name}-${operationHash}-${computeUrlId}-uc.a.run.app 
+    --push-auth-token-audience=https://${region}-${operationName}-${operationHash}-${computeUrlId}-uc.a.run.app 
     --push-auth-service-account=cloud-run-pubsub-invoker@${project}.iam.gserviceaccount.com
     --topic-project=${project}
     --expiration-period=never

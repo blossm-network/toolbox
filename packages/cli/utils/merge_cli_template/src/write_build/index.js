@@ -130,6 +130,7 @@ const steps = ({
         service,
         memory,
         context,
+        operationName,
         operationHash,
         env,
         serviceName,
