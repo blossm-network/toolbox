@@ -7,7 +7,7 @@ vendors:
         sandbox: core-sandbox-268920
         staging: core-staging-268920
         development: core-development-268920
-      computeIds:
+      computeUrlIds:
         production:
         sandbox:
         staging:

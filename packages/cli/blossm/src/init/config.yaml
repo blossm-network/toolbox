@@ -7,6 +7,11 @@ vendors:
         sandbox:
         staging:
         development:
+      computeUrlIds:
+        production:
+        sandbox:
+        staging:
+        development:
       dnsZone:
       secretsBuckets:
         production:
