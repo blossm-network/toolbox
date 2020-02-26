@@ -40,6 +40,21 @@ const envProject = ({ env, config }) => {
   }
 };
 
+const envComputeUrlId = ({ env, config }) => {
+  switch (env) {
+    case "production":
+      return config.vendors.cloud.gcp.computeUrlIds.production;
+    case "sandbox":
+      return config.vendors.cloud.gcp.computeUrlIds.sandbox;
+    case "staging":
+      return config.vendors.cloud.gcp.computeUrlIds.staging;
+    case "development":
+      return config.vendors.cloud.gcp.computeUrlIds.development;
+    default:
+      return "";
+  }
+};
+
 const envSecretsBucket = ({ env, config }) => {
   switch (env) {
     case "production":
@@ -388,6 +403,7 @@ const configure = async (workingDir, configFn, env, strict) => {
       mainContainerName,
       containerRegistery,
       envUriSpecifier: envUriSpecifier(env),
+      computeUrlId: envComputeUrlId({ env, config: blossmConfig }),
       dnsZone,
       service,
       secretBucket,

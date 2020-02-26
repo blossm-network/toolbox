@@ -38,6 +38,7 @@ const steps = ({
   runBaseUnitTests,
   runIntegrationTests,
   runBaseIntegrationTests,
+  computeUrlId,
   actions,
   strict
 }) => {
@@ -120,6 +121,7 @@ const steps = ({
         project,
         network,
         envUriSpecifier,
+        computeUrlId,
         containerRegistery,
         mainContainerName,
         dnsZone,
@@ -291,6 +293,7 @@ module.exports = ({
   secretBucket,
   secretBucketKeyLocation,
   secretBucketKeyRing,
+  computeUrlId,
   actions,
   strict
 }) => {
@@ -331,6 +334,7 @@ module.exports = ({
       dnsZone,
       service,
       env,
+      computeUrlId,
       operationHash,
       operationName,
       mongodbHost,

@@ -3,13 +3,13 @@ const deps = require("./deps");
 const serverId = () => {
   switch (process.env.NODE_ENV) {
     case "development":
-      return process.env.GCP_DEVELOPMENT_PROJECT_ID; //"p3u6hkyfwa";
+      return process.env.GCP_DEVELOPMENT_COMPUTE_URL_ID; //"p3u6hkyfwa";
     case "staging":
-      return process.env.GCP_STAGING_PROJECT_ID; //"p3u6hkyfwa";
+      return process.env.GCP_STAGING_COMPUTE_URL_ID; //"p3u6hkyfwa";
     case "sandbox":
-      return process.env.GCP_SANDBOX_PROJECT_ID; //"ixixyzl3ea";
+      return process.env.GCP_SANDBOX_COMPUTE_URL_ID; //"ixixyzl3ea";
     case "production":
-      return process.env.GCP_PRODUCTION_PROJECT_ID; //"qzhmgyrp2q";
+      return process.env.GCP_PRODUCTION_COMPUTE_URL_ID; //"qzhmgyrp2q";
     default:
       return null;
   }

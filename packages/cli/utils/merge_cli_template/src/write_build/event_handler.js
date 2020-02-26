@@ -29,6 +29,7 @@ module.exports = ({
   envUriSpecifier,
   containerRegistery,
   mainContainerName,
+  computeUrlId,
   memory,
   uri,
   serviceName,
@@ -139,8 +140,7 @@ module.exports = ({
             eventService: event.service,
             context,
             region,
-            envUriSpecifier,
-            network,
+            computeUrlId,
             project
           })
         ]

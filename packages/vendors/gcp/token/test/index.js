@@ -6,17 +6,17 @@ const gcpToken = require("..");
 const hash = "some-operation-hash";
 
 const gcpRegion = "some-region";
-const gcpDevelopmentProjectId = "some-gcp-development-project-id";
-const gcpProductionProjectId = "some-gcp-production-project-id";
-const gcpSandboxProjectId = "some-gcp-sandbox-project-id";
-const gcpStagingProjectId = "some-gcp-staging-project-id";
+const gcpDevelopmentComputeUrlId = "some-gcp-development-compute-url-id";
+const gcpProductionComputeUrlId = "some-gcp-production-compute-url-id";
+const gcpSandboxComputeUrlId = "some-gcp-sandbox-compute-url-id";
+const gcpStagingComputeUrlId = "some-gcp-compute-url-id";
 const name = "some-name";
 
 process.env.GCP_REGION = gcpRegion;
-process.env.GCP_DEVELOPMENT_PROJECT_ID = gcpDevelopmentProjectId;
-process.env.GCP_PRODUCTION_PROJECT_ID = gcpProductionProjectId;
-process.env.GCP_SANDBOX_PROJECT_ID = gcpSandboxProjectId;
-process.env.GCP_STAGING_PROJECT_ID = gcpStagingProjectId;
+process.env.GCP_DEVELOPMENT_COMPUTE_URL_ID = gcpDevelopmentComputeUrlId;
+process.env.GCP_PRODUCTION_COMPUTE_URL_ID = gcpProductionComputeUrlId;
+process.env.GCP_SANDBOX_COMPUTE_URL_ID = gcpSandboxComputeUrlId;
+process.env.GCP_STAGING_COMPUTE_URL_ID = gcpStagingComputeUrlId;
 
 describe("Gcp token", () => {
   afterEach(() => {
@@ -34,7 +34,7 @@ describe("Gcp token", () => {
 
     const result = await gcpToken({ hash, name });
 
-    const url = `https://${gcpRegion}-${name}-${hash}-${gcpStagingProjectId}-uc.a.run.app`;
+    const url = `https://${gcpRegion}-${name}-${hash}-${gcpStagingComputeUrlId}-uc.a.run.app`;
 
     expect(
       getFake
@@ -56,7 +56,7 @@ describe("Gcp token", () => {
 
     const result = await gcpToken({ hash, name });
 
-    const url = `https://${gcpRegion}-${name}-${hash}-${gcpSandboxProjectId}-uc.a.run.app`;
+    const url = `https://${gcpRegion}-${name}-${hash}-${gcpSandboxComputeUrlId}-uc.a.run.app`;
 
     expect(
       getFake
@@ -78,7 +78,7 @@ describe("Gcp token", () => {
 
     const result = await gcpToken({ hash, name });
 
-    const url = `https://${gcpRegion}-${name}-${hash}-${gcpProductionProjectId}-uc.a.run.app`;
+    const url = `https://${gcpRegion}-${name}-${hash}-${gcpProductionComputeUrlId}-uc.a.run.app`;
 
     expect(
       getFake
@@ -112,7 +112,7 @@ describe("Gcp token", () => {
 
     const result = await gcpToken({ hash, name });
 
-    const url = `https://${gcpRegion}-${name}-${hash}-${gcpStagingProjectId}-uc.a.run.app`;
+    const url = `https://${gcpRegion}-${name}-${hash}-${gcpStagingComputeUrlId}-uc.a.run.app`;
 
     expect(
       getFake
