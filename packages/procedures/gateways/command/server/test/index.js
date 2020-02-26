@@ -40,8 +40,8 @@ describe("Command gateway", () => {
     replace(deps, "post", gatewayPostFake);
 
     const permissions = "some-permissions";
-    const action = "some-action";
-    const commands = [{ action, permissions }];
+    const name = "some-name";
+    const commands = [{ name, permissions }];
 
     const verifyFnResult = "some-verify-fn";
     const verifyFnFake = fake.returns(verifyFnResult);
@@ -54,7 +54,7 @@ describe("Command gateway", () => {
       verifyFn: verifyFnFake
     });
 
-    expect(gatewayPostFake).to.have.been.calledWith({ action, domain });
+    expect(gatewayPostFake).to.have.been.calledWith({ name, domain });
     expect(gatewayPostFake).to.have.been.calledOnce;
     expect(listenFake).to.have.been.calledWith();
     expect(serverFake).to.have.been.calledWith({
@@ -70,7 +70,7 @@ describe("Command gateway", () => {
       })
     });
     expect(postFake).to.have.been.calledWith(gatewayPostResult, {
-      path: `/${action}`,
+      path: `/${name}`,
       preMiddleware: [authenticationResult, authorizationResult]
     });
     expect(authenticationFake).to.have.been.calledWith({
@@ -109,9 +109,9 @@ describe("Command gateway", () => {
     replace(deps, "post", gatewayPostFake);
 
     const permissions = "some-permissions";
-    const action = "some-action";
+    const name = "some-name";
     const key = "some-key";
-    const commands = [{ action, permissions, key }];
+    const commands = [{ name, permissions, key }];
 
     const verifyFnResult = "some-verify-fn";
     const verifyFnFake = fake.returns(verifyFnResult);
@@ -155,11 +155,11 @@ describe("Command gateway", () => {
     replace(deps, "post", gatewayPostFake);
 
     const permissions = "some-permissions";
-    const action1 = "some-action1";
-    const action2 = "some-action2";
+    const name1 = "some-name1";
+    const name2 = "some-name2";
     const commands = [
-      { action: action1, protected: false },
-      { action: action2, permissions }
+      { name: name1, protected: false },
+      { name: name2, permissions }
     ];
 
     const verifyFnResult = "some-verify-fn";
@@ -174,19 +174,19 @@ describe("Command gateway", () => {
     });
 
     expect(gatewayPostFake).to.have.been.calledWith({
-      action: action1,
+      name: name1,
       domain
     });
     expect(gatewayPostFake).to.have.been.calledWith({
-      action: action2,
+      name: name2,
       domain
     });
     expect(gatewayPostFake).to.have.been.calledTwice;
     expect(postFake).to.have.been.calledWith(gatewayPostResult, {
-      path: `/${action1}`
+      path: `/${name1}`
     });
     expect(secondPostFake).to.have.been.calledWith(gatewayPostResult, {
-      path: `/${action2}`,
+      path: `/${name2}`,
       preMiddleware: [authenticationResult, authorizationResult]
     });
     expect(authenticationFake).to.have.been.calledWith({
@@ -227,8 +227,8 @@ describe("Command gateway", () => {
     replace(deps, "post", gatewayPostFake);
 
     const permissions = "some-permissions";
-    const action = "some-action";
-    const commands = [{ action, permissions }];
+    const name = "some-name";
+    const commands = [{ name, permissions }];
 
     const otherDomain = "some-other-domain";
 
@@ -245,7 +245,7 @@ describe("Command gateway", () => {
     });
 
     expect(gatewayPostFake).to.have.been.calledWith({
-      action,
+      name,
       domain: otherDomain
     });
   });
