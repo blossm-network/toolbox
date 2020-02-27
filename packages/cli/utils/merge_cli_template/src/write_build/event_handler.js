@@ -11,7 +11,6 @@ const dockerPush = require("./steps/docker_push");
 const deploy = require("./steps/deploy");
 const startDnsTransaction = require("./steps/start_dns_transaction");
 const addPubSubPolicy = require("./steps/add_pubsub_policy");
-const createPubsubTopic = require("./steps/create_pubsub_topic");
 const createPubsubSubscription = require("./steps/create_pubsub_subscription");
 const addDnsTransaction = require("./steps/add_dns_transaction");
 const executeDnsTransaction = require("./steps/execute_dns_transaction");
@@ -122,14 +121,6 @@ module.exports = ({
           addPubSubPolicy({
             region,
             serviceName,
-            project
-          }),
-          createPubsubTopic({
-            action: event.action,
-            domain: event.domain,
-            service: event.service,
-            envUriSpecifier,
-            network,
             project
           }),
           createPubsubSubscription({

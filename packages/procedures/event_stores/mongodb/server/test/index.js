@@ -112,7 +112,7 @@ describe("Mongodb event store", () => {
               jti: String
             }
           },
-          created: { type: String, required: true },
+          created: { type: Date, required: true },
           idempotency: { type: String, required: true, unique: true },
           command: {
             type: {
@@ -149,7 +149,7 @@ describe("Mongodb event store", () => {
     expect(storeFake).to.have.been.calledWith({
       name: `${domain}.snapshots`,
       schema: {
-        created: { type: Number, required: true },
+        created: { type: Date, required: true },
         headers: {
           root: { type: String, required: true, unique: true },
           lastEventNumber: { type: Number, required: true }
@@ -254,7 +254,7 @@ describe("Mongodb event store", () => {
               jti: String
             }
           },
-          created: { type: String, required: true },
+          created: { type: Date, required: true },
           idempotency: { type: String, required: true, unique: true },
           command: {
             type: {
@@ -373,7 +373,7 @@ describe("Mongodb event store", () => {
               jti: String
             }
           },
-          created: { type: String, required: true },
+          created: { type: Date, required: true },
           idempotency: { type: String, required: true, unique: true },
           command: {
             type: {
@@ -480,7 +480,7 @@ describe("Mongodb event store", () => {
               jti: String
             }
           },
-          created: { type: String, required: true },
+          created: { type: Date, required: true },
           idempotency: { type: String, required: true, unique: true },
           command: {
             type: {
