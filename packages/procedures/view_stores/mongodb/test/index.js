@@ -116,7 +116,7 @@ describe("View store", () => {
         },
         id: { type: String, required: true, unique: true },
         created: {
-          type: String,
+          type: Date,
           required: true,
           default: match(fn => {
             const date = fn();
@@ -124,7 +124,7 @@ describe("View store", () => {
           })
         },
         modified: {
-          type: String,
+          type: Date,
           required: true,
           default: match(fn => {
             const date = fn();
@@ -311,7 +311,7 @@ describe("View store", () => {
         f: [{ g: 1, _id: false }],
         id: { type: String, required: true, unique: true },
         created: {
-          type: String,
+          type: Date,
           required: true,
           default: match(fn => {
             const date = fn();
@@ -319,7 +319,7 @@ describe("View store", () => {
           })
         },
         modified: {
-          type: String,
+          type: Date,
           required: true,
           default: match(fn => {
             const date = fn();
@@ -397,7 +397,7 @@ describe("View store", () => {
         },
         id: { type: String, required: true, unique: true },
         created: {
-          type: String,
+          type: Date,
           required: true,
           default: match(fn => {
             const date = fn();
@@ -405,7 +405,7 @@ describe("View store", () => {
           })
         },
         modified: {
-          type: String,
+          type: Date,
           required: true,
           default: match(fn => {
             const date = fn();
@@ -440,7 +440,7 @@ describe("View store", () => {
         },
         id: { type: String, required: true, unique: true },
         created: {
-          type: String,
+          type: Date,
           required: true,
           default: match(fn => {
             const date = fn();
@@ -448,7 +448,7 @@ describe("View store", () => {
           })
         },
         modified: {
-          type: String,
+          type: Date,
           required: true,
           default: match(fn => {
             const date = fn();
@@ -617,7 +617,7 @@ describe("View store", () => {
         },
         id: { type: String, required: true, unique: true },
         created: {
-          type: String,
+          type: Date,
           required: true,
           default: match(fn => {
             const date = fn();
@@ -625,7 +625,7 @@ describe("View store", () => {
           })
         },
         modified: {
-          type: String,
+          type: Date,
           required: true,
           default: match(fn => {
             const date = fn();

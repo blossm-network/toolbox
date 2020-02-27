@@ -28,6 +28,9 @@ exports.unsubscribe = async ({ topic, name }) => {
 
 exports.create = async name => {
   const topic = pubsub.topic(name);
+  //TODOremove
+  //eslint-disable-next-line
+  console.log({ exists: await topic.exists() });
   const [exists] = await topic.exists();
   if (exists) return;
   await topic.create();

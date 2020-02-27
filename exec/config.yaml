@@ -30,10 +30,12 @@ vendors:
         production: gcp-production
         sandbox: gcp-sandbox
         staging: gcp-staging
+        development: gcp-development
       hosts:
         production: production-ggjlv.gcp.mongodb.net
         sandbox: sandbox-ggjlv.gcp.mongodb.net
         staging: staging-ggjlv.gcp.mongodb.net
+        development: development-ggjlv.gcp.mongodb.net
       protocol: mongodb+srv
   eventStore:
     mongodb:
@@ -41,10 +43,12 @@ vendors:
         production: gcp-production
         sandbox: gcp-sandbox
         staging: gcp-staging
+        development: gcp-development
       hosts:
         production: production-ggjlv.gcp.mongodb.net
         sandbox: sandbox-ggjlv.gcp.mongodb.net
         staging: staging-ggjlv.gcp.mongodb.net
+        development: development-ggjlv.gcp.mongodb.net
       protocol: mongodb+srv
 defaults:
   viewStore: mongodb

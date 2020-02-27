@@ -3,7 +3,8 @@
     "@blossm/command-handler": "*",
     "@blossm/validator": "*",
     "@blossm/crypt": "*",
-    "@blossm/errors": "*"
+    "@blossm/errors": "*",
+    "@blossm/gcp-token": "*"
   },
   "devDependencies": {
     "localenv": "^0.2.2",

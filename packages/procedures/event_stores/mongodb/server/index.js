@@ -34,7 +34,7 @@ const eventStore = async ({ schema, indexes }) => {
     name: `${process.env.DOMAIN}`,
     schema: {
       id: { type: String, required: true, unique: true },
-      saved: { type: String, required: true },
+      saved: { type: Date, required: true },
       payload: formatSchema(schema),
       headers: {
         root: { type: String, required: true },

@@ -90,7 +90,7 @@ describe("Mongodb event store", () => {
       name: domain,
       schema: {
         id: { type: String, required: true, unique: true },
-        saved: { type: String, required: true },
+        saved: { type: Date, required: true },
         payload: { a: { type: String, required: false, unique: false } },
         headers: {
           root: { type: String, required: true },
@@ -232,7 +232,7 @@ describe("Mongodb event store", () => {
       name: domain,
       schema: {
         id: { type: String, required: true, unique: true },
-        saved: { type: String, required: true },
+        saved: { type: Date, required: true },
         payload: { a: { type: String, required: false, unique: false } },
         headers: {
           root: { type: String, required: true },
@@ -351,7 +351,7 @@ describe("Mongodb event store", () => {
       name: domain,
       schema: {
         id: { type: String, required: true, unique: true },
-        saved: { type: String, required: true },
+        saved: { type: Date, required: true },
         payload: { a: { type: String, required: false, unique: false } },
         headers: {
           root: { type: String, required: true },
@@ -458,7 +458,7 @@ describe("Mongodb event store", () => {
       name: domain,
       schema: {
         id: { type: String, required: true, unique: true },
-        saved: { type: String, required: true },
+        saved: { type: Date, required: true },
         payload: { a: { type: String, required: false, unique: false } },
         headers: {
           root: { type: String, required: true },

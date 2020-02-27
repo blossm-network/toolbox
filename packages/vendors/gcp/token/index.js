@@ -9,13 +9,7 @@ module.exports = async ({ name, hash }) => {
 
   const url = `https://${process.env.GCP_REGION}-${name}-${hash}-${process.env.GCP_COMPUTE_URL_ID}-uc.a.run.app`;
 
-  //eslint-disable-next-line
-  console.log({ tokenUrl: url });
-
   const response = await deps.get(metadataServerTokenUrl + url, { headers });
-
-  //eslint-disable-next-line
-  console.log({ tokenResponse: response });
 
   if (response.statusCode >= 300) return null;
   return response.body;

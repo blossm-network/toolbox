@@ -30,10 +30,12 @@ vendors:
         production:
         sandbox:
         staging:
+        development:
       hosts:
         production:
         sandbox:
         staging:
+        development:
       protocol:
   eventStore:
     mongodb:
@@ -41,10 +43,12 @@ vendors:
         production:
         sandbox:
         staging:
+        development:
       hosts:
         production:
         sandbox:
         staging:
+        development:
       protocol:
 defaults:
   viewStore:
