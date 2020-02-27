@@ -42,3 +42,9 @@ exports.delete = async name => {
   if (!exists) return;
   await topic.delete();
 };
+
+exports.exists = async name => {
+  const topic = pubsub.topic(name);
+  const [exists] = await topic.exists();
+  return exists;
+};

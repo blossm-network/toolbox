@@ -216,4 +216,19 @@ describe("Pub sub", () => {
     expect(existsFake).to.have.been.calledWith();
     expect(deleteFake).to.not.have.been.calledWith();
   });
+  it("should correctly tell if a topic exists", async () => {
+    const pubsub = function() {};
+    const exists = "some-exists";
+    const existsFake = fake.returns([exists]);
+    pubsub.prototype.topic = t => {
+      expect(t).to.equal(topic);
+      return {
+        exists: existsFake
+      };
+    };
+    replace(gcp, "PubSub", pubsub);
+    eventBus = require("..");
+    const result = await eventBus.exists(topic);
+    expect(result).to.equal(exists);
+  });
 });

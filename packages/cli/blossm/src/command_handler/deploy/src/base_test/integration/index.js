@@ -2,7 +2,7 @@ require("localenv");
 const { expect } = require("chai");
 const { string: stringDate } = require("@blossm/datetime");
 const uuid = require("@blossm/uuid");
-const { create, delete: del } = require("@blossm/gcp-pubsub");
+const { create, delete: del, exists } = require("@blossm/gcp-pubsub");
 const eventStore = require("@blossm/event-store-rpc");
 const createEvent = require("@blossm/create-event");
 const { hash } = require("@blossm/crypt");
@@ -60,6 +60,7 @@ const executeStep = async step => {
   if (step.pre) {
     for (const { action, domain, root, payload } of step.pre) {
       const topic = `did-${action}.${domain}.${process.env.SERVICE}`;
+      if (await exists(topic)) existingTopics.push(topic);
       stateTopics.push(topic);
       await create(topic);
       const stateEvent = await createEvent({
@@ -108,11 +109,23 @@ const executeStep = async step => {
   });
 };
 
+const existingTopics = [];
 describe("Command handler integration tests", () => {
-  before(async () => await Promise.all(testing.topics.map(t => create(t))));
+  before(async () => {
+    existingTopics.push(
+      ...testing.topics.filter(async t => {
+        return await exists(t);
+      })
+    );
+    await Promise.all(testing.topics.map(t => create(t)));
+  });
   after(
     async () =>
-      await Promise.all([...testing.topics.map(t => del(t)), ...stateTopics])
+      await Promise.all(
+        [...testing.topics, ...stateTopics].map(
+          t => !existingTopics.includes(t) && del(t)
+        )
+      )
   );
 
   it("should return successfully", async () => {
