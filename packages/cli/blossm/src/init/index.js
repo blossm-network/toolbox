@@ -5,14 +5,14 @@ const normalize = require("@blossm/normalize-cli");
 const roboSay = require("@blossm/robo-say");
 
 const create = async input => {
-  const blossmDir = path.resolve(process.cwd(), input.network);
-  if (fs.existsSync(blossmDir)) {
+  const blossmDir = path.resolve(process.cwd(), input.dir || "");
+  if (fs.existsSync(blossmDir) && input.dir) {
     const { flag } = await prompt({
       type: "Boolean",
       name: "flag",
       default: true,
       message: roboSay(
-        "There's already a blossm directory here. Do you really want to overwrite it?"
+        "There's already a directory here. Do you really want to overwrite it?"
       )
     });
 
@@ -23,8 +23,10 @@ const create = async input => {
     }
   }
 
-  fs.removeSync(blossmDir);
-  fs.mkdirSync(blossmDir);
+  if (input.dir) {
+    fs.removeSync(blossmDir);
+    fs.mkdirSync(blossmDir);
+  }
 
   const templateConfigPath = path.resolve(__dirname, "config.yaml");
   const destinationConfigPath = path.resolve(blossmDir, "config.yaml");
@@ -34,7 +36,8 @@ const create = async input => {
 
 module.exports = async args => {
   const input = await normalize({
-    entrypointType: "network",
+    entrypointType: "dir",
+    default: "blossm",
     args
   });
 
