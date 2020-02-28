@@ -12,14 +12,14 @@ vendors:
         sandbox:
         staging:
         development:
-      dnsZone:
+      dnsZone: network
       secretsBuckets:
         production:
         sandbox:
         staging:
         development:
       defaults:
-        region:
+        region: us-central1
         memory: 128Mi
         memoryOverrides:
           eventStore: 256Mi
@@ -36,7 +36,7 @@ vendors:
         sandbox:
         staging:
         development:
-      protocol:
+      protocol: mongodb+srv
   eventStore:
     mongodb:
       users:
@@ -49,8 +49,8 @@ vendors:
         sandbox:
         staging:
         development:
-      protocol:
+      protocol: mongodb+srv
 defaults:
-  viewStore:
-  eventStore:
-  cloud:
+  viewStore: mongodb
+  eventStore: mongodb
+  cloud: gcp
