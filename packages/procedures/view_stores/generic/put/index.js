@@ -6,8 +6,9 @@ module.exports = ({ writeFn, dataFn = defaultFn }) => {
   return async (req, res) => {
     if (req.params.id == undefined) throw deps.badRequestError.missingId();
 
-    // Can't set the id, created, or modified.
+    // Can't set the id, root, created, or modified.
     delete req.body.id;
+    delete req.body.root;
     delete req.body.created;
     delete req.body.modified;
 

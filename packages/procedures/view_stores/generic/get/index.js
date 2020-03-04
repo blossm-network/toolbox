@@ -4,9 +4,9 @@ const defaultQueryFn = ({ query }) => query;
 
 module.exports = ({ findFn, findOneFn, queryFn = defaultQueryFn }) => {
   return async (req, res) => {
-    if (req.params.id) {
+    if (req.params.root) {
       const result = await findOneFn({
-        id: req.params.id,
+        root: req.params.root,
         ...(req.query.sort && { sort: req.query.sort }),
         ...(req.query.context && { context: req.query.context }),
         ...(req.query.session && { session: req.query.session })

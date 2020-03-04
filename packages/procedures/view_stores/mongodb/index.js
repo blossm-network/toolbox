@@ -32,7 +32,7 @@ const viewStore = async ({ schema, indexes }) => {
 
 module.exports = async ({ schema, indexes, getFn, postFn, putFn } = {}) => {
   if (schema) {
-    schema.id = { type: String, required: true, unique: true };
+    schema.root = { type: String, required: true, unique: true };
     schema.created = {
       type: Date,
       required: true,
@@ -45,7 +45,7 @@ module.exports = async ({ schema, indexes, getFn, postFn, putFn } = {}) => {
     };
   }
 
-  const allIndexes = [[{ id: 1 }], [{ created: 1 }], [{ modified: 1 }]];
+  const allIndexes = [[{ root: 1 }], [{ created: 1 }], [{ modified: 1 }]];
 
   if (indexes) {
     allIndexes.push(...indexes);
@@ -123,10 +123,10 @@ module.exports = async ({ schema, indexes, getFn, postFn, putFn } = {}) => {
     });
   };
 
-  const removeFn = async ({ id }) =>
+  const removeFn = async query =>
     await deps.db.remove({
       store,
-      query: { id }
+      query
     });
 
   deps.viewStore({

@@ -16,6 +16,7 @@ const id = "some-id";
 const body = {
   a: 1,
   id: "bogus",
+  root: "boogus",
   created: "more-bogus",
   modified: "even-more-bogus"
 };

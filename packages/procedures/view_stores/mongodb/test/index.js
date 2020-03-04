@@ -20,7 +20,7 @@ const userPassword = "some-db-user-password";
 const host = "some-host";
 const database = "some-db";
 const password = "some-password";
-const id = "some-id";
+const root = "some-root";
 const query = "some-query";
 const sort = "some-sort";
 const sort2 = "some-other-sort";
@@ -114,7 +114,7 @@ describe("View store", () => {
           c: 2,
           _id: false
         },
-        id: { type: String, required: true, unique: true },
+        root: { type: String, required: true, unique: true },
         created: {
           type: Date,
           required: true,
@@ -132,7 +132,12 @@ describe("View store", () => {
           })
         }
       },
-      indexes: [[{ id: 1 }], [{ created: 1 }], [{ modified: 1 }], "some-index"],
+      indexes: [
+        [{ root: 1 }],
+        [{ created: 1 }],
+        [{ modified: 1 }],
+        "some-index"
+      ],
       connection: {
         protocol,
         user,
@@ -149,17 +154,14 @@ describe("View store", () => {
     });
     expect(secretFake).to.have.been.calledWith("mongodb");
 
+    const id = "some-id";
     const findOneFnResult = await viewStoreFake.lastCall.lastArg.findOneFn({
       id
     });
     expect(findOneFake).to.have.been.calledWith({
       store,
-      query: {
-        id
-      },
-      options: {
-        lean: true
-      }
+      query: { id },
+      options: { lean: true }
     });
     expect(findOneFnResult).to.equal(foundObj);
 
@@ -216,14 +218,10 @@ describe("View store", () => {
     });
     expect(writeFnResult).to.equal(writeResult);
 
-    const removeFnResult = await viewStoreFake.lastCall.lastArg.removeFn({
-      id
-    });
+    const removeFnResult = await viewStoreFake.lastCall.lastArg.removeFn(query);
     expect(removeFake).to.have.been.calledWith({
       store,
-      query: {
-        id
-      }
+      query
     });
     expect(removeFnResult).to.equal(removeResult);
 
@@ -234,7 +232,7 @@ describe("View store", () => {
       findFn: match(fn => expect(fn({ query, sort })).to.exist),
       findOneFn: match(fn => expect(fn({ id })).to.exist),
       writeFn: match(fn => expect(fn({ id, data })).to.exist),
-      removeFn: match(fn => expect(fn({ id })).to.exist),
+      removeFn: match(fn => expect(fn(query)).to.exist),
       getFn,
       postFn,
       putFn
@@ -243,7 +241,7 @@ describe("View store", () => {
     await mongodbViewStore();
     expect(storeFake).to.have.been.calledOnce;
   });
-  it("should call with the correct params with no id's in nested objs", async () => {
+  it("should call with the correct params with no root's in nested objs", async () => {
     const mongodbViewStore = require("..");
     const store = "some-store";
     const storeFake = fake.returns(store);
@@ -309,7 +307,7 @@ describe("View store", () => {
         d: { type: String },
         e: { type: [{ type: { type: String }, _id: false }] },
         f: [{ g: 1, _id: false }],
-        id: { type: String, required: true, unique: true },
+        root: { type: String, required: true, unique: true },
         created: {
           type: Date,
           required: true,
@@ -327,7 +325,12 @@ describe("View store", () => {
           })
         }
       },
-      indexes: [[{ id: 1 }], [{ created: 1 }], [{ modified: 1 }], "some-index"],
+      indexes: [
+        [{ root: 1 }],
+        [{ created: 1 }],
+        [{ modified: 1 }],
+        "some-index"
+      ],
       connection: {
         protocol,
         user,
@@ -395,7 +398,7 @@ describe("View store", () => {
           c: 2,
           _id: false
         },
-        id: { type: String, required: true, unique: true },
+        root: { type: String, required: true, unique: true },
         created: {
           type: Date,
           required: true,
@@ -413,7 +416,12 @@ describe("View store", () => {
           })
         }
       },
-      indexes: [[{ id: 1 }], [{ created: 1 }], [{ modified: 1 }], "some-index"],
+      indexes: [
+        [{ root: 1 }],
+        [{ created: 1 }],
+        [{ modified: 1 }],
+        "some-index"
+      ],
       connection: {
         protocol,
         user,
@@ -438,7 +446,7 @@ describe("View store", () => {
           c: 2,
           _id: false
         },
-        id: { type: String, required: true, unique: true },
+        root: { type: String, required: true, unique: true },
         created: {
           type: Date,
           required: true,
@@ -456,7 +464,12 @@ describe("View store", () => {
           })
         }
       },
-      indexes: [[{ id: 1 }], [{ created: 1 }], [{ modified: 1 }], "some-index"],
+      indexes: [
+        [{ root: 1 }],
+        [{ created: 1 }],
+        [{ modified: 1 }],
+        "some-index"
+      ],
       connection: {
         protocol,
         user,
@@ -473,17 +486,14 @@ describe("View store", () => {
     });
     expect(secretFake).to.have.been.calledWith("mongodb");
 
+    const id = "some-id";
     const findOneFnResult = await viewStoreFake.lastCall.lastArg.findOneFn({
       id
     });
     expect(findOneFake).to.have.been.calledWith({
       store,
-      query: {
-        id
-      },
-      options: {
-        lean: true
-      }
+      query: { id },
+      options: { lean: true }
     });
     expect(findOneFnResult).to.equal(foundObj);
 
@@ -540,14 +550,10 @@ describe("View store", () => {
     });
     expect(writeFnResult).to.equal(writeResult);
 
-    const removeFnResult = await viewStoreFake.lastCall.lastArg.removeFn({
-      id
-    });
+    const removeFnResult = await viewStoreFake.lastCall.lastArg.removeFn(query);
     expect(removeFake).to.have.been.calledWith({
       store,
-      query: {
-        id
-      }
+      query
     });
     expect(removeFnResult).to.equal(removeResult);
 
@@ -556,9 +562,9 @@ describe("View store", () => {
         fn => expect(fn({ query, sort, parallel, fn: fnFake })).to.exist
       ),
       findFn: match(fn => expect(fn({ query, sort })).to.exist),
-      findOneFn: match(fn => expect(fn({ id })).to.exist),
-      writeFn: match(fn => expect(fn({ id, data })).to.exist),
-      removeFn: match(fn => expect(fn({ id })).to.exist)
+      findOneFn: match(fn => expect(fn({ root })).to.exist),
+      writeFn: match(fn => expect(fn({ root, data })).to.exist),
+      removeFn: match(fn => expect(fn({ root })).to.exist)
     });
     await mongodbViewStore();
     expect(storeFake).to.have.been.calledOnce;
@@ -615,7 +621,7 @@ describe("View store", () => {
           c: 2,
           _id: false
         },
-        id: { type: String, required: true, unique: true },
+        root: { type: String, required: true, unique: true },
         created: {
           type: Date,
           required: true,
@@ -633,7 +639,12 @@ describe("View store", () => {
           })
         }
       },
-      indexes: [[{ id: 1 }], [{ created: 1 }], [{ modified: 1 }], "some-index"],
+      indexes: [
+        [{ root: 1 }],
+        [{ created: 1 }],
+        [{ modified: 1 }],
+        "some-index"
+      ],
       connection: {
         protocol,
         user,
@@ -650,17 +661,14 @@ describe("View store", () => {
     });
     expect(secretFake).to.have.been.calledWith("mongodb");
 
+    const id = "some-id";
     const findOneFnResult = await viewStoreFake.lastCall.lastArg.findOneFn({
       id
     });
     expect(findOneFake).to.have.been.calledWith({
       store,
-      query: {
-        id
-      },
-      options: {
-        lean: true
-      }
+      query: { id },
+      options: { lean: true }
     });
     expect(findOneFnResult).to.equal(foundObj);
 
@@ -727,14 +735,10 @@ describe("View store", () => {
     });
     expect(writeFnResult).to.equal(writeResult);
 
-    const removeFnResult = await viewStoreFake.lastCall.lastArg.removeFn({
-      id
-    });
+    const removeFnResult = await viewStoreFake.lastCall.lastArg.removeFn(query);
     expect(removeFake).to.have.been.calledWith({
       store,
-      query: {
-        id
-      }
+      query
     });
     expect(removeFnResult).to.equal(removeResult);
 
