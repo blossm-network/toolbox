@@ -4,7 +4,8 @@ const { restore, replace, fake } = require("sinon");
 const del = require("..");
 const deps = require("../deps");
 
-const root = "some-root";
+const id = "some-id";
+const query = { a: 1 };
 const deletedCount = 3;
 
 describe("View store delete", () => {
@@ -12,14 +13,58 @@ describe("View store delete", () => {
     restore();
   });
 
-  it("should call with the correct params", async () => {
+  it("should call with the correct params with id only", async () => {
+    const removeFake = fake.returns({ deletedCount });
+
+    const params = { id };
+    const req = {
+      params,
+      query: {}
+    };
+
+    const sendFake = fake();
+    const res = {
+      send: sendFake
+    };
+
+    await del({ removeFn: removeFake })(req, res);
+    expect(removeFake).to.have.been.calledWith({ id });
+    expect(sendFake).to.have.been.calledWith({ deletedCount });
+  });
+  it("should call with the correct params with query only", async () => {
+    const removeFake = fake.returns({ deletedCount });
+
+    const params = {};
+    const req = {
+      params,
+      query: {
+        query
+      }
+    };
+
+    const sendFake = fake();
+    const res = {
+      send: sendFake
+    };
+
+    await del({ removeFn: removeFake })(req, res);
+    expect(removeFake).to.have.been.calledWith(query);
+    expect(sendFake).to.have.been.calledWith({ deletedCount });
+  });
+  it("should call with the correct params with query and id", async () => {
     const removeFake = fake.returns({ deletedCount });
 
     const params = {
-      root
+      id
     };
     const req = {
-      params
+      params,
+      query: {
+        query: {
+          ...query,
+          id
+        }
+      }
     };
 
     const sendFake = fake();
@@ -29,16 +74,17 @@ describe("View store delete", () => {
 
     await del({ removeFn: removeFake })(req, res);
     expect(removeFake).to.have.been.calledWith({
-      root
+      ...query,
+      id
     });
     expect(sendFake).to.have.been.calledWith({ deletedCount });
   });
   it("should throw if missing root params", async () => {
     const removeFake = fake.returns({ deletedCount });
 
-    const params = {};
     const req = {
-      params
+      params: {},
+      query: {}
     };
 
     const sendFake = fake();
@@ -46,10 +92,10 @@ describe("View store delete", () => {
       send: sendFake
     };
 
-    const error = "some-error";
-    const missingIdFake = fake.returns(error);
+    const error = new Error("Missing query parameter in the url's query.");
+    const messageFake = fake.returns(error);
     replace(deps, "badRequestError", {
-      missingId: missingIdFake
+      message: messageFake
     });
 
     try {
@@ -59,6 +105,9 @@ describe("View store delete", () => {
       expect(1).to.equal(0);
     } catch (e) {
       expect(e).to.equal(error);
+      expect(messageFake).to.have.been.calledWith(
+        "Missing query parameter in the url's query."
+      );
     }
   });
 });

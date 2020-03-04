@@ -133,7 +133,15 @@ describe("View store base integration tests", () => {
     expect(ids).to.include(id1);
   };
 
-  const testDelete = async () => {};
+  const testDelete = async () => {
+    const query = testing.examples.stream.query;
+    const response1 = await request.delete(url, {
+      query: {
+        query
+      }
+    });
+    expect(response1.statusCode).to.equal(200);
+  };
 
   it("should return successfully", async () => {
     await testIdQueries();
