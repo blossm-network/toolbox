@@ -20,20 +20,24 @@ const makeQuery = (properties, example) => {
 
 describe("View store base integration tests", () => {
   const testIdQueries = async () => {
+    const root = testing.examples.id.root;
     const example0 = testing.examples.id.first;
     const example1 = testing.examples.id.second;
     expect(example0).to.exist;
     expect(example1).to.exist;
 
-    const id = await uuid();
-    const response0 = await request.put(`${url}/${id}`, {
-      body: example0.put
+    const response0 = await request.post(`${url}`, {
+      body: {
+        ...example0.put,
+        root
+      }
     });
 
     expect(response0.statusCode).to.equal(204);
 
     const response1 = await request.get(`${url}/${id}`);
     const parsedBody1 = JSON.parse(response1.body);
+    const id = parsedBody1.id;
 
     expect(response1.statusCode).to.equal(200);
     for (const key in example0.get) {
@@ -41,7 +45,10 @@ describe("View store base integration tests", () => {
     }
 
     const response2 = await request.put(`${url}/${id}`, {
-      body: example1.put
+      body: {
+        ...example1.put,
+        root
+      }
     });
 
     expect(response2.statusCode).to.equal(204);
@@ -133,21 +140,10 @@ describe("View store base integration tests", () => {
     expect(ids).to.include(id1);
   };
 
-  const testDelete = async () => {
-    const query = testing.examples.stream.query;
-    const response1 = await request.delete(url, {
-      query: {
-        query
-      }
-    });
-    expect(response1.statusCode).to.equal(200);
-  };
-
   it("should return successfully", async () => {
     await testIdQueries();
     await testIndexes();
     await testStreaming();
-    await testDelete();
   });
 
   it("should return an error if incorrect params", async () => {
