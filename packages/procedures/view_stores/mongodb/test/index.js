@@ -114,7 +114,8 @@ describe("View store", () => {
           c: 2,
           _id: false
         },
-        root: { type: String, required: true, unique: true },
+        root: { type: String, required: true },
+        id: { type: String, required: true, unique: true },
         created: {
           type: Date,
           required: true,
@@ -133,6 +134,7 @@ describe("View store", () => {
         }
       },
       indexes: [
+        [{ id: 1 }],
         [{ root: 1 }],
         [{ created: 1 }],
         [{ modified: 1 }],
@@ -307,7 +309,8 @@ describe("View store", () => {
         d: { type: String },
         e: { type: [{ type: { type: String }, _id: false }] },
         f: [{ g: 1, _id: false }],
-        root: { type: String, required: true, unique: true },
+        root: { type: String, required: true },
+        id: { type: String, required: true, unique: true },
         created: {
           type: Date,
           required: true,
@@ -326,6 +329,7 @@ describe("View store", () => {
         }
       },
       indexes: [
+        [{ id: 1 }],
         [{ root: 1 }],
         [{ created: 1 }],
         [{ modified: 1 }],
@@ -398,7 +402,8 @@ describe("View store", () => {
           c: 2,
           _id: false
         },
-        root: { type: String, required: true, unique: true },
+        root: { type: String, required: true },
+        id: { type: String, required: true, unique: true },
         created: {
           type: Date,
           required: true,
@@ -417,6 +422,7 @@ describe("View store", () => {
         }
       },
       indexes: [
+        [{ id: 1 }],
         [{ root: 1 }],
         [{ created: 1 }],
         [{ modified: 1 }],
@@ -446,7 +452,8 @@ describe("View store", () => {
           c: 2,
           _id: false
         },
-        root: { type: String, required: true, unique: true },
+        root: { type: String, required: true },
+        id: { type: String, required: true, unique: true },
         created: {
           type: Date,
           required: true,
@@ -465,6 +472,7 @@ describe("View store", () => {
         }
       },
       indexes: [
+        [{ id: 1 }],
         [{ root: 1 }],
         [{ created: 1 }],
         [{ modified: 1 }],
@@ -621,7 +629,8 @@ describe("View store", () => {
           c: 2,
           _id: false
         },
-        root: { type: String, required: true, unique: true },
+        root: { type: String, required: true },
+        id: { type: String, required: true, unique: true },
         created: {
           type: Date,
           required: true,
@@ -640,6 +649,7 @@ describe("View store", () => {
         }
       },
       indexes: [
+        [{ id: 1 }],
         [{ root: 1 }],
         [{ created: 1 }],
         [{ modified: 1 }],
