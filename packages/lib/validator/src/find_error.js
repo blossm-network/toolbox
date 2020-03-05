@@ -7,8 +7,15 @@ const getErrors = results => {
       continue;
     } else if (result.isValid) {
       if (!result.isValid()) errors.push(...result.errors);
-    } else {
-      errors.push(result);
+    } else if (result.toJSON) {
+      const json = result.toJSON();
+      if (!json.errors) continue;
+      for (const error of json.errors) {
+        errors.push({
+          message: error.message,
+          path: error.path
+        });
+      }
     }
   }
   return errors;
