@@ -57,7 +57,7 @@ describe("View store post", () => {
         created: deps.dateString()
       }
     });
-    expect(sendFake).to.have.been.calledOnce;
+    expect(sendFake).to.have.been.calledWith({ id: uuid });
   });
 
   it("should call with the correct params with fn", async () => {
@@ -91,8 +91,8 @@ describe("View store post", () => {
       }
     });
     expect(fnFake).to.have.been.calledWith(body);
-    expect(statusFake).to.have.been.calledWith(204);
-    expect(sendFake).to.have.been.calledOnce;
+    expect(statusFake).to.have.been.calledWith(200);
+    expect(sendFake).to.have.been.calledWith({ id: uuid });
   });
   it("should throw correctly", async () => {
     const error = new Error("some-error");

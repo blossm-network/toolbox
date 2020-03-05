@@ -22,6 +22,6 @@ module.exports = ({ writeFn, dataFn = defaultFn }) => {
       data
     });
 
-    res.status(204).send();
+    res.status(200).send({ id });
   };
 };
