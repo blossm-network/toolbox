@@ -1,0 +1,127 @@
+name: issue
+domain: challenge
+service: core
+
+payload:
+  phone:
+    type: phoneNumber
+    title: phone number
+  id: 
+    type: string
+    optional: true
+
+dependencies:
+  "@blossm/phone-number": "*"
+  "@blossm/jwt": "*"
+  "@blossm/gcp-kms": "*"
+  "@blossm/gcp-token": "*"
+  "@blossm/duration-consts": "*"
+  "@blossm/uuid": "*"
+  "@blossm/datetime": "*"
+  "@blossm/random-int-of-length": "*"
+  "@blossm/twilio-sms": "*"
+  "@blossm/event-store-rpc": "*"
+  "@blossm/errors": "*"
+  "@blossm/crypt": "*"
+  "@blossm/gcp-secret": "*"
+
+devDependencies:
+  "mocha": "^6.1.4"
+  "chai": "^4.2.0"
+  "sinon": "^7.3.2"
+  "sinon-chai": "^3.3.0"
+  "chai-datetime": "^1.5.0"
+
+testing:
+  validate:
+    ok:
+      - id: some-id
+        phone: "919 555 1144"
+      - id: some-id
+        phone: "(919) 555 1144"
+    bad:
+      - id:  
+          a: 1
+      - phone: "919"
+      - phone: 919
+      - phone: false
+  
+  normalize:
+    - payload:
+        id: some-id
+        phone: "919 555 1144"
+      normalized:
+        phone: "+19195551144"
+        id: some-id
+
+  procedures:
+    - domain: identity
+      context: event-store
+    - domain: challenge
+      context: event-store
+
+  steps:
+    - payload:
+        id: some-id
+        phone: "(919) 555 1144"
+      code: 409
+    - options:
+        principle: some-principle-root
+      payload:
+        phone: "(919) 555 1133"
+      session:
+        sub: some-principle-root
+      response:
+        tokens:
+          challenge:
+    - options:
+        principle: some-principle-root
+      payload:
+        phone: "(919) 555 1133"
+      session:
+        sub: some-whack-principle-root
+      code: 400
+    - pre:
+      - domain: identity
+        root: some-identity-root
+        action: register
+        payload:
+          id: some-id
+          phone: "#+19195551144"
+          principle: some-principle
+      payload:
+        id: some-id
+        phone: "+19195551144"
+      session:
+        sub: some-sub
+      code: 400
+    - pre:
+      - domain: identity
+        root: some-other-identity-root
+        action: register
+        payload:
+          id: some-other-id
+          phone: "#+19195551144"
+          principle: some-other-principle
+      payload:
+        id: some-other-id
+        phone: "+19195551144"
+      session: {}
+      response:
+        tokens:
+          challenge:
+    - pre:
+      - domain: identity
+        root: yet-another-identity-root
+        action: register
+        payload:
+          id: yet-another-id
+          phone: "+19195551144"
+          principle: yet-another-principle
+      payload:
+        id: some-id
+        phone: "+19195551133"
+      code: 400
+
+#don't change
+context: command-handler

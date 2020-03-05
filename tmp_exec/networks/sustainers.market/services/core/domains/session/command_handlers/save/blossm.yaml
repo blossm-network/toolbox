@@ -1,0 +1,152 @@
+name: save
+domain: session
+service: core
+
+payload:
+  id: string
+  phone: phoneNumber
+
+dependencies:
+  "@blossm/command-rpc": "*"
+  "@blossm/event-store-rpc": "*"
+  "@blossm/array-difference": "*"
+  "@blossm/crypt": "*"
+  "@blossm/uuid": "*"
+  "@blossm/phone-number": "*"
+  "@blossm/gcp-token": "*"
+  "@blossm/errors": "*"
+
+devDependencies:
+  "mocha": "^6.1.4"
+  "chai": "^4.2.0"
+  "sinon": "^7.3.2"
+  "sinon-chai": "^3.3.0"
+  "chai-datetime": "^1.5.0"
+
+testing:
+  validate:
+    ok:
+      - id: some-id
+        phone: "1 (919) 555-1144"
+      - id: some-id
+        phone: "19195551144"
+      - id: some-id
+        phone: "+19195551144"
+    bad:
+      - phone:
+          a: 1
+      - phone: asdf
+
+  normalize:
+    - payload:
+        id: some-id
+        phone: "1 (919) 555-1144"
+      normalized:
+        id: some-id
+        phone: "+19195551144"
+
+  procedures:
+    - domain: principle
+      context: event-store
+    - domain: identity
+      context: event-store
+    - domain: challenge
+      name: issue
+      context: command-handler
+
+  steps:
+    - pre:
+      - domain: identity
+        root: some-identity-root
+        action: register
+        payload:
+          id: some-identity-id
+          phone: "#+19195551144"
+          principle: some-sub
+      payload: 
+        id: some-identity-id
+        phone: "+19195551133"
+      code: 409
+    - pre:
+      - domain: identity
+        root: some-other-identity-root
+        action: register
+        payload:
+          id: some-other-identity-id
+          phone: "#+19195551155"
+          principle: some-principle-root
+      payload: 
+        id: some-other-identity-id
+        phone: "+19195551155"
+      session:
+        sub: some-principle-root
+      response:
+    - pre:
+      payload: 
+        id: new-identity-id
+        phone: "+19195551144"
+      session:
+        sub: some-principle-root
+      response:
+        tokens:
+          challenge:
+    - pre:
+      - domain: principle 
+        root: some-principle-root
+        action: add-permissions
+        payload:
+          permissions: some-permission
+      - domain: principle 
+        root: some-other-principle-root
+        action: add-permissions
+        payload:
+          permissions: some-other-permission
+      - domain: identity
+        root: yet-another-identity-root
+        action: register
+        payload:
+          id: yet-another-identity-id
+          phone: "#+19195551177"
+          principle: some-principle-root
+      payload: 
+        id: yet-another-identity-id
+        phone: "+19195551177"
+      session:
+        sub: some-other-principle-root
+      response:
+        tokens:
+          challenge:
+    - pre:
+      - domain: principle 
+        root: some-principle-root_1
+        action: add-permissions
+        payload:
+          permissions: some-permission
+      - domain: principle 
+        root: some-other-principle-root_1
+        action: add-permissions
+        payload:
+          permissions: some-other-permission
+      - domain: identity
+        root: yet-another-identity-root_1
+        action: register
+        payload:
+          id: yet-another-identity-id_1
+          phone: "#+19195551177"
+          principle: some-principle-root_1
+      - domain: identity
+        root: any-identity-root_1
+        action: register
+        payload:
+          id: doesnt-matter
+          phone: "#+19195551177"
+          principle: some-other-principle-root_1
+      payload: 
+        id: yet-another-identity-id_1
+        phone: "+19195551177"
+      session:
+        sub: some-other-principle-root_1
+      code: 400
+
+#don't change
+context: command-handler

@@ -1,0 +1,54 @@
+domain: principle
+service: core
+
+schema:
+  permissions: [String]
+
+actions:
+  - add-permissions
+
+dependencies:
+  "@blossm/array-difference": "*"
+
+testing:
+  examples:
+    first:
+      action: add-permissions
+      payload:
+        permissions:
+          - some-permission
+          - some-other-permission
+    second:
+      action: remove-permissions
+      payload:
+        permissions:
+          - some-permissions
+
+  handlers:
+    - action: add-permissions
+      examples:
+        - state:
+            permissions:
+              - some-permission
+          payload:
+            permissions:
+              - some-other-permission
+          result:
+            permissions:
+              - some-permission
+              - some-other-permission
+    - action: remove-permissions
+      examples:
+        - state:
+            permissions:
+              - some-permission
+              - some-other-permission
+          payload:
+            permissions:
+              - some-permission
+          result:
+            permissions:
+              - some-other-permission
+
+#don't change
+context: event-store
