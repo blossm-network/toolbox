@@ -1,6 +1,6 @@
 {
   "name": "@blossm/gcp-pubsub",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "description": "Publishes to PubSub.",
   "main": "index.js",
   "author": "blossm.network",
