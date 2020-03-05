@@ -13,7 +13,7 @@ const tokenFn = "some-token-fn";
 
 const query = "some-query";
 const sort = "some-sort";
-const properties = "some-params";
+const view = "some-view";
 const root = "some-root";
 const context = { c: 2 };
 
@@ -37,10 +37,10 @@ describe("Get views", () => {
 
     await viewStore({ name, domain, service, network })
       .set({ context, tokenFn })
-      .create(properties);
+      .create(view);
 
     expect(rpcFake).to.have.been.calledWith(name, domain, "view-store");
-    expect(postFake).to.have.been.calledWith(properties);
+    expect(postFake).to.have.been.calledWith({ view });
     expect(inFake).to.have.been.calledWith({ context, service, network });
     expect(withFake).to.have.been.calledWith({ tokenFn });
   });
@@ -57,10 +57,10 @@ describe("Get views", () => {
     });
     replace(deps, "rpc", rpcFake);
 
-    await viewStore({ name, domain }).create(properties);
+    await viewStore({ name, domain }).create(view);
 
     expect(rpcFake).to.have.been.calledWith(name, domain, "view-store");
-    expect(postFake).to.have.been.calledWith(properties);
+    expect(postFake).to.have.been.calledWith({ view });
     expect(inFake).to.have.been.calledWith({});
     expect(withFake).to.have.been.calledWith();
   });
@@ -182,10 +182,10 @@ describe("Get views", () => {
 
     await viewStore({ name, domain, service, network })
       .set({ context, tokenFn })
-      .update(root, properties);
+      .update(root, view);
 
     expect(rpcFake).to.have.been.calledWith(name, domain, "view-store");
-    expect(putFake).to.have.been.calledWith(root, properties);
+    expect(putFake).to.have.been.calledWith(root, { view });
     expect(inFake).to.have.been.calledWith({ context, service, network });
     expect(withFake).to.have.been.calledWith({
       tokenFn
@@ -204,13 +204,10 @@ describe("Get views", () => {
     });
     replace(deps, "rpc", rpcFake);
 
-    await viewStore({ name, domain, service, network }).update(
-      root,
-      properties
-    );
+    await viewStore({ name, domain, service, network }).update(root, view);
 
     expect(rpcFake).to.have.been.calledWith(name, domain, "view-store");
-    expect(putFake).to.have.been.calledWith(root, properties);
+    expect(putFake).to.have.been.calledWith(root, { view });
     expect(inFake).to.have.been.calledWith({ service, network });
     expect(withFake).to.have.been.calledWith();
   });

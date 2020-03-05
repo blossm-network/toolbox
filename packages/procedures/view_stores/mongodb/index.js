@@ -77,12 +77,8 @@ module.exports = async ({ schema, indexes, getFn, postFn, putFn } = {}) => {
     return await cursor.eachAsync(fn, { parallel });
   };
 
-  const findFn = async ({ query, sort }) => {
-    //TODO remove
-    //eslint-disable-next-line
-    console.log({ query, sort });
-
-    return await deps.db.find({
+  const findFn = async ({ query, sort }) =>
+    await deps.db.find({
       store,
       query,
       ...(sort && { sort }),
@@ -90,7 +86,6 @@ module.exports = async ({ schema, indexes, getFn, postFn, putFn } = {}) => {
         lean: true
       }
     });
-  };
 
   const findOneFn = async ({ id }) =>
     await deps.db.findOne({

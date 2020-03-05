@@ -19,6 +19,7 @@ devDependencies:
 testing:
   examples:
     id:
+      root: some-identity
       first:
         - put:
             context: some-context

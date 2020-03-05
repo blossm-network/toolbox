@@ -4,9 +4,6 @@ const defaultQueryFn = ({ query }) => query;
 
 module.exports = ({ findFn, findOneFn, queryFn = defaultQueryFn }) => {
   return async (req, res) => {
-    //TODO remove
-    //eslint-disable-next-line
-    console.log({ params: req.params, query: req.query, body: req.body });
     if (req.params.root) {
       const result = await findOneFn({
         root: req.params.root,

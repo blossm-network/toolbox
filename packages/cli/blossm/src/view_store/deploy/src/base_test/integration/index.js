@@ -47,7 +47,6 @@ describe("View store base integration tests", () => {
     const [parsedBody1] = JSON.parse(response1.body);
     const id = parsedBody1.id;
 
-    // console.log({ parsedBody1 });
     expect(response1.statusCode).to.equal(200);
     for (const key in example0.get) {
       expect(parsedBody1[key]).to.deep.equal(example0.get[key]);
@@ -62,7 +61,6 @@ describe("View store base integration tests", () => {
       }
     });
 
-    // console.log({ response2 });
     expect(response2.statusCode).to.equal(204);
 
     const response3 = await request.get(`${url}/${id}`);
@@ -125,11 +123,13 @@ describe("View store base integration tests", () => {
     const id1 = await uuid();
 
     const response = await request.put(`${url}/${id0}`, {
-      body: example0.put
+      body: {
+        view: example0.put
+      }
     });
     expect(response.statusCode).to.equal(204);
     const response1 = await request.put(`${url}/${id1}`, {
-      body: example1.put
+      body: { view: example1.put }
     });
     expect(response1.statusCode).to.equal(204);
     let ids = [];
@@ -172,7 +172,7 @@ describe("View store base integration tests", () => {
           ? { a: 1 } //pass an object to a String property
           : "some-string"; // or, pass a string to a non-String property
       const response = await request.post(url, {
-        body: { [property]: badValue }
+        body: { view: { [property]: badValue } }
       });
       expect(response.statusCode).to.equal(500);
       return;

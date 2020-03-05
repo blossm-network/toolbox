@@ -1,10 +1,10 @@
 const deps = require("./deps");
 
 module.exports = ({ name, domain, service, network }) => {
-  const create = ({ context, session, tokenFn } = {}) => async properties =>
+  const create = ({ context, session, tokenFn } = {}) => async view =>
     await deps
       .rpc(name, domain, "view-store")
-      .post(properties)
+      .post({ view })
       .in({
         ...(context && { context }),
         ...(session && { session }),
@@ -40,13 +40,10 @@ module.exports = ({ name, domain, service, network }) => {
         ...(network && { network })
       })
       .with({ path: "/stream", ...(tokenFn && { tokenFn }) });
-  const update = ({ context, session, tokenFn } = {}) => async (
-    root,
-    properties
-  ) =>
+  const update = ({ context, session, tokenFn } = {}) => async (root, view) =>
     await deps
       .rpc(name, domain, "view-store")
-      .put(root, properties)
+      .put(root, { view })
       .in({
         ...(context && { context }),
         ...(session && { session }),
