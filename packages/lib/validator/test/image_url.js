@@ -14,8 +14,8 @@ describe("Image url", () => {
   });
 });
 
-describe("Invalid name", () => {
-  it("should contain one error if a name is missing", () => {
+describe("Invalid image url", () => {
+  it("should contain one error if image url is bad", () => {
     const invalidImageUrls = ["bad", "https://some.mov"];
     for (const url of invalidImageUrls) {
       const response = imageUrl(url);

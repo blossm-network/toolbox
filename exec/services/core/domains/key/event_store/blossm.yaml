@@ -1,0 +1,36 @@
+domain: key
+service: core
+
+schema:
+  name: String
+  id:
+    type: String
+    unique: true
+  secret: String
+
+actions:
+  - create
+
+testing:
+  examples:
+    first:
+      action: create
+      payload:
+        name: some-name
+    second:
+      action: create
+      payload:
+        name: some-other-name
+
+  handlers:
+    - action: create
+      examples:
+        - state:
+            name: some-name
+          payload:
+            name: some-other-name
+          result:
+            name: some-other-name
+
+#don't change
+context: event-store

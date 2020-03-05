@@ -31,6 +31,7 @@ const email = require("./src/email");
 const phoneNumber = require("./src/phone_number");
 const numeric = require("./src/numeric");
 const imageUrl = require("./src/image_url");
+const domain = require("./src/domain");
 
 module.exports = {
   string,
@@ -65,5 +66,6 @@ module.exports = {
   email,
   phoneNumber,
   numeric,
-  imageUrl
+  imageUrl,
+  domain
 };

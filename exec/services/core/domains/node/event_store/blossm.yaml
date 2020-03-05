@@ -1,0 +1,38 @@
+domain: node
+service: core
+
+schema:
+  domain: String
+  context: String
+
+actions:
+  - register
+
+testing:
+  examples:
+    first:
+      action: register
+      payload:
+        domain: some-domain
+        context: some-context
+    second:
+      action: register
+      payload:
+        domain: some-domain
+        context: some-other-context
+
+  handlers:
+    - action: register
+      examples:
+        - state:
+            domain: some-domain
+            context: some-context
+          payload:
+            domain: some-other-domain
+            context: some-other-context
+          result:
+            domain: some-other-domain
+            context: some-other-context
+
+#don't change
+context: event-store

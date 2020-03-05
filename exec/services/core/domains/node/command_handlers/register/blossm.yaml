@@ -1,0 +1,77 @@
+name: register
+domain: node
+service: core
+
+payload:
+  domain: domain
+
+dependencies:
+  "@blossm/command-rpc": "*"
+  "@blossm/uuid": "*"
+  "@blossm/gcp-token": "*"
+
+devDependencies:
+  "mocha": "^6.1.4"
+  "chai": "^4.2.0"
+  "sinon": "^7.3.2"
+  "sinon-chai": "^3.3.0"
+
+testing:
+  validate:
+    ok:
+      - domain: some.domain
+    bad:
+      - domain: some-bad-domain
+      - domain: 3
+
+  normalize:
+    - payload:
+        domain: Some.Domain
+      normalized:
+        domain: some.domain
+
+  procedures:
+    - name: register
+      domain: context
+      context: command-handler
+    - domain: principle
+      context: event-store
+
+  steps:
+    - pre:
+        - domain: session
+          root: some-session-root
+          action: start
+          payload:
+            device:
+              os: some-os
+      payload:
+        name: Some-name
+      context:
+        session: some-session-root
+      session:
+        iss: some-iss
+        aud: some-aud
+        exp: 9999-12-31T00:00:00.000
+      response:
+        tokens:
+          session:
+    - pre:
+        - domain: session
+          root: some-other-session-root
+          action: start
+          payload:
+            device:
+              os: some-os
+      payload:
+        name: Some-name
+      context:
+        session: some-other-session-root
+      session:
+        iss: some-iss
+        aud: some-aud
+        sub: some-sub
+        exp: 9999-12-31T00:00:00.000
+
+#don't change
+context: command-handler
