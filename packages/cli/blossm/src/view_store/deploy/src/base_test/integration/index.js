@@ -28,12 +28,14 @@ describe("View store base integration tests", () => {
 
     const response0 = await request.post(`${url}`, {
       body: {
-        ...example0.put,
-        root
+        view: {
+          ...example0.put,
+          root
+        }
       }
     });
 
-    expect(response0.statusCode).to.equal(204);
+    expect(response0.statusCode).to.equal(200);
 
     const response1 = await request.get(`${url}`, {
       query: {
@@ -45,6 +47,7 @@ describe("View store base integration tests", () => {
     const [parsedBody1] = JSON.parse(response1.body);
     const id = parsedBody1.id;
 
+    // console.log({ parsedBody1 });
     expect(response1.statusCode).to.equal(200);
     for (const key in example0.get) {
       expect(parsedBody1[key]).to.deep.equal(example0.get[key]);
@@ -52,11 +55,14 @@ describe("View store base integration tests", () => {
 
     const response2 = await request.put(`${url}/${id}`, {
       body: {
-        ...example1.put,
-        root
+        view: {
+          ...example1.put,
+          root
+        }
       }
     });
 
+    // console.log({ response2 });
     expect(response2.statusCode).to.equal(204);
 
     const response3 = await request.get(`${url}/${id}`);
@@ -79,7 +85,11 @@ describe("View store base integration tests", () => {
     const id = await uuid();
 
     const response = await request.put(`${url}/${id}`, {
-      body: example0.put
+      body: {
+        view: {
+          ...example0.put
+        }
+      }
     });
 
     expect(response.statusCode).to.equal(204);
