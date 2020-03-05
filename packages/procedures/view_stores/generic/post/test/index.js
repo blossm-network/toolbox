@@ -12,10 +12,12 @@ const now = new Date();
 
 const view = "some-view";
 const body = {
-  a: 1,
-  id: "some-bogus",
-  created: "more-bogus",
-  modified: "even-more-bogus"
+  view: {
+    a: 1,
+    id: "some-bogus",
+    created: "more-bogus",
+    modified: "even-more-bogus"
+  }
 };
 const uuid = "some-uuid";
 

@@ -14,11 +14,13 @@ const now = new Date();
 const view = "some-view";
 const id = "some-id";
 const body = {
-  a: 1,
-  id: "bogus",
-  root: "boogus",
-  created: "more-bogus",
-  modified: "even-more-bogus"
+  view: {
+    a: 1,
+    id: "bogus",
+    root: "boogus",
+    created: "more-bogus",
+    modified: "even-more-bogus"
+  }
 };
 const params = {
   id

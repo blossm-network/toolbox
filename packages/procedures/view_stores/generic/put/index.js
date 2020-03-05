@@ -1,16 +1,16 @@
 const deps = require("./deps");
 
-const defaultFn = body => body;
+const defaultFn = body => body.view;
 
 module.exports = ({ writeFn, dataFn = defaultFn }) => {
   return async (req, res) => {
     if (req.params.id == undefined) throw deps.badRequestError.missingId();
 
     // Can't set the id, root, created, or modified.
-    delete req.body.id;
-    delete req.body.root;
-    delete req.body.created;
-    delete req.body.modified;
+    delete req.body.view.id;
+    delete req.body.view.root;
+    delete req.body.view.created;
+    delete req.body.view.modified;
 
     const customData = dataFn(req.body);
 

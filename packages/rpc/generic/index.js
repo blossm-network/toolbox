@@ -28,7 +28,7 @@ const common = ({ method, dataParam, procedure, root, data }) => {
 
           const response = await method(url, {
             [dataParam]: {
-              ...(data != undefined && { ...data }),
+              ...(data && { ...data }),
               ...(context && { context }),
               ...(session && { session })
             },

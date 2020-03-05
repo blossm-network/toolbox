@@ -5,18 +5,21 @@
  * - MongoDB update syntax
  *
  * The function takes in the body params from the request (req.body),
- * and is responsible for returning { update }, where
- * update is the data to put in the view store, formatted as a MongoDB update.
+ * and is responsible for returning an object to use as
+ * the data to put in the view store, formatted as a MongoDB update.
+ *
+ * The body parameter contains req.body.context and req.body.view.
  *
  */
 
 // module.exports = body => {
+//   // body.context is the context
 //   return {
 //     $set: {
-//       name: body.firstName + body.lastName
+//       name: body.view.firstName + body.view.lastName
 //     },
 //     $addToSet: {
-//       things: body.thing
+//       things: body.context.thing
 //     }
 //   };
 // };

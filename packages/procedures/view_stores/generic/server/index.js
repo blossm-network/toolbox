@@ -7,7 +7,8 @@ module.exports = async ({
   writeFn,
   removeFn,
   queryFn,
-  dataFn
+  postFn,
+  putFn
 } = {}) => {
   deps
     .server()
@@ -15,8 +16,8 @@ module.exports = async ({
       path: "/stream"
     })
     .get(deps.get({ findFn, findOneFn, ...(queryFn && { queryFn }) }))
-    .post(deps.post({ writeFn, ...(dataFn && { dataFn }) }))
-    .put(deps.put({ writeFn, ...(dataFn && { dataFn }) }))
+    .post(deps.post({ writeFn, ...(postFn && { dataFn: postFn }) }))
+    .put(deps.put({ writeFn, ...(putFn && { dataFn: putFn }) }))
     .delete(deps.delete({ removeFn }))
     .listen();
 };

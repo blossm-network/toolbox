@@ -35,8 +35,14 @@ describe("View store base integration tests", () => {
 
     expect(response0.statusCode).to.equal(204);
 
-    const response1 = await request.get(`${url}/${id}`);
-    const parsedBody1 = JSON.parse(response1.body);
+    const response1 = await request.get(`${url}`, {
+      query: {
+        query: {
+          root
+        }
+      }
+    });
+    const [parsedBody1] = JSON.parse(response1.body);
     const id = parsedBody1.id;
 
     expect(response1.statusCode).to.equal(200);
