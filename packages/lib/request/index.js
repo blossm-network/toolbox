@@ -1,8 +1,11 @@
 const deps = require("./deps");
 const addParamsToUrl = require("./src/add_params_to_url");
 
-const common = async ({ method, url, params, headers }) =>
-  new Promise((resolve, reject) =>
+const common = async ({ method, url, params, headers }) => {
+  //TODO remove
+  //eslint-disable-next-line
+  console.log({ method, url, params, headers });
+  return new Promise((resolve, reject) =>
     deps.request(
       {
         url,
@@ -21,6 +24,7 @@ const common = async ({ method, url, params, headers }) =>
             })
     )
   );
+};
 
 exports.post = async (url, { body, headers } = {}) =>
   await common({ method: "POST", url, params: body, headers });
