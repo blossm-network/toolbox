@@ -18,13 +18,11 @@ devDependencies:
 
 testing:
   examples:
-    - root: some-root
+    - root: some-identity
       payload:
         name: some-name
         context: some-context
         # avatar: some-name
-      context:
-        identity: some-identity
       result:
         root: some-identity
         value:
