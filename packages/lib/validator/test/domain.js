@@ -13,7 +13,7 @@ describe("Domain", () => {
 
 describe("Invalid domain", () => {
   it("should contain one error if domain is bad", () => {
-    const invalidDomains = ["bad"];
+    const invalidDomains = ["bad", "other-bad"];
     for (const invalidDomain of invalidDomains) {
       const response = domain(invalidDomain);
       expect(response.message).to.exist;

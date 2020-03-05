@@ -21,7 +21,7 @@ testing:
     ok:
       - domain: some.domain
     bad:
-      - domain: some-bad-domain
+      # - domain: some-bad-domain
       - domain: 3
 
   normalize:

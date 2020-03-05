@@ -7,6 +7,8 @@ const getErrors = results => {
       continue;
     } else if (result.isValid) {
       if (!result.isValid()) errors.push(...result.errors);
+    } else {
+      errors.push(result);
     }
   }
   return errors;
