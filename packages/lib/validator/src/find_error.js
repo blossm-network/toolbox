@@ -9,12 +9,6 @@ const getErrors = results => {
       if (!result.isValid()) errors.push(...result.errors);
     } else if (result.toJSON) {
       const json = result.toJSON();
-      //TODO
-      //eslint-disable-next-line no-console
-      console.log({ json });
-      //TODO
-      //eslint-disable-next-line no-console
-      console.log({ jsonErrors: json.info.errors });
       errors.push(
         ...json.info.errors.map(error => {
           return {
@@ -23,32 +17,19 @@ const getErrors = results => {
           };
         })
       );
-      //TODO
-      //eslint-disable-next-line no-console
-      console.log({ errors });
     }
   }
   return errors;
 };
 
 module.exports = results => {
-  //TODO
-  //eslint-disable-next-line no-console
-  console.log({ results });
   const errors = getErrors(results);
-
-  //TODO
-  //eslint-disable-next-line no-console
-  console.log({ finalErrors: errors });
 
   if (!errors.length) return null;
 
   return deps.invalidArgumentError.validationFailed({
     info: {
       errors: errors.map(e => {
-        //TODO
-        //eslint-disable-next-line no-console
-        console.log({ e });
         return { message: e.message, path: e.path[0] };
       })
     }
