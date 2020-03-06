@@ -9,13 +9,24 @@ const getErrors = results => {
       if (!result.isValid()) errors.push(...result.errors);
     } else if (result.toJSON) {
       const json = result.toJSON();
+      //TODO
+      //eslint-disable-next-line no-console
+      console.log({ json });
       if (!json.errors) continue;
-      for (const error of json.errors) {
-        errors.push({
-          message: error.message,
-          path: error.path
-        });
-      }
+      //TODO
+      //eslint-disable-next-line no-console
+      console.log({ jsonErrors: json.errors });
+      errors.push(
+        ...json.errors.map(error => {
+          return {
+            message: error.message,
+            path: error.path
+          };
+        })
+      );
+      //TODO
+      //eslint-disable-next-line no-console
+      console.log({ errors });
     }
   }
   return errors;
@@ -24,11 +35,18 @@ const getErrors = results => {
 module.exports = results => {
   const errors = getErrors(results);
 
+  //TODO
+  //eslint-disable-next-line no-console
+  console.log({ finalErrors: errors });
+
   if (!errors.length) return null;
 
   return deps.invalidArgumentError.validationFailed({
     info: {
       errors: errors.map(e => {
+        //TODO
+        //eslint-disable-next-line no-console
+        console.log({ e });
         return { message: e.message, path: e.path[0] };
       })
     }
