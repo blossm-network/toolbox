@@ -12,12 +12,11 @@ const getErrors = results => {
       //TODO
       //eslint-disable-next-line no-console
       console.log({ json });
-      if (!json.errors) continue;
       //TODO
       //eslint-disable-next-line no-console
-      console.log({ jsonErrors: json.errors });
+      console.log({ jsonErrors: json.info.errors });
       errors.push(
-        ...json.errors.map(error => {
+        ...json.info.errors.map(error => {
           return {
             message: error.message,
             path: error.path

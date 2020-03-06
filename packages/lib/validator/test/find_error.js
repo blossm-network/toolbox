@@ -11,7 +11,7 @@ describe("Errors exist", () => {
     const message = "some-message";
     const path = "some-path";
     const toJSON = () => {
-      return { errors: [{ message, path }] };
+      return { info: { errors: [{ message, path }] } };
     };
     const error = findError([{ toJSON }]);
     expect(error.info().errors).to.be.of.length(1);
