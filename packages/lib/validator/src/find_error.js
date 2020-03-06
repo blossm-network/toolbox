@@ -33,6 +33,9 @@ const getErrors = results => {
 };
 
 module.exports = results => {
+  //TODO
+  //eslint-disable-next-line no-console
+  console.log({ results });
   const errors = getErrors(results);
 
   //TODO
