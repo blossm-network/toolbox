@@ -4,8 +4,8 @@ const { replace, restore, fake, stub } = require("sinon");
 const main = require("../../main");
 const deps = require("../../deps");
 
-const payloadDomain = "some-payload-domain";
-const payload = { domain: payloadDomain };
+const payloadNetwork = "some-payload-network";
+const payload = { network: payloadNetwork };
 const identity = "some-identity";
 const context = { identity };
 const session = {
@@ -62,7 +62,7 @@ describe("Command handler unit tests", () => {
           action: "register",
           root: nodeRoot,
           payload: {
-            domain: payloadDomain,
+            network: payloadNetwork,
             context: contextRoot
           }
         }

@@ -3,7 +3,7 @@ domain: node
 service: core
 
 payload:
-  domain: domain
+  network: domain
 
 dependencies:
   "@blossm/command-rpc": "*"
@@ -19,16 +19,16 @@ devDependencies:
 testing:
   validate:
     ok:
-      - domain: some.domain
+      - network: some.network
     bad:
-      # - domain: some-bad-domain
-      - domain: 3
+      - network: some-bad-network
+      - network: 3
 
   normalize:
     - payload:
-        domain: Some.Domain
+        network: Some.Network
       normalized:
-        domain: some.domain
+        network: some.network
 
   procedures:
     - name: register
@@ -46,7 +46,7 @@ testing:
             device:
               os: some-os
       payload:
-        name: Some-name
+        network: some.network
       context:
         session: some-session-root
       session:
@@ -64,7 +64,7 @@ testing:
             device:
               os: some-os
       payload:
-        name: Some-name
+        network: some.network
       context:
         session: some-other-session-root
       session:

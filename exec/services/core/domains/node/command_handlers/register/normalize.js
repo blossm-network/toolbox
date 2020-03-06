@@ -1,5 +1,5 @@
 module.exports = async payload => {
   return {
-    domain: payload.domain.toLowerCase()
+    network: payload.network.toLowerCase()
   };
 };

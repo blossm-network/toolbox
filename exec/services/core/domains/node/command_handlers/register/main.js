@@ -35,7 +35,7 @@ module.exports = async ({ payload, context, session }) => {
         action: "register",
         root: nodeRoot,
         payload: {
-          domain: payload.domain,
+          network: payload.network,
           context: contextRoot
         }
       }

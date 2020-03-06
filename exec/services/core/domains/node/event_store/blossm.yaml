@@ -2,7 +2,7 @@ domain: node
 service: core
 
 schema:
-  domain: String
+  network: String
   context: String
 
 actions:
@@ -13,25 +13,25 @@ testing:
     first:
       action: register
       payload:
-        domain: some-domain
+        network: some-network
         context: some-context
     second:
       action: register
       payload:
-        domain: some-domain
+        network: some-network
         context: some-other-context
 
   handlers:
     - action: register
       examples:
         - state:
-            domain: some-domain
+            network: some-network
             context: some-context
           payload:
-            domain: some-other-domain
+            network: some-other-network
             context: some-other-context
           result:
-            domain: some-other-domain
+            network: some-other-network
             context: some-other-context
 
 #don't change
