@@ -37,7 +37,9 @@ const upload = async input => {
       )
     );
     process.exit(1);
-    for (const role in roles) {
+  } else {
+    for (const id in roles) {
+      const role = roles[id];
       if (!role.title) {
         //eslint-disable-next-line no-console
         console.error(
@@ -54,13 +56,15 @@ const upload = async input => {
       }
     }
   }
+
   await uploadFile({
     bucket: envRolesBucket({ config: blossmConfig, env }),
     file: input.path,
     destination: "roles.yaml"
   });
 
-  roboSay("All done. Your roles.yaml file is uploaded.");
+  //eslint-disable-next-line no-console
+  console.log(roboSay("All done. Your roles.yaml file is uploaded."));
 };
 
 module.exports = async args => {

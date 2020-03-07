@@ -1,5 +1,5 @@
 admin:
-  name: Admin
+  title: Admin
   permissions:
     - node:create
     - node:delete
