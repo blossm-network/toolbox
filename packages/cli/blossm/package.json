@@ -25,6 +25,7 @@
     "@blossm/service-hash": "^0.0.23",
     "@blossm/service-name-consts": "*",
     "@blossm/trim-string": "*",
+    "yaml": "^1.7.0",
     "chalk": "^2.4.2",
     "esm": "^3.2.25"
   }

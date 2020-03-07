@@ -44,6 +44,7 @@ const create = async input => {
     location: "global",
     bucket: envSecretsBucket({ config: blossmConfig, env })
   });
+  roboSay("All done. Your secret has been encrypted and uploaded.");
 };
 
 module.exports = async args => {
