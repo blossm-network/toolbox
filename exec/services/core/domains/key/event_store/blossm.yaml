@@ -3,6 +3,7 @@ service: core
 
 schema:
   name: String
+  node: String
   id:
     type: String
     unique: true
@@ -17,20 +18,35 @@ testing:
       action: create
       payload:
         name: some-name
+        node: some-node
+        id: some-id
+        secret: some-secret
     second:
       action: create
       payload:
         name: some-other-name
+        node: some-other-node
+        id: some-other-id
+        secret: some-other-secret
 
   handlers:
     - action: create
       examples:
         - state:
             name: some-name
+            node: some-node
+            id: some-id
+            secret: some-secret
           payload:
             name: some-other-name
+            node: some-other-node
+            id: some-other-id
+            secret: some-other-secret
           result:
             name: some-other-name
+            node: some-other-node
+            id: some-other-id
+            secret: some-other-secret
 
 #don't change
 context: event-store

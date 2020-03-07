@@ -1,0 +1,79 @@
+domain: role
+service: core
+
+schema:
+  title: String
+  id:
+    type: String
+    unique: true
+  permissions: [String]
+
+actions:
+  - create
+  - add-permissions
+  - remove-permissions
+
+dependencies:
+  "@blossm/array-difference": "*"
+
+testing:
+  examples:
+    first:
+      action: create
+      payload:
+        title: Some title
+        id: some-id
+        permissions:
+          - some-permission
+    second:
+      action: add-permissions
+      payload:
+        permissions:
+          - some-other-permission
+    more:
+      - action: remove-permissions
+        payload:
+          permissions:
+            - some-other-permission
+
+  handlers:
+    - action: create
+      examples:
+        - payload:
+            title: Some title
+            id: some-id
+            permissions:
+              - some-permission
+    - action: add-permissions
+      examples:
+        - state:
+            title: Some title
+            id: some-id
+            permissions:
+              - some-permission
+          payload:
+            permissions:
+              - some-other-permission
+          result:
+            title: Some title
+            id: some-id
+            permissions:
+              - some-permission
+              - some-other-permission
+    - action: remove-permissions
+      examples:
+        - state:
+            title: Some title
+            id: some-id
+            permissions:
+              - some-permission
+          payload:
+            permissions:
+              - some-permission
+          result:
+            title: Some title
+            id: some-id
+            permissions: []
+
+#don't change
+context: event-store

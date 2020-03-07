@@ -25,6 +25,22 @@ describe("upload", () => {
       destination: file
     });
   });
+  it("should upload correctly with destination", async () => {
+    const storage = function() {};
+    const uploadFake = fake();
+
+    const bucketFake = fake.returns({
+      upload: uploadFake
+    });
+    storage.prototype.bucket = bucketFake;
+    replace(deps, "storage", storage);
+    const destination = "some-destination";
+    await upload({ bucket, file, destination });
+    expect(bucketFake).to.have.been.calledWith(bucket);
+    expect(uploadFake).to.have.been.calledWith(file, {
+      destination
+    });
+  });
   it("should throw correctly", async () => {
     const storage = function() {};
     const error = new Error("some-error");

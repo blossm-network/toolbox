@@ -1,0 +1,47 @@
+#
+# This file is required.
+#
+# Give your command-handler a name,
+# and specify which domain and service it's for.
+#
+
+name: some-name
+domain: some-domain
+service: core
+
+payload:
+  name:
+    type: string
+
+devDependencies:
+  "mocha": "^6.1.4"
+  "chai": "^4.2.0"
+  "sinon": "^7.3.2"
+  "sinon-chai": "^3.3.0"
+  "chai-datetime": "^1.5.0"
+
+testing:
+  validate:
+    ok:
+      name: Some-name
+    bad:
+      name: 3
+
+  normalize:
+    - payload:
+        name: Some-name
+      normalized:
+        name: Some-name
+
+  procedures:
+
+  steps:
+    pre:
+    payload:
+    context:
+    session:
+    root:
+    response:
+
+#don't change
+context: command-handler

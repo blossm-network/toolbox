@@ -18,6 +18,11 @@ vendors:
         sandbox: sandbox-secrets-268920
         staging: staging-secrets-268920
         development: development-secrets-268920
+      rolesBuckets:
+        production: production-roles-268920
+        sandbox: sandbox-roles-268920
+        staging: staging-roles-268920
+        development: development-roles-268920
       defaults:
         region: us-central1
         memory: 128Mi

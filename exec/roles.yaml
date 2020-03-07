@@ -1,0 +1,5 @@
+admin:
+  name: Admin
+  permissions:
+    - node:create
+    - node:delete

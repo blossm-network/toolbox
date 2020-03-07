@@ -1,21 +1,45 @@
 const deps = require("./deps");
 
-module.exports = async ({ payload }) => {
-  //}, context, aggregateFn }) => {
-  const root = await deps.uuid();
+module.exports = async ({ payload, context }) => {
+  const node = context.domain == "node" && context.root;
+
+  if (!node) throw "A key can only be made in the context of a node";
+
+  const [keyRoot, principleRoot] = await Promise.all([
+    deps.uuid(),
+    deps.uuid()
+  ]);
 
   //create an id.
-  // const id = randomStringOfLength(20);
-  // const secret = randomStringOfLength(20);
-  // const hash = await deps.hash(secret);
-  // const network = context.network;
+  const id = deps.randomStringOfLength(20);
+  const secret = deps.randomStringOfLength(20);
+  const hash = await deps.hash(secret);
 
-  //create a secret.
-  //hash the secret.
+  //get all permissions for the requesting principle.
+  //make sure payload.permissions is a subset.
 
-  //return the id and the secret to the client.
-
-  //save an event with the name, id, and hash of the secret.
-
-  return { events: [{ payload, root, correctNumber: 0 }] };
+  ("some-service:some-domain:some-priviledges:some-root");
+  return {
+    events: [
+      {
+        action: "add-permissions",
+        payload: {
+          permissions: payload.permissions
+        },
+        root: principleRoot
+      },
+      {
+        action: "create",
+        payload: {
+          name: payload.name,
+          node,
+          principle: principleRoot,
+          id,
+          secret: hash
+        },
+        root: keyRoot
+      }
+    ],
+    response: { id, secret }
+  };
 };

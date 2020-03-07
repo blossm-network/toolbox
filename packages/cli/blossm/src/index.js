@@ -14,6 +14,7 @@ const eventStore = require("./event_store");
 const viewStore = require("./view_store");
 const commandGateway = require("./command_gateway");
 const viewGateway = require("./view_gateway");
+const roles = require("./roles");
 const job = require("./job");
 
 const domains = [
@@ -22,6 +23,7 @@ const domains = [
   "init",
   "set",
   "command-handler",
+  "roles",
   "event-handler",
   "projection",
   "view-store",
@@ -67,6 +69,8 @@ const tryShortcuts = input => {
       return commandGateway(args);
     case "view-gateway":
       return viewGateway(args);
+    case "roles":
+      return roles(args);
     case "job":
       return job(args);
   }
@@ -90,6 +94,8 @@ const forward = input => {
       return viewStore(input.args);
     case "command-gateway":
       return commandGateway(input.args);
+    case "roles":
+      return roles(input.args);
     case "view-gateway":
       return viewGateway(input.args);
     case "job":
