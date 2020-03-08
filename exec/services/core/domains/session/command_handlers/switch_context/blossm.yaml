@@ -52,12 +52,12 @@ testing:
             root: some-context-root
         - domain: principle
           root: some-principle-root
-          action: add-permissions
+          action: add-contexts
           payload:
-            permissions:
-              - context:some-priviledges:some-context-root
+            contexts:
+              - some-context-root
       root: some-root
-      payload: 
+      payload:
         context: some-context-root
       session:
         iss: some-iss
@@ -70,12 +70,12 @@ testing:
     - pre:
         - domain: principle
           root: some-other-principle-root
-          action: add-permissions
+          action: add-contexts
           payload:
-            permissions:
+            contexts:
               - bogus
       root: some-root
-      payload: 
+      payload:
         context: some-context-root
       session:
         iss: some-iss
@@ -84,13 +84,13 @@ testing:
         exp: 20000
       code: 401
     - pre:
-      - domain: session
-        root: some-root
-        action: logout
-        payload:
-          loggedout: 2019-12-31T00:00:00.000Z
+        - domain: session
+          root: some-root
+          action: logout
+          payload:
+            loggedout: 2019-12-31T00:00:00.000Z
       root: some-root
-      payload: 
+      payload:
         context: some-context-root
       session:
         iss: some-iss

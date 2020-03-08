@@ -22,9 +22,9 @@ module.exports = async ({ payload, context }) => {
   return {
     events: [
       {
-        action: "add-permissions",
+        action: "add-roles",
         payload: {
-          permissions: payload.permissions
+          roles: payload.roles
         },
         root: principleRoot
       },

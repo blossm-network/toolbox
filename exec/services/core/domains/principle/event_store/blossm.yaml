@@ -2,10 +2,14 @@ domain: principle
 service: core
 
 schema:
-  permissions: [String]
+  roles: [String]
+  contexts: [String]
 
 actions:
-  - add-permissions
+  - add-roles
+  - remove-roles
+  - add-contexts
+  - remove-contexts
 
 dependencies:
   "@blossm/array-difference": "*"
@@ -13,42 +17,77 @@ dependencies:
 testing:
   examples:
     first:
-      action: add-permissions
+      action: add-roles
       payload:
-        permissions:
-          - some-permission
-          - some-other-permission
+        roles:
+          - some-role
+          - some-other-role
     second:
-      action: remove-permissions
+      action: remove-roles
       payload:
-        permissions:
-          - some-permissions
+        roles:
+          - some-role
+    more:
+      - action: add-contexts
+        payload:
+          contexts:
+            - some-context
+      - action: remove-contexts
+        payload:
+          contexts:
+            - some-context
 
   handlers:
-    - action: add-permissions
+    - action: add-roles
       examples:
         - state:
-            permissions:
-              - some-permission
+            roles:
+              - some-role
           payload:
-            permissions:
-              - some-other-permission
+            roles:
+              - some-role
+              - some-other-role
           result:
-            permissions:
-              - some-permission
-              - some-other-permission
-    - action: remove-permissions
+            roles:
+              - some-role
+              - some-other-role
+    - action: remove-roles
       examples:
         - state:
-            permissions:
-              - some-permission
-              - some-other-permission
+            roles:
+              - some-role
+              - some-other-role
           payload:
-            permissions:
-              - some-permission
+            roles:
+              - some-role
           result:
-            permissions:
-              - some-other-permission
+            roles:
+              - some-other-role
+    - action: add-contexts
+      examples:
+        - state:
+            contexts:
+              - some-context
+          payload:
+            contexts:
+              - some-context
+              - some-other-context
+          result:
+            contexts:
+              - some-context
+              - some-other-context
+    - action: remove-contexts
+      examples:
+        - state:
+            contexts:
+              - some-context
+              - some-other-context
+          payload:
+            contexts:
+              - some-context
+          result:
+            contexts:
+              - some-other-context
 
 #don't change
 context: event-store

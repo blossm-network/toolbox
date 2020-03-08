@@ -10,11 +10,13 @@ module.exports = async ({
   phone = "+19195551144",
   id
 } = {}) => {
-  const [identityRoot, principleRoot, sessionRoot] = await Promise.all([
-    uuid(),
-    uuid(),
-    uuid()
-  ]);
+  const [
+    identityRoot,
+    roleRoot,
+    roleId,
+    principleRoot,
+    sessionRoot
+  ] = await Promise.all([uuid(), uuid(), uuid(), uuid(), uuid()]);
 
   // Create the identity for the token.
   await eventStore({
@@ -33,20 +35,37 @@ module.exports = async ({
     })
   );
 
-  // Add permissions to the principle
-  await eventStore({
-    domain: "principle"
-  }).add(
-    await createEvent({
-      root: principleRoot,
-      payload: {
-        permissions
-      },
-      action: "add-permissions",
-      domain: "principle",
-      service: process.env.SERVICE
-    })
-  );
+  // Add permissions to the role
+  // and add role to the principle.
+  await Promise.all([
+    eventStore({
+      domain: "role"
+    }).add(
+      await createEvent({
+        root: roleRoot,
+        payload: {
+          id: roleId,
+          permissions
+        },
+        action: "create",
+        domain: "role",
+        service: process.env.SERVICE
+      })
+    ),
+    eventStore({
+      domain: "principle"
+    }).add(
+      await createEvent({
+        root: principleRoot,
+        payload: {
+          roles: [roleId]
+        },
+        action: "add-roles",
+        domain: "principle",
+        service: process.env.SERVICE
+      })
+    )
+  ]);
 
   // Add a session.
   await eventStore({

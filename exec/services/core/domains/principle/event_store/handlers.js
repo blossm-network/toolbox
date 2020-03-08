@@ -1,17 +1,33 @@
 const difference = require("@blossm/array-difference");
 module.exports = {
-  "add-permissions": (state, payload) => {
+  "add-roles": (state, payload) => {
     return {
       ...state,
       ...payload,
-      permissions: (state.permissions || []).concat(payload.permissions)
+      roles: (state.roles || []).concat(difference(payload.roles, state.roles))
     };
   },
-  "remove-permissions": (state, payload) => {
+  "remove-roles": (state, payload) => {
     return {
       ...state,
       ...payload,
-      permissions: difference(state.permissions, payload.permissions)
+      roles: difference(state.roles, payload.roles)
+    };
+  },
+  "add-contexts": (state, payload) => {
+    return {
+      ...state,
+      ...payload,
+      contexts: (state.contexts || []).concat(
+        difference(payload.contexts, state.contexts)
+      )
+    };
+  },
+  "remove-contexts": (state, payload) => {
+    return {
+      ...state,
+      ...payload,
+      contexts: difference(state.contexts, payload.contexts)
     };
   }
 };

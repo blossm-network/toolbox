@@ -26,8 +26,8 @@ const identity = {
     principle
   }
 };
-const principleAggregate = { permissions: ["some-permission"] };
-const sessionPrincipleAggregate = { permissions: ["some-other-permission"] };
+const principleAggregate = { roles: ["some-role"] };
+const sessionPrincipleAggregate = { roles: ["some-other-role"] };
 
 describe("Command handler unit tests", () => {
   beforeEach(() => {
@@ -120,11 +120,11 @@ describe("Command handler unit tests", () => {
           principle,
           events: [
             {
-              action: "add-permissions",
+              action: "add-roles",
               domain: "principle",
               root: principle,
               payload: {
-                permissions: ["some-other-permission"]
+                roles: ["some-other-role"]
               }
             }
           ]
@@ -132,7 +132,7 @@ describe("Command handler unit tests", () => {
       }
     );
   });
-  it("should return successfully if identity is found and there are no new permissions to add", async () => {
+  it("should return successfully if identity is found and there are no new roles to add", async () => {
     const queryFake = fake.returns([identity]);
     const otherQueryFake = fake.returns([]);
     const setFake = fake.returns({
@@ -299,11 +299,11 @@ describe("Command handler unit tests", () => {
               }
             },
             {
-              action: "principle",
-              domain: "add-permissions",
+              action: "add-roles",
+              domain: "principle",
               root: principleRoot,
               payload: {
-                permissions: [`identity:admin:${identityRoot}`]
+                roles: [`IdentityAdmin`]
               }
             }
           ]
@@ -384,11 +384,11 @@ describe("Command handler unit tests", () => {
               }
             },
             {
-              action: "principle",
-              domain: "add-permissions",
+              action: "add-roles",
+              domain: "principle",
               root: sub,
               payload: {
-                permissions: [`identity:admin:${identityRoot}`]
+                roles: ["IdentityAdmin"]
               }
             }
           ]

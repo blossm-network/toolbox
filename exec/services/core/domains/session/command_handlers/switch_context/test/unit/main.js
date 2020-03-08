@@ -57,7 +57,7 @@ describe("Command handler unit tests", () => {
     const aggregateFake = stub()
       .onFirstCall()
       .returns({
-        aggregate: { permissions: [`context:some-priviledges:${newContext}`] }
+        aggregate: { contexts: [newContext] }
       })
       .onSecondCall()
       .returns({ aggregate: { terminated: false } })
@@ -138,7 +138,7 @@ describe("Command handler unit tests", () => {
     const aggregateFake = stub()
       .onFirstCall()
       .returns({
-        aggregate: { permissions: [`context:some-priviledges:bogus`] }
+        aggregate: { contexts: [context] }
       })
       .onSecondCall()
       .returns({ aggregate: { terminated: false } })
@@ -175,7 +175,7 @@ describe("Command handler unit tests", () => {
     const aggregateFake = stub()
       .onFirstCall()
       .returns({
-        aggregate: { permissions: [`context:some-priviledges:${newContext}`] }
+        aggregate: { contexts: [newContext] }
       })
       .onSecondCall()
       .returns({ aggregate: { terminated: true } })
@@ -219,7 +219,7 @@ describe("Command handler unit tests", () => {
     const aggregateFake = stub()
       .onFirstCall()
       .returns({
-        aggregate: { permissions: [`context:some-priviledges:${newContext}`] }
+        aggregate: { contexts: [newContext] }
       })
       .onSecondCall()
       .returns({ aggregate: { terminated: false } })

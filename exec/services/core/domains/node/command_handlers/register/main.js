@@ -25,10 +25,10 @@ module.exports = async ({ payload, context, session }) => {
     events: [
       {
         domain: "principle",
-        action: "add-permissions",
+        action: "add-role",
         root: principle,
         payload: {
-          permissions: [`node:admin:${nodeRoot}`]
+          roles: ["NodeAdmin"]
         }
       },
       {

@@ -214,7 +214,8 @@ const topicsForProcedures = (config, events) => {
             "did-start.session.core",
             "did-upgrade.session.core",
             "did-register.identity.core",
-            "did-add-permissions.principle.core"
+            "did-create.role.core",
+            "did-add-roles.principle.core"
           ]
         : []
     );
@@ -245,6 +246,10 @@ const addDefaultProcedures = ({ config }) => {
     },
     {
       domain: "session",
+      context: "event-store"
+    },
+    {
+      domain: "role",
       context: "event-store"
     },
     {

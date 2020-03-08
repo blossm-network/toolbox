@@ -17,13 +17,7 @@ module.exports = async ({ root, payload, context, session, aggregateFn }) => {
   ]);
 
   // Check to see if the principle has access to the context being switched in to.
-  if (
-    !principleAggregate.permissions.some(
-      priviledge =>
-        priviledge.startsWith("context:") &&
-        priviledge.endsWith(`:${payload.context}`)
-    )
-  )
+  if (!principleAggregate.contexts.some(context => context == payload.context))
     throw deps.unauthorizedError.context({
       info: { context: payload.context }
     });

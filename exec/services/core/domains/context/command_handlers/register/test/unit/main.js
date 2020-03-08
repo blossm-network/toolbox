@@ -38,10 +38,10 @@ describe("Command handler unit tests", () => {
       events: [
         {
           domain: "principle",
-          action: "add-permissions",
+          action: "add-contexts",
           root: uuid,
           payload: {
-            permissions: [`context:admin:${root}`]
+            contexts: [root]
           }
         },
         { action: "register", payload, root }
@@ -92,10 +92,10 @@ describe("Command handler unit tests", () => {
       events: [
         {
           domain: "principle",
-          action: "add-permissions",
+          action: "add-contexts",
           root: "some-sub",
           payload: {
-            permissions: [`context:admin:${root}`]
+            contexts: [root]
           }
         },
         { action: "register", payload, root }

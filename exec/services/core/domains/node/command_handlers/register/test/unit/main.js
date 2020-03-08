@@ -52,10 +52,10 @@ describe("Command handler unit tests", () => {
       events: [
         {
           domain: "principle",
-          action: "add-permissions",
+          action: "add-roles",
           root: principle,
           payload: {
-            permissions: [`node:admin:${nodeRoot}`]
+            roles: ["NodeAdmin"]
           }
         },
         {

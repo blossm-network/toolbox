@@ -20,10 +20,8 @@ const getEventsForPermissionsMerge = async ({
 
   // Don't create an event if nothing is being saved.
   if (
-    deps.difference(
-      principleAggregate.permissions,
-      sessionPrincipleAggregate.permissions
-    ).length == 0
+    deps.difference(principleAggregate.roles, sessionPrincipleAggregate.roles)
+      .length == 0
   )
     return { events: [], principleRoot };
 
@@ -31,10 +29,10 @@ const getEventsForPermissionsMerge = async ({
     events: [
       {
         domain: "principle",
-        action: "add-permissions",
+        action: "add-roles",
         root: principleRoot,
         payload: {
-          permissions: sessionPrincipleAggregate.permissions
+          roles: sessionPrincipleAggregate.roles
         }
       }
     ],
@@ -63,11 +61,11 @@ const getEventsForIdentityRegistering = async ({ subject, payload }) => {
         }
       },
       {
-        action: "principle",
-        domain: "add-permissions",
+        action: "add-roles",
+        domain: "principle",
         root: principleRoot,
         payload: {
-          permissions: [`identity:admin:${identityRoot}`]
+          roles: ["IdentityAdmin"]
         }
       }
     ],
@@ -108,7 +106,7 @@ module.exports = async ({ payload, context, session, aggregateFn }) => {
     }
   }
 
-  // If an identity is found, merge the permissions given to the session's subject
+  // If an identity is found, merge the roles given to the session's subject
   // to the identity's principle.
   // If not found, register a new identity and set the principle to be the session's subject.
   const { events, principleRoot } = identity
