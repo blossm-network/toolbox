@@ -1,0 +1,10 @@
+domain: node
+service: core
+
+roles:
+  admin:
+    title: NodeAdmin
+    priviledges:
+      - create
+      - update
+      - delete

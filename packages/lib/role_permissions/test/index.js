@@ -3,10 +3,18 @@ const { restore, fake } = require("sinon");
 const rolePermissions = require("..");
 
 const roles = ["some-role"];
-const permissions = ["some-permission"];
+const priviledges = ["some-priviledges"];
+
+const domain = "some-domain";
+const service = "some-service";
+
 const defaultRoles = {
-  "some-role": {
-    permissions
+  domain,
+  service,
+  roles: {
+    "some-role": {
+      priviledges
+    }
   }
 };
 describe("Role permissions", () => {
@@ -18,11 +26,13 @@ describe("Role permissions", () => {
       roles,
       defaultRoles
     });
-    expect(result).to.deep.equal(permissions);
+    expect(result).to.deep.equal(
+      priviledges.map(priviledge => `${service}:${domain}:${priviledge}`)
+    );
   });
   it("should return the correct roles with custom roles", async () => {
-    const customRolePermisisons = ["some-other-permission"];
-    const customRolesPermissionFnFake = fake.resolves(customRolePermisisons);
+    const customRolePermissions = ["some-other-permission"];
+    const customRolesPermissionFnFake = fake.resolves(customRolePermissions);
     const customRole = "some-custom-role";
     const result = await rolePermissions({
       roles: [...roles, customRole],
@@ -32,6 +42,9 @@ describe("Role permissions", () => {
     expect(customRolesPermissionFnFake).to.have.been.calledWith({
       roleId: customRole
     });
-    expect(result).to.deep.equal([...permissions, ...customRolePermisisons]);
+    expect(result).to.deep.equal([
+      ...priviledges.map(priviledge => `${service}:${domain}:${priviledge}`),
+      ...customRolePermissions
+    ]);
   });
 });

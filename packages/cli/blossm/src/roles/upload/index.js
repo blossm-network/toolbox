@@ -28,6 +28,7 @@ const upload = async input => {
 
   const blossmConfig = rootDir.config();
   const roles = yaml.parse(fs.readFileSync(rolesPath, "utf8"));
+
   if (!roles) {
     //eslint-disable-next-line no-console
     console.error(
@@ -38,8 +39,8 @@ const upload = async input => {
     );
     process.exit(1);
   } else {
-    for (const id in roles) {
-      const role = roles[id];
+    for (const id in roles.roles) {
+      const role = roles.roles[id];
       if (!role.title) {
         //eslint-disable-next-line no-console
         console.error(
@@ -47,10 +48,13 @@ const upload = async input => {
         );
         process.exit(1);
       }
-      if (!role.permissions || role.permissions.length == 0) {
+      if (!role.priviledges || role.priviledges.length == 0) {
         //eslint-disable-next-line no-console
         console.error(
-          roboSay("All roles must have permissions", red.bold("internal error"))
+          roboSay(
+            "All roles must have associated priviledges",
+            red.bold("internal error")
+          )
         );
         process.exit(1);
       }
@@ -60,7 +64,7 @@ const upload = async input => {
   await uploadFile({
     bucket: envRolesBucket({ config: blossmConfig, env }),
     file: input.path,
-    destination: "roles.yaml"
+    destination: `${roles.service}/${roles.domain}/roles.yaml`
   });
 
   //eslint-disable-next-line no-console

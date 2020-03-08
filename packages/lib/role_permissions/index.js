@@ -2,9 +2,14 @@ module.exports = async ({ roles, defaultRoles, customRolePermissionsFn }) => {
   const permissions = [];
   const customRoleCandidates = [];
   roles.reduce(async (result, roleId) => {
-    const role = defaultRoles[roleId];
+    const role = defaultRoles.roles[roleId];
     if (role) {
-      permissions.push(...role.permissions);
+      permissions.push(
+        ...role.priviledges.map(
+          priviledge =>
+            `${defaultRoles.service}:${defaultRoles.domain}:${priviledge}`
+        )
+      );
     } else {
       customRoleCandidates.push(roleId);
     }

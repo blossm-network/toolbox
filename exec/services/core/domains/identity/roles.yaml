@@ -1,0 +1,8 @@
+domain: identity
+service: core
+
+roles:
+  admin:
+    title: IdentityAdmin
+    priviledges:
+      - create
