@@ -3,7 +3,8 @@ service: core
 
 commands:
   - name: register
-    permissions: none
+    priviledges:
+      - create
 
 whitelist:
   - "127.0.0.1"

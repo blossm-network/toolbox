@@ -3,6 +3,7 @@ const deps = require("./deps");
 module.exports = async ({
   stores,
   domain = process.env.DOMAIN,
+  service = process.env.SERVICE,
   whitelist,
   permissionsLookupFn,
   terminatedSessionCheckFn,
@@ -21,7 +22,7 @@ module.exports = async ({
   for (const {
     name,
     key = "session",
-    permissions,
+    priviledges,
     protected = true
   } of stores) {
     server = server.get(deps.get({ name, domain }), {
@@ -34,7 +35,9 @@ module.exports = async ({
           deps.authorization({
             permissionsLookupFn,
             terminatedSessionCheckFn,
-            permissions
+            permissions: priviledges.map(
+              priviledge => `${service}:${domain}:${priviledge}`
+            )
           })
         ]
       })

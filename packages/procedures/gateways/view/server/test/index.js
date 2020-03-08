@@ -7,8 +7,10 @@ const whitelist = "some-whitelist";
 const permissionsLookupFn = "some-permissions-fn";
 const terminatedSessionCheckFn = "some-terminated-session-check-fn";
 const domain = "some-domain";
+const service = "some-service";
 
 process.env.DOMAIN = domain;
+process.env.SERVICE = service;
 
 describe("View gateway", () => {
   afterEach(() => {
@@ -39,9 +41,10 @@ describe("View gateway", () => {
     const gatewayGetFake = fake.returns(gatewayGetResult);
     replace(deps, "get", gatewayGetFake);
 
-    const permissions = "some-permissions";
+    const priviledge = "some-priviledge";
+    const priviledges = [priviledge];
     const name = "some-name";
-    const stores = [{ name, permissions }];
+    const stores = [{ name, priviledges }];
 
     const verifyFnResult = "some-verify-fn";
     const verifyFnFake = fake.returns(verifyFnResult);
@@ -80,7 +83,9 @@ describe("View gateway", () => {
     expect(authorizationFake).to.have.been.calledWith({
       permissionsLookupFn,
       terminatedSessionCheckFn,
-      permissions
+      permissions: priviledges.map(
+        priviledge => `${service}:${domain}:${priviledge}`
+      )
     });
   });
   it("should call with the correct params with store key", async () => {
@@ -108,10 +113,11 @@ describe("View gateway", () => {
     const gatewayGetFake = fake.returns(gatewayGetResult);
     replace(deps, "get", gatewayGetFake);
 
-    const permissions = "some-permissions";
+    const priviledge = "some-priviledge";
+    const priviledges = [priviledge];
     const name = "some-name";
     const key = "some-key";
-    const stores = [{ name, permissions, key }];
+    const stores = [{ name, priviledges, key }];
 
     const verifyFnResult = "some-verify-fn";
     const verifyFnFake = fake.returns(verifyFnResult);
@@ -156,12 +162,13 @@ describe("View gateway", () => {
     const gatewayGetFake = fake.returns(gatewayGetResult);
     replace(deps, "get", gatewayGetFake);
 
-    const permissions = "some-permissions";
+    const priviledge = "some-priviledge";
+    const priviledges = [priviledge];
     const name1 = "some-name1";
     const name2 = "some-name2";
     const stores = [
       { name: name1, protected: false },
-      { name: name2, permissions }
+      { name: name2, priviledges }
     ];
 
     const verifyFnResult = "some-verify-fn";
@@ -199,11 +206,13 @@ describe("View gateway", () => {
     expect(authorizationFake).to.have.been.calledWith({
       permissionsLookupFn,
       terminatedSessionCheckFn,
-      permissions
+      permissions: priviledges.map(
+        priviledge => `${service}:${domain}:${priviledge}`
+      )
     });
     expect(authorizationFake).to.have.been.calledOnce;
   });
-  it("should call with the correct params with passed in domain", async () => {
+  it("should call with the correct params with passed in domain and service", async () => {
     const corsMiddlewareFake = fake();
     replace(deps, "corsMiddleware", corsMiddlewareFake);
 
@@ -228,11 +237,13 @@ describe("View gateway", () => {
     const gatewayGetFake = fake.returns(gatewayGetResult);
     replace(deps, "get", gatewayGetFake);
 
-    const permissions = "some-permissions";
+    const priviledge = "some-priviledge";
+    const priviledges = [priviledge];
     const name = "some-name";
-    const stores = [{ name, permissions }];
+    const stores = [{ name, priviledges }];
 
     const otherDomain = "some-other-domain";
+    const otherService = "some-other-service";
 
     const verifyFnResult = "some-verify-fn";
     const verifyFnFake = fake.returns(verifyFnResult);
@@ -240,6 +251,7 @@ describe("View gateway", () => {
     await gateway({
       stores,
       domain: otherDomain,
+      service: otherService,
       whitelist,
       permissionsLookupFn,
       terminatedSessionCheckFn,
@@ -249,6 +261,13 @@ describe("View gateway", () => {
     expect(gatewayGetFake).to.have.been.calledWith({
       name,
       domain: otherDomain
+    });
+    expect(authorizationFake).to.have.been.calledWith({
+      permissionsLookupFn,
+      terminatedSessionCheckFn,
+      permissions: priviledges.map(
+        priviledge => `${otherService}:${otherDomain}:${priviledge}`
+      )
     });
   });
   it("should throw correctly", async () => {

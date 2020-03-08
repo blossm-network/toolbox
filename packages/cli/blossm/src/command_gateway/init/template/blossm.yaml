@@ -20,6 +20,5 @@ whitelist:
 devDependencies:
   "mocha": "^6.1.4"
   "chai": "^4.2.0"
-
 #don't change
-context: command-gateway
+
