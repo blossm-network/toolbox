@@ -18,7 +18,7 @@ module.exports = gateway({
     if (!defaultRoles) {
       await downloadFile({
         bucket: process.env.GCP_ROLES_BUCKET,
-        file: "roles.yaml"
+        file: `${process.env.SERVICE}/${process.env.DOMAIN}/roles.yaml`
       });
       defaultRoles = yaml.parse(defaultRoles.yaml);
     }
