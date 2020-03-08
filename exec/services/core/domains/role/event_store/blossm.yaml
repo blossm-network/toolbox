@@ -8,6 +8,9 @@ schema:
     unique: true
   permissions: [String]
 
+indexes:
+  - id
+
 actions:
   - create
   - add-permissions

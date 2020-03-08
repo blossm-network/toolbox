@@ -1,10 +1,13 @@
 {
   "dependencies": {
+    "yaml": "^1.7.0",
     "@blossm/command-gateway": "*",
     "@blossm/event-store-rpc": "*",
     "@blossm/gcp-kms": "*",
     "@blossm/gcp-token": "*",
-    "@blossm/errors": "*"
+    "@blossm/gcp-storage": "*",
+    "@blossm/errors": "*",
+    "@blossm/role-permissions": "*"
   },
   "devDependencies": {
     "localenv": "^0.2.2",

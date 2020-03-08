@@ -19,7 +19,8 @@ schema:
   name: String
 
 #optional. Remove if querying only by root, created date, or modified date
-indexes: [[{ name: 1 }]]
+indexes:
+  - - name: 1
 
 devDependencies:
   "localenv": "^0.2.2"
