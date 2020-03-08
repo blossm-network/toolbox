@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "yaml": "^1.7.0",
     "@blossm/view-gateway": "*",
     "@blossm/event-store-rpc": "*",
     "@blossm/gcp-kms": "*",
