@@ -8,15 +8,22 @@ module.exports = ({ saveEventsFn, aggregateFn, publishFn }) => {
     const eventRoots = [
       ...new Set(req.body.events.map(event => event.data.headers.root))
     ];
+    //eslint-disable-next-line
+    console.log({ eventRoots });
     const [...aggregates] = await Promise.all(
       eventRoots.map(root => aggregateFn(root))
     );
+    //eslint-disable-next-line
+    console.log({ aggregates });
 
     const lastEventNumbers = aggregates.reduce((result, aggregate) => {
       if (!aggregate) return result;
       result[aggregate.headers.root] = aggregate.headers.lastEventNumber;
       return result;
     }, {});
+
+    //eslint-disable-next-line
+    console.log({ lastEventNumbers });
 
     const normalizedEvents = req.body.events.map(event => {
       if (!eventNumberOffsets[event.data.headers.root])
@@ -43,6 +50,9 @@ module.exports = ({ saveEventsFn, aggregateFn, publishFn }) => {
         (lastEventNumbers[event.data.headers.root]
           ? lastEventNumbers[event.data.headers.root] + 1
           : 0) + eventNumberOffsets[event.data.headers.root];
+
+      //eslint-disable-next-line
+      console.log({ number, event });
 
       if (event.number && event.number != number)
         throw preconditionFailed.eventNumberIncorrect({
