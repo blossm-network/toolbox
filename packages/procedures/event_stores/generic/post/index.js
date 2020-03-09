@@ -4,6 +4,14 @@ const { preconditionFailed, badRequest } = require("@blossm/errors");
 
 module.exports = ({ saveEventsFn, aggregateFn, publishFn }) => {
   return async (req, res) => {
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log({
+      body: req.body,
+      query: req.query,
+      params: req.params,
+      events: req.body.events
+    });
     const eventNumberOffsets = {};
     const eventRoots = [
       ...new Set(req.body.events.map(event => event.data.headers.root))

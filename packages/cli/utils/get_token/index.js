@@ -23,7 +23,7 @@ module.exports = async ({
     domain: "identity"
   }).add([
     {
-      data: await createEvent({
+      data: createEvent({
         root: identityRoot,
         payload: {
           principle: principleRoot,
@@ -44,7 +44,7 @@ module.exports = async ({
       domain: "role"
     }).add([
       {
-        data: await createEvent({
+        data: createEvent({
           root: roleRoot,
           payload: {
             id: roleId,
@@ -60,7 +60,7 @@ module.exports = async ({
       domain: "principle"
     }).add([
       {
-        data: await createEvent({
+        data: createEvent({
           root: principleRoot,
           payload: {
             roles: [roleId]
@@ -78,7 +78,7 @@ module.exports = async ({
     domain: "session"
   }).add([
     {
-      data: await createEvent({
+      data: createEvent({
         root: sessionRoot,
         payload: {},
         action: "start",

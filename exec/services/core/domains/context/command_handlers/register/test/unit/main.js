@@ -38,6 +38,14 @@ describe("Command handler unit tests", () => {
       events: [
         {
           domain: "principle",
+          action: "add-roles",
+          root: uuid,
+          payload: {
+            roles: ["ContextAdmin"]
+          }
+        },
+        {
+          domain: "principle",
           action: "add-contexts",
           root: uuid,
           payload: {
@@ -92,6 +100,14 @@ describe("Command handler unit tests", () => {
       events: [
         {
           domain: "principle",
+          action: "add-roles",
+          root: "some-sub",
+          payload: {
+            roles: ["ContextAdmin"]
+          }
+        },
+        {
+          domain: "principle",
           action: "add-contexts",
           root: "some-sub",
           payload: {
@@ -107,7 +123,7 @@ describe("Command handler unit tests", () => {
   });
   it("should throw correctly", async () => {
     const errorMessage = "some-error";
-    const uuidFake = fake.rejects(errorMessage);
+    const uuidFake = fake.throws(errorMessage);
     replace(deps, "uuid", uuidFake);
     try {
       await main({ session });

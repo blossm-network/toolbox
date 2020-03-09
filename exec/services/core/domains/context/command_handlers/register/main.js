@@ -8,6 +8,14 @@ module.exports = async ({ payload, root, context, session }) => {
   const events = [
     {
       domain: "principle",
+      action: "add-roles",
+      root: principleRoot,
+      payload: {
+        roles: ["ContextAdmin"]
+      }
+    },
+    {
+      domain: "principle",
       action: "add-contexts",
       root: principleRoot,
       payload: {

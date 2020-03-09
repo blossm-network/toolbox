@@ -34,7 +34,7 @@ module.exports = commandHandler({
       aggregate: aggregate.state
     };
   },
-  addFn: async ({ domain, context, session, events }) =>
+  addFn: ({ domain, context, session, events }) =>
     eventStore({ domain })
       .set({
         context,

@@ -34,7 +34,7 @@ describe("Create event", () => {
     restore();
   });
   it("should get called with expected params", async () => {
-    const value = await createEvent({
+    const value = createEvent({
       trace,
       action,
       domain,
@@ -90,7 +90,7 @@ describe("Create event", () => {
         .returns(idempUuid)
     );
 
-    const value = await createEvent({
+    const value = createEvent({
       trace,
       action,
       domain,
@@ -130,7 +130,7 @@ describe("Create event", () => {
     });
   });
   it("should get called with expected params if authorized is missing", async () => {
-    const value = await createEvent({
+    const value = createEvent({
       trace,
       action,
       domain,
@@ -173,7 +173,7 @@ describe("Create event", () => {
     });
   });
   it("should get called with expected params if context and session are missing", async () => {
-    const value = await createEvent({
+    const value = createEvent({
       trace,
       action,
       domain,
