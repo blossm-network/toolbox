@@ -11,38 +11,38 @@ describe("create", () => {
   });
   it("it should return correctly with all optional params unspecified", async () => {
     const execResult = 4;
-    const createFake = fake.returns(execResult);
+    const insertManyFake = fake.returns(execResult);
     const store = {
-      create: createFake
+      insertMany: insertManyFake
     };
 
     const result = await create({ store, data });
 
     expect(result).to.equal(execResult);
-    expect(createFake).to.have.been.calledWith([data]);
+    expect(insertManyFake).to.have.been.calledWith([data]);
   });
   it("it should return correctly with all optional params unspecified and array data", async () => {
     const execResult = 4;
-    const createFake = fake.returns(execResult);
+    const insertManyFake = fake.returns(execResult);
     const store = {
-      create: createFake
+      insertMany: insertManyFake
     };
 
     const result = await create({ store, data: [data] });
 
     expect(result).to.equal(execResult);
-    expect(createFake).to.have.been.calledWith([data]);
+    expect(insertManyFake).to.have.been.calledWith([data]);
   });
   it("it should return correctly with all optional params included", async () => {
     const execResult = 4;
-    const createFake = fake.returns(execResult);
+    const insertManyFake = fake.returns(execResult);
     const store = {
-      create: createFake
+      insertMany: insertManyFake
     };
 
     const result = await create({ store, options, data });
 
     expect(result).to.equal(execResult);
-    expect(createFake).to.have.been.calledWith([data], options);
+    expect(insertManyFake).to.have.been.calledWith([data], options);
   });
 });
