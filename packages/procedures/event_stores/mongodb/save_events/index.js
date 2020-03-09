@@ -26,7 +26,7 @@ module.exports = ({ eventStore, handlers }) => async events => {
     });
     return groomedResults;
   } catch (e) {
-    if (e.code == "11000" && e.keyPattern.id == 1) {
+    if (e.code == "11000" && e.keyPattern && e.keyPattern.id == 1) {
       throw preconditionFailed.eventNumberDuplicate();
     } else {
       throw e;
