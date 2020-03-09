@@ -30,7 +30,7 @@ const events = [
     }
   }
 ];
-const lastEventNumber = 4;
+const lastEventNumber = 0;
 
 const aggregate = { headers: { lastEventNumber, root } };
 
@@ -340,7 +340,7 @@ describe("Event store post", () => {
         events: [
           {
             ...events[0],
-            number: lastEventNumber
+            number: 1
           }
         ]
       }

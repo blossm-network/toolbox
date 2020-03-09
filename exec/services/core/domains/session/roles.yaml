@@ -1,0 +1,8 @@
+domain: session
+service: core
+
+roles:
+  SessionAdmin:
+    title: Session Admin
+    priviledges:
+      - update

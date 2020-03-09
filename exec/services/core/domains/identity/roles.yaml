@@ -2,7 +2,7 @@ domain: identity
 service: core
 
 roles:
-  admin:
-    title: IdentityAdmin
+  IdentityAdmin:
+    title: Identity Admin
     priviledges:
       - create

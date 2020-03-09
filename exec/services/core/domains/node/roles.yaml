@@ -2,8 +2,8 @@ domain: node
 service: core
 
 roles:
-  admin:
-    title: NodeAdmin
+  NodeAdmin:
+    title: Node Admin
     priviledges:
       - create
       - update
