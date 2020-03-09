@@ -80,7 +80,7 @@ describe("View store base integration tests", () => {
     const example0 = testing.examples.index;
     expect(example0).to.exist;
 
-    const id = await uuid();
+    const id = uuid();
 
     const response = await request.put(`${url}/${id}`, {
       body: {
@@ -119,8 +119,8 @@ describe("View store base integration tests", () => {
     expect(example0).to.exist;
     expect(example1).to.exist;
 
-    const id0 = await uuid();
-    const id1 = await uuid();
+    const id0 = uuid();
+    const id1 = uuid();
 
     const response = await request.put(`${url}/${id0}`, {
       body: {

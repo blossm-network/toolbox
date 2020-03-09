@@ -43,30 +43,34 @@ describe("Event store integration tests", () => {
   });
 
   it("should return successfully", async () => {
-    const root = await uuid();
+    const root = uuid();
 
     const response0 = await request.post(url, {
       body: {
-        event: {
-          headers: {
-            root,
-            topic,
-            action: example0.action,
-            domain,
-            service,
-            version,
-            created,
-            command: {
-              id,
-              name,
-              domain,
-              service,
-              network,
-              issued
+        events: [
+          {
+            data: {
+              headers: {
+                root,
+                topic,
+                action: example0.action,
+                domain,
+                service,
+                version,
+                created,
+                command: {
+                  id,
+                  name,
+                  domain,
+                  service,
+                  network,
+                  issued
+                }
+              },
+              payload: example0.payload
             }
-          },
-          payload: example0.payload
-        }
+          }
+        ]
       }
     });
 
@@ -84,26 +88,30 @@ describe("Event store integration tests", () => {
 
     const response2 = await request.post(url, {
       body: {
-        event: {
-          headers: {
-            root,
-            topic,
-            version,
-            created,
-            action: example1.action,
-            domain,
-            service,
-            command: {
-              id,
-              name,
-              domain,
-              service,
-              network,
-              issued
+        events: [
+          {
+            data: {
+              headers: {
+                root,
+                topic,
+                version,
+                created,
+                action: example1.action,
+                domain,
+                service,
+                command: {
+                  id,
+                  name,
+                  domain,
+                  service,
+                  network,
+                  issued
+                }
+              },
+              payload: example1.payload
             }
-          },
-          payload: example1.payload
-        }
+          }
+        ]
       }
     });
 
@@ -136,6 +144,62 @@ describe("Event store integration tests", () => {
       }
     }
   });
+  it("should return successfully adding two events together", async () => {
+    const root = uuid();
+
+    const response = await request.post(url, {
+      body: {
+        events: [
+          {
+            data: {
+              headers: {
+                root,
+                topic,
+                version,
+                created,
+                action: example0.action,
+                domain,
+                service,
+                command: {
+                  id,
+                  name,
+                  domain,
+                  service,
+                  network,
+                  issued
+                }
+              },
+              payload: example0.payload
+            }
+          },
+          {
+            data: {
+              headers: {
+                root,
+                topic,
+                version,
+                created,
+                action: example1.action,
+                domain,
+                service,
+                command: {
+                  id,
+                  name,
+                  domain,
+                  service,
+                  network,
+                  issued
+                }
+              },
+              payload: example1.payload
+            }
+          }
+        ]
+      }
+    });
+
+    expect(response.statusCode).to.equal(204);
+  });
 
   it("should publish event successfully", done => {
     subscribe({
@@ -156,44 +220,52 @@ describe("Event store integration tests", () => {
           await unsubscribe({ topic, name: sub });
           done();
         });
-        const root = await uuid();
+        const root = uuid();
         request.post(url, {
           body: {
-            event: {
-              headers: {
-                root,
-                topic,
-                version,
-                created,
-                action: example0.action,
-                domain,
-                service,
-                command: { id, name, domain, service, network, issued }
-              },
-              payload: example0.payload
-            }
+            events: [
+              {
+                data: {
+                  headers: {
+                    root,
+                    topic,
+                    version,
+                    created,
+                    action: example0.action,
+                    domain,
+                    service,
+                    command: { id, name, domain, service, network, issued }
+                  },
+                  payload: example0.payload
+                }
+              }
+            ]
           }
         });
       }
     });
   });
   const testIncorrectParams = async ({ payload, action }) => {
-    const root = await uuid();
+    const root = uuid();
     const response = await request.post(url, {
       body: {
-        event: {
-          headers: {
-            root,
-            topic,
-            version,
-            created,
-            action,
-            domain,
-            service,
-            command: { id, name, domain, service, network, issued }
-          },
-          payload
-        }
+        events: [
+          {
+            data: {
+              headers: {
+                root,
+                topic,
+                version,
+                created,
+                action,
+                domain,
+                service,
+                command: { id, name, domain, service, network, issued }
+              },
+              payload
+            }
+          }
+        ]
       }
     });
     expect(response.statusCode).to.equal(500);
@@ -252,86 +324,98 @@ describe("Event store integration tests", () => {
   });
 
   it("should return an error if bad number", async () => {
-    const root = await uuid();
+    const root = uuid();
 
     const response = await request.post(url, {
       body: {
-        event: {
-          headers: {
-            root,
-            topic,
-            version,
-            created,
-            action: testing.action,
-            domain,
-            service,
-            command: {
-              id,
-              name,
-              domain,
-              service,
-              network,
-              issued
-            }
-          },
-          payload: example0
-        },
-        number: 2
+        events: [
+          {
+            data: {
+              headers: {
+                root,
+                topic,
+                version,
+                created,
+                action: testing.action,
+                domain,
+                service,
+                command: {
+                  id,
+                  name,
+                  domain,
+                  service,
+                  network,
+                  issued
+                }
+              },
+              payload: example0
+            },
+            number: 2
+          }
+        ]
       }
     });
     expect(response.statusCode).to.equal(412);
   });
   it("should return an error if two simultaneous events are attempted", async () => {
-    const root = await uuid();
+    const root = uuid();
 
     const [response0, response1] = await Promise.all([
       request.post(url, {
         body: {
-          event: {
-            headers: {
-              root,
-              topic,
-              version,
-              created,
-              action: example0.action,
-              domain,
-              service,
-              command: {
-                id,
-                name,
-                domain,
-                service,
-                network,
-                issued
+          events: [
+            {
+              data: {
+                headers: {
+                  root,
+                  topic,
+                  version,
+                  created,
+                  action: example0.action,
+                  domain,
+                  service,
+                  command: {
+                    id,
+                    name,
+                    domain,
+                    service,
+                    network,
+                    issued
+                  }
+                },
+                payload: example0.payload
               }
-            },
-            payload: example0.payload
-          }
+            }
+          ]
         }
       }),
 
       request.post(url, {
         body: {
-          event: {
-            headers: {
-              root,
-              topic,
-              version,
-              created,
-              action: example1.action,
-              domain,
-              service,
-              command: {
-                id,
-                name,
-                domain,
-                service,
-                network,
-                issued
+          events: [
+            {
+              data: {
+                headers: {
+                  root,
+                  topic,
+                  version,
+                  created,
+                  action: example1.action,
+                  domain,
+                  service,
+                  command: {
+                    id,
+                    name,
+                    domain,
+                    service,
+                    network,
+                    issued
+                  }
+                },
+                payload: example1.payload
               }
-            },
-            payload: example1.payload
-          }
+            }
+          ]
         }
       })
     ]);
@@ -344,30 +428,34 @@ describe("Event store integration tests", () => {
     }
   });
   it("should return an error if action is not recognized", async () => {
-    const root = await uuid();
+    const root = uuid();
 
     const response = await request.post(url, {
       body: {
-        event: {
-          headers: {
-            root,
-            topic,
-            version,
-            created,
-            action: "bogus",
-            domain,
-            service,
-            command: {
-              id,
-              name,
-              domain,
-              service,
-              network,
-              issued
+        events: [
+          {
+            data: {
+              headers: {
+                root,
+                topic,
+                version,
+                created,
+                action: "bogus",
+                domain,
+                service,
+                command: {
+                  id,
+                  name,
+                  domain,
+                  service,
+                  network,
+                  issued
+                }
+              },
+              payload: example0.payload
             }
-          },
-          payload: example0.payload
-        }
+          }
+        ]
       }
     });
 

@@ -6,7 +6,7 @@ const deps = require("./deps");
 
 module.exports = async ({ payload }) => {
   // Create the root for this session.
-  const root = await deps.uuid();
+  const root = deps.uuid();
 
   // Create a long-lived token.
   const token = await deps.createJwt({

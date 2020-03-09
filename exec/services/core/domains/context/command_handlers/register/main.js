@@ -2,7 +2,7 @@ const deps = require("./deps");
 
 module.exports = async ({ payload, root, context, session }) => {
   // Create a root for the context, and determine what root should be used for the principle.
-  const principleRoot = session.sub || (await deps.uuid());
+  const principleRoot = session.sub || deps.uuid();
 
   // Give the principle admin priviledges to this context.
   const events = [

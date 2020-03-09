@@ -53,7 +53,7 @@ module.exports = async ({
     );
 
   // Create the root for this challenge.
-  const root = await deps.uuid();
+  const root = deps.uuid();
 
   // Create a token that can only access the answer challenge command.
   const token = await deps.createJwt({
