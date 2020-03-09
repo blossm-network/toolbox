@@ -313,7 +313,7 @@ describe("Event store post", () => {
         events: [
           {
             ...events[0],
-            number: 1
+            number: currentEventsForRoot + 1
           }
         ]
       }

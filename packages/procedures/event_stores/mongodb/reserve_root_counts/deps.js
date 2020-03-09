@@ -1,3 +1,3 @@
-const { create } = require("@blossm/mongodb-database");
+const { write } = require("@blossm/mongodb-database");
 
-exports.db = { create };
+exports.db = { write };
