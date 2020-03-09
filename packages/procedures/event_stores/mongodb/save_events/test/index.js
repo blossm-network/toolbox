@@ -49,8 +49,7 @@ describe("Mongodb event store create event", () => {
     class DuplicateError extends Error {
       constructor() {
         super();
-        this.code = "11000";
-        this.keyPattern = { id: 1 };
+        this.code = 11000;
       }
     }
     const createFake = fake.rejects(new DuplicateError());
