@@ -21,64 +21,72 @@ module.exports = async ({
   // Create the identity for the token.
   await eventStore({
     domain: "identity"
-  }).add(
-    await createEvent({
-      root: identityRoot,
-      payload: {
-        principle: principleRoot,
-        phone: await hash(phone),
-        id
-      },
-      action: "register",
-      domain: "identity",
-      service: process.env.SERVICE
-    })
-  );
+  }).add([
+    {
+      data: await createEvent({
+        root: identityRoot,
+        payload: {
+          principle: principleRoot,
+          phone: await hash(phone),
+          id
+        },
+        action: "register",
+        domain: "identity",
+        service: process.env.SERVICE
+      })
+    }
+  ]);
 
   // Add permissions to the role
   // and add role to the principle.
   await Promise.all([
     eventStore({
       domain: "role"
-    }).add(
-      await createEvent({
-        root: roleRoot,
-        payload: {
-          id: roleId,
-          permissions
-        },
-        action: "create",
-        domain: "role",
-        service: process.env.SERVICE
-      })
-    ),
+    }).add([
+      {
+        data: await createEvent({
+          root: roleRoot,
+          payload: {
+            id: roleId,
+            permissions
+          },
+          action: "create",
+          domain: "role",
+          service: process.env.SERVICE
+        })
+      }
+    ]),
     eventStore({
       domain: "principle"
-    }).add(
-      await createEvent({
-        root: principleRoot,
-        payload: {
-          roles: [roleId]
-        },
-        action: "add-roles",
-        domain: "principle",
-        service: process.env.SERVICE
-      })
-    )
+    }).add([
+      {
+        data: await createEvent({
+          root: principleRoot,
+          payload: {
+            roles: [roleId]
+          },
+          action: "add-roles",
+          domain: "principle",
+          service: process.env.SERVICE
+        })
+      }
+    ])
   ]);
 
   // Add a session.
   await eventStore({
     domain: "session"
-  }).add(
-    await createEvent({
-      root: sessionRoot,
-      payload: {},
-      action: "start",
-      domain: "session",
-      service: process.env.SERVICE
-    })
-  );
+  }).add([
+    {
+      data: await createEvent({
+        root: sessionRoot,
+        payload: {},
+        action: "start",
+        domain: "session",
+        service: process.env.SERVICE
+      })
+    }
+  ]);
 
   const { tokens } = await command({
     name: "upgrade",
