@@ -43,11 +43,14 @@ describe("Mongodb event store", () => {
     const mongodbEventStore = require("..");
     const eStore = "some-event-store";
     const sStore = "some-snapshot-store";
+    const cStore = "some-counts-store";
     const storeFake = stub()
       .onCall(0)
       .returns(eStore)
       .onCall(1)
-      .returns(sStore);
+      .returns(sStore)
+      .onCall(2)
+      .returns(cStore);
 
     const secretFake = fake.returns(password);
     replace(deps, "secret", secretFake);
@@ -73,6 +76,9 @@ describe("Mongodb event store", () => {
     const saveEventsResult = "some-save-events-result";
     const saveEventsFake = fake.returns(saveEventsResult);
     replace(deps, "saveEvents", saveEventsFake);
+    const reserveRootCountsResult = "some-reserve-root-count-result";
+    const reserveRootCountsFake = fake.returns(reserveRootCountsResult);
+    replace(deps, "reserveRootCounts", reserveRootCountsFake);
     const aggregateResult = "some-aggregate-result";
     const aggregateFake = fake.returns(aggregateResult);
     replace(deps, "aggregate", aggregateFake);
@@ -164,6 +170,9 @@ describe("Mongodb event store", () => {
       eventStore: eStore,
       handlers
     });
+    expect(reserveRootCountsFake).to.have.been.calledWith({
+      countsStore: cStore
+    });
     expect(aggregateFake).to.have.been.calledWith({
       eventStore: eStore,
       snapshotStore: sStore,
@@ -178,11 +187,12 @@ describe("Mongodb event store", () => {
       aggregateFn: aggregateResult,
       saveEventsFn: saveEventsResult,
       queryFn: queryResult,
+      reserveRootCountsFn: reserveRootCountsResult,
       publishFn
     });
 
     await mongodbEventStore();
-    expect(storeFake).to.have.been.calledTwice;
+    expect(storeFake).to.have.been.calledThrice;
   });
   it("should call with the correct params with indexes", async () => {
     const mongodbEventStore = require("..");
@@ -301,111 +311,13 @@ describe("Mongodb event store", () => {
       },
       indexes: [[{ "headers.root": 1 }], [{ [index]: 1 }]]
     });
-  });
-  it("should call with the correct params in local env", async () => {
-    const mongodbEventStore = require("..");
-    const eStore = "some-event-store";
-    const sStore = "some-snapshot-store";
-    const storeFake = stub()
-      .onCall(0)
-      .returns(eStore)
-      .onCall(1)
-      .returns(sStore);
-
-    const secretFake = fake.returns(password);
-    replace(deps, "secret", secretFake);
-
-    const eventStoreFake = fake();
-    replace(deps, "eventStore", eventStoreFake);
-
-    const eventStoreSchema = { a: String };
-    const snapshotStoreSchema = "some-snapshot-schema";
-    const removeIdsFake = stub()
-      .onCall(0)
-      .returns(eventStoreSchema)
-      .onCall(1)
-      .returns(snapshotStoreSchema);
-
-    replace(deps, "removeIds", removeIdsFake);
-
-    const db = {
-      store: storeFake
-    };
-    replace(deps, "db", db);
-
-    process.env.NODE_ENV = "local";
-
-    const saveEventsResult = "some-save-events-result";
-    const saveEventsFake = fake.returns(saveEventsResult);
-    replace(deps, "saveEvents", saveEventsFake);
-    const aggregateResult = "some-aggregate-result";
-    const aggregateFake = fake.returns(aggregateResult);
-    replace(deps, "aggregate", aggregateFake);
-    const queryResult = "some-query-result";
-    const queryFake = fake.returns(queryResult);
-    replace(deps, "query", queryFake);
-
-    await mongodbEventStore({ schema, publishFn });
-
     expect(storeFake).to.have.been.calledWith({
-      name: domain,
+      name: `${domain}.counts`,
       schema: {
-        id: { type: String, required: true, unique: true },
-        saved: { type: Date, required: true },
-        payload: { a: { type: String, required: false, unique: false } },
-        headers: {
-          root: { type: String, required: true },
-          number: { type: Number, required: true },
-          topic: { type: String, required: true },
-          version: { type: Number, required: true },
-          action: { type: String, required: true },
-          domain: { type: String, required: true },
-          service: { type: String, required: true },
-          trace: { type: String },
-          context: { type: Object },
-          session: {
-            type: {
-              iss: String,
-              aud: String,
-              sub: String,
-              exp: String,
-              iat: String,
-              jti: String
-            }
-          },
-          created: { type: Date, required: true },
-          idempotency: { type: String, required: true, unique: true },
-          command: {
-            type: {
-              id: { type: String, required: true },
-              name: { type: String, required: true },
-              domain: { type: String, required: true },
-              service: { type: String, required: true },
-              network: { type: String, required: true },
-              issued: { type: String, required: true }
-            },
-            default: null
-          }
-        }
+        root: { type: String, required: true },
+        value: { type: Number, required: true, default: 0 }
       },
-      indexes: [
-        [{ id: 1 }],
-        [{ "headers.root": 1 }],
-        [{ "headers.root": 1, "headers.number": 1, _id: 1, __v: 1 }]
-      ],
-      connection: {
-        protocol,
-        user,
-        password: userPassword,
-        host,
-        database,
-        parameters: {
-          authSource: "admin",
-          retryWrites: true,
-          w: "majority"
-        },
-        autoIndex: true
-      }
+      indexes: [[{ root: 1 }]]
     });
   });
   it("should call with the correct params when schema has object property", async () => {

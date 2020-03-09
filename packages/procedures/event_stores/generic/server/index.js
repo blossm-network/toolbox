@@ -4,6 +4,7 @@ module.exports = async ({
   aggregateFn,
   saveEventsFn,
   queryFn,
+  reserveRootCountsFn,
   publishFn
 } = {}) => {
   deps
@@ -12,7 +13,7 @@ module.exports = async ({
     .post(
       deps.post({
         saveEventsFn,
-        aggregateFn,
+        reserveRootCountsFn,
         publishFn
       })
     )

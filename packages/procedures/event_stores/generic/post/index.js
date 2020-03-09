@@ -2,22 +2,31 @@ const deps = require("./deps");
 
 const { preconditionFailed, badRequest } = require("@blossm/errors");
 
-module.exports = ({ saveEventsFn, aggregateFn, publishFn }) => {
+module.exports = ({ saveEventsFn, reserveRootCountsFn, publishFn }) => {
   return async (req, res) => {
     const eventNumberOffsets = {};
-    const eventRoots = [
-      ...new Set(req.body.events.map(event => event.data.headers.root))
-    ];
 
-    const [...aggregates] = await Promise.all(
-      eventRoots.map(root => aggregateFn(root))
-    );
-
-    const lastEventNumbers = aggregates.reduce((result, aggregate) => {
-      if (!aggregate) return result;
-      result[aggregate.headers.root] = aggregate.headers.lastEventNumber;
+    const eventRootCounts = req.body.events.reduce((result, event) => {
+      if (result[event.data.headers.root] == undefined)
+        result[event.data.headers.root] = 0;
+      result[event.data.headers.root]++;
       return result;
     }, {});
+
+    const [...updatedCountObjects] = await Promise.all(
+      Object.keys(eventRootCounts).map(root =>
+        reserveRootCountsFn({ root, amount: eventRootCounts[root] })
+      )
+    );
+
+    const currentEventCounts = updatedCountObjects.reduce(
+      (result, countObject) => {
+        result[countObject.root] =
+          countObject.value - eventRootCounts[countObject.root];
+        return result;
+      },
+      {}
+    );
 
     const normalizedEvents = req.body.events.map(event => {
       if (!eventNumberOffsets[event.data.headers.root])
@@ -41,9 +50,8 @@ module.exports = ({ saveEventsFn, aggregateFn, publishFn }) => {
       const root = event.data.headers.root;
 
       const number =
-        (lastEventNumbers[event.data.headers.root] != undefined
-          ? lastEventNumbers[event.data.headers.root] + 1
-          : 0) + eventNumberOffsets[event.data.headers.root];
+        currentEventCounts[event.data.headers.root] +
+        eventNumberOffsets[event.data.headers.root];
 
       if (event.number && event.number != number)
         throw preconditionFailed.eventNumberIncorrect({

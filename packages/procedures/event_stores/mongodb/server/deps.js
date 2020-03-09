@@ -5,6 +5,7 @@ const eventStore = require("@blossm/event-store");
 const removeIds = require("@blossm/remove-ids-from-mongodb-schema");
 const saveEvents = require("@blossm/mongodb-event-store-save-events");
 const aggregate = require("@blossm/mongodb-event-store-aggregate");
+const reserveRootCounts = require("@blossm/mongodb-event-store-reserve-root-counts");
 const query = require("@blossm/mongodb-event-store-query");
 
 exports.secret = secret;
@@ -14,4 +15,5 @@ exports.db = { store };
 exports.removeIds = removeIds;
 exports.saveEvents = saveEvents;
 exports.aggregate = aggregate;
+exports.reserveRootCounts = reserveRootCounts;
 exports.query = query;
