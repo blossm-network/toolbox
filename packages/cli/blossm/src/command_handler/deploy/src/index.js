@@ -34,12 +34,12 @@ module.exports = commandHandler({
       aggregate: aggregate.state
     };
   },
-  addFn: async ({ domain, context, session, event, number }) =>
+  addFn: async ({ domain, context, session, events }) =>
     eventStore({ domain })
       .set({
         context,
         session,
         tokenFn: gcpToken
       })
-      .add(event, { number })
+      .add(events)
 });

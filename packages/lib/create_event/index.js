@@ -1,7 +1,7 @@
 const { string: stringDate } = require("@blossm/datetime");
 const deps = require("./deps");
 
-module.exports = async ({
+module.exports = ({
   root,
   payload,
   version = 0,
@@ -14,14 +14,14 @@ module.exports = async ({
 } = {}) => {
   return {
     headers: {
-      root: root || (await deps.uuid()),
+      root: root || deps.uuid(),
       action,
       domain,
       service,
       topic: `did-${action}.${domain}.${service}`,
       version,
       created: stringDate(),
-      idempotency: idempotency || (await deps.uuid()),
+      idempotency: idempotency || deps.uuid(),
       ...(trace != undefined && { trace }),
       ...(command && {
         command: {

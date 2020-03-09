@@ -36,6 +36,12 @@ module.exports = async ({ root, payload, context, session, aggregateFn }) => {
         root,
         action: "upgrade",
         payload: { upgraded: deps.stringDate(), principle: payload.principle }
+      },
+      {
+        root: payload.principle,
+        domain: "principle",
+        action: "add-roles",
+        payload: { roles: ["SessionAdmin"] }
       }
     ],
     response: { tokens: { session: token } }

@@ -21,7 +21,7 @@
     "@blossm/mongodb-database": "^0.0.32",
     "@blossm/mongodb-event-store-aggregate": "^0.0.14",
     "@blossm/mongodb-event-store-query": "^0.0.15",
-    "@blossm/mongodb-event-store-save-event": "^0.0.18",
+    "@blossm/mongodb-event-store-save-events": "*",
     "@blossm/remove-ids-from-mongodb-schema": "^0.0.2"
   },
   "devDependencies": {

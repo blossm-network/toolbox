@@ -69,56 +69,62 @@ describe("Event store", () => {
 
     await eventStore({ domain, service, network })
       .set({ context, session, tokenFn })
-      .add(
+      .add([
         {
-          headers: {
-            root,
-            topic,
-            action: eventAction,
-            domain: eventDomain,
-            service: eventService,
-            version,
-            trace,
-            command: {
-              name: commandName,
-              domain: commandDomain,
-              service: commandService,
-              network: commandNetwork,
-              id: commandId,
-              issued: commandIssuedTimestamp
-            }
+          data: {
+            headers: {
+              root,
+              topic,
+              action: eventAction,
+              domain: eventDomain,
+              service: eventService,
+              version,
+              trace,
+              command: {
+                name: commandName,
+                domain: commandDomain,
+                service: commandService,
+                network: commandNetwork,
+                id: commandId,
+                issued: commandIssuedTimestamp
+              }
+            },
+            payload
           },
-          payload
-        },
-        { number }
-      );
+          number
+        }
+      ]);
 
     expect(rpcFake).to.have.been.calledWith(domain, "event-store");
     expect(postFake).to.have.been.calledWith({
-      event: {
-        headers: {
-          root,
-          context,
-          session,
-          topic,
-          action: eventAction,
-          domain: eventDomain,
-          service: eventService,
-          version,
-          command: {
-            id: commandId,
-            name: commandName,
-            domain: commandDomain,
-            service: commandService,
-            network: commandNetwork,
-            issued: commandIssuedTimestamp
+      events: [
+        {
+          data: {
+            headers: {
+              root,
+              context,
+              session,
+              topic,
+              action: eventAction,
+              domain: eventDomain,
+              service: eventService,
+              version,
+              command: {
+                id: commandId,
+                name: commandName,
+                domain: commandDomain,
+                service: commandService,
+                network: commandNetwork,
+                issued: commandIssuedTimestamp
+              },
+              trace,
+              created: dateString()
+            },
+            payload
           },
-          trace,
-          created: dateString()
-        },
-        payload
-      },
-      number
+          number
+        }
+      ]
     });
     expect(inFake).to.have.been.calledWith({
       context,
@@ -142,32 +148,40 @@ describe("Event store", () => {
     });
     replace(deps, "rpc", rpcFake);
 
-    await eventStore({ domain }).add({
-      headers: {
-        root,
-        topic,
-        action: eventAction,
-        domain: eventDomain,
-        service: eventService,
-        version
-      },
-      payload
-    });
+    await eventStore({ domain }).add([
+      {
+        data: {
+          headers: {
+            root,
+            topic,
+            action: eventAction,
+            domain: eventDomain,
+            service: eventService,
+            version
+          },
+          payload
+        }
+      }
+    ]);
 
     expect(rpcFake).to.have.been.calledWith(domain, "event-store");
     expect(postFake).to.have.been.calledWith({
-      event: {
-        headers: {
-          root,
-          topic,
-          action: eventAction,
-          domain: eventDomain,
-          service: eventService,
-          version,
-          created: dateString()
-        },
-        payload
-      }
+      events: [
+        {
+          data: {
+            headers: {
+              root,
+              topic,
+              action: eventAction,
+              domain: eventDomain,
+              service: eventService,
+              version,
+              created: dateString()
+            },
+            payload
+          }
+        }
+      ]
     });
     expect(inFake).to.have.been.calledWith({});
     expect(withFake).to.have.been.calledWith();

@@ -3,42 +3,25 @@ const { string: dateString } = require("@blossm/datetime");
 const deps = require("./deps");
 
 module.exports = ({ domain, service, network } = {}) => {
-  const add = ({ context, session, tokenFn } = {}) => async (
-    {
-      headers: {
-        root,
-        action: eventAction,
-        domain: eventDomain,
-        service: eventService,
-        topic,
-        version,
-        trace,
-        command
-      },
-      payload
-    },
-    { number } = {}
-  ) => {
-    const event = {
-      headers: {
-        root,
-        topic,
-        action: eventAction,
-        domain: eventDomain,
-        service: eventService,
-        version,
-        created: dateString(),
-        ...(context && { context }),
-        ...(session && { session }),
-        ...(trace && { trace }),
-        ...(command && { command })
-      },
-      payload
-    };
+  const add = ({ context, session, tokenFn } = {}) => async events => {
+    const normalizedEvents = events.map(event => {
+      return {
+        data: {
+          headers: {
+            ...event.data.headers,
+            created: dateString(),
+            ...(context && { context }),
+            ...(session && { session })
+          },
+          payload: event.data.payload
+        },
+        ...(event.number && { number: event.number })
+      };
+    });
 
     await deps
       .rpc(domain, "event-store")
-      .post({ event, ...(number && { number }) })
+      .post({ events: normalizedEvents })
       .in({
         ...(context && { context }),
         ...(session && { session }),

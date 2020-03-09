@@ -3,11 +3,10 @@ const { restore, replace, fake } = require("sinon");
 const gcp = require("@google-cloud/pubsub");
 
 let eventBus;
-const result = "random";
 const topic = "some-topic";
 const name = "some-name";
 const fn = "some-fn";
-const publishFake = fake.returns(result);
+const publishFake = fake();
 
 describe("Pub sub", () => {
   beforeEach(() => {
@@ -34,11 +33,37 @@ describe("Pub sub", () => {
         a: 1
       }
     };
-    const value = await eventBus.publish(data);
+    await eventBus.publish(data);
     expect(publishFake).to.have.been.calledWith(
       Buffer.from(JSON.stringify(data))
     );
-    expect(value).to.equal(result);
+  });
+  it("should call publish with the correct array params", async () => {
+    const pubsub = function() {};
+    pubsub.prototype.topic = t => {
+      expect(t).to.equal(topic);
+      return {
+        publish: publishFake
+      };
+    };
+    replace(gcp, "PubSub", pubsub);
+    eventBus = require("..");
+    const data = [
+      {
+        headers: {
+          topic
+        },
+        payload: {
+          a: 1
+        }
+      }
+    ];
+    await eventBus.publish(data);
+    for (const element of data) {
+      expect(publishFake).to.have.been.calledWith(
+        Buffer.from(JSON.stringify(element))
+      );
+    }
   });
   it("should call publish with the correct params and add a payload if missing", async () => {
     const pubsub = function() {};
@@ -53,11 +78,10 @@ describe("Pub sub", () => {
     const headers = {
       topic
     };
-    const value = await eventBus.publish({ headers });
+    await eventBus.publish({ headers });
     expect(publishFake).to.have.been.calledWith(
       Buffer.from(JSON.stringify({ headers: { topic }, payload: {} }))
     );
-    expect(value).to.equal(result);
   });
   it("should call subscribe with the correct params", async () => {
     const pubsub = function() {};

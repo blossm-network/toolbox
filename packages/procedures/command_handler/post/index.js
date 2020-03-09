@@ -25,65 +25,56 @@ module.exports = ({
       })
     });
 
-    const synchronousFns = [];
-    let asynchronousFns = [];
+    const eventsPerStore = {};
+
     for (const {
       root,
       payload = {},
       correctNumber,
-      async = true,
       version = 0,
       action,
       domain = process.env.DOMAIN
     } of events) {
-      const fn = async () => {
-        const event = await deps.createEvent({
-          ...(root && { root }),
-          payload,
-          trace: req.body.headers.trace,
-          version,
-          action,
-          domain,
+      const eventData = deps.createEvent({
+        ...(root && { root }),
+        payload,
+        trace: req.body.headers.trace,
+        version,
+        action,
+        domain,
+        service: process.env.SERVICE,
+        idempotency: req.body.headers.idempotency,
+        command: {
+          id: req.body.headers.id,
+          issued: req.body.headers.issued,
+          name: process.env.NAME,
+          domain: process.env.DOMAIN,
           service: process.env.SERVICE,
-          idempotency: req.body.headers.idempotency,
-          command: {
-            id: req.body.headers.id,
-            issued: req.body.headers.issued,
-            name: process.env.NAME,
-            domain: process.env.DOMAIN,
-            service: process.env.SERVICE,
-            network: process.env.NETWORK
-          }
-        });
+          network: process.env.NETWORK
+        }
+      });
+      const normalizedEvent = {
+        data: eventData,
+        ...(correctNumber && { number: correctNumber })
+      };
+      eventsPerStore[domain] = eventsPerStore[domain]
+        ? eventsPerStore[domain].concat([normalizedEvent])
+        : [normalizedEvent];
+    }
 
-        await addFn({
+    const fns = [];
+    for (const domain in eventsPerStore) {
+      fns.push(
+        addFn({
           domain,
           context: req.body.context,
           session: req.body.session,
-          event,
-          ...(correctNumber && { number: correctNumber })
-        });
-      };
-
-      if (async) {
-        asynchronousFns.push(fn);
-      } else {
-        synchronousFns.push(
-          async () => await Promise.all(asynchronousFns.map(f => f()))
-        );
-        synchronousFns.push(fn);
-        asynchronousFns = [];
-      }
+          events: eventsPerStore[domain]
+        })
+      );
     }
 
-    for (const fn of [
-      ...synchronousFns,
-      ...(asynchronousFns.length > 0
-        ? [async () => await Promise.all(asynchronousFns.map(f => f()))]
-        : [])
-    ]) {
-      await fn();
-    }
+    await Promise.all(fns);
 
     res.status(response ? 200 : 204).send(response);
   };

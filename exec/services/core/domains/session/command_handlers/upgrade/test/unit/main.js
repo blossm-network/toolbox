@@ -68,6 +68,12 @@ describe("Command handler unit tests", () => {
             upgraded: deps.stringDate()
           },
           root
+        },
+        {
+          root: payload.principle,
+          domain: "principle",
+          action: "add-roles",
+          payload: { roles: ["SessionAdmin"] }
         }
       ],
       response: { tokens: { session: token } }

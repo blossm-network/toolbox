@@ -30,13 +30,17 @@ testing:
         principle: some-principle-root
       normalized:
         principle: some-principle-root
-  
+
+  procedures:
+    - domain: principle
+      context: event-store
+
   steps:
     - pre:
-      - domain: session
-        root: some-root
-        action: start
-        payload: {}
+        - domain: session
+          root: some-root
+          action: start
+          payload: {}
       payload:
         principle: some-principle-root
       root: some-root
@@ -48,21 +52,21 @@ testing:
         tokens:
           session:
     - pre:
-      - domain: session
-        root: some-other-root
-        action: upgrade
-        payload:
-          upgraded: 2019-12-31T00:00:00.000Z
+        - domain: session
+          root: some-other-root
+          action: upgrade
+          payload:
+            upgraded: 2019-12-31T00:00:00.000Z
       payload:
         principle: some-principle-root
       root: some-other-root
       code: 400
     - pre:
-      - domain: session
-        root: yet-another-root
-        action: logout
-        payload:
-          loggedout: 2019-12-31T00:00:00.000Z
+        - domain: session
+          root: yet-another-root
+          action: logout
+          payload:
+            loggedout: 2019-12-31T00:00:00.000Z
       payload:
         principle: some-principle-root
       root: yet-another-root

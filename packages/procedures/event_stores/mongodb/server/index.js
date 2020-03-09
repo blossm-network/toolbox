@@ -154,7 +154,7 @@ module.exports = async ({
       snapshotStore: sStore,
       handlers
     }),
-    saveEventFn: deps.saveEvent({
+    saveEventsFn: deps.saveEvents({
       eventStore: eStore,
       handlers
     }),

@@ -70,9 +70,9 @@ describe("Mongodb event store", () => {
     };
     replace(deps, "db", db);
 
-    const saveEventResult = "some-save-event-result";
-    const saveEventFake = fake.returns(saveEventResult);
-    replace(deps, "saveEvent", saveEventFake);
+    const saveEventsResult = "some-save-events-result";
+    const saveEventsFake = fake.returns(saveEventsResult);
+    replace(deps, "saveEvents", saveEventsFake);
     const aggregateResult = "some-aggregate-result";
     const aggregateFake = fake.returns(aggregateResult);
     replace(deps, "aggregate", aggregateFake);
@@ -160,7 +160,7 @@ describe("Mongodb event store", () => {
     });
     expect(secretFake).to.have.been.calledWith("mongodb");
 
-    expect(saveEventFake).to.have.been.calledWith({
+    expect(saveEventsFake).to.have.been.calledWith({
       eventStore: eStore,
       handlers
     });
@@ -176,7 +176,7 @@ describe("Mongodb event store", () => {
     });
     expect(eventStoreFake).to.have.been.calledWith({
       aggregateFn: aggregateResult,
-      saveEventFn: saveEventResult,
+      saveEventsFn: saveEventsResult,
       queryFn: queryResult,
       publishFn
     });
@@ -216,9 +216,9 @@ describe("Mongodb event store", () => {
     replace(deps, "db", db);
 
     const index = "some-index";
-    const saveEventResult = "some-save-event-result";
-    const saveEventFake = fake.returns(saveEventResult);
-    replace(deps, "saveEvent", saveEventFake);
+    const saveEventsResult = "some-save-events-result";
+    const saveEventsFake = fake.returns(saveEventsResult);
+    replace(deps, "saveEvents", saveEventsFake);
     const aggregateResult = "some-aggregate-result";
     const aggregateFake = fake.returns(aggregateResult);
     replace(deps, "aggregate", aggregateFake);
@@ -335,9 +335,9 @@ describe("Mongodb event store", () => {
 
     process.env.NODE_ENV = "local";
 
-    const saveEventResult = "some-save-event-result";
-    const saveEventFake = fake.returns(saveEventResult);
-    replace(deps, "saveEvent", saveEventFake);
+    const saveEventsResult = "some-save-events-result";
+    const saveEventsFake = fake.returns(saveEventsResult);
+    replace(deps, "saveEvents", saveEventsFake);
     const aggregateResult = "some-aggregate-result";
     const aggregateFake = fake.returns(aggregateResult);
     replace(deps, "aggregate", aggregateFake);
@@ -439,9 +439,9 @@ describe("Mongodb event store", () => {
     };
     replace(deps, "db", db);
 
-    const saveEventResult = "some-save-event-result";
-    const saveEventFake = fake.returns(saveEventResult);
-    replace(deps, "saveEvent", saveEventFake);
+    const saveEventsResult = "some-save-event-result";
+    const saveEventsFake = fake.returns(saveEventsResult);
+    replace(deps, "saveEvents", saveEventsFake);
     const aggregateResult = "some-aggregate-result";
     const aggregateFake = fake.returns(aggregateResult);
     replace(deps, "aggregate", aggregateFake);

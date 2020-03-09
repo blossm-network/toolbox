@@ -25,19 +25,21 @@ describe("Mongodb event store create event", () => {
     };
     replace(deps, "db", db);
 
-    const event = {
-      id,
-      headers: {
-        action
+    const events = [
+      {
+        id,
+        headers: {
+          action
+        }
       }
-    };
+    ];
 
-    const saveEventFnResult = await saveEvent({ eventStore, handlers })(event);
+    const saveEventFnResult = await saveEvent({ eventStore, handlers })(events);
     expect(createFake).to.have.been.calledWith({
       store: eventStore,
-      data: event
+      data: events
     });
-    expect(saveEventFnResult).to.deep.equal(createResult);
+    expect(saveEventFnResult).to.deep.equal([createResult]);
   });
   it("should throw correct error when events have a duplicate id", async () => {
     const eventStore = "some-event-store";
@@ -56,15 +58,17 @@ describe("Mongodb event store create event", () => {
     };
     replace(deps, "db", db);
 
-    const event = {
-      id,
-      headers: {
-        action,
-        number: "some-number"
+    const events = [
+      {
+        id,
+        headers: {
+          action,
+          number: "some-number"
+        }
       }
-    };
+    ];
     try {
-      await saveEvent({ eventStore, handlers })(event);
+      await saveEvent({ eventStore, handlers })(events);
 
       //shouldn't get called
       expect(1).to.equal(2);
@@ -82,15 +86,17 @@ describe("Mongodb event store create event", () => {
     };
     replace(deps, "db", db);
 
-    const event = {
-      id,
-      headers: {
-        action: "bogus",
-        number: "some-number"
+    const events = [
+      {
+        id,
+        headers: {
+          action: "bogus",
+          number: "some-number"
+        }
       }
-    };
+    ];
     try {
-      await saveEvent({ eventStore, handlers })(event);
+      await saveEvent({ eventStore, handlers })(events);
 
       //shouldn't get called
       expect(1).to.equal(2);
