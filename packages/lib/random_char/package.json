@@ -1,6 +1,6 @@
 {
   "name": "@blossm/random-char",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Returns a random char.",
   "main": "index.js",
   "author": "blossm.network",
