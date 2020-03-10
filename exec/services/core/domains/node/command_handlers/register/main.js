@@ -2,7 +2,8 @@ const deps = require("./deps");
 
 module.exports = async ({ payload, context, session }) => {
   // Create new roots for the context and the node.
-  const [nodeRoot, contextRoot] = await Promise.all([deps.uuid(), deps.uuid()]);
+  const nodeRoot = deps.uuid();
+  const contextRoot = deps.uuid();
 
   // Register the context.
   const { tokens, principle } = await deps
