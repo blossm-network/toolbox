@@ -340,6 +340,7 @@ describe("Event store integration tests", () => {
   const findBadValue = (schema, property) => {
     return schema[property] == "String" ||
       (typeof schema[property] == "object" &&
+        !(schema[property] instanceof Array) &&
         (schema[property]["type"] == "String" ||
           (typeof schema[property]["type"] == "object" &&
             schema[property]["type"]["type"] == "String")))
@@ -358,6 +359,41 @@ describe("Event store integration tests", () => {
         action: example0.action
       });
     }
+    return "bad-object";
+  };
+
+  const badArrayValue = async (property, schema) => {
+    const element = schema[0];
+    let badValue;
+    const [exampleToUse] = [
+      example0,
+      example1,
+      ...(testing.examples.more || [])
+    ].filter(example => example.payload[property] != undefined);
+
+    if (!exampleToUse) return "bad-array";
+
+    if (typeof element == "object") {
+      for (const objProperty in element) {
+        //root
+        badValue = findBadValue(element, objProperty);
+        await testIncorrectParams({
+          payload: {
+            ...exampleToUse.payload,
+            [property]: [{ [objProperty]: badValue }]
+          },
+          action: exampleToUse.action
+        });
+      }
+    } else {
+      badValue = element == "String" ? { a: 1 } : "some-string";
+      await testIncorrectParams({
+        payload: { ...exampleToUse.payload, [property]: [badValue] },
+        action: exampleToUse.action
+      });
+    }
+
+    return "bad-array";
   };
 
   it("should return an error if incorrect params", async () => {
@@ -366,10 +402,12 @@ describe("Event store integration tests", () => {
       let badValue;
       if (
         typeof schema[property] == "object" &&
+        !(schema[property] instanceof Array) &&
         schema[property]["type"] == undefined
       ) {
         badValue = await badObjectValue(property, schema[property]);
-        return;
+      } else if (schema[property] instanceof Array) {
+        badValue = await badArrayValue(property, schema[property]);
       } else {
         badValue = findBadValue(schema, property);
       }

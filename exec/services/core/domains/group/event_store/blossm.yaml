@@ -2,7 +2,10 @@ domain: group
 service: core
 
 schema:
-  identities: [String]
+  identities:
+    - root: String
+      service: String
+      network: String
 
 actions:
   - add-identities
@@ -12,23 +15,44 @@ testing:
     first:
       action: add-identities
       payload:
-        identities: [some-identity-root]
+        identities:
+          - root: some-identity-root
+            service: some-identity-service
+            network: some-identity-network
     second:
       action: add-identities
       payload:
-        identities: [some-other-identity-root]
+        identities:
+          - root: some-other-identity-root
+            service: some-other-identity-service
+            network: some-other-identity-network
 
   handlers:
     - action: add-identities
       examples:
         - state:
-            identities: [some-identity-root]
+            identities:
+              - root: some-identity-root
+                service: some-identiy-service
+                network: some-identiy-network
           payload:
-            identities: [some-other-identity-root]
+            identities:
+              - root: some-other-identity-root
+                service: some-other-identiy-service
+                network: some-other-identiy-network
           result:
-            identities: [some-identity-root, some-other-identity-root]
+            identities:
+              - root: some-identity-root
+                service: some-identiy-service
+                network: some-identiy-network
+              - root: some-other-identity-root
+                service: some-other-identiy-service
+                network: some-other-identiy-network
         - payload:
-            identities: [some-identity-root]
+            identities:
+              - root: some-identity-root
+                service: some-identity-service
+                network: some-identity-network
 
 #don't change
 context: event-store

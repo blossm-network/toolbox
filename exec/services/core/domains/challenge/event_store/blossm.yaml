@@ -3,7 +3,10 @@ service: core
 
 schema:
   code: String
-  principle: String
+  principle:
+    root: String
+    service: String
+    network: String
   issued: Date
   answered: String
   expires: Date

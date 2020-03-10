@@ -206,7 +206,11 @@ describe("Command handler unit tests", () => {
           root,
           payload: {
             code,
-            principle: optionsPrincipleRoot,
+            principle: {
+              root: optionsPrincipleRoot,
+              service,
+              network
+            },
             session,
             issued: new Date().toISOString(),
             expires: deps

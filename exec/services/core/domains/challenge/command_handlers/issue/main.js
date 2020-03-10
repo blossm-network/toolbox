@@ -96,7 +96,11 @@ module.exports = async ({
         action: "issue",
         payload: {
           code,
-          principle: identity.state.principle,
+          principle: {
+            root: identity.state.principle,
+            service: process.env.SERVICE,
+            network: process.env.NETWORK
+          },
           session,
           issued: deps.stringDate(),
           expires: deps

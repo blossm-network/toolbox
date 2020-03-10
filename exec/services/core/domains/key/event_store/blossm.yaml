@@ -4,6 +4,7 @@ service: core
 schema:
   name: String
   node: String
+  principle: String
   id:
     type: String
     unique: true
