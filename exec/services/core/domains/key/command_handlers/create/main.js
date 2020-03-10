@@ -5,10 +5,8 @@ module.exports = async ({ payload, context }) => {
 
   if (!node) throw "A key can only be made in the context of a node";
 
-  const [keyRoot, principleRoot] = await Promise.all([
-    deps.uuid(),
-    deps.uuid()
-  ]);
+  const keyRoot = deps.uuid();
+  const principleRoot = deps.uuid();
 
   //create an id.
   const id = deps.randomStringOfLength(20);

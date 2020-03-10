@@ -1,7 +1,7 @@
 {
-  "name": "@blossm/random-int-of-length",
-  "version": "0.0.4",
-  "description": "Creates a random int that has the specified number of characters.",
+  "name": "@blossm/random-string-of-length",
+  "version": "0.0.1",
+  "description": "Creates a random string that has the specified number of characters.",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -14,7 +14,7 @@
     "test": "mocha --recursive"
   },
   "dependencies": {
-    "@blossm/random-int": "*"
+    "@blossm/random-char": "^0.0.1"
   },
   "devDependencies": {
     "mocha": "^6.1.4"

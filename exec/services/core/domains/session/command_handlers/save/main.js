@@ -41,12 +41,9 @@ const getEventsForPermissionsMerge = async ({
 };
 
 const getEventsForIdentityRegistering = async ({ subject, payload }) => {
-  // Create a new root.
-  const [identityRoot, principleRoot, hashedPhone] = await Promise.all([
-    deps.uuid(),
-    subject || deps.uuid(),
-    deps.hash(payload.phone)
-  ]);
+  const identityRoot = deps.uuid();
+  const principleRoot = subject || deps.uuid();
+  const hashedPhone = deps.hash(payload.phone);
 
   return {
     events: [
