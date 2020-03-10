@@ -270,6 +270,72 @@ describe("Event store integration tests", () => {
     });
     expect(response.statusCode).to.equal(500);
   };
+  it("should not return an error if two simultaneous events are attempted", async () => {
+    const root = uuid();
+
+    const [response0, response1] = await Promise.all([
+      request.post(url, {
+        body: {
+          events: [
+            {
+              data: {
+                headers: {
+                  root,
+                  topic,
+                  version,
+                  created,
+                  action: example0.action,
+                  domain,
+                  service,
+                  command: {
+                    id,
+                    name,
+                    domain,
+                    service,
+                    network,
+                    issued
+                  }
+                },
+                payload: example0.payload
+              }
+            }
+          ]
+        }
+      }),
+
+      request.post(url, {
+        body: {
+          events: [
+            {
+              data: {
+                headers: {
+                  root,
+                  topic,
+                  version,
+                  created,
+                  action: example1.action,
+                  domain,
+                  service,
+                  command: {
+                    id,
+                    name,
+                    domain,
+                    service,
+                    network,
+                    issued
+                  }
+                },
+                payload: example1.payload
+              }
+            }
+          ]
+        }
+      })
+    ]);
+
+    expect(response0.statusCode).to.equal(204);
+    expect(response1.statusCode).to.equal(204);
+  });
 
   const findBadValue = (schema, property) => {
     return schema[property] == "String" ||
@@ -356,76 +422,6 @@ describe("Event store integration tests", () => {
       }
     });
     expect(response.statusCode).to.equal(412);
-  });
-  it("should return an error if two simultaneous events are attempted", async () => {
-    const root = uuid();
-
-    const [response0, response1] = await Promise.all([
-      request.post(url, {
-        body: {
-          events: [
-            {
-              data: {
-                headers: {
-                  root,
-                  topic,
-                  version,
-                  created,
-                  action: example0.action,
-                  domain,
-                  service,
-                  command: {
-                    id,
-                    name,
-                    domain,
-                    service,
-                    network,
-                    issued
-                  }
-                },
-                payload: example0.payload
-              }
-            }
-          ]
-        }
-      }),
-
-      request.post(url, {
-        body: {
-          events: [
-            {
-              data: {
-                headers: {
-                  root,
-                  topic,
-                  version,
-                  created,
-                  action: example1.action,
-                  domain,
-                  service,
-                  command: {
-                    id,
-                    name,
-                    domain,
-                    service,
-                    network,
-                    issued
-                  }
-                },
-                payload: example1.payload
-              }
-            }
-          ]
-        }
-      })
-    ]);
-
-    if (response0.statusCode == 204) {
-      expect(response1.statusCode).to.equal(412);
-    } else {
-      expect(response0.statusCode).to.equal(412);
-      expect(response1.statusCode).to.equal(204);
-    }
   });
   it("should return an error if action is not recognized", async () => {
     const root = uuid();

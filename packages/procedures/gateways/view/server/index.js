@@ -35,9 +35,12 @@ module.exports = async ({
           deps.authorization({
             permissionsLookupFn,
             terminatedSessionCheckFn,
-            permissions: priviledges.map(
-              priviledge => `${service}:${domain}:${priviledge}`
-            )
+            permissions:
+              priviledges instanceof Array
+                ? priviledges.map(
+                    priviledge => `${service}:${domain}:${priviledge}`
+                  )
+                : priviledges
           })
         ]
       })

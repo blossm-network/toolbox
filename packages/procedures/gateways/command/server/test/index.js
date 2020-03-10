@@ -88,6 +88,75 @@ describe("Command gateway", () => {
       )
     });
   });
+  it("should call with the correct params with priviledges set to none", async () => {
+    const corsMiddlewareFake = fake();
+    replace(deps, "corsMiddleware", corsMiddlewareFake);
+
+    const authenticationResult = "some-authentication";
+    const authenticationFake = fake.returns(authenticationResult);
+    replace(deps, "authentication", authenticationFake);
+
+    const authorizationResult = "some-authorization";
+    const authorizationFake = fake.returns(authorizationResult);
+    replace(deps, "authorization", authorizationFake);
+
+    const listenFake = fake();
+    const postFake = fake.returns({
+      listen: listenFake
+    });
+    const serverFake = fake.returns({
+      post: postFake
+    });
+    replace(deps, "server", serverFake);
+
+    const gatewayPostResult = "some-post-result";
+    const gatewayPostFake = fake.returns(gatewayPostResult);
+    replace(deps, "post", gatewayPostFake);
+
+    const priviledges = "none";
+    const name = "some-name";
+    const commands = [{ name, priviledges }];
+
+    const verifyFnResult = "some-verify-fn";
+    const verifyFnFake = fake.returns(verifyFnResult);
+
+    await gateway({
+      commands,
+      whitelist,
+      permissionsLookupFn,
+      terminatedSessionCheckFn,
+      verifyFn: verifyFnFake
+    });
+
+    expect(gatewayPostFake).to.have.been.calledWith({ name, domain });
+    expect(gatewayPostFake).to.have.been.calledOnce;
+    expect(listenFake).to.have.been.calledWith();
+    expect(serverFake).to.have.been.calledWith({
+      prehook: match(fn => {
+        const app = "some-app";
+        fn(app);
+        return corsMiddlewareFake.calledWith({
+          app,
+          whitelist,
+          credentials: true,
+          methods: ["POST"]
+        });
+      })
+    });
+    expect(postFake).to.have.been.calledWith(gatewayPostResult, {
+      path: `/${name}`,
+      preMiddleware: [authenticationResult, authorizationResult]
+    });
+    expect(authenticationFake).to.have.been.calledWith({
+      verifyFn: verifyFnResult
+    });
+    expect(verifyFnFake).to.have.been.calledWith({ key: "session" });
+    expect(authorizationFake).to.have.been.calledWith({
+      permissionsLookupFn,
+      terminatedSessionCheckFn,
+      permissions: "none"
+    });
+  });
   it("should call with the correct params with a command key", async () => {
     const corsMiddlewareFake = fake();
     replace(deps, "corsMiddleware", corsMiddlewareFake);
