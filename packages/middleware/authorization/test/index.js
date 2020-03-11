@@ -16,7 +16,8 @@ process.env.NETWORK = envNetwork;
 process.env.SERVICE = envService;
 
 const root = "some-root";
-const session = "some-session-root";
+const sessionRoot = "some-session-root";
+const session = { root: sessionRoot };
 const reqSession = "some-req-session";
 
 describe("Authorization middleware", () => {
@@ -61,7 +62,9 @@ describe("Authorization middleware", () => {
       service,
       network
     });
-    expect(terminatedSessionCheckFake).to.have.been.calledWith({ session });
+    expect(terminatedSessionCheckFake).to.have.been.calledWith({
+      session: sessionRoot
+    });
 
     expect(req.policy).to.deep.equal(policy);
     expect(nextFake).to.have.been.calledOnce;
