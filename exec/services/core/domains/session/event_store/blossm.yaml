@@ -5,7 +5,7 @@ schema:
   started: Date
   loggedout: Date
   upgraded: Date
-  context:
+  scene:
     root: String
     service: String
     network: String
@@ -25,7 +25,7 @@ actions:
   - start
   - save
   - upgrade
-  - switch-context
+  - change-scene
 
 testing:
   examples:
@@ -44,10 +44,10 @@ testing:
       payload:
         started: 2020-12-31T00:00:00.000Z
         previous: some-previous-session-root
-        context:
-          root: some-context-root
-          service: some-context-service
-          domain: some-context-domain
+        scene:
+          root: some-scene-root
+          service: some-scene-service
+          domain: some-scene-domain
         device:
           os: Android
           version: "10"
@@ -58,12 +58,12 @@ testing:
       - action: logout
         payload:
           loggedout: 2020-12-31T00:00:00.000Z
-      - action: switch-context
+      - action: change-scene
         payload:
           context:
-            root: some-context-root
-            service: some-context-service
-            domain: some-context-domain
+            root: some-scene-root
+            service: some-scene-service
+            domain: some-scene-domain
 
   handlers:
     - action: start
@@ -84,10 +84,10 @@ testing:
               root: some-principle-root
               service: some-principle-service
               domain: some-principle-domain
-            context:
-              root: some-context-root
-              service: some-context-service
-              domain: some-context-domain
+            scene:
+              root: some-scene-root
+              service: some-scene-service
+              domain: some-scene-domain
             device:
               os: Android
               version: "10"
@@ -101,10 +101,10 @@ testing:
               root: some-principle-root
               service: some-principle-service
               domain: some-principle-domain
-            context:
-              root: some-context-root
-              service: some-context-service
-              domain: some-context-domain
+            scene:
+              root: some-scene-root
+              service: some-scene-service
+              domain: some-scene-domain
             device:
               os: Android
               version: "10"
@@ -127,13 +127,13 @@ testing:
           result:
             loggedout: 2021-01-03T00:02:15.000Z
             terminated: true
-    - action: switch-context
+    - action: change-scene
       examples:
         - payload:
-            context:
-              root: some-context-root
-              service: some-context-service
-              domain: some-context-domain
+            scene:
+              root: some-scene-root
+              service: some-scene-service
+              domain: some-scene-domain
 
 #don't change
 context: event-store

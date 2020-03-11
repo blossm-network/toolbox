@@ -1,5 +1,5 @@
 name: register
-domain: context
+domain: scene
 service: core
 
 payload:

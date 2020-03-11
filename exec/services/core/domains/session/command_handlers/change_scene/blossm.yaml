@@ -1,9 +1,9 @@
-name: switch-context
+name: change-scene
 domain: session
 service: core
 
 payload:
-  context:
+  scene:
     root: string
     service: string
     network: string
@@ -24,36 +24,36 @@ devDependencies:
 testing:
   validate:
     ok:
-      - context:
-          root: some-context-root
+      - scene:
+          root: some-scene-root
           service: some-service
           network: some-network
     bad:
-      - context: "bad"
-      - context:
+      - scene: bad
+      - scene:
           root:
             a: 1
-      - context:
+      - scene:
           service:
             a: 1
-      - context:
+      - scene:
           network:
             a: 1
 
   normalize:
     - payload:
-        context:
-          root: some-context-root
+        scene:
+          root: some-scene-root
           service: some-service
           network: some-network
       normalized:
-        context:
-          root: some-context-root
+        scene:
+          root: some-scene-root
           service: some-service
           network: some-network
 
   procedures:
-    - domain: context
+    - domain: scene
       context: event-store
     - domain: principle
       context: event-store
@@ -64,24 +64,24 @@ testing:
           root: some-root
           action: start
           payload: {}
-        - domain: context
-          root: some-context-root
+        - domain: scene
+          root: some-scene-root
           action: register
           payload:
-            domain: some-context-domain
-            root: some-context-root
+            domain: some-scene-domain
+            root: some-scene-root
         - domain: principle
           root: some-principle-root
-          action: add-contexts
+          action: add-scenes
           payload:
-            contexts:
-              - root: some-context-root
+            scenes:
+              - root: some-scene-root
                 service: some-service
                 network: some-network
       root: some-root
       payload:
-        context:
-          root: some-context-root
+        scene:
+          root: some-scene-root
           service: some-service
           network: some-network
       session:
@@ -96,16 +96,16 @@ testing:
     - pre:
         - domain: principle
           root: some-other-principle-root
-          action: add-contexts
+          action: add-scenes
           payload:
-            contexts:
+            scenes:
               - root: bogus
                 service: some-service
                 network: some-network
       root: some-root
       payload:
-        context:
-          root: some-context-root
+        scene:
+          root: some-scene-root
           service: some-service
           network: some-network
       session:
@@ -123,8 +123,8 @@ testing:
             loggedout: 2019-12-31T00:00:00.000Z
       root: some-root
       payload:
-        context:
-          root: some-context-root
+        scene:
+          root: some-scene-root
           service: some-service
           network: some-network
       context: {}

@@ -19,7 +19,7 @@ module.exports = async ({ payload, root, context, session }) => {
       payload: {
         roles: [
           {
-            id: "ContextAdmin",
+            id: "SceneAdmin",
             service: process.env.SERVICE,
             network: process.env.NETWORK
           }
@@ -30,10 +30,10 @@ module.exports = async ({ payload, root, context, session }) => {
       domain: "principle",
       service: principle.service,
       network: principle.network,
-      action: "add-contexts",
+      action: "add-scenes",
       root: principle.root,
       payload: {
-        contexts: [
+        scenes: [
           {
             root,
             service: process.env.SERVICE,

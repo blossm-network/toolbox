@@ -1,4 +1,4 @@
-domain: context
+domain: scene
 service: core
 
 schema:
@@ -15,14 +15,14 @@ testing:
     first:
       action: register
       payload:
-        root: some-context-root
+        root: some-scene-root
         domain: some-domain
         service: some-service
         network: some-network
     second:
       action: register
       payload:
-        root: some-other-context-root
+        root: some-other-scene-root
         domain: some-other-domain
         service: some-other-service
         network: some-other-network
@@ -31,7 +31,7 @@ testing:
     - action: register
       examples:
         - payload:
-            root: some-context-root
+            root: some-scene-root
             domain: some-domain
             service: some-service
             network: some-network

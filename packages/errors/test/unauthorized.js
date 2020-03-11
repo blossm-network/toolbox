@@ -24,25 +24,6 @@ describe("Unauthorized", () => {
       message: "Not allowed by CORS."
     });
   });
-  it("context correct", () => {
-    const error = unauthorized.context();
-    expect(error.toJSON()).to.deep.equal({
-      statusCode: 401,
-      code: "Unauthorized",
-      info: {},
-      message: "This context isn't accessible."
-    });
-  });
-  it("context correct with props", () => {
-    const error = unauthorized.context({ cause, info });
-    expect(error.toJSON()).to.deep.equal({
-      statusCode: 401,
-      code: "Unauthorized",
-      info,
-      cause,
-      message: "This context isn't accessible."
-    });
-  });
   it("message correct", () => {
     const message = "some-message";
     const error = unauthorized.message(message);

@@ -18,7 +18,7 @@ module.exports = {
       terminated: true
     };
   },
-  "switch-context": (state, payload) => {
+  "change-scene": (state, payload) => {
     return {
       ...state,
       ...payload

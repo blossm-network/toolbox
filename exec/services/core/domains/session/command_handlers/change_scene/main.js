@@ -5,28 +5,28 @@ module.exports = async ({ root, payload, context, session, aggregateFn }) => {
   const [
     { aggregate: principleAggregate },
     { aggregate },
-    { aggregate: contextAggregate }
+    { aggregate: sceneAggregate }
   ] = await Promise.all([
     aggregateFn(session.sub, {
       domain: "principle"
     }),
     aggregateFn(root),
-    aggregateFn(payload.context.root, {
-      domain: "context"
+    aggregateFn(payload.scene.root, {
+      domain: "scene"
     })
   ]);
 
   // Check to see if the principle has access to the context being switched in to.
   if (
-    !principleAggregate.contexts.some(
-      context =>
-        context.root == payload.context.root &&
-        context.service == payload.context.service &&
-        context.network == payload.context.network
+    !principleAggregate.scenes.some(
+      scene =>
+        scene.root == payload.scene.root &&
+        scene.service == payload.scene.service &&
+        scene.network == payload.scene.network
     )
   )
-    throw deps.unauthorizedError.context({
-      info: { context: payload.context }
+    throw deps.unauthorizedError.message("This scene isn't accessible.", {
+      info: { scene: payload.scene }
     });
 
   // Check to see if this session has already been terminated.
@@ -46,12 +46,12 @@ module.exports = async ({ root, payload, context, session, aggregateFn }) => {
     payload: {
       context: {
         ...context,
-        context: payload.context,
-        domain: contextAggregate.domain,
-        [contextAggregate.domain]: {
-          root: contextAggregate.root,
-          service: contextAggregate.service,
-          network: contextAggregate.network
+        scene: payload.scene,
+        domain: sceneAggregate.domain,
+        [sceneAggregate.domain]: {
+          root: sceneAggregate.root,
+          service: sceneAggregate.service,
+          network: sceneAggregate.network
         }
       }
     },
@@ -65,7 +65,7 @@ module.exports = async ({ root, payload, context, session, aggregateFn }) => {
   });
 
   return {
-    events: [{ action: "switch-context", root, payload }],
+    events: [{ action: "change-scene", root, payload }],
     response: { tokens: { session: token } }
   };
 };

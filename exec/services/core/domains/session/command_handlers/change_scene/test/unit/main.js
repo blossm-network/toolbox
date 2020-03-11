@@ -9,15 +9,15 @@ const deps = require("../../deps");
 let clock;
 const now = new Date();
 
-const newContextRoot = "some-new-context-root";
-const newContextService = "some-new-context-service";
-const newContextNetwork = "some-new-context-network";
+const newSceneRoot = "some-new-scene-root";
+const newSceneService = "some-new-scene-service";
+const newSceneNetwork = "some-new-scene-network";
 
 const payload = {
-  context: {
-    root: newContextRoot,
-    service: newContextService,
-    network: newContextNetwork
+  scene: {
+    root: newSceneRoot,
+    service: newSceneService,
+    network: newSceneNetwork
   }
 };
 const token = "some-token";
@@ -32,10 +32,10 @@ const context = {
   domain: oldDomain,
   [oldDomain]: "some-old-domain"
 };
-const contextAggregateRoot = "some-context-aggregate-root";
-const contextAggregateDomain = "some-context-aggregate-domain";
-const contextAggregateService = "some-context-aggregate-service";
-const contextAggregateNetwork = "some-context-aggregate-network";
+const sceneAggregateRoot = "some-scene-aggregate-root";
+const sceneAggregateDomain = "some-scene-aggregate-domain";
+const sceneAggregateService = "some-scene-aggregate-service";
+const sceneAggregateNetwork = "some-scene-aggregate-network";
 
 const iss = "some-iss";
 const aud = "some-aud";
@@ -70,11 +70,11 @@ describe("Command handler unit tests", () => {
       .onFirstCall()
       .returns({
         aggregate: {
-          contexts: [
+          scenes: [
             {
-              root: newContextRoot,
-              service: newContextService,
-              network: newContextNetwork
+              root: newSceneRoot,
+              service: newSceneService,
+              network: newSceneNetwork
             }
           ]
         }
@@ -84,10 +84,10 @@ describe("Command handler unit tests", () => {
       .onThirdCall()
       .returns({
         aggregate: {
-          domain: contextAggregateDomain,
-          service: contextAggregateService,
-          network: contextAggregateNetwork,
-          root: contextAggregateRoot
+          domain: sceneAggregateDomain,
+          service: sceneAggregateService,
+          network: sceneAggregateNetwork,
+          root: sceneAggregateRoot
         }
       });
 
@@ -102,7 +102,7 @@ describe("Command handler unit tests", () => {
     expect(result).to.deep.equal({
       events: [
         {
-          action: "switch-context",
+          action: "change-scene",
           payload,
           root
         }
@@ -113,8 +113,8 @@ describe("Command handler unit tests", () => {
       domain: "principle"
     });
     expect(aggregateFake).to.have.been.calledWith(root);
-    expect(aggregateFake).to.have.been.calledWith(newContextRoot, {
-      domain: "context"
+    expect(aggregateFake).to.have.been.calledWith(newSceneRoot, {
+      domain: "scene"
     });
     expect(aggregateFake).to.have.callCount(3);
     expect(signFake).to.have.been.calledWith({
@@ -135,16 +135,16 @@ describe("Command handler unit tests", () => {
         context: {
           identity,
           session: contextSession,
-          context: {
-            root: newContextRoot,
-            service: newContextService,
-            network: newContextNetwork
+          scene: {
+            root: newSceneRoot,
+            service: newSceneService,
+            network: newSceneNetwork
           },
-          domain: contextAggregateDomain,
-          [contextAggregateDomain]: {
-            root: contextAggregateRoot,
-            service: contextAggregateService,
-            network: contextAggregateNetwork
+          domain: sceneAggregateDomain,
+          [sceneAggregateDomain]: {
+            root: sceneAggregateRoot,
+            service: sceneAggregateService,
+            network: sceneAggregateNetwork
           }
         }
       },
@@ -160,25 +160,25 @@ describe("Command handler unit tests", () => {
     replace(deps, "createJwt", createJwtFake);
 
     const error = "some-error";
-    const contextFake = fake.returns(error);
+    const messageFake = fake.returns(error);
     replace(deps, "unauthorizedError", {
-      context: contextFake
+      message: messageFake
     });
 
     const aggregateFake = stub()
       .onFirstCall()
       .returns({
-        aggregate: { contexts: [context] }
+        aggregate: { scenes: [{ root: "bogus" }] }
       })
       .onSecondCall()
       .returns({ aggregate: { terminated: false } })
       .onThirdCall()
       .returns({
         aggregate: {
-          domain: contextAggregateDomain,
-          service: contextAggregateService,
-          network: contextAggregateNetwork,
-          root: contextAggregateRoot
+          domain: sceneAggregateDomain,
+          service: sceneAggregateService,
+          network: sceneAggregateNetwork,
+          root: sceneAggregateRoot
         }
       });
 
@@ -193,6 +193,18 @@ describe("Command handler unit tests", () => {
       //shouldn't get called
       expect(2).to.equal(3);
     } catch (e) {
+      expect(messageFake).to.have.been.calledWith(
+        "This scene isn't accessible.",
+        {
+          info: {
+            scene: {
+              root: newSceneRoot,
+              service: newSceneService,
+              network: newSceneNetwork
+            }
+          }
+        }
+      );
       expect(e).to.equal(error);
     }
   });
@@ -208,11 +220,11 @@ describe("Command handler unit tests", () => {
       .onFirstCall()
       .returns({
         aggregate: {
-          contexts: [
+          scenes: [
             {
-              root: newContextRoot,
-              service: newContextService,
-              network: newContextNetwork
+              root: newSceneRoot,
+              service: newSceneService,
+              network: newSceneNetwork
             }
           ]
         }
@@ -222,8 +234,8 @@ describe("Command handler unit tests", () => {
       .onThirdCall()
       .returns({
         aggregate: {
-          domain: contextAggregateDomain,
-          root: contextAggregateRoot
+          domain: sceneAggregateDomain,
+          root: sceneAggregateRoot
         }
       });
 
@@ -260,11 +272,11 @@ describe("Command handler unit tests", () => {
       .onFirstCall()
       .returns({
         aggregate: {
-          contexts: [
+          scenes: [
             {
-              root: newContextRoot,
-              service: newContextService,
-              network: newContextNetwork
+              root: newSceneRoot,
+              service: newSceneService,
+              network: newSceneNetwork
             }
           ]
         }
@@ -274,10 +286,10 @@ describe("Command handler unit tests", () => {
       .onThirdCall()
       .returns({
         aggregate: {
-          domain: contextAggregateDomain,
-          service: contextAggregateService,
-          network: contextAggregateNetwork,
-          root: contextAggregateRoot
+          domain: sceneAggregateDomain,
+          service: sceneAggregateService,
+          network: sceneAggregateNetwork,
+          root: sceneAggregateRoot
         }
       });
 

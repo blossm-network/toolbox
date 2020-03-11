@@ -1,0 +1,8 @@
+domain: scene
+service: core
+
+roles:
+  SceneAdmin:
+    title: Scene Admin
+    priviledges:
+      - delete

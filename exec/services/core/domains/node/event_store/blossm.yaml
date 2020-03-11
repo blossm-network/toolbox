@@ -3,7 +3,7 @@ service: core
 
 schema:
   network: String
-  context:
+  scene:
     root: String
     service: String
     network: String
@@ -17,40 +17,40 @@ testing:
       action: register
       payload:
         network: some-network
-        context:
-          root: some-context
-          service: some-context-service
-          network: some-context-network
+        scene:
+          root: some-scene
+          service: some-scene-service
+          network: some-scene-network
     second:
       action: register
       payload:
         network: some-network
-        context:
-          root: some-other-context
-          service: some-other-context-service
-          network: some-other-context-network
+        scene:
+          root: some-scene-context
+          service: some-other-scene-service
+          network: some-other-scene-network
 
   handlers:
     - action: register
       examples:
         - state:
             network: some-network
-            context:
-              root: some-context
-              service: some-context-service
-              network: some-context-network
+            scene:
+              root: some-scene
+              service: some-scene-service
+              network: some-scene-network
           payload:
             network: some-other-network
-            context:
-              root: some-other-context
-              service: some-other-context-service
-              network: some-other-context-network
+            scene:
+              root: some-other-scene
+              service: some-other-scene-service
+              network: some-other-scene-network
           result:
             network: some-other-network
-            context:
-              root: some-other-context
-              service: some-other-context-service
-              network: some-other-context-network
+            scene:
+              root: some-other-scene
+              service: some-other-scene-service
+              network: some-other-scene-network
 
 #don't change
 context: event-store

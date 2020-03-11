@@ -26,13 +26,13 @@ describe("Command handler unit tests", () => {
   });
   it("should return successfully", async () => {
     const nodeRoot = "some-node-root";
-    const contextRoot = "some-context-root";
+    const sceneRoot = "some-scene-root";
 
     const uuidFake = stub()
       .onFirstCall()
       .returns(nodeRoot)
       .onSecondCall()
-      .returns(contextRoot);
+      .returns(sceneRoot);
 
     replace(deps, "uuid", uuidFake);
 
@@ -75,7 +75,7 @@ describe("Command handler unit tests", () => {
           root: nodeRoot,
           payload: {
             network: payloadNetwork,
-            context: { root: contextRoot, service, network }
+            scene: { root: sceneRoot, service, network }
           }
         }
       ],
@@ -83,7 +83,7 @@ describe("Command handler unit tests", () => {
     });
     expect(commandFake).to.have.been.calledWith({
       name: "register",
-      domain: "context"
+      domain: "scene"
     });
     expect(setFake).to.have.been.calledWith({
       context,
@@ -97,7 +97,7 @@ describe("Command handler unit tests", () => {
         service,
         network
       },
-      { root: contextRoot }
+      { root: sceneRoot }
     );
   });
   it("should throw correctly", async () => {

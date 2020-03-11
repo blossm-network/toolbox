@@ -39,21 +39,21 @@ module.exports = {
       })
     };
   },
-  "add-contexts": (state, payload) => {
-    state.contexts = state.contexts || [];
+  "add-scenes": (state, payload) => {
+    state.scenes = state.scenes || [];
     return {
       ...state,
       ...payload,
-      contexts: state.contexts.concat(
+      scenes: state.scenes.concat(
         difference(
-          payload.contexts.map(
-            context => `${context.root}:${context.service}:${context.network}`
+          payload.scenes.map(
+            scene => `${scene.root}:${scene.service}:${scene.network}`
           ),
-          state.contexts.map(
-            context => `${context.root}:${context.service}:${context.network}`
+          state.scenes.map(
+            scene => `${scene.root}:${scene.service}:${scene.network}`
           )
-        ).map(stringContext => {
-          const [root, service, network] = stringContext.split(":");
+        ).map(stringScene => {
+          const [root, service, network] = stringScene.split(":");
           return {
             root,
             service,
@@ -63,19 +63,19 @@ module.exports = {
       )
     };
   },
-  "remove-contexts": (state, payload) => {
+  "remove-scenes": (state, payload) => {
     return {
       ...state,
       ...payload,
-      contexts: difference(
-        state.contexts.map(
-          context => `${context.root}:${context.service}:${context.network}`
+      scenes: difference(
+        state.scenes.map(
+          scene => `${scene.root}:${scene.service}:${scene.network}`
         ),
-        payload.contexts.map(
-          context => `${context.root}:${context.service}:${context.network}`
+        payload.scenes.map(
+          scene => `${scene.root}:${scene.service}:${scene.network}`
         )
-      ).map(stringContext => {
-        const [root, service, network] = stringContext.split(":");
+      ).map(stringScene => {
+        const [root, service, network] = stringScene.split(":");
         return {
           root,
           service,

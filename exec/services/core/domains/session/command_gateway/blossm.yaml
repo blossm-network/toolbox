@@ -9,7 +9,7 @@ commands:
   - name: logout
     priviledges:
       - update
-  - name: switch-context
+  - name: change-scene
     priviledges:
       - update
 

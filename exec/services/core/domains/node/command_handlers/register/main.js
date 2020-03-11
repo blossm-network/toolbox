@@ -1,15 +1,15 @@
 const deps = require("./deps");
 
 module.exports = async ({ payload, context, session }) => {
-  // Create new roots for the context and the node.
+  // Create new roots for the scene and the node.
   const nodeRoot = deps.uuid();
-  const contextRoot = deps.uuid();
+  const sceneRoot = deps.uuid();
 
-  // Register the context.
+  // Register the scene.
   const { tokens, principle } = await deps
     .command({
       name: "register",
-      domain: "context"
+      domain: "scene"
     })
     .set({ context, session, tokenFn: deps.gcpToken })
     .issue(
@@ -19,7 +19,7 @@ module.exports = async ({ payload, context, session }) => {
         service: process.env.SERVICE,
         network: process.env.NETWORK
       },
-      { root: contextRoot }
+      { root: sceneRoot }
     );
 
   return {
@@ -45,8 +45,8 @@ module.exports = async ({ payload, context, session }) => {
         root: nodeRoot,
         payload: {
           network: payload.network,
-          context: {
-            root: contextRoot,
+          scene: {
+            root: sceneRoot,
             service: process.env.SERVICE,
             network: process.env.NETWORK
           }

@@ -58,17 +58,17 @@ describe("Command handler unit tests", () => {
           action: "add-roles",
           root: uuid,
           payload: {
-            roles: [{ id: "ContextAdmin", service, network }]
+            roles: [{ id: "SceneAdmin", service, network }]
           }
         },
         {
           domain: "principle",
           service,
           network,
-          action: "add-contexts",
+          action: "add-scenes",
           root: uuid,
           payload: {
-            contexts: [{ root, service, network }]
+            scenes: [{ root, service, network }]
           }
         },
         { action: "register", payload, root, correctNumber: 0 }
@@ -136,17 +136,17 @@ describe("Command handler unit tests", () => {
           action: "add-roles",
           root: principleRoot,
           payload: {
-            roles: [{ id: "ContextAdmin", service, network }]
+            roles: [{ id: "SceneAdmin", service, network }]
           }
         },
         {
           domain: "principle",
           service: principleService,
           network: principleNetwork,
-          action: "add-contexts",
+          action: "add-scenes",
           root: principleRoot,
           payload: {
-            contexts: [{ root, service, network }]
+            scenes: [{ root, service, network }]
           }
         },
         { action: "register", payload, root, correctNumber: 0 }
