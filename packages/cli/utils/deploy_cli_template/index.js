@@ -50,7 +50,7 @@ module.exports = ({ domain, dir, configFn }) => async args => {
     args,
     flags: [
       {
-        name: "test-only",
+        name: "unit-test",
         short: "t",
         type: Boolean,
         default: false
@@ -63,9 +63,9 @@ module.exports = ({ domain, dir, configFn }) => async args => {
         default: "development"
       },
       {
-        name: "allow-fail",
+        name: "dry-run",
         type: Boolean,
-        short: "a",
+        short: "d",
         default: false
       }
     ]

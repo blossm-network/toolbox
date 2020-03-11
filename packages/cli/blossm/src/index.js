@@ -48,7 +48,7 @@ const tryShortcuts = input => {
 
   if (input.domain == "test") {
     args.push("deploy");
-    args.push("--test-only");
+    args.push("--unit-test");
   } else {
     args.push(input.domain);
   }
