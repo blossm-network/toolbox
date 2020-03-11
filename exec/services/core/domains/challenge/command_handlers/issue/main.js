@@ -15,7 +15,7 @@ let sms;
 module.exports = async ({
   payload,
   context,
-  session,
+  claims,
   // `events` are any events to submit once the challenge is answered.
   // `principle` is the principle to set as the subject of the session token.
   options: { events, principle } = {}
@@ -47,7 +47,7 @@ module.exports = async ({
       "This phone number can't be used to challenge."
     );
 
-  if (session.sub && session.sub != identity.state.principle.root)
+  if (claims.sub && claims.sub != identity.state.principle.root)
     throw deps.badRequestError.message(
       "This principle can't be challenged during the current session."
     );
@@ -99,7 +99,7 @@ module.exports = async ({
         payload: {
           code,
           principle: identity.state.principle,
-          session,
+          claims,
           issued: deps.stringDate(),
           expires: deps
             .moment()

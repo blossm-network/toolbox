@@ -33,7 +33,7 @@ const network = "some-network";
 const domain = "the-domain-the-event-was-triggered-in";
 
 const context = "some-context";
-const session = "some-session";
+const claims = "some-claims";
 const tokenFn = "some-token-fn";
 const number = "some-number";
 
@@ -68,7 +68,7 @@ describe("Event store", () => {
     const trace = "trace";
 
     await eventStore({ domain, service, network })
-      .set({ context, session, tokenFn })
+      .set({ context, claims, tokenFn })
       .add([
         {
           data: {
@@ -103,7 +103,7 @@ describe("Event store", () => {
             headers: {
               root,
               context,
-              session,
+              claims,
               topic,
               action: eventAction,
               domain: eventDomain,
@@ -128,11 +128,10 @@ describe("Event store", () => {
     });
     expect(inFake).to.have.been.calledWith({
       context,
-      session,
       service,
       network
     });
-    expect(withFake).to.have.been.calledWith({ tokenFn });
+    expect(withFake).to.have.been.calledWith({ tokenFn, claims });
   });
 
   it("should call add with the right params and optionals left out", async () => {
@@ -204,18 +203,17 @@ describe("Event store", () => {
     const root = "user";
 
     const result = await eventStore({ domain, service, network })
-      .set({ context, session, tokenFn })
+      .set({ context, claims, tokenFn })
       .aggregate(root);
 
     expect(rpcFake).to.have.been.calledWith(domain, "event-store");
     expect(getFake).to.have.been.calledWith({ root });
     expect(inFake).to.have.been.calledWith({
       context,
-      session,
       service,
       network
     });
-    expect(withFake).to.have.been.calledWith({ tokenFn });
+    expect(withFake).to.have.been.calledWith({ tokenFn, claims });
     expect(result).to.equal(aggregate);
   });
   it("should call aggregate with the right params with optionals missing", async () => {
@@ -259,18 +257,17 @@ describe("Event store", () => {
     replace(deps, "rpc", rpcFake);
 
     const result = await eventStore({ domain, service, network })
-      .set({ context, session, tokenFn })
+      .set({ context, claims, tokenFn })
       .query(query);
 
     expect(rpcFake).to.have.been.calledWith(domain, "event-store");
     expect(getFake).to.have.been.calledWith(query);
     expect(inFake).to.have.been.calledWith({
       context,
-      session,
       service,
       network
     });
-    expect(withFake).to.have.been.calledWith({ tokenFn });
+    expect(withFake).to.have.been.calledWith({ tokenFn, claims });
     expect(result).to.equal(aggregate);
   });
   it("should call aggregate with the right params with optionals missing", async () => {

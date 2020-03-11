@@ -172,7 +172,7 @@ describe("Create event", () => {
       payload
     });
   });
-  it("should get called with expected params if context and session are missing", async () => {
+  it("should get called with expected params if context is missing", async () => {
     const value = createEvent({
       trace,
       action,

@@ -11,7 +11,7 @@ const body = "some-body";
 const name = "some-name";
 const domain = "some-domain";
 const context = "some-context";
-const session = "some-session";
+const claims = "some-claims";
 
 const root = "some-root";
 
@@ -40,7 +40,7 @@ describe("Command gateway post", () => {
 
     const req = {
       context,
-      session,
+      claims,
       body,
       params: {}
     };
@@ -66,7 +66,7 @@ describe("Command gateway post", () => {
     expect(setFake).to.have.been.calledWith({
       tokenFn: deps.gcpToken,
       context,
-      session
+      claims
     });
     expect(issueFake).to.have.been.calledWith(payload, { ...headers, root });
     expect(statusFake).to.have.been.calledWith(200);
@@ -90,7 +90,7 @@ describe("Command gateway post", () => {
 
     const req = {
       context,
-      session,
+      claims,
       body,
       params: {}
     };
@@ -116,7 +116,7 @@ describe("Command gateway post", () => {
     expect(setFake).to.have.been.calledWith({
       tokenFn: deps.gcpToken,
       context,
-      session
+      claims
     });
     expect(issueFake).to.have.been.calledWith(payload, { ...headers, root });
     expect(statusFake).to.have.been.calledWith(204);
@@ -142,7 +142,7 @@ describe("Command gateway post", () => {
 
     const req = {
       context,
-      session,
+      claims,
       body,
       params: {}
     };
@@ -177,7 +177,7 @@ describe("Command gateway post", () => {
     expect(setFake).to.have.been.calledWith({
       tokenFn: deps.gcpToken,
       context,
-      session
+      claims
     });
     expect(issueFake).to.have.been.calledWith(payload, { ...headers, root });
     // expect(statusFake).to.have.been.calledWith(204);

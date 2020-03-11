@@ -41,7 +41,7 @@ const token = "some-token";
 const code = "some-code";
 const secret = "some-secret";
 const project = "some-projectl";
-const session = {
+const claims = {
   iss: "some-iss"
 };
 
@@ -92,7 +92,7 @@ describe("Command handler unit tests", () => {
     const randomIntFake = fake.returns(code);
     replace(deps, "randomIntOfLength", randomIntFake);
 
-    const result = await main({ payload, context, session });
+    const result = await main({ payload, context, claims });
 
     expect(result).to.deep.equal({
       events: [
@@ -107,7 +107,7 @@ describe("Command handler unit tests", () => {
               service: principleService,
               network: principleNetwork
             },
-            session,
+            claims,
             issued: new Date().toISOString(),
             expires: deps
               .moment()
@@ -205,7 +205,7 @@ describe("Command handler unit tests", () => {
     const result = await main({
       payload,
       context,
-      session,
+      claims,
       options: {
         principle: optionsPrinciple
       }
@@ -221,7 +221,7 @@ describe("Command handler unit tests", () => {
           payload: {
             code,
             principle: optionsPrinciple,
-            session,
+            claims,
             issued: new Date().toISOString(),
             expires: deps
               .moment()
@@ -276,7 +276,7 @@ describe("Command handler unit tests", () => {
     replace(deps, "eventStore", eventStoreFake);
 
     try {
-      await main({ payload, context, session });
+      await main({ payload, context, claims });
 
       //shouldn't get called
       expect(2).to.equal(3);
@@ -302,7 +302,7 @@ describe("Command handler unit tests", () => {
     try {
       await main({
         payload,
-        session,
+        claims,
         context
       });
 
@@ -357,7 +357,7 @@ describe("Command handler unit tests", () => {
       expect(e).to.equal(error);
     }
   });
-  it("should throw correctly if session.sub doesn't match the identity's principle", async () => {
+  it("should throw correctly if claims.sub doesn't match the identity's principle", async () => {
     const secretFake = fake.returns(secret);
     replace(deps, "secret", secretFake);
 
@@ -391,7 +391,7 @@ describe("Command handler unit tests", () => {
       await main({
         payload,
         context,
-        session: { sub: "some-bogus" }
+        claims: { sub: "some-bogus" }
       });
 
       //shouldn't get called
@@ -442,7 +442,7 @@ describe("Command handler unit tests", () => {
     const context = { c: 3 };
     const result = await main({
       payload,
-      session,
+      claims,
       context,
       options
     });
@@ -462,7 +462,7 @@ describe("Command handler unit tests", () => {
               network: principleNetwork
             },
             issued: new Date().toISOString(),
-            session,
+            claims,
             expires: deps
               .moment()
               .add(180, "s")

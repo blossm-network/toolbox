@@ -16,7 +16,7 @@ const aud = "some-aud";
 const challenge = {
   code,
   principle: challengePrinciple,
-  session: {
+  claims: {
     exp,
     iss,
     aud
@@ -93,7 +93,7 @@ describe("Command handler unit tests", () => {
     });
     expect(setFake).to.have.been.calledWith({
       context,
-      session: {
+      claims: {
         iss,
         exp,
         aud
@@ -111,7 +111,7 @@ describe("Command handler unit tests", () => {
     const aggregateFake = fake.returns({
       aggregate: {
         ...challenge,
-        session: {
+        claims: {
           sub: "some-sub"
         },
         expires: deps.stringDate()

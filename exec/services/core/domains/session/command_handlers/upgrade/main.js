@@ -1,6 +1,6 @@
 const deps = require("./deps");
 
-module.exports = async ({ root, payload, context, session, aggregateFn }) => {
+module.exports = async ({ root, payload, context, claims, aggregateFn }) => {
   // Get the aggregate for this session.
   const { aggregate: sessionAggregate } = await aggregateFn(root);
 
@@ -12,13 +12,13 @@ module.exports = async ({ root, payload, context, session, aggregateFn }) => {
   if (sessionAggregate.upgraded)
     throw deps.badRequestError.sessionAlreadyUpgraded();
 
-  // Create a new token inheriting from the current session.
+  // Create a new token inheriting from the current claims.
   const token = await deps.createJwt({
     options: {
-      issuer: session.iss,
+      issuer: claims.iss,
       subject: payload.principle.root,
-      audience: session.aud,
-      expiresIn: Date.parse(session.exp) - deps.fineTimestamp()
+      audience: claims.aud,
+      expiresIn: Date.parse(claims.exp) - deps.fineTimestamp()
     },
     payload: {
       context: {

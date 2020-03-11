@@ -1,18 +1,30 @@
 const deps = require("./deps");
 
 module.exports = ({ name, domain, service, network }) => {
-  const create = ({ context, session, tokenFn } = {}) => async view =>
+  const create = ({ context, claims, tokenFn } = {}) => async view =>
     await deps
       .rpc(name, domain, "view-store")
       .post({ view })
       .in({
         ...(context && { context }),
-        ...(session && { session }),
         ...(service && { service }),
         ...(network && { network })
       })
-      .with({ tokenFn });
-  const read = ({ context, session, tokenFn } = {}) => async ({
+      .with({
+        tokenFn,
+        ...(claims && { claims })
+      });
+  const read = ({ context, claims, tokenFn } = {}) => async ({ query, sort }) =>
+    await deps
+      .rpc(name, domain, "view-store")
+      .get({ query, ...(sort && { sort }) })
+      .in({
+        ...(context && { context }),
+        ...(service && { service }),
+        ...(network && { network })
+      })
+      .with({ tokenFn, ...(claims && { claims }) });
+  const stream = ({ context, claims, tokenFn } = {}) => async ({
     query,
     sort
   }) =>
@@ -21,55 +33,42 @@ module.exports = ({ name, domain, service, network }) => {
       .get({ query, ...(sort && { sort }) })
       .in({
         ...(context && { context }),
-        ...(session && { session }),
         ...(service && { service }),
         ...(network && { network })
       })
-      .with({ tokenFn });
-  const stream = ({ context, session, tokenFn } = {}) => async ({
-    query,
-    sort
-  }) =>
-    await deps
-      .rpc(name, domain, "view-store")
-      .get({ query, ...(sort && { sort }) })
-      .in({
-        ...(context && { context }),
-        ...(session && { session }),
-        ...(service && { service }),
-        ...(network && { network })
-      })
-      .with({ path: "/stream", ...(tokenFn && { tokenFn }) });
-  const update = ({ context, session, tokenFn } = {}) => async (root, view) =>
+      .with({
+        path: "/stream",
+        ...(tokenFn && { tokenFn }),
+        ...(claims && { claims })
+      });
+  const update = ({ context, claims, tokenFn } = {}) => async (root, view) =>
     await deps
       .rpc(name, domain, "view-store")
       .put(root, { view })
       .in({
         ...(context && { context }),
-        ...(session && { session }),
         ...(service && { service }),
         ...(network && { network })
       })
-      .with({ tokenFn });
-  const del = ({ context, session, tokenFn } = {}) => async root =>
+      .with({ tokenFn, ...(claims && { claims }) });
+  const del = ({ context, claims, tokenFn } = {}) => async root =>
     await deps
       .rpc(name, domain, "view-store")
       .delete(root)
       .in({
         ...(context && { context }),
-        ...(session && { session }),
         ...(service && { service }),
         ...(network && { network })
       })
-      .with({ tokenFn });
+      .with({ tokenFn, ...(claims && { claims }) });
   return {
-    set: ({ context, session, tokenFn }) => {
+    set: ({ context, claims, tokenFn }) => {
       return {
-        create: create({ context, session, tokenFn }),
-        read: read({ context, session, tokenFn }),
-        stream: stream({ context, session, tokenFn }),
-        update: update({ context, session, tokenFn }),
-        delete: del({ context, session, tokenFn })
+        create: create({ context, claims, tokenFn }),
+        read: read({ context, claims, tokenFn }),
+        stream: stream({ context, claims, tokenFn }),
+        update: update({ context, claims, tokenFn }),
+        delete: del({ context, claims, tokenFn })
       };
     },
     create: create(),

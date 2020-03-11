@@ -47,16 +47,16 @@ describe("Command handler post", () => {
     expect(statusFake).to.have.been.calledWith(204);
     expect(sendFake).to.have.been.calledWith();
   });
-  it("should call with the correct params with context and session", async () => {
+  it("should call with the correct params with context and claims", async () => {
     const mainFnFake = fake();
 
-    const session = "some-session";
+    const claims = "some-claims";
     const context = "some-context";
 
     const req = {
       body: {
         payload,
-        session,
+        claims,
         context
       }
     };
@@ -76,7 +76,7 @@ describe("Command handler post", () => {
     expect(mainFnFake).to.have.been.calledWith({
       payload,
       context,
-      session
+      claims
     });
     expect(statusFake).to.have.been.calledWith(204);
     expect(sendFake).to.have.been.calledWith();

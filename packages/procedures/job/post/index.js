@@ -3,7 +3,7 @@ module.exports = ({ mainFn }) => {
     await mainFn({
       payload: req.body.payload,
       ...(req.body.context && { context: req.body.context }),
-      ...(req.body.session && { session: req.body.session })
+      ...(req.body.claims && { claims: req.body.claims })
     });
 
     res.status(204).send();

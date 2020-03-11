@@ -87,7 +87,7 @@ const executeStep = async step => {
       options: step.options,
       context: step.context,
       payload: step.payload,
-      session: step.session
+      claims: step.claims
     }
   });
 

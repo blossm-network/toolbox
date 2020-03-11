@@ -14,7 +14,7 @@ process.env.SERVICE = envService;
 
 const sessionRoot = "some-session-root";
 const session = { root: sessionRoot };
-const reqSession = "some-req-session";
+const reqClaims = "some-req-claims";
 
 describe("Authorization middleware", () => {
   afterEach(() => {
@@ -25,7 +25,7 @@ describe("Authorization middleware", () => {
     const path = "some-path";
     const req = {
       path,
-      session: reqSession,
+      claims: reqClaims,
       context
     };
 
@@ -43,7 +43,7 @@ describe("Authorization middleware", () => {
 
     expect(authorizationFake).to.have.been.calledWith({
       context,
-      session: reqSession,
+      claims: reqClaims,
       permissionsLookupFn,
       permissions
     });
@@ -59,7 +59,7 @@ describe("Authorization middleware", () => {
     const path = "some-path";
     const req = {
       path,
-      session: reqSession,
+      claims: reqClaims,
       context: otherContext,
       body: {}
     };
@@ -77,7 +77,7 @@ describe("Authorization middleware", () => {
     })(req, null, nextFake);
 
     expect(authorizationFake).to.have.been.calledWith({
-      session: reqSession,
+      claims: reqClaims,
       context: otherContext,
       permissionsLookupFn,
       permissions
@@ -92,7 +92,7 @@ describe("Authorization middleware", () => {
     const req = {
       path,
       context: {},
-      session: reqSession,
+      claims: reqClaims,
       body: {}
     };
 
@@ -116,7 +116,7 @@ describe("Authorization middleware", () => {
     const path = "some-path";
     const req = {
       path,
-      session: reqSession,
+      claims: reqClaims,
       context
     };
 

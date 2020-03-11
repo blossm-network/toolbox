@@ -1,7 +1,7 @@
 const deps = require("./deps");
 
 module.exports = async ({
-  session: { sub },
+  claims: { sub },
   context,
   permissionsLookupFn,
   permissions = []

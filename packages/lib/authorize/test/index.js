@@ -16,7 +16,7 @@ const context = {
   any: "any-root"
 };
 
-const session = {
+const claims = {
   sub: principle
 };
 
@@ -32,7 +32,7 @@ describe("Authorize", () => {
     const permissionsLookupFn = fake.returns(permissions);
 
     const document = await authorize({
-      session,
+      claims,
       context,
       permissionsLookupFn,
       permissions: [`${service}:${domain}:${priviledge}`],
@@ -58,7 +58,7 @@ describe("Authorize", () => {
 
     try {
       await authorize({
-        session,
+        claims,
         context,
         permissionsLookupFn,
         network
@@ -76,7 +76,7 @@ describe("Authorize", () => {
     const permissionsLookupFn = fake.returns(permissions);
 
     const document = await authorize({
-      session,
+      claims,
       context,
       permissionsLookupFn,
       permissions: "none",
@@ -90,7 +90,7 @@ describe("Authorize", () => {
   it("should authorize with no sub and permissions as none", async () => {
     const document = await authorize({
       context,
-      session: {},
+      claims: {},
       permissions: "none",
       network
     });

@@ -41,7 +41,7 @@ const iss = "some-iss";
 const aud = "some-aud";
 const sub = "some-sub";
 const exp = deps.stringFromDate(new Date(deps.fineTimestamp() + 300));
-const session = {
+const claims = {
   iss,
   aud,
   sub,
@@ -95,7 +95,7 @@ describe("Command handler unit tests", () => {
       payload,
       root,
       context,
-      session,
+      claims,
       aggregateFn: aggregateFake
     });
 
@@ -187,7 +187,7 @@ describe("Command handler unit tests", () => {
         payload,
         root,
         context,
-        session,
+        claims,
         aggregateFn: aggregateFake
       });
       //shouldn't get called
@@ -250,7 +250,7 @@ describe("Command handler unit tests", () => {
         payload,
         root,
         context,
-        session,
+        claims,
         aggregateFn: aggregateFake
       });
       //shouldn't get called
@@ -298,7 +298,7 @@ describe("Command handler unit tests", () => {
         payload,
         root,
         context,
-        session,
+        claims,
         aggregateFn: aggregateFake
       });
       //shouldn't get called

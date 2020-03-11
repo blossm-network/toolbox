@@ -6,12 +6,11 @@ const common = ({ method, dataParam, procedure, root, data }) => {
   return {
     in: ({
       context,
-      session,
       service = process.env.SERVICE,
       network = process.env.NETWORK
     }) => {
       return {
-        with: async ({ path, tokenFn } = {}) => {
+        with: async ({ path, tokenFn, claims } = {}) => {
           const token = await deps.serviceToken({
             tokenFn,
             service,
@@ -30,7 +29,7 @@ const common = ({ method, dataParam, procedure, root, data }) => {
             [dataParam]: {
               ...(data && { ...data }),
               ...(context && { context }),
-              ...(session && { session })
+              ...(claims && { claims })
             },
             ...(token && {
               headers: {

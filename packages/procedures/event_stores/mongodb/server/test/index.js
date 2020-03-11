@@ -108,7 +108,7 @@ describe("Mongodb event store", () => {
           service: { type: String, required: true },
           trace: { type: String },
           context: { type: Object },
-          session: {
+          claims: {
             type: {
               iss: String,
               aud: String,
@@ -254,7 +254,7 @@ describe("Mongodb event store", () => {
           service: { type: String, required: true },
           trace: { type: String },
           context: { type: Object },
-          session: {
+          claims: {
             type: {
               iss: String,
               aud: String,
@@ -382,7 +382,7 @@ describe("Mongodb event store", () => {
           service: { type: String, required: true },
           trace: { type: String },
           context: { type: Object },
-          session: {
+          claims: {
             type: {
               iss: String,
               aud: String,

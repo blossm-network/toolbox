@@ -2,7 +2,7 @@ const deps = require("./deps");
 
 const getEventsForPermissionsMerge = async ({
   principle,
-  session,
+  claims,
   aggregateFn
 }) => {
   // Get the aggregates of the principle of the identity and the current principle of the session.
@@ -13,7 +13,7 @@ const getEventsForPermissionsMerge = async ({
     aggregateFn(principle.root, {
       domain: "principle"
     }),
-    aggregateFn(session.sub, {
+    aggregateFn(claims.sub, {
       domain: "principle"
     })
   ]);
@@ -82,30 +82,30 @@ const getEventsForIdentityRegistering = async ({ subject, payload }) => {
   };
 };
 
-module.exports = async ({ payload, context, session, aggregateFn }) => {
+module.exports = async ({ payload, context, claims, aggregateFn }) => {
   // Check to see if there is an identity with the provided id.
   const [identity] = await deps
     .eventStore({
       domain: "identity"
     })
-    .set({ context, session, tokenFn: deps.gcpToken })
+    .set({ context, claims, tokenFn: deps.gcpToken })
     .query({ key: "id", value: payload.id });
 
   if (identity) {
     if (!(await deps.compare(payload.phone, identity.state.phone)))
       throw deps.invalidArgumentError.message("This phone number isn't right.");
 
-    if (session.sub) {
+    if (claims.sub) {
       // Don't log an event or issue a challange if
-      // the identity's root is already set as the session's subject.
-      if (identity.state.principle.root == session.sub) return {};
+      // the identity's root is already set as the claims's subject.
+      if (identity.state.principle.root == claims.sub) return {};
 
       const [subjectIdentity] = await deps
         .eventStore({
           domain: "identity"
         })
-        .set({ context, session, tokenFn: deps.gcpToken })
-        .query({ key: "principle.root", value: session.sub });
+        .set({ context, claims, tokenFn: deps.gcpToken })
+        .query({ key: "principle.root", value: claims.sub });
 
       if (subjectIdentity)
         throw deps.badRequestError.message(
@@ -114,17 +114,17 @@ module.exports = async ({ payload, context, session, aggregateFn }) => {
     }
   }
 
-  // If an identity is found, merge the roles given to the session's subject
+  // If an identity is found, merge the roles given to the claims's subject
   // to the identity's principle.
-  // If not found, register a new identity and set the principle to be the session's subject.
+  // If not found, register a new identity and set the principle to be the claims's subject.
   const { events, principle } = identity
     ? await getEventsForPermissionsMerge({
         principle: identity.state.principle,
-        session,
+        claims,
         aggregateFn
       })
     : await getEventsForIdentityRegistering({
-        subject: session.sub,
+        subject: claims.sub,
         payload
       });
 
@@ -135,8 +135,8 @@ module.exports = async ({ payload, context, session, aggregateFn }) => {
     })
     .set({
       context,
-      session: {
-        ...session,
+      claims: {
+        ...claims,
         sub: principle.root
       },
       tokenFn: deps.gcpToken

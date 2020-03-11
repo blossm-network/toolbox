@@ -10,7 +10,7 @@ const query = {
 };
 const sort = "some-sort";
 const context = "some-context";
-const session = "some-session";
+const claims = "some-claims";
 
 const root = "some-root";
 
@@ -29,7 +29,7 @@ describe("View store get", () => {
       query: {
         sort,
         context,
-        session
+        claims
       },
       params
     };
@@ -43,7 +43,7 @@ describe("View store get", () => {
       root,
       sort,
       context,
-      session
+      claims
     });
     expect(sendFake).to.have.been.calledWith(objs);
   });
@@ -74,7 +74,7 @@ describe("View store get", () => {
       query: {
         query,
         sort,
-        session,
+        claims,
         context
       },
       params
@@ -88,7 +88,7 @@ describe("View store get", () => {
     expect(findFake).to.have.been.calledWith({
       query,
       sort,
-      session,
+      claims,
       context
     });
     expect(sendFake).to.have.been.calledWith(objs);

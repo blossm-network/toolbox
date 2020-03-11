@@ -49,7 +49,7 @@ testing:
         network: some.network
       context:
         session: some-session-root
-      session:
+      claims:
         iss: some-iss
         aud: some-aud
         exp: 9999-12-31T00:00:00.000
@@ -71,7 +71,7 @@ testing:
           root: some-principle-root
           service: some-service
           network: some-network
-      session:
+      claims:
         iss: some-iss
         aud: some-aud
         exp: 9999-12-31T00:00:00.000

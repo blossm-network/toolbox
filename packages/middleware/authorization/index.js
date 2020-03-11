@@ -10,7 +10,7 @@ module.exports = ({
     const [policy] = await Promise.all([
       deps.authorize({
         context: req.context,
-        session: req.session,
+        claims: req.claims,
         permissionsLookupFn,
         permissions
       }),

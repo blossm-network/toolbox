@@ -12,7 +12,7 @@ const now = new Date();
 
 const data = { a: 1, context: 3 };
 const context = { b: 4 };
-const session = "some-session";
+const claims = "some-claims";
 const procedurePart1 = "some-procedure1";
 const procedurePart2 = "some-procedure2";
 const token = "some-token";
@@ -60,14 +60,14 @@ describe("Operation", () => {
 
     const result = await operation(procedurePart1, procedurePart2)
       .post(data)
-      .in({ context, session, service, network })
-      .with({ tokenFn });
+      .in({ context, service, network })
+      .with({ tokenFn, claims });
 
     expect(post).to.have.been.calledWith(url, {
       body: {
         ...data,
         context,
-        session
+        claims
       },
       headers: {
         Authorization: `Bearer ${token}`
@@ -85,7 +85,7 @@ describe("Operation", () => {
     });
     expect(result).to.be.null;
   });
-  it("should call post with the correct params without context or session", async () => {
+  it("should call post with the correct params without context or claims", async () => {
     const post = fake.returns(response);
     replace(deps, "post", post);
 
@@ -130,8 +130,8 @@ describe("Operation", () => {
 
     const result = await operation(procedurePart1, procedurePart2)
       .post(data)
-      .in({ context, session })
-      .with({ tokenFn });
+      .in({ context })
+      .with({ tokenFn, claims });
 
     expect(serviceTokenFake).to.have.been.calledWith({
       tokenFn,
@@ -157,14 +157,14 @@ describe("Operation", () => {
 
     const result = await operation(procedurePart1, procedurePart2)
       .post(data)
-      .in({ context, session, service, network })
-      .with();
+      .in({ context, service, network })
+      .with({ claims });
 
     expect(post).to.have.been.calledWith(url, {
       body: {
         ...data,
         context,
-        session
+        claims
       }
     });
     expect(result).to.be.null;
@@ -183,14 +183,14 @@ describe("Operation", () => {
     const path = "/some/path";
     const result = await operation(procedurePart1, procedurePart2)
       .post(data)
-      .in({ context, session, service, network })
-      .with({ path, tokenFn });
+      .in({ context, service, network })
+      .with({ path, tokenFn, claims });
 
     expect(post).to.have.been.calledWith(url, {
       body: {
         ...data,
         context,
-        session
+        claims
       },
       headers: {
         Authorization: `Bearer ${token}`
@@ -222,14 +222,14 @@ describe("Operation", () => {
 
     const result = await operation(procedurePart1, procedurePart2)
       .get(data)
-      .in({ context, session, service, network })
-      .with({ tokenFn });
+      .in({ context, service, network })
+      .with({ tokenFn, claims });
 
     expect(get).to.have.been.calledWith(url, {
       query: {
         ...data,
         context,
-        session
+        claims
       },
       headers: {
         Authorization: `Bearer ${token}`
@@ -259,14 +259,14 @@ describe("Operation", () => {
 
     const result = await operation(procedurePart1, procedurePart2)
       .get({ ...data, root })
-      .in({ context, session, service, network })
-      .with({ tokenFn });
+      .in({ context, service, network })
+      .with({ tokenFn, claims });
 
     expect(get).to.have.been.calledWith(url, {
       query: {
         ...data,
         context,
-        session
+        claims
       },
       headers: {
         Authorization: `Bearer ${token}`
@@ -297,14 +297,14 @@ describe("Operation", () => {
 
     const result = await operation(procedurePart1, procedurePart2)
       .put(root, data)
-      .in({ context, session, service, network })
-      .with({ tokenFn });
+      .in({ context, service, network })
+      .with({ tokenFn, claims });
 
     expect(put).to.have.been.calledWith(url, {
       body: {
         ...data,
         context,
-        session
+        claims
       },
       headers: {
         Authorization: `Bearer ${token}`
@@ -337,14 +337,14 @@ describe("Operation", () => {
     const path = "/some/path";
     const result = await operation(procedurePart1, procedurePart2)
       .put(root, data)
-      .in({ context, session, service, network })
-      .with({ path, tokenFn });
+      .in({ context, service, network })
+      .with({ path, tokenFn, claims });
 
     expect(put).to.have.been.calledWith(url, {
       body: {
         ...data,
         context,
-        session
+        claims
       },
       headers: {
         Authorization: `Bearer ${token}`
@@ -376,13 +376,13 @@ describe("Operation", () => {
 
     const result = await operation(procedurePart1, procedurePart2)
       .delete(root)
-      .in({ context, session, service, network })
-      .with({ tokenFn });
+      .in({ context, service, network })
+      .with({ tokenFn, claims });
 
     expect(del).to.have.been.calledWith(url, {
       body: {
         context,
-        session
+        claims
       },
       headers: {
         Authorization: `Bearer ${token}`
@@ -426,8 +426,8 @@ describe("Operation", () => {
     try {
       await operation(procedurePart1, procedurePart2)
         .delete(root)
-        .in({ context, session, service, network })
-        .with({ tokenFn });
+        .in({ context, service, network })
+        .with({ tokenFn, claims });
 
       expect(3).to.equal(4);
     } catch (e) {
@@ -462,8 +462,8 @@ describe("Operation", () => {
     try {
       await operation(procedurePart1, procedurePart2)
         .delete(root)
-        .in({ context, session, service, network })
-        .with({ tokenFn });
+        .in({ context, service, network })
+        .with({ tokenFn, claims });
 
       expect(3).to.equal(4);
     } catch (e) {
@@ -494,8 +494,8 @@ describe("Operation", () => {
     try {
       await operation(procedurePart1, procedurePart2)
         .delete(root)
-        .in({ context, session, service, network })
-        .with({ tokenFn });
+        .in({ context, service, network })
+        .with({ tokenFn, claims });
 
       //shouldnt be called
       expect(3).to.equal(4);

@@ -84,7 +84,7 @@ testing:
           root: some-scene-root
           service: some-service
           network: some-network
-      session:
+      claims:
         iss: some-iss
         aud: some-aud
         sub: some-principle-root
@@ -108,7 +108,7 @@ testing:
           root: some-scene-root
           service: some-service
           network: some-network
-      session:
+      claims:
         iss: some-iss
         aud: some-aud
         sub: some-other-principle-root
@@ -128,7 +128,7 @@ testing:
           service: some-service
           network: some-network
       context: {}
-      session:
+      claims:
         iss: some-iss
         aud: some-aud
         sub: some-principle-root

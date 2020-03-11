@@ -18,7 +18,7 @@ const service = "some-service";
 const network = "some-network";
 
 const sub = "some-sub";
-const session = {
+const claims = {
   sub
 };
 
@@ -94,7 +94,7 @@ describe("Command handler unit tests", () => {
     const result = await main({
       payload,
       context,
-      session,
+      claims,
       aggregateFn: aggregateFake
     });
 
@@ -104,7 +104,7 @@ describe("Command handler unit tests", () => {
     expect(eventStoreFake).to.have.been.calledWith({ domain: "identity" });
     expect(setFake).to.have.been.calledWith({
       context,
-      session,
+      claims,
       tokenFn: deps.gcpToken
     });
     expect(queryFake).to.have.been.calledWith({ key: "id", value: id });
@@ -121,8 +121,8 @@ describe("Command handler unit tests", () => {
     });
     expect(anotherSetFake).to.have.been.calledWith({
       context,
-      session: {
-        ...session,
+      claims: {
+        ...claims,
         sub: principleRoot
       },
       tokenFn: deps.gcpToken
@@ -193,7 +193,7 @@ describe("Command handler unit tests", () => {
     const result = await main({
       payload,
       context,
-      session,
+      claims,
       aggregateFn: aggregateFake
     });
 
@@ -203,7 +203,7 @@ describe("Command handler unit tests", () => {
     expect(eventStoreFake).to.have.been.calledWith({ domain: "identity" });
     expect(setFake).to.have.been.calledWith({
       context,
-      session,
+      claims,
       tokenFn: deps.gcpToken
     });
     expect(queryFake).to.have.been.calledWith({ key: "id", value: id });
@@ -220,8 +220,8 @@ describe("Command handler unit tests", () => {
     });
     expect(anotherSetFake).to.have.been.calledWith({
       context,
-      session: {
-        ...session,
+      claims: {
+        ...claims,
         sub: principleRoot
       },
       tokenFn: deps.gcpToken
@@ -279,7 +279,7 @@ describe("Command handler unit tests", () => {
     const result = await main({
       payload,
       context,
-      session: {}
+      claims: {}
     });
 
     expect(result).to.deep.equal({
@@ -288,7 +288,7 @@ describe("Command handler unit tests", () => {
     expect(eventStoreFake).to.have.been.calledWith({ domain: "identity" });
     expect(setFake).to.have.been.calledWith({
       context,
-      session: {},
+      claims: {},
       tokenFn: deps.gcpToken
     });
     expect(queryFake).to.have.been.calledWith({ key: "id", value: id });
@@ -299,7 +299,7 @@ describe("Command handler unit tests", () => {
     });
     expect(anotherSetFake).to.have.been.calledWith({
       context,
-      session: {
+      claims: {
         sub: principleRoot
       },
       tokenFn: deps.gcpToken
@@ -366,7 +366,7 @@ describe("Command handler unit tests", () => {
     const result = await main({
       payload,
       context,
-      session
+      claims
     });
 
     expect(result).to.deep.equal({
@@ -375,7 +375,7 @@ describe("Command handler unit tests", () => {
     expect(eventStoreFake).to.have.been.calledWith({ domain: "identity" });
     expect(setFake).to.have.been.calledWith({
       context,
-      session,
+      claims,
       tokenFn: deps.gcpToken
     });
     expect(queryFake).to.have.been.calledWith({ key: "id", value: id });
@@ -386,7 +386,7 @@ describe("Command handler unit tests", () => {
     });
     expect(anotherSetFake).to.have.been.calledWith({
       context,
-      session,
+      claims,
       tokenFn: deps.gcpToken
     });
     expect(issueFake).to.have.been.calledWith(
@@ -433,7 +433,7 @@ describe("Command handler unit tests", () => {
     const result = await main({
       payload,
       context,
-      session
+      claims
     });
 
     expect(result).to.deep.equal({});
@@ -465,7 +465,7 @@ describe("Command handler unit tests", () => {
       await main({
         payload,
         context,
-        session
+        claims
       });
       //shouldn't get called
       expect(2).to.equal(3);
@@ -492,7 +492,7 @@ describe("Command handler unit tests", () => {
       await main({
         payload,
         context,
-        session
+        claims
       });
       //shouldn't get called
       expect(2).to.equal(3);
@@ -536,7 +536,7 @@ describe("Command handler unit tests", () => {
       await main({
         payload,
         context,
-        session,
+        claims,
         aggregateFn: aggregateFake
       });
 

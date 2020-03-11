@@ -1,6 +1,6 @@
 const deps = require("./deps");
 
-module.exports = async ({ payload, context, session }) => {
+module.exports = async ({ payload, context, claims }) => {
   // Create new roots for the scene and the node.
   const nodeRoot = deps.uuid();
   const sceneRoot = deps.uuid();
@@ -11,7 +11,7 @@ module.exports = async ({ payload, context, session }) => {
       name: "register",
       domain: "scene"
     })
-    .set({ context, session, tokenFn: deps.gcpToken })
+    .set({ context, claims, tokenFn: deps.gcpToken })
     .issue(
       {
         root: nodeRoot,

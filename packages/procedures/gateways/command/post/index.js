@@ -8,7 +8,7 @@ module.exports = ({ name, domain } = {}) => async (req, res) => {
       name,
       domain
     })
-    .set({ tokenFn: deps.gcpToken, context: req.context, session: req.session })
+    .set({ tokenFn: deps.gcpToken, context: req.context, claims: req.claims })
     .issue(payload, { ...headers, root });
 
   // If the response has tokens, send them as cookies and remove them from the response.

@@ -16,6 +16,7 @@ const sort = "some-sort";
 const view = "some-view";
 const root = "some-root";
 const context = { c: 2 };
+const claims = "some-claims";
 
 describe("Get views", () => {
   afterEach(() => {
@@ -36,13 +37,13 @@ describe("Get views", () => {
     replace(deps, "rpc", rpcFake);
 
     await viewStore({ name, domain, service, network })
-      .set({ context, tokenFn })
+      .set({ context, tokenFn, claims })
       .create(view);
 
     expect(rpcFake).to.have.been.calledWith(name, domain, "view-store");
     expect(postFake).to.have.been.calledWith({ view });
     expect(inFake).to.have.been.calledWith({ context, service, network });
-    expect(withFake).to.have.been.calledWith({ tokenFn });
+    expect(withFake).to.have.been.calledWith({ tokenFn, claims });
   });
   it("should call create with the correct params and optionals omitted", async () => {
     const withFake = fake();

@@ -1,13 +1,13 @@
 const deps = require("./deps");
 
-module.exports = async ({ root, payload, context, session, aggregateFn }) => {
+module.exports = async ({ root, payload, context, claims, aggregateFn }) => {
   // Get aggregates for the principle, this session, and the context to be switched in to.
   const [
     { aggregate: principleAggregate },
     { aggregate },
     { aggregate: sceneAggregate }
   ] = await Promise.all([
-    aggregateFn(session.sub, {
+    aggregateFn(claims.sub, {
       domain: "principle"
     }),
     aggregateFn(root),
@@ -38,10 +38,10 @@ module.exports = async ({ root, payload, context, session, aggregateFn }) => {
   // Create a new token inheriting from the current session.
   const token = await deps.createJwt({
     options: {
-      issuer: session.iss,
-      subject: session.sub,
-      audience: session.aud,
-      expiresIn: Date.parse(session.exp) - deps.fineTimestamp()
+      issuer: claims.iss,
+      subject: claims.sub,
+      audience: claims.aud,
+      expiresIn: Date.parse(claims.exp) - deps.fineTimestamp()
     },
     payload: {
       context: {

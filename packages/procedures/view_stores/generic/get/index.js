@@ -9,7 +9,7 @@ module.exports = ({ findFn, findOneFn, queryFn = defaultQueryFn }) => {
         root: req.params.root,
         ...(req.query.sort && { sort: req.query.sort }),
         ...(req.query.context && { context: req.query.context }),
-        ...(req.query.session && { session: req.query.session })
+        ...(req.query.claims && { claims: req.query.claims })
       });
 
       if (!result) throw deps.resourceNotFoundError.view();
@@ -23,7 +23,7 @@ module.exports = ({ findFn, findOneFn, queryFn = defaultQueryFn }) => {
         query,
         ...(req.query.sort && { sort: req.query.sort }),
         ...(req.query.context && { context: req.query.context }),
-        ...(req.query.session && { session: req.query.session })
+        ...(req.query.claims && { claims: req.query.claims })
       });
 
       res.send(results);

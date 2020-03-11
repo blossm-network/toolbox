@@ -17,11 +17,11 @@ module.exports = ({
       payload: req.body.payload,
       ...(req.body.root && { root: req.body.root }),
       ...(req.body.options && { options: req.body.options }),
-      session: req.body.session,
+      claims: req.body.claims,
       context: req.body.context,
       aggregateFn: aggregateFn({
         context: req.body.context,
-        session: req.body.session
+        claims: req.body.claims
       })
     });
 
@@ -68,7 +68,7 @@ module.exports = ({
         addFn({
           domain,
           context: req.body.context,
-          session: req.body.session,
+          claims: req.body.claims,
           events: eventsPerStore[domain]
         })
       );

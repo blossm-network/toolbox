@@ -72,7 +72,7 @@ testing:
           network: some-principle-network
       payload:
         phone: "(919) 555 1133"
-      session:
+      claims:
         sub: some-principle-root
       response:
         tokens:
@@ -84,7 +84,7 @@ testing:
           network: some-principle-network
       payload:
         phone: "(919) 555 1133"
-      session:
+      claims:
         sub: some-whack-principle-root
       code: 400
     - pre:
@@ -101,7 +101,7 @@ testing:
       payload:
         id: some-id
         phone: "+19195551144"
-      session:
+      claims:
         sub: some-sub
       code: 400
     - pre:
@@ -118,7 +118,7 @@ testing:
       payload:
         id: some-other-id
         phone: "+19195551144"
-      session: {}
+      claims: {}
       response:
         tokens:
           challenge:

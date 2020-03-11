@@ -84,14 +84,14 @@ testing:
       payload:
         id: some-other-identity-id
         phone: "+19195551155"
-      session:
+      claims:
         sub: some-principle-root
       response:
     - pre:
       payload:
         id: new-identity-id
         phone: "+19195551144"
-      session:
+      claims:
         sub: some-principle-root
       response:
         tokens:
@@ -126,7 +126,7 @@ testing:
       payload:
         id: yet-another-identity-id
         phone: "+19195551177"
-      session:
+      claims:
         sub: some-other-principle-root
       response:
         tokens:
@@ -171,7 +171,7 @@ testing:
       payload:
         id: yet-another-identity-id_1
         phone: "+19195551177"
-      session:
+      claims:
         sub: some-other-principle-root_1
       code: 400
 

@@ -3,7 +3,7 @@ const { string: dateString } = require("@blossm/datetime");
 const deps = require("./deps");
 
 module.exports = ({ domain, service, network } = {}) => {
-  const add = ({ context, session, tokenFn } = {}) => async events => {
+  const add = ({ context, claims, tokenFn } = {}) => async events => {
     const normalizedEvents = events.map(event => {
       return {
         data: {
@@ -11,7 +11,7 @@ module.exports = ({ domain, service, network } = {}) => {
             ...event.data.headers,
             created: dateString(),
             ...(context && { context }),
-            ...(session && { session })
+            ...(claims && { claims })
           },
           payload: event.data.payload
         },
@@ -24,26 +24,24 @@ module.exports = ({ domain, service, network } = {}) => {
       .post({ events: normalizedEvents })
       .in({
         ...(context && { context }),
-        ...(session && { session }),
         ...(service && { service }),
         ...(network && { network })
       })
-      .with({ tokenFn });
+      .with({ tokenFn, ...(claims && { claims }) });
   };
 
-  const aggregate = ({ context, session, tokenFn } = {}) => async root =>
+  const aggregate = ({ context, claims, tokenFn } = {}) => async root =>
     await deps
       .rpc(domain, "event-store")
       .get({ root })
       .in({
         ...(context && { context }),
-        ...(session && { session }),
         ...(service && { service }),
         ...(network && { network })
       })
-      .with({ tokenFn });
+      .with({ tokenFn, ...(claims && { claims }) });
 
-  const query = ({ context, session, tokenFn } = {}) => async ({
+  const query = ({ context, claims, tokenFn } = {}) => async ({
     key,
     value
   }) => {
@@ -52,23 +50,22 @@ module.exports = ({ domain, service, network } = {}) => {
       .get({ key, value })
       .in({
         ...(context && { context }),
-        ...(session && { session }),
         ...(service && { service }),
         ...(network && { network })
       })
-      .with({ tokenFn });
+      .with({ tokenFn, ...(claims && { claims }) });
   };
 
   return {
-    set: ({ context, session, tokenFn } = {}) => {
+    set: ({ context, claims, tokenFn } = {}) => {
       return {
-        add: add({ context, session, tokenFn }),
+        add: add({ context, claims, tokenFn }),
         query: query({
           ...(context && { context }),
-          ...(session && { session }),
+          ...(claims && { claims }),
           tokenFn
         }),
-        aggregate: aggregate({ context, session, tokenFn })
+        aggregate: aggregate({ context, claims, tokenFn })
       };
     },
     add: add(),

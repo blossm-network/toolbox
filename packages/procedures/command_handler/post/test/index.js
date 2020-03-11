@@ -21,7 +21,7 @@ const event = {
 };
 const correctNumber = 4;
 const context = "some-context";
-const session = "some-session";
+const claims = "some-claims";
 const trace = "some-trace";
 const id = "some-id";
 const issued = "some-issued";
@@ -72,7 +72,7 @@ describe("Command handler post", () => {
         payload,
         headers,
         context,
-        session
+        claims
       }
     };
 
@@ -95,13 +95,13 @@ describe("Command handler post", () => {
       aggregateFn: aggregateFnFake
     })(req, res);
 
-    expect(aggregateFnFake).to.have.been.calledWith({ context, session });
+    expect(aggregateFnFake).to.have.been.calledWith({ context, claims });
     expect(normalizeFnFake).to.have.been.calledWith(payload);
     expect(validateFnFake).to.have.been.calledWith(payload);
     expect(mainFnFake).to.have.been.calledWith({
       payload: cleanedPayload,
       context,
-      session,
+      claims,
       aggregateFn
     });
 
@@ -125,7 +125,7 @@ describe("Command handler post", () => {
     expect(addFnFake).to.have.been.calledWith({
       domain,
       context,
-      session,
+      claims,
       events: [
         {
           data: event,
@@ -161,7 +161,7 @@ describe("Command handler post", () => {
         payload,
         headers,
         context,
-        session
+        claims
       }
     };
 
@@ -185,7 +185,7 @@ describe("Command handler post", () => {
       addFn: addFnFake
     })(req, res);
 
-    expect(aggregateFnFake).to.have.been.calledWith({ context, session });
+    expect(aggregateFnFake).to.have.been.calledWith({ context, claims });
     expect(fillFnFake).to.have.been.calledWith(payload);
     expect(normalizeFnFake).to.have.been.calledWith(filledPayload);
     expect(validateFnFake).to.have.been.calledWith(payload);
@@ -213,7 +213,7 @@ describe("Command handler post", () => {
         payload,
         headers,
         context,
-        session
+        claims
       }
     };
 
@@ -236,19 +236,19 @@ describe("Command handler post", () => {
       addFn: addFnFake
     })(req, res);
 
-    expect(aggregateFnFake).to.have.been.calledWith({ context, session });
+    expect(aggregateFnFake).to.have.been.calledWith({ context, claims });
     expect(normalizeFnFake).to.have.been.calledWith(payload);
     expect(validateFnFake).to.have.been.calledWith(payload);
     expect(mainFnFake).to.have.been.calledWith({
       payload: cleanedPayload,
       context,
-      session,
+      claims,
       aggregateFn
     });
     expect(addFnFake).to.have.been.calledWith({
       domain,
       context,
-      session,
+      claims,
       events: [{ data: event, number: correctNumber }]
     });
 
@@ -272,7 +272,7 @@ describe("Command handler post", () => {
     expect(statusFake).to.have.been.calledWith(204);
     expect(sendFake).to.have.been.calledWith();
   });
-  it("should call with the correct params with root, options, session, version passed in, and no payload", async () => {
+  it("should call with the correct params with root, options, claims, version passed in, and no payload", async () => {
     const validateFnFake = fake();
     const normalizeFnFake = fake.returns(cleanedPayload);
 
@@ -303,7 +303,7 @@ describe("Command handler post", () => {
         headers,
         options,
         context,
-        session
+        claims
       }
     };
 
@@ -325,7 +325,7 @@ describe("Command handler post", () => {
       addFn: addFnFake
     })(req, res);
 
-    expect(aggregateFnFake).to.have.been.calledWith({ context, session });
+    expect(aggregateFnFake).to.have.been.calledWith({ context, claims });
     expect(normalizeFnFake).to.have.been.calledWith(payload);
     expect(validateFnFake).to.have.been.calledWith(payload);
     expect(mainFnFake).to.have.been.calledWith({
@@ -333,14 +333,14 @@ describe("Command handler post", () => {
       root: currentRoot,
       options,
       context,
-      session,
+      claims,
       aggregateFn
     });
 
     expect(addFnFake).to.have.been.calledWith({
       domain,
       context,
-      session,
+      claims,
       events: [{ data: event, number: correctNumber }]
     });
 
@@ -384,7 +384,7 @@ describe("Command handler post", () => {
         payload,
         headers,
         context,
-        session
+        claims
       }
     };
 
@@ -405,18 +405,18 @@ describe("Command handler post", () => {
       addFn: addFnFake
     })(req, res);
 
-    expect(aggregateFnFake).to.have.been.calledWith({ context, session });
+    expect(aggregateFnFake).to.have.been.calledWith({ context, claims });
     expect(mainFnFake).to.have.been.calledWith({
       payload,
       context,
-      session,
+      claims,
       aggregateFn
     });
 
     expect(addFnFake).to.have.been.calledWith({
       domain,
       context,
-      session,
+      claims,
       events: [{ data: event }]
     });
     expect(createEventFake).to.have.been.calledWith({
@@ -467,7 +467,7 @@ describe("Command handler post", () => {
         payload,
         headers,
         context,
-        session
+        claims
       }
     };
 
@@ -490,20 +490,20 @@ describe("Command handler post", () => {
       addFn: addFnFake
     })(req, res);
 
-    expect(aggregateFnFake).to.have.been.calledWith({ context, session });
+    expect(aggregateFnFake).to.have.been.calledWith({ context, claims });
     expect(normalizeFnFake).to.have.been.calledWith(payload);
     expect(validateFnFake).to.have.been.calledWith(payload);
     expect(mainFnFake).to.have.been.calledWith({
       payload: cleanedPayload,
       context,
-      session,
+      claims,
       aggregateFn
     });
 
     expect(addFnFake).to.have.been.calledWith({
       domain: eventDomain,
       context,
-      session,
+      claims,
       events: [{ data: event, number: correctNumber }]
     });
     expect(createEventFake).to.have.been.calledWith({
@@ -542,7 +542,7 @@ describe("Command handler post", () => {
         payload,
         headers,
         context,
-        session
+        claims
       }
     };
 
@@ -565,13 +565,13 @@ describe("Command handler post", () => {
       addFn: addFnFake
     })(req, res);
 
-    expect(aggregateFnFake).to.have.been.calledWith({ context, session });
+    expect(aggregateFnFake).to.have.been.calledWith({ context, claims });
     expect(normalizeFnFake).to.have.been.calledWith(payload);
     expect(validateFnFake).to.have.been.calledWith(payload);
     expect(mainFnFake).to.have.been.calledWith({
       payload: cleanedPayload,
       context,
-      session,
+      claims,
       aggregateFn
     });
 
@@ -611,7 +611,7 @@ describe("Command handler post", () => {
         payload,
         headers,
         context,
-        session
+        claims
       }
     };
 
@@ -634,13 +634,13 @@ describe("Command handler post", () => {
       addFn: addFnFake
     })(req, res);
 
-    expect(aggregateFnFake).to.have.been.calledWith({ context, session });
+    expect(aggregateFnFake).to.have.been.calledWith({ context, claims });
     expect(normalizeFnFake).to.have.been.calledWith(payload);
     expect(validateFnFake).to.have.been.calledWith(payload);
     expect(mainFnFake).to.have.been.calledWith({
       payload: cleanedPayload,
       context,
-      session,
+      claims,
       aggregateFn
     });
 
@@ -681,7 +681,7 @@ describe("Command handler post", () => {
     expect(addFnFake).to.have.been.calledWith({
       domain,
       context,
-      session,
+      claims,
       events: [
         { data: event, number: correctNumber },
         { data: event, number: otherCorrectNumber }
@@ -723,7 +723,7 @@ describe("Command handler post", () => {
         payload,
         headers,
         context,
-        session
+        claims
       }
     };
 
@@ -746,13 +746,13 @@ describe("Command handler post", () => {
       addFn: addFnFake
     })(req, res);
 
-    expect(aggregateFnFake).to.have.been.calledWith({ context, session });
+    expect(aggregateFnFake).to.have.been.calledWith({ context, claims });
     expect(normalizeFnFake).to.have.been.calledWith(payload);
     expect(validateFnFake).to.have.been.calledWith(payload);
     expect(mainFnFake).to.have.been.calledWith({
       payload: cleanedPayload,
       context,
-      session,
+      claims,
       aggregateFn
     });
 
@@ -793,13 +793,13 @@ describe("Command handler post", () => {
     expect(addFnFake).to.have.been.calledWith({
       domain,
       context,
-      session,
+      claims,
       events: [{ data: event, number: correctNumber }]
     });
     expect(addFnFake).to.have.been.calledWith({
       domain: differentDomain,
       context,
-      session,
+      claims,
       events: [{ data: event, number: otherCorrectNumber }]
     });
     expect(addFnFake).to.have.been.calledTwice;

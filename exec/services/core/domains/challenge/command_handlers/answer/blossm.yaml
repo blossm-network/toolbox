@@ -66,7 +66,7 @@ testing:
               root: some-challenge-principle-root
               service: some-service
               network: some-network
-            session:
+            claims:
               iss: some-iss
               aud: some-aud
               exp: 9999-12-31T00:00:00.000Z
@@ -101,7 +101,7 @@ testing:
               root: some-challenge-principle-root
               service: some-service
               network: some-network
-            session:
+            claims:
               iss: some-iss
               aud: some-aud
               sub: some-sub

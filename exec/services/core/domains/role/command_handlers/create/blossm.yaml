@@ -39,7 +39,7 @@ testing:
     pre:
     payload:
     context:
-    session:
+    claims:
     root:
     response:
 

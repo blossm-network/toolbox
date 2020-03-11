@@ -13,7 +13,7 @@ module.exports = commandHandler({
   ...(validate && { validateFn: validate }),
   ...(normalize && { normalizeFn: normalize }),
   ...(fill && { fillFn: fill }),
-  aggregateFn: ({ context, session }) => async (
+  aggregateFn: ({ context, claims }) => async (
     root,
     {
       domain = process.env.DOMAIN,
@@ -24,7 +24,7 @@ module.exports = commandHandler({
     const aggregate = await eventStore({ domain, service, network })
       .set({
         context,
-        session,
+        claims,
         tokenFn: gcpToken
       })
       .aggregate(root);
@@ -34,11 +34,11 @@ module.exports = commandHandler({
       aggregate: aggregate.state
     };
   },
-  addFn: ({ domain, context, session, events }) =>
+  addFn: ({ domain, context, claims, events }) =>
     eventStore({ domain })
       .set({
         context,
-        session,
+        claims,
         tokenFn: gcpToken
       })
       .add(events)

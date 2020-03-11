@@ -10,7 +10,7 @@ module.exports = ({ verifyFn }) =>
     });
 
     req.context = claims.context;
-    req.session = {
+    req.claims = {
       iss: claims.iss,
       aud: claims.aud,
       sub: claims.sub,

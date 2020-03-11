@@ -40,7 +40,7 @@ describe("Authentication middleware", () => {
       verifyFn
     });
     expect(req.context).to.deep.equal(context);
-    expect(req.session).to.deep.equal({
+    expect(req.claims).to.deep.equal({
       iss,
       aud,
       sub,
