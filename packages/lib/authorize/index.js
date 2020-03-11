@@ -4,12 +4,8 @@ module.exports = async ({
   session: { sub },
   context,
   permissionsLookupFn,
-  permissions = [],
-  network
+  permissions = []
 }) => {
-  if (context.network !== network)
-    throw deps.invalidCredentialsError.tokenInvalid();
-
   if (permissions == "none")
     return {
       permissions: [],

@@ -1,0 +1,51 @@
+domain: connection
+service: core
+
+schema:
+  key:
+    root: String
+    service: String
+    network: String
+
+actions:
+  - open
+
+testing:
+  examples:
+    first:
+      action: open
+      payload:
+        key:
+          root: some-key-root
+          service: some-key-service
+          network: some-key-network
+    second:
+      action: open
+      payload:
+        key:
+          root: some-other-key-root
+          service: some-other-key-service
+          network: some-other-key-network
+    more: []
+
+  handlers:
+    - action: open
+      examples:
+        - state:
+            key:
+              root: some-key-root
+              service: some-key-service
+              network: some-key-network
+          payload:
+            key:
+              root: some-other-key-root
+              service: some-other-key-service
+              network: some-other-key-network
+          result:
+            key:
+              root: some-other-key-root
+              service: some-other-key-service
+              network: some-other-key-network
+
+#don't change
+context: event-store

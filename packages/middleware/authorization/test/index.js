@@ -5,9 +5,6 @@ const authorizationMiddleware = require("..");
 
 const permissionsLookupFn = "some-permissions-lookup-fn";
 const permissions = "some-permissions";
-const domain = "some-domain";
-const service = "some-service";
-const network = "some-network";
 const policy = "some-policy";
 
 const envNetwork = "some-env-network";
@@ -15,7 +12,6 @@ const envService = "some-env-service";
 process.env.NETWORK = envNetwork;
 process.env.SERVICE = envService;
 
-const root = "some-root";
 const sessionRoot = "some-session-root";
 const session = { root: sessionRoot };
 const reqSession = "some-req-session";
@@ -30,10 +26,7 @@ describe("Authorization middleware", () => {
     const req = {
       path,
       session: reqSession,
-      context,
-      body: {
-        root
-      }
+      context
     };
 
     const authorizationFake = fake.returns(policy);
@@ -43,24 +36,16 @@ describe("Authorization middleware", () => {
     const terminatedSessionCheckFake = fake();
 
     await authorizationMiddleware({
-      domain,
-      service,
-      network,
       permissionsLookupFn,
       terminatedSessionCheckFn: terminatedSessionCheckFake,
       permissions
     })(req, null, nextFake);
 
     expect(authorizationFake).to.have.been.calledWith({
-      path,
       context,
       session: reqSession,
       permissionsLookupFn,
-      root,
-      permissions,
-      domain,
-      service,
-      network
+      permissions
     });
     expect(terminatedSessionCheckFake).to.have.been.calledWith({
       session: sessionRoot
@@ -86,21 +71,16 @@ describe("Authorization middleware", () => {
 
     const nextFake = fake();
     await authorizationMiddleware({
-      domain,
       permissionsLookupFn,
       terminatedSessionCheckFn: terminatedSessionCheckFake,
       permissions
     })(req, null, nextFake);
 
     expect(authorizationFake).to.have.been.calledWith({
-      path,
       session: reqSession,
       context: otherContext,
       permissionsLookupFn,
-      permissions,
-      domain,
-      service: envService,
-      network: envNetwork
+      permissions
     });
     expect(terminatedSessionCheckFake).to.not.have.been.called;
 
@@ -124,9 +104,6 @@ describe("Authorization middleware", () => {
     const nextFake = fake();
 
     await authorizationMiddleware({
-      domain,
-      service,
-      network,
       permissionsLookupFn,
       terminatedSessionCheckFn: terminatedSessionCheckFake,
       permissions
@@ -140,10 +117,7 @@ describe("Authorization middleware", () => {
     const req = {
       path,
       session: reqSession,
-      context,
-      body: {
-        root
-      }
+      context
     };
 
     const authorizationFake = fake.returns(policy);
@@ -155,9 +129,6 @@ describe("Authorization middleware", () => {
     const nextFake = fake();
 
     await authorizationMiddleware({
-      domain,
-      service,
-      network,
       permissionsLookupFn,
       terminatedSessionCheckFn: terminatedSessionCheckFake,
       permissions

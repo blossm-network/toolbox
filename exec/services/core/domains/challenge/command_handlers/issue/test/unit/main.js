@@ -99,6 +99,7 @@ describe("Command handler unit tests", () => {
         {
           action: "issue",
           root,
+          correctNumber: 0,
           payload: {
             code,
             principle: {
@@ -216,6 +217,7 @@ describe("Command handler unit tests", () => {
         {
           action: "issue",
           root,
+          correctNumber: 0,
           payload: {
             code,
             principle: optionsPrinciple,
@@ -451,6 +453,7 @@ describe("Command handler unit tests", () => {
         {
           action: "issue",
           root,
+          correctNumber: 0,
           payload: {
             code,
             principle: {
