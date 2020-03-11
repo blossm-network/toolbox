@@ -1,6 +1,6 @@
 {
   "name": "@blossm/create-event",
-  "version": "0.0.22",
+  "version": "0.0.23",
   "description": "Creates a normalized event.",
   "main": "index.js",
   "author": "blossm.network",

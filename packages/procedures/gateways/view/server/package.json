@@ -1,7 +1,7 @@
 {
   "name": "@blossm/view-gateway",
   "description": "A gateway server that manages view access.",
-  "version": "0.0.137",
+  "version": "0.0.138",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -14,11 +14,11 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/authentication-middleware": "^0.0.56",
-    "@blossm/authorization-middleware": "^0.0.53",
+    "@blossm/authentication-middleware": "^0.0.57",
+    "@blossm/authorization-middleware": "^0.0.54",
     "@blossm/cors-middleware": "^0.0.19",
     "@blossm/server": "^0.0.7",
-    "@blossm/view-gateway-get": "^0.0.88"
+    "@blossm/view-gateway-get": "^0.0.89"
   },
   "devDependencies": {
     "chai-datetime": "^1.5.0",
