@@ -1,7 +1,7 @@
 {
   "name": "@blossm/command-gateway",
   "description": "A gateway server that manages command issuing access.",
-  "version": "0.0.143",
+  "version": "0.0.144",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@blossm/authentication-middleware": "^0.0.55",
-    "@blossm/authorization-middleware": "^0.0.51",
+    "@blossm/authorization-middleware": "^0.0.52",
     "@blossm/command-gateway-post": "^0.0.98",
     "@blossm/cors-middleware": "^0.0.18",
     "@blossm/server": "^0.0.7"
