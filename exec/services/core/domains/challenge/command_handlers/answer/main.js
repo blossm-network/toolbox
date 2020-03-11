@@ -1,7 +1,7 @@
 const deps = require("./deps");
 
 module.exports = async ({ payload, context, aggregateFn }) => {
-  const root = context.challenge;
+  const root = context.challenge.root;
 
   // Look for the challenge being answered.
   const { aggregate: challengeAggregate } = await aggregateFn(root);
@@ -47,7 +47,7 @@ module.exports = async ({ payload, context, aggregateFn }) => {
       {
         principle: challengeAggregate.principle
       },
-      { root: context.session }
+      { root: context.session.root }
     );
 
   return { events, response: { tokens } };

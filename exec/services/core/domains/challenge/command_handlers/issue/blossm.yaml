@@ -6,7 +6,7 @@ payload:
   phone:
     type: phoneNumber
     title: phone number
-  id: 
+  id:
     type: string
     optional: true
 
@@ -40,12 +40,12 @@ testing:
       - id: some-id
         phone: "(919) 555 1144"
     bad:
-      - id:  
+      - id:
           a: 1
       - phone: "919"
       - phone: 919
       - phone: false
-  
+
   normalize:
     - payload:
         id: some-id
@@ -66,7 +66,10 @@ testing:
         phone: "(919) 555 1144"
       code: 409
     - options:
-        principle: some-principle-root
+        principle:
+          root: some-principle-root
+          service: some-principle-service
+          network: some-principle-network
       payload:
         phone: "(919) 555 1133"
       session:
@@ -75,20 +78,26 @@ testing:
         tokens:
           challenge:
     - options:
-        principle: some-principle-root
+        principle:
+          root: some-principle-root
+          service: some-principle-service
+          network: some-principle-network
       payload:
         phone: "(919) 555 1133"
       session:
         sub: some-whack-principle-root
       code: 400
     - pre:
-      - domain: identity
-        root: some-identity-root
-        action: register
-        payload:
-          id: some-id
-          phone: "#+19195551144"
-          principle: some-principle
+        - domain: identity
+          root: some-identity-root
+          action: register
+          payload:
+            id: some-id
+            phone: "#+19195551144"
+            principle:
+              root: some-principle
+              service: some-service
+              network: some-network
       payload:
         id: some-id
         phone: "+19195551144"
@@ -96,13 +105,16 @@ testing:
         sub: some-sub
       code: 400
     - pre:
-      - domain: identity
-        root: some-other-identity-root
-        action: register
-        payload:
-          id: some-other-id
-          phone: "#+19195551144"
-          principle: some-other-principle
+        - domain: identity
+          root: some-other-identity-root
+          action: register
+          payload:
+            id: some-other-id
+            phone: "#+19195551144"
+            principle:
+              root: some-other-principle
+              service: some-service
+              network: some-network
       payload:
         id: some-other-id
         phone: "+19195551144"
@@ -111,13 +123,16 @@ testing:
         tokens:
           challenge:
     - pre:
-      - domain: identity
-        root: yet-another-identity-root
-        action: register
-        payload:
-          id: yet-another-id
-          phone: "+19195551144"
-          principle: yet-another-principle
+        - domain: identity
+          root: yet-another-identity-root
+          action: register
+          payload:
+            id: yet-another-id
+            phone: "+19195551144"
+            principle:
+              root: yet-another-principle
+              service: some-service
+              network: some-network
       payload:
         id: some-id
         phone: "+19195551133"

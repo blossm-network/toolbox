@@ -9,7 +9,9 @@ const deps = require("../../deps");
 let clock;
 const now = new Date();
 const root = "some-root";
-const principle = "some-identity-principle";
+const principleRoot = "some-identity-principle";
+const principleService = "some-priciple-service";
+const principleNetwork = "some-priciple-network";
 const identityRoot = "some-identity-root";
 const phone = "some-identity-phone";
 const identity = {
@@ -17,7 +19,11 @@ const identity = {
     root: identityRoot
   },
   state: {
-    principle,
+    principle: {
+      root: principleRoot,
+      service: principleService,
+      network: principleNetwork
+    },
     phone
   }
 };
@@ -95,7 +101,11 @@ describe("Command handler unit tests", () => {
           root,
           payload: {
             code,
-            principle,
+            principle: {
+              root: principleRoot,
+              service: principleService,
+              network: principleNetwork
+            },
             session,
             issued: new Date().toISOString(),
             expires: deps
@@ -139,9 +149,7 @@ describe("Command handler unit tests", () => {
       payload: {
         context: {
           ...context,
-          challenge: root,
-          service,
-          network
+          challenge: { root, service, network }
         }
       },
       signFn: signature
@@ -184,7 +192,11 @@ describe("Command handler unit tests", () => {
     const randomIntFake = fake.returns(code);
     replace(deps, "randomIntOfLength", randomIntFake);
 
-    const optionsPrincipleRoot = principle;
+    const optionsPrinciple = {
+      root: principleRoot,
+      service: principleService,
+      network: principleNetwork
+    };
 
     const compareFake = fake.returns(true);
     replace(deps, "compare", compareFake);
@@ -194,7 +206,7 @@ describe("Command handler unit tests", () => {
       context,
       session,
       options: {
-        principle: optionsPrincipleRoot
+        principle: optionsPrinciple
       }
     });
 
@@ -206,11 +218,7 @@ describe("Command handler unit tests", () => {
           root,
           payload: {
             code,
-            principle: {
-              root: optionsPrincipleRoot,
-              service,
-              network
-            },
+            principle: optionsPrinciple,
             session,
             issued: new Date().toISOString(),
             expires: deps
@@ -239,9 +247,7 @@ describe("Command handler unit tests", () => {
       payload: {
         context: {
           ...context,
-          challenge: root,
-          service,
-          network
+          challenge: { root, service, network }
         }
       },
       signFn: signature
@@ -447,7 +453,11 @@ describe("Command handler unit tests", () => {
           root,
           payload: {
             code,
-            principle,
+            principle: {
+              root: principleRoot,
+              service: principleService,
+              network: principleNetwork
+            },
             issued: new Date().toISOString(),
             session,
             expires: deps
@@ -476,9 +486,7 @@ describe("Command handler unit tests", () => {
       payload: {
         context: {
           c: 3,
-          challenge: root,
-          service,
-          network
+          challenge: { root, service, network }
         }
       },
       signFn: signature

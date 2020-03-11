@@ -1,7 +1,7 @@
 const deps = require("./deps");
 
 const getEventsForPermissionsMerge = async ({
-  principleRoot,
+  principle,
   session,
   aggregateFn
 }) => {
@@ -10,7 +10,7 @@ const getEventsForPermissionsMerge = async ({
     { aggregate: principleAggregate },
     { aggregate: sessionPrincipleAggregate }
   ] = await Promise.all([
-    aggregateFn(principleRoot, {
+    aggregateFn(principle.root, {
       domain: "principle"
     }),
     aggregateFn(session.sub, {
@@ -23,27 +23,33 @@ const getEventsForPermissionsMerge = async ({
     deps.difference(principleAggregate.roles, sessionPrincipleAggregate.roles)
       .length == 0
   )
-    return { events: [], principleRoot };
+    return { events: [], principle };
 
   return {
     events: [
       {
         domain: "principle",
         action: "add-roles",
-        root: principleRoot,
+        root: principle.root,
         payload: {
           roles: sessionPrincipleAggregate.roles
         }
       }
     ],
-    principleRoot
+    principle
   };
 };
 
 const getEventsForIdentityRegistering = async ({ subject, payload }) => {
   const identityRoot = deps.uuid();
   const principleRoot = subject || deps.uuid();
-  const hashedPhone = deps.hash(payload.phone);
+  const hashedPhone = await deps.hash(payload.phone);
+
+  const principle = {
+    root: principleRoot,
+    service: process.env.SERVICE,
+    network: process.env.NETWORK
+  };
 
   return {
     events: [
@@ -54,7 +60,7 @@ const getEventsForIdentityRegistering = async ({ subject, payload }) => {
         payload: {
           phone: hashedPhone,
           id: payload.id,
-          principle: principleRoot
+          principle
         }
       },
       {
@@ -62,11 +68,17 @@ const getEventsForIdentityRegistering = async ({ subject, payload }) => {
         domain: "principle",
         root: principleRoot,
         payload: {
-          roles: ["IdentityAdmin"]
+          roles: [
+            {
+              id: "IdentityAdmin",
+              service: process.env.SERVICE,
+              network: process.env.NETWORK
+            }
+          ]
         }
       }
     ],
-    principleRoot
+    principle
   };
 };
 
@@ -86,15 +98,14 @@ module.exports = async ({ payload, context, session, aggregateFn }) => {
     if (session.sub) {
       // Don't log an event or issue a challange if
       // the identity's root is already set as the session's subject.
-      if (identity.state.principle == session.sub) return {};
+      if (identity.state.principle.root == session.sub) return {};
 
-      // If the current session .
       const [subjectIdentity] = await deps
         .eventStore({
           domain: "identity"
         })
         .set({ context, session, tokenFn: deps.gcpToken })
-        .query({ key: "principle", value: session.sub });
+        .query({ key: "principle.root", value: session.sub });
 
       if (subjectIdentity)
         throw deps.badRequestError.message(
@@ -106,9 +117,9 @@ module.exports = async ({ payload, context, session, aggregateFn }) => {
   // If an identity is found, merge the roles given to the session's subject
   // to the identity's principle.
   // If not found, register a new identity and set the principle to be the session's subject.
-  const { events, principleRoot } = identity
+  const { events, principle } = identity
     ? await getEventsForPermissionsMerge({
-        principleRoot: identity.state.principle,
+        principle: identity.state.principle,
         session,
         aggregateFn
       })
@@ -126,7 +137,7 @@ module.exports = async ({ payload, context, session, aggregateFn }) => {
       context,
       session: {
         ...session,
-        sub: principleRoot
+        sub: principle.root
       },
       tokenFn: deps.gcpToken
     })
@@ -136,10 +147,7 @@ module.exports = async ({ payload, context, session, aggregateFn }) => {
         phone: payload.phone
       },
       {
-        options: {
-          principle: principleRoot,
-          events
-        }
+        options: { principle, events }
       }
     );
 

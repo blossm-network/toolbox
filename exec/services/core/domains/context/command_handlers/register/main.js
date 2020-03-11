@@ -1,38 +1,59 @@
 const deps = require("./deps");
 
 module.exports = async ({ payload, root, context, session }) => {
-  // Create a root for the context, and determine what root should be used for the principle.
-  const principleRoot = session.sub || deps.uuid();
+  // Determine what root should be used for the principle.
+  const principle = context.principle || {
+    root: deps.uuid(),
+    service: process.env.SERVICE,
+    network: process.env.NETWORK
+  };
 
   // Give the principle admin priviledges to this context.
   const events = [
     {
       domain: "principle",
+      service: principle.service,
+      network: principle.network,
       action: "add-roles",
-      root: principleRoot,
+      root: principle.root,
       payload: {
-        roles: ["ContextAdmin"]
+        roles: [
+          {
+            id: "ContextAdmin",
+            service: process.env.SERVICE,
+            network: process.env.NETWORK
+          }
+        ]
       }
     },
     {
       domain: "principle",
+      service: principle.service,
+      network: principle.network,
       action: "add-contexts",
-      root: principleRoot,
+      root: principle.root,
       payload: {
-        contexts: [root]
+        contexts: [
+          {
+            root,
+            service: process.env.SERVICE,
+            network: process.env.NETWORK
+          }
+        ]
       }
     },
     {
       action: "register",
       root,
-      payload
+      payload,
+      correctNumber: 0
     }
   ];
 
-  const response = { principle: principleRoot };
+  const response = { principle };
 
-  // If the session already has a subject, no need to upgrade it.
-  if (session.sub) return { events, response };
+  // If the session already has a principle, no need to upgrade it.
+  if (context.principle) return { events, response };
 
   // Upgrade the session for the principle.
   const { tokens } = await deps
@@ -41,7 +62,7 @@ module.exports = async ({ payload, root, context, session }) => {
       name: "upgrade"
     })
     .set({ context, session, tokenFn: deps.gcpToken })
-    .issue({ principle: principleRoot }, { root: context.session });
+    .issue({ principle }, { root: context.session });
 
   return { events, response: { ...response, tokens } };
 };

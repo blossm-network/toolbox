@@ -74,9 +74,11 @@ describe("Command handler unit tests", () => {
       },
       payload: {
         context: {
-          session: root,
-          service,
-          network
+          session: {
+            root,
+            service,
+            network
+          }
         }
       },
       signFn: signature

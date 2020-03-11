@@ -6,13 +6,23 @@ const deps = require("../../deps");
 
 const payload = "some-payload";
 const root = "some-root";
+const service = "some-service";
+const network = "some-network";
 const contextSession = "some-context-session";
+const principleRoot = "some-principle-root";
+const principleService = "some-principle-service";
+const principleNetwork = "some-principle-network";
+
 const context = {
   session: contextSession
 };
+
 const session = {
   a: 1
 };
+
+process.env.SERVICE = service;
+process.env.NETWORK = network;
 
 describe("Command handler unit tests", () => {
   afterEach(() => {
@@ -33,29 +43,42 @@ describe("Command handler unit tests", () => {
     });
     replace(deps, "command", commandFake);
 
-    const result = await main({ payload, root, context, session });
+    const result = await main({
+      payload,
+      root,
+      context,
+      session
+    });
     expect(result).to.deep.equal({
       events: [
         {
           domain: "principle",
+          service,
+          network,
           action: "add-roles",
           root: uuid,
           payload: {
-            roles: ["ContextAdmin"]
+            roles: [{ id: "ContextAdmin", service, network }]
           }
         },
         {
           domain: "principle",
+          service,
+          network,
           action: "add-contexts",
           root: uuid,
           payload: {
-            contexts: [root]
+            contexts: [{ root, service, network }]
           }
         },
-        { action: "register", payload, root }
+        { action: "register", payload, root, correctNumber: 0 }
       ],
       response: {
-        principle: uuid,
+        principle: {
+          root: uuid,
+          service,
+          network
+        },
         tokens
       }
     });
@@ -70,12 +93,12 @@ describe("Command handler unit tests", () => {
     });
     expect(issueFake).to.have.been.calledWith(
       {
-        principle: uuid
+        principle: { root: uuid, service, network }
       },
       { root: contextSession }
     );
   });
-  it("should return successfully if there's a session subject", async () => {
+  it("should return successfully if there's a context principle", async () => {
     const uuid = "some-uuid";
     const uuidFake = fake.returns(uuid);
     replace(deps, "uuid", uuidFake);
@@ -90,34 +113,50 @@ describe("Command handler unit tests", () => {
     });
     replace(deps, "command", commandFake);
 
+    const principleContext = {
+      session: contextSession,
+      principle: {
+        root: principleRoot,
+        service: principleService,
+        network: principleNetwork
+      }
+    };
     const result = await main({
       payload,
       root,
-      context,
-      session: { sub: "some-sub" }
+      context: principleContext,
+      session
     });
     expect(result).to.deep.equal({
       events: [
         {
           domain: "principle",
+          service: principleService,
+          network: principleNetwork,
           action: "add-roles",
-          root: "some-sub",
+          root: principleRoot,
           payload: {
-            roles: ["ContextAdmin"]
+            roles: [{ id: "ContextAdmin", service, network }]
           }
         },
         {
           domain: "principle",
+          service: principleService,
+          network: principleNetwork,
           action: "add-contexts",
-          root: "some-sub",
+          root: principleRoot,
           payload: {
-            contexts: [root]
+            contexts: [{ root, service, network }]
           }
         },
-        { action: "register", payload, root }
+        { action: "register", payload, root, correctNumber: 0 }
       ],
       response: {
-        principle: "some-sub"
+        principle: {
+          root: principleRoot,
+          service: principleService,
+          network: principleNetwork
+        }
       }
     });
   });
@@ -126,7 +165,7 @@ describe("Command handler unit tests", () => {
     const uuidFake = fake.throws(errorMessage);
     replace(deps, "uuid", uuidFake);
     try {
-      await main({ session });
+      await main({ context: {} });
       //shouldn't get called
       expect(2).to.equal(3);
     } catch (e) {

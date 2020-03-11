@@ -26,7 +26,11 @@ module.exports = async ({
       data: createEvent({
         root: identityRoot,
         payload: {
-          principle: principleRoot,
+          principle: {
+            root: principleRoot,
+            service: process.env.SERVICE,
+            network: process.env.NETWORK
+          },
           phone: await hash(phone),
           id
         },
@@ -63,7 +67,13 @@ module.exports = async ({
         data: createEvent({
           root: principleRoot,
           payload: {
-            roles: [roleId]
+            roles: [
+              {
+                id: roleId,
+                service: process.env.SERVICE,
+                network: process.env.NETWORK
+              }
+            ]
           },
           action: "add-roles",
           domain: "principle",
@@ -94,10 +104,12 @@ module.exports = async ({
   })
     .set({
       context: {
-        service: process.env.SERVICE,
-        network: process.env.NETWORK,
         ...context,
-        session: sessionRoot
+        session: {
+          root: sessionRoot,
+          service: process.env.SERVICE,
+          network: process.env.NETWORK
+        }
       },
       session: {
         iss: `session.${process.env.SERVICE}.${process.env.NETWORK}/upgrade`,
@@ -107,7 +119,11 @@ module.exports = async ({
     })
     .issue(
       {
-        principle: principleRoot
+        principle: {
+          root: principleRoot,
+          service: process.env.SERVICE,
+          network: process.env.NETWORK
+        }
       },
       { root: sessionRoot }
     );

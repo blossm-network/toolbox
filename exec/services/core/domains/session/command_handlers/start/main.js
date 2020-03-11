@@ -17,9 +17,11 @@ module.exports = async ({ payload }) => {
     },
     payload: {
       context: {
-        session: root,
-        service: process.env.SERVICE,
-        network: process.env.NETWORK
+        session: {
+          root,
+          service: process.env.SERVICE,
+          network: process.env.NETWORK
+        }
       }
     },
     signFn: deps.sign({

@@ -129,11 +129,23 @@ describe("Event store integration tests", () => {
 
     ///Test indexes
     for (const index of indexes || []) {
-      const example = [example1, example0].find(e => e.payload[index]);
+      const indexParts = index.split(".");
+      const example = [example1, example0].find(e => {
+        let obj = e.payload;
+        for (const part of indexParts) {
+          obj = obj[part];
+          if (obj == undefined) return false;
+        }
+        return true;
+      });
+      let value = example.payload;
+      for (const part of indexParts) {
+        value = value[part];
+      }
       const response4 = await request.get(url, {
         query: {
           key: [index],
-          value: example.payload[index]
+          value
         }
       });
       expect(response4.statusCode).to.equal(200);

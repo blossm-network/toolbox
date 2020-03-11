@@ -3,7 +3,10 @@ service: core
 
 schema:
   network: String
-  context: String
+  context:
+    root: String
+    service: String
+    network: String
 
 actions:
   - register
@@ -14,25 +17,40 @@ testing:
       action: register
       payload:
         network: some-network
-        context: some-context
+        context:
+          root: some-context
+          service: some-context-service
+          network: some-context-network
     second:
       action: register
       payload:
         network: some-network
-        context: some-other-context
+        context:
+          root: some-other-context
+          service: some-other-context-service
+          network: some-other-context-network
 
   handlers:
     - action: register
       examples:
         - state:
             network: some-network
-            context: some-context
+            context:
+              root: some-context
+              service: some-context-service
+              network: some-context-network
           payload:
             network: some-other-network
-            context: some-other-context
+            context:
+              root: some-other-context
+              service: some-other-context-service
+              network: some-other-context-network
           result:
             network: some-other-network
-            context: some-other-context
+            context:
+              root: some-other-context
+              service: some-other-context-service
+              network: some-other-context-network
 
 #don't change
 context: event-store

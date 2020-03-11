@@ -37,8 +37,18 @@ describe("Command handler unit tests", () => {
     replace(deps, "uuid", uuidFake);
 
     const tokens = "some-tokens";
-    const principle = "some-principle";
-    const issueFake = fake.returns({ tokens, principle });
+    const principleRoot = "some-principle-root";
+    const principleService = "some-principle-service";
+    const principleNetwork = "some-principle-network";
+
+    const issueFake = fake.returns({
+      tokens,
+      principle: {
+        root: principleRoot,
+        service: principleService,
+        network: principleNetwork
+      }
+    });
     const setFake = fake.returns({
       issue: issueFake
     });
@@ -52,10 +62,12 @@ describe("Command handler unit tests", () => {
       events: [
         {
           domain: "principle",
+          service: principleService,
+          network: principleNetwork,
           action: "add-roles",
-          root: principle,
+          root: principleRoot,
           payload: {
-            roles: ["NodeAdmin"]
+            roles: [{ id: "NodeAdmin", service, network }]
           }
         },
         {
@@ -63,7 +75,7 @@ describe("Command handler unit tests", () => {
           root: nodeRoot,
           payload: {
             network: payloadNetwork,
-            context: contextRoot
+            context: { root: contextRoot, service, network }
           }
         }
       ],

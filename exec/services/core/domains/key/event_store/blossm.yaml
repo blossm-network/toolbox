@@ -4,7 +4,10 @@ service: core
 schema:
   name: String
   node: String
-  principle: String
+  principle:
+    root: String
+    service: String
+    network: String
   id:
     type: String
     unique: true
@@ -20,6 +23,10 @@ testing:
       payload:
         name: some-name
         node: some-node
+        principle:
+          root: some-principle-root
+          service: some-principle-service
+          network: some-principle-network
         id: some-id
         secret: some-secret
     second:
@@ -27,6 +34,10 @@ testing:
       payload:
         name: some-other-name
         node: some-other-node
+        principle:
+          root: some-other-principle-root
+          service: some-other-principle-service
+          network: some-other-principle-network
         id: some-other-id
         secret: some-other-secret
 
@@ -36,16 +47,28 @@ testing:
         - state:
             name: some-name
             node: some-node
+            principle:
+              root: some-principle-root
+              service: some-principle-service
+              network: some-principle-network
             id: some-id
             secret: some-secret
           payload:
             name: some-other-name
             node: some-other-node
+            principle:
+              root: some-other-principle-root
+              service: some-other-principle-service
+              network: some-other-principle-network
             id: some-other-id
             secret: some-other-secret
           result:
             name: some-other-name
             node: some-other-node
+            principle:
+              root: some-other-principle-root
+              service: some-other-principle-service
+              network: some-other-principle-network
             id: some-other-id
             secret: some-other-secret
 

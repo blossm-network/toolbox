@@ -7,11 +7,16 @@ schema:
   id:
     type: String
     unique: true
-  principle: String
+  principle:
+    root: String
+    service: String
+    network: String
 
 indexes:
   - id
-  - principle
+  - principle.root
+  - principle.service
+  - principle.network
 
 actions:
   - register
@@ -22,14 +27,20 @@ testing:
       action: register
       payload:
         phone: "+19195551155"
-        principle: some-principle
+        principle:
+          root: some-principle
+          service: some-principle-service
+          network: some-principle-network
         email: some-email
         id: some-id
     second:
       action: register
       payload:
         phone: "+19195551133"
-        principle: some-other-principle
+        principle:
+          root: some-other-principle
+          service: some-other-principle-service
+          network: some-other-principle-network
         email: some-other-email
         id: some-other-id
 
@@ -39,15 +50,24 @@ testing:
         - state:
             id: some-id
             phone: "+19195551133"
-            principle: some-principle-root
+            principle:
+              root: some-principle-root
+              service: some-principle-service
+              network: some-principle-network
           payload:
             id: some-other-id
             phone: "+19195551144"
-            principle: some-other-principle-root
+            principle:
+              root: some-other-principle-root
+              service: some-other-principle-service
+              network: some-other-principle-network
           result:
             id: some-other-id
             phone: "+19195551144"
-            principle: some-other-principle-root
+            principle:
+              root: some-other-principle-root
+              service: some-other-principle-service
+              network: some-other-principle-network
 
 #don't change
 context: event-store

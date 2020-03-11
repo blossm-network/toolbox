@@ -28,8 +28,10 @@ const payload = {
 const contextChallenge = "some-challenge-context";
 const sessionRoot = "some-session-root";
 const context = {
-  challenge: contextChallenge,
-  session: sessionRoot
+  challenge: {
+    root: contextChallenge
+  },
+  session: { root: sessionRoot }
 };
 const service = "some-service";
 const network = "some-network";

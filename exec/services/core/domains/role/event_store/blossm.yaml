@@ -7,7 +7,10 @@ schema:
   id:
     type: String
     unique: true
-  permissions: [String]
+  permissions:
+    - root: String
+      service: String
+      network: String
 
 indexes:
   - id
@@ -28,18 +31,24 @@ testing:
         title: Some title
         id: some-id
         permissions:
-          - some-permission
+          - root: some-permission
+            service: some-permission-service
+            network: some-permission-network
     second:
       action: add-permissions
       payload:
         description: "Some description"
         permissions:
-          - some-other-permission
+          - root: some-other-permission
+            service: some-permission-service
+            network: some-permission-network
     more:
       - action: remove-permissions
         payload:
           permissions:
-            - some-other-permission
+            - root: some-other-permission
+              service: some-permission-service
+              network: some-permission-network
 
   handlers:
     - action: create
@@ -48,35 +57,68 @@ testing:
             title: Some title
             id: some-id
             permissions:
-              - some-permission
+              - root: some-permission
+                service: some-permission-service
+                network: some-permission-network
     - action: add-permissions
       examples:
         - state:
             title: Some title
             id: some-id
             permissions:
-              - some-permission
+              - root: some-permission
+                service: some-permission-service
+                network: some-permission-network
           payload:
             description: Some description
             permissions:
-              - some-permission
-              - some-other-permission
+              - root: some-permission
+                service: some-permission-service
+                network: some-permission-network
+              - root: some-other-permission
+                service: some-other-permission-service
+                network: some-other-permission-network
           result:
             title: Some title
             id: some-id
             permissions:
-              - some-permission
-              - some-other-permission
+              - root: some-permission
+                service: some-permission-service
+                network: some-permission-network
+              - root: some-other-permission
+                service: some-other-permission-service
+                network: some-other-permission-network
+        - state: {}
+          payload:
+            permissions:
+              - root: some-permission
+                service: some-permission-service
+                network: some-permission-network
+              - root: some-other-permission
+                service: some-other-permission-service
+                network: some-other-permission-network
+          result:
+            permissions:
+              - root: some-permission
+                service: some-permission-service
+                network: some-permission-network
+              - root: some-other-permission
+                service: some-other-permission-service
+                network: some-other-permission-network
     - action: remove-permissions
       examples:
         - state:
             title: Some title
             id: some-id
             permissions:
-              - some-permission
+              - root: some-permission
+                service: some-permission-service
+                network: some-permission-network
           payload:
             permissions:
-              - some-permission
+              - root: some-permission
+                service: some-permission-service
+                network: some-permission-network
           result:
             title: Some title
             id: some-id

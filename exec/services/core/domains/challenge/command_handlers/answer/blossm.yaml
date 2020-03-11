@@ -38,7 +38,7 @@ testing:
     bad:
       - code:
           a: 1
-  
+
   normalize:
     - payload:
         code: "123456"
@@ -56,76 +56,100 @@ testing:
 
   steps:
     - pre:
-      - domain: challenge
-        root: some-root
-        action: issue
-        payload:
-          code: "123456"
-          expires: 9999-12-31T00:00:00.000Z
-          principle: some-challenge-principle-root
-          session:
-            iss: some-iss
-            aud: some-aud
-            exp: 9999-12-31T00:00:00.000Z
-      - domain: session
-        root: some-session-root
-        action: start
-        payload:
-          device:
-            os: some-os
+        - domain: challenge
+          root: some-root
+          action: issue
+          payload:
+            code: "123456"
+            expires: 9999-12-31T00:00:00.000Z
+            principle:
+              root: some-challenge-principle-root
+              service: some-service
+              network: some-network
+            session:
+              iss: some-iss
+              aud: some-aud
+              exp: 9999-12-31T00:00:00.000Z
+        - domain: session
+          root: some-session-root
+          action: start
+          payload:
+            device:
+              os: some-os
       payload:
         code: "123456"
       context:
-        challenge: some-root
-        session: some-session-root
+        challenge:
+          root: some-root
+          service: some-service
+          network: some-network
+        session:
+          root: some-session-root
+          service: some-service
+          network: some-network
       response:
         tokens:
           session:
     - pre:
-      - domain: challenge
-        root: some-other-root
-        action: issue
-        payload:
-          code: "234567"
-          expires: 9999-12-31T00:00:00.000Z
-          principle: some-challenge-principle-root
-          session:
-            iss: some-iss
-            aud: some-aud
-            sub: some-sub
-            exp: 9999-12-31T00:00:00.000Z
-      - domain: session
-        root: some-other-session-root
-        action: start
-        payload:
-          device:
-            os: some-os
+        - domain: challenge
+          root: some-other-root
+          action: issue
+          payload:
+            code: "234567"
+            expires: 9999-12-31T00:00:00.000Z
+            principle:
+              root: some-challenge-principle-root
+              service: some-service
+              network: some-network
+            session:
+              iss: some-iss
+              aud: some-aud
+              sub: some-sub
+              exp: 9999-12-31T00:00:00.000Z
+        - domain: session
+          root: some-other-session-root
+          action: start
+          payload:
+            device:
+              os: some-os
       payload:
         code: "234567"
       context:
-        challenge: some-other-root
-        session: some-other-session-root
+        challenge:
+          root: some-other-root
+          service: some-service
+          network: some-network
+        session:
+          root: some-other-session-root
+          service: some-service
+          network: some-network
     - pre:
-      - domain: challenge
-        root: another-root
-        action: issue
-        payload:
-          code: "345678"
-          expires: 2019-12-31T00:00:00.000Z
+        - domain: challenge
+          root: another-root
+          action: issue
+          payload:
+            code: "345678"
+            expires: 2019-12-31T00:00:00.000Z
       payload:
         code: "345678"
       context:
-        challenge: another-root
+        challenge:
+          root: another-root
+          service: some-service
+          network: some-network
       code: 409
     - pre:
-      - domain: challenge
-        root: yet-another-root
-        action: issue
-        payload:
-          code: "345678"
-          expires: 9999-12-31T00:00:00.000Z
+        - domain: challenge
+          root: yet-another-root
+          action: issue
+          payload:
+            code: "345678"
+            expires: 9999-12-31T00:00:00.000Z
       context:
-        challenge: yet-another-root
+        challenge:
+          root: yet-another-root
+          service: some-service
+          network: some-network
       payload:
         code: "11111"
       code: 409

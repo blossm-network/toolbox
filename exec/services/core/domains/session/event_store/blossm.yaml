@@ -5,8 +5,14 @@ schema:
   started: Date
   loggedout: Date
   upgraded: Date
-  context: String
-  principle: String
+  context:
+    root: String
+    service: String
+    network: String
+  principle:
+    root: String
+    service: String
+    network: String
   device:
     os: String
     version: String
@@ -38,7 +44,10 @@ testing:
       payload:
         started: 2020-12-31T00:00:00.000Z
         previous: some-previous-session-root
-        context: some-context-root
+        context:
+          root: some-context-root
+          service: some-context-service
+          domain: some-context-domain
         device:
           os: Android
           version: "10"
@@ -51,7 +60,10 @@ testing:
           loggedout: 2020-12-31T00:00:00.000Z
       - action: switch-context
         payload:
-          context: some-context-root
+          context:
+            root: some-context-root
+            service: some-context-service
+            domain: some-context-domain
 
   handlers:
     - action: start
@@ -68,8 +80,14 @@ testing:
           payload:
             started: 2021-01-03T00:02:15.000Z
             upgraded: 2021-01-03T00:02:15.000Z
-            principle: some-principle-root
-            context: some-context-root
+            principle:
+              root: some-principle-root
+              service: some-principle-service
+              domain: some-principle-domain
+            context:
+              root: some-context-root
+              service: some-context-service
+              domain: some-context-domain
             device:
               os: Android
               version: "10"
@@ -79,8 +97,14 @@ testing:
           result:
             started: 2021-01-03T00:02:15.000Z
             upgraded: 2021-01-03T00:02:15.000Z
-            principle: some-principle-root
-            context: some-context-root
+            principle:
+              root: some-principle-root
+              service: some-principle-service
+              domain: some-principle-domain
+            context:
+              root: some-context-root
+              service: some-context-service
+              domain: some-context-domain
             device:
               os: Android
               version: "10"
@@ -90,7 +114,10 @@ testing:
     - action: upgrade
       examples:
         - payload:
-            principle: some-principle-root
+            principle:
+              root: some-principle-root
+              service: some-principle-service
+              network: some-principle-network
             upgraded: 2021-01-03T00:02:15.000Z
     - action: logout
       examples:
@@ -103,7 +130,10 @@ testing:
     - action: switch-context
       examples:
         - payload:
-            context: some-context-root
+            context:
+              root: some-context-root
+              service: some-context-service
+              domain: some-context-domain
 
 #don't change
 context: event-store

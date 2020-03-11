@@ -44,7 +44,10 @@ const createBadPayload = ({ bad, ok }) => {
   for (const property in ok) {
     payload[property] =
       bad[property] != undefined
-        ? typeof ok[property] == "object" && !(ok[property] instanceof Array)
+        ? typeof ok[property] == "object" &&
+          !(ok[property] instanceof Array) &&
+          typeof bad[property] == "object" &&
+          !(bad[property] instanceof Array)
           ? createBadPayload({
               bad: bad[property],
               ok: ok[property]

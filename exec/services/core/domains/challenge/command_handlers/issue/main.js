@@ -47,7 +47,7 @@ module.exports = async ({
       "This phone number can't be used to challenge."
     );
 
-  if (session.sub && session.sub != identity.state.principle)
+  if (session.sub && session.sub != identity.state.principle.root)
     throw deps.badRequestError.message(
       "This principle can't be challenged during the current session."
     );
@@ -65,9 +65,11 @@ module.exports = async ({
     payload: {
       context: {
         ...context,
-        challenge: root,
-        service: process.env.SERVICE,
-        network: process.env.NETWORK
+        challenge: {
+          root,
+          service: process.env.SERVICE,
+          network: process.env.NETWORK
+        }
       }
     },
     signFn: deps.sign({
@@ -96,11 +98,7 @@ module.exports = async ({
         action: "issue",
         payload: {
           code,
-          principle: {
-            root: identity.state.principle,
-            service: process.env.SERVICE,
-            network: process.env.NETWORK
-          },
+          principle: identity.state.principle,
           session,
           issued: deps.stringDate(),
           expires: deps

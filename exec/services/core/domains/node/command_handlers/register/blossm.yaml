@@ -67,10 +67,13 @@ testing:
         network: some.network
       context:
         session: some-other-session-root
+        principle:
+          root: some-principle-root
+          service: some-service
+          network: some-network
       session:
         iss: some-iss
         aud: some-aud
-        sub: some-sub
         exp: 9999-12-31T00:00:00.000
 
 #don't change

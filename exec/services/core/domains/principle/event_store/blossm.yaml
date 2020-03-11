@@ -2,8 +2,14 @@ domain: principle
 service: core
 
 schema:
-  roles: [String]
-  contexts: [String]
+  roles:
+    - id: String
+      service: String
+      network: String
+  contexts:
+    - root: String
+      service: String
+      network: String
 
 actions:
   - add-roles
@@ -20,74 +26,131 @@ testing:
       action: add-roles
       payload:
         roles:
-          - some-role
-          - some-other-role
+          - id: some-role
+            service: some-role-service
+            network: some-role-network
+          - id: some-other-role
+            service: some-other-role-service
+            network: some-other-role-network
     second:
       action: remove-roles
       payload:
         roles:
-          - some-role
+          - id: some-role
+            service: some-role-service
+            network: some-role-network
     more:
       - action: add-contexts
         payload:
           contexts:
-            - some-context
+            - root: some-context
+              service: some-context-service
+              network: some-context-network
       - action: remove-contexts
         payload:
           contexts:
-            - some-context
+            - root: some-context
+              service: some-context-service
+              network: some-context-network
 
   handlers:
     - action: add-roles
       examples:
         - state:
             roles:
-              - some-role
+              - id: some-role
+                service: some-role-service
+                network: some-role-network
           payload:
             roles:
-              - some-role
-              - some-other-role
+              - id: some-role
+                service: some-role-service
+                network: some-role-network
+              - id: some-other-role
+                service: some-other-role-service
+                network: some-other-role-network
           result:
             roles:
-              - some-role
-              - some-other-role
+              - id: some-role
+                service: some-role-service
+                network: some-role-network
+              - id: some-other-role
+                service: some-other-role-service
+                network: some-other-role-network
+        - state: {}
+          payload:
+            roles:
+              - id: some-role
+                service: some-role-service
+                network: some-role-network
+          result:
+            roles:
+              - id: some-role
+                service: some-role-service
+                network: some-role-network
     - action: remove-roles
       examples:
         - state:
             roles:
-              - some-role
-              - some-other-role
+              - id: some-role
+                service: some-role-service
+                network: some-role-network
+              - id: some-other-role
+                service: some-other-role-service
+                network: some-other-role-network
           payload:
             roles:
-              - some-role
+              - id: some-role
+                service: some-role-service
+                network: some-role-network
           result:
             roles:
-              - some-other-role
+              - id: some-other-role
+                service: some-other-role-service
+                network: some-other-role-network
     - action: add-contexts
       examples:
         - state:
             contexts:
-              - some-context
+              - root: some-context
+                service: some-context-service
+                network: some-context-network
           payload:
             contexts:
-              - some-context
-              - some-other-context
+              - root: some-context
+                service: some-context-service
+                network: some-context-network
+              - root: some-other-context
+                service: some-other-context-service
+                network: some-other-context-network
           result:
             contexts:
-              - some-context
-              - some-other-context
+              - root: some-context
+                service: some-context-service
+                network: some-context-network
+              - root: some-other-context
+                service: some-other-context-service
+                network: some-other-context-network
     - action: remove-contexts
       examples:
         - state:
             contexts:
-              - some-context
-              - some-other-context
+              - root: some-context
+                service: some-context-service
+                network: some-context-network
+              - root: some-other-context
+                service: some-other-context-service
+                network: some-other-context-network
           payload:
             contexts:
-              - some-context
+              - root: some-context
+                service: some-context-service
+                network: some-context-network
           result:
             contexts:
-              - some-other-context
+              - root: some-other-context
+                service: some-other-context-service
+                network: some-other-context-network
 
 #don't change
 context: event-store

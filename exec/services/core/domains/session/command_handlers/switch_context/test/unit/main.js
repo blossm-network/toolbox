@@ -9,21 +9,33 @@ const deps = require("../../deps");
 let clock;
 const now = new Date();
 
-const newContext = "some-new-context";
+const newContextRoot = "some-new-context-root";
+const newContextService = "some-new-context-service";
+const newContextNetwork = "some-new-context-network";
+
 const payload = {
-  context: newContext
+  context: {
+    root: newContextRoot,
+    service: newContextService,
+    network: newContextNetwork
+  }
 };
 const token = "some-token";
 const project = "some-projectl";
 const root = "some-root";
 const identity = "some-identity";
 const contextSession = "some-context-session";
+const oldDomain = "some-old-domain";
 const context = {
   identity,
-  session: contextSession
+  session: contextSession,
+  domain: oldDomain,
+  [oldDomain]: "some-old-domain"
 };
 const contextAggregateRoot = "some-context-aggregate-root";
 const contextAggregateDomain = "some-context-aggregate-domain";
+const contextAggregateService = "some-context-aggregate-service";
+const contextAggregateNetwork = "some-context-aggregate-network";
 
 const iss = "some-iss";
 const aud = "some-aud";
@@ -57,7 +69,15 @@ describe("Command handler unit tests", () => {
     const aggregateFake = stub()
       .onFirstCall()
       .returns({
-        aggregate: { contexts: [newContext] }
+        aggregate: {
+          contexts: [
+            {
+              root: newContextRoot,
+              service: newContextService,
+              network: newContextNetwork
+            }
+          ]
+        }
       })
       .onSecondCall()
       .returns({ aggregate: { terminated: false } })
@@ -65,6 +85,8 @@ describe("Command handler unit tests", () => {
       .returns({
         aggregate: {
           domain: contextAggregateDomain,
+          service: contextAggregateService,
+          network: contextAggregateNetwork,
           root: contextAggregateRoot
         }
       });
@@ -91,7 +113,7 @@ describe("Command handler unit tests", () => {
       domain: "principle"
     });
     expect(aggregateFake).to.have.been.calledWith(root);
-    expect(aggregateFake).to.have.been.calledWith(newContext, {
+    expect(aggregateFake).to.have.been.calledWith(newContextRoot, {
       domain: "context"
     });
     expect(aggregateFake).to.have.callCount(3);
@@ -113,9 +135,17 @@ describe("Command handler unit tests", () => {
         context: {
           identity,
           session: contextSession,
-          context: newContext,
+          context: {
+            root: newContextRoot,
+            service: newContextService,
+            network: newContextNetwork
+          },
           domain: contextAggregateDomain,
-          root: contextAggregateRoot
+          [contextAggregateDomain]: {
+            root: contextAggregateRoot,
+            service: contextAggregateService,
+            network: contextAggregateNetwork
+          }
         }
       },
       signFn: signature
@@ -146,6 +176,8 @@ describe("Command handler unit tests", () => {
       .returns({
         aggregate: {
           domain: contextAggregateDomain,
+          service: contextAggregateService,
+          network: contextAggregateNetwork,
           root: contextAggregateRoot
         }
       });
@@ -175,7 +207,15 @@ describe("Command handler unit tests", () => {
     const aggregateFake = stub()
       .onFirstCall()
       .returns({
-        aggregate: { contexts: [newContext] }
+        aggregate: {
+          contexts: [
+            {
+              root: newContextRoot,
+              service: newContextService,
+              network: newContextNetwork
+            }
+          ]
+        }
       })
       .onSecondCall()
       .returns({ aggregate: { terminated: true } })
@@ -219,7 +259,15 @@ describe("Command handler unit tests", () => {
     const aggregateFake = stub()
       .onFirstCall()
       .returns({
-        aggregate: { contexts: [newContext] }
+        aggregate: {
+          contexts: [
+            {
+              root: newContextRoot,
+              service: newContextService,
+              network: newContextNetwork
+            }
+          ]
+        }
       })
       .onSecondCall()
       .returns({ aggregate: { terminated: false } })
@@ -227,6 +275,8 @@ describe("Command handler unit tests", () => {
       .returns({
         aggregate: {
           domain: contextAggregateDomain,
+          service: contextAggregateService,
+          network: contextAggregateNetwork,
           root: contextAggregateRoot
         }
       });

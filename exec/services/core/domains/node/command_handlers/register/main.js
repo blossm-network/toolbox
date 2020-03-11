@@ -26,10 +26,18 @@ module.exports = async ({ payload, context, session }) => {
     events: [
       {
         domain: "principle",
+        service: principle.service,
+        network: principle.network,
         action: "add-roles",
-        root: principle,
+        root: principle.root,
         payload: {
-          roles: ["NodeAdmin"]
+          roles: [
+            {
+              id: "NodeAdmin",
+              service: process.env.SERVICE,
+              network: process.env.NETWORK
+            }
+          ]
         }
       },
       {
@@ -37,7 +45,11 @@ module.exports = async ({ payload, context, session }) => {
         root: nodeRoot,
         payload: {
           network: payload.network,
-          context: contextRoot
+          context: {
+            root: contextRoot,
+            service: process.env.SERVICE,
+            network: process.env.NETWORK
+          }
         }
       }
     ],

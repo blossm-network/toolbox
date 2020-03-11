@@ -11,19 +11,29 @@ module.exports = async ({ root, payload, context, session, aggregateFn }) => {
       domain: "principle"
     }),
     aggregateFn(root),
-    aggregateFn(payload.context, {
+    aggregateFn(payload.context.root, {
       domain: "context"
     })
   ]);
 
   // Check to see if the principle has access to the context being switched in to.
-  if (!principleAggregate.contexts.some(context => context == payload.context))
+  if (
+    !principleAggregate.contexts.some(
+      context =>
+        context.root == payload.context.root &&
+        context.service == payload.context.service &&
+        context.network == payload.context.network
+    )
+  )
     throw deps.unauthorizedError.context({
       info: { context: payload.context }
     });
 
   // Check to see if this session has already been terminated.
   if (aggregate.terminated) throw deps.badRequestError.sessionTerminated();
+
+  // Remove the old context domain.
+  delete context[context.domain];
 
   // Create a new token inheriting from the current session.
   const token = await deps.createJwt({
@@ -38,7 +48,11 @@ module.exports = async ({ root, payload, context, session, aggregateFn }) => {
         ...context,
         context: payload.context,
         domain: contextAggregate.domain,
-        root: contextAggregate.root
+        [contextAggregate.domain]: {
+          root: contextAggregate.root,
+          service: contextAggregate.service,
+          network: contextAggregate.network
+        }
       }
     },
     signFn: deps.sign({

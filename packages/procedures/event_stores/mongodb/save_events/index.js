@@ -26,13 +26,6 @@ module.exports = ({ eventStore, handlers }) => async events => {
     });
     return groomedResults;
   } catch (e) {
-    //TODOo
-    //eslint-disable-next-line
-    console.log({
-      code: e.code,
-      string: e.code == "11000",
-      num: e.code == 11000
-    });
     if (e.code == 11000) {
       throw preconditionFailed.eventNumberDuplicate();
     } else {

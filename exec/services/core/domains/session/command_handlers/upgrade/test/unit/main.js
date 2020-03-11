@@ -9,14 +9,22 @@ const deps = require("../../deps");
 let clock;
 const now = new Date();
 
-const principle = "some-principle";
+const principleRoot = "some-principle-root";
+const principleService = "some-principle-service";
+const principleNetwork = "some-principle-network";
 const payload = {
-  principle
+  principle: {
+    root: principleRoot,
+    service: principleService,
+    network: principleNetwork
+  }
 };
 const token = "some-token";
 const project = "some-projectl";
 const root = "some-root";
 const context = "some-context";
+const service = "some-service";
+const network = "some-network";
 
 const iss = "some-iss";
 const aud = "some-aud";
@@ -30,6 +38,8 @@ const session = {
 };
 
 process.env.GCP_PROJECT = project;
+process.env.SERVICE = service;
+process.env.NETWORK = network;
 
 describe("Command handler unit tests", () => {
   beforeEach(() => {
@@ -70,10 +80,10 @@ describe("Command handler unit tests", () => {
           root
         },
         {
-          root: payload.principle,
+          root: principleRoot,
           domain: "principle",
           action: "add-roles",
-          payload: { roles: ["SessionAdmin"] }
+          payload: { roles: [{ id: "SessionAdmin", service, network }] }
         }
       ],
       response: { tokens: { session: token } }
@@ -89,12 +99,19 @@ describe("Command handler unit tests", () => {
     expect(createJwtFake).to.have.been.calledWith({
       options: {
         issuer: iss,
-        subject: principle,
+        subject: principleRoot,
         audience: aud,
         expiresIn: Date.parse(exp) - deps.fineTimestamp()
       },
       payload: {
-        context
+        context: {
+          ...context,
+          principle: {
+            root: principleRoot,
+            service: principleService,
+            network: principleNetwork
+          }
+        }
       },
       signFn: signature
     });

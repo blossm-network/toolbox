@@ -3,7 +3,10 @@ domain: session
 service: core
 
 payload:
-  context: string
+  context:
+    root: string
+    service: string
+    network: string
 
 dependencies:
   "@blossm/jwt": "*"
@@ -21,16 +24,33 @@ devDependencies:
 testing:
   validate:
     ok:
-      - context: some-context-root
-    bad:
       - context:
-          a: 1
+          root: some-context-root
+          service: some-service
+          network: some-network
+    bad:
+      - context: "bad"
+      - context:
+          root:
+            a: 1
+      - context:
+          service:
+            a: 1
+      - context:
+          network:
+            a: 1
 
   normalize:
     - payload:
-        context: some-context-root
+        context:
+          root: some-context-root
+          service: some-service
+          network: some-network
       normalized:
-        context: some-context-root
+        context:
+          root: some-context-root
+          service: some-service
+          network: some-network
 
   procedures:
     - domain: context
@@ -55,15 +75,21 @@ testing:
           action: add-contexts
           payload:
             contexts:
-              - some-context-root
+              - root: some-context-root
+                service: some-service
+                network: some-network
       root: some-root
       payload:
-        context: some-context-root
+        context:
+          root: some-context-root
+          service: some-service
+          network: some-network
       session:
         iss: some-iss
         aud: some-aud
         sub: some-principle-root
         exp: 20000
+      context: {}
       response:
         tokens:
           session:
@@ -73,15 +99,21 @@ testing:
           action: add-contexts
           payload:
             contexts:
-              - bogus
+              - root: bogus
+                service: some-service
+                network: some-network
       root: some-root
       payload:
-        context: some-context-root
+        context:
+          root: some-context-root
+          service: some-service
+          network: some-network
       session:
         iss: some-iss
         aud: some-aud
         sub: some-other-principle-root
         exp: 20000
+      context: {}
       code: 401
     - pre:
         - domain: session
@@ -91,7 +123,11 @@ testing:
             loggedout: 2019-12-31T00:00:00.000Z
       root: some-root
       payload:
-        context: some-context-root
+        context:
+          root: some-context-root
+          service: some-service
+          network: some-network
+      context: {}
       session:
         iss: some-iss
         aud: some-aud

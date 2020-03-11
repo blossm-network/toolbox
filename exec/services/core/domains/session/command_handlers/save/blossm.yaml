@@ -62,7 +62,10 @@ testing:
           payload:
             id: some-identity-id
             phone: "#+19195551144"
-            principle: some-sub
+            principle:
+              root: some-sub
+              service: some-service
+              network: some-network
       payload:
         id: some-identity-id
         phone: "+19195551133"
@@ -74,7 +77,10 @@ testing:
           payload:
             id: some-other-identity-id
             phone: "#+19195551155"
-            principle: some-principle-root
+            principle:
+              root: some-principle-root
+              service: some-service
+              network: some-network
       payload:
         id: some-other-identity-id
         phone: "+19195551155"
@@ -95,19 +101,28 @@ testing:
           root: some-principle-root
           action: add-roles
           payload:
-            roles: some-role
+            roles:
+              - id: some-role
+                service: some-service
+                network: some-network
         - domain: principle
           root: some-other-principle-root
           action: add-roles
           payload:
-            roles: some-other-role
+            roles:
+              - id: some-other-role
+                service: some-service
+                network: some-network
         - domain: identity
           root: yet-another-identity-root
           action: register
           payload:
             id: yet-another-identity-id
             phone: "#+19195551177"
-            principle: some-principle-root
+            principle:
+              root: some-principle-root
+              service: some-service
+              network: some-network
       payload:
         id: yet-another-identity-id
         phone: "+19195551177"
@@ -121,26 +136,38 @@ testing:
           root: some-principle-root_1
           action: add-roles
           payload:
-            roles: some-role
+            roles:
+              - id: some-role
+                service: some-service
+                network: some-network
         - domain: principle
           root: some-other-principle-root_1
           action: add-roles
           payload:
-            roles: some-other-role
+            roles:
+              - id: some-other-role
+                service: some-service
+                network: some-network
         - domain: identity
           root: yet-another-identity-root_1
           action: register
           payload:
             id: yet-another-identity-id_1
             phone: "#+19195551177"
-            principle: some-principle-root_1
+            principle:
+              root: some-principle-root_1
+              service: some-service
+              network: some-network
         - domain: identity
           root: any-identity-root_1
           action: register
           payload:
             id: doesnt-matter
             phone: "#+19195551177"
-            principle: some-other-principle-root_1
+            principle:
+              root: some-other-principle-root_1
+              service: some-service
+              network: some-network
       payload:
         id: yet-another-identity-id_1
         phone: "+19195551177"

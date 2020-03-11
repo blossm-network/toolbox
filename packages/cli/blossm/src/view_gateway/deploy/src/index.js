@@ -31,7 +31,7 @@ module.exports = gateway({
 
     return aggregate
       ? await rolePermissions({
-          roles: aggregate.state.roles,
+          roles: aggregate.state.roles.map(role => role.id),
           defaultRoles,
           customRolePermissionsFn: async ({ roleId }) => {
             const role = await eventStore({ domain: "role" })
