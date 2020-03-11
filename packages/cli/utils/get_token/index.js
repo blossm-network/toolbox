@@ -111,7 +111,7 @@ module.exports = async ({
           network: process.env.NETWORK
         }
       },
-      session: {
+      claims: {
         iss: `session.${process.env.SERVICE}.${process.env.NETWORK}/upgrade`,
         aud: `${process.env.SERVICE}.${process.env.NETWORK}`,
         exp: "9999-12-31T00:00:00.000Z"
