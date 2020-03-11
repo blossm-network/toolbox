@@ -1,7 +1,7 @@
 {
   "name": "@blossm/mongodb-event-store-save-events",
   "description": "A mongodb event store server event saving function.",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
