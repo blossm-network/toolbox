@@ -48,8 +48,10 @@ testing:
     - name: upgrade
       domain: session
       procedure: command-handler
+      service: core
     - domain: principle
       procedure: event-store
+      service: core
 
   steps:
     - pre:

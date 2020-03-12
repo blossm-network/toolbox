@@ -57,8 +57,10 @@ testing:
   dependencies:
     - domain: identity
       procedure: event-store
+      service: core
     - domain: challenge
       procedure: event-store
+      service: core
 
   steps:
     - payload:

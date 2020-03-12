@@ -48,11 +48,14 @@ testing:
   dependencies:
     - domain: principle
       procedure: event-store
+      service: core
     - domain: identity
       procedure: event-store
+      service: core
     - domain: challenge
       name: issue
       procedure: command-handler
+      service: core
 
   steps:
     - pre:

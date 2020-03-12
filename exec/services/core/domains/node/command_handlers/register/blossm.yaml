@@ -34,8 +34,10 @@ testing:
     - name: register
       domain: scene
       procedure: command-handler
+      service: core
     - domain: principle
       procedure: event-store
+      service: core
 
   steps:
     - pre:

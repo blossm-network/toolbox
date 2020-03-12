@@ -55,8 +55,10 @@ testing:
   dependencies:
     - domain: scene
       procedure: event-store
+      service: core
     - domain: principle
       procedure: event-store
+      service: core
 
   steps:
     - pre:

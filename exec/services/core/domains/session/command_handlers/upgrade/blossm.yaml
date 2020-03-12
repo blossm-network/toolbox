@@ -55,6 +55,7 @@ testing:
   dependencies:
     - domain: principle
       procedure: event-store
+      service: core
 
   steps:
     - pre:
