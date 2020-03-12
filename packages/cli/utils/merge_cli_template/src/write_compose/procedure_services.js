@@ -81,7 +81,7 @@ module.exports = ({
         break;
       case "event-store":
         {
-          const procedureHash = hash(
+          const dependencyHash = hash(
             dependency.domain,
             dependency.service,
             dependency.procedure
@@ -93,7 +93,7 @@ module.exports = ({
             [key]: {
               ...common,
               image: `${commonServiceImagePrefix}.${dependency.domain}:latest`,
-              container_name: `${procedureHash}.${network}`,
+              container_name: `${dependencyHash}.${network}`,
               depends_on: [databaseServiceKey],
               environment: {
                 ...commonEnvironment,
@@ -108,7 +108,7 @@ module.exports = ({
         break;
       case "command-handler":
         {
-          const procedureHash = hash(
+          const dependencyHash = hash(
             dependency.name,
             dependency.domain,
             dependency.service,
@@ -120,7 +120,7 @@ module.exports = ({
             [key]: {
               ...common,
               image: `${commonServiceImagePrefix}.${dependency.domain}.${dependency.name}:latest`,
-              container_name: `${procedureHash}.${network}`,
+              container_name: `${dependencyHash}.${network}`,
               environment: {
                 ...commonEnvironment,
                 PROCEDURE: dependency.procedure,
