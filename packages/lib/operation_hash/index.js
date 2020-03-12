@@ -1,3 +1,3 @@
 const deps = require("./deps");
 
-module.exports = operation => deps.hash(operation.join("")).toString();
+module.exports = (...operation) => deps.hash(operation.join("")).toString();

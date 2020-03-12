@@ -5,10 +5,10 @@ const operationToken = require("..");
 const deps = require("../deps");
 
 const hash = 12345;
-const procedure0 = "some-procedure0";
-const procedure1 = "some-procedure1";
-const procedure2 = "some-procedure2";
-const procedure = [procedure0, procedure1, procedure2];
+const operation0 = "some-operation0";
+const operation1 = "some-operation1";
+const operation2 = "some-operation2";
+const operation = [operation0, operation1, operation2];
 const trimmed = "some-trimmed";
 const token = "some-token";
 
@@ -25,18 +25,18 @@ describe("Service token", () => {
 
     const result = await operationToken({
       tokenFn: tokenFnFake,
-      procedure
+      operation
     });
-    expect(hashFake).to.have.been.calledWith(procedure);
+    expect(hashFake).to.have.been.calledWith(operation);
     expect(trimFake).to.have.been.calledWith(
-      "some-procedure2-some-procedure1-some-procedure0",
+      "some-operation2-some-operation1-some-operation0",
       25
     );
-    //doesn't mutate the origianl procedure.
-    expect(procedure).to.deep.equal([
-      "some-procedure0",
-      "some-procedure1",
-      "some-procedure2"
+    //doesn't mutate the origianl operation.
+    expect(operation).to.deep.equal([
+      "some-operation0",
+      "some-operation1",
+      "some-operation2"
     ]);
     expect(result).to.equal(token);
   });
