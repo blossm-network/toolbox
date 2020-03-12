@@ -2,18 +2,18 @@ const logger = require("@blossm/logger");
 
 const deps = require("./deps");
 
-const common = ({ method, dataParam, procedure, root, data }) => {
+const common = ({ method, dataParam, operation, root, data }) => {
   return {
     in: ({ context, network = process.env.NETWORK }) => {
       return {
         with: async ({ path, tokenFn, claims } = {}) => {
           const token = await deps.operationToken({
             tokenFn,
-            procedure
+            operation
           });
 
           const url = deps.operationUrl({
-            procedure,
+            operation,
             network,
             ...(path && { path }),
             ...(root && { root })
@@ -56,21 +56,21 @@ const common = ({ method, dataParam, procedure, root, data }) => {
   };
 };
 
-module.exports = (...procedure) => {
+module.exports = (...operation) => {
   return {
     post: data =>
-      common({ method: deps.post, dataParam: "body", procedure, data }),
+      common({ method: deps.post, dataParam: "body", operation, data }),
     put: (root, data) =>
-      common({ method: deps.put, dataParam: "body", procedure, root, data }),
+      common({ method: deps.put, dataParam: "body", operation, root, data }),
     delete: root =>
-      common({ method: deps.delete, dataParam: "body", procedure, root }),
+      common({ method: deps.delete, dataParam: "body", operation, root }),
     get: query => {
       const root = query.root;
       delete query.root;
       return common({
         method: deps.get,
         dataParam: "query",
-        procedure,
+        operation,
         root,
         data: query
       });
