@@ -243,22 +243,27 @@ const addDefaultDependencies = ({ config }) => {
     {
       name: "upgrade",
       domain: "session",
+      service: "core",
       procedure: "command-handler"
     },
     {
       domain: "session",
+      service: "core",
       procedure: "event-store"
     },
     {
       domain: "role",
+      service: "core",
       procedure: "event-store"
     },
     {
       domain: "principle",
+      service: "core",
       procedure: "event-store"
     },
     {
       domain: "identity",
+      service: "core",
       procedure: "event-store"
     }
   ];
@@ -270,12 +275,21 @@ const addDefaultDependencies = ({ config }) => {
         ...eventStoreDependencies({
           dependencies: config.testing.dependencies
         }),
-        { domain: config.domain, procedure: "event-store" }
+        {
+          domain: config.domain,
+          service: config.service,
+          procedure: "event-store"
+        }
       ];
     case "projection":
       return [
         ...config.testing.dependencies,
-        { name: config.name, domain: config.domain, procedure: "view-store" }
+        {
+          name: config.name,
+          domain: config.domain,
+          service: config.service,
+          procedure: "view-store"
+        }
       ];
     case "command-gateway": {
       const dependencies = [
@@ -284,6 +298,7 @@ const addDefaultDependencies = ({ config }) => {
           return {
             name: command.name,
             domain: config.domain,
+            service: config.service,
             procedure: "command-handler"
           };
         })
@@ -297,6 +312,7 @@ const addDefaultDependencies = ({ config }) => {
           return {
             name: store.name,
             domain: config.domain,
+            service: config.service,
             conte: "view-store"
           };
         })
