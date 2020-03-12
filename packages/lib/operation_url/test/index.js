@@ -20,7 +20,7 @@ describe("Service url", () => {
     replace(deps, "hash", hashFake);
 
     const result = operationUrl({ operation, network, path, root });
-    expect(hashFake).to.have.been.calledWith(operation);
+    expect(hashFake).to.have.been.calledWith(...operation);
     expect(result).to.equal(`https://${hash}.some-network/some-path/some-root`);
   });
   it("should return the correct output in local env", () => {
@@ -29,7 +29,7 @@ describe("Service url", () => {
 
     process.env.NODE_ENV = "local";
     const result = operationUrl({ operation, network, path, root });
-    expect(hashFake).to.have.been.calledWith(operation);
+    expect(hashFake).to.have.been.calledWith(...operation);
     expect(result).to.equal(`http://${hash}.some-network/some-path/some-root`);
   });
   it("should return the correct output with no path", () => {
@@ -37,7 +37,7 @@ describe("Service url", () => {
     replace(deps, "hash", hashFake);
 
     const result = operationUrl({ operation, network, root });
-    expect(hashFake).to.have.been.calledWith(operation);
+    expect(hashFake).to.have.been.calledWith(...operation);
     expect(result).to.equal(`https://${hash}.some-network/some-root`);
   });
   it("should return the correct output with no path or root", () => {
@@ -45,7 +45,7 @@ describe("Service url", () => {
     replace(deps, "hash", hashFake);
 
     const result = operationUrl({ operation, network });
-    expect(hashFake).to.have.been.calledWith(operation);
+    expect(hashFake).to.have.been.calledWith(...operation);
     expect(result).to.equal(`https://${hash}.some-network`);
   });
 });

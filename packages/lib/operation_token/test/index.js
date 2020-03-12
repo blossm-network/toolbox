@@ -27,7 +27,7 @@ describe("Service token", () => {
       tokenFn: tokenFnFake,
       operation
     });
-    expect(hashFake).to.have.been.calledWith(operation);
+    expect(hashFake).to.have.been.calledWith(...operation);
     expect(trimFake).to.have.been.calledWith(
       "some-operation2-some-operation1-some-operation0",
       25
