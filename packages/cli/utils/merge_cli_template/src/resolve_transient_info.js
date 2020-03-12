@@ -32,12 +32,21 @@ const resolveTransientDependencies = config => {
     case "command-handler":
       return [
         ...(config.testing.dependencies || []),
-        { domain: config.domain, procedure: "event-store" }
+        {
+          domain: config.domain,
+          service: config.service,
+          procedure: "event-store"
+        }
       ];
-    case "projects":
+    case "projection":
       return [
         ...(config.testing.dependencies || []),
-        { name: config.name, domain: config.domain, procedure: "view-store" }
+        {
+          name: config.name,
+          domain: config.domain,
+          service: config.service,
+          procedure: "view-store"
+        }
       ];
     default:
       return config.testing.dependencies || [];
