@@ -232,7 +232,11 @@ const eventStoreDependencies = ({ dependencies }) => {
         d => d.procedure == "event-store" && d.domain == dependency.domain
       )
     ) {
-      result.push({ procedure: "event-store", domain: dependency.domain });
+      result.push({
+        procedure: "event-store",
+        service: dependency.service,
+        domain: dependency.domain
+      });
     }
   }
   return result;
