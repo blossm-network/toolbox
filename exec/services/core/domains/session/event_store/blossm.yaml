@@ -136,4 +136,4 @@ testing:
               domain: some-scene-domain
 
 #don't change
-context: event-store
+procedure: event-store

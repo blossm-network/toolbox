@@ -37,4 +37,4 @@ testing:
             network: some-network
 
 #don't change
-context: event-store
+procedure: event-store

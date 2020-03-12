@@ -20,4 +20,4 @@ devDependencies:
   "@blossm/request": "*"
 
 #don't change
-context: job
+procedure: job

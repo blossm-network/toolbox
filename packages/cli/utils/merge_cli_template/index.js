@@ -70,8 +70,8 @@ const envSecretsBucket = ({ env, config }) => {
   }
 };
 
-const envMongodbUser = ({ env, config, context }) => {
-  switch (context) {
+const envMongodbUser = ({ env, config, procedure }) => {
+  switch (procedure) {
     case "view-store":
       switch (env) {
         case "production":
@@ -101,8 +101,8 @@ const envMongodbUser = ({ env, config, context }) => {
   }
 };
 
-const envMongodbHost = ({ env, config, context }) => {
-  switch (context) {
+const envMongodbHost = ({ env, config, procedure }) => {
+  switch (procedure) {
     case "view-store":
       switch (env) {
         case "production":
@@ -135,7 +135,7 @@ const envMongodbHost = ({ env, config, context }) => {
 const configMemory = ({ config, blossmConfig }) => {
   if (config.memory) return config.memory;
   return (
-    blossmConfig.vendors.cloud.gcp.defaults.memoryOverrides[config.context] ||
+    blossmConfig.vendors.cloud.gcp.defaults.memoryOverrides[config.procedure] ||
     blossmConfig.vendors.cloud.gcp.defaults.memory
   );
 };
@@ -196,11 +196,11 @@ const copySource = async (p, workingDir) => {
   });
 };
 
-const topicsForProcedures = (config, events) => {
+const topicsForDependencies = (config, events) => {
   const array = (events || [])
     .map(e => `did-${e.action}.${e.domain}.${e.service || config.service}`)
     .concat(
-      config.context == "command-handler"
+      config.procedure == "command-handler"
         ? config.testing.events
           ? config.testing.events.map(
               e => `did-${e.action}.${e.domain}.${e.service}`
@@ -209,7 +209,8 @@ const topicsForProcedures = (config, events) => {
         : []
     )
     .concat(
-      config.context == "command-gateway" || config.context == "view-gateway"
+      config.procedure == "command-gateway" ||
+        config.procedure == "view-gateway"
         ? [
             "did-start.session.core",
             "did-upgrade.session.core",
@@ -222,100 +223,102 @@ const topicsForProcedures = (config, events) => {
   return [...new Set(array)];
 };
 
-const eventStoreProcedures = ({ procedures }) => {
+const eventStoreDependencies = ({ dependencies }) => {
   let result = [];
-  for (const procedure of procedures) {
+  for (const dependency of dependencies) {
     if (
-      procedure.context == "command-handler" &&
-      ![...procedures, ...result].some(
-        p => p.context == "event-store" && p.domain == procedure.domain
+      dependency.procedure == "command-handler" &&
+      ![...dependencies, ...result].some(
+        d => d.procedure == "event-store" && d.domain == dependency.domain
       )
     ) {
-      result.push({ context: "event-store", domain: procedure.domain });
+      result.push({ procedure: "event-store", domain: dependency.domain });
     }
   }
   return result;
 };
 
-const addDefaultProcedures = ({ config }) => {
-  const tokenProcedures = [
+const addDefaultDependencies = ({ config }) => {
+  const tokenDependencies = [
     {
       name: "upgrade",
       domain: "session",
-      context: "command-handler"
+      procedure: "command-handler"
     },
     {
       domain: "session",
-      context: "event-store"
+      procedure: "event-store"
     },
     {
       domain: "role",
-      context: "event-store"
+      procedure: "event-store"
     },
     {
       domain: "principle",
-      context: "event-store"
+      procedure: "event-store"
     },
     {
       domain: "identity",
-      context: "event-store"
+      procedure: "event-store"
     }
   ];
 
-  switch (config.context) {
+  switch (config.procedure) {
     case "command-handler":
       return [
-        ...config.testing.procedures,
-        ...eventStoreProcedures({ procedures: config.testing.procedures }),
-        { domain: config.domain, context: "event-store" }
+        ...config.testing.dependencies,
+        ...eventStoreDependencies({
+          dependencies: config.testing.dependencies
+        }),
+        { domain: config.domain, procedure: "event-store" }
       ];
     case "projection":
       return [
-        ...config.testing.procedures,
-        { name: config.name, domain: config.domain, context: "view-store" }
+        ...config.testing.dependencies,
+        { name: config.name, domain: config.domain, procedure: "view-store" }
       ];
     case "command-gateway": {
-      const procedures = [
-        ...tokenProcedures,
+      const dependencies = [
+        ...tokenDependencies,
         ...config.commands.map(command => {
           return {
             name: command.name,
             domain: config.domain,
-            context: "command-handler"
+            procedure: "command-handler"
           };
         })
       ];
-      return [...eventStoreProcedures({ procedures }), ...procedures];
+      return [...eventStoreDependencies({ dependencies }), ...dependencies];
     }
     case "view-gateway":
       return [
-        ...tokenProcedures,
+        ...tokenDependencies,
         ...config.stores.map(store => {
           return {
             name: store.name,
             domain: config.domain,
-            context: "view-store"
+            conte: "view-store"
           };
         })
       ];
     default:
-      return config.testing.procedures;
+      return config.testing.dependencies;
   }
 };
 
 const writeConfig = (config, workingDir) => {
   const newConfigPath = path.resolve(workingDir, "config.json");
   if (!config.testing) config.testing = {};
-  if (!config.testing.procedures) config.testing.procedures = [];
+  if (!config.testing.dependencies) config.testing.dependencies = [];
 
-  const { procedures, events } = resolveTransientInfo(
-    addDefaultProcedures({ config })
+  const { dependencies, events } = resolveTransientInfo(
+    addDefaultDependencies({ config })
   );
 
   config.testing = {
     ...config.testing,
-    procedures,
-    topics: topicsForProcedures(config, events)
+    dependencies,
+    topics: topicsForDependencies(config, events)
   };
 
   delete config.testing.events;
@@ -378,7 +381,7 @@ const configure = async (workingDir, configFn, env, strict) => {
 
     const domain = config.domain;
     const service = config.service;
-    const context = config.context;
+    const procedure = config.procedure;
     const name = config.name;
     const event = config.event;
     const actions = config.actions;
@@ -400,11 +403,11 @@ const configure = async (workingDir, configFn, env, strict) => {
       name,
       event,
       project,
-      context,
+      procedure,
       network,
       memory: configMemory({ config, blossmConfig }),
-      mongodbUser: envMongodbUser({ env, config: blossmConfig, context }),
-      mongodbHost: envMongodbHost({ env, config: blossmConfig, context }),
+      mongodbUser: envMongodbUser({ env, config: blossmConfig, procedure }),
+      mongodbHost: envMongodbHost({ env, config: blossmConfig, procedure }),
       mainContainerName,
       containerRegistery,
       envUriSpecifier: envUriSpecifier(env),
@@ -422,7 +425,7 @@ const configure = async (workingDir, configFn, env, strict) => {
     writeCompose({
       config,
       workingDir,
-      context,
+      procedure,
       port: 80,
       mainContainerName,
       network: "local",

@@ -52,11 +52,11 @@ testing:
           service: some-service
           network: some-network
 
-  procedures:
+  dependencies:
     - domain: scene
-      context: event-store
+      procedure: event-store
     - domain: principle
-      context: event-store
+      procedure: event-store
 
   steps:
     - pre:
@@ -136,4 +136,4 @@ testing:
       code: 400
 
 #don't change
-context: command-handler
+procedure: command-handler

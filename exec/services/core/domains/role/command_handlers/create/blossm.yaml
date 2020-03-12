@@ -33,7 +33,7 @@ testing:
       normalized:
         name: Some-name
 
-  procedures:
+  dependencies:
 
   steps:
     pre:
@@ -44,4 +44,4 @@ testing:
     response:
 
 #don't change
-context: command-handler
+procedure: command-handler

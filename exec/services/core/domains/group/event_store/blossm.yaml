@@ -55,4 +55,4 @@ testing:
                 network: some-identity-network
 
 #don't change
-context: event-store
+procedure: event-store

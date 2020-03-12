@@ -1,5 +1,5 @@
 name: contexts
-domain: identity 
+domain: identity
 service: core
 
 event:
@@ -31,4 +31,4 @@ testing:
           name: some-name
 
 #don't change
-context: projection
+procedure: projection

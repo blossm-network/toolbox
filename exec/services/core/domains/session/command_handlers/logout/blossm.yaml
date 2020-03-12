@@ -17,29 +17,29 @@ devDependencies:
 
 testing:
   validate:
-    ok: 
+    ok:
       - {}
-  
+
   normalize:
     - payload: {}
       normalized: {}
 
   steps:
-  - pre:
-      - domain: session
-        root: some-root
-        action: start
-        payload: {}
-    root: some-root
-    code: 204
-  - pre:
-      - domain: session
-        root: some-root
-        action: logout
-        payload:
-          loggedout: 2019-12-31T00:00:00.000Z
-    root: some-root
-    code: 400
+    - pre:
+        - domain: session
+          root: some-root
+          action: start
+          payload: {}
+      root: some-root
+      code: 204
+    - pre:
+        - domain: session
+          root: some-root
+          action: logout
+          payload:
+            loggedout: 2019-12-31T00:00:00.000Z
+      root: some-root
+      code: 400
 
 #don't change
-context: command-handler
+procedure: command-handler

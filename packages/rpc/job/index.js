@@ -1,14 +1,13 @@
 const deps = require("./deps");
 
-module.exports = ({ name, domain, service, network }) => {
+module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
   const issue = ({ context, claims, tokenFn } = {}) => async payload => {
     const data = { payload };
     return await deps
-      .rpc(name, domain, "job")
+      .rpc(name, domain, service, "job")
       .post(data)
       .in({
         ...(context && { context }),
-        ...(service && { service }),
         ...(network && { network })
       })
       .with({ tokenFn, ...(claims && { claims }) });

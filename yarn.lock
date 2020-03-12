@@ -22,6 +22,22 @@
   dependencies:
     regenerator-runtime "^0.13.2"
 
+"@blossm/service-hash@^0.0.23":
+  version "0.0.23"
+  resolved "https://registry.yarnpkg.com/@blossm/service-hash/-/service-hash-0.0.23.tgz#b4e6745cbf10fe00f2ee7dab17cb3d56dfe0cfd9"
+  integrity sha512-ocGhBjbyZGWRAXBxaqOtSU4zixJ+H0m2kDclUu85bc4LuJFOKx0on0wfcc4SAJ7SAMZ7Q8UBsqVi8Y+rABN6Pw==
+  dependencies:
+    "@blossm/hash-string" "^0.0.3"
+
+"@blossm/service-token@^0.0.23":
+  version "0.0.23"
+  resolved "https://registry.yarnpkg.com/@blossm/service-token/-/service-token-0.0.23.tgz#be5e181405fff6ec5198a19f3733d9e7441bd390"
+  integrity sha512-1IjEKJnNBkAn9A3z47ce2azPJ8nYS8lQq+rxN90t1cLNUruvZyie5eFZuPd6lJ/ZI080SaaGY9wFMJAKW9OJ2Q==
+  dependencies:
+    "@blossm/service-hash" "^0.0.23"
+    "@blossm/service-name-consts" "*"
+    "@blossm/trim-string" "*"
+
 "@evocateur/libnpmaccess@^3.1.2":
   version "3.1.2"
   resolved "https://registry.yarnpkg.com/@evocateur/libnpmaccess/-/libnpmaccess-3.1.2.tgz#ecf7f6ce6b004e9f942b098d92200be4a4b1c845"

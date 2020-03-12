@@ -1,12 +1,12 @@
 const { post, put, get, delete: del } = require("@blossm/request");
 const { construct } = require("@blossm/errors");
-const serviceToken = require("@blossm/service-token");
-const serviceUrl = require("@blossm/service-url");
+const operationToken = require("@blossm/operation-token");
+const operationUrl = require("@blossm/operation-url");
 
 exports.post = post;
 exports.put = put;
 exports.get = get;
 exports.delete = del;
 exports.constructError = construct;
-exports.serviceUrl = serviceUrl;
-exports.serviceToken = serviceToken;
+exports.operationUrl = operationUrl;
+exports.operationToken = operationToken;

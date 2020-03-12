@@ -4,7 +4,7 @@ module.exports = ({
   mainContainerName,
   domain,
   service,
-  context,
+  procedure,
   project,
   region,
   secretBucket,
@@ -23,7 +23,7 @@ module.exports = ({
     NODE_ENV=local
     DOMAIN=${domain}
     SERVICE=${service}
-    CONTEXT=${context}
+    PROCEDURE=${procedure}
     MAIN_CONTAINER_NAME=${mainContainerName}
     GCP_PROJECT=${project}
     GCP_REGION=${region}

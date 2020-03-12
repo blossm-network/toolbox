@@ -48,4 +48,4 @@ testing:
               network: some-other-key-network
 
 #don't change
-context: event-store
+procedure: event-store

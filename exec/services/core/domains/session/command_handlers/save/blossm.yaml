@@ -45,14 +45,14 @@ testing:
         id: some-id
         phone: "+19195551144"
 
-  procedures:
+  dependencies:
     - domain: principle
-      context: event-store
+      procedure: event-store
     - domain: identity
-      context: event-store
+      procedure: event-store
     - domain: challenge
       name: issue
-      context: command-handler
+      procedure: command-handler
 
   steps:
     - pre:
@@ -176,4 +176,4 @@ testing:
       code: 400
 
 #don't change
-context: command-handler
+procedure: command-handler

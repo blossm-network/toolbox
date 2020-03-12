@@ -4,7 +4,7 @@ module.exports = ({
   domain,
   service,
   network,
-  context,
+  procedure,
   memory,
   operationHash,
   containerRegistery,
@@ -27,14 +27,14 @@ module.exports = ({
       "run",
       "deploy",
       `${serviceName}`,
-      `--image=${containerRegistery}/${service}.${context}.${extension}`,
+      `--image=${containerRegistery}/${service}.${procedure}.${extension}`,
       "--platform=managed",
       `--memory=${memory}`,
       ...(allowUnauthenticated ? ["--allow-unauthenticated"] : []),
       `--project=${project}`,
       `--region=${region}`,
-      `--set-env-vars=NODE_ENV=${nodeEnv},NETWORK=${region}.${envUriSpecifier}${network},SERVICE=${service},CONTEXT=${context},DOMAIN=${domain},GCP_PROJECT=${project},GCP_REGION=${region},GCP_SECRET_BUCKET=${secretBucket},GCP_KMS_SECRET_BUCKET_KEY_LOCATION=${secretBucketKeyLocation},GCP_KMS_SECRET_BUCKET_KEY_RING=${secretBucketKeyRing},GCP_COMPUTE_URL_ID=${computeUrlId},${env}`,
-      `--labels=service=${service},context=${context},domain=${domain},hash=${operationHash},${labels}`
+      `--set-env-vars=NODE_ENV=${nodeEnv},NETWORK=${region}.${envUriSpecifier}${network},SERVICE=${service},PROCEDURE=${procedure},DOMAIN=${domain},GCP_PROJECT=${project},GCP_REGION=${region},GCP_SECRET_BUCKET=${secretBucket},GCP_KMS_SECRET_BUCKET_KEY_LOCATION=${secretBucketKeyLocation},GCP_KMS_SECRET_BUCKET_KEY_RING=${secretBucketKeyRing},GCP_COMPUTE_URL_ID=${computeUrlId},${env}`,
+      `--labels=service=${service},procedure=${procedure},domain=${domain},hash=${operationHash},${labels}`
     ]
   };
 };

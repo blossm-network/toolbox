@@ -24,4 +24,4 @@ devDependencies:
   "@blossm/gcp-secret": "*"
 
 #don't change
-context: command-gateway
+procedure: command-gateway

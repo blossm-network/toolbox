@@ -9,7 +9,7 @@ const databaseService = require("./database_service");
 const databaseServiceKey = "db";
 
 const includeDatabase = config => {
-  switch (config.context) {
+  switch (config.procedure) {
     case "view-store":
     case "event-store":
       return true;
@@ -20,7 +20,7 @@ const includeDatabase = config => {
 module.exports = ({
   config,
   workingDir,
-  context,
+  procedure,
   port,
   mainContainerName,
   network,
@@ -75,7 +75,7 @@ module.exports = ({
     services: {
       main: {
         ...mainService({
-          context,
+          procedure,
           port,
           mainContainerName,
           network,

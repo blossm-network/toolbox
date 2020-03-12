@@ -34,7 +34,7 @@ module.exports = ({
   serviceName,
   dnsZone,
   service,
-  context,
+  procedure,
   env,
   operationHash,
   operationName,
@@ -56,13 +56,13 @@ module.exports = ({
       extension: imageExtension,
       containerRegistery,
       service,
-      context
+      procedure
     }),
     writeEnv({
       mainContainerName,
       project,
       domain,
-      context,
+      procedure,
       region,
       service,
       secretBucket,
@@ -85,11 +85,11 @@ module.exports = ({
             extension: imageExtension,
             containerRegistery,
             service,
-            context
+            procedure
           }),
           deploy({
             serviceName,
-            context,
+            procedure,
             service,
             extension: imageExtension,
             secretBucket,
@@ -132,7 +132,7 @@ module.exports = ({
             eventAction: event.action,
             eventDomain: event.domain,
             eventService: event.service,
-            context,
+            procedure,
             region,
             computeUrlId,
             project

@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@blossm/cli-root-dir": "^0.0.5",
-    "@blossm/service-hash": "^0.0.23",
+    "@blossm/operation-hash": "*",
     "any-json": "^3.1.0",
     "chalk": "^2.4.2",
     "common-tags": "^1.8.0",

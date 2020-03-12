@@ -2,7 +2,7 @@ const { string: dateString } = require("@blossm/datetime");
 
 const deps = require("./deps");
 
-module.exports = ({ name, domain, service, network }) => {
+module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
   const issue = ({ context, claims, tokenFn } = {}) => async (
     payload,
     { trace, source, issued, root, options } = {}
@@ -20,12 +20,12 @@ module.exports = ({ name, domain, service, network }) => {
       ...(root && { root }),
       ...(options && { options })
     };
+
     return await deps
-      .rpc(name, domain, "command-handler")
+      .rpc(name, domain, service, "command-handler")
       .post(data)
       .in({
         ...(context && { context }),
-        ...(service && { service }),
         ...(network && { network })
       })
       .with({ tokenFn, ...(claims && { claims }) });

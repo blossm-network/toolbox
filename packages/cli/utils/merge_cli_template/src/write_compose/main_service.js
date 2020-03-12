@@ -1,5 +1,5 @@
 module.exports = ({
-  context,
+  procedure,
   port,
   mainContainerName,
   network,
@@ -28,7 +28,7 @@ module.exports = ({
       NODE_ENV: `${env}`,
       DOMAIN: `${domain}`,
       NETWORK: `${network}`,
-      CONTEXT: `${context}`,
+      PROCEDURE: `${procedure}`,
       SERVICE: `${service}`,
       GCP_PROJECT: `${project}`,
       GCP_REGION: `${region}`,
@@ -46,9 +46,9 @@ module.exports = ({
     MONGODB_PROTOCOL: `${mongodbProtocol}`
   };
 
-  const commonImagePrefix = `${containerRegistery}/${service}.${context}.${domain}`;
+  const commonImagePrefix = `${containerRegistery}/${service}.${procedure}.${domain}`;
 
-  switch (context) {
+  switch (procedure) {
     case "view-store":
       return {
         image: `${commonImagePrefix}.${name}:latest`,

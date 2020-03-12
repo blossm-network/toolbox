@@ -1,7 +1,7 @@
 {
-  "name": "@blossm/service-url",
-  "version": "0.0.24",
-  "description": "Returns a url for a service.",
+  "name": "@blossm/operation-url",
+  "version": "0.0.0",
+  "description": "Returns a url for an operation.",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -14,7 +14,7 @@
     "test": "mocha --recursive"
   },
   "dependencies": {
-    "@blossm/service-hash": "^0.0.23"
+    "@blossm/operation-hash": "*"
   },
   "devDependencies": {
     "mocha": "^6.1.4",

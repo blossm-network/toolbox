@@ -43,4 +43,4 @@ testing:
             name: some-other-name
 
 #don't change
-context: event-store
+procedure: event-store

@@ -21,6 +21,10 @@ const tokenFn = "some-token-fn";
 const context = { c: 2 };
 const claims = "some-claims";
 
+const envService = "some-env-service";
+
+process.env.SERVICE = envService;
+
 describe("Issue command", () => {
   beforeEach(() => {
     clock = useFakeTimers(now.getTime());
@@ -49,13 +53,12 @@ describe("Issue command", () => {
       .issue(payload);
 
     expect(result).to.equal(response);
-    expect(rpcFake).to.have.been.calledWith(name, domain, "job");
+    expect(rpcFake).to.have.been.calledWith(name, domain, service, "job");
     expect(postFake).to.have.been.calledWith({
       payload
     });
     expect(inFake).to.have.been.calledWith({
       context,
-      service,
       network
     });
     expect(withFake).to.have.been.calledWith({ tokenFn, claims });
@@ -77,7 +80,7 @@ describe("Issue command", () => {
     const result = await command({ name, domain }).issue(payload);
 
     expect(result).to.equal(response);
-    expect(rpcFake).to.have.been.calledWith(name, domain);
+    expect(rpcFake).to.have.been.calledWith(name, domain, envService, "job");
     expect(postFake).to.have.been.calledWith({
       payload
     });

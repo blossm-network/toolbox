@@ -9,7 +9,7 @@ module.exports = ({
   eventAction,
   eventDomain,
   eventService,
-  context,
+  procedure,
   computeUrlId,
   project,
   region
@@ -20,7 +20,7 @@ module.exports = ({
     args: [
       "-c",
       oneLine`
-    gcloud beta pubsub subscriptions create ${service}-${context}-${operationHash}
+    gcloud beta pubsub subscriptions create ${service}-${procedure}-${operationHash}
     --topic=did-${eventAction}.${eventDomain}.${eventService}
     --push-endpoint=https://${region}-${operationName}-${operationHash}-${computeUrlId}-uc.a.run.app 
     --push-auth-token-audience=https://${region}-${operationName}-${operationHash}-${computeUrlId}-uc.a.run.app 
@@ -29,7 +29,7 @@ module.exports = ({
     --expiration-period=never
     --ack-deadline=30
     --project=${project}
-    --labels=service=${service},context=${context},domain=${domain},name=${name},event-action=${eventAction},event-domain=${eventDomain},event-service=${eventService},hash=${operationHash} || exit 0
+    --labels=service=${service},procedure=${procedure},domain=${domain},name=${name},event-action=${eventAction},event-domain=${eventDomain},event-service=${eventService},hash=${operationHash} || exit 0
     `
     ]
   };

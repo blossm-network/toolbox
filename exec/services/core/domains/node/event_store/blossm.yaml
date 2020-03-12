@@ -26,7 +26,7 @@ testing:
       payload:
         network: some-network
         scene:
-          root: some-scene-context
+          root: some-scene-root
           service: some-other-scene-service
           network: some-other-scene-network
 
@@ -53,4 +53,4 @@ testing:
               network: some-other-scene-network
 
 #don't change
-context: event-store
+procedure: event-store

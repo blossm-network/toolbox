@@ -42,7 +42,7 @@ const tryShortcuts = input => {
   const configPath = path.resolve(process.cwd(), inputPath, "blossm.yaml");
   const config = yaml.parse(fs.readFileSync(configPath, "utf8"));
 
-  if (!config.context) throw "Context not set.";
+  if (!config.procedure) throw "Procedure not set.";
 
   const args = [];
 
@@ -54,7 +54,7 @@ const tryShortcuts = input => {
   }
   args.push(...input.args);
 
-  switch (config.context) {
+  switch (config.procedure) {
     case "command-handler":
       return commandHandler(args);
     case "event-handler":

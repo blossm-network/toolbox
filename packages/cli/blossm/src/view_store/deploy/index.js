@@ -1,5 +1,5 @@
 const deployCliTemplate = require("@blossm/deploy-cli-template");
-const hash = require("@blossm/service-hash");
+const hash = require("@blossm/operation-hash");
 const trim = require("@blossm/trim-string");
 const { MAX_LENGTH } = require("@blossm/service-name-consts");
 
@@ -10,13 +10,15 @@ module.exports = deployCliTemplate({
     return {
       name: config.name,
       operationName: trim(
-        `${config.service}-${config.context}-${config.domain}-${config.name}`,
+        `${config.service}-${config.procedure}-${config.domain}-${config.name}`,
         MAX_LENGTH
       ),
-      operationHash: hash({
-        procedure: [config.name, config.domain, config.context],
-        service: config.service
-      })
+      operationHash: hash(
+        config.name,
+        config.domain,
+        config.service,
+        config.procedure
+      )
     };
   }
 });

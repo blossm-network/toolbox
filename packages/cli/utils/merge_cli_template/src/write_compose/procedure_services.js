@@ -1,4 +1,4 @@
-const hash = require("@blossm/service-hash");
+const hash = require("@blossm/operation-hash");
 
 const databaseService = require("./database_service");
 
@@ -47,30 +47,32 @@ module.exports = ({
   };
   let services = {};
   let includeDatabase = false;
-  for (const procedure of config.testing.procedures) {
-    const commonServiceImagePrefix = `${containerRegistery}/${service}.${procedure.context}`;
-    switch (procedure.context) {
+  for (const dependency of config.testing.dependencies) {
+    const commonServiceImagePrefix = `${containerRegistery}/${service}.${dependency.procedure}`;
+    switch (dependency.procedure) {
       case "view-store":
         {
-          const procedureHash = hash({
-            procedure: [procedure.name, procedure.domain, procedure.context],
-            service: config.service
-          });
+          const dependencyHash = hash(
+            dependency.name,
+            dependency.domain,
+            dependency.service,
+            dependency.procedure
+          );
 
-          const key = `${procedure.name}-${procedure.domain}-${config.service}`;
+          const key = `${dependency.name}-${dependency.domain}-${config.service}`;
           services = {
             ...services,
             [key]: {
               ...common,
-              image: `${commonServiceImagePrefix}.${procedure.domain}.${procedure.name}:latest`,
-              container_name: `${procedureHash}.${network}`,
+              image: `${commonServiceImagePrefix}.${dependency.domain}.${dependency.name}:latest`,
+              container_name: `${dependencyHash}.${network}`,
               depends_on: [databaseServiceKey],
               environment: {
                 ...commonEnvironment,
                 ...commonStoreEnvironment,
-                CONTEXT: procedure.context,
-                DOMAIN: procedure.domain,
-                NAME: procedure.name
+                PROCEDURE: dependency.procedure,
+                DOMAIN: dependency.domain,
+                NAME: dependency.name
               }
             }
           };
@@ -79,24 +81,25 @@ module.exports = ({
         break;
       case "event-store":
         {
-          const procedureHash = hash({
-            procedure: [procedure.domain, procedure.context],
-            service: config.service
-          });
+          const procedureHash = hash(
+            dependency.domain,
+            dependency.service,
+            dependency.procedure
+          );
 
-          const key = `${procedure.domain}-${config.service}`;
+          const key = `${dependency.domain}-${config.service}`;
           services = {
             ...services,
             [key]: {
               ...common,
-              image: `${commonServiceImagePrefix}.${procedure.domain}:latest`,
+              image: `${commonServiceImagePrefix}.${dependency.domain}:latest`,
               container_name: `${procedureHash}.${network}`,
               depends_on: [databaseServiceKey],
               environment: {
                 ...commonEnvironment,
                 ...commonStoreEnvironment,
-                CONTEXT: procedure.context,
-                DOMAIN: procedure.domain
+                PROCEDURE: dependency.procedure,
+                DOMAIN: dependency.domain
               }
             }
           };
@@ -105,22 +108,24 @@ module.exports = ({
         break;
       case "command-handler":
         {
-          const procedureHash = hash({
-            procedure: [procedure.name, procedure.domain, procedure.context],
-            service: config.service
-          });
-          const key = `${procedure.name}-${procedure.domain}-${config.service}`;
+          const procedureHash = hash(
+            dependency.name,
+            dependency.domain,
+            dependency.service,
+            dependency.procedure
+          );
+          const key = `${dependency.name}-${dependency.domain}-${config.service}`;
           services = {
             ...services,
             [key]: {
               ...common,
-              image: `${commonServiceImagePrefix}.${procedure.domain}.${procedure.name}:latest`,
+              image: `${commonServiceImagePrefix}.${dependency.domain}.${dependency.name}:latest`,
               container_name: `${procedureHash}.${network}`,
               environment: {
                 ...commonEnvironment,
-                CONTEXT: procedure.context,
-                DOMAIN: procedure.domain,
-                NAME: procedure.name
+                PROCEDURE: dependency.procedure,
+                DOMAIN: dependency.domain,
+                NAME: dependency.name
               }
             }
           };

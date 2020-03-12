@@ -1,13 +1,12 @@
 const deps = require("./deps");
 
-module.exports = ({ name, domain, service, network }) => {
+module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
   const create = ({ context, claims, tokenFn } = {}) => async view =>
     await deps
-      .rpc(name, domain, "view-store")
+      .rpc(name, domain, service, "view-store")
       .post({ view })
       .in({
         ...(context && { context }),
-        ...(service && { service }),
         ...(network && { network })
       })
       .with({
@@ -16,11 +15,10 @@ module.exports = ({ name, domain, service, network }) => {
       });
   const read = ({ context, claims, tokenFn } = {}) => async ({ query, sort }) =>
     await deps
-      .rpc(name, domain, "view-store")
+      .rpc(name, domain, service, "view-store")
       .get({ query, ...(sort && { sort }) })
       .in({
         ...(context && { context }),
-        ...(service && { service }),
         ...(network && { network })
       })
       .with({ tokenFn, ...(claims && { claims }) });
@@ -29,11 +27,10 @@ module.exports = ({ name, domain, service, network }) => {
     sort
   }) =>
     await deps
-      .rpc(name, domain, "view-store")
+      .rpc(name, domain, service, "view-store")
       .get({ query, ...(sort && { sort }) })
       .in({
         ...(context && { context }),
-        ...(service && { service }),
         ...(network && { network })
       })
       .with({
@@ -43,21 +40,19 @@ module.exports = ({ name, domain, service, network }) => {
       });
   const update = ({ context, claims, tokenFn } = {}) => async (root, view) =>
     await deps
-      .rpc(name, domain, "view-store")
+      .rpc(name, domain, service, "view-store")
       .put(root, { view })
       .in({
         ...(context && { context }),
-        ...(service && { service }),
         ...(network && { network })
       })
       .with({ tokenFn, ...(claims && { claims }) });
   const del = ({ context, claims, tokenFn } = {}) => async root =>
     await deps
-      .rpc(name, domain, "view-store")
+      .rpc(name, domain, service, "view-store")
       .delete(root)
       .in({
         ...(context && { context }),
-        ...(service && { service }),
         ...(network && { network })
       })
       .with({ tokenFn, ...(claims && { claims }) });

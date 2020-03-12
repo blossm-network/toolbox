@@ -153,4 +153,4 @@ testing:
                 network: some-other-scene-network
 
 #don't change
-context: event-store
+procedure: event-store

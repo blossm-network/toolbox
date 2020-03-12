@@ -54,11 +54,11 @@ testing:
         phone: "+19195551144"
         id: some-id
 
-  procedures:
+  dependencies:
     - domain: identity
-      context: event-store
+      procedure: event-store
     - domain: challenge
-      context: event-store
+      procedure: event-store
 
   steps:
     - payload:
@@ -139,4 +139,4 @@ testing:
       code: 400
 
 #don't change
-context: command-handler
+procedure: command-handler

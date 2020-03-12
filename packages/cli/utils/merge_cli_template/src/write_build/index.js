@@ -26,7 +26,7 @@ const steps = ({
   mainContainerName,
   dnsZone,
   service,
-  context,
+  procedure,
   env,
   operationHash,
   operationName,
@@ -45,7 +45,7 @@ const steps = ({
   const serviceName = `${region}-${operationName}-${operationHash}`;
   const uri = `${operationHash}.${region}.${envUriSpecifier}${network}`;
   const blossmConfig = rootDir.config();
-  switch (context) {
+  switch (procedure) {
     case "view-store":
       return viewStore({
         imageExtension,
@@ -62,7 +62,7 @@ const steps = ({
         mainContainerName,
         dnsZone,
         service,
-        context,
+        procedure,
         operationHash,
         operationName,
         serviceName,
@@ -88,7 +88,7 @@ const steps = ({
         project,
         dnsZone,
         service,
-        context,
+        procedure,
         network,
         computeUrlId,
         envUriSpecifier,
@@ -129,7 +129,7 @@ const steps = ({
         dnsZone,
         service,
         memory,
-        context,
+        procedure,
         operationName,
         operationHash,
         env,
@@ -160,7 +160,7 @@ const steps = ({
         operationHash,
         dnsZone,
         service,
-        context,
+        procedure,
         env,
         serviceName,
         uri,
@@ -185,7 +185,7 @@ const steps = ({
         mainContainerName,
         dnsZone,
         service,
-        context,
+        procedure,
         memory,
         computeUrlId,
         operationHash,
@@ -215,7 +215,7 @@ const steps = ({
         computeUrlId,
         service,
         domain,
-        context,
+        procedure,
         network,
         operationHash,
         operationName,
@@ -243,7 +243,7 @@ const steps = ({
         env,
         service,
         domain,
-        context,
+        procedure,
         network,
         operationHash,
         operationName,
@@ -260,8 +260,8 @@ const steps = ({
   }
 };
 
-const imageExtension = ({ domain, name, event, context }) => {
-  switch (context) {
+const imageExtension = ({ domain, name, event, procedure }) => {
+  switch (procedure) {
     case "view-store":
       return `${domain}.${name}`;
     case "event-store":
@@ -285,7 +285,7 @@ module.exports = ({
   name,
   project,
   network,
-  context,
+  procedure,
   memory,
   envUriSpecifier,
   containerRegistery,
@@ -307,7 +307,7 @@ module.exports = ({
   const buildPath = path.resolve(workingDir, "build.yaml");
 
   const i = imageExtension({
-    context,
+    procedure,
     name,
     domain,
     event
@@ -334,7 +334,7 @@ module.exports = ({
       project,
       network,
       memory,
-      context,
+      procedure,
       envUriSpecifier,
       containerRegistery,
       mainContainerName,

@@ -44,12 +44,12 @@ testing:
         service: some-service
         network: some-network
 
-  procedures:
+  dependencies:
     - name: upgrade
       domain: session
-      context: command-handler
+      procedure: command-handler
     - domain: principle
-      context: event-store
+      procedure: event-store
 
   steps:
     - pre:
@@ -103,4 +103,4 @@ testing:
           network: some-network
 
 #don't change
-context: command-handler
+procedure: command-handler

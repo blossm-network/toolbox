@@ -107,7 +107,7 @@ describe("Command handler unit tests", () => {
       { root: sessionRoot }
     );
   });
-  it("should return successfully if context.sub is provided.", async () => {
+  it("should return successfully if claims.sub is provided.", async () => {
     const aggregateFake = fake.returns({
       aggregate: {
         ...challenge,

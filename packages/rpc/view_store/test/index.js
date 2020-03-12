@@ -18,6 +18,9 @@ const root = "some-root";
 const context = { c: 2 };
 const claims = "some-claims";
 
+const envService = "some-env-service";
+process.env.SERVICE = envService;
+
 describe("Get views", () => {
   afterEach(() => {
     restore();
@@ -40,9 +43,14 @@ describe("Get views", () => {
       .set({ context, tokenFn, claims })
       .create(view);
 
-    expect(rpcFake).to.have.been.calledWith(name, domain, "view-store");
+    expect(rpcFake).to.have.been.calledWith(
+      name,
+      domain,
+      service,
+      "view-store"
+    );
     expect(postFake).to.have.been.calledWith({ view });
-    expect(inFake).to.have.been.calledWith({ context, service, network });
+    expect(inFake).to.have.been.calledWith({ context, network });
     expect(withFake).to.have.been.calledWith({ tokenFn, claims });
   });
   it("should call create with the correct params and optionals omitted", async () => {
@@ -60,7 +68,12 @@ describe("Get views", () => {
 
     await viewStore({ name, domain }).create(view);
 
-    expect(rpcFake).to.have.been.calledWith(name, domain, "view-store");
+    expect(rpcFake).to.have.been.calledWith(
+      name,
+      domain,
+      envService,
+      "view-store"
+    );
     expect(postFake).to.have.been.calledWith({ view });
     expect(inFake).to.have.been.calledWith({});
     expect(withFake).to.have.been.calledWith();
@@ -83,9 +96,14 @@ describe("Get views", () => {
       .set({ context, tokenFn })
       .read({ query, sort });
 
-    expect(rpcFake).to.have.been.calledWith(name, domain, "view-store");
+    expect(rpcFake).to.have.been.calledWith(
+      name,
+      domain,
+      service,
+      "view-store"
+    );
     expect(getFake).to.have.been.calledWith({ query, sort });
-    expect(inFake).to.have.been.calledWith({ context, service, network });
+    expect(inFake).to.have.been.calledWith({ context, network });
     expect(withFake).to.have.been.calledWith({
       tokenFn
     });
@@ -105,13 +123,18 @@ describe("Get views", () => {
     });
     replace(deps, "rpc", rpcFake);
 
-    const result = await viewStore({ name, domain, service, network }).read({
+    const result = await viewStore({ name, domain }).read({
       query
     });
 
-    expect(rpcFake).to.have.been.calledWith(name, domain, "view-store");
+    expect(rpcFake).to.have.been.calledWith(
+      name,
+      domain,
+      envService,
+      "view-store"
+    );
     expect(getFake).to.have.been.calledWith({ query });
-    expect(inFake).to.have.been.calledWith({ service, network });
+    expect(inFake).to.have.been.calledWith({});
     expect(withFake).to.have.been.calledWith();
     expect(result).to.equal(views);
   });
@@ -133,9 +156,14 @@ describe("Get views", () => {
       .set({ context, tokenFn })
       .stream({ query, sort });
 
-    expect(rpcFake).to.have.been.calledWith(name, domain, "view-store");
+    expect(rpcFake).to.have.been.calledWith(
+      name,
+      domain,
+      service,
+      "view-store"
+    );
     expect(getFake).to.have.been.calledWith({ query, sort });
-    expect(inFake).to.have.been.calledWith({ context, service, network });
+    expect(inFake).to.have.been.calledWith({ context, network });
     expect(withFake).to.have.been.calledWith({
       path: "/stream",
       tokenFn
@@ -156,13 +184,18 @@ describe("Get views", () => {
     });
     replace(deps, "rpc", rpcFake);
 
-    const result = await viewStore({ name, domain, service, network }).stream({
+    const result = await viewStore({ name, domain }).stream({
       query
     });
 
-    expect(rpcFake).to.have.been.calledWith(name, domain, "view-store");
+    expect(rpcFake).to.have.been.calledWith(
+      name,
+      domain,
+      envService,
+      "view-store"
+    );
     expect(getFake).to.have.been.calledWith({ query });
-    expect(inFake).to.have.been.calledWith({ service, network });
+    expect(inFake).to.have.been.calledWith({});
     expect(withFake).to.have.been.calledWith({
       path: "/stream"
     });
@@ -185,9 +218,14 @@ describe("Get views", () => {
       .set({ context, tokenFn })
       .update(root, view);
 
-    expect(rpcFake).to.have.been.calledWith(name, domain, "view-store");
+    expect(rpcFake).to.have.been.calledWith(
+      name,
+      domain,
+      service,
+      "view-store"
+    );
     expect(putFake).to.have.been.calledWith(root, { view });
-    expect(inFake).to.have.been.calledWith({ context, service, network });
+    expect(inFake).to.have.been.calledWith({ context, network });
     expect(withFake).to.have.been.calledWith({
       tokenFn
     });
@@ -205,11 +243,16 @@ describe("Get views", () => {
     });
     replace(deps, "rpc", rpcFake);
 
-    await viewStore({ name, domain, service, network }).update(root, view);
+    await viewStore({ name, domain }).update(root, view);
 
-    expect(rpcFake).to.have.been.calledWith(name, domain, "view-store");
+    expect(rpcFake).to.have.been.calledWith(
+      name,
+      domain,
+      envService,
+      "view-store"
+    );
     expect(putFake).to.have.been.calledWith(root, { view });
-    expect(inFake).to.have.been.calledWith({ service, network });
+    expect(inFake).to.have.been.calledWith({});
     expect(withFake).to.have.been.calledWith();
   });
   it("should call delete with the correct params", async () => {
@@ -229,9 +272,14 @@ describe("Get views", () => {
       .set({ context, tokenFn })
       .delete(root);
 
-    expect(rpcFake).to.have.been.calledWith(name, domain, "view-store");
+    expect(rpcFake).to.have.been.calledWith(
+      name,
+      domain,
+      service,
+      "view-store"
+    );
     expect(deleteFake).to.have.been.calledWith(root);
-    expect(inFake).to.have.been.calledWith({ context, service, network });
+    expect(inFake).to.have.been.calledWith({ context, network });
     expect(withFake).to.have.been.calledWith({
       tokenFn
     });
@@ -249,11 +297,16 @@ describe("Get views", () => {
     });
     replace(deps, "rpc", rpcFake);
 
-    await viewStore({ name, domain, service, network }).delete(root);
+    await viewStore({ name, domain }).delete(root);
 
-    expect(rpcFake).to.have.been.calledWith(name, domain, "view-store");
+    expect(rpcFake).to.have.been.calledWith(
+      name,
+      domain,
+      envService,
+      "view-store"
+    );
     expect(deleteFake).to.have.been.calledWith(root);
-    expect(inFake).to.have.been.calledWith({ service, network });
+    expect(inFake).to.have.been.calledWith({});
     expect(withFake).to.have.been.calledWith();
   });
 });

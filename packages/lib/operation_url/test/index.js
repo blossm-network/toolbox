@@ -1,12 +1,11 @@
 const { expect } = require("chai").use(require("sinon-chai"));
 const { restore, replace, fake } = require("sinon");
 
-const serviceUrl = require("..");
+const operationUrl = require("..");
 const deps = require("../deps");
 
 const hash = 12345;
-const procedure = "some-procedure";
-const service = "some-service";
+const operation = "some-operation";
 const network = "some-network";
 const path = "/some-path";
 const root = "some-root";
@@ -20,8 +19,8 @@ describe("Service url", () => {
     const hashFake = fake.returns(hash);
     replace(deps, "hash", hashFake);
 
-    const result = serviceUrl({ procedure, service, network, path, root });
-    expect(hashFake).to.have.been.calledWith({ procedure, service });
+    const result = operationUrl({ operation, network, path, root });
+    expect(hashFake).to.have.been.calledWith(operation);
     expect(result).to.equal(`https://${hash}.some-network/some-path/some-root`);
   });
   it("should return the correct output in local env", () => {
@@ -29,24 +28,24 @@ describe("Service url", () => {
     replace(deps, "hash", hashFake);
 
     process.env.NODE_ENV = "local";
-    const result = serviceUrl({ procedure, service, network, path, root });
-    expect(hashFake).to.have.been.calledWith({ procedure, service });
+    const result = operationUrl({ operation, network, path, root });
+    expect(hashFake).to.have.been.calledWith(operation);
     expect(result).to.equal(`http://${hash}.some-network/some-path/some-root`);
   });
   it("should return the correct output with no path", () => {
     const hashFake = fake.returns(hash);
     replace(deps, "hash", hashFake);
 
-    const result = serviceUrl({ procedure, service, network, root });
-    expect(hashFake).to.have.been.calledWith({ procedure, service });
+    const result = operationUrl({ operation, network, root });
+    expect(hashFake).to.have.been.calledWith(operation);
     expect(result).to.equal(`https://${hash}.some-network/some-root`);
   });
   it("should return the correct output with no path or root", () => {
     const hashFake = fake.returns(hash);
     replace(deps, "hash", hashFake);
 
-    const result = serviceUrl({ procedure, service, network });
-    expect(hashFake).to.have.been.calledWith({ procedure, service });
+    const result = operationUrl({ operation, network });
+    expect(hashFake).to.have.been.calledWith(operation);
     expect(result).to.equal(`https://${hash}.some-network`);
   });
 });

@@ -45,14 +45,14 @@ testing:
       normalized:
         code: "123456"
 
-  procedures:
+  dependencies:
     - domain: identity
-      context: event-store
+      procedure: event-store
     - domain: challenge
-      context: event-store
+      procedure: event-store
     - domain: session
       name: upgrade
-      context: command-handler
+      procedure: command-handler
 
   steps:
     - pre:
@@ -155,4 +155,4 @@ testing:
       code: 409
 
 #don't change
-context: command-handler
+procedure: command-handler

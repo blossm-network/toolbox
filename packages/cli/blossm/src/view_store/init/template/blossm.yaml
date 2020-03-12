@@ -37,4 +37,4 @@ testing:
     - name: some-other-name
 
 #don't change
-context: view-store
+procedure: view-store

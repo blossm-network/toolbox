@@ -28,9 +28,13 @@ const commandDomain = "command-domain";
 const commandService = "command-service";
 const commandNetwork = "command-network";
 const commandIssuedTimestamp = 234;
-const service = "the-service-the-event-was-triggered-in";
+const service = "some-service";
 const network = "some-network";
-const domain = "the-domain-the-event-was-triggered-in";
+const domain = "some-domain";
+
+const envService = "some-env-service";
+
+process.env.SERVICE = envService;
 
 const context = "some-context";
 const claims = "some-claims";
@@ -95,7 +99,7 @@ describe("Event store", () => {
         }
       ]);
 
-    expect(rpcFake).to.have.been.calledWith(domain, "event-store");
+    expect(rpcFake).to.have.been.calledWith(domain, service, "event-store");
     expect(postFake).to.have.been.calledWith({
       events: [
         {
@@ -128,7 +132,6 @@ describe("Event store", () => {
     });
     expect(inFake).to.have.been.calledWith({
       context,
-      service,
       network
     });
     expect(withFake).to.have.been.calledWith({ tokenFn, claims });
@@ -163,7 +166,7 @@ describe("Event store", () => {
       }
     ]);
 
-    expect(rpcFake).to.have.been.calledWith(domain, "event-store");
+    expect(rpcFake).to.have.been.calledWith(domain, envService, "event-store");
     expect(postFake).to.have.been.calledWith({
       events: [
         {
@@ -206,11 +209,10 @@ describe("Event store", () => {
       .set({ context, claims, tokenFn })
       .aggregate(root);
 
-    expect(rpcFake).to.have.been.calledWith(domain, "event-store");
+    expect(rpcFake).to.have.been.calledWith(domain, service, "event-store");
     expect(getFake).to.have.been.calledWith({ root });
     expect(inFake).to.have.been.calledWith({
       context,
-      service,
       network
     });
     expect(withFake).to.have.been.calledWith({ tokenFn, claims });
@@ -232,13 +234,11 @@ describe("Event store", () => {
 
     const root = "user";
 
-    const result = await eventStore({ domain, service, network }).aggregate(
-      root
-    );
+    const result = await eventStore({ domain }).aggregate(root);
 
-    expect(rpcFake).to.have.been.calledWith(domain, "event-store");
+    expect(rpcFake).to.have.been.calledWith(domain, envService, "event-store");
     expect(getFake).to.have.been.calledWith({ root });
-    expect(inFake).to.have.been.calledWith({ service, network });
+    expect(inFake).to.have.been.calledWith({});
     expect(withFake).to.have.been.calledWith();
     expect(result).to.equal(aggregate);
   });
@@ -260,11 +260,10 @@ describe("Event store", () => {
       .set({ context, claims, tokenFn })
       .query(query);
 
-    expect(rpcFake).to.have.been.calledWith(domain, "event-store");
+    expect(rpcFake).to.have.been.calledWith(domain, service, "event-store");
     expect(getFake).to.have.been.calledWith(query);
     expect(inFake).to.have.been.calledWith({
       context,
-      service,
       network
     });
     expect(withFake).to.have.been.calledWith({ tokenFn, claims });
@@ -284,11 +283,11 @@ describe("Event store", () => {
     });
     replace(deps, "rpc", rpcFake);
 
-    const result = await eventStore({ domain, service, network }).query(query);
+    const result = await eventStore({ domain }).query(query);
 
-    expect(rpcFake).to.have.been.calledWith(domain, "event-store");
+    expect(rpcFake).to.have.been.calledWith(domain, envService, "event-store");
     expect(getFake).to.have.been.calledWith(query);
-    expect(inFake).to.have.been.calledWith({ service, network });
+    expect(inFake).to.have.been.calledWith({});
     expect(withFake).to.have.been.calledWith();
     expect(result).to.equal(aggregate);
   });

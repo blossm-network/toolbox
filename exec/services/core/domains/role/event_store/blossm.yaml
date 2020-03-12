@@ -125,4 +125,4 @@ testing:
             permissions: []
 
 #don't change
-context: event-store
+procedure: event-store

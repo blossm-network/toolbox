@@ -29,7 +29,7 @@ testing:
       normalized:
         name: some-name
 
-  procedures:
+  dependencies:
 
   steps:
     pre:
@@ -40,4 +40,4 @@ testing:
     response:
 
 #don't change
-context: command-handler
+procedure: command-handler

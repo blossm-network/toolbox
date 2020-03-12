@@ -8,7 +8,7 @@ service: core
 
 stores:
   - name: some-name
-    permissions: 
+    permissions:
       - some-permission
   - name: some-other-name
     protected: false
@@ -22,4 +22,4 @@ devDependencies:
   "chai": "^4.2.0"
 
 #don't change
-context: view-gateway
+procedure: view-gateway

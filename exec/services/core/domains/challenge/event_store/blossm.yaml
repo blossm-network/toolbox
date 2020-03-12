@@ -69,4 +69,4 @@ testing:
             code: "123456"
 
 #don't change
-context: event-store
+procedure: event-store

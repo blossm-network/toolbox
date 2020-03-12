@@ -4,22 +4,16 @@ const deps = require("./deps");
 
 const common = ({ method, dataParam, procedure, root, data }) => {
   return {
-    in: ({
-      context,
-      service = process.env.SERVICE,
-      network = process.env.NETWORK
-    }) => {
+    in: ({ context, network = process.env.NETWORK }) => {
       return {
         with: async ({ path, tokenFn, claims } = {}) => {
-          const token = await deps.serviceToken({
+          const token = await deps.operationToken({
             tokenFn,
-            service,
             procedure
           });
 
-          const url = deps.serviceUrl({
+          const url = deps.operationUrl({
             procedure,
-            service,
             network,
             ...(path && { path }),
             ...(root && { root })
