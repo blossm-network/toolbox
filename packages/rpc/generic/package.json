@@ -1,7 +1,7 @@
 {
   "name": "@blossm/rpc",
   "description": "Calls a remote procedure within the network.",
-  "version": "0.0.62",
+  "version": "0.0.63",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -16,8 +16,8 @@
   "dependencies": {
     "@blossm/errors": "^0.0.18",
     "@blossm/logger": "^0.0.5",
-    "@blossm/operation-token": "^0.0.2",
-    "@blossm/operation-url": "^0.0.3",
+    "@blossm/operation-token": "^0.0.3",
+    "@blossm/operation-url": "^0.0.4",
     "@blossm/request": "^0.0.9"
   },
   "devDependencies": {
