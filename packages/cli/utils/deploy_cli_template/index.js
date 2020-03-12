@@ -78,12 +78,14 @@ module.exports = ({ domain, dir, configFn }) => async args => {
   await mergeCliTemplate({
     scriptDir: dir,
     workingDir,
-    input,
+    env: input.env,
+    path: input.path,
+    dry: input.dryRun,
     configFn
   });
 
   try {
-    if (input.testOnly) {
+    if (input.unitTest) {
       //eslint-disable-next-line no-console
       console.log(roboSay("Running your tests..."));
       await testCliTemplate({ workingDir, input });

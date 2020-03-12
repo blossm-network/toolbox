@@ -77,6 +77,7 @@ module.exports = ({
     await Promise.all(fns);
 
     if (thenFn) await thenFn();
+    // broadcastFn({ events });
     res.status(response ? 200 : 204).send(response);
   };
 };

@@ -455,9 +455,16 @@ const configure = async (workingDir, configFn, env, strict) => {
   }
 };
 
-module.exports = async ({ scriptDir, workingDir, input, configFn }) => {
+module.exports = async ({
+  scriptDir,
+  workingDir,
+  path,
+  env,
+  dry,
+  configFn
+}) => {
   await copyTemplate(__dirname, workingDir);
   await copyScript(scriptDir, workingDir);
-  await copySource(input.path, workingDir);
-  await configure(workingDir, configFn, input.env, !input.allowFail);
+  await copySource(path, workingDir);
+  await configure(workingDir, configFn, env, !dry);
 };
