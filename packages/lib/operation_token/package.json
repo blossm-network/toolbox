@@ -1,6 +1,6 @@
 {
   "name": "@blossm/operation-token",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Creates a token to access an operation.",
   "main": "index.js",
   "author": "blossm.network",
@@ -14,7 +14,7 @@
     "test": "mocha --recursive"
   },
   "dependencies": {
-    "@blossm/operation-hash": "*",
+    "@blossm/operation-hash": "^0.0.1",
     "@blossm/service-name-consts": "*",
     "@blossm/trim-string": "*"
   },
