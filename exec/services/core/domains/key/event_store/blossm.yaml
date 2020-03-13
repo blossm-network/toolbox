@@ -3,7 +3,10 @@ service: core
 
 schema:
   name: String
-  node: String
+  node:
+    root: String
+    service: String
+    network: String
   principle:
     root: String
     service: String
@@ -22,7 +25,10 @@ testing:
       action: create
       payload:
         name: some-name
-        node: some-node
+        node:
+          root: some-node-root
+          service: some-node-service
+          network: some-node-network
         principle:
           root: some-principle-root
           service: some-principle-service
@@ -33,7 +39,10 @@ testing:
       action: create
       payload:
         name: some-other-name
-        node: some-other-node
+        node:
+          root: some-other-node-root
+          service: some-other-node-service
+          network: some-other-node-network
         principle:
           root: some-other-principle-root
           service: some-other-principle-service
@@ -46,7 +55,10 @@ testing:
       examples:
         - state:
             name: some-name
-            node: some-node
+            node:
+              root: some-node-root
+              service: some-node-service
+              network: some-node-network
             principle:
               root: some-principle-root
               service: some-principle-service
@@ -55,7 +67,10 @@ testing:
             secret: some-secret
           payload:
             name: some-other-name
-            node: some-other-node
+            node:
+              root: some-other-node-root
+              service: some-other-node-service
+              network: some-other-node-network
             principle:
               root: some-other-principle-root
               service: some-other-principle-service
@@ -64,7 +79,10 @@ testing:
             secret: some-other-secret
           result:
             name: some-other-name
-            node: some-other-node
+            node:
+              root: some-other-node-root
+              service: some-other-node-service
+              network: some-other-node-network
             principle:
               root: some-other-principle-root
               service: some-other-principle-service

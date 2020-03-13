@@ -36,12 +36,12 @@ testing:
   dependencies:
 
   steps:
-    pre:
-    payload:
-    context:
-    session:
-    root:
-    response:
+    - pre:
+      payload:
+      context:
+      session:
+      root:
+      response:
 
 #don't change
 procedure: command-handler

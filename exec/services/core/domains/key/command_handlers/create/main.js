@@ -1,28 +1,31 @@
 const deps = require("./deps");
 
 module.exports = async ({ payload, context }) => {
-  const node = context.domain == "node" && context.root;
+  const node = context.domain == "node" && context.node;
 
-  if (!node) throw "A key can only be made in the context of a node";
+  if (!node)
+    throw deps.forbiddenError.message("A key can only be made by a node.");
 
   const keyRoot = deps.uuid();
   const principleRoot = deps.uuid();
 
-  //create an id.
   const id = deps.randomStringOfLength(20);
   const secret = deps.randomStringOfLength(20);
   const hash = await deps.hash(secret);
 
-  //get all permissions for the requesting principle.
-  //make sure payload.permissions is a subset.
-
-  ("some-service:some-domain:some-priviledges:some-root");
   return {
     events: [
       {
+        domain: "principle",
         action: "add-roles",
         payload: {
-          roles: payload.roles
+          roles: payload.roles.map(role => {
+            return {
+              id: role,
+              service: process.env.SERVICE,
+              network: process.env.NETWORK
+            };
+          })
         },
         root: principleRoot
       },
@@ -31,7 +34,11 @@ module.exports = async ({ payload, context }) => {
         payload: {
           name: payload.name,
           node,
-          principle: principleRoot,
+          principle: {
+            root: principleRoot,
+            service: process.env.SERVICE,
+            network: process.env.NETWORK
+          },
           id,
           secret: hash
         },

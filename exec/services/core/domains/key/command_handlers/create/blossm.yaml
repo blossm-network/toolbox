@@ -4,6 +4,14 @@ service: core
 
 payload:
   name: string
+  roles:
+    - string
+
+dependencies:
+  "@blossm/random-string-of-length": "*"
+  "@blossm/hash-string": "*"
+  "@blossm/uuid": "*"
+  "@blossm/errors": "*"
 
 devDependencies:
   "mocha": "^6.1.4"
@@ -15,29 +23,53 @@ devDependencies:
 testing:
   validate:
     ok:
-      name: Some-name
+      - name: Some-name
+        roles:
+          - some-id
     bad:
-      name: 3
+      - name: 3
+      - roles: bad
+      - roles:
+          - id: 4
 
   normalize:
     - payload:
         name: Some-name
+        roles:
+          - some-id
       normalized:
         name: Some-name
-    - payload:
-        name: some-name
-      normalized:
-        name: some-name
+        roles:
+          - some-id
 
   dependencies:
+    - domain: principle
+      service: core
+      procedure: event-store
 
   steps:
-    pre:
-    payload:
-    context:
-    claims:
-    root:
-    response:
+    - pre:
+      payload:
+        name: some name
+        roles:
+          - some-role-id
+      context:
+        domain: node
+        node:
+          root: some-node-root
+          service: some-node-service
+          network: some-node-network
+      response:
+        id:
+        secret:
+    - pre:
+      payload:
+        name: some name
+        roles:
+          - some-role-id
+      context:
+        domain: bogus
+      code: 403
 
 #don't change
 procedure: command-handler

@@ -2,7 +2,7 @@ domain: role
 service: core
 
 schema:
-  title: String
+  name: String
   description: String
   id:
     type: String
