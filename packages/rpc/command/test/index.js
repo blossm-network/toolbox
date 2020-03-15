@@ -14,7 +14,7 @@ const now = new Date();
 const name = "some-nmae!";
 const domain = "some-domain!";
 const service = "some-service";
-const network = "some-network";
+const host = "some-host";
 
 const payload = { a: 1 };
 const options = "some-options";
@@ -58,7 +58,7 @@ describe("Issue command", () => {
     const uuidFake = fake.returns(id);
     replace(deps, "uuid", uuidFake);
 
-    const result = await command({ name, domain, service, network })
+    const result = await command({ name, domain, service, host })
       .set({ context, claims, tokenFn })
       .issue(payload, { trace, source, issued, root, options });
 
@@ -82,7 +82,7 @@ describe("Issue command", () => {
     });
     expect(inFake).to.have.been.calledWith({
       context,
-      network
+      host
     });
     expect(withFake).to.have.been.calledWith({ tokenFn, claims });
   });

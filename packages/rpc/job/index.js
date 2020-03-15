@@ -1,6 +1,6 @@
 const deps = require("./deps");
 
-module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
+module.exports = ({ name, domain, service = process.env.SERVICE, host }) => {
   const issue = ({ context, claims, tokenFn } = {}) => async payload => {
     const data = { payload };
     return await deps
@@ -8,7 +8,7 @@ module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
       .post(data)
       .in({
         ...(context && { context }),
-        ...(network && { network })
+        ...(host && { host })
       })
       .with({ tokenFn, ...(claims && { claims }) });
   };

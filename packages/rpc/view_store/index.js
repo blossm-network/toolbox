@@ -1,13 +1,13 @@
 const deps = require("./deps");
 
-module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
+module.exports = ({ name, domain, service = process.env.SERVICE, host }) => {
   const create = ({ context, claims, tokenFn } = {}) => async view =>
     await deps
       .rpc(name, domain, service, "view-store")
       .post({ view })
       .in({
         ...(context && { context }),
-        ...(network && { network })
+        ...(host && { host })
       })
       .with({
         tokenFn,
@@ -19,7 +19,7 @@ module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
       .get({ query, ...(sort && { sort }) })
       .in({
         ...(context && { context }),
-        ...(network && { network })
+        ...(host && { host })
       })
       .with({ tokenFn, ...(claims && { claims }) });
   const stream = ({ context, claims, tokenFn } = {}) => async ({
@@ -31,7 +31,7 @@ module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
       .get({ query, ...(sort && { sort }) })
       .in({
         ...(context && { context }),
-        ...(network && { network })
+        ...(host && { host })
       })
       .with({
         path: "/stream",
@@ -44,7 +44,7 @@ module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
       .put(root, { view })
       .in({
         ...(context && { context }),
-        ...(network && { network })
+        ...(host && { host })
       })
       .with({ tokenFn, ...(claims && { claims }) });
   const del = ({ context, claims, tokenFn } = {}) => async root =>
@@ -53,7 +53,7 @@ module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
       .delete(root)
       .in({
         ...(context && { context }),
-        ...(network && { network })
+        ...(host && { host })
       })
       .with({ tokenFn, ...(claims && { claims }) });
   return {
