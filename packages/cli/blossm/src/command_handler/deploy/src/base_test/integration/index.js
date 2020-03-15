@@ -137,39 +137,43 @@ describe("Command handler integration tests", () => {
     }
   });
 
-  //   it("should return an error if incorrect params", async () => {
-  //     if (!testing.validate.bad || !testing.validate.bad[0]) return;
-  //     const response = await request.post(url, {
-  //       body: {
-  //         headers: {
-  //           issued: stringDate(),
-  //           id: uuid()
-  //         },
-  //         payload: createBadPayload({
-  //           bad: testing.validate.bad[0],
-  //           ok: testing.validate.ok[0]
-  //         }),
-  //         claims: {}
-  //       }
-  //     });
+  it("should return an error if incorrect params", async () => {
+    if (!testing.validate.bad || !testing.validate.bad[0]) return;
+    const response = await request.post(url, {
+      body: {
+        headers: {
+          issued: stringDate(),
+          id: uuid()
+        },
+        payload: createBadPayload({
+          bad: testing.validate.bad[0],
+          ok: testing.validate.ok[0]
+        }),
+        claims: {}
+      }
+    });
 
-  //     expect(response.statusCode).to.equal(409);
-  //   });
+    expect(response.statusCode).to.equal(409);
+  });
 });
 
-// const createBadPayload = ({ bad, ok }) => {
-//   let payload = { ...bad };
+const createBadPayload = ({ bad, ok }) => {
+  let payload = { ...bad };
 
-//   for (const property in ok) {
-//     payload[property] = bad[property]
-//       ? typeof ok[property] == "object" && !(ok[property] instanceof Array)
-//         ? createBadPayload({
-//             bad: bad[property],
-//             ok: ok[property]
-//           })
-//         : (payload[property] = bad[property])
-//       : (payload[property] = ok[property]);
-//   }
+  for (const property in ok) {
+    payload[property] =
+      bad[property] != undefined
+        ? typeof ok[property] == "object" &&
+          !(ok[property] instanceof Array) &&
+          typeof bad[property] == "object" &&
+          !(bad[property] instanceof Array)
+          ? createBadPayload({
+              bad: bad[property],
+              ok: ok[property]
+            })
+          : (payload[property] = bad[property])
+        : (payload[property] = ok[property]);
+  }
 
-//   return payload;
-// };
+  return payload;
+};
