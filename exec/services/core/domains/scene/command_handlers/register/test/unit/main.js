@@ -8,7 +8,10 @@ const payload = "some-payload";
 const root = "some-root";
 const service = "some-service";
 const network = "some-network";
-const contextSession = "some-context-session";
+const contextSessionRoot = "some-context-session-root";
+const contextSession = {
+  root: contextSessionRoot
+};
 const principleRoot = "some-principle-root";
 const principleService = "some-principle-service";
 const principleNetwork = "some-principle-network";
@@ -95,7 +98,7 @@ describe("Command handler unit tests", () => {
       {
         principle: { root: uuid, service, network }
       },
-      { root: contextSession }
+      { root: contextSessionRoot }
     );
   });
   it("should return successfully if there's a context principle", async () => {

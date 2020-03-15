@@ -11,20 +11,13 @@ module.exports = async ({ root, payload, context, claims, aggregateFn }) => {
       domain: "principle"
     }),
     aggregateFn(root),
-    aggregateFn(payload.scene.root, {
+    aggregateFn(payload.scene, {
       domain: "scene"
     })
   ]);
 
   // Check to see if the principle has access to the context being switched in to.
-  if (
-    !principleAggregate.scenes.some(
-      scene =>
-        scene.root == payload.scene.root &&
-        scene.service == payload.scene.service &&
-        scene.network == payload.scene.network
-    )
-  )
+  if (!principleAggregate.scenes.some(scene => scene.root == payload.scene))
     throw deps.unauthorizedError.message("This scene isn't accessible.", {
       info: { scene: payload.scene }
     });
@@ -46,7 +39,11 @@ module.exports = async ({ root, payload, context, claims, aggregateFn }) => {
     payload: {
       context: {
         ...context,
-        scene: payload.scene,
+        scene: {
+          root: payload.scene,
+          service: sceneAggregate.service,
+          network: sceneAggregate.network
+        },
         domain: sceneAggregate.domain,
         [sceneAggregate.domain]: {
           root: sceneAggregate.root,
@@ -65,7 +62,19 @@ module.exports = async ({ root, payload, context, claims, aggregateFn }) => {
   });
 
   return {
-    events: [{ action: "change-scene", root, payload }],
+    events: [
+      {
+        action: "change-scene",
+        root,
+        payload: {
+          scene: {
+            root: payload.scene,
+            service: process.env.SERVICE,
+            network: process.env.NETWORK
+          }
+        }
+      }
+    ],
     response: { tokens: { session: token } }
   };
 };

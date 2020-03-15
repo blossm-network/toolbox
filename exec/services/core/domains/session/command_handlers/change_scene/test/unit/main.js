@@ -10,16 +10,13 @@ let clock;
 const now = new Date();
 
 const newSceneRoot = "some-new-scene-root";
-const newSceneService = "some-new-scene-service";
-const newSceneNetwork = "some-new-scene-network";
+const sceneService = "some-scene-service";
+const sceneNetwork = "some-scene-network";
 
 const payload = {
-  scene: {
-    root: newSceneRoot,
-    service: newSceneService,
-    network: newSceneNetwork
-  }
+  scene: newSceneRoot
 };
+
 const token = "some-token";
 const project = "some-projectl";
 const root = "some-root";
@@ -48,7 +45,12 @@ const claims = {
   exp
 };
 
+const service = "some-service";
+const network = "some-network";
+
 process.env.GCP_PROJECT = project;
+process.env.SERVICE = service;
+process.env.NETWORK = network;
 
 describe("Command handler unit tests", () => {
   beforeEach(() => {
@@ -73,8 +75,8 @@ describe("Command handler unit tests", () => {
           scenes: [
             {
               root: newSceneRoot,
-              service: newSceneService,
-              network: newSceneNetwork
+              service: sceneService,
+              network: sceneNetwork
             }
           ]
         }
@@ -103,7 +105,13 @@ describe("Command handler unit tests", () => {
       events: [
         {
           action: "change-scene",
-          payload,
+          payload: {
+            scene: {
+              root: newSceneRoot,
+              service,
+              network
+            }
+          },
           root
         }
       ],
@@ -137,8 +145,8 @@ describe("Command handler unit tests", () => {
           session: contextSession,
           scene: {
             root: newSceneRoot,
-            service: newSceneService,
-            network: newSceneNetwork
+            service: sceneAggregateService,
+            network: sceneAggregateNetwork
           },
           domain: sceneAggregateDomain,
           [sceneAggregateDomain]: {
@@ -197,11 +205,7 @@ describe("Command handler unit tests", () => {
         "This scene isn't accessible.",
         {
           info: {
-            scene: {
-              root: newSceneRoot,
-              service: newSceneService,
-              network: newSceneNetwork
-            }
+            scene: newSceneRoot
           }
         }
       );
@@ -223,8 +227,8 @@ describe("Command handler unit tests", () => {
           scenes: [
             {
               root: newSceneRoot,
-              service: newSceneService,
-              network: newSceneNetwork
+              service: sceneService,
+              network: sceneNetwork
             }
           ]
         }
@@ -275,8 +279,8 @@ describe("Command handler unit tests", () => {
           scenes: [
             {
               root: newSceneRoot,
-              service: newSceneService,
-              network: newSceneNetwork
+              service: sceneService,
+              network: sceneNetwork
             }
           ]
         }

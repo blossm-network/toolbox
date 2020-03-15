@@ -67,7 +67,10 @@ testing:
         service: some-service
         network: some-network
       context:
-        session: some-session-root
+        session:
+          root: some-session-root
+          service: some-session-service
+          network: some-session-network
       claims:
         iss: some-iss
         aud: some-aud
@@ -89,7 +92,10 @@ testing:
         service: some-service
         network: some-network
       context:
-        session: some-other-session-root
+        session:
+          root: some-other-session-root
+          service: some-session-service
+          network: some-session-network
         principle:
           root: some-principle-root
           service: some-service

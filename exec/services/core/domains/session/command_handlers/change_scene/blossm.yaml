@@ -3,10 +3,7 @@ domain: session
 service: core
 
 payload:
-  scene:
-    root: string
-    service: string
-    network: string
+  scene: string
 
 dependencies:
   "@blossm/jwt": "*"
@@ -24,33 +21,16 @@ devDependencies:
 testing:
   validate:
     ok:
-      - scene:
-          root: some-scene-root
-          service: some-service
-          network: some-network
+      - scene: some-scene-root
     bad:
-      - scene: bad
       - scene:
-          root:
-            a: 1
-      - scene:
-          service:
-            a: 1
-      - scene:
-          network:
-            a: 1
+          a: 1
 
   normalize:
     - payload:
-        scene:
-          root: some-scene-root
-          service: some-service
-          network: some-network
+        scene: some-scene-root
       normalized:
-        scene:
-          root: some-scene-root
-          service: some-service
-          network: some-network
+        scene: some-scene-root
 
   dependencies:
     - domain: scene
@@ -82,10 +62,7 @@ testing:
                 network: some-network
       root: some-root
       payload:
-        scene:
-          root: some-scene-root
-          service: some-service
-          network: some-network
+        scene: some-scene-root
       claims:
         iss: some-iss
         aud: some-aud
@@ -106,10 +83,7 @@ testing:
                 network: some-network
       root: some-root
       payload:
-        scene:
-          root: some-scene-root
-          service: some-service
-          network: some-network
+        scene: some-scene-root
       claims:
         iss: some-iss
         aud: some-aud
@@ -125,10 +99,7 @@ testing:
             loggedout: 2019-12-31T00:00:00.000Z
       root: some-root
       payload:
-        scene:
-          root: some-scene-root
-          service: some-service
-          network: some-network
+        scene: some-scene-root
       context: {}
       claims:
         iss: some-iss
