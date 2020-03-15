@@ -1,0 +1,35 @@
+name: open
+domain: connection
+service: core
+
+payload: {}
+
+devDependencies:
+  "mocha": "^6.1.4"
+  "chai": "^4.2.0"
+  "sinon": "^7.3.2"
+  "sinon-chai": "^3.3.0"
+  "chai-datetime": "^1.5.0"
+
+testing:
+  validate:
+    ok: []
+    bad: []
+
+  normalize:
+    - payload: {}
+      normalized: {}
+
+  dependencies:
+
+  steps:
+    []
+    # - pre:
+    #   payload:
+    #   context:
+    #   session:
+    #   root:
+    #   response:
+
+#don't change
+procedure: command-handler

@@ -8,6 +8,7 @@ const permissionsLookupFn = "some-permissions-fn";
 const terminatedSessionCheckFn = "some-terminated-session-check-fn";
 const domain = "some-domain";
 const service = "some-service";
+const tokenClaimsFn = "some-token-claims-fn";
 
 process.env.DOMAIN = domain;
 process.env.SERVICE = service;
@@ -54,7 +55,8 @@ describe("Command gateway", () => {
       whitelist,
       permissionsLookupFn,
       terminatedSessionCheckFn,
-      verifyFn: verifyFnFake
+      verifyFn: verifyFnFake,
+      tokenClaimsFn
     });
 
     expect(gatewayPostFake).to.have.been.calledWith({ name, domain });
@@ -77,7 +79,8 @@ describe("Command gateway", () => {
       preMiddleware: [authenticationResult, authorizationResult]
     });
     expect(authenticationFake).to.have.been.calledWith({
-      verifyFn: verifyFnResult
+      verifyFn: verifyFnResult,
+      tokenClaimsFn
     });
     expect(verifyFnFake).to.have.been.calledWith({ key: "session" });
     expect(authorizationFake).to.have.been.calledWith({
@@ -125,7 +128,8 @@ describe("Command gateway", () => {
       whitelist,
       permissionsLookupFn,
       terminatedSessionCheckFn,
-      verifyFn: verifyFnFake
+      verifyFn: verifyFnFake,
+      tokenClaimsFn
     });
 
     expect(gatewayPostFake).to.have.been.calledWith({ name, domain });
@@ -148,7 +152,8 @@ describe("Command gateway", () => {
       preMiddleware: [authenticationResult, authorizationResult]
     });
     expect(authenticationFake).to.have.been.calledWith({
-      verifyFn: verifyFnResult
+      verifyFn: verifyFnResult,
+      tokenClaimsFn
     });
     expect(verifyFnFake).to.have.been.calledWith({ key: "session" });
     expect(authorizationFake).to.have.been.calledWith({
@@ -198,7 +203,8 @@ describe("Command gateway", () => {
       whitelist,
       permissionsLookupFn,
       terminatedSessionCheckFn,
-      verifyFn: verifyFnFake
+      verifyFn: verifyFnFake,
+      tokenClaimsFn
     });
 
     expect(verifyFnFake).to.have.been.calledWith({ key });
@@ -248,7 +254,8 @@ describe("Command gateway", () => {
       whitelist,
       permissionsLookupFn,
       terminatedSessionCheckFn,
-      verifyFn: verifyFnFake
+      verifyFn: verifyFnFake,
+      tokenClaimsFn
     });
 
     expect(gatewayPostFake).to.have.been.calledWith({
@@ -268,7 +275,8 @@ describe("Command gateway", () => {
       preMiddleware: [authenticationResult, authorizationResult]
     });
     expect(authenticationFake).to.have.been.calledWith({
-      verifyFn: verifyFnResult
+      verifyFn: verifyFnResult,
+      tokenClaimsFn
     });
     expect(verifyFnFake).to.have.been.calledWith({ key: "session" });
     expect(authorizationFake).to.have.been.calledOnce;
@@ -325,7 +333,8 @@ describe("Command gateway", () => {
       whitelist,
       permissionsLookupFn,
       terminatedSessionCheckFn,
-      verifyFn: verifyFnFake
+      verifyFn: verifyFnFake,
+      tokenClaimsFn
     });
 
     expect(gatewayPostFake).to.have.been.calledWith({

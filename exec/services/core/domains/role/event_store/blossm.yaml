@@ -28,7 +28,7 @@ testing:
     first:
       action: create
       payload:
-        title: Some title
+        name: Some name
         id: some-id
         permissions:
           - root: some-permission
@@ -54,7 +54,7 @@ testing:
     - action: create
       examples:
         - payload:
-            title: Some title
+            name: Some name
             id: some-id
             permissions:
               - root: some-permission
@@ -63,7 +63,7 @@ testing:
     - action: add-permissions
       examples:
         - state:
-            title: Some title
+            name: Some name
             id: some-id
             permissions:
               - root: some-permission
@@ -79,7 +79,7 @@ testing:
                 service: some-other-permission-service
                 network: some-other-permission-network
           result:
-            title: Some title
+            name: Some name
             id: some-id
             permissions:
               - root: some-permission
@@ -108,7 +108,7 @@ testing:
     - action: remove-permissions
       examples:
         - state:
-            title: Some title
+            name: Some name
             id: some-id
             permissions:
               - root: some-permission
@@ -120,7 +120,7 @@ testing:
                 service: some-permission-service
                 network: some-permission-network
           result:
-            title: Some title
+            name: Some name
             id: some-id
             permissions: []
 

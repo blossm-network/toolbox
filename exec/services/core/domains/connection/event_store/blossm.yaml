@@ -2,6 +2,8 @@ domain: connection
 service: core
 
 schema:
+  opened: Date
+  terminated: Date
   key:
     root: String
     service: String
@@ -15,6 +17,7 @@ testing:
     first:
       action: open
       payload:
+        opened: 2020-12-31T00:00:00.000Z
         key:
           root: some-key-root
           service: some-key-service
@@ -22,6 +25,7 @@ testing:
     second:
       action: open
       payload:
+        opened: 2020-11-31T00:00:00.000Z
         key:
           root: some-other-key-root
           service: some-other-key-service
@@ -31,17 +35,8 @@ testing:
   handlers:
     - action: open
       examples:
-        - state:
-            key:
-              root: some-key-root
-              service: some-key-service
-              network: some-key-network
-          payload:
-            key:
-              root: some-other-key-root
-              service: some-other-key-service
-              network: some-other-key-network
-          result:
+        - payload:
+            opened: 2020-11-31T00:00:00.000Z
             key:
               root: some-other-key-root
               service: some-other-key-service

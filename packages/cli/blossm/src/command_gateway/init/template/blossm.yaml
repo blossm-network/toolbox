@@ -8,17 +8,17 @@ service: core
 
 commands:
   - name: some-name
-    permissions:
+    priviledges:
       - some-permission
   - name: some-other-name
     protected: false
 
 whitelist:
   - "127.0.0.1"
-  - "https://${process.env.NETWORK}"
 
 devDependencies:
   "mocha": "^6.1.4"
   "chai": "^4.2.0"
-#don't change
 
+#don't change
+procedure: command-gateway

@@ -12,7 +12,7 @@ module.exports = async ({ payload }) => {
   const token = await deps.createJwt({
     options: {
       issuer: `session.${process.env.SERVICE}.${process.env.NETWORK}/start`,
-      audience: `${process.env.SERVICE}.${process.env.NETWORK}`,
+      audience: process.env.NETWORK,
       expiresIn: NINETY_DAYS
     },
     payload: {

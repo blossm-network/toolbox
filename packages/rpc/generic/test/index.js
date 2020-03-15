@@ -20,7 +20,7 @@ const root = "some-root";
 const tokenFn = "some-token-fn";
 const url = "some-url";
 
-const network = "some-network";
+const host = "some-host";
 const statusCode = 204;
 const response = {
   statusCode
@@ -33,8 +33,8 @@ const bodyResponse = {
   statusCode: 200
 };
 
-const envNetwork = "some-env-network";
-process.env.NETWORK = envNetwork;
+const envHost = "some-env-host";
+process.env.HOST = envHost;
 
 describe("Operation", () => {
   beforeEach(() => {
@@ -57,7 +57,7 @@ describe("Operation", () => {
 
     const result = await operation(operarationPart1, operarationPart2)
       .post(data)
-      .in({ context, network })
+      .in({ context, host })
       .with({ tokenFn, claims });
 
     expect(post).to.have.been.calledWith(url, {
@@ -76,7 +76,7 @@ describe("Operation", () => {
     });
     expect(operationUrlFake).to.have.been.calledWith({
       operation: [operarationPart1, operarationPart2],
-      network
+      host
     });
     expect(result).to.be.null;
   });
@@ -92,7 +92,7 @@ describe("Operation", () => {
 
     const result = await operation(operarationPart1, operarationPart2)
       .post(data)
-      .in({ network })
+      .in({ host })
       .with({ tokenFn });
 
     expect(post).to.have.been.calledWith(url, {
@@ -108,11 +108,11 @@ describe("Operation", () => {
     expect(operationUrlFake).to.have.been.calledWith({
       operation: [operarationPart1, operarationPart2],
 
-      network
+      host
     });
     expect(result).to.be.null;
   });
-  it("should call post with the correct params with env network and service", async () => {
+  it("should call post with the correct params with env host and service", async () => {
     const post = fake.returns(response);
     replace(deps, "post", post);
 
@@ -133,7 +133,7 @@ describe("Operation", () => {
     });
     expect(operationUrlFake).to.have.been.calledWith({
       operation: [operarationPart1, operarationPart2],
-      network: envNetwork
+      host: envHost
     });
     expect(result).to.be.null;
   });
@@ -149,7 +149,7 @@ describe("Operation", () => {
 
     const result = await operation(operarationPart1, operarationPart2)
       .post(data)
-      .in({ context, network })
+      .in({ context, host })
       .with({ claims });
 
     expect(post).to.have.been.calledWith(url, {
@@ -175,7 +175,7 @@ describe("Operation", () => {
     const path = "/some/path";
     const result = await operation(operarationPart1, operarationPart2)
       .post(data)
-      .in({ context, network })
+      .in({ context, host })
       .with({ path, tokenFn, claims });
 
     expect(post).to.have.been.calledWith(url, {
@@ -194,7 +194,7 @@ describe("Operation", () => {
     });
     expect(operationUrlFake).to.have.been.calledWith({
       operation: [operarationPart1, operarationPart2],
-      network,
+      host,
       path
     });
     expect(result).to.be.null;
@@ -212,7 +212,7 @@ describe("Operation", () => {
 
     const result = await operation(operarationPart1, operarationPart2)
       .get(data)
-      .in({ context, network })
+      .in({ context, host })
       .with({ tokenFn, claims });
 
     expect(get).to.have.been.calledWith(url, {
@@ -231,7 +231,7 @@ describe("Operation", () => {
     });
     expect(operationUrlFake).to.have.been.calledWith({
       operation: [operarationPart1, operarationPart2],
-      network
+      host
     });
     expect(result).to.deep.equal(body);
   });
@@ -247,7 +247,7 @@ describe("Operation", () => {
 
     const result = await operation(operarationPart1, operarationPart2)
       .get({ ...data, root })
-      .in({ context, network })
+      .in({ context, host })
       .with({ tokenFn, claims });
 
     expect(get).to.have.been.calledWith(url, {
@@ -266,7 +266,7 @@ describe("Operation", () => {
     });
     expect(operationUrlFake).to.have.been.calledWith({
       operation: [operarationPart1, operarationPart2],
-      network,
+      host,
       root
     });
     expect(result).to.deep.equal(body);
@@ -283,7 +283,7 @@ describe("Operation", () => {
 
     const result = await operation(operarationPart1, operarationPart2)
       .put(root, data)
-      .in({ context, network })
+      .in({ context, host })
       .with({ tokenFn, claims });
 
     expect(put).to.have.been.calledWith(url, {
@@ -303,7 +303,7 @@ describe("Operation", () => {
     });
     expect(operationUrlFake).to.have.been.calledWith({
       operation: [operarationPart1, operarationPart2],
-      network,
+      host,
       root
     });
     expect(result).to.be.null;
@@ -321,7 +321,7 @@ describe("Operation", () => {
     const path = "/some/path";
     const result = await operation(operarationPart1, operarationPart2)
       .put(root, data)
-      .in({ context, network })
+      .in({ context, host })
       .with({ path, tokenFn, claims });
 
     expect(put).to.have.been.calledWith(url, {
@@ -340,7 +340,7 @@ describe("Operation", () => {
     });
     expect(operationUrlFake).to.have.been.calledWith({
       operation: [operarationPart1, operarationPart2],
-      network,
+      host,
       root,
       path
     });
@@ -358,7 +358,7 @@ describe("Operation", () => {
 
     const result = await operation(operarationPart1, operarationPart2)
       .delete(root)
-      .in({ context, network })
+      .in({ context, host })
       .with({ tokenFn, claims });
 
     expect(del).to.have.been.calledWith(url, {
@@ -376,7 +376,7 @@ describe("Operation", () => {
     });
     expect(operationUrlFake).to.have.been.calledWith({
       operation: [operarationPart1, operarationPart2],
-      network,
+      host,
       root
     });
     expect(result).to.be.null;
@@ -406,7 +406,7 @@ describe("Operation", () => {
     try {
       await operation(operarationPart1, operarationPart2)
         .delete(root)
-        .in({ context, network })
+        .in({ context, host })
         .with({ tokenFn, claims });
 
       expect(3).to.equal(4);
@@ -442,7 +442,7 @@ describe("Operation", () => {
     try {
       await operation(operarationPart1, operarationPart2)
         .delete(root)
-        .in({ context, network })
+        .in({ context, host })
         .with({ tokenFn, claims });
 
       expect(3).to.equal(4);
@@ -474,7 +474,7 @@ describe("Operation", () => {
     try {
       await operation(operarationPart1, operarationPart2)
         .delete(root)
-        .in({ context, network })
+        .in({ context, host })
         .with({ tokenFn, claims });
 
       //shouldnt be called

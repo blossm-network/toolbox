@@ -11,18 +11,21 @@ module.exports = deployCliTemplate({
       action: config.action,
       name: config.name,
       operationName: trim(
-        `${config.service}-${config.procedure}-${config.name}-${config.domain}-did-${config.event.action}-${config.event.domain}`,
+        `${config.procedure}-${config.service}-${config.name}-${config.domain}-did-${config.event.action}-${config.event.domain}`,
         MAX_LENGTH
       ),
-      operationHash: hash(
-        config.name,
-        config.domain,
-        config.service,
-        config.event.action,
-        config.event.domain,
-        config.event.service,
-        config.procedure
-      )
+      operationHash: hash({
+        procedure: [
+          config.name,
+          config.domain,
+          config.service,
+          config.event.action,
+          config.event.domain,
+          config.event.service,
+          config.procedure
+        ],
+        service: config.service
+      })
     };
   }
 });

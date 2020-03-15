@@ -17,7 +17,7 @@ const context = {
   session: contextSession
 };
 
-const session = {
+const claims = {
   a: 1
 };
 
@@ -47,7 +47,7 @@ describe("Command handler unit tests", () => {
       payload,
       root,
       context,
-      session
+      claims
     });
     expect(result).to.deep.equal({
       events: [
@@ -88,7 +88,7 @@ describe("Command handler unit tests", () => {
     });
     expect(setFake).to.have.been.calledWith({
       context,
-      session,
+      claims,
       tokenFn: deps.gcpToken
     });
     expect(issueFake).to.have.been.calledWith(
@@ -125,7 +125,7 @@ describe("Command handler unit tests", () => {
       payload,
       root,
       context: principleContext,
-      session
+      claims
     });
     expect(result).to.deep.equal({
       events: [

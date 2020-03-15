@@ -16,7 +16,7 @@ module.exports = deployCliTemplate({
         config.procedure
       ),
       operationName: trim(
-        `${config.service}-${config.procedure}-${config.domain}-${config.name}`,
+        `${config.procedure}-${config.service}-${config.domain}-${config.name}`,
         MAX_LENGTH
       )
     };

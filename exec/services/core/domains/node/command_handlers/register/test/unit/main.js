@@ -8,7 +8,7 @@ const payloadNetwork = "some-payload-network";
 const payload = { network: payloadNetwork };
 const identity = "some-identity";
 const context = { identity };
-const session = {
+const claims = {
   a: 1
 };
 
@@ -57,7 +57,7 @@ describe("Command handler unit tests", () => {
     });
     replace(deps, "command", commandFake);
 
-    const result = await main({ payload, context, session });
+    const result = await main({ payload, context, claims });
     expect(result).to.deep.equal({
       events: [
         {
@@ -87,7 +87,7 @@ describe("Command handler unit tests", () => {
     });
     expect(setFake).to.have.been.calledWith({
       context,
-      session,
+      claims,
       tokenFn: deps.gcpToken
     });
     expect(issueFake).to.have.been.calledWith(

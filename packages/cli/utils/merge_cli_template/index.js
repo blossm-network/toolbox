@@ -449,6 +449,7 @@ const configure = async (workingDir, configFn, env, strict) => {
       port: 80,
       mainContainerName,
       network: "local",
+      host: "local",
       service,
       project,
       region,

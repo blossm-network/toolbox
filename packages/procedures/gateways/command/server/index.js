@@ -7,7 +7,8 @@ module.exports = async ({
   whitelist,
   permissionsLookupFn,
   terminatedSessionCheckFn,
-  verifyFn
+  verifyFn,
+  tokenClaimsFn
 }) => {
   let server = deps.server({
     prehook: app =>
@@ -30,7 +31,8 @@ module.exports = async ({
       ...(protected && {
         preMiddleware: [
           deps.authentication({
-            verifyFn: verifyFn({ key })
+            verifyFn: verifyFn({ key }),
+            tokenClaimsFn
           }),
           deps.authorization({
             permissionsLookupFn,

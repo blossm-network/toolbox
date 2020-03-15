@@ -1,9 +1,10 @@
-domain: node
+domain: key
 service: core
 
 commands:
-  - name: register
-    priviledges: none
+  - name: create
+    priviledges:
+      - create
 
 whitelist:
   - "127.0.0.1"

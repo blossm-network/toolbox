@@ -9,7 +9,7 @@ module.exports = deployCliTemplate({
   configFn: config => {
     return {
       operationName: trim(
-        `${config.service}-${config.procedure}-${config.domain}`,
+        `${config.procedure}-${config.service}-${config.domain}`,
         MAX_LENGTH
       ),
       operationHash: hash(config.domain, config.service, config.procedure)

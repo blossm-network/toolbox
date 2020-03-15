@@ -6,6 +6,7 @@ const { invalidCredentials } = require("@blossm/errors");
 const gcpToken = require("@blossm/gcp-token");
 const { download: downloadFile } = require("@blossm/gcp-storage");
 const rolePermissions = require("@blossm/role-permissions");
+const { compare } = require("@blossm/crypt");
 
 const config = require("./config.json");
 
@@ -58,5 +59,31 @@ module.exports = gateway({
       location: "global",
       version: "1",
       project: process.env.GCP_PROJECT
-    })
+    }),
+  //TODO
+  //eslint-disable-next-line
+  tokenClaimsFn: async ({ header }) => {
+    const id = "some-key-id";
+    const secret = "some-secret";
+
+    const key = await eventStore({ domain: "key" })
+      .set({ tokenFn: gcpToken })
+      .query({ key: "id", value: id });
+
+    if (!key) throw "Key not found";
+
+    if (!(await compare(secret, key.state.secret))) throw "Incorrect secret";
+
+    return {
+      context: {
+        key: {
+          root: key.state.root,
+          service: process.env.SERVICE,
+          network: process.env.NETWORK
+        },
+        node: key.state.node,
+        domain: "node"
+      }
+    };
+  }
 });

@@ -11,7 +11,7 @@ module.exports = deployCliTemplate({
       action: config.action,
       name: config.name,
       operationName: trim(
-        `${config.service}-${config.procedure}-${config.name}-${config.domain}-did-${config.event.action}-${config.event.domain}`,
+        `${config.procedure}-${config.service}-${config.name}-${config.domain}-did-${config.event.action}-${config.event.domain}`,
         MAX_LENGTH
       ),
       operationHash: hash(

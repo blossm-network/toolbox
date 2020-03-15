@@ -33,11 +33,11 @@ testing:
   dependencies:
     - name: register
       domain: scene
+      service: core
       procedure: command-handler
-      service: core
     - domain: principle
-      procedure: event-store
       service: core
+      procedure: event-store
 
   steps:
     - pre:

@@ -2,11 +2,12 @@ const asyncHandler = require("express-async-handler");
 
 const deps = require("./deps");
 
-module.exports = ({ verifyFn }) =>
+module.exports = ({ verifyFn, tokenClaimsFn }) =>
   asyncHandler(async (req, _, next) => {
     const claims = await deps.authenticate({
       req,
-      verifyFn
+      verifyFn,
+      tokenClaimsFn
     });
 
     req.context = claims.context;

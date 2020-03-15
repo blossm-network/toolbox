@@ -62,6 +62,27 @@ describe("Authorize", () => {
     });
     expect(response).to.deep.equal(claims);
   });
+  it("should authenticate with basic token", async () => {
+    const basicToken = "some-basic-token";
+    const basicTokens = {
+      basic: basicToken
+    };
+
+    replace(deps, "tokensFromReq", fake.returns(basicTokens));
+
+    const tokenClaimsFnFake = fake.returns(claims);
+    const response = await authorize({
+      req,
+      verifyFn,
+      tokenClaimsFn: tokenClaimsFnFake
+    });
+
+    expect(deps.tokensFromReq).to.have.been.calledWith(req);
+    expect(tokenClaimsFnFake).to.have.been.calledWith({
+      header: basicToken
+    });
+    expect(response).to.deep.equal(claims);
+  });
   it("should not authorize if there is no token", async () => {
     replace(deps, "tokensFromReq", fake.returns({}));
     replace(deps, "validate", fake.returns(claims));
