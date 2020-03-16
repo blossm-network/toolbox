@@ -16,14 +16,18 @@ module.exports = async ({ root, payload, context, claims, aggregateFn }) => {
   const token = await deps.createJwt({
     options: {
       issuer: claims.iss,
-      subject: payload.principle.root,
+      subject: payload.principle,
       audience: claims.aud,
       expiresIn: Date.parse(claims.exp) - deps.fineTimestamp()
     },
     payload: {
       context: {
         ...context,
-        principle: payload.principle
+        principle: {
+          root: payload.principle,
+          service: process.env.SERVICE,
+          network: process.env.NETWORK
+        }
       }
     },
     signFn: deps.sign({
@@ -40,10 +44,17 @@ module.exports = async ({ root, payload, context, claims, aggregateFn }) => {
       {
         root,
         action: "upgrade",
-        payload: { upgraded: deps.stringDate(), principle: payload.principle }
+        payload: {
+          upgraded: deps.stringDate(),
+          principle: {
+            root: payload.principle,
+            service: process.env.SERVICE,
+            network: process.env.NETWORK
+          }
+        }
       },
       {
-        root: payload.principle.root,
+        root: payload.principle,
         domain: "principle",
         action: "add-roles",
         payload: {

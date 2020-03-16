@@ -3,10 +3,7 @@ domain: session
 service: core
 
 payload:
-  principle:
-    root: string
-    service: string
-    network: string
+  principle: string
 
 dependencies:
   "@blossm/jwt": "*"
@@ -24,33 +21,16 @@ devDependencies:
 testing:
   validate:
     ok:
-      - principle:
-          root: some-principle-root
-          service: some-service
-          network: some-network
+      - principle: some-principle-root
     bad:
       - principle:
-          root:
-            a: 1
-      - principle:
-          service:
-            a: 1
-      - principle:
-          network:
-            a: 1
-      - principle: "bad"
+          a: 1
 
   normalize:
     - payload:
-        principle:
-          root: some-principle-root
-          service: some-service
-          network: some-network
+        principle: some-principle-root
       normalized:
-        principle:
-          root: some-principle-root
-          service: some-service
-          network: some-network
+        principle: some-principle-root
 
   dependencies:
     - domain: principle
@@ -64,10 +44,7 @@ testing:
           action: start
           payload: {}
       payload:
-        principle:
-          root: some-principle-root
-          service: some-service
-          network: some-network
+        principle: some-principle-root
       root: some-root
       claims:
         iss: some-iss
@@ -83,10 +60,7 @@ testing:
           payload:
             upgraded: 2019-12-31T00:00:00.000Z
       payload:
-        principle:
-          root: some-principle-root
-          service: some-service
-          network: some-network
+        principle: some-principle-root
       root: some-other-root
       code: 400
     - pre:
@@ -96,10 +70,7 @@ testing:
           payload:
             loggedout: 2019-12-31T00:00:00.000Z
       payload:
-        principle:
-          root: some-principle-root
-          service: some-service
-          network: some-network
+        principle: some-principle-root
       root: yet-another-root
       code: 400
 

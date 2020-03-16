@@ -96,7 +96,7 @@ describe("Command handler unit tests", () => {
     });
     expect(issueFake).to.have.been.calledWith(
       {
-        principle: { root: uuid, service, network }
+        principle: uuid
       },
       { root: contextSessionRoot }
     );

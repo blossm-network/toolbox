@@ -42,6 +42,11 @@ module.exports = gateway({
       .set({ tokenFn: gcpToken })
       .aggregate(principle);
 
+    //eslint-disable-next-line no-console
+    console.log({
+      roleCount: aggregate.state.roles.length,
+      aggStateRoles: aggregate.state.roles
+    });
     return aggregate
       ? await rolePermissions({
           roles: aggregate.state.roles.map(role => role.id),

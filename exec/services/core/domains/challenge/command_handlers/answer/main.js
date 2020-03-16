@@ -45,7 +45,7 @@ module.exports = async ({ payload, context, aggregateFn }) => {
     })
     .issue(
       {
-        principle: challengeAggregate.principle
+        principle: challengeAggregate.principle.root
       },
       { root: context.session.root }
     );
