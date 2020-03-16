@@ -70,6 +70,21 @@ const envSecretsBucket = ({ env, config }) => {
   }
 };
 
+const envRolesBucket = ({ env, config }) => {
+  switch (env) {
+    case "production":
+      return config.vendors.cloud.gcp.rolesBuckets.production;
+    case "sandbox":
+      return config.vendors.cloud.gcp.rolesBuckets.sandbox;
+    case "staging":
+      return config.vendors.cloud.gcp.rolesBuckets.staging;
+    case "development":
+      return config.vendors.cloud.gcp.rolesBuckets.development;
+    default:
+      return "";
+  }
+};
+
 const envMongodbUser = ({ env, config, procedure }) => {
   switch (procedure) {
     case "view-store":
@@ -406,6 +421,7 @@ const configure = async (workingDir, configFn, env, strict) => {
     const event = config.event;
     const actions = config.actions;
 
+    const rolesBucket = envRolesBucket({ env, config: blossmConfig });
     const secretBucket = envSecretsBucket({ env, config: blossmConfig });
     const secretBucketKeyLocation = "global";
     const secretBucketKeyRing = "secret-bucket";
@@ -434,6 +450,7 @@ const configure = async (workingDir, configFn, env, strict) => {
       computeUrlId: envComputeUrlId({ env, config: blossmConfig }),
       dnsZone,
       service,
+      rolesBucket,
       secretBucket,
       secretBucketKeyLocation,
       secretBucketKeyRing,
