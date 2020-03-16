@@ -1,6 +1,9 @@
 module.exports = async ({ roles, defaultRoles, customRolePermissionsFn }) => {
   const permissions = [];
   const customRoleCandidates = [];
+  //TODO
+  //eslint-disable-next-line
+  console.log({ roles, official: defaultRoles.roles });
   roles.reduce(async (result, roleId) => {
     const role = defaultRoles.roles[roleId];
     if (role) {
