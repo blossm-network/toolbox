@@ -30,8 +30,8 @@ module.exports = gateway({
       console.log("downloaded");
       const roles = await readFileAsync(destination);
       //eslint-disable-next-line no-console
-      console.log({ roles: Buffer.from(roles) });
-      defaultRoles = yaml.parse(Buffer.from(roles));
+      console.log({ roles: roles.toString() });
+      defaultRoles = yaml.parse(roles.toString());
       //eslint-disable-next-line no-console
       console.log({ defaultRoles });
     }
