@@ -1,7 +1,7 @@
 {
   "name": "@blossm/antenna",
   "description": "A server to receive events published from external networks.",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
