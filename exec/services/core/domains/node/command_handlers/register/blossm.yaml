@@ -58,6 +58,8 @@ testing:
       response:
         tokens:
           session:
+        roots:
+          node:
     - pre:
         - domain: session
           root: some-other-session-root
@@ -77,6 +79,9 @@ testing:
         iss: some-iss
         aud: some-aud
         exp: 9999-12-31T00:00:00.000
+      response:
+        roots:
+          node:
 
 #don't change
 procedure: command-handler

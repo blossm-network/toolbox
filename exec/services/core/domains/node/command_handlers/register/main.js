@@ -53,6 +53,6 @@ module.exports = async ({ payload, context, claims }) => {
         }
       }
     ],
-    ...(tokens && { response: { tokens } })
+    response: { ...(tokens && { tokens }), roots: { node: nodeRoot } }
   };
 };
