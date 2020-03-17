@@ -13,19 +13,17 @@ describe("Command gateway integration tests", () => {
   before(async () => await Promise.all(testing.topics.map(t => create(t))));
   after(async () => await Promise.all(testing.topics.map(t => del(t))));
   it("should return successfully", async () => {
-    const requiredPermissions = commands.reduce((permissions, command) => {
-      return command.permissions == "none"
-        ? permissions
+    const requiredPermissions = commands.reduce((priviledges, command) => {
+      return command.priviledges == "none"
+        ? priviledges
         : [
             ...new Set([
-              ...permissions,
-              ...(command.permissions
-                ? command.permissions.map(permission => {
-                    const permissionComponents = permission.split(":");
-                    return permissionComponents.length == 1
-                      ? `${process.env.DOMAIN}:${permissionComponents[0]}`
-                      : `${permissionComponents[0]}:${permissionComponents[1]}`;
-                  })
+              ...priviledges,
+              ...(command.priviledges
+                ? command.priviledges.map(
+                    priviledge =>
+                      `${process.env.SERVICE}:${process.env.DOMAIN}:${priviledge}`
+                  )
                 : [])
             ])
           ];

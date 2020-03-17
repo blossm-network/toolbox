@@ -119,11 +119,7 @@ module.exports = async ({
     })
     .issue(
       {
-        principle: {
-          root: principleRoot,
-          service: process.env.SERVICE,
-          network: process.env.NETWORK
-        }
+        principle: principleRoot
       },
       { root: sessionRoot }
     );
