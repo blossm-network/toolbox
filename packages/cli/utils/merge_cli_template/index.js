@@ -215,15 +215,6 @@ const topicsForDependencies = (config, events) => {
   const array = (events || [])
     .map(e => `did-${e.action}.${e.domain}.${e.service || config.service}`)
     .concat(
-      config.procedure == "command-handler"
-        ? config.testing.events
-          ? config.testing.events.map(
-              e => `did-${e.action}.${e.domain}.${e.service}`
-            )
-          : [`did-${config.action}.${config.domain}.${config.service}`]
-        : []
-    )
-    .concat(
       config.procedure == "command-gateway" ||
         config.procedure == "view-gateway"
         ? [
