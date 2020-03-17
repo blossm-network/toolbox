@@ -19,23 +19,11 @@ module.exports = async ({
 
   const satisfiedPermissions = principlePermissions.filter(
     principlePermission => {
-      const [
-        principlePermissionService,
-        principlePermissionDomain,
-        principlePermissionPriviledge
-      ] = principlePermission.split(":");
-
       for (const permission of permissions) {
-        const [
-          permissionService,
-          permissionDomain,
-          permissionPriviledge
-        ] = permission.split(":");
-
         if (
-          principlePermissionService == permissionService &&
-          principlePermissionDomain == permissionDomain &&
-          principlePermissionPriviledge == permissionPriviledge
+          principlePermission.service == permission.service &&
+          principlePermission.domain == permission.domain &&
+          principlePermission.priviledge == permission.priviledge
         )
           return true;
       }

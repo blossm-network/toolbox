@@ -13,21 +13,28 @@ describe("Command gateway integration tests", () => {
   before(async () => await Promise.all(testing.topics.map(t => create(t))));
   after(async () => await Promise.all(testing.topics.map(t => del(t))));
   it("should return successfully", async () => {
-    const requiredPermissions = commands.reduce((priviledges, command) => {
+    const requiredPermissions = commands.reduce((permissions, command) => {
       return command.priviledges == "none"
-        ? priviledges
+        ? permissions
         : [
             ...new Set([
-              ...priviledges,
+              ...permissions,
               ...(command.priviledges
-                ? command.priviledges.map(
-                    priviledge =>
-                      `${process.env.SERVICE}:${process.env.DOMAIN}:${priviledge}`
-                  )
+                ? command.priviledges.map(priviledge => {
+                    return {
+                      priviledge,
+                      domain: process.env.DOMAIN,
+                      service: process.env.SERVICE
+                    };
+                  })
                 : [])
             ])
           ];
     }, []);
+
+    //TODO
+    //eslint-disable-next-line
+    console.log({ requiredPermissions });
 
     const { token } = await getToken({ permissions: requiredPermissions });
 

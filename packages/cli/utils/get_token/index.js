@@ -10,13 +10,11 @@ module.exports = async ({
   phone = "+19195551144",
   id
 } = {}) => {
-  const [
-    identityRoot,
-    roleRoot,
-    roleId,
-    principleRoot,
-    sessionRoot
-  ] = await Promise.all([uuid(), uuid(), uuid(), uuid(), uuid()]);
+  const identityRoot = uuid();
+  const roleRoot = uuid();
+  const roleId = uuid();
+  const principleRoot = uuid();
+  const sessionRoot = uuid();
 
   // Create the identity for the token.
   await eventStore({

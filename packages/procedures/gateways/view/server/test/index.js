@@ -83,9 +83,9 @@ describe("View gateway", () => {
     expect(authorizationFake).to.have.been.calledWith({
       permissionsLookupFn,
       terminatedSessionCheckFn,
-      permissions: priviledges.map(
-        priviledge => `${service}:${domain}:${priviledge}`
-      )
+      permissions: priviledges.map(priviledge => {
+        return { service, domain, priviledge };
+      })
     });
   });
   it("should call with the correct params with priviledges set to none", async () => {
@@ -275,9 +275,9 @@ describe("View gateway", () => {
     expect(authorizationFake).to.have.been.calledWith({
       permissionsLookupFn,
       terminatedSessionCheckFn,
-      permissions: priviledges.map(
-        priviledge => `${service}:${domain}:${priviledge}`
-      )
+      permissions: priviledges.map(priviledge => {
+        return { service, domain, priviledge };
+      })
     });
     expect(authorizationFake).to.have.been.calledOnce;
   });
@@ -334,9 +334,9 @@ describe("View gateway", () => {
     expect(authorizationFake).to.have.been.calledWith({
       permissionsLookupFn,
       terminatedSessionCheckFn,
-      permissions: priviledges.map(
-        priviledge => `${otherService}:${otherDomain}:${priviledge}`
-      )
+      permissions: priviledges.map(priviledge => {
+        return { service: otherService, domain: otherDomain, priviledge };
+      })
     });
   });
   it("should throw correctly", async () => {

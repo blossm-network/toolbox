@@ -376,7 +376,6 @@ describe("Event store integration tests", () => {
 
   const badArrayValue = async (property, schema) => {
     const element = schema[0];
-    let badValue;
     const [exampleToUse] = [
       example0,
       example1,
@@ -385,10 +384,18 @@ describe("Event store integration tests", () => {
 
     if (!exampleToUse) return "bad-array";
 
+    await testIncorrectParams({
+      payload: {
+        ...exampleToUse.payload,
+        [property]: "not-an-array"
+      },
+      action: exampleToUse.action
+    });
+
     if (typeof element == "object") {
       for (const objProperty in element) {
         //root
-        badValue = findBadValue(element, objProperty);
+        const badValue = findBadValue(element, objProperty);
         await testIncorrectParams({
           payload: {
             ...exampleToUse.payload,
@@ -398,7 +405,7 @@ describe("Event store integration tests", () => {
         });
       }
     } else {
-      badValue = element == "String" ? { a: 1 } : "some-string";
+      const badValue = element == "String" ? { a: 1 } : "some-string";
       await testIncorrectParams({
         payload: { ...exampleToUse.payload, [property]: [badValue] },
         action: exampleToUse.action

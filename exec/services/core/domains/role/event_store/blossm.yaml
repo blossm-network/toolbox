@@ -8,9 +8,9 @@ schema:
     type: String
     unique: true
   permissions:
-    - root: String
+    - priviledge: String
+      domain: String
       service: String
-      network: String
 
 indexes:
   - id
@@ -31,24 +31,24 @@ testing:
         name: Some name
         id: some-id
         permissions:
-          - root: some-permission
+          - priviledge: some-priviledge
+            domain: some-permission-domain
             service: some-permission-service
-            network: some-permission-network
     second:
       action: add-permissions
       payload:
         description: "Some description"
         permissions:
-          - root: some-other-permission
-            service: some-permission-service
-            network: some-permission-network
+          - priviledge: some-other-priviledge
+            domain: some-other-permission-domain
+            service: some-other-permission-service
     more:
       - action: remove-permissions
         payload:
           permissions:
-            - root: some-other-permission
+            - priviledge: some-other-priviledge
+              domain: some-permission-domain
               service: some-permission-service
-              network: some-permission-network
 
   handlers:
     - action: create
@@ -57,68 +57,68 @@ testing:
             name: Some name
             id: some-id
             permissions:
-              - root: some-permission
+              - priviledge: some-priviledge
+                domain: some-permission-domain
                 service: some-permission-service
-                network: some-permission-network
     - action: add-permissions
       examples:
         - state:
             name: Some name
             id: some-id
             permissions:
-              - root: some-permission
+              - priviledge: some-priviledge
+                domain: some-permission-domain
                 service: some-permission-service
-                network: some-permission-network
           payload:
             description: Some description
             permissions:
-              - root: some-permission
+              - priviledge: some-priviledge
+                domain: some-permission-domain
                 service: some-permission-service
-                network: some-permission-network
-              - root: some-other-permission
+              - priviledge: some-other-priviledge
+                domain: some-other-permission-domain
                 service: some-other-permission-service
-                network: some-other-permission-network
           result:
             name: Some name
             id: some-id
             permissions:
-              - root: some-permission
+              - priviledge: some-priviledge
+                domain: some-permission-domain
                 service: some-permission-service
-                network: some-permission-network
-              - root: some-other-permission
+              - priviledge: some-other-priviledge
+                domain: some-other-permission-domain
                 service: some-other-permission-service
-                network: some-other-permission-network
         - state: {}
           payload:
             permissions:
-              - root: some-permission
+              - priviledge: some-priviledge
+                domain: some-permission-domain
                 service: some-permission-service
-                network: some-permission-network
-              - root: some-other-permission
+              - priviledge: some-other-priviledge
+                domain: some-other-permission-domain
                 service: some-other-permission-service
-                network: some-other-permission-network
           result:
             permissions:
-              - root: some-permission
+              - priviledge: some-priviledge
+                domain: some-permission-domain
                 service: some-permission-service
-                network: some-permission-network
-              - root: some-other-permission
+              - priviledge: some-other-priviledge
+                domain: some-other-permission-domain
                 service: some-other-permission-service
-                network: some-other-permission-network
     - action: remove-permissions
       examples:
         - state:
             name: Some name
             id: some-id
             permissions:
-              - root: some-permission
+              - priviledge: some-priviledge
+                domain: some-permission-domain
                 service: some-permission-service
-                network: some-permission-network
           payload:
             permissions:
-              - root: some-permission
+              - priviledge: some-priviledge
+                domain: some-permission-domain
                 service: some-permission-service
-                network: some-permission-network
           result:
             name: Some name
             id: some-id

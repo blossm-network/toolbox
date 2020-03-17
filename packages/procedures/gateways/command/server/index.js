@@ -39,9 +39,9 @@ module.exports = async ({
             terminatedSessionCheckFn,
             permissions:
               priviledges instanceof Array
-                ? priviledges.map(
-                    priviledge => `${service}:${domain}:${priviledge}`
-                  )
+                ? priviledges.map(priviledge => {
+                    return { service, domain, priviledge };
+                  })
                 : priviledges
           })
         ]

@@ -27,7 +27,7 @@ describe("Authorize", () => {
     restore();
   });
   it("should authorize with matching priviledge, domain, and service from permission", async () => {
-    const permissions = [`${service}:${domain}:${priviledge}`];
+    const permissions = [{ service, domain, priviledge }];
 
     const permissionsLookupFn = fake.returns(permissions);
 
@@ -35,7 +35,7 @@ describe("Authorize", () => {
       claims,
       context,
       permissionsLookupFn,
-      permissions: [`${service}:${domain}:${priviledge}`],
+      permissions: [{ service, domain, priviledge }],
       network
     });
 
@@ -46,7 +46,7 @@ describe("Authorize", () => {
     });
   });
   it("should not authorize if theres a mismatch", async () => {
-    const permissions = [`${service}:${domain}:bogus`];
+    const permissions = [{ service, domain, priviledge: "bogus" }];
 
     const permissionsLookupFn = fake.returns(permissions);
 
@@ -71,14 +71,9 @@ describe("Authorize", () => {
     }
   });
   it("should authorize with permissions as none", async () => {
-    const permissions = ["*:bogus:*"];
-
-    const permissionsLookupFn = fake.returns(permissions);
-
     const document = await authorize({
       claims,
       context,
-      permissionsLookupFn,
       permissions: "none",
       network
     });
