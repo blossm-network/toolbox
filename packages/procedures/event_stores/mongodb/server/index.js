@@ -22,6 +22,7 @@ const formatSchema = schema => {
           };
     newSchema[property].required = false;
     newSchema[property].unique = false;
+    newSchema[property].default = undefined;
   }
   return newSchema;
 };

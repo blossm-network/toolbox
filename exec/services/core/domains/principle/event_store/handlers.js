@@ -43,7 +43,6 @@ module.exports = {
     state.scenes = state.scenes || [];
     return {
       ...state,
-      ...payload,
       scenes: state.scenes.concat(
         difference(
           payload.scenes.map(
