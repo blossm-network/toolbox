@@ -77,6 +77,24 @@ testing:
               - id: some-other-role
                 service: some-other-role-service
                 network: some-other-role-network
+        - state:
+            roles:
+              - id: some-role
+                service: some-role-service
+                network: some-role-network
+          payload:
+            roles:
+              - id: some-other-role
+                service: some-other-role-service
+                network: some-other-role-network
+          result:
+            roles:
+              - id: some-role
+                service: some-role-service
+                network: some-role-network
+              - id: some-other-role
+                service: some-other-role-service
+                network: some-other-role-network
         - state: {}
           payload:
             roles:

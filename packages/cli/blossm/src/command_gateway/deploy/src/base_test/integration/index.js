@@ -32,10 +32,6 @@ describe("Command gateway integration tests", () => {
           ];
     }, []);
 
-    //TODO
-    //eslint-disable-next-line
-    console.log({ requiredPermissions });
-
     const { token } = await getToken({ permissions: requiredPermissions });
 
     const parallelFns = [];

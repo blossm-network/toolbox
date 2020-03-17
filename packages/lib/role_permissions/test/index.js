@@ -32,14 +32,14 @@ describe("Role permissions", () => {
   });
   it("should return the correct roles with custom roles", async () => {
     const customRolePermissions = ["some-other-permission"];
-    const customRolesPermissionFnFake = fake.resolves(customRolePermissions);
+    const customRolesPermissionsFnFake = fake.resolves(customRolePermissions);
     const customRole = "some-custom-role";
     const result = await rolePermissions({
       roles: [...roles, customRole],
       defaultRoles,
-      customRolePermissionsFn: customRolesPermissionFnFake
+      customRolePermissionsFn: customRolesPermissionsFnFake
     });
-    expect(customRolesPermissionFnFake).to.have.been.calledWith({
+    expect(customRolesPermissionsFnFake).to.have.been.calledWith({
       roleId: customRole
     });
     expect(result).to.deep.equal([
