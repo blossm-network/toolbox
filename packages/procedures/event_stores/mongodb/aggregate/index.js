@@ -43,8 +43,7 @@ module.exports = ({ eventStore, snapshotStore, handlers }) => async root => {
           root,
           accumulator,
           event,
-          hasHandler: handler != undefined,
-          handlerResponse: handler(accumulator.state, event.payload)
+          hasHandler: handler != undefined
         });
         if (!handler)
           throw badRequest.eventHandlerNotSpecified({
@@ -52,6 +51,12 @@ module.exports = ({ eventStore, snapshotStore, handlers }) => async root => {
               action: event.headers.action
             }
           });
+
+        //TODO
+        //eslint-disable-next-line no-console
+        console.log({
+          handlerResponse: handler(accumulator.state, event.payload)
+        });
 
         return {
           headers: {
