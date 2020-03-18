@@ -1,7 +1,7 @@
 {
   "name": "@blossm/view-store",
   "description": "A view store server.",
-  "version": "0.0.80",
+  "version": "0.0.81",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@blossm/datetime": "*",
-    "@blossm/gcp-secret": "^0.0.35",
+    "@blossm/gcp-secret": "^0.0.36",
     "@blossm/logger": "^0.0.5",
     "@blossm/server": "^0.0.8",
     "@blossm/view-store-delete": "^0.0.27",
