@@ -8,7 +8,8 @@
     "@blossm/gcp-storage": "*",
     "@blossm/errors": "*",
     "@blossm/role-permissions": "*",
-    "@blossm/crypt": "*"
+    "@blossm/crypt": "*",
+    "@blossm/uuid": "*"
   },
   "devDependencies": {
     "localenv": "^0.2.2",

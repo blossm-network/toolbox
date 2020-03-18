@@ -1,3 +1,5 @@
+const { promisify } = require("util");
+const { readFile, readdir } = require("fs");
 const yaml = require("yaml");
 const gateway = require("@blossm/view-gateway");
 const eventStore = require("@blossm/event-store-rpc");
@@ -6,6 +8,10 @@ const { invalidCredentials } = require("@blossm/errors");
 const { download: downloadFile } = require("@blossm/gcp-storage");
 const rolePermissions = require("@blossm/role-permissions");
 const gcpToken = require("@blossm/gcp-token");
+const uuid = require("@blossm/uuid");
+
+const readFileAsync = promisify(readFile);
+const readDirAsync = promisify(readdir);
 
 const config = require("./config.json");
 
@@ -16,11 +22,25 @@ module.exports = gateway({
   whitelist: config.whitelist,
   permissionsLookupFn: async ({ principle }) => {
     if (!defaultRoles) {
+      const fileName = uuid();
+      const extension = ".yaml";
+      defaultRoles = {};
       await downloadFile({
         bucket: process.env.GCP_ROLES_BUCKET,
-        file: `${process.env.SERVICE}/${process.env.DOMAIN}/roles.yaml`
+        destination: fileName + extension
       });
-      defaultRoles = yaml.parse(defaultRoles.yaml);
+      const files = (await readDirAsync(".")).filter(
+        file => file.startsWith(fileName) && file.endsWith(extension)
+      );
+
+      for (const file of files) {
+        const role = await readFileAsync(file);
+        const defaultRole = yaml.parse(role.toString());
+        defaultRoles = {
+          ...defaultRoles,
+          ...defaultRole
+        };
+      }
     }
 
     const aggregate = await eventStore({

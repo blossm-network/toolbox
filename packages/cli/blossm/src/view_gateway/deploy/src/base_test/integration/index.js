@@ -1,7 +1,7 @@
 require("localenv");
 const { expect } = require("chai");
 const getToken = require("@blossm/get-token");
-const { create, delete: del } = require("@blossm/gcp-pubsub");
+const { create, delete: del, exists } = require("@blossm/gcp-pubsub");
 
 const request = require("@blossm/request");
 const { stores, testing } = require("./../../config.json");
@@ -10,9 +10,22 @@ const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 
 const root = "some-root";
 
+const existingTopics = [];
 describe("View gateway integration tests", () => {
-  before(async () => await Promise.all(testing.topics.map(t => create(t))));
-  after(async () => await Promise.all(testing.topics.map(t => del(t))));
+  before(async () => {
+    existingTopics.push(
+      ...testing.topics.filter(async t => {
+        return await exists(t);
+      })
+    );
+    await Promise.all(testing.topics.map(t => create(t)));
+  });
+  after(
+    async () =>
+      await Promise.all(
+        [...testing.topics].map(t => !existingTopics.includes(t) && del(t))
+      )
+  );
   it("should return successfully", async () => {
     const requiredPermissions = stores.reduce((permissions, command) => {
       return command.priviledges == "none"
