@@ -10,6 +10,7 @@ const { compare } = require("@blossm/crypt");
 const { readFile, readdir } = require("fs");
 const { promisify } = require("util");
 const readFileAsync = promisify(readFile);
+const readDirAsync = promisify(readdir);
 
 const config = require("./config.json");
 
@@ -27,8 +28,8 @@ module.exports = gateway({
         destination
       });
       //eslint-disable-next-line no-console
-      console.log("downloaded");
-      const files = readdir().filter(
+      console.log({ download: await readDirAsync() });
+      const files = (await readDirAsync()).filter(
         file => file.startsWith(destination) && file.endsWith(".yaml")
       );
       //eslint-disable-next-line no-console
@@ -39,7 +40,7 @@ module.exports = gateway({
       for (const file of files) {
         //eslint-disable-next-line no-console
         console.log({ file });
-        roles.push(...(await readFileAsync(destination)));
+        roles.push(...(await readFileAsync(file)));
       }
 
       //eslint-disable-next-line no-console
