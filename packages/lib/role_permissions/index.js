@@ -5,17 +5,8 @@ module.exports = async ({ roles, defaultRoles, customRolePermissionsFn }) => {
 
   const rolesFound = [];
   for (const roleId of roles) {
-    //TODO
-    //eslint-disable-next-line
-    console.log({ roleId });
     for (const defaultRole of defaultRoles) {
-      //TODO
-      //eslint-disable-next-line
-      console.log({ defaultRole });
       const role = defaultRole.roles[roleId];
-      //TODO
-      //eslint-disable-next-line
-      console.log({ role });
       if (role) {
         permissions.push(
           ...role.priviledges.map(priviledge => {
@@ -32,9 +23,6 @@ module.exports = async ({ roles, defaultRoles, customRolePermissionsFn }) => {
     }
   }
   const customRoleCandidates = difference(roles, rolesFound);
-  //TODO
-  //eslint-disable-next-line
-  console.log({ customRoleCandidates });
   if (customRoleCandidates.length > 0) {
     permissions.push(
       ...(
@@ -47,8 +35,5 @@ module.exports = async ({ roles, defaultRoles, customRolePermissionsFn }) => {
     );
   }
 
-  //TODO
-  //eslint-disable-next-line
-  console.log({ donePermissions: permissions });
   return permissions;
 };

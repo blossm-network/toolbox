@@ -21,6 +21,7 @@ module.exports = gateway({
   whitelist: config.whitelist,
   permissionsLookupFn: async ({ principle }) => {
     if (!defaultRoles) {
+      const defaultRoles = [];
       const destination = "roles.yaml";
       await downloadFile({
         bucket: process.env.GCP_ROLES_BUCKET,
@@ -35,17 +36,18 @@ module.exports = gateway({
       //eslint-disable-next-line no-console
       console.log({ files });
 
-      const roles = [];
-
       for (const file of files) {
         //eslint-disable-next-line no-console
         console.log({ file });
-        roles.push(...(await readFileAsync(file)));
+        const role = await readFileAsync(file);
+        //eslint-disable-next-line no-console
+        console.log({ role: role.toString() });
+        const defaultRole = yaml.parse(role.toString());
+        //eslint-disable-next-line no-console
+        console.log({ defaultRole });
+        defaultRoles.push(defaultRole);
       }
 
-      //eslint-disable-next-line no-console
-      console.log({ roles: roles.toString() });
-      defaultRoles = yaml.parse(roles.toString());
       //eslint-disable-next-line no-console
       console.log({ defaultRoles });
     }
