@@ -79,7 +79,7 @@ describe("Command handler unit tests", () => {
           }
         }
       ],
-      response: { tokens, roots: { node: nodeRoot } }
+      response: { tokens, roots: { node: nodeRoot, scene: sceneRoot } }
     });
     expect(commandFake).to.have.been.calledWith({
       name: "register",

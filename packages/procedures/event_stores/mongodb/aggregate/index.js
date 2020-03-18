@@ -36,27 +36,12 @@ module.exports = ({ eventStore, snapshotStore, handlers }) => async root => {
     .reduce(
       (accumulator, event) => {
         const handler = handlers[event.headers.action];
-
-        //TODO
-        //eslint-disable-next-line no-console
-        console.log({
-          root,
-          accumulator,
-          event,
-          hasHandler: handler != undefined
-        });
         if (!handler)
           throw badRequest.eventHandlerNotSpecified({
             info: {
               action: event.headers.action
             }
           });
-
-        //TODO
-        //eslint-disable-next-line no-console
-        console.log({
-          handlerResponse: handler(accumulator.state, event.payload)
-        });
 
         return {
           headers: {

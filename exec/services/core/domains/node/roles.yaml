@@ -1,10 +1,7 @@
-domain: node
-service: core
-
-roles:
-  NodeAdmin:
-    title: Node Admin
-    priviledges:
-      - create
-      - update
-      - delete
+NodeAdmin:
+  title: Node Admin
+  permissions:
+    - core:node:create
+    - core:node:update
+    - core:node:delete
+    - core:key:create

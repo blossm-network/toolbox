@@ -60,7 +60,6 @@ testing:
               - root: some-scene-root
                 service: some-service
                 network: some-network
-      root: some-root
       payload:
         scene: some-scene-root
       claims:
@@ -68,7 +67,9 @@ testing:
         aud: some-aud
         sub: some-principle-root
         exp: 20000
-      context: {}
+      context:
+        session:
+          root: some-root
       response:
         tokens:
           session:
@@ -81,7 +82,6 @@ testing:
               - root: bogus
                 service: some-service
                 network: some-network
-      root: some-root
       payload:
         scene: some-scene-root
       claims:
@@ -89,7 +89,9 @@ testing:
         aud: some-aud
         sub: some-other-principle-root
         exp: 20000
-      context: {}
+      context:
+        session:
+          root: some-root
       code: 401
     - pre:
         - domain: session
@@ -97,10 +99,11 @@ testing:
           action: logout
           payload:
             loggedout: 2019-12-31T00:00:00.000Z
-      root: some-root
       payload:
         scene: some-scene-root
-      context: {}
+      context:
+        session:
+          root: some-root
       claims:
         iss: some-iss
         aud: some-aud

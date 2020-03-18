@@ -19,13 +19,14 @@ const payload = {
 
 const token = "some-token";
 const project = "some-projectl";
-const root = "some-root";
+const sessionRoot = "some-session-root";
 const identity = "some-identity";
-const contextSession = "some-context-session";
 const oldDomain = "some-old-domain";
 const context = {
   identity,
-  session: contextSession,
+  session: {
+    root: sessionRoot
+  },
   domain: oldDomain,
   [oldDomain]: "some-old-domain"
 };
@@ -95,7 +96,6 @@ describe("Command handler unit tests", () => {
 
     const result = await main({
       payload,
-      root,
       context,
       claims,
       aggregateFn: aggregateFake
@@ -112,7 +112,7 @@ describe("Command handler unit tests", () => {
               network
             }
           },
-          root
+          root: sessionRoot
         }
       ],
       response: { tokens: { session: token } }
@@ -120,7 +120,7 @@ describe("Command handler unit tests", () => {
     expect(aggregateFake).to.have.been.calledWith(sub, {
       domain: "principle"
     });
-    expect(aggregateFake).to.have.been.calledWith(root);
+    expect(aggregateFake).to.have.been.calledWith(sessionRoot);
     expect(aggregateFake).to.have.been.calledWith(newSceneRoot, {
       domain: "scene"
     });
@@ -142,7 +142,9 @@ describe("Command handler unit tests", () => {
       payload: {
         context: {
           identity,
-          session: contextSession,
+          session: {
+            root: sessionRoot
+          },
           scene: {
             root: newSceneRoot,
             service: sceneAggregateService,
@@ -193,7 +195,6 @@ describe("Command handler unit tests", () => {
     try {
       await main({
         payload,
-        root,
         context,
         claims,
         aggregateFn: aggregateFake
@@ -252,7 +253,6 @@ describe("Command handler unit tests", () => {
     try {
       await main({
         payload,
-        root,
         context,
         claims,
         aggregateFn: aggregateFake
@@ -300,7 +300,6 @@ describe("Command handler unit tests", () => {
     try {
       await main({
         payload,
-        root,
         context,
         claims,
         aggregateFn: aggregateFake

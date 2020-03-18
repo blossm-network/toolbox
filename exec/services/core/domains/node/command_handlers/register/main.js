@@ -53,6 +53,9 @@ module.exports = async ({ payload, context, claims }) => {
         }
       }
     ],
-    response: { ...(tokens && { tokens }), roots: { node: nodeRoot } }
+    response: {
+      ...(tokens && { tokens }),
+      roots: { node: nodeRoot, scene: sceneRoot }
+    }
   };
 };

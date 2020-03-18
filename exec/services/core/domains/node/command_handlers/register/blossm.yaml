@@ -63,6 +63,7 @@ testing:
           session:
         roots:
           node:
+          scene:
     - pre:
         - domain: session
           root: some-other-session-root
@@ -88,6 +89,7 @@ testing:
       response:
         roots:
           node:
+          scene:
 
 #don't change
 procedure: command-handler

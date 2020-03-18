@@ -1,4 +1,6 @@
 const yaml = require("yaml");
+const { readFile, readdir } = require("fs");
+const { promisify } = require("util");
 const gateway = require("@blossm/command-gateway");
 const eventStore = require("@blossm/event-store-rpc");
 const { verify } = require("@blossm/gcp-kms");
@@ -7,8 +9,8 @@ const gcpToken = require("@blossm/gcp-token");
 const { download: downloadFile } = require("@blossm/gcp-storage");
 const rolePermissions = require("@blossm/role-permissions");
 const { compare } = require("@blossm/crypt");
-const { readFile, readdir } = require("fs");
-const { promisify } = require("util");
+const uuid = require("@blossm/uuid");
+
 const readFileAsync = promisify(readFile);
 const readDirAsync = promisify(readdir);
 
@@ -21,35 +23,25 @@ module.exports = gateway({
   whitelist: config.whitelist,
   permissionsLookupFn: async ({ principle }) => {
     if (!defaultRoles) {
-      const defaultRoles = [];
-      const destination = "roles.yaml";
+      const fileName = uuid();
+      const extension = ".yaml";
+      defaultRoles = {};
       await downloadFile({
         bucket: process.env.GCP_ROLES_BUCKET,
-        // file: `${process.env.SERVICE}/${process.env.DOMAIN}/roles.yaml`,
-        destination
+        destination: fileName + extension
       });
-      //eslint-disable-next-line no-console
-      console.log({ download: await readDirAsync(".") });
       const files = (await readDirAsync(".")).filter(
-        file => file.startsWith(destination) && file.endsWith(".yaml")
+        file => file.startsWith(fileName) && file.endsWith(extension)
       );
-      //eslint-disable-next-line no-console
-      console.log({ files });
 
       for (const file of files) {
-        //eslint-disable-next-line no-console
-        console.log({ file });
         const role = await readFileAsync(file);
-        //eslint-disable-next-line no-console
-        console.log({ role: role.toString() });
         const defaultRole = yaml.parse(role.toString());
-        //eslint-disable-next-line no-console
-        console.log({ defaultRole });
-        defaultRoles.push(defaultRole);
+        defaultRoles = {
+          ...defaultRoles,
+          ...defaultRole
+        };
       }
-
-      //eslint-disable-next-line no-console
-      console.log({ defaultRoles });
     }
 
     const aggregate = await eventStore({
@@ -58,11 +50,6 @@ module.exports = gateway({
       .set({ tokenFn: gcpToken })
       .aggregate(principle);
 
-    //eslint-disable-next-line no-console
-    console.log({
-      roleCount: aggregate.state.roles.length,
-      aggStateRoles: aggregate.state.roles
-    });
     return aggregate
       ? await rolePermissions({
           roles: aggregate.state.roles.map(role => role.id),

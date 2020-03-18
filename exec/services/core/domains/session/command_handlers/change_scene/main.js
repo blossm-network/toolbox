@@ -1,6 +1,6 @@
 const deps = require("./deps");
 
-module.exports = async ({ root, payload, context, claims, aggregateFn }) => {
+module.exports = async ({ payload, context, claims, aggregateFn }) => {
   // Get aggregates for the principle, this session, and the context to be switched in to.
   const [
     { aggregate: principleAggregate },
@@ -10,7 +10,7 @@ module.exports = async ({ root, payload, context, claims, aggregateFn }) => {
     aggregateFn(claims.sub, {
       domain: "principle"
     }),
-    aggregateFn(root),
+    aggregateFn(context.session.root),
     aggregateFn(payload.scene, {
       domain: "scene"
     })
@@ -65,7 +65,7 @@ module.exports = async ({ root, payload, context, claims, aggregateFn }) => {
     events: [
       {
         action: "change-scene",
-        root,
+        root: context.session.root,
         payload: {
           scene: {
             root: payload.scene,

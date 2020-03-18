@@ -3,18 +3,18 @@ const { restore, fake } = require("sinon");
 const rolePermissions = require("..");
 
 const roles = ["some-role"];
-const priviledges = ["some-priviledge"];
 
-const domain = "some-domain";
-const service = "some-service";
+const permissionPriviledge = "some-permission-privildge";
+const permissionDomain = "some-permission-domain";
+const permissionService = "some-permission-service";
+
+const permissions = [
+  `${permissionService}:${permissionDomain}:${permissionPriviledge}`
+];
 
 const defaultRole = {
-  domain,
-  service,
-  roles: {
-    "some-role": {
-      priviledges
-    }
+  "some-role": {
+    permissions
   }
 };
 describe("Role permissions", () => {
@@ -24,17 +24,15 @@ describe("Role permissions", () => {
   it("should return the correct roles with no custom roles", async () => {
     const result = await rolePermissions({
       roles,
-      defaultRoles: [defaultRole]
+      defaultRoles: { ...defaultRole }
     });
-    expect(result).to.deep.equal(
-      priviledges.map(priviledge => {
-        return {
-          service,
-          domain,
-          priviledge
-        };
-      })
-    );
+    expect(result).to.deep.equal([
+      {
+        service: permissionService,
+        domain: permissionDomain,
+        priviledge: permissionPriviledge
+      }
+    ]);
   });
   it("should return the correct roles with custom roles", async () => {
     const customRolePermissions = ["some-other-permission"];
@@ -42,55 +40,50 @@ describe("Role permissions", () => {
     const customRole = "some-custom-role";
     const result = await rolePermissions({
       roles: [...roles, customRole],
-      defaultRoles: [defaultRole],
+      defaultRoles: { ...defaultRole },
       customRolePermissionsFn: customRolesPermissionsFnFake
     });
     expect(customRolesPermissionsFnFake).to.have.been.calledWith({
       roleId: customRole
     });
     expect(result).to.deep.equal([
-      ...priviledges.map(priviledge => {
-        return { service, domain, priviledge };
-      }),
+      {
+        service: permissionService,
+        domain: permissionDomain,
+        priviledge: permissionPriviledge
+      },
       ...customRolePermissions
     ]);
   });
   it("should return the correct roles with multiple defaultRoles", async () => {
-    const otherPriviledges = ["some-other-priviledges"];
+    const otherPermissionPriviledge = "some-other-permission-privildge";
+    const otherPermissionDomain = "some-other-permission-domain";
+    const otherPermissionService = "some-other-permission-service";
 
-    const otherDomain = "some-other-domain";
-    const otherService = "some-other-service";
+    const otherPermissions = [
+      `${otherPermissionService}:${otherPermissionDomain}:${otherPermissionPriviledge}`
+    ];
 
     const result = await rolePermissions({
       roles: [...roles, "some-other-role"],
-      defaultRoles: [
-        defaultRole,
-        {
-          domain: otherDomain,
-          service: otherService,
-          roles: {
-            "some-other-role": {
-              priviledges: otherPriviledges
-            }
-          }
+      defaultRoles: {
+        ...defaultRole,
+        "some-other-role": {
+          permissions: otherPermissions
         }
-      ]
+      }
     });
     expect(result).to.deep.equal([
-      ...priviledges.map(priviledge => {
-        return {
-          service,
-          domain,
-          priviledge
-        };
-      }),
-      ...otherPriviledges.map(priviledge => {
-        return {
-          service: otherService,
-          domain: otherDomain,
-          priviledge
-        };
-      })
+      {
+        service: permissionService,
+        domain: permissionDomain,
+        priviledge: permissionPriviledge
+      },
+      {
+        service: otherPermissionService,
+        domain: otherPermissionDomain,
+        priviledge: otherPermissionPriviledge
+      }
     ]);
   });
 });

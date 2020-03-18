@@ -5,15 +5,15 @@ module.exports = async ({ roles, defaultRoles, customRolePermissionsFn }) => {
 
   const rolesFound = [];
   for (const roleId of roles) {
-    for (const defaultRole of defaultRoles) {
-      const role = defaultRole.roles[roleId];
-      if (role) {
+    for (const defaultRoleId in defaultRoles) {
+      if (roleId == defaultRoleId) {
         permissions.push(
-          ...role.priviledges.map(priviledge => {
+          ...defaultRoles[defaultRoleId].permissions.map(permission => {
+            const [service, domain, priviledge] = permission.split(":");
             return {
               priviledge,
-              service: defaultRole.service,
-              domain: defaultRole.domain
+              service,
+              domain
             };
           })
         );
