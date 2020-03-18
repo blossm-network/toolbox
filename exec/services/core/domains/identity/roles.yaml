@@ -1,8 +1,4 @@
-domain: identity
-service: core
-
-roles:
-  IdentityAdmin:
-    title: Identity Admin
-    priviledges:
-      - create
+IdentityAdmin:
+  title: Identity Admin
+  permissions:
+    - core:identity:create

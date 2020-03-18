@@ -1,8 +1,4 @@
-domain: scene
-service: core
-
-roles:
-  SceneAdmin:
-    title: Scene Admin
-    priviledges:
-      - delete
+SceneAdmin:
+  title: Scene Admin
+  permissions:
+    - core:scene:delete

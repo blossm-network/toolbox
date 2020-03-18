@@ -1,8 +1,4 @@
-domain: session
-service: core
-
-roles:
-  SessionAdmin:
-    title: Session Admin
-    priviledges:
-      - update
+SessionAdmin:
+  title: Session Admin
+  permissions:
+    - core:session:update
