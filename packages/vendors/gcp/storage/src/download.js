@@ -1,14 +1,22 @@
 const deps = require("../deps");
 
-module.exports = async ({ bucket, file, destination }) => {
+module.exports = async ({ bucket: bucketName, destination, file }) => {
   const storage = new deps.storage();
 
-  const options = {
-    destination: destination || file
-  };
+  const bucket = storage.bucket(bucketName);
 
-  await storage
-    .bucket(bucket)
-    .file(file)
-    .download(options);
+  if (file) {
+    await bucket.file(file).download({
+      destination
+    });
+  } else {
+    const files = await bucket.getFiles();
+    let counter = 0;
+    for (const file of files) {
+      file.download({
+        destination: `${destination}${counter == 0 ? "" : `_${counter}`}`
+      });
+      counter++;
+    }
+  }
 };

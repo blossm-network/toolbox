@@ -5,6 +5,7 @@ const deps = require("../deps");
 
 const bucket = "some-bucket";
 const file = "some-file";
+const destination = "some-destination";
 
 describe("Download", () => {
   afterEach(() => {
@@ -22,31 +23,36 @@ describe("Download", () => {
     });
     storage.prototype.bucket = bucketFake;
     replace(deps, "storage", storage);
-    await download({ bucket, file });
-    expect(bucketFake).to.have.been.calledWith(bucket);
-    expect(fileFake).to.have.been.calledWith(file);
-    expect(downloadFake).to.have.been.calledWith({
-      destination: file
-    });
-  });
-  it("should download correctly with destination", async () => {
-    const storage = function() {};
-    const downloadFake = fake();
-    const fileFake = fake.returns({
-      download: downloadFake
-    });
-
-    const bucketFake = fake.returns({
-      file: fileFake
-    });
-    storage.prototype.bucket = bucketFake;
-    replace(deps, "storage", storage);
-    const destination = "some-destination";
     await download({ bucket, file, destination });
     expect(bucketFake).to.have.been.calledWith(bucket);
     expect(fileFake).to.have.been.calledWith(file);
-    expect(downloadFake).to.have.been.calledWith({
-      destination
+    expect(downloadFake).to.have.been.calledWith({ destination });
+  });
+  it("should download correctly with no file", async () => {
+    const storage = function() {};
+    const download1Fake = fake();
+    const download2Fake = fake();
+    const files = [
+      {
+        download: download1Fake
+      },
+      {
+        download: download2Fake
+      }
+    ];
+    const getFilesFake = fake.returns(files);
+
+    const bucketFake = fake.returns({
+      getFiles: getFilesFake
+    });
+    storage.prototype.bucket = bucketFake;
+    replace(deps, "storage", storage);
+    await download({ bucket, destination });
+    expect(bucketFake).to.have.been.calledWith(bucket);
+    expect(getFilesFake).to.have.been.calledWith();
+    expect(download1Fake).to.have.been.calledWith({ destination });
+    expect(download2Fake).to.have.been.calledWith({
+      destination: `${destination}_1`
     });
   });
   it("should throw correctly", async () => {

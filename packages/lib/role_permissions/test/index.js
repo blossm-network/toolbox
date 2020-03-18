@@ -3,12 +3,12 @@ const { restore, fake } = require("sinon");
 const rolePermissions = require("..");
 
 const roles = ["some-role"];
-const priviledges = ["some-priviledges"];
+const priviledges = ["some-priviledge"];
 
 const domain = "some-domain";
 const service = "some-service";
 
-const defaultRoles = {
+const defaultRole = {
   domain,
   service,
   roles: {
@@ -24,10 +24,16 @@ describe("Role permissions", () => {
   it("should return the correct roles with no custom roles", async () => {
     const result = await rolePermissions({
       roles,
-      defaultRoles
+      defaultRoles: [defaultRole]
     });
     expect(result).to.deep.equal(
-      priviledges.map(priviledge => `${service}:${domain}:${priviledge}`)
+      priviledges.map(priviledge => {
+        return {
+          service,
+          domain,
+          priviledge
+        };
+      })
     );
   });
   it("should return the correct roles with custom roles", async () => {
@@ -36,15 +42,55 @@ describe("Role permissions", () => {
     const customRole = "some-custom-role";
     const result = await rolePermissions({
       roles: [...roles, customRole],
-      defaultRoles,
+      defaultRoles: [defaultRole],
       customRolePermissionsFn: customRolesPermissionsFnFake
     });
     expect(customRolesPermissionsFnFake).to.have.been.calledWith({
       roleId: customRole
     });
     expect(result).to.deep.equal([
-      ...priviledges.map(priviledge => `${service}:${domain}:${priviledge}`),
+      ...priviledges.map(priviledge => {
+        return { service, domain, priviledge };
+      }),
       ...customRolePermissions
+    ]);
+  });
+  it("should return the correct roles with multiple defaultRoles", async () => {
+    const otherPriviledges = ["some-other-priviledges"];
+
+    const otherDomain = "some-other-domain";
+    const otherService = "some-other-service";
+
+    const result = await rolePermissions({
+      roles: [...roles, "some-other-role"],
+      defaultRoles: [
+        defaultRole,
+        {
+          domain: otherDomain,
+          service: otherService,
+          roles: {
+            "some-other-role": {
+              priviledges: otherPriviledges
+            }
+          }
+        }
+      ]
+    });
+    expect(result).to.deep.equal([
+      ...priviledges.map(priviledge => {
+        return {
+          service,
+          domain,
+          priviledge
+        };
+      }),
+      ...otherPriviledges.map(priviledge => {
+        return {
+          service: otherService,
+          domain: otherDomain,
+          priviledge
+        };
+      })
     ]);
   });
 });

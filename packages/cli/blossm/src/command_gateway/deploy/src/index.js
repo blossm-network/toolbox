@@ -7,7 +7,7 @@ const gcpToken = require("@blossm/gcp-token");
 const { download: downloadFile } = require("@blossm/gcp-storage");
 const rolePermissions = require("@blossm/role-permissions");
 const { compare } = require("@blossm/crypt");
-const { readFile } = require("fs");
+const { readFile, readdir } = require("fs");
 const { promisify } = require("util");
 const readFileAsync = promisify(readFile);
 
@@ -23,12 +23,25 @@ module.exports = gateway({
       const destination = "roles.yaml";
       await downloadFile({
         bucket: process.env.GCP_ROLES_BUCKET,
-        file: `${process.env.SERVICE}/${process.env.DOMAIN}/roles.yaml`,
+        // file: `${process.env.SERVICE}/${process.env.DOMAIN}/roles.yaml`,
         destination
       });
       //eslint-disable-next-line no-console
       console.log("downloaded");
-      const roles = await readFileAsync(destination);
+      const files = readdir().filter(
+        file => file.startsWith(destination) && file.endsWith(".yaml")
+      );
+      //eslint-disable-next-line no-console
+      console.log({ files });
+
+      const roles = [];
+
+      for (const file of files) {
+        //eslint-disable-next-line no-console
+        console.log({ file });
+        roles.push(...(await readFileAsync(destination)));
+      }
+
       //eslint-disable-next-line no-console
       console.log({ roles: roles.toString() });
       defaultRoles = yaml.parse(roles.toString());

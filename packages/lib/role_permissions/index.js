@@ -1,23 +1,37 @@
+const difference = require("@blossm/array-difference");
+
 module.exports = async ({ roles, defaultRoles, customRolePermissionsFn }) => {
   const permissions = [];
-  const customRoleCandidates = [];
+
+  const rolesFound = [];
+  for (const roleId of roles) {
+    //TODO
+    //eslint-disable-next-line
+    console.log({ roleId });
+    for (const defaultRole of defaultRoles) {
+      const role = defaultRole.roles[roleId];
+      //TODO
+      //eslint-disable-next-line
+      console.log({ defaultRole, role });
+      if (role) {
+        permissions.push(
+          ...role.priviledges.map(priviledge => {
+            return {
+              priviledge,
+              service: defaultRole.service,
+              domain: defaultRole.domain
+            };
+          })
+        );
+        rolesFound.push(roleId);
+        break;
+      }
+    }
+  }
+  const customRoleCandidates = difference(roles, rolesFound);
   //TODO
   //eslint-disable-next-line
-  console.log({ roles, official: defaultRoles.roles });
-  roles.reduce(async (result, roleId) => {
-    const role = defaultRoles.roles[roleId];
-    if (role) {
-      permissions.push(
-        ...role.priviledges.map(
-          priviledge =>
-            `${defaultRoles.service}:${defaultRoles.domain}:${priviledge}`
-        )
-      );
-    } else {
-      customRoleCandidates.push(roleId);
-    }
-    return result;
-  }, []);
+  console.log({ customRoleCandidates });
   if (customRoleCandidates.length > 0) {
     permissions.push(
       ...(
@@ -30,5 +44,8 @@ module.exports = async ({ roles, defaultRoles, customRolePermissionsFn }) => {
     );
   }
 
+  //TODO
+  //eslint-disable-next-line
+  console.log({ donePermissions: permissions });
   return permissions;
 };
