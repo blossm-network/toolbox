@@ -35,12 +35,16 @@ describe("Secrets", () => {
     replace(deps, "decrypt", decryptFake);
     replace(deps, "unlink", unlinkFake);
 
+    const fileName = "some-file-name";
+    replace(deps, "uuid", fake.returns(fileName));
+
     const result = await get(key);
     expect(downloadFake).to.have.been.calledWith({
       bucket,
-      file: `${key}.txt.encrypted`
+      file: `${key}.txt.encrypted`,
+      destination: `${fileName}.txt.encrypted`
     });
-    expect(readFileFake).to.have.been.calledWith(`${key}.txt.encrypted`);
+    expect(readFileFake).to.have.been.calledWith(`${fileName}.txt.encrypted`);
     expect(decryptFake).to.have.been.calledWith({
       message: encrypted,
       key,
@@ -65,6 +69,9 @@ describe("Secrets", () => {
     replace(deps, "decrypt", decryptFake);
     replace(deps, "unlink", unlinkFake);
 
+    const fileName = "some-file-name";
+    replace(deps, "uuid", fake.returns(fileName));
+
     const result = await get(key, {
       project: "some-other-project",
       ring: "some-other-ring",
@@ -73,9 +80,10 @@ describe("Secrets", () => {
     });
     expect(downloadFake).to.have.been.calledWith({
       bucket: "some-other-bucket",
-      file: `${key}.txt.encrypted`
+      file: `${key}.txt.encrypted`,
+      destination: `${fileName}.txt.encrypted`
     });
-    expect(readFileFake).to.have.been.calledWith(`${key}.txt.encrypted`);
+    expect(readFileFake).to.have.been.calledWith(`${fileName}.txt.encrypted`);
     expect(decryptFake).to.have.been.calledWith({
       message: encrypted,
       key,

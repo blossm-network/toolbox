@@ -23,8 +23,9 @@ exports.get = async (
   } = {}
 ) => {
   const file = `${key}.txt.encrypted`;
-  await deps.download({ bucket, file });
-  const encrypted = await deps.readFile(file);
+  const fileName = `${deps.uuid()}.txt.encrypted`;
+  await deps.download({ bucket, file, destination: fileName });
+  const encrypted = await deps.readFile(fileName);
   const [secret] = await Promise.all([
     deps.decrypt({
       message: encrypted.toString().trim(),
