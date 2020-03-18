@@ -52,7 +52,7 @@ describe("Secrets", () => {
       location,
       project
     });
-    expect(unlinkFake).to.have.been.calledWith(`${key}.txt.encrypted`);
+    expect(unlinkFake).to.have.been.calledWith(`${fileName}.txt.encrypted`);
     expect(result).to.equal(secret);
   });
   it("should return the correct secret with passed in options in get", async () => {
@@ -91,7 +91,7 @@ describe("Secrets", () => {
       location: "some-other-location",
       project: "some-other-project"
     });
-    expect(unlinkFake).to.have.been.calledWith(`${key}.txt.encrypted`);
+    expect(unlinkFake).to.have.been.calledWith(`${fileName}.txt.encrypted`);
     expect(result).to.equal(secret);
   });
   it("should throw correctly with get", async () => {
