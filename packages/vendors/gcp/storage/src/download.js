@@ -10,7 +10,7 @@ module.exports = async ({ bucket: bucketName, destination, file }) => {
       destination
     });
   } else {
-    const files = await bucket.getFiles();
+    const [files] = await bucket.getFiles();
     let counter = 0;
     //TODO
     //eslint-disable-next-line

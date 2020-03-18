@@ -40,7 +40,7 @@ describe("Download", () => {
         download: download2Fake
       }
     ];
-    const getFilesFake = fake.returns(files);
+    const getFilesFake = fake.returns([files]);
 
     const bucketFake = fake.returns({
       getFiles: getFilesFake
