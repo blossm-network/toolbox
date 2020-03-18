@@ -5,7 +5,7 @@ const deps = require("../deps");
 
 const bucket = "some-bucket";
 const file = "some-file";
-const destination = "some-destination";
+const destination = "some-destination.extension";
 
 describe("Download", () => {
   afterEach(() => {
@@ -50,9 +50,11 @@ describe("Download", () => {
     await download({ bucket, destination });
     expect(bucketFake).to.have.been.calledWith(bucket);
     expect(getFilesFake).to.have.been.calledWith();
-    expect(download1Fake).to.have.been.calledWith({ destination });
+    expect(download1Fake).to.have.been.calledWith({
+      destination
+    });
     expect(download2Fake).to.have.been.calledWith({
-      destination: `${destination}_1`
+      destination: `some-destination_1.extension`
     });
   });
   it("should throw correctly", async () => {

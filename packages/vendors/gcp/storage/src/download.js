@@ -13,8 +13,13 @@ module.exports = async ({ bucket: bucketName, destination, file }) => {
     const [files] = await bucket.getFiles();
     let counter = 0;
     for (const file of files) {
+      const lastDotIndex = destination.lastIndexOf(".");
+      const fileName = destination.slice(0, lastDotIndex);
+      const fileExtension = destination.slice(lastDotIndex + 1);
       await file.download({
-        destination: `${destination}${counter == 0 ? "" : `_${counter}`}`
+        destination: `${fileName}${
+          counter == 0 ? "" : `_${counter}`
+        }.${fileExtension}`
       });
       counter++;
     }
