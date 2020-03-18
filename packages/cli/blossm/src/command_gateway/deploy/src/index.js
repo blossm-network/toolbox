@@ -28,8 +28,8 @@ module.exports = gateway({
         destination
       });
       //eslint-disable-next-line no-console
-      console.log({ download: await readDirAsync() });
-      const files = (await readDirAsync()).filter(
+      console.log({ download: await readDirAsync(".") });
+      const files = (await readDirAsync(".")).filter(
         file => file.startsWith(destination) && file.endsWith(".yaml")
       );
       //eslint-disable-next-line no-console

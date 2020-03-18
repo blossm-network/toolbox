@@ -9,10 +9,13 @@ module.exports = async ({ roles, defaultRoles, customRolePermissionsFn }) => {
     //eslint-disable-next-line
     console.log({ roleId });
     for (const defaultRole of defaultRoles) {
+      //TODO
+      //eslint-disable-next-line
+      console.log({ defaultRole });
       const role = defaultRole.roles[roleId];
       //TODO
       //eslint-disable-next-line
-      console.log({ defaultRole, role });
+      console.log({ role });
       if (role) {
         permissions.push(
           ...role.priviledges.map(priviledge => {
