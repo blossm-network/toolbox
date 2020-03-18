@@ -1,6 +1,6 @@
 {
   "name": "@blossm/array-difference",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Finds the items different between two arrays.",
   "main": "index.js",
   "author": "blossm.network",

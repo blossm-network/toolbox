@@ -1,6 +1,6 @@
 {
   "name": "@blossm/uuid",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Creates a uuid.",
   "main": "index.js",
   "author": "blossm.network",

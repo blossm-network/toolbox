@@ -1,7 +1,7 @@
 {
   "name": "@blossm/antenna-post",
   "description": "An antenna server POST handler.",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -14,7 +14,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/gcp-token": "^0.0.20"
+    "@blossm/gcp-token": "^0.0.21"
   },
   "devDependencies": {
     "chai-datetime": "^1.5.0",

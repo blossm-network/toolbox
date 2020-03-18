@@ -1,6 +1,6 @@
 {
   "name": "@blossm/normalize-command",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Normalizes the paramaters found in command requests.",
   "main": "index.js",
   "author": "blossm.network",
@@ -14,7 +14,7 @@
     "test": "mocha --recursive"
   },
   "dependencies": {
-    "@blossm/uuid": "^0.0.3"
+    "@blossm/uuid": "^0.0.4"
   },
   "devDependencies": {
     "mocha": "^7.1.0",

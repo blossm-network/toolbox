@@ -1,6 +1,6 @@
 {
   "name": "@blossm/twilio-sms",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Sms functionality.",
   "main": "index.js",
   "author": "blossm.network",
