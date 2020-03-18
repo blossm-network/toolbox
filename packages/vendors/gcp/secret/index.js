@@ -34,7 +34,7 @@ exports.get = async (
       location,
       project
     }),
-    deps.unlink(file)
+    deps.unlink(fileName)
   ]);
 
   return secret;

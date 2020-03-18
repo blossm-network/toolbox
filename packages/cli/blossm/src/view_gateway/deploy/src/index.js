@@ -1,5 +1,5 @@
 const { promisify } = require("util");
-const { readFile, readdir } = require("fs");
+const { readFile, readdir, unlink } = require("fs");
 const yaml = require("yaml");
 const gateway = require("@blossm/view-gateway");
 const eventStore = require("@blossm/event-store-rpc");
@@ -12,6 +12,7 @@ const uuid = require("@blossm/uuid");
 
 const readFileAsync = promisify(readFile);
 const readDirAsync = promisify(readdir);
+const unlinkAsync = promisify(unlink);
 
 const config = require("./config.json");
 
@@ -33,14 +34,17 @@ module.exports = gateway({
         file => file.startsWith(fileName) && file.endsWith(extension)
       );
 
-      for (const file of files) {
-        const role = await readFileAsync(file);
-        const defaultRole = yaml.parse(role.toString());
-        defaultRoles = {
-          ...defaultRoles,
-          ...defaultRole
-        };
-      }
+      await Promise.all(
+        files.map(async file => {
+          const role = await readFileAsync(file);
+          const defaultRole = yaml.parse(role.toString());
+          defaultRoles = {
+            ...defaultRoles,
+            ...defaultRole
+          };
+          await unlinkAsync(file);
+        })
+      );
     }
 
     const aggregate = await eventStore({
