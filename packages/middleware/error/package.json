@@ -17,6 +17,6 @@
     "@blossm/logger": "^0.0.5"
   },
   "devDependencies": {
-    "mocha": "^6.1.4"
+    "mocha": "^7.1.0"
   }
 }

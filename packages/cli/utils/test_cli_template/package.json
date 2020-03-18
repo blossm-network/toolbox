@@ -19,6 +19,6 @@
     "ncp": "^2.0.0"
   },
   "devDependencies": {
-    "mocha": "^6.1.4"
+    "mocha": "^7.1.0"
   }
 }

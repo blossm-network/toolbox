@@ -19,7 +19,7 @@ dependencies:
   "@blossm/datetime": "*"
 
 devDependencies:
-  "mocha": "^6.1.4"
+  "mocha": "^7.1.0"
   "chai": "^4.2.0"
   "sinon": "^7.3.2"
   "sinon-chai": "^3.3.0"

@@ -22,7 +22,7 @@ actions:
 
 devDependencies:
   "localenv": "^0.2.2"
-  "mocha": "^6.1.4"
+  "mocha": "^7.1.0"
   "chai": "^4.2.0"
   "@blossm/request": "*"
   "@blossm/uuid": "*"

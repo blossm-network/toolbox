@@ -19,6 +19,6 @@
     "express-async-handler": "^1.1.4"
   },
   "devDependencies": {
-    "mocha": "^6.1.4"
+    "mocha": "^7.1.0"
   }
 }
