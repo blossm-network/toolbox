@@ -4,6 +4,13 @@ service: core
 
 payload: {}
 
+dependencies:
+  "@blossm/jwt": "*"
+  "@blossm/gcp-kms": "*"
+  "@blossm/uuid": "*"
+  "@blossm/duration-consts": "*"
+  "@blossm/datetime": "*"
+
 devDependencies:
   "mocha": "^7.1.0"
   "chai": "^4.2.0"
@@ -23,13 +30,23 @@ testing:
   dependencies:
 
   steps:
-    []
-    # - pre:
-    #   payload:
-    #   context:
-    #   session:
-    #   root:
-    #   response:
+    - payload: {}
+      context:
+        principle:
+          root: some-principle-root
+          service: some-principle-service
+          network: some-principle-network
+        node:
+          root: some-node-root
+          service: some-node-service
+          network: some-node-network
+        key:
+          root: some-key-root
+          service: some-key-service
+          network: some-key-network
+      response:
+        tokens:
+          access:
 
 #don't change
 procedure: command-handler

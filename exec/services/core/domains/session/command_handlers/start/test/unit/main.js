@@ -69,7 +69,7 @@ describe("Command handler unit tests", () => {
     expect(createJwtFake).to.have.been.calledWith({
       options: {
         issuer: `session.${service}.${network}/start`,
-        audience: `${network}`,
+        audience: network,
         expiresIn: 7776000000
       },
       payload: {

@@ -96,7 +96,7 @@ module.exports = gateway({
     return {
       context: {
         key: {
-          root: key.state.root,
+          root: key.headers.root,
           service: process.env.SERVICE,
           network: process.env.NETWORK
         },

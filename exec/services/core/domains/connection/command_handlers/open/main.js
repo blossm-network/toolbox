@@ -1,31 +1,55 @@
-/**
- * This file is required.
- *
- * Specifies the command handler logic.
- *
- * The function takes in the payload param from the request (req.body.payload),
- * the root that is being commanded (optional),
- * the context param derived from the gateway,
- * and an async function which takes a root argument to derive the aggregate.
- * It is responsible for returning an array of events to publish
- * and also the response that should be sent back to the issuer of the request.
- *
- */
+const { MILLISECONDS_IN_DAY } = require("@blossm/duration-consts");
 
-//const deps = require("./deps");
+const NINETY_DAYS = 90 * MILLISECONDS_IN_DAY;
 
-module.exports = async ({ payload, root, context, aggregateFn }) => {
-  //eslint-disable-next-line no-console
-  console.log("Do something with: ", {
-    payload,
-    root,
-    context,
-    aggregateFn
+const deps = require("./deps");
+
+module.exports = async ({ context }) => {
+  const root = deps.uuid();
+
+  const token = await deps.createJwt({
+    options: {
+      subject: context.principle.root,
+      issuer: `connection.${process.env.SERVICE}.${process.env.NETWORK}/open`,
+      audience: process.env.NETWORK,
+      expiresIn: NINETY_DAYS
+    },
+    payload: {
+      context: {
+        ...context,
+        connection: {
+          root,
+          service: process.env.SERVICE,
+          network: process.env.NETWORK
+        }
+      }
+    },
+    signFn: deps.sign({
+      ring: "jwt",
+      key: "session",
+      location: "global",
+      version: "1",
+      project: process.env.GCP_PROJECT
+    })
   });
 
   return {
-    events: [],
-    reponse: { ok: "sounds-good" }
-    // events: [{ action: "some-action", payload, root, correctNumber: 0 }]
+    events: [
+      {
+        action: "open",
+        payload: {
+          node: context.node,
+          key: context.key,
+          opened: deps.stringDate()
+        },
+        root,
+        correctNumber: 0
+      }
+    ],
+    response: {
+      tokens: {
+        access: token
+      }
+    }
   };
 };
