@@ -19,7 +19,7 @@ describe("Command handler unit tests", () => {
     restore();
   });
   it("should return successfully", async () => {
-    const aggregateFake = fake.returns({ aggregate: { terminated: false } });
+    const aggregateFake = fake.returns({ aggregate: {} });
     const result = await main({
       root,
       aggregateFn: aggregateFake
@@ -29,16 +29,18 @@ describe("Command handler unit tests", () => {
       events: [
         {
           root,
-          action: "logout",
+          action: "terminate",
           payload: {
-            loggedout: deps.stringDate()
+            terminated: deps.stringDate()
           }
         }
       ]
     });
   });
   it("should throw correctly if aggregate has already been terminated", async () => {
-    const aggregateFake = fake.returns({ aggregate: { terminated: true } });
+    const aggregateFake = fake.returns({
+      aggregate: { terminated: deps.stringDate() }
+    });
     const error = "some-error";
     const sessionAlreadyTerminatedFake = fake.returns(error);
     replace(deps, "badRequestError", {

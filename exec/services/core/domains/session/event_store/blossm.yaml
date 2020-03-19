@@ -3,7 +3,7 @@ service: core
 
 schema:
   started: Date
-  loggedout: Date
+  terminated: Date
   upgraded: Date
   scene:
     root: String
@@ -21,7 +21,7 @@ schema:
     id: String
 
 actions:
-  - logout
+  - terminate
   - start
   - save
   - upgrade
@@ -55,9 +55,9 @@ testing:
           manufacturer: Google
           id: some-other-device-id
     more:
-      - action: logout
+      - action: terminate
         payload:
-          loggedout: 2020-12-31T00:00:00.000Z
+          terminated: 2020-12-31T00:00:00.000Z
       - action: change-scene
         payload:
           context:
@@ -119,14 +119,13 @@ testing:
               service: some-principle-service
               network: some-principle-network
             upgraded: 2021-01-03T00:02:15.000Z
-    - action: logout
+    - action: terminate
       examples:
         - state: {}
           payload:
-            loggedout: 2021-01-03T00:02:15.000Z
+            terminated: 2021-01-03T00:02:15.000Z
           result:
-            loggedout: 2021-01-03T00:02:15.000Z
-            terminated: true
+            terminated: 2021-01-03T00:02:15.000Z
     - action: change-scene
       examples:
         - payload:

@@ -52,7 +52,7 @@ describe("Command handler unit tests", () => {
     replace(deps, "createJwt", createJwtFake);
 
     const aggregateFake = fake.returns({
-      aggregate: { terminated: false, upgraded: false }
+      aggregate: { upgraded: false }
     });
 
     const result = await main({
@@ -122,7 +122,9 @@ describe("Command handler unit tests", () => {
     const createJwtFake = fake.returns(token);
     replace(deps, "createJwt", createJwtFake);
 
-    const aggregateFake = fake.returns({ aggregate: { terminated: true } });
+    const aggregateFake = fake.returns({
+      aggregate: { terminated: deps.stringDate() }
+    });
 
     const error = "some-error";
     const sessionTerminatedFake = fake.returns(error);
@@ -153,7 +155,7 @@ describe("Command handler unit tests", () => {
     replace(deps, "createJwt", createJwtFake);
 
     const aggregateFake = fake.returns({
-      aggregate: { terminated: false, upgraded: true }
+      aggregate: { upgraded: true }
     });
 
     const error = "some-error";
@@ -185,7 +187,7 @@ describe("Command handler unit tests", () => {
     replace(deps, "createJwt", createJwtFake);
 
     const aggregateFake = fake.returns({
-      aggregate: { terminated: false, upgraded: false }
+      aggregate: { upgraded: false }
     });
 
     try {

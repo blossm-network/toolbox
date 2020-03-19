@@ -83,7 +83,7 @@ describe("Command handler unit tests", () => {
         }
       })
       .onSecondCall()
-      .returns({ aggregate: { terminated: false } })
+      .returns({ aggregate: {} })
       .onThirdCall()
       .returns({
         aggregate: {
@@ -181,7 +181,7 @@ describe("Command handler unit tests", () => {
         aggregate: { scenes: [{ root: "bogus" }] }
       })
       .onSecondCall()
-      .returns({ aggregate: { terminated: false } })
+      .returns({ aggregate: {} })
       .onThirdCall()
       .returns({
         aggregate: {
@@ -235,7 +235,7 @@ describe("Command handler unit tests", () => {
         }
       })
       .onSecondCall()
-      .returns({ aggregate: { terminated: true } })
+      .returns({ aggregate: { terminated: deps.stringDate() } })
       .onThirdCall()
       .returns({
         aggregate: {
@@ -286,7 +286,7 @@ describe("Command handler unit tests", () => {
         }
       })
       .onSecondCall()
-      .returns({ aggregate: { terminated: false } })
+      .returns({ aggregate: {} })
       .onThirdCall()
       .returns({
         aggregate: {

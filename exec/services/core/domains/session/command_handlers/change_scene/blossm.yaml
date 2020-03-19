@@ -96,9 +96,9 @@ testing:
     - pre:
         - domain: session
           root: some-root
-          action: logout
+          action: terminate
           payload:
-            loggedout: 2019-12-31T00:00:00.000Z
+            terminated: 2019-12-31T00:00:00.000Z
       payload:
         scene: some-scene-root
       context:

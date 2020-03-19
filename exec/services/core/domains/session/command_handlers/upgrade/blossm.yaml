@@ -66,9 +66,9 @@ testing:
     - pre:
         - domain: session
           root: yet-another-root
-          action: logout
+          action: terminate
           payload:
-            loggedout: 2019-12-31T00:00:00.000Z
+            terminated: 2019-12-31T00:00:00.000Z
       payload:
         principle: some-principle-root
       root: yet-another-root

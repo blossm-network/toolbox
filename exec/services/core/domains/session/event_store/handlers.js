@@ -11,11 +11,10 @@ module.exports = {
       ...payload
     };
   },
-  logout: (state, payload) => {
+  terminate: (state, payload) => {
     return {
       ...state,
-      ...payload,
-      terminated: true
+      ...payload
     };
   },
   "change-scene": (state, payload) => {

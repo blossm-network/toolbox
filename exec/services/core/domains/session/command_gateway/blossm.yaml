@@ -6,7 +6,7 @@ commands:
     protected: false
   - name: save
     priviledges: none
-  - name: logout
+  - name: terminate
     priviledges:
       - update
   - name: change-scene
