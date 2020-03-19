@@ -9,7 +9,7 @@ payload:
 
 dependencies:
   "@blossm/random-string-of-length": "*"
-  "@blossm/hash-string": "*"
+  "@blossm/crypt": "*"
   "@blossm/uuid": "*"
   "@blossm/errors": "*"
 

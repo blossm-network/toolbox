@@ -51,7 +51,7 @@ module.exports = gateway({
       domain: "principle"
     })
       .set({ tokenFn: gcpToken })
-      .aggregate(principle);
+      .aggregate(principle.root);
 
     return aggregate
       ? await rolePermissions({

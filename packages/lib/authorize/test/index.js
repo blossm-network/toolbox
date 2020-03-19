@@ -13,11 +13,8 @@ const principle = "some-priciple-root";
 const context = {
   network,
   service,
-  any: "any-root"
-};
-
-const claims = {
-  sub: principle
+  any: "any-root",
+  principle
 };
 
 const deps = require("../deps");
@@ -32,17 +29,15 @@ describe("Authorize", () => {
     const permissionsLookupFn = fake.returns(permissions);
 
     const document = await authorize({
-      claims,
       context,
       permissionsLookupFn,
       permissions: [{ service, domain, priviledge }],
       network
     });
 
-    expect(permissionsLookupFn).to.have.been.calledWith({ principle, context });
+    expect(permissionsLookupFn).to.have.been.calledWith({ principle });
     expect(document).to.deep.equal({
-      permissions,
-      principle
+      permissions
     });
   });
   it("should not authorize if theres a mismatch", async () => {
@@ -58,7 +53,6 @@ describe("Authorize", () => {
 
     try {
       await authorize({
-        claims,
         context,
         permissionsLookupFn,
         network
@@ -72,20 +66,17 @@ describe("Authorize", () => {
   });
   it("should authorize with permissions as none", async () => {
     const document = await authorize({
-      claims,
       context,
       permissions: "none",
       network
     });
     expect(document).to.deep.equal({
-      permissions: [],
-      principle
+      permissions: []
     });
   });
   it("should authorize with no sub and permissions as none", async () => {
     const document = await authorize({
       context,
-      claims: {},
       permissions: "none",
       network
     });

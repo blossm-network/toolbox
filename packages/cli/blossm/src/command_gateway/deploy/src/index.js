@@ -52,7 +52,7 @@ module.exports = gateway({
       domain: "principle"
     })
       .set({ tokenFn: gcpToken })
-      .aggregate(principle);
+      .aggregate(principle.root);
 
     return aggregate
       ? await rolePermissions({
@@ -85,18 +85,11 @@ module.exports = gateway({
       project: process.env.GCP_PROJECT
     }),
   keyClaimsFn: async ({ id, secret }) => {
-    //TODO
-    //eslint-disable-next-line
-    console.log({ cliamsId: id, claimsSecret: secret });
-    const key = await eventStore({ domain: "key" })
+    const [key] = await eventStore({ domain: "key" })
       .set({ tokenFn: gcpToken })
       .query({ key: "id", value: id });
 
     if (!key) throw "Key not found";
-
-    //TODO
-    //eslint-disable-next-line
-    console.log({ key });
 
     if (!(await compare(secret, key.state.secret))) throw "Incorrect secret";
 

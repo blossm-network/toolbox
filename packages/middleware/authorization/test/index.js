@@ -5,7 +5,6 @@ const authorizationMiddleware = require("..");
 
 const permissionsLookupFn = "some-permissions-lookup-fn";
 const permissions = "some-permissions";
-const policy = "some-policy";
 
 const envNetwork = "some-env-network";
 const envService = "some-env-service";
@@ -14,7 +13,6 @@ process.env.SERVICE = envService;
 
 const sessionRoot = "some-session-root";
 const session = { root: sessionRoot };
-const reqClaims = "some-req-claims";
 
 describe("Authorization middleware", () => {
   afterEach(() => {
@@ -25,11 +23,10 @@ describe("Authorization middleware", () => {
     const path = "some-path";
     const req = {
       path,
-      claims: reqClaims,
       context
     };
 
-    const authorizationFake = fake.returns(policy);
+    const authorizationFake = fake();
     replace(deps, "authorize", authorizationFake);
 
     const nextFake = fake();
@@ -43,7 +40,6 @@ describe("Authorization middleware", () => {
 
     expect(authorizationFake).to.have.been.calledWith({
       context,
-      claims: reqClaims,
       permissionsLookupFn,
       permissions
     });
@@ -51,7 +47,6 @@ describe("Authorization middleware", () => {
       session: sessionRoot
     });
 
-    expect(req.policy).to.deep.equal(policy);
     expect(nextFake).to.have.been.calledOnce;
   });
   it("should call correctly with optionals", async () => {
@@ -59,12 +54,11 @@ describe("Authorization middleware", () => {
     const path = "some-path";
     const req = {
       path,
-      claims: reqClaims,
       context: otherContext,
       body: {}
     };
 
-    const authorizationFake = fake.returns(policy);
+    const authorizationFake = fake();
     replace(deps, "authorize", authorizationFake);
 
     const terminatedSessionCheckFake = fake();
@@ -77,14 +71,12 @@ describe("Authorization middleware", () => {
     })(req, null, nextFake);
 
     expect(authorizationFake).to.have.been.calledWith({
-      claims: reqClaims,
       context: otherContext,
       permissionsLookupFn,
       permissions
     });
     expect(terminatedSessionCheckFake).to.not.have.been.called;
 
-    expect(req.policy).to.deep.equal(policy);
     expect(nextFake).to.have.been.calledOnce;
   });
   it("should throw correctly", async () => {
@@ -92,7 +84,6 @@ describe("Authorization middleware", () => {
     const req = {
       path,
       context: {},
-      claims: reqClaims,
       body: {}
     };
 
@@ -116,11 +107,10 @@ describe("Authorization middleware", () => {
     const path = "some-path";
     const req = {
       path,
-      claims: reqClaims,
       context
     };
 
-    const authorizationFake = fake.returns(policy);
+    const authorizationFake = fake();
     replace(deps, "authorize", authorizationFake);
 
     const error = new Error();

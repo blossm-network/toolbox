@@ -7,10 +7,9 @@ module.exports = ({
   permissions
 }) =>
   asyncHandler(async (req, _, next) => {
-    const [policy] = await Promise.all([
+    await Promise.all([
       deps.authorize({
         context: req.context,
-        claims: req.claims,
         permissionsLookupFn,
         permissions
       }),
@@ -20,6 +19,5 @@ module.exports = ({
         : [])
     ]);
 
-    req.policy = policy;
     next();
   });

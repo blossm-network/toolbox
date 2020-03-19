@@ -1,20 +1,13 @@
 const deps = require("./deps");
 
-module.exports = async ({
-  claims: { sub },
-  context,
-  permissionsLookupFn,
-  permissions = []
-}) => {
+module.exports = async ({ context, permissionsLookupFn, permissions = [] }) => {
   if (permissions == "none")
     return {
-      permissions: [],
-      ...(sub && { principle: sub })
+      permissions: []
     };
 
   const principlePermissions = await permissionsLookupFn({
-    principle: sub,
-    context
+    principle: context.principle
   });
 
   const satisfiedPermissions = principlePermissions.filter(
@@ -35,7 +28,6 @@ module.exports = async ({
     throw deps.invalidCredentialsError.tokenInvalid();
 
   return {
-    permissions: satisfiedPermissions,
-    principle: sub
+    permissions: satisfiedPermissions
   };
 };

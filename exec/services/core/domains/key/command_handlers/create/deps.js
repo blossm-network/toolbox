@@ -1,5 +1,5 @@
 const randomStringOfLength = require("@blossm/random-string-of-length");
-const hash = require("@blossm/hash-string");
+const { hash } = require("@blossm/crypt");
 const uuid = require("@blossm/uuid");
 const { forbidden } = require("@blossm/errors");
 
