@@ -1,0 +1,17 @@
+domain: connection
+service: core
+
+commands:
+  - name: open
+    priviledges:
+      - create
+
+whitelist:
+  - "127.0.0.1"
+
+devDependencies:
+  "mocha": "^7.1.0"
+  "chai": "^4.2.0"
+
+#don't change
+procedure: command-gateway

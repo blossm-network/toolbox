@@ -5,3 +5,4 @@ NodeAdmin:
     - core:node:update
     - core:node:delete
     - core:key:create
+    - core:connection:create
