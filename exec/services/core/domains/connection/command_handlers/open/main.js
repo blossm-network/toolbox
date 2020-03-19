@@ -24,6 +24,8 @@ module.exports = async ({ payload, root, context, aggregateFn }) => {
   });
 
   return {
-    events: [{ action: "some-action", payload, root, correctNumber: 0 }]
+    events: [],
+    reponse: { ok: "sounds-good" }
+    // events: [{ action: "some-action", payload, root, correctNumber: 0 }]
   };
 };

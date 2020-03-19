@@ -90,6 +90,9 @@ module.exports = gateway({
     const id = "some-key-id";
     const secret = "some-secret";
 
+    //TODO
+    //eslint-disable-next-line
+    console.log({ header });
     const key = await eventStore({ domain: "key" })
       .set({ tokenFn: gcpToken })
       .query({ key: "id", value: id });
