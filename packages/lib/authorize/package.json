@@ -1,6 +1,6 @@
 {
   "name": "@blossm/authorize",
-  "version": "0.0.53",
+  "version": "0.0.54",
   "description": "Authorize requests.",
   "main": "index.js",
   "author": "blossm.network",
@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@blossm/jwt": "^0.0.33",
-    "@blossm/tokens-from-req": "^0.0.5"
+    "@blossm/tokens-from-req": "^0.0.6"
   },
   "scripts": {
     "test": "mocha --recursive"
