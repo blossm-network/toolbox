@@ -84,20 +84,19 @@ module.exports = gateway({
       version: "1",
       project: process.env.GCP_PROJECT
     }),
-  //TODO
-  //eslint-disable-next-line
-  tokenClaimsFn: async ({ header }) => {
-    const id = "some-key-id";
-    const secret = "some-secret";
-
+  keyClaimsFn: async ({ id, secret }) => {
     //TODO
     //eslint-disable-next-line
-    console.log({ header });
+    console.log({ cliamsId: id, claimsSecret: secret });
     const key = await eventStore({ domain: "key" })
       .set({ tokenFn: gcpToken })
       .query({ key: "id", value: id });
 
     if (!key) throw "Key not found";
+
+    //TODO
+    //eslint-disable-next-line
+    console.log({ key });
 
     if (!(await compare(secret, key.state.secret))) throw "Incorrect secret";
 
@@ -108,6 +107,7 @@ module.exports = gateway({
           service: process.env.SERVICE,
           network: process.env.NETWORK
         },
+        principle: key.state.principle,
         node: key.state.node,
         domain: "node"
       }

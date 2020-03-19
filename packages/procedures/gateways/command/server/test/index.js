@@ -8,7 +8,7 @@ const permissionsLookupFn = "some-permissions-fn";
 const terminatedSessionCheckFn = "some-terminated-session-check-fn";
 const domain = "some-domain";
 const service = "some-service";
-const tokenClaimsFn = "some-token-claims-fn";
+const keyClaimsFn = "some-token-claims-fn";
 
 process.env.DOMAIN = domain;
 process.env.SERVICE = service;
@@ -56,7 +56,7 @@ describe("Command gateway", () => {
       permissionsLookupFn,
       terminatedSessionCheckFn,
       verifyFn: verifyFnFake,
-      tokenClaimsFn
+      keyClaimsFn
     });
 
     expect(gatewayPostFake).to.have.been.calledWith({ name, domain });
@@ -80,7 +80,7 @@ describe("Command gateway", () => {
     });
     expect(authenticationFake).to.have.been.calledWith({
       verifyFn: verifyFnResult,
-      tokenClaimsFn
+      keyClaimsFn
     });
     expect(verifyFnFake).to.have.been.calledWith({ key: "session" });
     expect(authorizationFake).to.have.been.calledWith({
@@ -129,7 +129,7 @@ describe("Command gateway", () => {
       permissionsLookupFn,
       terminatedSessionCheckFn,
       verifyFn: verifyFnFake,
-      tokenClaimsFn
+      keyClaimsFn
     });
 
     expect(gatewayPostFake).to.have.been.calledWith({ name, domain });
@@ -153,7 +153,7 @@ describe("Command gateway", () => {
     });
     expect(authenticationFake).to.have.been.calledWith({
       verifyFn: verifyFnResult,
-      tokenClaimsFn
+      keyClaimsFn
     });
     expect(verifyFnFake).to.have.been.calledWith({ key: "session" });
     expect(authorizationFake).to.have.been.calledWith({
@@ -204,7 +204,7 @@ describe("Command gateway", () => {
       permissionsLookupFn,
       terminatedSessionCheckFn,
       verifyFn: verifyFnFake,
-      tokenClaimsFn
+      keyClaimsFn
     });
 
     expect(verifyFnFake).to.have.been.calledWith({ key });
@@ -255,7 +255,7 @@ describe("Command gateway", () => {
       permissionsLookupFn,
       terminatedSessionCheckFn,
       verifyFn: verifyFnFake,
-      tokenClaimsFn
+      keyClaimsFn
     });
 
     expect(gatewayPostFake).to.have.been.calledWith({
@@ -276,7 +276,7 @@ describe("Command gateway", () => {
     });
     expect(authenticationFake).to.have.been.calledWith({
       verifyFn: verifyFnResult,
-      tokenClaimsFn
+      keyClaimsFn
     });
     expect(verifyFnFake).to.have.been.calledWith({ key: "session" });
     expect(authorizationFake).to.have.been.calledOnce;
@@ -334,7 +334,7 @@ describe("Command gateway", () => {
       permissionsLookupFn,
       terminatedSessionCheckFn,
       verifyFn: verifyFnFake,
-      tokenClaimsFn
+      keyClaimsFn
     });
 
     expect(gatewayPostFake).to.have.been.calledWith({

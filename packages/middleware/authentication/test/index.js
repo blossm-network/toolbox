@@ -4,7 +4,7 @@ const deps = require("../deps");
 const authenticationMiddleware = require("..");
 
 const verifyFn = "some-verify-fn";
-const tokenClaimsFn = "some-claims-fn";
+const keyClaimsFn = "some-claims-fn";
 
 describe("Authentication middleware", () => {
   afterEach(() => {
@@ -34,7 +34,7 @@ describe("Authentication middleware", () => {
 
     const nextFake = fake();
 
-    await authenticationMiddleware({ verifyFn, tokenClaimsFn })(
+    await authenticationMiddleware({ verifyFn, keyClaimsFn })(
       req,
       null,
       nextFake
@@ -43,7 +43,7 @@ describe("Authentication middleware", () => {
     expect(authenticateFake).to.have.been.calledWith({
       req,
       verifyFn,
-      tokenClaimsFn
+      keyClaimsFn
     });
     expect(req.context).to.deep.equal(context);
     expect(req.claims).to.deep.equal({

@@ -1,6 +1,6 @@
 const deps = require("./deps");
 
-module.exports = async ({ req, verifyFn, tokenClaimsFn }) => {
+module.exports = async ({ req, verifyFn, keyClaimsFn }) => {
   const tokens = deps.tokensFromReq(req);
 
   //TODO
@@ -16,7 +16,9 @@ module.exports = async ({ req, verifyFn, tokenClaimsFn }) => {
     });
     return claims;
   } else if (tokens.basic) {
-    const claims = await tokenClaimsFn({ header: tokens.basic });
+    const credentials = Buffer.from(tokens.basic, "base64").toString("ascii");
+    const [id, secret] = credentials.split(":");
+    const claims = await keyClaimsFn({ id, secret });
     //TODO
     //eslint-disable-next-line no-console
     console.log({ claims });

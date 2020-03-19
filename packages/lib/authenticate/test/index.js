@@ -63,23 +63,30 @@ describe("Authorize", () => {
     expect(response).to.deep.equal(claims);
   });
   it("should authenticate with basic token", async () => {
-    const basicToken = "some-basic-token";
+    const basicTokenId = "some-basic-id";
+    const basicTokenSecret = "some-basic-secret";
+
+    const basicToken = `${basicTokenId}:${basicTokenSecret}`;
+
+    const buffer = Buffer.from(basicToken).toString("base64");
+
     const basicTokens = {
-      basic: basicToken
+      basic: buffer
     };
 
     replace(deps, "tokensFromReq", fake.returns(basicTokens));
 
-    const tokenClaimsFnFake = fake.returns(claims);
+    const keyClaimsFnFake = fake.returns(claims);
     const response = await authorize({
       req,
       verifyFn,
-      tokenClaimsFn: tokenClaimsFnFake
+      keyClaimsFn: keyClaimsFnFake
     });
 
     expect(deps.tokensFromReq).to.have.been.calledWith(req);
-    expect(tokenClaimsFnFake).to.have.been.calledWith({
-      header: basicToken
+    expect(keyClaimsFnFake).to.have.been.calledWith({
+      id: basicTokenId,
+      secret: basicTokenSecret
     });
     expect(response).to.deep.equal(claims);
   });
