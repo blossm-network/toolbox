@@ -23,6 +23,17 @@ module.exports = (req, { cookieKey } = {}) => {
   //eslint-disable-next-line no-console
   console.log({ components });
 
+  const base64Credentials = components[1];
+  const credentials = Buffer.from(base64Credentials, "base64").toString(
+    "ascii"
+  );
+  //TODO
+  //eslint-disable-next-line no-console
+  console.log({ credentials });
+  const [username, password] = credentials.split(":");
+  //TODO
+  //eslint-disable-next-line no-console
+  console.log({ username, password });
   return {
     ...tokens,
     ...(components[0] == "Bearer" && { bearer: components[1] }),
