@@ -74,7 +74,7 @@ describe("Command handler unit tests", () => {
     expect(uuidFake).to.have.been.calledTwice;
     expect(uuidFake).to.have.been.calledWith();
     expect(randomStringOfLengthFake).to.have.been.calledTwice;
-    expect(randomStringOfLengthFake).to.have.been.calledWith(20);
+    expect(randomStringOfLengthFake).to.have.been.calledWith(40);
     expect(hashFake).to.have.been.calledWith(secret);
 
     expect(result).to.deep.equal({

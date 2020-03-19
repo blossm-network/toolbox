@@ -9,8 +9,8 @@ module.exports = async ({ payload, context }) => {
   const keyRoot = deps.uuid();
   const principleRoot = deps.uuid();
 
-  const id = deps.randomStringOfLength(20);
-  const secret = deps.randomStringOfLength(20);
+  const id = deps.randomStringOfLength(40);
+  const secret = deps.randomStringOfLength(40);
   const hash = await deps.hash(secret);
 
   return {
