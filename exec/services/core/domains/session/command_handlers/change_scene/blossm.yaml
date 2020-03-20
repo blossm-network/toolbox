@@ -72,7 +72,9 @@ testing:
           root: some-root
       response:
         tokens:
-          session:
+          - network:
+            type: access
+            value:
     - pre:
         - domain: principle
           root: some-other-principle-root

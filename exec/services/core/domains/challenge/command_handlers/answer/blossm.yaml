@@ -92,7 +92,9 @@ testing:
           network: some-network
       response:
         tokens:
-          session:
+          - network:
+            type: access
+            value:
     - pre:
         - domain: challenge
           root: some-other-root

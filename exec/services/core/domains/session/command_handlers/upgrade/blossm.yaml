@@ -52,7 +52,9 @@ testing:
         exp: 9999-12-31T00:00:00.000
       response:
         tokens:
-          session:
+          - network:
+            type: access
+            value:
     - pre:
         - domain: session
           root: some-other-root

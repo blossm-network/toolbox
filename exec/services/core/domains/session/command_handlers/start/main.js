@@ -45,6 +45,8 @@ module.exports = async ({ payload }) => {
         correctNumber: 0
       }
     ],
-    response: { tokens: { session: token } }
+    response: {
+      tokens: [{ network: process.env.NETWORK, type: "access", value: token }]
+    }
   };
 };

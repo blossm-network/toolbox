@@ -13,8 +13,9 @@ module.exports = ({ name, domain } = {}) => async (req, res) => {
 
   // If the response has tokens, send them as cookies and remove them from the response.
   if (response && response.tokens) {
-    for (const token in response.tokens) {
-      res.cookie(token, response.tokens[token], {
+    for (const token of response.tokens) {
+      const cookieName = `${token.network}-${token.type}`;
+      res.cookie(cookieName, token.value, {
         httpOnly: true,
         secure: true
       });

@@ -98,7 +98,9 @@ testing:
         sub: some-principle-root
       response:
         tokens:
-          challenge:
+          - network:
+            type: challenge
+            value:
     - pre:
         - domain: principle
           root: some-principle-root
@@ -133,7 +135,9 @@ testing:
         sub: some-other-principle-root
       response:
         tokens:
-          challenge:
+          - network:
+            type: challenge
+            value:
     - pre:
         - domain: principle
           root: some-principle-root_1

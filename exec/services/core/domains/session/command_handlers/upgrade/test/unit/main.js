@@ -84,7 +84,7 @@ describe("Command handler unit tests", () => {
           payload: { roles: [{ id: "SessionAdmin", service, network }] }
         }
       ],
-      response: { tokens: { session: token } }
+      response: { tokens: [{ network, type: "access", value: token }] }
     });
     expect(aggregateFake).to.have.been.calledWith(root);
     expect(signFake).to.have.been.calledWith({

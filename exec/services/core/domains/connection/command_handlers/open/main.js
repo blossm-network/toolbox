@@ -47,9 +47,7 @@ module.exports = async ({ context }) => {
       }
     ],
     response: {
-      tokens: {
-        access: token
-      }
+      tokens: [{ network: process.env.NETWORK, type: "access", value: token }]
     }
   };
 };

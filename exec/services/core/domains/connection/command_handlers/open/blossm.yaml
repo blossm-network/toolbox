@@ -46,7 +46,9 @@ testing:
           network: some-key-network
       response:
         tokens:
-          access:
+          - network:
+            type: access
+            value:
 
 #don't change
 procedure: command-handler

@@ -27,6 +27,16 @@ const checkResponse = ({ data, expected }) => {
           data: data[property],
           expected: expected[property]
         });
+      } else if (expected[property] instanceof Array) {
+        expect(data[property]).to.be.an("array");
+        let i = 0;
+        for (const expectedValue of expected[property]) {
+          checkResponse({
+            data: data[property][i],
+            expected: expectedValue[i]
+          });
+          i++;
+        }
       } else {
         expect(data[property]).to.deep.equal(expected[property]);
       }

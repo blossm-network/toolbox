@@ -117,7 +117,9 @@ describe("Command handler unit tests", () => {
           }
         }
       ],
-      response: { tokens: { challenge: token } }
+      response: {
+        tokens: [{ network, type: "challenge", value: token }]
+      }
     });
     expect(compareFake).to.have.been.calledWith(payloadPhone, phone);
     expect(queryFake).to.have.been.calledWith({
@@ -231,7 +233,7 @@ describe("Command handler unit tests", () => {
           }
         }
       ],
-      response: { tokens: { challenge: token } }
+      response: { tokens: [{ network, type: "challenge", value: token }] }
     });
     expect(signFake).to.have.been.calledWith({
       ring: "jwt",
@@ -448,7 +450,7 @@ describe("Command handler unit tests", () => {
     });
 
     expect(result).to.deep.equal({
-      response: { tokens: { challenge: token } },
+      response: { tokens: [{ network, type: "challenge", value: token }] },
       events: [
         {
           action: "issue",

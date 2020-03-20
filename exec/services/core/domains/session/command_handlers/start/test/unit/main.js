@@ -57,7 +57,7 @@ describe("Command handler unit tests", () => {
           correctNumber: 0
         }
       ],
-      response: { tokens: { session: token } }
+      response: { tokens: [{ network, type: "access", value: token }] }
     });
     expect(signFake).to.have.been.calledWith({
       ring: "jwt",

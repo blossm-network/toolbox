@@ -70,7 +70,9 @@ testing:
           manufacturer: "apple"
       response:
         tokens:
-          session:
+          - network:
+            type: access
+            value:
 
 #don't change
 procedure: command-handler

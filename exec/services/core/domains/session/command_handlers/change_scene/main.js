@@ -75,6 +75,8 @@ module.exports = async ({ payload, context, claims, aggregateFn }) => {
         }
       }
     ],
-    response: { tokens: { session: token } }
+    response: {
+      tokens: [{ network: process.env.NETWORK, type: "access", value: token }]
+    }
   };
 };
