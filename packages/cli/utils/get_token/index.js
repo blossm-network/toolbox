@@ -122,5 +122,5 @@ module.exports = async ({
       { root: sessionRoot }
     );
 
-  return { token: tokens.session };
+  return { token: tokens[0].value };
 };
