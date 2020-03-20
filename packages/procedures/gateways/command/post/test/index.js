@@ -28,7 +28,7 @@ describe("Command gateway post", () => {
 
     const issueFake = fake.returns({
       ...response,
-      tokens: { a: 1 }
+      tokens: [{ a: 1 }]
     });
     const setFake = fake.returns({
       issue: issueFake
@@ -70,7 +70,6 @@ describe("Command gateway post", () => {
     });
     expect(issueFake).to.have.been.calledWith(payload, { ...headers, root });
     expect(statusFake).to.have.been.calledWith(200);
-    // expect(sendFake).to.have.been.calledWith(response);
   });
   it("should call with the correct params if response is empty", async () => {
     const validateFake = fake();
@@ -129,9 +128,23 @@ describe("Command gateway post", () => {
     const normalizeFake = fake.returns({ payload, headers, root });
     replace(deps, "normalize", normalizeFake);
 
-    const token1 = "some-token";
-    const token2 = "some-other-token";
-    const issueFake = fake.returns({ tokens: { token1, token2 } });
+    const token1Network = "some-token1-network";
+    const token1Type = "some-token1-type";
+    const token1Value = "some-token1-value";
+    const token2Network = "some-token2-network";
+    const token2Type = "some-token2-type";
+    const token2Value = "some-token2-value";
+    const token1 = {
+      network: token1Network,
+      type: token1Type,
+      value: token1Value
+    };
+    const token2 = {
+      network: token2Network,
+      type: token2Type,
+      value: token2Value
+    };
+    const issueFake = fake.returns({ tokens: [token1, token2] });
     const setFake = fake.returns({
       issue: issueFake
     });
@@ -160,14 +173,22 @@ describe("Command gateway post", () => {
     await post({ name, domain })(req, res);
 
     expect(cookieFake).to.have.been.calledTwice;
-    expect(cookieFake).to.have.been.calledWith("token1", token1, {
-      httpOnly: true,
-      secure: true
-    });
-    expect(cookieFake).to.have.been.calledWith("token2", token2, {
-      httpOnly: true,
-      secure: true
-    });
+    expect(cookieFake).to.have.been.calledWith(
+      `${token1Network}-${token1Type}`,
+      token1Value,
+      {
+        httpOnly: true,
+        secure: true
+      }
+    );
+    expect(cookieFake).to.have.been.calledWith(
+      `${token2Network}-${token2Type}`,
+      token2Value,
+      {
+        httpOnly: true,
+        secure: true
+      }
+    );
     expect(validateFake).to.have.been.calledWith(body);
     expect(normalizeFake).to.have.been.calledWith(body);
     expect(commandFake).to.have.been.calledWith({
@@ -180,9 +201,7 @@ describe("Command gateway post", () => {
       claims
     });
     expect(issueFake).to.have.been.calledWith(payload, { ...headers, root });
-    // expect(statusFake).to.have.been.calledWith(204);
     expect(statusFake).to.have.been.calledWith(200);
-    // expect(sendFake).to.have.been.calledWith();
   });
   it("should throw correctly", async () => {
     const errorMessage = "error-message";
