@@ -70,7 +70,7 @@ describe("Command handler unit tests", () => {
     });
     expect(signFake).to.have.been.calledWith({
       ring: "jwt",
-      key: "session",
+      key: "access",
       location: "global",
       version: "1",
       project

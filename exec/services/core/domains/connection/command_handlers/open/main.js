@@ -26,7 +26,7 @@ module.exports = async ({ context }) => {
     },
     signFn: deps.sign({
       ring: "jwt",
-      key: "session",
+      key: "access",
       location: "global",
       version: "1",
       project: process.env.GCP_PROJECT

@@ -89,7 +89,7 @@ describe("Command handler unit tests", () => {
     expect(aggregateFake).to.have.been.calledWith(root);
     expect(signFake).to.have.been.calledWith({
       ring: "jwt",
-      key: "session",
+      key: "access",
       location: "global",
       version: "1",
       project
