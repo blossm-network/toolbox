@@ -22,7 +22,7 @@ module.exports = async ({
 
   for (const {
     name,
-    key = "session",
+    key = "access",
     priviledges,
     protected = true
   } of commands) {
