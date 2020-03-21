@@ -415,7 +415,7 @@ const configure = async (workingDir, configFn, env, strict) => {
     const rolesBucket = envRolesBucket({ env, config: blossmConfig });
     const secretBucket = envSecretsBucket({ env, config: blossmConfig });
     const secretBucketKeyLocation = "global";
-    const secretBucketKeyRing = "secret-bucket";
+    const secretBucketKeyRing = "secrets-bucket";
 
     const containerRegistery = `us.gcr.io/${project}`;
 

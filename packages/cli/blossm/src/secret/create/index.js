@@ -40,7 +40,7 @@ const create = async input => {
   const blossmConfig = rootDir.config();
   await createSecret(input.name, input.message, {
     project: envProject({ config: blossmConfig, env }),
-    ring: "secret-bucket",
+    ring: "secrets-bucket",
     location: "global",
     bucket: envSecretsBucket({ config: blossmConfig, env })
   });
