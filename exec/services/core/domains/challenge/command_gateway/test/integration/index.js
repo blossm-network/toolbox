@@ -39,7 +39,7 @@ describe("Command gateway integration tests", () => {
 
     expect(response.statusCode).to.equal(200);
     const {
-      tokens: { challenge: token }
+      tokens: [{ value: token }]
     } = JSON.parse(response.body);
 
     const [message] = await sms(
