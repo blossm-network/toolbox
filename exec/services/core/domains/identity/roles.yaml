@@ -1,4 +1,0 @@
-IdentityAdmin:
-  title: Identity Admin
-  permissions:
-    - core:identity:create

@@ -1,4 +1,0 @@
-SceneAdmin:
-  title: Scene Admin
-  permissions:
-    - core:scene:delete
