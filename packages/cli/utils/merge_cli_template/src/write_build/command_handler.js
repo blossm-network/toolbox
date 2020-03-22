@@ -38,6 +38,8 @@ module.exports = ({
   secretBucket,
   secretBucketKeyLocation,
   secretBucketKeyRing,
+  twilioTestReceivingPhoneNumber,
+  twilioSendingPhoneNumber,
   imageExtension,
   runUnitTests,
   runBaseUnitTests,
@@ -65,7 +67,11 @@ module.exports = ({
       secretBucket,
       secretBucketKeyRing,
       secretBucketKeyLocation,
-      custom: { NAME: name }
+      custom: {
+        NAME: name,
+        TWILIO_TEST_RECEIVING_PHONE_NUMBER: twilioTestReceivingPhoneNumber,
+        TWILIO_SENDING_PHONE_NUMBER: twilioSendingPhoneNumber
+      }
     }),
     dockerComposeUp,
     dockerComposeProcesses,
@@ -98,7 +104,7 @@ module.exports = ({
             network,
             envUriSpecifier,
             nodeEnv: env,
-            env: `NAME=${name}`,
+            env: `NAME=${name},TWILIO_SENDING_PHONE_NUMBER=${twilioSendingPhoneNumber}`,
             labels: `name=${name}`
           }),
           startDnsTransaction({ dnsZone, project }),

@@ -23,7 +23,9 @@ module.exports = ({
   mongodbHost,
   mongodbProtocol,
   mongodbUser,
-  mongodbUserPassword
+  mongodbUserPassword,
+  twilioSendingPhoneNumber,
+  twilioTestReceivingPhoneNumber
 }) => {
   const common = {
     ports: [`${port}`]
@@ -127,7 +129,9 @@ module.exports = ({
                 ...commonEnvironment,
                 PROCEDURE: dependency.procedure,
                 DOMAIN: dependency.domain,
-                NAME: dependency.name
+                NAME: dependency.name,
+                TWILIO_SENDING_PHONE_NUMBER: twilioSendingPhoneNumber,
+                TWILIO_RECEIVING_PHONE_NUMBER: twilioTestReceivingPhoneNumber
               }
             }
           };

@@ -19,7 +19,9 @@ module.exports = ({
   mongodbUserPassword,
   mongodbHost,
   mongodbDatabase,
-  mongodbProtocol
+  mongodbProtocol,
+  twilioSendingPhoneNumber,
+  twilioTestReceivingPhoneNumber
 }) => {
   const common = {
     container_name: `${mainContainerName}`,
@@ -76,7 +78,9 @@ module.exports = ({
         ...common,
         environment: {
           ...common.environment,
-          NAME: `${name}`
+          TWILIO_SENDING_PHONE_NUMBER: twilioSendingPhoneNumber,
+          TWILIO_TEST_RECEIVING_PHONE_NUMBER: twilioTestReceivingPhoneNumber,
+          NAME: name
         }
       };
     case "event-handler":

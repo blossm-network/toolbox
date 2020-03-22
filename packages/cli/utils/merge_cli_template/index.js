@@ -40,6 +40,36 @@ const envProject = ({ env, config }) => {
   }
 };
 
+const envTwilioSendingPhoneNumber = ({ env, config }) => {
+  switch (env) {
+    case "production":
+      return config.vendors.texting.twilio.sendingPhoneNumber.production;
+    case "sandbox":
+      return config.vendors.texting.twilio.sendingPhoneNumber.sandbox;
+    case "staging":
+      return config.vendors.texting.twilio.sendingPhoneNumber.staging;
+    case "development":
+      return config.vendors.texting.twilio.sendingPhoneNumber.development;
+    default:
+      return "";
+  }
+};
+
+const envTwilioTestReceivingPhoneNumber = ({ env, config }) => {
+  switch (env) {
+    case "production":
+      return config.vendors.texting.twilio.testReceivingPhoneNumber.production;
+    case "sandbox":
+      return config.vendors.texting.twilio.testReceivingPhoneNumber.sandbox;
+    case "staging":
+      return config.vendors.texting.twilio.testReceivingPhoneNumber.staging;
+    case "development":
+      return config.vendors.texting.twilio.testReceivingPhoneNumber.development;
+    default:
+      return "";
+  }
+};
+
 const envComputeUrlId = ({ env, config }) => {
   switch (env) {
     case "production":
@@ -414,6 +444,14 @@ const configure = async (workingDir, configFn, env, strict) => {
 
     const rolesBucket = envRolesBucket({ env, config: blossmConfig });
     const secretBucket = envSecretsBucket({ env, config: blossmConfig });
+    const twilioSendingPhoneNumber = envTwilioSendingPhoneNumber({
+      env,
+      config: blossmConfig
+    });
+    const twilioTestReceivingPhoneNumber = envTwilioTestReceivingPhoneNumber({
+      env,
+      config: blossmConfig
+    });
     const secretBucketKeyLocation = "global";
     const secretBucketKeyRing = "secrets-bucket";
 
@@ -437,6 +475,8 @@ const configure = async (workingDir, configFn, env, strict) => {
       mongodbHost: envMongodbHost({ env, config: blossmConfig, procedure }),
       mainContainerName,
       containerRegistery,
+      twilioSendingPhoneNumber,
+      twilioTestReceivingPhoneNumber,
       envUriSpecifier: envUriSpecifier(env),
       computeUrlId: envComputeUrlId({ env, config: blossmConfig }),
       dnsZone,
@@ -467,7 +507,9 @@ const configure = async (workingDir, configFn, env, strict) => {
       event,
       secretBucket,
       secretBucketKeyLocation,
-      secretBucketKeyRing
+      secretBucketKeyRing,
+      twilioSendingPhoneNumber,
+      twilioTestReceivingPhoneNumber
     });
   } catch (e) {
     //eslint-disable-next-line no-console
