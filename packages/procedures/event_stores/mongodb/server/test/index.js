@@ -171,7 +171,7 @@ describe("Mongodb event store", () => {
       },
       indexes: [[{ "headers.root": 1 }]]
     });
-    expect(secretFake).to.have.been.calledWith("mongodb");
+    expect(secretFake).to.have.been.calledWith("mongodb-event-store");
 
     expect(saveEventsFake).to.have.been.calledWith({
       eventStore: eStore,

@@ -154,7 +154,7 @@ describe("View store", () => {
         autoIndex: true
       }
     });
-    expect(secretFake).to.have.been.calledWith("mongodb");
+    expect(secretFake).to.have.been.calledWith("mongodb-view-store");
 
     const id = "some-id";
     const findOneFnResult = await viewStoreFake.lastCall.lastArg.findOneFn({
@@ -442,7 +442,7 @@ describe("View store", () => {
         autoIndex: true
       }
     });
-    expect(secretFake).to.have.been.calledWith("mongodb");
+    expect(secretFake).to.have.been.calledWith("mongodb-view-store");
 
     expect(storeFake).to.have.been.calledWith({
       name: `${domain}.${name}`,
@@ -492,7 +492,7 @@ describe("View store", () => {
         autoIndex: true
       }
     });
-    expect(secretFake).to.have.been.calledWith("mongodb");
+    expect(secretFake).to.have.been.calledWith("mongodb-view-store");
 
     const id = "some-id";
     const findOneFnResult = await viewStoreFake.lastCall.lastArg.findOneFn({
@@ -669,7 +669,7 @@ describe("View store", () => {
         autoIndex: true
       }
     });
-    expect(secretFake).to.have.been.calledWith("mongodb");
+    expect(secretFake).to.have.been.calledWith("mongodb-view-store");
 
     const id = "some-id";
     const findOneFnResult = await viewStoreFake.lastCall.lastArg.findOneFn({
