@@ -1,7 +1,7 @@
 {
-  "name": "@blossm/antenna-post",
-  "description": "An antenna server POST handler.",
-  "version": "0.0.2",
+  "name": "@blossm/command-relay-post",
+  "description": "A relay gateway server POST handler.",
+  "version": "0.0.0",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -14,6 +14,7 @@
     "access": "public"
   },
   "dependencies": {
+    "@blossm/request": "*",
     "@blossm/gcp-token": "^0.0.21"
   },
   "devDependencies": {

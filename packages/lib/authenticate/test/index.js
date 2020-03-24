@@ -112,4 +112,36 @@ describe("Authorize", () => {
       expect(e).to.equal(error);
     }
   });
+  it("should not authenticate with basic token but no keyClaimsFn", async () => {
+    const basicTokenId = "some-basic-id";
+    const basicTokenSecret = "some-basic-secret";
+
+    const basicToken = `${basicTokenId}:${basicTokenSecret}`;
+
+    const buffer = Buffer.from(basicToken).toString("base64");
+
+    const basicTokens = {
+      basic: buffer
+    };
+
+    replace(deps, "tokensFromReq", fake.returns(basicTokens));
+
+    const error = "some-error";
+    const tokenInvalidFake = fake.returns(error);
+    replace(deps, "invalidCredentialsError", {
+      tokenInvalid: tokenInvalidFake
+    });
+
+    try {
+      await authorize({
+        req,
+        verifyFn
+      });
+
+      //shouldn't get called
+      expect(1).to.equal(0);
+    } catch (e) {
+      expect(e).to.equal(error);
+    }
+  });
 });

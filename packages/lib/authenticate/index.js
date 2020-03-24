@@ -11,7 +11,7 @@ module.exports = async ({ req, verifyFn, keyClaimsFn }) => {
       verifyFn
     });
     return claims;
-  } else if (tokens.basic) {
+  } else if (tokens.basic && keyClaimsFn) {
     const credentials = Buffer.from(tokens.basic, "base64").toString("ascii");
     const [id, secret] = credentials.split(":");
     const claims = await keyClaimsFn({ id, secret });

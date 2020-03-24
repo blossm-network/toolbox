@@ -13,6 +13,7 @@ const projection = require("./projection");
 const eventStore = require("./event_store");
 const viewStore = require("./view_store");
 const commandGateway = require("./command_gateway");
+const commandRelay = require("./command_relay");
 const viewGateway = require("./view_gateway");
 const roles = require("./roles");
 const job = require("./job");
@@ -29,6 +30,7 @@ const domains = [
   "view-store",
   "event-store",
   "command-gateway",
+  "command-relay",
   "view-gateway",
   "job"
 ];
@@ -69,6 +71,8 @@ const tryShortcuts = input => {
       return commandGateway(args);
     case "view-gateway":
       return viewGateway(args);
+    case "command-relay":
+      return commandRelay(args);
     case "roles":
       return roles(args);
     case "job":
@@ -98,6 +102,8 @@ const forward = input => {
       return roles(input.args);
     case "view-gateway":
       return viewGateway(input.args);
+    case "command-relay":
+      return commandRelay(input.args);
     case "job":
       return job(input.args);
     default: {
