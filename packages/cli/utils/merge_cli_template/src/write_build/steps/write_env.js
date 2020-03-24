@@ -19,8 +19,8 @@ module.exports = ({
       "-c",
       stripIndents`
     cat >> .env <<- EOM
-    NETWORK=local
-    HOST=local
+    NETWORK=local.network
+    HOST=local.network
     NODE_ENV=local
     DOMAIN=${domain}
     SERVICE=${service}
