@@ -50,7 +50,8 @@ module.exports = gateway({
     }
 
     const aggregate = await eventStore({
-      domain: "principle"
+      domain: "principle",
+      service: "core"
     })
       .set({ tokenFn: gcpToken })
       .aggregate(principle.root);
@@ -60,7 +61,7 @@ module.exports = gateway({
           roles: aggregate.state.roles.map(role => role.id),
           defaultRoles,
           customRolePermissionsFn: async ({ roleId }) => {
-            const role = await eventStore({ domain: "role" })
+            const role = await eventStore({ domain: "role", service: "core" })
               .set({ tokenFn: gcpToken })
               .query({ key: "id", value: roleId });
             return role.state.permissions;
@@ -70,7 +71,8 @@ module.exports = gateway({
   },
   terminatedSessionCheckFn: async ({ session }) => {
     const aggregate = await eventStore({
-      domain: "session"
+      domain: "session",
+      service: "core"
     })
       .set({ tokenFn: gcpToken })
       .aggregate(session);
@@ -86,7 +88,7 @@ module.exports = gateway({
       project: process.env.GCP_PROJECT
     }),
   keyClaimsFn: async ({ id, secret }) => {
-    const [key] = await eventStore({ domain: "key" })
+    const [key] = await eventStore({ domain: "key", service: "core" })
       .set({ tokenFn: gcpToken })
       .query({ key: "id", value: id });
 

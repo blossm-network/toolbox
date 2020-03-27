@@ -18,7 +18,8 @@ module.exports = async ({
 
   // Create the identity for the token.
   await eventStore({
-    domain: "identity"
+    domain: "identity",
+    service: "core"
   }).add([
     {
       data: createEvent({
@@ -43,7 +44,8 @@ module.exports = async ({
   // and add role to the principle.
   await Promise.all([
     eventStore({
-      domain: "role"
+      domain: "role",
+      service: "core"
     }).add([
       {
         data: createEvent({
@@ -59,7 +61,8 @@ module.exports = async ({
       }
     ]),
     eventStore({
-      domain: "principle"
+      domain: "principle",
+      service: "core"
     }).add([
       {
         data: createEvent({
@@ -83,7 +86,8 @@ module.exports = async ({
 
   // Add a session.
   await eventStore({
-    domain: "session"
+    domain: "session",
+    service: "core"
   }).add([
     {
       data: createEvent({
@@ -98,7 +102,8 @@ module.exports = async ({
 
   const { tokens } = await command({
     name: "upgrade",
-    domain: "session"
+    domain: "session",
+    service: "core"
   })
     .set({
       context: {
