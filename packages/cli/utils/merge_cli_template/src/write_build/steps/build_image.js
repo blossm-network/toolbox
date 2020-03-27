@@ -4,7 +4,7 @@ module.exports = ({ extension, containerRegistery, procedure } = {}) => {
     args: [
       "build",
       "-t",
-      `${containerRegistery}/${procedure}.${extension}`,
+      `${containerRegistery}/${procedure}${extension ? `.${extension}` : ""}`,
       "."
     ]
   };
