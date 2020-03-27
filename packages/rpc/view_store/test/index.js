@@ -4,8 +4,8 @@ const { restore, replace, fake } = require("sinon");
 const deps = require("../deps");
 const viewStore = require("..");
 
-const name = "some-name!";
-const domain = "some-domain!";
+const name = "some-name";
+const domain = "some-domain";
 const service = "some-service";
 const host = "some-host";
 
@@ -20,6 +20,7 @@ const claims = "some-claims";
 
 const envService = "some-env-service";
 process.env.SERVICE = envService;
+process.env.HOST = host;
 
 describe("Get views", () => {
   afterEach(() => {
@@ -39,7 +40,7 @@ describe("Get views", () => {
     });
     replace(deps, "rpc", rpcFake);
 
-    await viewStore({ name, domain, service, host })
+    await viewStore({ name, domain, service })
       .set({ context, tokenFn, claims })
       .create(view);
 
@@ -50,7 +51,7 @@ describe("Get views", () => {
       "view-store"
     );
     expect(postFake).to.have.been.calledWith({ view });
-    expect(inFake).to.have.been.calledWith({ context, host });
+    expect(inFake).to.have.been.calledWith({ context });
     expect(withFake).to.have.been.calledWith({ tokenFn, claims });
   });
   it("should call create with the correct params and optionals omitted", async () => {
@@ -138,6 +139,42 @@ describe("Get views", () => {
     expect(withFake).to.have.been.calledWith();
     expect(result).to.equal(views);
   });
+  it("should call read with the correct params onto other host", async () => {
+    const views = "some-views";
+    const withFake = fake.returns(views);
+    const inFake = fake.returns({
+      with: withFake
+    });
+    const getFake = fake.returns({
+      in: inFake
+    });
+    const rpcFake = fake.returns({
+      get: getFake
+    });
+    replace(deps, "rpc", rpcFake);
+
+    const otherHost = "some-other-host";
+    const result = await viewStore({ name, domain, service, host: otherHost })
+      .set({ context, tokenFn })
+      .read({ query, sort });
+
+    expect(rpcFake).to.have.been.calledWith(
+      name,
+      domain,
+      service,
+      "view-store"
+    );
+    expect(getFake).to.have.been.calledWith({ query, sort });
+    expect(inFake).to.have.been.calledWith({
+      context,
+      host: "view.some-domain.some-service.some-other-host"
+    });
+    expect(withFake).to.have.been.calledWith({
+      tokenFn,
+      path: "/some-name"
+    });
+    expect(result).to.equal(views);
+  });
   it("should call stream with the correct params", async () => {
     const views = "some-views";
     const withFake = fake.returns(views);
@@ -201,6 +238,42 @@ describe("Get views", () => {
     });
     expect(result).to.equal(views);
   });
+  it("should call stream with the correct params onto other host", async () => {
+    const views = "some-views";
+    const withFake = fake.returns(views);
+    const inFake = fake.returns({
+      with: withFake
+    });
+    const getFake = fake.returns({
+      in: inFake
+    });
+    const rpcFake = fake.returns({
+      get: getFake
+    });
+    replace(deps, "rpc", rpcFake);
+
+    const otherHost = "some-other-host";
+    const result = await viewStore({ name, domain, service, host: otherHost })
+      .set({ context, tokenFn })
+      .stream({ query, sort });
+
+    expect(rpcFake).to.have.been.calledWith(
+      name,
+      domain,
+      service,
+      "view-store"
+    );
+    expect(getFake).to.have.been.calledWith({ query, sort });
+    expect(inFake).to.have.been.calledWith({
+      context,
+      host: "view.some-domain.some-service.some-other-host"
+    });
+    expect(withFake).to.have.been.calledWith({
+      path: "/some-name/stream",
+      tokenFn
+    });
+    expect(result).to.equal(views);
+  });
   it("should call update with the correct params", async () => {
     const withFake = fake();
     const inFake = fake.returns({
@@ -214,7 +287,7 @@ describe("Get views", () => {
     });
     replace(deps, "rpc", rpcFake);
 
-    await viewStore({ name, domain, service, host })
+    await viewStore({ name, domain, service })
       .set({ context, tokenFn })
       .update(root, view);
 
@@ -225,7 +298,7 @@ describe("Get views", () => {
       "view-store"
     );
     expect(putFake).to.have.been.calledWith(root, { view });
-    expect(inFake).to.have.been.calledWith({ context, host });
+    expect(inFake).to.have.been.calledWith({ context });
     expect(withFake).to.have.been.calledWith({
       tokenFn
     });
@@ -268,7 +341,7 @@ describe("Get views", () => {
     });
     replace(deps, "rpc", rpcFake);
 
-    await viewStore({ name, domain, service, host })
+    await viewStore({ name, domain, service })
       .set({ context, tokenFn })
       .delete(root);
 
@@ -279,7 +352,7 @@ describe("Get views", () => {
       "view-store"
     );
     expect(deleteFake).to.have.been.calledWith(root);
-    expect(inFake).to.have.been.calledWith({ context, host });
+    expect(inFake).to.have.been.calledWith({ context });
     expect(withFake).to.have.been.calledWith({
       tokenFn
     });

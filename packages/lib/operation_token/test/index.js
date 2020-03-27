@@ -38,6 +38,11 @@ describe("Service token", () => {
       "some-operation1",
       "some-operation2"
     ]);
+    expect(tokenFnFake).to.have.been.calledWith({ hash, name: trimmed });
     expect(result).to.equal(token);
+  });
+  it("should return the correct output with no tokenFn", async () => {
+    const result = await operationToken({});
+    expect(result).to.be.null;
   });
 });

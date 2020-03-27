@@ -1,33 +1,28 @@
 const deps = require("./deps");
 
-module.exports = () => async (req, res) => {
-  const { name, domain, service, network, payload, headers } = req.body;
+module.exports = ({ tokenFn }) => async (req, res) => {
+  //TODO
+  //eslint-disable-next-line
+  console.log({ body: req.body });
+  const { root, name, domain, service, host, payload, headers } = req.body;
 
-  // validate all them.
+  //TODO
+  //eslint-disable-next-line
+  console.log({ root, name, domain, service, host, payload, headers });
 
-  const url = `http://command.${domain}.${service}.${network}/${name}`;
-  const response = await deps.post(url, {
-    body: {
-      payload,
-      headers,
-      context
-    }
-    // ...(token && {
-    //   headers: {
-    //     Authorization: `Basic ${token}`
-    //   }
-    // })
-  });
+  const response = await deps
+    .command({
+      name,
+      domain,
+      service,
+      host
+    })
+    .set({ tokenFn, context: req.context })
+    .issue(payload, { ...headers, root });
 
-  // let response = await deps
-  //   .command({
-  //     name,
-  //     domain,
-  //     service,
-  //     network
-  //   })
-  //   .set({ tokenFn: deps.gcpToken, context: req.context, claims: req.claims })
-  //   .issue(payload, { ...headers });
+  //TODO
+  //eslint-disable-next-line
+  console.log({ response });
 
   // If the response has tokens, send them as cookies and remove them from the response.
   if (response && response.tokens) {
@@ -39,7 +34,7 @@ module.exports = () => async (req, res) => {
         secure: true
       });
     }
-    // // If removing tokens makes the response empty, set it to null to properly return a 204.
+    // If removing tokens makes the response empty, set it to null to properly return a 204.
     // if (Object.keys(response).length == 1) {
     //   response = null;
     // } else {

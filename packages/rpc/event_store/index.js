@@ -2,7 +2,7 @@ const { string: dateString } = require("@blossm/datetime");
 
 const deps = require("./deps");
 
-module.exports = ({ domain, service = process.env.SERVICE, host } = {}) => {
+module.exports = ({ domain, service = process.env.SERVICE } = {}) => {
   const add = ({ context, claims, tokenFn } = {}) => async events => {
     const normalizedEvents = events.map(event => {
       return {
@@ -23,8 +23,7 @@ module.exports = ({ domain, service = process.env.SERVICE, host } = {}) => {
       .rpc(domain, service, "event-store")
       .post({ events: normalizedEvents })
       .in({
-        ...(context && { context }),
-        ...(host && { host })
+        ...(context && { context })
       })
       .with({ tokenFn, ...(claims && { claims }) });
   };
@@ -34,8 +33,7 @@ module.exports = ({ domain, service = process.env.SERVICE, host } = {}) => {
       .rpc(domain, service, "event-store")
       .get({ root })
       .in({
-        ...(context && { context }),
-        ...(host && { host })
+        ...(context && { context })
       })
       .with({ tokenFn, ...(claims && { claims }) });
 
@@ -47,8 +45,7 @@ module.exports = ({ domain, service = process.env.SERVICE, host } = {}) => {
       .rpc(domain, service, "event-store")
       .get({ key, value })
       .in({
-        ...(context && { context }),
-        ...(host && { host })
+        ...(context && { context })
       })
       .with({ tokenFn, ...(claims && { claims }) });
   };

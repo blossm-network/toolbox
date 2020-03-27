@@ -22,6 +22,7 @@ let defaultRoles;
 module.exports = gateway({
   commands: config.commands,
   whitelist: config.whitelist,
+  tokenFn: gcpToken,
   permissionsLookupFn: async ({ principle }) => {
     if (!defaultRoles) {
       const fileName = uuid();

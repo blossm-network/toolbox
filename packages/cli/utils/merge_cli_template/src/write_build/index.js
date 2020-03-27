@@ -6,6 +6,7 @@ const rootDir = require("@blossm/cli-root-dir");
 const viewStore = require("./view_store");
 const commandGateway = require("./command_gateway");
 const viewGateway = require("./view_gateway");
+const commandRelay = require("./command_relay");
 const commandHandler = require("./command_handler");
 const eventHandler = require("./event_handler");
 const eventStore = require("./event_store");
@@ -269,23 +270,54 @@ const steps = ({
         runBaseIntegrationTests,
         strict
       });
+    case "command-relay":
+      return commandRelay({
+        imageExtension,
+        region,
+        project,
+        envUriSpecifier,
+        containerRegistery,
+        mainContainerName,
+        dnsZone,
+        memory,
+        env,
+        computeUrlId,
+        service,
+        domain,
+        procedure,
+        network,
+        operationHash,
+        operationName,
+        serviceName,
+        rolesBucket,
+        secretBucket,
+        secretBucketKeyLocation,
+        secretBucketKeyRing,
+        runUnitTests,
+        runBaseUnitTests,
+        runIntegrationTests,
+        runBaseIntegrationTests,
+        strict
+      });
   }
 };
 
-const imageExtension = ({ domain, name, event, procedure }) => {
+const imageExtension = ({ service, domain, name, event, procedure }) => {
   switch (procedure) {
     case "view-store":
-      return `${domain}.${name}`;
+      return `${service}.${domain}.${name}`;
     case "event-store":
     case "command-gateway":
     case "view-gateway":
-      return domain;
+      return `${service}.${domain}`;
     case "event-handler":
     case "projection":
-      return `${domain}.${name}.did-${event.action}.${event.domain}`;
+      return `${service}.${domain}.${name}.did-${event.action}.${event.domain}`;
     case "command-handler":
     case "job":
-      return `${domain}.${name}`;
+      return `${service}.${domain}.${name}`;
+    default:
+      return "";
   }
 };
 
@@ -325,6 +357,7 @@ module.exports = ({
     procedure,
     name,
     domain,
+    service,
     event
   });
 

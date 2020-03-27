@@ -4,8 +4,8 @@ const baseUnitTests = require("./steps/base_unit_tests");
 const buildImage = require("./steps/build_image");
 const dockerComposeUp = require("./steps/docker_compose_up");
 const dockerComposeProcesses = require("./steps/docker_compose_processes");
-const baseIntegrationTests = require("./steps/base_integration_tests");
 const integrationTests = require("./steps/integration_tests");
+const baseIntegrationTests = require("./steps/base_integration_tests");
 const dockerComposeLogs = require("./steps/docker_compose_logs");
 const dockerPush = require("./steps/docker_push");
 const deploy = require("./steps/deploy");
@@ -17,22 +17,18 @@ const mapDomain = require("./steps/map_domain");
 const writeEnv = require("./steps/write_env");
 
 module.exports = ({
-  name,
-  domain,
   region,
   project,
+  network,
   envUriSpecifier,
-  dnsZone,
-  service,
-  procedure,
-  env,
-  operationHash,
-  serviceName,
-  computeUrlId,
-  memory,
   containerRegistery,
   mainContainerName,
-  uri,
+  serviceName,
+  dnsZone,
+  procedure,
+  memory,
+  env,
+  computeUrlId,
   rolesBucket,
   secretBucket,
   secretBucketKeyLocation,
@@ -44,6 +40,7 @@ module.exports = ({
   runBaseIntegrationTests,
   strict
 }) => {
+  const relayUri = `relay.${envUriSpecifier}${network}`;
   return [
     yarnInstall,
     ...(runUnitTests ? [unitTests] : []),
@@ -60,12 +57,7 @@ module.exports = ({
       procedure,
       secretBucket,
       secretBucketKeyRing,
-      secretBucketKeyLocation,
-      custom: {
-        NAME: name,
-        DOMAIN: domain,
-        SERVICE: service
-      }
+      secretBucketKeyLocation
     }),
     dockerComposeUp,
     dockerComposeProcesses,
@@ -79,35 +71,32 @@ module.exports = ({
             procedure
           }),
           deploy({
-            serviceName,
-            procedure,
-            service,
             extension: imageExtension,
+            serviceName,
+            allowUnauthenticated: true,
+            procedure,
+            computeUrlId,
             rolesBucket,
             secretBucket,
             secretBucketKeyLocation,
             secretBucketKeyRing,
             containerRegistery,
-            envUriSpecifier,
-            domain,
-            operationHash,
-            computeUrlId,
+            nodeEnv: env,
             memory,
             region,
             project,
-            nodeEnv: env,
-            env: `NAME=${name},DOMAIN=${domain},SERVICE=${service}`,
-            labels: `name=${name},domain=${domain},service=${service}`
+            network,
+            envUriSpecifier
           }),
           startDnsTransaction({ dnsZone, project }),
-          addDnsTransaction({ uri, dnsZone, project }),
+          addDnsTransaction({ uri: relayUri, dnsZone, project }),
           executeDnsTransaction({ dnsZone, project }),
           abortDnsTransaction({ dnsZone, project }),
           mapDomain({
-            serviceName,
-            uri,
+            uri: relayUri,
             project,
-            region
+            region,
+            serviceName
           })
         ]
       : [dockerComposeLogs])

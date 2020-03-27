@@ -11,8 +11,8 @@ let clock;
 
 const now = new Date();
 
-const name = "some-nmae!";
-const domain = "some-domain!";
+const name = "some-name";
+const domain = "some-domain";
 const service = "some-service";
 const host = "some-host";
 
@@ -31,6 +31,7 @@ const root = "some-root";
 
 const envService = "Some-env-service";
 process.env.SERVICE = envService;
+process.env.HOST = host;
 
 describe("Issue command", () => {
   beforeEach(() => {
@@ -116,5 +117,55 @@ describe("Issue command", () => {
     });
     expect(inFake).to.have.been.calledWith({});
     expect(withFake).to.have.been.calledWith();
+  });
+  it("should call with the correct params onto a different host", async () => {
+    const response = "some-response";
+    const withFake = fake.returns(response);
+    const inFake = fake.returns({
+      with: withFake
+    });
+    const postFake = fake.returns({
+      in: inFake
+    });
+    const rpcFake = fake.returns({
+      post: postFake
+    });
+    replace(deps, "rpc", rpcFake);
+
+    const uuidFake = fake.returns(id);
+    replace(deps, "uuid", uuidFake);
+
+    const otherHost = "some-other-host";
+    const result = await command({ name, domain, service, host: otherHost })
+      .set({ context, claims, tokenFn })
+      .issue(payload, { trace, source, issued, root, options });
+
+    expect(result).to.equal(response);
+    expect(rpcFake).to.have.been.calledWith(
+      name,
+      domain,
+      service,
+      "command-handler"
+    );
+    expect(postFake).to.have.been.calledWith({
+      payload,
+      headers: {
+        issued,
+        trace,
+        source,
+        id
+      },
+      root,
+      options
+    });
+    expect(inFake).to.have.been.calledWith({
+      context,
+      host: "command.some-domain.some-service.some-other-host"
+    });
+    expect(withFake).to.have.been.calledWith({
+      tokenFn,
+      claims,
+      path: "/some-name"
+    });
   });
 });

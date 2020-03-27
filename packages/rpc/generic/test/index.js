@@ -33,11 +33,9 @@ const bodyResponse = {
   statusCode: 200
 };
 
-const envHost = "some-env-host";
-process.env.HOST = envHost;
-
 describe("Operation", () => {
   beforeEach(() => {
+    process.env.HOST = host;
     clock = useFakeTimers(now.getTime());
   });
   afterEach(() => {
@@ -122,6 +120,9 @@ describe("Operation", () => {
     const operationUrlFake = fake.returns(url);
     replace(deps, "operationUrl", operationUrlFake);
 
+    const envHost = "some-env-host";
+    process.env.HOST = envHost;
+
     const result = await operation(operarationPart1, operarationPart2)
       .post(data)
       .in({ context })
@@ -134,6 +135,32 @@ describe("Operation", () => {
     expect(operationUrlFake).to.have.been.calledWith({
       operation: [operarationPart1, operarationPart2],
       host: envHost
+    });
+    expect(result).to.be.null;
+  });
+  it("should call post with the correct params with other host", async () => {
+    const post = fake.returns(response);
+    replace(deps, "post", post);
+
+    const networkTokenFake = fake.returns(token);
+    replace(deps, "networkToken", networkTokenFake);
+
+    const networkUrlFake = fake.returns(url);
+    replace(deps, "networkUrl", networkUrlFake);
+
+    const otherHost = "some-other-host";
+
+    const result = await operation(operarationPart1, operarationPart2)
+      .post(data)
+      .in({ context, host: otherHost })
+      .with({ tokenFn, claims });
+
+    expect(networkTokenFake).to.have.been.calledWith({
+      tokenFn,
+      host: otherHost
+    });
+    expect(networkUrlFake).to.have.been.calledWith({
+      host: otherHost
     });
     expect(result).to.be.null;
   });

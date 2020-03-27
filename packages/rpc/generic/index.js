@@ -7,17 +7,27 @@ const common = ({ method, dataParam, operation, root, data }) => {
     in: ({ context, host = process.env.HOST }) => {
       return {
         with: async ({ path, tokenFn, claims } = {}) => {
-          const token = await deps.operationToken({
-            tokenFn,
-            operation
-          });
+          const internal = host == process.env.HOST;
 
-          const url = deps.operationUrl({
-            operation,
-            host,
-            ...(path && { path }),
-            ...(root && { root })
-          });
+          const token = internal
+            ? await deps.operationToken({
+                tokenFn,
+                operation
+              })
+            : await deps.networkToken({ tokenFn, host });
+
+          const url = internal
+            ? deps.operationUrl({
+                operation,
+                host,
+                ...(path && { path }),
+                ...(root && { root })
+              })
+            : deps.networkUrl({
+                host,
+                ...(path && { path }),
+                ...(root && { root })
+              });
 
           const response = await method(url, {
             [dataParam]: {

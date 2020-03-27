@@ -12,6 +12,7 @@ const name = "some-name";
 const domain = "some-domain";
 const context = "some-context";
 const claims = "some-claims";
+const tokenFn = "some-token-fn";
 
 const root = "some-root";
 
@@ -55,7 +56,7 @@ describe("Command gateway post", () => {
       status: statusFake
     };
 
-    await post({ name, domain })(req, res);
+    await post({ name, domain, tokenFn })(req, res);
 
     expect(validateFake).to.have.been.calledWith(body);
     expect(normalizeFake).to.have.been.calledWith(body);
@@ -64,7 +65,7 @@ describe("Command gateway post", () => {
       domain
     });
     expect(setFake).to.have.been.calledWith({
-      tokenFn: deps.gcpToken,
+      tokenFn,
       context,
       claims
     });
@@ -104,7 +105,7 @@ describe("Command gateway post", () => {
       cookie: cookieFake
     };
 
-    await post({ name, domain })(req, res);
+    await post({ name, domain, tokenFn })(req, res);
 
     expect(validateFake).to.have.been.calledWith(body);
     expect(normalizeFake).to.have.been.calledWith(body);
@@ -113,7 +114,7 @@ describe("Command gateway post", () => {
       domain
     });
     expect(setFake).to.have.been.calledWith({
-      tokenFn: deps.gcpToken,
+      tokenFn,
       context,
       claims
     });
@@ -170,7 +171,7 @@ describe("Command gateway post", () => {
       status: statusFake
     };
 
-    await post({ name, domain })(req, res);
+    await post({ name, domain, tokenFn })(req, res);
 
     expect(cookieFake).to.have.been.calledTwice;
     expect(cookieFake).to.have.been.calledWith(
@@ -196,7 +197,7 @@ describe("Command gateway post", () => {
       domain
     });
     expect(setFake).to.have.been.calledWith({
-      tokenFn: deps.gcpToken,
+      tokenFn,
       context,
       claims
     });
@@ -224,7 +225,7 @@ describe("Command gateway post", () => {
     };
 
     try {
-      await post({ name, domain })(req, res);
+      await post({ name, domain, tokenFn })(req, res);
       //shouldn't get called
       expect(2).to.equal(1);
     } catch (e) {

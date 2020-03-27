@@ -1,13 +1,13 @@
 const deps = require("./deps");
 
 module.exports = ({ name, domain, service = process.env.SERVICE, host }) => {
+  const internal = !host || host == process.env.HOST;
   const create = ({ context, claims, tokenFn } = {}) => async view =>
     await deps
       .rpc(name, domain, service, "view-store")
       .post({ view })
       .in({
-        ...(context && { context }),
-        ...(host && { host })
+        ...(context && { context })
       })
       .with({
         tokenFn,
@@ -19,9 +19,15 @@ module.exports = ({ name, domain, service = process.env.SERVICE, host }) => {
       .get({ query, ...(sort && { sort }) })
       .in({
         ...(context && { context }),
-        ...(host && { host })
+        ...(host && {
+          host: internal ? host : `view.${domain}.${service}.${host}`
+        })
       })
-      .with({ tokenFn, ...(claims && { claims }) });
+      .with({
+        tokenFn,
+        ...(claims && { claims }),
+        ...(!internal && { path: `/${name}` })
+      });
   const stream = ({ context, claims, tokenFn } = {}) => async ({
     query,
     sort
@@ -31,10 +37,12 @@ module.exports = ({ name, domain, service = process.env.SERVICE, host }) => {
       .get({ query, ...(sort && { sort }) })
       .in({
         ...(context && { context }),
-        ...(host && { host })
+        ...(host && {
+          host: internal ? host : `view.${domain}.${service}.${host}`
+        })
       })
       .with({
-        path: "/stream",
+        path: `/${internal ? "" : `${name}/`}stream`,
         ...(tokenFn && { tokenFn }),
         ...(claims && { claims })
       });
@@ -43,8 +51,7 @@ module.exports = ({ name, domain, service = process.env.SERVICE, host }) => {
       .rpc(name, domain, service, "view-store")
       .put(root, { view })
       .in({
-        ...(context && { context }),
-        ...(host && { host })
+        ...(context && { context })
       })
       .with({ tokenFn, ...(claims && { claims }) });
   const del = ({ context, claims, tokenFn } = {}) => async root =>
@@ -52,8 +59,7 @@ module.exports = ({ name, domain, service = process.env.SERVICE, host }) => {
       .rpc(name, domain, service, "view-store")
       .delete(root)
       .in({
-        ...(context && { context }),
-        ...(host && { host })
+        ...(context && { context })
       })
       .with({ tokenFn, ...(claims && { claims }) });
   return {

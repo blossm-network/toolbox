@@ -1,14 +1,14 @@
 const deps = require("./deps");
 
-module.exports = ({ name, domain } = {}) => async (req, res) => {
+module.exports = ({ name, domain, tokenFn } = {}) => async (req, res) => {
   await deps.validate(req.body);
   const { root, payload, headers } = await deps.normalize(req.body);
-  let response = await deps
+  const response = await deps
     .command({
       name,
       domain
     })
-    .set({ tokenFn: deps.gcpToken, context: req.context, claims: req.claims })
+    .set({ tokenFn, context: req.context, claims: req.claims })
     .issue(payload, { ...headers, root });
 
   // If the response has tokens, send them as cookies and remove them from the response.

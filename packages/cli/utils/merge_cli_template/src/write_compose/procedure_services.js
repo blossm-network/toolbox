@@ -10,7 +10,6 @@ module.exports = ({
   env,
   network,
   host,
-  service,
   region,
   containerRegistery,
   secretBucket,
@@ -35,7 +34,6 @@ module.exports = ({
     NODE_ENV: `${env}`,
     NETWORK: `${network}`,
     HOST: `${host}`,
-    SERVICE: `${service}`,
     GCP_PROJECT: `${project}`,
     GCP_REGION: `${region}`,
     GCP_SECRET_BUCKET: `${secretBucket}`,
@@ -52,7 +50,7 @@ module.exports = ({
   let services = {};
   let includeDatabase = false;
   for (const dependency of config.testing.dependencies) {
-    const commonServiceImagePrefix = `${containerRegistery}/${service}.${dependency.procedure}`;
+    const commonServiceImagePrefix = `${containerRegistery}/${dependency.procedure}`;
     switch (dependency.procedure) {
       case "view-store":
         {
@@ -68,7 +66,7 @@ module.exports = ({
             ...services,
             [key]: {
               ...common,
-              image: `${commonServiceImagePrefix}.${dependency.domain}.${dependency.name}:latest`,
+              image: `${commonServiceImagePrefix}.${dependency.service}.${dependency.domain}.${dependency.name}:latest`,
               container_name: `${dependencyHash}.${network}`,
               depends_on: [databaseServiceKey],
               environment: {
@@ -76,6 +74,7 @@ module.exports = ({
                 ...commonStoreEnvironment,
                 PROCEDURE: dependency.procedure,
                 DOMAIN: dependency.domain,
+                SERVICE: dependency.service,
                 NAME: dependency.name
               }
             }
@@ -96,14 +95,15 @@ module.exports = ({
             ...services,
             [key]: {
               ...common,
-              image: `${commonServiceImagePrefix}.${dependency.domain}:latest`,
+              image: `${commonServiceImagePrefix}.${dependency.service}.${dependency.domain}:latest`,
               container_name: `${dependencyHash}.${network}`,
               depends_on: [databaseServiceKey],
               environment: {
                 ...commonEnvironment,
                 ...commonStoreEnvironment,
                 PROCEDURE: dependency.procedure,
-                DOMAIN: dependency.domain
+                DOMAIN: dependency.domain,
+                SERVICE: dependency.service
               }
             }
           };
@@ -123,12 +123,13 @@ module.exports = ({
             ...services,
             [key]: {
               ...common,
-              image: `${commonServiceImagePrefix}.${dependency.domain}.${dependency.name}:latest`,
+              image: `${commonServiceImagePrefix}.${dependency.service}.${dependency.domain}.${dependency.name}:latest`,
               container_name: `${dependencyHash}.${network}`,
               environment: {
                 ...commonEnvironment,
                 PROCEDURE: dependency.procedure,
                 DOMAIN: dependency.domain,
+                SERVICE: dependency.service,
                 NAME: dependency.name,
                 TWILIO_SENDING_PHONE_NUMBER: twilioSendingPhoneNumber,
                 TWILIO_RECEIVING_PHONE_NUMBER: twilioTestReceivingPhoneNumber

@@ -29,11 +29,11 @@ module.exports = ({
     environment: {
       PORT: `${port}`,
       NODE_ENV: `${env}`,
-      DOMAIN: `${domain}`,
+      ...(domain && { DOMAIN: `${domain}` }),
+      ...(service && { SERVICE: `${service}` }),
       NETWORK: `${network}`,
       HOST: `${host}`,
       PROCEDURE: `${procedure}`,
-      SERVICE: `${service}`,
       GCP_PROJECT: `${project}`,
       GCP_REGION: `${region}`,
       GCP_SECRET_BUCKET: `${secretBucket}`,
@@ -50,12 +50,12 @@ module.exports = ({
     MONGODB_PROTOCOL: `${mongodbProtocol}`
   };
 
-  const commonImagePrefix = `${containerRegistery}/${service}.${procedure}.${domain}`;
+  const commonImagePrefix = `${containerRegistery}/${procedure}`;
 
   switch (procedure) {
     case "view-store":
       return {
-        image: `${commonImagePrefix}.${name}:latest`,
+        image: `${commonImagePrefix}.${service}.${domain}.${name}:latest`,
         ...common,
         environment: {
           NAME: `${name}`,
@@ -65,7 +65,7 @@ module.exports = ({
       };
     case "event-store":
       return {
-        image: `${commonImagePrefix}:latest`,
+        image: `${commonImagePrefix}.${service}..${domain}:latest`,
         ...common,
         environment: {
           ...common.environment,
@@ -74,7 +74,7 @@ module.exports = ({
       };
     case "command-handler":
       return {
-        image: `${commonImagePrefix}.${name}:latest`,
+        image: `${commonImagePrefix}.${service}.${domain}.${name}:latest`,
         ...common,
         environment: {
           ...common.environment,
@@ -86,7 +86,7 @@ module.exports = ({
     case "event-handler":
     case "projection":
       return {
-        image: `${commonImagePrefix}.${name}.did-${event.action}.${event.domain}:latest`,
+        image: `${commonImagePrefix}.${service}.${domain}.${name}.did-${event.action}.${event.domain}:latest`,
         ...common,
         environment: {
           ...common.environment,
@@ -98,7 +98,7 @@ module.exports = ({
       };
     case "job":
       return {
-        image: `${commonImagePrefix}.${name}:latest`,
+        image: `${commonImagePrefix}.${service}.${domain}.${name}:latest`,
         ...common,
         environment: {
           ...common.environment,
@@ -107,6 +107,12 @@ module.exports = ({
       };
     case "command-gateway":
     case "view-gateway":
+      return {
+        image: `${commonImagePrefix}.${service}.${domain}:latest`,
+        ...common
+      };
+    case "command-relay":
+    case "view-relay":
       return {
         image: `${commonImagePrefix}:latest`,
         ...common

@@ -18,7 +18,9 @@
     "@blossm/logger": "^0.0.6",
     "@blossm/operation-token": "^0.0.7",
     "@blossm/operation-url": "^0.0.9",
-    "@blossm/request": "^0.0.10"
+    "@blossm/request": "^0.0.10",
+    "@blossm/network-token": "*",
+    "@blossm/network-url": "*"
   },
   "devDependencies": {
     "chai-datetime": "^1.5.0",

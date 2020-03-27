@@ -9,6 +9,7 @@ const terminatedSessionCheckFn = "some-terminated-session-check-fn";
 const domain = "some-domain";
 const service = "some-service";
 const keyClaimsFn = "some-token-claims-fn";
+const tokenFn = "some-token-fn";
 
 process.env.DOMAIN = domain;
 process.env.SERVICE = service;
@@ -53,13 +54,14 @@ describe("Command gateway", () => {
     await gateway({
       commands,
       whitelist,
+      tokenFn,
       permissionsLookupFn,
       terminatedSessionCheckFn,
       verifyFn: verifyFnFake,
       keyClaimsFn
     });
 
-    expect(gatewayPostFake).to.have.been.calledWith({ name, domain });
+    expect(gatewayPostFake).to.have.been.calledWith({ name, domain, tokenFn });
     expect(gatewayPostFake).to.have.been.calledOnce;
     expect(listenFake).to.have.been.calledWith();
     expect(serverFake).to.have.been.calledWith({
@@ -126,13 +128,14 @@ describe("Command gateway", () => {
     await gateway({
       commands,
       whitelist,
+      tokenFn,
       permissionsLookupFn,
       terminatedSessionCheckFn,
       verifyFn: verifyFnFake,
       keyClaimsFn
     });
 
-    expect(gatewayPostFake).to.have.been.calledWith({ name, domain });
+    expect(gatewayPostFake).to.have.been.calledWith({ name, domain, tokenFn });
     expect(gatewayPostFake).to.have.been.calledOnce;
     expect(listenFake).to.have.been.calledWith();
     expect(serverFake).to.have.been.calledWith({
@@ -252,6 +255,7 @@ describe("Command gateway", () => {
     await gateway({
       commands,
       whitelist,
+      tokenFn,
       permissionsLookupFn,
       terminatedSessionCheckFn,
       verifyFn: verifyFnFake,
@@ -260,11 +264,13 @@ describe("Command gateway", () => {
 
     expect(gatewayPostFake).to.have.been.calledWith({
       name: name1,
-      domain
+      domain,
+      tokenFn
     });
     expect(gatewayPostFake).to.have.been.calledWith({
       name: name2,
-      domain
+      domain,
+      tokenFn
     });
     expect(gatewayPostFake).to.have.been.calledTwice;
     expect(postFake).to.have.been.calledWith(gatewayPostResult, {
@@ -331,6 +337,7 @@ describe("Command gateway", () => {
       domain: otherDomain,
       service: otherService,
       whitelist,
+      tokenFn,
       permissionsLookupFn,
       terminatedSessionCheckFn,
       verifyFn: verifyFnFake,
@@ -339,7 +346,8 @@ describe("Command gateway", () => {
 
     expect(gatewayPostFake).to.have.been.calledWith({
       name,
-      domain: otherDomain
+      domain: otherDomain,
+      tokenFn
     });
     expect(authorizationFake).to.have.been.calledWith({
       permissionsLookupFn,

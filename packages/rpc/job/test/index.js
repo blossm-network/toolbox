@@ -13,7 +13,6 @@ const now = new Date();
 const name = "some-name!";
 const domain = "some-domain!";
 const service = "some-service";
-const host = "some-host";
 
 const payload = { a: 1 };
 const tokenFn = "some-token-fn";
@@ -48,7 +47,7 @@ describe("Issue command", () => {
     });
     replace(deps, "rpc", rpcFake);
 
-    const result = await command({ name, domain, service, host })
+    const result = await command({ name, domain, service })
       .set({ context, claims, tokenFn })
       .issue(payload);
 
@@ -58,8 +57,7 @@ describe("Issue command", () => {
       payload
     });
     expect(inFake).to.have.been.calledWith({
-      context,
-      host
+      context
     });
     expect(withFake).to.have.been.calledWith({ tokenFn, claims });
   });

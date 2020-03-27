@@ -54,20 +54,19 @@ module.exports = ({
     buildImage({
       extension: imageExtension,
       containerRegistery,
-      service,
       procedure
     }),
     writeEnv({
       mainContainerName,
       project,
-      domain,
       region,
       procedure,
-      service,
       secretBucket,
       secretBucketKeyRing,
       secretBucketKeyLocation,
       custom: {
+        DOMAIN: domain,
+        SERVICE: service,
         NAME: name,
         TWILIO_TEST_RECEIVING_PHONE_NUMBER: twilioTestReceivingPhoneNumber,
         TWILIO_SENDING_PHONE_NUMBER: twilioSendingPhoneNumber
@@ -82,7 +81,6 @@ module.exports = ({
           dockerPush({
             extension: imageExtension,
             containerRegistery,
-            service,
             procedure
           }),
           deploy({
@@ -104,8 +102,8 @@ module.exports = ({
             network,
             envUriSpecifier,
             nodeEnv: env,
-            env: `NAME=${name},TWILIO_SENDING_PHONE_NUMBER=${twilioSendingPhoneNumber}`,
-            labels: `name=${name}`
+            env: `NAME=${name},DOMAIN=${domain},SERVICE=${service},TWILIO_SENDING_PHONE_NUMBER=${twilioSendingPhoneNumber}`,
+            labels: `name=${name},domain=${domain},service=${service}`
           }),
           startDnsTransaction({ dnsZone, project }),
           addDnsTransaction({ uri, dnsZone, project }),

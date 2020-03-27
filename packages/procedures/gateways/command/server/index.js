@@ -4,6 +4,7 @@ module.exports = async ({
   commands,
   domain = process.env.DOMAIN,
   service = process.env.SERVICE,
+  tokenFn,
   whitelist,
   permissionsLookupFn,
   terminatedSessionCheckFn,
@@ -26,7 +27,7 @@ module.exports = async ({
     priviledges,
     protected = true
   } of commands) {
-    server = server.post(deps.post({ name, domain }), {
+    server = server.post(deps.post({ name, domain, tokenFn }), {
       path: `/${name}`,
       ...(protected && {
         preMiddleware: [

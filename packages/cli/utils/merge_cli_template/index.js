@@ -246,7 +246,9 @@ const topicsForDependencies = (config, events) => {
     .map(e => `did-${e.action}.${e.domain}.${e.service || config.service}`)
     .concat(
       config.procedure == "command-gateway" ||
-        config.procedure == "view-gateway"
+        config.procedure == "view-gateway" ||
+        config.procedure == "command-relay" ||
+        config.procedure == "view-relay"
         ? [
             "did-start.session.core",
             "did-upgrade.session.core",
@@ -357,6 +359,10 @@ const addDefaultDependencies = ({ config }) => {
           };
         })
       ];
+    case "command-relay": {
+      const dependencies = [...tokenDependencies];
+      return [...eventStoreDependencies({ dependencies }), ...dependencies];
+    }
     default:
       return config.testing.dependencies;
   }

@@ -2,8 +2,6 @@ const { stripIndents } = require("common-tags");
 
 module.exports = ({
   mainContainerName,
-  domain,
-  service,
   procedure,
   project,
   region,
@@ -22,8 +20,6 @@ module.exports = ({
     NETWORK=local.network
     HOST=local.network
     NODE_ENV=local
-    DOMAIN=${domain}
-    SERVICE=${service}
     PROCEDURE=${procedure}
     MAIN_CONTAINER_NAME=${mainContainerName}
     GCP_PROJECT=${project}

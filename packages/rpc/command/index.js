@@ -7,6 +7,8 @@ module.exports = ({ name, domain, service = process.env.SERVICE, host }) => {
     payload,
     { trace, source, issued, root, options } = {}
   ) => {
+    const internal = !host || host == process.env.HOST;
+
     const headers = {
       id: deps.uuid(),
       issued: issued || dateString(),
@@ -26,9 +28,15 @@ module.exports = ({ name, domain, service = process.env.SERVICE, host }) => {
       .post(data)
       .in({
         ...(context && { context }),
-        ...(host && { host })
+        ...(host && {
+          host: internal ? host : `command.${domain}.${service}.${host}`
+        })
       })
-      .with({ tokenFn, ...(claims && { claims }) });
+      .with({
+        tokenFn,
+        ...(claims && { claims }),
+        ...(!internal && { path: `/${name}` })
+      });
   };
 
   return {

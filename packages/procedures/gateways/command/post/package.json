@@ -15,7 +15,6 @@
   },
   "dependencies": {
     "@blossm/command-rpc": "^0.0.75",
-    "@blossm/gcp-token": "^0.0.21",
     "@blossm/normalize-command": "^0.0.8",
     "@blossm/validate-command": "^0.0.30"
   },

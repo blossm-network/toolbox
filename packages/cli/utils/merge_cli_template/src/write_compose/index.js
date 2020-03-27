@@ -58,7 +58,6 @@ module.exports = ({
     env,
     network,
     host,
-    service,
     region,
     containerRegistery,
     secretBucket,

@@ -50,19 +50,20 @@ module.exports = ({
     buildImage({
       extension: imageExtension,
       containerRegistery,
-      service,
       procedure
     }),
     writeEnv({
       mainContainerName,
-      domain,
       project,
       region,
       procedure,
-      service,
       secretBucket,
       secretBucketKeyRing,
-      secretBucketKeyLocation
+      secretBucketKeyLocation,
+      custom: {
+        DOMAIN: domain,
+        SERVICE: service
+      }
     }),
     dockerComposeUp,
     dockerComposeProcesses,
@@ -73,7 +74,6 @@ module.exports = ({
           dockerPush({
             extension: imageExtension,
             containerRegistery,
-            service,
             procedure
           }),
           deploy({
@@ -94,7 +94,9 @@ module.exports = ({
             region,
             project,
             network,
-            envUriSpecifier
+            envUriSpecifier,
+            env: `DOMAIN=${domain},SERVICE=${service}`,
+            labels: `domain=${domain},service=${service}`
           }),
           startDnsTransaction({ dnsZone, project }),
           addDnsTransaction({ uri: authUri, dnsZone, project }),
