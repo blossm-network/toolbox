@@ -1,6 +1,6 @@
 {
   "name": "@blossm/operation-token",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Creates a token to access an operation.",
   "main": "index.js",
   "author": "blossm.network",
