@@ -15,7 +15,7 @@ module.exports = ({ tokenFn } = {}) => async (req, res) => {
       name,
       domain,
       service,
-      host: network
+      network
     })
     .set({ tokenFn, context: req.context })
     .issue(payload, { ...headers, root });
