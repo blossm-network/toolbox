@@ -1,6 +1,6 @@
 const deps = require("./deps");
 
-module.exports = ({ tokenFn }) => async (req, res) => {
+module.exports = ({ tokenFn } = {}) => async (req, res) => {
   //TODO
   //eslint-disable-next-line
   console.log({ body: req.body });
