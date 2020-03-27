@@ -8,7 +8,7 @@ const response = { a: 1 };
 const payload = "some-payload";
 const headers = "some-headers";
 const service = "some-service";
-const host = "some-host";
+const network = "some-network";
 const name = "some-name";
 const domain = "some-domain";
 const context = "some-context";
@@ -16,7 +16,7 @@ const claims = "some-claims";
 const tokenFn = "some-token-fn";
 const root = "some-root";
 const body = {
-  host,
+  network,
   name,
   service,
   domain,
@@ -73,7 +73,7 @@ describe("Command relay post", () => {
       name,
       domain,
       service,
-      host
+      network
     });
     expect(setFake).to.have.been.calledWith({
       tokenFn,
@@ -123,7 +123,7 @@ describe("Command relay post", () => {
       name,
       domain,
       service,
-      host
+      network
     });
     expect(setFake).to.have.been.calledWith({
       tokenFn,
@@ -207,7 +207,7 @@ describe("Command relay post", () => {
       name,
       domain,
       service,
-      host
+      network
     });
     expect(setFake).to.have.been.calledWith({
       tokenFn,

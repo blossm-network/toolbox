@@ -1,7 +1,7 @@
 const deps = require("./deps");
 
-module.exports = ({ name, domain, service = process.env.SERVICE, host }) => {
-  const internal = !host || host == process.env.HOST;
+module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
+  const internal = !network || network == process.env.NETWORK;
   const create = ({ context, claims, tokenFn } = {}) => async view =>
     await deps
       .rpc(name, domain, service, "view-store")
@@ -19,8 +19,8 @@ module.exports = ({ name, domain, service = process.env.SERVICE, host }) => {
       .get({ query, ...(sort && { sort }) })
       .in({
         ...(context && { context }),
-        ...(host && {
-          host: internal ? host : `view.${domain}.${service}.${host}`
+        ...(!internal && {
+          host: `view.${domain}.${service}.${network}`
         })
       })
       .with({
@@ -37,8 +37,8 @@ module.exports = ({ name, domain, service = process.env.SERVICE, host }) => {
       .get({ query, ...(sort && { sort }) })
       .in({
         ...(context && { context }),
-        ...(host && {
-          host: internal ? host : `view.${domain}.${service}.${host}`
+        ...(!internal && {
+          host: `view.${domain}.${service}.${network}`
         })
       })
       .with({

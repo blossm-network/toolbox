@@ -4,18 +4,18 @@ module.exports = ({ tokenFn } = {}) => async (req, res) => {
   //TODO
   //eslint-disable-next-line
   console.log({ body: req.body });
-  const { root, name, domain, service, host, payload, headers } = req.body;
+  const { root, name, domain, service, network, payload, headers } = req.body;
 
   //TODO
   //eslint-disable-next-line
-  console.log({ root, name, domain, service, host, payload, headers });
+  console.log({ root, name, domain, service, network, payload, headers });
 
   const response = await deps
     .command({
       name,
       domain,
       service,
-      host
+      host: network
     })
     .set({ tokenFn, context: req.context })
     .issue(payload, { ...headers, root });

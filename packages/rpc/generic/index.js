@@ -14,7 +14,8 @@ const common = ({ method, dataParam, operation, root, data }) => {
           console.log({
             genericRpcInternal: internal,
             host,
-            processHost: process.env.HOST
+            processHost: process.env.HOST,
+            operation
           });
           const token = internal
             ? await deps.operationToken({

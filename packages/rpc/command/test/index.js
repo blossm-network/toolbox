@@ -14,7 +14,7 @@ const now = new Date();
 const name = "some-name";
 const domain = "some-domain";
 const service = "some-service";
-const host = "some-host";
+const network = "some-network";
 
 const payload = { a: 1 };
 const options = "some-options";
@@ -31,7 +31,7 @@ const root = "some-root";
 
 const envService = "Some-env-service";
 process.env.SERVICE = envService;
-process.env.HOST = host;
+process.env.NETWORK = network;
 
 describe("Issue command", () => {
   beforeEach(() => {
@@ -59,7 +59,7 @@ describe("Issue command", () => {
     const uuidFake = fake.returns(id);
     replace(deps, "uuid", uuidFake);
 
-    const result = await command({ name, domain, service, host })
+    const result = await command({ name, domain, service, network })
       .set({ context, claims, tokenFn })
       .issue(payload, { trace, source, issued, root, options });
 
@@ -82,8 +82,7 @@ describe("Issue command", () => {
       options
     });
     expect(inFake).to.have.been.calledWith({
-      context,
-      host
+      context
     });
     expect(withFake).to.have.been.calledWith({ tokenFn, claims });
   });
@@ -118,7 +117,7 @@ describe("Issue command", () => {
     expect(inFake).to.have.been.calledWith({});
     expect(withFake).to.have.been.calledWith();
   });
-  it("should call with the correct params onto a different host", async () => {
+  it("should call with the correct params onto a different network", async () => {
     const response = "some-response";
     const withFake = fake.returns(response);
     const inFake = fake.returns({
@@ -135,8 +134,13 @@ describe("Issue command", () => {
     const uuidFake = fake.returns(id);
     replace(deps, "uuid", uuidFake);
 
-    const otherHost = "some-other-host";
-    const result = await command({ name, domain, service, host: otherHost })
+    const otherNetwork = "some-other-network";
+    const result = await command({
+      name,
+      domain,
+      service,
+      network: otherNetwork
+    })
       .set({ context, claims, tokenFn })
       .issue(payload, { trace, source, issued, root, options });
 
@@ -160,7 +164,7 @@ describe("Issue command", () => {
     });
     expect(inFake).to.have.been.calledWith({
       context,
-      host: "command.some-domain.some-service.some-other-host"
+      host: "command.some-domain.some-service.some-other-network"
     });
     expect(withFake).to.have.been.calledWith({
       tokenFn,

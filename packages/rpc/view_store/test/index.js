@@ -7,7 +7,7 @@ const viewStore = require("..");
 const name = "some-name";
 const domain = "some-domain";
 const service = "some-service";
-const host = "some-host";
+const network = "some-network";
 
 const tokenFn = "some-token-fn";
 
@@ -20,7 +20,7 @@ const claims = "some-claims";
 
 const envService = "some-env-service";
 process.env.SERVICE = envService;
-process.env.HOST = host;
+process.env.NETWORK = network;
 
 describe("Get views", () => {
   afterEach(() => {
@@ -93,7 +93,7 @@ describe("Get views", () => {
     });
     replace(deps, "rpc", rpcFake);
 
-    const result = await viewStore({ name, domain, service, host })
+    const result = await viewStore({ name, domain, service, network })
       .set({ context, tokenFn })
       .read({ query, sort });
 
@@ -104,7 +104,7 @@ describe("Get views", () => {
       "view-store"
     );
     expect(getFake).to.have.been.calledWith({ query, sort });
-    expect(inFake).to.have.been.calledWith({ context, host });
+    expect(inFake).to.have.been.calledWith({ context });
     expect(withFake).to.have.been.calledWith({
       tokenFn
     });
@@ -153,8 +153,13 @@ describe("Get views", () => {
     });
     replace(deps, "rpc", rpcFake);
 
-    const otherHost = "some-other-host";
-    const result = await viewStore({ name, domain, service, host: otherHost })
+    const otherNetwork = "some-other-network";
+    const result = await viewStore({
+      name,
+      domain,
+      service,
+      network: otherNetwork
+    })
       .set({ context, tokenFn })
       .read({ query, sort });
 
@@ -167,7 +172,7 @@ describe("Get views", () => {
     expect(getFake).to.have.been.calledWith({ query, sort });
     expect(inFake).to.have.been.calledWith({
       context,
-      host: "view.some-domain.some-service.some-other-host"
+      host: "view.some-domain.some-service.some-other-network"
     });
     expect(withFake).to.have.been.calledWith({
       tokenFn,
@@ -189,7 +194,7 @@ describe("Get views", () => {
     });
     replace(deps, "rpc", rpcFake);
 
-    const result = await viewStore({ name, domain, service, host })
+    const result = await viewStore({ name, domain, service, network })
       .set({ context, tokenFn })
       .stream({ query, sort });
 
@@ -200,7 +205,7 @@ describe("Get views", () => {
       "view-store"
     );
     expect(getFake).to.have.been.calledWith({ query, sort });
-    expect(inFake).to.have.been.calledWith({ context, host });
+    expect(inFake).to.have.been.calledWith({ context });
     expect(withFake).to.have.been.calledWith({
       path: "/stream",
       tokenFn
@@ -252,8 +257,13 @@ describe("Get views", () => {
     });
     replace(deps, "rpc", rpcFake);
 
-    const otherHost = "some-other-host";
-    const result = await viewStore({ name, domain, service, host: otherHost })
+    const otherNetwork = "some-other-network";
+    const result = await viewStore({
+      name,
+      domain,
+      service,
+      network: otherNetwork
+    })
       .set({ context, tokenFn })
       .stream({ query, sort });
 
@@ -266,7 +276,7 @@ describe("Get views", () => {
     expect(getFake).to.have.been.calledWith({ query, sort });
     expect(inFake).to.have.been.calledWith({
       context,
-      host: "view.some-domain.some-service.some-other-host"
+      host: "view.some-domain.some-service.some-other-network"
     });
     expect(withFake).to.have.been.calledWith({
       path: "/some-name/stream",

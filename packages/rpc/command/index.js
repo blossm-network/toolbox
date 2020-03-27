@@ -2,18 +2,19 @@ const { string: dateString } = require("@blossm/datetime");
 
 const deps = require("./deps");
 
-module.exports = ({ name, domain, service = process.env.SERVICE, host }) => {
+module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
   const issue = ({ context, claims, tokenFn } = {}) => async (
     payload,
     { trace, source, issued, root, options } = {}
   ) => {
-    const internal = !host || host == process.env.HOST;
+    const internal = !network || network == process.env.NETWORK;
 
     //TODO
     //eslint-disable-next-line no-console
     console.log({
       commandRpcInternal: internal,
-      host,
+      network,
+      processNetwork: process.env.NETWORK,
       processHost: process.env.HOST
     });
 
@@ -36,8 +37,8 @@ module.exports = ({ name, domain, service = process.env.SERVICE, host }) => {
       .post(data)
       .in({
         ...(context && { context }),
-        ...(host && {
-          host: internal ? host : `command.${domain}.${service}.${host}`
+        ...(!internal && {
+          host: `command.${domain}.${service}.${network}`
         })
       })
       .with({
