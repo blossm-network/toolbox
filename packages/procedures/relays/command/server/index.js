@@ -2,8 +2,10 @@ const deps = require("./deps");
 
 module.exports = async ({
   whitelist,
+  tokenFn,
   verifyFn,
   keyClaimsFn,
+  terminatedSessionCheckFn,
   key = "access"
 }) => {
   let server = deps
@@ -16,11 +18,14 @@ module.exports = async ({
           methods: ["POST"]
         })
     })
-    .post(deps.post(), {
+    .post(deps.post({ tokenFn }), {
       preMiddleware: [
         deps.authentication({
           verifyFn: verifyFn({ key }),
           keyClaimsFn
+        }),
+        deps.authorization({
+          terminatedSessionCheckFn
         })
       ]
     });

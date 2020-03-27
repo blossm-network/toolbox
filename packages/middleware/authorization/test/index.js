@@ -65,16 +65,11 @@ describe("Authorization middleware", () => {
 
     const nextFake = fake();
     await authorizationMiddleware({
-      permissionsLookupFn,
       terminatedSessionCheckFn: terminatedSessionCheckFake,
       permissions
     })(req, null, nextFake);
 
-    expect(authorizationFake).to.have.been.calledWith({
-      context: otherContext,
-      permissionsLookupFn,
-      permissions
-    });
+    expect(authorizationFake).to.not.have.been.called;
     expect(terminatedSessionCheckFake).to.not.have.been.called;
 
     expect(nextFake).to.have.been.calledOnce;

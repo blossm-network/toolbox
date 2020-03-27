@@ -4,6 +4,7 @@
     "@blossm/event-store-rpc": "*",
     "@blossm/gcp-kms": "*",
     "@blossm/gcp-token": "*",
+    "@blossm/error": "*",
     "@blossm/crypt": "*"
   },
   "devDependencies": {
