@@ -19,7 +19,8 @@ module.exports = relay({
     }),
   terminatedSessionCheckFn: async ({ session }) => {
     const aggregate = await eventStore({
-      domain: "session"
+      domain: "session",
+      service: "core"
     })
       .set({ tokenFn: gcpToken })
       .aggregate(session);
@@ -27,7 +28,7 @@ module.exports = relay({
     if (aggregate.state.terminated) throw invalidCredentials.tokenTerminated();
   },
   keyClaimsFn: async ({ id, secret }) => {
-    const [key] = await eventStore({ domain: "key" })
+    const [key] = await eventStore({ domain: "key", service: "core" })
       .set({ tokenFn: gcpToken })
       .query({ key: "id", value: id });
 
