@@ -1,6 +1,6 @@
 {
   "name": "@blossm/get-token",
-  "version": "0.0.119",
+  "version": "0.0.120",
   "description": "Gets a token for a development environment.",
   "main": "index.js",
   "author": "blossm.network",
