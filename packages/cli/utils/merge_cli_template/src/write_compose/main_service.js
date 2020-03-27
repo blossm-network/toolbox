@@ -65,7 +65,7 @@ module.exports = ({
       };
     case "event-store":
       return {
-        image: `${commonImagePrefix}.${service}..${domain}:latest`,
+        image: `${commonImagePrefix}.${service}.${domain}:latest`,
         ...common,
         environment: {
           ...common.environment,
