@@ -9,6 +9,13 @@ const common = ({ method, dataParam, operation, root, data }) => {
         with: async ({ path, tokenFn, claims } = {}) => {
           const internal = host == process.env.HOST;
 
+          //TODO
+          //eslint-disable-next-line no-console
+          console.log({
+            genericRpcInternal: internal,
+            host,
+            processHost: process.env.HOST
+          });
           const token = internal
             ? await deps.operationToken({
                 tokenFn,
@@ -16,6 +23,11 @@ const common = ({ method, dataParam, operation, root, data }) => {
               })
             : await deps.networkToken({ tokenFn, host });
 
+          //TODO
+          //eslint-disable-next-line no-console
+          console.log({
+            token
+          });
           const url = internal
             ? deps.operationUrl({
                 operation,
@@ -29,6 +41,11 @@ const common = ({ method, dataParam, operation, root, data }) => {
                 ...(root && { root })
               });
 
+          //TODO
+          //eslint-disable-next-line no-console
+          console.log({
+            url
+          });
           const response = await method(url, {
             [dataParam]: {
               ...(data && { ...data }),
