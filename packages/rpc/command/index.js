@@ -9,15 +9,6 @@ module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
   ) => {
     const internal = !network || network == process.env.NETWORK;
 
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log({
-      commandRpcInternal: internal,
-      network,
-      processNetwork: process.env.NETWORK,
-      processHost: process.env.HOST
-    });
-
     const headers = {
       id: deps.uuid(),
       issued: issued || dateString(),

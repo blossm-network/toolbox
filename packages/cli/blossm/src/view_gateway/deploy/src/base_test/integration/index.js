@@ -46,7 +46,13 @@ describe("View gateway integration tests", () => {
           ];
     }, []);
 
-    const { token } = await getToken({ permissions: requiredPermissions });
+    const needsToken = stores.some(
+      c => c.protected == undefined || c.protected
+    );
+
+    const { token } = needsToken
+      ? await getToken({ permissions: requiredPermissions })
+      : {};
 
     const parallelFns = [];
     for (const store of stores) {

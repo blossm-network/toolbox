@@ -27,7 +27,7 @@ testing:
       payload:
         name: some-name
     second:
-      action: some-other-action
+      action: some-action
       payload:
         name: some-other-name
     more: []

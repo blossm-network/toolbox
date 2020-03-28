@@ -23,15 +23,15 @@ devDependencies:
 testing:
   validate:
     ok:
-      name: Some-name
+      - name: Some-name
     bad:
-      name: 3
+      - name: 3
 
   normalize:
     - payload:
         name: Some-name
       normalized:
-        name: Some-name
+        name: some-name
 
   dependencies:
 

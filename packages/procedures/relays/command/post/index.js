@@ -1,14 +1,7 @@
 const deps = require("./deps");
 
 module.exports = ({ tokenFn } = {}) => async (req, res) => {
-  //TODO
-  //eslint-disable-next-line
-  console.log({ body: req.body });
   const { root, name, domain, service, network, payload, headers } = req.body;
-
-  //TODO
-  //eslint-disable-next-line
-  console.log({ root, name, domain, service, network, payload, headers });
 
   const response = await deps
     .command({
@@ -19,10 +12,6 @@ module.exports = ({ tokenFn } = {}) => async (req, res) => {
     })
     .set({ tokenFn, context: req.context })
     .issue(payload, { ...headers, root });
-
-  //TODO
-  //eslint-disable-next-line
-  console.log({ response });
 
   // If the response has tokens, send them as cookies and remove them from the response.
   if (response && response.tokens) {

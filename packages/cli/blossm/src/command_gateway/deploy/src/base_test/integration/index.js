@@ -45,7 +45,13 @@ describe("Command gateway integration tests", () => {
           ];
     }, []);
 
-    const { token } = await getToken({ permissions: requiredPermissions });
+    const needsToken = commands.some(
+      c => c.protected == undefined || c.protected
+    );
+
+    const { token } = needsToken
+      ? await getToken({ permissions: requiredPermissions })
+      : {};
 
     const parallelFns = [];
     for (const command of commands) {
