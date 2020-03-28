@@ -245,8 +245,10 @@ const topicsForDependencies = (config, events) => {
   const array = (events || [])
     .map(e => `did-${e.action}.${e.domain}.${e.service || config.service}`)
     .concat(
-      config.procedure == "command-gateway" ||
-        config.procedure == "view-gateway" ||
+      (config.procedure == "command-gateway" &&
+        config.commands.some(c => c.protected == undefined || c.protected)) ||
+        (config.procedure == "view-gateway" &&
+          config.stores.some(s => s.protected == undefined || s.protected)) ||
         config.procedure == "command-relay" ||
         config.procedure == "view-relay"
         ? [
@@ -335,7 +337,9 @@ const addDefaultDependencies = ({ config }) => {
       ];
     case "command-gateway": {
       const dependencies = [
-        ...tokenDependencies,
+        ...(config.commands.some(c => c.protected == undefined || c.protected)
+          ? tokenDependencies
+          : []),
         ...config.commands.map(command => {
           return {
             name: command.name,
@@ -350,6 +354,9 @@ const addDefaultDependencies = ({ config }) => {
     case "view-gateway":
       return [
         ...tokenDependencies,
+        ...(config.stores.some(s => s.protected == undefined || s.protected)
+          ? tokenDependencies
+          : []),
         ...config.stores.map(store => {
           return {
             name: store.name,
