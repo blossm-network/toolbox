@@ -11,4 +11,4 @@ devDependencies:
   "chai": "^4.2.0"
 
 #don't change
-procedure: command-relay
+procedure: command-antenna

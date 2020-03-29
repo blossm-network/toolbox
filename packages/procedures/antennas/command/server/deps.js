@@ -1,4 +1,4 @@
-const post = require("@blossm/command-relay-post");
+const post = require("@blossm/command-antenna-post");
 const server = require("@blossm/server");
 const corsMiddleware = require("@blossm/cors-middleware");
 const authentication = require("@blossm/authentication-middleware");

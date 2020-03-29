@@ -1,4 +1,4 @@
-const relay = require("@blossm/command-relay");
+const antenna = require("@blossm/command-antenna");
 const eventStore = require("@blossm/event-store-rpc");
 const { verify } = require("@blossm/gcp-kms");
 const gcpToken = require("@blossm/gcp-token");
@@ -7,7 +7,7 @@ const { invalidCredentials } = require("@blossm/errors");
 
 const config = require("./config.json");
 
-module.exports = relay({
+module.exports = antenna({
   whitelist: config.whitelist,
   verifyFn: ({ key }) =>
     verify({

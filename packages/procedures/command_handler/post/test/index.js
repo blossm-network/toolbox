@@ -25,12 +25,16 @@ const claims = "some-claims";
 const trace = "some-trace";
 const id = "some-id";
 const issued = "some-issued";
+const accepted = "some-accepted";
+const broadcasted = "some-broadcasted";
 const idempotency = "some-idempotency";
 
 const headers = {
   trace,
   id,
   issued,
+  accepted,
+  broadcasted,
   idempotency
 };
 
@@ -116,6 +120,8 @@ describe("Command handler post", () => {
       command: {
         id,
         issued,
+        accepted,
+        broadcasted,
         name,
         domain,
         service,
@@ -317,6 +323,8 @@ describe("Command handler post", () => {
       command: {
         id,
         issued,
+        accepted,
+        broadcasted,
         name,
         domain,
         service,
@@ -410,6 +418,8 @@ describe("Command handler post", () => {
       command: {
         id,
         issued,
+        accepted,
+        broadcasted,
         name,
         domain,
         service,
@@ -484,6 +494,8 @@ describe("Command handler post", () => {
       command: {
         id,
         issued,
+        accepted,
+        broadcasted,
         name,
         domain,
         service,
@@ -571,6 +583,8 @@ describe("Command handler post", () => {
       command: {
         id,
         issued,
+        accepted,
+        broadcasted,
         name,
         domain,
         service,
@@ -709,6 +723,8 @@ describe("Command handler post", () => {
       command: {
         id,
         issued,
+        accepted,
+        broadcasted,
         name,
         domain,
         service,
@@ -726,6 +742,8 @@ describe("Command handler post", () => {
       command: {
         id,
         issued,
+        accepted,
+        broadcasted,
         name,
         domain,
         service,
@@ -821,6 +839,8 @@ describe("Command handler post", () => {
       command: {
         id,
         issued,
+        accepted,
+        broadcasted,
         name,
         domain,
         service,
@@ -838,6 +858,8 @@ describe("Command handler post", () => {
       command: {
         id,
         issued,
+        accepted,
+        broadcasted,
         name,
         domain,
         service,

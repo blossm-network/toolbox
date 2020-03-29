@@ -14,7 +14,9 @@ const commandName = "command-name!";
 const commandDomain = "command-domain!";
 const commandService = "command-service!";
 const commandNetwork = "command-network!";
-const commandIssued = "some-date";
+const commandIssued = "some-issued-date";
+const commandAccepted = "some-accepted-date";
+const commandBroadcasted = "some-broadcasted-date";
 const root = "root!";
 const idempotency = "some-idempotency";
 
@@ -42,6 +44,8 @@ describe("Create event", () => {
       command: {
         id: commandId,
         issued: commandIssued,
+        accepted: commandAccepted,
+        broadcasted: commandBroadcasted,
         name: commandName,
         domain: commandDomain,
         service: commandService,
@@ -70,14 +74,16 @@ describe("Create event", () => {
           domain: commandDomain,
           service: commandService,
           network: commandNetwork,
-          issued: commandIssued
+          issued: commandIssued,
+          accepted: commandAccepted,
+          broadcasted: commandBroadcasted
         }
       },
       payload
     });
   });
 
-  it("should get called with expected params if root, idempotency, and version are missing", async () => {
+  it("should get called with expected params if root, idempotency, version, and broadcasted are missing", async () => {
     const rootUuid = "rootUuid!";
     const idempUuid = "idemptUuid!";
     replace(
@@ -98,6 +104,7 @@ describe("Create event", () => {
       command: {
         id: commandId,
         issued: commandIssued,
+        accepted: commandAccepted,
         name: commandName,
         domain: commandDomain,
         service: commandService,
@@ -123,7 +130,8 @@ describe("Create event", () => {
           domain: commandDomain,
           service: commandService,
           network: commandNetwork,
-          issued: commandIssued
+          issued: commandIssued,
+          accepted: commandAccepted
         }
       },
       payload
@@ -139,6 +147,8 @@ describe("Create event", () => {
       command: {
         id: commandId,
         issued: commandIssued,
+        accepted: commandAccepted,
+        broadcasted: commandBroadcasted,
         name: commandName,
         domain: commandDomain,
         service: commandService,
@@ -166,7 +176,9 @@ describe("Create event", () => {
           domain: commandDomain,
           service: commandService,
           network: commandNetwork,
-          issued: commandIssued
+          issued: commandIssued,
+          accepted: commandAccepted,
+          broadcasted: commandBroadcasted
         }
       },
       payload
@@ -181,6 +193,8 @@ describe("Create event", () => {
       command: {
         id: commandId,
         issued: commandIssued,
+        accepted: commandAccepted,
+        broadcasted: commandBroadcasted,
         name: commandName,
         domain: commandDomain,
         service: commandService,
@@ -209,7 +223,9 @@ describe("Create event", () => {
           domain: commandDomain,
           service: commandService,
           network: commandNetwork,
-          issued: commandIssued
+          issued: commandIssued,
+          accepted: commandAccepted,
+          broadcasted: commandBroadcasted
         }
       },
       payload

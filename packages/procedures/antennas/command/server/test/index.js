@@ -13,7 +13,7 @@ const tokenFn = "some-token-fn";
 process.env.DOMAIN = domain;
 process.env.SERVICE = service;
 
-describe("Command relay", () => {
+describe("Command antenna", () => {
   afterEach(() => {
     restore();
   });

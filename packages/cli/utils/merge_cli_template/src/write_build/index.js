@@ -6,7 +6,7 @@ const rootDir = require("@blossm/cli-root-dir");
 const viewStore = require("./view_store");
 const commandGateway = require("./command_gateway");
 const viewGateway = require("./view_gateway");
-const commandRelay = require("./command_relay");
+const commandAntenna = require("./command_antenna");
 const commandHandler = require("./command_handler");
 const eventHandler = require("./event_handler");
 const eventStore = require("./event_store");
@@ -270,8 +270,8 @@ const steps = ({
         runBaseIntegrationTests,
         strict
       });
-    case "command-relay":
-      return commandRelay({
+    case "command-antenna":
+      return commandAntenna({
         imageExtension,
         region,
         project,

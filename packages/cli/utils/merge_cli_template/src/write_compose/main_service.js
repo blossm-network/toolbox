@@ -111,8 +111,8 @@ module.exports = ({
         image: `${commonImagePrefix}.${service}.${domain}:latest`,
         ...common
       };
-    case "command-relay":
-    case "view-relay":
+    case "command-antenna":
+    case "view-antenna":
       return {
         image: `${commonImagePrefix}:latest`,
         ...common

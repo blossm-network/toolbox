@@ -47,6 +47,10 @@ module.exports = ({
         command: {
           id: req.body.headers.id,
           issued: req.body.headers.issued,
+          accepted: req.body.headers.accepted,
+          ...(req.body.headers.broadcasted && {
+            broadcasted: req.body.headers.broadcasted
+          }),
           name: process.env.NAME,
           domain: process.env.DOMAIN,
           service: process.env.SERVICE,

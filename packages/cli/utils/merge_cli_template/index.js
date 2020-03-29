@@ -249,8 +249,8 @@ const topicsForDependencies = (config, events) => {
         config.commands.some(c => c.protected == undefined || c.protected)) ||
         (config.procedure == "view-gateway" &&
           config.stores.some(s => s.protected == undefined || s.protected)) ||
-        config.procedure == "command-relay" ||
-        config.procedure == "view-relay"
+        config.procedure == "command-antenna" ||
+        config.procedure == "view-antenna"
         ? [
             "did-start.session.core",
             "did-upgrade.session.core",
@@ -366,7 +366,7 @@ const addDefaultDependencies = ({ config }) => {
           };
         })
       ];
-    case "command-relay": {
+    case "command-antenna": {
       const dependencies = [...tokenDependencies];
       return [...eventStoreDependencies({ dependencies }), ...dependencies];
     }

@@ -68,7 +68,9 @@ const eventStore = async ({ schema, indexes }) => {
             domain: { type: String, required: true },
             service: { type: String, required: true },
             network: { type: String, required: true },
-            issued: { type: String, required: true }
+            issued: { type: Date, required: true },
+            accepted: { type: Date, required: true },
+            broadcasted: { type: Date }
           },
           default: null
         }

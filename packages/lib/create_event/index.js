@@ -30,7 +30,9 @@ module.exports = ({
           domain: command.domain,
           service: command.service,
           network: command.network,
-          issued: command.issued
+          issued: command.issued,
+          accepted: command.accepted,
+          ...(command.broadcasted && { broadcasted: command.broadcasted })
         }
       })
     },

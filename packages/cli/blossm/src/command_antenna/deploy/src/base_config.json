@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "@blossm/command-relay": "*",
+    "@blossm/command-antenna": "*",
     "@blossm/event-store-rpc": "*",
     "@blossm/gcp-kms": "*",
     "@blossm/gcp-token": "*",

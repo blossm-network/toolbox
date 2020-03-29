@@ -10,7 +10,7 @@ require("localenv");
 // const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 
 // const existingTopics = [];
-describe("Command relay integration tests", () => {
+describe("Command antenna integration tests", () => {
   // before(async () => {
   //   existingTopics.push(
   //     ...testing.topics.filter(async t => {

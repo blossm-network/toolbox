@@ -5,13 +5,15 @@ const deps = require("./deps");
 module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
   const issue = ({ context, claims, tokenFn } = {}) => async (
     payload,
-    { trace, source, issued, root, options } = {}
+    { trace, source, issued, accepted, broadcasted, root, options } = {}
   ) => {
     const internal = !network || network == process.env.NETWORK;
 
     const headers = {
       id: deps.uuid(),
       issued: issued || dateString(),
+      ...(accepted != undefined && { accepted }),
+      ...(broadcasted != undefined && { broadcasted }),
       ...(trace != undefined && { trace }),
       ...(source != undefined && { source })
     };

@@ -1,13 +1,16 @@
 const { expect } = require("chai").use(require("sinon-chai"));
-const { restore, replace, fake } = require("sinon");
+const { restore, replace, fake, useFakeTimers } = require("sinon");
 
 const deps = require("../deps");
 const post = require("..");
 
+let clock;
+
+const now = new Date();
+
 const response = { a: 1 };
 const payload = "some-payload";
 const headers = "some-headers";
-const body = "some-body";
 const name = "some-name";
 const domain = "some-domain";
 const context = "some-context";
@@ -16,16 +19,23 @@ const tokenFn = "some-token-fn";
 
 const root = "some-root";
 
+const body = {
+  payload,
+  headers,
+  root
+};
+
 describe("Command gateway post", () => {
+  beforeEach(() => {
+    clock = useFakeTimers(now.getTime());
+  });
   afterEach(() => {
+    clock.restore();
     restore();
   });
   it("should call with the correct params", async () => {
     const validateFake = fake();
     replace(deps, "validate", validateFake);
-
-    const normalizeFake = fake.returns({ payload, headers, root });
-    replace(deps, "normalize", normalizeFake);
 
     const issueFake = fake.returns({
       ...response,
@@ -59,7 +69,6 @@ describe("Command gateway post", () => {
     await post({ name, domain, tokenFn })(req, res);
 
     expect(validateFake).to.have.been.calledWith(body);
-    expect(normalizeFake).to.have.been.calledWith(body);
     expect(commandFake).to.have.been.calledWith({
       name,
       domain
@@ -69,15 +78,16 @@ describe("Command gateway post", () => {
       context,
       claims
     });
-    expect(issueFake).to.have.been.calledWith(payload, { ...headers, root });
+    expect(issueFake).to.have.been.calledWith(payload, {
+      ...headers,
+      accepted: deps.stringDate(),
+      root
+    });
     expect(statusFake).to.have.been.calledWith(200);
   });
   it("should call with the correct params if response is empty", async () => {
     const validateFake = fake();
     replace(deps, "validate", validateFake);
-
-    const normalizeFake = fake.returns({ payload, headers, root });
-    replace(deps, "normalize", normalizeFake);
 
     const issueFake = fake.returns();
     const setFake = fake.returns({
@@ -108,7 +118,6 @@ describe("Command gateway post", () => {
     await post({ name, domain, tokenFn })(req, res);
 
     expect(validateFake).to.have.been.calledWith(body);
-    expect(normalizeFake).to.have.been.calledWith(body);
     expect(commandFake).to.have.been.calledWith({
       name,
       domain
@@ -118,16 +127,17 @@ describe("Command gateway post", () => {
       context,
       claims
     });
-    expect(issueFake).to.have.been.calledWith(payload, { ...headers, root });
+    expect(issueFake).to.have.been.calledWith(payload, {
+      ...headers,
+      accepted: deps.stringDate(),
+      root
+    });
     expect(statusFake).to.have.been.calledWith(204);
     expect(sendFake).to.have.been.calledWith();
   });
   it("should call with the correct params if tokens is in the response", async () => {
     const validateFake = fake();
     replace(deps, "validate", validateFake);
-
-    const normalizeFake = fake.returns({ payload, headers, root });
-    replace(deps, "normalize", normalizeFake);
 
     const token1Network = "some-token1-network";
     const token1Type = "some-token1-type";
@@ -191,7 +201,6 @@ describe("Command gateway post", () => {
       }
     );
     expect(validateFake).to.have.been.calledWith(body);
-    expect(normalizeFake).to.have.been.calledWith(body);
     expect(commandFake).to.have.been.calledWith({
       name,
       domain
@@ -201,7 +210,11 @@ describe("Command gateway post", () => {
       context,
       claims
     });
-    expect(issueFake).to.have.been.calledWith(payload, { ...headers, root });
+    expect(issueFake).to.have.been.calledWith(payload, {
+      ...headers,
+      accepted: deps.stringDate(),
+      root
+    });
     expect(statusFake).to.have.been.calledWith(200);
   });
   it("should throw correctly", async () => {

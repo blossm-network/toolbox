@@ -40,7 +40,7 @@ module.exports = ({
   runBaseIntegrationTests,
   strict
 }) => {
-  const relayUri = `command.relay.${envUriSpecifier}${network}`;
+  const relayUri = `command.antenna.${envUriSpecifier}${network}`;
   return [
     yarnInstall,
     ...(runUnitTests ? [unitTests] : []),
