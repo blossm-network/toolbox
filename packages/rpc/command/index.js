@@ -5,7 +5,7 @@ const deps = require("./deps");
 module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
   const issue = ({ context, claims, tokenFn } = {}) => async (
     payload,
-    { trace, source, issued, accepted, broadcasted, root, options } = {}
+    { trace, issued, accepted, broadcasted, root, options } = {}
   ) => {
     const internal = !network || network == process.env.NETWORK;
 
@@ -14,8 +14,7 @@ module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
       issued: issued || dateString(),
       ...(accepted != undefined && { accepted }),
       ...(broadcasted != undefined && { broadcasted }),
-      ...(trace != undefined && { trace }),
-      ...(source != undefined && { source })
+      ...(trace != undefined && { trace })
     };
 
     const data = {

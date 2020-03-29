@@ -19,7 +19,6 @@ const network = "some-network";
 const payload = { a: 1 };
 const options = "some-options";
 const trace = "some-trace";
-const source = "some-source";
 const tokenFn = "some-token-fn";
 const issued = "some-issued";
 const accepted = "some-accepted";
@@ -65,7 +64,6 @@ describe("Issue command", () => {
       .set({ context, claims, tokenFn })
       .issue(payload, {
         trace,
-        source,
         issued,
         accepted,
         broadcasted,
@@ -87,7 +85,6 @@ describe("Issue command", () => {
         accepted,
         broadcasted,
         trace,
-        source,
         id
       },
       root,
@@ -154,7 +151,7 @@ describe("Issue command", () => {
       network: otherNetwork
     })
       .set({ context, claims, tokenFn })
-      .issue(payload, { trace, source, issued, root, options });
+      .issue(payload, { trace, issued, root, options });
 
     expect(result).to.equal(response);
     expect(rpcFake).to.have.been.calledWith(
@@ -168,7 +165,6 @@ describe("Issue command", () => {
       headers: {
         issued,
         trace,
-        source,
         id
       },
       root,

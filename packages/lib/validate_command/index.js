@@ -34,6 +34,11 @@ module.exports = async params => {
     date(params.headers.issued, {
       title: "issued date",
       headers: "headers.issued"
+    }),
+    date(params.headers.broadcasted, {
+      title: "issued date",
+      headers: "headers.broadcasted",
+      optional: true
     })
   ]);
 
@@ -45,5 +50,15 @@ module.exports = async params => {
       SECONDS_IN_DAY * 1000
   ) {
     throw deps.badRequestError.message("The issued timestamp seems incorrect.");
+  }
+  if (
+    params.headers.broadcasted != undefined &&
+    (new Date() < new Date(params.headers.broadcasted) ||
+      new Date().getTime() - new Date(params.headers.broadcasted).getTime() >
+        SECONDS_IN_DAY * 1000)
+  ) {
+    throw deps.badRequestError.message(
+      "The broadcasted timestamp seems incorrect."
+    );
   }
 };
