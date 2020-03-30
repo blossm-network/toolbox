@@ -91,6 +91,7 @@ const executeStep = async step => {
       headers: {
         //In non-test environments, the command issuer sets the issued date.
         issued: stringDate(),
+        accepted: stringDate(),
         //In non-test environments, a gateway adds an id.
         id: uuid()
       },
@@ -153,6 +154,7 @@ describe("Command handler integration tests", () => {
       body: {
         headers: {
           issued: stringDate(),
+          accepted: stringDate(),
           id: uuid()
         },
         payload: createBadPayload({

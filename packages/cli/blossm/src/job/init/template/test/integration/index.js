@@ -12,7 +12,8 @@ describe("Command handler integration tests", () => {
     const response = await request.post(url, {
       body: {
         headers: {
-          issued: stringDate()
+          issued: stringDate(),
+          accepted: stringDate()
         },
         payload: {
           name

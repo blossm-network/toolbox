@@ -59,7 +59,8 @@ describe("Command gateway integration tests", () => {
         const response0 = await request.post(`${url}/${command.action}`, {
           body: {
             headers: {
-              issued: stringDate()
+              issued: stringDate(),
+              accepted: stringDate()
             },
             payload: {}
           },
@@ -81,7 +82,8 @@ describe("Command gateway integration tests", () => {
         const response1 = await request.post(`${url}/${command.action}`, {
           body: {
             headers: {
-              issued: stringDate()
+              issued: stringDate(),
+              accepted: stringDate()
             },
             payload: {}
           }
@@ -94,7 +96,8 @@ describe("Command gateway integration tests", () => {
         const response2 = await request.post(`${url}/${command.action}`, {
           body: {
             headers: {
-              issued: stringDate()
+              issued: stringDate(),
+              accepted: stringDate()
             },
             payload: {}
           },
