@@ -28,6 +28,7 @@ const created = stringDate();
 const id = "some-id";
 const network = "some-network";
 const issued = stringDate();
+const accepted = stringDate();
 const name = "some-command-name";
 
 describe("Event store integration tests", () => {
@@ -64,7 +65,8 @@ describe("Event store integration tests", () => {
                   domain,
                   service,
                   network,
-                  issued
+                  issued,
+                  accepted
                 }
               },
               payload: example0.payload
@@ -105,7 +107,8 @@ describe("Event store integration tests", () => {
                   domain,
                   service,
                   network,
-                  issued
+                  issued,
+                  accepted
                 }
               },
               payload: example1.payload
@@ -178,7 +181,8 @@ describe("Event store integration tests", () => {
                   domain,
                   service,
                   network,
-                  issued
+                  issued,
+                  accepted
                 }
               },
               payload: example0.payload
@@ -200,7 +204,8 @@ describe("Event store integration tests", () => {
                   domain,
                   service,
                   network,
-                  issued
+                  issued,
+                  accepted
                 }
               },
               payload: example1.payload
@@ -246,7 +251,15 @@ describe("Event store integration tests", () => {
                     action: example0.action,
                     domain,
                     service,
-                    command: { id, name, domain, service, network, issued }
+                    command: {
+                      id,
+                      name,
+                      domain,
+                      service,
+                      network,
+                      issued,
+                      accepted
+                    }
                   },
                   payload: example0.payload
                 }
@@ -272,7 +285,15 @@ describe("Event store integration tests", () => {
                 action,
                 domain,
                 service,
-                command: { id, name, domain, service, network, issued }
+                command: {
+                  id,
+                  name,
+                  domain,
+                  service,
+                  network,
+                  issued,
+                  accepted
+                }
               },
               payload
             }
@@ -305,7 +326,8 @@ describe("Event store integration tests", () => {
                     domain,
                     service,
                     network,
-                    issued
+                    issued,
+                    accepted
                   }
                 },
                 payload: example0.payload
@@ -334,7 +356,8 @@ describe("Event store integration tests", () => {
                     domain,
                     service,
                     network,
-                    issued
+                    issued,
+                    accepted
                   }
                 },
                 payload: example1.payload
@@ -468,7 +491,8 @@ describe("Event store integration tests", () => {
                   domain,
                   service,
                   network,
-                  issued
+                  issued,
+                  accepted
                 }
               },
               payload: example0
@@ -502,7 +526,8 @@ describe("Event store integration tests", () => {
                   domain,
                   service,
                   network,
-                  issued
+                  issued,
+                  accepted
                 }
               },
               payload: example0.payload
