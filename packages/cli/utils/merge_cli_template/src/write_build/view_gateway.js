@@ -107,8 +107,8 @@ module.exports = ({
             routerNetwork,
             routerKeyId,
             routerKeySecretName,
-            env: `DOMAIN=${domain},SERVICE=${service}`,
-            labels: `domain=${domain},service=${service}`
+            env: { DOMAIN: domain, SERVICE: service },
+            labels: { domain, service }
           }),
           startDnsTransaction({ dnsZone, project }),
           addDnsTransaction({ uri: authUri, dnsZone, project }),

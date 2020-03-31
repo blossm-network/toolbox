@@ -106,8 +106,22 @@ module.exports = ({
             project,
             network,
             envUriSpecifier,
-            env: `NAME=${name},DOMAIN=${domain},SERVICE=${service},EVENT_ACTION=${event.action},EVENT_DOMAIN=${event.domain},EVENT_SERVICE=${event.service}`,
-            labels: `name=${name},domain=${domain},service=${service},event-action=${event.action},event-domain=${event.domain},event-service=${event.service}`
+            env: {
+              NAME: name,
+              DOMAIN: domain,
+              SERVICE: service,
+              EVENT_ACTION: event.action,
+              EVENT_DOMAIN: event.domain,
+              EVENT_SERVICE: event.service
+            },
+            labels: {
+              name,
+              domain,
+              service,
+              "event-action": event.action,
+              "event-domain": event.domain,
+              "event-service": event.service
+            }
           }),
           startDnsTransaction({ dnsZone, project }),
           addDnsTransaction({ uri, dnsZone, project }),

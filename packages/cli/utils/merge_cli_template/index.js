@@ -449,6 +449,18 @@ const configure = async (workingDir, configFn, env, strict) => {
       config["gcp-dns-zone"] || blossmConfig.vendors.cloud.gcp.dnsZone;
 
     const routers = config.routers;
+    //TODO
+    //eslint-disable-next-line
+    console.log({
+      routers,
+      obj: {
+        ...(routers && {
+          routerNetwork: routers[0].network,
+          routerKeyId: routers[0].key.id,
+          routerKeySecretName: routers[0].key.secretName
+        })
+      }
+    });
     const domain = config.domain;
     const service = config.service;
     const procedure = config.procedure;

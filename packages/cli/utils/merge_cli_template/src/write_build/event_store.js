@@ -102,8 +102,15 @@ module.exports = ({
             envUriSpecifier,
             network,
             nodeEnv: env,
-            env: `DOMAIN=${domain},SERVICE=${service},MONGODB_DATABASE=event-store,MONGODB_USER=${mongodbUser},MONGODB_HOST=${mongodbHost},MONGODB_PROTOCOL=${mongodbProtocol}`,
-            labels: `domain=${domain},service=${service}`
+            env: {
+              DOMAIN: domain,
+              SERVICE: service,
+              MONGODB_DATABASE: "event-store",
+              MONGODB_USER: mongodbUser,
+              MONGODB_HOST: mongodbHost,
+              MONGODB_PROTOCOL: mongodbProtocol
+            },
+            labels: { domain, service }
           }),
           startDnsTransaction({ dnsZone, project }),
           addDnsTransaction({ uri, dnsZone, project }),

@@ -116,12 +116,15 @@ module.exports = ({
             routerNetwork,
             routerKeyId,
             routerKeySecretName,
-            env: `NAME=${name},DOMAIN=${domain},SERVICE=${service}${
-              twilioSendingPhoneNumber
-                ? `,TWILIO_SENDING_PHONE_NUMBER=${twilioSendingPhoneNumber}`
-                : ""
-            }`,
-            labels: `name=${name},domain=${domain},service=${service}`
+            env: {
+              NAME: name,
+              DOMAIN: domain,
+              SERVICE: service,
+              ...(twilioSendingPhoneNumber && {
+                TWILIO_SENDING_PHONE_NUMBER: twilioSendingPhoneNumber
+              })
+            },
+            labels: { name, domain, service }
           }),
           startDnsTransaction({ dnsZone, project }),
           addDnsTransaction({ uri, dnsZone, project }),

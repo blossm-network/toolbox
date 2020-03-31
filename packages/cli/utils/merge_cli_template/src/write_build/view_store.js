@@ -102,8 +102,16 @@ module.exports = ({
             secretBucketKeyLocation,
             secretBucketKeyRing,
             nodeEnv: env,
-            env: `NAME=${name},DOMAIN=${domain},SERVICE=${service},MONGODB_DATABASE=view-store,MONGODB_USER=${mongodbUser},MONGODB_HOST=${mongodbHost},MONGODB_PROTOCOL=${mongodbProtocol}`,
-            labels: `name=${name},domain=${domain},service=${service}`
+            env: {
+              NAME: name,
+              DOMAIN: domain,
+              SERVICE: service,
+              MONGODB_DATABASE: "view-store",
+              MONGODB_USER: mongodbUser,
+              MONGODB_HOST: mongodbHost,
+              MONGODB_PROTOCOL: mongodbProtocol
+            },
+            labels: { name, domain, service }
           }),
           startDnsTransaction({ dnsZone, project }),
           addDnsTransaction({ uri, dnsZone, project }),
