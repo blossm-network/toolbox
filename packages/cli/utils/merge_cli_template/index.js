@@ -501,7 +501,6 @@ const configure = async (workingDir, configFn, env, strict) => {
       secretBucketKeyRing,
       ...(routers && {
         routerNetwork: routers[0].network,
-        routerAntennaHost: routers[0].antenna,
         routerKeyId: routers[0].key.id,
         routerKeySecretName: routers[0].key.secretName
       }),
@@ -530,7 +529,6 @@ const configure = async (workingDir, configFn, env, strict) => {
       secretBucketKeyRing,
       ...(routers && {
         routerNetwork: routers[0].network,
-        routerAntennaHost: routers[0].antenna,
         routerKeyId: routers[0].key.id,
         routerKeySecretName: routers[0].key.secretName
       }),

@@ -46,7 +46,6 @@ const steps = ({
   actions,
   strict,
   routerNetwork,
-  routerAntennaHost,
   routerKeyId,
   routerKeySecretName
 }) => {
@@ -186,7 +185,6 @@ const steps = ({
         runIntegrationTests,
         runBaseIntegrationTests,
         routerNetwork,
-        routerAntennaHost,
         routerKeyId,
         routerKeySecretName,
         strict
@@ -219,7 +217,6 @@ const steps = ({
         runIntegrationTests,
         runBaseIntegrationTests,
         routerNetwork,
-        routerAntennaHost,
         routerKeyId,
         routerKeySecretName,
         strict
@@ -254,7 +251,6 @@ const steps = ({
         runIntegrationTests,
         runBaseIntegrationTests,
         routerNetwork,
-        routerAntennaHost,
         routerKeyId,
         routerKeySecretName,
         strict
@@ -287,7 +283,6 @@ const steps = ({
         runIntegrationTests,
         runBaseIntegrationTests,
         routerNetwork,
-        routerAntennaHost,
         routerKeyId,
         routerKeySecretName,
         strict
@@ -372,7 +367,6 @@ module.exports = ({
   computeUrlId,
   actions,
   routerNetwork,
-  routerAntennaHost,
   routerKeyId,
   routerKeySecretName,
   strict
@@ -431,7 +425,6 @@ module.exports = ({
       runIntegrationTests,
       runBaseIntegrationTests,
       routerNetwork,
-      routerAntennaHost,
       routerKeyId,
       routerKeySecretName,
       actions,

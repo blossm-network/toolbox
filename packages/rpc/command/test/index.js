@@ -33,6 +33,8 @@ const envProcedure = "some-env-procedure";
 const envDomain = "some-env-domain";
 const envHash = "some-env-hash";
 
+const routerNetwork = "some-router-network";
+
 process.env.SERVICE = envService;
 process.env.NETWORK = network;
 process.env.NAME = envName;
@@ -40,10 +42,10 @@ process.env.HOST = envHost;
 process.env.DOMAIN = envDomain;
 process.env.PROCEDURE = envProcedure;
 process.env.OPERATION_HASH = envHash;
+process.env.ROUTER_NETWORK = routerNetwork;
 
 describe("Issue command", () => {
   beforeEach(() => {
-    delete process.env.ROUTER_ANTENNA_HOST;
     clock = useFakeTimers(now.getTime());
   });
   afterEach(() => {
@@ -166,8 +168,6 @@ describe("Issue command", () => {
 
     const otherNetwork = "some-other-network";
 
-    const routerAntennaHost = "some-antenna-host";
-    process.env.ROUTER_ANTENNA_HOST = routerAntennaHost;
     const result = await command({
       name,
       domain,
@@ -214,7 +214,7 @@ describe("Issue command", () => {
     });
     expect(inFake).to.have.been.calledWith({
       context,
-      host: routerAntennaHost
+      host: `command.antenna.${routerNetwork}`
     });
     expect(withFake).to.have.been.calledWith({
       tokenFn,
@@ -222,7 +222,7 @@ describe("Issue command", () => {
       path: "/some-name"
     });
   });
-  it("should call with the correct params onto a different network without an antenna", async () => {
+  it("should call with the correct params onto a different network with route as false", async () => {
     const response = "some-response";
     const withFake = fake.returns(response);
     const inFake = fake.returns({
@@ -244,7 +244,7 @@ describe("Issue command", () => {
       service,
       network: otherNetwork
     })
-      .set({ context, claims, tokenFn })
+      .set({ context, claims, tokenFn, route: false })
       .issue(payload, { trace, issued, root, options });
 
     expect(result).to.equal(response);

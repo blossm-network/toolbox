@@ -39,7 +39,6 @@ module.exports = ({
   twilioSendingPhoneNumber,
   twilioTestReceivingPhoneNumber,
   routerNetwork,
-  routerAntennaHost,
   routerKeyId,
   routerKeySecretName
 }) => {
@@ -79,7 +78,6 @@ module.exports = ({
     twilioSendingPhoneNumber,
     twilioTestReceivingPhoneNumber,
     routerNetwork,
-    routerAntennaHost,
     routerKeyId,
     routerKeySecretName
   });
@@ -114,7 +112,6 @@ module.exports = ({
           twilioSendingPhoneNumber,
           twilioTestReceivingPhoneNumber,
           routerNetwork,
-          routerAntennaHost,
           routerKeyId,
           routerKeySecretName
         }),

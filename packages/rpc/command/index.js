@@ -1,12 +1,11 @@
 const deps = require("./deps");
 
 module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
-  const issue = ({ context, claims, tokenFn } = {}) => async (
+  const issue = ({ context, claims, tokenFn, route = true } = {}) => async (
     payload = {},
     { trace, issued, root, path, options } = {}
   ) => {
     const internal = !network || network == process.env.NETWORK;
-    const sendToAntenna = !internal && process.env.ROUTER_ANTENNA_HOST;
 
     const headers = {
       issued: issued || deps.dateString(),
@@ -32,14 +31,15 @@ module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
       headers,
       ...(root && { root }),
       ...(options && { options }),
-      ...(sendToAntenna && {
-        destination: {
-          name,
-          domain,
-          service,
-          network
-        }
-      })
+      ...(!internal &&
+        route && {
+          destination: {
+            name,
+            domain,
+            service,
+            network
+          }
+        })
     };
 
     return await deps
@@ -48,8 +48,8 @@ module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
       .in({
         ...(context && { context }),
         ...(!internal && {
-          host: sendToAntenna
-            ? process.env.ROUTER_ANTENNA_HOST
+          host: route
+            ? `command.antenna.${process.env.ROUTER_NETWORK}`
             : `command.${domain}.${service}.${network}`
         })
       })
@@ -61,9 +61,9 @@ module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
   };
 
   return {
-    set: ({ context, claims, tokenFn }) => {
+    set: ({ context, claims, tokenFn, route }) => {
       return {
-        issue: issue({ context, claims, tokenFn })
+        issue: issue({ context, claims, tokenFn, route })
       };
     },
     issue: issue()

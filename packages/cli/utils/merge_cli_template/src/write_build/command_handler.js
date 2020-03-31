@@ -34,7 +34,6 @@ module.exports = ({
   serviceName,
   computeUrlId,
   routerNetwork,
-  routerAntennaHost,
   routerKeyId,
   routerKeySecretName,
   procedure,
@@ -70,7 +69,6 @@ module.exports = ({
       secretBucketKeyRing,
       secretBucketKeyLocation,
       routerNetwork,
-      routerAntennaHost,
       routerKeyId,
       routerKeySecretName,
       custom: {
@@ -112,7 +110,6 @@ module.exports = ({
             envUriSpecifier,
             nodeEnv: env,
             routerNetwork,
-            routerAntennaHost,
             routerKeyId,
             routerKeySecretName,
             env: `NAME=${name},DOMAIN=${domain},SERVICE=${service},TWILIO_SENDING_PHONE_NUMBER=${twilioSendingPhoneNumber}`,

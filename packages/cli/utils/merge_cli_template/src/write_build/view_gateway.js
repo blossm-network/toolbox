@@ -42,7 +42,6 @@ module.exports = ({
   runIntegrationTests,
   runBaseIntegrationTests,
   routerNetwork,
-  routerAntennaHost,
   routerKeyId,
   routerKeySecretName,
   strict
@@ -67,7 +66,6 @@ module.exports = ({
       secretBucketKeyRing,
       secretBucketKeyLocation,
       routerNetwork,
-      routerAntennaHost,
       routerKeyId,
       routerKeySecretName,
       custom: {
@@ -107,7 +105,6 @@ module.exports = ({
             network,
             envUriSpecifier,
             routerNetwork,
-            routerAntennaHost,
             routerKeyId,
             routerKeySecretName,
             env: `DOMAIN=${domain},SERVICE=${service}`,

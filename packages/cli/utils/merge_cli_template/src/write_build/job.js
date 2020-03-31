@@ -43,7 +43,6 @@ module.exports = ({
   runIntegrationTests,
   runBaseIntegrationTests,
   routerNetwork,
-  routerAntennaHost,
   routerKeyId,
   routerKeySecretName,
   strict
@@ -67,7 +66,6 @@ module.exports = ({
       secretBucketKeyRing,
       secretBucketKeyLocation,
       routerNetwork,
-      routerAntennaHost,
       routerKeyId,
       routerKeySecretName,
       custom: {
@@ -106,7 +104,6 @@ module.exports = ({
             project,
             nodeEnv: env,
             routerNetwork,
-            routerAntennaHost,
             routerKeyId,
             routerKeySecretName,
             env: `NAME=${name},DOMAIN=${domain},SERVICE=${service}`,

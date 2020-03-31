@@ -10,7 +10,6 @@ module.exports = ({
   secretBucketKeyRing,
   secretBucketKeyLocation,
   routerNetwork,
-  routerAntennaHost,
   routerKeyId,
   routerKeySecretName,
   custom = {}
@@ -35,7 +34,6 @@ module.exports = ({
       GCP_KMS_SECRET_BUCKET_KEY_RING: secretBucketKeyRing,
       GCP_KMS_SECRET_BUCKET_KEY_LOCATION: secretBucketKeyLocation,
       ...(routerNetwork && { ROUTER_NETWORK: routerNetwork }),
-      ...(routerAntennaHost && { ROUTER_ATENNA_HOST: routerAntennaHost }),
       ...(routerKeyId && { ROUTER_KEY_ID: routerKeyId }),
       ...(routerKeySecretName && {
         ROUTER_KEY_SECRET_NAME: routerKeySecretName

@@ -22,7 +22,6 @@ module.exports = ({
   mongodbDatabase,
   mongodbProtocol,
   routerNetwork,
-  routerAntennaHost,
   routerKeyId,
   routerKeySecretName,
   twilioSendingPhoneNumber,
@@ -41,7 +40,6 @@ module.exports = ({
       PROCEDURE: procedure,
       OPERATION_HASH: operationHash,
       ...(routerNetwork && { ROUTER_NETWORK: routerNetwork }),
-      ...(routerAntennaHost && { ROUTER_ANTENNA_HOST: routerAntennaHost }),
       ...(routerKeyId && { ROUTER_KEY_ID: routerKeyId }),
       ...(routerKeySecretName && {
         ROUTER_KEY_SECRET_NAME: routerKeySecretName
