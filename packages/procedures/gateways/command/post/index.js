@@ -10,7 +10,7 @@ module.exports = ({ name, domain, tokenFn } = {}) => async (req, res) => {
       domain
     })
     .set({ tokenFn, context: req.context, claims: req.claims })
-    .issue(payload, { ...headers, accepted: deps.stringDate(), root });
+    .issue(payload, { ...headers, root });
 
   // If the response has tokens, send them as cookies and remove them from the response.
   if (response && response.tokens) {

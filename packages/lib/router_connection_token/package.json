@@ -1,0 +1,20 @@
+{
+  "name": "@blossm/router-connection-token",
+  "version": "0.0.0",
+  "description": "Gets a connection token to communicate with a router.",
+  "main": "index.js",
+  "author": "blossm.network",
+  "engines": {
+    "node": ">= 10.16.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "mocha --recursive"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "mocha": "^7.1.0"
+  }
+}

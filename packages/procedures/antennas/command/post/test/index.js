@@ -1,12 +1,8 @@
 const { expect } = require("chai").use(require("sinon-chai"));
-const { restore, replace, fake, useFakeTimers } = require("sinon");
+const { restore, replace, fake } = require("sinon");
 
 const deps = require("../deps");
 const post = require("..");
-
-let clock;
-
-const now = new Date();
 
 const response = { a: 1 };
 const payload = "some-payload";
@@ -20,7 +16,7 @@ const claims = "some-claims";
 const tokenFn = "some-token-fn";
 const root = "some-root";
 const body = {
-  routing: {
+  destination: {
     network,
     name,
     service,
@@ -32,11 +28,7 @@ const body = {
 };
 
 describe("Command antenna post", () => {
-  beforeEach(() => {
-    clock = useFakeTimers(now.getTime());
-  });
   afterEach(() => {
-    clock.restore();
     restore();
   });
   it("should call with the correct params", async () => {
@@ -71,8 +63,6 @@ describe("Command antenna post", () => {
 
     await post({ name, domain, tokenFn })(req, res);
 
-    // expect(validateFake).to.have.been.calledWith(body);
-    // expect(normalizeFake).to.have.been.calledWith(body);
     expect(commandFake).to.have.been.calledWith({
       name,
       domain,
@@ -85,7 +75,6 @@ describe("Command antenna post", () => {
     });
     expect(issueFake).to.have.been.calledWith(payload, {
       ...headers,
-      broadcasted: deps.stringDate(),
       root
     });
     expect(statusFake).to.have.been.calledWith(200);
@@ -131,7 +120,6 @@ describe("Command antenna post", () => {
     });
     expect(issueFake).to.have.been.calledWith(payload, {
       ...headers,
-      broadcasted: deps.stringDate(),
       root
     });
     expect(statusFake).to.have.been.calledWith(204);
@@ -212,7 +200,6 @@ describe("Command antenna post", () => {
     });
     expect(issueFake).to.have.been.calledWith(payload, {
       ...headers,
-      broadcasted: deps.stringDate(),
       root
     });
     expect(statusFake).to.have.been.calledWith(200);

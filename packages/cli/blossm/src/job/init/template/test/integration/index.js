@@ -1,6 +1,6 @@
 require("localenv");
 const { expect } = require("chai");
-const { string: stringDate } = require("@blossm/datetime");
+const { string: dateString } = require("@blossm/datetime");
 
 const request = require("@blossm/request");
 
@@ -12,8 +12,8 @@ describe("Command handler integration tests", () => {
     const response = await request.post(url, {
       body: {
         headers: {
-          issued: stringDate(),
-          accepted: stringDate()
+          issued: dateString(),
+          accepted: dateString()
         },
         payload: {
           name

@@ -2,7 +2,6 @@ const { expect } = require("chai")
   .use(require("chai-datetime"))
   .use(require("sinon-chai"));
 const { restore, replace, fake, useFakeTimers } = require("sinon");
-const { string: dateString } = require("@blossm/datetime");
 
 const deps = require("../deps");
 const command = require("..");
@@ -21,9 +20,6 @@ const options = "some-options";
 const trace = "some-trace";
 const tokenFn = "some-token-fn";
 const issued = "some-issued";
-const accepted = "some-accepted";
-const broadcasted = "some-broadcasted";
-const id = "some-id";
 
 const context = { c: 2 };
 const claims = "some-claims";
@@ -31,11 +27,23 @@ const claims = "some-claims";
 const root = "some-root";
 
 const envService = "Some-env-service";
+const envName = "Some-env-name";
+const envHost = "some-env-host";
+const envProcedure = "some-env-procedure";
+const envDomain = "some-env-domain";
+const envHash = "some-env-hash";
+
 process.env.SERVICE = envService;
 process.env.NETWORK = network;
+process.env.NAME = envName;
+process.env.HOST = envHost;
+process.env.DOMAIN = envDomain;
+process.env.PROCEDURE = envProcedure;
+process.env.OPERATION_HASH = envHash;
 
 describe("Issue command", () => {
   beforeEach(() => {
+    delete process.env.ROUTER_ANTENNA_HOST;
     clock = useFakeTimers(now.getTime());
   });
   afterEach(() => {
@@ -57,16 +65,13 @@ describe("Issue command", () => {
     });
     replace(deps, "rpc", rpcFake);
 
-    const uuidFake = fake.returns(id);
-    replace(deps, "uuid", uuidFake);
-
+    const path = ["some-path"];
     const result = await command({ name, domain, service, network })
       .set({ context, claims, tokenFn })
       .issue(payload, {
         trace,
         issued,
-        accepted,
-        broadcasted,
+        path,
         root,
         options
       });
@@ -82,10 +87,21 @@ describe("Issue command", () => {
       payload,
       headers: {
         issued,
-        accepted,
-        broadcasted,
         trace,
-        id
+        path: [
+          "some-path",
+          {
+            timestamp: deps.dateString(),
+            issued,
+            procedure: envProcedure,
+            hash: envHash,
+            network,
+            host: envHost,
+            name: envName,
+            domain: envDomain,
+            service: envService
+          }
+        ]
       },
       root,
       options
@@ -109,9 +125,6 @@ describe("Issue command", () => {
     });
     replace(deps, "rpc", rpcFake);
 
-    const uuidFake = fake.returns(id);
-    replace(deps, "uuid", uuidFake);
-
     const result = await command({ name, domain }).issue(payload);
 
     expect(result).to.equal(response);
@@ -119,14 +132,25 @@ describe("Issue command", () => {
     expect(postFake).to.have.been.calledWith({
       payload,
       headers: {
-        issued: dateString(),
-        id
+        issued: deps.dateString(),
+        path: [
+          {
+            timestamp: deps.dateString(),
+            procedure: envProcedure,
+            hash: envHash,
+            network,
+            host: envHost,
+            name: envName,
+            domain: envDomain,
+            service: envService
+          }
+        ]
       }
     });
     expect(inFake).to.have.been.calledWith({});
     expect(withFake).to.have.been.calledWith();
   });
-  it("should call with the correct params onto a different network", async () => {
+  it("should call with the correct params onto a different network with an antenna", async () => {
     const response = "some-response";
     const withFake = fake.returns(response);
     const inFake = fake.returns({
@@ -140,10 +164,10 @@ describe("Issue command", () => {
     });
     replace(deps, "rpc", rpcFake);
 
-    const uuidFake = fake.returns(id);
-    replace(deps, "uuid", uuidFake);
-
     const otherNetwork = "some-other-network";
+
+    const routerAntennaHost = "some-antenna-host";
+    process.env.ROUTER_ANTENNA_HOST = routerAntennaHost;
     const result = await command({
       name,
       domain,
@@ -165,7 +189,89 @@ describe("Issue command", () => {
       headers: {
         issued,
         trace,
-        id
+        path: [
+          {
+            timestamp: deps.dateString(),
+            issued,
+            procedure: envProcedure,
+            hash: envHash,
+            network,
+            host: envHost,
+            name: envName,
+            domain: envDomain,
+            service: envService
+          }
+        ]
+      },
+      root,
+      options,
+      destination: {
+        name,
+        domain,
+        service,
+        network: otherNetwork
+      }
+    });
+    expect(inFake).to.have.been.calledWith({
+      context,
+      host: routerAntennaHost
+    });
+    expect(withFake).to.have.been.calledWith({
+      tokenFn,
+      claims,
+      path: "/some-name"
+    });
+  });
+  it("should call with the correct params onto a different network without an antenna", async () => {
+    const response = "some-response";
+    const withFake = fake.returns(response);
+    const inFake = fake.returns({
+      with: withFake
+    });
+    const postFake = fake.returns({
+      in: inFake
+    });
+    const rpcFake = fake.returns({
+      post: postFake
+    });
+    replace(deps, "rpc", rpcFake);
+
+    const otherNetwork = "some-other-network";
+
+    const result = await command({
+      name,
+      domain,
+      service,
+      network: otherNetwork
+    })
+      .set({ context, claims, tokenFn })
+      .issue(payload, { trace, issued, root, options });
+
+    expect(result).to.equal(response);
+    expect(rpcFake).to.have.been.calledWith(
+      name,
+      domain,
+      service,
+      "command-handler"
+    );
+    expect(postFake).to.have.been.calledWith({
+      payload,
+      headers: {
+        issued,
+        trace,
+        path: [
+          {
+            timestamp: deps.dateString(),
+            issued,
+            procedure: envProcedure,
+            hash: envHash,
+            network,
+            host: envHost,
+            name: envName,
+            domain: envDomain,
+            service: envService
+          }
+        ]
       },
       root,
       options

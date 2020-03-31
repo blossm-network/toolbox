@@ -1,6 +1,6 @@
 const { expect } = require("chai").use(require("sinon-chai"));
 const { useFakeTimers } = require("sinon");
-const { string: stringDate, stringFromDate } = require("@blossm/datetime");
+const { string: dateString, stringFromDate } = require("@blossm/datetime");
 const validateCommand = require("..");
 
 const now = new Date();
@@ -18,7 +18,7 @@ let clock;
 describe("Validate command", () => {
   beforeEach(() => {
     clock = useFakeTimers(now.getTime());
-    goodParams.headers.issued = stringDate();
+    goodParams.headers.issued = dateString();
   });
   afterEach(() => {
     clock.restore();

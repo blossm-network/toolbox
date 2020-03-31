@@ -1,17 +1,17 @@
 const deps = require("./deps");
 
 module.exports = ({ tokenFn } = {}) => async (req, res) => {
-  const { routing, payload, headers, root } = req.body;
+  const { destination, payload, headers, root } = req.body;
 
   const response = await deps
     .command({
-      name: routing.name,
-      domain: routing.domain,
-      service: routing.service,
-      network: routing.network
+      name: destination.name,
+      domain: destination.domain,
+      service: destination.service,
+      network: destination.network
     })
     .set({ tokenFn, context: req.context })
-    .issue(payload, { ...headers, broadcasted: deps.stringDate(), root });
+    .issue(payload, { ...headers, root });
 
   // If the response has tokens, send them as cookies and remove them from the response.
   if (response && response.tokens) {

@@ -1,12 +1,8 @@
 const { expect } = require("chai").use(require("sinon-chai"));
-const { restore, replace, fake, useFakeTimers } = require("sinon");
+const { restore, replace, fake } = require("sinon");
 
 const deps = require("../deps");
 const post = require("..");
-
-let clock;
-
-const now = new Date();
 
 const response = { a: 1 };
 const payload = "some-payload";
@@ -26,11 +22,7 @@ const body = {
 };
 
 describe("Command gateway post", () => {
-  beforeEach(() => {
-    clock = useFakeTimers(now.getTime());
-  });
   afterEach(() => {
-    clock.restore();
     restore();
   });
   it("should call with the correct params", async () => {
@@ -80,7 +72,6 @@ describe("Command gateway post", () => {
     });
     expect(issueFake).to.have.been.calledWith(payload, {
       ...headers,
-      accepted: deps.stringDate(),
       root
     });
     expect(statusFake).to.have.been.calledWith(200);
@@ -129,7 +120,6 @@ describe("Command gateway post", () => {
     });
     expect(issueFake).to.have.been.calledWith(payload, {
       ...headers,
-      accepted: deps.stringDate(),
       root
     });
     expect(statusFake).to.have.been.calledWith(204);
@@ -212,7 +202,6 @@ describe("Command gateway post", () => {
     });
     expect(issueFake).to.have.been.calledWith(payload, {
       ...headers,
-      accepted: deps.stringDate(),
       root
     });
     expect(statusFake).to.have.been.calledWith(200);

@@ -59,7 +59,7 @@ describe("Create", () => {
       aud: audience,
       sub: subject,
       exp: deps.stringFromDate(new Date(deps.fineTimestamp() + expiresIn)),
-      iat: deps.stringDate(),
+      iat: deps.dateString(),
       jti: uuid
     });
     const encodedPayload = base64url.fromBase64(

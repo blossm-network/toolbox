@@ -25,6 +25,7 @@ module.exports = ({
       })
     });
 
+    const commandId = deps.uuid();
     const eventsPerStore = {};
 
     for (const {
@@ -44,18 +45,21 @@ module.exports = ({
         domain,
         service: process.env.SERVICE,
         idempotency: req.body.headers.idempotency,
-        command: {
-          id: req.body.headers.id,
-          issued: req.body.headers.issued,
-          accepted: req.body.headers.accepted,
-          ...(req.body.headers.broadcasted && {
-            broadcasted: req.body.headers.broadcasted
-          }),
-          name: process.env.NAME,
-          domain: process.env.DOMAIN,
-          service: process.env.SERVICE,
-          network: process.env.NETWORK
-        }
+        path: [
+          ...(req.body.headers.path || []),
+          {
+            procedure: process.env.PROCEDURE,
+            id: commandId,
+            timestamp: deps.dateString(),
+            issued: req.body.headers.issued,
+            name: process.env.NAME,
+            domain: process.env.DOMAIN,
+            service: process.env.SERVICE,
+            network: process.env.NETWORK,
+            host: process.env.HOST,
+            hash: process.env.OPERATION_HASH
+          }
+        ]
       });
       const normalizedEvent = {
         data: eventData,

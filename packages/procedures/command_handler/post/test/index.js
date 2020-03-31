@@ -1,8 +1,12 @@
 const { expect } = require("chai").use(require("sinon-chai"));
-const { restore, fake, replace } = require("sinon");
+const { restore, fake, replace, useFakeTimers } = require("sinon");
 
 const post = require("..");
 const deps = require("../deps");
+
+let clock;
+
+const now = new Date();
 
 const payload = "some-payload";
 const eventPayload = "some-event-payload";
@@ -14,6 +18,7 @@ const aggregateFn = "some-aggregate-fn";
 const response = "some-response";
 const root = "some-root";
 const options = "some-options";
+const commandId = "some-command-id";
 const event = {
   headers: {
     root
@@ -23,7 +28,6 @@ const correctNumber = 4;
 const context = "some-context";
 const claims = "some-claims";
 const trace = "some-trace";
-const id = "some-id";
 const issued = "some-issued";
 const accepted = "some-accepted";
 const broadcasted = "some-broadcasted";
@@ -31,7 +35,6 @@ const idempotency = "some-idempotency";
 
 const headers = {
   trace,
-  id,
   issued,
   accepted,
   broadcasted,
@@ -42,14 +45,24 @@ const name = "some-name";
 const domain = "some-domain";
 const service = "some-service";
 const network = "some-network";
+const host = "some-host";
+const procedure = "some-procedure";
+const hash = "some-op-hash";
 
 process.env.NAME = name;
 process.env.DOMAIN = domain;
 process.env.SERVICE = service;
 process.env.NETWORK = network;
+process.env.HOST = host;
+process.env.PROCEDURE = procedure;
+process.env.OPERATION_HASH = hash;
 
 describe("Command handler post", () => {
+  beforeEach(() => {
+    clock = useFakeTimers(now.getTime());
+  });
   afterEach(() => {
+    clock.restore();
     restore();
   });
 
@@ -59,6 +72,8 @@ describe("Command handler post", () => {
 
     const createEventFake = fake.returns(event);
     replace(deps, "createEvent", createEventFake);
+
+    replace(deps, "uuid", fake.returns(commandId));
 
     const events = [
       {
@@ -117,16 +132,20 @@ describe("Command handler post", () => {
       service,
       version: 0,
       idempotency,
-      command: {
-        id,
-        issued,
-        accepted,
-        broadcasted,
-        name,
-        domain,
-        service,
-        network
-      }
+      path: [
+        {
+          procedure,
+          hash,
+          id: commandId,
+          issued,
+          timestamp: deps.dateString(),
+          name,
+          domain,
+          service,
+          network,
+          host
+        }
+      ]
     });
     expect(addFnFake).to.have.been.calledWith({
       domain,
@@ -142,6 +161,85 @@ describe("Command handler post", () => {
     expect(statusFake).to.have.been.calledWith(200);
     expect(sendFake).to.have.been.calledWith(response);
   });
+  it("should call with the correct params with added header path", async () => {
+    const validateFnFake = fake();
+    const normalizeFnFake = fake.returns(cleanedPayload);
+
+    const createEventFake = fake.returns(event);
+    replace(deps, "createEvent", createEventFake);
+
+    replace(deps, "uuid", fake.returns(commandId));
+
+    const events = [
+      {
+        payload: eventPayload,
+        action: eventAction,
+        correctNumber
+      }
+    ];
+    const mainFnFake = fake.returns({
+      events,
+      response
+    });
+    const otherPath = "some-other-path";
+    const req = {
+      body: {
+        payload,
+        headers: {
+          ...headers,
+          path: [otherPath]
+        },
+        context,
+        claims
+      }
+    };
+
+    const sendFake = fake();
+    const statusFake = fake.returns({
+      send: sendFake
+    });
+    const res = {
+      status: statusFake
+    };
+
+    const addFnFake = fake();
+    const aggregateFnFake = fake.returns(aggregateFn);
+
+    await post({
+      mainFn: mainFnFake,
+      validateFn: validateFnFake,
+      normalizeFn: normalizeFnFake,
+      addFn: addFnFake,
+      aggregateFn: aggregateFnFake
+    })(req, res);
+
+    expect(createEventFake).to.have.been.calledWith({
+      payload: eventPayload,
+      trace,
+      action: eventAction,
+      domain,
+      service,
+      version: 0,
+      idempotency,
+      path: [
+        otherPath,
+        {
+          procedure,
+          hash,
+          id: commandId,
+          issued,
+          timestamp: deps.dateString(),
+          name,
+          domain,
+          service,
+          network,
+          host
+        }
+      ]
+    });
+    expect(statusFake).to.have.been.calledWith(200);
+    expect(sendFake).to.have.been.calledWith(response);
+  });
   it("should call with the correct params will fillFn", async () => {
     const validateFnFake = fake();
     const fillFnFake = fake.returns(filledPayload);
@@ -150,6 +248,7 @@ describe("Command handler post", () => {
     const createEventFake = fake.returns(event);
     replace(deps, "createEvent", createEventFake);
 
+    replace(deps, "uuid", fake.returns(commandId));
     const events = [
       {
         payload: eventPayload,
@@ -203,6 +302,7 @@ describe("Command handler post", () => {
     const createEventFake = fake.returns(event);
     replace(deps, "createEvent", createEventFake);
 
+    replace(deps, "uuid", fake.returns(commandId));
     const events = [
       {
         payload: eventPayload,
@@ -257,6 +357,7 @@ describe("Command handler post", () => {
     const createEventFake = fake.returns(event);
     replace(deps, "createEvent", createEventFake);
 
+    replace(deps, "uuid", fake.returns(commandId));
     const events = [
       {
         payload: eventPayload,
@@ -320,16 +421,20 @@ describe("Command handler post", () => {
       service,
       version: 0,
       idempotency,
-      command: {
-        id,
-        issued,
-        accepted,
-        broadcasted,
-        name,
-        domain,
-        service,
-        network
-      }
+      path: [
+        {
+          procedure,
+          hash,
+          id: commandId,
+          issued,
+          timestamp: deps.dateString(),
+          name,
+          domain,
+          service,
+          network,
+          host
+        }
+      ]
     });
     expect(statusFake).to.have.been.calledWith(204);
     expect(sendFake).to.have.been.calledWith();
@@ -341,6 +446,7 @@ describe("Command handler post", () => {
     const createEventFake = fake.returns(event);
     replace(deps, "createEvent", createEventFake);
 
+    replace(deps, "uuid", fake.returns(commandId));
     const version = "some-version";
     const events = [
       {
@@ -415,16 +521,20 @@ describe("Command handler post", () => {
       service,
       version,
       idempotency,
-      command: {
-        id,
-        issued,
-        accepted,
-        broadcasted,
-        name,
-        domain,
-        service,
-        network
-      }
+      path: [
+        {
+          procedure,
+          hash,
+          id: commandId,
+          issued,
+          timestamp: deps.dateString(),
+          name,
+          domain,
+          service,
+          network,
+          host
+        }
+      ]
     });
     expect(statusFake).to.have.been.calledWith(200);
     expect(sendFake).to.have.been.calledWith(response);
@@ -433,6 +543,7 @@ describe("Command handler post", () => {
     const createEventFake = fake.returns(event);
     replace(deps, "createEvent", createEventFake);
 
+    replace(deps, "uuid", fake.returns(commandId));
     const events = [
       {
         payload: eventPayload,
@@ -491,16 +602,20 @@ describe("Command handler post", () => {
       service,
       version: 0,
       idempotency,
-      command: {
-        id,
-        issued,
-        accepted,
-        broadcasted,
-        name,
-        domain,
-        service,
-        network
-      }
+      path: [
+        {
+          procedure,
+          hash,
+          id: commandId,
+          issued,
+          timestamp: deps.dateString(),
+          name,
+          domain,
+          service,
+          network,
+          host
+        }
+      ]
     });
     expect(statusFake).to.have.been.calledWith(200);
     expect(sendFake).to.have.been.calledWith(response);
@@ -511,6 +626,8 @@ describe("Command handler post", () => {
 
     const createEventFake = fake.returns(event);
     replace(deps, "createEvent", createEventFake);
+
+    replace(deps, "uuid", fake.returns(commandId));
 
     const eventDomain = "some-other-event-domain";
 
@@ -580,74 +697,25 @@ describe("Command handler post", () => {
       service,
       version: 0,
       idempotency,
-      command: {
-        id,
-        issued,
-        accepted,
-        broadcasted,
-        name,
-        domain,
-        service,
-        network
-      }
+      path: [
+        {
+          procedure,
+          hash,
+          id: commandId,
+          issued,
+          timestamp: deps.dateString(),
+          name,
+          domain,
+          service,
+          network,
+          host
+        }
+      ]
     });
     expect(statusFake).to.have.been.calledWith(200);
     expect(sendFake).to.have.been.calledWith(response);
   });
-  it("should call with the correct params with no events", async () => {
-    const validateFnFake = fake();
-    const normalizeFnFake = fake.returns(cleanedPayload);
 
-    const createEventFake = fake.returns(event);
-    replace(deps, "createEvent", createEventFake);
-
-    const mainFnFake = fake.returns({
-      response
-    });
-
-    const req = {
-      body: {
-        payload,
-        headers,
-        context,
-        claims
-      }
-    };
-
-    const sendFake = fake();
-    const statusFake = fake.returns({
-      send: sendFake
-    });
-    const res = {
-      status: statusFake
-    };
-
-    const addFnFake = fake();
-    const aggregateFnFake = fake.returns(aggregateFn);
-
-    await post({
-      mainFn: mainFnFake,
-      validateFn: validateFnFake,
-      normalizeFn: normalizeFnFake,
-      aggregateFn: aggregateFnFake,
-      addFn: addFnFake
-    })(req, res);
-
-    expect(aggregateFnFake).to.have.been.calledWith({ context, claims });
-    expect(normalizeFnFake).to.have.been.calledWith(payload);
-    expect(validateFnFake).to.have.been.calledWith(payload);
-    expect(mainFnFake).to.have.been.calledWith({
-      payload: cleanedPayload,
-      context,
-      claims,
-      aggregateFn
-    });
-
-    expect(addFnFake).to.not.have.been.called;
-
-    expect(statusFake).to.have.been.calledWith(200);
-    expect(sendFake).to.have.been.calledWith(response);
-  });
   it("should call with the correct params with many events", async () => {
     const validateFnFake = fake();
     const normalizeFnFake = fake.returns(cleanedPayload);
@@ -655,6 +723,7 @@ describe("Command handler post", () => {
     const createEventFake = fake.returns(event);
     replace(deps, "createEvent", createEventFake);
 
+    replace(deps, "uuid", fake.returns(commandId));
     const otherEventPayload = "some-other-event-payload";
     const otherEventAction = "some-other-event-action";
     const otherCorrectNumber = "some-other-correct-number";
@@ -720,16 +789,20 @@ describe("Command handler post", () => {
       service,
       version: 0,
       idempotency,
-      command: {
-        id,
-        issued,
-        accepted,
-        broadcasted,
-        name,
-        domain,
-        service,
-        network
-      }
+      path: [
+        {
+          procedure,
+          hash,
+          id: commandId,
+          issued,
+          timestamp: deps.dateString(),
+          name,
+          domain,
+          service,
+          network,
+          host
+        }
+      ]
     });
     expect(createEventFake).to.have.been.calledWith({
       payload: otherEventPayload,
@@ -739,16 +812,20 @@ describe("Command handler post", () => {
       service,
       version: 0,
       idempotency,
-      command: {
-        id,
-        issued,
-        accepted,
-        broadcasted,
-        name,
-        domain,
-        service,
-        network
-      }
+      path: [
+        {
+          id: commandId,
+          issued,
+          timestamp: deps.dateString(),
+          name,
+          domain,
+          service,
+          network,
+          host,
+          procedure,
+          hash
+        }
+      ]
     });
     expect(addFnFake).to.have.been.calledWith({
       domain,
@@ -769,6 +846,7 @@ describe("Command handler post", () => {
     const createEventFake = fake.returns(event);
     replace(deps, "createEvent", createEventFake);
 
+    replace(deps, "uuid", fake.returns(commandId));
     const otherEventPayload = "some-other-event-payload";
     const otherEventAction = "some-other-event-action";
     const otherCorrectNumber = "some-other-correct-number";
@@ -836,16 +914,21 @@ describe("Command handler post", () => {
       service,
       version: 0,
       idempotency,
-      command: {
-        id,
-        issued,
-        accepted,
-        broadcasted,
-        name,
-        domain,
-        service,
-        network
-      }
+      path: [
+        {
+          id: commandId,
+          issued,
+          timestamp: deps.dateString(),
+          name,
+          domain,
+          service,
+          network,
+          host,
+          procedure,
+
+          hash
+        }
+      ]
     });
     expect(createEventFake).to.have.been.calledWith({
       payload: otherEventPayload,
@@ -855,16 +938,20 @@ describe("Command handler post", () => {
       service,
       version: 0,
       idempotency,
-      command: {
-        id,
-        issued,
-        accepted,
-        broadcasted,
-        name,
-        domain,
-        service,
-        network
-      }
+      path: [
+        {
+          id: commandId,
+          issued,
+          timestamp: deps.dateString(),
+          name,
+          domain,
+          service,
+          network,
+          host,
+          procedure,
+          hash
+        }
+      ]
     });
     expect(addFnFake).to.have.been.calledWith({
       domain,

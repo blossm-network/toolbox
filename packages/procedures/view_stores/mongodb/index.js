@@ -37,12 +37,12 @@ module.exports = async ({ schema, indexes, getFn, postFn, putFn } = {}) => {
     schema.created = {
       type: Date,
       required: true,
-      default: deps.stringDate
+      default: deps.dateString
     };
     schema.modified = {
       type: Date,
       required: true,
-      default: deps.stringDate
+      default: deps.dateString
     };
   }
 

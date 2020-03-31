@@ -1,7 +1,7 @@
 const { expect } = require("chai").use(require("sinon-chai"));
 const { restore, replace, stub, useFakeTimers } = require("sinon");
 const createEvent = require("../");
-const { string: stringDate } = require("@blossm/datetime");
+const { string: dateString } = require("@blossm/datetime");
 const deps = require("../deps");
 
 let clock;
@@ -67,7 +67,7 @@ describe("Create event", () => {
         topic: `did-${action}.${domain}.${service}`,
         version,
         trace,
-        created: stringDate(),
+        created: dateString(),
         command: {
           id: commandId,
           name: commandName,
@@ -123,7 +123,7 @@ describe("Create event", () => {
         topic: `did-${action}.${domain}.${service}`,
         version: 0,
         trace,
-        created: stringDate(),
+        created: dateString(),
         command: {
           id: commandId,
           name: commandName,
@@ -169,7 +169,7 @@ describe("Create event", () => {
         topic: `did-${action}.${domain}.${service}`,
         version,
         trace,
-        created: stringDate(),
+        created: dateString(),
         command: {
           id: commandId,
           name: commandName,
@@ -216,7 +216,7 @@ describe("Create event", () => {
         topic: `did-${action}.${domain}.${service}`,
         version,
         trace,
-        created: stringDate(),
+        created: dateString(),
         command: {
           id: commandId,
           name: commandName,

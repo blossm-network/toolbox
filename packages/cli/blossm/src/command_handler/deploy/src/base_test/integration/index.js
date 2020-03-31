@@ -1,6 +1,6 @@
 require("localenv");
 const { expect } = require("chai");
-const { string: stringDate } = require("@blossm/datetime");
+const { string: dateString } = require("@blossm/datetime");
 const uuid = require("@blossm/uuid");
 const { create, delete: del, exists } = require("@blossm/gcp-pubsub");
 const eventStore = require("@blossm/event-store-rpc");
@@ -90,8 +90,8 @@ const executeStep = async step => {
       root: step.root,
       headers: {
         //In non-test environments, the command issuer sets the issued date.
-        issued: stringDate(),
-        accepted: stringDate(),
+        issued: dateString(),
+        accepted: dateString(),
         //In non-test environments, a gateway adds an id.
         id: uuid()
       },
@@ -153,8 +153,8 @@ describe("Command handler integration tests", () => {
     const response = await request.post(url, {
       body: {
         headers: {
-          issued: stringDate(),
-          accepted: stringDate(),
+          issued: dateString(),
+          accepted: dateString(),
           id: uuid()
         },
         payload: createBadPayload({

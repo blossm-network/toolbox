@@ -1,4 +1,4 @@
-const { string: stringDate } = require("@blossm/datetime");
+const { string: dateString } = require("@blossm/datetime");
 const deps = require("./deps");
 
 module.exports = ({
@@ -20,7 +20,7 @@ module.exports = ({
       service,
       topic: `did-${action}.${domain}.${service}`,
       version,
-      created: stringDate(),
+      created: dateString(),
       idempotency: idempotency || deps.uuid(),
       ...(trace != undefined && { trace }),
       ...(command && {

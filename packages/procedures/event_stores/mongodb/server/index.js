@@ -61,18 +61,20 @@ const eventStore = async ({ schema, indexes }) => {
         trace: { type: String },
         created: { type: Date, required: true },
         idempotency: { type: String, required: true, unique: true },
-        command: {
-          type: {
-            id: { type: String, required: true },
-            name: { type: String, required: true },
-            domain: { type: String, required: true },
-            service: { type: String, required: true },
-            network: { type: String, required: true },
-            issued: { type: Date, required: true },
-            accepted: { type: Date, required: true },
-            broadcasted: { type: Date }
-          },
-          default: null
+        path: {
+          type: [
+            {
+              name: { type: String },
+              domain: { type: String },
+              service: { type: String },
+              network: { type: String, required: true },
+              host: { type: String, required: true },
+              procedure: { type: String, required: true },
+              hash: { type: String, required: true },
+              issued: { type: Date, required: true }
+            }
+          ],
+          default: []
         }
       }
     },

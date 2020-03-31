@@ -1,7 +1,7 @@
 require("localenv");
 const { expect } = require("chai");
 const request = require("@blossm/request");
-const { string: stringDate } = require("@blossm/datetime");
+const { string: dateString } = require("@blossm/datetime");
 const uuid = require("@blossm/uuid");
 
 const {
@@ -24,11 +24,11 @@ const {
 const topic = `some-topic.${process.env.DOMAIN}.${process.env.SERVICE}`;
 const sub = "some-sub";
 const version = 0;
-const created = stringDate();
+const created = dateString();
 const id = "some-id";
 const network = "some-network";
-const issued = stringDate();
-const accepted = stringDate();
+const issued = dateString();
+const accepted = dateString();
 const name = "some-command-name";
 
 describe("Event store integration tests", () => {

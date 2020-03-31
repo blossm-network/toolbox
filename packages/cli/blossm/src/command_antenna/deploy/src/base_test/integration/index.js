@@ -1,6 +1,6 @@
 require("localenv");
 // const { expect } = require("chai");
-// const { string: stringDate } = require("@blossm/datetime");
+// const { string: dateString } = require("@blossm/datetime");
 // const getToken = require("@blossm/get-token");
 // const { create, delete: del, exists } = require("@blossm/gcp-pubsub");
 
@@ -51,7 +51,7 @@ describe("Command antenna integration tests", () => {
   //       const response0 = await request.post(`${url}/${command.action}`, {
   //         body: {
   //           headers: {
-  //             issued: stringDate()
+  //             issued: dateString()
   //           },
   //           payload: {}
   //         },
@@ -70,7 +70,7 @@ describe("Command antenna integration tests", () => {
   //       const response1 = await request.post(`${url}/${command.action}`, {
   //         body: {
   //           headers: {
-  //             issued: stringDate()
+  //             issued: dateString()
   //           },
   //           payload: {}
   //         }
@@ -81,7 +81,7 @@ describe("Command antenna integration tests", () => {
   //       const response2 = await request.post(`${url}/${command.action}`, {
   //         body: {
   //           headers: {
-  //             issued: stringDate()
+  //             issued: dateString()
   //           },
   //           payload: {}
   //         },

@@ -1,6 +1,6 @@
 const { expect } = require("chai").use(require("sinon-chai"));
 const { restore, replace, fake } = require("sinon");
-const { string: stringDate } = require("@blossm/datetime");
+const { string: dateString } = require("@blossm/datetime");
 
 const deps = require("../deps");
 
@@ -18,7 +18,7 @@ const tokens = {
 };
 
 const claims = {
-  exp: stringDate()
+  exp: dateString()
 };
 
 describe("Authorize", () => {

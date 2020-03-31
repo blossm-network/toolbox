@@ -87,9 +87,9 @@ describe("View store", () => {
     const secretFake = fake.returns(password);
     replace(deps, "secret", secretFake);
 
-    const stringDate = "some-date";
-    const stringDateFake = fake.returns(stringDate);
-    replace(deps, "stringDate", stringDateFake);
+    const dateString = "some-date";
+    const dateStringFake = fake.returns(dateString);
+    replace(deps, "dateString", dateStringFake);
 
     const viewStoreFake = fake();
     replace(deps, "viewStore", viewStoreFake);
@@ -121,7 +121,7 @@ describe("View store", () => {
           required: true,
           default: match(fn => {
             const date = fn();
-            return date == stringDate;
+            return date == dateString;
           })
         },
         modified: {
@@ -129,7 +129,7 @@ describe("View store", () => {
           required: true,
           default: match(fn => {
             const date = fn();
-            return date == stringDate;
+            return date == dateString;
           })
         }
       },
@@ -278,9 +278,9 @@ describe("View store", () => {
     const secretFake = fake.returns(password);
     replace(deps, "secret", secretFake);
 
-    const stringDate = "some-date";
-    const stringDateFake = fake.returns(stringDate);
-    replace(deps, "stringDate", stringDateFake);
+    const dateString = "some-date";
+    const dateStringFake = fake.returns(dateString);
+    replace(deps, "dateString", dateStringFake);
 
     const viewStoreFake = fake();
     replace(deps, "viewStore", viewStoreFake);
@@ -316,7 +316,7 @@ describe("View store", () => {
           required: true,
           default: match(fn => {
             const date = fn();
-            return date == stringDate;
+            return date == dateString;
           })
         },
         modified: {
@@ -324,7 +324,7 @@ describe("View store", () => {
           required: true,
           default: match(fn => {
             const date = fn();
-            return date == stringDate;
+            return date == dateString;
           })
         }
       },
@@ -385,9 +385,9 @@ describe("View store", () => {
     const secretFake = fake.returns(password);
     replace(deps, "secret", secretFake);
 
-    const stringDate = "some-date";
-    const stringDateFake = fake.returns(stringDate);
-    replace(deps, "stringDate", stringDateFake);
+    const dateString = "some-date";
+    const dateStringFake = fake.returns(dateString);
+    replace(deps, "dateString", dateStringFake);
 
     const viewStoreFake = fake();
     replace(deps, "viewStore", viewStoreFake);
@@ -409,7 +409,7 @@ describe("View store", () => {
           required: true,
           default: match(fn => {
             const date = fn();
-            return date == stringDate;
+            return date == dateString;
           })
         },
         modified: {
@@ -417,7 +417,7 @@ describe("View store", () => {
           required: true,
           default: match(fn => {
             const date = fn();
-            return date == stringDate;
+            return date == dateString;
           })
         }
       },
@@ -459,7 +459,7 @@ describe("View store", () => {
           required: true,
           default: match(fn => {
             const date = fn();
-            return date == stringDate;
+            return date == dateString;
           })
         },
         modified: {
@@ -467,7 +467,7 @@ describe("View store", () => {
           required: true,
           default: match(fn => {
             const date = fn();
-            return date == stringDate;
+            return date == dateString;
           })
         }
       },
@@ -612,9 +612,9 @@ describe("View store", () => {
     const secretFake = fake.returns(password);
     replace(deps, "secret", secretFake);
 
-    const stringDate = "some-date";
-    const stringDateFake = fake.returns(stringDate);
-    replace(deps, "stringDate", stringDateFake);
+    const dateString = "some-date";
+    const dateStringFake = fake.returns(dateString);
+    replace(deps, "dateString", dateStringFake);
 
     const viewStoreFake = fake();
     replace(deps, "viewStore", viewStoreFake);
@@ -636,7 +636,7 @@ describe("View store", () => {
           required: true,
           default: match(fn => {
             const date = fn();
-            return date == stringDate;
+            return date == dateString;
           })
         },
         modified: {
@@ -644,7 +644,7 @@ describe("View store", () => {
           required: true,
           default: match(fn => {
             const date = fn();
-            return date == stringDate;
+            return date == dateString;
           })
         }
       },
