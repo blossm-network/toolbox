@@ -40,7 +40,7 @@ module.exports = ({
       `--region=${region}`,
       `--set-env-vars=NODE_ENV=${nodeEnv},NETWORK=${envUriSpecifier}${network},HOST=${region}.${envUriSpecifier}${network},PROCEDURE=${procedure},OPERATION_HASH=${operationHash},${
         routerNetwork ? `${routerNetwork},` : ""
-      },${routerAntennaHost ? `${routerAntennaHost},` : ""}${
+      }${routerAntennaHost ? `${routerAntennaHost},` : ""}${
         routerKeyId ? `${routerKeyId},` : ""
       }${
         routerKeySecretName ? `${routerKeySecretName},` : ""
