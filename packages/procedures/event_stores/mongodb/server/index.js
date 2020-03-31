@@ -71,7 +71,7 @@ const eventStore = async ({ schema, indexes }) => {
               host: { type: String, required: true },
               procedure: { type: String, required: true },
               hash: { type: String, required: true },
-              issued: { type: Date, required: true }
+              issued: { type: Date }
             }
           ],
           default: []
