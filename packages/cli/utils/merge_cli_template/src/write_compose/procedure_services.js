@@ -137,8 +137,12 @@ module.exports = ({
                 DOMAIN: dependency.domain,
                 SERVICE: dependency.service,
                 NAME: dependency.name,
-                TWILIO_SENDING_PHONE_NUMBER: twilioSendingPhoneNumber,
-                TWILIO_RECEIVING_PHONE_NUMBER: twilioTestReceivingPhoneNumber,
+                ...(twilioTestReceivingPhoneNumber && {
+                  TWILIO_TEST_RECEIVING_PHONE_NUMBER: twilioTestReceivingPhoneNumber
+                }),
+                ...(twilioSendingPhoneNumber && {
+                  TWILIO_SENDING_PHONE_NUMBER: twilioSendingPhoneNumber
+                }),
                 ROUTER_NETWORK: routerNetwork,
                 ROUTER_KEY_ID: routerKeyId,
                 ROUTER_KEY_SECRET_NAME: routerKeySecretName

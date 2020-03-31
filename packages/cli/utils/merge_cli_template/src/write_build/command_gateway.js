@@ -73,8 +73,12 @@ module.exports = ({
       custom: {
         DOMAIN: domain,
         SERVICE: service,
-        TWILIO_TEST_RECEIVING_PHONE_NUMBER: twilioTestReceivingPhoneNumber,
-        TWILIO_SENDING_PHONE_NUMBER: twilioSendingPhoneNumber
+        ...(twilioTestReceivingPhoneNumber && {
+          TWILIO_TEST_RECEIVING_PHONE_NUMBER: twilioTestReceivingPhoneNumber
+        }),
+        ...(twilioSendingPhoneNumber && {
+          TWILIO_SENDING_PHONE_NUMBER: twilioSendingPhoneNumber
+        })
       }
     }),
     dockerComposeUp,

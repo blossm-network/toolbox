@@ -88,8 +88,12 @@ module.exports = ({
         ...common,
         environment: {
           ...common.environment,
-          TWILIO_SENDING_PHONE_NUMBER: twilioSendingPhoneNumber,
-          TWILIO_TEST_RECEIVING_PHONE_NUMBER: twilioTestReceivingPhoneNumber,
+          ...(twilioTestReceivingPhoneNumber && {
+            TWILIO_TEST_RECEIVING_PHONE_NUMBER: twilioTestReceivingPhoneNumber
+          }),
+          ...(twilioSendingPhoneNumber && {
+            TWILIO_SENDING_PHONE_NUMBER: twilioSendingPhoneNumber
+          }),
           NAME: name
         }
       };

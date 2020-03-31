@@ -75,8 +75,12 @@ module.exports = ({
         DOMAIN: domain,
         SERVICE: service,
         NAME: name,
-        TWILIO_TEST_RECEIVING_PHONE_NUMBER: twilioTestReceivingPhoneNumber,
-        TWILIO_SENDING_PHONE_NUMBER: twilioSendingPhoneNumber
+        ...(twilioTestReceivingPhoneNumber && {
+          TWILIO_TEST_RECEIVING_PHONE_NUMBER: twilioTestReceivingPhoneNumber
+        }),
+        ...(twilioSendingPhoneNumber && {
+          TWILIO_SENDING_PHONE_NUMBER: twilioSendingPhoneNumber
+        })
       }
     }),
     dockerComposeUp,
@@ -112,7 +116,11 @@ module.exports = ({
             routerNetwork,
             routerKeyId,
             routerKeySecretName,
-            env: `NAME=${name},DOMAIN=${domain},SERVICE=${service},TWILIO_SENDING_PHONE_NUMBER=${twilioSendingPhoneNumber}`,
+            env: `NAME=${name},DOMAIN=${domain},SERVICE=${service}${
+              twilioSendingPhoneNumber
+                ? `,TWILIO_SENDING_PHONE_NUMBER=${twilioSendingPhoneNumber}`
+                : ""
+            }`,
             labels: `name=${name},domain=${domain},service=${service}`
           }),
           startDnsTransaction({ dnsZone, project }),
