@@ -1,5 +1,6 @@
 module.exports = ({
   procedure,
+  operationHash,
   port,
   mainContainerName,
   network,
@@ -34,6 +35,7 @@ module.exports = ({
       NETWORK: `${network}`,
       HOST: `${host}`,
       PROCEDURE: `${procedure}`,
+      OPERATION_HASH: `${operationHash}`,
       GCP_PROJECT: `${project}`,
       GCP_REGION: `${region}`,
       GCP_SECRET_BUCKET: `${secretBucket}`,

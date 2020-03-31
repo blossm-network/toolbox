@@ -522,7 +522,8 @@ const configure = async (workingDir, configFn, env, strict) => {
       secretBucketKeyLocation,
       secretBucketKeyRing,
       twilioSendingPhoneNumber,
-      twilioTestReceivingPhoneNumber
+      twilioTestReceivingPhoneNumber,
+      ...configFn(config)
     });
   } catch (e) {
     //eslint-disable-next-line no-console

@@ -54,7 +54,7 @@ module.exports = ({
     switch (dependency.procedure) {
       case "view-store":
         {
-          const dependencyHash = hash(
+          const operationHash = hash(
             dependency.name,
             dependency.domain,
             dependency.service,
@@ -67,12 +67,13 @@ module.exports = ({
             [key]: {
               ...common,
               image: `${commonServiceImagePrefix}.${dependency.service}.${dependency.domain}.${dependency.name}:latest`,
-              container_name: `${dependencyHash}.${network}`,
+              container_name: `${operationHash}.${network}`,
               depends_on: [databaseServiceKey],
               environment: {
                 ...commonEnvironment,
                 ...commonStoreEnvironment,
                 PROCEDURE: dependency.procedure,
+                OPERATION_HASH: operationHash,
                 DOMAIN: dependency.domain,
                 SERVICE: dependency.service,
                 NAME: dependency.name
@@ -84,7 +85,7 @@ module.exports = ({
         break;
       case "event-store":
         {
-          const dependencyHash = hash(
+          const operationHash = hash(
             dependency.domain,
             dependency.service,
             dependency.procedure
@@ -96,12 +97,13 @@ module.exports = ({
             [key]: {
               ...common,
               image: `${commonServiceImagePrefix}.${dependency.service}.${dependency.domain}:latest`,
-              container_name: `${dependencyHash}.${network}`,
+              container_name: `${operationHash}.${network}`,
               depends_on: [databaseServiceKey],
               environment: {
                 ...commonEnvironment,
                 ...commonStoreEnvironment,
                 PROCEDURE: dependency.procedure,
+                OPERATION_HASH: operationHash,
                 DOMAIN: dependency.domain,
                 SERVICE: dependency.service
               }
@@ -112,7 +114,7 @@ module.exports = ({
         break;
       case "command-handler":
         {
-          const dependencyHash = hash(
+          const operationHash = hash(
             dependency.name,
             dependency.domain,
             dependency.service,
@@ -124,10 +126,11 @@ module.exports = ({
             [key]: {
               ...common,
               image: `${commonServiceImagePrefix}.${dependency.service}.${dependency.domain}.${dependency.name}:latest`,
-              container_name: `${dependencyHash}.${network}`,
+              container_name: `${operationHash}.${network}`,
               environment: {
                 ...commonEnvironment,
                 PROCEDURE: dependency.procedure,
+                OPERATION_HASH: operationHash,
                 DOMAIN: dependency.domain,
                 SERVICE: dependency.service,
                 NAME: dependency.name,

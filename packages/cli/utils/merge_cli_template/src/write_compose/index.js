@@ -21,6 +21,7 @@ module.exports = ({
   config,
   workingDir,
   procedure,
+  operationHash,
   port,
   mainContainerName,
   network,
@@ -81,6 +82,7 @@ module.exports = ({
       main: {
         ...mainService({
           procedure,
+          operationHash,
           port,
           mainContainerName,
           network,
