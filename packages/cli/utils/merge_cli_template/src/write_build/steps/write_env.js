@@ -3,6 +3,7 @@ const { stripIndents } = require("common-tags");
 module.exports = ({
   mainContainerName,
   procedure,
+  operationHash,
   project,
   region,
   secretBucket,
@@ -21,6 +22,7 @@ module.exports = ({
     HOST=local.network
     NODE_ENV=local
     PROCEDURE=${procedure}
+    OPERATION_HASH=${operationHash}
     MAIN_CONTAINER_NAME=${mainContainerName}
     GCP_PROJECT=${project}
     GCP_REGION=${region}

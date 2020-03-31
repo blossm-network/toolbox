@@ -23,6 +23,7 @@ module.exports = ({
   envUriSpecifier,
   containerRegistery,
   mainContainerName,
+  operationHash,
   serviceName,
   dnsZone,
   procedure,
@@ -55,6 +56,7 @@ module.exports = ({
       project,
       region,
       procedure,
+      operationHash,
       secretBucket,
       secretBucketKeyRing,
       secretBucketKeyLocation
@@ -75,6 +77,7 @@ module.exports = ({
             serviceName,
             allowUnauthenticated: true,
             procedure,
+            operationHash,
             computeUrlId,
             rolesBucket,
             secretBucket,

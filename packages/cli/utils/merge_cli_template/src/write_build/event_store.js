@@ -62,6 +62,7 @@ module.exports = ({
       mainContainerName,
       project,
       procedure,
+      operationHash,
       region,
       secretBucket,
       secretBucketKeyRing,
