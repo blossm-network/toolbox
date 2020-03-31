@@ -68,8 +68,8 @@ const formattedPayload = async payload => {
 };
 const executeStep = async step => {
   if (step.pre) {
-    for (const { action, domain, root, payload } of step.pre) {
-      const topic = `did-${action}.${domain}.${process.env.SERVICE}`;
+    for (const { action, domain, service, root, payload } of step.pre) {
+      const topic = `did-${action}.${domain}.${service}`;
       if (await exists(topic)) existingTopics.push(topic);
       stateTopics.push(topic);
       await create(topic);
@@ -78,7 +78,7 @@ const executeStep = async step => {
         payload: await formattedPayload(payload),
         action,
         domain,
-        service: process.env.SERVICE
+        service
       });
 
       await eventStore({ domain }).add([{ data: stateEvent }]);
