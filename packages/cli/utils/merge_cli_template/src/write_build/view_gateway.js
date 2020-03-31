@@ -41,6 +41,10 @@ module.exports = ({
   runBaseUnitTests,
   runIntegrationTests,
   runBaseIntegrationTests,
+  routerNetwork,
+  routerAntennaHost,
+  routerKeyId,
+  routerKeySecretName,
   strict
 }) => {
   const authUri = `view.${domain}.${service}.${envUriSpecifier}${network}`;
@@ -62,6 +66,10 @@ module.exports = ({
       secretBucket,
       secretBucketKeyRing,
       secretBucketKeyLocation,
+      routerNetwork,
+      routerAntennaHost,
+      routerKeyId,
+      routerKeySecretName,
       custom: {
         DOMAIN: domain,
         SERVICE: service
@@ -98,6 +106,10 @@ module.exports = ({
             project,
             network,
             envUriSpecifier,
+            routerNetwork,
+            routerAntennaHost,
+            routerKeyId,
+            routerKeySecretName,
             env: `DOMAIN=${domain},SERVICE=${service}`,
             labels: `domain=${domain},service=${service}`
           }),

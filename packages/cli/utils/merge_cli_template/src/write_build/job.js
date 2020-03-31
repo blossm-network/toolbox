@@ -42,6 +42,10 @@ module.exports = ({
   runBaseUnitTests,
   runIntegrationTests,
   runBaseIntegrationTests,
+  routerNetwork,
+  routerAntennaHost,
+  routerKeyId,
+  routerKeySecretName,
   strict
 }) => {
   return [
@@ -62,6 +66,10 @@ module.exports = ({
       secretBucket,
       secretBucketKeyRing,
       secretBucketKeyLocation,
+      routerNetwork,
+      routerAntennaHost,
+      routerKeyId,
+      routerKeySecretName,
       custom: {
         NAME: name,
         DOMAIN: domain,
@@ -97,6 +105,10 @@ module.exports = ({
             region,
             project,
             nodeEnv: env,
+            routerNetwork,
+            routerAntennaHost,
+            routerKeyId,
+            routerKeySecretName,
             env: `NAME=${name},DOMAIN=${domain},SERVICE=${service}`,
             labels: `name=${name},domain=${domain},service=${service}`
           }),

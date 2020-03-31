@@ -9,6 +9,10 @@ module.exports = ({
   secretBucket,
   secretBucketKeyRing,
   secretBucketKeyLocation,
+  routerNetwork,
+  routerAntennaHost,
+  routerKeyId,
+  routerKeySecretName,
   custom = {}
 } = {}) => {
   return {
@@ -18,21 +22,26 @@ module.exports = ({
       "-c",
       stripIndents`
     cat >> .env <<- EOM
-    NETWORK=local.network
-    HOST=local.network
-    NODE_ENV=local
-    PROCEDURE=${procedure}
-    OPERATION_HASH=${operationHash}
-    MAIN_CONTAINER_NAME=${mainContainerName}
-    GCP_PROJECT=${project}
-    GCP_REGION=${region}
-    GCP_SECRET_BUCKET=${secretBucket}
-    GCP_KMS_SECRET_BUCKET_KEY_RING=${secretBucketKeyRing}
-    GCP_KMS_SECRET_BUCKET_KEY_LOCATION=${secretBucketKeyLocation}
-    ${Object.entries(custom).reduce(
-      (string, [key, value]) => (string += `${key}=${value}\n`),
-      ""
-    )}
+    ${Object.entries({
+      NETWORK: "local.network",
+      HOST: "local.network",
+      NODE_ENV: "local",
+      PROCEDURE: procedure,
+      OPERATION_HASH: operationHash,
+      MAIN_CONTAINER_NAME: mainContainerName,
+      GCP_PROJECT: project,
+      GCP_REGION: region,
+      GCP_SECRET_BUCKET: secretBucket,
+      GCP_KMS_SECRET_BUCKET_KEY_RING: secretBucketKeyRing,
+      GCP_KMS_SECRET_BUCKET_KEY_LOCATION: secretBucketKeyLocation,
+      ...(routerNetwork && { ROUTER_NETWORK: routerNetwork }),
+      ...(routerAntennaHost && { ROUTER_ATENNA_HOST: routerAntennaHost }),
+      ...(routerKeyId && { ROUTER_KEY_ID: routerKeyId }),
+      ...(routerKeySecretName && {
+        ROUTER_KEY_SECRET_NAME: routerKeySecretName
+      }),
+      ...custom
+    }).reduce((string, [key, value]) => (string += `${key}=${value}\n`), "")}
     EOM`
     ]
   };

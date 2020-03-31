@@ -44,7 +44,11 @@ const steps = ({
   runBaseIntegrationTests,
   computeUrlId,
   actions,
-  strict
+  strict,
+  routerNetwork,
+  routerAntennaHost,
+  routerKeyId,
+  routerKeySecretName
 }) => {
   const serviceName = `${region}-${operationName}-${operationHash}`;
   const uri = `${operationHash}.${region}.${envUriSpecifier}${network}`;
@@ -181,6 +185,10 @@ const steps = ({
         runBaseUnitTests,
         runIntegrationTests,
         runBaseIntegrationTests,
+        routerNetwork,
+        routerAntennaHost,
+        routerKeyId,
+        routerKeySecretName,
         strict
       });
     case "job":
@@ -210,6 +218,10 @@ const steps = ({
         runBaseUnitTests,
         runIntegrationTests,
         runBaseIntegrationTests,
+        routerNetwork,
+        routerAntennaHost,
+        routerKeyId,
+        routerKeySecretName,
         strict
       });
     case "command-gateway":
@@ -241,6 +253,10 @@ const steps = ({
         runBaseUnitTests,
         runIntegrationTests,
         runBaseIntegrationTests,
+        routerNetwork,
+        routerAntennaHost,
+        routerKeyId,
+        routerKeySecretName,
         strict
       });
     case "view-gateway":
@@ -270,6 +286,10 @@ const steps = ({
         runBaseUnitTests,
         runIntegrationTests,
         runBaseIntegrationTests,
+        routerNetwork,
+        routerAntennaHost,
+        routerKeyId,
+        routerKeySecretName,
         strict
       });
     case "command-antenna":
@@ -351,6 +371,10 @@ module.exports = ({
   secretBucketKeyRing,
   computeUrlId,
   actions,
+  routerNetwork,
+  routerAntennaHost,
+  routerKeyId,
+  routerKeySecretName,
   strict
 }) => {
   const buildPath = path.resolve(workingDir, "build.yaml");
@@ -406,6 +430,10 @@ module.exports = ({
       runBaseUnitTests,
       runIntegrationTests,
       runBaseIntegrationTests,
+      routerNetwork,
+      routerAntennaHost,
+      routerKeyId,
+      routerKeySecretName,
       actions,
       strict
     })

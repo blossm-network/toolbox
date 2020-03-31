@@ -24,21 +24,25 @@ module.exports = ({
   mongodbUser,
   mongodbUserPassword,
   twilioSendingPhoneNumber,
-  twilioTestReceivingPhoneNumber
+  twilioTestReceivingPhoneNumber,
+  routerNetwork,
+  routerAntennaHost,
+  routerKeyId,
+  routerKeySecretName
 }) => {
   const common = {
     ports: [`${port}`]
   };
   const commonEnvironment = {
     PORT: `${port}`,
-    NODE_ENV: `${env}`,
-    NETWORK: `${network}`,
-    HOST: `${host}`,
-    GCP_PROJECT: `${project}`,
-    GCP_REGION: `${region}`,
-    GCP_SECRET_BUCKET: `${secretBucket}`,
-    GCP_KMS_SECRET_BUCKET_KEY_LOCATION: `${secretBucketKeyLocation}`,
-    GCP_KMS_SECRET_BUCKET_KEY_RING: `${secretBucketKeyRing}`
+    NODE_ENV: env,
+    NETWORK: network,
+    HOST: host,
+    GCP_PROJECT: project,
+    GCP_REGION: region,
+    GCP_SECRET_BUCKET: secretBucket,
+    GCP_KMS_SECRET_BUCKET_KEY_LOCATION: secretBucketKeyLocation,
+    GCP_KMS_SECRET_BUCKET_KEY_RING: secretBucketKeyRing
   };
   const commonStoreEnvironment = {
     MONGODB_USER: `${mongodbUser}`,
@@ -135,7 +139,11 @@ module.exports = ({
                 SERVICE: dependency.service,
                 NAME: dependency.name,
                 TWILIO_SENDING_PHONE_NUMBER: twilioSendingPhoneNumber,
-                TWILIO_RECEIVING_PHONE_NUMBER: twilioTestReceivingPhoneNumber
+                TWILIO_RECEIVING_PHONE_NUMBER: twilioTestReceivingPhoneNumber,
+                ROUTER_NETWORK: routerNetwork,
+                ROUTER_ANTENNA_HOST: routerAntennaHost,
+                ROUTER_KEY_ID: routerKeyId,
+                ROUTER_KEY_SECRET_NAME: routerKeySecretName
               }
             }
           };

@@ -21,26 +21,36 @@ module.exports = ({
   mongodbHost,
   mongodbDatabase,
   mongodbProtocol,
+  routerNetwork,
+  routerAntennaHost,
+  routerKeyId,
+  routerKeySecretName,
   twilioSendingPhoneNumber,
   twilioTestReceivingPhoneNumber
 }) => {
   const common = {
-    container_name: `${mainContainerName}`,
+    container_name: mainContainerName,
     ports: [`${port}`],
     environment: {
       PORT: `${port}`,
-      NODE_ENV: `${env}`,
-      ...(domain && { DOMAIN: `${domain}` }),
-      ...(service && { SERVICE: `${service}` }),
-      NETWORK: `${network}`,
-      HOST: `${host}`,
-      PROCEDURE: `${procedure}`,
-      OPERATION_HASH: `${operationHash}`,
-      GCP_PROJECT: `${project}`,
-      GCP_REGION: `${region}`,
-      GCP_SECRET_BUCKET: `${secretBucket}`,
-      GCP_KMS_SECRET_BUCKET_KEY_LOCATION: `${secretBucketKeyLocation}`,
-      GCP_KMS_SECRET_BUCKET_KEY_RING: `${secretBucketKeyRing}`
+      NODE_ENV: env,
+      ...(domain && { DOMAIN: domain }),
+      ...(service && { SERVICE: service }),
+      NETWORK: network,
+      HOST: host,
+      PROCEDURE: procedure,
+      OPERATION_HASH: operationHash,
+      ...(routerNetwork && { ROUTER_NETWORK: routerNetwork }),
+      ...(routerAntennaHost && { ROUTER_ANTENNA_HOST: routerAntennaHost }),
+      ...(routerKeyId && { ROUTER_KEY_ID: routerKeyId }),
+      ...(routerKeySecretName && {
+        ROUTER_KEY_SECRET_NAME: routerKeySecretName
+      }),
+      GCP_PROJECT: project,
+      GCP_REGION: region,
+      GCP_SECRET_BUCKET: secretBucket,
+      GCP_KMS_SECRET_BUCKET_KEY_LOCATION: secretBucketKeyLocation,
+      GCP_KMS_SECRET_BUCKET_KEY_RING: secretBucketKeyRing
     }
   };
 

@@ -37,7 +37,11 @@ module.exports = ({
   secretBucketKeyRing,
   secretBucket,
   twilioSendingPhoneNumber,
-  twilioTestReceivingPhoneNumber
+  twilioTestReceivingPhoneNumber,
+  routerNetwork,
+  routerAntennaHost,
+  routerKeyId,
+  routerKeySecretName
 }) => {
   const mongodbUser = "tester";
   const mongodbUserPassword = "password";
@@ -73,7 +77,11 @@ module.exports = ({
     mongodbHost,
     mongodbProtocol,
     twilioSendingPhoneNumber,
-    twilioTestReceivingPhoneNumber
+    twilioTestReceivingPhoneNumber,
+    routerNetwork,
+    routerAntennaHost,
+    routerKeyId,
+    routerKeySecretName
   });
 
   const compose = {
@@ -104,7 +112,11 @@ module.exports = ({
           mongodbDatabase,
           mongodbProtocol,
           twilioSendingPhoneNumber,
-          twilioTestReceivingPhoneNumber
+          twilioTestReceivingPhoneNumber,
+          routerNetwork,
+          routerAntennaHost,
+          routerKeyId,
+          routerKeySecretName
         }),
         depends_on: [
           ...(_includeDatabase ? [databaseServiceKey] : []),

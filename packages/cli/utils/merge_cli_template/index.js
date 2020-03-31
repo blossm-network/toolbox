@@ -448,6 +448,7 @@ const configure = async (workingDir, configFn, env, strict) => {
     const dnsZone =
       config["gcp-dns-zone"] || blossmConfig.vendors.cloud.gcp.dnsZone;
 
+    const router = config.router;
     const domain = config.domain;
     const service = config.service;
     const procedure = config.procedure;
@@ -498,6 +499,12 @@ const configure = async (workingDir, configFn, env, strict) => {
       secretBucket,
       secretBucketKeyLocation,
       secretBucketKeyRing,
+      ...(router && {
+        routerNetwork: router.network,
+        routerAntennaHost: router.antenna,
+        routerKeyId: router.key.id,
+        routerKeySecretName: router.key.secretName
+      }),
       actions,
       strict,
       ...configFn(config)
@@ -521,6 +528,12 @@ const configure = async (workingDir, configFn, env, strict) => {
       secretBucket,
       secretBucketKeyLocation,
       secretBucketKeyRing,
+      ...(router && {
+        routerNetwork: router.network,
+        routerAntennaHost: router.antenna,
+        routerKeyId: router.key.id,
+        routerKeySecretName: router.key.secretName
+      }),
       twilioSendingPhoneNumber,
       twilioTestReceivingPhoneNumber,
       ...configFn(config)
