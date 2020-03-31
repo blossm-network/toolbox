@@ -448,7 +448,7 @@ const configure = async (workingDir, configFn, env, strict) => {
     const dnsZone =
       config["gcp-dns-zone"] || blossmConfig.vendors.cloud.gcp.dnsZone;
 
-    const router = config.router;
+    const routers = config.routers;
     const domain = config.domain;
     const service = config.service;
     const procedure = config.procedure;
@@ -499,11 +499,11 @@ const configure = async (workingDir, configFn, env, strict) => {
       secretBucket,
       secretBucketKeyLocation,
       secretBucketKeyRing,
-      ...(router && {
-        routerNetwork: router.network,
-        routerAntennaHost: router.antenna,
-        routerKeyId: router.key.id,
-        routerKeySecretName: router.key.secretName
+      ...(routers && {
+        routerNetwork: routers[0].network,
+        routerAntennaHost: routers[0].antenna,
+        routerKeyId: routers[0].key.id,
+        routerKeySecretName: routers[0].key.secretName
       }),
       actions,
       strict,
@@ -528,11 +528,11 @@ const configure = async (workingDir, configFn, env, strict) => {
       secretBucket,
       secretBucketKeyLocation,
       secretBucketKeyRing,
-      ...(router && {
-        routerNetwork: router.network,
-        routerAntennaHost: router.antenna,
-        routerKeyId: router.key.id,
-        routerKeySecretName: router.key.secretName
+      ...(routers && {
+        routerNetwork: routers[0].network,
+        routerAntennaHost: routers[0].antenna,
+        routerKeyId: routers[0].key.id,
+        routerKeySecretName: routers[0].key.secretName
       }),
       twilioSendingPhoneNumber,
       twilioTestReceivingPhoneNumber,
