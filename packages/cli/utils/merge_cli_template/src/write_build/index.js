@@ -235,6 +235,8 @@ const steps = ({
         secretBucket,
         secretBucketKeyLocation,
         secretBucketKeyRing,
+        twilioTestReceivingPhoneNumber,
+        twilioSendingPhoneNumber,
         runUnitTests,
         runBaseUnitTests,
         runIntegrationTests,

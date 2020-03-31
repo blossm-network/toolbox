@@ -36,6 +36,8 @@ module.exports = ({
   secretBucket,
   secretBucketKeyLocation,
   secretBucketKeyRing,
+  twilioSendingPhoneNumber,
+  twilioTestReceivingPhoneNumber,
   imageExtension,
   runUnitTests,
   runBaseUnitTests,
@@ -64,7 +66,9 @@ module.exports = ({
       secretBucketKeyLocation,
       custom: {
         DOMAIN: domain,
-        SERVICE: service
+        SERVICE: service,
+        TWILIO_TEST_RECEIVING_PHONE_NUMBER: twilioTestReceivingPhoneNumber,
+        TWILIO_SENDING_PHONE_NUMBER: twilioSendingPhoneNumber
       }
     }),
     dockerComposeUp,
