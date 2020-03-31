@@ -9,14 +9,14 @@ let clock;
 const now = new Date();
 
 const trace = "trade!";
-const commandId = "command-id!";
-const commandName = "command-name!";
-const commandDomain = "command-domain!";
-const commandService = "command-service!";
-const commandNetwork = "command-network!";
-const commandIssued = "some-issued-date";
-const commandAccepted = "some-accepted-date";
-const commandBroadcasted = "some-broadcasted-date";
+const pathName = "path-name!";
+const pathDomain = "path-domain!";
+const pathService = "path-service!";
+const pathNetwork = "path-network!";
+const pathIssued = "some-issued-date";
+const pathHost = "some-path-host";
+const pathHash = "some-path-hash";
+const pathProcedure = "some-path-procedure";
 const root = "root!";
 const idempotency = "some-idempotency";
 
@@ -41,16 +41,18 @@ describe("Create event", () => {
       action,
       domain,
       service,
-      command: {
-        id: commandId,
-        issued: commandIssued,
-        accepted: commandAccepted,
-        broadcasted: commandBroadcasted,
-        name: commandName,
-        domain: commandDomain,
-        service: commandService,
-        network: commandNetwork
-      },
+      path: [
+        {
+          issued: pathIssued,
+          name: pathName,
+          domain: pathDomain,
+          service: pathService,
+          network: pathNetwork,
+          host: pathHost,
+          hash: pathHash,
+          procedure: pathProcedure
+        }
+      ],
       root,
       idempotency,
       payload,
@@ -68,22 +70,24 @@ describe("Create event", () => {
         version,
         trace,
         created: dateString(),
-        command: {
-          id: commandId,
-          name: commandName,
-          domain: commandDomain,
-          service: commandService,
-          network: commandNetwork,
-          issued: commandIssued,
-          accepted: commandAccepted,
-          broadcasted: commandBroadcasted
-        }
+        path: [
+          {
+            issued: pathIssued,
+            name: pathName,
+            domain: pathDomain,
+            service: pathService,
+            network: pathNetwork,
+            host: pathHost,
+            hash: pathHash,
+            procedure: pathProcedure
+          }
+        ]
       },
       payload
     });
   });
 
-  it("should get called with expected params if root, idempotency, version, and broadcasted are missing", async () => {
+  it("should get called with expected params if root, idempotency, version, and path properties are missing", async () => {
     const rootUuid = "rootUuid!";
     const idempUuid = "idemptUuid!";
     replace(
@@ -101,15 +105,14 @@ describe("Create event", () => {
       action,
       domain,
       service,
-      command: {
-        id: commandId,
-        issued: commandIssued,
-        accepted: commandAccepted,
-        name: commandName,
-        domain: commandDomain,
-        service: commandService,
-        network: commandNetwork
-      },
+      path: [
+        {
+          network: pathNetwork,
+          host: pathHost,
+          hash: pathHash,
+          procedure: pathProcedure
+        }
+      ],
       payload
     });
 
@@ -124,15 +127,14 @@ describe("Create event", () => {
         version: 0,
         trace,
         created: dateString(),
-        command: {
-          id: commandId,
-          name: commandName,
-          domain: commandDomain,
-          service: commandService,
-          network: commandNetwork,
-          issued: commandIssued,
-          accepted: commandAccepted
-        }
+        path: [
+          {
+            network: pathNetwork,
+            host: pathHost,
+            hash: pathHash,
+            procedure: pathProcedure
+          }
+        ]
       },
       payload
     });
@@ -144,16 +146,18 @@ describe("Create event", () => {
       domain,
       service,
       idempotency,
-      command: {
-        id: commandId,
-        issued: commandIssued,
-        accepted: commandAccepted,
-        broadcasted: commandBroadcasted,
-        name: commandName,
-        domain: commandDomain,
-        service: commandService,
-        network: commandNetwork
-      },
+      path: [
+        {
+          issued: pathIssued,
+          name: pathName,
+          domain: pathDomain,
+          service: pathService,
+          network: pathNetwork,
+          host: pathHost,
+          hash: pathHash,
+          procedure: pathProcedure
+        }
+      ],
       root,
       payload,
       version
@@ -170,16 +174,18 @@ describe("Create event", () => {
         version,
         trace,
         created: dateString(),
-        command: {
-          id: commandId,
-          name: commandName,
-          domain: commandDomain,
-          service: commandService,
-          network: commandNetwork,
-          issued: commandIssued,
-          accepted: commandAccepted,
-          broadcasted: commandBroadcasted
-        }
+        path: [
+          {
+            issued: pathIssued,
+            name: pathName,
+            domain: pathDomain,
+            service: pathService,
+            network: pathNetwork,
+            host: pathHost,
+            hash: pathHash,
+            procedure: pathProcedure
+          }
+        ]
       },
       payload
     });
@@ -190,16 +196,18 @@ describe("Create event", () => {
       action,
       domain,
       service,
-      command: {
-        id: commandId,
-        issued: commandIssued,
-        accepted: commandAccepted,
-        broadcasted: commandBroadcasted,
-        name: commandName,
-        domain: commandDomain,
-        service: commandService,
-        network: commandNetwork
-      },
+      path: [
+        {
+          issued: pathIssued,
+          name: pathName,
+          domain: pathDomain,
+          service: pathService,
+          network: pathNetwork,
+          host: pathHost,
+          hash: pathHash,
+          procedure: pathProcedure
+        }
+      ],
       root,
       idempotency,
       payload,
@@ -217,16 +225,18 @@ describe("Create event", () => {
         version,
         trace,
         created: dateString(),
-        command: {
-          id: commandId,
-          name: commandName,
-          domain: commandDomain,
-          service: commandService,
-          network: commandNetwork,
-          issued: commandIssued,
-          accepted: commandAccepted,
-          broadcasted: commandBroadcasted
-        }
+        path: [
+          {
+            issued: pathIssued,
+            name: pathName,
+            domain: pathDomain,
+            service: pathService,
+            network: pathNetwork,
+            host: pathHost,
+            hash: pathHash,
+            procedure: pathProcedure
+          }
+        ]
       },
       payload
     });

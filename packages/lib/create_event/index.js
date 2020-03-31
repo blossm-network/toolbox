@@ -10,7 +10,7 @@ module.exports = ({
   domain,
   service,
   idempotency,
-  command
+  path
 } = {}) => {
   return {
     headers: {
@@ -23,17 +23,19 @@ module.exports = ({
       created: dateString(),
       idempotency: idempotency || deps.uuid(),
       ...(trace != undefined && { trace }),
-      ...(command && {
-        command: {
-          id: command.id,
-          name: command.name,
-          domain: command.domain,
-          service: command.service,
-          network: command.network,
-          issued: command.issued,
-          accepted: command.accepted,
-          ...(command.broadcasted && { broadcasted: command.broadcasted })
-        }
+      ...(path && {
+        path: path.map(p => {
+          return {
+            ...(p.name && { name: p.name }),
+            ...(p.domain && { domain: p.domain }),
+            ...(p.service && { service: p.service }),
+            ...(p.issued && { issued: p.issued }),
+            network: p.network,
+            hash: p.hash,
+            procedure: p.procedure,
+            host: p.host
+          };
+        })
       })
     },
     payload

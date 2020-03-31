@@ -22,12 +22,7 @@ const version = "version";
 const eventAction = "some-event-action";
 const eventDomain = "some-event-domain";
 const eventService = "some-event-service";
-const commandId = "commandId";
-const commandName = "command-name";
-const commandDomain = "command-domain";
-const commandService = "command-service";
-const commandNetwork = "command-network";
-const commandIssuedTimestamp = 234;
+const path = "some-path";
 const service = "some-service";
 const domain = "some-domain";
 
@@ -83,14 +78,7 @@ describe("Event store", () => {
               service: eventService,
               version,
               trace,
-              command: {
-                name: commandName,
-                domain: commandDomain,
-                service: commandService,
-                network: commandNetwork,
-                id: commandId,
-                issued: commandIssuedTimestamp
-              }
+              path
             },
             payload
           },
@@ -112,14 +100,7 @@ describe("Event store", () => {
               domain: eventDomain,
               service: eventService,
               version,
-              command: {
-                id: commandId,
-                name: commandName,
-                domain: commandDomain,
-                service: commandService,
-                network: commandNetwork,
-                issued: commandIssuedTimestamp
-              },
+              path,
               trace,
               created: dateString()
             },

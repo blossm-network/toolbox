@@ -25,11 +25,6 @@ const topic = `some-topic.${process.env.DOMAIN}.${process.env.SERVICE}`;
 const sub = "some-sub";
 const version = 0;
 const created = dateString();
-const id = "some-id";
-const network = "some-network";
-const issued = dateString();
-const accepted = dateString();
-const name = "some-command-name";
 
 describe("Event store integration tests", () => {
   const example0 = testing.examples.first;
@@ -58,16 +53,7 @@ describe("Event store integration tests", () => {
                 domain,
                 service,
                 version,
-                created,
-                command: {
-                  id,
-                  name,
-                  domain,
-                  service,
-                  network,
-                  issued,
-                  accepted
-                }
+                created
               },
               payload: example0.payload
             }
@@ -100,16 +86,7 @@ describe("Event store integration tests", () => {
                 created,
                 action: example1.action,
                 domain,
-                service,
-                command: {
-                  id,
-                  name,
-                  domain,
-                  service,
-                  network,
-                  issued,
-                  accepted
-                }
+                service
               },
               payload: example1.payload
             }
@@ -174,16 +151,7 @@ describe("Event store integration tests", () => {
                 created,
                 action: example0.action,
                 domain,
-                service,
-                command: {
-                  id,
-                  name,
-                  domain,
-                  service,
-                  network,
-                  issued,
-                  accepted
-                }
+                service
               },
               payload: example0.payload
             }
@@ -197,16 +165,7 @@ describe("Event store integration tests", () => {
                 created,
                 action: example1.action,
                 domain,
-                service,
-                command: {
-                  id,
-                  name,
-                  domain,
-                  service,
-                  network,
-                  issued,
-                  accepted
-                }
+                service
               },
               payload: example1.payload
             }
@@ -250,16 +209,7 @@ describe("Event store integration tests", () => {
                     created,
                     action: example0.action,
                     domain,
-                    service,
-                    command: {
-                      id,
-                      name,
-                      domain,
-                      service,
-                      network,
-                      issued,
-                      accepted
-                    }
+                    service
                   },
                   payload: example0.payload
                 }
@@ -284,16 +234,7 @@ describe("Event store integration tests", () => {
                 created,
                 action,
                 domain,
-                service,
-                command: {
-                  id,
-                  name,
-                  domain,
-                  service,
-                  network,
-                  issued,
-                  accepted
-                }
+                service
               },
               payload
             }
@@ -319,16 +260,7 @@ describe("Event store integration tests", () => {
                   created,
                   action: example0.action,
                   domain,
-                  service,
-                  command: {
-                    id,
-                    name,
-                    domain,
-                    service,
-                    network,
-                    issued,
-                    accepted
-                  }
+                  service
                 },
                 payload: example0.payload
               }
@@ -349,16 +281,7 @@ describe("Event store integration tests", () => {
                   created,
                   action: example1.action,
                   domain,
-                  service,
-                  command: {
-                    id,
-                    name,
-                    domain,
-                    service,
-                    network,
-                    issued,
-                    accepted
-                  }
+                  service
                 },
                 payload: example1.payload
               }
@@ -484,16 +407,7 @@ describe("Event store integration tests", () => {
                 created,
                 action: testing.action,
                 domain,
-                service,
-                command: {
-                  id,
-                  name,
-                  domain,
-                  service,
-                  network,
-                  issued,
-                  accepted
-                }
+                service
               },
               payload: example0
             },
@@ -519,16 +433,7 @@ describe("Event store integration tests", () => {
                 created,
                 action: "bogus",
                 domain,
-                service,
-                command: {
-                  id,
-                  name,
-                  domain,
-                  service,
-                  network,
-                  issued,
-                  accepted
-                }
+                service
               },
               payload: example0.payload
             }
