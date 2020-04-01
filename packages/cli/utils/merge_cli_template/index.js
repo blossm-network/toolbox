@@ -445,22 +445,10 @@ const configure = async (workingDir, configFn, env, strict) => {
     const region =
       config["gcp-region"] || blossmConfig.vendors.cloud.gcp.defaults.region;
     const network = config.network || blossmConfig.network;
+    const routers = blossmConfig.routers;
     const dnsZone =
       config["gcp-dns-zone"] || blossmConfig.vendors.cloud.gcp.dnsZone;
 
-    const routers = config.routers;
-    //TODO
-    //eslint-disable-next-line
-    console.log({
-      routers,
-      obj: {
-        ...(routers && {
-          routerNetwork: routers[0].network,
-          routerKeyId: routers[0].key.id,
-          routerKeySecretName: routers[0].key.secretName
-        })
-      }
-    });
     const domain = config.domain;
     const service = config.service;
     const procedure = config.procedure;
