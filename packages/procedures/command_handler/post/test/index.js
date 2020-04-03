@@ -149,6 +149,7 @@ describe("Command handler post", () => {
     });
     expect(addFnFake).to.have.been.calledWith({
       domain,
+      service,
       context,
       claims,
       events: [
@@ -408,6 +409,7 @@ describe("Command handler post", () => {
     });
     expect(addFnFake).to.have.been.calledWith({
       domain,
+      service,
       context,
       claims,
       events: [{ data: event, number: correctNumber }]
@@ -507,6 +509,7 @@ describe("Command handler post", () => {
 
     expect(addFnFake).to.have.been.calledWith({
       domain,
+      service,
       context,
       claims,
       events: [{ data: event, number: correctNumber }]
@@ -590,6 +593,7 @@ describe("Command handler post", () => {
 
     expect(addFnFake).to.have.been.calledWith({
       domain,
+      service,
       context,
       claims,
       events: [{ data: event }]
@@ -630,13 +634,15 @@ describe("Command handler post", () => {
     replace(deps, "uuid", fake.returns(commandId));
 
     const eventDomain = "some-other-event-domain";
+    const eventService = "some-other-event-service";
 
     const events = [
       {
         payload: eventPayload,
         correctNumber,
         action: eventAction,
-        domain: eventDomain
+        domain: eventDomain,
+        service: eventService
       }
     ];
 
@@ -685,6 +691,7 @@ describe("Command handler post", () => {
 
     expect(addFnFake).to.have.been.calledWith({
       domain: eventDomain,
+      service: eventService,
       context,
       claims,
       events: [{ data: event, number: correctNumber }]
@@ -694,7 +701,7 @@ describe("Command handler post", () => {
       trace,
       action: eventAction,
       domain: eventDomain,
-      service,
+      service: eventService,
       version: 0,
       idempotency,
       path: [
@@ -716,7 +723,7 @@ describe("Command handler post", () => {
     expect(sendFake).to.have.been.calledWith(response);
   });
 
-  it("should call with the correct params with many events", async () => {
+  it("should call with the correct params with many events in different services", async () => {
     const validateFnFake = fake();
     const normalizeFnFake = fake.returns(cleanedPayload);
 
@@ -829,6 +836,7 @@ describe("Command handler post", () => {
     });
     expect(addFnFake).to.have.been.calledWith({
       domain,
+      service,
       context,
       claims,
       events: [
@@ -839,7 +847,7 @@ describe("Command handler post", () => {
     expect(statusFake).to.have.been.calledWith(200);
     expect(sendFake).to.have.been.calledWith(response);
   });
-  it("should call with the correct params with many events in different domains", async () => {
+  it("should call with the correct params with many events in different domains and services", async () => {
     const validateFnFake = fake();
     const normalizeFnFake = fake.returns(cleanedPayload);
 
@@ -851,6 +859,7 @@ describe("Command handler post", () => {
     const otherEventAction = "some-other-event-action";
     const otherCorrectNumber = "some-other-correct-number";
     const differentDomain = "some-different-domain";
+    const differentService = "some-other-event-service";
     const events = [
       {
         payload: eventPayload,
@@ -861,6 +870,7 @@ describe("Command handler post", () => {
         payload: otherEventPayload,
         action: otherEventAction,
         domain: differentDomain,
+        service: differentService,
         correctNumber: otherCorrectNumber
       }
     ];
@@ -925,7 +935,6 @@ describe("Command handler post", () => {
           network,
           host,
           procedure,
-
           hash
         }
       ]
@@ -935,7 +944,7 @@ describe("Command handler post", () => {
       trace,
       action: otherEventAction,
       domain: differentDomain,
-      service,
+      service: differentService,
       version: 0,
       idempotency,
       path: [
@@ -955,12 +964,14 @@ describe("Command handler post", () => {
     });
     expect(addFnFake).to.have.been.calledWith({
       domain,
+      service,
       context,
       claims,
       events: [{ data: event, number: correctNumber }]
     });
     expect(addFnFake).to.have.been.calledWith({
       domain: differentDomain,
+      service: differentService,
       context,
       claims,
       events: [{ data: event, number: otherCorrectNumber }]

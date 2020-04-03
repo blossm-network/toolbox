@@ -34,7 +34,8 @@ module.exports = ({
       correctNumber,
       version = 0,
       action,
-      domain = process.env.DOMAIN
+      domain = process.env.DOMAIN,
+      service = process.env.SERVICE
     } of events) {
       const eventData = deps.createEvent({
         ...(root && { root }),
@@ -43,7 +44,7 @@ module.exports = ({
         version,
         action,
         domain,
-        service: process.env.SERVICE,
+        service,
         idempotency: req.body.headers.idempotency,
         path: [
           ...(req.body.headers.path || []),
@@ -65,21 +66,27 @@ module.exports = ({
         data: eventData,
         ...(correctNumber && { number: correctNumber })
       };
-      eventsPerStore[domain] = eventsPerStore[domain]
-        ? eventsPerStore[domain].concat([normalizedEvent])
+
+      eventsPerStore[service] = eventsPerStore[service] || {};
+
+      eventsPerStore[service][domain] = eventsPerStore[service][domain]
+        ? eventsPerStore[service][domain].concat([normalizedEvent])
         : [normalizedEvent];
     }
 
     const fns = [];
-    for (const domain in eventsPerStore) {
-      fns.push(
-        addFn({
-          domain,
-          context: req.body.context,
-          claims: req.body.claims,
-          events: eventsPerStore[domain]
-        })
-      );
+    for (const service in eventsPerStore) {
+      for (const domain in eventsPerStore[service]) {
+        fns.push(
+          addFn({
+            domain,
+            service,
+            context: req.body.context,
+            claims: req.body.claims,
+            events: eventsPerStore[service][domain]
+          })
+        );
+      }
     }
 
     await Promise.all(fns);
