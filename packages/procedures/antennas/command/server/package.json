@@ -1,7 +1,7 @@
 {
   "name": "@blossm/command-antenna",
   "description": "A antenna server that manages command issuing access to the networks of other nodes.",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -16,7 +16,7 @@
   "dependencies": {
     "@blossm/authentication-middleware": "^0.0.66",
     "@blossm/authorization-middleware": "^0.0.62",
-    "@blossm/command-antenna-post": "^0.0.4",
+    "@blossm/command-antenna-post": "^0.0.5",
     "@blossm/cors-middleware": "^0.0.23",
     "@blossm/server": "^0.0.9"
   },
