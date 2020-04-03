@@ -214,6 +214,7 @@ describe("Issue command", () => {
     });
     expect(inFake).to.have.been.calledWith({
       context,
+      network: otherNetwork,
       host: `command.antenna.${routerNetwork}`
     });
     expect(withFake).to.have.been.calledWith({
@@ -278,6 +279,7 @@ describe("Issue command", () => {
     });
     expect(inFake).to.have.been.calledWith({
       context,
+      network: otherNetwork,
       host: "command.some-domain.some-service.some-other-network"
     });
     expect(withFake).to.have.been.calledWith({

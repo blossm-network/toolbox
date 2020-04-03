@@ -149,15 +149,16 @@ describe("Operation", () => {
     replace(deps, "networkUrl", networkUrlFake);
 
     const otherHost = "some-other-host";
+    const otherNetwork = "some-other-network";
 
     const result = await operation(operarationPart1, operarationPart2)
       .post(data)
-      .in({ context, host: otherHost })
+      .in({ context, network: otherNetwork, host: otherHost })
       .with({ tokenFn, claims });
 
     expect(networkTokenFake).to.have.been.calledWith({
       tokenFn,
-      host: otherHost
+      network: otherNetwork
     });
     expect(networkUrlFake).to.have.been.calledWith({
       host: otherHost

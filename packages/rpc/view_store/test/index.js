@@ -172,6 +172,7 @@ describe("Get views", () => {
     expect(getFake).to.have.been.calledWith({ query, sort });
     expect(inFake).to.have.been.calledWith({
       context,
+      network: otherNetwork,
       host: "view.some-domain.some-service.some-other-network"
     });
     expect(withFake).to.have.been.calledWith({
@@ -276,6 +277,7 @@ describe("Get views", () => {
     expect(getFake).to.have.been.calledWith({ query, sort });
     expect(inFake).to.have.been.calledWith({
       context,
+      network: otherNetwork,
       host: "view.some-domain.some-service.some-other-network"
     });
     expect(withFake).to.have.been.calledWith({

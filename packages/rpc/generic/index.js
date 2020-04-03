@@ -4,7 +4,7 @@ const deps = require("./deps");
 
 const common = ({ method, dataParam, operation, root, data }) => {
   return {
-    in: ({ context, host = process.env.HOST }) => {
+    in: ({ context, network, host = process.env.HOST }) => {
       return {
         with: async ({ path, tokenFn, claims } = {}) => {
           const internal = host == process.env.HOST;
@@ -14,7 +14,7 @@ const common = ({ method, dataParam, operation, root, data }) => {
                 tokenFn,
                 operation
               })
-            : await deps.networkToken({ tokenFn, host });
+            : await deps.networkToken({ tokenFn, network });
 
           const url = internal
             ? deps.operationUrl({
@@ -48,6 +48,7 @@ const common = ({ method, dataParam, operation, root, data }) => {
               url,
               data,
               context,
+              network,
               token
             });
             throw deps.constructError({
@@ -69,7 +70,12 @@ const common = ({ method, dataParam, operation, root, data }) => {
 module.exports = (...operation) => {
   return {
     post: data =>
-      common({ method: deps.post, dataParam: "body", operation, data }),
+      common({
+        method: deps.post,
+        dataParam: "body",
+        operation,
+        data
+      }),
     put: (root, data) =>
       common({ method: deps.put, dataParam: "body", operation, root, data }),
     delete: root =>

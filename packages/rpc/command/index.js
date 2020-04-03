@@ -48,6 +48,7 @@ module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
       .in({
         ...(context && { context }),
         ...(!internal && {
+          network,
           host: route
             ? `command.antenna.${process.env.ROUTER_NETWORK}`
             : `command.${domain}.${service}.${network}`

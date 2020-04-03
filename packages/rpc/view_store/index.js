@@ -20,6 +20,7 @@ module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
       .in({
         ...(context && { context }),
         ...(!internal && {
+          network,
           host: `view.${domain}.${service}.${network}`
         })
       })
@@ -38,6 +39,7 @@ module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
       .in({
         ...(context && { context }),
         ...(!internal && {
+          network,
           host: `view.${domain}.${service}.${network}`
         })
       })
