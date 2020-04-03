@@ -1,28 +1,34 @@
-// const deps = require("./deps");
+const deps = require("./deps");
 
-// let token;
-// let exp;
+let cache = {};
 
-module.exports = async () => {
-  //({ host }) => {
-  // if (!token || exp < new Date()) {
-  //   token = await command({
-  //     name: "open",
-  //     domain: "connection",
-  //     service: "router",
-  //     network: process.env.ROUTER_NETWORK
-  //   })
-  //     .set({
-  //       tokenFn: basicToken({
-  //         id: process.env.ROUTER_KEY_ID,
-  //         secret: await secret(process.env.ROUTER_KEY_SECRET_NAME)
-  //       })
-  //     })
-  //     .issue({
-  //       hosts: [host]
-  //     });
-  //   const claims = await validate({ token });
-  //   exp = Date.parse(claims.exp);
-  // }
-  // return token;
+module.exports = ({ routerNetwork, routerKeyId, routerKeySecret }) => async ({
+  network
+}) => {
+  const { token, exp } = cache[network] || {};
+  if (!token || exp < new Date()) {
+    const { tokens } = await deps
+      .command({
+        name: "open",
+        domain: "connection",
+        service: "router",
+        network: routerNetwork
+      })
+      .set({
+        tokenFn: deps.basicToken({
+          id: routerKeyId,
+          secret: routerKeySecret
+        })
+      })
+      .issue({
+        networks: [network]
+      });
+    const { value: token } = tokens.filter(t => t.network == routerNetwork)[0];
+    const claims = await deps.validate({ token });
+    cache[network] = {
+      token,
+      exp: Date.parse(claims.exp)
+    };
+  }
+  return cache[network].token;
 };
