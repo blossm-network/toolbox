@@ -110,7 +110,8 @@ module.exports = ({
           EVENT_SERVICE: `${event.service}`
         }
       };
-    case "job":
+    case "post-job":
+    case "get-job":
       return {
         image: `${commonImagePrefix}.${service}.${domain}.${name}:latest`,
         ...common,

@@ -16,7 +16,8 @@ const commandGateway = require("./command_gateway");
 const commandAntenna = require("./command_antenna");
 const viewGateway = require("./view_gateway");
 const roles = require("./roles");
-const job = require("./job");
+const postJob = require("./post_job");
+const getJob = require("./get_job");
 
 const domains = [
   "begin",
@@ -32,7 +33,8 @@ const domains = [
   "command-gateway",
   "command-antenna",
   "view-gateway",
-  "job"
+  "post-job",
+  "get-job"
 ];
 
 const tryShortcuts = input => {
@@ -75,8 +77,10 @@ const tryShortcuts = input => {
       return commandAntenna(args);
     case "roles":
       return roles(args);
-    case "job":
-      return job(args);
+    case "post-job":
+      return postJob(args);
+    case "get-job":
+      return getJob(args);
   }
 };
 
@@ -104,8 +108,10 @@ const forward = input => {
       return viewGateway(input.args);
     case "command-antenna":
       return commandAntenna(input.args);
-    case "job":
-      return job(input.args);
+    case "post-job":
+      return postJob(input.args);
+    case "get-job":
+      return getJob(input.args);
     default: {
       try {
         tryShortcuts(input);

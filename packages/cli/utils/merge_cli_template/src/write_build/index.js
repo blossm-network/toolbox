@@ -189,7 +189,8 @@ const steps = ({
         routerKeySecretName,
         strict
       });
-    case "job":
+    case "post-job":
+    case "get-job":
       return job({
         imageExtension,
         name,
@@ -331,7 +332,8 @@ const imageExtension = ({ service, domain, name, event, procedure }) => {
     case "projection":
       return `${service}.${domain}.${name}.did-${event.action}.${event.domain}`;
     case "command-handler":
-    case "job":
+    case "post-job":
+    case "get-job":
       return `${service}.${domain}.${name}`;
     default:
       return "";
