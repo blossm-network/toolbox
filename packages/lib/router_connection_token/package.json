@@ -1,6 +1,6 @@
 {
   "name": "@blossm/router-connection-token",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Gets a connection token to communicate with a router.",
   "main": "index.js",
   "author": "blossm.network",
