@@ -1,7 +1,7 @@
 {
   "name": "@blossm/command-antenna-post",
   "description": "An antenna gateway server POST handler.",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -14,7 +14,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/command-rpc": "^0.0.85",
+    "@blossm/command-rpc": "^0.0.86",
     "@blossm/datetime": "*"
   },
   "devDependencies": {

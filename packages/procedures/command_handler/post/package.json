@@ -1,7 +1,7 @@
 {
   "name": "@blossm/command-handler-post",
   "description": "A command handler server POST handler.",
-  "version": "0.0.141",
+  "version": "0.0.142",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -16,7 +16,7 @@
   "dependencies": {
     "@blossm/create-event": "^0.0.27",
     "@blossm/datetime": "*",
-    "@blossm/event-store-rpc": "^0.0.86",
+    "@blossm/event-store-rpc": "^0.0.87",
     "@blossm/uuid": "*"
   },
   "devDependencies": {
