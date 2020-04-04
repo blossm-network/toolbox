@@ -35,7 +35,7 @@ module.exports = async ({
         },
         action: "register",
         domain: "identity",
-        service: process.env.SERVICE
+        service: "core"
       })
     }
   ]);
@@ -56,7 +56,7 @@ module.exports = async ({
           },
           action: "create",
           domain: "role",
-          service: process.env.SERVICE
+          service: "core"
         })
       }
     ]),
@@ -78,7 +78,7 @@ module.exports = async ({
           },
           action: "add-roles",
           domain: "principle",
-          service: process.env.SERVICE
+          service: "core"
         })
       }
     ])
@@ -95,7 +95,7 @@ module.exports = async ({
         payload: {},
         action: "start",
         domain: "session",
-        service: process.env.SERVICE
+        service: "core"
       })
     }
   ]);
