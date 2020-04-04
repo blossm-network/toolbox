@@ -1,7 +1,7 @@
 {
   "name": "@blossm/post-get-rpc",
   "description": "Triggers a get job.",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {

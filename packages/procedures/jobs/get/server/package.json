@@ -1,7 +1,7 @@
 {
   "name": "@blossm/get-job",
   "description": "A generic get job server.",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -14,7 +14,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/get-job-get": "*",
+    "@blossm/get-job-get": "^0.0.1",
     "@blossm/server": "^0.0.9"
   },
   "devDependencies": {
