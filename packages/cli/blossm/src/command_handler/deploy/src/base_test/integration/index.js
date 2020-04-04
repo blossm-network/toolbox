@@ -81,7 +81,7 @@ const executeStep = async step => {
         service
       });
 
-      await eventStore({ domain }).add([{ data: stateEvent }]);
+      await eventStore({ domain, service }).add([{ data: stateEvent }]);
     }
   }
 
@@ -104,7 +104,7 @@ const executeStep = async step => {
 
   const correctCode = step.response ? 200 : step.code || 204;
   if (response.statusCode != correctCode) {
-    //eslint-disable-next-line
+    //eslint-disable-next-line no-console
     console.log("response: ", response);
   }
 
