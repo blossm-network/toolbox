@@ -266,10 +266,16 @@ const topicsForDependencies = (config, events) => {
 const eventStoreDependencies = ({ dependencies }) => {
   let result = [];
   for (const dependency of dependencies) {
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log({ dependency });
     if (
       dependency.procedure == "command-handler" &&
       ![...dependencies, ...result].some(
-        d => d.procedure == "event-store" && d.domain == dependency.domain
+        d =>
+          d.procedure == "event-store" &&
+          d.domain == dependency.domain &&
+          d.service == dependency.service
       )
     ) {
       result.push({
@@ -279,6 +285,9 @@ const eventStoreDependencies = ({ dependencies }) => {
       });
     }
   }
+  //TODO
+  //eslint-disable-next-line no-console
+  console.log({ result });
   return result;
 };
 
@@ -383,6 +392,10 @@ const writeConfig = (config, workingDir) => {
   const { dependencies, events } = resolveTransientInfo(
     addDefaultDependencies({ config })
   );
+
+  //TODO
+  //eslint-disable-next-line no-console
+  console.log({ allDeps: dependencies });
 
   config.testing = {
     ...config.testing,
