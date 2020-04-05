@@ -46,7 +46,7 @@ module.exports = ({
   routerKeySecretName,
   strict
 }) => {
-  const authUri = `job.${domain}.${service}.${envUriSpecifier}${network}`;
+  const authUri = `get.${domain}.${service}.${envUriSpecifier}${network}`;
   return [
     yarnInstall,
     ...(runUnitTests ? [unitTests] : []),
