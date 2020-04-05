@@ -55,6 +55,21 @@ const envTwilioSendingPhoneNumber = ({ env, config }) => {
   }
 };
 
+const envPublicKeyUrl = ({ env, config }) => {
+  switch (env) {
+    case "production":
+      return config.publicKeyUrls.production;
+    case "sandbox":
+      return config.publicKeyUrls.sandbox;
+    case "staging":
+      return config.publicKeyUrls.staging;
+    case "development":
+      return config.publicKeyUrls.development;
+    default:
+      return "";
+  }
+};
+
 const envTwilioTestReceivingPhoneNumber = ({ env, config }) => {
   switch (env) {
     case "production":
@@ -488,6 +503,7 @@ const configure = async (workingDir, configFn, env, strict) => {
 
     const rolesBucket = envRolesBucket({ env, config: blossmConfig });
     const secretBucket = envSecretsBucket({ env, config: blossmConfig });
+    const publicKeyUrl = envPublicKeyUrl({ env, config: blossmConfig });
     const twilioSendingPhoneNumber = envTwilioSendingPhoneNumber({
       env,
       config: blossmConfig
@@ -507,6 +523,7 @@ const configure = async (workingDir, configFn, env, strict) => {
       workingDir,
       configFn,
       env,
+      publicKeyUrl,
       region,
       domain,
       name,

@@ -2,6 +2,7 @@ module.exports = ({
   procedure,
   operationHash,
   port,
+  publicKeyUrl,
   mainContainerName,
   network,
   host,
@@ -126,14 +127,16 @@ module.exports = ({
     case "view-gateway":
       return {
         image: `${commonImagePrefix}.${service}.${domain}:latest`,
-        ...common
+        ...common,
+        PUBLIC_KEY_URL: publicKeyUrl
       };
     case "get-job-gateway":
       return {
         image: `${commonImagePrefix}${service ? `.${service}` : ""}${
           domain ? `.${domain}` : ""
         }:latest`,
-        ...common
+        ...common,
+        PUBLIC_KEY_URL: publicKeyUrl
       };
     case "command-antenna":
     case "view-antenna":

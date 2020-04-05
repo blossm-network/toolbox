@@ -3,7 +3,8 @@ const { readFile, readdir, unlink } = require("fs");
 const yaml = require("yaml");
 const gateway = require("@blossm/get-job-gateway");
 const eventStore = require("@blossm/event-store-rpc");
-const { verify } = require("@blossm/gcp-kms");
+const { verify: verifyGCP } = require("@blossm/gcp-kms");
+const { verify } = require("@blossm/verify-access-token");
 const { invalidCredentials } = require("@blossm/errors");
 const { download: downloadFile } = require("@blossm/gcp-storage");
 const rolePermissions = require("@blossm/role-permissions");
@@ -79,11 +80,16 @@ module.exports = gateway({
     if (aggregate.state.terminated) throw invalidCredentials.tokenTerminated();
   },
   verifyFn: ({ key }) =>
-    verify({
-      ring: "jwt",
-      key,
-      location: "global",
-      version: "1",
-      project: process.env.GCP_PROJECT
-    })
+    key == "access"
+      ? verify({
+          url: process.env.PUBLIC_KEY_URL,
+          algorithm: "SHA256"
+        })
+      : verifyGCP({
+          ring: "jwt",
+          key,
+          location: "global",
+          version: "1",
+          project: process.env.GCP_PROJECT
+        })
 });

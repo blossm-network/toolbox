@@ -2,6 +2,7 @@
   "dependencies": {
     "@blossm/command-antenna": "*",
     "@blossm/event-store-rpc": "*",
+    "@blossm/verify-access-token": "*",
     "@blossm/gcp-kms": "*",
     "@blossm/gcp-token": "*",
     "@blossm/errors": "*",

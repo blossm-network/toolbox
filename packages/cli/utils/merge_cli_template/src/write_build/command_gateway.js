@@ -21,6 +21,7 @@ module.exports = ({
   region,
   project,
   network,
+  publicKeyUrl,
   envUriSpecifier,
   containerRegistery,
   mainContainerName,
@@ -73,6 +74,7 @@ module.exports = ({
       custom: {
         DOMAIN: domain,
         SERVICE: service,
+        ...(publicKeyUrl && { PUBLIC_KEY_URL: publicKeyUrl }),
         ...(twilioTestReceivingPhoneNumber && {
           TWILIO_TEST_RECEIVING_PHONE_NUMBER: twilioTestReceivingPhoneNumber
         }),
@@ -113,7 +115,11 @@ module.exports = ({
             routerNetwork,
             routerKeyId,
             routerKeySecretName,
-            env: { DOMAIN: domain, SERVICE: service },
+            env: {
+              DOMAIN: domain,
+              SERVICE: service,
+              ...(publicKeyUrl && { PUBLIC_KEY_URL: publicKeyUrl })
+            },
             labels: { domain, service }
           }),
           startDnsTransaction({ dnsZone, project }),

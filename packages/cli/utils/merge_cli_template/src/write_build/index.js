@@ -18,6 +18,7 @@ const steps = ({
   domain,
   name,
   event,
+  publicKeyUrl,
   project,
   network,
   mongodbUser,
@@ -226,6 +227,7 @@ const steps = ({
     case "command-gateway":
       return commandGateway({
         imageExtension,
+        publicKeyUrl,
         region,
         project,
         envUriSpecifier,
@@ -260,6 +262,7 @@ const steps = ({
     case "view-gateway":
       return viewGateway({
         imageExtension,
+        publicKeyUrl,
         region,
         project,
         envUriSpecifier,
@@ -292,6 +295,7 @@ const steps = ({
     case "get-job-gateway":
       return getJobGateway({
         imageExtension,
+        publicKeyUrl,
         region,
         project,
         envUriSpecifier,
@@ -387,6 +391,7 @@ module.exports = ({
   region,
   domain,
   event,
+  publicKeyUrl,
   name,
   project,
   network,
@@ -442,6 +447,7 @@ module.exports = ({
       region,
       domain,
       name,
+      publicKeyUrl,
       event,
       project,
       network,

@@ -21,6 +21,7 @@ module.exports = ({
   region,
   project,
   network,
+  publicKeyUrl,
   envUriSpecifier,
   containerRegistery,
   mainContainerName,
@@ -72,7 +73,8 @@ module.exports = ({
       routerKeySecretName,
       custom: {
         ...(domain && { DOMAIN: domain }),
-        ...(service && { SERVICE: service })
+        ...(service && { SERVICE: service }),
+        ...(publicKeyUrl && { PUBLIC_KEY_URL: publicKeyUrl })
       }
     }),
     dockerComposeUp,
@@ -109,7 +111,8 @@ module.exports = ({
             routerKeySecretName,
             env: {
               ...(domain && { DOMAIN: domain }),
-              ...(service && { SERVICE: service })
+              ...(service && { SERVICE: service }),
+              ...(publicKeyUrl && { PUBLIC_KEY_URL: publicKeyUrl })
             },
             labels: { ...(domain && { domain }), ...(service && { service }) }
           }),

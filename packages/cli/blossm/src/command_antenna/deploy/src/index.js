@@ -1,6 +1,7 @@
 const antenna = require("@blossm/command-antenna");
 const eventStore = require("@blossm/event-store-rpc");
-const { verify } = require("@blossm/gcp-kms");
+const { verify: verifyGCP } = require("@blossm/gcp-kms");
+const { verify } = require("@blossm/verify-access-token");
 const gcpToken = require("@blossm/gcp-token");
 const { compare } = require("@blossm/crypt");
 const { invalidCredentials } = require("@blossm/errors");
@@ -10,13 +11,18 @@ const config = require("./config.json");
 module.exports = antenna({
   whitelist: config.whitelist,
   verifyFn: ({ key }) =>
-    verify({
-      ring: "jwt",
-      key,
-      location: "global",
-      version: "1",
-      project: process.env.GCP_PROJECT
-    }),
+    key == "access"
+      ? verify({
+          url: process.env.PUBLIC_KEY_URL,
+          algorithm: "SHA256"
+        })
+      : verifyGCP({
+          ring: "jwt",
+          key,
+          location: "global",
+          version: "1",
+          project: process.env.GCP_PROJECT
+        }),
   terminatedSessionCheckFn: async ({ session }) => {
     const aggregate = await eventStore({
       domain: "session",
