@@ -19,7 +19,7 @@ const config = require("./config.json");
 let defaultRoles;
 
 module.exports = gateway({
-  stores: config.stores,
+  jobs: config.jobs,
   whitelist: config.whitelist,
   tokenFn: gcpToken,
   permissionsLookupFn: async ({ principle }) => {

@@ -6,7 +6,7 @@
 domain: some-domain
 service: core
 
-stores:
+jobs:
   - name: some-name
     priviledges:
       - some-priviledge
