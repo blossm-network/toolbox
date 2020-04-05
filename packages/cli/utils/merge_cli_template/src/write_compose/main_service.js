@@ -122,9 +122,15 @@ module.exports = ({
       };
     case "command-gateway":
     case "view-gateway":
-    case "get-job-gateway":
       return {
         image: `${commonImagePrefix}.${service}.${domain}:latest`,
+        ...common
+      };
+    case "get-job-gateway":
+      return {
+        image: `${commonImagePrefix}${service ? `.${service}` : ""}${
+          domain ? `.${domain}` : ""
+        }:latest`,
         ...common
       };
     case "command-antenna":
