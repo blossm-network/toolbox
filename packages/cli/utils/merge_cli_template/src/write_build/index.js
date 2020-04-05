@@ -360,8 +360,13 @@ const imageExtension = ({ service, domain, name, event, procedure }) => {
     case "event-store":
     case "command-gateway":
     case "view-gateway":
-    case "get-job-gateway":
       return `${service}.${domain}`;
+    case "get-job-gateway":
+      if (service) {
+        if (domain) return `${service}.${domain}`;
+        return service;
+      }
+      return "";
     case "event-handler":
     case "projection":
       return `${service}.${domain}.${name}.did-${event.action}.${event.domain}`;

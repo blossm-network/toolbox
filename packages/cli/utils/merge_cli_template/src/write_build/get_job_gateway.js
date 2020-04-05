@@ -46,7 +46,9 @@ module.exports = ({
   routerKeySecretName,
   strict
 }) => {
-  const authUri = `get.${domain}.${service}.${envUriSpecifier}${network}`;
+  const authUri = `get.${domain ? `${domain}.` : ""}${
+    service ? `${service}.` : ""
+  }${envUriSpecifier}${network}`;
   return [
     yarnInstall,
     ...(runUnitTests ? [unitTests] : []),
@@ -69,8 +71,8 @@ module.exports = ({
       routerKeyId,
       routerKeySecretName,
       custom: {
-        DOMAIN: domain,
-        SERVICE: service
+        ...(domain && { DOMAIN: domain }),
+        ...(service && { SERVICE: service })
       }
     }),
     dockerComposeUp,
@@ -107,8 +109,11 @@ module.exports = ({
             routerNetwork,
             routerKeyId,
             routerKeySecretName,
-            env: { DOMAIN: domain, SERVICE: service },
-            labels: { domain, service }
+            env: {
+              ...(domain && { DOMAIN: domain }),
+              ...(service && { SERVICE: service })
+            },
+            labels: { ...(domain && { domain }), ...(service && { service }) }
           }),
           startDnsTransaction({ dnsZone, project }),
           addDnsTransaction({ uri: authUri, dnsZone, project }),
