@@ -265,9 +265,7 @@ const topicsForDependencies = (config, events) => {
         (config.procedure == "view-gateway" &&
           config.stores.some(s => s.protected == undefined || s.protected)) ||
         (config.procedure == "get-job-gateway" &&
-          config.jobs.some(j => j.protected == undefined || j.protected)) ||
-        config.procedure == "command-antenna" ||
-        config.procedure == "view-antenna"
+          config.jobs.some(j => j.protected == undefined || j.protected))
         ? [
             "did-start.session.core",
             "did-upgrade.session.core",
@@ -407,10 +405,6 @@ const addDefaultDependencies = ({ config }) => {
           };
         })
       ];
-    case "command-antenna": {
-      const dependencies = [...tokenDependencies];
-      return [...eventStoreDependencies({ dependencies }), ...dependencies];
-    }
     default:
       return config.testing.dependencies;
   }

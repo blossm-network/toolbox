@@ -138,11 +138,5 @@ module.exports = ({
         ...common,
         PUBLIC_KEY_URL: publicKeyUrl
       };
-    case "command-antenna":
-    case "view-antenna":
-      return {
-        image: `${commonImagePrefix}:latest`,
-        ...common
-      };
   }
 };

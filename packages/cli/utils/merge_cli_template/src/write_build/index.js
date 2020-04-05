@@ -7,7 +7,6 @@ const viewStore = require("./view_store");
 const commandGateway = require("./command_gateway");
 const viewGateway = require("./view_gateway");
 const getJobGateway = require("./get_job_gateway");
-const commandAntenna = require("./command_antenna");
 const commandHandler = require("./command_handler");
 const eventHandler = require("./event_handler");
 const eventStore = require("./event_store");
@@ -323,35 +322,6 @@ const steps = ({
         routerNetwork,
         routerKeyId,
         routerKeySecretName,
-        strict
-      });
-    case "command-antenna":
-      return commandAntenna({
-        imageExtension,
-        region,
-        project,
-        envUriSpecifier,
-        containerRegistery,
-        mainContainerName,
-        dnsZone,
-        memory,
-        env,
-        computeUrlId,
-        service,
-        domain,
-        procedure,
-        network,
-        operationHash,
-        operationName,
-        serviceName,
-        rolesBucket,
-        secretBucket,
-        secretBucketKeyLocation,
-        secretBucketKeyRing,
-        runUnitTests,
-        runBaseUnitTests,
-        runIntegrationTests,
-        runBaseIntegrationTests,
         strict
       });
   }

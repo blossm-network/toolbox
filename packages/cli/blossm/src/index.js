@@ -13,7 +13,6 @@ const projection = require("./projection");
 const eventStore = require("./event_store");
 const viewStore = require("./view_store");
 const commandGateway = require("./command_gateway");
-const commandAntenna = require("./command_antenna");
 const viewGateway = require("./view_gateway");
 const getJobGateway = require("./get_job_gateway");
 const roles = require("./roles");
@@ -32,7 +31,6 @@ const domains = [
   "view-store",
   "event-store",
   "command-gateway",
-  "command-antenna",
   "view-gateway",
   "get-job-gateway",
   "post-job",
@@ -77,8 +75,6 @@ const tryShortcuts = input => {
       return viewGateway(args);
     case "get-job-gateway":
       return getJobGateway(args);
-    case "command-antenna":
-      return commandAntenna(args);
     case "roles":
       return roles(args);
     case "post-job":
@@ -112,8 +108,6 @@ const forward = input => {
       return viewGateway(input.args);
     case "get-job-gateway":
       return getJobGateway(input.args);
-    case "command-antenna":
-      return commandAntenna(input.args);
     case "post-job":
       return postJob(input.args);
     case "get-job":
