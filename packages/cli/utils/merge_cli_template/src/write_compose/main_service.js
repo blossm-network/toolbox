@@ -122,6 +122,7 @@ module.exports = ({
       };
     case "command-gateway":
     case "view-gateway":
+    case "get-job-gateway":
       return {
         image: `${commonImagePrefix}.${service}.${domain}:latest`,
         ...common

@@ -1,0 +1,24 @@
+#
+# This file is required.
+# It's URL will be auth.[network]
+#
+
+domain: some-domain
+service: core
+
+stores:
+  - name: some-name
+    priviledges:
+      - some-priviledge
+  - name: some-other-name
+    protected: false
+
+whitelist:
+  - "127.0.0.1"
+
+devDependencies:
+  "mocha": "^7.1.0"
+  "chai": "^4.2.0"
+
+#don't change
+procedure: get-job-gateway

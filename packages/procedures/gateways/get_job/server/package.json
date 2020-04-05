@@ -1,6 +1,6 @@
 {
-  "name": "@blossm/get-job-rpc",
-  "description": "Triggers a get job.",
+  "name": "@blossm/get-job-gateway",
+  "description": "A gateway server that manages get job access.",
   "version": "0.0.0",
   "main": "index.js",
   "author": "blossm.network",
@@ -14,7 +14,11 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/rpc": "^0.0.75"
+    "@blossm/authentication-middleware": "^0.0.66",
+    "@blossm/authorization-middleware": "^0.0.62",
+    "@blossm/cors-middleware": "^0.0.23",
+    "@blossm/server": "^0.0.9",
+    "@blossm/get-job-gateway-get": "*"
   },
   "devDependencies": {
     "chai-datetime": "^1.5.0",

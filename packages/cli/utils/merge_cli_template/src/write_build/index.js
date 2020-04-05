@@ -6,6 +6,7 @@ const rootDir = require("@blossm/cli-root-dir");
 const viewStore = require("./view_store");
 const commandGateway = require("./command_gateway");
 const viewGateway = require("./view_gateway");
+const getJobGateway = require("./get_job_gateway");
 const commandAntenna = require("./command_antenna");
 const commandHandler = require("./command_handler");
 const eventHandler = require("./event_handler");
@@ -288,6 +289,38 @@ const steps = ({
         routerKeySecretName,
         strict
       });
+    case "get-job-gateway":
+      return getJobGateway({
+        imageExtension,
+        region,
+        project,
+        envUriSpecifier,
+        containerRegistery,
+        mainContainerName,
+        computeUrlId,
+        dnsZone,
+        memory,
+        env,
+        service,
+        domain,
+        procedure,
+        network,
+        operationHash,
+        operationName,
+        serviceName,
+        rolesBucket,
+        secretBucket,
+        secretBucketKeyLocation,
+        secretBucketKeyRing,
+        runUnitTests,
+        runBaseUnitTests,
+        runIntegrationTests,
+        runBaseIntegrationTests,
+        routerNetwork,
+        routerKeyId,
+        routerKeySecretName,
+        strict
+      });
     case "command-antenna":
       return commandAntenna({
         imageExtension,
@@ -327,6 +360,7 @@ const imageExtension = ({ service, domain, name, event, procedure }) => {
     case "event-store":
     case "command-gateway":
     case "view-gateway":
+    case "get-job-gateway":
       return `${service}.${domain}`;
     case "event-handler":
     case "projection":

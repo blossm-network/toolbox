@@ -1,7 +1,7 @@
 {
-  "name": "@blossm/get-job-rpc",
-  "description": "Triggers a get job.",
-  "version": "0.0.0",
+  "name": "@blossm/get-job-gateway-get",
+  "description": "A get job gateway server GET handler.",
+  "version": "0.0.108",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -14,7 +14,8 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/rpc": "^0.0.75"
+    "@blossm/gcp-token": "^0.0.21",
+    "@blossm/get-job-rpc": "*"
   },
   "devDependencies": {
     "chai-datetime": "^1.5.0",

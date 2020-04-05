@@ -249,6 +249,8 @@ const topicsForDependencies = (config, events) => {
         config.commands.some(c => c.protected == undefined || c.protected)) ||
         (config.procedure == "view-gateway" &&
           config.stores.some(s => s.protected == undefined || s.protected)) ||
+        (config.procedure == "get-job-gateway" &&
+          config.jobs.some(j => j.protected == undefined || j.protected)) ||
         config.procedure == "command-antenna" ||
         config.procedure == "view-antenna"
         ? [
@@ -371,7 +373,22 @@ const addDefaultDependencies = ({ config }) => {
             name: store.name,
             domain: config.domain,
             service: config.service,
-            conte: "view-store"
+            procedure: "view-store"
+          };
+        })
+      ];
+    case "get-job-gateway":
+      return [
+        ...tokenDependencies,
+        ...(config.jobs.some(j => j.protected == undefined || j.protected)
+          ? tokenDependencies
+          : []),
+        ...config.jobs.map(job => {
+          return {
+            name: job.name,
+            domain: config.domain,
+            service: config.service,
+            procedure: "get-job"
           };
         })
       ];
