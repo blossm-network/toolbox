@@ -97,7 +97,6 @@ module.exports = ({
           deploy({
             serviceName,
             procedure,
-            service,
             extension: imageExtension,
             rolesBucket,
             secretBucket,
@@ -105,7 +104,6 @@ module.exports = ({
             secretBucketKeyRing,
             containerRegistery,
             computeUrlId,
-            domain,
             operationHash,
             region,
             memory,
