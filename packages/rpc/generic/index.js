@@ -2,6 +2,15 @@ const logger = require("@blossm/logger");
 
 const deps = require("./deps");
 
+const formatResponse = response => {
+  try {
+    const formattedResponse = JSON.parse(response);
+    return formattedResponse;
+  } catch (e) {
+    return response;
+  }
+};
+
 const common = ({ method, dataParam, operation, root, data }) => {
   return {
     in: ({ context, network, host = process.env.HOST }) => {
@@ -72,7 +81,7 @@ const common = ({ method, dataParam, operation, root, data }) => {
           }
           if (response.statusCode == 204) return null;
 
-          return JSON.parse(response.body);
+          return formatResponse(response.body);
         }
       };
     }

@@ -263,6 +263,45 @@ describe("Operation", () => {
     });
     expect(result).to.deep.equal(body);
   });
+  it("should call get with the correct params with non json response", async () => {
+    const response = "some-response";
+    const get = fake.returns({
+      body: response,
+      statusCode: 200
+    });
+    replace(deps, "get", get);
+
+    const operationTokenFake = fake.returns(token);
+    replace(deps, "operationToken", operationTokenFake);
+
+    const operationUrlFake = fake.returns(url);
+    replace(deps, "operationUrl", operationUrlFake);
+
+    const result = await operation(operarationPart1, operarationPart2)
+      .get(data)
+      .in({ context, host })
+      .with({ tokenFn, claims });
+
+    expect(get).to.have.been.calledWith(url, {
+      query: {
+        ...data,
+        context,
+        claims
+      },
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+    expect(operationTokenFake).to.have.been.calledWith({
+      tokenFn,
+      operation: [operarationPart1, operarationPart2]
+    });
+    expect(operationUrlFake).to.have.been.calledWith({
+      operation: [operarationPart1, operarationPart2],
+      host
+    });
+    expect(result).to.deep.equal(response);
+  });
   it("should call get with the correct params with root", async () => {
     const get = fake.returns(bodyResponse);
     replace(deps, "get", get);
