@@ -113,7 +113,9 @@ module.exports = ({
     case "post-job":
     case "get-job":
       return {
-        image: `${commonImagePrefix}.${service}.${domain}.${name}:latest`,
+        image: `${commonImagePrefix}${service ? `.${service}` : ""}${
+          domain ? `.${domain}` : ""
+        }.${name}:latest`,
         ...common,
         environment: {
           ...common.environment,

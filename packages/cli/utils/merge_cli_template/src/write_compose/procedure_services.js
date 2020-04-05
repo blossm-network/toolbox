@@ -151,6 +151,39 @@ module.exports = ({
           };
         }
         break;
+      case "get-job":
+        {
+          const operationHash = hash(
+            dependency.name,
+            ...(dependency.domain ? [dependency.domain] : []),
+            ...(dependency.service ? [dependency.service] : []),
+            dependency.procedure
+          );
+          const key = `${dependency.name}${
+            dependency.domain ? `-${dependency.domain}` : ""
+          }${config.service ? `-${dependency.service}` : ""}`;
+          services = {
+            ...services,
+            [key]: {
+              ...common,
+              image: `${commonServiceImagePrefix}${
+                dependency.service ? `.${dependency.service}` : ""
+              }${dependency.domain ? `.${dependency.domain}` : ""}.${
+                dependency.name
+              }:latest`,
+              container_name: `${operationHash}.${network}`,
+              environment: {
+                ...commonEnvironment,
+                PROCEDURE: dependency.procedure,
+                OPERATION_HASH: operationHash,
+                ...(dependency.domain && { DOMAIN: dependency.domain }),
+                ...(dependency.service && { SERVICE: dependency.service }),
+                NAME: dependency.name
+              }
+            }
+          };
+        }
+        break;
     }
   }
   return {

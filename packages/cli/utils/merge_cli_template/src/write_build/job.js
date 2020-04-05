@@ -70,8 +70,8 @@ module.exports = ({
       routerKeySecretName,
       custom: {
         NAME: name,
-        DOMAIN: domain,
-        SERVICE: service
+        ...(domain && { DOMAIN: domain }),
+        ...(service && { SERVICE: service })
       }
     }),
     dockerComposeUp,
@@ -106,8 +106,16 @@ module.exports = ({
             routerNetwork,
             routerKeyId,
             routerKeySecretName,
-            env: { NAME: name, DOMAIN: domain, SERVICE: service },
-            labels: { name, domain, service }
+            env: {
+              NAME: name,
+              ...(domain && { DOMAIN: domain }),
+              ...(service && { SERVICE: service })
+            },
+            labels: {
+              name,
+              ...(domain && { domain }),
+              ...(service && { service })
+            }
           }),
           startDnsTransaction({ dnsZone, project }),
           addDnsTransaction({ uri, dnsZone, project }),
