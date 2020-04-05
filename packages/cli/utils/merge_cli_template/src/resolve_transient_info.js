@@ -49,7 +49,7 @@ const resolveTransientDependencies = config => {
         }
       ];
     default:
-      return config.testing.dependencies || [];
+      return (config.testing || {}).dependencies || [];
   }
 };
 
