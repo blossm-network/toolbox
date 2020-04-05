@@ -374,7 +374,7 @@ const imageExtension = ({ service, domain, name, event, procedure }) => {
       return `${service}.${domain}.${name}`;
     case "post-job":
     case "get-job":
-      return `${service ? `${service}.` : ""}.${
+      return `${service ? `${service}.` : ""}${
         domain ? `${domain}.` : ""
       }${name}`;
     default:
