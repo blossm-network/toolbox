@@ -3,7 +3,12 @@ const deps = require("./deps");
 module.exports = ({ name, domain, service = process.env.SERVICE }) => {
   const read = ({ context, claims, tokenFn } = {}) => async query =>
     await deps
-      .rpc(name, domain, service, "get-job")
+      .rpc(
+        name,
+        ...(domain ? [domain] : []),
+        ...(service ? [service] : []),
+        "get-job"
+      )
       .get({ query })
       .in({
         ...(context && { context })
@@ -14,7 +19,12 @@ module.exports = ({ name, domain, service = process.env.SERVICE }) => {
       });
   const stream = ({ context, claims, tokenFn } = {}) => async query =>
     await deps
-      .rpc(name, domain, service, "get-job")
+      .rpc(
+        name,
+        ...(domain ? [domain] : []),
+        ...(service ? [service] : []),
+        "get-job"
+      )
       .get({ query })
       .in({
         ...(context && { context })

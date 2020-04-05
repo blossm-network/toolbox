@@ -75,15 +75,10 @@ describe("Get job", () => {
     });
     replace(deps, "rpc", rpcFake);
 
-    const result = await getJob({ name, domain }).read(query);
+    const result = await getJob({ name }).read(query);
 
     expect(result).to.equal(response);
-    expect(rpcFake).to.have.been.calledWith(
-      name,
-      domain,
-      envService,
-      "get-job"
-    );
+    expect(rpcFake).to.have.been.calledWith(name, envService, "get-job");
     expect(getFake).to.have.been.calledWith({
       query
     });
@@ -136,15 +131,10 @@ describe("Get job", () => {
     });
     replace(deps, "rpc", rpcFake);
 
-    const result = await getJob({ name, domain }).stream(query);
+    const result = await getJob({ name }).stream(query);
 
     expect(result).to.equal(response);
-    expect(rpcFake).to.have.been.calledWith(
-      name,
-      domain,
-      envService,
-      "get-job"
-    );
+    expect(rpcFake).to.have.been.calledWith(name, envService, "get-job");
     expect(getFake).to.have.been.calledWith({
       query
     });

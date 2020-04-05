@@ -75,15 +75,10 @@ describe("Post job", () => {
     });
     replace(deps, "rpc", rpcFake);
 
-    const result = await postJob({ name, domain }).trigger(payload);
+    const result = await postJob({ name }).trigger(payload);
 
     expect(result).to.equal(response);
-    expect(rpcFake).to.have.been.calledWith(
-      name,
-      domain,
-      envService,
-      "post-job"
-    );
+    expect(rpcFake).to.have.been.calledWith(name, envService, "post-job");
     expect(postFake).to.have.been.calledWith({
       payload
     });
