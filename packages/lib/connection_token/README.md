@@ -1,0 +1,1 @@
+Opens a connection to get a token to another node.

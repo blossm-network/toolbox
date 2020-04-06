@@ -9,7 +9,8 @@ const terminatedSessionCheckFn = "some-terminated-session-check-fn";
 const domain = "some-domain";
 const service = "some-service";
 const keyClaimsFn = "some-token-claims-fn";
-const tokenFn = "some-token-fn";
+const internalTokenFn = "some-internal-token-fn";
+const externalTokenFn = "some-external-token-fn";
 
 process.env.DOMAIN = domain;
 process.env.SERVICE = service;
@@ -54,14 +55,20 @@ describe("Command gateway", () => {
     await gateway({
       commands,
       whitelist,
-      tokenFn,
+      internalTokenFn,
+      externalTokenFn,
       permissionsLookupFn,
       terminatedSessionCheckFn,
       verifyFn: verifyFnFake,
       keyClaimsFn
     });
 
-    expect(gatewayPostFake).to.have.been.calledWith({ name, domain, tokenFn });
+    expect(gatewayPostFake).to.have.been.calledWith({
+      name,
+      domain,
+      internalTokenFn,
+      externalTokenFn
+    });
     expect(gatewayPostFake).to.have.been.calledOnce;
     expect(listenFake).to.have.been.calledWith();
     expect(serverFake).to.have.been.calledWith({
@@ -94,7 +101,7 @@ describe("Command gateway", () => {
       })
     });
   });
-  it("should call with the correct params with priviledges set to none", async () => {
+  it("should call with the correct params with priviledges set to none and network in command", async () => {
     const corsMiddlewareFake = fake();
     replace(deps, "corsMiddleware", corsMiddlewareFake);
 
@@ -121,7 +128,8 @@ describe("Command gateway", () => {
 
     const priviledges = "none";
     const name = "some-name";
-    const commands = [{ name, priviledges }];
+    const network = "some-network";
+    const commands = [{ name, network, priviledges }];
 
     const verifyFnResult = "some-verify-fn";
     const verifyFnFake = fake.returns(verifyFnResult);
@@ -129,14 +137,21 @@ describe("Command gateway", () => {
     await gateway({
       commands,
       whitelist,
-      tokenFn,
+      internalTokenFn,
+      externalTokenFn,
       permissionsLookupFn,
       terminatedSessionCheckFn,
       verifyFn: verifyFnFake,
       keyClaimsFn
     });
 
-    expect(gatewayPostFake).to.have.been.calledWith({ name, domain, tokenFn });
+    expect(gatewayPostFake).to.have.been.calledWith({
+      name,
+      network,
+      domain,
+      internalTokenFn,
+      externalTokenFn
+    });
     expect(gatewayPostFake).to.have.been.calledOnce;
     expect(listenFake).to.have.been.calledWith();
     expect(serverFake).to.have.been.calledWith({
@@ -262,7 +277,8 @@ describe("Command gateway", () => {
     await gateway({
       commands,
       whitelist,
-      tokenFn,
+      internalTokenFn,
+      externalTokenFn,
       permissionsLookupFn,
       terminatedSessionCheckFn,
       verifyFn: verifyFnFake,
@@ -272,17 +288,20 @@ describe("Command gateway", () => {
     expect(gatewayPostFake).to.have.been.calledWith({
       name: name1,
       domain,
-      tokenFn
+      internalTokenFn,
+      externalTokenFn
     });
     expect(gatewayPostFake).to.have.been.calledWith({
       name: name2,
       domain,
-      tokenFn
+      internalTokenFn,
+      externalTokenFn
     });
     expect(gatewayPostFake).to.have.been.calledWith({
       name: name3,
       domain,
-      tokenFn
+      internalTokenFn,
+      externalTokenFn
     });
     expect(gatewayPostFake).to.have.been.calledThrice;
     expect(postFake).to.have.been.calledWith(gatewayPostResult, {
@@ -359,7 +378,8 @@ describe("Command gateway", () => {
       domain: otherDomain,
       service: otherService,
       whitelist,
-      tokenFn,
+      internalTokenFn,
+      externalTokenFn,
       permissionsLookupFn,
       terminatedSessionCheckFn,
       verifyFn: verifyFnFake,
@@ -369,7 +389,8 @@ describe("Command gateway", () => {
     expect(gatewayPostFake).to.have.been.calledWith({
       name,
       domain: otherDomain,
-      tokenFn
+      internalTokenFn,
+      externalTokenFn
     });
     expect(authorizationFake).to.have.been.calledWith({
       permissionsLookupFn,

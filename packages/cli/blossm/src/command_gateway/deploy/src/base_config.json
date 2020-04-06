@@ -4,6 +4,7 @@
     "@blossm/command-gateway": "*",
     "@blossm/event-store-rpc": "*",
     "@blossm/verify-access-token": "*",
+    "@blossm/connection-token": "*",
     "@blossm/gcp-kms": "*",
     "@blossm/gcp-token": "*",
     "@blossm/gcp-storage": "*",

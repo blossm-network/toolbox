@@ -11,7 +11,8 @@ const name = "some-name";
 const domain = "some-domain";
 const context = "some-context";
 const claims = "some-claims";
-const tokenFn = "some-token-fn";
+const internalTokenFn = "some-internal-token-fn";
+const externalTokenFn = "some-external-token-fn";
 
 const root = "some-root";
 
@@ -58,7 +59,7 @@ describe("Command gateway post", () => {
       status: statusFake
     };
 
-    await post({ name, domain, tokenFn })(req, res);
+    await post({ name, domain, internalTokenFn, externalTokenFn })(req, res);
 
     expect(validateFake).to.have.been.calledWith(body);
     expect(commandFake).to.have.been.calledWith({
@@ -66,7 +67,63 @@ describe("Command gateway post", () => {
       domain
     });
     expect(setFake).to.have.been.calledWith({
-      tokenFn,
+      tokenFn: internalTokenFn,
+      context,
+      claims
+    });
+    expect(issueFake).to.have.been.calledWith(payload, {
+      ...headers,
+      root
+    });
+    expect(statusFake).to.have.been.calledWith(200);
+  });
+  it("should call with the correct params on a different network", async () => {
+    const validateFake = fake();
+    replace(deps, "validate", validateFake);
+
+    const issueFake = fake.returns({
+      ...response,
+      tokens: [{ a: 1 }]
+    });
+    const setFake = fake.returns({
+      issue: issueFake
+    });
+    const commandFake = fake.returns({
+      set: setFake
+    });
+    replace(deps, "command", commandFake);
+
+    const req = {
+      context,
+      claims,
+      body,
+      params: {}
+    };
+
+    const sendFake = fake();
+    const statusFake = fake.returns({
+      send: sendFake
+    });
+    const cookieFake = fake();
+    const res = {
+      cookie: cookieFake,
+      status: statusFake
+    };
+
+    const network = "some-random-network";
+    await post({ name, domain, internalTokenFn, externalTokenFn, network })(
+      req,
+      res
+    );
+
+    expect(validateFake).to.have.been.calledWith(body);
+    expect(commandFake).to.have.been.calledWith({
+      name,
+      domain,
+      network
+    });
+    expect(setFake).to.have.been.calledWith({
+      tokenFn: externalTokenFn,
       context,
       claims
     });
@@ -106,7 +163,7 @@ describe("Command gateway post", () => {
       cookie: cookieFake
     };
 
-    await post({ name, domain, tokenFn })(req, res);
+    await post({ name, domain, internalTokenFn, externalTokenFn })(req, res);
 
     expect(validateFake).to.have.been.calledWith(body);
     expect(commandFake).to.have.been.calledWith({
@@ -114,7 +171,7 @@ describe("Command gateway post", () => {
       domain
     });
     expect(setFake).to.have.been.calledWith({
-      tokenFn,
+      tokenFn: internalTokenFn,
       context,
       claims
     });
@@ -171,7 +228,7 @@ describe("Command gateway post", () => {
       status: statusFake
     };
 
-    await post({ name, domain, tokenFn })(req, res);
+    await post({ name, domain, internalTokenFn, externalTokenFn })(req, res);
 
     expect(cookieFake).to.have.been.calledTwice;
     expect(cookieFake).to.have.been.calledWith(
@@ -196,7 +253,7 @@ describe("Command gateway post", () => {
       domain
     });
     expect(setFake).to.have.been.calledWith({
-      tokenFn,
+      tokenFn: internalTokenFn,
       context,
       claims
     });
@@ -227,7 +284,7 @@ describe("Command gateway post", () => {
     };
 
     try {
-      await post({ name, domain, tokenFn })(req, res);
+      await post({ name, domain, internalTokenFn, externalTokenFn })(req, res);
       //shouldn't get called
       expect(2).to.equal(1);
     } catch (e) {

@@ -7,6 +7,7 @@ const { verify: verifyGCP } = require("@blossm/gcp-kms");
 const verify = require("@blossm/verify-access-token");
 const { invalidCredentials } = require("@blossm/errors");
 const gcpToken = require("@blossm/gcp-token");
+const connectionToken = require("@blossm/connection-token");
 const { download: downloadFile } = require("@blossm/gcp-storage");
 const rolePermissions = require("@blossm/role-permissions");
 const { compare } = require("@blossm/crypt");
@@ -23,7 +24,8 @@ let defaultRoles;
 module.exports = gateway({
   commands: config.commands,
   whitelist: config.whitelist,
-  tokenFn: gcpToken,
+  internalTokenFn: gcpToken,
+  externalTokenFn: connectionToken,
   //roles are the roles that the principle has.
   permissionsLookupFn: async ({ roles }) => {
     if (!defaultRoles) {

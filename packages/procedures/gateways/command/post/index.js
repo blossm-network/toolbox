@@ -1,15 +1,27 @@
 const deps = require("./deps");
 
-module.exports = ({ name, domain, tokenFn } = {}) => async (req, res) => {
+module.exports = ({
+  name,
+  domain,
+  network,
+  internalTokenFn,
+  externalTokenFn
+} = {}) => async (req, res) => {
   await deps.validate(req.body);
   const { root, payload, headers } = req.body;
 
   const response = await deps
     .command({
       name,
-      domain
+      domain,
+      ...(network && { network })
     })
-    .set({ tokenFn, context: req.context, claims: req.claims })
+    .set({
+      tokenFn:
+        network == process.env.NETWORK ? internalTokenFn : externalTokenFn,
+      context: req.context,
+      claims: req.claims
+    })
     .issue(payload, { ...headers, root });
 
   // If the response has tokens, send them as cookies and remove them from the response.

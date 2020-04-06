@@ -1,7 +1,7 @@
 const deps = require("./deps");
 
 module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
-  const issue = ({ context, claims, tokenFn, route = true } = {}) => async (
+  const issue = ({ context, claims, tokenFn } = {}) => async (
     payload = {},
     { trace, issued, root, path, options } = {}
   ) => {
@@ -30,16 +30,7 @@ module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
       payload,
       headers,
       ...(root && { root }),
-      ...(options && { options }),
-      ...(!internal &&
-        route && {
-          destination: {
-            name,
-            domain,
-            service,
-            network
-          }
-        })
+      ...(options && { options })
     };
 
     return await deps
@@ -49,9 +40,7 @@ module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
         ...(context && { context }),
         ...(!internal && {
           network,
-          host: route
-            ? `command.antenna.${process.env.ROUTER_NETWORK}`
-            : `command.${domain}.${service}.${network}`
+          host: `command.${domain}.${service}.${network}`
         })
       })
       .with({

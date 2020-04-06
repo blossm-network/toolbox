@@ -4,7 +4,8 @@ module.exports = async ({
   commands,
   domain = process.env.DOMAIN,
   service = process.env.SERVICE,
-  tokenFn,
+  internalTokenFn,
+  externalTokenFn,
   whitelist,
   permissionsLookupFn,
   terminatedSessionCheckFn,
@@ -23,36 +24,46 @@ module.exports = async ({
 
   for (const {
     name,
+    network,
     key = "access",
     priviledges,
     protection = "strict"
   } of commands) {
-    server = server.post(deps.post({ name, domain, tokenFn }), {
-      path: `/${name}`,
-      ...(protection != "none" && {
-        preMiddleware: [
-          deps.authentication({
-            verifyFn: verifyFn({ key }),
-            keyClaimsFn,
-            strict: protection == "strict"
-          }),
-          ...(protection == "strict"
-            ? [
-                deps.authorization({
-                  permissionsLookupFn,
-                  terminatedSessionCheckFn,
-                  permissions:
-                    priviledges instanceof Array
-                      ? priviledges.map(priviledge => {
-                          return { service, domain, priviledge };
-                        })
-                      : priviledges
-                })
-              ]
-            : [])
-        ]
-      })
-    });
+    server = server.post(
+      deps.post({
+        name,
+        domain,
+        ...(network && { network }),
+        internalTokenFn,
+        externalTokenFn
+      }),
+      {
+        path: `/${name}`,
+        ...(protection != "none" && {
+          preMiddleware: [
+            deps.authentication({
+              verifyFn: verifyFn({ key }),
+              keyClaimsFn,
+              strict: protection == "strict"
+            }),
+            ...(protection == "strict"
+              ? [
+                  deps.authorization({
+                    permissionsLookupFn,
+                    terminatedSessionCheckFn,
+                    permissions:
+                      priviledges instanceof Array
+                        ? priviledges.map(priviledge => {
+                            return { service, domain, priviledge };
+                          })
+                        : priviledges
+                  })
+                ]
+              : [])
+          ]
+        })
+      }
+    );
   }
 
   server.listen();
