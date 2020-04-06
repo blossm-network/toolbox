@@ -7,6 +7,7 @@
     "@blossm/event-store-rpc": "*",
     "@blossm/request": "*",
     "@blossm/gcp-pubsub": "*",
-    "@blossm/create-event": "*"
+    "@blossm/create-event": "*",
+    "@blossm/crypt": "*"
   }
 }
