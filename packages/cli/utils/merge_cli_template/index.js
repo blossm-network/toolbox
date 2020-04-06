@@ -268,7 +268,7 @@ const topicsForDependencies = (config, events) => {
           config.stores.some(
             s => s.protection == undefined || s.protection == "strict"
           )) ||
-        (config.procedure == "get-job-gateway" &&
+        (config.procedure == "fact-gateway" &&
           config.jobs.some(
             j => j.protection == undefined || j.protection == "strict"
           ))
@@ -400,7 +400,7 @@ const addDefaultDependencies = ({ config }) => {
           };
         })
       ];
-    case "get-job-gateway":
+    case "fact-gateway":
       return [
         ...tokenDependencies,
         ...(config.jobs.some(
@@ -413,7 +413,7 @@ const addDefaultDependencies = ({ config }) => {
             name: job.name,
             domain: config.domain,
             service: config.service,
-            procedure: "get-job"
+            procedure: "fact"
           };
         })
       ];

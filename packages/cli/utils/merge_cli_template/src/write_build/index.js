@@ -6,7 +6,7 @@ const rootDir = require("@blossm/cli-root-dir");
 const viewStore = require("./view_store");
 const commandGateway = require("./command_gateway");
 const viewGateway = require("./view_gateway");
-const getJobGateway = require("./get_job_gateway");
+const factGateway = require("./fact_gateway");
 const commandHandler = require("./command_handler");
 const eventHandler = require("./event_handler");
 const eventStore = require("./event_store");
@@ -190,8 +190,8 @@ const steps = ({
         routerKeySecretName,
         strict
       });
-    case "post-job":
-    case "get-job":
+    case "job":
+    case "fact":
       return job({
         imageExtension,
         name,
@@ -291,8 +291,8 @@ const steps = ({
         routerKeySecretName,
         strict
       });
-    case "get-job-gateway":
-      return getJobGateway({
+    case "fact-gateway":
+      return factGateway({
         imageExtension,
         publicKeyUrl,
         region,
@@ -335,7 +335,7 @@ const imageExtension = ({ service, domain, name, event, procedure }) => {
     case "command-gateway":
     case "view-gateway":
       return `${service}.${domain}`;
-    case "get-job-gateway":
+    case "fact-gateway":
       if (service) {
         if (domain) return `${service}.${domain}`;
         return service;
@@ -346,8 +346,8 @@ const imageExtension = ({ service, domain, name, event, procedure }) => {
       return `${service}.${domain}.${name}.did-${event.action}.${event.domain}`;
     case "command-handler":
       return `${service}.${domain}.${name}`;
-    case "post-job":
-    case "get-job":
+    case "job":
+    case "fact":
       return `${service ? `${service}.` : ""}${
         domain ? `${domain}.` : ""
       }${name}`;

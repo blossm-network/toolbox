@@ -111,8 +111,8 @@ module.exports = ({
           EVENT_SERVICE: `${event.service}`
         }
       };
-    case "post-job":
-    case "get-job":
+    case "job":
+    case "fact":
       return {
         image: `${commonImagePrefix}${service ? `.${service}` : ""}${
           domain ? `.${domain}` : ""
@@ -133,7 +133,7 @@ module.exports = ({
           PUBLIC_KEY_URL: publicKeyUrl
         }
       };
-    case "get-job-gateway":
+    case "fact-gateway":
       return {
         image: `${commonImagePrefix}${service ? `.${service}` : ""}${
           domain ? `.${domain}` : ""

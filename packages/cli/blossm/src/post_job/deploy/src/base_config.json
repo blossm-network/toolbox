@@ -1,8 +1,0 @@
-{
-  "dependencies": {
-    "@blossm/post-job": "*"
-  },
-  "devDependencies": {
-    "chai": "^4.2.0"
-  }
-}

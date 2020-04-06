@@ -14,10 +14,10 @@ const eventStore = require("./event_store");
 const viewStore = require("./view_store");
 const commandGateway = require("./command_gateway");
 const viewGateway = require("./view_gateway");
-const getJobGateway = require("./get_job_gateway");
+const factGateway = require("./fact_gateway");
 const roles = require("./roles");
-const postJob = require("./post_job");
-const getJob = require("./get_job");
+const job = require("./job");
+const fact = require("./fact");
 
 const domains = [
   "begin",
@@ -32,9 +32,9 @@ const domains = [
   "event-store",
   "command-gateway",
   "view-gateway",
-  "get-job-gateway",
-  "post-job",
-  "get-job"
+  "fact-gateway",
+  "job",
+  "fact"
 ];
 
 const tryShortcuts = input => {
@@ -58,6 +58,10 @@ const tryShortcuts = input => {
   }
   args.push(...input.args);
 
+  //TODO
+  //eslint-disable-next-line
+  console.log({ p: config.procedure });
+
   switch (config.procedure) {
     case "command-handler":
       return commandHandler(args);
@@ -73,14 +77,14 @@ const tryShortcuts = input => {
       return commandGateway(args);
     case "view-gateway":
       return viewGateway(args);
-    case "get-job-gateway":
-      return getJobGateway(args);
+    case "fact-gateway":
+      return factGateway(args);
     case "roles":
       return roles(args);
-    case "post-job":
-      return postJob(args);
-    case "get-job":
-      return getJob(args);
+    case "job":
+      return job(args);
+    case "fact":
+      return fact(args);
   }
 };
 
@@ -106,12 +110,12 @@ const forward = input => {
       return roles(input.args);
     case "view-gateway":
       return viewGateway(input.args);
-    case "get-job-gateway":
-      return getJobGateway(input.args);
-    case "post-job":
-      return postJob(input.args);
-    case "get-job":
-      return getJob(input.args);
+    case "fact-gateway":
+      return factGateway(input.args);
+    case "job":
+      return job(input.args);
+    case "fact":
+      return fact(input.args);
     default: {
       try {
         tryShortcuts(input);

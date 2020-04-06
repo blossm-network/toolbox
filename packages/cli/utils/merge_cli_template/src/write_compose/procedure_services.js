@@ -151,7 +151,7 @@ module.exports = ({
           };
         }
         break;
-      case "get-job":
+      case "fact":
         {
           const operationHash = hash(
             dependency.name,
