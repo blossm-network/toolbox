@@ -18,6 +18,9 @@ const checkResponse = ({ data, expected }) => {
   //eslint-disable-next-line no-console
   console.log("checking: ", { data, expected });
   if (typeof expected != "object" && expected instanceof Array) {
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log("meep");
     expect(expected).to.deep.equal(data);
     return;
   }
