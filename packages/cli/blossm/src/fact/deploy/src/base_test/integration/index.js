@@ -14,17 +14,6 @@ const { testing } = require("../../config.json");
 const stateTopics = [];
 
 const checkResponse = ({ data, expected }) => {
-  //TODO
-  //eslint-disable-next-line no-console
-  console.log("checking: ", { data, expected });
-  if (typeof expected != "object" && expected instanceof Array) {
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log("meep");
-    expect(expected).to.deep.equal(data);
-    return;
-  }
-
   for (const property in expected) {
     expect(data[property]).to.exist;
     if (expected[property]) {
@@ -95,20 +84,12 @@ const executeStep = async step => {
     }
   }
 
-  //TODO
-  //eslint-disable-next-line no-console
-  console.log("step: ", step);
-
   const response = await request.get(url, {
     query: {
       context: step.context,
       query: step.query
     }
   });
-
-  //TODO
-  //eslint-disable-next-line no-console
-  console.log("response: ", response);
 
   const correctCode = step.response ? 200 : step.code;
   if (response.statusCode != correctCode) {
@@ -120,14 +101,7 @@ const executeStep = async step => {
 
   if (!step.response) return;
 
-  //TODO
-  //eslint-disable-next-line no-console
-  console.log("response body: ", response.body);
   const parsedBody = JSON.parse(response.body);
-
-  //TODO
-  //eslint-disable-next-line no-console
-  console.log("parsed response body: ", parsedBody);
 
   checkResponse({
     expected: step.response,

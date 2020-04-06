@@ -10,10 +10,6 @@ module.exports = async args => {
     args
   });
 
-  //TODO
-  //eslint-disable-next-line
-  console.log({ q: input.action });
-
   switch (input.action) {
     case "deploy":
       return deploy(input.args);

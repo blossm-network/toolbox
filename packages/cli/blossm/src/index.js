@@ -58,10 +58,6 @@ const tryShortcuts = input => {
   }
   args.push(...input.args);
 
-  //TODO
-  //eslint-disable-next-line
-  console.log({ p: config.procedure });
-
   switch (config.procedure) {
     case "command-handler":
       return commandHandler(args);
