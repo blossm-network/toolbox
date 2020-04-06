@@ -1,7 +1,7 @@
 {
   "name": "@blossm/command-rpc",
   "description": "Issues a command.",
-  "version": "0.0.89",
+  "version": "0.0.90",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
