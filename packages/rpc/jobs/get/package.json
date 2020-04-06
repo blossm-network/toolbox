@@ -1,7 +1,7 @@
 {
   "name": "@blossm/get-job-rpc",
   "description": "Triggers a get job.",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -14,7 +14,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/rpc": "^0.0.76"
+    "@blossm/rpc": "^0.0.77"
   },
   "devDependencies": {
     "chai-datetime": "^1.5.0",

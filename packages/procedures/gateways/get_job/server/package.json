@@ -1,7 +1,7 @@
 {
   "name": "@blossm/get-job-gateway",
   "description": "A gateway server that manages get job access.",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -14,10 +14,10 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/authentication-middleware": "^0.0.66",
-    "@blossm/authorization-middleware": "^0.0.62",
-    "@blossm/cors-middleware": "^0.0.23",
-    "@blossm/get-job-gateway-get": "^0.0.111",
+    "@blossm/authentication-middleware": "^0.0.67",
+    "@blossm/authorization-middleware": "^0.0.63",
+    "@blossm/cors-middleware": "^0.0.24",
+    "@blossm/get-job-gateway-get": "^0.0.112",
     "@blossm/server": "^0.0.9"
   },
   "devDependencies": {
