@@ -47,7 +47,7 @@ module.exports = ({
   routerKeySecretName,
   strict
 }) => {
-  const authUri = `get.${domain ? `${domain}.` : ""}${
+  const authUri = `fact.${domain ? `${domain}.` : ""}${
     service ? `${service}.` : ""
   }${envUriSpecifier}${network}`;
   return [
