@@ -14,7 +14,8 @@ module.exports = ({
             deps.authorize({
               context: req.context,
               permissionsLookupFn,
-              permissions
+              permissions,
+              roles: req.roles
             })
           ]
         : []),

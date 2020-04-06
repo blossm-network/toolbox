@@ -24,7 +24,8 @@ module.exports = gateway({
   commands: config.commands,
   whitelist: config.whitelist,
   tokenFn: gcpToken,
-  permissionsLookupFn: async ({ principle }) => {
+  //roles are the roles that the principle has.
+  permissionsLookupFn: async ({ roles }) => {
     if (!defaultRoles) {
       const fileName = uuid();
       const extension = ".yaml";
@@ -50,26 +51,32 @@ module.exports = gateway({
       );
     }
 
-    const aggregate = await eventStore({
-      domain: "principle",
-      service: "core"
-    })
-      .set({ tokenFn: gcpToken })
-      .aggregate(principle.root);
+    // //TODO
+    // //The sustainers network needs to attach this to the context.
+    // const aggregate = await eventStore({
+    //   domain: "principle",
+    //   service: "core"
+    // })
+    //   .set({ tokenFn: gcpToken })
+    //   .aggregate(principle.root);
 
-    return aggregate
-      ? await rolePermissions({
-          roles: aggregate.state.roles.map(role => role.id),
-          defaultRoles,
-          customRolePermissionsFn: async ({ roleId }) => {
-            const role = await eventStore({ domain: "role", service: "core" })
-              .set({ tokenFn: gcpToken })
-              .query({ key: "id", value: roleId });
-            return role.state.permissions;
-          }
-        })
-      : [];
+    // return aggregate
+    //   ? await rolePermissions({
+    await rolePermissions({
+      roles,
+      // : aggregate.state.roles.map(role => role.id),
+      defaultRoles
+      // customRolePermissionsFn: async ({ roleId }) => {
+      //   //look through customRoles and pick out roleId
+      //   const role = await eventStore({ domain: "role", service: "core" })
+      //     .set({ tokenFn: gcpToken })
+      //     .query({ key: "id", value: roleId });
+      //   return role.state.permissions;
+      // }
+    });
+    // : [];
   },
+  //TODO look at removing this to prevent cross network event store lookup.
   terminatedSessionCheckFn: async ({ session }) => {
     const aggregate = await eventStore({
       domain: "session",
@@ -93,7 +100,7 @@ module.exports = gateway({
           version: "1",
           project: process.env.GCP_PROJECT
         }),
-  keyClaimsFn: async ({ id, secret }) => {
+  keyClaimsFn: async ({ id, secret, domain = "node" }) => {
     const [key] = await eventStore({ domain: "key", service: "core" })
       .set({ tokenFn: gcpToken })
       .query({ key: "id", value: id });
@@ -106,12 +113,12 @@ module.exports = gateway({
       context: {
         key: {
           root: key.headers.root,
-          service: process.env.SERVICE,
+          service: "core",
           network: process.env.NETWORK
         },
         principle: key.state.principle,
-        node: key.state.node,
-        domain: "node"
+        [domain]: key.state[domain],
+        domain
       }
     };
   }

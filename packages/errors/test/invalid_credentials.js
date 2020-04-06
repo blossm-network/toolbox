@@ -36,6 +36,25 @@ describe("Invalid credentials", () => {
       message: "This token is expired."
     });
   });
+  it("tokenNotActive correct", () => {
+    const error = invalidCredentials.tokenNotActive();
+    expect(error.toJSON()).to.deep.equal({
+      statusCode: 401,
+      code: "InvalidCredentials",
+      info: {},
+      message: "This token is not active."
+    });
+  });
+  it("tokenNotActive correct with props", () => {
+    const error = invalidCredentials.tokenNotActive({ cause, info });
+    expect(error.toJSON()).to.deep.equal({
+      statusCode: 401,
+      code: "InvalidCredentials",
+      info,
+      cause,
+      message: "This token is not active."
+    });
+  });
   it("tokenTerminated correct", () => {
     const error = invalidCredentials.tokenTerminated();
     expect(error.toJSON()).to.deep.equal({

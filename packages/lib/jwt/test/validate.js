@@ -69,6 +69,33 @@ describe("Validate", () => {
       expect(e).to.equal(error);
     }
   });
+  it("it should be invalid if the algorithm is wrong", async () => {
+    const value = "value";
+    const payload = { key: value };
+    const sig = "some-signature";
+    const token = await create({
+      options,
+      payload,
+      signFn: () => sig,
+      algorithm: "some-bad-algorithm"
+    });
+    const verifyFn = fake.returns(false);
+
+    const error = "some-error";
+    const tokenInvalidFake = fake.returns(error);
+    replace(deps, "invalidCredentialsError", {
+      tokenInvalid: tokenInvalidFake
+    });
+
+    try {
+      await validate({ token, verifyFn });
+
+      //shouldn't get called.
+      expect(1).to.equal(2);
+    } catch (e) {
+      expect(e).to.equal(error);
+    }
+  });
   it("should throw if token is expired", async () => {
     const sig = "some-signature";
     const token = await create({
@@ -84,6 +111,32 @@ describe("Validate", () => {
     const tokenExpiredFake = fake.returns(error);
     replace(deps, "invalidCredentialsError", {
       tokenExpired: tokenExpiredFake
+    });
+
+    try {
+      await validate({ token, verifyFn });
+
+      //shouldn't get called.
+      expect(1).to.equal(2);
+    } catch (e) {
+      expect(e).to.equal(error);
+    }
+  });
+  it("should throw if token is before nbf", async () => {
+    const sig = "some-signature";
+    const token = await create({
+      options: {
+        ...options,
+        activeIn: 1
+      },
+      signFn: () => sig
+    });
+    const verifyFn = fake.returns(true);
+
+    const error = "some-error";
+    const tokenNotAtiveFake = fake.returns(error);
+    replace(deps, "invalidCredentialsError", {
+      tokenNotActive: tokenNotAtiveFake
     });
 
     try {

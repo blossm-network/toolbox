@@ -18,8 +18,10 @@ describe("Authentication middleware", () => {
     const iat = "some-iat";
     const jti = "some-jti";
     const context = "some-context";
+    const roles = "some-roles";
     const claims = {
       context,
+      roles,
       iss,
       aud,
       sub,
@@ -46,6 +48,7 @@ describe("Authentication middleware", () => {
       keyClaimsFn
     });
     expect(req.context).to.deep.equal(context);
+    expect(req.roles).to.deep.equal(roles);
     expect(req.claims).to.deep.equal({
       iss,
       aud,
@@ -53,6 +56,29 @@ describe("Authentication middleware", () => {
       exp,
       iat,
       jti
+    });
+    expect(nextFake).to.have.been.calledOnce;
+  });
+  it("should call correctly with strict off", async () => {
+    const errorMessage = "some-error-message";
+    const error = new Error(errorMessage);
+    const authenticateFake = fake.rejects(error);
+    replace(deps, "authenticate", authenticateFake);
+
+    const nextFake = fake();
+
+    const req = fake();
+
+    await authenticationMiddleware({ verifyFn, keyClaimsFn, strict: false })(
+      req,
+      null,
+      nextFake
+    );
+
+    expect(authenticateFake).to.have.been.calledWith({
+      req,
+      verifyFn,
+      keyClaimsFn
     });
     expect(nextFake).to.have.been.calledOnce;
   });

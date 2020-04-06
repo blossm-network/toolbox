@@ -13,6 +13,11 @@ module.exports = {
       { cause, info, toJSON },
       "This token is expired."
     ),
+  tokenNotActive: ({ cause, info } = {}) =>
+    new InvalidCredentialsError(
+      { cause, info, toJSON },
+      "This token is not active."
+    ),
   tokenTerminated: ({ cause, info } = {}) =>
     new InvalidCredentialsError(
       { cause, info, toJSON },

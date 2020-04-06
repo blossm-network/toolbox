@@ -13,6 +13,10 @@ module.exports = async ({ token, verifyFn }) => {
 
   if (!isVerified) throw deps.invalidCredentialsError.tokenInvalid();
 
+  const { alg } = decodeJwt(token, { header: true });
+
+  if (alg != "ES256") throw deps.invalidCredentialsError.tokenInvalid();
+
   const claims = decodeJwt(token);
 
   //Throw if the token is expired.
@@ -20,6 +24,9 @@ module.exports = async ({ token, verifyFn }) => {
 
   if (Date.parse(claims.exp) < now)
     throw deps.invalidCredentialsError.tokenExpired();
+
+  if (claims.nbf && Date.parse(claims.nbf) > now)
+    throw deps.invalidCredentialsError.tokenNotActive();
 
   return claims;
 };

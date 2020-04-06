@@ -25,26 +25,31 @@ module.exports = async ({
     name,
     key = "access",
     priviledges,
-    protected = true
+    protection = "strict"
   } of commands) {
     server = server.post(deps.post({ name, domain, tokenFn }), {
       path: `/${name}`,
-      ...(protected && {
+      ...(protection != "none" && {
         preMiddleware: [
           deps.authentication({
             verifyFn: verifyFn({ key }),
-            keyClaimsFn
+            keyClaimsFn,
+            strict: protection == "strict"
           }),
-          deps.authorization({
-            permissionsLookupFn,
-            terminatedSessionCheckFn,
-            permissions:
-              priviledges instanceof Array
-                ? priviledges.map(priviledge => {
-                    return { service, domain, priviledge };
-                  })
-                : priviledges
-          })
+          ...(protection == "strict"
+            ? [
+                deps.authorization({
+                  permissionsLookupFn,
+                  terminatedSessionCheckFn,
+                  permissions:
+                    priviledges instanceof Array
+                      ? priviledges.map(priviledge => {
+                          return { service, domain, priviledge };
+                        })
+                      : priviledges
+                })
+              ]
+            : [])
         ]
       })
     });

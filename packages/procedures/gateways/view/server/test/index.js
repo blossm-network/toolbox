@@ -77,7 +77,8 @@ describe("View gateway", () => {
       preMiddleware: [authenticationResult, authorizationResult]
     });
     expect(authenticationFake).to.have.been.calledWith({
-      verifyFn: verifyFnResult
+      verifyFn: verifyFnResult,
+      strict: true
     });
     expect(verifyFnFake).to.have.been.calledWith({ key: "access" });
     expect(authorizationFake).to.have.been.calledWith({
@@ -148,7 +149,8 @@ describe("View gateway", () => {
       preMiddleware: [authenticationResult, authorizationResult]
     });
     expect(authenticationFake).to.have.been.calledWith({
-      verifyFn: verifyFnResult
+      verifyFn: verifyFnResult,
+      strict: true
     });
     expect(verifyFnFake).to.have.been.calledWith({ key: "access" });
     expect(authorizationFake).to.have.been.calledWith({
@@ -199,11 +201,12 @@ describe("View gateway", () => {
       verifyFn: verifyFnFake
     });
     expect(authenticationFake).to.have.been.calledWith({
-      verifyFn: verifyFnResult
+      verifyFn: verifyFnResult,
+      strict: true
     });
     expect(verifyFnFake).to.have.been.calledWith({ key });
   });
-  it("should call with the correct params with multiple stores", async () => {
+  it("should call with the correct params with multiple stores with different protections", async () => {
     const corsMiddlewareFake = fake();
     replace(deps, "corsMiddleware", corsMiddlewareFake);
 
@@ -216,8 +219,11 @@ describe("View gateway", () => {
     replace(deps, "authorization", authorizationFake);
 
     const listenFake = fake();
-    const secondGetFake = fake.returns({
+    const thirdGetFake = fake.returns({
       listen: listenFake
+    });
+    const secondGetFake = fake.returns({
+      get: thirdGetFake
     });
     const getFake = fake.returns({
       get: secondGetFake
@@ -235,9 +241,11 @@ describe("View gateway", () => {
     const priviledges = [priviledge];
     const name1 = "some-name1";
     const name2 = "some-name2";
+    const name3 = "some-name3";
     const stores = [
-      { name: name1, protected: false },
-      { name: name2, priviledges }
+      { name: name1, protection: "none" },
+      { name: name2, protection: "context" },
+      { name: name3, priviledges }
     ];
 
     const verifyFnResult = "some-verify-fn";
@@ -259,16 +267,29 @@ describe("View gateway", () => {
       name: name2,
       domain
     });
-    expect(gatewayGetFake).to.have.been.calledTwice;
+    expect(gatewayGetFake).to.have.been.calledWith({
+      name: name3,
+      domain
+    });
+    expect(gatewayGetFake).to.have.been.calledThrice;
     expect(getFake).to.have.been.calledWith(gatewayGetResult, {
       path: `/${name1}`
     });
     expect(secondGetFake).to.have.been.calledWith(gatewayGetResult, {
       path: `/${name2}`,
+      preMiddleware: [authenticationResult]
+    });
+    expect(thirdGetFake).to.have.been.calledWith(gatewayGetResult, {
+      path: `/${name3}`,
       preMiddleware: [authenticationResult, authorizationResult]
     });
     expect(authenticationFake).to.have.been.calledWith({
-      verifyFn: verifyFnResult
+      verifyFn: verifyFnResult,
+      strict: false
+    });
+    expect(authenticationFake).to.have.been.calledWith({
+      verifyFn: verifyFnResult,
+      strict: true
     });
     expect(verifyFnFake).to.have.been.calledWith({ key: "access" });
     expect(authorizationFake).to.have.been.calledOnce;
@@ -279,7 +300,6 @@ describe("View gateway", () => {
         return { service, domain, priviledge };
       })
     });
-    expect(authorizationFake).to.have.been.calledOnce;
   });
   it("should call with the correct params with passed in domain and service", async () => {
     const corsMiddlewareFake = fake();

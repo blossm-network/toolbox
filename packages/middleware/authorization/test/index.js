@@ -21,9 +21,11 @@ describe("Authorization middleware", () => {
   it("should call correctly", async () => {
     const context = { session };
     const path = "some-path";
+    const roles = "some-roles";
     const req = {
       path,
-      context
+      context,
+      roles
     };
 
     const authorizationFake = fake();
@@ -41,7 +43,8 @@ describe("Authorization middleware", () => {
     expect(authorizationFake).to.have.been.calledWith({
       context,
       permissionsLookupFn,
-      permissions
+      permissions,
+      roles
     });
     expect(terminatedSessionCheckFake).to.have.been.calledWith({
       session: sessionRoot

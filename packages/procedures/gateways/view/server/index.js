@@ -23,25 +23,30 @@ module.exports = async ({
     name,
     key = "access",
     priviledges,
-    protected = true
+    protection = "strict"
   } of stores) {
     server = server.get(deps.get({ name, domain }), {
       path: `/${name}`,
-      ...(protected && {
+      ...(protection != "none" && {
         preMiddleware: [
           deps.authentication({
-            verifyFn: verifyFn({ key })
+            verifyFn: verifyFn({ key }),
+            strict: protection == "strict"
           }),
-          deps.authorization({
-            permissionsLookupFn,
-            terminatedSessionCheckFn,
-            permissions:
-              priviledges instanceof Array
-                ? priviledges.map(priviledge => {
-                    return { service, domain, priviledge };
-                  })
-                : priviledges
-          })
+          ...(protection == "strict"
+            ? [
+                deps.authorization({
+                  permissionsLookupFn,
+                  terminatedSessionCheckFn,
+                  permissions:
+                    priviledges instanceof Array
+                      ? priviledges.map(priviledge => {
+                          return { service, domain, priviledge };
+                        })
+                      : priviledges
+                })
+              ]
+            : [])
         ]
       })
     });

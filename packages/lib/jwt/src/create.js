@@ -2,12 +2,13 @@ const deps = require("../deps");
 const base64url = require("base64url");
 
 module.exports = async ({
-  options: { issuer, subject, audience, expiresIn },
+  options: { issuer, subject, audience, expiresIn, activeIn = 0 },
   payload = {},
-  signFn
+  signFn,
+  algorithm = "ES256"
 }) => {
   const header = {
-    alg: "HS256",
+    alg: algorithm,
     typ: "JWT"
   };
 
@@ -22,6 +23,7 @@ module.exports = async ({
     aud: audience,
     sub: subject,
     exp: deps.stringFromDate(new Date(deps.fineTimestamp() + expiresIn)),
+    nbf: deps.stringFromDate(new Date(deps.fineTimestamp() + activeIn)),
     iat: deps.dateString(),
     jti: deps.uuid()
   });

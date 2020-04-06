@@ -19,6 +19,7 @@ const context = {
 
 const deps = require("../deps");
 
+const roles = "some-roles";
 describe("Authorize", () => {
   afterEach(() => {
     restore();
@@ -29,13 +30,13 @@ describe("Authorize", () => {
     const permissionsLookupFn = fake.returns(permissions);
 
     const document = await authorize({
-      context,
       permissionsLookupFn,
       permissions: [{ service, domain, priviledge }],
-      network
+      network,
+      roles
     });
 
-    expect(permissionsLookupFn).to.have.been.calledWith({ principle });
+    expect(permissionsLookupFn).to.have.been.calledWith({ roles });
     expect(document).to.deep.equal({
       permissions
     });
@@ -53,9 +54,9 @@ describe("Authorize", () => {
 
     try {
       await authorize({
-        context,
         permissionsLookupFn,
-        network
+        network,
+        roles
       });
 
       //shouldnt be called;
@@ -76,7 +77,7 @@ describe("Authorize", () => {
   });
   it("should authorize with no sub and permissions as none", async () => {
     const document = await authorize({
-      context,
+      roles,
       permissions: "none",
       network
     });

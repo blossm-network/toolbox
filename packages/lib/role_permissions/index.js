@@ -23,17 +23,18 @@ module.exports = async ({ roles, defaultRoles, customRolePermissionsFn }) => {
     }
   }
   const customRoleCandidates = difference(roles, rolesFound);
-  if (customRoleCandidates.length > 0) {
-    permissions.push(
-      ...(
-        await Promise.all(
-          customRoleCandidates.map(customRole =>
-            customRolePermissionsFn({ roleId: customRole })
-          )
+  if (!customRolePermissionsFn || customRoleCandidates.length == 0)
+    return permissions;
+
+  permissions.push(
+    ...(
+      await Promise.all(
+        customRoleCandidates.map(customRole =>
+          customRolePermissionsFn({ roleId: customRole })
         )
-      ).reduce((a, b) => a.concat(b))
-    );
-  }
+      )
+    ).reduce((a, b) => a.concat(b))
+  );
 
   return permissions;
 };
