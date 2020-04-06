@@ -1,7 +1,7 @@
 {
   "name": "@blossm/fact-gateway",
   "description": "A gateway server that manages fact access.",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -17,7 +17,7 @@
     "@blossm/authentication-middleware": "^0.0.68",
     "@blossm/authorization-middleware": "^0.0.64",
     "@blossm/cors-middleware": "^0.0.24",
-    "@blossm/fact-gateway-get": "*",
+    "@blossm/fact-gateway-get": "^0.0.1",
     "@blossm/server": "^0.0.9"
   },
   "devDependencies": {

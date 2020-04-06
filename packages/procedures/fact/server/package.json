@@ -1,7 +1,7 @@
 {
   "name": "@blossm/fact",
   "description": "A generic fact server.",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -14,7 +14,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/fact-get": "*",
+    "@blossm/fact-get": "^0.0.1",
     "@blossm/server": "^0.0.9"
   },
   "devDependencies": {
