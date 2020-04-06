@@ -498,6 +498,9 @@ const configure = async (workingDir, configFn, env, strict) => {
     const rolesBucket = envRolesBucket({ env, config: blossmConfig });
     const secretBucket = envSecretsBucket({ env, config: blossmConfig });
     const publicKeyUrl = envPublicKeyUrl({ env, config: blossmConfig });
+
+    //eslint-disable-next-line no-console
+    console.log({ publicKeyUrl });
     const twilioSendingPhoneNumber = envTwilioSendingPhoneNumber({
       env,
       config: blossmConfig
