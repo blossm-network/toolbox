@@ -46,7 +46,7 @@ describe("Command gateway integration tests", () => {
     }, []);
 
     const needsToken = commands.some(
-      c => c.protected == undefined || c.protected
+      c => c.protection == undefined || c.protection == "strict"
     );
 
     const { token } = needsToken
@@ -64,8 +64,8 @@ describe("Command gateway integration tests", () => {
             },
             payload: {}
           },
-          ...(command.protected === undefined ||
-            (command.protected === true && {
+          ...(command.protection === undefined ||
+            (command.protection === "strict" && {
               headers: {
                 Authorization: `Bearer ${token}`
               }

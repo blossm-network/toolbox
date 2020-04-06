@@ -47,7 +47,7 @@ describe("View gateway integration tests", () => {
     }, []);
 
     const needsToken = stores.some(
-      c => c.protected == undefined || c.protected
+      c => c.protection == undefined || c.protection == "strict"
     );
 
     const { token } = needsToken
@@ -61,8 +61,8 @@ describe("View gateway integration tests", () => {
           body: {
             root
           },
-          ...(store.protected === undefined ||
-            (store.protected === true && {
+          ...(store.protection === undefined ||
+            (store.protection === "strict" && {
               headers: {
                 Authorization: `Bearer ${token}`
               }

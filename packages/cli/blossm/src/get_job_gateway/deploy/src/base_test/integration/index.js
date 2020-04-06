@@ -46,7 +46,9 @@ describe("Get job gateway integration tests", () => {
           ];
     }, []);
 
-    const needsToken = jobs.some(c => c.protected == undefined || c.protected);
+    const needsToken = jobs.some(
+      c => c.protection == undefined || c.protection == "strict"
+    );
 
     const { token } = needsToken
       ? await getToken({ permissions: requiredPermissions })
@@ -59,8 +61,8 @@ describe("Get job gateway integration tests", () => {
           body: {
             root
           },
-          ...(job.protected === undefined ||
-            (job.protected === true && {
+          ...(job.protection === undefined ||
+            (job.protection === "strict" && {
               headers: {
                 Authorization: `Bearer ${token}`
               }

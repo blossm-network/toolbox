@@ -261,11 +261,17 @@ const topicsForDependencies = (config, events) => {
     .map(e => `did-${e.action}.${e.domain}.${e.service || config.service}`)
     .concat(
       (config.procedure == "command-gateway" &&
-        config.commands.some(c => c.protected == undefined || c.protected)) ||
+        config.commands.some(
+          c => c.protection == undefined || c.protection == "strict"
+        )) ||
         (config.procedure == "view-gateway" &&
-          config.stores.some(s => s.protected == undefined || s.protected)) ||
+          config.stores.some(
+            s => s.protection == undefined || s.protection == "strict"
+          )) ||
         (config.procedure == "get-job-gateway" &&
-          config.jobs.some(j => j.protected == undefined || j.protected))
+          config.jobs.some(
+            j => j.protection == undefined || j.protection == "strict"
+          ))
         ? [
             "did-start.session.core",
             "did-upgrade.session.core",
@@ -361,7 +367,9 @@ const addDefaultDependencies = ({ config }) => {
       ];
     case "command-gateway": {
       const dependencies = [
-        ...(config.commands.some(c => c.protected == undefined || c.protected)
+        ...(config.commands.some(
+          c => c.protection == undefined || c.protection == "strict"
+        )
           ? tokenDependencies
           : []),
         ...config.commands.map(command => {
@@ -378,7 +386,9 @@ const addDefaultDependencies = ({ config }) => {
     case "view-gateway":
       return [
         ...tokenDependencies,
-        ...(config.stores.some(s => s.protected == undefined || s.protected)
+        ...(config.stores.some(
+          s => s.protection == undefined || s.protection == "strict"
+        )
           ? tokenDependencies
           : []),
         ...config.stores.map(store => {
@@ -393,7 +403,9 @@ const addDefaultDependencies = ({ config }) => {
     case "get-job-gateway":
       return [
         ...tokenDependencies,
-        ...(config.jobs.some(j => j.protected == undefined || j.protected)
+        ...(config.jobs.some(
+          j => j.protection == undefined || j.protection == "strict"
+        )
           ? tokenDependencies
           : []),
         ...config.jobs.map(job => {
