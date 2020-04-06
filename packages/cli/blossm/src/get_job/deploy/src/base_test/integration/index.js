@@ -14,6 +14,11 @@ const { testing } = require("../../config.json");
 const stateTopics = [];
 
 const checkResponse = ({ data, expected }) => {
+  if (typeof expected != "object") {
+    expect(expected).to.deep.equal(data);
+    return;
+  }
+
   for (const property in expected) {
     expect(data[property]).to.exist;
     if (expected[property]) {
