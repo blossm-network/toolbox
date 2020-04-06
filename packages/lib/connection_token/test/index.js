@@ -1,23 +1,27 @@
 const { expect } = require("chai").use(require("sinon-chai"));
 const { restore, fake, replace } = require("sinon");
 const deps = require("../deps");
-const routerConnectionToken = require("..");
+const connectionToken = require("..");
 
-const routerNetwork = "some-router-network";
+const coreNetwork = "some-core-network";
 const token = "some-token";
-const routerKeyId = "some-router-key-id";
-const routerKeySecret = "some-router-key-secret";
+const id = "some-credentials-id";
+const secret = "some-credentials-secret";
 const exp = "9999-01-03T00:02:12.000Z";
 const expiredExp = "2000-01-03T00:02:12.000Z";
 const network = "some-network";
 const basicToken = "some-basic-token";
-describe("Router connection token", () => {
+
+const currentNetwork = "some-current-network";
+process.env.NETWORK = currentNetwork;
+
+describe("Connection token", () => {
   afterEach(() => {
     restore();
   });
   it("should call correctly", async () => {
     const response = {
-      tokens: [{ network: routerNetwork, value: token }]
+      tokens: [{ network: currentNetwork, value: token }]
     };
 
     const issueFake = fake.returns(response);
@@ -34,39 +38,40 @@ describe("Router connection token", () => {
 
     const basicTokenFake = fake.returns(basicToken);
     replace(deps, "basicToken", basicTokenFake);
-    const result = await routerConnectionToken({
-      routerNetwork,
-      routerKeyId,
-      routerKeySecret
+
+    const credentialsFnFake = fake.returns({ id, secret });
+    const result = await connectionToken({
+      coreNetwork,
+      credentialsFn: credentialsFnFake
     })({ network });
 
     expect(commandFake).to.have.been.calledWith({
       name: "open",
       domain: "connection",
-      service: "router",
-      network: routerNetwork
+      service: "system",
+      network: coreNetwork
     });
     expect(setFake).to.have.been.calledWith({
       tokenFn: basicToken
     });
     expect(basicTokenFake).to.have.been.calledWith({
-      id: routerKeyId,
-      secret: routerKeySecret
+      id,
+      secret
     });
-    expect(issueFake).to.have.been.calledWith({ networks: [network] });
+    expect(issueFake).to.have.been.calledWith();
+    expect(credentialsFnFake).to.have.been.calledWith({ network });
     expect(result).to.equal(token);
 
-    const anotherResult = await routerConnectionToken({
-      routerNetwork,
-      routerKeyId,
-      routerKeySecret
+    const anotherResult = await connectionToken({
+      coreNetwork,
+      credentialsFn: credentialsFnFake
     })({ network });
     expect(commandFake).to.have.been.calledOnce;
     expect(anotherResult).to.equal(token);
   });
   it("should call correctly if expired", async () => {
     const response = {
-      tokens: [{ network: routerNetwork, value: token }]
+      tokens: [{ network: currentNetwork, value: token }]
     };
 
     const issueFake = fake.returns(response);
@@ -84,17 +89,16 @@ describe("Router connection token", () => {
     const basicTokenFake = fake.returns(basicToken);
     replace(deps, "basicToken", basicTokenFake);
     const anotherNetwork = "another-network";
-    const result = await routerConnectionToken({
-      routerNetwork,
-      routerKeyId,
-      routerKeySecret
+    const credentialsFnFake = fake.returns({ id, secret });
+    const result = await connectionToken({
+      coreNetwork,
+      credentialsFn: credentialsFnFake
     })({ network: anotherNetwork });
     expect(result).to.equal(token);
 
-    const anotherResult = await routerConnectionToken({
-      routerNetwork,
-      routerKeyId,
-      routerKeySecret
+    const anotherResult = await connectionToken({
+      coreNetwork,
+      credentialsFn: credentialsFnFake
     })({ network: anotherNetwork });
     expect(commandFake).to.have.been.calledTwice;
     expect(anotherResult).to.equal(token);

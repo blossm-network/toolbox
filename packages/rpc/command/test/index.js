@@ -33,8 +33,6 @@ const envProcedure = "some-env-procedure";
 const envDomain = "some-env-domain";
 const envHash = "some-env-hash";
 
-const routerNetwork = "some-router-network";
-
 process.env.SERVICE = envService;
 process.env.NETWORK = network;
 process.env.NAME = envName;
@@ -42,7 +40,6 @@ process.env.HOST = envHost;
 process.env.DOMAIN = envDomain;
 process.env.PROCEDURE = envProcedure;
 process.env.OPERATION_HASH = envHash;
-process.env.ROUTER_NETWORK = routerNetwork;
 
 describe("Issue command", () => {
   beforeEach(() => {
@@ -204,83 +201,12 @@ describe("Issue command", () => {
         ]
       },
       root,
-      options,
-      destination: {
-        name,
-        domain,
-        service,
-        network: otherNetwork
-      }
-    });
-    expect(inFake).to.have.been.calledWith({
-      context,
-      network: otherNetwork,
-      host: `command.antenna.${routerNetwork}`
-    });
-    expect(withFake).to.have.been.calledWith({
-      tokenFn,
-      claims,
-      path: "/some-name"
-    });
-  });
-  it("should call with the correct params onto a different network with route as false", async () => {
-    const response = "some-response";
-    const withFake = fake.returns(response);
-    const inFake = fake.returns({
-      with: withFake
-    });
-    const postFake = fake.returns({
-      in: inFake
-    });
-    const rpcFake = fake.returns({
-      post: postFake
-    });
-    replace(deps, "rpc", rpcFake);
-
-    const otherNetwork = "some-other-network";
-
-    const result = await command({
-      name,
-      domain,
-      service,
-      network: otherNetwork
-    })
-      .set({ context, claims, tokenFn, route: false })
-      .issue(payload, { trace, issued, root, options });
-
-    expect(result).to.equal(response);
-    expect(rpcFake).to.have.been.calledWith(
-      name,
-      domain,
-      service,
-      "command-handler"
-    );
-    expect(postFake).to.have.been.calledWith({
-      payload,
-      headers: {
-        issued,
-        trace,
-        path: [
-          {
-            timestamp: deps.dateString(),
-            issued,
-            procedure: envProcedure,
-            hash: envHash,
-            network,
-            host: envHost,
-            name: envName,
-            domain: envDomain,
-            service: envService
-          }
-        ]
-      },
-      root,
       options
     });
     expect(inFake).to.have.been.calledWith({
       context,
       network: otherNetwork,
-      host: "command.some-domain.some-service.some-other-network"
+      host: `command.some-domain.some-service.some-other-network`
     });
     expect(withFake).to.have.been.calledWith({
       tokenFn,

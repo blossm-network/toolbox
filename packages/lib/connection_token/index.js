@@ -16,7 +16,8 @@ module.exports = ({ coreNetwork, credentialsFn }) => async ({ network }) => {
         tokenFn: deps.basicToken({
           ...credentialsFn({ network })
         })
-      });
+      })
+      .issue();
 
     //TODO
     //eslint-disable-next-line no-console
