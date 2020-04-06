@@ -128,7 +128,10 @@ module.exports = ({
       return {
         image: `${commonImagePrefix}.${service}.${domain}:latest`,
         ...common,
-        PUBLIC_KEY_URL: publicKeyUrl
+        environment: {
+          ...common.environment,
+          PUBLIC_KEY_URL: publicKeyUrl
+        }
       };
     case "get-job-gateway":
       return {
@@ -136,7 +139,10 @@ module.exports = ({
           domain ? `.${domain}` : ""
         }:latest`,
         ...common,
-        PUBLIC_KEY_URL: publicKeyUrl
+        environment: {
+          ...common.environment,
+          PUBLIC_KEY_URL: publicKeyUrl
+        }
       };
   }
 };
