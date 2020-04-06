@@ -14,7 +14,10 @@ const { testing } = require("../../config.json");
 const stateTopics = [];
 
 const checkResponse = ({ data, expected }) => {
-  if (typeof expected != "object") {
+  //TODO
+  //eslint-disable-next-line no-console
+  console.log("checking: ", { data, expected });
+  if (typeof expected != "object" && expected instanceof Array) {
     expect(expected).to.deep.equal(data);
     return;
   }
@@ -114,7 +117,14 @@ const executeStep = async step => {
 
   if (!step.response) return;
 
+  //TODO
+  //eslint-disable-next-line no-console
+  console.log("response body: ", response.body);
   const parsedBody = JSON.parse(response.body);
+
+  //TODO
+  //eslint-disable-next-line no-console
+  console.log("parsed response body: ", parsedBody);
 
   checkResponse({
     expected: step.response,
