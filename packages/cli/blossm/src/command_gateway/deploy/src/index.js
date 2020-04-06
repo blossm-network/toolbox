@@ -27,7 +27,7 @@ module.exports = gateway({
   internalTokenFn: gcpToken,
   externalTokenFn: connectionToken,
   //roles are the roles that the principle has.
-  permissionsLookupFn: async ({ roles }) => {
+  permissionsLookupFn: async ({ principle }) => {
     if (!defaultRoles) {
       const fileName = uuid();
       const extension = ".yaml";
@@ -54,6 +54,9 @@ module.exports = gateway({
     }
 
     // //TODO
+    //eslint-disable-next-line
+    console.log({ principle });
+    // //TODO
     // //The sustainers network needs to attach this to the context.
     // const aggregate = await eventStore({
     //   domain: "principle",
@@ -65,7 +68,7 @@ module.exports = gateway({
     // return aggregate
     //   ? await rolePermissions({
     await rolePermissions({
-      roles,
+      // roles,
       // : aggregate.state.roles.map(role => role.id),
       defaultRoles
       // customRolePermissionsFn: async ({ roleId }) => {
