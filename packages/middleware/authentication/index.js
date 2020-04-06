@@ -11,7 +11,6 @@ module.exports = ({ verifyFn, keyClaimsFn, strict = true }) =>
         keyClaimsFn
       });
       req.context = claims.context;
-      req.roles = claims.roles;
       req.claims = {
         iss: claims.iss,
         aud: claims.aud,

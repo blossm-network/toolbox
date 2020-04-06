@@ -12,10 +12,9 @@ module.exports = ({
       ...(permissions && permissionsLookupFn
         ? [
             deps.authorize({
-              context: req.context,
+              principle: req.context.principle,
               permissionsLookupFn,
-              permissions,
-              roles: req.roles
+              permissions
             })
           ]
         : []),

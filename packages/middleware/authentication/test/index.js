@@ -18,10 +18,8 @@ describe("Authentication middleware", () => {
     const iat = "some-iat";
     const jti = "some-jti";
     const context = "some-context";
-    const roles = "some-roles";
     const claims = {
       context,
-      roles,
       iss,
       aud,
       sub,
@@ -48,7 +46,6 @@ describe("Authentication middleware", () => {
       keyClaimsFn
     });
     expect(req.context).to.deep.equal(context);
-    expect(req.roles).to.deep.equal(roles);
     expect(req.claims).to.deep.equal({
       iss,
       aud,

@@ -1,13 +1,17 @@
 const deps = require("./deps");
 
-module.exports = async ({ permissionsLookupFn, permissions = [], roles }) => {
+module.exports = async ({
+  permissionsLookupFn,
+  permissions = [],
+  principle
+}) => {
   if (permissions == "none")
     return {
       permissions: []
     };
 
   const principlePermissions = await permissionsLookupFn({
-    roles
+    principle
   });
 
   const satisfiedPermissions = principlePermissions.filter(

@@ -13,19 +13,18 @@ process.env.SERVICE = envService;
 
 const sessionRoot = "some-session-root";
 const session = { root: sessionRoot };
+const principle = "some-principle";
 
 describe("Authorization middleware", () => {
   afterEach(() => {
     restore();
   });
   it("should call correctly", async () => {
-    const context = { session };
+    const context = { session, principle };
     const path = "some-path";
-    const roles = "some-roles";
     const req = {
       path,
-      context,
-      roles
+      context
     };
 
     const authorizationFake = fake();
@@ -41,10 +40,9 @@ describe("Authorization middleware", () => {
     })(req, null, nextFake);
 
     expect(authorizationFake).to.have.been.calledWith({
-      context,
+      principle,
       permissionsLookupFn,
-      permissions,
-      roles
+      permissions
     });
     expect(terminatedSessionCheckFake).to.have.been.calledWith({
       session: sessionRoot
