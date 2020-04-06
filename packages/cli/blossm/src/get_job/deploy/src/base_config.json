@@ -3,6 +3,10 @@
     "@blossm/get-job": "*"
   },
   "devDependencies": {
-    "chai": "^4.2.0"
+    "chai": "^4.2.0",
+    "@blossm/event-store-rpc": "*",
+    "@blossm/request": "*",
+    "@blossm/gcp-pubsub": "*",
+    "@blossm/create-event": "*"
   }
 }
