@@ -553,6 +553,7 @@ const configure = async (workingDir, configFn, env, strict) => {
     writeCompose({
       config,
       workingDir,
+      publicKeyUrl,
       procedure,
       port: 80,
       mainContainerName,
