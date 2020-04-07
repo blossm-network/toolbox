@@ -1,12 +1,15 @@
 const deps = require("./deps");
 
 module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
-  const issue = ({ context, claims, tokenFn } = {}) => async (
+  const internal = !network || network == process.env.NETWORK;
+  const issue = ({
+    context,
+    claims,
+    tokenFns: { internal: internalTokenFn, external: externalTokenFn } = {}
+  } = {}) => async (
     payload = {},
     { trace, issued, root, path, options } = {}
   ) => {
-    const internal = !network || network == process.env.NETWORK;
-
     const headers = {
       issued: issued || deps.dateString(),
       ...(trace != undefined && { trace }),
@@ -44,16 +47,17 @@ module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
         })
       })
       .with({
-        tokenFn,
+        ...(internalTokenFn && { internalTokenFn }),
+        ...(externalTokenFn && { externalTokenFn }),
         ...(claims && { claims }),
         ...(!internal && { path: `/${name}` })
       });
   };
 
   return {
-    set: ({ context, claims, tokenFn, route }) => {
+    set: ({ context, claims, tokenFns, route }) => {
       return {
-        issue: issue({ context, claims, tokenFn, route })
+        issue: issue({ context, claims, tokenFns, route })
       };
     },
     issue: issue()

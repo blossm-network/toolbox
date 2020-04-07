@@ -17,8 +17,10 @@ module.exports = ({
       ...(network && { network })
     })
     .set({
-      tokenFn:
-        network == process.env.NETWORK ? internalTokenFn : externalTokenFn,
+      tokenFns: {
+        internal: internalTokenFn,
+        external: externalTokenFn
+      },
       context: req.context,
       claims: req.claims
     })

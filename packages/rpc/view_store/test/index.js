@@ -9,7 +9,8 @@ const domain = "some-domain";
 const service = "some-service";
 const network = "some-network";
 
-const tokenFn = "some-token-fn";
+const internalTokenFn = "some-internal-token-fn";
+const externalTokenFn = "some-external-token-fn";
 
 const query = "some-query";
 const sort = "some-sort";
@@ -41,7 +42,11 @@ describe("Get views", () => {
     replace(deps, "rpc", rpcFake);
 
     await viewStore({ name, domain, service })
-      .set({ context, tokenFn, claims })
+      .set({
+        context,
+        tokenFns: { internal: internalTokenFn, external: externalTokenFn },
+        claims
+      })
       .create(view);
 
     expect(rpcFake).to.have.been.calledWith(
@@ -52,7 +57,11 @@ describe("Get views", () => {
     );
     expect(postFake).to.have.been.calledWith({ view });
     expect(inFake).to.have.been.calledWith({ context });
-    expect(withFake).to.have.been.calledWith({ tokenFn, claims });
+    expect(withFake).to.have.been.calledWith({
+      internalTokenFn,
+      externalTokenFn,
+      claims
+    });
   });
   it("should call create with the correct params and optionals omitted", async () => {
     const withFake = fake();
@@ -77,7 +86,7 @@ describe("Get views", () => {
     );
     expect(postFake).to.have.been.calledWith({ view });
     expect(inFake).to.have.been.calledWith({});
-    expect(withFake).to.have.been.calledWith();
+    expect(withFake).to.have.been.calledWith({});
   });
   it("should call read with the correct params", async () => {
     const views = "some-views";
@@ -94,7 +103,10 @@ describe("Get views", () => {
     replace(deps, "rpc", rpcFake);
 
     const result = await viewStore({ name, domain, service, network })
-      .set({ context, tokenFn })
+      .set({
+        context,
+        tokenFns: { internal: internalTokenFn, external: externalTokenFn }
+      })
       .read({ query, sort });
 
     expect(rpcFake).to.have.been.calledWith(
@@ -106,7 +118,8 @@ describe("Get views", () => {
     expect(getFake).to.have.been.calledWith({ query, sort });
     expect(inFake).to.have.been.calledWith({ context });
     expect(withFake).to.have.been.calledWith({
-      tokenFn
+      internalTokenFn,
+      externalTokenFn
     });
     expect(result).to.equal(views);
   });
@@ -136,7 +149,7 @@ describe("Get views", () => {
     );
     expect(getFake).to.have.been.calledWith({ query });
     expect(inFake).to.have.been.calledWith({});
-    expect(withFake).to.have.been.calledWith();
+    expect(withFake).to.have.been.calledWith({});
     expect(result).to.equal(views);
   });
   it("should call read with the correct params onto other host", async () => {
@@ -160,7 +173,7 @@ describe("Get views", () => {
       service,
       network: otherNetwork
     })
-      .set({ context, tokenFn })
+      .set({ context, tokenFns: { external: externalTokenFn } })
       .read({ query, sort });
 
     expect(rpcFake).to.have.been.calledWith(
@@ -176,7 +189,7 @@ describe("Get views", () => {
       host: "view.some-domain.some-service.some-other-network"
     });
     expect(withFake).to.have.been.calledWith({
-      tokenFn,
+      externalTokenFn,
       path: "/some-name"
     });
     expect(result).to.equal(views);
@@ -196,7 +209,10 @@ describe("Get views", () => {
     replace(deps, "rpc", rpcFake);
 
     const result = await viewStore({ name, domain, service, network })
-      .set({ context, tokenFn })
+      .set({
+        context,
+        tokenFns: { internal: internalTokenFn, external: externalTokenFn }
+      })
       .stream({ query, sort });
 
     expect(rpcFake).to.have.been.calledWith(
@@ -209,7 +225,8 @@ describe("Get views", () => {
     expect(inFake).to.have.been.calledWith({ context });
     expect(withFake).to.have.been.calledWith({
       path: "/stream",
-      tokenFn
+      internalTokenFn,
+      externalTokenFn
     });
     expect(result).to.equal(views);
   });
@@ -265,7 +282,7 @@ describe("Get views", () => {
       service,
       network: otherNetwork
     })
-      .set({ context, tokenFn })
+      .set({ context, tokenFns: { external: externalTokenFn } })
       .stream({ query, sort });
 
     expect(rpcFake).to.have.been.calledWith(
@@ -282,7 +299,7 @@ describe("Get views", () => {
     });
     expect(withFake).to.have.been.calledWith({
       path: "/some-name/stream",
-      tokenFn
+      externalTokenFn
     });
     expect(result).to.equal(views);
   });
@@ -300,7 +317,11 @@ describe("Get views", () => {
     replace(deps, "rpc", rpcFake);
 
     await viewStore({ name, domain, service })
-      .set({ context, tokenFn })
+      .set({
+        context,
+
+        tokenFns: { internal: internalTokenFn, external: externalTokenFn }
+      })
       .update(root, view);
 
     expect(rpcFake).to.have.been.calledWith(
@@ -312,7 +333,8 @@ describe("Get views", () => {
     expect(putFake).to.have.been.calledWith(root, { view });
     expect(inFake).to.have.been.calledWith({ context });
     expect(withFake).to.have.been.calledWith({
-      tokenFn
+      internalTokenFn,
+      externalTokenFn
     });
   });
   it("should call update with the correct params and optionals omitted", async () => {
@@ -354,7 +376,11 @@ describe("Get views", () => {
     replace(deps, "rpc", rpcFake);
 
     await viewStore({ name, domain, service })
-      .set({ context, tokenFn })
+      .set({
+        context,
+        claims,
+        tokenFns: { internal: internalTokenFn, external: externalTokenFn }
+      })
       .delete(root);
 
     expect(rpcFake).to.have.been.calledWith(
@@ -366,7 +392,9 @@ describe("Get views", () => {
     expect(deleteFake).to.have.been.calledWith(root);
     expect(inFake).to.have.been.calledWith({ context });
     expect(withFake).to.have.been.calledWith({
-      tokenFn
+      claims,
+      internalTokenFn,
+      externalTokenFn
     });
   });
   it("should call delete with the correct params with optionals omitted", async () => {

@@ -67,7 +67,7 @@ describe("Command gateway post", () => {
       domain
     });
     expect(setFake).to.have.been.calledWith({
-      tokenFn: internalTokenFn,
+      tokenFns: { internal: internalTokenFn, external: externalTokenFn },
       context,
       claims
     });
@@ -123,7 +123,7 @@ describe("Command gateway post", () => {
       network
     });
     expect(setFake).to.have.been.calledWith({
-      tokenFn: externalTokenFn,
+      tokenFns: { external: externalTokenFn, internal: internalTokenFn },
       context,
       claims
     });
@@ -171,7 +171,7 @@ describe("Command gateway post", () => {
       domain
     });
     expect(setFake).to.have.been.calledWith({
-      tokenFn: internalTokenFn,
+      tokenFns: { internal: internalTokenFn, external: externalTokenFn },
       context,
       claims
     });
@@ -253,7 +253,7 @@ describe("Command gateway post", () => {
       domain
     });
     expect(setFake).to.have.been.calledWith({
-      tokenFn: internalTokenFn,
+      tokenFns: { internal: internalTokenFn, external: externalTokenFn },
       context,
       claims
     });

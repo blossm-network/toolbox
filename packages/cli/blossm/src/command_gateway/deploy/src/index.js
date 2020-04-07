@@ -3,6 +3,7 @@ const { readFile, readdir, unlink } = require("fs");
 const { promisify } = require("util");
 const gateway = require("@blossm/command-gateway");
 const eventStore = require("@blossm/event-store-rpc");
+const fact = require("@blossm/fact-rpc");
 const { verify: verifyGCP } = require("@blossm/gcp-kms");
 const verify = require("@blossm/verify-access-token");
 const { invalidCredentials } = require("@blossm/errors");
@@ -28,6 +29,7 @@ module.exports = gateway({
   externalTokenFn: connectionToken,
   //roles are the roles that the principle has.
   permissionsLookupFn: async ({ principle }) => {
+    //Download files if they aren't downloaded already.
     if (!defaultRoles) {
       const fileName = uuid();
       const extension = ".yaml";
@@ -53,28 +55,22 @@ module.exports = gateway({
       );
     }
 
-    // //TODO
-    //eslint-disable-next-line
-    console.log({ principle });
-    // //TODO
-    // //The sustainers network needs to attach this to the context.
-    // const aggregate = await eventStore({
-    //   domain: "principle",
-    //   service: "core"
-    // })
-    //   .set({ tokenFn: gcpToken })
-    //   .aggregate(principle.root);
+    const roles = await fact({
+      name: "roles",
+      domain: "principle",
+      service: "core",
+      network: process.env.ROLE_NETWORK
+    })
+      .set({ tokenFns: { internal: gcpToken } })
+      .read({ root: principle.root });
 
-    // return aggregate
-    //   ? await rolePermissions({
-    await rolePermissions({
-      // roles,
-      // : aggregate.state.roles.map(role => role.id),
+    return await rolePermissions({
+      roles,
       defaultRoles
       // customRolePermissionsFn: async ({ roleId }) => {
       //   //look through customRoles and pick out roleId
       //   const role = await eventStore({ domain: "role", service: "core" })
-      //     .set({ tokenFn: gcpToken })
+      //     .set({ tokenFns: { internal: gcpToken } })
       //     .query({ key: "id", value: roleId });
       //   return role.state.permissions;
       // }
@@ -87,7 +83,7 @@ module.exports = gateway({
       domain: "session",
       service: "core"
     })
-      .set({ tokenFn: gcpToken })
+      .set({ tokenFns: { internal: gcpToken } })
       .aggregate(session);
 
     if (aggregate.state.terminated) throw invalidCredentials.tokenTerminated();
@@ -107,7 +103,7 @@ module.exports = gateway({
         }),
   keyClaimsFn: async ({ id, secret, domain = "node" }) => {
     const [key] = await eventStore({ domain: "key", service: "core" })
-      .set({ tokenFn: gcpToken })
+      .set({ tokenFns: { internal: gcpToken } })
       .query({ key: "id", value: id });
 
     if (!key) throw "Key not found";

@@ -6,7 +6,11 @@ module.exports = ({ name, domain } = {}) => async (req, res) => {
       name,
       domain
     })
-    .set({ tokenFn: deps.gcpToken, context: req.context, claims: req.claims })
+    .set({
+      tokenFns: { internal: deps.gcpToken },
+      context: req.context,
+      claims: req.claims
+    })
     .read(req.query);
 
   res.status(200).send(response);

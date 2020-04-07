@@ -22,7 +22,7 @@ let defaultRoles;
 module.exports = gateway({
   stores: config.stores,
   whitelist: config.whitelist,
-  tokenFn: gcpToken,
+  internalTokenFn: gcpToken,
   permissionsLookupFn: async ({ principle }) => {
     if (!defaultRoles) {
       const fileName = uuid();
@@ -53,7 +53,7 @@ module.exports = gateway({
       domain: "principle",
       service: "core"
     })
-      .set({ tokenFn: gcpToken })
+      .set({ tokenFns: { internal: gcpToken } })
       .aggregate(principle.root);
 
     return aggregate
@@ -62,7 +62,7 @@ module.exports = gateway({
           defaultRoles,
           customRolePermissionsFn: async ({ roleId }) => {
             const role = await eventStore({ domain: "role", service: "core" })
-              .set({ tokenFn: gcpToken })
+              .set({ tokenFns: { internal: gcpToken } })
               .query({ key: "id", value: roleId });
             return role.state.permissions;
           }
@@ -74,7 +74,7 @@ module.exports = gateway({
       domain: "session",
       service: "core"
     })
-      .set({ tokenFn: gcpToken })
+      .set({ tokenFns: { internal: gcpToken } })
       .aggregate(session);
 
     if (aggregate.state.terminated) throw invalidCredentials.tokenTerminated();

@@ -48,7 +48,7 @@ describe("Fact gateway get", () => {
     expect(setFake).to.have.been.calledWith({
       context,
       claims,
-      tokenFn: deps.gcpToken
+      tokenFns: { internal: deps.gcpToken }
     });
     expect(readFake).to.have.been.calledWith(query);
     expect(sendFake).to.have.been.calledWith(results);

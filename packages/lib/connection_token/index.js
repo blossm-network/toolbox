@@ -13,9 +13,11 @@ module.exports = ({ coreNetwork, credentialsFn }) => async ({ network }) => {
         network: coreNetwork
       })
       .set({
-        tokenFn: deps.basicToken({
-          ...credentialsFn({ network })
-        })
+        tokenFns: {
+          external: deps.basicToken({
+            ...credentialsFn({ network })
+          })
+        }
       })
       .issue();
 

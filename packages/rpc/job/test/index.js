@@ -15,7 +15,8 @@ const domain = "some-domain!";
 const service = "some-service";
 
 const payload = { a: 1 };
-const tokenFn = "some-token-fn";
+const internalTokenFn = "some-internal-token-fn";
+const externalTokenFn = "some-external-token-fn";
 
 const context = { c: 2 };
 const claims = "some-claims";
@@ -48,7 +49,11 @@ describe("Job", () => {
     replace(deps, "rpc", rpcFake);
 
     const result = await job({ name, domain, service })
-      .set({ context, claims, tokenFn })
+      .set({
+        context,
+        claims,
+        tokenFns: { internal: internalTokenFn, external: externalTokenFn }
+      })
       .trigger(payload);
 
     expect(result).to.equal(response);
@@ -59,7 +64,11 @@ describe("Job", () => {
     expect(inFake).to.have.been.calledWith({
       context
     });
-    expect(withFake).to.have.been.calledWith({ tokenFn, claims });
+    expect(withFake).to.have.been.calledWith({
+      internalTokenFn,
+      externalTokenFn,
+      claims
+    });
   });
   it("should call with the correct optional params", async () => {
     const response = "some-response";

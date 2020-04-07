@@ -15,7 +15,7 @@ module.exports = eventHandler({
       .set({
         context: event.headers.context,
         claims: event.headers.claims,
-        tokenFn: gcpToken
+        tokenFns: { internal: gcpToken }
       })
       .create({
         root: event.headers.root,

@@ -15,7 +15,14 @@ const common = ({ method, dataParam, operation, root, data }) => {
   return {
     in: ({ context, network, host = process.env.HOST }) => {
       return {
-        with: async ({ path, tokenFn, claims } = {}) => {
+        with: async ({
+          path,
+          tokenFns: {
+            internal: internalTokenFn,
+            external: externalTokenFn
+          } = {},
+          claims
+        } = {}) => {
           //TODO
           //eslint-disable-next-line no-console
           console.log({ operation, host, network });
@@ -26,10 +33,13 @@ const common = ({ method, dataParam, operation, root, data }) => {
 
           const token = internal
             ? await deps.operationToken({
-                tokenFn,
+                tokenFn: internalTokenFn,
                 operation
               })
-            : await deps.networkToken({ tokenFn, network });
+            : await deps.networkToken({
+                tokenFn: externalTokenFn,
+                network
+              });
 
           //TODO
           //eslint-disable-next-line no-console

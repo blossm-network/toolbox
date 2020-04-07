@@ -32,7 +32,8 @@ process.env.SERVICE = envService;
 
 const context = "some-context";
 const claims = "some-claims";
-const tokenFn = "some-token-fn";
+const internalTokenFn = "some-internal-token-fn";
+const externalTokenFn = "some-external-token-fn";
 const number = "some-number";
 
 const query = {
@@ -66,7 +67,11 @@ describe("Event store", () => {
     const trace = "trace";
 
     await eventStore({ domain, service })
-      .set({ context, claims, tokenFn })
+      .set({
+        context,
+        claims,
+        tokenFns: { internal: internalTokenFn, external: externalTokenFn }
+      })
       .add([
         {
           data: {
@@ -113,7 +118,11 @@ describe("Event store", () => {
     expect(inFake).to.have.been.calledWith({
       context
     });
-    expect(withFake).to.have.been.calledWith({ tokenFn, claims });
+    expect(withFake).to.have.been.calledWith({
+      internalTokenFn,
+      externalTokenFn,
+      claims
+    });
   });
 
   it("should call add with the right params and optionals left out", async () => {
@@ -165,7 +174,7 @@ describe("Event store", () => {
       ]
     });
     expect(inFake).to.have.been.calledWith({});
-    expect(withFake).to.have.been.calledWith();
+    expect(withFake).to.have.been.calledWith({});
   });
 
   it("should call aggregate with the right params", async () => {
@@ -185,7 +194,11 @@ describe("Event store", () => {
     const root = "user";
 
     const result = await eventStore({ domain, service })
-      .set({ context, claims, tokenFn })
+      .set({
+        context,
+        claims,
+        tokenFns: { internal: internalTokenFn, external: externalTokenFn }
+      })
       .aggregate(root);
 
     expect(rpcFake).to.have.been.calledWith(domain, service, "event-store");
@@ -193,7 +206,11 @@ describe("Event store", () => {
     expect(inFake).to.have.been.calledWith({
       context
     });
-    expect(withFake).to.have.been.calledWith({ tokenFn, claims });
+    expect(withFake).to.have.been.calledWith({
+      internalTokenFn,
+      externalTokenFn,
+      claims
+    });
     expect(result).to.equal(aggregate);
   });
   it("should call aggregate with the right params with optionals missing", async () => {
@@ -217,7 +234,7 @@ describe("Event store", () => {
     expect(rpcFake).to.have.been.calledWith(domain, envService, "event-store");
     expect(getFake).to.have.been.calledWith({ root });
     expect(inFake).to.have.been.calledWith({});
-    expect(withFake).to.have.been.calledWith();
+    expect(withFake).to.have.been.calledWith({});
     expect(result).to.equal(aggregate);
   });
   it("should call query with the right params", async () => {
@@ -235,7 +252,11 @@ describe("Event store", () => {
     replace(deps, "rpc", rpcFake);
 
     const result = await eventStore({ domain, service })
-      .set({ context, claims, tokenFn })
+      .set({
+        context,
+        claims,
+        tokenFns: { internal: internalTokenFn, external: externalTokenFn }
+      })
       .query(query);
 
     expect(rpcFake).to.have.been.calledWith(domain, service, "event-store");
@@ -243,7 +264,11 @@ describe("Event store", () => {
     expect(inFake).to.have.been.calledWith({
       context
     });
-    expect(withFake).to.have.been.calledWith({ tokenFn, claims });
+    expect(withFake).to.have.been.calledWith({
+      internalTokenFn,
+      externalTokenFn,
+      claims
+    });
     expect(result).to.equal(aggregate);
   });
   it("should call aggregate with the right params with optionals missing", async () => {

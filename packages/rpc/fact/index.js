@@ -1,7 +1,12 @@
 const deps = require("./deps");
 
-module.exports = ({ name, domain, service = process.env.SERVICE }) => {
-  const read = ({ context, claims, tokenFn } = {}) => async query =>
+module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
+  const internal = !network || network == process.env.NETWORK;
+  const read = ({
+    context,
+    claims,
+    tokenFns: { internal: internalTokenFn, external: externalTokenFn } = {}
+  } = {}) => async query =>
     await deps
       .rpc(
         name,
@@ -11,13 +16,22 @@ module.exports = ({ name, domain, service = process.env.SERVICE }) => {
       )
       .get({ query })
       .in({
-        ...(context && { context })
+        ...(context && { context }),
+        ...(!internal && {
+          network,
+          host: `fact.${domain}.${service}.${network}`
+        })
       })
       .with({
-        ...(tokenFn && { tokenFn }),
+        ...(internalTokenFn && { internalTokenFn }),
+        ...(externalTokenFn && { externalTokenFn }),
         ...(claims && { claims })
       });
-  const stream = ({ context, claims, tokenFn } = {}) => async query =>
+  const stream = ({
+    context,
+    claims,
+    tokenFns: { internal: internalTokenFn, external: externalTokenFn } = {}
+  } = {}) => async query =>
     await deps
       .rpc(
         name,
@@ -27,19 +41,24 @@ module.exports = ({ name, domain, service = process.env.SERVICE }) => {
       )
       .get({ query })
       .in({
-        ...(context && { context })
+        ...(context && { context }),
+        ...(!internal && {
+          network,
+          host: `fact.${domain}.${service}.${network}`
+        })
       })
       .with({
         path: "/stream",
-        ...(tokenFn && { tokenFn }),
+        ...(internalTokenFn && { internalTokenFn }),
+        ...(externalTokenFn && { externalTokenFn }),
         ...(claims && { claims })
       });
 
   return {
-    set: ({ context, claims, tokenFn }) => {
+    set: ({ context, claims, tokenFns }) => {
       return {
-        read: read({ context, claims, tokenFn }),
-        stream: stream({ context, claims, tokenFn })
+        read: read({ context, claims, tokenFns }),
+        stream: stream({ context, claims, tokenFns })
       };
     },
     read: read(),

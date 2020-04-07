@@ -18,7 +18,8 @@ const network = "some-network";
 const payload = { a: 1 };
 const options = "some-options";
 const trace = "some-trace";
-const tokenFn = "some-token-fn";
+const internalTokenFn = "some-internal-token-fn";
+const externalTokenFn = "some-external-token-fn";
 const issued = "some-issued";
 
 const context = { c: 2 };
@@ -66,7 +67,11 @@ describe("Issue command", () => {
 
     const path = ["some-path"];
     const result = await command({ name, domain, service, network })
-      .set({ context, claims, tokenFn })
+      .set({
+        context,
+        claims,
+        tokenFns: { internal: internalTokenFn, external: externalTokenFn }
+      })
       .issue(payload, {
         trace,
         issued,
@@ -108,7 +113,11 @@ describe("Issue command", () => {
     expect(inFake).to.have.been.calledWith({
       context
     });
-    expect(withFake).to.have.been.calledWith({ tokenFn, claims });
+    expect(withFake).to.have.been.calledWith({
+      internalTokenFn,
+      externalTokenFn,
+      claims
+    });
   });
   it("should call with the correct optional params", async () => {
     const response = "some-response";
@@ -147,9 +156,9 @@ describe("Issue command", () => {
       }
     });
     expect(inFake).to.have.been.calledWith({});
-    expect(withFake).to.have.been.calledWith();
+    expect(withFake).to.have.been.calledWith({});
   });
-  it("should call with the correct params onto a different network with an antenna", async () => {
+  it("should call with the correct params onto a different network", async () => {
     const response = "some-response";
     const withFake = fake.returns(response);
     const inFake = fake.returns({
@@ -171,7 +180,7 @@ describe("Issue command", () => {
       service,
       network: otherNetwork
     })
-      .set({ context, claims, tokenFn })
+      .set({ context, claims, tokenFns: { external: externalTokenFn } })
       .issue(payload, { trace, issued, root, options });
 
     expect(result).to.equal(response);
@@ -209,7 +218,7 @@ describe("Issue command", () => {
       host: `command.some-domain.some-service.some-other-network`
     });
     expect(withFake).to.have.been.calledWith({
-      tokenFn,
+      externalTokenFn,
       claims,
       path: "/some-name"
     });

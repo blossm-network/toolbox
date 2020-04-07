@@ -52,7 +52,7 @@ describe("Connection token", () => {
       network: coreNetwork
     });
     expect(setFake).to.have.been.calledWith({
-      tokenFn: basicToken
+      tokenFns: { external: basicToken }
     });
     expect(basicTokenFake).to.have.been.calledWith({
       id,

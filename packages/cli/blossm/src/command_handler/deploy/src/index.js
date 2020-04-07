@@ -25,7 +25,7 @@ module.exports = commandHandler({
       .set({
         context,
         claims,
-        tokenFn: gcpToken
+        tokenFns: { internal: gcpToken }
       })
       .aggregate(root);
 
@@ -39,7 +39,7 @@ module.exports = commandHandler({
       .set({
         context,
         claims,
-        tokenFn: gcpToken
+        tokenFns: { internal: gcpToken }
       })
       .add(events)
 });

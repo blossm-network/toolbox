@@ -1,7 +1,11 @@
 const deps = require("./deps");
 
 module.exports = ({ name, domain, service = process.env.SERVICE }) => {
-  const trigger = ({ context, claims, tokenFn } = {}) => async payload => {
+  const trigger = ({
+    context,
+    claims,
+    tokenFns: { internal: internalTokenFn, external: externalTokenFn } = {}
+  } = {}) => async payload => {
     const data = { payload };
     return await deps
       .rpc(
@@ -14,13 +18,17 @@ module.exports = ({ name, domain, service = process.env.SERVICE }) => {
       .in({
         ...(context && { context })
       })
-      .with({ tokenFn, ...(claims && { claims }) });
+      .with({
+        ...(internalTokenFn && { internalTokenFn }),
+        ...(externalTokenFn && { externalTokenFn }),
+        ...(claims && { claims })
+      });
   };
 
   return {
-    set: ({ context, claims, tokenFn }) => {
+    set: ({ context, claims, tokenFns }) => {
       return {
-        trigger: trigger({ context, claims, tokenFn })
+        trigger: trigger({ context, claims, tokenFns })
       };
     },
     trigger: trigger()
