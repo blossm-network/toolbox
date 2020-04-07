@@ -6,6 +6,7 @@ module.exports = async ({
   service = process.env.SERVICE,
   internalTokenFn,
   externalTokenFn,
+  algorithm,
   whitelist,
   permissionsLookupFn,
   terminatedSessionCheckFn,
@@ -46,6 +47,8 @@ module.exports = async ({
             deps.authentication({
               verifyFn: verifyFn({ key }),
               keyClaimsFn,
+              audience: process.env.NETWORK,
+              algorithm,
               strict: protection == "strict"
             }),
             ...(protection == "strict"

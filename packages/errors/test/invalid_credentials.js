@@ -36,6 +36,25 @@ describe("Invalid credentials", () => {
       message: "This token is expired."
     });
   });
+  it("wrongAudience correct", () => {
+    const error = invalidCredentials.wrongAudience();
+    expect(error.toJSON()).to.deep.equal({
+      statusCode: 401,
+      code: "InvalidCredentials",
+      info: {},
+      message: "This token isn't meant for this audience."
+    });
+  });
+  it("wrongAudience correct with props", () => {
+    const error = invalidCredentials.wrongAudience({ cause, info });
+    expect(error.toJSON()).to.deep.equal({
+      statusCode: 401,
+      code: "InvalidCredentials",
+      info,
+      cause,
+      message: "This token isn't meant for this audience."
+    });
+  });
   it("tokenNotActive correct", () => {
     const error = invalidCredentials.tokenNotActive();
     expect(error.toJSON()).to.deep.equal({

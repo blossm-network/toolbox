@@ -3,7 +3,7 @@ const { decodeJwt } = require("../deps");
 
 const deps = require("../deps");
 
-module.exports = async ({ token, verifyFn }) => {
+module.exports = async ({ token, verifyFn, audience, algorithm }) => {
   const [header, payload, signature] = token.split(".");
 
   const isVerified = await verifyFn({
@@ -15,9 +15,12 @@ module.exports = async ({ token, verifyFn }) => {
 
   const { alg } = decodeJwt(token, { header: true });
 
-  if (alg != "ES256") throw deps.invalidCredentialsError.tokenInvalid();
+  if (alg != algorithm) throw deps.invalidCredentialsError.tokenInvalid();
 
   const claims = decodeJwt(token);
+
+  if (!claims.aud.split(",").includes(audience))
+    throw deps.invalidCredentialsError.wrongAudience();
 
   //Throw if the token is expired.
   const now = new Date();

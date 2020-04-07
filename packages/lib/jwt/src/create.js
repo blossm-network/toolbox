@@ -20,7 +20,7 @@ module.exports = async ({
   const stringifiedPayload = JSON.stringify({
     ...payload,
     iss: issuer,
-    aud: audience,
+    aud: audience instanceof Array ? audience.join(",") : audience,
     sub: subject,
     exp: deps.stringFromDate(new Date(deps.fineTimestamp() + expiresIn)),
     nbf: deps.stringFromDate(new Date(deps.fineTimestamp() + activeIn)),

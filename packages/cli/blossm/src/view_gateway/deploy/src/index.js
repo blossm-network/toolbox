@@ -22,6 +22,7 @@ let defaultRoles;
 module.exports = gateway({
   stores: config.stores,
   whitelist: config.whitelist,
+  algorithm: "EC256",
   internalTokenFn: gcpToken,
   permissionsLookupFn: async ({ principle }) => {
     if (!defaultRoles) {

@@ -20,24 +20,31 @@ const tokens = {
 const claims = {
   exp: dateString()
 };
+const audience = "some-audience";
+const algorithm = "some-algorithm";
 
 describe("Authorize", () => {
   afterEach(() => {
     restore();
   });
   it("should authentiate", async () => {
-    replace(deps, "validate", fake.returns(claims));
+    const validateFake = fake.returns(claims);
+    replace(deps, "validate", validateFake);
     replace(deps, "tokensFromReq", fake.returns(tokens));
 
     const result = await authorize({
       req,
-      verifyFn
+      verifyFn,
+      audience,
+      algorithm
     });
 
     expect(deps.tokensFromReq).to.have.been.calledWith(req);
     expect(deps.validate).to.have.been.calledWith({
       token: bearer,
-      verifyFn
+      verifyFn,
+      audience,
+      algorithm
     });
     expect(result).to.deep.equal(claims);
   });
@@ -52,13 +59,17 @@ describe("Authorize", () => {
 
     const response = await authorize({
       req,
-      verifyFn
+      verifyFn,
+      audience,
+      algorithm
     });
 
     expect(deps.tokensFromReq).to.have.been.calledWith(req);
     expect(deps.validate).to.have.been.calledWith({
       token: cookieToken,
-      verifyFn
+      verifyFn,
+      audience,
+      algorithm
     });
     expect(response).to.deep.equal(claims);
   });

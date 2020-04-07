@@ -1,6 +1,12 @@
 const deps = require("./deps");
 
-module.exports = async ({ req, verifyFn, keyClaimsFn }) => {
+module.exports = async ({
+  req,
+  verifyFn,
+  keyClaimsFn,
+  audience,
+  algorithm
+}) => {
   const tokens = deps.tokensFromReq(req);
 
   const jwt = tokens.bearer || tokens.cookie;
@@ -8,7 +14,9 @@ module.exports = async ({ req, verifyFn, keyClaimsFn }) => {
   if (jwt) {
     const claims = await deps.validate({
       token: jwt,
-      verifyFn
+      verifyFn,
+      audience,
+      algorithm
     });
     return claims;
   } else if (tokens.basic && keyClaimsFn) {

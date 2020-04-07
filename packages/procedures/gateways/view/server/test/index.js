@@ -8,9 +8,12 @@ const permissionsLookupFn = "some-permissions-fn";
 const terminatedSessionCheckFn = "some-terminated-session-check-fn";
 const domain = "some-domain";
 const service = "some-service";
+const network = "some-network";
+const algorithm = "some-algorithm";
 
 process.env.DOMAIN = domain;
 process.env.SERVICE = service;
+process.env.NETWORK = network;
 
 describe("View gateway", () => {
   afterEach(() => {
@@ -54,7 +57,8 @@ describe("View gateway", () => {
       whitelist,
       permissionsLookupFn,
       terminatedSessionCheckFn,
-      verifyFn: verifyFnFake
+      verifyFn: verifyFnFake,
+      algorithm
     });
 
     expect(gatewayGetFake).to.have.been.calledWith({ name, domain });
@@ -78,6 +82,8 @@ describe("View gateway", () => {
     });
     expect(authenticationFake).to.have.been.calledWith({
       verifyFn: verifyFnResult,
+      audience: network,
+      algorithm,
       strict: true
     });
     expect(verifyFnFake).to.have.been.calledWith({ key: "access" });
@@ -126,7 +132,8 @@ describe("View gateway", () => {
       whitelist,
       permissionsLookupFn,
       terminatedSessionCheckFn,
-      verifyFn: verifyFnFake
+      verifyFn: verifyFnFake,
+      algorithm
     });
 
     expect(gatewayGetFake).to.have.been.calledWith({ name, domain });
@@ -150,6 +157,8 @@ describe("View gateway", () => {
     });
     expect(authenticationFake).to.have.been.calledWith({
       verifyFn: verifyFnResult,
+      audience: network,
+      algorithm,
       strict: true
     });
     expect(verifyFnFake).to.have.been.calledWith({ key: "access" });
@@ -198,10 +207,13 @@ describe("View gateway", () => {
       whitelist,
       permissionsLookupFn,
       terminatedSessionCheckFn,
-      verifyFn: verifyFnFake
+      verifyFn: verifyFnFake,
+      algorithm
     });
     expect(authenticationFake).to.have.been.calledWith({
       verifyFn: verifyFnResult,
+      audience: network,
+      algorithm,
       strict: true
     });
     expect(verifyFnFake).to.have.been.calledWith({ key });
@@ -256,7 +268,8 @@ describe("View gateway", () => {
       whitelist,
       permissionsLookupFn,
       terminatedSessionCheckFn,
-      verifyFn: verifyFnFake
+      verifyFn: verifyFnFake,
+      algorithm
     });
 
     expect(gatewayGetFake).to.have.been.calledWith({
@@ -285,10 +298,14 @@ describe("View gateway", () => {
     });
     expect(authenticationFake).to.have.been.calledWith({
       verifyFn: verifyFnResult,
+      audience: network,
+      algorithm,
       strict: false
     });
     expect(authenticationFake).to.have.been.calledWith({
       verifyFn: verifyFnResult,
+      audience: network,
+      algorithm,
       strict: true
     });
     expect(verifyFnFake).to.have.been.calledWith({ key: "access" });
@@ -344,7 +361,8 @@ describe("View gateway", () => {
       whitelist,
       permissionsLookupFn,
       terminatedSessionCheckFn,
-      verifyFn: verifyFnFake
+      verifyFn: verifyFnFake,
+      algorithm
     });
 
     expect(gatewayGetFake).to.have.been.calledWith({
@@ -368,7 +386,8 @@ describe("View gateway", () => {
         stores: [],
         whitelist,
         permissionsLookupFn,
-        terminatedSessionCheckFn
+        terminatedSessionCheckFn,
+        algorithm
       });
       //shouldn't get called
       expect(2).to.equal(1);

@@ -23,6 +23,7 @@ let defaultRoles;
 module.exports = gateway({
   jobs: config.jobs,
   whitelist: config.whitelist,
+  algorithm: "EC256",
   internalTokenFn: gcpToken,
   externalTokenFn: connectionToken,
   permissionsLookupFn: async ({ principle }) => {

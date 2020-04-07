@@ -25,6 +25,7 @@ let defaultRoles;
 module.exports = gateway({
   commands: config.commands,
   whitelist: config.whitelist,
+  algorithm: "EC256",
   internalTokenFn: gcpToken,
   externalTokenFn: connectionToken,
   //roles are the roles that the principle has.

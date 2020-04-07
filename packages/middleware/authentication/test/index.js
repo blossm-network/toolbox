@@ -5,6 +5,8 @@ const authenticationMiddleware = require("..");
 
 const verifyFn = "some-verify-fn";
 const keyClaimsFn = "some-claims-fn";
+const algorithm = "some-algorithm";
+const audience = "some-audience";
 
 describe("Authentication middleware", () => {
   afterEach(() => {
@@ -34,16 +36,19 @@ describe("Authentication middleware", () => {
 
     const nextFake = fake();
 
-    await authenticationMiddleware({ verifyFn, keyClaimsFn })(
-      req,
-      null,
-      nextFake
-    );
+    await authenticationMiddleware({
+      verifyFn,
+      keyClaimsFn,
+      audience,
+      algorithm
+    })(req, null, nextFake);
 
     expect(authenticateFake).to.have.been.calledWith({
       req,
       verifyFn,
-      keyClaimsFn
+      keyClaimsFn,
+      audience,
+      algorithm
     });
     expect(req.context).to.deep.equal(context);
     expect(req.claims).to.deep.equal({
@@ -66,16 +71,20 @@ describe("Authentication middleware", () => {
 
     const req = fake();
 
-    await authenticationMiddleware({ verifyFn, keyClaimsFn, strict: false })(
-      req,
-      null,
-      nextFake
-    );
+    await authenticationMiddleware({
+      verifyFn,
+      keyClaimsFn,
+      audience,
+      algorithm,
+      strict: false
+    })(req, null, nextFake);
 
     expect(authenticateFake).to.have.been.calledWith({
       req,
       verifyFn,
-      keyClaimsFn
+      keyClaimsFn,
+      audience,
+      algorithm
     });
     expect(nextFake).to.have.been.calledOnce;
   });

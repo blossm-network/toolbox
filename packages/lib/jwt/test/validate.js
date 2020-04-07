@@ -10,10 +10,12 @@ const deps = require("../deps");
 
 const { create, validate } = require("..");
 
+const audience = "some-aud";
+const algorithm = "ES256";
 const options = {
   issuer: "some-iss",
   subject: "some-sub",
-  audience: "some-aud",
+  audience,
   expiresIn: 60
 };
 
@@ -29,7 +31,12 @@ describe("Validate", () => {
     const sig = "some-signature";
     const token = await create({ options, signFn: () => sig });
     const verifyFn = fake.returns(true);
-    const validatedToken = await validate({ token, verifyFn });
+    const validatedToken = await validate({
+      token,
+      verifyFn,
+      audience,
+      algorithm
+    });
 
     const [header, payload, signature] = token.split(".");
     expect(verifyFn).to.have.been.calledWith({
@@ -44,7 +51,12 @@ describe("Validate", () => {
     const sig = "some-signature";
     const token = await create({ options, payload, signFn: () => sig });
     const verifyFn = fake.returns(true);
-    const validatedToken = await validate({ token, verifyFn });
+    const validatedToken = await validate({
+      token,
+      verifyFn,
+      audience,
+      algorithm
+    });
     expect(validatedToken.key).to.equal(value);
   });
   it("it should be invalid if the secret is wrong", async () => {
@@ -61,7 +73,7 @@ describe("Validate", () => {
     });
 
     try {
-      await validate({ token, verifyFn });
+      await validate({ token, verifyFn, audience, algorithm });
 
       //shouldn't get called.
       expect(1).to.equal(2);
@@ -79,7 +91,7 @@ describe("Validate", () => {
       signFn: () => sig,
       algorithm: "some-bad-algorithm"
     });
-    const verifyFn = fake.returns(false);
+    const verifyFn = fake.returns(true);
 
     const error = "some-error";
     const tokenInvalidFake = fake.returns(error);
@@ -88,7 +100,37 @@ describe("Validate", () => {
     });
 
     try {
-      await validate({ token, verifyFn });
+      await validate({ token, verifyFn, audience, algorithm });
+
+      //shouldn't get called.
+      expect(1).to.equal(2);
+    } catch (e) {
+      expect(e).to.equal(error);
+    }
+  });
+  it("it should be invalid if the audience is wrong", async () => {
+    const value = "value";
+    const payload = { key: value };
+    const sig = "some-signature";
+    const token = await create({
+      options: {
+        ...options,
+        audience: ["some-other-audience", "yet-another-audience"]
+      },
+      payload,
+      signFn: () => sig,
+      algorithm
+    });
+    const verifyFn = fake.returns(true);
+
+    const error = "some-error";
+    const wrongAudienceFake = fake.returns(error);
+    replace(deps, "invalidCredentialsError", {
+      wrongAudience: wrongAudienceFake
+    });
+
+    try {
+      await validate({ token, verifyFn, audience, algorithm });
 
       //shouldn't get called.
       expect(1).to.equal(2);
@@ -114,7 +156,7 @@ describe("Validate", () => {
     });
 
     try {
-      await validate({ token, verifyFn });
+      await validate({ token, verifyFn, audience, algorithm });
 
       //shouldn't get called.
       expect(1).to.equal(2);
@@ -140,7 +182,7 @@ describe("Validate", () => {
     });
 
     try {
-      await validate({ token, verifyFn });
+      await validate({ token, verifyFn, audience, algorithm });
 
       //shouldn't get called.
       expect(1).to.equal(2);

@@ -23,6 +23,11 @@ module.exports = {
       { cause, info, toJSON },
       "This token has already been terminated."
     ),
+  wrongAudience: ({ cause, info } = {}) =>
+    new InvalidCredentialsError(
+      { cause, info, toJSON },
+      "This token isn't meant for this audience."
+    ),
   phoneNotRecognized: ({ cause, info } = {}) =>
     new InvalidCredentialsError(
       { cause, info, toJSON },

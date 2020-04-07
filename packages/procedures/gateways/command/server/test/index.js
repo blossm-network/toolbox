@@ -8,12 +8,15 @@ const permissionsLookupFn = "some-permissions-fn";
 const terminatedSessionCheckFn = "some-terminated-session-check-fn";
 const domain = "some-domain";
 const service = "some-service";
+const network = "some-network";
+const algorithm = "some-algorithm";
 const keyClaimsFn = "some-token-claims-fn";
 const internalTokenFn = "some-internal-token-fn";
 const externalTokenFn = "some-external-token-fn";
 
 process.env.DOMAIN = domain;
 process.env.SERVICE = service;
+process.env.NETWORK = network;
 
 describe("Command gateway", () => {
   afterEach(() => {
@@ -60,7 +63,8 @@ describe("Command gateway", () => {
       permissionsLookupFn,
       terminatedSessionCheckFn,
       verifyFn: verifyFnFake,
-      keyClaimsFn
+      keyClaimsFn,
+      algorithm
     });
 
     expect(gatewayPostFake).to.have.been.calledWith({
@@ -91,6 +95,8 @@ describe("Command gateway", () => {
     expect(authenticationFake).to.have.been.calledWith({
       verifyFn: verifyFnResult,
       keyClaimsFn,
+      audience: network,
+      algorithm,
       strict: true
     });
     expect(verifyFnFake).to.have.been.calledWith({ key: "access" });
@@ -143,7 +149,8 @@ describe("Command gateway", () => {
       permissionsLookupFn,
       terminatedSessionCheckFn,
       verifyFn: verifyFnFake,
-      keyClaimsFn
+      keyClaimsFn,
+      algorithm
     });
 
     expect(gatewayPostFake).to.have.been.calledWith({
@@ -175,6 +182,8 @@ describe("Command gateway", () => {
     expect(authenticationFake).to.have.been.calledWith({
       verifyFn: verifyFnResult,
       keyClaimsFn,
+      audience: network,
+      algorithm,
       strict: true
     });
     expect(verifyFnFake).to.have.been.calledWith({ key: "access" });
@@ -294,7 +303,8 @@ describe("Command gateway", () => {
       permissionsLookupFn,
       terminatedSessionCheckFn,
       verifyFn: verifyFnFake,
-      keyClaimsFn
+      keyClaimsFn,
+      algorithm
     });
 
     expect(gatewayPostFake).to.have.been.calledWith({
@@ -333,11 +343,15 @@ describe("Command gateway", () => {
     expect(authenticationFake).to.have.been.calledWith({
       verifyFn: verifyFnResult,
       keyClaimsFn,
+      algorithm,
+      audience: network,
       strict: true
     });
     expect(authenticationFake).to.have.been.calledWith({
       verifyFn: verifyFnResult,
       keyClaimsFn,
+      algorithm,
+      audience: network,
       strict: false
     });
     expect(verifyFnFake).to.have.been.calledWith({ key: "access" });
