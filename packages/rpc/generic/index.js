@@ -17,10 +17,8 @@ const common = ({ method, dataParam, operation, root, data }) => {
       return {
         with: async ({
           path,
-          tokenFns: {
-            internal: internalTokenFn,
-            external: externalTokenFn
-          } = {},
+          internalTokenFn,
+          externalTokenFn,
           claims
         } = {}) => {
           //TODO

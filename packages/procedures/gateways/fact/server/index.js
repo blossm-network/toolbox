@@ -31,7 +31,6 @@ module.exports = async ({
       deps.get({
         name,
         domain,
-
         internalTokenFn,
         externalTokenFn
       }),

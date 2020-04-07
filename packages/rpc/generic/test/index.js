@@ -56,7 +56,7 @@ describe("Operation", () => {
     const result = await operation(operarationPart1, operarationPart2)
       .post(data)
       .in({ context, host })
-      .with({ tokenFns: { internal: tokenFn }, claims });
+      .with({ internalTokenFn: tokenFn, claims });
 
     expect(post).to.have.been.calledWith(url, {
       body: {
@@ -91,7 +91,7 @@ describe("Operation", () => {
     const result = await operation(operarationPart1, operarationPart2)
       .post(data)
       .in({ host })
-      .with({ tokenFns: { internal: tokenFn } });
+      .with({ internalTokenFn: tokenFn });
 
     expect(post).to.have.been.calledWith(url, {
       body: data,
@@ -126,7 +126,7 @@ describe("Operation", () => {
     const result = await operation(operarationPart1, operarationPart2)
       .post(data)
       .in({ context })
-      .with({ tokenFns: { internal: tokenFn }, claims });
+      .with({ internalTokenFn: tokenFn, claims });
 
     expect(operationTokenFake).to.have.been.calledWith({
       tokenFn,
@@ -154,7 +154,7 @@ describe("Operation", () => {
     const result = await operation(operarationPart1, operarationPart2)
       .post(data)
       .in({ context, network: otherNetwork, host: otherHost })
-      .with({ tokenFns: { external: tokenFn }, claims });
+      .with({ externalTokenFn: tokenFn, claims });
 
     expect(networkTokenFake).to.have.been.calledWith({
       tokenFn,
@@ -204,7 +204,7 @@ describe("Operation", () => {
     const result = await operation(operarationPart1, operarationPart2)
       .post(data)
       .in({ context, host })
-      .with({ path, tokenFns: { internal: tokenFn }, claims });
+      .with({ path, internalTokenFn: tokenFn, claims });
 
     expect(post).to.have.been.calledWith(url, {
       body: {
@@ -241,7 +241,7 @@ describe("Operation", () => {
     const result = await operation(operarationPart1, operarationPart2)
       .get(data)
       .in({ context, host })
-      .with({ tokenFns: { internal: tokenFn }, claims });
+      .with({ internalTokenFn: tokenFn, claims });
 
     expect(get).to.have.been.calledWith(url, {
       query: {
@@ -280,7 +280,7 @@ describe("Operation", () => {
     const result = await operation(operarationPart1, operarationPart2)
       .get(data)
       .in({ context, host })
-      .with({ tokenFns: { internal: tokenFn }, claims });
+      .with({ internalTokenFn: tokenFn, claims });
 
     expect(get).to.have.been.calledWith(url, {
       query: {
@@ -315,7 +315,7 @@ describe("Operation", () => {
     const result = await operation(operarationPart1, operarationPart2)
       .get({ ...data, root })
       .in({ context, host })
-      .with({ tokenFns: { internal: tokenFn }, claims });
+      .with({ internalTokenFn: tokenFn, claims });
 
     expect(get).to.have.been.calledWith(url, {
       query: {
@@ -351,7 +351,7 @@ describe("Operation", () => {
     const result = await operation(operarationPart1, operarationPart2)
       .put(root, data)
       .in({ context, host })
-      .with({ tokenFns: { internal: tokenFn }, claims });
+      .with({ internalTokenFn: tokenFn, claims });
 
     expect(put).to.have.been.calledWith(url, {
       body: {
@@ -389,7 +389,7 @@ describe("Operation", () => {
     const result = await operation(operarationPart1, operarationPart2)
       .put(root, data)
       .in({ context, host })
-      .with({ path, tokenFns: { internal: tokenFn }, claims });
+      .with({ path, internalTokenFn: tokenFn, claims });
 
     expect(put).to.have.been.calledWith(url, {
       body: {
@@ -426,7 +426,7 @@ describe("Operation", () => {
     const result = await operation(operarationPart1, operarationPart2)
       .delete(root)
       .in({ context, host })
-      .with({ tokenFns: { internal: tokenFn }, claims });
+      .with({ internalTokenFn: tokenFn, claims });
 
     expect(del).to.have.been.calledWith(url, {
       body: {
