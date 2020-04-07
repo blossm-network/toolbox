@@ -8,7 +8,8 @@ module.exports = ({ url, algorithm = "SHA256" }) => async ({
   signature
 }) => {
   if (!publicKey) {
-    publicKey = await deps.get(url);
+    const response = await deps.get(url);
+    publicKey = response.body;
   }
 
   //TODO
