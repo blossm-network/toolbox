@@ -13,7 +13,7 @@ module.exports = ({ url, algorithm = "SHA256" }) => async ({
 
   //TODO
   //eslint-disable-next-line
-  console.log({ publicKey, signature, algorithm });
+  console.log({ publicKey, signature, algorithm, url });
 
   return crypto
     .createVerify(algorithm)
