@@ -66,6 +66,7 @@ describe("Command gateway", () => {
     expect(gatewayPostFake).to.have.been.calledWith({
       name,
       domain,
+      service,
       internalTokenFn,
       externalTokenFn
     });
@@ -148,6 +149,7 @@ describe("Command gateway", () => {
     expect(gatewayPostFake).to.have.been.calledWith({
       name,
       network,
+      service,
       domain,
       internalTokenFn,
       externalTokenFn
@@ -182,7 +184,7 @@ describe("Command gateway", () => {
       permissions: "none"
     });
   });
-  it("should call with the correct params with a command key", async () => {
+  it("should call with the correct params with a command key and command server", async () => {
     const corsMiddlewareFake = fake();
     replace(deps, "corsMiddleware", corsMiddlewareFake);
 
@@ -207,13 +209,14 @@ describe("Command gateway", () => {
     const gatewayPostFake = fake.returns(gatewayPostResult);
     replace(deps, "post", gatewayPostFake);
 
-    const name = "some-name";
-    const key = "some-key";
+    const name = "some-command-name";
+    const key = "some-command-key";
+    const otherService = "some-other-server";
 
     const priviledge = "some-priviledge";
     const priviledges = [priviledge];
 
-    const commands = [{ name, priviledges, key }];
+    const commands = [{ name, priviledges, key, service: otherService }];
 
     const verifyFnResult = "some-verify-fn";
     const verifyFnFake = fake.returns(verifyFnResult);
@@ -224,10 +227,19 @@ describe("Command gateway", () => {
       permissionsLookupFn,
       terminatedSessionCheckFn,
       verifyFn: verifyFnFake,
-      keyClaimsFn
+      keyClaimsFn,
+      internalTokenFn,
+      externalTokenFn
     });
 
     expect(verifyFnFake).to.have.been.calledWith({ key });
+    expect(gatewayPostFake).to.have.been.calledWith({
+      name,
+      domain,
+      service: otherService,
+      internalTokenFn,
+      externalTokenFn
+    });
   });
   it("should call with the correct params with multiple commands with difference protections", async () => {
     const corsMiddlewareFake = fake();
@@ -288,18 +300,21 @@ describe("Command gateway", () => {
     expect(gatewayPostFake).to.have.been.calledWith({
       name: name1,
       domain,
+      service,
       internalTokenFn,
       externalTokenFn
     });
     expect(gatewayPostFake).to.have.been.calledWith({
       name: name2,
       domain,
+      service,
       internalTokenFn,
       externalTokenFn
     });
     expect(gatewayPostFake).to.have.been.calledWith({
       name: name3,
       domain,
+      service,
       internalTokenFn,
       externalTokenFn
     });
@@ -389,6 +404,7 @@ describe("Command gateway", () => {
     expect(gatewayPostFake).to.have.been.calledWith({
       name,
       domain: otherDomain,
+      service: otherService,
       internalTokenFn,
       externalTokenFn
     });

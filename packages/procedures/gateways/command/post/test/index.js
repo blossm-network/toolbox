@@ -77,7 +77,7 @@ describe("Command gateway post", () => {
     });
     expect(statusFake).to.have.been.calledWith(200);
   });
-  it("should call with the correct params on a different network", async () => {
+  it("should call with the correct params on a different network and different service", async () => {
     const validateFake = fake();
     replace(deps, "validate", validateFake);
 
@@ -111,15 +111,21 @@ describe("Command gateway post", () => {
     };
 
     const network = "some-random-network";
-    await post({ name, domain, internalTokenFn, externalTokenFn, network })(
-      req,
-      res
-    );
+    const service = "some-random-service";
+    await post({
+      name,
+      domain,
+      internalTokenFn,
+      externalTokenFn,
+      network,
+      service
+    })(req, res);
 
     expect(validateFake).to.have.been.calledWith(body);
     expect(commandFake).to.have.been.calledWith({
       name,
       domain,
+      service,
       network
     });
     expect(setFake).to.have.been.calledWith({

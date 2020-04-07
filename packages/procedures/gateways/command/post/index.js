@@ -3,6 +3,7 @@ const deps = require("./deps");
 module.exports = ({
   name,
   domain,
+  service,
   network,
   internalTokenFn,
   externalTokenFn
@@ -14,6 +15,7 @@ module.exports = ({
     .command({
       name,
       domain,
+      ...(service && { service }),
       ...(network && { network })
     })
     .set({

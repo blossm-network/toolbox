@@ -25,6 +25,7 @@ module.exports = async ({
   for (const {
     name,
     network,
+    service: commandService,
     key = "access",
     priviledges,
     protection = "strict"
@@ -33,6 +34,7 @@ module.exports = async ({
       deps.post({
         name,
         domain,
+        service: commandService || service,
         ...(network && { network }),
         internalTokenFn,
         externalTokenFn
