@@ -8,6 +8,8 @@ const permissionsLookupFn = "some-permissions-fn";
 const terminatedSessionCheckFn = "some-terminated-session-check-fn";
 const domain = "some-domain";
 const service = "some-service";
+const internalTokenFn = "some-internal-token-fn";
+const externalTokenFn = "some-external-token-fn";
 
 process.env.DOMAIN = domain;
 process.env.SERVICE = service;
@@ -54,10 +56,18 @@ describe("Fact gateway", () => {
       whitelist,
       permissionsLookupFn,
       terminatedSessionCheckFn,
-      verifyFn: verifyFnFake
+      verifyFn: verifyFnFake,
+      internalTokenFn,
+      externalTokenFn
     });
 
-    expect(gatewayGetFake).to.have.been.calledWith({ name, domain });
+    expect(gatewayGetFake).to.have.been.calledWith({
+      name,
+      domain,
+
+      internalTokenFn,
+      externalTokenFn
+    });
     expect(gatewayGetFake).to.have.been.calledOnce;
     expect(listenFake).to.have.been.calledWith();
     expect(serverFake).to.have.been.calledWith({
@@ -126,10 +136,17 @@ describe("Fact gateway", () => {
       whitelist,
       permissionsLookupFn,
       terminatedSessionCheckFn,
-      verifyFn: verifyFnFake
+      verifyFn: verifyFnFake,
+      internalTokenFn,
+      externalTokenFn
     });
 
-    expect(gatewayGetFake).to.have.been.calledWith({ name, domain });
+    expect(gatewayGetFake).to.have.been.calledWith({
+      name,
+      domain,
+      internalTokenFn,
+      externalTokenFn
+    });
     expect(gatewayGetFake).to.have.been.calledOnce;
     expect(listenFake).to.have.been.calledWith();
     expect(serverFake).to.have.been.calledWith({
@@ -198,7 +215,9 @@ describe("Fact gateway", () => {
       whitelist,
       permissionsLookupFn,
       terminatedSessionCheckFn,
-      verifyFn: verifyFnFake
+      verifyFn: verifyFnFake,
+      internalTokenFn,
+      externalTokenFn
     });
     expect(authenticationFake).to.have.been.calledWith({
       verifyFn: verifyFnResult,
@@ -256,20 +275,28 @@ describe("Fact gateway", () => {
       whitelist,
       permissionsLookupFn,
       terminatedSessionCheckFn,
-      verifyFn: verifyFnFake
+      verifyFn: verifyFnFake,
+      internalTokenFn,
+      externalTokenFn
     });
 
     expect(gatewayGetFake).to.have.been.calledWith({
       name: name1,
-      domain
+      domain,
+      internalTokenFn,
+      externalTokenFn
     });
     expect(gatewayGetFake).to.have.been.calledWith({
       name: name2,
-      domain
+      domain,
+      internalTokenFn,
+      externalTokenFn
     });
     expect(gatewayGetFake).to.have.been.calledWith({
       name: name3,
-      domain
+      domain,
+      internalTokenFn,
+      externalTokenFn
     });
     expect(gatewayGetFake).to.have.been.calledThrice;
     expect(getFake).to.have.been.calledWith(gatewayGetResult, {
@@ -345,12 +372,16 @@ describe("Fact gateway", () => {
       whitelist,
       permissionsLookupFn,
       terminatedSessionCheckFn,
-      verifyFn: verifyFnFake
+      verifyFn: verifyFnFake,
+      internalTokenFn,
+      externalTokenFn
     });
 
     expect(gatewayGetFake).to.have.been.calledWith({
       name,
-      domain: otherDomain
+      domain: otherDomain,
+      internalTokenFn,
+      externalTokenFn
     });
     expect(authorizationFake).to.have.been.calledWith({
       permissionsLookupFn,
@@ -369,7 +400,9 @@ describe("Fact gateway", () => {
         jobs: [],
         whitelist,
         permissionsLookupFn,
-        terminatedSessionCheckFn
+        terminatedSessionCheckFn,
+        internalTokenFn,
+        externalTokenFn
       });
       //shouldn't get called
       expect(2).to.equal(1);

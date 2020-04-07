@@ -1,13 +1,18 @@
 const deps = require("./deps");
 
-module.exports = ({ name, domain } = {}) => async (req, res) => {
+module.exports = ({
+  name,
+  domain,
+  internalTokenFn,
+  externalTokenFn
+} = {}) => async (req, res) => {
   const response = await deps
     .fact({
       name,
       domain
     })
     .set({
-      tokenFns: { internal: deps.gcpToken },
+      tokenFns: { internal: internalTokenFn, external: externalTokenFn },
       context: req.context,
       claims: req.claims
     })

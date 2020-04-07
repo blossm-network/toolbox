@@ -29,7 +29,7 @@ const common = ({ method, dataParam, operation, root, data }) => {
           const internal = host == process.env.HOST;
           //TODO
           //eslint-disable-next-line no-console
-          console.log({ internal });
+          console.log({ internal, internalTokenFn, externalTokenFn });
 
           const token = internal
             ? await deps.operationToken({

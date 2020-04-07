@@ -11,6 +11,9 @@ const domain = "some-domain";
 const context = "some-context";
 const claims = "some-claims";
 
+const internalTokenFn = "some-internal-token-fn";
+const externalTokenFn = "some-external-token-fn";
+
 describe("Fact gateway get", () => {
   afterEach(() => {
     restore();
@@ -39,7 +42,7 @@ describe("Fact gateway get", () => {
       status: statusFake
     };
 
-    await get({ name, domain })(req, res);
+    await get({ name, domain, internalTokenFn, externalTokenFn })(req, res);
 
     expect(factFake).to.have.been.calledWith({
       name,
@@ -48,7 +51,7 @@ describe("Fact gateway get", () => {
     expect(setFake).to.have.been.calledWith({
       context,
       claims,
-      tokenFns: { internal: deps.gcpToken }
+      tokenFns: { internal: internalTokenFn, external: externalTokenFn }
     });
     expect(readFake).to.have.been.calledWith(query);
     expect(sendFake).to.have.been.calledWith(results);

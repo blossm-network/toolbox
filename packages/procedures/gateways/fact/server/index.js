@@ -7,7 +7,9 @@ module.exports = async ({
   whitelist,
   permissionsLookupFn,
   terminatedSessionCheckFn,
-  verifyFn
+  verifyFn,
+  internalTokenFn,
+  externalTokenFn
 }) => {
   let server = deps.server({
     prehook: app =>
@@ -25,31 +27,40 @@ module.exports = async ({
     priviledges,
     protection = "strict"
   } of jobs) {
-    server = server.get(deps.get({ name, domain }), {
-      path: `/${name}`,
-      ...(protection != "none" && {
-        preMiddleware: [
-          deps.authentication({
-            verifyFn: verifyFn({ key }),
-            strict: protection == "strict"
-          }),
-          ...(protection == "strict"
-            ? [
-                deps.authorization({
-                  permissionsLookupFn,
-                  terminatedSessionCheckFn,
-                  permissions:
-                    priviledges instanceof Array
-                      ? priviledges.map(priviledge => {
-                          return { service, domain, priviledge };
-                        })
-                      : priviledges
-                })
-              ]
-            : [])
-        ]
-      })
-    });
+    server = server.get(
+      deps.get({
+        name,
+        domain,
+
+        internalTokenFn,
+        externalTokenFn
+      }),
+      {
+        path: `/${name}`,
+        ...(protection != "none" && {
+          preMiddleware: [
+            deps.authentication({
+              verifyFn: verifyFn({ key }),
+              strict: protection == "strict"
+            }),
+            ...(protection == "strict"
+              ? [
+                  deps.authorization({
+                    permissionsLookupFn,
+                    terminatedSessionCheckFn,
+                    permissions:
+                      priviledges instanceof Array
+                        ? priviledges.map(priviledge => {
+                            return { service, domain, priviledge };
+                          })
+                        : priviledges
+                  })
+                ]
+              : [])
+          ]
+        })
+      }
+    );
   }
 
   server.listen();

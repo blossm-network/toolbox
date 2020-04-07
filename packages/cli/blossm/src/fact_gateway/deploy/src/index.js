@@ -9,6 +9,7 @@ const { invalidCredentials } = require("@blossm/errors");
 const { download: downloadFile } = require("@blossm/gcp-storage");
 const rolePermissions = require("@blossm/role-permissions");
 const gcpToken = require("@blossm/gcp-token");
+const connectionToken = require("@blossm/connection-token");
 const uuid = require("@blossm/uuid");
 
 const readFileAsync = promisify(readFile);
@@ -22,7 +23,8 @@ let defaultRoles;
 module.exports = gateway({
   jobs: config.jobs,
   whitelist: config.whitelist,
-  tokenFns: { internal: gcpToken },
+  internalTokenFn: gcpToken,
+  externalTokenFn: connectionToken,
   permissionsLookupFn: async ({ principle }) => {
     if (!defaultRoles) {
       const fileName = uuid();
