@@ -25,9 +25,7 @@ module.exports = ({
   mongodbUserPassword,
   twilioSendingPhoneNumber,
   twilioTestReceivingPhoneNumber,
-  routerNetwork,
-  routerKeyId,
-  routerKeySecretName
+  dependencyKeyEnvironmentVariables
 }) => {
   const common = {
     ports: [`${port}`]
@@ -41,7 +39,8 @@ module.exports = ({
     GCP_REGION: region,
     GCP_SECRET_BUCKET: secretBucket,
     GCP_KMS_SECRET_BUCKET_KEY_LOCATION: secretBucketKeyLocation,
-    GCP_KMS_SECRET_BUCKET_KEY_RING: secretBucketKeyRing
+    GCP_KMS_SECRET_BUCKET_KEY_RING: secretBucketKeyRing,
+    ...dependencyKeyEnvironmentVariables
   };
   const commonStoreEnvironment = {
     MONGODB_USER: `${mongodbUser}`,
@@ -142,10 +141,7 @@ module.exports = ({
                 }),
                 ...(twilioSendingPhoneNumber && {
                   TWILIO_SENDING_PHONE_NUMBER: twilioSendingPhoneNumber
-                }),
-                ROUTER_NETWORK: routerNetwork,
-                ROUTER_KEY_ID: routerKeyId,
-                ROUTER_KEY_SECRET_NAME: routerKeySecretName
+                })
               }
             }
           };

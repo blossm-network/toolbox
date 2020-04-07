@@ -1,1 +1,1 @@
-Gets a connection token to communicate with a router.
+Gets a connection token to communicate with a network.

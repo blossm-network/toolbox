@@ -3,7 +3,6 @@ const { restore, fake, replace } = require("sinon");
 const deps = require("../deps");
 const connectionToken = require("..");
 
-const coreNetwork = "some-core-network";
 const token = "some-token";
 const id = "some-credentials-id";
 const secret = "some-credentials-secret";
@@ -41,7 +40,6 @@ describe("Connection token", () => {
 
     const credentialsFnFake = fake.returns({ id, secret });
     const result = await connectionToken({
-      coreNetwork,
       credentialsFn: credentialsFnFake
     })({ network });
 
@@ -49,7 +47,7 @@ describe("Connection token", () => {
       name: "open",
       domain: "connection",
       service: "system",
-      network: coreNetwork
+      network
     });
     expect(setFake).to.have.been.calledWith({
       tokenFns: { external: basicToken }
@@ -63,7 +61,6 @@ describe("Connection token", () => {
     expect(result).to.equal(token);
 
     const anotherResult = await connectionToken({
-      coreNetwork,
       credentialsFn: credentialsFnFake
     })({ network });
     expect(commandFake).to.have.been.calledOnce;
@@ -91,13 +88,11 @@ describe("Connection token", () => {
     const anotherNetwork = "another-network";
     const credentialsFnFake = fake.returns({ id, secret });
     const result = await connectionToken({
-      coreNetwork,
       credentialsFn: credentialsFnFake
     })({ network: anotherNetwork });
     expect(result).to.equal(token);
 
     const anotherResult = await connectionToken({
-      coreNetwork,
       credentialsFn: credentialsFnFake
     })({ network: anotherNetwork });
     expect(commandFake).to.have.been.calledTwice;

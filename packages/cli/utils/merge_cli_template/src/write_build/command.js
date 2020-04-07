@@ -33,9 +33,6 @@ module.exports = ({
   operationHash,
   serviceName,
   computeUrlId,
-  routerNetwork,
-  routerKeyId,
-  routerKeySecretName,
   procedure,
   rolesBucket,
   secretBucket,
@@ -48,6 +45,7 @@ module.exports = ({
   runBaseUnitTests,
   runIntegrationTests,
   runBaseIntegrationTests,
+  dependencyKeyEnvironmentVariables,
   strict
 }) => {
   return [
@@ -68,13 +66,11 @@ module.exports = ({
       secretBucket,
       secretBucketKeyRing,
       secretBucketKeyLocation,
-      routerNetwork,
-      routerKeyId,
-      routerKeySecretName,
       custom: {
         DOMAIN: domain,
         SERVICE: service,
         NAME: name,
+        ...dependencyKeyEnvironmentVariables,
         ...(twilioTestReceivingPhoneNumber && {
           TWILIO_TEST_RECEIVING_PHONE_NUMBER: twilioTestReceivingPhoneNumber
         }),
@@ -111,13 +107,11 @@ module.exports = ({
             network,
             envUriSpecifier,
             nodeEnv: env,
-            routerNetwork,
-            routerKeyId,
-            routerKeySecretName,
             env: {
               NAME: name,
               DOMAIN: domain,
               SERVICE: service,
+              ...dependencyKeyEnvironmentVariables,
               ...(twilioSendingPhoneNumber && {
                 TWILIO_SENDING_PHONE_NUMBER: twilioSendingPhoneNumber
               })

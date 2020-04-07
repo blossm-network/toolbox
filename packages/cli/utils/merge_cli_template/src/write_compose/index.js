@@ -39,9 +39,7 @@ module.exports = ({
   secretBucket,
   twilioSendingPhoneNumber,
   twilioTestReceivingPhoneNumber,
-  routerNetwork,
-  routerKeyId,
-  routerKeySecretName
+  dependencyKeyEnvironmentVariables
 }) => {
   const mongodbUser = "tester";
   const mongodbUserPassword = "password";
@@ -78,9 +76,7 @@ module.exports = ({
     mongodbProtocol,
     twilioSendingPhoneNumber,
     twilioTestReceivingPhoneNumber,
-    routerNetwork,
-    routerKeyId,
-    routerKeySecretName
+    dependencyKeyEnvironmentVariables
   });
 
   const compose = {
@@ -113,9 +109,7 @@ module.exports = ({
           mongodbProtocol,
           twilioSendingPhoneNumber,
           twilioTestReceivingPhoneNumber,
-          routerNetwork,
-          routerKeyId,
-          routerKeySecretName
+          dependencyKeyEnvironmentVariables
         }),
         depends_on: [
           ...(_includeDatabase ? [databaseServiceKey] : []),

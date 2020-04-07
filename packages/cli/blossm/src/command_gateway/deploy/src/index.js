@@ -3,6 +3,7 @@ const { readFile, readdir, unlink } = require("fs");
 const { promisify } = require("util");
 const gateway = require("@blossm/command-gateway");
 const eventStore = require("@blossm/event-store-rpc");
+const secret = require("@blossm/gcp-secret");
 const fact = require("@blossm/fact-rpc");
 const { verify: verifyGCP } = require("@blossm/gcp-kms");
 const verify = require("@blossm/verify-access-token");
@@ -27,7 +28,23 @@ module.exports = gateway({
   whitelist: config.whitelist,
   algorithm: "EC256",
   internalTokenFn: gcpToken,
-  externalTokenFn: connectionToken,
+  externalTokenFn: connectionToken({
+    credentialsFn: async ({ network }) => {
+      const nameRoot = network
+        .toUpperCase()
+        .split(".")
+        .join("_");
+
+      const id = process.env[`${nameRoot}_KEY_ID`];
+      const secretName = process.env[`${nameRoot}_KEY_SECRET_NAME`];
+
+      if (!id || !secretName) return null;
+      return {
+        id,
+        secret: await secret(secretName)
+      };
+    }
+  }),
   //roles are the roles that the principle has.
   permissionsLookupFn: async ({ principle }) => {
     //Download files if they aren't downloaded already.

@@ -46,6 +46,7 @@ module.exports = ({
   runBaseUnitTests,
   runIntegrationTests,
   runBaseIntegrationTests,
+  dependencyKeyEnvironmentVariables,
   strict
 }) => {
   return [
@@ -69,7 +70,8 @@ module.exports = ({
       custom: {
         NAME: name,
         DOMAIN: domain,
-        SERVICE: service
+        SERVICE: service,
+        ...dependencyKeyEnvironmentVariables
       }
     }),
     dockerComposeUp,
@@ -107,7 +109,8 @@ module.exports = ({
               MONGODB_DATABASE: "view-store",
               MONGODB_USER: mongodbUser,
               MONGODB_HOST: mongodbHost,
-              MONGODB_PROTOCOL: mongodbProtocol
+              MONGODB_PROTOCOL: mongodbProtocol,
+              ...dependencyKeyEnvironmentVariables
             },
             labels: { name, domain, service }
           }),

@@ -17,10 +17,7 @@ module.exports = ({
   nodeEnv,
   env = "",
   labels = "",
-  allowUnauthenticated = false,
-  routerNetwork,
-  routerKeyId,
-  routerKeySecretName
+  allowUnauthenticated = false
 } = {}) => {
   return {
     name: "gcr.io/cloud-builders/gcloud",
@@ -43,11 +40,6 @@ module.exports = ({
         HOST: `${region}.${envUriSpecifier}${network}`,
         PROCEDURE: procedure,
         OPERATION_HASH: operationHash,
-        ...(routerNetwork && { ROUTER_NETWORK: routerNetwork }),
-        ...(routerKeyId && { ROUTER_KEY_ID: routerKeyId }),
-        ...(routerKeySecretName && {
-          ROUTER_KEY_SECRET_NAME: routerKeySecretName
-        }),
         GCP_PROJECT: project,
         GCP_REGION: region,
         GCP_SECRET_BUCKET: secretBucket,

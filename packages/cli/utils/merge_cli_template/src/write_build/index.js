@@ -46,9 +46,7 @@ const steps = ({
   computeUrlId,
   actions,
   strict,
-  routerNetwork,
-  routerKeyId,
-  routerKeySecretName
+  dependencyKeyEnvironmentVariables
 }) => {
   const serviceName = `${region}-${operationName}-${operationHash}`;
   const uri = `${operationHash}.${region}.${envUriSpecifier}${network}`;
@@ -66,6 +64,7 @@ const steps = ({
         memory,
         computeUrlId,
         envUriSpecifier,
+        dependencyKeyEnvironmentVariables,
         containerRegistery,
         mainContainerName,
         dnsZone,
@@ -104,6 +103,7 @@ const steps = ({
         memory,
         env,
         serviceName,
+        dependencyKeyEnvironmentVariables,
         containerRegistery,
         mainContainerName,
         operationHash,
@@ -132,6 +132,7 @@ const steps = ({
         event,
         project,
         network,
+        dependencyKeyEnvironmentVariables,
         envUriSpecifier,
         computeUrlId,
         containerRegistery,
@@ -165,6 +166,7 @@ const steps = ({
         network,
         memory,
         computeUrlId,
+        dependencyKeyEnvironmentVariables,
         mainContainerName,
         envUriSpecifier,
         containerRegistery,
@@ -185,9 +187,6 @@ const steps = ({
         runBaseUnitTests,
         runIntegrationTests,
         runBaseIntegrationTests,
-        routerNetwork,
-        routerKeyId,
-        routerKeySecretName,
         strict
       });
     case "job":
@@ -201,6 +200,7 @@ const steps = ({
         envUriSpecifier,
         containerRegistery,
         mainContainerName,
+        dependencyKeyEnvironmentVariables,
         dnsZone,
         service,
         procedure,
@@ -218,9 +218,6 @@ const steps = ({
         runBaseUnitTests,
         runIntegrationTests,
         runBaseIntegrationTests,
-        routerNetwork,
-        routerKeyId,
-        routerKeySecretName,
         strict
       });
     case "command-gateway":
@@ -232,6 +229,7 @@ const steps = ({
         envUriSpecifier,
         containerRegistery,
         mainContainerName,
+        dependencyKeyEnvironmentVariables,
         dnsZone,
         memory,
         env,
@@ -253,9 +251,6 @@ const steps = ({
         runBaseUnitTests,
         runIntegrationTests,
         runBaseIntegrationTests,
-        routerNetwork,
-        routerKeyId,
-        routerKeySecretName,
         strict
       });
     case "view-gateway":
@@ -267,6 +262,7 @@ const steps = ({
         envUriSpecifier,
         containerRegistery,
         mainContainerName,
+        dependencyKeyEnvironmentVariables,
         computeUrlId,
         dnsZone,
         memory,
@@ -286,9 +282,6 @@ const steps = ({
         runBaseUnitTests,
         runIntegrationTests,
         runBaseIntegrationTests,
-        routerNetwork,
-        routerKeyId,
-        routerKeySecretName,
         strict
       });
     case "fact-gateway":
@@ -301,6 +294,7 @@ const steps = ({
         containerRegistery,
         mainContainerName,
         computeUrlId,
+        dependencyKeyEnvironmentVariables,
         dnsZone,
         memory,
         env,
@@ -319,9 +313,6 @@ const steps = ({
         runBaseUnitTests,
         runIntegrationTests,
         runBaseIntegrationTests,
-        routerNetwork,
-        routerKeyId,
-        routerKeySecretName,
         strict
       });
   }
@@ -370,6 +361,7 @@ module.exports = ({
   envUriSpecifier,
   containerRegistery,
   mainContainerName,
+  dependencyKeyEnvironmentVariables,
   mongodbUser,
   mongodbHost,
   dnsZone,
@@ -385,9 +377,6 @@ module.exports = ({
   secretBucketKeyRing,
   computeUrlId,
   actions,
-  routerNetwork,
-  routerKeyId,
-  routerKeySecretName,
   strict
 }) => {
   const buildPath = path.resolve(workingDir, "build.yaml");
@@ -426,6 +415,7 @@ module.exports = ({
       twilioTestReceivingPhoneNumber,
       twilioSendingPhoneNumber,
       envUriSpecifier,
+      dependencyKeyEnvironmentVariables,
       containerRegistery,
       mainContainerName,
       dnsZone,
@@ -444,9 +434,6 @@ module.exports = ({
       runBaseUnitTests,
       runIntegrationTests,
       runBaseIntegrationTests,
-      routerNetwork,
-      routerKeyId,
-      routerKeySecretName,
       actions,
       strict
     })

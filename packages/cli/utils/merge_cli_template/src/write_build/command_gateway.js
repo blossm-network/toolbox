@@ -33,6 +33,7 @@ module.exports = ({
   env,
   operationHash,
   computeUrlId,
+  dependencyKeyEnvironmentVariables,
   rolesBucket,
   secretBucket,
   secretBucketKeyLocation,
@@ -44,9 +45,6 @@ module.exports = ({
   runBaseUnitTests,
   runIntegrationTests,
   runBaseIntegrationTests,
-  routerNetwork,
-  routerKeyId,
-  routerKeySecretName,
   strict
 }) => {
   const authUri = `command.${domain}.${service}.${envUriSpecifier}${network}`;
@@ -68,12 +66,10 @@ module.exports = ({
       secretBucket,
       secretBucketKeyRing,
       secretBucketKeyLocation,
-      routerNetwork,
-      routerKeyId,
-      routerKeySecretName,
       custom: {
         DOMAIN: domain,
         SERVICE: service,
+        ...dependencyKeyEnvironmentVariables,
         ...(publicKeyUrl && { PUBLIC_KEY_URL: publicKeyUrl }),
         ...(twilioTestReceivingPhoneNumber && {
           TWILIO_TEST_RECEIVING_PHONE_NUMBER: twilioTestReceivingPhoneNumber
@@ -112,12 +108,10 @@ module.exports = ({
             project,
             network,
             envUriSpecifier,
-            routerNetwork,
-            routerKeyId,
-            routerKeySecretName,
             env: {
               DOMAIN: domain,
               SERVICE: service,
+              ...dependencyKeyEnvironmentVariables,
               ...(publicKeyUrl && { PUBLIC_KEY_URL: publicKeyUrl })
             },
             labels: { domain, service }

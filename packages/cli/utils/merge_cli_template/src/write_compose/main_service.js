@@ -10,6 +10,7 @@ module.exports = ({
   project,
   region,
   containerRegistery,
+  dependencyKeyEnvironmentVariables,
   domain,
   name,
   event,
@@ -22,9 +23,6 @@ module.exports = ({
   mongodbHost,
   mongodbDatabase,
   mongodbProtocol,
-  routerNetwork,
-  routerKeyId,
-  routerKeySecretName,
   twilioSendingPhoneNumber,
   twilioTestReceivingPhoneNumber
 }) => {
@@ -40,11 +38,7 @@ module.exports = ({
       HOST: host,
       PROCEDURE: procedure,
       OPERATION_HASH: operationHash,
-      ...(routerNetwork && { ROUTER_NETWORK: routerNetwork }),
-      ...(routerKeyId && { ROUTER_KEY_ID: routerKeyId }),
-      ...(routerKeySecretName && {
-        ROUTER_KEY_SECRET_NAME: routerKeySecretName
-      }),
+      ...dependencyKeyEnvironmentVariables,
       GCP_PROJECT: project,
       GCP_REGION: region,
       GCP_SECRET_BUCKET: secretBucket,

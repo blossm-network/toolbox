@@ -9,9 +9,6 @@ module.exports = ({
   secretBucket,
   secretBucketKeyRing,
   secretBucketKeyLocation,
-  routerNetwork,
-  routerKeyId,
-  routerKeySecretName,
   custom = {}
 } = {}) => {
   return {
@@ -33,11 +30,6 @@ module.exports = ({
       GCP_SECRET_BUCKET: secretBucket,
       GCP_KMS_SECRET_BUCKET_KEY_RING: secretBucketKeyRing,
       GCP_KMS_SECRET_BUCKET_KEY_LOCATION: secretBucketKeyLocation,
-      ...(routerNetwork && { ROUTER_NETWORK: routerNetwork }),
-      ...(routerKeyId && { ROUTER_KEY_ID: routerKeyId }),
-      ...(routerKeySecretName && {
-        ROUTER_KEY_SECRET_NAME: routerKeySecretName
-      }),
       ...custom
     }).reduce((string, [key, value]) => (string += `${key}=${value}\n`), "")}
     EOM`

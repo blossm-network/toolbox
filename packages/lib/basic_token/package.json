@@ -1,7 +1,7 @@
 {
   "name": "@blossm/basic-token",
   "version": "0.0.1",
-  "description": "Gets a basic token to communicate with a router.",
+  "description": "Gets a basic token to communicate with a network.",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {

@@ -25,6 +25,30 @@ const envUriSpecifier = env => {
   }
 };
 
+const envDependencyKeyEnvironmentVariables = ({ env, config }) => {
+  if (!config.dependencies) return {};
+  let environmentVariables = {};
+
+  for (const dependency in config.dependencies) {
+    const baseName = dependency
+      .toUpperCase()
+      .split(".")
+      .join("_");
+    const { id, secretName } = dependency.keys[env];
+    environmentVariables = {
+      ...environmentVariables,
+      [`${baseName}_KEY_ID`]: id,
+      [`${baseName}_KEY_SECRET_NAME`]: secretName
+    };
+  }
+
+  //TODO
+  //eslint-disable-next-line no-console
+  console.log({ environmentVariables });
+
+  return environmentVariables;
+};
+
 const envProject = ({ env, config }) => {
   switch (env) {
     case "production":
@@ -496,7 +520,6 @@ const configure = async (workingDir, configFn, env, strict) => {
     const region =
       config["gcp-region"] || blossmConfig.vendors.cloud.gcp.defaults.region;
     const network = config.network || blossmConfig.network;
-    const routers = blossmConfig.routers;
     const dnsZone =
       config["gcp-dns-zone"] || blossmConfig.vendors.cloud.gcp.dnsZone;
 
@@ -506,6 +529,10 @@ const configure = async (workingDir, configFn, env, strict) => {
     const name = config.name;
     const event = config.event;
     const actions = config.actions;
+
+    const dependencyKeyEnvironmentVariables = envDependencyKeyEnvironmentVariables(
+      { env, config: blossmConfig }
+    );
 
     const rolesBucket = envRolesBucket({ env, config: blossmConfig });
     const secretBucket = envSecretsBucket({ env, config: blossmConfig });
@@ -555,13 +582,9 @@ const configure = async (workingDir, configFn, env, strict) => {
       secretBucket,
       secretBucketKeyLocation,
       secretBucketKeyRing,
-      ...(routers && {
-        routerNetwork: routers[0].network,
-        routerKeyId: routers[0].key.id,
-        routerKeySecretName: routers[0].key.secretName
-      }),
       actions,
       strict,
+      dependencyKeyEnvironmentVariables,
       ...configFn(config)
     });
 
@@ -584,13 +607,9 @@ const configure = async (workingDir, configFn, env, strict) => {
       secretBucket,
       secretBucketKeyLocation,
       secretBucketKeyRing,
-      ...(routers && {
-        routerNetwork: routers[0].network,
-        routerKeyId: routers[0].key.id,
-        routerKeySecretName: routers[0].key.secretName
-      }),
       twilioSendingPhoneNumber,
       twilioTestReceivingPhoneNumber,
+      dependencyKeyEnvironmentVariables,
       ...configFn(config)
     });
   } catch (e) {

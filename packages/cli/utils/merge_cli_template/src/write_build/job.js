@@ -42,9 +42,7 @@ module.exports = ({
   runBaseUnitTests,
   runIntegrationTests,
   runBaseIntegrationTests,
-  routerNetwork,
-  routerKeyId,
-  routerKeySecretName,
+  dependencyKeyEnvironmentVariables,
   strict
 }) => {
   return [
@@ -65,11 +63,9 @@ module.exports = ({
       secretBucket,
       secretBucketKeyRing,
       secretBucketKeyLocation,
-      routerNetwork,
-      routerKeyId,
-      routerKeySecretName,
       custom: {
         NAME: name,
+        ...dependencyKeyEnvironmentVariables,
         ...(domain && { DOMAIN: domain }),
         ...(service && { SERVICE: service })
       }
@@ -101,13 +97,11 @@ module.exports = ({
             region,
             project,
             nodeEnv: env,
-            routerNetwork,
-            routerKeyId,
-            routerKeySecretName,
             env: {
               NAME: name,
               ...(domain && { DOMAIN: domain }),
-              ...(service && { SERVICE: service })
+              ...(service && { SERVICE: service }),
+              ...dependencyKeyEnvironmentVariables
             },
             labels: {
               name,

@@ -46,6 +46,7 @@ module.exports = ({
   runBaseUnitTests,
   runIntegrationTests,
   runBaseIntegrationTests,
+  dependencyKeyEnvironmentVariables,
   actions,
   strict
 }) => {
@@ -69,7 +70,8 @@ module.exports = ({
       secretBucketKeyLocation,
       custom: {
         DOMAIN: domain,
-        SERVICE: service
+        SERVICE: service,
+        ...dependencyKeyEnvironmentVariables
       }
     }),
     dockerComposeUp,
@@ -106,7 +108,8 @@ module.exports = ({
               MONGODB_DATABASE: "event-store",
               MONGODB_USER: mongodbUser,
               MONGODB_HOST: mongodbHost,
-              MONGODB_PROTOCOL: mongodbProtocol
+              MONGODB_PROTOCOL: mongodbProtocol,
+              ...dependencyKeyEnvironmentVariables
             },
             labels: { domain, service }
           }),

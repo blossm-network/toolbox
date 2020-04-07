@@ -4,6 +4,7 @@ const yaml = require("yaml");
 const gateway = require("@blossm/fact-gateway");
 const eventStore = require("@blossm/event-store-rpc");
 const { verify: verifyGCP } = require("@blossm/gcp-kms");
+const secret = require("@blossm/gcp-secret");
 const verify = require("@blossm/verify-access-token");
 const { invalidCredentials } = require("@blossm/errors");
 const { download: downloadFile } = require("@blossm/gcp-storage");
@@ -25,7 +26,23 @@ module.exports = gateway({
   whitelist: config.whitelist,
   algorithm: "EC256",
   internalTokenFn: gcpToken,
-  externalTokenFn: connectionToken,
+  externalTokenFn: connectionToken({
+    credentialsFn: async ({ network }) => {
+      const nameRoot = network
+        .toUpperCase()
+        .split(".")
+        .join("_");
+
+      const id = process.env[`${nameRoot}_KEY_ID`];
+      const secretName = process.env[`${nameRoot}_KEY_SECRET_NAME`];
+
+      if (!id || !secretName) return null;
+      return {
+        id,
+        secret: await secret(secretName)
+      };
+    }
+  }),
   permissionsLookupFn: async ({ principle }) => {
     if (!defaultRoles) {
       const fileName = uuid();

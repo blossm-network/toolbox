@@ -47,6 +47,7 @@ module.exports = ({
   runBaseUnitTests,
   runIntegrationTests,
   runBaseIntegrationTests,
+  dependencyKeyEnvironmentVariables,
   strict
 }) => {
   return [
@@ -73,7 +74,8 @@ module.exports = ({
         NAME: name,
         EVENT_ACTION: event.action,
         EVENT_DOMAIN: event.domain,
-        EVENT_SERVICE: event.service
+        EVENT_SERVICE: event.service,
+        ...dependencyKeyEnvironmentVariables
       }
     }),
     dockerComposeUp,

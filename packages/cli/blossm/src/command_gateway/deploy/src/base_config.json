@@ -7,6 +7,7 @@
     "@blossm/verify-access-token": "*",
     "@blossm/connection-token": "*",
     "@blossm/gcp-kms": "*",
+    "@blossm/gcp-secret": "*",
     "@blossm/gcp-token": "*",
     "@blossm/gcp-storage": "*",
     "@blossm/errors": "*",
