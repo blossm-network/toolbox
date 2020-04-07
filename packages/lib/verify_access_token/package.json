@@ -1,6 +1,6 @@
 {
   "name": "@blossm/verify-access-token",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Verifies that the signature is correct given a message and a public key.",
   "main": "index.js",
   "author": "blossm.network",
