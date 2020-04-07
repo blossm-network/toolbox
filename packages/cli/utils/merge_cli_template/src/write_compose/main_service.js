@@ -83,7 +83,7 @@ module.exports = ({
           ...commonDatabaseEnv
         }
       };
-    case "command-handler":
+    case "command":
       return {
         image: `${commonImagePrefix}.${service}.${domain}.${name}:latest`,
         ...common,

@@ -1,7 +1,7 @@
 #
 # This file is required.
 #
-# Give your command-handler a name,
+# Give your command a name,
 # and specify which domain and service it's for.
 #
 
@@ -44,4 +44,4 @@ testing:
       response:
 
 #don't change
-procedure: command-handler
+procedure: command

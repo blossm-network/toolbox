@@ -1,7 +1,7 @@
 #
 # This file is required.
 #
-# Give your command-handler an action name,
+# Give your command an action name,
 # specify which domain it's for,
 # and set which version of the event to create.
 #

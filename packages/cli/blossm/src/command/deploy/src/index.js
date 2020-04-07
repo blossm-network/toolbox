@@ -1,5 +1,5 @@
 const fs = require("fs");
-const commandHandler = require("@blossm/command-handler");
+const command = require("@blossm/command");
 const eventStore = require("@blossm/event-store-rpc");
 const gcpToken = require("@blossm/gcp-token");
 
@@ -8,7 +8,7 @@ const validate = fs.existsSync("./validate.js") && require("./validate");
 const normalize = fs.existsSync("./normalize.js") && require("./normalize");
 const fill = fs.existsSync("./fill.js") && require("./fill");
 
-module.exports = commandHandler({
+module.exports = command({
   mainFn: main,
   ...(validate && { validateFn: validate }),
   ...(normalize && { normalizeFn: normalize }),

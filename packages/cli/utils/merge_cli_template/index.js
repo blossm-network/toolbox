@@ -291,7 +291,7 @@ const eventStoreDependencies = ({ dependencies }) => {
     //eslint-disable-next-line no-console
     console.log({ dependency });
     if (
-      dependency.procedure == "command-handler" &&
+      dependency.procedure == "command" &&
       ![...dependencies, ...result].some(
         d =>
           d.procedure == "event-store" &&
@@ -318,7 +318,7 @@ const addDefaultDependencies = ({ config }) => {
       name: "upgrade",
       domain: "session",
       service: "core",
-      procedure: "command-handler"
+      procedure: "command"
     },
     {
       domain: "session",
@@ -343,7 +343,7 @@ const addDefaultDependencies = ({ config }) => {
   ];
 
   switch (config.procedure) {
-    case "command-handler":
+    case "command":
       return [
         ...config.testing.dependencies,
         ...eventStoreDependencies({
@@ -377,7 +377,7 @@ const addDefaultDependencies = ({ config }) => {
             name: command.name,
             domain: config.domain,
             service: config.service,
-            procedure: "command-handler"
+            procedure: "command"
           };
         })
       ];

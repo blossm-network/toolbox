@@ -2,7 +2,7 @@ const { expect } = require("chai").use(require("sinon-chai"));
 const { restore, replace, fake } = require("sinon");
 
 const deps = require("../deps");
-const commandHandler = require("..");
+const command = require("..");
 
 const mainFn = "some-main-fn";
 const aggregateFn = "some-aggregate-fn";
@@ -28,11 +28,11 @@ describe("Command handler", () => {
     });
     replace(deps, "server", serverFake);
 
-    const commandHandlerPostResult = "some-post-result";
-    const commandHandlerPostFake = fake.returns(commandHandlerPostResult);
-    replace(deps, "post", commandHandlerPostFake);
+    const commandPostResult = "some-post-result";
+    const commandPostFake = fake.returns(commandPostResult);
+    replace(deps, "post", commandPostFake);
 
-    const result = await commandHandler({
+    const result = await command({
       version,
       mainFn,
       aggregateFn,
@@ -45,8 +45,8 @@ describe("Command handler", () => {
     expect(result).to.equal(returnValue);
     expect(listenFake).to.have.been.calledWith();
     expect(serverFake).to.have.been.calledWith();
-    expect(postFake).to.have.been.calledWith(commandHandlerPostResult);
-    expect(commandHandlerPostFake).to.have.been.calledWith({
+    expect(postFake).to.have.been.calledWith(commandPostResult);
+    expect(commandPostFake).to.have.been.calledWith({
       version,
       mainFn,
       aggregateFn,
@@ -66,16 +66,16 @@ describe("Command handler", () => {
     });
     replace(deps, "server", serverFake);
 
-    const commandHandlerPostResult = "some-post-result";
-    const commandHandlerPostFake = fake.returns(commandHandlerPostResult);
-    replace(deps, "post", commandHandlerPostFake);
+    const commandPostResult = "some-post-result";
+    const commandPostFake = fake.returns(commandPostResult);
+    replace(deps, "post", commandPostFake);
 
-    await commandHandler({ version, mainFn, aggregateFn, addFn });
+    await command({ version, mainFn, aggregateFn, addFn });
 
     expect(listenFake).to.have.been.calledWith();
     expect(serverFake).to.have.been.calledWith();
-    expect(postFake).to.have.been.calledWith(commandHandlerPostResult);
-    expect(commandHandlerPostFake).to.have.been.calledWith({
+    expect(postFake).to.have.been.calledWith(commandPostResult);
+    expect(commandPostFake).to.have.been.calledWith({
       version,
       mainFn,
       aggregateFn,
@@ -93,12 +93,12 @@ describe("Command handler", () => {
     });
     replace(deps, "server", serverFake);
 
-    const commandHandlerPostResult = "some-post-result";
-    const commandHandlerPostFake = fake.returns(commandHandlerPostResult);
-    replace(deps, "post", commandHandlerPostFake);
+    const commandPostResult = "some-post-result";
+    const commandPostFake = fake.returns(commandPostResult);
+    replace(deps, "post", commandPostFake);
 
     try {
-      await commandHandler({ version, mainFn, aggregateFn, addFn });
+      await command({ version, mainFn, aggregateFn, addFn });
 
       //shouldn't get called
       expect(1).to.equal(0);

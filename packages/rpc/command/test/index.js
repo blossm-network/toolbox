@@ -81,12 +81,7 @@ describe("Issue command", () => {
       });
 
     expect(result).to.equal(response);
-    expect(rpcFake).to.have.been.calledWith(
-      name,
-      domain,
-      service,
-      "command-handler"
-    );
+    expect(rpcFake).to.have.been.calledWith(name, domain, service, "command");
     expect(postFake).to.have.been.calledWith({
       payload,
       headers: {
@@ -184,12 +179,7 @@ describe("Issue command", () => {
       .issue(payload, { trace, issued, root, options });
 
     expect(result).to.equal(response);
-    expect(rpcFake).to.have.been.calledWith(
-      name,
-      domain,
-      service,
-      "command-handler"
-    );
+    expect(rpcFake).to.have.been.calledWith(name, domain, service, "command");
     expect(postFake).to.have.been.calledWith({
       payload,
       headers: {

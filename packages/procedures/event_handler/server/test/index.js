@@ -21,16 +21,16 @@ describe("Event handler", () => {
     });
     replace(deps, "server", serverFake);
 
-    const commandHandlerPostResult = "some-post-result";
-    const commandHandlerPostFake = fake.returns(commandHandlerPostResult);
-    replace(deps, "post", commandHandlerPostFake);
+    const commandPostResult = "some-post-result";
+    const commandPostFake = fake.returns(commandPostResult);
+    replace(deps, "post", commandPostFake);
 
     await eventHandler({ mainFn });
 
     expect(listenFake).to.have.been.calledOnce;
     expect(serverFake).to.have.been.calledOnce;
-    expect(postFake).to.have.been.calledWith(commandHandlerPostResult);
-    expect(commandHandlerPostFake).to.have.been.calledWith({
+    expect(postFake).to.have.been.calledWith(commandPostResult);
+    expect(commandPostFake).to.have.been.calledWith({
       mainFn
     });
   });
@@ -45,9 +45,9 @@ describe("Event handler", () => {
     });
     replace(deps, "server", serverFake);
 
-    const commandHandlerPostResult = "some-post-result";
-    const commandHandlerPostFake = fake.returns(commandHandlerPostResult);
-    replace(deps, "post", commandHandlerPostFake);
+    const commandPostResult = "some-post-result";
+    const commandPostFake = fake.returns(commandPostResult);
+    replace(deps, "post", commandPostFake);
 
     try {
       await eventHandler({ mainFn });

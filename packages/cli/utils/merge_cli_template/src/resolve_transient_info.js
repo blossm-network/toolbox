@@ -29,7 +29,7 @@ const eventsForStore = config =>
 
 const resolveTransientDependencies = config => {
   switch (config.procedure) {
-    case "command-handler":
+    case "command":
       return [
         ...(config.testing.dependencies || []),
         {

@@ -7,7 +7,7 @@ const { red } = require("chalk");
 
 const init = require("./init");
 const secret = require("./secret");
-const commandHandler = require("./command_handler");
+const command = require("./command");
 const eventHandler = require("./event_handler");
 const projection = require("./projection");
 const eventStore = require("./event_store");
@@ -24,7 +24,7 @@ const domains = [
   "config",
   "init",
   "set",
-  "command-handler",
+  "command",
   "roles",
   "event-handler",
   "projection",
@@ -59,8 +59,8 @@ const tryShortcuts = input => {
   args.push(...input.args);
 
   switch (config.procedure) {
-    case "command-handler":
-      return commandHandler(args);
+    case "command":
+      return command(args);
     case "event-handler":
       return eventHandler(args);
     case "projection":
@@ -90,8 +90,8 @@ const forward = input => {
       return init(input.args);
     case "secret":
       return secret(input.args);
-    case "command-handler":
-      return commandHandler(input.args);
+    case "command":
+      return command(input.args);
     case "event-handler":
       return eventHandler(input.args);
     case "projection":

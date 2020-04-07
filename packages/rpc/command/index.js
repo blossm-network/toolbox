@@ -37,7 +37,7 @@ module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
     };
 
     return await deps
-      .rpc(name, domain, service, "command-handler")
+      .rpc(name, domain, service, "command")
       .post(data)
       .in({
         ...(context && { context }),

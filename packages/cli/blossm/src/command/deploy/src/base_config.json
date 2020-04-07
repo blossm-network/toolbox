@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "@blossm/command-handler": "*",
+    "@blossm/command": "*",
     "@blossm/validator": "*",
     "@blossm/crypt": "*",
     "@blossm/errors": "*",

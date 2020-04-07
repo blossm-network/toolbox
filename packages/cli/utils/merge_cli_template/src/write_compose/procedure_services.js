@@ -115,7 +115,7 @@ module.exports = ({
           includeDatabase = true;
         }
         break;
-      case "command-handler":
+      case "command":
         {
           const operationHash = hash(
             dependency.name,
