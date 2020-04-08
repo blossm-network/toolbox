@@ -27,6 +27,9 @@ module.exports = ({ key, ring, location, version, project }) => async ({
     publicKeys[instanceKey] = pem;
   }
 
+  //TODO
+  //eslint-disable-next-line
+  console.log({ pk: publicKeys[instanceKey], signature });
   return crypto
     .createVerify("SHA256")
     .update(message)
