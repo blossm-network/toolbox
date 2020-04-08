@@ -87,7 +87,7 @@ module.exports = gateway({
 
     //TODO
     //eslint-disable-next-line
-    console.log({ roles });
+    console.log({ roles, defaultRoles });
     return await rolePermissions({
       roles,
       defaultRoles

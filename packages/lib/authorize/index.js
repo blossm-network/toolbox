@@ -14,6 +14,13 @@ module.exports = async ({
     principle
   });
 
+  //TODO
+  //eslint-disable-next-line no-console
+  console.log("PERMISSIONS: ", {
+    permissions,
+    principlePermissions,
+    principle
+  });
   const satisfiedPermissions = principlePermissions.filter(
     principlePermission => {
       for (const permission of permissions) {

@@ -57,13 +57,15 @@ describe("Fact get", () => {
 
     const claims = "some-claims";
     const context = "some-context";
+    const root = "some-root";
 
     const req = {
       params,
       query: {
         query,
         claims,
-        context
+        context,
+        root
       }
     };
 
@@ -83,6 +85,7 @@ describe("Fact get", () => {
       query,
       params,
       context,
+      root,
       claims
     });
     expect(statusFake).to.have.been.calledWith(200);
