@@ -1,6 +1,6 @@
 const deps = require("./deps");
 
-module.exports = ({ operation, host, path = "", root }) =>
+module.exports = ({ operation, host, path = "", id }) =>
   `${process.env.NODE_ENV == "local" ? "http" : "https"}://${deps.hash(
     ...operation
-  )}.${host}${path}${root != undefined ? `/${root}` : ""}`;
+  )}.${host}${path}${id != undefined ? `/${id}` : ""}`;

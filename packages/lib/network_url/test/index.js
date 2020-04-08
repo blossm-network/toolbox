@@ -5,7 +5,7 @@ const operationUrl = require("..");
 
 const host = "some-host";
 const path = "/some-path";
-const root = "some-root";
+const id = "some-id";
 
 describe("Service url", () => {
   beforeEach(() => {
@@ -13,14 +13,14 @@ describe("Service url", () => {
   });
   afterEach(restore);
   it("should return the correct output", () => {
-    const result = operationUrl({ host, path, root });
-    expect(result).to.equal(`https://some-host/some-path/some-root`);
+    const result = operationUrl({ host, path, id });
+    expect(result).to.equal(`https://some-host/some-path/some-id`);
   });
   it("should return the correct output with no path", () => {
-    const result = operationUrl({ host, root });
-    expect(result).to.equal(`https://some-host/some-root`);
+    const result = operationUrl({ host, id });
+    expect(result).to.equal(`https://some-host/some-id`);
   });
-  it("should return the correct output with no path or root", () => {
+  it("should return the correct output with no path or id", () => {
     const result = operationUrl({ host });
     expect(result).to.equal(`https://some-host`);
   });

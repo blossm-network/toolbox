@@ -1,2 +1,2 @@
-module.exports = ({ host, path = "", root }) =>
-  `https://${host}${path}${root != undefined ? `/${root}` : ""}`;
+module.exports = ({ host, path = "", id }) =>
+  `https://${host}${path}${id != undefined ? `/${id}` : ""}`;
