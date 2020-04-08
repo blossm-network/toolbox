@@ -6,7 +6,7 @@ module.exports = ({ mainFn }) => {
     const response = await mainFn({
       params: req.params,
       query: req.query.query,
-      ...(req.query.root && { context: req.query.root }),
+      ...(req.query.root && { root: req.query.root }),
       ...(req.query.context && { context: req.query.context }),
       ...(req.query.claims && { claims: req.query.claims })
     });
