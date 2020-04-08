@@ -29,12 +29,21 @@ const envDependencyKeyEnvironmentVariables = ({ env, config }) => {
   if (!config.dependencies) return {};
   let environmentVariables = {};
 
-  for (const dependency in config.dependencies) {
-    const baseName = dependency
+  for (const network in config.dependencies) {
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log({ network });
+    const baseName = network
       .toUpperCase()
       .split(".")
       .join("_");
-    const { id, secretName } = dependency.keys[env];
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log({ baseName });
+    const { id, secretName } = config.dependencies[network].keys[env];
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log({ id, secretName });
     environmentVariables = {
       ...environmentVariables,
       [`${baseName}_KEY_ID`]: id,
