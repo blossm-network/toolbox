@@ -33,7 +33,7 @@ describe("Fact", () => {
     expect(result).to.equal(returnValue);
     expect(listenFake).to.have.been.calledWith();
     expect(serverFake).to.have.been.calledWith();
-    expect(getFake).to.have.been.calledWith(jobGetResult);
+    expect(getFake).to.have.been.calledWith(jobGetResult, { path: "/:root?" });
     expect(jobGetFake).to.have.been.calledWith({ mainFn });
   });
   it("should throw correctly", async () => {

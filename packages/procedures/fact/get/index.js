@@ -4,9 +4,8 @@ module.exports = ({ mainFn }) => {
     //eslint-disable-next-line no-console
     console.log({ query: req.query, params: req.params });
     const response = await mainFn({
-      params: req.params,
       query: req.query.query,
-      ...(req.query.root && { root: req.query.root }),
+      ...(req.params.root && { root: req.params.root }),
       ...(req.query.context && { context: req.query.context }),
       ...(req.query.claims && { claims: req.query.claims })
     });

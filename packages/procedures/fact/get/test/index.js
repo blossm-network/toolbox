@@ -45,7 +45,6 @@ describe("Fact get", () => {
     })(req, res);
 
     expect(mainFnFake).to.have.been.calledWith({
-      params,
       query
     });
     expect(statusFake).to.have.been.calledWith(200);
@@ -60,12 +59,13 @@ describe("Fact get", () => {
     const root = "some-root";
 
     const req = {
-      params,
+      params: {
+        root
+      },
       query: {
         query,
         claims,
-        context,
-        root
+        context
       }
     };
 
@@ -83,7 +83,6 @@ describe("Fact get", () => {
 
     expect(mainFnFake).to.have.been.calledWith({
       query,
-      params,
       context,
       root,
       claims

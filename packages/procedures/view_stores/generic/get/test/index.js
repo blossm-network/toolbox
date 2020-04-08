@@ -12,7 +12,7 @@ const sort = "some-sort";
 const context = "some-context";
 const claims = "some-claims";
 
-const root = "some-root";
+const id = "some-id";
 
 describe("View store get", () => {
   afterEach(() => {
@@ -23,7 +23,7 @@ describe("View store get", () => {
     const findOneFake = fake.returns(objs);
 
     const params = {
-      root
+      id
     };
     const req = {
       query: {
@@ -40,7 +40,7 @@ describe("View store get", () => {
     };
     await get({ findOneFn: findOneFake })(req, res);
     expect(findOneFake).to.have.been.calledWith({
-      root,
+      id,
       sort,
       context,
       claims
@@ -51,7 +51,7 @@ describe("View store get", () => {
     const findOneFake = fake.returns(objs);
 
     const params = {
-      root
+      id
     };
     const req = {
       query: {},
@@ -63,7 +63,7 @@ describe("View store get", () => {
       send: sendFake
     };
     await get({ findOneFn: findOneFake })(req, res);
-    expect(findOneFake).to.have.been.calledWith({ root });
+    expect(findOneFake).to.have.been.calledWith({ id });
     expect(sendFake).to.have.been.calledWith(objs);
   });
   it("should call with the correct params if no id", async () => {
@@ -136,7 +136,7 @@ describe("View store get", () => {
     const findOneFake = fake();
 
     const params = {
-      root
+      id
     };
     const req = {
       query,

@@ -79,7 +79,9 @@ describe("View store", () => {
     expect(listenFake).to.have.been.calledOnce;
     expect(serverFake).to.have.been.calledOnce;
     expect(secondGetFake).to.have.been.calledWith(viewStoreGetResult);
-    expect(firstGetFake).to.have.been.calledWith(viewStoreStreamResult);
+    expect(firstGetFake).to.have.been.calledWith(viewStoreStreamResult, {
+      path: "/stream"
+    });
     expect(postFake).to.have.been.calledWith(viewStorePostResult);
     expect(putFake).to.have.been.calledWith(viewStorePutResult);
     expect(deleteFake).to.have.been.calledWith(viewStoreDeleteResult);
@@ -163,7 +165,9 @@ describe("View store", () => {
     expect(listenFake).to.have.been.calledOnce;
     expect(serverFake).to.have.been.calledOnce;
     expect(secondGetFake).to.have.been.calledWith(viewStoreGetResult);
-    expect(firstGetFake).to.have.been.calledWith(viewStoreStreamResult);
+    expect(firstGetFake).to.have.been.calledWith(viewStoreStreamResult, {
+      path: "/stream"
+    });
     expect(postFake).to.have.been.calledWith(viewStorePostResult);
     expect(putFake).to.have.been.calledWith(viewStorePutResult);
     expect(deleteFake).to.have.been.calledWith(viewStoreDeleteResult);
