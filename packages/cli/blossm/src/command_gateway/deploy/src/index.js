@@ -82,6 +82,9 @@ module.exports = gateway({
       .set({ tokenFns: { internal: gcpToken } })
       .read({ root: principle.root });
 
+    //TODO
+    //eslint-disable-next-line
+    console.log({ roles });
     return await rolePermissions({
       roles,
       defaultRoles
