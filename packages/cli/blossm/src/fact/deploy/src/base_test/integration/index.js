@@ -86,8 +86,9 @@ const executeStep = async step => {
 
   const response = await request.get(url, {
     query: {
-      context: step.context,
-      query: step.query
+      ...(step.context && { context: step.context }),
+      ...(step.query && { query: step.query }),
+      ...(step.root && { root: step.root })
     }
   });
 
