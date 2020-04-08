@@ -5,6 +5,7 @@
     "@blossm/event-store-rpc": "*",
     "@blossm/verify-access-token": "*",
     "@blossm/gcp-kms": "*",
+    "@blossm/gcp-secret": "*",
     "@blossm/connection-token": "*",
     "@blossm/gcp-token": "*",
     "@blossm/gcp-storage": "*",
