@@ -16,7 +16,6 @@ const payload = {
   b: 2
 };
 
-const root = "root";
 const topic = "topic";
 const version = "version";
 const eventAction = "some-event-action";
@@ -76,7 +75,6 @@ describe("Event store", () => {
         {
           data: {
             headers: {
-              root,
               topic,
               action: eventAction,
               domain: eventDomain,
@@ -97,7 +95,6 @@ describe("Event store", () => {
         {
           data: {
             headers: {
-              root,
               context,
               claims,
               topic,
@@ -142,7 +139,6 @@ describe("Event store", () => {
       {
         data: {
           headers: {
-            root,
             topic,
             action: eventAction,
             domain: eventDomain,
@@ -160,7 +156,6 @@ describe("Event store", () => {
         {
           data: {
             headers: {
-              root,
               topic,
               action: eventAction,
               domain: eventDomain,
@@ -202,7 +197,7 @@ describe("Event store", () => {
       .aggregate(root);
 
     expect(rpcFake).to.have.been.calledWith(domain, service, "event-store");
-    expect(getFake).to.have.been.calledWith({ root });
+    expect(getFake).to.have.been.calledWith({ id: root });
     expect(inFake).to.have.been.calledWith({
       context
     });
@@ -232,7 +227,7 @@ describe("Event store", () => {
     const result = await eventStore({ domain }).aggregate(root);
 
     expect(rpcFake).to.have.been.calledWith(domain, envService, "event-store");
-    expect(getFake).to.have.been.calledWith({ root });
+    expect(getFake).to.have.been.calledWith({ id: root });
     expect(inFake).to.have.been.calledWith({});
     expect(withFake).to.have.been.calledWith({});
     expect(result).to.equal(aggregate);

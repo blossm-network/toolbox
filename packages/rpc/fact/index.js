@@ -6,15 +6,19 @@ module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
     context,
     claims,
     tokenFns: { internal: internalTokenFn, external: externalTokenFn } = {}
-  } = {}) => async query =>
-    await deps
+  } = {}) => async query => {
+    if (query.root) {
+      query.id = query.root;
+      delete query.root;
+    }
+    return await deps
       .rpc(
         name,
         ...(domain ? [domain] : []),
         ...(service ? [service] : []),
         "fact"
       )
-      .get({ query })
+      .get(query)
       .in({
         ...(context && { context }),
         ...(!internal && {
@@ -27,19 +31,24 @@ module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
         ...(externalTokenFn && { externalTokenFn }),
         ...(claims && { claims })
       });
+  };
   const stream = ({
     context,
     claims,
     tokenFns: { internal: internalTokenFn, external: externalTokenFn } = {}
-  } = {}) => async query =>
-    await deps
+  } = {}) => async query => {
+    if (query.root) {
+      query.id = query.root;
+      delete query.root;
+    }
+    return await deps
       .rpc(
         name,
         ...(domain ? [domain] : []),
         ...(service ? [service] : []),
         "fact"
       )
-      .get({ query })
+      .get(query)
       .in({
         ...(context && { context }),
         ...(!internal && {
@@ -53,6 +62,7 @@ module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
         ...(externalTokenFn && { externalTokenFn }),
         ...(claims && { claims })
       });
+  };
 
   return {
     set: ({ context, claims, tokenFns }) => {

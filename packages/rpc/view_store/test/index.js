@@ -15,7 +15,7 @@ const externalTokenFn = "some-external-token-fn";
 const query = "some-query";
 const sort = "some-sort";
 const view = "some-view";
-const root = "some-root";
+const id = "some-id";
 const context = { c: 2 };
 const claims = "some-claims";
 
@@ -322,7 +322,7 @@ describe("Get views", () => {
 
         tokenFns: { internal: internalTokenFn, external: externalTokenFn }
       })
-      .update(root, view);
+      .update(id, view);
 
     expect(rpcFake).to.have.been.calledWith(
       name,
@@ -330,7 +330,7 @@ describe("Get views", () => {
       service,
       "view-store"
     );
-    expect(putFake).to.have.been.calledWith(root, { view });
+    expect(putFake).to.have.been.calledWith(id, { view });
     expect(inFake).to.have.been.calledWith({ context });
     expect(withFake).to.have.been.calledWith({
       internalTokenFn,
@@ -350,7 +350,7 @@ describe("Get views", () => {
     });
     replace(deps, "rpc", rpcFake);
 
-    await viewStore({ name, domain }).update(root, view);
+    await viewStore({ name, domain }).update(id, view);
 
     expect(rpcFake).to.have.been.calledWith(
       name,
@@ -358,7 +358,7 @@ describe("Get views", () => {
       envService,
       "view-store"
     );
-    expect(putFake).to.have.been.calledWith(root, { view });
+    expect(putFake).to.have.been.calledWith(id, { view });
     expect(inFake).to.have.been.calledWith({});
     expect(withFake).to.have.been.calledWith();
   });
@@ -381,7 +381,7 @@ describe("Get views", () => {
         claims,
         tokenFns: { internal: internalTokenFn, external: externalTokenFn }
       })
-      .delete(root);
+      .delete(id);
 
     expect(rpcFake).to.have.been.calledWith(
       name,
@@ -389,7 +389,7 @@ describe("Get views", () => {
       service,
       "view-store"
     );
-    expect(deleteFake).to.have.been.calledWith(root);
+    expect(deleteFake).to.have.been.calledWith(id);
     expect(inFake).to.have.been.calledWith({ context });
     expect(withFake).to.have.been.calledWith({
       claims,
@@ -410,7 +410,7 @@ describe("Get views", () => {
     });
     replace(deps, "rpc", rpcFake);
 
-    await viewStore({ name, domain }).delete(root);
+    await viewStore({ name, domain }).delete(id);
 
     expect(rpcFake).to.have.been.calledWith(
       name,
@@ -418,7 +418,7 @@ describe("Get views", () => {
       envService,
       "view-store"
     );
-    expect(deleteFake).to.have.been.calledWith(root);
+    expect(deleteFake).to.have.been.calledWith(id);
     expect(inFake).to.have.been.calledWith({});
     expect(withFake).to.have.been.calledWith();
   });

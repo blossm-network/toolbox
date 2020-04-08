@@ -58,9 +58,7 @@ describe("Get job", () => {
 
     expect(result).to.equal(response);
     expect(rpcFake).to.have.been.calledWith(name, domain, service, "fact");
-    expect(getFake).to.have.been.calledWith({
-      query
-    });
+    expect(getFake).to.have.been.calledWith(query);
     expect(inFake).to.have.been.calledWith({
       context
     });
@@ -88,9 +86,30 @@ describe("Get job", () => {
 
     expect(result).to.equal(response);
     expect(rpcFake).to.have.been.calledWith(name, envService, "fact");
-    expect(getFake).to.have.been.calledWith({
-      query
+    expect(getFake).to.have.been.calledWith(query);
+    expect(inFake).to.have.been.calledWith({});
+    expect(withFake).to.have.been.calledWith({});
+  });
+  it("should call with the correct params with root", async () => {
+    const response = "some-response";
+    const withFake = fake.returns(response);
+    const inFake = fake.returns({
+      with: withFake
     });
+    const getFake = fake.returns({
+      in: inFake
+    });
+    const rpcFake = fake.returns({
+      get: getFake
+    });
+    replace(deps, "rpc", rpcFake);
+
+    const root = "some-root";
+    const result = await fact({ name }).read({ root });
+
+    expect(result).to.equal(response);
+    expect(rpcFake).to.have.been.calledWith(name, envService, "fact");
+    expect(getFake).to.have.been.calledWith({ id: root });
     expect(inFake).to.have.been.calledWith({});
     expect(withFake).to.have.been.calledWith({});
   });
@@ -118,9 +137,7 @@ describe("Get job", () => {
 
     expect(result).to.equal(response);
     expect(rpcFake).to.have.been.calledWith(name, domain, service, "fact");
-    expect(getFake).to.have.been.calledWith({
-      query
-    });
+    expect(getFake).to.have.been.calledWith(query);
     expect(inFake).to.have.been.calledWith({
       context,
       network: otherNetwork,
@@ -155,9 +172,7 @@ describe("Get job", () => {
 
     expect(result).to.equal(response);
     expect(rpcFake).to.have.been.calledWith(name, domain, service, "fact");
-    expect(getFake).to.have.been.calledWith({
-      query
-    });
+    expect(getFake).to.have.been.calledWith(query);
     expect(inFake).to.have.been.calledWith({
       context
     });
@@ -186,11 +201,45 @@ describe("Get job", () => {
 
     expect(result).to.equal(response);
     expect(rpcFake).to.have.been.calledWith(name, envService, "fact");
-    expect(getFake).to.have.been.calledWith({
-      query
-    });
+    expect(getFake).to.have.been.calledWith(query);
     expect(inFake).to.have.been.calledWith({});
     expect(withFake).to.have.been.calledWith({ path: "/stream" });
+  });
+  it("should call stream with the correct params with root", async () => {
+    const response = "some-response";
+    const withFake = fake.returns(response);
+    const inFake = fake.returns({
+      with: withFake
+    });
+    const getFake = fake.returns({
+      in: inFake
+    });
+    const rpcFake = fake.returns({
+      get: getFake
+    });
+    replace(deps, "rpc", rpcFake);
+
+    const root = "some-root";
+    const result = await fact({ name, domain, service })
+      .set({
+        context,
+        claims,
+        tokenFns: { internal: internalTokenFn, external: externalTokenFn }
+      })
+      .stream({ root });
+
+    expect(result).to.equal(response);
+    expect(rpcFake).to.have.been.calledWith(name, domain, service, "fact");
+    expect(getFake).to.have.been.calledWith({ id: root });
+    expect(inFake).to.have.been.calledWith({
+      context
+    });
+    expect(withFake).to.have.been.calledWith({
+      path: "/stream",
+      internalTokenFn,
+      externalTokenFn,
+      claims
+    });
   });
   it("should call stream with the correct params onto different network", async () => {
     const response = "some-response";
@@ -217,9 +266,7 @@ describe("Get job", () => {
 
     expect(result).to.equal(response);
     expect(rpcFake).to.have.been.calledWith(name, domain, service, "fact");
-    expect(getFake).to.have.been.calledWith({
-      query
-    });
+    expect(getFake).to.have.been.calledWith(query);
     expect(inFake).to.have.been.calledWith({
       context,
       network: otherNetwork,

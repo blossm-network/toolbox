@@ -16,7 +16,7 @@ const claims = "some-claims";
 const operarationPart1 = "some-operaration1";
 const operarationPart2 = "some-operaration2";
 const token = "some-token";
-const root = "some-root";
+const id = "some-id";
 const tokenFn = "some-token-fn";
 const url = "some-url";
 
@@ -302,7 +302,7 @@ describe("Operation", () => {
     });
     expect(result).to.deep.equal(response);
   });
-  it("should call get with the correct params with root", async () => {
+  it("should call get with the correct params with id", async () => {
     const get = fake.returns(bodyResponse);
     replace(deps, "get", get);
 
@@ -313,7 +313,7 @@ describe("Operation", () => {
     replace(deps, "operationUrl", operationUrlFake);
 
     const result = await operation(operarationPart1, operarationPart2)
-      .get({ ...data, root })
+      .get({ ...data, id })
       .in({ context, host })
       .with({ internalTokenFn: tokenFn, claims });
 
@@ -334,7 +334,7 @@ describe("Operation", () => {
     expect(operationUrlFake).to.have.been.calledWith({
       operation: [operarationPart1, operarationPart2],
       host,
-      root
+      id
     });
     expect(result).to.deep.equal(body);
   });
@@ -349,7 +349,7 @@ describe("Operation", () => {
     replace(deps, "operationUrl", operationUrlFake);
 
     const result = await operation(operarationPart1, operarationPart2)
-      .put(root, data)
+      .put(id, data)
       .in({ context, host })
       .with({ internalTokenFn: tokenFn, claims });
 
@@ -371,7 +371,7 @@ describe("Operation", () => {
     expect(operationUrlFake).to.have.been.calledWith({
       operation: [operarationPart1, operarationPart2],
       host,
-      root
+      id
     });
     expect(result).to.be.null;
   });
@@ -387,7 +387,7 @@ describe("Operation", () => {
 
     const path = "/some/path";
     const result = await operation(operarationPart1, operarationPart2)
-      .put(root, data)
+      .put(id, data)
       .in({ context, host })
       .with({ path, internalTokenFn: tokenFn, claims });
 
@@ -408,7 +408,7 @@ describe("Operation", () => {
     expect(operationUrlFake).to.have.been.calledWith({
       operation: [operarationPart1, operarationPart2],
       host,
-      root,
+      id,
       path
     });
     expect(result).to.be.null;
@@ -424,7 +424,7 @@ describe("Operation", () => {
     replace(deps, "operationUrl", operationUrlFake);
 
     const result = await operation(operarationPart1, operarationPart2)
-      .delete(root)
+      .delete(id)
       .in({ context, host })
       .with({ internalTokenFn: tokenFn, claims });
 
@@ -444,7 +444,7 @@ describe("Operation", () => {
     expect(operationUrlFake).to.have.been.calledWith({
       operation: [operarationPart1, operarationPart2],
       host,
-      root
+      id
     });
     expect(result).to.be.null;
   });
@@ -472,7 +472,7 @@ describe("Operation", () => {
 
     try {
       await operation(operarationPart1, operarationPart2)
-        .delete(root)
+        .delete(id)
         .in({ context, host })
         .with({ tokenFn, claims });
 
@@ -508,7 +508,7 @@ describe("Operation", () => {
 
     try {
       await operation(operarationPart1, operarationPart2)
-        .delete(root)
+        .delete(id)
         .in({ context, host })
         .with({ tokenFn, claims });
 
@@ -540,7 +540,7 @@ describe("Operation", () => {
 
     try {
       await operation(operarationPart1, operarationPart2)
-        .delete(root)
+        .delete(id)
         .in({ context, host })
         .with({ tokenFn, claims });
 

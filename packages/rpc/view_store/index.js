@@ -64,10 +64,10 @@ module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
     context,
     claims,
     tokenFns: { internal: internalTokenFn, external: externalTokenFn } = {}
-  } = {}) => async (root, view) =>
+  } = {}) => async (id, view) =>
     await deps
       .rpc(name, domain, service, "view-store")
-      .put(root, { view })
+      .put(id, { view })
       .in({
         ...(context && { context })
       })
@@ -80,10 +80,10 @@ module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
     context,
     claims,
     tokenFns: { internal: internalTokenFn, external: externalTokenFn } = {}
-  } = {}) => async root =>
+  } = {}) => async id =>
     await deps
       .rpc(name, domain, service, "view-store")
-      .delete(root)
+      .delete(id)
       .in({
         ...(context && { context })
       })

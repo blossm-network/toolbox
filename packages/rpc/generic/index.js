@@ -11,7 +11,7 @@ const formatResponse = response => {
   }
 };
 
-const common = ({ method, dataParam, operation, root, data }) => {
+const common = ({ method, dataParam, operation, id, data }) => {
   return {
     in: ({ context, network, host = process.env.HOST }) => {
       return {
@@ -47,12 +47,12 @@ const common = ({ method, dataParam, operation, root, data }) => {
                 operation,
                 host,
                 ...(path && { path }),
-                ...(root && { root })
+                ...(id && { id })
               })
             : deps.networkUrl({
                 host,
                 ...(path && { path }),
-                ...(root && { root })
+                ...(id && { id })
               });
 
           //TODO
@@ -105,18 +105,18 @@ module.exports = (...operation) => {
         operation,
         data
       }),
-    put: (root, data) =>
-      common({ method: deps.put, dataParam: "body", operation, root, data }),
-    delete: root =>
-      common({ method: deps.delete, dataParam: "body", operation, root }),
+    put: (id, data) =>
+      common({ method: deps.put, dataParam: "body", operation, id, data }),
+    delete: id =>
+      common({ method: deps.delete, dataParam: "body", operation, id }),
     get: query => {
-      const root = query.root;
-      delete query.root;
+      const id = query.id;
+      delete query.id;
       return common({
         method: deps.get,
         dataParam: "query",
         operation,
-        root,
+        id,
         data: query
       });
     }

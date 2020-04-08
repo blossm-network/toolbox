@@ -43,7 +43,7 @@ module.exports = ({ domain, service = process.env.SERVICE } = {}) => {
   } = {}) => async root =>
     await deps
       .rpc(domain, service, "event-store")
-      .get({ root })
+      .get({ id: root })
       .in({
         ...(context && { context })
       })
