@@ -2,7 +2,14 @@ const { expect } = require("chai").use(require("sinon-chai"));
 const { restore, fake } = require("sinon");
 const rolePermissions = require("..");
 
-const roles = ["some-role"];
+const roles = [
+  {
+    id: "some-role-id",
+    root: "some-role-root",
+    service: "some-role-service",
+    network: "some-role-network"
+  }
+];
 
 const permissionPriviledge = "some-permission-privildge";
 const permissionDomain = "some-permission-domain";
@@ -13,10 +20,11 @@ const permissions = [
 ];
 
 const defaultRole = {
-  "some-role": {
+  "some-role-id": {
     permissions
   }
 };
+
 describe("Role permissions", () => {
   afterEach(() => {
     restore();
@@ -37,14 +45,19 @@ describe("Role permissions", () => {
   it("should return the correct roles with custom roles", async () => {
     const customRolePermissions = ["some-other-permission"];
     const customRolesPermissionsFnFake = fake.resolves(customRolePermissions);
-    const customRole = "some-custom-role";
+    const customRole = {
+      id: "some-custom-role-id",
+      root: "some-custom-role-root",
+      service: "some-custom-role-service",
+      network: "some-custom-role-network"
+    };
     const result = await rolePermissions({
       roles: [...roles, customRole],
       defaultRoles: { ...defaultRole },
       customRolePermissionsFn: customRolesPermissionsFnFake
     });
     expect(customRolesPermissionsFnFake).to.have.been.calledWith({
-      roleId: customRole
+      roleId: "some-custom-role-id"
     });
     expect(result).to.deep.equal([
       {
@@ -65,10 +78,10 @@ describe("Role permissions", () => {
     ];
 
     const result = await rolePermissions({
-      roles: [...roles, "some-other-role"],
+      roles: [...roles, { id: "some-other-role-id" }],
       defaultRoles: {
         ...defaultRole,
-        "some-other-role": {
+        "some-other-role-id": {
           permissions: otherPermissions
         }
       }
