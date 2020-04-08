@@ -197,6 +197,7 @@ const steps = ({
         domain,
         region,
         project,
+        network,
         envUriSpecifier,
         containerRegistery,
         mainContainerName,
