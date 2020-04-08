@@ -18,7 +18,7 @@ describe("Verify access token", () => {
     const algorithm = "SHA256";
     const result = "some-result";
 
-    const getFake = fake.returns({ body: { key: publicKey } });
+    const getFake = fake.returns({ body: JSON.stringify({ key: publicKey }) });
     replace(deps, "get", getFake);
 
     const verifyFake = fake.returns(result);
@@ -54,7 +54,7 @@ describe("Verify access token", () => {
     const publicKey = "some-public-key";
     const result = "some-result";
 
-    const getFake = fake.returns({ body: { key: publicKey } });
+    const getFake = fake.returns({ body: JSON.stringify({ key: publicKey }) });
     replace(deps, "get", getFake);
 
     const verifyFake = fake.returns(result);

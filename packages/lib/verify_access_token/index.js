@@ -9,7 +9,7 @@ module.exports = ({ url, algorithm = "SHA256" }) => async ({
 }) => {
   if (!publicKey) {
     const response = await deps.get(url);
-    const { key } = response.body;
+    const { key } = JSON.parse(response.body);
     publicKey = key;
   }
 
