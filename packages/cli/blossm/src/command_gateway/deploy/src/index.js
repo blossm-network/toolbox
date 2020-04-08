@@ -79,7 +79,10 @@ module.exports = gateway({
       service: "core",
       network: process.env.ROLE_NETWORK
     })
-      .set({ tokenFns: { internal: gcpToken } })
+      .set({
+        tokenFns: { internal: gcpToken },
+        context: { network: process.env.NETWORK }
+      })
       .read({ root: principle.root });
 
     //TODO

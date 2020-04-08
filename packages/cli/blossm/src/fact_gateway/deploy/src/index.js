@@ -73,7 +73,10 @@ module.exports = gateway({
       domain: "principle",
       service: "core"
     })
-      .set({ tokenFns: { internal: gcpToken } })
+      .set({
+        tokenFns: { internal: gcpToken },
+        context: { network: process.env.NETWORK }
+      })
       .aggregate(principle.root);
 
     return aggregate
