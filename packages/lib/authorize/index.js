@@ -28,8 +28,12 @@ module.exports = async ({
     }
   );
 
-  if (satisfiedPermissions.length == 0)
+  if (satisfiedPermissions.length == 0) {
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log("PERMISSIONS BAD: ", { principle });
     throw deps.invalidCredentialsError.tokenInvalid();
+  }
 
   return {
     permissions: satisfiedPermissions

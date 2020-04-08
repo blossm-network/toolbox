@@ -11,10 +11,29 @@ module.exports = async ({ token, verifyFn, audience, algorithm }) => {
     signature: base64url.toBase64(signature)
   });
 
+  if (!isVerified) {
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log("NOT VER: ", {
+      isVerified,
+      header,
+      payload,
+      signature,
+      verifyFn
+    });
+  }
   if (!isVerified) throw deps.invalidCredentialsError.tokenInvalid();
 
   const { alg } = decodeJwt(token, { header: true });
 
+  if (alg != algorithm) {
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log("NOT VER 2: ", {
+      alg,
+      algorithm
+    });
+  }
   if (alg != algorithm) throw deps.invalidCredentialsError.tokenInvalid();
 
   const claims = decodeJwt(token);

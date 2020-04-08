@@ -27,5 +27,8 @@ module.exports = async ({
     return claims;
   }
 
+  //TODO
+  //eslint-disable-next-line no-console
+  console.log("AUTHENTICATE BAD: ", { tokens, jwt });
   throw deps.invalidCredentialsError.tokenInvalid();
 };
