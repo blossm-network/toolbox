@@ -8,6 +8,14 @@ module.exports = ({
   subcontextKey
 }) =>
   asyncHandler(async (req, _, next) => {
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log("AUth middleware", {
+      subcontextKey,
+      context: req.context,
+      subcontext:
+        req.context && subcontextKey ? req.context[subcontextKey] : "boop"
+    });
     await Promise.all([
       // If there are permissions with a lookup fn, check if the permissions are met.
       ...(permissions && permissionsLookupFn
