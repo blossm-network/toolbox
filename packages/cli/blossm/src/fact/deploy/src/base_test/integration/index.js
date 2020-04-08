@@ -84,13 +84,15 @@ const executeStep = async step => {
     }
   }
 
-  const response = await request.get(url, {
-    query: {
-      ...(step.context && { context: step.context }),
-      ...(step.query && { query: step.query }),
-      ...(step.root && { root: step.root })
+  const response = await request.get(
+    `${url}${step.root ? `/${step.root}` : ""}`,
+    {
+      query: {
+        ...(step.context && { context: step.context }),
+        ...(step.query && { query: step.query })
+      }
     }
-  });
+  );
 
   const correctCode = step.response ? 200 : step.code;
   if (response.statusCode != correctCode) {
