@@ -23,7 +23,7 @@ const common = ({ method, dataParam, operation, root, data }) => {
         } = {}) => {
           //TODO
           //eslint-disable-next-line no-console
-          console.log({ operation, host, network });
+          console.log({ operation, host, network, context });
           const internal = host == process.env.HOST;
           //TODO
           //eslint-disable-next-line no-console

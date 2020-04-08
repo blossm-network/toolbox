@@ -1,5 +1,8 @@
 module.exports = ({ mainFn }) => {
   return async (req, res) => {
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log({ query: req.query, params: req.params });
     const response = await mainFn({
       params: req.params,
       query: req.query.query,
