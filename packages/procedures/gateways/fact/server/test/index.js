@@ -100,6 +100,7 @@ describe("Fact gateway", () => {
     expect(authorizationFake).to.have.been.calledWith({
       permissionsLookupFn,
       terminatedSessionCheckFn,
+      subcontextKey: domain,
       permissions: priviledges.map(priviledge => {
         return { service, domain, priviledge };
       })
@@ -182,7 +183,8 @@ describe("Fact gateway", () => {
     expect(authorizationFake).to.have.been.calledWith({
       permissionsLookupFn,
       terminatedSessionCheckFn,
-      permissions: "none"
+      permissions: "none",
+      subcontextKey: domain
     });
   });
   it("should call with the correct params with job key", async () => {
@@ -273,10 +275,11 @@ describe("Fact gateway", () => {
     const name1 = "some-name1";
     const name2 = "some-name2";
     const name3 = "some-name3";
+    const otherSubcontextKey = "some-other-subcontext-key";
     const jobs = [
       { name: name1, protection: "none" },
       { name: name2, protection: "context" },
-      { name: name3, priviledges }
+      { name: name3, priviledges, subcontextKey: otherSubcontextKey }
     ];
 
     const verifyFnResult = "some-verify-fn";
@@ -340,6 +343,7 @@ describe("Fact gateway", () => {
     expect(authorizationFake).to.have.been.calledWith({
       permissionsLookupFn,
       terminatedSessionCheckFn,
+      subcontextKey: otherSubcontextKey,
       permissions: priviledges.map(priviledge => {
         return { service, domain, priviledge };
       })
@@ -404,6 +408,7 @@ describe("Fact gateway", () => {
     expect(authorizationFake).to.have.been.calledWith({
       permissionsLookupFn,
       terminatedSessionCheckFn,
+      subcontextKey: domain,
       permissions: priviledges.map(priviledge => {
         return { service: otherService, domain: otherDomain, priviledge };
       })

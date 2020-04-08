@@ -20,7 +20,9 @@ describe("Authorization middleware", () => {
     restore();
   });
   it("should call correctly", async () => {
-    const context = { session, principle };
+    const subcontextKey = "some-subcontext-key";
+    const subcontext = "some-subcontext";
+    const context = { session, principle, [subcontextKey]: subcontext };
     const path = "some-path";
     const req = {
       path,
@@ -36,13 +38,15 @@ describe("Authorization middleware", () => {
     await authorizationMiddleware({
       permissionsLookupFn,
       terminatedSessionCheckFn: terminatedSessionCheckFake,
-      permissions
+      permissions,
+      subcontextKey
     })(req, null, nextFake);
 
     expect(authorizationFake).to.have.been.calledWith({
       principle,
       permissionsLookupFn,
-      permissions
+      permissions,
+      subcontext
     });
     expect(terminatedSessionCheckFake).to.have.been.calledWith({
       session: sessionRoot

@@ -4,7 +4,7 @@ const { string: dateString } = require("@blossm/datetime");
 
 const deps = require("../deps");
 
-const authorize = require("..");
+const authenticate = require("..");
 
 const verifyFn = "some-verify-fn";
 
@@ -32,7 +32,7 @@ describe("Authorize", () => {
     replace(deps, "validate", validateFake);
     replace(deps, "tokensFromReq", fake.returns(tokens));
 
-    const result = await authorize({
+    const result = await authenticate({
       req,
       verifyFn,
       audience,
@@ -57,7 +57,7 @@ describe("Authorize", () => {
     replace(deps, "validate", fake.returns(claims));
     replace(deps, "tokensFromReq", fake.returns(cookieTokens));
 
-    const response = await authorize({
+    const response = await authenticate({
       req,
       verifyFn,
       audience,
@@ -88,7 +88,7 @@ describe("Authorize", () => {
     replace(deps, "tokensFromReq", fake.returns(basicTokens));
 
     const keyClaimsFnFake = fake.returns(claims);
-    const response = await authorize({
+    const response = await authenticate({
       req,
       verifyFn,
       keyClaimsFn: keyClaimsFnFake
@@ -112,7 +112,7 @@ describe("Authorize", () => {
     });
 
     try {
-      await authorize({
+      await authenticate({
         req,
         verifyFn
       });
@@ -144,7 +144,7 @@ describe("Authorize", () => {
     });
 
     try {
-      await authorize({
+      await authenticate({
         req,
         verifyFn
       });

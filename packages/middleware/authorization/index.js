@@ -4,7 +4,8 @@ const deps = require("./deps");
 module.exports = ({
   permissionsLookupFn,
   terminatedSessionCheckFn,
-  permissions
+  permissions,
+  subcontextKey
 }) =>
   asyncHandler(async (req, _, next) => {
     await Promise.all([
@@ -14,7 +15,9 @@ module.exports = ({
             deps.authorize({
               principle: req.context.principle,
               permissionsLookupFn,
-              permissions
+              permissions,
+              ...(req.context &&
+                subcontextKey && { subcontext: req.context[subcontextKey] })
             })
           ]
         : []),

@@ -3,7 +3,8 @@ const deps = require("./deps");
 module.exports = async ({
   permissionsLookupFn,
   permissions = [],
-  principle
+  principle,
+  subcontext
 }) => {
   if (permissions == "none")
     return {
@@ -11,7 +12,8 @@ module.exports = async ({
     };
 
   const principlePermissions = await permissionsLookupFn({
-    principle
+    principle,
+    subcontext
   });
 
   //TODO
@@ -21,6 +23,7 @@ module.exports = async ({
     principlePermissions,
     principle
   });
+
   const satisfiedPermissions = principlePermissions.filter(
     principlePermission => {
       for (const permission of permissions) {

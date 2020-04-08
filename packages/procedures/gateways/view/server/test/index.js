@@ -90,6 +90,7 @@ describe("View gateway", () => {
     expect(authorizationFake).to.have.been.calledWith({
       permissionsLookupFn,
       terminatedSessionCheckFn,
+      subcontextKey: domain,
       permissions: priviledges.map(priviledge => {
         return { service, domain, priviledge };
       })
@@ -165,6 +166,7 @@ describe("View gateway", () => {
     expect(authorizationFake).to.have.been.calledWith({
       permissionsLookupFn,
       terminatedSessionCheckFn,
+      subcontextKey: domain,
       permissions: "none"
     });
   });
@@ -254,10 +256,11 @@ describe("View gateway", () => {
     const name1 = "some-name1";
     const name2 = "some-name2";
     const name3 = "some-name3";
+    const otherSubcontextKey = "some-other-subcontext-key";
     const stores = [
       { name: name1, protection: "none" },
       { name: name2, protection: "context" },
-      { name: name3, priviledges }
+      { name: name3, priviledges, subcontextKey: otherSubcontextKey }
     ];
 
     const verifyFnResult = "some-verify-fn";
@@ -313,6 +316,7 @@ describe("View gateway", () => {
     expect(authorizationFake).to.have.been.calledWith({
       permissionsLookupFn,
       terminatedSessionCheckFn,
+      subcontextKey: otherSubcontextKey,
       permissions: priviledges.map(priviledge => {
         return { service, domain, priviledge };
       })
@@ -372,6 +376,7 @@ describe("View gateway", () => {
     expect(authorizationFake).to.have.been.calledWith({
       permissionsLookupFn,
       terminatedSessionCheckFn,
+      subcontextKey: domain,
       permissions: priviledges.map(priviledge => {
         return { service: otherService, domain: otherDomain, priviledge };
       })

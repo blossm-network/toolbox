@@ -46,7 +46,7 @@ module.exports = gateway({
     }
   }),
   //roles are the roles that the principle has.
-  permissionsLookupFn: async ({ principle }) => {
+  permissionsLookupFn: async ({ principle, subcontext }) => {
     //Download files if they aren't downloaded already.
     if (!defaultRoles) {
       const fileName = uuid();
@@ -90,7 +90,8 @@ module.exports = gateway({
     console.log({ roles, defaultRoles });
     return await rolePermissions({
       roles,
-      defaultRoles
+      defaultRoles,
+      subcontext
       // customRolePermissionsFn: async ({ roleId }) => {
       //   //look through customRoles and pick out roleId
       //   const role = await eventStore({ domain: "role", service: "core" })

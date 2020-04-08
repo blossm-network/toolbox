@@ -1,26 +1,38 @@
 const difference = require("@blossm/array-difference");
 
-module.exports = async ({ roles, defaultRoles, customRolePermissionsFn }) => {
+module.exports = async ({
+  roles,
+  defaultRoles,
+  subcontext,
+  customRolePermissionsFn
+}) => {
   const permissions = [];
-
   const rolesFound = [];
+
   for (const role of roles) {
-    for (const defaultRoleId in defaultRoles) {
-      if (role.id == defaultRoleId) {
-        permissions.push(
-          ...defaultRoles[defaultRoleId].permissions.map(permission => {
-            const [service, domain, priviledge] = permission.split(":");
-            return {
-              priviledge,
-              service,
-              domain
-            };
-          })
-        );
-        rolesFound.push(role);
-        break;
-      }
-    }
+    if (
+      subcontext &&
+      role.root != subcontext.root &&
+      role.service != subcontext.service &&
+      role.network != subcontext.network
+    )
+      continue;
+
+    const defaultRole = defaultRoles[role.id];
+
+    if (!defaultRole) continue;
+
+    permissions.push(
+      ...defaultRole.permissions.map(permission => {
+        const [service, domain, priviledge] = permission.split(":");
+        return {
+          priviledge,
+          service,
+          domain
+        };
+      })
+    );
+    rolesFound.push(role);
   }
 
   const customRoleCandidates = difference(
@@ -47,7 +59,10 @@ module.exports = async ({ roles, defaultRoles, customRolePermissionsFn }) => {
     ...(
       await Promise.all(
         customRoleCandidates.map(customRole =>
-          customRolePermissionsFn({ roleId: customRole.id })
+          customRolePermissionsFn({
+            roleId: customRole.id,
+            ...(subcontext && { subcontext })
+          })
         )
       )
     ).reduce((a, b) => a.concat(b))

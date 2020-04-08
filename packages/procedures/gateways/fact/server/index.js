@@ -26,7 +26,8 @@ module.exports = async ({
     name,
     key = "access",
     priviledges,
-    protection = "strict"
+    protection = "strict",
+    subcontextKey = process.env.DOMAIN
   } of jobs) {
     server = server.get(
       deps.get({
@@ -50,6 +51,7 @@ module.exports = async ({
                   deps.authorization({
                     permissionsLookupFn,
                     terminatedSessionCheckFn,
+                    subcontextKey,
                     permissions:
                       priviledges instanceof Array
                         ? priviledges.map(priviledge => {

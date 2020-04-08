@@ -24,7 +24,8 @@ module.exports = async ({
     name,
     key = "access",
     priviledges,
-    protection = "strict"
+    protection = "strict",
+    subcontextKey = process.env.DOMAIN
   } of stores) {
     server = server.get(deps.get({ name, domain }), {
       path: `/${name}`,
@@ -41,6 +42,7 @@ module.exports = async ({
                 deps.authorization({
                   permissionsLookupFn,
                   terminatedSessionCheckFn,
+                  subcontextKey,
                   permissions:
                     priviledges instanceof Array
                       ? priviledges.map(priviledge => {

@@ -42,6 +42,55 @@ describe("Role permissions", () => {
       }
     ]);
   });
+  it("should return the no roles with no custom roles and wrong subcontext", async () => {
+    const subcontextRoot = "some-subcontext-root";
+    const subcontextService = "some-subcontext-service";
+    const subcontextNetwork = "some-subcontext-network";
+
+    const result = await rolePermissions({
+      roles,
+      defaultRoles: { ...defaultRole },
+      subcontext: {
+        root: subcontextRoot,
+        service: subcontextService,
+        network: subcontextNetwork
+      }
+    });
+
+    expect(result).to.deep.equal([]);
+  });
+  it("should return the correct roles with no custom roles and subcontext", async () => {
+    const subcontextRoot = "some-subcontext-root";
+    const subcontextService = "some-subcontext-service";
+    const subcontextNetwork = "some-subcontext-network";
+
+    const result = await rolePermissions({
+      roles: [
+        ...roles.map(role => {
+          return {
+            id: role.id,
+            root: subcontextRoot,
+            service: subcontextService,
+            network: subcontextNetwork
+          };
+        })
+      ],
+      defaultRoles: { ...defaultRole },
+      subcontext: {
+        root: subcontextRoot,
+        service: subcontextService,
+        network: subcontextNetwork
+      }
+    });
+
+    expect(result).to.deep.equal([
+      {
+        service: permissionService,
+        domain: permissionDomain,
+        priviledge: permissionPriviledge
+      }
+    ]);
+  });
   it("should return the correct roles with custom roles", async () => {
     const customRolePermissions = ["some-other-permission"];
     const customRolesPermissionsFnFake = fake.resolves(customRolePermissions);
