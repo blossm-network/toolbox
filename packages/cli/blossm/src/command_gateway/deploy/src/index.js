@@ -6,7 +6,7 @@ const eventStore = require("@blossm/event-store-rpc");
 const secret = require("@blossm/gcp-secret");
 const fact = require("@blossm/fact-rpc");
 const { verify: verifyGCP } = require("@blossm/gcp-kms");
-// const verify = require("@blossm/verify-access-token");
+const verify = require("@blossm/verify-access-token");
 const { invalidCredentials } = require("@blossm/errors");
 const gcpToken = require("@blossm/gcp-token");
 const connectionToken = require("@blossm/connection-token");
@@ -26,7 +26,7 @@ let defaultRoles;
 module.exports = gateway({
   commands: config.commands,
   whitelist: config.whitelist,
-  algorithm: "EC256",
+  algorithm: "ES256",
   internalTokenFn: gcpToken,
   externalTokenFn: connectionToken({
     credentialsFn: async ({ network }) => {
@@ -107,19 +107,18 @@ module.exports = gateway({
     if (aggregate.state.terminated) throw invalidCredentials.tokenTerminated();
   },
   verifyFn: ({ key }) =>
-    // key == "access"
-    //   ? verify({
-    //       url: process.env.PUBLIC_KEY_URL,
-    //       algorithm: "SHA256"
-    //     })
-    // :
-    verifyGCP({
-      ring: "jwt",
-      key,
-      location: "global",
-      version: "1",
-      project: process.env.GCP_PROJECT
-    }),
+    key == "access"
+      ? verify({
+          url: process.env.PUBLIC_KEY_URL,
+          algorithm: "SHA256"
+        })
+      : verifyGCP({
+          ring: "jwt",
+          key,
+          location: "global",
+          version: "1",
+          project: process.env.GCP_PROJECT
+        }),
   keyClaimsFn: async ({ id, secret, domain = "node" }) => {
     const [key] = await eventStore({ domain: "key", service: "core" })
       .set({ tokenFns: { internal: gcpToken } })
