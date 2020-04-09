@@ -1,6 +1,6 @@
 {
   "name": "@blossm/role-permissions",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "description": "Finds the permissions associated with the given roles.",
   "main": "index.js",
   "author": "blossm.network",
