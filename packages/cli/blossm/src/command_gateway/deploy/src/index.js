@@ -135,7 +135,7 @@ module.exports = gateway({
     console.log("KEY CAIMS FN HERE ", { id, secret });
     const key = await fact({ name: "state", domain: "key", service: "system" })
       .set({ tokenFns: { internal: gcpToken } })
-      .read({ key: "id", value: id });
+      .read({ id });
 
     //TODO
     //eslint-disable-next-line no-console
