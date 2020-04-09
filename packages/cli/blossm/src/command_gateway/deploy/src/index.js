@@ -130,9 +130,16 @@ module.exports = gateway({
     // const [key] = await eventStore({ domain: "key", service: "system" })
     //   .set({ tokenFns: { internal: gcpToken } })
     //   .query({ key: "id", value: id });
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log("KEY CAIMS FN HERE ", { id, secret });
     const key = await fact({ name: "state", domain: "key", service: "system" })
       .set({ tokenFns: { internal: gcpToken } })
       .read({ key: "id", value: id });
+
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log("KEY CAIMS FN: ", { key });
 
     if (!key) throw "Key not found";
 
@@ -140,13 +147,14 @@ module.exports = gateway({
 
     return {
       context: {
+        network: key.network,
         key: {
           root: key.root,
           service: "system",
           network: process.env.NETWORK
         },
-        principle: key.principle
-        // ...key.state.context
+        principle: key.principle,
+        node: key.node
       }
     };
   }
