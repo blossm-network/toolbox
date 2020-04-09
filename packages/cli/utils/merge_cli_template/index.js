@@ -58,6 +58,20 @@ const envDependencyKeyEnvironmentVariables = ({ env, config }) => {
   return environmentVariables;
 };
 
+const envCoreContainerRegistry = ({ env, config }) => {
+  switch (env) {
+    case "production":
+      return config.core.registries.production;
+    case "sandbox":
+      return config.core.registries.sandbox;
+    case "staging":
+      return config.core.registries.staging;
+    case "development":
+      return config.core.registries.development;
+    default:
+      return "";
+  }
+};
 const envProject = ({ env, config }) => {
   switch (env) {
     case "production":
@@ -345,32 +359,37 @@ const eventStoreDependencies = ({ dependencies }) => {
   return result;
 };
 
-const addDefaultDependencies = ({ config }) => {
+const addDefaultDependencies = ({ config, coreNetwork }) => {
   const tokenDependencies = [
     {
       name: "upgrade",
       domain: "session",
       service: "core",
+      network: coreNetwork,
       procedure: "command"
     },
     {
       domain: "session",
       service: "core",
+      network: coreNetwork,
       procedure: "event-store"
     },
     {
       domain: "role",
       service: "core",
+      network: coreNetwork,
       procedure: "event-store"
     },
     {
       domain: "principle",
       service: "core",
+      network: coreNetwork,
       procedure: "event-store"
     },
     {
       domain: "identity",
       service: "core",
+      network: coreNetwork,
       procedure: "event-store"
     }
   ];
@@ -405,14 +424,16 @@ const addDefaultDependencies = ({ config }) => {
         )
           ? tokenDependencies
           : []),
-        ...config.commands.map(command => {
-          return {
-            name: command.name,
-            domain: config.domain,
-            service: config.service,
-            procedure: "command"
-          };
-        })
+        ...config.commands
+          .filter(c => c.network == undefined)
+          .map(command => {
+            return {
+              name: command.name,
+              domain: config.domain,
+              service: config.service,
+              procedure: "command"
+            };
+          })
       ];
       return [...eventStoreDependencies({ dependencies }), ...dependencies];
     }
@@ -424,14 +445,16 @@ const addDefaultDependencies = ({ config }) => {
         )
           ? tokenDependencies
           : []),
-        ...config.stores.map(store => {
-          return {
-            name: store.name,
-            domain: config.domain,
-            service: config.service,
-            procedure: "view-store"
-          };
-        })
+        ...config.stores
+          .filter(s => s.network == undefined)
+          .map(store => {
+            return {
+              name: store.name,
+              domain: config.domain,
+              service: config.service,
+              procedure: "view-store"
+            };
+          })
       ];
     case "fact-gateway":
       return [
@@ -441,27 +464,29 @@ const addDefaultDependencies = ({ config }) => {
         )
           ? tokenDependencies
           : []),
-        ...config.jobs.map(job => {
-          return {
-            name: job.name,
-            domain: config.domain,
-            service: config.service,
-            procedure: "fact"
-          };
-        })
+        ...config.jobs
+          .filter(j => j.network == undefined)
+          .map(job => {
+            return {
+              name: job.name,
+              domain: config.domain,
+              service: config.service,
+              procedure: "fact"
+            };
+          })
       ];
     default:
       return config.testing.dependencies;
   }
 };
 
-const writeConfig = (config, workingDir) => {
+const writeConfig = ({ config, coreNetwork, workingDir }) => {
   const newConfigPath = path.resolve(workingDir, "config.json");
   if (!config.testing) config.testing = {};
   if (!config.testing.dependencies) config.testing.dependencies = [];
 
   const { dependencies, events } = resolveTransientInfo(
-    addDefaultDependencies({ config })
+    addDefaultDependencies({ config, coreNetwork })
   );
 
   //TODO
@@ -521,7 +546,6 @@ const configure = async (workingDir, configFn, env, strict) => {
     writePackage({ config, baseConfig, workingDir });
     delete config.dependencies;
     delete config.devDependencies;
-    writeConfig(config, workingDir);
 
     const blossmConfig = rootDir.config();
     const project = envProject({ env, config: blossmConfig });
@@ -529,7 +553,7 @@ const configure = async (workingDir, configFn, env, strict) => {
     const region =
       config["gcp-region"] || blossmConfig.vendors.cloud.gcp.defaults.region;
     const network = blossmConfig.network;
-    const coreNetwork = blossmConfig.core || network;
+    const coreNetwork = blossmConfig.core.network || network;
     const dnsZone =
       config["gcp-dns-zone"] || blossmConfig.vendors.cloud.gcp.dnsZone;
 
@@ -549,7 +573,8 @@ const configure = async (workingDir, configFn, env, strict) => {
     const publicKeyUrl = envPublicKeyUrl({ env, config: blossmConfig });
 
     //eslint-disable-next-line no-console
-    console.log({ publicKeyUrl });
+    console.log({ publicKeyUrl, coreContainerRegistery });
+
     const twilioSendingPhoneNumber = envTwilioSendingPhoneNumber({
       env,
       config: blossmConfig
@@ -562,8 +587,14 @@ const configure = async (workingDir, configFn, env, strict) => {
     const secretBucketKeyRing = "secrets-bucket";
 
     const containerRegistery = `us.gcr.io/${project}`;
+    const coreContainerRegistery = envCoreContainerRegistry({
+      env,
+      config: blossmConfig
+    });
 
     const mainContainerName = "main";
+
+    writeConfig({ config, coreNetwork, workingDir });
 
     writeBuild({
       workingDir,
@@ -612,6 +643,7 @@ const configure = async (workingDir, configFn, env, strict) => {
       project,
       region,
       containerRegistery,
+      coreContainerRegistery,
       coreNetwork,
       domain,
       name,

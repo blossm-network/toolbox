@@ -13,6 +13,7 @@ module.exports = ({
   host,
   region,
   containerRegistery,
+  coreContainerRegistery,
   secretBucket,
   secretBucketKeyLocation,
   secretBucketKeyRing,
@@ -54,7 +55,11 @@ module.exports = ({
   let services = {};
   let includeDatabase = false;
   for (const dependency of config.testing.dependencies) {
-    const commonServiceImagePrefix = `${containerRegistery}/${dependency.procedure}`;
+    const commonServiceImagePrefix = `${
+      coreNetwork && dependency.network == coreNetwork
+        ? coreContainerRegistery
+        : containerRegistery
+    }/${dependency.procedure}`;
     switch (dependency.procedure) {
       case "view-store":
         {
