@@ -4,6 +4,7 @@ module.exports = ({
   network,
   procedure,
   memory,
+  coreNetwork,
   operationHash,
   containerRegistery,
   envUriSpecifier,
@@ -37,6 +38,7 @@ module.exports = ({
       `--set-env-vars=${Object.entries({
         NODE_ENV: nodeEnv,
         NETWORK: `${envUriSpecifier}${network}`,
+        CORE_NETWORK: `${envUriSpecifier}${coreNetwork}`,
         HOST: `${region}.${envUriSpecifier}${network}`,
         PROCEDURE: procedure,
         OPERATION_HASH: operationHash,

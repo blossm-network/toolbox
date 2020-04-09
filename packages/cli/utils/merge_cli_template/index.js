@@ -528,7 +528,8 @@ const configure = async (workingDir, configFn, env, strict) => {
 
     const region =
       config["gcp-region"] || blossmConfig.vendors.cloud.gcp.defaults.region;
-    const network = config.network || blossmConfig.network;
+    const network = blossmConfig.network;
+    const coreNetwork = blossmConfig.core || network;
     const dnsZone =
       config["gcp-dns-zone"] || blossmConfig.vendors.cloud.gcp.dnsZone;
 
@@ -591,6 +592,7 @@ const configure = async (workingDir, configFn, env, strict) => {
       secretBucket,
       secretBucketKeyLocation,
       secretBucketKeyRing,
+      coreNetwork,
       actions,
       strict,
       dependencyKeyEnvironmentVariables,
@@ -610,6 +612,7 @@ const configure = async (workingDir, configFn, env, strict) => {
       project,
       region,
       containerRegistery,
+      coreNetwork,
       domain,
       name,
       event,

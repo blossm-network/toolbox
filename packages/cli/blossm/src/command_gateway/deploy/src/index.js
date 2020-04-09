@@ -2,12 +2,12 @@ const yaml = require("yaml");
 const { readFile, readdir, unlink } = require("fs");
 const { promisify } = require("util");
 const gateway = require("@blossm/command-gateway");
-const eventStore = require("@blossm/event-store-rpc");
+// const eventStore = require("@blossm/event-store-rpc");
 const secret = require("@blossm/gcp-secret");
 const fact = require("@blossm/fact-rpc");
 const { verify: verifyGCP } = require("@blossm/gcp-kms");
 const verify = require("@blossm/verify-access-token");
-const { invalidCredentials } = require("@blossm/errors");
+// const { invalidCredentials } = require("@blossm/errors");
 const gcpToken = require("@blossm/gcp-token");
 const connectionToken = require("@blossm/connection-token");
 const { download: downloadFile } = require("@blossm/gcp-storage");
@@ -77,7 +77,9 @@ module.exports = gateway({
       name: "roles",
       domain: "principle",
       service: "core",
-      network: process.env.ROLE_NETWORK
+      ...(process.env.CORE_NETWORK && {
+        network: process.env.CORE_NETWORK
+      })
     })
       .set({
         tokenFns: { internal: gcpToken },
@@ -103,15 +105,15 @@ module.exports = gateway({
     // : [];
   },
   //TODO look at removing this to prevent cross network event store lookup.
-  terminatedSessionCheckFn: async ({ session }) => {
-    const aggregate = await eventStore({
-      domain: "session",
-      service: "core"
-    })
-      .set({ tokenFns: { internal: gcpToken } })
-      .aggregate(session);
-
-    if (aggregate.state.terminated) throw invalidCredentials.tokenTerminated();
+  terminatedSessionCheckFn: async () => {
+    // session }) => {
+    // const aggregate = await eventStore({
+    //   domain: "session",
+    //   service: "core"
+    // })
+    //   .set({ tokenFns: { internal: gcpToken } })
+    //   .aggregate(session);
+    // if (aggregate.state.terminated) throw invalidCredentials.tokenTerminated();
   },
   verifyFn: ({ key }) =>
     key == "access"
@@ -133,7 +135,12 @@ module.exports = gateway({
     //TODO
     //eslint-disable-next-line no-console
     console.log("KEY CAIMS FN HERE ", { id, secret });
-    const key = await fact({ name: "state", domain: "key", service: "system" })
+    const key = await fact({
+      name: "state",
+      domain: "key",
+      service: "system",
+      ...(process.env.CORE_NETWORK && { network: process.env.CORE_NETWORK })
+    })
       .set({ tokenFns: { internal: gcpToken } })
       .read({ id });
 

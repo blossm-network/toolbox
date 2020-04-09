@@ -3,6 +3,7 @@
     "yaml": "^1.7.0",
     "@blossm/fact-gateway": "*",
     "@blossm/event-store-rpc": "*",
+    "@blossm/fact-rpc": "*",
     "@blossm/verify-access-token": "*",
     "@blossm/gcp-kms": "*",
     "@blossm/gcp-secret": "*",

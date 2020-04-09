@@ -35,6 +35,7 @@ module.exports = ({
   computeUrlId,
   dependencyKeyEnvironmentVariables,
   rolesBucket,
+  coreNetwork,
   secretBucket,
   secretBucketKeyLocation,
   secretBucketKeyRing,
@@ -61,6 +62,7 @@ module.exports = ({
       mainContainerName,
       project,
       region,
+      coreNetwork,
       procedure,
       operationHash,
       secretBucket,
@@ -93,6 +95,7 @@ module.exports = ({
           deploy({
             extension: imageExtension,
             serviceName,
+            coreNetwork,
             allowUnauthenticated: true,
             procedure,
             operationHash,

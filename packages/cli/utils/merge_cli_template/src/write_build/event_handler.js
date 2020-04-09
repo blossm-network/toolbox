@@ -36,6 +36,7 @@ module.exports = ({
   service,
   procedure,
   env,
+  coreNetwork,
   operationHash,
   operationName,
   rolesBucket,
@@ -68,6 +69,7 @@ module.exports = ({
       secretBucket,
       secretBucketKeyRing,
       secretBucketKeyLocation,
+      coreNetwork,
       custom: {
         DOMAIN: domain,
         SERVICE: service,
@@ -95,6 +97,7 @@ module.exports = ({
             extension: imageExtension,
             rolesBucket,
             secretBucket,
+            coreNetwork,
             secretBucketKeyLocation,
             secretBucketKeyRing,
             containerRegistery,

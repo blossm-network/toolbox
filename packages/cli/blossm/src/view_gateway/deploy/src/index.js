@@ -2,10 +2,11 @@ const { promisify } = require("util");
 const { readFile, readdir, unlink } = require("fs");
 const yaml = require("yaml");
 const gateway = require("@blossm/view-gateway");
-const eventStore = require("@blossm/event-store-rpc");
+// const eventStore = require("@blossm/event-store-rpc");
+const fact = require("@blossm/fact-rpc");
 const { verify: verifyGCP } = require("@blossm/gcp-kms");
 const verify = require("@blossm/verify-access-token");
-const { invalidCredentials } = require("@blossm/errors");
+// const { invalidCredentials } = require("@blossm/errors");
 const { download: downloadFile } = require("@blossm/gcp-storage");
 const rolePermissions = require("@blossm/role-permissions");
 const gcpToken = require("@blossm/gcp-token");
@@ -24,7 +25,9 @@ module.exports = gateway({
   whitelist: config.whitelist,
   algorithm: "ES256",
   internalTokenFn: gcpToken,
-  permissionsLookupFn: async ({ principle }) => {
+  //roles are the roles that the principle has.
+  permissionsLookupFn: async ({ principle, context }) => {
+    //Download files if they aren't downloaded already.
     if (!defaultRoles) {
       const fileName = uuid();
       const extension = ".yaml";
@@ -50,38 +53,47 @@ module.exports = gateway({
       );
     }
 
-    const aggregate = await eventStore({
+    const roles = await fact({
+      name: "roles",
       domain: "principle",
-      service: "core"
+      service: "core",
+      ...(process.env.CORE_NETWORK && {
+        network: process.env.CORE_NETWORK
+      })
     })
       .set({
         tokenFns: { internal: gcpToken },
         context: { network: process.env.NETWORK }
       })
-      .aggregate(principle.root);
+      .read({ root: principle.root });
 
-    return aggregate
-      ? await rolePermissions({
-          roles: aggregate.state.roles.map(role => role.id),
-          defaultRoles,
-          customRolePermissionsFn: async ({ roleId }) => {
-            const role = await eventStore({ domain: "role", service: "core" })
-              .set({ tokenFns: { internal: gcpToken } })
-              .query({ key: "id", value: roleId });
-            return role.state.permissions;
-          }
-        })
-      : [];
+    //TODO
+    //eslint-disable-next-line
+    console.log({ roles, defaultRoles });
+    return await rolePermissions({
+      roles,
+      defaultRoles,
+      context
+      // customRolePermissionsFn: async ({ roleId }) => {
+      //   //look through customRoles and pick out roleId
+      //   const role = await eventStore({ domain: "role", service: "core" })
+      //     .set({ tokenFns: { internal: gcpToken } })
+      //     .query({ key: "id", value: roleId });
+      //   return role.state.permissions;
+      // }
+    });
+    // : [];
   },
-  terminatedSessionCheckFn: async ({ session }) => {
-    const aggregate = await eventStore({
-      domain: "session",
-      service: "core"
-    })
-      .set({ tokenFns: { internal: gcpToken } })
-      .aggregate(session);
-
-    if (aggregate.state.terminated) throw invalidCredentials.tokenTerminated();
+  //TODO look at removing this to prevent cross network event store lookup.
+  terminatedSessionCheckFn: async () => {
+    // session }) => {
+    // const aggregate = await eventStore({
+    //   domain: "session",
+    //   service: "core"
+    // })
+    //   .set({ tokenFns: { internal: gcpToken } })
+    //   .aggregate(session);
+    // if (aggregate.state.terminated) throw invalidCredentials.tokenTerminated();
   },
   verifyFn: ({ key }) =>
     key == "access"
