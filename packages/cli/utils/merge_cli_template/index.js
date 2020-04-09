@@ -572,9 +572,6 @@ const configure = async (workingDir, configFn, env, strict) => {
     const secretBucket = envSecretsBucket({ env, config: blossmConfig });
     const publicKeyUrl = envPublicKeyUrl({ env, config: blossmConfig });
 
-    //eslint-disable-next-line no-console
-    console.log({ publicKeyUrl, coreContainerRegistery });
-
     const twilioSendingPhoneNumber = envTwilioSendingPhoneNumber({
       env,
       config: blossmConfig
@@ -593,6 +590,9 @@ const configure = async (workingDir, configFn, env, strict) => {
     });
 
     const mainContainerName = "main";
+
+    //eslint-disable-next-line no-console
+    console.log({ publicKeyUrl, coreContainerRegistery });
 
     writeConfig({ config, coreNetwork, workingDir });
 
