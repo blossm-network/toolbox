@@ -30,7 +30,7 @@ module.exports = async ({
     key = "access",
     priviledges,
     protection = "strict",
-    subcontextKey = process.env.DOMAIN
+    context
   } of commands) {
     server = server.post(
       deps.post({
@@ -57,7 +57,7 @@ module.exports = async ({
                   deps.authorization({
                     permissionsLookupFn,
                     terminatedSessionCheckFn,
-                    subcontextKey,
+                    context,
                     permissions:
                       priviledges instanceof Array
                         ? priviledges.map(priviledge => {

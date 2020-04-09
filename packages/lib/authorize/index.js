@@ -4,7 +4,7 @@ module.exports = async ({
   permissionsLookupFn,
   permissions = [],
   principle,
-  subcontext
+  context
 }) => {
   if (permissions == "none")
     return {
@@ -13,7 +13,7 @@ module.exports = async ({
 
   const principlePermissions = await permissionsLookupFn({
     principle,
-    subcontext
+    context
   });
 
   //TODO

@@ -3,7 +3,7 @@ const difference = require("@blossm/array-difference");
 module.exports = async ({
   roles,
   defaultRoles,
-  subcontext,
+  context,
   customRolePermissionsFn
 }) => {
   const permissions = [];
@@ -11,10 +11,10 @@ module.exports = async ({
 
   for (const role of roles) {
     if (
-      subcontext &&
-      role.root != subcontext.root &&
-      role.service != subcontext.service &&
-      role.network != subcontext.network
+      context &&
+      role.root != context.root &&
+      role.service != context.service &&
+      role.network != context.network
     )
       continue;
 
@@ -61,7 +61,7 @@ module.exports = async ({
         customRoleCandidates.map(customRole =>
           customRolePermissionsFn({
             roleId: customRole.id,
-            ...(subcontext && { subcontext })
+            ...(context && { context })
           })
         )
       )

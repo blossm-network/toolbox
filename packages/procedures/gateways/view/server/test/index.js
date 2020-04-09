@@ -9,6 +9,7 @@ const terminatedSessionCheckFn = "some-terminated-session-check-fn";
 const domain = "some-domain";
 const service = "some-service";
 const network = "some-network";
+const context = "some-context";
 const algorithm = "some-algorithm";
 
 process.env.DOMAIN = domain;
@@ -47,7 +48,7 @@ describe("View gateway", () => {
     const priviledge = "some-priviledge";
     const priviledges = [priviledge];
     const name = "some-name";
-    const stores = [{ name, priviledges }];
+    const stores = [{ name, priviledges, context }];
 
     const verifyFnResult = "some-verify-fn";
     const verifyFnFake = fake.returns(verifyFnResult);
@@ -90,7 +91,7 @@ describe("View gateway", () => {
     expect(authorizationFake).to.have.been.calledWith({
       permissionsLookupFn,
       terminatedSessionCheckFn,
-      subcontextKey: domain,
+      context,
       permissions: priviledges.map(priviledge => {
         return { service, domain, priviledge };
       })
@@ -123,7 +124,7 @@ describe("View gateway", () => {
 
     const priviledges = "none";
     const name = "some-name";
-    const stores = [{ name, priviledges }];
+    const stores = [{ name, priviledges, context }];
 
     const verifyFnResult = "some-verify-fn";
     const verifyFnFake = fake.returns(verifyFnResult);
@@ -166,7 +167,7 @@ describe("View gateway", () => {
     expect(authorizationFake).to.have.been.calledWith({
       permissionsLookupFn,
       terminatedSessionCheckFn,
-      subcontextKey: domain,
+      context,
       permissions: "none"
     });
   });
@@ -256,11 +257,10 @@ describe("View gateway", () => {
     const name1 = "some-name1";
     const name2 = "some-name2";
     const name3 = "some-name3";
-    const otherSubcontextKey = "some-other-subcontext-key";
     const stores = [
       { name: name1, protection: "none" },
       { name: name2, protection: "context" },
-      { name: name3, priviledges, subcontextKey: otherSubcontextKey }
+      { name: name3, priviledges, context }
     ];
 
     const verifyFnResult = "some-verify-fn";
@@ -316,7 +316,7 @@ describe("View gateway", () => {
     expect(authorizationFake).to.have.been.calledWith({
       permissionsLookupFn,
       terminatedSessionCheckFn,
-      subcontextKey: otherSubcontextKey,
+      context,
       permissions: priviledges.map(priviledge => {
         return { service, domain, priviledge };
       })
@@ -350,7 +350,7 @@ describe("View gateway", () => {
     const priviledge = "some-priviledge";
     const priviledges = [priviledge];
     const name = "some-name";
-    const stores = [{ name, priviledges }];
+    const stores = [{ name, priviledges, context }];
 
     const otherDomain = "some-other-domain";
     const otherService = "some-other-service";
@@ -376,7 +376,7 @@ describe("View gateway", () => {
     expect(authorizationFake).to.have.been.calledWith({
       permissionsLookupFn,
       terminatedSessionCheckFn,
-      subcontextKey: domain,
+      context,
       permissions: priviledges.map(priviledge => {
         return { service: otherService, domain: otherDomain, priviledge };
       })

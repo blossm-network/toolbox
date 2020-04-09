@@ -5,16 +5,13 @@ module.exports = ({
   permissionsLookupFn,
   terminatedSessionCheckFn,
   permissions,
-  subcontextKey
+  context
 }) =>
   asyncHandler(async (req, _, next) => {
     //TODO
     //eslint-disable-next-line no-console
     console.log("AUth middleware", {
-      subcontextKey,
-      context: req.context,
-      subcontext:
-        req.context && subcontextKey ? req.context[subcontextKey] : "boop"
+      context: req.context && context ? req.context[context] : "boop"
     });
     await Promise.all([
       // If there are permissions with a lookup fn, check if the permissions are met.
@@ -24,8 +21,7 @@ module.exports = ({
               principle: req.context.principle,
               permissionsLookupFn,
               permissions,
-              ...(req.context &&
-                subcontextKey && { subcontext: req.context[subcontextKey] })
+              ...(req.context && context && { context: req.context[context] })
             })
           ]
         : []),

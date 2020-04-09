@@ -27,19 +27,19 @@ describe("Authorize", () => {
     const permissions = [{ service, domain, priviledge }];
 
     const permissionsLookupFn = fake.returns(permissions);
-    const subcontext = "some-subcontext";
+    const context = "some-context";
 
     const document = await authorize({
       permissionsLookupFn,
       permissions: [{ service, domain, priviledge }],
       network,
       principle,
-      subcontext
+      context
     });
 
     expect(permissionsLookupFn).to.have.been.calledWith({
       principle,
-      subcontext
+      context
     });
     expect(document).to.deep.equal({
       permissions

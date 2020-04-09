@@ -42,44 +42,44 @@ describe("Role permissions", () => {
       }
     ]);
   });
-  it("should return the no roles with no custom roles and wrong subcontext", async () => {
-    const subcontextRoot = "some-subcontext-root";
-    const subcontextService = "some-subcontext-service";
-    const subcontextNetwork = "some-subcontext-network";
+  it("should return the no roles with no custom roles and wrong context", async () => {
+    const contextRoot = "some-context-root";
+    const contextService = "some-context-service";
+    const contextNetwork = "some-context-network";
 
     const result = await rolePermissions({
       roles,
       defaultRoles: { ...defaultRole },
-      subcontext: {
-        root: subcontextRoot,
-        service: subcontextService,
-        network: subcontextNetwork
+      context: {
+        root: contextRoot,
+        service: contextService,
+        network: contextNetwork
       }
     });
 
     expect(result).to.deep.equal([]);
   });
-  it("should return the correct roles with no custom roles and subcontext", async () => {
-    const subcontextRoot = "some-subcontext-root";
-    const subcontextService = "some-subcontext-service";
-    const subcontextNetwork = "some-subcontext-network";
+  it("should return the correct roles with no custom roles and context", async () => {
+    const contextRoot = "some-context-root";
+    const contextService = "some-context-service";
+    const contextNetwork = "some-context-network";
 
     const result = await rolePermissions({
       roles: [
         ...roles.map(role => {
           return {
             id: role.id,
-            root: subcontextRoot,
-            service: subcontextService,
-            network: subcontextNetwork
+            root: contextRoot,
+            service: contextService,
+            network: contextNetwork
           };
         })
       ],
       defaultRoles: { ...defaultRole },
-      subcontext: {
-        root: subcontextRoot,
-        service: subcontextService,
-        network: subcontextNetwork
+      context: {
+        root: contextRoot,
+        service: contextService,
+        network: contextNetwork
       }
     });
 

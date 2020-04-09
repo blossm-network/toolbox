@@ -9,6 +9,7 @@ const terminatedSessionCheckFn = "some-terminated-session-check-fn";
 const domain = "some-domain";
 const service = "some-service";
 const network = "some-network";
+const context = "some-context";
 const algorithm = "some-algorithm";
 const keyClaimsFn = "some-token-claims-fn";
 const internalTokenFn = "some-internal-token-fn";
@@ -50,7 +51,7 @@ describe("Command gateway", () => {
     const priviledge = "some-priviledge";
     const priviledges = [priviledge];
     const name = "some-name";
-    const commands = [{ name, priviledges }];
+    const commands = [{ name, priviledges, context }];
 
     const verifyFnResult = "some-verify-fn";
     const verifyFnFake = fake.returns(verifyFnResult);
@@ -106,7 +107,7 @@ describe("Command gateway", () => {
       permissions: priviledges.map(priviledge => {
         return { service, domain, priviledge };
       }),
-      subcontextKey: domain
+      context
     });
   });
   it("should call with the correct params with priviledges set to none and network in command", async () => {
@@ -137,7 +138,7 @@ describe("Command gateway", () => {
     const priviledges = "none";
     const name = "some-name";
     const network = "some-network";
-    const commands = [{ name, network, priviledges }];
+    const commands = [{ name, network, priviledges, context }];
 
     const verifyFnResult = "some-verify-fn";
     const verifyFnFake = fake.returns(verifyFnResult);
@@ -191,7 +192,7 @@ describe("Command gateway", () => {
     expect(authorizationFake).to.have.been.calledWith({
       permissionsLookupFn,
       terminatedSessionCheckFn,
-      subcontextKey: domain,
+      context,
       permissions: "none"
     });
   });
@@ -285,14 +286,13 @@ describe("Command gateway", () => {
 
     const priviledge = "some-priviledge";
     const priviledges = [priviledge];
-    const otherSubcontextKey = "some-other-subcontext-key";
     const name1 = "some-name1";
     const name2 = "some-name2";
     const name3 = "some-name3";
     const commands = [
       { name: name1, protection: "none" },
       { name: name2, protection: "context" },
-      { name: name3, priviledges, subcontextKey: otherSubcontextKey }
+      { name: name3, priviledges, context }
     ];
 
     const verifyFnResult = "some-verify-fn";
@@ -362,7 +362,7 @@ describe("Command gateway", () => {
     expect(authorizationFake).to.have.been.calledWith({
       permissionsLookupFn,
       terminatedSessionCheckFn,
-      subcontextKey: otherSubcontextKey,
+      context,
       permissions: priviledges.map(priviledge => {
         return { service, domain, priviledge };
       })
@@ -398,7 +398,7 @@ describe("Command gateway", () => {
     const priviledges = [priviledge];
 
     const name = "some-name";
-    const commands = [{ name, priviledges }];
+    const commands = [{ name, priviledges, context }];
 
     const otherDomain = "some-other-domain";
     const otherService = "some-other-service";
@@ -429,7 +429,7 @@ describe("Command gateway", () => {
     expect(authorizationFake).to.have.been.calledWith({
       permissionsLookupFn,
       terminatedSessionCheckFn,
-      subcontextKey: domain,
+      context,
       permissions: priviledges.map(priviledge => {
         return { service: otherService, domain: otherDomain, priviledge };
       })
