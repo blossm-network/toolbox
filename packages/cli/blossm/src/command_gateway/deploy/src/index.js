@@ -38,6 +38,10 @@ module.exports = gateway({
       const id = process.env[`${nameRoot}_KEY_ID`];
       const secretName = process.env[`${nameRoot}_KEY_SECRET_NAME`];
 
+      //TODO
+      //eslint-disable-next-line no-console
+      console.log({ nameRoot, network, id, secretName });
+
       if (!id || !secretName) return null;
       return {
         id,
