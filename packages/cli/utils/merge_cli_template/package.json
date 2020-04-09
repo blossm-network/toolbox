@@ -1,6 +1,6 @@
 {
   "name": "@blossm/merge-cli-template",
-  "version": "0.0.306",
+  "version": "0.0.307",
   "description": "Merges the contents of a file with a template.",
   "main": "index.js",
   "author": "blossm.network",
