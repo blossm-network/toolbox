@@ -29,6 +29,6 @@ module.exports = async ({
 
   //TODO
   //eslint-disable-next-line no-console
-  console.log("AUTHENTICATE BAD: ", { tokens, jwt });
+  console.log("AUTHENTICATE BAD: ", { tokens, jwt, context });
   throw deps.invalidCredentialsError.tokenInvalid();
 };
