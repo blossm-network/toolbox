@@ -127,22 +127,25 @@ module.exports = gateway({
           project: process.env.GCP_PROJECT
         }),
   keyClaimsFn: async ({ id, secret }) => {
-    const [key] = await eventStore({ domain: "key", service: "system" })
+    // const [key] = await eventStore({ domain: "key", service: "system" })
+    //   .set({ tokenFns: { internal: gcpToken } })
+    //   .query({ key: "id", value: id });
+    const key = await fact({ name: "state", domain: "key", service: "system" })
       .set({ tokenFns: { internal: gcpToken } })
-      .query({ key: "id", value: id });
+      .read({ key: "id", value: id });
 
     if (!key) throw "Key not found";
 
-    if (!(await compare(secret, key.state.secret))) throw "Incorrect secret";
+    if (!(await compare(secret, key.secret))) throw "Incorrect secret";
 
     return {
       context: {
         key: {
-          root: key.headers.root,
+          root: key.root,
           service: "system",
           network: process.env.NETWORK
         },
-        principle: key.state.principle
+        principle: key.principle
         // ...key.state.context
       }
     };

@@ -98,7 +98,8 @@ describe("Command gateway", () => {
       keyClaimsFn,
       audience: network,
       algorithm,
-      strict: true
+      strict: true,
+      allowBasic: false
     });
     expect(verifyFnFake).to.have.been.calledWith({ key: "access" });
     expect(authorizationFake).to.have.been.calledWith({
@@ -138,7 +139,7 @@ describe("Command gateway", () => {
     const priviledges = "none";
     const name = "some-name";
     const network = "some-network";
-    const commands = [{ name, network, priviledges, context }];
+    const commands = [{ name, network, priviledges, context, basic: true }];
 
     const verifyFnResult = "some-verify-fn";
     const verifyFnFake = fake.returns(verifyFnResult);
@@ -186,7 +187,8 @@ describe("Command gateway", () => {
       keyClaimsFn,
       audience: network,
       algorithm,
-      strict: true
+      strict: true,
+      allowBasic: true
     });
     expect(verifyFnFake).to.have.been.calledWith({ key: "access" });
     expect(authorizationFake).to.have.been.calledWith({
@@ -348,14 +350,16 @@ describe("Command gateway", () => {
       keyClaimsFn,
       algorithm,
       audience: network,
-      strict: true
+      strict: true,
+      allowBasic: false
     });
     expect(authenticationFake).to.have.been.calledWith({
       verifyFn: verifyFnResult,
       keyClaimsFn,
       algorithm,
       audience: network,
-      strict: false
+      strict: false,
+      allowBasic: false
     });
     expect(verifyFnFake).to.have.been.calledWith({ key: "access" });
     expect(authorizationFake).to.have.been.calledOnce;

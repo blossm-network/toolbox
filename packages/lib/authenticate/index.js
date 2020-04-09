@@ -5,7 +5,8 @@ module.exports = async ({
   verifyFn,
   keyClaimsFn,
   audience,
-  algorithm
+  algorithm,
+  allowBasic = false
 }) => {
   const tokens = deps.tokensFromReq(req);
 
@@ -19,7 +20,7 @@ module.exports = async ({
       algorithm
     });
     return claims;
-  } else if (tokens.basic && keyClaimsFn) {
+  } else if (tokens.basic && allowBasic && keyClaimsFn) {
     const credentials = Buffer.from(tokens.basic, "base64").toString("ascii");
     const [id, secret] = credentials.split(":");
     const claims = await keyClaimsFn({ id, secret });

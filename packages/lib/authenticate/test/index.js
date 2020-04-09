@@ -91,7 +91,8 @@ describe("Authorize", () => {
     const response = await authenticate({
       req,
       verifyFn,
-      keyClaimsFn: keyClaimsFnFake
+      keyClaimsFn: keyClaimsFnFake,
+      allowBasic: true
     });
 
     expect(deps.tokensFromReq).to.have.been.calledWith(req);
@@ -100,6 +101,42 @@ describe("Authorize", () => {
       secret: basicTokenSecret
     });
     expect(response).to.deep.equal(claims);
+  });
+  it("should authenticate with basic token", async () => {
+    const basicTokenId = "some-basic-id";
+    const basicTokenSecret = "some-basic-secret";
+
+    const basicToken = `${basicTokenId}:${basicTokenSecret}`;
+
+    const buffer = Buffer.from(basicToken).toString("base64");
+
+    const basicTokens = {
+      basic: buffer
+    };
+
+    replace(deps, "tokensFromReq", fake.returns(basicTokens));
+
+    const keyClaimsFnFake = fake.returns(claims);
+
+    const error = "some-error";
+    const tokenInvalidFake = fake.returns(error);
+    replace(deps, "invalidCredentialsError", {
+      tokenInvalid: tokenInvalidFake
+    });
+
+    try {
+      await authenticate({
+        req,
+        verifyFn,
+        keyClaimsFn: keyClaimsFnFake,
+        allowBasic: false
+      });
+
+      //shouldn't get called
+      expect(1).to.equal(0);
+    } catch (e) {
+      expect(e).to.equal(error);
+    }
   });
   it("should not authorize if there is no token", async () => {
     replace(deps, "tokensFromReq", fake.returns({}));

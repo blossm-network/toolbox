@@ -30,6 +30,7 @@ module.exports = async ({
     key = "access",
     priviledges,
     protection = "strict",
+    basic = false,
     context
   } of commands) {
     server = server.post(
@@ -50,7 +51,8 @@ module.exports = async ({
               keyClaimsFn,
               audience: process.env.NETWORK,
               algorithm,
-              strict: protection == "strict"
+              strict: protection == "strict",
+              allowBasic: basic
             }),
             ...(protection == "strict"
               ? [

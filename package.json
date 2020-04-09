@@ -8,13 +8,13 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/blossm-network/blossm.git"
+    "url": "git+https://github.com/blossm-network/toolbox.git"
   },
   "author": "blossm.network",
   "bugs": {
-    "url": "https://github.com/blossm-network/blossm/issues"
+    "url": "https://github.com/blossm-network/toolbox/issues"
   },
-  "homepage": "https://github.com/blossm-network/blossm#readme",
+  "homepage": "https://github.com/blossm-network/toolbox#readme",
   "engines": {
     "node": ">= 10.16.0"
   },

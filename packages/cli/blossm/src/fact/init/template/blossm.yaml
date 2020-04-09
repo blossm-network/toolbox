@@ -1,7 +1,7 @@
 #
 # This file is required.
 #
-# Give your command an action name,
+# Give your fact a name,
 # specify which domain it's for,
 # and set which version of the event to create.
 #
@@ -9,6 +9,8 @@
 name: some-action
 domain: some-domain
 service: core
+
+dependencies:
 
 devDependencies:
   "mocha": "^7.1.0"
@@ -18,5 +20,15 @@ devDependencies:
   "chai-datetime": "^1.5.0"
   "@blossm/request": "*"
 
+testing:
+  dependencies:
+
+  steps:
+    - pre:
+      query:
+      root:
+      context:
+      response:
+
 #don't change
-procedure: job
+procedure: fact

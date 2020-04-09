@@ -7,7 +7,8 @@ module.exports = ({
   keyClaimsFn,
   strict = true,
   audience,
-  algorithm
+  algorithm,
+  allowBasic
 }) =>
   asyncHandler(async (req, _, next) => {
     try {
@@ -16,7 +17,8 @@ module.exports = ({
         verifyFn,
         keyClaimsFn,
         audience,
-        algorithm
+        algorithm,
+        allowBasic
       });
       req.context = claims.context;
       req.claims = {
