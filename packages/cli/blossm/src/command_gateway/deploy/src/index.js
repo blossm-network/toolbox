@@ -23,25 +23,13 @@ const config = require("./config.json");
 
 let defaultRoles;
 
-const audience = process.env.NETWORK;
-const algorithm = "ES256";
-
 module.exports = gateway({
   commands: config.commands,
   whitelist: config.whitelist,
   algorithm: "ES256",
-  audience,
+  audience: process.env.NETWORK,
   internalTokenFn: gcpToken,
   externalTokenFn: connectionToken({
-    verifyFn: verifyGCP({
-      ring: "jwt",
-      key: "access",
-      location: "global",
-      version: "1",
-      project: process.env.GCP_PROJECT
-    }),
-    audience,
-    algorithm,
     credentialsFn: async ({ network }) => {
       const nameRoot = network
         .toUpperCase()

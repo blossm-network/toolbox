@@ -20,14 +20,11 @@ const config = require("./config.json");
 
 let defaultRoles;
 
-const audience = process.env.NETWORK;
-const algorithm = "ES256";
-
 module.exports = gateway({
   stores: config.stores,
   whitelist: config.whitelist,
-  algorithm,
-  audience,
+  algorithm: "ES256",
+  audience: process.env.NETWORK,
   internalTokenFn: gcpToken,
   //roles are the roles that the principle has.
   permissionsLookupFn: async ({ principle, context }) => {

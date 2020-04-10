@@ -2,9 +2,7 @@ const deps = require("./deps");
 
 let cache = {};
 
-module.exports = ({ credentialsFn, verifyFn, audience, algorithm }) => async ({
-  network
-}) => {
+module.exports = ({ credentialsFn }) => async ({ network }) => {
   const { id, secret } = await credentialsFn({ network });
   const { token, exp } = cache[network] || {};
   if (!token || exp < new Date()) {
@@ -35,12 +33,7 @@ module.exports = ({ credentialsFn, verifyFn, audience, algorithm }) => async ({
     //TODO
     //eslint-disable-next-line no-console
     console.log({ token });
-    const claims = await deps.validate({
-      token,
-      verifyFn,
-      audience,
-      algorithm
-    });
+    const claims = await deps.decode(token);
     //TODO
     //eslint-disable-next-line no-console
     console.log({ claims });

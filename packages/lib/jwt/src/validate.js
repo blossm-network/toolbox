@@ -1,5 +1,5 @@
 const base64url = require("base64url");
-const { decodeJwt } = require("../deps");
+const decode = require("./decode");
 
 const deps = require("../deps");
 
@@ -24,19 +24,22 @@ module.exports = async ({ token, verifyFn, audience, algorithm }) => {
   }
   if (!isVerified) throw deps.invalidCredentialsError.tokenInvalid();
 
-  const { alg } = decodeJwt(token, { header: true });
+  const { headers, claims } = decode(token);
 
-  if (alg != algorithm) {
+  //TODO
+  //eslint-disable-next-line no-console
+  console.log("Process: ", { claims });
+
+  if (headers.alg != algorithm) {
     //TODO
     //eslint-disable-next-line no-console
     console.log("NOT VER 2: ", {
-      alg,
+      alg: headers.alg,
       algorithm
     });
   }
-  if (alg != algorithm) throw deps.invalidCredentialsError.tokenInvalid();
-
-  const claims = decodeJwt(token);
+  if (headers.alg != algorithm)
+    throw deps.invalidCredentialsError.tokenInvalid();
 
   if (!claims.aud.split(",").includes(audience))
     throw deps.invalidCredentialsError.wrongAudience();

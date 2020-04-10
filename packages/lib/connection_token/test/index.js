@@ -10,9 +10,6 @@ const exp = "9999-01-03T00:02:12.000Z";
 const expiredExp = "2000-01-03T00:02:12.000Z";
 const network = "some-network";
 const basicToken = "some-basic-token";
-const verifyFn = "some-verify-fn";
-const audience = "some-audience";
-const algorithm = "some-algorithm";
 
 const currentNetwork = "some-current-network";
 process.env.NETWORK = currentNetwork;
@@ -35,18 +32,15 @@ describe("Connection token", () => {
     });
     replace(deps, "command", commandFake);
 
-    const validateFake = fake.returns({ exp });
-    replace(deps, "validate", validateFake);
+    const decodeFake = fake.returns({ exp });
+    replace(deps, "decode", decodeFake);
 
     const basicTokenFake = fake.returns(basicToken);
     replace(deps, "basicToken", basicTokenFake);
 
     const credentialsFnFake = fake.returns({ id, secret });
     const result = await connectionToken({
-      credentialsFn: credentialsFnFake,
-      verifyFn,
-      audience,
-      algorithm
+      credentialsFn: credentialsFnFake
     })({ network });
 
     expect(commandFake).to.have.been.calledWith({
@@ -55,12 +49,7 @@ describe("Connection token", () => {
       service: "system",
       network
     });
-    expect(validateFake).to.have.been.calledWith({
-      token,
-      verifyFn,
-      audience,
-      algorithm
-    });
+    expect(decodeFake).to.have.been.calledWith(token);
     expect(setFake).to.have.been.calledWith({
       tokenFns: { external: match(fn => fn() == basicToken) }
     });
@@ -73,10 +62,7 @@ describe("Connection token", () => {
     expect(result).to.deep.equal({ token, type: "Bearer" });
 
     const anotherResult = await connectionToken({
-      credentialsFn: credentialsFnFake,
-      verifyFn,
-      audience,
-      algorithm
+      credentialsFn: credentialsFnFake
     })({ network });
     expect(commandFake).to.have.been.calledOnce;
     expect(anotherResult).to.deep.equal({ token, type: "Bearer" });
@@ -95,8 +81,8 @@ describe("Connection token", () => {
     });
     replace(deps, "command", commandFake);
 
-    const validateFake = fake.returns({ exp: expiredExp });
-    replace(deps, "validate", validateFake);
+    const decodeFake = fake.returns({ exp: expiredExp });
+    replace(deps, "decode", decodeFake);
 
     const basicTokenFake = fake.returns(basicToken);
     replace(deps, "basicToken", basicTokenFake);

@@ -22,14 +22,11 @@ const config = require("./config.json");
 
 let defaultRoles;
 
-const audience = process.env.NETWORK;
-const algorithm = "ES256";
-
 module.exports = gateway({
   jobs: config.jobs,
   whitelist: config.whitelist,
-  algorithm,
-  audience,
+  algorithm: "ES256",
+  audience: process.env.NETWORK,
   internalTokenFn: gcpToken,
   externalTokenFn: connectionToken({
     credentialsFn: async ({ network }) => {
