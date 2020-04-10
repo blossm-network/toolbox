@@ -1,6 +1,6 @@
 {
   "name": "@blossm/basic-token",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Gets a basic token to communicate with a network.",
   "main": "index.js",
   "author": "blossm.network",
