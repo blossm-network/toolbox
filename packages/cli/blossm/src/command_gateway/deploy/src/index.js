@@ -33,6 +33,7 @@ module.exports = gateway({
       const nameRoot = network
         .toUpperCase()
         .split(".")
+        .slice(-2)
         .join("_");
 
       const id = process.env[`${nameRoot}_KEY_ID`];
