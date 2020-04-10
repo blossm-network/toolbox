@@ -12,5 +12,6 @@ module.exports = async ({ name, hash }) => {
   const response = await deps.get(metadataServerTokenUrl + url, { headers });
 
   if (response.statusCode >= 300) return null;
-  return response.body;
+
+  return { token: response.body, type: "Bearer" };
 };

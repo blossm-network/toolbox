@@ -29,15 +29,16 @@ const common = ({ method, dataParam, operation, id, data }) => {
           //eslint-disable-next-line no-console
           console.log({ internal, internalTokenFn, externalTokenFn });
 
-          const token = internal
-            ? await deps.operationToken({
-                tokenFn: internalTokenFn,
-                operation
-              })
-            : await deps.networkToken({
-                tokenFn: externalTokenFn,
-                network
-              });
+          const { token, type } =
+            (internal
+              ? await deps.operationToken({
+                  tokenFn: internalTokenFn,
+                  operation
+                })
+              : await deps.networkToken({
+                  tokenFn: externalTokenFn,
+                  network
+                })) || {};
 
           //TODO
           //eslint-disable-next-line no-console
@@ -66,7 +67,7 @@ const common = ({ method, dataParam, operation, id, data }) => {
             },
             ...(token && {
               headers: {
-                Authorization: `Bearer ${token}`
+                Authorization: `${type} ${token}`
               }
             })
           });

@@ -58,13 +58,13 @@ describe("Connection token", () => {
     });
     expect(issueFake).to.have.been.calledWith();
     expect(credentialsFnFake).to.have.been.calledWith({ network });
-    expect(result).to.equal(token);
+    expect(result).to.deep.equal({ token, type: "Bearer" });
 
     const anotherResult = await connectionToken({
       credentialsFn: credentialsFnFake
     })({ network });
     expect(commandFake).to.have.been.calledOnce;
-    expect(anotherResult).to.equal(token);
+    expect(anotherResult).to.deep.equal({ token, type: "Bearer" });
   });
   it("should call correctly if expired", async () => {
     const response = {
@@ -90,12 +90,12 @@ describe("Connection token", () => {
     const result = await connectionToken({
       credentialsFn: credentialsFnFake
     })({ network: anotherNetwork });
-    expect(result).to.equal(token);
+    expect(result).to.deep.equal({ token, type: "Bearer" });
 
     const anotherResult = await connectionToken({
       credentialsFn: credentialsFnFake
     })({ network: anotherNetwork });
     expect(commandFake).to.have.been.calledTwice;
-    expect(anotherResult).to.equal(token);
+    expect(anotherResult).to.deep.equal({ token, type: "Bearer" });
   });
 });

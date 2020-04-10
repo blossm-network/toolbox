@@ -46,5 +46,5 @@ module.exports = ({ credentialsFn }) => async ({ network }) => {
   //TODO
   //eslint-disable-next-line no-console
   console.log({ returnedRouterConnectionToke: cache[network] });
-  return cache[network].token;
+  return { token: cache[network].token, type: "Bearer" };
 };

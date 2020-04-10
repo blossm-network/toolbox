@@ -16,6 +16,7 @@ const claims = "some-claims";
 const operarationPart1 = "some-operaration1";
 const operarationPart2 = "some-operaration2";
 const token = "some-token";
+const type = "some-type";
 const id = "some-id";
 const tokenFn = "some-token-fn";
 const url = "some-url";
@@ -47,7 +48,7 @@ describe("Operation", () => {
     const post = fake.returns(response);
     replace(deps, "post", post);
 
-    const operationTokenFake = fake.returns(token);
+    const operationTokenFake = fake.returns({ token, type });
     replace(deps, "operationToken", operationTokenFake);
 
     const operationUrlFake = fake.returns(url);
@@ -65,7 +66,7 @@ describe("Operation", () => {
         claims
       },
       headers: {
-        Authorization: `Bearer ${token}`
+        Authorization: `${type} ${token}`
       }
     });
     expect(operationTokenFake).to.have.been.calledWith({
@@ -82,7 +83,7 @@ describe("Operation", () => {
     const post = fake.returns(response);
     replace(deps, "post", post);
 
-    const operationTokenFake = fake.returns(token);
+    const operationTokenFake = fake.returns({ token, type });
     replace(deps, "operationToken", operationTokenFake);
 
     const operationUrlFake = fake.returns(url);
@@ -96,7 +97,7 @@ describe("Operation", () => {
     expect(post).to.have.been.calledWith(url, {
       body: data,
       headers: {
-        Authorization: `Bearer ${token}`
+        Authorization: `${type} ${token}`
       }
     });
     expect(operationTokenFake).to.have.been.calledWith({
@@ -114,7 +115,7 @@ describe("Operation", () => {
     const post = fake.returns(response);
     replace(deps, "post", post);
 
-    const operationTokenFake = fake.returns(token);
+    const operationTokenFake = fake.returns({ token, type });
     replace(deps, "operationToken", operationTokenFake);
 
     const operationUrlFake = fake.returns(url);
@@ -142,7 +143,7 @@ describe("Operation", () => {
     const post = fake.returns(response);
     replace(deps, "post", post);
 
-    const networkTokenFake = fake.returns(token);
+    const networkTokenFake = fake.returns({ token, type });
     replace(deps, "networkToken", networkTokenFake);
 
     const networkUrlFake = fake.returns(url);
@@ -194,7 +195,7 @@ describe("Operation", () => {
     const post = fake.returns(response);
     replace(deps, "post", post);
 
-    const operationTokenFake = fake.returns(token);
+    const operationTokenFake = fake.returns({ token, type });
     replace(deps, "operationToken", operationTokenFake);
 
     const operationUrlFake = fake.returns(url);
@@ -213,7 +214,7 @@ describe("Operation", () => {
         claims
       },
       headers: {
-        Authorization: `Bearer ${token}`
+        Authorization: `${type} ${token}`
       }
     });
     expect(operationTokenFake).to.have.been.calledWith({
@@ -232,7 +233,7 @@ describe("Operation", () => {
     const get = fake.returns(bodyResponse);
     replace(deps, "get", get);
 
-    const operationTokenFake = fake.returns(token);
+    const operationTokenFake = fake.returns({ token, type });
     replace(deps, "operationToken", operationTokenFake);
 
     const operationUrlFake = fake.returns(url);
@@ -250,7 +251,7 @@ describe("Operation", () => {
         claims
       },
       headers: {
-        Authorization: `Bearer ${token}`
+        Authorization: `${type} ${token}`
       }
     });
     expect(operationTokenFake).to.have.been.calledWith({
@@ -271,7 +272,7 @@ describe("Operation", () => {
     });
     replace(deps, "get", get);
 
-    const operationTokenFake = fake.returns(token);
+    const operationTokenFake = fake.returns({ token, type });
     replace(deps, "operationToken", operationTokenFake);
 
     const operationUrlFake = fake.returns(url);
@@ -289,7 +290,7 @@ describe("Operation", () => {
         claims
       },
       headers: {
-        Authorization: `Bearer ${token}`
+        Authorization: `${type} ${token}`
       }
     });
     expect(operationTokenFake).to.have.been.calledWith({
@@ -306,7 +307,7 @@ describe("Operation", () => {
     const get = fake.returns(bodyResponse);
     replace(deps, "get", get);
 
-    const operationTokenFake = fake.returns(token);
+    const operationTokenFake = fake.returns({ token, type });
     replace(deps, "operationToken", operationTokenFake);
 
     const operationUrlFake = fake.returns(url);
@@ -324,7 +325,7 @@ describe("Operation", () => {
         claims
       },
       headers: {
-        Authorization: `Bearer ${token}`
+        Authorization: `${type} ${token}`
       }
     });
     expect(operationTokenFake).to.have.been.calledWith({
@@ -342,7 +343,7 @@ describe("Operation", () => {
     const put = fake.returns(response);
     replace(deps, "put", put);
 
-    const operationTokenFake = fake.returns(token);
+    const operationTokenFake = fake.returns({ token, type });
     replace(deps, "operationToken", operationTokenFake);
 
     const operationUrlFake = fake.returns(url);
@@ -360,7 +361,7 @@ describe("Operation", () => {
         claims
       },
       headers: {
-        Authorization: `Bearer ${token}`
+        Authorization: `${type} ${token}`
       }
     });
 
@@ -379,7 +380,7 @@ describe("Operation", () => {
     const put = fake.returns(response);
     replace(deps, "put", put);
 
-    const operationTokenFake = fake.returns(token);
+    const operationTokenFake = fake.returns({ token, type });
     replace(deps, "operationToken", operationTokenFake);
 
     const operationUrlFake = fake.returns(url);
@@ -398,7 +399,7 @@ describe("Operation", () => {
         claims
       },
       headers: {
-        Authorization: `Bearer ${token}`
+        Authorization: `${type} ${token}`
       }
     });
     expect(operationTokenFake).to.have.been.calledWith({
@@ -417,7 +418,7 @@ describe("Operation", () => {
     const del = fake.returns(response);
     replace(deps, "delete", del);
 
-    const operationTokenFake = fake.returns(token);
+    const operationTokenFake = fake.returns({ token, type });
     replace(deps, "operationToken", operationTokenFake);
 
     const operationUrlFake = fake.returns(url);
@@ -434,7 +435,7 @@ describe("Operation", () => {
         claims
       },
       headers: {
-        Authorization: `Bearer ${token}`
+        Authorization: `${type} ${token}`
       }
     });
     expect(operationTokenFake).to.have.been.calledWith({
@@ -460,7 +461,7 @@ describe("Operation", () => {
     });
     replace(deps, "delete", del);
 
-    const operationTokenFake = fake.returns(token);
+    const operationTokenFake = fake.returns({ token, type });
     replace(deps, "operationToken", operationTokenFake);
 
     const operationUrlFake = fake.returns(url);
@@ -496,7 +497,7 @@ describe("Operation", () => {
     });
     replace(deps, "delete", del);
 
-    const operationTokenFake = fake.returns(token);
+    const operationTokenFake = fake.returns({ token, type });
     replace(deps, "operationToken", operationTokenFake);
 
     const operationUrlFake = fake.returns(url);
@@ -532,7 +533,7 @@ describe("Operation", () => {
     });
     replace(deps, "delete", del);
 
-    const operationTokenFake = fake.returns(token);
+    const operationTokenFake = fake.returns({ token, type });
     replace(deps, "operationToken", operationTokenFake);
 
     const operationUrlFake = fake.returns(url);

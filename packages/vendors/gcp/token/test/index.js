@@ -36,7 +36,7 @@ describe("Gcp token", () => {
       `http://metadata/computeMetadata/v1/instance/service-accounts/default/identity?audience=${url}`,
       { headers: { "Metadata-Flavor": "Google" } }
     );
-    expect(result).to.equal(body);
+    expect(result).to.deep.equal({ token: body, type: "Bearer" });
   });
   it("should call correctly with error", async () => {
     process.env.NODE_ENV = "staging";
