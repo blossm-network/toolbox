@@ -39,7 +39,7 @@ module.exports = ({ credentialsFn }) => async ({ network }) => {
     console.log({ claims });
     cache[network] = {
       token,
-      exp: Date.parse(claims.exp)
+      exp: new Date(Date.parse(claims.exp))
     };
   }
 
