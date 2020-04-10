@@ -13,6 +13,7 @@ const context = "some-context";
 const algorithm = "some-algorithm";
 const internalTokenFn = "some-internal-token-fn";
 const externalTokenFn = "some-external-token-fn";
+const audience = "some-audience";
 
 process.env.DOMAIN = domain;
 process.env.SERVICE = service;
@@ -63,7 +64,8 @@ describe("Fact gateway", () => {
       verifyFn: verifyFnFake,
       internalTokenFn,
       externalTokenFn,
-      algorithm
+      algorithm,
+      audience
     });
 
     expect(gatewayGetFake).to.have.been.calledWith({
@@ -93,7 +95,7 @@ describe("Fact gateway", () => {
     });
     expect(authenticationFake).to.have.been.calledWith({
       verifyFn: verifyFnResult,
-      audience: network,
+      audience,
       algorithm,
       strict: true
     });
@@ -147,7 +149,8 @@ describe("Fact gateway", () => {
       verifyFn: verifyFnFake,
       internalTokenFn,
       externalTokenFn,
-      algorithm
+      algorithm,
+      audience
     });
 
     expect(gatewayGetFake).to.have.been.calledWith({
@@ -176,7 +179,7 @@ describe("Fact gateway", () => {
     });
     expect(authenticationFake).to.have.been.calledWith({
       verifyFn: verifyFnResult,
-      audience: network,
+      audience,
       algorithm,
       strict: true
     });
@@ -230,11 +233,12 @@ describe("Fact gateway", () => {
       verifyFn: verifyFnFake,
       internalTokenFn,
       externalTokenFn,
-      algorithm
+      algorithm,
+      audience
     });
     expect(authenticationFake).to.have.been.calledWith({
       verifyFn: verifyFnResult,
-      audience: network,
+      audience,
       algorithm,
       strict: true
     });
@@ -293,7 +297,8 @@ describe("Fact gateway", () => {
       verifyFn: verifyFnFake,
       internalTokenFn,
       externalTokenFn,
-      algorithm
+      algorithm,
+      audience
     });
 
     expect(gatewayGetFake).to.have.been.calledWith({
@@ -328,13 +333,13 @@ describe("Fact gateway", () => {
     });
     expect(authenticationFake).to.have.been.calledWith({
       verifyFn: verifyFnResult,
-      audience: network,
+      audience,
       algorithm,
       strict: true
     });
     expect(authenticationFake).to.have.been.calledWith({
       verifyFn: verifyFnResult,
-      audience: network,
+      audience,
       algorithm,
       strict: false
     });
@@ -396,7 +401,8 @@ describe("Fact gateway", () => {
       verifyFn: verifyFnFake,
       internalTokenFn,
       externalTokenFn,
-      algorithm
+      algorithm,
+      audience
     });
 
     expect(gatewayGetFake).to.have.been.calledWith({
@@ -426,7 +432,8 @@ describe("Fact gateway", () => {
         terminatedSessionCheckFn,
         internalTokenFn,
         externalTokenFn,
-        algorithm
+        algorithm,
+        audience
       });
       //shouldn't get called
       expect(2).to.equal(1);

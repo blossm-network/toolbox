@@ -8,7 +8,8 @@ module.exports = async ({
   permissionsLookupFn,
   terminatedSessionCheckFn,
   verifyFn,
-  algorithm
+  algorithm,
+  audience
 }) => {
   let server = deps.server({
     prehook: app =>
@@ -33,7 +34,7 @@ module.exports = async ({
         preMiddleware: [
           deps.authentication({
             verifyFn: verifyFn({ key }),
-            audience: process.env.NETWORK,
+            audience,
             algorithm,
             strict: protection == "strict"
           }),

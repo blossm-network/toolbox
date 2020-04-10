@@ -14,6 +14,7 @@ const algorithm = "some-algorithm";
 const keyClaimsFn = "some-token-claims-fn";
 const internalTokenFn = "some-internal-token-fn";
 const externalTokenFn = "some-external-token-fn";
+const audience = "some-audience";
 
 process.env.DOMAIN = domain;
 process.env.SERVICE = service;
@@ -65,7 +66,8 @@ describe("Command gateway", () => {
       terminatedSessionCheckFn,
       verifyFn: verifyFnFake,
       keyClaimsFn,
-      algorithm
+      algorithm,
+      audience
     });
 
     expect(gatewayPostFake).to.have.been.calledWith({
@@ -96,7 +98,7 @@ describe("Command gateway", () => {
     expect(authenticationFake).to.have.been.calledWith({
       verifyFn: verifyFnResult,
       keyClaimsFn,
-      audience: network,
+      audience,
       algorithm,
       strict: true,
       allowBasic: false
@@ -153,7 +155,8 @@ describe("Command gateway", () => {
       terminatedSessionCheckFn,
       verifyFn: verifyFnFake,
       keyClaimsFn,
-      algorithm
+      algorithm,
+      audience
     });
 
     expect(gatewayPostFake).to.have.been.calledWith({
@@ -185,7 +188,7 @@ describe("Command gateway", () => {
     expect(authenticationFake).to.have.been.calledWith({
       verifyFn: verifyFnResult,
       keyClaimsFn,
-      audience: network,
+      audience,
       algorithm,
       strict: true,
       allowBasic: true
@@ -309,7 +312,8 @@ describe("Command gateway", () => {
       terminatedSessionCheckFn,
       verifyFn: verifyFnFake,
       keyClaimsFn,
-      algorithm
+      algorithm,
+      audience
     });
 
     expect(gatewayPostFake).to.have.been.calledWith({
@@ -349,7 +353,7 @@ describe("Command gateway", () => {
       verifyFn: verifyFnResult,
       keyClaimsFn,
       algorithm,
-      audience: network,
+      audience,
       strict: true,
       allowBasic: false
     });
@@ -357,7 +361,7 @@ describe("Command gateway", () => {
       verifyFn: verifyFnResult,
       keyClaimsFn,
       algorithm,
-      audience: network,
+      audience,
       strict: false,
       allowBasic: false
     });

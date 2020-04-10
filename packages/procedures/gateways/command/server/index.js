@@ -7,6 +7,7 @@ module.exports = async ({
   internalTokenFn,
   externalTokenFn,
   algorithm,
+  audience,
   whitelist,
   permissionsLookupFn,
   terminatedSessionCheckFn,
@@ -49,7 +50,7 @@ module.exports = async ({
             deps.authentication({
               verifyFn: verifyFn({ key }),
               keyClaimsFn,
-              audience: process.env.NETWORK,
+              audience,
               algorithm,
               strict: protection == "strict",
               allowBasic: basic

@@ -11,6 +11,7 @@ const service = "some-service";
 const network = "some-network";
 const context = "some-context";
 const algorithm = "some-algorithm";
+const audience = "some-audience";
 
 process.env.DOMAIN = domain;
 process.env.SERVICE = service;
@@ -59,7 +60,8 @@ describe("View gateway", () => {
       permissionsLookupFn,
       terminatedSessionCheckFn,
       verifyFn: verifyFnFake,
-      algorithm
+      algorithm,
+      audience
     });
 
     expect(gatewayGetFake).to.have.been.calledWith({ name, domain });
@@ -83,7 +85,7 @@ describe("View gateway", () => {
     });
     expect(authenticationFake).to.have.been.calledWith({
       verifyFn: verifyFnResult,
-      audience: network,
+      audience,
       algorithm,
       strict: true
     });
@@ -135,7 +137,8 @@ describe("View gateway", () => {
       permissionsLookupFn,
       terminatedSessionCheckFn,
       verifyFn: verifyFnFake,
-      algorithm
+      algorithm,
+      audience
     });
 
     expect(gatewayGetFake).to.have.been.calledWith({ name, domain });
@@ -159,7 +162,7 @@ describe("View gateway", () => {
     });
     expect(authenticationFake).to.have.been.calledWith({
       verifyFn: verifyFnResult,
-      audience: network,
+      audience,
       algorithm,
       strict: true
     });
@@ -211,11 +214,12 @@ describe("View gateway", () => {
       permissionsLookupFn,
       terminatedSessionCheckFn,
       verifyFn: verifyFnFake,
-      algorithm
+      algorithm,
+      audience
     });
     expect(authenticationFake).to.have.been.calledWith({
       verifyFn: verifyFnResult,
-      audience: network,
+      audience,
       algorithm,
       strict: true
     });
@@ -272,7 +276,8 @@ describe("View gateway", () => {
       permissionsLookupFn,
       terminatedSessionCheckFn,
       verifyFn: verifyFnFake,
-      algorithm
+      algorithm,
+      audience
     });
 
     expect(gatewayGetFake).to.have.been.calledWith({
@@ -301,13 +306,13 @@ describe("View gateway", () => {
     });
     expect(authenticationFake).to.have.been.calledWith({
       verifyFn: verifyFnResult,
-      audience: network,
+      audience,
       algorithm,
       strict: false
     });
     expect(authenticationFake).to.have.been.calledWith({
       verifyFn: verifyFnResult,
-      audience: network,
+      audience,
       algorithm,
       strict: true
     });
@@ -366,7 +371,8 @@ describe("View gateway", () => {
       permissionsLookupFn,
       terminatedSessionCheckFn,
       verifyFn: verifyFnFake,
-      algorithm
+      algorithm,
+      audience
     });
 
     expect(gatewayGetFake).to.have.been.calledWith({

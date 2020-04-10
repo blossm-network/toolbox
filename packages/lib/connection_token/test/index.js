@@ -10,6 +10,9 @@ const exp = "9999-01-03T00:02:12.000Z";
 const expiredExp = "2000-01-03T00:02:12.000Z";
 const network = "some-network";
 const basicToken = "some-basic-token";
+const verifyFn = "some-verify-fn";
+const audience = "some-audience";
+const algorithm = "some-algorithm";
 
 const currentNetwork = "some-current-network";
 process.env.NETWORK = currentNetwork;
@@ -40,7 +43,10 @@ describe("Connection token", () => {
 
     const credentialsFnFake = fake.returns({ id, secret });
     const result = await connectionToken({
-      credentialsFn: credentialsFnFake
+      credentialsFn: credentialsFnFake,
+      verifyFn,
+      audience,
+      algorithm
     })({ network });
 
     expect(commandFake).to.have.been.calledWith({
@@ -48,6 +54,12 @@ describe("Connection token", () => {
       domain: "connection",
       service: "system",
       network
+    });
+    expect(validateFake).to.have.been.calledWith({
+      token,
+      verifyFn,
+      audience,
+      algorithm
     });
     expect(setFake).to.have.been.calledWith({
       tokenFns: { external: match(fn => fn() == basicToken) }
@@ -61,7 +73,10 @@ describe("Connection token", () => {
     expect(result).to.deep.equal({ token, type: "Bearer" });
 
     const anotherResult = await connectionToken({
-      credentialsFn: credentialsFnFake
+      credentialsFn: credentialsFnFake,
+      verifyFn,
+      audience,
+      algorithm
     })({ network });
     expect(commandFake).to.have.been.calledOnce;
     expect(anotherResult).to.deep.equal({ token, type: "Bearer" });
