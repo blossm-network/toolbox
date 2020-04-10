@@ -553,7 +553,7 @@ const configure = async (workingDir, configFn, env, strict) => {
     const region =
       config["gcp-region"] || blossmConfig.vendors.cloud.gcp.defaults.region;
     const network = blossmConfig.network;
-    const coreNetwork = blossmConfig.core.network || network;
+    const coreNetwork = (blossmConfig.core || {}).network || network;
     const dnsZone =
       config["gcp-dns-zone"] || blossmConfig.vendors.cloud.gcp.dnsZone;
 
