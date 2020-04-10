@@ -584,10 +584,12 @@ const configure = async (workingDir, configFn, env, strict) => {
     const secretBucketKeyRing = "secrets-bucket";
 
     const containerRegistery = `us.gcr.io/${project}`;
-    const coreContainerRegistery = envCoreContainerRegistry({
-      env,
-      config: blossmConfig
-    });
+    const coreContainerRegistery = blossmConfig.core
+      ? envCoreContainerRegistry({
+          env,
+          config: blossmConfig
+        })
+      : containerRegistery;
 
     const mainContainerName = "main";
 
