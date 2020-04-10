@@ -1,5 +1,5 @@
 const { expect } = require("chai").use(require("sinon-chai"));
-const { restore, fake, replace } = require("sinon");
+const { restore, fake, replace, match } = require("sinon");
 const deps = require("../deps");
 const connectionToken = require("..");
 
@@ -50,7 +50,7 @@ describe("Connection token", () => {
       network
     });
     expect(setFake).to.have.been.calledWith({
-      tokenFns: { external: basicToken }
+      tokenFns: { external: match(fn => fn() == basicToken) }
     });
     expect(basicTokenFake).to.have.been.calledWith({
       id,
