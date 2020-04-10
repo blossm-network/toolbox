@@ -1,7 +1,7 @@
 {
   "name": "@blossm/view-gateway",
   "description": "A gateway server that manages view access.",
-  "version": "0.0.191",
+  "version": "0.0.192",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {

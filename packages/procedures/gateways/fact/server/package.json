@@ -1,7 +1,7 @@
 {
   "name": "@blossm/fact-gateway",
   "description": "A gateway server that manages fact access.",
-  "version": "0.0.19",
+  "version": "0.0.20",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
