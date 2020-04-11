@@ -107,6 +107,7 @@ module.exports = async ({
   })
     .set({
       context: {
+        network: process.env.NETWORK,
         ...context,
         session: {
           root: sessionRoot,
