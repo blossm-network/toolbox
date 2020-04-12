@@ -26,6 +26,7 @@ const version = 0;
 const action = "some-action";
 const domain = "some-domain";
 const service = "some-service";
+const context = "some-context";
 
 describe("Create event", () => {
   beforeEach(() => {
@@ -41,6 +42,7 @@ describe("Create event", () => {
       action,
       domain,
       service,
+      context,
       path: [
         {
           issued: pathIssued,
@@ -69,6 +71,7 @@ describe("Create event", () => {
         topic: `did-${action}.${domain}.${service}`,
         version,
         trace,
+        context,
         created: dateString(),
         path: [
           {

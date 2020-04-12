@@ -9,6 +9,7 @@ module.exports = ({
   action,
   domain,
   service,
+  context,
   idempotency,
   path
 } = {}) => {
@@ -22,7 +23,8 @@ module.exports = ({
       version,
       created: dateString(),
       idempotency: idempotency || deps.uuid(),
-      ...(trace != undefined && { trace }),
+      ...(context && { context }),
+      ...(trace && { trace }),
       ...(path && {
         path: path.map(p => {
           return {

@@ -441,7 +441,7 @@ describe("Command handler post", () => {
     expect(statusFake).to.have.been.calledWith(204);
     expect(sendFake).to.have.been.calledWith();
   });
-  it("should call with the correct params with root, options, claims, version passed in, and no payload", async () => {
+  it("should call with the correct params with root, context, options, claims, version passed in, and no payload", async () => {
     const validateFnFake = fake();
     const normalizeFnFake = fake.returns(cleanedPayload);
 
@@ -450,9 +450,11 @@ describe("Command handler post", () => {
 
     replace(deps, "uuid", fake.returns(commandId));
     const version = "some-version";
+    const eventContext = "some-event-context";
     const events = [
       {
         root: eventRoot,
+        context: eventContext,
         action: eventAction,
         version,
         correctNumber
@@ -523,6 +525,7 @@ describe("Command handler post", () => {
       domain,
       service,
       version,
+      context: eventContext,
       idempotency,
       path: [
         {

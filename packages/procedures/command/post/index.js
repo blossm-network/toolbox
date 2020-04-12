@@ -37,6 +37,7 @@ module.exports = ({
       correctNumber,
       version = 0,
       action,
+      context,
       domain = process.env.DOMAIN,
       service = process.env.SERVICE
     } of events) {
@@ -49,6 +50,7 @@ module.exports = ({
         domain,
         service,
         idempotency: req.body.headers.idempotency,
+        ...(context && { context }),
         path: [
           ...(req.body.headers.path || []),
           {
@@ -95,7 +97,7 @@ module.exports = ({
     await Promise.all(fns);
 
     if (thenFn) await thenFn();
-    // broadcastFn({ events });
+
     res.status(response ? 200 : 204).send(response);
   };
 };

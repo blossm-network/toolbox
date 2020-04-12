@@ -14,7 +14,12 @@ module.exports = ({ domain, service = process.env.SERVICE } = {}) => {
           headers: {
             ...event.data.headers,
             created: dateString(),
-            ...(context && { context }),
+            ...((context || event.data.headers.context) && {
+              context: {
+                ...event.data.headers.context,
+                ...context
+              }
+            }),
             ...(claims && { claims })
           },
           payload: event.data.payload

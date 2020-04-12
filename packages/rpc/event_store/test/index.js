@@ -29,7 +29,7 @@ const envService = "some-env-service";
 
 process.env.SERVICE = envService;
 
-const context = "some-context";
+const context = { a: "some-context" };
 const claims = "some-claims";
 const internalTokenFn = "some-internal-token-fn";
 const externalTokenFn = "some-external-token-fn";
@@ -96,6 +96,84 @@ describe("Event store", () => {
           data: {
             headers: {
               context,
+              claims,
+              topic,
+              action: eventAction,
+              domain: eventDomain,
+              service: eventService,
+              version,
+              path,
+              trace,
+              created: dateString()
+            },
+            payload
+          },
+          number
+        }
+      ]
+    });
+    expect(inFake).to.have.been.calledWith({
+      context
+    });
+    expect(withFake).to.have.been.calledWith({
+      internalTokenFn,
+      externalTokenFn,
+      claims
+    });
+  });
+  it("should call add with the right params with event header context", async () => {
+    const withFake = fake();
+    const inFake = fake.returns({
+      with: withFake
+    });
+    const postFake = fake.returns({
+      in: inFake
+    });
+    const rpcFake = fake.returns({
+      post: postFake
+    });
+    replace(deps, "rpc", rpcFake);
+
+    const trace = "trace";
+
+    await eventStore({ domain, service })
+      .set({
+        context,
+        claims,
+        tokenFns: { internal: internalTokenFn, external: externalTokenFn }
+      })
+      .add([
+        {
+          data: {
+            headers: {
+              topic,
+              action: eventAction,
+              domain: eventDomain,
+              service: eventService,
+              version,
+              trace,
+              path,
+              context: {
+                a: 1,
+                b: 2
+              }
+            },
+            payload
+          },
+          number
+        }
+      ]);
+
+    expect(rpcFake).to.have.been.calledWith(domain, service, "event-store");
+    expect(postFake).to.have.been.calledWith({
+      events: [
+        {
+          data: {
+            headers: {
+              context: {
+                b: 2,
+                a: "some-context"
+              },
               claims,
               topic,
               action: eventAction,
