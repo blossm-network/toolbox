@@ -237,22 +237,14 @@ describe("Command gateway post", () => {
     await post({ name, domain, internalTokenFn, externalTokenFn })(req, res);
 
     expect(cookieFake).to.have.been.calledTwice;
-    expect(cookieFake).to.have.been.calledWith(
-      `${token1Network}-${token1Type}`,
-      token1Value,
-      {
-        httpOnly: true,
-        secure: true
-      }
-    );
-    expect(cookieFake).to.have.been.calledWith(
-      `${token2Network}-${token2Type}`,
-      token2Value,
-      {
-        httpOnly: true,
-        secure: true
-      }
-    );
+    expect(cookieFake).to.have.been.calledWith(token1Type, token1Value, {
+      httpOnly: true,
+      secure: true
+    });
+    expect(cookieFake).to.have.been.calledWith(token2Type, token2Value, {
+      httpOnly: true,
+      secure: true
+    });
     expect(validateFake).to.have.been.calledWith(body);
     expect(commandFake).to.have.been.calledWith({
       name,

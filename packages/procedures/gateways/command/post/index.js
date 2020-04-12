@@ -32,7 +32,7 @@ module.exports = ({
   if (response && response.tokens) {
     for (const token of response.tokens) {
       if (!token.network || !token.type || !token.value) continue;
-      const cookieName = `${token.network}-${token.type}`;
+      const cookieName = token.type;
       res.cookie(cookieName, token.value, {
         httpOnly: true,
         secure: true
