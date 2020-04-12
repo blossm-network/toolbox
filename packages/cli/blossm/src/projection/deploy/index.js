@@ -8,24 +8,20 @@ module.exports = deployCliTemplate({
   dir: __dirname,
   configFn: config => {
     return {
-      action: config.action,
       name: config.name,
       operationName: trim(
         `${config.procedure}-${config.service}-${config.name}-${config.domain}-did-${config.event.action}-${config.event.domain}`,
         MAX_LENGTH
       ),
-      operationHash: hash({
-        procedure: [
-          config.name,
-          config.domain,
-          config.service,
-          config.event.action,
-          config.event.domain,
-          config.event.service,
-          config.procedure
-        ],
-        service: config.service
-      })
+      operationHash: hash(
+        config.name,
+        config.domain,
+        config.service,
+        config.event.action,
+        config.event.domain,
+        config.event.service,
+        config.procedure
+      )
     };
   }
 });
