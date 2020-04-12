@@ -17,7 +17,11 @@ describe("Projection integration tests", () => {
           message: {
             data: Buffer.from(
               JSON.stringify({
-                headers: { context: example.context, root: example.root },
+                headers: {
+                  ...example.headers,
+                  context: example.context,
+                  root: example.root
+                },
                 payload: example.payload
               })
             )
