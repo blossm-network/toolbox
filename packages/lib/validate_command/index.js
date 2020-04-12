@@ -1,4 +1,10 @@
-const { object, string, date, findError } = require("@blossm/validator");
+const {
+  object,
+  objectArray,
+  string,
+  date,
+  findError
+} = require("@blossm/validator");
 const { SECONDS_IN_DAY } = require("@blossm/duration-consts");
 
 const deps = require("./deps");
@@ -21,20 +27,23 @@ module.exports = async params => {
       title: "trace",
       path: "headers.trace"
     }),
+    //TODO do headers have a root?
     string(params.headers.root, {
       optional: true,
       title: "root",
       path: "headers.root"
     }),
-    object(params.headers.source, {
+    //TODO
+    objectArray(params.headers.path, {
       optional: true,
-      title: "source",
-      path: "headers.source"
+      title: "path",
+      path: "headers.path"
     }),
     date(params.headers.issued, {
       title: "issued date",
       headers: "headers.issued"
     }),
+    //TODO
     date(params.headers.broadcasted, {
       title: "issued date",
       headers: "headers.broadcasted",

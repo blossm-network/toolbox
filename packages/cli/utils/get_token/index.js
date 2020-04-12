@@ -123,7 +123,11 @@ module.exports = async ({
     })
     .issue(
       {
-        principle: principleRoot
+        principle: {
+          root: principleRoot,
+          service: "core",
+          network: process.env.NETWORK
+        }
       },
       { root: sessionRoot }
     );
