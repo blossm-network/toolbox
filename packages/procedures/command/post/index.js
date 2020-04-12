@@ -13,6 +13,9 @@ module.exports = ({
     if (fillFn) req.body.payload = await fillFn(req.body.payload);
     if (normalizeFn) req.body.payload = await normalizeFn(req.body.payload);
 
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log({ reqBody: req.body });
     const { events = [], response, thenFn } = await mainFn({
       payload: req.body.payload,
       ...(req.body.root && { root: req.body.root }),
