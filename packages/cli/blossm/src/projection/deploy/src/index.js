@@ -18,7 +18,10 @@ module.exports = eventHandler({
         tokenFns: { internal: gcpToken }
       })
       .create({
-        root: event.headers.root,
+        ...(event.headers.context &&
+          event.headers.context[process.env.DOMAIN] && {
+            root: event.headers.context[process.env.DOMAIN].root
+          }),
         ...(event.headers.trace && { trace: event.headers.trace }),
         ...(await main(event))
       });
