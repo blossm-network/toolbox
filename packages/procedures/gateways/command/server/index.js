@@ -29,7 +29,7 @@ module.exports = async ({
     network,
     service: commandService,
     key = "access",
-    priviledges,
+    privileges,
     protection = "strict",
     basic = false,
     context
@@ -62,11 +62,11 @@ module.exports = async ({
                     terminatedSessionCheckFn,
                     context,
                     permissions:
-                      priviledges instanceof Array
-                        ? priviledges.map(priviledge => {
+                      privileges instanceof Array
+                        ? privileges.map(priviledge => {
                             return { service, domain, priviledge };
                           })
-                        : priviledges
+                        : privileges
                   })
                 ]
               : [])

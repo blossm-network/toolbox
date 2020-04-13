@@ -27,13 +27,13 @@ describe("Command gateway integration tests", () => {
   );
   it("should return successfully", async () => {
     const requiredPermissions = commands.reduce((permissions, command) => {
-      return command.priviledges == "none"
+      return command.privileges == "none"
         ? permissions
         : [
             ...new Set([
               ...permissions,
-              ...(command.priviledges
-                ? command.priviledges.map(priviledge => {
+              ...(command.privileges
+                ? command.privileges.map(priviledge => {
                     return {
                       priviledge,
                       domain: process.env.DOMAIN,

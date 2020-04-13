@@ -47,9 +47,9 @@ describe("View gateway", () => {
     replace(deps, "get", gatewayGetFake);
 
     const priviledge = "some-priviledge";
-    const priviledges = [priviledge];
+    const privileges = [priviledge];
     const name = "some-name";
-    const stores = [{ name, priviledges, context }];
+    const stores = [{ name, privileges, context }];
 
     const verifyFnResult = "some-verify-fn";
     const verifyFnFake = fake.returns(verifyFnResult);
@@ -94,12 +94,12 @@ describe("View gateway", () => {
       permissionsLookupFn,
       terminatedSessionCheckFn,
       context,
-      permissions: priviledges.map(priviledge => {
+      permissions: privileges.map(priviledge => {
         return { service, domain, priviledge };
       })
     });
   });
-  it("should call with the correct params with priviledges set to none", async () => {
+  it("should call with the correct params with privileges set to none", async () => {
     const corsMiddlewareFake = fake();
     replace(deps, "corsMiddleware", corsMiddlewareFake);
 
@@ -124,9 +124,9 @@ describe("View gateway", () => {
     const gatewayGetFake = fake.returns(gatewayGetResult);
     replace(deps, "get", gatewayGetFake);
 
-    const priviledges = "none";
+    const privileges = "none";
     const name = "some-name";
-    const stores = [{ name, priviledges, context }];
+    const stores = [{ name, privileges, context }];
 
     const verifyFnResult = "some-verify-fn";
     const verifyFnFake = fake.returns(verifyFnResult);
@@ -200,10 +200,10 @@ describe("View gateway", () => {
     replace(deps, "get", gatewayGetFake);
 
     const priviledge = "some-priviledge";
-    const priviledges = [priviledge];
+    const privileges = [priviledge];
     const name = "some-name";
     const key = "some-key";
-    const stores = [{ name, priviledges, key }];
+    const stores = [{ name, privileges, key }];
 
     const verifyFnResult = "some-verify-fn";
     const verifyFnFake = fake.returns(verifyFnResult);
@@ -257,14 +257,14 @@ describe("View gateway", () => {
     replace(deps, "get", gatewayGetFake);
 
     const priviledge = "some-priviledge";
-    const priviledges = [priviledge];
+    const privileges = [priviledge];
     const name1 = "some-name1";
     const name2 = "some-name2";
     const name3 = "some-name3";
     const stores = [
       { name: name1, protection: "none" },
       { name: name2, protection: "context" },
-      { name: name3, priviledges, context }
+      { name: name3, privileges, context }
     ];
 
     const verifyFnResult = "some-verify-fn";
@@ -322,7 +322,7 @@ describe("View gateway", () => {
       permissionsLookupFn,
       terminatedSessionCheckFn,
       context,
-      permissions: priviledges.map(priviledge => {
+      permissions: privileges.map(priviledge => {
         return { service, domain, priviledge };
       })
     });
@@ -353,9 +353,9 @@ describe("View gateway", () => {
     replace(deps, "get", gatewayGetFake);
 
     const priviledge = "some-priviledge";
-    const priviledges = [priviledge];
+    const privileges = [priviledge];
     const name = "some-name";
-    const stores = [{ name, priviledges, context }];
+    const stores = [{ name, privileges, context }];
 
     const otherDomain = "some-other-domain";
     const otherService = "some-other-service";
@@ -383,7 +383,7 @@ describe("View gateway", () => {
       permissionsLookupFn,
       terminatedSessionCheckFn,
       context,
-      permissions: priviledges.map(priviledge => {
+      permissions: privileges.map(priviledge => {
         return { service: otherService, domain: otherDomain, priviledge };
       })
     });

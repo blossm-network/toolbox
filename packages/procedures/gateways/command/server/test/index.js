@@ -50,9 +50,9 @@ describe("Command gateway", () => {
     replace(deps, "post", gatewayPostFake);
 
     const priviledge = "some-priviledge";
-    const priviledges = [priviledge];
+    const privileges = [priviledge];
     const name = "some-name";
-    const commands = [{ name, priviledges, context }];
+    const commands = [{ name, privileges, context }];
 
     const verifyFnResult = "some-verify-fn";
     const verifyFnFake = fake.returns(verifyFnResult);
@@ -107,13 +107,13 @@ describe("Command gateway", () => {
     expect(authorizationFake).to.have.been.calledWith({
       permissionsLookupFn,
       terminatedSessionCheckFn,
-      permissions: priviledges.map(priviledge => {
+      permissions: privileges.map(priviledge => {
         return { service, domain, priviledge };
       }),
       context
     });
   });
-  it("should call with the correct params with priviledges set to none and network in command", async () => {
+  it("should call with the correct params with privileges set to none and network in command", async () => {
     const corsMiddlewareFake = fake();
     replace(deps, "corsMiddleware", corsMiddlewareFake);
 
@@ -138,10 +138,10 @@ describe("Command gateway", () => {
     const gatewayPostFake = fake.returns(gatewayPostResult);
     replace(deps, "post", gatewayPostFake);
 
-    const priviledges = "none";
+    const privileges = "none";
     const name = "some-name";
     const network = "some-network";
-    const commands = [{ name, network, priviledges, context, basic: true }];
+    const commands = [{ name, network, privileges, context, basic: true }];
 
     const verifyFnResult = "some-verify-fn";
     const verifyFnFake = fake.returns(verifyFnResult);
@@ -231,9 +231,9 @@ describe("Command gateway", () => {
     const otherService = "some-other-server";
 
     const priviledge = "some-priviledge";
-    const priviledges = [priviledge];
+    const privileges = [priviledge];
 
-    const commands = [{ name, priviledges, key, service: otherService }];
+    const commands = [{ name, privileges, key, service: otherService }];
 
     const verifyFnResult = "some-verify-fn";
     const verifyFnFake = fake.returns(verifyFnResult);
@@ -290,14 +290,14 @@ describe("Command gateway", () => {
     replace(deps, "post", gatewayPostFake);
 
     const priviledge = "some-priviledge";
-    const priviledges = [priviledge];
+    const privileges = [priviledge];
     const name1 = "some-name1";
     const name2 = "some-name2";
     const name3 = "some-name3";
     const commands = [
       { name: name1, protection: "none" },
       { name: name2, protection: "context" },
-      { name: name3, priviledges, context }
+      { name: name3, privileges, context }
     ];
 
     const verifyFnResult = "some-verify-fn";
@@ -371,7 +371,7 @@ describe("Command gateway", () => {
       permissionsLookupFn,
       terminatedSessionCheckFn,
       context,
-      permissions: priviledges.map(priviledge => {
+      permissions: privileges.map(priviledge => {
         return { service, domain, priviledge };
       })
     });
@@ -403,10 +403,10 @@ describe("Command gateway", () => {
     replace(deps, "post", gatewayPostFake);
 
     const priviledge = "some-priviledge";
-    const priviledges = [priviledge];
+    const privileges = [priviledge];
 
     const name = "some-name";
-    const commands = [{ name, priviledges, context }];
+    const commands = [{ name, privileges, context }];
 
     const otherDomain = "some-other-domain";
     const otherService = "some-other-service";
@@ -438,7 +438,7 @@ describe("Command gateway", () => {
       permissionsLookupFn,
       terminatedSessionCheckFn,
       context,
-      permissions: priviledges.map(priviledge => {
+      permissions: privileges.map(priviledge => {
         return { service: otherService, domain: otherDomain, priviledge };
       })
     });

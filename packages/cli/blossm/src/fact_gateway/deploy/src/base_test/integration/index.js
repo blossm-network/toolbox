@@ -28,13 +28,13 @@ describe("Get job gateway integration tests", () => {
   );
   it("should return successfully", async () => {
     const requiredPermissions = jobs.reduce((permissions, command) => {
-      return command.priviledges == "none"
+      return command.privileges == "none"
         ? permissions
         : [
             ...new Set([
               ...permissions,
-              ...(command.priviledges
-                ? command.priviledges.map(priviledge => {
+              ...(command.privileges
+                ? command.privileges.map(priviledge => {
                     return {
                       priviledge,
                       domain: process.env.DOMAIN,
@@ -72,7 +72,7 @@ describe("Get job gateway integration tests", () => {
         expect(response0.statusCode).to.be.lessThan(500);
       });
 
-      if (job.priviledges == "none") continue;
+      if (job.privileges == "none") continue;
 
       parallelFns.push(async () => {
         const response1 = await request.get(`${url}/${job.name}`, {

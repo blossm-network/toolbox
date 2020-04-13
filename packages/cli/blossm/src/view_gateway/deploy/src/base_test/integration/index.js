@@ -28,13 +28,13 @@ describe("View gateway integration tests", () => {
   );
   it("should return successfully", async () => {
     const requiredPermissions = stores.reduce((permissions, command) => {
-      return command.priviledges == "none"
+      return command.privileges == "none"
         ? permissions
         : [
             ...new Set([
               ...permissions,
-              ...(command.priviledges
-                ? command.priviledges.map(priviledge => {
+              ...(command.privileges
+                ? command.privileges.map(priviledge => {
                     return {
                       priviledge,
                       domain: process.env.DOMAIN,
@@ -72,7 +72,7 @@ describe("View gateway integration tests", () => {
         expect(response0.statusCode).to.be.lessThan(500);
       });
 
-      if (store.priviledges == "none") continue;
+      if (store.privileges == "none") continue;
 
       parallelFns.push(async () => {
         const response1 = await request.get(`${url}/${store.name}`, {

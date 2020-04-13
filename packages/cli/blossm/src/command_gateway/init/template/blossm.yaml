@@ -8,7 +8,7 @@ service: core
 
 commands:
   - name: some-name
-    priviledges:
+    privileges:
       - some-permission
   - name: some-other-name
     protection: none

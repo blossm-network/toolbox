@@ -24,7 +24,7 @@ module.exports = async ({
   for (const {
     name,
     key = "access",
-    priviledges,
+    privileges,
     protection = "strict",
     context
   } of stores) {
@@ -45,11 +45,11 @@ module.exports = async ({
                   terminatedSessionCheckFn,
                   context,
                   permissions:
-                    priviledges instanceof Array
-                      ? priviledges.map(priviledge => {
+                    privileges instanceof Array
+                      ? privileges.map(priviledge => {
                           return { service, domain, priviledge };
                         })
-                      : priviledges
+                      : privileges
                 })
               ]
             : [])
