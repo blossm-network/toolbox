@@ -34,13 +34,16 @@ describe("Projection integration tests", () => {
       parallelFns.push(async () => {
         const v = await viewStore({
           name,
-          domain
+          ...(domain && { domain })
         }).read(
           example.result.root
             ? { root: example.result.root }
             : example.result.query
         );
 
+        //TODO
+        //eslint-disable-next-line
+        console.log({ v });
         if (example.result.value) {
           for (const property in example.result.value) {
             expect(v[0][property]).to.exist;
