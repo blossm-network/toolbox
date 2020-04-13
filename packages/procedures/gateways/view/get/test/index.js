@@ -39,12 +39,9 @@ describe("View gateway get", () => {
       status: statusFake
     };
 
-    await get({ name, domain })(req, res);
+    await get({ name })(req, res);
 
-    expect(viewStoreFake).to.have.been.calledWith({
-      name,
-      domain
-    });
+    expect(viewStoreFake).to.have.been.calledWith({ name });
     expect(setFake).to.have.been.calledWith({
       context,
       claims,
@@ -53,7 +50,7 @@ describe("View gateway get", () => {
     expect(readFake).to.have.been.calledWith(query);
     expect(sendFake).to.have.been.calledWith(results);
   });
-  it("should call with the correct params with context", async () => {
+  it("should call with the correct params with context and domain", async () => {
     const readFake = fake.returns(results);
     const setFake = fake.returns({
       read: readFake

@@ -24,10 +24,10 @@ module.exports = async ({
   for (const {
     name,
     key = "access",
-    privileges,
+    permissions,
     protection = "strict"
   } of stores) {
-    server = server.get(deps.get({ name, domain }), {
+    server = server.get(deps.get({ name, ...(domain && { domain }) }), {
       path: `/${name}`,
       ...(protection != "none" && {
         preMiddleware: [
@@ -44,11 +44,18 @@ module.exports = async ({
                   terminatedSessionCheckFn,
                   context,
                   permissions:
-                    privileges instanceof Array
-                      ? privileges.map(privilege => {
-                          return { context, domain, privilege };
+                    permissions instanceof Array
+                      ? permissions.map(permission => {
+                          const [service, domain, privilege] = permission.split(
+                            ":"
+                          );
+                          return {
+                            service,
+                            domain,
+                            privilege
+                          };
                         })
-                      : privileges
+                      : permissions
                 })
               ]
             : [])

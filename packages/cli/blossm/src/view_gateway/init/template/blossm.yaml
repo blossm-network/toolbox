@@ -8,8 +8,8 @@ context: principle
 
 stores:
   - name: some-name
-    privileges:
-      - some-privilege
+    permissions:
+      - some-service:some-domain:some-privilege
   - name: some-other-name
     protection: none
 

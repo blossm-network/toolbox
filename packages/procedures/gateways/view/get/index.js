@@ -4,7 +4,7 @@ module.exports = ({ name, domain, context } = {}) => async (req, res) => {
   const response = await deps
     .viewStore({
       name,
-      domain,
+      ...(domain && { domain }),
       ...(context && { context })
     })
     .set({

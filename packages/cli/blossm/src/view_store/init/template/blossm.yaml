@@ -13,7 +13,7 @@
 
 name: some-name
 domain: some-domain
-service: core
+context: principle
 
 schema:
   name: String
