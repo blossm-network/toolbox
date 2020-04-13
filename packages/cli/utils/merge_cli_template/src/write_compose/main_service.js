@@ -51,11 +51,11 @@ module.exports = ({
   };
 
   const commonDatabaseEnv = {
-    MONGODB_USER: `${mongodbUser}`,
-    MONGODB_HOST: `${mongodbHost}`,
-    MONGODB_USER_PASSWORD: `${mongodbUserPassword}`,
-    MONGODB_DATABASE: `${mongodbDatabase}`,
-    MONGODB_PROTOCOL: `${mongodbProtocol}`
+    MONGODB_USER: mongodbUser,
+    MONGODB_HOST: mongodbHost,
+    MONGODB_USER_PASSWORD: mongodbUserPassword,
+    MONGODB_DATABASE: mongodbDatabase,
+    MONGODB_PROTOCOL: mongodbProtocol
   };
 
   const commonImagePrefix = `${containerRegistery}/${procedure}`;
@@ -101,14 +101,17 @@ module.exports = ({
     case "event-handler":
     case "projection":
       return {
-        image: `${commonImagePrefix}.${service}.${domain}.${name}.did-${event.action}.${event.domain}:latest`,
+        image: `${commonImagePrefix}.${context}${
+          domain ? `.${domain}` : ""
+        }.${name}.did-${event.action}.${event.domain}:latest`,
         ...common,
         environment: {
           ...common.environment,
-          NAME: `${name}`,
-          EVENT_ACTION: `${event.action}`,
-          EVENT_DOMAIN: `${event.domain}`,
-          EVENT_SERVICE: `${event.service}`
+          NAME: name,
+          CONTEXT: context,
+          EVENT_ACTION: event.action,
+          EVENT_DOMAIN: event.domain,
+          EVENT_SERVICE: event.service
         }
       };
     case "job":
@@ -120,7 +123,7 @@ module.exports = ({
         ...common,
         environment: {
           ...common.environment,
-          NAME: `${name}`
+          NAME: name
         }
       };
     case "command-gateway":

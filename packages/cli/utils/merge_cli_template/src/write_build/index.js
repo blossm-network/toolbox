@@ -144,7 +144,7 @@ const steps = ({
         mainContainerName,
         coreNetwork,
         dnsZone,
-        service,
+        context,
         memory,
         procedure,
         operationName,
@@ -355,7 +355,9 @@ const imageExtension = ({
       return "";
     case "event-handler":
     case "projection":
-      return `${service}.${domain}.${name}.did-${event.action}.${event.domain}`;
+      return `${context}${domain ? `.${domain}` : ""}.${name}.did-${
+        event.action
+      }.${event.domain}`;
     case "command":
       return `${service}.${domain}.${name}`;
     case "job":

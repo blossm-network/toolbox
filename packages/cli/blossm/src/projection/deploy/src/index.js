@@ -10,7 +10,7 @@ module.exports = eventHandler({
   mainFn: async event => {
     return await viewStore({
       name: config.name,
-      domain: config.domain
+      ...(config.domain && { domain: config.domain })
     })
       .set({
         context: event.headers.context,

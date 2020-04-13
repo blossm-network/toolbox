@@ -7,7 +7,7 @@
 
 name: some-name
 domain: some-domain
-service: core
+context: principle
 
 event:
   action: some-event-action

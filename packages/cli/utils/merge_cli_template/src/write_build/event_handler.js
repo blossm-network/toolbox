@@ -21,6 +21,7 @@ const writeEnv = require("./steps/write_env");
 module.exports = ({
   region,
   domain,
+  context,
   name,
   event,
   project,
@@ -33,7 +34,6 @@ module.exports = ({
   uri,
   serviceName,
   dnsZone,
-  service,
   procedure,
   env,
   coreNetwork,
@@ -71,8 +71,8 @@ module.exports = ({
       secretBucketKeyLocation,
       coreNetwork,
       custom: {
-        DOMAIN: domain,
-        SERVICE: service,
+        ...(domain && { DOMAIN: domain }),
+        CONTEXT: context,
         NAME: name,
         EVENT_ACTION: event.action,
         EVENT_DOMAIN: event.domain,
@@ -111,16 +111,16 @@ module.exports = ({
             envUriSpecifier,
             env: {
               NAME: name,
-              DOMAIN: domain,
-              SERVICE: service,
+              ...(domain && { DOMAIN: domain }),
+              CONTEXT: context,
               EVENT_ACTION: event.action,
               EVENT_DOMAIN: event.domain,
               EVENT_SERVICE: event.service
             },
             labels: {
               name,
-              domain,
-              service,
+              ...(domain && { domain }),
+              ...(context && { context }),
               "event-action": event.action,
               "event-domain": event.domain,
               "event-service": event.service
@@ -144,7 +144,7 @@ module.exports = ({
           createPubsubSubscription({
             name,
             domain,
-            service,
+            context,
             operationHash,
             operationName,
             eventAction: event.action,
