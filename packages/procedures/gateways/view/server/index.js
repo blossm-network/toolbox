@@ -3,7 +3,7 @@ const deps = require("./deps");
 module.exports = async ({
   stores,
   domain = process.env.DOMAIN,
-  service = process.env.SERVICE,
+  context = process.env.CONTEXT,
   whitelist,
   permissionsLookupFn,
   terminatedSessionCheckFn,
@@ -25,8 +25,7 @@ module.exports = async ({
     name,
     key = "access",
     privileges,
-    protection = "strict",
-    context
+    protection = "strict"
   } of stores) {
     server = server.get(deps.get({ name, domain }), {
       path: `/${name}`,
@@ -46,8 +45,8 @@ module.exports = async ({
                   context,
                   permissions:
                     privileges instanceof Array
-                      ? privileges.map(priviledge => {
-                          return { service, domain, priviledge };
+                      ? privileges.map(privilege => {
+                          return { context, domain, privilege };
                         })
                       : privileges
                 })

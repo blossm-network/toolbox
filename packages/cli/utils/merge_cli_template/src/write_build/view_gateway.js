@@ -27,9 +27,9 @@ module.exports = ({
   mainContainerName,
   serviceName,
   dnsZone,
+  context,
   computeUrlId,
   coreNetwork,
-  service,
   procedure,
   operationHash,
   memory,
@@ -46,7 +46,9 @@ module.exports = ({
   dependencyKeyEnvironmentVariables,
   strict
 }) => {
-  const authUri = `view.${domain}.${service}.${envUriSpecifier}${network}`;
+  const authUri = `view${
+    domain ? `.${domain}` : ""
+  }.${context}.${envUriSpecifier}${network}`;
   return [
     yarnInstall,
     ...(runUnitTests ? [unitTests] : []),
@@ -67,8 +69,8 @@ module.exports = ({
       secretBucketKeyRing,
       secretBucketKeyLocation,
       custom: {
-        DOMAIN: domain,
-        SERVICE: service,
+        ...(domain && { DOMAIN: domain }),
+        CONTEXT: context,
         ...dependencyKeyEnvironmentVariables,
         ...(publicKeyUrl && { PUBLIC_KEY_URL: publicKeyUrl })
       }
@@ -104,12 +106,12 @@ module.exports = ({
             network,
             envUriSpecifier,
             env: {
-              DOMAIN: domain,
-              SERVICE: service,
+              ...(domain && { DOMAIN: domain }),
+              CONTEXT: context,
               ...dependencyKeyEnvironmentVariables,
               ...(publicKeyUrl && { PUBLIC_KEY_URL: publicKeyUrl })
             },
-            labels: { domain, service }
+            labels: { domain, context }
           }),
           startDnsTransaction({ dnsZone, project }),
           addDnsTransaction({ uri: authUri, dnsZone, project }),

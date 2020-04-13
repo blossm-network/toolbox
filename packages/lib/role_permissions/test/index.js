@@ -38,7 +38,7 @@ describe("Role permissions", () => {
       {
         service: permissionService,
         domain: permissionDomain,
-        priviledge: permissionPriviledge
+        privilege: permissionPriviledge
       }
     ]);
   });
@@ -87,7 +87,7 @@ describe("Role permissions", () => {
       {
         service: permissionService,
         domain: permissionDomain,
-        priviledge: permissionPriviledge
+        privilege: permissionPriviledge
       }
     ]);
   });
@@ -112,7 +112,7 @@ describe("Role permissions", () => {
       {
         service: permissionService,
         domain: permissionDomain,
-        priviledge: permissionPriviledge
+        privilege: permissionPriviledge
       },
       ...customRolePermissions
     ]);
@@ -139,12 +139,12 @@ describe("Role permissions", () => {
       {
         service: permissionService,
         domain: permissionDomain,
-        priviledge: permissionPriviledge
+        privilege: permissionPriviledge
       },
       {
         service: otherPermissionService,
         domain: otherPermissionDomain,
-        priviledge: otherPermissionPriviledge
+        privilege: otherPermissionPriviledge
       }
     ]);
   });

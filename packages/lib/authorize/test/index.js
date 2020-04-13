@@ -6,7 +6,7 @@ const authorize = require("..");
 const domain = "some-domain";
 const service = "some-service";
 const network = "some-network";
-const priviledge = "some-priviledge";
+const privilege = "some-privilege";
 
 const principle = "some-priciple-root";
 
@@ -23,15 +23,15 @@ describe("Authorize", () => {
   afterEach(() => {
     restore();
   });
-  it("should authorize with matching priviledge, domain, and service from permission", async () => {
-    const permissions = [{ service, domain, priviledge }];
+  it("should authorize with matching privilege, domain, and service from permission", async () => {
+    const permissions = [{ service, domain, privilege }];
 
     const permissionsLookupFn = fake.returns(permissions);
     const context = "some-context";
 
     const document = await authorize({
       permissionsLookupFn,
-      permissions: [{ service, domain, priviledge }],
+      permissions: [{ service, domain, privilege }],
       network,
       principle,
       context
@@ -46,7 +46,7 @@ describe("Authorize", () => {
     });
   });
   it("should not authorize if theres a mismatch", async () => {
-    const permissions = [{ service, domain, priviledge: "bogus" }];
+    const permissions = [{ service, domain, privilege: "bogus" }];
 
     const permissionsLookupFn = fake.returns(permissions);
 

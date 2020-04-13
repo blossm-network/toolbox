@@ -48,8 +48,8 @@ describe("Fact gateway", () => {
     const gatewayGetFake = fake.returns(gatewayGetResult);
     replace(deps, "get", gatewayGetFake);
 
-    const priviledge = "some-priviledge";
-    const privileges = [priviledge];
+    const privilege = "some-privilege";
+    const privileges = [privilege];
     const name = "some-name";
     const jobs = [{ name, privileges, context }];
 
@@ -104,8 +104,8 @@ describe("Fact gateway", () => {
       permissionsLookupFn,
       terminatedSessionCheckFn,
       context,
-      permissions: privileges.map(priviledge => {
-        return { service, domain, priviledge };
+      permissions: privileges.map(privilege => {
+        return { service, domain, privilege };
       })
     });
   });
@@ -216,8 +216,8 @@ describe("Fact gateway", () => {
     const gatewayGetFake = fake.returns(gatewayGetResult);
     replace(deps, "get", gatewayGetFake);
 
-    const priviledge = "some-priviledge";
-    const privileges = [priviledge];
+    const privilege = "some-privilege";
+    const privileges = [privilege];
     const name = "some-name";
     const key = "some-key";
     const jobs = [{ name, privileges, key }];
@@ -275,8 +275,8 @@ describe("Fact gateway", () => {
     const gatewayGetFake = fake.returns(gatewayGetResult);
     replace(deps, "get", gatewayGetFake);
 
-    const priviledge = "some-priviledge";
-    const privileges = [priviledge];
+    const privilege = "some-privilege";
+    const privileges = [privilege];
     const name1 = "some-name1";
     const name2 = "some-name2";
     const name3 = "some-name3";
@@ -349,8 +349,8 @@ describe("Fact gateway", () => {
       permissionsLookupFn,
       terminatedSessionCheckFn,
       context,
-      permissions: privileges.map(priviledge => {
-        return { service, domain, priviledge };
+      permissions: privileges.map(privilege => {
+        return { service, domain, privilege };
       })
     });
     expect(authorizationFake).to.have.been.calledOnce;
@@ -380,8 +380,8 @@ describe("Fact gateway", () => {
     const gatewayGetFake = fake.returns(gatewayGetResult);
     replace(deps, "get", gatewayGetFake);
 
-    const priviledge = "some-priviledge";
-    const privileges = [priviledge];
+    const privilege = "some-privilege";
+    const privileges = [privilege];
     const name = "some-name";
     const jobs = [{ name, privileges, context }];
 
@@ -415,8 +415,8 @@ describe("Fact gateway", () => {
       permissionsLookupFn,
       terminatedSessionCheckFn,
       context,
-      permissions: privileges.map(priviledge => {
-        return { service: otherService, domain: otherDomain, priviledge };
+      permissions: privileges.map(privilege => {
+        return { service: otherService, domain: otherDomain, privilege };
       })
     });
   });

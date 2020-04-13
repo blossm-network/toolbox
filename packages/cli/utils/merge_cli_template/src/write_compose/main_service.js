@@ -5,6 +5,7 @@ module.exports = ({
   publicKeyUrl,
   mainContainerName,
   network,
+  context,
   host,
   service,
   project,
@@ -62,10 +63,13 @@ module.exports = ({
   switch (procedure) {
     case "view-store":
       return {
-        image: `${commonImagePrefix}.${service}.${domain}.${name}:latest`,
+        image: `${commonImagePrefix}.${context}.${
+          domain ? `.${domain}` : ""
+        }.${name}:latest`,
         ...common,
         environment: {
-          NAME: `${name}`,
+          NAME: name,
+          CONTEXT: context,
           ...common.environment,
           ...commonDatabaseEnv
         }
@@ -120,12 +124,23 @@ module.exports = ({
         }
       };
     case "command-gateway":
-    case "view-gateway":
       return {
         image: `${commonImagePrefix}.${service}.${domain}:latest`,
         ...common,
         environment: {
           ...common.environment,
+          PUBLIC_KEY_URL: publicKeyUrl
+        }
+      };
+    case "view-gateway":
+      return {
+        image: `${commonImagePrefix}.${context}.${
+          domain ? `.${domain}` : ""
+        }:latest`,
+        ...common,
+        environment: {
+          ...common.environment,
+          CONTEXT: context,
           PUBLIC_KEY_URL: publicKeyUrl
         }
       };

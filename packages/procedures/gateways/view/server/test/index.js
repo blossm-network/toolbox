@@ -7,14 +7,13 @@ const whitelist = "some-whitelist";
 const permissionsLookupFn = "some-permissions-fn";
 const terminatedSessionCheckFn = "some-terminated-session-check-fn";
 const domain = "some-domain";
-const service = "some-service";
-const network = "some-network";
 const context = "some-context";
+const network = "some-network";
 const algorithm = "some-algorithm";
 const audience = "some-audience";
 
 process.env.DOMAIN = domain;
-process.env.SERVICE = service;
+process.env.CONTEXT = context;
 process.env.NETWORK = network;
 
 describe("View gateway", () => {
@@ -46,8 +45,8 @@ describe("View gateway", () => {
     const gatewayGetFake = fake.returns(gatewayGetResult);
     replace(deps, "get", gatewayGetFake);
 
-    const priviledge = "some-priviledge";
-    const privileges = [priviledge];
+    const privilege = "some-privilege";
+    const privileges = [privilege];
     const name = "some-name";
     const stores = [{ name, privileges, context }];
 
@@ -94,8 +93,8 @@ describe("View gateway", () => {
       permissionsLookupFn,
       terminatedSessionCheckFn,
       context,
-      permissions: privileges.map(priviledge => {
-        return { service, domain, priviledge };
+      permissions: privileges.map(privilege => {
+        return { context, domain, privilege };
       })
     });
   });
@@ -199,8 +198,8 @@ describe("View gateway", () => {
     const gatewayGetFake = fake.returns(gatewayGetResult);
     replace(deps, "get", gatewayGetFake);
 
-    const priviledge = "some-priviledge";
-    const privileges = [priviledge];
+    const privilege = "some-privilege";
+    const privileges = [privilege];
     const name = "some-name";
     const key = "some-key";
     const stores = [{ name, privileges, key }];
@@ -256,8 +255,8 @@ describe("View gateway", () => {
     const gatewayGetFake = fake.returns(gatewayGetResult);
     replace(deps, "get", gatewayGetFake);
 
-    const priviledge = "some-priviledge";
-    const privileges = [priviledge];
+    const privilege = "some-privilege";
+    const privileges = [privilege];
     const name1 = "some-name1";
     const name2 = "some-name2";
     const name3 = "some-name3";
@@ -322,12 +321,12 @@ describe("View gateway", () => {
       permissionsLookupFn,
       terminatedSessionCheckFn,
       context,
-      permissions: privileges.map(priviledge => {
-        return { service, domain, priviledge };
+      permissions: privileges.map(privilege => {
+        return { context, domain, privilege };
       })
     });
   });
-  it("should call with the correct params with passed in domain and service", async () => {
+  it("should call with the correct params with passed in domain and context", async () => {
     const corsMiddlewareFake = fake();
     replace(deps, "corsMiddleware", corsMiddlewareFake);
 
@@ -352,13 +351,13 @@ describe("View gateway", () => {
     const gatewayGetFake = fake.returns(gatewayGetResult);
     replace(deps, "get", gatewayGetFake);
 
-    const priviledge = "some-priviledge";
-    const privileges = [priviledge];
+    const privilege = "some-privilege";
+    const privileges = [privilege];
     const name = "some-name";
     const stores = [{ name, privileges, context }];
 
     const otherDomain = "some-other-domain";
-    const otherService = "some-other-service";
+    const otherContext = "some-other-context";
 
     const verifyFnResult = "some-verify-fn";
     const verifyFnFake = fake.returns(verifyFnResult);
@@ -366,7 +365,7 @@ describe("View gateway", () => {
     await gateway({
       stores,
       domain: otherDomain,
-      service: otherService,
+      context: otherContext,
       whitelist,
       permissionsLookupFn,
       terminatedSessionCheckFn,
@@ -382,9 +381,9 @@ describe("View gateway", () => {
     expect(authorizationFake).to.have.been.calledWith({
       permissionsLookupFn,
       terminatedSessionCheckFn,
-      context,
-      permissions: privileges.map(priviledge => {
-        return { service: otherService, domain: otherDomain, priviledge };
+      context: otherContext,
+      permissions: privileges.map(privilege => {
+        return { context: otherContext, domain: otherDomain, privilege };
       })
     });
   });

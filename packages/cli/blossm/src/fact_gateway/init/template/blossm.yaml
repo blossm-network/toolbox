@@ -9,7 +9,7 @@ service: core
 jobs:
   - name: some-name
     privileges:
-      - some-priviledge
+      - some-privilege
   - name: some-other-name
     protection: none
 

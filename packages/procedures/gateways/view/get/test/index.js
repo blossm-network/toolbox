@@ -15,7 +15,7 @@ describe("View gateway get", () => {
   afterEach(() => {
     restore();
   });
-  it("should call with the correct params when action and domain passed in url", async () => {
+  it("should call with the correct params", async () => {
     const readFake = fake.returns(results);
     const setFake = fake.returns({
       read: readFake
@@ -44,6 +44,46 @@ describe("View gateway get", () => {
     expect(viewStoreFake).to.have.been.calledWith({
       name,
       domain
+    });
+    expect(setFake).to.have.been.calledWith({
+      context,
+      claims,
+      tokenFns: { internal: deps.gcpToken }
+    });
+    expect(readFake).to.have.been.calledWith(query);
+    expect(sendFake).to.have.been.calledWith(results);
+  });
+  it("should call with the correct params with context", async () => {
+    const readFake = fake.returns(results);
+    const setFake = fake.returns({
+      read: readFake
+    });
+    const viewStoreFake = fake.returns({
+      set: setFake
+    });
+    replace(deps, "viewStore", viewStoreFake);
+
+    const req = {
+      context,
+      claims,
+      query
+    };
+
+    const sendFake = fake();
+    const statusFake = fake.returns({
+      send: sendFake
+    });
+    const res = {
+      status: statusFake
+    };
+
+    const contextParam = "some-context";
+    await get({ name, domain, context: contextParam })(req, res);
+
+    expect(viewStoreFake).to.have.been.calledWith({
+      name,
+      domain,
+      context: contextParam
     });
     expect(setFake).to.have.been.calledWith({
       context,

@@ -31,6 +31,7 @@ const steps = ({
   service,
   procedure,
   env,
+  context,
   operationHash,
   operationName,
   twilioTestReceivingPhoneNumber,
@@ -62,6 +63,7 @@ const steps = ({
         event,
         project,
         network,
+        context,
         memory,
         computeUrlId,
         envUriSpecifier,
@@ -267,6 +269,7 @@ const steps = ({
         publicKeyUrl,
         region,
         project,
+        context,
         envUriSpecifier,
         containerRegistery,
         mainContainerName,
@@ -328,14 +331,22 @@ const steps = ({
   }
 };
 
-const imageExtension = ({ service, domain, name, event, procedure }) => {
+const imageExtension = ({
+  service,
+  context,
+  domain,
+  name,
+  event,
+  procedure
+}) => {
   switch (procedure) {
     case "view-store":
-      return `${service}.${domain}.${name}`;
+      return `${context}${domain ? `.${domain}` : ""}.${name}`;
     case "event-store":
     case "command-gateway":
-    case "view-gateway":
       return `${service}.${domain}`;
+    case "view-gateway":
+      return `${service}${domain ? `.${domain}` : ""}`;
     case "fact-gateway":
       if (service) {
         if (domain) return `${service}.${domain}`;
@@ -368,6 +379,7 @@ module.exports = ({
   network,
   procedure,
   memory,
+  context,
   envUriSpecifier,
   coreNetwork,
   containerRegistery,
@@ -421,6 +433,7 @@ module.exports = ({
       event,
       project,
       network,
+      context,
       memory,
       procedure,
       twilioTestReceivingPhoneNumber,

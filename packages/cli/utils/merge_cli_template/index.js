@@ -559,6 +559,7 @@ const configure = async (workingDir, configFn, env, strict) => {
 
     const domain = config.domain;
     const service = config.service;
+    const context = config.context;
     const procedure = config.procedure;
     const name = config.name;
     const event = config.event;
@@ -605,6 +606,7 @@ const configure = async (workingDir, configFn, env, strict) => {
       publicKeyUrl,
       region,
       domain,
+      context,
       name,
       event,
       project,
@@ -643,6 +645,7 @@ const configure = async (workingDir, configFn, env, strict) => {
       host: "local.network",
       service,
       project,
+      context,
       region,
       containerRegistery,
       coreContainerRegistery,

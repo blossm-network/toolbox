@@ -66,11 +66,14 @@ module.exports = ({
           const operationHash = hash(
             dependency.name,
             dependency.domain,
-            dependency.service,
+            dependency.context,
             dependency.procedure
           );
 
-          const key = `${dependency.name}-${dependency.domain}-${config.service}`;
+          const key = `${dependency.name}-${
+            dependency.domain ? `${dependency.domain}-` : ""
+          }${config.service}`;
+
           services = {
             ...services,
             [key]: {
@@ -83,8 +86,8 @@ module.exports = ({
                 ...commonStoreEnvironment,
                 PROCEDURE: dependency.procedure,
                 OPERATION_HASH: operationHash,
-                DOMAIN: dependency.domain,
-                SERVICE: dependency.service,
+                ...{ DOMAIN: dependency.domain },
+                CONTEXT: dependency.contxt,
                 NAME: dependency.name
               }
             }

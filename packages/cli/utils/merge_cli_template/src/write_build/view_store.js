@@ -22,13 +22,13 @@ module.exports = ({
   name,
   project,
   network,
+  context,
   memory,
   envUriSpecifier,
   containerRegistery,
   mainContainerName,
   coreNetwork,
   dnsZone,
-  service,
   procedure,
   computeUrlId,
   operationHash,
@@ -71,8 +71,8 @@ module.exports = ({
       secretBucketKeyLocation,
       custom: {
         NAME: name,
-        DOMAIN: domain,
-        SERVICE: service,
+        ...(domain && { DOMAIN: domain }),
+        CONTEXT: context,
         ...dependencyKeyEnvironmentVariables
       }
     }),
@@ -107,15 +107,15 @@ module.exports = ({
             nodeEnv: env,
             env: {
               NAME: name,
-              DOMAIN: domain,
-              SERVICE: service,
+              ...(domain && { DOMAIN: domain }),
+              CONTEXT: context,
               MONGODB_DATABASE: "view-store",
               MONGODB_USER: mongodbUser,
               MONGODB_HOST: mongodbHost,
               MONGODB_PROTOCOL: mongodbProtocol,
               ...dependencyKeyEnvironmentVariables
             },
-            labels: { name, domain, service }
+            labels: { name, domain, context }
           }),
           startDnsTransaction({ dnsZone, project }),
           addDnsTransaction({ uri, dnsZone, project }),

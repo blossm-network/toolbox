@@ -6,7 +6,7 @@ const viewStore = require("..");
 
 const name = "some-name";
 const domain = "some-domain";
-const service = "some-service";
+const context = "some-context";
 const network = "some-network";
 
 const internalTokenFn = "some-internal-token-fn";
@@ -16,11 +16,11 @@ const query = "some-query";
 const sort = "some-sort";
 const view = "some-view";
 const id = "some-id";
-const context = { c: 2 };
+const contexts = { c: 2 };
 const claims = "some-claims";
 
-const envService = "some-env-service";
-process.env.SERVICE = envService;
+const envContext = "some-env-context";
+process.env.CONTEXT = envContext;
 process.env.NETWORK = network;
 
 describe("Get views", () => {
@@ -41,9 +41,9 @@ describe("Get views", () => {
     });
     replace(deps, "rpc", rpcFake);
 
-    await viewStore({ name, domain, service })
+    await viewStore({ name, domain, context })
       .set({
-        context,
+        context: contexts,
         tokenFns: { internal: internalTokenFn, external: externalTokenFn },
         claims
       })
@@ -52,11 +52,11 @@ describe("Get views", () => {
     expect(rpcFake).to.have.been.calledWith(
       name,
       domain,
-      service,
+      context,
       "view-store"
     );
     expect(postFake).to.have.been.calledWith({ view });
-    expect(inFake).to.have.been.calledWith({ context });
+    expect(inFake).to.have.been.calledWith({ context: contexts });
     expect(withFake).to.have.been.calledWith({
       internalTokenFn,
       externalTokenFn,
@@ -76,14 +76,9 @@ describe("Get views", () => {
     });
     replace(deps, "rpc", rpcFake);
 
-    await viewStore({ name, domain }).create(view);
+    await viewStore({ name }).create(view);
 
-    expect(rpcFake).to.have.been.calledWith(
-      name,
-      domain,
-      envService,
-      "view-store"
-    );
+    expect(rpcFake).to.have.been.calledWith(name, envContext, "view-store");
     expect(postFake).to.have.been.calledWith({ view });
     expect(inFake).to.have.been.calledWith({});
     expect(withFake).to.have.been.calledWith({});
@@ -102,9 +97,9 @@ describe("Get views", () => {
     });
     replace(deps, "rpc", rpcFake);
 
-    const result = await viewStore({ name, domain, service, network })
+    const result = await viewStore({ name, domain, context, network })
       .set({
-        context,
+        context: contexts,
         tokenFns: { internal: internalTokenFn, external: externalTokenFn }
       })
       .read({ query, sort });
@@ -112,11 +107,11 @@ describe("Get views", () => {
     expect(rpcFake).to.have.been.calledWith(
       name,
       domain,
-      service,
+      context,
       "view-store"
     );
     expect(getFake).to.have.been.calledWith({ query, sort });
-    expect(inFake).to.have.been.calledWith({ context });
+    expect(inFake).to.have.been.calledWith({ context: contexts });
     expect(withFake).to.have.been.calledWith({
       internalTokenFn,
       externalTokenFn
@@ -137,16 +132,11 @@ describe("Get views", () => {
     });
     replace(deps, "rpc", rpcFake);
 
-    const result = await viewStore({ name, domain }).read({
+    const result = await viewStore({ name }).read({
       query
     });
 
-    expect(rpcFake).to.have.been.calledWith(
-      name,
-      domain,
-      envService,
-      "view-store"
-    );
+    expect(rpcFake).to.have.been.calledWith(name, envContext, "view-store");
     expect(getFake).to.have.been.calledWith({ query });
     expect(inFake).to.have.been.calledWith({});
     expect(withFake).to.have.been.calledWith({});
@@ -169,24 +159,18 @@ describe("Get views", () => {
     const otherNetwork = "some-other-network";
     const result = await viewStore({
       name,
-      domain,
-      service,
+      context,
       network: otherNetwork
     })
-      .set({ context, tokenFns: { external: externalTokenFn } })
+      .set({ context: contexts, tokenFns: { external: externalTokenFn } })
       .read({ query, sort });
 
-    expect(rpcFake).to.have.been.calledWith(
-      name,
-      domain,
-      service,
-      "view-store"
-    );
+    expect(rpcFake).to.have.been.calledWith(name, context, "view-store");
     expect(getFake).to.have.been.calledWith({ query, sort });
     expect(inFake).to.have.been.calledWith({
-      context,
+      context: contexts,
       network: otherNetwork,
-      host: "view.some-domain.some-service.some-other-network"
+      host: "view.some-context.some-other-network"
     });
     expect(withFake).to.have.been.calledWith({
       externalTokenFn,
@@ -208,21 +192,16 @@ describe("Get views", () => {
     });
     replace(deps, "rpc", rpcFake);
 
-    const result = await viewStore({ name, domain, service, network })
+    const result = await viewStore({ name, context, network })
       .set({
-        context,
+        context: contexts,
         tokenFns: { internal: internalTokenFn, external: externalTokenFn }
       })
       .stream({ query, sort });
 
-    expect(rpcFake).to.have.been.calledWith(
-      name,
-      domain,
-      service,
-      "view-store"
-    );
+    expect(rpcFake).to.have.been.calledWith(name, context, "view-store");
     expect(getFake).to.have.been.calledWith({ query, sort });
-    expect(inFake).to.have.been.calledWith({ context });
+    expect(inFake).to.have.been.calledWith({ context: contexts });
     expect(withFake).to.have.been.calledWith({
       path: "/stream",
       internalTokenFn,
@@ -244,16 +223,11 @@ describe("Get views", () => {
     });
     replace(deps, "rpc", rpcFake);
 
-    const result = await viewStore({ name, domain }).stream({
+    const result = await viewStore({ name }).stream({
       query
     });
 
-    expect(rpcFake).to.have.been.calledWith(
-      name,
-      domain,
-      envService,
-      "view-store"
-    );
+    expect(rpcFake).to.have.been.calledWith(name, envContext, "view-store");
     expect(getFake).to.have.been.calledWith({ query });
     expect(inFake).to.have.been.calledWith({});
     expect(withFake).to.have.been.calledWith({
@@ -279,23 +253,23 @@ describe("Get views", () => {
     const result = await viewStore({
       name,
       domain,
-      service,
+      context,
       network: otherNetwork
     })
-      .set({ context, tokenFns: { external: externalTokenFn } })
+      .set({ context: contexts, tokenFns: { external: externalTokenFn } })
       .stream({ query, sort });
 
     expect(rpcFake).to.have.been.calledWith(
       name,
       domain,
-      service,
+      context,
       "view-store"
     );
     expect(getFake).to.have.been.calledWith({ query, sort });
     expect(inFake).to.have.been.calledWith({
-      context,
+      context: contexts,
       network: otherNetwork,
-      host: "view.some-domain.some-service.some-other-network"
+      host: "view.some-domain.some-context.some-other-network"
     });
     expect(withFake).to.have.been.calledWith({
       path: "/some-name/stream",
@@ -316,10 +290,9 @@ describe("Get views", () => {
     });
     replace(deps, "rpc", rpcFake);
 
-    await viewStore({ name, domain, service })
+    await viewStore({ name, domain, context })
       .set({
-        context,
-
+        context: contexts,
         tokenFns: { internal: internalTokenFn, external: externalTokenFn }
       })
       .update(id, view);
@@ -327,11 +300,11 @@ describe("Get views", () => {
     expect(rpcFake).to.have.been.calledWith(
       name,
       domain,
-      service,
+      context,
       "view-store"
     );
     expect(putFake).to.have.been.calledWith(id, { view });
-    expect(inFake).to.have.been.calledWith({ context });
+    expect(inFake).to.have.been.calledWith({ context: contexts });
     expect(withFake).to.have.been.calledWith({
       internalTokenFn,
       externalTokenFn
@@ -350,14 +323,9 @@ describe("Get views", () => {
     });
     replace(deps, "rpc", rpcFake);
 
-    await viewStore({ name, domain }).update(id, view);
+    await viewStore({ name }).update(id, view);
 
-    expect(rpcFake).to.have.been.calledWith(
-      name,
-      domain,
-      envService,
-      "view-store"
-    );
+    expect(rpcFake).to.have.been.calledWith(name, envContext, "view-store");
     expect(putFake).to.have.been.calledWith(id, { view });
     expect(inFake).to.have.been.calledWith({});
     expect(withFake).to.have.been.calledWith();
@@ -375,9 +343,9 @@ describe("Get views", () => {
     });
     replace(deps, "rpc", rpcFake);
 
-    await viewStore({ name, domain, service })
+    await viewStore({ name, domain, context })
       .set({
-        context,
+        context: contexts,
         claims,
         tokenFns: { internal: internalTokenFn, external: externalTokenFn }
       })
@@ -386,11 +354,11 @@ describe("Get views", () => {
     expect(rpcFake).to.have.been.calledWith(
       name,
       domain,
-      service,
+      context,
       "view-store"
     );
     expect(deleteFake).to.have.been.calledWith(id);
-    expect(inFake).to.have.been.calledWith({ context });
+    expect(inFake).to.have.been.calledWith({ context: contexts });
     expect(withFake).to.have.been.calledWith({
       claims,
       internalTokenFn,
@@ -410,14 +378,9 @@ describe("Get views", () => {
     });
     replace(deps, "rpc", rpcFake);
 
-    await viewStore({ name, domain }).delete(id);
+    await viewStore({ name }).delete(id);
 
-    expect(rpcFake).to.have.been.calledWith(
-      name,
-      domain,
-      envService,
-      "view-store"
-    );
+    expect(rpcFake).to.have.been.calledWith(name, envContext, "view-store");
     expect(deleteFake).to.have.been.calledWith(id);
     expect(inFake).to.have.been.calledWith({});
     expect(withFake).to.have.been.calledWith();

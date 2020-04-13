@@ -1,17 +1,17 @@
 const deps = require("./deps");
 
-module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
+module.exports = ({ name, domain, context = process.env.CONTEXT, network }) => {
   const internal = !network || network == process.env.NETWORK;
   const create = ({
-    context,
+    contexts,
     claims,
     tokenFns: { internal: internalTokenFn, external: externalTokenFn } = {}
   } = {}) => async view =>
     await deps
-      .rpc(name, domain, service, "view-store")
+      .rpc(name, ...(domain ? [domain] : []), context, "view-store")
       .post({ view })
       .in({
-        ...(context && { context })
+        ...(contexts && { context: contexts })
       })
       .with({
         ...(internalTokenFn && { internalTokenFn }),
@@ -19,18 +19,18 @@ module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
         ...(claims && { claims })
       });
   const read = ({
-    context,
+    contexts,
     claims,
     tokenFns: { internal: internalTokenFn, external: externalTokenFn } = {}
   } = {}) => async ({ query, sort }) =>
     await deps
-      .rpc(name, domain, service, "view-store")
+      .rpc(name, ...(domain ? [domain] : []), context, "view-store")
       .get({ query, ...(sort && { sort }) })
       .in({
-        ...(context && { context }),
+        ...(contexts && { context: contexts }),
         ...(!internal && {
           network,
-          host: `view.${domain}.${service}.${network}`
+          host: `view${domain ? `.${domain}` : ""}.${context}.${network}`
         })
       })
       .with({
@@ -40,18 +40,18 @@ module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
         ...(!internal && { path: `/${name}` })
       });
   const stream = ({
-    context,
+    contexts,
     claims,
     tokenFns: { internal: internalTokenFn, external: externalTokenFn } = {}
   } = {}) => async ({ query, sort }) =>
     await deps
-      .rpc(name, domain, service, "view-store")
+      .rpc(name, ...(domain ? [domain] : []), context, "view-store")
       .get({ query, ...(sort && { sort }) })
       .in({
-        ...(context && { context }),
+        ...(contexts && { context: contexts }),
         ...(!internal && {
           network,
-          host: `view.${domain}.${service}.${network}`
+          host: `view.${domain}.${context}.${network}`
         })
       })
       .with({
@@ -61,15 +61,15 @@ module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
         ...(claims && { claims })
       });
   const update = ({
-    context,
+    contexts,
     claims,
     tokenFns: { internal: internalTokenFn, external: externalTokenFn } = {}
   } = {}) => async (id, view) =>
     await deps
-      .rpc(name, domain, service, "view-store")
+      .rpc(name, ...(domain ? [domain] : []), context, "view-store")
       .put(id, { view })
       .in({
-        ...(context && { context })
+        ...(contexts && { context: contexts })
       })
       .with({
         ...(internalTokenFn && { internalTokenFn }),
@@ -77,15 +77,15 @@ module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
         ...(claims && { claims })
       });
   const del = ({
-    context,
+    contexts,
     claims,
     tokenFns: { internal: internalTokenFn, external: externalTokenFn } = {}
   } = {}) => async id =>
     await deps
-      .rpc(name, domain, service, "view-store")
+      .rpc(name, ...(domain ? [domain] : []), context, "view-store")
       .delete(id)
       .in({
-        ...(context && { context })
+        ...(contexts && { context: contexts })
       })
       .with({
         ...(internalTokenFn && { internalTokenFn }),
@@ -93,13 +93,13 @@ module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
         ...(claims && { claims })
       });
   return {
-    set: ({ context, claims, tokenFns }) => {
+    set: ({ context: contexts, claims, tokenFns }) => {
       return {
-        create: create({ context, claims, tokenFns }),
-        read: read({ context, claims, tokenFns }),
-        stream: stream({ context, claims, tokenFns }),
-        update: update({ context, claims, tokenFns }),
-        delete: del({ context, claims, tokenFns })
+        create: create({ contexts, claims, tokenFns }),
+        read: read({ contexts, claims, tokenFns }),
+        stream: stream({ contexts, claims, tokenFns }),
+        update: update({ contexts, claims, tokenFns }),
+        delete: del({ contexts, claims, tokenFns })
       };
     },
     create: create(),

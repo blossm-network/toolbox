@@ -49,8 +49,8 @@ describe("Command gateway", () => {
     const gatewayPostFake = fake.returns(gatewayPostResult);
     replace(deps, "post", gatewayPostFake);
 
-    const priviledge = "some-priviledge";
-    const privileges = [priviledge];
+    const privilege = "some-privilege";
+    const privileges = [privilege];
     const name = "some-name";
     const commands = [{ name, privileges, context }];
 
@@ -107,8 +107,8 @@ describe("Command gateway", () => {
     expect(authorizationFake).to.have.been.calledWith({
       permissionsLookupFn,
       terminatedSessionCheckFn,
-      permissions: privileges.map(priviledge => {
-        return { service, domain, priviledge };
+      permissions: privileges.map(privilege => {
+        return { service, domain, privilege };
       }),
       context
     });
@@ -230,8 +230,8 @@ describe("Command gateway", () => {
     const key = "some-command-key";
     const otherService = "some-other-server";
 
-    const priviledge = "some-priviledge";
-    const privileges = [priviledge];
+    const privilege = "some-privilege";
+    const privileges = [privilege];
 
     const commands = [{ name, privileges, key, service: otherService }];
 
@@ -289,8 +289,8 @@ describe("Command gateway", () => {
     const gatewayPostFake = fake.returns(gatewayPostResult);
     replace(deps, "post", gatewayPostFake);
 
-    const priviledge = "some-priviledge";
-    const privileges = [priviledge];
+    const privilege = "some-privilege";
+    const privileges = [privilege];
     const name1 = "some-name1";
     const name2 = "some-name2";
     const name3 = "some-name3";
@@ -371,8 +371,8 @@ describe("Command gateway", () => {
       permissionsLookupFn,
       terminatedSessionCheckFn,
       context,
-      permissions: privileges.map(priviledge => {
-        return { service, domain, priviledge };
+      permissions: privileges.map(privilege => {
+        return { service, domain, privilege };
       })
     });
     expect(authorizationFake).to.have.been.calledOnce;
@@ -402,8 +402,8 @@ describe("Command gateway", () => {
     const gatewayPostFake = fake.returns(gatewayPostResult);
     replace(deps, "post", gatewayPostFake);
 
-    const priviledge = "some-priviledge";
-    const privileges = [priviledge];
+    const privilege = "some-privilege";
+    const privileges = [privilege];
 
     const name = "some-name";
     const commands = [{ name, privileges, context }];
@@ -438,8 +438,8 @@ describe("Command gateway", () => {
       permissionsLookupFn,
       terminatedSessionCheckFn,
       context,
-      permissions: privileges.map(priviledge => {
-        return { service: otherService, domain: otherDomain, priviledge };
+      permissions: privileges.map(privilege => {
+        return { service: otherService, domain: otherDomain, privilege };
       })
     });
   });

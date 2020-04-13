@@ -24,9 +24,9 @@ module.exports = async ({
 
     permissions.push(
       ...defaultRole.permissions.map(permission => {
-        const [service, domain, priviledge] = permission.split(":");
+        const [service, domain, privilege] = permission.split(":");
         return {
-          priviledge,
+          privilege,
           service,
           domain
         };

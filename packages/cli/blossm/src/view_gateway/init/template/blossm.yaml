@@ -4,12 +4,12 @@
 #
 
 domain: some-domain
-service: core
+context: principle
 
 stores:
   - name: some-name
     privileges:
-      - some-priviledge
+      - some-privilege
   - name: some-other-name
     protection: none
 

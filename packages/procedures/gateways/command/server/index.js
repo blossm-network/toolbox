@@ -63,8 +63,8 @@ module.exports = async ({
                     context,
                     permissions:
                       privileges instanceof Array
-                        ? privileges.map(priviledge => {
-                            return { service, domain, priviledge };
+                        ? privileges.map(privilege => {
+                            return { service, domain, privilege };
                           })
                         : privileges
                   })

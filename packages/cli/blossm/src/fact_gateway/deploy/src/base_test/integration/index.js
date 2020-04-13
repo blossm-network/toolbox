@@ -34,9 +34,9 @@ describe("Get job gateway integration tests", () => {
             ...new Set([
               ...permissions,
               ...(command.privileges
-                ? command.privileges.map(priviledge => {
+                ? command.privileges.map(privilege => {
                     return {
-                      priviledge,
+                      privilege,
                       domain: process.env.DOMAIN,
                       service: process.env.SERVICE
                     };

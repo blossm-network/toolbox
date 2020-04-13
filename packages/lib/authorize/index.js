@@ -30,7 +30,7 @@ module.exports = async ({
         if (
           principlePermission.service == permission.service &&
           principlePermission.domain == permission.domain &&
-          principlePermission.priviledge == permission.priviledge
+          principlePermission.privilege == permission.privilege
         )
           return true;
       }
