@@ -63,7 +63,7 @@ module.exports = ({
   switch (procedure) {
     case "view-store":
       return {
-        image: `${commonImagePrefix}.${context}.${
+        image: `${commonImagePrefix}.${context}${
           domain ? `.${domain}` : ""
         }.${name}:latest`,
         ...common,
@@ -134,7 +134,7 @@ module.exports = ({
       };
     case "view-gateway":
       return {
-        image: `${commonImagePrefix}.${context}.${
+        image: `${commonImagePrefix}.${context}${
           domain ? `.${domain}` : ""
         }:latest`,
         ...common,
