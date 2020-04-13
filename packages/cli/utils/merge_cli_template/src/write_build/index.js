@@ -409,6 +409,7 @@ module.exports = ({
     name,
     domain,
     service,
+    context,
     event
   });
 
