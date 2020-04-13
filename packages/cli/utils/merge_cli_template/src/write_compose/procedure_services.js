@@ -78,7 +78,9 @@ module.exports = ({
             ...services,
             [key]: {
               ...common,
-              image: `${commonServiceImagePrefix}.${dependency.service}.${dependency.domain}.${dependency.name}:latest`,
+              image: `${commonServiceImagePrefix}.${dependency.context}${
+                dependency.domain ? `.${dependency.domain}` : ""
+              }.${dependency.name}:latest`,
               container_name: `${operationHash}.${network}`,
               depends_on: [databaseServiceKey],
               environment: {

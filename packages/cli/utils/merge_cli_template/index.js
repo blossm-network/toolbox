@@ -412,8 +412,8 @@ const addDefaultDependencies = ({ config, coreNetwork }) => {
         ...config.testing.dependencies,
         {
           name: config.name,
-          domain: config.domain,
-          service: config.service,
+          ...(config.domain && { domain: config.domain }),
+          context: config.context,
           procedure: "view-store"
         }
       ];
