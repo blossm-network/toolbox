@@ -1,6 +1,6 @@
 {
   "name": "@blossm/remove-ids-from-mongodb-schema",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Removes the _id property from a mongodb schema.",
   "main": "index.js",
   "author": "blossm.network",
