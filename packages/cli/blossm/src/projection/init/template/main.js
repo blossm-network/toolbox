@@ -12,6 +12,10 @@ module.exports = async event => {
   // const context = event.headers.context;
 
   return {
-    name: event.payload.name
+    body: {
+      name: event.payload.name
+    },
+    root: "some-root",
+    domain: "some-root"
   };
 };

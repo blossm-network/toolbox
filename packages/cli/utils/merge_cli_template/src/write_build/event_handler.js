@@ -21,6 +21,7 @@ const writeEnv = require("./steps/write_env");
 module.exports = ({
   region,
   domain,
+  service,
   context,
   name,
   event,
@@ -72,6 +73,7 @@ module.exports = ({
       coreNetwork,
       custom: {
         ...(domain && { DOMAIN: domain }),
+        ...(service && { SERVICE: service }),
         CONTEXT: context,
         NAME: name,
         EVENT_ACTION: event.action,
@@ -112,6 +114,7 @@ module.exports = ({
             env: {
               NAME: name,
               ...(domain && { DOMAIN: domain }),
+              ...(service && { SERVICE: service }),
               CONTEXT: context,
               EVENT_ACTION: event.action,
               EVENT_DOMAIN: event.domain,
@@ -120,6 +123,7 @@ module.exports = ({
             labels: {
               name,
               ...(domain && { domain }),
+              ...(service && { service }),
               ...(context && { context }),
               "event-action": event.action,
               "event-domain": event.domain,

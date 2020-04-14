@@ -26,7 +26,7 @@ describe("Event handler unit tests", () => {
     const response = await main({ payload });
 
     expect(response).to.deep.equal({
-      name
+      body: { name }
     });
   });
 });

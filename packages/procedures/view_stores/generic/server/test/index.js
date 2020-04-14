@@ -22,11 +22,12 @@ describe("View store", () => {
     const putFake = fake.returns({
       delete: deleteFake
     });
-    const postFake = fake.returns({
-      put: putFake
-    });
+    // const postFake = fake.returns({
+    //   put: putFake
+    // });
     const secondGetFake = fake.returns({
-      post: postFake
+      // post: postFake
+      put: putFake
     });
     const firstGetFake = fake.returns({
       get: secondGetFake
@@ -44,9 +45,9 @@ describe("View store", () => {
     const viewStoreStreamFake = fake.returns(viewStoreStreamResult);
     replace(deps, "stream", viewStoreStreamFake);
 
-    const viewStorePostResult = "some-post-result";
-    const viewStorePostFake = fake.returns(viewStorePostResult);
-    replace(deps, "post", viewStorePostFake);
+    // const viewStorePostResult = "some-post-result";
+    // const viewStorePostFake = fake.returns(viewStorePostResult);
+    // replace(deps, "post", viewStorePostFake);
 
     const viewStorePutResult = "some-put-result";
     const viewStorePutFake = fake.returns(viewStorePutResult);
@@ -58,21 +59,21 @@ describe("View store", () => {
 
     const streamFn = "some-stream-fn";
     const findFn = "some-find-fn";
-    const findOneFn = "some-find-one-fn";
+    // const findOneFn = "some-find-one-fn";
     const writeFn = "some-write-fn";
     const removeFn = "some-remove-fn";
     const queryFn = "some-query-fn";
-    const postFn = "some-post-fn";
+    // const postFn = "some-post-fn";
     const putFn = "some-put-fn";
 
     await viewStore({
       streamFn,
       findFn,
-      findOneFn,
+      // findOneFn,
       writeFn,
       removeFn,
       queryFn,
-      postFn,
+      // postFn,
       putFn
     });
 
@@ -82,7 +83,7 @@ describe("View store", () => {
     expect(firstGetFake).to.have.been.calledWith(viewStoreStreamResult, {
       path: "/stream"
     });
-    expect(postFake).to.have.been.calledWith(viewStorePostResult);
+    // expect(postFake).to.have.been.calledWith(viewStorePostResult);
     expect(putFake).to.have.been.calledWith(viewStorePutResult);
     expect(deleteFake).to.have.been.calledWith(viewStoreDeleteResult);
     expect(viewStoreStreamFake).to.have.been.calledWith({
@@ -91,13 +92,13 @@ describe("View store", () => {
     });
     expect(viewStoreGetFake).to.have.been.calledWith({
       findFn,
-      findOneFn,
+      // findOneFn,
       queryFn
     });
-    expect(viewStorePostFake).to.have.been.calledWith({
-      writeFn,
-      dataFn: postFn
-    });
+    // expect(viewStorePostFake).to.have.been.calledWith({
+    //   writeFn,
+    //   dataFn: postFn
+    // });
     expect(viewStorePutFake).to.have.been.calledWith({
       writeFn,
       dataFn: putFn
@@ -114,11 +115,12 @@ describe("View store", () => {
     const putFake = fake.returns({
       delete: deleteFake
     });
-    const postFake = fake.returns({
-      put: putFake
-    });
+    // const postFake = fake.returns({
+    //   put: putFake
+    // });
     const secondGetFake = fake.returns({
-      post: postFake
+      // post: postFake
+      put: putFake
     });
     const firstGetFake = fake.returns({
       get: secondGetFake
@@ -136,9 +138,9 @@ describe("View store", () => {
     const viewStoreStreamFake = fake.returns(viewStoreStreamResult);
     replace(deps, "stream", viewStoreStreamFake);
 
-    const viewStorePostResult = "some-post-result";
-    const viewStorePostFake = fake.returns(viewStorePostResult);
-    replace(deps, "post", viewStorePostFake);
+    // const viewStorePostResult = "some-post-result";
+    // const viewStorePostFake = fake.returns(viewStorePostResult);
+    // replace(deps, "post", viewStorePostFake);
 
     const viewStorePutResult = "some-put-result";
     const viewStorePutFake = fake.returns(viewStorePutResult);
@@ -168,12 +170,12 @@ describe("View store", () => {
     expect(firstGetFake).to.have.been.calledWith(viewStoreStreamResult, {
       path: "/stream"
     });
-    expect(postFake).to.have.been.calledWith(viewStorePostResult);
+    // expect(postFake).to.have.been.calledWith(viewStorePostResult);
     expect(putFake).to.have.been.calledWith(viewStorePutResult);
     expect(deleteFake).to.have.been.calledWith(viewStoreDeleteResult);
     expect(viewStoreStreamFake).to.have.been.calledWith({ streamFn });
-    expect(viewStoreGetFake).to.have.been.calledWith({ findFn, findOneFn });
-    expect(viewStorePostFake).to.have.been.calledWith({ writeFn });
+    expect(viewStoreGetFake).to.have.been.calledWith({ findFn }); //, findOneFn });
+    // expect(viewStorePostFake).to.have.been.calledWith({ writeFn });
     expect(viewStorePutFake).to.have.been.calledWith({ writeFn });
     expect(viewStoreDeleteFake).to.have.been.calledWith({ removeFn });
   });

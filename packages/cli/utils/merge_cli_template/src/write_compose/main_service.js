@@ -63,7 +63,7 @@ module.exports = ({
   switch (procedure) {
     case "view-store":
       return {
-        image: `${commonImagePrefix}.${context}${
+        image: `${commonImagePrefix}.${context}${service ? `.${service}` : ""}${
           domain ? `.${domain}` : ""
         }.${name}:latest`,
         ...common,
@@ -101,7 +101,7 @@ module.exports = ({
     case "event-handler":
     case "projection":
       return {
-        image: `${commonImagePrefix}.${context}${
+        image: `${commonImagePrefix}.${context}${service ? `.${service}` : ""}${
           domain ? `.${domain}` : ""
         }.${name}.did-${event.action}.${event.domain}:latest`,
         ...common,
@@ -137,7 +137,7 @@ module.exports = ({
       };
     case "view-gateway":
       return {
-        image: `${commonImagePrefix}.${context}${
+        image: `${commonImagePrefix}.${context}${service ? `.${service}` : ""}${
           domain ? `.${domain}` : ""
         }:latest`,
         ...common,

@@ -23,6 +23,7 @@ module.exports = ({
   project,
   network,
   context,
+  service,
   memory,
   envUriSpecifier,
   containerRegistery,
@@ -72,6 +73,7 @@ module.exports = ({
       custom: {
         NAME: name,
         ...(domain && { DOMAIN: domain }),
+        ...(service && { SERVICE: service }),
         CONTEXT: context,
         ...dependencyKeyEnvironmentVariables
       }
@@ -108,6 +110,7 @@ module.exports = ({
             env: {
               NAME: name,
               ...(domain && { DOMAIN: domain }),
+              ...(service && { SERVICE: service }),
               CONTEXT: context,
               MONGODB_DATABASE: "view-store",
               MONGODB_USER: mongodbUser,
@@ -115,7 +118,12 @@ module.exports = ({
               MONGODB_PROTOCOL: mongodbProtocol,
               ...dependencyKeyEnvironmentVariables
             },
-            labels: { name, domain, context }
+            labels: {
+              name,
+              ...(domain && { domain }),
+              ...(service && { service }),
+              context
+            }
           }),
           startDnsTransaction({ dnsZone, project }),
           addDnsTransaction({ uri, dnsZone, project }),

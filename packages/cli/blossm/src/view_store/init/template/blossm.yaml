@@ -12,7 +12,8 @@
 #
 
 name: some-name
-domain: some-domain
+domain: some-optional-domain
+service: some-optional-service
 context: principle
 
 schema:

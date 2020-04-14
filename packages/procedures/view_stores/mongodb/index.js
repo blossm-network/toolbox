@@ -11,7 +11,9 @@ const viewStore = async ({ schema, indexes }) => {
   }
 
   _viewStore = deps.db.store({
-    name: `${process.env.DOMAIN}.${process.env.NAME}`,
+    name: `${process.env.CONTEXT}${
+      process.env.DOMAIN ? `.${process.env.DOMAIN}` : ""
+    }.${process.env.NAME}`,
     schema,
     indexes,
     connection: {
@@ -30,35 +32,70 @@ const viewStore = async ({ schema, indexes }) => {
   return _viewStore;
 };
 
-module.exports = async ({ schema, indexes, getFn, postFn, putFn } = {}) => {
-  if (schema) {
-    schema.root = { type: String, required: true };
-    schema.id = { type: String, required: true, unique: true };
-    schema.created = {
-      type: Date,
-      required: true,
-      default: deps.dateString
-    };
-    schema.modified = {
-      type: Date,
-      required: true,
-      default: deps.dateString
-    };
-  }
+module.exports = async ({ schema, indexes, getFn, /*postFn,*/ putFn } = {}) => {
+  const formattedSchema = {
+    body: schema,
+    headers: {
+      root: { type: String, required: true, unique: true },
+      [process.env.CONTEXT]: {
+        root: String,
+        service: String,
+        network: String
+      },
+      ...(process.env.DOMAIN && {
+        [process.env.DOMAIN]: {
+          root: String,
+          service: String,
+          network: String
+        }
+      }),
+      created: {
+        type: Date,
+        required: true,
+        default: deps.dateString
+      },
+      modified: {
+        type: Date,
+        required: true,
+        default: deps.dateString
+      }
+    }
+  };
 
   const allIndexes = [
-    [{ id: 1 }],
     [{ root: 1 }],
-    [{ created: 1 }],
-    [{ modified: 1 }]
+    [
+      { [`headers.${process.env.CONTEXT}.root`]: 1 },
+      { [`headers.${process.env.CONTEXT}.service`]: 1 },
+      { [`headers.${process.env.CONTEXT}.network`]: 1 }
+    ],
+    ...(process.env.DOMAIN
+      ? [
+          [
+            { [`headers.${process.env.DOMAIN}.root`]: 1 },
+            { [`headers.${process.env.DOMAIN}.service`]: 1 },
+            { [`headers.${process.env.DOMAIN}.network`]: 1 }
+          ]
+        ]
+      : [])
   ];
 
   if (indexes) {
-    allIndexes.push(...indexes);
+    const customIndexes = [];
+    for (const index of indexes) {
+      let customElement = {};
+      for (const element of index) {
+        for (const key in element) {
+          customElement[`body.${key}`] = element[key];
+        }
+      }
+      customIndexes.push([customElement]);
+    }
+    allIndexes.push(...customIndexes);
   }
 
   const store = await viewStore({
-    schema: deps.removeIds({ schema }),
+    schema: deps.removeIds({ schema: formattedSchema }),
     indexes: allIndexes
   });
 
@@ -87,18 +124,18 @@ module.exports = async ({ schema, indexes, getFn, postFn, putFn } = {}) => {
       }
     });
 
-  const findOneFn = async ({ id }) =>
-    await deps.db.findOne({
-      store,
-      query: {
-        id
-      },
-      options: {
-        lean: true
-      }
-    });
+  // const findOneFn = async ({ root }) =>
+  //   await deps.db.findOne({
+  //     store,
+  //     query: {
+  //       "headers.root": root
+  //     },
+  //     options: {
+  //       lean: true
+  //     }
+  //   });
 
-  const writeFn = async ({ id, data }) => {
+  const writeFn = async ({ root, data }) => {
     const update = {};
     const setKey = "$set";
     for (const key of Object.keys(data)) {
@@ -116,7 +153,7 @@ module.exports = async ({ schema, indexes, getFn, postFn, putFn } = {}) => {
     }
     return await deps.db.write({
       store,
-      query: { id },
+      query: { "headers.root": root },
       update,
       options: {
         lean: true,
@@ -138,11 +175,11 @@ module.exports = async ({ schema, indexes, getFn, postFn, putFn } = {}) => {
   deps.viewStore({
     streamFn,
     findFn,
-    findOneFn,
+    // findOneFn,
     writeFn,
     removeFn,
     ...(getFn && { getFn }),
-    ...(postFn && { postFn }),
+    // ...(postFn && { postFn }),
     ...(putFn && { putFn })
   });
 };

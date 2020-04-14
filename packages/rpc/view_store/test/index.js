@@ -6,6 +6,7 @@ const viewStore = require("..");
 
 const name = "some-name";
 const domain = "some-domain";
+const service = "some-service";
 const context = "some-context";
 const network = "some-network";
 
@@ -28,61 +29,61 @@ describe("Get views", () => {
     restore();
   });
 
-  it("should call create with the correct params", async () => {
-    const withFake = fake();
-    const inFake = fake.returns({
-      with: withFake
-    });
-    const postFake = fake.returns({
-      in: inFake
-    });
-    const rpcFake = fake.returns({
-      post: postFake
-    });
-    replace(deps, "rpc", rpcFake);
+  // it("should call create with the correct params", async () => {
+  //   const withFake = fake();
+  //   const inFake = fake.returns({
+  //     with: withFake
+  //   });
+  //   const postFake = fake.returns({
+  //     in: inFake
+  //   });
+  //   const rpcFake = fake.returns({
+  //     post: postFake
+  //   });
+  //   replace(deps, "rpc", rpcFake);
 
-    await viewStore({ name, domain, context })
-      .set({
-        context: contexts,
-        tokenFns: { internal: internalTokenFn, external: externalTokenFn },
-        claims
-      })
-      .create(view);
+  //   await viewStore({ name, domain, context })
+  //     .set({
+  //       context: contexts,
+  //       tokenFns: { internal: internalTokenFn, external: externalTokenFn },
+  //       claims
+  //     })
+  //     .create(view);
 
-    expect(rpcFake).to.have.been.calledWith(
-      name,
-      domain,
-      context,
-      "view-store"
-    );
-    expect(postFake).to.have.been.calledWith({ view });
-    expect(inFake).to.have.been.calledWith({ context: contexts });
-    expect(withFake).to.have.been.calledWith({
-      internalTokenFn,
-      externalTokenFn,
-      claims
-    });
-  });
-  it("should call create with the correct params and optionals omitted", async () => {
-    const withFake = fake();
-    const inFake = fake.returns({
-      with: withFake
-    });
-    const postFake = fake.returns({
-      in: inFake
-    });
-    const rpcFake = fake.returns({
-      post: postFake
-    });
-    replace(deps, "rpc", rpcFake);
+  //   expect(rpcFake).to.have.been.calledWith(
+  //     name,
+  //     domain,
+  //     context,
+  //     "view-store"
+  //   );
+  //   expect(postFake).to.have.been.calledWith({ view });
+  //   expect(inFake).to.have.been.calledWith({ context: contexts });
+  //   expect(withFake).to.have.been.calledWith({
+  //     internalTokenFn,
+  //     externalTokenFn,
+  //     claims
+  //   });
+  // });
+  // it("should call create with the correct params and optionals omitted", async () => {
+  //   const withFake = fake();
+  //   const inFake = fake.returns({
+  //     with: withFake
+  //   });
+  //   const postFake = fake.returns({
+  //     in: inFake
+  //   });
+  //   const rpcFake = fake.returns({
+  //     post: postFake
+  //   });
+  //   replace(deps, "rpc", rpcFake);
 
-    await viewStore({ name }).create(view);
+  //   await viewStore({ name }).create(view);
 
-    expect(rpcFake).to.have.been.calledWith(name, envContext, "view-store");
-    expect(postFake).to.have.been.calledWith({ view });
-    expect(inFake).to.have.been.calledWith({});
-    expect(withFake).to.have.been.calledWith({});
-  });
+  //   expect(rpcFake).to.have.been.calledWith(name, envContext, "view-store");
+  //   expect(postFake).to.have.been.calledWith({ view });
+  //   expect(inFake).to.have.been.calledWith({});
+  //   expect(withFake).to.have.been.calledWith({});
+  // });
   it("should call read with the correct params", async () => {
     const views = "some-views";
     const withFake = fake.returns(views);
@@ -97,7 +98,7 @@ describe("Get views", () => {
     });
     replace(deps, "rpc", rpcFake);
 
-    const result = await viewStore({ name, domain, context, network })
+    const result = await viewStore({ name, domain, service, context, network })
       .set({
         context: contexts,
         tokenFns: { internal: internalTokenFn, external: externalTokenFn }
@@ -107,6 +108,7 @@ describe("Get views", () => {
     expect(rpcFake).to.have.been.calledWith(
       name,
       domain,
+      service,
       context,
       "view-store"
     );
@@ -192,14 +194,20 @@ describe("Get views", () => {
     });
     replace(deps, "rpc", rpcFake);
 
-    const result = await viewStore({ name, context, network })
+    const result = await viewStore({ name, domain, service, context, network })
       .set({
         context: contexts,
         tokenFns: { internal: internalTokenFn, external: externalTokenFn }
       })
       .stream({ query, sort });
 
-    expect(rpcFake).to.have.been.calledWith(name, context, "view-store");
+    expect(rpcFake).to.have.been.calledWith(
+      name,
+      domain,
+      service,
+      context,
+      "view-store"
+    );
     expect(getFake).to.have.been.calledWith({ query, sort });
     expect(inFake).to.have.been.calledWith({ context: contexts });
     expect(withFake).to.have.been.calledWith({
@@ -290,7 +298,7 @@ describe("Get views", () => {
     });
     replace(deps, "rpc", rpcFake);
 
-    await viewStore({ name, domain, context })
+    await viewStore({ name, domain, service, context })
       .set({
         context: contexts,
         tokenFns: { internal: internalTokenFn, external: externalTokenFn }
@@ -300,6 +308,7 @@ describe("Get views", () => {
     expect(rpcFake).to.have.been.calledWith(
       name,
       domain,
+      service,
       context,
       "view-store"
     );
@@ -343,7 +352,7 @@ describe("Get views", () => {
     });
     replace(deps, "rpc", rpcFake);
 
-    await viewStore({ name, domain, context })
+    await viewStore({ name, domain, service, context })
       .set({
         context: contexts,
         claims,
@@ -354,6 +363,7 @@ describe("Get views", () => {
     expect(rpcFake).to.have.been.calledWith(
       name,
       domain,
+      service,
       context,
       "view-store"
     );

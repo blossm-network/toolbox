@@ -1,11 +1,11 @@
 const deps = require("./deps");
 
-module.exports = ({ name, domain, context } = {}) => async (req, res) => {
+module.exports = ({ name, domain, service } = {}) => async (req, res) => {
   const response = await deps
     .viewStore({
       name,
       ...(domain && { domain }),
-      ...(context && { context })
+      ...(service && { service })
     })
     .set({
       tokenFns: { internal: deps.gcpToken },

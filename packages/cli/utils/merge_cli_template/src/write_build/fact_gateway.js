@@ -46,9 +46,9 @@ module.exports = ({
   dependencyKeyEnvironmentVariables,
   strict
 }) => {
-  const authUri = `fact.${domain ? `${domain}.` : ""}${
-    service ? `${service}.` : ""
-  }${envUriSpecifier}${network}`;
+  const authUri = `f${domain ? `.${domain}` : ""}${
+    service ? `.${service}` : ""
+  }.${envUriSpecifier}${network}`;
   return [
     yarnInstall,
     ...(runUnitTests ? [unitTests] : []),

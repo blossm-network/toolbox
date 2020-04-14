@@ -10,31 +10,31 @@ let clock;
 const now = new Date();
 
 const schema = { a: 1, b: { c: 2 } };
-const indexes = ["some-index"];
+const indexes = [[{ "some-index": 1 }]];
 
 const protocol = "some-db-protocol";
 const domain = "some-domain";
 const name = "some-name";
+const context = "some-context";
 const user = "some-db-user";
 const userPassword = "some-db-user-password";
 const host = "some-host";
 const database = "some-db";
 const password = "some-password";
-const root = "some-root";
 const query = "some-query";
 const sort = "some-sort";
 const sort2 = "some-other-sort";
 const query2 = "some-other-query";
 
-const foundObj = "some-found-obj";
+// const foundObj = "some-found-obj";
 const writeResult = "some-write-result";
 const removeResult = "some-remove-result";
 const data = { c: 1 };
 const fnFake = fake();
 const parallel = "some-parallel";
 
-process.env.DOMAIN = domain;
 process.env.NAME = name;
+process.env.CONTEXT = context;
 process.env.MONGODB_PROTOCOL = protocol;
 process.env.MONGODB_USER = user;
 process.env.MONGODB_USER_PASSWORD = userPassword;
@@ -46,6 +46,7 @@ describe("View store", () => {
     delete require.cache[require.resolve("..")];
     process.env.NODE_ENV = "some-env";
     clock = useFakeTimers(now.getTime());
+    process.env.DOMAIN = domain;
   });
   afterEach(() => {
     clock.restore();
@@ -56,7 +57,7 @@ describe("View store", () => {
     const mongodbViewStore = require("..");
     const store = "some-store";
     const storeFake = fake.returns(store);
-    const findOneFake = fake.returns(foundObj);
+    // const findOneFake = fake.returns(foundObj);
 
     const cursorFake = fake.returns({
       eachAsync: async (fn, options) => {
@@ -77,7 +78,7 @@ describe("View store", () => {
 
     const db = {
       store: storeFake,
-      findOne: findOneFake,
+      // findOne: findOneFake,
       find: findFake,
       write: writeFake,
       remove: removeFake
@@ -95,50 +96,74 @@ describe("View store", () => {
     replace(deps, "viewStore", viewStoreFake);
 
     const getFn = "some-get-fn";
-    const postFn = "some-post-fn";
+    // const postFn = "some-post-fn";
     const putFn = "some-put-fn";
 
     await mongodbViewStore({
       schema,
       indexes,
       getFn,
-      postFn,
+      // postFn,
       putFn
     });
 
     expect(storeFake).to.have.been.calledWith({
-      name: `${domain}.${name}`,
+      name: `${context}.${domain}.${name}`,
       schema: {
-        a: 1,
-        b: {
-          c: 2,
+        body: {
+          a: 1,
+          b: {
+            c: 2,
+            _id: false
+          },
           _id: false
         },
-        root: { type: String, required: true },
-        id: { type: String, required: true, unique: true },
-        created: {
-          type: Date,
-          required: true,
-          default: match(fn => {
-            const date = fn();
-            return date == dateString;
-          })
-        },
-        modified: {
-          type: Date,
-          required: true,
-          default: match(fn => {
-            const date = fn();
-            return date == dateString;
-          })
+        headers: {
+          _id: false,
+          root: { type: String, required: true, unique: true },
+          [context]: {
+            root: String,
+            service: String,
+            network: String,
+            _id: false
+          },
+          [domain]: {
+            root: String,
+            service: String,
+            network: String,
+            _id: false
+          },
+          created: {
+            type: Date,
+            required: true,
+            default: match(fn => {
+              const date = fn();
+              return date == dateString;
+            })
+          },
+          modified: {
+            type: Date,
+            required: true,
+            default: match(fn => {
+              const date = fn();
+              return date == dateString;
+            })
+          }
         }
       },
       indexes: [
-        [{ id: 1 }],
         [{ root: 1 }],
-        [{ created: 1 }],
-        [{ modified: 1 }],
-        "some-index"
+        [
+          { "headers.some-context.root": 1 },
+          { "headers.some-context.service": 1 },
+          { "headers.some-context.network": 1 }
+        ],
+        [
+          { "headers.some-domain.root": 1 },
+          { "headers.some-domain.service": 1 },
+          { "headers.some-domain.network": 1 }
+        ],
+        [{ "body.some-index": 1 }]
       ],
       connection: {
         protocol,
@@ -156,16 +181,16 @@ describe("View store", () => {
     });
     expect(secretFake).to.have.been.calledWith("mongodb-view-store");
 
-    const id = "some-id";
-    const findOneFnResult = await viewStoreFake.lastCall.lastArg.findOneFn({
-      id
-    });
-    expect(findOneFake).to.have.been.calledWith({
-      store,
-      query: { id },
-      options: { lean: true }
-    });
-    expect(findOneFnResult).to.equal(foundObj);
+    const root = "some-root";
+    // const findOneFnResult = await viewStoreFake.lastCall.lastArg.findOneFn({
+    //   root
+    // });
+    // expect(findOneFake).to.have.been.calledWith({
+    //   store,
+    //   query: { "headers.root": root },
+    //   options: { lean: true }
+    // });
+    // expect(findOneFnResult).to.equal(foundObj);
 
     const findFnResult = await viewStoreFake.lastCall.lastArg.findFn({
       query,
@@ -200,12 +225,12 @@ describe("View store", () => {
     expect(steamFnResult).to.equal(foundObjs);
 
     const writeFnResult = await viewStoreFake.lastCall.lastArg.writeFn({
-      id,
+      root,
       data
     });
     expect(writeFake).to.have.been.calledWith({
       store,
-      query: { id },
+      query: { "headers.root": root },
       update: {
         $set: data
       },
@@ -232,22 +257,22 @@ describe("View store", () => {
         fn => expect(fn({ query, sort, parallel, fn: fnFake })).to.exist
       ),
       findFn: match(fn => expect(fn({ query, sort })).to.exist),
-      findOneFn: match(fn => expect(fn({ id })).to.exist),
-      writeFn: match(fn => expect(fn({ id, data })).to.exist),
+      // findOneFn: match(fn => expect(fn({ root })).to.exist),
+      writeFn: match(fn => expect(fn({ root, data })).to.exist),
       removeFn: match(fn => expect(fn(query)).to.exist),
       getFn,
-      postFn,
+      // postFn,
       putFn
     });
 
-    await mongodbViewStore();
+    await mongodbViewStore({ schema });
     expect(storeFake).to.have.been.calledOnce;
   });
-  it("should call with the correct params with no root's in nested objs", async () => {
+  it("should call with the correct params without domain", async () => {
     const mongodbViewStore = require("..");
     const store = "some-store";
     const storeFake = fake.returns(store);
-    const findOneFake = fake.returns(foundObj);
+    // const findOneFake = fake.returns(foundObj);
 
     const cursorFake = fake.returns({
       eachAsync: async (fn, options) => {
@@ -268,7 +293,7 @@ describe("View store", () => {
 
     const db = {
       store: storeFake,
-      findOne: findOneFake,
+      // findOne: findOneFake,
       find: findFake,
       write: writeFake,
       remove: removeFake
@@ -286,7 +311,124 @@ describe("View store", () => {
     replace(deps, "viewStore", viewStoreFake);
 
     const getFn = "some-get-fn";
-    const postFn = "some-post-fn";
+    // const postFn = "some-post-fn";
+    const putFn = "some-put-fn";
+
+    delete process.env.DOMAIN;
+    await mongodbViewStore({
+      schema,
+      indexes,
+      getFn,
+      // postFn,
+      putFn
+    });
+
+    expect(storeFake).to.have.been.calledWith({
+      name: `${context}.${name}`,
+      schema: {
+        body: {
+          a: 1,
+          b: {
+            c: 2,
+            _id: false
+          },
+          _id: false
+        },
+        headers: {
+          _id: false,
+          root: { type: String, required: true, unique: true },
+          [context]: {
+            root: String,
+            service: String,
+            network: String,
+            _id: false
+          },
+          created: {
+            type: Date,
+            required: true,
+            default: match(fn => {
+              const date = fn();
+              return date == dateString;
+            })
+          },
+          modified: {
+            type: Date,
+            required: true,
+            default: match(fn => {
+              const date = fn();
+              return date == dateString;
+            })
+          }
+        }
+      },
+      indexes: [
+        [{ root: 1 }],
+        [
+          { "headers.some-context.root": 1 },
+          { "headers.some-context.service": 1 },
+          { "headers.some-context.network": 1 }
+        ],
+        [{ "body.some-index": 1 }]
+      ],
+      connection: {
+        protocol,
+        user,
+        password,
+        host,
+        database,
+        parameters: {
+          authSource: "admin",
+          retryWrites: true,
+          w: "majority"
+        },
+        autoIndex: true
+      }
+    });
+  });
+  it("should call with the correct params with no root's in nested objs", async () => {
+    const mongodbViewStore = require("..");
+    const store = "some-store";
+    const storeFake = fake.returns(store);
+    // const findOneFake = fake.returns(foundObj);
+
+    const cursorFake = fake.returns({
+      eachAsync: async (fn, options) => {
+        const view = { a: 1 };
+        await fn(view);
+        expect(fnFake).to.have.been.calledWith(view);
+        expect(options).to.deep.equal({ parallel });
+        return foundObjs;
+      }
+    });
+
+    const foundObjs = {
+      cursor: cursorFake
+    };
+    const findFake = fake.returns(foundObjs);
+    const writeFake = fake.returns(writeResult);
+    const removeFake = fake.returns(removeResult);
+
+    const db = {
+      store: storeFake,
+      // findOne: findOneFake,
+      find: findFake,
+      write: writeFake,
+      remove: removeFake
+    };
+    replace(deps, "db", db);
+
+    const secretFake = fake.returns(password);
+    replace(deps, "secret", secretFake);
+
+    const dateString = "some-date";
+    const dateStringFake = fake.returns(dateString);
+    replace(deps, "dateString", dateStringFake);
+
+    const viewStoreFake = fake();
+    replace(deps, "viewStore", viewStoreFake);
+
+    const getFn = "some-get-fn";
+    // const postFn = "some-post-fn";
     const putFn = "some-put-fn";
 
     const schema = {
@@ -296,44 +438,68 @@ describe("View store", () => {
       e: { type: [{ type: { type: String } }] },
       f: [{ g: 1 }]
     };
-    await mongodbViewStore({ schema, indexes, getFn, postFn, putFn });
+    await mongodbViewStore({ schema, indexes, getFn, /* postFn, */ putFn });
 
     expect(storeFake).to.have.been.calledWith({
-      name: `${domain}.${name}`,
+      name: `${context}.${domain}.${name}`,
       schema: {
-        a: 1,
-        b: {
-          c: 2,
+        body: {
+          a: 1,
+          b: {
+            c: 2,
+            _id: false
+          },
+          d: { type: String },
+          e: { type: [{ type: { type: String }, _id: false }] },
+          f: [{ g: 1, _id: false }],
           _id: false
         },
-        d: { type: String },
-        e: { type: [{ type: { type: String }, _id: false }] },
-        f: [{ g: 1, _id: false }],
-        root: { type: String, required: true },
-        id: { type: String, required: true, unique: true },
-        created: {
-          type: Date,
-          required: true,
-          default: match(fn => {
-            const date = fn();
-            return date == dateString;
-          })
-        },
-        modified: {
-          type: Date,
-          required: true,
-          default: match(fn => {
-            const date = fn();
-            return date == dateString;
-          })
+        headers: {
+          _id: false,
+          root: { type: String, required: true, unique: true },
+          [context]: {
+            root: String,
+            service: String,
+            network: String,
+            _id: false
+          },
+          [domain]: {
+            root: String,
+            service: String,
+            network: String,
+            _id: false
+          },
+          created: {
+            type: Date,
+            required: true,
+            default: match(fn => {
+              const date = fn();
+              return date == dateString;
+            })
+          },
+          modified: {
+            type: Date,
+            required: true,
+            default: match(fn => {
+              const date = fn();
+              return date == dateString;
+            })
+          }
         }
       },
       indexes: [
-        [{ id: 1 }],
         [{ root: 1 }],
-        [{ created: 1 }],
-        [{ modified: 1 }],
-        "some-index"
+        [
+          { "headers.some-context.root": 1 },
+          { "headers.some-context.service": 1 },
+          { "headers.some-context.network": 1 }
+        ],
+        [
+          { "headers.some-domain.root": 1 },
+          { "headers.some-domain.service": 1 },
+          { "headers.some-domain.network": 1 }
+        ],
+        [{ "body.some-index": 1 }]
       ],
       connection: {
         protocol,
@@ -354,7 +520,7 @@ describe("View store", () => {
     const mongodbViewStore = require("..");
     const store = "some-store";
     const storeFake = fake.returns(store);
-    const findOneFake = fake.returns(foundObj);
+    // const findOneFake = fake.returns(foundObj);
 
     const cursorFake = fake.returns({
       eachAsync: async (fn, options) => {
@@ -375,7 +541,7 @@ describe("View store", () => {
 
     const db = {
       store: storeFake,
-      findOne: findOneFake,
+      // findOne: findOneFake,
       find: findFake,
       write: writeFake,
       remove: removeFake
@@ -395,38 +561,62 @@ describe("View store", () => {
     await mongodbViewStore({ schema, indexes });
 
     expect(storeFake).to.have.been.calledWith({
-      name: `${domain}.${name}`,
+      name: `${context}.${domain}.${name}`,
       schema: {
-        a: 1,
-        b: {
-          c: 2,
+        body: {
+          a: 1,
+          b: {
+            c: 2,
+            _id: false
+          },
           _id: false
         },
-        root: { type: String, required: true },
-        id: { type: String, required: true, unique: true },
-        created: {
-          type: Date,
-          required: true,
-          default: match(fn => {
-            const date = fn();
-            return date == dateString;
-          })
-        },
-        modified: {
-          type: Date,
-          required: true,
-          default: match(fn => {
-            const date = fn();
-            return date == dateString;
-          })
+        headers: {
+          _id: false,
+          root: { type: String, required: true, unique: true },
+          [context]: {
+            root: String,
+            service: String,
+            network: String,
+            _id: false
+          },
+          [domain]: {
+            root: String,
+            service: String,
+            network: String,
+            _id: false
+          },
+          created: {
+            type: Date,
+            required: true,
+            default: match(fn => {
+              const date = fn();
+              return date == dateString;
+            })
+          },
+          modified: {
+            type: Date,
+            required: true,
+            default: match(fn => {
+              const date = fn();
+              return date == dateString;
+            })
+          }
         }
       },
       indexes: [
-        [{ id: 1 }],
         [{ root: 1 }],
-        [{ created: 1 }],
-        [{ modified: 1 }],
-        "some-index"
+        [
+          { "headers.some-context.root": 1 },
+          { "headers.some-context.service": 1 },
+          { "headers.some-context.network": 1 }
+        ],
+        [
+          { "headers.some-domain.root": 1 },
+          { "headers.some-domain.service": 1 },
+          { "headers.some-domain.network": 1 }
+        ],
+        [{ "body.some-index": 1 }]
       ],
       connection: {
         protocol,
@@ -445,38 +635,62 @@ describe("View store", () => {
     expect(secretFake).to.have.been.calledWith("mongodb-view-store");
 
     expect(storeFake).to.have.been.calledWith({
-      name: `${domain}.${name}`,
+      name: `${context}.${domain}.${name}`,
       schema: {
-        a: 1,
-        b: {
-          c: 2,
+        body: {
+          a: 1,
+          b: {
+            c: 2,
+            _id: false
+          },
           _id: false
         },
-        root: { type: String, required: true },
-        id: { type: String, required: true, unique: true },
-        created: {
-          type: Date,
-          required: true,
-          default: match(fn => {
-            const date = fn();
-            return date == dateString;
-          })
-        },
-        modified: {
-          type: Date,
-          required: true,
-          default: match(fn => {
-            const date = fn();
-            return date == dateString;
-          })
+        headers: {
+          _id: false,
+          root: { type: String, required: true, unique: true },
+          [context]: {
+            root: String,
+            service: String,
+            network: String,
+            _id: false
+          },
+          [domain]: {
+            root: String,
+            service: String,
+            network: String,
+            _id: false
+          },
+          created: {
+            type: Date,
+            required: true,
+            default: match(fn => {
+              const date = fn();
+              return date == dateString;
+            })
+          },
+          modified: {
+            type: Date,
+            required: true,
+            default: match(fn => {
+              const date = fn();
+              return date == dateString;
+            })
+          }
         }
       },
       indexes: [
-        [{ id: 1 }],
         [{ root: 1 }],
-        [{ created: 1 }],
-        [{ modified: 1 }],
-        "some-index"
+        [
+          { "headers.some-context.root": 1 },
+          { "headers.some-context.service": 1 },
+          { "headers.some-context.network": 1 }
+        ],
+        [
+          { "headers.some-domain.root": 1 },
+          { "headers.some-domain.service": 1 },
+          { "headers.some-domain.network": 1 }
+        ],
+        [{ "body.some-index": 1 }]
       ],
       connection: {
         protocol,
@@ -494,16 +708,16 @@ describe("View store", () => {
     });
     expect(secretFake).to.have.been.calledWith("mongodb-view-store");
 
-    const id = "some-id";
-    const findOneFnResult = await viewStoreFake.lastCall.lastArg.findOneFn({
-      id
-    });
-    expect(findOneFake).to.have.been.calledWith({
-      store,
-      query: { id },
-      options: { lean: true }
-    });
-    expect(findOneFnResult).to.equal(foundObj);
+    const root = "some-root";
+    // const findOneFnResult = await viewStoreFake.lastCall.lastArg.findOneFn({
+    //   root
+    // });
+    // expect(findOneFake).to.have.been.calledWith({
+    //   store,
+    //   query: { "headers.root": root },
+    //   options: { lean: true }
+    // });
+    // expect(findOneFnResult).to.equal(foundObj);
 
     const findFnResult = await viewStoreFake.lastCall.lastArg.findFn({
       query,
@@ -538,12 +752,12 @@ describe("View store", () => {
     expect(steamFnResult).to.equal(foundObjs);
 
     const writeFnResult = await viewStoreFake.lastCall.lastArg.writeFn({
-      id,
+      root,
       data
     });
     expect(writeFake).to.have.been.calledWith({
       store,
-      query: { id },
+      query: { "headers.root": root },
       update: {
         $set: data
       },
@@ -570,7 +784,7 @@ describe("View store", () => {
         fn => expect(fn({ query, sort, parallel, fn: fnFake })).to.exist
       ),
       findFn: match(fn => expect(fn({ query, sort })).to.exist),
-      findOneFn: match(fn => expect(fn({ root })).to.exist),
+      // findOneFn: match(fn => expect(fn({ root })).to.exist),
       writeFn: match(fn => expect(fn({ root, data })).to.exist),
       removeFn: match(fn => expect(fn({ root })).to.exist)
     });
@@ -581,7 +795,7 @@ describe("View store", () => {
     const mongodbViewStore = require("..");
     const store = "some-store";
     const storeFake = fake.returns(store);
-    const findOneFake = fake.returns(foundObj);
+    // const findOneFake = fake.returns(foundObj);
 
     const cursorFake = fake.returns({
       eachAsync: async (fn, options) => {
@@ -602,7 +816,7 @@ describe("View store", () => {
 
     const db = {
       store: storeFake,
-      findOne: findOneFake,
+      // findOne: findOneFake,
       find: findFake,
       write: writeFake,
       remove: removeFake
@@ -622,38 +836,62 @@ describe("View store", () => {
     await mongodbViewStore({ schema, indexes });
 
     expect(storeFake).to.have.been.calledWith({
-      name: `${domain}.${name}`,
+      name: `${context}.${domain}.${name}`,
       schema: {
-        a: 1,
-        b: {
-          c: 2,
+        body: {
+          a: 1,
+          b: {
+            c: 2,
+            _id: false
+          },
           _id: false
         },
-        root: { type: String, required: true },
-        id: { type: String, required: true, unique: true },
-        created: {
-          type: Date,
-          required: true,
-          default: match(fn => {
-            const date = fn();
-            return date == dateString;
-          })
-        },
-        modified: {
-          type: Date,
-          required: true,
-          default: match(fn => {
-            const date = fn();
-            return date == dateString;
-          })
+        headers: {
+          _id: false,
+          root: { type: String, required: true, unique: true },
+          [context]: {
+            root: String,
+            service: String,
+            network: String,
+            _id: false
+          },
+          [domain]: {
+            root: String,
+            service: String,
+            network: String,
+            _id: false
+          },
+          created: {
+            type: Date,
+            required: true,
+            default: match(fn => {
+              const date = fn();
+              return date == dateString;
+            })
+          },
+          modified: {
+            type: Date,
+            required: true,
+            default: match(fn => {
+              const date = fn();
+              return date == dateString;
+            })
+          }
         }
       },
       indexes: [
-        [{ id: 1 }],
         [{ root: 1 }],
-        [{ created: 1 }],
-        [{ modified: 1 }],
-        "some-index"
+        [
+          { "headers.some-context.root": 1 },
+          { "headers.some-context.service": 1 },
+          { "headers.some-context.network": 1 }
+        ],
+        [
+          { "headers.some-domain.root": 1 },
+          { "headers.some-domain.service": 1 },
+          { "headers.some-domain.network": 1 }
+        ],
+        [{ "body.some-index": 1 }]
       ],
       connection: {
         protocol,
@@ -671,16 +909,16 @@ describe("View store", () => {
     });
     expect(secretFake).to.have.been.calledWith("mongodb-view-store");
 
-    const id = "some-id";
-    const findOneFnResult = await viewStoreFake.lastCall.lastArg.findOneFn({
-      id
-    });
-    expect(findOneFake).to.have.been.calledWith({
-      store,
-      query: { id },
-      options: { lean: true }
-    });
-    expect(findOneFnResult).to.equal(foundObj);
+    const root = "some-root";
+    // const findOneFnResult = await viewStoreFake.lastCall.lastArg.findOneFn({
+    //   root
+    // });
+    // expect(findOneFake).to.have.been.calledWith({
+    //   store,
+    //   query: { "headers.root": root },
+    //   options: { lean: true }
+    // });
+    // expect(findOneFnResult).to.equal(foundObj);
 
     const findFnResult = await viewStoreFake.lastCall.lastArg.findFn({
       query,
@@ -717,7 +955,7 @@ describe("View store", () => {
     const mongoKey = "$some-mongo-key";
     const plainKey = "some-plain-key";
     const writeFnResult = await viewStoreFake.lastCall.lastArg.writeFn({
-      id,
+      root,
       data: {
         [mongoKey]: { a: 3 },
         [plainKey]: 5,
@@ -726,7 +964,7 @@ describe("View store", () => {
     });
     expect(writeFake).to.have.been.calledWith({
       store,
-      query: { id },
+      query: { "headers.root": root },
       update: {
         $set: {
           [plainKey]: 5,

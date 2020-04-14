@@ -5,6 +5,8 @@ const toJSON = require("./_to_json");
 module.exports = {
   missingId: ({ cause, info } = {}) =>
     new BadRequestError({ cause, info, toJSON }, "Missing id url parameter."),
+  missingRoot: ({ cause, info } = {}) =>
+    new BadRequestError({ cause, info, toJSON }, "Missing root url parameter."),
   missingMessage: ({ cause, info } = {}) =>
     new BadRequestError(
       { cause, info, toJSON },

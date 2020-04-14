@@ -12,18 +12,14 @@ let clock;
 const now = new Date();
 
 const view = "some-view";
-const id = "some-id";
+const root = "some-root";
 const body = {
   view: {
-    a: 1,
-    id: "bogus",
-    root: "boogus",
-    created: "more-bogus",
-    modified: "even-more-bogus"
+    a: 1
   }
 };
 const params = {
-  id
+  root
 };
 
 describe("View store put", () => {
@@ -54,10 +50,10 @@ describe("View store put", () => {
     await put({ writeFn: writeFake })(req, res);
 
     expect(writeFake).to.have.been.calledWith({
-      id,
+      root,
       data: {
-        a: 1,
-        modified: deps.dateString()
+        "body.a": 1,
+        "headers.modified": deps.dateString()
       }
     });
     expect(sendFake).to.have.been.calledOnce;
@@ -83,17 +79,17 @@ describe("View store put", () => {
     await put({ writeFn: writeFake, dataFn: fnFake })(req, res);
 
     expect(writeFake).to.have.been.calledWith({
-      id,
+      root,
       data: {
-        b: 2,
-        modified: deps.dateString()
+        "body.b": 2,
+        "headers.modified": deps.dateString()
       }
     });
-    expect(fnFake).to.have.been.calledWith(body);
+    expect(fnFake).to.have.been.calledWith({ a: 1 });
     expect(statusFake).to.have.been.calledWith(204);
     expect(sendFake).to.have.been.calledOnce;
   });
-  it("should throw if id is missing", async () => {
+  it("should throw if root is missing", async () => {
     const writeFake = fake.returns(view);
 
     const req = {
@@ -110,9 +106,9 @@ describe("View store put", () => {
     };
 
     const error = "some-error";
-    const missingIdFake = fake.returns(error);
+    const missingRootFake = fake.returns(error);
     replace(deps, "badRequestError", {
-      missingId: missingIdFake
+      missingRoot: missingRootFake
     });
 
     const fnFake = fake.returns({ $set: { b: 2 } });

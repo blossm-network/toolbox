@@ -1,30 +1,42 @@
 const deps = require("./deps");
 
-module.exports = ({ name, domain, context = process.env.CONTEXT, network }) => {
+module.exports = ({
+  name,
+  domain,
+  service,
+  context = process.env.CONTEXT,
+  network
+}) => {
   const internal = !network || network == process.env.NETWORK;
-  const create = ({
-    contexts,
-    claims,
-    tokenFns: { internal: internalTokenFn, external: externalTokenFn } = {}
-  } = {}) => async view =>
-    await deps
-      .rpc(name, ...(domain ? [domain] : []), context, "view-store")
-      .post({ view })
-      .in({
-        ...(contexts && { context: contexts })
-      })
-      .with({
-        ...(internalTokenFn && { internalTokenFn }),
-        ...(externalTokenFn && { externalTokenFn }),
-        ...(claims && { claims })
-      });
+  // const create = ({
+  //   contexts,
+  //   claims,
+  //   tokenFns: { internal: internalTokenFn, external: externalTokenFn } = {}
+  // } = {}) => async view =>
+  //   await deps
+  //     .rpc(name, ...(domain ? [domain] : []), ...(service ? [service] : []), context, "view-store")
+  //     .post({ view })
+  //     .in({
+  //       ...(contexts && { context: contexts })
+  //     })
+  //     .with({
+  //       ...(internalTokenFn && { internalTokenFn }),
+  //       ...(externalTokenFn && { externalTokenFn }),
+  //       ...(claims && { claims })
+  //     });
   const read = ({
     contexts,
     claims,
     tokenFns: { internal: internalTokenFn, external: externalTokenFn } = {}
   } = {}) => async ({ query, sort }) =>
     await deps
-      .rpc(name, ...(domain ? [domain] : []), context, "view-store")
+      .rpc(
+        name,
+        ...(domain ? [domain] : []),
+        ...(service ? [service] : []),
+        context,
+        "view-store"
+      )
       .get({ query, ...(sort && { sort }) })
       .in({
         ...(contexts && { context: contexts }),
@@ -45,7 +57,13 @@ module.exports = ({ name, domain, context = process.env.CONTEXT, network }) => {
     tokenFns: { internal: internalTokenFn, external: externalTokenFn } = {}
   } = {}) => async ({ query, sort }) =>
     await deps
-      .rpc(name, ...(domain ? [domain] : []), context, "view-store")
+      .rpc(
+        name,
+        ...(domain ? [domain] : []),
+        ...(service ? [service] : []),
+        context,
+        "view-store"
+      )
       .get({ query, ...(sort && { sort }) })
       .in({
         ...(contexts && { context: contexts }),
@@ -64,10 +82,16 @@ module.exports = ({ name, domain, context = process.env.CONTEXT, network }) => {
     contexts,
     claims,
     tokenFns: { internal: internalTokenFn, external: externalTokenFn } = {}
-  } = {}) => async (id, view) =>
+  } = {}) => async (root, view) =>
     await deps
-      .rpc(name, ...(domain ? [domain] : []), context, "view-store")
-      .put(id, { view })
+      .rpc(
+        name,
+        ...(domain ? [domain] : []),
+        ...(service ? [service] : []),
+        context,
+        "view-store"
+      )
+      .put(root, { view })
       .in({
         ...(contexts && { context: contexts })
       })
@@ -80,10 +104,16 @@ module.exports = ({ name, domain, context = process.env.CONTEXT, network }) => {
     contexts,
     claims,
     tokenFns: { internal: internalTokenFn, external: externalTokenFn } = {}
-  } = {}) => async id =>
+  } = {}) => async root =>
     await deps
-      .rpc(name, ...(domain ? [domain] : []), context, "view-store")
-      .delete(id)
+      .rpc(
+        name,
+        ...(domain ? [domain] : []),
+        ...(service ? [service] : []),
+        context,
+        "view-store"
+      )
+      .delete(root)
       .in({
         ...(contexts && { context: contexts })
       })
@@ -95,14 +125,14 @@ module.exports = ({ name, domain, context = process.env.CONTEXT, network }) => {
   return {
     set: ({ context: contexts, claims, tokenFns }) => {
       return {
-        create: create({ contexts, claims, tokenFns }),
+        // create: create({ contexts, claims, tokenFns }),
         read: read({ contexts, claims, tokenFns }),
         stream: stream({ contexts, claims, tokenFns }),
         update: update({ contexts, claims, tokenFns }),
         delete: del({ contexts, claims, tokenFns })
       };
     },
-    create: create(),
+    // create: create(),
     read: read(),
     stream: stream(),
     update: update(),

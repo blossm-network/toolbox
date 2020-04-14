@@ -65,14 +65,17 @@ module.exports = ({
         {
           const operationHash = hash(
             dependency.name,
-            dependency.domain,
+            ...(dependency.domain ? [dependency.domain] : []),
+            ...(dependency.service ? [dependency.service] : []),
             dependency.context,
             dependency.procedure
           );
 
-          const key = `${dependency.name}-${
-            dependency.domain ? `${dependency.domain}-` : ""
-          }${config.service}`;
+          const key = `${dependency.name}${
+            dependency.domain ? `-${dependency.domain}` : ""
+          }${dependency.service ? `-${dependency.service}` : ""}${
+            config.context
+          }`;
 
           services = {
             ...services,
@@ -80,7 +83,9 @@ module.exports = ({
               ...common,
               image: `${commonServiceImagePrefix}.${dependency.context}${
                 dependency.domain ? `.${dependency.domain}` : ""
-              }.${dependency.name}:latest`,
+              }${dependency.service ? `.${dependency.service}` : ""}.${
+                dependency.name
+              }:latest`,
               container_name: `${operationHash}.${network}`,
               depends_on: [databaseServiceKey],
               environment: {
@@ -88,7 +93,8 @@ module.exports = ({
                 ...commonStoreEnvironment,
                 PROCEDURE: dependency.procedure,
                 OPERATION_HASH: operationHash,
-                ...{ DOMAIN: dependency.domain },
+                ...(dependency.domain && { DOMAIN: dependency.domain }),
+                ...(dependency.service && { SERVICE: dependency.service }),
                 CONTEXT: dependency.contxt,
                 NAME: dependency.name
               }

@@ -1,41 +1,58 @@
 const deps = require("./deps");
 
-const defaultQueryFn = ({ query }) => query;
+const defaultQueryFn = query => query;
 
-module.exports = ({ findFn, findOneFn, queryFn = defaultQueryFn }) => {
+module.exports = ({ findFn, one = false, queryFn = defaultQueryFn }) => {
   return async (req, res) => {
     //TODO
     //eslint-disable-next-line no-console
     console.log({ query: req.query, params: req.params });
-    if (req.params.id) {
-      const result = await findOneFn({
-        id: req.params.id,
-        ...(req.query.sort && { sort: req.query.sort }),
-        ...(req.query.context && { context: req.query.context }),
-        ...(req.query.claims && { claims: req.query.claims })
-      });
 
-      if (!result) throw deps.resourceNotFoundError.view();
-      res.send(result);
-    } else {
-      const query = queryFn({
-        query: req.query.query,
-        ...(req.query.context && { context: req.query.context })
-      });
-      //TODO
-      //eslint-disable-next-line no-console
-      console.log({ formattedQuery: query });
-      const results = await findFn({
-        query,
-        ...(req.query.sort && { sort: req.query.sort }),
-        ...(req.query.context && { context: req.query.context }),
-        ...(req.query.claims && { claims: req.query.claims })
-      });
-      //TODO
-      //eslint-disable-next-line no-console
-      console.log({ results });
-
-      res.send(results);
+    const queryBody = queryFn(req.query.query);
+    const formattedQueryBody = {};
+    for (const key in queryBody) {
+      formattedQueryBody[`body.${key}`] = queryBody[key];
     }
+
+    const context = req.query.context[process.env.CONTEXT];
+    const query = {
+      ...formattedQueryBody,
+      [`headers.${process.env.CONTEXT}`]: {
+        root: context.root,
+        service: context.service,
+        network: context.network
+      },
+      ...(req.params.root &&
+        process.env.DOMAIN &&
+        process.env.SERVICE && {
+          [`headers.${process.env.DOMAIN}`]: {
+            root: req.params.root,
+            service: process.env.SERVICE,
+            network: process.env.NETWORK
+          }
+        })
+    };
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log({ formattedQuery: query });
+    const results = await findFn({
+      query,
+      ...(req.query.sort && { sort: req.query.sort })
+    });
+
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log({ results });
+
+    const formattedResults = results.map(r => {
+      return { ...r.body, root: r.headers.root };
+    });
+
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log({ formattedResults });
+    if (!one) return res.send(formattedResults);
+    if (formattedResults.length > 0) return res.send(formattedResults[0]);
+    throw deps.resourceNotFoundError.view();
   };
 };

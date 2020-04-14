@@ -17,6 +17,18 @@ describe("Bad request", () => {
     expect(error.cause()).to.deep.equal(cause);
     expect(error.statusCode).to.equal(400);
   });
+  it("missingRoot correct", () => {
+    const error = badRequest.missingRoot();
+    expect(error.message).to.equal("Missing root url parameter.");
+    expect(error.statusCode).to.equal(400);
+  });
+  it("missingRoot correct with props", () => {
+    const error = badRequest.missingRoot({ cause, info });
+    expect(error.message).to.equal("Missing root url parameter.");
+    expect(error.toJSON().info).to.deep.equal(info);
+    expect(error.cause()).to.deep.equal(cause);
+    expect(error.statusCode).to.equal(400);
+  });
   it("missingMessage correct", () => {
     const error = badRequest.missingMessage();
     expect(error.message).to.equal("No Pub/Sub message received.");

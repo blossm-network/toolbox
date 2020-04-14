@@ -3,6 +3,7 @@ const deps = require("./deps");
 module.exports = async ({
   stores,
   domain = process.env.DOMAIN,
+  service = process.env.SERVICE,
   context = process.env.CONTEXT,
   whitelist,
   permissionsLookupFn,
@@ -27,41 +28,50 @@ module.exports = async ({
     permissions,
     protection = "strict"
   } of stores) {
-    server = server.get(deps.get({ name, ...(domain && { domain }) }), {
-      path: `/${name}`,
-      ...(protection != "none" && {
-        preMiddleware: [
-          deps.authentication({
-            verifyFn: verifyFn({ key }),
-            audience,
-            algorithm,
-            strict: protection == "strict"
-          }),
-          ...(protection == "strict"
-            ? [
-                deps.authorization({
-                  permissionsLookupFn,
-                  terminatedSessionCheckFn,
-                  context,
-                  permissions:
-                    permissions instanceof Array
-                      ? permissions.map(permission => {
-                          const [service, domain, privilege] = permission.split(
-                            ":"
-                          );
-                          return {
-                            service,
-                            domain,
-                            privilege
-                          };
-                        })
-                      : permissions
-                })
-              ]
-            : [])
-        ]
-      })
-    });
+    server = server.get(
+      deps.get({
+        name,
+        ...(domain && { domain }),
+        ...(service && { service })
+      }),
+      {
+        path: `/${name}`,
+        ...(protection != "none" && {
+          preMiddleware: [
+            deps.authentication({
+              verifyFn: verifyFn({ key }),
+              audience,
+              algorithm,
+              strict: protection == "strict"
+            }),
+            ...(protection == "strict"
+              ? [
+                  deps.authorization({
+                    permissionsLookupFn,
+                    terminatedSessionCheckFn,
+                    context,
+                    permissions:
+                      permissions instanceof Array
+                        ? permissions.map(permission => {
+                            const [
+                              service,
+                              domain,
+                              privilege
+                            ] = permission.split(":");
+                            return {
+                              service,
+                              domain,
+                              privilege
+                            };
+                          })
+                        : permissions
+                  })
+                ]
+              : [])
+          ]
+        })
+      }
+    );
   }
 
   server.listen();

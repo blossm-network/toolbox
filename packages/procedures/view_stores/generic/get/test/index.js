@@ -4,78 +4,52 @@ const { restore, replace, fake } = require("sinon");
 const get = require("..");
 const deps = require("../deps");
 
-const objs = "some-objs";
-const query = {
-  a: 1
-};
+const obj = { a: "some-obj" };
 const sort = "some-sort";
-const context = "some-context";
-const claims = "some-claims";
+const root = "some-root";
+const objRoot = "some-obj-root";
 
-const id = "some-id";
+const envContext = "some-env-context";
+const envContextRoot = "some-env-context-root";
+const envContextService = "some-env-context-service";
+const envContextNetwork = "some-env-context-network";
+
+const envDomain = "some-env-domain";
+const envService = "some-env-service";
+const envNetwork = "some-env-network";
+
+const context = {
+  [envContext]: {
+    root: envContextRoot,
+    service: envContextService,
+    network: envContextNetwork
+  }
+};
+
+process.env.CONTEXT = envContext;
+process.env.NETWORK = envNetwork;
 
 describe("View store get", () => {
+  beforeEach(() => {
+    process.env.DOMAIN = envDomain;
+    process.env.SERVICE = envService;
+  });
   afterEach(() => {
     restore();
   });
 
   it("should call with the correct params", async () => {
-    const findOneFake = fake.returns(objs);
+    const findFake = fake.returns([{ body: obj, headers: { root: objRoot } }]);
 
-    const params = {
-      id
-    };
+    const params = { root };
+
+    const query = { "some-query-key": 1 };
+
     const req = {
       query: {
         sort,
         context,
-        claims
-      },
-      params
-    };
-
-    const sendFake = fake();
-    const res = {
-      send: sendFake
-    };
-    await get({ findOneFn: findOneFake })(req, res);
-    expect(findOneFake).to.have.been.calledWith({
-      id,
-      sort,
-      context,
-      claims
-    });
-    expect(sendFake).to.have.been.calledWith(objs);
-  });
-  it("should call with the correct params with optionals left out", async () => {
-    const findOneFake = fake.returns(objs);
-
-    const params = {
-      id
-    };
-    const req = {
-      query: {},
-      params
-    };
-
-    const sendFake = fake();
-    const res = {
-      send: sendFake
-    };
-    await get({ findOneFn: findOneFake })(req, res);
-    expect(findOneFake).to.have.been.calledWith({ id });
-    expect(sendFake).to.have.been.calledWith(objs);
-  });
-  it("should call with the correct params if no id", async () => {
-    const findFake = fake.returns(objs);
-
-    const params = {};
-    const req = {
-      query: {
-        query,
-        sort,
-        claims,
-        context
+        query
       },
       params
     };
@@ -86,37 +60,72 @@ describe("View store get", () => {
     };
     await get({ findFn: findFake })(req, res);
     expect(findFake).to.have.been.calledWith({
-      query,
       sort,
-      claims,
-      context
+      query: {
+        "body.some-query-key": 1,
+        "headers.some-env-context": {
+          root: envContextRoot,
+          service: envContextService,
+          network: envContextNetwork
+        },
+        "headers.some-env-domain": {
+          root,
+          service: envService,
+          network: envNetwork
+        }
+      }
     });
-    expect(sendFake).to.have.been.calledWith(objs);
+    expect(sendFake).to.have.been.calledWith([{ ...obj, root: objRoot }]);
   });
-  it("should call with the correct params if no id with optionals omitted", async () => {
-    const findFake = fake.returns(objs);
+  it("should call with the correct params with no env domain, no params, one as true", async () => {
+    const findFake = fake.returns([{ body: obj, headers: { root: objRoot } }]);
 
-    const params = {};
+    const query = { "some-query-key": 1 };
+
     const req = {
-      query: { query },
-      params
+      query: {
+        sort,
+        context,
+        query
+      },
+      params: {}
     };
 
     const sendFake = fake();
     const res = {
       send: sendFake
     };
-    await get({ findFn: findFake })(req, res);
-    expect(findFake).to.have.been.calledWith({ query });
-    expect(sendFake).to.have.been.calledWith(objs);
+
+    const otherQuery = { "some-other-query-key": 1 };
+    const queryFnFake = fake.returns(otherQuery);
+    delete process.env.DOMAIN;
+    await get({ findFn: findFake, one: true, queryFn: queryFnFake })(req, res);
+    expect(queryFnFake).to.have.been.calledWith(query);
+    expect(findFake).to.have.been.calledWith({
+      sort,
+      query: {
+        "body.some-other-query-key": 1,
+        "headers.some-env-context": {
+          root: envContextRoot,
+          service: envContextService,
+          network: envContextNetwork
+        }
+      }
+    });
+    expect(sendFake).to.have.been.calledWith({ ...obj, root: objRoot });
   });
-  it("should call with the correct params if a queryFn is passed in", async () => {
-    const findFake = fake.returns(objs);
-    const params = {};
+  it("should call with the correct params with no env service", async () => {
+    const findFake = fake.returns([{ body: obj, headers: { root: objRoot } }]);
+
+    const params = { root };
+
+    const query = { "some-query-key": 1 };
+
     const req = {
       query: {
-        query,
-        context
+        sort,
+        context,
+        query
       },
       params
     };
@@ -125,21 +134,29 @@ describe("View store get", () => {
     const res = {
       send: sendFake
     };
-
-    const queryFnFake = fake.returns({ b: 2 });
-    await get({ findFn: findFake, queryFn: queryFnFake })(req, res);
-    expect(queryFnFake).to.have.been.calledWith({ query, context });
-    expect(findFake).to.have.been.calledWith({ query: { b: 2 }, context });
-    expect(sendFake).to.have.been.calledWith(objs);
+    delete process.env.SERVICE;
+    await get({ findFn: findFake })(req, res);
+    expect(findFake).to.have.been.calledWith({
+      sort,
+      query: {
+        "body.some-query-key": 1,
+        "headers.some-env-context": {
+          root: envContextRoot,
+          service: envContextService,
+          network: envContextNetwork
+        }
+      }
+    });
+    expect(sendFake).to.have.been.calledWith([{ ...obj, root: objRoot }]);
   });
   it("should throw correctly if not found", async () => {
-    const findOneFake = fake();
+    const findFake = fake.returns([]);
 
-    const params = {
-      id
-    };
+    const params = { root };
     const req = {
-      query,
+      query: {
+        context
+      },
       params
     };
 
@@ -155,7 +172,7 @@ describe("View store get", () => {
     });
 
     try {
-      await get({ findOneFn: findOneFake })(req, res);
+      await get({ findFn: findFake, one: true })(req, res);
     } catch (e) {
       expect(e).to.equal(error);
     }

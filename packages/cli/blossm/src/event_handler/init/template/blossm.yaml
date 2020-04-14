@@ -6,8 +6,9 @@
 #
 
 name: some-name
-domain: some-domain
-service: core
+domain: some-optional-domain
+service: some-optional-domain
+context: some-context
 
 event:
   action: some-event-action

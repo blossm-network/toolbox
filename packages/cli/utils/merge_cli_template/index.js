@@ -17,9 +17,11 @@ const resolveTransientInfo = require("./src/resolve_transient_info");
 const envUriSpecifier = env => {
   switch (env) {
     case "sandbox":
+      return "s";
     case "staging":
+      return "t";
     case "development":
-      return `${env}.`;
+      return "d";
     default:
       return "";
   }

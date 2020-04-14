@@ -7,6 +7,7 @@ const get = require("..");
 const results = "some-result";
 const query = "some-query";
 const name = "some-name";
+const service = "some-service";
 const domain = "some-domain";
 const context = "some-context";
 const claims = "some-claims";
@@ -74,13 +75,12 @@ describe("View gateway get", () => {
       status: statusFake
     };
 
-    const contextParam = "some-context";
-    await get({ name, domain, context: contextParam })(req, res);
+    await get({ name, domain, service })(req, res);
 
     expect(viewStoreFake).to.have.been.calledWith({
       name,
       domain,
-      context: contextParam
+      service
     });
     expect(setFake).to.have.been.calledWith({
       context,

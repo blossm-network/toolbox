@@ -18,6 +18,7 @@ const writeEnv = require("./steps/write_env");
 
 module.exports = ({
   domain,
+  service,
   region,
   project,
   network,
@@ -46,7 +47,7 @@ module.exports = ({
   dependencyKeyEnvironmentVariables,
   strict
 }) => {
-  const authUri = `view${
+  const authUri = `v${
     domain ? `.${domain}` : ""
   }.${context}.${envUriSpecifier}${network}`;
   return [
@@ -70,6 +71,7 @@ module.exports = ({
       secretBucketKeyLocation,
       custom: {
         ...(domain && { DOMAIN: domain }),
+        ...(service && { SERVICE: service }),
         CONTEXT: context,
         ...dependencyKeyEnvironmentVariables,
         ...(publicKeyUrl && { PUBLIC_KEY_URL: publicKeyUrl })
@@ -107,11 +109,16 @@ module.exports = ({
             envUriSpecifier,
             env: {
               ...(domain && { DOMAIN: domain }),
+              ...(service && { SERVICE: service }),
               CONTEXT: context,
               ...dependencyKeyEnvironmentVariables,
               ...(publicKeyUrl && { PUBLIC_KEY_URL: publicKeyUrl })
             },
-            labels: { domain, context }
+            labels: {
+              ...(domain && { domain }),
+              ...(service && { service }),
+              context
+            }
           }),
           startDnsTransaction({ dnsZone, project }),
           addDnsTransaction({ uri: authUri, dnsZone, project }),

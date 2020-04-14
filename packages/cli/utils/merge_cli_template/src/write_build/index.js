@@ -59,6 +59,7 @@ const steps = ({
         imageExtension,
         region,
         domain,
+        service,
         name,
         event,
         project,
@@ -71,7 +72,6 @@ const steps = ({
         containerRegistery,
         mainContainerName,
         dnsZone,
-        service,
         procedure,
         operationHash,
         operationName,
@@ -133,6 +133,7 @@ const steps = ({
         imageExtension,
         region,
         domain,
+        service,
         name,
         event,
         project,
@@ -341,12 +342,16 @@ const imageExtension = ({
 }) => {
   switch (procedure) {
     case "view-store":
-      return `${context}${domain ? `.${domain}` : ""}.${name}`;
+      return `${context}${service ? `.${service}` : ""}${
+        domain ? `.${domain}` : ""
+      }.${name}`;
     case "event-store":
     case "command-gateway":
       return `${service}.${domain}`;
     case "view-gateway":
-      return `${service}${domain ? `.${domain}` : ""}`;
+      return `${context}${service ? `.${service}` : ""}${
+        domain ? `.${domain}` : ""
+      }`;
     case "fact-gateway":
       if (service) {
         if (domain) return `${service}.${domain}`;
@@ -355,9 +360,9 @@ const imageExtension = ({
       return "";
     case "event-handler":
     case "projection":
-      return `${context}${domain ? `.${domain}` : ""}.${name}.did-${
-        event.action
-      }.${event.domain}`;
+      return `${context}${domain ? `.${domain}` : ""}${
+        service ? `.${service}` : ""
+      }.${name}.did-${event.action}.${event.domain}`;
     case "command":
       return `${service}.${domain}.${name}`;
     case "job":

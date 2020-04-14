@@ -3,11 +3,11 @@ const deps = require("./deps");
 module.exports = async ({
   streamFn,
   findFn,
-  findOneFn,
+  // findOneFn,
   writeFn,
   removeFn,
   queryFn,
-  postFn,
+  // postFn,
   putFn
 } = {}) => {
   deps
@@ -15,8 +15,8 @@ module.exports = async ({
     .get(deps.stream({ streamFn, ...(queryFn && { queryFn }) }), {
       path: "/stream"
     })
-    .get(deps.get({ findFn, findOneFn, ...(queryFn && { queryFn }) }))
-    .post(deps.post({ writeFn, ...(postFn && { dataFn: postFn }) }))
+    .get(deps.get({ findFn, /* findOneFn, */ ...(queryFn && { queryFn }) }))
+    // .post(deps.post({ writeFn, ...(postFn && { dataFn: postFn }) }))
     .put(deps.put({ writeFn, ...(putFn && { dataFn: putFn }) }))
     .delete(deps.delete({ removeFn }))
     .listen();

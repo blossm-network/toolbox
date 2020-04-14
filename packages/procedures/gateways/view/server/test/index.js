@@ -8,6 +8,7 @@ const permissionsLookupFn = "some-permissions-fn";
 const terminatedSessionCheckFn = "some-terminated-session-check-fn";
 const domain = "some-domain";
 const context = "some-context";
+const service = "some-service";
 const network = "some-network";
 const algorithm = "some-algorithm";
 const audience = "some-audience";
@@ -17,6 +18,7 @@ process.env.NETWORK = network;
 
 describe("View gateway", () => {
   beforeEach(() => {
+    process.env.SERVICE = service;
     process.env.DOMAIN = domain;
   });
   afterEach(() => {
@@ -70,7 +72,7 @@ describe("View gateway", () => {
       audience
     });
 
-    expect(gatewayGetFake).to.have.been.calledWith({ name, domain });
+    expect(gatewayGetFake).to.have.been.calledWith({ name, domain, service });
     expect(gatewayGetFake).to.have.been.calledOnce;
     expect(listenFake).to.have.been.calledWith();
     expect(serverFake).to.have.been.calledWith({
@@ -109,7 +111,7 @@ describe("View gateway", () => {
       ]
     });
   });
-  it("should call with the correct params with no domain in env", async () => {
+  it("should call with the correct params with no domain or service in env", async () => {
     const corsMiddlewareFake = fake();
     replace(deps, "corsMiddleware", corsMiddlewareFake);
 
@@ -147,6 +149,7 @@ describe("View gateway", () => {
     const verifyFnFake = fake.returns(verifyFnResult);
 
     delete process.env.DOMAIN;
+    delete process.env.SERVICE;
     await gateway({
       stores,
       whitelist,
@@ -238,7 +241,7 @@ describe("View gateway", () => {
       audience
     });
 
-    expect(gatewayGetFake).to.have.been.calledWith({ name, domain });
+    expect(gatewayGetFake).to.have.been.calledWith({ name, domain, service });
     expect(gatewayGetFake).to.have.been.calledOnce;
     expect(listenFake).to.have.been.calledWith();
     expect(serverFake).to.have.been.calledWith({
@@ -382,15 +385,18 @@ describe("View gateway", () => {
 
     expect(gatewayGetFake).to.have.been.calledWith({
       name: name1,
-      domain
+      domain,
+      service
     });
     expect(gatewayGetFake).to.have.been.calledWith({
       name: name2,
-      domain
+      domain,
+      service
     });
     expect(gatewayGetFake).to.have.been.calledWith({
       name: name3,
-      domain
+      domain,
+      service
     });
     expect(gatewayGetFake).to.have.been.calledThrice;
     expect(getFake).to.have.been.calledWith(gatewayGetResult, {
@@ -466,6 +472,7 @@ describe("View gateway", () => {
     const stores = [{ name, permissions, context }];
 
     const otherDomain = "some-other-domain";
+    const otherService = "some-other-service";
     const otherContext = "some-other-context";
 
     const verifyFnResult = "some-verify-fn";
@@ -474,6 +481,7 @@ describe("View gateway", () => {
     await gateway({
       stores,
       domain: otherDomain,
+      service: otherService,
       context: otherContext,
       whitelist,
       permissionsLookupFn,
@@ -485,7 +493,8 @@ describe("View gateway", () => {
 
     expect(gatewayGetFake).to.have.been.calledWith({
       name,
-      domain: otherDomain
+      domain: otherDomain,
+      service: otherService
     });
     expect(authorizationFake).to.have.been.calledWith({
       permissionsLookupFn,

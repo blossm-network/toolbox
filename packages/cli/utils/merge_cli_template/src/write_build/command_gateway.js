@@ -48,7 +48,7 @@ module.exports = ({
   runBaseIntegrationTests,
   strict
 }) => {
-  const authUri = `command.${domain}.${service}.${envUriSpecifier}${network}`;
+  const authUri = `c.${domain}.${service}.${envUriSpecifier}${network}`;
   return [
     yarnInstall,
     ...(runUnitTests ? [unitTests] : []),
