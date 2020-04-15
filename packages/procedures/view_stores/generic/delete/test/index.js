@@ -4,7 +4,7 @@ const { restore, replace, fake } = require("sinon");
 const del = require("..");
 const deps = require("../deps");
 
-const id = "some-id";
+const root = "some-root";
 const query = { a: 1 };
 const deletedCount = 3;
 
@@ -13,10 +13,10 @@ describe("View store delete", () => {
     restore();
   });
 
-  it("should call with the correct params with id only", async () => {
+  it("should call with the correct params with root only", async () => {
     const removeFake = fake.returns({ deletedCount });
 
-    const params = { id };
+    const params = { root };
     const req = {
       params,
       query: {}
@@ -28,7 +28,7 @@ describe("View store delete", () => {
     };
 
     await del({ removeFn: removeFake })(req, res);
-    expect(removeFake).to.have.been.calledWith({ id });
+    expect(removeFake).to.have.been.calledWith({ "headers.root": root });
     expect(sendFake).to.have.been.calledWith({ deletedCount });
   });
   it("should call with the correct params with query only", async () => {
@@ -48,22 +48,19 @@ describe("View store delete", () => {
     };
 
     await del({ removeFn: removeFake })(req, res);
-    expect(removeFake).to.have.been.calledWith(query);
+    expect(removeFake).to.have.been.calledWith({ "body.a": 1 });
     expect(sendFake).to.have.been.calledWith({ deletedCount });
   });
-  it("should call with the correct params with query and id", async () => {
+  it("should call with the correct params with query and root", async () => {
     const removeFake = fake.returns({ deletedCount });
 
     const params = {
-      id
+      root
     };
     const req = {
       params,
       query: {
-        query: {
-          ...query,
-          id
-        }
+        query
       }
     };
 
@@ -74,8 +71,8 @@ describe("View store delete", () => {
 
     await del({ removeFn: removeFake })(req, res);
     expect(removeFake).to.have.been.calledWith({
-      ...query,
-      id
+      "body.a": 1,
+      "headers.root": root
     });
     expect(sendFake).to.have.been.calledWith({ deletedCount });
   });
