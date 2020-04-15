@@ -7,6 +7,13 @@ module.exports = ({ findFn, one = false, queryFn = defaultQueryFn }) => {
     //TODO
     //eslint-disable-next-line no-console
     console.log({ query: req.query, params: req.params });
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log({
+      context: process.env.CONTEXT,
+      domain: process.env.DOMAIN,
+      service: process.env.SERVICE
+    });
 
     const queryBody = queryFn(req.query.query);
     const formattedQueryBody = {};

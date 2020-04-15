@@ -107,7 +107,7 @@ describe("View store", () => {
     // });
     expect(viewStorePutFake).to.have.been.calledWith({
       writeFn,
-      dataFn: putFn
+      viewFn: putFn
     });
     expect(viewStoreDeleteFake).to.have.been.calledWith({ removeFn });
   });

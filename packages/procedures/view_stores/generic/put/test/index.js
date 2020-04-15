@@ -11,11 +11,15 @@ let clock;
 
 const now = new Date();
 
-const view = "some-view";
 const root = "some-root";
 const body = {
   view: {
-    a: 1
+    body: {
+      a: 1
+    },
+    headers: {
+      b: 2
+    }
   }
 };
 const params = {
@@ -32,7 +36,7 @@ describe("View store put", () => {
   });
 
   it("should call with the correct params", async () => {
-    const writeFake = fake.returns(view);
+    const writeFake = fake();
 
     const req = {
       params,
@@ -53,6 +57,7 @@ describe("View store put", () => {
       root,
       data: {
         "body.a": 1,
+        "headers.b": 2,
         "headers.modified": deps.dateString()
       }
     });
@@ -60,7 +65,7 @@ describe("View store put", () => {
   });
 
   it("should call with the correct params", async () => {
-    const writeFake = fake.returns(view);
+    const writeFake = fake();
 
     const req = {
       params,
@@ -75,22 +80,26 @@ describe("View store put", () => {
       status: statusFake
     };
 
-    const fnFake = fake.returns({ b: 2 });
-    await put({ writeFn: writeFake, dataFn: fnFake })(req, res);
+    const fnFake = fake.returns({ body: { c: 3 }, headers: { b: 2 } });
+    await put({ writeFn: writeFake, viewFn: fnFake })(req, res);
 
     expect(writeFake).to.have.been.calledWith({
       root,
       data: {
-        "body.b": 2,
+        "body.c": 3,
+        "headers.b": 2,
         "headers.modified": deps.dateString()
       }
     });
-    expect(fnFake).to.have.been.calledWith({ a: 1 });
+    expect(fnFake).to.have.been.calledWith({
+      body: { a: 1 },
+      headers: { b: 2 }
+    });
     expect(statusFake).to.have.been.calledWith(204);
     expect(sendFake).to.have.been.calledOnce;
   });
   it("should throw if root is missing", async () => {
-    const writeFake = fake.returns(view);
+    const writeFake = fake();
 
     const req = {
       params: {},

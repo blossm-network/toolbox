@@ -19,7 +19,7 @@ module.exports = async ({
       path: "/:root?"
     })
     // .post(deps.post({ writeFn, ...(postFn && { dataFn: postFn }) }))
-    .put(deps.put({ writeFn, ...(putFn && { dataFn: putFn }) }), {
+    .put(deps.put({ writeFn, ...(putFn && { viewFn: putFn }) }), {
       path: "/:root"
     })
     .delete(deps.delete({ removeFn }), {

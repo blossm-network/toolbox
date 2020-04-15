@@ -20,17 +20,38 @@ const { testing } = require("../../config.json");
 // };
 
 describe("View store base integration tests", () => {
-  const testParamIdQueries = async () => {
+  const testParamQueries = async () => {
     const root = testing.examples.id.root;
-    const example0 = testing.examples.id.first;
-    const example1 = testing.examples.id.second;
+    const example0 = testing.examples.query.first;
+    const example1 = testing.examples.query.second;
     expect(example0).to.exist;
     expect(example1).to.exist;
+
+    const contextRoot = "some-context-root";
+    const contextService = "some-context-service";
+    const contextNetwork = "some-context-network";
+
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log({
+      context: process.env.CONTEXT,
+      domain: process.env.DOMAIN,
+      service: process.env.SERVICE
+    });
 
     const response0 = await request.put(`${url}${root ? `/${root}` : ""}`, {
       body: {
         view: {
-          ...example0.put
+          body: {
+            ...example0.put.body
+          },
+          headers: {
+            [process.env.CONTEXT]: {
+              root: contextRoot,
+              service: contextService,
+              network: contextNetwork
+            }
+          }
         }
       }
     });
@@ -41,7 +62,17 @@ describe("View store base integration tests", () => {
 
     expect(response0.statusCode).to.equal(204);
 
-    const response1 = await request.get(`${url}${root ? `/${root}` : ""}`);
+    const response1 = await request.get(`${url}${root ? `/${root}` : ""}`, {
+      query: {
+        context: {
+          [process.env.CONTEXT]: {
+            root: contextRoot,
+            service: contextService,
+            network: contextNetwork
+          }
+        }
+      }
+    });
 
     //TODO
     //eslint-disable-next-line no-console
@@ -173,7 +204,7 @@ describe("View store base integration tests", () => {
   // };
 
   it("should return successfully", async () => {
-    await testParamIdQueries();
+    await testParamQueries();
     // await testIndexes();
     // await testStreaming();
   });
