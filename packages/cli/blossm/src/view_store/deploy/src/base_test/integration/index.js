@@ -38,7 +38,7 @@ describe("View store base integration tests", () => {
       body: {
         view: {
           body: {
-            ...example0.put.body
+            ...example0.put
           },
           headers: {
             [process.env.CONTEXT]: {
@@ -94,7 +94,16 @@ describe("View store base integration tests", () => {
     const response2 = await request.put(`${url}/${root}`, {
       body: {
         view: {
-          ...example1.put
+          body: {
+            ...example1.put
+          },
+          headers: {
+            [process.env.CONTEXT]: {
+              root: contextRoot,
+              service: contextService,
+              network: contextNetwork
+            }
+          }
         }
       }
     });
@@ -105,7 +114,18 @@ describe("View store base integration tests", () => {
 
     expect(response2.statusCode).to.equal(204);
 
-    const response3 = await request.get(`${url}/${root}`);
+    const response3 = await request.get(`${url}/${root}`, {
+      query: {
+        context: {
+          [process.env.CONTEXT]: {
+            root: contextRoot,
+            service: contextService,
+            network: contextNetwork
+          }
+        }
+      }
+    });
+
     //TODO
     //eslint-disable-next-line no-console
     console.log({ response3 });
