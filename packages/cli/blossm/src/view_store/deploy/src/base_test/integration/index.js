@@ -236,7 +236,13 @@ describe("View store base integration tests", () => {
     await request.stream(
       `${url}/stream/`,
       data => {
+        //TODO
+        //eslint-disable-next-line no-console
+        console.log({ DATA: data });
         const parsedData = JSON.parse(data.toString().trim());
+        //TODO
+        //eslint-disable-next-line no-console
+        console.log({ oarsed: parsedData });
         roots.push(parsedData.root);
 
         if (data.root == root0) {
@@ -282,12 +288,14 @@ describe("View store base integration tests", () => {
       const root = "some-root";
       const response = await request.put(`${url}/${root}`, {
         body: {
-          view: { [property]: badValue },
-          headers: {
-            [process.env.CONTEXT]: {
-              root: contextRoot,
-              service: contextService,
-              network: contextNetwork
+          view: {
+            body: { [property]: badValue },
+            headers: {
+              [process.env.CONTEXT]: {
+                root: contextRoot,
+                service: contextService,
+                network: contextNetwork
+              }
             }
           }
         }
