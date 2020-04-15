@@ -39,7 +39,7 @@ describe("View store base integration tests", () => {
     //eslint-disable-next-line no-console
     console.log({ response0 });
 
-    expect(response0.statusCode).to.equal(200);
+    expect(response0.statusCode).to.equal(204);
 
     const response1 = await request.get(`${url}${root ? `/${root}` : ""}`);
 
