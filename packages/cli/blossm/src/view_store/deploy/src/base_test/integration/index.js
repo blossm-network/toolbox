@@ -34,6 +34,7 @@ describe("View store base integration tests", () => {
     //TODO
     //eslint-disable-next-line no-console
     console.log({
+      a: 1,
       context: process.env.CONTEXT,
       domain: process.env.DOMAIN,
       service: process.env.SERVICE
