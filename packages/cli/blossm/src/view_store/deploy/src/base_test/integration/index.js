@@ -21,7 +21,7 @@ const { testing } = require("../../config.json");
 
 describe("View store base integration tests", () => {
   const testParamQueries = async () => {
-    const root = testing.examples.id.root;
+    const root = testing.examples.query.root;
     const example0 = testing.examples.query.first;
     const example1 = testing.examples.query.second;
     expect(example0).to.exist;
@@ -31,6 +31,9 @@ describe("View store base integration tests", () => {
     const contextService = "some-context-service";
     const contextNetwork = "some-context-network";
 
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log("ASFDASDFASDFASDFAS");
     const response0 = await request.put(`${url}${root ? `/${root}` : ""}`, {
       body: {
         view: {
