@@ -264,7 +264,18 @@ describe("View store base integration tests", () => {
           }
         }
       },
-      { query: { query, context } }
+      {
+        query: {
+          query,
+          context: {
+            [process.env.CONTEXT]: {
+              root: contextRoot,
+              service: contextService,
+              network: contextNetwork
+            }
+          }
+        }
+      }
     );
     expect(roots).to.include(root0);
     expect(roots).to.include(root1);
