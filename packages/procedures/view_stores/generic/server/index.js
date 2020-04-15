@@ -15,9 +15,15 @@ module.exports = async ({
     .get(deps.stream({ streamFn, ...(queryFn && { queryFn }) }), {
       path: "/stream"
     })
-    .get(deps.get({ findFn, /* findOneFn, */ ...(queryFn && { queryFn }) }))
+    .get(deps.get({ findFn, /* findOneFn, */ ...(queryFn && { queryFn }) }), {
+      path: "/:root?"
+    })
     // .post(deps.post({ writeFn, ...(postFn && { dataFn: postFn }) }))
-    .put(deps.put({ writeFn, ...(putFn && { dataFn: putFn }) }))
-    .delete(deps.delete({ removeFn }))
+    .put(deps.put({ writeFn, ...(putFn && { dataFn: putFn }) }), {
+      path: "/:root"
+    })
+    .delete(deps.delete({ removeFn }), {
+      path: "/:root"
+    })
     .listen();
 };

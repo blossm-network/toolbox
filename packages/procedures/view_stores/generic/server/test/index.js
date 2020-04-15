@@ -79,13 +79,19 @@ describe("View store", () => {
 
     expect(listenFake).to.have.been.calledOnce;
     expect(serverFake).to.have.been.calledOnce;
-    expect(secondGetFake).to.have.been.calledWith(viewStoreGetResult);
     expect(firstGetFake).to.have.been.calledWith(viewStoreStreamResult, {
       path: "/stream"
     });
+    expect(secondGetFake).to.have.been.calledWith(viewStoreGetResult, {
+      path: "/:root?"
+    });
     // expect(postFake).to.have.been.calledWith(viewStorePostResult);
-    expect(putFake).to.have.been.calledWith(viewStorePutResult);
-    expect(deleteFake).to.have.been.calledWith(viewStoreDeleteResult);
+    expect(putFake).to.have.been.calledWith(viewStorePutResult, {
+      path: "/:root"
+    });
+    expect(deleteFake).to.have.been.calledWith(viewStoreDeleteResult, {
+      path: "/:root"
+    });
     expect(viewStoreStreamFake).to.have.been.calledWith({
       streamFn,
       queryFn
@@ -171,8 +177,12 @@ describe("View store", () => {
       path: "/stream"
     });
     // expect(postFake).to.have.been.calledWith(viewStorePostResult);
-    expect(putFake).to.have.been.calledWith(viewStorePutResult);
-    expect(deleteFake).to.have.been.calledWith(viewStoreDeleteResult);
+    expect(putFake).to.have.been.calledWith(viewStorePutResult, {
+      path: "/:root"
+    });
+    expect(deleteFake).to.have.been.calledWith(viewStoreDeleteResult, {
+      path: "/:root"
+    });
     expect(viewStoreStreamFake).to.have.been.calledWith({ streamFn });
     expect(viewStoreGetFake).to.have.been.calledWith({ findFn }); //, findOneFn });
     // expect(viewStorePostFake).to.have.been.calledWith({ writeFn });

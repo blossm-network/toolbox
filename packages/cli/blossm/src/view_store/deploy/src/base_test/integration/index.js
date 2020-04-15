@@ -3,7 +3,7 @@ const { expect } = require("chai");
 
 const request = require("@blossm/request");
 
-const { schema } = require("../../config.json");
+// const { schema } = require("../../config.json");
 // const uuid = require("@blossm/uuid");
 
 const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
@@ -178,21 +178,21 @@ describe("View store base integration tests", () => {
     // await testStreaming();
   });
 
-  it("should return an error if incorrect params", async () => {
-    //Grab a property from the schema and pass a wrong value to it.
-    for (const property in schema) {
-      const badValue =
-        schema[property] == "String" ||
-        (typeof schema[property] == "object" &&
-          schema[property]["type"] == "String")
-          ? { a: 1 } //pass an object to a String property
-          : "some-string"; // or, pass a string to a non-String property
-      const root = "some-root";
-      const response = await request.put(`${url}/${root}`, {
-        body: { view: { [property]: badValue } }
-      });
-      expect(response.statusCode).to.equal(500);
-      return;
-    }
-  });
+  // it("should return an error if incorrect params", async () => {
+  //   //Grab a property from the schema and pass a wrong value to it.
+  //   for (const property in schema) {
+  //     const badValue =
+  //       schema[property] == "String" ||
+  //       (typeof schema[property] == "object" &&
+  //         schema[property]["type"] == "String")
+  //         ? { a: 1 } //pass an object to a String property
+  //         : "some-string"; // or, pass a string to a non-String property
+  //     const root = "some-root";
+  //     const response = await request.put(`${url}/${root}`, {
+  //       body: { view: { [property]: badValue } }
+  //     });
+  //     expect(response.statusCode).to.equal(500);
+  //     return;
+  //   }
+  // });
 });
