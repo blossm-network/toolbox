@@ -127,7 +127,7 @@ describe("View store base integration tests", () => {
     //eslint-disable-next-line no-console
     console.log({ response3 });
     expect(response3.statusCode).to.equal(200);
-    const parsedBody3 = JSON.parse(response3.body);
+    const [parsedBody3] = JSON.parse(response3.body);
     //TODO
     //eslint-disable-next-line no-console
     console.log({ parsedBody3 });
