@@ -54,12 +54,9 @@ describe("View store base integration tests", () => {
       a: 1,
       context: process.env.CONTEXT,
       domain: process.env.DOMAIN,
-      service: process.env.SERVICE
+      service: process.env.SERVICE,
+      response0
     });
-
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log({ response0 });
 
     expect(response0.statusCode).to.equal(204);
 
@@ -77,7 +74,7 @@ describe("View store base integration tests", () => {
 
     //TODO
     //eslint-disable-next-line no-console
-    console.log({ response1 });
+    console.log({ b: 2, response1 });
 
     const [parsedBody1] = JSON.parse(response1.body);
     // const root = parsedBody1.headers.root;
