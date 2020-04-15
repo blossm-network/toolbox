@@ -88,7 +88,7 @@ describe("View store base integration tests", () => {
 
     expect(response1.statusCode).to.equal(200);
     for (const key in example0.get) {
-      expect(parsedBody1.body[key]).to.deep.equal(example0.get[key]);
+      expect(parsedBody1[key]).to.deep.equal(example0.get[key]);
     }
 
     const response2 = await request.put(`${url}/${root}`, {
@@ -115,7 +115,7 @@ describe("View store base integration tests", () => {
     //eslint-disable-next-line no-console
     console.log({ parsedBody3 });
     for (const key in example1.get) {
-      expect(parsedBody3.body[key]).to.deep.equal(example1.get[key]);
+      expect(parsedBody3[key]).to.deep.equal(example1.get[key]);
     }
 
     const response4 = await request.delete(`${url}/${root}`);
