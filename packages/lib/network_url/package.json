@@ -1,6 +1,6 @@
 {
   "name": "@blossm/network-url",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Returns a url for a network.",
   "main": "index.js",
   "author": "blossm.network",

@@ -1,6 +1,6 @@
 {
   "name": "@blossm/trim-string",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Trims a string to a fixed length and optionally adds three dots to the end.",
   "main": "index.js",
   "author": "blossm.network",

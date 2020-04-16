@@ -1,6 +1,6 @@
 {
   "name": "@blossm/operation-url",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "description": "Returns a url for an operation.",
   "main": "index.js",
   "author": "blossm.network",
@@ -14,7 +14,7 @@
     "test": "mocha --recursive"
   },
   "dependencies": {
-    "@blossm/operation-hash": "^0.0.8"
+    "@blossm/operation-hash": "^0.0.9"
   },
   "devDependencies": {
     "mocha": "^7.1.1",

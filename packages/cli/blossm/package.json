@@ -1,6 +1,6 @@
 {
   "name": "@blossm/cli",
-  "version": "0.0.619",
+  "version": "0.0.620",
   "description": "A command line tool for interacting with a blossm network.",
   "main": "index.js",
   "scripts": {
@@ -14,16 +14,16 @@
   },
   "author": "blossm.network",
   "dependencies": {
-    "@blossm/cli-root-dir": "^0.0.6",
-    "@blossm/deploy-cli-template": "^0.0.333",
-    "@blossm/gcp-secret": "^0.0.44",
-    "@blossm/gcp-storage": "^0.0.9",
-    "@blossm/init-cli-template": "^0.0.12",
-    "@blossm/normalize-cli": "^0.0.7",
-    "@blossm/operation-hash": "^0.0.8",
-    "@blossm/robo-say": "^0.0.2",
+    "@blossm/cli-root-dir": "^0.0.7",
+    "@blossm/deploy-cli-template": "^0.0.334",
+    "@blossm/gcp-secret": "^0.0.45",
+    "@blossm/gcp-storage": "^0.0.10",
+    "@blossm/init-cli-template": "^0.0.13",
+    "@blossm/normalize-cli": "^0.0.8",
+    "@blossm/operation-hash": "^0.0.9",
+    "@blossm/robo-say": "^0.0.3",
     "@blossm/service-name-consts": "*",
-    "@blossm/trim-string": "^0.0.3",
+    "@blossm/trim-string": "^0.0.4",
     "chalk": "^2.4.2",
     "esm": "^3.2.25",
     "yaml": "^1.7.0"
