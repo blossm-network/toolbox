@@ -123,9 +123,6 @@ module.exports = gateway({
           project: process.env.GCP_PROJECT,
         }),
   keyClaimsFn: async ({ id, secret }) => {
-    // const [key] = await eventStore({ domain: "key", service: "system" })
-    //   .set({ tokenFns: { internal: gcpToken } })
-    //   .query({ key: "id", value: id });
     const key = await fact({
       name: "state",
       domain: "key",
@@ -148,7 +145,7 @@ module.exports = gateway({
           network: process.env.NETWORK,
         },
         principle: key.principle,
-        node: key.node,
+        scene: key.scene,
       },
     };
   },
