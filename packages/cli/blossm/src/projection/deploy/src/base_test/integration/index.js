@@ -25,7 +25,8 @@ describe("Projection integration tests", () => {
               JSON.stringify({
                 headers: {
                   ...example.headers,
-                  context: example.context
+                  context: example.context,
+                  root: example.root
                 },
                 payload: example.payload
               })
