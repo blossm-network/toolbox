@@ -572,9 +572,6 @@ const configure = async (workingDir, configFn, env, strict) => {
 
     const mainContainerName = "main";
 
-    //eslint-disable-next-line no-console
-    console.log({ publicKeyUrl, coreContainerRegistery });
-
     writeConfig({ config, coreNetwork, workingDir });
 
     writeBuild({

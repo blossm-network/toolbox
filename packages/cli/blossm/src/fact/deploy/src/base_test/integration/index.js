@@ -94,7 +94,7 @@ const executeStep = async (step) => {
     }
   );
 
-  const correctCode = step.response ? 200 : step.code;
+  const correctCode = step.response != undefined ? 200 : step.code;
   if (response.statusCode != correctCode) {
     //eslint-disable-next-line no-console
     console.log("response: ", response);
@@ -102,7 +102,7 @@ const executeStep = async (step) => {
 
   expect(response.statusCode).to.equal(correctCode);
 
-  if (!step.response) return;
+  if (step.response == undefined) return;
 
   const parsedBody = JSON.parse(response.body);
 
