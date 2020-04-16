@@ -87,15 +87,21 @@ module.exports = gateway({
       roles,
       defaultRoles,
       context,
-      // customRolePermissionsFn: async ({ roleId }) => {
-      //   //look through customRoles and pick out roleId
-      //   const role = await eventStore({ domain: "role", service: "core" })
-      //     .set({ tokenFns: { internal: gcpToken } })
-      //     .query({ key: "id", value: roleId });
-      //   return role.state.permissions;
-      // }
+      customRolePermissionsFn: async ({ roleId }) =>
+        await fact({
+          name: "permissions",
+          domain: "role",
+          service: "core",
+          ...(process.env.CORE_NETWORK && {
+            network: process.env.CORE_NETWORK,
+          }),
+        })
+          .set({
+            tokenFns: { internal: gcpToken },
+            context: { network: process.env.NETWORK },
+          })
+          .read({ id: roleId }),
     });
-    // : [];
   },
   terminatedSessionCheckFn: async (session) => {
     const terminated = await fact({
