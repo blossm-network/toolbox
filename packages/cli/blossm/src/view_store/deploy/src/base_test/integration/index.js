@@ -122,11 +122,51 @@ describe("View store base integration tests", () => {
     );
 
     expect(response3.statusCode).to.equal(200);
-    const [parsedBody3] = JSON.parse(response3.body);
+    const [parsedBody3, parsedBody35] = JSON.parse(response3.body);
+    //TODO does parsedBody4 exist? Write a sorting test.
+    //eslint-disable-next-line no-console
+    console.log({ parsedBody45ASDFASDF: parsedBody35 });
     for (const key in example1.get) {
       expect(parsedBody3[key]).to.deep.equal(example1.get[key]);
     }
 
+    // const response4 = await request.put(`${url}/${root}`, {
+    //   body: {
+    //     view: {
+    //       body: {
+    //         ...example0.put
+    //       },
+    //       headers: {
+    //         [process.env.CONTEXT]: {
+    //           root: contextRoot,
+    //           service: contextService,
+    //           network: contextNetwork
+    //         }
+    //       },
+    //       ...(domainRoot && {
+    //         [process.env.DOMAIN]: {
+    //           root: domainRoot,
+    //           service: process.env.SERVICE,
+    //           network: process.env.NETWORK
+    //         }
+    //       })
+    //     }
+    //   }
+    // });
+    // const response5 = await request.get(
+    //   `${url}${domainR,
+    //   {
+    //     query: {
+    //       context: {
+    //         [process.env.CONTEXT]: {
+    //           root: contextRoot,
+    //           service: contextService,
+    //           network: contextNetwork
+    //         }
+    //       }
+    //     }
+    //   }
+    // );
     const response4 = await request.delete(`${url}/${root}`);
     const parsedBody4 = JSON.parse(response4.body);
     expect(response4.statusCode).to.equal(200);

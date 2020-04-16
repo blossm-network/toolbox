@@ -4,6 +4,7 @@
 #
 
 domain: some-domain
+service: some-service
 context: principle
 
 stores:

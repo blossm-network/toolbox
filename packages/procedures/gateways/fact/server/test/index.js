@@ -51,13 +51,13 @@ describe("Fact gateway", () => {
     const privilege = "some-privilege";
     const privileges = [privilege];
     const name = "some-name";
-    const jobs = [{ name, privileges, context }];
+    const facts = [{ name, privileges, context }];
 
     const verifyFnResult = "some-verify-fn";
     const verifyFnFake = fake.returns(verifyFnResult);
 
     await gateway({
-      jobs,
+      facts,
       whitelist,
       permissionsLookupFn,
       terminatedSessionCheckFn,
@@ -136,13 +136,13 @@ describe("Fact gateway", () => {
 
     const privileges = "none";
     const name = "some-name";
-    const jobs = [{ name, privileges, context }];
+    const facts = [{ name, privileges, context }];
 
     const verifyFnResult = "some-verify-fn";
     const verifyFnFake = fake.returns(verifyFnResult);
 
     await gateway({
-      jobs,
+      facts,
       whitelist,
       permissionsLookupFn,
       terminatedSessionCheckFn,
@@ -220,13 +220,13 @@ describe("Fact gateway", () => {
     const privileges = [privilege];
     const name = "some-name";
     const key = "some-key";
-    const jobs = [{ name, privileges, key }];
+    const facts = [{ name, privileges, key }];
 
     const verifyFnResult = "some-verify-fn";
     const verifyFnFake = fake.returns(verifyFnResult);
 
     await gateway({
-      jobs,
+      facts,
       whitelist,
       permissionsLookupFn,
       terminatedSessionCheckFn,
@@ -244,7 +244,7 @@ describe("Fact gateway", () => {
     });
     expect(verifyFnFake).to.have.been.calledWith({ key });
   });
-  it("should call with the correct params with multiple jobs with different protections", async () => {
+  it("should call with the correct params with multiple facts with different protections", async () => {
     const corsMiddlewareFake = fake();
     replace(deps, "corsMiddleware", corsMiddlewareFake);
 
@@ -280,7 +280,7 @@ describe("Fact gateway", () => {
     const name1 = "some-name1";
     const name2 = "some-name2";
     const name3 = "some-name3";
-    const jobs = [
+    const facts = [
       { name: name1, protection: "none" },
       { name: name2, protection: "context" },
       { name: name3, privileges, context }
@@ -290,7 +290,7 @@ describe("Fact gateway", () => {
     const verifyFnFake = fake.returns(verifyFnResult);
 
     await gateway({
-      jobs,
+      facts,
       whitelist,
       permissionsLookupFn,
       terminatedSessionCheckFn,
@@ -383,7 +383,7 @@ describe("Fact gateway", () => {
     const privilege = "some-privilege";
     const privileges = [privilege];
     const name = "some-name";
-    const jobs = [{ name, privileges, context }];
+    const facts = [{ name, privileges, context }];
 
     const otherDomain = "some-other-domain";
     const otherService = "some-other-service";
@@ -392,7 +392,7 @@ describe("Fact gateway", () => {
     const verifyFnFake = fake.returns(verifyFnResult);
 
     await gateway({
-      jobs,
+      facts,
       domain: otherDomain,
       service: otherService,
       whitelist,
@@ -426,7 +426,7 @@ describe("Fact gateway", () => {
     replace(deps, "server", serverFake);
     try {
       await gateway({
-        jobs: [],
+        facts: [],
         whitelist,
         permissionsLookupFn,
         terminatedSessionCheckFn,

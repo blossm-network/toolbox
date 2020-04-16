@@ -415,6 +415,7 @@ const addDefaultDependencies = ({ config, coreNetwork }) => {
         {
           name: config.name,
           ...(config.domain && { domain: config.domain }),
+          ...(config.service && { domain: config.service }),
           context: config.context,
           procedure: "view-store"
         }
@@ -452,8 +453,9 @@ const addDefaultDependencies = ({ config, coreNetwork }) => {
           .map(store => {
             return {
               name: store.name,
-              domain: config.domain,
-              service: config.service,
+              ...(config.domain && { domain: config.domain }),
+              ...(config.service && { service: config.service }),
+              context: config.context,
               procedure: "view-store"
             };
           })
@@ -466,13 +468,13 @@ const addDefaultDependencies = ({ config, coreNetwork }) => {
         )
           ? tokenDependencies
           : []),
-        ...config.jobs
-          .filter(j => j.network == undefined)
-          .map(job => {
+        ...config.facts
+          .filter(f => f.network == undefined)
+          .map(fact => {
             return {
-              name: job.name,
-              domain: config.domain,
-              service: config.service,
+              name: fact.name,
+              ...(config.domain && { domain: config.domain }),
+              ...(config.service && { service: config.service }),
               procedure: "fact"
             };
           })

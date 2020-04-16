@@ -1,7 +1,7 @@
 const deps = require("./deps");
 
 module.exports = async ({
-  jobs,
+  facts,
   domain = process.env.DOMAIN,
   service = process.env.SERVICE,
   whitelist,
@@ -29,7 +29,7 @@ module.exports = async ({
     privileges,
     protection = "strict",
     context
-  } of jobs) {
+  } of facts) {
     server = server.get(
       deps.get({
         name,

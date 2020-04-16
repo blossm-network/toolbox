@@ -64,6 +64,7 @@ module.exports = ({
     env,
     network,
     host,
+    context,
     region,
     coreNetwork,
     containerRegistery,
