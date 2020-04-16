@@ -4,7 +4,7 @@ const getToken = require("@blossm/get-token");
 const { create, delete: del, exists } = require("@blossm/gcp-pubsub");
 
 const request = require("@blossm/request");
-const { jobs, testing } = require("./../../config.json");
+const { facts, testing } = require("./../../config.json");
 
 const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 
@@ -27,7 +27,7 @@ describe("Get job gateway integration tests", () => {
       )
   );
   it("should return successfully", async () => {
-    const requiredPermissions = jobs.reduce((permissions, command) => {
+    const requiredPermissions = facts.reduce((permissions, command) => {
       return command.privileges == "none"
         ? permissions
         : [
@@ -46,7 +46,7 @@ describe("Get job gateway integration tests", () => {
           ];
     }, []);
 
-    const needsToken = jobs.some(
+    const needsToken = facts.some(
       (c) => c.protection == undefined || c.protection == "strict"
     );
 
@@ -55,14 +55,14 @@ describe("Get job gateway integration tests", () => {
       : {};
 
     const parallelFns = [];
-    for (const job of jobs) {
+    for (const fact of facts) {
       parallelFns.push(async () => {
-        const response0 = await request.get(`${url}/${job.name}`, {
+        const response0 = await request.get(`${url}/${fact.name}`, {
           body: {
             root,
           },
-          ...(job.protection === undefined ||
-            (job.protection === "strict" && {
+          ...(fact.protection === undefined ||
+            (fact.protection === "strict" && {
               headers: {
                 Authorization: `Bearer ${token}`,
               },
@@ -72,10 +72,10 @@ describe("Get job gateway integration tests", () => {
         expect(response0.statusCode).to.be.lessThan(500);
       });
 
-      if (job.privileges == "none") continue;
+      if (fact.privileges == "none") continue;
 
       parallelFns.push(async () => {
-        const response1 = await request.get(`${url}/${job.name}`, {
+        const response1 = await request.get(`${url}/${fact.name}`, {
           body: {
             root,
           },
@@ -85,7 +85,7 @@ describe("Get job gateway integration tests", () => {
       });
 
       parallelFns.push(async () => {
-        const response2 = await request.get(`${url}/${job.name}`, {
+        const response2 = await request.get(`${url}/${fact.name}`, {
           body: {
             root,
           },

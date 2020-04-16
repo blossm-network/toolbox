@@ -106,8 +106,9 @@ module.exports = gateway({
     })
       .set({
         tokenFns: { internal: gcpToken },
+        context: { session },
       })
-      .read({ root: session.root });
+      .read();
 
     if (terminated) throw invalidCredentials.tokenTerminated();
   },
