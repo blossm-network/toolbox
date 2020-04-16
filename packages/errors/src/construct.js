@@ -3,6 +3,7 @@ const internalServer = require("./internal_server");
 const unauthorized = require("./unauthorized");
 const resourceNotFound = require("./resource_not_found");
 const invalidArgument = require("./invalid_argument");
+const forbidden = require("./forbidden");
 
 module.exports = ({ statusCode, message }) => {
   switch (statusCode) {
@@ -10,6 +11,8 @@ module.exports = ({ statusCode, message }) => {
       return badRequest.message(message);
     case 401:
       return unauthorized.message(message);
+    case 403:
+      return forbidden.message(message);
     case 404:
       return resourceNotFound.message(message);
     case 409:
