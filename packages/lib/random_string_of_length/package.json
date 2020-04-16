@@ -1,6 +1,6 @@
 {
   "name": "@blossm/random-string-of-length",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Creates a random string that has the specified number of characters.",
   "main": "index.js",
   "author": "blossm.network",

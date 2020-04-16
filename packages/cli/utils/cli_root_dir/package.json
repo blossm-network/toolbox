@@ -1,6 +1,6 @@
 {
   "name": "@blossm/cli-root-dir",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Finds the nearest root blossm directory.",
   "main": "index.js",
   "author": "blossm.network",

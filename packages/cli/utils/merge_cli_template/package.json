@@ -1,6 +1,6 @@
 {
   "name": "@blossm/merge-cli-template",
-  "version": "0.0.320",
+  "version": "0.0.321",
   "description": "Merges the contents of a file with a template.",
   "main": "index.js",
   "author": "blossm.network",
@@ -14,8 +14,8 @@
     "test": "echo \"Error: no test specified\" && exit 0"
   },
   "dependencies": {
-    "@blossm/cli-root-dir": "^0.0.7",
-    "@blossm/operation-hash": "^0.0.9",
+    "@blossm/cli-root-dir": "^0.0.8",
+    "@blossm/operation-hash": "^0.0.10",
     "any-json": "^3.1.0",
     "chalk": "^2.4.2",
     "common-tags": "^1.8.0",

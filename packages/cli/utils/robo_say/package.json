@@ -1,6 +1,6 @@
 {
   "name": "@blossm/robo-say",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Adds character to a string.",
   "main": "index.js",
   "author": "blossm.network",
