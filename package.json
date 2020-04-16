@@ -32,7 +32,7 @@
     "major": "lerna version major",
     "check-packages": "yarn clean && yarn compile && yarn test",
     "lerna-publish": "npx lerna publish -y from-package",
-    "format": "prettier-eslint --write $PWD/'packages/**/*.js'"
+    "format": "eslint --fix packages"
   },
   "devDependencies": {
     "auto-changelog": "^2.0.0",
@@ -46,17 +46,15 @@
     "lerna": "^3.20.2",
     "lint-staged": "^10.1.3",
     "mocha": "^7.1.1",
-    "prettier-eslint-cli": "^5.0.0",
     "sinon": "^9.0.2"
   },
   "lint-staged": {
     "*.js": [
       "eslint --fix",
-      "prettier-eslint --write",
       "git add"
     ],
     "*.json": [
-      "prettier-eslint --write",
+      "eslint --fix",
       "git add"
     ]
   }

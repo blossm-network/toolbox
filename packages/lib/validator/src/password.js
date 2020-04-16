@@ -12,17 +12,21 @@ let isShortEnough = (string) => {
 };
 
 let hasAcceptableSymbol = (string) => {
+  /* eslint-disable no-useless-escape */
   return (
     string.search(/[\!\@\#\$\%\^\&\*\(\)\_\+\-\?\>\<\,\.\/\|\]\[\}\{\]\~]/) > -1
   );
+  /* eslint-enable no-useless-escape */
 };
 
 let hasUnsupportedChar = (string) => {
+  /* eslint-disable no-useless-escape */
   return (
     string.search(
       /[^a-zA-Z0-9\!\@\#\$\%\^\&\*\(\)\_\+\-\?\>\<\,\.\/\|\]\[\}\{\]\~]/
     ) != -1
   );
+  /* eslint-enable no-useless-escape */
 };
 
 let hasNumber = (string) => {
