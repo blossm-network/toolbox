@@ -4,7 +4,13 @@ const viewStore = require("@blossm/view-store-rpc");
 
 const request = require("@blossm/request");
 
-const { testing, name, domain } = require("../../config.json");
+const {
+  testing,
+  name,
+  domain,
+  service,
+  context
+} = require("../../config.json");
 
 const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 
@@ -19,8 +25,7 @@ describe("Projection integration tests", () => {
               JSON.stringify({
                 headers: {
                   ...example.headers,
-                  context: example.context,
-                  root: example.root
+                  context: example.context
                 },
                 payload: example.payload
               })
@@ -34,7 +39,9 @@ describe("Projection integration tests", () => {
       parallelFns.push(async () => {
         const v = await viewStore({
           name,
-          ...(domain && { domain })
+          ...(domain && { domain }),
+          ...(service && { service }),
+          context
         }).read(
           example.result.root
             ? { root: example.result.root }
