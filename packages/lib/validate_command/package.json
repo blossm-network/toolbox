@@ -22,6 +22,6 @@
     "@blossm/datetime": "^0.0.3",
     "mocha": "^7.1.1",
     "sinon": "^7.3.2",
-    "sinon-chai": "^3.3.0"
+    "sinon-chai": "^3.5.0"
   }
 }
