@@ -1,7 +1,7 @@
 {
   "name": "@blossm/blossm",
   "description": "The Blossm codebase.",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "private": true,
   "workspaces": [
     "packages/**/*"
@@ -28,24 +28,25 @@
     "clean": "lerna run clean",
     "test": "lerna run test",
     "patch": "lerna version patch",
+    "minor": "lerna version minor",
     "major": "lerna version major",
     "check-packages": "yarn clean && yarn compile && yarn test",
     "lerna-publish": "npx lerna publish -y from-package"
   },
   "devDependencies": {
-    "auto-changelog": "^1.13.0",
+    "auto-changelog": "^2.0.0",
     "chai": "^4.2.0",
-    "eslint": "^5.16.0",
-    "eslint-config-prettier": "^4.1.0",
-    "eslint-plugin-import": "^2.17.2",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.10.1",
+    "eslint-plugin-import": "^2.20.2",
     "eslint-plugin-prettier": "^3.1.1",
-    "prettier": "^1.19.1",
-    "husky": "^1.3.1",
-    "lerna": "^3.18.4",
-    "lint-staged": "^8.1.7",
-    "mocha": "^6.1.4",
+    "prettier": "^2.0.4",
+    "husky": "^4.2.5",
+    "lerna": "^3.20.2",
+    "lint-staged": "^10.1.3",
+    "mocha": "^7.1.1",
     "prettier-eslint-cli": "^5.0.0",
-    "sinon": "^7.3.2"
+    "sinon": "^9.0.2"
   },
   "lint-staged": {
     "*.js": [

@@ -14,9 +14,9 @@
     "test": "mocha --recursive"
   },
   "dependencies": {
-    "lodash": "^4.17.11"
+    "lodash": "^4.17.15"
   },
   "devDependencies": {
-    "mocha": "^7.1.0"
+    "mocha": "^7.1.1"
   }
 }

@@ -11,7 +11,7 @@ domain: some-domain
 service: core
 
 devDependencies:
-  "mocha": "^7.1.0"
+  "mocha": "^7.1.1"
   "chai": "^4.2.0"
   "sinon": "^7.3.2"
   "sinon-chai": "^3.3.0"

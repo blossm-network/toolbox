@@ -23,6 +23,6 @@
     "yaml": "^1.7.0"
   },
   "devDependencies": {
-    "mocha": "^7.1.0"
+    "mocha": "^7.1.1"
   }
 }
