@@ -15,10 +15,10 @@ describe("Job", () => {
     const returnValue = "some-return-value";
     const listenFake = fake.returns(returnValue);
     const postFake = fake.returns({
-      listen: listenFake
+      listen: listenFake,
     });
     const serverFake = fake.returns({
-      post: postFake
+      post: postFake,
     });
     replace(deps, "server", serverFake);
 
@@ -27,7 +27,7 @@ describe("Job", () => {
     replace(deps, "post", jobPostFake);
 
     const result = await job({
-      mainFn
+      mainFn,
     });
 
     expect(result).to.equal(returnValue);
@@ -40,10 +40,10 @@ describe("Job", () => {
     const error = new Error("some-message");
     const listenFake = fake.rejects(error);
     const postFake = fake.returns({
-      listen: listenFake
+      listen: listenFake,
     });
     const serverFake = fake.returns({
-      post: postFake
+      post: postFake,
     });
     replace(deps, "server", serverFake);
 

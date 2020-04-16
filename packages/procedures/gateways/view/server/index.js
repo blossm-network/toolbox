@@ -10,29 +10,29 @@ module.exports = async ({
   terminatedSessionCheckFn,
   verifyFn,
   algorithm,
-  audience
+  audience,
 }) => {
   let server = deps.server({
-    prehook: app =>
+    prehook: (app) =>
       deps.corsMiddleware({
         app,
         whitelist,
         credentials: true,
-        methods: ["GET"]
-      })
+        methods: ["GET"],
+      }),
   });
 
   for (const {
     name,
     key = "access",
     permissions,
-    protection = "strict"
+    protection = "strict",
   } of stores) {
     server = server.get(
       deps.get({
         name,
         ...(domain && { domain }),
-        ...(service && { service })
+        ...(service && { service }),
       }),
       {
         path: `/${name}`,
@@ -42,7 +42,7 @@ module.exports = async ({
               verifyFn: verifyFn({ key }),
               audience,
               algorithm,
-              strict: protection == "strict"
+              strict: protection == "strict",
             }),
             ...(protection == "strict"
               ? [
@@ -52,24 +52,24 @@ module.exports = async ({
                     context,
                     permissions:
                       permissions instanceof Array
-                        ? permissions.map(permission => {
+                        ? permissions.map((permission) => {
                             const [
                               service,
                               domain,
-                              privilege
+                              privilege,
                             ] = permission.split(":");
                             return {
                               service,
                               domain,
-                              privilege
+                              privilege,
                             };
                           })
-                        : permissions
-                  })
+                        : permissions,
+                  }),
                 ]
-              : [])
-          ]
-        })
+              : []),
+          ],
+        }),
       }
     );
   }

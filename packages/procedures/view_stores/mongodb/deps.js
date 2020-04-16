@@ -3,7 +3,7 @@ const {
   find,
   findOne,
   write,
-  remove
+  remove,
 } = require("@blossm/mongodb-database");
 const { get: secret } = require("@blossm/gcp-secret");
 const { string: dateString } = require("@blossm/datetime");

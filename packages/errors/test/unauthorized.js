@@ -11,7 +11,7 @@ describe("Unauthorized", () => {
       statusCode: 401,
       code: "Unauthorized",
       info: {},
-      message: "Not allowed by CORS."
+      message: "Not allowed by CORS.",
     });
   });
   it("cors correct with props", () => {
@@ -21,7 +21,7 @@ describe("Unauthorized", () => {
       code: "Unauthorized",
       info,
       cause,
-      message: "Not allowed by CORS."
+      message: "Not allowed by CORS.",
     });
   });
   it("message correct", () => {
@@ -31,7 +31,7 @@ describe("Unauthorized", () => {
       statusCode: 401,
       code: "Unauthorized",
       info: {},
-      message
+      message,
     });
   });
   it("message correct with props", () => {
@@ -42,7 +42,7 @@ describe("Unauthorized", () => {
       code: "Unauthorized",
       info,
       cause,
-      message
+      message,
     });
   });
 });

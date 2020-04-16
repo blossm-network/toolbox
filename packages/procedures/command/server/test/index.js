@@ -21,10 +21,10 @@ describe("Command handler", () => {
     const returnValue = "some-return-value";
     const listenFake = fake.returns(returnValue);
     const postFake = fake.returns({
-      listen: listenFake
+      listen: listenFake,
     });
     const serverFake = fake.returns({
-      post: postFake
+      post: postFake,
     });
     replace(deps, "server", serverFake);
 
@@ -39,7 +39,7 @@ describe("Command handler", () => {
       addFn,
       validateFn,
       normalizeFn,
-      fillFn
+      fillFn,
     });
 
     expect(result).to.equal(returnValue);
@@ -53,16 +53,16 @@ describe("Command handler", () => {
       validateFn,
       normalizeFn,
       addFn,
-      fillFn
+      fillFn,
     });
   });
   it("should call with the correct params with optionals omitted", async () => {
     const listenFake = fake();
     const postFake = fake.returns({
-      listen: listenFake
+      listen: listenFake,
     });
     const serverFake = fake.returns({
-      post: postFake
+      post: postFake,
     });
     replace(deps, "server", serverFake);
 
@@ -79,17 +79,17 @@ describe("Command handler", () => {
       version,
       mainFn,
       aggregateFn,
-      addFn
+      addFn,
     });
   });
   it("should throw correctly", async () => {
     const error = new Error("some-message");
     const listenFake = fake.rejects(error);
     const postFake = fake.returns({
-      listen: listenFake
+      listen: listenFake,
     });
     const serverFake = fake.returns({
-      post: postFake
+      post: postFake,
     });
     replace(deps, "server", serverFake);
 

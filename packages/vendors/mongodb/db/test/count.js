@@ -12,7 +12,7 @@ describe("Count", () => {
     const numObjects = 4;
     const countDocumentsFake = fake.returns(numObjects);
     const store = {
-      countDocuments: countDocumentsFake
+      countDocuments: countDocumentsFake,
     };
     const result = await count({ store, query });
 

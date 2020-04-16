@@ -38,13 +38,13 @@ describe("Job", () => {
     const response = "some-response";
     const withFake = fake.returns(response);
     const inFake = fake.returns({
-      with: withFake
+      with: withFake,
     });
     const postFake = fake.returns({
-      in: inFake
+      in: inFake,
     });
     const rpcFake = fake.returns({
-      post: postFake
+      post: postFake,
     });
     replace(deps, "rpc", rpcFake);
 
@@ -52,35 +52,35 @@ describe("Job", () => {
       .set({
         context,
         claims,
-        tokenFns: { internal: internalTokenFn, external: externalTokenFn }
+        tokenFns: { internal: internalTokenFn, external: externalTokenFn },
       })
       .trigger(payload);
 
     expect(result).to.equal(response);
     expect(rpcFake).to.have.been.calledWith(name, domain, service, "job");
     expect(postFake).to.have.been.calledWith({
-      payload
+      payload,
     });
     expect(inFake).to.have.been.calledWith({
-      context
+      context,
     });
     expect(withFake).to.have.been.calledWith({
       internalTokenFn,
       externalTokenFn,
-      claims
+      claims,
     });
   });
   it("should call with the correct optional params", async () => {
     const response = "some-response";
     const withFake = fake.returns(response);
     const inFake = fake.returns({
-      with: withFake
+      with: withFake,
     });
     const postFake = fake.returns({
-      in: inFake
+      in: inFake,
     });
     const rpcFake = fake.returns({
-      post: postFake
+      post: postFake,
     });
     replace(deps, "rpc", rpcFake);
 
@@ -89,7 +89,7 @@ describe("Job", () => {
     expect(result).to.equal(response);
     expect(rpcFake).to.have.been.calledWith(name, envService, "job");
     expect(postFake).to.have.been.calledWith({
-      payload
+      payload,
     });
     expect(inFake).to.have.been.calledWith({});
     expect(withFake).to.have.been.calledWith();

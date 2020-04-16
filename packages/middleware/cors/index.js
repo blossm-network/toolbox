@@ -1,16 +1,13 @@
 const deps = require("./deps");
 
 module.exports = ({ app, whitelist, credentials = false, methods = [] }) => {
-  //TODO
-  //eslint-disable-next-line
-  console.log({ whitelist });
   app.use(
     deps.cors({
       origin: deps.whitelist(whitelist).check,
       methods: methods.join(","),
       preflightContinue: false,
       optionsSuccessStatus: 204,
-      credentials
+      credentials,
     })
   );
   app.options("*", deps.cors());

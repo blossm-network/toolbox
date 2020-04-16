@@ -1,11 +1,11 @@
 const { PubSub } = require("@google-cloud/pubsub");
 const pubsub = new PubSub();
 
-exports.publish = async data => {
+exports.publish = async (data) => {
   data = data instanceof Array ? data : [data];
 
   await Promise.all(
-    data.map(d =>
+    data.map((d) =>
       (() => {
         if (d.payload == undefined) d.payload = {};
 
@@ -32,21 +32,21 @@ exports.unsubscribe = async ({ topic, name }) => {
   await subscription.delete();
 };
 
-exports.create = async name => {
+exports.create = async (name) => {
   const topic = pubsub.topic(name);
   const [exists] = await topic.exists();
   if (exists) return;
   await topic.create();
 };
 
-exports.delete = async name => {
+exports.delete = async (name) => {
   const topic = pubsub.topic(name);
   const [exists] = await topic.exists();
   if (!exists) return;
   await topic.delete();
 };
 
-exports.exists = async name => {
+exports.exists = async (name) => {
   const topic = pubsub.topic(name);
   const [exists] = await topic.exists();
   return exists;

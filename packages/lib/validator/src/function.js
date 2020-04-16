@@ -8,7 +8,7 @@ module.exports = (
     refinementMessageFn,
     title,
     path,
-    optional
+    optional,
   } = {}
 ) =>
   fnValidator({
@@ -18,5 +18,5 @@ module.exports = (
     optional,
     refinementFn,
     refinementMessageFn,
-    baseMessageFn
+    baseMessageFn,
   });

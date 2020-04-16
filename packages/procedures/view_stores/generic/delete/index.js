@@ -13,7 +13,7 @@ module.exports = ({ removeFn }) => async (req, res) => {
 
   const { deletedCount } = await removeFn({
     ...formattedQueryBody,
-    ...(req.params.root && { "headers.root": req.params.root })
+    ...(req.params.root && { "headers.root": req.params.root }),
   });
 
   res.send({ deletedCount });

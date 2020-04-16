@@ -9,8 +9,8 @@ const goodParams = {
   payload: { a: 1 },
   headers: {
     root: "some-root",
-    trace: "trace!"
-  }
+    trace: "trace!",
+  },
 };
 
 let clock;
@@ -34,7 +34,7 @@ describe("Validate command", () => {
   it("should throw if a bad header is passed", async () => {
     const params = {
       ...goodParams,
-      headers: 123
+      headers: 123,
     };
     try {
       await validateCommand(params);
@@ -48,7 +48,7 @@ describe("Validate command", () => {
   it("should throw if a no header is passed", async () => {
     const params = {
       ...goodParams,
-      headers: undefined
+      headers: undefined,
     };
     try {
       await validateCommand(params);
@@ -64,8 +64,8 @@ describe("Validate command", () => {
       ...goodParams,
       headers: {
         ...goodParams.headers,
-        trace: 123
-      }
+        trace: 123,
+      },
     };
     try {
       await validateCommand(params);
@@ -81,8 +81,8 @@ describe("Validate command", () => {
       ...goodParams,
       headers: {
         ...goodParams.headers,
-        trace: undefined
-      }
+        trace: undefined,
+      },
     };
     try {
       validateCommand(params);
@@ -96,8 +96,8 @@ describe("Validate command", () => {
       ...goodParams,
       headers: {
         ...goodParams.headers,
-        root: 123
-      }
+        root: 123,
+      },
     };
     try {
       await validateCommand(params);
@@ -113,8 +113,8 @@ describe("Validate command", () => {
       ...goodParams,
       headers: {
         ...goodParams.headers,
-        root: undefined
-      }
+        root: undefined,
+      },
     };
     try {
       validateCommand(params);
@@ -128,8 +128,8 @@ describe("Validate command", () => {
       ...goodParams,
       headers: {
         ...goodParams.headers,
-        issued: "bad"
-      }
+        issued: "bad",
+      },
     };
     try {
       await validateCommand(params);
@@ -145,8 +145,8 @@ describe("Validate command", () => {
       ...goodParams,
       headers: {
         ...goodParams.headers,
-        issued: undefined
-      }
+        issued: undefined,
+      },
     };
 
     try {
@@ -163,8 +163,8 @@ describe("Validate command", () => {
       ...goodParams,
       headers: {
         ...goodParams.headers,
-        issued: stringFromDate(new Date(now.getTime() + 60000))
-      }
+        issued: stringFromDate(new Date(now.getTime() + 60000)),
+      },
     };
 
     try {
@@ -181,8 +181,8 @@ describe("Validate command", () => {
       ...goodParams,
       headers: {
         ...goodParams.headers,
-        issued: stringFromDate(new Date(234))
-      }
+        issued: stringFromDate(new Date(234)),
+      },
     };
 
     try {
@@ -199,8 +199,8 @@ describe("Validate command", () => {
       ...goodParams,
       headers: {
         ...goodParams.headers,
-        broadcasted: "bad"
-      }
+        broadcasted: "bad",
+      },
     };
     try {
       await validateCommand(params);
@@ -216,8 +216,8 @@ describe("Validate command", () => {
       ...goodParams,
       headers: {
         ...goodParams.headers,
-        broadcasted: stringFromDate(new Date(now.getTime() + 60000))
-      }
+        broadcasted: stringFromDate(new Date(now.getTime() + 60000)),
+      },
     };
 
     try {
@@ -234,8 +234,8 @@ describe("Validate command", () => {
       ...goodParams,
       headers: {
         ...goodParams.headers,
-        broadcasted: stringFromDate(new Date(234))
-      }
+        broadcasted: stringFromDate(new Date(234)),
+      },
     };
 
     try {
@@ -250,7 +250,7 @@ describe("Validate command", () => {
   it("should throw if a bad payload is passed", async () => {
     const params = {
       ...goodParams,
-      payload: 123
+      payload: 123,
     };
     try {
       await validateCommand(params);
@@ -264,7 +264,7 @@ describe("Validate command", () => {
   it("should not throw if a no payload is passed", async () => {
     const params = {
       ...goodParams,
-      payload: undefined
+      payload: undefined,
     };
     try {
       validateCommand(params);

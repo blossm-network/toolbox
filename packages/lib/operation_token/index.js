@@ -5,12 +5,6 @@ module.exports = async ({ tokenFn, operation }) =>
   tokenFn
     ? await tokenFn({
         hash: deps.hash(...operation),
-        name: deps.trim(
-          `${operation
-            .slice()
-            .reverse()
-            .join("-")}`,
-          MAX_LENGTH
-        )
+        name: deps.trim(`${operation.slice().reverse().join("-")}`, MAX_LENGTH),
       })
     : null;

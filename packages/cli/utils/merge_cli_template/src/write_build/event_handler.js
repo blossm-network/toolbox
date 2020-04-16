@@ -50,7 +50,7 @@ module.exports = ({
   runIntegrationTests,
   runBaseIntegrationTests,
   dependencyKeyEnvironmentVariables,
-  strict
+  strict,
 }) => {
   return [
     yarnInstall,
@@ -59,7 +59,7 @@ module.exports = ({
     buildImage({
       extension: imageExtension,
       containerRegistery,
-      procedure
+      procedure,
     }),
     writeEnv({
       mainContainerName,
@@ -79,8 +79,8 @@ module.exports = ({
         EVENT_ACTION: event.action,
         EVENT_DOMAIN: event.domain,
         EVENT_SERVICE: event.service,
-        ...dependencyKeyEnvironmentVariables
-      }
+        ...dependencyKeyEnvironmentVariables,
+      },
     }),
     dockerComposeUp,
     dockerComposeProcesses,
@@ -91,7 +91,7 @@ module.exports = ({
           dockerPush({
             extension: imageExtension,
             containerRegistery,
-            procedure
+            procedure,
           }),
           deploy({
             serviceName,
@@ -118,7 +118,7 @@ module.exports = ({
               CONTEXT: context,
               EVENT_ACTION: event.action,
               EVENT_DOMAIN: event.domain,
-              EVENT_SERVICE: event.service
+              EVENT_SERVICE: event.service,
             },
             labels: {
               name,
@@ -127,8 +127,8 @@ module.exports = ({
               ...(context && { context }),
               "event-action": event.action,
               "event-domain": event.domain,
-              "event-service": event.service
-            }
+              "event-service": event.service,
+            },
           }),
           startDnsTransaction({ dnsZone, project }),
           addDnsTransaction({ uri, dnsZone, project }),
@@ -138,12 +138,12 @@ module.exports = ({
             serviceName,
             uri,
             project,
-            region
+            region,
           }),
           addPubSubPolicy({
             region,
             serviceName,
-            project
+            project,
           }),
           createPubsubSubscription({
             name,
@@ -157,9 +157,9 @@ module.exports = ({
             procedure,
             region,
             computeUrlId,
-            project
-          })
+            project,
+          }),
         ]
-      : [dockerComposeLogs])
+      : [dockerComposeLogs]),
   ];
 };

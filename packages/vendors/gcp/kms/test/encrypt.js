@@ -18,7 +18,7 @@ describe("Kms encrypt", () => {
   it("should encrypt correctly", async () => {
     const path = "some-path";
     const pathFake = fake.returns(path);
-    const kmsClient = function() {};
+    const kmsClient = function () {};
     kmsClient.prototype.cryptoKeyPath = pathFake;
     const encrpytedMessage = "some-encrypted-message";
     const buffer = Buffer.from(encrpytedMessage);
@@ -29,14 +29,14 @@ describe("Kms encrypt", () => {
     expect(pathFake).to.have.been.calledWith(project, location, ring, key);
     expect(encryptFake).to.have.been.calledWith({
       name: path,
-      plaintext: Buffer.from(message)
+      plaintext: Buffer.from(message),
     });
     expect(result).to.equal(buffer.toString("base64"));
   });
   it("should encrypt correctly with new lines removed", async () => {
     const path = "some-path";
     const pathFake = fake.returns(path);
-    const kmsClient = function() {};
+    const kmsClient = function () {};
     kmsClient.prototype.cryptoKeyPath = pathFake;
     const encrpytedMessage = "some-encrypted-message";
     const buffer = Buffer.from(`${encrpytedMessage}\n`);
@@ -48,13 +48,13 @@ describe("Kms encrypt", () => {
     expect(result).to.equal(buffer.toString("base64"));
     expect(encryptFake).to.have.been.calledWith({
       name: path,
-      plaintext: Buffer.from(message)
+      plaintext: Buffer.from(message),
     });
   });
   it("should throw correctly", async () => {
     const path = "some-path";
     const pathFake = fake.returns(path);
-    const kmsClient = function() {};
+    const kmsClient = function () {};
     kmsClient.prototype.cryptoKeyPath = pathFake;
     const error = new Error("some-error");
     const encryptFake = fake.rejects(error);

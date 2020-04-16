@@ -31,7 +31,8 @@
     "minor": "lerna version minor",
     "major": "lerna version major",
     "check-packages": "yarn clean && yarn compile && yarn test",
-    "lerna-publish": "npx lerna publish -y from-package"
+    "lerna-publish": "npx lerna publish -y from-package",
+    "format": "prettier-eslint --write $PWD/'packages/**/*.js'"
   },
   "devDependencies": {
     "auto-changelog": "^2.0.0",

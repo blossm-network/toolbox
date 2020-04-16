@@ -17,7 +17,7 @@ const installDependenciesIfNeeded = async (workingDir, input) => {
 
   const spawnInstall = spawnSync("npm", ["install"], {
     stdio: [process.stdin, process.stdout, process.stderr],
-    cwd: workingDir
+    cwd: workingDir,
   });
 
   if (spawnInstall.stderr) {
@@ -60,7 +60,7 @@ module.exports = async ({ workingDir, input }) => {
   if (fs.existsSync(path.resolve(workingDir, "base_test/unit"))) {
     const spawnBaseTest = spawnSync("yarn", ["test:base-unit"], {
       stdio: [process.stdin, process.stdout, process.stderr],
-      cwd: workingDir
+      cwd: workingDir,
     });
 
     if (spawnBaseTest.stderr) {
@@ -72,7 +72,7 @@ module.exports = async ({ workingDir, input }) => {
   if (fs.existsSync(path.resolve(workingDir, "test/unit"))) {
     const spawnTest = spawnSync("yarn", ["test:unit"], {
       stdio: [process.stdin, process.stdout, process.stderr],
-      cwd: workingDir
+      cwd: workingDir,
     });
 
     if (spawnTest.stderr) {

@@ -8,14 +8,14 @@ module.exports = (
   value,
   { fn, optional, title, path, maxLength, shouldAllowEmptyString = true } = {}
 ) => {
-  const isWithinBounds = string =>
+  const isWithinBounds = (string) =>
     maxLength == undefined || string.length <= maxLength;
 
   return stringValidator({
     value,
     title,
     path,
-    refinementFn: string => {
+    refinementFn: (string) => {
       return (
         (fn == undefined || fn(string)) &&
         (shouldAllowEmptyString || stringIsNotEmpty(string)) &&
@@ -29,10 +29,10 @@ module.exports = (
       if (!isWithinBounds(value)) {
         return stringTooLongMessage({
           title,
-          max: maxLength
+          max: maxLength,
         });
       }
     },
-    optional
+    optional,
   });
 };

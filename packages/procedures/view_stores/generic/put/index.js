@@ -1,6 +1,6 @@
 const deps = require("./deps");
 
-const defaultFn = view => view;
+const defaultFn = (view) => view;
 
 module.exports = ({ writeFn, viewFn = defaultFn }) => {
   return async (req, res) => {
@@ -21,12 +21,12 @@ module.exports = ({ writeFn, viewFn = defaultFn }) => {
     const data = {
       ...formattedBody,
       ...formattedHeaders,
-      "headers.modified": deps.dateString()
+      "headers.modified": deps.dateString(),
     };
 
     await writeFn({
       root: req.params.root,
-      data
+      data,
     });
 
     res.status(204).send();

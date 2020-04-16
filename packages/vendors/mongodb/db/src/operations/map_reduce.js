@@ -6,7 +6,7 @@ module.exports = async ({
   map,
   reduce,
   finalize,
-  out
+  out,
 }) => {
   return await store.mapReduce({
     map,
@@ -16,6 +16,6 @@ module.exports = async ({
     ...(query && { query }),
     ...(limit && { limit }),
     ...(sort && { sort }),
-    ...(finalize && { finalize })
+    ...(finalize && { finalize }),
   });
 };

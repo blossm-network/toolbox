@@ -12,7 +12,7 @@ describe("Internal server", () => {
       statusCode: 500,
       code: "InternalServer",
       info: {},
-      message
+      message,
     });
   });
   it("message correct with props", () => {
@@ -23,7 +23,7 @@ describe("Internal server", () => {
       code: "InternalServer",
       info,
       cause,
-      message
+      message,
     });
   });
 });

@@ -6,7 +6,7 @@ module.exports = ({
   service,
   network,
   internalTokenFn,
-  externalTokenFn
+  externalTokenFn,
 } = {}) => async (req, res) => {
   await deps.validate(req.body);
   const { root, payload, headers } = req.body;
@@ -16,15 +16,15 @@ module.exports = ({
       name,
       domain,
       ...(service && { service }),
-      ...(network && { network })
+      ...(network && { network }),
     })
     .set({
       tokenFns: {
         internal: internalTokenFn,
-        external: externalTokenFn
+        external: externalTokenFn,
       },
       context: req.context,
-      claims: req.claims
+      claims: req.claims,
     })
     .issue(payload, { ...headers, root });
 
@@ -35,7 +35,7 @@ module.exports = ({
       const cookieName = token.type;
       res.cookie(cookieName, token.value, {
         httpOnly: true,
-        secure: true
+        secure: true,
       });
     }
     // // If removing tokens makes the response empty, set it to null to properly return a 204.

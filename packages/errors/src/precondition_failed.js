@@ -14,5 +14,5 @@ module.exports = {
       "Event number duplicate."
     ),
   message: (message, { cause, info } = {}) =>
-    new PreconditionFailedError({ cause, info, toJSON }, message)
+    new PreconditionFailedError({ cause, info, toJSON }, message),
 };

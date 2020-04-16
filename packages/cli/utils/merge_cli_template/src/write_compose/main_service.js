@@ -26,7 +26,7 @@ module.exports = ({
   mongodbDatabase,
   mongodbProtocol,
   twilioSendingPhoneNumber,
-  twilioTestReceivingPhoneNumber
+  twilioTestReceivingPhoneNumber,
 }) => {
   const common = {
     container_name: mainContainerName,
@@ -46,8 +46,8 @@ module.exports = ({
       GCP_REGION: region,
       GCP_SECRET_BUCKET: secretBucket,
       GCP_KMS_SECRET_BUCKET_KEY_LOCATION: secretBucketKeyLocation,
-      GCP_KMS_SECRET_BUCKET_KEY_RING: secretBucketKeyRing
-    }
+      GCP_KMS_SECRET_BUCKET_KEY_RING: secretBucketKeyRing,
+    },
   };
 
   const commonDatabaseEnv = {
@@ -55,7 +55,7 @@ module.exports = ({
     MONGODB_HOST: mongodbHost,
     MONGODB_USER_PASSWORD: mongodbUserPassword,
     MONGODB_DATABASE: mongodbDatabase,
-    MONGODB_PROTOCOL: mongodbProtocol
+    MONGODB_PROTOCOL: mongodbProtocol,
   };
 
   const commonImagePrefix = `${containerRegistery}/${procedure}`;
@@ -71,8 +71,8 @@ module.exports = ({
           NAME: name,
           CONTEXT: context,
           ...common.environment,
-          ...commonDatabaseEnv
-        }
+          ...commonDatabaseEnv,
+        },
       };
     case "event-store":
       return {
@@ -80,8 +80,8 @@ module.exports = ({
         ...common,
         environment: {
           ...common.environment,
-          ...commonDatabaseEnv
-        }
+          ...commonDatabaseEnv,
+        },
       };
     case "command":
       return {
@@ -90,13 +90,13 @@ module.exports = ({
         environment: {
           ...common.environment,
           ...(twilioTestReceivingPhoneNumber && {
-            TWILIO_TEST_RECEIVING_PHONE_NUMBER: twilioTestReceivingPhoneNumber
+            TWILIO_TEST_RECEIVING_PHONE_NUMBER: twilioTestReceivingPhoneNumber,
           }),
           ...(twilioSendingPhoneNumber && {
-            TWILIO_SENDING_PHONE_NUMBER: twilioSendingPhoneNumber
+            TWILIO_SENDING_PHONE_NUMBER: twilioSendingPhoneNumber,
           }),
-          NAME: name
-        }
+          NAME: name,
+        },
       };
     case "event-handler":
     case "projection":
@@ -111,8 +111,8 @@ module.exports = ({
           CONTEXT: context,
           EVENT_ACTION: event.action,
           EVENT_DOMAIN: event.domain,
-          EVENT_SERVICE: event.service
-        }
+          EVENT_SERVICE: event.service,
+        },
       };
     case "job":
     case "fact":
@@ -123,8 +123,8 @@ module.exports = ({
         ...common,
         environment: {
           ...common.environment,
-          NAME: name
-        }
+          NAME: name,
+        },
       };
     case "command-gateway":
       return {
@@ -132,8 +132,8 @@ module.exports = ({
         ...common,
         environment: {
           ...common.environment,
-          PUBLIC_KEY_URL: publicKeyUrl
-        }
+          PUBLIC_KEY_URL: publicKeyUrl,
+        },
       };
     case "view-gateway":
       return {
@@ -144,8 +144,8 @@ module.exports = ({
         environment: {
           ...common.environment,
           CONTEXT: context,
-          PUBLIC_KEY_URL: publicKeyUrl
-        }
+          PUBLIC_KEY_URL: publicKeyUrl,
+        },
       };
     case "fact-gateway":
       return {
@@ -155,8 +155,8 @@ module.exports = ({
         ...common,
         environment: {
           ...common.environment,
-          PUBLIC_KEY_URL: publicKeyUrl
-        }
+          PUBLIC_KEY_URL: publicKeyUrl,
+        },
       };
   }
 };

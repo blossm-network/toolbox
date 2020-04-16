@@ -24,7 +24,7 @@ describe("Optional numbers", () => {
 
 describe("Invalid number", () => {
   it("should contain one error if something other than a number is passed in", () => {
-    invalidNumbers.forEach(invalidNumber => {
+    invalidNumbers.forEach((invalidNumber) => {
       let response = number(invalidNumber);
       expect(response.errors).to.have.lengthOf(1);
     });
@@ -33,7 +33,7 @@ describe("Invalid number", () => {
 
 describe("Invalid optional number", () => {
   it("should contain one error if something other than a number is passed in, regardless of optional flag", () => {
-    invalidNumbers.forEach(invalidNumber => {
+    invalidNumbers.forEach((invalidNumber) => {
       let response = number(invalidNumber, { optional: true });
       expect(response.errors).to.have.lengthOf(1);
     });

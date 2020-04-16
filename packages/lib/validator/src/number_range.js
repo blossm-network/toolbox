@@ -11,7 +11,7 @@ module.exports = (
     upperBound,
     title = "range",
     path,
-    optional
+    optional,
   } = {}
 ) =>
   numberValidator({
@@ -19,20 +19,21 @@ module.exports = (
     title,
     path,
     baseMessageFn,
-    refinementFn: number => isNumberInRange({ number, lowerBound, upperBound }),
+    refinementFn: (number) =>
+      isNumberInRange({ number, lowerBound, upperBound }),
     refinementMessageFn: (number, title) => {
       if (number > upperBound) {
         return numberTooBigMessage({
           title,
-          max: upperBound
+          max: upperBound,
         });
       }
       if (number < lowerBound) {
         return numberTooSmallMessage({
           title,
-          min: lowerBound
+          min: lowerBound,
         });
       }
     },
-    optional
+    optional,
   });

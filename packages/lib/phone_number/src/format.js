@@ -24,7 +24,7 @@ function backupFormatter(number) {
   }
 }
 
-module.exports = number => {
+module.exports = (number) => {
   const formattedNumber = defaultFormatter(number);
   if (formattedNumber != null) return formattedNumber;
   return backupFormatter(number);

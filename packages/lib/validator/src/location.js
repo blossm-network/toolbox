@@ -10,7 +10,7 @@ module.exports = (location, { title = "location", path, optional } = {}) => {
   if (location == undefined) return;
 
   const locationIdErr = findError([
-    string(location.id, { optional: true, title, path: `${path}.id` })
+    string(location.id, { optional: true, title, path: `${path}.id` }),
   ]);
 
   if (locationIdErr) return locationIdErr;
@@ -18,7 +18,7 @@ module.exports = (location, { title = "location", path, optional } = {}) => {
 
   const fallbackErr = findError([
     string(location.postalCode, { title, path: `${path}.postalCode` }),
-    countryCode(location.countryCode, { title, path: `${path}.countryCode` })
+    countryCode(location.countryCode, { title, path: `${path}.countryCode` }),
   ]);
 
   if (fallbackErr) return fallbackErr;

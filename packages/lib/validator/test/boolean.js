@@ -24,7 +24,7 @@ describe("Optional booleans", () => {
 
 describe("Invalid boolean", () => {
   it("should contain one error if something other than a boolean is passed in", () => {
-    invalidBooleans.forEach(invalidBoolean => {
+    invalidBooleans.forEach((invalidBoolean) => {
       let response = boolean(invalidBoolean);
       expect(response.errors).to.have.lengthOf(1);
     });
@@ -33,7 +33,7 @@ describe("Invalid boolean", () => {
 
 describe("Invalid optional boolean", () => {
   it("should contain one error if something other than a boolean is passed in, regardless of optional flag", () => {
-    invalidBooleans.forEach(invalidBoolean => {
+    invalidBooleans.forEach((invalidBoolean) => {
       let response = boolean(invalidBoolean, { optional: true });
       expect(response.errors).to.have.lengthOf(1);
     });

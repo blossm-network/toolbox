@@ -8,8 +8,8 @@ module.exports = (
     value: buffer,
     baseMessageFn,
     refinementMessageFn: (_, title) => `This ${title} is invalid.`,
-    refinementFn: object => Buffer.isBuffer(object),
+    refinementFn: (object) => Buffer.isBuffer(object),
     title,
     path,
-    optional
+    optional,
   });

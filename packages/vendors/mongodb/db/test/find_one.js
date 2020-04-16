@@ -14,7 +14,7 @@ describe("Find one", () => {
     const execResult = 4;
     const findOneFake = fake.returns(execResult);
     const store = {
-      findOne: findOneFake
+      findOne: findOneFake,
     };
     const result = await findOne({ store, query });
 
@@ -26,7 +26,7 @@ describe("Find one", () => {
     const findOneFake = fake.returns(execResult);
 
     const store = {
-      findOne: findOneFake
+      findOne: findOneFake,
     };
 
     const sort = "some-sort";

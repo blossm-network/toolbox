@@ -1,6 +1,6 @@
 const randomChar = require("@blossm/random-char");
 
-module.exports = length => {
+module.exports = (length) => {
   let charString = "";
   for (let i = 0; i < length; i++) {
     let nextChar = randomChar();

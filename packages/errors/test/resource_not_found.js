@@ -11,7 +11,7 @@ describe("Bad request", () => {
       statusCode: 404,
       code: "ResourceNotFound",
       info: {},
-      message: "This root wasn't found."
+      message: "This root wasn't found.",
     });
   });
   it("root correct with props", () => {
@@ -21,7 +21,7 @@ describe("Bad request", () => {
       code: "ResourceNotFound",
       info,
       cause,
-      message: "This root wasn't found."
+      message: "This root wasn't found.",
     });
   });
   it("view id correct", () => {
@@ -32,7 +32,7 @@ describe("Bad request", () => {
       statusCode: 404,
       code: "ResourceNotFound",
       info: {},
-      message: "This view wasn't found."
+      message: "This view wasn't found.",
     });
   });
   it("id correct with props", () => {
@@ -42,7 +42,7 @@ describe("Bad request", () => {
       code: "ResourceNotFound",
       info,
       cause,
-      message: "This view wasn't found."
+      message: "This view wasn't found.",
     });
   });
   it("message correct", () => {
@@ -52,7 +52,7 @@ describe("Bad request", () => {
       statusCode: 404,
       code: "ResourceNotFound",
       info: {},
-      message
+      message,
     });
   });
   it("message correct with props", () => {
@@ -63,7 +63,7 @@ describe("Bad request", () => {
       code: "ResourceNotFound",
       info,
       cause,
-      message
+      message,
     });
   });
 });

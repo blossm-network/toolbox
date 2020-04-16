@@ -9,7 +9,7 @@ const {
   name,
   domain,
   service,
-  context
+  context,
 } = require("../../config.json");
 
 const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
@@ -33,16 +33,16 @@ describe("Projection integration tests", () => {
                     [context]: {
                       root: contextRoot,
                       service: contextService,
-                      network: contextNetwork
-                    }
+                      network: contextNetwork,
+                    },
                   },
-                  root: example.root
+                  root: example.root,
                 },
-                payload: example.payload
+                payload: example.payload,
               })
-            )
-          }
-        }
+            ),
+          },
+        },
       });
 
       expect(response.statusCode).to.equal(204);
@@ -52,16 +52,16 @@ describe("Projection integration tests", () => {
           name,
           ...(domain && { domain }),
           ...(service && { service }),
-          context
+          context,
         })
           .set({
             context: {
               [context]: {
                 root: contextRoot,
                 service: contextService,
-                network: contextNetwork
-              }
-            }
+                network: contextNetwork,
+              },
+            },
           })
           .read(
             example.result.root
@@ -69,9 +69,6 @@ describe("Projection integration tests", () => {
               : example.result.query
           );
 
-        //TODO
-        //eslint-disable-next-line
-        console.log({ v });
         if (example.result.value) {
           for (const property in example.result.value) {
             expect(v[0][property]).to.exist;
@@ -85,7 +82,7 @@ describe("Projection integration tests", () => {
           expect(example.result.values.length).to.equal(v.length);
           for (const value of example.result.values) {
             expect(
-              v.some(view => {
+              v.some((view) => {
                 for (const property in value) {
                   expect(view[property]).to.exist;
                   if (value[property] != undefined) {
@@ -98,6 +95,6 @@ describe("Projection integration tests", () => {
         }
       });
     }
-    await Promise.all(parallelFns.map(fn => fn()));
+    await Promise.all(parallelFns.map((fn) => fn()));
   });
 });

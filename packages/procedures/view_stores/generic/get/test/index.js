@@ -22,8 +22,8 @@ const context = {
   [envContext]: {
     root: envContextRoot,
     service: envContextService,
-    network: envContextNetwork
-  }
+    network: envContextNetwork,
+  },
 };
 
 process.env.CONTEXT = envContext;
@@ -49,14 +49,14 @@ describe("View store get", () => {
       query: {
         sort,
         context,
-        query
+        query,
       },
-      params
+      params,
     };
 
     const sendFake = fake();
     const res = {
-      send: sendFake
+      send: sendFake,
     };
     await get({ findFn: findFake })(req, res);
     expect(findFake).to.have.been.calledWith({
@@ -66,14 +66,14 @@ describe("View store get", () => {
         "headers.some-env-context": {
           root: envContextRoot,
           service: envContextService,
-          network: envContextNetwork
+          network: envContextNetwork,
         },
         "headers.some-env-domain": {
           root,
           service: envService,
-          network: envNetwork
-        }
-      }
+          network: envNetwork,
+        },
+      },
     });
     expect(sendFake).to.have.been.calledWith([{ ...obj, root: objRoot }]);
   });
@@ -86,14 +86,14 @@ describe("View store get", () => {
       query: {
         sort,
         context,
-        query
+        query,
       },
-      params: {}
+      params: {},
     };
 
     const sendFake = fake();
     const res = {
-      send: sendFake
+      send: sendFake,
     };
 
     const otherQuery = { "some-other-query-key": 1 };
@@ -108,9 +108,9 @@ describe("View store get", () => {
         "headers.some-env-context": {
           root: envContextRoot,
           service: envContextService,
-          network: envContextNetwork
-        }
-      }
+          network: envContextNetwork,
+        },
+      },
     });
     expect(sendFake).to.have.been.calledWith({ ...obj, root: objRoot });
   });
@@ -125,14 +125,14 @@ describe("View store get", () => {
       query: {
         sort,
         context,
-        query
+        query,
       },
-      params
+      params,
     };
 
     const sendFake = fake();
     const res = {
-      send: sendFake
+      send: sendFake,
     };
     delete process.env.SERVICE;
     await get({ findFn: findFake })(req, res);
@@ -143,9 +143,9 @@ describe("View store get", () => {
         "headers.some-env-context": {
           root: envContextRoot,
           service: envContextService,
-          network: envContextNetwork
-        }
-      }
+          network: envContextNetwork,
+        },
+      },
     });
     expect(sendFake).to.have.been.calledWith([{ ...obj, root: objRoot }]);
   });
@@ -155,20 +155,20 @@ describe("View store get", () => {
     const params = { root };
     const req = {
       query: {
-        context
+        context,
       },
-      params
+      params,
     };
 
     const sendFake = fake();
     const res = {
-      send: sendFake
+      send: sendFake,
     };
 
     const error = "some-error";
     const viewNotFoundFake = fake.returns(error);
     replace(deps, "resourceNotFoundError", {
-      view: viewNotFoundFake
+      view: viewNotFoundFake,
     });
 
     try {
@@ -183,20 +183,20 @@ describe("View store get", () => {
     const params = { root };
     const req = {
       query: {
-        context: {}
+        context: {},
       },
-      params
+      params,
     };
 
     const sendFake = fake();
     const res = {
-      send: sendFake
+      send: sendFake,
     };
 
     const error = "some-error";
     const wrongContextFake = fake.returns(error);
     replace(deps, "forbiddenError", {
-      wrongContext: wrongContextFake
+      wrongContext: wrongContextFake,
     });
 
     try {

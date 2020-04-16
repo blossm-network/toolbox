@@ -7,7 +7,7 @@ module.exports = async ({
   normalizeFn,
   aggregateFn,
   addFn,
-  fillFn
+  fillFn,
 } = {}) =>
   deps
     .server()
@@ -19,7 +19,7 @@ module.exports = async ({
         addFn,
         ...(fillFn && { fillFn }),
         ...(validateFn && { validateFn }),
-        ...(normalizeFn && { normalizeFn })
+        ...(normalizeFn && { normalizeFn }),
       })
     )
     .listen();

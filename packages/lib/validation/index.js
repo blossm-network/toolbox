@@ -19,5 +19,5 @@ module.exports = {
   numberArray,
   booleanArray,
   objectArray,
-  fnArray
+  fnArray,
 };

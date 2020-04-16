@@ -14,5 +14,5 @@ module.exports = {
       "This view wasn't found."
     ),
   message: (message, { cause, info } = {}) =>
-    new ResourceNotFoundError({ cause, info, toJSON }, message)
+    new ResourceNotFoundError({ cause, info, toJSON }, message),
 };

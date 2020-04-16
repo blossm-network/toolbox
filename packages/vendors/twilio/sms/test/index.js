@@ -23,8 +23,8 @@ describe("Twilio sms", () => {
     const createFake = fake();
     const twilioFake = fake.returns({
       messages: {
-        create: createFake
-      }
+        create: createFake,
+      },
     });
     replace(deps, "twilio", twilioFake);
     const client = await sms(accountSid, authToken);
@@ -37,15 +37,15 @@ describe("Twilio sms", () => {
       to,
       from,
       body,
-      mediaUrl: media
+      mediaUrl: media,
     });
   });
   it("it should execute send correctly with optionals omitted", async () => {
     const createFake = fake();
     const twilioFake = fake.returns({
       messages: {
-        create: createFake
-      }
+        create: createFake,
+      },
     });
     replace(deps, "twilio", twilioFake);
     const client = await sms(accountSid, authToken);
@@ -57,7 +57,7 @@ describe("Twilio sms", () => {
     expect(createFake).to.have.been.calledWith({
       to,
       from,
-      body
+      body,
     });
   });
   it("it should execute list correctly", async () => {
@@ -65,8 +65,8 @@ describe("Twilio sms", () => {
     const listFake = fake.returns(messages);
     const twilioFake = fake.returns({
       messages: {
-        list: listFake
-      }
+        list: listFake,
+      },
     });
     replace(deps, "twilio", twilioFake);
     const client = await sms(accountSid, authToken);
@@ -80,7 +80,7 @@ describe("Twilio sms", () => {
       dateSentAfter: sentAfter,
       dateSentBefore: sentBefore,
       limit,
-      to
+      to,
     });
   });
   it("it should execute list correctly with optionals omitted", async () => {
@@ -88,8 +88,8 @@ describe("Twilio sms", () => {
     const listFake = fake.returns(messages);
     const twilioFake = fake.returns({
       messages: {
-        list: listFake
-      }
+        list: listFake,
+      },
     });
     replace(deps, "twilio", twilioFake);
     const client = await sms(accountSid, authToken);
@@ -100,7 +100,7 @@ describe("Twilio sms", () => {
 
     expect(result).to.equal(messages);
     expect(listFake).to.have.been.calledWith({
-      limit: 20
+      limit: 20,
     });
   });
   it("it should throw correctly", async () => {
@@ -108,8 +108,8 @@ describe("Twilio sms", () => {
     const createFake = fake.rejects(new Error(errorMessage));
     const twilioFake = fake.returns({
       messages: {
-        create: createFake
-      }
+        create: createFake,
+      },
     });
     replace(deps, "twilio", twilioFake);
     const client = await sms(accountSid, authToken);

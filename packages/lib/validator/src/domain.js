@@ -4,11 +4,11 @@ const string = require("./string");
 module.exports = (domain, { optional, title = "domain", path } = {}) => {
   const err = findError([
     string(domain, {
-      fn: domain => domain.includes("."),
+      fn: (domain) => domain.includes("."),
       optional,
       title,
-      path
-    })
+      path,
+    }),
   ]);
 
   if (err) return err;

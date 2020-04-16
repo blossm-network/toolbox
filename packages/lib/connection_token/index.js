@@ -11,40 +11,28 @@ module.exports = ({ credentialsFn }) => async ({ network }) => {
         name: "open",
         domain: "connection",
         service: "system",
-        network
+        network,
       })
       .set({
         tokenFns: {
           external: () =>
             deps.basicToken({
               id,
-              secret
-            })
-        }
+              secret,
+            }),
+        },
       })
       .issue();
 
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log({ tokens });
     const [{ value: token } = {}] = tokens.filter(
-      t => t.network == process.env.NETWORK
+      (t) => t.network == process.env.NETWORK
     );
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log({ token });
     const claims = await deps.decode(token);
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log({ claims });
     cache[network] = {
       token,
-      exp: new Date(Date.parse(claims.exp))
+      exp: new Date(Date.parse(claims.exp)),
     };
   }
 
-  //TODO
-  //eslint-disable-next-line no-console
-  console.log({ returnedRouterConnectionToke: cache[network] });
   return { token: cache[network].token, type: "Bearer" };
 };

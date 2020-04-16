@@ -9,26 +9,29 @@ const action = "some-action";
 const otherAction = "some-other-action";
 const findResult = [
   { payload: { b: 2, c: 2 }, headers: { number: 1, root, action } },
-  { payload: { c: 3, d: 4 }, headers: { number: 2, root, action: otherAction } }
+  {
+    payload: { c: 3, d: 4 },
+    headers: { number: 2, root, action: otherAction },
+  },
 ];
 const handlers = {
   [action]: (state, payload) => {
     return {
       ...state,
-      ...payload
+      ...payload,
     };
   },
   [otherAction]: (state, payload) => {
     return {
       ...state,
       ...payload,
-      e: 5
+      e: 5,
     };
-  }
+  },
 };
 const findOneResult = {
   state: { a: 1, b: 1 },
-  headers: { lastEventNumber: 0, root }
+  headers: { lastEventNumber: 0, root },
 };
 
 const eventStore = "some-event-store";
@@ -44,7 +47,7 @@ describe("Mongodb event store aggregate", () => {
 
     const db = {
       find: findFake,
-      findOne: findOneFake
+      findOne: findOneFake,
     };
 
     replace(deps, "db", db);
@@ -56,27 +59,27 @@ describe("Mongodb event store aggregate", () => {
     expect(findFake).to.have.been.calledWith({
       store: eventStore,
       query: {
-        "headers.root": root
+        "headers.root": root,
       },
       sort: {
-        "headers.number": 1
+        "headers.number": 1,
       },
       options: {
-        lean: true
-      }
+        lean: true,
+      },
     });
     expect(findOneFake).to.have.been.calledWith({
       store: snapshotStore,
       query: {
-        "headers.root": root
+        "headers.root": root,
       },
       options: {
-        lean: true
-      }
+        lean: true,
+      },
     });
     expect(result).to.deep.equal({
       state: { a: 1, b: 2, c: 3, d: 4, e: 5 },
-      headers: { root, lastEventNumber: 2 }
+      headers: { root, lastEventNumber: 2 },
     });
   });
   it("should call with the correct params with no snapshot found", async () => {
@@ -85,7 +88,7 @@ describe("Mongodb event store aggregate", () => {
 
     const db = {
       find: findFake,
-      findOne: findOneFake
+      findOne: findOneFake,
     };
 
     replace(deps, "db", db);
@@ -97,27 +100,27 @@ describe("Mongodb event store aggregate", () => {
     expect(findFake).to.have.been.calledWith({
       store: eventStore,
       query: {
-        "headers.root": root
+        "headers.root": root,
       },
       sort: {
-        "headers.number": 1
+        "headers.number": 1,
       },
       options: {
-        lean: true
-      }
+        lean: true,
+      },
     });
     expect(findOneFake).to.have.been.calledWith({
       store: snapshotStore,
       query: {
-        "headers.root": root
+        "headers.root": root,
       },
       options: {
-        lean: true
-      }
+        lean: true,
+      },
     });
     expect(result).to.deep.equal({
       state: { b: 2, c: 3, d: 4, e: 5 },
-      headers: { root, lastEventNumber: 2 }
+      headers: { root, lastEventNumber: 2 },
     });
   });
   it("should call with the correct params with no snapshot or events found", async () => {
@@ -126,7 +129,7 @@ describe("Mongodb event store aggregate", () => {
 
     const db = {
       find: findFake,
-      findOne: findOneFake
+      findOne: findOneFake,
     };
 
     replace(deps, "db", db);
@@ -138,23 +141,23 @@ describe("Mongodb event store aggregate", () => {
     expect(findFake).to.have.been.calledWith({
       store: eventStore,
       query: {
-        "headers.root": root
+        "headers.root": root,
       },
       sort: {
-        "headers.number": 1
+        "headers.number": 1,
       },
       options: {
-        lean: true
-      }
+        lean: true,
+      },
     });
     expect(findOneFake).to.have.been.calledWith({
       store: snapshotStore,
       query: {
-        "headers.root": root
+        "headers.root": root,
       },
       options: {
-        lean: true
-      }
+        lean: true,
+      },
     });
     expect(result).to.be.null;
   });
@@ -164,7 +167,7 @@ describe("Mongodb event store aggregate", () => {
 
     const db = {
       find: findFake,
-      findOne: findOneFake
+      findOne: findOneFake,
     };
 
     replace(deps, "db", db);

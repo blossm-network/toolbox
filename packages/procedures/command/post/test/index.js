@@ -21,8 +21,8 @@ const options = "some-options";
 const commandId = "some-command-id";
 const event = {
   headers: {
-    root
-  }
+    root,
+  },
 };
 const correctNumber = 4;
 const context = "some-context";
@@ -38,7 +38,7 @@ const headers = {
   issued,
   accepted,
   broadcasted,
-  idempotency
+  idempotency,
 };
 
 const name = "some-name";
@@ -79,28 +79,28 @@ describe("Command handler post", () => {
       {
         payload: eventPayload,
         action: eventAction,
-        correctNumber
-      }
+        correctNumber,
+      },
     ];
     const mainFnFake = fake.returns({
       events,
-      response
+      response,
     });
     const req = {
       body: {
         payload,
         headers,
         context,
-        claims
-      }
+        claims,
+      },
     };
 
     const sendFake = fake();
     const statusFake = fake.returns({
-      send: sendFake
+      send: sendFake,
     });
     const res = {
-      status: statusFake
+      status: statusFake,
     };
 
     const addFnFake = fake();
@@ -111,7 +111,7 @@ describe("Command handler post", () => {
       validateFn: validateFnFake,
       normalizeFn: normalizeFnFake,
       addFn: addFnFake,
-      aggregateFn: aggregateFnFake
+      aggregateFn: aggregateFnFake,
     })(req, res);
 
     expect(aggregateFnFake).to.have.been.calledWith({ context, claims });
@@ -121,7 +121,7 @@ describe("Command handler post", () => {
       payload: cleanedPayload,
       context,
       claims,
-      aggregateFn
+      aggregateFn,
     });
 
     expect(createEventFake).to.have.been.calledWith({
@@ -143,9 +143,9 @@ describe("Command handler post", () => {
           domain,
           service,
           network,
-          host
-        }
-      ]
+          host,
+        },
+      ],
     });
     expect(addFnFake).to.have.been.calledWith({
       domain,
@@ -155,9 +155,9 @@ describe("Command handler post", () => {
       events: [
         {
           data: event,
-          number: correctNumber
-        }
-      ]
+          number: correctNumber,
+        },
+      ],
     });
     expect(statusFake).to.have.been.calledWith(200);
     expect(sendFake).to.have.been.calledWith(response);
@@ -175,12 +175,12 @@ describe("Command handler post", () => {
       {
         payload: eventPayload,
         action: eventAction,
-        correctNumber
-      }
+        correctNumber,
+      },
     ];
     const mainFnFake = fake.returns({
       events,
-      response
+      response,
     });
     const otherPath = "some-other-path";
     const req = {
@@ -188,19 +188,19 @@ describe("Command handler post", () => {
         payload,
         headers: {
           ...headers,
-          path: [otherPath]
+          path: [otherPath],
         },
         context,
-        claims
-      }
+        claims,
+      },
     };
 
     const sendFake = fake();
     const statusFake = fake.returns({
-      send: sendFake
+      send: sendFake,
     });
     const res = {
-      status: statusFake
+      status: statusFake,
     };
 
     const addFnFake = fake();
@@ -211,7 +211,7 @@ describe("Command handler post", () => {
       validateFn: validateFnFake,
       normalizeFn: normalizeFnFake,
       addFn: addFnFake,
-      aggregateFn: aggregateFnFake
+      aggregateFn: aggregateFnFake,
     })(req, res);
 
     expect(createEventFake).to.have.been.calledWith({
@@ -234,9 +234,9 @@ describe("Command handler post", () => {
           domain,
           service,
           network,
-          host
-        }
-      ]
+          host,
+        },
+      ],
     });
     expect(statusFake).to.have.been.calledWith(200);
     expect(sendFake).to.have.been.calledWith(response);
@@ -254,12 +254,12 @@ describe("Command handler post", () => {
       {
         payload: eventPayload,
         action: eventAction,
-        correctNumber
-      }
+        correctNumber,
+      },
     ];
     const mainFnFake = fake.returns({
       events,
-      response
+      response,
     });
 
     const req = {
@@ -267,16 +267,16 @@ describe("Command handler post", () => {
         payload,
         headers,
         context,
-        claims
-      }
+        claims,
+      },
     };
 
     const sendFake = fake();
     const statusFake = fake.returns({
-      send: sendFake
+      send: sendFake,
     });
     const res = {
-      status: statusFake
+      status: statusFake,
     };
 
     const addFnFake = fake();
@@ -288,7 +288,7 @@ describe("Command handler post", () => {
       normalizeFn: normalizeFnFake,
       fillFn: fillFnFake,
       aggregateFn: aggregateFnFake,
-      addFn: addFnFake
+      addFn: addFnFake,
     })(req, res);
 
     expect(aggregateFnFake).to.have.been.calledWith({ context, claims });
@@ -308,14 +308,14 @@ describe("Command handler post", () => {
       {
         payload: eventPayload,
         action: eventAction,
-        correctNumber
-      }
+        correctNumber,
+      },
     ];
     const thenFnFake = fake();
     const mainFnFake = fake.returns({
       events,
       response,
-      thenFn: thenFnFake
+      thenFn: thenFnFake,
     });
 
     const req = {
@@ -323,16 +323,16 @@ describe("Command handler post", () => {
         payload,
         headers,
         context,
-        claims
-      }
+        claims,
+      },
     };
 
     const sendFake = fake();
     const statusFake = fake.returns({
-      send: sendFake
+      send: sendFake,
     });
     const res = {
-      status: statusFake
+      status: statusFake,
     };
 
     const addFnFake = fake();
@@ -343,7 +343,7 @@ describe("Command handler post", () => {
       validateFn: validateFnFake,
       normalizeFn: normalizeFnFake,
       aggregateFn: aggregateFnFake,
-      addFn: addFnFake
+      addFn: addFnFake,
     })(req, res);
 
     expect(aggregateFnFake).to.have.been.calledWith({ context, claims });
@@ -363,11 +363,11 @@ describe("Command handler post", () => {
       {
         payload: eventPayload,
         action: eventAction,
-        correctNumber
-      }
+        correctNumber,
+      },
     ];
     const mainFnFake = fake.returns({
-      events
+      events,
     });
 
     const req = {
@@ -375,16 +375,16 @@ describe("Command handler post", () => {
         payload,
         headers,
         context,
-        claims
-      }
+        claims,
+      },
     };
 
     const sendFake = fake();
     const statusFake = fake.returns({
-      send: sendFake
+      send: sendFake,
     });
     const res = {
-      status: statusFake
+      status: statusFake,
     };
 
     const addFnFake = fake();
@@ -395,7 +395,7 @@ describe("Command handler post", () => {
       validateFn: validateFnFake,
       normalizeFn: normalizeFnFake,
       aggregateFn: aggregateFnFake,
-      addFn: addFnFake
+      addFn: addFnFake,
     })(req, res);
 
     expect(aggregateFnFake).to.have.been.calledWith({ context, claims });
@@ -405,14 +405,14 @@ describe("Command handler post", () => {
       payload: cleanedPayload,
       context,
       claims,
-      aggregateFn
+      aggregateFn,
     });
     expect(addFnFake).to.have.been.calledWith({
       domain,
       service,
       context,
       claims,
-      events: [{ data: event, number: correctNumber }]
+      events: [{ data: event, number: correctNumber }],
     });
 
     expect(createEventFake).to.have.been.calledWith({
@@ -434,9 +434,9 @@ describe("Command handler post", () => {
           domain,
           service,
           network,
-          host
-        }
-      ]
+          host,
+        },
+      ],
     });
     expect(statusFake).to.have.been.calledWith(204);
     expect(sendFake).to.have.been.calledWith();
@@ -457,15 +457,15 @@ describe("Command handler post", () => {
         context: eventContext,
         action: eventAction,
         version,
-        correctNumber
-      }
+        correctNumber,
+      },
     ];
 
     const addFnFake = fake();
 
     const mainFnFake = fake.returns({
       events,
-      response
+      response,
     });
     const currentRoot = "current-root";
     const req = {
@@ -475,16 +475,16 @@ describe("Command handler post", () => {
         headers,
         options,
         context,
-        claims
-      }
+        claims,
+      },
     };
 
     const sendFake = fake();
     const statusFake = fake.returns({
-      send: sendFake
+      send: sendFake,
     });
     const res = {
-      status: statusFake
+      status: statusFake,
     };
 
     const aggregateFnFake = fake.returns(aggregateFn);
@@ -494,7 +494,7 @@ describe("Command handler post", () => {
       validateFn: validateFnFake,
       normalizeFn: normalizeFnFake,
       aggregateFn: aggregateFnFake,
-      addFn: addFnFake
+      addFn: addFnFake,
     })(req, res);
 
     expect(aggregateFnFake).to.have.been.calledWith({ context, claims });
@@ -506,7 +506,7 @@ describe("Command handler post", () => {
       options,
       context,
       claims,
-      aggregateFn
+      aggregateFn,
     });
 
     expect(addFnFake).to.have.been.calledWith({
@@ -514,7 +514,7 @@ describe("Command handler post", () => {
       service,
       context,
       claims,
-      events: [{ data: event, number: correctNumber }]
+      events: [{ data: event, number: correctNumber }],
     });
 
     expect(createEventFake).to.have.been.calledWith({
@@ -538,9 +538,9 @@ describe("Command handler post", () => {
           domain,
           service,
           network,
-          host
-        }
-      ]
+          host,
+        },
+      ],
     });
     expect(statusFake).to.have.been.calledWith(200);
     expect(sendFake).to.have.been.calledWith(response);
@@ -553,28 +553,28 @@ describe("Command handler post", () => {
     const events = [
       {
         payload: eventPayload,
-        action: eventAction
-      }
+        action: eventAction,
+      },
     ];
     const mainFnFake = fake.returns({
       events,
-      response
+      response,
     });
     const req = {
       body: {
         payload,
         headers,
         context,
-        claims
-      }
+        claims,
+      },
     };
 
     const sendFake = fake();
     const statusFake = fake.returns({
-      send: sendFake
+      send: sendFake,
     });
     const res = {
-      status: statusFake
+      status: statusFake,
     };
 
     const addFnFake = fake();
@@ -583,7 +583,7 @@ describe("Command handler post", () => {
     await post({
       mainFn: mainFnFake,
       aggregateFn: aggregateFnFake,
-      addFn: addFnFake
+      addFn: addFnFake,
     })(req, res);
 
     expect(aggregateFnFake).to.have.been.calledWith({ context, claims });
@@ -591,7 +591,7 @@ describe("Command handler post", () => {
       payload,
       context,
       claims,
-      aggregateFn
+      aggregateFn,
     });
 
     expect(addFnFake).to.have.been.calledWith({
@@ -599,7 +599,7 @@ describe("Command handler post", () => {
       service,
       context,
       claims,
-      events: [{ data: event }]
+      events: [{ data: event }],
     });
     expect(createEventFake).to.have.been.calledWith({
       payload: eventPayload,
@@ -620,9 +620,9 @@ describe("Command handler post", () => {
           domain,
           service,
           network,
-          host
-        }
-      ]
+          host,
+        },
+      ],
     });
     expect(statusFake).to.have.been.calledWith(200);
     expect(sendFake).to.have.been.calledWith(response);
@@ -645,13 +645,13 @@ describe("Command handler post", () => {
         correctNumber,
         action: eventAction,
         domain: eventDomain,
-        service: eventService
-      }
+        service: eventService,
+      },
     ];
 
     const mainFnFake = fake.returns({
       events,
-      response
+      response,
     });
 
     const req = {
@@ -659,16 +659,16 @@ describe("Command handler post", () => {
         payload,
         headers,
         context,
-        claims
-      }
+        claims,
+      },
     };
 
     const sendFake = fake();
     const statusFake = fake.returns({
-      send: sendFake
+      send: sendFake,
     });
     const res = {
-      status: statusFake
+      status: statusFake,
     };
 
     const addFnFake = fake();
@@ -679,7 +679,7 @@ describe("Command handler post", () => {
       validateFn: validateFnFake,
       normalizeFn: normalizeFnFake,
       aggregateFn: aggregateFnFake,
-      addFn: addFnFake
+      addFn: addFnFake,
     })(req, res);
 
     expect(aggregateFnFake).to.have.been.calledWith({ context, claims });
@@ -689,7 +689,7 @@ describe("Command handler post", () => {
       payload: cleanedPayload,
       context,
       claims,
-      aggregateFn
+      aggregateFn,
     });
 
     expect(addFnFake).to.have.been.calledWith({
@@ -697,7 +697,7 @@ describe("Command handler post", () => {
       service: eventService,
       context,
       claims,
-      events: [{ data: event, number: correctNumber }]
+      events: [{ data: event, number: correctNumber }],
     });
     expect(createEventFake).to.have.been.calledWith({
       payload: eventPayload,
@@ -718,9 +718,9 @@ describe("Command handler post", () => {
           domain,
           service,
           network,
-          host
-        }
-      ]
+          host,
+        },
+      ],
     });
     expect(statusFake).to.have.been.calledWith(200);
     expect(sendFake).to.have.been.calledWith(response);
@@ -741,33 +741,33 @@ describe("Command handler post", () => {
       {
         payload: eventPayload,
         action: eventAction,
-        correctNumber
+        correctNumber,
       },
       {
         payload: otherEventPayload,
         action: otherEventAction,
-        correctNumber: otherCorrectNumber
-      }
+        correctNumber: otherCorrectNumber,
+      },
     ];
     const mainFnFake = fake.returns({
       events,
-      response
+      response,
     });
     const req = {
       body: {
         payload,
         headers,
         context,
-        claims
-      }
+        claims,
+      },
     };
 
     const sendFake = fake();
     const statusFake = fake.returns({
-      send: sendFake
+      send: sendFake,
     });
     const res = {
-      status: statusFake
+      status: statusFake,
     };
 
     const addFnFake = fake();
@@ -778,7 +778,7 @@ describe("Command handler post", () => {
       validateFn: validateFnFake,
       normalizeFn: normalizeFnFake,
       aggregateFn: aggregateFnFake,
-      addFn: addFnFake
+      addFn: addFnFake,
     })(req, res);
 
     expect(aggregateFnFake).to.have.been.calledWith({ context, claims });
@@ -788,7 +788,7 @@ describe("Command handler post", () => {
       payload: cleanedPayload,
       context,
       claims,
-      aggregateFn
+      aggregateFn,
     });
 
     expect(createEventFake).to.have.been.calledWith({
@@ -810,9 +810,9 @@ describe("Command handler post", () => {
           domain,
           service,
           network,
-          host
-        }
-      ]
+          host,
+        },
+      ],
     });
     expect(createEventFake).to.have.been.calledWith({
       payload: otherEventPayload,
@@ -833,9 +833,9 @@ describe("Command handler post", () => {
           network,
           host,
           procedure,
-          hash
-        }
-      ]
+          hash,
+        },
+      ],
     });
     expect(addFnFake).to.have.been.calledWith({
       domain,
@@ -844,8 +844,8 @@ describe("Command handler post", () => {
       claims,
       events: [
         { data: event, number: correctNumber },
-        { data: event, number: otherCorrectNumber }
-      ]
+        { data: event, number: otherCorrectNumber },
+      ],
     });
     expect(statusFake).to.have.been.calledWith(200);
     expect(sendFake).to.have.been.calledWith(response);
@@ -867,35 +867,35 @@ describe("Command handler post", () => {
       {
         payload: eventPayload,
         action: eventAction,
-        correctNumber
+        correctNumber,
       },
       {
         payload: otherEventPayload,
         action: otherEventAction,
         domain: differentDomain,
         service: differentService,
-        correctNumber: otherCorrectNumber
-      }
+        correctNumber: otherCorrectNumber,
+      },
     ];
     const mainFnFake = fake.returns({
       events,
-      response
+      response,
     });
     const req = {
       body: {
         payload,
         headers,
         context,
-        claims
-      }
+        claims,
+      },
     };
 
     const sendFake = fake();
     const statusFake = fake.returns({
-      send: sendFake
+      send: sendFake,
     });
     const res = {
-      status: statusFake
+      status: statusFake,
     };
 
     const addFnFake = fake();
@@ -906,7 +906,7 @@ describe("Command handler post", () => {
       validateFn: validateFnFake,
       normalizeFn: normalizeFnFake,
       aggregateFn: aggregateFnFake,
-      addFn: addFnFake
+      addFn: addFnFake,
     })(req, res);
 
     expect(aggregateFnFake).to.have.been.calledWith({ context, claims });
@@ -916,7 +916,7 @@ describe("Command handler post", () => {
       payload: cleanedPayload,
       context,
       claims,
-      aggregateFn
+      aggregateFn,
     });
 
     expect(createEventFake).to.have.been.calledWith({
@@ -938,9 +938,9 @@ describe("Command handler post", () => {
           network,
           host,
           procedure,
-          hash
-        }
-      ]
+          hash,
+        },
+      ],
     });
     expect(createEventFake).to.have.been.calledWith({
       payload: otherEventPayload,
@@ -961,23 +961,23 @@ describe("Command handler post", () => {
           network,
           host,
           procedure,
-          hash
-        }
-      ]
+          hash,
+        },
+      ],
     });
     expect(addFnFake).to.have.been.calledWith({
       domain,
       service,
       context,
       claims,
-      events: [{ data: event, number: correctNumber }]
+      events: [{ data: event, number: correctNumber }],
     });
     expect(addFnFake).to.have.been.calledWith({
       domain: differentDomain,
       service: differentService,
       context,
       claims,
-      events: [{ data: event, number: otherCorrectNumber }]
+      events: [{ data: event, number: otherCorrectNumber }],
     });
     expect(addFnFake).to.have.been.calledTwice;
     expect(statusFake).to.have.been.calledWith(200);

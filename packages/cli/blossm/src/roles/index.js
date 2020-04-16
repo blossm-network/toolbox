@@ -2,11 +2,11 @@ const normalize = require("@blossm/normalize-cli");
 
 const upload = require("./upload");
 
-module.exports = async args => {
+module.exports = async (args) => {
   const input = await normalize({
     entrypointType: "action",
     choices: ["upload"],
-    args
+    args,
   });
 
   switch (input.action) {

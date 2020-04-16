@@ -16,21 +16,21 @@ describe("Command handler post", () => {
     const req = {
       body: {
         message: {
-          data
-        }
-      }
+          data,
+        },
+      },
     };
 
     const sendFake = fake();
     const statusFake = fake.returns({
-      send: sendFake
+      send: sendFake,
     });
     const res = {
-      status: statusFake
+      status: statusFake,
     };
 
     await post({
-      mainFn: mainFnFake
+      mainFn: mainFnFake,
     })(req, res);
 
     expect(mainFnFake).to.have.been.calledWith(event);
@@ -43,15 +43,15 @@ describe("Command handler post", () => {
 
     const sendFake = fake();
     const statusFake = fake.returns({
-      send: sendFake
+      send: sendFake,
     });
     const res = {
-      status: statusFake
+      status: statusFake,
     };
 
     try {
       await post({
-        mainFn: mainFnFake
+        mainFn: mainFnFake,
       })(req, res);
 
       //shouldnt be called;
@@ -63,20 +63,20 @@ describe("Command handler post", () => {
   it("should call correct error when theres no message", async () => {
     const mainFnFake = fake();
     const req = {
-      body: {}
+      body: {},
     };
 
     const sendFake = fake();
     const statusFake = fake.returns({
-      send: sendFake
+      send: sendFake,
     });
     const res = {
-      status: statusFake
+      status: statusFake,
     };
 
     try {
       await post({
-        mainFn: mainFnFake
+        mainFn: mainFnFake,
       })(req, res);
 
       //shouldnt be called;
@@ -90,22 +90,22 @@ describe("Command handler post", () => {
     const req = {
       body: {
         message: {
-          data: Buffer.from("bad")
-        }
-      }
+          data: Buffer.from("bad"),
+        },
+      },
     };
 
     const sendFake = fake();
     const statusFake = fake.returns({
-      send: sendFake
+      send: sendFake,
     });
     const res = {
-      status: statusFake
+      status: statusFake,
     };
 
     try {
       await post({
-        mainFn: mainFnFake
+        mainFn: mainFnFake,
       })(req, res);
 
       //shouldnt be called;

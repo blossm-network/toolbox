@@ -10,15 +10,15 @@ const verifyFn = "some-verify-fn";
 
 const path = "some-path";
 const req = {
-  path
+  path,
 };
 const bearer = "bearer-some";
 const tokens = {
-  bearer
+  bearer,
 };
 
 const claims = {
-  exp: dateString()
+  exp: dateString(),
 };
 const audience = "some-audience";
 const algorithm = "some-algorithm";
@@ -36,7 +36,7 @@ describe("Authorize", () => {
       req,
       verifyFn,
       audience,
-      algorithm
+      algorithm,
     });
 
     expect(deps.tokensFromReq).to.have.been.calledWith(req);
@@ -44,14 +44,14 @@ describe("Authorize", () => {
       token: bearer,
       verifyFn,
       audience,
-      algorithm
+      algorithm,
     });
     expect(result).to.deep.equal(claims);
   });
   it("should authenticate with cookie token", async () => {
     const cookieToken = "some-cookie-token";
     const cookieTokens = {
-      cookie: cookieToken
+      cookie: cookieToken,
     };
 
     replace(deps, "validate", fake.returns(claims));
@@ -61,7 +61,7 @@ describe("Authorize", () => {
       req,
       verifyFn,
       audience,
-      algorithm
+      algorithm,
     });
 
     expect(deps.tokensFromReq).to.have.been.calledWith(req);
@@ -69,7 +69,7 @@ describe("Authorize", () => {
       token: cookieToken,
       verifyFn,
       audience,
-      algorithm
+      algorithm,
     });
     expect(response).to.deep.equal(claims);
   });
@@ -82,7 +82,7 @@ describe("Authorize", () => {
     const buffer = Buffer.from(basicToken).toString("base64");
 
     const basicTokens = {
-      basic: buffer
+      basic: buffer,
     };
 
     replace(deps, "tokensFromReq", fake.returns(basicTokens));
@@ -92,13 +92,13 @@ describe("Authorize", () => {
       req,
       verifyFn,
       keyClaimsFn: keyClaimsFnFake,
-      allowBasic: true
+      allowBasic: true,
     });
 
     expect(deps.tokensFromReq).to.have.been.calledWith(req);
     expect(keyClaimsFnFake).to.have.been.calledWith({
       id: basicTokenId,
-      secret: basicTokenSecret
+      secret: basicTokenSecret,
     });
     expect(response).to.deep.equal(claims);
   });
@@ -111,7 +111,7 @@ describe("Authorize", () => {
     const buffer = Buffer.from(basicToken).toString("base64");
 
     const basicTokens = {
-      basic: buffer
+      basic: buffer,
     };
 
     replace(deps, "tokensFromReq", fake.returns(basicTokens));
@@ -121,7 +121,7 @@ describe("Authorize", () => {
     const error = "some-error";
     const tokenInvalidFake = fake.returns(error);
     replace(deps, "invalidCredentialsError", {
-      tokenInvalid: tokenInvalidFake
+      tokenInvalid: tokenInvalidFake,
     });
 
     try {
@@ -129,7 +129,7 @@ describe("Authorize", () => {
         req,
         verifyFn,
         keyClaimsFn: keyClaimsFnFake,
-        allowBasic: false
+        allowBasic: false,
       });
 
       //shouldn't get called
@@ -145,13 +145,13 @@ describe("Authorize", () => {
     const error = "some-error";
     const tokenInvalidFake = fake.returns(error);
     replace(deps, "invalidCredentialsError", {
-      tokenInvalid: tokenInvalidFake
+      tokenInvalid: tokenInvalidFake,
     });
 
     try {
       await authenticate({
         req,
-        verifyFn
+        verifyFn,
       });
 
       //shouldn't get called
@@ -169,7 +169,7 @@ describe("Authorize", () => {
     const buffer = Buffer.from(basicToken).toString("base64");
 
     const basicTokens = {
-      basic: buffer
+      basic: buffer,
     };
 
     replace(deps, "tokensFromReq", fake.returns(basicTokens));
@@ -177,13 +177,13 @@ describe("Authorize", () => {
     const error = "some-error";
     const tokenInvalidFake = fake.returns(error);
     replace(deps, "invalidCredentialsError", {
-      tokenInvalid: tokenInvalidFake
+      tokenInvalid: tokenInvalidFake,
     });
 
     try {
       await authenticate({
         req,
-        verifyFn
+        verifyFn,
       });
 
       //shouldn't get called

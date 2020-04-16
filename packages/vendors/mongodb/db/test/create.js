@@ -13,7 +13,7 @@ describe("create", () => {
     const execResult = 4;
     const insertManyFake = fake.returns(execResult);
     const store = {
-      insertMany: insertManyFake
+      insertMany: insertManyFake,
     };
 
     const result = await create({ store, data });
@@ -25,7 +25,7 @@ describe("create", () => {
     const execResult = 4;
     const insertManyFake = fake.returns(execResult);
     const store = {
-      insertMany: insertManyFake
+      insertMany: insertManyFake,
     };
 
     const result = await create({ store, data: [data] });
@@ -37,7 +37,7 @@ describe("create", () => {
     const execResult = 4;
     const insertManyFake = fake.returns(execResult);
     const store = {
-      insertMany: insertManyFake
+      insertMany: insertManyFake,
     };
 
     const result = await create({ store, options, data });

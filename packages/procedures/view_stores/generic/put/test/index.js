@@ -15,15 +15,15 @@ const root = "some-root";
 const body = {
   view: {
     body: {
-      a: 1
+      a: 1,
     },
     headers: {
-      b: 2
-    }
-  }
+      b: 2,
+    },
+  },
 };
 const params = {
-  root
+  root,
 };
 
 describe("View store put", () => {
@@ -40,15 +40,15 @@ describe("View store put", () => {
 
     const req = {
       params,
-      body
+      body,
     };
 
     const sendFake = fake();
     const statusFake = fake.returns({
-      send: sendFake
+      send: sendFake,
     });
     const res = {
-      status: statusFake
+      status: statusFake,
     };
 
     await put({ writeFn: writeFake })(req, res);
@@ -58,8 +58,8 @@ describe("View store put", () => {
       data: {
         "body.a": 1,
         "headers.b": 2,
-        "headers.modified": deps.dateString()
-      }
+        "headers.modified": deps.dateString(),
+      },
     });
     expect(sendFake).to.have.been.calledOnce;
   });
@@ -69,15 +69,15 @@ describe("View store put", () => {
 
     const req = {
       params,
-      body
+      body,
     };
 
     const sendFake = fake();
     const statusFake = fake.returns({
-      send: sendFake
+      send: sendFake,
     });
     const res = {
-      status: statusFake
+      status: statusFake,
     };
 
     const fnFake = fake.returns({ body: { c: 3 }, headers: { b: 2 } });
@@ -88,12 +88,12 @@ describe("View store put", () => {
       data: {
         "body.c": 3,
         "headers.b": 2,
-        "headers.modified": deps.dateString()
-      }
+        "headers.modified": deps.dateString(),
+      },
     });
     expect(fnFake).to.have.been.calledWith({
       body: { a: 1 },
-      headers: { b: 2 }
+      headers: { b: 2 },
     });
     expect(statusFake).to.have.been.calledWith(204);
     expect(sendFake).to.have.been.calledOnce;
@@ -103,21 +103,21 @@ describe("View store put", () => {
 
     const req = {
       params: {},
-      body
+      body,
     };
 
     const sendFake = fake();
     const statusFake = fake.returns({
-      send: sendFake
+      send: sendFake,
     });
     const res = {
-      status: statusFake
+      status: statusFake,
     };
 
     const error = "some-error";
     const missingRootFake = fake.returns(error);
     replace(deps, "badRequestError", {
-      missingRoot: missingRootFake
+      missingRoot: missingRootFake,
     });
 
     const fnFake = fake.returns({ $set: { b: 2 } });

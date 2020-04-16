@@ -36,7 +36,7 @@ describe("Invalid object array", () => {
     const message = "This is a bad object";
     const response = objectArray({
       value: invalidObjectArray,
-      baseMessageFn: () => message
+      baseMessageFn: () => message,
     });
     expect(response.errors).to.have.lengthOf(1);
     expect(response.errors[0].message).to.equal(message);
@@ -51,7 +51,7 @@ describe("Invalid object array", () => {
       baseMessageFn: (e, title) => {
         expect(e).to.exist;
         return title;
-      }
+      },
     });
     expect(response.errors).to.have.lengthOf(1);
     expect(response.errors[0].message).to.equal(title);
@@ -61,7 +61,7 @@ describe("Invalid object array", () => {
     const message = "This is a bad object";
     const response = objectArray({
       value: 3,
-      baseMessageFn: () => message
+      baseMessageFn: () => message,
     });
     expect(response.errors).to.have.lengthOf(1);
     expect(response.errors[0].message).to.equal(message);
@@ -78,7 +78,7 @@ describe("Invalid optional object array", () => {
   it("should contain one error if array has values that are not objects, regardless of optional flag", () => {
     const response = objectArray({
       value: invalidObjectArray,
-      optional: true
+      optional: true,
     });
     expect(response.errors).to.have.lengthOf(1);
   });
@@ -87,24 +87,24 @@ describe("Invalid optional object array", () => {
 describe("Error message", () => {
   it("should contain one error with the specified message if an invalid object array is passed in", () => {
     const incorrectObjectArray = [{}];
-    const refinementFn = value => value[0].key == "value";
+    const refinementFn = (value) => value[0].key == "value";
     const message = "This is a bad object";
     const response = objectArray({
       value: incorrectObjectArray,
       refinementMessageFn: () => message,
-      refinementFn
+      refinementFn,
     });
     expect(response.errors[0].message).to.equal(message);
   });
   it("should contain one error with the specified message if an invalid object array is passed in with title", () => {
     const incorrectObjectArray = [{}];
-    const refinementFn = value => value[0].key == "value";
+    const refinementFn = (value) => value[0].key == "value";
     const title = "some-title";
     const response = objectArray({
       title,
       value: incorrectObjectArray,
       refinementMessageFn: (value, title) => `${value}${title}`,
-      refinementFn
+      refinementFn,
     });
     expect(response.errors[0].message).to.equal(
       `${incorrectObjectArray}${title}`
@@ -131,7 +131,7 @@ describe("Error message", () => {
     const response = objectArray({
       value: validObjectArray,
       refinementMessageFn: () => message,
-      refinementFn
+      refinementFn,
     });
 
     expect(response.errors[0].message).to.equal(message);

@@ -17,12 +17,12 @@ const fillPayload = ({ payload, schema }) => {
         schema:
           schema[property].type == "object"
             ? schema[property].properties
-            : schema[property]
+            : schema[property],
       });
     }
   }
   return newPayload;
 };
 
-module.exports = async payload =>
+module.exports = async (payload) =>
   fillPayload({ payload, schema: config.payload });

@@ -9,9 +9,9 @@
 
 const { findError, string } = require("@blossm/validator");
 
-module.exports = payload => {
+module.exports = (payload) => {
   const error = findError([
-    string(payload.name, { title: "name", path: "payload.name" })
+    string(payload.name, { title: "name", path: "payload.name" }),
   ]);
   if (error) throw error;
 };

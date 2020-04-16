@@ -24,7 +24,7 @@ describe("Forbidden", () => {
       statusCode: 403,
       code: "Forbidden",
       info: {},
-      message
+      message,
     });
   });
   it("message correct with props", () => {
@@ -35,7 +35,7 @@ describe("Forbidden", () => {
       code: "Forbidden",
       info,
       cause,
-      message
+      message,
     });
   });
 });

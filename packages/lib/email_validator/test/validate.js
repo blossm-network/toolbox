@@ -15,9 +15,9 @@ describe("Valid emails", () => {
       "_______@domain.com",
       "email@domain.name",
       "email@domain.co.jp",
-      "firstname-lastname@domain.com"
+      "firstname-lastname@domain.com",
     ];
-    validEmails.forEach(validEmail => {
+    validEmails.forEach((validEmail) => {
       try {
         validate(validEmail);
       } catch (e) {
@@ -47,9 +47,9 @@ describe("Invalid emails", () => {
       "email@111.222.333.44444",
       "email@domain..com",
       "email@123.123.123.123",
-      "email@[123.123.123.123]"
+      "email@[123.123.123.123]",
     ];
-    invalidEmails.forEach(invalidEmail => {
+    invalidEmails.forEach((invalidEmail) => {
       try {
         validate(invalidEmail);
 

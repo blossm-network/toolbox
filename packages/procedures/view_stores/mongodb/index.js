@@ -26,8 +26,8 @@ const viewStore = async ({ schema, indexes }) => {
       host: process.env.MONGODB_HOST,
       database: process.env.MONGODB_DATABASE,
       parameters: { authSource: "admin", retryWrites: true, w: "majority" },
-      autoIndex: true
-    }
+      autoIndex: true,
+    },
   });
   return _viewStore;
 };
@@ -40,26 +40,26 @@ module.exports = async ({ schema, indexes, getFn, /*postFn,*/ putFn } = {}) => {
       [process.env.CONTEXT]: {
         root: String,
         service: String,
-        network: String
+        network: String,
       },
       ...(process.env.DOMAIN && {
         [process.env.DOMAIN]: {
           root: String,
           service: String,
-          network: String
-        }
+          network: String,
+        },
       }),
       created: {
         type: Date,
         required: true,
-        default: deps.dateString
+        default: deps.dateString,
       },
       modified: {
         type: Date,
         required: true,
-        default: deps.dateString
-      }
-    }
+        default: deps.dateString,
+      },
+    },
   };
 
   const allIndexes = [
@@ -67,17 +67,17 @@ module.exports = async ({ schema, indexes, getFn, /*postFn,*/ putFn } = {}) => {
     [
       { [`headers.${process.env.CONTEXT}.root`]: 1 },
       { [`headers.${process.env.CONTEXT}.service`]: 1 },
-      { [`headers.${process.env.CONTEXT}.network`]: 1 }
+      { [`headers.${process.env.CONTEXT}.network`]: 1 },
     ],
     ...(process.env.DOMAIN
       ? [
           [
             { [`headers.${process.env.DOMAIN}.root`]: 1 },
             { [`headers.${process.env.DOMAIN}.service`]: 1 },
-            { [`headers.${process.env.DOMAIN}.network`]: 1 }
-          ]
+            { [`headers.${process.env.DOMAIN}.network`]: 1 },
+          ],
         ]
-      : [])
+      : []),
   ];
 
   if (indexes) {
@@ -96,7 +96,7 @@ module.exports = async ({ schema, indexes, getFn, /*postFn,*/ putFn } = {}) => {
 
   const store = await viewStore({
     schema: deps.removeIds({ schema: formattedSchema }),
-    indexes: allIndexes
+    indexes: allIndexes,
   });
 
   const streamFn = async ({ query, sort, parallel, fn }) => {
@@ -106,8 +106,8 @@ module.exports = async ({ schema, indexes, getFn, /*postFn,*/ putFn } = {}) => {
         query,
         ...(sort && { sort }),
         options: {
-          lean: true
-        }
+          lean: true,
+        },
       })
       .cursor();
 
@@ -120,8 +120,8 @@ module.exports = async ({ schema, indexes, getFn, /*postFn,*/ putFn } = {}) => {
       query,
       ...(sort && { sort }),
       options: {
-        lean: true
-      }
+        lean: true,
+      },
     });
 
   // const findOneFn = async ({ root }) =>
@@ -142,12 +142,12 @@ module.exports = async ({ schema, indexes, getFn, /*postFn,*/ putFn } = {}) => {
       if (key.charAt(0) == "$") {
         update[key] = {
           ...update[key],
-          ...data[key]
+          ...data[key],
         };
       } else {
         update[setKey] = {
           ...update[setKey],
-          [key]: data[key]
+          [key]: data[key],
         };
       }
     }
@@ -161,15 +161,15 @@ module.exports = async ({ schema, indexes, getFn, /*postFn,*/ putFn } = {}) => {
         upsert: true,
         new: true,
         runValidators: true,
-        setDefaultsOnInsert: true
-      }
+        setDefaultsOnInsert: true,
+      },
     });
   };
 
-  const removeFn = async query =>
+  const removeFn = async (query) =>
     await deps.db.remove({
       store,
-      query
+      query,
     });
 
   deps.viewStore({
@@ -180,6 +180,6 @@ module.exports = async ({ schema, indexes, getFn, /*postFn,*/ putFn } = {}) => {
     removeFn,
     ...(getFn && { getFn }),
     // ...(postFn && { postFn }),
-    ...(putFn && { putFn })
+    ...(putFn && { putFn }),
   });
 };

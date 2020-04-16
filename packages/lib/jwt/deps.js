@@ -1,7 +1,7 @@
 const {
   fineTimestamp,
   stringFromDate,
-  string: dateString
+  string: dateString,
 } = require("@blossm/datetime");
 const uuid = require("@blossm/uuid");
 const { invalidCredentials } = require("@blossm/errors");

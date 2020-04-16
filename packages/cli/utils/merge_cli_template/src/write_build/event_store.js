@@ -49,7 +49,7 @@ module.exports = ({
   runBaseIntegrationTests,
   dependencyKeyEnvironmentVariables,
   actions,
-  strict
+  strict,
 }) => {
   return [
     yarnInstall,
@@ -58,7 +58,7 @@ module.exports = ({
     buildImage({
       extension: imageExtension,
       containerRegistery,
-      procedure
+      procedure,
     }),
     writeEnv({
       mainContainerName,
@@ -73,8 +73,8 @@ module.exports = ({
       custom: {
         DOMAIN: domain,
         SERVICE: service,
-        ...dependencyKeyEnvironmentVariables
-      }
+        ...dependencyKeyEnvironmentVariables,
+      },
     }),
     dockerComposeUp,
     dockerComposeProcesses,
@@ -85,7 +85,7 @@ module.exports = ({
           dockerPush({
             extension: imageExtension,
             containerRegistery,
-            procedure
+            procedure,
           }),
           deploy({
             serviceName,
@@ -112,9 +112,9 @@ module.exports = ({
               MONGODB_USER: mongodbUser,
               MONGODB_HOST: mongodbHost,
               MONGODB_PROTOCOL: mongodbProtocol,
-              ...dependencyKeyEnvironmentVariables
+              ...dependencyKeyEnvironmentVariables,
             },
-            labels: { domain, service }
+            labels: { domain, service },
           }),
           startDnsTransaction({ dnsZone, project }),
           addDnsTransaction({ uri, dnsZone, project }),
@@ -124,17 +124,17 @@ module.exports = ({
             serviceName,
             uri,
             project,
-            region
+            region,
           }),
-          ...actions.map(action =>
+          ...actions.map((action) =>
             createPubsubTopic({
               action,
               domain,
               service,
-              project
+              project,
             })
-          )
+          ),
         ]
-      : [dockerComposeLogs])
+      : [dockerComposeLogs]),
   ];
 };

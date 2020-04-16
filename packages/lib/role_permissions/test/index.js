@@ -7,8 +7,8 @@ const roles = [
     id: "some-role-id",
     root: "some-role-root",
     service: "some-role-service",
-    network: "some-role-network"
-  }
+    network: "some-role-network",
+  },
 ];
 
 const permissionPriviledge = "some-permission-privildge";
@@ -16,13 +16,13 @@ const permissionDomain = "some-permission-domain";
 const permissionService = "some-permission-service";
 
 const permissions = [
-  `${permissionService}:${permissionDomain}:${permissionPriviledge}`
+  `${permissionService}:${permissionDomain}:${permissionPriviledge}`,
 ];
 
 const defaultRole = {
   "some-role-id": {
-    permissions
-  }
+    permissions,
+  },
 };
 
 describe("Role permissions", () => {
@@ -32,14 +32,14 @@ describe("Role permissions", () => {
   it("should return the correct roles with no custom roles", async () => {
     const result = await rolePermissions({
       roles,
-      defaultRoles: { ...defaultRole }
+      defaultRoles: { ...defaultRole },
     });
     expect(result).to.deep.equal([
       {
         service: permissionService,
         domain: permissionDomain,
-        privilege: permissionPriviledge
-      }
+        privilege: permissionPriviledge,
+      },
     ]);
   });
   it("should return the no roles with no custom roles and wrong context", async () => {
@@ -53,8 +53,8 @@ describe("Role permissions", () => {
       context: {
         root: contextRoot,
         service: contextService,
-        network: contextNetwork
-      }
+        network: contextNetwork,
+      },
     });
 
     expect(result).to.deep.equal([]);
@@ -66,29 +66,29 @@ describe("Role permissions", () => {
 
     const result = await rolePermissions({
       roles: [
-        ...roles.map(role => {
+        ...roles.map((role) => {
           return {
             id: role.id,
             root: contextRoot,
             service: contextService,
-            network: contextNetwork
+            network: contextNetwork,
           };
-        })
+        }),
       ],
       defaultRoles: { ...defaultRole },
       context: {
         root: contextRoot,
         service: contextService,
-        network: contextNetwork
-      }
+        network: contextNetwork,
+      },
     });
 
     expect(result).to.deep.equal([
       {
         service: permissionService,
         domain: permissionDomain,
-        privilege: permissionPriviledge
-      }
+        privilege: permissionPriviledge,
+      },
     ]);
   });
   it("should return the correct roles with custom roles", async () => {
@@ -98,23 +98,23 @@ describe("Role permissions", () => {
       id: "some-custom-role-id",
       root: "some-custom-role-root",
       service: "some-custom-role-service",
-      network: "some-custom-role-network"
+      network: "some-custom-role-network",
     };
     const result = await rolePermissions({
       roles: [...roles, customRole],
       defaultRoles: { ...defaultRole },
-      customRolePermissionsFn: customRolesPermissionsFnFake
+      customRolePermissionsFn: customRolesPermissionsFnFake,
     });
     expect(customRolesPermissionsFnFake).to.have.been.calledWith({
-      roleId: "some-custom-role-id"
+      roleId: "some-custom-role-id",
     });
     expect(result).to.deep.equal([
       {
         service: permissionService,
         domain: permissionDomain,
-        privilege: permissionPriviledge
+        privilege: permissionPriviledge,
       },
-      ...customRolePermissions
+      ...customRolePermissions,
     ]);
   });
   it("should return the correct roles with multiple defaultRoles", async () => {
@@ -123,7 +123,7 @@ describe("Role permissions", () => {
     const otherPermissionService = "some-other-permission-service";
 
     const otherPermissions = [
-      `${otherPermissionService}:${otherPermissionDomain}:${otherPermissionPriviledge}`
+      `${otherPermissionService}:${otherPermissionDomain}:${otherPermissionPriviledge}`,
     ];
 
     const result = await rolePermissions({
@@ -131,21 +131,21 @@ describe("Role permissions", () => {
       defaultRoles: {
         ...defaultRole,
         "some-other-role-id": {
-          permissions: otherPermissions
-        }
-      }
+          permissions: otherPermissions,
+        },
+      },
     });
     expect(result).to.deep.equal([
       {
         service: permissionService,
         domain: permissionDomain,
-        privilege: permissionPriviledge
+        privilege: permissionPriviledge,
       },
       {
         service: otherPermissionService,
         domain: otherPermissionDomain,
-        privilege: otherPermissionPriviledge
-      }
+        privilege: otherPermissionPriviledge,
+      },
     ]);
   });
 });

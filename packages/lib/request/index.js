@@ -8,7 +8,7 @@ const common = async ({ method, url, params, headers }) =>
         url,
         method,
         ...(params != undefined && { json: params }),
-        ...(headers != undefined && { headers })
+        ...(headers != undefined && { headers }),
       },
       (err, response, body) =>
         err
@@ -17,7 +17,7 @@ const common = async ({ method, url, params, headers }) =>
               headers: response.headers,
               statusCode: response.statusCode,
               statusMessage: response.statusMessage,
-              body
+              body,
             })
     )
   );
@@ -40,7 +40,7 @@ exports.stream = async (url, onData, { query, headers } = {}) =>
       .request({
         url: addParamsToUrl(url, query),
         method: "GET",
-        ...(headers != undefined && { headers })
+        ...(headers != undefined && { headers }),
       })
       .on("data", onData)
       .on("error", reject)

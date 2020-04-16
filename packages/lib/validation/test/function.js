@@ -24,17 +24,17 @@ describe("Optional functions", () => {
 
 describe("Invalid function", () => {
   it("should contain one error if something other than a func is passed in", () => {
-    invalidFunctions.forEach(invalidFunction => {
+    invalidFunctions.forEach((invalidFunction) => {
       let response = fn({ value: invalidFunction });
       expect(response.errors).to.have.lengthOf(1);
     });
   });
   it("should contain one error if something other than a func is passed in with message", () => {
     const message = "This is a bad fn";
-    invalidFunctions.forEach(invalidFunction => {
+    invalidFunctions.forEach((invalidFunction) => {
       let response = fn({
         value: invalidFunction,
-        baseMessageFn: () => message
+        baseMessageFn: () => message,
       });
       expect(response.errors).to.have.lengthOf(1);
       expect(response.errors[0].message).to.equal(message);
@@ -43,7 +43,7 @@ describe("Invalid function", () => {
   it("should contain one error if something other than a func is passed in with message, title, and path", () => {
     const title = "some-title";
     const path = "some-path";
-    invalidFunctions.forEach(invalidFunction => {
+    invalidFunctions.forEach((invalidFunction) => {
       let response = fn({
         title,
         path,
@@ -51,7 +51,7 @@ describe("Invalid function", () => {
         baseMessageFn: (e, title) => {
           expect(e).to.exist;
           return title;
-        }
+        },
       });
       expect(response.errors).to.have.lengthOf(1);
       expect(response.errors[0].message).to.equal(title);
@@ -60,7 +60,7 @@ describe("Invalid function", () => {
   });
   it("should contain one error if something other than a func is passed in with title response", () => {
     const title = "some-title";
-    invalidFunctions.forEach(invalidFunction => {
+    invalidFunctions.forEach((invalidFunction) => {
       let response = fn({ value: invalidFunction, title });
       expect(response.errors).to.have.lengthOf(1);
       expect(response.errors[0].message).to.include(title);
@@ -70,7 +70,7 @@ describe("Invalid function", () => {
 
 describe("Invalid optional function", () => {
   it("should contain one error if something other than a function is passed in, regardless of optional flag", () => {
-    invalidFunctions.forEach(invalidFunction => {
+    invalidFunctions.forEach((invalidFunction) => {
       let response = fn({ value: invalidFunction, optional: true });
       expect(response.errors).to.have.lengthOf(1);
     });
@@ -80,25 +80,25 @@ describe("Invalid optional function", () => {
 describe("Error message", () => {
   it("should contain one error with the specified message if an invalid function is passed in", () => {
     const incorrectFn = () => false;
-    const refinementFn = value => value();
+    const refinementFn = (value) => value();
     const message = "This is a bad function";
     const response = fn({
       value: incorrectFn,
       refinementMessageFn: () => message,
-      refinementFn
+      refinementFn,
     });
     expect(response.errors[0].message).to.equal(message);
   });
 
   it("should contain one error with the specified message if an invalid function is passed in with title", () => {
     const incorrectFn = () => false;
-    const refinementFn = value => value();
+    const refinementFn = (value) => value();
     const title = "some-title";
     const response = fn({
       title,
       value: incorrectFn,
       refinementMessageFn: (value, title) => `${value}${title}`,
-      refinementFn
+      refinementFn,
     });
     expect(response.errors[0].message).to.equal(`${incorrectFn}${title}`);
   });
@@ -122,7 +122,7 @@ describe("Error message", () => {
     const response = fn({
       value: validFunction,
       refinementMessageFn: () => message,
-      refinementFn
+      refinementFn,
     });
 
     expect(response.errors[0].message).to.equal(message);

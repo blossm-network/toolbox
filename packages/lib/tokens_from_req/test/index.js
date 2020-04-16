@@ -8,9 +8,9 @@ describe("Tokens from req", () => {
     const token = "some-token-name";
     const req = {
       headers: {
-        authorization: `Bearer ${token}`
+        authorization: `Bearer ${token}`,
       },
-      cookies: {}
+      cookies: {},
     };
     expect(tokensFromReq(req)).to.deep.equal({ bearer: token });
   });
@@ -19,8 +19,8 @@ describe("Tokens from req", () => {
     const req = {
       headers: {},
       cookies: {
-        [cookieKey]: token
-      }
+        [cookieKey]: token,
+      },
     };
     expect(tokensFromReq(req, { cookieKey })).to.deep.equal({ cookie: token });
   });
@@ -28,9 +28,9 @@ describe("Tokens from req", () => {
     const token = "some-token-name";
     const req = {
       headers: {
-        authorization: `Basic ${token}`
+        authorization: `Basic ${token}`,
       },
-      cookies: {}
+      cookies: {},
     };
     expect(tokensFromReq(req)).to.deep.equal({ basic: token });
   });
@@ -39,31 +39,31 @@ describe("Tokens from req", () => {
     const otherToken = "some-other-token-name";
     const req = {
       headers: {
-        authorization: `Bearer ${otherToken}`
+        authorization: `Bearer ${otherToken}`,
       },
       cookies: {
-        [cookieKey]: token
-      }
+        [cookieKey]: token,
+      },
     };
     expect(tokensFromReq(req, { cookieKey })).to.deep.equal({
       cookie: token,
-      bearer: otherToken
+      bearer: otherToken,
     });
   });
   it("should return null if the scheme is incorrect.", () => {
     const token = "some-token-name";
     const req = {
       headers: {
-        authorization: `Bear ${token}`
+        authorization: `Bear ${token}`,
       },
-      cookies: {}
+      cookies: {},
     };
     expect(tokensFromReq(req)).to.deep.equal({});
   });
   it("should return null if authorization is missing.", () => {
     const req = {
       headers: {},
-      cookies: {}
+      cookies: {},
     };
     expect(tokensFromReq(req)).to.deep.equal({});
   });

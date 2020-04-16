@@ -35,12 +35,12 @@ describe("Create", () => {
       subject,
       audience,
       expiresIn,
-      activeIn
+      activeIn,
     };
     const algorithm = "ES256";
     const payload = {
       root,
-      a: 1
+      a: 1,
     };
     const signature = Buffer.from("some-signature").toString("base64");
     const signFnFake = fake.returns(signature);
@@ -48,12 +48,12 @@ describe("Create", () => {
       payload,
       options,
       signFn: signFnFake,
-      algorithm
+      algorithm,
     });
 
     const header = {
       alg: algorithm,
-      typ: "JWT"
+      typ: "JWT",
     };
 
     const stringifiedHeader = JSON.stringify(header);
@@ -69,7 +69,7 @@ describe("Create", () => {
       exp: deps.stringFromDate(new Date(deps.fineTimestamp() + expiresIn)),
       nbf: deps.stringFromDate(new Date(deps.fineTimestamp() + activeIn)),
       iat: deps.dateString(),
-      jti: uuid
+      jti: uuid,
     });
     const encodedPayload = base64url.fromBase64(
       Buffer.from(stringifiedPayload).toString("base64")
@@ -92,12 +92,12 @@ describe("Create", () => {
       subject,
       audience,
       expiresIn,
-      activeIn
+      activeIn,
     };
     const algorithm = "ES256";
     const payload = {
       root,
-      a: 1
+      a: 1,
     };
     const signature = Buffer.from("some-signature").toString("base64");
     const signFnFake = fake.returns(signature);
@@ -105,12 +105,12 @@ describe("Create", () => {
       payload,
       options,
       signFn: signFnFake,
-      algorithm
+      algorithm,
     });
 
     const header = {
       alg: algorithm,
-      typ: "JWT"
+      typ: "JWT",
     };
 
     const stringifiedHeader = JSON.stringify(header);
@@ -126,7 +126,7 @@ describe("Create", () => {
       exp: deps.stringFromDate(new Date(deps.fineTimestamp() + expiresIn)),
       nbf: deps.stringFromDate(new Date(deps.fineTimestamp() + activeIn)),
       iat: deps.dateString(),
-      jti: uuid
+      jti: uuid,
     });
     const encodedPayload = base64url.fromBase64(
       Buffer.from(stringifiedPayload).toString("base64")
@@ -148,11 +148,11 @@ describe("Create", () => {
       issuer,
       subject,
       audience,
-      expiresIn
+      expiresIn,
     };
     const payload = {
       root,
-      a: 1
+      a: 1,
     };
     const signature = Buffer.from("some-signature").toString("base64");
     const signFnFake = fake.returns(signature);
@@ -160,7 +160,7 @@ describe("Create", () => {
 
     const header = {
       alg: "ES256",
-      typ: "JWT"
+      typ: "JWT",
     };
 
     const stringifiedHeader = JSON.stringify(header);
@@ -176,7 +176,7 @@ describe("Create", () => {
       exp: deps.stringFromDate(new Date(deps.fineTimestamp() + expiresIn)),
       nbf: deps.stringFromDate(new Date(deps.fineTimestamp())),
       iat: deps.dateString(),
-      jti: uuid
+      jti: uuid,
     });
     const encodedPayload = base64url.fromBase64(
       Buffer.from(stringifiedPayload).toString("base64")

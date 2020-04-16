@@ -36,7 +36,7 @@ describe("Invalid number array", () => {
     const message = "This is a bad number";
     const response = numberArray({
       value: invalidNumberArray,
-      baseMessageFn: () => message
+      baseMessageFn: () => message,
     });
     expect(response.errors).to.have.lengthOf(1);
     expect(response.errors[0].message).to.equal(message);
@@ -51,7 +51,7 @@ describe("Invalid number array", () => {
       baseMessageFn: (e, title) => {
         expect(e).to.exist;
         return title;
-      }
+      },
     });
     expect(response.errors).to.have.lengthOf(1);
     expect(response.errors[0].message).to.equal(title);
@@ -61,7 +61,7 @@ describe("Invalid number array", () => {
     const message = "This is a bad number";
     const response = numberArray({
       value: 3,
-      baseMessageFn: () => message
+      baseMessageFn: () => message,
     });
     expect(response.errors).to.have.lengthOf(1);
     expect(response.errors[0].message).to.equal(message);
@@ -84,25 +84,25 @@ describe("Invalid optional number array", () => {
 describe("Error message", () => {
   it("should contain one error with the specified message if an invalid number array is passed in", () => {
     const incorrectNumberArray = [0];
-    const refinementFn = value => value[0] != 0;
+    const refinementFn = (value) => value[0] != 0;
     const message = "This is a bad number array";
     const response = numberArray({
       value: incorrectNumberArray,
       refinementMessageFn: () => message,
-      refinementFn
+      refinementFn,
     });
     expect(response.errors[0].message).to.equal(message);
   });
 
   it("should contain one error with the specified message if an invalid number array is passed in with title", () => {
     const incorrectNumberArray = [0];
-    const refinementFn = value => value[0] != 0;
+    const refinementFn = (value) => value[0] != 0;
     const title = "some-title";
     const response = numberArray({
       title,
       value: incorrectNumberArray,
       refinementMessageFn: (value, title) => `${value}${title}`,
-      refinementFn
+      refinementFn,
     });
     expect(response.errors[0].message).to.equal(
       `${incorrectNumberArray}${title}`
@@ -129,7 +129,7 @@ describe("Error message", () => {
     const response = numberArray({
       value: validNumberArray,
       refinementMessageFn: () => message,
-      refinementFn
+      refinementFn,
     });
 
     expect(response.errors[0].message).to.equal(message);

@@ -18,7 +18,7 @@ module.exports = ({
   nodeEnv,
   env = "",
   labels = "",
-  allowUnauthenticated = false
+  allowUnauthenticated = false,
 } = {}) => {
   return {
     name: "gcr.io/cloud-builders/gcloud",
@@ -49,13 +49,13 @@ module.exports = ({
         GCP_KMS_SECRET_BUCKET_KEY_LOCATION: secretBucketKeyLocation,
         GCP_KMS_SECRET_BUCKET_KEY_RING: secretBucketKeyRing,
         GCP_COMPUTE_URL_ID: computeUrlId,
-        ...env
+        ...env,
       }).reduce((string, [key, value]) => (string += `${key}=${value},`), "")}`,
       `--labels=${Object.entries({
         procedure,
         hash: operationHash,
-        ...labels
-      }).reduce((string, [key, value]) => (string += `${key}=${value},`), "")}`
-    ]
+        ...labels,
+      }).reduce((string, [key, value]) => (string += `${key}=${value},`), "")}`,
+    ],
   };
 };

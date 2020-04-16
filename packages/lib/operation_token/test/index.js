@@ -25,7 +25,7 @@ describe("Service token", () => {
 
     const result = await operationToken({
       tokenFn: tokenFnFake,
-      operation
+      operation,
     });
     expect(hashFake).to.have.been.calledWith(...operation);
     expect(trimFake).to.have.been.calledWith(
@@ -36,7 +36,7 @@ describe("Service token", () => {
     expect(operation).to.deep.equal([
       "some-operation0",
       "some-operation1",
-      "some-operation2"
+      "some-operation2",
     ]);
     expect(tokenFnFake).to.have.been.calledWith({ hash, name: trimmed });
     expect(result).to.equal(token);

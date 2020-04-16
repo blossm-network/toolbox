@@ -20,15 +20,15 @@ describe("Connection token", () => {
   });
   it("should call correctly", async () => {
     const response = {
-      tokens: [{ network: currentNetwork, value: token }]
+      tokens: [{ network: currentNetwork, value: token }],
     };
 
     const issueFake = fake.returns(response);
     const setFake = fake.returns({
-      issue: issueFake
+      issue: issueFake,
     });
     const commandFake = fake.returns({
-      set: setFake
+      set: setFake,
     });
     replace(deps, "command", commandFake);
 
@@ -40,44 +40,44 @@ describe("Connection token", () => {
 
     const credentialsFnFake = fake.returns({ id, secret });
     const result = await connectionToken({
-      credentialsFn: credentialsFnFake
+      credentialsFn: credentialsFnFake,
     })({ network });
 
     expect(commandFake).to.have.been.calledWith({
       name: "open",
       domain: "connection",
       service: "system",
-      network
+      network,
     });
     expect(decodeFake).to.have.been.calledWith(token);
     expect(setFake).to.have.been.calledWith({
-      tokenFns: { external: match(fn => fn() == basicToken) }
+      tokenFns: { external: match((fn) => fn() == basicToken) },
     });
     expect(basicTokenFake).to.have.been.calledWith({
       id,
-      secret
+      secret,
     });
     expect(issueFake).to.have.been.calledWith();
     expect(credentialsFnFake).to.have.been.calledWith({ network });
     expect(result).to.deep.equal({ token, type: "Bearer" });
 
     const anotherResult = await connectionToken({
-      credentialsFn: credentialsFnFake
+      credentialsFn: credentialsFnFake,
     })({ network });
     expect(commandFake).to.have.been.calledOnce;
     expect(anotherResult).to.deep.equal({ token, type: "Bearer" });
   });
   it("should call correctly if expired", async () => {
     const response = {
-      tokens: [{ network: currentNetwork, value: token }]
+      tokens: [{ network: currentNetwork, value: token }],
     };
 
     const issueFake = fake.returns(response);
     const setFake = fake.returns({
-      issue: issueFake
+      issue: issueFake,
     });
     const commandFake = fake.returns({
-      set: setFake
+      set: setFake,
     });
     replace(deps, "command", commandFake);
 
@@ -89,12 +89,12 @@ describe("Connection token", () => {
     const anotherNetwork = "another-network";
     const credentialsFnFake = fake.returns({ id, secret });
     const result = await connectionToken({
-      credentialsFn: credentialsFnFake
+      credentialsFn: credentialsFnFake,
     })({ network: anotherNetwork });
     expect(result).to.deep.equal({ token, type: "Bearer" });
 
     const anotherResult = await connectionToken({
-      credentialsFn: credentialsFnFake
+      credentialsFn: credentialsFnFake,
     })({ network: anotherNetwork });
     expect(commandFake).to.have.been.calledTwice;
     expect(anotherResult).to.deep.equal({ token, type: "Bearer" });

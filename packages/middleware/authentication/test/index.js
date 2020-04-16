@@ -28,7 +28,7 @@ describe("Authentication middleware", () => {
       sub,
       exp,
       iat,
-      jti
+      jti,
     };
     const req = {};
 
@@ -42,7 +42,7 @@ describe("Authentication middleware", () => {
       keyClaimsFn,
       audience,
       algorithm,
-      allowBasic
+      allowBasic,
     })(req, null, nextFake);
 
     expect(authenticateFake).to.have.been.calledWith({
@@ -51,7 +51,7 @@ describe("Authentication middleware", () => {
       keyClaimsFn,
       audience,
       algorithm,
-      allowBasic
+      allowBasic,
     });
     expect(req.context).to.deep.equal(context);
     expect(req.claims).to.deep.equal({
@@ -60,7 +60,7 @@ describe("Authentication middleware", () => {
       sub,
       exp,
       iat,
-      jti
+      jti,
     });
     expect(nextFake).to.have.been.calledOnce;
   });
@@ -80,7 +80,7 @@ describe("Authentication middleware", () => {
       audience,
       algorithm,
       strict: false,
-      allowBasic
+      allowBasic,
     })(req, null, nextFake);
 
     expect(authenticateFake).to.have.been.calledWith({
@@ -89,7 +89,7 @@ describe("Authentication middleware", () => {
       keyClaimsFn,
       audience,
       algorithm,
-      allowBasic
+      allowBasic,
     });
     expect(nextFake).to.have.been.calledOnce;
   });

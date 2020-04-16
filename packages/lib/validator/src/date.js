@@ -13,6 +13,6 @@ module.exports = (
     baseMessageFn,
     refinementMessageFn: (_, title) =>
       `This ${title.toLowerCase()} couldn't be parsed. Try again after making a change to it.`,
-    refinementFn: value => !findError([number(Date.parse(value))]),
-    optional
+    refinementFn: (value) => !findError([number(Date.parse(value))]),
+    optional,
   });

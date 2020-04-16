@@ -18,19 +18,19 @@ describe("Mongodb event store reserve root count", () => {
     const writeFake = fake.returns(writeResult);
 
     const db = {
-      write: writeFake
+      write: writeFake,
     };
     replace(deps, "db", db);
 
     const result = await reserveRootCount({ countsStore })({
       root,
-      amount
+      amount,
     });
     expect(writeFake).to.have.been.calledWith({
       store: countsStore,
       query: { root },
       update: {
-        $inc: { value: amount }
+        $inc: { value: amount },
       },
       options: {
         lean: true,
@@ -38,8 +38,8 @@ describe("Mongodb event store reserve root count", () => {
         upsert: true,
         new: true,
         runValidators: true,
-        setDefaultsOnInsert: true
-      }
+        setDefaultsOnInsert: true,
+      },
     });
     expect(result).to.deep.equal(writeResult);
   });

@@ -14,14 +14,14 @@ describe("Event store get", () => {
   it("should call with the correct params with root", async () => {
     const aggregateFnFake = fake.returns(found);
     const params = {
-      root
+      root,
     };
     const req = {
-      params
+      params,
     };
     const sendFake = fake();
     const res = {
-      send: sendFake
+      send: sendFake,
     };
     await get({ aggregateFn: aggregateFnFake })(req, res);
     expect(aggregateFnFake).to.have.been.calledWith(root);
@@ -34,15 +34,15 @@ describe("Event store get", () => {
     const value = "some-value";
     const query = {
       key,
-      value
+      value,
     };
     const req = {
       params,
-      query
+      query,
     };
     const sendFake = fake();
     const res = {
-      send: sendFake
+      send: sendFake,
     };
     await get({ queryFn: queryFnFake })(req, res);
     expect(queryFnFake).to.have.been.calledWith(query);
@@ -51,17 +51,17 @@ describe("Event store get", () => {
   it("should throw correctly if not found", async () => {
     const aggregateFnFake = fake();
     const params = {
-      root
+      root,
     };
     const req = {
-      params
+      params,
     };
     const res = {};
 
     const error = "some-error";
     const rootNotFoundFake = fake.returns(error);
     replace(deps, "resourceNotFoundError", {
-      root: rootNotFoundFake
+      root: rootNotFoundFake,
     });
 
     try {

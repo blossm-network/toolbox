@@ -12,7 +12,7 @@ describe("Remove", () => {
     const execResult = 4;
     const deleteOneFake = fake.returns(execResult);
     const store = {
-      deleteOne: deleteOneFake
+      deleteOne: deleteOneFake,
     };
 
     const result = await remove({ store, query });

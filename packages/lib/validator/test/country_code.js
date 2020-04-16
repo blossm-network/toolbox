@@ -251,12 +251,12 @@ const validCountryCodes = [
   "EH",
   "YE",
   "ZM",
-  "ZW"
+  "ZW",
 ];
 
 describe("Valid country code", () => {
   it("should not contain errors if value is a country code", () => {
-    validCountryCodes.forEach(validCountryCode => {
+    validCountryCodes.forEach((validCountryCode) => {
       let response = countryCode(validCountryCode);
       expect(response.errors).to.be.empty;
     });
@@ -276,7 +276,7 @@ describe("Optional buffers", () => {
 
 describe("Invalid buffer", () => {
   it("should contain one error if something other than a country code is passed in", () => {
-    invalidCountryCodes.forEach(invalidCountryCode => {
+    invalidCountryCodes.forEach((invalidCountryCode) => {
       let response = countryCode(invalidCountryCode);
       expect(response.errors).to.have.lengthOf(1);
     });
@@ -285,7 +285,7 @@ describe("Invalid buffer", () => {
 
 describe("Invalid optional country code", () => {
   it("should contain one error if something other than a country code is passed in, regardless of optional flag", () => {
-    invalidCountryCodes.forEach(invalidCountryCode => {
+    invalidCountryCodes.forEach((invalidCountryCode) => {
       let response = countryCode(invalidCountryCode, { optional: true });
       expect(response.errors).to.have.lengthOf(1);
     });

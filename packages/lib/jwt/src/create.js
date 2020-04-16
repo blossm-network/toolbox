@@ -5,11 +5,11 @@ module.exports = async ({
   options: { issuer, subject, audience, expiresIn, activeIn = 0 },
   payload = {},
   signFn,
-  algorithm = "ES256"
+  algorithm = "ES256",
 }) => {
   const header = {
     alg: algorithm,
-    typ: "JWT"
+    typ: "JWT",
   };
 
   const stringifiedHeader = JSON.stringify(header);
@@ -25,7 +25,7 @@ module.exports = async ({
     exp: deps.stringFromDate(new Date(deps.fineTimestamp() + expiresIn)),
     nbf: deps.stringFromDate(new Date(deps.fineTimestamp() + activeIn)),
     iat: deps.dateString(),
-    jti: deps.uuid()
+    jti: deps.uuid(),
   });
 
   const encodedPayload = base64url.fromBase64(

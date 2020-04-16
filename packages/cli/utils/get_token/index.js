@@ -8,7 +8,7 @@ module.exports = async ({
   permissions = [],
   context = {},
   phone = "+19195551144",
-  id
+  id,
 } = {}) => {
   const identityRoot = uuid();
   const roleRoot = uuid();
@@ -19,7 +19,7 @@ module.exports = async ({
   // Create the identity for the token.
   await eventStore({
     domain: "identity",
-    service: "core"
+    service: "core",
   }).add([
     {
       data: createEvent({
@@ -28,16 +28,16 @@ module.exports = async ({
           principle: {
             root: principleRoot,
             service: process.env.SERVICE,
-            network: process.env.NETWORK
+            network: process.env.NETWORK,
           },
           phone: await hash(phone),
-          id
+          id,
         },
         action: "register",
         domain: "identity",
-        service: "core"
-      })
-    }
+        service: "core",
+      }),
+    },
   ]);
 
   // Add permissions to the role
@@ -45,24 +45,24 @@ module.exports = async ({
   await Promise.all([
     eventStore({
       domain: "role",
-      service: "core"
+      service: "core",
     }).add([
       {
         data: createEvent({
           root: roleRoot,
           payload: {
             id: roleId,
-            permissions
+            permissions,
           },
           action: "create",
           domain: "role",
-          service: "core"
-        })
-      }
+          service: "core",
+        }),
+      },
     ]),
     eventStore({
       domain: "principle",
-      service: "core"
+      service: "core",
     }).add([
       {
         data: createEvent({
@@ -72,22 +72,22 @@ module.exports = async ({
               {
                 id: roleId,
                 service: process.env.SERVICE,
-                network: process.env.NETWORK
-              }
-            ]
+                network: process.env.NETWORK,
+              },
+            ],
           },
           action: "add-roles",
           domain: "principle",
-          service: "core"
-        })
-      }
-    ])
+          service: "core",
+        }),
+      },
+    ]),
   ]);
 
   // Add a session.
   await eventStore({
     domain: "session",
-    service: "core"
+    service: "core",
   }).add([
     {
       data: createEvent({
@@ -95,15 +95,15 @@ module.exports = async ({
         payload: {},
         action: "start",
         domain: "session",
-        service: "core"
-      })
-    }
+        service: "core",
+      }),
+    },
   ]);
 
   const { tokens } = await command({
     name: "upgrade",
     domain: "session",
-    service: "core"
+    service: "core",
   })
     .set({
       context: {
@@ -112,22 +112,22 @@ module.exports = async ({
         session: {
           root: sessionRoot,
           service: process.env.SERVICE,
-          network: process.env.NETWORK
-        }
+          network: process.env.NETWORK,
+        },
       },
       claims: {
         iss: `session.${process.env.SERVICE}.${process.env.NETWORK}/upgrade`,
         aud: `${process.env.NETWORK}`,
-        exp: "9999-12-31T00:00:00.000Z"
-      }
+        exp: "9999-12-31T00:00:00.000Z",
+      },
     })
     .issue(
       {
         principle: {
           root: principleRoot,
           service: "core",
-          network: process.env.NETWORK
-        }
+          network: process.env.NETWORK,
+        },
       },
       { root: sessionRoot }
     );

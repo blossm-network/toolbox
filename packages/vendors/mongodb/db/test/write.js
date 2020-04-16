@@ -14,7 +14,7 @@ describe("write", () => {
     const execResult = 4;
     const findOneAndUpdateFake = fake.returns(execResult);
     const store = {
-      findOneAndUpdate: findOneAndUpdateFake
+      findOneAndUpdate: findOneAndUpdateFake,
     };
 
     const result = await write({ store, query, update });
@@ -26,7 +26,7 @@ describe("write", () => {
     const execResult = 4;
     const findOneAndUpdateFake = fake.returns(execResult);
     const store = {
-      findOneAndUpdate: findOneAndUpdateFake
+      findOneAndUpdate: findOneAndUpdateFake,
     };
 
     const result = await write({ store, query, options, update });

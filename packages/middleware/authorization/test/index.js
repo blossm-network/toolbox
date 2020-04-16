@@ -26,7 +26,7 @@ describe("Authorization middleware", () => {
     const path = "some-path";
     const req = {
       path,
-      context
+      context,
     };
 
     const authorizationFake = fake();
@@ -39,17 +39,17 @@ describe("Authorization middleware", () => {
       permissionsLookupFn,
       terminatedSessionCheckFn: terminatedSessionCheckFake,
       permissions,
-      context: contextKey
+      context: contextKey,
     })(req, null, nextFake);
 
     expect(authorizationFake).to.have.been.calledWith({
       principle,
       permissionsLookupFn,
       permissions,
-      context: contextObj
+      context: contextObj,
     });
     expect(terminatedSessionCheckFake).to.have.been.calledWith({
-      session: sessionRoot
+      session: sessionRoot,
     });
 
     expect(nextFake).to.have.been.calledOnce;
@@ -60,7 +60,7 @@ describe("Authorization middleware", () => {
     const req = {
       path,
       context: otherContext,
-      body: {}
+      body: {},
     };
 
     const authorizationFake = fake();
@@ -71,7 +71,7 @@ describe("Authorization middleware", () => {
     const nextFake = fake();
     await authorizationMiddleware({
       terminatedSessionCheckFn: terminatedSessionCheckFake,
-      permissions
+      permissions,
     })(req, null, nextFake);
 
     expect(authorizationFake).to.not.have.been.called;
@@ -84,7 +84,7 @@ describe("Authorization middleware", () => {
     const req = {
       path,
       context: {},
-      body: {}
+      body: {},
     };
 
     const error = new Error();
@@ -97,7 +97,7 @@ describe("Authorization middleware", () => {
     await authorizationMiddleware({
       permissionsLookupFn,
       terminatedSessionCheckFn: terminatedSessionCheckFake,
-      permissions
+      permissions,
     })(req, null, nextFake);
 
     expect(nextFake).to.have.been.calledWith(error);
@@ -107,7 +107,7 @@ describe("Authorization middleware", () => {
     const path = "some-path";
     const req = {
       path,
-      context
+      context,
     };
 
     const authorizationFake = fake();
@@ -121,7 +121,7 @@ describe("Authorization middleware", () => {
     await authorizationMiddleware({
       permissionsLookupFn,
       terminatedSessionCheckFn: terminatedSessionCheckFake,
-      permissions
+      permissions,
     })(req, null, nextFake);
 
     expect(nextFake).to.have.been.calledWith(error);

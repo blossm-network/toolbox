@@ -24,7 +24,7 @@ describe("Optional buffers", () => {
 
 describe("Invalid buffer", () => {
   it("should contain one error if something other than a buffer is passed in", () => {
-    invalidBuffers.forEach(invalidBoolean => {
+    invalidBuffers.forEach((invalidBoolean) => {
       let response = buffer(invalidBoolean);
       expect(response.errors).to.have.lengthOf(1);
     });
@@ -33,7 +33,7 @@ describe("Invalid buffer", () => {
 
 describe("Invalid optional buffer", () => {
   it("should contain one error if something other than a buffer is passed in, regardless of optional flag", () => {
-    invalidBuffers.forEach(invalidBoolean => {
+    invalidBuffers.forEach((invalidBoolean) => {
       let response = buffer(invalidBoolean, { optional: true });
       expect(response.errors).to.have.lengthOf(1);
     });

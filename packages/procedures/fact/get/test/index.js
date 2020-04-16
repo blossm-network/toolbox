@@ -28,24 +28,24 @@ describe("Fact get", () => {
     const req = {
       params,
       query: {
-        query
-      }
+        query,
+      },
     };
 
     const sendFake = fake();
     const statusFake = fake.returns({
-      send: sendFake
+      send: sendFake,
     });
     const res = {
-      status: statusFake
+      status: statusFake,
     };
 
     await get({
-      mainFn: mainFnFake
+      mainFn: mainFnFake,
     })(req, res);
 
     expect(mainFnFake).to.have.been.calledWith({
-      query
+      query,
     });
     expect(statusFake).to.have.been.calledWith(200);
     expect(sendFake).to.have.been.calledWith(response);
@@ -60,32 +60,32 @@ describe("Fact get", () => {
 
     const req = {
       params: {
-        root
+        root,
       },
       query: {
         query,
         claims,
-        context
-      }
+        context,
+      },
     };
 
     const sendFake = fake();
     const statusFake = fake.returns({
-      send: sendFake
+      send: sendFake,
     });
     const res = {
-      status: statusFake
+      status: statusFake,
     };
 
     await get({
-      mainFn: mainFnFake
+      mainFn: mainFnFake,
     })(req, res);
 
     expect(mainFnFake).to.have.been.calledWith({
       query,
       context,
       root,
-      claims
+      claims,
     });
     expect(statusFake).to.have.been.calledWith(200);
     expect(sendFake).to.have.been.calledWith(response);
@@ -95,20 +95,20 @@ describe("Fact get", () => {
     const mainFnFake = fake.rejects(new Error(errorMessage));
     const req = {
       params,
-      query
+      query,
     };
 
     const sendFake = fake();
     const statusFake = fake.returns({
-      send: sendFake
+      send: sendFake,
     });
     const res = {
-      status: statusFake
+      status: statusFake,
     };
 
     try {
       await get({
-        mainFn: mainFnFake
+        mainFn: mainFnFake,
       })(req, res);
 
       //shouldn't get called

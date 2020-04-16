@@ -26,7 +26,7 @@ describe("Secrets", () => {
     const readFileFake = fake.returns({
       toString: () => {
         return { trim: () => encrypted };
-      }
+      },
     });
     const decryptFake = fake.returns(secret);
     const unlinkFake = fake();
@@ -42,7 +42,7 @@ describe("Secrets", () => {
     expect(downloadFake).to.have.been.calledWith({
       bucket,
       file: `${key}.txt.encrypted`,
-      destination: `${fileName}.txt.encrypted`
+      destination: `${fileName}.txt.encrypted`,
     });
     expect(readFileFake).to.have.been.calledWith(`${fileName}.txt.encrypted`);
     expect(decryptFake).to.have.been.calledWith({
@@ -50,7 +50,7 @@ describe("Secrets", () => {
       key,
       ring,
       location,
-      project
+      project,
     });
     expect(unlinkFake).to.have.been.calledWith(`${fileName}.txt.encrypted`);
     expect(result).to.equal(secret);
@@ -60,7 +60,7 @@ describe("Secrets", () => {
     const readFileFake = fake.returns({
       toString: () => {
         return { trim: () => encrypted };
-      }
+      },
     });
     const decryptFake = fake.returns(secret);
     const unlinkFake = fake();
@@ -76,12 +76,12 @@ describe("Secrets", () => {
       project: "some-other-project",
       ring: "some-other-ring",
       location: "some-other-location",
-      bucket: "some-other-bucket"
+      bucket: "some-other-bucket",
     });
     expect(downloadFake).to.have.been.calledWith({
       bucket: "some-other-bucket",
       file: `${key}.txt.encrypted`,
-      destination: `${fileName}.txt.encrypted`
+      destination: `${fileName}.txt.encrypted`,
     });
     expect(readFileFake).to.have.been.calledWith(`${fileName}.txt.encrypted`);
     expect(decryptFake).to.have.been.calledWith({
@@ -89,7 +89,7 @@ describe("Secrets", () => {
       key,
       ring: "some-other-ring",
       location: "some-other-location",
-      project: "some-other-project"
+      project: "some-other-project",
     });
     expect(unlinkFake).to.have.been.calledWith(`${fileName}.txt.encrypted`);
     expect(result).to.equal(secret);
@@ -124,14 +124,14 @@ describe("Secrets", () => {
       id: key,
       project,
       ring,
-      location
+      location,
     });
     expect(encryptFake).to.have.been.calledWith({
       message: secret,
       key,
       ring,
       location,
-      project
+      project,
     });
     expect(writeFileFake).to.have.been.calledWith(
       `${key}.txt.encrypted`,
@@ -139,7 +139,7 @@ describe("Secrets", () => {
     );
     expect(uploadFake).to.have.been.calledWith({
       file: `${key}.txt.encrypted`,
-      bucket
+      bucket,
     });
     expect(unlinkFake).to.have.been.calledWith(`${key}.txt.encrypted`);
     expect(result).to.be.undefined;
@@ -161,14 +161,14 @@ describe("Secrets", () => {
       id: key,
       project,
       ring,
-      location
+      location,
     });
     expect(encryptFake).to.have.been.calledWith({
       message: secret,
       key,
       ring,
       location,
-      project
+      project,
     });
     expect(writeFileFake).to.have.been.calledWith(
       `${key}.txt.encrypted`,
@@ -176,7 +176,7 @@ describe("Secrets", () => {
     );
     expect(uploadFake).to.have.been.calledWith({
       file: `${key}.txt.encrypted`,
-      bucket
+      bucket,
     });
     expect(unlinkFake).to.have.been.calledWith(`${key}.txt.encrypted`);
     expect(result).to.be.undefined;
@@ -197,20 +197,20 @@ describe("Secrets", () => {
       project: "some-other-project",
       ring: "some-other-ring",
       location: "some-other-location",
-      bucket: "some-other-bucket"
+      bucket: "some-other-bucket",
     });
     expect(createKeyFake).to.have.been.calledWith({
       id: key,
       project: "some-other-project",
       ring: "some-other-ring",
-      location: "some-other-location"
+      location: "some-other-location",
     });
     expect(encryptFake).to.have.been.calledWith({
       message: secret,
       key,
       ring: "some-other-ring",
       location: "some-other-location",
-      project: "some-other-project"
+      project: "some-other-project",
     });
     expect(writeFileFake).to.have.been.calledWith(
       `${key}.txt.encrypted`,
@@ -218,7 +218,7 @@ describe("Secrets", () => {
     );
     expect(uploadFake).to.have.been.calledWith({
       file: `${key}.txt.encrypted`,
-      bucket: "some-other-bucket"
+      bucket: "some-other-bucket",
     });
     expect(unlinkFake).to.have.been.calledWith(`${key}.txt.encrypted`);
     expect(result).to.be.undefined;

@@ -3,20 +3,20 @@ const {
   objectArray,
   string,
   date,
-  findError
+  findError,
 } = require("@blossm/validator");
 const { SECONDS_IN_DAY } = require("@blossm/duration-consts");
 
 const deps = require("./deps");
 
-module.exports = async params => {
+module.exports = async (params) => {
   const error = findError([
     object(params.headers, { title: "headers", path: "headers" }),
     object(params.payload, {
       optional: true,
       title: "payload",
-      path: "payload"
-    })
+      path: "payload",
+    }),
   ]);
 
   if (error) throw error;
@@ -25,30 +25,30 @@ module.exports = async params => {
     string(params.headers.trace, {
       optional: true,
       title: "trace",
-      path: "headers.trace"
+      path: "headers.trace",
     }),
     //TODO do headers have a root?
     string(params.headers.root, {
       optional: true,
       title: "root",
-      path: "headers.root"
+      path: "headers.root",
     }),
     //TODO
     objectArray(params.headers.path, {
       optional: true,
       title: "path",
-      path: "headers.path"
+      path: "headers.path",
     }),
     date(params.headers.issued, {
       title: "issued date",
-      headers: "headers.issued"
+      headers: "headers.issued",
     }),
     //TODO
     date(params.headers.broadcasted, {
       title: "issued date",
       headers: "headers.broadcasted",
-      optional: true
-    })
+      optional: true,
+    }),
   ]);
 
   if (headersError) throw headersError;

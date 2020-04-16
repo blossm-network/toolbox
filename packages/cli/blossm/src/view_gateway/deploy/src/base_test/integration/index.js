@@ -14,16 +14,16 @@ const existingTopics = [];
 describe("View gateway integration tests", () => {
   before(async () => {
     existingTopics.push(
-      ...testing.topics.filter(async t => {
+      ...testing.topics.filter(async (t) => {
         return await exists(t);
       })
     );
-    await Promise.all(testing.topics.map(t => create(t)));
+    await Promise.all(testing.topics.map((t) => create(t)));
   });
   after(
     async () =>
       await Promise.all(
-        [...testing.topics].map(t => !existingTopics.includes(t) && del(t))
+        [...testing.topics].map((t) => !existingTopics.includes(t) && del(t))
       )
   );
   it("should return successfully", async () => {
@@ -34,20 +34,20 @@ describe("View gateway integration tests", () => {
             ...new Set([
               ...permissions,
               ...(command.privileges
-                ? command.privileges.map(privilege => {
+                ? command.privileges.map((privilege) => {
                     return {
                       privilege,
                       domain: process.env.DOMAIN,
-                      context: process.env.CONTEXT
+                      context: process.env.CONTEXT,
                     };
                   })
-                : [])
-            ])
+                : []),
+            ]),
           ];
     }, []);
 
     const needsToken = stores.some(
-      c => c.protection == undefined || c.protection == "strict"
+      (c) => c.protection == undefined || c.protection == "strict"
     );
 
     const { token } = needsToken
@@ -59,14 +59,14 @@ describe("View gateway integration tests", () => {
       parallelFns.push(async () => {
         const response0 = await request.get(`${url}/${store.name}`, {
           body: {
-            root
+            root,
           },
           ...(store.protection === undefined ||
             (store.protection === "strict" && {
               headers: {
-                Authorization: `Bearer ${token}`
-              }
-            }))
+                Authorization: `Bearer ${token}`,
+              },
+            })),
         });
         expect(response0.statusCode).to.not.equal(401);
         expect(response0.statusCode).to.be.lessThan(500);
@@ -77,8 +77,8 @@ describe("View gateway integration tests", () => {
       parallelFns.push(async () => {
         const response1 = await request.get(`${url}/${store.name}`, {
           body: {
-            root
-          }
+            root,
+          },
         });
 
         expect(response1.statusCode).to.equal(401);
@@ -87,11 +87,11 @@ describe("View gateway integration tests", () => {
       parallelFns.push(async () => {
         const response2 = await request.get(`${url}/${store.name}`, {
           body: {
-            root
+            root,
           },
           headers: {
-            Authorization: "Bearer bogusHeader.bogusPayload.bogusSignature"
-          }
+            Authorization: "Bearer bogusHeader.bogusPayload.bogusSignature",
+          },
         });
 
         expect(response2.statusCode).to.equal(401);

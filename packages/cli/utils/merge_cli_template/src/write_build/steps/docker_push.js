@@ -3,7 +3,7 @@ module.exports = ({ extension, containerRegistery, procedure } = {}) => {
     name: "gcr.io/cloud-builders/docker",
     args: [
       "push",
-      `${containerRegistery}/${procedure}${extension ? `.${extension}` : ""}`
-    ]
+      `${containerRegistery}/${procedure}${extension ? `.${extension}` : ""}`,
+    ],
   };
 };

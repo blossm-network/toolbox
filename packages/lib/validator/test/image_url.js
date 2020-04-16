@@ -5,7 +5,7 @@ describe("Image url", () => {
   it("should not contain errors if the image url is formatted correctly", () => {
     const validImageUrls = [
       "https://upload.wikimedia.org/wikipedia/commons/2/25/Red.svg",
-      "https://media.giphy.com/media/3o72EWdzDI0wgdAq7S/giphy.gif"
+      "https://media.giphy.com/media/3o72EWdzDI0wgdAq7S/giphy.gif",
     ];
     for (const url of validImageUrls) {
       const error = imageUrl(url);

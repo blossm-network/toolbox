@@ -1,6 +1,6 @@
 const deps = require("../deps");
 
-module.exports = whitelist => {
+module.exports = (whitelist) => {
   return {
     check: (origin, callback) => {
       if (!origin || whitelist.indexOf(origin) !== -1) {
@@ -8,6 +8,6 @@ module.exports = whitelist => {
       } else {
         callback(deps.unauthorizedError.cors());
       }
-    }
+    },
   };
 };

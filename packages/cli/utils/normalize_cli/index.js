@@ -3,8 +3,8 @@ const arg = require("arg");
 const { prompt } = require("inquirer");
 const { red } = require("chalk");
 
-const camelCased = str =>
-  str.replace(/-([a-z])/g, function(g) {
+const camelCased = (str) =>
+  str.replace(/-([a-z])/g, function (g) {
     return g[1].toUpperCase();
   });
 
@@ -19,7 +19,7 @@ const flagValue = async (flag, args) => {
       message: roboSay(
         `Which of these ${flag.name}'s do you wanna use by default?`
       ),
-      choices: flag.choices
+      choices: flag.choices,
     });
 
     return flagValue;
@@ -45,7 +45,7 @@ const parseArgs = async (
     return {
       ...map,
       [`--${flag.name}`]: flag.type,
-      [`-${flag.short}`]: `--${flag.name}`
+      [`-${flag.short}`]: `--${flag.name}`,
     };
   }, {});
 
@@ -54,11 +54,11 @@ const parseArgs = async (
       {
         "--skip-prompts": Boolean,
         "-s": "--skip-prompts",
-        ...flagArgs
+        ...flagArgs,
       },
       {
         argv: rawArgs,
-        permissive
+        permissive,
       }
     );
 
@@ -67,7 +67,7 @@ const parseArgs = async (
     const formattedFlags = flags.reduce((map, flag) => {
       return {
         ...map,
-        [camelCased(flag.name)]: flag.value
+        [camelCased(flag.name)]: flag.value,
       };
     }, {});
 
@@ -75,7 +75,7 @@ const parseArgs = async (
       ...formattedFlags,
       entrypoint: args._[0] || entrypointDefault,
       args: args._.slice(1),
-      positionalArgs: args._.slice(1).filter(arg => arg[0] != "-")
+      positionalArgs: args._.slice(1).filter((arg) => arg[0] != "-"),
     };
   } catch (e) {
     //eslint-disable-next-line no-console
@@ -107,7 +107,7 @@ const validate = async ({ entrypointType, choices, options }) => {
         message: roboSay(
           `Which of these ${entrypointType}'s do you wanna run?`
         ),
-        choices
+        choices,
       });
 
       options.entrypoint = answers.entrypoint;
@@ -139,12 +139,12 @@ module.exports = async ({
   entrypointDefault,
   choices,
   args,
-  flags
+  flags,
 }) => {
   const options = await validate({
     entrypointType,
     choices,
-    options: await parseArgs(args, { flags, entrypointDefault })
+    options: await parseArgs(args, { flags, entrypointDefault }),
   });
   return format(options, { entrypointType });
 };

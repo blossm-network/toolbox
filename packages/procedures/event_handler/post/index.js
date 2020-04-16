@@ -1,6 +1,6 @@
 const deps = require("./deps");
 
-const event = req => {
+const event = (req) => {
   try {
     const eventString = Buffer.from(req.body.message.data, "base64")
       .toString()

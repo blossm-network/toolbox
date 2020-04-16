@@ -1,6 +1,6 @@
 const deps = require("../deps");
 
-const getErrors = results => {
+const getErrors = (results) => {
   const errors = [];
   for (const result of results) {
     if (result == undefined) {
@@ -10,10 +10,10 @@ const getErrors = results => {
     } else if (result.toJSON) {
       const json = result.toJSON();
       errors.push(
-        ...json.info.errors.map(error => {
+        ...json.info.errors.map((error) => {
           return {
             message: error.message,
-            path: error.path
+            path: error.path,
           };
         })
       );
@@ -22,16 +22,16 @@ const getErrors = results => {
   return errors;
 };
 
-module.exports = results => {
+module.exports = (results) => {
   const errors = getErrors(results);
 
   if (!errors.length) return null;
 
   return deps.invalidArgumentError.validationFailed({
     info: {
-      errors: errors.map(e => {
+      errors: errors.map((e) => {
         return { message: e.message, path: e.path[0] };
-      })
-    }
+      }),
+    },
   });
 };

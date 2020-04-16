@@ -11,16 +11,16 @@ module.exports = async ({
   internalTokenFn,
   externalTokenFn,
   algorithm,
-  audience
+  audience,
 }) => {
   let server = deps.server({
-    prehook: app =>
+    prehook: (app) =>
       deps.corsMiddleware({
         app,
         whitelist,
         credentials: true,
-        methods: ["GET"]
-      })
+        methods: ["GET"],
+      }),
   });
 
   for (const {
@@ -28,14 +28,14 @@ module.exports = async ({
     key = "access",
     privileges,
     protection = "strict",
-    context
+    context,
   } of facts) {
     server = server.get(
       deps.get({
         name,
         domain,
         internalTokenFn,
-        externalTokenFn
+        externalTokenFn,
       }),
       {
         path: `/${name}`,
@@ -45,7 +45,7 @@ module.exports = async ({
               verifyFn: verifyFn({ key }),
               audience,
               algorithm,
-              strict: protection == "strict"
+              strict: protection == "strict",
             }),
             ...(protection == "strict"
               ? [
@@ -55,15 +55,15 @@ module.exports = async ({
                     context,
                     permissions:
                       privileges instanceof Array
-                        ? privileges.map(privilege => {
+                        ? privileges.map((privilege) => {
                             return { service, domain, privilege };
                           })
-                        : privileges
-                  })
+                        : privileges,
+                  }),
                 ]
-              : [])
-          ]
-        })
+              : []),
+          ],
+        }),
       }
     );
   }

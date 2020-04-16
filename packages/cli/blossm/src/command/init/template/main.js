@@ -20,10 +20,10 @@ module.exports = async ({ payload, root, context, aggregateFn }) => {
     payload,
     root,
     context,
-    aggregateFn
+    aggregateFn,
   });
 
   return {
-    events: [{ action: "some-action", payload, root, correctNumber: 0 }]
+    events: [{ action: "some-action", payload, root, correctNumber: 0 }],
   };
 };

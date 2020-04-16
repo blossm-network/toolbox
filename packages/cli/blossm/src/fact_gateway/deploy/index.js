@@ -6,7 +6,7 @@ const { MAX_LENGTH } = require("@blossm/service-name-consts");
 module.exports = deployCliTemplate({
   domain: "fact-gateway",
   dir: __dirname,
-  configFn: config => {
+  configFn: (config) => {
     return {
       operationName: trim(
         `${config.procedure}${config.service ? `-${config.service}` : ""}${
@@ -18,7 +18,7 @@ module.exports = deployCliTemplate({
         ...(config.domain ? [config.domain] : []),
         ...(config.service ? [config.service] : []),
         config.procedure
-      )
+      ),
     };
-  }
+  },
 });

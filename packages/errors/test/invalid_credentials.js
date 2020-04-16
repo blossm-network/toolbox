@@ -23,7 +23,7 @@ describe("Invalid credentials", () => {
       statusCode: 401,
       code: "InvalidCredentials",
       info: {},
-      message: "This token is expired."
+      message: "This token is expired.",
     });
   });
   it("tokenExpired correct with props", () => {
@@ -33,7 +33,7 @@ describe("Invalid credentials", () => {
       code: "InvalidCredentials",
       info,
       cause,
-      message: "This token is expired."
+      message: "This token is expired.",
     });
   });
   it("wrongAudience correct", () => {
@@ -42,7 +42,7 @@ describe("Invalid credentials", () => {
       statusCode: 401,
       code: "InvalidCredentials",
       info: {},
-      message: "This token isn't meant for this audience."
+      message: "This token isn't meant for this audience.",
     });
   });
   it("wrongAudience correct with props", () => {
@@ -52,7 +52,7 @@ describe("Invalid credentials", () => {
       code: "InvalidCredentials",
       info,
       cause,
-      message: "This token isn't meant for this audience."
+      message: "This token isn't meant for this audience.",
     });
   });
   it("tokenNotActive correct", () => {
@@ -61,7 +61,7 @@ describe("Invalid credentials", () => {
       statusCode: 401,
       code: "InvalidCredentials",
       info: {},
-      message: "This token is not active."
+      message: "This token is not active.",
     });
   });
   it("tokenNotActive correct with props", () => {
@@ -71,7 +71,7 @@ describe("Invalid credentials", () => {
       code: "InvalidCredentials",
       info,
       cause,
-      message: "This token is not active."
+      message: "This token is not active.",
     });
   });
   it("tokenTerminated correct", () => {
@@ -80,7 +80,7 @@ describe("Invalid credentials", () => {
       statusCode: 401,
       code: "InvalidCredentials",
       info: {},
-      message: "This token has already been terminated."
+      message: "This token has already been terminated.",
     });
   });
   it("tokenTerminated correct with props", () => {
@@ -90,7 +90,7 @@ describe("Invalid credentials", () => {
       code: "InvalidCredentials",
       info,
       cause,
-      message: "This token has already been terminated."
+      message: "This token has already been terminated.",
     });
   });
   it("phoneNotRecognized correct", () => {
@@ -99,7 +99,7 @@ describe("Invalid credentials", () => {
       statusCode: 401,
       code: "InvalidCredentials",
       info: {},
-      message: "This phone number isn't recognized."
+      message: "This phone number isn't recognized.",
     });
   });
   it("phoneNotRecognized correct with props", () => {
@@ -109,7 +109,7 @@ describe("Invalid credentials", () => {
       code: "InvalidCredentials",
       info,
       cause,
-      message: "This phone number isn't recognized."
+      message: "This phone number isn't recognized.",
     });
   });
   it("message correct", () => {
@@ -119,7 +119,7 @@ describe("Invalid credentials", () => {
       statusCode: 401,
       code: "InvalidCredentials",
       info: {},
-      message
+      message,
     });
   });
   it("message correct with props", () => {
@@ -130,7 +130,7 @@ describe("Invalid credentials", () => {
       code: "InvalidCredentials",
       info,
       cause,
-      message
+      message,
     });
   });
 });

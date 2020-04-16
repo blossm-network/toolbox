@@ -56,7 +56,7 @@ module.exports = ({ prehook, posthook } = {}) => {
         ...postMiddleware
       );
       return { ...methods, listen };
-    }
+    },
   };
 
   return methods;

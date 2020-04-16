@@ -8,7 +8,7 @@ module.exports = (value, { baseMessageFn, title, path, optional } = {}) =>
     title,
     path,
     baseMessageFn,
-    refinementFn: numeric => regex.test(numeric),
+    refinementFn: (numeric) => regex.test(numeric),
     refinementMessageFn: (_, title) => `${title} should be a number.`,
-    optional
+    optional,
   });

@@ -18,14 +18,14 @@ describe("Map reduce", () => {
     const execResult = 4;
     const mapReduceFake = fake.returns(execResult);
     const store = {
-      mapReduce: mapReduceFake
+      mapReduce: mapReduceFake,
     };
 
     const result = await mapReduce({
       store,
       map,
       reduce,
-      out
+      out,
     });
 
     expect(result).to.equal(execResult);
@@ -33,14 +33,14 @@ describe("Map reduce", () => {
       map,
       reduce,
       out,
-      resolveToObject: true
+      resolveToObject: true,
     });
   });
   it("it should return correctly with added optional params", async () => {
     const execResult = 4;
     const mapReduceFake = fake.returns(execResult);
     const store = {
-      mapReduce: mapReduceFake
+      mapReduce: mapReduceFake,
     };
 
     const result = await mapReduce({
@@ -51,7 +51,7 @@ describe("Map reduce", () => {
       reduce,
       limit,
       finalize,
-      out
+      out,
     });
 
     expect(result).to.equal(execResult);
@@ -63,7 +63,7 @@ describe("Map reduce", () => {
       query,
       limit,
       out,
-      finalize
+      finalize,
     });
   });
 });

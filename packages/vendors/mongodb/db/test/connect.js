@@ -18,7 +18,7 @@ const onceFake = fake();
 const connectFake = fake();
 const connectionFake = fake.returns({
   on: onFake,
-  once: onceFake
+  once: onceFake,
 });
 
 describe("Connects", () => {
@@ -39,7 +39,7 @@ describe("Connects", () => {
       useUnifiedTopology: true,
       useFindAndModify: false,
       autoIndex: false,
-      poolSize: 10
+      poolSize: 10,
     });
   });
 
@@ -60,7 +60,7 @@ describe("Connects", () => {
       database,
       parameters,
       poolSize,
-      autoIndex
+      autoIndex,
     });
 
     expect(connectFake).to.have.been.calledWith(
@@ -71,13 +71,13 @@ describe("Connects", () => {
         useUnifiedTopology: true,
         useFindAndModify: false,
         autoIndex,
-        poolSize
+        poolSize,
       }
     );
   });
 
   it("it pass along the onError callback", () => {
-    const onError = name => name;
+    const onError = (name) => name;
 
     connect({
       protocol,
@@ -85,7 +85,7 @@ describe("Connects", () => {
       password,
       host,
       database,
-      onError
+      onError,
     });
 
     expect(onFake).to.have.been.calledWith("error", onError);
@@ -100,7 +100,7 @@ describe("Connects", () => {
       password,
       host,
       database,
-      onOpen
+      onOpen,
     });
 
     expect(onceFake).to.have.been.calledWith("open", onOpen);
@@ -117,7 +117,7 @@ describe("Returns the right object", () => {
     const onFake = fake();
     const returnValue = {
       on: onFake,
-      once: onceFake
+      once: onceFake,
     };
     replace(mongoose, "connect", fake());
     replaceGetter(mongoose, "connection", fake.returns(returnValue));

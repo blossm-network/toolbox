@@ -4,6 +4,6 @@ module.exports = ({ strict = true } = {}) => {
     entrypoint: strict ? "yarn" : "bash",
     args: strict
       ? ["test:integration"]
-      : ["-c", "yarn test:integration || exit 0"]
+      : ["-c", "yarn test:integration || exit 0"],
   };
 };

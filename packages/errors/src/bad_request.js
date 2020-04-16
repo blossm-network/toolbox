@@ -47,5 +47,5 @@ module.exports = {
       "This event store can't accept this event."
     ),
   message: (message, { cause, info } = {}) =>
-    new BadRequestError({ cause, info, toJSON }, message)
+    new BadRequestError({ cause, info, toJSON }, message),
 };

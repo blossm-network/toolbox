@@ -5,7 +5,7 @@ describe("Valid location", () => {
   it("should not contain errors if the location is formatted correctly", () => {
     const validLocation = {
       postalCode: "94110",
-      countryCode: "US"
+      countryCode: "US",
     };
     const error = location(validLocation);
     expect(error).to.be.undefined;

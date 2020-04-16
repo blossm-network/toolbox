@@ -9,7 +9,7 @@ const validateObject = ({ object, expectation, path }) => {
       expectation[property] instanceof Array
     ) {
       expectation[property] = {
-        type: expectation[property]
+        type: expectation[property],
       };
     }
 
@@ -25,8 +25,8 @@ const validateObject = ({ object, expectation, path }) => {
           title: expectation[property].title || property,
           path: `${path}.${property}`,
           optional:
-            expectation[property].optional || expectation[property].default
-        })
+            expectation[property].optional || expectation[property].default,
+        }),
       ]);
       if (error) throw error;
 
@@ -35,13 +35,13 @@ const validateObject = ({ object, expectation, path }) => {
           validateObject({
             object: item,
             expectation: expectation[property].type[0],
-            path: `${path}.${property}`
+            path: `${path}.${property}`,
           });
         } else {
           validator[expectation[property].type[0]](item, {
             title: `${expectation[property].title || property} item`,
             path: `${path}.${property}`,
-            optional: expectation[property].optional
+            optional: expectation[property].optional,
           });
         }
       }
@@ -53,30 +53,30 @@ const validateObject = ({ object, expectation, path }) => {
         title: expectation[property].title || property,
         path: `${path}.${property}`,
         optional:
-          expectation[property].optional || expectation[property].default
-      })
+          expectation[property].optional || expectation[property].default,
+      }),
     ]);
     if (error) throw error;
     if (expectation[property].type == "object") {
       validateObject({
         object: object[property],
         expectation: expectation[property].properties,
-        path: `${path}.${property}`
+        path: `${path}.${property}`,
       });
     }
     if (!expectation[property].type) {
       validateObject({
         object: object[property],
         expectation: expectation[property],
-        path: `${path}.${property}`
+        path: `${path}.${property}`,
       });
     }
   }
 };
 
-module.exports = async payload =>
+module.exports = async (payload) =>
   validateObject({
     object: payload,
     expectation: config.payload,
-    path: "payload"
+    path: "payload",
   });

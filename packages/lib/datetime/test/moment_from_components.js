@@ -12,7 +12,7 @@ describe("Converts correctly", () => {
       time,
       day,
       month,
-      year
+      year,
     };
     const moment = momentFromComponents(components);
 

@@ -5,5 +5,5 @@ const decode = require("./src/decode");
 module.exports = {
   create,
   validate,
-  decode
+  decode,
 };

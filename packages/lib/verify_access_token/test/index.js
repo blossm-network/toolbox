@@ -23,18 +23,18 @@ describe("Verify access token", () => {
 
     const verifyFake = fake.returns(result);
     const updateFake = fake.returns({
-      verify: verifyFake
+      verify: verifyFake,
     });
 
     const createVerifyFake = fake.returns({
-      update: updateFake
+      update: updateFake,
     });
 
     replace(crypto, "createVerify", createVerifyFake);
 
     const response = await verifyAccessToken({ url, algorithm })({
       message,
-      signature
+      signature,
     });
     expect(response).to.equal(result);
     expect(getFake).to.have.been.calledWith(url);
@@ -43,7 +43,7 @@ describe("Verify access token", () => {
     expect(verifyFake).to.have.been.calledWith(publicKey, signature, "base64");
     await verifyAccessToken({ url, algorithm })({
       message,
-      signature
+      signature,
     });
     expect(getFake).to.have.been.calledOnce;
   });
@@ -59,18 +59,18 @@ describe("Verify access token", () => {
 
     const verifyFake = fake.returns(result);
     const updateFake = fake.returns({
-      verify: verifyFake
+      verify: verifyFake,
     });
 
     const createVerifyFake = fake.returns({
-      update: updateFake
+      update: updateFake,
     });
 
     replace(crypto, "createVerify", createVerifyFake);
 
     const response = await verifyAccessToken({ url })({
       message,
-      signature
+      signature,
     });
     expect(response).to.equal(result);
     expect(createVerifyFake).to.have.been.calledWith("SHA256");

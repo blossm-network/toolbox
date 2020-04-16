@@ -10,7 +10,7 @@ module.exports = ({
   secretBucket,
   secretBucketKeyRing,
   secretBucketKeyLocation,
-  custom = {}
+  custom = {},
 } = {}) => {
   return {
     name: "node:10.16.0",
@@ -32,9 +32,9 @@ module.exports = ({
       GCP_SECRET_BUCKET: secretBucket,
       GCP_KMS_SECRET_BUCKET_KEY_RING: secretBucketKeyRing,
       GCP_KMS_SECRET_BUCKET_KEY_LOCATION: secretBucketKeyLocation,
-      ...custom
+      ...custom,
     }).reduce((string, [key, value]) => (string += `${key}=${value}\n`), "")}
-    EOM`
-    ]
+    EOM`,
+    ],
   };
 };

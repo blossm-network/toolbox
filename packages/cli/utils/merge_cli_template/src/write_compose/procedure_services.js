@@ -27,10 +27,10 @@ module.exports = ({
   mongodbUserPassword,
   twilioSendingPhoneNumber,
   twilioTestReceivingPhoneNumber,
-  dependencyKeyEnvironmentVariables
+  dependencyKeyEnvironmentVariables,
 }) => {
   const common = {
-    ports: [`${port}`]
+    ports: [`${port}`],
   };
   const commonEnvironment = {
     PORT: `${port}`,
@@ -43,14 +43,14 @@ module.exports = ({
     GCP_SECRET_BUCKET: secretBucket,
     GCP_KMS_SECRET_BUCKET_KEY_LOCATION: secretBucketKeyLocation,
     GCP_KMS_SECRET_BUCKET_KEY_RING: secretBucketKeyRing,
-    ...dependencyKeyEnvironmentVariables
+    ...dependencyKeyEnvironmentVariables,
   };
   const commonStoreEnvironment = {
     MONGODB_USER: `${mongodbUser}`,
     MONGODB_HOST: `${mongodbHost}`,
     MONGODB_USER_PASSWORD: `${mongodbUserPassword}`,
     MONGODB_PROTOCOL: `${mongodbProtocol}`,
-    MONGODB_DATABASE: `${mongodbDatabase}`
+    MONGODB_DATABASE: `${mongodbDatabase}`,
   };
   let services = {};
   let includeDatabase = false;
@@ -96,9 +96,9 @@ module.exports = ({
                 ...(dependency.domain && { DOMAIN: dependency.domain }),
                 ...(dependency.service && { SERVICE: dependency.service }),
                 CONTEXT: dependency.contxt,
-                NAME: dependency.name
-              }
-            }
+                NAME: dependency.name,
+              },
+            },
           };
           includeDatabase = true;
         }
@@ -125,9 +125,9 @@ module.exports = ({
                 PROCEDURE: dependency.procedure,
                 OPERATION_HASH: operationHash,
                 DOMAIN: dependency.domain,
-                SERVICE: dependency.service
-              }
-            }
+                SERVICE: dependency.service,
+              },
+            },
           };
           includeDatabase = true;
         }
@@ -155,13 +155,13 @@ module.exports = ({
                 SERVICE: dependency.service,
                 NAME: dependency.name,
                 ...(twilioTestReceivingPhoneNumber && {
-                  TWILIO_TEST_RECEIVING_PHONE_NUMBER: twilioTestReceivingPhoneNumber
+                  TWILIO_TEST_RECEIVING_PHONE_NUMBER: twilioTestReceivingPhoneNumber,
                 }),
                 ...(twilioSendingPhoneNumber && {
-                  TWILIO_SENDING_PHONE_NUMBER: twilioSendingPhoneNumber
-                })
-              }
-            }
+                  TWILIO_SENDING_PHONE_NUMBER: twilioSendingPhoneNumber,
+                }),
+              },
+            },
           };
         }
         break;
@@ -192,9 +192,9 @@ module.exports = ({
                 OPERATION_HASH: operationHash,
                 ...(dependency.domain && { DOMAIN: dependency.domain }),
                 ...(dependency.service && { SERVICE: dependency.service }),
-                NAME: dependency.name
-              }
-            }
+                NAME: dependency.name,
+              },
+            },
           };
         }
         break;
@@ -210,9 +210,9 @@ module.exports = ({
             adminDatabase: mongodbAdminDatabase,
             database: mongodbDatabase,
             user: mongodbUser,
-            userPassword: mongodbUserPassword
-          })
+            userPassword: mongodbUserPassword,
+          }),
         }
-      : [])
+      : []),
   };
 };

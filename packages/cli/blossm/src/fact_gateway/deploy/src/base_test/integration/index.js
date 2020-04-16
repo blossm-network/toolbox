@@ -14,16 +14,16 @@ const existingTopics = [];
 describe("Get job gateway integration tests", () => {
   before(async () => {
     existingTopics.push(
-      ...testing.topics.filter(async t => {
+      ...testing.topics.filter(async (t) => {
         return await exists(t);
       })
     );
-    await Promise.all(testing.topics.map(t => create(t)));
+    await Promise.all(testing.topics.map((t) => create(t)));
   });
   after(
     async () =>
       await Promise.all(
-        [...testing.topics].map(t => !existingTopics.includes(t) && del(t))
+        [...testing.topics].map((t) => !existingTopics.includes(t) && del(t))
       )
   );
   it("should return successfully", async () => {
@@ -34,20 +34,20 @@ describe("Get job gateway integration tests", () => {
             ...new Set([
               ...permissions,
               ...(command.privileges
-                ? command.privileges.map(privilege => {
+                ? command.privileges.map((privilege) => {
                     return {
                       privilege,
                       domain: process.env.DOMAIN,
-                      service: process.env.SERVICE
+                      service: process.env.SERVICE,
                     };
                   })
-                : [])
-            ])
+                : []),
+            ]),
           ];
     }, []);
 
     const needsToken = jobs.some(
-      c => c.protection == undefined || c.protection == "strict"
+      (c) => c.protection == undefined || c.protection == "strict"
     );
 
     const { token } = needsToken
@@ -59,14 +59,14 @@ describe("Get job gateway integration tests", () => {
       parallelFns.push(async () => {
         const response0 = await request.get(`${url}/${job.name}`, {
           body: {
-            root
+            root,
           },
           ...(job.protection === undefined ||
             (job.protection === "strict" && {
               headers: {
-                Authorization: `Bearer ${token}`
-              }
-            }))
+                Authorization: `Bearer ${token}`,
+              },
+            })),
         });
         expect(response0.statusCode).to.not.equal(401);
         expect(response0.statusCode).to.be.lessThan(500);
@@ -77,8 +77,8 @@ describe("Get job gateway integration tests", () => {
       parallelFns.push(async () => {
         const response1 = await request.get(`${url}/${job.name}`, {
           body: {
-            root
-          }
+            root,
+          },
         });
 
         expect(response1.statusCode).to.equal(401);
@@ -87,11 +87,11 @@ describe("Get job gateway integration tests", () => {
       parallelFns.push(async () => {
         const response2 = await request.get(`${url}/${job.name}`, {
           body: {
-            root
+            root,
           },
           headers: {
-            Authorization: "Bearer bogusHeader.bogusPayload.bogusSignature"
-          }
+            Authorization: "Bearer bogusHeader.bogusPayload.bogusSignature",
+          },
         });
 
         expect(response2.statusCode).to.equal(401);

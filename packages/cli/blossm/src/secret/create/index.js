@@ -34,7 +34,7 @@ const envSecretsBucket = ({ env, config }) => {
   }
 };
 
-const create = async input => {
+const create = async (input) => {
   const env = input.env;
 
   const blossmConfig = rootDir.config();
@@ -42,7 +42,7 @@ const create = async input => {
     project: envProject({ config: blossmConfig, env }),
     ring: "secrets-bucket",
     location: "global",
-    bucket: envSecretsBucket({ config: blossmConfig, env })
+    bucket: envSecretsBucket({ config: blossmConfig, env }),
   });
   //eslint-disable-next-line no-console
   console.log(
@@ -50,7 +50,7 @@ const create = async input => {
   );
 };
 
-module.exports = async args => {
+module.exports = async (args) => {
   const input = await normalize({
     entrypointType: "name",
     args,
@@ -58,22 +58,22 @@ module.exports = async args => {
       {
         name: "message",
         short: "m",
-        type: String
+        type: String,
       },
       {
         name: "env",
         short: "e",
         type: String,
         choices: ["production", "sandbox", "staging", "development"],
-        default: "development"
-      }
-    ]
+        default: "development",
+      },
+    ],
   });
   if (!input.message) {
     const { message } = await prompt({
       type: "string",
       name: "message",
-      message: roboSay(`What's the secret?`)
+      message: roboSay(`What's the secret?`),
     });
     input.message = message;
   }
@@ -82,7 +82,7 @@ module.exports = async args => {
       type: "list",
       choices: ["production", "sandbox", "staging", "development"],
       name: "env",
-      message: roboSay(`What environment is this for?`)
+      message: roboSay(`What environment is this for?`),
     });
     input.env = env;
   }

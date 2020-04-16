@@ -19,7 +19,7 @@ describe("Kms sign", () => {
   it("should sign correctly", async () => {
     const path = "some-path";
     const pathFake = fake.returns(path);
-    const kmsClient = function() {};
+    const kmsClient = function () {};
     kmsClient.prototype.cryptoKeyVersionPath = pathFake;
     const signature = "some-sig";
     const signFake = fake.returns([{ signature: Buffer.from(signature) }]);
@@ -29,9 +29,9 @@ describe("Kms sign", () => {
     const createHashFake = fake.returns({
       update: () => {
         return {
-          digest: () => sha256
+          digest: () => sha256,
         };
-      }
+      },
     });
     replace(crypto, "createHash", createHashFake);
     const result = await sign({ ring, key, location, version, project })(
@@ -48,14 +48,14 @@ describe("Kms sign", () => {
     expect(signFake).to.have.been.calledWith({
       name: path,
       digest: {
-        sha256
-      }
+        sha256,
+      },
     });
   });
   it("should throw correctly", async () => {
     const path = "some-path";
     const pathFake = fake.returns(path);
-    const kmsClient = function() {};
+    const kmsClient = function () {};
     kmsClient.prototype.cryptoKeyVersionPath = pathFake;
 
     const errorMessage = "some-error-message";
@@ -66,9 +66,9 @@ describe("Kms sign", () => {
     const createHashFake = fake.returns({
       update: () => {
         return {
-          digest: () => sha256
+          digest: () => sha256,
         };
-      }
+      },
     });
     replace(crypto, "createHash", createHashFake);
     try {

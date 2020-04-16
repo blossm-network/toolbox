@@ -19,25 +19,25 @@ describe("View gateway get", () => {
   it("should call with the correct params", async () => {
     const readFake = fake.returns(results);
     const setFake = fake.returns({
-      read: readFake
+      read: readFake,
     });
     const viewStoreFake = fake.returns({
-      set: setFake
+      set: setFake,
     });
     replace(deps, "viewStore", viewStoreFake);
 
     const req = {
       context,
       claims,
-      query
+      query,
     };
 
     const sendFake = fake();
     const statusFake = fake.returns({
-      send: sendFake
+      send: sendFake,
     });
     const res = {
-      status: statusFake
+      status: statusFake,
     };
 
     await get({ name })(req, res);
@@ -46,7 +46,7 @@ describe("View gateway get", () => {
     expect(setFake).to.have.been.calledWith({
       context,
       claims,
-      tokenFns: { internal: deps.gcpToken }
+      tokenFns: { internal: deps.gcpToken },
     });
     expect(readFake).to.have.been.calledWith(query);
     expect(sendFake).to.have.been.calledWith(results);
@@ -54,25 +54,25 @@ describe("View gateway get", () => {
   it("should call with the correct params with context and domain", async () => {
     const readFake = fake.returns(results);
     const setFake = fake.returns({
-      read: readFake
+      read: readFake,
     });
     const viewStoreFake = fake.returns({
-      set: setFake
+      set: setFake,
     });
     replace(deps, "viewStore", viewStoreFake);
 
     const req = {
       context,
       claims,
-      query
+      query,
     };
 
     const sendFake = fake();
     const statusFake = fake.returns({
-      send: sendFake
+      send: sendFake,
     });
     const res = {
-      status: statusFake
+      status: statusFake,
     };
 
     await get({ name, domain, service })(req, res);
@@ -80,12 +80,12 @@ describe("View gateway get", () => {
     expect(viewStoreFake).to.have.been.calledWith({
       name,
       domain,
-      service
+      service,
     });
     expect(setFake).to.have.been.calledWith({
       context,
       claims,
-      tokenFns: { internal: deps.gcpToken }
+      tokenFns: { internal: deps.gcpToken },
     });
     expect(readFake).to.have.been.calledWith(query);
     expect(sendFake).to.have.been.calledWith(results);
@@ -94,24 +94,24 @@ describe("View gateway get", () => {
     const errorMessage = "error-message";
     const readFake = fake.rejects(new Error(errorMessage));
     const setFake = fake.returns({
-      read: readFake
+      read: readFake,
     });
     const viewStoreFake = fake.returns({
-      set: setFake
+      set: setFake,
     });
     replace(deps, "viewStore", viewStoreFake);
 
     const req = {
       context,
-      query
+      query,
     };
 
     const sendFake = fake();
     const statusFake = fake.returns({
-      send: sendFake
+      send: sendFake,
     });
     const res = {
-      status: statusFake
+      status: statusFake,
     };
 
     try {

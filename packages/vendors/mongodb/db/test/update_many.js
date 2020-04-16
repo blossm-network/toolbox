@@ -15,7 +15,7 @@ describe("Update many", () => {
     const updateManyFake = fake.returns(execResult);
 
     const store = {
-      updateMany: updateManyFake
+      updateMany: updateManyFake,
     };
 
     const result = await updateMany({ store, query, update });
@@ -28,7 +28,7 @@ describe("Update many", () => {
     const execResult = 4;
     const updateManyFake = fake.returns(execResult);
     const store = {
-      updateMany: updateManyFake
+      updateMany: updateManyFake,
     };
 
     const result = await updateMany({ store, query, update, options });

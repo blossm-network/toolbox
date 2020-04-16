@@ -38,7 +38,7 @@ describe("Invalid optional boolean array", () => {
   it("should contain one error if array has values that are not booleans, regardless of optional flag", () => {
     const response = booleanArray({
       value: invalidBooleanArray,
-      optional: true
+      optional: true,
     });
     expect(response.errors).to.have.lengthOf(1);
   });

@@ -26,7 +26,7 @@ describe("Cors middleware", () => {
     const optionsFake = fake();
     const app = {
       use: useFake,
-      options: optionsFake
+      options: optionsFake,
     };
     await corsMiddleware({ app, whitelist, methods });
 
@@ -35,7 +35,7 @@ describe("Cors middleware", () => {
       methods: `${method0},${method1}`,
       preflightContinue: false,
       optionsSuccessStatus: 204,
-      credentials: false
+      credentials: false,
     });
     expect(useFake).to.have.been.calledWith(corsResult);
     expect(whitelistFake).to.have.been.calledWith(whitelist);
@@ -53,7 +53,7 @@ describe("Cors middleware", () => {
     const optionsFake = fake();
     const app = {
       use: useFake,
-      options: optionsFake
+      options: optionsFake,
     };
     await corsMiddleware({ app, whitelist, credentials: true, methods });
 
@@ -62,7 +62,7 @@ describe("Cors middleware", () => {
       methods: `${method0},${method1}`,
       preflightContinue: false,
       optionsSuccessStatus: 204,
-      credentials: true
+      credentials: true,
     });
     expect(useFake).to.have.been.calledWith(corsResult);
     expect(whitelistFake).to.have.been.calledWith(whitelist);

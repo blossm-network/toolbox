@@ -19,12 +19,12 @@ describe("View store delete", () => {
     const params = { root };
     const req = {
       params,
-      query: {}
+      query: {},
     };
 
     const sendFake = fake();
     const res = {
-      send: sendFake
+      send: sendFake,
     };
 
     await del({ removeFn: removeFake })(req, res);
@@ -38,13 +38,13 @@ describe("View store delete", () => {
     const req = {
       params,
       query: {
-        query
-      }
+        query,
+      },
     };
 
     const sendFake = fake();
     const res = {
-      send: sendFake
+      send: sendFake,
     };
 
     await del({ removeFn: removeFake })(req, res);
@@ -55,24 +55,24 @@ describe("View store delete", () => {
     const removeFake = fake.returns({ deletedCount });
 
     const params = {
-      root
+      root,
     };
     const req = {
       params,
       query: {
-        query
-      }
+        query,
+      },
     };
 
     const sendFake = fake();
     const res = {
-      send: sendFake
+      send: sendFake,
     };
 
     await del({ removeFn: removeFake })(req, res);
     expect(removeFake).to.have.been.calledWith({
       "body.a": 1,
-      "headers.root": root
+      "headers.root": root,
     });
     expect(sendFake).to.have.been.calledWith({ deletedCount });
   });
@@ -81,18 +81,18 @@ describe("View store delete", () => {
 
     const req = {
       params: {},
-      query: {}
+      query: {},
     };
 
     const sendFake = fake();
     const res = {
-      send: sendFake
+      send: sendFake,
     };
 
     const error = new Error("Missing query parameter in the url's query.");
     const messageFake = fake.returns(error);
     replace(deps, "badRequestError", {
-      message: messageFake
+      message: messageFake,
     });
 
     try {

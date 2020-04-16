@@ -34,13 +34,13 @@ const domains = [
   "view-gateway",
   "fact-gateway",
   "job",
-  "fact"
+  "fact",
 ];
 
-const tryShortcuts = input => {
+const tryShortcuts = (input) => {
   const inputPath =
     input.positionalArgs.length >
-    input.args.filter(a => a.startsWith("-")).length
+    input.args.filter((a) => a.startsWith("-")).length
       ? input.positionalArgs[0]
       : ".";
   const configPath = path.resolve(process.cwd(), inputPath, "blossm.yaml");
@@ -84,7 +84,7 @@ const tryShortcuts = input => {
   }
 };
 
-const forward = input => {
+const forward = (input) => {
   switch (input.domain) {
     case "init":
       return init(input.args);
@@ -130,10 +130,10 @@ const forward = input => {
   }
 };
 
-exports.cli = async rawArgs => {
+exports.cli = async (rawArgs) => {
   const input = await normalize({
     entrypointType: "domain",
-    args: rawArgs.slice(2)
+    args: rawArgs.slice(2),
   });
 
   forward(input);

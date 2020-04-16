@@ -2,11 +2,11 @@ const normalize = require("@blossm/normalize-cli");
 
 const create = require("./create");
 
-module.exports = async args => {
+module.exports = async (args) => {
   const input = await normalize({
     entrypointType: "action",
     choices: ["create"],
-    args
+    args,
   });
 
   switch (input.action) {

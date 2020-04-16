@@ -14,7 +14,7 @@ const context = {
   network,
   service,
   any: "any-root",
-  principle
+  principle,
 };
 
 const deps = require("../deps");
@@ -34,15 +34,15 @@ describe("Authorize", () => {
       permissions: [{ service, domain, privilege }],
       network,
       principle,
-      context
+      context,
     });
 
     expect(permissionsLookupFn).to.have.been.calledWith({
       principle,
-      context
+      context,
     });
     expect(document).to.deep.equal({
-      permissions
+      permissions,
     });
   });
   it("should not authorize if theres a mismatch", async () => {
@@ -53,14 +53,14 @@ describe("Authorize", () => {
     const error = "some-error";
     const tokenInvalidFake = fake.returns(error);
     replace(deps, "invalidCredentialsError", {
-      tokenInvalid: tokenInvalidFake
+      tokenInvalid: tokenInvalidFake,
     });
 
     try {
       await authorize({
         permissionsLookupFn,
         network,
-        principle
+        principle,
       });
 
       //shouldnt be called;
@@ -73,21 +73,21 @@ describe("Authorize", () => {
     const document = await authorize({
       context,
       permissions: "none",
-      network
+      network,
     });
     expect(document).to.deep.equal({
-      permissions: []
+      permissions: [],
     });
   });
   it("should authorize with no sub and permissions as none", async () => {
     const document = await authorize({
       principle,
       permissions: "none",
-      network
+      network,
     });
 
     expect(document).to.deep.equal({
-      permissions: []
+      permissions: [],
     });
   });
 });

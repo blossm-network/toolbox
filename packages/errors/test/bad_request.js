@@ -77,7 +77,7 @@ describe("Bad request", () => {
       statusCode: 400,
       code: "BadRequest",
       message: "Invalid Pub/Sub message format.",
-      cause
+      cause,
     });
   });
   it("sessionTerminated correct", () => {
@@ -92,7 +92,7 @@ describe("Bad request", () => {
       statusCode: 400,
       code: "BadRequest",
       message: "This session is terminated.",
-      cause
+      cause,
     });
   });
   it("sessionAlreadyTerminated correct", () => {
@@ -107,7 +107,7 @@ describe("Bad request", () => {
       statusCode: 400,
       code: "BadRequest",
       message: "This session has already been terminated.",
-      cause
+      cause,
     });
   });
   it("sessionAlreadyUpgraded correct", () => {
@@ -122,7 +122,7 @@ describe("Bad request", () => {
       statusCode: 400,
       code: "BadRequest",
       message: "This session has already been upgraded.",
-      cause
+      cause,
     });
   });
   it("badEvent correct", () => {
@@ -132,7 +132,7 @@ describe("Bad request", () => {
       statusCode: 400,
       info: {},
       code: "BadRequest",
-      message: "Invalid event format."
+      message: "Invalid event format.",
     });
   });
   it("badEvent correct with props", () => {
@@ -142,7 +142,7 @@ describe("Bad request", () => {
       statusCode: 400,
       code: "BadRequest",
       message: "Invalid event format.",
-      cause
+      cause,
     });
   });
   it("wrongEventStore correct", () => {
@@ -152,7 +152,7 @@ describe("Bad request", () => {
       statusCode: 400,
       info: {},
       code: "BadRequest",
-      message: "This event store can't accept this event."
+      message: "This event store can't accept this event.",
     });
   });
   it("wrongEventStore correct with props", () => {
@@ -162,7 +162,7 @@ describe("Bad request", () => {
       statusCode: 400,
       code: "BadRequest",
       message: "This event store can't accept this event.",
-      cause
+      cause,
     });
   });
   it("message correct", () => {
@@ -172,7 +172,7 @@ describe("Bad request", () => {
       statusCode: 400,
       info: {},
       code: "BadRequest",
-      message
+      message,
     });
   });
   it("message correct with props", () => {
@@ -183,7 +183,7 @@ describe("Bad request", () => {
       cause,
       info,
       code: "BadRequest",
-      message
+      message,
     });
   });
 });

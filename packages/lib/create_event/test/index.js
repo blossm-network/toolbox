@@ -52,13 +52,13 @@ describe("Create event", () => {
           network: pathNetwork,
           host: pathHost,
           hash: pathHash,
-          procedure: pathProcedure
-        }
+          procedure: pathProcedure,
+        },
       ],
       root,
       idempotency,
       payload,
-      version
+      version,
     });
 
     expect(value).to.deep.equal({
@@ -82,11 +82,11 @@ describe("Create event", () => {
             network: pathNetwork,
             host: pathHost,
             hash: pathHash,
-            procedure: pathProcedure
-          }
-        ]
+            procedure: pathProcedure,
+          },
+        ],
       },
-      payload
+      payload,
     });
   });
 
@@ -96,11 +96,7 @@ describe("Create event", () => {
     replace(
       deps,
       "uuid",
-      stub()
-        .onFirstCall()
-        .returns(rootUuid)
-        .onCall(1)
-        .returns(idempUuid)
+      stub().onFirstCall().returns(rootUuid).onCall(1).returns(idempUuid)
     );
 
     const value = createEvent({
@@ -113,10 +109,10 @@ describe("Create event", () => {
           network: pathNetwork,
           host: pathHost,
           hash: pathHash,
-          procedure: pathProcedure
-        }
+          procedure: pathProcedure,
+        },
       ],
-      payload
+      payload,
     });
 
     expect(value).to.deep.equal({
@@ -135,11 +131,11 @@ describe("Create event", () => {
             network: pathNetwork,
             host: pathHost,
             hash: pathHash,
-            procedure: pathProcedure
-          }
-        ]
+            procedure: pathProcedure,
+          },
+        ],
       },
-      payload
+      payload,
     });
   });
   it("should get called with expected params if authorized is missing", async () => {
@@ -158,12 +154,12 @@ describe("Create event", () => {
           network: pathNetwork,
           host: pathHost,
           hash: pathHash,
-          procedure: pathProcedure
-        }
+          procedure: pathProcedure,
+        },
       ],
       root,
       payload,
-      version
+      version,
     });
 
     expect(value).to.deep.equal({
@@ -186,11 +182,11 @@ describe("Create event", () => {
             network: pathNetwork,
             host: pathHost,
             hash: pathHash,
-            procedure: pathProcedure
-          }
-        ]
+            procedure: pathProcedure,
+          },
+        ],
       },
-      payload
+      payload,
     });
   });
   it("should get called with expected params if context is missing", async () => {
@@ -208,13 +204,13 @@ describe("Create event", () => {
           network: pathNetwork,
           host: pathHost,
           hash: pathHash,
-          procedure: pathProcedure
-        }
+          procedure: pathProcedure,
+        },
       ],
       root,
       idempotency,
       payload,
-      version
+      version,
     });
 
     expect(value).to.deep.equal({
@@ -237,11 +233,11 @@ describe("Create event", () => {
             network: pathNetwork,
             host: pathHost,
             hash: pathHash,
-            procedure: pathProcedure
-          }
-        ]
+            procedure: pathProcedure,
+          },
+        ],
       },
-      payload
+      payload,
     });
   });
 });

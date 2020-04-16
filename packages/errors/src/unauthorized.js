@@ -6,5 +6,5 @@ module.exports = {
   cors: ({ cause, info } = {}) =>
     new UnauthorizedError({ cause, info, toJSON }, "Not allowed by CORS."),
   message: (message, { cause, info } = {}) =>
-    new UnauthorizedError({ cause, info, toJSON }, message)
+    new UnauthorizedError({ cause, info, toJSON }, message),
 };

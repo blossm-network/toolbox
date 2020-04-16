@@ -7,15 +7,15 @@
  *
  */
 
-module.exports = async event => {
+module.exports = async (event) => {
   // const root = event.headers.root;
   // const context = event.headers.context;
 
   return {
     body: {
-      name: event.payload.name
+      name: event.payload.name,
     },
     root: "some-root",
-    domain: "some-root"
+    domain: "some-root",
   };
 };

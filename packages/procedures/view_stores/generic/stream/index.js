@@ -1,4 +1,4 @@
-const defaultFn = query => query;
+const defaultFn = (query) => query;
 
 module.exports = ({ streamFn, queryFn = defaultFn }) => {
   return async (req, res) => {
@@ -16,7 +16,7 @@ module.exports = ({ streamFn, queryFn = defaultFn }) => {
         [`headers.${process.env.CONTEXT}`]: {
           root: context.root,
           service: context.service,
-          network: context.network
+          network: context.network,
         },
         ...(req.params.root &&
           process.env.DOMAIN &&
@@ -24,14 +24,14 @@ module.exports = ({ streamFn, queryFn = defaultFn }) => {
             [`headers.${process.env.DOMAIN}`]: {
               root: req.params.root,
               service: process.env.SERVICE,
-              network: process.env.NETWORK
-            }
-          })
+              network: process.env.NETWORK,
+            },
+          }),
       },
       ...(req.query.sort && { sort: req.query.sort }),
       ...(req.query.parallel && { parallel: req.query.parallel }),
-      fn: view =>
-        res.write(JSON.stringify({ ...view.body, root: view.headers.root }))
+      fn: (view) =>
+        res.write(JSON.stringify({ ...view.body, root: view.headers.root })),
     });
 
     res.end();

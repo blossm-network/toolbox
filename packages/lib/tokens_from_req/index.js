@@ -5,7 +5,7 @@ module.exports = (req, { cookieKey } = {}) => {
 
   const token = cookieKey && cookies[cookieKey];
   const tokens = {
-    ...(token != undefined && { cookie: token })
+    ...(token != undefined && { cookie: token }),
   };
 
   if (authorization == undefined) return tokens;
@@ -15,6 +15,6 @@ module.exports = (req, { cookieKey } = {}) => {
   return {
     ...tokens,
     ...(components[0] == "Bearer" && { bearer: components[1] }),
-    ...(components[0] == "Basic" && { basic: components[1] })
+    ...(components[0] == "Basic" && { basic: components[1] }),
   };
 };

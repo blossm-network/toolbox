@@ -6,16 +6,13 @@ module.exports = ({
   normalizeFn,
   fillFn,
   aggregateFn,
-  addFn
+  addFn,
 }) => {
   return async (req, res) => {
     if (validateFn) await validateFn(req.body.payload);
     if (fillFn) req.body.payload = await fillFn(req.body.payload);
     if (normalizeFn) req.body.payload = await normalizeFn(req.body.payload);
 
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log({ reqBody: req.body });
     const { events = [], response, thenFn } = await mainFn({
       payload: req.body.payload,
       ...(req.body.root && { root: req.body.root }),
@@ -24,8 +21,8 @@ module.exports = ({
       context: req.body.context,
       aggregateFn: aggregateFn({
         context: req.body.context,
-        claims: req.body.claims
-      })
+        claims: req.body.claims,
+      }),
     });
 
     const commandId = deps.uuid();
@@ -39,7 +36,7 @@ module.exports = ({
       action,
       context,
       domain = process.env.DOMAIN,
-      service = process.env.SERVICE
+      service = process.env.SERVICE,
     } of events) {
       const eventData = deps.createEvent({
         ...(root && { root }),
@@ -63,13 +60,13 @@ module.exports = ({
             service: process.env.SERVICE,
             network: process.env.NETWORK,
             host: process.env.HOST,
-            hash: process.env.OPERATION_HASH
-          }
-        ]
+            hash: process.env.OPERATION_HASH,
+          },
+        ],
       });
       const normalizedEvent = {
         data: eventData,
-        ...(correctNumber && { number: correctNumber })
+        ...(correctNumber && { number: correctNumber }),
       };
 
       eventsPerStore[service] = eventsPerStore[service] || {};
@@ -88,7 +85,7 @@ module.exports = ({
             service,
             context: req.body.context,
             claims: req.body.claims,
-            events: eventsPerStore[service][domain]
+            events: eventsPerStore[service][domain],
           })
         );
       }

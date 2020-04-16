@@ -7,14 +7,14 @@ module.exports = ({ aggregateFn, queryFn }) => {
 
       if (!result)
         throw deps.resourceNotFoundError.root({
-          info: { root: req.params.root }
+          info: { root: req.params.root },
         });
 
       res.send(result);
     } else {
       const results = await queryFn({
         key: req.query.key,
-        value: req.query.value
+        value: req.query.value,
       });
       res.send(results);
     }

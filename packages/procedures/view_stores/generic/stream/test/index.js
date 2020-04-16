@@ -21,8 +21,8 @@ const context = {
   [envContext]: {
     root: envContextRoot,
     service: envContextService,
-    network: envContextNetwork
-  }
+    network: envContextNetwork,
+  },
 };
 
 process.env.CONTEXT = envContext;
@@ -49,9 +49,9 @@ describe("View store get", () => {
         sort,
         context,
         parallel: 2,
-        query
+        query,
       },
-      params
+      params,
     };
 
     const endFake = fake();
@@ -59,7 +59,7 @@ describe("View store get", () => {
     const writeFake = fake.returns(writeResult);
     const res = {
       end: endFake,
-      write: writeFake
+      write: writeFake,
     };
 
     await stream({ streamFn: streamFake })(req, res);
@@ -71,22 +71,22 @@ describe("View store get", () => {
         "headers.some-env-context": {
           root: envContextRoot,
           service: envContextService,
-          network: envContextNetwork
+          network: envContextNetwork,
         },
         "headers.some-env-domain": {
           root,
           service: envService,
-          network: envNetwork
-        }
+          network: envNetwork,
+        },
       },
-      fn: match(fn => {
+      fn: match((fn) => {
         const view = { body: obj, headers: { root: objRoot } };
         const result = fn(view);
         return (
           result == writeResult &&
           writeFake.calledWith(JSON.stringify({ ...obj, root: objRoot }))
         );
-      })
+      }),
     });
     expect(endFake).to.have.been.calledWith();
   });
@@ -99,9 +99,9 @@ describe("View store get", () => {
       query: {
         sort,
         context,
-        query
+        query,
       },
-      params: {}
+      params: {},
     };
 
     const endFake = fake();
@@ -109,7 +109,7 @@ describe("View store get", () => {
     const writeFake = fake.returns(writeResult);
     const res = {
       end: endFake,
-      write: writeFake
+      write: writeFake,
     };
 
     const otherQuery = { "some-other-query-key": 1 };
@@ -125,17 +125,17 @@ describe("View store get", () => {
         "headers.some-env-context": {
           root: envContextRoot,
           service: envContextService,
-          network: envContextNetwork
-        }
+          network: envContextNetwork,
+        },
       },
-      fn: match(fn => {
+      fn: match((fn) => {
         const view = { body: obj, headers: { root: objRoot } };
         const result = fn(view);
         return (
           result == writeResult &&
           writeFake.calledWith(JSON.stringify({ ...obj, root: objRoot }))
         );
-      })
+      }),
     });
     expect(endFake).to.have.been.calledWith();
   });
@@ -150,9 +150,9 @@ describe("View store get", () => {
       query: {
         sort,
         context,
-        query
+        query,
       },
-      params
+      params,
     };
 
     const endFake = fake();
@@ -160,7 +160,7 @@ describe("View store get", () => {
     const writeFake = fake.returns(writeResult);
     const res = {
       end: endFake,
-      write: writeFake
+      write: writeFake,
     };
     delete process.env.SERVICE;
     await stream({ streamFn: streamFake })(req, res);
@@ -171,17 +171,17 @@ describe("View store get", () => {
         "headers.some-env-context": {
           root: envContextRoot,
           service: envContextService,
-          network: envContextNetwork
-        }
+          network: envContextNetwork,
+        },
       },
-      fn: match(fn => {
+      fn: match((fn) => {
         const view = { body: obj, headers: { root: objRoot } };
         const result = fn(view);
         return (
           result == writeResult &&
           writeFake.calledWith(JSON.stringify({ ...obj, root: objRoot }))
         );
-      })
+      }),
     });
     expect(endFake).to.have.been.calledWith();
   });

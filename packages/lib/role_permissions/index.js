@@ -4,7 +4,7 @@ module.exports = async ({
   roles,
   defaultRoles,
   context,
-  customRolePermissionsFn
+  customRolePermissionsFn,
 }) => {
   const permissions = [];
   const rolesFound = [];
@@ -23,12 +23,12 @@ module.exports = async ({
     if (!defaultRole) continue;
 
     permissions.push(
-      ...defaultRole.permissions.map(permission => {
+      ...defaultRole.permissions.map((permission) => {
         const [service, domain, privilege] = permission.split(":");
         return {
           privilege,
           service,
-          domain
+          domain,
         };
       })
     );
@@ -37,18 +37,18 @@ module.exports = async ({
 
   const customRoleCandidates = difference(
     roles.map(
-      role => `${role.id}:${role.root}:${role.service}:${role.network}`
+      (role) => `${role.id}:${role.root}:${role.service}:${role.network}`
     ),
     rolesFound.map(
-      role => `${role.id}:${role.root}:${role.service}:${role.network}`
+      (role) => `${role.id}:${role.root}:${role.service}:${role.network}`
     )
-  ).map(stringRole => {
+  ).map((stringRole) => {
     const [id, root, service, network] = stringRole.split(":");
     return {
       id,
       root,
       service,
-      network
+      network,
     };
   });
 
@@ -58,10 +58,10 @@ module.exports = async ({
   permissions.push(
     ...(
       await Promise.all(
-        customRoleCandidates.map(customRole =>
+        customRoleCandidates.map((customRole) =>
           customRolePermissionsFn({
             roleId: customRole.id,
-            ...(context && { context })
+            ...(context && { context }),
           })
         )
       )

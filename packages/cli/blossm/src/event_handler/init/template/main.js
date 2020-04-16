@@ -13,7 +13,7 @@
  * in tests in the deps file.
  */
 
-module.exports = async event => {
+module.exports = async (event) => {
   const root = event.headers.root;
   const context = event.headers.context;
 

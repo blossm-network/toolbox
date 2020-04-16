@@ -12,5 +12,5 @@ module.exports = viewStore({
   indexes: config.indexes,
   ...(query && { queryFn: query }),
   // ...(post && { postFn: post }),
-  ...(put && { postFn: put })
+  ...(put && { postFn: put }),
 });

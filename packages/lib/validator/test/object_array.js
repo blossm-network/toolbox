@@ -37,7 +37,7 @@ describe("Invalid object array", () => {
 describe("Invalid optional object array", () => {
   it("should contain one error if array has values that are not objects, regardless of optional flag", () => {
     const response = objectArray(invalidObjectArray, {
-      optional: true
+      optional: true,
     });
     expect(response.errors).to.have.lengthOf(1);
   });

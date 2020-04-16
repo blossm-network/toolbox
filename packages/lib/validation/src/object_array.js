@@ -8,7 +8,7 @@ module.exports = ({
   refinementMessageFn,
   title,
   path,
-  optional
+  optional,
 }) => {
   return validator({
     value,
@@ -19,6 +19,6 @@ module.exports = ({
     refinementFn,
     title,
     path,
-    optional
+    optional,
   });
 };

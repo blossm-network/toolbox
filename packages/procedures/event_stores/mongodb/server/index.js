@@ -11,14 +11,14 @@ let _countStore;
 
 //make all properties not required since events may
 //not contain the full schema.
-const formatSchema = schema => {
+const formatSchema = (schema) => {
   const newSchema = {};
   for (const property in schema) {
     newSchema[property] =
       typeof schema[property] == "object" && schema[property].type != undefined
         ? schema[property]
         : {
-            type: schema[property]
+            type: schema[property],
           };
     newSchema[property].required = false;
     newSchema[property].unique = false;
@@ -55,8 +55,8 @@ const eventStore = async ({ schema, indexes }) => {
             sub: String,
             exp: String,
             iat: String,
-            jti: String
-          }
+            jti: String,
+          },
         },
         trace: { type: String },
         created: { type: Date, required: true },
@@ -71,12 +71,12 @@ const eventStore = async ({ schema, indexes }) => {
               host: { type: String, required: true },
               procedure: { type: String, required: true },
               hash: { type: String, required: true },
-              issued: { type: Date }
-            }
+              issued: { type: Date },
+            },
           ],
-          default: []
-        }
-      }
+          default: [],
+        },
+      },
     },
     indexes: [
       [{ id: 1 }],
@@ -85,10 +85,10 @@ const eventStore = async ({ schema, indexes }) => {
       ...(indexes.length == 0
         ? []
         : [
-            indexes.map(index => {
+            indexes.map((index) => {
               return { [index]: 1 };
-            })
-          ])
+            }),
+          ]),
     ],
     connection: {
       protocol: process.env.MONGODB_PROTOCOL,
@@ -100,8 +100,8 @@ const eventStore = async ({ schema, indexes }) => {
       host: process.env.MONGODB_HOST,
       database: process.env.MONGODB_DATABASE,
       parameters: { authSource: "admin", retryWrites: true, w: "majority" },
-      autoIndex: true
-    }
+      autoIndex: true,
+    },
   });
 
   return _eventStore;
@@ -119,20 +119,20 @@ const snapshotStore = async ({ schema, indexes }) => {
       created: { type: Date, required: true },
       headers: {
         root: { type: String, required: true, unique: true },
-        lastEventNumber: { type: Number, required: true }
+        lastEventNumber: { type: Number, required: true },
       },
-      state: schema
+      state: schema,
     },
     indexes: [
       [{ "headers.root": 1 }],
       ...(indexes.length == 0
         ? []
         : [
-            indexes.map(index => {
+            indexes.map((index) => {
               return { [index]: 1 };
-            })
-          ])
-    ]
+            }),
+          ]),
+    ],
   });
 
   return _snapshotStore;
@@ -148,9 +148,9 @@ const countStore = async () => {
     name: countStoreName,
     schema: {
       root: { type: String, required: true },
-      value: { type: Number, required: true, default: 0 }
+      value: { type: Number, required: true, default: 0 },
     },
-    indexes: [[{ root: 1 }]]
+    indexes: [[{ root: 1 }]],
   });
 
   return _countStore;
@@ -160,17 +160,17 @@ module.exports = async ({
   schema,
   indexes = [],
   handlers,
-  publishFn
+  publishFn,
   // archiveSnapshotFn,
   // archiveEventsFn
 } = {}) => {
   const eStore = await eventStore({
     schema: deps.removeIds({ schema }),
-    indexes
+    indexes,
   });
   const sStore = await snapshotStore({
     schema: deps.removeIds({ schema }),
-    indexes
+    indexes,
   });
   const cStore = await countStore();
 
@@ -178,22 +178,22 @@ module.exports = async ({
     aggregateFn: deps.aggregate({
       eventStore: eStore,
       snapshotStore: sStore,
-      handlers
+      handlers,
     }),
     saveEventsFn: deps.saveEvents({
       eventStore: eStore,
-      handlers
+      handlers,
     }),
     queryFn: deps.query({
       eventStore: eStore,
       snapshotStore: sStore,
-      handlers
+      handlers,
     }),
     reserveRootCountsFn: deps.reserveRootCounts({
-      countsStore: cStore
+      countsStore: cStore,
     }),
     // saveSnapshotFn,
-    publishFn
+    publishFn,
   });
 };
 

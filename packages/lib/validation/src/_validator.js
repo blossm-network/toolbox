@@ -14,7 +14,7 @@ module.exports = ({
   refinementMessageFn,
   title,
   path,
-  optional
+  optional,
 }) => {
   const baseThrowingMessage = (value, _, context) => {
     try {
@@ -43,7 +43,7 @@ module.exports = ({
   //If the passed in function throws, return a falsey message;
   const throwingFn = !refinementFn
     ? null
-    : v => {
+    : (v) => {
         try {
           const fnValue = refinementFn(v);
 
@@ -82,6 +82,6 @@ module.exports = ({
   return process(value, validatorFn, {
     context: { title },
     ...(path && { path: [path] }),
-    optional
+    optional,
   });
 };

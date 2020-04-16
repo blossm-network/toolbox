@@ -24,7 +24,7 @@ describe("Optional booleans", () => {
 
 describe("Refinement functions", () => {
   it("should not contain errors if value is not empty and passes refinement function", () => {
-    const fn = value => value == false;
+    const fn = (value) => value == false;
     const response = boolean({ value: validBoolean, fn });
     expect(response.errors).to.be.empty;
   });
@@ -32,17 +32,17 @@ describe("Refinement functions", () => {
 
 describe("Invalid boolean", () => {
   it("should contain one error if something other than a boolean is passed in", () => {
-    invalidBooleans.forEach(invalidBoolean => {
+    invalidBooleans.forEach((invalidBoolean) => {
       let response = boolean({ value: invalidBoolean });
       expect(response.errors).to.have.lengthOf(1);
     });
   });
   it("should contain one error if something other than a boolean is passed in with message", () => {
     const message = "This is a bad boolean";
-    invalidBooleans.forEach(invalidBoolean => {
+    invalidBooleans.forEach((invalidBoolean) => {
       let response = boolean({
         value: invalidBoolean,
-        baseMessageFn: () => message
+        baseMessageFn: () => message,
       });
       expect(response.errors).to.have.lengthOf(1);
       expect(response.errors[0].message).to.equal(message);
@@ -51,7 +51,7 @@ describe("Invalid boolean", () => {
   it("should contain one error if something other than a boolean is passed in with message, title, and path", () => {
     const title = "some-title";
     const path = "some-path";
-    invalidBooleans.forEach(invalidBoolean => {
+    invalidBooleans.forEach((invalidBoolean) => {
       let response = boolean({
         title,
         path,
@@ -59,7 +59,7 @@ describe("Invalid boolean", () => {
         baseMessageFn: (e, title) => {
           expect(e).to.exist;
           return title;
-        }
+        },
       });
       expect(response.errors).to.have.lengthOf(1);
       expect(response.errors[0].message).to.equal(title);
@@ -68,7 +68,7 @@ describe("Invalid boolean", () => {
   });
   it("should contain one error if something other than a boolean is passed in with title response", () => {
     const title = "some-title";
-    invalidBooleans.forEach(invalidBoolean => {
+    invalidBooleans.forEach((invalidBoolean) => {
       let response = boolean({ value: invalidBoolean, title });
       expect(response.errors).to.have.lengthOf(1);
       expect(response.errors[0].message).to.include(title);
@@ -78,7 +78,7 @@ describe("Invalid boolean", () => {
 
 describe("Invalid optional boolean", () => {
   it("should contain one error if something other than a boolean is passed in, regardless of optional flag", () => {
-    invalidBooleans.forEach(invalidBoolean => {
+    invalidBooleans.forEach((invalidBoolean) => {
       let response = boolean({ value: invalidBoolean, optional: true });
       expect(response.errors).to.have.lengthOf(1);
     });
@@ -87,7 +87,7 @@ describe("Invalid optional boolean", () => {
 
 describe("Valid boolean that doesn't satisfy refinement", () => {
   it("should contain one error if a boolean is passed in that doesn't satisfy the refinement function", () => {
-    const refinementFn = value => value != false;
+    const refinementFn = (value) => value != false;
     const response = boolean({ value: validBoolean, refinementFn });
     expect(response.errors).to.have.lengthOf(1);
   });
@@ -96,25 +96,25 @@ describe("Valid boolean that doesn't satisfy refinement", () => {
 describe("Error message", () => {
   it("should contain one error with the specified message if an invalid boolean is passed in", () => {
     const incorrectBoolean = false;
-    const refinementFn = value => value != false;
+    const refinementFn = (value) => value != false;
     const message = "This is a bad boolean";
     const response = boolean({
       value: incorrectBoolean,
       refinementMessageFn: () => message,
-      refinementFn
+      refinementFn,
     });
     expect(response.errors[0].message).to.equal(message);
   });
 
   it("should contain one error with the specified message if an invalid boolean is passed in with title", () => {
     const incorrectBoolean = false;
-    const refinementFn = value => value != false;
+    const refinementFn = (value) => value != false;
     const title = "some-title";
     const response = boolean({
       title,
       value: incorrectBoolean,
       refinementMessageFn: (value, title) => `${value}${title}`,
-      refinementFn
+      refinementFn,
     });
     expect(response.errors[0].message).to.equal(`${incorrectBoolean}${title}`);
   });
@@ -127,7 +127,7 @@ describe("Error message", () => {
 
     const response = boolean({
       value: validBoolean,
-      refinementFn
+      refinementFn,
     });
 
     expect(response.errors[0].message).to.equal(message);
@@ -142,7 +142,7 @@ describe("Error message", () => {
     const response = boolean({
       value: validBoolean,
       refinementMessageFn: () => message,
-      refinementFn
+      refinementFn,
     });
 
     expect(response.errors[0].message).to.equal(message);

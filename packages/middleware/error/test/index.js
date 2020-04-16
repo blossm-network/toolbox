@@ -11,14 +11,14 @@ describe("Error middleware", () => {
 
     const statusCode = "some-status-code";
     const err = {
-      statusCode
+      statusCode,
     };
     const sendFake = fake();
     const statusFake = fake.returns({
-      send: sendFake
+      send: sendFake,
     });
     const res = {
-      status: statusFake
+      status: statusFake,
     };
 
     const nextFake = fake();
@@ -33,10 +33,10 @@ describe("Error middleware", () => {
     const err = {};
     const sendFake = fake();
     const statusFake = fake.returns({
-      send: sendFake
+      send: sendFake,
     });
     const res = {
-      status: statusFake
+      status: statusFake,
     };
 
     const nextFake = fake();
@@ -51,16 +51,16 @@ describe("Error middleware", () => {
 
     const statusCode = 401;
     const err = {
-      statusCode
+      statusCode,
     };
     const sendFake = fake();
     const statusFake = fake.returns({
-      send: sendFake
+      send: sendFake,
     });
     const clearCookieFake = fake();
     const res = {
       status: statusFake,
-      clearCookie: clearCookieFake
+      clearCookie: clearCookieFake,
     };
     const nextFake = fake();
     await errorMiddleware(err, req, res, nextFake);
@@ -75,11 +75,11 @@ describe("Error middleware", () => {
     const err = {};
     const sendFake = fake();
     const statusFake = fake.returns({
-      send: sendFake
+      send: sendFake,
     });
     const res = {
       status: statusFake,
-      headersSent: "some"
+      headersSent: "some",
     };
     const nextFake = fake();
     await errorMiddleware(err, req, res, nextFake);

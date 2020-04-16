@@ -34,16 +34,16 @@ const build = async ({ workingDir, env }) => {
       "submit",
       ".",
       "--config=build.yaml",
-      `--project=${envProject({ config: blossmConfig, env })}`
+      `--project=${envProject({ config: blossmConfig, env })}`,
     ],
     {
       stdio: [process.stdin, process.stdout, process.stderr],
-      cwd: workingDir
+      cwd: workingDir,
     }
   );
 };
 
-module.exports = ({ domain, dir, configFn }) => async args => {
+module.exports = ({ domain, dir, configFn }) => async (args) => {
   const input = await normalize({
     entrypointType: "path",
     entrypointDefault: ".",
@@ -53,22 +53,22 @@ module.exports = ({ domain, dir, configFn }) => async args => {
         name: "unit-test",
         short: "t",
         type: Boolean,
-        default: false
+        default: false,
       },
       {
         name: "env",
         type: String,
         short: "e",
         choices: ["production", "sandbox", "staging", "development"],
-        default: "development"
+        default: "development",
       },
       {
         name: "dry-run",
         type: Boolean,
         short: "d",
-        default: false
-      }
-    ]
+        default: false,
+      },
+    ],
   });
 
   const workingDir = fs.mkdtempSync(path.join(os.tmpdir(), "blossm-"));
@@ -81,7 +81,7 @@ module.exports = ({ domain, dir, configFn }) => async args => {
     env: input.env,
     path: input.path,
     dry: input.dryRun,
-    configFn
+    configFn,
   });
 
   try {

@@ -9,7 +9,7 @@ const headers = "some-headers";
 const response = {
   statusCode,
   statusMessage,
-  headers
+  headers,
 };
 const body = "some-body";
 
@@ -24,7 +24,7 @@ describe("Request", () => {
       expect(options).to.deep.equal({
         url,
         method: "POST",
-        json: params
+        json: params,
       });
       callback(null, response, body);
     });
@@ -40,13 +40,13 @@ describe("Request", () => {
         url,
         method: "POST",
         json: params,
-        headers: reqHeaders
+        headers: reqHeaders,
       });
       callback(null, response, body);
     });
     const reply = await request.post(url, {
       body: params,
-      headers: reqHeaders
+      headers: reqHeaders,
     });
     expect(reply).to.deep.equal({ ...response, body });
   });
@@ -57,7 +57,7 @@ describe("Request", () => {
       expect(options).to.deep.equal({
         url,
         method: "PUT",
-        json: params
+        json: params,
       });
       callback(null, response, body);
     });
@@ -69,7 +69,7 @@ describe("Request", () => {
     replace(deps, "request", (options, callback) => {
       expect(options).to.deep.equal({
         url,
-        method: "DELETE"
+        method: "DELETE",
       });
       callback(null, response, body);
     });
@@ -82,7 +82,7 @@ describe("Request", () => {
       hello: "there",
       how: ["are", "you"],
       andy: [0, "ur dogs?"],
-      dandy: { a: 1 }
+      dandy: { a: 1 },
     };
     replace(deps, "request", (options, callback) => {
       expect(options.url).to.equal(
@@ -98,7 +98,7 @@ describe("Request", () => {
     const params = {
       hello: "there",
       how: ["are", "you"],
-      andy: [0, "ur dogs?"]
+      andy: [0, "ur dogs?"],
     };
     const headers = "some-header!";
     replace(deps, "request", (options, callback) => {
@@ -116,7 +116,7 @@ describe("Request", () => {
     const params = {
       hello: "there",
       how: "are",
-      you: "now"
+      you: "now",
     };
     replace(deps, "request", (options, callback) => {
       expect(options.url).to.equal(`${url}?hello=there&how=are&you=now`);
@@ -139,7 +139,7 @@ describe("Request", () => {
     const params = {
       hello: "there",
       how: ["are", "you"],
-      andy: [0, "ur dogs?"]
+      andy: [0, "ur dogs?"],
     };
     const onFn = (status, fn) => {
       switch (status) {
@@ -153,12 +153,12 @@ describe("Request", () => {
           break;
       }
     };
-    replace(deps, "request", options => {
+    replace(deps, "request", (options) => {
       expect(options.url).to.equal(
         `${url}?hello=there&how%5B0%5D=are&how%5B1%5D=you&andy%5B0%5D=0&andy%5B1%5D=ur%20dogs%3F`
       );
       return {
-        on: onFn
+        on: onFn,
       };
     });
     const url = "http://google.com";
@@ -170,7 +170,7 @@ describe("Request", () => {
     const params = {
       hello: "there",
       how: ["are", "you"],
-      andy: [0, "ur dogs?"]
+      andy: [0, "ur dogs?"],
     };
     const errorMessage = "some-error-message";
     const onFn = (status, fn) => {
@@ -186,12 +186,12 @@ describe("Request", () => {
           break;
       }
     };
-    replace(deps, "request", options => {
+    replace(deps, "request", (options) => {
       expect(options.url).to.equal(
         `${url}?hello=there&how%5B0%5D=are&how%5B1%5D=you&andy%5B0%5D=0&andy%5B1%5D=ur%20dogs%3F`
       );
       return {
-        on: onFn
+        on: onFn,
       };
     });
     const url = "http://google.com";

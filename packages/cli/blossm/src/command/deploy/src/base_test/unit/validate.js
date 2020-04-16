@@ -21,7 +21,7 @@ describe("Command handler store validator tests", () => {
         await validate(
           createBadPayload({
             bad: value,
-            ok: testing.validate.ok[0] || {}
+            ok: testing.validate.ok[0] || {},
           })
         );
 
@@ -50,7 +50,7 @@ const createBadPayload = ({ bad, ok }) => {
           !(bad[property] instanceof Array)
           ? createBadPayload({
               bad: bad[property],
-              ok: ok[property]
+              ok: ok[property],
             })
           : (payload[property] = bad[property])
         : (payload[property] = ok[property]);

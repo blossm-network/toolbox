@@ -18,20 +18,20 @@ module.exports = command({
     {
       domain = process.env.DOMAIN,
       service = process.env.SERVICE,
-      network = process.env.NETWORK
+      network = process.env.NETWORK,
     } = {}
   ) => {
     const aggregate = await eventStore({ domain, service, network })
       .set({
         context,
         claims,
-        tokenFns: { internal: gcpToken }
+        tokenFns: { internal: gcpToken },
       })
       .aggregate(root);
 
     return {
       lastEventNumber: aggregate.headers.lastEventNumber,
-      aggregate: aggregate.state
+      aggregate: aggregate.state,
     };
   },
   addFn: ({ domain, service, context, claims, events }) =>
@@ -39,7 +39,7 @@ module.exports = command({
       .set({
         context,
         claims,
-        tokenFns: { internal: gcpToken }
+        tokenFns: { internal: gcpToken },
       })
-      .add(events)
+      .add(events),
 });

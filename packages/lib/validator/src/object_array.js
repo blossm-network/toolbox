@@ -8,7 +8,7 @@ module.exports = (
     baseMessageFn,
     refinementFn,
     refinementMessageFn,
-    optional
+    optional,
   } = {}
 ) =>
   objectArrayValidator({
@@ -18,5 +18,5 @@ module.exports = (
     baseMessageFn,
     refinementFn,
     refinementMessageFn,
-    optional
+    optional,
   });

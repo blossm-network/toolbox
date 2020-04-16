@@ -18,16 +18,16 @@ const objectsEqual = (obj0, obj1) => {
   return true;
 };
 
-const eventsForStore = config =>
-  config.actions.map(action => {
+const eventsForStore = (config) =>
+  config.actions.map((action) => {
     return {
       action,
       domain: config.domain,
-      service: config.service
+      service: config.service,
     };
   });
 
-const resolveTransientDependencies = config => {
+const resolveTransientDependencies = (config) => {
   switch (config.procedure) {
     case "command":
       return [
@@ -35,8 +35,8 @@ const resolveTransientDependencies = config => {
         {
           domain: config.domain,
           service: config.service,
-          procedure: "event-store"
-        }
+          procedure: "event-store",
+        },
       ];
     case "projection":
       return [
@@ -45,8 +45,8 @@ const resolveTransientDependencies = config => {
           name: config.name,
           domain: config.domain,
           service: config.service,
-          procedure: "view-store"
-        }
+          procedure: "view-store",
+        },
       ];
     default:
       return (config.testing || {}).dependencies || [];
@@ -69,7 +69,7 @@ const findDependenciesAndEventsForDependency = (dependency, dir) => {
           events:
             blossmConfig.procedure == "event-store"
               ? eventsForStore(blossmConfig)
-              : []
+              : [],
         };
       }
     } else if (fs.statSync(filePath).isDirectory()) {
@@ -96,15 +96,15 @@ const findDependenciesAndEvents = (
   for (const dependency of dependencies) {
     const {
       dependencies: foundDependencies,
-      events: foundEvents
+      events: foundEvents,
     } = findDependenciesAndEventsForDependency(dependency, dir);
-    const filteredFoundDependencies = foundDependencies.filter(p => {
+    const filteredFoundDependencies = foundDependencies.filter((p) => {
       for (const s of newDependencies) {
         if (objectsEqual(s, p)) return false;
       }
       return true;
     });
-    const filteredFoundEvents = foundEvents.filter(e => {
+    const filteredFoundEvents = foundEvents.filter((e) => {
       for (const s of newEvents) {
         if (objectsEqual(s, e)) return false;
       }
@@ -114,14 +114,14 @@ const findDependenciesAndEvents = (
     newEvents.push(...filteredFoundEvents);
   }
 
-  const dependencyDifference = newDependencies.filter(p => {
+  const dependencyDifference = newDependencies.filter((p) => {
     for (const dependency of allDependencies) {
       if (objectsEqual(dependency, p)) return false;
     }
     return true;
   });
 
-  const eventDifference = newEvents.filter(e => {
+  const eventDifference = newEvents.filter((e) => {
     for (const event of allEvents) {
       if (objectsEqual(event, e)) return false;
     }
@@ -131,7 +131,7 @@ const findDependenciesAndEvents = (
   if (dependencyDifference.length == 0)
     return {
       dependencies: allDependencies,
-      events: [...allEvents, ...eventDifference]
+      events: [...allEvents, ...eventDifference],
     };
 
   return findDependenciesAndEvents(
@@ -142,7 +142,7 @@ const findDependenciesAndEvents = (
   );
 };
 
-module.exports = dependencies => {
+module.exports = (dependencies) => {
   if (!dependencies) return;
   const dir = rootDir.path();
   return findDependenciesAndEvents(dependencies, dir, dependencies, []);

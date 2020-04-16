@@ -11,26 +11,26 @@ describe("upload", () => {
     restore();
   });
   it("should upload correctly", async () => {
-    const storage = function() {};
+    const storage = function () {};
     const uploadFake = fake();
 
     const bucketFake = fake.returns({
-      upload: uploadFake
+      upload: uploadFake,
     });
     storage.prototype.bucket = bucketFake;
     replace(deps, "storage", storage);
     await upload({ bucket, file });
     expect(bucketFake).to.have.been.calledWith(bucket);
     expect(uploadFake).to.have.been.calledWith(file, {
-      destination: file
+      destination: file,
     });
   });
   it("should upload correctly with destination", async () => {
-    const storage = function() {};
+    const storage = function () {};
     const uploadFake = fake();
 
     const bucketFake = fake.returns({
-      upload: uploadFake
+      upload: uploadFake,
     });
     storage.prototype.bucket = bucketFake;
     replace(deps, "storage", storage);
@@ -38,16 +38,16 @@ describe("upload", () => {
     await upload({ bucket, file, destination });
     expect(bucketFake).to.have.been.calledWith(bucket);
     expect(uploadFake).to.have.been.calledWith(file, {
-      destination
+      destination,
     });
   });
   it("should throw correctly", async () => {
-    const storage = function() {};
+    const storage = function () {};
     const error = new Error("some-error");
     const uploadFake = fake.rejects(error);
 
     const bucketFake = fake.returns({
-      upload: uploadFake
+      upload: uploadFake,
     });
     storage.prototype.bucket = bucketFake;
     replace(deps, "storage", storage);

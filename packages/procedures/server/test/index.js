@@ -22,7 +22,7 @@ describe("Lamba", () => {
     const app = {
       use: useFake,
       listen: listenFake,
-      post: postFake
+      post: postFake,
     };
     const expressFake = fake.returns(app);
     replace(deps, "express", expressFake);
@@ -34,9 +34,7 @@ describe("Lamba", () => {
     replace(deps, "asyncHandler", asyncHandlerFake);
     replace(deps, "expressMiddleware", expressMiddlewareFake);
 
-    const result = server()
-      .post(fn)
-      .listen();
+    const result = server().post(fn).listen();
 
     expect(result).to.equal(app);
     expect(postFake).to.have.been.calledWith("/", asyncFn);
@@ -53,7 +51,7 @@ describe("Lamba", () => {
       use: useFake,
       listen: listenFake,
       post: postFake,
-      get: getFake
+      get: getFake,
     };
     const expressFake = fake.returns(app);
     replace(deps, "express", expressFake);
@@ -67,10 +65,7 @@ describe("Lamba", () => {
 
     const fn2 = "another-function";
 
-    const result = server()
-      .post(fn)
-      .get(fn2)
-      .listen();
+    const result = server().post(fn).get(fn2).listen();
 
     expect(result).to.equal(app);
     expect(postFake).to.have.been.calledWith("/", asyncFn);
@@ -85,7 +80,7 @@ describe("Lamba", () => {
     const app = {
       use: useFake,
       listen: listenFake,
-      post: postFake
+      post: postFake,
     };
     const expressFake = fake.returns(app);
     replace(deps, "express", expressFake);
@@ -116,7 +111,7 @@ describe("Lamba", () => {
     const app = {
       use: useFake,
       listen: listenFake,
-      post: postFake
+      post: postFake,
     };
     const expressFake = fake.returns(app);
     replace(deps, "express", expressFake);
@@ -129,9 +124,7 @@ describe("Lamba", () => {
     replace(deps, "asyncHandler", asyncHandlerFake);
     replace(deps, "expressMiddleware", expressMiddlewareFake);
 
-    const result = server()
-      .post(fn)
-      .listen();
+    const result = server().post(fn).listen();
 
     expect(result).to.equal(app);
     expect(postFake).to.have.been.calledWith("/", asyncFn);
@@ -146,7 +139,7 @@ describe("Lamba", () => {
     const app = {
       use: useFake,
       listen: listenFake,
-      post: postFake
+      post: postFake,
     };
     const expressFake = fake.returns(app);
     replace(deps, "express", expressFake);
@@ -178,7 +171,7 @@ describe("Lamba", () => {
     const app = {
       use: useFake,
       listen: listenFake,
-      post: postFake
+      post: postFake,
     };
     const expressFake = fake.returns(app);
     replace(deps, "express", expressFake);
@@ -196,7 +189,7 @@ describe("Lamba", () => {
     const result = server()
       .post(fn, {
         preMiddleware: [preMiddleware],
-        postMiddleware: [postMiddleware]
+        postMiddleware: [postMiddleware],
       })
       .listen();
 
@@ -218,7 +211,7 @@ describe("Lamba", () => {
     const app = {
       use: useFake,
       listen: listenFake,
-      get: getFake
+      get: getFake,
     };
     const expressFake = fake.returns(app);
     replace(deps, "express", expressFake);
@@ -230,9 +223,7 @@ describe("Lamba", () => {
     replace(deps, "asyncHandler", asyncHandlerFake);
     replace(deps, "expressMiddleware", expressMiddlewareFake);
 
-    const result = server()
-      .get(fn)
-      .listen();
+    const result = server().get(fn).listen();
 
     expect(result).to.equal(app);
     expect(getFake).to.have.been.calledWith("/:id?", asyncFn);
@@ -247,7 +238,7 @@ describe("Lamba", () => {
     const app = {
       use: useFake,
       listen: listenFake,
-      get: getFake
+      get: getFake,
     };
     const expressFake = fake.returns(app);
     replace(deps, "express", expressFake);
@@ -265,7 +256,7 @@ describe("Lamba", () => {
     const result = server()
       .get(fn, {
         preMiddleware: [preMiddleware],
-        postMiddleware: [postMiddleware]
+        postMiddleware: [postMiddleware],
       })
       .listen();
 
@@ -287,7 +278,7 @@ describe("Lamba", () => {
     const app = {
       use: useFake,
       listen: listenFake,
-      put: putFake
+      put: putFake,
     };
     const expressFake = fake.returns(app);
     replace(deps, "express", expressFake);
@@ -305,7 +296,7 @@ describe("Lamba", () => {
     const result = server()
       .put(fn, {
         preMiddleware: [preMiddleware],
-        postMiddleware: [postMiddleware]
+        postMiddleware: [postMiddleware],
       })
       .listen();
 
@@ -327,7 +318,7 @@ describe("Lamba", () => {
     const app = {
       use: useFake,
       listen: listenFake,
-      delete: deleteFake
+      delete: deleteFake,
     };
     const expressFake = fake.returns(app);
     replace(deps, "express", expressFake);
@@ -339,9 +330,7 @@ describe("Lamba", () => {
     replace(deps, "asyncHandler", asyncHandlerFake);
     replace(deps, "expressMiddleware", expressMiddlewareFake);
 
-    const result = server()
-      .delete(fn)
-      .listen();
+    const result = server().delete(fn).listen();
 
     expect(result).to.equal(app);
     expect(deleteFake).to.have.been.calledWith("/:id", asyncFn);
@@ -356,7 +345,7 @@ describe("Lamba", () => {
     const app = {
       use: useFake,
       listen: listenFake,
-      delete: deleteFake
+      delete: deleteFake,
     };
     const expressFake = fake.returns(app);
     replace(deps, "express", expressFake);
@@ -374,7 +363,7 @@ describe("Lamba", () => {
     const result = server()
       .delete(fn, {
         preMiddleware: [preMiddleware],
-        postMiddleware: [postMiddleware]
+        postMiddleware: [postMiddleware],
       })
       .listen();
 

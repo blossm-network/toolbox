@@ -10,5 +10,5 @@ module.exports = (
     baseMessageFn,
     title,
     path,
-    optional
+    optional,
   });

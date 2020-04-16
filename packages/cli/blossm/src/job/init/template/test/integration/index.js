@@ -13,12 +13,12 @@ describe("Job integration tests", () => {
       body: {
         headers: {
           issued: dateString(),
-          accepted: dateString()
+          accepted: dateString(),
         },
         payload: {
-          name
-        }
-      }
+          name,
+        },
+      },
     });
 
     expect(response.statusCode).to.equal(204);

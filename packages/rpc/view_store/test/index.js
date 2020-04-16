@@ -88,20 +88,20 @@ describe("Get views", () => {
     const views = "some-views";
     const withFake = fake.returns(views);
     const inFake = fake.returns({
-      with: withFake
+      with: withFake,
     });
     const getFake = fake.returns({
-      in: inFake
+      in: inFake,
     });
     const rpcFake = fake.returns({
-      get: getFake
+      get: getFake,
     });
     replace(deps, "rpc", rpcFake);
 
     const result = await viewStore({ name, domain, service, context, network })
       .set({
         context: contexts,
-        tokenFns: { internal: internalTokenFn, external: externalTokenFn }
+        tokenFns: { internal: internalTokenFn, external: externalTokenFn },
       })
       .read({ query, sort });
 
@@ -116,7 +116,7 @@ describe("Get views", () => {
     expect(inFake).to.have.been.calledWith({ context: contexts });
     expect(withFake).to.have.been.calledWith({
       internalTokenFn,
-      externalTokenFn
+      externalTokenFn,
     });
     expect(result).to.equal(views);
   });
@@ -124,18 +124,18 @@ describe("Get views", () => {
     const views = "some-views";
     const withFake = fake.returns(views);
     const inFake = fake.returns({
-      with: withFake
+      with: withFake,
     });
     const getFake = fake.returns({
-      in: inFake
+      in: inFake,
     });
     const rpcFake = fake.returns({
-      get: getFake
+      get: getFake,
     });
     replace(deps, "rpc", rpcFake);
 
     const result = await viewStore({ name }).read({
-      query
+      query,
     });
 
     expect(rpcFake).to.have.been.calledWith(name, envContext, "view-store");
@@ -148,13 +148,13 @@ describe("Get views", () => {
     const views = "some-views";
     const withFake = fake.returns(views);
     const inFake = fake.returns({
-      with: withFake
+      with: withFake,
     });
     const getFake = fake.returns({
-      in: inFake
+      in: inFake,
     });
     const rpcFake = fake.returns({
-      get: getFake
+      get: getFake,
     });
     replace(deps, "rpc", rpcFake);
 
@@ -162,7 +162,7 @@ describe("Get views", () => {
     const result = await viewStore({
       name,
       context,
-      network: otherNetwork
+      network: otherNetwork,
     })
       .set({ context: contexts, tokenFns: { external: externalTokenFn } })
       .read({ query, sort });
@@ -172,11 +172,11 @@ describe("Get views", () => {
     expect(inFake).to.have.been.calledWith({
       context: contexts,
       network: otherNetwork,
-      host: "view.some-context.some-other-network"
+      host: "view.some-context.some-other-network",
     });
     expect(withFake).to.have.been.calledWith({
       externalTokenFn,
-      path: "/some-name"
+      path: "/some-name",
     });
     expect(result).to.equal(views);
   });
@@ -184,20 +184,20 @@ describe("Get views", () => {
     const views = "some-views";
     const withFake = fake.returns(views);
     const inFake = fake.returns({
-      with: withFake
+      with: withFake,
     });
     const getFake = fake.returns({
-      in: inFake
+      in: inFake,
     });
     const rpcFake = fake.returns({
-      get: getFake
+      get: getFake,
     });
     replace(deps, "rpc", rpcFake);
 
     const result = await viewStore({ name, domain, service, context, network })
       .set({
         context: contexts,
-        tokenFns: { internal: internalTokenFn, external: externalTokenFn }
+        tokenFns: { internal: internalTokenFn, external: externalTokenFn },
       })
       .stream({ query, sort });
 
@@ -213,7 +213,7 @@ describe("Get views", () => {
     expect(withFake).to.have.been.calledWith({
       path: "/stream",
       internalTokenFn,
-      externalTokenFn
+      externalTokenFn,
     });
     expect(result).to.equal(views);
   });
@@ -221,25 +221,25 @@ describe("Get views", () => {
     const views = "some-views";
     const withFake = fake.returns(views);
     const inFake = fake.returns({
-      with: withFake
+      with: withFake,
     });
     const getFake = fake.returns({
-      in: inFake
+      in: inFake,
     });
     const rpcFake = fake.returns({
-      get: getFake
+      get: getFake,
     });
     replace(deps, "rpc", rpcFake);
 
     const result = await viewStore({ name }).stream({
-      query
+      query,
     });
 
     expect(rpcFake).to.have.been.calledWith(name, envContext, "view-store");
     expect(getFake).to.have.been.calledWith({ query });
     expect(inFake).to.have.been.calledWith({});
     expect(withFake).to.have.been.calledWith({
-      path: "/stream"
+      path: "/stream",
     });
     expect(result).to.equal(views);
   });
@@ -247,13 +247,13 @@ describe("Get views", () => {
     const views = "some-views";
     const withFake = fake.returns(views);
     const inFake = fake.returns({
-      with: withFake
+      with: withFake,
     });
     const getFake = fake.returns({
-      in: inFake
+      in: inFake,
     });
     const rpcFake = fake.returns({
-      get: getFake
+      get: getFake,
     });
     replace(deps, "rpc", rpcFake);
 
@@ -262,7 +262,7 @@ describe("Get views", () => {
       name,
       domain,
       context,
-      network: otherNetwork
+      network: otherNetwork,
     })
       .set({ context: contexts, tokenFns: { external: externalTokenFn } })
       .stream({ query, sort });
@@ -277,31 +277,31 @@ describe("Get views", () => {
     expect(inFake).to.have.been.calledWith({
       context: contexts,
       network: otherNetwork,
-      host: "view.some-domain.some-context.some-other-network"
+      host: "view.some-domain.some-context.some-other-network",
     });
     expect(withFake).to.have.been.calledWith({
       path: "/some-name/stream",
-      externalTokenFn
+      externalTokenFn,
     });
     expect(result).to.equal(views);
   });
   it("should call update with the correct params", async () => {
     const withFake = fake();
     const inFake = fake.returns({
-      with: withFake
+      with: withFake,
     });
     const putFake = fake.returns({
-      in: inFake
+      in: inFake,
     });
     const rpcFake = fake.returns({
-      put: putFake
+      put: putFake,
     });
     replace(deps, "rpc", rpcFake);
 
     await viewStore({ name, domain, service, context })
       .set({
         context: contexts,
-        tokenFns: { internal: internalTokenFn, external: externalTokenFn }
+        tokenFns: { internal: internalTokenFn, external: externalTokenFn },
       })
       .update(id, view);
 
@@ -316,19 +316,19 @@ describe("Get views", () => {
     expect(inFake).to.have.been.calledWith({ context: contexts });
     expect(withFake).to.have.been.calledWith({
       internalTokenFn,
-      externalTokenFn
+      externalTokenFn,
     });
   });
   it("should call update with the correct params and optionals omitted", async () => {
     const withFake = fake();
     const inFake = fake.returns({
-      with: withFake
+      with: withFake,
     });
     const putFake = fake.returns({
-      in: inFake
+      in: inFake,
     });
     const rpcFake = fake.returns({
-      put: putFake
+      put: putFake,
     });
     replace(deps, "rpc", rpcFake);
 
@@ -342,13 +342,13 @@ describe("Get views", () => {
   it("should call delete with the correct params", async () => {
     const withFake = fake();
     const inFake = fake.returns({
-      with: withFake
+      with: withFake,
     });
     const deleteFake = fake.returns({
-      in: inFake
+      in: inFake,
     });
     const rpcFake = fake.returns({
-      delete: deleteFake
+      delete: deleteFake,
     });
     replace(deps, "rpc", rpcFake);
 
@@ -356,7 +356,7 @@ describe("Get views", () => {
       .set({
         context: contexts,
         claims,
-        tokenFns: { internal: internalTokenFn, external: externalTokenFn }
+        tokenFns: { internal: internalTokenFn, external: externalTokenFn },
       })
       .delete(id);
 
@@ -372,19 +372,19 @@ describe("Get views", () => {
     expect(withFake).to.have.been.calledWith({
       claims,
       internalTokenFn,
-      externalTokenFn
+      externalTokenFn,
     });
   });
   it("should call delete with the correct params with optionals omitted", async () => {
     const withFake = fake();
     const inFake = fake.returns({
-      with: withFake
+      with: withFake,
     });
     const deleteFake = fake.returns({
-      in: inFake
+      in: inFake,
     });
     const rpcFake = fake.returns({
-      delete: deleteFake
+      delete: deleteFake,
     });
     replace(deps, "rpc", rpcFake);
 

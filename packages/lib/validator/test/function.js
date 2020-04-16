@@ -24,7 +24,7 @@ describe("Optional functions", () => {
 
 describe("Invalid function", () => {
   it("should contain one error if something other than a func is passed in", () => {
-    invalidFunctions.forEach(invalidFunction => {
+    invalidFunctions.forEach((invalidFunction) => {
       let response = fn(invalidFunction);
       expect(response.errors).to.have.lengthOf(1);
     });
@@ -33,7 +33,7 @@ describe("Invalid function", () => {
 
 describe("Invalid optional function", () => {
   it("should contain one error if something other than a function is passed in, regardless of optional flag", () => {
-    invalidFunctions.forEach(invalidFunction => {
+    invalidFunctions.forEach((invalidFunction) => {
       let response = fn(invalidFunction, { optional: true });
       expect(response.errors).to.have.lengthOf(1);
     });

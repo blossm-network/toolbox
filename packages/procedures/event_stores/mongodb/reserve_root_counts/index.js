@@ -5,7 +5,7 @@ module.exports = ({ countsStore }) => ({ root, amount }) =>
     store: countsStore,
     query: { root },
     update: {
-      $inc: { value: amount }
+      $inc: { value: amount },
     },
     options: {
       lean: true,
@@ -13,6 +13,6 @@ module.exports = ({ countsStore }) => ({ root, amount }) =>
       upsert: true,
       new: true,
       runValidators: true,
-      setDefaultsOnInsert: true
-    }
+      setDefaultsOnInsert: true,
+    },
   });

@@ -8,7 +8,7 @@ module.exports = async ({
   timeZone,
   token,
   project,
-  location
+  location,
 }) => {
   const parent = client.locationPath(project, location);
 
@@ -20,15 +20,15 @@ module.exports = async ({
       uri: url,
       httpMethod: "POST",
       oauthToken: token,
-      body
+      body,
     },
     schedule,
-    timeZone
+    timeZone,
   };
 
   const request = {
-    parent: parent,
-    job: job
+    parent,
+    job,
   };
 
   const [response] = await client.createJob(request);

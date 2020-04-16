@@ -22,7 +22,7 @@ describe("Command handler unit tests", () => {
 
     const result = await main({ payload, root });
     expect(result).to.deep.equal({
-      events: [{ action: "some-action", payload, root, correctNumber: 0 }]
+      events: [{ action: "some-action", payload, root, correctNumber: 0 }],
     });
   });
 });

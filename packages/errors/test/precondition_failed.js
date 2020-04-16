@@ -36,7 +36,7 @@ describe("Precondition failed", () => {
       statusCode: 412,
       info: {},
       code: "PreconditionFailed",
-      message
+      message,
     });
   });
   it("message correct with props", () => {
@@ -47,7 +47,7 @@ describe("Precondition failed", () => {
       cause,
       info,
       code: "PreconditionFailed",
-      message
+      message,
     });
   });
 });

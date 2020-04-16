@@ -18,5 +18,5 @@ module.exports = {
       "Some information is invalid."
     ),
   message: (message, { cause, info } = {}) =>
-    new InvalidArgumentError({ cause, info, toJSON }, message)
+    new InvalidArgumentError({ cause, info, toJSON }, message),
 };

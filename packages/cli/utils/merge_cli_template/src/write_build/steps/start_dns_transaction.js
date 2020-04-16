@@ -8,7 +8,7 @@ module.exports = ({ dnsZone, project }) => {
       "transaction",
       "start",
       `--zone=${dnsZone}`,
-      `--project=${project}`
-    ]
+      `--project=${project}`,
+    ],
   };
 };

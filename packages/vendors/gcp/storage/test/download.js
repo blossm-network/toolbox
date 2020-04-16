@@ -12,14 +12,14 @@ describe("Download", () => {
     restore();
   });
   it("should download correctly", async () => {
-    const storage = function() {};
+    const storage = function () {};
     const downloadFake = fake();
     const fileFake = fake.returns({
-      download: downloadFake
+      download: downloadFake,
     });
 
     const bucketFake = fake.returns({
-      file: fileFake
+      file: fileFake,
     });
     storage.prototype.bucket = bucketFake;
     replace(deps, "storage", storage);
@@ -29,21 +29,21 @@ describe("Download", () => {
     expect(downloadFake).to.have.been.calledWith({ destination });
   });
   it("should download correctly with no file", async () => {
-    const storage = function() {};
+    const storage = function () {};
     const download1Fake = fake();
     const download2Fake = fake();
     const files = [
       {
-        download: download1Fake
+        download: download1Fake,
       },
       {
-        download: download2Fake
-      }
+        download: download2Fake,
+      },
     ];
     const getFilesFake = fake.returns([files]);
 
     const bucketFake = fake.returns({
-      getFiles: getFilesFake
+      getFiles: getFilesFake,
     });
     storage.prototype.bucket = bucketFake;
     replace(deps, "storage", storage);
@@ -51,22 +51,22 @@ describe("Download", () => {
     expect(bucketFake).to.have.been.calledWith(bucket);
     expect(getFilesFake).to.have.been.calledWith();
     expect(download1Fake).to.have.been.calledWith({
-      destination
+      destination,
     });
     expect(download2Fake).to.have.been.calledWith({
-      destination: `some-destination_1.extension`
+      destination: `some-destination_1.extension`,
     });
   });
   it("should throw correctly", async () => {
-    const storage = function() {};
+    const storage = function () {};
     const error = new Error("some-error");
     const downloadFake = fake.rejects(error);
     const fileFake = fake.returns({
-      download: downloadFake
+      download: downloadFake,
     });
 
     const bucketFake = fake.returns({
-      file: fileFake
+      file: fileFake,
     });
     storage.prototype.bucket = bucketFake;
     replace(deps, "storage", storage);

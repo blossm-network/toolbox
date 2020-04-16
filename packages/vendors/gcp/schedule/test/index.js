@@ -18,7 +18,7 @@ const token = "some-token";
 
 describe("Schedule", () => {
   before(() => {
-    const client = function() {};
+    const client = function () {};
     client.prototype.locationPath = locationPathFake;
     client.prototype.createJob = createJobFake;
 
@@ -38,7 +38,7 @@ describe("Schedule", () => {
       token,
       timeZone,
       project,
-      location
+      location,
     });
     expect(locationPathFake).to.have.been.calledWith(project, location);
     expect(createJobFake).to.have.been.calledWith({
@@ -48,11 +48,11 @@ describe("Schedule", () => {
           uri: url,
           httpMethod: "POST",
           oauthToken: token,
-          body: Buffer.from(JSON.stringify(data))
+          body: Buffer.from(JSON.stringify(data)),
         },
         schedule: scheduleString,
-        timeZone
-      }
+        timeZone,
+      },
     });
     expect(result).to.equal(response);
   });

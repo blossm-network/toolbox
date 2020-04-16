@@ -38,13 +38,13 @@ describe("Get job", () => {
     const response = "some-response";
     const withFake = fake.returns(response);
     const inFake = fake.returns({
-      with: withFake
+      with: withFake,
     });
     const getFake = fake.returns({
-      in: inFake
+      in: inFake,
     });
     const rpcFake = fake.returns({
-      get: getFake
+      get: getFake,
     });
     replace(deps, "rpc", rpcFake);
 
@@ -52,7 +52,7 @@ describe("Get job", () => {
       .set({
         context,
         claims,
-        tokenFns: { internal: internalTokenFn, external: externalTokenFn }
+        tokenFns: { internal: internalTokenFn, external: externalTokenFn },
       })
       .read(query);
 
@@ -60,25 +60,25 @@ describe("Get job", () => {
     expect(rpcFake).to.have.been.calledWith(name, domain, service, "fact");
     expect(getFake).to.have.been.calledWith(query);
     expect(inFake).to.have.been.calledWith({
-      context
+      context,
     });
     expect(withFake).to.have.been.calledWith({
       internalTokenFn,
       externalTokenFn,
-      claims
+      claims,
     });
   });
   it("should call with the correct optional params", async () => {
     const response = "some-response";
     const withFake = fake.returns(response);
     const inFake = fake.returns({
-      with: withFake
+      with: withFake,
     });
     const getFake = fake.returns({
-      in: inFake
+      in: inFake,
     });
     const rpcFake = fake.returns({
-      get: getFake
+      get: getFake,
     });
     replace(deps, "rpc", rpcFake);
 
@@ -94,13 +94,13 @@ describe("Get job", () => {
     const response = "some-response";
     const withFake = fake.returns(response);
     const inFake = fake.returns({
-      with: withFake
+      with: withFake,
     });
     const getFake = fake.returns({
-      in: inFake
+      in: inFake,
     });
     const rpcFake = fake.returns({
-      get: getFake
+      get: getFake,
     });
     replace(deps, "rpc", rpcFake);
 
@@ -117,13 +117,13 @@ describe("Get job", () => {
     const response = "some-response";
     const withFake = fake.returns(response);
     const inFake = fake.returns({
-      with: withFake
+      with: withFake,
     });
     const getFake = fake.returns({
-      in: inFake
+      in: inFake,
     });
     const rpcFake = fake.returns({
-      get: getFake
+      get: getFake,
     });
     replace(deps, "rpc", rpcFake);
     const otherNetwork = "some-other-network";
@@ -131,7 +131,7 @@ describe("Get job", () => {
       .set({
         context,
         claims,
-        tokenFns: { external: externalTokenFn }
+        tokenFns: { external: externalTokenFn },
       })
       .read(query);
 
@@ -141,24 +141,24 @@ describe("Get job", () => {
     expect(inFake).to.have.been.calledWith({
       context,
       network: otherNetwork,
-      host: `fact.some-domain.some-service.some-other-network`
+      host: `fact.some-domain.some-service.some-other-network`,
     });
     expect(withFake).to.have.been.calledWith({
       externalTokenFn,
-      claims
+      claims,
     });
   });
   it("should call stream with the correct params", async () => {
     const response = "some-response";
     const withFake = fake.returns(response);
     const inFake = fake.returns({
-      with: withFake
+      with: withFake,
     });
     const getFake = fake.returns({
-      in: inFake
+      in: inFake,
     });
     const rpcFake = fake.returns({
-      get: getFake
+      get: getFake,
     });
     replace(deps, "rpc", rpcFake);
 
@@ -166,7 +166,7 @@ describe("Get job", () => {
       .set({
         context,
         claims,
-        tokenFns: { internal: internalTokenFn, external: externalTokenFn }
+        tokenFns: { internal: internalTokenFn, external: externalTokenFn },
       })
       .stream(query);
 
@@ -174,26 +174,26 @@ describe("Get job", () => {
     expect(rpcFake).to.have.been.calledWith(name, domain, service, "fact");
     expect(getFake).to.have.been.calledWith(query);
     expect(inFake).to.have.been.calledWith({
-      context
+      context,
     });
     expect(withFake).to.have.been.calledWith({
       path: "/stream",
       internalTokenFn,
       externalTokenFn,
-      claims
+      claims,
     });
   });
   it("should call with the correct optional params", async () => {
     const response = "some-response";
     const withFake = fake.returns(response);
     const inFake = fake.returns({
-      with: withFake
+      with: withFake,
     });
     const getFake = fake.returns({
-      in: inFake
+      in: inFake,
     });
     const rpcFake = fake.returns({
-      get: getFake
+      get: getFake,
     });
     replace(deps, "rpc", rpcFake);
 
@@ -209,13 +209,13 @@ describe("Get job", () => {
     const response = "some-response";
     const withFake = fake.returns(response);
     const inFake = fake.returns({
-      with: withFake
+      with: withFake,
     });
     const getFake = fake.returns({
-      in: inFake
+      in: inFake,
     });
     const rpcFake = fake.returns({
-      get: getFake
+      get: getFake,
     });
     replace(deps, "rpc", rpcFake);
 
@@ -224,7 +224,7 @@ describe("Get job", () => {
       .set({
         context,
         claims,
-        tokenFns: { internal: internalTokenFn, external: externalTokenFn }
+        tokenFns: { internal: internalTokenFn, external: externalTokenFn },
       })
       .stream({ root });
 
@@ -232,26 +232,26 @@ describe("Get job", () => {
     expect(rpcFake).to.have.been.calledWith(name, domain, service, "fact");
     expect(getFake).to.have.been.calledWith({ id: root });
     expect(inFake).to.have.been.calledWith({
-      context
+      context,
     });
     expect(withFake).to.have.been.calledWith({
       path: "/stream",
       internalTokenFn,
       externalTokenFn,
-      claims
+      claims,
     });
   });
   it("should call stream with the correct params onto different network", async () => {
     const response = "some-response";
     const withFake = fake.returns(response);
     const inFake = fake.returns({
-      with: withFake
+      with: withFake,
     });
     const getFake = fake.returns({
-      in: inFake
+      in: inFake,
     });
     const rpcFake = fake.returns({
-      get: getFake
+      get: getFake,
     });
     replace(deps, "rpc", rpcFake);
 
@@ -260,7 +260,7 @@ describe("Get job", () => {
       .set({
         context,
         claims,
-        tokenFns: { external: externalTokenFn }
+        tokenFns: { external: externalTokenFn },
       })
       .stream(query);
 
@@ -270,12 +270,12 @@ describe("Get job", () => {
     expect(inFake).to.have.been.calledWith({
       context,
       network: otherNetwork,
-      host: `fact.some-domain.some-service.some-other-network`
+      host: `fact.some-domain.some-service.some-other-network`,
     });
     expect(withFake).to.have.been.calledWith({
       path: "/stream",
       externalTokenFn,
-      claims
+      claims,
     });
   });
 });

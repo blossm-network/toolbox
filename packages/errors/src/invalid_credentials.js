@@ -34,5 +34,5 @@ module.exports = {
       "This phone number isn't recognized."
     ),
   message: (message, { cause, info } = {}) =>
-    new InvalidCredentialsError({ cause, info, toJSON }, message)
+    new InvalidCredentialsError({ cause, info, toJSON }, message),
 };

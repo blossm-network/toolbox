@@ -7,37 +7,33 @@ const main = require("./main.js");
 const config = require("./config.json");
 
 module.exports = eventHandler({
-  mainFn: async event => {
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log({ projectionEvent: event });
-
+  mainFn: async (event) => {
     const {
       [process.env.DOMAIN]: {
         root: domainRoot,
         service: domainService,
-        network: domainNetwork
+        network: domainNetwork,
       } = {},
       root,
-      body
+      body,
     } = await main(event);
 
     return await viewStore({
       name: config.name,
       ...(config.domain && { domain: config.domain }),
       ...(config.service && { service: config.service }),
-      context: config.context
+      context: config.context,
     })
       .set({
         context: event.headers.context,
         claims: event.headers.claims,
-        tokenFns: { internal: gcpToken }
+        tokenFns: { internal: gcpToken },
       })
       .update(root, {
         headers: {
           ...(event.headers.context &&
             event.headers.context[process.env.CONTEXT] && {
-              [process.env.CONTEXT]: event.headers.context[process.env.CONTEXT]
+              [process.env.CONTEXT]: event.headers.context[process.env.CONTEXT],
             }),
           ...(process.env.DOMAIN &&
             domainRoot &&
@@ -46,14 +42,14 @@ module.exports = eventHandler({
               [process.env.DOMAIN]: {
                 root: domainRoot,
                 service: domainService,
-                network: domainNetwork
-              }
-            })
+                network: domainNetwork,
+              },
+            }),
         },
         body: {
           ...body,
-          ...(event.headers.trace && { trace: event.headers.trace })
-        }
+          ...(event.headers.trace && { trace: event.headers.trace }),
+        },
       });
-  }
+  },
 });

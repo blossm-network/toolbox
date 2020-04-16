@@ -25,24 +25,24 @@ describe("Job post", () => {
 
     const req = {
       body: {
-        payload
-      }
+        payload,
+      },
     };
 
     const sendFake = fake();
     const statusFake = fake.returns({
-      send: sendFake
+      send: sendFake,
     });
     const res = {
-      status: statusFake
+      status: statusFake,
     };
 
     await post({
-      mainFn: mainFnFake
+      mainFn: mainFnFake,
     })(req, res);
 
     expect(mainFnFake).to.have.been.calledWith({
-      payload
+      payload,
     });
     expect(statusFake).to.have.been.calledWith(204);
     expect(sendFake).to.have.been.calledWith();
@@ -57,26 +57,26 @@ describe("Job post", () => {
       body: {
         payload,
         claims,
-        context
-      }
+        context,
+      },
     };
 
     const sendFake = fake();
     const statusFake = fake.returns({
-      send: sendFake
+      send: sendFake,
     });
     const res = {
-      status: statusFake
+      status: statusFake,
     };
 
     await post({
-      mainFn: mainFnFake
+      mainFn: mainFnFake,
     })(req, res);
 
     expect(mainFnFake).to.have.been.calledWith({
       payload,
       context,
-      claims
+      claims,
     });
     expect(statusFake).to.have.been.calledWith(204);
     expect(sendFake).to.have.been.calledWith();
@@ -86,21 +86,21 @@ describe("Job post", () => {
     const mainFnFake = fake.rejects(new Error(errorMessage));
     const req = {
       body: {
-        payload
-      }
+        payload,
+      },
     };
 
     const sendFake = fake();
     const statusFake = fake.returns({
-      send: sendFake
+      send: sendFake,
     });
     const res = {
-      status: statusFake
+      status: statusFake,
     };
 
     try {
       await post({
-        mainFn: mainFnFake
+        mainFn: mainFnFake,
       })(req, res);
 
       //shouldn't get called

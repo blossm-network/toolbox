@@ -14,7 +14,7 @@ module.exports = ({ saveEventsFn, reserveRootCountsFn, publishFn }) => {
     }, {});
 
     const [...updatedCountObjects] = await Promise.all(
-      Object.keys(eventRootCounts).map(root =>
+      Object.keys(eventRootCounts).map((root) =>
         reserveRootCountsFn({ root, amount: eventRootCounts[root] })
       )
     );
@@ -28,7 +28,7 @@ module.exports = ({ saveEventsFn, reserveRootCountsFn, publishFn }) => {
       {}
     );
 
-    const normalizedEvents = req.body.events.map(event => {
+    const normalizedEvents = req.body.events.map((event) => {
       if (!eventNumberOffsets[event.data.headers.root])
         eventNumberOffsets[event.data.headers.root] = 0;
 
@@ -43,8 +43,8 @@ module.exports = ({ saveEventsFn, reserveRootCountsFn, publishFn }) => {
         throw badRequest.wrongEventStore({
           info: {
             expected: `${process.env.DOMAIN}.${process.env.SERVICE}`,
-            actual: `${topicDomain}.${topicService}`
-          }
+            actual: `${topicDomain}.${topicService}`,
+          },
         });
 
       const root = event.data.headers.root;
@@ -55,7 +55,7 @@ module.exports = ({ saveEventsFn, reserveRootCountsFn, publishFn }) => {
 
       if (event.number && event.number != number)
         throw preconditionFailed.eventNumberIncorrect({
-          info: { expected: req.body.number, actual: number }
+          info: { expected: req.body.number, actual: number },
         });
 
       const now = deps.dateString();
@@ -65,10 +65,10 @@ module.exports = ({ saveEventsFn, reserveRootCountsFn, publishFn }) => {
         headers: {
           ...event.data.headers,
           number,
-          idempotency: event.data.headers.idempotency || deps.uuid()
+          idempotency: event.data.headers.idempotency || deps.uuid(),
         },
         id: `${root}_${number}`,
-        saved: now
+        saved: now,
       };
 
       eventNumberOffsets[event.data.headers.root]++;

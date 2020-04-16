@@ -17,7 +17,7 @@ const options = {
   issuer: "some-iss",
   subject: "some-sub",
   audience,
-  expiresIn: 60
+  expiresIn: 60,
 };
 
 describe("Validate", () => {
@@ -36,13 +36,13 @@ describe("Validate", () => {
       token,
       verifyFn,
       audience,
-      algorithm
+      algorithm,
     });
 
     const [header, payload, signature] = token.split(".");
     expect(verifyFn).to.have.been.calledWith({
       message: `${header}.${payload}`,
-      signature: base64url.toBase64(signature)
+      signature: base64url.toBase64(signature),
     });
     expect(validatedClaims).to.exist;
   });
@@ -56,7 +56,7 @@ describe("Validate", () => {
       token,
       verifyFn,
       audience,
-      algorithm
+      algorithm,
     });
     expect(validatedToken.key).to.equal(value);
   });
@@ -70,7 +70,7 @@ describe("Validate", () => {
     const error = "some-error";
     const tokenInvalidFake = fake.returns(error);
     replace(deps, "invalidCredentialsError", {
-      tokenInvalid: tokenInvalidFake
+      tokenInvalid: tokenInvalidFake,
     });
 
     try {
@@ -90,14 +90,14 @@ describe("Validate", () => {
       options,
       payload,
       signFn: () => sig,
-      algorithm: "some-bad-algorithm"
+      algorithm: "some-bad-algorithm",
     });
     const verifyFn = fake.returns(true);
 
     const error = "some-error";
     const tokenInvalidFake = fake.returns(error);
     replace(deps, "invalidCredentialsError", {
-      tokenInvalid: tokenInvalidFake
+      tokenInvalid: tokenInvalidFake,
     });
 
     try {
@@ -116,18 +116,18 @@ describe("Validate", () => {
     const token = await create({
       options: {
         ...options,
-        audience: ["some-other-audience", "yet-another-audience"]
+        audience: ["some-other-audience", "yet-another-audience"],
       },
       payload,
       signFn: () => sig,
-      algorithm
+      algorithm,
     });
     const verifyFn = fake.returns(true);
 
     const error = "some-error";
     const wrongAudienceFake = fake.returns(error);
     replace(deps, "invalidCredentialsError", {
-      wrongAudience: wrongAudienceFake
+      wrongAudience: wrongAudienceFake,
     });
 
     try {
@@ -144,16 +144,16 @@ describe("Validate", () => {
     const token = await create({
       options: {
         ...options,
-        expiresIn: -1
+        expiresIn: -1,
       },
-      signFn: () => sig
+      signFn: () => sig,
     });
     const verifyFn = fake.returns(true);
 
     const error = "some-error";
     const tokenExpiredFake = fake.returns(error);
     replace(deps, "invalidCredentialsError", {
-      tokenExpired: tokenExpiredFake
+      tokenExpired: tokenExpiredFake,
     });
 
     try {
@@ -170,16 +170,16 @@ describe("Validate", () => {
     const token = await create({
       options: {
         ...options,
-        activeIn: 1
+        activeIn: 1,
       },
-      signFn: () => sig
+      signFn: () => sig,
     });
     const verifyFn = fake.returns(true);
 
     const error = "some-error";
     const tokenNotAtiveFake = fake.returns(error);
     replace(deps, "invalidCredentialsError", {
-      tokenNotActive: tokenNotAtiveFake
+      tokenNotActive: tokenNotAtiveFake,
     });
 
     try {

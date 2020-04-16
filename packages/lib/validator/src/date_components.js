@@ -15,7 +15,7 @@ module.exports = (dateComponents, { title = "date", path, optional } = {}) => {
     dayTimeRange(dateComponents.time, { path: `${path}.time` }),
     dateRange(dateComponents.day, { path: `${path}.day` }),
     monthRange(dateComponents.month, { path: `${path}.month` }),
-    yearRange(dateComponents.year, { path: `${path}.year` })
+    yearRange(dateComponents.year, { path: `${path}.year` }),
   ]);
 
   if (componentsErr) return componentsErr;

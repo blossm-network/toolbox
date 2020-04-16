@@ -12,16 +12,16 @@ module.exports = async ({
   permissionsLookupFn,
   terminatedSessionCheckFn,
   verifyFn,
-  keyClaimsFn
+  keyClaimsFn,
 }) => {
   let server = deps.server({
-    prehook: app =>
+    prehook: (app) =>
       deps.corsMiddleware({
         app,
         whitelist,
         credentials: true,
-        methods: ["POST"]
-      })
+        methods: ["POST"],
+      }),
   });
 
   for (const {
@@ -32,7 +32,7 @@ module.exports = async ({
     privileges,
     protection = "strict",
     basic = false,
-    context
+    context,
   } of commands) {
     server = server.post(
       deps.post({
@@ -41,7 +41,7 @@ module.exports = async ({
         service: commandService || service,
         ...(network && { network }),
         internalTokenFn,
-        externalTokenFn
+        externalTokenFn,
       }),
       {
         path: `/${name}`,
@@ -53,7 +53,7 @@ module.exports = async ({
               audience,
               algorithm,
               strict: protection == "strict",
-              allowBasic: basic
+              allowBasic: basic,
             }),
             ...(protection == "strict"
               ? [
@@ -63,15 +63,15 @@ module.exports = async ({
                     context,
                     permissions:
                       privileges instanceof Array
-                        ? privileges.map(privilege => {
+                        ? privileges.map((privilege) => {
                             return { service, domain, privilege };
                           })
-                        : privileges
-                  })
+                        : privileges,
+                  }),
                 ]
-              : [])
-          ]
-        })
+              : []),
+          ],
+        }),
       }
     );
   }

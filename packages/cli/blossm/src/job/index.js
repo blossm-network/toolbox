@@ -3,11 +3,11 @@ const normalize = require("@blossm/normalize-cli");
 const deploy = require("./deploy");
 const init = require("./init");
 
-module.exports = async args => {
+module.exports = async (args) => {
   const input = await normalize({
     entrypointType: "action",
     choices: ["deploy", "init"],
-    args
+    args,
   });
 
   switch (input.action) {

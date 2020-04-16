@@ -23,11 +23,11 @@ describe("Kms decrypt", () => {
   it("should decrypt correctly", async () => {
     const path = "some-path";
     const pathFake = fake.returns(path);
-    const kmsClient = function() {};
+    const kmsClient = function () {};
     kmsClient.prototype.cryptoKeyPath = pathFake;
     const decrpytedMessage = "some-decrypted-message";
     const decryptFake = fake.returns([
-      { plaintext: Buffer.from(decrpytedMessage) }
+      { plaintext: Buffer.from(decrpytedMessage) },
     ]);
     kmsClient.prototype.decrypt = decryptFake;
     replace(kms, "KeyManagementServiceClient", kmsClient);
@@ -36,17 +36,17 @@ describe("Kms decrypt", () => {
     expect(result).to.equal(decrpytedMessage);
     expect(decryptFake).to.have.been.calledWith({
       name: path,
-      ciphertext: Buffer.from(message, "base64")
+      ciphertext: Buffer.from(message, "base64"),
     });
   });
   it("should decrypt correctly with new lines removed", async () => {
     const path = "some-path";
     const pathFake = fake.returns(path);
-    const kmsClient = function() {};
+    const kmsClient = function () {};
     kmsClient.prototype.cryptoKeyPath = pathFake;
     const decrpytedMessage = "some-decrypted-message";
     const decryptFake = fake.returns([
-      { plaintext: Buffer.from(`${decrpytedMessage}\n`) }
+      { plaintext: Buffer.from(`${decrpytedMessage}\n`) },
     ]);
     kmsClient.prototype.decrypt = decryptFake;
     replace(kms, "KeyManagementServiceClient", kmsClient);
@@ -55,13 +55,13 @@ describe("Kms decrypt", () => {
     expect(result).to.equal(decrpytedMessage);
     expect(decryptFake).to.have.been.calledWith({
       name: path,
-      ciphertext: Buffer.from(message, "base64")
+      ciphertext: Buffer.from(message, "base64"),
     });
   });
   it("should throw correctly", async () => {
     const path = "some-path";
     const pathFake = fake.returns(path);
-    const kmsClient = function() {};
+    const kmsClient = function () {};
     kmsClient.prototype.cryptoKeyPath = pathFake;
     const error = new Error("some-error");
     const decryptFake = fake.rejects(error);
@@ -84,7 +84,7 @@ describe("Kms decrypt", () => {
       key: actualKey,
       ring: actualRing,
       location: actualLocation,
-      project: actualProject
+      project: actualProject,
     });
 
     const plaintext = await decrypt({
@@ -92,7 +92,7 @@ describe("Kms decrypt", () => {
       ring: actualRing,
       location: actualLocation,
       project: actualProject,
-      message: ciphertext
+      message: ciphertext,
     });
 
     expect(plaintext).to.equal(message);

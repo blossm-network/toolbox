@@ -8,7 +8,7 @@ const options = {
   issuer: "some-iss",
   subject: "some-sub",
   audience,
-  expiresIn: 60
+  expiresIn: 60,
 };
 
 describe("Validate", () => {

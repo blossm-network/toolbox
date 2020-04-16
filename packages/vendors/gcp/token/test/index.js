@@ -21,7 +21,7 @@ describe("Gcp token", () => {
 
     const body = "some-body";
     const response = {
-      body
+      body,
     };
     const getFake = fake.returns(response);
     replace(deps, "get", getFake);
@@ -42,7 +42,7 @@ describe("Gcp token", () => {
     process.env.NODE_ENV = "staging";
 
     const response = {
-      statusCode: 300
+      statusCode: 300,
     };
     const getFake = fake.returns(response);
     replace(deps, "get", getFake);

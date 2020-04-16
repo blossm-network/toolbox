@@ -24,14 +24,14 @@ const url = "some-url";
 const host = "some-host";
 const statusCode = 204;
 const response = {
-  statusCode
+  statusCode,
 };
 const body = {
-  some: "body"
+  some: "body",
 };
 const bodyResponse = {
   body: JSON.stringify(body),
-  statusCode: 200
+  statusCode: 200,
 };
 
 describe("Operation", () => {
@@ -63,19 +63,19 @@ describe("Operation", () => {
       body: {
         ...data,
         context,
-        claims
+        claims,
       },
       headers: {
-        Authorization: `${type} ${token}`
-      }
+        Authorization: `${type} ${token}`,
+      },
     });
     expect(operationTokenFake).to.have.been.calledWith({
       tokenFn,
-      operation: [operarationPart1, operarationPart2]
+      operation: [operarationPart1, operarationPart2],
     });
     expect(operationUrlFake).to.have.been.calledWith({
       operation: [operarationPart1, operarationPart2],
-      host
+      host,
     });
     expect(result).to.be.null;
   });
@@ -97,17 +97,17 @@ describe("Operation", () => {
     expect(post).to.have.been.calledWith(url, {
       body: data,
       headers: {
-        Authorization: `${type} ${token}`
-      }
+        Authorization: `${type} ${token}`,
+      },
     });
     expect(operationTokenFake).to.have.been.calledWith({
       tokenFn,
-      operation: [operarationPart1, operarationPart2]
+      operation: [operarationPart1, operarationPart2],
     });
     expect(operationUrlFake).to.have.been.calledWith({
       operation: [operarationPart1, operarationPart2],
 
-      host
+      host,
     });
     expect(result).to.be.null;
   });
@@ -131,11 +131,11 @@ describe("Operation", () => {
 
     expect(operationTokenFake).to.have.been.calledWith({
       tokenFn,
-      operation: [operarationPart1, operarationPart2]
+      operation: [operarationPart1, operarationPart2],
     });
     expect(operationUrlFake).to.have.been.calledWith({
       operation: [operarationPart1, operarationPart2],
-      host: envHost
+      host: envHost,
     });
     expect(result).to.be.null;
   });
@@ -159,10 +159,10 @@ describe("Operation", () => {
 
     expect(networkTokenFake).to.have.been.calledWith({
       tokenFn,
-      network: otherNetwork
+      network: otherNetwork,
     });
     expect(networkUrlFake).to.have.been.calledWith({
-      host: otherHost
+      host: otherHost,
     });
     expect(result).to.be.null;
   });
@@ -185,8 +185,8 @@ describe("Operation", () => {
       body: {
         ...data,
         context,
-        claims
-      }
+        claims,
+      },
     });
     expect(result).to.be.null;
   });
@@ -211,20 +211,20 @@ describe("Operation", () => {
       body: {
         ...data,
         context,
-        claims
+        claims,
       },
       headers: {
-        Authorization: `${type} ${token}`
-      }
+        Authorization: `${type} ${token}`,
+      },
     });
     expect(operationTokenFake).to.have.been.calledWith({
       tokenFn,
-      operation: [operarationPart1, operarationPart2]
+      operation: [operarationPart1, operarationPart2],
     });
     expect(operationUrlFake).to.have.been.calledWith({
       operation: [operarationPart1, operarationPart2],
       host,
-      path
+      path,
     });
     expect(result).to.be.null;
   });
@@ -248,19 +248,19 @@ describe("Operation", () => {
       query: {
         ...data,
         context,
-        claims
+        claims,
       },
       headers: {
-        Authorization: `${type} ${token}`
-      }
+        Authorization: `${type} ${token}`,
+      },
     });
     expect(operationTokenFake).to.have.been.calledWith({
       tokenFn,
-      operation: [operarationPart1, operarationPart2]
+      operation: [operarationPart1, operarationPart2],
     });
     expect(operationUrlFake).to.have.been.calledWith({
       operation: [operarationPart1, operarationPart2],
-      host
+      host,
     });
     expect(result).to.deep.equal(body);
   });
@@ -268,7 +268,7 @@ describe("Operation", () => {
     const response = "some-response";
     const get = fake.returns({
       body: response,
-      statusCode: 200
+      statusCode: 200,
     });
     replace(deps, "get", get);
 
@@ -287,19 +287,19 @@ describe("Operation", () => {
       query: {
         ...data,
         context,
-        claims
+        claims,
       },
       headers: {
-        Authorization: `${type} ${token}`
-      }
+        Authorization: `${type} ${token}`,
+      },
     });
     expect(operationTokenFake).to.have.been.calledWith({
       tokenFn,
-      operation: [operarationPart1, operarationPart2]
+      operation: [operarationPart1, operarationPart2],
     });
     expect(operationUrlFake).to.have.been.calledWith({
       operation: [operarationPart1, operarationPart2],
-      host
+      host,
     });
     expect(result).to.deep.equal(response);
   });
@@ -322,20 +322,20 @@ describe("Operation", () => {
       query: {
         ...data,
         context,
-        claims
+        claims,
       },
       headers: {
-        Authorization: `${type} ${token}`
-      }
+        Authorization: `${type} ${token}`,
+      },
     });
     expect(operationTokenFake).to.have.been.calledWith({
       tokenFn,
-      operation: [operarationPart1, operarationPart2]
+      operation: [operarationPart1, operarationPart2],
     });
     expect(operationUrlFake).to.have.been.calledWith({
       operation: [operarationPart1, operarationPart2],
       host,
-      id
+      id,
     });
     expect(result).to.deep.equal(body);
   });
@@ -358,21 +358,21 @@ describe("Operation", () => {
       body: {
         ...data,
         context,
-        claims
+        claims,
       },
       headers: {
-        Authorization: `${type} ${token}`
-      }
+        Authorization: `${type} ${token}`,
+      },
     });
 
     expect(operationTokenFake).to.have.been.calledWith({
       tokenFn,
-      operation: [operarationPart1, operarationPart2]
+      operation: [operarationPart1, operarationPart2],
     });
     expect(operationUrlFake).to.have.been.calledWith({
       operation: [operarationPart1, operarationPart2],
       host,
-      id
+      id,
     });
     expect(result).to.be.null;
   });
@@ -396,21 +396,21 @@ describe("Operation", () => {
       body: {
         ...data,
         context,
-        claims
+        claims,
       },
       headers: {
-        Authorization: `${type} ${token}`
-      }
+        Authorization: `${type} ${token}`,
+      },
     });
     expect(operationTokenFake).to.have.been.calledWith({
       tokenFn,
-      operation: [operarationPart1, operarationPart2]
+      operation: [operarationPart1, operarationPart2],
     });
     expect(operationUrlFake).to.have.been.calledWith({
       operation: [operarationPart1, operarationPart2],
       host,
       id,
-      path
+      path,
     });
     expect(result).to.be.null;
   });
@@ -432,20 +432,20 @@ describe("Operation", () => {
     expect(del).to.have.been.calledWith(url, {
       body: {
         context,
-        claims
+        claims,
       },
       headers: {
-        Authorization: `${type} ${token}`
-      }
+        Authorization: `${type} ${token}`,
+      },
     });
     expect(operationTokenFake).to.have.been.calledWith({
       tokenFn,
-      operation: [operarationPart1, operarationPart2]
+      operation: [operarationPart1, operarationPart2],
     });
     expect(operationUrlFake).to.have.been.calledWith({
       operation: [operarationPart1, operarationPart2],
       host,
-      id
+      id,
     });
     expect(result).to.be.null;
   });
@@ -457,7 +457,7 @@ describe("Operation", () => {
     const del = fake.returns({
       statusCode: errorStatusCode,
       statusMessage,
-      body: JSON.stringify(errBody)
+      body: JSON.stringify(errBody),
     });
     replace(deps, "delete", del);
 
@@ -481,7 +481,7 @@ describe("Operation", () => {
     } catch (e) {
       expect(constructErrorFake).to.have.been.calledWith({
         statusCode: errorStatusCode,
-        message: errorMessage
+        message: errorMessage,
       });
       expect(e).to.equal(error);
     }
@@ -493,7 +493,7 @@ describe("Operation", () => {
     const del = fake.returns({
       statusCode: errorStatusCode,
       statusMessage,
-      body: JSON.stringify(errBody)
+      body: JSON.stringify(errBody),
     });
     replace(deps, "delete", del);
 
@@ -517,7 +517,7 @@ describe("Operation", () => {
     } catch (e) {
       expect(constructErrorFake).to.have.been.calledWith({
         statusCode: errorStatusCode,
-        message: "Not specified"
+        message: "Not specified",
       });
       expect(e).to.equal(error);
     }
@@ -529,7 +529,7 @@ describe("Operation", () => {
     const del = fake.rejects({
       statusCode: errorStatusCode,
       statusMessage,
-      body: JSON.stringify(errBody)
+      body: JSON.stringify(errBody),
     });
     replace(deps, "delete", del);
 

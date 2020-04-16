@@ -7,7 +7,7 @@ module.exports = async ({ id, ring, project, location }) => {
     parent,
     cryptoKeyId: id,
     cryptoKey: {
-      purpose: "ENCRYPT_DECRYPT"
-    }
+      purpose: "ENCRYPT_DECRYPT",
+    },
   });
 };

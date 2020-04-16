@@ -21,7 +21,7 @@ describe("Mongodb event store create event", () => {
     const createFake = fake.returns([{ ...createResult, __v: 3, _id: 4 }]);
 
     const db = {
-      create: createFake
+      create: createFake,
     };
     replace(deps, "db", db);
 
@@ -29,9 +29,9 @@ describe("Mongodb event store create event", () => {
       {
         id,
         headers: {
-          action
-        }
-      }
+          action,
+        },
+      },
     ];
 
     const saveEventsFnResult = await saveEvent({ eventStore, handlers })(
@@ -39,7 +39,7 @@ describe("Mongodb event store create event", () => {
     );
     expect(createFake).to.have.been.calledWith({
       store: eventStore,
-      data: events
+      data: events,
     });
     expect(saveEventsFnResult).to.deep.equal([createResult]);
   });
@@ -55,7 +55,7 @@ describe("Mongodb event store create event", () => {
     const createFake = fake.rejects(new DuplicateError());
 
     const db = {
-      create: createFake
+      create: createFake,
     };
     replace(deps, "db", db);
 
@@ -64,9 +64,9 @@ describe("Mongodb event store create event", () => {
         id,
         headers: {
           action,
-          number: "some-number"
-        }
-      }
+          number: "some-number",
+        },
+      },
     ];
     try {
       await saveEvent({ eventStore, handlers })(events);
@@ -83,7 +83,7 @@ describe("Mongodb event store create event", () => {
     const createFake = fake.returns([{ ...createResult, __v: 3, _id: 4 }]);
 
     const db = {
-      create: createFake
+      create: createFake,
     };
     replace(deps, "db", db);
 
@@ -92,9 +92,9 @@ describe("Mongodb event store create event", () => {
         id,
         headers: {
           action: "bogus",
-          number: "some-number"
-        }
-      }
+          number: "some-number",
+        },
+      },
     ];
     try {
       await saveEvent({ eventStore, handlers })(events);

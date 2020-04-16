@@ -5,7 +5,7 @@ module.exports = async ({ mainFn } = {}) => {
     .server()
     .post(
       deps.post({
-        mainFn
+        mainFn,
       })
     )
     .listen();

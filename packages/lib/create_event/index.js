@@ -11,7 +11,7 @@ module.exports = ({
   service,
   context,
   idempotency,
-  path
+  path,
 } = {}) => {
   return {
     headers: {
@@ -26,7 +26,7 @@ module.exports = ({
       ...(context && { context }),
       ...(trace && { trace }),
       ...(path && {
-        path: path.map(p => {
+        path: path.map((p) => {
           return {
             ...(p.name && { name: p.name }),
             ...(p.domain && { domain: p.domain }),
@@ -35,11 +35,11 @@ module.exports = ({
             network: p.network,
             hash: p.hash,
             procedure: p.procedure,
-            host: p.host
+            host: p.host,
           };
-        })
-      })
+        }),
+      }),
     },
-    payload
+    payload,
   };
 };

@@ -12,7 +12,7 @@ describe("Find", () => {
     const execResult = 4;
     const findFake = fake.returns(execResult);
     const store = {
-      find: findFake
+      find: findFake,
     };
     const result = await find({ store, query });
 
@@ -23,7 +23,7 @@ describe("Find", () => {
     const execResult = 4;
     const findFake = fake.returns(execResult);
     const store = {
-      find: findFake
+      find: findFake,
     };
 
     const sort = "some-sort";
@@ -39,7 +39,7 @@ describe("Find", () => {
       select,
       skip,
       pageSize,
-      options
+      options,
     });
 
     expect(result).to.equal(execResult);
@@ -50,7 +50,7 @@ describe("Find", () => {
         skip,
         sort,
         limit: pageSize,
-        a: 1
+        a: 1,
       }
     );
   });

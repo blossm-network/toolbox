@@ -6,7 +6,7 @@ const createKeyIfNeeded = async ({ key, project, ring, location }) => {
       id: key,
       project,
       ring,
-      location
+      location,
     });
   } catch (e) {
     return;
@@ -19,7 +19,7 @@ exports.get = async (
     project = process.env.GCP_PROJECT,
     ring = process.env.GCP_KMS_SECRET_BUCKET_KEY_RING,
     location = process.env.GCP_KMS_SECRET_BUCKET_KEY_LOCATION,
-    bucket = process.env.GCP_SECRET_BUCKET
+    bucket = process.env.GCP_SECRET_BUCKET,
   } = {}
 ) => {
   const file = `${key}.txt.encrypted`;
@@ -32,9 +32,9 @@ exports.get = async (
       ring,
       key,
       location,
-      project
+      project,
     }),
-    deps.unlink(fileName)
+    deps.unlink(fileName),
   ]);
 
   return secret;
@@ -47,14 +47,14 @@ exports.create = async (
     project = process.env.GCP_PROJECT,
     ring = process.env.GCP_KMS_SECRET_BUCKET_KEY_RING,
     location = process.env.GCP_KMS_SECRET_BUCKET_KEY_LOCATION,
-    bucket = process.env.GCP_SECRET_BUCKET
+    bucket = process.env.GCP_SECRET_BUCKET,
   } = {}
 ) => {
   await createKeyIfNeeded({
     key,
     project,
     ring,
-    location
+    location,
   });
 
   const ciphertext = await deps.encrypt({
@@ -62,14 +62,14 @@ exports.create = async (
     key,
     ring,
     location,
-    project
+    project,
   });
 
   const filename = `${key}.txt.encrypted`;
   await deps.writeFile(filename, ciphertext);
   await deps.upload({
     file: filename,
-    bucket
+    bucket,
   });
 
   await deps.unlink(filename);

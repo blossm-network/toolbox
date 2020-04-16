@@ -6,7 +6,7 @@ const { MAX_LENGTH } = require("@blossm/service-name-consts");
 module.exports = deployCliTemplate({
   domain: "fact",
   dir: __dirname,
-  configFn: config => {
+  configFn: (config) => {
     return {
       name: config.name,
       operationHash: hash(
@@ -20,7 +20,7 @@ module.exports = deployCliTemplate({
           config.domain ? `-${config.domain}` : ""
         }-${config.name}`,
         MAX_LENGTH
-      )
+      ),
     };
-  }
+  },
 });

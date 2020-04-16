@@ -12,7 +12,7 @@ describe("Service token", () => {
 
     const result = await operationToken({
       tokenFn: tokenFnFake,
-      network
+      network,
     });
     expect(tokenFnFake).to.have.been.calledWith({ network });
     expect(result).to.equal(token);

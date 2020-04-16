@@ -8,7 +8,7 @@ module.exports = (
     refinementMessageFn,
     title,
     path,
-    optional
+    optional,
   } = {}
 ) =>
   objectValidator({
@@ -18,5 +18,5 @@ module.exports = (
     baseMessageFn,
     refinementMessageFn,
     refinementFn,
-    optional
+    optional,
   });

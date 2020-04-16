@@ -9,14 +9,14 @@ const { promisify } = require("util");
 const access = promisify(fs.access);
 const copy = promisify(ncp);
 
-module.exports = ({ domain, dir }) => async args => {
+module.exports = ({ domain, dir }) => async (args) => {
   //eslint-disable-next-line no-console
   console.log(roboSay(`Initializing your ${domain} codebase...`));
 
   const input = await normalize({
     entrypointType: "path",
     entrypointDefault: domain,
-    args
+    args,
   });
 
   const targetDirectory = path.resolve(process.cwd(), input.path);

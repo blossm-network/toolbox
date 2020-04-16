@@ -48,7 +48,7 @@ const steps = ({
   computeUrlId,
   actions,
   strict,
-  dependencyKeyEnvironmentVariables
+  dependencyKeyEnvironmentVariables,
 }) => {
   const serviceName = `${region}-${operationName}-${operationHash}`;
   const uri = `${operationHash}.${region}.${envUriSpecifier}${network}`;
@@ -90,7 +90,7 @@ const steps = ({
         runBaseUnitTests,
         runIntegrationTests,
         runBaseIntegrationTests,
-        strict
+        strict,
       });
     case "event-store":
       return eventStore({
@@ -125,7 +125,7 @@ const steps = ({
         runIntegrationTests,
         runBaseIntegrationTests,
         actions,
-        strict
+        strict,
       });
     case "event-handler":
     case "projection":
@@ -161,7 +161,7 @@ const steps = ({
         runBaseUnitTests,
         runIntegrationTests,
         runBaseIntegrationTests,
-        strict
+        strict,
       });
     case "command":
       return command({
@@ -195,7 +195,7 @@ const steps = ({
         runBaseUnitTests,
         runIntegrationTests,
         runBaseIntegrationTests,
-        strict
+        strict,
       });
     case "job":
     case "fact":
@@ -228,7 +228,7 @@ const steps = ({
         runBaseUnitTests,
         runIntegrationTests,
         runBaseIntegrationTests,
-        strict
+        strict,
       });
     case "command-gateway":
       return commandGateway({
@@ -262,7 +262,7 @@ const steps = ({
         runBaseUnitTests,
         runIntegrationTests,
         runBaseIntegrationTests,
-        strict
+        strict,
       });
     case "view-gateway":
       return viewGateway({
@@ -295,7 +295,7 @@ const steps = ({
         runBaseUnitTests,
         runIntegrationTests,
         runBaseIntegrationTests,
-        strict
+        strict,
       });
     case "fact-gateway":
       return factGateway({
@@ -327,7 +327,7 @@ const steps = ({
         runBaseUnitTests,
         runIntegrationTests,
         runBaseIntegrationTests,
-        strict
+        strict,
       });
   }
 };
@@ -338,7 +338,7 @@ const imageExtension = ({
   domain,
   name,
   event,
-  procedure
+  procedure,
 }) => {
   switch (procedure) {
     case "view-store":
@@ -407,7 +407,7 @@ module.exports = ({
   secretBucketKeyRing,
   computeUrlId,
   actions,
-  strict
+  strict,
 }) => {
   const buildPath = path.resolve(workingDir, "build.yaml");
 
@@ -417,7 +417,7 @@ module.exports = ({
     domain,
     service,
     context,
-    event
+    event,
   });
 
   const runUnitTests = fs.existsSync(path.resolve(workingDir, "test/unit"));
@@ -468,8 +468,8 @@ module.exports = ({
       runIntegrationTests,
       runBaseIntegrationTests,
       actions,
-      strict
-    })
+      strict,
+    }),
   };
 
   fs.writeFileSync(buildPath, yaml.stringify(build));

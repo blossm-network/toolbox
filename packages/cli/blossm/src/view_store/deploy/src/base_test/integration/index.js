@@ -36,24 +36,24 @@ describe("View store base integration tests", () => {
       body: {
         view: {
           body: {
-            ...example0.put
+            ...example0.put,
           },
           headers: {
             [process.env.CONTEXT]: {
               root: contextRoot,
               service: contextService,
-              network: contextNetwork
+              network: contextNetwork,
             },
             ...(domainRoot && {
               [process.env.DOMAIN]: {
                 root: domainRoot,
                 service: process.env.SERVICE,
-                network: process.env.NETWORK
-              }
-            })
-          }
-        }
-      }
+                network: process.env.NETWORK,
+              },
+            }),
+          },
+        },
+      },
     });
 
     expect(response0.statusCode).to.equal(204);
@@ -66,10 +66,10 @@ describe("View store base integration tests", () => {
             [process.env.CONTEXT]: {
               root: contextRoot,
               service: contextService,
-              network: contextNetwork
-            }
-          }
-        }
+              network: contextNetwork,
+            },
+          },
+        },
       }
     );
 
@@ -84,24 +84,24 @@ describe("View store base integration tests", () => {
       body: {
         view: {
           body: {
-            ...example1.put
+            ...example1.put,
           },
           headers: {
             [process.env.CONTEXT]: {
               root: contextRoot,
               service: contextService,
-              network: contextNetwork
-            }
+              network: contextNetwork,
+            },
           },
           ...(domainRoot && {
             [process.env.DOMAIN]: {
               root: domainRoot,
               service: process.env.SERVICE,
-              network: process.env.NETWORK
-            }
-          })
-        }
-      }
+              network: process.env.NETWORK,
+            },
+          }),
+        },
+      },
     });
 
     expect(response2.statusCode).to.equal(204);
@@ -114,10 +114,10 @@ describe("View store base integration tests", () => {
             [process.env.CONTEXT]: {
               root: contextRoot,
               service: contextService,
-              network: contextNetwork
-            }
-          }
-        }
+              network: contextNetwork,
+            },
+          },
+        },
       }
     );
 
@@ -184,24 +184,24 @@ describe("View store base integration tests", () => {
       body: {
         view: {
           body: {
-            ...example0.put
-          }
+            ...example0.put,
+          },
         },
         headers: {
           [process.env.CONTEXT]: {
             root: contextRoot,
             service: contextService,
-            network: contextNetwork
+            network: contextNetwork,
           },
           ...(domainRoot && {
             [process.env.DOMAIN]: {
               root: domainRoot,
               service: process.env.SERVICE,
-              network: process.env.NETWORK
-            }
-          })
-        }
-      }
+              network: process.env.NETWORK,
+            },
+          }),
+        },
+      },
     });
 
     expect(response.statusCode).to.equal(204);
@@ -217,9 +217,9 @@ describe("View store base integration tests", () => {
             [process.env.CONTEXT]: {
               root: contextRoot,
               service: contextService,
-              network: contextNetwork
-            }
-          }
+              network: contextNetwork,
+            },
+          },
         }
       );
       expect(response1.statusCode).to.equal(200);
@@ -254,18 +254,18 @@ describe("View store base integration tests", () => {
             [process.env.CONTEXT]: {
               root: contextRoot,
               service: contextService,
-              network: contextNetwork
+              network: contextNetwork,
             },
             ...(domainRoot && {
               [process.env.DOMAIN]: {
                 root: domainRoot,
                 service: process.env.SERVICE,
-                network: process.env.NETWORK
-              }
-            })
-          }
-        }
-      }
+                network: process.env.NETWORK,
+              },
+            }),
+          },
+        },
+      },
     });
 
     expect(response.statusCode).to.equal(204);
@@ -277,24 +277,24 @@ describe("View store base integration tests", () => {
             [process.env.CONTEXT]: {
               root: contextRoot,
               service: contextService,
-              network: contextNetwork
+              network: contextNetwork,
             },
             ...(domainRoot && {
               [process.env.DOMAIN]: {
                 root: domainRoot,
                 service: process.env.SERVICE,
-                network: process.env.NETWORK
-              }
-            })
-          }
-        }
-      }
+                network: process.env.NETWORK,
+              },
+            }),
+          },
+        },
+      },
     });
     expect(response1.statusCode).to.equal(204);
     let roots = [];
     await request.stream(
       `${url}/stream${domainRoot ? `/${domainRoot}` : ""}`,
-      data => {
+      (data) => {
         const parsedData = JSON.parse(data.toString().trim());
         roots.push(parsedData.root);
 
@@ -325,10 +325,10 @@ describe("View store base integration tests", () => {
             [process.env.CONTEXT]: {
               root: contextRoot,
               service: contextService,
-              network: contextNetwork
-            }
-          }
-        }
+              network: contextNetwork,
+            },
+          },
+        },
       }
     );
     expect(roots).to.include(root0);
@@ -359,18 +359,18 @@ describe("View store base integration tests", () => {
               [process.env.CONTEXT]: {
                 root: contextRoot,
                 service: contextService,
-                network: contextNetwork
+                network: contextNetwork,
               },
               ...(domainRoot && {
                 [process.env.DOMAIN]: {
                   root: domainRoot,
                   service: process.env.SERVICE,
-                  network: process.env.NETWORK
-                }
-              })
-            }
-          }
-        }
+                  network: process.env.NETWORK,
+                },
+              }),
+            },
+          },
+        },
       });
       expect(response.statusCode).to.equal(500);
       return;

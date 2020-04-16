@@ -12,7 +12,7 @@ describe("Command handler store normalize tests", () => {
     for (const { payload, normalized } of testing.normalize) {
       const cleanedPayload = await normalize({
         ...payload,
-        bogusPropertyasdf: "nope"
+        bogusPropertyasdf: "nope",
       });
 
       expect(cleanedPayload).to.deep.equal(normalized);

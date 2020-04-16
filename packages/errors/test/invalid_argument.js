@@ -11,7 +11,7 @@ describe("Bad request", () => {
       statusCode: 409,
       code: "InvalidArgument",
       info: {},
-      message: "This phone number isn't recognized."
+      message: "This phone number isn't recognized.",
     });
   });
   it("phoneNotRecognized correct with props", () => {
@@ -21,7 +21,7 @@ describe("Bad request", () => {
       code: "InvalidArgument",
       info,
       cause,
-      message: "This phone number isn't recognized."
+      message: "This phone number isn't recognized.",
     });
   });
   it("codeExpired correct", () => {
@@ -30,7 +30,7 @@ describe("Bad request", () => {
       statusCode: 409,
       code: "InvalidArgument",
       info: {},
-      message: "This code expired."
+      message: "This code expired.",
     });
   });
   it("codeExpired correct with props", () => {
@@ -40,7 +40,7 @@ describe("Bad request", () => {
       code: "InvalidArgument",
       info,
       cause,
-      message: "This code expired."
+      message: "This code expired.",
     });
   });
   it("wrongCode correct", () => {
@@ -49,7 +49,7 @@ describe("Bad request", () => {
       statusCode: 409,
       code: "InvalidArgument",
       info: {},
-      message: "This code isn't right."
+      message: "This code isn't right.",
     });
   });
   it("wrongCode correct with props", () => {
@@ -59,7 +59,7 @@ describe("Bad request", () => {
       code: "InvalidArgument",
       cause,
       info,
-      message: "This code isn't right."
+      message: "This code isn't right.",
     });
   });
   it("validationFailed correct", () => {
@@ -68,7 +68,7 @@ describe("Bad request", () => {
       statusCode: 409,
       code: "InvalidArgument",
       info: {},
-      message: "Some information is invalid."
+      message: "Some information is invalid.",
     });
   });
   it("wrongCode correct with props", () => {
@@ -78,7 +78,7 @@ describe("Bad request", () => {
       code: "InvalidArgument",
       cause,
       info,
-      message: "Some information is invalid."
+      message: "Some information is invalid.",
     });
   });
   it("message correct", () => {
@@ -88,7 +88,7 @@ describe("Bad request", () => {
       statusCode: 409,
       code: "InvalidArgument",
       info: {},
-      message
+      message,
     });
   });
   it("message correct with props", () => {
@@ -99,7 +99,7 @@ describe("Bad request", () => {
       code: "InvalidArgument",
       cause,
       info,
-      message
+      message,
     });
   });
 });

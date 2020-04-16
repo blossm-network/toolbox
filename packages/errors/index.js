@@ -17,5 +17,5 @@ module.exports = {
   invalidArgument,
   forbidden,
   unauthorized,
-  preconditionFailed
+  preconditionFailed,
 };

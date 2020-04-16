@@ -17,8 +17,8 @@ module.exports = (
     string(name.last, {
       optional: lastNameOptional,
       title,
-      path: `${path}.last`
-    })
+      path: `${path}.last`,
+    }),
   ]);
 
   if (nameErr) return nameErr;

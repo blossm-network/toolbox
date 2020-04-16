@@ -4,28 +4,20 @@ module.exports = async ({
   permissionsLookupFn,
   permissions = [],
   principle,
-  context
+  context,
 }) => {
   if (permissions == "none")
     return {
-      permissions: []
+      permissions: [],
     };
 
   const principlePermissions = await permissionsLookupFn({
     principle,
-    context
-  });
-
-  //TODO
-  //eslint-disable-next-line no-console
-  console.log("PERMISSIONS: ", {
-    permissions,
-    principlePermissions,
-    principle
+    context,
   });
 
   const satisfiedPermissions = principlePermissions.filter(
-    principlePermission => {
+    (principlePermission) => {
       for (const permission of permissions) {
         if (
           principlePermission.service == permission.service &&
@@ -39,13 +31,10 @@ module.exports = async ({
   );
 
   if (satisfiedPermissions.length == 0) {
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log("PERMISSIONS BAD: ", { principle });
     throw deps.invalidCredentialsError.tokenInvalid();
   }
 
   return {
-    permissions: satisfiedPermissions
+    permissions: satisfiedPermissions,
   };
 };

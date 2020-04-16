@@ -17,7 +17,7 @@ describe("Middleware", () => {
     replace(deps, "cookieParser", cookieParserFake);
     const useFake = fake();
     const app = {
-      use: useFake
+      use: useFake,
     };
     await middleware(app);
     expect(useFake).to.have.been.calledWith(bodyParserUseableJson);

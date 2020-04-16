@@ -13,7 +13,7 @@ const now = new Date();
 
 const payload = {
   a: 1,
-  b: 2
+  b: 2,
 };
 
 const topic = "topic";
@@ -37,7 +37,7 @@ const number = "some-number";
 
 const query = {
   key: "some-key",
-  value: "some-value"
+  value: "some-value",
 };
 
 describe("Event store", () => {
@@ -53,13 +53,13 @@ describe("Event store", () => {
   it("should call add with the right params", async () => {
     const withFake = fake();
     const inFake = fake.returns({
-      with: withFake
+      with: withFake,
     });
     const postFake = fake.returns({
-      in: inFake
+      in: inFake,
     });
     const rpcFake = fake.returns({
-      post: postFake
+      post: postFake,
     });
     replace(deps, "rpc", rpcFake);
 
@@ -69,7 +69,7 @@ describe("Event store", () => {
       .set({
         context,
         claims,
-        tokenFns: { internal: internalTokenFn, external: externalTokenFn }
+        tokenFns: { internal: internalTokenFn, external: externalTokenFn },
       })
       .add([
         {
@@ -81,12 +81,12 @@ describe("Event store", () => {
               service: eventService,
               version,
               trace,
-              path
+              path,
             },
-            payload
+            payload,
           },
-          number
-        }
+          number,
+        },
       ]);
 
     expect(rpcFake).to.have.been.calledWith(domain, service, "event-store");
@@ -104,33 +104,33 @@ describe("Event store", () => {
               version,
               path,
               trace,
-              created: dateString()
+              created: dateString(),
             },
-            payload
+            payload,
           },
-          number
-        }
-      ]
+          number,
+        },
+      ],
     });
     expect(inFake).to.have.been.calledWith({
-      context
+      context,
     });
     expect(withFake).to.have.been.calledWith({
       internalTokenFn,
       externalTokenFn,
-      claims
+      claims,
     });
   });
   it("should call add with the right params with event header context", async () => {
     const withFake = fake();
     const inFake = fake.returns({
-      with: withFake
+      with: withFake,
     });
     const postFake = fake.returns({
-      in: inFake
+      in: inFake,
     });
     const rpcFake = fake.returns({
-      post: postFake
+      post: postFake,
     });
     replace(deps, "rpc", rpcFake);
 
@@ -140,7 +140,7 @@ describe("Event store", () => {
       .set({
         context,
         claims,
-        tokenFns: { internal: internalTokenFn, external: externalTokenFn }
+        tokenFns: { internal: internalTokenFn, external: externalTokenFn },
       })
       .add([
         {
@@ -155,13 +155,13 @@ describe("Event store", () => {
               path,
               context: {
                 a: 1,
-                b: 2
-              }
+                b: 2,
+              },
             },
-            payload
+            payload,
           },
-          number
-        }
+          number,
+        },
       ]);
 
     expect(rpcFake).to.have.been.calledWith(domain, service, "event-store");
@@ -172,7 +172,7 @@ describe("Event store", () => {
             headers: {
               context: {
                 b: 2,
-                a: "some-context"
+                a: "some-context",
               },
               claims,
               topic,
@@ -182,34 +182,34 @@ describe("Event store", () => {
               version,
               path,
               trace,
-              created: dateString()
+              created: dateString(),
             },
-            payload
+            payload,
           },
-          number
-        }
-      ]
+          number,
+        },
+      ],
     });
     expect(inFake).to.have.been.calledWith({
-      context
+      context,
     });
     expect(withFake).to.have.been.calledWith({
       internalTokenFn,
       externalTokenFn,
-      claims
+      claims,
     });
   });
 
   it("should call add with the right params and optionals left out", async () => {
     const withFake = fake();
     const inFake = fake.returns({
-      with: withFake
+      with: withFake,
     });
     const postFake = fake.returns({
-      in: inFake
+      in: inFake,
     });
     const rpcFake = fake.returns({
-      post: postFake
+      post: postFake,
     });
     replace(deps, "rpc", rpcFake);
 
@@ -221,11 +221,11 @@ describe("Event store", () => {
             action: eventAction,
             domain: eventDomain,
             service: eventService,
-            version
+            version,
           },
-          payload
-        }
-      }
+          payload,
+        },
+      },
     ]);
 
     expect(rpcFake).to.have.been.calledWith(domain, envService, "event-store");
@@ -239,12 +239,12 @@ describe("Event store", () => {
               domain: eventDomain,
               service: eventService,
               version,
-              created: dateString()
+              created: dateString(),
             },
-            payload
-          }
-        }
-      ]
+            payload,
+          },
+        },
+      ],
     });
     expect(inFake).to.have.been.calledWith({});
     expect(withFake).to.have.been.calledWith({});
@@ -254,13 +254,13 @@ describe("Event store", () => {
     const aggregate = "some-aggregate";
     const withFake = fake.returns(aggregate);
     const inFake = fake.returns({
-      with: withFake
+      with: withFake,
     });
     const getFake = fake.returns({
-      in: inFake
+      in: inFake,
     });
     const rpcFake = fake.returns({
-      get: getFake
+      get: getFake,
     });
     replace(deps, "rpc", rpcFake);
 
@@ -270,19 +270,19 @@ describe("Event store", () => {
       .set({
         context,
         claims,
-        tokenFns: { internal: internalTokenFn, external: externalTokenFn }
+        tokenFns: { internal: internalTokenFn, external: externalTokenFn },
       })
       .aggregate(root);
 
     expect(rpcFake).to.have.been.calledWith(domain, service, "event-store");
     expect(getFake).to.have.been.calledWith({ id: root });
     expect(inFake).to.have.been.calledWith({
-      context
+      context,
     });
     expect(withFake).to.have.been.calledWith({
       internalTokenFn,
       externalTokenFn,
-      claims
+      claims,
     });
     expect(result).to.equal(aggregate);
   });
@@ -290,13 +290,13 @@ describe("Event store", () => {
     const aggregate = "some-aggregate";
     const withFake = fake.returns(aggregate);
     const inFake = fake.returns({
-      with: withFake
+      with: withFake,
     });
     const getFake = fake.returns({
-      in: inFake
+      in: inFake,
     });
     const rpcFake = fake.returns({
-      get: getFake
+      get: getFake,
     });
     replace(deps, "rpc", rpcFake);
 
@@ -314,13 +314,13 @@ describe("Event store", () => {
     const aggregate = "some-aggregate";
     const withFake = fake.returns(aggregate);
     const inFake = fake.returns({
-      with: withFake
+      with: withFake,
     });
     const getFake = fake.returns({
-      in: inFake
+      in: inFake,
     });
     const rpcFake = fake.returns({
-      get: getFake
+      get: getFake,
     });
     replace(deps, "rpc", rpcFake);
 
@@ -328,19 +328,19 @@ describe("Event store", () => {
       .set({
         context,
         claims,
-        tokenFns: { internal: internalTokenFn, external: externalTokenFn }
+        tokenFns: { internal: internalTokenFn, external: externalTokenFn },
       })
       .query(query);
 
     expect(rpcFake).to.have.been.calledWith(domain, service, "event-store");
     expect(getFake).to.have.been.calledWith(query);
     expect(inFake).to.have.been.calledWith({
-      context
+      context,
     });
     expect(withFake).to.have.been.calledWith({
       internalTokenFn,
       externalTokenFn,
-      claims
+      claims,
     });
     expect(result).to.equal(aggregate);
   });
@@ -348,13 +348,13 @@ describe("Event store", () => {
     const aggregate = "some-aggregate";
     const withFake = fake.returns(aggregate);
     const inFake = fake.returns({
-      with: withFake
+      with: withFake,
     });
     const getFake = fake.returns({
-      in: inFake
+      in: inFake,
     });
     const rpcFake = fake.returns({
-      get: getFake
+      get: getFake,
     });
     replace(deps, "rpc", rpcFake);
 

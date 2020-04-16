@@ -7,7 +7,7 @@ describe("Valid date components", () => {
       time: 86399,
       day: 1,
       month: 1,
-      year: 2019
+      year: 2019,
     };
     const error = dateComponents(validDateComponents);
     expect(error).to.be.undefined;
@@ -19,7 +19,7 @@ describe("Invalid date components", () => {
     const invalidDateComponents = {
       day: 1,
       month: 1,
-      year: 2019
+      year: 2019,
     };
     const response = dateComponents(invalidDateComponents);
     expect(response.message).to.exist;

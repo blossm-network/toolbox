@@ -13,7 +13,7 @@ describe("Converts correctly", () => {
       time,
       day,
       month,
-      year
+      year,
     };
 
     expect(timestampFromComponents(components)).to.equal(time);

@@ -6,7 +6,7 @@ const { MAX_LENGTH } = require("@blossm/service-name-consts");
 module.exports = deployCliTemplate({
   domain: "event-handler",
   dir: __dirname,
-  configFn: config => {
+  configFn: (config) => {
     return {
       name: config.name,
       operationName: trim(
@@ -26,7 +26,7 @@ module.exports = deployCliTemplate({
         config.event.context,
         config.event.service,
         config.procedure
-      )
+      ),
     };
-  }
+  },
 });

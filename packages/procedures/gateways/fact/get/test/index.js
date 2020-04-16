@@ -21,37 +21,37 @@ describe("Fact gateway get", () => {
   it("should call with the correct params when action and domain passed in url", async () => {
     const readFake = fake.returns(results);
     const setFake = fake.returns({
-      read: readFake
+      read: readFake,
     });
     const factFake = fake.returns({
-      set: setFake
+      set: setFake,
     });
     replace(deps, "fact", factFake);
 
     const req = {
       context,
       claims,
-      query
+      query,
     };
 
     const sendFake = fake();
     const statusFake = fake.returns({
-      send: sendFake
+      send: sendFake,
     });
     const res = {
-      status: statusFake
+      status: statusFake,
     };
 
     await get({ name, domain, internalTokenFn, externalTokenFn })(req, res);
 
     expect(factFake).to.have.been.calledWith({
       name,
-      domain
+      domain,
     });
     expect(setFake).to.have.been.calledWith({
       context,
       claims,
-      tokenFns: { internal: internalTokenFn, external: externalTokenFn }
+      tokenFns: { internal: internalTokenFn, external: externalTokenFn },
     });
     expect(readFake).to.have.been.calledWith(query);
     expect(sendFake).to.have.been.calledWith(results);
@@ -60,24 +60,24 @@ describe("Fact gateway get", () => {
     const errorMessage = "error-message";
     const readFake = fake.rejects(new Error(errorMessage));
     const setFake = fake.returns({
-      read: readFake
+      read: readFake,
     });
     const factFake = fake.returns({
-      set: setFake
+      set: setFake,
     });
     replace(deps, "fact", factFake);
 
     const req = {
       context,
-      query
+      query,
     };
 
     const sendFake = fake();
     const statusFake = fake.returns({
-      send: sendFake
+      send: sendFake,
     });
     const res = {
-      status: statusFake
+      status: statusFake,
     };
 
     try {

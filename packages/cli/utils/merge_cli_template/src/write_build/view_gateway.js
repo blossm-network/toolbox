@@ -45,7 +45,7 @@ module.exports = ({
   runIntegrationTests,
   runBaseIntegrationTests,
   dependencyKeyEnvironmentVariables,
-  strict
+  strict,
 }) => {
   const authUri = `v${
     domain ? `.${domain}` : ""
@@ -57,7 +57,7 @@ module.exports = ({
     buildImage({
       extension: imageExtension,
       containerRegistery,
-      procedure
+      procedure,
     }),
     writeEnv({
       mainContainerName,
@@ -74,8 +74,8 @@ module.exports = ({
         ...(service && { SERVICE: service }),
         CONTEXT: context,
         ...dependencyKeyEnvironmentVariables,
-        ...(publicKeyUrl && { PUBLIC_KEY_URL: publicKeyUrl })
-      }
+        ...(publicKeyUrl && { PUBLIC_KEY_URL: publicKeyUrl }),
+      },
     }),
     dockerComposeUp,
     dockerComposeProcesses,
@@ -86,7 +86,7 @@ module.exports = ({
           dockerPush({
             extension: imageExtension,
             containerRegistery,
-            procedure
+            procedure,
           }),
           deploy({
             extension: imageExtension,
@@ -112,13 +112,13 @@ module.exports = ({
               ...(service && { SERVICE: service }),
               CONTEXT: context,
               ...dependencyKeyEnvironmentVariables,
-              ...(publicKeyUrl && { PUBLIC_KEY_URL: publicKeyUrl })
+              ...(publicKeyUrl && { PUBLIC_KEY_URL: publicKeyUrl }),
             },
             labels: {
               ...(domain && { domain }),
               ...(service && { service }),
-              context
-            }
+              context,
+            },
           }),
           startDnsTransaction({ dnsZone, project }),
           addDnsTransaction({ uri: authUri, dnsZone, project }),
@@ -128,9 +128,9 @@ module.exports = ({
             uri: authUri,
             project,
             region,
-            serviceName
-          })
+            serviceName,
+          }),
         ]
-      : [dockerComposeLogs])
+      : [dockerComposeLogs]),
   ];
 };

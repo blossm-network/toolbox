@@ -13,7 +13,7 @@ module.exports = {
   "some-action": (state, payload) => {
     return {
       ...state,
-      ...payload
+      ...payload,
     };
-  }
+  },
 };

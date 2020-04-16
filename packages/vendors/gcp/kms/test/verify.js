@@ -38,7 +38,7 @@ describe("Kms verify", () => {
   it("should throw correctly", async () => {
     const path = "some-path";
     const pathFake = fake.returns(path);
-    const kmsClient = function() {};
+    const kmsClient = function () {};
     kmsClient.prototype.cryptoKeyVersionPath = pathFake;
 
     const errorMessage = "some-error-message";
@@ -49,7 +49,7 @@ describe("Kms verify", () => {
     try {
       await verify({ key, ring, location, version, project })({
         message,
-        signature
+        signature,
       });
 
       //shouldn't get called
@@ -61,7 +61,7 @@ describe("Kms verify", () => {
   it("should get the public key correctly", async () => {
     const path = "some-path";
     const pathFake = fake.returns(path);
-    const kmsClient = function() {};
+    const kmsClient = function () {};
     kmsClient.prototype.cryptoKeyVersionPath = pathFake;
     const getKeyFake = fake.returns([{ pem }]);
     kmsClient.prototype.getPublicKey = getKeyFake;
@@ -70,16 +70,16 @@ describe("Kms verify", () => {
     const isVerified = "some-result";
     const verifyFake = fake.returns(isVerified);
     const updateFake = fake.returns({
-      verify: verifyFake
+      verify: verifyFake,
     });
     const createVerifyFake = fake.returns({
-      update: updateFake
+      update: updateFake,
     });
     replace(crypto, "createVerify", createVerifyFake);
 
     const result = await verify({ key, ring, location, version, project })({
       message,
-      signature
+      signature,
     });
 
     expect(result).to.equal(isVerified);
@@ -98,7 +98,7 @@ describe("Kms verify", () => {
   it("shouldn't call the service if the key has already been retrieved", async () => {
     const path = "some-path";
     const pathFake = fake.returns(path);
-    const kmsClient = function() {};
+    const kmsClient = function () {};
     kmsClient.prototype.cryptoKeyVersionPath = pathFake;
     const getKeyFake = fake.returns([{ pem }]);
     kmsClient.prototype.getPublicKey = getKeyFake;
@@ -106,15 +106,15 @@ describe("Kms verify", () => {
     const isVerified = "some-result";
     const verifyFake = fake.returns(isVerified);
     const updateFake = fake.returns({
-      verify: verifyFake
+      verify: verifyFake,
     });
     const createVerifyFake = fake.returns({
-      update: updateFake
+      update: updateFake,
     });
     replace(crypto, "createVerify", createVerifyFake);
     const result = await verify({ key, ring, location, version, project })({
       message,
-      signature
+      signature,
     });
 
     expect(result).to.equal(isVerified);
@@ -132,17 +132,17 @@ describe("Kms verify", () => {
       ring: actualRing,
       location: actualLocation,
       version: actualVersion,
-      project: actualProject
+      project: actualProject,
     })(message);
     const result = await verify({
       key: actualKey,
       ring: actualRing,
       location: actualLocation,
       version: actualVersion,
-      project: actualProject
+      project: actualProject,
     })({
       message,
-      signature: signature.toString("base64")
+      signature: signature.toString("base64"),
     });
     expect(result).to.be.true;
   });
@@ -153,17 +153,17 @@ describe("Kms verify", () => {
       ring: actualRing,
       location: actualLocation,
       version: actualVersion,
-      project: actualProject
+      project: actualProject,
     })(message);
     const result = await verify({
       key: actualKey,
       ring: actualRing,
       location: actualLocation,
       version: actualVersion,
-      project: actualProject
+      project: actualProject,
     })({
       message: `${message}-`,
-      signature: signature.toString("base64")
+      signature: signature.toString("base64"),
     });
     expect(result).to.be.false;
   });

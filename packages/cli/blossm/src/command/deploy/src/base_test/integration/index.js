@@ -25,7 +25,7 @@ const checkResponse = ({ data, expected }) => {
       ) {
         checkResponse({
           data: data[property],
-          expected: expected[property]
+          expected: expected[property],
         });
       } else if (expected[property] instanceof Array) {
         expect(data[property]).to.be.an("array");
@@ -33,7 +33,7 @@ const checkResponse = ({ data, expected }) => {
         for (const expectedValue of expected[property]) {
           checkResponse({
             data: data[property][i],
-            expected: expectedValue[i]
+            expected: expectedValue[i],
           });
           i++;
         }
@@ -44,7 +44,7 @@ const checkResponse = ({ data, expected }) => {
   }
 };
 
-const formattedPayload = async payload => {
+const formattedPayload = async (payload) => {
   let result = {};
   for (const property in payload) {
     if (
@@ -66,7 +66,7 @@ const formattedPayload = async payload => {
 
   return result;
 };
-const executeStep = async step => {
+const executeStep = async (step) => {
   if (step.pre) {
     for (const { action, domain, service, root, payload } of step.pre) {
       const topic = `did-${action}.${domain}.${service}`;
@@ -78,7 +78,7 @@ const executeStep = async step => {
         payload: await formattedPayload(payload),
         action,
         domain,
-        service
+        service,
       });
 
       await eventStore({ domain, service }).add([{ data: stateEvent }]);
@@ -93,13 +93,13 @@ const executeStep = async step => {
         issued: dateString(),
         accepted: dateString(),
         //In non-test environments, a gateway adds an id.
-        id: uuid()
+        id: uuid(),
       },
       options: step.options,
       context: step.context,
       payload: step.payload,
-      claims: step.claims
-    }
+      claims: step.claims,
+    },
   });
 
   const correctCode = step.response ? 200 : step.code || 204;
@@ -116,7 +116,7 @@ const executeStep = async step => {
 
   checkResponse({
     expected: step.response,
-    data: parsedBody
+    data: parsedBody,
   });
 };
 
@@ -124,17 +124,17 @@ const existingTopics = [];
 describe("Command handler integration tests", () => {
   before(async () => {
     existingTopics.push(
-      ...testing.topics.filter(async t => {
+      ...testing.topics.filter(async (t) => {
         return await exists(t);
       })
     );
-    await Promise.all(testing.topics.map(t => create(t)));
+    await Promise.all(testing.topics.map((t) => create(t)));
   });
   after(
     async () =>
       await Promise.all(
         [...testing.topics, ...stateTopics].map(
-          t => !existingTopics.includes(t) && del(t)
+          (t) => !existingTopics.includes(t) && del(t)
         )
       )
   );
@@ -155,14 +155,14 @@ describe("Command handler integration tests", () => {
         headers: {
           issued: dateString(),
           accepted: dateString(),
-          id: uuid()
+          id: uuid(),
         },
         payload: createBadPayload({
           bad: testing.validate.bad[0],
-          ok: testing.validate.ok[0]
+          ok: testing.validate.ok[0],
         }),
-        claims: {}
-      }
+        claims: {},
+      },
     });
 
     expect(response.statusCode).to.equal(409);
@@ -181,7 +181,7 @@ const createBadPayload = ({ bad, ok }) => {
           !(bad[property] instanceof Array)
           ? createBadPayload({
               bad: bad[property],
-              ok: ok[property]
+              ok: ok[property],
             })
           : (payload[property] = bad[property])
         : (payload[property] = ok[property]);

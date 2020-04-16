@@ -8,7 +8,7 @@ module.exports = (
     refinementFn,
     title,
     path,
-    optional
+    optional,
   } = {}
 ) =>
   booleanValidator({
@@ -18,5 +18,5 @@ module.exports = (
     refinementFn,
     title,
     path,
-    optional
+    optional,
   });

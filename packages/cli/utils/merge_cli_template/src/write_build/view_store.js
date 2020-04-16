@@ -49,7 +49,7 @@ module.exports = ({
   runIntegrationTests,
   runBaseIntegrationTests,
   dependencyKeyEnvironmentVariables,
-  strict
+  strict,
 }) => {
   return [
     yarnInstall,
@@ -58,7 +58,7 @@ module.exports = ({
     buildImage({
       extension: imageExtension,
       containerRegistery,
-      procedure
+      procedure,
     }),
     writeEnv({
       mainContainerName,
@@ -75,8 +75,8 @@ module.exports = ({
         ...(domain && { DOMAIN: domain }),
         ...(service && { SERVICE: service }),
         CONTEXT: context,
-        ...dependencyKeyEnvironmentVariables
-      }
+        ...dependencyKeyEnvironmentVariables,
+      },
     }),
     dockerComposeUp,
     dockerComposeProcesses,
@@ -87,7 +87,7 @@ module.exports = ({
           dockerPush({
             extension: imageExtension,
             containerRegistery,
-            procedure
+            procedure,
           }),
           deploy({
             serviceName,
@@ -116,14 +116,14 @@ module.exports = ({
               MONGODB_USER: mongodbUser,
               MONGODB_HOST: mongodbHost,
               MONGODB_PROTOCOL: mongodbProtocol,
-              ...dependencyKeyEnvironmentVariables
+              ...dependencyKeyEnvironmentVariables,
             },
             labels: {
               name,
               ...(domain && { domain }),
               ...(service && { service }),
-              context
-            }
+              context,
+            },
           }),
           startDnsTransaction({ dnsZone, project }),
           addDnsTransaction({ uri, dnsZone, project }),
@@ -133,9 +133,9 @@ module.exports = ({
             serviceName,
             uri,
             project,
-            region
-          })
+            region,
+          }),
         ]
-      : [dockerComposeLogs])
+      : [dockerComposeLogs]),
   ];
 };

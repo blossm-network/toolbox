@@ -13,7 +13,7 @@ module.exports = ({
   poolSize = 10,
   autoIndex = false,
   onOpen = () => logger.info("Thank you database."),
-  onError = err => logger.error("Database has errored.", { err })
+  onError = (err) => logger.error("Database has errored.", { err }),
 }) => {
   let connectionString = `${protocol}://${user}:${password}@${host}/${database}`;
 
@@ -27,7 +27,7 @@ module.exports = ({
     useUnifiedTopology: true,
     useFindAndModify: false,
     autoIndex,
-    poolSize
+    poolSize,
   });
 
   const db = mongoose.connection;

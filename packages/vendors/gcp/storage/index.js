@@ -1,4 +1,4 @@
 module.exports = {
   download: require("./src/download"),
-  upload: require("./src/upload")
+  upload: require("./src/upload"),
 };

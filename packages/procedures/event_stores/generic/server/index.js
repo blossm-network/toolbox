@@ -5,7 +5,7 @@ module.exports = async ({
   saveEventsFn,
   queryFn,
   reserveRootCountsFn,
-  publishFn
+  publishFn,
 } = {}) => {
   deps
     .server()
@@ -14,7 +14,7 @@ module.exports = async ({
       deps.post({
         saveEventsFn,
         reserveRootCountsFn,
-        publishFn
+        publishFn,
       })
     )
     .listen();

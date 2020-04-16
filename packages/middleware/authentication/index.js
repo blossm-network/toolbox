@@ -8,7 +8,7 @@ module.exports = ({
   strict = true,
   audience,
   algorithm,
-  allowBasic
+  allowBasic,
 }) =>
   asyncHandler(async (req, _, next) => {
     try {
@@ -18,7 +18,7 @@ module.exports = ({
         keyClaimsFn,
         audience,
         algorithm,
-        allowBasic
+        allowBasic,
       });
       req.context = claims.context;
       req.claims = {
@@ -27,7 +27,7 @@ module.exports = ({
         sub: claims.sub,
         exp: claims.exp,
         iat: claims.iat,
-        jti: claims.jti
+        jti: claims.jti,
       };
     } catch (err) {
       if (strict) throw err;

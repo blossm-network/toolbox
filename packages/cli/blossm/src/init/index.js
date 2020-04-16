@@ -4,7 +4,7 @@ const { prompt } = require("inquirer");
 const normalize = require("@blossm/normalize-cli");
 const roboSay = require("@blossm/robo-say");
 
-const create = async input => {
+const create = async (input) => {
   const blossmDir = path.resolve(process.cwd(), input.dir || "");
   if (fs.existsSync(blossmDir) && input.dir) {
     const { flag } = await prompt({
@@ -13,7 +13,7 @@ const create = async input => {
       default: true,
       message: roboSay(
         "There's already a directory here. Do you really want to overwrite it?"
-      )
+      ),
     });
 
     if (!flag) {
@@ -34,11 +34,11 @@ const create = async input => {
   fs.copyFileSync(templateConfigPath, destinationConfigPath);
 };
 
-module.exports = async args => {
+module.exports = async (args) => {
   const input = await normalize({
     entrypointType: "dir",
     default: "blossm",
-    args
+    args,
   });
 
   create(input);

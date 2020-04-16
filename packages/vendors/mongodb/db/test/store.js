@@ -20,7 +20,7 @@ const mixin1 = { schema: schema1 };
 
 const addFake = fake();
 const schemaFake = fake.returns({
-  add: addFake
+  add: addFake,
 });
 const modelObject = "some-model-object";
 const modelFake = fake.returns(modelObject);
@@ -46,18 +46,18 @@ describe("Returns a model", () => {
     expect(addFake).to.have.been.calledWith({
       version: {
         type: Number,
-        default: 0
-      }
+        default: 0,
+      },
     });
     expect(schemaFake).to.have.been.calledWith(
       {},
       { strict: false, typePojoToMixed: false, minimize: false }
     );
     expect(addFake).to.have.been.calledWith({
-      key: schema0[commonKey]
+      key: schema0[commonKey],
     });
     expect(addFake).to.have.been.calledWith({
-      key: schema1[commonKey]
+      key: schema1[commonKey],
     });
   });
 
@@ -71,7 +71,7 @@ describe("Returns a model", () => {
     const result = store({
       name,
       mixins,
-      version
+      version,
     });
 
     expect(result).to.equal(modelObject);
@@ -80,9 +80,9 @@ describe("Returns a model", () => {
 
   it("it should apply mixins in the correct order", () => {
     const obj = {};
-    const addFake = mixin => Object.assign(obj, mixin);
+    const addFake = (mixin) => Object.assign(obj, mixin);
     const schemaFake = fake.returns({
-      add: addFake
+      add: addFake,
     });
 
     replace(mongoose, "Schema", schemaFake);
@@ -91,7 +91,7 @@ describe("Returns a model", () => {
 
     store({
       name,
-      mixins
+      mixins,
     });
 
     expect(obj[commonKey].default).to.equal(schema1Value);
@@ -99,9 +99,9 @@ describe("Returns a model", () => {
 
   it("it should apply mixins in the correct order if a base is provided", () => {
     const obj = {};
-    const addFake = mixin => Object.assign(obj, mixin);
+    const addFake = (mixin) => Object.assign(obj, mixin);
     const schemaFake = fake.returns({
-      add: addFake
+      add: addFake,
     });
 
     replace(mongoose, "Schema", schemaFake);
@@ -111,7 +111,7 @@ describe("Returns a model", () => {
     store({
       name,
       schema: schema0,
-      mixins
+      mixins,
     });
 
     expect(obj[commonKey].default).to.equal(schema0Value);
@@ -127,7 +127,7 @@ describe("Returns a model", () => {
     const connectFake = fake();
     const connectionFake = fake.returns({
       on: onFake,
-      once: onceFake
+      once: onceFake,
     });
     replace(mongoose, "connect", connectFake);
     replaceGetter(mongoose, "connection", connectionFake);
@@ -148,8 +148,8 @@ describe("Returns a model", () => {
         user,
         password,
         host,
-        database
-      }
+        database,
+      },
     });
 
     expect(result).to.equal(modelObject);
@@ -162,7 +162,7 @@ describe("Returns a model", () => {
       useUnifiedTopology: true,
       useFindAndModify: false,
       autoIndex: false,
-      poolSize: 10
+      poolSize: 10,
     });
   });
   it("it should throw if it doesnt have a name", () => {
@@ -175,7 +175,7 @@ describe("Returns a model", () => {
     const error = "some-error";
     const internalServerMessageErrorFake = fake.returns(error);
     replace(deps, "internalServerError", {
-      message: internalServerMessageErrorFake
+      message: internalServerMessageErrorFake,
     });
 
     try {

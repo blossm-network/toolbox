@@ -7,7 +7,7 @@ const doesMatchQuery = ({ state, query }) => {
     for (const property in query) {
       const propertyParts = property.split(".");
       let value = {
-        ...state
+        ...state,
       };
       for (const part of propertyParts) value = value[part];
       if (value != query[property]) return false;
@@ -20,7 +20,7 @@ const doesMatchQuery = ({ state, query }) => {
 
 module.exports = ({ eventStore, snapshotStore, handlers }) => async ({
   key,
-  value
+  value,
 }) => {
   if (!key || !value)
     throw badRequest.incompleteQuery({ info: { key, value } });
@@ -29,21 +29,21 @@ module.exports = ({ eventStore, snapshotStore, handlers }) => async ({
     deps.db.find({
       store: snapshotStore,
       query: {
-        [`state.${key}`]: value
+        [`state.${key}`]: value,
       },
       options: {
-        lean: true
-      }
+        lean: true,
+      },
     }),
     deps.db.find({
       store: eventStore,
       query: {
-        [`payload.${key}`]: value
+        [`payload.${key}`]: value,
       },
       options: {
-        lean: true
-      }
-    })
+        lean: true,
+      },
+    }),
   ]);
 
   if (snapshots.length == 0 && events.length == 0) return [];
@@ -52,7 +52,7 @@ module.exports = ({ eventStore, snapshotStore, handlers }) => async ({
 
   if (events.length == 0) {
     const aggregates = await Promise.all(
-      snapshots.map(snapshot => aggregateFn(snapshot.headers.root))
+      snapshots.map((snapshot) => aggregateFn(snapshot.headers.root))
     );
 
     return aggregates;
@@ -60,16 +60,16 @@ module.exports = ({ eventStore, snapshotStore, handlers }) => async ({
 
   const candidateRoots = [
     ...new Set([
-      ...snapshots.map(snapshot => snapshot.headers.root),
-      ...events.map(event => event.headers.root)
-    ])
+      ...snapshots.map((snapshot) => snapshot.headers.root),
+      ...events.map((event) => event.headers.root),
+    ]),
   ];
 
   const aggregates = await Promise.all(
-    candidateRoots.map(root => aggregateFn(root))
+    candidateRoots.map((root) => aggregateFn(root))
   );
 
-  const filteredAggregates = aggregates.filter(aggregate =>
+  const filteredAggregates = aggregates.filter((aggregate) =>
     doesMatchQuery({ state: aggregate.state, query: { [key]: value } })
   );
 

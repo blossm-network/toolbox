@@ -14,10 +14,10 @@ describe("Event handler", () => {
   it("should call with the correct params", async () => {
     const listenFake = fake();
     const postFake = fake.returns({
-      listen: listenFake
+      listen: listenFake,
     });
     const serverFake = fake.returns({
-      post: postFake
+      post: postFake,
     });
     replace(deps, "server", serverFake);
 
@@ -31,17 +31,17 @@ describe("Event handler", () => {
     expect(serverFake).to.have.been.calledOnce;
     expect(postFake).to.have.been.calledWith(commandPostResult);
     expect(commandPostFake).to.have.been.calledWith({
-      mainFn
+      mainFn,
     });
   });
   it("should throw correctly", async () => {
     const errorMessage = "error-message";
     const listenFake = fake.throws(new Error(errorMessage));
     const postFake = fake.returns({
-      listen: listenFake
+      listen: listenFake,
     });
     const serverFake = fake.returns({
-      post: postFake
+      post: postFake,
     });
     replace(deps, "server", serverFake);
 

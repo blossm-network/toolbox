@@ -5,7 +5,7 @@ module.exports = ({
   select = null,
   skip = 0,
   pageSize = null,
-  options = null
+  options = null,
 }) =>
   store.find(
     query,
@@ -14,6 +14,6 @@ module.exports = ({
       ...(skip && { skip }),
       ...(sort && { sort }),
       ...(pageSize && { limit: pageSize }),
-      ...options
+      ...options,
     }
   );

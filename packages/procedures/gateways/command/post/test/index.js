@@ -19,7 +19,7 @@ const root = "some-root";
 const body = {
   payload,
   headers,
-  root
+  root,
 };
 
 describe("Command gateway post", () => {
@@ -32,13 +32,13 @@ describe("Command gateway post", () => {
 
     const issueFake = fake.returns({
       ...response,
-      tokens: [{ a: 1 }]
+      tokens: [{ a: 1 }],
     });
     const setFake = fake.returns({
-      issue: issueFake
+      issue: issueFake,
     });
     const commandFake = fake.returns({
-      set: setFake
+      set: setFake,
     });
     replace(deps, "command", commandFake);
 
@@ -46,17 +46,17 @@ describe("Command gateway post", () => {
       context,
       claims,
       body,
-      params: {}
+      params: {},
     };
 
     const sendFake = fake();
     const statusFake = fake.returns({
-      send: sendFake
+      send: sendFake,
     });
     const cookieFake = fake();
     const res = {
       cookie: cookieFake,
-      status: statusFake
+      status: statusFake,
     };
 
     await post({ name, domain, internalTokenFn, externalTokenFn })(req, res);
@@ -64,16 +64,16 @@ describe("Command gateway post", () => {
     expect(validateFake).to.have.been.calledWith(body);
     expect(commandFake).to.have.been.calledWith({
       name,
-      domain
+      domain,
     });
     expect(setFake).to.have.been.calledWith({
       tokenFns: { internal: internalTokenFn, external: externalTokenFn },
       context,
-      claims
+      claims,
     });
     expect(issueFake).to.have.been.calledWith(payload, {
       ...headers,
-      root
+      root,
     });
     expect(statusFake).to.have.been.calledWith(200);
   });
@@ -83,13 +83,13 @@ describe("Command gateway post", () => {
 
     const issueFake = fake.returns({
       ...response,
-      tokens: [{ a: 1 }]
+      tokens: [{ a: 1 }],
     });
     const setFake = fake.returns({
-      issue: issueFake
+      issue: issueFake,
     });
     const commandFake = fake.returns({
-      set: setFake
+      set: setFake,
     });
     replace(deps, "command", commandFake);
 
@@ -97,17 +97,17 @@ describe("Command gateway post", () => {
       context,
       claims,
       body,
-      params: {}
+      params: {},
     };
 
     const sendFake = fake();
     const statusFake = fake.returns({
-      send: sendFake
+      send: sendFake,
     });
     const cookieFake = fake();
     const res = {
       cookie: cookieFake,
-      status: statusFake
+      status: statusFake,
     };
 
     const network = "some-random-network";
@@ -118,7 +118,7 @@ describe("Command gateway post", () => {
       internalTokenFn,
       externalTokenFn,
       network,
-      service
+      service,
     })(req, res);
 
     expect(validateFake).to.have.been.calledWith(body);
@@ -126,16 +126,16 @@ describe("Command gateway post", () => {
       name,
       domain,
       service,
-      network
+      network,
     });
     expect(setFake).to.have.been.calledWith({
       tokenFns: { external: externalTokenFn, internal: internalTokenFn },
       context,
-      claims
+      claims,
     });
     expect(issueFake).to.have.been.calledWith(payload, {
       ...headers,
-      root
+      root,
     });
     expect(statusFake).to.have.been.calledWith(200);
   });
@@ -145,10 +145,10 @@ describe("Command gateway post", () => {
 
     const issueFake = fake.returns();
     const setFake = fake.returns({
-      issue: issueFake
+      issue: issueFake,
     });
     const commandFake = fake.returns({
-      set: setFake
+      set: setFake,
     });
     replace(deps, "command", commandFake);
 
@@ -156,17 +156,17 @@ describe("Command gateway post", () => {
       context,
       claims,
       body,
-      params: {}
+      params: {},
     };
 
     const sendFake = fake();
     const statusFake = fake.returns({
-      send: sendFake
+      send: sendFake,
     });
     const cookieFake = fake();
     const res = {
       status: statusFake,
-      cookie: cookieFake
+      cookie: cookieFake,
     };
 
     await post({ name, domain, internalTokenFn, externalTokenFn })(req, res);
@@ -174,16 +174,16 @@ describe("Command gateway post", () => {
     expect(validateFake).to.have.been.calledWith(body);
     expect(commandFake).to.have.been.calledWith({
       name,
-      domain
+      domain,
     });
     expect(setFake).to.have.been.calledWith({
       tokenFns: { internal: internalTokenFn, external: externalTokenFn },
       context,
-      claims
+      claims,
     });
     expect(issueFake).to.have.been.calledWith(payload, {
       ...headers,
-      root
+      root,
     });
     expect(statusFake).to.have.been.calledWith(204);
     expect(sendFake).to.have.been.calledWith();
@@ -201,19 +201,19 @@ describe("Command gateway post", () => {
     const token1 = {
       network: token1Network,
       type: token1Type,
-      value: token1Value
+      value: token1Value,
     };
     const token2 = {
       network: token2Network,
       type: token2Type,
-      value: token2Value
+      value: token2Value,
     };
     const issueFake = fake.returns({ tokens: [token1, token2] });
     const setFake = fake.returns({
-      issue: issueFake
+      issue: issueFake,
     });
     const commandFake = fake.returns({
-      set: setFake
+      set: setFake,
     });
     replace(deps, "command", commandFake);
 
@@ -221,17 +221,17 @@ describe("Command gateway post", () => {
       context,
       claims,
       body,
-      params: {}
+      params: {},
     };
 
     const sendFake = fake();
     const statusFake = fake.returns({
-      send: sendFake
+      send: sendFake,
     });
     const cookieFake = fake();
     const res = {
       cookie: cookieFake,
-      status: statusFake
+      status: statusFake,
     };
 
     await post({ name, domain, internalTokenFn, externalTokenFn })(req, res);
@@ -239,25 +239,25 @@ describe("Command gateway post", () => {
     expect(cookieFake).to.have.been.calledTwice;
     expect(cookieFake).to.have.been.calledWith(token1Type, token1Value, {
       httpOnly: true,
-      secure: true
+      secure: true,
     });
     expect(cookieFake).to.have.been.calledWith(token2Type, token2Value, {
       httpOnly: true,
-      secure: true
+      secure: true,
     });
     expect(validateFake).to.have.been.calledWith(body);
     expect(commandFake).to.have.been.calledWith({
       name,
-      domain
+      domain,
     });
     expect(setFake).to.have.been.calledWith({
       tokenFns: { internal: internalTokenFn, external: externalTokenFn },
       context,
-      claims
+      claims,
     });
     expect(issueFake).to.have.been.calledWith(payload, {
       ...headers,
-      root
+      root,
     });
     expect(statusFake).to.have.been.calledWith(200);
   });
@@ -268,17 +268,17 @@ describe("Command gateway post", () => {
 
     const req = {
       context,
-      body
+      body,
     };
 
     const sendFake = fake();
     const statusFake = fake.returns({
-      send: sendFake
+      send: sendFake,
     });
     const cookieFake = fake();
     const res = {
       status: statusFake,
-      cookie: cookieFake
+      cookie: cookieFake,
     };
 
     try {

@@ -12,7 +12,7 @@ module.exports = ({
   procedure,
   computeUrlId,
   project,
-  region
+  region,
 }) => {
   return {
     name: "gcr.io/cloud-builders/gcloud",
@@ -37,9 +37,9 @@ module.exports = ({
         name,
         "event-action": eventAction,
         "event-domain": eventDomain,
-        "event-service": eventService
+        "event-service": eventService,
       }).reduce((string, [key, value]) => (string += `${key}=${value},`), "")}
-    `
-    ]
+    `,
+    ],
   };
 };

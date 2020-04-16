@@ -10,7 +10,7 @@ module.exports = ({ dnsZone, project }) => {
     gcloud beta dns record-sets transaction abort
     --zone=${dnsZone}
     --project=${project} || exit 0
-    `
-    ]
+    `,
+    ],
   };
 };

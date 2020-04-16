@@ -7,12 +7,12 @@ const unravelMixins = ({ schema = {}, indexes = [], mixins = [] }) => {
   const mixin = {
     schema,
     indexes,
-    mixins
+    mixins,
   };
 
   const result = [mixin];
 
-  mixin.mixins.reverse().forEach(nestedMixin => {
+  mixin.mixins.reverse().forEach((nestedMixin) => {
     const nestedMixins = unravelMixins(nestedMixin);
     result.unshift(...nestedMixins);
   });
@@ -20,17 +20,17 @@ const unravelMixins = ({ schema = {}, indexes = [], mixins = [] }) => {
   return result;
 };
 
-const formattedMixins = root => {
+const formattedMixins = (root) => {
   const allMixins = unravelMixins(root);
 
-  const allSchemas = allMixins.map(mixin => mixin.schema);
-  const allIndexes = allMixins.map(mixin => mixin.indexes);
+  const allSchemas = allMixins.map((mixin) => mixin.schema);
+  const allIndexes = allMixins.map((mixin) => mixin.indexes);
 
-  const formattedSchemas = viewStore => {
+  const formattedSchemas = (viewStore) => {
     for (const schema of allSchemas) viewStore.add(schema);
   };
 
-  const formattedIndexes = viewStore => {
+  const formattedIndexes = (viewStore) => {
     for (const indexes of allIndexes) {
       for (const index of indexes) {
         viewStore.index(...index);
@@ -57,8 +57,8 @@ module.exports = ({
     poolSize,
     autoIndex,
     onError,
-    onOpen
-  } = {}
+    onOpen,
+  } = {},
 }) => {
   if (name == undefined || name.length == 0)
     throw deps.internalServerError.message("View store needs a name.");
@@ -80,14 +80,14 @@ module.exports = ({
       poolSize,
       autoIndex,
       onError,
-      onOpen
+      onOpen,
     });
   }
 
   const base = {
     schema,
     indexes,
-    mixins
+    mixins,
   };
 
   const store = new mongoose.Schema(
@@ -95,13 +95,13 @@ module.exports = ({
     { strict: schema != undefined, typePojoToMixed: false, minimize: false }
   );
 
-  formattedMixins(base).forEach(mixin => mixin(store));
+  formattedMixins(base).forEach((mixin) => mixin(store));
 
   store.add({
     version: {
       type: Number,
-      default: version
-    }
+      default: version,
+    },
   });
 
   const storeName = `${name}.${version}`;

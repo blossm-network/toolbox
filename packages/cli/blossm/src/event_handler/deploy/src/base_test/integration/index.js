@@ -13,11 +13,11 @@ describe("Event handler integration tests", () => {
           data: Buffer.from(
             JSON.stringify({
               headers: { context: "some-context", root: "some-root" },
-              payload: { key: "property" }
+              payload: { key: "property" },
             })
-          )
-        }
-      }
+          ),
+        },
+      },
     });
 
     expect(response.statusCode).to.equal(204);

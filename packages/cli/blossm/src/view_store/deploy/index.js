@@ -6,7 +6,7 @@ const { MAX_LENGTH } = require("@blossm/service-name-consts");
 module.exports = deployCliTemplate({
   domain: "view-store",
   dir: __dirname,
-  configFn: config => {
+  configFn: (config) => {
     return {
       name: config.name,
       operationName: trim(
@@ -21,7 +21,7 @@ module.exports = deployCliTemplate({
         ...(config.service ? [config.service] : []),
         config.context,
         config.procedure
-      )
+      ),
     };
-  }
+  },
 });

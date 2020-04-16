@@ -21,7 +21,7 @@ describe("Whitelist", () => {
   it("should call correctly if incorrect", async () => {
     const good = "good";
     const list = [good];
-    whitelist(list).check("bogus", err => {
+    whitelist(list).check("bogus", (err) => {
       expect(err).to.exist;
     });
   });

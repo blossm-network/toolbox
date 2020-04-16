@@ -58,14 +58,14 @@ describe("Empty strings", () => {
 
 describe("Invalid string", () => {
   it("should contain one error if something other than a string is passed in", () => {
-    invalidStrings.forEach(invalidString => {
+    invalidStrings.forEach((invalidString) => {
       let response = string(invalidString);
       expect(response.errors).to.have.lengthOf(1);
     });
   });
   it("should contain one error if something other than a string is passed in with a title", () => {
     const title = "some-title";
-    invalidStrings.forEach(invalidString => {
+    invalidStrings.forEach((invalidString) => {
       let response = string(invalidString, { title });
       expect(response.errors).to.have.lengthOf(1);
       expect(response.errors[0].message).to.include(title);
@@ -75,7 +75,7 @@ describe("Invalid string", () => {
 
 describe("Invalid optional string", () => {
   it("should contain one error if something other than a string is passed in, regardless of optional flag", () => {
-    invalidStrings.forEach(invalidString => {
+    invalidStrings.forEach((invalidString) => {
       let response = string(invalidString, { optional: true });
       expect(response.errors).to.have.lengthOf(1);
     });

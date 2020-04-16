@@ -37,7 +37,7 @@ describe("Invalid function array", () => {
 describe("Invalid optional function array", () => {
   it("should contain one error if array has values that are not functions, regardless of optional flag", () => {
     const response = fnArray(invalidFunctionArray, {
-      optional: true
+      optional: true,
     });
     expect(response.errors).to.have.lengthOf(1);
   });

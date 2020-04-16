@@ -21,5 +21,5 @@ module.exports = {
   updateMany,
   mapReduce,
   connect,
-  store
+  store,
 };

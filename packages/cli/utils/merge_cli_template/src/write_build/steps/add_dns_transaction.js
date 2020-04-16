@@ -12,7 +12,7 @@ module.exports = ({ uri, dnsZone, project }) => {
       `--zone=${dnsZone}`,
       "--type=CNAME",
       "--ttl=86400",
-      `--project=${project}`
-    ]
+      `--project=${project}`,
+    ],
   };
 };

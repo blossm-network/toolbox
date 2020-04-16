@@ -12,7 +12,7 @@ module.exports = ({ serviceName, uri, project, region }) => {
       --domain=${uri}
       --project=${project}
       --region=${region} || exit 0
-      `
-    ]
+      `,
+    ],
   };
 };

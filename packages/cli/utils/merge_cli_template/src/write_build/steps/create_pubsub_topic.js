@@ -9,7 +9,7 @@ module.exports = ({ action, domain, service, project }) => {
       oneLine`
     gcloud pubsub topics create did-${action}.${domain}.${service}
     --project=${project} || exit 0
-    `
-    ]
+    `,
+    ],
   };
 };

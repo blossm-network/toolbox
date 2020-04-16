@@ -55,13 +55,13 @@ describe("Issue command", () => {
     const response = "some-response";
     const withFake = fake.returns(response);
     const inFake = fake.returns({
-      with: withFake
+      with: withFake,
     });
     const postFake = fake.returns({
-      in: inFake
+      in: inFake,
     });
     const rpcFake = fake.returns({
-      post: postFake
+      post: postFake,
     });
     replace(deps, "rpc", rpcFake);
 
@@ -70,14 +70,14 @@ describe("Issue command", () => {
       .set({
         context,
         claims,
-        tokenFns: { internal: internalTokenFn, external: externalTokenFn }
+        tokenFns: { internal: internalTokenFn, external: externalTokenFn },
       })
       .issue(payload, {
         trace,
         issued,
         path,
         root,
-        options
+        options,
       });
 
     expect(result).to.equal(response);
@@ -98,33 +98,33 @@ describe("Issue command", () => {
             host: envHost,
             name: envName,
             domain: envDomain,
-            service: envService
-          }
-        ]
+            service: envService,
+          },
+        ],
       },
       root,
-      options
+      options,
     });
     expect(inFake).to.have.been.calledWith({
-      context
+      context,
     });
     expect(withFake).to.have.been.calledWith({
       internalTokenFn,
       externalTokenFn,
-      claims
+      claims,
     });
   });
   it("should call with the correct optional params", async () => {
     const response = "some-response";
     const withFake = fake.returns(response);
     const inFake = fake.returns({
-      with: withFake
+      with: withFake,
     });
     const postFake = fake.returns({
-      in: inFake
+      in: inFake,
     });
     const rpcFake = fake.returns({
-      post: postFake
+      post: postFake,
     });
     replace(deps, "rpc", rpcFake);
 
@@ -145,10 +145,10 @@ describe("Issue command", () => {
             host: envHost,
             name: envName,
             domain: envDomain,
-            service: envService
-          }
-        ]
-      }
+            service: envService,
+          },
+        ],
+      },
     });
     expect(inFake).to.have.been.calledWith({});
     expect(withFake).to.have.been.calledWith({});
@@ -157,13 +157,13 @@ describe("Issue command", () => {
     const response = "some-response";
     const withFake = fake.returns(response);
     const inFake = fake.returns({
-      with: withFake
+      with: withFake,
     });
     const postFake = fake.returns({
-      in: inFake
+      in: inFake,
     });
     const rpcFake = fake.returns({
-      post: postFake
+      post: postFake,
     });
     replace(deps, "rpc", rpcFake);
 
@@ -173,7 +173,7 @@ describe("Issue command", () => {
       name,
       domain,
       service,
-      network: otherNetwork
+      network: otherNetwork,
     })
       .set({ context, claims, tokenFns: { external: externalTokenFn } })
       .issue(payload, { trace, issued, root, options });
@@ -195,22 +195,22 @@ describe("Issue command", () => {
             host: envHost,
             name: envName,
             domain: envDomain,
-            service: envService
-          }
-        ]
+            service: envService,
+          },
+        ],
       },
       root,
-      options
+      options,
     });
     expect(inFake).to.have.been.calledWith({
       context,
       network: otherNetwork,
-      host: `command.some-domain.some-service.some-other-network`
+      host: `command.some-domain.some-service.some-other-network`,
     });
     expect(withFake).to.have.been.calledWith({
       externalTokenFn,
       claims,
-      path: "/some-name"
+      path: "/some-name",
     });
   });
 });

@@ -6,9 +6,9 @@ module.exports = ({ domain, service = process.env.SERVICE } = {}) => {
   const add = ({
     context,
     claims,
-    tokenFns: { internal: internalTokenFn, external: externalTokenFn } = {}
-  } = {}) => async events => {
-    const normalizedEvents = events.map(event => {
+    tokenFns: { internal: internalTokenFn, external: externalTokenFn } = {},
+  } = {}) => async (events) => {
+    const normalizedEvents = events.map((event) => {
       return {
         data: {
           headers: {
@@ -17,14 +17,14 @@ module.exports = ({ domain, service = process.env.SERVICE } = {}) => {
             ...((context || event.data.headers.context) && {
               context: {
                 ...event.data.headers.context,
-                ...context
-              }
+                ...context,
+              },
             }),
-            ...(claims && { claims })
+            ...(claims && { claims }),
           },
-          payload: event.data.payload
+          payload: event.data.payload,
         },
-        ...(event.number && { number: event.number })
+        ...(event.number && { number: event.number }),
       };
     });
 
@@ -32,47 +32,47 @@ module.exports = ({ domain, service = process.env.SERVICE } = {}) => {
       .rpc(domain, service, "event-store")
       .post({ events: normalizedEvents })
       .in({
-        ...(context && { context })
+        ...(context && { context }),
       })
       .with({
         ...(internalTokenFn && { internalTokenFn }),
         ...(externalTokenFn && { externalTokenFn }),
-        ...(claims && { claims })
+        ...(claims && { claims }),
       });
   };
 
   const aggregate = ({
     context,
     claims,
-    tokenFns: { internal: internalTokenFn, external: externalTokenFn } = {}
-  } = {}) => async root =>
+    tokenFns: { internal: internalTokenFn, external: externalTokenFn } = {},
+  } = {}) => async (root) =>
     await deps
       .rpc(domain, service, "event-store")
       .get({ id: root })
       .in({
-        ...(context && { context })
+        ...(context && { context }),
       })
       .with({
         ...(internalTokenFn && { internalTokenFn }),
         ...(externalTokenFn && { externalTokenFn }),
-        ...(claims && { claims })
+        ...(claims && { claims }),
       });
 
   const query = ({
     context,
     claims,
-    tokenFns: { internal: internalTokenFn, external: externalTokenFn } = {}
+    tokenFns: { internal: internalTokenFn, external: externalTokenFn } = {},
   } = {}) => async ({ key, value }) => {
     return await deps
       .rpc(domain, service, "event-store")
       .get({ key, value })
       .in({
-        ...(context && { context })
+        ...(context && { context }),
       })
       .with({
         ...(internalTokenFn && { internalTokenFn }),
         ...(externalTokenFn && { externalTokenFn }),
-        ...(claims && { claims })
+        ...(claims && { claims }),
       });
   };
 
@@ -81,11 +81,11 @@ module.exports = ({ domain, service = process.env.SERVICE } = {}) => {
       return {
         add: add({ context, claims, tokenFns }),
         query: query({ context, claims, tokenFns }),
-        aggregate: aggregate({ context, claims, tokenFns })
+        aggregate: aggregate({ context, claims, tokenFns }),
       };
     },
     add: add(),
     aggregate: aggregate(),
-    query: query()
+    query: query(),
   };
 };

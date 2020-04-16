@@ -16,7 +16,7 @@ describe("Kms create", () => {
   it("should create correctly", async () => {
     const path = "some-path";
     const pathFake = fake.returns(path);
-    const kmsClient = function() {};
+    const kmsClient = function () {};
     kmsClient.prototype.keyRingPath = pathFake;
     const createCryptoKeyFake = fake.returns();
     kmsClient.prototype.createCryptoKey = createCryptoKeyFake;
@@ -28,8 +28,8 @@ describe("Kms create", () => {
       parent: path,
       cryptoKeyId: id,
       cryptoKey: {
-        purpose: "ENCRYPT_DECRYPT"
-      }
+        purpose: "ENCRYPT_DECRYPT",
+      },
     });
   });
 });

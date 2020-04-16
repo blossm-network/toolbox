@@ -12,6 +12,6 @@ module.exports = (
     baseMessageFn,
     refinementMessageFn: (value, title) =>
       `This ${title} isn't formatted right. Try again after making a change to it.`,
-    refinementFn: number => phoneNumber.format(number) != null,
-    optional
+    refinementFn: (number) => phoneNumber.format(number) != null,
+    optional,
   });

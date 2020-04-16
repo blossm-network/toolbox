@@ -8,5 +8,5 @@ module.exports = eventStore({
   schema: config.schema,
   indexes: config.indexes,
   handlers,
-  publishFn: pubsub.publish
+  publishFn: pubsub.publish,
 });

@@ -5,12 +5,12 @@ module.exports = ({ name, domain, service } = {}) => async (req, res) => {
     .viewStore({
       name,
       ...(domain && { domain }),
-      ...(service && { service })
+      ...(service && { service }),
     })
     .set({
       tokenFns: { internal: deps.gcpToken },
       context: req.context,
-      claims: req.claims
+      claims: req.claims,
     })
     .read(req.query);
 

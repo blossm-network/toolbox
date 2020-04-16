@@ -24,11 +24,11 @@ const events = [
         b: 2,
         root,
         topic,
-        idempotency
+        idempotency,
       },
-      a: 1
-    }
-  }
+      a: 1,
+    },
+  },
 ];
 const currentEventsForRoot = 0;
 
@@ -54,22 +54,22 @@ describe("Event store post", () => {
 
     const req = {
       body: {
-        events
-      }
+        events,
+      },
     };
 
     const sendFake = fake();
     const statusFake = fake.returns({
-      send: sendFake
+      send: sendFake,
     });
     const res = {
-      status: statusFake
+      status: statusFake,
     };
 
     await post({
       saveEventsFn: saveEventsFnFake,
       reserveRootCountsFn: reserveRootCountsFnFake,
-      publishFn: publishFnFake
+      publishFn: publishFnFake,
     })(req, res);
     expect(saveEventsFnFake).to.have.been.calledWith([
       {
@@ -81,13 +81,13 @@ describe("Event store post", () => {
           root,
           number: currentEventsForRoot,
           topic,
-          idempotency
-        }
-      }
+          idempotency,
+        },
+      },
     ]);
     expect(reserveRootCountsFnFake).to.have.been.calledWith({
       root,
-      amount: 1
+      amount: 1,
     });
     expect(publishFnFake).to.have.been.calledWith(writtenEvents);
     expect(statusFake).to.have.been.calledWith(204);
@@ -104,24 +104,24 @@ describe("Event store post", () => {
         events: [
           {
             ...events[0],
-            number: currentEventsForRoot
-          }
-        ]
-      }
+            number: currentEventsForRoot,
+          },
+        ],
+      },
     };
 
     const sendFake = fake();
     const statusFake = fake.returns({
-      send: sendFake
+      send: sendFake,
     });
     const res = {
-      status: statusFake
+      status: statusFake,
     };
 
     await post({
       saveEventsFn: saveEventsFnFake,
       reserveRootCountsFn: reserveRootCountsFnFake,
-      publishFn: publishFnFake
+      publishFn: publishFnFake,
     })(req, res);
     expect(saveEventsFnFake).to.have.been.calledWith([
       {
@@ -133,13 +133,13 @@ describe("Event store post", () => {
           root,
           number: currentEventsForRoot,
           topic,
-          idempotency
-        }
-      }
+          idempotency,
+        },
+      },
     ]);
     expect(reserveRootCountsFnFake).to.have.been.calledWith({
       root,
-      amount: 1
+      amount: 1,
     });
     expect(publishFnFake).to.have.been.calledWith(writtenEvents);
     expect(statusFake).to.have.been.calledWith(204);
@@ -167,27 +167,27 @@ describe("Event store post", () => {
                 b: 2,
                 root: "some-other-root",
                 topic,
-                idempotency
+                idempotency,
               },
-              a: 1
-            }
-          }
-        ]
-      }
+              a: 1,
+            },
+          },
+        ],
+      },
     };
 
     const sendFake = fake();
     const statusFake = fake.returns({
-      send: sendFake
+      send: sendFake,
     });
     const res = {
-      status: statusFake
+      status: statusFake,
     };
 
     await post({
       saveEventsFn: saveEventsFnFake,
       reserveRootCountsFn: reserveRootCountsFnFake,
-      publishFn: publishFnFake
+      publishFn: publishFnFake,
     })(req, res);
     expect(saveEventsFnFake).to.have.been.calledWith([
       {
@@ -199,8 +199,8 @@ describe("Event store post", () => {
           root,
           number: currentEventsForRoot,
           topic,
-          idempotency
-        }
+          idempotency,
+        },
       },
       {
         id: `${root}_${currentEventsForRoot + 1}`,
@@ -211,8 +211,8 @@ describe("Event store post", () => {
           root,
           number: currentEventsForRoot + 1,
           topic,
-          idempotency
-        }
+          idempotency,
+        },
       },
       {
         id: "some-other-root_9",
@@ -223,17 +223,17 @@ describe("Event store post", () => {
           root: "some-other-root",
           number: 9,
           topic,
-          idempotency
-        }
-      }
+          idempotency,
+        },
+      },
     ]);
     expect(reserveRootCountsFnFake).to.have.been.calledWith({
       root,
-      amount: 2
+      amount: 2,
     });
     expect(reserveRootCountsFnFake).to.have.been.calledWith({
       root: "some-other-root",
-      amount: 1
+      amount: 1,
     });
     expect(reserveRootCountsFnFake).to.have.been.calledTwice;
     expect(publishFnFake).to.have.been.calledWith(writtenEvents);
@@ -254,21 +254,21 @@ describe("Event store post", () => {
               headers: {
                 b: 2,
                 root,
-                topic
+                topic,
               },
-              a: 1
-            }
-          }
-        ]
-      }
+              a: 1,
+            },
+          },
+        ],
+      },
     };
 
     const sendFake = fake();
     const statusFake = fake.returns({
-      send: sendFake
+      send: sendFake,
     });
     const res = {
-      status: statusFake
+      status: statusFake,
     };
 
     const uuid = "some-uuid";
@@ -278,7 +278,7 @@ describe("Event store post", () => {
     await post({
       saveEventsFn: saveEventsFnFake,
       reserveRootCountsFn: reserveRootCountsFnFake,
-      publishFn: publishFnFake
+      publishFn: publishFnFake,
     })(req, res);
     expect(saveEventsFnFake).to.have.been.calledWith([
       {
@@ -290,13 +290,13 @@ describe("Event store post", () => {
           root,
           number: currentEventsForRoot,
           topic,
-          idempotency: uuid
-        }
-      }
+          idempotency: uuid,
+        },
+      },
     ]);
     expect(reserveRootCountsFnFake).to.have.been.calledWith({
       root,
-      amount: 1
+      amount: 1,
     });
     expect(publishFnFake).to.have.been.calledWith(writtenEvents);
     expect(statusFake).to.have.been.calledWith(204);
@@ -313,17 +313,17 @@ describe("Event store post", () => {
         events: [
           {
             ...events[0],
-            number: currentEventsForRoot + 1
-          }
-        ]
-      }
+            number: currentEventsForRoot + 1,
+          },
+        ],
+      },
     };
 
     try {
       await post({
         saveEventsFn: saveEventsFnFake,
         reserveRootCountsFn: reserveRootCountsFnFake,
-        publishFn: publishFnFake
+        publishFn: publishFnFake,
       })(req);
     } catch (e) {
       expect(e.statusCode).to.equal(412);
@@ -339,15 +339,15 @@ describe("Event store post", () => {
 
     const req = {
       body: {
-        events
-      }
+        events,
+      },
     };
 
     try {
       await post({
         saveEventsFn: saveEventsFnFake,
         reserveRootCountsFn: reserveRootCountsFnFake,
-        publishFn: publishFnFake
+        publishFn: publishFnFake,
       })(req);
     } catch (e) {
       expect(e).to.equal(error);
@@ -363,18 +363,18 @@ describe("Event store post", () => {
           {
             data: {
               headers: {
-                topic: `did-something.some-bad-domain.${service}`
-              }
-            }
-          }
-        ]
-      }
+                topic: `did-something.some-bad-domain.${service}`,
+              },
+            },
+          },
+        ],
+      },
     };
 
     try {
       await post({
         publishFn: publishFnFake,
-        reserveRootCountsFn: reserveRootCountsFnFake
+        reserveRootCountsFn: reserveRootCountsFnFake,
       })(req);
     } catch (e) {
       expect(e.statusCode).to.equal(400);
@@ -390,18 +390,18 @@ describe("Event store post", () => {
           {
             data: {
               headers: {
-                topic: `did-something.${domain}.some-bad-service`
-              }
-            }
-          }
-        ]
-      }
+                topic: `did-something.${domain}.some-bad-service`,
+              },
+            },
+          },
+        ],
+      },
     };
 
     try {
       await post({
         publishFn: publishFnFake,
-        reserveRootCountsFn: reserveRootCountsFnFake
+        reserveRootCountsFn: reserveRootCountsFnFake,
       })(req);
     } catch (e) {
       expect(e.statusCode).to.equal(400);

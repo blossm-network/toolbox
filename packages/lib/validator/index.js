@@ -67,5 +67,5 @@ module.exports = {
   phoneNumber,
   numeric,
   imageUrl,
-  domain
+  domain,
 };

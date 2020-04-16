@@ -9,5 +9,5 @@ module.exports = {
       "Missing required permissions."
     ),
   message: (message, { cause, info } = {}) =>
-    new ForbiddenError({ cause, info, toJSON }, message)
+    new ForbiddenError({ cause, info, toJSON }, message),
 };

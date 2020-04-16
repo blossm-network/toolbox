@@ -69,7 +69,7 @@ describe("Mongodb event store", () => {
     replace(deps, "removeIds", removeIdsFake);
 
     const db = {
-      store: storeFake
+      store: storeFake,
     };
     replace(deps, "db", db);
 
@@ -89,7 +89,7 @@ describe("Mongodb event store", () => {
     await mongodbEventStore({ schema, handlers, publishFn });
 
     expect(removeIdsFake).to.have.been.calledWith({
-      schema
+      schema,
     });
     expect(removeIdsFake).to.have.been.calledTwice;
     expect(storeFake).to.have.been.calledWith({
@@ -102,8 +102,8 @@ describe("Mongodb event store", () => {
             type: String,
             required: false,
             unique: false,
-            default: undefined
-          }
+            default: undefined,
+          },
         },
         headers: {
           root: { type: String, required: true },
@@ -122,8 +122,8 @@ describe("Mongodb event store", () => {
               sub: String,
               exp: String,
               iat: String,
-              jti: String
-            }
+              jti: String,
+            },
           },
           created: { type: Date, required: true },
           idempotency: { type: String, required: true, unique: true },
@@ -137,17 +137,17 @@ describe("Mongodb event store", () => {
                 host: { type: String, required: true },
                 procedure: { type: String, required: true },
                 hash: { type: String, required: true },
-                issued: { type: Date }
-              }
+                issued: { type: Date },
+              },
             ],
-            default: []
-          }
-        }
+            default: [],
+          },
+        },
       },
       indexes: [
         [{ id: 1 }],
         [{ "headers.root": 1 }],
-        [{ "headers.root": 1, "headers.number": 1, _id: 1, __v: 1 }]
+        [{ "headers.root": 1, "headers.number": 1, _id: 1, __v: 1 }],
       ],
       connection: {
         protocol,
@@ -158,10 +158,10 @@ describe("Mongodb event store", () => {
         parameters: {
           authSource: "admin",
           retryWrites: true,
-          w: "majority"
+          w: "majority",
         },
-        autoIndex: true
-      }
+        autoIndex: true,
+      },
     });
     expect(storeFake).to.have.been.calledWith({
       name: `${domain}.snapshots`,
@@ -169,37 +169,37 @@ describe("Mongodb event store", () => {
         created: { type: Date, required: true },
         headers: {
           root: { type: String, required: true, unique: true },
-          lastEventNumber: { type: Number, required: true }
+          lastEventNumber: { type: Number, required: true },
         },
-        state: snapshotStoreSchema
+        state: snapshotStoreSchema,
       },
-      indexes: [[{ "headers.root": 1 }]]
+      indexes: [[{ "headers.root": 1 }]],
     });
     expect(secretFake).to.have.been.calledWith("mongodb-event-store");
 
     expect(saveEventsFake).to.have.been.calledWith({
       eventStore: eStore,
-      handlers
+      handlers,
     });
     expect(reserveRootCountsFake).to.have.been.calledWith({
-      countsStore: cStore
+      countsStore: cStore,
     });
     expect(aggregateFake).to.have.been.calledWith({
       eventStore: eStore,
       snapshotStore: sStore,
-      handlers
+      handlers,
     });
     expect(queryFake).to.have.been.calledWith({
       eventStore: eStore,
       snapshotStore: sStore,
-      handlers
+      handlers,
     });
     expect(eventStoreFake).to.have.been.calledWith({
       aggregateFn: aggregateResult,
       saveEventsFn: saveEventsResult,
       queryFn: queryResult,
       reserveRootCountsFn: reserveRootCountsResult,
-      publishFn
+      publishFn,
     });
 
     await mongodbEventStore();
@@ -232,7 +232,7 @@ describe("Mongodb event store", () => {
     replace(deps, "removeIds", removeIdsFake);
 
     const db = {
-      store: storeFake
+      store: storeFake,
     };
     replace(deps, "db", db);
 
@@ -259,8 +259,8 @@ describe("Mongodb event store", () => {
             type: String,
             required: false,
             unique: false,
-            default: undefined
-          }
+            default: undefined,
+          },
         },
         headers: {
           root: { type: String, required: true },
@@ -279,8 +279,8 @@ describe("Mongodb event store", () => {
               sub: String,
               exp: String,
               iat: String,
-              jti: String
-            }
+              jti: String,
+            },
           },
           created: { type: Date, required: true },
           idempotency: { type: String, required: true, unique: true },
@@ -294,18 +294,18 @@ describe("Mongodb event store", () => {
                 host: { type: String, required: true },
                 procedure: { type: String, required: true },
                 hash: { type: String, required: true },
-                issued: { type: Date }
-              }
+                issued: { type: Date },
+              },
             ],
-            default: []
-          }
-        }
+            default: [],
+          },
+        },
       },
       indexes: [
         [{ id: 1 }],
         [{ "headers.root": 1 }],
         [{ "headers.root": 1, "headers.number": 1, _id: 1, __v: 1 }],
-        [{ [index]: 1 }]
+        [{ [index]: 1 }],
       ],
       connection: {
         protocol,
@@ -316,10 +316,10 @@ describe("Mongodb event store", () => {
         parameters: {
           authSource: "admin",
           retryWrites: true,
-          w: "majority"
+          w: "majority",
         },
-        autoIndex: true
-      }
+        autoIndex: true,
+      },
     });
     expect(storeFake).to.have.been.calledWith({
       name: `${domain}.snapshots`,
@@ -327,19 +327,19 @@ describe("Mongodb event store", () => {
         created: { type: Date, required: true },
         headers: {
           root: { type: String, required: true, unique: true },
-          lastEventNumber: { type: Number, required: true }
+          lastEventNumber: { type: Number, required: true },
         },
-        state: snapshotStoreSchema
+        state: snapshotStoreSchema,
       },
-      indexes: [[{ "headers.root": 1 }], [{ [index]: 1 }]]
+      indexes: [[{ "headers.root": 1 }], [{ [index]: 1 }]],
     });
     expect(storeFake).to.have.been.calledWith({
       name: `${domain}.counts`,
       schema: {
         root: { type: String, required: true },
-        value: { type: Number, required: true, default: 0 }
+        value: { type: Number, required: true, default: 0 },
       },
-      indexes: [[{ root: 1 }]]
+      indexes: [[{ root: 1 }]],
     });
   });
   it("should call with the correct params when schema has object property", async () => {
@@ -369,7 +369,7 @@ describe("Mongodb event store", () => {
     replace(deps, "removeIds", removeIdsFake);
 
     const db = {
-      store: storeFake
+      store: storeFake,
     };
     replace(deps, "db", db);
 
@@ -385,7 +385,7 @@ describe("Mongodb event store", () => {
     await mongodbEventStore({ schema, publishFn });
 
     expect(removeIdsFake).to.have.been.calledWith({
-      schema
+      schema,
     });
     expect(removeIdsFake).to.have.been.calledTwice;
     expect(storeFake).to.have.been.calledWith({
@@ -398,8 +398,8 @@ describe("Mongodb event store", () => {
             type: String,
             required: false,
             unique: false,
-            default: undefined
-          }
+            default: undefined,
+          },
         },
         headers: {
           root: { type: String, required: true },
@@ -418,8 +418,8 @@ describe("Mongodb event store", () => {
               sub: String,
               exp: String,
               iat: String,
-              jti: String
-            }
+              jti: String,
+            },
           },
           created: { type: Date, required: true },
           idempotency: { type: String, required: true, unique: true },
@@ -433,17 +433,17 @@ describe("Mongodb event store", () => {
                 host: { type: String, required: true },
                 procedure: { type: String, required: true },
                 hash: { type: String, required: true },
-                issued: { type: Date }
-              }
+                issued: { type: Date },
+              },
             ],
-            default: []
-          }
-        }
+            default: [],
+          },
+        },
       },
       indexes: [
         [{ id: 1 }],
         [{ "headers.root": 1 }],
-        [{ "headers.root": 1, "headers.number": 1, _id: 1, __v: 1 }]
+        [{ "headers.root": 1, "headers.number": 1, _id: 1, __v: 1 }],
       ],
       connection: {
         protocol,
@@ -454,10 +454,10 @@ describe("Mongodb event store", () => {
         parameters: {
           authSource: "admin",
           retryWrites: true,
-          w: "majority"
+          w: "majority",
         },
-        autoIndex: true
-      }
+        autoIndex: true,
+      },
     });
   });
 });

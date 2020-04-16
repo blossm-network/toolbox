@@ -24,7 +24,7 @@ describe("Optional numbers", () => {
 
 describe("Refinement functions", () => {
   it("should not contain errors if value is not empty and passes refinement function", () => {
-    const fn = value => value == 0;
+    const fn = (value) => value == 0;
     const response = number({ value: validNumber, fn });
     expect(response.errors).to.be.empty;
   });
@@ -32,17 +32,17 @@ describe("Refinement functions", () => {
 
 describe("Invalid number", () => {
   it("should contain one error if something other than a number is passed in", () => {
-    invalidNumbers.forEach(invalidNumber => {
+    invalidNumbers.forEach((invalidNumber) => {
       let response = number({ value: invalidNumber });
       expect(response.errors).to.have.lengthOf(1);
     });
   });
   it("should contain one error if something other than a number is passed in with message", () => {
     const message = "This is a bad number";
-    invalidNumbers.forEach(invalidNumber => {
+    invalidNumbers.forEach((invalidNumber) => {
       let response = number({
         value: invalidNumber,
-        baseMessageFn: () => message
+        baseMessageFn: () => message,
       });
       expect(response.errors).to.have.lengthOf(1);
       expect(response.errors[0].message).to.equal(message);
@@ -51,7 +51,7 @@ describe("Invalid number", () => {
   it("should contain one error if something other than a number is passed in with message, title, and path", () => {
     const title = "some-title";
     const path = "some-path";
-    invalidNumbers.forEach(invalidNumber => {
+    invalidNumbers.forEach((invalidNumber) => {
       let response = number({
         title,
         path,
@@ -59,7 +59,7 @@ describe("Invalid number", () => {
         baseMessageFn: (e, title) => {
           expect(e).to.exist;
           return title;
-        }
+        },
       });
       expect(response.errors).to.have.lengthOf(1);
       expect(response.errors[0].message).to.equal(title);
@@ -68,7 +68,7 @@ describe("Invalid number", () => {
   });
   it("should contain one error if something other than a number is passed in with title response", () => {
     const title = "some-title";
-    invalidNumbers.forEach(invalidNumber => {
+    invalidNumbers.forEach((invalidNumber) => {
       let response = number({ value: invalidNumber, title });
       expect(response.errors).to.have.lengthOf(1);
       expect(response.errors[0].message).to.include(title);
@@ -78,7 +78,7 @@ describe("Invalid number", () => {
 
 describe("Invalid optional number", () => {
   it("should contain one error if something other than a number is passed in, regardless of optional flag", () => {
-    invalidNumbers.forEach(invalidNumber => {
+    invalidNumbers.forEach((invalidNumber) => {
       let response = number({ value: invalidNumber, optional: true });
       expect(response.errors).to.have.lengthOf(1);
     });
@@ -87,7 +87,7 @@ describe("Invalid optional number", () => {
 
 describe("Valid number that doesn't satisfy refinement", () => {
   it("should contain one error if a number is passed in that doesn't satisfy the refinement function", () => {
-    const refinementFn = value => value != 0;
+    const refinementFn = (value) => value != 0;
     const response = number({ value: validNumber, refinementFn });
     expect(response.errors).to.have.lengthOf(1);
   });
@@ -96,25 +96,25 @@ describe("Valid number that doesn't satisfy refinement", () => {
 describe("Error message", () => {
   it("should contain one error with the specified message if an invalid number is passed in", () => {
     const incorrectNumber = 0;
-    const refinementFn = value => value != 0;
+    const refinementFn = (value) => value != 0;
     const message = "This is a bad number";
     const response = number({
       value: incorrectNumber,
       refinementMessageFn: () => message,
-      refinementFn
+      refinementFn,
     });
     expect(response.errors[0].message).to.equal(message);
   });
 
   it("should contain one error with the specified message if an invalid number is passed in with title", () => {
     const incorrectNumber = 0;
-    const refinementFn = value => value != 0;
+    const refinementFn = (value) => value != 0;
     const title = "some-title";
     const response = number({
       title,
       value: incorrectNumber,
       refinementMessageFn: (value, title) => `${value}${title}`,
-      refinementFn
+      refinementFn,
     });
     expect(response.errors[0].message).to.equal(`${incorrectNumber}${title}`);
   });
@@ -139,7 +139,7 @@ describe("Error message", () => {
     const response = number({
       value: validNumber,
       refinementMessageFn: () => message,
-      refinementFn
+      refinementFn,
     });
 
     expect(response.errors[0].message).to.equal(message);

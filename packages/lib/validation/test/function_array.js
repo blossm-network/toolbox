@@ -36,7 +36,7 @@ describe("Invalid function array", () => {
     const message = "This is a bad fn";
     const response = fnArray({
       value: invalidFunctionArray,
-      baseMessageFn: () => message
+      baseMessageFn: () => message,
     });
     expect(response.errors).to.have.lengthOf(1);
     expect(response.errors[0].message).to.equal(message);
@@ -51,7 +51,7 @@ describe("Invalid function array", () => {
       baseMessageFn: (e, title) => {
         expect(e).to.exist;
         return title;
-      }
+      },
     });
     expect(response.errors).to.have.lengthOf(1);
     expect(response.errors[0].message).to.equal(title);
@@ -61,7 +61,7 @@ describe("Invalid function array", () => {
     const message = "This is a bad fn";
     const response = fnArray({
       value: 3,
-      baseMessageFn: () => message
+      baseMessageFn: () => message,
     });
     expect(response.errors).to.have.lengthOf(1);
     expect(response.errors[0].message).to.equal(message);
@@ -78,7 +78,7 @@ describe("Invalid optional function array", () => {
   it("should contain one error if array has values that are not functions, regardless of optional flag", () => {
     const response = fnArray({
       value: invalidFunctionArray,
-      optional: true
+      optional: true,
     });
     expect(response.errors).to.have.lengthOf(1);
   });
@@ -87,25 +87,25 @@ describe("Invalid optional function array", () => {
 describe("Error message", () => {
   it("should contain one error with the specified message if an invalid function array is passed in", () => {
     const incorrectFnArray = [() => false];
-    const refinementFn = value => value[0]();
+    const refinementFn = (value) => value[0]();
     const message = "This is a bad function array";
     const response = fnArray({
       value: incorrectFnArray,
       refinementMessageFn: () => message,
-      refinementFn
+      refinementFn,
     });
     expect(response.errors[0].message).to.equal(message);
   });
 
   it("should contain one error with the specified message if an invalid function array is passed in with title", () => {
     const incorrectFnArray = [() => false];
-    const refinementFn = value => value[0]();
+    const refinementFn = (value) => value[0]();
     const title = "some-title";
     const response = fnArray({
       title,
       value: incorrectFnArray,
       refinementMessageFn: (value, title) => `${value}${title}`,
-      refinementFn
+      refinementFn,
     });
     expect(response.errors[0].message).to.equal(`${incorrectFnArray}${title}`);
   });
@@ -129,7 +129,7 @@ describe("Error message", () => {
     const response = fnArray({
       value: validFunctionArray,
       refinementMessageFn: () => message,
-      refinementFn
+      refinementFn,
     });
 
     expect(response.errors[0].message).to.equal(message);

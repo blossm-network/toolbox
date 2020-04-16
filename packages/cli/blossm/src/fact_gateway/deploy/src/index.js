@@ -30,10 +30,7 @@ module.exports = gateway({
   internalTokenFn: gcpToken,
   externalTokenFn: connectionToken({
     credentialsFn: async ({ network }) => {
-      const nameRoot = network
-        .toUpperCase()
-        .split(".")
-        .join("_");
+      const nameRoot = network.toUpperCase().split(".").join("_");
 
       const id = process.env[`${nameRoot}_KEY_ID`];
       const secretName = process.env[`${nameRoot}_KEY_SECRET_NAME`];
@@ -41,9 +38,9 @@ module.exports = gateway({
       if (!id || !secretName) return null;
       return {
         id,
-        secret: await secret(secretName)
+        secret: await secret(secretName),
       };
-    }
+    },
   }),
   //roles are the roles that the principle has.
   permissionsLookupFn: async ({ principle, context }) => {
@@ -54,19 +51,19 @@ module.exports = gateway({
       defaultRoles = {};
       await downloadFile({
         bucket: process.env.GCP_ROLES_BUCKET,
-        destination: fileName + extension
+        destination: fileName + extension,
       });
       const files = (await readDirAsync(".")).filter(
-        file => file.startsWith(fileName) && file.endsWith(extension)
+        (file) => file.startsWith(fileName) && file.endsWith(extension)
       );
 
       await Promise.all(
-        files.map(async file => {
+        files.map(async (file) => {
           const role = await readFileAsync(file);
           const defaultRole = yaml.parse(role.toString());
           defaultRoles = {
             ...defaultRoles,
-            ...defaultRole
+            ...defaultRole,
           };
           await unlinkAsync(file);
         })
@@ -78,22 +75,19 @@ module.exports = gateway({
       domain: "principle",
       service: "core",
       ...(process.env.CORE_NETWORK && {
-        network: process.env.CORE_NETWORK
-      })
+        network: process.env.CORE_NETWORK,
+      }),
     })
       .set({
         tokenFns: { internal: gcpToken },
-        context: { network: process.env.NETWORK }
+        context: { network: process.env.NETWORK },
       })
       .read({ root: principle.root });
 
-    //TODO
-    //eslint-disable-next-line
-    console.log({ roles, defaultRoles });
     return await rolePermissions({
       roles,
       defaultRoles,
-      context
+      context,
       // customRolePermissionsFn: async ({ roleId }) => {
       //   //look through customRoles and pick out roleId
       //   const role = await eventStore({ domain: "role", service: "core" })
@@ -104,7 +98,6 @@ module.exports = gateway({
     });
     // : [];
   },
-  //TODO look at removing this to prevent cross network event store lookup.
   terminatedSessionCheckFn: async () => {
     // session }) => {
     // const aggregate = await eventStore({
@@ -119,13 +112,13 @@ module.exports = gateway({
     key == "access"
       ? verify({
           url: process.env.PUBLIC_KEY_URL,
-          algorithm: "SHA256"
+          algorithm: "SHA256",
         })
       : verifyGCP({
           ring: "jwt",
           key,
           location: "global",
           version: "1",
-          project: process.env.GCP_PROJECT
-        })
+          project: process.env.GCP_PROJECT,
+        }),
 });

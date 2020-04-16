@@ -6,7 +6,7 @@ let publicKeys = {};
 
 module.exports = ({ key, ring, location, version, project }) => async ({
   message,
-  signature
+  signature,
 }) => {
   const instanceKey = `${project}.${ring}.${key}`;
   if (publicKeys[instanceKey] == undefined) {
@@ -21,15 +21,12 @@ module.exports = ({ key, ring, location, version, project }) => async ({
     );
 
     const [{ pem }] = await client.getPublicKey({
-      name: versionPath
+      name: versionPath,
     });
 
     publicKeys[instanceKey] = pem;
   }
 
-  //TODO
-  //eslint-disable-next-line
-  console.log({ pk: publicKeys[instanceKey], signature });
   return crypto
     .createVerify("SHA256")
     .update(message)

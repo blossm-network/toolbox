@@ -36,7 +36,7 @@ describe("Invalid boolean array", () => {
     const message = "This is a bad boolean";
     const response = booleanArray({
       value: invalidBooleanArray,
-      baseMessageFn: () => message
+      baseMessageFn: () => message,
     });
     expect(response.errors).to.have.lengthOf(1);
     expect(response.errors[0].message).to.equal(message);
@@ -51,7 +51,7 @@ describe("Invalid boolean array", () => {
       baseMessageFn: (e, title) => {
         expect(e).to.exist;
         return title;
-      }
+      },
     });
     expect(response.errors).to.have.lengthOf(1);
     expect(response.errors[0].message).to.equal(title);
@@ -61,7 +61,7 @@ describe("Invalid boolean array", () => {
     const message = "This is a bad boolean";
     const response = booleanArray({
       value: 3,
-      baseMessageFn: () => message
+      baseMessageFn: () => message,
     });
     expect(response.errors).to.have.lengthOf(1);
     expect(response.errors[0].message).to.equal(message);
@@ -78,7 +78,7 @@ describe("Invalid optional boolean array", () => {
   it("should contain one error if array has values that are not booleans, regardless of optional flag", () => {
     const response = booleanArray({
       value: invalidBooleanArray,
-      optional: true
+      optional: true,
     });
     expect(response.errors).to.have.lengthOf(1);
   });
@@ -87,25 +87,25 @@ describe("Invalid optional boolean array", () => {
 describe("Error message", () => {
   it("should contain one error with the specified message if an invalid boolean is passed in", () => {
     const incorrectBooleanArray = [false];
-    const refinementFn = value => value[0];
+    const refinementFn = (value) => value[0];
     const message = "This is a bad boolean array";
     const response = booleanArray({
       value: incorrectBooleanArray,
       refinementMessageFn: () => message,
-      refinementFn
+      refinementFn,
     });
     expect(response.errors[0].message).to.equal(message);
   });
 
   it("should contain one error with the specified message if an invalid boolean array is passed in with title", () => {
     const incorrectBooleanArray = [false];
-    const refinementFn = value => value[0];
+    const refinementFn = (value) => value[0];
     const title = "some-title";
     const response = booleanArray({
       title,
       value: incorrectBooleanArray,
       refinementMessageFn: (value, title) => `${value}${title}`,
-      refinementFn
+      refinementFn,
     });
     expect(response.errors[0].message).to.equal(
       `${incorrectBooleanArray}${title}`
@@ -120,7 +120,7 @@ describe("Error message", () => {
 
     const response = booleanArray({
       value: validBooleanArray,
-      refinementFn
+      refinementFn,
     });
 
     expect(response.errors[0].message).to.equal(message);
@@ -135,7 +135,7 @@ describe("Error message", () => {
     const response = booleanArray({
       value: validBooleanArray,
       refinementMessageFn: () => message,
-      refinementFn
+      refinementFn,
     });
 
     expect(response.errors[0].message).to.equal(message);

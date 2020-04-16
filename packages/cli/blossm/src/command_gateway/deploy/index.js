@@ -6,13 +6,13 @@ const { MAX_LENGTH } = require("@blossm/service-name-consts");
 module.exports = deployCliTemplate({
   domain: "command-gateway",
   dir: __dirname,
-  configFn: config => {
+  configFn: (config) => {
     return {
       operationName: trim(
         `${config.procedure}-${config.service}-${config.domain}`,
         MAX_LENGTH
       ),
-      operationHash: hash(config.domain, config.service, config.procedure)
+      operationHash: hash(config.domain, config.service, config.procedure),
     };
-  }
+  },
 });

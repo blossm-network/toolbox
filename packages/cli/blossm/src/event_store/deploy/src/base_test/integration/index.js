@@ -9,7 +9,7 @@ const {
   service,
   testing,
   schema,
-  indexes
+  indexes,
 } = require("../../config.json");
 
 const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
@@ -18,7 +18,7 @@ const {
   subscribe,
   create,
   delete: del,
-  unsubscribe
+  unsubscribe,
 } = require("@blossm/gcp-pubsub");
 
 const topic = `some-topic.${process.env.DOMAIN}.${process.env.SERVICE}`;
@@ -53,13 +53,13 @@ describe("Event store integration tests", () => {
                 domain,
                 service,
                 version,
-                created
+                created,
               },
-              payload: example0.payload
-            }
-          }
-        ]
-      }
+              payload: example0.payload,
+            },
+          },
+        ],
+      },
     });
 
     expect(response0.statusCode).to.equal(204);
@@ -86,13 +86,13 @@ describe("Event store integration tests", () => {
                 created,
                 action: example1.action,
                 domain,
-                service
+                service,
               },
-              payload: example1.payload
-            }
-          }
-        ]
-      }
+              payload: example1.payload,
+            },
+          },
+        ],
+      },
     });
 
     expect(response2.statusCode).to.equal(204);
@@ -110,7 +110,7 @@ describe("Event store integration tests", () => {
     ///Test indexes
     for (const index of indexes || []) {
       const indexParts = index.split(".");
-      const example = [example1, example0].find(e => {
+      const example = [example1, example0].find((e) => {
         let obj = e.payload;
         for (const part of indexParts) {
           obj = obj[part];
@@ -125,8 +125,8 @@ describe("Event store integration tests", () => {
       const response4 = await request.get(url, {
         query: {
           key: [index],
-          value
-        }
+          value,
+        },
       });
       expect(response4.statusCode).to.equal(200);
 
@@ -151,10 +151,10 @@ describe("Event store integration tests", () => {
                 created,
                 action: example0.action,
                 domain,
-                service
+                service,
               },
-              payload: example0.payload
-            }
+              payload: example0.payload,
+            },
           },
           {
             data: {
@@ -165,25 +165,25 @@ describe("Event store integration tests", () => {
                 created,
                 action: example1.action,
                 domain,
-                service
+                service,
               },
-              payload: example1.payload
-            }
-          }
-        ]
-      }
+              payload: example1.payload,
+            },
+          },
+        ],
+      },
     });
 
     expect(response.statusCode).to.equal(204);
   });
 
-  it("should publish event successfully", done => {
+  it("should publish event successfully", (done) => {
     subscribe({
       topic,
       name: sub,
       fn: async (_, subscription) => {
         if (!subscription) throw "Subscription wasn't made";
-        subscription.once("message", async event => {
+        subscription.once("message", async (event) => {
           const eventString = Buffer.from(event.data, "base64")
             .toString()
             .trim();
@@ -209,15 +209,15 @@ describe("Event store integration tests", () => {
                     created,
                     action: example0.action,
                     domain,
-                    service
+                    service,
                   },
-                  payload: example0.payload
-                }
-              }
-            ]
-          }
+                  payload: example0.payload,
+                },
+              },
+            ],
+          },
         });
-      }
+      },
     });
   });
   const testIncorrectParams = async ({ payload, action }) => {
@@ -234,13 +234,13 @@ describe("Event store integration tests", () => {
                 created,
                 action,
                 domain,
-                service
+                service,
               },
-              payload
-            }
-          }
-        ]
-      }
+              payload,
+            },
+          },
+        ],
+      },
     });
     expect(response.statusCode).to.equal(500);
   };
@@ -260,13 +260,13 @@ describe("Event store integration tests", () => {
                   created,
                   action: example0.action,
                   domain,
-                  service
+                  service,
                 },
-                payload: example0.payload
-              }
-            }
-          ]
-        }
+                payload: example0.payload,
+              },
+            },
+          ],
+        },
       }),
 
       request.post(url, {
@@ -281,14 +281,14 @@ describe("Event store integration tests", () => {
                   created,
                   action: example1.action,
                   domain,
-                  service
+                  service,
                 },
-                payload: example1.payload
-              }
-            }
-          ]
-        }
-      })
+                payload: example1.payload,
+              },
+            },
+          ],
+        },
+      }),
     ]);
 
     expect(response0.statusCode).to.equal(204);
@@ -312,9 +312,9 @@ describe("Event store integration tests", () => {
       await testIncorrectParams({
         payload: {
           ...example0.payload,
-          [key]: { [property]: badValue }
+          [key]: { [property]: badValue },
         },
-        action: example0.action
+        action: example0.action,
       });
     }
     return "bad-object";
@@ -325,17 +325,17 @@ describe("Event store integration tests", () => {
     const [exampleToUse] = [
       example0,
       example1,
-      ...(testing.examples.more || [])
-    ].filter(example => example.payload[property] != undefined);
+      ...(testing.examples.more || []),
+    ].filter((example) => example.payload[property] != undefined);
 
     if (!exampleToUse) return "bad-array";
 
     await testIncorrectParams({
       payload: {
         ...exampleToUse.payload,
-        [property]: "not-an-array"
+        [property]: "not-an-array",
       },
-      action: exampleToUse.action
+      action: exampleToUse.action,
     });
 
     if (typeof element == "object") {
@@ -345,16 +345,16 @@ describe("Event store integration tests", () => {
         await testIncorrectParams({
           payload: {
             ...exampleToUse.payload,
-            [property]: [{ [objProperty]: badValue }]
+            [property]: [{ [objProperty]: badValue }],
           },
-          action: exampleToUse.action
+          action: exampleToUse.action,
         });
       }
     } else {
       const badValue = element == "String" ? { a: 1 } : "some-string";
       await testIncorrectParams({
         payload: { ...exampleToUse.payload, [property]: [badValue] },
-        action: exampleToUse.action
+        action: exampleToUse.action,
       });
     }
 
@@ -380,14 +380,14 @@ describe("Event store integration tests", () => {
       const [exampleToUse] = [
         example0,
         example1,
-        ...(testing.examples.more || [])
-      ].filter(example => example.payload[property] != undefined);
+        ...(testing.examples.more || []),
+      ].filter((example) => example.payload[property] != undefined);
 
       if (!exampleToUse) return;
 
       await testIncorrectParams({
         payload: { ...exampleToUse.payload, [property]: badValue },
-        action: exampleToUse.action
+        action: exampleToUse.action,
       });
     }
   });
@@ -407,14 +407,14 @@ describe("Event store integration tests", () => {
                 created,
                 action: testing.action,
                 domain,
-                service
+                service,
               },
-              payload: example0
+              payload: example0,
             },
-            number: 2
-          }
-        ]
-      }
+            number: 2,
+          },
+        ],
+      },
     });
     expect(response.statusCode).to.equal(412);
   });
@@ -433,13 +433,13 @@ describe("Event store integration tests", () => {
                 created,
                 action: "bogus",
                 domain,
-                service
+                service,
               },
-              payload: example0.payload
-            }
-          }
-        ]
-      }
+              payload: example0.payload,
+            },
+          },
+        ],
+      },
     });
 
     expect(response.statusCode).to.equal(400);

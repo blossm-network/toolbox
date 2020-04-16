@@ -23,7 +23,7 @@ const checkResponse = ({ data, expected }) => {
       ) {
         checkResponse({
           data: data[property],
-          expected: expected[property]
+          expected: expected[property],
         });
       } else if (expected[property] instanceof Array) {
         expect(data[property]).to.be.an("array");
@@ -31,7 +31,7 @@ const checkResponse = ({ data, expected }) => {
         for (const expectedValue of expected[property]) {
           checkResponse({
             data: data[property][i],
-            expected: expectedValue[i]
+            expected: expectedValue[i],
           });
           i++;
         }
@@ -42,7 +42,7 @@ const checkResponse = ({ data, expected }) => {
   }
 };
 
-const formattedPayload = async payload => {
+const formattedPayload = async (payload) => {
   let result = {};
   for (const property in payload) {
     if (
@@ -65,7 +65,7 @@ const formattedPayload = async payload => {
   return result;
 };
 
-const executeStep = async step => {
+const executeStep = async (step) => {
   if (step.pre) {
     for (const { action, domain, service, root, payload } of step.pre) {
       const topic = `did-${action}.${domain}.${service}`;
@@ -77,7 +77,7 @@ const executeStep = async step => {
         payload: await formattedPayload(payload),
         action,
         domain,
-        service
+        service,
       });
 
       await eventStore({ domain, service }).add([{ data: stateEvent }]);
@@ -89,8 +89,8 @@ const executeStep = async step => {
     {
       query: {
         ...(step.context && { context: step.context }),
-        ...(step.query && { query: step.query })
-      }
+        ...(step.query && { query: step.query }),
+      },
     }
   );
 
@@ -108,7 +108,7 @@ const executeStep = async step => {
 
   checkResponse({
     expected: step.response,
-    data: parsedBody
+    data: parsedBody,
   });
 };
 
@@ -118,7 +118,7 @@ describe("Fact integration tests", () => {
     async () =>
       await Promise.all(
         [...testing.topics, ...stateTopics].map(
-          t => !existingTopics.includes(t) && del(t)
+          (t) => !existingTopics.includes(t) && del(t)
         )
       )
   );

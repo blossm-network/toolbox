@@ -4,7 +4,7 @@ module.exports = ({
   adminDatabase,
   database,
   user,
-  userPassword
+  userPassword,
 }) => {
   return {
     image: "mongo:latest",
@@ -15,11 +15,11 @@ module.exports = ({
       MONGODB_INITDB_DATABASE: `${adminDatabase}`,
       MONGODB_DATABASE: `${database}`,
       MONGODB_USER: `${user}`,
-      MONGODB_USER_PASSWORD: `${userPassword}`
+      MONGODB_USER_PASSWORD: `${userPassword}`,
     },
     volumes: [
-      "./mongodb-init.sh:/docker-entrypoint-initdb.d/mongodb-init.sh:ro"
+      "./mongodb-init.sh:/docker-entrypoint-initdb.d/mongodb-init.sh:ro",
     ],
-    ports: ["27017:27017"]
+    ports: ["27017:27017"],
   };
 };

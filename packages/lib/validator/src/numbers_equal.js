@@ -13,6 +13,6 @@ module.exports = (
     baseMessageFn,
     refinementMessageFn: (_, title) =>
       `These ${title.toLowerCase()} don't match up.`,
-    refinementFn: number => doNumbersEqual(number, number2),
-    optional
+    refinementFn: (number) => doNumbersEqual(number, number2),
+    optional,
   });

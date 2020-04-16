@@ -46,7 +46,7 @@ module.exports = ({
   runBaseUnitTests,
   runIntegrationTests,
   runBaseIntegrationTests,
-  strict
+  strict,
 }) => {
   const authUri = `c.${domain}.${service}.${envUriSpecifier}${network}`;
   return [
@@ -56,7 +56,7 @@ module.exports = ({
     buildImage({
       extension: imageExtension,
       containerRegistery,
-      procedure
+      procedure,
     }),
     writeEnv({
       mainContainerName,
@@ -74,12 +74,12 @@ module.exports = ({
         ...dependencyKeyEnvironmentVariables,
         ...(publicKeyUrl && { PUBLIC_KEY_URL: publicKeyUrl }),
         ...(twilioTestReceivingPhoneNumber && {
-          TWILIO_TEST_RECEIVING_PHONE_NUMBER: twilioTestReceivingPhoneNumber
+          TWILIO_TEST_RECEIVING_PHONE_NUMBER: twilioTestReceivingPhoneNumber,
         }),
         ...(twilioSendingPhoneNumber && {
-          TWILIO_SENDING_PHONE_NUMBER: twilioSendingPhoneNumber
-        })
-      }
+          TWILIO_SENDING_PHONE_NUMBER: twilioSendingPhoneNumber,
+        }),
+      },
     }),
     dockerComposeUp,
     dockerComposeProcesses,
@@ -90,7 +90,7 @@ module.exports = ({
           dockerPush({
             extension: imageExtension,
             containerRegistery,
-            procedure
+            procedure,
           }),
           deploy({
             extension: imageExtension,
@@ -115,9 +115,9 @@ module.exports = ({
               DOMAIN: domain,
               SERVICE: service,
               ...dependencyKeyEnvironmentVariables,
-              ...(publicKeyUrl && { PUBLIC_KEY_URL: publicKeyUrl })
+              ...(publicKeyUrl && { PUBLIC_KEY_URL: publicKeyUrl }),
             },
-            labels: { domain, service }
+            labels: { domain, service },
           }),
           startDnsTransaction({ dnsZone, project }),
           addDnsTransaction({ uri: authUri, dnsZone, project }),
@@ -127,9 +127,9 @@ module.exports = ({
             uri: authUri,
             project,
             region,
-            serviceName
-          })
+            serviceName,
+          }),
         ]
-      : [dockerComposeLogs])
+      : [dockerComposeLogs]),
   ];
 };

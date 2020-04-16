@@ -66,11 +66,11 @@ describe("View store", () => {
         expect(fnFake).to.have.been.calledWith(view);
         expect(options).to.deep.equal({ parallel });
         return foundObjs;
-      }
+      },
     });
 
     const foundObjs = {
-      cursor: cursorFake
+      cursor: cursorFake,
     };
     const findFake = fake.returns(foundObjs);
     const writeFake = fake.returns(writeResult);
@@ -81,7 +81,7 @@ describe("View store", () => {
       // findOne: findOneFake,
       find: findFake,
       write: writeFake,
-      remove: removeFake
+      remove: removeFake,
     };
     replace(deps, "db", db);
 
@@ -104,7 +104,7 @@ describe("View store", () => {
       indexes,
       getFn,
       // postFn,
-      putFn
+      putFn,
     });
 
     expect(storeFake).to.have.been.calledWith({
@@ -114,9 +114,9 @@ describe("View store", () => {
           a: 1,
           b: {
             c: 2,
-            _id: false
+            _id: false,
           },
-          _id: false
+          _id: false,
         },
         headers: {
           _id: false,
@@ -125,45 +125,45 @@ describe("View store", () => {
             root: String,
             service: String,
             network: String,
-            _id: false
+            _id: false,
           },
           [domain]: {
             root: String,
             service: String,
             network: String,
-            _id: false
+            _id: false,
           },
           created: {
             type: Date,
             required: true,
-            default: match(fn => {
+            default: match((fn) => {
               const date = fn();
               return date == dateString;
-            })
+            }),
           },
           modified: {
             type: Date,
             required: true,
-            default: match(fn => {
+            default: match((fn) => {
               const date = fn();
               return date == dateString;
-            })
-          }
-        }
+            }),
+          },
+        },
       },
       indexes: [
         [{ root: 1 }],
         [
           { "headers.some-context.root": 1 },
           { "headers.some-context.service": 1 },
-          { "headers.some-context.network": 1 }
+          { "headers.some-context.network": 1 },
         ],
         [
           { "headers.some-domain.root": 1 },
           { "headers.some-domain.service": 1 },
-          { "headers.some-domain.network": 1 }
+          { "headers.some-domain.network": 1 },
         ],
-        [{ "body.some-index": 1 }]
+        [{ "body.some-index": 1 }],
       ],
       connection: {
         protocol,
@@ -174,10 +174,10 @@ describe("View store", () => {
         parameters: {
           authSource: "admin",
           retryWrites: true,
-          w: "majority"
+          w: "majority",
         },
-        autoIndex: true
-      }
+        autoIndex: true,
+      },
     });
     expect(secretFake).to.have.been.calledWith("mongodb-view-store");
 
@@ -194,7 +194,7 @@ describe("View store", () => {
 
     const findFnResult = await viewStoreFake.lastCall.lastArg.findFn({
       query,
-      sort
+      sort,
     });
 
     expect(findFake).to.have.been.calledWith({
@@ -202,8 +202,8 @@ describe("View store", () => {
       query,
       sort,
       options: {
-        lean: true
-      }
+        lean: true,
+      },
     });
     expect(findFnResult).to.equal(foundObjs);
 
@@ -211,7 +211,7 @@ describe("View store", () => {
       query: query2,
       sort: sort2,
       parallel,
-      fn: fnFake
+      fn: fnFake,
     });
 
     expect(findFake).to.have.been.calledWith({
@@ -219,20 +219,20 @@ describe("View store", () => {
       query: query2,
       sort: sort2,
       options: {
-        lean: true
-      }
+        lean: true,
+      },
     });
     expect(steamFnResult).to.equal(foundObjs);
 
     const writeFnResult = await viewStoreFake.lastCall.lastArg.writeFn({
       root,
-      data
+      data,
     });
     expect(writeFake).to.have.been.calledWith({
       store,
       query: { "headers.root": root },
       update: {
-        $set: data
+        $set: data,
       },
       options: {
         lean: true,
@@ -240,29 +240,29 @@ describe("View store", () => {
         upsert: true,
         new: true,
         runValidators: true,
-        setDefaultsOnInsert: true
-      }
+        setDefaultsOnInsert: true,
+      },
     });
     expect(writeFnResult).to.equal(writeResult);
 
     const removeFnResult = await viewStoreFake.lastCall.lastArg.removeFn(query);
     expect(removeFake).to.have.been.calledWith({
       store,
-      query
+      query,
     });
     expect(removeFnResult).to.equal(removeResult);
 
     expect(viewStoreFake).to.have.been.calledWith({
       streamFn: match(
-        fn => expect(fn({ query, sort, parallel, fn: fnFake })).to.exist
+        (fn) => expect(fn({ query, sort, parallel, fn: fnFake })).to.exist
       ),
-      findFn: match(fn => expect(fn({ query, sort })).to.exist),
+      findFn: match((fn) => expect(fn({ query, sort })).to.exist),
       // findOneFn: match(fn => expect(fn({ root })).to.exist),
-      writeFn: match(fn => expect(fn({ root, data })).to.exist),
-      removeFn: match(fn => expect(fn(query)).to.exist),
+      writeFn: match((fn) => expect(fn({ root, data })).to.exist),
+      removeFn: match((fn) => expect(fn(query)).to.exist),
       getFn,
       // postFn,
-      putFn
+      putFn,
     });
 
     await mongodbViewStore({ schema });
@@ -281,11 +281,11 @@ describe("View store", () => {
         expect(fnFake).to.have.been.calledWith(view);
         expect(options).to.deep.equal({ parallel });
         return foundObjs;
-      }
+      },
     });
 
     const foundObjs = {
-      cursor: cursorFake
+      cursor: cursorFake,
     };
     const findFake = fake.returns(foundObjs);
     const writeFake = fake.returns(writeResult);
@@ -296,7 +296,7 @@ describe("View store", () => {
       // findOne: findOneFake,
       find: findFake,
       write: writeFake,
-      remove: removeFake
+      remove: removeFake,
     };
     replace(deps, "db", db);
 
@@ -320,7 +320,7 @@ describe("View store", () => {
       indexes,
       getFn,
       // postFn,
-      putFn
+      putFn,
     });
 
     expect(storeFake).to.have.been.calledWith({
@@ -330,9 +330,9 @@ describe("View store", () => {
           a: 1,
           b: {
             c: 2,
-            _id: false
+            _id: false,
           },
-          _id: false
+          _id: false,
         },
         headers: {
           _id: false,
@@ -341,34 +341,34 @@ describe("View store", () => {
             root: String,
             service: String,
             network: String,
-            _id: false
+            _id: false,
           },
           created: {
             type: Date,
             required: true,
-            default: match(fn => {
+            default: match((fn) => {
               const date = fn();
               return date == dateString;
-            })
+            }),
           },
           modified: {
             type: Date,
             required: true,
-            default: match(fn => {
+            default: match((fn) => {
               const date = fn();
               return date == dateString;
-            })
-          }
-        }
+            }),
+          },
+        },
       },
       indexes: [
         [{ root: 1 }],
         [
           { "headers.some-context.root": 1 },
           { "headers.some-context.service": 1 },
-          { "headers.some-context.network": 1 }
+          { "headers.some-context.network": 1 },
         ],
-        [{ "body.some-index": 1 }]
+        [{ "body.some-index": 1 }],
       ],
       connection: {
         protocol,
@@ -379,10 +379,10 @@ describe("View store", () => {
         parameters: {
           authSource: "admin",
           retryWrites: true,
-          w: "majority"
+          w: "majority",
         },
-        autoIndex: true
-      }
+        autoIndex: true,
+      },
     });
   });
   it("should call with the correct params with no root's in nested objs", async () => {
@@ -398,11 +398,11 @@ describe("View store", () => {
         expect(fnFake).to.have.been.calledWith(view);
         expect(options).to.deep.equal({ parallel });
         return foundObjs;
-      }
+      },
     });
 
     const foundObjs = {
-      cursor: cursorFake
+      cursor: cursorFake,
     };
     const findFake = fake.returns(foundObjs);
     const writeFake = fake.returns(writeResult);
@@ -413,7 +413,7 @@ describe("View store", () => {
       // findOne: findOneFake,
       find: findFake,
       write: writeFake,
-      remove: removeFake
+      remove: removeFake,
     };
     replace(deps, "db", db);
 
@@ -436,7 +436,7 @@ describe("View store", () => {
       b: { c: 2 },
       d: { type: String },
       e: { type: [{ type: { type: String } }] },
-      f: [{ g: 1 }]
+      f: [{ g: 1 }],
     };
     await mongodbViewStore({ schema, indexes, getFn, /* postFn, */ putFn });
 
@@ -447,12 +447,12 @@ describe("View store", () => {
           a: 1,
           b: {
             c: 2,
-            _id: false
+            _id: false,
           },
           d: { type: String },
           e: { type: [{ type: { type: String }, _id: false }] },
           f: [{ g: 1, _id: false }],
-          _id: false
+          _id: false,
         },
         headers: {
           _id: false,
@@ -461,45 +461,45 @@ describe("View store", () => {
             root: String,
             service: String,
             network: String,
-            _id: false
+            _id: false,
           },
           [domain]: {
             root: String,
             service: String,
             network: String,
-            _id: false
+            _id: false,
           },
           created: {
             type: Date,
             required: true,
-            default: match(fn => {
+            default: match((fn) => {
               const date = fn();
               return date == dateString;
-            })
+            }),
           },
           modified: {
             type: Date,
             required: true,
-            default: match(fn => {
+            default: match((fn) => {
               const date = fn();
               return date == dateString;
-            })
-          }
-        }
+            }),
+          },
+        },
       },
       indexes: [
         [{ root: 1 }],
         [
           { "headers.some-context.root": 1 },
           { "headers.some-context.service": 1 },
-          { "headers.some-context.network": 1 }
+          { "headers.some-context.network": 1 },
         ],
         [
           { "headers.some-domain.root": 1 },
           { "headers.some-domain.service": 1 },
-          { "headers.some-domain.network": 1 }
+          { "headers.some-domain.network": 1 },
         ],
-        [{ "body.some-index": 1 }]
+        [{ "body.some-index": 1 }],
       ],
       connection: {
         protocol,
@@ -510,10 +510,10 @@ describe("View store", () => {
         parameters: {
           authSource: "admin",
           retryWrites: true,
-          w: "majority"
+          w: "majority",
         },
-        autoIndex: true
-      }
+        autoIndex: true,
+      },
     });
   });
   it("should call with the correct params without fns", async () => {
@@ -529,11 +529,11 @@ describe("View store", () => {
         expect(fnFake).to.have.been.calledWith(view);
         expect(options).to.deep.equal({ parallel });
         return foundObjs;
-      }
+      },
     });
 
     const foundObjs = {
-      cursor: cursorFake
+      cursor: cursorFake,
     };
     const findFake = fake.returns(foundObjs);
     const writeFake = fake.returns(writeResult);
@@ -544,7 +544,7 @@ describe("View store", () => {
       // findOne: findOneFake,
       find: findFake,
       write: writeFake,
-      remove: removeFake
+      remove: removeFake,
     };
     replace(deps, "db", db);
 
@@ -567,9 +567,9 @@ describe("View store", () => {
           a: 1,
           b: {
             c: 2,
-            _id: false
+            _id: false,
           },
-          _id: false
+          _id: false,
         },
         headers: {
           _id: false,
@@ -578,45 +578,45 @@ describe("View store", () => {
             root: String,
             service: String,
             network: String,
-            _id: false
+            _id: false,
           },
           [domain]: {
             root: String,
             service: String,
             network: String,
-            _id: false
+            _id: false,
           },
           created: {
             type: Date,
             required: true,
-            default: match(fn => {
+            default: match((fn) => {
               const date = fn();
               return date == dateString;
-            })
+            }),
           },
           modified: {
             type: Date,
             required: true,
-            default: match(fn => {
+            default: match((fn) => {
               const date = fn();
               return date == dateString;
-            })
-          }
-        }
+            }),
+          },
+        },
       },
       indexes: [
         [{ root: 1 }],
         [
           { "headers.some-context.root": 1 },
           { "headers.some-context.service": 1 },
-          { "headers.some-context.network": 1 }
+          { "headers.some-context.network": 1 },
         ],
         [
           { "headers.some-domain.root": 1 },
           { "headers.some-domain.service": 1 },
-          { "headers.some-domain.network": 1 }
+          { "headers.some-domain.network": 1 },
         ],
-        [{ "body.some-index": 1 }]
+        [{ "body.some-index": 1 }],
       ],
       connection: {
         protocol,
@@ -627,10 +627,10 @@ describe("View store", () => {
         parameters: {
           authSource: "admin",
           retryWrites: true,
-          w: "majority"
+          w: "majority",
         },
-        autoIndex: true
-      }
+        autoIndex: true,
+      },
     });
     expect(secretFake).to.have.been.calledWith("mongodb-view-store");
 
@@ -641,9 +641,9 @@ describe("View store", () => {
           a: 1,
           b: {
             c: 2,
-            _id: false
+            _id: false,
           },
-          _id: false
+          _id: false,
         },
         headers: {
           _id: false,
@@ -652,45 +652,45 @@ describe("View store", () => {
             root: String,
             service: String,
             network: String,
-            _id: false
+            _id: false,
           },
           [domain]: {
             root: String,
             service: String,
             network: String,
-            _id: false
+            _id: false,
           },
           created: {
             type: Date,
             required: true,
-            default: match(fn => {
+            default: match((fn) => {
               const date = fn();
               return date == dateString;
-            })
+            }),
           },
           modified: {
             type: Date,
             required: true,
-            default: match(fn => {
+            default: match((fn) => {
               const date = fn();
               return date == dateString;
-            })
-          }
-        }
+            }),
+          },
+        },
       },
       indexes: [
         [{ root: 1 }],
         [
           { "headers.some-context.root": 1 },
           { "headers.some-context.service": 1 },
-          { "headers.some-context.network": 1 }
+          { "headers.some-context.network": 1 },
         ],
         [
           { "headers.some-domain.root": 1 },
           { "headers.some-domain.service": 1 },
-          { "headers.some-domain.network": 1 }
+          { "headers.some-domain.network": 1 },
         ],
-        [{ "body.some-index": 1 }]
+        [{ "body.some-index": 1 }],
       ],
       connection: {
         protocol,
@@ -701,10 +701,10 @@ describe("View store", () => {
         parameters: {
           authSource: "admin",
           retryWrites: true,
-          w: "majority"
+          w: "majority",
         },
-        autoIndex: true
-      }
+        autoIndex: true,
+      },
     });
     expect(secretFake).to.have.been.calledWith("mongodb-view-store");
 
@@ -721,7 +721,7 @@ describe("View store", () => {
 
     const findFnResult = await viewStoreFake.lastCall.lastArg.findFn({
       query,
-      sort
+      sort,
     });
 
     expect(findFake).to.have.been.calledWith({
@@ -729,8 +729,8 @@ describe("View store", () => {
       query,
       sort,
       options: {
-        lean: true
-      }
+        lean: true,
+      },
     });
     expect(findFnResult).to.equal(foundObjs);
 
@@ -738,7 +738,7 @@ describe("View store", () => {
       query: query2,
       sort: sort2,
       parallel,
-      fn: fnFake
+      fn: fnFake,
     });
 
     expect(findFake).to.have.been.calledWith({
@@ -746,20 +746,20 @@ describe("View store", () => {
       query: query2,
       sort: sort2,
       options: {
-        lean: true
-      }
+        lean: true,
+      },
     });
     expect(steamFnResult).to.equal(foundObjs);
 
     const writeFnResult = await viewStoreFake.lastCall.lastArg.writeFn({
       root,
-      data
+      data,
     });
     expect(writeFake).to.have.been.calledWith({
       store,
       query: { "headers.root": root },
       update: {
-        $set: data
+        $set: data,
       },
       options: {
         lean: true,
@@ -767,26 +767,26 @@ describe("View store", () => {
         upsert: true,
         new: true,
         runValidators: true,
-        setDefaultsOnInsert: true
-      }
+        setDefaultsOnInsert: true,
+      },
     });
     expect(writeFnResult).to.equal(writeResult);
 
     const removeFnResult = await viewStoreFake.lastCall.lastArg.removeFn(query);
     expect(removeFake).to.have.been.calledWith({
       store,
-      query
+      query,
     });
     expect(removeFnResult).to.equal(removeResult);
 
     expect(viewStoreFake).to.have.been.calledWith({
       streamFn: match(
-        fn => expect(fn({ query, sort, parallel, fn: fnFake })).to.exist
+        (fn) => expect(fn({ query, sort, parallel, fn: fnFake })).to.exist
       ),
-      findFn: match(fn => expect(fn({ query, sort })).to.exist),
+      findFn: match((fn) => expect(fn({ query, sort })).to.exist),
       // findOneFn: match(fn => expect(fn({ root })).to.exist),
-      writeFn: match(fn => expect(fn({ root, data })).to.exist),
-      removeFn: match(fn => expect(fn({ root })).to.exist)
+      writeFn: match((fn) => expect(fn({ root, data })).to.exist),
+      removeFn: match((fn) => expect(fn({ root })).to.exist),
     });
     await mongodbViewStore();
     expect(storeFake).to.have.been.calledOnce;
@@ -804,11 +804,11 @@ describe("View store", () => {
         expect(fnFake).to.have.been.calledWith(view);
         expect(options).to.deep.equal({ parallel });
         return foundObjs;
-      }
+      },
     });
 
     const foundObjs = {
-      cursor: cursorFake
+      cursor: cursorFake,
     };
     const findFake = fake.returns(foundObjs);
     const writeFake = fake.returns(writeResult);
@@ -819,7 +819,7 @@ describe("View store", () => {
       // findOne: findOneFake,
       find: findFake,
       write: writeFake,
-      remove: removeFake
+      remove: removeFake,
     };
     replace(deps, "db", db);
 
@@ -842,9 +842,9 @@ describe("View store", () => {
           a: 1,
           b: {
             c: 2,
-            _id: false
+            _id: false,
           },
-          _id: false
+          _id: false,
         },
         headers: {
           _id: false,
@@ -853,45 +853,45 @@ describe("View store", () => {
             root: String,
             service: String,
             network: String,
-            _id: false
+            _id: false,
           },
           [domain]: {
             root: String,
             service: String,
             network: String,
-            _id: false
+            _id: false,
           },
           created: {
             type: Date,
             required: true,
-            default: match(fn => {
+            default: match((fn) => {
               const date = fn();
               return date == dateString;
-            })
+            }),
           },
           modified: {
             type: Date,
             required: true,
-            default: match(fn => {
+            default: match((fn) => {
               const date = fn();
               return date == dateString;
-            })
-          }
-        }
+            }),
+          },
+        },
       },
       indexes: [
         [{ root: 1 }],
         [
           { "headers.some-context.root": 1 },
           { "headers.some-context.service": 1 },
-          { "headers.some-context.network": 1 }
+          { "headers.some-context.network": 1 },
         ],
         [
           { "headers.some-domain.root": 1 },
           { "headers.some-domain.service": 1 },
-          { "headers.some-domain.network": 1 }
+          { "headers.some-domain.network": 1 },
         ],
-        [{ "body.some-index": 1 }]
+        [{ "body.some-index": 1 }],
       ],
       connection: {
         protocol,
@@ -902,10 +902,10 @@ describe("View store", () => {
         parameters: {
           authSource: "admin",
           retryWrites: true,
-          w: "majority"
+          w: "majority",
         },
-        autoIndex: true
-      }
+        autoIndex: true,
+      },
     });
     expect(secretFake).to.have.been.calledWith("mongodb-view-store");
 
@@ -922,7 +922,7 @@ describe("View store", () => {
 
     const findFnResult = await viewStoreFake.lastCall.lastArg.findFn({
       query,
-      sort
+      sort,
     });
 
     expect(findFake).to.have.been.calledWith({
@@ -930,8 +930,8 @@ describe("View store", () => {
       query,
       sort,
       options: {
-        lean: true
-      }
+        lean: true,
+      },
     });
     expect(findFnResult).to.equal(foundObjs);
 
@@ -939,7 +939,7 @@ describe("View store", () => {
       query,
       sort,
       parallel,
-      fn: fnFake
+      fn: fnFake,
     });
 
     expect(findFake).to.have.been.calledWith({
@@ -947,8 +947,8 @@ describe("View store", () => {
       query,
       sort,
       options: {
-        lean: true
-      }
+        lean: true,
+      },
     });
     expect(steamFnResult).to.equal(foundObjs);
 
@@ -959,8 +959,8 @@ describe("View store", () => {
       data: {
         [mongoKey]: { a: 3 },
         [plainKey]: 5,
-        $set: { k: 9 }
-      }
+        $set: { k: 9 },
+      },
     });
     expect(writeFake).to.have.been.calledWith({
       store,
@@ -968,9 +968,9 @@ describe("View store", () => {
       update: {
         $set: {
           [plainKey]: 5,
-          k: 9
+          k: 9,
         },
-        [mongoKey]: { a: 3 }
+        [mongoKey]: { a: 3 },
       },
       options: {
         lean: true,
@@ -978,15 +978,15 @@ describe("View store", () => {
         upsert: true,
         new: true,
         runValidators: true,
-        setDefaultsOnInsert: true
-      }
+        setDefaultsOnInsert: true,
+      },
     });
     expect(writeFnResult).to.equal(writeResult);
 
     const removeFnResult = await viewStoreFake.lastCall.lastArg.removeFn(query);
     expect(removeFake).to.have.been.calledWith({
       store,
-      query
+      query,
     });
     expect(removeFnResult).to.equal(removeResult);
 

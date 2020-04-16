@@ -23,7 +23,7 @@ const envRolesBucket = ({ env, config }) => {
   }
 };
 
-const upload = async input => {
+const upload = async (input) => {
   const env = input.env;
   const rolesPath = input.path;
 
@@ -65,20 +65,18 @@ const upload = async input => {
   await uploadFile({
     bucket: envRolesBucket({ config: blossmConfig, env }),
     file: input.path,
-    destination: `${input.directory ||
+    destination: `${
+      input.directory ||
       // path.basename(path.resolve(process.cwd()))}/roles.yaml`
-      process
-        .cwd()
-        .split(path.sep)
-        .slice(-3)
-        .join("/")}/roles.yaml`
+      process.cwd().split(path.sep).slice(-3).join("/")
+    }/roles.yaml`,
   });
 
   //eslint-disable-next-line no-console
   console.log(roboSay("All done. Your roles.yaml file is uploaded."));
 };
 
-module.exports = async args => {
+module.exports = async (args) => {
   const input = await normalize({
     entrypointType: "path",
     entrypointDefault: "roles.yaml",
@@ -89,21 +87,21 @@ module.exports = async args => {
         short: "e",
         type: String,
         choices: ["production", "sandbox", "staging", "development"],
-        default: "development"
+        default: "development",
       },
       {
         name: "directory",
         short: "d",
-        type: String
-      }
-    ]
+        type: String,
+      },
+    ],
   });
   if (!input.env) {
     const { env } = await prompt({
       type: "list",
       choices: ["production", "sandbox", "staging", "development"],
       name: "env",
-      message: roboSay(`What environment is this for?`)
+      message: roboSay(`What environment is this for?`),
     });
     input.env = env;
   }

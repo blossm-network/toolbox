@@ -2,7 +2,7 @@ const logger = require("@blossm/logger");
 
 const deps = require("./deps");
 
-const formatResponse = response => {
+const formatResponse = (response) => {
   try {
     const formattedResponse = JSON.parse(response);
     return formattedResponse;
@@ -19,57 +19,45 @@ const common = ({ method, dataParam, operation, id, data }) => {
           path,
           internalTokenFn,
           externalTokenFn,
-          claims
+          claims,
         } = {}) => {
-          //TODO
-          //eslint-disable-next-line no-console
-          console.log({ operation, host, network, context });
           const internal = host == process.env.HOST;
-          //TODO
-          //eslint-disable-next-line no-console
-          console.log({ internal, internalTokenFn, externalTokenFn });
 
           const { token, type } =
             (internal
               ? await deps.operationToken({
                   tokenFn: internalTokenFn,
-                  operation
+                  operation,
                 })
               : await deps.networkToken({
                   tokenFn: externalTokenFn,
-                  network
+                  network,
                 })) || {};
 
-          //TODO
-          //eslint-disable-next-line no-console
-          console.log({ tokenRpc: token });
           const url = internal
             ? deps.operationUrl({
                 operation,
                 host,
                 ...(path && { path }),
-                ...(id && { id })
+                ...(id && { id }),
               })
             : deps.networkUrl({
                 host,
                 ...(path && { path }),
-                ...(id && { id })
+                ...(id && { id }),
               });
 
-          //TODO
-          //eslint-disable-next-line no-console
-          console.log({ url, data });
           const response = await method(url, {
             [dataParam]: {
               ...(data && { ...data }),
               ...(context && { context }),
-              ...(claims && { claims })
+              ...(claims && { claims }),
             },
             ...(token && {
               headers: {
-                Authorization: `${type} ${token}`
-              }
-            })
+                Authorization: `${type} ${token}`,
+              },
+            }),
           });
 
           if (response.statusCode >= 300) {
@@ -79,38 +67,38 @@ const common = ({ method, dataParam, operation, id, data }) => {
               data,
               context,
               network,
-              token
+              token,
             });
             throw deps.constructError({
               statusCode: response.statusCode,
               message: response.body
                 ? JSON.parse(response.body).message || "Not specified"
-                : null
+                : null,
             });
           }
           if (response.statusCode == 204) return null;
 
           return formatResponse(response.body);
-        }
+        },
       };
-    }
+    },
   };
 };
 
 module.exports = (...operation) => {
   return {
-    post: data =>
+    post: (data) =>
       common({
         method: deps.post,
         dataParam: "body",
         operation,
-        data
+        data,
       }),
     put: (id, data) =>
       common({ method: deps.put, dataParam: "body", operation, id, data }),
-    delete: id =>
+    delete: (id) =>
       common({ method: deps.delete, dataParam: "body", operation, id }),
-    get: query => {
+    get: (query) => {
       const id = query.id;
       delete query.id;
       return common({
@@ -118,8 +106,8 @@ module.exports = (...operation) => {
         dataParam: "query",
         operation,
         id,
-        data: query
+        data: query,
       });
-    }
+    },
   };
 };

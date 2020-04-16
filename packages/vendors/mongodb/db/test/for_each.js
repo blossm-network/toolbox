@@ -13,23 +13,23 @@ describe("For each", () => {
     const data = "some-data";
     const on = (param, fn) => {
       switch (param) {
-      case "data":
-        fn(data);
-        return { on };
-      case "error":
-        return { on };
-      case "end":
-        return fn();
+        case "data":
+          fn(data);
+          return { on };
+        case "error":
+          return { on };
+        case "end":
+          return fn();
       }
     };
     const cursorFake = fake.returns({
-      on
+      on,
     });
     const findFake = fake.returns({
-      cursor: cursorFake
+      cursor: cursorFake,
     });
     const store = {
-      find: findFake
+      find: findFake,
     };
 
     const fnFake = fake();
@@ -48,24 +48,24 @@ describe("Throws", () => {
     const data = "some-data";
     const on = (param, fn) => {
       switch (param) {
-      case "data":
-        fn(data);
-        return { on };
-      case "error":
-        fn(error);
-        return { on };
-      case "end":
-        return fn();
+        case "data":
+          fn(data);
+          return { on };
+        case "error":
+          fn(error);
+          return { on };
+        case "end":
+          return fn();
       }
     };
     const cursorFake = fake.returns({
-      on
+      on,
     });
     const findFake = fake.returns({
-      cursor: cursorFake
+      cursor: cursorFake,
     });
     const store = {
-      find: findFake
+      find: findFake,
     };
 
     const fnFake = fake();

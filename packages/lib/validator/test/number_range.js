@@ -23,7 +23,7 @@ describe("Optional range", () => {
     const response = numberRange(null, {
       upperBound: 1,
       lowerBound: 0,
-      optional: true
+      optional: true,
     });
     expect(response.errors).to.be.empty;
   });
@@ -42,7 +42,7 @@ describe("Invalid range", () => {
     const response = numberRange(1, {
       upperBound: 3,
       lowerBound: 2,
-      optional: true
+      optional: true,
     });
     expect(response.errors).to.have.lengthOf(1);
   });

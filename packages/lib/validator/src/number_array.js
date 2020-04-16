@@ -8,7 +8,7 @@ module.exports = (
     refinementMessageFn,
     title,
     path,
-    optional
+    optional,
   } = {}
 ) =>
   numberArrayValidator({
@@ -18,5 +18,5 @@ module.exports = (
     baseMessageFn,
     refinementMessageFn,
     optional,
-    refinementFn
+    refinementFn,
   });

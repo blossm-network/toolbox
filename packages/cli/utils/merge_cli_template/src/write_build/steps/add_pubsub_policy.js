@@ -11,7 +11,7 @@ module.exports = ({ region, serviceName, project }) => {
       "--platform=managed",
       "--role=roles/run.invoker",
       `--project=${project}`,
-      `--region=${region}`
-    ]
+      `--region=${region}`,
+    ],
   };
 };

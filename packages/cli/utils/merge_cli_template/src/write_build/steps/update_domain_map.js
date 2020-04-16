@@ -8,7 +8,7 @@ module.exports = ({ uri }) => {
       oneLine`
       gcloud beta run domain-mappings update ${uri} 
       --certificate-management=automatic
-      `
-    ]
+      `,
+    ],
   };
 };

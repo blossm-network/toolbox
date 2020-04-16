@@ -13,8 +13,8 @@ module.exports = (
     baseMessageFn,
     refinementMessageFn: (_, title) =>
       `This ${title.toLowerCase()} is not a valid two-letter country code.`,
-    refinementFn: code => codes.includes(code.toUpperCase()),
-    optional
+    refinementFn: (code) => codes.includes(code.toUpperCase()),
+    optional,
   });
 
 const codes = [
@@ -266,5 +266,5 @@ const codes = [
   "EH",
   "YE",
   "ZM",
-  "ZW"
+  "ZW",
 ];

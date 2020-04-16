@@ -7,7 +7,7 @@ module.exports = async ({ bucket: bucketName, destination, file }) => {
 
   if (file) {
     await bucket.file(file).download({
-      destination
+      destination,
     });
   } else {
     const [files] = await bucket.getFiles();
@@ -19,7 +19,7 @@ module.exports = async ({ bucket: bucketName, destination, file }) => {
       await file.download({
         destination: `${fileName}${
           counter == 0 ? "" : `_${counter}`
-        }.${fileExtension}`
+        }.${fileExtension}`,
       });
       counter++;
     }

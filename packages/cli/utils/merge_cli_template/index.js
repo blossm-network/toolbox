@@ -14,7 +14,7 @@ const writeCompose = require("./src/write_compose");
 const writeBuild = require("./src/write_build");
 const resolveTransientInfo = require("./src/resolve_transient_info");
 
-const envUriSpecifier = env => {
+const envUriSpecifier = (env) => {
   switch (env) {
     case "sandbox":
       return "snd.";
@@ -32,30 +32,14 @@ const envDependencyKeyEnvironmentVariables = ({ env, config }) => {
   let environmentVariables = {};
 
   for (const network in config.dependencies) {
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log({ network });
-    const baseName = network
-      .toUpperCase()
-      .split(".")
-      .join("_");
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log({ baseName });
+    const baseName = network.toUpperCase().split(".").join("_");
     const { id, secretName } = config.dependencies[network].keys[env];
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log({ id, secretName });
     environmentVariables = {
       ...environmentVariables,
       [`${baseName}_KEY_ID`]: id,
-      [`${baseName}_KEY_SECRET_NAME`]: secretName
+      [`${baseName}_KEY_SECRET_NAME`]: secretName,
     };
   }
-
-  //TODO
-  //eslint-disable-next-line no-console
-  console.log({ environmentVariables });
 
   return environmentVariables;
 };
@@ -301,32 +285,32 @@ const copySource = async (p, workingDir) => {
     process.exit(1);
   }
   await copy(srcDir, workingDir, {
-    clobber: false
+    clobber: false,
   });
 };
 
 const topicsForDependencies = (config, events) => {
   const array = (events || [])
-    .map(e => `did-${e.action}.${e.domain}.${e.service || config.service}`)
+    .map((e) => `did-${e.action}.${e.domain}.${e.service || config.service}`)
     .concat(
       (config.procedure == "command-gateway" &&
         config.commands.some(
-          c => c.protection == undefined || c.protection == "strict"
+          (c) => c.protection == undefined || c.protection == "strict"
         )) ||
         (config.procedure == "view-gateway" &&
           config.stores.some(
-            s => s.protection == undefined || s.protection == "strict"
+            (s) => s.protection == undefined || s.protection == "strict"
           )) ||
         (config.procedure == "fact-gateway" &&
           config.jobs.some(
-            j => j.protection == undefined || j.protection == "strict"
+            (j) => j.protection == undefined || j.protection == "strict"
           ))
         ? [
             "did-start.session.core",
             "did-upgrade.session.core",
             "did-register.identity.core",
             "did-create.role.core",
-            "did-add-roles.principle.core"
+            "did-add-roles.principle.core",
           ]
         : []
     );
@@ -336,13 +320,10 @@ const topicsForDependencies = (config, events) => {
 const eventStoreDependencies = ({ dependencies }) => {
   let result = [];
   for (const dependency of dependencies) {
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log({ dependency });
     if (
       dependency.procedure == "command" &&
       ![...dependencies, ...result].some(
-        d =>
+        (d) =>
           d.procedure == "event-store" &&
           d.domain == dependency.domain &&
           d.service == dependency.service
@@ -351,13 +332,10 @@ const eventStoreDependencies = ({ dependencies }) => {
       result.push({
         procedure: "event-store",
         service: dependency.service,
-        domain: dependency.domain
+        domain: dependency.domain,
       });
     }
   }
-  //TODO
-  //eslint-disable-next-line no-console
-  console.log({ result });
   return result;
 };
 
@@ -368,32 +346,32 @@ const addDefaultDependencies = ({ config, coreNetwork }) => {
       domain: "session",
       service: "core",
       network: coreNetwork,
-      procedure: "command"
+      procedure: "command",
     },
     {
       domain: "session",
       service: "core",
       network: coreNetwork,
-      procedure: "event-store"
+      procedure: "event-store",
     },
     {
       domain: "role",
       service: "core",
       network: coreNetwork,
-      procedure: "event-store"
+      procedure: "event-store",
     },
     {
       domain: "principle",
       service: "core",
       network: coreNetwork,
-      procedure: "event-store"
+      procedure: "event-store",
     },
     {
       domain: "identity",
       service: "core",
       network: coreNetwork,
-      procedure: "event-store"
-    }
+      procedure: "event-store",
+    },
   ];
 
   switch (config.procedure) {
@@ -401,13 +379,13 @@ const addDefaultDependencies = ({ config, coreNetwork }) => {
       return [
         ...config.testing.dependencies,
         ...eventStoreDependencies({
-          dependencies: config.testing.dependencies
+          dependencies: config.testing.dependencies,
         }),
         {
           domain: config.domain,
           service: config.service,
-          procedure: "event-store"
-        }
+          procedure: "event-store",
+        },
       ];
     case "projection":
       return [
@@ -417,26 +395,26 @@ const addDefaultDependencies = ({ config, coreNetwork }) => {
           ...(config.domain && { domain: config.domain }),
           ...(config.service && { domain: config.service }),
           context: config.context,
-          procedure: "view-store"
-        }
+          procedure: "view-store",
+        },
       ];
     case "command-gateway": {
       const dependencies = [
         ...(config.commands.some(
-          c => c.protection == undefined || c.protection == "strict"
+          (c) => c.protection == undefined || c.protection == "strict"
         )
           ? tokenDependencies
           : []),
         ...config.commands
-          .filter(c => c.network == undefined)
-          .map(command => {
+          .filter((c) => c.network == undefined)
+          .map((command) => {
             return {
               name: command.name,
               domain: config.domain,
               service: config.service,
-              procedure: "command"
+              procedure: "command",
             };
-          })
+          }),
       ];
       return [...eventStoreDependencies({ dependencies }), ...dependencies];
     }
@@ -444,40 +422,40 @@ const addDefaultDependencies = ({ config, coreNetwork }) => {
       return [
         ...tokenDependencies,
         ...(config.stores.some(
-          s => s.protection == undefined || s.protection == "strict"
+          (s) => s.protection == undefined || s.protection == "strict"
         )
           ? tokenDependencies
           : []),
         ...config.stores
-          .filter(s => s.network == undefined)
-          .map(store => {
+          .filter((s) => s.network == undefined)
+          .map((store) => {
             return {
               name: store.name,
               ...(config.domain && { domain: config.domain }),
               ...(config.service && { service: config.service }),
               context: config.context,
-              procedure: "view-store"
+              procedure: "view-store",
             };
-          })
+          }),
       ];
     case "fact-gateway":
       return [
         ...tokenDependencies,
         ...(config.jobs.some(
-          j => j.protection == undefined || j.protection == "strict"
+          (j) => j.protection == undefined || j.protection == "strict"
         )
           ? tokenDependencies
           : []),
         ...config.facts
-          .filter(f => f.network == undefined)
-          .map(fact => {
+          .filter((f) => f.network == undefined)
+          .map((fact) => {
             return {
               name: fact.name,
               ...(config.domain && { domain: config.domain }),
               ...(config.service && { service: config.service }),
-              procedure: "fact"
+              procedure: "fact",
             };
-          })
+          }),
       ];
     default:
       return config.testing.dependencies;
@@ -493,14 +471,10 @@ const writeConfig = ({ config, coreNetwork, workingDir }) => {
     addDefaultDependencies({ config, coreNetwork })
   );
 
-  //TODO
-  //eslint-disable-next-line no-console
-  console.log({ allDeps: dependencies });
-
   config.testing = {
     ...config.testing,
     dependencies,
-    topics: topicsForDependencies(config, events)
+    topics: topicsForDependencies(config, events),
   };
 
   delete config.testing.events;
@@ -511,11 +485,11 @@ const writeConfig = ({ config, coreNetwork, workingDir }) => {
 const writePackage = ({ config, baseConfig, workingDir }) => {
   const dependencies = {
     ...baseConfig.dependencies,
-    ...(config.dependencies || {})
+    ...(config.dependencies || {}),
   };
   const devDependencies = {
     ...baseConfig.devDependencies,
-    ...config.devDependencies
+    ...config.devDependencies,
   };
 
   for (const key in dependencies) {
@@ -530,10 +504,10 @@ const writePackage = ({ config, baseConfig, workingDir }) => {
       "test:base-unit": "mocha --recursive base_test/unit",
       "test:base-integration":
         "mocha --recursive base_test/integration --timeout 40000",
-      "test:integration": "mocha --recursive test/integration --timeout 40000"
+      "test:integration": "mocha --recursive test/integration --timeout 40000",
     },
     dependencies,
-    devDependencies
+    devDependencies,
   };
 
   const packagePath = path.resolve(workingDir, "package.json");
@@ -579,11 +553,11 @@ const configure = async (workingDir, configFn, env, strict) => {
 
     const twilioSendingPhoneNumber = envTwilioSendingPhoneNumber({
       env,
-      config: blossmConfig
+      config: blossmConfig,
     });
     const twilioTestReceivingPhoneNumber = envTwilioTestReceivingPhoneNumber({
       env,
-      config: blossmConfig
+      config: blossmConfig,
     });
     const secretBucketKeyLocation = "global";
     const secretBucketKeyRing = "secrets-bucket";
@@ -592,7 +566,7 @@ const configure = async (workingDir, configFn, env, strict) => {
     const coreContainerRegistery = blossmConfig.core
       ? envCoreContainerRegistry({
           env,
-          config: blossmConfig
+          config: blossmConfig,
         })
       : containerRegistery;
 
@@ -635,7 +609,7 @@ const configure = async (workingDir, configFn, env, strict) => {
       actions,
       strict,
       dependencyKeyEnvironmentVariables,
-      ...configFn(config)
+      ...configFn(config),
     });
 
     writeCompose({
@@ -663,7 +637,7 @@ const configure = async (workingDir, configFn, env, strict) => {
       twilioSendingPhoneNumber,
       twilioTestReceivingPhoneNumber,
       dependencyKeyEnvironmentVariables,
-      ...configFn(config)
+      ...configFn(config),
     });
   } catch (e) {
     //eslint-disable-next-line no-console
@@ -686,7 +660,7 @@ module.exports = async ({
   path,
   env,
   dry,
-  configFn
+  configFn,
 }) => {
   await copyTemplate(__dirname, workingDir);
   await copyScript(scriptDir, workingDir);

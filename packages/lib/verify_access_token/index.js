@@ -5,17 +5,13 @@ let publicKey;
 
 module.exports = ({ url, algorithm = "SHA256" }) => async ({
   message,
-  signature
+  signature,
 }) => {
   if (!publicKey) {
     const response = await deps.get(url);
     const { key } = JSON.parse(response.body);
     publicKey = key;
   }
-
-  //TODO
-  //eslint-disable-next-line
-  console.log({ publicKey, signature, algorithm, url });
 
   return crypto
     .createVerify(algorithm)

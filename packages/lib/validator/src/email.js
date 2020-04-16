@@ -13,5 +13,5 @@ module.exports = (
     refinementMessageFn: (_, title) =>
       `This ${title.toLowerCase()} isn't formatted right, maybe it’s a typo? Try again after making a change to it.`,
     refinementFn: emailValidator,
-    optional
+    optional,
   });

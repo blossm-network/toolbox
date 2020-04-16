@@ -24,7 +24,7 @@ describe("Optional objects", () => {
 
 describe("Invalid object", () => {
   it("should contain one error if something other than a object is passed in", () => {
-    invalidObjects.forEach(invalidObject => {
+    invalidObjects.forEach((invalidObject) => {
       let response = object(invalidObject);
       expect(response.errors).to.have.lengthOf(1);
     });
@@ -33,7 +33,7 @@ describe("Invalid object", () => {
 
 describe("Invalid optional object", () => {
   it("should contain one error if something other than a object is passed in, regardless of optional flag", () => {
-    invalidObjects.forEach(invalidObject => {
+    invalidObjects.forEach((invalidObject) => {
       let response = object(invalidObject, { optional: true });
       expect(response.errors).to.have.lengthOf(1);
     });

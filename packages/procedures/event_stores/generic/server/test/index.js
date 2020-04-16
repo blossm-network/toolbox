@@ -20,13 +20,13 @@ describe("Event store", () => {
     const eventStore = require("..");
     const listenFake = fake();
     const postFake = fake.returns({
-      listen: listenFake
+      listen: listenFake,
     });
     const getFake = fake.returns({
-      post: postFake
+      post: postFake,
     });
     const serverFake = fake.returns({
-      get: getFake
+      get: getFake,
     });
     replace(deps, "server", serverFake);
     const eventStoreGetResult = "some-get-result";
@@ -40,19 +40,19 @@ describe("Event store", () => {
       reserveRootCountsFn,
       saveEventsFn,
       queryFn,
-      publishFn
+      publishFn,
     });
     expect(listenFake).to.have.been.calledOnce;
     expect(serverFake).to.have.been.calledOnce;
     expect(getFake).to.have.been.calledWith(eventStoreGetResult, {
-      path: "/:root?"
+      path: "/:root?",
     });
     expect(postFake).to.have.been.calledWith(eventStorePostResult);
     expect(eventStoreGetFake).to.have.been.calledWith({ aggregateFn, queryFn });
     expect(eventStorePostFake).to.have.been.calledWith({
       saveEventsFn,
       reserveRootCountsFn,
-      publishFn
+      publishFn,
     });
   });
 });

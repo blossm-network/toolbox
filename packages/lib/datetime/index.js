@@ -31,5 +31,5 @@ module.exports = {
   componentsFromMoment,
   componentsFromTimestamp,
   momentFromComponents,
-  timestampFromComponents
+  timestampFromComponents,
 };

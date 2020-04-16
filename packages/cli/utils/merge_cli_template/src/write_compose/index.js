@@ -8,7 +8,7 @@ const databaseService = require("./database_service");
 
 const databaseServiceKey = "db";
 
-const includeDatabase = config => {
+const includeDatabase = (config) => {
   switch (config.procedure) {
     case "view-store":
     case "event-store":
@@ -42,7 +42,7 @@ module.exports = ({
   secretBucket,
   twilioSendingPhoneNumber,
   twilioTestReceivingPhoneNumber,
-  dependencyKeyEnvironmentVariables
+  dependencyKeyEnvironmentVariables,
 }) => {
   const mongodbUser = "tester";
   const mongodbUserPassword = "password";
@@ -82,7 +82,7 @@ module.exports = ({
     mongodbProtocol,
     twilioSendingPhoneNumber,
     twilioTestReceivingPhoneNumber,
-    dependencyKeyEnvironmentVariables
+    dependencyKeyEnvironmentVariables,
   });
 
   const compose = {
@@ -117,12 +117,12 @@ module.exports = ({
           mongodbProtocol,
           twilioSendingPhoneNumber,
           twilioTestReceivingPhoneNumber,
-          dependencyKeyEnvironmentVariables
+          dependencyKeyEnvironmentVariables,
         }),
         depends_on: [
           ...(_includeDatabase ? [databaseServiceKey] : []),
-          ...Object.keys(_procedureServices)
-        ]
+          ...Object.keys(_procedureServices),
+        ],
       },
       ..._procedureServices,
       ...(_includeDatabase && {
@@ -132,17 +132,17 @@ module.exports = ({
           adminDatabase: mongodbAdminDatabase,
           database: mongodbDatabase,
           user: mongodbUser,
-          userPassword: mongodbUserPassword
-        })
-      })
+          userPassword: mongodbUserPassword,
+        }),
+      }),
     },
     networks: {
       default: {
         external: {
-          name: "cloudbuild"
-        }
-      }
-    }
+          name: "cloudbuild",
+        },
+      },
+    },
   };
 
   const composePath = path.resolve(workingDir, "docker-compose.yaml");

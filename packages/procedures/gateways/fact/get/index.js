@@ -4,17 +4,17 @@ module.exports = ({
   name,
   domain,
   internalTokenFn,
-  externalTokenFn
+  externalTokenFn,
 } = {}) => async (req, res) => {
   const response = await deps
     .fact({
       name,
-      domain
+      domain,
     })
     .set({
       tokenFns: { internal: internalTokenFn, external: externalTokenFn },
       context: req.context,
-      claims: req.claims
+      claims: req.claims,
     })
     .read(req.query);
 

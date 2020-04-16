@@ -6,22 +6,18 @@ module.exports = async ({
   keyClaimsFn,
   audience,
   algorithm,
-  allowBasic = false
+  allowBasic = false,
 }) => {
   const tokens = deps.tokensFromReq(req);
 
   const jwt = tokens.bearer || tokens.cookie;
-
-  //TODO
-  //eslint-disable-next-line no-console
-  console.log("AUTHENTICATIN!: ", { audience, tokens, jwt });
 
   if (jwt) {
     const claims = await deps.validate({
       token: jwt,
       verifyFn,
       audience,
-      algorithm
+      algorithm,
     });
     return claims;
   } else if (tokens.basic && allowBasic && keyClaimsFn) {
@@ -32,8 +28,5 @@ module.exports = async ({
     return claims;
   }
 
-  //TODO
-  //eslint-disable-next-line no-console
-  console.log("AUTHENTICATE BAD: ", { tokens, jwt, context });
   throw deps.invalidCredentialsError.tokenInvalid();
 };

@@ -8,22 +8,22 @@ module.exports = async ({
   removeFn,
   queryFn,
   // postFn,
-  putFn
+  putFn,
 } = {}) => {
   deps
     .server()
     .get(deps.stream({ streamFn, ...(queryFn && { queryFn }) }), {
-      path: "/stream"
+      path: "/stream",
     })
     .get(deps.get({ findFn, /* findOneFn, */ ...(queryFn && { queryFn }) }), {
-      path: "/:root?"
+      path: "/:root?",
     })
     // .post(deps.post({ writeFn, ...(postFn && { dataFn: postFn }) }))
     .put(deps.put({ writeFn, ...(putFn && { viewFn: putFn }) }), {
-      path: "/:root"
+      path: "/:root",
     })
     .delete(deps.delete({ removeFn }), {
-      path: "/:root"
+      path: "/:root",
     })
     .listen();
 };

@@ -19,10 +19,6 @@ describe("Creates correctly", () => {
   it("it should return a moment that equals now", async () => {
     const nowTimestamp = now.getTime();
 
-    expect(
-      moment()
-        .utc()
-        .valueOf()
-    ).to.equal(nowTimestamp);
+    expect(moment().utc().valueOf()).to.equal(nowTimestamp);
   });
 });

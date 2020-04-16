@@ -3,21 +3,21 @@ const { string: stringValidator } = require("@blossm/validation");
 const maxPasswordLength = 30;
 const minPasswordLength = 8;
 
-let isLongEnough = string => {
+let isLongEnough = (string) => {
   return string.length >= minPasswordLength;
 };
 
-let isShortEnough = string => {
+let isShortEnough = (string) => {
   return string.length <= maxPasswordLength;
 };
 
-let hasAcceptableSymbol = string => {
+let hasAcceptableSymbol = (string) => {
   return (
     string.search(/[\!\@\#\$\%\^\&\*\(\)\_\+\-\?\>\<\,\.\/\|\]\[\}\{\]\~]/) > -1
   );
 };
 
-let hasUnsupportedChar = string => {
+let hasUnsupportedChar = (string) => {
   return (
     string.search(
       /[^a-zA-Z0-9\!\@\#\$\%\^\&\*\(\)\_\+\-\?\>\<\,\.\/\|\]\[\}\{\]\~]/
@@ -25,15 +25,15 @@ let hasUnsupportedChar = string => {
   );
 };
 
-let hasNumber = string => {
+let hasNumber = (string) => {
   return string.search(/\d/) > -1;
 };
 
-let hasLetter = string => {
+let hasLetter = (string) => {
   return string.search(/[a-zA-Z]/) > -1;
 };
 
-let isFormattedCorrectly = string => {
+let isFormattedCorrectly = (string) => {
   return (
     hasNumber(string) &&
     hasLetter(string) &&
@@ -51,7 +51,7 @@ module.exports = (
     title,
     path,
     baseMessageFn,
-    refinementFn: password => {
+    refinementFn: (password) => {
       return (
         isLongEnough(password) &&
         isShortEnough(password) &&
@@ -69,5 +69,5 @@ module.exports = (
         return `This ${password} should have a number, letter, and symbol. It’s safer that way.`;
       }
     },
-    optional
+    optional,
   });
