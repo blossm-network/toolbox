@@ -6,7 +6,7 @@
 domain: some-domain
 service: core
 
-jobs:
+facts:
   - name: some-name
     privileges:
       - some-privilege

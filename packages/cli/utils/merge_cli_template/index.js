@@ -302,8 +302,8 @@ const topicsForDependencies = (config, events) => {
             (s) => s.protection == undefined || s.protection == "strict"
           )) ||
         (config.procedure == "fact-gateway" &&
-          config.jobs.some(
-            (j) => j.protection == undefined || j.protection == "strict"
+          config.facts.some(
+            (f) => f.protection == undefined || f.protection == "strict"
           ))
         ? [
             "did-start.session.core",
@@ -441,8 +441,8 @@ const addDefaultDependencies = ({ config, coreNetwork }) => {
     case "fact-gateway":
       return [
         ...tokenDependencies,
-        ...(config.jobs.some(
-          (j) => j.protection == undefined || j.protection == "strict"
+        ...(config.facts.some(
+          (f) => f.protection == undefined || f.protection == "strict"
         )
           ? tokenDependencies
           : []),
