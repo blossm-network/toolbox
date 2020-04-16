@@ -8,9 +8,17 @@
  *
  */
 
-//const deps = require("./deps");
+const deps = require("./deps");
 
 module.exports = async ({ query, params, context, claims }) => {
+  await deps
+    .eventStore({
+      domain: "some-domain",
+      service: "some-service",
+    })
+    .set({ tokenFns: { internal: deps.gcpToken } })
+    .aggregate("some-root");
+
   //eslint-disable-next-line no-console
   console.log("Do something with: ", { query, params, context, claims });
 };

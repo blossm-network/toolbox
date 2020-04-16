@@ -11,6 +11,8 @@ domain: some-domain
 service: core
 
 dependencies:
+  "@blossm/event-store-rpc": "*"
+  "@blossm/gcp-token": "*"
 
 devDependencies:
   "mocha": "^7.1.1"
@@ -18,10 +20,12 @@ devDependencies:
   "sinon": "^7.3.2"
   "sinon-chai": "^3.5.0"
   "chai-datetime": "^1.5.0"
-  "@blossm/request": "*"
 
 testing:
   dependencies:
+    - domain: some-domain
+      procedure: event-store
+      service: some-service
 
   steps:
     - pre:

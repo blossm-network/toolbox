@@ -9,7 +9,7 @@ const { red } = require("chalk");
 const copy = promisify(ncp);
 
 const installDependenciesIfNeeded = async (workingDir, input) => {
-  const lockFile = "package-lock.json";
+  const lockFile = "yarn.lock";
 
   const lock = path.resolve(workingDir, lockFile);
 

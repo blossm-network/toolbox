@@ -89,7 +89,7 @@ describe("View store delete", () => {
       send: sendFake,
     };
 
-    const error = new Error("Missing query parameter in the url's query.");
+    const error = new Error();
     const messageFake = fake.returns(error);
     replace(deps, "badRequestError", {
       message: messageFake,
