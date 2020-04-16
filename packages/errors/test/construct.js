@@ -9,7 +9,7 @@ describe("Construct", () => {
       statusCode: 400,
       code: "BadRequest",
       info: {},
-      message
+      message,
     });
   });
   it("401 correct", () => {
@@ -18,7 +18,7 @@ describe("Construct", () => {
       statusCode: 401,
       code: "Unauthorized",
       info: {},
-      message
+      message,
     });
   });
   it("409 correct", () => {
@@ -27,7 +27,7 @@ describe("Construct", () => {
       statusCode: 409,
       code: "InvalidArgument",
       info: {},
-      message
+      message,
     });
   });
   it("404 correct", () => {
@@ -36,7 +36,7 @@ describe("Construct", () => {
       statusCode: 403,
       code: "Forbidden",
       info: {},
-      message
+      message,
     });
   });
   it("404 correct", () => {
@@ -45,7 +45,7 @@ describe("Construct", () => {
       statusCode: 404,
       code: "ResourceNotFound",
       info: {},
-      message
+      message,
     });
   });
   it("500 correct", () => {
@@ -54,7 +54,7 @@ describe("Construct", () => {
       statusCode: 500,
       code: "InternalServer",
       info: {},
-      message
+      message,
     });
   });
 });
