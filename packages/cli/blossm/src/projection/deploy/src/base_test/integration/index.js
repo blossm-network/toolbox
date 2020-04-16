@@ -17,6 +17,10 @@ const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 describe("Projection integration tests", () => {
   it("should return successfully", async () => {
     const parallelFns = [];
+    const contextRoot = "some-context-root";
+    const contextService = "some-context-service";
+    const contextNetwork = "some-context-network";
+
     for (const example of testing.examples) {
       const response = await request.post(url, {
         body: {
@@ -25,7 +29,13 @@ describe("Projection integration tests", () => {
               JSON.stringify({
                 headers: {
                   ...example.headers,
-                  context: example.context,
+                  context: {
+                    [context]: {
+                      root: contextRoot,
+                      service: contextService,
+                      network: contextNetwork
+                    }
+                  },
                   root: example.root
                 },
                 payload: example.payload
@@ -43,11 +53,21 @@ describe("Projection integration tests", () => {
           ...(domain && { domain }),
           ...(service && { service }),
           context
-        }).read(
-          example.result.root
-            ? { root: example.result.root }
-            : example.result.query
-        );
+        })
+          .set({
+            context: {
+              [context]: {
+                root: contextRoot,
+                service: contextService,
+                network: contextNetwork
+              }
+            }
+          })
+          .read(
+            example.result.root
+              ? { root: example.result.root }
+              : example.result.query
+          );
 
         //TODO
         //eslint-disable-next-line
