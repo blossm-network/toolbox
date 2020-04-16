@@ -23,7 +23,7 @@ const config = require("./config.json");
 let defaultRoles;
 
 module.exports = gateway({
-  jobs: config.jobs,
+  facts: config.facts,
   whitelist: config.whitelist,
   algorithm: "ES256",
   audience: process.env.NETWORK,
