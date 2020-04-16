@@ -13,6 +13,9 @@ const contextRoot = "some-context-root";
 const contextService = "some-context-service";
 const contextNetwork = "some-context-network";
 
+const domainRoot =
+  process.env.DOMAIN && process.env.SERVICE ? "some-domain-root" : null;
+
 const makeQuery = (properties, example) => {
   let obj = {};
   for (const property in properties) {
@@ -40,46 +43,37 @@ describe("View store base integration tests", () => {
               root: contextRoot,
               service: contextService,
               network: contextNetwork
-            }
+            },
+            ...(domainRoot && {
+              [process.env.DOMAIN]: {
+                root: domainRoot,
+                service: process.env.SERVICE,
+                network: process.env.NETWORK
+              }
+            })
           }
         }
       }
-    });
-
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log({
-      a: 1,
-      context: process.env.CONTEXT,
-      domain: process.env.DOMAIN,
-      service: process.env.SERVICE,
-      response0
     });
 
     expect(response0.statusCode).to.equal(204);
 
-    const response1 = await request.get(`${url}${root ? `/${root}` : ""}`, {
-      query: {
-        context: {
-          [process.env.CONTEXT]: {
-            root: contextRoot,
-            service: contextService,
-            network: contextNetwork
+    const response1 = await request.get(
+      `${url}${domainRoot ? `/${domainRoot}` : ""}`,
+      {
+        query: {
+          context: {
+            [process.env.CONTEXT]: {
+              root: contextRoot,
+              service: contextService,
+              network: contextNetwork
+            }
           }
         }
       }
-    });
-
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log({ b: 2, response1 });
+    );
 
     const [parsedBody1] = JSON.parse(response1.body);
-    // const root = parsedBody1.headers.root;
-
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log({ parsedBody1 });
 
     expect(response1.statusCode).to.equal(200);
     for (const key in example0.get) {
@@ -98,37 +92,37 @@ describe("View store base integration tests", () => {
               service: contextService,
               network: contextNetwork
             }
-          }
+          },
+          ...(domainRoot && {
+            [process.env.DOMAIN]: {
+              root: domainRoot,
+              service: process.env.SERVICE,
+              network: process.env.NETWORK
+            }
+          })
         }
       }
     });
-
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log({ response2 });
 
     expect(response2.statusCode).to.equal(204);
 
-    const response3 = await request.get(`${url}/${root}`, {
-      query: {
-        context: {
-          [process.env.CONTEXT]: {
-            root: contextRoot,
-            service: contextService,
-            network: contextNetwork
+    const response3 = await request.get(
+      `${url}${domainRoot ? `/domainRoot` : ""}`,
+      {
+        query: {
+          context: {
+            [process.env.CONTEXT]: {
+              root: contextRoot,
+              service: contextService,
+              network: contextNetwork
+            }
           }
         }
       }
-    });
+    );
 
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log({ response3 });
     expect(response3.statusCode).to.equal(200);
     const [parsedBody3] = JSON.parse(response3.body);
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log({ parsedBody3 });
     for (const key in example1.get) {
       expect(parsedBody3[key]).to.deep.equal(example1.get[key]);
     }
@@ -158,7 +152,14 @@ describe("View store base integration tests", () => {
             root: contextRoot,
             service: contextService,
             network: contextNetwork
-          }
+          },
+          ...(domainRoot && {
+            [process.env.DOMAIN]: {
+              root: domainRoot,
+              service: process.env.SERVICE,
+              network: process.env.NETWORK
+            }
+          })
         }
       }
     });
@@ -168,16 +169,19 @@ describe("View store base integration tests", () => {
     ///Test indexes
     for (const index of indexes) {
       const query = makeQuery(index[0], example0.query);
-      const response1 = await request.get(url, {
-        query: {
-          query,
-          [process.env.CONTEXT]: {
-            root: contextRoot,
-            service: contextService,
-            network: contextNetwork
+      const response1 = await request.get(
+        `${url}${domainRoot ? `/${domainRoot}` : ""}`,
+        {
+          query: {
+            query,
+            [process.env.CONTEXT]: {
+              root: contextRoot,
+              service: contextService,
+              network: contextNetwork
+            }
           }
         }
-      });
+      );
       expect(response1.statusCode).to.equal(200);
 
       const [parsedBody4] = JSON.parse(response1.body);
@@ -211,11 +215,19 @@ describe("View store base integration tests", () => {
               root: contextRoot,
               service: contextService,
               network: contextNetwork
-            }
+            },
+            ...(domainRoot && {
+              [process.env.DOMAIN]: {
+                root: domainRoot,
+                service: process.env.SERVICE,
+                network: process.env.NETWORK
+              }
+            })
           }
         }
       }
     });
+
     expect(response.statusCode).to.equal(204);
     const response1 = await request.put(`${url}/${root1}`, {
       body: {
@@ -226,7 +238,14 @@ describe("View store base integration tests", () => {
               root: contextRoot,
               service: contextService,
               network: contextNetwork
-            }
+            },
+            ...(domainRoot && {
+              [process.env.DOMAIN]: {
+                root: domainRoot,
+                service: process.env.SERVICE,
+                network: process.env.NETWORK
+              }
+            })
           }
         }
       }
@@ -234,15 +253,9 @@ describe("View store base integration tests", () => {
     expect(response1.statusCode).to.equal(204);
     let roots = [];
     await request.stream(
-      `${url}/stream/`,
+      `${url}/stream${domainRoot ? `/${domainRoot}` : ""}`,
       data => {
-        //TODO
-        //eslint-disable-next-line no-console
-        console.log({ DATA: data });
         const parsedData = JSON.parse(data.toString().trim());
-        //TODO
-        //eslint-disable-next-line no-console
-        console.log({ oarsed: parsedData });
         roots.push(parsedData.root);
 
         if (data.root == root0) {
@@ -254,6 +267,7 @@ describe("View store base integration tests", () => {
             }
           }
         }
+
         if (data.roots == root1) {
           for (const key in example1.get) {
             if (key == "root") {
@@ -306,7 +320,14 @@ describe("View store base integration tests", () => {
                 root: contextRoot,
                 service: contextService,
                 network: contextNetwork
-              }
+              },
+              ...(domainRoot && {
+                [process.env.DOMAIN]: {
+                  root: domainRoot,
+                  service: process.env.SERVICE,
+                  network: process.env.NETWORK
+                }
+              })
             }
           }
         }
