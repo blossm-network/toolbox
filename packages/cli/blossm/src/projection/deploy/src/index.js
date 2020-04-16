@@ -24,7 +24,9 @@ module.exports = eventHandler({
 
     return await viewStore({
       name: config.name,
-      ...(config.domain && { domain: config.domain })
+      ...(config.domain && { domain: config.domain }),
+      ...(config.service && { service: config.service }),
+      context: config.context
     })
       .set({
         context: event.headers.context,
