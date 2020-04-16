@@ -4,6 +4,9 @@ const defaultQueryFn = query => query;
 
 module.exports = ({ findFn, one = false, queryFn = defaultQueryFn }) => {
   return async (req, res) => {
+    const context = req.query.context[process.env.CONTEXT];
+
+    if (!context) throw deps.forbiddenError.wrongContext();
     //TODO
     //eslint-disable-next-line no-console
     console.log({ query: req.query, params: req.params });
@@ -21,7 +24,6 @@ module.exports = ({ findFn, one = false, queryFn = defaultQueryFn }) => {
       formattedQueryBody[`body.${key}`] = queryBody[key];
     }
 
-    const context = req.query.context[process.env.CONTEXT];
     const query = {
       ...formattedQueryBody,
       [`headers.${process.env.CONTEXT}`]: {

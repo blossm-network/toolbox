@@ -177,4 +177,32 @@ describe("View store get", () => {
       expect(e).to.equal(error);
     }
   });
+  it("should throw correctly if wrong context", async () => {
+    const findFake = fake.returns([]);
+
+    const params = { root };
+    const req = {
+      query: {
+        context: {}
+      },
+      params
+    };
+
+    const sendFake = fake();
+    const res = {
+      send: sendFake
+    };
+
+    const error = "some-error";
+    const wrongContextFake = fake.returns(error);
+    replace(deps, "forbiddenError", {
+      wrongContext: wrongContextFake
+    });
+
+    try {
+      await get({ findFn: findFake, one: true })(req, res);
+    } catch (e) {
+      expect(e).to.equal(error);
+    }
+  });
 });
