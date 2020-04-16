@@ -73,10 +73,8 @@ module.exports = gateway({
     const roles = await fact({
       name: "roles",
       domain: "principle",
-      service: "core",
-      ...(process.env.CORE_NETWORK && {
-        network: process.env.CORE_NETWORK,
-      }),
+      service: principle.service,
+      network: principle.network,
     })
       .set({
         tokenFns: { internal: gcpToken },

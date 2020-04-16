@@ -22,7 +22,7 @@ module.exports = ({
         : []),
       // If there is a session, check if it's terminated.
       ...(req.context && req.context.session
-        ? [terminatedSessionCheckFn({ session: req.context.session.root })]
+        ? [terminatedSessionCheckFn({ session: req.context.session })]
         : []),
     ]);
 

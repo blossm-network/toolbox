@@ -7,7 +7,7 @@ const { get: secret } = require("@blossm/gcp-secret");
 const fact = require("@blossm/fact-rpc");
 const { verify: verifyGCP } = require("@blossm/gcp-kms");
 const verify = require("@blossm/verify-access-token");
-// const { invalidCredentials } = require("@blossm/errors");
+const { invalidCredentials } = require("@blossm/errors");
 const gcpToken = require("@blossm/gcp-token");
 const connectionToken = require("@blossm/connection-token");
 const { download: downloadFile } = require("@blossm/gcp-storage");
@@ -74,10 +74,8 @@ module.exports = gateway({
     const roles = await fact({
       name: "roles",
       domain: "principle",
-      service: "core",
-      ...(process.env.CORE_NETWORK && {
-        network: process.env.CORE_NETWORK,
-      }),
+      service: principle.service,
+      network: principle.network,
     })
       .set({
         tokenFns: { internal: gcpToken },
@@ -99,15 +97,19 @@ module.exports = gateway({
     });
     // : [];
   },
-  terminatedSessionCheckFn: async () => {
-    // session }) => {
-    // const aggregate = await eventStore({
-    //   domain: "session",
-    //   service: "core"
-    // })
-    //   .set({ tokenFns: { internal: gcpToken } })
-    //   .aggregate(session);
-    // if (aggregate.state.terminated) throw invalidCredentials.tokenTerminated();
+  terminatedSessionCheckFn: async (session) => {
+    const terminated = await fact({
+      name: "terminated",
+      domain: "session",
+      service: session.service,
+      network: session.network,
+    })
+      .set({
+        tokenFns: { internal: gcpToken },
+      })
+      .read({ root: session.root });
+
+    if (terminated) throw invalidCredentials.tokenTerminated();
   },
   verifyFn: ({ key }) =>
     key == "access"

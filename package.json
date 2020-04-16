@@ -32,7 +32,7 @@
     "major": "lerna version major",
     "check-packages": "yarn clean && yarn compile && yarn test",
     "lerna-publish": "npx lerna publish -y from-package",
-    "format": "eslint --fix packages"
+    "format": "eslint --fix ."
   },
   "devDependencies": {
     "auto-changelog": "^2.0.0",

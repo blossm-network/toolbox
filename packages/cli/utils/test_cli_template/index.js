@@ -15,7 +15,7 @@ const installDependenciesIfNeeded = async (workingDir, input) => {
 
   if (fs.existsSync(lock)) return;
 
-  const spawnInstall = spawnSync("npm", ["install"], {
+  const spawnInstall = spawnSync("yarn", {
     stdio: [process.stdin, process.stdout, process.stderr],
     cwd: workingDir,
   });
