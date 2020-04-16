@@ -1,7 +1,7 @@
 {
   "name": "@blossm/event-store",
   "description": "An event store server.",
-  "version": "0.0.83",
+  "version": "0.0.84",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -14,8 +14,8 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/event-store-get": "^0.0.37",
-    "@blossm/event-store-post": "^0.0.60",
+    "@blossm/event-store-get": "^0.0.38",
+    "@blossm/event-store-post": "^0.0.61",
     "@blossm/logger": "^0.0.6",
     "@blossm/server": "^0.0.9"
   },
