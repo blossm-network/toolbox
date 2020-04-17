@@ -102,7 +102,7 @@ const executeStep = async (step) => {
     },
   });
 
-  const correctCode = step.response ? 200 : step.code || 204;
+  const correctCode = step.response ? 201 : step.code || 204;
   if (response.statusCode != correctCode) {
     //eslint-disable-next-line no-console
     console.log("response: ", response);

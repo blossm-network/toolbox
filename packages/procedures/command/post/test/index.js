@@ -159,7 +159,7 @@ describe("Command handler post", () => {
         },
       ],
     });
-    expect(statusFake).to.have.been.calledWith(200);
+    expect(statusFake).to.have.been.calledWith(201);
     expect(sendFake).to.have.been.calledWith(response);
   });
   it("should call with the correct params with added header path", async () => {

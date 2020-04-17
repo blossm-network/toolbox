@@ -95,6 +95,6 @@ module.exports = ({
 
     if (thenFn) await thenFn();
 
-    res.status(response ? 200 : 204).send(response);
+    res.status(response ? 201 : 204).send(response);
   };
 };
