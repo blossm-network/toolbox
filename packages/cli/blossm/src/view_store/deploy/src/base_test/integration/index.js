@@ -26,6 +26,9 @@ const makeQuery = (properties, example) => {
 
 describe("View store base integration tests", () => {
   const testParamQueries = async () => {
+    //TODO remove
+    //eslint-disable-next-line no-console
+    console.log("SUP");
     const root = testing.examples.query.root;
     const example0 = testing.examples.query.first;
     const example1 = testing.examples.query.second;
