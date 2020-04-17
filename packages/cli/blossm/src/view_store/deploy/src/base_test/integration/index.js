@@ -32,12 +32,10 @@ describe("View store base integration tests", () => {
     expect(example0).to.exist;
     expect(example1).to.exist;
 
-    const response0 = await request.put(`${url}${root ? `/${root}` : ""}`, {
+    const response0 = await request.put(`${url}${root}`, {
       body: {
         view: {
-          body: {
-            ...example0.put,
-          },
+          body: example0.put,
           headers: {
             [process.env.CONTEXT]: {
               root: contextRoot,
@@ -83,9 +81,7 @@ describe("View store base integration tests", () => {
     const response2 = await request.put(`${url}/${root}`, {
       body: {
         view: {
-          body: {
-            ...example1.put,
-          },
+          body: example1.put,
           headers: {
             [process.env.CONTEXT]: {
               root: contextRoot,
@@ -107,7 +103,7 @@ describe("View store base integration tests", () => {
     expect(response2.statusCode).to.equal(204);
 
     const response3 = await request.get(
-      `${url}${domainRoot ? `/domainRoot` : ""}`,
+      `${url}${domainRoot ? `/${domainRoot}` : ""}`,
       {
         query: {
           context: {
@@ -122,55 +118,88 @@ describe("View store base integration tests", () => {
     );
 
     expect(response3.statusCode).to.equal(200);
-    const [parsedBody3, parsedBody35] = JSON.parse(response3.body);
-    //TODO does parsedBody4 exist? Write a sorting test.
-    //eslint-disable-next-line no-console
-    console.log({ parsedBody45ASDFASDF: parsedBody35 });
+    const [parsedBody3] = JSON.parse(response3.body);
     for (const key in example1.get) {
       expect(parsedBody3[key]).to.deep.equal(example1.get[key]);
     }
 
-    // const response4 = await request.put(`${url}/${root}`, {
-    //   body: {
-    //     view: {
-    //       body: {
-    //         ...example0.put
-    //       },
-    //       headers: {
-    //         [process.env.CONTEXT]: {
-    //           root: contextRoot,
-    //           service: contextService,
-    //           network: contextNetwork
-    //         }
-    //       },
-    //       ...(domainRoot && {
-    //         [process.env.DOMAIN]: {
-    //           root: domainRoot,
-    //           service: process.env.SERVICE,
-    //           network: process.env.NETWORK
-    //         }
-    //       })
-    //     }
-    //   }
-    // });
-    // const response5 = await request.get(
-    //   `${url}${domainR,
-    //   {
-    //     query: {
-    //       context: {
-    //         [process.env.CONTEXT]: {
-    //           root: contextRoot,
-    //           service: contextService,
-    //           network: contextNetwork
-    //         }
-    //       }
-    //     }
-    //   }
-    // );
-    const response4 = await request.delete(`${url}/${root}`);
-    const parsedBody4 = JSON.parse(response4.body);
-    expect(response4.statusCode).to.equal(200);
-    expect(parsedBody4.deletedCount).to.equal(1);
+    const otherRoot = "some-other-root";
+    const response4 = await request.put(`${url}/${otherRoot}`, {
+      body: {
+        view: {
+          body: example1.put,
+          headers: {
+            [process.env.CONTEXT]: {
+              root: contextRoot,
+              service: contextService,
+              network: contextNetwork,
+            },
+          },
+          ...(domainRoot && {
+            [process.env.DOMAIN]: {
+              root: domainRoot,
+              service: process.env.SERVICE,
+              network: process.env.NETWORK,
+            },
+          }),
+        },
+      },
+    });
+
+    const response5 = await request.get(
+      `${url}${domainRoot ? `/${domainRoot}` : ""}`,
+      {
+        query: {
+          context: {
+            [process.env.CONTEXT]: {
+              root: contextRoot,
+              service: contextService,
+              network: contextNetwork,
+            },
+          },
+          sort: {
+            "headers.root": 1,
+          },
+        },
+      }
+    );
+
+    const [firstSort1, firstSort2] = JSON.parse(response5.body);
+
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log({ firstSort1, firstSort2 });
+
+    const response6 = await request.get(
+      `${url}${domainRoot ? `/${domainRoot}` : ""}`,
+      {
+        query: {
+          context: {
+            [process.env.CONTEXT]: {
+              root: contextRoot,
+              service: contextService,
+              network: contextNetwork,
+            },
+          },
+          sort: {
+            "headers.root": -1,
+          },
+        },
+      }
+    );
+
+    const [secondSort1, secondSort2] = JSON.parse(response6.body);
+
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log({ secondSort1, secondSort2 });
+    expect(firstSort1).to.deep.equal(secondSort2);
+    expect(firstSort2).to.deep.equal(secondSort1);
+
+    const response7 = await request.delete(`${url}/${root}`);
+    const parsedBody7 = JSON.parse(response4.body);
+    expect(response7.statusCode).to.equal(200);
+    expect(parsedBody7.deletedCount).to.equal(1);
   };
 
   const testIndexes = async () => {
