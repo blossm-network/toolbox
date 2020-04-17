@@ -238,7 +238,7 @@ describe("Command handler post", () => {
         },
       ],
     });
-    expect(statusFake).to.have.been.calledWith(200);
+    expect(statusFake).to.have.been.calledWith(201);
     expect(sendFake).to.have.been.calledWith(response);
   });
   it("should call with the correct params will fillFn", async () => {
@@ -542,7 +542,7 @@ describe("Command handler post", () => {
         },
       ],
     });
-    expect(statusFake).to.have.been.calledWith(200);
+    expect(statusFake).to.have.been.calledWith(201);
     expect(sendFake).to.have.been.calledWith(response);
   });
   it("should call with the correct params with no clean or validate, correctNubmer, and empty response", async () => {
@@ -624,7 +624,7 @@ describe("Command handler post", () => {
         },
       ],
     });
-    expect(statusFake).to.have.been.calledWith(200);
+    expect(statusFake).to.have.been.calledWith(201);
     expect(sendFake).to.have.been.calledWith(response);
   });
   it("should call with the correct params without default action, domain, service, and networks", async () => {
@@ -722,7 +722,7 @@ describe("Command handler post", () => {
         },
       ],
     });
-    expect(statusFake).to.have.been.calledWith(200);
+    expect(statusFake).to.have.been.calledWith(201);
     expect(sendFake).to.have.been.calledWith(response);
   });
 
@@ -847,7 +847,7 @@ describe("Command handler post", () => {
         { data: event, number: otherCorrectNumber },
       ],
     });
-    expect(statusFake).to.have.been.calledWith(200);
+    expect(statusFake).to.have.been.calledWith(201);
     expect(sendFake).to.have.been.calledWith(response);
   });
   it("should call with the correct params with many events in different domains and services", async () => {
@@ -980,7 +980,7 @@ describe("Command handler post", () => {
       events: [{ data: event, number: otherCorrectNumber }],
     });
     expect(addFnFake).to.have.been.calledTwice;
-    expect(statusFake).to.have.been.calledWith(200);
+    expect(statusFake).to.have.been.calledWith(201);
     expect(sendFake).to.have.been.calledWith(response);
   });
 });
