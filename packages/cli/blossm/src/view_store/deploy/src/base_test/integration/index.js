@@ -35,7 +35,7 @@ describe("View store base integration tests", () => {
     expect(example0).to.exist;
     expect(example1).to.exist;
 
-    const response0 = await request.put(`${url}${root}`, {
+    const response0 = await request.put(`${url}/${root}`, {
       body: {
         view: {
           body: example0.put,
