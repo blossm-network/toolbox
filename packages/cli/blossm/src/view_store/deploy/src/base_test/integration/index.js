@@ -26,9 +26,6 @@ const makeQuery = (properties, example) => {
 
 describe("View store base integration tests", () => {
   const testParamQueries = async () => {
-    //TODO remove
-    //eslint-disable-next-line no-console
-    console.log("SUP");
     const root = testing.examples.query.root;
     const example0 = testing.examples.query.first;
     const example1 = testing.examples.query.second;
@@ -127,7 +124,7 @@ describe("View store base integration tests", () => {
     }
 
     const otherRoot = "some-other-root";
-    const response4 = await request.put(`${url}/${otherRoot}`, {
+    await request.put(`${url}/${otherRoot}`, {
       body: {
         view: {
           body: example1.put,
@@ -169,10 +166,6 @@ describe("View store base integration tests", () => {
 
     const [firstSort1, firstSort2] = JSON.parse(response5.body);
 
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log({ firstSort1, firstSort2 });
-
     const response6 = await request.get(
       `${url}${domainRoot ? `/${domainRoot}` : ""}`,
       {
@@ -193,14 +186,11 @@ describe("View store base integration tests", () => {
 
     const [secondSort1, secondSort2] = JSON.parse(response6.body);
 
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log({ secondSort1, secondSort2 });
     expect(firstSort1).to.deep.equal(secondSort2);
     expect(firstSort2).to.deep.equal(secondSort1);
 
     const response7 = await request.delete(`${url}/${root}`);
-    const parsedBody7 = JSON.parse(response4.body);
+    const parsedBody7 = JSON.parse(response7.body);
     expect(response7.statusCode).to.equal(200);
     expect(parsedBody7.deletedCount).to.equal(1);
   };
