@@ -285,7 +285,7 @@ const copySource = async (p, workingDir) => {
     process.exit(1);
   }
   await copy(srcDir, workingDir, {
-    clobber: false,
+    clobber: true,
   });
 };
 

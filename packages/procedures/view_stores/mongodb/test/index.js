@@ -41,9 +41,11 @@ process.env.MONGODB_USER_PASSWORD = userPassword;
 process.env.MONGODB_HOST = host;
 process.env.MONGODB_DATABASE = database;
 
+let mongodbViewStore;
 describe("View store", () => {
   beforeEach(() => {
     delete require.cache[require.resolve("..")];
+    mongodbViewStore = require("..");
     process.env.NODE_ENV = "some-env";
     clock = useFakeTimers(now.getTime());
     process.env.DOMAIN = domain;
@@ -54,7 +56,6 @@ describe("View store", () => {
   });
 
   it("should call with the correct params", async () => {
-    const mongodbViewStore = require("..");
     const store = "some-store";
     const storeFake = fake.returns(store);
     // const findOneFake = fake.returns(foundObj);
@@ -269,7 +270,6 @@ describe("View store", () => {
     expect(storeFake).to.have.been.calledOnce;
   });
   it("should call with the correct params without domain", async () => {
-    const mongodbViewStore = require("..");
     const store = "some-store";
     const storeFake = fake.returns(store);
     // const findOneFake = fake.returns(foundObj);
@@ -386,7 +386,6 @@ describe("View store", () => {
     });
   });
   it("should call with the correct params with no root's in nested objs", async () => {
-    const mongodbViewStore = require("..");
     const store = "some-store";
     const storeFake = fake.returns(store);
     // const findOneFake = fake.returns(foundObj);
@@ -517,7 +516,6 @@ describe("View store", () => {
     });
   });
   it("should call with the correct params without fns", async () => {
-    const mongodbViewStore = require("..");
     const store = "some-store";
     const storeFake = fake.returns(store);
     // const findOneFake = fake.returns(foundObj);
@@ -792,7 +790,6 @@ describe("View store", () => {
     expect(storeFake).to.have.been.calledOnce;
   });
   it("should call with the correct params with mongo style", async () => {
-    const mongodbViewStore = require("..");
     const store = "some-store";
     const storeFake = fake.returns(store);
     // const findOneFake = fake.returns(foundObj);
