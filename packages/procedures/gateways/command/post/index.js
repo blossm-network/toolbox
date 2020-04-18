@@ -11,7 +11,7 @@ module.exports = ({
   await deps.validate(req.body);
   const { root, payload, headers } = req.body;
 
-  const response = await deps
+  let response = await deps
     .command({
       name,
       domain,
@@ -38,13 +38,14 @@ module.exports = ({
         secure: true,
       });
     }
-    // // If removing tokens makes the response empty, set it to null to properly return a 204.
-    // if (Object.keys(response).length == 1) {
-    //   response = null;
-    // } else {
-    //   delete response.tokens;
-    // }
+
+    // If removing tokens makes the response empty, set it to null to properly return a 204.
+    if (Object.keys(response).length == 1) {
+      response = null;
+    } else {
+      delete response.tokens;
+    }
   }
 
-  res.status(response ? 200 : 204).send(response);
+  res.status(response ? 201 : 204).send(response);
 };

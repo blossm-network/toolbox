@@ -75,7 +75,8 @@ describe("Command gateway post", () => {
       ...headers,
       root,
     });
-    expect(statusFake).to.have.been.calledWith(200);
+    expect(statusFake).to.have.been.calledWith(201);
+    expect(sendFake).to.have.been.calledWith(response);
   });
   it("should call with the correct params on a different network and different service", async () => {
     const validateFake = fake();
@@ -137,7 +138,7 @@ describe("Command gateway post", () => {
       ...headers,
       root,
     });
-    expect(statusFake).to.have.been.calledWith(200);
+    expect(statusFake).to.have.been.calledWith(201);
   });
   it("should call with the correct params if response is empty", async () => {
     const validateFake = fake();
@@ -259,7 +260,7 @@ describe("Command gateway post", () => {
       ...headers,
       root,
     });
-    expect(statusFake).to.have.been.calledWith(200);
+    expect(statusFake).to.have.been.calledWith(204);
   });
   it("should throw correctly", async () => {
     const errorMessage = "error-message";
