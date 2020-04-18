@@ -22,6 +22,9 @@ const body = {
   root,
 };
 
+const network = "some-network";
+process.env.NETWORK = network;
+
 describe("Command gateway post", () => {
   afterEach(() => {
     restore();
@@ -239,10 +242,12 @@ describe("Command gateway post", () => {
 
     expect(cookieFake).to.have.been.calledTwice;
     expect(cookieFake).to.have.been.calledWith(token1Type, token1Value, {
+      domain: network,
       httpOnly: true,
       secure: true,
     });
     expect(cookieFake).to.have.been.calledWith(token2Type, token2Value, {
+      domain: network,
       httpOnly: true,
       secure: true,
     });

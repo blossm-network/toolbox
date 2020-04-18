@@ -34,6 +34,7 @@ module.exports = ({
       if (!token.network || !token.type || !token.value) continue;
       const cookieName = token.type;
       res.cookie(cookieName, token.value, {
+        domain: process.env.NETWORK,
         httpOnly: true,
         secure: true,
       });
