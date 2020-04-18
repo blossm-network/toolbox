@@ -308,6 +308,7 @@ describe("Event store integration tests", () => {
 
   const badObjectValue = async (key, schema) => {
     for (const property in schema) {
+      if (schema[property] == "Object") continue;
       const badValue = findBadValue(schema, property);
       await testIncorrectParams({
         payload: {
