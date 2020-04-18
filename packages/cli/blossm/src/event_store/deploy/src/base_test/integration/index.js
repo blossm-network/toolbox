@@ -364,9 +364,6 @@ describe("Event store integration tests", () => {
   it("should return an error if incorrect params", async () => {
     //Grab a property from the schema and pass a wrong value to it.
     for (const property in schema) {
-      //TODO
-      //eslint-disable-next-line no-console
-      console.log({ property, schema });
       if (schema[property] == "Object") continue;
       let badValue;
       if (
