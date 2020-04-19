@@ -466,12 +466,9 @@ describe("Command handler post", () => {
       },
     };
 
-    const sendFake = fake();
-    const statusFake = fake.returns({
-      send: sendFake,
-    });
+    const sendStatusFake = fake();
     const res = {
-      status: statusFake,
+      sendStatus: sendStatusFake,
     };
 
     const addFnFake = fake();
@@ -495,8 +492,7 @@ describe("Command handler post", () => {
       aggregateFn,
     });
 
-    expect(statusFake).to.have.been.calledWith(204);
-    expect(sendFake).to.have.been.calledWith();
+    expect(sendStatusFake).to.have.been.calledWith(204);
   });
   it("should call with the correct params with root, context, options, claims, version passed in, and no payload", async () => {
     const validateFnFake = fake();

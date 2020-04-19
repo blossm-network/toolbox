@@ -95,16 +95,13 @@ module.exports = ({
 
     if (thenFn) await thenFn();
 
-    const formattedResponse = (response || events.length) && {
-      ...response,
-      ...(events.length && { _id: commandId }),
-    };
-
-    const statusCode = events.length ? 202 : formattedResponse ? 200 : 204;
-
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log({ statusCode, formattedResponse, events });
-    res.status(statusCode).send(formattedResponse);
+    if (response || events.length) {
+      res.status(events.length ? 202 : 201).send({
+        ...response,
+        ...(events.length && { _id: commandId }),
+      });
+    } else {
+      res.sendStatus(204);
+    }
   };
 };
