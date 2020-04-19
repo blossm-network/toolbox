@@ -96,7 +96,7 @@ module.exports = ({
     if (thenFn) await thenFn();
 
     if (response || events.length) {
-      res.status(events.length ? 202 : 201).send({
+      res.status(events.length ? 202 : 200).send({
         ...response,
         ...(events.length && { _id: commandId }),
       });

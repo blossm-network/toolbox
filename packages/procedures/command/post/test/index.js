@@ -444,6 +444,61 @@ describe("Command handler post", () => {
     expect(statusFake).to.have.been.calledWith(202);
     expect(sendFake).to.have.been.calledWith({ _id: commandId });
   });
+  it("should call with the correct params with no events", async () => {
+    const validateFnFake = fake();
+    const normalizeFnFake = fake.returns(cleanedPayload);
+
+    const createEventFake = fake.returns(event);
+    replace(deps, "createEvent", createEventFake);
+
+    replace(deps, "uuid", fake.returns(commandId));
+    const events = [];
+    const mainFnFake = fake.returns({
+      events,
+      response,
+    });
+
+    const req = {
+      body: {
+        payload,
+        headers,
+        context,
+        claims,
+      },
+    };
+
+    const sendFake = fake();
+    const statusFake = fake.returns({
+      send: sendFake,
+    });
+    const res = {
+      status: statusFake,
+    };
+
+    const addFnFake = fake();
+    const aggregateFnFake = fake.returns(aggregateFn);
+
+    await post({
+      mainFn: mainFnFake,
+      validateFn: validateFnFake,
+      normalizeFn: normalizeFnFake,
+      aggregateFn: aggregateFnFake,
+      addFn: addFnFake,
+    })(req, res);
+
+    expect(aggregateFnFake).to.have.been.calledWith({ context, claims });
+    expect(normalizeFnFake).to.have.been.calledWith(payload);
+    expect(validateFnFake).to.have.been.calledWith(payload);
+    expect(mainFnFake).to.have.been.calledWith({
+      payload: cleanedPayload,
+      context,
+      claims,
+      aggregateFn,
+    });
+
+    expect(statusFake).to.have.been.calledWith(200);
+    expect(sendFake).to.have.been.calledWith(response);
+  });
   it("should call with the correct params with no response and no events", async () => {
     const validateFnFake = fake();
     const normalizeFnFake = fake.returns(cleanedPayload);
