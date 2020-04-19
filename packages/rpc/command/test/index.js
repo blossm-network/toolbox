@@ -53,7 +53,7 @@ describe("Issue command", () => {
 
   it("should call with the correct params", async () => {
     const response = "some-response";
-    const withFake = fake.returns(response);
+    const withFake = fake.returns({ body: response });
     const inFake = fake.returns({
       with: withFake,
     });
@@ -66,7 +66,7 @@ describe("Issue command", () => {
     replace(deps, "rpc", rpcFake);
 
     const path = ["some-path"];
-    const result = await command({ name, domain, service, network })
+    const { body: result } = await command({ name, domain, service, network })
       .set({
         context,
         claims,
@@ -116,7 +116,7 @@ describe("Issue command", () => {
   });
   it("should call with the correct optional params", async () => {
     const response = "some-response";
-    const withFake = fake.returns(response);
+    const withFake = fake.returns({ body: response });
     const inFake = fake.returns({
       with: withFake,
     });
@@ -128,7 +128,7 @@ describe("Issue command", () => {
     });
     replace(deps, "rpc", rpcFake);
 
-    const result = await command({ name, domain }).issue(payload);
+    const { body: result } = await command({ name, domain }).issue(payload);
 
     expect(result).to.equal(response);
     expect(rpcFake).to.have.been.calledWith(name, domain, envService);
@@ -155,7 +155,7 @@ describe("Issue command", () => {
   });
   it("should call with the correct params onto a different network", async () => {
     const response = "some-response";
-    const withFake = fake.returns(response);
+    const withFake = fake.returns({ body: response });
     const inFake = fake.returns({
       with: withFake,
     });
@@ -169,7 +169,7 @@ describe("Issue command", () => {
 
     const otherNetwork = "some-other-network";
 
-    const result = await command({
+    const { body: result } = await command({
       name,
       domain,
       service,

@@ -252,7 +252,7 @@ describe("Event store", () => {
 
   it("should call aggregate with the right params", async () => {
     const aggregate = "some-aggregate";
-    const withFake = fake.returns(aggregate);
+    const withFake = fake.returns({ body: aggregate });
     const inFake = fake.returns({
       with: withFake,
     });
@@ -266,7 +266,7 @@ describe("Event store", () => {
 
     const root = "user";
 
-    const result = await eventStore({ domain, service })
+    const { body: result } = await eventStore({ domain, service })
       .set({
         context,
         claims,
@@ -288,7 +288,7 @@ describe("Event store", () => {
   });
   it("should call aggregate with the right params with optionals missing", async () => {
     const aggregate = "some-aggregate";
-    const withFake = fake.returns(aggregate);
+    const withFake = fake.returns({ body: aggregate });
     const inFake = fake.returns({
       with: withFake,
     });
@@ -308,11 +308,11 @@ describe("Event store", () => {
     expect(getFake).to.have.been.calledWith({ id: root });
     expect(inFake).to.have.been.calledWith({});
     expect(withFake).to.have.been.calledWith({});
-    expect(result).to.equal(aggregate);
+    expect(result).to.deep.equal({ body: aggregate });
   });
   it("should call query with the right params", async () => {
     const aggregate = "some-aggregate";
-    const withFake = fake.returns(aggregate);
+    const withFake = fake.returns({ body: aggregate });
     const inFake = fake.returns({
       with: withFake,
     });
@@ -324,7 +324,7 @@ describe("Event store", () => {
     });
     replace(deps, "rpc", rpcFake);
 
-    const result = await eventStore({ domain, service })
+    const { body: result } = await eventStore({ domain, service })
       .set({
         context,
         claims,
@@ -346,7 +346,7 @@ describe("Event store", () => {
   });
   it("should call aggregate with the right params with optionals missing", async () => {
     const aggregate = "some-aggregate";
-    const withFake = fake.returns(aggregate);
+    const withFake = fake.returns({ body: aggregate });
     const inFake = fake.returns({
       with: withFake,
     });
@@ -358,7 +358,7 @@ describe("Event store", () => {
     });
     replace(deps, "rpc", rpcFake);
 
-    const result = await eventStore({ domain }).query(query);
+    const { body: result } = await eventStore({ domain }).query(query);
 
     expect(rpcFake).to.have.been.calledWith(domain, envService, "event-store");
     expect(getFake).to.have.been.calledWith(query);

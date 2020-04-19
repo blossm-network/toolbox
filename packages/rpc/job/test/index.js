@@ -36,7 +36,7 @@ describe("Job", () => {
 
   it("should call with the correct params", async () => {
     const response = "some-response";
-    const withFake = fake.returns(response);
+    const withFake = fake.returns({ body: response });
     const inFake = fake.returns({
       with: withFake,
     });
@@ -48,7 +48,7 @@ describe("Job", () => {
     });
     replace(deps, "rpc", rpcFake);
 
-    const result = await job({ name, domain, service })
+    const { body: result } = await job({ name, domain, service })
       .set({
         context,
         claims,
@@ -56,7 +56,7 @@ describe("Job", () => {
       })
       .trigger(payload);
 
-    expect(result).to.equal(response);
+    expect(result).to.deep.equal(response);
     expect(rpcFake).to.have.been.calledWith(name, domain, service, "job");
     expect(postFake).to.have.been.calledWith({
       payload,

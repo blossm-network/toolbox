@@ -23,7 +23,7 @@ describe("Connection token", () => {
       tokens: [{ network: currentNetwork, value: token }],
     };
 
-    const issueFake = fake.returns(response);
+    const issueFake = fake.returns({ body: response });
     const setFake = fake.returns({
       issue: issueFake,
     });
@@ -72,7 +72,7 @@ describe("Connection token", () => {
       tokens: [{ network: currentNetwork, value: token }],
     };
 
-    const issueFake = fake.returns(response);
+    const issueFake = fake.returns({ body: response });
     const setFake = fake.returns({
       issue: issueFake,
     });

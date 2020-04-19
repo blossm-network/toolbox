@@ -6,7 +6,7 @@ module.exports = ({
   internalTokenFn,
   externalTokenFn,
 } = {}) => async (req, res) => {
-  const response = await deps
+  const { body: response } = await deps
     .fact({
       name,
       domain,

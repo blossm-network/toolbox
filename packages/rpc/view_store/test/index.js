@@ -86,7 +86,7 @@ describe("Get views", () => {
   // });
   it("should call read with the correct params", async () => {
     const views = "some-views";
-    const withFake = fake.returns(views);
+    const withFake = fake.returns({ body: views });
     const inFake = fake.returns({
       with: withFake,
     });
@@ -98,7 +98,13 @@ describe("Get views", () => {
     });
     replace(deps, "rpc", rpcFake);
 
-    const result = await viewStore({ name, domain, service, context, network })
+    const { body: result } = await viewStore({
+      name,
+      domain,
+      service,
+      context,
+      network,
+    })
       .set({
         context: contexts,
         tokenFns: { internal: internalTokenFn, external: externalTokenFn },
@@ -122,7 +128,7 @@ describe("Get views", () => {
   });
   it("should call read with the correct params and optionals omitted", async () => {
     const views = "some-views";
-    const withFake = fake.returns(views);
+    const withFake = fake.returns({ body: views });
     const inFake = fake.returns({
       with: withFake,
     });
@@ -142,11 +148,11 @@ describe("Get views", () => {
     expect(getFake).to.have.been.calledWith({ query });
     expect(inFake).to.have.been.calledWith({});
     expect(withFake).to.have.been.calledWith({});
-    expect(result).to.equal(views);
+    expect(result).to.deep.equal({ body: views });
   });
   it("should call read with the correct params onto other host", async () => {
     const views = "some-views";
-    const withFake = fake.returns(views);
+    const withFake = fake.returns({ body: views });
     const inFake = fake.returns({
       with: withFake,
     });
@@ -159,7 +165,7 @@ describe("Get views", () => {
     replace(deps, "rpc", rpcFake);
 
     const otherNetwork = "some-other-network";
-    const result = await viewStore({
+    const { body: result } = await viewStore({
       name,
       context,
       network: otherNetwork,
@@ -182,7 +188,7 @@ describe("Get views", () => {
   });
   it("should call stream with the correct params", async () => {
     const views = "some-views";
-    const withFake = fake.returns(views);
+    const withFake = fake.returns({ body: views });
     const inFake = fake.returns({
       with: withFake,
     });
@@ -194,7 +200,13 @@ describe("Get views", () => {
     });
     replace(deps, "rpc", rpcFake);
 
-    const result = await viewStore({ name, domain, service, context, network })
+    const { body: result } = await viewStore({
+      name,
+      domain,
+      service,
+      context,
+      network,
+    })
       .set({
         context: contexts,
         tokenFns: { internal: internalTokenFn, external: externalTokenFn },
@@ -219,7 +231,7 @@ describe("Get views", () => {
   });
   it("should call stream with the correct params and optionals omitted", async () => {
     const views = "some-views";
-    const withFake = fake.returns(views);
+    const withFake = fake.returns({ body: views });
     const inFake = fake.returns({
       with: withFake,
     });
@@ -241,11 +253,11 @@ describe("Get views", () => {
     expect(withFake).to.have.been.calledWith({
       path: "/stream",
     });
-    expect(result).to.equal(views);
+    expect(result).to.deep.equal({ body: views });
   });
   it("should call stream with the correct params onto other host", async () => {
     const views = "some-views";
-    const withFake = fake.returns(views);
+    const withFake = fake.returns({ body: views });
     const inFake = fake.returns({
       with: withFake,
     });
@@ -258,7 +270,7 @@ describe("Get views", () => {
     replace(deps, "rpc", rpcFake);
 
     const otherNetwork = "some-other-network";
-    const result = await viewStore({
+    const { body: result } = await viewStore({
       name,
       domain,
       context,
@@ -286,7 +298,7 @@ describe("Get views", () => {
     expect(result).to.equal(views);
   });
   it("should call update with the correct params", async () => {
-    const withFake = fake();
+    const withFake = fake.returns({});
     const inFake = fake.returns({
       with: withFake,
     });
@@ -320,7 +332,7 @@ describe("Get views", () => {
     });
   });
   it("should call update with the correct params and optionals omitted", async () => {
-    const withFake = fake();
+    const withFake = fake.returns({});
     const inFake = fake.returns({
       with: withFake,
     });
@@ -376,7 +388,7 @@ describe("Get views", () => {
     });
   });
   it("should call delete with the correct params with optionals omitted", async () => {
-    const withFake = fake();
+    const withFake = fake.returns({});
     const inFake = fake.returns({
       with: withFake,
     });

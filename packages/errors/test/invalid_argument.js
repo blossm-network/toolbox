@@ -5,25 +5,6 @@ const cause = new Error();
 const info = { some: "info" };
 
 describe("Bad request", () => {
-  it("phoneNotRecognized correct", () => {
-    const error = invalidArgument.phoneNotRecognized();
-    expect(error.toJSON()).to.deep.equal({
-      statusCode: 409,
-      code: "InvalidArgument",
-      info: {},
-      message: "This phone number isn't recognized.",
-    });
-  });
-  it("phoneNotRecognized correct with props", () => {
-    const error = invalidArgument.phoneNotRecognized({ cause, info });
-    expect(error.toJSON()).to.deep.equal({
-      statusCode: 409,
-      code: "InvalidArgument",
-      info,
-      cause,
-      message: "This phone number isn't recognized.",
-    });
-  });
   it("codeExpired correct", () => {
     const error = invalidArgument.codeExpired();
     expect(error.toJSON()).to.deep.equal({

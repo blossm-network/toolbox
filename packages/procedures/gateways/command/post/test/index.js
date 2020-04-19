@@ -34,8 +34,10 @@ describe("Command gateway post", () => {
     replace(deps, "validate", validateFake);
 
     const issueFake = fake.returns({
-      ...response,
-      tokens: [{ a: 1 }],
+      body: {
+        ...response,
+        tokens: [{ a: 1 }],
+      },
     });
     const setFake = fake.returns({
       issue: issueFake,
@@ -86,8 +88,10 @@ describe("Command gateway post", () => {
     replace(deps, "validate", validateFake);
 
     const issueFake = fake.returns({
-      ...response,
-      tokens: [{ a: 1 }],
+      body: {
+        ...response,
+        tokens: [{ a: 1 }],
+      },
     });
     const setFake = fake.returns({
       issue: issueFake,
@@ -147,7 +151,7 @@ describe("Command gateway post", () => {
     const validateFake = fake();
     replace(deps, "validate", validateFake);
 
-    const issueFake = fake.returns();
+    const issueFake = fake.returns({});
     const setFake = fake.returns({
       issue: issueFake,
     });
@@ -212,7 +216,7 @@ describe("Command gateway post", () => {
       type: token2Type,
       value: token2Value,
     };
-    const issueFake = fake.returns({ tokens: [token1, token2] });
+    const issueFake = fake.returns({ body: { tokens: [token1, token2] } });
     const setFake = fake.returns({
       issue: issueFake,
     });

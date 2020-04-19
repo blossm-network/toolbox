@@ -18,7 +18,7 @@ module.exports = eventHandler({
       body,
     } = await main(event);
 
-    return await viewStore({
+    await viewStore({
       name: config.name,
       ...(config.domain && { domain: config.domain }),
       ...(config.service && { service: config.service }),

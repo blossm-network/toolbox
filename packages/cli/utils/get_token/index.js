@@ -100,7 +100,9 @@ module.exports = async ({
     },
   ]);
 
-  const { tokens } = await command({
+  const {
+    body: { tokens },
+  } = await command({
     name: "upgrade",
     domain: "session",
     service: "core",

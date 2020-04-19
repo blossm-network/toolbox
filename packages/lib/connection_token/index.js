@@ -6,7 +6,9 @@ module.exports = ({ credentialsFn }) => async ({ network }) => {
   const { id, secret } = await credentialsFn({ network });
   const { token, exp } = cache[network] || {};
   if (!token || exp < new Date()) {
-    const { tokens } = await deps
+    const {
+      body: { tokens },
+    } = await deps
       .command({
         name: "open",
         domain: "connection",

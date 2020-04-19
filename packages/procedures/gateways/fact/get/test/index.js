@@ -19,7 +19,7 @@ describe("Fact gateway get", () => {
     restore();
   });
   it("should call with the correct params when action and domain passed in url", async () => {
-    const readFake = fake.returns(results);
+    const readFake = fake.returns({ body: results });
     const setFake = fake.returns({
       read: readFake,
     });

@@ -54,7 +54,7 @@ module.exports = gateway({
       );
     }
 
-    const roles = await fact({
+    const { body: roles } = await fact({
       name: "roles",
       domain: "principle",
       service: principle.service,
@@ -70,8 +70,8 @@ module.exports = gateway({
       roles,
       defaultRoles,
       context,
-      customRolePermissionsFn: async ({ roleId }) =>
-        await fact({
+      customRolePermissionsFn: async ({ roleId }) => {
+        const { body: permissions } = await fact({
           name: "permissions",
           domain: "role",
           service: "core",
@@ -83,11 +83,14 @@ module.exports = gateway({
             tokenFns: { internal: gcpToken },
             context: { network: process.env.NETWORK },
           })
-          .read({ id: roleId }),
+          .read({ id: roleId });
+
+        return permissions;
+      },
     });
   },
   terminatedSessionCheckFn: async ({ session }) => {
-    const terminated = await fact({
+    const { body: terminated } = await fact({
       name: "terminated",
       domain: "session",
       service: session.service,

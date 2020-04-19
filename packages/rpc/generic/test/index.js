@@ -29,9 +29,11 @@ const response = {
 const body = {
   some: "body",
 };
+
+const bodyStatusCode = 200;
 const bodyResponse = {
   body: JSON.stringify(body),
-  statusCode: 200,
+  statusCode: bodyStatusCode,
 };
 
 describe("Operation", () => {
@@ -77,40 +79,9 @@ describe("Operation", () => {
       operation: [operarationPart1, operarationPart2],
       host,
     });
-    expect(result).to.be.null;
+    expect(result).to.deep.equal({ statusCode });
   });
-  it("should call post with the correct params without context or claims", async () => {
-    const post = fake.returns(response);
-    replace(deps, "post", post);
 
-    const operationTokenFake = fake.returns({ token, type });
-    replace(deps, "operationToken", operationTokenFake);
-
-    const operationUrlFake = fake.returns(url);
-    replace(deps, "operationUrl", operationUrlFake);
-
-    const result = await operation(operarationPart1, operarationPart2)
-      .post(data)
-      .in({ host })
-      .with({ internalTokenFn: tokenFn });
-
-    expect(post).to.have.been.calledWith(url, {
-      body: data,
-      headers: {
-        Authorization: `${type} ${token}`,
-      },
-    });
-    expect(operationTokenFake).to.have.been.calledWith({
-      tokenFn,
-      operation: [operarationPart1, operarationPart2],
-    });
-    expect(operationUrlFake).to.have.been.calledWith({
-      operation: [operarationPart1, operarationPart2],
-
-      host,
-    });
-    expect(result).to.be.null;
-  });
   it("should call post with the correct params with env host and service", async () => {
     const post = fake.returns(response);
     replace(deps, "post", post);
@@ -137,7 +108,7 @@ describe("Operation", () => {
       operation: [operarationPart1, operarationPart2],
       host: envHost,
     });
-    expect(result).to.be.null;
+    expect(result).to.deep.equal({ statusCode });
   });
   it("should call post with the correct params with other host", async () => {
     const post = fake.returns(response);
@@ -164,7 +135,7 @@ describe("Operation", () => {
     expect(networkUrlFake).to.have.been.calledWith({
       host: otherHost,
     });
-    expect(result).to.be.null;
+    expect(result).to.deep.equal({ statusCode });
   });
   it("should call post with the correct params with no token", async () => {
     const post = fake.returns(response);
@@ -188,7 +159,7 @@ describe("Operation", () => {
         claims,
       },
     });
-    expect(result).to.be.null;
+    expect(result).to.deep.equal({ statusCode });
   });
 
   it("should call post with the correct params with path", async () => {
@@ -226,7 +197,7 @@ describe("Operation", () => {
       host,
       path,
     });
-    expect(result).to.be.null;
+    expect(result).to.deep.equal({ statusCode });
   });
 
   it("should call get with the correct params", async () => {
@@ -262,13 +233,13 @@ describe("Operation", () => {
       operation: [operarationPart1, operarationPart2],
       host,
     });
-    expect(result).to.deep.equal(body);
+    expect(result).to.deep.equal({ statusCode: bodyStatusCode, body });
   });
   it("should call get with the correct params with non json response", async () => {
     const response = "some-response";
     const get = fake.returns({
       body: response,
-      statusCode: 200,
+      statusCode: bodyStatusCode,
     });
     replace(deps, "get", get);
 
@@ -301,7 +272,10 @@ describe("Operation", () => {
       operation: [operarationPart1, operarationPart2],
       host,
     });
-    expect(result).to.deep.equal(response);
+    expect(result).to.deep.equal({
+      statusCode: bodyStatusCode,
+      body: response,
+    });
   });
   it("should call get with the correct params with id", async () => {
     const get = fake.returns(bodyResponse);
@@ -337,7 +311,10 @@ describe("Operation", () => {
       host,
       id,
     });
-    expect(result).to.deep.equal(body);
+    expect(result).to.deep.equal({
+      statusCode: bodyStatusCode,
+      body,
+    });
   });
   it("should call put with the correct params", async () => {
     const put = fake.returns(response);
@@ -374,7 +351,7 @@ describe("Operation", () => {
       host,
       id,
     });
-    expect(result).to.be.null;
+    expect(result).to.deep.equal({ statusCode });
   });
   it("should call put with the correct params with path", async () => {
     const put = fake.returns(response);
@@ -412,7 +389,7 @@ describe("Operation", () => {
       id,
       path,
     });
-    expect(result).to.be.null;
+    expect(result).to.deep.equal({ statusCode });
   });
   it("should call delete with the correct params", async () => {
     const del = fake.returns(response);
@@ -447,7 +424,7 @@ describe("Operation", () => {
       host,
       id,
     });
-    expect(result).to.be.null;
+    expect(result).to.deep.equal({ statusCode });
   });
   it("should return error correctly", async () => {
     const errorStatusCode = 400;

@@ -22,7 +22,7 @@ describe("Invalid credentials", () => {
     expect(error.toJSON()).to.deep.equal({
       statusCode: 401,
       code: "InvalidCredentials",
-      info: {},
+      info: { reason: "expired" },
       message: "This token is expired.",
     });
   });
@@ -31,7 +31,7 @@ describe("Invalid credentials", () => {
     expect(error.toJSON()).to.deep.equal({
       statusCode: 401,
       code: "InvalidCredentials",
-      info,
+      info: { ...info, reason: "expired" },
       cause,
       message: "This token is expired.",
     });
@@ -91,25 +91,6 @@ describe("Invalid credentials", () => {
       info,
       cause,
       message: "This token has already been terminated.",
-    });
-  });
-  it("phoneNotRecognized correct", () => {
-    const error = invalidCredentials.phoneNotRecognized();
-    expect(error.toJSON()).to.deep.equal({
-      statusCode: 401,
-      code: "InvalidCredentials",
-      info: {},
-      message: "This phone number isn't recognized.",
-    });
-  });
-  it("phoneNotRecognized correct with props", () => {
-    const error = invalidCredentials.phoneNotRecognized({ cause, info });
-    expect(error.toJSON()).to.deep.equal({
-      statusCode: 401,
-      code: "InvalidCredentials",
-      info,
-      cause,
-      message: "This phone number isn't recognized.",
     });
   });
   it("message correct", () => {

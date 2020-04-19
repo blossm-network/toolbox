@@ -36,7 +36,7 @@ describe("Get job", () => {
 
   it("should call read with the correct params", async () => {
     const response = "some-response";
-    const withFake = fake.returns(response);
+    const withFake = fake.returns({ body: response });
     const inFake = fake.returns({
       with: withFake,
     });
@@ -48,7 +48,7 @@ describe("Get job", () => {
     });
     replace(deps, "rpc", rpcFake);
 
-    const result = await fact({ name, domain, service })
+    const { body: result } = await fact({ name, domain, service })
       .set({
         context,
         claims,
@@ -70,7 +70,7 @@ describe("Get job", () => {
   });
   it("should call with the correct optional params", async () => {
     const response = "some-response";
-    const withFake = fake.returns(response);
+    const withFake = fake.returns({ body: response });
     const inFake = fake.returns({
       with: withFake,
     });
@@ -84,7 +84,7 @@ describe("Get job", () => {
 
     const result = await fact({ name }).read();
 
-    expect(result).to.equal(response);
+    expect(result).to.deep.equal({ body: response });
     expect(rpcFake).to.have.been.calledWith(name, envService, "fact");
     expect(getFake).to.have.been.calledWith({});
     expect(inFake).to.have.been.calledWith({});
@@ -92,7 +92,7 @@ describe("Get job", () => {
   });
   it("should call with the correct params with root", async () => {
     const response = "some-response";
-    const withFake = fake.returns(response);
+    const withFake = fake.returns({ body: response });
     const inFake = fake.returns({
       with: withFake,
     });
@@ -107,7 +107,7 @@ describe("Get job", () => {
     const root = "some-root";
     const result = await fact({ name }).read({ root });
 
-    expect(result).to.equal(response);
+    expect(result).to.deep.equal({ body: response });
     expect(rpcFake).to.have.been.calledWith(name, envService, "fact");
     expect(getFake).to.have.been.calledWith({ id: root });
     expect(inFake).to.have.been.calledWith({});
@@ -115,7 +115,7 @@ describe("Get job", () => {
   });
   it("should call read with the correct params onto a different network", async () => {
     const response = "some-response";
-    const withFake = fake.returns(response);
+    const withFake = fake.returns({ body: response });
     const inFake = fake.returns({
       with: withFake,
     });
@@ -127,7 +127,12 @@ describe("Get job", () => {
     });
     replace(deps, "rpc", rpcFake);
     const otherNetwork = "some-other-network";
-    const result = await fact({ name, domain, service, network: otherNetwork })
+    const { body: result } = await fact({
+      name,
+      domain,
+      service,
+      network: otherNetwork,
+    })
       .set({
         context,
         claims,
@@ -150,7 +155,7 @@ describe("Get job", () => {
   });
   it("should call stream with the correct params", async () => {
     const response = "some-response";
-    const withFake = fake.returns(response);
+    const withFake = fake.returns({ body: response });
     const inFake = fake.returns({
       with: withFake,
     });
@@ -162,7 +167,7 @@ describe("Get job", () => {
     });
     replace(deps, "rpc", rpcFake);
 
-    const result = await fact({ name, domain, service })
+    const { body: result } = await fact({ name, domain, service })
       .set({
         context,
         claims,
@@ -185,7 +190,7 @@ describe("Get job", () => {
   });
   it("should call with the correct optional params", async () => {
     const response = "some-response";
-    const withFake = fake.returns(response);
+    const withFake = fake.returns({ body: response });
     const inFake = fake.returns({
       with: withFake,
     });
@@ -199,7 +204,7 @@ describe("Get job", () => {
 
     const result = await fact({ name }).stream(query);
 
-    expect(result).to.equal(response);
+    expect(result).to.deep.equal({ body: response });
     expect(rpcFake).to.have.been.calledWith(name, envService, "fact");
     expect(getFake).to.have.been.calledWith(query);
     expect(inFake).to.have.been.calledWith({});
@@ -207,7 +212,7 @@ describe("Get job", () => {
   });
   it("should call stream with the correct params with root", async () => {
     const response = "some-response";
-    const withFake = fake.returns(response);
+    const withFake = fake.returns({ body: response });
     const inFake = fake.returns({
       with: withFake,
     });
@@ -220,7 +225,7 @@ describe("Get job", () => {
     replace(deps, "rpc", rpcFake);
 
     const root = "some-root";
-    const result = await fact({ name, domain, service })
+    const { body: result } = await fact({ name, domain, service })
       .set({
         context,
         claims,
@@ -243,7 +248,7 @@ describe("Get job", () => {
   });
   it("should call stream with the correct params onto different network", async () => {
     const response = "some-response";
-    const withFake = fake.returns(response);
+    const withFake = fake.returns({ body: response });
     const inFake = fake.returns({
       with: withFake,
     });
@@ -256,7 +261,12 @@ describe("Get job", () => {
     replace(deps, "rpc", rpcFake);
 
     const otherNetwork = "some-other-network";
-    const result = await fact({ name, domain, service, network: otherNetwork })
+    const { body: result } = await fact({
+      name,
+      domain,
+      service,
+      network: otherNetwork,
+    })
       .set({
         context,
         claims,

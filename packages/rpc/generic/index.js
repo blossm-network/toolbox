@@ -2,12 +2,12 @@ const logger = require("@blossm/logger");
 
 const deps = require("./deps");
 
-const formatResponse = (response) => {
+const formatResponse = (data) => {
   try {
-    const formattedResponse = JSON.parse(response);
+    const formattedResponse = JSON.parse(data);
     return formattedResponse;
   } catch (e) {
-    return response;
+    return data;
   }
 };
 
@@ -76,9 +76,12 @@ const common = ({ method, dataParam, operation, id, data }) => {
                 : null,
             });
           }
-          if (response.statusCode == 204) return null;
+          // if (response.statusCode == 204) return null;
 
-          return formatResponse(response.body);
+          return {
+            ...(response.body && { body: formatResponse(response.body) }),
+            statusCode: response.statusCode,
+          };
         },
       };
     },

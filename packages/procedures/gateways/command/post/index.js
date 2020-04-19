@@ -11,7 +11,7 @@ module.exports = ({
   await deps.validate(req.body);
   const { root, payload, headers } = req.body;
 
-  let response = await deps
+  let { body: response } = await deps
     .command({
       name,
       domain,

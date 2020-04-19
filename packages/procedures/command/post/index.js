@@ -95,6 +95,14 @@ module.exports = ({
 
     if (thenFn) await thenFn();
 
+    // If there are events, add the command id to the response and return 202.
+    // If there is a response, return 200.
+    // If there is not a response, return 204.
+
+    // const formattedResponse = {
+    //   ...response,
+    //   events,
+    // };
     res.status(response ? 201 : 204).send(response);
   };
 };

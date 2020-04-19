@@ -10,7 +10,7 @@ module.exports = {
     ),
   tokenExpired: ({ cause, info } = {}) =>
     new InvalidCredentialsError(
-      { cause, info, toJSON },
+      { cause, info: { ...info, reason: "expired" }, toJSON },
       "This token is expired."
     ),
   tokenNotActive: ({ cause, info } = {}) =>
@@ -27,11 +27,6 @@ module.exports = {
     new InvalidCredentialsError(
       { cause, info, toJSON },
       "This token isn't meant for this audience."
-    ),
-  phoneNotRecognized: ({ cause, info } = {}) =>
-    new InvalidCredentialsError(
-      { cause, info, toJSON },
-      "This phone number isn't recognized."
     ),
   message: (message, { cause, info } = {}) =>
     new InvalidCredentialsError({ cause, info, toJSON }, message),

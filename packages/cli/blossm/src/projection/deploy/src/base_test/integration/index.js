@@ -48,7 +48,7 @@ describe("Projection integration tests", () => {
       expect(response.statusCode).to.equal(204);
 
       parallelFns.push(async () => {
-        const v = await viewStore({
+        const { body: v } = await viewStore({
           name,
           ...(domain && { domain }),
           ...(service && { service }),

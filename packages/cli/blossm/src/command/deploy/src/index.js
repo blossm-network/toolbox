@@ -21,7 +21,7 @@ module.exports = command({
       network = process.env.NETWORK,
     } = {}
   ) => {
-    const aggregate = await eventStore({ domain, service, network })
+    const { body: aggregate } = await eventStore({ domain, service, network })
       .set({
         context,
         claims,
