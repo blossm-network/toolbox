@@ -76,7 +76,6 @@ const common = ({ method, dataParam, operation, id, data }) => {
                 : null,
             });
           }
-          // if (response.statusCode == 204) return null;
 
           return {
             ...(response.body && { body: formatResponse(response.body) }),
