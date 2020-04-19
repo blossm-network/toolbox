@@ -15,7 +15,7 @@ const eventAction = "some-event-action";
 const cleanedPayload = "some-cleaned-payload";
 const filledPayload = "some-filled-payload";
 const aggregateFn = "some-aggregate-fn";
-const response = "some-response";
+const response = { some: "response" };
 const root = "some-root";
 const options = "some-options";
 const commandId = "some-command-id";
@@ -159,8 +159,8 @@ describe("Command handler post", () => {
         },
       ],
     });
-    expect(statusFake).to.have.been.calledWith(201);
-    expect(sendFake).to.have.been.calledWith(response);
+    expect(statusFake).to.have.been.calledWith(202);
+    expect(sendFake).to.have.been.calledWith({ ...response, _id: commandId });
   });
   it("should call with the correct params with added header path", async () => {
     const validateFnFake = fake();
@@ -238,8 +238,11 @@ describe("Command handler post", () => {
         },
       ],
     });
-    expect(statusFake).to.have.been.calledWith(201);
-    expect(sendFake).to.have.been.calledWith(response);
+    expect(statusFake).to.have.been.calledWith(202);
+    expect(sendFake).to.have.been.calledWith({
+      ...response,
+      _id: commandId,
+    });
   });
   it("should call with the correct params will fillFn", async () => {
     const validateFnFake = fake();
@@ -438,6 +441,60 @@ describe("Command handler post", () => {
         },
       ],
     });
+    expect(statusFake).to.have.been.calledWith(202);
+    expect(sendFake).to.have.been.calledWith({ _id: commandId });
+  });
+  it("should call with the correct params with no response and no events", async () => {
+    const validateFnFake = fake();
+    const normalizeFnFake = fake.returns(cleanedPayload);
+
+    const createEventFake = fake.returns(event);
+    replace(deps, "createEvent", createEventFake);
+
+    replace(deps, "uuid", fake.returns(commandId));
+    const events = [];
+    const mainFnFake = fake.returns({
+      events,
+    });
+
+    const req = {
+      body: {
+        payload,
+        headers,
+        context,
+        claims,
+      },
+    };
+
+    const sendFake = fake();
+    const statusFake = fake.returns({
+      send: sendFake,
+    });
+    const res = {
+      status: statusFake,
+    };
+
+    const addFnFake = fake();
+    const aggregateFnFake = fake.returns(aggregateFn);
+
+    await post({
+      mainFn: mainFnFake,
+      validateFn: validateFnFake,
+      normalizeFn: normalizeFnFake,
+      aggregateFn: aggregateFnFake,
+      addFn: addFnFake,
+    })(req, res);
+
+    expect(aggregateFnFake).to.have.been.calledWith({ context, claims });
+    expect(normalizeFnFake).to.have.been.calledWith(payload);
+    expect(validateFnFake).to.have.been.calledWith(payload);
+    expect(mainFnFake).to.have.been.calledWith({
+      payload: cleanedPayload,
+      context,
+      claims,
+      aggregateFn,
+    });
+
     expect(statusFake).to.have.been.calledWith(204);
     expect(sendFake).to.have.been.calledWith();
   });
@@ -542,8 +599,8 @@ describe("Command handler post", () => {
         },
       ],
     });
-    expect(statusFake).to.have.been.calledWith(201);
-    expect(sendFake).to.have.been.calledWith(response);
+    expect(statusFake).to.have.been.calledWith(202);
+    expect(sendFake).to.have.been.calledWith({ ...response, _id: commandId });
   });
   it("should call with the correct params with no clean or validate, correctNubmer, and empty response", async () => {
     const createEventFake = fake.returns(event);
@@ -624,8 +681,8 @@ describe("Command handler post", () => {
         },
       ],
     });
-    expect(statusFake).to.have.been.calledWith(201);
-    expect(sendFake).to.have.been.calledWith(response);
+    expect(statusFake).to.have.been.calledWith(202);
+    expect(sendFake).to.have.been.calledWith({ ...response, _id: commandId });
   });
   it("should call with the correct params without default action, domain, service, and networks", async () => {
     const validateFnFake = fake();
@@ -722,8 +779,8 @@ describe("Command handler post", () => {
         },
       ],
     });
-    expect(statusFake).to.have.been.calledWith(201);
-    expect(sendFake).to.have.been.calledWith(response);
+    expect(statusFake).to.have.been.calledWith(202);
+    expect(sendFake).to.have.been.calledWith({ ...response, _id: commandId });
   });
 
   it("should call with the correct params with many events in different services", async () => {
@@ -847,8 +904,8 @@ describe("Command handler post", () => {
         { data: event, number: otherCorrectNumber },
       ],
     });
-    expect(statusFake).to.have.been.calledWith(201);
-    expect(sendFake).to.have.been.calledWith(response);
+    expect(statusFake).to.have.been.calledWith(202);
+    expect(sendFake).to.have.been.calledWith({ ...response, _id: commandId });
   });
   it("should call with the correct params with many events in different domains and services", async () => {
     const validateFnFake = fake();
@@ -980,7 +1037,7 @@ describe("Command handler post", () => {
       events: [{ data: event, number: otherCorrectNumber }],
     });
     expect(addFnFake).to.have.been.calledTwice;
-    expect(statusFake).to.have.been.calledWith(201);
-    expect(sendFake).to.have.been.calledWith(response);
+    expect(statusFake).to.have.been.calledWith(202);
+    expect(sendFake).to.have.been.calledWith({ ...response, _id: commandId });
   });
 });

@@ -13,6 +13,7 @@ const context = "some-context";
 const claims = "some-claims";
 const internalTokenFn = "some-internal-token-fn";
 const externalTokenFn = "some-external-token-fn";
+const statusCode = "some-status-code";
 
 const root = "some-root";
 
@@ -38,6 +39,7 @@ describe("Command gateway post", () => {
         ...response,
         tokens: [{ a: 1 }],
       },
+      statusCode,
     });
     const setFake = fake.returns({
       issue: issueFake,
@@ -80,7 +82,7 @@ describe("Command gateway post", () => {
       ...headers,
       root,
     });
-    expect(statusFake).to.have.been.calledWith(201);
+    expect(statusFake).to.have.been.calledWith(statusCode);
     expect(sendFake).to.have.been.calledWith(response);
   });
   it("should call with the correct params on a different network and different service", async () => {
@@ -92,6 +94,7 @@ describe("Command gateway post", () => {
         ...response,
         tokens: [{ a: 1 }],
       },
+      statusCode,
     });
     const setFake = fake.returns({
       issue: issueFake,
@@ -145,13 +148,13 @@ describe("Command gateway post", () => {
       ...headers,
       root,
     });
-    expect(statusFake).to.have.been.calledWith(201);
+    expect(statusFake).to.have.been.calledWith(statusCode);
   });
   it("should call with the correct params if response is empty", async () => {
     const validateFake = fake();
     replace(deps, "validate", validateFake);
 
-    const issueFake = fake.returns({});
+    const issueFake = fake.returns({ statusCode });
     const setFake = fake.returns({
       issue: issueFake,
     });
@@ -193,7 +196,7 @@ describe("Command gateway post", () => {
       ...headers,
       root,
     });
-    expect(statusFake).to.have.been.calledWith(204);
+    expect(statusFake).to.have.been.calledWith(statusCode);
     expect(sendFake).to.have.been.calledWith();
   });
   it("should call with the correct params if tokens is in the response", async () => {
@@ -216,7 +219,10 @@ describe("Command gateway post", () => {
       type: token2Type,
       value: token2Value,
     };
-    const issueFake = fake.returns({ body: { tokens: [token1, token2] } });
+    const issueFake = fake.returns({
+      body: { tokens: [token1, token2] },
+      statusCode,
+    });
     const setFake = fake.returns({
       issue: issueFake,
     });

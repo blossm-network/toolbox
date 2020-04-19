@@ -99,10 +99,13 @@ module.exports = ({
     // If there is a response, return 200.
     // If there is not a response, return 204.
 
-    // const formattedResponse = {
-    //   ...response,
-    //   events,
-    // };
-    res.status(response ? 201 : 204).send(response);
+    const formattedResponse = (response || events.length) && {
+      ...response,
+      ...(events.length && { _id: commandId }),
+    };
+
+    const statusCode = events.length ? 202 : formattedResponse ? 200 : 204;
+
+    res.status(statusCode).send(formattedResponse);
   };
 };

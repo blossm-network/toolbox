@@ -11,7 +11,7 @@ module.exports = ({
   await deps.validate(req.body);
   const { root, payload, headers } = req.body;
 
-  let { body: response } = await deps
+  let { body: response, statusCode } = await deps
     .command({
       name,
       domain,
@@ -43,10 +43,11 @@ module.exports = ({
     // If removing tokens makes the response empty, set it to null to properly return a 204.
     if (Object.keys(response).length == 1) {
       response = null;
+      statusCode = 204;
     } else {
       delete response.tokens;
     }
   }
 
-  res.status(response ? 201 : 204).send(response);
+  res.status(statusCode).send(response);
 };
