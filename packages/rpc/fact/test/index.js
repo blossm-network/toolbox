@@ -82,11 +82,11 @@ describe("Get job", () => {
     });
     replace(deps, "rpc", rpcFake);
 
-    const result = await fact({ name }).read(query);
+    const result = await fact({ name }).read();
 
     expect(result).to.equal(response);
     expect(rpcFake).to.have.been.calledWith(name, envService, "fact");
-    expect(getFake).to.have.been.calledWith(query);
+    expect(getFake).to.have.been.calledWith({});
     expect(inFake).to.have.been.calledWith({});
     expect(withFake).to.have.been.calledWith({});
   });

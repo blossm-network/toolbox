@@ -6,7 +6,7 @@ module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
     context,
     claims,
     tokenFns: { internal: internalTokenFn, external: externalTokenFn } = {},
-  } = {}) => async (query) => {
+  } = {}) => async (query = {}) => {
     if (query.root) {
       query.id = query.root;
       delete query.root;
