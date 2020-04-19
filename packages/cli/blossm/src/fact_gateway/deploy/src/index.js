@@ -102,7 +102,7 @@ module.exports = gateway({
           .read({ id: roleId }),
     });
   },
-  terminatedSessionCheckFn: async (session) => {
+  terminatedSessionCheckFn: async ({ session }) => {
     const terminated = await fact({
       name: "terminated",
       domain: "session",

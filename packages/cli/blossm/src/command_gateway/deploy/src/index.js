@@ -2,7 +2,6 @@ const yaml = require("yaml");
 const { readFile, readdir, unlink } = require("fs");
 const { promisify } = require("util");
 const gateway = require("@blossm/command-gateway");
-// const eventStore = require("@blossm/event-store-rpc");
 const { get: secret } = require("@blossm/gcp-secret");
 const fact = require("@blossm/fact-rpc");
 const { verify: verifyGCP } = require("@blossm/gcp-kms");
@@ -103,7 +102,7 @@ module.exports = gateway({
           .read({ id: roleId }),
     });
   },
-  terminatedSessionCheckFn: async (session) => {
+  terminatedSessionCheckFn: async ({ session }) => {
     const terminated = await fact({
       name: "terminated",
       domain: "session",
