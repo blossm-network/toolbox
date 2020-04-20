@@ -1,0 +1,25 @@
+{
+  "name": "@blossm/key-claims",
+  "version": "0.0.0",
+  "description": "Establishes the claims from the key.",
+  "main": "index.js",
+  "author": "blossm.network",
+  "engines": {
+    "node": ">= 10.16.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 0"
+  },
+  "dependencies": {
+    "@blossm/fact-rpc": "*",
+    "@blossm/errors": "*",
+    "@blossm/gcp-token": "*",
+    "@blossm/crypt": "*"
+  },
+  "devDependencies": {
+    "mocha": "^7.1.1"
+  }
+}

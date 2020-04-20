@@ -1,0 +1,76 @@
+const yaml = require("yaml");
+const { readFile, readdir, unlink } = require("fs");
+const { promisify } = require("util");
+const fact = require("@blossm/fact-rpc");
+// const gcpToken = require("@blossm/gcp-token");
+const rolePermissions = require("@blossm/role-permissions");
+const uuid = require("@blossm/uuid");
+
+const readFileAsync = promisify(readFile);
+const readDirAsync = promisify(readdir);
+const unlinkAsync = promisify(unlink);
+
+let defaultRoles;
+
+module.exports = ({ token, downloadFileFn }) => async ({
+  principle,
+  context,
+}) => {
+  //Download files if they aren't downloaded already.
+  if (!defaultRoles) {
+    const fileName = uuid();
+    const extension = ".yaml";
+    defaultRoles = {};
+    await downloadFileFn({ fileName, extension });
+    const files = (await readDirAsync(".")).filter(
+      (file) => file.startsWith(fileName) && file.endsWith(extension)
+    );
+
+    await Promise.all(
+      files.map(async (file) => {
+        const role = await readFileAsync(file);
+        const defaultRole = yaml.parse(role.toString());
+        defaultRoles = {
+          ...defaultRoles,
+          ...defaultRole,
+        };
+        await unlinkAsync(file);
+      })
+    );
+  }
+
+  const { body: roles } = await fact({
+    name: "roles",
+    domain: "principle",
+    service: principle.service,
+    network: principle.network,
+  })
+    .set({
+      tokenFns: { internal: token },
+      context: { network: process.env.NETWORK },
+    })
+    .read({ root: principle.root });
+
+  return await rolePermissions({
+    roles,
+    defaultRoles,
+    context,
+    customRolePermissionsFn: async ({ roleId }) => {
+      const { body: permissions } = await fact({
+        name: "permissions",
+        domain: "role",
+        service: "core",
+        ...(process.env.CORE_NETWORK && {
+          network: process.env.CORE_NETWORK,
+        }),
+      })
+        .set({
+          tokenFns: { internal: token },
+          context: { network: process.env.NETWORK },
+        })
+        .read({ id: roleId });
+
+      return permissions;
+    },
+  });
+};
