@@ -102,13 +102,12 @@ const executeStep = async (step) => {
     },
   });
 
-  const correctCode = step.response ? 202 : step.code || 204;
-  if (response.statusCode != correctCode) {
+  if (response.statusCode != step.code) {
     //eslint-disable-next-line no-console
     console.log("response: ", response);
   }
 
-  expect(response.statusCode).to.equal(correctCode);
+  expect(response.statusCode).to.equal(step.code);
 
   if (!step.response) return;
 
