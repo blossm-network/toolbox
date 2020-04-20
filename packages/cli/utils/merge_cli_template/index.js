@@ -372,6 +372,20 @@ const addDefaultDependencies = ({ config, coreNetwork }) => {
       network: coreNetwork,
       procedure: "event-store",
     },
+    {
+      name: "terminated",
+      domain: "session",
+      service: "core",
+      network: coreNetwork,
+      procedure: "fact",
+    },
+    {
+      name: "permissions",
+      domain: "role",
+      service: "core",
+      network: coreNetwork,
+      procedure: "fact",
+    },
   ];
 
   switch (config.procedure) {
@@ -420,7 +434,6 @@ const addDefaultDependencies = ({ config, coreNetwork }) => {
     }
     case "view-gateway":
       return [
-        ...tokenDependencies,
         ...(config.stores.some(
           (s) => s.protection == undefined || s.protection == "strict"
         )
@@ -440,7 +453,6 @@ const addDefaultDependencies = ({ config, coreNetwork }) => {
       ];
     case "fact-gateway":
       return [
-        ...tokenDependencies,
         ...(config.facts.some(
           (f) => f.protection == undefined || f.protection == "strict"
         )
