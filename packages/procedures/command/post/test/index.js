@@ -162,6 +162,105 @@ describe("Command handler post", () => {
     expect(statusFake).to.have.been.calledWith(202);
     expect(sendFake).to.have.been.calledWith({ ...response, _id: commandId });
   });
+  it("should call with the correct params with status code", async () => {
+    const validateFnFake = fake();
+    const normalizeFnFake = fake.returns(cleanedPayload);
+
+    const createEventFake = fake.returns(event);
+    replace(deps, "createEvent", createEventFake);
+
+    replace(deps, "uuid", fake.returns(commandId));
+
+    const statusCode = "some-status-code";
+
+    const events = [
+      {
+        payload: eventPayload,
+        action: eventAction,
+        correctNumber,
+      },
+    ];
+    const mainFnFake = fake.returns({
+      events,
+      response,
+      statusCode,
+    });
+    const req = {
+      body: {
+        payload,
+        headers,
+        context,
+        claims,
+      },
+    };
+
+    const sendFake = fake();
+    const statusFake = fake.returns({
+      send: sendFake,
+    });
+    const res = {
+      status: statusFake,
+    };
+
+    const addFnFake = fake();
+    const aggregateFnFake = fake.returns(aggregateFn);
+
+    await post({
+      mainFn: mainFnFake,
+      validateFn: validateFnFake,
+      normalizeFn: normalizeFnFake,
+      addFn: addFnFake,
+      aggregateFn: aggregateFnFake,
+    })(req, res);
+
+    expect(aggregateFnFake).to.have.been.calledWith({ context, claims });
+    expect(normalizeFnFake).to.have.been.calledWith(payload);
+    expect(validateFnFake).to.have.been.calledWith(payload);
+    expect(mainFnFake).to.have.been.calledWith({
+      payload: cleanedPayload,
+      context,
+      claims,
+      aggregateFn,
+    });
+
+    expect(createEventFake).to.have.been.calledWith({
+      payload: eventPayload,
+      trace,
+      action: eventAction,
+      domain,
+      service,
+      version: 0,
+      idempotency,
+      path: [
+        {
+          procedure,
+          hash,
+          id: commandId,
+          issued,
+          timestamp: deps.dateString(),
+          name,
+          domain,
+          service,
+          network,
+          host,
+        },
+      ],
+    });
+    expect(addFnFake).to.have.been.calledWith({
+      domain,
+      service,
+      context,
+      claims,
+      events: [
+        {
+          data: event,
+          number: correctNumber,
+        },
+      ],
+    });
+    expect(statusFake).to.have.been.calledWith(statusCode);
+    expect(sendFake).to.have.been.calledWith({ ...response, _id: commandId });
+  });
   it("should call with the correct params with added header path", async () => {
     const validateFnFake = fake();
     const normalizeFnFake = fake.returns(cleanedPayload);
