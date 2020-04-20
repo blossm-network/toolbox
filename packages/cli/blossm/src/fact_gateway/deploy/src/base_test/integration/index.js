@@ -11,7 +11,7 @@ const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 const root = "some-root";
 
 const existingTopics = [];
-describe("Get job gateway integration tests", () => {
+describe("Fact gateway integration tests", () => {
   before(async () => {
     existingTopics.push(
       ...testing.topics.filter(async (t) => {

@@ -25,7 +25,7 @@ const envService = "some-env-service";
 
 process.env.SERVICE = envService;
 
-describe("Get job", () => {
+describe("Fact", () => {
   beforeEach(() => {
     clock = useFakeTimers(now.getTime());
   });
