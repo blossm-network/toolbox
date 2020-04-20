@@ -69,7 +69,7 @@ module.exports = ({
         ...(contexts && { context: contexts }),
         ...(!internal && {
           network,
-          host: `view.${domain}.${context}.${network}`,
+          host: `v.${domain}.${context}.${network}`,
         }),
       })
       .with({

@@ -205,7 +205,7 @@ describe("Issue command", () => {
     expect(inFake).to.have.been.calledWith({
       context,
       network: otherNetwork,
-      host: `command.some-domain.some-service.some-other-network`,
+      host: `c.some-domain.some-service.some-other-network`,
     });
     expect(withFake).to.have.been.calledWith({
       externalTokenFn,

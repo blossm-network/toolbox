@@ -73,7 +73,7 @@ module.exports = ({
 
           const key = `${dependency.name}${
             dependency.domain ? `-${dependency.domain}` : ""
-          }${dependency.service ? `-${dependency.service}` : ""}${
+          }${dependency.service ? `-${dependency.service}` : ""}-${
             config.context
           }`;
 
@@ -111,7 +111,7 @@ module.exports = ({
             dependency.procedure
           );
 
-          const key = `${dependency.domain}-${config.service}`;
+          const key = `${dependency.domain}-${dependency.service}`;
           services = {
             ...services,
             [key]: {
@@ -140,7 +140,7 @@ module.exports = ({
             dependency.service,
             dependency.procedure
           );
-          const key = `${dependency.name}-${dependency.domain}-${config.service}`;
+          const key = `${dependency.name}-${dependency.domain}-${dependency.service}`;
           services = {
             ...services,
             [key]: {

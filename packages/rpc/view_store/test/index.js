@@ -289,7 +289,7 @@ describe("Get views", () => {
     expect(inFake).to.have.been.calledWith({
       context: contexts,
       network: otherNetwork,
-      host: "view.some-domain.some-context.some-other-network",
+      host: "v.some-domain.some-context.some-other-network",
     });
     expect(withFake).to.have.been.calledWith({
       path: "/some-name/stream",

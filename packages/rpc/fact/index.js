@@ -23,7 +23,7 @@ module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
         ...(context && { context }),
         ...(!internal && {
           network,
-          host: `fact.${domain}.${service}.${network}`,
+          host: `f.${domain}.${service}.${network}`,
         }),
       })
       .with({
