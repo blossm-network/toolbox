@@ -28,5 +28,5 @@ module.exports = async ({
     return claims;
   }
 
-  throw deps.invalidCredentialsError.tokenInvalid();
+  throw deps.invalidCredentialsError.message("Token not found.");
 };

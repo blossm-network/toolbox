@@ -3,11 +3,6 @@ const { InvalidCredentialsError } = require("restify-errors");
 const toJSON = require("./_to_json");
 
 module.exports = {
-  tokenInvalid: ({ cause, info } = {}) =>
-    new InvalidCredentialsError(
-      { cause, info, toJSON },
-      "This token is invalid."
-    ),
   tokenExpired: ({ cause, info } = {}) =>
     new InvalidCredentialsError(
       { cause, info: { ...info, reason: "expired" }, toJSON },

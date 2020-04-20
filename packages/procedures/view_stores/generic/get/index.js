@@ -6,7 +6,8 @@ module.exports = ({ findFn, one = false, queryFn = defaultQueryFn }) => {
   return async (req, res) => {
     const context = req.query.context[process.env.CONTEXT];
 
-    if (!context) throw deps.forbiddenError.wrongContext();
+    if (!context)
+      throw deps.forbiddenError.message("Missing required permissions.");
 
     const queryBody = queryFn(req.query.query);
     const formattedQueryBody = {};

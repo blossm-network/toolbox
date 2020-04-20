@@ -68,9 +68,9 @@ describe("Validate", () => {
     const verifyFn = fake.returns(false);
 
     const error = "some-error";
-    const tokenInvalidFake = fake.returns(error);
+    const messageFake = fake.returns(error);
     replace(deps, "invalidCredentialsError", {
-      tokenInvalid: tokenInvalidFake,
+      message: messageFake,
     });
 
     try {
@@ -79,6 +79,7 @@ describe("Validate", () => {
       //shouldn't get called.
       expect(1).to.equal(2);
     } catch (e) {
+      expect(messageFake).to.have.been.calledWith("The signature is wrong.");
       expect(e).to.equal(error);
     }
   });
@@ -95,9 +96,9 @@ describe("Validate", () => {
     const verifyFn = fake.returns(true);
 
     const error = "some-error";
-    const tokenInvalidFake = fake.returns(error);
+    const messageFake = fake.returns(error);
     replace(deps, "invalidCredentialsError", {
-      tokenInvalid: tokenInvalidFake,
+      message: messageFake,
     });
 
     try {
@@ -106,6 +107,9 @@ describe("Validate", () => {
       //shouldn't get called.
       expect(1).to.equal(2);
     } catch (e) {
+      expect(messageFake).to.have.been.calledWith(
+        "The token algorithm is wrong."
+      );
       expect(e).to.equal(error);
     }
   });
@@ -125,9 +129,9 @@ describe("Validate", () => {
     const verifyFn = fake.returns(true);
 
     const error = "some-error";
-    const wrongAudienceFake = fake.returns(error);
+    const messageFake = fake.returns(error);
     replace(deps, "invalidCredentialsError", {
-      wrongAudience: wrongAudienceFake,
+      message: messageFake,
     });
 
     try {
@@ -136,6 +140,9 @@ describe("Validate", () => {
       //shouldn't get called.
       expect(1).to.equal(2);
     } catch (e) {
+      expect(messageFake).to.have.been.calledWith(
+        "The token is intended for a different audience."
+      );
       expect(e).to.equal(error);
     }
   });
@@ -151,9 +158,9 @@ describe("Validate", () => {
     const verifyFn = fake.returns(true);
 
     const error = "some-error";
-    const tokenExpiredFake = fake.returns(error);
+    const messageFake = fake.returns(error);
     replace(deps, "invalidCredentialsError", {
-      tokenExpired: tokenExpiredFake,
+      message: messageFake,
     });
 
     try {
@@ -162,6 +169,9 @@ describe("Validate", () => {
       //shouldn't get called.
       expect(1).to.equal(2);
     } catch (e) {
+      expect(messageFake).to.have.been.calledWith("The token is expired.", {
+        info: { reason: "expired" },
+      });
       expect(e).to.equal(error);
     }
   });
@@ -177,9 +187,9 @@ describe("Validate", () => {
     const verifyFn = fake.returns(true);
 
     const error = "some-error";
-    const tokenNotAtiveFake = fake.returns(error);
+    const messageFake = fake.returns(error);
     replace(deps, "invalidCredentialsError", {
-      tokenNotActive: tokenNotAtiveFake,
+      message: messageFake,
     });
 
     try {
@@ -188,6 +198,9 @@ describe("Validate", () => {
       //shouldn't get called.
       expect(1).to.equal(2);
     } catch (e) {
+      expect(messageFake).to.have.been.calledWith(
+        "The token isn't active yet."
+      );
       expect(e).to.equal(error);
     }
   });

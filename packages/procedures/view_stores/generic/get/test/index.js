@@ -194,14 +194,17 @@ describe("View store get", () => {
     };
 
     const error = "some-error";
-    const wrongContextFake = fake.returns(error);
+    const messageFake = fake.returns(error);
     replace(deps, "forbiddenError", {
-      wrongContext: wrongContextFake,
+      message: messageFake,
     });
 
     try {
       await get({ findFn: findFake, one: true })(req, res);
     } catch (e) {
+      expect(messageFake).to.have.been.calledWith(
+        "Missing required permissions."
+      );
       expect(e).to.equal(error);
     }
   });

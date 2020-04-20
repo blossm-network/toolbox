@@ -5,18 +5,6 @@ const cause = new Error();
 const info = { some: "info" };
 
 describe("Invalid credentials", () => {
-  it("tokenInvalid correct", () => {
-    const error = invalidCredentials.tokenInvalid();
-    expect(error.message).to.equal("This token is invalid.");
-    expect(error.statusCode).to.equal(401);
-  });
-  it("tokenInvalid correct with props", () => {
-    const error = invalidCredentials.tokenInvalid({ cause, info });
-    expect(error.message).to.equal("This token is invalid.");
-    expect(error.info()).to.deep.equal(info);
-    expect(error.cause()).to.deep.equal(cause);
-    expect(error.statusCode).to.equal(401);
-  });
   it("tokenExpired correct", () => {
     const error = invalidCredentials.tokenExpired();
     expect(error.toJSON()).to.deep.equal({

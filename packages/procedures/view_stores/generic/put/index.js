@@ -4,7 +4,8 @@ const defaultFn = (view) => view;
 
 module.exports = ({ writeFn, viewFn = defaultFn }) => {
   return async (req, res) => {
-    if (req.params.root == undefined) throw deps.badRequestError.missingRoot();
+    if (req.params.root == undefined)
+      throw deps.badRequestError.message("Missing root url parameter.");
 
     const customView = viewFn(req.body.view);
 

@@ -115,9 +115,9 @@ describe("View store put", () => {
     };
 
     const error = "some-error";
-    const missingRootFake = fake.returns(error);
+    const messageFake = fake.returns(error);
     replace(deps, "badRequestError", {
-      missingRoot: missingRootFake,
+      message: messageFake,
     });
 
     const fnFake = fake.returns({ $set: { b: 2 } });
@@ -128,6 +128,9 @@ describe("View store put", () => {
       //shouldn't get called
       expect(1).to.equal(0);
     } catch (e) {
+      expect(messageFake).to.have.been.calledWith(
+        "Missing root url parameter."
+      );
       expect(e).to.equal(error);
     }
   });

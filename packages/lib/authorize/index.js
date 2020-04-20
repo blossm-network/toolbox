@@ -31,7 +31,9 @@ module.exports = async ({
   );
 
   if (satisfiedPermissions.length == 0) {
-    throw deps.invalidCredentialsError.tokenInvalid();
+    throw deps.invalidCredentialsError.message(
+      "There are missing permissions."
+    );
   }
 
   return {
