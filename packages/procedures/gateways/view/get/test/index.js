@@ -17,7 +17,7 @@ describe("View gateway get", () => {
     restore();
   });
   it("should call with the correct params", async () => {
-    const readFake = fake.returns(results);
+    const readFake = fake.returns({ body: results });
     const setFake = fake.returns({
       read: readFake,
     });
@@ -49,10 +49,10 @@ describe("View gateway get", () => {
       tokenFns: { internal: deps.gcpToken },
     });
     expect(readFake).to.have.been.calledWith(query);
-    expect(sendFake).to.have.been.calledWith(results);
+    expect(sendFake).to.have.been.calledWith({ content: results });
   });
   it("should call with the correct params with context and domain", async () => {
-    const readFake = fake.returns(results);
+    const readFake = fake.returns({ body: results });
     const setFake = fake.returns({
       read: readFake,
     });
@@ -88,7 +88,7 @@ describe("View gateway get", () => {
       tokenFns: { internal: deps.gcpToken },
     });
     expect(readFake).to.have.been.calledWith(query);
-    expect(sendFake).to.have.been.calledWith(results);
+    expect(sendFake).to.have.been.calledWith({ content: results });
   });
   it("should throw correctly", async () => {
     const errorMessage = "error-message";

@@ -1,7 +1,7 @@
 const deps = require("./deps");
 
 module.exports = ({ name, domain, service } = {}) => async (req, res) => {
-  const response = await deps
+  const { body: response } = await deps
     .viewStore({
       name,
       ...(domain && { domain }),
@@ -14,5 +14,5 @@ module.exports = ({ name, domain, service } = {}) => async (req, res) => {
     })
     .read(req.query);
 
-  res.status(200).send(response);
+  res.status(200).send({ content: response });
 };
