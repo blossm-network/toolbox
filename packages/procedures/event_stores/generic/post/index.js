@@ -36,11 +36,12 @@ module.exports = ({ saveEventsFn, reserveRootCountsFn, publishFn }) => {
       const topicDomain = topicParts[1];
       const topicService = topicParts[2];
 
+      // TODO write a test for this
       if (
         topicDomain != process.env.DOMAIN ||
         topicService != process.env.SERVICE
       )
-        throw badRequest.wrongEventStore({
+        throw badRequest.message("This event store can't accept this event.", {
           info: {
             expected: `${process.env.DOMAIN}.${process.env.SERVICE}`,
             actual: `${topicDomain}.${topicService}`,

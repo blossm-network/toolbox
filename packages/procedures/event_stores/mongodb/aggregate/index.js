@@ -36,8 +36,9 @@ module.exports = ({ eventStore, snapshotStore, handlers }) => async (root) => {
     .reduce(
       (accumulator, event) => {
         const handler = handlers[event.headers.action];
+        // TODO write test for this.
         if (!handler)
-          throw badRequest.eventHandlerNotSpecified({
+          throw badRequest.message("Event handler not specified.", {
             info: {
               action: event.headers.action,
             },

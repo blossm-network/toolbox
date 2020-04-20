@@ -22,8 +22,11 @@ module.exports = ({ eventStore, snapshotStore, handlers }) => async ({
   key,
   value,
 }) => {
+  // Write a test for this. TODO
   if (!key || !value)
-    throw badRequest.incompleteQuery({ info: { key, value } });
+    throw badRequest.message("The query is missing a key or value.", {
+      info: { key, value },
+    });
 
   const [snapshots, events] = await Promise.all([
     deps.db.find({

@@ -27,7 +27,7 @@ module.exports = (results) => {
 
   if (!errors.length) return null;
 
-  return deps.invalidArgumentError.validationFailed({
+  return deps.invalidArgumentError.message("Some information is invalid.", {
     info: {
       errors: errors.map((e) => {
         return { message: e.message, path: e.path[0] };

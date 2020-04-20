@@ -7,19 +7,13 @@ const event = (req) => {
       .trim();
     return JSON.parse(eventString);
   } catch (e) {
-    throw deps.badRequestError.badEvent();
+    //TODO write a test for this.
+    throw deps.badRequestError.message("Invalid event format.");
   }
 };
 
 module.exports = ({ mainFn }) => {
   return async (req, res) => {
-    if (!req.body) {
-      throw deps.badRequestError.missingMessage();
-    }
-    if (!req.body.message) {
-      throw deps.badRequestError.badMessage();
-    }
-
     await mainFn(event(req));
 
     res.status(204).send();

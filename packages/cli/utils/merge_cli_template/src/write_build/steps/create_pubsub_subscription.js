@@ -38,7 +38,10 @@ module.exports = ({
         "event-action": eventAction,
         "event-domain": eventDomain,
         "event-service": eventService,
-      }).reduce((string, [key, value]) => (string += `${key}=${value},`), "")}
+      }).reduce(
+        (string, [key, value]) => (string += `${key}=${value},`),
+        ""
+      )} || exit 0
     `,
     ],
   };
