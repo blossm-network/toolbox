@@ -59,9 +59,9 @@ describe("Event store get", () => {
     const res = {};
 
     const error = "some-error";
-    const rootNotFoundFake = fake.returns(error);
+    const messageFake = fake.returns(error);
     replace(deps, "resourceNotFoundError", {
-      root: rootNotFoundFake,
+      message: messageFake,
     });
 
     try {
@@ -70,6 +70,7 @@ describe("Event store get", () => {
       //shouldn't get called
       expect(2).to.equal(1);
     } catch (e) {
+      expect(messageFake).to.have.been.calledWith("This root wasn't found.");
       expect(e).to.equal(error);
     }
   });

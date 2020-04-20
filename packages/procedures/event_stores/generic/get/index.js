@@ -6,7 +6,7 @@ module.exports = ({ aggregateFn, queryFn }) => {
       const result = await aggregateFn(req.params.root);
 
       if (!result)
-        throw deps.resourceNotFoundError.root({
+        throw deps.resourceNotFoundError.message("This root wasn't found.", {
           info: { root: req.params.root },
         });
 

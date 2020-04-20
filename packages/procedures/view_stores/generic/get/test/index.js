@@ -166,14 +166,15 @@ describe("View store get", () => {
     };
 
     const error = "some-error";
-    const viewNotFoundFake = fake.returns(error);
+    const messageFake = fake.returns(error);
     replace(deps, "resourceNotFoundError", {
-      view: viewNotFoundFake,
+      message: messageFake,
     });
 
     try {
       await get({ findFn: findFake, one: true })(req, res);
     } catch (e) {
+      expect(messageFake).to.have.been.calledWith("This view wasn't found.");
       expect(e).to.equal(error);
     }
   });

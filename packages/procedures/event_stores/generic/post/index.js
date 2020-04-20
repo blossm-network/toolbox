@@ -55,7 +55,7 @@ module.exports = ({ saveEventsFn, reserveRootCountsFn, publishFn }) => {
         eventNumberOffsets[event.data.headers.root];
 
       if (event.number && event.number != number)
-        throw preconditionFailed.eventNumberIncorrect({
+        throw preconditionFailed.message("Event number incorrect.", {
           info: { expected: req.body.number, actual: number },
         });
 

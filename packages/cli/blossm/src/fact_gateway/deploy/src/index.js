@@ -118,7 +118,10 @@ module.exports = gateway({
       })
       .read();
 
-    if (terminated) throw invalidCredentials.tokenTerminated();
+    if (terminated)
+      throw invalidCredentials.message(
+        "This token has already been terminated."
+      );
   },
   verifyFn: ({ key }) =>
     key == "access"

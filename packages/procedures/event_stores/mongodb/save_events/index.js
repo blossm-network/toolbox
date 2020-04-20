@@ -28,7 +28,7 @@ module.exports = ({ eventStore, handlers }) => async (events) => {
     return groomedResults;
   } catch (e) {
     if (e.code == 11000) {
-      throw preconditionFailed.eventNumberDuplicate();
+      throw preconditionFailed.message("Event number duplicate.");
     } else {
       throw e;
     }

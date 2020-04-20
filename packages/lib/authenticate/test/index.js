@@ -119,9 +119,9 @@ describe("Authorize", () => {
     const keyClaimsFnFake = fake.returns(claims);
 
     const error = "some-error";
-    const tokenInvalidFake = fake.returns(error);
+    const messageFake = fake.returns(error);
     replace(deps, "invalidCredentialsError", {
-      tokenInvalid: tokenInvalidFake,
+      message: messageFake,
     });
 
     try {
@@ -135,6 +135,7 @@ describe("Authorize", () => {
       //shouldn't get called
       expect(1).to.equal(0);
     } catch (e) {
+      expect(messageFake).to.have.been.calledWith("Token not found.");
       expect(e).to.equal(error);
     }
   });
@@ -143,9 +144,9 @@ describe("Authorize", () => {
     replace(deps, "validate", fake.returns(claims));
 
     const error = "some-error";
-    const tokenInvalidFake = fake.returns(error);
+    const messageFake = fake.returns(error);
     replace(deps, "invalidCredentialsError", {
-      tokenInvalid: tokenInvalidFake,
+      message: messageFake,
     });
 
     try {
@@ -157,6 +158,7 @@ describe("Authorize", () => {
       //shouldn't get called
       expect(1).to.equal(0);
     } catch (e) {
+      expect(messageFake).to.have.been.calledWith("Token not found.");
       expect(e).to.equal(error);
     }
   });
@@ -175,9 +177,9 @@ describe("Authorize", () => {
     replace(deps, "tokensFromReq", fake.returns(basicTokens));
 
     const error = "some-error";
-    const tokenInvalidFake = fake.returns(error);
+    const messageFake = fake.returns(error);
     replace(deps, "invalidCredentialsError", {
-      tokenInvalid: tokenInvalidFake,
+      message: messageFake,
     });
 
     try {
@@ -189,6 +191,7 @@ describe("Authorize", () => {
       //shouldn't get called
       expect(1).to.equal(0);
     } catch (e) {
+      expect(messageFake).to.have.been.calledWith("Token not found.");
       expect(e).to.equal(error);
     }
   });

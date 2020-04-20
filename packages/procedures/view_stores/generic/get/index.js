@@ -44,6 +44,6 @@ module.exports = ({ findFn, one = false, queryFn = defaultQueryFn }) => {
 
     if (!one) return res.send(formattedResults);
     if (formattedResults.length > 0) return res.send(formattedResults[0]);
-    throw deps.resourceNotFoundError.view();
+    throw deps.resourceNotFoundError.message("This view wasn't found.");
   };
 };
