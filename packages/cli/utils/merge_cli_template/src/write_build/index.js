@@ -198,6 +198,7 @@ const steps = ({
         strict,
       });
     case "job":
+    case "reaction":
     case "fact":
       return job({
         imageExtension,
@@ -366,6 +367,7 @@ const imageExtension = ({
     case "command":
       return `${service}.${domain}.${name}`;
     case "job":
+    case "reaction":
     case "fact":
       return `${service ? `${service}.` : ""}${
         domain ? `${domain}.` : ""
