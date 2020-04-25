@@ -107,6 +107,22 @@ describe("Event store integration tests", () => {
       );
     }
 
+    //Test stream
+    await request.stream(
+      `${url}/stream/${root}`,
+      (data) => {
+        const parsedData = JSON.parse(data.toString().trim());
+        //TODO
+        //eslint-disable-next-line no-console
+        console.log({ eventStoreStream: parsedData });
+      },
+      {
+        query: {
+          from: 0,
+        },
+      }
+    );
+
     ///Test indexes
     for (const index of indexes || []) {
       const indexParts = index.split(".");

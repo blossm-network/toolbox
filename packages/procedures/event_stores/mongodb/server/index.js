@@ -2,9 +2,6 @@ const logger = require("@blossm/logger");
 
 const deps = require("./deps");
 
-const snapshotStoreName = `${process.env.DOMAIN}.snapshots`;
-const countStoreName = `${process.env.DOMAIN}.counts`;
-
 let _eventStore;
 let _snapshotStore;
 let _countStore;
@@ -114,7 +111,7 @@ const snapshotStore = async ({ schema, indexes }) => {
   }
 
   _snapshotStore = deps.db.store({
-    name: snapshotStoreName,
+    name: `${process.env.DOMAIN}.snapshots`,
     schema: {
       created: { type: Date, required: true },
       headers: {
@@ -140,12 +137,12 @@ const snapshotStore = async ({ schema, indexes }) => {
 
 const countStore = async () => {
   if (_countStore != undefined) {
-    logger.info("Thank you existing number store database.");
+    logger.info("Thank you existing count store database.");
     return _countStore;
   }
 
   _countStore = deps.db.store({
-    name: countStoreName,
+    name: `${process.env.DOMAIN}.counts`,
     schema: {
       root: { type: String, required: true },
       value: { type: Number, required: true, default: 0 },
@@ -188,6 +185,9 @@ module.exports = async ({
       eventStore: eStore,
       snapshotStore: sStore,
       handlers,
+    }),
+    streamFn: deps.stream({
+      eventStore: eStore,
     }),
     reserveRootCountsFn: deps.reserveRootCounts({
       countsStore: cStore,

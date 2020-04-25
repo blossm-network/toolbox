@@ -332,6 +332,13 @@ describe("Mongodb event store query", () => {
     const snapshotStore = "some-snapshot-store";
 
     const handlers = "some-handlers";
+
+    const error = new Error();
+    const messageFake = fake.returns(error);
+    replace(deps, "badRequestError", {
+      message: messageFake,
+    });
+
     try {
       await query({ eventStore, snapshotStore, handlers })({
         value: 1,
@@ -340,7 +347,13 @@ describe("Mongodb event store query", () => {
       //shouldn't get called
       expect(1).to.equal(2);
     } catch (e) {
-      expect(e.statusCode).to.equal(400);
+      expect(messageFake).to.have.been.calledWith(
+        "The query is missing a key or value.",
+        {
+          info: { key: undefined, value: 1 },
+        }
+      );
+      expect(e).to.equal(error);
     }
   });
   it("should throw if no value is passed in", async () => {
@@ -348,6 +361,13 @@ describe("Mongodb event store query", () => {
     const snapshotStore = "some-snapshot-store";
 
     const handlers = "some-handlers";
+
+    const error = new Error();
+    const messageFake = fake.returns(error);
+    replace(deps, "badRequestError", {
+      message: messageFake,
+    });
+
     try {
       await query({ eventStore, snapshotStore, handlers })({
         key: "a",
@@ -356,7 +376,13 @@ describe("Mongodb event store query", () => {
       //shouldn't get called
       expect(1).to.equal(2);
     } catch (e) {
-      expect(e.statusCode).to.equal(400);
+      expect(messageFake).to.have.been.calledWith(
+        "The query is missing a key or value.",
+        {
+          info: { key: "a", value: undefined },
+        }
+      );
+      expect(e).to.equal(error);
     }
   });
 });

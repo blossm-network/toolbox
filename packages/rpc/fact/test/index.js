@@ -280,7 +280,7 @@ describe("Fact", () => {
     expect(inFake).to.have.been.calledWith({
       context,
       network: otherNetwork,
-      host: `fact.some-domain.some-service.some-other-network`,
+      host: `f.some-domain.some-service.some-other-network`,
     });
     expect(withFake).to.have.been.calledWith({
       path: "/stream",

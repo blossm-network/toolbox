@@ -1,7 +1,5 @@
 const deps = require("./deps");
 
-const { badRequest } = require("@blossm/errors");
-
 module.exports = ({ eventStore, snapshotStore, handlers }) => async (root) => {
   const [events, snapshot] = await Promise.all([
     deps.db.find({
@@ -36,9 +34,8 @@ module.exports = ({ eventStore, snapshotStore, handlers }) => async (root) => {
     .reduce(
       (accumulator, event) => {
         const handler = handlers[event.headers.action];
-        // TODO write test for this.
         if (!handler)
-          throw badRequest.message("Event handler not specified.", {
+          throw deps.badRequestError.message("Event handler not specified.", {
             info: {
               action: event.headers.action,
             },

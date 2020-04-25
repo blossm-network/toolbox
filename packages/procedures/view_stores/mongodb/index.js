@@ -32,7 +32,7 @@ const viewStore = async ({ schema, indexes }) => {
   return _viewStore;
 };
 
-module.exports = async ({ schema, indexes, getFn, /*postFn,*/ putFn } = {}) => {
+module.exports = async ({ schema, indexes, getFn, putFn } = {}) => {
   const formattedSchema = {
     body: schema,
     headers: {
@@ -124,17 +124,6 @@ module.exports = async ({ schema, indexes, getFn, /*postFn,*/ putFn } = {}) => {
       },
     });
 
-  // const findOneFn = async ({ root }) =>
-  //   await deps.db.findOne({
-  //     store,
-  //     query: {
-  //       "headers.root": root
-  //     },
-  //     options: {
-  //       lean: true
-  //     }
-  //   });
-
   const writeFn = async ({ root, data }) => {
     const update = {};
     const setKey = "$set";
@@ -175,11 +164,9 @@ module.exports = async ({ schema, indexes, getFn, /*postFn,*/ putFn } = {}) => {
   deps.viewStore({
     streamFn,
     findFn,
-    // findOneFn,
     writeFn,
     removeFn,
     ...(getFn && { getFn }),
-    // ...(postFn && { postFn }),
     ...(putFn && { putFn }),
   });
 };

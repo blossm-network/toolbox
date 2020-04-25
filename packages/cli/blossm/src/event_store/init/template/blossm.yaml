@@ -20,6 +20,10 @@ schema:
 actions:
   - some-action
 
+reactions:
+  - name: some-reaction
+    action: some-action
+
 testing:
   examples:
     first:

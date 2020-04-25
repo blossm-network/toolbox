@@ -12,6 +12,7 @@ let clock;
 const now = new Date();
 
 const root = "some-root";
+const writeResult = "some-write-result";
 const body = {
   view: {
     body: {
@@ -36,7 +37,7 @@ describe("View store put", () => {
   });
 
   it("should call with the correct params", async () => {
-    const writeFake = fake();
+    const writeFake = fake.returns(writeResult);
 
     const req = {
       params,
@@ -61,11 +62,12 @@ describe("View store put", () => {
         "headers.modified": deps.dateString(),
       },
     });
-    expect(sendFake).to.have.been.calledOnce;
+    expect(statusFake).to.have.been.calledWith(200);
+    expect(sendFake).to.have.been.calledWith(writeResult);
   });
 
-  it("should call with the correct params", async () => {
-    const writeFake = fake();
+  it("should call with the correct params with custom fn", async () => {
+    const writeFake = fake.returns(writeResult);
 
     const req = {
       params,
@@ -95,8 +97,8 @@ describe("View store put", () => {
       body: { a: 1 },
       headers: { b: 2 },
     });
-    expect(statusFake).to.have.been.calledWith(204);
-    expect(sendFake).to.have.been.calledOnce;
+    expect(statusFake).to.have.been.calledWith(200);
+    expect(sendFake).to.have.been.calledWith(writeResult);
   });
   it("should throw if root is missing", async () => {
     const writeFake = fake();

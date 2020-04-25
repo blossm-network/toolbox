@@ -85,6 +85,9 @@ describe("Mongodb event store", () => {
     const queryResult = "some-query-result";
     const queryFake = fake.returns(queryResult);
     replace(deps, "query", queryFake);
+    const streamResult = "some-stream-result";
+    const streamFake = fake.returns(streamResult);
+    replace(deps, "stream", streamFake);
 
     await mongodbEventStore({ schema, handlers, publishFn });
 
@@ -194,10 +197,14 @@ describe("Mongodb event store", () => {
       snapshotStore: sStore,
       handlers,
     });
+    expect(streamFake).to.have.been.calledWith({
+      eventStore: eStore,
+    });
     expect(eventStoreFake).to.have.been.calledWith({
       aggregateFn: aggregateResult,
       saveEventsFn: saveEventsResult,
       queryFn: queryResult,
+      streamFn: streamResult,
       reserveRootCountsFn: reserveRootCountsResult,
       publishFn,
     });
@@ -205,7 +212,7 @@ describe("Mongodb event store", () => {
     await mongodbEventStore();
     expect(storeFake).to.have.been.calledThrice;
   });
-  it("should call with the correct params with indexes", async () => {
+  it("should call with the correct params with indexes and local env", async () => {
     const mongodbEventStore = require("..");
     const eStore = "some-event-store";
     const sStore = "some-snapshot-store";
@@ -246,6 +253,11 @@ describe("Mongodb event store", () => {
     const queryResult = "some-query-result";
     const queryFake = fake.returns(queryResult);
     replace(deps, "query", queryFake);
+    const streamResult = "some-stream-result";
+    const streamFake = fake.returns(streamResult);
+    replace(deps, "stream", streamFake);
+
+    process.env.NODE_ENV = "local";
 
     await mongodbEventStore({ schema, indexes: [index], publishFn });
 
@@ -310,7 +322,7 @@ describe("Mongodb event store", () => {
       connection: {
         protocol,
         user,
-        password,
+        password: userPassword,
         host,
         database,
         parameters: {
@@ -382,6 +394,9 @@ describe("Mongodb event store", () => {
     const queryResult = "some-query-result";
     const queryFake = fake.returns(queryResult);
     replace(deps, "query", queryFake);
+    const streamResult = "some-query-result";
+    const streamFake = fake.returns(streamResult);
+    replace(deps, "stream", streamFake);
     await mongodbEventStore({ schema, publishFn });
 
     expect(removeIdsFake).to.have.been.calledWith({

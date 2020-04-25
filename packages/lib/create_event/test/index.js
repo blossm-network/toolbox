@@ -96,7 +96,7 @@ describe("Create event", () => {
     replace(
       deps,
       "uuid",
-      stub().onFirstCall().returns(rootUuid).onCall(1).returns(idempUuid)
+      stub().onFirstCall().returns(rootUuid).onSecondCall().returns(idempUuid)
     );
 
     const value = createEvent({

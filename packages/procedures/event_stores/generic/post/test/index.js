@@ -17,6 +17,21 @@ const service = "some-service";
 const topic = `did-something.${domain}.${service}`;
 const idempotency = "some-idempotency";
 
+const eventRoot = "some-event-eroot";
+const eventAction = "some-event-action";
+const eventNumber = "some-event-number";
+const eventTopic = "some-event-topic";
+
+const writtenEvent = {
+  headers: {
+    root: eventRoot,
+    action: eventAction,
+    number: eventNumber,
+    topic: eventTopic,
+  },
+};
+const writtenEvents = [writtenEvent];
+
 const events = [
   {
     data: {
@@ -47,7 +62,6 @@ describe("Event store post", () => {
   });
 
   it("should call with the correct params", async () => {
-    const writtenEvents = "some-written-events";
     const saveEventsFnFake = fake.returns(writtenEvents);
     const reserveRootCountsFnFake = fake.returns(reserveRootCount);
     const publishFnFake = fake();
@@ -58,12 +72,9 @@ describe("Event store post", () => {
       },
     };
 
-    const sendFake = fake();
-    const statusFake = fake.returns({
-      send: sendFake,
-    });
+    const sendStatusFake = fake();
     const res = {
-      status: statusFake,
+      sendStatus: sendStatusFake,
     };
 
     await post({
@@ -71,6 +82,7 @@ describe("Event store post", () => {
       reserveRootCountsFn: reserveRootCountsFnFake,
       publishFn: publishFnFake,
     })(req, res);
+
     expect(saveEventsFnFake).to.have.been.calledWith([
       {
         id: `${root}_${currentEventsForRoot}`,
@@ -89,12 +101,13 @@ describe("Event store post", () => {
       root,
       amount: 1,
     });
-    expect(publishFnFake).to.have.been.calledWith(writtenEvents);
-    expect(statusFake).to.have.been.calledWith(204);
-    expect(sendFake).to.have.been.calledOnce;
+    expect(publishFnFake).to.have.been.calledWith(
+      { root: eventRoot, action: eventAction, number: eventNumber },
+      eventTopic
+    );
+    expect(sendStatusFake).to.have.been.calledWith(204);
   });
   it("should call with the correct params with correct number", async () => {
-    const writtenEvents = "some-written-events";
     const saveEventsFnFake = fake.returns(writtenEvents);
     const reserveRootCountsFnFake = fake.returns(reserveRootCount);
     const publishFnFake = fake();
@@ -110,12 +123,9 @@ describe("Event store post", () => {
       },
     };
 
-    const sendFake = fake();
-    const statusFake = fake.returns({
-      send: sendFake,
-    });
+    const sendStatusFake = fake();
     const res = {
-      status: statusFake,
+      sendStatus: sendStatusFake,
     };
 
     await post({
@@ -141,12 +151,13 @@ describe("Event store post", () => {
       root,
       amount: 1,
     });
-    expect(publishFnFake).to.have.been.calledWith(writtenEvents);
-    expect(statusFake).to.have.been.calledWith(204);
-    expect(sendFake).to.have.been.calledOnce;
+    expect(publishFnFake).to.have.been.calledWith(
+      { root: eventRoot, action: eventAction, number: eventNumber },
+      eventTopic
+    );
+    expect(sendStatusFake).to.have.been.calledWith(204);
   });
   it("should call with the correct params with multiple events with the same root and different roots", async () => {
-    const writtenEvents = "some-written-events";
     const saveEventsFnFake = fake.returns(writtenEvents);
     const reserveRootCountsFnFake = stub()
       .onFirstCall()
@@ -176,12 +187,9 @@ describe("Event store post", () => {
       },
     };
 
-    const sendFake = fake();
-    const statusFake = fake.returns({
-      send: sendFake,
-    });
+    const sendStatusFake = fake();
     const res = {
-      status: statusFake,
+      sendStatus: sendStatusFake,
     };
 
     await post({
@@ -236,12 +244,13 @@ describe("Event store post", () => {
       amount: 1,
     });
     expect(reserveRootCountsFnFake).to.have.been.calledTwice;
-    expect(publishFnFake).to.have.been.calledWith(writtenEvents);
-    expect(statusFake).to.have.been.calledWith(204);
-    expect(sendFake).to.have.been.calledOnce;
+    expect(publishFnFake).to.have.been.calledWith(
+      { root: eventRoot, action: eventAction, number: eventNumber },
+      eventTopic
+    );
+    expect(sendStatusFake).to.have.been.calledWith(204);
   });
   it("should call with the correct params with default idempotency", async () => {
-    const writtenEvents = ["some-written-event"];
     const saveEventsFnFake = fake.returns(writtenEvents);
     const reserveRootCountsFnFake = fake.returns(reserveRootCount);
     const publishFnFake = fake();
@@ -263,12 +272,9 @@ describe("Event store post", () => {
       },
     };
 
-    const sendFake = fake();
-    const statusFake = fake.returns({
-      send: sendFake,
-    });
+    const sendStatusFake = fake();
     const res = {
-      status: statusFake,
+      sendStatus: sendStatusFake,
     };
 
     const uuid = "some-uuid";
@@ -298,12 +304,13 @@ describe("Event store post", () => {
       root,
       amount: 1,
     });
-    expect(publishFnFake).to.have.been.calledWith(writtenEvents);
-    expect(statusFake).to.have.been.calledWith(204);
-    expect(sendFake).to.have.been.calledOnce;
+    expect(publishFnFake).to.have.been.calledWith(
+      { root: eventRoot, action: eventAction, number: eventNumber },
+      eventTopic
+    );
+    expect(sendStatusFake).to.have.been.calledWith(204);
   });
   it("should throw if event number is incorrect", async () => {
-    const writtenEvents = ["some-written-event"];
     const saveEventsFnFake = fake.returns(writtenEvents);
     const reserveRootCountsFnFake = fake.returns(reserveRootCount);
     const publishFnFake = fake();
@@ -332,7 +339,6 @@ describe("Event store post", () => {
 
   it("should throw correctly", async () => {
     const error = new Error();
-    const writtenEvents = ["some-written-event"];
     const saveEventsFnFake = fake.returns(writtenEvents);
     const reserveRootCountsFnFake = fake.rejects(error);
     const publishFnFake = fake();
@@ -371,13 +377,21 @@ describe("Event store post", () => {
       },
     };
 
+    const error = new Error();
+    const messageFake = fake.returns(error);
+    replace(deps, "badRequestError", {
+      message: messageFake,
+    });
     try {
       await post({
         publishFn: publishFnFake,
         reserveRootCountsFn: reserveRootCountsFnFake,
       })(req);
     } catch (e) {
-      expect(e.statusCode).to.equal(400);
+      expect(messageFake).to.have.been.calledWith(
+        "This event store can't accept this event."
+      );
+      expect(e).to.equal(error);
     }
   });
   it("should throw with bad topic service", async () => {
@@ -398,13 +412,21 @@ describe("Event store post", () => {
       },
     };
 
+    const error = new Error();
+    const messageFake = fake.returns(error);
+    replace(deps, "badRequestError", {
+      message: messageFake,
+    });
     try {
       await post({
         publishFn: publishFnFake,
         reserveRootCountsFn: reserveRootCountsFnFake,
       })(req);
     } catch (e) {
-      expect(e.statusCode).to.equal(400);
+      expect(messageFake).to.have.been.calledWith(
+        "This event store can't accept this event."
+      );
+      expect(e).to.equal(error);
     }
   });
 });

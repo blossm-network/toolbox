@@ -6,6 +6,7 @@ const deps = require("../deps");
 const aggregateFn = "some-aggregate-fn";
 const reserveRootCountsFn = "some-reserve-root-counts-fn";
 const queryFn = "some-query-fn";
+const streamFn = "some-stream-fn";
 const saveEventsFn = "some-save-events-fn";
 const publishFn = "some-publish-fn";
 
@@ -22,8 +23,11 @@ describe("Event store", () => {
     const postFake = fake.returns({
       listen: listenFake,
     });
-    const getFake = fake.returns({
+    const streamFake = fake.returns({
       post: postFake,
+    });
+    const getFake = fake.returns({
+      get: streamFake,
     });
     const serverFake = fake.returns({
       get: getFake,
@@ -32,6 +36,9 @@ describe("Event store", () => {
     const eventStoreGetResult = "some-get-result";
     const eventStoreGetFake = fake.returns(eventStoreGetResult);
     replace(deps, "get", eventStoreGetFake);
+    const eventStoreStreamResult = "some-stream-result";
+    const eventStoreStreamFake = fake.returns(eventStoreStreamResult);
+    replace(deps, "stream", eventStoreStreamFake);
     const eventStorePostResult = "some-post-result";
     const eventStorePostFake = fake.returns(eventStorePostResult);
     replace(deps, "post", eventStorePostFake);
@@ -40,12 +47,16 @@ describe("Event store", () => {
       reserveRootCountsFn,
       saveEventsFn,
       queryFn,
+      streamFn,
       publishFn,
     });
     expect(listenFake).to.have.been.calledOnce;
     expect(serverFake).to.have.been.calledOnce;
     expect(getFake).to.have.been.calledWith(eventStoreGetResult, {
       path: "/:root?",
+    });
+    expect(streamFake).to.have.been.calledWith(eventStoreStreamResult, {
+      path: "/stream/:root?",
     });
     expect(postFake).to.have.been.calledWith(eventStorePostResult);
     expect(eventStoreGetFake).to.have.been.calledWith({ aggregateFn, queryFn });

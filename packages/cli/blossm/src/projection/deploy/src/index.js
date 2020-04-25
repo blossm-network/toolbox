@@ -1,5 +1,6 @@
 const eventHandler = require("@blossm/event-handler");
 const viewStore = require("@blossm/view-store-rpc");
+const eventStore = require("@blossm/event-store-rpc");
 const gcpToken = require("@blossm/gcp-token");
 
 const main = require("./main.js");
@@ -7,6 +8,7 @@ const main = require("./main.js");
 const config = require("./config.json");
 
 module.exports = eventHandler({
+  // Expect the event to be delivered at least once, not necessarily in order.
   mainFn: async (event) => {
     const {
       [process.env.DOMAIN]: {
@@ -51,5 +53,23 @@ module.exports = eventHandler({
           ...(event.headers.trace && { trace: event.headers.trace }),
         },
       });
+
+    // //Should only do this on first delivery.
+    // //TODO set token.
+    // await command({
+    //   name: "push",
+    //   domain: "update",
+    //   service: "system",
+    //   network: process.env.CORE_NETWORK,
+    // }).issue(newView);
   },
+  streamFn: ({ root, from }) =>
+    eventStore({
+      domain: process.env.EVENT_DOMAIN,
+      service: process.env.EVENT_SERVICE,
+    })
+      .set({
+        tokenFns: { internal: gcpToken },
+      })
+      .stream({ root, from }),
 });

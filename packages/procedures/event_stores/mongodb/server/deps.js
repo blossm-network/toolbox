@@ -7,6 +7,7 @@ const saveEvents = require("@blossm/mongodb-event-store-save-events");
 const aggregate = require("@blossm/mongodb-event-store-aggregate");
 const reserveRootCounts = require("@blossm/mongodb-event-store-reserve-root-counts");
 const query = require("@blossm/mongodb-event-store-query");
+const stream = require("@blossm/mongodb-event-store-stream");
 
 exports.secret = secret;
 exports.dateString = dateString;
@@ -17,3 +18,4 @@ exports.saveEvents = saveEvents;
 exports.aggregate = aggregate;
 exports.reserveRootCounts = reserveRootCounts;
 exports.query = query;
+exports.stream = stream;

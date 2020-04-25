@@ -1,21 +1,10 @@
 const { PubSub } = require("@google-cloud/pubsub");
 const pubsub = new PubSub();
 
-exports.publish = async (data) => {
-  data = data instanceof Array ? data : [data];
-
-  await Promise.all(
-    data.map((d) =>
-      (() => {
-        if (d.payload == undefined) d.payload = {};
-
-        const string = JSON.stringify(d);
-        const buffer = Buffer.from(string);
-
-        return pubsub.topic(d.headers.topic).publish(buffer);
-      })()
-    )
-  );
+exports.publish = async (data, topic) => {
+  const string = JSON.stringify(data);
+  const buffer = Buffer.from(string);
+  return pubsub.topic(topic).publish(buffer);
 };
 
 exports.subscribe = async ({ topic, name, fn }) => {

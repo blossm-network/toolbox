@@ -1,7 +1,5 @@
 const deps = require("./deps");
 
-const { badRequest } = require("@blossm/errors");
-
 const doesMatchQuery = ({ state, query }) => {
   try {
     for (const property in query) {
@@ -22,9 +20,8 @@ module.exports = ({ eventStore, snapshotStore, handlers }) => async ({
   key,
   value,
 }) => {
-  // Write a test for this. TODO
   if (!key || !value)
-    throw badRequest.message("The query is missing a key or value.", {
+    throw deps.badRequestError.message("The query is missing a key or value.", {
       info: { key, value },
     });
 

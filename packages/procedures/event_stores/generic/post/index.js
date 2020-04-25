@@ -1,7 +1,5 @@
 const deps = require("./deps");
 
-const { preconditionFailed, badRequest } = require("@blossm/errors");
-
 module.exports = ({ saveEventsFn, reserveRootCountsFn, publishFn }) => {
   return async (req, res) => {
     const eventNumberOffsets = {};
@@ -41,12 +39,15 @@ module.exports = ({ saveEventsFn, reserveRootCountsFn, publishFn }) => {
         topicDomain != process.env.DOMAIN ||
         topicService != process.env.SERVICE
       )
-        throw badRequest.message("This event store can't accept this event.", {
-          info: {
-            expected: `${process.env.DOMAIN}.${process.env.SERVICE}`,
-            actual: `${topicDomain}.${topicService}`,
-          },
-        });
+        throw deps.badRequestError.message(
+          "This event store can't accept this event.",
+          {
+            info: {
+              expected: `${process.env.DOMAIN}.${process.env.SERVICE}`,
+              actual: `${topicDomain}.${topicService}`,
+            },
+          }
+        );
 
       const root = event.data.headers.root;
 
@@ -55,7 +56,7 @@ module.exports = ({ saveEventsFn, reserveRootCountsFn, publishFn }) => {
         eventNumberOffsets[event.data.headers.root];
 
       if (event.number && event.number != number)
-        throw preconditionFailed.message("Event number incorrect.", {
+        throw deps.preconditionFailedError.message("Event number incorrect.", {
           info: { expected: req.body.number, actual: number },
         });
 
@@ -77,8 +78,19 @@ module.exports = ({ saveEventsFn, reserveRootCountsFn, publishFn }) => {
     });
 
     const savedEvents = await saveEventsFn(normalizedEvents);
-    await publishFn(savedEvents);
+    await Promise.all(
+      savedEvents.map((e) =>
+        publishFn(
+          {
+            action: e.headers.action,
+            number: e.headers.number,
+            root: e.headers.root,
+          },
+          e.headers.topic
+        )
+      )
+    );
 
-    res.status(204).send();
+    res.sendStatus(204);
   };
 };

@@ -62,8 +62,8 @@ module.exports = ({ domain, service = process.env.SERVICE } = {}) => {
     context,
     claims,
     tokenFns: { internal: internalTokenFn, external: externalTokenFn } = {},
-  } = {}) => async ({ key, value }) => {
-    return await deps
+  } = {}) => async ({ key, value }) =>
+    await deps
       .rpc(domain, service, "event-store")
       .get({ key, value })
       .in({
@@ -74,18 +74,36 @@ module.exports = ({ domain, service = process.env.SERVICE } = {}) => {
         ...(externalTokenFn && { externalTokenFn }),
         ...(claims && { claims }),
       });
-  };
+  const stream = ({
+    context,
+    claims,
+    tokenFns: { internal: internalTokenFn, external: externalTokenFn } = {},
+  } = {}) => async ({ root, from, parallel }) =>
+    await deps
+      .rpc(domain, service, "event-store")
+      .get({ root, from, ...(parallel && { parallel }) })
+      .in({
+        ...(context && { context }),
+      })
+      .with({
+        path: `/stream`,
+        ...(internalTokenFn && { internalTokenFn }),
+        ...(externalTokenFn && { externalTokenFn }),
+        ...(claims && { claims }),
+      });
 
   return {
     set: ({ context, claims, tokenFns } = {}) => {
       return {
         add: add({ context, claims, tokenFns }),
         query: query({ context, claims, tokenFns }),
+        stream: stream({ context, claims, tokenFns }),
         aggregate: aggregate({ context, claims, tokenFns }),
       };
     },
     add: add(),
     aggregate: aggregate(),
     query: query(),
+    stream: stream(),
   };
 };

@@ -5,6 +5,7 @@ const deps = require("../deps");
 const eventHandler = require("..");
 
 const mainFn = "some-main-fn";
+const streamFn = "some-stream-fn";
 
 describe("Event handler", () => {
   afterEach(() => {
@@ -25,13 +26,14 @@ describe("Event handler", () => {
     const commandPostFake = fake.returns(commandPostResult);
     replace(deps, "post", commandPostFake);
 
-    await eventHandler({ mainFn });
+    await eventHandler({ mainFn, streamFn });
 
     expect(listenFake).to.have.been.calledOnce;
     expect(serverFake).to.have.been.calledOnce;
     expect(postFake).to.have.been.calledWith(commandPostResult);
     expect(commandPostFake).to.have.been.calledWith({
       mainFn,
+      streamFn,
     });
   });
   it("should throw correctly", async () => {
@@ -50,7 +52,7 @@ describe("Event handler", () => {
     replace(deps, "post", commandPostFake);
 
     try {
-      await eventHandler({ mainFn });
+      await eventHandler({ mainFn, streamFn });
 
       //shouldnt call
       expect(2).to.equal(1);

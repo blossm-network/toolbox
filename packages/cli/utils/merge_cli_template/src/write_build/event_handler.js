@@ -147,8 +147,9 @@ module.exports = ({
           }),
           createPubsubSubscription({
             name,
-            domain,
-            context,
+            ...(domain && { domain }),
+            ...(service && { service }),
+            ...(context && { context }),
             operationHash,
             operationName,
             eventAction: event.action,

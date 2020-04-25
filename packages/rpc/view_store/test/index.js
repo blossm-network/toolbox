@@ -29,61 +29,6 @@ describe("Get views", () => {
     restore();
   });
 
-  // it("should call create with the correct params", async () => {
-  //   const withFake = fake();
-  //   const inFake = fake.returns({
-  //     with: withFake
-  //   });
-  //   const postFake = fake.returns({
-  //     in: inFake
-  //   });
-  //   const rpcFake = fake.returns({
-  //     post: postFake
-  //   });
-  //   replace(deps, "rpc", rpcFake);
-
-  //   await viewStore({ name, domain, context })
-  //     .set({
-  //       context: contexts,
-  //       tokenFns: { internal: internalTokenFn, external: externalTokenFn },
-  //       claims
-  //     })
-  //     .create(view);
-
-  //   expect(rpcFake).to.have.been.calledWith(
-  //     name,
-  //     domain,
-  //     context,
-  //     "view-store"
-  //   );
-  //   expect(postFake).to.have.been.calledWith({ view });
-  //   expect(inFake).to.have.been.calledWith({ context: contexts });
-  //   expect(withFake).to.have.been.calledWith({
-  //     internalTokenFn,
-  //     externalTokenFn,
-  //     claims
-  //   });
-  // });
-  // it("should call create with the correct params and optionals omitted", async () => {
-  //   const withFake = fake();
-  //   const inFake = fake.returns({
-  //     with: withFake
-  //   });
-  //   const postFake = fake.returns({
-  //     in: inFake
-  //   });
-  //   const rpcFake = fake.returns({
-  //     post: postFake
-  //   });
-  //   replace(deps, "rpc", rpcFake);
-
-  //   await viewStore({ name }).create(view);
-
-  //   expect(rpcFake).to.have.been.calledWith(name, envContext, "view-store");
-  //   expect(postFake).to.have.been.calledWith({ view });
-  //   expect(inFake).to.have.been.calledWith({});
-  //   expect(withFake).to.have.been.calledWith({});
-  // });
   it("should call read with the correct params", async () => {
     const views = "some-views";
     const withFake = fake.returns({ body: views });

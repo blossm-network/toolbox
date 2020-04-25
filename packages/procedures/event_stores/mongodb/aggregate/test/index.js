@@ -172,12 +172,25 @@ describe("Mongodb event store aggregate", () => {
 
     replace(deps, "db", db);
 
+    const error = new Error();
+    const messageFake = fake.returns(error);
+    replace(deps, "badRequestError", {
+      message: messageFake,
+    });
     try {
       await aggregate({ handlers: {}, eventStore, snapshotStore })(root);
       //shouldn't get called
       expect(1).to.equal(2);
     } catch (e) {
-      expect(e.statusCode).to.equal(400);
+      expect(messageFake).to.have.been.calledWith(
+        "Event handler not specified.",
+        {
+          info: {
+            action,
+          },
+        }
+      );
+      expect(e).to.equal(error);
     }
   });
 });

@@ -8,22 +8,6 @@ module.exports = ({
   network,
 }) => {
   const internal = !network || network == process.env.NETWORK;
-  // const create = ({
-  //   contexts,
-  //   claims,
-  //   tokenFns: { internal: internalTokenFn, external: externalTokenFn } = {}
-  // } = {}) => async view =>
-  //   await deps
-  //     .rpc(name, ...(domain ? [domain] : []), ...(service ? [service] : []), context, "view-store")
-  //     .post({ view })
-  //     .in({
-  //       ...(contexts && { context: contexts })
-  //     })
-  //     .with({
-  //       ...(internalTokenFn && { internalTokenFn }),
-  //       ...(externalTokenFn && { externalTokenFn }),
-  //       ...(claims && { claims })
-  //     });
   const read = ({
     contexts,
     claims,
@@ -125,14 +109,12 @@ module.exports = ({
   return {
     set: ({ context: contexts, claims, tokenFns }) => {
       return {
-        // create: create({ contexts, claims, tokenFns }),
         read: read({ contexts, claims, tokenFns }),
         stream: stream({ contexts, claims, tokenFns }),
         update: update({ contexts, claims, tokenFns }),
         delete: del({ contexts, claims, tokenFns }),
       };
     },
-    // create: create(),
     read: read(),
     stream: stream(),
     update: update(),

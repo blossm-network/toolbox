@@ -25,62 +25,10 @@ describe("Pub sub", () => {
     };
     replace(gcp, "PubSub", pubsub);
     eventBus = require("..");
-    const data = {
-      headers: {
-        topic,
-      },
-      payload: {
-        a: 1,
-      },
-    };
-    await eventBus.publish(data);
+    const data = "some-data";
+    await eventBus.publish(data, topic);
     expect(publishFake).to.have.been.calledWith(
       Buffer.from(JSON.stringify(data))
-    );
-  });
-  it("should call publish with the correct array params", async () => {
-    const pubsub = function () {};
-    pubsub.prototype.topic = (t) => {
-      expect(t).to.equal(topic);
-      return {
-        publish: publishFake,
-      };
-    };
-    replace(gcp, "PubSub", pubsub);
-    eventBus = require("..");
-    const data = [
-      {
-        headers: {
-          topic,
-        },
-        payload: {
-          a: 1,
-        },
-      },
-    ];
-    await eventBus.publish(data);
-    for (const element of data) {
-      expect(publishFake).to.have.been.calledWith(
-        Buffer.from(JSON.stringify(element))
-      );
-    }
-  });
-  it("should call publish with the correct params and add a payload if missing", async () => {
-    const pubsub = function () {};
-    pubsub.prototype.topic = (t) => {
-      expect(t).to.equal(topic);
-      return {
-        publish: publishFake,
-      };
-    };
-    replace(gcp, "PubSub", pubsub);
-    eventBus = require("..");
-    const headers = {
-      topic,
-    };
-    await eventBus.publish({ headers });
-    expect(publishFake).to.have.been.calledWith(
-      Buffer.from(JSON.stringify({ headers: { topic }, payload: {} }))
     );
   });
   it("should call subscribe with the correct params", async () => {

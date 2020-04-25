@@ -1,7 +1,7 @@
 {
-  "name": "@blossm/view-store-post",
-  "description": "A view store POST handler.",
-  "version": "0.0.21",
+  "name": "@blossm/mongodb-event-handler",
+  "description": "A mongodb event handler server.",
+  "version": "0.0.0",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -14,11 +14,12 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/datetime": "^0.0.5",
-    "@blossm/uuid": "^0.0.5"
+    "@blossm/event-handler": "*",
+    "@blossm/gcp-secret": "^0.0.46",
+    "@blossm/logger": "^0.0.8",
+    "@blossm/mongodb-database": "^0.0.46"
   },
   "devDependencies": {
-    "chai-datetime": "^1.5.0",
     "mocha": "^7.1.1",
     "sinon": "^7.3.2",
     "sinon-chai": "^3.5.0"

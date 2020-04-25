@@ -58,7 +58,6 @@ describe("View store", () => {
   it("should call with the correct params", async () => {
     const store = "some-store";
     const storeFake = fake.returns(store);
-    // const findOneFake = fake.returns(foundObj);
 
     const cursorFake = fake.returns({
       eachAsync: async (fn, options) => {
@@ -79,7 +78,6 @@ describe("View store", () => {
 
     const db = {
       store: storeFake,
-      // findOne: findOneFake,
       find: findFake,
       write: writeFake,
       remove: removeFake,
@@ -97,14 +95,12 @@ describe("View store", () => {
     replace(deps, "viewStore", viewStoreFake);
 
     const getFn = "some-get-fn";
-    // const postFn = "some-post-fn";
     const putFn = "some-put-fn";
 
     await mongodbViewStore({
       schema,
       indexes,
       getFn,
-      // postFn,
       putFn,
     });
 
@@ -183,15 +179,6 @@ describe("View store", () => {
     expect(secretFake).to.have.been.calledWith("mongodb-view-store");
 
     const root = "some-root";
-    // const findOneFnResult = await viewStoreFake.lastCall.lastArg.findOneFn({
-    //   root
-    // });
-    // expect(findOneFake).to.have.been.calledWith({
-    //   store,
-    //   query: { "headers.root": root },
-    //   options: { lean: true }
-    // });
-    // expect(findOneFnResult).to.equal(foundObj);
 
     const findFnResult = await viewStoreFake.lastCall.lastArg.findFn({
       query,
@@ -258,21 +245,18 @@ describe("View store", () => {
         (fn) => expect(fn({ query, sort, parallel, fn: fnFake })).to.exist
       ),
       findFn: match((fn) => expect(fn({ query, sort })).to.exist),
-      // findOneFn: match(fn => expect(fn({ root })).to.exist),
       writeFn: match((fn) => expect(fn({ root, data })).to.exist),
       removeFn: match((fn) => expect(fn(query)).to.exist),
       getFn,
-      // postFn,
       putFn,
     });
 
     await mongodbViewStore({ schema });
     expect(storeFake).to.have.been.calledOnce;
   });
-  it("should call with the correct params without domain", async () => {
+  it("should call with the correct params without domain and in local env", async () => {
     const store = "some-store";
     const storeFake = fake.returns(store);
-    // const findOneFake = fake.returns(foundObj);
 
     const cursorFake = fake.returns({
       eachAsync: async (fn, options) => {
@@ -293,7 +277,6 @@ describe("View store", () => {
 
     const db = {
       store: storeFake,
-      // findOne: findOneFake,
       find: findFake,
       write: writeFake,
       remove: removeFake,
@@ -311,15 +294,14 @@ describe("View store", () => {
     replace(deps, "viewStore", viewStoreFake);
 
     const getFn = "some-get-fn";
-    // const postFn = "some-post-fn";
     const putFn = "some-put-fn";
 
     delete process.env.DOMAIN;
+    process.env.NODE_ENV = "local";
     await mongodbViewStore({
       schema,
       indexes,
       getFn,
-      // postFn,
       putFn,
     });
 
@@ -373,7 +355,7 @@ describe("View store", () => {
       connection: {
         protocol,
         user,
-        password,
+        password: userPassword,
         host,
         database,
         parameters: {
@@ -388,7 +370,6 @@ describe("View store", () => {
   it("should call with the correct params with no root's in nested objs", async () => {
     const store = "some-store";
     const storeFake = fake.returns(store);
-    // const findOneFake = fake.returns(foundObj);
 
     const cursorFake = fake.returns({
       eachAsync: async (fn, options) => {
@@ -409,7 +390,6 @@ describe("View store", () => {
 
     const db = {
       store: storeFake,
-      // findOne: findOneFake,
       find: findFake,
       write: writeFake,
       remove: removeFake,
@@ -427,7 +407,6 @@ describe("View store", () => {
     replace(deps, "viewStore", viewStoreFake);
 
     const getFn = "some-get-fn";
-    // const postFn = "some-post-fn";
     const putFn = "some-put-fn";
 
     const schema = {
@@ -437,7 +416,7 @@ describe("View store", () => {
       e: { type: [{ type: { type: String } }] },
       f: [{ g: 1 }],
     };
-    await mongodbViewStore({ schema, indexes, getFn, /* postFn, */ putFn });
+    await mongodbViewStore({ schema, indexes, getFn, putFn });
 
     expect(storeFake).to.have.been.calledWith({
       name: `${context}.${domain}.${name}`,
@@ -518,7 +497,6 @@ describe("View store", () => {
   it("should call with the correct params without fns", async () => {
     const store = "some-store";
     const storeFake = fake.returns(store);
-    // const findOneFake = fake.returns(foundObj);
 
     const cursorFake = fake.returns({
       eachAsync: async (fn, options) => {
@@ -539,7 +517,6 @@ describe("View store", () => {
 
     const db = {
       store: storeFake,
-      // findOne: findOneFake,
       find: findFake,
       write: writeFake,
       remove: removeFake,
@@ -707,15 +684,6 @@ describe("View store", () => {
     expect(secretFake).to.have.been.calledWith("mongodb-view-store");
 
     const root = "some-root";
-    // const findOneFnResult = await viewStoreFake.lastCall.lastArg.findOneFn({
-    //   root
-    // });
-    // expect(findOneFake).to.have.been.calledWith({
-    //   store,
-    //   query: { "headers.root": root },
-    //   options: { lean: true }
-    // });
-    // expect(findOneFnResult).to.equal(foundObj);
 
     const findFnResult = await viewStoreFake.lastCall.lastArg.findFn({
       query,
@@ -782,7 +750,6 @@ describe("View store", () => {
         (fn) => expect(fn({ query, sort, parallel, fn: fnFake })).to.exist
       ),
       findFn: match((fn) => expect(fn({ query, sort })).to.exist),
-      // findOneFn: match(fn => expect(fn({ root })).to.exist),
       writeFn: match((fn) => expect(fn({ root, data })).to.exist),
       removeFn: match((fn) => expect(fn({ root })).to.exist),
     });
@@ -792,7 +759,6 @@ describe("View store", () => {
   it("should call with the correct params with mongo style", async () => {
     const store = "some-store";
     const storeFake = fake.returns(store);
-    // const findOneFake = fake.returns(foundObj);
 
     const cursorFake = fake.returns({
       eachAsync: async (fn, options) => {
@@ -813,7 +779,6 @@ describe("View store", () => {
 
     const db = {
       store: storeFake,
-      // findOne: findOneFake,
       find: findFake,
       write: writeFake,
       remove: removeFake,
@@ -907,15 +872,6 @@ describe("View store", () => {
     expect(secretFake).to.have.been.calledWith("mongodb-view-store");
 
     const root = "some-root";
-    // const findOneFnResult = await viewStoreFake.lastCall.lastArg.findOneFn({
-    //   root
-    // });
-    // expect(findOneFake).to.have.been.calledWith({
-    //   store,
-    //   query: { "headers.root": root },
-    //   options: { lean: true }
-    // });
-    // expect(findOneFnResult).to.equal(foundObj);
 
     const findFnResult = await viewStoreFake.lastCall.lastArg.findFn({
       query,

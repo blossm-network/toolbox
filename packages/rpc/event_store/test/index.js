@@ -24,6 +24,9 @@ const eventService = "some-event-service";
 const path = "some-path";
 const service = "some-service";
 const domain = "some-domain";
+const root = "some-root";
+const from = "some-from";
+const parallel = "some-parallel";
 
 const envService = "some-env-service";
 
@@ -252,7 +255,7 @@ describe("Event store", () => {
 
   it("should call aggregate with the right params", async () => {
     const aggregate = "some-aggregate";
-    const withFake = fake.returns({ body: aggregate });
+    const withFake = fake.returns(aggregate);
     const inFake = fake.returns({
       with: withFake,
     });
@@ -266,7 +269,7 @@ describe("Event store", () => {
 
     const root = "user";
 
-    const { body: result } = await eventStore({ domain, service })
+    const result = await eventStore({ domain, service })
       .set({
         context,
         claims,
@@ -288,7 +291,7 @@ describe("Event store", () => {
   });
   it("should call aggregate with the right params with optionals missing", async () => {
     const aggregate = "some-aggregate";
-    const withFake = fake.returns({ body: aggregate });
+    const withFake = fake.returns(aggregate);
     const inFake = fake.returns({
       with: withFake,
     });
@@ -308,11 +311,11 @@ describe("Event store", () => {
     expect(getFake).to.have.been.calledWith({ id: root });
     expect(inFake).to.have.been.calledWith({});
     expect(withFake).to.have.been.calledWith({});
-    expect(result).to.deep.equal({ body: aggregate });
+    expect(result).to.deep.equal(aggregate);
   });
   it("should call query with the right params", async () => {
-    const aggregate = "some-aggregate";
-    const withFake = fake.returns({ body: aggregate });
+    const queryResult = "some-query-result";
+    const withFake = fake.returns(queryResult);
     const inFake = fake.returns({
       with: withFake,
     });
@@ -324,7 +327,7 @@ describe("Event store", () => {
     });
     replace(deps, "rpc", rpcFake);
 
-    const { body: result } = await eventStore({ domain, service })
+    const result = await eventStore({ domain, service })
       .set({
         context,
         claims,
@@ -342,11 +345,11 @@ describe("Event store", () => {
       externalTokenFn,
       claims,
     });
-    expect(result).to.equal(aggregate);
+    expect(result).to.equal(queryResult);
   });
-  it("should call aggregate with the right params with optionals missing", async () => {
-    const aggregate = "some-aggregate";
-    const withFake = fake.returns({ body: aggregate });
+  it("should call query with the right params with optionals missing", async () => {
+    const queryResult = "some-query-result";
+    const withFake = fake.returns(queryResult);
     const inFake = fake.returns({
       with: withFake,
     });
@@ -358,12 +361,82 @@ describe("Event store", () => {
     });
     replace(deps, "rpc", rpcFake);
 
-    const { body: result } = await eventStore({ domain }).query(query);
+    const result = await eventStore({ domain }).query(query);
 
     expect(rpcFake).to.have.been.calledWith(domain, envService, "event-store");
     expect(getFake).to.have.been.calledWith(query);
     expect(inFake).to.have.been.calledWith({});
     expect(withFake).to.have.been.calledWith();
-    expect(result).to.equal(aggregate);
+    expect(result).to.equal(queryResult);
+  });
+  it("should call stream with the right params", async () => {
+    const stream = "some-stream";
+    const withFake = fake.returns(stream);
+    const inFake = fake.returns({
+      with: withFake,
+    });
+    const getFake = fake.returns({
+      in: inFake,
+    });
+    const rpcFake = fake.returns({
+      get: getFake,
+    });
+    replace(deps, "rpc", rpcFake);
+
+    const result = await eventStore({ domain, service })
+      .set({
+        context,
+        claims,
+        tokenFns: { internal: internalTokenFn, external: externalTokenFn },
+      })
+      .stream({ root, from, parallel });
+
+    expect(rpcFake).to.have.been.calledWith(domain, service, "event-store");
+    expect(getFake).to.have.been.calledWith({ root, from, parallel });
+    expect(inFake).to.have.been.calledWith({
+      context,
+    });
+    expect(withFake).to.have.been.calledWith({
+      path: "/stream",
+      internalTokenFn,
+      externalTokenFn,
+      claims,
+    });
+    expect(result).to.equal(stream);
+  });
+  it("should call stream with the right params with optionals missing", async () => {
+    const stream = "some-stream";
+    const withFake = fake.returns(stream);
+    const inFake = fake.returns({
+      with: withFake,
+    });
+    const getFake = fake.returns({
+      in: inFake,
+    });
+    const rpcFake = fake.returns({
+      get: getFake,
+    });
+    replace(deps, "rpc", rpcFake);
+
+    const result = await eventStore({ domain, service })
+      .set({
+        context,
+        claims,
+        tokenFns: { internal: internalTokenFn, external: externalTokenFn },
+      })
+      .stream({ root, from });
+
+    expect(rpcFake).to.have.been.calledWith(domain, service, "event-store");
+    expect(getFake).to.have.been.calledWith({ root, from });
+    expect(inFake).to.have.been.calledWith({
+      context,
+    });
+    expect(withFake).to.have.been.calledWith({
+      path: "/stream",
+      internalTokenFn,
+      externalTokenFn,
+      claims,
+    });
+    expect(result).to.equal(stream);
   });
 });
