@@ -19,18 +19,17 @@ module.exports = ({
   incrementNextEventNumberFn,
 }) => {
   return async (req, res) => {
-    const { from, root, force = false } = data(req);
-    const nextEvent = await nextEventNumberFn({ root });
+    const { root, forceNumber } = data(req);
+    const nextEventNumber = await nextEventNumberFn({ root });
 
-    if (!force && nextEvent != from)
-      throw deps.preconditionFailedError.message(
-        "The event was received out of order."
-      );
-
-    await streamFn({ root, from }, async (event) => {
-      await mainFn(event);
-      await incrementNextEventNumberFn({ root, from: event.headers.number });
-    });
+    await streamFn(
+      { root, from: forceNumber != undefined ? forceNumber : nextEventNumber },
+      async (event) => {
+        if (event.headers.action == process.env.EVENT_ACTION)
+          await mainFn(event);
+        await incrementNextEventNumberFn({ root, from: event.headers.number });
+      }
+    );
 
     res.sendStatus(204);
   };

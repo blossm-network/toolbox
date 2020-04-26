@@ -199,20 +199,16 @@ describe("Event store integration tests", () => {
       name: sub,
       fn: async (_, subscription) => {
         if (!subscription) throw "Subscription wasn't made";
-        subscription.once("message", async (event) => {
-          const eventString = Buffer.from(event.data, "base64")
+        const root = uuid();
+        subscription.once("message", async (message) => {
+          const dataString = Buffer.from(message.data, "base64")
             .toString()
             .trim();
-          const json = JSON.parse(eventString);
-          for (const property in example0.payload) {
-            expect(json.payload[property]).to.deep.equal(
-              example0.payload[property]
-            );
-          }
+          const data = JSON.parse(dataString);
+          expect(data.root).to.equal(root);
           await unsubscribe({ topic, name: sub });
           done();
         });
-        const root = uuid();
         request.post(url, {
           body: {
             events: [

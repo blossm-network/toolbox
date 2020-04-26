@@ -1,4 +1,3 @@
-const { badRequest, preconditionFailed } = require("@blossm/errors");
+const { badRequest } = require("@blossm/errors");
 
 exports.badRequestError = badRequest;
-exports.preconditionFailedError = preconditionFailed;

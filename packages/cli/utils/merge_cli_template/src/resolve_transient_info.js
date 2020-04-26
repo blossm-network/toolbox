@@ -18,15 +18,6 @@ const objectsEqual = (obj0, obj1) => {
   return true;
 };
 
-const eventsForStore = (config) =>
-  config.actions.map((action) => {
-    return {
-      action,
-      domain: config.domain,
-      service: config.service,
-    };
-  });
-
 const resolveTransientDependencies = (config) => {
   switch (config.procedure) {
     case "command":
@@ -68,7 +59,12 @@ const findDependenciesAndEventsForDependency = (dependency, dir) => {
           dependencies: resolveTransientDependencies(blossmConfig),
           events:
             blossmConfig.procedure == "event-store"
-              ? eventsForStore(blossmConfig)
+              ? [
+                  {
+                    domain: blossmConfig.domain,
+                    service: blossmConfig.service,
+                  },
+                ]
               : [],
         };
       }

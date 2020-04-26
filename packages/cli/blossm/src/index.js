@@ -18,7 +18,6 @@ const factGateway = require("./fact_gateway");
 const roles = require("./roles");
 const job = require("./job");
 const fact = require("./fact");
-const reaction = require("./reaction");
 
 const domains = [
   "begin",
@@ -35,7 +34,6 @@ const domains = [
   "view-gateway",
   "fact-gateway",
   "job",
-  "reaction",
   "fact",
 ];
 
@@ -81,8 +79,6 @@ const tryShortcuts = (input) => {
       return roles(args);
     case "job":
       return job(args);
-    case "reaction":
-      return reaction(args);
     case "fact":
       return fact(args);
   }
@@ -112,8 +108,6 @@ const forward = (input) => {
       return viewGateway(input.args);
     case "fact-gateway":
       return factGateway(input.args);
-    case "reaction":
-      return reaction(input.args);
     case "fact":
       return fact(input.args);
     default: {

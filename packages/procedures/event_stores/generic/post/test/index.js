@@ -14,18 +14,16 @@ const root = "some-root";
 const domain = "some-domain";
 const service = "some-service";
 
-const topic = `did-something.${domain}.${service}`;
+const topic = `${domain}.${service}`;
 const idempotency = "some-idempotency";
 
-const eventRoot = "some-event-eroot";
-const eventAction = "some-event-action";
+const eventRoot = "some-event-root";
 const eventNumber = "some-event-number";
 const eventTopic = "some-event-topic";
 
 const writtenEvent = {
   headers: {
     root: eventRoot,
-    action: eventAction,
     number: eventNumber,
     topic: eventTopic,
   },
@@ -102,7 +100,7 @@ describe("Event store post", () => {
       amount: 1,
     });
     expect(publishFnFake).to.have.been.calledWith(
-      { root: eventRoot, action: eventAction, number: eventNumber },
+      { root: eventRoot },
       eventTopic
     );
     expect(sendStatusFake).to.have.been.calledWith(204);
@@ -152,7 +150,7 @@ describe("Event store post", () => {
       amount: 1,
     });
     expect(publishFnFake).to.have.been.calledWith(
-      { root: eventRoot, action: eventAction, number: eventNumber },
+      { root: eventRoot },
       eventTopic
     );
     expect(sendStatusFake).to.have.been.calledWith(204);
@@ -245,7 +243,7 @@ describe("Event store post", () => {
     });
     expect(reserveRootCountsFnFake).to.have.been.calledTwice;
     expect(publishFnFake).to.have.been.calledWith(
-      { root: eventRoot, action: eventAction, number: eventNumber },
+      { root: eventRoot },
       eventTopic
     );
     expect(sendStatusFake).to.have.been.calledWith(204);
@@ -305,7 +303,7 @@ describe("Event store post", () => {
       amount: 1,
     });
     expect(publishFnFake).to.have.been.calledWith(
-      { root: eventRoot, action: eventAction, number: eventNumber },
+      { root: eventRoot },
       eventTopic
     );
     expect(sendStatusFake).to.have.been.calledWith(204);
@@ -369,7 +367,7 @@ describe("Event store post", () => {
           {
             data: {
               headers: {
-                topic: `did-something.some-bad-domain.${service}`,
+                topic: `some-bad-domain.${service}`,
               },
             },
           },
@@ -404,7 +402,7 @@ describe("Event store post", () => {
           {
             data: {
               headers: {
-                topic: `did-something.${domain}.some-bad-service`,
+                topic: `${domain}.some-bad-service`,
               },
             },
           },

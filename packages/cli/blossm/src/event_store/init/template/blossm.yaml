@@ -17,13 +17,6 @@ service: core
 schema:
   name: String
 
-actions:
-  - some-action
-
-reactions:
-  - name: some-reaction
-    action: some-action
-
 testing:
   examples:
     first:

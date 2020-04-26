@@ -31,8 +31,8 @@ module.exports = ({ saveEventsFn, reserveRootCountsFn, publishFn }) => {
         eventNumberOffsets[event.data.headers.root] = 0;
 
       const topicParts = event.data.headers.topic.split(".");
-      const topicDomain = topicParts[1];
-      const topicService = topicParts[2];
+      const topicDomain = topicParts[0];
+      const topicService = topicParts[1];
 
       // TODO write a test for this
       if (
@@ -82,8 +82,6 @@ module.exports = ({ saveEventsFn, reserveRootCountsFn, publishFn }) => {
       savedEvents.map((e) =>
         publishFn(
           {
-            action: e.headers.action,
-            number: e.headers.number,
             root: e.headers.root,
           },
           e.headers.topic
