@@ -10,6 +10,14 @@ const numberStore = async () => {
     return _numberStore;
   }
 
+  //TODO
+  //eslint-disable-next-line no-console
+  console.log({
+    host: process.env.MONGODB_HOST,
+    protocol: process.env.MONGODB_PROTOCOL,
+    user: process.env.MONGODB_USER,
+    database: process.env.MONGODB_DATABASE,
+  });
   _numberStore = deps.db.store({
     name: `${process.env.NAME}${
       process.env.DOMAIN ? `.${process.env.DOMAIN}` : ""
