@@ -11,7 +11,7 @@ module.exports = ({ streamFn }) => {
         //TODO
         //eslint-disable-next-line no-console
         console.log("YAA: ", { event });
-        res.write(JSON.stringify(event));
+        return res.write(JSON.stringify(event));
       },
     });
 
