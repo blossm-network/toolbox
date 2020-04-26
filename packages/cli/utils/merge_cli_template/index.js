@@ -191,6 +191,7 @@ const envMongodbUser = ({ env, config, procedure }) => {
         default:
           return "";
       }
+    case "projection":
     case "event-handler":
       switch (env) {
         case "production":
