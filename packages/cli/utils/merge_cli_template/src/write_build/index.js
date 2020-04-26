@@ -123,6 +123,7 @@ const steps = ({
         runBaseUnitTests,
         runIntegrationTests,
         runBaseIntegrationTests,
+        actions,
         strict,
       });
     case "event-handler":
@@ -162,7 +163,6 @@ const steps = ({
         runBaseUnitTests,
         runIntegrationTests,
         runBaseIntegrationTests,
-        actions,
         strict,
       });
     case "command":
