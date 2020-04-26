@@ -133,7 +133,7 @@ describe("Event handler", () => {
     await mongodbEventHandler({ mainFn, streamFn });
     expect(storeFake).to.have.been.calledOnce;
   });
-  it("should call with the correct params if find returns nothingj", async () => {
+  it("should call with the correct params if find returns nothing", async () => {
     const store = "some-store";
     const storeFake = fake.returns(store);
 
