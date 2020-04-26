@@ -7,67 +7,35 @@ const data = (req) => {
       .trim();
     return JSON.parse(dataString);
   } catch (e) {
-    //TODO write a test for this.
     throw deps.badRequestError.message("Invalid data format.");
   }
 };
 
 module.exports = ({
   mainFn,
+  commitFn,
   streamFn,
   nextEventNumberFn,
-  incrementNextEventNumberFn,
+  saveNextEventNumberFn,
 }) => {
   return async (req, res) => {
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log("HEY");
-    const { root, forceNumber } = data(req);
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log({ root, forceNumber, nextEventNumberFn });
-    const nextEventNumber = await nextEventNumberFn({ root });
+    const {
+      root,
+      forceFrom: number = await nextEventNumberFn({ root }),
+    } = data(req);
 
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log({ nextEventNumber });
+    let state;
 
-    await streamFn(
-      { root, from: forceNumber != undefined ? forceNumber : nextEventNumber },
-      async (event) => {
-        //TODO
-        //eslint-disable-next-line no-console
-        console.log("found event: ", { event });
+    await streamFn({ root, from: number }, (event) => {
+      if (event.headers.action == process.env.EVENT_ACTION)
+        state = mainFn(state, event);
+    });
 
-        // // lock will exist and equal event.headers.number if its allowed.
-        // const lock = await lockNextEventNumberFn({
-        //   root,
-        //   from: event.headers.number,
-        // });
+    if (state) {
+      await commitFn(state);
+      await saveNextEventNumberFn({ root, from: state.headers.number });
+    }
 
-        // if (lock == undefined) return;
-
-        //TODO
-        //eslint-disable-next-line no-console
-        console.log(" equal: ", {
-          eveAction: event.headers.action,
-          envAction: process.env.EVENT_ACTION,
-        });
-        if (event.headers.action == process.env.EVENT_ACTION)
-          await mainFn(event);
-        //TODO
-        //eslint-disable-next-line no-console
-        console.log("amin done");
-        await incrementNextEventNumberFn({ root, from: event.headers.number });
-        //TODO
-        //eslint-disable-next-line no-console
-        console.log("incremented");
-      }
-    );
-
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log("swag");
     res.sendStatus(204);
   };
 };

@@ -59,10 +59,12 @@ describe("Event handler", () => {
     replace(deps, "eventHandler", eventHandlerFake);
 
     const mainFn = "main-fn";
+    const commitFn = "commit-fn";
     const streamFn = "stream-fn";
 
     await mongodbEventHandler({
       mainFn,
+      commitFn,
       streamFn,
     });
 
@@ -108,7 +110,7 @@ describe("Event handler", () => {
     expect(numberFnResult).to.equal(number);
 
     const from = "some-from";
-    const incrementFnResult = await eventHandlerFake.lastCall.lastArg.incrementNextEventNumberFn(
+    const incrementFnResult = await eventHandlerFake.lastCall.lastArg.saveNextEventNumberFn(
       {
         root,
         from,
@@ -117,9 +119,9 @@ describe("Event handler", () => {
 
     expect(writeFake).to.have.been.calledWith({
       store,
-      query: { root, number: from },
+      query: { root, number: { $gte: from } },
       update: {
-        $inc: { number: 1 },
+        $set: { number: from + 1 },
       },
       options: {
         lean: true,
@@ -130,7 +132,7 @@ describe("Event handler", () => {
     });
     expect(incrementFnResult).to.equal(writeResult);
 
-    await mongodbEventHandler({ mainFn, streamFn });
+    await mongodbEventHandler({ mainFn, commitFn, streamFn });
     expect(storeFake).to.have.been.calledOnce;
   });
   it("should call with the correct params if find returns nothing", async () => {
@@ -154,10 +156,12 @@ describe("Event handler", () => {
     replace(deps, "eventHandler", eventHandlerFake);
 
     const mainFn = "main-fn";
+    const commitFn = "commit-fn";
     const streamFn = "stream-fn";
 
     await mongodbEventHandler({
       mainFn,
+      commitFn,
       streamFn,
     });
 
@@ -203,7 +207,7 @@ describe("Event handler", () => {
     expect(numberFnResult).to.equal(0);
 
     const from = "some-from";
-    const incrementFnResult = await eventHandlerFake.lastCall.lastArg.incrementNextEventNumberFn(
+    const incrementFnResult = await eventHandlerFake.lastCall.lastArg.saveNextEventNumberFn(
       {
         root,
         from,
@@ -212,9 +216,9 @@ describe("Event handler", () => {
 
     expect(writeFake).to.have.been.calledWith({
       store,
-      query: { root, number: from },
+      query: { root, number: { $gte: from } },
       update: {
-        $inc: { number: 1 },
+        $set: { number: from + 1 },
       },
       options: {
         lean: true,
@@ -225,7 +229,7 @@ describe("Event handler", () => {
     });
     expect(incrementFnResult).to.equal(writeResult);
 
-    await mongodbEventHandler({ mainFn, streamFn });
+    await mongodbEventHandler({ mainFn, commitFn, streamFn });
     expect(storeFake).to.have.been.calledOnce;
   });
   it("should call with the correct params with domain and service and local env", async () => {
@@ -250,6 +254,7 @@ describe("Event handler", () => {
     replace(deps, "eventHandler", eventHandlerFake);
 
     const mainFn = "main-fn";
+    const commitFn = "commit-fn";
     const streamFn = "stream-fn";
 
     process.env.DOMAIN = domain;
@@ -258,6 +263,7 @@ describe("Event handler", () => {
 
     await mongodbEventHandler({
       mainFn,
+      commitFn,
       streamFn,
     });
 

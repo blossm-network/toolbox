@@ -2,18 +2,20 @@ const deps = require("./deps");
 
 module.exports = async ({
   mainFn,
+  commitFn,
   streamFn,
   nextEventNumberFn,
-  incrementNextEventNumberFn,
+  saveNextEventNumberFn,
 } = {}) => {
   deps
     .server()
     .post(
       deps.post({
         mainFn,
+        commitFn,
         streamFn,
         nextEventNumberFn,
-        incrementNextEventNumberFn,
+        saveNextEventNumberFn,
       })
     )
     .listen();

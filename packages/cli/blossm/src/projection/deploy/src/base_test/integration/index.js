@@ -23,18 +23,7 @@ describe("Projection integration tests", () => {
     const contextService = "some-context-service";
     const contextNetwork = "some-context-network";
 
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log("1");
-
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log("2");
-
     for (const example of testing.examples) {
-      //TODO
-      //eslint-disable-next-line no-console
-      console.log(" example ");
       const event = createEvent({
         root: example.root,
         action: process.env.EVENT_ACTION,
@@ -50,18 +39,10 @@ describe("Projection integration tests", () => {
         },
       });
 
-      //TODO
-      //eslint-disable-next-line no-console
-      console.log({ event });
-
       await eventStore({
         domain: process.env.EVENT_DOMAIN,
         service: process.env.EVENT_SERVICE,
       }).add([{ data: event }]);
-
-      //TODO
-      //eslint-disable-next-line no-console
-      console.log("added");
 
       const response = await request.post(url, {
         body: {
@@ -74,10 +55,6 @@ describe("Projection integration tests", () => {
           },
         },
       });
-
-      //TODO
-      //eslint-disable-next-line no-console
-      console.log({ response });
 
       expect(response.statusCode).to.equal(204);
 
@@ -99,9 +76,6 @@ describe("Projection integration tests", () => {
           })
           .read(example.result.query);
 
-        //TODO
-        //eslint-disable-next-line no-console
-        console.log({ v, zero: v[0] });
         if (example.result.value) {
           for (const property in example.result.value) {
             expect(v[0][property]).to.exist;

@@ -10,14 +10,6 @@ const numberStore = async () => {
     return _numberStore;
   }
 
-  //TODO
-  //eslint-disable-next-line no-console
-  console.log({
-    host: process.env.MONGODB_HOST,
-    protocol: process.env.MONGODB_PROTOCOL,
-    user: process.env.MONGODB_USER,
-    database: process.env.MONGODB_DATABASE,
-  });
   _numberStore = deps.db.store({
     name: `${process.env.NAME}${
       process.env.DOMAIN ? `.${process.env.DOMAIN}` : ""
@@ -46,31 +38,25 @@ const numberStore = async () => {
   return _numberStore;
 };
 
-module.exports = async ({ mainFn, streamFn } = {}) => {
+module.exports = async ({ mainFn, commitFn, streamFn } = {}) => {
   const store = await numberStore();
 
   const nextEventNumberFn = async ({ root }) => {
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log({ inTheFn: root });
     const [{ number } = { number: 0 }] = await deps.db.find({
       store,
       query: { root },
       pageSize: 1,
       options: { lean: true },
     });
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log({ number });
 
     return number;
   };
 
-  const incrementNextEventNumberFn = async ({ root, from }) =>
+  const saveNextEventNumberFn = async ({ root, from }) =>
     deps.db.write({
       store,
-      query: { root, number: from },
-      update: { $inc: { number: 1 } },
+      query: { root, number: { $gte: from } },
+      update: { $set: { number: from + 1 } },
       options: {
         lean: true,
         upsert: true,
@@ -81,8 +67,9 @@ module.exports = async ({ mainFn, streamFn } = {}) => {
 
   deps.eventHandler({
     mainFn,
+    commitFn,
     streamFn,
     nextEventNumberFn,
-    incrementNextEventNumberFn,
+    saveNextEventNumberFn,
   });
 };

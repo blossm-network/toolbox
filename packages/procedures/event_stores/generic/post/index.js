@@ -34,7 +34,6 @@ module.exports = ({ saveEventsFn, reserveRootCountsFn, publishFn }) => {
       const topicDomain = topicParts[0];
       const topicService = topicParts[1];
 
-      // TODO write a test for this
       if (
         topicDomain != process.env.DOMAIN ||
         topicService != process.env.SERVICE

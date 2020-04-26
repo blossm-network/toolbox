@@ -1,14 +1,11 @@
 const deps = require("./deps");
 
-const { preconditionFailed, badRequest } = require("@blossm/errors");
-
 module.exports = ({ eventStore, handlers }) => async (events) => {
   for (const event of events) {
     const handler = handlers[event.headers.action];
 
-    // TODO write test for this.
     if (!handler)
-      throw badRequest.message("Event handler not specified.", {
+      throw deps.badRequestError.message("Event handler not specified.", {
         info: {
           action: event.headers.action,
         },
@@ -28,7 +25,7 @@ module.exports = ({ eventStore, handlers }) => async (events) => {
     return groomedResults;
   } catch (e) {
     if (e.code == 11000) {
-      throw preconditionFailed.message("Event number duplicate.");
+      throw deps.preconditionFailedError.message("Event number duplicate.");
     } else {
       throw e;
     }

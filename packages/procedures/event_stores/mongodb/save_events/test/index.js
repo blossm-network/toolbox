@@ -68,13 +68,21 @@ describe("Mongodb event store create event", () => {
         },
       },
     ];
+
+    const error = new Error();
+    const messageFake = fake.returns(error);
+    replace(deps, "preconditionFailedError", {
+      message: messageFake,
+    });
+
     try {
       await saveEvent({ eventStore, handlers })(events);
 
       //shouldn't get called
       expect(1).to.equal(2);
     } catch (e) {
-      expect(e.statusCode).to.equal(412);
+      expect(messageFake).to.have.been.calledWith("Event number duplicate.");
+      expect(e).to.equal(error);
     }
   });
   it("should throw if adding event with unrecognized action", async () => {
@@ -87,6 +95,11 @@ describe("Mongodb event store create event", () => {
     };
     replace(deps, "db", db);
 
+    const error = new Error();
+    const messageFake = fake.returns(error);
+    replace(deps, "badRequestError", {
+      message: messageFake,
+    });
     const events = [
       {
         id,
@@ -102,7 +115,10 @@ describe("Mongodb event store create event", () => {
       //shouldn't get called
       expect(1).to.equal(2);
     } catch (e) {
-      expect(e.statusCode).to.equal(400);
+      expect(messageFake).to.have.been.calledWith(
+        "Event handler not specified."
+      );
+      expect(e).to.equal(error);
     }
   });
 });

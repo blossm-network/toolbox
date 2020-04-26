@@ -8,94 +8,56 @@ const main = require("./main.js");
 const config = require("./config.json");
 
 module.exports = eventHandler({
-  // Expect the event to be delivered at least once, not necessarily in order.
-  mainFn: async (event) => {
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log(" in this: ", { event });
+  mainFn: (state = {}, event) => {
     const {
       [process.env.DOMAIN]: {
         root: domainRoot,
         service: domainService,
         network: domainNetwork,
       } = {},
-      root,
       body,
-    } = await main(event);
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log(" gottem: ", { root, body });
+    } = main(event);
 
-    const c = await viewStore({
+    return {
+      root: event.headers.root,
+      headers: {
+        ...state.headers,
+        ...(event.headers.context &&
+          event.headers.context[process.env.CONTEXT] && {
+            [process.env.CONTEXT]: event.headers.context[process.env.CONTEXT],
+          }),
+        ...(process.env.DOMAIN &&
+          domainRoot &&
+          domainService &&
+          domainNetwork && {
+            [process.env.DOMAIN]: {
+              root: domainRoot,
+              service: domainService,
+              network: domainNetwork,
+            },
+          }),
+      },
+      body: {
+        ...state.body,
+        ...body,
+        ...(event.headers.trace && { trace: event.headers.trace }),
+      },
+    };
+  },
+  commitFn: async (state) => {
+    await viewStore({
       name: config.name,
       ...(config.domain && { domain: config.domain }),
       ...(config.service && { service: config.service }),
       context: config.context,
     })
       .set({
-        context: event.headers.context,
-        claims: event.headers.claims,
         tokenFns: { internal: gcpToken },
       })
-      .update(root, {
-        headers: {
-          ...(event.headers.context &&
-            event.headers.context[process.env.CONTEXT] && {
-              [process.env.CONTEXT]: event.headers.context[process.env.CONTEXT],
-            }),
-          ...(process.env.DOMAIN &&
-            domainRoot &&
-            domainService &&
-            domainNetwork && {
-              [process.env.DOMAIN]: {
-                root: domainRoot,
-                service: domainService,
-                network: domainNetwork,
-              },
-            }),
-        },
-        body: {
-          ...body,
-          ...(event.headers.trace && { trace: event.headers.trace }),
-        },
+      .update(state.root, {
+        headers: state.headers,
+        body: state.body,
       });
-
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log({
-      c: JSON.stringify(c),
-      set: {
-        context: event.headers.context,
-        claims: event.headers.claims,
-        tokenFns: { internal: gcpToken },
-      },
-      update: {
-        root,
-        a: {
-          headers: {
-            ...(event.headers.context &&
-              event.headers.context[process.env.CONTEXT] && {
-                [process.env.CONTEXT]:
-                  event.headers.context[process.env.CONTEXT],
-              }),
-            ...(process.env.DOMAIN &&
-              domainRoot &&
-              domainService &&
-              domainNetwork && {
-                [process.env.DOMAIN]: {
-                  root: domainRoot,
-                  service: domainService,
-                  network: domainNetwork,
-                },
-              }),
-          },
-          body: {
-            ...body,
-            ...(event.headers.trace && { trace: event.headers.trace }),
-          },
-        },
-      },
-    });
     // //Should only do this on first delivery.
     // //TODO set token.
     // await command({

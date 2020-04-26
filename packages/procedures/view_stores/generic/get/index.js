@@ -33,10 +33,6 @@ module.exports = ({ findFn, one = false, queryFn = defaultQueryFn }) => {
         }),
     };
 
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log({ query });
-
     const results = await findFn({
       query,
       ...(req.query.sort && { sort: req.query.sort }),
