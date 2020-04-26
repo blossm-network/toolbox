@@ -23,12 +23,16 @@ describe("View store delete", () => {
     };
 
     const sendFake = fake();
-    const res = {
+    const statusFake = fake.returns({
       send: sendFake,
+    });
+    const res = {
+      status: statusFake,
     };
 
     await del({ removeFn: removeFake })(req, res);
     expect(removeFake).to.have.been.calledWith({ "headers.root": root });
+    expect(statusFake).to.have.been.calledWith(200);
     expect(sendFake).to.have.been.calledWith({ deletedCount });
   });
   it("should call with the correct params with query only", async () => {
@@ -43,12 +47,16 @@ describe("View store delete", () => {
     };
 
     const sendFake = fake();
-    const res = {
+    const statusFake = fake.returns({
       send: sendFake,
+    });
+    const res = {
+      status: statusFake,
     };
 
     await del({ removeFn: removeFake })(req, res);
     expect(removeFake).to.have.been.calledWith({ "body.a": 1 });
+    expect(statusFake).to.have.been.calledWith(200);
     expect(sendFake).to.have.been.calledWith({ deletedCount });
   });
   it("should call with the correct params with query and root", async () => {
@@ -65,8 +73,11 @@ describe("View store delete", () => {
     };
 
     const sendFake = fake();
-    const res = {
+    const statusFake = fake.returns({
       send: sendFake,
+    });
+    const res = {
+      status: statusFake,
     };
 
     await del({ removeFn: removeFake })(req, res);
@@ -74,6 +85,7 @@ describe("View store delete", () => {
       "body.a": 1,
       "headers.root": root,
     });
+    expect(statusFake).to.have.been.calledWith(200);
     expect(sendFake).to.have.been.calledWith({ deletedCount });
   });
   it("should throw if missing root params", async () => {
@@ -84,10 +96,7 @@ describe("View store delete", () => {
       query: {},
     };
 
-    const sendFake = fake();
-    const res = {
-      send: sendFake,
-    };
+    const res = {};
 
     const error = new Error();
     const messageFake = fake.returns(error);

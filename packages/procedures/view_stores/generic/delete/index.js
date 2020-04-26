@@ -16,5 +16,5 @@ module.exports = ({ removeFn }) => async (req, res) => {
     ...(req.params.root && { "headers.root": req.params.root }),
   });
 
-  res.send({ deletedCount });
+  res.status(200).send({ deletedCount });
 };

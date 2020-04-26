@@ -54,7 +54,7 @@ describe("View store base integration tests", () => {
       },
     });
 
-    expect(response0.statusCode).to.equal(204);
+    expect(response0.statusCode).to.equal(200);
 
     const response1 = await request.get(
       `${url}${domainRoot ? `/${domainRoot}` : ""}`,
@@ -100,7 +100,7 @@ describe("View store base integration tests", () => {
       },
     });
 
-    expect(response2.statusCode).to.equal(204);
+    expect(response2.statusCode).to.equal(200);
 
     const response3 = await request.get(
       `${url}${domainRoot ? `/${domainRoot}` : ""}`,
@@ -226,7 +226,7 @@ describe("View store base integration tests", () => {
       },
     });
 
-    expect(response.statusCode).to.equal(204);
+    expect(response.statusCode).to.equal(200);
 
     ///Test indexes
     for (const index of indexes) {
@@ -290,7 +290,7 @@ describe("View store base integration tests", () => {
       },
     });
 
-    expect(response.statusCode).to.equal(204);
+    expect(response.statusCode).to.equal(200);
     const response1 = await request.put(`${url}/${root1}`, {
       body: {
         view: {
