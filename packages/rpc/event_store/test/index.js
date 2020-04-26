@@ -392,7 +392,7 @@ describe("Event store", () => {
       .stream({ root, from, parallel });
 
     expect(rpcFake).to.have.been.calledWith(domain, service, "event-store");
-    expect(getFake).to.have.been.calledWith({ root, from, parallel });
+    expect(getFake).to.have.been.calledWith({ id: root, from, parallel });
     expect(inFake).to.have.been.calledWith({
       context,
     });
@@ -427,7 +427,7 @@ describe("Event store", () => {
       .stream({ root, from });
 
     expect(rpcFake).to.have.been.calledWith(domain, service, "event-store");
-    expect(getFake).to.have.been.calledWith({ root, from });
+    expect(getFake).to.have.been.calledWith({ id: root, from });
     expect(inFake).to.have.been.calledWith({
       context,
     });

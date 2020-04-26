@@ -81,7 +81,7 @@ module.exports = ({ domain, service = process.env.SERVICE } = {}) => {
   } = {}) => async ({ root, from, parallel }) =>
     await deps
       .rpc(domain, service, "event-store")
-      .get({ root, from, ...(parallel && { parallel }) })
+      .get({ id: root, from, ...(parallel && { parallel }) })
       .in({
         ...(context && { context }),
       })
