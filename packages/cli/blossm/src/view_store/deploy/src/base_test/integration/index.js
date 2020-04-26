@@ -312,7 +312,7 @@ describe("View store base integration tests", () => {
         },
       },
     });
-    expect(response1.statusCode).to.equal(204);
+    expect(response1.statusCode).to.equal(200);
     let roots = [];
     await request.stream(
       `${url}/stream${domainRoot ? `/${domainRoot}` : ""}`,
