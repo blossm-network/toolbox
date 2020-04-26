@@ -8,6 +8,9 @@
   "devDependencies": {
     "chai": "^4.2.0",
     "@blossm/request": "*",
-    "@blossm/view-store-rpc": "*"
+    "@blossm/view-store-rpc": "*",
+    "@blossm/event-store-rpc": "*",
+    "@blossm/gcp-pubsub": "*",
+    "@blossm/create-event": "*"
   }
 }

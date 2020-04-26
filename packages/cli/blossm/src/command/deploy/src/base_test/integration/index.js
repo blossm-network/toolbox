@@ -14,6 +14,7 @@ const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 const { testing } = require("../../config.json");
 
 const stateTopics = [];
+const existingTopics = [];
 
 const checkResponse = ({ data, expected }) => {
   for (const property in expected) {
@@ -119,7 +120,6 @@ const executeStep = async (step) => {
   });
 };
 
-const existingTopics = [];
 describe("Command handler integration tests", () => {
   before(async () => {
     existingTopics.push(
