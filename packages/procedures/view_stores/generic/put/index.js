@@ -29,6 +29,10 @@ module.exports = ({ writeFn, viewFn = defaultFn }) => {
       data,
     });
 
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log({ newView });
+
     res.status(200).send(newView);
   };
 };

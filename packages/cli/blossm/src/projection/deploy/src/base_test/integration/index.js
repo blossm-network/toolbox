@@ -97,11 +97,7 @@ describe("Projection integration tests", () => {
               },
             },
           })
-          .read(
-            example.result.root
-              ? { root: example.result.root }
-              : example.result.query
-          );
+          .read(example.result.query);
 
         //TODO
         //eslint-disable-next-line no-console
