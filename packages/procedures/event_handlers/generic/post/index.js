@@ -28,6 +28,9 @@ module.exports = ({
     let newSeenEventNumber;
 
     await streamFn({ root, from: number }, (event) => {
+      //TODO
+      //eslint-disable-next-line no-console
+      console.log({ event });
       if (event.headers.action == process.env.EVENT_ACTION)
         state = mainFn(state, event);
 
