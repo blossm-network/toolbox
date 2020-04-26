@@ -6,7 +6,7 @@ module.exports = ({ eventStore }) => async ({
   parallel = 1,
   fn,
 }) => {
-  const stuff = deps.db.find({
+  const stuff = await deps.db.find({
     store: eventStore,
     query: { "headers.root": root },
     options: { lean: true },
