@@ -2,7 +2,6 @@ require("localenv");
 const { expect } = require("chai");
 const viewStore = require("@blossm/view-store-rpc");
 const eventStore = require("@blossm/event-store-rpc");
-const { create, delete: del, exists } = require("@blossm/gcp-pubsub");
 const createEvent = require("@blossm/create-event");
 
 const request = require("@blossm/request");
@@ -17,26 +16,7 @@ const {
 
 const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 
-const stateTopics = [];
-const existingTopics = [];
-
 describe("Projection integration tests", () => {
-  before(async () => {
-    existingTopics.push(
-      ...testing.topics.filter(async (t) => {
-        return await exists(t);
-      })
-    );
-    await Promise.all(testing.topics.map((t) => create(t)));
-  });
-  after(
-    async () =>
-      await Promise.all(
-        [...testing.topics, ...stateTopics].map(
-          (t) => !existingTopics.includes(t) && del(t)
-        )
-      )
-  );
   it("should return successfully", async () => {
     const parallelFns = [];
     const contextRoot = "some-context-root";
@@ -46,12 +26,6 @@ describe("Projection integration tests", () => {
     //TODO
     //eslint-disable-next-line no-console
     console.log("1");
-
-    //Add to event store first.
-    const topic = `${domain}.${service}`;
-    if (await exists(topic)) existingTopics.push(topic);
-    stateTopics.push(topic);
-    await create(topic);
 
     //TODO
     //eslint-disable-next-line no-console

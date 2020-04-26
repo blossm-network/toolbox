@@ -399,11 +399,25 @@ const addDefaultDependencies = ({ config, coreNetwork }) => {
       return [
         ...config.testing.dependencies,
         {
+          domain: config.event.domain,
+          service: config.event.service,
+          procedure: "event-store",
+        },
+        {
           name: config.name,
           ...(config.domain && { domain: config.domain }),
           ...(config.service && { domain: config.service }),
           context: config.context,
           procedure: "view-store",
+        },
+      ];
+    case "event-handler":
+      return [
+        ...config.testing.dependencies,
+        {
+          domain: config.event.domain,
+          service: config.event.service,
+          procedure: "event-store",
         },
       ];
     case "command-gateway": {
