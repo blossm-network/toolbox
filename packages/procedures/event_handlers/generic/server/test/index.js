@@ -6,6 +6,8 @@ const eventHandler = require("..");
 
 const mainFn = "some-main-fn";
 const streamFn = "some-stream-fn";
+const nextEventNumberFn = "some-next-event-number-fn";
+const incrementNextEventNumberFn = "some-increment-next-event-number-fn";
 
 describe("Event handler", () => {
   afterEach(() => {
@@ -26,7 +28,12 @@ describe("Event handler", () => {
     const commandPostFake = fake.returns(commandPostResult);
     replace(deps, "post", commandPostFake);
 
-    await eventHandler({ mainFn, streamFn });
+    await eventHandler({
+      mainFn,
+      streamFn,
+      nextEventNumberFn,
+      incrementNextEventNumberFn,
+    });
 
     expect(listenFake).to.have.been.calledOnce;
     expect(serverFake).to.have.been.calledOnce;
@@ -34,6 +41,8 @@ describe("Event handler", () => {
     expect(commandPostFake).to.have.been.calledWith({
       mainFn,
       streamFn,
+      nextEventNumberFn,
+      incrementNextEventNumberFn,
     });
   });
   it("should throw correctly", async () => {

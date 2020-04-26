@@ -41,7 +41,7 @@ const numberStore = async () => {
 module.exports = async ({ mainFn, streamFn } = {}) => {
   const store = await numberStore();
 
-  const numberFn = async ({ root }) => {
+  const nextEventNumberFn = async ({ root }) => {
     const [{ number }] = await deps.db.find({
       store,
       query: { root },
@@ -52,7 +52,7 @@ module.exports = async ({ mainFn, streamFn } = {}) => {
     return number;
   };
 
-  const incrementFn = async ({ root, from }) =>
+  const incrementNextEventNumberFn = async ({ root, from }) =>
     deps.db.write({
       store,
       query: { root, number: from },
@@ -68,7 +68,7 @@ module.exports = async ({ mainFn, streamFn } = {}) => {
   deps.eventHandler({
     mainFn,
     streamFn,
-    numberFn,
-    incrementFn,
+    nextEventNumberFn,
+    incrementNextEventNumberFn,
   });
 };

@@ -91,9 +91,11 @@ describe("Event handler", () => {
 
     const root = "some-root";
 
-    const numberFnResult = await eventHandlerFake.lastCall.lastArg.numberFn({
-      root,
-    });
+    const numberFnResult = await eventHandlerFake.lastCall.lastArg.nextEventNumberFn(
+      {
+        root,
+      }
+    );
 
     expect(findFake).to.have.been.calledWith({
       store,
@@ -106,7 +108,7 @@ describe("Event handler", () => {
     expect(numberFnResult).to.equal(number);
 
     const from = "some-from";
-    const incrementFnResult = await eventHandlerFake.lastCall.lastArg.incrementFn(
+    const incrementFnResult = await eventHandlerFake.lastCall.lastArg.incrementNextEventNumberFn(
       {
         root,
         from,
