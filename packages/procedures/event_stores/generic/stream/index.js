@@ -1,5 +1,8 @@
 module.exports = ({ streamFn }) => {
   return async (req, res) => {
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log({ params: req.params, query: req.query });
     await streamFn({
       root: req.params.root,
       from: req.query.from,

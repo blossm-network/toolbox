@@ -6,6 +6,9 @@ module.exports = ({ eventStore }) => async ({
   parallel = 1,
   fn,
 }) => {
+  //TODO
+  //eslint-disable-next-line no-console
+  console.log("In mongodb stream: ", { root, from, parallel, fn });
   const cursor = deps.db
     .find({
       store: eventStore,
