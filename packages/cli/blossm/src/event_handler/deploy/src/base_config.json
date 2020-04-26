@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "@blossm/event-handler": "*"
+    "@blossm/mongodb-event-handler": "*"
   },
   "devDependencies": {
     "chai": "^4.2.0",

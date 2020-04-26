@@ -1,4 +1,4 @@
-const eventHandler = require("@blossm/event-handler");
+const eventHandler = require("@blossm/mongodb-event-handler");
 const viewStore = require("@blossm/view-store-rpc");
 const eventStore = require("@blossm/event-store-rpc");
 const gcpToken = require("@blossm/gcp-token");

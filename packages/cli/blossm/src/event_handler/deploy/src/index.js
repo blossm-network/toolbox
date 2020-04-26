@@ -1,4 +1,4 @@
-const eventHandler = require("@blossm/event-handler");
+const eventHandler = require("@blossm/mongodb-event-handler");
 
 const main = require("./main.js");
 
