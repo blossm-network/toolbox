@@ -42,7 +42,7 @@ module.exports = async ({ mainFn, streamFn } = {}) => {
   const store = await numberStore();
 
   const nextEventNumberFn = async ({ root }) => {
-    const [{ number }] = await deps.db.find({
+    const [{ number } = { number: 0 }] = await deps.db.find({
       store,
       query: { root },
       pageSize: 1,
