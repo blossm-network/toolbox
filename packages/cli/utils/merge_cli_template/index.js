@@ -222,6 +222,20 @@ const envMongodbHost = ({ env, config, procedure }) => {
         default:
           return "";
       }
+    case "projection":
+    case "event-handler":
+      switch (env) {
+        case "production":
+          return config.vendors.eventHandler.mongodb.hosts.production;
+        case "sandbox":
+          return config.vendors.eventHandler.mongodb.hosts.sandbox;
+        case "staging":
+          return config.vendors.eventHandler.mongodb.hosts.staging;
+        case "development":
+          return config.vendors.eventHandler.mongodb.hosts.development;
+        default:
+          return "";
+      }
   }
 };
 
