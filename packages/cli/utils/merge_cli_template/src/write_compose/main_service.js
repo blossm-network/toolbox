@@ -107,6 +107,7 @@ module.exports = ({
         ...common,
         environment: {
           ...common.environment,
+          ...commonDatabaseEnv,
           NAME: name,
           CONTEXT: context,
           EVENT_ACTION: event.action,
