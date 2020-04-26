@@ -26,7 +26,7 @@ module.exports = eventHandler({
     //eslint-disable-next-line no-console
     console.log(" gottem: ", { root, body });
 
-    await viewStore({
+    const c = await viewStore({
       name: config.name,
       ...(config.domain && { domain: config.domain }),
       ...(config.service && { service: config.service }),
@@ -63,6 +63,7 @@ module.exports = eventHandler({
     //TODO
     //eslint-disable-next-line no-console
     console.log({
+      c: JSON.stringify(c),
       set: {
         context: event.headers.context,
         claims: event.headers.claims,
