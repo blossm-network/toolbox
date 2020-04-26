@@ -309,7 +309,7 @@ describe("Operation", () => {
     });
   });
   it("should call stream with the correct params", async () => {
-    const streamFake = fake.returns(bodyResponse);
+    const streamFake = fake();
     replace(deps, "stream", streamFake);
 
     const operationTokenFake = fake.returns({ token, type });
@@ -352,63 +352,10 @@ describe("Operation", () => {
       operation: [operarationPart1, operarationPart2],
       host,
     });
-    expect(result).to.deep.equal({ statusCode: bodyStatusCode, body });
-  });
-  it("should call stream with the correct params with non json response", async () => {
-    const response = "some-response";
-    const streamFake = fake.returns({
-      body: response,
-      statusCode: bodyStatusCode,
-    });
-    replace(deps, "stream", streamFake);
-
-    const operationTokenFake = fake.returns({ token, type });
-    replace(deps, "operationToken", operationTokenFake);
-
-    const operationUrlFake = fake.returns(url);
-    replace(deps, "operationUrl", operationUrlFake);
-
-    const fnFake = fake();
-    const result = await operation(operarationPart1, operarationPart2)
-      .stream(data, fnFake)
-      .in({ context, host })
-      .with({ internalTokenFn: tokenFn, claims });
-
-    expect(streamFake).to.have.been.calledWith(
-      url,
-      match((func) => {
-        const obj = { a: 1 };
-        const stringObj = JSON.stringify(obj);
-        const buffer = Buffer.from(stringObj);
-        func(buffer);
-        return fnFake.calledWith(obj);
-      }),
-      {
-        query: {
-          ...data,
-          context,
-          claims,
-        },
-        headers: {
-          Authorization: `${type} ${token}`,
-        },
-      }
-    );
-    expect(operationTokenFake).to.have.been.calledWith({
-      tokenFn,
-      operation: [operarationPart1, operarationPart2],
-    });
-    expect(operationUrlFake).to.have.been.calledWith({
-      operation: [operarationPart1, operarationPart2],
-      host,
-    });
-    expect(result).to.deep.equal({
-      statusCode: bodyStatusCode,
-      body: response,
-    });
+    expect(result).to.equal();
   });
   it("should call stream with the correct params with id", async () => {
-    const streamFake = fake.returns(bodyResponse);
+    const streamFake = fake();
     replace(deps, "stream", streamFake);
 
     const operationTokenFake = fake.returns({ token, type });
@@ -452,10 +399,7 @@ describe("Operation", () => {
       host,
       id,
     });
-    expect(result).to.deep.equal({
-      statusCode: bodyStatusCode,
-      body,
-    });
+    expect(result).to.equal();
   });
   it("should call put with the correct params", async () => {
     const put = fake.returns(response);
