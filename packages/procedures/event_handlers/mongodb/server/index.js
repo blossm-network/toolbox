@@ -42,12 +42,18 @@ module.exports = async ({ mainFn, streamFn } = {}) => {
   const store = await numberStore();
 
   const nextEventNumberFn = async ({ root }) => {
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log({ inTheFn: root });
     const [{ number } = { number: 0 }] = await deps.db.find({
       store,
       query: { root },
       pageSize: 1,
       options: { lean: true },
     });
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log({ number });
 
     return number;
   };

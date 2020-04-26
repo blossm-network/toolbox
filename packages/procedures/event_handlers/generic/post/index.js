@@ -25,7 +25,7 @@ module.exports = ({
     const { root, forceNumber } = data(req);
     //TODO
     //eslint-disable-next-line no-console
-    console.log({ root, forceNumber });
+    console.log({ root, forceNumber, nextEventNumberFn });
     const nextEventNumber = await nextEventNumberFn({ root });
 
     //TODO
