@@ -103,6 +103,9 @@ describe("Projection integration tests", () => {
               : example.result.query
           );
 
+        //TODO
+        //eslint-disable-next-line no-console
+        console.log({ v, zero: v[0] });
         if (example.result.value) {
           for (const property in example.result.value) {
             expect(v[0][property]).to.exist;
