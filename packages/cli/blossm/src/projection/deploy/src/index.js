@@ -54,6 +54,41 @@ module.exports = eventHandler({
         },
       });
 
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log({
+      set: {
+        context: event.headers.context,
+        claims: event.headers.claims,
+        tokenFns: { internal: gcpToken },
+      },
+      update: {
+        root,
+        a: {
+          headers: {
+            ...(event.headers.context &&
+              event.headers.context[process.env.CONTEXT] && {
+                [process.env.CONTEXT]:
+                  event.headers.context[process.env.CONTEXT],
+              }),
+            ...(process.env.DOMAIN &&
+              domainRoot &&
+              domainService &&
+              domainNetwork && {
+                [process.env.DOMAIN]: {
+                  root: domainRoot,
+                  service: domainService,
+                  network: domainNetwork,
+                },
+              }),
+          },
+          body: {
+            ...body,
+            ...(event.headers.trace && { trace: event.headers.trace }),
+          },
+        },
+      },
+    });
     // //Should only do this on first delivery.
     // //TODO set token.
     // await command({
