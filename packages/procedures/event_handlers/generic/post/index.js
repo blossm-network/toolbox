@@ -25,16 +25,19 @@ module.exports = ({
     } = data(req);
 
     let state;
+    let newSeenEventNumber;
 
     await streamFn({ root, from: number }, (event) => {
       if (event.headers.action == process.env.EVENT_ACTION)
         state = mainFn(state, event);
+
+      newSeenEventNumber = event.headers.number;
     });
 
-    if (state) {
-      await commitFn(state);
-      await saveNextEventNumberFn({ root, from: state.headers.number });
-    }
+    if (state) await commitFn(state);
+
+    if (newSeenEventNumber != undefined)
+      await saveNextEventNumberFn({ root, from: newSeenEventNumber });
 
     res.sendStatus(204);
   };
