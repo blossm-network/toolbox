@@ -8,7 +8,7 @@ const main = require("./main.js");
 const config = require("./config.json");
 
 module.exports = eventHandler({
-  mainFn: (state = {}, event) => {
+  mainFn: (state, event) => {
     const {
       [process.env.DOMAIN]: {
         root: domainRoot,
@@ -16,12 +16,11 @@ module.exports = eventHandler({
         network: domainNetwork,
       } = {},
       body,
-    } = main(event);
+    } = main(state, event);
 
     return {
       root: event.headers.root,
       headers: {
-        ...state.headers,
         ...(event.headers.context &&
           event.headers.context[process.env.CONTEXT] && {
             [process.env.CONTEXT]: event.headers.context[process.env.CONTEXT],
@@ -38,7 +37,6 @@ module.exports = eventHandler({
           }),
       },
       body: {
-        ...state.body,
         ...body,
         ...(event.headers.trace && { trace: event.headers.trace }),
       },
