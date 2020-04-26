@@ -1,4 +1,5 @@
 const roboSay = require("@blossm/robo-say");
+
 const rootDir = require("@blossm/cli-root-dir");
 const fs = require("fs-extra");
 const ncp = require("ncp");
@@ -250,6 +251,18 @@ const envMongodbHost = ({ env, config, procedure }) => {
         default:
           return "";
       }
+  }
+};
+
+const mongodbProtocol = ({ config, procedure }) => {
+  switch (procedure) {
+    case "view-store":
+      return config.vendors.viewStore.mongodb.protocol;
+    case "event-store":
+      return config.vendors.eventStore.mongodb.protocol;
+    case "projection":
+    case "event-handler":
+      return config.vendors.eventHandler.mongodb.protocol;
   }
 };
 
@@ -637,6 +650,10 @@ const configure = async (workingDir, configFn, env, strict) => {
       memory: configMemory({ config, blossmConfig }),
       mongodbUser: envMongodbUser({ env, config: blossmConfig, procedure }),
       mongodbHost: envMongodbHost({ env, config: blossmConfig, procedure }),
+      mongodbProtocol: mongodbProtocol({
+        config: blossmConfig,
+        procedure,
+      }),
       mainContainerName,
       containerRegistery,
       twilioSendingPhoneNumber,

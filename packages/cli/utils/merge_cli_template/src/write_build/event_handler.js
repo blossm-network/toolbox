@@ -50,6 +50,9 @@ module.exports = ({
   runIntegrationTests,
   runBaseIntegrationTests,
   dependencyKeyEnvironmentVariables,
+  mongodbUser,
+  mongodbHost,
+  mongodbProtocol,
   strict,
 }) => {
   return [
@@ -119,6 +122,10 @@ module.exports = ({
               EVENT_ACTION: event.action,
               EVENT_DOMAIN: event.domain,
               EVENT_SERVICE: event.service,
+              MONGODB_DATABASE: "event-handler",
+              MONGODB_USER: mongodbUser,
+              MONGODB_HOST: mongodbHost,
+              MONGODB_PROTOCOL: mongodbProtocol,
             },
             labels: {
               name,

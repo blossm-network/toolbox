@@ -1,7 +1,6 @@
 const fs = require("fs-extra");
 const yaml = require("yaml");
 const path = require("path");
-const rootDir = require("@blossm/cli-root-dir");
 
 const viewStore = require("./view_store");
 const commandGateway = require("./command_gateway");
@@ -22,6 +21,7 @@ const steps = ({
   network,
   mongodbUser,
   mongodbHost,
+  mongodbProtocol,
   memory,
   envUriSpecifier,
   containerRegistery,
@@ -51,7 +51,6 @@ const steps = ({
 }) => {
   const serviceName = `${region}-${operationName}-${operationHash}`;
   const uri = `${operationHash}.${region}.${envUriSpecifier}${network}`;
-  const blossmConfig = rootDir.config();
   switch (procedure) {
     case "view-store":
       return viewStore({
@@ -84,7 +83,7 @@ const steps = ({
         secretBucketKeyRing,
         mongodbUser,
         mongodbHost,
-        mongodbProtocol: blossmConfig.vendors.viewStore.mongodb.protocol,
+        mongodbProtocol,
         runUnitTests,
         runBaseUnitTests,
         runIntegrationTests,
@@ -118,7 +117,7 @@ const steps = ({
         secretBucketKeyRing,
         mongodbUser,
         mongodbHost,
-        mongodbProtocol: blossmConfig.vendors.eventStore.mongodb.protocol,
+        mongodbProtocol,
         runUnitTests,
         runBaseUnitTests,
         runIntegrationTests,
@@ -136,6 +135,9 @@ const steps = ({
         event,
         project,
         network,
+        mongodbUser,
+        mongodbHost,
+        mongodbProtocol,
         dependencyKeyEnvironmentVariables,
         envUriSpecifier,
         computeUrlId,
@@ -392,6 +394,7 @@ module.exports = ({
   dependencyKeyEnvironmentVariables,
   mongodbUser,
   mongodbHost,
+  mongodbProtocol,
   dnsZone,
   service,
   operationHash,
@@ -456,6 +459,7 @@ module.exports = ({
       operationName,
       mongodbHost,
       mongodbUser,
+      mongodbProtocol,
       rolesBucket,
       secretBucket,
       secretBucketKeyLocation,

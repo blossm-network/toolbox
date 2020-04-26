@@ -37,6 +37,15 @@ module.exports = ({
         //TODO
         //eslint-disable-next-line no-console
         console.log("found event: ", { event });
+
+        // // lock will exist and equal event.headers.number if its allowed.
+        // const lock = await lockNextEventNumberFn({
+        //   root,
+        //   from: event.headers.number,
+        // });
+
+        // if (lock == undefined) return;
+
         if (event.headers.action == process.env.EVENT_ACTION)
           await mainFn(event);
         //TODO
