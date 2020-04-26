@@ -148,7 +148,7 @@ describe("Request", () => {
         case "data":
           fn(body);
           return { on: onFn };
-        case "end":
+        case "complete":
           fn();
           break;
       }
@@ -181,7 +181,7 @@ describe("Request", () => {
         case "data":
           fn(body);
           return { on: onFn };
-        case "end":
+        case "complete":
           fn();
           break;
       }

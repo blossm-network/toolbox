@@ -128,6 +128,6 @@ describe("Projection integration tests", () => {
         }
       });
     }
-    await Promise.all(parallelFns.map((fn) => fn()));
+    await Promise.all(parallelFns);
   });
 });

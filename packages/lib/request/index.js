@@ -44,5 +44,5 @@ exports.stream = async (url, onData, { query, headers } = {}) =>
       })
       .on("data", onData)
       .on("error", reject)
-      .on("end", resolve)
+      .on("complete", resolve)
   );
