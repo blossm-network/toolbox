@@ -108,13 +108,13 @@ describe("Event store integration tests", () => {
     }
 
     //Test stream
+    let currentNumber = 0;
     await request.stream(
       `${url}/stream/${root}`,
       (data) => {
         const parsedData = JSON.parse(data.toString().trim());
-        //TODO
-        //eslint-disable-next-line no-console
-        console.log({ eventStoreStream: parsedData });
+        expect(parsedData.headers.number).to.equal(currentNumber);
+        currentNumber++;
       },
       {
         query: {
