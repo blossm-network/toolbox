@@ -34,15 +34,26 @@ exports.delete = async (url, { headers } = {}) =>
 exports.get = async (url, { query, headers } = {}) =>
   await common({ method: "GET", url: addParamsToUrl(url, query), headers });
 
-exports.stream = async (url, onData, { query, headers } = {}) =>
-  new Promise((resolve, reject) =>
+exports.stream = async (url, onData, { query, headers } = {}) => {
+  let processingData = false;
+  let finishedProcessingAllData = false;
+  return new Promise((resolve, reject) =>
     deps
       .request({
         url: addParamsToUrl(url, query),
         method: "GET",
         ...(headers != undefined && { headers }),
       })
-      .on("data", onData)
+      .on("data", async (data) => {
+        processingData = true;
+        await onData(data);
+        processingData = false;
+        if (finishedProcessingAllData) resolve();
+      })
       .on("error", reject)
-      .on("end", resolve)
+      .on("end", () => {
+        finishedProcessingAllData = true;
+        if (!processingData) resolve();
+      })
   );
+};
