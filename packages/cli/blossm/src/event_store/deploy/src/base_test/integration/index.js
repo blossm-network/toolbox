@@ -21,7 +21,7 @@ const {
   // unsubscribe,
 } = require("@blossm/gcp-pubsub");
 
-const topic = `some-topic.${process.env.DOMAIN}.${process.env.SERVICE}`;
+const topic = `${process.env.DOMAIN}.${process.env.SERVICE}`;
 // const sub = "some-sub";
 const version = 0;
 const created = dateString();
