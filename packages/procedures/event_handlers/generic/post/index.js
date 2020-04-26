@@ -31,9 +31,13 @@ module.exports = ({
     //TODO
     //eslint-disable-next-line no-console
     console.log({ nextEventNumber });
+
+    let processingEvent = false;
+    let finishedReceivingEvents = false;
     await streamFn(
       { root, from: forceNumber != undefined ? forceNumber : nextEventNumber },
       async (event) => {
+        processingEvent = true;
         //TODO
         //eslint-disable-next-line no-console
         console.log("found event: ", { event });
@@ -61,12 +65,24 @@ module.exports = ({
         //TODO
         //eslint-disable-next-line no-console
         console.log("incremented");
+
+        processingEvent = false;
+        if (finishedReceivingEvents) {
+          //TODO
+          //eslint-disable-next-line no-console
+          console.log("other swag");
+          res.sendStatus(204);
+        }
       }
     );
 
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log("swag");
-    res.sendStatus(204);
+    finishedReceivingEvents = true;
+
+    if (!processingEvent) {
+      //TODO
+      //eslint-disable-next-line no-console
+      console.log("swag");
+      res.sendStatus(204);
+    }
   };
 };
