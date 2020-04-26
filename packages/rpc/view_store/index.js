@@ -39,7 +39,7 @@ module.exports = ({
     contexts,
     claims,
     tokenFns: { internal: internalTokenFn, external: externalTokenFn } = {},
-  } = {}) => async ({ query, sort }) =>
+  } = {}) => async ({ query, sort }, fn) =>
     await deps
       .rpc(
         name,
@@ -48,7 +48,7 @@ module.exports = ({
         context,
         "view-store"
       )
-      .get({ query, ...(sort && { sort }) })
+      .stream({ query, ...(sort && { sort }) }, fn)
       .in({
         ...(contexts && { context: contexts }),
         ...(!internal && {

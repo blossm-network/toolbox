@@ -375,24 +375,28 @@ describe("Event store", () => {
     const inFake = fake.returns({
       with: withFake,
     });
-    const getFake = fake.returns({
+    const streamFake = fake.returns({
       in: inFake,
     });
     const rpcFake = fake.returns({
-      get: getFake,
+      stream: streamFake,
     });
     replace(deps, "rpc", rpcFake);
 
+    const fn = "some-fn";
     const result = await eventStore({ domain, service })
       .set({
         context,
         claims,
         tokenFns: { internal: internalTokenFn, external: externalTokenFn },
       })
-      .stream({ root, from, parallel });
+      .stream({ root, from, parallel }, fn);
 
     expect(rpcFake).to.have.been.calledWith(domain, service, "event-store");
-    expect(getFake).to.have.been.calledWith({ id: root, from, parallel });
+    expect(streamFake).to.have.been.calledWith(
+      { id: root, from, parallel },
+      fn
+    );
     expect(inFake).to.have.been.calledWith({
       context,
     });
@@ -410,24 +414,25 @@ describe("Event store", () => {
     const inFake = fake.returns({
       with: withFake,
     });
-    const getFake = fake.returns({
+    const streamFake = fake.returns({
       in: inFake,
     });
     const rpcFake = fake.returns({
-      get: getFake,
+      stream: streamFake,
     });
     replace(deps, "rpc", rpcFake);
 
+    const fn = "some-fn";
     const result = await eventStore({ domain, service })
       .set({
         context,
         claims,
         tokenFns: { internal: internalTokenFn, external: externalTokenFn },
       })
-      .stream({ root, from });
+      .stream({ root, from }, fn);
 
     expect(rpcFake).to.have.been.calledWith(domain, service, "event-store");
-    expect(getFake).to.have.been.calledWith({ id: root, from });
+    expect(streamFake).to.have.been.calledWith({ id: root, from }, fn);
     expect(inFake).to.have.been.calledWith({
       context,
     });

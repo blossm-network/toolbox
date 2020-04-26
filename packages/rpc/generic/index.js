@@ -111,5 +111,16 @@ module.exports = (...operation) => {
         data: query,
       });
     },
+    stream: (query, fn) => {
+      const id = query.id;
+      delete query.id;
+      return common({
+        method: (url, data) => deps.stream(url, fn, data),
+        dataParam: "query",
+        operation,
+        id,
+        data: query,
+      });
+    },
   };
 };

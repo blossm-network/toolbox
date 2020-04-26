@@ -104,7 +104,7 @@ module.exports = eventHandler({
     //   network: process.env.CORE_NETWORK,
     // }).issue(newView);
   },
-  streamFn: ({ root, from }) =>
+  streamFn: ({ root, from }, fn) =>
     eventStore({
       domain: process.env.EVENT_DOMAIN,
       service: process.env.EVENT_SERVICE,
@@ -112,5 +112,5 @@ module.exports = eventHandler({
       .set({
         tokenFns: { internal: gcpToken },
       })
-      .stream({ root, from }),
+      .stream({ root, from }, fn),
 });
