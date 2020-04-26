@@ -115,7 +115,15 @@ module.exports = (...operation) => {
       const id = query.id;
       delete query.id;
       return common({
-        method: (url, data) => deps.stream(url, fn, data),
+        method: (url, data) =>
+          deps.stream(
+            url,
+            (data) => {
+              const parsedData = JSON.parse(data.toString());
+              fn(parsedData);
+            },
+            data
+          ),
         dataParam: "query",
         operation,
         id,

@@ -1,14 +1,8 @@
-const { expect } = require("chai")
-  .use(require("chai-datetime"))
-  .use(require("sinon-chai"));
-const { restore, replace, fake, useFakeTimers } = require("sinon");
+const { expect } = require("chai").use(require("sinon-chai"));
+const { restore, replace, fake, match } = require("sinon");
 const operation = require("..");
 
 const deps = require("../deps");
-
-let clock;
-
-const now = new Date();
 
 const data = { a: 1, context: 3 };
 const context = { b: 4 };
@@ -39,10 +33,8 @@ const bodyResponse = {
 describe("Operation", () => {
   beforeEach(() => {
     process.env.HOST = host;
-    clock = useFakeTimers(now.getTime());
   });
   afterEach(() => {
-    clock.restore();
     restore();
   });
 
@@ -326,22 +318,32 @@ describe("Operation", () => {
     const operationUrlFake = fake.returns(url);
     replace(deps, "operationUrl", operationUrlFake);
 
-    const fn = "some-fn";
+    const fnFake = fake();
     const result = await operation(operarationPart1, operarationPart2)
-      .stream(data, fn)
+      .stream(data, fnFake)
       .in({ context, host })
       .with({ internalTokenFn: tokenFn, claims });
 
-    expect(streamFake).to.have.been.calledWith(url, fn, {
-      query: {
-        ...data,
-        context,
-        claims,
-      },
-      headers: {
-        Authorization: `${type} ${token}`,
-      },
-    });
+    expect(streamFake).to.have.been.calledWith(
+      url,
+      match((func) => {
+        const obj = { a: 1 };
+        const stringObj = JSON.stringify(obj);
+        const buffer = Buffer.from(stringObj);
+        func(buffer);
+        return fnFake.calledWith(obj);
+      }),
+      {
+        query: {
+          ...data,
+          context,
+          claims,
+        },
+        headers: {
+          Authorization: `${type} ${token}`,
+        },
+      }
+    );
     expect(operationTokenFake).to.have.been.calledWith({
       tokenFn,
       operation: [operarationPart1, operarationPart2],
@@ -366,22 +368,32 @@ describe("Operation", () => {
     const operationUrlFake = fake.returns(url);
     replace(deps, "operationUrl", operationUrlFake);
 
-    const fn = "some-fn";
+    const fnFake = fake();
     const result = await operation(operarationPart1, operarationPart2)
-      .stream(data, fn)
+      .stream(data, fnFake)
       .in({ context, host })
       .with({ internalTokenFn: tokenFn, claims });
 
-    expect(streamFake).to.have.been.calledWith(url, fn, {
-      query: {
-        ...data,
-        context,
-        claims,
-      },
-      headers: {
-        Authorization: `${type} ${token}`,
-      },
-    });
+    expect(streamFake).to.have.been.calledWith(
+      url,
+      match((func) => {
+        const obj = { a: 1 };
+        const stringObj = JSON.stringify(obj);
+        const buffer = Buffer.from(stringObj);
+        func(buffer);
+        return fnFake.calledWith(obj);
+      }),
+      {
+        query: {
+          ...data,
+          context,
+          claims,
+        },
+        headers: {
+          Authorization: `${type} ${token}`,
+        },
+      }
+    );
     expect(operationTokenFake).to.have.been.calledWith({
       tokenFn,
       operation: [operarationPart1, operarationPart2],
@@ -405,22 +417,32 @@ describe("Operation", () => {
     const operationUrlFake = fake.returns(url);
     replace(deps, "operationUrl", operationUrlFake);
 
-    const fn = "some-fn";
+    const fnFake = fake();
     const result = await operation(operarationPart1, operarationPart2)
-      .stream({ ...data, id }, fn)
+      .stream({ ...data, id }, fnFake)
       .in({ context, host })
       .with({ internalTokenFn: tokenFn, claims });
 
-    expect(streamFake).to.have.been.calledWith(url, fn, {
-      query: {
-        ...data,
-        context,
-        claims,
-      },
-      headers: {
-        Authorization: `${type} ${token}`,
-      },
-    });
+    expect(streamFake).to.have.been.calledWith(
+      url,
+      match((func) => {
+        const obj = { a: 1 };
+        const stringObj = JSON.stringify(obj);
+        const buffer = Buffer.from(stringObj);
+        func(buffer);
+        return fnFake.calledWith(obj);
+      }),
+      {
+        query: {
+          ...data,
+          context,
+          claims,
+        },
+        headers: {
+          Authorization: `${type} ${token}`,
+        },
+      }
+    );
     expect(operationTokenFake).to.have.been.calledWith({
       tokenFn,
       operation: [operarationPart1, operarationPart2],
