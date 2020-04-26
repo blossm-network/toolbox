@@ -10,6 +10,9 @@ const config = require("./config.json");
 module.exports = eventHandler({
   // Expect the event to be delivered at least once, not necessarily in order.
   mainFn: async (event) => {
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log(" in this: ", { event });
     const {
       [process.env.DOMAIN]: {
         root: domainRoot,
@@ -19,6 +22,9 @@ module.exports = eventHandler({
       root,
       body,
     } = await main(event);
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log(" gottem: ", { root, body });
 
     await viewStore({
       name: config.name,

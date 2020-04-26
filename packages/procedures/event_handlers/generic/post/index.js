@@ -46,6 +46,12 @@ module.exports = ({
 
         // if (lock == undefined) return;
 
+        //TODO
+        //eslint-disable-next-line no-console
+        console.log(" equal: ", {
+          eveAction: event.headers.action,
+          envAction: process.env.EVENT_ACTION,
+        });
         if (event.headers.action == process.env.EVENT_ACTION)
           await mainFn(event);
         //TODO
