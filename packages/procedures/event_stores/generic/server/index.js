@@ -11,7 +11,7 @@ module.exports = async ({
   deps
     .server()
     .get(deps.get({ aggregateFn, queryFn }), { path: "/:root?" })
-    .get(deps.stream({ streamFn, ...(queryFn && { queryFn }) }), {
+    .get(deps.stream({ streamFn }), {
       path: "/stream/:root?",
     })
     .post(
