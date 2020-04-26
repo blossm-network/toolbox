@@ -137,7 +137,6 @@ describe("Event handler", () => {
     const store = "some-store";
     const storeFake = fake.returns(store);
 
-    const number = "some-number";
     const findFake = fake.returns([]);
     const writeFake = fake.returns(writeResult);
 
