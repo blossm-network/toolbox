@@ -332,7 +332,7 @@ const copySource = async (p, workingDir) => {
 
 const topicsForDependencies = (config, events) => {
   const array = (events || [])
-    .map((e) => `${e.domain}.${e.service || config.service}`)
+    .map((e) => `did-${e.action}.${e.domain}.${e.service || config.service}`)
     .concat(
       (config.procedure == "command-gateway" &&
         config.commands.some(
@@ -346,7 +346,13 @@ const topicsForDependencies = (config, events) => {
           config.facts.some(
             (f) => f.protection == undefined || f.protection == "strict"
           ))
-        ? ["session.core", "identity.core", "role.core", "principle.core"]
+        ? [
+            "did-start.session.core",
+            "did-upgrade.session.core",
+            "did-register.identity.core",
+            "did-create.role.core",
+            "did-add-roles.principle.core",
+          ]
         : []
     );
   return [...new Set(array)];
@@ -602,6 +608,7 @@ const configure = async (workingDir, configFn, env, strict) => {
     const procedure = config.procedure;
     const name = config.name;
     const event = config.event;
+    const actions = config.actions;
 
     const dependencyKeyEnvironmentVariables = envDependencyKeyEnvironmentVariables(
       { env, config: blossmConfig }
@@ -667,6 +674,7 @@ const configure = async (workingDir, configFn, env, strict) => {
       secretBucketKeyLocation,
       secretBucketKeyRing,
       coreNetwork,
+      actions,
       strict,
       dependencyKeyEnvironmentVariables,
       ...configFn(config),

@@ -19,7 +19,7 @@ module.exports = ({
       action,
       domain,
       service,
-      topic: `${domain}.${service}`,
+      topic: `did-${action}.${domain}.${service}`,
       version,
       created: dateString(),
       idempotency: idempotency || deps.uuid(),

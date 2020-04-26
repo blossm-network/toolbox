@@ -10,11 +10,12 @@ let clock;
 
 const now = new Date();
 
+const action = "some-action";
 const root = "some-root";
 const domain = "some-domain";
 const service = "some-service";
 
-const topic = `${domain}.${service}`;
+const topic = `did-${action}.${domain}.${service}`;
 const idempotency = "some-idempotency";
 
 const eventRoot = "some-event-root";
@@ -367,7 +368,7 @@ describe("Event store post", () => {
           {
             data: {
               headers: {
-                topic: `some-bad-domain.${service}`,
+                topic: `did-${action}.some-bad-domain.${service}`,
               },
             },
           },
@@ -402,7 +403,7 @@ describe("Event store post", () => {
           {
             data: {
               headers: {
-                topic: `${domain}.some-bad-service`,
+                topic: `did-${action}.${domain}.some-bad-service`,
               },
             },
           },

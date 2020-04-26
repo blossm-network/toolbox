@@ -46,6 +46,7 @@ const steps = ({
   runIntegrationTests,
   runBaseIntegrationTests,
   computeUrlId,
+  actions,
   strict,
   dependencyKeyEnvironmentVariables,
 }) => {
@@ -161,6 +162,7 @@ const steps = ({
         runBaseUnitTests,
         runIntegrationTests,
         runBaseIntegrationTests,
+        actions,
         strict,
       });
     case "command":
@@ -407,6 +409,7 @@ module.exports = ({
   secretBucketKeyLocation,
   secretBucketKeyRing,
   computeUrlId,
+  actions,
   strict,
 }) => {
   const buildPath = path.resolve(workingDir, "build.yaml");
@@ -468,6 +471,7 @@ module.exports = ({
       runBaseUnitTests,
       runIntegrationTests,
       runBaseIntegrationTests,
+      actions,
       strict,
     }),
   };

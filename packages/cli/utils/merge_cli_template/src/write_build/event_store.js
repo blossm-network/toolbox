@@ -48,6 +48,7 @@ module.exports = ({
   runIntegrationTests,
   runBaseIntegrationTests,
   dependencyKeyEnvironmentVariables,
+  actions,
   strict,
 }) => {
   return [
@@ -125,11 +126,14 @@ module.exports = ({
             project,
             region,
           }),
-          createPubsubTopic({
-            domain,
-            service,
-            project,
-          }),
+          ...actions.map((action) =>
+            createPubsubTopic({
+              action,
+              domain,
+              service,
+              project,
+            })
+          ),
         ]
       : [dockerComposeLogs]),
   ];
