@@ -191,37 +191,6 @@ const envMongodbUser = ({ env, config, procedure }) => {
         default:
           return "";
       }
-  }
-};
-
-const envMongodbUser = ({ env, config, procedure }) => {
-  switch (procedure) {
-    case "view-store":
-      switch (env) {
-        case "production":
-          return config.vendors.viewStore.mongodb.users.production;
-        case "sandbox":
-          return config.vendors.viewStore.mongodb.users.sandbox;
-        case "staging":
-          return config.vendors.viewStore.mongodb.users.staging;
-        case "development":
-          return config.vendors.viewStore.mongodb.users.development;
-        default:
-          return "";
-      }
-    case "event-store":
-      switch (env) {
-        case "production":
-          return config.vendors.eventStore.mongodb.users.production;
-        case "sandbox":
-          return config.vendors.eventStore.mongodb.users.sandbox;
-        case "staging":
-          return config.vendors.eventStore.mongodb.users.staging;
-        case "development":
-          return config.vendors.eventStore.mongodb.users.development;
-        default:
-          return "";
-      }
     case "event-handler":
       switch (env) {
         case "production":
