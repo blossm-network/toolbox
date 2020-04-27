@@ -114,7 +114,8 @@ module.exports = (...operation) => {
         data: query,
       });
     },
-    stream: (query, fn) => {
+    stream: (query) => {
+      // }, fn) => {
       const id = query.id;
       delete query.id;
       return common({
