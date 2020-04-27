@@ -123,13 +123,7 @@ module.exports = (...operation) => {
           deps.stream(
             url,
             (data) => {
-              //TODO
-              //eslint-disable-next-line no-console
-              console.log({ data });
               const string = data.toString();
-              //TODO
-              //eslint-disable-next-line no-console
-              console.log({ string });
               try {
                 const parsedData = JSON.parse(
                   progress + data.toString().trim()

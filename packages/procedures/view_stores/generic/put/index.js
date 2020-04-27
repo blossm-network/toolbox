@@ -7,7 +7,15 @@ module.exports = ({ writeFn, viewFn = defaultFn }) => {
     if (req.params.root == undefined)
       throw deps.badRequestError.message("Missing root url parameter.");
 
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log({ body: req.body, view: req.body.view });
+
     const customView = viewFn(req.body.view);
+
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log({ customView, body: customView.body });
 
     const formattedBody = {};
     const formattedHeaders = {};
@@ -24,10 +32,18 @@ module.exports = ({ writeFn, viewFn = defaultFn }) => {
       "headers.modified": deps.dateString(),
     };
 
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log({ data });
+
     const newView = await writeFn({
       root: req.params.root,
       data,
     });
+
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log({ newView });
 
     res.status(200).send(newView);
   };

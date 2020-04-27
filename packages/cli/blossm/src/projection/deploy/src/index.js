@@ -42,8 +42,8 @@ module.exports = eventHandler({
       },
     };
   },
-  commitFn: async (state) => {
-    await viewStore({
+  commitFn: (state) =>
+    viewStore({
       name: config.name,
       ...(config.domain && { domain: config.domain }),
       ...(config.service && { service: config.service }),
@@ -55,16 +55,15 @@ module.exports = eventHandler({
       .update(state.root, {
         headers: state.headers,
         body: state.body,
-      });
-    // //Should only do this on first delivery.
-    // //TODO set token.
-    // await command({
-    //   name: "push",
-    //   domain: "update",
-    //   service: "system",
-    //   network: process.env.CORE_NETWORK,
-    // }).issue(newView);
-  },
+      }),
+  // //Should only do this on first delivery.
+  // //TODO set token.
+  // await command({
+  //   name: "push",
+  //   domain: "update",
+  //   service: "system",
+  //   network: process.env.CORE_NETWORK,
+  // }).issue(newView);
   streamFn: ({ root, from }, fn) =>
     eventStore({
       domain: process.env.EVENT_DOMAIN,
