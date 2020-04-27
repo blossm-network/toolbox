@@ -27,6 +27,7 @@ module.exports = ({
     let state;
     let newSeenEventNumber;
 
+    // TODO write a better test for this. idk a way to do it quickly.
     await streamFn({ root, from: number }, (event) => {
       if (event.headers.action == process.env.EVENT_ACTION)
         state = mainFn(state, event);
