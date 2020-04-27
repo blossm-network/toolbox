@@ -11,6 +11,14 @@ const formatResponse = (data) => {
   }
 };
 
+const jsonString = (string) => {
+  try {
+    return JSON.parse(string);
+  } catch (e) {
+    return null;
+  }
+};
+
 const common = ({ method, dataParam, operation, id, data }) => {
   return {
     in: ({ context, network, host = process.env.HOST }) => {
@@ -124,15 +132,13 @@ module.exports = (...operation) => {
             url,
             (data) => {
               const string = data.toString();
-              let parsedData;
-              try {
-                parsedData = JSON.parse(progress + string);
-                progress = "";
-              } catch (e) {
+              let parsedData = jsonString(progress + string);
+              if (!parsedData) {
                 progress = progress + string;
-                parsedData = null;
+                return;
               }
-              if (parsedData) fn(parsedData);
+              progress = "";
+              fn(parsedData);
             },
             data
           ),
