@@ -22,6 +22,7 @@ const claims = {
 };
 const audience = "some-audience";
 const algorithm = "some-algorithm";
+const cookieKey = "some-cookie-key";
 
 describe("Authorize", () => {
   afterEach(() => {
@@ -37,9 +38,10 @@ describe("Authorize", () => {
       verifyFn,
       audience,
       algorithm,
+      cookieKey,
     });
 
-    expect(deps.tokensFromReq).to.have.been.calledWith(req);
+    expect(deps.tokensFromReq).to.have.been.calledWith(req, { cookieKey });
     expect(deps.validate).to.have.been.calledWith({
       token: bearer,
       verifyFn,
@@ -62,9 +64,10 @@ describe("Authorize", () => {
       verifyFn,
       audience,
       algorithm,
+      cookieKey,
     });
 
-    expect(deps.tokensFromReq).to.have.been.calledWith(req);
+    expect(deps.tokensFromReq).to.have.been.calledWith(req, { cookieKey });
     expect(deps.validate).to.have.been.calledWith({
       token: cookieToken,
       verifyFn,
@@ -93,9 +96,10 @@ describe("Authorize", () => {
       verifyFn,
       keyClaimsFn: keyClaimsFnFake,
       allowBasic: true,
+      cookieKey,
     });
 
-    expect(deps.tokensFromReq).to.have.been.calledWith(req);
+    expect(deps.tokensFromReq).to.have.been.calledWith(req, { cookieKey });
     expect(keyClaimsFnFake).to.have.been.calledWith({
       id: basicTokenId,
       secret: basicTokenSecret,
@@ -130,6 +134,7 @@ describe("Authorize", () => {
         verifyFn,
         keyClaimsFn: keyClaimsFnFake,
         allowBasic: false,
+        cookieKey,
       });
 
       //shouldn't get called
@@ -153,6 +158,7 @@ describe("Authorize", () => {
       await authenticate({
         req,
         verifyFn,
+        cookieKey,
       });
 
       //shouldn't get called
@@ -186,6 +192,7 @@ describe("Authorize", () => {
       await authenticate({
         req,
         verifyFn,
+        cookieKey,
       });
 
       //shouldn't get called

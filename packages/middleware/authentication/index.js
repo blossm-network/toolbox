@@ -8,6 +8,7 @@ module.exports = ({
   strict = true,
   audience,
   algorithm,
+  cookieKey,
   allowBasic,
 }) =>
   asyncHandler(async (req, _, next) => {
@@ -19,6 +20,7 @@ module.exports = ({
         audience,
         algorithm,
         allowBasic,
+        cookieKey,
       });
       req.context = claims.context;
       req.claims = {

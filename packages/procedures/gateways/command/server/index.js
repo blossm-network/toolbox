@@ -49,6 +49,7 @@ module.exports = async ({
           preMiddleware: [
             deps.authentication({
               verifyFn: verifyFn({ key }),
+              cookieKey: key,
               keyClaimsFn,
               audience,
               algorithm,

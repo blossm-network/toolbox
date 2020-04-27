@@ -46,6 +46,7 @@ module.exports = async ({
               audience,
               algorithm,
               strict: protection == "strict",
+              cookieKey: key,
             }),
             ...(protection == "strict"
               ? [

@@ -97,6 +97,7 @@ describe("Command gateway", () => {
     });
     expect(authenticationFake).to.have.been.calledWith({
       verifyFn: verifyFnResult,
+      cookieKey: "access",
       keyClaimsFn,
       audience,
       algorithm,
@@ -187,6 +188,7 @@ describe("Command gateway", () => {
     });
     expect(authenticationFake).to.have.been.calledWith({
       verifyFn: verifyFnResult,
+      cookieKey: "access",
       keyClaimsFn,
       audience,
       algorithm,
@@ -247,6 +249,18 @@ describe("Command gateway", () => {
       keyClaimsFn,
       internalTokenFn,
       externalTokenFn,
+      algorithm,
+      audience,
+    });
+
+    expect(authenticationFake).to.have.been.calledWith({
+      verifyFn: verifyFnResult,
+      cookieKey: key,
+      keyClaimsFn,
+      audience,
+      algorithm,
+      strict: true,
+      allowBasic: false,
     });
 
     expect(verifyFnFake).to.have.been.calledWith({ key });
@@ -351,6 +365,7 @@ describe("Command gateway", () => {
     });
     expect(authenticationFake).to.have.been.calledWith({
       verifyFn: verifyFnResult,
+      cookieKey: "access",
       keyClaimsFn,
       algorithm,
       audience,
@@ -359,6 +374,7 @@ describe("Command gateway", () => {
     });
     expect(authenticationFake).to.have.been.calledWith({
       verifyFn: verifyFnResult,
+      cookieKey: "access",
       keyClaimsFn,
       algorithm,
       audience,

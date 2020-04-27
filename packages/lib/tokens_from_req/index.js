@@ -3,10 +3,6 @@ module.exports = (req, { cookieKey } = {}) => {
   const authorization = headers.authorization;
   const cookies = req.cookies || {};
 
-  //TODO
-  //eslint-disable-next-line no-console
-  console.log({ cookies });
-
   const token = cookieKey && cookies[cookieKey];
   const tokens = {
     ...(token != undefined && { cookie: token }),

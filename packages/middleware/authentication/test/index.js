@@ -8,6 +8,7 @@ const keyClaimsFn = "some-claims-fn";
 const algorithm = "some-algorithm";
 const audience = "some-audience";
 const allowBasic = "some-allow-basic";
+const cookieKey = "some-cookie-key";
 
 describe("Authentication middleware", () => {
   afterEach(() => {
@@ -43,6 +44,7 @@ describe("Authentication middleware", () => {
       audience,
       algorithm,
       allowBasic,
+      cookieKey,
     })(req, null, nextFake);
 
     expect(authenticateFake).to.have.been.calledWith({
@@ -52,6 +54,7 @@ describe("Authentication middleware", () => {
       audience,
       algorithm,
       allowBasic,
+      cookieKey,
     });
     expect(req.context).to.deep.equal(context);
     expect(req.claims).to.deep.equal({
@@ -81,6 +84,7 @@ describe("Authentication middleware", () => {
       algorithm,
       strict: false,
       allowBasic,
+      cookieKey,
     })(req, null, nextFake);
 
     expect(authenticateFake).to.have.been.calledWith({
@@ -90,6 +94,7 @@ describe("Authentication middleware", () => {
       audience,
       algorithm,
       allowBasic,
+      cookieKey,
     });
     expect(nextFake).to.have.been.calledOnce;
   });

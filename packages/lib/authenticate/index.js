@@ -6,13 +6,11 @@ module.exports = async ({
   keyClaimsFn,
   audience,
   algorithm,
+  cookieKey,
   allowBasic = false,
 }) => {
-  const tokens = deps.tokensFromReq(req);
+  const tokens = deps.tokensFromReq(req, { cookieKey });
 
-  //TODO
-  //eslint-disable-next-line no-console
-  console.log({ tokens, cookie: tokens.cookie });
   const jwt = tokens.bearer || tokens.cookie;
 
   if (jwt) {
