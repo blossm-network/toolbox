@@ -331,7 +331,7 @@ describe("Operation", () => {
         const stringObj = JSON.stringify(obj);
         const buffer = Buffer.from(stringObj);
         func(buffer);
-        return true; //fnFake.calledWith(obj);
+        return fnFake.calledWith(obj);
       }),
       {
         query: {
@@ -377,7 +377,7 @@ describe("Operation", () => {
         const stringObj = JSON.stringify(obj);
         const buffer = Buffer.from(stringObj);
         func(buffer);
-        return true; //fnFake.calledWith(obj);
+        return fnFake.calledWith(obj);
       }),
       {
         query: {
