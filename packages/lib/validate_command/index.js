@@ -1,10 +1,4 @@
-const {
-  object,
-  objectArray,
-  string,
-  date,
-  findError,
-} = require("@blossm/validator");
+const { object, string, date, findError } = require("@blossm/validator");
 const { SECONDS_IN_DAY } = require("@blossm/duration-consts");
 
 const deps = require("./deps");
@@ -27,27 +21,9 @@ module.exports = async (params) => {
       title: "trace",
       path: "headers.trace",
     }),
-    //TODO do headers have a root?
-    string(params.headers.root, {
-      optional: true,
-      title: "root",
-      path: "headers.root",
-    }),
-    //TODO
-    objectArray(params.headers.path, {
-      optional: true,
-      title: "path",
-      path: "headers.path",
-    }),
     date(params.headers.issued, {
       title: "issued date",
       headers: "headers.issued",
-    }),
-    //TODO
-    date(params.headers.broadcasted, {
-      title: "issued date",
-      headers: "headers.broadcasted",
-      optional: true,
     }),
   ]);
 
@@ -59,15 +35,5 @@ module.exports = async (params) => {
       SECONDS_IN_DAY * 1000
   ) {
     throw deps.badRequestError.message("The issued timestamp seems incorrect.");
-  }
-  if (
-    params.headers.broadcasted != undefined &&
-    (new Date() < new Date(params.headers.broadcasted) ||
-      new Date().getTime() - new Date(params.headers.broadcasted).getTime() >
-        SECONDS_IN_DAY * 1000)
-  ) {
-    throw deps.badRequestError.message(
-      "The broadcasted timestamp seems incorrect."
-    );
   }
 };
