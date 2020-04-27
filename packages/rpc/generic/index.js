@@ -114,10 +114,10 @@ module.exports = (...operation) => {
         data: query,
       });
     },
-    stream: (query) => {
-      // }, fn) => {
+    stream: (query, fn) => {
       const id = query.id;
       delete query.id;
+      let progress = "";
       return common({
         method: (url, data) =>
           deps.stream(
@@ -126,11 +126,19 @@ module.exports = (...operation) => {
               //TODO
               //eslint-disable-next-line no-console
               console.log({ data });
+              const string = data.toString();
               //TODO
               //eslint-disable-next-line no-console
-              console.log({ string: `${data.toString().trim()}.ASDFASDF` });
-              // const parsedData = JSON.parse(data.toString().trim());
-              // fn(parsedData);
+              console.log({ string });
+              try {
+                const parsedData = JSON.parse(
+                  progress + data.toString().trim()
+                );
+                progress = "";
+                fn(parsedData);
+              } catch (e) {
+                progress = progress + string;
+              }
             },
             data
           ),
