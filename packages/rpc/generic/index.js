@@ -128,8 +128,8 @@ module.exports = (...operation) => {
               //TODO
               //eslint-disable-next-line no-console
               console.log({ string: `${data.toString().trim()}.ASDFASDF` });
-              const parsedData = JSON.parse(data.toString().trim());
-              fn(parsedData);
+              // const parsedData = JSON.parse(data.toString().trim());
+              // fn(parsedData);
             },
             data
           ),
