@@ -1,7 +1,7 @@
 {
   "name": "@blossm/fact-gateway-get",
   "description": "A fact gateway server GET handler.",
-  "version": "0.0.31",
+  "version": "0.0.32",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -14,7 +14,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/fact-rpc": "^0.0.31",
+    "@blossm/fact-rpc": "^0.0.32",
     "@blossm/gcp-token": "^0.0.27"
   },
   "devDependencies": {
