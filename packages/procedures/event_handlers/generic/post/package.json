@@ -1,7 +1,7 @@
 {
   "name": "@blossm/event-handler-post",
   "description": "An event handler server POST handler.",
-  "version": "0.0.160",
+  "version": "0.0.161",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
