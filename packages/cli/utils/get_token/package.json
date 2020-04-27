@@ -1,6 +1,6 @@
 {
   "name": "@blossm/get-token",
-  "version": "0.0.172",
+  "version": "0.0.173",
   "description": "Gets a token for a development environment.",
   "main": "index.js",
   "author": "blossm.network",
@@ -14,10 +14,10 @@
     "test": "echo \"Error: no test specified\" && exit 0"
   },
   "dependencies": {
-    "@blossm/command-rpc": "^0.0.121",
+    "@blossm/command-rpc": "^0.0.122",
     "@blossm/create-event": "^0.0.33",
     "@blossm/crypt": "^0.0.5",
-    "@blossm/event-store-rpc": "^0.0.121",
+    "@blossm/event-store-rpc": "^0.0.122",
     "@blossm/uuid": "^0.0.5"
   },
   "devDependencies": {
