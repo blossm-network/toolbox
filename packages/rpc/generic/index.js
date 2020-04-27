@@ -122,6 +122,12 @@ module.exports = (...operation) => {
           deps.stream(
             url,
             (data) => {
+              //TODO
+              //eslint-disable-next-line no-console
+              console.log({ data });
+              //TODO
+              //eslint-disable-next-line no-console
+              console.log({ string: data.toString() });
               const parsedData = JSON.parse(data.toString());
               fn(parsedData);
             },
