@@ -18,6 +18,10 @@ module.exports = eventHandler({
       body,
     } = main(state, event);
 
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log({ body });
+
     return {
       root: event.headers.root,
       headers: {
@@ -42,8 +46,12 @@ module.exports = eventHandler({
       },
     };
   },
-  commitFn: (state) =>
-    viewStore({
+  commitFn: async (state) => {
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log({ state });
+
+    await viewStore({
       name: config.name,
       ...(config.domain && { domain: config.domain }),
       ...(config.service && { service: config.service }),
@@ -55,7 +63,8 @@ module.exports = eventHandler({
       .update(state.root, {
         headers: state.headers,
         body: state.body,
-      }),
+      });
+  },
   // //Should only do this on first delivery.
   // //TODO set token.
   // await command({
