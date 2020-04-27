@@ -1,6 +1,6 @@
 {
   "name": "@blossm/normalize-cli",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "Normalizes arguments passed in to smarket",
   "main": "index.js",
   "author": "blossm.network",
@@ -14,7 +14,7 @@
     "test": "echo \"Error: no test specified\" && exit 0"
   },
   "dependencies": {
-    "@blossm/robo-say": "^0.0.5",
+    "@blossm/robo-say": "^0.0.6",
     "arg": "^4.1.1",
     "chalk": "^2.4.2",
     "inquirer": "^7.0.0"
