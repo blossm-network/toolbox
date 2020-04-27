@@ -124,15 +124,15 @@ module.exports = (...operation) => {
             url,
             (data) => {
               const string = data.toString();
+              let parsedData;
               try {
-                const parsedData = JSON.parse(
-                  progress + data.toString().trim()
-                );
+                parsedData = JSON.parse(progress + string);
                 progress = "";
-                fn(parsedData);
               } catch (e) {
                 progress = progress + string;
+                parsedData = null;
               }
+              if (parsedData) fn(parsedData);
             },
             data
           ),
