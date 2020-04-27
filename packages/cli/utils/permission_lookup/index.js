@@ -2,9 +2,9 @@ const yaml = require("yaml");
 const { readFile, readdir, unlink } = require("fs");
 const { promisify } = require("util");
 const fact = require("@blossm/fact-rpc");
-// const gcpToken = require("@blossm/gcp-token");
 const rolePermissions = require("@blossm/role-permissions");
 const uuid = require("@blossm/uuid");
+const { forbidden } = require("@blossm/errors");
 
 const readFileAsync = promisify(readFile);
 const readDirAsync = promisify(readdir);
@@ -16,6 +16,8 @@ module.exports = ({ token, downloadFileFn }) => async ({
   principle,
   context,
 }) => {
+  if (!principle) throw forbidden.message("Missing required permissions.");
+
   //Download files if they aren't downloaded already.
   if (!defaultRoles) {
     const fileName = uuid();

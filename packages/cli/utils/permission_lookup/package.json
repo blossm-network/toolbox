@@ -16,6 +16,7 @@
   "dependencies": {
     "@blossm/fact-rpc": "^0.0.39",
     "@blossm/role-permissions": "*",
+    "@blossm/errors": "*",
     "@blossm/uuid": "*",
     "yaml": "^1.7.0"
   },
