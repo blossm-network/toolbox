@@ -1,6 +1,6 @@
 {
   "name": "@blossm/validate-command",
-  "version": "0.0.45",
+  "version": "0.0.46",
   "description": "Validates the paramaters found in command requests.",
   "main": "index.js",
   "author": "blossm.network",
