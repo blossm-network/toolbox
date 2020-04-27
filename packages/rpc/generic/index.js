@@ -127,8 +127,8 @@ module.exports = (...operation) => {
               console.log({ data });
               //TODO
               //eslint-disable-next-line no-console
-              console.log({ string: data.toString() });
-              const parsedData = JSON.parse(data.toString());
+              console.log({ string: data.toString().trim() });
+              const parsedData = JSON.parse(data.toString().trim());
               fn(parsedData);
             },
             data
