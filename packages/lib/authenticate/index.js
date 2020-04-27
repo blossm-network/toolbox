@@ -10,6 +10,9 @@ module.exports = async ({
 }) => {
   const tokens = deps.tokensFromReq(req);
 
+  //TODO
+  //eslint-disable-next-line no-console
+  console.log({ tokens, cookie: tokens.cookie });
   const jwt = tokens.bearer || tokens.cookie;
 
   if (jwt) {
