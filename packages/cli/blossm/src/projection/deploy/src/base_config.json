@@ -3,7 +3,9 @@
     "@blossm/mongodb-event-handler": "*",
     "@blossm/view-store-rpc": "*",
     "@blossm/event-store-rpc": "*",
-    "@blossm/gcp-token": "*"
+    "@blossm/gcp-token": "*",
+    "@blossm/external-token": "*",
+    "@blossm/hash-string": "*"
   },
   "devDependencies": {
     "chai": "^4.2.0",

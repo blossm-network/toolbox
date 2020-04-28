@@ -1,7 +1,10 @@
 const eventHandler = require("@blossm/mongodb-event-handler");
+// const command = require("@blossm/command-rpc");
 const viewStore = require("@blossm/view-store-rpc");
 const eventStore = require("@blossm/event-store-rpc");
 const gcpToken = require("@blossm/gcp-token");
+// const externalToken = require("@blossm/external-token");
+// const hash = require("@blossm/hash-string");
 
 const main = require("./main.js");
 
@@ -42,8 +45,8 @@ module.exports = eventHandler({
       },
     };
   },
-  commitFn: (state) =>
-    viewStore({
+  commitFn: async (state) => {
+    const newView = await viewStore({
       name: config.name,
       ...(config.domain && { domain: config.domain }),
       ...(config.service && { service: config.service }),
@@ -55,15 +58,29 @@ module.exports = eventHandler({
       .update(state.root, {
         headers: state.headers,
         body: state.body,
-      }),
-  // //Should only do this on first delivery.
-  // //TODO set token.
-  // await command({
-  //   name: "push",
-  //   domain: "update",
-  //   service: "system",
-  //   network: process.env.CORE_NETWORK,
-  // }).issue(newView);
+      });
+
+    // await command({
+    //   name: "push",
+    //   domain: "update",
+    //   service: "system",
+    //   network: process.env.CORE_NETWORK,
+    // })
+    //   .set({
+    //     tokenFns: { external: externalToken, internal: gcpToken },
+    //   })
+    //   .issue({
+    //     view: newView,
+    //     channel: hash(
+    //       `${process.env.NAME}${process.env.DOMAIN || ""}${
+    //         process.env.SERVICE || ""
+    //       }${process.env.CONTEXT}${newView.headers[process.env.CONTEXT].root}${
+    //         newView.headers[process.env.CONTEXT].service
+    //       }${newView.headers[process.env.CONTEXT].network}
+    //       `
+    //     ),
+    //   });
+  },
   streamFn: ({ root, from }, fn) =>
     eventStore({
       domain: process.env.EVENT_DOMAIN,
