@@ -46,7 +46,8 @@ module.exports = eventHandler({
     };
   },
   commitFn: async (state) => {
-    const newView = await viewStore({
+    // const newView = await viewStore({
+    await viewStore({
       name: config.name,
       ...(config.domain && { domain: config.domain }),
       ...(config.service && { service: config.service }),
