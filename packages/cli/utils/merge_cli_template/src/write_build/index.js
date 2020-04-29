@@ -380,6 +380,7 @@ const imageExtension = ({
 }) => {
   switch (procedure) {
     case "view-store":
+    case "view-composite":
       return `${context}${service ? `.${service}` : ""}${
         domain ? `.${domain}` : ""
       }.${name}`;
