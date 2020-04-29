@@ -12,6 +12,7 @@ const service = "some-service";
 const network = "some-network";
 const algorithm = "some-algorithm";
 const audience = "some-audience";
+const procedure = "some-procedure";
 
 process.env.CONTEXT = context;
 process.env.NETWORK = network;
@@ -57,13 +58,13 @@ describe("View gateway", () => {
     ];
 
     const name = "some-name";
-    const stores = [{ name, permissions, context }];
+    const views = [{ name, procedure, permissions, context }];
 
     const verifyFnResult = "some-verify-fn";
     const verifyFnFake = fake.returns(verifyFnResult);
 
     await gateway({
-      stores,
+      views,
       whitelist,
       permissionsLookupFn,
       terminatedSessionCheckFn,
@@ -72,7 +73,12 @@ describe("View gateway", () => {
       audience,
     });
 
-    expect(gatewayGetFake).to.have.been.calledWith({ name, domain, service });
+    expect(gatewayGetFake).to.have.been.calledWith({
+      procedure,
+      name,
+      domain,
+      service,
+    });
     expect(gatewayGetFake).to.have.been.calledOnce;
     expect(listenFake).to.have.been.calledWith();
     expect(serverFake).to.have.been.calledWith({
@@ -144,7 +150,7 @@ describe("View gateway", () => {
       `${permissionService}:${permissionDomain}:${permissionPrivilege}`,
     ];
     const name = "some-name";
-    const stores = [{ name, permissions, context }];
+    const views = [{ name, procedure, permissions, context }];
 
     const verifyFnResult = "some-verify-fn";
     const verifyFnFake = fake.returns(verifyFnResult);
@@ -152,7 +158,7 @@ describe("View gateway", () => {
     delete process.env.DOMAIN;
     delete process.env.SERVICE;
     await gateway({
-      stores,
+      views,
       whitelist,
       permissionsLookupFn,
       terminatedSessionCheckFn,
@@ -161,7 +167,7 @@ describe("View gateway", () => {
       audience,
     });
 
-    expect(gatewayGetFake).to.have.been.calledWith({ name });
+    expect(gatewayGetFake).to.have.been.calledWith({ procedure, name });
     expect(gatewayGetFake).to.have.been.calledOnce;
     expect(listenFake).to.have.been.calledWith();
     expect(serverFake).to.have.been.calledWith({
@@ -228,13 +234,13 @@ describe("View gateway", () => {
 
     const permissions = "none";
     const name = "some-name";
-    const stores = [{ name, permissions, context }];
+    const views = [{ name, procedure, permissions, context }];
 
     const verifyFnResult = "some-verify-fn";
     const verifyFnFake = fake.returns(verifyFnResult);
 
     await gateway({
-      stores,
+      views,
       whitelist,
       permissionsLookupFn,
       terminatedSessionCheckFn,
@@ -243,7 +249,12 @@ describe("View gateway", () => {
       audience,
     });
 
-    expect(gatewayGetFake).to.have.been.calledWith({ name, domain, service });
+    expect(gatewayGetFake).to.have.been.calledWith({
+      procedure,
+      name,
+      domain,
+      service,
+    });
     expect(gatewayGetFake).to.have.been.calledOnce;
     expect(listenFake).to.have.been.calledWith();
     expect(serverFake).to.have.been.calledWith({
@@ -305,13 +316,13 @@ describe("View gateway", () => {
     const permissions = ["some-permission"];
     const name = "some-name";
     const key = "some-key";
-    const stores = [{ name, permissions, key }];
+    const views = [{ name, procedure, permissions, key }];
 
     const verifyFnResult = "some-verify-fn";
     const verifyFnFake = fake.returns(verifyFnResult);
 
     await gateway({
-      stores,
+      views,
       whitelist,
       permissionsLookupFn,
       terminatedSessionCheckFn,
@@ -328,7 +339,7 @@ describe("View gateway", () => {
     });
     expect(verifyFnFake).to.have.been.calledWith({ key });
   });
-  it("should call with the correct params with multiple stores with different protections", async () => {
+  it("should call with the correct params with multiple views with different protections", async () => {
     const corsMiddlewareFake = fake();
     replace(deps, "corsMiddleware", corsMiddlewareFake);
 
@@ -368,17 +379,17 @@ describe("View gateway", () => {
     const name1 = "some-name1";
     const name2 = "some-name2";
     const name3 = "some-name3";
-    const stores = [
-      { name: name1, protection: "none" },
-      { name: name2, protection: "context" },
-      { name: name3, permissions, context },
+    const views = [
+      { name: name1, procedure, protection: "none" },
+      { name: name2, procedure, protection: "context" },
+      { name: name3, procedure, permissions, context },
     ];
 
     const verifyFnResult = "some-verify-fn";
     const verifyFnFake = fake.returns(verifyFnResult);
 
     await gateway({
-      stores,
+      views,
       whitelist,
       permissionsLookupFn,
       terminatedSessionCheckFn,
@@ -388,16 +399,19 @@ describe("View gateway", () => {
     });
 
     expect(gatewayGetFake).to.have.been.calledWith({
+      procedure,
       name: name1,
       domain,
       service,
     });
     expect(gatewayGetFake).to.have.been.calledWith({
+      procedure,
       name: name2,
       domain,
       service,
     });
     expect(gatewayGetFake).to.have.been.calledWith({
+      procedure,
       name: name3,
       domain,
       service,
@@ -475,7 +489,7 @@ describe("View gateway", () => {
       `${permissionService}:${permissionDomain}:${permissionPrivilege}`,
     ];
     const name = "some-name";
-    const stores = [{ name, permissions, context }];
+    const views = [{ name, procedure, permissions, context }];
 
     const otherDomain = "some-other-domain";
     const otherService = "some-other-service";
@@ -485,7 +499,7 @@ describe("View gateway", () => {
     const verifyFnFake = fake.returns(verifyFnResult);
 
     await gateway({
-      stores,
+      views,
       domain: otherDomain,
       service: otherService,
       context: otherContext,
@@ -498,6 +512,7 @@ describe("View gateway", () => {
     });
 
     expect(gatewayGetFake).to.have.been.calledWith({
+      procedure,
       name,
       domain: otherDomain,
       service: otherService,
@@ -521,7 +536,7 @@ describe("View gateway", () => {
     replace(deps, "server", serverFake);
     try {
       await gateway({
-        stores: [],
+        views: [],
         whitelist,
         permissionsLookupFn,
         terminatedSessionCheckFn,

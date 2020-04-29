@@ -7,11 +7,13 @@ domain: some-domain
 service: some-service
 context: principle
 
-stores:
+views:
   - name: some-name
+    type: store
     permissions:
       - some-service:some-domain:some-privilege
   - name: some-other-name
+    type: composite
     protection: none
 
 whitelist:

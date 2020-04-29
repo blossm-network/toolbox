@@ -1,7 +1,7 @@
 {
-  "name": "@blossm/view-store-rpc",
-  "description": "Interact with a view store.",
-  "version": "0.0.134",
+  "name": "@blossm/view-composite",
+  "description": "A generic view composite server.",
+  "version": "0.0.0",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -14,7 +14,8 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/rpc": "^0.0.112"
+    "@blossm/view-composite-get": "^0.0.0",
+    "@blossm/server": "^0.0.11"
   },
   "devDependencies": {
     "chai-datetime": "^1.5.0",

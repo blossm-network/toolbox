@@ -10,6 +10,7 @@ const command = require("./command");
 const eventHandler = require("./event_handler");
 const eventStore = require("./event_store");
 const job = require("./job");
+const viewComposite = require("./view_composite");
 
 const steps = ({
   region,
@@ -85,6 +86,41 @@ const steps = ({
         mongodbUser,
         mongodbHost,
         mongodbProtocol,
+        runUnitTests,
+        runBaseUnitTests,
+        runIntegrationTests,
+        runBaseIntegrationTests,
+        strict,
+      });
+    case "view-composite":
+      return viewComposite({
+        imageExtension,
+        region,
+        domain,
+        service,
+        name,
+        event,
+        project,
+        network,
+        context,
+        memory,
+        computeUrlId,
+        envUriSpecifier,
+        dependencyKeyEnvironmentVariables,
+        containerRegistery,
+        mainContainerName,
+        dnsZone,
+        procedure,
+        operationHash,
+        operationName,
+        serviceName,
+        coreNetwork,
+        env,
+        uri,
+        rolesBucket,
+        secretBucket,
+        secretBucketKeyLocation,
+        secretBucketKeyRing,
         runUnitTests,
         runBaseUnitTests,
         runIntegrationTests,

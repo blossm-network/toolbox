@@ -18,6 +18,7 @@ const factGateway = require("./fact_gateway");
 const roles = require("./roles");
 const job = require("./job");
 const fact = require("./fact");
+const viewComposite = require("./view_composite");
 
 const domains = [
   "begin",
@@ -35,6 +36,7 @@ const domains = [
   "fact-gateway",
   "job",
   "fact",
+  "view-composite",
 ];
 
 const tryShortcuts = (input) => {
@@ -81,6 +83,8 @@ const tryShortcuts = (input) => {
       return job(args);
     case "fact":
       return fact(args);
+    case "view-composite":
+      return viewComposite(args);
   }
 };
 
@@ -110,6 +114,8 @@ const forward = (input) => {
       return factGateway(input.args);
     case "fact":
       return fact(input.args);
+    case "view-composite":
+      return viewComposite(input.args);
     default: {
       try {
         tryShortcuts(input);

@@ -1,7 +1,7 @@
 const deps = require("./deps");
 
 module.exports = async ({
-  stores,
+  views,
   domain = process.env.DOMAIN,
   service = process.env.SERVICE,
   context = process.env.CONTEXT,
@@ -62,12 +62,14 @@ module.exports = async ({
 
   for (const {
     name,
+    procedure,
     key = "access",
     permissions,
     protection = "strict",
-  } of stores) {
+  } of views) {
     server = server.get(
       deps.get({
+        procedure,
         name,
         ...(domain && { domain }),
         ...(service && { service }),

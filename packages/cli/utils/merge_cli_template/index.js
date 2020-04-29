@@ -502,7 +502,7 @@ const addDefaultDependencies = ({ config, coreNetwork }) => {
               ...(config.domain && { domain: config.domain }),
               ...(config.service && { service: config.service }),
               context: config.context,
-              procedure: "view-store",
+              procedure: "projection",
             };
           }),
       ];

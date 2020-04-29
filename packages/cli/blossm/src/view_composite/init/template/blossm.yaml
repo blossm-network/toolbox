@@ -1,0 +1,41 @@
+#
+# This file is required.
+#
+# Give your fact a name,
+# specify which domain it's for,
+# and set which version of the event to create.
+#
+
+name: some-name
+domain: some-optional-domain
+service: some-optional-service
+context: some-context
+
+dependencies:
+  "@blossm/view-store-rpc": "*"
+  "@blossm/gcp-token": "*"
+
+devDependencies:
+  "mocha": "^7.1.1"
+  "chai": "^4.2.0"
+  "sinon": "^7.3.2"
+  "sinon-chai": "^3.5.0"
+  "chai-datetime": "^1.5.0"
+
+testing:
+  dependencies:
+    - name: some-name
+      domain: some-domain
+      service: some-service
+      context: some-context
+      procedure: view-store
+
+  steps:
+    - pre:
+      query:
+      root:
+      context:
+      response:
+
+#don't change
+procedure: view-composite

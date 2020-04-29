@@ -1,7 +1,7 @@
 {
-  "name": "@blossm/view-store-rpc",
-  "description": "Interact with a view store.",
-  "version": "0.0.134",
+  "name": "@blossm/view-composite-get",
+  "description": "A view composite server GET handler.",
+  "version": "0.0.0",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -12,9 +12,6 @@
   },
   "publishConfig": {
     "access": "public"
-  },
-  "dependencies": {
-    "@blossm/rpc": "^0.0.112"
   },
   "devDependencies": {
     "chai-datetime": "^1.5.0",

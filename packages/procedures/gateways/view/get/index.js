@@ -1,18 +1,39 @@
 const deps = require("./deps");
 
-module.exports = ({ name, domain, service } = {}) => async (req, res) => {
-  const { body: response } = await deps
-    .viewStore({
-      name,
-      ...(domain && { domain }),
-      ...(service && { service }),
-    })
-    .set({
-      tokenFns: { internal: deps.gcpToken },
-      context: req.context,
-      claims: req.claims,
-    })
-    .read(req.query);
-
-  res.status(200).send({ content: response });
+module.exports = ({ procedure, name, domain, service } = {}) => async (
+  req,
+  res
+) => {
+  switch (procedure) {
+    case "view-store": {
+      const { body: response } = await deps
+        .viewStore({
+          name,
+          ...(domain && { domain }),
+          ...(service && { service }),
+        })
+        .set({
+          tokenFns: { internal: deps.gcpToken },
+          context: req.context,
+        })
+        .read(req.query);
+      res.status(200).send({ content: response });
+      break;
+    }
+    case "view-composite": {
+      const { body: response } = await deps
+        .viewComposite({
+          name,
+          ...(domain && { domain }),
+          ...(service && { service }),
+        })
+        .set({
+          tokenFns: { internal: deps.gcpToken },
+          context: req.context,
+        })
+        .read(req.query);
+      res.status(200).send({ content: response });
+      break;
+    }
+  }
 };

@@ -2,7 +2,7 @@ const { expect } = require("chai").use(require("sinon-chai"));
 const { restore, replace, fake } = require("sinon");
 
 const deps = require("../deps");
-const fact = require("..");
+const composite = require("..");
 
 const mainFn = "some-main-fn";
 
@@ -22,19 +22,21 @@ describe("Fact", () => {
     });
     replace(deps, "server", serverFake);
 
-    const factGetResult = "some-get-result";
-    const factGetFake = fake.returns(factGetResult);
-    replace(deps, "get", factGetFake);
+    const compositeGetResult = "some-get-result";
+    const compositeGetFake = fake.returns(compositeGetResult);
+    replace(deps, "get", compositeGetFake);
 
-    const result = await fact({
+    const result = await composite({
       mainFn,
     });
 
     expect(result).to.equal(returnValue);
     expect(listenFake).to.have.been.calledWith();
     expect(serverFake).to.have.been.calledWith();
-    expect(getFake).to.have.been.calledWith(factGetResult, { path: "/:root?" });
-    expect(factGetFake).to.have.been.calledWith({ mainFn });
+    expect(getFake).to.have.been.calledWith(compositeGetResult, {
+      path: "/:root?",
+    });
+    expect(compositeGetFake).to.have.been.calledWith({ mainFn });
   });
   it("should throw correctly", async () => {
     const error = new Error("some-message");
@@ -47,12 +49,12 @@ describe("Fact", () => {
     });
     replace(deps, "server", serverFake);
 
-    const factGetResult = "some-get-result";
-    const factGetFake = fake.returns(factGetResult);
-    replace(deps, "get", factGetFake);
+    const compositeGetResult = "some-get-result";
+    const compositeGetFake = fake.returns(compositeGetResult);
+    replace(deps, "get", compositeGetFake);
 
     try {
-      await fact({ mainFn });
+      await composite({ mainFn });
 
       //shouldn't get called
       expect(1).to.equal(0);

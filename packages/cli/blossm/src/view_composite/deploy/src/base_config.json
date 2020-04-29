@@ -1,0 +1,11 @@
+{
+  "dependencies": {
+    "@blossm/view-composite": "*"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "@blossm/view-store-rpc": "*",
+    "@blossm/request": "*",
+    "@blossm/gcp-pubsub": "*"
+  }
+}

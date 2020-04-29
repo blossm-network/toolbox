@@ -1,1 +1,1 @@
-Interact with the view store.
+Interact with a view store.

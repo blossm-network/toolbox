@@ -10,7 +10,6 @@ module.exports = ({
   const internal = !network || network == process.env.NETWORK;
   const read = ({
     contexts,
-    claims,
     tokenFns: { internal: internalTokenFn, external: externalTokenFn } = {},
   } = {}) => async ({ query, sort }) =>
     await deps
@@ -26,18 +25,16 @@ module.exports = ({
         ...(contexts && { context: contexts }),
         ...(!internal && {
           network,
-          host: `view${domain ? `.${domain}` : ""}.${context}.${network}`,
+          host: `v${domain ? `.${domain}` : ""}.${context}.${network}`,
         }),
       })
       .with({
         ...(internalTokenFn && { internalTokenFn }),
         ...(externalTokenFn && { externalTokenFn }),
-        ...(claims && { claims }),
         ...(!internal && { path: `/${name}` }),
       });
   const stream = ({
     contexts,
-    claims,
     tokenFns: { internal: internalTokenFn, external: externalTokenFn } = {},
   } = {}) => async ({ query, sort }, fn) =>
     await deps
@@ -60,11 +57,9 @@ module.exports = ({
         path: `/${internal ? "" : `${name}/`}stream`,
         ...(internalTokenFn && { internalTokenFn }),
         ...(externalTokenFn && { externalTokenFn }),
-        ...(claims && { claims }),
       });
   const update = ({
     contexts,
-    claims,
     tokenFns: { internal: internalTokenFn, external: externalTokenFn } = {},
   } = {}) => async (root, view) =>
     await deps
@@ -82,11 +77,9 @@ module.exports = ({
       .with({
         ...(internalTokenFn && { internalTokenFn }),
         ...(externalTokenFn && { externalTokenFn }),
-        ...(claims && { claims }),
       });
   const del = ({
     contexts,
-    claims,
     tokenFns: { internal: internalTokenFn, external: externalTokenFn } = {},
   } = {}) => async (root) =>
     await deps
@@ -104,15 +97,14 @@ module.exports = ({
       .with({
         ...(internalTokenFn && { internalTokenFn }),
         ...(externalTokenFn && { externalTokenFn }),
-        ...(claims && { claims }),
       });
   return {
-    set: ({ context: contexts, claims, tokenFns }) => {
+    set: ({ context: contexts, tokenFns }) => {
       return {
-        read: read({ contexts, claims, tokenFns }),
-        stream: stream({ contexts, claims, tokenFns }),
-        update: update({ contexts, claims, tokenFns }),
-        delete: del({ contexts, claims, tokenFns }),
+        read: read({ contexts, tokenFns }),
+        stream: stream({ contexts, tokenFns }),
+        update: update({ contexts, tokenFns }),
+        delete: del({ contexts, tokenFns }),
       };
     },
     read: read(),

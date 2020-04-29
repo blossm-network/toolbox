@@ -74,6 +74,18 @@ module.exports = ({
           ...commonDatabaseEnv,
         },
       };
+    case "view-composite":
+      return {
+        image: `${commonImagePrefix}.${context}${service ? `.${service}` : ""}${
+          domain ? `.${domain}` : ""
+        }.${name}:latest`,
+        ...common,
+        environment: {
+          NAME: name,
+          CONTEXT: context,
+          ...common.environment,
+        },
+      };
     case "event-store":
       return {
         image: `${commonImagePrefix}.${service}.${domain}:latest`,

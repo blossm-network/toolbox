@@ -103,6 +103,46 @@ module.exports = ({
           includeDatabase = true;
         }
         break;
+      case "view-composite":
+        {
+          const operationHash = hash(
+            dependency.name,
+            ...(dependency.domain ? [dependency.domain] : []),
+            ...(dependency.service ? [dependency.service] : []),
+            dependency.context,
+            dependency.procedure
+          );
+
+          const key = `${dependency.name}${
+            dependency.domain ? `-${dependency.domain}` : ""
+          }${dependency.service ? `-${dependency.service}` : ""}-${
+            config.context
+          }`;
+
+          services = {
+            ...services,
+            [key]: {
+              ...common,
+              image: `${commonServiceImagePrefix}.${dependency.context}${
+                dependency.domain ? `.${dependency.domain}` : ""
+              }${dependency.service ? `.${dependency.service}` : ""}.${
+                dependency.name
+              }:latest`,
+              container_name: `${operationHash}.${network}`,
+              depends_on: [databaseServiceKey],
+              environment: {
+                ...commonEnvironment,
+                PROCEDURE: dependency.procedure,
+                OPERATION_HASH: operationHash,
+                ...(dependency.domain && { DOMAIN: dependency.domain }),
+                ...(dependency.service && { SERVICE: dependency.service }),
+                CONTEXT: dependency.contxt,
+                NAME: dependency.name,
+              },
+            },
+          };
+        }
+        break;
       case "event-store":
         {
           const operationHash = hash(

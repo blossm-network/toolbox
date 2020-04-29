@@ -18,7 +18,6 @@ const sort = "some-sort";
 const view = "some-view";
 const id = "some-id";
 const contexts = { c: 2 };
-const claims = "some-claims";
 
 const envContext = "some-env-context";
 process.env.CONTEXT = envContext;
@@ -123,7 +122,7 @@ describe("Get views", () => {
     expect(inFake).to.have.been.calledWith({
       context: contexts,
       network: otherNetwork,
-      host: "view.some-context.some-other-network",
+      host: "v.some-context.some-other-network",
     });
     expect(withFake).to.have.been.calledWith({
       externalTokenFn,
@@ -318,7 +317,6 @@ describe("Get views", () => {
     await viewStore({ name, domain, service, context })
       .set({
         context: contexts,
-        claims,
         tokenFns: { internal: internalTokenFn, external: externalTokenFn },
       })
       .delete(id);
@@ -333,7 +331,6 @@ describe("Get views", () => {
     expect(deleteFake).to.have.been.calledWith(id);
     expect(inFake).to.have.been.calledWith({ context: contexts });
     expect(withFake).to.have.been.calledWith({
-      claims,
       internalTokenFn,
       externalTokenFn,
     });

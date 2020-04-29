@@ -1,0 +1,1 @@
+Gets a composite view.
