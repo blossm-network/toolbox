@@ -3,8 +3,8 @@
  * in this file.
  */
 
-const eventStore = require("@blossm/event-store-rpc");
+const viewStore = require("@blossm/view-store-rpc");
 const gcpToken = require("@blossm/gcp-token");
 
-exports.eventStore = eventStore;
+exports.viewStore = viewStore;
 exports.gcpToken = gcpToken;
