@@ -84,12 +84,10 @@ describe("Get views", () => {
     });
     replace(deps, "rpc", rpcFake);
 
-    const result = await viewStore({ name }).read({
-      query,
-    });
+    const result = await viewStore({ name }).read();
 
     expect(rpcFake).to.have.been.calledWith(name, envContext, "view-store");
-    expect(getFake).to.have.been.calledWith({ query });
+    expect(getFake).to.have.been.calledWith();
     expect(inFake).to.have.been.calledWith({});
     expect(withFake).to.have.been.calledWith({});
     expect(result).to.deep.equal({ body: views });
@@ -156,7 +154,7 @@ describe("Get views", () => {
         context: contexts,
         tokenFns: { internal: internalTokenFn, external: externalTokenFn },
       })
-      .stream({ query, sort }, fn);
+      .stream(fn, { query, sort });
 
     expect(rpcFake).to.have.been.calledWith(
       name,
@@ -165,7 +163,7 @@ describe("Get views", () => {
       context,
       "view-store"
     );
-    expect(streamFake).to.have.been.calledWith({ query, sort }, fn);
+    expect(streamFake).to.have.been.calledWith(fn, { query, sort });
     expect(inFake).to.have.been.calledWith({ context: contexts });
     expect(withFake).to.have.been.calledWith({
       path: "/stream",
@@ -189,15 +187,12 @@ describe("Get views", () => {
     replace(deps, "rpc", rpcFake);
 
     const fn = "some-fn";
-    const result = await viewStore({ name }).stream(
-      {
-        query,
-      },
-      fn
-    );
+    const result = await viewStore({ name }).stream(fn, {
+      query,
+    });
 
     expect(rpcFake).to.have.been.calledWith(name, envContext, "view-store");
-    expect(streamFake).to.have.been.calledWith({ query }, fn);
+    expect(streamFake).to.have.been.calledWith(fn, { query });
     expect(inFake).to.have.been.calledWith({});
     expect(withFake).to.have.been.calledWith({
       path: "/stream",
@@ -227,7 +222,7 @@ describe("Get views", () => {
       network: otherNetwork,
     })
       .set({ context: contexts, tokenFns: { external: externalTokenFn } })
-      .stream({ query, sort }, fn);
+      .stream(fn, { query, sort });
 
     expect(rpcFake).to.have.been.calledWith(
       name,
@@ -235,7 +230,7 @@ describe("Get views", () => {
       context,
       "view-store"
     );
-    expect(streamFake).to.have.been.calledWith({ query, sort }, fn);
+    expect(streamFake).to.have.been.calledWith(fn, { query, sort });
     expect(inFake).to.have.been.calledWith({
       context: contexts,
       network: otherNetwork,

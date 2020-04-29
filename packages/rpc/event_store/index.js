@@ -78,10 +78,10 @@ module.exports = ({ domain, service = process.env.SERVICE } = {}) => {
     context,
     claims,
     tokenFns: { internal: internalTokenFn, external: externalTokenFn } = {},
-  } = {}) => async ({ root, from, parallel }, fn) =>
+  } = {}) => async (fn, { root, from, parallel }) =>
     await deps
       .rpc(domain, service, "event-store")
-      .stream({ id: root, from, ...(parallel && { parallel }) }, fn)
+      .stream(fn, { id: root, from, ...(parallel && { parallel }) })
       .in({
         ...(context && { context }),
       })

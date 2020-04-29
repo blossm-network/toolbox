@@ -36,7 +36,7 @@ module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
     context,
     claims,
     tokenFns: { internal: internalTokenFn, external: externalTokenFn } = {},
-  } = {}) => async (query) => {
+  } = {}) => async (fn, query = {}) => {
     if (query.root) {
       query.id = query.root;
       delete query.root;
@@ -48,7 +48,7 @@ module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
         ...(service ? [service] : []),
         "fact"
       )
-      .get(query)
+      .stream(fn, query)
       .in({
         ...(context && { context }),
         ...(!internal && {

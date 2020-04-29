@@ -122,7 +122,7 @@ module.exports = (...operation) => {
         data: query,
       });
     },
-    stream: (query, fn) => {
+    stream: (fn, query) => {
       const id = query.id;
       delete query.id;
       let progress = "";

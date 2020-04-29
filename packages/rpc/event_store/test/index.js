@@ -390,13 +390,14 @@ describe("Event store", () => {
         claims,
         tokenFns: { internal: internalTokenFn, external: externalTokenFn },
       })
-      .stream({ root, from, parallel }, fn);
+      .stream(fn, { root, from, parallel });
 
     expect(rpcFake).to.have.been.calledWith(domain, service, "event-store");
-    expect(streamFake).to.have.been.calledWith(
-      { id: root, from, parallel },
-      fn
-    );
+    expect(streamFake).to.have.been.calledWith(fn, {
+      id: root,
+      from,
+      parallel,
+    });
     expect(inFake).to.have.been.calledWith({
       context,
     });
@@ -429,10 +430,10 @@ describe("Event store", () => {
         claims,
         tokenFns: { internal: internalTokenFn, external: externalTokenFn },
       })
-      .stream({ root, from }, fn);
+      .stream(fn, { root, from });
 
     expect(rpcFake).to.have.been.calledWith(domain, service, "event-store");
-    expect(streamFake).to.have.been.calledWith({ id: root, from }, fn);
+    expect(streamFake).to.have.been.calledWith(fn, { id: root, from });
     expect(inFake).to.have.been.calledWith({
       context,
     });

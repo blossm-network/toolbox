@@ -320,7 +320,7 @@ describe("Operation", () => {
 
     const fnFake = fake();
     const result = await operation(operarationPart1, operarationPart2)
-      .stream(data, fnFake)
+      .stream(fnFake, data)
       .in({ context, host })
       .with({ internalTokenFn: tokenFn, claims });
 
@@ -366,7 +366,7 @@ describe("Operation", () => {
 
     const fnFake = fake();
     const result = await operation(operarationPart1, operarationPart2)
-      .stream({ ...data, id }, fnFake)
+      .stream(fnFake, { ...data, id })
       .in({ context, host })
       .with({ internalTokenFn: tokenFn, claims });
 

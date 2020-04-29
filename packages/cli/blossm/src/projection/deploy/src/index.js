@@ -90,5 +90,5 @@ module.exports = eventHandler({
       .set({
         tokenFns: { internal: gcpToken },
       })
-      .stream({ root, from }, fn),
+      .stream(fn, { root, from }),
 });
