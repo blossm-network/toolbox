@@ -120,7 +120,9 @@ describe("View store base integration tests", () => {
     );
 
     expect(response3.statusCode).to.equal(200);
-    const [parsedBody3] = JSON.parse(response3.body);
+    const {
+      content: [parsedBody3],
+    } = JSON.parse(response3.body);
     for (const key in example1.get) {
       expect(parsedBody3[key]).to.deep.equal(example1.get[key]);
     }
