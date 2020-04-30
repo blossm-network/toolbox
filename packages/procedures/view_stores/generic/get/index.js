@@ -42,8 +42,9 @@ module.exports = ({ findFn, one = false, queryFn = defaultQueryFn }) => {
       return { ...r.body, root: r.headers.root };
     });
 
-    if (!one) return res.send(formattedResults);
-    if (formattedResults.length > 0) return res.send(formattedResults[0]);
+    if (!one) return res.send({ content: formattedResults });
+    if (formattedResults.length > 0)
+      return res.send({ content: formattedResults[0] });
     throw deps.resourceNotFoundError.message("This view wasn't found.");
   };
 };

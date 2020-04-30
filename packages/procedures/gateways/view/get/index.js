@@ -17,7 +17,7 @@ module.exports = ({ procedure, name, domain, service } = {}) => async (
           context: req.context,
         })
         .read(req.query);
-      res.status(200).send({ content: response });
+      res.status(200).send(response);
       break;
     }
     case "view-composite": {
@@ -32,7 +32,7 @@ module.exports = ({ procedure, name, domain, service } = {}) => async (
           context: req.context,
         })
         .read(req.query);
-      res.status(200).send({ content: response });
+      res.status(200).send(response);
       break;
     }
   }

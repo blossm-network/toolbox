@@ -75,7 +75,9 @@ describe("View store get", () => {
         },
       },
     });
-    expect(sendFake).to.have.been.calledWith([{ ...obj, root: objRoot }]);
+    expect(sendFake).to.have.been.calledWith({
+      content: [{ ...obj, root: objRoot }],
+    });
   });
   it("should call with the correct params with no query", async () => {
     const findFake = fake.returns([{ body: obj, headers: { root: objRoot } }]);
@@ -108,7 +110,9 @@ describe("View store get", () => {
         },
       },
     });
-    expect(sendFake).to.have.been.calledWith([{ ...obj, root: objRoot }]);
+    expect(sendFake).to.have.been.calledWith({
+      content: [{ ...obj, root: objRoot }],
+    });
   });
   it("should call with the correct params with no env domain, no params, one as true", async () => {
     const findFake = fake.returns([{ body: obj, headers: { root: objRoot } }]);
@@ -145,7 +149,9 @@ describe("View store get", () => {
         },
       },
     });
-    expect(sendFake).to.have.been.calledWith({ ...obj, root: objRoot });
+    expect(sendFake).to.have.been.calledWith({
+      content: { ...obj, root: objRoot },
+    });
   });
   it("should call with the correct params with no env service", async () => {
     const findFake = fake.returns([{ body: obj, headers: { root: objRoot } }]);
@@ -180,7 +186,9 @@ describe("View store get", () => {
         },
       },
     });
-    expect(sendFake).to.have.been.calledWith([{ ...obj, root: objRoot }]);
+    expect(sendFake).to.have.been.calledWith({
+      content: [{ ...obj, root: objRoot }],
+    });
   });
   it("should throw correctly if not found", async () => {
     const findFake = fake.returns([]);

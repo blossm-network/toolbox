@@ -46,7 +46,7 @@ describe("View gateway get", () => {
       tokenFns: { internal: deps.gcpToken },
     });
     expect(readFake).to.have.been.calledWith(query);
-    expect(sendFake).to.have.been.calledWith({ content: results });
+    expect(sendFake).to.have.been.calledWith(results);
   });
   it("should call with the correct params with context and domain with view-store procedure", async () => {
     const readFake = fake.returns({ body: results });
@@ -83,7 +83,7 @@ describe("View gateway get", () => {
       tokenFns: { internal: deps.gcpToken },
     });
     expect(readFake).to.have.been.calledWith(query);
-    expect(sendFake).to.have.been.calledWith({ content: results });
+    expect(sendFake).to.have.been.calledWith(results);
   });
   it("should throw correctly with view-store procedure", async () => {
     const errorMessage = "error-message";
@@ -148,7 +148,7 @@ describe("View gateway get", () => {
       tokenFns: { internal: deps.gcpToken },
     });
     expect(readFake).to.have.been.calledWith(query);
-    expect(sendFake).to.have.been.calledWith({ content: results });
+    expect(sendFake).to.have.been.calledWith(results);
   });
   it("should call with the correct params with context and domain with view-composite procedure", async () => {
     const readFake = fake.returns({ body: results });
@@ -185,7 +185,7 @@ describe("View gateway get", () => {
       tokenFns: { internal: deps.gcpToken },
     });
     expect(readFake).to.have.been.calledWith(query);
-    expect(sendFake).to.have.been.calledWith({ content: results });
+    expect(sendFake).to.have.been.calledWith(results);
   });
   it("should throw correctly with view-composite procedure", async () => {
     const errorMessage = "error-message";
