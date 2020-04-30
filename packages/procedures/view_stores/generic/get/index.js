@@ -9,7 +9,7 @@ module.exports = ({ findFn, one = false, queryFn = defaultQueryFn }) => {
     if (!context)
       throw deps.forbiddenError.message("Missing required permissions.");
 
-    const queryBody = queryFn(req.query.query);
+    const queryBody = queryFn(req.query.query || {});
     const formattedQueryBody = {};
     for (const key in queryBody) {
       formattedQueryBody[`body.${key}`] = queryBody[key];
@@ -32,6 +32,10 @@ module.exports = ({ findFn, one = false, queryFn = defaultQueryFn }) => {
           },
         }),
     };
+
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log({ formattedQueryBody, query });
 
     const results = await findFn({
       query,

@@ -77,6 +77,39 @@ describe("View store get", () => {
     });
     expect(sendFake).to.have.been.calledWith([{ ...obj, root: objRoot }]);
   });
+  it("should call with the correct params with no query", async () => {
+    const findFake = fake.returns([{ body: obj, headers: { root: objRoot } }]);
+
+    const params = { root };
+
+    const req = {
+      query: {
+        context,
+      },
+      params,
+    };
+
+    const sendFake = fake();
+    const res = {
+      send: sendFake,
+    };
+    await get({ findFn: findFake })(req, res);
+    expect(findFake).to.have.been.calledWith({
+      query: {
+        "headers.some-env-context": {
+          root: envContextRoot,
+          service: envContextService,
+          network: envContextNetwork,
+        },
+        "headers.some-env-domain": {
+          root,
+          service: envService,
+          network: envNetwork,
+        },
+      },
+    });
+    expect(sendFake).to.have.been.calledWith([{ ...obj, root: objRoot }]);
+  });
   it("should call with the correct params with no env domain, no params, one as true", async () => {
     const findFake = fake.returns([{ body: obj, headers: { root: objRoot } }]);
 

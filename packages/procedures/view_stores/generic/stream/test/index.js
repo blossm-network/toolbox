@@ -90,6 +90,53 @@ describe("View store get", () => {
     });
     expect(endFake).to.have.been.calledWith();
   });
+  it("should call with the correct params with no query", async () => {
+    const streamFake = fake();
+
+    const params = { root };
+
+    const req = {
+      query: {
+        context,
+        parallel: 2,
+      },
+      params,
+    };
+
+    const endFake = fake();
+    const writeResult = "some-write-result";
+    const writeFake = fake.returns(writeResult);
+    const res = {
+      end: endFake,
+      write: writeFake,
+    };
+
+    await stream({ streamFn: streamFake })(req, res);
+    expect(streamFake).to.have.been.calledWith({
+      parallel: 2,
+      query: {
+        "headers.some-env-context": {
+          root: envContextRoot,
+          service: envContextService,
+          network: envContextNetwork,
+        },
+        "headers.some-env-domain": {
+          root,
+          service: envService,
+          network: envNetwork,
+        },
+      },
+      fn: match((fn) => {
+        const view = { body: obj, headers: { root: objRoot } };
+        const result = fn(view);
+        return (
+          result == writeResult &&
+          writeFake.calledWith(JSON.stringify({ ...obj, root: objRoot }))
+        );
+      }),
+    });
+    expect(endFake).to.have.been.calledWith();
+  });
   it("should call with the correct params with no env domain", async () => {
     const streamFake = fake();
 

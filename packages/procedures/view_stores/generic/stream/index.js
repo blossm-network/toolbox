@@ -2,7 +2,7 @@ const defaultFn = (query) => query;
 
 module.exports = ({ streamFn, queryFn = defaultFn }) => {
   return async (req, res) => {
-    const queryBody = queryFn(req.query.query);
+    const queryBody = queryFn(req.query.query || {});
     const formattedQueryBody = {};
     for (const key in queryBody) {
       formattedQueryBody[`body.${key}`] = queryBody[key];
