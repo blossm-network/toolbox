@@ -35,7 +35,7 @@ module.exports = ({ findFn, one = false, queryFn = defaultQueryFn }) => {
 
     //TODO
     //eslint-disable-next-line no-console
-    console.log({ formattedQueryBody, query });
+    console.log({ query: JSON.stringify(query) });
 
     const results = await findFn({
       query,
