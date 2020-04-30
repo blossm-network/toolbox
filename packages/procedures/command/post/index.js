@@ -13,7 +13,13 @@ module.exports = ({
     if (fillFn) req.body.payload = await fillFn(req.body.payload);
     if (normalizeFn) req.body.payload = await normalizeFn(req.body.payload);
 
-    const { events = [], response, statusCode, thenFn } = await mainFn({
+    const {
+      events = [],
+      response,
+      headers = {},
+      statusCode,
+      thenFn,
+    } = await mainFn({
       payload: req.body.payload,
       ...(req.body.root && { root: req.body.root }),
       ...(req.body.options && { options: req.body.options }),
@@ -96,12 +102,15 @@ module.exports = ({
     if (thenFn) await thenFn();
 
     if (response || events.length) {
-      res.status(statusCode || (events.length ? 202 : 200)).send({
-        ...response,
-        ...(events.length && { _id: commandId }),
-      });
+      res
+        .set(headers)
+        .status(statusCode || (events.length ? 202 : 200))
+        .send({
+          ...response,
+          ...(events.length && { _id: commandId }),
+        });
     } else {
-      res.sendStatus(204);
+      res.set(headers).sendStatus(204);
     }
   };
 };

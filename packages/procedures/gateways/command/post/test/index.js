@@ -60,10 +60,13 @@ describe("Command gateway post", () => {
     const statusFake = fake.returns({
       send: sendFake,
     });
+    const setResponseFake = fake.returns({
+      status: statusFake,
+    });
     const cookieFake = fake();
     const res = {
       cookie: cookieFake,
-      status: statusFake,
+      set: setResponseFake,
     };
 
     await post({ name, domain, internalTokenFn, externalTokenFn })(req, res);
@@ -115,10 +118,13 @@ describe("Command gateway post", () => {
     const statusFake = fake.returns({
       send: sendFake,
     });
+    const setResponseFake = fake.returns({
+      status: statusFake,
+    });
     const cookieFake = fake();
     const res = {
       cookie: cookieFake,
-      status: statusFake,
+      set: setResponseFake,
     };
 
     const network = "some-random-network";
@@ -174,9 +180,12 @@ describe("Command gateway post", () => {
     const statusFake = fake.returns({
       send: sendFake,
     });
+    const resSetFake = fake.returns({
+      status: statusFake,
+    });
     const cookieFake = fake();
     const res = {
-      status: statusFake,
+      set: resSetFake,
       cookie: cookieFake,
     };
 
@@ -242,10 +251,13 @@ describe("Command gateway post", () => {
     const statusFake = fake.returns({
       send: sendFake,
     });
+    const resSetFake = fake.returns({
+      status: statusFake,
+    });
     const cookieFake = fake();
     const res = {
       cookie: cookieFake,
-      status: statusFake,
+      set: resSetFake,
     };
 
     await post({ name, domain, internalTokenFn, externalTokenFn })(req, res);

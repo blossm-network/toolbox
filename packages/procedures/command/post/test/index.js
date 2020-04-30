@@ -99,8 +99,11 @@ describe("Command handler post", () => {
     const statusFake = fake.returns({
       send: sendFake,
     });
-    const res = {
+    const setResponseFake = fake.returns({
       status: statusFake,
+    });
+    const res = {
+      set: setResponseFake,
     };
 
     const addFnFake = fake();
@@ -159,10 +162,11 @@ describe("Command handler post", () => {
         },
       ],
     });
+    expect(setResponseFake).to.have.been.calledWith({});
     expect(statusFake).to.have.been.calledWith(202);
     expect(sendFake).to.have.been.calledWith({ ...response, _id: commandId });
   });
-  it("should call with the correct params with status code", async () => {
+  it("should call with the correct params with status code and headers", async () => {
     const validateFnFake = fake();
     const normalizeFnFake = fake.returns(cleanedPayload);
 
@@ -172,6 +176,7 @@ describe("Command handler post", () => {
     replace(deps, "uuid", fake.returns(commandId));
 
     const statusCode = "some-status-code";
+    const responseHeaders = { some: "headers" };
 
     const events = [
       {
@@ -184,6 +189,7 @@ describe("Command handler post", () => {
       events,
       response,
       statusCode,
+      headers: responseHeaders,
     });
     const req = {
       body: {
@@ -198,8 +204,11 @@ describe("Command handler post", () => {
     const statusFake = fake.returns({
       send: sendFake,
     });
-    const res = {
+    const setResponseFake = fake.returns({
       status: statusFake,
+    });
+    const res = {
+      set: setResponseFake,
     };
 
     const addFnFake = fake();
@@ -258,6 +267,7 @@ describe("Command handler post", () => {
         },
       ],
     });
+    expect(setResponseFake).to.have.been.calledWith(responseHeaders);
     expect(statusFake).to.have.been.calledWith(statusCode);
     expect(sendFake).to.have.been.calledWith({ ...response, _id: commandId });
   });
@@ -298,8 +308,11 @@ describe("Command handler post", () => {
     const statusFake = fake.returns({
       send: sendFake,
     });
-    const res = {
+    const setResponseFake = fake.returns({
       status: statusFake,
+    });
+    const res = {
+      set: setResponseFake,
     };
 
     const addFnFake = fake();
@@ -337,13 +350,14 @@ describe("Command handler post", () => {
         },
       ],
     });
+    expect(setResponseFake).to.have.been.calledWith({});
     expect(statusFake).to.have.been.calledWith(202);
     expect(sendFake).to.have.been.calledWith({
       ...response,
       _id: commandId,
     });
   });
-  it("should call with the correct params will fillFn", async () => {
+  it("should call with the correct params with fillFn", async () => {
     const validateFnFake = fake();
     const fillFnFake = fake.returns(filledPayload);
     const normalizeFnFake = fake.returns(cleanedPayload);
@@ -377,8 +391,11 @@ describe("Command handler post", () => {
     const statusFake = fake.returns({
       send: sendFake,
     });
-    const res = {
+    const setResponseFake = fake.returns({
       status: statusFake,
+    });
+    const res = {
+      set: setResponseFake,
     };
 
     const addFnFake = fake();
@@ -433,8 +450,11 @@ describe("Command handler post", () => {
     const statusFake = fake.returns({
       send: sendFake,
     });
-    const res = {
+    const setResponseFake = fake.returns({
       status: statusFake,
+    });
+    const res = {
+      set: setResponseFake,
     };
 
     const addFnFake = fake();
@@ -485,8 +505,11 @@ describe("Command handler post", () => {
     const statusFake = fake.returns({
       send: sendFake,
     });
-    const res = {
+    const setResponseFake = fake.returns({
       status: statusFake,
+    });
+    const res = {
+      set: setResponseFake,
     };
 
     const addFnFake = fake();
@@ -540,6 +563,7 @@ describe("Command handler post", () => {
         },
       ],
     });
+    expect(setResponseFake).to.have.been.calledWith({});
     expect(statusFake).to.have.been.calledWith(202);
     expect(sendFake).to.have.been.calledWith({ _id: commandId });
   });
@@ -570,8 +594,11 @@ describe("Command handler post", () => {
     const statusFake = fake.returns({
       send: sendFake,
     });
-    const res = {
+    const setResponseFake = fake.returns({
       status: statusFake,
+    });
+    const res = {
+      set: setResponseFake,
     };
 
     const addFnFake = fake();
@@ -595,6 +622,7 @@ describe("Command handler post", () => {
       aggregateFn,
     });
 
+    expect(setResponseFake).to.have.been.calledWith({});
     expect(statusFake).to.have.been.calledWith(200);
     expect(sendFake).to.have.been.calledWith(response);
   });
@@ -621,8 +649,11 @@ describe("Command handler post", () => {
     };
 
     const sendStatusFake = fake();
-    const res = {
+    const setResponseFake = fake.returns({
       sendStatus: sendStatusFake,
+    });
+    const res = {
+      set: setResponseFake,
     };
 
     const addFnFake = fake();
@@ -646,6 +677,7 @@ describe("Command handler post", () => {
       aggregateFn,
     });
 
+    expect(setResponseFake).to.have.been.calledWith({});
     expect(sendStatusFake).to.have.been.calledWith(204);
   });
   it("should call with the correct params with root, context, options, claims, version passed in, and no payload", async () => {
@@ -690,8 +722,11 @@ describe("Command handler post", () => {
     const statusFake = fake.returns({
       send: sendFake,
     });
-    const res = {
+    const setResponseFake = fake.returns({
       status: statusFake,
+    });
+    const res = {
+      set: setResponseFake,
     };
 
     const aggregateFnFake = fake.returns(aggregateFn);
@@ -749,6 +784,7 @@ describe("Command handler post", () => {
         },
       ],
     });
+    expect(setResponseFake).to.have.been.calledWith({});
     expect(statusFake).to.have.been.calledWith(202);
     expect(sendFake).to.have.been.calledWith({ ...response, _id: commandId });
   });
@@ -780,8 +816,11 @@ describe("Command handler post", () => {
     const statusFake = fake.returns({
       send: sendFake,
     });
-    const res = {
+    const setResponseFake = fake.returns({
       status: statusFake,
+    });
+    const res = {
+      set: setResponseFake,
     };
 
     const addFnFake = fake();
@@ -831,6 +870,7 @@ describe("Command handler post", () => {
         },
       ],
     });
+    expect(setResponseFake).to.have.been.calledWith({});
     expect(statusFake).to.have.been.calledWith(202);
     expect(sendFake).to.have.been.calledWith({ ...response, _id: commandId });
   });
@@ -874,8 +914,11 @@ describe("Command handler post", () => {
     const statusFake = fake.returns({
       send: sendFake,
     });
-    const res = {
+    const setResponseFake = fake.returns({
       status: statusFake,
+    });
+    const res = {
+      set: setResponseFake,
     };
 
     const addFnFake = fake();
@@ -929,6 +972,7 @@ describe("Command handler post", () => {
         },
       ],
     });
+    expect(setResponseFake).to.have.been.calledWith({});
     expect(statusFake).to.have.been.calledWith(202);
     expect(sendFake).to.have.been.calledWith({ ...response, _id: commandId });
   });
@@ -973,8 +1017,11 @@ describe("Command handler post", () => {
     const statusFake = fake.returns({
       send: sendFake,
     });
-    const res = {
+    const setResponseFake = fake.returns({
       status: statusFake,
+    });
+    const res = {
+      set: setResponseFake,
     };
 
     const addFnFake = fake();
@@ -1054,6 +1101,7 @@ describe("Command handler post", () => {
         { data: event, number: otherCorrectNumber },
       ],
     });
+    expect(setResponseFake).to.have.been.calledWith({});
     expect(statusFake).to.have.been.calledWith(202);
     expect(sendFake).to.have.been.calledWith({ ...response, _id: commandId });
   });
@@ -1101,8 +1149,11 @@ describe("Command handler post", () => {
     const statusFake = fake.returns({
       send: sendFake,
     });
-    const res = {
+    const setResponseFake = fake.returns({
       status: statusFake,
+    });
+    const res = {
+      set: setResponseFake,
     };
 
     const addFnFake = fake();
@@ -1187,6 +1238,7 @@ describe("Command handler post", () => {
       events: [{ data: event, number: otherCorrectNumber }],
     });
     expect(addFnFake).to.have.been.calledTwice;
+    expect(setResponseFake).to.have.been.calledWith({});
     expect(statusFake).to.have.been.calledWith(202);
     expect(sendFake).to.have.been.calledWith({ ...response, _id: commandId });
   });

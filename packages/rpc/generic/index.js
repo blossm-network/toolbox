@@ -90,6 +90,9 @@ const common = ({ method, dataParam, operation, id, data }) => {
 
           return {
             ...(response.body && { body: formatResponse(response.body) }),
+            ...(response.headers && {
+              headers: formatResponse(response.headers),
+            }),
             statusCode: response.statusCode,
           };
         },

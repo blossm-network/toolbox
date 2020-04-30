@@ -11,7 +11,7 @@ module.exports = ({
   await deps.validate(req.body);
   const { root, payload, headers } = req.body;
 
-  let { body: response, statusCode } = await deps
+  let { body: response, headers: responseHeaders = {}, statusCode } = await deps
     .command({
       name,
       domain,
@@ -49,5 +49,5 @@ module.exports = ({
     }
   }
 
-  res.status(statusCode).send(response);
+  res.set(responseHeaders).status(statusCode).send(response);
 };
