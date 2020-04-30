@@ -16,7 +16,7 @@ const externalTokenFn = "some-external-token-fn";
 const query = "some-query";
 const sort = "some-sort";
 const view = "some-view";
-const id = "some-id";
+const root = "some-root";
 const contexts = { c: 2 };
 
 const envContext = "some-env-context";
@@ -260,7 +260,7 @@ describe("Get views", () => {
         context: contexts,
         tokenFns: { internal: internalTokenFn, external: externalTokenFn },
       })
-      .update(id, view);
+      .update(root, view);
 
     expect(rpcFake).to.have.been.calledWith(
       name,
@@ -269,7 +269,7 @@ describe("Get views", () => {
       context,
       "view-store"
     );
-    expect(putFake).to.have.been.calledWith(id, { view });
+    expect(putFake).to.have.been.calledWith(root, { view });
     expect(inFake).to.have.been.calledWith({ context: contexts });
     expect(withFake).to.have.been.calledWith({
       internalTokenFn,
@@ -289,10 +289,10 @@ describe("Get views", () => {
     });
     replace(deps, "rpc", rpcFake);
 
-    await viewStore({ name }).update(id, view);
+    await viewStore({ name }).update(root, view);
 
     expect(rpcFake).to.have.been.calledWith(name, envContext, "view-store");
-    expect(putFake).to.have.been.calledWith(id, { view });
+    expect(putFake).to.have.been.calledWith(root, { view });
     expect(inFake).to.have.been.calledWith({});
     expect(withFake).to.have.been.calledWith();
   });
@@ -314,7 +314,7 @@ describe("Get views", () => {
         context: contexts,
         tokenFns: { internal: internalTokenFn, external: externalTokenFn },
       })
-      .delete(id);
+      .delete(root);
 
     expect(rpcFake).to.have.been.calledWith(
       name,
@@ -323,7 +323,7 @@ describe("Get views", () => {
       context,
       "view-store"
     );
-    expect(deleteFake).to.have.been.calledWith(id);
+    expect(deleteFake).to.have.been.calledWith(root);
     expect(inFake).to.have.been.calledWith({ context: contexts });
     expect(withFake).to.have.been.calledWith({
       internalTokenFn,
@@ -343,10 +343,10 @@ describe("Get views", () => {
     });
     replace(deps, "rpc", rpcFake);
 
-    await viewStore({ name }).delete(id);
+    await viewStore({ name }).delete(root);
 
     expect(rpcFake).to.have.been.calledWith(name, envContext, "view-store");
-    expect(deleteFake).to.have.been.calledWith(id);
+    expect(deleteFake).to.have.been.calledWith(root);
     expect(inFake).to.have.been.calledWith({});
     expect(withFake).to.have.been.calledWith();
   });
