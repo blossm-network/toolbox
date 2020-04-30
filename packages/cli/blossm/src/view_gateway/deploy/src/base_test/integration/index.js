@@ -4,7 +4,7 @@ const getToken = require("@blossm/get-token");
 const { create, delete: del, exists } = require("@blossm/gcp-pubsub");
 
 const request = require("@blossm/request");
-const { stores, testing } = require("./../../config.json");
+const { views, testing } = require("./../../config.json");
 
 const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 
@@ -27,14 +27,14 @@ describe("View gateway integration tests", () => {
       )
   );
   it("should return successfully", async () => {
-    const requiredPermissions = stores.reduce((permissions, command) => {
-      return command.privileges == "none"
+    const requiredPermissions = views.reduce((permissions, view) => {
+      return view.privileges == "none"
         ? permissions
         : [
             ...new Set([
               ...permissions,
-              ...(command.privileges
-                ? command.privileges.map((privilege) => {
+              ...(view.privileges
+                ? view.privileges.map((privilege) => {
                     return {
                       privilege,
                       domain: process.env.DOMAIN,
@@ -46,7 +46,7 @@ describe("View gateway integration tests", () => {
           ];
     }, []);
 
-    const needsToken = stores.some(
+    const needsToken = views.some(
       (c) => c.protection == undefined || c.protection == "strict"
     );
 
@@ -55,14 +55,14 @@ describe("View gateway integration tests", () => {
       : {};
 
     const parallelFns = [];
-    for (const store of stores) {
+    for (const view of views) {
       parallelFns.push(async () => {
-        const response0 = await request.get(`${url}/${store.name}`, {
+        const response0 = await request.get(`${url}/${view.name}`, {
           body: {
             root,
           },
-          ...(store.protection === undefined ||
-            (store.protection === "strict" && {
+          ...(view.protection === undefined ||
+            (view.protection === "strict" && {
               headers: {
                 Authorization: `Bearer ${token}`,
               },
@@ -72,10 +72,10 @@ describe("View gateway integration tests", () => {
         expect(response0.statusCode).to.be.lessThan(500);
       });
 
-      if (store.privileges == "none") continue;
+      if (view.privileges == "none") continue;
 
       parallelFns.push(async () => {
-        const response1 = await request.get(`${url}/${store.name}`, {
+        const response1 = await request.get(`${url}/${view.name}`, {
           body: {
             root,
           },
@@ -85,7 +85,7 @@ describe("View gateway integration tests", () => {
       });
 
       parallelFns.push(async () => {
-        const response2 = await request.get(`${url}/${store.name}`, {
+        const response2 = await request.get(`${url}/${view.name}`, {
           body: {
             root,
           },

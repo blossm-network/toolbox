@@ -9,7 +9,7 @@ const { download: downloadFile } = require("@blossm/gcp-storage");
 const config = require("./config.json");
 
 module.exports = gateway({
-  stores: config.stores,
+  views: config.views,
   whitelist: config.whitelist,
   algorithm: "ES256",
   audience: process.env.NETWORK,

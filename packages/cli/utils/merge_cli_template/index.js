@@ -339,8 +339,8 @@ const topicsForDependencies = (config, events) => {
           (c) => c.protection == undefined || c.protection == "strict"
         )) ||
         (config.procedure == "view-gateway" &&
-          config.stores.some(
-            (s) => s.protection == undefined || s.protection == "strict"
+          config.views.some(
+            (v) => v.protection == undefined || v.protection == "strict"
           )) ||
         (config.procedure == "fact-gateway" &&
           config.facts.some(
@@ -489,16 +489,16 @@ const addDefaultDependencies = ({ config, coreNetwork }) => {
     }
     case "view-gateway":
       return [
-        ...(config.stores.some(
+        ...(config.views.some(
           (s) => s.protection == undefined || s.protection == "strict"
         )
           ? tokenDependencies
           : []),
-        ...config.stores
-          .filter((s) => s.network == undefined)
-          .map((store) => {
+        ...config.views
+          .filter((v) => v.network == undefined)
+          .map((view) => {
             return {
-              name: store.name,
+              name: view.name,
               ...(config.domain && { domain: config.domain }),
               ...(config.service && { service: config.service }),
               context: config.context,
