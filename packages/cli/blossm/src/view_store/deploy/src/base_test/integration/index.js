@@ -71,7 +71,9 @@ describe("View store base integration tests", () => {
       }
     );
 
-    const [parsedBody1] = JSON.parse(response1.body);
+    const {
+      content: [parsedBody1],
+    } = JSON.parse(response1.body);
 
     expect(response1.statusCode).to.equal(200);
     for (const key in example0.get) {
@@ -164,7 +166,9 @@ describe("View store base integration tests", () => {
       }
     );
 
-    const [firstSort1, firstSort2] = JSON.parse(response5.body);
+    const {
+      content: [firstSort1, firstSort2],
+    } = JSON.parse(response5.body);
 
     const response6 = await request.get(
       `${url}${domainRoot ? `/${domainRoot}` : ""}`,
@@ -184,7 +188,9 @@ describe("View store base integration tests", () => {
       }
     );
 
-    const [secondSort1, secondSort2] = JSON.parse(response6.body);
+    const {
+      content: [secondSort1, secondSort2],
+    } = JSON.parse(response6.body);
 
     expect(firstSort1).to.deep.equal(secondSort2);
     expect(firstSort2).to.deep.equal(secondSort1);
@@ -246,7 +252,9 @@ describe("View store base integration tests", () => {
       );
       expect(response1.statusCode).to.equal(200);
 
-      const [parsedBody4] = JSON.parse(response1.body);
+      const {
+        content: [parsedBody4],
+      } = JSON.parse(response1.body);
       for (const key in example0.get) {
         if (key == "root") {
           expect(parsedBody4[0][key]).to.equal(root);
