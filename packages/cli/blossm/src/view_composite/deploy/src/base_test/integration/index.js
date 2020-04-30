@@ -41,10 +41,8 @@ const checkResponse = ({ data, expected }) => {
 
 const executeStep = async (step) => {
   if (step.pre) {
-    for (const { name, domain, service, context, root, data } of step.pre) {
-      await viewStore({ name, domain, service, context }).update(root, {
-        data,
-      });
+    for (const { name, domain, service, context, root, view } of step.pre) {
+      await viewStore({ name, domain, service, context }).update(root, view);
     }
   }
 
