@@ -60,7 +60,13 @@ module.exports = eventHandler({
         headers: state.headers,
         body: state.body,
       });
-
+    // const channel = `${process.env.NAME}.${
+    //   process.env.DOMAIN ? `.${process.env.DOMAIN}` : ""
+    // }${process.env.SERVICE ? `.${process.env.SERVICE}` : ""}.${
+    //   process.env.CONTEXT
+    // }.${req.query.context[process.env.CONTEXT].root}.${
+    //   req.query.context[process.env.CONTEXT].service
+    // }.${req.query.context[process.env.CONTEXT].network}`;
     // await command({
     //   name: "push",
     //   domain: "update",

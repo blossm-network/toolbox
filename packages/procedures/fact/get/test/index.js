@@ -23,7 +23,7 @@ describe("Fact get", () => {
 
   it("should call with the correct params", async () => {
     const response = "some-response";
-    const mainFnFake = fake.returns(response);
+    const mainFnFake = fake.returns({ response });
 
     const req = {
       params,
@@ -36,8 +36,11 @@ describe("Fact get", () => {
     const statusFake = fake.returns({
       send: sendFake,
     });
-    const res = {
+    const setFake = fake.returns({
       status: statusFake,
+    });
+    const res = {
+      set: setFake,
     };
 
     await get({
@@ -47,14 +50,15 @@ describe("Fact get", () => {
     expect(mainFnFake).to.have.been.calledWith({
       query,
     });
+    expect(setFake).to.have.been.calledWith({});
     expect(statusFake).to.have.been.calledWith(200);
     expect(sendFake).to.have.been.calledWith(response);
   });
-  it("should call with the correct params with context and claims", async () => {
+  it("should call with the correct params with context and headers", async () => {
     const response = "some-response";
-    const mainFnFake = fake.returns(response);
+    const headers = "some-headers";
+    const mainFnFake = fake.returns({ headers, response });
 
-    const claims = "some-claims";
     const context = "some-context";
     const root = "some-root";
 
@@ -64,7 +68,6 @@ describe("Fact get", () => {
       },
       query: {
         query,
-        claims,
         context,
       },
     };
@@ -73,8 +76,11 @@ describe("Fact get", () => {
     const statusFake = fake.returns({
       send: sendFake,
     });
-    const res = {
+    const setFake = fake.returns({
       status: statusFake,
+    });
+    const res = {
+      set: setFake,
     };
 
     await get({
@@ -85,10 +91,10 @@ describe("Fact get", () => {
       query,
       context,
       root,
-      claims,
     });
     expect(statusFake).to.have.been.calledWith(200);
     expect(sendFake).to.have.been.calledWith(response);
+    expect(setFake).to.have.been.calledWith(headers);
   });
   it("should throw correctly", async () => {
     const errorMessage = "some-error-message";

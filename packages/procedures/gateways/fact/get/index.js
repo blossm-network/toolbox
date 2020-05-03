@@ -6,7 +6,7 @@ module.exports = ({
   internalTokenFn,
   externalTokenFn,
 } = {}) => async (req, res) => {
-  const { body: response } = await deps
+  const { body: response, headers = {} } = await deps
     .fact({
       name,
       domain,
@@ -18,5 +18,5 @@ module.exports = ({
     })
     .read(req.query);
 
-  res.status(200).send(response);
+  res.set(headers).status(200).send(response);
 };

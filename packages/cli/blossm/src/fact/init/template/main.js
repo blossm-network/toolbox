@@ -21,4 +21,5 @@ module.exports = async ({ query, params, context, claims }) => {
 
   //eslint-disable-next-line no-console
   console.log("Do something with: ", { query, params, context, claims });
+  return { response: { some: "response " } };
 };
