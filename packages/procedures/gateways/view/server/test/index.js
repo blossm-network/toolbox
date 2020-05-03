@@ -1,5 +1,5 @@
 const { expect } = require("chai").use(require("sinon-chai"));
-const { restore, replace, fake, match } = require("sinon");
+const { restore, replace, fake, stub, match } = require("sinon");
 
 const deps = require("../deps");
 const gateway = require("..");
@@ -30,19 +30,40 @@ describe("View gateway", () => {
     replace(deps, "corsMiddleware", corsMiddlewareFake);
 
     const authenticationResult = "some-authentication";
-    const authenticationFake = fake.returns(authenticationResult);
+    const channelAuthenticationResultFakeResult =
+      "some-channel-authentication-result-fake";
+    const channelAuthenticationResultFake = fake.returns(
+      channelAuthenticationResultFakeResult
+    );
+    const authenticationFake = stub()
+      .onFirstCall()
+      .returns(authenticationResult)
+      .onSecondCall()
+      .returns(channelAuthenticationResultFake);
     replace(deps, "authentication", authenticationFake);
 
-    const authorizationResult = "some-authorization";
-    const authorizationFake = fake.returns(authorizationResult);
+    const authorizationResult = "some-authorization-result";
+    const channelAuthorizationResultFakeResult =
+      "some-channel-authorization-result-fake";
+    const channelAuthorizationResultFake = fake.returns(
+      channelAuthorizationResultFakeResult
+    );
+    const authorizationFake = stub()
+      .onFirstCall()
+      .returns(authorizationResult)
+      .onSecondCall()
+      .returns(channelAuthorizationResultFake);
     replace(deps, "authorization", authorizationFake);
 
     const listenFake = fake();
     const getFake = fake.returns({
       listen: listenFake,
     });
-    const serverFake = fake.returns({
+    const channelGetFake = fake.returns({
       get: getFake,
+    });
+    const serverFake = fake.returns({
+      get: channelGetFake,
     });
     replace(deps, "server", serverFake);
 
@@ -80,6 +101,7 @@ describe("View gateway", () => {
       service,
     });
     expect(gatewayGetFake).to.have.been.calledOnce;
+
     expect(listenFake).to.have.been.calledWith();
     expect(serverFake).to.have.been.calledWith({
       prehook: match((fn) => {
@@ -92,6 +114,53 @@ describe("View gateway", () => {
           methods: ["GET"],
         });
       }),
+    });
+    expect(channelGetFake).to.have.been.calledWith(deps.channel, {
+      preMiddleware: [
+        match((fn) => {
+          const req = {
+            query: { name },
+          };
+          const res = "some-res";
+          const next = "some-next";
+          const result = fn(req, res, next);
+          return (
+            result == channelAuthenticationResultFakeResult &&
+            authenticationFake.calledWith({
+              verifyFn: verifyFnResult,
+              audience,
+              algorithm,
+              strict: true,
+              cookieKey: "access",
+            }) &&
+            channelAuthenticationResultFake.calledWith(req, res, next)
+          );
+        }),
+        match((fn) => {
+          const req = {
+            query: { name },
+          };
+          const res = "some-res";
+          const next = "some-next";
+          const result = fn(req, res, next);
+          return (
+            result == channelAuthorizationResultFakeResult &&
+            authorizationFake.calledWith({
+              permissionsLookupFn,
+              terminatedSessionCheckFn,
+              context,
+              permissions: [
+                {
+                  service: permissionService,
+                  domain: permissionDomain,
+                  privilege: permissionPrivilege,
+                },
+              ],
+            }) &&
+            channelAuthorizationResultFake.calledWith(req, res, next)
+          );
+        }),
+      ],
     });
     expect(getFake).to.have.been.calledWith(gatewayGetResult, {
       path: `/${name}`,
@@ -123,19 +192,40 @@ describe("View gateway", () => {
     replace(deps, "corsMiddleware", corsMiddlewareFake);
 
     const authenticationResult = "some-authentication";
-    const authenticationFake = fake.returns(authenticationResult);
+    const channelAuthenticationResultFakeResult =
+      "some-channel-authentication-result-fake";
+    const channelAuthenticationResultFake = fake.returns(
+      channelAuthenticationResultFakeResult
+    );
+    const authenticationFake = stub()
+      .onFirstCall()
+      .returns(authenticationResult)
+      .onSecondCall()
+      .returns(channelAuthenticationResultFake);
     replace(deps, "authentication", authenticationFake);
 
-    const authorizationResult = "some-authorization";
-    const authorizationFake = fake.returns(authorizationResult);
+    const authorizationResult = "some-authorization-result";
+    const channelAuthorizationResultFakeResult =
+      "some-channel-authorization-result-fake";
+    const channelAuthorizationResultFake = fake.returns(
+      channelAuthorizationResultFakeResult
+    );
+    const authorizationFake = stub()
+      .onFirstCall()
+      .returns(authorizationResult)
+      .onSecondCall()
+      .returns(channelAuthorizationResultFake);
     replace(deps, "authorization", authorizationFake);
 
     const listenFake = fake();
     const getFake = fake.returns({
       listen: listenFake,
     });
-    const serverFake = fake.returns({
+    const channelGetFake = fake.returns({
       get: getFake,
+    });
+    const serverFake = fake.returns({
+      get: channelGetFake,
     });
     replace(deps, "server", serverFake);
 
@@ -212,19 +302,40 @@ describe("View gateway", () => {
     replace(deps, "corsMiddleware", corsMiddlewareFake);
 
     const authenticationResult = "some-authentication";
-    const authenticationFake = fake.returns(authenticationResult);
+    const channelAuthenticationResultFakeResult =
+      "some-channel-authentication-result-fake";
+    const channelAuthenticationResultFake = fake.returns(
+      channelAuthenticationResultFakeResult
+    );
+    const authenticationFake = stub()
+      .onFirstCall()
+      .returns(authenticationResult)
+      .onSecondCall()
+      .returns(channelAuthenticationResultFake);
     replace(deps, "authentication", authenticationFake);
 
-    const authorizationResult = "some-authorization";
-    const authorizationFake = fake.returns(authorizationResult);
+    const authorizationResult = "some-authorization-result";
+    const channelAuthorizationResultFakeResult =
+      "some-channel-authorization-result-fake";
+    const channelAuthorizationResultFake = fake.returns(
+      channelAuthorizationResultFakeResult
+    );
+    const authorizationFake = stub()
+      .onFirstCall()
+      .returns(authorizationResult)
+      .onSecondCall()
+      .returns(channelAuthorizationResultFake);
     replace(deps, "authorization", authorizationFake);
 
     const listenFake = fake();
     const getFake = fake.returns({
       listen: listenFake,
     });
-    const serverFake = fake.returns({
+    const channelGetFake = fake.returns({
       get: getFake,
+    });
+    const serverFake = fake.returns({
+      get: channelGetFake,
     });
     replace(deps, "server", serverFake);
 
@@ -293,19 +404,40 @@ describe("View gateway", () => {
     replace(deps, "corsMiddleware", corsMiddlewareFake);
 
     const authenticationResult = "some-authentication";
-    const authenticationFake = fake.returns(authenticationResult);
+    const channelAuthenticationResultFakeResult =
+      "some-channel-authentication-result-fake";
+    const channelAuthenticationResultFake = fake.returns(
+      channelAuthenticationResultFakeResult
+    );
+    const authenticationFake = stub()
+      .onFirstCall()
+      .returns(authenticationResult)
+      .onSecondCall()
+      .returns(channelAuthenticationResultFake);
     replace(deps, "authentication", authenticationFake);
 
-    const authorizationResult = "some-authorization";
-    const authorizationFake = fake.returns(authorizationResult);
+    const authorizationResult = "some-authorization-result";
+    const channelAuthorizationResultFakeResult =
+      "some-channel-authorization-result-fake";
+    const channelAuthorizationResultFake = fake.returns(
+      channelAuthorizationResultFakeResult
+    );
+    const authorizationFake = stub()
+      .onFirstCall()
+      .returns(authorizationResult)
+      .onSecondCall()
+      .returns(channelAuthorizationResultFake);
     replace(deps, "authorization", authorizationFake);
 
     const listenFake = fake();
     const getFake = fake.returns({
       listen: listenFake,
     });
-    const serverFake = fake.returns({
+    const channelGetFake = fake.returns({
       get: getFake,
+    });
+    const serverFake = fake.returns({
+      get: channelGetFake,
     });
     replace(deps, "server", serverFake);
 
@@ -313,7 +445,12 @@ describe("View gateway", () => {
     const gatewayGetFake = fake.returns(gatewayGetResult);
     replace(deps, "get", gatewayGetFake);
 
-    const permissions = ["some-permission"];
+    const permissionService = "some-permission-service";
+    const permissionDomain = "some-permission-domain";
+    const permissionPrivilege = "some-permission-privilege";
+    const permissions = [
+      `${permissionService}:${permissionDomain}:${permissionPrivilege}`,
+    ];
     const name = "some-name";
     const key = "some-key";
     const views = [{ name, procedure, permissions, key }];
@@ -338,6 +475,53 @@ describe("View gateway", () => {
       cookieKey: key,
     });
     expect(verifyFnFake).to.have.been.calledWith({ key });
+    expect(channelGetFake).to.have.been.calledWith(deps.channel, {
+      preMiddleware: [
+        match((fn) => {
+          const req = {
+            query: { name },
+          };
+          const res = "some-res";
+          const next = "some-next";
+          const result = fn(req, res, next);
+          return (
+            result == channelAuthenticationResultFakeResult &&
+            authenticationFake.calledWith({
+              verifyFn: verifyFnResult,
+              audience,
+              algorithm,
+              strict: true,
+              cookieKey: key,
+            }) &&
+            channelAuthenticationResultFake.calledWith(req, res, next)
+          );
+        }),
+        match((fn) => {
+          const req = {
+            query: { name },
+          };
+          const res = "some-res";
+          const next = "some-next";
+          const result = fn(req, res, next);
+          return (
+            result == channelAuthorizationResultFakeResult &&
+            authorizationFake.calledWith({
+              permissionsLookupFn,
+              terminatedSessionCheckFn,
+              context,
+              permissions: [
+                {
+                  service: permissionService,
+                  domain: permissionDomain,
+                  privilege: permissionPrivilege,
+                },
+              ],
+            }) &&
+            channelAuthorizationResultFake.calledWith(req, res, next)
+          );
+        }),
+      ],
+    });
   });
   it("should call with the correct params with multiple views with different protections", async () => {
     const corsMiddlewareFake = fake();
@@ -361,8 +545,11 @@ describe("View gateway", () => {
     const getFake = fake.returns({
       get: secondGetFake,
     });
-    const serverFake = fake.returns({
+    const channelGetFake = fake.returns({
       get: getFake,
+    });
+    const serverFake = fake.returns({
+      get: channelGetFake,
     });
     replace(deps, "server", serverFake);
 
@@ -473,8 +660,11 @@ describe("View gateway", () => {
     const getFake = fake.returns({
       listen: listenFake,
     });
-    const serverFake = fake.returns({
+    const channelGetFake = fake.returns({
       get: getFake,
+    });
+    const serverFake = fake.returns({
+      get: channelGetFake,
     });
     replace(deps, "server", serverFake);
 

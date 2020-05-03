@@ -12,62 +12,57 @@ module.exports = async ({
   algorithm,
   audience,
 }) => {
-  let server = deps.server({
-    prehook: (app) =>
-      deps.corsMiddleware({
-        app,
-        whitelist,
-        credentials: true,
-        methods: ["GET"],
-      }),
-  });
-  // .get(
-  //   (req, res) => {
-  //     const channel = `${process.env.NAME}.${
-  //       process.env.DOMAIN ? `.${process.env.DOMAIN}` : ""
-  //     }${process.env.SERVICE ? `.${process.env.SERVICE}` : ""}.${
-  //       process.env.CONTEXT
-  //     }.${req.query.context[process.env.CONTEXT].root}.${
-  //       req.query.context[process.env.CONTEXT].service
-  //     }.${req.query.context[process.env.CONTEXT].network}`;
+  let server = deps
+    .server({
+      prehook: (app) =>
+        deps.corsMiddleware({
+          app,
+          whitelist,
+          credentials: true,
+          methods: ["GET"],
+        }),
+    })
+    .get(deps.channel, {
+      preMiddleware: [
+        (req, res, next) => {
+          const { protection = "strict", key = "access" } = views.find(
+            (v) => v.name == req.query.name
+          );
 
-  //     //respond with the channel that can be subscribed to.
-  //     res.status(200).send(channel);
-  //   },
-  //   {
-  //     preMiddleware: [
-  //       deps.authentication({
-  //         verifyFn: verifyFn({ key: "access" }),
-  //         audience,
-  //         algorithm,
-  //         strict: true,
-  //       }),
-  //       async (req, _, next) => {
-  //         const name = req.query.name;
-  //         const permissions = views.some((v) => v.name == name).permissions;
-  //         await deps.authorization({
-  //           permissionsLookupFn,
-  //           terminatedSessionCheckFn,
-  //           context,
-  //           permissions:
-  //             permissions instanceof Array
-  //               ? permissions.map((permission) => {
-  //                   const [service, domain, privilege] = permission.split(
-  //                     ":"
-  //                   );
-  //                   return {
-  //                     service,
-  //                     domain,
-  //                     privilege,
-  //                   };
-  //                 })
-  //               : permissions,
-  //         });
-  //         next();
-  //       },
-  //     ],
-  //   }
-  // );
+          if (protection == "none") return next();
+
+          return deps.authentication({
+            verifyFn: verifyFn({ key }),
+            audience,
+            algorithm,
+            strict: protection == "strict",
+            cookieKey: key,
+          })(req, res, next);
+        },
+        (req, res, next) => {
+          const { permissions, protection = "strict" } = views.find(
+            (v) => v.name == req.query.name
+          );
+          if (protection != "strict") return next();
+          return deps.authorization({
+            permissionsLookupFn,
+            terminatedSessionCheckFn,
+            context,
+            permissions:
+              permissions instanceof Array
+                ? permissions.map((permission) => {
+                    const [service, domain, privilege] = permission.split(":");
+                    return {
+                      service,
+                      domain,
+                      privilege,
+                    };
+                  })
+                : permissions,
+          })(req, res, next);
+        },
+      ],
+    });
 
   for (const {
     name,

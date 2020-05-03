@@ -18,7 +18,8 @@
     "@blossm/authorization-middleware": "^0.0.86",
     "@blossm/cors-middleware": "^0.0.34",
     "@blossm/server": "^0.0.11",
-    "@blossm/view-gateway-get": "^0.0.155"
+    "@blossm/view-gateway-get": "^0.0.155",
+    "@blossm/view-gateway-channel": "*"
   },
   "devDependencies": {
     "chai-datetime": "^1.5.0",
