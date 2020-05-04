@@ -30,16 +30,7 @@ describe("View gateway", () => {
     replace(deps, "corsMiddleware", corsMiddlewareFake);
 
     const authenticationResult = "some-authentication";
-    const channelAuthenticationResultFakeResult =
-      "some-channel-authentication-result-fake";
-    const channelAuthenticationResultFake = fake.returns(
-      channelAuthenticationResultFakeResult
-    );
-    const authenticationFake = stub()
-      .onFirstCall()
-      .returns(authenticationResult)
-      .onSecondCall()
-      .returns(channelAuthenticationResultFake);
+    const authenticationFake = fake.returns(authenticationResult);
     replace(deps, "authentication", authenticationFake);
 
     const authorizationResult = "some-authorization-result";
@@ -125,25 +116,6 @@ describe("View gateway", () => {
           const next = "some-next";
           const result = fn(req, res, next);
           return (
-            result == channelAuthenticationResultFakeResult &&
-            authenticationFake.calledWith({
-              verifyFn: verifyFnResult,
-              audience,
-              algorithm,
-              strict: true,
-              cookieKey: "access",
-            }) &&
-            channelAuthenticationResultFake.calledWith(req, res, next)
-          );
-        }),
-        match((fn) => {
-          const req = {
-            query: { name },
-          };
-          const res = "some-res";
-          const next = "some-next";
-          const result = fn(req, res, next);
-          return (
             result == channelAuthorizationResultFakeResult &&
             authorizationFake.calledWith({
               permissionsLookupFn,
@@ -192,16 +164,7 @@ describe("View gateway", () => {
     replace(deps, "corsMiddleware", corsMiddlewareFake);
 
     const authenticationResult = "some-authentication";
-    const channelAuthenticationResultFakeResult =
-      "some-channel-authentication-result-fake";
-    const channelAuthenticationResultFake = fake.returns(
-      channelAuthenticationResultFakeResult
-    );
-    const authenticationFake = stub()
-      .onFirstCall()
-      .returns(authenticationResult)
-      .onSecondCall()
-      .returns(channelAuthenticationResultFake);
+    const authenticationFake = fake.returns(authenticationResult);
     replace(deps, "authentication", authenticationFake);
 
     const authorizationResult = "some-authorization-result";
@@ -302,16 +265,7 @@ describe("View gateway", () => {
     replace(deps, "corsMiddleware", corsMiddlewareFake);
 
     const authenticationResult = "some-authentication";
-    const channelAuthenticationResultFakeResult =
-      "some-channel-authentication-result-fake";
-    const channelAuthenticationResultFake = fake.returns(
-      channelAuthenticationResultFakeResult
-    );
-    const authenticationFake = stub()
-      .onFirstCall()
-      .returns(authenticationResult)
-      .onSecondCall()
-      .returns(channelAuthenticationResultFake);
+    const authenticationFake = fake.returns(authenticationResult);
     replace(deps, "authentication", authenticationFake);
 
     const authorizationResult = "some-authorization-result";
@@ -404,16 +358,7 @@ describe("View gateway", () => {
     replace(deps, "corsMiddleware", corsMiddlewareFake);
 
     const authenticationResult = "some-authentication";
-    const channelAuthenticationResultFakeResult =
-      "some-channel-authentication-result-fake";
-    const channelAuthenticationResultFake = fake.returns(
-      channelAuthenticationResultFakeResult
-    );
-    const authenticationFake = stub()
-      .onFirstCall()
-      .returns(authenticationResult)
-      .onSecondCall()
-      .returns(channelAuthenticationResultFake);
+    const authenticationFake = fake.returns(authenticationResult);
     replace(deps, "authentication", authenticationFake);
 
     const authorizationResult = "some-authorization-result";
@@ -477,25 +422,6 @@ describe("View gateway", () => {
     expect(verifyFnFake).to.have.been.calledWith({ key });
     expect(channelGetFake).to.have.been.calledWith(deps.channel, {
       preMiddleware: [
-        match((fn) => {
-          const req = {
-            query: { name },
-          };
-          const res = "some-res";
-          const next = "some-next";
-          const result = fn(req, res, next);
-          return (
-            result == channelAuthenticationResultFakeResult &&
-            authenticationFake.calledWith({
-              verifyFn: verifyFnResult,
-              audience,
-              algorithm,
-              strict: true,
-              cookieKey: key,
-            }) &&
-            channelAuthenticationResultFake.calledWith(req, res, next)
-          );
-        }),
         match((fn) => {
           const req = {
             query: { name },

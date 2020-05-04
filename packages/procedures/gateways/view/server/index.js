@@ -25,21 +25,6 @@ module.exports = async ({
     .get(deps.channel, {
       preMiddleware: [
         (req, res, next) => {
-          const { protection = "strict", key = "access" } = views.find(
-            (v) => v.name == req.query.name
-          );
-
-          if (protection == "none") return next();
-
-          return deps.authentication({
-            verifyFn: verifyFn({ key }),
-            audience,
-            algorithm,
-            strict: protection == "strict",
-            cookieKey: key,
-          })(req, res, next);
-        },
-        (req, res, next) => {
           const { permissions, protection = "strict" } = views.find(
             (v) => v.name == req.query.name
           );
