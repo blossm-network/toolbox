@@ -93,9 +93,14 @@ const executeStep = async (step) => {
       //TODO
       //eslint-disable-next-line no-console
       console.log("NOCKIN");
+      //TODO
+      //eslint-disable-next-line no-console
       nock(host)[method](path).reply(code, response);
     }
   }
+  //TODO
+  //eslint-disable-next-line no-console
+  console.error("active mocks: %j", nock.activeMocks());
 
   const response = await request.get(
     `${url}${step.root ? `/${step.root}` : ""}`,
