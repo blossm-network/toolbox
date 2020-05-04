@@ -119,27 +119,6 @@ module.exports = ({
   const compose = {
     version: "3",
     services: {
-      test: {
-        ...main,
-        container_name: "test",
-        depends_on: ["main"],
-        command: "yarn test:base-integration",
-        environment: {
-          ...main.environment,
-          NETWORK: "local.network",
-          HOST: "local.network",
-          NODE_ENV: "local",
-          CORE_NETWORK: coreNetwork,
-          PROCEDURE: procedure,
-          OPERATION_HASH: operationHash,
-          MAIN_CONTAINER_NAME: mainContainerName,
-          GCP_PROJECT: project,
-          GCP_REGION: region,
-          GCP_SECRET_BUCKET: secretBucket,
-          GCP_KMS_SECRET_BUCKET_KEY_RING: secretBucketKeyRing,
-          GCP_KMS_SECRET_BUCKET_KEY_LOCATION: secretBucketKeyLocation,
-        },
-      },
       main: {
         ...main,
         depends_on: [
