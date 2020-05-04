@@ -1,5 +1,6 @@
 require("localenv");
 const { expect } = require("chai");
+const nock = require("nock");
 // const { create, delete: del, exists } = require("@blossm/gcp-pubsub");
 const eventStore = require("@blossm/event-store-rpc");
 const createEvent = require("@blossm/create-event");
@@ -84,6 +85,12 @@ const executeStep = async (step) => {
     }
   }
 
+  if (step.stub) {
+    for (const { host, get, code, response } of step.stub) {
+      nock(host).get(get).reply(code, response);
+    }
+  }
+
   const response = await request.get(
     `${url}${step.root ? `/${step.root}` : ""}`,
     {
@@ -114,6 +121,9 @@ const executeStep = async (step) => {
 
 // const existingTopics = [];
 describe("Fact integration tests", () => {
+  afterEach(() => {
+    nock.restore();
+  });
   // after(
   //   async () =>
   //     await Promise.all(
