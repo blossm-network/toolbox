@@ -36,10 +36,10 @@ const initMock = async () => {
     res.status(mock.status).send(mock.responseBody);
   });
 
-  mock.server = await mock.app.listen(80);
+  mock.server = await mock.app.listen(8002);
   //TODO
   //eslint-disable-next-line no-console
-  console.log(`Mock server started on port: ${80}`);
+  console.log(`Mock server started on port: ${8002}`);
 };
 const teardownMock = () => {
   if (mock.server) {

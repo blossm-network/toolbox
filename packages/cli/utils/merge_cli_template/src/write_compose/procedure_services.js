@@ -65,11 +65,12 @@ module.exports = ({
         services = {
           ...services,
           [dependency.host]: {
-            ...common,
-            image: "node:10",
+            ports: [`8002`],
+            build: ".",
+            image: dependency.host,
             container_name: dependency.host,
             environment: {
-              PORT: `${port}`,
+              PORT: `8002`,
             },
           },
         };
