@@ -41,6 +41,7 @@ const initMock = async () => {
   //eslint-disable-next-line no-console
   console.log(`Mock server started on port: ${8002}`);
 };
+
 const teardownMock = () => {
   if (mock.server) {
     mock.server.close();
