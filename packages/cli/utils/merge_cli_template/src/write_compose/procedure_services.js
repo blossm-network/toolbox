@@ -61,6 +61,19 @@ module.exports = ({
         : containerRegistery
     }/${dependency.procedure}`;
     switch (dependency.procedure) {
+      case "http": {
+        services = {
+          ...services,
+          [dependency.host]: {
+            ...common,
+            build: ".",
+            image: dependency.host,
+            container_name: dependency.host,
+            environment: {},
+          },
+        };
+        break;
+      }
       case "view-store":
         {
           const operationHash = hash(
@@ -129,7 +142,6 @@ module.exports = ({
                 dependency.name
               }:latest`,
               container_name: `${operationHash}.${network}`,
-              depends_on: [databaseServiceKey],
               environment: {
                 ...commonEnvironment,
                 PROCEDURE: dependency.procedure,
