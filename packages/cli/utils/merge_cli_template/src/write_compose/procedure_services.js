@@ -69,7 +69,9 @@ module.exports = ({
             build: ".",
             image: dependency.host,
             container_name: dependency.host,
-            environment: {},
+            environment: {
+              PORT: `${port}`,
+            },
           },
         };
         break;
