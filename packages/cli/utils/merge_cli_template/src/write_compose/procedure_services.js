@@ -66,11 +66,17 @@ module.exports = ({
           ...services,
           [dependency.host]: {
             ...common,
-            build: ".",
+            build: "./http_dependency",
             image: dependency.host,
             container_name: dependency.host,
             environment: {
               PORT: `${port}`,
+              PATH: dependency.mock.path,
+              RESPONSE:
+                typeof dependency.mock.response == "string"
+                  ? dependency.mock.response
+                  : JSON.stringify(dependency.mock.response),
+              CODE: dependency.mock.code,
             },
           },
         };

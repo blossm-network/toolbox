@@ -1,0 +1,12 @@
+{
+  "name": "dependency",
+  "version": "0.0.0",
+  "main": "index.js",
+  "author": "blossm.network",
+  "engines": {
+    "node": ">= 10.16.0"
+  },
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
