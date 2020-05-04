@@ -49,6 +49,7 @@ const steps = ({
   computeUrlId,
   actions,
   strict,
+  buildHttpDependencyImage,
   dependencyKeyEnvironmentVariables,
 }) => {
   const serviceName = `${region}-${operationName}-${operationHash}`;
@@ -267,6 +268,7 @@ const steps = ({
         runIntegrationTests,
         runBaseIntegrationTests,
         strict,
+        buildHttpDependencyImage,
       });
     case "command-gateway":
       return commandGateway({
@@ -510,6 +512,7 @@ module.exports = ({
       runBaseIntegrationTests,
       actions,
       strict,
+      buildHttpDependencyImage,
     }),
   };
 
