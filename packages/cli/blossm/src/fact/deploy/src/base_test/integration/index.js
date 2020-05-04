@@ -86,7 +86,13 @@ const executeStep = async (step) => {
   }
 
   if (step.stub) {
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log({ stub: step.stub });
     for (const { host, method, path, code, response } of step.stub) {
+      //TODO
+      //eslint-disable-next-line no-console
+      console.log("NOCKIN");
       nock(host)[method](path).reply(code, response);
     }
   }
