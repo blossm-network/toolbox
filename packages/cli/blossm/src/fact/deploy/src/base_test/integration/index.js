@@ -86,8 +86,8 @@ const executeStep = async (step) => {
   }
 
   if (step.stub) {
-    for (const { host, get, code, response } of step.stub) {
-      nock(host).get(get).reply(code, response);
+    for (const { host, method, path, code, response } of step.stub) {
+      nock(host)[method](path).reply(code, response);
     }
   }
 
