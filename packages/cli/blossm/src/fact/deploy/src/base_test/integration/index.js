@@ -28,7 +28,7 @@ const initMock = async () => {
   // mock.app.use(bodyParser.urlencoded({ extended: false }));
   // mock.app.use(bodyParser.json());
   // mock.app.use(cors());
-  mock.app.get("/cray", (req, res) => {
+  mock.app.get("*", (req, res) => {
     //TODO
     //eslint-disable-next-line no-console
     console.log("AHASDFASDF", { query: req.query });

@@ -4,8 +4,8 @@ const baseUnitTests = require("./steps/base_unit_tests");
 const buildImage = require("./steps/build_image");
 const dockerComposeUp = require("./steps/docker_compose_up");
 const dockerComposeProcesses = require("./steps/docker_compose_processes");
-const baseIntegrationTests = require("./steps/base_integration_tests");
-const integrationTests = require("./steps/integration_tests");
+// const baseIntegrationTests = require("./steps/base_integration_tests");
+// const integrationTests = require("./steps/integration_tests");
 const dockerComposeLogs = require("./steps/docker_compose_logs");
 const dockerPush = require("./steps/docker_push");
 const deploy = require("./steps/deploy");
@@ -42,8 +42,8 @@ module.exports = ({
   imageExtension,
   runUnitTests,
   runBaseUnitTests,
-  runIntegrationTests,
-  runBaseIntegrationTests,
+  // runIntegrationTests,
+  // runBaseIntegrationTests,
   dependencyKeyEnvironmentVariables,
   strict,
 }) => {
@@ -75,8 +75,8 @@ module.exports = ({
     }),
     dockerComposeUp,
     dockerComposeProcesses,
-    ...(runBaseIntegrationTests ? [baseIntegrationTests({ strict })] : []),
-    ...(runIntegrationTests ? [integrationTests({ strict })] : []),
+    // ...(runBaseIntegrationTests ? [baseIntegrationTests({ strict })] : []),
+    // ...(runIntegrationTests ? [integrationTests({ strict })] : []),
     ...(strict
       ? [
           dockerPush({
