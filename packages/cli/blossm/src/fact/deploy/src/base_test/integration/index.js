@@ -1,6 +1,5 @@
 require("localenv");
 const { expect } = require("chai");
-const nock = require("nock");
 // const { create, delete: del, exists } = require("@blossm/gcp-pubsub");
 const eventStore = require("@blossm/event-store-rpc");
 const createEvent = require("@blossm/create-event");
@@ -13,6 +12,41 @@ const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 const { testing } = require("../../config.json");
 
 // const stateTopics = [];
+const express = require("express");
+const mock = {
+  app: express(),
+  server: null,
+  requests: [],
+  status: 404,
+  responseBody: {},
+};
+const setupMock = (status, body) => {
+  mock.status = status;
+  mock.responseBody = body;
+};
+const initMock = async () => {
+  // mock.app.use(bodyParser.urlencoded({ extended: false }));
+  // mock.app.use(bodyParser.json());
+  // mock.app.use(cors());
+  mock.app.get("*", (req, res) => {
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log("AHASDFASDF", { query: req.query });
+    mock.requests.push(req);
+    res.status(mock.status).send(mock.responseBody);
+  });
+
+  mock.server = await mock.app.listen(80);
+  //TODO
+  //eslint-disable-next-line no-console
+  console.log(`Mock server started on port: ${80}`);
+};
+const teardownMock = () => {
+  if (mock.server) {
+    mock.server.close();
+    delete mock.server;
+  }
+};
 
 const checkResponse = ({ data, expected }) => {
   for (const property in expected) {
@@ -89,18 +123,17 @@ const executeStep = async (step) => {
     //TODO
     //eslint-disable-next-line no-console
     console.log({ stub: step.stub });
-    for (const { host, method, path, code, response } of step.stub) {
+    // for (const { host, method, path, code, response } of step.stub) {
+    for (const { code, response } of step.stub) {
       //TODO
       //eslint-disable-next-line no-console
-      console.log("NOCKIN");
+      console.log("MOCKIN");
       //TODO
       //eslint-disable-next-line no-console
-      nock(host)[method](path).reply(code, response);
+      // nock(host)[method](path).reply(code, response);
+      setupMock(code, response);
     }
   }
-  //TODO
-  //eslint-disable-next-line no-console
-  console.error("active mocks: %j", nock.activeMocks());
 
   const response = await request.get(
     `${url}${step.root ? `/${step.root}` : ""}`,
@@ -111,6 +144,10 @@ const executeStep = async (step) => {
       },
     }
   );
+
+  //TODO
+  //eslint-disable-next-line no-console
+  console.log({ mockReqs: mock.requests });
 
   const correctCode = step.response != undefined ? 200 : step.code;
   if (response.statusCode != correctCode) {
@@ -132,8 +169,10 @@ const executeStep = async (step) => {
 
 // const existingTopics = [];
 describe("Fact integration tests", () => {
-  afterEach(() => {
-    nock.restore();
+  beforeEach(async () => await initMock());
+  beforeEach(() => (mock.requests = []));
+  after(() => {
+    teardownMock();
   });
   // after(
   //   async () =>

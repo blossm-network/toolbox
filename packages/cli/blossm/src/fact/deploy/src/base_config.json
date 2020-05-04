@@ -4,7 +4,7 @@
   },
   "devDependencies": {
     "chai": "^4.2.0",
-    "nock": "^12.0.3",
+    "express": "^4.17.1",
     "@blossm/event-store-rpc": "*",
     "@blossm/request": "*",
     "@blossm/gcp-pubsub": "*",
