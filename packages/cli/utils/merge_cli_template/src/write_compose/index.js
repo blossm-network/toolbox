@@ -121,6 +121,7 @@ module.exports = ({
     services: {
       test: {
         ...main,
+        container_name: "test",
         depends_on: ["main"],
         command: "yarn test:base-integration",
       },
