@@ -70,7 +70,7 @@ module.exports = ({
             container_name: dependency.host,
             environment: {
               PORT: `${port}`,
-              PATH: `${dependency.mock.path}`,
+              URL_PATH: `${dependency.mock.path}`,
               RESPONSE:
                 typeof dependency.mock.response == "string"
                   ? dependency.mock.response
