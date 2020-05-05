@@ -53,11 +53,7 @@ describe("View gateway get", () => {
       tokenFns: { internal: deps.gcpToken },
     });
     expect(readFake).to.have.been.calledWith(query);
-    expect(sendFake).to.have.been.calledWith({
-      ...results,
-      updates:
-        "https://f.channel.updates.system.some-core-network?context=some-env-context&network=some-network",
-    });
+    expect(sendFake).to.have.been.calledWith(results);
   });
   it("should call with the correct params with context and domain with view-store procedure", async () => {
     const readFake = fake.returns({ body: results });
@@ -98,11 +94,7 @@ describe("View gateway get", () => {
       tokenFns: { internal: deps.gcpToken },
     });
     expect(readFake).to.have.been.calledWith({ ...query, root });
-    expect(sendFake).to.have.been.calledWith({
-      ...results,
-      updates:
-        "https://f.channel.updates.system.some-core-network?context=some-env-context&network=some-network&domain=some-domain&some-domain%5Broot%5D=some-root&some-domain%5Bservice%5D=some-service&some-domain%5Bnetwork%5D=some-network",
-    });
+    expect(sendFake).to.have.been.calledWith(results);
   });
   it("should throw correctly with view-store procedure", async () => {
     const errorMessage = "error-message";

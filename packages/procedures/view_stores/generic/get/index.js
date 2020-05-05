@@ -42,9 +42,17 @@ module.exports = ({ findFn, one = false, queryFn = defaultQueryFn }) => {
       return { ...r.body, root: r.headers.root };
     });
 
-    if (!one) return res.send({ content: formattedResults });
+    const updates = `https://f.channel.updates.system.${
+      process.env.CORE_NETWORK
+    }?context=${process.env.CONTEXT}&network=${process.env.NETWORK}${
+      req.params.root && process.env.DOMAIN && process.env.SERVICE
+        ? `&domain=${process.env.DOMAIN}&${process.env.DOMAIN}%5Broot%5D=${req.params.root}&${process.env.DOMAIN}%5Bservice%5D=${process.env.SERVICE}&${process.env.DOMAIN}%5Bnetwork%5D=${process.env.NETWORK}`
+        : ""
+    }`;
+
+    if (!one) return res.send({ content: formattedResults, updates });
     if (formattedResults.length > 0)
-      return res.send({ content: formattedResults[0] });
+      return res.send({ content: formattedResults[0], updates });
     throw deps.resourceNotFoundError.message("This view wasn't found.");
   };
 };

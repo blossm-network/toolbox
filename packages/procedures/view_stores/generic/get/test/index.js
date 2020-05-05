@@ -17,6 +17,7 @@ const envContextNetwork = "some-env-context-network";
 const envDomain = "some-env-domain";
 const envService = "some-env-service";
 const envNetwork = "some-env-network";
+const coreNetwork = "some-core-network";
 
 const context = {
   [envContext]: {
@@ -28,6 +29,7 @@ const context = {
 
 process.env.CONTEXT = envContext;
 process.env.NETWORK = envNetwork;
+process.env.CORE_NETWORK = coreNetwork;
 
 describe("View store get", () => {
   beforeEach(() => {
@@ -77,6 +79,8 @@ describe("View store get", () => {
     });
     expect(sendFake).to.have.been.calledWith({
       content: [{ ...obj, root: objRoot }],
+      updates:
+        "https://f.channel.updates.system.some-core-network?context=some-env-context&network=some-env-network&domain=some-env-domain&some-env-domain%5Broot%5D=some-root&some-env-domain%5Bservice%5D=some-env-service&some-env-domain%5Bnetwork%5D=some-env-network",
     });
   });
   it("should call with the correct params with no query", async () => {
@@ -112,6 +116,8 @@ describe("View store get", () => {
     });
     expect(sendFake).to.have.been.calledWith({
       content: [{ ...obj, root: objRoot }],
+      updates:
+        "https://f.channel.updates.system.some-core-network?context=some-env-context&network=some-env-network&domain=some-env-domain&some-env-domain%5Broot%5D=some-root&some-env-domain%5Bservice%5D=some-env-service&some-env-domain%5Bnetwork%5D=some-env-network",
     });
   });
   it("should call with the correct params with no env domain, no params, one as true", async () => {
@@ -151,6 +157,8 @@ describe("View store get", () => {
     });
     expect(sendFake).to.have.been.calledWith({
       content: { ...obj, root: objRoot },
+      updates:
+        "https://f.channel.updates.system.some-core-network?context=some-env-context&network=some-env-network",
     });
   });
   it("should call with the correct params with no env service", async () => {
@@ -188,6 +196,8 @@ describe("View store get", () => {
     });
     expect(sendFake).to.have.been.calledWith({
       content: [{ ...obj, root: objRoot }],
+      updates:
+        "https://f.channel.updates.system.some-core-network?context=some-env-context&network=some-env-network",
     });
   });
   it("should throw correctly if not found", async () => {
