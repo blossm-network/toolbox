@@ -44,7 +44,7 @@ module.exports = ({ findFn, one = false, queryFn = defaultQueryFn }) => {
 
     const updates = `https://f.updates.system.${
       process.env.CORE_NETWORK
-    }/channel?query%5Bcontext%5D=${process.env.CONTEXT}&query%5Bnetwork=%5D${
+    }/channel?query%5Bcontext%5D=${process.env.CONTEXT}&query%5Bnetwork%5D=${
       process.env.NETWORK
     }${
       req.params.root && process.env.DOMAIN && process.env.SERVICE
