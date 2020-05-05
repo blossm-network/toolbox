@@ -1,4 +1,6 @@
 {
+  "name": "@blossm/http-dependency-cli",
+  "version": "0.0.0",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -6,6 +8,5 @@
   },
   "dependencies": {
     "express": "^4.17.1"
-  },
-  "gitHead": "8b4589f4cf37465039d2c89e64b2b47f7e97299e"
+  }
 }

@@ -3,8 +3,7 @@
   "command": {
     "publish": {
       "ignoreChanges": [
-        "*.md",
-        "*/**/http_dependency/*"
+        "*.md"
       ]
     },
     "version": {
