@@ -5,7 +5,9 @@ const common = async ({ method, url, params, headers }) =>
   new Promise((resolve, reject) =>
     deps.request(
       {
-        url,
+        url: url.startsWith("http")
+          ? url
+          : `${process.env.NODE_ENV == "local" ? "http" : "https"}://${url}`,
         method,
         ...(params != undefined && { json: params }),
         ...(headers != undefined && { headers }),

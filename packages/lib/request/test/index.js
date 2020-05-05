@@ -14,6 +14,9 @@ const response = {
 const body = "some-body";
 
 describe("Request", () => {
+  beforeEach(() => {
+    delete process.env.NODE_ENV;
+  });
   afterEach(() => {
     restore();
   });
@@ -28,6 +31,35 @@ describe("Request", () => {
       });
       callback(null, response, body);
     });
+    const reply = await request.post(url, { body: params });
+    expect(reply).to.deep.equal({ ...response, body });
+  });
+  it("should call post with correct params without http and not in local env", async () => {
+    const params = { hello: "there" };
+    const url = "google.com";
+    replace(deps, "request", (options, callback) => {
+      expect(options).to.deep.equal({
+        url: `https://${url}`,
+        method: "POST",
+        json: params,
+      });
+      callback(null, response, body);
+    });
+    const reply = await request.post(url, { body: params });
+    expect(reply).to.deep.equal({ ...response, body });
+  });
+  it("should call post with correct params without http in local env", async () => {
+    const params = { hello: "there" };
+    const url = "google.com";
+    replace(deps, "request", (options, callback) => {
+      expect(options).to.deep.equal({
+        url: `http://${url}`,
+        method: "POST",
+        json: params,
+      });
+      callback(null, response, body);
+    });
+    process.env.NODE_ENV = "local";
     const reply = await request.post(url, { body: params });
     expect(reply).to.deep.equal({ ...response, body });
   });
