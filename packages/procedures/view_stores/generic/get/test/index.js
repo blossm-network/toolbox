@@ -80,7 +80,7 @@ describe("View store get", () => {
     expect(sendFake).to.have.been.calledWith({
       content: [{ ...obj, root: objRoot }],
       updates:
-        "https://f.updates.system.some-core-network/channel?context=some-env-context&network=some-env-network&domain=some-env-domain&some-env-domain%5Broot%5D=some-root&some-env-domain%5Bservice%5D=some-env-service&some-env-domain%5Bnetwork%5D=some-env-network",
+        "https://f.updates.system.some-core-network/channel?query%5Bcontext%5D=some-env-context&query%5Bnetwork=%5Dsome-env-network&query%5Bdomain%5D=some-env-domain&query%5Bsome-env-domain%5D%5Broot%5D=some-root&query%5Bsome-env-domain%5D%5Bservice%5D=some-env-service&query%5Bsome-env-domain%5D%5Bnetwork%5D=some-env-network",
     });
   });
   it("should call with the correct params with no query", async () => {
@@ -117,7 +117,7 @@ describe("View store get", () => {
     expect(sendFake).to.have.been.calledWith({
       content: [{ ...obj, root: objRoot }],
       updates:
-        "https://f.updates.system.some-core-network/channel?context=some-env-context&network=some-env-network&domain=some-env-domain&some-env-domain%5Broot%5D=some-root&some-env-domain%5Bservice%5D=some-env-service&some-env-domain%5Bnetwork%5D=some-env-network",
+        "https://f.updates.system.some-core-network/channel?query%5Bcontext%5D=some-env-context&query%5Bnetwork=%5Dsome-env-network&query%5Bdomain%5D=some-env-domain&query%5Bsome-env-domain%5D%5Broot%5D=some-root&query%5Bsome-env-domain%5D%5Bservice%5D=some-env-service&query%5Bsome-env-domain%5D%5Bnetwork%5D=some-env-network",
     });
   });
   it("should call with the correct params with no env domain, no params, one as true", async () => {
@@ -158,7 +158,7 @@ describe("View store get", () => {
     expect(sendFake).to.have.been.calledWith({
       content: { ...obj, root: objRoot },
       updates:
-        "https://f.updates.system.some-core-network/channel?context=some-env-context&network=some-env-network",
+        "https://f.updates.system.some-core-network/channel?query%5Bcontext%5D=some-env-context&query%5Bnetwork=%5Dsome-env-network",
     });
   });
   it("should call with the correct params with no env service", async () => {
@@ -197,7 +197,7 @@ describe("View store get", () => {
     expect(sendFake).to.have.been.calledWith({
       content: [{ ...obj, root: objRoot }],
       updates:
-        "https://f.updates.system.some-core-network/channel?context=some-env-context&network=some-env-network",
+        "https://f.updates.system.some-core-network/channel?query%5Bcontext%5D=some-env-context&query%5Bnetwork=%5Dsome-env-network",
     });
   });
   it("should throw correctly if not found", async () => {

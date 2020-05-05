@@ -44,9 +44,11 @@ module.exports = ({ findFn, one = false, queryFn = defaultQueryFn }) => {
 
     const updates = `https://f.updates.system.${
       process.env.CORE_NETWORK
-    }/channel?context=${process.env.CONTEXT}&network=${process.env.NETWORK}${
+    }/channel?query%5Bcontext%5D=${process.env.CONTEXT}&query%5Bnetwork=%5D${
+      process.env.NETWORK
+    }${
       req.params.root && process.env.DOMAIN && process.env.SERVICE
-        ? `&domain=${process.env.DOMAIN}&${process.env.DOMAIN}%5Broot%5D=${req.params.root}&${process.env.DOMAIN}%5Bservice%5D=${process.env.SERVICE}&${process.env.DOMAIN}%5Bnetwork%5D=${process.env.NETWORK}`
+        ? `&query%5Bdomain%5D=${process.env.DOMAIN}&query%5B${process.env.DOMAIN}%5D%5Broot%5D=${req.params.root}&query%5B${process.env.DOMAIN}%5D%5Bservice%5D=${process.env.SERVICE}&query%5B${process.env.DOMAIN}%5D%5Bnetwork%5D=${process.env.NETWORK}`
         : ""
     }`;
 
