@@ -107,6 +107,7 @@ describe("View gateway", () => {
       }),
     });
     expect(channelGetFake).to.have.been.calledWith(deps.channel, {
+      path: "/",
       preMiddleware: [
         match((fn) => {
           const req = {
@@ -421,6 +422,7 @@ describe("View gateway", () => {
     });
     expect(verifyFnFake).to.have.been.calledWith({ key });
     expect(channelGetFake).to.have.been.calledWith(deps.channel, {
+      path: "/",
       preMiddleware: [
         match((fn) => {
           const req = {

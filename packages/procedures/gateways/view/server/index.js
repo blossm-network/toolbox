@@ -23,6 +23,7 @@ module.exports = async ({
         }),
     })
     .get(deps.channel, {
+      path: "/",
       preMiddleware: [
         (req, res, next) => {
           const { permissions, protection = "strict" } = views.find(
