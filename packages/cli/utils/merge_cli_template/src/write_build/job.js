@@ -2,7 +2,7 @@ const yarnInstall = require("./steps/yarn_install");
 const unitTests = require("./steps/unit_tests");
 const baseUnitTests = require("./steps/base_unit_tests");
 const buildImage = require("./steps/build_image");
-const buildHttpDependencyImage = require("./steps/build_http_dependency_image");
+// const buildHttpDependencyImage = require("./steps/build_http_dependency_image");
 const dockerComposeUp = require("./steps/docker_compose_up");
 const dockerComposeProcesses = require("./steps/docker_compose_processes");
 const baseIntegrationTests = require("./steps/base_integration_tests");
@@ -47,7 +47,7 @@ module.exports = ({
   runBaseIntegrationTests,
   dependencyKeyEnvironmentVariables,
   strict,
-  buildHttpDependencyImage: _buildHttpDependencyImage,
+  // buildHttpDependencyImage: _buildHttpDependencyImage,
 }) => {
   return [
     yarnInstall,
@@ -58,15 +58,15 @@ module.exports = ({
       containerRegistery,
       procedure,
     }),
-    ...(_buildHttpDependencyImage
-      ? [
-          buildHttpDependencyImage({
-            extension: imageExtension,
-            containerRegistery,
-            procedure,
-          }),
-        ]
-      : []),
+    // ...(_buildHttpDependencyImage
+    //   ? [
+    //       buildHttpDependencyImage({
+    //         extension: imageExtension,
+    //         containerRegistery,
+    //         procedure,
+    //       }),
+    //     ]
+    //   : []),
     writeEnv({
       mainContainerName,
       project,
