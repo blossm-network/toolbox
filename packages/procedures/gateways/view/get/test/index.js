@@ -13,8 +13,10 @@ const context = "some-context";
 
 const coreNetwork = "some-core-network";
 const network = "some-network";
+const envContext = "some-env-context";
 process.env.CORE_NETWORK = coreNetwork;
 process.env.NETWORK = network;
+process.env.CONTEXT = envContext;
 
 describe("View gateway get", () => {
   afterEach(() => {
@@ -53,7 +55,8 @@ describe("View gateway get", () => {
     expect(readFake).to.have.been.calledWith(query);
     expect(sendFake).to.have.been.calledWith({
       ...results,
-      updates: "https://f.channel.updates.system.some-core-network",
+      updates:
+        "https://f.channel.updates.system.some-core-network?context=some-env-context&network=some-network",
     });
   });
   it("should call with the correct params with context and domain with view-store procedure", async () => {
@@ -98,7 +101,7 @@ describe("View gateway get", () => {
     expect(sendFake).to.have.been.calledWith({
       ...results,
       updates:
-        "https://f.channel.updates.system.some-core-network?domain=some-domain&some-domain%5Broot%5D=some-root&some-domain%5Bservice%5D=some-service&some-domain%5Bnetwork%5D=some-network",
+        "https://f.channel.updates.system.some-core-network?context=some-env-context&network=some-network&domain=some-domain&some-domain%5Broot%5D=some-root&some-domain%5Bservice%5D=some-service&some-domain%5Bnetwork%5D=some-network",
     });
   });
   it("should throw correctly with view-store procedure", async () => {

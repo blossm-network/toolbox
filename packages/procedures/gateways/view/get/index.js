@@ -20,9 +20,9 @@ module.exports = ({ procedure, name, domain, service } = {}) => async (
 
       const updates = `https://f.channel.updates.system.${
         process.env.CORE_NETWORK
-      }${
+      }?context=${process.env.CONTEXT}&network=${process.env.NETWORK}${
         domain && service
-          ? `?domain=${domain}&${domain}%5Broot%5D=${req.query.root}&${domain}%5Bservice%5D=${service}&${domain}%5Bnetwork%5D=${process.env.NETWORK}`
+          ? `&domain=${domain}&${domain}%5Broot%5D=${req.query.root}&${domain}%5Bservice%5D=${service}&${domain}%5Bnetwork%5D=${process.env.NETWORK}`
           : ""
       }`;
 
