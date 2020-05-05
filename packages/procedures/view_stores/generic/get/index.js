@@ -42,9 +42,9 @@ module.exports = ({ findFn, one = false, queryFn = defaultQueryFn }) => {
       return { ...r.body, root: r.headers.root };
     });
 
-    const updates = `https://f.channel.updates.system.${
+    const updates = `https://f.updates.system.${
       process.env.CORE_NETWORK
-    }?context=${process.env.CONTEXT}&network=${process.env.NETWORK}${
+    }/channel?context=${process.env.CONTEXT}&network=${process.env.NETWORK}${
       req.params.root && process.env.DOMAIN && process.env.SERVICE
         ? `&domain=${process.env.DOMAIN}&${process.env.DOMAIN}%5Broot%5D=${req.params.root}&${process.env.DOMAIN}%5Bservice%5D=${process.env.SERVICE}&${process.env.DOMAIN}%5Bnetwork%5D=${process.env.NETWORK}`
         : ""
