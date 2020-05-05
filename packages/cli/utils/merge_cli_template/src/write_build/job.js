@@ -47,7 +47,7 @@ module.exports = ({
   runBaseIntegrationTests,
   dependencyKeyEnvironmentVariables,
   strict,
-  buildHttpDependencyImage,
+  buildHttpDependencyImage: _buildHttpDependencyImage,
 }) => {
   return [
     yarnInstall,
@@ -58,7 +58,7 @@ module.exports = ({
       containerRegistery,
       procedure,
     }),
-    ...(buildHttpDependencyImage
+    ...(_buildHttpDependencyImage
       ? [
           buildHttpDependencyImage({
             extension: imageExtension,

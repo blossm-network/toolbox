@@ -450,6 +450,7 @@ module.exports = ({
   computeUrlId,
   actions,
   strict,
+  buildHttpDependencyImage,
 }) => {
   const buildPath = path.resolve(workingDir, "build.yaml");
 
