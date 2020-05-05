@@ -1,12 +1,20 @@
 {
   "name": "@blossm/http-dependency-cli",
-  "version": "0.0.1",
+  "version": "0.0.0",
+  "description": "A template for creating dependency mock servers.",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
     "node": ">= 10.16.0"
   },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 0"
+  },
   "dependencies": {
     "express": "^4.17.1"
-  }
+  },
+  "gitHead": "7da889b9f08f6f8662238149d1cb94a979624e5c"
 }
