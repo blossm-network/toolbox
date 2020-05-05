@@ -13,6 +13,7 @@ const network = "some-network";
 const algorithm = "some-algorithm";
 const audience = "some-audience";
 const procedure = "some-procedure";
+const reqContext = "some-req-context";
 
 process.env.CONTEXT = context;
 process.env.NETWORK = network;
@@ -111,7 +112,7 @@ describe("View gateway", () => {
       preMiddleware: [
         match((fn) => {
           const req = {
-            query: { name },
+            query: { name, context: reqContext },
           };
           const res = "some-res";
           const next = "some-next";
@@ -130,7 +131,11 @@ describe("View gateway", () => {
                 },
               ],
             }) &&
-            channelAuthorizationResultFake.calledWith(req, res, next)
+            channelAuthorizationResultFake.calledWith(
+              { ...req, context: reqContext },
+              res,
+              next
+            )
           );
         }),
       ],
@@ -426,7 +431,7 @@ describe("View gateway", () => {
       preMiddleware: [
         match((fn) => {
           const req = {
-            query: { name },
+            query: { name, context: reqContext },
           };
           const res = "some-res";
           const next = "some-next";
@@ -445,7 +450,11 @@ describe("View gateway", () => {
                 },
               ],
             }) &&
-            channelAuthorizationResultFake.calledWith(req, res, next)
+            channelAuthorizationResultFake.calledWith(
+              { ...req, context: reqContext },
+              res,
+              next
+            )
           );
         }),
       ],

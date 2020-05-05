@@ -30,6 +30,10 @@ module.exports = async ({
             (v) => v.name == req.query.name
           );
           if (protection != "strict") return next();
+
+          //Set the req context since the authenticate middleware isn't called.
+          req.context = req.query.context;
+
           return deps.authorization({
             permissionsLookupFn,
             terminatedSessionCheckFn,
