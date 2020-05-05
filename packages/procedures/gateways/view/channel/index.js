@@ -1,11 +1,18 @@
-module.exports = (req, res) => {
-  const channel = `${req.query.name}${
-    process.env.DOMAIN ? `.${process.env.DOMAIN}` : ""
-  }${process.env.SERVICE ? `.${process.env.SERVICE}` : ""}.${
-    process.env.CONTEXT
-  }.${req.query.context[process.env.CONTEXT].root}.${
-    req.query.context[process.env.CONTEXT].service
-  }.${req.query.context[process.env.CONTEXT].network}`;
+const deps = require("./deps");
 
+module.exports = (req, res) => {
+  const channel = deps.channelName({
+    name: req.query.name,
+    ...(process.env.DOMAIN && {
+      domain: process.env.DOMAIN,
+      domainRoot: req.query[process.env.DOMAIN].root,
+      domainService: req.query[process.env.DOMAIN].service,
+      domainNetwork: req.query[process.env.DOMAIN].network,
+    }),
+    context: process.env.CONTEXT,
+    contextRoot: req.query.context[process.env.CONTEXT].root,
+    contextService: req.query.context[process.env.CONTEXT].service,
+    contextNetwork: req.query.context[process.env.CONTEXT].network,
+  });
   res.status(200).send(channel);
 };

@@ -1,6 +1,7 @@
 const { expect } = require("chai").use(require("sinon-chai"));
-const { restore, fake } = require("sinon");
+const { restore, replace, fake } = require("sinon");
 
+const deps = require("../deps");
 const get = require("..");
 
 const name = "some-name";
@@ -40,16 +41,29 @@ describe("View gateway get", () => {
       status: statusFake,
     };
 
+    const channelName = "some-channel-name";
+    const channelNameFake = fake.returns(channelName);
+    replace(deps, "channelName", channelNameFake);
     await get(req, res);
 
-    expect(sendFake).to.have.been.calledWith(
-      `${name}.${context}.${queryContextRoot}.${queryContextService}.${queryContextNetwork}`
-    );
+    expect(sendFake).to.have.been.calledWith(channelName);
+    expect(channelNameFake).to.have.been.calledWith({
+      name,
+      context,
+      contextRoot: queryContextRoot,
+      contextService: queryContextService,
+      contextNetwork: queryContextNetwork,
+    });
   });
   it("should call with the correct params with domain and service", async () => {
     const queryContextRoot = "some-query-context-root";
     const queryContextService = "some-query-context-service";
     const queryContextNetwork = "some-query-context-network";
+    const queryDomainRoot = "some-query-domain-root";
+    const queryDomainService = "some-query-domain-service";
+    const queryDomainNetwork = "some-query-domain-network";
+
+    const domain = "some-domain";
     const queryContext = {
       [context]: {
         root: queryContextRoot,
@@ -57,9 +71,15 @@ describe("View gateway get", () => {
         network: queryContextNetwork,
       },
     };
+
     const query = {
       name,
       context: queryContext,
+      [domain]: {
+        root: queryDomainRoot,
+        service: queryDomainService,
+        network: queryDomainNetwork,
+      },
     };
 
     const req = {
@@ -74,15 +94,25 @@ describe("View gateway get", () => {
       status: statusFake,
     };
 
-    const domain = "some-domain";
-    const service = "some-service";
+    const channelName = "some-channel-name";
+    const channelNameFake = fake.returns(channelName);
+    replace(deps, "channelName", channelNameFake);
+
     process.env.DOMAIN = domain;
-    process.env.SERVICE = service;
 
     await get(req, res);
 
-    expect(sendFake).to.have.been.calledWith(
-      `${name}.${domain}.${service}.${context}.${queryContextRoot}.${queryContextService}.${queryContextNetwork}`
-    );
+    expect(sendFake).to.have.been.calledWith(channelName);
+    expect(channelNameFake).to.have.been.calledWith({
+      name,
+      domain,
+      domainRoot: queryDomainRoot,
+      domainService: queryDomainService,
+      domainNetwork: queryDomainNetwork,
+      context,
+      contextRoot: queryContextRoot,
+      contextService: queryContextService,
+      contextNetwork: queryContextNetwork,
+    });
   });
 });

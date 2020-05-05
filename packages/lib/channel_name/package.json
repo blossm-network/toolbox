@@ -1,0 +1,19 @@
+{
+  "name": "@blossm/channel-name",
+  "version": "0.0.0",
+  "description": "A properly formatted channel name.",
+  "main": "index.js",
+  "author": "blossm.network",
+  "engines": {
+    "node": ">= 10.16.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "mocha --recursive"
+  },
+  "devDependencies": {
+    "mocha": "^7.1.1"
+  }
+}

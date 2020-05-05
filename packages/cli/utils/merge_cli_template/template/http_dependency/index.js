@@ -12,7 +12,6 @@ for (const mock of mocks) {
 
 server.listen(process.env.PORT);
 
-//TODO
 //eslint-disable-next-line no-console
 console.log(`Dependency server started on port: ${process.env.PORT}`);
 

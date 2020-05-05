@@ -14,12 +14,9 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/gcp-token": "^0.0.28",
-    "@blossm/view-composite-rpc": "^0.0.4",
-    "@blossm/view-store-rpc": "^0.0.139"
+    "@blossm/channel-name": "*"
   },
   "devDependencies": {
-    "chai-datetime": "^1.5.0",
     "mocha": "^7.1.1",
     "sinon": "^7.3.2",
     "sinon-chai": "^3.5.0"

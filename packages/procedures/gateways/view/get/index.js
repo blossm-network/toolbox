@@ -17,7 +17,16 @@ module.exports = ({ procedure, name, domain, service } = {}) => async (
           context: req.context,
         })
         .read(req.query);
-      res.status(200).send(response);
+
+      const updates = `https://f.channel.updates.system.${
+        process.env.CORE_NETWORK
+      }${
+        domain && service
+          ? `?domain=${domain}&${domain}%5Broot%5D=${req.query.root}&${domain}%5Bservice%5D=${service}&${domain}%5Bnetwork%5D=${process.env.NETWORK}`
+          : ""
+      }`;
+
+      res.status(200).send({ ...response, updates });
       break;
     }
     case "view-composite": {

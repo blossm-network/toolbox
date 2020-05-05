@@ -77,10 +77,6 @@ module.exports = ({ domain, dir, configFn }) => async (args) => {
     ],
   });
 
-  //TODO
-  //eslint-disable-next-line no-console
-  console.log({ input });
-
   const workingDir = fs.mkdtempSync(path.join(os.tmpdir(), "blossm-"));
   //eslint-disable-next-line no-console
   console.log(roboSay(`Assembling template into ${workingDir}...`));
