@@ -12,6 +12,7 @@
     "localenv": "^0.2.2",
     "chai": "^4.2.0",
     "@blossm/request": "*",
+    "@blossm/jwt": "*",
     "@blossm/datetime": "*",
     "@blossm/get-token": "*",
     "@blossm/gcp-pubsub": "*"

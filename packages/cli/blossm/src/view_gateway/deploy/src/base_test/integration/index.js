@@ -1,6 +1,7 @@
 require("localenv");
 const { expect } = require("chai");
 const getToken = require("@blossm/get-token");
+const { decode } = require("@blossm/jwt");
 const { create, delete: del, exists } = require("@blossm/gcp-pubsub");
 
 const request = require("@blossm/request");
@@ -54,8 +55,22 @@ describe("View gateway integration tests", () => {
       ? await getToken({ permissions: requiredPermissions })
       : {};
 
+    const {
+      claims: { context: tokenContext },
+    } = decode(token);
     const parallelFns = [];
     for (const view of views) {
+      parallelFns.push(async () => {
+        const response = await request.get(`${url}`, {
+          body: {
+            query: {
+              name: view.name,
+            },
+            context: tokenContext,
+          },
+        });
+        expect(response.statusCode).to.equal(200);
+      });
       parallelFns.push(async () => {
         const response0 = await request.get(`${url}/${view.name}`, {
           body: {
@@ -68,6 +83,7 @@ describe("View gateway integration tests", () => {
               },
             })),
         });
+        expect(response0.statusCode).to.equal(200);
         expect(response0.statusCode).to.not.equal(401);
         expect(response0.statusCode).to.be.lessThan(500);
       });
@@ -95,6 +111,19 @@ describe("View gateway integration tests", () => {
         });
 
         expect(response2.statusCode).to.equal(401);
+      });
+
+      if (view.protection == "none") continue;
+
+      parallelFns.push(async () => {
+        const response3 = await request.get(`${url}`, {
+          body: {
+            query: {
+              name: view.name,
+            },
+          },
+        });
+        expect(response3.statusCode).to.equal(401);
       });
     }
 
