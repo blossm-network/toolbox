@@ -4,7 +4,7 @@
     "publish": {
       "ignoreChanges": [
         "*.md",
-        "*/**/http_dependency/*/**"
+        "*/**/http_dependency/*"
       ]
     },
     "version": {
