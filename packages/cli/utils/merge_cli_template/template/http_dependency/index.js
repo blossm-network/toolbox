@@ -1,24 +1,14 @@
 const express = require("express");
 
-const jsonString = (string) => {
-  try {
-    return JSON.parse(string);
-  } catch (e) {
-    return null;
-  }
-};
-
 const server = express();
-server.get(process.env.URL_PATH, (_, res) => {
-  res
-    .status(process.env.CODE)
-    .send(jsonString(process.env.RESPONSE) || process.env.RESPONSE);
-});
-server.post(process.env.URL_PATH, (_, res) => {
-  res
-    .status(process.env.CODE)
-    .send(jsonString(process.env.RESPONSE) || process.env.RESPONSE);
-});
+
+const mocks = JSON.parse(process.env.MOCKS);
+
+for (const mock of mocks) {
+  server[mock.method.toLowerCase()](mock.path, (_, res) => {
+    res.status(mock.code).send(mock.response);
+  });
+}
 
 server.listen(process.env.PORT);
 
