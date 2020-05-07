@@ -14,7 +14,9 @@
     "test": "mocha --recursive"
   },
   "dependencies": {
-    "@blossm/basic-token": "^0.0.6"
+    "@blossm/basic-token": "^0.0.6",
+    "@blossm/command-rpc": "*",
+    "@blossm/jwt": "*"
   },
   "devDependencies": {
     "mocha": "^7.1.1"
