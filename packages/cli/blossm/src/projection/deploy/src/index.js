@@ -1,10 +1,10 @@
 const eventHandler = require("@blossm/mongodb-event-handler");
-// const command = require("@blossm/command-rpc");
+const command = require("@blossm/command-rpc");
 const viewStore = require("@blossm/view-store-rpc");
 const eventStore = require("@blossm/event-store-rpc");
 const gcpToken = require("@blossm/gcp-token");
-// const externalToken = require("@blossm/external-token");
-// const hash = require("@blossm/hash-string");
+const externalToken = require("@blossm/external-token");
+const channelName = require("@blossm/channel-name");
 
 const main = require("./main.js");
 
@@ -46,8 +46,7 @@ module.exports = eventHandler({
     };
   },
   commitFn: async (state) => {
-    // const newView = await viewStore({
-    await viewStore({
+    const newView = await viewStore({
       name: config.name,
       ...(config.domain && { domain: config.domain }),
       ...(config.service && { service: config.service }),
@@ -60,33 +59,42 @@ module.exports = eventHandler({
         headers: state.headers,
         body: state.body,
       });
-    // const channel = `${process.env.NAME}.${
-    //   process.env.DOMAIN ? `.${process.env.DOMAIN}` : ""
-    // }${process.env.SERVICE ? `.${process.env.SERVICE}` : ""}.${
-    //   process.env.CONTEXT
-    // }.${req.query.context[process.env.CONTEXT].root}.${
-    //   req.query.context[process.env.CONTEXT].service
-    // }.${req.query.context[process.env.CONTEXT].network}`;
-    // await command({
-    //   name: "push",
-    //   domain: "update",
-    //   service: "system",
-    //   network: process.env.CORE_NETWORK,
-    // })
-    //   .set({
-    //     tokenFns: { external: externalToken, internal: gcpToken },
-    //   })
-    //   .issue({
-    //     view: newView,
-    //     channel: hash(
-    //       `${process.env.NAME}${process.env.DOMAIN || ""}${
-    //         process.env.SERVICE || ""
-    //       }${process.env.CONTEXT}${newView.headers[process.env.CONTEXT].root}${
-    //         newView.headers[process.env.CONTEXT].service
-    //       }${newView.headers[process.env.CONTEXT].network}
-    //       `
-    //     ),
-    //   });
+
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log({ newView, json: JSON.stringify(newView) });
+
+    const channel = channelName({
+      name: process.env.NAME,
+      ...(process.env.DOMAIN && {
+        domain: process.env.DOMAIN,
+        domainRoot: newView.headers[process.env.DOMAIN].root,
+        domainService: newView.headers[process.env.DOMAIN].service,
+        domainNetwork: newView.headers[process.env.DOMAIN].network,
+      }),
+      context: process.env.CONTEXT,
+      contextRoot: newView.headers[process.env.CONTEXT].root,
+      contextService: newView.headers[process.env.CONTEXT].service,
+      contextNetwork: newView.headers[process.env.CONTEXT].network,
+    });
+
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log({ channel });
+
+    command({
+      name: "push",
+      domain: "update",
+      service: "system",
+      network: process.env.CORE_NETWORK,
+    })
+      .set({
+        tokenFns: { external: externalToken, internal: gcpToken },
+      })
+      .issue({
+        view: newView,
+        channel,
+      });
   },
   streamFn: ({ root, from }, fn) =>
     eventStore({

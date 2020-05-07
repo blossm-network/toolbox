@@ -2,10 +2,11 @@
   "dependencies": {
     "@blossm/mongodb-event-handler": "*",
     "@blossm/view-store-rpc": "*",
+    "@blossm/command-rpc": "*",
     "@blossm/event-store-rpc": "*",
     "@blossm/gcp-token": "*",
     "@blossm/external-token": "*",
-    "@blossm/hash-string": "*"
+    "@blossm/channel-name": "*"
   },
   "devDependencies": {
     "chai": "^4.2.0",
