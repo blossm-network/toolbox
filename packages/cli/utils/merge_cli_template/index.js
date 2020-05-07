@@ -460,6 +460,15 @@ const addDefaultDependencies = ({ config, coreNetwork }) => {
           context: config.context,
           procedure: "view-store",
         },
+        {
+          procedure: "http",
+          host: `f.updates.system.${coreNetwork}`,
+          mock: {
+            method: "post",
+            path: "/push",
+            code: 200,
+          },
+        },
       ];
     case "event-handler":
       return [
