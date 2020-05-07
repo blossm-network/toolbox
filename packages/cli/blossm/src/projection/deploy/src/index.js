@@ -60,10 +60,6 @@ module.exports = eventHandler({
         body: state.body,
       });
 
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log({ newView, json: JSON.stringify(newView) });
-
     const channel = channelName({
       name: process.env.NAME,
       ...(process.env.DOMAIN && {
@@ -77,10 +73,6 @@ module.exports = eventHandler({
       contextService: newView.headers[process.env.CONTEXT].service,
       contextNetwork: newView.headers[process.env.CONTEXT].network,
     });
-
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log({ channel });
 
     command({
       name: "push",
