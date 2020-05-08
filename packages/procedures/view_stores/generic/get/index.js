@@ -42,7 +42,7 @@ module.exports = ({ findFn, one = false, queryFn = defaultQueryFn }) => {
       return { ...r.body, root: r.headers.root };
     });
 
-    const updates = `https://f.updates.system.${
+    const updates = `http://updates.${
       process.env.CORE_NETWORK
     }/channel?query%5Bcontext%5D=${process.env.CONTEXT}&query%5Bnetwork%5D=${
       process.env.NETWORK
