@@ -22,8 +22,9 @@ module.exports = eventHandler({
     } = main(state, event);
 
     return {
-      root: event.headers.root,
       headers: {
+        root: event.headers.root,
+        ...(event.headers.trace && { trace: event.headers.trace }),
         ...(event.headers.context &&
           event.headers.context[process.env.CONTEXT] && {
             [process.env.CONTEXT]: event.headers.context[process.env.CONTEXT],
@@ -55,7 +56,7 @@ module.exports = eventHandler({
       .set({
         tokenFns: { internal: gcpToken },
       })
-      .update(state.root, {
+      .update(state.headers.root, {
         headers: state.headers,
         body: state.body,
       });

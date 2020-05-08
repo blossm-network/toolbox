@@ -37,6 +37,7 @@ module.exports = async ({ schema, indexes, getFn, putFn } = {}) => {
     body: schema,
     headers: {
       root: { type: String, required: true, unique: true },
+      trace: { type: String },
       [process.env.CONTEXT]: {
         root: String,
         service: String,
@@ -64,6 +65,7 @@ module.exports = async ({ schema, indexes, getFn, putFn } = {}) => {
 
   const allIndexes = [
     [{ root: 1 }],
+    [{ trace: 1 }],
     [
       { [`headers.${process.env.CONTEXT}.root`]: 1 },
       { [`headers.${process.env.CONTEXT}.service`]: 1 },

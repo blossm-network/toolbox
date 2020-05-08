@@ -39,7 +39,13 @@ module.exports = ({ findFn, one = false, queryFn = defaultQueryFn }) => {
     });
 
     const formattedResults = results.map((r) => {
-      return { ...r.body, root: r.headers.root };
+      return {
+        body: r.body,
+        headers: {
+          root: r.headers.root,
+          ...(r.headers.trace && { trace: r.headers.trace }),
+        },
+      };
     });
 
     const updates = `http://updates.${

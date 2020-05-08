@@ -84,13 +84,15 @@ describe("View store get", () => {
         const result = fn(view);
         return (
           result == writeResult &&
-          writeFake.calledWith(JSON.stringify({ ...obj, root: objRoot }))
+          writeFake.calledWith(
+            JSON.stringify({ body: obj, headers: { root: objRoot } })
+          )
         );
       }),
     });
     expect(endFake).to.have.been.calledWith();
   });
-  it("should call with the correct params with no query", async () => {
+  it("should call with the correct params with no query and trace", async () => {
     const streamFake = fake();
 
     const params = { root };
@@ -112,6 +114,7 @@ describe("View store get", () => {
     };
 
     await stream({ streamFn: streamFake })(req, res);
+    const trace = "some-trace";
     expect(streamFake).to.have.been.calledWith({
       parallel: 2,
       query: {
@@ -127,11 +130,13 @@ describe("View store get", () => {
         },
       },
       fn: match((fn) => {
-        const view = { body: obj, headers: { root: objRoot } };
+        const view = { body: obj, headers: { root: objRoot, trace } };
         const result = fn(view);
         return (
           result == writeResult &&
-          writeFake.calledWith(JSON.stringify({ ...obj, root: objRoot }))
+          writeFake.calledWith(
+            JSON.stringify({ body: obj, headers: { root: objRoot, trace } })
+          )
         );
       }),
     });
@@ -180,7 +185,9 @@ describe("View store get", () => {
         const result = fn(view);
         return (
           result == writeResult &&
-          writeFake.calledWith(JSON.stringify({ ...obj, root: objRoot }))
+          writeFake.calledWith(
+            JSON.stringify({ body: obj, headers: { root: objRoot } })
+          )
         );
       }),
     });
@@ -226,7 +233,9 @@ describe("View store get", () => {
         const result = fn(view);
         return (
           result == writeResult &&
-          writeFake.calledWith(JSON.stringify({ ...obj, root: objRoot }))
+          writeFake.calledWith(
+            JSON.stringify({ body: obj, headers: { root: objRoot } })
+          )
         );
       }),
     });

@@ -118,6 +118,7 @@ describe("View store", () => {
         headers: {
           _id: false,
           root: { type: String, required: true, unique: true },
+          trace: { type: String },
           [context]: {
             root: String,
             service: String,
@@ -319,6 +320,7 @@ describe("View store", () => {
         headers: {
           _id: false,
           root: { type: String, required: true, unique: true },
+          trace: { type: String },
           [context]: {
             root: String,
             service: String,
@@ -435,6 +437,7 @@ describe("View store", () => {
         headers: {
           _id: false,
           root: { type: String, required: true, unique: true },
+          trace: { type: String },
           [context]: {
             root: String,
             service: String,
@@ -549,6 +552,7 @@ describe("View store", () => {
         headers: {
           _id: false,
           root: { type: String, required: true, unique: true },
+          trace: { type: String },
           [context]: {
             root: String,
             service: String,
@@ -623,6 +627,7 @@ describe("View store", () => {
         headers: {
           _id: false,
           root: { type: String, required: true, unique: true },
+          trace: { type: String },
           [context]: {
             root: String,
             service: String,
@@ -811,6 +816,7 @@ describe("View store", () => {
         headers: {
           _id: false,
           root: { type: String, required: true, unique: true },
+          trace: { type: String },
           [context]: {
             root: String,
             service: String,

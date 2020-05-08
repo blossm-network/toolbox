@@ -78,13 +78,16 @@ describe("View store get", () => {
       },
     });
     expect(sendFake).to.have.been.calledWith({
-      content: [{ ...obj, root: objRoot }],
+      content: [{ body: obj, headers: { root: objRoot } }],
       updates:
         "http://updates.some-core-network/channel?query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network&query%5Bdomain%5D=some-env-domain&query%5Bsome-env-domain%5D%5Broot%5D=some-root&query%5Bsome-env-domain%5D%5Bservice%5D=some-env-service&query%5Bsome-env-domain%5D%5Bnetwork%5D=some-env-network",
     });
   });
-  it("should call with the correct params with no query", async () => {
-    const findFake = fake.returns([{ body: obj, headers: { root: objRoot } }]);
+  it("should call with the correct params with no query and trace in headers", async () => {
+    const trace = "some-trace";
+    const findFake = fake.returns([
+      { body: obj, headers: { root: objRoot, trace } },
+    ]);
 
     const params = { root };
 
@@ -115,7 +118,7 @@ describe("View store get", () => {
       },
     });
     expect(sendFake).to.have.been.calledWith({
-      content: [{ ...obj, root: objRoot }],
+      content: [{ body: obj, headers: { root: objRoot, trace } }],
       updates:
         "http://updates.some-core-network/channel?query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network&query%5Bdomain%5D=some-env-domain&query%5Bsome-env-domain%5D%5Broot%5D=some-root&query%5Bsome-env-domain%5D%5Bservice%5D=some-env-service&query%5Bsome-env-domain%5D%5Bnetwork%5D=some-env-network",
     });
@@ -156,7 +159,7 @@ describe("View store get", () => {
       },
     });
     expect(sendFake).to.have.been.calledWith({
-      content: { ...obj, root: objRoot },
+      content: { body: obj, headers: { root: objRoot } },
       updates:
         "http://updates.some-core-network/channel?query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
     });
@@ -195,7 +198,7 @@ describe("View store get", () => {
       },
     });
     expect(sendFake).to.have.been.calledWith({
-      content: [{ ...obj, root: objRoot }],
+      content: [{ body: obj, headers: { root: objRoot } }],
       updates:
         "http://updates.some-core-network/channel?query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
     });
