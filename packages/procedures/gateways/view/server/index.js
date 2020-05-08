@@ -26,10 +26,6 @@ module.exports = async ({
       path: "/",
       preMiddleware: [
         (req, res, next) => {
-          //TODO
-          //eslint-disable-next-line
-          console.log({ query: req.query, params: req.params, body: req.body, views });
-
           const { permissions, protection = "strict" } = views.find(
             (v) => v.name == req.query.name
           );

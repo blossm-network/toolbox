@@ -13,10 +13,6 @@ module.exports = async ({
 
   const jwt = tokens.bearer || tokens.cookie;
 
-  //TODO
-  //eslint-disable-next-line no-console
-  console.log({ jwt, tokens });
-
   if (jwt) {
     const claims = await deps.validate({
       token: jwt,
