@@ -77,7 +77,7 @@ describe("View store base integration tests", () => {
 
     expect(response1.statusCode).to.equal(200);
     for (const key in example0.get) {
-      expect(parsedBody1[key]).to.deep.equal(example0.get[key]);
+      expect(parsedBody1.body[key]).to.deep.equal(example0.get[key]);
     }
 
     const response2 = await request.put(`${url}/${root}`, {
@@ -124,7 +124,7 @@ describe("View store base integration tests", () => {
       content: [parsedBody3],
     } = JSON.parse(response3.body);
     for (const key in example1.get) {
-      expect(parsedBody3[key]).to.deep.equal(example1.get[key]);
+      expect(parsedBody3.body[key]).to.deep.equal(example1.get[key]);
     }
 
     const otherRoot = "some-other-root";
@@ -259,9 +259,9 @@ describe("View store base integration tests", () => {
       } = JSON.parse(response1.body);
       for (const key in example0.get) {
         if (key == "root") {
-          expect(parsedBody4[0][key]).to.equal(root);
+          expect(parsedBody4[0].body[key]).to.equal(root);
         } else {
-          expect(parsedBody4[0][key]).to.deep.equal(example0.get[key]);
+          expect(parsedBody4[0].body[key]).to.deep.equal(example0.get[key]);
         }
       }
     }
@@ -328,14 +328,14 @@ describe("View store base integration tests", () => {
       `${url}/stream${domainRoot ? `/${domainRoot}` : ""}`,
       (data) => {
         const parsedData = JSON.parse(data.toString().trim());
-        roots.push(parsedData.root);
+        roots.push(parsedData.headers.root);
 
         if (data.root == root0) {
           for (const key in example0.get) {
             if (key == "root") {
-              expect(parsedData[key]).to.deep.equal(root0);
+              expect(parsedData.body[key]).to.deep.equal(root0);
             } else {
-              expect(parsedData[key]).to.deep.equal(example0.get[key]);
+              expect(parsedData.body[key]).to.deep.equal(example0.get[key]);
             }
           }
         }
@@ -343,9 +343,9 @@ describe("View store base integration tests", () => {
         if (data.roots == root1) {
           for (const key in example1.get) {
             if (key == "root") {
-              expect(parsedData[key]).to.deep.equal(root1);
+              expect(parsedData.body[key]).to.deep.equal(root1);
             } else {
-              expect(parsedData[key]).to.deep.equal(example1.get[key]);
+              expect(parsedData.body[key]).to.deep.equal(example1.get[key]);
             }
           }
         }
