@@ -14,7 +14,8 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/channel-name": "^0.0.1"
+    "@blossm/channel-name": "^0.0.1",
+    "@blossm/errors": "*"
   },
   "devDependencies": {
     "mocha": "^7.1.1",
