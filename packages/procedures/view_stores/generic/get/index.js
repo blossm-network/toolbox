@@ -50,9 +50,9 @@ module.exports = ({ findFn, one = false, queryFn = defaultQueryFn }) => {
 
     const updates = `http://updates.${
       process.env.CORE_NETWORK
-    }/channel?query%5Bcontext%5D=${process.env.CONTEXT}&query%5Bnetwork%5D=${
-      process.env.NETWORK
-    }${
+    }/channel?query%5Bname%5D=${process.env.NAME}&query%5Bcontext%5D=${
+      process.env.CONTEXT
+    }&query%5Bnetwork%5D=${process.env.NETWORK}${
       req.params.root && process.env.DOMAIN && process.env.SERVICE
         ? `&query%5Bdomain%5D=${process.env.DOMAIN}&query%5B${process.env.DOMAIN}%5D%5Broot%5D=${req.params.root}&query%5B${process.env.DOMAIN}%5D%5Bservice%5D=${process.env.SERVICE}&query%5B${process.env.DOMAIN}%5D%5Bnetwork%5D=${process.env.NETWORK}`
         : ""

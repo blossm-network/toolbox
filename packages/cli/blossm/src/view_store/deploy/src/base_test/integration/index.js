@@ -75,10 +75,6 @@ describe("View store base integration tests", () => {
       content: [parsedBody1],
     } = JSON.parse(response1.body);
 
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log({ parsedBody1, e: example0.get });
-
     expect(response1.statusCode).to.equal(200);
     for (const key in example0.get) {
       expect(parsedBody1.body[key]).to.deep.equal(example0.get[key]);

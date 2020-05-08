@@ -14,6 +14,7 @@ const envContextRoot = "some-env-context-root";
 const envContextService = "some-env-context-service";
 const envContextNetwork = "some-env-context-network";
 
+const envName = "some-env-name";
 const envDomain = "some-env-domain";
 const envService = "some-env-service";
 const envNetwork = "some-env-network";
@@ -27,6 +28,7 @@ const context = {
   },
 };
 
+process.env.NAME = envName;
 process.env.CONTEXT = envContext;
 process.env.NETWORK = envNetwork;
 process.env.CORE_NETWORK = coreNetwork;
@@ -80,7 +82,7 @@ describe("View store get", () => {
     expect(sendFake).to.have.been.calledWith({
       content: [{ body: obj, headers: { root: objRoot } }],
       updates:
-        "http://updates.some-core-network/channel?query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network&query%5Bdomain%5D=some-env-domain&query%5Bsome-env-domain%5D%5Broot%5D=some-root&query%5Bsome-env-domain%5D%5Bservice%5D=some-env-service&query%5Bsome-env-domain%5D%5Bnetwork%5D=some-env-network",
+        "http://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network&query%5Bdomain%5D=some-env-domain&query%5Bsome-env-domain%5D%5Broot%5D=some-root&query%5Bsome-env-domain%5D%5Bservice%5D=some-env-service&query%5Bsome-env-domain%5D%5Bnetwork%5D=some-env-network",
     });
   });
   it("should call with the correct params with no query and trace in headers", async () => {
@@ -120,7 +122,7 @@ describe("View store get", () => {
     expect(sendFake).to.have.been.calledWith({
       content: [{ body: obj, headers: { root: objRoot, trace } }],
       updates:
-        "http://updates.some-core-network/channel?query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network&query%5Bdomain%5D=some-env-domain&query%5Bsome-env-domain%5D%5Broot%5D=some-root&query%5Bsome-env-domain%5D%5Bservice%5D=some-env-service&query%5Bsome-env-domain%5D%5Bnetwork%5D=some-env-network",
+        "http://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network&query%5Bdomain%5D=some-env-domain&query%5Bsome-env-domain%5D%5Broot%5D=some-root&query%5Bsome-env-domain%5D%5Bservice%5D=some-env-service&query%5Bsome-env-domain%5D%5Bnetwork%5D=some-env-network",
     });
   });
   it("should call with the correct params with no env domain, no params, one as true", async () => {
@@ -161,7 +163,7 @@ describe("View store get", () => {
     expect(sendFake).to.have.been.calledWith({
       content: { body: obj, headers: { root: objRoot } },
       updates:
-        "http://updates.some-core-network/channel?query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
+        "http://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
     });
   });
   it("should call with the correct params with no env service", async () => {
@@ -200,7 +202,7 @@ describe("View store get", () => {
     expect(sendFake).to.have.been.calledWith({
       content: [{ body: obj, headers: { root: objRoot } }],
       updates:
-        "http://updates.some-core-network/channel?query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
+        "http://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
     });
   });
   it("should throw correctly if not found", async () => {
