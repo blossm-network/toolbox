@@ -81,7 +81,7 @@ module.exports = eventHandler({
 
     command({
       name: "push",
-      domain: "update",
+      domain: "updates",
       service: "system",
       network: process.env.CORE_NETWORK,
     })
