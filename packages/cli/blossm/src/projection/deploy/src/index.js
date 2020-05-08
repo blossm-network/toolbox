@@ -74,6 +74,10 @@ module.exports = eventHandler({
       contextNetwork: newView.headers[process.env.CONTEXT].network,
     });
 
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log({ channel });
+
     command({
       name: "push",
       domain: "update",
