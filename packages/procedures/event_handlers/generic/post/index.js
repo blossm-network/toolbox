@@ -29,9 +29,7 @@ module.exports = ({
 
     // TODO write a better test for this. idk a way to do it quickly.
     await streamFn({ root, from: number }, (event) => {
-      if (event.headers.action == process.env.EVENT_ACTION)
-        state = mainFn(state, event);
-
+      state = mainFn(state, event);
       newSeenEventNumber = event.headers.number;
     });
 

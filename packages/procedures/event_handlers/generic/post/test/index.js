@@ -9,9 +9,6 @@ const root = "some-root";
 
 const data = Buffer.from(JSON.stringify({ root }));
 
-const action = "some-action";
-process.env.EVENT_ACTION = action;
-
 describe("Command handler post", () => {
   afterEach(() => {
     restore();
@@ -49,10 +46,7 @@ describe("Command handler post", () => {
 
     const eventNumber = "some-number";
     const event = {
-      headers: {
-        number: eventNumber,
-        action,
-      },
+      headers: { number: eventNumber },
     };
 
     streamFnFake.lastCall.lastArg(event);
@@ -94,54 +88,12 @@ describe("Command handler post", () => {
 
     const eventNumber = "some-number";
     const event = {
-      headers: { number: eventNumber, action },
+      headers: { number: eventNumber },
     };
 
     await streamFnFake.lastCall.lastArg(event);
 
     expect(mainFnFake).to.have.been.calledWith(undefined, event);
-    expect(saveNextEventNumberFnFake).to.not.have.been.called;
-
-    expect(sendStatusFake).to.have.been.calledWith(204);
-  });
-  it("should call with the correct params and skip calling main if action is different", async () => {
-    const mainFnFake = fake();
-    const streamFnFake = fake();
-    const nextEventNumberFnFake = fake.returns(number);
-    const saveNextEventNumberFnFake = fake();
-
-    const req = {
-      body: {
-        message: { data },
-      },
-    };
-
-    const sendStatusFake = fake();
-    const res = {
-      sendStatus: sendStatusFake,
-    };
-
-    await post({
-      mainFn: mainFnFake,
-      streamFn: streamFnFake,
-      nextEventNumberFn: nextEventNumberFnFake,
-      saveNextEventNumberFn: saveNextEventNumberFnFake,
-    })(req, res);
-
-    expect(nextEventNumberFnFake).to.have.been.calledWith({ root });
-    expect(streamFnFake).to.have.been.calledWith({ root, from: number });
-
-    const eventNumber = "some-number";
-    const event = {
-      headers: {
-        number: eventNumber,
-        action: "some-bogus",
-      },
-    };
-
-    await streamFnFake.lastCall.lastArg(event);
-
-    expect(mainFnFake).to.not.have.been.called;
     expect(saveNextEventNumberFnFake).to.not.have.been.called;
 
     expect(sendStatusFake).to.have.been.calledWith(204);

@@ -15,7 +15,7 @@ module.exports = ({
   dependencyKeyEnvironmentVariables,
   domain,
   name,
-  event,
+  events,
   env,
   secretBucket,
   secretBucketKeyLocation,
@@ -115,16 +115,15 @@ module.exports = ({
       return {
         image: `${commonImagePrefix}.${context}${service ? `.${service}` : ""}${
           domain ? `.${domain}` : ""
-        }.${name}.did-${event.action}.${event.domain}:latest`,
+        }.${name}.${events.domain}.${events.service}:latest`,
         ...common,
         environment: {
           ...common.environment,
           ...commonDatabaseEnv,
           NAME: name,
           CONTEXT: context,
-          EVENT_ACTION: event.action,
-          EVENT_DOMAIN: event.domain,
-          EVENT_SERVICE: event.service,
+          EVENTS_DOMAIN: events.domain,
+          EVENTS_SERVICE: events.service,
         },
       };
     case "job":

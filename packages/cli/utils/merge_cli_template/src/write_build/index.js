@@ -16,7 +16,7 @@ const steps = ({
   region,
   domain,
   name,
-  event,
+  events,
   publicKeyUrl,
   project,
   network,
@@ -63,7 +63,6 @@ const steps = ({
         domain,
         service,
         name,
-        event,
         project,
         network,
         context,
@@ -101,7 +100,6 @@ const steps = ({
         domain,
         service,
         name,
-        event,
         project,
         network,
         context,
@@ -172,7 +170,7 @@ const steps = ({
         domain,
         service,
         name,
-        event,
+        events,
         project,
         network,
         mongodbUser,
@@ -379,7 +377,7 @@ const imageExtension = ({
   context,
   domain,
   name,
-  event,
+  events,
   procedure,
 }) => {
   switch (procedure) {
@@ -405,7 +403,7 @@ const imageExtension = ({
     case "projection":
       return `${context}${domain ? `.${domain}` : ""}${
         service ? `.${service}` : ""
-      }.${name}.did-${event.action}.${event.domain}`;
+      }.${name}.${events.domain}.${events.service}`;
     case "command":
       return `${service}.${domain}.${name}`;
     case "job":
@@ -422,7 +420,7 @@ module.exports = ({
   workingDir,
   region,
   domain,
-  event,
+  events,
   publicKeyUrl,
   name,
   project,
@@ -463,7 +461,7 @@ module.exports = ({
     domain,
     service,
     context,
-    event,
+    events,
   });
 
   const runUnitTests = fs.existsSync(path.resolve(workingDir, "test/unit"));
@@ -484,7 +482,7 @@ module.exports = ({
       domain,
       name,
       publicKeyUrl,
-      event,
+      events,
       project,
       network,
       context,

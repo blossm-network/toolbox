@@ -625,7 +625,7 @@ const configure = async (
     const context = config.context;
     const procedure = config.procedure;
     const name = config.name;
-    const event = config.event;
+    const events = config.events;
     const actions = config.actions;
 
     const dependencyKeyEnvironmentVariables = envDependencyKeyEnvironmentVariables(
@@ -669,7 +669,7 @@ const configure = async (
       domain,
       context,
       name,
-      event,
+      events,
       project,
       procedure,
       network,
@@ -719,7 +719,7 @@ const configure = async (
       coreNetwork,
       domain,
       name,
-      event,
+      events,
       secretBucket,
       secretBucketKeyLocation,
       secretBucketKeyRing,

@@ -26,7 +26,7 @@ describe("Projection integration tests", () => {
     for (const example of testing.examples) {
       const event = createEvent({
         root: example.root,
-        action: process.env.EVENT_ACTION,
+        action: example.action,
         payload: example.payload,
         domain: process.env.EVENT_DOMAIN,
         service: process.env.EVENT_SERVICE,

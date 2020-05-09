@@ -7,9 +7,8 @@ module.exports = ({
   service,
   operationHash,
   operationName,
-  eventAction,
-  eventDomain,
-  eventService,
+  eventsDomain,
+  eventsService,
   procedure,
   computeUrlId,
   project,
@@ -22,7 +21,7 @@ module.exports = ({
       "-c",
       oneLine`
     gcloud beta pubsub subscriptions create ${context}-${procedure}-${operationHash}
-    --topic=did-${eventAction}.${eventDomain}.${eventService}
+    --topic=${eventsDomain}.${eventsService}
     --push-endpoint=https://${region}-${operationName}-${operationHash}-${computeUrlId}-uc.a.run.app 
     --push-auth-token-audience=https://${region}-${operationName}-${operationHash}-${computeUrlId}-uc.a.run.app 
     --push-auth-service-account=cloud-run-pubsub-invoker@${project}.iam.gserviceaccount.com
@@ -37,9 +36,8 @@ module.exports = ({
         ...(domain && { domain }),
         ...(service && { service }),
         name,
-        "event-action": eventAction,
-        "event-domain": eventDomain,
-        "event-service": eventService,
+        "events-domain": eventsDomain,
+        "events-service": eventsService,
       }).reduce(
         (string, [key, value]) => (string += `${key}=${value},`),
         ""

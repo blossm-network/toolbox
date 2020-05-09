@@ -6,12 +6,14 @@ const gcpToken = require("@blossm/gcp-token");
 const externalToken = require("@blossm/external-token");
 const channelName = require("@blossm/channel-name");
 
-const main = require("./main.js");
+const handlers = require("./handlers.js");
 
 const config = require("./config.json");
 
 module.exports = eventHandler({
   mainFn: (state, event) => {
+    if (!handlers[event.headers.action]) return state;
+
     const {
       [process.env.DOMAIN]: {
         root: domainRoot,
@@ -19,7 +21,7 @@ module.exports = eventHandler({
         network: domainNetwork,
       } = {},
       body,
-    } = main(state, event);
+    } = handlers[event.headers.action](state, event);
 
     return {
       headers: {
