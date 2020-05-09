@@ -31,8 +31,8 @@ module.exports = ({ saveEventsFn, reserveRootCountsFn, publishFn }) => {
         eventNumberOffsets[event.data.headers.root] = 0;
 
       const topicParts = event.data.headers.topic.split(".");
-      const topicDomain = topicParts[1];
-      const topicService = topicParts[2];
+      const topicDomain = topicParts[0];
+      const topicService = topicParts[1];
 
       if (
         topicDomain != process.env.DOMAIN ||
