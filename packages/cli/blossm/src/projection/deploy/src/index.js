@@ -12,14 +12,8 @@ const config = require("./config.json");
 
 module.exports = eventHandler({
   mainFn: (state, event) => {
-    //TODO
-    //eslint-disable-next-line
-    console.log("asdfasfd");
     if (!handlers[event.headers.action]) return state;
 
-    //TODO
-    //eslint-disable-next-line
-    console.log("asdfasfd a");
     const {
       [process.env.DOMAIN]: {
         root: domainRoot,
@@ -28,10 +22,6 @@ module.exports = eventHandler({
       } = {},
       body,
     } = handlers[event.headers.action](state, event);
-
-    //TODO
-    //eslint-disable-next-line
-    console.log("asdfasfd ab");
 
     return {
       headers: {

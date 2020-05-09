@@ -19,9 +19,6 @@ module.exports = ({
   saveNextEventNumberFn,
 }) => {
   return async (req, res) => {
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log("hi 4");
     const {
       root,
       forceFrom: number = await nextEventNumberFn({ root }),
@@ -32,18 +29,9 @@ module.exports = ({
 
     // TODO write a better test for this. idk a way to do it quickly.
     await streamFn({ root, from: number }, (event) => {
-      //TODO
-      //eslint-disable-next-line no-console
-      console.log("hi 5");
       state = mainFn(state, event);
       newSeenEventNumber = event.headers.number;
-      //TODO
-      //eslint-disable-next-line no-console
-      console.log("hi 6");
     });
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log("hi 7");
 
     if (state) await commitFn(state);
 
