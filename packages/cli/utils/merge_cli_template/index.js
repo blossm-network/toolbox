@@ -461,8 +461,14 @@ const addDefaultDependencies = ({ config, coreNetwork }) => {
           procedure: "view-store",
         },
         {
+          name: "push",
+          domain: "updates",
+          service: "system",
+          procedure: "command",
+        },
+        {
           procedure: "http",
-          host: `f.updates.system.${coreNetwork}`,
+          host: `c.updates.system.${coreNetwork}`,
           mocks: [
             {
               method: "post",
