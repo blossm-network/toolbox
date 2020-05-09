@@ -11,13 +11,16 @@ module.exports = deployCliTemplate({
       name: config.name,
       operationName: trim(
         `${config.procedure}-${config.context}${
-          config.domain ? `-${config.domain}` : ""
-        }-${config.name}-${config.events.domain}-${config.events.service}`,
+          config.service ? `-${config.service}` : ""
+        }${config.domain ? `-${config.domain}` : ""}-${config.name}-${
+          config.events.domain
+        }-${config.events.service}`,
         MAX_LENGTH
       ),
       operationHash: hash(
         config.name,
         ...(config.domain ? [config.domain] : []),
+        ...(config.service ? [config.service] : []),
         config.context,
         config.events.domain,
         config.events.service,
