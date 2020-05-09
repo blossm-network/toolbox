@@ -94,7 +94,6 @@ module.exports = eventHandler({
       network: process.env.CORE_NETWORK,
     })
       .set({
-        context,
         tokenFns: { external: externalToken, internal: gcpToken },
       })
       .issue({
