@@ -463,11 +463,13 @@ const addDefaultDependencies = ({ config, coreNetwork }) => {
         {
           procedure: "http",
           host: `f.updates.system.${coreNetwork}`,
-          mock: {
-            method: "post",
-            path: "/push",
-            code: 200,
-          },
+          mocks: [
+            {
+              method: "post",
+              path: "/push",
+              code: 200,
+            },
+          ],
         },
       ];
     case "event-handler":
