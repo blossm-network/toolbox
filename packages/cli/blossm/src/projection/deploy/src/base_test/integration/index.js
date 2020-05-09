@@ -39,11 +39,17 @@ describe("Projection integration tests", () => {
         },
       });
 
+      //TODO
+      //eslint-disable-next-line no-console
+      console.log("hi");
       await eventStore({
         domain: process.env.EVENT_DOMAIN,
         service: process.env.EVENT_SERVICE,
       }).add([{ data: event }]);
 
+      //TODO
+      //eslint-disable-next-line no-console
+      console.log("hi 2");
       const response = await request.post(url, {
         body: {
           message: {
@@ -56,6 +62,9 @@ describe("Projection integration tests", () => {
         },
       });
 
+      //TODO
+      //eslint-disable-next-line no-console
+      console.log("hi 3");
       expect(response.statusCode).to.equal(204);
 
       parallelFns.push(async () => {
