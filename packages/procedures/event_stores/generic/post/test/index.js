@@ -368,7 +368,7 @@ describe("Event store post", () => {
           {
             data: {
               headers: {
-                topic: `did-${action}.some-bad-domain.${service}`,
+                topic: `some-bad-domain.${service}`,
               },
             },
           },
@@ -403,7 +403,7 @@ describe("Event store post", () => {
           {
             data: {
               headers: {
-                topic: `did-${action}.${domain}.some-bad-service`,
+                topic: `${domain}.some-bad-service`,
               },
             },
           },
