@@ -10,18 +10,17 @@ module.exports = deployCliTemplate({
     return {
       name: config.name,
       operationName: trim(
-        `${config.procedure}-${config.context}-${config.name}${
+        `${config.procedure}-${config.context}${
           config.domain ? `-${config.domain}` : ""
-        }-did-${config.event.action}-${config.event.domain}`,
+        }-${config.name}-${config.events.domain}-${config.events.service}`,
         MAX_LENGTH
       ),
       operationHash: hash(
         config.name,
         ...(config.domain ? [config.domain] : []),
         config.context,
-        config.event.action,
-        config.event.domain,
-        config.event.service,
+        config.events.domain,
+        config.events.service,
         config.procedure
       ),
     };

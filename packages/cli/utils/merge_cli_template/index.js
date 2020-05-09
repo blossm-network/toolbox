@@ -449,8 +449,8 @@ const addDefaultDependencies = ({ config, coreNetwork }) => {
       return [
         ...config.testing.dependencies,
         {
-          domain: config.event.domain,
-          service: config.event.service,
+          domain: config.events.domain,
+          service: config.events.service,
           procedure: "event-store",
         },
         {
@@ -474,8 +474,8 @@ const addDefaultDependencies = ({ config, coreNetwork }) => {
       return [
         ...config.testing.dependencies,
         {
-          domain: config.event.domain,
-          service: config.event.service,
+          domain: config.events.domain,
+          service: config.events.service,
           procedure: "event-store",
         },
       ];
