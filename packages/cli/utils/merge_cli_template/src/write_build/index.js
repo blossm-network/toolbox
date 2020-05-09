@@ -48,7 +48,6 @@ const steps = ({
   runIntegrationTests,
   runBaseIntegrationTests,
   computeUrlId,
-  actions,
   strict,
   buildHttpDependencyImage,
   dependencyKeyEnvironmentVariables,
@@ -159,7 +158,6 @@ const steps = ({
         runBaseUnitTests,
         runIntegrationTests,
         runBaseIntegrationTests,
-        actions,
         strict,
       });
     case "event-handler":
@@ -449,7 +447,6 @@ module.exports = ({
   secretBucketKeyLocation,
   secretBucketKeyRing,
   computeUrlId,
-  actions,
   strict,
   buildHttpDependencyImage,
 }) => {
@@ -513,7 +510,6 @@ module.exports = ({
       runBaseUnitTests,
       runIntegrationTests,
       runBaseIntegrationTests,
-      actions,
       strict,
       buildHttpDependencyImage,
     }),

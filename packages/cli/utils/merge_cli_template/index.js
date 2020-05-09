@@ -635,7 +635,6 @@ const configure = async (
     const procedure = config.procedure;
     const name = config.name;
     const events = config.events;
-    const actions = config.actions;
 
     const dependencyKeyEnvironmentVariables = envDependencyKeyEnvironmentVariables(
       { env, config: blossmConfig }
@@ -703,7 +702,6 @@ const configure = async (
       secretBucketKeyLocation,
       secretBucketKeyRing,
       coreNetwork,
-      actions,
       strict,
       buildHttpDependencyImage,
       dependencyKeyEnvironmentVariables,

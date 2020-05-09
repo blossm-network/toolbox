@@ -3,15 +3,6 @@ const path = require("path");
 const fs = require("fs");
 const yaml = require("yaml");
 
-const eventsForStore = (config) =>
-  config.actions.map((action) => {
-    return {
-      action,
-      domain: config.domain,
-      service: config.service,
-    };
-  });
-
 const dependencyIsConfig = (dependency, config) => {
   if (config.procedure != dependency.procedure) return false;
   for (const property in dependency) {
@@ -68,7 +59,12 @@ const findDependenciesAndEventsForDependency = (dependency, dir) => {
           dependencies: resolveTransientDependencies(blossmConfig),
           events:
             blossmConfig.procedure == "event-store"
-              ? eventsForStore(blossmConfig)
+              ? [
+                  {
+                    domain: blossmConfig.domain,
+                    service: blossmConfig.service,
+                  },
+                ]
               : [],
         };
       }

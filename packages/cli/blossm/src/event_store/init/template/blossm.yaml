@@ -17,9 +17,6 @@ service: core
 schema:
   name: String
 
-actions:
-  - some-action
-
 testing:
   examples:
     first:
