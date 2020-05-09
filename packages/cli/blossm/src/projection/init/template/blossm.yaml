@@ -35,5 +35,14 @@ testing:
         value:
           name: some-name
 
+  handlers:
+    - action: register
+      examples:
+        - event:
+            payload:
+              name: some-name
+          result:
+            body:
+              name: some-name
 #don't change
 procedure: projection
