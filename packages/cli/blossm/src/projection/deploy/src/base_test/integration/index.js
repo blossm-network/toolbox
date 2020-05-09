@@ -28,8 +28,8 @@ describe("Projection integration tests", () => {
         root: example.root,
         action: example.action,
         payload: example.payload,
-        domain: process.env.EVENT_DOMAIN,
-        service: process.env.EVENT_SERVICE,
+        domain: process.env.EVENTS_DOMAIN,
+        service: process.env.EVENTS_SERVICE,
         context: {
           [context]: {
             root: contextRoot,
@@ -41,10 +41,10 @@ describe("Projection integration tests", () => {
 
       //TODO
       //eslint-disable-next-line no-console
-      console.log("hi");
+      console.log("hi: ", event);
       await eventStore({
-        domain: process.env.EVENT_DOMAIN,
-        service: process.env.EVENT_SERVICE,
+        domain: process.env.EVENTS_DOMAIN,
+        service: process.env.EVENTS_SERVICE,
       }).add([{ data: event }]);
 
       //TODO
