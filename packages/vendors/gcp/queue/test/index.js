@@ -45,9 +45,10 @@ describe("Queue", () => {
   });
 
   it("should call create with the correct params", async () => {
-    const result = await queue.create(name, {
+    const result = await queue.create({
       project,
       location,
+      name,
     });
     expect(locationPathFake).to.have.been.calledWith(project, location);
     expect(queuePathFake).to.have.been.calledWith(project, location, name);
