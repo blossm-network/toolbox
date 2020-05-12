@@ -115,6 +115,8 @@ const forward = (input) => {
       return viewGateway(input.args);
     case "fact-gateway":
       return factGateway(input.args);
+    case "job":
+      return job(input.args);
     case "fact":
       return fact(input.args);
     case "view-composite":
