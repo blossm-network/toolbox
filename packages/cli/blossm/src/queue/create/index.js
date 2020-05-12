@@ -25,7 +25,7 @@ const create = async (input) => {
   const blossmConfig = rootDir.config();
   await createQueue({
     project: envProject({ config: blossmConfig, env }),
-    location: "global",
+    location: "us-central1",
     name: input.name,
   });
   //eslint-disable-next-line no-console
