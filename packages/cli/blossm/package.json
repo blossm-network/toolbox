@@ -17,6 +17,7 @@
     "@blossm/cli-root-dir": "^0.0.8",
     "@blossm/deploy-cli-template": "^0.0.401",
     "@blossm/gcp-secret": "^0.0.46",
+    "@blossm/gcp-queue": "*",
     "@blossm/gcp-storage": "^0.0.11",
     "@blossm/init-cli-template": "^0.0.17",
     "@blossm/normalize-cli": "^0.0.12",

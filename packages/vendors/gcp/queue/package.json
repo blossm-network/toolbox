@@ -1,0 +1,24 @@
+{
+  "name": "@blossm/gcp-queue",
+  "version": "0.0.0",
+  "description": "Queues and task.",
+  "main": "index.js",
+  "author": "blossm.network",
+  "engines": {
+    "node": ">= 10.16.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "mocha --recursive"
+  },
+  "dependencies": {
+    "@google-cloud/tasks": "^2.0.0"
+  },
+  "devDependencies": {
+    "mocha": "^7.1.1",
+    "sinon": "^7.3.2",
+    "sinon-chai": "^3.5.0"
+  }
+}
