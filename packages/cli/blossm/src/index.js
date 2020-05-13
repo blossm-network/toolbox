@@ -8,6 +8,7 @@ const { red } = require("chalk");
 const init = require("./init");
 const secret = require("./secret");
 const queue = require("./queue");
+const replay = require("./replay");
 const command = require("./command");
 const eventHandler = require("./event_handler");
 const projection = require("./projection");
@@ -97,6 +98,8 @@ const forward = (input) => {
       return secret(input.args);
     case "queue":
       return queue(input.args);
+    case "replay":
+      return replay(input.args);
     case "command":
       return command(input.args);
     case "event-handler":

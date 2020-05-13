@@ -1,0 +1,56 @@
+network:
+vendors:
+  cloud:
+    gcp:
+      projects:
+        production:
+        sandbox:
+        staging:
+        development:
+      computeUrlIds:
+        production:
+        sandbox:
+        staging:
+        development:
+      dnsZone: network
+      secretsBuckets:
+        production:
+        sandbox:
+        staging:
+        development:
+      defaults:
+        region: us-central1
+        memory: 128Mi
+        memoryOverrides:
+          eventStore: 256Mi
+          viewStore: 256Mi
+  viewStore:
+    mongodb:
+      users:
+        production:
+        sandbox:
+        staging:
+        development:
+      hosts:
+        production:
+        sandbox:
+        staging:
+        development:
+      protocol: mongodb+srv
+  eventStore:
+    mongodb:
+      users:
+        production:
+        sandbox:
+        staging:
+        development:
+      hosts:
+        production:
+        sandbox:
+        staging:
+        development:
+      protocol: mongodb+srv
+defaults:
+  viewStore: mongodb
+  eventStore: mongodb
+  cloud: gcp
