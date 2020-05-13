@@ -99,4 +99,12 @@ describe("Connection token", () => {
     expect(commandFake).to.have.been.calledTwice;
     expect(anotherResult).to.deep.equal({ token, type: "Bearer" });
   });
+  it("should call correctly if no credentials", async () => {
+    const credentialsFnFake = fake();
+    const result = await connectionToken({
+      credentialsFn: credentialsFnFake,
+    })({ network });
+
+    expect(result).to.have.be.null;
+  });
 });

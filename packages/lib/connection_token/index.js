@@ -3,7 +3,9 @@ const deps = require("./deps");
 let cache = {};
 
 module.exports = ({ credentialsFn }) => async ({ network }) => {
-  const { id, secret } = await credentialsFn({ network });
+  const credentials = await credentialsFn({ network });
+  if (!credentials) return null;
+  const { id, secret } = credentials;
   const { token, exp } = cache[network] || {};
   if (!token || exp < new Date()) {
     const {

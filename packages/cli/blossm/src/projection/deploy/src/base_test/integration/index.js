@@ -39,10 +39,16 @@ describe("Projection integration tests", () => {
         },
       });
 
+      //eslint-disable-next-line no-console
+      console.log({ event });
+
       await eventStore({
         domain: process.env.EVENTS_DOMAIN,
         service: process.env.EVENTS_SERVICE,
       }).add([{ data: event }]);
+
+      //eslint-disable-next-line no-console
+      console.log("asdf");
 
       const response = await request.post(url, {
         body: {
@@ -56,6 +62,8 @@ describe("Projection integration tests", () => {
         },
       });
 
+      //eslint-disable-next-line no-console
+      console.log({ responseBody: response.body });
       expect(response.statusCode).to.equal(204);
 
       parallelFns.push(async () => {
@@ -105,6 +113,8 @@ describe("Projection integration tests", () => {
         }
       });
     }
+    //eslint-disable-next-line no-console
+    console.log({ count: parallelFns.length });
     await Promise.all(parallelFns);
   });
 });
