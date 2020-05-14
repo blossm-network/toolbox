@@ -204,8 +204,12 @@ describe("View store base integration tests", () => {
     const secondSort2 = one ? null : content3[1];
     expect(updates3).to.exist;
 
-    expect(firstSort1).to.deep.equal(secondSort2);
-    expect(firstSort2).to.deep.equal(secondSort1);
+    if (one) {
+      expect(firstSort1).to.deep.equal(secondSort1);
+    } else {
+      expect(firstSort1).to.deep.equal(secondSort2);
+      expect(firstSort2).to.deep.equal(secondSort1);
+    }
 
     const response7 = await request.delete(`${url}/${root}`);
     const parsedBody7 = JSON.parse(response7.body);
