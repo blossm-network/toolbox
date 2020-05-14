@@ -12,14 +12,8 @@ const config = require("./config.json");
 
 module.exports = eventHandler({
   mainFn: (state, event) => {
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log("D");
     if (!handlers[event.headers.action]) return state;
 
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log("E");
     const {
       [process.env.DOMAIN]: {
         root: domainRoot,
@@ -29,9 +23,6 @@ module.exports = eventHandler({
       body,
     } = handlers[event.headers.action](state, event);
 
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log("F");
     return {
       headers: {
         root: event.headers.root,
@@ -58,9 +49,6 @@ module.exports = eventHandler({
     };
   },
   commitFn: async (state) => {
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log("G");
     const { body: newView } = await viewStore({
       name: config.name,
       ...(config.domain && { domain: config.domain }),
@@ -75,9 +63,6 @@ module.exports = eventHandler({
         body: state.body,
       });
 
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log("L");
     const channel = channelName({
       name: process.env.NAME,
       ...(process.env.DOMAIN && {
@@ -92,9 +77,6 @@ module.exports = eventHandler({
       contextNetwork: newView.headers[process.env.CONTEXT].network,
     });
 
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log("M");
     command({
       name: "push",
       domain: "updates",
@@ -108,9 +90,6 @@ module.exports = eventHandler({
         view: newView,
         channel,
       });
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log("N");
   },
   streamFn: ({ root, from }, fn) =>
     eventStore({

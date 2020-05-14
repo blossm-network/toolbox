@@ -27,25 +27,12 @@ module.exports = ({
     let state;
     let newSeenEventNumber;
 
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log("A");
-
     // TODO write a better test for this. idk a way to do it quickly.
     await streamFn({ root, from: number }, (event) => {
-      //TODO
-      //eslint-disable-next-line no-console
-      console.log("C");
       state = mainFn(state, event);
       newSeenEventNumber = event.headers.number;
-      //TODO
-      //eslint-disable-next-line no-console
-      console.log("C2");
     });
 
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log("B");
     if (state) await commitFn(state);
 
     if (newSeenEventNumber != undefined)

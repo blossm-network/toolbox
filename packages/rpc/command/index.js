@@ -1,7 +1,6 @@
 const deps = require("./deps");
 
 module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
-  //TODO nothin
   const internal = !network || network == process.env.NETWORK;
   const issue = ({
     context,
