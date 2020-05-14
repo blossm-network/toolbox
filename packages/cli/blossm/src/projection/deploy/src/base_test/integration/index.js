@@ -80,9 +80,9 @@ describe("Projection integration tests", () => {
 
         if (example.result.value) {
           for (const property in example.result.value) {
-            expect(v.content[0].body[property]).to.exist;
+            expect(v.content.body[property]).to.exist;
             if (example.result.value[property] != undefined) {
-              expect(v.content[0].body[property]).to.deep.equal(
+              expect(v.content.body[property]).to.deep.equal(
                 example.result.value[property]
               );
             }
