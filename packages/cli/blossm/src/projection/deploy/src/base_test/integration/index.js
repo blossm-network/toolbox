@@ -39,16 +39,10 @@ describe("Projection integration tests", () => {
         },
       });
 
-      //eslint-disable-next-line no-console
-      console.log({ event });
-
       await eventStore({
         domain: process.env.EVENTS_DOMAIN,
         service: process.env.EVENTS_SERVICE,
       }).add([{ data: event }]);
-
-      //eslint-disable-next-line no-console
-      console.log("asdf");
 
       const response = await request.post(url, {
         body: {
@@ -65,8 +59,6 @@ describe("Projection integration tests", () => {
       expect(response.statusCode).to.equal(204);
 
       parallelFns.push(async () => {
-        //eslint-disable-next-line no-console
-        console.log("doin in");
         const { body: v } = await viewStore({
           name,
           ...(domain && { domain }),
@@ -84,37 +76,31 @@ describe("Projection integration tests", () => {
           })
           .read(example.result.query);
 
-        //eslint-disable-next-line no-console
-        console.log({ v, json: JSON.stringify(v) });
-
+        expect(v.updates).to.exist();
         if (example.result.value) {
           for (const property in example.result.value) {
-            expect(v[0][property]).to.exist;
+            expect(v.content[0][property]).to.exist;
             if (example.result.value[property] != undefined) {
-              expect(v[0][property]).to.deep.equal(
+              expect(v.content[0][property]).to.deep.equal(
                 example.result.value[property]
               );
             }
           }
         } else if (example.result.values) {
-          expect(example.result.values.length).to.equal(v.length);
-          for (const value of example.result.values) {
-            expect(
-              v.some((view) => {
-                for (const property in value) {
-                  expect(view[property]).to.exist;
-                  if (value[property] != undefined) {
-                    expect(view[property]).to.deep.equal(value[property]);
-                  }
-                }
-              })
-            );
+          expect(example.result.values.length).to.equal(v.content.length);
+          for (let i = 0; i < example.result.values.length; i++) {
+            let value = example.result.values[i];
+            for (const property in value) {
+              expect(v.content[i][property]).to.exist;
+              if (value[property] != undefined) {
+                expect(v.content[i][property]).to.deep.equal(value[property]);
+              }
+            }
           }
         }
       });
     }
-    //eslint-disable-next-line no-console
-    console.log({ count: parallelFns.length });
+
     await Promise.all(parallelFns.map((fn) => fn()));
   });
 });
