@@ -455,16 +455,41 @@ const addDefaultDependencies = ({ config, coreNetwork }) => {
           procedure: "view-store",
         },
         {
-          procedure: "http",
-          host: `c.updates.system.${coreNetwork}`,
-          mocks: [
-            {
-              method: "post",
-              path: "/push",
-              code: 200,
-            },
-          ],
+          name: "open",
+          domain: "connection",
+          service: "system",
+          network: coreNetwork,
+          procedure: "command",
         },
+        {
+          name: "push",
+          domain: "updates",
+          service: "system",
+          network: coreNetwork,
+          procedure: "command",
+        },
+        // {
+        //   procedure: "http",
+        //   host: `c.updates.system.${coreNetwork}`,
+        //   mocks: [
+        //     {
+        //       method: "post",
+        //       path: "/push",
+        //       code: 200,
+        //     },
+        //   ],
+        // },
+        // {
+        //   procedure: "http",
+        //   host: `c.connection.system.${coreNetwork}`,
+        //   mocks: [
+        //     {
+        //       method: "post",
+        //       path: "/open",
+        //       code: 200,
+        //     },
+        //   ],
+        // },
       ];
     case "event-handler":
       return [
