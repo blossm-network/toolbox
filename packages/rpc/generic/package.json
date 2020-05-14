@@ -1,7 +1,7 @@
 {
   "name": "@blossm/rpc",
   "description": "Calls a remote procedure within the network.",
-  "version": "0.0.115",
+  "version": "0.0.116",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
