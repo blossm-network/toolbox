@@ -462,23 +462,16 @@ const addDefaultDependencies = ({ config, coreNetwork }) => {
           procedure: "command",
         },
         {
-          name: "push",
-          domain: "updates",
-          service: "system",
-          network: coreNetwork,
-          procedure: "command",
+          procedure: "http",
+          host: `c.updates.system.${coreNetwork}`,
+          mocks: [
+            {
+              method: "post",
+              path: "/push",
+              code: 200,
+            },
+          ],
         },
-        // {
-        //   procedure: "http",
-        //   host: `c.updates.system.${coreNetwork}`,
-        //   mocks: [
-        //     {
-        //       method: "post",
-        //       path: "/push",
-        //       code: 200,
-        //     },
-        //   ],
-        // },
         // {
         //   procedure: "http",
         //   host: `c.connection.system.${coreNetwork}`,

@@ -44,7 +44,7 @@ const common = ({ method, dataParam, operation, id, data }) => {
 
           //TODO
           //eslint-disable-next-line no-console
-          console.log("Z", { token, type });
+          console.log("Z", { token, type, operation });
           const url = internal
             ? deps.operationUrl({
                 operation,
