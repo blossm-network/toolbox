@@ -62,11 +62,11 @@ describe("Projection integration tests", () => {
         },
       });
 
-      //eslint-disable-next-line no-console
-      console.log({ responseBody: response.body });
       expect(response.statusCode).to.equal(204);
 
       parallelFns.push(async () => {
+        //eslint-disable-next-line no-console
+        console.log("doin in");
         const { body: v } = await viewStore({
           name,
           ...(domain && { domain }),
