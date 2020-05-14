@@ -42,6 +42,9 @@ const common = ({ method, dataParam, operation, id, data }) => {
                   network,
                 })) || {};
 
+          //TODO
+          //eslint-disable-next-line no-console
+          console.log("Z", { token, type });
           const url = internal
             ? deps.operationUrl({
                 operation,
@@ -55,6 +58,18 @@ const common = ({ method, dataParam, operation, id, data }) => {
                 ...(id && { id }),
               });
 
+          //TODO
+          //eslint-disable-next-line no-console
+          console.log("Y", {
+            url,
+            data: {
+              [dataParam]: {
+                ...(data && { ...data }),
+                ...(context && { context }),
+                ...(claims && { claims }),
+              },
+            },
+          });
           const response = await method(url, {
             [dataParam]: {
               ...(data && { ...data }),
