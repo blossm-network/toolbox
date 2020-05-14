@@ -115,6 +115,6 @@ describe("Projection integration tests", () => {
     }
     //eslint-disable-next-line no-console
     console.log({ count: parallelFns.length });
-    await Promise.all(parallelFns);
+    await Promise.all(parallelFns.map((fn) => fn()));
   });
 });
