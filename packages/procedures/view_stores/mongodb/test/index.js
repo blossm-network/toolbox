@@ -26,12 +26,12 @@ const sort = "some-sort";
 const sort2 = "some-other-sort";
 const query2 = "some-other-query";
 
-// const foundObj = "some-found-obj";
 const writeResult = "some-write-result";
 const removeResult = "some-remove-result";
 const data = { c: 1 };
 const fnFake = fake();
 const parallel = "some-parallel";
+const one = "some-one";
 
 process.env.NAME = name;
 process.env.CONTEXT = context;
@@ -102,6 +102,7 @@ describe("View store", () => {
       indexes,
       getFn,
       putFn,
+      one,
     });
 
     expect(storeFake).to.have.been.calledWith({
@@ -250,6 +251,7 @@ describe("View store", () => {
       removeFn: match((fn) => expect(fn(query)).to.exist),
       getFn,
       putFn,
+      one,
     });
 
     await mongodbViewStore({ schema });
@@ -497,7 +499,7 @@ describe("View store", () => {
       },
     });
   });
-  it("should call with the correct params without fns", async () => {
+  it("should call with the correct params without fns or one", async () => {
     const store = "some-store";
     const storeFake = fake.returns(store);
 

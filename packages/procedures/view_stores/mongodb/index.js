@@ -32,7 +32,7 @@ const viewStore = async ({ schema, indexes }) => {
   return _viewStore;
 };
 
-module.exports = async ({ schema, indexes, getFn, putFn } = {}) => {
+module.exports = async ({ schema, indexes, getFn, putFn, one } = {}) => {
   const formattedSchema = {
     body: schema,
     headers: {
@@ -169,5 +169,6 @@ module.exports = async ({ schema, indexes, getFn, putFn } = {}) => {
     removeFn,
     ...(getFn && { getFn }),
     ...(putFn && { putFn }),
+    ...(one && { one }),
   });
 };

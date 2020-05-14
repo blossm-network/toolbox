@@ -55,6 +55,7 @@ describe("View store", () => {
     const removeFn = "some-remove-fn";
     const queryFn = "some-query-fn";
     const putFn = "some-put-fn";
+    const one = "some-one";
 
     await viewStore({
       streamFn,
@@ -63,6 +64,7 @@ describe("View store", () => {
       removeFn,
       queryFn,
       putFn,
+      one,
     });
 
     expect(listenFake).to.have.been.calledOnce;
@@ -86,6 +88,7 @@ describe("View store", () => {
     expect(viewStoreGetFake).to.have.been.calledWith({
       findFn,
       queryFn,
+      one,
     });
     expect(viewStorePutFake).to.have.been.calledWith({
       writeFn,

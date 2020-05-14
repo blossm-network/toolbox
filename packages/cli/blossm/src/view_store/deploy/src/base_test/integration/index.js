@@ -7,7 +7,7 @@ const { schema } = require("../../config.json");
 
 const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 
-const { testing, indexes = [] } = require("../../config.json");
+const { testing, indexes = [], one } = require("../../config.json");
 
 const contextRoot = "some-context-root";
 const contextService = "some-context-service";
@@ -71,16 +71,15 @@ describe("View store base integration tests", () => {
       }
     );
 
-    const {
-      updates: updates0,
-      content: [parsedBody1],
-    } = JSON.parse(response1.body);
+    const { updates: updates0, content: content0 } = JSON.parse(response1.body);
+
+    const parsedBody0 = one ? content0 : content0[0];
 
     expect(updates0).to.exist;
 
     expect(response1.statusCode).to.equal(200);
     for (const key in example0.get) {
-      expect(parsedBody1.body[key]).to.deep.equal(example0.get[key]);
+      expect(parsedBody0.body[key]).to.deep.equal(example0.get[key]);
     }
 
     const response2 = await request.put(`${url}/${root}`, {
@@ -123,15 +122,14 @@ describe("View store base integration tests", () => {
     );
 
     expect(response3.statusCode).to.equal(200);
-    const {
-      updates: updates1,
-      content: [parsedBody3],
-    } = JSON.parse(response3.body);
+    const { updates: updates1, content: content1 } = JSON.parse(response3.body);
+
+    const parsedBody1 = one ? content1 : content1[0];
 
     expect(updates1).to.exist;
 
     for (const key in example1.get) {
-      expect(parsedBody3.body[key]).to.deep.equal(example1.get[key]);
+      expect(parsedBody1.body[key]).to.deep.equal(example1.get[key]);
     }
 
     const otherRoot = "some-other-root";
@@ -175,10 +173,10 @@ describe("View store base integration tests", () => {
       }
     );
 
-    const {
-      updates: updates2,
-      content: [firstSort1, firstSort2],
-    } = JSON.parse(response5.body);
+    const { updates: updates2, content: content2 } = JSON.parse(response5.body);
+
+    const firstSort1 = one ? content2 : content2[0];
+    const firstSort2 = one ? null : content2[1];
 
     expect(updates2).to.exist;
 
@@ -200,11 +198,10 @@ describe("View store base integration tests", () => {
       }
     );
 
-    const {
-      updates: updates3,
-      content: [secondSort1, secondSort2],
-    } = JSON.parse(response6.body);
+    const { updates: updates3, content: content3 } = JSON.parse(response6.body);
 
+    const secondSort1 = one ? content2 : content3[0];
+    const secondSort2 = one ? null : content3[1];
     expect(updates3).to.exist;
 
     expect(firstSort1).to.deep.equal(secondSort2);
@@ -267,10 +264,11 @@ describe("View store base integration tests", () => {
       );
       expect(response1.statusCode).to.equal(200);
 
-      const {
-        updates: updates4,
-        content: [parsedBody4],
-      } = JSON.parse(response1.body);
+      const { updates: updates4, content: content4 } = JSON.parse(
+        response1.body
+      );
+
+      const parsedBody4 = one ? content4 : content4[0];
 
       expect(updates4).to.exist;
 
