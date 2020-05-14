@@ -78,11 +78,15 @@ describe("Projection integration tests", () => {
 
         expect(v.updates).to.exist;
 
+        //TODO
+        //eslint-disable-next-line no-console
+        console.log({ v });
+
         if (example.result.value) {
           for (const property in example.result.value) {
-            expect(v.content[0][property]).to.exist;
+            expect(v.content[property]).to.exist;
             if (example.result.value[property] != undefined) {
-              expect(v.content[0][property]).to.deep.equal(
+              expect(v.content[property]).to.deep.equal(
                 example.result.value[property]
               );
             }
