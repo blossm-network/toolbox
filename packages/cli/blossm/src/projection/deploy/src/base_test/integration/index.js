@@ -76,7 +76,8 @@ describe("Projection integration tests", () => {
           })
           .read(example.result.query);
 
-        expect(v.updates).to.exist();
+        expect(v.updates).to.exist;
+
         if (example.result.value) {
           for (const property in example.result.value) {
             expect(v.content[0][property]).to.exist;
