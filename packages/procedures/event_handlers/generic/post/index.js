@@ -38,6 +38,9 @@ module.exports = ({
       console.log("C");
       state = mainFn(state, event);
       newSeenEventNumber = event.headers.number;
+      //TODO
+      //eslint-disable-next-line no-console
+      console.log("C2");
     });
 
     //TODO
