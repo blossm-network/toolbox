@@ -80,7 +80,7 @@ describe("Projection integration tests", () => {
 
         //TODO
         //eslint-disable-next-line no-console
-        console.log({ v });
+        console.log({ v, content: v.content, contentFirst: v.content[0] });
 
         if (example.result.value) {
           for (const property in example.result.value) {
