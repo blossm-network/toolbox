@@ -3,7 +3,8 @@ const path = require("path");
 const yaml = require("yaml");
 // const { prompt } = require("inquirer");
 const normalize = require("@blossm/normalize-cli");
-// const roboSay = require("@blossm/robo-say");
+const roboSay = require("@blossm/robo-say");
+const { red } = require("chalk");
 // const rootDir = require("@blossm/cli-root-dir");
 
 const projectionMatches = ({ name, context, domain, service }, config) => {
@@ -16,17 +17,30 @@ const projectionMatches = ({ name, context, domain, service }, config) => {
 };
 
 const replay = async (input) => {
-  const blossmDir = path.resolve(process.cwd(), input.dir || "");
-  const blossmConfig = yaml.parse(fs.readFileSync(blossmDir, "utf8"));
+  //TODO
+  //eslint-disable-next-line no-console
+  console.log("hey");
+
+  const storePath = path.resolve(process.cwd(), input.path || "");
+  const blossmConfig = yaml.parse(fs.readFileSync(storePath, "utf8"));
 
   //TODO
   //eslint-disable-next-line no-console
   console.log({
+    procedure: blossmConfig.procedure,
     name: blossmConfig.name,
     context: blossmConfig.context,
     ...(blossmConfig.domain && { domain: blossmConfig.domain }),
     ...(blossmConfig.service && { service: blossmConfig.service }),
   });
+  if (blossmConfig.procedure != "view-store") {
+    roboSay(
+      "This directory doesn't seem to be a view store that can be replayed."
+    );
+    red.bold("error");
+    return;
+  }
+
   const allEvents = findProjections({
     name: blossmConfig.name,
     context: blossmConfig.context,
@@ -62,8 +76,8 @@ const findProjections = ({ name, context, domain, service }, dir) => {
 
 module.exports = async (args) => {
   const input = await normalize({
-    entrypointType: "dir",
-    default: "blossm",
+    entrypointType: "path",
+    default: ".",
     args,
   });
 
