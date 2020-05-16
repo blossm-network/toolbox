@@ -62,22 +62,28 @@ const replay = async (input) => {
   console.log({ allEvents });
 
   const e = allEvents[0];
-  const response = await projection({
-    name: blossmConfig.name,
-    context: blossmConfig.context,
-    ...(blossmConfig.domain && { domain: blossmConfig.domain }),
-    ...(blossmConfig.service && { service: blossmConfig.service }),
-    eventsDomain: e.domain,
-    eventsService: e.service,
-  })
-    .set({
-      tokenFns: { internal: gcpToken },
-    })
-    .replay("asdf");
 
-  //TODO
-  //eslint-disable-next-line no-console
-  console.log({ response });
+  try {
+    const response = await projection({
+      name: blossmConfig.name,
+      context: blossmConfig.context,
+      ...(blossmConfig.domain && { domain: blossmConfig.domain }),
+      ...(blossmConfig.service && { service: blossmConfig.service }),
+      eventsDomain: e.domain,
+      eventsService: e.service,
+    })
+      .set({
+        tokenFns: { internal: gcpToken },
+      })
+      .replay("asdf");
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log({ response });
+  } catch (e) {
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log({ e });
+  }
 };
 
 const findProjections = ({ name, context, domain, service }, dir) => {
