@@ -62,7 +62,7 @@ const replay = async (input) => {
   console.log({ allEvents });
 
   const e = allEvents[0];
-  const response = projection({
+  const response = await projection({
     name: blossmConfig.name,
     context: blossmConfig.context,
     ...(blossmConfig.domain && { domain: blossmConfig.domain }),
