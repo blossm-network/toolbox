@@ -6,6 +6,8 @@ const normalize = require("@blossm/normalize-cli");
 const roboSay = require("@blossm/robo-say");
 const { red } = require("chalk");
 const rootDir = require("@blossm/cli-root-dir");
+const projection = require("@blossm/projection-rpc");
+const gcpToken = require("@blossm/gcp-token");
 
 const projectionMatches = ({ name, context, domain, service }, config) => {
   if (config.procedure != "projection") return false;
@@ -58,6 +60,24 @@ const replay = async (input) => {
   //TODO
   //eslint-disable-next-line no-console
   console.log({ allEvents });
+
+  const e = allEvents[0];
+  const response = projection({
+    name: blossmConfig.name,
+    context: blossmConfig.context,
+    ...(blossmConfig.domain && { domain: blossmConfig.domain }),
+    ...(blossmConfig.service && { service: blossmConfig.service }),
+    eventsDomain: e.domain,
+    eventsService: e.service,
+  })
+    .set({
+      tokenFns: { internal: gcpToken },
+    })
+    .replay("asdf");
+
+  //TODO
+  //eslint-disable-next-line no-console
+  console.log({ response });
 };
 
 const findProjections = ({ name, context, domain, service }, dir) => {

@@ -17,6 +17,8 @@
     "@blossm/cli-root-dir": "^0.0.8",
     "@blossm/deploy-cli-template": "^0.0.404",
     "@blossm/gcp-queue": "^0.0.1",
+    "@blossm/projection-rpc": "*",
+    "@blossm/gcp-token": "*",
     "@blossm/gcp-secret": "^0.0.46",
     "@blossm/gcp-storage": "^0.0.11",
     "@blossm/init-cli-template": "^0.0.17",
@@ -28,6 +30,5 @@
     "chalk": "^2.4.2",
     "esm": "^3.2.25",
     "yaml": "^1.7.0"
-  },
-  "gitHead": "9ee3a3eaaea3d3164de709d804ca01569daedb9d"
+  }
 }

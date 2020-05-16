@@ -1,7 +1,7 @@
 {
-  "name": "@blossm/command-rpc",
-  "description": "Issues a command.",
-  "version": "0.0.134",
+  "name": "@blossm/projection-rpc",
+  "description": "Replays a projection.",
+  "version": "0.0.0",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -14,11 +14,9 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/datetime": "^0.0.5",
     "@blossm/rpc": "^0.0.118"
   },
   "devDependencies": {
-    "chai-datetime": "^1.5.0",
     "mocha": "^7.1.1",
     "sinon": "^7.3.2",
     "sinon-chai": "^3.5.0"
