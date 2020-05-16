@@ -31,6 +31,10 @@ const common = ({ method, dataParam, operation, id, data }) => {
         } = {}) => {
           const internal = host == process.env.HOST;
 
+          //TODO
+          //eslint-disable-next-line no-console
+          console.log("before token");
+
           const { token, type } =
             (internal
               ? await deps.operationToken({
@@ -41,6 +45,10 @@ const common = ({ method, dataParam, operation, id, data }) => {
                   tokenFn: externalTokenFn,
                   network,
                 })) || {};
+
+          //TODO
+          //eslint-disable-next-line no-console
+          console.log("after token", { token });
 
           const url = internal
             ? deps.operationUrl({
@@ -57,7 +65,7 @@ const common = ({ method, dataParam, operation, id, data }) => {
 
           //TODO
           //eslint-disable-next-line no-console
-          console.log({ url, operation, token });
+          console.log({ url, operation });
 
           const response = await method(url, {
             [dataParam]: {
