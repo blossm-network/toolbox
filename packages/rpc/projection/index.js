@@ -12,8 +12,14 @@ module.exports = ({
     tokenFns: { internal: internalTokenFn } = {},
   } = {}) => async (root, { from: number = 0 } = {}) => {
     const data = {
-      root,
-      forceFrom: number,
+      message: {
+        data: Buffer.from(
+          JSON.stringify({
+            root,
+            forceFrom: number,
+          })
+        ),
+      },
     };
 
     return await deps

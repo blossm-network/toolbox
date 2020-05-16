@@ -57,9 +57,11 @@ describe("Replay projection", () => {
       eventsService,
       "projection"
     );
+
     expect(postFake).to.have.been.calledWith({
-      forceFrom: from,
-      root,
+      message: {
+        data: Buffer.from(JSON.stringify({ root, forceFrom: from })),
+      },
     });
     expect(inFake).to.have.been.calledWith({});
     expect(withFake).to.have.been.calledWith({
@@ -100,8 +102,9 @@ describe("Replay projection", () => {
       "projection"
     );
     expect(postFake).to.have.been.calledWith({
-      forceFrom: 0,
-      root,
+      message: {
+        data: Buffer.from(JSON.stringify({ root, forceFrom: 0 })),
+      },
     });
     expect(inFake).to.have.been.calledWith({});
     expect(withFake).to.have.been.calledWith({
