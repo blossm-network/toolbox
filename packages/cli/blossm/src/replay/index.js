@@ -67,14 +67,18 @@ const findProjections = ({ name, context, domain, service }, dir) => {
 
     if (file == "blossm.yaml" || file == "blossm.yml") {
       const blossmConfig = yaml.parse(fs.readFileSync(filePath, "utf8"));
-      if (projectionMatches({ name, context, domain, service }, blossmConfig))
+      if (projectionMatches({ name, context, domain, service }, blossmConfig)) {
+        //TODO
+        //eslint-disable-next-line no-console
+        console.log({ found: blossmConfig.events });
         all.push(blossmConfig.events);
+      }
     } else if (fs.statSync(filePath).isDirectory()) {
-      const events = findProjections(
+      const allEvents = findProjections(
         { name, context, domain, service },
         filePath
       );
-      if (events) all.push(events);
+      all.push(...allEvents);
     }
   }
 
