@@ -5,7 +5,7 @@ const yaml = require("yaml");
 const normalize = require("@blossm/normalize-cli");
 const roboSay = require("@blossm/robo-say");
 const { red } = require("chalk");
-// const rootDir = require("@blossm/cli-root-dir");
+const rootDir = require("@blossm/cli-root-dir");
 
 const projectionMatches = ({ name, context, domain, service }, config) => {
   if (config.procedure != "projection") return false;
@@ -21,7 +21,11 @@ const replay = async (input) => {
   //eslint-disable-next-line no-console
   console.log("hey");
 
-  const storePath = path.resolve(process.cwd(), input.path || "");
+  const storePath = path.resolve(
+    process.cwd(),
+    input.path || "",
+    "blossm.yaml"
+  );
   const blossmConfig = yaml.parse(fs.readFileSync(storePath, "utf8"));
 
   //TODO
@@ -41,12 +45,15 @@ const replay = async (input) => {
     return;
   }
 
-  const allEvents = findProjections({
-    name: blossmConfig.name,
-    context: blossmConfig.context,
-    ...(blossmConfig.domain && { domain: blossmConfig.domain }),
-    ...(blossmConfig.service && { service: blossmConfig.service }),
-  });
+  const allEvents = findProjections(
+    {
+      name: blossmConfig.name,
+      context: blossmConfig.context,
+      ...(blossmConfig.domain && { domain: blossmConfig.domain }),
+      ...(blossmConfig.service && { service: blossmConfig.service }),
+    },
+    rootDir.path()
+  );
 
   //TODO
   //eslint-disable-next-line no-console
@@ -77,7 +84,7 @@ const findProjections = ({ name, context, domain, service }, dir) => {
 module.exports = async (args) => {
   const input = await normalize({
     entrypointType: "path",
-    default: ".",
+    entrypointDefault: ".",
     args,
   });
 
