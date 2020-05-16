@@ -1,6 +1,6 @@
 {
   "name": "@blossm/http-dependency-cli",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "description": "A template for creating dependency mock servers.",
   "main": "index.js",
   "author": "blossm.network",
