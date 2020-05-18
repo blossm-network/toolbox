@@ -125,7 +125,7 @@ describe("Event store integration tests", () => {
 
     //Test root stream
     await request.stream(
-      `roots`,
+      `${url}/roots`,
       (data) => {
         //TODO
         //eslint-disable-next-line
