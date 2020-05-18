@@ -129,8 +129,8 @@ describe("Event store integration tests", () => {
       (data) => {
         //TODO
         //eslint-disable-next-line
-        console.log({ data });
-        expect(data).to.equal(root);
+        console.log({ data: data.toString() });
+        expect(data.toString()).to.equal(root);
       },
       {
         query: {},
