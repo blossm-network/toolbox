@@ -4,7 +4,7 @@ const deps = require("./deps");
 
 let _eventStore;
 let _snapshotStore;
-let _countStore;
+let _countsStore;
 
 //make all properties not required since events may
 //not contain the full schema.
@@ -137,13 +137,13 @@ const snapshotStore = async ({ schema, indexes }) => {
   return _snapshotStore;
 };
 
-const countStore = async () => {
-  if (_countStore != undefined) {
+const countsStore = async () => {
+  if (_countsStore != undefined) {
     logger.info("Thank you existing count store database.");
-    return _countStore;
+    return _countsStore;
   }
 
-  _countStore = deps.db.store({
+  _countsStore = deps.db.store({
     name: `${process.env.DOMAIN}.counts`,
     schema: {
       root: { type: String, required: true, unique: true },
@@ -152,7 +152,7 @@ const countStore = async () => {
     indexes: [[{ root: 1 }]],
   });
 
-  return _countStore;
+  return _countsStore;
 };
 
 module.exports = async ({
@@ -171,7 +171,7 @@ module.exports = async ({
     schema: deps.removeIds({ schema }),
     indexes,
   });
-  const cStore = await countStore();
+  const cStore = await countsStore();
 
   deps.eventStore({
     aggregateFn: deps.aggregate({
