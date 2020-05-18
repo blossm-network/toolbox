@@ -8,6 +8,21 @@ const { red } = require("chalk");
 const rootDir = require("@blossm/cli-root-dir");
 const { spawnSync } = require("child_process");
 
+const envProject = ({ env, config }) => {
+  switch (env) {
+    case "production":
+      return config.vendors.cloud.gcp.projects.production;
+    case "sandbox":
+      return config.vendors.cloud.gcp.projects.sandbox;
+    case "staging":
+      return config.vendors.cloud.gcp.projects.staging;
+    case "development":
+      return config.vendors.cloud.gcp.projects.development;
+    default:
+      return "";
+  }
+};
+
 const projectionMatches = ({ name, context, domain, service }, config) => {
   if (config.procedure != "projection") return false;
   if (config.name != name) return false;
@@ -69,8 +84,7 @@ const replay = async (input) => {
         "functions",
         "call",
         "replay-projection",
-        "--data",
-        JSON.stringify({
+        `--data=${JSON.stringify({
           projection: {
             name: blossmConfig.name,
             context: blossmConfig.context,
@@ -78,7 +92,8 @@ const replay = async (input) => {
             eventsService: e.service,
           },
           root: "asdf",
-        }),
+        })}`,
+        `--project=${envProject({ config: rootDir.config(), env: input.env })}`,
       ],
       {
         stdio: [process.stdin, process.stdout, process.stderr],
