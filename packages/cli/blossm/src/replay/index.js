@@ -169,6 +169,15 @@ module.exports = async (args) => {
     entrypointType: "path",
     entrypointDefault: ".",
     args,
+    flags: [
+      {
+        name: "env",
+        type: String,
+        short: "e",
+        choices: ["production", "sandbox", "staging", "development"],
+        default: "development",
+      },
+    ],
   });
 
   replay(input);
