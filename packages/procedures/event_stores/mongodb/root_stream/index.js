@@ -1,9 +1,9 @@
 const deps = require("./deps");
 
-module.exports = ({ countStore }) => async ({ parallel = 1, fn }) => {
+module.exports = ({ countsStore }) => async ({ parallel = 1, fn }) => {
   const cursor = deps.db
     .find({
-      store: countStore,
+      store: countsStore,
       query: {},
       options: { lean: true },
     })

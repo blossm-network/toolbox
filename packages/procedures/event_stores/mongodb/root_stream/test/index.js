@@ -5,7 +5,7 @@ const stream = require("..");
 
 const deps = require("../deps");
 
-const countStore = "some-count-store";
+const countsStore = "some-counts-store";
 const root = "some-root";
 const from = "some-from";
 const parallel = "some-parallel";
@@ -31,14 +31,14 @@ describe("Mongodb event store root stream", () => {
 
     replace(deps, "db", db);
 
-    const result = await stream({ countStore })({
+    const result = await stream({ countsStore })({
       root,
       from,
       parallel,
       fn,
     });
     expect(findFake).to.have.been.calledWith({
-      store: countStore,
+      store: countsStore,
       query: {},
       options: {
         lean: true,
@@ -64,14 +64,14 @@ describe("Mongodb event store root stream", () => {
 
     replace(deps, "db", db);
 
-    const result = await stream({ countStore })({
+    const result = await stream({ countsStore })({
       root,
       from,
       fn,
     });
 
     expect(findFake).to.have.been.calledWith({
-      store: countStore,
+      store: countsStore,
       query: {},
       options: {
         lean: true,
