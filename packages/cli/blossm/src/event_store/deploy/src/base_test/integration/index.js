@@ -127,9 +127,6 @@ describe("Event store integration tests", () => {
     await request.stream(
       `${url}/roots`,
       (data) => {
-        //TODO
-        //eslint-disable-next-line
-        console.log({ data: data.toString() });
         expect(data.toString()).to.equal(root);
       },
       {
