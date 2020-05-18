@@ -24,6 +24,7 @@
     "@blossm/mongodb-event-store-reserve-root-counts": "^0.0.19",
     "@blossm/mongodb-event-store-save-events": "^0.0.24",
     "@blossm/mongodb-event-store-stream": "^0.0.5",
+    "@blossm/mongodb-event-store-root-stream": "*",
     "@blossm/remove-ids-from-mongodb-schema": "^0.0.6"
   },
   "devDependencies": {
