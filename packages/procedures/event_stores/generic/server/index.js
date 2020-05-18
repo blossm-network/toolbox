@@ -11,13 +11,13 @@ module.exports = async ({
 } = {}) => {
   deps
     .server()
-    .get(deps.get({ aggregateFn, queryFn }), { path: "/:root?" })
     .get(deps.stream({ streamFn }), {
       path: "/stream/:root?",
     })
     .get(deps.rootStream({ rootStreamFn }), {
       path: "/roots",
     })
+    .get(deps.get({ aggregateFn, queryFn }), { path: "/:root?" })
     .post(
       deps.post({
         saveEventsFn,
