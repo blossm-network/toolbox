@@ -6,8 +6,7 @@ const normalize = require("@blossm/normalize-cli");
 const roboSay = require("@blossm/robo-say");
 const { red } = require("chalk");
 const rootDir = require("@blossm/cli-root-dir");
-const projection = require("@blossm/projection-rpc");
-const gcpToken = require("@blossm/gcp-token");
+const { spawnSync } = require("child_process");
 
 const projectionMatches = ({ name, context, domain, service }, config) => {
   if (config.procedure != "projection") return false;
@@ -64,21 +63,36 @@ const replay = async (input) => {
   const e = allEvents[0];
 
   try {
-    const response = await projection({
-      name: blossmConfig.name,
-      context: blossmConfig.context,
-      ...(blossmConfig.domain && { domain: blossmConfig.domain }),
-      ...(blossmConfig.service && { service: blossmConfig.service }),
-      eventsDomain: e.domain,
-      eventsService: e.service,
-    })
-      .set({
-        tokenFns: { internal: gcpToken },
-      })
-      .replay("asdf");
+    const spawnCall = spawnSync(
+      "gcloud",
+      [
+        "functions",
+        "call",
+        "replay-projection",
+        "--data",
+        JSON.stringify({
+          projection: {
+            name: blossmConfig.name,
+            context: blossmConfig.context,
+            eventsDomain: e.domain,
+            eventsService: e.service,
+          },
+          root: "asdf",
+        }),
+      ],
+      {
+        stdio: [process.stdin, process.stdout, process.stderr],
+        cwd: process.cwd(),
+      }
+    );
     //TODO
     //eslint-disable-next-line no-console
-    console.log({ response });
+    console.log({ spawnCall });
+
+    if (spawnCall.stderr) {
+      process.exitCode = 1;
+      throw "Couldn't call replay.";
+    }
   } catch (e) {
     //TODO
     //eslint-disable-next-line no-console
