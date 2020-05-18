@@ -607,13 +607,7 @@ const writePackage = ({ config, baseConfig, workingDir }) => {
   fs.writeFileSync(packagePath, JSON.stringify(package));
 };
 
-const configure = async (
-  workingDir,
-  configFn,
-  env,
-  strict,
-  buildHttpDependencyImage
-) => {
+const configure = async (workingDir, configFn, env, strict) => {
   const configPath = path.resolve(workingDir, "blossm.yaml");
   const baseConfigPath = path.resolve(workingDir, "base_config.json");
 
@@ -708,7 +702,6 @@ const configure = async (
       secretBucketKeyRing,
       coreNetwork,
       strict,
-      buildHttpDependencyImage,
       dependencyKeyEnvironmentVariables,
       ...configFn(config),
     });
@@ -761,11 +754,10 @@ module.exports = async ({
   path,
   env,
   dry,
-  buildHttpDependencyImage,
   configFn,
 }) => {
   await copyTemplate(__dirname, workingDir);
   await copyScript(scriptDir, workingDir);
   await copySource(path, workingDir);
-  await configure(workingDir, configFn, env, !dry, buildHttpDependencyImage);
+  await configure(workingDir, configFn, env, !dry);
 };

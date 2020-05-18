@@ -49,7 +49,6 @@ const steps = ({
   runBaseIntegrationTests,
   computeUrlId,
   strict,
-  buildHttpDependencyImage,
   dependencyKeyEnvironmentVariables,
 }) => {
   const serviceName = `${region}-${operationName}-${operationHash}`;
@@ -266,7 +265,6 @@ const steps = ({
         runIntegrationTests,
         runBaseIntegrationTests,
         strict,
-        buildHttpDependencyImage,
       });
     case "command-gateway":
       return commandGateway({
@@ -448,7 +446,6 @@ module.exports = ({
   secretBucketKeyRing,
   computeUrlId,
   strict,
-  buildHttpDependencyImage,
 }) => {
   const buildPath = path.resolve(workingDir, "build.yaml");
 
@@ -511,7 +508,6 @@ module.exports = ({
       runIntegrationTests,
       runBaseIntegrationTests,
       strict,
-      buildHttpDependencyImage,
     }),
   };
 

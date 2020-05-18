@@ -68,12 +68,6 @@ module.exports = ({ domain, dir, configFn }) => async (args) => {
         short: "d",
         default: false,
       },
-      {
-        name: "build-http-dependency-image",
-        type: Boolean,
-        short: "d",
-        default: false,
-      },
     ],
   });
 
@@ -87,7 +81,6 @@ module.exports = ({ domain, dir, configFn }) => async (args) => {
     env: input.env,
     path: input.path,
     dry: input.dryRun,
-    buildHttpDependencyImage: input.buildHttpDependencyImage,
     configFn,
   });
 
