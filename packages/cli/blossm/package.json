@@ -1,6 +1,6 @@
 {
   "name": "@blossm/cli",
-  "version": "0.0.800",
+  "version": "0.0.801",
   "description": "A command line tool for interacting with a blossm network.",
   "main": "index.js",
   "scripts": {
