@@ -92,12 +92,31 @@ module.exports = ({ domain, service = process.env.SERVICE } = {}) => {
         ...(claims && { claims }),
       });
 
+  const rootStream = ({
+    context,
+    claims,
+    tokenFns: { internal: internalTokenFn, external: externalTokenFn } = {},
+  } = {}) => async (fn, { parallel } = {}) =>
+    await deps
+      .rpc(domain, service, "event-store")
+      .stream(fn, { ...(parallel && { parallel }) })
+      .in({
+        ...(context && { context }),
+      })
+      .with({
+        path: `/roots`,
+        ...(internalTokenFn && { internalTokenFn }),
+        ...(externalTokenFn && { externalTokenFn }),
+        ...(claims && { claims }),
+      });
+
   return {
     set: ({ context, claims, tokenFns } = {}) => {
       return {
         add: add({ context, claims, tokenFns }),
         query: query({ context, claims, tokenFns }),
         stream: stream({ context, claims, tokenFns }),
+        rootStream: rootStream({ context, claims, tokenFns }),
         aggregate: aggregate({ context, claims, tokenFns }),
       };
     },
@@ -105,5 +124,6 @@ module.exports = ({ domain, service = process.env.SERVICE } = {}) => {
     aggregate: aggregate(),
     query: query(),
     stream: stream(),
+    rootStream: rootStream(),
   };
 };

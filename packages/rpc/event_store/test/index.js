@@ -445,4 +445,78 @@ describe("Event store", () => {
     });
     expect(result).to.equal(stream);
   });
+  it("should call root stream with the right params", async () => {
+    const stream = "some-stream";
+    const withFake = fake.returns(stream);
+    const inFake = fake.returns({
+      with: withFake,
+    });
+    const streamFake = fake.returns({
+      in: inFake,
+    });
+    const rpcFake = fake.returns({
+      stream: streamFake,
+    });
+    replace(deps, "rpc", rpcFake);
+
+    const fn = "some-fn";
+    const result = await eventStore({ domain, service })
+      .set({
+        context,
+        claims,
+        tokenFns: { internal: internalTokenFn, external: externalTokenFn },
+      })
+      .rootStream(fn, { parallel });
+
+    expect(rpcFake).to.have.been.calledWith(domain, service, "event-store");
+    expect(streamFake).to.have.been.calledWith(fn, {
+      parallel,
+    });
+    expect(inFake).to.have.been.calledWith({
+      context,
+    });
+    expect(withFake).to.have.been.calledWith({
+      path: "/roots",
+      internalTokenFn,
+      externalTokenFn,
+      claims,
+    });
+    expect(result).to.equal(stream);
+  });
+  it("should call root stream with the right params with optionals missing", async () => {
+    const stream = "some-stream";
+    const withFake = fake.returns(stream);
+    const inFake = fake.returns({
+      with: withFake,
+    });
+    const streamFake = fake.returns({
+      in: inFake,
+    });
+    const rpcFake = fake.returns({
+      stream: streamFake,
+    });
+    replace(deps, "rpc", rpcFake);
+
+    const fn = "some-fn";
+    const result = await eventStore({ domain, service })
+      .set({
+        context,
+        claims,
+        tokenFns: { internal: internalTokenFn, external: externalTokenFn },
+      })
+      .rootStream(fn);
+
+    expect(rpcFake).to.have.been.calledWith(domain, service, "event-store");
+    expect(streamFake).to.have.been.calledWith(fn);
+    expect(inFake).to.have.been.calledWith({
+      context,
+    });
+    expect(withFake).to.have.been.calledWith({
+      path: "/roots",
+      internalTokenFn,
+      externalTokenFn,
+      claims,
+    });
+    expect(result).to.equal(stream);
+  });
 });
