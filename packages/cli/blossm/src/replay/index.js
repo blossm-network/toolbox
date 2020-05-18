@@ -78,6 +78,30 @@ const replay = async (input) => {
   const e = allEvents[0];
 
   try {
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log({
+      some: {
+        array: [
+          "functions",
+          "call",
+          "replay-projection",
+          `--data=${JSON.stringify({
+            projection: {
+              name: blossmConfig.name,
+              context: blossmConfig.context,
+              eventsDomain: e.domain,
+              eventsService: e.service,
+            },
+            root: "asdf",
+          })}`,
+          `--project=${envProject({
+            config: rootDir.config(),
+            env: input.env,
+          })}`,
+        ],
+      },
+    });
     const spawnCall = spawnSync(
       "gcloud",
       [
