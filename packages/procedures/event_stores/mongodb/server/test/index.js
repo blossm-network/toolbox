@@ -79,6 +79,9 @@ describe("Mongodb event store", () => {
     const reserveRootCountsResult = "some-reserve-root-count-result";
     const reserveRootCountsFake = fake.returns(reserveRootCountsResult);
     replace(deps, "reserveRootCounts", reserveRootCountsFake);
+    const rootStreamResult = "some-root-stream-result";
+    const rootStreamFake = fake.returns(rootStreamResult);
+    replace(deps, "rootStream", rootStreamFake);
     const aggregateResult = "some-aggregate-result";
     const aggregateFake = fake.returns(aggregateResult);
     replace(deps, "aggregate", aggregateFake);
@@ -189,6 +192,9 @@ describe("Mongodb event store", () => {
     expect(reserveRootCountsFake).to.have.been.calledWith({
       countsStore: cStore,
     });
+    expect(rootStreamFake).to.have.been.calledWith({
+      countsStore: cStore,
+    });
     expect(aggregateFake).to.have.been.calledWith({
       eventStore: eStore,
       snapshotStore: sStore,
@@ -208,6 +214,7 @@ describe("Mongodb event store", () => {
       queryFn: queryResult,
       streamFn: streamResult,
       reserveRootCountsFn: reserveRootCountsResult,
+      rootStreamFn: rootStreamResult,
       publishFn,
     });
 
@@ -352,7 +359,7 @@ describe("Mongodb event store", () => {
     expect(storeFake).to.have.been.calledWith({
       name: `${domain}.counts`,
       schema: {
-        root: { type: String, required: true },
+        root: { type: String, required: true, unique: true },
         value: { type: Number, required: true, default: 0 },
       },
       indexes: [[{ root: 1 }]],

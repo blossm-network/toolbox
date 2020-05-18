@@ -77,6 +77,8 @@ const replay = async (input) => {
 
   const e = allEvents[0];
 
+  const root = "asdf";
+
   try {
     //TODO
     //eslint-disable-next-line no-console
@@ -93,7 +95,7 @@ const replay = async (input) => {
               eventsDomain: e.domain,
               eventsService: e.service,
             },
-            root: "asdf",
+            root,
           })}`,
           `--project=${envProject({
             config: rootDir.config(),

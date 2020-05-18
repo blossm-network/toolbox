@@ -1,1 +1,1 @@
-A mongodb event store server query function.
+A mongodb event store server stream function.

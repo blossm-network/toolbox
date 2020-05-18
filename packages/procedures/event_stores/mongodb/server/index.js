@@ -146,7 +146,7 @@ const countStore = async () => {
   _countStore = deps.db.store({
     name: `${process.env.DOMAIN}.counts`,
     schema: {
-      root: { type: String, required: true },
+      root: { type: String, required: true, unique: true },
       value: { type: Number, required: true, default: 0 },
     },
     indexes: [[{ root: 1 }]],
@@ -192,6 +192,9 @@ module.exports = async ({
       eventStore: eStore,
     }),
     reserveRootCountsFn: deps.reserveRootCounts({
+      countsStore: cStore,
+    }),
+    rootStreamFn: deps.rootStream({
       countsStore: cStore,
     }),
     // saveSnapshotFn,
