@@ -24,17 +24,17 @@ describe("Event store", () => {
     const postFake = fake.returns({
       listen: listenFake,
     });
-    const rootStreamFake = fake.returns({
+    const getFake = fake.returns({
       post: postFake,
     });
     const streamFake = fake.returns({
-      get: rootStreamFake,
+      get: getFake,
     });
-    const getFake = fake.returns({
+    const rootStreamFake = fake.returns({
       get: streamFake,
     });
     const serverFake = fake.returns({
-      get: getFake,
+      get: rootStreamFake,
     });
     replace(deps, "server", serverFake);
     const eventStoreGetResult = "some-get-result";

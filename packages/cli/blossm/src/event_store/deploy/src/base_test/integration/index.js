@@ -124,18 +124,18 @@ describe("Event store integration tests", () => {
     );
 
     //Test root stream
-    await request.stream(
-      `${url}/roots`,
-      (data) => {
-        //TODO
-        //eslint-disable-next-line
-        console.log({ data });
-        expect(data).to.equal(root);
-      },
-      {
-        query: {},
-      }
-    );
+    // await request.stream(
+    //   `${url}/roots`,
+    //   (data) => {
+    //     //TODO
+    //     //eslint-disable-next-line
+    //     console.log({ data });
+    //     expect(data).to.equal(root);
+    //   },
+    //   {
+    //     query: {},
+    //   }
+    // );
 
     ///Test indexes
     for (const index of indexes || []) {
