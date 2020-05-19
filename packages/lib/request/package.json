@@ -14,9 +14,8 @@
     "test": "mocha --recursive"
   },
   "dependencies": {
-    "qs": "^6.9.1",
-    "query-string": "^6.8.1",
-    "request": "^1.2.0"
+    "request": "^1.2.0",
+    "@blossm/url-encode-query-data": "*"
   },
   "devDependencies": {
     "mocha": "^7.1.1",

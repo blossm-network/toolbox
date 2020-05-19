@@ -14,7 +14,8 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/errors": "^0.0.30"
+    "@blossm/errors": "^0.0.30",
+    "@blossm/url-encode-query-data": "*"
   },
   "devDependencies": {
     "chai-datetime": "^1.5.0",

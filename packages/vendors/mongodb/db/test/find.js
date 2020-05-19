@@ -29,7 +29,7 @@ describe("Find", () => {
     const sort = "some-sort";
     const select = "some-select";
     const skip = "some-skip";
-    const pageSize = "some-page-size";
+    const limit = "some-limit";
     const options = { a: 1 };
 
     const result = await find({
@@ -38,7 +38,7 @@ describe("Find", () => {
       sort,
       select,
       skip,
-      pageSize,
+      limit,
       options,
     });
 
@@ -49,7 +49,7 @@ describe("Find", () => {
       {
         skip,
         sort,
-        limit: pageSize,
+        limit,
         a: 1,
       }
     );

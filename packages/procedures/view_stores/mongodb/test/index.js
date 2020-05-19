@@ -182,7 +182,11 @@ describe("View store", () => {
 
     const root = "some-root";
 
+    const limit = "some-limit";
+    const skip = "some-skip";
     const findFnResult = await viewStoreFake.lastCall.lastArg.findFn({
+      limit,
+      skip,
       query,
       sort,
     });
@@ -190,6 +194,8 @@ describe("View store", () => {
     expect(findFake).to.have.been.calledWith({
       store,
       query,
+      limit,
+      skip,
       sort,
       options: {
         lean: true,

@@ -12,6 +12,7 @@ const response = {
   headers,
 };
 const body = "some-body";
+const resultingUrl = "some-resulting-url";
 
 describe("Request", () => {
   beforeEach(() => {
@@ -116,10 +117,10 @@ describe("Request", () => {
       andy: [0, "ur dogs?"],
       dandy: { a: 1 },
     };
+    const urlEncodeQueryDataFake = fake.returns(resultingUrl);
+    replace(deps, "urlEncodeQueryData", urlEncodeQueryDataFake);
     replace(deps, "request", (options, callback) => {
-      expect(options.url).to.equal(
-        `${url}?hello=there&how%5B0%5D=are&how%5B1%5D=you&andy%5B0%5D=0&andy%5B1%5D=ur%20dogs%3F&dandy%5Ba%5D=1`
-      );
+      expect(options.url).to.equal(`https://${resultingUrl}`);
       callback(null, response, body);
     });
     const url = "http://google.com";
@@ -133,11 +134,10 @@ describe("Request", () => {
       andy: [0, "ur dogs?"],
     };
     const headers = "some-header!";
+    const urlEncodeQueryDataFake = fake.returns(resultingUrl);
+    replace(deps, "urlEncodeQueryData", urlEncodeQueryDataFake);
     replace(deps, "request", (options, callback) => {
-      expect(options.url).to.equal(
-        `${url}?hello=there&how%5B0%5D=are&how%5B1%5D=you&andy%5B0%5D=0&andy%5B1%5D=ur%20dogs%3F`
-      );
-      expect(options.headers).to.equal(headers);
+      expect(options.url).to.equal(`https://${resultingUrl}`);
       callback(null, response, body);
     });
     const url = "http://google.com";
@@ -150,8 +150,10 @@ describe("Request", () => {
       how: "are",
       you: "now",
     };
+    const urlEncodeQueryDataFake = fake.returns(resultingUrl);
+    replace(deps, "urlEncodeQueryData", urlEncodeQueryDataFake);
     replace(deps, "request", (options, callback) => {
-      expect(options.url).to.equal(`${url}?hello=there&how=are&you=now`);
+      expect(options.url).to.equal(`https://${resultingUrl}`);
       callback(null, response, body);
     });
     const url = "http://google.com";
@@ -185,10 +187,10 @@ describe("Request", () => {
           break;
       }
     };
+    const urlEncodeQueryDataFake = fake.returns(resultingUrl);
+    replace(deps, "urlEncodeQueryData", urlEncodeQueryDataFake);
     replace(deps, "request", (options) => {
-      expect(options.url).to.equal(
-        `${url}?hello=there&how%5B0%5D=are&how%5B1%5D=you&andy%5B0%5D=0&andy%5B1%5D=ur%20dogs%3F`
-      );
+      expect(options.url).to.equal(resultingUrl);
       return {
         on: onFn,
       };
@@ -218,10 +220,10 @@ describe("Request", () => {
           break;
       }
     };
+    const urlEncodeQueryDataFake = fake.returns(resultingUrl);
+    replace(deps, "urlEncodeQueryData", urlEncodeQueryDataFake);
     replace(deps, "request", (options) => {
-      expect(options.url).to.equal(
-        `${url}?hello=there&how%5B0%5D=are&how%5B1%5D=you&andy%5B0%5D=0&andy%5B1%5D=ur%20dogs%3F`
-      );
+      expect(options.url).to.equal(resultingUrl);
       return {
         on: onFn,
       };

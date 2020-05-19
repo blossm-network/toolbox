@@ -9,17 +9,16 @@ module.exports = ({
   password,
   host,
   database,
-  parameters = {},
+  parameters,
   poolSize = 10,
   autoIndex = false,
   onOpen = () => logger.info("Thank you database."),
   onError = (err) => logger.error("Database has errored.", { err }),
 }) => {
-  let connectionString = `${protocol}://${user}:${password}@${host}/${database}`;
-
-  const queryString = deps.urlEncodeQueryData(parameters);
-
-  if (queryString.length > 0) connectionString += `?${queryString}`;
+  const connectionString = deps.urlEncodeQueryData(
+    `${protocol}://${user}:${password}@${host}/${database}`,
+    ...(parameters ? [parameters] : [])
+  );
 
   mongoose.connect(connectionString, {
     useNewUrlParser: true,

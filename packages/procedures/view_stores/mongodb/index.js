@@ -115,10 +115,12 @@ module.exports = async ({ schema, indexes, getFn, putFn, one } = {}) => {
     return await cursor.eachAsync(fn, { parallel });
   };
 
-  const findFn = async ({ query, sort }) =>
+  const findFn = async ({ query, limit, skip, sort }) =>
     await deps.db.find({
       store,
       query,
+      limit,
+      skip,
       ...(sort && { sort }),
       options: {
         lean: true,

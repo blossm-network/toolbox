@@ -4,7 +4,7 @@ module.exports = ({
   sort = null,
   select = null,
   skip = 0,
-  pageSize = null,
+  limit = null,
   options = null,
 }) =>
   store.find(
@@ -13,7 +13,7 @@ module.exports = ({
     {
       ...(skip && { skip }),
       ...(sort && { sort }),
-      ...(pageSize && { limit: pageSize }),
+      ...(limit && { limit }),
       ...options,
     }
   );

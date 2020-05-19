@@ -1,6 +1,7 @@
 const deps = require("./deps");
 
 const defaultQueryFn = (query) => query;
+const defaultLimit = 100;
 
 module.exports = ({ findFn, one = false, queryFn = defaultQueryFn }) => {
   return async (req, res) => {
@@ -33,8 +34,14 @@ module.exports = ({ findFn, one = false, queryFn = defaultQueryFn }) => {
         }),
     };
 
+    // const [result, count] = await Promise.all([findFn, countFn]);
+    const limit = one ? 1 : req.query.limit || defaultLimit;
+    const skip = one ? 0 : req.query.skip || 0;
+
     const results = await findFn({
       query,
+      limit,
+      skip,
       ...(req.query.sort && { sort: req.query.sort }),
     });
 
@@ -48,7 +55,8 @@ module.exports = ({ findFn, one = false, queryFn = defaultQueryFn }) => {
       };
     });
 
-    const updates = `http://updates.${
+    //TODO https may not work.
+    const updates = `https://updates.${
       process.env.CORE_NETWORK
     }/channel?query%5Bname%5D=${process.env.NAME}&query%5Bcontext%5D=${
       process.env.CONTEXT
@@ -58,9 +66,23 @@ module.exports = ({ findFn, one = false, queryFn = defaultQueryFn }) => {
         : ""
     }`;
 
-    if (!one) return res.send({ content: formattedResults, updates });
-    if (formattedResults.length > 0)
-      return res.send({ content: formattedResults[0], updates });
-    throw deps.resourceNotFoundError.message("This view wasn't found.");
+    if (!one) {
+      const limit = req.query.limit || defaultLimit;
+      const url = `https://v${
+        process.env.DOMAIN && process.env.SERVICE
+          ? `.${process.env.DOMAIN}.${process.env.SERVICE}`
+          : ""
+      }.${process.env.CONTEXT}.${process.env.NETWORK}/${process.env.NAME}`;
+      const next = deps.urlEncodeQueryData(url, {
+        ...req.query,
+        skip: skip + limit,
+        limit,
+      });
+      res.send({ content: formattedResults, updates, next });
+    } else if (formattedResults.length > 0) {
+      res.send({ content: formattedResults[0], updates });
+    } else {
+      throw deps.resourceNotFoundError.message("This view wasn't found.");
+    }
   };
 };

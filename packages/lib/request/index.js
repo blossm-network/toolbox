@@ -1,5 +1,4 @@
 const deps = require("./deps");
-const addParamsToUrl = require("./src/add_params_to_url");
 
 const common = async ({ method, url, params, headers }) =>
   new Promise((resolve, reject) =>
@@ -34,7 +33,11 @@ exports.delete = async (url, { headers } = {}) =>
   await common({ method: "DELETE", url, headers });
 
 exports.get = async (url, { query, headers } = {}) =>
-  await common({ method: "GET", url: addParamsToUrl(url, query), headers });
+  await common({
+    method: "GET",
+    url: deps.urlEncodeQueryData(url, query),
+    headers,
+  });
 
 exports.stream = async (url, onData, { query, headers } = {}) => {
   let processingData = false;
@@ -42,7 +45,7 @@ exports.stream = async (url, onData, { query, headers } = {}) => {
   return new Promise((resolve, reject) =>
     deps
       .request({
-        url: addParamsToUrl(url, query),
+        url: deps.urlEncodeQueryData(url, query),
         method: "GET",
         ...(headers != undefined && { headers }),
       })
