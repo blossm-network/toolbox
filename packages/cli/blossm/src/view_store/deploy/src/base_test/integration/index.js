@@ -71,11 +71,14 @@ describe("View store base integration tests", () => {
       }
     );
 
-    const { updates: updates0, content: content0 } = JSON.parse(response1.body);
+    const { updates: updates0, count: count0, content: content0 } = JSON.parse(
+      response1.body
+    );
 
     const parsedBody0 = one ? content0 : content0[0];
 
     expect(updates0).to.exist;
+    expect(count0).to.equal(1);
 
     expect(response1.statusCode).to.equal(200);
     for (const key in example0.get) {
@@ -122,11 +125,14 @@ describe("View store base integration tests", () => {
     );
 
     expect(response3.statusCode).to.equal(200);
-    const { updates: updates1, content: content1 } = JSON.parse(response3.body);
+    const { updates: updates1, count: count1, content: content1 } = JSON.parse(
+      response3.body
+    );
 
     const parsedBody1 = one ? content1 : content1[0];
 
     expect(updates1).to.exist;
+    expect(count1).to.equal(1);
 
     for (const key in example1.get) {
       expect(parsedBody1.body[key]).to.deep.equal(example1.get[key]);
@@ -173,12 +179,15 @@ describe("View store base integration tests", () => {
       }
     );
 
-    const { updates: updates2, content: content2 } = JSON.parse(response5.body);
+    const { updates: updates2, count: count2, content: content2 } = JSON.parse(
+      response5.body
+    );
 
     const firstSort1 = one ? content2 : content2[0];
     const firstSort2 = one ? null : content2[1];
 
     expect(updates2).to.exist;
+    expect(count2).to.equal(2);
 
     const response6 = await request.get(
       `${url}${domainRoot ? `/${domainRoot}` : ""}`,
@@ -198,11 +207,14 @@ describe("View store base integration tests", () => {
       }
     );
 
-    const { updates: updates3, content: content3 } = JSON.parse(response6.body);
+    const { updates: updates3, count: count3, content: content3 } = JSON.parse(
+      response6.body
+    );
 
     const secondSort1 = one ? content2 : content3[0];
     const secondSort2 = one ? null : content3[1];
     expect(updates3).to.exist;
+    expect(count3).to.equal(2);
 
     if (one) {
       expect(firstSort1).to.deep.equal(secondSort1);
@@ -255,9 +267,15 @@ describe("View store base integration tests", () => {
         }
       );
 
-      const { content: content4 } = JSON.parse(response7.body);
+      const {
+        updates: updates4,
+        content: content4,
+        count: count4,
+      } = JSON.parse(response7.body);
 
       expect(content4).to.have.length(1);
+      expect(updates4).to.exist;
+      expect(count4).to.equal();
 
       //TODO
       //eslint-disable-next-line no-console
@@ -329,19 +347,19 @@ describe("View store base integration tests", () => {
       );
       expect(response1.statusCode).to.equal(200);
 
-      const { updates: updates4, content: content4 } = JSON.parse(
+      const { updates: updates1, content: content1 } = JSON.parse(
         response1.body
       );
 
-      const parsedBody4 = one ? content4 : content4[0];
+      const parsedBody1 = one ? content1 : content1[0];
 
-      expect(updates4).to.exist;
+      expect(updates1).to.exist;
 
       for (const key in example0.get) {
         if (key == "root") {
-          expect(parsedBody4[0].body[key]).to.equal(root);
+          expect(parsedBody1[0].body[key]).to.equal(root);
         } else {
-          expect(parsedBody4[0].body[key]).to.deep.equal(example0.get[key]);
+          expect(parsedBody1[0].body[key]).to.deep.equal(example0.get[key]);
         }
       }
     }

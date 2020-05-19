@@ -7,6 +7,7 @@ module.exports = async ({
   removeFn,
   queryFn,
   putFn,
+  countFn,
   one,
 } = {}) => {
   deps
@@ -15,7 +16,12 @@ module.exports = async ({
       path: "/stream/:root?",
     })
     .get(
-      deps.get({ findFn, ...(queryFn && { queryFn }), ...(one && { one }) }),
+      deps.get({
+        findFn,
+        countFn,
+        ...(queryFn && { queryFn }),
+        ...(one && { one }),
+      }),
       {
         path: "/:root?",
       }

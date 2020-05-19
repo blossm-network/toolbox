@@ -3,7 +3,12 @@ const deps = require("./deps");
 const defaultQueryFn = (query) => query;
 const defaultLimit = 100;
 
-module.exports = ({ findFn, one = false, queryFn = defaultQueryFn }) => {
+module.exports = ({
+  findFn,
+  countFn,
+  one = false,
+  queryFn = defaultQueryFn,
+}) => {
   return async (req, res) => {
     const context = req.query.context[process.env.CONTEXT];
 
@@ -45,12 +50,15 @@ module.exports = ({ findFn, one = false, queryFn = defaultQueryFn }) => {
     const limit = one ? 1 : req.query.limit || defaultLimit;
     const skip = one ? 0 : req.query.skip || 0;
 
-    const results = await findFn({
-      query,
-      limit,
-      skip,
-      ...(req.query.sort && { sort: req.query.sort }),
-    });
+    const [results, count] = await Promise.all([
+      findFn({
+        query,
+        limit,
+        skip,
+        ...(req.query.sort && { sort: req.query.sort }),
+      }),
+      ...(one ? [] : [countFn({ query })]),
+    ]);
 
     const formattedResults = results.map((r) => {
       return {
@@ -85,7 +93,7 @@ module.exports = ({ findFn, one = false, queryFn = defaultQueryFn }) => {
         skip: skip + limit,
         limit,
       });
-      res.send({ content: formattedResults, updates, next });
+      res.send({ content: formattedResults, updates, next, count });
     } else if (formattedResults.length > 0) {
       res.send({ content: formattedResults[0], updates });
     } else {

@@ -51,6 +51,7 @@ describe("View store", () => {
 
     const streamFn = "some-stream-fn";
     const findFn = "some-find-fn";
+    const countFn = "some-count-fn";
     const writeFn = "some-write-fn";
     const removeFn = "some-remove-fn";
     const queryFn = "some-query-fn";
@@ -60,6 +61,7 @@ describe("View store", () => {
     await viewStore({
       streamFn,
       findFn,
+      countFn,
       writeFn,
       removeFn,
       queryFn,
@@ -87,6 +89,7 @@ describe("View store", () => {
     });
     expect(viewStoreGetFake).to.have.been.calledWith({
       findFn,
+      countFn,
       queryFn,
       one,
     });
@@ -135,14 +138,14 @@ describe("View store", () => {
 
     const streamFn = "some-stream-fn";
     const findFn = "some-find-fn";
-    const findOneFn = "some-find-one-fn";
+    const countFn = "some-count-fn";
     const writeFn = "some-write-fn";
     const removeFn = "some-remove-fn";
 
     await viewStore({
       streamFn,
       findFn,
-      findOneFn,
+      countFn,
       writeFn,
       removeFn,
     });
@@ -160,7 +163,7 @@ describe("View store", () => {
       path: "/:root",
     });
     expect(viewStoreStreamFake).to.have.been.calledWith({ streamFn });
-    expect(viewStoreGetFake).to.have.been.calledWith({ findFn }); //, findOneFn });
+    expect(viewStoreGetFake).to.have.been.calledWith({ findFn, countFn });
     expect(viewStorePutFake).to.have.been.calledWith({ writeFn });
     expect(viewStoreDeleteFake).to.have.been.calledWith({ removeFn });
   });

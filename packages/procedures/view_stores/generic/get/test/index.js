@@ -8,6 +8,7 @@ const obj = { a: "some-obj" };
 const sort = { a: "1" };
 const root = "some-root";
 const objRoot = "some-obj-root";
+const count = "some-count";
 
 const envContext = "some-env-context";
 const envContextRoot = "some-env-context-root";
@@ -46,6 +47,7 @@ describe("View store get", () => {
 
   it("should call with the correct params", async () => {
     const findFake = fake.returns([{ body: obj, headers: { root: objRoot } }]);
+    const countFake = fake.returns(count);
 
     const params = { root };
 
@@ -72,11 +74,26 @@ describe("View store get", () => {
     const res = {
       send: sendFake,
     };
-    await get({ findFn: findFake })(req, res);
+    await get({ findFn: findFake, countFn: countFake })(req, res);
     expect(findFake).to.have.been.calledWith({
       limit: 20,
       skip: 40,
       sort: { a: 1 },
+      query: {
+        "body.some-query-key": 1,
+        "headers.some-env-context": {
+          root: envContextRoot,
+          service: envContextService,
+          network: envContextNetwork,
+        },
+        "headers.some-env-domain": {
+          root,
+          service: envService,
+          network: envNetwork,
+        },
+      },
+    });
+    expect(countFake).to.have.been.calledWith({
       query: {
         "body.some-query-key": 1,
         "headers.some-env-context": {
@@ -106,6 +123,7 @@ describe("View store get", () => {
       updates:
         "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network&query%5Bdomain%5D=some-env-domain&query%5Bsome-env-domain%5D%5Broot%5D=some-root&query%5Bsome-env-domain%5D%5Bservice%5D=some-env-service&query%5Bsome-env-domain%5D%5Bnetwork%5D=some-env-network",
       next: nextUrl,
+      count,
     });
   });
   it("should call with the correct params with no query and trace in headers", async () => {
@@ -113,6 +131,7 @@ describe("View store get", () => {
     const findFake = fake.returns([
       { body: obj, headers: { root: objRoot, trace } },
     ]);
+    const countFake = fake.returns(count);
 
     const params = { root };
 
@@ -130,10 +149,24 @@ describe("View store get", () => {
     const res = {
       send: sendFake,
     };
-    await get({ findFn: findFake })(req, res);
+    await get({ findFn: findFake, countFn: countFake })(req, res);
     expect(findFake).to.have.been.calledWith({
       limit: 100,
       skip: 0,
+      query: {
+        "headers.some-env-context": {
+          root: envContextRoot,
+          service: envContextService,
+          network: envContextNetwork,
+        },
+        "headers.some-env-domain": {
+          root,
+          service: envService,
+          network: envNetwork,
+        },
+      },
+    });
+    expect(countFake).to.have.been.calledWith({
       query: {
         "headers.some-env-context": {
           root: envContextRoot,
@@ -160,10 +193,12 @@ describe("View store get", () => {
       updates:
         "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network&query%5Bdomain%5D=some-env-domain&query%5Bsome-env-domain%5D%5Broot%5D=some-root&query%5Bsome-env-domain%5D%5Bservice%5D=some-env-service&query%5Bsome-env-domain%5D%5Bnetwork%5D=some-env-network",
       next: nextUrl,
+      count,
     });
   });
   it("should call with the correct params with no env domain, no params, one as true", async () => {
     const findFake = fake.returns([{ body: obj, headers: { root: objRoot } }]);
+    const countFake = fake.returns(count);
 
     const query = { "some-query-key": 1 };
 
@@ -187,7 +222,12 @@ describe("View store get", () => {
     const otherQuery = { "some-other-query-key": 1 };
     const queryFnFake = fake.returns(otherQuery);
     delete process.env.DOMAIN;
-    await get({ findFn: findFake, one: true, queryFn: queryFnFake })(req, res);
+    await get({
+      findFn: findFake,
+      countFn: countFake,
+      one: true,
+      queryFn: queryFnFake,
+    })(req, res);
     expect(queryFnFake).to.have.been.calledWith(query);
     expect(findFake).to.have.been.calledWith({
       limit: 1,
@@ -202,6 +242,7 @@ describe("View store get", () => {
         },
       },
     });
+    expect(countFake).to.not.have.been.called;
     expect(sendFake).to.have.been.calledWith({
       content: { body: obj, headers: { root: objRoot } },
       updates:
@@ -210,6 +251,7 @@ describe("View store get", () => {
   });
   it("should call with the correct params with no env service", async () => {
     const findFake = fake.returns([{ body: obj, headers: { root: objRoot } }]);
+    const countFake = fake.returns(count);
 
     const params = { root };
 
@@ -232,11 +274,21 @@ describe("View store get", () => {
       send: sendFake,
     };
     delete process.env.SERVICE;
-    await get({ findFn: findFake })(req, res);
+    await get({ findFn: findFake, countFn: countFake })(req, res);
     expect(findFake).to.have.been.calledWith({
       limit: 100,
       skip: 0,
       sort: { a: 1 },
+      query: {
+        "body.some-query-key": 1,
+        "headers.some-env-context": {
+          root: envContextRoot,
+          service: envContextService,
+          network: envContextNetwork,
+        },
+      },
+    });
+    expect(countFake).to.have.been.calledWith({
       query: {
         "body.some-query-key": 1,
         "headers.some-env-context": {
@@ -261,10 +313,12 @@ describe("View store get", () => {
       updates:
         "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
       next: nextUrl,
+      count,
     });
   });
   it("should throw correctly if not found", async () => {
     const findFake = fake.returns([]);
+    const countFake = fake.returns(0);
 
     const params = { root };
     const req = {
@@ -286,7 +340,7 @@ describe("View store get", () => {
     });
 
     try {
-      await get({ findFn: findFake, one: true })(req, res);
+      await get({ findFn: findFake, countFn: countFake, one: true })(req, res);
     } catch (e) {
       expect(messageFake).to.have.been.calledWith("This view wasn't found.");
       expect(e).to.equal(error);
@@ -294,6 +348,7 @@ describe("View store get", () => {
   });
   it("should throw correctly if wrong context", async () => {
     const findFake = fake.returns([]);
+    const countFake = fake.returns(0);
 
     const params = { root };
     const req = {
@@ -315,7 +370,7 @@ describe("View store get", () => {
     });
 
     try {
-      await get({ findFn: findFake, one: true })(req, res);
+      await get({ findFn: findFake, countFn: countFake, one: true })(req, res);
     } catch (e) {
       expect(messageFake).to.have.been.calledWith(
         "Missing required permissions."
