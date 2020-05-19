@@ -38,6 +38,10 @@ module.exports = ({ findFn, one = false, queryFn = defaultQueryFn }) => {
     const limit = one ? 1 : req.query.limit || defaultLimit;
     const skip = one ? 0 : req.query.skip || 0;
 
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log({ skip, limit });
+
     const results = await findFn({
       query,
       limit,
