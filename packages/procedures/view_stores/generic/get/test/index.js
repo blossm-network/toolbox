@@ -46,8 +46,13 @@ describe("View store get", () => {
   });
 
   it("should call with the correct params", async () => {
-    const findFake = fake.returns([{ body: obj, headers: { root: objRoot } }]);
-    const countFake = fake.returns(count);
+    const results = [];
+
+    for (let i = 0; i < 100; i++) {
+      results.push({ body: obj, headers: { root: objRoot } });
+    }
+    const findFake = fake.returns(results);
+    const countFake = fake.returns(200);
 
     const params = { root };
 
@@ -56,16 +61,11 @@ describe("View store get", () => {
     const urlEncodeQueryDataFake = fake.returns(nextUrl);
     replace(deps, "urlEncodeQueryData", urlEncodeQueryDataFake);
 
-    const skip = "40";
-    const limit = "20";
-
     const req = {
       query: {
         sort,
         context,
         query,
-        skip,
-        limit,
       },
       params,
     };
@@ -76,8 +76,8 @@ describe("View store get", () => {
     };
     await get({ findFn: findFake, countFn: countFake })(req, res);
     expect(findFake).to.have.been.calledWith({
-      limit: 20,
-      skip: 40,
+      limit: 100,
+      skip: 0,
       sort: { a: 1 },
       query: {
         "body.some-query-key": 1,
@@ -113,8 +113,88 @@ describe("View store get", () => {
       {
         sort: { a: 1 },
         query,
-        skip: 60,
-        limit: 20,
+        skip: 100,
+        limit: 100,
+      }
+    );
+    expect(sendFake).to.have.been.calledWith({
+      content: results,
+      updates:
+        "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network&query%5Bdomain%5D=some-env-domain&query%5Bsome-env-domain%5D%5Broot%5D=some-root&query%5Bsome-env-domain%5D%5Bservice%5D=some-env-service&query%5Bsome-env-domain%5D%5Bnetwork%5D=some-env-network",
+      next: nextUrl,
+      count: 200,
+    });
+  });
+  it("should call with the correct params if limit reached", async () => {
+    const findFake = fake.returns([{ body: obj, headers: { root: objRoot } }]);
+    const countFake = fake.returns(3);
+
+    const params = { root };
+
+    const query = { "some-query-key": 1 };
+
+    const urlEncodeQueryDataFake = fake.returns(nextUrl);
+    replace(deps, "urlEncodeQueryData", urlEncodeQueryDataFake);
+
+    const skip = "1";
+    const limit = "1";
+
+    const req = {
+      query: {
+        sort,
+        context,
+        query,
+        skip,
+        limit,
+      },
+      params,
+    };
+
+    const sendFake = fake();
+    const res = {
+      send: sendFake,
+    };
+    await get({ findFn: findFake, countFn: countFake })(req, res);
+    expect(findFake).to.have.been.calledWith({
+      limit: 1,
+      skip: 1,
+      sort: { a: 1 },
+      query: {
+        "body.some-query-key": 1,
+        "headers.some-env-context": {
+          root: envContextRoot,
+          service: envContextService,
+          network: envContextNetwork,
+        },
+        "headers.some-env-domain": {
+          root,
+          service: envService,
+          network: envNetwork,
+        },
+      },
+    });
+    expect(countFake).to.have.been.calledWith({
+      query: {
+        "body.some-query-key": 1,
+        "headers.some-env-context": {
+          root: envContextRoot,
+          service: envContextService,
+          network: envContextNetwork,
+        },
+        "headers.some-env-domain": {
+          root,
+          service: envService,
+          network: envNetwork,
+        },
+      },
+    });
+    expect(urlEncodeQueryDataFake).to.have.been.calledWith(
+      `https://v.${envDomain}.${envService}.${envContext}.${envNetwork}/${envName}`,
+      {
+        sort: { a: 1 },
+        query,
+        skip: 2,
+        limit: 1,
       }
     );
     expect(sendFake).to.have.been.calledWith({
@@ -122,7 +202,78 @@ describe("View store get", () => {
       updates:
         "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network&query%5Bdomain%5D=some-env-domain&query%5Bsome-env-domain%5D%5Broot%5D=some-root&query%5Bsome-env-domain%5D%5Bservice%5D=some-env-service&query%5Bsome-env-domain%5D%5Bnetwork%5D=some-env-network",
       next: nextUrl,
-      count,
+      count: 3,
+    });
+  });
+  it("should call with the correct params if all objects already retrieved with skip and limit", async () => {
+    const findFake = fake.returns([{ body: obj, headers: { root: objRoot } }]);
+    const countFake = fake.returns(1);
+
+    const params = { root };
+
+    const query = { "some-query-key": 1 };
+
+    const urlEncodeQueryDataFake = fake.returns(nextUrl);
+    replace(deps, "urlEncodeQueryData", urlEncodeQueryDataFake);
+
+    const skip = "0";
+    const limit = "1";
+
+    const req = {
+      query: {
+        sort,
+        context,
+        query,
+        skip,
+        limit,
+      },
+      params,
+    };
+
+    const sendFake = fake();
+    const res = {
+      send: sendFake,
+    };
+    await get({ findFn: findFake, countFn: countFake })(req, res);
+    expect(findFake).to.have.been.calledWith({
+      limit: 1,
+      skip: 0,
+      sort: { a: 1 },
+      query: {
+        "body.some-query-key": 1,
+        "headers.some-env-context": {
+          root: envContextRoot,
+          service: envContextService,
+          network: envContextNetwork,
+        },
+        "headers.some-env-domain": {
+          root,
+          service: envService,
+          network: envNetwork,
+        },
+      },
+    });
+    expect(countFake).to.have.been.calledWith({
+      query: {
+        "body.some-query-key": 1,
+        "headers.some-env-context": {
+          root: envContextRoot,
+          service: envContextService,
+          network: envContextNetwork,
+        },
+        "headers.some-env-domain": {
+          root,
+          service: envService,
+          network: envNetwork,
+        },
+      },
+    });
+    expect(urlEncodeQueryDataFake).to.not.have.been.called;
+    expect(sendFake).to.have.been.calledWith({
+      content: [{ body: obj, headers: { root: objRoot } }],
+      updates:
+        "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network&query%5Bdomain%5D=some-env-domain&query%5Bsome-env-domain%5D%5Broot%5D=some-root&query%5Bsome-env-domain%5D%5Bservice%5D=some-env-service&query%5Bsome-env-domain%5D%5Bnetwork%5D=some-env-network",
+      count: 1,
     });
   });
   it("should call with the correct params with no query and trace in headers", async () => {
@@ -179,18 +330,11 @@ describe("View store get", () => {
         },
       },
     });
-    expect(urlEncodeQueryDataFake).to.have.been.calledWith(
-      `https://v.${envDomain}.${envService}.${envContext}.${envNetwork}/${envName}`,
-      {
-        skip: 100,
-        limit: 100,
-      }
-    );
+    expect(urlEncodeQueryDataFake).to.not.have.been.called;
     expect(sendFake).to.have.been.calledWith({
       content: [{ body: obj, headers: { root: objRoot, trace } }],
       updates:
         "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network&query%5Bdomain%5D=some-env-domain&query%5Bsome-env-domain%5D%5Broot%5D=some-root&query%5Bsome-env-domain%5D%5Bservice%5D=some-env-service&query%5Bsome-env-domain%5D%5Bnetwork%5D=some-env-network",
-      next: nextUrl,
       count,
     });
   });
@@ -296,20 +440,11 @@ describe("View store get", () => {
         },
       },
     });
-    expect(urlEncodeQueryDataFake).to.have.been.calledWith(
-      `https://v.${envContext}.${envNetwork}/${envName}`,
-      {
-        sort: { a: 1 },
-        query,
-        skip: 100,
-        limit: 100,
-      }
-    );
+    expect(urlEncodeQueryDataFake).to.not.have.been.called;
     expect(sendFake).to.have.been.calledWith({
       content: [{ body: obj, headers: { root: objRoot } }],
       updates:
         "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
-      next: nextUrl,
       count,
     });
   });

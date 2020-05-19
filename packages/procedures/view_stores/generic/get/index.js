@@ -88,17 +88,25 @@ module.exports = ({
           ? `.${process.env.DOMAIN}.${process.env.SERVICE}`
           : ""
       }.${process.env.CONTEXT}.${process.env.NETWORK}/${process.env.NAME}`;
-      const next = deps.urlEncodeQueryData(url, {
-        ...(req.query.query && {
-          query: req.query.query,
-        }),
-        ...(req.query.sort && {
-          sort: req.query.sort,
-        }),
-        skip: skip + limit,
-        limit,
+      const next =
+        formattedResults.length == limit && skip + limit < count
+          ? deps.urlEncodeQueryData(url, {
+              ...(req.query.query && {
+                query: req.query.query,
+              }),
+              ...(req.query.sort && {
+                sort: req.query.sort,
+              }),
+              skip: skip + limit,
+              limit,
+            })
+          : null;
+      res.send({
+        content: formattedResults,
+        updates,
+        ...(next && { next }),
+        count,
       });
-      res.send({ content: formattedResults, updates, next, count });
     } else if (formattedResults.length > 0) {
       res.send({ content: formattedResults[0], updates });
     } else {
