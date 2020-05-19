@@ -211,10 +211,56 @@ describe("View store base integration tests", () => {
       expect(firstSort2).to.deep.equal(secondSort1);
     }
 
-    const response7 = await request.delete(`${url}/${root}`);
-    const parsedBody7 = JSON.parse(response7.body);
-    expect(response7.statusCode).to.equal(200);
-    expect(parsedBody7.deletedCount).to.equal(1);
+    const yetAnotherRoot = "yet-another-root";
+    await request.put(`${url}/${yetAnotherRoot}`, {
+      body: {
+        view: {
+          body: { a: 1 },
+          headers: {
+            [process.env.CONTEXT]: {
+              root: contextRoot,
+              service: contextService,
+              network: contextNetwork,
+            },
+          },
+          ...(domainRoot && {
+            [process.env.DOMAIN]: {
+              root: domainRoot,
+              service: process.env.SERVICE,
+              network: process.env.NETWORK,
+            },
+          }),
+        },
+      },
+    });
+    const response7 = await request.get(
+      `${url}${domainRoot ? `/${domainRoot}` : ""}`,
+      {
+        query: {
+          context: {
+            [process.env.CONTEXT]: {
+              root: contextRoot,
+              service: contextService,
+              network: contextNetwork,
+            },
+          },
+          limit: 1,
+          skip: 1,
+        },
+      }
+    );
+
+    const { content: content4 } = JSON.parse(response7.body);
+
+    expect(content4).to.have.length(1);
+
+    const content5 = one ? content4[0] : content4[0];
+    expect(content5).to.equal(firstSort1);
+
+    const response8 = await request.delete(`${url}/${root}`);
+    const parsedBody8 = JSON.parse(response8.body);
+    expect(response8.statusCode).to.equal(200);
+    expect(parsedBody8.deletedCount).to.equal(1);
   };
 
   const testIndexes = async () => {
