@@ -127,6 +127,12 @@ module.exports = async ({ schema, indexes, getFn, putFn, one } = {}) => {
       },
     });
 
+  const countFn = async ({ query }) =>
+    await deps.db.count({
+      store,
+      query,
+    });
+
   const writeFn = async ({ root, data }) => {
     const update = {};
     const setKey = "$set";
@@ -169,6 +175,7 @@ module.exports = async ({ schema, indexes, getFn, putFn, one } = {}) => {
     findFn,
     writeFn,
     removeFn,
+    countFn,
     ...(getFn && { getFn }),
     ...(putFn && { putFn }),
     ...(one && { one }),

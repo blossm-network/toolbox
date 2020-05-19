@@ -25,6 +25,7 @@ const query = "some-query";
 const sort = "some-sort";
 const sort2 = "some-other-sort";
 const query2 = "some-other-query";
+const count = "some-count";
 
 const writeResult = "some-write-result";
 const removeResult = "some-remove-result";
@@ -73,12 +74,14 @@ describe("View store", () => {
       cursor: cursorFake,
     };
     const findFake = fake.returns(foundObjs);
+    const countFake = fake.returns(count);
     const writeFake = fake.returns(writeResult);
     const removeFake = fake.returns(removeResult);
 
     const db = {
       store: storeFake,
       find: findFake,
+      count: countFake,
       write: writeFake,
       remove: removeFake,
     };
@@ -203,6 +206,17 @@ describe("View store", () => {
     });
     expect(findFnResult).to.equal(foundObjs);
 
+    const countFnResult = await viewStoreFake.lastCall.lastArg.countFn({
+      query,
+    });
+
+    expect(countFake).to.have.been.calledWith({
+      store,
+      query,
+    });
+
+    expect(countFnResult).to.equal(count);
+
     const steamFnResult = await viewStoreFake.lastCall.lastArg.streamFn({
       query: query2,
       sort: sort2,
@@ -253,6 +267,7 @@ describe("View store", () => {
         (fn) => expect(fn({ query, sort, parallel, fn: fnFake })).to.exist
       ),
       findFn: match((fn) => expect(fn({ query, sort })).to.exist),
+      countFn: match((fn) => expect(fn({ query })).to.exist),
       writeFn: match((fn) => expect(fn({ root, data })).to.exist),
       removeFn: match((fn) => expect(fn(query)).to.exist),
       getFn,
@@ -281,12 +296,14 @@ describe("View store", () => {
       cursor: cursorFake,
     };
     const findFake = fake.returns(foundObjs);
+    const countFake = fake.returns(count);
     const writeFake = fake.returns(writeResult);
     const removeFake = fake.returns(removeResult);
 
     const db = {
       store: storeFake,
       find: findFake,
+      count: countFake,
       write: writeFake,
       remove: removeFake,
     };
@@ -395,12 +412,14 @@ describe("View store", () => {
       cursor: cursorFake,
     };
     const findFake = fake.returns(foundObjs);
+    const countFake = fake.returns(count);
     const writeFake = fake.returns(writeResult);
     const removeFake = fake.returns(removeResult);
 
     const db = {
       store: storeFake,
       find: findFake,
+      count: countFake,
       write: writeFake,
       remove: removeFake,
     };
@@ -523,12 +542,14 @@ describe("View store", () => {
       cursor: cursorFake,
     };
     const findFake = fake.returns(foundObjs);
+    const countFake = fake.returns(count);
     const writeFake = fake.returns(writeResult);
     const removeFake = fake.returns(removeResult);
 
     const db = {
       store: storeFake,
       find: findFake,
+      count: countFake,
       write: writeFake,
       remove: removeFake,
     };
@@ -712,6 +733,16 @@ describe("View store", () => {
       },
     });
     expect(findFnResult).to.equal(foundObjs);
+
+    const countFnResult = await viewStoreFake.lastCall.lastArg.countFn({
+      query,
+    });
+
+    expect(countFake).to.have.been.calledWith({
+      store,
+      query,
+    });
+    expect(countFnResult).to.equal(count);
 
     const steamFnResult = await viewStoreFake.lastCall.lastArg.streamFn({
       query: query2,
@@ -763,6 +794,7 @@ describe("View store", () => {
         (fn) => expect(fn({ query, sort, parallel, fn: fnFake })).to.exist
       ),
       findFn: match((fn) => expect(fn({ query, sort })).to.exist),
+      countFn: match((fn) => expect(fn({ query, sort })).to.exist),
       writeFn: match((fn) => expect(fn({ root, data })).to.exist),
       removeFn: match((fn) => expect(fn({ root })).to.exist),
     });
@@ -787,12 +819,14 @@ describe("View store", () => {
       cursor: cursorFake,
     };
     const findFake = fake.returns(foundObjs);
+    const countFake = fake.returns(count);
     const writeFake = fake.returns(writeResult);
     const removeFake = fake.returns(removeResult);
 
     const db = {
       store: storeFake,
       find: findFake,
+      count: countFake,
       write: writeFake,
       remove: removeFake,
     };
@@ -901,6 +935,16 @@ describe("View store", () => {
       },
     });
     expect(findFnResult).to.equal(foundObjs);
+
+    const countFnResult = await viewStoreFake.lastCall.lastArg.countFn({
+      query,
+    });
+
+    expect(countFake).to.have.been.calledWith({
+      store,
+      query,
+    });
+    expect(countFnResult).to.equal(count);
 
     const steamFnResult = await viewStoreFake.lastCall.lastArg.streamFn({
       query,
