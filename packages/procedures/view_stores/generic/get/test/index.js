@@ -5,7 +5,7 @@ const get = require("..");
 const deps = require("../deps");
 
 const obj = { a: "some-obj" };
-const sort = "some-sort";
+const sort = { a: "1" };
 const root = "some-root";
 const objRoot = "some-obj-root";
 
@@ -76,7 +76,7 @@ describe("View store get", () => {
     expect(findFake).to.have.been.calledWith({
       limit: 20,
       skip: 40,
-      sort,
+      sort: { a: 1 },
       query: {
         "body.some-query-key": 1,
         "headers.some-env-context": {
@@ -94,7 +94,7 @@ describe("View store get", () => {
     expect(urlEncodeQueryDataFake).to.have.been.calledWith(
       `https://v.${envDomain}.${envService}.${envContext}.${envNetwork}/${envName}`,
       {
-        sort,
+        sort: { a: 1 },
         context,
         query,
         skip: 60,
@@ -192,7 +192,7 @@ describe("View store get", () => {
     expect(findFake).to.have.been.calledWith({
       limit: 1,
       skip: 0,
-      sort,
+      sort: { a: 1 },
       query: {
         "body.some-other-query-key": 1,
         "headers.some-env-context": {
@@ -236,7 +236,7 @@ describe("View store get", () => {
     expect(findFake).to.have.been.calledWith({
       limit: 100,
       skip: 0,
-      sort,
+      sort: { a: 1 },
       query: {
         "body.some-query-key": 1,
         "headers.some-env-context": {
@@ -249,7 +249,7 @@ describe("View store get", () => {
     expect(urlEncodeQueryDataFake).to.have.been.calledWith(
       `https://v.${envContext}.${envNetwork}/${envName}`,
       {
-        sort,
+        sort: { a: 1 },
         context,
         query,
         skip: 100,

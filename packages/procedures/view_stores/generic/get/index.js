@@ -36,6 +36,11 @@ module.exports = ({ findFn, one = false, queryFn = defaultQueryFn }) => {
 
     if (req.query.limit) req.query.limit = parseInt(req.query.limit);
     if (req.query.skip) req.query.skip = parseInt(req.query.skip);
+    if (req.query.sort) {
+      for (const sort in req.query.sort) {
+        req.query.sort[sort] = parseInt(req.query.sort[sort]);
+      }
+    }
 
     const limit = one ? 1 : req.query.limit || defaultLimit;
     const skip = one ? 0 : req.query.skip || 0;
