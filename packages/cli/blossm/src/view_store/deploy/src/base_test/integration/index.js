@@ -248,7 +248,7 @@ describe("View store base integration tests", () => {
           // skip: 1,
         },
         sort: {
-          "headers.root": -1,
+          "headers.root": 1,
         },
       }
     );
