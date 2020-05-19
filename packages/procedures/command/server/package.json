@@ -1,7 +1,7 @@
 {
   "name": "@blossm/command",
   "description": "A command server.",
-  "version": "0.0.56",
+  "version": "0.0.57",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -14,7 +14,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/command-post": "^0.0.56",
+    "@blossm/command-post": "^0.0.57",
     "@blossm/server": "^0.0.11"
   },
   "devDependencies": {
