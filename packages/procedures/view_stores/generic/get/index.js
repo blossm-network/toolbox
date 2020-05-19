@@ -34,13 +34,11 @@ module.exports = ({ findFn, one = false, queryFn = defaultQueryFn }) => {
         }),
     };
 
-    // const [result, count] = await Promise.all([findFn, countFn]);
+    if (req.query.limit) req.query.limit = parseInt(req.query.limit);
+    if (req.query.skip) req.query.skip = parseInt(req.query.skip);
+
     const limit = one ? 1 : req.query.limit || defaultLimit;
     const skip = one ? 0 : req.query.skip || 0;
-
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log({ skip, limit });
 
     const results = await findFn({
       query,

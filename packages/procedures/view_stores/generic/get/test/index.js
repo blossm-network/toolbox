@@ -54,8 +54,8 @@ describe("View store get", () => {
     const urlEncodeQueryDataFake = fake.returns(nextUrl);
     replace(deps, "urlEncodeQueryData", urlEncodeQueryDataFake);
 
-    const skip = 40;
-    const limit = 20;
+    const skip = "40";
+    const limit = "20";
 
     const req = {
       query: {
@@ -74,8 +74,8 @@ describe("View store get", () => {
     };
     await get({ findFn: findFake })(req, res);
     expect(findFake).to.have.been.calledWith({
-      limit,
-      skip,
+      limit: 20,
+      skip: 40,
       sort,
       query: {
         "body.some-query-key": 1,
