@@ -257,7 +257,7 @@ describe("View store base integration tests", () => {
 
     expect(content4).to.have.length(1);
 
-    const content5 = one ? content4[1] : content4[1];
+    const content5 = one ? content4[0] : content4[0];
     expect(content5).to.equal(secondSort2);
 
     const response8 = await request.delete(`${url}/${root}`);
