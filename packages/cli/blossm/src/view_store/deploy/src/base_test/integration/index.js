@@ -259,7 +259,17 @@ describe("View store base integration tests", () => {
 
       expect(content4).to.have.length(1);
 
-      expect(content4[0]).to.equal(firstSort2);
+      //TODO
+      //eslint-disable-next-line no-console
+      console.log({
+        firstSort1,
+        firstSort2,
+        secondSort1,
+        secondSort2,
+        body: response7.body,
+        item: content4[0],
+      });
+      expect(content4[0]).to.deep.equal(firstSort2);
     }
 
     const response8 = await request.delete(`${url}/${root}`);
