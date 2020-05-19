@@ -443,8 +443,8 @@ const addDefaultDependencies = ({ config, coreNetwork }) => {
       return [
         ...config.testing.dependencies,
         {
-          domain: config.events.domain,
-          service: config.events.service,
+          domain: config.store.domain,
+          service: config.store.service,
           procedure: "event-store",
         },
         {
@@ -488,8 +488,8 @@ const addDefaultDependencies = ({ config, coreNetwork }) => {
       return [
         ...config.testing.dependencies,
         {
-          domain: config.events.domain,
-          service: config.events.service,
+          domain: config.store.domain,
+          service: config.store.service,
           procedure: "event-store",
         },
       ];
@@ -633,7 +633,7 @@ const configure = async (workingDir, configFn, env, strict) => {
     const context = config.context;
     const procedure = config.procedure;
     const name = config.name;
-    const events = config.events;
+    const store = config.store;
 
     const dependencyKeyEnvironmentVariables = envDependencyKeyEnvironmentVariables(
       { env, config: blossmConfig }
@@ -676,7 +676,7 @@ const configure = async (workingDir, configFn, env, strict) => {
       domain,
       context,
       name,
-      events,
+      store,
       project,
       procedure,
       network,
@@ -724,7 +724,7 @@ const configure = async (workingDir, configFn, env, strict) => {
       coreNetwork,
       domain,
       name,
-      events,
+      store,
       secretBucket,
       secretBucketKeyLocation,
       secretBucketKeyRing,

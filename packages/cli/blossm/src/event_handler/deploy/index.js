@@ -13,8 +13,8 @@ module.exports = deployCliTemplate({
         `${config.procedure}-${config.context}${
           config.service ? `-${config.service}` : ""
         }${config.domain ? `-${config.domain}` : ""}-${config.name}-${
-          config.events.domain
-        }-${config.events.service}`,
+          config.store.domain
+        }-${config.store.service}`,
         MAX_LENGTH
       ),
       operationHash: hash(
@@ -22,8 +22,8 @@ module.exports = deployCliTemplate({
         ...(config.domain ? [config.domain] : []),
         ...(config.service ? [config.service] : []),
         config.context,
-        config.events.domain,
-        config.events.service,
+        config.store.domain,
+        config.store.service,
         config.procedure
       ),
     };

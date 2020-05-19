@@ -1,7 +1,6 @@
 const fs = require("fs-extra");
 const path = require("path");
 const yaml = require("yaml");
-// const { prompt } = require("inquirer");
 const normalize = require("@blossm/normalize-cli");
 const roboSay = require("@blossm/robo-say");
 const { red } = require("chalk");
@@ -33,10 +32,6 @@ const projectionMatches = ({ name, context, domain, service }, config) => {
 };
 
 const replay = async (input) => {
-  //TODO
-  //eslint-disable-next-line no-console
-  console.log("hey");
-
   const storePath = path.resolve(
     process.cwd(),
     input.path || "",
@@ -44,15 +39,6 @@ const replay = async (input) => {
   );
   const blossmConfig = yaml.parse(fs.readFileSync(storePath, "utf8"));
 
-  //TODO
-  //eslint-disable-next-line no-console
-  console.log({
-    procedure: blossmConfig.procedure,
-    name: blossmConfig.name,
-    context: blossmConfig.context,
-    ...(blossmConfig.domain && { domain: blossmConfig.domain }),
-    ...(blossmConfig.service && { service: blossmConfig.service }),
-  });
   if (blossmConfig.procedure != "view-store") {
     roboSay(
       "This directory doesn't seem to be a view store that can be replayed."
@@ -61,7 +47,7 @@ const replay = async (input) => {
     return;
   }
 
-  const allEvents = findProjections(
+  const stores = findProjections(
     {
       name: blossmConfig.name,
       context: blossmConfig.context,
@@ -71,99 +57,59 @@ const replay = async (input) => {
     rootDir.path()
   );
 
-  //TODO
-  //eslint-disable-next-line no-console
-  console.log({ allEvents });
-
-  const e = allEvents[0];
-
-  const root = "asdf";
-
   try {
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log({
-      some: {
-        array: [
+    for (const store of stores) {
+      const spawnCall = spawnSync(
+        "gcloud",
+        [
           "functions",
           "call",
           "replay-projection",
           `--data=${JSON.stringify({
-            projection: {
-              name: blossmConfig.name,
-              context: blossmConfig.context,
-              eventsDomain: e.domain,
-              eventsService: e.service,
-            },
-            root,
+            name: blossmConfig.name,
+            context: blossmConfig.context,
+            store,
           })}`,
           `--project=${envProject({
             config: rootDir.config(),
             env: input.env,
           })}`,
         ],
-      },
-    });
-    const spawnCall = spawnSync(
-      "gcloud",
-      [
-        "functions",
-        "call",
-        "replay-projection",
-        `--data=${JSON.stringify({
-          projection: {
-            name: blossmConfig.name,
-            context: blossmConfig.context,
-            eventsDomain: e.domain,
-            eventsService: e.service,
-          },
-          root: "asdf",
-        })}`,
-        `--project=${envProject({ config: rootDir.config(), env: input.env })}`,
-      ],
-      {
-        stdio: [process.stdin, process.stdout, process.stderr],
-        cwd: process.cwd(),
-      }
-    );
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log({ spawnCall });
+        {
+          stdio: [process.stdin, process.stdout, process.stderr],
+          cwd: process.cwd(),
+        }
+      );
 
-    if (spawnCall.stderr) {
-      process.exitCode = 1;
-      throw "Couldn't call replay.";
+      if (spawnCall.stderr) {
+        process.exitCode = 1;
+        throw "Couldn't call replay.";
+      }
     }
-  } catch (e) {
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log({ e });
+  } catch (err) {
+    process.exitCode = 1;
+    throw err;
   }
 };
 
 const findProjections = ({ name, context, domain, service }, dir) => {
-  const all = [];
+  const stores = [];
   for (const file of fs.readdirSync(dir)) {
     const filePath = path.join(dir, file);
 
     if (file == "blossm.yaml" || file == "blossm.yml") {
       const blossmConfig = yaml.parse(fs.readFileSync(filePath, "utf8"));
       if (projectionMatches({ name, context, domain, service }, blossmConfig)) {
-        //TODO
-        //eslint-disable-next-line no-console
-        console.log({ found: blossmConfig.events });
-        all.push(blossmConfig.events);
+        stores.push(blossmConfig.store);
       }
     } else if (fs.statSync(filePath).isDirectory()) {
-      const allEvents = findProjections(
-        { name, context, domain, service },
-        filePath
+      stores.push(
+        ...findProjections({ name, context, domain, service }, filePath)
       );
-      all.push(...allEvents);
     }
   }
 
-  return all;
+  return stores;
 };
 
 module.exports = async (args) => {

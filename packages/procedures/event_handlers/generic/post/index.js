@@ -19,10 +19,6 @@ module.exports = ({
   saveNextEventNumberFn,
 }) => {
   return async (req, res) => {
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log({ body: req.body, params: req.params, query: req.query });
-
     const {
       root,
       forceFrom: number = await nextEventNumberFn({ root }),

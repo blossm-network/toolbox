@@ -10,7 +10,7 @@ module.exports = deployCliTemplate({
     return {
       name: config.name,
       operationName: trim(
-        `${config.procedure}-${config.events.service}-${config.events.domain}-${
+        `${config.procedure}-${config.store.service}-${config.store.domain}-${
           config.context
         }${config.service ? `-${config.service}` : ""}${
           config.domain ? `-${config.domain}` : ""
@@ -22,8 +22,8 @@ module.exports = deployCliTemplate({
         ...(config.domain ? [config.domain] : []),
         ...(config.service ? [config.service] : []),
         config.context,
-        config.events.domain,
-        config.events.service,
+        config.store.domain,
+        config.store.service,
         config.procedure
       ),
     };

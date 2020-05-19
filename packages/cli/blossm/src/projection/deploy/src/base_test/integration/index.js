@@ -28,8 +28,8 @@ describe("Projection integration tests", () => {
         root: example.root,
         action: example.action,
         payload: example.payload,
-        domain: process.env.EVENTS_DOMAIN,
-        service: process.env.EVENTS_SERVICE,
+        domain: process.env.STORE_DOMAIN,
+        service: process.env.STORE_SERVICE,
         context: {
           [context]: {
             root: contextRoot,
@@ -40,8 +40,8 @@ describe("Projection integration tests", () => {
       });
 
       await eventStore({
-        domain: process.env.EVENTS_DOMAIN,
-        service: process.env.EVENTS_SERVICE,
+        domain: process.env.STORE_DOMAIN,
+        service: process.env.STORE_SERVICE,
       }).add([{ data: event }]);
 
       const response = await request.post(url, {

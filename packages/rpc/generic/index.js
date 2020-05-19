@@ -55,18 +55,6 @@ const common = ({ method, dataParam, operation, id, data }) => {
                 ...(id && { id }),
               });
 
-          //TODO
-          //eslint-disable-next-line no-console
-          console.log({
-            url,
-            data: {
-              [dataParam]: {
-                ...(data && { ...data }),
-                ...(context && { context }),
-                ...(claims && { claims }),
-              },
-            },
-          });
           const response = await method(url, {
             [dataParam]: {
               ...(data && { ...data }),
