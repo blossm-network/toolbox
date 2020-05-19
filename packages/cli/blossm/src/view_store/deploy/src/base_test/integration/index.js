@@ -78,7 +78,7 @@ describe("View store base integration tests", () => {
     const parsedBody0 = one ? content0 : content0[0];
 
     expect(updates0).to.exist;
-    one ? expect(count0).to.equal(1) : expect(count0).to.be.undefined;
+    !one ? expect(count0).to.equal(1) : expect(count0).to.be.undefined;
 
     expect(response1.statusCode).to.equal(200);
     for (const key in example0.get) {
@@ -132,7 +132,7 @@ describe("View store base integration tests", () => {
     const parsedBody1 = one ? content1 : content1[0];
 
     expect(updates1).to.exist;
-    one ? expect(count1).to.equal(1) : expect(count1).to.be.undefined;
+    !one ? expect(count1).to.equal(1) : expect(count1).to.be.undefined;
 
     for (const key in example1.get) {
       expect(parsedBody1.body[key]).to.deep.equal(example1.get[key]);
@@ -187,7 +187,7 @@ describe("View store base integration tests", () => {
     const firstSort2 = one ? null : content2[1];
 
     expect(updates2).to.exist;
-    one ? expect(count2).to.equal(2) : expect(count2).to.be.undefined;
+    !one ? expect(count2).to.equal(2) : expect(count2).to.be.undefined;
 
     const response6 = await request.get(
       `${url}${domainRoot ? `/${domainRoot}` : ""}`,
@@ -214,7 +214,7 @@ describe("View store base integration tests", () => {
     const secondSort1 = one ? content2 : content3[0];
     const secondSort2 = one ? null : content3[1];
     expect(updates3).to.exist;
-    one ? expect(count3).to.equal(2) : expect(count3).to.be.undefined;
+    !one ? expect(count3).to.equal(2) : expect(count3).to.be.undefined;
 
     if (one) {
       expect(firstSort1).to.deep.equal(secondSort1);
@@ -275,7 +275,7 @@ describe("View store base integration tests", () => {
 
       expect(content4).to.have.length(1);
       expect(updates4).to.exist;
-      one ? expect(count4).to.equal(3) : expect(count4).to.be.undefined;
+      !one ? expect(count4).to.equal(3) : expect(count4).to.be.undefined;
 
       expect(content4[0]).to.deep.equal(firstSort2);
     }
