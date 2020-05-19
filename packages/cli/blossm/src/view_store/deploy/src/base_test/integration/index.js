@@ -253,17 +253,9 @@ describe("View store base integration tests", () => {
       }
     );
 
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log({ body: response7.body });
-
     const { content: content4 } = JSON.parse(response7.body);
 
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log({ content4 });
-
-    expect(content4).to.have.length(3);
+    expect(content4).to.have.length(1);
 
     const content5 = one ? content4[1] : content4[1];
     expect(content5).to.equal(secondSort2);
