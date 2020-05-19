@@ -233,32 +233,34 @@ describe("View store base integration tests", () => {
         },
       },
     });
-    const response7 = await request.get(
-      `${url}${domainRoot ? `/${domainRoot}` : ""}`,
-      {
-        query: {
-          context: {
-            [process.env.CONTEXT]: {
-              root: contextRoot,
-              service: contextService,
-              network: contextNetwork,
+
+    if (!one) {
+      const response7 = await request.get(
+        `${url}${domainRoot ? `/${domainRoot}` : ""}`,
+        {
+          query: {
+            context: {
+              [process.env.CONTEXT]: {
+                root: contextRoot,
+                service: contextService,
+                network: contextNetwork,
+              },
+            },
+            limit: 1,
+            skip: 1,
+            sort: {
+              "headers.root": 1,
             },
           },
-          limit: 1,
-          skip: 1,
-          sort: {
-            "headers.root": -1,
-          },
-        },
-      }
-    );
+        }
+      );
 
-    const { content: content4 } = JSON.parse(response7.body);
+      const { content: content4 } = JSON.parse(response7.body);
 
-    expect(content4).to.have.length(1);
+      expect(content4).to.have.length(1);
 
-    const content5 = one ? content4[0] : content4[0];
-    expect(content5).to.equal(secondSort2);
+      expect(content4[0]).to.equal(firstSort2);
+    }
 
     const response8 = await request.delete(`${url}/${root}`);
     const parsedBody8 = JSON.parse(response8.body);
