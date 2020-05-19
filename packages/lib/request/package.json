@@ -1,6 +1,6 @@
 {
   "name": "@blossm/request",
-  "version": "0.0.16",
+  "version": "0.0.17",
   "description": "Http access.",
   "main": "index.js",
   "author": "blossm.network",
@@ -14,8 +14,8 @@
     "test": "mocha --recursive"
   },
   "dependencies": {
-    "request": "^1.2.0",
-    "@blossm/url-encode-query-data": "*"
+    "@blossm/url-encode-query-data": "^0.0.5",
+    "request": "^1.2.0"
   },
   "devDependencies": {
     "mocha": "^7.1.1",
