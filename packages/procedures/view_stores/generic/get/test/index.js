@@ -112,7 +112,6 @@ describe("View store get", () => {
       `https://v.${envDomain}.${envService}.${envContext}.${envNetwork}/${envName}`,
       {
         sort: { a: 1 },
-        context,
         query,
         skip: 60,
         limit: 20,
@@ -183,7 +182,6 @@ describe("View store get", () => {
     expect(urlEncodeQueryDataFake).to.have.been.calledWith(
       `https://v.${envDomain}.${envService}.${envContext}.${envNetwork}/${envName}`,
       {
-        context,
         skip: 100,
         limit: 100,
       }
@@ -302,7 +300,6 @@ describe("View store get", () => {
       `https://v.${envContext}.${envNetwork}/${envName}`,
       {
         sort: { a: 1 },
-        context,
         query,
         skip: 100,
         limit: 100,

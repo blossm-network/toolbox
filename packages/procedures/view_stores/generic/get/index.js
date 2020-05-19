@@ -89,7 +89,12 @@ module.exports = ({
           : ""
       }.${process.env.CONTEXT}.${process.env.NETWORK}/${process.env.NAME}`;
       const next = deps.urlEncodeQueryData(url, {
-        ...req.query,
+        ...(req.query.query && {
+          query: req.query.query,
+        }),
+        ...(req.query.sort && {
+          sort: req.query.sort,
+        }),
         skip: skip + limit,
         limit,
       });
