@@ -275,7 +275,7 @@ describe("View store base integration tests", () => {
 
       expect(content4).to.have.length(1);
       expect(updates4).to.exist;
-      expect(count4).to.equal();
+      expect(count4).to.equal(3);
 
       expect(content4[0]).to.deep.equal(firstSort2);
     }
