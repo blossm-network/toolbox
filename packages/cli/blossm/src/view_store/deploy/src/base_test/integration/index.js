@@ -211,7 +211,7 @@ describe("View store base integration tests", () => {
       expect(firstSort2).to.deep.equal(secondSort1);
     }
 
-    const yetAnotherRoot = "yet-another-root";
+    const yetAnotherRoot = "z";
     await request.put(`${url}/${yetAnotherRoot}`, {
       body: {
         view: {
@@ -246,6 +246,9 @@ describe("View store base integration tests", () => {
           },
           limit: 1,
           skip: 1,
+        },
+        sort: {
+          "headers.root": -1,
         },
       }
     );
