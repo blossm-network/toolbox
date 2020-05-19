@@ -119,8 +119,8 @@ module.exports = async ({ schema, indexes, getFn, putFn, one } = {}) => {
     await deps.db.find({
       store,
       query,
-      limit,
-      skip,
+      ...(limit && { limit }),
+      ...(skip && { skip }),
       ...(sort && { sort }),
       options: {
         lean: true,
