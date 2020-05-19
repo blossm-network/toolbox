@@ -70,7 +70,6 @@ module.exports = ({
       };
     });
 
-    //TODO https may not work.
     const updates = `https://updates.${
       process.env.CORE_NETWORK
     }/channel?query%5Bname%5D=${process.env.NAME}&query%5Bcontext%5D=${
