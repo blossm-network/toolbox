@@ -244,11 +244,11 @@ describe("View store base integration tests", () => {
               network: contextNetwork,
             },
           },
-          // limit: 1,
-          // skip: 1,
-        },
-        sort: {
-          "headers.root": 1,
+          limit: 1,
+          skip: 1,
+          sort: {
+            "headers.root": -1,
+          },
         },
       }
     );
@@ -265,7 +265,7 @@ describe("View store base integration tests", () => {
 
     expect(content4).to.have.length(3);
 
-    const content5 = one ? content4[0] : content4[0];
+    const content5 = one ? content4[1] : content4[1];
     expect(content5).to.equal(secondSort2);
 
     const response8 = await request.delete(`${url}/${root}`);
