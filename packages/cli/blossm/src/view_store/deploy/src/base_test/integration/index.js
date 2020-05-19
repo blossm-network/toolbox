@@ -132,7 +132,7 @@ describe("View store base integration tests", () => {
       expect(parsedBody1.body[key]).to.deep.equal(example1.get[key]);
     }
 
-    const otherRoot = "some-other-root";
+    const otherRoot = "a";
     await request.put(`${url}/${otherRoot}`, {
       body: {
         view: {
@@ -244,8 +244,8 @@ describe("View store base integration tests", () => {
               network: contextNetwork,
             },
           },
-          limit: 1,
-          skip: 1,
+          // limit: 1,
+          // skip: 1,
         },
         sort: {
           "headers.root": -1,
@@ -253,16 +253,20 @@ describe("View store base integration tests", () => {
       }
     );
 
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log({ body: response7.body });
+
     const { content: content4 } = JSON.parse(response7.body);
 
     //TODO
     //eslint-disable-next-line no-console
     console.log({ content4 });
 
-    expect(content4).to.have.length(1);
+    expect(content4).to.have.length(3);
 
     const content5 = one ? content4[0] : content4[0];
-    expect(content5).to.equal(firstSort1);
+    expect(content5).to.equal(secondSort2);
 
     const response8 = await request.delete(`${url}/${root}`);
     const parsedBody8 = JSON.parse(response8.body);
