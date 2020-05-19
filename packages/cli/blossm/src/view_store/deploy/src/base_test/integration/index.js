@@ -277,16 +277,6 @@ describe("View store base integration tests", () => {
       expect(updates4).to.exist;
       expect(count4).to.equal();
 
-      //TODO
-      //eslint-disable-next-line no-console
-      console.log({
-        firstSort1,
-        firstSort2,
-        secondSort1,
-        secondSort2,
-        body: response7.body,
-        item: content4[0],
-      });
       expect(content4[0]).to.deep.equal(firstSort2);
     }
 
