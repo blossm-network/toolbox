@@ -43,13 +43,14 @@ module.exports = command({
         tokenFns: { internal: gcpToken },
       })
       .add(events),
-  taskFn: ({ url, body, wait }) =>  gcpTask({
-    url,
-    data,
-    token,
-    project,
-    location,
-    queue,
-    wait = 0,
-  })
+  // taskFn: ({ url, body, wait }) =>
+  //   gcpTask({
+  //     url,
+  //     data,
+  //     token,
+  //     project,
+  //     location,
+  //     queue,
+  //     wait: 0,
+  //   }),
 });
