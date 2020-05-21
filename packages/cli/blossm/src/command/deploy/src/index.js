@@ -2,7 +2,7 @@ const fs = require("fs");
 const command = require("@blossm/command");
 const eventStore = require("@blossm/event-store-rpc");
 const gcpToken = require("@blossm/gcp-token");
-const gcpTask = require("@blossm/gcp-task");
+// const gcpTask = require("@blossm/gcp-task");
 
 const main = require("./main.js");
 const validate = fs.existsSync("./validate.js") && require("./validate");
