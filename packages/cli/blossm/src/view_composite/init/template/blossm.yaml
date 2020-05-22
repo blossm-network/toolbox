@@ -1,28 +1,31 @@
 #
-# This file is required.
+# Give your view-composite a unique name, and specify which context it's in. Optionally add the
+# domain and service.
 #
-# Give your fact a name,
-# specify which domain it's for,
-# and set which version of the event to create.
-#
-
 name: some-name
 domain: some-optional-domain
 service: some-optional-service
 context: some-context
 
+#
+# Add dependencies and devDependencies, just like a package.json file.
+#
 dependencies:
   "@blossm/view-store-rpc": "*"
   "@blossm/gcp-token": "*"
 
-devDependencies:
-  "mocha": "^7.1.1"
-  "chai": "^4.2.0"
-  "sinon": "^7.3.2"
-  "sinon-chai": "^3.5.0"
-  "chai-datetime": "^1.5.0"
-
+#
+# The following properties are used for automated testing.
+#
 testing:
+  #
+  # Add network dependencies that will be used when running integration tests.
+  #
+  # You can include any standard blossm procedure thats within your network
+  # by specifying 'procedure', 'service', 'domain', 'context', and 'name' properties.
+  # These procedure within your network that are included in dependencies will run
+  # during integration test based on the latest published image.
+  #
   dependencies:
     - name: some-name
       domain: some-domain
@@ -30,12 +33,38 @@ testing:
       context: some-context
       procedure: view-store
 
+  #
+  # Add each integration test you want to run as a 'step'.
+  #
+  # The 'pre' property is an array of instructions that allow you to set up the view state
+  # of the system before the integration test runs. For example, you can add a view to
+  # an view-store by setting the 'name', 'domain', 'service', and 'context' properties to
+  # those of the view-store that you want to modify the state of, 'root' and 'action' to the root
+  # and action that describe the event, and 'payload' to the payload of the event that is
+  # being added.
+  #
+  # The 'query' property is the query that should be used in this integration test step.
+  #
+  # The 'context' property is the context that should be used in this integration test step.
+  # Leave it out if no context should be passed in.
+  #
+  # The 'root' property is the domain root that should be used in this integration test step.
+  # Leave it out if there is no relevant domain root.
+  #
+  # The 'response' property is the response body that is expected to be returned.
+  # If the expected value of a response property is not known ahead of time, leave
+  # it's value empty.
+  #
+  # The 'code' property is the response code that is expected to be returned.
+  # If a 'response' is provided, this defaults to 200.
+  #
   steps:
     - pre:
       query:
       root:
       context:
       response:
+      code:
 
 #don't change
 procedure: view-composite

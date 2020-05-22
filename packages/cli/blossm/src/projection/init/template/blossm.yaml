@@ -1,40 +1,43 @@
 #
-# This file is required.
+# Specify the name and context of this projection, and optionally the
+# domain and service.
 #
-# Give your projection the action that it's subscribed to, with it's domain,
-# and the name of the store that it modifies.
-#
-
 name: some-name
-domain: some-domain
-context: principle
+domain: some-optional-domain
+service: some-optional-service
+context: some-context
 
-event:
+#
+# Set the event-store from which this projection will listen for events.
+#
+store:
   action: some-event-action
   domain: some-event-domain
   service: core
 
+#
+# Add dependencies and devDependencies, just like a package.json file.
+#
 devDependencies:
-  "localenv": "^0.2.2"
-  "mocha": "^7.1.1"
-  "chai": "^4.2.0"
-  "sinon": "^7.3.2"
-  "sinon-chai": "^3.5.0"
-  "chai-datetime": "^1.5.0"
-  "@blossm/request": "*"
 
+#
+# The following properties are used for automated testing.
+#
 testing:
-  examples:
-    - root: some-root
-
-      payload:
-        name: some-name
-
-      result:
-        root: some-root
-        value:
-          name: some-name
-
+  #
+  # Add tests for your handlers here.
+  #
+  # The 'action' property specifies which handler is being tested.
+  # The 'examples' property is an array of instructions
+  # with 'state', 'event', and 'result' properties.
+  #
+  # The 'state' property specifies the state of the aggregate before
+  # the event is applied. The 'event' property specifies the event,
+  # and the 'result' property specifies the expected state once the event is applied.
+  #
+  # You can omit the 'state' property if the event payload entirely
+  # overwrites the state of the aggregate.
+  #
   handlers:
     - action: register
       examples:
@@ -44,5 +47,31 @@ testing:
           result:
             body:
               name: some-name
+  #
+  # Add examples to run integration tests for.
+  #
+  # The 'action' property specifies which handler is being tested.
+  #
+  # The 'root' property specifies the root of the event being projected.
+  #
+  # The 'payload' property is the payload of the event being projected.
+  # with 'state', 'payload', and 'result' properties.
+  #
+  # The 'state' property specifies the state of the aggregate before
+  #
+  # The 'result' property contains instructions for checking what got projected.
+  # Specify a 'query' to, and either 'value' or 'values', depending on whether a
+  # single object or an array of objects is expected.
+  #
+  examples:
+    - action: some-action
+      root: some-root
+      payload:
+        name: some-name
+      result:
+        query: {}
+        value:
+          name: some-name
+
 #don't change
 procedure: projection

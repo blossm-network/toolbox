@@ -1,23 +1,17 @@
 #
-# This file is required.
+# Give your job a name,
+# and specify which domain and service it's for.
 #
-# Give your command an action name,
-# specify which domain it's for,
-# and set which version of the event to create.
-#
-
 name: some-action
 domain: some-domain
-service: core
+service: some-service
 
+#
+# Add dependencies and devDependencies, just like a package.json file.
+#
 devDependencies:
-  "mocha": "^7.1.1"
-  "chai": "^4.2.0"
-  "sinon": "^7.3.2"
-  "sinon-chai": "^3.5.0"
   "chai-datetime": "^1.5.0"
   "@blossm/datetime": "*"
-  "@blossm/request": "*"
 
 #don't change
 procedure: job

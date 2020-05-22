@@ -3,6 +3,10 @@
     "@blossm/job": "*"
   },
   "devDependencies": {
-    "chai": "^4.2.0"
+    "chai": "^4.2.0",
+    "mocha": "^7.1.1",
+    "sinon": "^7.3.2",
+    "sinon-chai": "^3.5.0",
+    "@blossm/request": "*"
   }
 }

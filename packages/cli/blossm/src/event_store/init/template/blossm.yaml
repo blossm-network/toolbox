@@ -1,23 +1,70 @@
 #
-# This file is required.
-# Specify which domain your event store for, write it's schema, and specify what it should be indexed by.
+# Specify which domain and service your event-store is for,
+# write it's schema, and specify what it should be indexed by.
+#
+domain: some-domain
+service: some-service
+
+#
+# Give your event-store a schema.
 #
 # How to write a schema -> https://mongoosejs.com/docs/schematypes.html
 # Types and validators should always be specified,
 # and default values and required flags should be set if intended.
 #
+schema:
+  name: String
+
+#
+# Specify how this event-store can be indexed.
+#
 # How to write indexes -> https://mongoosejs.com/docs/guide.html#indexes
 # Queries to the store that aren't indexed will be rejected.
 # In other words, full collection scans are not allowed.
 #
+# Queries can only be issued against indexed properties.
+#
+# Indexes options are not supported.
+#
+indexes:
+  - name
 
-domain: some-domain
-service: core
-
-schema:
-  name: String
-
+#
+# The following properties are used for automated testing.
+#
 testing:
+  #
+  # Add tests for your handlers here.
+  #
+  # The 'action' property specifies which handler is being tested.
+  # The 'examples' property is an array of instructions
+  # with 'state', 'payload', and 'result' properties.
+  #
+  # The 'state' property specifies the state of the aggregate before
+  # the event is applied. The 'payload' property specifies the event payload,
+  # and the 'result' property specifies the expected state once the event is applied.
+  #
+  # You can omit the 'state' and 'result' properties if the event payload entirely
+  # overwrites the state of the aggregate.
+  #
+  handlers:
+    - action: some-action
+      examples:
+        - state:
+            name: some-name
+          payload:
+            name: some-other-name
+          result:
+            name: some-other-name
+
+  #
+  # Add at least two examples of events that can be used to test the
+  # aggregation functionality of the store.
+  #
+  # 'action' must be an action that specified in the handlers.js file.
+  #
+  # Feel free to add more events to test your handler outcomes.
+  #
   examples:
     first:
       action: some-action
@@ -28,16 +75,6 @@ testing:
       payload:
         name: some-other-name
     more: []
-
-  handlers:
-    - action: some-action
-      examples:
-        - state:
-            name: some-name
-          payload:
-            name: some-other-name
-          result:
-            name: some-other-name
 
 #don't change
 procedure: event-store

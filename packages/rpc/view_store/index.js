@@ -11,7 +11,7 @@ module.exports = ({
   const read = ({
     contexts,
     tokenFns: { internal: internalTokenFn, external: externalTokenFn } = {},
-  } = {}) => async ({ query, sort } = {}) =>
+  } = {}) => async ({ query, sort, root } = {}) =>
     await deps
       .rpc(
         name,
@@ -20,7 +20,11 @@ module.exports = ({
         context,
         "view-store"
       )
-      .get({ ...(query && { query }), ...(sort && { sort }) })
+      .get({
+        ...(query && { query }),
+        ...(sort && { sort }),
+        ...(root && { id: root }),
+      })
       .in({
         ...(contexts && { context: contexts }),
         ...(!internal && {
@@ -36,7 +40,7 @@ module.exports = ({
   const stream = ({
     contexts,
     tokenFns: { internal: internalTokenFn, external: externalTokenFn } = {},
-  } = {}) => async (fn, { query, sort } = {}) =>
+  } = {}) => async (fn, { query, sort, root } = {}) =>
     await deps
       .rpc(
         name,
@@ -45,7 +49,11 @@ module.exports = ({
         context,
         "view-store"
       )
-      .stream(fn, { ...(query && { query }), ...(sort && { sort }) })
+      .stream(fn, {
+        ...(query && { query }),
+        ...(sort && { sort }),
+        ...(root && { id: root }),
+      })
       .in({
         ...(contexts && { context: contexts }),
         ...(!internal && {

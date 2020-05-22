@@ -1,11 +1,24 @@
 #
-# This file is required.
-# It's URL will be auth.[network]
+# The base URL of this gateway will be f.[domain].[service].[network]
 #
-
 domain: some-domain
-service: core
+service: some-service
 
+#
+# Specify the facts that this gateway should accept requests for.
+#
+# The 'name' property correlates to the fact name.
+# Each fact can be accessed by adding the URL path /<name> to the base URL.
+#
+# The 'priviledges' property describes the priviledges needed by the requester
+# to access this fact. Set this to 'none' if no specific priviledges are needed,
+# but the route should still require by a valid token.
+#
+# Set the 'protection' property to 'none' if this route should be accessible by
+# anyone on the internet. Set 'protection' to 'context' if the route should be
+# accessible by anyone on the internet, but if a valid token is used, then
+# the request context should be parsed from it and passed along to the fact.
+#
 facts:
   - name: some-name
     privileges:
@@ -13,12 +26,9 @@ facts:
   - name: some-other-name
     protection: none
 
+# Not used right now.
 whitelist:
   - "127.0.0.1"
-
-devDependencies:
-  "mocha": "^7.1.1"
-  "chai": "^4.2.0"
 
 #don't change
 procedure: fact-gateway

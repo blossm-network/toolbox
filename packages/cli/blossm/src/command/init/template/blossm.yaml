@@ -1,18 +1,36 @@
 #
-# This file is required.
-#
 # Give your command a name,
 # and specify which domain and service it's for.
 #
-
 name: some-name
 domain: some-domain
 service: core
 
+#
+# Describe what the incoming payload should include.
+#
+# Each payload property can have a 'type' as anything exported by @blossm/validator.
+# If 'type' is the only characteristic you want to specify, you can just set
+# the payload property to the 'type' it should be.
+# Specify an array by setting the 'type' to [<element_type>], where element_type
+# is something exported from @blossm/validator.
+#
+# Mark properties as optional by setting the optional characteristic to 'true'.
+#
+# You can optionally set a 'title' characteristic for payload properties. This will
+# be used in the response to the issuer if the property isn't valid. The property's name
+# is used as the default 'title'.
+#
+# You can also optionally set a 'default' characteristic for payload properties which
+# will be added as the value of the property if the issuer did not specify one.
+#
 payload:
   name:
     type: string
 
+#
+# Add dependencies and devDependencies, just like a package.json file.
+#
 devDependencies:
   "mocha": "^7.1.1"
   "chai": "^4.2.0"
@@ -20,27 +38,81 @@ devDependencies:
   "sinon-chai": "^3.5.0"
   "chai-datetime": "^1.5.0"
 
+#
+# The following properties are used for automated testing.
+#
 testing:
+  #
+  # Add any ok payloads and bad payload to run tests against.
+  #
   validate:
     ok:
       - name: Some-name
     bad:
       - name: 3
 
+  #
+  # Add any outcomes of normalized payloads that you want to test against.
+  #
   normalize:
     - payload:
         name: Some-name
       normalized:
         name: some-name
 
+  #
+  # Add network dependencies that will be used when running integration tests.
+  #
+  # You can include any standard blossm procedure thats within your network
+  # by specifying 'procedure', 'service', and 'domain' properties. Also include
+  # a 'name' property if you're mocking a command. These procedure within your network that
+  # are included in dependencies will run during integration test based on the latest published image.
+  #
+  # To mock calls to blossm services outside of your network, or any other http service,
+  # set 'procedure' to 'http', and 'host' to the host where the service lives (exclude the http protocol prefix).
+  # Then, set a 'mocks' property as an array of objects that describe how calls should behave.
+  # The 'mocks' should include 'method' as 'get', 'post', 'put', and 'delete', 'path' as
+  # the path that the mock applies to (or * if the mock should be used for any path on this host),
+  # 'code' as the status code that the mock returns, and 'response' as the http response the mock returns.
+  #
   dependencies:
+    - domain: some-domain
+      procedure: event-store
+      service: some-service
 
+  #
+  # Add each integration test you want to run as a 'step'.
+  #
+  # The 'pre' property is an array of instructions that allow you to set up the event state
+  # of the system before the integration test runs. For example, you can add an event to
+  # an event-store by setting the 'domain' and 'service' property to the domain and service
+  # of the event-store that you want to modify the state of, 'root' and 'action' to the root
+  # and action that describe the event, and 'payload' to the payload of the event that is
+  # being added.
+  #
+  # The 'payload' property is the payload that should be used in this integration test step.
+  #
+  # The 'context' property is the context that should be used in this integration test step.
+  # Leave it out if no context should be passed in.
+  #
+  # The 'root' property is the root that should be used in this integration test step.
+  # Leave it out if no root should be passed in.
+  #
+  # The 'code' property is the response code that is expected to be returned.
+  #
+  # The 'response' property is the response body that is expected to be returned.
+  # If the expected value of a response property is not known ahead of time, leave
+  # it's value empty.
+  # You can also leave the response empty if a particular response body isn't expected,
+  # like in the case of an expected error.
+  #
   steps:
     - pre:
       payload:
       context:
       session:
       root:
+      code:
       response:
 
 #don't change

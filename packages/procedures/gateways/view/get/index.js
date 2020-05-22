@@ -16,7 +16,10 @@ module.exports = ({ procedure, name, domain, service } = {}) => async (
           tokenFns: { internal: deps.gcpToken },
           context: req.context,
         })
-        .read(req.query);
+        .read({
+          ...req.query,
+          ...(req.params.root && { root: req.params.root }),
+        });
 
       res.status(200).send(response);
       break;
@@ -32,7 +35,10 @@ module.exports = ({ procedure, name, domain, service } = {}) => async (
           tokenFns: { internal: deps.gcpToken },
           context: req.context,
         })
-        .read(req.query);
+        .read({
+          ...req.query,
+          ...(req.params.root && { root: req.params.root }),
+        });
       res.status(200).send(response);
       break;
     }

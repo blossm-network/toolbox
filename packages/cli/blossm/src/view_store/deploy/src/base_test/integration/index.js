@@ -2,12 +2,13 @@ require("localenv");
 const { expect } = require("chai");
 
 const request = require("@blossm/request");
+const uuid = require("@blossm/uuid");
 
 const { schema } = require("../../config.json");
 
 const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 
-const { testing, indexes = [], one } = require("../../config.json");
+const { testing, one } = require("../../config.json");
 
 const contextRoot = "some-context-root";
 const contextService = "some-context-service";
@@ -16,19 +17,11 @@ const contextNetwork = "some-context-network";
 const domainRoot =
   process.env.DOMAIN && process.env.SERVICE ? "some-domain-root" : null;
 
-const makeQuery = (properties, example) => {
-  let obj = {};
-  for (const property in properties) {
-    obj[property] = example[property];
-  }
-  return obj;
-};
-
 describe("View store base integration tests", () => {
   const testParamQueries = async () => {
-    const root = testing.examples.query.root;
-    const example0 = testing.examples.query.first;
-    const example1 = testing.examples.query.second;
+    const root = "some-root";
+    const example0 = testing.examples.first;
+    const example1 = testing.examples.second;
     expect(example0).to.exist;
     expect(example1).to.exist;
 
@@ -83,6 +76,65 @@ describe("View store base integration tests", () => {
     expect(response1.statusCode).to.equal(200);
     for (const key in example0.get) {
       expect(parsedBody0.body[key]).to.deep.equal(example0.get[key]);
+    }
+
+    for (const more of testing.examples.more || []) {
+      const moreRoot = uuid();
+      const moreResponse0 = await request.put(`${url}/${moreRoot}`, {
+        body: {
+          view: {
+            body: more.put,
+            headers: {
+              [process.env.CONTEXT]: {
+                root: contextRoot,
+                service: contextService,
+                network: contextNetwork,
+              },
+              ...(domainRoot && {
+                [process.env.DOMAIN]: {
+                  root: domainRoot,
+                  service: process.env.SERVICE,
+                  network: process.env.NETWORK,
+                },
+              }),
+            },
+          },
+        },
+      });
+
+      expect(moreResponse0.statusCode).to.equal(200);
+
+      const moreResponse1 = await request.get(
+        `${url}${domainRoot ? `/${domainRoot}` : ""}`,
+        {
+          query: {
+            ...(more.query && { query: more.query }),
+            context: {
+              [process.env.CONTEXT]: {
+                root: contextRoot,
+                service: contextService,
+                network: contextNetwork,
+              },
+            },
+          },
+        }
+      );
+
+      const {
+        updates: moreUpdate,
+        count: moreCount,
+        content: moreContent,
+      } = JSON.parse(response1.body);
+
+      const moreParsedBody = one ? moreContent : moreContent[0];
+
+      expect(moreUpdate).to.exist;
+      !one ? expect(moreCount).to.equal(1) : expect(moreCount).to.be.undefined;
+
+      expect(moreResponse1.statusCode).to.equal(200);
+      for (const key in more.get) {
+        expect(moreParsedBody.body[key]).to.deep.equal(more.get[key]);
+      }
     }
 
     const response2 = await request.put(`${url}/${root}`, {
@@ -286,79 +338,9 @@ describe("View store base integration tests", () => {
     expect(parsedBody8.deletedCount).to.equal(1);
   };
 
-  const testIndexes = async () => {
-    if (indexes.length == 0) return;
-    const example0 = testing.examples.index;
-    expect(example0).to.exist;
-
-    const root = "some-index-root";
-
-    const response = await request.put(`${url}/${root}`, {
-      body: {
-        view: {
-          body: {
-            ...example0.put,
-          },
-        },
-        headers: {
-          [process.env.CONTEXT]: {
-            root: contextRoot,
-            service: contextService,
-            network: contextNetwork,
-          },
-          ...(domainRoot && {
-            [process.env.DOMAIN]: {
-              root: domainRoot,
-              service: process.env.SERVICE,
-              network: process.env.NETWORK,
-            },
-          }),
-        },
-      },
-    });
-
-    expect(response.statusCode).to.equal(200);
-
-    ///Test indexes
-    for (const index of indexes) {
-      const query = makeQuery(index[0], example0.query);
-      const response1 = await request.get(
-        `${url}${domainRoot ? `/${domainRoot}` : ""}`,
-        {
-          query: {
-            query,
-            [process.env.CONTEXT]: {
-              root: contextRoot,
-              service: contextService,
-              network: contextNetwork,
-            },
-          },
-        }
-      );
-      expect(response1.statusCode).to.equal(200);
-
-      const { updates: updates1, content: content1 } = JSON.parse(
-        response1.body
-      );
-
-      const parsedBody1 = one ? content1 : content1[0];
-
-      expect(updates1).to.exist;
-
-      for (const key in example0.get) {
-        if (key == "root") {
-          expect(parsedBody1[0].body[key]).to.equal(root);
-        } else {
-          expect(parsedBody1[0].body[key]).to.deep.equal(example0.get[key]);
-        }
-      }
-    }
-  };
-
   const testStreaming = async () => {
-    const example0 = testing.examples.stream.first;
-    const example1 = testing.examples.stream.second;
-    const query = testing.examples.stream.query;
+    const example0 = testing.examples.first;
+    const example1 = testing.examples.second;
 
     expect(example0).to.exist;
     expect(example1).to.exist;
@@ -440,7 +422,6 @@ describe("View store base integration tests", () => {
       },
       {
         query: {
-          query,
           context: {
             [process.env.CONTEXT]: {
               root: contextRoot,
@@ -457,7 +438,6 @@ describe("View store base integration tests", () => {
 
   it("should return successfully", async () => {
     await testParamQueries();
-    await testIndexes();
     await testStreaming();
   });
 

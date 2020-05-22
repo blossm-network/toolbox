@@ -4,7 +4,7 @@ module.exports = ({ name, domain, service, context = process.env.CONTEXT }) => {
   const read = ({
     contexts,
     tokenFns: { internal: internalTokenFn } = {},
-  } = {}) => async ({ query, sort }) =>
+  } = {}) => async ({ query, sort, root }) =>
     await deps
       .rpc(
         name,
@@ -13,7 +13,7 @@ module.exports = ({ name, domain, service, context = process.env.CONTEXT }) => {
         context,
         "view-composite"
       )
-      .get({ query, ...(sort && { sort }) })
+      .get({ query, ...(sort && { sort }), ...(root && { id: root }) })
       .in({
         ...(contexts && { context: contexts }),
       })
@@ -23,7 +23,7 @@ module.exports = ({ name, domain, service, context = process.env.CONTEXT }) => {
   const stream = ({
     contexts,
     tokenFns: { internal: internalTokenFn, external: externalTokenFn } = {},
-  } = {}) => async (fn, { query, sort }) =>
+  } = {}) => async (fn, { query, sort, root }) =>
     await deps
       .rpc(
         name,
@@ -32,7 +32,7 @@ module.exports = ({ name, domain, service, context = process.env.CONTEXT }) => {
         context,
         "view-composite"
       )
-      .stream(fn, { query, ...(sort && { sort }) })
+      .stream(fn, { query, ...(sort && { sort }), ...(root && { id: root }) })
       .in({
         ...(contexts && { context: contexts }),
       })

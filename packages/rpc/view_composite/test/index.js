@@ -13,6 +13,7 @@ const internalTokenFn = "some-internal-token-fn";
 
 const query = "some-query";
 const sort = "some-sort";
+const root = "some-root";
 const contexts = { c: 2 };
 
 const envContext = "some-env-context";
@@ -47,7 +48,7 @@ describe("Get composite views", () => {
         context: contexts,
         tokenFns: { internal: internalTokenFn },
       })
-      .read({ query, sort });
+      .read({ query, sort, root });
 
     expect(rpcFake).to.have.been.calledWith(
       name,
@@ -56,7 +57,7 @@ describe("Get composite views", () => {
       context,
       "view-composite"
     );
-    expect(getFake).to.have.been.calledWith({ query, sort });
+    expect(getFake).to.have.been.calledWith({ query, sort, id: root });
     expect(inFake).to.have.been.calledWith({ context: contexts });
     expect(withFake).to.have.been.calledWith({
       internalTokenFn,
@@ -110,7 +111,7 @@ describe("Get composite views", () => {
         context: contexts,
         tokenFns: { internal: internalTokenFn },
       })
-      .stream(fn, { query, sort });
+      .stream(fn, { query, sort, root });
 
     expect(rpcFake).to.have.been.calledWith(
       name,
@@ -119,7 +120,7 @@ describe("Get composite views", () => {
       context,
       "view-composite"
     );
-    expect(streamFake).to.have.been.calledWith(fn, { query, sort });
+    expect(streamFake).to.have.been.calledWith(fn, { query, sort, id: root });
     expect(inFake).to.have.been.calledWith({ context: contexts });
     expect(withFake).to.have.been.calledWith({
       path: "/stream",

@@ -1,15 +1,14 @@
 #
-# This file is required.
-#
 # Give your fact a name,
-# specify which domain it's for,
-# and set which version of the event to create.
+# and specify which domain and service it's for.
 #
-
-name: some-action
+name: some-name
 domain: some-domain
-service: core
+service: some-service
 
+#
+# Add dependencies and devDependencies, just like a package.json file.
+#
 dependencies:
   "@blossm/event-store-rpc": "*"
   "@blossm/gcp-token": "*"
@@ -21,18 +20,62 @@ devDependencies:
   "sinon-chai": "^3.5.0"
   "chai-datetime": "^1.5.0"
 
+#
+# The following properties are used for automated testing.
+#
 testing:
+  #
+  # Add network dependencies that will be used when running integration tests.
+  #
+  # You can include any standard blossm procedure thats within your network
+  # by specifying 'procedure', 'service', and 'domain' properties. Also include
+  # a 'name' property if you're mocking a command. These procedure within your network that
+  # are included in dependencies will run during integration test based on the latest published image.
+  #
+  # To mock calls to blossm services outside of your network, or any other http service,
+  # set 'procedure' to 'http', and 'host' to the host where the service lives (exclude the http protocol prefix).
+  # Then, set a 'mocks' property as an array of objects that describe how calls should behave.
+  # The 'mocks' should include 'method' as 'get', 'post', 'put', and 'delete', 'path' as
+  # the path that the mock applies to (or * if the mock should be used for any path on this host),
+  # 'code' as the status code that the mock returns, and 'response' as the http response the mock returns.
+  #
   dependencies:
     - domain: some-domain
       procedure: event-store
       service: some-service
 
+  #
+  # Add each integration test you want to run as a 'step'.
+  #
+  # The 'pre' property is an array of instructions that allow you to set up the event state
+  # of the system before the integration test runs. For example, you can add an event to
+  # an event-store by setting the 'domain' and 'service' property to the domain and service
+  # of the event-store that you want to modify the state of, 'root' and 'action' to the root
+  # and action that describe the event, and 'payload' to the payload of the event that is
+  # being added.
+  #
+  # The 'query' property is the query that should be used in this integration test step.
+  #
+  # The 'context' property is the context that should be used in this integration test step.
+  # Leave it out if no context should be passed in.
+  #
+  # The 'root' property is the root that should be used in this integration test step.
+  # Leave it out if no root should be passed in.
+  #
+  # The 'response' property is the response body that is expected to be returned.
+  # If the expected value of a response property is not known ahead of time, leave
+  # it's value empty.
+  #
+  # The 'code' property is the response code that is expected to be returned.
+  # If a 'response' is provided, this defaults to 200.
+  #
   steps:
     - pre:
       query:
       root:
       context:
       response:
+      code:
 
 #don't change
 procedure: fact

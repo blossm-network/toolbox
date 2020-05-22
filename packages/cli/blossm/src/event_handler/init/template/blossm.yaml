@@ -1,20 +1,22 @@
 #
-# This file is required.
+# Specify the name and context of this event-handler, and optionally the
+# domain and service.
 #
-# Give your event-handler the action that it's subscribed to, with it's domain,
-# and a unique name that describes it.
-#
-
 name: some-name
 domain: some-optional-domain
-service: some-optional-domain
+service: some-optional-service
 context: some-context
 
-event:
-  action: some-event-action
-  domain: some-event-domain
-  service: core
+#
+# Set the event-store from which this handler will listen for events.
+#
+store:
+  domain: some-store-domain
+  service: some-store-service
 
+#
+# Add dependencies and devDependencies, just like a package.json file.
+#
 devDependencies:
   "localenv": "^0.2.2"
   "mocha": "^7.1.1"

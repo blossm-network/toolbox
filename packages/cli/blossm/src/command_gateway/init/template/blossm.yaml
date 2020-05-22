@@ -1,24 +1,38 @@
 #
-# This file is required.
-# It's URL will be command.[domain].[service].[network]
+# The base URL of this gateway will be c.[domain].[service].[network]
 #
-
 domain: some-domain
 service: core
 
+#
+# Specify the commands that this gateway should accept requests for.
+#
+# The 'name' property correlates to the command name.
+# Each command can be accessed by adding the URL path /<name> to the base URL.
+#
+# The 'priviledges' property describes the priviledges needed by the requester
+# to access this command. Set this to 'none' if no specific priviledges are needed,
+# but the route should still require by a valid token.
+#
+# The 'context' property describes which property in the requesting token's context
+# that the specified priviledges should refer to.
+#
+# Set the 'protection' property to 'none' if this route should be accessible by
+# anyone on the internet. Set 'protection' to 'context' if the route should be
+# accessible by anyone on the internet, but if a valid token is used, then
+# the request context should be parsed from it and passed along to the command.
+#
 commands:
   - name: some-name
+    context: some-context
     privileges:
       - some-permission
   - name: some-other-name
     protection: none
 
+# Not used right now.
 whitelist:
   - "127.0.0.1"
-
-devDependencies:
-  "mocha": "^7.1.1"
-  "chai": "^4.2.0"
 
 #don't change
 procedure: command-gateway

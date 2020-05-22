@@ -1,41 +1,67 @@
 #
-# This file is required.
-# Give your view-store a unique name, specify which domain it's for, write the view store's schema, and specify what it should be indexed by.
+# Give your view-store a unique name, and specify which context it's in. Optionally add the
+# domain and service.
+#
+name: some-name
+domain: some-optional-domain
+service: some-optional-service
+context: some-context
+
+#
+# Give your view-store a schema.
 #
 # How to write a schema -> https://mongoosejs.com/docs/schematypes.html
 # Types and validators should always be specified,
 # and default values and required flags should be set if intended.
 #
+schema:
+  name: String
+
+#
+# Specify how this view-store can be indexed.
+#
 # How to write indexes -> https://mongoosejs.com/docs/guide.html#indexes
 # Queries to the store that aren't indexed will be rejected.
 # In other words, full collection scans are not allowed.
 #
-
-name: some-name
-domain: some-optional-domain
-service: some-optional-service
-context: principle
-
-schema:
-  name: String
-
-#optional. Remove if querying only by root, created date, or modified date
+# Queries can only be issued against indexed properties.
+#
+# A nested array is used to accomodate index options.
+#
 indexes:
   - - name: 1
 
-devDependencies:
-  "localenv": "^0.2.2"
-  "mocha": "^7.1.1"
-  "chai": "^4.2.0"
-  "sinon-chai": "^3.5.0"
-  "@blossm/request": "*"
-  "@blossm/uuid": "*"
-
+#
+# The following properties are used for automated testing.
+#
 testing:
-  #must add at least 2 examples
+  #
+  # Add examples for testing query, index, and stream functionality.
+  #
   examples:
-    - name: some-name
-    - name: some-other-name
+    #
+    # Test the query capability of the view-store.
+    #
+    # The 'first' property contains a 'put' property that should be
+    # and object that's writted to the view-store, and a 'get' with
+    # the expected result when the view-store is read. You can optionally add
+    # more examples to test, in which you can include 'query' parameters
+    # if you want to refine your query and test indexes.
+    #
+    # The 'second' object works the same way as 'first', but should contain
+    # different values in order to test overwritting.
+    #
+    first:
+      put:
+        name: some-name
+      get:
+        name: some-name
+    second:
+      put:
+        name: some-other-name
+      get:
+        name: some-other-name
+    more: []
 
 #don't change
 procedure: view-store

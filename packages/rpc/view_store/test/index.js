@@ -53,7 +53,7 @@ describe("Get views", () => {
         context: contexts,
         tokenFns: { internal: internalTokenFn, external: externalTokenFn },
       })
-      .read({ query, sort });
+      .read({ query, sort, root });
 
     expect(rpcFake).to.have.been.calledWith(
       name,
@@ -62,7 +62,7 @@ describe("Get views", () => {
       context,
       "view-store"
     );
-    expect(getFake).to.have.been.calledWith({ query, sort });
+    expect(getFake).to.have.been.calledWith({ query, sort, id: root });
     expect(inFake).to.have.been.calledWith({ context: contexts });
     expect(withFake).to.have.been.calledWith({
       internalTokenFn,
@@ -154,7 +154,7 @@ describe("Get views", () => {
         context: contexts,
         tokenFns: { internal: internalTokenFn, external: externalTokenFn },
       })
-      .stream(fn, { query, sort });
+      .stream(fn, { query, sort, root });
 
     expect(rpcFake).to.have.been.calledWith(
       name,
@@ -163,7 +163,7 @@ describe("Get views", () => {
       context,
       "view-store"
     );
-    expect(streamFake).to.have.been.calledWith(fn, { query, sort });
+    expect(streamFake).to.have.been.calledWith(fn, { query, sort, id: root });
     expect(inFake).to.have.been.calledWith({ context: contexts });
     expect(withFake).to.have.been.calledWith({
       path: "/stream",

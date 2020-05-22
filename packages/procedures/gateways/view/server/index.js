@@ -69,7 +69,7 @@ module.exports = async ({
         ...(service && { service }),
       }),
       {
-        path: `/${name}`,
+        path: `/${name}/:root?`,
         ...(protection != "none" && {
           preMiddleware: [
             deps.authentication({
