@@ -19,7 +19,7 @@ const findEnvForDependency = (dependency, dir) => {
         (!dependency.service || dependency.service == blossmConfig.service) &&
         (!dependency.name || dependency.name == blossmConfig.name)
       )
-        blossmConfig.env;
+        return blossmConfig.env;
     } else if (fs.statSync(filePath).isDirectory()) {
       const env = findEnvForDependency(dependency, filePath);
       if (env) return env;
