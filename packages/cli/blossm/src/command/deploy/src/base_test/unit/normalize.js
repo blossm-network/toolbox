@@ -1,6 +1,8 @@
 const fs = require("fs");
 const { expect } = require("chai").use(require("sinon-chai"));
 
+const exists = fs.existsSync("../../normalize.js");
+
 const normalize =
   fs.existsSync("../../normalize.js") && require("../../normalize");
 
@@ -13,7 +15,7 @@ describe("Command handler store normalize tests", () => {
   it("should clean correctly", async () => {
     //TODO
     //eslint-disable-next-line no-console
-    console.log({ normalize });
+    console.log({ exists, normalize });
     if (!normalize) return;
     for (const { payload, normalized } of testing.normalize) {
       const cleanedPayload = await normalize({
