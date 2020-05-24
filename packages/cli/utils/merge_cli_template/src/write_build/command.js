@@ -39,8 +39,8 @@ module.exports = ({
   secretBucket,
   secretBucketKeyLocation,
   secretBucketKeyRing,
-  twilioTestReceivingPhoneNumber,
-  twilioSendingPhoneNumber,
+  envVars,
+  devEnvVars,
   fanoutRealmId,
   imageExtension,
   runUnitTests,
@@ -74,12 +74,8 @@ module.exports = ({
         SERVICE: service,
         NAME: name,
         ...dependencyKeyEnvironmentVariables,
-        ...(twilioTestReceivingPhoneNumber && {
-          TWILIO_TEST_RECEIVING_PHONE_NUMBER: twilioTestReceivingPhoneNumber,
-        }),
-        ...(twilioSendingPhoneNumber && {
-          TWILIO_SENDING_PHONE_NUMBER: twilioSendingPhoneNumber,
-        }),
+        ...envVars,
+        ...devEnvVars,
         ...(fanoutRealmId && {
           FANOUT_REALM_ID: fanoutRealmId,
         }),
@@ -119,9 +115,7 @@ module.exports = ({
               DOMAIN: domain,
               SERVICE: service,
               ...dependencyKeyEnvironmentVariables,
-              ...(twilioSendingPhoneNumber && {
-                TWILIO_SENDING_PHONE_NUMBER: twilioSendingPhoneNumber,
-              }),
+              ...envVars,
               ...(fanoutRealmId && {
                 FANOUT_REALM_ID: fanoutRealmId,
               }),

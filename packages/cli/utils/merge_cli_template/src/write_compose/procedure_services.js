@@ -1,6 +1,31 @@
+const yaml = require("yaml");
+const path = require("path");
+const fs = require("fs-extra");
+
 const hash = require("@blossm/operation-hash");
+const rootDir = require("@blossm/cli-root-dir");
 
 const databaseService = require("./database_service");
+
+const findEnvForDependency = (dependency, dir) => {
+  for (const file of fs.readdirSync(dir)) {
+    const filePath = path.join(dir, file);
+
+    if (file == "blossm.yaml" || file == "blossm.yml") {
+      const blossmConfig = yaml.parse(fs.readFileSync(filePath, "utf8"));
+      if (
+        dependency.procedure == blossmConfig.procedure &&
+        (!dependency.domain || dependency.domain == blossmConfig.domain) &&
+        (!dependency.service || dependency.service == blossmConfig.service) &&
+        (!dependency.name || dependency.name == blossmConfig.name)
+      )
+        blossmConfig.env;
+    } else if (fs.statSync(filePath).isDirectory()) {
+      const env = findEnvForDependency(dependency, filePath);
+      if (env) return env;
+    }
+  }
+};
 
 module.exports = ({
   config,
@@ -25,8 +50,6 @@ module.exports = ({
   mongodbProtocol,
   mongodbUser,
   mongodbUserPassword,
-  twilioSendingPhoneNumber,
-  twilioTestReceivingPhoneNumber,
   dependencyKeyEnvironmentVariables,
 }) => {
   const common = {
@@ -52,9 +75,15 @@ module.exports = ({
     MONGODB_PROTOCOL: `${mongodbProtocol}`,
     MONGODB_DATABASE: `${mongodbDatabase}`,
   };
+
   let services = {};
   let includeDatabase = false;
   for (const dependency of config.testing.dependencies) {
+    const customEnv = findEnvForDependency(dependency, rootDir.path());
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log({ dependency, customEnv });
+
     const commonServiceImagePrefix = `${
       coreNetwork && dependency.network == coreNetwork
         ? coreContainerRegistery
@@ -208,12 +237,7 @@ module.exports = ({
                 DOMAIN: dependency.domain,
                 SERVICE: dependency.service,
                 NAME: dependency.name,
-                ...(twilioTestReceivingPhoneNumber && {
-                  TWILIO_TEST_RECEIVING_PHONE_NUMBER: twilioTestReceivingPhoneNumber,
-                }),
-                ...(twilioSendingPhoneNumber && {
-                  TWILIO_SENDING_PHONE_NUMBER: twilioSendingPhoneNumber,
-                }),
+                ...customEnv,
               },
             },
           };
@@ -247,6 +271,7 @@ module.exports = ({
                 ...(dependency.domain && { DOMAIN: dependency.domain }),
                 ...(dependency.service && { SERVICE: dependency.service }),
                 NAME: dependency.name,
+                ...customEnv,
               },
             },
           };

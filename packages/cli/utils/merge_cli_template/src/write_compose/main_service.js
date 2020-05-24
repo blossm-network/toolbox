@@ -25,8 +25,7 @@ module.exports = ({
   mongodbHost,
   mongodbDatabase,
   mongodbProtocol,
-  twilioSendingPhoneNumber,
-  twilioTestReceivingPhoneNumber,
+  envVars,
 }) => {
   const common = {
     container_name: mainContainerName,
@@ -101,12 +100,7 @@ module.exports = ({
         ...common,
         environment: {
           ...common.environment,
-          ...(twilioTestReceivingPhoneNumber && {
-            TWILIO_TEST_RECEIVING_PHONE_NUMBER: twilioTestReceivingPhoneNumber,
-          }),
-          ...(twilioSendingPhoneNumber && {
-            TWILIO_SENDING_PHONE_NUMBER: twilioSendingPhoneNumber,
-          }),
+          ...envVars,
           NAME: name,
         },
       };
@@ -124,6 +118,7 @@ module.exports = ({
           CONTEXT: context,
           STORE_DOMAIN: store.domain,
           STORE_SERVICE: store.service,
+          ...envVars,
         },
       };
     case "job":
@@ -136,6 +131,7 @@ module.exports = ({
         environment: {
           ...common.environment,
           NAME: name,
+          ...envVars,
         },
       };
     case "command-gateway":

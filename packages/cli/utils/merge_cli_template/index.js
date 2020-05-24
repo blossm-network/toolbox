@@ -1,11 +1,11 @@
 const roboSay = require("@blossm/robo-say");
 
 const rootDir = require("@blossm/cli-root-dir");
-const fs = require("fs-extra");
 const ncp = require("ncp");
 const { promisify } = require("util");
 const yaml = require("yaml");
 const path = require("path");
+const fs = require("fs-extra");
 const { red } = require("chalk");
 
 const access = promisify(fs.access);
@@ -74,20 +74,10 @@ const envProject = ({ env, config }) => {
   }
 };
 
-const envTwilioSendingPhoneNumber = ({ env, config }) => {
-  switch (env) {
-    case "production":
-      return config.vendors.texting.twilio.sendingPhoneNumber.production;
-    case "sandbox":
-      return config.vendors.texting.twilio.sendingPhoneNumber.sandbox;
-    case "staging":
-      return config.vendors.texting.twilio.sendingPhoneNumber.staging;
-    case "development":
-      return config.vendors.texting.twilio.sendingPhoneNumber.development;
-    default:
-      return "";
-  }
-};
+const envEnvVars = ({ env, config }) => (config.env ? config.env[env] : {});
+
+const envDevEnvVars = ({ env, config }) =>
+  config.devEnv ? config.devEnv[env] : {};
 
 const envPublicKeyUrl = ({ env, config }) => {
   switch (env) {
@@ -99,21 +89,6 @@ const envPublicKeyUrl = ({ env, config }) => {
       return config.publicKeyUrls.staging;
     case "development":
       return config.publicKeyUrls.development;
-    default:
-      return "";
-  }
-};
-
-const envTwilioTestReceivingPhoneNumber = ({ env, config }) => {
-  switch (env) {
-    case "production":
-      return config.vendors.texting.twilio.testReceivingPhoneNumber.production;
-    case "sandbox":
-      return config.vendors.texting.twilio.testReceivingPhoneNumber.sandbox;
-    case "staging":
-      return config.vendors.texting.twilio.testReceivingPhoneNumber.staging;
-    case "development":
-      return config.vendors.texting.twilio.testReceivingPhoneNumber.development;
     default:
       return "";
   }
@@ -472,17 +447,6 @@ const addDefaultDependencies = ({ config, coreNetwork }) => {
             },
           ],
         },
-        // {
-        //   procedure: "http",
-        //   host: `c.connection.system.${coreNetwork}`,
-        //   mocks: [
-        //     {
-        //       method: "post",
-        //       path: "/open",
-        //       code: 200,
-        //     },
-        //   ],
-        // },
       ];
     case "event-handler":
       return [
@@ -634,6 +598,8 @@ const configure = async (workingDir, configFn, env, strict) => {
     const procedure = config.procedure;
     const name = config.name;
     const store = config.store;
+    const envVars = envEnvVars({ env, config });
+    const devEnvVars = envDevEnvVars({ env, config });
 
     const dependencyKeyEnvironmentVariables = envDependencyKeyEnvironmentVariables(
       { env, config: blossmConfig }
@@ -643,14 +609,6 @@ const configure = async (workingDir, configFn, env, strict) => {
     const secretBucket = envSecretsBucket({ env, config: blossmConfig });
     const publicKeyUrl = envPublicKeyUrl({ env, config: blossmConfig });
 
-    const twilioSendingPhoneNumber = envTwilioSendingPhoneNumber({
-      env,
-      config: blossmConfig,
-    });
-    const twilioTestReceivingPhoneNumber = envTwilioTestReceivingPhoneNumber({
-      env,
-      config: blossmConfig,
-    });
     const fanoutRealmId = envFanoutRealmId({ env, config: blossmConfig });
     const secretBucketKeyLocation = "global";
     const secretBucketKeyRing = "secrets-bucket";
@@ -689,8 +647,8 @@ const configure = async (workingDir, configFn, env, strict) => {
       }),
       mainContainerName,
       containerRegistery,
-      twilioSendingPhoneNumber,
-      twilioTestReceivingPhoneNumber,
+      envVars,
+      devEnvVars,
       fanoutRealmId,
       envUriSpecifier: envUriSpecifier(env),
       computeUrlId: envComputeUrlId({ env, config: blossmConfig }),
@@ -728,8 +686,7 @@ const configure = async (workingDir, configFn, env, strict) => {
       secretBucket,
       secretBucketKeyLocation,
       secretBucketKeyRing,
-      twilioSendingPhoneNumber,
-      twilioTestReceivingPhoneNumber,
+      envVars,
       dependencyKeyEnvironmentVariables,
       ...configFn(config),
     });

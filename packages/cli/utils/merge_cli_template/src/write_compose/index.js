@@ -40,8 +40,7 @@ module.exports = ({
   secretBucketKeyLocation,
   secretBucketKeyRing,
   secretBucket,
-  twilioSendingPhoneNumber,
-  twilioTestReceivingPhoneNumber,
+  envVars,
   dependencyKeyEnvironmentVariables,
 }) => {
   const mongodbUser = "tester";
@@ -80,8 +79,6 @@ module.exports = ({
     mongodbUserPassword,
     mongodbHost,
     mongodbProtocol,
-    twilioSendingPhoneNumber,
-    twilioTestReceivingPhoneNumber,
     dependencyKeyEnvironmentVariables,
   });
 
@@ -111,8 +108,7 @@ module.exports = ({
     mongodbUserPassword,
     mongodbDatabase,
     mongodbProtocol,
-    twilioSendingPhoneNumber,
-    twilioTestReceivingPhoneNumber,
+    envVars,
     dependencyKeyEnvironmentVariables,
   });
 
