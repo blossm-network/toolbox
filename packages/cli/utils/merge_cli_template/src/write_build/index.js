@@ -284,6 +284,8 @@ const steps = ({
         memory,
         coreNetwork,
         env,
+        envVars,
+        devEnvVars,
         computeUrlId,
         service,
         domain,
