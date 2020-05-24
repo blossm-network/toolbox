@@ -13,13 +13,14 @@ const findEnvForDependency = (dependency, dir, env) => {
 
     if (file == "blossm.yaml" || file == "blossm.yml") {
       const blossmConfig = yaml.parse(fs.readFileSync(filePath, "utf8"));
+
       if (
         dependency.procedure == blossmConfig.procedure &&
         (!dependency.domain || dependency.domain == blossmConfig.domain) &&
         (!dependency.service || dependency.service == blossmConfig.service) &&
         (!dependency.name || dependency.name == blossmConfig.name)
       )
-        return blossmConfig.env[env];
+        return blossmConfig.env && blossmConfig.env[env];
     } else if (fs.statSync(filePath).isDirectory()) {
       const envVars = findEnvForDependency(dependency, filePath);
       if (envVars) return envVars;
