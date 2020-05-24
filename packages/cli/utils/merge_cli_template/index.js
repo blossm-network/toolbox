@@ -596,10 +596,6 @@ const configure = async (workingDir, configFn, env, strict) => {
     const envVars = config.env && config.env[env];
     const devEnvVars = config.devEnv && config.devEnv[env];
 
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log({ envVars, devEnvVars, config, env });
-
     const dependencyKeyEnvironmentVariables = envDependencyKeyEnvironmentVariables(
       { env, config: blossmConfig }
     );
