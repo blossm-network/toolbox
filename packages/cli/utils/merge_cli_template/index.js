@@ -74,11 +74,6 @@ const envProject = ({ env, config }) => {
   }
 };
 
-const envEnvVars = ({ env, config }) => (config.env ? config.env[env] : {});
-
-const envDevEnvVars = ({ env, config }) =>
-  config.devEnv ? config.devEnv[env] : {};
-
 const envPublicKeyUrl = ({ env, config }) => {
   switch (env) {
     case "production":
@@ -598,8 +593,12 @@ const configure = async (workingDir, configFn, env, strict) => {
     const procedure = config.procedure;
     const name = config.name;
     const store = config.store;
-    const envVars = envEnvVars({ env, config });
-    const devEnvVars = envDevEnvVars({ env, config });
+    const envVars = config.env && config.env[env];
+    const devEnvVars = config.devEnv && config.devEnv[env];
+
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log({ envVars, devEnvVars, config, env });
 
     const dependencyKeyEnvironmentVariables = envDependencyKeyEnvironmentVariables(
       { env, config: blossmConfig }

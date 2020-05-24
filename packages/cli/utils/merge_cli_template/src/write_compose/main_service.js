@@ -46,6 +46,7 @@ module.exports = ({
       GCP_SECRET_BUCKET: secretBucket,
       GCP_KMS_SECRET_BUCKET_KEY_LOCATION: secretBucketKeyLocation,
       GCP_KMS_SECRET_BUCKET_KEY_RING: secretBucketKeyRing,
+      ...envVars,
     },
   };
 
@@ -100,7 +101,6 @@ module.exports = ({
         ...common,
         environment: {
           ...common.environment,
-          ...envVars,
           NAME: name,
         },
       };
@@ -118,7 +118,6 @@ module.exports = ({
           CONTEXT: context,
           STORE_DOMAIN: store.domain,
           STORE_SERVICE: store.service,
-          ...envVars,
         },
       };
     case "job":
@@ -131,7 +130,6 @@ module.exports = ({
         environment: {
           ...common.environment,
           NAME: name,
-          ...envVars,
         },
       };
     case "command-gateway":
