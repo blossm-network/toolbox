@@ -1,4 +1,3 @@
-// TODO check if localenv is still needed.
 require("localenv");
 const { expect } = require("chai");
 const viewStore = require("@blossm/view-store-rpc");

@@ -236,9 +236,6 @@ const mongodbProtocol = ({ config, procedure }) => {
   }
 };
 
-const envFanoutRealmId = ({ env, config }) =>
-  config.vendors.fanout.realmId[env];
-
 const configMemory = ({ config, blossmConfig }) => {
   if (config.memory) return config.memory;
   return (
@@ -604,7 +601,6 @@ const configure = async (workingDir, configFn, env, strict) => {
     const secretBucket = envSecretsBucket({ env, config: blossmConfig });
     const publicKeyUrl = envPublicKeyUrl({ env, config: blossmConfig });
 
-    const fanoutRealmId = envFanoutRealmId({ env, config: blossmConfig });
     const secretBucketKeyLocation = "global";
     const secretBucketKeyRing = "secrets-bucket";
 
@@ -644,7 +640,6 @@ const configure = async (workingDir, configFn, env, strict) => {
       containerRegistery,
       envVars,
       devEnvVars,
-      fanoutRealmId,
       envUriSpecifier: envUriSpecifier(env),
       computeUrlId: envComputeUrlId({ env, config: blossmConfig }),
       dnsZone,

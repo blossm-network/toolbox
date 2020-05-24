@@ -41,7 +41,6 @@ module.exports = ({
   secretBucketKeyRing,
   envVars,
   devEnvVars,
-  fanoutRealmId,
   imageExtension,
   runUnitTests,
   runBaseUnitTests,
@@ -76,9 +75,6 @@ module.exports = ({
         ...dependencyKeyEnvironmentVariables,
         ...envVars,
         ...devEnvVars,
-        ...(fanoutRealmId && {
-          FANOUT_REALM_ID: fanoutRealmId,
-        }),
       },
     }),
     dockerComposeUp,
@@ -116,9 +112,6 @@ module.exports = ({
               SERVICE: service,
               ...dependencyKeyEnvironmentVariables,
               ...envVars,
-              ...(fanoutRealmId && {
-                FANOUT_REALM_ID: fanoutRealmId,
-              }),
             },
             labels: { name, domain, service },
           }),
