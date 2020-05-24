@@ -11,6 +11,9 @@ describe("Command handler store normalize tests", () => {
     expect(testing.normalize).to.exist;
   });
   it("should clean correctly", async () => {
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log({ normalize });
     if (!normalize) return;
     for (const { payload, normalized } of testing.normalize) {
       const cleanedPayload = await normalize({
