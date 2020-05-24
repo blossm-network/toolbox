@@ -668,6 +668,7 @@ const configure = async (workingDir, configFn, env, strict) => {
       mainContainerName,
       network: "local.network",
       host: "local.network",
+      env,
       service,
       project,
       context,

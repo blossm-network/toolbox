@@ -37,6 +37,7 @@ module.exports = ({
   domain,
   name,
   store,
+  env,
   secretBucketKeyLocation,
   secretBucketKeyRing,
   secretBucket,
@@ -51,7 +52,6 @@ module.exports = ({
   const mongodbAdminUser = "admin";
   const mongodbAdminUserPassword = "password";
   const mongodbAdminDatabase = "admin";
-  const env = "local";
 
   const _includeDatabase = includeDatabase(config);
 
@@ -95,7 +95,6 @@ module.exports = ({
     service,
     project,
     region,
-    env,
     containerRegistery,
     domain,
     name,

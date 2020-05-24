@@ -7,7 +7,7 @@ const rootDir = require("@blossm/cli-root-dir");
 
 const databaseService = require("./database_service");
 
-const findEnvForDependency = (dependency, dir) => {
+const findEnvForDependency = (dependency, dir, env) => {
   for (const file of fs.readdirSync(dir)) {
     const filePath = path.join(dir, file);
 
@@ -20,7 +20,7 @@ const findEnvForDependency = (dependency, dir) => {
         (!dependency.service || dependency.service == blossmConfig.service) &&
         (!dependency.name || dependency.name == blossmConfig.name)
       )
-        return blossmConfig.env;
+        return blossmConfig.env && blossmConfig.env[env];
     } else if (fs.statSync(filePath).isDirectory()) {
       const envVars = findEnvForDependency(dependency, filePath);
       if (envVars) return envVars;
@@ -33,11 +33,11 @@ module.exports = ({
   databaseServiceKey,
   project,
   port,
-  env,
   coreNetwork,
   network,
   host,
   region,
+  env,
   containerRegistery,
   coreContainerRegistery,
   secretBucket,
@@ -58,7 +58,7 @@ module.exports = ({
   };
   const commonEnvironment = {
     PORT: `${port}`,
-    NODE_ENV: env,
+    NODE_ENV: "local",
     NETWORK: network,
     CORE_NETWORK: coreNetwork,
     HOST: host,
@@ -80,15 +80,7 @@ module.exports = ({
   let services = {};
   let includeDatabase = false;
   for (const dependency of config.testing.dependencies) {
-    const allCustomEnv = findEnvForDependency(dependency, rootDir.path(), env);
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log({ allCustomEnv, dependency, env });
-    const customEnv = allCustomEnv ? allCustomEnv[env] : undefined;
-
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log({ customEnv });
+    const customEnv = findEnvForDependency(dependency, rootDir.path(), env);
 
     const commonServiceImagePrefix = `${
       coreNetwork && dependency.network == coreNetwork
