@@ -41,6 +41,7 @@ module.exports = ({
   secretBucketKeyRing,
   secretBucket,
   envVars,
+  devEnvVars,
   dependencyKeyEnvironmentVariables,
 }) => {
   const mongodbUser = "tester";
@@ -109,6 +110,7 @@ module.exports = ({
     mongodbDatabase,
     mongodbProtocol,
     envVars,
+    devEnvVars,
     dependencyKeyEnvironmentVariables,
   });
 

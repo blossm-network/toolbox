@@ -682,6 +682,7 @@ const configure = async (workingDir, configFn, env, strict) => {
       secretBucketKeyLocation,
       secretBucketKeyRing,
       envVars,
+      devEnvVars,
       dependencyKeyEnvironmentVariables,
       ...configFn(config),
     });

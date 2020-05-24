@@ -26,6 +26,7 @@ module.exports = ({
   mongodbDatabase,
   mongodbProtocol,
   envVars,
+  devEnvVars,
 }) => {
   const common = {
     container_name: mainContainerName,
@@ -47,6 +48,7 @@ module.exports = ({
       GCP_KMS_SECRET_BUCKET_KEY_LOCATION: secretBucketKeyLocation,
       GCP_KMS_SECRET_BUCKET_KEY_RING: secretBucketKeyRing,
       ...envVars,
+      ...devEnvVars,
     },
   };
 
