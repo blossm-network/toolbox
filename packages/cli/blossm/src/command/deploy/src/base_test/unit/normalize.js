@@ -1,7 +1,8 @@
 const fs = require("fs");
 const { expect } = require("chai").use(require("sinon-chai"));
 
-const normalize = fs.existsSync("./normalize.js") && require("./normalize");
+const normalize =
+  fs.existsSync("../../normalize.js") && require("../../normalize");
 
 const { testing } = require("../../config.json");
 
