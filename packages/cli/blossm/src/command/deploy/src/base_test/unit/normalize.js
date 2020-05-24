@@ -1,10 +1,12 @@
 const fs = require("fs");
+const path = require("path");
 const { expect } = require("chai").use(require("sinon-chai"));
 
-const exists = fs.existsSync("../../normalize.js");
+const exists = fs.existsSync(path.resolve(__dirname, "../../normalize.js"));
 
 const normalize =
-  fs.existsSync("../../normalize.js") && require("../../normalize");
+  fs.existsSync(path.resolve(__dirname, "../../normalize.js")) &&
+  require("../../normalize");
 
 const { testing } = require("../../config.json");
 

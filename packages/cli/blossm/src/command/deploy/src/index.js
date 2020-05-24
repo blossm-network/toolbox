@@ -1,13 +1,19 @@
 const fs = require("fs");
+const path = require("path");
 const command = require("@blossm/command");
 const eventStore = require("@blossm/event-store-rpc");
 const gcpToken = require("@blossm/gcp-token");
 // const gcpTask = require("@blossm/gcp-task");
 
 const main = require("./main.js");
-const validate = fs.existsSync("./validate.js") && require("./validate");
-const normalize = fs.existsSync("./normalize.js") && require("./normalize");
-const fill = fs.existsSync("./fill.js") && require("./fill");
+const validate =
+  fs.existsSync(path.resolve(__dirname, "./validate.js")) &&
+  require("./validate");
+const normalize =
+  fs.existsSync(path.resolve(__dirname, "./normalize.js")) &&
+  require("./normalize");
+const fill =
+  fs.existsSync(path.resolve(__dirname, "./fill.js")) && require("./fill");
 
 module.exports = command({
   mainFn: main,
