@@ -22,7 +22,7 @@ const findEnvForDependency = (dependency, dir, env) => {
         return blossmConfig.env[env];
     } else if (fs.statSync(filePath).isDirectory()) {
       const envVars = findEnvForDependency(dependency, filePath);
-      if (envVars) return envVars[env];
+      if (envVars) return envVars;
     }
   }
 };
