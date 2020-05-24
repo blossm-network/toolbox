@@ -110,7 +110,6 @@ testing:
     - pre:
       payload:
       context:
-      session:
       root:
       code:
       response:
