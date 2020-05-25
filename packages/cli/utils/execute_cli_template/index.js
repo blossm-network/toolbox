@@ -74,6 +74,10 @@ const execute = async (input, configFn) => {
       config: rootConfig,
     })}-uc.a.run.app`;
 
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log({ audience });
+
     const spawnCall = spawnSync(
       "gcloud",
       [
