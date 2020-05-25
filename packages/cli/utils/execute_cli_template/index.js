@@ -34,6 +34,21 @@ const envUriSpecifier = (env) => {
   }
 };
 
+const envComputeUrlId = ({ env, config }) => {
+  switch (env) {
+    case "production":
+      return config.vendors.cloud.gcp.computeUrlIds.production;
+    case "sandbox":
+      return config.vendors.cloud.gcp.computeUrlIds.sandbox;
+    case "staging":
+      return config.vendors.cloud.gcp.computeUrlIds.staging;
+    case "development":
+      return config.vendors.cloud.gcp.computeUrlIds.development;
+    default:
+      return "";
+  }
+};
+
 const execute = async (input, configFn) => {
   const functionPath = path.resolve(
     process.cwd(),
@@ -52,6 +67,13 @@ const execute = async (input, configFn) => {
       env: input.env,
     });
 
+    const audience = `https://${input.region}-${
+      blossmConfig.name
+    }-${operationHash}-${envComputeUrlId({
+      env: input.env,
+      config: rootConfig,
+    })}-uc.a.run.app`;
+
     const spawnCall = spawnSync(
       "gcloud",
       [
@@ -60,10 +82,11 @@ const execute = async (input, configFn) => {
         "create-http-task",
         input.name,
         `--queue=${input.queue}`,
-        `--url=http://${operationHash}.${input.region}.${envUriSpecifier(
+        `--url=https://${operationHash}.${input.region}.${envUriSpecifier(
           input.env
         )}${rootConfig.network}`,
         `--oidc-service-account-email=executer@${project}.iam.gserviceaccount.com`,
+        `--oidc-token-audience=${audience}`,
         ...(input.data ? [`--body-content=${input.data}`] : []),
         `--project=${project}`,
       ],
