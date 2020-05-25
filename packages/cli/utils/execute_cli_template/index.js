@@ -61,9 +61,9 @@ const execute = async (input, configFn) => {
         "create-http-task",
         input.name,
         `--queue=${input.queue}`,
-        `--url=${operationHash}.${input.region}.${envUriSpecifier(input.env)}.${
-          rootConfig.network
-        }`,
+        `--url=https://${operationHash}.${input.region}.${envUriSpecifier(
+          input.env
+        )}.${rootConfig.network}`,
         `--oidc-service-account-email=executer@${project}.iam.gserviceaccount.com`,
         ...(input.data ? [`--body-content=${input.data}`] : []),
         `--project=${project}`,
