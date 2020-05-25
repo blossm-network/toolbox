@@ -34,10 +34,10 @@ module.exports = ({
       "--platform=managed",
       `--memory=${memory}`,
       `--timeout=${timeout}`,
-      `--vpc-connector=${region}`,
+      `--vpc-connector=${region}-network`,
       ...(allowUnauthenticated ? ["--allow-unauthenticated"] : []),
       `--project=${project}`,
-      `--region=${region}-network`,
+      `--region=${region}`,
       `--set-env-vars=${Object.entries({
         NODE_ENV: nodeEnv,
         NETWORK: `${envUriSpecifier}${network}`,
