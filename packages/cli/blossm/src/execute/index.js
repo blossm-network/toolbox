@@ -26,6 +26,10 @@ const envProject = ({ env, config }) => {
 };
 
 const execute = async (input) => {
+  //TODO
+  //eslint-disable-next-line no-console
+  console.log("yup");
+
   const functionPath = path.resolve(
     process.cwd(),
     input.path || "",
@@ -86,6 +90,9 @@ const execute = async (input) => {
 };
 
 module.exports = async (args) => {
+  //TODO
+  //eslint-disable-next-line no-console
+  console.log("executing");
   const input = await normalize({
     entrypointType: "path",
     entrypointDefault: ".",
