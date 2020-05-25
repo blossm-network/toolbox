@@ -76,7 +76,7 @@ const execute = async (input) => {
         "beta",
         "tasks",
         "create-http-task",
-        "some-task-id",
+        input.name,
         "--queue=test",
         "--url=https://us-central1-development-278216.cloudfunctions.net/us-central1-function-some-action-1660852768",
         `--oidc-service-account-email=executer@${project}.iam.gserviceaccount.com`,
@@ -106,6 +106,12 @@ module.exports = async (args) => {
     args,
     flags: [
       {
+        name: "name",
+        type: String,
+        short: "n",
+        required: true,
+      },
+      {
         name: "env",
         type: String,
         short: "e",
@@ -120,7 +126,7 @@ module.exports = async (args) => {
       {
         name: "region",
         type: String,
-        short: "e",
+        short: "r",
         choices: [
           "asia-east1",
           "asia-east2",
