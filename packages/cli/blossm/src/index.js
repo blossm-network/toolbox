@@ -9,7 +9,6 @@ const init = require("./init");
 const secret = require("./secret");
 const queue = require("./queue");
 const replay = require("./replay");
-const execute = require("./execute");
 const command = require("./command");
 const eventHandler = require("./event_handler");
 const projection = require("./projection");
@@ -38,7 +37,6 @@ const domains = [
   "view-gateway",
   "fact-gateway",
   "job",
-  "execute",
   "function",
   "fact",
   "view-composite",
@@ -103,8 +101,6 @@ const forward = (input) => {
       return queue(input.args);
     case "replay":
       return replay(input.args);
-    case "execute":
-      return execute(input.args);
     case "command":
       return command(input.args);
     case "event-handler":
