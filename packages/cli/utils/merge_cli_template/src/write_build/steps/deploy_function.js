@@ -48,7 +48,7 @@ module.exports = ({
         GCP_COMPUTE_URL_ID: computeUrlId,
         ...env,
       }).reduce((string, [key, value]) => (string += `${key}=${value},`), "")}`,
-      `--labels=${Object.entries({
+      `--update-labels=${Object.entries({
         procedure,
         hash: operationHash,
         ...labels,
