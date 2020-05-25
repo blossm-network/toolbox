@@ -53,6 +53,11 @@ const execute = async (input, configFn) => {
     });
     //TODO
     //eslint-disable-next-line
+    console.log({
+      url: `https://${operationHash}.${input.region}.${envUriSpecifier(
+        input.env
+      )}.${rootConfig.network}`,
+    });
     const spawnCall = spawnSync(
       "gcloud",
       [
