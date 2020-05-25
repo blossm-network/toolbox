@@ -26,6 +26,7 @@ module.exports = ({
       "functions",
       "deploy",
       `${serviceName}`,
+      "--trigger-http",
       `--entry-point=main`,
       `--memory=${memory}`,
       ...(allowUnauthenticated ? ["--allow-unauthenticated"] : []),
