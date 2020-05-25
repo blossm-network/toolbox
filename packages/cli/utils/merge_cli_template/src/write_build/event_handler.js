@@ -8,7 +8,7 @@ const integrationTests = require("./steps/integration_tests");
 const baseIntegrationTests = require("./steps/base_integration_tests");
 const dockerComposeLogs = require("./steps/docker_compose_logs");
 const dockerPush = require("./steps/docker_push");
-const deploy = require("./steps/deploy");
+const deployRun = require("./steps/deploy_run");
 const startDnsTransaction = require("./steps/start_dns_transaction");
 const addPubSubPolicy = require("./steps/add_pubsub_policy");
 const createPubsubSubscription = require("./steps/create_pubsub_subscription");
@@ -99,7 +99,7 @@ module.exports = ({
             containerRegistery,
             procedure,
           }),
-          deploy({
+          deployRun({
             serviceName,
             procedure,
             extension: imageExtension,

@@ -9,7 +9,7 @@ const baseIntegrationTests = require("./steps/base_integration_tests");
 const dockerComposeLogs = require("./steps/docker_compose_logs");
 const dockerPush = require("./steps/docker_push");
 const writeEnv = require("./steps/write_env");
-const deploy = require("./steps/deploy");
+const deployRun = require("./steps/deploy_run");
 const startDnsTransaction = require("./steps/start_dns_transaction");
 const addDnsTransaction = require("./steps/add_dns_transaction");
 const executeDnsTransaction = require("./steps/execute_dns_transaction");
@@ -88,7 +88,7 @@ module.exports = ({
             containerRegistery,
             procedure,
           }),
-          deploy({
+          deployRun({
             serviceName,
             procedure,
             extension: imageExtension,

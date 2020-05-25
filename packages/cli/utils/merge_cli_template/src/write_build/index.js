@@ -10,6 +10,7 @@ const command = require("./command");
 const eventHandler = require("./event_handler");
 const eventStore = require("./event_store");
 const job = require("./job");
+const func = require("./func");
 const viewComposite = require("./view_composite");
 
 const steps = ({
@@ -20,6 +21,7 @@ const steps = ({
   publicKeyUrl,
   project,
   network,
+  timeout,
   mongodbUser,
   mongodbHost,
   mongodbProtocol,
@@ -268,6 +270,30 @@ const steps = ({
         devEnvVars,
         strict,
       });
+    case "function":
+      return func({
+        name,
+        domain,
+        region,
+        project,
+        envUriSpecifier,
+        service,
+        procedure,
+        network,
+        env,
+        operationHash,
+        serviceName,
+        computeUrlId,
+        memory,
+        timeout,
+        envVars,
+        rolesBucket,
+        secretBucket,
+        secretBucketKeyLocation,
+        secretBucketKeyRing,
+        runUnitTests,
+        runBaseUnitTests,
+      });
     case "command-gateway":
       return commandGateway({
         imageExtension,
@@ -440,6 +466,7 @@ module.exports = ({
   operationName,
   envVars,
   devEnvVars,
+  timeout,
   env,
   rolesBucket,
   secretBucket,
@@ -491,6 +518,7 @@ module.exports = ({
       mainContainerName,
       dnsZone,
       service,
+      timeout,
       env,
       coreNetwork,
       computeUrlId,

@@ -244,6 +244,15 @@ const configMemory = ({ config, blossmConfig }) => {
   );
 };
 
+const configTimeout = ({ config, blossmConfig }) => {
+  if (config.timeout) return config.timeout;
+  return (
+    blossmConfig.vendors.cloud.gcp.defaults.timeoutOverrides[
+      config.procedure
+    ] || blossmConfig.vendors.cloud.gcp.defaults.timeout
+  );
+};
+
 const copyScript = async (scriptDir, workingDir) => {
   const scripts = path.resolve(scriptDir, "src");
   try {
@@ -629,6 +638,7 @@ const configure = async (workingDir, configFn, env, strict) => {
       project,
       procedure,
       network,
+      timeout: configTimeout({ config, blossmConfig }),
       memory: configMemory({ config, blossmConfig }),
       mongodbUser: envMongodbUser({ env, config: blossmConfig, procedure }),
       mongodbHost: envMongodbHost({ env, config: blossmConfig, procedure }),
