@@ -9,6 +9,10 @@ const camelCased = (str) =>
   });
 
 const flagValue = async (flag, args) => {
+  //TODO
+  //eslint-disable-next-line no-console
+  console.log({ flag, args });
+
   const value = args[`--${flag.name}`] || flag.default;
   if (value) return value;
 
