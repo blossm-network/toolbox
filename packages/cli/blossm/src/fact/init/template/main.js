@@ -10,7 +10,7 @@
 
 const deps = require("./deps");
 
-module.exports = async ({ query, params, context, claims }) => {
+module.exports = async ({ query, root, context, claims }) => {
   await deps
     .eventStore({
       domain: "some-domain",
@@ -20,6 +20,6 @@ module.exports = async ({ query, params, context, claims }) => {
     .aggregate("some-root");
 
   //eslint-disable-next-line no-console
-  console.log("Do something with: ", { query, params, context, claims });
+  console.log("Do something with: ", { query, root, context, claims });
   return { response: { some: "response " } };
 };
