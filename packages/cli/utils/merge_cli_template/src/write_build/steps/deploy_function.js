@@ -31,7 +31,7 @@ module.exports = ({
       `--memory=${memory}`,
       ...(allowUnauthenticated ? ["--allow-unauthenticated"] : []),
       `--project=${project}`,
-      `--runtime=nodejs12`,
+      `--runtime=nodejs10`,
       `--region=${region}`,
       `--timeout=${timeout}`,
       `--set-env-vars=${Object.entries({
