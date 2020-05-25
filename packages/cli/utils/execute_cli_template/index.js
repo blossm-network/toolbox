@@ -1,11 +1,11 @@
-const fs = require("fs-extra");
-const path = require("path");
-const yaml = require("yaml");
 const normalize = require("@blossm/normalize-cli");
 const roboSay = require("@blossm/robo-say");
-const { red } = require("chalk");
-const rootDir = require("@blossm/cli-root-dir");
+const fs = require("fs-extra");
 const { spawnSync } = require("child_process");
+const rootDir = require("@blossm/cli-root-dir");
+const path = require("path");
+const yaml = require("yaml");
+const { red } = require("chalk");
 
 const envProject = ({ env, config }) => {
   switch (env) {
@@ -22,13 +22,28 @@ const envProject = ({ env, config }) => {
   }
 };
 
-const execute = async (input) => {
+const envUriSpecifier = (env) => {
+  switch (env) {
+    case "sandbox":
+      return "snd.";
+    case "staging":
+      return "stg.";
+    case "development":
+      return "dev.";
+    default:
+      return "";
+  }
+};
+
+const execute = async (input, configFn) => {
   const functionPath = path.resolve(
     process.cwd(),
     input.path || "",
     "blossm.yaml"
   );
   const blossmConfig = yaml.parse(fs.readFileSync(functionPath, "utf8"));
+
+  const { operationHash } = configFn(blossmConfig);
 
   if (blossmConfig.procedure != "function") {
     roboSay(
@@ -38,9 +53,11 @@ const execute = async (input) => {
     return;
   }
 
+  const rootConfig = rootDir.config();
+
   try {
     const project = envProject({
-      config: rootDir.config(),
+      config: rootConfig,
       env: input.env,
     });
     const spawnCall = spawnSync(
@@ -50,8 +67,10 @@ const execute = async (input) => {
         "tasks",
         "create-http-task",
         input.name,
-        "--queue=test",
-        "--url=https://us-central1-development-278216.cloudfunctions.net/us-central1-function-some-action-1660852768",
+        `--queue=${input.queue}`,
+        `--url=${operationHash}.${input.region}.${envUriSpecifier(input.env)}.${
+          rootConfig.network
+        }`,
         `--oidc-service-account-email=executer@${project}.iam.gserviceaccount.com`,
         ...(input.data ? [`--body-content=${input.data}`] : []),
         `--project=${project}`,
@@ -72,7 +91,7 @@ const execute = async (input) => {
   }
 };
 
-module.exports = async (args) => {
+module.exports = ({ domain }) => async (args, configFn) => {
   const input = await normalize({
     entrypointType: "path",
     entrypointDefault: ".",
@@ -130,5 +149,7 @@ module.exports = async (args) => {
     ],
   });
 
-  execute(input);
+  //eslint-disable-next-line no-console
+  console.log(roboSay(`Executing your ${domain.split("-").join(" ")}.`));
+  await execute(input, configFn);
 };

@@ -43,7 +43,7 @@ const build = async ({ workingDir, env }) => {
   );
 };
 
-module.exports = ({ domain, dir, configFn }) => async (args) => {
+module.exports = ({ domain, dir }) => async (args, configFn) => {
   const input = await normalize({
     entrypointType: "path",
     entrypointDefault: ".",

@@ -623,7 +623,6 @@ const configure = async (workingDir, configFn, env, strict) => {
 
     writeBuild({
       workingDir,
-      configFn,
       env,
       publicKeyUrl,
       region,
