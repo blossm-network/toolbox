@@ -10,7 +10,7 @@ const command = require("./command");
 const eventHandler = require("./event_handler");
 const eventStore = require("./event_store");
 const job = require("./job");
-const func = require("./func");
+const func = require("./function");
 const viewComposite = require("./view_composite");
 
 const steps = ({
