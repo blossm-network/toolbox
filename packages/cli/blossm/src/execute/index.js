@@ -26,10 +26,6 @@ const envProject = ({ env, config }) => {
 };
 
 const execute = async (input) => {
-  //TODO
-  //eslint-disable-next-line no-console
-  console.log("yup");
-
   const functionPath = path.resolve(
     process.cwd(),
     input.path || "",
@@ -44,10 +40,6 @@ const execute = async (input) => {
   );
   const serviceName = `${input.region}-${operationName}-${operationHash}`;
 
-  //TODO
-  //eslint-disable-next-line no-console
-  console.log({ serviceName });
-
   if (blossmConfig.procedure != "function") {
     roboSay(
       "This directory doesn't seem to be a function that can be executed."
@@ -57,13 +49,32 @@ const execute = async (input) => {
   }
 
   try {
+    // const spawnCall = spawnSync(
+    //   "gcloud",
+    //   [
+    //     "functions",
+    //     "call",
+    //     serviceName,
+    //     ...(input.data ? [`--data=${input.data}`] : []),
+    //     `--project=${envProject({
+    //       config: rootDir.config(),
+    //       env: input.env,
+    //     })}`,
+    //   ],
+    //   {
+    //     stdio: [process.stdin, process.stdout, process.stderr],
+    //     cwd: process.cwd(),
+    //   }
+    // );
     const spawnCall = spawnSync(
       "gcloud",
       [
-        "functions",
-        "call",
-        serviceName,
-        ...(input.data ? [`--data=${input.data}`] : []),
+        "tasks",
+        "create-http-task",
+        "some-task-id",
+        "--queue=test",
+        "--url=https://us-central1-development-278216.cloudfunctions.net/us-central1-function-some-action-1660852768",
+        ...(input.data ? [`--body-content=${input.data}`] : []),
         `--project=${envProject({
           config: rootDir.config(),
           env: input.env,
@@ -75,13 +86,9 @@ const execute = async (input) => {
       }
     );
 
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log({ out: spawnCall.stdout });
-
     if (spawnCall.stderr) {
       process.exitCode = 1;
-      throw "Couldn't call replay.";
+      throw "Couldn't call execute.";
     }
   } catch (err) {
     process.exitCode = 1;
@@ -90,9 +97,6 @@ const execute = async (input) => {
 };
 
 module.exports = async (args) => {
-  //TODO
-  //eslint-disable-next-line no-console
-  console.log("executing");
   const input = await normalize({
     entrypointType: "path",
     entrypointDefault: ".",
