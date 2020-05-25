@@ -66,6 +66,10 @@ const execute = async (input) => {
     //     cwd: process.cwd(),
     //   }
     // );
+    const project = envProject({
+      config: rootDir.config(),
+      env: input.env,
+    });
     const spawnCall = spawnSync(
       "gcloud",
       [
@@ -75,11 +79,9 @@ const execute = async (input) => {
         "some-task-id",
         "--queue=test",
         "--url=https://us-central1-development-278216.cloudfunctions.net/us-central1-function-some-action-1660852768",
+        `--oidc-service-account-email=executer@${project}.iam.gserviceaccount.com`,
         ...(input.data ? [`--body-content=${input.data}`] : []),
-        `--project=${envProject({
-          config: rootDir.config(),
-          env: input.env,
-        })}`,
+        `--project=${project}`,
       ],
       {
         stdio: [process.stdin, process.stdout, process.stderr],
