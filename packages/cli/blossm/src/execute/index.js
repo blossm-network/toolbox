@@ -69,6 +69,7 @@ const execute = async (input) => {
     const spawnCall = spawnSync(
       "gcloud",
       [
+        "beta",
         "tasks",
         "create-http-task",
         "some-task-id",
