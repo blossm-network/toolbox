@@ -104,6 +104,12 @@ module.exports = ({ domain }) => async (args, configFn) => {
         required: true,
       },
       {
+        name: "queue",
+        type: String,
+        short: "q",
+        required: true,
+      },
+      {
         name: "env",
         type: String,
         short: "e",
