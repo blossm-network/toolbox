@@ -40,9 +40,13 @@ const execute = async (input) => {
   );
   const serviceName = `${input.region}-${operationName}-${operationHash}`;
 
-  if (blossmConfig.procedure != "view-store") {
+  //TODO
+  //eslint-disable-next-line no-console
+  console.log({ serviceName });
+
+  if (blossmConfig.procedure != "function") {
     roboSay(
-      "This directory doesn't seem to be a view store that can be replayed."
+      "This directory doesn't seem to be a function that can be executed."
     );
     red.bold("error");
     return;
@@ -66,6 +70,10 @@ const execute = async (input) => {
         cwd: process.cwd(),
       }
     );
+
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log({ out: spawnCall.stdout });
 
     if (spawnCall.stderr) {
       process.exitCode = 1;
