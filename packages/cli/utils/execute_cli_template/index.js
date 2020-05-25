@@ -5,7 +5,6 @@ const { spawnSync } = require("child_process");
 const rootDir = require("@blossm/cli-root-dir");
 const path = require("path");
 const yaml = require("yaml");
-const { red } = require("chalk");
 
 const envProject = ({ env, config }) => {
   switch (env) {
@@ -45,14 +44,6 @@ const execute = async (input, configFn) => {
 
   const { operationHash } = configFn(blossmConfig);
 
-  if (blossmConfig.procedure != "function") {
-    roboSay(
-      "This directory doesn't seem to be a function that can be executed."
-    );
-    red.bold("error");
-    return;
-  }
-
   const rootConfig = rootDir.config();
 
   try {
@@ -60,6 +51,8 @@ const execute = async (input, configFn) => {
       config: rootConfig,
       env: input.env,
     });
+    //TODO
+    //eslint-disable-next-line
     const spawnCall = spawnSync(
       "gcloud",
       [

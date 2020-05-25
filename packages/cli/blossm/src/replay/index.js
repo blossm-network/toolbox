@@ -40,11 +40,14 @@ const replay = async (input) => {
   const blossmConfig = yaml.parse(fs.readFileSync(storePath, "utf8"));
 
   if (blossmConfig.procedure != "view-store") {
-    roboSay(
-      "This directory doesn't seem to be a view store that can be replayed."
-    );
     red.bold("error");
-    return;
+    //eslint-disable-next-line no-console
+    console.log(
+      roboSay(
+        "This directory doesn't seem to be a view store that can be replayed."
+      )
+    );
+    process.exit(1);
   }
 
   const stores = findProjections(
