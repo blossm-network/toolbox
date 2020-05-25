@@ -6,9 +6,6 @@ const roboSay = require("@blossm/robo-say");
 const { red } = require("chalk");
 const rootDir = require("@blossm/cli-root-dir");
 const { spawnSync } = require("child_process");
-const hash = require("@blossm/operation-hash");
-const trim = require("@blossm/trim-string");
-const { MAX_LENGTH } = require("@blossm/service-name-consts");
 
 const envProject = ({ env, config }) => {
   switch (env) {
@@ -33,13 +30,6 @@ const execute = async (input) => {
   );
   const blossmConfig = yaml.parse(fs.readFileSync(functionPath, "utf8"));
 
-  const operationHash = hash(blossmConfig.name, blossmConfig.procedure);
-  const operationName = trim(
-    `${blossmConfig.procedure}-${blossmConfig.name}`,
-    MAX_LENGTH
-  );
-  const serviceName = `${input.region}-${operationName}-${operationHash}`;
-
   if (blossmConfig.procedure != "function") {
     roboSay(
       "This directory doesn't seem to be a function that can be executed."
@@ -49,23 +39,6 @@ const execute = async (input) => {
   }
 
   try {
-    // const spawnCall = spawnSync(
-    //   "gcloud",
-    //   [
-    //     "functions",
-    //     "call",
-    //     serviceName,
-    //     ...(input.data ? [`--data=${input.data}`] : []),
-    //     `--project=${envProject({
-    //       config: rootDir.config(),
-    //       env: input.env,
-    //     })}`,
-    //   ],
-    //   {
-    //     stdio: [process.stdin, process.stdout, process.stderr],
-    //     cwd: process.cwd(),
-    //   }
-    // );
     const project = envProject({
       config: rootDir.config(),
       env: input.env,

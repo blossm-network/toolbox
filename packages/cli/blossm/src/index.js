@@ -20,7 +20,6 @@ const viewGateway = require("./view_gateway");
 const factGateway = require("./fact_gateway");
 const roles = require("./roles");
 const job = require("./job");
-const func = require("./function");
 const fact = require("./fact");
 const viewComposite = require("./view_composite");
 
@@ -87,8 +86,6 @@ const tryShortcuts = (input) => {
       return roles(args);
     case "job":
       return job(args);
-    case "function":
-      return func(args);
     case "fact":
       return fact(args);
     case "view-composite":
@@ -128,8 +125,6 @@ const forward = (input) => {
       return factGateway(input.args);
     case "job":
       return job(input.args);
-    case "function":
-      return func(input.args);
     case "fact":
       return fact(input.args);
     case "view-composite":

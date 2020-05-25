@@ -1,7 +1,0 @@
-#
-# Give your function a name by which you'll execute it.
-#
-name: some-action
-
-#don't change
-procedure: function
