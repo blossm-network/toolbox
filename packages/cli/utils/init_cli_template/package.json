@@ -1,6 +1,6 @@
 {
   "name": "@blossm/init-cli-template",
-  "version": "0.0.17",
+  "version": "0.0.18",
   "description": "Initializes a deployable template.",
   "main": "index.js",
   "author": "blossm.network",
@@ -14,7 +14,7 @@
     "test": "echo \"Error: no test specified\" && exit 0"
   },
   "dependencies": {
-    "@blossm/normalize-cli": "^0.0.12",
+    "@blossm/normalize-cli": "^0.0.13",
     "@blossm/robo-say": "^0.0.7",
     "chalk": "^2.4.2",
     "ncp": "^2.0.0"

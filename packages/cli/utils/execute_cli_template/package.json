@@ -1,6 +1,6 @@
 {
   "name": "@blossm/execute-cli-template",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Queues a procedure for execution.",
   "main": "index.js",
   "author": "blossm.network",
@@ -14,7 +14,7 @@
     "test": "echo \"Error: no test specified\" && exit 0"
   },
   "dependencies": {
-    "@blossm/normalize-cli": "^0.0.12",
+    "@blossm/normalize-cli": "^0.0.13",
     "@blossm/robo-say": "^0.0.7",
     "chalk": "^2.4.2",
     "fs-extra": "^8.1.0",
