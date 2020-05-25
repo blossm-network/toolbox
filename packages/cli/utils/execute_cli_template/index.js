@@ -51,13 +51,7 @@ const execute = async (input, configFn) => {
       config: rootConfig,
       env: input.env,
     });
-    //TODO
-    //eslint-disable-next-line
-    console.log({
-      url: `https://${operationHash}.${input.region}.${envUriSpecifier(
-        input.env
-      )}.${rootConfig.network}`,
-    });
+
     const spawnCall = spawnSync(
       "gcloud",
       [
@@ -68,7 +62,7 @@ const execute = async (input, configFn) => {
         `--queue=${input.queue}`,
         `--url=https://${operationHash}.${input.region}.${envUriSpecifier(
           input.env
-        )}.${rootConfig.network}`,
+        )}${rootConfig.network}`,
         `--oidc-service-account-email=executer@${project}.iam.gserviceaccount.com`,
         ...(input.data ? [`--body-content=${input.data}`] : []),
         `--project=${project}`,
