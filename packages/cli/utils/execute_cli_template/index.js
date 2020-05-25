@@ -57,7 +57,7 @@ const execute = async (input, configFn) => {
   );
   const blossmConfig = yaml.parse(fs.readFileSync(functionPath, "utf8"));
 
-  const { operationHash } = configFn(blossmConfig);
+  const { operationHash, operationName } = configFn(blossmConfig);
 
   const rootConfig = rootDir.config();
 
@@ -67,9 +67,9 @@ const execute = async (input, configFn) => {
       env: input.env,
     });
 
-    const audience = `https://${input.region}-${
-      blossmConfig.name
-    }-${operationHash}-${envComputeUrlId({
+    const audience = `https://${
+      input.region
+    }-${operationName}-${operationHash}-${envComputeUrlId({
       env: input.env,
       config: rootConfig,
     })}-uc.a.run.app`;
