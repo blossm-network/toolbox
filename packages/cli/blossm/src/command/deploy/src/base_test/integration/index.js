@@ -150,7 +150,8 @@ describe("Command handler integration tests", () => {
   });
 
   it("should return an error if incorrect params", async () => {
-    if (!testing.validate.bad || !testing.validate.bad[0]) return;
+    if (!testing.validate || !testing.validate.bad || !testing.validate.bad[0])
+      return;
     const response = await request.post(url, {
       body: {
         headers: {
