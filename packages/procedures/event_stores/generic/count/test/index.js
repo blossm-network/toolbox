@@ -12,7 +12,7 @@ describe("Event store root count", () => {
   });
 
   it("should call with the correct params", async () => {
-    const rootCountFake = fake.returns(result);
+    const countFake = fake.returns(result);
 
     const req = {
       params: {
@@ -25,8 +25,8 @@ describe("Event store root count", () => {
       send: sendFake,
     };
 
-    await count({ rootCountFn: rootCountFake })(req, res);
-    expect(rootCountFake).to.have.been.calledWith({
+    await count({ countFn: countFake })(req, res);
+    expect(countFake).to.have.been.calledWith({
       root,
     });
     expect(sendFake).to.have.been.calledWith(result);

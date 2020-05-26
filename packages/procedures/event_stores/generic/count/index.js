@@ -1,6 +1,6 @@
-module.exports = ({ rootCountFn }) => {
+module.exports = ({ countFn }) => {
   return async (req, res) => {
-    const result = await rootCountFn({
+    const result = await countFn({
       root: req.params.root,
     });
 
