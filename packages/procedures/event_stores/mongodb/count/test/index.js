@@ -53,6 +53,6 @@ describe("Mongodb event store root stream", () => {
         lean: true,
       },
     });
-    expect(result).to.equal(-1);
+    expect(result).to.equal(0);
   });
 });
