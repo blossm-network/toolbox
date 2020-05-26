@@ -4,9 +4,6 @@ module.exports = ({ countFn }) => {
       root: req.params.root,
     });
 
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log({ params: req.params, result });
-    res.send(result);
+    res.send({ count: result });
   };
 };

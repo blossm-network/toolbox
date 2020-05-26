@@ -29,6 +29,6 @@ describe("Event store root count", () => {
     expect(countFake).to.have.been.calledWith({
       root,
     });
-    expect(sendFake).to.have.been.calledWith(result);
+    expect(sendFake).to.have.been.calledWith({ count: result });
   });
 });

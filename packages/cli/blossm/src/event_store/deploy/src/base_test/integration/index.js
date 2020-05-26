@@ -44,7 +44,7 @@ describe("Event store integration tests", () => {
     const countResponse = await request.get(`${url}/count/${root}`);
     const parsedCountBody = JSON.parse(countResponse.body);
 
-    expect(parsedCountBody).to.equal(-1);
+    expect(parsedCountBody.count).to.equal(-1);
 
     const response0 = await request.post(url, {
       body: {
@@ -72,7 +72,7 @@ describe("Event store integration tests", () => {
     const newCountResponse = await request.get(`${url}/count/${root}`);
     const newParsedCountBody = JSON.parse(newCountResponse.body);
 
-    expect(newParsedCountBody).to.equal(1);
+    expect(newParsedCountBody.count).to.equal(1);
 
     const response1 = await request.get(`${url}/${root}`);
     expect(response1.statusCode).to.equal(200);

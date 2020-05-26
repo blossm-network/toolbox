@@ -7,9 +7,5 @@ module.exports = ({ countsStore }) => async ({ root }) => {
     options: { lean: true },
   });
 
-  //TODO
-  //eslint-disable-next-line no-console
-  console.log({ count, root });
-
   return count;
 };
