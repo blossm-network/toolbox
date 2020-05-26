@@ -72,6 +72,9 @@ describe("Event store integration tests", () => {
     const newCountResponse = await request.get(`${url}/count/${root}`);
     const newParsedCountBody = JSON.parse(newCountResponse.body);
 
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log({ newParsedCountBody });
     expect(newParsedCountBody.count).to.equal(1);
 
     const response1 = await request.get(`${url}/${root}`);
