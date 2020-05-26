@@ -7,13 +7,14 @@ const deps = require("../deps");
 
 const countsStore = "some-counts-store";
 const root = "some-root";
+const value = "some-value";
 
 describe("Mongodb event store root stream", () => {
   afterEach(() => {
     restore();
   });
   it("should call with the correct params", async () => {
-    const findFake = fake.returns([{ count }]);
+    const findFake = fake.returns([{ value }]);
 
     const db = {
       find: findFake,
@@ -31,7 +32,7 @@ describe("Mongodb event store root stream", () => {
         lean: true,
       },
     });
-    expect(result).to.deep.equal(count);
+    expect(result).to.deep.equal(value);
   });
   it("should call with the correct params if root not found", async () => {
     const findFake = fake.returns([]);
