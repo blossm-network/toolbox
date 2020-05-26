@@ -1,7 +1,7 @@
 {
   "name": "@blossm/event-store-count",
   "description": "An event store GET handler for getting the count for a root.",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
