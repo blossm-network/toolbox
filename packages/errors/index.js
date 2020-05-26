@@ -4,6 +4,7 @@ const {
   UnauthorizedError,
   ResourceNotFoundError,
   InvalidArgumentError,
+  ConflictError,
   InvalidCredentialsError,
   ForbiddenError,
   PreconditionFailedError,
@@ -39,6 +40,10 @@ const invalidArgument = {
   message: (message, { cause, info } = {}) =>
     new InvalidArgumentError({ cause, info, toJSON }, message),
 };
+const conflict = {
+  message: (message, { cause, info } = {}) =>
+    new ConflictError({ cause, info, toJSON }, message),
+};
 const preconditionFailed = {
   message: (message, { cause, info } = {}) =>
     new PreconditionFailedError({ cause, info, toJSON }, message),
@@ -68,6 +73,7 @@ module.exports = {
   internalServer,
   invalidCredentials,
   invalidArgument,
+  conflict,
   forbidden,
   unauthorized,
   preconditionFailed,

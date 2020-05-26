@@ -47,12 +47,14 @@ module.exports = ({
       const eventData = deps.createEvent({
         ...(root && { root }),
         payload,
-        trace: req.body.headers.trace,
+        ...(req.body.headers.trace && { trace: req.body.headers.trace }),
         version,
         action,
         domain,
         service,
-        idempotency: req.body.headers.idempotency,
+        ...(req.body.headers.idempotency && {
+          idempotency: req.body.headers.idempotency,
+        }),
         ...(context && { context }),
         path: [
           ...(req.body.headers.path || []),
