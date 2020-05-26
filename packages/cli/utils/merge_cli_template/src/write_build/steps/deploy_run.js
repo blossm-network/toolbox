@@ -24,7 +24,7 @@ module.exports = ({
   return {
     name: "gcr.io/cloud-builders/gcloud",
     args: [
-      "beta",
+      "alpha",
       "run",
       "deploy",
       `${serviceName}`,
