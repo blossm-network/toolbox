@@ -6,6 +6,7 @@ const { testing } = require("../../config.json");
 
 describe("Command handler store validator tests", () => {
   it("should handle correct payload correctly", async () => {
+    if (!testing.validate || !testing.validate.ok) return;
     try {
       for (const payload of testing.validate.ok) await validate(payload);
     } catch (e) {
@@ -15,7 +16,7 @@ describe("Command handler store validator tests", () => {
   });
 
   it("should throw if invalid param is passed", async () => {
-    if (!testing.validate.bad) return;
+    if (!testing.validate || !testing.validate.bad) return;
     for (const value of testing.validate.bad) {
       try {
         await validate(
