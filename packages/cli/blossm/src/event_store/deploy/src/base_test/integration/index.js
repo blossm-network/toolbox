@@ -41,6 +41,11 @@ describe("Event store integration tests", () => {
   it("should return successfully", async () => {
     const root = uuid();
 
+    const countResponse = await request.get(`${url}/count/${root}`);
+    const parsedCountBody = JSON.parse(countResponse.body);
+
+    expect(parsedCountBody).to.equal(-1);
+
     const response0 = await request.post(url, {
       body: {
         events: [
@@ -63,6 +68,11 @@ describe("Event store integration tests", () => {
     });
 
     expect(response0.statusCode).to.equal(204);
+
+    const newCountResponse = await request.get(`${url}/count/${root}`);
+    const newParsedCountBody = JSON.parse(newCountResponse.body);
+
+    expect(newParsedCountBody).to.equal(1);
 
     const response1 = await request.get(`${url}/${root}`);
     expect(response1.statusCode).to.equal(200);
