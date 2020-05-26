@@ -1,6 +1,6 @@
 const { expect } = require("chai").use(require("sinon-chai"));
 const { restore, replace, fake } = require("sinon");
-const { decrypt, encrypt } = require("..");
+const { decrypt /*encrypt*/ } = require("..");
 
 const kms = require("@google-cloud/kms");
 
@@ -11,10 +11,10 @@ const location = "some-key-location";
 
 const message = "This is my message to sign";
 
-const actualProject = "blossm";
-const actualLocation = "global";
-const actualRing = "test-ring";
-const actualKey = "test-sym-key";
+// const actualProject = "blossm";
+// const actualLocation = "global";
+// const actualRing = "test-ring";
+// const actualKey = "test-sym-key";
 
 describe("Kms decrypt", () => {
   afterEach(() => {
@@ -76,25 +76,25 @@ describe("Kms decrypt", () => {
       expect(e).to.equal(error);
     }
   });
-  it("should encrypt and decrypt correctly", async () => {
-    const message = "I am a message";
+  // it("should encrypt and decrypt correctly", async () => {
+  //   const message = "I am a message";
 
-    const ciphertext = await encrypt({
-      message,
-      key: actualKey,
-      ring: actualRing,
-      location: actualLocation,
-      project: actualProject,
-    });
+  //   const ciphertext = await encrypt({
+  //     message,
+  //     key: actualKey,
+  //     ring: actualRing,
+  //     location: actualLocation,
+  //     project: actualProject,
+  //   });
 
-    const plaintext = await decrypt({
-      key: actualKey,
-      ring: actualRing,
-      location: actualLocation,
-      project: actualProject,
-      message: ciphertext,
-    });
+  //   const plaintext = await decrypt({
+  //     key: actualKey,
+  //     ring: actualRing,
+  //     location: actualLocation,
+  //     project: actualProject,
+  //     message: ciphertext,
+  //   });
 
-    expect(plaintext).to.equal(message);
-  });
+  //   expect(plaintext).to.equal(message);
+  // });
 });

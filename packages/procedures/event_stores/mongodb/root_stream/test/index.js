@@ -6,8 +6,6 @@ const stream = require("..");
 const deps = require("../deps");
 
 const countsStore = "some-counts-store";
-const root = "some-root";
-const from = "some-from";
 const parallel = "some-parallel";
 const fn = "some-fn";
 
@@ -32,8 +30,6 @@ describe("Mongodb event store root stream", () => {
     replace(deps, "db", db);
 
     const result = await stream({ countsStore })({
-      root,
-      from,
       parallel,
       fn,
     });
@@ -65,8 +61,6 @@ describe("Mongodb event store root stream", () => {
     replace(deps, "db", db);
 
     const result = await stream({ countsStore })({
-      root,
-      from,
       fn,
     });
 

@@ -82,6 +82,9 @@ describe("Mongodb event store", () => {
     const rootStreamResult = "some-root-stream-result";
     const rootStreamFake = fake.returns(rootStreamResult);
     replace(deps, "rootStream", rootStreamFake);
+    const countResult = "some-count-result";
+    const countFake = fake.returns(countResult);
+    replace(deps, "count", countFake);
     const aggregateResult = "some-aggregate-result";
     const aggregateFake = fake.returns(aggregateResult);
     replace(deps, "aggregate", aggregateFake);
@@ -195,6 +198,9 @@ describe("Mongodb event store", () => {
     expect(rootStreamFake).to.have.been.calledWith({
       countsStore: cStore,
     });
+    expect(countFake).to.have.been.calledWith({
+      countsStore: cStore,
+    });
     expect(aggregateFake).to.have.been.calledWith({
       eventStore: eStore,
       snapshotStore: sStore,
@@ -215,6 +221,7 @@ describe("Mongodb event store", () => {
       streamFn: streamResult,
       reserveRootCountsFn: reserveRootCountsResult,
       rootStreamFn: rootStreamResult,
+      countFn: countResult,
       publishFn,
     });
 

@@ -197,6 +197,9 @@ module.exports = async ({
     rootStreamFn: deps.rootStream({
       countsStore: cStore,
     }),
+    countFn: deps.count({
+      countsStore: cStore,
+    }),
     // saveSnapshotFn,
     publishFn,
   });

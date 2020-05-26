@@ -9,6 +9,7 @@ const reserveRootCounts = require("@blossm/mongodb-event-store-reserve-root-coun
 const query = require("@blossm/mongodb-event-store-query");
 const stream = require("@blossm/mongodb-event-store-stream");
 const rootStream = require("@blossm/mongodb-event-store-root-stream");
+const count = require("@blossm/mongodb-event-store-count");
 
 exports.secret = secret;
 exports.dateString = dateString;
@@ -21,3 +22,4 @@ exports.reserveRootCounts = reserveRootCounts;
 exports.query = query;
 exports.stream = stream;
 exports.rootStream = rootStream;
+exports.count = count;

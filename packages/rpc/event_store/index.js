@@ -110,6 +110,24 @@ module.exports = ({ domain, service = process.env.SERVICE } = {}) => {
         ...(claims && { claims }),
       });
 
+  const count = ({
+    context,
+    claims,
+    tokenFns: { internal: internalTokenFn, external: externalTokenFn } = {},
+  } = {}) => async (root) =>
+    await deps
+      .rpc(domain, service, "event-store")
+      .get({ id: root })
+      .in({
+        ...(context && { context }),
+      })
+      .with({
+        path: `/count`,
+        ...(internalTokenFn && { internalTokenFn }),
+        ...(externalTokenFn && { externalTokenFn }),
+        ...(claims && { claims }),
+      });
+
   return {
     set: ({ context, claims, tokenFns } = {}) => {
       return {
@@ -117,6 +135,7 @@ module.exports = ({ domain, service = process.env.SERVICE } = {}) => {
         query: query({ context, claims, tokenFns }),
         stream: stream({ context, claims, tokenFns }),
         rootStream: rootStream({ context, claims, tokenFns }),
+        count: count({ context, claims, tokenFns }),
         aggregate: aggregate({ context, claims, tokenFns }),
       };
     },
@@ -125,5 +144,6 @@ module.exports = ({ domain, service = process.env.SERVICE } = {}) => {
     query: query(),
     stream: stream(),
     rootStream: rootStream(),
+    count: count(),
   };
 };

@@ -3,7 +3,7 @@ const { restore, fake, match } = require("sinon");
 
 const stream = require("..");
 
-describe("Event store stream", () => {
+describe("Event store root stream", () => {
   afterEach(() => {
     restore();
   });

@@ -8,11 +8,15 @@ module.exports = async ({
   reserveRootCountsFn,
   publishFn,
   rootStreamFn,
+  countFn,
 } = {}) => {
   deps
     .server()
     .get(deps.stream({ streamFn }), {
       path: "/stream/:root?",
+    })
+    .get(deps.count({ countFn }), {
+      path: "/count/:root",
     })
     .get(deps.rootStream({ rootStreamFn }), {
       path: "/roots",

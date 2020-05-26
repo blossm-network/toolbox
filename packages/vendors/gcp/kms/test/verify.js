@@ -1,17 +1,17 @@
 //ovveride process.env with local .env file.
-const fs = require("fs");
+// const fs = require("fs");
 
-if (fs.existsSync(".blossm-application-credentials.json")) {
-  const dotenv = require("dotenv");
-  const envConfig = dotenv.parse(fs.readFileSync(".env"));
-  for (const k in envConfig) {
-    process.env[k] = envConfig[k];
-  }
-}
+// if (fs.existsSync(".blossm-application-credentials.json")) {
+//   const dotenv = require("dotenv");
+//   const envConfig = dotenv.parse(fs.readFileSync(".env"));
+//   for (const k in envConfig) {
+//     process.env[k] = envConfig[k];
+//   }
+// }
 
 const { expect } = require("chai").use(require("sinon-chai"));
 const { restore, replace, fake } = require("sinon");
-const { sign, verify } = require("..");
+const { /*sign,*/ verify } = require("..");
 const crypto = require("crypto");
 
 const kms = require("@google-cloud/kms");
@@ -25,11 +25,11 @@ const pem = "some-pem";
 const message = "some message";
 const signature = "some-signature";
 
-const actualProject = "blossm";
-const actualLocation = "global";
-const actualRing = "test-ring";
-const actualKey = "test-key";
-const actualVersion = "1";
+// const actualProject = "blossm";
+// const actualLocation = "global";
+// const actualRing = "test-ring";
+// const actualKey = "test-key";
+// const actualVersion = "1";
 
 describe("Kms verify", () => {
   afterEach(() => {
@@ -124,47 +124,47 @@ describe("Kms verify", () => {
     expect(pathFake).to.have.not.been.called;
   });
 
-  it("should sign and verify correctly", async () => {
-    const message = "I am a message";
+  // it("should sign and verify correctly", async () => {
+  //   const message = "I am a message";
 
-    const signature = await sign({
-      key: actualKey,
-      ring: actualRing,
-      location: actualLocation,
-      version: actualVersion,
-      project: actualProject,
-    })(message);
-    const result = await verify({
-      key: actualKey,
-      ring: actualRing,
-      location: actualLocation,
-      version: actualVersion,
-      project: actualProject,
-    })({
-      message,
-      signature: signature.toString("base64"),
-    });
-    expect(result).to.be.true;
-  });
-  it("should fail if messages dont match", async () => {
-    const message = "I am a message";
-    const signature = await sign({
-      key: actualKey,
-      ring: actualRing,
-      location: actualLocation,
-      version: actualVersion,
-      project: actualProject,
-    })(message);
-    const result = await verify({
-      key: actualKey,
-      ring: actualRing,
-      location: actualLocation,
-      version: actualVersion,
-      project: actualProject,
-    })({
-      message: `${message}-`,
-      signature: signature.toString("base64"),
-    });
-    expect(result).to.be.false;
-  });
+  //   const signature = await sign({
+  //     key: actualKey,
+  //     ring: actualRing,
+  //     location: actualLocation,
+  //     version: actualVersion,
+  //     project: actualProject,
+  //   })(message);
+  //   const result = await verify({
+  //     key: actualKey,
+  //     ring: actualRing,
+  //     location: actualLocation,
+  //     version: actualVersion,
+  //     project: actualProject,
+  //   })({
+  //     message,
+  //     signature: signature.toString("base64"),
+  //   });
+  //   expect(result).to.be.true;
+  // });
+  // it("should fail if messages dont match", async () => {
+  //   const message = "I am a message";
+  //   const signature = await sign({
+  //     key: actualKey,
+  //     ring: actualRing,
+  //     location: actualLocation,
+  //     version: actualVersion,
+  //     project: actualProject,
+  //   })(message);
+  //   const result = await verify({
+  //     key: actualKey,
+  //     ring: actualRing,
+  //     location: actualLocation,
+  //     version: actualVersion,
+  //     project: actualProject,
+  //   })({
+  //     message: `${message}-`,
+  //     signature: signature.toString("base64"),
+  //   });
+  //   expect(result).to.be.false;
+  // });
 });

@@ -519,4 +519,41 @@ describe("Event store", () => {
     });
     expect(result).to.equal(stream);
   });
+  it("should call root count with the right params", async () => {
+    const count = "some-count";
+    const withFake = fake.returns(count);
+    const inFake = fake.returns({
+      with: withFake,
+    });
+    const getFake = fake.returns({
+      in: inFake,
+    });
+    const rpcFake = fake.returns({
+      get: getFake,
+    });
+    replace(deps, "rpc", rpcFake);
+
+    const result = await eventStore({ domain, service })
+      .set({
+        context,
+        claims,
+        tokenFns: { internal: internalTokenFn, external: externalTokenFn },
+      })
+      .count(root);
+
+    expect(rpcFake).to.have.been.calledWith(domain, service, "event-store");
+    expect(getFake).to.have.been.calledWith({
+      id: root,
+    });
+    expect(inFake).to.have.been.calledWith({
+      context,
+    });
+    expect(withFake).to.have.been.calledWith({
+      path: "/count",
+      internalTokenFn,
+      externalTokenFn,
+      claims,
+    });
+    expect(result).to.equal(count);
+  });
 });
