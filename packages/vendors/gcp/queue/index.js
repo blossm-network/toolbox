@@ -15,7 +15,7 @@ exports.create = async ({ project, location, name }) => {
 
 exports.enqueue = async ({
   url,
-  data,
+  data = {},
   serviceAccountEmail,
   audience,
   project,

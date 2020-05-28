@@ -97,7 +97,6 @@ describe("Queue", () => {
   it("should call enqueue with the correct params with wait and optionals missing", async () => {
     const result = await queue.enqueue({
       url,
-      data,
       token,
       project,
       queue: name,
@@ -115,7 +114,7 @@ describe("Queue", () => {
             serviceAccountEmail:
               "executer@some-project.iam.gserviceaccount.com",
           },
-          body: Buffer.from(JSON.stringify(data)),
+          body: Buffer.from(JSON.stringify({})),
         },
         scheduleTime: {
           seconds: 4 + Date.now() / 1000,
