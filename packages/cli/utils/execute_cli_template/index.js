@@ -82,6 +82,7 @@ const execute = async (input, configFn) => {
       ...(input.data && { data: JSON.parse(input.data) }),
       serviceAccountEmai: `executer@${project}.iam.gserviceaccount.com`,
       audience,
+      location: input.region,
       project,
     });
   } catch (err) {
@@ -96,12 +97,12 @@ module.exports = ({ domain }) => async (args, configFn) => {
     entrypointDefault: ".",
     args,
     flags: [
-      {
-        name: "name",
-        type: String,
-        short: "n",
-        required: true,
-      },
+      // {
+      //   name: "name",
+      //   type: String,
+      //   short: "n",
+      //   required: true,
+      // },
       {
         name: "queue",
         type: String,
