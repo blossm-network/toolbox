@@ -21,6 +21,10 @@ const project = "some-project";
 const location = "some-location";
 const token = "some-token";
 const name = "some-name";
+const serviceAccountEmail = "some-service-account-email";
+const audience = "some-audience";
+
+process.env.GCP_PROJECT = project;
 
 describe("Queue", () => {
   beforeEach(() => {
@@ -64,7 +68,8 @@ describe("Queue", () => {
     const result = await queue.enqueue({
       url,
       data,
-      token,
+      serviceAccountEmail,
+      audience,
       project,
       queue: name,
       location,
@@ -76,7 +81,10 @@ describe("Queue", () => {
         httpRequest: {
           url,
           httpMethod: "POST",
-          oauthToken: token,
+          oidcToken: {
+            serviceAccountEmail,
+            audience,
+          },
           body: Buffer.from(JSON.stringify(data)),
         },
         scheduleTime: {
@@ -86,7 +94,7 @@ describe("Queue", () => {
     });
     expect(result).to.equal(taskResponse);
   });
-  it("should call create with the correct params with wait", async () => {
+  it("should call enqueue with the correct params with wait and optionals missing", async () => {
     const result = await queue.enqueue({
       url,
       data,
@@ -103,7 +111,10 @@ describe("Queue", () => {
         httpRequest: {
           url,
           httpMethod: "POST",
-          oauthToken: token,
+          oidcToken: {
+            serviceAccountEmail:
+              "executer@some-project.iam.gserviceaccount.com",
+          },
           body: Buffer.from(JSON.stringify(data)),
         },
         scheduleTime: {

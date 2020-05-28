@@ -16,7 +16,8 @@ exports.create = async ({ project, location, name }) => {
 exports.enqueue = async ({
   url,
   data,
-  token,
+  serviceAccountEmail,
+  audience,
   project,
   location,
   queue,
@@ -30,7 +31,11 @@ exports.enqueue = async ({
     httpRequest: {
       httpMethod: "POST",
       url,
-      oauthToken: token,
+      oidcToken: {
+        serviceAccountEmail:
+          serviceAccountEmail || `executer@${project}.iam.gserviceaccount.com`,
+        ...(audience && { audience }),
+      },
       body,
     },
     scheduleTime: {

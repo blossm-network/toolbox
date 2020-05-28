@@ -16,6 +16,7 @@
   "dependencies": {
     "@blossm/normalize-cli": "^0.0.14",
     "@blossm/robo-say": "^0.0.7",
+    "@blossm/gcp-queue": "*",
     "chalk": "^2.4.2",
     "fs-extra": "^8.1.0",
     "yaml": "^1.7.0"

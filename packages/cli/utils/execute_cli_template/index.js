@@ -1,10 +1,10 @@
 const normalize = require("@blossm/normalize-cli");
 const roboSay = require("@blossm/robo-say");
 const fs = require("fs-extra");
-const { spawnSync } = require("child_process");
 const rootDir = require("@blossm/cli-root-dir");
 const path = require("path");
 const yaml = require("yaml");
+const { enqueue } = require("@blossm/gcp-queue");
 
 const envProject = ({ env, config }) => {
   switch (env) {
@@ -74,32 +74,16 @@ const execute = async (input, configFn) => {
       config: rootConfig,
     })}-uc.a.run.app`;
 
-    const spawnCall = spawnSync(
-      "gcloud",
-      [
-        "beta",
-        "tasks",
-        "create-http-task",
-        input.name,
-        `--queue=${input.queue}`,
-        `--url=https://${operationHash}.${input.region}.${envUriSpecifier(
-          input.env
-        )}${rootConfig.network}`,
-        `--oidc-service-account-email=executer@${project}.iam.gserviceaccount.com`,
-        `--oidc-token-audience=${audience}`,
-        ...(input.data ? [`--body-content=${input.data}`] : []),
-        `--project=${project}`,
-      ],
-      {
-        stdio: [process.stdin, process.stdout, process.stderr],
-        cwd: process.cwd(),
-      }
-    );
-
-    if (spawnCall.stderr) {
-      process.exitCode = 1;
-      throw "Couldn't call execute.";
-    }
+    await enqueue({
+      queue: input.queue,
+      url: `https://${operationHash}.${input.region}.${envUriSpecifier(
+        input.env
+      )}${rootConfig.network}`,
+      ...(input.data && { data: JSON.parse(input.data) }),
+      serviceAccountEmai: `executer@${project}.iam.gserviceaccount.com`,
+      audience,
+      project,
+    });
   } catch (err) {
     process.exitCode = 1;
     throw err;
