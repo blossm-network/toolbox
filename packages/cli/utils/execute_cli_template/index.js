@@ -80,7 +80,7 @@ const execute = async (input, configFn) => {
         input.env
       )}${rootConfig.network}`,
       ...(input.data && { data: JSON.parse(input.data) }),
-      serviceAccountEmai: `executer@${project}.iam.gserviceaccount.com`,
+      serviceAccountEmail: `executer@${project}.iam.gserviceaccount.com`,
       audience,
       location: input.region,
       project,
