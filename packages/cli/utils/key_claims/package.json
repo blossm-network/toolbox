@@ -1,6 +1,6 @@
 {
   "name": "@blossm/key-claims",
-  "version": "0.0.29",
+  "version": "0.0.30",
   "description": "Establishes the claims from the key.",
   "main": "index.js",
   "author": "blossm.network",
