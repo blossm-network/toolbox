@@ -86,9 +86,9 @@ describe("Queue", () => {
             audience,
           },
           headers: {
-            "content-type": "application/json",
+            "Content-Type": "application/json",
           },
-          body: JSON.stringify(data), //Buffer.from().toString("base64"),
+          body: Buffer.from(JSON.stringify(data)).toString("base64"),
         },
         scheduleTime: {
           seconds: Date.now() / 1000,
@@ -118,9 +118,9 @@ describe("Queue", () => {
               "executer@some-project.iam.gserviceaccount.com",
           },
           headers: {
-            "content-type": "application/json",
+            "Content-Type": "application/json",
           },
-          body: JSON.stringify({}), //Buffer.from().toString("base64"),
+          body: Buffer.from(JSON.stringify({})).toString("base64"),
         },
         scheduleTime: {
           seconds: 4 + Date.now() / 1000,

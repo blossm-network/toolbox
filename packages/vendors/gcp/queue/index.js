@@ -28,8 +28,8 @@ exports.enqueue = async ({
   const string = JSON.stringify(data);
   //TODO
   //eslint-disable-next-line no-console
-  console.log({ data });
-  // const body = Buffer.from(string).toString("base64");
+  console.log({ data, string });
+  const body = Buffer.from(string).toString("base64");
   const task = {
     httpRequest: {
       httpMethod: "POST",
@@ -40,9 +40,9 @@ exports.enqueue = async ({
         ...(audience && { audience }),
       },
       headers: {
-        "content-type": "application/json",
+        "Content-Type": "application/json",
       },
-      body: string,
+      body, //: string,
     },
     scheduleTime: {
       seconds: wait + Date.now() / 1000,
