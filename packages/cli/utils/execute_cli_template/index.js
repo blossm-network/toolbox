@@ -82,7 +82,7 @@ const execute = async (input, configFn) => {
       ...(input.data && { data: JSON.parse(input.data) }),
       serviceAccountEmail: `executer@${project}.iam.gserviceaccount.com`,
       audience,
-      location: input.region,
+      location: "us-central1",
       project,
     });
   } catch (err) {
