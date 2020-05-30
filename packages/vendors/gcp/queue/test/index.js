@@ -85,7 +85,7 @@ describe("Queue", () => {
             serviceAccountEmail,
             audience,
           },
-          body: Buffer.from(JSON.stringify(data)),
+          body: Buffer.from(JSON.stringify(data)).toString("base64"),
         },
         scheduleTime: {
           seconds: Date.now() / 1000,
@@ -114,7 +114,7 @@ describe("Queue", () => {
             serviceAccountEmail:
               "executer@some-project.iam.gserviceaccount.com",
           },
-          body: Buffer.from(JSON.stringify({})),
+          body: Buffer.from(JSON.stringify({})).toString("base64"),
         },
         scheduleTime: {
           seconds: 4 + Date.now() / 1000,

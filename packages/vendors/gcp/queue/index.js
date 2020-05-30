@@ -26,7 +26,7 @@ exports.enqueue = async ({
   const parent = client.queuePath(project, location, queue);
 
   const string = JSON.stringify(data);
-  const body = Buffer.from(string);
+  const body = Buffer.from(string).toString("base64");
   const task = {
     httpRequest: {
       httpMethod: "POST",
