@@ -13,10 +13,10 @@ const unlinkAsync = promisify(unlink);
 let defaultRoles;
 
 module.exports = ({ token, downloadFileFn }) => async ({
-  principle,
+  principal,
   context,
 }) => {
-  if (!principle) throw forbidden.message("Missing required permissions.");
+  if (!principal) throw forbidden.message("Missing required permissions.");
 
   //Download files if they aren't downloaded already.
   if (!defaultRoles) {
@@ -43,15 +43,15 @@ module.exports = ({ token, downloadFileFn }) => async ({
 
   const { body: roles } = await fact({
     name: "roles",
-    domain: "principle",
-    service: principle.service,
-    network: principle.network,
+    domain: "principal",
+    service: principal.service,
+    network: principal.network,
   })
     .set({
       tokenFns: { internal: token },
       context: { network: process.env.NETWORK },
     })
-    .read({ root: principle.root });
+    .read({ root: principal.root });
 
   return await rolePermissions({
     roles,

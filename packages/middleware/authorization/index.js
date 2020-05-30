@@ -13,7 +13,7 @@ module.exports = ({
       ...(permissions && permissionsLookupFn
         ? [
             deps.authorize({
-              principle: req.context.principle,
+              principal: req.context.principal,
               permissionsLookupFn,
               permissions,
               ...(req.context && context && { context: req.context[context] }),

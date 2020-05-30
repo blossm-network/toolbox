@@ -8,13 +8,13 @@ const service = "some-service";
 const network = "some-network";
 const privilege = "some-privilege";
 
-const principle = "some-priciple-root";
+const principal = "some-principal-root";
 
 const context = {
   network,
   service,
   any: "any-root",
-  principle,
+  principal,
 };
 
 const deps = require("../deps");
@@ -33,12 +33,12 @@ describe("Authorize", () => {
       permissionsLookupFn,
       permissions: [{ service, domain, privilege }],
       network,
-      principle,
+      principal,
       context,
     });
 
     expect(permissionsLookupFn).to.have.been.calledWith({
-      principle,
+      principal,
       context,
     });
     expect(document).to.deep.equal({
@@ -60,7 +60,7 @@ describe("Authorize", () => {
       await authorize({
         permissionsLookupFn,
         network,
-        principle,
+        principal,
       });
 
       //shouldnt be called;
@@ -81,7 +81,7 @@ describe("Authorize", () => {
   });
   it("should authorize with no sub and permissions as none", async () => {
     const document = await authorize({
-      principle,
+      principal,
       permissions: "none",
       network,
     });

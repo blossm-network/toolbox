@@ -3,7 +3,7 @@ const deps = require("./deps");
 module.exports = async ({
   permissionsLookupFn,
   permissions = [],
-  principle,
+  principal,
   context,
 }) => {
   if (permissions == "none")
@@ -11,18 +11,18 @@ module.exports = async ({
       permissions: [],
     };
 
-  const principlePermissions = await permissionsLookupFn({
-    principle,
+  const principalPermissions = await permissionsLookupFn({
+    principal,
     context,
   });
 
-  const satisfiedPermissions = principlePermissions.filter(
-    (principlePermission) => {
+  const satisfiedPermissions = principalPermissions.filter(
+    (principalPermission) => {
       for (const permission of permissions) {
         if (
-          principlePermission.service == permission.service &&
-          principlePermission.domain == permission.domain &&
-          principlePermission.privilege == permission.privilege
+          principalPermission.service == permission.service &&
+          principalPermission.domain == permission.domain &&
+          principalPermission.privilege == permission.privilege
         )
           return true;
       }

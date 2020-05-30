@@ -321,7 +321,7 @@ const topicsForDependencies = (config, events) => {
           config.facts.some(
             (f) => f.protection == undefined || f.protection == "strict"
           ))
-        ? ["session.core", "identity.core", "role.core", "principle.core"]
+        ? ["session.core", "identity.core", "role.core", "principal.core"]
         : []
     );
   return [...new Set(array)];
@@ -371,7 +371,7 @@ const addDefaultDependencies = ({ config, coreNetwork }) => {
       procedure: "event-store",
     },
     {
-      domain: "principle",
+      domain: "principal",
       service: "core",
       network: coreNetwork,
       procedure: "event-store",

@@ -12,7 +12,7 @@ process.env.NETWORK = envNetwork;
 process.env.SERVICE = envService;
 
 const session = "some-session";
-const principle = "some-principle";
+const principal = "some-principal";
 
 describe("Authorization middleware", () => {
   afterEach(() => {
@@ -21,7 +21,7 @@ describe("Authorization middleware", () => {
   it("should call correctly", async () => {
     const contextObj = "some-context-obj";
     const contextKey = "some-context-key";
-    const context = { session, principle, [contextKey]: contextObj };
+    const context = { session, principal, [contextKey]: contextObj };
     const path = "some-path";
     const req = {
       path,
@@ -42,7 +42,7 @@ describe("Authorization middleware", () => {
     })(req, null, nextFake);
 
     expect(authorizationFake).to.have.been.calledWith({
-      principle,
+      principal,
       permissionsLookupFn,
       permissions,
       context: contextObj,

@@ -13,7 +13,7 @@ module.exports = async ({
   const identityRoot = uuid();
   const roleRoot = uuid();
   const roleId = uuid();
-  const principleRoot = uuid();
+  const principalRoot = uuid();
   const sessionRoot = uuid();
 
   // Create the identity for the token.
@@ -25,8 +25,8 @@ module.exports = async ({
       data: createEvent({
         root: identityRoot,
         payload: {
-          principle: {
-            root: principleRoot,
+          principal: {
+            root: principalRoot,
             service: process.env.SERVICE,
             network: process.env.NETWORK,
           },
@@ -41,7 +41,7 @@ module.exports = async ({
   ]);
 
   // Add permissions to the role
-  // and add role to the principle.
+  // and add role to the principal.
   await Promise.all([
     eventStore({
       domain: "role",
@@ -61,12 +61,12 @@ module.exports = async ({
       },
     ]),
     eventStore({
-      domain: "principle",
+      domain: "principal",
       service: "core",
     }).add([
       {
         data: createEvent({
-          root: principleRoot,
+          root: principalRoot,
           payload: {
             roles: [
               {
@@ -77,7 +77,7 @@ module.exports = async ({
             ],
           },
           action: "add-roles",
-          domain: "principle",
+          domain: "principal",
           service: "core",
         }),
       },
@@ -125,8 +125,8 @@ module.exports = async ({
     })
     .issue(
       {
-        principle: {
-          root: principleRoot,
+        principal: {
+          root: principalRoot,
           service: "core",
           network: process.env.NETWORK,
         },

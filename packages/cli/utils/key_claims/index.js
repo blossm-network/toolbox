@@ -25,7 +25,7 @@ module.exports = ({ token }) => async ({ id, secret }) => {
         service: "system",
         network: process.env.NETWORK,
       },
-      principle: key.principle,
+      principal: key.principal,
       scene: key.scene,
     },
   };
