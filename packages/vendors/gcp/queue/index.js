@@ -25,11 +25,11 @@ exports.enqueue = async ({
 }) => {
   const parent = client.queuePath(project, location, queue);
 
-  const string = JSON.stringify(data);
+  // const string = JSON.stringify(data);
   //TODO
   //eslint-disable-next-line no-console
-  console.log({ string });
-  const body = Buffer.from(string).toString("base64");
+  console.log({ data });
+  // const body = Buffer.from(string).toString("base64");
   const task = {
     httpRequest: {
       httpMethod: "POST",
@@ -39,7 +39,10 @@ exports.enqueue = async ({
           serviceAccountEmail || `executer@${project}.iam.gserviceaccount.com`,
         ...(audience && { audience }),
       },
-      body,
+      headers: {
+        "content-type": "application/json",
+      },
+      body: data,
     },
     scheduleTime: {
       seconds: wait + Date.now() / 1000,
