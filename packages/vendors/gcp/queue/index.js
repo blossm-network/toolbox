@@ -35,7 +35,7 @@ exports.enqueue = async ({
         ...(audience && { audience }),
       },
       headers: {
-        "Content-Type": "application/json",
+        "content-type": "application/json",
       },
       body: JSON.stringify(data),
     },

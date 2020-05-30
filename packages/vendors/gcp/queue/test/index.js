@@ -86,7 +86,7 @@ describe("Queue", () => {
             audience,
           },
           headers: {
-            "Content-Type": "application/json",
+            "content-type": "application/json",
           },
           body: JSON.stringify(data),
         },
@@ -118,7 +118,7 @@ describe("Queue", () => {
               "executer@some-project.iam.gserviceaccount.com",
           },
           headers: {
-            "Content-Type": "application/json",
+            "content-type": "application/json",
           },
           body: JSON.stringify({}),
         },
