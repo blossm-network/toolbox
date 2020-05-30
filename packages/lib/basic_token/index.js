@@ -1,6 +1,6 @@
-module.exports = ({ id, secret }) => {
+module.exports = ({ root, secret }) => {
   return {
-    token: Buffer.from(`${id}:${secret}`).toString("base64"),
+    token: Buffer.from(`${root}:${secret}`).toString("base64"),
     type: "Basic",
   };
 };

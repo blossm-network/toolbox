@@ -5,12 +5,12 @@ module.exports = connectionToken({
   credentialsFn: async ({ network }) => {
     const nameRoot = network.toUpperCase().split(".").slice(-2).join("_");
 
-    const id = process.env[`${nameRoot}_KEY_ID`];
+    const root = process.env[`${nameRoot}_KEY_ROOT`];
     const secretName = process.env[`${nameRoot}_KEY_SECRET_NAME`];
 
-    if (!id || !secretName) return null;
+    if (!root || !secretName) return null;
     return {
-      id,
+      root,
       secret: await secret(secretName),
     };
   },

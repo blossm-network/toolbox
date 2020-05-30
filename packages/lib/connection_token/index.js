@@ -5,7 +5,7 @@ let cache = {};
 module.exports = ({ credentialsFn }) => async ({ network }) => {
   const credentials = await credentialsFn({ network });
   if (!credentials) return null;
-  const { id, secret } = credentials;
+  const { root, secret } = credentials;
   const { token, exp } = cache[network] || {};
   if (!token || exp < new Date()) {
     const {
@@ -21,7 +21,7 @@ module.exports = ({ credentialsFn }) => async ({ network }) => {
         tokenFns: {
           external: () =>
             deps.basicToken({
-              id,
+              root,
               secret,
             }),
         },

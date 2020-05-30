@@ -4,7 +4,7 @@ const deps = require("../deps");
 const connectionToken = require("..");
 
 const token = "some-token";
-const id = "some-credentials-id";
+const root = "some-credentials-root";
 const secret = "some-credentials-secret";
 const exp = "9999-01-03T00:02:12.000Z";
 const expiredExp = "2000-01-03T00:02:12.000Z";
@@ -38,7 +38,7 @@ describe("Connection token", () => {
     const basicTokenFake = fake.returns(basicToken);
     replace(deps, "basicToken", basicTokenFake);
 
-    const credentialsFnFake = fake.returns({ id, secret });
+    const credentialsFnFake = fake.returns({ root, secret });
     const result = await connectionToken({
       credentialsFn: credentialsFnFake,
     })({ network });
@@ -54,7 +54,7 @@ describe("Connection token", () => {
       tokenFns: { external: match((fn) => fn() == basicToken) },
     });
     expect(basicTokenFake).to.have.been.calledWith({
-      id,
+      root,
       secret,
     });
     expect(issueFake).to.have.been.calledWith();
@@ -87,7 +87,7 @@ describe("Connection token", () => {
     const basicTokenFake = fake.returns(basicToken);
     replace(deps, "basicToken", basicTokenFake);
     const anotherNetwork = "another-network";
-    const credentialsFnFake = fake.returns({ id, secret });
+    const credentialsFnFake = fake.returns({ root, secret });
     const result = await connectionToken({
       credentialsFn: credentialsFnFake,
     })({ network: anotherNetwork });

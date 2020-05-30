@@ -34,10 +34,10 @@ const envDependencyKeyEnvironmentVariables = ({ env, config }) => {
 
   for (const network in config.dependencies) {
     const baseName = network.toUpperCase().split(".").join("_");
-    const { id, secretName } = config.dependencies[network].keys[env];
+    const { root, secretName } = config.dependencies[network].keys[env];
     environmentVariables = {
       ...environmentVariables,
-      [`${baseName}_KEY_ID`]: id,
+      [`${baseName}_KEY_ROOT`]: root,
       [`${baseName}_KEY_SECRET_NAME`]: secretName,
     };
   }
