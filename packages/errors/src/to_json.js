@@ -1,6 +1,9 @@
 const { info } = require("restify-errors");
 
-module.exports = function () {
+module.exports = () => {
+  //TODO
+  //eslint-disable-next-line no-console
+  console.log({ thisBe: this, thisInfo: info(this), thisRawInfo: this.info() });
   return {
     statusCode: this.statusCode,
     code: this.body.code,

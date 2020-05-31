@@ -10,12 +10,26 @@ module.exports = (err, _, res, next) => {
   //If unauthorized, remove cookie;
   if (err.statusCode === 401) res.clearCookie("token");
 
-  res.status(err.statusCode || 500).send({
+  //TODO
+  //eslint-disable-next-line no-console
+  console.log({
+    err,
+    json: err.toJSON(),
+    string: JSON.stringify(err),
     ...(err.statusCode && { statusCode: err.statusCode }),
     ...(err.code && { code: err.code }),
     ...(err.message && { message: err.message }),
-    ...(err.info && { info: err.info() }),
+    ...(err.info && { info: err.info }),
+    ...(err.info && { ice: "cream" }),
+    ...(err.info && { otherInfo: err.info() }),
   });
+  res.status(err.statusCode || 500).send(err);
+  // {
+  //   ...(err.statusCode && { statusCode: err.statusCode }),
+  //   ...(err.code && { code: err.code }),
+  //   ...(err.message && { message: err.message }),
+  //   ...(err.info && { info: err.info() }),
+  // });
 
   next();
 };
