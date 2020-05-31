@@ -19,7 +19,7 @@ module.exports = ({ credentialsFn }) => async ({ network }) => {
         secret,
       }),
     });
-    const { body } = await deps
+    const { body, headers } = await deps
       .command({
         name: "open",
         domain: "connection",
@@ -41,6 +41,8 @@ module.exports = ({ credentialsFn }) => async ({ network }) => {
     //eslint-disable-next-line no-console
     console.log({
       body,
+      headers,
+      cookieHeader: headers["set-cookie"],
     });
 
     const [{ value: token } = {}] = body.tokens.filter(
