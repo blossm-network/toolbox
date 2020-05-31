@@ -1,6 +1,6 @@
 {
   "name": "@blossm/error-middleware",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "description": "Error middleware for the network.",
   "main": "index.js",
   "author": "blossm.network",
