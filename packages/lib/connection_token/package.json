@@ -14,6 +14,7 @@
     "test": "mocha --recursive"
   },
   "dependencies": {
+    "set-cookie-parser": "^2.4.6",
     "@blossm/basic-token": "^0.0.7",
     "@blossm/command-rpc": "^0.0.141",
     "@blossm/jwt": "^0.0.48"

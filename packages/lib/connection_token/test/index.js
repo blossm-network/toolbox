@@ -22,11 +22,7 @@ describe("Connection token", () => {
     restore();
   });
   it("should call correctly", async () => {
-    const response = {
-      tokens: [{ network: currentNetwork, value: token }],
-    };
-
-    const issueFake = fake.returns({ body: response, headers });
+    const issueFake = fake.returns({ headers });
     const setFake = fake.returns({
       issue: issueFake,
     });
@@ -40,6 +36,11 @@ describe("Connection token", () => {
 
     const basicTokenFake = fake.returns(basicToken);
     replace(deps, "basicToken", basicTokenFake);
+
+    const parseCookiesFake = fake.returns([
+      { network: currentNetwork, value: token },
+    ]);
+    replace(deps, "parseCookies", parseCookiesFake);
 
     const credentialsFnFake = fake.returns({ root, secret });
     const result = await connectionToken({
@@ -56,6 +57,7 @@ describe("Connection token", () => {
     expect(setFake).to.have.been.calledWith({
       tokenFns: { external: match((fn) => fn() == basicToken) },
     });
+    expect(parseCookiesFake).to.have.been.calledWith({ headers });
     expect(basicTokenFake).to.have.been.calledWith({
       root,
       secret,
@@ -71,11 +73,7 @@ describe("Connection token", () => {
     expect(anotherResult).to.deep.equal({ token, type: "Bearer" });
   });
   it("should call correctly if expired", async () => {
-    const response = {
-      tokens: [{ network: currentNetwork, value: token }],
-    };
-
-    const issueFake = fake.returns({ body: response, headers });
+    const issueFake = fake.returns({ headers });
     const setFake = fake.returns({
       issue: issueFake,
     });
@@ -86,6 +84,11 @@ describe("Connection token", () => {
 
     const decodeFake = fake.returns({ exp: expiredExp });
     replace(deps, "decode", decodeFake);
+
+    const parseCookiesFake = fake.returns([
+      { network: currentNetwork, value: token },
+    ]);
+    replace(deps, "parseCookies", parseCookiesFake);
 
     const basicTokenFake = fake.returns(basicToken);
     replace(deps, "basicToken", basicTokenFake);

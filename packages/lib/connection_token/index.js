@@ -37,18 +37,30 @@ module.exports = ({ credentialsFn }) => async ({ network }) => {
       })
       .issue();
 
+    const cookies = deps.parseCookies({ headers });
+
     //TODO
     //eslint-disable-next-line no-console
     console.log({
       body,
       headers,
-      cookieHeader: headers["set-cookie"],
+      cookies,
     });
 
-    const [{ value: token } = {}] = body.tokens.filter(
-      (t) => t.network == process.env.NETWORK
+    const [{ value: token } = {}] = cookies.filter(
+      (c) => c.network == process.env.NETWORK
     );
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log({
+      token,
+    });
     const claims = await deps.decode(token);
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log({
+      claims,
+    });
     cache[network] = {
       token,
       exp: new Date(Date.parse(claims.exp)),
