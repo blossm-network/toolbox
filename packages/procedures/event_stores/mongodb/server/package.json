@@ -1,7 +1,7 @@
 {
   "name": "@blossm/mongodb-event-store",
   "description": "A mongodb event store server.",
-  "version": "0.0.197",
+  "version": "0.0.198",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -15,17 +15,17 @@
   },
   "dependencies": {
     "@blossm/datetime": "^0.0.5",
-    "@blossm/event-store": "^0.0.117",
+    "@blossm/event-store": "^0.0.118",
     "@blossm/gcp-secret": "^0.0.47",
     "@blossm/logger": "^0.0.8",
-    "@blossm/mongodb-database": "^0.0.48",
-    "@blossm/mongodb-event-store-aggregate": "^0.0.34",
-    "@blossm/mongodb-event-store-count": "^0.0.5",
-    "@blossm/mongodb-event-store-query": "^0.0.35",
-    "@blossm/mongodb-event-store-reserve-root-counts": "^0.0.22",
-    "@blossm/mongodb-event-store-root-stream": "^0.0.5",
-    "@blossm/mongodb-event-store-save-events": "^0.0.27",
-    "@blossm/mongodb-event-store-stream": "^0.0.7",
+    "@blossm/mongodb-database": "^0.0.49",
+    "@blossm/mongodb-event-store-aggregate": "^0.0.35",
+    "@blossm/mongodb-event-store-count": "^0.0.6",
+    "@blossm/mongodb-event-store-query": "^0.0.36",
+    "@blossm/mongodb-event-store-reserve-root-counts": "^0.0.23",
+    "@blossm/mongodb-event-store-root-stream": "^0.0.6",
+    "@blossm/mongodb-event-store-save-events": "^0.0.28",
+    "@blossm/mongodb-event-store-stream": "^0.0.8",
     "@blossm/remove-ids-from-mongodb-schema": "^0.0.6"
   },
   "devDependencies": {

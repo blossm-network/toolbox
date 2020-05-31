@@ -1,7 +1,7 @@
 {
   "name": "@blossm/view-store-put",
   "description": "A view store PUT handler.",
-  "version": "0.0.51",
+  "version": "0.0.52",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@blossm/datetime": "^0.0.5",
-    "@blossm/errors": "^0.0.31"
+    "@blossm/errors": "^0.0.32"
   },
   "devDependencies": {
     "chai-datetime": "^1.5.0",
