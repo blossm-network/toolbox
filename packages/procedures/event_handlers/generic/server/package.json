@@ -1,7 +1,7 @@
 {
   "name": "@blossm/event-handler",
   "description": "An event handler server.",
-  "version": "0.0.174",
+  "version": "0.0.175",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@blossm/event-handler-post": "^0.0.170",
-    "@blossm/server": "^0.0.12"
+    "@blossm/server": "^0.0.13"
   },
   "devDependencies": {
     "chai-datetime": "^1.5.0",
