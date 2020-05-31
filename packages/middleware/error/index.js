@@ -13,6 +13,8 @@ module.exports = (err, _, res, next) => {
   //TODO
   //eslint-disable-next-line no-console
   console.log({
+    json: err.toJSON(),
+    string: JSON.stringify(err),
     ...(err.statusCode && { statusCode: err.statusCode }),
     ...(err.code && { code: err.code }),
     ...(err.message && { message: err.message }),
