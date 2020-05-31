@@ -48,8 +48,11 @@ module.exports = ({ credentialsFn }) => async ({ network }) => {
     });
 
     const [{ value: token } = {}] = cookies.filter(
-      (c) => c.network == process.env.NETWORK
+      (c) => c.domain == network && c.name == "access"
     );
+
+    if (!token) return null;
+
     //TODO
     //eslint-disable-next-line no-console
     console.log({

@@ -14,9 +14,6 @@ const headers = {
   "set-cookie": "somthing",
 };
 
-const currentNetwork = "some-current-network";
-process.env.NETWORK = currentNetwork;
-
 describe("Connection token", () => {
   afterEach(() => {
     restore();
@@ -38,7 +35,7 @@ describe("Connection token", () => {
     replace(deps, "basicToken", basicTokenFake);
 
     const parseCookiesFake = fake.returns([
-      { network: currentNetwork, value: token },
+      { domain: network, name: "access", value: token },
     ]);
     replace(deps, "parseCookies", parseCookiesFake);
 
@@ -85,14 +82,14 @@ describe("Connection token", () => {
     const decodeFake = fake.returns({ exp: expiredExp });
     replace(deps, "decode", decodeFake);
 
+    const anotherNetwork = "another-network";
     const parseCookiesFake = fake.returns([
-      { network: currentNetwork, value: token },
+      { domain: anotherNetwork, name: "access", value: token },
     ]);
     replace(deps, "parseCookies", parseCookiesFake);
 
     const basicTokenFake = fake.returns(basicToken);
     replace(deps, "basicToken", basicTokenFake);
-    const anotherNetwork = "another-network";
     const credentialsFnFake = fake.returns({ root, secret });
     const result = await connectionToken({
       credentialsFn: credentialsFnFake,
@@ -104,6 +101,34 @@ describe("Connection token", () => {
     })({ network: anotherNetwork });
     expect(commandFake).to.have.been.calledTwice;
     expect(anotherResult).to.deep.equal({ token, type: "Bearer" });
+  });
+  it("should call correctly if no token", async () => {
+    const issueFake = fake.returns({ headers });
+    const setFake = fake.returns({
+      issue: issueFake,
+    });
+    const commandFake = fake.returns({
+      set: setFake,
+    });
+    replace(deps, "command", commandFake);
+
+    const decodeFake = fake.returns({ exp });
+    replace(deps, "decode", decodeFake);
+
+    const basicTokenFake = fake.returns(basicToken);
+    replace(deps, "basicToken", basicTokenFake);
+
+    const parseCookiesFake = fake.returns([
+      { domain: "nope", name: "bogus", value: token },
+    ]);
+    replace(deps, "parseCookies", parseCookiesFake);
+
+    const credentialsFnFake = fake.returns({ root, secret });
+    const result = await connectionToken({
+      credentialsFn: credentialsFnFake,
+    })({ network: "some-random-network" });
+
+    expect(result).to.be.null;
   });
   it("should call correctly if no credentials", async () => {
     const credentialsFnFake = fake();
