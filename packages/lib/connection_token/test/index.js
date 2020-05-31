@@ -10,6 +10,9 @@ const exp = "9999-01-03T00:02:12.000Z";
 const expiredExp = "2000-01-03T00:02:12.000Z";
 const network = "some-network";
 const basicToken = "some-basic-token";
+const headers = {
+  "set-cookie": "somthing",
+};
 
 const currentNetwork = "some-current-network";
 process.env.NETWORK = currentNetwork;
@@ -23,7 +26,7 @@ describe("Connection token", () => {
       tokens: [{ network: currentNetwork, value: token }],
     };
 
-    const issueFake = fake.returns({ body: response });
+    const issueFake = fake.returns({ body: response, headers });
     const setFake = fake.returns({
       issue: issueFake,
     });
@@ -72,7 +75,7 @@ describe("Connection token", () => {
       tokens: [{ network: currentNetwork, value: token }],
     };
 
-    const issueFake = fake.returns({ body: response });
+    const issueFake = fake.returns({ body: response, headers });
     const setFake = fake.returns({
       issue: issueFake,
     });
