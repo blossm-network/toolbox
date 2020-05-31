@@ -1,6 +1,6 @@
 {
   "name": "@blossm/cors-middleware",
-  "version": "0.0.36",
+  "version": "0.0.37",
   "description": "Cors middleware for the network.",
   "main": "index.js",
   "author": "blossm.network",
