@@ -10,8 +10,15 @@ describe("Error middleware", () => {
     const req = {};
 
     const statusCode = "some-status-code";
+    const code = "some-code";
+    const message = "some-message";
+    const info = "some-info";
+
     const err = {
       statusCode,
+      code,
+      message,
+      info,
     };
     const sendFake = fake();
     const statusFake = fake.returns({
@@ -24,7 +31,12 @@ describe("Error middleware", () => {
     const nextFake = fake();
     await errorMiddleware(err, req, res, nextFake);
     expect(statusFake).to.have.been.calledWith(statusCode);
-    expect(sendFake).to.have.been.calledWith(err);
+    expect(sendFake).to.have.been.calledWith({
+      statusCode,
+      code,
+      message,
+      info,
+    });
     expect(nextFake).to.have.been.calledWith();
   });
   it("should call correctly with no status code", async () => {
