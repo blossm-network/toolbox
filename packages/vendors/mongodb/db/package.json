@@ -1,6 +1,6 @@
 {
   "name": "@blossm/mongodb-database",
-  "version": "0.0.49",
+  "version": "0.0.50",
   "description": "Read and write from a MongoDB database.",
   "main": "index.js",
   "author": "blossm.network",
@@ -14,7 +14,7 @@
     "test": "mocha --recursive"
   },
   "dependencies": {
-    "@blossm/errors": "^0.0.32",
+    "@blossm/errors": "^0.0.33",
     "@blossm/url-encode-query-data": "^0.0.5",
     "mongoose": "^5.7.1",
     "restify-errors": "^8.0.0"
