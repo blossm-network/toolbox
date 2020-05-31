@@ -36,6 +36,8 @@ describe("Error middleware", () => {
       code,
       message,
       info,
+      ice: "cream",
+      otherInfo: info,
     });
     expect(nextFake).to.have.been.calledWith();
   });
