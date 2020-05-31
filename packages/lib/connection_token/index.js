@@ -4,13 +4,22 @@ let cache = {};
 
 module.exports = ({ credentialsFn }) => async ({ network }) => {
   const credentials = await credentialsFn({ network });
+  //TODO
+  //eslint-disable-next-line no-console
+  console.log({ credentials, network });
   if (!credentials) return null;
   const { root, secret } = credentials;
   const { token, exp } = cache[network] || {};
   if (!token || exp < new Date()) {
-    const {
-      body: { tokens },
-    } = await deps
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log({
+      external: deps.basicToken({
+        root,
+        secret,
+      }),
+    });
+    const { body } = await deps
       .command({
         name: "open",
         domain: "connection",
@@ -28,7 +37,13 @@ module.exports = ({ credentialsFn }) => async ({ network }) => {
       })
       .issue();
 
-    const [{ value: token } = {}] = tokens.filter(
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log({
+      body,
+    });
+
+    const [{ value: token } = {}] = body.tokens.filter(
       (t) => t.network == process.env.NETWORK
     );
     const claims = await deps.decode(token);
