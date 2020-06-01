@@ -25,6 +25,7 @@ const body = {
 
 const network = "some-network";
 process.env.NETWORK = network;
+process.env.NODE_ENV = "some-node-env-not-dev";
 
 describe("Command gateway post", () => {
   afterEach(() => {
