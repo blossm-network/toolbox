@@ -24,6 +24,7 @@ const issued = "some-issued";
 
 const context = { c: 2 };
 const claims = "some-claims";
+const key = "some-key";
 
 const root = "some-root";
 
@@ -70,7 +71,11 @@ describe("Issue command", () => {
       .set({
         context,
         claims,
-        tokenFns: { internal: internalTokenFn, external: externalTokenFn },
+        token: {
+          internalFn: internalTokenFn,
+          externalFn: externalTokenFn,
+          key,
+        },
       })
       .issue(payload, {
         trace,
@@ -111,6 +116,7 @@ describe("Issue command", () => {
     expect(withFake).to.have.been.calledWith({
       internalTokenFn,
       externalTokenFn,
+      key,
       claims,
     });
   });
@@ -175,7 +181,7 @@ describe("Issue command", () => {
       service,
       network: otherNetwork,
     })
-      .set({ context, claims, tokenFns: { external: externalTokenFn } })
+      .set({ context, claims, token: { externalFn: externalTokenFn } })
       .issue(payload, { trace, issued, root, options });
 
     expect(result).to.equal(response);

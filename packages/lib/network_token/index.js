@@ -1,2 +1,2 @@
-module.exports = async ({ tokenFn, network }) =>
-  tokenFn ? await tokenFn({ network }) : null;
+module.exports = async ({ tokenFn, network, key }) =>
+  tokenFn ? await tokenFn({ network, key }) : null;

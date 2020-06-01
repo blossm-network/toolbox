@@ -7,6 +7,7 @@ module.exports = ({
   network,
   internalTokenFn,
   externalTokenFn,
+  key,
 } = {}) => async (req, res) => {
   //TODO
   //eslint-disable-next-line no-console
@@ -23,9 +24,10 @@ module.exports = ({
       ...(network && { network }),
     })
     .set({
-      tokenFns: {
-        internal: internalTokenFn,
-        external: externalTokenFn,
+      token: {
+        internalFn: internalTokenFn,
+        externalFn: externalTokenFn,
+        key,
       },
       context: req.context,
       claims: req.claims,

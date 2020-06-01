@@ -115,14 +115,17 @@ describe("Operation", () => {
     const otherHost = "some-other-host";
     const otherNetwork = "some-other-network";
 
+    const key = "some-key";
+
     const result = await operation(operarationPart1, operarationPart2)
       .post(data)
       .in({ context, network: otherNetwork, host: otherHost })
-      .with({ externalTokenFn: tokenFn, claims });
+      .with({ externalTokenFn: tokenFn, key, claims });
 
     expect(networkTokenFake).to.have.been.calledWith({
       tokenFn,
       network: otherNetwork,
+      key,
     });
     expect(networkUrlFake).to.have.been.calledWith({
       host: otherHost,

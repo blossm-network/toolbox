@@ -5,7 +5,11 @@ module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
   const issue = ({
     context,
     claims,
-    tokenFns: { internal: internalTokenFn, external: externalTokenFn } = {},
+    token: {
+      internalFn: internalTokenFn,
+      externalFn: externalTokenFn,
+      key,
+    } = {},
   } = {}) => async (
     payload = {},
     { trace, issued, root, path, options } = {}
@@ -49,15 +53,16 @@ module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
       .with({
         ...(internalTokenFn && { internalTokenFn }),
         ...(externalTokenFn && { externalTokenFn }),
+        ...(key && { key }),
         ...(claims && { claims }),
         ...(!internal && { path: `/${name}` }),
       });
   };
 
   return {
-    set: ({ context, claims, tokenFns, route }) => {
+    set: ({ context, claims, token, key, route }) => {
       return {
-        issue: issue({ context, claims, tokenFns, route }),
+        issue: issue({ context, claims, token, key, route }),
       };
     },
     issue: issue(),

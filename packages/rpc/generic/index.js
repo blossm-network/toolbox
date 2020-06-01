@@ -27,6 +27,7 @@ const common = ({ method, dataParam, operation, id, data }) => {
           path,
           internalTokenFn,
           externalTokenFn,
+          key,
           claims,
         } = {}) => {
           const internal = host == process.env.HOST;
@@ -40,6 +41,7 @@ const common = ({ method, dataParam, operation, id, data }) => {
               : await deps.networkToken({
                   tokenFn: externalTokenFn,
                   network,
+                  key,
                 })) || {};
 
           const url = internal
