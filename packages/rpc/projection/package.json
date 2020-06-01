@@ -1,7 +1,7 @@
 {
   "name": "@blossm/projection-rpc",
   "description": "Replays a projection.",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
