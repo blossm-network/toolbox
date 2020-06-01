@@ -59,6 +59,29 @@ describe("Construct", () => {
       message,
     });
   });
+  it("409 Conflict correct", () => {
+    const error = construct({ statusCode: 409, code: "Conflict", message });
+    expect(error.toJSON()).to.deep.equal({
+      statusCode: 409,
+      code: "Conflict",
+      info: {},
+      message,
+    });
+  });
+  it("409 correct with info", () => {
+    const error = construct({
+      statusCode: 409,
+      code: "Conflict",
+      message,
+      info,
+    });
+    expect(error.toJSON()).to.deep.equal({
+      statusCode: 409,
+      code: "Conflict",
+      info,
+      message,
+    });
+  });
   it("404 correct", () => {
     const error = construct({ statusCode: 403, message });
     expect(error.toJSON()).to.deep.equal({

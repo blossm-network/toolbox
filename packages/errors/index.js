@@ -49,7 +49,7 @@ const preconditionFailed = {
     new PreconditionFailedError({ cause, info, toJSON }, message),
 };
 
-const construct = ({ statusCode, message, info }) => {
+const construct = ({ statusCode, code, message, info }) => {
   switch (statusCode) {
     case 400:
       return badRequest.message(message, { info });
@@ -60,6 +60,10 @@ const construct = ({ statusCode, message, info }) => {
     case 404:
       return resourceNotFound.message(message, { info });
     case 409:
+      switch (code) {
+        case "Conflict":
+          return conflict.message(message, { info });
+      }
       return invalidArgument.message(message, { info });
     case 500:
       return internalServer.message(message, { info });

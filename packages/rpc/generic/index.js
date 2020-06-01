@@ -85,6 +85,7 @@ const common = ({ method, dataParam, operation, id, data }) => {
               statusCode: response.statusCode,
               message: parsedBody.message || "Not specified",
               ...(parsedBody.info && { info: parsedBody.info }),
+              ...(parsedBody.code && { code: parsedBody.code }),
             });
           }
 

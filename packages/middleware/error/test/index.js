@@ -12,14 +12,11 @@ describe("Error middleware", () => {
     const statusCode = "some-status-code";
     const code = "some-code";
     const message = "some-message";
-    const info = "some-info";
 
     const err = {
       statusCode,
       code,
       message,
-      info: () => info,
-      toJSON: () => {},
     };
     const sendFake = fake();
     const statusFake = fake.returns({
@@ -32,20 +29,13 @@ describe("Error middleware", () => {
     const nextFake = fake();
     await errorMiddleware(err, req, res, nextFake);
     expect(statusFake).to.have.been.calledWith(statusCode);
-    expect(sendFake).to.have.been.calledWith(err); //{
-    // statusCode,
-    // code,
-    // message,
-    // info,
-    // });
+    expect(sendFake).to.have.been.calledWith(err);
     expect(nextFake).to.have.been.calledWith();
   });
   it("should call correctly with no status code", async () => {
     const req = {};
 
-    const err = {
-      toJSON: () => {},
-    };
+    const err = {};
     const sendFake = fake();
     const statusFake = fake.returns({
       send: sendFake,
@@ -67,7 +57,6 @@ describe("Error middleware", () => {
     const statusCode = 401;
     const err = {
       statusCode,
-      toJSON: () => {},
     };
     const sendFake = fake();
     const statusFake = fake.returns({

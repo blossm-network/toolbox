@@ -516,7 +516,8 @@ describe("Operation", () => {
     const statusMessage = "some-status-message";
     const errorMessage = "some-error-message";
     const info = { some: "info" };
-    const errBody = { message: errorMessage, info };
+    const code = "some-code";
+    const errBody = { message: errorMessage, info, code };
     const del = fake.returns({
       statusCode: errorStatusCode,
       statusMessage,
@@ -546,11 +547,12 @@ describe("Operation", () => {
         statusCode: errorStatusCode,
         message: errorMessage,
         info,
+        code,
       });
       expect(e).to.equal(error);
     }
   });
-  it("should return error correctly without message or info", async () => {
+  it("should return error correctly without message, info, or code", async () => {
     const errorStatusCode = 400;
     const statusMessage = "some-status-message";
     const errBody = { some: "err" };
