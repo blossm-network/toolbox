@@ -1,7 +1,7 @@
 {
   "name": "@blossm/mongodb-event-handler",
   "description": "A mongodb event handler server.",
-  "version": "0.0.39",
+  "version": "0.0.40",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -14,7 +14,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/event-handler": "^0.0.182",
+    "@blossm/event-handler": "^0.0.183",
     "@blossm/gcp-secret": "^0.0.47",
     "@blossm/logger": "^0.0.8",
     "@blossm/mongodb-database": "^0.0.50"
