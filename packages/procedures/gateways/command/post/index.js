@@ -8,6 +8,10 @@ module.exports = ({
   internalTokenFn,
   externalTokenFn,
 } = {}) => async (req, res) => {
+  //TODO
+  //eslint-disable-next-line no-console
+  console.log({ headers: req.headers });
+
   await deps.validate(req.body);
   const { root, payload, headers } = req.body;
 
