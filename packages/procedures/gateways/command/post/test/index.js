@@ -23,8 +23,6 @@ const body = {
   root,
 };
 
-const network = "some-network";
-process.env.NETWORK = network;
 process.env.NODE_ENV = "some-node-env-not-dev";
 
 describe("Command gateway post", () => {
@@ -265,12 +263,12 @@ describe("Command gateway post", () => {
 
     expect(cookieFake).to.have.been.calledTwice;
     expect(cookieFake).to.have.been.calledWith(token1Type, token1Value, {
-      domain: network,
+      domain: token1Network,
       httpOnly: true,
       secure: true,
     });
     expect(cookieFake).to.have.been.calledWith(token2Type, token2Value, {
-      domain: network,
+      domain: token2Network,
       httpOnly: true,
       secure: true,
     });

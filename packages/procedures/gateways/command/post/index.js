@@ -32,16 +32,20 @@ module.exports = ({
     })
     .issue(payload, { ...headers, root });
 
+  //TODO
+  //eslint-disable-next-line no-console
+  console.log({ responseHeaders });
+
   // If the response has tokens, send them as cookies and remove them from the response.
   if (response && response.tokens) {
     for (const token of response.tokens) {
       if (!token.network || !token.type || !token.value) continue;
       const cookieName = token.type;
       res.cookie(cookieName, token.value, {
-        domain: process.env.NETWORK,
+        domain: token.network, //process.env.NETWORK,
         //TODO
         httpOnly: process.env.NODE_ENV != "development",
-        secure: true,
+        secure: process.env.NODE_ENV != "development", //true,
       });
     }
 
