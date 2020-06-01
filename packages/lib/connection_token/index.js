@@ -18,12 +18,13 @@ module.exports = ({ credentialsFn }) => async ({ network, key }) => {
         network,
       })
       .set({
-        tokenFns: {
-          external: () =>
+        token: {
+          externalFn: () =>
             deps.basicToken({
               root,
               secret,
             }),
+          key: "access",
         },
       })
       .issue({ key });

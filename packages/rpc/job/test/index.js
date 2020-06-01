@@ -17,6 +17,7 @@ const service = "some-service";
 const payload = { a: 1 };
 const internalTokenFn = "some-internal-token-fn";
 const externalTokenFn = "some-external-token-fn";
+const key = "some-key";
 
 const context = { c: 2 };
 const claims = "some-claims";
@@ -52,7 +53,11 @@ describe("Job", () => {
       .set({
         context,
         claims,
-        tokenFns: { internal: internalTokenFn, external: externalTokenFn },
+        token: {
+          internalFn: internalTokenFn,
+          externalFn: externalTokenFn,
+          key,
+        },
       })
       .trigger(payload);
 
@@ -67,6 +72,7 @@ describe("Job", () => {
     expect(withFake).to.have.been.calledWith({
       internalTokenFn,
       externalTokenFn,
+      key,
       claims,
     });
   });

@@ -32,7 +32,7 @@ module.exports = command({
       .set({
         context,
         claims,
-        tokenFns: { internal: gcpToken },
+        token: { internalFn: gcpToken },
       })
       .aggregate(root);
 
@@ -46,7 +46,7 @@ module.exports = command({
       .set({
         context,
         claims,
-        tokenFns: { internal: gcpToken },
+        token: { internalFn: gcpToken },
       })
       .add(events),
   // taskFn: ({ url, body, wait }) =>

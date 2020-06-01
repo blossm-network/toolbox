@@ -9,7 +9,7 @@ module.exports = ({ token }) => async ({ id, secret }) => {
     service: "system",
     ...(process.env.CORE_NETWORK && { network: process.env.CORE_NETWORK }),
   })
-    .set({ tokenFns: { internal: token } })
+    .set({ token: { internalFn: token } })
     .read({ id });
 
   if (!key) throw invalidCredentials.message("This key wasn't found.");

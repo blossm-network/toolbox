@@ -48,7 +48,7 @@ module.exports = ({ token, downloadFileFn }) => async ({
     network: principal.network,
   })
     .set({
-      tokenFns: { internal: token },
+      token: { internalFn: token },
       context: { network: process.env.NETWORK },
     })
     .read({ root: principal.root });
@@ -67,7 +67,7 @@ module.exports = ({ token, downloadFileFn }) => async ({
         }),
       })
         .set({
-          tokenFns: { internal: token },
+          token: { internalFn: token },
           context: { network: process.env.NETWORK },
         })
         .read({ id: roleId });

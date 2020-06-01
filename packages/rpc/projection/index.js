@@ -9,7 +9,7 @@ module.exports = ({
   eventsService,
 }) => {
   const replay = ({
-    tokenFns: { internal: internalTokenFn } = {},
+    token: { internalFn: internalTokenFn } = {},
   } = {}) => async (root, { from: number = 0 } = {}) => {
     const data = {
       message: {
@@ -35,13 +35,13 @@ module.exports = ({
       .post(data)
       //TODO this line is ugly. The generic rpc package needs love.
       .in({})
-      .with({ internalTokenFn });
+      .with({ ...(internalTokenFn && { internalFn: internalTokenFn }) });
   };
 
   return {
-    set: ({ tokenFns }) => {
+    set: ({ token }) => {
       return {
-        replay: replay({ tokenFns }),
+        replay: replay({ token }),
       };
     },
     replay: replay(),

@@ -9,7 +9,7 @@ module.exports = ({ token }) => async ({ session }) => {
     network: session.network,
   })
     .set({
-      tokenFns: { internal: token },
+      token: { internalFn: token },
       context: { session },
     })
     .read();

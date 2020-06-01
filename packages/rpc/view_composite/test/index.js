@@ -46,7 +46,7 @@ describe("Get composite views", () => {
     })
       .set({
         context: contexts,
-        tokenFns: { internal: internalTokenFn },
+        token: { internalFn: internalTokenFn },
       })
       .read({ query, sort, root });
 
@@ -109,7 +109,7 @@ describe("Get composite views", () => {
     })
       .set({
         context: contexts,
-        tokenFns: { internal: internalTokenFn },
+        token: { internalFn: internalTokenFn },
       })
       .stream(fn, { query, sort, root });
 

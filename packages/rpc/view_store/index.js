@@ -10,7 +10,11 @@ module.exports = ({
   const internal = !network || network == process.env.NETWORK;
   const read = ({
     contexts,
-    tokenFns: { internal: internalTokenFn, external: externalTokenFn } = {},
+    token: {
+      internalFn: internalTokenFn,
+      externalFn: externalTokenFn,
+      key,
+    } = {},
   } = {}) => async ({ query, sort, root } = {}) =>
     await deps
       .rpc(
@@ -35,11 +39,16 @@ module.exports = ({
       .with({
         ...(internalTokenFn && { internalTokenFn }),
         ...(externalTokenFn && { externalTokenFn }),
+        ...(key && { key }),
         ...(!internal && { path: `/${name}` }),
       });
   const stream = ({
     contexts,
-    tokenFns: { internal: internalTokenFn, external: externalTokenFn } = {},
+    token: {
+      internalFn: internalTokenFn,
+      externalFn: externalTokenFn,
+      key,
+    } = {},
   } = {}) => async (fn, { query, sort, root } = {}) =>
     await deps
       .rpc(
@@ -65,10 +74,15 @@ module.exports = ({
         path: `/${internal ? "" : `${name}/`}stream`,
         ...(internalTokenFn && { internalTokenFn }),
         ...(externalTokenFn && { externalTokenFn }),
+        ...(key && { key }),
       });
   const update = ({
     contexts,
-    tokenFns: { internal: internalTokenFn, external: externalTokenFn } = {},
+    token: {
+      internalFn: internalTokenFn,
+      externalFn: externalTokenFn,
+      key,
+    } = {},
   } = {}) => async (root, view) =>
     await deps
       .rpc(
@@ -85,10 +99,15 @@ module.exports = ({
       .with({
         ...(internalTokenFn && { internalTokenFn }),
         ...(externalTokenFn && { externalTokenFn }),
+        ...(key && { key }),
       });
   const del = ({
     contexts,
-    tokenFns: { internal: internalTokenFn, external: externalTokenFn } = {},
+    token: {
+      internalFn: internalTokenFn,
+      externalFn: externalTokenFn,
+      key,
+    } = {},
   } = {}) => async (root) =>
     await deps
       .rpc(
@@ -105,14 +124,15 @@ module.exports = ({
       .with({
         ...(internalTokenFn && { internalTokenFn }),
         ...(externalTokenFn && { externalTokenFn }),
+        ...(key && { key }),
       });
   return {
-    set: ({ context: contexts, tokenFns }) => {
+    set: ({ context: contexts, token }) => {
       return {
-        read: read({ contexts, tokenFns }),
-        stream: stream({ contexts, tokenFns }),
-        update: update({ contexts, tokenFns }),
-        delete: del({ contexts, tokenFns }),
+        read: read({ contexts, token }),
+        stream: stream({ contexts, token }),
+        update: update({ contexts, token }),
+        delete: del({ contexts, token }),
       };
     },
     read: read(),

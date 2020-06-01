@@ -5,6 +5,7 @@ module.exports = ({
   domain,
   internalTokenFn,
   externalTokenFn,
+  key,
 } = {}) => async (req, res) => {
   const { body: response, headers = {} } = await deps
     .fact({
@@ -12,7 +13,7 @@ module.exports = ({
       domain,
     })
     .set({
-      tokenFns: { internal: internalTokenFn, external: externalTokenFn },
+      token: { internalFn: internalTokenFn, externalFn: externalTokenFn, key },
       context: req.context,
       claims: req.claims,
     })

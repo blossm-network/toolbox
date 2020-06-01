@@ -16,7 +16,7 @@ module.exports = async ({ query, root, context, claims }) => {
       domain: "some-domain",
       service: "some-service",
     })
-    .set({ tokenFns: { internal: deps.gcpToken } })
+    .set({ token: { internalFn: deps.gcpToken } })
     .aggregate("some-root");
 
   //eslint-disable-next-line no-console

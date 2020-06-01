@@ -5,7 +5,11 @@ module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
   const read = ({
     context,
     claims,
-    tokenFns: { internal: internalTokenFn, external: externalTokenFn } = {},
+    token: {
+      internalFn: internalTokenFn,
+      externalFn: externalTokenFn,
+      key,
+    } = {},
   } = {}) => async (query = {}) => {
     if (query.root) {
       query.id = query.root;
@@ -29,13 +33,18 @@ module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
       .with({
         ...(internalTokenFn && { internalTokenFn }),
         ...(externalTokenFn && { externalTokenFn }),
+        ...(key && { key }),
         ...(claims && { claims }),
       });
   };
   const stream = ({
     context,
     claims,
-    tokenFns: { internal: internalTokenFn, external: externalTokenFn } = {},
+    token: {
+      internalFn: internalTokenFn,
+      externalFn: externalTokenFn,
+      key,
+    } = {},
   } = {}) => async (fn, query = {}) => {
     if (query.root) {
       query.id = query.root;
@@ -60,15 +69,16 @@ module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
         path: "/stream",
         ...(internalTokenFn && { internalTokenFn }),
         ...(externalTokenFn && { externalTokenFn }),
+        ...(key && { key }),
         ...(claims && { claims }),
       });
   };
 
   return {
-    set: ({ context, claims, tokenFns }) => {
+    set: ({ context, claims, token }) => {
       return {
-        read: read({ context, claims, tokenFns }),
-        stream: stream({ context, claims, tokenFns }),
+        read: read({ context, claims, token }),
+        stream: stream({ context, claims, token }),
       };
     },
     read: read(),

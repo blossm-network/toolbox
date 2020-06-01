@@ -60,9 +60,9 @@ module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
   };
 
   return {
-    set: ({ context, claims, token, key, route }) => {
+    set: ({ context, claims, token, route }) => {
       return {
-        issue: issue({ context, claims, token, key, route }),
+        issue: issue({ context, claims, token, route }),
       };
     },
     issue: issue(),

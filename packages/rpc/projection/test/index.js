@@ -43,7 +43,7 @@ describe("Replay projection", () => {
       eventsService,
     })
       .set({
-        tokenFns: { internal: internalTokenFn },
+        token: { internalFn: internalTokenFn },
       })
       .replay(root, { from });
 
@@ -65,7 +65,7 @@ describe("Replay projection", () => {
     });
     expect(inFake).to.have.been.calledWith({});
     expect(withFake).to.have.been.calledWith({
-      internalTokenFn,
+      internalFn: internalTokenFn,
     });
   });
   it("should call with the correct params with optionals omitted", async () => {
@@ -87,11 +87,7 @@ describe("Replay projection", () => {
       context,
       eventsDomain,
       eventsService,
-    })
-      .set({
-        tokenFns: { internal: internalTokenFn },
-      })
-      .replay(root);
+    }).replay(root);
 
     expect(result).to.equal(response);
     expect(rpcFake).to.have.been.calledWith(
@@ -107,8 +103,6 @@ describe("Replay projection", () => {
       },
     });
     expect(inFake).to.have.been.calledWith({});
-    expect(withFake).to.have.been.calledWith({
-      internalTokenFn,
-    });
+    expect(withFake).to.have.been.calledWith({});
   });
 });

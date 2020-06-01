@@ -27,6 +27,7 @@ const domain = "some-domain";
 const root = "some-root";
 const from = "some-from";
 const parallel = "some-parallel";
+const key = "some-key";
 
 const envService = "some-env-service";
 
@@ -72,7 +73,11 @@ describe("Event store", () => {
       .set({
         context,
         claims,
-        tokenFns: { internal: internalTokenFn, external: externalTokenFn },
+        token: {
+          internalFn: internalTokenFn,
+          externalFn: externalTokenFn,
+          key,
+        },
       })
       .add([
         {
@@ -121,6 +126,7 @@ describe("Event store", () => {
     expect(withFake).to.have.been.calledWith({
       internalTokenFn,
       externalTokenFn,
+      key,
       claims,
     });
   });
@@ -143,7 +149,11 @@ describe("Event store", () => {
       .set({
         context,
         claims,
-        tokenFns: { internal: internalTokenFn, external: externalTokenFn },
+        token: {
+          internalFn: internalTokenFn,
+          externalFn: externalTokenFn,
+          key,
+        },
       })
       .add([
         {
@@ -199,6 +209,7 @@ describe("Event store", () => {
     expect(withFake).to.have.been.calledWith({
       internalTokenFn,
       externalTokenFn,
+      key,
       claims,
     });
   });
@@ -273,7 +284,11 @@ describe("Event store", () => {
       .set({
         context,
         claims,
-        tokenFns: { internal: internalTokenFn, external: externalTokenFn },
+        token: {
+          internalFn: internalTokenFn,
+          externalFn: externalTokenFn,
+          key,
+        },
       })
       .aggregate(root);
 
@@ -285,6 +300,7 @@ describe("Event store", () => {
     expect(withFake).to.have.been.calledWith({
       internalTokenFn,
       externalTokenFn,
+      key,
       claims,
     });
     expect(result).to.equal(aggregate);
@@ -331,7 +347,11 @@ describe("Event store", () => {
       .set({
         context,
         claims,
-        tokenFns: { internal: internalTokenFn, external: externalTokenFn },
+        token: {
+          internalFn: internalTokenFn,
+          externalFn: externalTokenFn,
+          key,
+        },
       })
       .query(query);
 
@@ -343,6 +363,7 @@ describe("Event store", () => {
     expect(withFake).to.have.been.calledWith({
       internalTokenFn,
       externalTokenFn,
+      key,
       claims,
     });
     expect(result).to.equal(queryResult);
@@ -388,7 +409,11 @@ describe("Event store", () => {
       .set({
         context,
         claims,
-        tokenFns: { internal: internalTokenFn, external: externalTokenFn },
+        token: {
+          internalFn: internalTokenFn,
+          externalFn: externalTokenFn,
+          key,
+        },
       })
       .stream(fn, { root, from, parallel });
 
@@ -405,6 +430,7 @@ describe("Event store", () => {
       path: "/stream",
       internalTokenFn,
       externalTokenFn,
+      key,
       claims,
     });
     expect(result).to.equal(stream);
@@ -424,24 +450,16 @@ describe("Event store", () => {
     replace(deps, "rpc", rpcFake);
 
     const fn = "some-fn";
-    const result = await eventStore({ domain, service })
-      .set({
-        context,
-        claims,
-        tokenFns: { internal: internalTokenFn, external: externalTokenFn },
-      })
-      .stream(fn, { root, from });
+    const result = await eventStore({ domain, service }).stream(fn, {
+      root,
+      from,
+    });
 
     expect(rpcFake).to.have.been.calledWith(domain, service, "event-store");
     expect(streamFake).to.have.been.calledWith(fn, { id: root, from });
-    expect(inFake).to.have.been.calledWith({
-      context,
-    });
+    expect(inFake).to.have.been.calledWith({});
     expect(withFake).to.have.been.calledWith({
-      path: "/stream",
-      internalTokenFn,
-      externalTokenFn,
-      claims,
+      path: `/stream`,
     });
     expect(result).to.equal(stream);
   });
@@ -464,7 +482,11 @@ describe("Event store", () => {
       .set({
         context,
         claims,
-        tokenFns: { internal: internalTokenFn, external: externalTokenFn },
+        token: {
+          internalFn: internalTokenFn,
+          externalFn: externalTokenFn,
+          key,
+        },
       })
       .rootStream(fn, { parallel });
 
@@ -479,6 +501,7 @@ describe("Event store", () => {
       path: "/roots",
       internalTokenFn,
       externalTokenFn,
+      key,
       claims,
     });
     expect(result).to.equal(stream);
@@ -498,24 +521,13 @@ describe("Event store", () => {
     replace(deps, "rpc", rpcFake);
 
     const fn = "some-fn";
-    const result = await eventStore({ domain, service })
-      .set({
-        context,
-        claims,
-        tokenFns: { internal: internalTokenFn, external: externalTokenFn },
-      })
-      .rootStream(fn);
+    const result = await eventStore({ domain, service }).rootStream(fn);
 
     expect(rpcFake).to.have.been.calledWith(domain, service, "event-store");
     expect(streamFake).to.have.been.calledWith(fn);
-    expect(inFake).to.have.been.calledWith({
-      context,
-    });
+    expect(inFake).to.have.been.calledWith({});
     expect(withFake).to.have.been.calledWith({
-      path: "/roots",
-      internalTokenFn,
-      externalTokenFn,
-      claims,
+      path: `/roots`,
     });
     expect(result).to.equal(stream);
   });
@@ -537,7 +549,11 @@ describe("Event store", () => {
       .set({
         context,
         claims,
-        tokenFns: { internal: internalTokenFn, external: externalTokenFn },
+        token: {
+          internalFn: internalTokenFn,
+          externalFn: externalTokenFn,
+          key,
+        },
       })
       .count(root);
 
@@ -552,6 +568,7 @@ describe("Event store", () => {
       path: "/count",
       internalTokenFn,
       externalTokenFn,
+      key,
       claims,
     });
     expect(result).to.equal(count);

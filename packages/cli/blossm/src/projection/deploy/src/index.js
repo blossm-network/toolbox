@@ -56,7 +56,7 @@ module.exports = eventHandler({
       context: config.context,
     })
       .set({
-        tokenFns: { internal: gcpToken },
+        token: { internalFn: gcpToken },
       })
       .update(state.headers.root, {
         headers: state.headers,
@@ -84,7 +84,11 @@ module.exports = eventHandler({
       network: process.env.CORE_NETWORK,
     })
       .set({
-        tokenFns: { external: externalToken, internal: gcpToken },
+        token: {
+          externalFn: externalToken,
+          internalFn: gcpToken,
+          key: "access",
+        },
       })
       .issue({
         view: newView,
@@ -97,7 +101,7 @@ module.exports = eventHandler({
       service: process.env.STORE_SERVICE,
     })
       .set({
-        tokenFns: { internal: gcpToken },
+        token: { internalFn: gcpToken },
       })
       .stream(fn, { root, from }),
 });

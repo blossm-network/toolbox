@@ -6,7 +6,11 @@ module.exports = ({ domain, service = process.env.SERVICE } = {}) => {
   const add = ({
     context,
     claims,
-    tokenFns: { internal: internalTokenFn, external: externalTokenFn } = {},
+    token: {
+      internalFn: internalTokenFn,
+      externalFn: externalTokenFn,
+      key,
+    } = {},
   } = {}) => async (events) => {
     const normalizedEvents = events.map((event) => {
       return {
@@ -37,6 +41,7 @@ module.exports = ({ domain, service = process.env.SERVICE } = {}) => {
       .with({
         ...(internalTokenFn && { internalTokenFn }),
         ...(externalTokenFn && { externalTokenFn }),
+        ...(key && { key }),
         ...(claims && { claims }),
       });
   };
@@ -44,7 +49,11 @@ module.exports = ({ domain, service = process.env.SERVICE } = {}) => {
   const aggregate = ({
     context,
     claims,
-    tokenFns: { internal: internalTokenFn, external: externalTokenFn } = {},
+    token: {
+      internalFn: internalTokenFn,
+      externalFn: externalTokenFn,
+      key,
+    } = {},
   } = {}) => async (root) =>
     await deps
       .rpc(domain, service, "event-store")
@@ -55,13 +64,18 @@ module.exports = ({ domain, service = process.env.SERVICE } = {}) => {
       .with({
         ...(internalTokenFn && { internalTokenFn }),
         ...(externalTokenFn && { externalTokenFn }),
+        ...(key && { key }),
         ...(claims && { claims }),
       });
 
   const query = ({
     context,
     claims,
-    tokenFns: { internal: internalTokenFn, external: externalTokenFn } = {},
+    token: {
+      internalFn: internalTokenFn,
+      externalFn: externalTokenFn,
+      key,
+    } = {},
   } = {}) => async ({ key, value }) =>
     await deps
       .rpc(domain, service, "event-store")
@@ -72,12 +86,17 @@ module.exports = ({ domain, service = process.env.SERVICE } = {}) => {
       .with({
         ...(internalTokenFn && { internalTokenFn }),
         ...(externalTokenFn && { externalTokenFn }),
+        ...(key && { key }),
         ...(claims && { claims }),
       });
   const stream = ({
     context,
     claims,
-    tokenFns: { internal: internalTokenFn, external: externalTokenFn } = {},
+    token: {
+      internalFn: internalTokenFn,
+      externalFn: externalTokenFn,
+      key,
+    } = {},
   } = {}) => async (fn, { root, from, parallel }) =>
     await deps
       .rpc(domain, service, "event-store")
@@ -89,13 +108,18 @@ module.exports = ({ domain, service = process.env.SERVICE } = {}) => {
         path: `/stream`,
         ...(internalTokenFn && { internalTokenFn }),
         ...(externalTokenFn && { externalTokenFn }),
+        ...(key && { key }),
         ...(claims && { claims }),
       });
 
   const rootStream = ({
     context,
     claims,
-    tokenFns: { internal: internalTokenFn, external: externalTokenFn } = {},
+    token: {
+      internalFn: internalTokenFn,
+      externalFn: externalTokenFn,
+      key,
+    } = {},
   } = {}) => async (fn, { parallel } = {}) =>
     await deps
       .rpc(domain, service, "event-store")
@@ -107,13 +131,18 @@ module.exports = ({ domain, service = process.env.SERVICE } = {}) => {
         path: `/roots`,
         ...(internalTokenFn && { internalTokenFn }),
         ...(externalTokenFn && { externalTokenFn }),
+        ...(key && { key }),
         ...(claims && { claims }),
       });
 
   const count = ({
     context,
     claims,
-    tokenFns: { internal: internalTokenFn, external: externalTokenFn } = {},
+    token: {
+      internalFn: internalTokenFn,
+      externalFn: externalTokenFn,
+      key,
+    } = {},
   } = {}) => async (root) =>
     await deps
       .rpc(domain, service, "event-store")
@@ -125,18 +154,19 @@ module.exports = ({ domain, service = process.env.SERVICE } = {}) => {
         path: `/count`,
         ...(internalTokenFn && { internalTokenFn }),
         ...(externalTokenFn && { externalTokenFn }),
+        ...(key && { key }),
         ...(claims && { claims }),
       });
 
   return {
-    set: ({ context, claims, tokenFns } = {}) => {
+    set: ({ context, claims, token } = {}) => {
       return {
-        add: add({ context, claims, tokenFns }),
-        query: query({ context, claims, tokenFns }),
-        stream: stream({ context, claims, tokenFns }),
-        rootStream: rootStream({ context, claims, tokenFns }),
-        count: count({ context, claims, tokenFns }),
-        aggregate: aggregate({ context, claims, tokenFns }),
+        add: add({ context, claims, token }),
+        query: query({ context, claims, token }),
+        stream: stream({ context, claims, token }),
+        rootStream: rootStream({ context, claims, token }),
+        count: count({ context, claims, token }),
+        aggregate: aggregate({ context, claims, token }),
       };
     },
     add: add(),

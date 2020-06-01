@@ -52,7 +52,7 @@ describe("View gateway get", () => {
     expect(viewStoreFake).to.have.been.calledWith({ name });
     expect(setFake).to.have.been.calledWith({
       context,
-      tokenFns: { internal: deps.gcpToken },
+      token: { internalFn: deps.gcpToken },
     });
     expect(readFake).to.have.been.calledWith(query);
     expect(sendFake).to.have.been.calledWith(results);
@@ -92,7 +92,7 @@ describe("View gateway get", () => {
     });
     expect(setFake).to.have.been.calledWith({
       context,
-      tokenFns: { internal: deps.gcpToken },
+      token: { internalFn: deps.gcpToken },
     });
     expect(readFake).to.have.been.calledWith({ ...query, root });
     expect(sendFake).to.have.been.calledWith(results);
@@ -159,7 +159,7 @@ describe("View gateway get", () => {
     expect(viewCompositeFake).to.have.been.calledWith({ name });
     expect(setFake).to.have.been.calledWith({
       context,
-      tokenFns: { internal: deps.gcpToken },
+      token: { internalFn: deps.gcpToken },
     });
     expect(readFake).to.have.been.calledWith(query);
     expect(sendFake).to.have.been.calledWith(results);
@@ -199,7 +199,7 @@ describe("View gateway get", () => {
     });
     expect(setFake).to.have.been.calledWith({
       context,
-      tokenFns: { internal: deps.gcpToken },
+      token: { internalFn: deps.gcpToken },
     });
     expect(readFake).to.have.been.calledWith({ ...query, root });
     expect(sendFake).to.have.been.calledWith(results);

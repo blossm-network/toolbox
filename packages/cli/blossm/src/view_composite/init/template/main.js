@@ -18,7 +18,7 @@ module.exports = async ({ query, params, context }) => {
       service: "some-service",
       context: "some-context",
     })
-    .set({ tokenFns: { internal: deps.gcpToken } })
+    .set({ token: { internalFn: deps.gcpToken } })
     .read({ a: "some-a" });
 
   //eslint-disable-next-line no-console

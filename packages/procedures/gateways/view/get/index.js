@@ -13,7 +13,7 @@ module.exports = ({ procedure, name, domain, service } = {}) => async (
           ...(service && { service }),
         })
         .set({
-          tokenFns: { internal: deps.gcpToken },
+          token: { internalFn: deps.gcpToken },
           context: req.context,
         })
         .read({
@@ -32,7 +32,7 @@ module.exports = ({ procedure, name, domain, service } = {}) => async (
           ...(service && { service }),
         })
         .set({
-          tokenFns: { internal: deps.gcpToken },
+          token: { internalFn: deps.gcpToken },
           context: req.context,
         })
         .read({

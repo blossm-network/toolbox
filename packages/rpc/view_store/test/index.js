@@ -12,6 +12,7 @@ const network = "some-network";
 
 const internalTokenFn = "some-internal-token-fn";
 const externalTokenFn = "some-external-token-fn";
+const key = "some-key";
 
 const query = "some-query";
 const sort = "some-sort";
@@ -51,7 +52,11 @@ describe("Get views", () => {
     })
       .set({
         context: contexts,
-        tokenFns: { internal: internalTokenFn, external: externalTokenFn },
+        token: {
+          internalFn: internalTokenFn,
+          externalFn: externalTokenFn,
+          key,
+        },
       })
       .read({ query, sort, root });
 
@@ -67,6 +72,7 @@ describe("Get views", () => {
     expect(withFake).to.have.been.calledWith({
       internalTokenFn,
       externalTokenFn,
+      key,
     });
     expect(result).to.equal(views);
   });
@@ -112,7 +118,7 @@ describe("Get views", () => {
       context,
       network: otherNetwork,
     })
-      .set({ context: contexts, tokenFns: { external: externalTokenFn } })
+      .set({ context: contexts, token: { externalFn: externalTokenFn, key } })
       .read({ query, sort });
 
     expect(rpcFake).to.have.been.calledWith(name, context, "view-store");
@@ -124,6 +130,7 @@ describe("Get views", () => {
     });
     expect(withFake).to.have.been.calledWith({
       externalTokenFn,
+      key,
       path: "/some-name",
     });
     expect(result).to.equal(views);
@@ -152,7 +159,11 @@ describe("Get views", () => {
     })
       .set({
         context: contexts,
-        tokenFns: { internal: internalTokenFn, external: externalTokenFn },
+        token: {
+          internalFn: internalTokenFn,
+          externalFn: externalTokenFn,
+          key,
+        },
       })
       .stream(fn, { query, sort, root });
 
@@ -169,6 +180,7 @@ describe("Get views", () => {
       path: "/stream",
       internalTokenFn,
       externalTokenFn,
+      key,
     });
     expect(result).to.equal(views);
   });
@@ -221,7 +233,7 @@ describe("Get views", () => {
       context,
       network: otherNetwork,
     })
-      .set({ context: contexts, tokenFns: { external: externalTokenFn } })
+      .set({ context: contexts, token: { externalFn: externalTokenFn, key } })
       .stream(fn, { query, sort });
 
     expect(rpcFake).to.have.been.calledWith(
@@ -239,6 +251,7 @@ describe("Get views", () => {
     expect(withFake).to.have.been.calledWith({
       path: "/some-name/stream",
       externalTokenFn,
+      key,
     });
     expect(result).to.equal(views);
   });
@@ -258,7 +271,11 @@ describe("Get views", () => {
     await viewStore({ name, domain, service, context })
       .set({
         context: contexts,
-        tokenFns: { internal: internalTokenFn, external: externalTokenFn },
+        token: {
+          internalFn: internalTokenFn,
+          externalFn: externalTokenFn,
+          key,
+        },
       })
       .update(root, view);
 
@@ -274,6 +291,7 @@ describe("Get views", () => {
     expect(withFake).to.have.been.calledWith({
       internalTokenFn,
       externalTokenFn,
+      key,
     });
   });
   it("should call update with the correct params and optionals omitted", async () => {
@@ -312,7 +330,11 @@ describe("Get views", () => {
     await viewStore({ name, domain, service, context })
       .set({
         context: contexts,
-        tokenFns: { internal: internalTokenFn, external: externalTokenFn },
+        token: {
+          internalFn: internalTokenFn,
+          externalFn: externalTokenFn,
+          key,
+        },
       })
       .delete(root);
 
@@ -328,6 +350,7 @@ describe("Get views", () => {
     expect(withFake).to.have.been.calledWith({
       internalTokenFn,
       externalTokenFn,
+      key,
     });
   });
   it("should call delete with the correct params with optionals omitted", async () => {
