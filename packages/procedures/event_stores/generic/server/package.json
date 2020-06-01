@@ -1,7 +1,7 @@
 {
   "name": "@blossm/event-store",
   "description": "An event store server.",
-  "version": "0.0.121",
+  "version": "0.0.122",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -15,12 +15,12 @@
   },
   "dependencies": {
     "@blossm/event-store-count": "^0.0.4",
-    "@blossm/event-store-get": "^0.0.49",
-    "@blossm/event-store-post": "^0.0.78",
+    "@blossm/event-store-get": "^0.0.50",
+    "@blossm/event-store-post": "^0.0.79",
     "@blossm/event-store-root-stream": "^0.0.2",
     "@blossm/event-store-stream": "^0.0.4",
     "@blossm/logger": "^0.0.8",
-    "@blossm/server": "^0.0.21"
+    "@blossm/server": "^0.0.22"
   },
   "devDependencies": {
     "chai-datetime": "^1.5.0",

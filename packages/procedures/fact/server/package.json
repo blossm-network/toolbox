@@ -1,7 +1,7 @@
 {
   "name": "@blossm/fact",
   "description": "A generic fact server.",
-  "version": "0.0.19",
+  "version": "0.0.20",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@blossm/fact-get": "^0.0.8",
-    "@blossm/server": "^0.0.21"
+    "@blossm/server": "^0.0.22"
   },
   "devDependencies": {
     "chai-datetime": "^1.5.0",
