@@ -11,7 +11,7 @@ module.exports = ({
 } = {}) => async (req, res) => {
   //TODO
   //eslint-disable-next-line no-console
-  console.log({ headers: req.headers });
+  console.log({ headers: req.headers, context: req.context });
 
   await deps.validate(req.body);
   const { root, payload, headers } = req.body;
