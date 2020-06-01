@@ -52,6 +52,9 @@ const validateObject = ({ object, expectation, path }) => {
       validator[expectation[property].type || "object"](object[property], {
         title: expectation[property].title || property,
         path: `${path}.${property}`,
+        ...(expectation[property].in && {
+          fn: (value) => expectation[property].in.includes(value),
+        }),
         optional:
           expectation[property].optional || expectation[property].default,
       }),
