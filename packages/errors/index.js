@@ -49,20 +49,20 @@ const preconditionFailed = {
     new PreconditionFailedError({ cause, info, toJSON }, message),
 };
 
-const construct = ({ statusCode, message }) => {
+const construct = ({ statusCode, message, info }) => {
   switch (statusCode) {
     case 400:
-      return badRequest.message(message);
+      return badRequest.message(message, { info });
     case 401:
-      return unauthorized.message(message);
+      return unauthorized.message(message, { info });
     case 403:
-      return forbidden.message(message);
+      return forbidden.message(message, { info });
     case 404:
-      return resourceNotFound.message(message);
+      return resourceNotFound.message(message, { info });
     case 409:
-      return invalidArgument.message(message);
+      return invalidArgument.message(message, { info });
     case 500:
-      return internalServer.message(message);
+      return internalServer.message(message, { info });
   }
 };
 
