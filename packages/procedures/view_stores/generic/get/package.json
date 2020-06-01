@@ -1,7 +1,7 @@
 {
   "name": "@blossm/view-store-get",
   "description": "A view store GET handler.",
-  "version": "0.0.74",
+  "version": "0.0.75",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -14,7 +14,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/errors": "^0.0.33",
+    "@blossm/errors": "^0.0.34",
     "@blossm/url-encode-query-data": "^0.0.5"
   },
   "devDependencies": {

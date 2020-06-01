@@ -1,6 +1,6 @@
 {
   "name": "@blossm/cors-middleware",
-  "version": "0.0.42",
+  "version": "0.0.43",
   "description": "Cors middleware for the network.",
   "main": "index.js",
   "author": "blossm.network",
@@ -14,7 +14,7 @@
     "test": "mocha --recursive"
   },
   "dependencies": {
-    "@blossm/errors": "^0.0.33",
+    "@blossm/errors": "^0.0.34",
     "cors": "^2.8.5"
   },
   "devDependencies": {

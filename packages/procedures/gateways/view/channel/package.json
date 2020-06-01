@@ -1,7 +1,7 @@
 {
   "name": "@blossm/view-gateway-channel",
   "description": "A view gateway server GET handler for channel subscriptions.",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@blossm/channel-name": "^0.0.1",
-    "@blossm/errors": "^0.0.33"
+    "@blossm/errors": "^0.0.34"
   },
   "devDependencies": {
     "mocha": "^7.1.1",
