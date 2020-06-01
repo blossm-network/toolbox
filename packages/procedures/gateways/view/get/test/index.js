@@ -1,5 +1,5 @@
 const { expect } = require("chai").use(require("sinon-chai"));
-const { restore, replace, fake } = require("sinon");
+const { restore, replace, fake, match } = require("sinon");
 
 const deps = require("../deps");
 const get = require("..");
@@ -13,8 +13,9 @@ const context = "some-context";
 const root = "some-root";
 
 const internalTokenFn = "some-internal-token-fn";
-const externalTokenFn = "some-external-token-fn";
 const key = "some-key";
+const externalTokenNetwork = "some-external-token-network";
+const externalTokenKey = "some-external-token-key";
 
 const coreNetwork = "some-core-network";
 const network = "some-network";
@@ -51,23 +52,41 @@ describe("View gateway get", () => {
       status: statusFake,
     };
 
+    const externalTokenResult = "some-external-token-result";
+    const externalTokenFnFake = fake.returns(externalTokenResult);
     await get({
       procedure: "view-store",
       name,
       internalTokenFn,
-      externalTokenFn,
+      externalTokenFn: externalTokenFnFake,
       key,
     })(req, res);
 
     expect(viewStoreFake).to.have.been.calledWith({ name });
     expect(setFake).to.have.been.calledWith({
       context,
-      token: { internalFn: internalTokenFn, externalFn: externalTokenFn, key },
+      token: {
+        internalFn: internalTokenFn,
+        externalFn: match((fn) => {
+          const result = fn({
+            network: externalTokenNetwork,
+            key: externalTokenKey,
+          });
+          return (
+            result == externalTokenResult &&
+            externalTokenFnFake.calledWith({
+              network: externalTokenNetwork,
+              key: externalTokenKey,
+            })
+          );
+        }),
+        key,
+      },
     });
     expect(readFake).to.have.been.calledWith(query);
     expect(sendFake).to.have.been.calledWith(results);
   });
-  it("should call with the correct params with context, domain, and params with view-store procedure", async () => {
+  it("should call with the correct params with context, domain, params with view-store procedure, token in req", async () => {
     const readFake = fake.returns({ body: results });
     const setFake = fake.returns({
       read: readFake,
@@ -77,9 +96,11 @@ describe("View gateway get", () => {
     });
     replace(deps, "viewStore", viewStoreFake);
 
+    const reqToken = "some-req-token";
     const req = {
       context,
       query,
+      token: reqToken,
       params: {
         root,
       },
@@ -93,15 +114,18 @@ describe("View gateway get", () => {
       status: statusFake,
     };
 
+    const externalTokenFnFake = fake();
     await get({
       procedure: "view-store",
       name,
       domain,
       service,
       internalTokenFn,
-      externalTokenFn,
+      externalTokenFn: externalTokenFnFake,
       key,
     })(req, res);
+
+    expect(externalTokenFnFake).to.not.have.been.called;
 
     expect(viewStoreFake).to.have.been.calledWith({
       name,
@@ -110,7 +134,14 @@ describe("View gateway get", () => {
     });
     expect(setFake).to.have.been.calledWith({
       context,
-      token: { internalFn: internalTokenFn, externalFn: externalTokenFn, key },
+      token: {
+        internalFn: internalTokenFn,
+        externalFn: match((fn) => {
+          const result = fn();
+          return result == reqToken;
+        }),
+        key,
+      },
     });
     expect(readFake).to.have.been.calledWith({ ...query, root });
     expect(sendFake).to.have.been.calledWith(results);
@@ -172,23 +203,41 @@ describe("View gateway get", () => {
       status: statusFake,
     };
 
+    const externalTokenResult = "some-external-token-result";
+    const externalTokenFnFake = fake.returns(externalTokenResult);
     await get({
       procedure: "view-composite",
       name,
       internalTokenFn,
-      externalTokenFn,
+      externalTokenFn: externalTokenFnFake,
       key,
     })(req, res);
 
     expect(viewCompositeFake).to.have.been.calledWith({ name });
     expect(setFake).to.have.been.calledWith({
       context,
-      token: { internalFn: internalTokenFn, externalFn: externalTokenFn, key },
+      token: {
+        internalFn: internalTokenFn,
+        externalFn: match((fn) => {
+          const result = fn({
+            network: externalTokenNetwork,
+            key: externalTokenKey,
+          });
+          return (
+            result == externalTokenResult &&
+            externalTokenFnFake.calledWith({
+              network: externalTokenNetwork,
+              key: externalTokenKey,
+            })
+          );
+        }),
+        key,
+      },
     });
     expect(readFake).to.have.been.calledWith(query);
     expect(sendFake).to.have.been.calledWith(results);
   });
-  it("should call with the correct params with context, domain, and root with view-composite procedure", async () => {
+  it("should call with the correct params with context, domain, root with view-composite procedure, and token in req", async () => {
     const readFake = fake.returns({ body: results });
     const setFake = fake.returns({
       read: readFake,
@@ -198,9 +247,11 @@ describe("View gateway get", () => {
     });
     replace(deps, "viewComposite", viewCompositeFake);
 
+    const reqToken = "some-req-token";
     const req = {
       context,
       query,
+      token: reqToken,
       params: {
         root,
       },
@@ -214,15 +265,17 @@ describe("View gateway get", () => {
       status: statusFake,
     };
 
+    const externalTokenFnFake = fake();
     await get({
       procedure: "view-composite",
       name,
       domain,
       service,
       internalTokenFn,
-      externalTokenFn,
+      externalTokenFn: externalTokenFnFake,
       key,
     })(req, res);
+    expect(externalTokenFnFake).to.not.have.been.called;
 
     expect(viewCompositeFake).to.have.been.calledWith({
       name,
@@ -231,7 +284,14 @@ describe("View gateway get", () => {
     });
     expect(setFake).to.have.been.calledWith({
       context,
-      token: { internalFn: internalTokenFn, externalFn: externalTokenFn, key },
+      token: {
+        internalFn: internalTokenFn,
+        externalFn: match((fn) => {
+          const result = fn();
+          return result == reqToken;
+        }),
+        key,
+      },
     });
     expect(readFake).to.have.been.calledWith({ ...query, root });
     expect(sendFake).to.have.been.calledWith(results);

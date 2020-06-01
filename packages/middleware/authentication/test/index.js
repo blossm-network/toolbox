@@ -22,6 +22,7 @@ describe("Authentication middleware", () => {
     const iat = "some-iat";
     const jti = "some-jti";
     const context = "some-context";
+    const jwt = "some-jwt";
     const claims = {
       context,
       iss,
@@ -33,7 +34,7 @@ describe("Authentication middleware", () => {
     };
     const req = {};
 
-    const authenticateFake = fake.returns(claims);
+    const authenticateFake = fake.returns({ claims, jwt });
     replace(deps, "authenticate", authenticateFake);
 
     const nextFake = fake();
@@ -57,6 +58,7 @@ describe("Authentication middleware", () => {
       cookieKey,
     });
     expect(req.context).to.deep.equal(context);
+    expect(req.token).to.deep.equal(jwt);
     expect(req.claims).to.deep.equal({
       iss,
       aud,

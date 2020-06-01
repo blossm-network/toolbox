@@ -48,7 +48,7 @@ describe("Authorize", () => {
       audience,
       algorithm,
     });
-    expect(result).to.deep.equal(claims);
+    expect(result).to.deep.equal({ claims, jwt: bearer });
   });
   it("should authenticate with cookie token", async () => {
     const cookieToken = "some-cookie-token";
@@ -74,7 +74,7 @@ describe("Authorize", () => {
       audience,
       algorithm,
     });
-    expect(response).to.deep.equal(claims);
+    expect(response).to.deep.equal({ claims, jwt: cookieToken });
   });
   it("should authenticate with basic token", async () => {
     const basicTokenId = "some-basic-id";
@@ -104,7 +104,7 @@ describe("Authorize", () => {
       id: basicTokenId,
       secret: basicTokenSecret,
     });
-    expect(response).to.deep.equal(claims);
+    expect(response).to.deep.equal({ claims });
   });
   it("should authenticate with basic token", async () => {
     const basicTokenId = "some-basic-id";

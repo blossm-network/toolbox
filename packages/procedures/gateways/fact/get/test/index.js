@@ -1,5 +1,5 @@
 const { expect } = require("chai").use(require("sinon-chai"));
-const { restore, replace, fake } = require("sinon");
+const { restore, replace, fake, match } = require("sinon");
 
 const deps = require("../deps");
 const get = require("..");
@@ -10,10 +10,11 @@ const name = "some-name";
 const domain = "some-domain";
 const context = "some-context";
 const claims = "some-claims";
-const key = "some-key";
 
 const internalTokenFn = "some-internal-token-fn";
-const externalTokenFn = "some-external-token-fn";
+const key = "some-key";
+const externalTokenNetwork = "some-external-token-network";
+const externalTokenKey = "some-external-token-key";
 
 describe("Fact gateway get", () => {
   afterEach(() => {
@@ -46,10 +47,15 @@ describe("Fact gateway get", () => {
       set: setResponseFake,
     };
 
-    await get({ name, domain, internalTokenFn, externalTokenFn, key })(
-      req,
-      res
-    );
+    const externalTokenResult = "some-external-token-result";
+    const externalTokenFnFake = fake.returns(externalTokenResult);
+    await get({
+      name,
+      domain,
+      internalTokenFn,
+      externalTokenFn: externalTokenFnFake,
+      key,
+    })(req, res);
 
     expect(factFake).to.have.been.calledWith({
       name,
@@ -58,13 +64,29 @@ describe("Fact gateway get", () => {
     expect(setFake).to.have.been.calledWith({
       context,
       claims,
-      token: { internalFn: internalTokenFn, externalFn: externalTokenFn, key },
+      token: {
+        internalFn: internalTokenFn,
+        externalFn: match((fn) => {
+          const result = fn({
+            network: externalTokenNetwork,
+            key: externalTokenKey,
+          });
+          return (
+            result == externalTokenResult &&
+            externalTokenFnFake.calledWith({
+              network: externalTokenNetwork,
+              key: externalTokenKey,
+            })
+          );
+        }),
+        key,
+      },
     });
     expect(readFake).to.have.been.calledWith(query);
     expect(sendFake).to.have.been.calledWith(results);
     expect(setResponseFake).to.have.been.calledWith({});
   });
-  it("should call with the correct params when headers are passed back", async () => {
+  it("should call with the correct params when headers are passed back and token in req", async () => {
     const headers = "some-headers";
     const readFake = fake.returns({ body: results, headers });
     const setFake = fake.returns({
@@ -75,10 +97,12 @@ describe("Fact gateway get", () => {
     });
     replace(deps, "fact", factFake);
 
+    const reqToken = "some-req-token";
     const req = {
       context,
       claims,
       query,
+      token: reqToken,
     };
 
     const sendFake = fake();
@@ -92,10 +116,15 @@ describe("Fact gateway get", () => {
       set: setResponseFake,
     };
 
-    await get({ name, domain, internalTokenFn, externalTokenFn, key })(
-      req,
-      res
-    );
+    const externalTokenFnFake = fake();
+    await get({
+      name,
+      domain,
+      internalTokenFn,
+      externalTokenFn: externalTokenFnFake,
+      key,
+    })(req, res);
+    expect(externalTokenFnFake).to.not.have.been.called;
 
     expect(factFake).to.have.been.calledWith({
       name,
@@ -104,7 +133,14 @@ describe("Fact gateway get", () => {
     expect(setFake).to.have.been.calledWith({
       context,
       claims,
-      token: { internalFn: internalTokenFn, externalFn: externalTokenFn, key },
+      token: {
+        internalFn: internalTokenFn,
+        externalFn: match((fn) => {
+          const result = fn();
+          return result == reqToken;
+        }),
+        key,
+      },
     });
     expect(readFake).to.have.been.calledWith(query);
     expect(sendFake).to.have.been.calledWith(results);

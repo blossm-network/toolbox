@@ -1,5 +1,5 @@
 const { expect } = require("chai").use(require("sinon-chai"));
-const { restore, replace, fake } = require("sinon");
+const { restore, replace, fake, match } = require("sinon");
 
 const deps = require("../deps");
 const post = require("..");
@@ -12,9 +12,10 @@ const domain = "some-domain";
 const context = "some-context";
 const claims = "some-claims";
 const internalTokenFn = "some-internal-token-fn";
-const externalTokenFn = "some-external-token-fn";
 const statusCode = "some-status-code";
 const key = "some-key";
+const externalTokenNetwork = "some-external-token-network";
+const externalTokenKey = "some-external-token-key";
 
 const root = "some-root";
 
@@ -68,11 +69,15 @@ describe("Command gateway post", () => {
       cookie: cookieFake,
       set: setResponseFake,
     };
-
-    await post({ name, domain, internalTokenFn, externalTokenFn, key })(
-      req,
-      res
-    );
+    const externalTokenResult = "some-external-token-result";
+    const externalTokenFnFake = fake.returns(externalTokenResult);
+    await post({
+      name,
+      domain,
+      internalTokenFn,
+      externalTokenFn: externalTokenFnFake,
+      key,
+    })(req, res);
 
     expect(validateFake).to.have.been.calledWith(body);
     expect(commandFake).to.have.been.calledWith({
@@ -80,7 +85,23 @@ describe("Command gateway post", () => {
       domain,
     });
     expect(setFake).to.have.been.calledWith({
-      token: { internalFn: internalTokenFn, externalFn: externalTokenFn, key },
+      token: {
+        internalFn: internalTokenFn,
+        externalFn: match((fn) => {
+          const result = fn({
+            network: externalTokenNetwork,
+            key: externalTokenKey,
+          });
+          return (
+            result == externalTokenResult &&
+            externalTokenFnFake.calledWith({
+              network: externalTokenNetwork,
+              key: externalTokenKey,
+            })
+          );
+        }),
+        key,
+      },
       context,
       claims,
     });
@@ -132,11 +153,13 @@ describe("Command gateway post", () => {
 
     const network = "some-random-network";
     const service = "some-random-service";
+    const externalTokenResult = "some-external-token-result";
+    const externalTokenFnFake = fake.returns(externalTokenResult);
     await post({
       name,
       domain,
       internalTokenFn,
-      externalTokenFn,
+      externalTokenFn: externalTokenFnFake,
       key,
       network,
       service,
@@ -150,7 +173,23 @@ describe("Command gateway post", () => {
       network,
     });
     expect(setFake).to.have.been.calledWith({
-      token: { externalFn: externalTokenFn, internalFn: internalTokenFn, key },
+      token: {
+        externalFn: match((fn) => {
+          const result = fn({
+            network: externalTokenNetwork,
+            key: externalTokenKey,
+          });
+          return (
+            result == externalTokenResult &&
+            externalTokenFnFake.calledWith({
+              network: externalTokenNetwork,
+              key: externalTokenKey,
+            })
+          );
+        }),
+        internalFn: internalTokenFn,
+        key,
+      },
       context,
       claims,
     });
@@ -193,10 +232,15 @@ describe("Command gateway post", () => {
       cookie: cookieFake,
     };
 
-    await post({ name, domain, internalTokenFn, externalTokenFn, key })(
-      req,
-      res
-    );
+    const externalTokenResult = "some-external-token-result";
+    const externalTokenFnFake = fake.returns(externalTokenResult);
+    await post({
+      name,
+      domain,
+      internalTokenFn,
+      externalTokenFn: externalTokenFnFake,
+      key,
+    })(req, res);
 
     expect(validateFake).to.have.been.calledWith(body);
     expect(commandFake).to.have.been.calledWith({
@@ -204,7 +248,23 @@ describe("Command gateway post", () => {
       domain,
     });
     expect(setFake).to.have.been.calledWith({
-      token: { internalFn: internalTokenFn, externalFn: externalTokenFn, key },
+      token: {
+        internalFn: internalTokenFn,
+        externalFn: match((fn) => {
+          const result = fn({
+            network: externalTokenNetwork,
+            key: externalTokenKey,
+          });
+          return (
+            result == externalTokenResult &&
+            externalTokenFnFake.calledWith({
+              network: externalTokenNetwork,
+              key: externalTokenKey,
+            })
+          );
+        }),
+        key,
+      },
       context,
       claims,
     });
@@ -215,7 +275,7 @@ describe("Command gateway post", () => {
     expect(statusFake).to.have.been.calledWith(statusCode);
     expect(sendFake).to.have.been.calledWith();
   });
-  it("should call with the correct params if tokens is in the response", async () => {
+  it("should call with the correct params if tokens is in the response and token in req", async () => {
     const validateFake = fake();
     replace(deps, "validate", validateFake);
 
@@ -247,10 +307,12 @@ describe("Command gateway post", () => {
     });
     replace(deps, "command", commandFake);
 
+    const reqToken = "some-req-token";
     const req = {
       context,
       claims,
       body,
+      token: reqToken,
       params: {},
     };
 
@@ -267,10 +329,15 @@ describe("Command gateway post", () => {
       set: resSetFake,
     };
 
-    await post({ name, domain, internalTokenFn, externalTokenFn, key })(
-      req,
-      res
-    );
+    const externalTokenFnFake = fake();
+    await post({
+      name,
+      domain,
+      internalTokenFn,
+      externalTokenFn: externalTokenFnFake,
+      key,
+    })(req, res);
+    expect(externalTokenFnFake).to.not.have.been.called;
 
     expect(cookieFake).to.have.been.calledTwice;
     expect(cookieFake).to.have.been.calledWith(token1Type, token1Value, {
@@ -289,7 +356,14 @@ describe("Command gateway post", () => {
       domain,
     });
     expect(setFake).to.have.been.calledWith({
-      token: { internalFn: internalTokenFn, externalFn: externalTokenFn, key },
+      token: {
+        internalFn: internalTokenFn,
+        externalFn: match((fn) => {
+          const result = fn();
+          return result == reqToken;
+        }),
+        key,
+      },
       context,
       claims,
     });
@@ -320,7 +394,7 @@ describe("Command gateway post", () => {
     };
 
     try {
-      await post({ name, domain, internalTokenFn, externalTokenFn })(req, res);
+      await post({ name, domain, internalTokenFn })(req, res);
       //shouldn't get called
       expect(2).to.equal(1);
     } catch (e) {

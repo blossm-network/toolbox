@@ -13,7 +13,13 @@ module.exports = ({
       domain,
     })
     .set({
-      token: { internalFn: internalTokenFn, externalFn: externalTokenFn, key },
+      token: {
+        internalFn: internalTokenFn,
+        externalFn: ({ network, key } = {}) => {
+          return req.token || externalTokenFn({ network, key });
+        },
+        key,
+      },
       context: req.context,
       claims: req.claims,
     })

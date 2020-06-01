@@ -20,7 +20,9 @@ module.exports = ({
         .set({
           token: {
             internalFn: internalTokenFn,
-            externalFn: externalTokenFn,
+            externalFn: ({ network, key } = {}) => {
+              return req.token || externalTokenFn({ network, key });
+            },
             key,
           },
           context: req.context,
@@ -43,7 +45,9 @@ module.exports = ({
         .set({
           token: {
             internalFn: internalTokenFn,
-            externalFn: externalTokenFn,
+            externalFn: ({ network, key } = {}) => {
+              return req.token || externalTokenFn({ network, key });
+            },
             key,
           },
           context: req.context,

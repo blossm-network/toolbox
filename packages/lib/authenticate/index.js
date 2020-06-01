@@ -24,13 +24,13 @@ module.exports = async ({
       audience,
       algorithm,
     });
-    return claims;
+    return { claims, jwt };
   } else if (tokens.basic && allowBasic && keyClaimsFn) {
     const credentials = Buffer.from(tokens.basic, "base64").toString("ascii");
     const [id, secret] = credentials.split(":");
     const claims = await keyClaimsFn({ id, secret });
 
-    return claims;
+    return { claims };
   }
 
   throw deps.invalidCredentialsError.message("Token not found.");

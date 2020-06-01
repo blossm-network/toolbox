@@ -13,7 +13,7 @@ module.exports = ({
 }) =>
   asyncHandler(async (req, _, next) => {
     try {
-      const claims = await deps.authenticate({
+      const { claims, jwt } = await deps.authenticate({
         req,
         verifyFn,
         keyClaimsFn,
@@ -23,6 +23,7 @@ module.exports = ({
         cookieKey,
       });
       req.context = claims.context;
+      if (jwt) req.token = jwt;
       req.claims = {
         iss: claims.iss,
         aud: claims.aud,

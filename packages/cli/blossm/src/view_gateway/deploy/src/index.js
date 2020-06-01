@@ -4,6 +4,7 @@ const verify = require("@blossm/verify-access-token");
 const gcpToken = require("@blossm/gcp-token");
 const terminatedSession = require("@blossm/terminated-session");
 const permissionsLookup = require("@blossm/permission-lookup");
+const externalToken = require("@blossm/external-token");
 const { download: downloadFile } = require("@blossm/gcp-storage");
 
 const config = require("./config.json");
@@ -14,6 +15,7 @@ module.exports = gateway({
   algorithm: "ES256",
   audience: process.env.NETWORK,
   internalTokenFn: gcpToken,
+  externalTokenFn: externalToken,
   permissionsLookupFn: permissionsLookup({
     token: gcpToken,
     downloadFileFn: ({ fileName, extension }) =>
