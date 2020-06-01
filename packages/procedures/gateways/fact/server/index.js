@@ -36,6 +36,7 @@ module.exports = async ({
         domain,
         internalTokenFn,
         externalTokenFn,
+        key,
       }),
       {
         path: `/${name}`,

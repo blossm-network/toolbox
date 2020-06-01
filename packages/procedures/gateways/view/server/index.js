@@ -9,6 +9,8 @@ module.exports = async ({
   permissionsLookupFn,
   terminatedSessionCheckFn,
   verifyFn,
+  internalTokenFn,
+  externalTokenFn,
   algorithm,
   audience,
 }) => {
@@ -67,6 +69,9 @@ module.exports = async ({
         name,
         ...(domain && { domain }),
         ...(service && { service }),
+        internalTokenFn,
+        externalTokenFn,
+        key,
       }),
       {
         path: `/${name}/:root?`,

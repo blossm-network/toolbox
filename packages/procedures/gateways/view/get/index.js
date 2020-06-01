@@ -1,9 +1,14 @@
 const deps = require("./deps");
 
-module.exports = ({ procedure, name, domain, service } = {}) => async (
-  req,
-  res
-) => {
+module.exports = ({
+  procedure,
+  name,
+  domain,
+  service,
+  internalTokenFn,
+  externalTokenFn,
+  key,
+} = {}) => async (req, res) => {
   switch (procedure) {
     case "view-store": {
       const { body: response } = await deps
@@ -13,7 +18,11 @@ module.exports = ({ procedure, name, domain, service } = {}) => async (
           ...(service && { service }),
         })
         .set({
-          token: { internalFn: deps.gcpToken },
+          token: {
+            internalFn: internalTokenFn,
+            externalFn: externalTokenFn,
+            key,
+          },
           context: req.context,
         })
         .read({
@@ -32,7 +41,11 @@ module.exports = ({ procedure, name, domain, service } = {}) => async (
           ...(service && { service }),
         })
         .set({
-          token: { internalFn: deps.gcpToken },
+          token: {
+            internalFn: internalTokenFn,
+            externalFn: externalTokenFn,
+            key,
+          },
           context: req.context,
         })
         .read({

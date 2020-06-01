@@ -42,6 +42,7 @@ module.exports = async ({
         ...(network && { network }),
         internalTokenFn,
         externalTokenFn,
+        key,
       }),
       {
         path: `/${name}`,

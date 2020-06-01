@@ -12,6 +12,10 @@ const domain = "some-domain";
 const context = "some-context";
 const root = "some-root";
 
+const internalTokenFn = "some-internal-token-fn";
+const externalTokenFn = "some-external-token-fn";
+const key = "some-key";
+
 const coreNetwork = "some-core-network";
 const network = "some-network";
 const envContext = "some-env-context";
@@ -47,12 +51,18 @@ describe("View gateway get", () => {
       status: statusFake,
     };
 
-    await get({ procedure: "view-store", name })(req, res);
+    await get({
+      procedure: "view-store",
+      name,
+      internalTokenFn,
+      externalTokenFn,
+      key,
+    })(req, res);
 
     expect(viewStoreFake).to.have.been.calledWith({ name });
     expect(setFake).to.have.been.calledWith({
       context,
-      token: { internalFn: deps.gcpToken },
+      token: { internalFn: internalTokenFn, externalFn: externalTokenFn, key },
     });
     expect(readFake).to.have.been.calledWith(query);
     expect(sendFake).to.have.been.calledWith(results);
@@ -83,7 +93,15 @@ describe("View gateway get", () => {
       status: statusFake,
     };
 
-    await get({ procedure: "view-store", name, domain, service })(req, res);
+    await get({
+      procedure: "view-store",
+      name,
+      domain,
+      service,
+      internalTokenFn,
+      externalTokenFn,
+      key,
+    })(req, res);
 
     expect(viewStoreFake).to.have.been.calledWith({
       name,
@@ -92,7 +110,7 @@ describe("View gateway get", () => {
     });
     expect(setFake).to.have.been.calledWith({
       context,
-      token: { internalFn: deps.gcpToken },
+      token: { internalFn: internalTokenFn, externalFn: externalTokenFn, key },
     });
     expect(readFake).to.have.been.calledWith({ ...query, root });
     expect(sendFake).to.have.been.calledWith(results);
@@ -154,12 +172,18 @@ describe("View gateway get", () => {
       status: statusFake,
     };
 
-    await get({ procedure: "view-composite", name })(req, res);
+    await get({
+      procedure: "view-composite",
+      name,
+      internalTokenFn,
+      externalTokenFn,
+      key,
+    })(req, res);
 
     expect(viewCompositeFake).to.have.been.calledWith({ name });
     expect(setFake).to.have.been.calledWith({
       context,
-      token: { internalFn: deps.gcpToken },
+      token: { internalFn: internalTokenFn, externalFn: externalTokenFn, key },
     });
     expect(readFake).to.have.been.calledWith(query);
     expect(sendFake).to.have.been.calledWith(results);
@@ -190,7 +214,15 @@ describe("View gateway get", () => {
       status: statusFake,
     };
 
-    await get({ procedure: "view-composite", name, domain, service })(req, res);
+    await get({
+      procedure: "view-composite",
+      name,
+      domain,
+      service,
+      internalTokenFn,
+      externalTokenFn,
+      key,
+    })(req, res);
 
     expect(viewCompositeFake).to.have.been.calledWith({
       name,
@@ -199,7 +231,7 @@ describe("View gateway get", () => {
     });
     expect(setFake).to.have.been.calledWith({
       context,
-      token: { internalFn: deps.gcpToken },
+      token: { internalFn: internalTokenFn, externalFn: externalTokenFn, key },
     });
     expect(readFake).to.have.been.calledWith({ ...query, root });
     expect(sendFake).to.have.been.calledWith(results);

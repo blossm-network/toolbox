@@ -76,6 +76,7 @@ describe("Command gateway", () => {
       service,
       internalTokenFn,
       externalTokenFn,
+      key: "access",
     });
     expect(gatewayPostFake).to.have.been.calledOnce;
     expect(listenFake).to.have.been.calledWith();
@@ -167,6 +168,7 @@ describe("Command gateway", () => {
       domain,
       internalTokenFn,
       externalTokenFn,
+      key: "access",
     });
     expect(gatewayPostFake).to.have.been.calledOnce;
     expect(listenFake).to.have.been.calledWith();
@@ -270,6 +272,7 @@ describe("Command gateway", () => {
       service: otherService,
       internalTokenFn,
       externalTokenFn,
+      key,
     });
   });
   it("should call with the correct params with multiple commands with difference protections", async () => {
@@ -336,6 +339,7 @@ describe("Command gateway", () => {
       service,
       internalTokenFn,
       externalTokenFn,
+      key: "access",
     });
     expect(gatewayPostFake).to.have.been.calledWith({
       name: name2,
@@ -343,6 +347,7 @@ describe("Command gateway", () => {
       service,
       internalTokenFn,
       externalTokenFn,
+      key: "access",
     });
     expect(gatewayPostFake).to.have.been.calledWith({
       name: name3,
@@ -350,6 +355,7 @@ describe("Command gateway", () => {
       service,
       internalTokenFn,
       externalTokenFn,
+      key: "access",
     });
     expect(gatewayPostFake).to.have.been.calledThrice;
     expect(postFake).to.have.been.calledWith(gatewayPostResult, {
@@ -449,6 +455,7 @@ describe("Command gateway", () => {
       service: otherService,
       internalTokenFn,
       externalTokenFn,
+      key: "access",
     });
     expect(authorizationFake).to.have.been.calledWith({
       permissionsLookupFn,

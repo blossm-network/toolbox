@@ -14,6 +14,8 @@ const algorithm = "some-algorithm";
 const audience = "some-audience";
 const procedure = "some-procedure";
 const reqContext = "some-req-context";
+const internalTokenFn = "some-internal-token-fn";
+const externalTokenFn = "some-external-token-fn";
 
 process.env.CONTEXT = context;
 process.env.NETWORK = network;
@@ -82,6 +84,8 @@ describe("View gateway", () => {
       permissionsLookupFn,
       terminatedSessionCheckFn,
       verifyFn: verifyFnFake,
+      internalTokenFn,
+      externalTokenFn,
       algorithm,
       audience,
     });
@@ -91,6 +95,9 @@ describe("View gateway", () => {
       name,
       domain,
       service,
+      internalTokenFn,
+      externalTokenFn,
+      key: "access",
     });
     expect(gatewayGetFake).to.have.been.calledOnce;
 
@@ -223,10 +230,18 @@ describe("View gateway", () => {
       terminatedSessionCheckFn,
       verifyFn: verifyFnFake,
       algorithm,
+      internalTokenFn,
+      externalTokenFn,
       audience,
     });
 
-    expect(gatewayGetFake).to.have.been.calledWith({ procedure, name });
+    expect(gatewayGetFake).to.have.been.calledWith({
+      procedure,
+      name,
+      internalTokenFn,
+      externalTokenFn,
+      key: "access",
+    });
     expect(gatewayGetFake).to.have.been.calledOnce;
     expect(listenFake).to.have.been.calledWith();
     expect(serverFake).to.have.been.calledWith({
@@ -317,6 +332,8 @@ describe("View gateway", () => {
       terminatedSessionCheckFn,
       verifyFn: verifyFnFake,
       algorithm,
+      internalTokenFn,
+      externalTokenFn,
       audience,
     });
 
@@ -325,6 +342,9 @@ describe("View gateway", () => {
       name,
       domain,
       service,
+      internalTokenFn,
+      externalTokenFn,
+      key: "access",
     });
     expect(gatewayGetFake).to.have.been.calledOnce;
     expect(listenFake).to.have.been.calledWith();
@@ -403,7 +423,7 @@ describe("View gateway", () => {
       `${permissionService}:${permissionDomain}:${permissionPrivilege}`,
     ];
     const name = "some-name";
-    const key = "some-key";
+    const key = "some-custom-key";
     const views = [{ name, procedure, permissions, key }];
 
     const verifyFnResult = "some-verify-fn";
@@ -416,7 +436,18 @@ describe("View gateway", () => {
       terminatedSessionCheckFn,
       verifyFn: verifyFnFake,
       algorithm,
+      internalTokenFn,
+      externalTokenFn,
       audience,
+    });
+    expect(gatewayGetFake).to.have.been.calledWith({
+      name,
+      procedure,
+      domain,
+      service,
+      internalTokenFn,
+      externalTokenFn,
+      key,
     });
     expect(authenticationFake).to.have.been.calledWith({
       verifyFn: verifyFnResult,
@@ -519,6 +550,8 @@ describe("View gateway", () => {
       terminatedSessionCheckFn,
       verifyFn: verifyFnFake,
       algorithm,
+      internalTokenFn,
+      externalTokenFn,
       audience,
     });
 
@@ -527,18 +560,27 @@ describe("View gateway", () => {
       name: name1,
       domain,
       service,
+      internalTokenFn,
+      externalTokenFn,
+      key: "access",
     });
     expect(gatewayGetFake).to.have.been.calledWith({
       procedure,
       name: name2,
       domain,
       service,
+      internalTokenFn,
+      externalTokenFn,
+      key: "access",
     });
     expect(gatewayGetFake).to.have.been.calledWith({
       procedure,
       name: name3,
       domain,
       service,
+      internalTokenFn,
+      externalTokenFn,
+      key: "access",
     });
     expect(gatewayGetFake).to.have.been.calledThrice;
     expect(getFake).to.have.been.calledWith(gatewayGetResult, {
@@ -636,6 +678,8 @@ describe("View gateway", () => {
       verifyFn: verifyFnFake,
       algorithm,
       audience,
+      internalTokenFn,
+      externalTokenFn,
     });
 
     expect(gatewayGetFake).to.have.been.calledWith({
@@ -643,6 +687,9 @@ describe("View gateway", () => {
       name,
       domain: otherDomain,
       service: otherService,
+      internalTokenFn,
+      externalTokenFn,
+      key: "access",
     });
     expect(authorizationFake).to.have.been.calledWith({
       permissionsLookupFn,

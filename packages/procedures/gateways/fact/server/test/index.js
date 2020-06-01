@@ -71,9 +71,9 @@ describe("Fact gateway", () => {
     expect(gatewayGetFake).to.have.been.calledWith({
       name,
       domain,
-
       internalTokenFn,
       externalTokenFn,
+      key: "access",
     });
     expect(gatewayGetFake).to.have.been.calledOnce;
     expect(listenFake).to.have.been.calledWith();
@@ -110,7 +110,7 @@ describe("Fact gateway", () => {
       }),
     });
   });
-  it("should call with the correct params with privileges set to none", async () => {
+  it("should call with the correct params with privileges set to none and custom key", async () => {
     const corsMiddlewareFake = fake();
     replace(deps, "corsMiddleware", corsMiddlewareFake);
 
@@ -137,7 +137,8 @@ describe("Fact gateway", () => {
 
     const privileges = "none";
     const name = "some-name";
-    const facts = [{ name, privileges, context }];
+    const key = "some-custom-key";
+    const facts = [{ name, privileges, context, key }];
 
     const verifyFnResult = "some-verify-fn";
     const verifyFnFake = fake.returns(verifyFnResult);
@@ -159,6 +160,7 @@ describe("Fact gateway", () => {
       domain,
       internalTokenFn,
       externalTokenFn,
+      key,
     });
     expect(gatewayGetFake).to.have.been.calledOnce;
     expect(listenFake).to.have.been.calledWith();
@@ -183,9 +185,9 @@ describe("Fact gateway", () => {
       audience,
       algorithm,
       strict: true,
-      cookieKey: "access",
+      cookieKey: key,
     });
-    expect(verifyFnFake).to.have.been.calledWith({ key: "access" });
+    expect(verifyFnFake).to.have.been.calledWith({ key });
     expect(authorizationFake).to.have.been.calledWith({
       permissionsLookupFn,
       terminatedSessionCheckFn,
@@ -309,18 +311,21 @@ describe("Fact gateway", () => {
       domain,
       internalTokenFn,
       externalTokenFn,
+      key: "access",
     });
     expect(gatewayGetFake).to.have.been.calledWith({
       name: name2,
       domain,
       internalTokenFn,
       externalTokenFn,
+      key: "access",
     });
     expect(gatewayGetFake).to.have.been.calledWith({
       name: name3,
       domain,
       internalTokenFn,
       externalTokenFn,
+      key: "access",
     });
     expect(gatewayGetFake).to.have.been.calledThrice;
     expect(getFake).to.have.been.calledWith(gatewayGetResult, {
@@ -415,6 +420,7 @@ describe("Fact gateway", () => {
       domain: otherDomain,
       internalTokenFn,
       externalTokenFn,
+      key: "access",
     });
     expect(authorizationFake).to.have.been.calledWith({
       permissionsLookupFn,
