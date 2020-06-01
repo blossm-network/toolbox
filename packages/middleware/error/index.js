@@ -14,6 +14,10 @@ module.exports = (err, _, res, next) => {
   //eslint-disable-next-line no-console
   console.log({
     err,
+    ...(err.info && { info: err.info() }),
+    ...(err.toJSON && { toJSON: err.toJSON() }),
+    ...(err.body && { body: err.body }),
+    ...(err.body && err.body.toJSON && { bodyToJSON: err.body.toJSON }),
     // json: err.toJSON(),
     // string: JSON.stringify(err),
     // ...(err.statusCode && { statusCode: err.statusCode }),
