@@ -1,7 +1,7 @@
 {
   "name": "@blossm/command-gateway-post",
   "description": "A command gateway server POST handler.",
-  "version": "0.0.192",
+  "version": "0.0.193",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
