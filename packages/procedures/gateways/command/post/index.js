@@ -38,7 +38,7 @@ module.exports = ({
       if (!token.network || !token.type || !token.value) continue;
       const cookieName = token.type;
       res.cookie(cookieName, token.value, {
-        // domain: process.env.NETWORK,
+        domain: process.env.NETWORK,
         //TODO
         httpOnly: process.env.NODE_ENV != "development",
         secure: true,

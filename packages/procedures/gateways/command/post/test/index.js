@@ -265,12 +265,12 @@ describe("Command gateway post", () => {
 
     expect(cookieFake).to.have.been.calledTwice;
     expect(cookieFake).to.have.been.calledWith(token1Type, token1Value, {
-      // domain: network,
+      domain: network,
       httpOnly: true,
       secure: true,
     });
     expect(cookieFake).to.have.been.calledWith(token2Type, token2Value, {
-      // domain: network,
+      domain: network,
       httpOnly: true,
       secure: true,
     });
