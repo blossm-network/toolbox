@@ -67,8 +67,8 @@ describe("View gateway get", () => {
       context,
       token: {
         internalFn: internalTokenFn,
-        externalFn: match(async (fn) => {
-          const result = await fn({
+        externalFn: match((fn) => {
+          const result = fn({
             network: externalTokenNetwork,
             key: externalTokenKey,
           });
@@ -136,9 +136,9 @@ describe("View gateway get", () => {
       context,
       token: {
         internalFn: internalTokenFn,
-        externalFn: match(async (fn) => {
-          const result = await fn();
-          return result == reqToken;
+        externalFn: match((fn) => {
+          const result = fn();
+          return result.token == reqToken && result.type == "Bearer";
         }),
         key,
       },
@@ -218,8 +218,8 @@ describe("View gateway get", () => {
       context,
       token: {
         internalFn: internalTokenFn,
-        externalFn: match(async (fn) => {
-          const result = await fn({
+        externalFn: match((fn) => {
+          const result = fn({
             network: externalTokenNetwork,
             key: externalTokenKey,
           });
@@ -286,9 +286,9 @@ describe("View gateway get", () => {
       context,
       token: {
         internalFn: internalTokenFn,
-        externalFn: match(async (fn) => {
-          const result = await fn();
-          return result == reqToken;
+        externalFn: match((fn) => {
+          const result = fn();
+          return result.token == reqToken && result.type == "Bearer";
         }),
         key,
       },
