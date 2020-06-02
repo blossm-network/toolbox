@@ -87,8 +87,8 @@ describe("Command gateway post", () => {
     expect(setFake).to.have.been.calledWith({
       token: {
         internalFn: internalTokenFn,
-        externalFn: match((fn) => {
-          const result = fn({
+        externalFn: match(async (fn) => {
+          const result = await fn({
             network: externalTokenNetwork,
             key: externalTokenKey,
           });
@@ -174,8 +174,8 @@ describe("Command gateway post", () => {
     });
     expect(setFake).to.have.been.calledWith({
       token: {
-        externalFn: match((fn) => {
-          const result = fn({
+        externalFn: match(async (fn) => {
+          const result = await fn({
             network: externalTokenNetwork,
             key: externalTokenKey,
           });
@@ -250,8 +250,8 @@ describe("Command gateway post", () => {
     expect(setFake).to.have.been.calledWith({
       token: {
         internalFn: internalTokenFn,
-        externalFn: match((fn) => {
-          const result = fn({
+        externalFn: match(async (fn) => {
+          const result = await fn({
             network: externalTokenNetwork,
             key: externalTokenKey,
           });
@@ -358,8 +358,8 @@ describe("Command gateway post", () => {
     expect(setFake).to.have.been.calledWith({
       token: {
         internalFn: internalTokenFn,
-        externalFn: match((fn) => {
-          const result = fn();
+        externalFn: match(async (fn) => {
+          const result = await fn();
           return result == reqToken;
         }),
         key,

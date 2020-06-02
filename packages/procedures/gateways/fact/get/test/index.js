@@ -66,8 +66,8 @@ describe("Fact gateway get", () => {
       claims,
       token: {
         internalFn: internalTokenFn,
-        externalFn: match((fn) => {
-          const result = fn({
+        externalFn: match(async (fn) => {
+          const result = await fn({
             network: externalTokenNetwork,
             key: externalTokenKey,
           });
@@ -135,8 +135,8 @@ describe("Fact gateway get", () => {
       claims,
       token: {
         internalFn: internalTokenFn,
-        externalFn: match((fn) => {
-          const result = fn();
+        externalFn: match(async (fn) => {
+          const result = await fn();
           return result == reqToken;
         }),
         key,
