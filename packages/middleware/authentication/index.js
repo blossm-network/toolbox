@@ -9,21 +9,22 @@ module.exports = ({
   audience,
   algorithm,
   cookieKey,
-  allowBasic,
+  allowBasic = false,
 }) =>
   asyncHandler(async (req, _, next) => {
+    const tokens = deps.tokensFromReq(req, { cookieKey });
+    const jwt = tokens.bearer || tokens.cookie;
+    if (jwt) req.token = jwt;
     try {
-      const { claims, jwt } = await deps.authenticate({
-        req,
+      const claims = await deps.authenticate({
+        ...(jwt && { jwt }),
+        ...(!jwt && allowBasic && { basic: tokens.basic }),
         verifyFn,
         keyClaimsFn,
         audience,
         algorithm,
-        allowBasic,
-        cookieKey,
       });
       req.context = claims.context;
-      if (jwt) req.token = jwt;
       req.claims = {
         iss: claims.iss,
         aud: claims.aud,

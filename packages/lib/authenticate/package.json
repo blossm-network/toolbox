@@ -12,8 +12,7 @@
   },
   "dependencies": {
     "@blossm/datetime": "^0.0.5",
-    "@blossm/jwt": "^0.0.52",
-    "@blossm/tokens-from-req": "^0.0.14"
+    "@blossm/jwt": "^0.0.52"
   },
   "scripts": {
     "test": "mocha --recursive"
