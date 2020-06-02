@@ -5,10 +5,6 @@ module.exports = (req, { cookieKey } = {}) => {
 
   const token = cookieKey && cookies[cookieKey];
 
-  //TODO
-  //eslint-disable-next-line no-console
-  console.log({ cookies, cookieKey, token });
-
   const tokens = {
     ...(token != undefined && { cookie: token }),
   };

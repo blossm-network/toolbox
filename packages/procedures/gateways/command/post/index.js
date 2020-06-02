@@ -9,10 +9,6 @@ module.exports = ({
   externalTokenFn,
   key,
 } = {}) => async (req, res) => {
-  //TODO
-  //eslint-disable-next-line no-console
-  console.log({ headers: req.headers, context: req.context, token: req.token });
-
   await deps.validate(req.body);
   const { root, payload, headers } = req.body;
 
@@ -37,17 +33,13 @@ module.exports = ({
     })
     .issue(payload, { ...headers, root });
 
-  //TODO
-  //eslint-disable-next-line no-console
-  console.log({ responseHeaders });
-
   // If the response has tokens, send them as cookies and remove them from the response.
   if (response && response.tokens) {
     for (const token of response.tokens) {
       if (!token.network || !token.type || !token.value) continue;
       const cookieName = token.type;
       res.cookie(cookieName, token.value, {
-        domain: token.network, //process.env.NETWORK,
+        domain: token.network,
         //TODO
         httpOnly: process.env.NODE_ENV != "development",
         secure: process.env.NODE_ENV != "development", //true,

@@ -44,18 +44,6 @@ const common = ({ method, dataParam, operation, id, data }) => {
                   key,
                 })) || {};
 
-          //TODO
-          //eslint-disable-next-line no-console
-          console.log({
-            token,
-            type,
-            key,
-            operation,
-            externalTokenFn,
-            internalTokenFn,
-            internal,
-          });
-
           const url = internal
             ? deps.operationUrl({
                 operation,
@@ -68,12 +56,6 @@ const common = ({ method, dataParam, operation, id, data }) => {
                 ...(path && { path }),
                 ...(id && { id }),
               });
-
-          //TODO
-          //eslint-disable-next-line no-console
-          console.log({
-            url,
-          });
 
           const response = await method(url, {
             [dataParam]: {
