@@ -288,11 +288,8 @@ describe("Command gateway", () => {
     replace(deps, "authorization", authorizationFake);
 
     const listenFake = fake();
-    const thirdPostFake = fake.returns({
-      listen: listenFake,
-    });
     const secondPostFake = fake.returns({
-      post: thirdPostFake,
+      listen: listenFake,
     });
     const postFake = fake.returns({
       post: secondPostFake,
@@ -310,11 +307,9 @@ describe("Command gateway", () => {
     const privileges = [privilege];
     const name1 = "some-name1";
     const name2 = "some-name2";
-    const name3 = "some-name3";
     const commands = [
       { name: name1, protection: "none" },
-      { name: name2, protection: "context" },
-      { name: name3, privileges, context },
+      { name: name2, privileges, context },
     ];
 
     const verifyFnResult = "some-verify-fn";
@@ -333,7 +328,7 @@ describe("Command gateway", () => {
       audience,
     });
 
-    expect(gatewayPostFake).to.have.been.calledWith({
+    expect(gatewayPostFake.getCall(0)).to.have.been.calledWith({
       name: name1,
       domain,
       service,
@@ -341,7 +336,7 @@ describe("Command gateway", () => {
       externalTokenFn,
       key: "access",
     });
-    expect(gatewayPostFake).to.have.been.calledWith({
+    expect(gatewayPostFake.getCall(1)).to.have.been.calledWith({
       name: name2,
       domain,
       service,
@@ -349,24 +344,13 @@ describe("Command gateway", () => {
       externalTokenFn,
       key: "access",
     });
-    expect(gatewayPostFake).to.have.been.calledWith({
-      name: name3,
-      domain,
-      service,
-      internalTokenFn,
-      externalTokenFn,
-      key: "access",
-    });
-    expect(gatewayPostFake).to.have.been.calledThrice;
+    expect(gatewayPostFake).to.have.been.calledTwice;
     expect(postFake).to.have.been.calledWith(gatewayPostResult, {
       path: `/${name1}`,
+      preMiddleware: [authenticationResult],
     });
     expect(secondPostFake).to.have.been.calledWith(gatewayPostResult, {
       path: `/${name2}`,
-      preMiddleware: [authenticationResult],
-    });
-    expect(thirdPostFake).to.have.been.calledWith(gatewayPostResult, {
-      path: `/${name3}`,
       preMiddleware: [authenticationResult, authorizationResult],
     });
     expect(authenticationFake).to.have.been.calledWith({

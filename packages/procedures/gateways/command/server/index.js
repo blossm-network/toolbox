@@ -46,34 +46,34 @@ module.exports = async ({
       }),
       {
         path: `/${name}`,
-        ...(protection != "none" && {
-          preMiddleware: [
-            deps.authentication({
-              verifyFn: verifyFn({ key }),
-              cookieKey: key,
-              keyClaimsFn,
-              audience,
-              algorithm,
-              strict: protection == "strict",
-              allowBasic: basic,
-            }),
-            ...(protection == "strict"
-              ? [
-                  deps.authorization({
-                    permissionsLookupFn,
-                    terminatedSessionCheckFn,
-                    context,
-                    permissions:
-                      privileges instanceof Array
-                        ? privileges.map((privilege) => {
-                            return { service, domain, privilege };
-                          })
-                        : privileges,
-                  }),
-                ]
-              : []),
-          ],
-        }),
+        // ...(protection != "none" && {
+        preMiddleware: [
+          deps.authentication({
+            verifyFn: verifyFn({ key }),
+            cookieKey: key,
+            keyClaimsFn,
+            audience,
+            algorithm,
+            strict: protection == "strict",
+            allowBasic: basic,
+          }),
+          ...(protection == "strict"
+            ? [
+                deps.authorization({
+                  permissionsLookupFn,
+                  terminatedSessionCheckFn,
+                  context,
+                  permissions:
+                    privileges instanceof Array
+                      ? privileges.map((privilege) => {
+                          return { service, domain, privilege };
+                        })
+                      : privileges,
+                }),
+              ]
+            : []),
+        ],
+        // }),
       }
     );
   }
