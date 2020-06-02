@@ -26,8 +26,8 @@ module.exports = ({
     .set({
       token: {
         internalFn: internalTokenFn,
-        externalFn: ({ network, key } = {}) => {
-          return req.token || externalTokenFn({ network, key });
+        externalFn: async ({ network, key } = {}) => {
+          return req.token || (await externalTokenFn({ network, key }));
         },
         key,
       },
