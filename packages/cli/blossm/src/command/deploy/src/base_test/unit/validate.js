@@ -23,15 +23,13 @@ describe("Command handler store validator tests", () => {
     for (const value of testing.validate.bad) {
       try {
         await validate(
-          createBadPayload(
-            {
-              bad: value,
-              ok: testing.validate.ok[0] || {},
-            },
-            {
-              ...(testing.validate.aud && { aud: testing.validate.aud }),
-            }
-          )
+          createBadPayload({
+            bad: value,
+            ok: testing.validate.ok[0] || {},
+          }),
+          {
+            ...(testing.validate.aud && { aud: testing.validate.aud }),
+          }
         );
 
         //shouldn't get called.

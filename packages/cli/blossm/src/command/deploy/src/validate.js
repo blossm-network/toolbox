@@ -91,7 +91,7 @@ const validateObject = ({ object, expectation, path, aud }) => {
   }
 };
 
-module.exports = async (payload, { aud }) =>
+module.exports = async (payload, { aud } = {}) =>
   validateObject({
     object: payload,
     expectation: config.payload,
