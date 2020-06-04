@@ -16,6 +16,11 @@ describe("Service url", () => {
     const result = operationUrl({ host, path, id });
     expect(result).to.equal(`https://some-host/some-path/some-id`);
   });
+  it("should return the correct output in local env", () => {
+    process.env.NODE_ENV = "local";
+    const result = operationUrl({ host, path, id });
+    expect(result).to.equal(`http://some-host/some-path/some-id`);
+  });
   it("should return the correct output with no path", () => {
     const result = operationUrl({ host, id });
     expect(result).to.equal(`https://some-host/some-id`);

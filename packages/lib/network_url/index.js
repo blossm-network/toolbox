@@ -1,2 +1,4 @@
 module.exports = ({ host, path = "", id }) =>
-  `https://${host}${path}${id != undefined ? `/${id}` : ""}`;
+  `${process.env.NODE_ENV == "local" ? "http" : "https"}://${host}${path}${
+    id != undefined ? `/${id}` : ""
+  }`;

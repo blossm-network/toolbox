@@ -512,7 +512,7 @@ const addDefaultDependencies = ({ config, coreNetwork }) => {
   }
 };
 
-const writeConfig = ({ config, coreNetwork, workingDir, env }) => {
+const writeConfig = ({ config, coreNetwork, workingDir }) => {
   const newConfigPath = path.resolve(workingDir, "config.json");
   if (!config.testing) config.testing = {};
   if (!config.testing.dependencies) config.testing.dependencies = [];
@@ -680,7 +680,7 @@ const configure = async (workingDir, configFn, env, strict) => {
 
     const mainContainerName = "main";
 
-    writeConfig({ config, coreNetwork, workingDir, env });
+    writeConfig({ config, coreNetwork, workingDir });
 
     writeBuild({
       workingDir,
