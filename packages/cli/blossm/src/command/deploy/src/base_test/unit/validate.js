@@ -29,7 +29,7 @@ describe("Command handler store validator tests", () => {
               ok: testing.validate.ok[0] || {},
             },
             {
-              ...(testing.validate.aud && { aud: testing.valdiate.aud }),
+              ...(testing.validate.aud && { aud: testing.validate.aud }),
             }
           )
         );
