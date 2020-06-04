@@ -23,6 +23,7 @@ module.exports = ({
       payload: req.body.payload,
       ...(req.body.root && { root: req.body.root }),
       ...(req.body.options && { options: req.body.options }),
+      ...(req.body.token && { token: req.body.token }),
       claims: req.body.claims,
       context: req.body.context,
       aggregateFn: aggregateFn({

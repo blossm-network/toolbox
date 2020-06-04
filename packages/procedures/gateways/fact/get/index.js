@@ -20,6 +20,7 @@ module.exports = ({
             ? { token: req.token, type: "Bearer" }
             : externalTokenFn({ network, key }),
         key,
+        ...(req.token && { current: req.token }),
       },
       context: req.context,
       claims: req.claims,

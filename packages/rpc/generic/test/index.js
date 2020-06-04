@@ -56,6 +56,7 @@ describe("Operation", () => {
     expect(post).to.have.been.calledWith(url, {
       body: {
         ...data,
+        token,
         context,
         claims,
       },
@@ -178,6 +179,7 @@ describe("Operation", () => {
         ...data,
         context,
         claims,
+        token,
       },
       headers: {
         Authorization: `${type} ${token}`,
@@ -215,6 +217,7 @@ describe("Operation", () => {
         ...data,
         context,
         claims,
+        token,
       },
       headers: {
         Authorization: `${type} ${token}`,
@@ -254,6 +257,7 @@ describe("Operation", () => {
         ...data,
         context,
         claims,
+        token,
       },
       headers: {
         Authorization: `${type} ${token}`,
@@ -292,6 +296,7 @@ describe("Operation", () => {
         ...data,
         context,
         claims,
+        token,
       },
       headers: {
         Authorization: `${type} ${token}`,
@@ -341,6 +346,7 @@ describe("Operation", () => {
           ...data,
           context,
           claims,
+          token,
         },
         headers: {
           Authorization: `${type} ${token}`,
@@ -387,6 +393,7 @@ describe("Operation", () => {
           ...data,
           context,
           claims,
+          token,
         },
         headers: {
           Authorization: `${type} ${token}`,
@@ -424,6 +431,7 @@ describe("Operation", () => {
         ...data,
         context,
         claims,
+        token,
       },
       headers: {
         Authorization: `${type} ${token}`,
@@ -462,6 +470,7 @@ describe("Operation", () => {
         ...data,
         context,
         claims,
+        token,
       },
       headers: {
         Authorization: `${type} ${token}`,
@@ -497,6 +506,7 @@ describe("Operation", () => {
     expect(del).to.have.been.calledWith(url, {
       body: {
         context,
+        token,
         claims,
       },
       headers: {

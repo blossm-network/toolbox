@@ -680,7 +680,7 @@ describe("Command handler post", () => {
     expect(setResponseFake).to.have.been.calledWith({});
     expect(sendStatusFake).to.have.been.calledWith(204);
   });
-  it("should call with the correct params with root, context, options, claims, version passed in, and no payload", async () => {
+  it("should call with the correct params with root, context, options, token, claims, version passed in, and no payload", async () => {
     const validateFnFake = fake();
     const normalizeFnFake = fake.returns(cleanedPayload);
 
@@ -707,6 +707,7 @@ describe("Command handler post", () => {
       response,
     });
     const currentRoot = "current-root";
+    const token = "some-token";
     const req = {
       body: {
         root: currentRoot,
@@ -715,6 +716,7 @@ describe("Command handler post", () => {
         options,
         context,
         claims,
+        token,
       },
     };
 
@@ -748,6 +750,7 @@ describe("Command handler post", () => {
       options,
       context,
       claims,
+      token,
       aggregateFn,
     });
 

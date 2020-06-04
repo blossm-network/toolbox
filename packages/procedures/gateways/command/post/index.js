@@ -27,11 +27,13 @@ module.exports = ({
             ? { token: req.token, type: "Bearer" }
             : externalTokenFn({ network, key }),
         key,
+        ...(req.token &&
+          network == process.env.NETWORK && { current: req.token }),
       },
-      //TODO no need to send context, token, claims if network != process.env.NETWORK
-      context: req.context,
-      ...(req.token && { token: req.token }),
-      claims: req.claims,
+      ...(network == process.env.NETWORK && {
+        context: req.context,
+        claims: req.claims,
+      }),
     })
     .issue(payload, { ...headers, root });
 

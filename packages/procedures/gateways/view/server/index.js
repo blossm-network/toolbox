@@ -58,6 +58,10 @@ module.exports = async ({
 
   for (const {
     name,
+    service: viewService,
+    context: viewContext,
+    subcontext,
+    network,
     procedure,
     key = "access",
     permissions,
@@ -68,48 +72,46 @@ module.exports = async ({
         procedure,
         name,
         ...(domain && { domain }),
-        ...(service && { service }),
+        ...((viewService || service) && { service: viewService || service }),
+        ...((viewContext || context) && { context: viewContext || context }),
+        ...(network && { network }),
         internalTokenFn,
         externalTokenFn,
         key,
       }),
       {
         path: `/${name}/:root?`,
-        ...(protection != "none" && {
-          preMiddleware: [
-            deps.authentication({
-              verifyFn: verifyFn({ key }),
-              audience,
-              algorithm,
-              strict: protection == "strict",
-              cookieKey: key,
-            }),
-            ...(protection == "strict"
-              ? [
-                  deps.authorization({
-                    permissionsLookupFn,
-                    terminatedSessionCheckFn,
-                    context,
-                    permissions:
-                      permissions instanceof Array
-                        ? permissions.map((permission) => {
-                            const [
-                              service,
-                              domain,
-                              privilege,
-                            ] = permission.split(":");
-                            return {
-                              service,
-                              domain,
-                              privilege,
-                            };
-                          })
-                        : permissions,
-                  }),
-                ]
-              : []),
-          ],
-        }),
+        preMiddleware: [
+          deps.authentication({
+            verifyFn: verifyFn({ key }),
+            audience,
+            algorithm,
+            strict: protection == "strict",
+            cookieKey: key,
+          }),
+          ...(protection == "strict"
+            ? [
+                deps.authorization({
+                  permissionsLookupFn,
+                  terminatedSessionCheckFn,
+                  context: subcontext,
+                  permissions:
+                    permissions instanceof Array
+                      ? permissions.map((permission) => {
+                          const [service, domain, privilege] = permission.split(
+                            ":"
+                          );
+                          return {
+                            service,
+                            domain,
+                            privilege,
+                          };
+                        })
+                      : permissions,
+                }),
+              ]
+            : []),
+        ],
       }
     );
   }

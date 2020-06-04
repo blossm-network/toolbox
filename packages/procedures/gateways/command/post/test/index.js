@@ -28,6 +28,9 @@ const body = {
 process.env.NODE_ENV = "some-node-env-not-dev";
 
 describe("Command gateway post", () => {
+  beforeEach(() => {
+    delete process.env.NETWORK;
+  });
   afterEach(() => {
     restore();
   });
@@ -131,9 +134,11 @@ describe("Command gateway post", () => {
     });
     replace(deps, "command", commandFake);
 
+    const reqToken = "some-req-token";
     const req = {
       context,
       claims,
+      token: reqToken,
       body,
       params: {},
     };
@@ -155,6 +160,7 @@ describe("Command gateway post", () => {
     const service = "some-random-service";
     const externalTokenResult = "some-external-token-result";
     const externalTokenFnFake = fake.returns(externalTokenResult);
+    process.env.NETWORK = "some-random-env-network";
     await post({
       name,
       domain,
@@ -175,23 +181,12 @@ describe("Command gateway post", () => {
     expect(setFake).to.have.been.calledWith({
       token: {
         externalFn: match((fn) => {
-          const result = fn({
-            network: externalTokenNetwork,
-            key: externalTokenKey,
-          });
-          return (
-            result == externalTokenResult &&
-            externalTokenFnFake.calledWith({
-              network: externalTokenNetwork,
-              key: externalTokenKey,
-            })
-          );
+          const result = fn();
+          return result.token == reqToken && result.type == "Bearer";
         }),
         internalFn: internalTokenFn,
         key,
       },
-      context,
-      claims,
     });
     expect(issueFake).to.have.been.calledWith(payload, {
       ...headers,
@@ -357,6 +352,7 @@ describe("Command gateway post", () => {
     });
     expect(setFake).to.have.been.calledWith({
       token: {
+        current: reqToken,
         internalFn: internalTokenFn,
         externalFn: match((fn) => {
           const result = fn();

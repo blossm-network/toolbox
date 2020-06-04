@@ -62,6 +62,10 @@ const common = ({ method, dataParam, operation, id, data }) => {
               ...(data && { ...data }),
               ...(context && { context }),
               ...(claims && { claims }),
+              ...(token &&
+                internal && {
+                  token,
+                }),
             },
             ...(token && {
               headers: {

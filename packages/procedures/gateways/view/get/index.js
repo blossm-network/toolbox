@@ -5,6 +5,7 @@ module.exports = ({
   name,
   domain,
   service,
+  network,
   internalTokenFn,
   externalTokenFn,
   key,
@@ -16,6 +17,7 @@ module.exports = ({
           name,
           ...(domain && { domain }),
           ...(service && { service }),
+          ...(network && { network }),
         })
         .set({
           token: {
@@ -25,6 +27,8 @@ module.exports = ({
                 ? { token: req.token, type: "Bearer" }
                 : externalTokenFn({ network, key }),
             key,
+            ...(req.token &&
+              network == process.env.NETWORK && { current: req.token }),
           },
           context: req.context,
         })

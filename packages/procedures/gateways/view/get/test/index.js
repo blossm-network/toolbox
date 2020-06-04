@@ -25,6 +25,9 @@ process.env.NETWORK = network;
 process.env.CONTEXT = envContext;
 
 describe("View gateway get", () => {
+  beforeEach(() => {
+    delete process.env.NETWORK;
+  });
   afterEach(() => {
     restore();
   });
@@ -86,6 +89,69 @@ describe("View gateway get", () => {
     expect(readFake).to.have.been.calledWith(query);
     expect(sendFake).to.have.been.calledWith(results);
   });
+  it("should call with the correct params with view-store procedure with custom domain, service and network", async () => {
+    const readFake = fake.returns({ body: results });
+    const setFake = fake.returns({
+      read: readFake,
+    });
+    const viewStoreFake = fake.returns({
+      set: setFake,
+    });
+    replace(deps, "viewStore", viewStoreFake);
+
+    const reqToken = "some-req-token";
+    const req = {
+      context,
+      query,
+      params: {},
+      token: reqToken,
+    };
+
+    const sendFake = fake();
+    const statusFake = fake.returns({
+      send: sendFake,
+    });
+    const res = {
+      status: statusFake,
+    };
+
+    const network = "some-random-network";
+    const service = "some-random-service";
+    const domain = "some-random-domain";
+    const externalTokenResult = "some-external-token-result";
+    const externalTokenFnFake = fake.returns(externalTokenResult);
+    process.env.NETWORK = "some-random-env-network";
+    await get({
+      procedure: "view-store",
+      name,
+      domain,
+      service,
+      network,
+      internalTokenFn,
+      externalTokenFn: externalTokenFnFake,
+      key,
+    })(req, res);
+
+    expect(viewStoreFake).to.have.been.calledWith({
+      name,
+      domain,
+      service,
+      network,
+    });
+    expect(setFake).to.have.been.calledWith({
+      context,
+      token: {
+        internalFn: internalTokenFn,
+        externalFn: match((fn) => {
+          const result = fn();
+          return result.token == reqToken && result.type == "Bearer";
+        }),
+        key,
+      },
+    });
+    expect(readFake).to.have.been.calledWith(query);
+    expect(sendFake).to.have.been.calledWith(results);
+  });
   it("should call with the correct params with context, domain, params with view-store procedure, token in req", async () => {
     const readFake = fake.returns({ body: results });
     const setFake = fake.returns({
@@ -135,6 +201,7 @@ describe("View gateway get", () => {
     expect(setFake).to.have.been.calledWith({
       context,
       token: {
+        current: reqToken,
         internalFn: internalTokenFn,
         externalFn: match((fn) => {
           const result = fn();
