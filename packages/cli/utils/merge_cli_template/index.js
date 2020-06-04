@@ -531,13 +531,14 @@ const writeConfig = ({ config, coreNetwork, workingDir }) => {
             // env == "production" ? ".snd" : ""
             ".dev"
           }.${coreNetwork}`,
-          mocks: [
-            {
+          mocks: dependency.mocks.map((mock) => {
+            return {
               method: "post",
               path: `/${dependency.name}`,
-              code: 202,
-            },
-          ],
+              code: mock.code,
+              calls: mock.calls,
+            };
+          }),
         });
         break;
       case "view-gateway":
@@ -549,13 +550,14 @@ const writeConfig = ({ config, coreNetwork, workingDir }) => {
             // env == "production" ? ".snd" : ""
             ".dev"
           }.${coreNetwork}`,
-          mocks: [
-            {
+          mocks: dependency.mocks.map((mock) => {
+            return {
               method: "get",
               path: `/${dependency.name}`,
-              code: 200,
-            },
-          ],
+              code: mock.code,
+              calls: mock.calls,
+            };
+          }),
         });
 
         if (!dependency.procedure) {
@@ -572,13 +574,14 @@ const writeConfig = ({ config, coreNetwork, workingDir }) => {
             // env == "production" ? ".snd" : ""
             ".dev"
           }.${coreNetwork}`,
-          mocks: [
-            {
+          mocks: dependency.mocks.map((mock) => {
+            return {
               method: "get",
               path: `/${dependency.name}`,
-              code: 200,
-            },
-          ],
+              code: mock.code,
+              calls: mock.calls,
+            };
+          }),
         });
         break;
       default:
