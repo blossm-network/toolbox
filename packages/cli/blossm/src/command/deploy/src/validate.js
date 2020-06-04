@@ -103,10 +103,14 @@ const validateObject = ({ object, expectation, path, aud }) => {
   }
 };
 
-module.exports = async (payload, { aud } = {}) =>
-  validateObject({
+module.exports = async (payload, { aud } = {}) => {
+  //TODO
+  //eslint-disable-next-line no-console
+  console.log({ payload, aud });
+  return validateObject({
     object: payload,
     expectation: config.payload,
     path: "payload",
     ...(aud != undefined && { aud }),
   });
+};
