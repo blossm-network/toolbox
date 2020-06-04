@@ -5,7 +5,7 @@ const config = require("./config.json");
 const validateObject = ({ object, expectation, path, aud }) => {
   //TODO
   //eslint-disable-next-line no-console
-  console.log({ expectation });
+  console.log({ expectation, aud });
   for (const property in expectation) {
     //TODO
     //eslint-disable-next-line no-console
