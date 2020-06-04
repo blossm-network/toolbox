@@ -3,7 +3,13 @@ const validator = require("@blossm/validator");
 const config = require("./config.json");
 
 const validateObject = ({ object, expectation, path, aud }) => {
+  //TODO
+  //eslint-disable-next-line no-console
+  console.log({ expectation });
   for (const property in expectation) {
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log({ property, value: expectation[property] });
     if (
       typeof expectation[property] == "string" ||
       expectation[property] instanceof Array
@@ -31,6 +37,9 @@ const validateObject = ({ object, expectation, path, aud }) => {
       if (error) throw error;
 
       for (const item of object[property]) {
+        //TODO
+        //eslint-disable-next-line no-console
+        console.log({ item });
         if (typeof item == "object") {
           validateObject({
             object: item,
