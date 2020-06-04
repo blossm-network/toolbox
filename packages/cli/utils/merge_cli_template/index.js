@@ -523,13 +523,13 @@ const writeConfig = ({ config, coreNetwork, workingDir, env }) => {
 
   const adjustedDependencies = [];
   for (const dependency of config.testing.dependencies) {
-    switch (config.procedure) {
+    switch (dependency.procedure) {
       case "command-gateway":
         adjustedDependencies.push({
           procedure: "http",
           host: `c.${dependency.domain}.${dependency.service}${
             // env == "production" ? ".snd" : ""
-            "dev"
+            ".dev"
           }.${coreNetwork}`,
           mocks: [
             {
@@ -543,9 +543,11 @@ const writeConfig = ({ config, coreNetwork, workingDir, env }) => {
       case "view-gateway":
         adjustedDependencies.push({
           procedure: "http",
-          host: `v.${dependency.domain}.${dependency.service}${
+          host: `v.${dependency.domain}${
+            dependency.service ? `.${dependency.service}` : ""
+          }${dependency.context ? `.${dependency.context}` : ""}${
             // env == "production" ? ".snd" : ""
-            "dev"
+            ".dev"
           }.${coreNetwork}`,
           mocks: [
             {
@@ -564,9 +566,11 @@ const writeConfig = ({ config, coreNetwork, workingDir, env }) => {
       case "fact-gateway":
         adjustedDependencies.push({
           procedure: "http",
-          host: `f.${dependency.domain}.${dependency.service}${
+          host: `f${dependency.domain ? `.${dependency.domain}` : ""}${
+            dependency.service ? `.${dependency.service}` : ""
+          }${
             // env == "production" ? ".snd" : ""
-            "dev"
+            ".dev"
           }.${coreNetwork}`,
           mocks: [
             {
