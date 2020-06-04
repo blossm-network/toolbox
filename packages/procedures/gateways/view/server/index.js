@@ -60,7 +60,6 @@ module.exports = async ({
     name,
     service: viewService,
     context: viewContext,
-    subcontext,
     network,
     procedure,
     key = "access",
@@ -94,7 +93,8 @@ module.exports = async ({
                 deps.authorization({
                   permissionsLookupFn,
                   terminatedSessionCheckFn,
-                  context: subcontext,
+                  //Authenticate based on this procedures context.
+                  context,
                   permissions:
                     permissions instanceof Array
                       ? permissions.map((permission) => {

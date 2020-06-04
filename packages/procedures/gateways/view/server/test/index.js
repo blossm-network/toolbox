@@ -16,14 +16,12 @@ const procedure = "some-procedure";
 const reqContext = "some-req-context";
 const internalTokenFn = "some-internal-token-fn";
 const externalTokenFn = "some-external-token-fn";
-const subcontext = "some-subcontext";
 
 process.env.CONTEXT = context;
 process.env.NETWORK = network;
 
 describe("View gateway", () => {
   beforeEach(() => {
-    process.env.CONTEXT = context;
     process.env.SERVICE = service;
     process.env.DOMAIN = domain;
   });
@@ -175,7 +173,7 @@ describe("View gateway", () => {
       ],
     });
   });
-  it("should call with the correct params with no domain, service, or context in env", async () => {
+  it("should call with the correct params with no domain or service in env", async () => {
     const corsMiddlewareFake = fake();
     replace(deps, "corsMiddleware", corsMiddlewareFake);
 
@@ -219,14 +217,13 @@ describe("View gateway", () => {
       `${permissionService}:${permissionDomain}:${permissionPrivilege}`,
     ];
     const name = "some-name";
-    const views = [{ name, procedure, permissions, subcontext }];
+    const views = [{ name, procedure, permissions }];
 
     const verifyFnResult = "some-verify-fn";
     const verifyFnFake = fake.returns(verifyFnResult);
 
     delete process.env.DOMAIN;
     delete process.env.SERVICE;
-    delete process.env.CONTEXT;
     await gateway({
       views,
       whitelist,
@@ -242,6 +239,7 @@ describe("View gateway", () => {
     expect(gatewayGetFake).to.have.been.calledWith({
       procedure,
       name,
+      context,
       internalTokenFn,
       externalTokenFn,
       key: "access",
@@ -275,7 +273,7 @@ describe("View gateway", () => {
     expect(authorizationFake).to.have.been.calledWith({
       permissionsLookupFn,
       terminatedSessionCheckFn,
-      context: subcontext,
+      context,
       permissions: [
         {
           service: permissionService,
@@ -324,7 +322,7 @@ describe("View gateway", () => {
 
     const permissions = "none";
     const name = "some-name";
-    const views = [{ name, procedure, permissions, context, subcontext }];
+    const views = [{ name, procedure, permissions, context }];
 
     const verifyFnResult = "some-verify-fn";
     const verifyFnFake = fake.returns(verifyFnResult);
@@ -382,7 +380,7 @@ describe("View gateway", () => {
       permissionsLookupFn,
       terminatedSessionCheckFn,
       permissions: "none",
-      context: subcontext,
+      context,
     });
   });
   it("should call with the correct params with store key", async () => {
@@ -554,7 +552,7 @@ describe("View gateway", () => {
         network: viewNetwork,
       },
       { name: name2, procedure, protection: "none" },
-      { name: name3, procedure, permissions, subcontext },
+      { name: name3, procedure, permissions },
     ];
 
     const verifyFnResult = "some-verify-fn";
@@ -635,7 +633,7 @@ describe("View gateway", () => {
     expect(authorizationFake).to.have.been.calledWith({
       permissionsLookupFn,
       terminatedSessionCheckFn,
-      context: subcontext,
+      context,
       permissions: [
         {
           service: permissionService,
@@ -680,7 +678,7 @@ describe("View gateway", () => {
       `${permissionService}:${permissionDomain}:${permissionPrivilege}`,
     ];
     const name = "some-name";
-    const views = [{ name, procedure, permissions, subcontext }];
+    const views = [{ name, procedure, permissions }];
 
     const otherDomain = "some-other-domain";
     const otherService = "some-other-service";
@@ -717,7 +715,7 @@ describe("View gateway", () => {
     expect(authorizationFake).to.have.been.calledWith({
       permissionsLookupFn,
       terminatedSessionCheckFn,
-      context: subcontext,
+      context: otherContext,
       permissions: [
         {
           service: permissionService,

@@ -32,7 +32,7 @@ module.exports = async ({
     privileges,
     protection = "strict",
     basic = false,
-    context,
+    subcontext,
   } of commands) {
     server = server.post(
       deps.post({
@@ -46,7 +46,6 @@ module.exports = async ({
       }),
       {
         path: `/${name}`,
-        // ...(protection != "none" && {
         preMiddleware: [
           deps.authentication({
             verifyFn: verifyFn({ key }),
@@ -62,7 +61,7 @@ module.exports = async ({
                 deps.authorization({
                   permissionsLookupFn,
                   terminatedSessionCheckFn,
-                  context,
+                  context: subcontext,
                   permissions:
                     privileges instanceof Array
                       ? privileges.map((privilege) => {
@@ -73,7 +72,6 @@ module.exports = async ({
               ]
             : []),
         ],
-        // }),
       }
     );
   }
