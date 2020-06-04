@@ -58,6 +58,16 @@ const validateObject = ({ object, expectation, path, aud }) => {
 
       continue;
     }
+
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log({
+      property,
+      type: expectation[property].type,
+      object,
+      objProp: object[property],
+      in: expectation[property].in,
+    });
     const error = validator.findError([
       validator[expectation[property].type || "object"](object[property], {
         title: expectation[property].title || property,
