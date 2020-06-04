@@ -41,7 +41,12 @@ module.exports = ({
       `--set-env-vars=${Object.entries({
         NODE_ENV: nodeEnv,
         NETWORK: `${envUriSpecifier}${network}`,
-        CORE_NETWORK: `${envUriSpecifier}${coreNetwork}`,
+        CORE_NETWORK:
+          coreNetwork == network
+            ? `${envUriSpecifier}${coreNetwork}`
+            : nodeEnv == "production"
+            ? coreNetwork
+            : `snd.${coreNetwork}`,
         HOST: `${region}.${envUriSpecifier}${network}`,
         PROCEDURE: procedure,
         OPERATION_HASH: operationHash,

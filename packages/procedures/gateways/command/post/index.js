@@ -28,7 +28,9 @@ module.exports = ({
             : externalTokenFn({ network, key }),
         key,
       },
+      //TODO no need to send context, token, claims if network != process.env.NETWORK
       context: req.context,
+      ...(req.token && { token: req.token }),
       claims: req.claims,
     })
     .issue(payload, { ...headers, root });

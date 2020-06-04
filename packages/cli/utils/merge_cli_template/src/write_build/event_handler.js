@@ -76,7 +76,7 @@ module.exports = ({
       secretBucket,
       secretBucketKeyRing,
       secretBucketKeyLocation,
-      coreNetwork,
+      // coreNetwork,
       custom: {
         ...(domain && { DOMAIN: domain }),
         ...(service && { SERVICE: service }),

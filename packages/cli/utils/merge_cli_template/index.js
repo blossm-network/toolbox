@@ -434,15 +434,11 @@ const addDefaultDependencies = ({ config, coreNetwork }) => {
           procedure: "command",
         },
         {
-          procedure: "http",
-          host: `c.updates.system.${coreNetwork}`,
-          mocks: [
-            {
-              method: "post",
-              path: "/push",
-              code: 200,
-            },
-          ],
+          name: "push",
+          domain: "updates",
+          service: "system",
+          network: coreNetwork,
+          production: "command-gateway",
         },
       ];
     case "event-handler":
@@ -516,7 +512,7 @@ const addDefaultDependencies = ({ config, coreNetwork }) => {
   }
 };
 
-const writeConfig = ({ config, coreNetwork, workingDir }) => {
+const writeConfig = ({ config, coreNetwork, workingDir, env }) => {
   const newConfigPath = path.resolve(workingDir, "config.json");
   if (!config.testing) config.testing = {};
   if (!config.testing.dependencies) config.testing.dependencies = [];
@@ -524,6 +520,67 @@ const writeConfig = ({ config, coreNetwork, workingDir }) => {
   const { dependencies, events } = resolveTransientInfo(
     addDefaultDependencies({ config, coreNetwork })
   );
+
+  const adjustedDependencies = [];
+  for (const dependency of config.testing.dependencies) {
+    switch (config.procedure) {
+      case "command-gateway":
+        adjustedDependencies.push({
+          procedure: "http",
+          host: `c.${dependency.domain}.${dependency.service}${
+            // env == "production" ? ".snd" : ""
+            "dev"
+          }.${coreNetwork}`,
+          mocks: [
+            {
+              method: "post",
+              path: `/${dependency.name}`,
+              code: 202,
+            },
+          ],
+        });
+        break;
+      case "view-gateway":
+        adjustedDependencies.push({
+          procedure: "http",
+          host: `v.${dependency.domain}.${dependency.service}${
+            // env == "production" ? ".snd" : ""
+            "dev"
+          }.${coreNetwork}`,
+          mocks: [
+            {
+              method: "get",
+              path: `/${dependency.name}`,
+              code: 200,
+            },
+          ],
+        });
+
+        if (!dependency.procedure) {
+          adjustedDependencies.push(dependency);
+          continue;
+        }
+        break;
+      case "fact-gateway":
+        adjustedDependencies.push({
+          procedure: "http",
+          host: `f.${dependency.domain}.${dependency.service}${
+            // env == "production" ? ".snd" : ""
+            "dev"
+          }.${coreNetwork}`,
+          mocks: [
+            {
+              method: "get",
+              path: `/${dependency.name}`,
+              code: 200,
+            },
+          ],
+        });
+        break;
+      default:
+        adjustedDependencies.push(dependency);
+    }
+  }
 
   config.testing = {
     ...config.testing,
@@ -619,7 +676,7 @@ const configure = async (workingDir, configFn, env, strict) => {
 
     const mainContainerName = "main";
 
-    writeConfig({ config, coreNetwork, workingDir });
+    writeConfig({ config, coreNetwork, workingDir, env });
 
     writeBuild({
       workingDir,

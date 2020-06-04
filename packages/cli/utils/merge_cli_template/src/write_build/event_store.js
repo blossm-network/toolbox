@@ -65,7 +65,7 @@ module.exports = ({
       project,
       procedure,
       operationHash,
-      coreNetwork,
+      // coreNetwork,
       region,
       secretBucket,
       secretBucketKeyRing,

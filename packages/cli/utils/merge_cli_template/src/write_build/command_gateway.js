@@ -63,7 +63,7 @@ module.exports = ({
       mainContainerName,
       project,
       region,
-      coreNetwork,
+      // coreNetwork,
       procedure,
       operationHash,
       secretBucket,
