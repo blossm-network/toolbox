@@ -4,9 +4,14 @@ const server = express();
 
 const mocks = JSON.parse(process.env.MOCKS);
 
+const counts = {};
+
 for (const mock of mocks) {
+  const key = `${mock.method}-${mock.path}`;
+  counts[key] = 0;
   server[mock.method.toLowerCase()](mock.path, (_, res) => {
-    res.status(mock.code).send(mock.response);
+    const count = counts[key]++;
+    res.status(mock.calls[count].code).send(mock.calls[count].response);
   });
 }
 
