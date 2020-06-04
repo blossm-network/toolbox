@@ -10,7 +10,7 @@ describe("Command handler store validator tests", () => {
     try {
       for (const payload of testing.validate.ok)
         await validate(payload, {
-          ...(testing.validate.aud && { aud: testing.valdiate.aud }),
+          ...(testing.validate.aud && { aud: testing.validate.aud }),
         });
     } catch (e) {
       //shouldn't get called.
