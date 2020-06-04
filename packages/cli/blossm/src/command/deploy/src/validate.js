@@ -54,6 +54,13 @@ const validateObject = ({ object, expectation, path, aud }) => {
         path: `${path}.${property}`,
         ...(expectation[property].in && {
           fn: (value) => {
+            //TODO
+            //eslint-disable-next-line no-console
+            console.log("yep: ", {
+              in: expectation[property].in,
+              aud,
+              value,
+            });
             if (expectation[property].in == "$aud") {
               if (!aud) return false;
               return aud.split(",").includes(value);
