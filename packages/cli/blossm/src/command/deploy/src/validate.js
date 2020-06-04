@@ -36,6 +36,7 @@ const validateObject = ({ object, expectation, path, aud }) => {
             object: item,
             expectation: expectation[property].type[0],
             path: `${path}.${property}`,
+            ...(aud && { aud }),
           });
         } else {
           validator[expectation[property].type[0]](item, {
@@ -79,6 +80,7 @@ const validateObject = ({ object, expectation, path, aud }) => {
         object: object[property],
         expectation: expectation[property].properties,
         path: `${path}.${property}`,
+        ...(aud && { aud }),
       });
     }
     if (!expectation[property].type) {
@@ -86,6 +88,7 @@ const validateObject = ({ object, expectation, path, aud }) => {
         object: object[property],
         expectation: expectation[property],
         path: `${path}.${property}`,
+        ...(aud && { aud }),
       });
     }
   }
