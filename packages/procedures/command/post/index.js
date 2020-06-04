@@ -9,7 +9,10 @@ module.exports = ({
   addFn,
 }) => {
   return async (req, res) => {
-    if (validateFn) await validateFn(req.body.payload);
+    if (validateFn)
+      await validateFn(req.body.payload, {
+        ...(req.body.claims && { aud: req.body.claims.aud }),
+      });
     if (fillFn) req.body.payload = await fillFn(req.body.payload);
     if (normalizeFn) req.body.payload = await normalizeFn(req.body.payload);
 
@@ -24,11 +27,11 @@ module.exports = ({
       ...(req.body.root && { root: req.body.root }),
       ...(req.body.options && { options: req.body.options }),
       ...(req.body.token && { token: req.body.token }),
-      claims: req.body.claims,
-      context: req.body.context,
+      ...(req.body.claims && { claims: req.body.claims }),
+      ...(req.body.context && { context: req.body.context }),
       aggregateFn: aggregateFn({
-        context: req.body.context,
-        claims: req.body.claims,
+        ...(req.body.context && { context: req.body.context }),
+        ...(req.body.claims && { claims: req.body.claims }),
       }),
     });
 
@@ -92,8 +95,8 @@ module.exports = ({
           addFn({
             domain,
             service,
-            context: req.body.context,
-            claims: req.body.claims,
+            ...(req.body.context && { context: req.body.context }),
+            ...(req.body.claims && { claims: req.body.claims }),
             events: eventsPerStore[service][domain],
           })
         );

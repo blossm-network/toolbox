@@ -90,8 +90,6 @@ describe("Command handler post", () => {
       body: {
         payload,
         headers,
-        context,
-        claims,
       },
     };
 
@@ -117,13 +115,11 @@ describe("Command handler post", () => {
       aggregateFn: aggregateFnFake,
     })(req, res);
 
-    expect(aggregateFnFake).to.have.been.calledWith({ context, claims });
+    expect(aggregateFnFake).to.have.been.calledWith({});
     expect(normalizeFnFake).to.have.been.calledWith(payload);
     expect(validateFnFake).to.have.been.calledWith(payload);
     expect(mainFnFake).to.have.been.calledWith({
       payload: cleanedPayload,
-      context,
-      claims,
       aggregateFn,
     });
 
@@ -153,8 +149,6 @@ describe("Command handler post", () => {
     expect(addFnFake).to.have.been.calledWith({
       domain,
       service,
-      context,
-      claims,
       events: [
         {
           data: event,
@@ -195,8 +189,6 @@ describe("Command handler post", () => {
       body: {
         payload,
         headers,
-        context,
-        claims,
       },
     };
 
@@ -222,13 +214,11 @@ describe("Command handler post", () => {
       aggregateFn: aggregateFnFake,
     })(req, res);
 
-    expect(aggregateFnFake).to.have.been.calledWith({ context, claims });
+    expect(aggregateFnFake).to.have.been.calledWith({});
     expect(normalizeFnFake).to.have.been.calledWith(payload);
     expect(validateFnFake).to.have.been.calledWith(payload);
     expect(mainFnFake).to.have.been.calledWith({
       payload: cleanedPayload,
-      context,
-      claims,
       aggregateFn,
     });
 
@@ -258,8 +248,6 @@ describe("Command handler post", () => {
     expect(addFnFake).to.have.been.calledWith({
       domain,
       service,
-      context,
-      claims,
       events: [
         {
           data: event,
@@ -299,8 +287,6 @@ describe("Command handler post", () => {
           ...headers,
           path: [otherPath],
         },
-        context,
-        claims,
       },
     };
 
@@ -382,8 +368,6 @@ describe("Command handler post", () => {
       body: {
         payload,
         headers,
-        context,
-        claims,
       },
     };
 
@@ -410,7 +394,7 @@ describe("Command handler post", () => {
       addFn: addFnFake,
     })(req, res);
 
-    expect(aggregateFnFake).to.have.been.calledWith({ context, claims });
+    expect(aggregateFnFake).to.have.been.calledWith({});
     expect(fillFnFake).to.have.been.calledWith(payload);
     expect(normalizeFnFake).to.have.been.calledWith(filledPayload);
     expect(validateFnFake).to.have.been.calledWith(payload);
@@ -441,8 +425,6 @@ describe("Command handler post", () => {
       body: {
         payload,
         headers,
-        context,
-        claims,
       },
     };
 
@@ -468,7 +450,7 @@ describe("Command handler post", () => {
       addFn: addFnFake,
     })(req, res);
 
-    expect(aggregateFnFake).to.have.been.calledWith({ context, claims });
+    expect(aggregateFnFake).to.have.been.calledWith({});
     expect(thenFnFake).to.have.been.calledWith();
     expect(normalizeFnFake).to.have.been.calledWith(payload);
     expect(validateFnFake).to.have.been.calledWith(payload);
@@ -496,8 +478,6 @@ describe("Command handler post", () => {
       body: {
         payload,
         headers,
-        context,
-        claims,
       },
     };
 
@@ -523,20 +503,16 @@ describe("Command handler post", () => {
       addFn: addFnFake,
     })(req, res);
 
-    expect(aggregateFnFake).to.have.been.calledWith({ context, claims });
+    expect(aggregateFnFake).to.have.been.calledWith({});
     expect(normalizeFnFake).to.have.been.calledWith(payload);
     expect(validateFnFake).to.have.been.calledWith(payload);
     expect(mainFnFake).to.have.been.calledWith({
       payload: cleanedPayload,
-      context,
-      claims,
       aggregateFn,
     });
     expect(addFnFake).to.have.been.calledWith({
       domain,
       service,
-      context,
-      claims,
       events: [{ data: event, number: correctNumber }],
     });
 
@@ -585,8 +561,6 @@ describe("Command handler post", () => {
       body: {
         payload,
         headers,
-        context,
-        claims,
       },
     };
 
@@ -612,13 +586,11 @@ describe("Command handler post", () => {
       addFn: addFnFake,
     })(req, res);
 
-    expect(aggregateFnFake).to.have.been.calledWith({ context, claims });
+    expect(aggregateFnFake).to.have.been.calledWith({});
     expect(normalizeFnFake).to.have.been.calledWith(payload);
     expect(validateFnFake).to.have.been.calledWith(payload);
     expect(mainFnFake).to.have.been.calledWith({
       payload: cleanedPayload,
-      context,
-      claims,
       aggregateFn,
     });
 
@@ -643,8 +615,6 @@ describe("Command handler post", () => {
       body: {
         payload,
         headers,
-        context,
-        claims,
       },
     };
 
@@ -667,13 +637,11 @@ describe("Command handler post", () => {
       addFn: addFnFake,
     })(req, res);
 
-    expect(aggregateFnFake).to.have.been.calledWith({ context, claims });
+    expect(aggregateFnFake).to.have.been.calledWith({});
     expect(normalizeFnFake).to.have.been.calledWith(payload);
     expect(validateFnFake).to.have.been.calledWith(payload);
     expect(mainFnFake).to.have.been.calledWith({
       payload: cleanedPayload,
-      context,
-      claims,
       aggregateFn,
     });
 
@@ -810,8 +778,6 @@ describe("Command handler post", () => {
       body: {
         payload,
         headers,
-        context,
-        claims,
       },
     };
 
@@ -835,19 +801,15 @@ describe("Command handler post", () => {
       addFn: addFnFake,
     })(req, res);
 
-    expect(aggregateFnFake).to.have.been.calledWith({ context, claims });
+    expect(aggregateFnFake).to.have.been.calledWith({});
     expect(mainFnFake).to.have.been.calledWith({
       payload,
-      context,
-      claims,
       aggregateFn,
     });
 
     expect(addFnFake).to.have.been.calledWith({
       domain,
       service,
-      context,
-      claims,
       events: [{ data: event }],
     });
     expect(createEventFake).to.have.been.calledWith({

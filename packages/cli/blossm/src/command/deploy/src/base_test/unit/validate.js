@@ -8,7 +8,10 @@ describe("Command handler store validator tests", () => {
   it("should handle correct payload correctly", async () => {
     if (!testing.validate || !testing.validate.ok) return;
     try {
-      for (const payload of testing.validate.ok) await validate(payload);
+      for (const payload of testing.validate.ok)
+        await validate(payload, {
+          ...(testing.validate.aud && { aud: testing.valdiate.aud }),
+        });
     } catch (e) {
       //shouldn't get called.
       expect(1).to.equal(0);
@@ -20,10 +23,15 @@ describe("Command handler store validator tests", () => {
     for (const value of testing.validate.bad) {
       try {
         await validate(
-          createBadPayload({
-            bad: value,
-            ok: testing.validate.ok[0] || {},
-          })
+          createBadPayload(
+            {
+              bad: value,
+              ok: testing.validate.ok[0] || {},
+            },
+            {
+              ...(testing.validate.aud && { aud: testing.valdiate.aud }),
+            }
+          )
         );
 
         //shouldn't get called.

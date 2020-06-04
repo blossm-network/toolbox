@@ -30,8 +30,8 @@ module.exports = command({
   ) => {
     const { body: aggregate } = await eventStore({ domain, service, network })
       .set({
-        context,
-        claims,
+        ...(context && { context }),
+        ...(claims && { claims }),
         token: { internalFn: gcpToken },
       })
       .aggregate(root);
@@ -44,8 +44,8 @@ module.exports = command({
   addFn: ({ domain, service, context, claims, events }) =>
     eventStore({ domain, service })
       .set({
-        context,
-        claims,
+        ...(context && { context }),
+        ...(claims && { claims }),
         token: { internalFn: gcpToken },
       })
       .add(events),

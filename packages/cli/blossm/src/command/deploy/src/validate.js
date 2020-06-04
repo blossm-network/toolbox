@@ -2,7 +2,7 @@ const validator = require("@blossm/validator");
 
 const config = require("./config.json");
 
-const validateObject = ({ object, expectation, path }) => {
+const validateObject = ({ object, expectation, path, aud }) => {
   for (const property in expectation) {
     if (
       typeof expectation[property] == "string" ||
@@ -53,7 +53,14 @@ const validateObject = ({ object, expectation, path }) => {
         title: expectation[property].title || property,
         path: `${path}.${property}`,
         ...(expectation[property].in && {
-          fn: (value) => expectation[property].in.includes(value),
+          fn: (value) => {
+            if (expectation[property].in == "$aud") {
+              if (!aud) return false;
+              return aud.split(",").includes(value);
+            } else {
+              return expectation[property].in.includes(value);
+            }
+          },
         }),
         optional:
           expectation[property].optional || expectation[property].default,
@@ -77,9 +84,10 @@ const validateObject = ({ object, expectation, path }) => {
   }
 };
 
-module.exports = async (payload) =>
+module.exports = async (payload, { aud }) =>
   validateObject({
     object: payload,
     expectation: config.payload,
     path: "payload",
+    ...(aud != undefined && { aud }),
   });
