@@ -3,6 +3,10 @@ const validator = require("@blossm/validator");
 const config = require("./config.json");
 
 const validateObject = ({ object, expectation, path, aud }) => {
+  //TODO
+  //eslint-disable-next-line no-console
+  console.log({ path, aud, expectation });
+
   for (const property in expectation) {
     if (
       typeof expectation[property] == "string" ||
