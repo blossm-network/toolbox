@@ -522,7 +522,7 @@ const writeConfig = ({ config, coreNetwork, workingDir }) => {
   );
 
   const adjustedDependencies = [];
-  for (const dependency of config.testing.dependencies) {
+  for (const dependency of dependencies) {
     switch (dependency.procedure) {
       case "command-gateway":
         adjustedDependencies.push({
@@ -596,7 +596,7 @@ const writeConfig = ({ config, coreNetwork, workingDir }) => {
 
   config.testing = {
     ...config.testing,
-    dependencies,
+    dependencies: adjustedDependencies,
     topics: topicsForDependencies(config, events),
   };
 
