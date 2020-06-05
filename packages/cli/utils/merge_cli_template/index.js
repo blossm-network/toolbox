@@ -527,11 +527,7 @@ const writeConfig = ({ config, coreNetwork, workingDir }) => {
       case "command-gateway":
         adjustedDependencies.push({
           procedure: "http",
-          host: `c.${dependency.domain}.${dependency.service}${
-            //TODO
-            // env == "production" ? ".snd" : ""
-            ".dev"
-          }.${coreNetwork}`,
+          host: `c.${dependency.domain}.${dependency.service}.${coreNetwork}`,
           mocks: [
             {
               method: "post",
@@ -550,10 +546,8 @@ const writeConfig = ({ config, coreNetwork, workingDir }) => {
           procedure: "http",
           host: `v.${dependency.domain}${
             dependency.service ? `.${dependency.service}` : ""
-          }${dependency.context ? `.${dependency.context}` : ""}${
-            //TODO
-            // env == "production" ? ".snd" : ""
-            ".dev"
+          }${
+            dependency.context ? `.${dependency.context}` : ""
           }.${coreNetwork}`,
           mocks: dependency.mocks.map((mock) => {
             return {
@@ -576,10 +570,6 @@ const writeConfig = ({ config, coreNetwork, workingDir }) => {
           procedure: "http",
           host: `f${dependency.domain ? `.${dependency.domain}` : ""}${
             dependency.service ? `.${dependency.service}` : ""
-          }${
-            //TODO
-            // env == "production" ? ".snd" : ""
-            ".dev"
           }.${coreNetwork}`,
           mocks: dependency.mocks.map((mock) => {
             return {
