@@ -159,6 +159,7 @@ describe("Fact", () => {
       externalTokenFn,
       key,
       claims,
+      path: `/${name}`,
     });
   });
   it("should call stream with the correct params", async () => {

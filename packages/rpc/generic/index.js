@@ -89,7 +89,7 @@ const common = ({ method, dataParam, operation, id, data }) => {
               network,
               token,
             });
-            const parsedBody = response.body ? JSON.parse(response.body) : null;
+            const parsedBody = response.body ? jsonString(response.body) : null;
             throw deps.constructError({
               statusCode: response.statusCode,
               message: parsedBody.message || "Not specified",

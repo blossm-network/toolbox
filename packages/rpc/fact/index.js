@@ -35,6 +35,7 @@ module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
         ...(externalTokenFn && { externalTokenFn }),
         ...(key && { key }),
         ...(claims && { claims }),
+        ...(!internal && { path: `/${name}` }),
       });
   };
   const stream = ({
