@@ -1,5 +1,5 @@
 const gateway = require("@blossm/view-gateway");
-const { verify: verifyGCP } = require("@blossm/gcp-kms");
+const { verify: verifyGcp } = require("@blossm/gcp-kms");
 const verify = require("@blossm/verify-access-token");
 const gcpToken = require("@blossm/gcp-token");
 const terminatedSession = require("@blossm/terminated-session");
@@ -26,12 +26,12 @@ module.exports = gateway({
   }),
   terminatedSessionCheckFn: terminatedSession({ token: gcpToken }),
   verifyFn: ({ key }) =>
-    key == "access"
+    key == "access" && process.env.NODE_ENV != "local"
       ? verify({
           url: process.env.PUBLIC_KEY_URL,
           algorithm: "SHA256",
         })
-      : verifyGCP({
+      : verifyGcp({
           ring: "jwt",
           key,
           location: "global",
