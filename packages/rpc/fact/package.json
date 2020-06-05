@@ -1,7 +1,7 @@
 {
   "name": "@blossm/fact-rpc",
   "description": "Gets a fact.",
-  "version": "0.0.65",
+  "version": "0.0.66",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -14,7 +14,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/rpc": "^0.0.136"
+    "@blossm/rpc": "^0.0.137"
   },
   "devDependencies": {
     "chai-datetime": "^1.5.0",
