@@ -3,13 +3,7 @@ const validator = require("@blossm/validator");
 const config = require("./config.json");
 
 const validateObject = ({ object, expectation, path, aud }) => {
-  //TODO
-  //eslint-disable-next-line no-console
-  console.log({ expectation, aud });
   for (const property in expectation) {
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log({ property, value: expectation[property] });
     if (
       typeof expectation[property] == "string" ||
       expectation[property] instanceof Array
@@ -37,9 +31,6 @@ const validateObject = ({ object, expectation, path, aud }) => {
       if (error) throw error;
 
       for (const item of object[property]) {
-        //TODO
-        //eslint-disable-next-line no-console
-        console.log({ item });
         if (typeof item == "object") {
           validateObject({
             object: item,
@@ -59,28 +50,12 @@ const validateObject = ({ object, expectation, path, aud }) => {
       continue;
     }
 
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log({
-      property,
-      type: expectation[property].type,
-      object,
-      objProp: object[property],
-      in: expectation[property].in,
-    });
     const error = validator.findError([
       validator[expectation[property].type || "object"](object[property], {
         title: expectation[property].title || property,
         path: `${path}.${property}`,
         ...(expectation[property].in && {
           fn: (value) => {
-            //TODO
-            //eslint-disable-next-line no-console
-            console.log("yep: ", {
-              in: expectation[property].in,
-              aud,
-              value,
-            });
             if (expectation[property].in == "$aud") {
               if (!aud) return false;
               return aud.split(",").includes(value);
@@ -114,9 +89,6 @@ const validateObject = ({ object, expectation, path, aud }) => {
 };
 
 module.exports = async (payload, { aud } = {}) => {
-  //TODO
-  //eslint-disable-next-line no-console
-  console.log({ payload, aud });
   return validateObject({
     object: payload,
     expectation: config.payload,
