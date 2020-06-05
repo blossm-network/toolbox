@@ -11,8 +11,9 @@ for (const mock of mocks) {
   counts[key] = 0;
   server[mock.method.toLowerCase()](mock.path, (_, res) => {
     const count = counts[key]++;
-    const code = mock.calls[count].code || mock.code;
-    const response = mock.calls[count].response || mock.response;
+    const code = (mock.calls && mock.calls[count].code) || mock.code;
+    const response =
+      (mock.calls && mock.calls[count].response) || mock.response;
     res.status(code).send(response);
   });
 }

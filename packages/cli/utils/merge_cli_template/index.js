@@ -535,8 +535,9 @@ const writeConfig = ({ config, coreNetwork, workingDir }) => {
             return {
               method: "post",
               path: `/${dependency.name}`,
-              code: mock.code,
-              calls: mock.calls,
+              ...(mock.code && { code: mock.code }),
+              ...(mock.response && { response: mock.response }),
+              ...(mock.calls && { calls: mock.calls }),
             };
           }),
         });
@@ -554,8 +555,9 @@ const writeConfig = ({ config, coreNetwork, workingDir }) => {
             return {
               method: "get",
               path: `/${dependency.name}`,
-              code: mock.code,
-              calls: mock.calls,
+              ...(mock.code && { code: mock.code }),
+              ...(mock.response && { response: mock.response }),
+              ...(mock.calls && { calls: mock.calls }),
             };
           }),
         });
@@ -578,8 +580,9 @@ const writeConfig = ({ config, coreNetwork, workingDir }) => {
             return {
               method: "get",
               path: `/${dependency.name}`,
-              code: mock.code,
-              calls: mock.calls,
+              ...(mock.code && { code: mock.code }),
+              ...(mock.response && { response: mock.response }),
+              ...(mock.calls && { calls: mock.calls }),
             };
           }),
         });
