@@ -64,12 +64,11 @@ const common = ({ method, dataParam, operation, id, data }) => {
           const response = await method(url, {
             [dataParam]: {
               ...(data && { ...data }),
-              ...(context && { context }),
-              ...(claims && { claims }),
-              ...(token &&
-                internal && {
-                  token,
-                }),
+              ...(internal && {
+                ...(context && { context }),
+                ...(claims && { claims }),
+                ...(token && { token }),
+              }),
             },
             ...(token && {
               headers: {

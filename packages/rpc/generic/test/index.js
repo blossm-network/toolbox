@@ -123,6 +123,12 @@ describe("Operation", () => {
       .in({ context, network: otherNetwork, host: otherHost })
       .with({ externalTokenFn: tokenFn, key, claims });
 
+    expect(post).to.have.been.calledWith(url, {
+      body: data,
+      headers: {
+        Authorization: `${type} ${token}`,
+      },
+    });
     expect(networkTokenFake).to.have.been.calledWith({
       tokenFn,
       network: otherNetwork,

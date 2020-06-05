@@ -32,10 +32,8 @@ module.exports = ({
             : externalTokenFn({ network, key }),
         key,
       },
-      ...(network == process.env.NETWORK && {
-        context: req.context,
-        claims: req.claims,
-      }),
+      ...(req.context && { context: req.context }),
+      ...(req.claims && { claims: req.claims }),
     })
     .issue(payload, { ...headers, root });
 

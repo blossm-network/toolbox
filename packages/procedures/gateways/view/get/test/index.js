@@ -10,6 +10,7 @@ const name = "some-name";
 const service = "some-service";
 const domain = "some-domain";
 const context = "some-context";
+const claims = "some-claims";
 const root = "some-root";
 
 const internalTokenFn = "some-internal-token-fn";
@@ -42,7 +43,6 @@ describe("View gateway get", () => {
     replace(deps, "viewStore", viewStoreFake);
 
     const req = {
-      context,
       query,
       params: {},
     };
@@ -67,7 +67,6 @@ describe("View gateway get", () => {
 
     expect(viewStoreFake).to.have.been.calledWith({ name });
     expect(setFake).to.have.been.calledWith({
-      context,
       token: {
         internalFn: internalTokenFn,
         externalFn: match((fn) => {
@@ -101,7 +100,6 @@ describe("View gateway get", () => {
 
     const reqToken = "some-req-token";
     const req = {
-      context,
       query,
       params: {},
       token: reqToken,
@@ -139,7 +137,6 @@ describe("View gateway get", () => {
       network,
     });
     expect(setFake).to.have.been.calledWith({
-      context,
       token: {
         internalFn: internalTokenFn,
         externalFn: match((fn) => {
@@ -152,7 +149,7 @@ describe("View gateway get", () => {
     expect(readFake).to.have.been.calledWith(query);
     expect(sendFake).to.have.been.calledWith(results);
   });
-  it("should call with the correct params with context, domain, params with view-store procedure, token in req", async () => {
+  it("should call with the correct params with context, domain, params with view-store procedure, token, context, and claims in req", async () => {
     const readFake = fake.returns({ body: results });
     const setFake = fake.returns({
       read: readFake,
@@ -164,6 +161,7 @@ describe("View gateway get", () => {
 
     const reqToken = "some-req-token";
     const req = {
+      claims,
       context,
       query,
       token: reqToken,
@@ -199,6 +197,7 @@ describe("View gateway get", () => {
       service,
     });
     expect(setFake).to.have.been.calledWith({
+      claims,
       context,
       token: {
         internalFn: internalTokenFn,
@@ -256,7 +255,6 @@ describe("View gateway get", () => {
     replace(deps, "viewComposite", viewCompositeFake);
 
     const req = {
-      context,
       query,
       params: {},
     };
@@ -281,7 +279,6 @@ describe("View gateway get", () => {
 
     expect(viewCompositeFake).to.have.been.calledWith({ name });
     expect(setFake).to.have.been.calledWith({
-      context,
       token: {
         internalFn: internalTokenFn,
         externalFn: match((fn) => {
@@ -303,7 +300,7 @@ describe("View gateway get", () => {
     expect(readFake).to.have.been.calledWith(query);
     expect(sendFake).to.have.been.calledWith(results);
   });
-  it("should call with the correct params with context, domain, root with view-composite procedure, and token in req", async () => {
+  it("should call with the correct params with context, domain, root with view-composite procedure, and token, context, and claims in req", async () => {
     const readFake = fake.returns({ body: results });
     const setFake = fake.returns({
       read: readFake,
@@ -315,6 +312,7 @@ describe("View gateway get", () => {
 
     const reqToken = "some-req-token";
     const req = {
+      claims,
       context,
       query,
       token: reqToken,
@@ -349,6 +347,7 @@ describe("View gateway get", () => {
       service,
     });
     expect(setFake).to.have.been.calledWith({
+      claims,
       context,
       token: {
         internalFn: internalTokenFn,

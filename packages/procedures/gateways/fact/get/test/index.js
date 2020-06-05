@@ -34,8 +34,6 @@ describe("Fact gateway get", () => {
     replace(deps, "fact", factFake);
 
     const req = {
-      context,
-      claims,
       query,
     };
 
@@ -65,8 +63,6 @@ describe("Fact gateway get", () => {
       domain,
     });
     expect(setFake).to.have.been.calledWith({
-      context,
-      claims,
       token: {
         internalFn: internalTokenFn,
         externalFn: match((fn) => {
@@ -89,7 +85,7 @@ describe("Fact gateway get", () => {
     expect(sendFake).to.have.been.calledWith(results);
     expect(setResponseFake).to.have.been.calledWith({});
   });
-  it("should call with the correct params when headers are passed back and token in req", async () => {
+  it("should call with the correct params when headers are passed back and token, claims, context in req", async () => {
     const headers = "some-headers";
     const readFake = fake.returns({ body: results, headers });
     const setFake = fake.returns({

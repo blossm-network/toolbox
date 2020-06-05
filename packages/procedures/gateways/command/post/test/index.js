@@ -54,8 +54,6 @@ describe("Command gateway post", () => {
     replace(deps, "command", commandFake);
 
     const req = {
-      context,
-      claims,
       body,
       params: {},
     };
@@ -105,8 +103,6 @@ describe("Command gateway post", () => {
         }),
         key,
       },
-      context,
-      claims,
     });
     expect(issueFake).to.have.been.calledWith(payload, {
       ...headers,
@@ -115,7 +111,7 @@ describe("Command gateway post", () => {
     expect(statusFake).to.have.been.calledWith(statusCode);
     expect(sendFake).to.have.been.calledWith(response);
   });
-  it("should call with the correct params on a different network and different service", async () => {
+  it("should call with the correct params on a different network and different service, with claims and context", async () => {
     const validateFake = fake();
     replace(deps, "validate", validateFake);
 
@@ -187,6 +183,8 @@ describe("Command gateway post", () => {
         internalFn: internalTokenFn,
         key,
       },
+      claims,
+      context,
     });
     expect(issueFake).to.have.been.calledWith(payload, {
       ...headers,

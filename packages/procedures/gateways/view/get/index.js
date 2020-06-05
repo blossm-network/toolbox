@@ -28,7 +28,8 @@ module.exports = ({
                 : externalTokenFn({ network, key }),
             key,
           },
-          context: req.context,
+          ...(req.context && { context: req.context }),
+          ...(req.claims && { claims: req.claims }),
         })
         .read({
           ...req.query,
@@ -54,7 +55,8 @@ module.exports = ({
                 : externalTokenFn({ network, key }),
             key,
           },
-          context: req.context,
+          ...(req.context && { context: req.context }),
+          ...(req.claims && { claims: req.claims }),
         })
         .read({
           ...req.query,
