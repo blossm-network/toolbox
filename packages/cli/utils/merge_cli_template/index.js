@@ -531,15 +531,17 @@ const writeConfig = ({ config, coreNetwork, workingDir }) => {
             // env == "production" ? ".snd" : ""
             ".dev"
           }.${coreNetwork}`,
-          mocks: dependency.mocks.map((mock) => {
-            return {
+          mocks: [
+            {
               method: "post",
               path: `/${dependency.name}`,
-              ...(mock.code && { code: mock.code }),
-              ...(mock.response && { response: mock.response }),
-              ...(mock.calls && { calls: mock.calls }),
-            };
-          }),
+              ...(dependency.mock.code && { code: dependency.mock.code }),
+              ...(dependency.mock.response && {
+                response: dependency.mock.response,
+              }),
+              ...(dependency.mock.calls && { calls: dependency.mock.calls }),
+            },
+          ],
         });
         break;
       case "view-gateway":
