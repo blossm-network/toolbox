@@ -27,8 +27,6 @@ module.exports = ({
             ? { token: req.token, type: "Bearer" }
             : externalTokenFn({ network, key }),
         key,
-        ...(req.token &&
-          network == process.env.NETWORK && { current: req.token }),
       },
       ...(network == process.env.NETWORK && {
         context: req.context,

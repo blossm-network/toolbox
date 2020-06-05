@@ -201,7 +201,6 @@ describe("View gateway get", () => {
     expect(setFake).to.have.been.calledWith({
       context,
       token: {
-        current: reqToken,
         internalFn: internalTokenFn,
         externalFn: match((fn) => {
           const result = fn();

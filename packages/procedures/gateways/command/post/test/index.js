@@ -352,7 +352,6 @@ describe("Command gateway post", () => {
     });
     expect(setFake).to.have.been.calledWith({
       token: {
-        current: reqToken,
         internalFn: internalTokenFn,
         externalFn: match((fn) => {
           const result = fn();

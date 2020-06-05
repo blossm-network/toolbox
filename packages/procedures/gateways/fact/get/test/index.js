@@ -143,7 +143,6 @@ describe("Fact gateway get", () => {
           return result.token == reqToken && result.type == "Bearer";
         }),
         key,
-        current: reqToken,
       },
     });
     expect(readFake).to.have.been.calledWith(query);
