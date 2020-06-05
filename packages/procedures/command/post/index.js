@@ -9,6 +9,9 @@ module.exports = ({
   addFn,
 }) => {
   return async (req, res) => {
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log({ body: req.body });
     if (validateFn)
       await validateFn(req.body.payload, {
         ...(req.body.claims && { aud: req.body.claims.aud }),
