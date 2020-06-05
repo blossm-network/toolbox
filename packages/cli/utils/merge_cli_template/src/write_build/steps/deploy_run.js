@@ -21,13 +21,6 @@ module.exports = ({
   labels = "",
   allowUnauthenticated = false,
 } = {}) => {
-  //TODO
-  //eslint-disable-next-line no-console
-  console.log({
-    coreNetwork,
-    network,
-  });
-
   return {
     name: "gcr.io/cloud-builders/gcloud",
     args: [
