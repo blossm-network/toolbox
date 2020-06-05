@@ -17,7 +17,6 @@ module.exports = gateway({
   internalTokenFn: gcpToken,
   nodeExternalTokenFn: nodeExternalToken,
   permissionsLookupFn: permissionsLookup({
-    token: gcpToken,
     downloadFileFn: ({ fileName, extension }) =>
       downloadFile({
         bucket: process.env.GCP_ROLES_BUCKET,
