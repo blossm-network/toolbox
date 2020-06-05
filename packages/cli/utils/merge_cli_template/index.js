@@ -650,7 +650,7 @@ const configure = async (workingDir, configFn, env, strict) => {
     const baseCoreNetwork = (blossmConfig.core || {}).network || network;
     const coreNetwork =
       baseCoreNetwork == network
-        ? `${envUriSpecifier}${coreNetwork}`
+        ? `${envUriSpecifier}${baseCoreNetwork}`
         : env == "production"
         ? baseCoreNetwork
         : //TODO
