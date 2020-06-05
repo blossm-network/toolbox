@@ -130,6 +130,7 @@ describe("View gateway", () => {
             authorizationFake.calledWith({
               permissionsLookupFn,
               terminatedSessionCheckFn,
+              internalTokenFn,
               context,
               permissions: [
                 {
@@ -163,6 +164,7 @@ describe("View gateway", () => {
     expect(authorizationFake).to.have.been.calledWith({
       permissionsLookupFn,
       terminatedSessionCheckFn,
+      internalTokenFn,
       context,
       permissions: [
         {
@@ -273,6 +275,7 @@ describe("View gateway", () => {
     expect(authorizationFake).to.have.been.calledWith({
       permissionsLookupFn,
       terminatedSessionCheckFn,
+      internalTokenFn,
       context,
       permissions: [
         {
@@ -379,6 +382,7 @@ describe("View gateway", () => {
     expect(authorizationFake).to.have.been.calledWith({
       permissionsLookupFn,
       terminatedSessionCheckFn,
+      internalTokenFn,
       permissions: "none",
       context,
     });
@@ -477,6 +481,7 @@ describe("View gateway", () => {
             authorizationFake.calledWith({
               permissionsLookupFn,
               terminatedSessionCheckFn,
+              internalTokenFn,
               context,
               permissions: [
                 {
@@ -633,6 +638,7 @@ describe("View gateway", () => {
     expect(authorizationFake).to.have.been.calledWith({
       permissionsLookupFn,
       terminatedSessionCheckFn,
+      internalTokenFn,
       context,
       permissions: [
         {
@@ -715,6 +721,7 @@ describe("View gateway", () => {
     expect(authorizationFake).to.have.been.calledWith({
       permissionsLookupFn,
       terminatedSessionCheckFn,
+      internalTokenFn,
       context: otherContext,
       permissions: [
         {

@@ -54,6 +54,7 @@ module.exports = async ({
                   deps.authorization({
                     permissionsLookupFn,
                     terminatedSessionCheckFn,
+                    internalTokenFn,
                     context,
                     permissions:
                       privileges instanceof Array

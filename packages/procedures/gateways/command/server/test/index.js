@@ -109,6 +109,7 @@ describe("Command gateway", () => {
     expect(authorizationFake).to.have.been.calledWith({
       permissionsLookupFn,
       terminatedSessionCheckFn,
+      internalTokenFn,
       permissions: privileges.map((privilege) => {
         return { service, domain, privilege };
       }),
@@ -201,6 +202,7 @@ describe("Command gateway", () => {
     expect(authorizationFake).to.have.been.calledWith({
       permissionsLookupFn,
       terminatedSessionCheckFn,
+      internalTokenFn,
       context: subcontext,
       permissions: "none",
     });
@@ -376,6 +378,7 @@ describe("Command gateway", () => {
     expect(authorizationFake).to.have.been.calledWith({
       permissionsLookupFn,
       terminatedSessionCheckFn,
+      internalTokenFn,
       context: subcontext,
       permissions: privileges.map((privilege) => {
         return { service, domain, privilege };
@@ -444,6 +447,7 @@ describe("Command gateway", () => {
     expect(authorizationFake).to.have.been.calledWith({
       permissionsLookupFn,
       terminatedSessionCheckFn,
+      internalTokenFn,
       context: subcontext,
       permissions: privileges.map((privilege) => {
         return { service: otherService, domain: otherDomain, privilege };

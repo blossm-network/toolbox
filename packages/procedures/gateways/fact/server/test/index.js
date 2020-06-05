@@ -104,6 +104,7 @@ describe("Fact gateway", () => {
     expect(authorizationFake).to.have.been.calledWith({
       permissionsLookupFn,
       terminatedSessionCheckFn,
+      internalTokenFn,
       context,
       permissions: privileges.map((privilege) => {
         return { service, domain, privilege };
@@ -191,6 +192,7 @@ describe("Fact gateway", () => {
     expect(authorizationFake).to.have.been.calledWith({
       permissionsLookupFn,
       terminatedSessionCheckFn,
+      internalTokenFn,
       permissions: "none",
       context,
     });
@@ -358,6 +360,7 @@ describe("Fact gateway", () => {
     expect(authorizationFake).to.have.been.calledWith({
       permissionsLookupFn,
       terminatedSessionCheckFn,
+      internalTokenFn,
       context,
       permissions: privileges.map((privilege) => {
         return { service, domain, privilege };
@@ -425,6 +428,7 @@ describe("Fact gateway", () => {
     expect(authorizationFake).to.have.been.calledWith({
       permissionsLookupFn,
       terminatedSessionCheckFn,
+      internalTokenFn,
       context,
       permissions: privileges.map((privilege) => {
         return { service: otherService, domain: otherDomain, privilege };

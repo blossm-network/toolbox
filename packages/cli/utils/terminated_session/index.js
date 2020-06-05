@@ -1,7 +1,7 @@
 const fact = require("@blossm/fact-rpc");
 const { invalidCredentials } = require("@blossm/errors");
 
-module.exports = ({ token }) => async ({ session }) => {
+module.exports = async ({ session, token: { internalFn, externalFn } }) => {
   const { body: terminated } = await fact({
     name: "terminated",
     domain: "session",
@@ -9,7 +9,10 @@ module.exports = ({ token }) => async ({ session }) => {
     network: session.network,
   })
     .set({
-      token: { internalFn: token },
+      token: {
+        internalFn,
+        externalFn,
+      },
       context: { session },
     })
     .read();

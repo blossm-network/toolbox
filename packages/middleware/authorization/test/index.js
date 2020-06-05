@@ -1,10 +1,11 @@
 const { expect } = require("chai").use(require("sinon-chai"));
-const { restore, fake, replace } = require("sinon");
+const { restore, fake, replace, match } = require("sinon");
 const deps = require("../deps");
 const authorizationMiddleware = require("..");
 
 const permissionsLookupFn = "some-permissions-lookup-fn";
 const permissions = "some-permissions";
+const token = "some-token";
 
 const envNetwork = "some-env-network";
 const envService = "some-env-service";
@@ -13,6 +14,7 @@ process.env.SERVICE = envService;
 
 const session = "some-session";
 const principal = "some-principal";
+const internalTokenFn = "some-internal-token-fn";
 
 describe("Authorization middleware", () => {
   afterEach(() => {
@@ -26,6 +28,7 @@ describe("Authorization middleware", () => {
     const req = {
       path,
       context,
+      token,
     };
 
     const authorizationFake = fake();
@@ -37,6 +40,7 @@ describe("Authorization middleware", () => {
     await authorizationMiddleware({
       permissionsLookupFn,
       terminatedSessionCheckFn: terminatedSessionCheckFake,
+      internalTokenFn,
       permissions,
       context: contextKey,
     })(req, null, nextFake);
@@ -49,6 +53,13 @@ describe("Authorization middleware", () => {
     });
     expect(terminatedSessionCheckFake).to.have.been.calledWith({
       session,
+      token: {
+        internalTokenFn,
+        externalFn: match((fn) => {
+          const result = fn();
+          return result == token;
+        }),
+      },
     });
 
     expect(nextFake).to.have.been.calledOnce;
@@ -70,6 +81,7 @@ describe("Authorization middleware", () => {
     const nextFake = fake();
     await authorizationMiddleware({
       terminatedSessionCheckFn: terminatedSessionCheckFake,
+      internalTokenFn,
       permissions,
     })(req, null, nextFake);
 
@@ -96,6 +108,7 @@ describe("Authorization middleware", () => {
     await authorizationMiddleware({
       permissionsLookupFn,
       terminatedSessionCheckFn: terminatedSessionCheckFake,
+      internalTokenFn,
       permissions,
     })(req, null, nextFake);
 
@@ -120,6 +133,7 @@ describe("Authorization middleware", () => {
     await authorizationMiddleware({
       permissionsLookupFn,
       terminatedSessionCheckFn: terminatedSessionCheckFake,
+      internalTokenFn,
       permissions,
     })(req, null, nextFake);
 

@@ -24,7 +24,7 @@ module.exports = gateway({
         destination: fileName + extension,
       }),
   }),
-  terminatedSessionCheckFn: terminatedSession({ token: gcpToken }),
+  terminatedSessionCheckFn: terminatedSession,
   verifyFn: ({ key }) =>
     key == "access" && process.env.NODE_ENV != "local"
       ? verify({

@@ -39,6 +39,7 @@ module.exports = async ({
           return deps.authorization({
             permissionsLookupFn,
             terminatedSessionCheckFn,
+            internalTokenFn,
             context,
             permissions:
               permissions instanceof Array
@@ -93,6 +94,7 @@ module.exports = async ({
                 deps.authorization({
                   permissionsLookupFn,
                   terminatedSessionCheckFn,
+                  internalTokenFn,
                   //Authenticate based on this procedures context.
                   context,
                   permissions:
