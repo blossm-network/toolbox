@@ -26,7 +26,10 @@ const event = {
 };
 const correctNumber = 4;
 const context = "some-context";
-const claims = "some-claims";
+const coreNetwork = "some-core-network";
+const claims = {
+  aud: coreNetwork,
+};
 const trace = "some-trace";
 const issued = "some-issued";
 const accepted = "some-accepted";
@@ -56,6 +59,7 @@ process.env.NETWORK = network;
 process.env.HOST = host;
 process.env.PROCEDURE = procedure;
 process.env.OPERATION_HASH = hash;
+process.env.CORE_NETWORK = coreNetwork;
 
 describe("Command handler post", () => {
   beforeEach(() => {
@@ -711,7 +715,9 @@ describe("Command handler post", () => {
 
     expect(aggregateFnFake).to.have.been.calledWith({ context, claims });
     expect(normalizeFnFake).to.have.been.calledWith(payload);
-    expect(validateFnFake).to.have.been.calledWith(payload);
+    expect(validateFnFake).to.have.been.calledWith(payload, {
+      aud: [coreNetwork],
+    });
     expect(mainFnFake).to.have.been.calledWith({
       payload: cleanedPayload,
       root: currentRoot,
@@ -899,7 +905,9 @@ describe("Command handler post", () => {
 
     expect(aggregateFnFake).to.have.been.calledWith({ context, claims });
     expect(normalizeFnFake).to.have.been.calledWith(payload);
-    expect(validateFnFake).to.have.been.calledWith(payload);
+    expect(validateFnFake).to.have.been.calledWith(payload, {
+      aud: [coreNetwork],
+    });
     expect(mainFnFake).to.have.been.calledWith({
       payload: cleanedPayload,
       context,
@@ -1002,7 +1010,9 @@ describe("Command handler post", () => {
 
     expect(aggregateFnFake).to.have.been.calledWith({ context, claims });
     expect(normalizeFnFake).to.have.been.calledWith(payload);
-    expect(validateFnFake).to.have.been.calledWith(payload);
+    expect(validateFnFake).to.have.been.calledWith(payload, {
+      aud: [coreNetwork],
+    });
     expect(mainFnFake).to.have.been.calledWith({
       payload: cleanedPayload,
       context,
@@ -1134,7 +1144,9 @@ describe("Command handler post", () => {
 
     expect(aggregateFnFake).to.have.been.calledWith({ context, claims });
     expect(normalizeFnFake).to.have.been.calledWith(payload);
-    expect(validateFnFake).to.have.been.calledWith(payload);
+    expect(validateFnFake).to.have.been.calledWith(payload, {
+      aud: [coreNetwork],
+    });
     expect(mainFnFake).to.have.been.calledWith({
       payload: cleanedPayload,
       context,
@@ -1203,6 +1215,109 @@ describe("Command handler post", () => {
       events: [{ data: event, number: otherCorrectNumber }],
     });
     expect(addFnFake).to.have.been.calledTwice;
+    expect(setResponseFake).to.have.been.calledWith({});
+    expect(statusFake).to.have.been.calledWith(202);
+    expect(sendFake).to.have.been.calledWith({ ...response, _id: commandId });
+  });
+  it("should call with the correct params with core network removed from aud", async () => {
+    const validateFnFake = fake();
+    const normalizeFnFake = fake.returns(cleanedPayload);
+
+    const createEventFake = fake.returns(event);
+    replace(deps, "createEvent", createEventFake);
+
+    replace(deps, "uuid", fake.returns(commandId));
+
+    const events = [
+      {
+        payload: eventPayload,
+        action: eventAction,
+        correctNumber,
+      },
+    ];
+    const mainFnFake = fake.returns({
+      events,
+      response,
+    });
+    const aud2 = "some-other-aud";
+    const claims = {
+      aud: `${coreNetwork},${aud2}`,
+    };
+    const req = {
+      body: {
+        payload,
+        headers,
+        claims,
+      },
+    };
+
+    const sendFake = fake();
+    const statusFake = fake.returns({
+      send: sendFake,
+    });
+    const setResponseFake = fake.returns({
+      status: statusFake,
+    });
+    const res = {
+      set: setResponseFake,
+    };
+
+    const addFnFake = fake();
+    const aggregateFnFake = fake.returns(aggregateFn);
+
+    await post({
+      mainFn: mainFnFake,
+      validateFn: validateFnFake,
+      normalizeFn: normalizeFnFake,
+      addFn: addFnFake,
+      aggregateFn: aggregateFnFake,
+    })(req, res);
+
+    expect(aggregateFnFake).to.have.been.calledWith({ claims });
+    expect(normalizeFnFake).to.have.been.calledWith(payload);
+    expect(validateFnFake).to.have.been.calledWith(payload, {
+      aud: [aud2],
+    });
+    expect(mainFnFake).to.have.been.calledWith({
+      payload: cleanedPayload,
+      claims,
+      aggregateFn,
+    });
+
+    expect(createEventFake).to.have.been.calledWith({
+      payload: eventPayload,
+      trace,
+      action: eventAction,
+      domain,
+      service,
+      version: 0,
+      idempotency,
+      path: [
+        {
+          procedure,
+          hash,
+          id: commandId,
+          issued,
+          timestamp: deps.dateString(),
+          name,
+          domain,
+          service,
+          network,
+          host,
+        },
+      ],
+    });
+    expect(addFnFake).to.have.been.calledWith({
+      domain,
+      service,
+      events: [
+        {
+          data: event,
+          number: correctNumber,
+        },
+      ],
+      claims,
+    });
     expect(setResponseFake).to.have.been.calledWith({});
     expect(statusFake).to.have.been.calledWith(202);
     expect(sendFake).to.have.been.calledWith({ ...response, _id: commandId });

@@ -10,11 +10,13 @@ module.exports = ({
 }) => {
   return async (req, res) => {
     if (validateFn) {
-      const aud = req.body.claims ? req.body.claims.aud.join(",") : null;
+      let aud = req.body.claims ? req.body.claims.aud.split(",") : null;
       //If there is more than one audience, remove the core network.
-      //Core network can only be a validated audience if it's the only one.
-      if (aud && aud.length > 1)
-        aud.filter((a) => a != process.env.CORE_NETWORK);
+      //Core network can only be a validated audience if it's the only audience.
+      if (aud && aud.length > 1) {
+        aud = aud.filter((a) => a != process.env.CORE_NETWORK);
+      }
+
       await validateFn(req.body.payload, {
         ...(aud && { aud }),
       });
