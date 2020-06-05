@@ -12,6 +12,10 @@ module.exports = ({
   await deps.validate(req.body);
   const { root, payload, headers } = req.body;
 
+  //TODO
+  //eslint-disable-next-line no-console
+  console.log({ tokenInGateway: req.token });
+
   let { body: response, headers: responseHeaders = {}, statusCode } = await deps
     .command({
       name,
