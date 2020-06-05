@@ -16,7 +16,6 @@
     "@blossm/datetime": "*",
     "@blossm/event-store-rpc": "*",
     "@blossm/request": "*",
-    "@blossm/gcp-pubsub": "*",
     "@blossm/uuid": "*",
     "@blossm/view-store-rpc": "*",
     "@blossm/create-event": "*"

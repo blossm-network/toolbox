@@ -9,9 +9,6 @@ module.exports = ({
   addFn,
 }) => {
   return async (req, res) => {
-    //TODO
-    //eslint-disable-next-line
-    console.log({ body: req.body });
     if (validateFn) {
       let aud = req.body.claims ? req.body.claims.aud.split(",") : null;
       //If there is more than one audience, remove the core network.

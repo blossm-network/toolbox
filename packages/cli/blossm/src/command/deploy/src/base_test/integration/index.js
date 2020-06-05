@@ -2,7 +2,6 @@ require("localenv");
 const { expect } = require("chai");
 const { string: dateString } = require("@blossm/datetime");
 const uuid = require("@blossm/uuid");
-// const { create, delete: del, exists } = require("@blossm/gcp-pubsub");
 const eventStore = require("@blossm/event-store-rpc");
 const createEvent = require("@blossm/create-event");
 const { hash } = require("@blossm/crypt");
@@ -12,9 +11,6 @@ const request = require("@blossm/request");
 const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 
 const { testing } = require("../../config.json");
-
-// const stateTopics = [];
-// const existingTopics = [];
 
 const checkResponse = ({ data, expected }) => {
   for (const property in expected) {
@@ -70,12 +66,6 @@ const formattedPayload = async (payload) => {
 const executeStep = async (step) => {
   if (step.pre) {
     for (const { action, domain, service, root, payload } of step.pre) {
-      // const topic = `${domain}.${service}`;
-      // if (!stateTopics.includes(topic)) {
-      //   if (await exists(topic)) existingTopics.push(topic);
-      //   stateTopics.push(topic);
-      //   await create(topic);
-      // }
       const stateEvent = createEvent({
         root,
         payload: await formattedPayload(payload),
@@ -123,23 +113,6 @@ const executeStep = async (step) => {
 };
 
 describe("Command handler integration tests", () => {
-  // before(async () => {
-  //   existingTopics.push(
-  //     ...testing.topics.filter(async (t) => {
-  //       return await exists(t);
-  //     })
-  //   );
-  //   await Promise.all(testing.topics.map((t) => create(t)));
-  // });
-  // after(
-  //   async () =>
-  //     await Promise.all(
-  //       [...testing.topics, ...stateTopics].map(
-  //         (t) => !existingTopics.includes(t) && del(t)
-  //       )
-  //     )
-  // );
-
   it("should return successfully", async () => {
     let i = 0;
     for (const step of testing.steps) {
@@ -163,7 +136,10 @@ describe("Command handler integration tests", () => {
           bad: testing.validate.bad[0],
           ok: testing.validate.ok[0],
         }),
-        claims: {},
+        claims: {
+          iss: "some-iss",
+          aud: "some-aud",
+        },
       },
     });
 
