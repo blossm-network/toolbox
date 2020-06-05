@@ -9,7 +9,7 @@ module.exports = async ({
   terminatedSessionCheckFn,
   verifyFn,
   internalTokenFn,
-  externalTokenFn,
+  nodeExternalTokenFn,
   algorithm,
   audience,
 }) => {
@@ -35,7 +35,7 @@ module.exports = async ({
         name,
         domain,
         internalTokenFn,
-        externalTokenFn,
+        nodeExternalTokenFn,
         key,
       }),
       {

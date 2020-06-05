@@ -15,7 +15,7 @@ const audience = "some-audience";
 const procedure = "some-procedure";
 const reqContext = "some-req-context";
 const internalTokenFn = "some-internal-token-fn";
-const externalTokenFn = "some-external-token-fn";
+const nodeExternalTokenFn = "some-node-external-token-fn";
 
 process.env.CONTEXT = context;
 process.env.NETWORK = network;
@@ -85,7 +85,7 @@ describe("View gateway", () => {
       terminatedSessionCheckFn,
       verifyFn: verifyFnFake,
       internalTokenFn,
-      externalTokenFn,
+      nodeExternalTokenFn,
       algorithm,
       audience,
     });
@@ -97,7 +97,7 @@ describe("View gateway", () => {
       service,
       context,
       internalTokenFn,
-      externalTokenFn,
+      nodeExternalTokenFn,
       key: "access",
     });
     expect(gatewayGetFake).to.have.been.calledOnce;
@@ -234,7 +234,7 @@ describe("View gateway", () => {
       verifyFn: verifyFnFake,
       algorithm,
       internalTokenFn,
-      externalTokenFn,
+      nodeExternalTokenFn,
       audience,
     });
 
@@ -243,7 +243,7 @@ describe("View gateway", () => {
       name,
       context,
       internalTokenFn,
-      externalTokenFn,
+      nodeExternalTokenFn,
       key: "access",
     });
     expect(gatewayGetFake).to.have.been.calledOnce;
@@ -338,7 +338,7 @@ describe("View gateway", () => {
       verifyFn: verifyFnFake,
       algorithm,
       internalTokenFn,
-      externalTokenFn,
+      nodeExternalTokenFn,
       audience,
     });
 
@@ -349,7 +349,7 @@ describe("View gateway", () => {
       service,
       context,
       internalTokenFn,
-      externalTokenFn,
+      nodeExternalTokenFn,
       key: "access",
     });
 
@@ -445,7 +445,7 @@ describe("View gateway", () => {
       verifyFn: verifyFnFake,
       algorithm,
       internalTokenFn,
-      externalTokenFn,
+      nodeExternalTokenFn,
       audience,
     });
     expect(gatewayGetFake).to.have.been.calledWith({
@@ -455,7 +455,7 @@ describe("View gateway", () => {
       service,
       context,
       internalTokenFn,
-      externalTokenFn,
+      nodeExternalTokenFn,
       key,
     });
     expect(authenticationFake).to.have.been.calledWith({
@@ -571,7 +571,7 @@ describe("View gateway", () => {
       verifyFn: verifyFnFake,
       algorithm,
       internalTokenFn,
-      externalTokenFn,
+      nodeExternalTokenFn,
       audience,
     });
 
@@ -583,7 +583,7 @@ describe("View gateway", () => {
       context: viewContext,
       network: viewNetwork,
       internalTokenFn,
-      externalTokenFn,
+      nodeExternalTokenFn,
       key: "access",
     });
     expect(gatewayGetFake).to.have.been.calledWith({
@@ -593,7 +593,7 @@ describe("View gateway", () => {
       service,
       context,
       internalTokenFn,
-      externalTokenFn,
+      nodeExternalTokenFn,
       key: "access",
     });
     expect(gatewayGetFake).to.have.been.calledWith({
@@ -603,7 +603,7 @@ describe("View gateway", () => {
       service,
       context,
       internalTokenFn,
-      externalTokenFn,
+      nodeExternalTokenFn,
       key: "access",
     });
     expect(gatewayGetFake).to.have.been.calledThrice;
@@ -705,7 +705,7 @@ describe("View gateway", () => {
       algorithm,
       audience,
       internalTokenFn,
-      externalTokenFn,
+      nodeExternalTokenFn,
     });
 
     expect(gatewayGetFake).to.have.been.calledWith({
@@ -715,7 +715,7 @@ describe("View gateway", () => {
       service: otherService,
       context: otherContext,
       internalTokenFn,
-      externalTokenFn,
+      nodeExternalTokenFn,
       key: "access",
     });
     expect(authorizationFake).to.have.been.calledWith({

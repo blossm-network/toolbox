@@ -9,6 +9,7 @@ module.exports = ({
   context,
 }) =>
   asyncHandler(async (req, _, next) => {
+    const externalTokenFn = () => req.token;
     await Promise.all([
       // If there are permissions with a lookup fn, check if the permissions are met.
       ...(permissions && permissionsLookupFn
@@ -16,6 +17,8 @@ module.exports = ({
             deps.authorize({
               principal: req.context.principal,
               permissionsLookupFn,
+              internalTokenFn,
+              externalTokenFn,
               permissions,
               ...(req.context && context && { context: req.context[context] }),
             }),
@@ -27,8 +30,8 @@ module.exports = ({
             terminatedSessionCheckFn({
               session: req.context.session,
               token: {
-                internalTokenFn,
-                externalFn: () => req.token,
+                internalFn: internalTokenFn,
+                externalFn: externalTokenFn,
               },
             }),
           ]

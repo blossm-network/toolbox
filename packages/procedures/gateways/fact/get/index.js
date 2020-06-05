@@ -4,7 +4,7 @@ module.exports = ({
   name,
   domain,
   internalTokenFn,
-  externalTokenFn,
+  nodeExternalTokenFn,
   key,
 } = {}) => async (req, res) => {
   const { body: response, headers = {} } = await deps
@@ -18,7 +18,7 @@ module.exports = ({
         externalFn: ({ network, key } = {}) =>
           req.token
             ? { token: req.token, type: "Bearer" }
-            : externalTokenFn({ network, key }),
+            : nodeExternalTokenFn({ network, key }),
         key,
       },
       ...(req.context && { context: req.context }),

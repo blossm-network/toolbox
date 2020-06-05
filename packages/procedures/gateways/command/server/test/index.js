@@ -13,7 +13,7 @@ const subcontext = "some-subcontext";
 const algorithm = "some-algorithm";
 const keyClaimsFn = "some-token-claims-fn";
 const internalTokenFn = "some-internal-token-fn";
-const externalTokenFn = "some-external-token-fn";
+const nodeExternalTokenFn = "some-node-external-token-fn";
 const audience = "some-audience";
 
 process.env.DOMAIN = domain;
@@ -61,7 +61,7 @@ describe("Command gateway", () => {
       commands,
       whitelist,
       internalTokenFn,
-      externalTokenFn,
+      nodeExternalTokenFn,
       permissionsLookupFn,
       terminatedSessionCheckFn,
       verifyFn: verifyFnFake,
@@ -75,7 +75,7 @@ describe("Command gateway", () => {
       domain,
       service,
       internalTokenFn,
-      externalTokenFn,
+      nodeExternalTokenFn,
       key: "access",
     });
     expect(gatewayPostFake).to.have.been.calledOnce;
@@ -153,7 +153,7 @@ describe("Command gateway", () => {
       commands,
       whitelist,
       internalTokenFn,
-      externalTokenFn,
+      nodeExternalTokenFn,
       permissionsLookupFn,
       terminatedSessionCheckFn,
       verifyFn: verifyFnFake,
@@ -168,7 +168,7 @@ describe("Command gateway", () => {
       service,
       domain,
       internalTokenFn,
-      externalTokenFn,
+      nodeExternalTokenFn,
       key: "access",
     });
     expect(gatewayPostFake).to.have.been.calledOnce;
@@ -252,7 +252,7 @@ describe("Command gateway", () => {
       verifyFn: verifyFnFake,
       keyClaimsFn,
       internalTokenFn,
-      externalTokenFn,
+      nodeExternalTokenFn,
       algorithm,
       audience,
     });
@@ -273,7 +273,7 @@ describe("Command gateway", () => {
       domain,
       service: otherService,
       internalTokenFn,
-      externalTokenFn,
+      nodeExternalTokenFn,
       key,
     });
   });
@@ -321,7 +321,7 @@ describe("Command gateway", () => {
       commands,
       whitelist,
       internalTokenFn,
-      externalTokenFn,
+      nodeExternalTokenFn,
       permissionsLookupFn,
       terminatedSessionCheckFn,
       verifyFn: verifyFnFake,
@@ -335,7 +335,7 @@ describe("Command gateway", () => {
       domain,
       service,
       internalTokenFn,
-      externalTokenFn,
+      nodeExternalTokenFn,
       key: "access",
     });
     expect(gatewayPostFake.getCall(1)).to.have.been.calledWith({
@@ -343,7 +343,7 @@ describe("Command gateway", () => {
       domain,
       service,
       internalTokenFn,
-      externalTokenFn,
+      nodeExternalTokenFn,
       key: "access",
     });
     expect(gatewayPostFake).to.have.been.calledTwice;
@@ -429,7 +429,7 @@ describe("Command gateway", () => {
       service: otherService,
       whitelist,
       internalTokenFn,
-      externalTokenFn,
+      nodeExternalTokenFn,
       permissionsLookupFn,
       terminatedSessionCheckFn,
       verifyFn: verifyFnFake,
@@ -441,7 +441,7 @@ describe("Command gateway", () => {
       domain: otherDomain,
       service: otherService,
       internalTokenFn,
-      externalTokenFn,
+      nodeExternalTokenFn,
       key: "access",
     });
     expect(authorizationFake).to.have.been.calledWith({

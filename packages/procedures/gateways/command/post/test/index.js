@@ -70,13 +70,13 @@ describe("Command gateway post", () => {
       cookie: cookieFake,
       set: setResponseFake,
     };
-    const externalTokenResult = "some-external-token-result";
-    const externalTokenFnFake = fake.returns(externalTokenResult);
+    const nodeExternalTokenResult = "some-external-token-result";
+    const nodeExternalTokenFnFake = fake.returns(nodeExternalTokenResult);
     await post({
       name,
       domain,
       internalTokenFn,
-      externalTokenFn: externalTokenFnFake,
+      nodeExternalTokenFn: nodeExternalTokenFnFake,
       key,
     })(req, res);
 
@@ -94,8 +94,8 @@ describe("Command gateway post", () => {
             key: externalTokenKey,
           });
           return (
-            result == externalTokenResult &&
-            externalTokenFnFake.calledWith({
+            result == nodeExternalTokenResult &&
+            nodeExternalTokenFnFake.calledWith({
               network: externalTokenNetwork,
               key: externalTokenKey,
             })
@@ -154,14 +154,14 @@ describe("Command gateway post", () => {
 
     const network = "some-random-network";
     const service = "some-random-service";
-    const externalTokenResult = "some-external-token-result";
-    const externalTokenFnFake = fake.returns(externalTokenResult);
+    const nodeExternalTokenResult = "some-node-external-token-result";
+    const nodeExternalTokenFnFake = fake.returns(nodeExternalTokenResult);
     process.env.NETWORK = "some-random-env-network";
     await post({
       name,
       domain,
       internalTokenFn,
-      externalTokenFn: externalTokenFnFake,
+      nodeExternalTokenFn: nodeExternalTokenFnFake,
       key,
       network,
       service,
@@ -225,13 +225,13 @@ describe("Command gateway post", () => {
       cookie: cookieFake,
     };
 
-    const externalTokenResult = "some-external-token-result";
-    const externalTokenFnFake = fake.returns(externalTokenResult);
+    const nodeExternalTokenResult = "some-external-token-result";
+    const nodeExternalTokenFnFake = fake.returns(nodeExternalTokenResult);
     await post({
       name,
       domain,
       internalTokenFn,
-      externalTokenFn: externalTokenFnFake,
+      nodeExternalTokenFn: nodeExternalTokenFnFake,
       key,
     })(req, res);
 
@@ -249,8 +249,8 @@ describe("Command gateway post", () => {
             key: externalTokenKey,
           });
           return (
-            result == externalTokenResult &&
-            externalTokenFnFake.calledWith({
+            result == nodeExternalTokenResult &&
+            nodeExternalTokenFnFake.calledWith({
               network: externalTokenNetwork,
               key: externalTokenKey,
             })
@@ -322,15 +322,15 @@ describe("Command gateway post", () => {
       set: resSetFake,
     };
 
-    const externalTokenFnFake = fake();
+    const nodeExternalTokenFnFake = fake();
     await post({
       name,
       domain,
       internalTokenFn,
-      externalTokenFn: externalTokenFnFake,
+      nodeExternalTokenFn: nodeExternalTokenFnFake,
       key,
     })(req, res);
-    expect(externalTokenFnFake).to.not.have.been.called;
+    expect(nodeExternalTokenFnFake).to.not.have.been.called;
 
     expect(cookieFake).to.have.been.calledTwice;
     expect(cookieFake).to.have.been.calledWith(token1Type, token1Value, {

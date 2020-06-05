@@ -6,7 +6,7 @@
     "@blossm/gcp-token": "*",
     "@blossm/gcp-storage": "*",
     "@blossm/terminated-session": "*",
-    "@blossm/permission-lookup": "*"
+    "@blossm/permissions-lookup": "*"
   },
   "devDependencies": {
     "localenv": "^0.2.2",

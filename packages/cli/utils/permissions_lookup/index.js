@@ -5,6 +5,7 @@ const fact = require("@blossm/fact-rpc");
 const rolePermissions = require("@blossm/role-permissions");
 const uuid = require("@blossm/uuid");
 const { forbidden } = require("@blossm/errors");
+const nodeExternalToken = require("@blossm/node-external-token");
 
 const readFileAsync = promisify(readFile);
 const readDirAsync = promisify(readdir);
@@ -12,7 +13,9 @@ const unlinkAsync = promisify(unlink);
 
 let defaultRoles;
 
-module.exports = ({ token, downloadFileFn }) => async ({
+module.exports = ({ downloadFileFn }) => async ({
+  internalTokenFn,
+  externalTokenFn,
   principal,
   context,
 }) => {
@@ -48,7 +51,7 @@ module.exports = ({ token, downloadFileFn }) => async ({
     network: principal.network,
   })
     .set({
-      token: { internalFn: token },
+      token: { internalFn: internalTokenFn, externalFn: externalTokenFn },
       context: { network: process.env.NETWORK },
     })
     .read({ root: principal.root });
@@ -67,7 +70,7 @@ module.exports = ({ token, downloadFileFn }) => async ({
         }),
       })
         .set({
-          token: { internalFn: token },
+          token: { internalFn: internalTokenFn, externalFn: nodeExternalToken },
           context: { network: process.env.NETWORK },
         })
         .read({ id: roleId });

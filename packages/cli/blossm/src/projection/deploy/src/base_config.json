@@ -5,7 +5,7 @@
     "@blossm/command-rpc": "*",
     "@blossm/event-store-rpc": "*",
     "@blossm/gcp-token": "*",
-    "@blossm/external-token": "*",
+    "@blossm/node-external-token": "*",
     "@blossm/channel-name": "*"
   },
   "devDependencies": {

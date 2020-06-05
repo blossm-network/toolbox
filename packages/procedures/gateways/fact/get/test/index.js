@@ -48,13 +48,13 @@ describe("Fact gateway get", () => {
       set: setResponseFake,
     };
 
-    const externalTokenResult = "some-external-token-result";
-    const externalTokenFnFake = fake.returns(externalTokenResult);
+    const nodeExternalTokenResult = "some-node-external-token-result";
+    const nodeExternalTokenFnFake = fake.returns(nodeExternalTokenResult);
     await get({
       name,
       domain,
       internalTokenFn,
-      externalTokenFn: externalTokenFnFake,
+      nodeExternalTokenFn: nodeExternalTokenFnFake,
       key,
     })(req, res);
 
@@ -71,8 +71,8 @@ describe("Fact gateway get", () => {
             key: externalTokenKey,
           });
           return (
-            result == externalTokenResult &&
-            externalTokenFnFake.calledWith({
+            result == nodeExternalTokenResult &&
+            nodeExternalTokenFnFake.calledWith({
               network: externalTokenNetwork,
               key: externalTokenKey,
             })
@@ -115,15 +115,15 @@ describe("Fact gateway get", () => {
       set: setResponseFake,
     };
 
-    const externalTokenFnFake = fake();
+    const nodeExternalTokenFnFake = fake();
     await get({
       name,
       domain,
       internalTokenFn,
-      externalTokenFn: externalTokenFnFake,
+      nodeExternalTokenFn: nodeExternalTokenFnFake,
       key,
     })(req, res);
-    expect(externalTokenFnFake).to.not.have.been.called;
+    expect(nodeExternalTokenFnFake).to.not.have.been.called;
 
     expect(factFake).to.have.been.calledWith({
       name,

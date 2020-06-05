@@ -48,13 +48,18 @@ describe("Authorization middleware", () => {
     expect(authorizationFake).to.have.been.calledWith({
       principal,
       permissionsLookupFn,
+      internalTokenFn,
+      externalTokenFn: match((fn) => {
+        const result = fn();
+        return result == token;
+      }),
       permissions,
       context: contextObj,
     });
     expect(terminatedSessionCheckFake).to.have.been.calledWith({
       session,
       token: {
-        internalTokenFn,
+        internalFn: internalTokenFn,
         externalFn: match((fn) => {
           const result = fn();
           return result == token;

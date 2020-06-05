@@ -10,7 +10,7 @@ module.exports = async ({
   terminatedSessionCheckFn,
   verifyFn,
   internalTokenFn,
-  externalTokenFn,
+  nodeExternalTokenFn,
   algorithm,
   audience,
 }) => {
@@ -76,7 +76,7 @@ module.exports = async ({
         ...((viewContext || context) && { context: viewContext || context }),
         ...(network && { network }),
         internalTokenFn,
-        externalTokenFn,
+        nodeExternalTokenFn,
         key,
       }),
       {

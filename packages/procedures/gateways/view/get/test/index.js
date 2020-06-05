@@ -55,13 +55,13 @@ describe("View gateway get", () => {
       status: statusFake,
     };
 
-    const externalTokenResult = "some-external-token-result";
-    const externalTokenFnFake = fake.returns(externalTokenResult);
+    const nodeExternalTokenResult = "some-external-token-result";
+    const nodeExternalTokenFnFake = fake.returns(nodeExternalTokenResult);
     await get({
       procedure: "view-store",
       name,
       internalTokenFn,
-      externalTokenFn: externalTokenFnFake,
+      nodeExternalTokenFn: nodeExternalTokenFnFake,
       key,
     })(req, res);
 
@@ -75,8 +75,8 @@ describe("View gateway get", () => {
             key: externalTokenKey,
           });
           return (
-            result == externalTokenResult &&
-            externalTokenFnFake.calledWith({
+            result == nodeExternalTokenResult &&
+            nodeExternalTokenFnFake.calledWith({
               network: externalTokenNetwork,
               key: externalTokenKey,
             })
@@ -116,8 +116,8 @@ describe("View gateway get", () => {
     const network = "some-random-network";
     const service = "some-random-service";
     const domain = "some-random-domain";
-    const externalTokenResult = "some-external-token-result";
-    const externalTokenFnFake = fake.returns(externalTokenResult);
+    const nodeExternalTokenResult = "some-node-external-token-result";
+    const nodeExternalTokenFnFake = fake.returns(nodeExternalTokenResult);
     process.env.NETWORK = "some-random-env-network";
     await get({
       procedure: "view-store",
@@ -126,7 +126,7 @@ describe("View gateway get", () => {
       service,
       network,
       internalTokenFn,
-      externalTokenFn: externalTokenFnFake,
+      nodeExternalTokenFn: nodeExternalTokenFnFake,
       key,
     })(req, res);
 
@@ -267,13 +267,13 @@ describe("View gateway get", () => {
       status: statusFake,
     };
 
-    const externalTokenResult = "some-external-token-result";
-    const externalTokenFnFake = fake.returns(externalTokenResult);
+    const nodeExternalTokenResult = "some-node-external-token-result";
+    const nodeExternalTokenFnFake = fake.returns(nodeExternalTokenResult);
     await get({
       procedure: "view-composite",
       name,
       internalTokenFn,
-      externalTokenFn: externalTokenFnFake,
+      nodeExternalTokenFn: nodeExternalTokenFnFake,
       key,
     })(req, res);
 
@@ -287,8 +287,8 @@ describe("View gateway get", () => {
             key: externalTokenKey,
           });
           return (
-            result == externalTokenResult &&
-            externalTokenFnFake.calledWith({
+            result == nodeExternalTokenResult &&
+            nodeExternalTokenFnFake.calledWith({
               network: externalTokenNetwork,
               key: externalTokenKey,
             })
@@ -329,17 +329,17 @@ describe("View gateway get", () => {
       status: statusFake,
     };
 
-    const externalTokenFnFake = fake();
+    const nodeExternalTokenFnFake = fake();
     await get({
       procedure: "view-composite",
       name,
       domain,
       service,
       internalTokenFn,
-      externalTokenFn: externalTokenFnFake,
+      nodeExternalTokenFn: nodeExternalTokenFnFake,
       key,
     })(req, res);
-    expect(externalTokenFnFake).to.not.have.been.called;
+    expect(nodeExternalTokenFnFake).to.not.have.been.called;
 
     expect(viewCompositeFake).to.have.been.calledWith({
       name,

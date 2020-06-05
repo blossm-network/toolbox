@@ -5,7 +5,7 @@ module.exports = async ({
   domain = process.env.DOMAIN,
   service = process.env.SERVICE,
   internalTokenFn,
-  externalTokenFn,
+  nodeExternalTokenFn,
   algorithm,
   audience,
   whitelist,
@@ -41,7 +41,7 @@ module.exports = async ({
         service: commandService || service,
         ...(network && { network }),
         internalTokenFn,
-        externalTokenFn,
+        nodeExternalTokenFn,
         key,
       }),
       {

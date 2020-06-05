@@ -2,6 +2,8 @@ const deps = require("./deps");
 
 module.exports = async ({
   permissionsLookupFn,
+  internalTokenFn,
+  externalTokenFn,
   permissions = [],
   principal,
   context,
@@ -12,6 +14,8 @@ module.exports = async ({
     };
 
   const principalPermissions = await permissionsLookupFn({
+    internalTokenFn,
+    externalTokenFn,
     principal,
     context,
   });

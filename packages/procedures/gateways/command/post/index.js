@@ -6,7 +6,7 @@ module.exports = ({
   service,
   network,
   internalTokenFn,
-  externalTokenFn,
+  nodeExternalTokenFn,
   key,
 } = {}) => async (req, res) => {
   await deps.validate(req.body);
@@ -29,7 +29,7 @@ module.exports = ({
         externalFn: ({ network, key } = {}) =>
           req.token
             ? { token: req.token, type: "Bearer" }
-            : externalTokenFn({ network, key }),
+            : nodeExternalTokenFn({ network, key }),
         key,
       },
       ...(req.context && { context: req.context }),

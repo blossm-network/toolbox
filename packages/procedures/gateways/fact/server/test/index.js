@@ -12,7 +12,7 @@ const network = "some-network";
 const context = "some-context";
 const algorithm = "some-algorithm";
 const internalTokenFn = "some-internal-token-fn";
-const externalTokenFn = "some-external-token-fn";
+const nodeExternalTokenFn = "some-node-external-token-fn";
 const audience = "some-audience";
 
 process.env.DOMAIN = domain;
@@ -63,7 +63,7 @@ describe("Fact gateway", () => {
       terminatedSessionCheckFn,
       verifyFn: verifyFnFake,
       internalTokenFn,
-      externalTokenFn,
+      nodeExternalTokenFn,
       algorithm,
       audience,
     });
@@ -72,7 +72,7 @@ describe("Fact gateway", () => {
       name,
       domain,
       internalTokenFn,
-      externalTokenFn,
+      nodeExternalTokenFn,
       key: "access",
     });
     expect(gatewayGetFake).to.have.been.calledOnce;
@@ -151,7 +151,7 @@ describe("Fact gateway", () => {
       terminatedSessionCheckFn,
       verifyFn: verifyFnFake,
       internalTokenFn,
-      externalTokenFn,
+      nodeExternalTokenFn,
       algorithm,
       audience,
     });
@@ -160,7 +160,7 @@ describe("Fact gateway", () => {
       name,
       domain,
       internalTokenFn,
-      externalTokenFn,
+      nodeExternalTokenFn,
       key,
     });
     expect(gatewayGetFake).to.have.been.calledOnce;
@@ -238,7 +238,7 @@ describe("Fact gateway", () => {
       terminatedSessionCheckFn,
       verifyFn: verifyFnFake,
       internalTokenFn,
-      externalTokenFn,
+      nodeExternalTokenFn,
       algorithm,
       audience,
     });
@@ -303,7 +303,7 @@ describe("Fact gateway", () => {
       terminatedSessionCheckFn,
       verifyFn: verifyFnFake,
       internalTokenFn,
-      externalTokenFn,
+      nodeExternalTokenFn,
       algorithm,
       audience,
     });
@@ -312,21 +312,21 @@ describe("Fact gateway", () => {
       name: name1,
       domain,
       internalTokenFn,
-      externalTokenFn,
+      nodeExternalTokenFn,
       key: "access",
     });
     expect(gatewayGetFake).to.have.been.calledWith({
       name: name2,
       domain,
       internalTokenFn,
-      externalTokenFn,
+      nodeExternalTokenFn,
       key: "access",
     });
     expect(gatewayGetFake).to.have.been.calledWith({
       name: name3,
       domain,
       internalTokenFn,
-      externalTokenFn,
+      nodeExternalTokenFn,
       key: "access",
     });
     expect(gatewayGetFake).to.have.been.calledThrice;
@@ -413,7 +413,7 @@ describe("Fact gateway", () => {
       terminatedSessionCheckFn,
       verifyFn: verifyFnFake,
       internalTokenFn,
-      externalTokenFn,
+      nodeExternalTokenFn,
       algorithm,
       audience,
     });
@@ -422,7 +422,7 @@ describe("Fact gateway", () => {
       name,
       domain: otherDomain,
       internalTokenFn,
-      externalTokenFn,
+      nodeExternalTokenFn,
       key: "access",
     });
     expect(authorizationFake).to.have.been.calledWith({
@@ -446,7 +446,7 @@ describe("Fact gateway", () => {
         permissionsLookupFn,
         terminatedSessionCheckFn,
         internalTokenFn,
-        externalTokenFn,
+        nodeExternalTokenFn,
         algorithm,
         audience,
       });

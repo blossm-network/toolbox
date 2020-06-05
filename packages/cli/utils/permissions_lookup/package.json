@@ -1,7 +1,7 @@
 {
-  "name": "@blossm/external-token",
-  "version": "0.0.37",
-  "description": "Creates a token for calling external services.",
+  "name": "@blossm/permissions-lookup",
+  "version": "0.0.0",
+  "description": "Looks up permissions for a role.",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -14,8 +14,11 @@
     "test": "echo \"Error: no test specified\" && exit 0"
   },
   "dependencies": {
-    "@blossm/connection-token": "^0.0.48",
-    "@blossm/gcp-secret": "^0.0.47"
+    "@blossm/errors": "^0.0.35",
+    "@blossm/fact-rpc": "^0.0.66",
+    "@blossm/role-permissions": "*",
+    "@blossm/uuid": "*",
+    "yaml": "^1.7.0"
   },
   "devDependencies": {
     "mocha": "^7.1.1"

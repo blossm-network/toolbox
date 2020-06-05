@@ -9,6 +9,8 @@ const network = "some-network";
 const privilege = "some-privilege";
 
 const principal = "some-principal-root";
+const internalTokenFn = "some-internal-token-fn";
+const externalTokenFn = "some-external-token-fn";
 
 const context = {
   network,
@@ -32,12 +34,16 @@ describe("Authorize", () => {
     const document = await authorize({
       permissionsLookupFn,
       permissions: [{ service, domain, privilege }],
+      internalTokenFn,
+      externalTokenFn,
       network,
       principal,
       context,
     });
 
     expect(permissionsLookupFn).to.have.been.calledWith({
+      internalTokenFn,
+      externalTokenFn,
       principal,
       context,
     });

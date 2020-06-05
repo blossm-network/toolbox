@@ -6,8 +6,8 @@
     "@blossm/gcp-token": "*",
     "@blossm/gcp-storage": "*",
     "@blossm/terminated-session": "*",
-    "@blossm/permission-lookup": "*",
-    "@blossm/external-token": "*"
+    "@blossm/permissions-lookup": "*",
+    "@blossm/node-external-token": "*"
   },
   "devDependencies": {
     "localenv": "^0.2.2",

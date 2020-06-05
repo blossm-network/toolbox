@@ -3,7 +3,7 @@ const command = require("@blossm/command-rpc");
 const viewStore = require("@blossm/view-store-rpc");
 const eventStore = require("@blossm/event-store-rpc");
 const gcpToken = require("@blossm/gcp-token");
-const externalToken = require("@blossm/external-token");
+const nodeExternalToken = require("@blossm/node-external-token");
 const channelName = require("@blossm/channel-name");
 
 const handlers = require("./handlers.js");
@@ -85,7 +85,7 @@ module.exports = eventHandler({
     })
       .set({
         token: {
-          externalFn: externalToken,
+          externalFn: nodeExternalToken,
           internalFn: gcpToken,
           key: "access",
         },
