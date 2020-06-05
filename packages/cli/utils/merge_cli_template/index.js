@@ -528,6 +528,7 @@ const writeConfig = ({ config, coreNetwork, workingDir }) => {
         adjustedDependencies.push({
           procedure: "http",
           host: `c.${dependency.domain}.${dependency.service}${
+            //TODO
             // env == "production" ? ".snd" : ""
             ".dev"
           }.${coreNetwork}`,
@@ -550,6 +551,7 @@ const writeConfig = ({ config, coreNetwork, workingDir }) => {
           host: `v.${dependency.domain}${
             dependency.service ? `.${dependency.service}` : ""
           }${dependency.context ? `.${dependency.context}` : ""}${
+            //TODO
             // env == "production" ? ".snd" : ""
             ".dev"
           }.${coreNetwork}`,
@@ -575,6 +577,7 @@ const writeConfig = ({ config, coreNetwork, workingDir }) => {
           host: `f${dependency.domain ? `.${dependency.domain}` : ""}${
             dependency.service ? `.${dependency.service}` : ""
           }${
+            //TODO
             // env == "production" ? ".snd" : ""
             ".dev"
           }.${coreNetwork}`,

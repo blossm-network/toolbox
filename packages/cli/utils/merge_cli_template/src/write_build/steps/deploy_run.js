@@ -53,7 +53,9 @@ module.exports = ({
             ? `${envUriSpecifier}${coreNetwork}`
             : nodeEnv == "production"
             ? coreNetwork
-            : `snd.${coreNetwork}`,
+            : //TODO
+              // : `snd.${coreNetwork}`,
+              `dev.${coreNetwork}`,
         HOST: `${region}.${envUriSpecifier}${network}`,
         PROCEDURE: procedure,
         OPERATION_HASH: operationHash,
