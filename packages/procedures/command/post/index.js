@@ -9,12 +9,15 @@ module.exports = ({
   addFn,
 }) => {
   return async (req, res) => {
+    //TODO
+    //eslint-disable-next-line
+    console.log({ body: req.body });
     if (validateFn) {
       let aud = req.body.claims ? req.body.claims.aud.split(",") : null;
       //If there is more than one audience, remove the core network.
-      //Core network can only be a validated audience if it's the only audience.
+      //The issuer can only be a validated audience if it's the only audience.
       if (aud && aud.length > 1) {
-        aud = aud.filter((a) => a != process.env.CORE_NETWORK);
+        aud = aud.filter((a) => a != req.body.claims.iss);
       }
 
       await validateFn(req.body.payload, {
