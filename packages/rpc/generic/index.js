@@ -33,13 +33,6 @@ const common = ({ method, dataParam, operation, id, data }) => {
         } = {}) => {
           const internal = host == process.env.HOST;
 
-          //TODO
-          //eslint-disable-next-line no-console
-          console.log({
-            rpcInternal: internal,
-            host,
-            envHost: process.env.HOST,
-          });
           const { token, type } =
             (internal
               ? await deps.operationToken({
@@ -64,10 +57,6 @@ const common = ({ method, dataParam, operation, id, data }) => {
                 ...(path && { path }),
                 ...(id && { id }),
               });
-
-          //TODO
-          //eslint-disable-next-line no-console
-          console.log({ token, url });
 
           const response = await method(url, {
             [dataParam]: {

@@ -9,14 +9,7 @@ module.exports = ({
   context,
 }) =>
   asyncHandler(async (req, _, next) => {
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log({ zaToken: req.token });
-
     const externalTokenFn = () => {
-      //TODO
-      //eslint-disable-next-line no-console
-      console.log("JAAA");
       return { token: req.token, type: "Bearer" };
     };
     await Promise.all([

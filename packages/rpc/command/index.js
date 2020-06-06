@@ -41,13 +41,6 @@ module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
       ...(options && { options }),
     };
 
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log({
-      commandInternal: internal,
-      network,
-      envHost: process.env.HOST,
-    });
     return await deps
       .rpc(name, domain, service, "command")
       .post(data)
