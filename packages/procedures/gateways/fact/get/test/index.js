@@ -132,13 +132,13 @@ describe("Fact gateway get", () => {
     expect(setFake).to.have.been.calledWith({
       context,
       claims,
+      currentToken: reqToken,
       token: {
         internalFn: internalTokenFn,
         externalFn: match((fn) => {
           const result = fn();
           return result.token == reqToken && result.type == "Bearer";
         }),
-        current: reqToken,
         key,
       },
     });

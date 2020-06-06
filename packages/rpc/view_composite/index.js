@@ -3,10 +3,10 @@ const deps = require("./deps");
 module.exports = ({ name, domain, service, context = process.env.CONTEXT }) => {
   const read = ({
     contexts,
+    currentToken,
     token: {
       internalFn: internalTokenFn,
       externalFn: externalTokenFn,
-      current: currentToken,
       key,
     } = {},
   } = {}) => async ({ query, sort, root }) =>
@@ -30,10 +30,10 @@ module.exports = ({ name, domain, service, context = process.env.CONTEXT }) => {
       });
   const stream = ({
     contexts,
+    currentToken,
     token: {
       internalFn: internalTokenFn,
       externalFn: externalTokenFn,
-      current: currentToken,
       key,
     } = {},
   } = {}) => async (fn, { query, sort, root }) =>
@@ -57,10 +57,10 @@ module.exports = ({ name, domain, service, context = process.env.CONTEXT }) => {
         ...(key && { key }),
       });
   return {
-    set: ({ context: contexts, token }) => {
+    set: ({ context: contexts, token, currentToken }) => {
       return {
-        read: read({ contexts, token }),
-        stream: stream({ contexts, token }),
+        read: read({ contexts, token, currentToken }),
+        stream: stream({ contexts, token, currentToken }),
       };
     },
     read: read(),

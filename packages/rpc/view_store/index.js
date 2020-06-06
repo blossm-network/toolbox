@@ -10,10 +10,10 @@ module.exports = ({
   const internal = !network || network == process.env.NETWORK;
   const read = ({
     contexts,
+    currentToken,
     token: {
       internalFn: internalTokenFn,
       externalFn: externalTokenFn,
-      current: currentToken,
       key,
     } = {},
   } = {}) => async ({ query, sort, root } = {}) =>
@@ -46,10 +46,10 @@ module.exports = ({
       });
   const stream = ({
     contexts,
+    currentToken,
     token: {
       internalFn: internalTokenFn,
       externalFn: externalTokenFn,
-      current: currentToken,
       key,
     } = {},
   } = {}) => async (fn, { query, sort, root } = {}) =>
@@ -119,10 +119,10 @@ module.exports = ({
         ...(internalTokenFn && { internalTokenFn }),
       });
   return {
-    set: ({ context: contexts, token }) => {
+    set: ({ context: contexts, token, currentToken }) => {
       return {
-        read: read({ contexts, token }),
-        stream: stream({ contexts, token }),
+        read: read({ contexts, token, currentToken }),
+        stream: stream({ contexts, token, currentToken }),
         update: update({ contexts, token }),
         delete: del({ contexts, token }),
       };

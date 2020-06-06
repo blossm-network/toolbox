@@ -137,13 +137,13 @@ describe("View gateway get", () => {
       network,
     });
     expect(setFake).to.have.been.calledWith({
+      currentToken: reqToken,
       token: {
         internalFn: internalTokenFn,
         externalFn: match((fn) => {
           const result = fn();
           return result.token == reqToken && result.type == "Bearer";
         }),
-        current: reqToken,
         key,
       },
     });
@@ -200,13 +200,13 @@ describe("View gateway get", () => {
     expect(setFake).to.have.been.calledWith({
       claims,
       context,
+      currentToken: reqToken,
       token: {
         internalFn: internalTokenFn,
         externalFn: match((fn) => {
           const result = fn();
           return result.token == reqToken && result.type == "Bearer";
         }),
-        current: reqToken,
         key,
       },
     });
@@ -351,13 +351,13 @@ describe("View gateway get", () => {
     expect(setFake).to.have.been.calledWith({
       claims,
       context,
+      currentToken: reqToken,
       token: {
         internalFn: internalTokenFn,
         externalFn: match((fn) => {
           const result = fn();
           return result.token == reqToken && result.type == "Bearer";
         }),
-        current: reqToken,
         key,
       },
     });

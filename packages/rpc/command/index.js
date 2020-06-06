@@ -5,10 +5,10 @@ module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
   const issue = ({
     context,
     claims,
+    currentToken,
     token: {
       internalFn: internalTokenFn,
       externalFn: externalTokenFn,
-      current: currentToken,
       key,
     } = {},
   } = {}) => async (
@@ -69,9 +69,9 @@ module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
   };
 
   return {
-    set: ({ context, claims, token, route }) => {
+    set: ({ context, claims, token, currentToken }) => {
       return {
-        issue: issue({ context, claims, token, route }),
+        issue: issue({ context, claims, token, currentToken }),
       };
     },
     issue: issue(),

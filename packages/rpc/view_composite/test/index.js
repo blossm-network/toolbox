@@ -49,10 +49,10 @@ describe("Get composite views", () => {
     })
       .set({
         context: contexts,
+        currentToken,
         token: {
           internalFn: internalTokenFn,
           externalFn: externalTokenFn,
-          current: currentToken,
           key,
         },
       })
@@ -120,10 +120,10 @@ describe("Get composite views", () => {
     })
       .set({
         context: contexts,
+        currentToken,
         token: {
           internalFn: internalTokenFn,
           externalFn: externalTokenFn,
-          current: currentToken,
           key,
         },
       })

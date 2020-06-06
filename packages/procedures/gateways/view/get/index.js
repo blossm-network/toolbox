@@ -26,9 +26,9 @@ module.exports = ({
               req.token
                 ? { token: req.token, type: "Bearer" }
                 : nodeExternalTokenFn({ network, key }),
-            ...(req.token && { current: req.token }),
             key,
           },
+          ...(req.token && { currentToken: req.token }),
           ...(req.context && { context: req.context }),
           ...(req.claims && { claims: req.claims }),
         })
@@ -54,9 +54,9 @@ module.exports = ({
               req.token
                 ? { token: req.token, type: "Bearer" }
                 : nodeExternalTokenFn({ network, key }),
-            ...(req.token && { current: req.token }),
             key,
           },
+          ...(req.token && { currentToken: req.token }),
           ...(req.context && { context: req.context }),
           ...(req.claims && { claims: req.claims }),
         })

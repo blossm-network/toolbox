@@ -72,10 +72,10 @@ describe("Issue command", () => {
       .set({
         context,
         claims,
+        currentToken,
         token: {
           internalFn: internalTokenFn,
           externalFn: externalTokenFn,
-          current: currentToken,
           key,
         },
       })

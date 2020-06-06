@@ -5,10 +5,10 @@ module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
   const read = ({
     context,
     claims,
+    currentToken,
     token: {
       internalFn: internalTokenFn,
       externalFn: externalTokenFn,
-      current: currentToken,
       key,
     } = {},
   } = {}) => async (query = {}) => {
@@ -47,10 +47,10 @@ module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
   const stream = ({
     context,
     claims,
+    currentToken,
     token: {
       internalFn: internalTokenFn,
       externalFn: externalTokenFn,
-      current: currentToken,
       key,
     } = {},
   } = {}) => async (fn, query = {}) => {
@@ -84,10 +84,10 @@ module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
   };
 
   return {
-    set: ({ context, claims, token }) => {
+    set: ({ context, claims, token, currentToken }) => {
       return {
-        read: read({ context, claims, token }),
-        stream: stream({ context, claims, token }),
+        read: read({ context, claims, token, currentToken }),
+        stream: stream({ context, claims, token, currentToken }),
       };
     },
     read: read(),

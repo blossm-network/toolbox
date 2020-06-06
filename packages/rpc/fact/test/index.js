@@ -55,10 +55,10 @@ describe("Fact", () => {
       .set({
         context,
         claims,
+        currentToken,
         token: {
           internalFn: internalTokenFn,
           externalFn: externalTokenFn,
-          current: currentToken,
           key,
         },
       })
@@ -183,10 +183,10 @@ describe("Fact", () => {
       .set({
         context,
         claims,
+        currentToken,
         token: {
           internalFn: internalTokenFn,
           externalFn: externalTokenFn,
-          current: currentToken,
           key,
         },
       })

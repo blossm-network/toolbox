@@ -4,10 +4,10 @@ module.exports = ({ name, domain, service = process.env.SERVICE }) => {
   const trigger = ({
     context,
     claims,
+    currentToken,
     token: {
       internalFn: internalTokenFn,
       externalFn: externalTokenFn,
-      current: currentToken,
       key,
     } = {},
   } = {}) => async (payload) => {
@@ -33,9 +33,9 @@ module.exports = ({ name, domain, service = process.env.SERVICE }) => {
   };
 
   return {
-    set: ({ context, claims, token }) => {
+    set: ({ context, claims, token, currentToken }) => {
       return {
-        trigger: trigger({ context, claims, token }),
+        trigger: trigger({ context, claims, token, currentToken }),
       };
     },
     trigger: trigger(),
