@@ -8,6 +8,7 @@ module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
     token: {
       internalFn: internalTokenFn,
       externalFn: externalTokenFn,
+      current: currentToken,
       key,
     } = {},
   } = {}) => async (query = {}) => {
@@ -37,6 +38,7 @@ module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
       .with({
         ...(internalTokenFn && { internalTokenFn }),
         ...(externalTokenFn && { externalTokenFn }),
+        ...(currentToken && { currentToken }),
         ...(key && { key }),
         ...(claims && { claims }),
         ...(!internal && { path: `/${name}` }),
@@ -48,6 +50,7 @@ module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
     token: {
       internalFn: internalTokenFn,
       externalFn: externalTokenFn,
+      current: currentToken,
       key,
     } = {},
   } = {}) => async (fn, query = {}) => {
@@ -74,6 +77,7 @@ module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
         path: "/stream",
         ...(internalTokenFn && { internalTokenFn }),
         ...(externalTokenFn && { externalTokenFn }),
+        ...(currentToken && { currentToken }),
         ...(key && { key }),
         ...(claims && { claims }),
       });

@@ -181,6 +181,7 @@ describe("Command gateway post", () => {
           return result.token == reqToken && result.type == "Bearer";
         }),
         internalFn: internalTokenFn,
+        current: req.token,
         key,
       },
       claims,
@@ -355,6 +356,7 @@ describe("Command gateway post", () => {
           const result = fn();
           return result.token == reqToken && result.type == "Bearer";
         }),
+        current: reqToken,
         key,
       },
       context,

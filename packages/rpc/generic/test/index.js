@@ -13,6 +13,7 @@ const token = "some-token";
 const type = "some-type";
 const id = "some-id";
 const tokenFn = "some-token-fn";
+const currentToken = "some-current-token";
 const url = "some-url";
 
 const host = "some-host";
@@ -56,7 +57,6 @@ describe("Operation", () => {
     expect(post).to.have.been.calledWith(url, {
       body: {
         ...data,
-        token,
         context,
         claims,
       },
@@ -178,14 +178,14 @@ describe("Operation", () => {
     const result = await operation(operarationPart1, operarationPart2)
       .post(data)
       .in({ context, host })
-      .with({ path, internalTokenFn: tokenFn, claims });
+      .with({ path, internalTokenFn: tokenFn, currentToken, claims });
 
     expect(post).to.have.been.calledWith(url, {
       body: {
         ...data,
         context,
         claims,
-        token,
+        token: currentToken,
       },
       headers: {
         Authorization: `${type} ${token}`,
@@ -216,14 +216,14 @@ describe("Operation", () => {
     const result = await operation(operarationPart1, operarationPart2)
       .get(data)
       .in({ context, host })
-      .with({ internalTokenFn: tokenFn, claims });
+      .with({ internalTokenFn: tokenFn, currentToken, claims });
 
     expect(get).to.have.been.calledWith(url, {
       query: {
         ...data,
         context,
         claims,
-        token,
+        token: currentToken,
       },
       headers: {
         Authorization: `${type} ${token}`,
@@ -256,14 +256,14 @@ describe("Operation", () => {
     const result = await operation(operarationPart1, operarationPart2)
       .get(data)
       .in({ context, host })
-      .with({ internalTokenFn: tokenFn, claims });
+      .with({ internalTokenFn: tokenFn, currentToken, claims });
 
     expect(get).to.have.been.calledWith(url, {
       query: {
         ...data,
         context,
         claims,
-        token,
+        token: currentToken,
       },
       headers: {
         Authorization: `${type} ${token}`,
@@ -295,14 +295,14 @@ describe("Operation", () => {
     const result = await operation(operarationPart1, operarationPart2)
       .get({ ...data, id })
       .in({ context, host })
-      .with({ internalTokenFn: tokenFn, claims });
+      .with({ internalTokenFn: tokenFn, currentToken, claims });
 
     expect(get).to.have.been.calledWith(url, {
       query: {
         ...data,
         context,
         claims,
-        token,
+        token: currentToken,
       },
       headers: {
         Authorization: `${type} ${token}`,
@@ -336,7 +336,7 @@ describe("Operation", () => {
     const result = await operation(operarationPart1, operarationPart2)
       .stream(fnFake, data)
       .in({ context, host })
-      .with({ internalTokenFn: tokenFn, claims });
+      .with({ internalTokenFn: tokenFn, currentToken, claims });
 
     expect(streamFake).to.have.been.calledWith(
       url,
@@ -352,7 +352,7 @@ describe("Operation", () => {
           ...data,
           context,
           claims,
-          token,
+          token: currentToken,
         },
         headers: {
           Authorization: `${type} ${token}`,
@@ -383,7 +383,7 @@ describe("Operation", () => {
     const result = await operation(operarationPart1, operarationPart2)
       .stream(fnFake, { ...data, id })
       .in({ context, host })
-      .with({ internalTokenFn: tokenFn, claims });
+      .with({ internalTokenFn: tokenFn, currentToken, claims });
 
     expect(streamFake).to.have.been.calledWith(
       url,
@@ -399,7 +399,7 @@ describe("Operation", () => {
           ...data,
           context,
           claims,
-          token,
+          token: currentToken,
         },
         headers: {
           Authorization: `${type} ${token}`,
@@ -430,14 +430,14 @@ describe("Operation", () => {
     const result = await operation(operarationPart1, operarationPart2)
       .put(id, data)
       .in({ context, host })
-      .with({ internalTokenFn: tokenFn, claims });
+      .with({ internalTokenFn: tokenFn, currentToken, claims });
 
     expect(put).to.have.been.calledWith(url, {
       body: {
         ...data,
         context,
         claims,
-        token,
+        token: currentToken,
       },
       headers: {
         Authorization: `${type} ${token}`,
@@ -469,14 +469,14 @@ describe("Operation", () => {
     const result = await operation(operarationPart1, operarationPart2)
       .put(id, data)
       .in({ context, host })
-      .with({ path, internalTokenFn: tokenFn, claims });
+      .with({ path, internalTokenFn: tokenFn, currentToken, claims });
 
     expect(put).to.have.been.calledWith(url, {
       body: {
         ...data,
         context,
         claims,
-        token,
+        token: currentToken,
       },
       headers: {
         Authorization: `${type} ${token}`,
@@ -507,12 +507,12 @@ describe("Operation", () => {
     const result = await operation(operarationPart1, operarationPart2)
       .delete(id)
       .in({ context, host })
-      .with({ internalTokenFn: tokenFn, claims });
+      .with({ internalTokenFn: tokenFn, currentToken, claims });
 
     expect(del).to.have.been.calledWith(url, {
       body: {
         context,
-        token,
+        token: currentToken,
         claims,
       },
       headers: {

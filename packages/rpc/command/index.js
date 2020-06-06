@@ -8,6 +8,7 @@ module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
     token: {
       internalFn: internalTokenFn,
       externalFn: externalTokenFn,
+      current: currentToken,
       key,
     } = {},
   } = {}) => async (
@@ -40,6 +41,13 @@ module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
       ...(options && { options }),
     };
 
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log({
+      commandInternal: internal,
+      network,
+      envHost: process.env.HOST,
+    });
     return await deps
       .rpc(name, domain, service, "command")
       .post(data)
@@ -53,6 +61,7 @@ module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
       .with({
         ...(internalTokenFn && { internalTokenFn }),
         ...(externalTokenFn && { externalTokenFn }),
+        ...(currentToken && { currentToken }),
         ...(key && { key }),
         ...(claims && { claims }),
         ...(!internal && { path: `/${name}` }),

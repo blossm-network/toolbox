@@ -7,6 +7,7 @@ module.exports = ({ name, domain, service = process.env.SERVICE }) => {
     token: {
       internalFn: internalTokenFn,
       externalFn: externalTokenFn,
+      current: currentToken,
       key,
     } = {},
   } = {}) => async (payload) => {
@@ -25,6 +26,7 @@ module.exports = ({ name, domain, service = process.env.SERVICE }) => {
       .with({
         ...(internalTokenFn && { internalTokenFn }),
         ...(externalTokenFn && { externalTokenFn }),
+        ...(currentToken && { currentToken }),
         ...(key && { key }),
         ...(claims && { claims }),
       });

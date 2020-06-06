@@ -138,6 +138,7 @@ describe("Fact gateway get", () => {
           const result = fn();
           return result.token == reqToken && result.type == "Bearer";
         }),
+        current: reqToken,
         key,
       },
     });

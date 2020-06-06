@@ -27,11 +27,19 @@ const common = ({ method, dataParam, operation, id, data }) => {
           path,
           internalTokenFn,
           externalTokenFn,
+          currentToken,
           key,
           claims,
         } = {}) => {
           const internal = host == process.env.HOST;
 
+          //TODO
+          //eslint-disable-next-line no-console
+          console.log({
+            rpcInternal: internal,
+            host,
+            envHost: process.env.HOST,
+          });
           const { token, type } =
             (internal
               ? await deps.operationToken({
@@ -67,7 +75,7 @@ const common = ({ method, dataParam, operation, id, data }) => {
               ...(internal && {
                 ...(context && { context }),
                 ...(claims && { claims }),
-                ...(token && { token }),
+                ...(currentToken && { token: currentToken }),
               }),
             },
             ...(token && {

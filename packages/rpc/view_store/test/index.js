@@ -12,6 +12,7 @@ const network = "some-network";
 
 const internalTokenFn = "some-internal-token-fn";
 const externalTokenFn = "some-external-token-fn";
+const currentToken = "some-current-token";
 const key = "some-key";
 
 const query = "some-query";
@@ -55,6 +56,7 @@ describe("Get views", () => {
         token: {
           internalFn: internalTokenFn,
           externalFn: externalTokenFn,
+          current: currentToken,
           key,
         },
       })
@@ -72,6 +74,7 @@ describe("Get views", () => {
     expect(withFake).to.have.been.calledWith({
       internalTokenFn,
       externalTokenFn,
+      currentToken,
       key,
     });
     expect(result).to.equal(views);
@@ -162,6 +165,7 @@ describe("Get views", () => {
         token: {
           internalFn: internalTokenFn,
           externalFn: externalTokenFn,
+          current: currentToken,
           key,
         },
       })
@@ -180,6 +184,7 @@ describe("Get views", () => {
       path: "/stream",
       internalTokenFn,
       externalTokenFn,
+      currentToken,
       key,
     });
     expect(result).to.equal(views);
@@ -273,8 +278,6 @@ describe("Get views", () => {
         context: contexts,
         token: {
           internalFn: internalTokenFn,
-          externalFn: externalTokenFn,
-          key,
         },
       })
       .update(root, view);
@@ -290,8 +293,6 @@ describe("Get views", () => {
     expect(inFake).to.have.been.calledWith({ context: contexts });
     expect(withFake).to.have.been.calledWith({
       internalTokenFn,
-      externalTokenFn,
-      key,
     });
   });
   it("should call update with the correct params and optionals omitted", async () => {
@@ -332,8 +333,6 @@ describe("Get views", () => {
         context: contexts,
         token: {
           internalFn: internalTokenFn,
-          externalFn: externalTokenFn,
-          key,
         },
       })
       .delete(root);
@@ -349,8 +348,6 @@ describe("Get views", () => {
     expect(inFake).to.have.been.calledWith({ context: contexts });
     expect(withFake).to.have.been.calledWith({
       internalTokenFn,
-      externalTokenFn,
-      key,
     });
   });
   it("should call delete with the correct params with optionals omitted", async () => {

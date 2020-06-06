@@ -143,6 +143,7 @@ describe("View gateway get", () => {
           const result = fn();
           return result.token == reqToken && result.type == "Bearer";
         }),
+        current: reqToken,
         key,
       },
     });
@@ -205,6 +206,7 @@ describe("View gateway get", () => {
           const result = fn();
           return result.token == reqToken && result.type == "Bearer";
         }),
+        current: reqToken,
         key,
       },
     });
@@ -355,6 +357,7 @@ describe("View gateway get", () => {
           const result = fn();
           return result.token == reqToken && result.type == "Bearer";
         }),
+        current: reqToken,
         key,
       },
     });

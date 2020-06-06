@@ -13,6 +13,7 @@ module.exports = ({
     token: {
       internalFn: internalTokenFn,
       externalFn: externalTokenFn,
+      current: currentToken,
       key,
     } = {},
   } = {}) => async ({ query, sort, root } = {}) =>
@@ -39,6 +40,7 @@ module.exports = ({
       .with({
         ...(internalTokenFn && { internalTokenFn }),
         ...(externalTokenFn && { externalTokenFn }),
+        ...(currentToken && { currentToken }),
         ...(key && { key }),
         ...(!internal && { path: `/${name}` }),
       });
@@ -47,6 +49,7 @@ module.exports = ({
     token: {
       internalFn: internalTokenFn,
       externalFn: externalTokenFn,
+      current: currentToken,
       key,
     } = {},
   } = {}) => async (fn, { query, sort, root } = {}) =>
@@ -74,15 +77,12 @@ module.exports = ({
         path: `/${internal ? "" : `${name}/`}stream`,
         ...(internalTokenFn && { internalTokenFn }),
         ...(externalTokenFn && { externalTokenFn }),
+        ...(currentToken && { currentToken }),
         ...(key && { key }),
       });
   const update = ({
     contexts,
-    token: {
-      internalFn: internalTokenFn,
-      externalFn: externalTokenFn,
-      key,
-    } = {},
+    token: { internalFn: internalTokenFn } = {},
   } = {}) => async (root, view) =>
     await deps
       .rpc(
@@ -98,16 +98,10 @@ module.exports = ({
       })
       .with({
         ...(internalTokenFn && { internalTokenFn }),
-        ...(externalTokenFn && { externalTokenFn }),
-        ...(key && { key }),
       });
   const del = ({
     contexts,
-    token: {
-      internalFn: internalTokenFn,
-      externalFn: externalTokenFn,
-      key,
-    } = {},
+    token: { internalFn: internalTokenFn } = {},
   } = {}) => async (root) =>
     await deps
       .rpc(
@@ -123,8 +117,6 @@ module.exports = ({
       })
       .with({
         ...(internalTokenFn && { internalTokenFn }),
-        ...(externalTokenFn && { externalTokenFn }),
-        ...(key && { key }),
       });
   return {
     set: ({ context: contexts, token }) => {

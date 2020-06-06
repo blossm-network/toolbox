@@ -10,6 +10,9 @@ const service = "some-service";
 const context = "some-context";
 
 const internalTokenFn = "some-internal-token-fn";
+const externalTokenFn = "some-external-token-fn";
+const currentToken = "some-current-token";
+const key = "some-key";
 
 const query = "some-query";
 const sort = "some-sort";
@@ -46,7 +49,12 @@ describe("Get composite views", () => {
     })
       .set({
         context: contexts,
-        token: { internalFn: internalTokenFn },
+        token: {
+          internalFn: internalTokenFn,
+          externalFn: externalTokenFn,
+          current: currentToken,
+          key,
+        },
       })
       .read({ query, sort, root });
 
@@ -61,6 +69,9 @@ describe("Get composite views", () => {
     expect(inFake).to.have.been.calledWith({ context: contexts });
     expect(withFake).to.have.been.calledWith({
       internalTokenFn,
+      externalTokenFn,
+      currentToken,
+      key,
     });
     expect(result).to.equal(view);
   });
@@ -109,7 +120,12 @@ describe("Get composite views", () => {
     })
       .set({
         context: contexts,
-        token: { internalFn: internalTokenFn },
+        token: {
+          internalFn: internalTokenFn,
+          externalFn: externalTokenFn,
+          current: currentToken,
+          key,
+        },
       })
       .stream(fn, { query, sort, root });
 
@@ -125,6 +141,9 @@ describe("Get composite views", () => {
     expect(withFake).to.have.been.calledWith({
       path: "/stream",
       internalTokenFn,
+      externalTokenFn,
+      currentToken,
+      key,
     });
     expect(result).to.equal(view);
   });

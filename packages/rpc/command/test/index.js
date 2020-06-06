@@ -25,6 +25,7 @@ const issued = "some-issued";
 const context = { c: 2 };
 const claims = "some-claims";
 const key = "some-key";
+const currentToken = "some-current-token";
 
 const root = "some-root";
 
@@ -74,6 +75,7 @@ describe("Issue command", () => {
         token: {
           internalFn: internalTokenFn,
           externalFn: externalTokenFn,
+          current: currentToken,
           key,
         },
       })
@@ -116,6 +118,7 @@ describe("Issue command", () => {
     expect(withFake).to.have.been.calledWith({
       internalTokenFn,
       externalTokenFn,
+      currentToken,
       key,
       claims,
     });
