@@ -51,7 +51,7 @@ describe("Authorization middleware", () => {
       internalTokenFn,
       externalTokenFn: match((fn) => {
         const result = fn();
-        return result == token;
+        return result.token == token && result.type == "Bearer";
       }),
       permissions,
       context: contextObj,
@@ -62,7 +62,7 @@ describe("Authorization middleware", () => {
         internalFn: internalTokenFn,
         externalFn: match((fn) => {
           const result = fn();
-          return result == token;
+          return result.token == token && result.type == "Bearer";
         }),
       },
     });
