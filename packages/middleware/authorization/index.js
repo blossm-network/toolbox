@@ -9,7 +9,16 @@ module.exports = ({
   context,
 }) =>
   asyncHandler(async (req, _, next) => {
-    const externalTokenFn = () => req.token;
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log({ zaToken: req.token });
+
+    const externalTokenFn = () => {
+      //TODO
+      //eslint-disable-next-line no-console
+      console.log("JAAA");
+      return req.token;
+    };
     await Promise.all([
       // If there are permissions with a lookup fn, check if the permissions are met.
       ...(permissions && permissionsLookupFn

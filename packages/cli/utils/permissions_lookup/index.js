@@ -70,7 +70,11 @@ module.exports = ({ downloadFileFn }) => async ({
         }),
       })
         .set({
-          token: { internalFn: internalTokenFn, externalFn: nodeExternalToken },
+          token: {
+            internalFn: internalTokenFn,
+            externalFn: nodeExternalToken,
+            key: "access",
+          },
           context: { network: process.env.NETWORK },
         })
         .read({ id: roleId });
