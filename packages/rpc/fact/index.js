@@ -15,6 +15,10 @@ module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
       query.id = query.root;
       delete query.root;
     }
+    //TODO
+    //eslint-disable-next-line
+    console.log({ network, procNet: process.env.NETWORK, internal, internalTokenFn, externalTokenFn })
+
     return await deps
       .rpc(
         name,

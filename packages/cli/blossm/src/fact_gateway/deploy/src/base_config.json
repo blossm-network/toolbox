@@ -5,7 +5,7 @@
     "@blossm/gcp-kms": "*",
     "@blossm/gcp-token": "*",
     "@blossm/gcp-storage": "*",
-    "@blossm/terminated-session": "*",
+    "@blossm/terminated-session-check": "*",
     "@blossm/permissions-lookup": "*",
     "@blossm/node-external-token": "*"
   },

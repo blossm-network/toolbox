@@ -17,7 +17,7 @@ module.exports = ({
       //TODO
       //eslint-disable-next-line no-console
       console.log("JAAA");
-      return req.token;
+      return { token: req.token, type: "Bearer" };
     };
     await Promise.all([
       // If there are permissions with a lookup fn, check if the permissions are met.
