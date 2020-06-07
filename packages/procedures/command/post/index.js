@@ -10,19 +10,21 @@ module.exports = ({
 }) => {
   return async (req, res) => {
     if (validateFn) {
-      let aud = req.body.claims ? req.body.claims.aud.split(",") : null;
-      //If there is more than one audience, remove the core network.
-      //The  can only be a validated audience if it's the only audience.
-      //TODO iss is long form where aud is just the network.
-      //Consider adding context.network even on sustainers.network requests. That was there will always be context.network.
-      //Then change $aud to $context.network to be more explicit.
-      if (aud && aud.length > 1) {
-        aud = aud.filter((a) => a == req.body.context.network);
-      }
+      // If there is more than one audience, remove the core network.
+      // The  can only be a validated audience if it's the only audience.
+      // TODO iss is long form where aud is just the network.
+      // Consider adding context.network even on sustainers.network requests. That was there will always be context.network.
+      // Then change $aud to $context.network to be more explicit.
+      // if (aud && aud.length > 1) {
+      //   aud = aud.filter((a) => a == req.body.context.network);
+      // }
 
       await validateFn(req.body.payload, {
-        ...(aud && { aud }),
+        ...(req.body.context && { context: req.body.context }),
       });
+      // , {
+      //   ...(context && { aud }),
+      // });
     }
     if (fillFn) req.body.payload = await fillFn(req.body.payload);
     if (normalizeFn) req.body.payload = await normalizeFn(req.body.payload);

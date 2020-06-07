@@ -2,7 +2,7 @@ const validator = require("@blossm/validator");
 
 const config = require("./config.json");
 
-const validateObject = ({ object, expectation, path, aud }) => {
+const validateObject = ({ object, expectation, path, context }) => {
   for (const property in expectation) {
     if (
       typeof expectation[property] == "string" ||
@@ -36,7 +36,7 @@ const validateObject = ({ object, expectation, path, aud }) => {
             object: item,
             expectation: expectation[property].type[0],
             path: `${path}.${property}`,
-            ...(aud && { aud }),
+            ...(context && { context }),
           });
         } else {
           validator[expectation[property].type[0]](item, {
@@ -54,16 +54,19 @@ const validateObject = ({ object, expectation, path, aud }) => {
       validator[expectation[property].type || "object"](object[property], {
         title: expectation[property].title || property,
         path: `${path}.${property}`,
-        ...(expectation[property].in && {
-          fn: (value) => {
-            if (expectation[property].in == "$aud") {
-              if (!aud) return false;
-              return aud.includes(value);
-            } else {
-              return expectation[property].in.includes(value);
-            }
-          },
-        }),
+        ...(expectation[property].in ||
+          (expectation[property].is && {
+            fn: (value) => {
+              if (expectation[property].is) {
+                return expectation[property].is == "$network" && context
+                  ? value == context.network
+                  : value == expectation[property].is;
+              }
+              if (expectation[property].in) {
+                return expectation[property].in.includes(value);
+              }
+            },
+          })),
         optional:
           expectation[property].optional || expectation[property].default,
       }),
@@ -74,7 +77,7 @@ const validateObject = ({ object, expectation, path, aud }) => {
         object: object[property],
         expectation: expectation[property].properties,
         path: `${path}.${property}`,
-        ...(aud && { aud }),
+        ...(context && { context }),
       });
     }
     if (!expectation[property].type) {
@@ -82,17 +85,17 @@ const validateObject = ({ object, expectation, path, aud }) => {
         object: object[property],
         expectation: expectation[property],
         path: `${path}.${property}`,
-        ...(aud && { aud }),
+        ...(context && { context }),
       });
     }
   }
 };
 
-module.exports = async (payload, { aud } = {}) => {
+module.exports = async (payload, { context } = {}) => {
   return validateObject({
     object: payload,
     expectation: config.payload,
     path: "payload",
-    ...(aud != undefined && { aud }),
+    ...(context != undefined && { context }),
   });
 };

@@ -26,11 +26,7 @@ const event = {
 };
 const correctNumber = 4;
 const context = "some-context";
-const iss = "some-iss";
-const claims = {
-  aud: iss,
-  iss,
-};
+const claims = "some-claims";
 const trace = "some-trace";
 const issued = "some-issued";
 const accepted = "some-accepted";
@@ -716,7 +712,7 @@ describe("Command handler post", () => {
     expect(aggregateFnFake).to.have.been.calledWith({ context, claims });
     expect(normalizeFnFake).to.have.been.calledWith(payload);
     expect(validateFnFake).to.have.been.calledWith(payload, {
-      aud: [iss],
+      context,
     });
     expect(mainFnFake).to.have.been.calledWith({
       payload: cleanedPayload,
@@ -906,7 +902,7 @@ describe("Command handler post", () => {
     expect(aggregateFnFake).to.have.been.calledWith({ context, claims });
     expect(normalizeFnFake).to.have.been.calledWith(payload);
     expect(validateFnFake).to.have.been.calledWith(payload, {
-      aud: [iss],
+      context,
     });
     expect(mainFnFake).to.have.been.calledWith({
       payload: cleanedPayload,
@@ -1010,9 +1006,7 @@ describe("Command handler post", () => {
 
     expect(aggregateFnFake).to.have.been.calledWith({ context, claims });
     expect(normalizeFnFake).to.have.been.calledWith(payload);
-    expect(validateFnFake).to.have.been.calledWith(payload, {
-      aud: [iss],
-    });
+    expect(validateFnFake).to.have.been.calledWith(payload, { context });
     expect(mainFnFake).to.have.been.calledWith({
       payload: cleanedPayload,
       context,
@@ -1144,9 +1138,7 @@ describe("Command handler post", () => {
 
     expect(aggregateFnFake).to.have.been.calledWith({ context, claims });
     expect(normalizeFnFake).to.have.been.calledWith(payload);
-    expect(validateFnFake).to.have.been.calledWith(payload, {
-      aud: [iss],
-    });
+    expect(validateFnFake).to.have.been.calledWith(payload, { context });
     expect(mainFnFake).to.have.been.calledWith({
       payload: cleanedPayload,
       context,
@@ -1239,11 +1231,7 @@ describe("Command handler post", () => {
       events,
       response,
     });
-    const aud2 = "some-other-aud";
-    const claims = {
-      aud: `${iss},${aud2}`,
-      iss,
-    };
+    const claims = {};
     const req = {
       body: {
         payload,
@@ -1276,9 +1264,7 @@ describe("Command handler post", () => {
 
     expect(aggregateFnFake).to.have.been.calledWith({ claims });
     expect(normalizeFnFake).to.have.been.calledWith(payload);
-    expect(validateFnFake).to.have.been.calledWith(payload, {
-      aud: [aud2],
-    });
+    expect(validateFnFake).to.have.been.calledWith(payload, {});
     expect(mainFnFake).to.have.been.calledWith({
       payload: cleanedPayload,
       claims,
