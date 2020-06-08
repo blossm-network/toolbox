@@ -17,7 +17,12 @@ module.exports = ({
       name,
       domain,
       ...(service && { service }),
-      ...(network && { network }),
+      //TODO change to snd
+      ...(network && {
+        network: `${
+          process.env.NODE_ENV == "production" ? "" : "dev."
+        }${network}`,
+      }),
     })
     .set({
       token: {
@@ -33,6 +38,10 @@ module.exports = ({
       ...(req.claims && { claims: req.claims }),
     })
     .issue(payload, { ...headers, root });
+
+  //TODO
+  //eslint-disable-next-line no-console
+  console.log({ responseHeaders, body: response });
 
   // If the response has tokens, send them as cookies and remove them from the response.
   if (response && response.tokens) {

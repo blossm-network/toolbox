@@ -25,11 +25,10 @@ const body = {
   root,
 };
 
-process.env.NODE_ENV = "some-node-env-not-dev";
-
 describe("Command gateway post", () => {
   beforeEach(() => {
     delete process.env.NETWORK;
+    process.env.NODE_ENV = "production";
   });
   afterEach(() => {
     restore();
@@ -173,6 +172,89 @@ describe("Command gateway post", () => {
       domain,
       service,
       network,
+    });
+    expect(setFake).to.have.been.calledWith({
+      token: {
+        externalFn: match((fn) => {
+          const result = fn();
+          return result.token == reqToken && result.type == "Bearer";
+        }),
+        internalFn: internalTokenFn,
+        key,
+      },
+      currentToken: req.token,
+      claims,
+      context,
+    });
+    expect(issueFake).to.have.been.calledWith(payload, {
+      ...headers,
+      root,
+    });
+    expect(statusFake).to.have.been.calledWith(statusCode);
+  });
+  it("should call with the correct params on a different network in a non prod env", async () => {
+    const validateFake = fake();
+    replace(deps, "validate", validateFake);
+
+    const issueFake = fake.returns({
+      body: {
+        ...response,
+        tokens: [{ a: 1 }],
+      },
+      statusCode,
+    });
+    const setFake = fake.returns({
+      issue: issueFake,
+    });
+    const commandFake = fake.returns({
+      set: setFake,
+    });
+    replace(deps, "command", commandFake);
+
+    const reqToken = "some-req-token";
+    const req = {
+      context,
+      claims,
+      token: reqToken,
+      body,
+      params: {},
+    };
+
+    const sendFake = fake();
+    const statusFake = fake.returns({
+      send: sendFake,
+    });
+    const setResponseFake = fake.returns({
+      status: statusFake,
+    });
+    const cookieFake = fake();
+    const res = {
+      cookie: cookieFake,
+      set: setResponseFake,
+    };
+
+    const network = "some-random-network";
+    const service = "some-random-service";
+    const nodeExternalTokenResult = "some-node-external-token-result";
+    const nodeExternalTokenFnFake = fake.returns(nodeExternalTokenResult);
+    process.env.NETWORK = "some-random-env-network";
+    process.env.NODE_ENV = "something-else";
+    await post({
+      name,
+      domain,
+      internalTokenFn,
+      nodeExternalTokenFn: nodeExternalTokenFnFake,
+      key,
+      network,
+      service,
+    })(req, res);
+
+    expect(validateFake).to.have.been.calledWith(body);
+    expect(commandFake).to.have.been.calledWith({
+      name,
+      domain,
+      service,
+      network: `dev.${network}`,
     });
     expect(setFake).to.have.been.calledWith({
       token: {
