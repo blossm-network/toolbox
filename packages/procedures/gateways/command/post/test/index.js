@@ -108,7 +108,10 @@ describe("Command gateway post", () => {
       root,
     });
     expect(statusFake).to.have.been.calledWith(statusCode);
-    expect(sendFake).to.have.been.calledWith(response);
+    expect(sendFake).to.have.been.calledWith({
+      ...response,
+      tokens: [{ a: 1 }],
+    });
   });
   it("should call with the correct params on a different network and different service, with claims and context", async () => {
     const validateFake = fake();
@@ -448,7 +451,8 @@ describe("Command gateway post", () => {
       ...headers,
       root,
     });
-    expect(statusFake).to.have.been.calledWith(204);
+    expect(sendFake).to.have.been.calledWith({ tokens: [token1, token2] });
+    expect(statusFake).to.have.been.calledWith(statusCode);
   });
   it("should throw correctly", async () => {
     const errorMessage = "error-message";
