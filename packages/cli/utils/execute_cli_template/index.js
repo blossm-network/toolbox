@@ -76,14 +76,15 @@ const execute = async (input, configFn) => {
 
     await enqueue({
       queue: input.queue,
-      url: `https://${operationHash}.${input.region}.${envUriSpecifier(
-        input.env
-      )}${rootConfig.network}`,
-      ...(input.data && { data: JSON.parse(input.data) }),
       serviceAccountEmail: `executer@${project}.iam.gserviceaccount.com`,
       audience,
       location: "us-central1",
       project,
+    })({
+      url: `https://${operationHash}.${input.region}.${envUriSpecifier(
+        input.env
+      )}${rootConfig.network}`,
+      ...(input.data && { data: JSON.parse(input.data) }),
     });
   } catch (err) {
     process.exitCode = 1;
