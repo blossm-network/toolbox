@@ -3,50 +3,10 @@ const mongoose = require("mongoose");
 const connect = require("./connect");
 const deps = require("../deps");
 
-const unravelMixins = ({ schema = {}, indexes = [], mixins = [] }) => {
-  const mixin = {
-    schema,
-    indexes,
-    mixins,
-  };
-
-  const result = [mixin];
-
-  mixin.mixins.reverse().forEach((nestedMixin) => {
-    const nestedMixins = unravelMixins(nestedMixin);
-    result.unshift(...nestedMixins);
-  });
-
-  return result;
-};
-
-const formattedMixins = (root) => {
-  const allMixins = unravelMixins(root);
-
-  const allSchemas = allMixins.map((mixin) => mixin.schema);
-  const allIndexes = allMixins.map((mixin) => mixin.indexes);
-
-  const formattedSchemas = (viewStore) => {
-    for (const schema of allSchemas) viewStore.add(schema);
-  };
-
-  const formattedIndexes = (viewStore) => {
-    for (const indexes of allIndexes) {
-      for (const index of indexes) {
-        viewStore.index(...index);
-      }
-    }
-  };
-
-  return [formattedSchemas, formattedIndexes];
-};
-
 module.exports = ({
   name,
   schema,
-  indexes,
-  mixins = [],
-  version = 0,
+  indexes = [],
   connection: {
     protocol,
     user,
@@ -61,7 +21,7 @@ module.exports = ({
   } = {},
 }) => {
   if (name == undefined || name.length == 0)
-    throw deps.internalServerError.message("View store needs a name.");
+    throw deps.internalServerError.message("Store needs a name.");
 
   if (
     user != undefined &&
@@ -84,26 +44,15 @@ module.exports = ({
     });
   }
 
-  const base = {
-    schema,
-    indexes,
-    mixins,
-  };
-
   const store = new mongoose.Schema(
     {},
     { strict: schema != undefined, typePojoToMixed: false, minimize: false }
   );
 
-  formattedMixins(base).forEach((mixin) => mixin(store));
+  if (schema) store.add(schema);
+  for (const index of indexes) {
+    store.index(...index);
+  }
 
-  store.add({
-    version: {
-      type: Number,
-      default: version,
-    },
-  });
-
-  const storeName = `${name}.${version}`;
-  return mongoose.model(storeName, store, name);
+  return mongoose.model(name, store);
 };
