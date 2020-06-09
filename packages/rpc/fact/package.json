@@ -1,7 +1,7 @@
 {
   "name": "@blossm/fact-rpc",
   "description": "Gets a fact.",
-  "version": "0.0.71",
+  "version": "0.0.72",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
