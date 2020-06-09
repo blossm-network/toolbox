@@ -14,6 +14,7 @@ const indexes = [[{ "some-index": 1 }]];
 
 const protocol = "some-db-protocol";
 const domain = "some-domain";
+const service = "some-service";
 const name = "some-name";
 const context = "some-context";
 const user = "some-db-user";
@@ -50,6 +51,7 @@ describe("View store", () => {
     process.env.NODE_ENV = "some-env";
     clock = useFakeTimers(now.getTime());
     process.env.DOMAIN = domain;
+    process.env.SERVICE = service;
   });
   afterEach(() => {
     clock.restore();
@@ -109,7 +111,7 @@ describe("View store", () => {
     });
 
     expect(storeFake).to.have.been.calledWith({
-      name: `${context}.${domain}.${name}`,
+      name: `${context}.${service}.${domain}.${name}`,
       schema: {
         body: {
           a: 1,
@@ -323,6 +325,7 @@ describe("View store", () => {
     const putFn = "some-put-fn";
 
     delete process.env.DOMAIN;
+    delete process.env.SERVICE;
     process.env.NODE_ENV = "local";
     await mongodbViewStore({
       schema,
@@ -448,7 +451,7 @@ describe("View store", () => {
     await mongodbViewStore({ schema, indexes, getFn, putFn });
 
     expect(storeFake).to.have.been.calledWith({
-      name: `${context}.${domain}.${name}`,
+      name: `${context}.${service}.${domain}.${name}`,
       schema: {
         body: {
           a: 1,
@@ -568,7 +571,7 @@ describe("View store", () => {
     await mongodbViewStore({ schema, indexes });
 
     expect(storeFake).to.have.been.calledWith({
-      name: `${context}.${domain}.${name}`,
+      name: `${context}.${service}.${domain}.${name}`,
       schema: {
         body: {
           a: 1,
@@ -643,7 +646,7 @@ describe("View store", () => {
     expect(secretFake).to.have.been.calledWith("mongodb-view-store");
 
     expect(storeFake).to.have.been.calledWith({
-      name: `${context}.${domain}.${name}`,
+      name: `${context}.${service}.${domain}.${name}`,
       schema: {
         body: {
           a: 1,
@@ -845,7 +848,7 @@ describe("View store", () => {
     await mongodbViewStore({ schema, indexes });
 
     expect(storeFake).to.have.been.calledWith({
-      name: `${context}.${domain}.${name}`,
+      name: `${context}.${service}.${domain}.${name}`,
       schema: {
         body: {
           a: 1,

@@ -74,7 +74,7 @@ module.exports = ({ domain, service = process.env.SERVICE } = {}) => {
     token: {
       internalFn: internalTokenFn,
       externalFn: externalTokenFn,
-      key,
+      key: tokenKey,
     } = {},
   } = {}) => async ({ key, value }) =>
     await deps
@@ -86,7 +86,7 @@ module.exports = ({ domain, service = process.env.SERVICE } = {}) => {
       .with({
         ...(internalTokenFn && { internalTokenFn }),
         ...(externalTokenFn && { externalTokenFn }),
-        ...(key && { key }),
+        ...(tokenKey && { key: tokenKey }),
         ...(claims && { claims }),
       });
   const stream = ({

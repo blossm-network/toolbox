@@ -11,10 +11,10 @@ const numberStore = async () => {
   }
 
   _numberStore = deps.db.store({
-    name: `${process.env.NAME}${
-      process.env.DOMAIN ? `.${process.env.DOMAIN}` : ""
-    }${process.env.SERVICE ? `.${process.env.SERVICE}` : ""}.${
-      process.env.CONTEXT
+    name: `${process.env.CONTEXT}${
+      process.env.SERVICE ? `.${process.env.SERVICE}` : ""
+    }${process.env.DOMAIN ? `.${process.env.DOMAIN}` : ""}.${
+      process.env.NAME
     }.numbers`,
     schema: {
       root: { type: String, required: true },

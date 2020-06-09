@@ -12,6 +12,7 @@ const now = new Date();
 const schema = "some-schema";
 
 const domain = "some-domain";
+const service = "some-service";
 const user = "some-db-user";
 const protocol = "some-db-protocol";
 const userPassword = "some-db-user-password";
@@ -21,6 +22,7 @@ const password = "some-password";
 const handlers = "some-handlers";
 
 process.env.DOMAIN = domain;
+process.env.SERVICE = service;
 process.env.MONGODB_PROTOCOL = protocol;
 process.env.MONGODB_USER = user;
 process.env.MONGODB_USER_PASSWORD = userPassword;
@@ -102,7 +104,7 @@ describe("Mongodb event store", () => {
     });
     expect(removeIdsFake).to.have.been.calledTwice;
     expect(storeFake).to.have.been.calledWith({
-      name: domain,
+      name: `${service}.${domain}`,
       schema: {
         id: { type: String, required: true, unique: true },
         saved: { type: Date, required: true },
@@ -175,7 +177,7 @@ describe("Mongodb event store", () => {
       },
     });
     expect(storeFake).to.have.been.calledWith({
-      name: `${domain}.snapshots`,
+      name: `${service}.${domain}.snapshots`,
       schema: {
         created: { type: Date, required: true },
         headers: {
@@ -278,7 +280,7 @@ describe("Mongodb event store", () => {
     await mongodbEventStore({ schema, indexes: [index], publishFn });
 
     expect(storeFake).to.have.been.calledWith({
-      name: domain,
+      name: `${service}.${domain}`,
       schema: {
         id: { type: String, required: true, unique: true },
         saved: { type: Date, required: true },
@@ -352,7 +354,7 @@ describe("Mongodb event store", () => {
       },
     });
     expect(storeFake).to.have.been.calledWith({
-      name: `${domain}.snapshots`,
+      name: `${service}.${domain}.snapshots`,
       schema: {
         created: { type: Date, required: true },
         headers: {
@@ -364,7 +366,7 @@ describe("Mongodb event store", () => {
       indexes: [[{ "headers.root": 1 }], [{ [index]: 1 }]],
     });
     expect(storeFake).to.have.been.calledWith({
-      name: `${domain}.counts`,
+      name: `${service}.${domain}.counts`,
       schema: {
         root: { type: String, required: true, unique: true },
         value: { type: Number, required: true, default: 0 },
@@ -422,7 +424,7 @@ describe("Mongodb event store", () => {
     });
     expect(removeIdsFake).to.have.been.calledTwice;
     expect(storeFake).to.have.been.calledWith({
-      name: domain,
+      name: `${service}.${domain}`,
       schema: {
         id: { type: String, required: true, unique: true },
         saved: { type: Date, required: true },
