@@ -1,7 +1,7 @@
 {
   "name": "@blossm/mongodb-event-handler",
   "description": "A mongodb event handler server.",
-  "version": "0.0.42",
+  "version": "0.0.43",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
