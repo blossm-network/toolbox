@@ -54,7 +54,7 @@ module.exports = ({ downloadFileFn }) => async ({
       token: { internalFn: internalTokenFn, externalFn: externalTokenFn },
       context: { network: process.env.NETWORK },
     })
-    .read({ root: principal.root });
+    .read({ id: principal.root });
 
   return await rolePermissions({
     roles,

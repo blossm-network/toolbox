@@ -62,11 +62,11 @@ describe("Fact", () => {
           key,
         },
       })
-      .read(query);
+      .read({ query });
 
     expect(result).to.equal(response);
     expect(rpcFake).to.have.been.calledWith(name, domain, service, "fact");
-    expect(getFake).to.have.been.calledWith(query);
+    expect(getFake).to.have.been.calledWith({ query });
     expect(inFake).to.have.been.calledWith({
       context,
     });
@@ -115,7 +115,7 @@ describe("Fact", () => {
     replace(deps, "rpc", rpcFake);
 
     const root = "some-root";
-    const result = await fact({ name }).read({ root });
+    const result = await fact({ name }).read({ id: root });
 
     expect(result).to.deep.equal({ body: response });
     expect(rpcFake).to.have.been.calledWith(name, envService, "fact");
@@ -148,11 +148,11 @@ describe("Fact", () => {
         claims,
         token: { externalFn: externalTokenFn, key },
       })
-      .read(query);
+      .read({ query });
 
     expect(result).to.equal(response);
     expect(rpcFake).to.have.been.calledWith(name, domain, service, "fact");
-    expect(getFake).to.have.been.calledWith(query);
+    expect(getFake).to.have.been.calledWith({ query });
     expect(inFake).to.have.been.calledWith({
       context,
       network: otherNetwork,
@@ -190,11 +190,11 @@ describe("Fact", () => {
           key,
         },
       })
-      .stream(fn, query);
+      .stream(fn, { query });
 
     expect(result).to.equal(response);
     expect(rpcFake).to.have.been.calledWith(name, domain, service, "fact");
-    expect(streamFake).to.have.been.calledWith(fn, query);
+    expect(streamFake).to.have.been.calledWith(fn, { query });
     expect(inFake).to.have.been.calledWith({
       context,
     });
@@ -243,7 +243,7 @@ describe("Fact", () => {
     });
     replace(deps, "rpc", rpcFake);
 
-    const root = "some-root";
+    const id = "some-id";
     const { body: result } = await fact({ name, domain, service })
       .set({
         context,
@@ -254,11 +254,11 @@ describe("Fact", () => {
           key,
         },
       })
-      .stream(fn, { root });
+      .stream(fn, { id });
 
     expect(result).to.equal(response);
     expect(rpcFake).to.have.been.calledWith(name, domain, service, "fact");
-    expect(streamFake).to.have.been.calledWith(fn, { id: root });
+    expect(streamFake).to.have.been.calledWith(fn, { id });
     expect(inFake).to.have.been.calledWith({
       context,
     });
@@ -296,11 +296,11 @@ describe("Fact", () => {
         claims,
         token: { externalFn: externalTokenFn, key },
       })
-      .stream(fn, query);
+      .stream(fn, { query });
 
     expect(result).to.equal(response);
     expect(rpcFake).to.have.been.calledWith(name, domain, service, "fact");
-    expect(streamFake).to.have.been.calledWith(fn, query);
+    expect(streamFake).to.have.been.calledWith(fn, { query });
     expect(inFake).to.have.been.calledWith({
       context,
       network: otherNetwork,

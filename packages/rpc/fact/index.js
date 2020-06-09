@@ -11,12 +11,7 @@ module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
       externalFn: externalTokenFn,
       key,
     } = {},
-  } = {}) => async (query = {}) => {
-    if (query.root) {
-      query.id = query.root;
-      delete query.root;
-    }
-
+  } = {}) => async ({ query, id } = {}) => {
     return await deps
       .rpc(
         name,
@@ -24,7 +19,7 @@ module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
         ...(service ? [service] : []),
         "fact"
       )
-      .get(query)
+      .get({ ...(query && { query }), ...(id && { id }) })
       .in({
         ...(context && { context }),
         ...(!internal && {
@@ -50,11 +45,7 @@ module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
       externalFn: externalTokenFn,
       key,
     } = {},
-  } = {}) => async (fn, query = {}) => {
-    if (query.root) {
-      query.id = query.root;
-      delete query.root;
-    }
+  } = {}) => async (fn, { query, id } = {}) => {
     return await deps
       .rpc(
         name,
@@ -62,7 +53,7 @@ module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
         ...(service ? [service] : []),
         "fact"
       )
-      .stream(fn, query)
+      .stream(fn, { ...(query && { query }), ...(id && { id }) })
       .in({
         ...(context && { context }),
         ...(!internal && {
