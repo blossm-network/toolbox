@@ -61,8 +61,40 @@ describe("Operation", () => {
         claims,
       },
       headers: {
-        Authorization: `${type} ${token}`,
+        authorization: `${type} ${token}`,
       },
+    });
+    expect(operationTokenFake).to.have.been.calledWith({
+      tokenFn,
+      operation: [operarationPart1, operarationPart2],
+    });
+    expect(operationUrlFake).to.have.been.calledWith({
+      operation: [operarationPart1, operarationPart2],
+      host,
+    });
+    expect(result).to.deep.equal({ statusCode });
+  });
+  it("should call post with the correct params with queueFn", async () => {
+    const operationTokenFake = fake.returns({ token, type });
+    replace(deps, "operationToken", operationTokenFake);
+
+    const operationUrlFake = fake.returns(url);
+    replace(deps, "operationUrl", operationUrlFake);
+
+    const queueFnFake = fake.returns(response);
+    const result = await operation(operarationPart1, operarationPart2)
+      .post(data)
+      .in({ context, host })
+      .with({ internalTokenFn: tokenFn, claims, queueFn: queueFnFake });
+
+    expect(queueFnFake).to.have.been.calledWith({
+      url,
+      data: {
+        ...data,
+        context,
+        claims,
+      },
+      token,
     });
     expect(operationTokenFake).to.have.been.calledWith({
       tokenFn,
@@ -126,7 +158,7 @@ describe("Operation", () => {
     expect(post).to.have.been.calledWith(url, {
       body: data,
       headers: {
-        Authorization: `${type} ${token}`,
+        authorization: `${type} ${token}`,
       },
     });
     expect(networkTokenFake).to.have.been.calledWith({
@@ -188,7 +220,7 @@ describe("Operation", () => {
         token: currentToken,
       },
       headers: {
-        Authorization: `${type} ${token}`,
+        authorization: `${type} ${token}`,
       },
     });
     expect(operationTokenFake).to.have.been.calledWith({
@@ -226,7 +258,49 @@ describe("Operation", () => {
         token: currentToken,
       },
       headers: {
-        Authorization: `${type} ${token}`,
+        authorization: `${type} ${token}`,
+      },
+    });
+    expect(operationTokenFake).to.have.been.calledWith({
+      tokenFn,
+      operation: [operarationPart1, operarationPart2],
+    });
+    expect(operationUrlFake).to.have.been.calledWith({
+      operation: [operarationPart1, operarationPart2],
+      host,
+    });
+    expect(result).to.deep.equal({ statusCode: bodyStatusCode, body });
+  });
+  it("should call get with queueFn ignored", async () => {
+    const get = fake.returns(bodyResponse);
+    replace(deps, "get", get);
+
+    const operationTokenFake = fake.returns({ token, type });
+    replace(deps, "operationToken", operationTokenFake);
+
+    const operationUrlFake = fake.returns(url);
+    replace(deps, "operationUrl", operationUrlFake);
+
+    const queueFnFake = fake.returns("whatever");
+    const result = await operation(operarationPart1, operarationPart2)
+      .get(data)
+      .in({ context, host })
+      .with({
+        internalTokenFn: tokenFn,
+        claims,
+        currentToken,
+        queueFn: queueFnFake,
+      });
+
+    expect(get).to.have.been.calledWith(url, {
+      query: {
+        ...data,
+        context,
+        claims,
+        token: currentToken,
+      },
+      headers: {
+        authorization: `${type} ${token}`,
       },
     });
     expect(operationTokenFake).to.have.been.calledWith({
@@ -266,7 +340,7 @@ describe("Operation", () => {
         token: currentToken,
       },
       headers: {
-        Authorization: `${type} ${token}`,
+        authorization: `${type} ${token}`,
       },
     });
     expect(operationTokenFake).to.have.been.calledWith({
@@ -305,7 +379,7 @@ describe("Operation", () => {
         token: currentToken,
       },
       headers: {
-        Authorization: `${type} ${token}`,
+        authorization: `${type} ${token}`,
       },
     });
     expect(operationTokenFake).to.have.been.calledWith({
@@ -355,7 +429,7 @@ describe("Operation", () => {
           token: currentToken,
         },
         headers: {
-          Authorization: `${type} ${token}`,
+          authorization: `${type} ${token}`,
         },
       }
     );
@@ -402,7 +476,7 @@ describe("Operation", () => {
           token: currentToken,
         },
         headers: {
-          Authorization: `${type} ${token}`,
+          authorization: `${type} ${token}`,
         },
       }
     );
@@ -440,7 +514,7 @@ describe("Operation", () => {
         token: currentToken,
       },
       headers: {
-        Authorization: `${type} ${token}`,
+        authorization: `${type} ${token}`,
       },
     });
 
@@ -479,7 +553,7 @@ describe("Operation", () => {
         token: currentToken,
       },
       headers: {
-        Authorization: `${type} ${token}`,
+        authorization: `${type} ${token}`,
       },
     });
     expect(operationTokenFake).to.have.been.calledWith({
@@ -516,7 +590,7 @@ describe("Operation", () => {
         claims,
       },
       headers: {
-        Authorization: `${type} ${token}`,
+        authorization: `${type} ${token}`,
       },
     });
     expect(operationTokenFake).to.have.been.calledWith({

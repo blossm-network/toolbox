@@ -10,6 +10,7 @@ module.exports = ({ name, domain, service = process.env.SERVICE }) => {
       externalFn: externalTokenFn,
       key,
     } = {},
+    queueFn,
   } = {}) => async (payload) => {
     const data = { payload };
     return await deps
@@ -29,13 +30,14 @@ module.exports = ({ name, domain, service = process.env.SERVICE }) => {
         ...(currentToken && { currentToken }),
         ...(key && { key }),
         ...(claims && { claims }),
+        ...(queueFn && { queueFn }),
       });
   };
 
   return {
-    set: ({ context, claims, token, currentToken }) => {
+    set: ({ context, claims, token, currentToken, queueFn }) => {
       return {
-        trigger: trigger({ context, claims, token, currentToken }),
+        trigger: trigger({ context, claims, token, currentToken, queueFn }),
       };
     },
     trigger: trigger(),

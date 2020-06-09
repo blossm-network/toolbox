@@ -68,6 +68,7 @@ describe("Issue command", () => {
     replace(deps, "rpc", rpcFake);
 
     const path = ["some-path"];
+    const queueFn = "some-queue-fn";
     const { body: result } = await command({ name, domain, service, network })
       .set({
         context,
@@ -78,6 +79,7 @@ describe("Issue command", () => {
           externalFn: externalTokenFn,
           key,
         },
+        queueFn,
       })
       .issue(payload, {
         trace,
@@ -121,6 +123,7 @@ describe("Issue command", () => {
       currentToken,
       key,
       claims,
+      queueFn,
     });
   });
   it("should call with the correct optional params", async () => {

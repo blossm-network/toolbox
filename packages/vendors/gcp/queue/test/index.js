@@ -19,7 +19,6 @@ const url = "some-url";
 const data = { a: 1 };
 const project = "some-project";
 const location = "some-location";
-const token = "some-token";
 const name = "some-name";
 const serviceAccountEmail = "some-service-account-email";
 const audience = "some-audience";
@@ -66,13 +65,14 @@ describe("Queue", () => {
   });
   it("should call enqueue with the correct params", async () => {
     const result = await queue.enqueue({
-      url,
-      data,
       serviceAccountEmail,
       audience,
       project,
       queue: name,
       location,
+    })({
+      url,
+      data,
     });
     expect(queuePathFake).to.have.been.calledWith(project, location);
     expect(createTaskFake).to.have.been.calledWith({
@@ -99,13 +99,11 @@ describe("Queue", () => {
   });
   it("should call enqueue with the correct params with wait and optionals missing", async () => {
     const result = await queue.enqueue({
-      url,
-      token,
       project,
       queue: name,
       wait: 4,
       location,
-    });
+    })({ url });
     expect(queuePathFake).to.have.been.calledWith(project, location);
     expect(createTaskFake).to.have.been.calledWith({
       parent: queueParent,
@@ -124,6 +122,39 @@ describe("Queue", () => {
         },
         scheduleTime: {
           seconds: 4 + Date.now() / 1000,
+        },
+      },
+    });
+    expect(result).to.equal(taskResponse);
+  });
+  it("should call enqueue with the correct params with token", async () => {
+    const token = "some-token";
+    const result = await queue.enqueue({
+      serviceAccountEmail,
+      audience,
+      project,
+      queue: name,
+      location,
+    })({
+      url,
+      data,
+      token,
+    });
+    expect(queuePathFake).to.have.been.calledWith(project, location);
+    expect(createTaskFake).to.have.been.calledWith({
+      parent: queueParent,
+      task: {
+        httpRequest: {
+          url,
+          httpMethod: "POST",
+          headers: {
+            "content-type": "application/json",
+            authorization: "Bearer some-token",
+          },
+          body: Buffer.from(JSON.stringify(data)).toString("base64"),
+        },
+        scheduleTime: {
+          seconds: Date.now() / 1000,
         },
       },
     });

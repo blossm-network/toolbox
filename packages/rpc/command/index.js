@@ -11,6 +11,7 @@ module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
       externalFn: externalTokenFn,
       key,
     } = {},
+    queueFn,
   } = {}) => async (
     payload = {},
     { trace, issued, root, path, options } = {}
@@ -55,6 +56,7 @@ module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
         ...(internalTokenFn && { internalTokenFn }),
         ...(externalTokenFn && { externalTokenFn }),
         ...(currentToken && { currentToken }),
+        ...(queueFn && { queueFn }),
         ...(key && { key }),
         ...(claims && { claims }),
         ...(!internal && { path: `/${name}` }),
@@ -62,9 +64,9 @@ module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
   };
 
   return {
-    set: ({ context, claims, token, currentToken }) => {
+    set: ({ context, claims, token, currentToken, queueFn }) => {
       return {
-        issue: issue({ context, claims, token, currentToken }),
+        issue: issue({ context, claims, token, currentToken, queueFn }),
       };
     },
     issue: issue(),

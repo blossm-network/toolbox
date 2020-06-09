@@ -30,6 +30,7 @@ const common = ({ method, dataParam, operation, id, data }) => {
           currentToken,
           key,
           claims,
+          queueFn,
         } = {}) => {
           const internal = host == process.env.HOST;
 
@@ -58,21 +59,26 @@ const common = ({ method, dataParam, operation, id, data }) => {
                 ...(id && { id }),
               });
 
-          const response = await method(url, {
-            [dataParam]: {
-              ...(data && { ...data }),
-              ...(internal && {
-                ...(context && { context }),
-                ...(claims && { claims }),
-                ...(currentToken && { token: currentToken }),
-              }),
-            },
-            ...(token && {
-              headers: {
-                Authorization: `${type} ${token}`,
-              },
+          const requestData = {
+            ...(data && { ...data }),
+            ...(internal && {
+              ...(context && { context }),
+              ...(claims && { claims }),
+              ...(currentToken && { token: currentToken }),
             }),
-          });
+          };
+
+          const response =
+            queueFn && method == deps.post
+              ? await queueFn({ url, data: requestData, token })
+              : await method(url, {
+                  [dataParam]: requestData,
+                  ...(token && {
+                    headers: {
+                      authorization: `${type} ${token}`,
+                    },
+                  }),
+                });
 
           //Stream doesn't have a reponse.
           if (!response) return;

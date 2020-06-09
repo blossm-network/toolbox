@@ -13,16 +13,14 @@ exports.create = async ({ project, location, name }) => {
   return response;
 };
 
-exports.enqueue = async ({
-  url,
-  data = {},
+exports.enqueue = ({
   serviceAccountEmail,
   audience,
   project,
   location,
   queue,
   wait = 0,
-}) => {
+}) => async ({ url, data = {}, token }) => {
   const parent = client.queuePath(project, location, queue);
 
   const string = JSON.stringify(data);
@@ -32,13 +30,17 @@ exports.enqueue = async ({
     httpRequest: {
       httpMethod: "POST",
       url,
-      oidcToken: {
-        serviceAccountEmail:
-          serviceAccountEmail || `executer@${project}.iam.gserviceaccount.com`,
-        ...(audience && { audience }),
-      },
+      ...(!token && {
+        oidcToken: {
+          serviceAccountEmail:
+            serviceAccountEmail ||
+            `executer@${project}.iam.gserviceaccount.com`,
+          ...(audience && { audience }),
+        },
+      }),
       headers: {
         "content-type": "application/json",
+        ...(token && { authorization: `Bearer ${token}` }),
       },
       body,
     },

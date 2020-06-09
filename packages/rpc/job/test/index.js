@@ -50,6 +50,7 @@ describe("Job", () => {
     });
     replace(deps, "rpc", rpcFake);
 
+    const queueFn = "some-queue-fn";
     const { body: result } = await job({ name, domain, service })
       .set({
         context,
@@ -60,6 +61,7 @@ describe("Job", () => {
           externalFn: externalTokenFn,
           key,
         },
+        queueFn,
       })
       .trigger(payload);
 
@@ -77,6 +79,7 @@ describe("Job", () => {
       currentToken,
       key,
       claims,
+      queueFn,
     });
   });
   it("should call with the correct optional params", async () => {
