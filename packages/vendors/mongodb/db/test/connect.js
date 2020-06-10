@@ -30,18 +30,18 @@ describe("Connects", () => {
     replaceGetter(mongoose, "connection", connectionFake);
   });
 
-  // it("it should connect if all the params are normal, and ommittable params omitted", () => {
-  //   connect({ protocol, user, password, host, database });
+  it("it should connect if all the params are normal, and ommittable params omitted", () => {
+    connect({ protocol, user, password, host, database });
 
-  //   expect(connectFake).to.have.been.calledWith(baseConnectionString, {
-  //     useNewUrlParser: true,
-  //     useCreateIndex: true,
-  //     useUnifiedTopology: true,
-  //     useFindAndModify: false,
-  //     autoIndex: false,
-  //     poolSize: 10,
-  //   });
-  // });
+    expect(connectFake).to.have.been.calledWith(baseConnectionString, {
+      useNewUrlParser: true,
+      useCreateIndex: true,
+      useUnifiedTopology: true,
+      useFindAndModify: false,
+      autoIndex: false,
+      poolSize: 5,
+    });
+  });
 
   it("it should connect if all the params are normal, and ommittable params are passed in", () => {
     const paramKey0 = "key0";

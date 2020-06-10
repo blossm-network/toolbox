@@ -1,5 +1,3 @@
-const mongoose = require("mongoose");
-
 const connect = require("./connect");
 const deps = require("../deps");
 
@@ -21,7 +19,7 @@ module.exports = ({
   } = {},
 }) => {
   if (name == undefined || name.length == 0)
-    throw deps.internalServerError.message("Store needs a name.");
+    throw deps.internalServerError.message("This store needs a name.");
 
   if (
     user != undefined &&
@@ -44,15 +42,16 @@ module.exports = ({
     });
   }
 
-  const store = new mongoose.Schema(
+  const store = new deps.mongoose.Schema(
     {},
     { strict: schema != undefined, typePojoToMixed: false, minimize: false }
   );
 
   if (schema) store.add(schema);
+
   for (const index of indexes) {
     store.index(...index);
   }
 
-  return mongoose.model(name, store);
+  return deps.mongoose.model(name, store, name);
 };

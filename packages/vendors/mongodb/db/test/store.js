@@ -1,93 +1,101 @@
 const { expect } = require("chai").use(require("sinon-chai"));
 const { restore, replace, replaceGetter, fake } = require("sinon");
-const mongoose = require("mongoose");
-
 const { store } = require("../index");
 
-const protocol = "some-protocol";
-const name = "collection";
+const name = "some-name";
 const commonKey = "key";
-const schema0 = {};
-const schema0Value = "value0";
-schema0[commonKey] = { type: String, default: schema0Value };
-
-const schema1 = {};
-const schema1Value = "value1";
-schema1[commonKey] = { type: String, default: schema1Value };
-
-const addFake = fake();
-const schemaFake = fake.returns({
-  add: addFake,
-});
-const modelObject = "some-model-object";
-const modelFake = fake.returns(modelObject);
+const schema = {};
+const schemaValue = "some-schema-value";
+schema[commonKey] = { type: String, default: schemaValue };
 
 const deps = require("../deps");
 
 describe("Returns a model", () => {
-  beforeEach(() => {
-    replace(mongoose, "model", modelFake);
-  });
   afterEach(() => {
     restore();
   });
 
   it("it should return a model object that is instatiatable", () => {
-    replace(mongoose, "Schema", schemaFake);
+    const addFake = fake();
+    const indexFake = fake();
 
-    const result = store({ name, schema: schema0 });
+    const schemaObj = {
+      add: addFake,
+      index: indexFake,
+    };
+
+    const schemaFake = fake.returns(schemaObj);
+    replace(deps.mongoose, "Schema", schemaFake);
+
+    const modelObject = "some-model-object";
+    const modelFake = fake.returns(modelObject);
+    replace(deps.mongoose, "model", modelFake);
+
+    const schema = "some-schema";
+    const indexPart1 = "some-index-part-1";
+    const indexPart2 = "some-index-part-2";
+    const indexes = [[indexPart1, indexPart2]];
+    const result = store({ name, schema, indexes });
 
     expect(result).to.equal(modelObject);
-    expect(modelFake).to.have.been.calledWith(name);
+    expect(modelFake).to.have.been.calledWith(name, schemaObj, name);
     expect(schemaFake).to.have.been.calledWith(
       {},
       { strict: true, typePojoToMixed: false, minimize: false }
     );
-    expect(addFake).to.have.been.calledWith({
-      key: schema0[commonKey],
-    });
-  });
-
-  it("it should apply mixins in the correct order if a base is provided", () => {
-    const obj = {};
-    const addFake = (mixin) => Object.assign(obj, mixin);
-    const schemaFake = fake.returns({
-      add: addFake,
-    });
-
-    replace(mongoose, "Schema", schemaFake);
-
-    store({
-      name,
-      schema: schema0,
-    });
-
-    expect(schemaFake).to.have.been.calledWith(
-      {},
-      { strict: true, typePojoToMixed: false, minimize: false }
+    expect(addFake).to.have.been.calledWith(schema);
+    expect(indexFake.getCall(0)).to.have.been.calledWith(
+      indexPart1,
+      indexPart2
     );
-    expect(obj[commonKey].default).to.equal(schema0Value);
   });
-  it("it should not be strict if no schema is provided", () => {
-    const obj = {};
-    const addFake = (mixin) => Object.assign(obj, mixin);
-    const schemaFake = fake.returns({
+  it("it should return a model object with optionals missing", () => {
+    const addFake = fake();
+    const indexFake = fake();
+
+    const schemaObj = {
       add: addFake,
-    });
+      index: indexFake,
+    };
 
-    replace(mongoose, "Schema", schemaFake);
+    const schemaFake = fake.returns(schemaObj);
+    replace(deps.mongoose, "Schema", schemaFake);
 
-    store({
-      name,
-    });
+    const modelObject = "some-model-object";
+    const modelFake = fake.returns(modelObject);
+    replace(deps.mongoose, "model", modelFake);
 
+    const result = store({ name });
+
+    expect(result).to.equal(modelObject);
+    expect(modelFake).to.have.been.calledWith(name, schemaObj, name);
     expect(schemaFake).to.have.been.calledWith(
       {},
       { strict: false, typePojoToMixed: false, minimize: false }
     );
+    expect(addFake).to.not.have.been.called;
+    expect(indexFake).to.not.have.been.called;
   });
-  it("it should connect if a connection string is passed in", () => {
-    replace(mongoose, "Schema", schemaFake);
+  it("it should return a model object with connection properties passed in", () => {
+    const addFake = fake();
+    const indexFake = fake();
+
+    const schemaObj = {
+      add: addFake,
+      index: indexFake,
+    };
+
+    const schemaFake = fake.returns(schemaObj);
+    replace(deps.mongoose, "Schema", schemaFake);
+
+    const modelObject = "some-model-object";
+    const modelFake = fake.returns(modelObject);
+    replace(deps.mongoose, "model", modelFake);
+
+    const schema = "some-schema";
+    const indexPart1 = "some-index-part-1";
+    const indexPart2 = "some-index-part-2";
+    const indexes = [[indexPart1, indexPart2]];
     const onFake = fake();
     const onceFake = fake();
     const connectFake = fake();
@@ -95,18 +103,20 @@ describe("Returns a model", () => {
       on: onFake,
       once: onceFake,
     });
-    replace(mongoose, "connect", connectFake);
-    replaceGetter(mongoose, "connection", connectionFake);
+
+    replace(deps.mongoose, "connect", connectFake);
+    replaceGetter(deps.mongoose, "connection", connectionFake);
     const name = "collection";
 
-    const user = "user";
-    const password = "pass";
-    const host = "host";
-    const database = "db";
-
+    const user = "soem-user";
+    const password = "some-pass";
+    const host = "some-host";
+    const database = "some-db";
+    const protocol = "some-protocol";
     const result = store({
       name,
-      schema: schema0,
+      schema,
+      indexes,
       connection: {
         protocol,
         user,
@@ -117,7 +127,16 @@ describe("Returns a model", () => {
     });
 
     expect(result).to.equal(modelObject);
-
+    expect(modelFake).to.have.been.calledWith(name, schemaObj, name);
+    expect(schemaFake).to.have.been.calledWith(
+      {},
+      { strict: true, typePojoToMixed: false, minimize: false }
+    );
+    expect(addFake).to.have.been.calledWith(schema);
+    expect(indexFake.getCall(0)).to.have.been.calledWith(
+      indexPart1,
+      indexPart2
+    );
     const baseConnectionString = `${protocol}://${user}:${password}@${host}/${database}`;
 
     expect(connectFake).to.have.been.calledWith(baseConnectionString, {
@@ -126,11 +145,11 @@ describe("Returns a model", () => {
       useUnifiedTopology: true,
       useFindAndModify: false,
       autoIndex: false,
-      poolSize: 10,
+      poolSize: 5,
     });
   });
+
   it("it should throw if it doesnt have a name", () => {
-    replace(mongoose, "Schema", schemaFake);
     const error = "some-error";
     const internalServerMessageErrorFake = fake.returns(error);
     replace(deps, "internalServerError", {
@@ -144,7 +163,7 @@ describe("Returns a model", () => {
       expect(1).to.equal(0);
     } catch (e) {
       expect(internalServerMessageErrorFake).to.have.been.calledWith(
-        "Store needs a name."
+        "This store needs a name."
       );
       expect(e).to.equal(error);
     }

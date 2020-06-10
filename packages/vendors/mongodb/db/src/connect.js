@@ -10,7 +10,7 @@ module.exports = ({
   host,
   database,
   parameters,
-  poolSize = 10,
+  poolSize = 5,
   autoIndex = false,
   onOpen = () => logger.info("Thank you database."),
   onError = (err) => logger.error("Database has errored.", { err }),
