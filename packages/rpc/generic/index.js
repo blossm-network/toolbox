@@ -30,7 +30,7 @@ const common = ({ method, dataParam, operation, id, data }) => {
           currentToken,
           key,
           claims,
-          queueFn,
+          enqueueFn,
         } = {}) => {
           const internal = host == process.env.HOST;
 
@@ -69,8 +69,8 @@ const common = ({ method, dataParam, operation, id, data }) => {
           };
 
           const response =
-            queueFn && method == deps.post
-              ? await queueFn({ url, data: requestData, token })
+            enqueueFn && method == deps.post
+              ? await enqueueFn({ url, data: requestData, token })
               : await method(url, {
                   [dataParam]: requestData,
                   ...(token && {

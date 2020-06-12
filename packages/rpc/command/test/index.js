@@ -68,9 +68,9 @@ describe("Issue command", () => {
     replace(deps, "rpc", rpcFake);
 
     const path = ["some-path"];
-    const queueFnResult = "some-queue-fn-result";
-    const queueFnFake = fake.returns(queueFnResult);
-    const queueWait = "some-queue-wait";
+    const enqueueFnResult = "some-enqueue-fn-result";
+    const enqueueFnFake = fake.returns(enqueueFnResult);
+    const enqueueWait = "some-enqueue-wait";
     const { body: result } = await command({ name, domain, service, network })
       .set({
         context,
@@ -81,9 +81,9 @@ describe("Issue command", () => {
           externalFn: externalTokenFn,
           key,
         },
-        queue: {
-          fn: queueFnFake,
-          wait: queueWait,
+        enqueue: {
+          fn: enqueueFnFake,
+          wait: enqueueWait,
         },
       })
       .issue(payload, {
@@ -128,11 +128,11 @@ describe("Issue command", () => {
       currentToken,
       key,
       claims,
-      queueFn: queueFnResult,
+      enqueueFn: enqueueFnResult,
     });
-    expect(queueFnFake).to.have.been.calledWith({
+    expect(enqueueFnFake).to.have.been.calledWith({
       queue: `c.${service}.${domain}.${name}`,
-      wait: queueWait,
+      wait: enqueueWait,
     });
   });
   it("should call with the correct optional params", async () => {
@@ -188,10 +188,10 @@ describe("Issue command", () => {
     });
     replace(deps, "rpc", rpcFake);
 
-    const queueFnResult = "some-queue-fn-result";
-    const queueFnFake = fake.returns(queueFnResult);
+    const enqueueFnResult = "some-enqueue-fn-result";
+    const enqueueFnFake = fake.returns(enqueueFnResult);
     const { body: result } = await command({ name, domain })
-      .set({ queue: { fn: queueFnFake } })
+      .set({ enqueue: { fn: enqueueFnFake } })
       .issue(payload);
 
     expect(result).to.equal(response);
@@ -216,9 +216,9 @@ describe("Issue command", () => {
     });
     expect(inFake).to.have.been.calledWith({});
     expect(withFake).to.have.been.calledWith({
-      queueFn: queueFnResult,
+      enqueueFn: enqueueFnResult,
     });
-    expect(queueFnFake).to.have.been.calledWith({
+    expect(enqueueFnFake).to.have.been.calledWith({
       queue: `c.${envService}.${domain}.${name}`,
     });
   });

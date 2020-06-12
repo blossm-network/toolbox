@@ -46,9 +46,9 @@ describe("Job", () => {
     });
     replace(deps, "rpc", rpcFake);
 
-    const queueFnResult = "some-queue-fn-result";
-    const queueFnFake = fake.returns(queueFnResult);
-    const queueWait = "some-queue-wait";
+    const enqueueFnResult = "some-enqueue-fn-result";
+    const enqueueFnFake = fake.returns(enqueueFnResult);
+    const enqueueWait = "some-enqueue-wait";
     const { body: result } = await job({ name, domain, service })
       .set({
         context,
@@ -59,9 +59,9 @@ describe("Job", () => {
           externalFn: externalTokenFn,
           key,
         },
-        queue: {
-          fn: queueFnFake,
-          wait: queueWait,
+        enqueue: {
+          fn: enqueueFnFake,
+          wait: enqueueWait,
         },
       })
       .trigger(payload);
@@ -80,11 +80,11 @@ describe("Job", () => {
       currentToken,
       key,
       claims,
-      queueFn: queueFnResult,
+      enqueueFn: enqueueFnResult,
     });
-    expect(queueFnFake).to.have.been.calledWith({
-      queue: `job.${service}.${domain}.${name}`,
-      wait: queueWait,
+    expect(enqueueFnFake).to.have.been.calledWith({
+      queue: `j.${service}.${domain}.${name}`,
+      wait: enqueueWait,
     });
   });
   it("should call with the correct optional params", async () => {
@@ -111,7 +111,7 @@ describe("Job", () => {
     expect(inFake).to.have.been.calledWith({});
     expect(withFake).to.have.been.calledWith();
   });
-  it("should call with the correct optional params with queue without wait", async () => {
+  it("should call with the correct optional params with enqueue without wait", async () => {
     const response = "some-response";
     const withFake = fake.returns(response);
     const inFake = fake.returns({
@@ -125,10 +125,10 @@ describe("Job", () => {
     });
     replace(deps, "rpc", rpcFake);
 
-    const queueFnResult = "some-queue-fn-result";
-    const queueFnFake = fake.returns(queueFnResult);
+    const enqueueFnResult = "some-enqueue-fn-result";
+    const enqueueFnFake = fake.returns(enqueueFnResult);
     const result = await job({ name })
-      .set({ queue: { fn: queueFnFake } })
+      .set({ enqueue: { fn: enqueueFnFake } })
       .trigger(payload);
 
     expect(result).to.equal(response);
@@ -138,10 +138,10 @@ describe("Job", () => {
     });
     expect(inFake).to.have.been.calledWith({});
     expect(withFake).to.have.been.calledWith({
-      queueFn: queueFnResult,
+      enqueueFn: enqueueFnResult,
     });
-    expect(queueFnFake).to.have.been.calledWith({
-      queue: `job.${name}`,
+    expect(enqueueFnFake).to.have.been.calledWith({
+      queue: `j.${name}`,
     });
   });
 });

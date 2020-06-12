@@ -74,20 +74,20 @@ describe("Operation", () => {
     });
     expect(result).to.deep.equal({ statusCode });
   });
-  it("should call post with the correct params with queueFn", async () => {
+  it("should call post with the correct params with enqueueFn", async () => {
     const operationTokenFake = fake.returns({ token, type });
     replace(deps, "operationToken", operationTokenFake);
 
     const operationUrlFake = fake.returns(url);
     replace(deps, "operationUrl", operationUrlFake);
 
-    const queueFnFake = fake.returns(response);
+    const enqueueFnFake = fake.returns(response);
     const result = await operation(operarationPart1, operarationPart2)
       .post(data)
       .in({ context, host })
-      .with({ internalTokenFn: tokenFn, claims, queueFn: queueFnFake });
+      .with({ internalTokenFn: tokenFn, claims, enqueueFn: enqueueFnFake });
 
-    expect(queueFnFake).to.have.been.calledWith({
+    expect(enqueueFnFake).to.have.been.calledWith({
       url,
       data: {
         ...data,
@@ -281,7 +281,7 @@ describe("Operation", () => {
     const operationUrlFake = fake.returns(url);
     replace(deps, "operationUrl", operationUrlFake);
 
-    const queueFnFake = fake.returns("whatever");
+    const enqueueFnFake = fake.returns("whatever");
     const result = await operation(operarationPart1, operarationPart2)
       .get(data)
       .in({ context, host })
@@ -289,7 +289,7 @@ describe("Operation", () => {
         internalTokenFn: tokenFn,
         claims,
         currentToken,
-        queueFn: queueFnFake,
+        enqueueFn: enqueueFnFake,
       });
 
     expect(get).to.have.been.calledWith(url, {

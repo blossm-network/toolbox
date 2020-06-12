@@ -10,7 +10,7 @@ module.exports = ({ name, domain, service }) => {
       externalFn: externalTokenFn,
       key,
     } = {},
-    queue: { fn: queueFn, wait: queueWait } = {},
+    enqueue: { fn: enqueueFn, wait: enqueueWait } = {},
   } = {}) => async (payload) => {
     const data = { payload };
     return await deps
@@ -28,26 +28,23 @@ module.exports = ({ name, domain, service }) => {
         ...(internalTokenFn && { internalTokenFn }),
         ...(externalTokenFn && { externalTokenFn }),
         ...(currentToken && { currentToken }),
-        ...(queueFn && {
-          queueFn: queueFn({ queue: `${name}.${domain}.${service}` }),
-        }),
         ...(key && { key }),
         ...(claims && { claims }),
-        ...(queueFn && {
-          queueFn: queueFn({
+        ...(enqueueFn && {
+          enqueueFn: enqueueFn({
             queue: `j${service ? `.${service}` : ""}${
               domain ? `.${domain}` : ""
             }.${name}`,
-            ...(queueWait && { wait: queueWait }),
+            ...(enqueueWait && { wait: enqueueWait }),
           }),
         }),
       });
   };
 
   return {
-    set: ({ context, claims, token, currentToken, queue }) => {
+    set: ({ context, claims, token, currentToken, enqueue }) => {
       return {
-        trigger: trigger({ context, claims, token, currentToken, queue }),
+        trigger: trigger({ context, claims, token, currentToken, enqueue }),
       };
     },
     trigger: trigger(),
