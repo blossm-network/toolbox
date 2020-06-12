@@ -15,6 +15,7 @@ const executeDnsTransaction = require("./steps/execute_dns_transaction");
 const abortDnsTransaction = require("./steps/abort_dns_transaction");
 const mapDomain = require("./steps/map_domain");
 const writeEnv = require("./steps/write_env");
+const createQueue = require("./steps/create_queue");
 
 module.exports = ({
   name,
@@ -121,6 +122,13 @@ module.exports = ({
               ...(domain && { domain }),
               ...(service && { service }),
             },
+          }),
+          createQueue({ name, domain, service, prefix: "j", project }),
+          createQueue({
+            name: `j${service ? `.${service}` : ""}.${
+              domain ? `.${domain}` : ""
+            }`,
+            project,
           }),
           startDnsTransaction({ dnsZone, project }),
           addDnsTransaction({ uri, dnsZone, project }),

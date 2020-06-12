@@ -16,8 +16,8 @@ exports.create = async ({ project, location, name }) => {
 exports.enqueue = ({
   serviceAccountEmail,
   audience,
-  project,
-  location,
+  project = process.env.GCP_PROJECT,
+  location = process.env.GCP_REGION,
   queue,
   wait = 0,
 }) => async ({ url, data = {}, token }) => {

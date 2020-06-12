@@ -1,6 +1,6 @@
 const deps = require("./deps");
 
-module.exports = ({ name, domain, service = process.env.SERVICE }) => {
+module.exports = ({ name, domain, service }) => {
   const trigger = ({
     context,
     claims,
@@ -10,7 +10,7 @@ module.exports = ({ name, domain, service = process.env.SERVICE }) => {
       externalFn: externalTokenFn,
       key,
     } = {},
-    queueFn,
+    queue: { fn: queueFn, wait: queueWait } = {},
   } = {}) => async (payload) => {
     const data = { payload };
     return await deps
@@ -28,16 +28,26 @@ module.exports = ({ name, domain, service = process.env.SERVICE }) => {
         ...(internalTokenFn && { internalTokenFn }),
         ...(externalTokenFn && { externalTokenFn }),
         ...(currentToken && { currentToken }),
+        ...(queueFn && {
+          queueFn: queueFn({ queue: `${name}.${domain}.${service}` }),
+        }),
         ...(key && { key }),
         ...(claims && { claims }),
-        ...(queueFn && { queueFn }),
+        ...(queueFn && {
+          queueFn: queueFn({
+            queue: `j${service ? `.${service}` : ""}${
+              domain ? `.${domain}` : ""
+            }.${name}`,
+            ...(queueWait && { wait: queueWait }),
+          }),
+        }),
       });
   };
 
   return {
-    set: ({ context, claims, token, currentToken, queueFn }) => {
+    set: ({ context, claims, token, currentToken, queue }) => {
       return {
-        trigger: trigger({ context, claims, token, currentToken, queueFn }),
+        trigger: trigger({ context, claims, token, currentToken, queue }),
       };
     },
     trigger: trigger(),

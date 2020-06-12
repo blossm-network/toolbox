@@ -23,10 +23,6 @@ const key = "some-key";
 const context = { c: 2 };
 const claims = "some-claims";
 
-const envService = "some-env-service";
-
-process.env.SERVICE = envService;
-
 describe("Job", () => {
   beforeEach(() => {
     clock = useFakeTimers(now.getTime());
@@ -50,7 +46,9 @@ describe("Job", () => {
     });
     replace(deps, "rpc", rpcFake);
 
-    const queueFn = "some-queue-fn";
+    const queueFnResult = "some-queue-fn-result";
+    const queueFnFake = fake.returns(queueFnResult);
+    const queueWait = "some-queue-wait";
     const { body: result } = await job({ name, domain, service })
       .set({
         context,
@@ -61,7 +59,10 @@ describe("Job", () => {
           externalFn: externalTokenFn,
           key,
         },
-        queueFn,
+        queue: {
+          fn: queueFnFake,
+          wait: queueWait,
+        },
       })
       .trigger(payload);
 
@@ -79,7 +80,11 @@ describe("Job", () => {
       currentToken,
       key,
       claims,
-      queueFn,
+      queueFn: queueFnResult,
+    });
+    expect(queueFnFake).to.have.been.calledWith({
+      queue: `job.${service}.${domain}.${name}`,
+      wait: queueWait,
     });
   });
   it("should call with the correct optional params", async () => {
@@ -99,11 +104,44 @@ describe("Job", () => {
     const result = await job({ name }).trigger(payload);
 
     expect(result).to.equal(response);
-    expect(rpcFake).to.have.been.calledWith(name, envService, "job");
+    expect(rpcFake).to.have.been.calledWith(name, "job");
     expect(postFake).to.have.been.calledWith({
       payload,
     });
     expect(inFake).to.have.been.calledWith({});
     expect(withFake).to.have.been.calledWith();
+  });
+  it("should call with the correct optional params with queue without wait", async () => {
+    const response = "some-response";
+    const withFake = fake.returns(response);
+    const inFake = fake.returns({
+      with: withFake,
+    });
+    const postFake = fake.returns({
+      in: inFake,
+    });
+    const rpcFake = fake.returns({
+      post: postFake,
+    });
+    replace(deps, "rpc", rpcFake);
+
+    const queueFnResult = "some-queue-fn-result";
+    const queueFnFake = fake.returns(queueFnResult);
+    const result = await job({ name })
+      .set({ queue: { fn: queueFnFake } })
+      .trigger(payload);
+
+    expect(result).to.equal(response);
+    expect(rpcFake).to.have.been.calledWith(name, "job");
+    expect(postFake).to.have.been.calledWith({
+      payload,
+    });
+    expect(inFake).to.have.been.calledWith({});
+    expect(withFake).to.have.been.calledWith({
+      queueFn: queueFnResult,
+    });
+    expect(queueFnFake).to.have.been.calledWith({
+      queue: `job.${name}`,
+    });
   });
 });

@@ -68,7 +68,9 @@ describe("Issue command", () => {
     replace(deps, "rpc", rpcFake);
 
     const path = ["some-path"];
-    const queueFn = "some-queue-fn";
+    const queueFnResult = "some-queue-fn-result";
+    const queueFnFake = fake.returns(queueFnResult);
+    const queueWait = "some-queue-wait";
     const { body: result } = await command({ name, domain, service, network })
       .set({
         context,
@@ -79,7 +81,10 @@ describe("Issue command", () => {
           externalFn: externalTokenFn,
           key,
         },
-        queueFn,
+        queue: {
+          fn: queueFnFake,
+          wait: queueWait,
+        },
       })
       .issue(payload, {
         trace,
@@ -123,7 +128,11 @@ describe("Issue command", () => {
       currentToken,
       key,
       claims,
-      queueFn,
+      queueFn: queueFnResult,
+    });
+    expect(queueFnFake).to.have.been.calledWith({
+      queue: `c.${service}.${domain}.${name}`,
+      wait: queueWait,
     });
   });
   it("should call with the correct optional params", async () => {
@@ -164,6 +173,54 @@ describe("Issue command", () => {
     });
     expect(inFake).to.have.been.calledWith({});
     expect(withFake).to.have.been.calledWith({});
+  });
+  it("should call with the correct optional params with queue fn", async () => {
+    const response = "some-response";
+    const withFake = fake.returns({ body: response });
+    const inFake = fake.returns({
+      with: withFake,
+    });
+    const postFake = fake.returns({
+      in: inFake,
+    });
+    const rpcFake = fake.returns({
+      post: postFake,
+    });
+    replace(deps, "rpc", rpcFake);
+
+    const queueFnResult = "some-queue-fn-result";
+    const queueFnFake = fake.returns(queueFnResult);
+    const { body: result } = await command({ name, domain })
+      .set({ queue: { fn: queueFnFake } })
+      .issue(payload);
+
+    expect(result).to.equal(response);
+    expect(rpcFake).to.have.been.calledWith(name, domain, envService);
+    expect(postFake).to.have.been.calledWith({
+      payload,
+      headers: {
+        issued: deps.dateString(),
+        path: [
+          {
+            timestamp: deps.dateString(),
+            procedure: envProcedure,
+            hash: envHash,
+            network,
+            host: envHost,
+            name: envName,
+            domain: envDomain,
+            service: envService,
+          },
+        ],
+      },
+    });
+    expect(inFake).to.have.been.calledWith({});
+    expect(withFake).to.have.been.calledWith({
+      queueFn: queueFnResult,
+    });
+    expect(queueFnFake).to.have.been.calledWith({
+      queue: `c.${envService}.${domain}.${name}`,
+    });
   });
   it("should call with the correct params onto a different network", async () => {
     const response = "some-response";

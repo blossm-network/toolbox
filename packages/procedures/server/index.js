@@ -11,6 +11,10 @@ module.exports = ({ prehook, posthook } = {}) => {
 
   const listen = ({ port } = {}) => {
     port = port || process.env.PORT || 3000;
+    app.get("/_sup", (_, res, next) => {
+      res.send("nmjc");
+      next();
+    });
     if (posthook) posthook(app);
     app.use(deps.errorMiddleware);
     app.listen(port);

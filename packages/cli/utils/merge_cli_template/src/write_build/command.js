@@ -15,6 +15,7 @@ const addDnsTransaction = require("./steps/add_dns_transaction");
 const executeDnsTransaction = require("./steps/execute_dns_transaction");
 const abortDnsTransaction = require("./steps/abort_dns_transaction");
 const mapDomain = require("./steps/map_domain");
+const createQueue = require("./steps/create_queue");
 
 module.exports = ({
   name,
@@ -68,7 +69,6 @@ module.exports = ({
       secretBucket,
       secretBucketKeyRing,
       secretBucketKeyLocation,
-      // coreNetwork,
       custom: {
         DOMAIN: domain,
         SERVICE: service,
@@ -116,6 +116,10 @@ module.exports = ({
               ...envVars,
             },
             labels: { name, domain, service },
+          }),
+          createQueue({
+            name: `c.${service}.${domain}`,
+            project,
           }),
           startDnsTransaction({ dnsZone, project }),
           addDnsTransaction({ uri, dnsZone, project }),

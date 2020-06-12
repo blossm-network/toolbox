@@ -49,6 +49,21 @@ const envComputeUrlId = ({ env, config }) => {
   }
 };
 
+const queueName = ({ config }) => {
+  switch (config.procedure) {
+    case "command":
+      return `c.${config.service}.${config.domain}.${config.name}`;
+    case "job":
+      return `j${config.service ? `.${config.service}` : ""}${
+        config.domain ? `.${config.domain}` : ""
+      }.${config.name}`;
+    case "projection":
+    case "event-handler":
+      return `e.${config.context}${config.service ? `.${config.service}` : ""}${
+        config.domain ? `.${config.domain}` : ""
+      }.${config.name}`;
+  }
+};
 const execute = async (input, configFn) => {
   const functionPath = path.resolve(
     process.cwd(),
@@ -75,7 +90,7 @@ const execute = async (input, configFn) => {
     })}-uc.a.run.app`;
 
     await enqueue({
-      queue: input.queue,
+      queue: input.queue || queueName({ config: blossmConfig }),
       serviceAccountEmail: `executer@${project}.iam.gserviceaccount.com`,
       audience,
       location: "us-central1",
@@ -98,12 +113,6 @@ module.exports = ({ domain }) => async (args, configFn) => {
     entrypointDefault: ".",
     args,
     flags: [
-      // {
-      //   name: "name",
-      //   type: String,
-      //   short: "n",
-      //   required: true,
-      // },
       {
         name: "queue",
         type: String,

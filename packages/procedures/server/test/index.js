@@ -1,5 +1,5 @@
 const { expect } = require("chai").use(require("sinon-chai"));
-const { restore, replace, fake } = require("sinon");
+const { restore, replace, match, fake } = require("sinon");
 
 const deps = require("../deps");
 const server = require("../../server");
@@ -7,7 +7,7 @@ const server = require("../../server");
 const port = "some-port";
 const fn = "some-fn";
 
-describe("Lamba", () => {
+describe("Server", () => {
   beforeEach(() => {
     process.env.PORT = port;
   });
@@ -19,8 +19,10 @@ describe("Lamba", () => {
     const useFake = fake();
     const listenFake = fake();
     const postFake = fake();
+    const getFake = fake();
     const app = {
       use: useFake,
+      get: getFake,
       listen: listenFake,
       post: postFake,
     };
@@ -37,7 +39,21 @@ describe("Lamba", () => {
     const result = server().post(fn).listen();
 
     expect(result).to.equal(app);
-    expect(postFake).to.have.been.calledWith("/", asyncFn);
+    expect(getFake).to.have.been.calledWith(
+      "/_sup",
+      match((fn) => {
+        const sendFake = fake();
+        const nextFake = fake();
+        fn(
+          null,
+          {
+            send: sendFake,
+          },
+          nextFake
+        );
+        return sendFake.calledWith("nmjc") && nextFake.called;
+      })
+    );
     expect(asyncHandlerFake).to.have.been.calledWith(fn);
     expect(useFake).to.have.been.calledWith(deps.errorMiddleware);
     expect(listenFake).to.have.been.calledWith(port);
@@ -69,6 +85,23 @@ describe("Lamba", () => {
 
     expect(result).to.equal(app);
     expect(postFake).to.have.been.calledWith("/", asyncFn);
+    expect(getFake).to.have.been.calledTwice;
+    expect(getFake.getCall(0)).to.have.been.calledWith("/:id?", asyncFn);
+    expect(getFake.getCall(1)).to.have.been.calledWith(
+      "/_sup",
+      match((fn) => {
+        const sendFake = fake();
+        const nextFake = fake();
+        fn(
+          null,
+          {
+            send: sendFake,
+          },
+          nextFake
+        );
+        return sendFake.calledWith("nmjc") && nextFake.called;
+      })
+    );
     expect(asyncHandlerFake).to.have.been.calledWith(fn);
     expect(useFake).to.have.been.calledWith(deps.errorMiddleware);
     expect(listenFake).to.have.been.calledWith(port);
@@ -77,10 +110,12 @@ describe("Lamba", () => {
     const useFake = fake();
     const listenFake = fake();
     const postFake = fake();
+    const getFake = fake();
     const app = {
       use: useFake,
       listen: listenFake,
       post: postFake,
+      get: getFake,
     };
     const expressFake = fake.returns(app);
     replace(deps, "express", expressFake);
@@ -100,6 +135,21 @@ describe("Lamba", () => {
 
     expect(result).to.equal(app);
     expect(postFake).to.have.been.calledWith(newPath, asyncFn);
+    expect(getFake).to.have.been.calledWith(
+      "/_sup",
+      match((fn) => {
+        const sendFake = fake();
+        const nextFake = fake();
+        fn(
+          null,
+          {
+            send: sendFake,
+          },
+          nextFake
+        );
+        return sendFake.calledWith("nmjc") && nextFake.called;
+      })
+    );
     expect(asyncHandlerFake).to.have.been.calledWith(fn);
     expect(useFake).to.have.been.calledWith(deps.errorMiddleware);
     expect(listenFake).to.have.been.calledWith(newPort);
@@ -108,10 +158,12 @@ describe("Lamba", () => {
     const useFake = fake();
     const listenFake = fake();
     const postFake = fake();
+    const getFake = fake();
     const app = {
       use: useFake,
       listen: listenFake,
       post: postFake,
+      get: getFake,
     };
     const expressFake = fake.returns(app);
     replace(deps, "express", expressFake);
@@ -128,6 +180,21 @@ describe("Lamba", () => {
 
     expect(result).to.equal(app);
     expect(postFake).to.have.been.calledWith("/", asyncFn);
+    expect(getFake).to.have.been.calledWith(
+      "/_sup",
+      match((fn) => {
+        const sendFake = fake();
+        const nextFake = fake();
+        fn(
+          null,
+          {
+            send: sendFake,
+          },
+          nextFake
+        );
+        return sendFake.calledWith("nmjc") && nextFake.called;
+      })
+    );
     expect(asyncHandlerFake).to.have.been.calledWith(fn);
     expect(useFake).to.have.been.calledWith(deps.errorMiddleware);
     expect(listenFake).to.have.been.calledWith(3000);
@@ -136,10 +203,12 @@ describe("Lamba", () => {
     const useFake = fake();
     const listenFake = fake();
     const postFake = fake();
+    const getFake = fake();
     const app = {
       use: useFake,
       listen: listenFake,
       post: postFake,
+      get: getFake,
     };
     const expressFake = fake.returns(app);
     replace(deps, "express", expressFake);
@@ -160,6 +229,21 @@ describe("Lamba", () => {
 
     expect(result).to.equal(app);
     expect(postFake).to.have.been.calledWith("/", asyncFn);
+    expect(getFake).to.have.been.calledWith(
+      "/_sup",
+      match((fn) => {
+        const sendFake = fake();
+        const nextFake = fake();
+        fn(
+          null,
+          {
+            send: sendFake,
+          },
+          nextFake
+        );
+        return sendFake.calledWith("nmjc") && nextFake.called;
+      })
+    );
     expect(asyncHandlerFake).to.have.been.calledWith(fn);
     expect(useFake).to.have.been.calledWith(deps.errorMiddleware);
     expect(listenFake).to.have.been.calledWith(port);
@@ -168,10 +252,12 @@ describe("Lamba", () => {
     const useFake = fake();
     const listenFake = fake();
     const postFake = fake();
+    const getFake = fake();
     const app = {
       use: useFake,
       listen: listenFake,
       post: postFake,
+      get: getFake,
     };
     const expressFake = fake.returns(app);
     replace(deps, "express", expressFake);
@@ -200,6 +286,21 @@ describe("Lamba", () => {
       asyncFn,
       postMiddleware
     );
+    expect(getFake).to.have.been.calledWith(
+      "/_sup",
+      match((fn) => {
+        const sendFake = fake();
+        const nextFake = fake();
+        fn(
+          null,
+          {
+            send: sendFake,
+          },
+          nextFake
+        );
+        return sendFake.calledWith("nmjc") && nextFake.called;
+      })
+    );
     expect(asyncHandlerFake).to.have.been.calledWith(fn);
     expect(useFake).to.have.been.calledWith(deps.errorMiddleware);
     expect(listenFake).to.have.been.calledWith(port);
@@ -226,7 +327,22 @@ describe("Lamba", () => {
     const result = server().get(fn).listen();
 
     expect(result).to.equal(app);
-    expect(getFake).to.have.been.calledWith("/:id?", asyncFn);
+    expect(getFake.getCall(0)).to.have.been.calledWith("/:id?", asyncFn);
+    expect(getFake.getCall(1)).to.have.been.calledWith(
+      "/_sup",
+      match((fn) => {
+        const sendFake = fake();
+        const nextFake = fake();
+        fn(
+          null,
+          {
+            send: sendFake,
+          },
+          nextFake
+        );
+        return sendFake.calledWith("nmjc") && nextFake.called;
+      })
+    );
     expect(asyncHandlerFake).to.have.been.calledWith(fn);
     expect(useFake).to.have.been.calledWith(deps.errorMiddleware);
     expect(listenFake).to.have.been.calledWith(port);
@@ -261,11 +377,26 @@ describe("Lamba", () => {
       .listen();
 
     expect(result).to.equal(app);
-    expect(getFake).to.have.been.calledWith(
+    expect(getFake.getCall(0)).to.have.been.calledWith(
       "/:id?",
       preMiddleware,
       asyncFn,
       postMiddleware
+    );
+    expect(getFake.getCall(1)).to.have.been.calledWith(
+      "/_sup",
+      match((fn) => {
+        const sendFake = fake();
+        const nextFake = fake();
+        fn(
+          null,
+          {
+            send: sendFake,
+          },
+          nextFake
+        );
+        return sendFake.calledWith("nmjc") && nextFake.called;
+      })
     );
     expect(asyncHandlerFake).to.have.been.calledWith(fn);
     expect(useFake).to.have.been.calledWith(deps.errorMiddleware);
@@ -275,10 +406,13 @@ describe("Lamba", () => {
     const useFake = fake();
     const listenFake = fake();
     const putFake = fake();
+    const getFake = fake();
+
     const app = {
       use: useFake,
       listen: listenFake,
       put: putFake,
+      get: getFake,
     };
     const expressFake = fake.returns(app);
     replace(deps, "express", expressFake);
@@ -307,6 +441,21 @@ describe("Lamba", () => {
       asyncFn,
       postMiddleware
     );
+    expect(getFake).to.have.been.calledWith(
+      "/_sup",
+      match((fn) => {
+        const sendFake = fake();
+        const nextFake = fake();
+        fn(
+          null,
+          {
+            send: sendFake,
+          },
+          nextFake
+        );
+        return sendFake.calledWith("nmjc") && nextFake.called;
+      })
+    );
     expect(asyncHandlerFake).to.have.been.calledWith(fn);
     expect(useFake).to.have.been.calledWith(deps.errorMiddleware);
     expect(listenFake).to.have.been.calledWith(port);
@@ -315,10 +464,12 @@ describe("Lamba", () => {
     const useFake = fake();
     const listenFake = fake();
     const deleteFake = fake();
+    const getFake = fake();
     const app = {
       use: useFake,
       listen: listenFake,
       delete: deleteFake,
+      get: getFake,
     };
     const expressFake = fake.returns(app);
     replace(deps, "express", expressFake);
@@ -334,6 +485,21 @@ describe("Lamba", () => {
 
     expect(result).to.equal(app);
     expect(deleteFake).to.have.been.calledWith("/:id", asyncFn);
+    expect(getFake).to.have.been.calledWith(
+      "/_sup",
+      match((fn) => {
+        const sendFake = fake();
+        const nextFake = fake();
+        fn(
+          null,
+          {
+            send: sendFake,
+          },
+          nextFake
+        );
+        return sendFake.calledWith("nmjc") && nextFake.called;
+      })
+    );
     expect(asyncHandlerFake).to.have.been.calledWith(fn);
     expect(useFake).to.have.been.calledWith(deps.errorMiddleware);
     expect(listenFake).to.have.been.calledWith(port);
@@ -342,10 +508,12 @@ describe("Lamba", () => {
     const useFake = fake();
     const listenFake = fake();
     const deleteFake = fake();
+    const getFake = fake();
     const app = {
       use: useFake,
       listen: listenFake,
       delete: deleteFake,
+      get: getFake,
     };
     const expressFake = fake.returns(app);
     replace(deps, "express", expressFake);
@@ -373,6 +541,21 @@ describe("Lamba", () => {
       preMiddleware,
       asyncFn,
       postMiddleware
+    );
+    expect(getFake).to.have.been.calledWith(
+      "/_sup",
+      match((fn) => {
+        const sendFake = fake();
+        const nextFake = fake();
+        fn(
+          null,
+          {
+            send: sendFake,
+          },
+          nextFake
+        );
+        return sendFake.calledWith("nmjc") && nextFake.called;
+      })
     );
     expect(asyncHandlerFake).to.have.been.calledWith(fn);
     expect(useFake).to.have.been.calledWith(deps.errorMiddleware);
