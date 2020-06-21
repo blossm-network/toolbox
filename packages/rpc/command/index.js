@@ -58,7 +58,7 @@ module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
         ...(currentToken && { currentToken }),
         ...(enqueueFn && {
           enqueueFn: enqueueFn({
-            queue: `c.${service}.${domain}.${name}`,
+            queue: `c-${service}-${domain}-${name}`,
             ...(enqueueWait && { wait: enqueueWait }),
           }),
         }),

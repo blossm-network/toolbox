@@ -131,7 +131,7 @@ describe("Issue command", () => {
       enqueueFn: enqueueFnResult,
     });
     expect(enqueueFnFake).to.have.been.calledWith({
-      queue: `c.${service}.${domain}.${name}`,
+      queue: `c-${service}-${domain}-${name}`,
       wait: enqueueWait,
     });
   });
@@ -219,7 +219,7 @@ describe("Issue command", () => {
       enqueueFn: enqueueFnResult,
     });
     expect(enqueueFnFake).to.have.been.calledWith({
-      queue: `c.${envService}.${domain}.${name}`,
+      queue: `c-${envService}-${domain}-${name}`,
     });
   });
   it("should call with the correct params onto a different network", async () => {
