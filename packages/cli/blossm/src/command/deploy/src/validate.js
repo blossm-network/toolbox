@@ -54,19 +54,18 @@ const validateObject = ({ object, expectation, path, context }) => {
       validator[expectation[property].type || "object"](object[property], {
         title: expectation[property].title || property,
         path: `${path}.${property}`,
-        ...(expectation[property].in ||
-          (expectation[property].is && {
-            fn: (value) => {
-              if (expectation[property].is) {
-                return expectation[property].is == "$network" && context
-                  ? value == context.network
-                  : value == expectation[property].is;
-              }
-              if (expectation[property].in) {
-                return expectation[property].in.includes(value);
-              }
-            },
-          })),
+        ...((expectation[property].in || expectation[property].is) && {
+          fn: (value) => {
+            if (expectation[property].is) {
+              return expectation[property].is == "$network" && context
+                ? value == context.network
+                : value == expectation[property].is;
+            }
+            if (expectation[property].in) {
+              return expectation[property].in.includes(value);
+            }
+          },
+        }),
         optional:
           expectation[property].optional || expectation[property].default,
       }),
