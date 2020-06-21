@@ -143,9 +143,9 @@ module.exports = ({
             },
           }),
           createQueue({
-            name: `e.${context}${service ? `.${service}` : ""}.${
-              domain ? `.${domain}` : ""
-            }`,
+            name: `e-${context}${service ? `-${service}` : ""}${
+              domain ? `-${domain}` : ""
+            }-${name}`,
             project,
           }),
           startDnsTransaction({ dnsZone, project }),

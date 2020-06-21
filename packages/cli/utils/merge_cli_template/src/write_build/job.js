@@ -123,11 +123,10 @@ module.exports = ({
               ...(service && { service }),
             },
           }),
-          createQueue({ name, domain, service, prefix: "j", project }),
           createQueue({
-            name: `j${service ? `.${service}` : ""}.${
-              domain ? `.${domain}` : ""
-            }`,
+            name: `j${service ? `-${service}` : ""}${
+              domain ? `-${domain}` : ""
+            }-${name}`,
             project,
           }),
           startDnsTransaction({ dnsZone, project }),
