@@ -67,6 +67,10 @@ describe("Event store integration tests", () => {
       },
     });
 
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log({ response: response0 });
+
     expect(response0.statusCode).to.equal(204);
 
     const newCountResponse = await request.get(`${url}/count/${root}`);
