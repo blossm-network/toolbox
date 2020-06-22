@@ -1,7 +1,7 @@
 {
   "name": "@blossm/view-composite-rpc",
   "description": "Gets a composite view.",
-  "version": "0.0.33",
+  "version": "0.0.34",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
