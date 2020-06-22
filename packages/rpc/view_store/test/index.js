@@ -138,128 +138,128 @@ describe("Get views", () => {
     });
     expect(result).to.equal(views);
   });
-  it("should call stream with the correct params", async () => {
-    const views = "some-views";
-    const withFake = fake.returns({ body: views });
-    const inFake = fake.returns({
-      with: withFake,
-    });
-    const streamFake = fake.returns({
-      in: inFake,
-    });
-    const rpcFake = fake.returns({
-      stream: streamFake,
-    });
-    replace(deps, "rpc", rpcFake);
+  // it("should call stream with the correct params", async () => {
+  //   const views = "some-views";
+  //   const withFake = fake.returns({ body: views });
+  //   const inFake = fake.returns({
+  //     with: withFake,
+  //   });
+  //   const streamFake = fake.returns({
+  //     in: inFake,
+  //   });
+  //   const rpcFake = fake.returns({
+  //     stream: streamFake,
+  //   });
+  //   replace(deps, "rpc", rpcFake);
 
-    const fn = "some-fn";
-    const { body: result } = await viewStore({
-      name,
-      domain,
-      service,
-      context,
-      network,
-    })
-      .set({
-        context: contexts,
-        currentToken,
-        token: {
-          internalFn: internalTokenFn,
-          externalFn: externalTokenFn,
-          key,
-        },
-      })
-      .stream(fn, { query, sort, root });
+  //   const fn = "some-fn";
+  //   const { body: result } = await viewStore({
+  //     name,
+  //     domain,
+  //     service,
+  //     context,
+  //     network,
+  //   })
+  //     .set({
+  //       context: contexts,
+  //       currentToken,
+  //       token: {
+  //         internalFn: internalTokenFn,
+  //         externalFn: externalTokenFn,
+  //         key,
+  //       },
+  //     })
+  //     .stream(fn, { query, sort, root });
 
-    expect(rpcFake).to.have.been.calledWith(
-      name,
-      domain,
-      service,
-      context,
-      "view-store"
-    );
-    expect(streamFake).to.have.been.calledWith(fn, { query, sort, id: root });
-    expect(inFake).to.have.been.calledWith({ context: contexts });
-    expect(withFake).to.have.been.calledWith({
-      path: "/stream",
-      internalTokenFn,
-      externalTokenFn,
-      currentToken,
-      key,
-    });
-    expect(result).to.equal(views);
-  });
-  it("should call stream with the correct params and optionals omitted", async () => {
-    const views = "some-views";
-    const withFake = fake.returns({ body: views });
-    const inFake = fake.returns({
-      with: withFake,
-    });
-    const streamFake = fake.returns({
-      in: inFake,
-    });
-    const rpcFake = fake.returns({
-      stream: streamFake,
-    });
-    replace(deps, "rpc", rpcFake);
+  //   expect(rpcFake).to.have.been.calledWith(
+  //     name,
+  //     domain,
+  //     service,
+  //     context,
+  //     "view-store"
+  //   );
+  //   expect(streamFake).to.have.been.calledWith(fn, { query, sort, id: root });
+  //   expect(inFake).to.have.been.calledWith({ context: contexts });
+  //   expect(withFake).to.have.been.calledWith({
+  //     path: "/stream",
+  //     internalTokenFn,
+  //     externalTokenFn,
+  //     currentToken,
+  //     key,
+  //   });
+  //   expect(result).to.equal(views);
+  // });
+  // it("should call stream with the correct params and optionals omitted", async () => {
+  //   const views = "some-views";
+  //   const withFake = fake.returns({ body: views });
+  //   const inFake = fake.returns({
+  //     with: withFake,
+  //   });
+  //   const streamFake = fake.returns({
+  //     in: inFake,
+  //   });
+  //   const rpcFake = fake.returns({
+  //     stream: streamFake,
+  //   });
+  //   replace(deps, "rpc", rpcFake);
 
-    const fn = "some-fn";
-    const result = await viewStore({ name }).stream(fn, {
-      query,
-    });
+  //   const fn = "some-fn";
+  //   const result = await viewStore({ name }).stream(fn, {
+  //     query,
+  //   });
 
-    expect(rpcFake).to.have.been.calledWith(name, envContext, "view-store");
-    expect(streamFake).to.have.been.calledWith(fn, { query });
-    expect(inFake).to.have.been.calledWith({});
-    expect(withFake).to.have.been.calledWith({
-      path: "/stream",
-    });
-    expect(result).to.deep.equal({ body: views });
-  });
-  it("should call stream with the correct params onto other host", async () => {
-    const views = "some-views";
-    const withFake = fake.returns({ body: views });
-    const inFake = fake.returns({
-      with: withFake,
-    });
-    const streamFake = fake.returns({
-      in: inFake,
-    });
-    const rpcFake = fake.returns({
-      stream: streamFake,
-    });
-    replace(deps, "rpc", rpcFake);
+  //   expect(rpcFake).to.have.been.calledWith(name, envContext, "view-store");
+  //   expect(streamFake).to.have.been.calledWith(fn, { query });
+  //   expect(inFake).to.have.been.calledWith({});
+  //   expect(withFake).to.have.been.calledWith({
+  //     path: "/stream",
+  //   });
+  //   expect(result).to.deep.equal({ body: views });
+  // });
+  // it("should call stream with the correct params onto other host", async () => {
+  //   const views = "some-views";
+  //   const withFake = fake.returns({ body: views });
+  //   const inFake = fake.returns({
+  //     with: withFake,
+  //   });
+  //   const streamFake = fake.returns({
+  //     in: inFake,
+  //   });
+  //   const rpcFake = fake.returns({
+  //     stream: streamFake,
+  //   });
+  //   replace(deps, "rpc", rpcFake);
 
-    const otherNetwork = "some-other-network";
-    const fn = "some-fn";
-    const { body: result } = await viewStore({
-      name,
-      domain,
-      context,
-      network: otherNetwork,
-    })
-      .set({ context: contexts, token: { externalFn: externalTokenFn, key } })
-      .stream(fn, { query, sort });
+  //   const otherNetwork = "some-other-network";
+  //   const fn = "some-fn";
+  //   const { body: result } = await viewStore({
+  //     name,
+  //     domain,
+  //     context,
+  //     network: otherNetwork,
+  //   })
+  //     .set({ context: contexts, token: { externalFn: externalTokenFn, key } })
+  //     .stream(fn, { query, sort });
 
-    expect(rpcFake).to.have.been.calledWith(
-      name,
-      domain,
-      context,
-      "view-store"
-    );
-    expect(streamFake).to.have.been.calledWith(fn, { query, sort });
-    expect(inFake).to.have.been.calledWith({
-      context: contexts,
-      network: otherNetwork,
-      host: "v.some-domain.some-context.some-other-network",
-    });
-    expect(withFake).to.have.been.calledWith({
-      path: "/some-name/stream",
-      externalTokenFn,
-      key,
-    });
-    expect(result).to.equal(views);
-  });
+  //   expect(rpcFake).to.have.been.calledWith(
+  //     name,
+  //     domain,
+  //     context,
+  //     "view-store"
+  //   );
+  //   expect(streamFake).to.have.been.calledWith(fn, { query, sort });
+  //   expect(inFake).to.have.been.calledWith({
+  //     context: contexts,
+  //     network: otherNetwork,
+  //     host: "v.some-domain.some-context.some-other-network",
+  //   });
+  //   expect(withFake).to.have.been.calledWith({
+  //     path: "/some-name/stream",
+  //     externalTokenFn,
+  //     key,
+  //   });
+  //   expect(result).to.equal(views);
+  // });
   it("should call update with the correct params", async () => {
     const withFake = fake.returns({});
     const inFake = fake.returns({

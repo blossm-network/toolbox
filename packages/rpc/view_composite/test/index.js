@@ -97,81 +97,81 @@ describe("Get composite views", () => {
     expect(withFake).to.have.been.calledWith({});
     expect(result).to.deep.equal({ body: view });
   });
-  it("should call stream with the correct params", async () => {
-    const view = "some-view";
-    const withFake = fake.returns({ body: view });
-    const inFake = fake.returns({
-      with: withFake,
-    });
-    const streamFake = fake.returns({
-      in: inFake,
-    });
-    const rpcFake = fake.returns({
-      stream: streamFake,
-    });
-    replace(deps, "rpc", rpcFake);
+  // it("should call stream with the correct params", async () => {
+  //   const view = "some-view";
+  //   const withFake = fake.returns({ body: view });
+  //   const inFake = fake.returns({
+  //     with: withFake,
+  //   });
+  //   const streamFake = fake.returns({
+  //     in: inFake,
+  //   });
+  //   const rpcFake = fake.returns({
+  //     stream: streamFake,
+  //   });
+  //   replace(deps, "rpc", rpcFake);
 
-    const fn = "some-fn";
-    const { body: result } = await viewComposite({
-      name,
-      domain,
-      service,
-      context,
-    })
-      .set({
-        context: contexts,
-        currentToken,
-        token: {
-          internalFn: internalTokenFn,
-          externalFn: externalTokenFn,
-          key,
-        },
-      })
-      .stream(fn, { query, sort, root });
+  //   const fn = "some-fn";
+  //   const { body: result } = await viewComposite({
+  //     name,
+  //     domain,
+  //     service,
+  //     context,
+  //   })
+  //     .set({
+  //       context: contexts,
+  //       currentToken,
+  //       token: {
+  //         internalFn: internalTokenFn,
+  //         externalFn: externalTokenFn,
+  //         key,
+  //       },
+  //     })
+  //     .stream(fn, { query, sort, root });
 
-    expect(rpcFake).to.have.been.calledWith(
-      name,
-      domain,
-      service,
-      context,
-      "view-composite"
-    );
-    expect(streamFake).to.have.been.calledWith(fn, { query, sort, id: root });
-    expect(inFake).to.have.been.calledWith({ context: contexts });
-    expect(withFake).to.have.been.calledWith({
-      path: "/stream",
-      internalTokenFn,
-      externalTokenFn,
-      currentToken,
-      key,
-    });
-    expect(result).to.equal(view);
-  });
-  it("should call stream with the correct params and optionals omitted", async () => {
-    const view = "some-view";
-    const withFake = fake.returns({ body: view });
-    const inFake = fake.returns({
-      with: withFake,
-    });
-    const streamFake = fake.returns({
-      in: inFake,
-    });
-    const rpcFake = fake.returns({
-      stream: streamFake,
-    });
-    replace(deps, "rpc", rpcFake);
+  //   expect(rpcFake).to.have.been.calledWith(
+  //     name,
+  //     domain,
+  //     service,
+  //     context,
+  //     "view-composite"
+  //   );
+  //   expect(streamFake).to.have.been.calledWith(fn, { query, sort, id: root });
+  //   expect(inFake).to.have.been.calledWith({ context: contexts });
+  //   expect(withFake).to.have.been.calledWith({
+  //     path: "/stream",
+  //     internalTokenFn,
+  //     externalTokenFn,
+  //     currentToken,
+  //     key,
+  //   });
+  //   expect(result).to.equal(view);
+  // });
+  // it("should call stream with the correct params and optionals omitted", async () => {
+  //   const view = "some-view";
+  //   const withFake = fake.returns({ body: view });
+  //   const inFake = fake.returns({
+  //     with: withFake,
+  //   });
+  //   const streamFake = fake.returns({
+  //     in: inFake,
+  //   });
+  //   const rpcFake = fake.returns({
+  //     stream: streamFake,
+  //   });
+  //   replace(deps, "rpc", rpcFake);
 
-    const fn = "some-fn";
-    const result = await viewComposite({ name }).stream(fn, {
-      query,
-    });
+  //   const fn = "some-fn";
+  //   const result = await viewComposite({ name }).stream(fn, {
+  //     query,
+  //   });
 
-    expect(rpcFake).to.have.been.calledWith(name, envContext, "view-composite");
-    expect(streamFake).to.have.been.calledWith(fn, { query });
-    expect(inFake).to.have.been.calledWith({});
-    expect(withFake).to.have.been.calledWith({
-      path: "/stream",
-    });
-    expect(result).to.deep.equal({ body: view });
-  });
+  //   expect(rpcFake).to.have.been.calledWith(name, envContext, "view-composite");
+  //   expect(streamFake).to.have.been.calledWith(fn, { query });
+  //   expect(inFake).to.have.been.calledWith({});
+  //   expect(withFake).to.have.been.calledWith({
+  //     path: "/stream",
+  //   });
+  //   expect(result).to.deep.equal({ body: view });
+  // });
 });

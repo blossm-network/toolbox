@@ -44,42 +44,42 @@ module.exports = ({
         ...(key && { key }),
         ...(!internal && { path: `/${name}` }),
       });
-  const stream = ({
-    contexts,
-    currentToken,
-    token: {
-      internalFn: internalTokenFn,
-      externalFn: externalTokenFn,
-      key,
-    } = {},
-  } = {}) => async (fn, { query, sort, root } = {}) =>
-    await deps
-      .rpc(
-        name,
-        ...(domain ? [domain] : []),
-        ...(service ? [service] : []),
-        context,
-        "view-store"
-      )
-      .stream(fn, {
-        ...(query && { query }),
-        ...(sort && { sort }),
-        ...(root && { id: root }),
-      })
-      .in({
-        ...(contexts && { context: contexts }),
-        ...(!internal && {
-          network,
-          host: `v.${domain}.${context}.${network}`,
-        }),
-      })
-      .with({
-        path: `/${internal ? "" : `${name}/`}stream`,
-        ...(internalTokenFn && { internalTokenFn }),
-        ...(externalTokenFn && { externalTokenFn }),
-        ...(currentToken && { currentToken }),
-        ...(key && { key }),
-      });
+  // const stream = ({
+  //   contexts,
+  //   currentToken,
+  //   token: {
+  //     internalFn: internalTokenFn,
+  //     externalFn: externalTokenFn,
+  //     key,
+  //   } = {},
+  // } = {}) => async (fn, { query, sort, root } = {}) =>
+  //   await deps
+  //     .rpc(
+  //       name,
+  //       ...(domain ? [domain] : []),
+  //       ...(service ? [service] : []),
+  //       context,
+  //       "view-store"
+  //     )
+  //     .stream(fn, {
+  //       ...(query && { query }),
+  //       ...(sort && { sort }),
+  //       ...(root && { id: root }),
+  //     })
+  //     .in({
+  //       ...(contexts && { context: contexts }),
+  //       ...(!internal && {
+  //         network,
+  //         host: `v.${domain}.${context}.${network}`,
+  //       }),
+  //     })
+  //     .with({
+  //       path: `/${internal ? "" : `${name}/`}stream`,
+  //       ...(internalTokenFn && { internalTokenFn }),
+  //       ...(externalTokenFn && { externalTokenFn }),
+  //       ...(currentToken && { currentToken }),
+  //       ...(key && { key }),
+  //     });
   const update = ({
     contexts,
     token: { internalFn: internalTokenFn } = {},
@@ -122,13 +122,13 @@ module.exports = ({
     set: ({ context: contexts, token, currentToken }) => {
       return {
         read: read({ contexts, token, currentToken }),
-        stream: stream({ contexts, token, currentToken }),
+        // stream: stream({ contexts, token, currentToken }),
         update: update({ contexts, token }),
         delete: del({ contexts, token }),
       };
     },
     read: read(),
-    stream: stream(),
+    // stream: stream(),
     update: update(),
     delete: del(),
   };
