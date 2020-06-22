@@ -39,10 +39,6 @@ module.exports = ({
     })
     .issue(payload, { ...headers, root });
 
-  //TODO
-  //eslint-disable-next-line no-console
-  console.log({ responseHeaders, body: response });
-
   // If the response has tokens, send them as cookies.
   if (response && response.tokens) {
     for (const token of response.tokens) {
