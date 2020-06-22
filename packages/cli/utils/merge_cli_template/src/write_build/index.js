@@ -10,6 +10,7 @@ const command = require("./command");
 const eventHandler = require("./event_handler");
 const eventStore = require("./event_store");
 const job = require("./job");
+const fact = require("./fact");
 const viewComposite = require("./view_composite");
 
 const steps = ({
@@ -240,8 +241,42 @@ const steps = ({
         strict,
       });
     case "job":
-    case "fact":
       return job({
+        imageExtension,
+        name,
+        domain,
+        region,
+        project,
+        network,
+        envUriSpecifier,
+        containerRegistery,
+        mainContainerName,
+        dependencyKeyEnvironmentVariables,
+        coreNetwork,
+        dnsZone,
+        service,
+        procedure,
+        timeout,
+        memory,
+        computeUrlId,
+        operationHash,
+        env,
+        serviceName,
+        uri,
+        rolesBucket,
+        secretBucket,
+        secretBucketKeyLocation,
+        secretBucketKeyRing,
+        runUnitTests,
+        runBaseUnitTests,
+        runIntegrationTests,
+        runBaseIntegrationTests,
+        envVars,
+        devEnvVars,
+        strict,
+      });
+    case "fact":
+      return fact({
         imageExtension,
         name,
         domain,
