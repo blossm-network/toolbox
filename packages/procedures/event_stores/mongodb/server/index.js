@@ -31,7 +31,7 @@ const eventStore = async ({ schema, indexes }) => {
   }
 
   _eventStore = deps.db.store({
-    name: `${process.env.SERVICE}.${process.env.DOMAIN}`,
+    name: `_${process.env.SERVICE}.${process.env.DOMAIN}`,
     schema: {
       id: { type: String, required: true, unique: true },
       saved: { type: Date, required: true },
@@ -113,7 +113,7 @@ const snapshotStore = async ({ schema, indexes }) => {
   }
 
   _snapshotStore = deps.db.store({
-    name: `${process.env.SERVICE}.${process.env.DOMAIN}.snapshots`,
+    name: `_${process.env.SERVICE}.${process.env.DOMAIN}.snapshots`,
     schema: {
       created: { type: Date, required: true },
       headers: {
@@ -144,7 +144,7 @@ const countsStore = async () => {
   }
 
   _countsStore = deps.db.store({
-    name: `${process.env.SERVICE}.${process.env.DOMAIN}.counts`,
+    name: `_${process.env.SERVICE}.${process.env.DOMAIN}.counts`,
     schema: {
       root: { type: String, required: true, unique: true },
       value: { type: Number, required: true, default: 0 },

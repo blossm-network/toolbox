@@ -104,7 +104,7 @@ describe("Mongodb event store", () => {
     });
     expect(removeIdsFake).to.have.been.calledTwice;
     expect(storeFake).to.have.been.calledWith({
-      name: `${service}.${domain}`,
+      name: `_${service}.${domain}`,
       schema: {
         id: { type: String, required: true, unique: true },
         saved: { type: Date, required: true },
@@ -177,7 +177,7 @@ describe("Mongodb event store", () => {
       },
     });
     expect(storeFake).to.have.been.calledWith({
-      name: `${service}.${domain}.snapshots`,
+      name: `_${service}.${domain}.snapshots`,
       schema: {
         created: { type: Date, required: true },
         headers: {
@@ -280,7 +280,7 @@ describe("Mongodb event store", () => {
     await mongodbEventStore({ schema, indexes: [index], publishFn });
 
     expect(storeFake).to.have.been.calledWith({
-      name: `${service}.${domain}`,
+      name: `_${service}.${domain}`,
       schema: {
         id: { type: String, required: true, unique: true },
         saved: { type: Date, required: true },
@@ -354,7 +354,7 @@ describe("Mongodb event store", () => {
       },
     });
     expect(storeFake).to.have.been.calledWith({
-      name: `${service}.${domain}.snapshots`,
+      name: `_${service}.${domain}.snapshots`,
       schema: {
         created: { type: Date, required: true },
         headers: {
@@ -366,7 +366,7 @@ describe("Mongodb event store", () => {
       indexes: [[{ "headers.root": 1 }], [{ [index]: 1 }]],
     });
     expect(storeFake).to.have.been.calledWith({
-      name: `${service}.${domain}.counts`,
+      name: `_${service}.${domain}.counts`,
       schema: {
         root: { type: String, required: true, unique: true },
         value: { type: Number, required: true, default: 0 },
@@ -424,7 +424,7 @@ describe("Mongodb event store", () => {
     });
     expect(removeIdsFake).to.have.been.calledTwice;
     expect(storeFake).to.have.been.calledWith({
-      name: `${service}.${domain}`,
+      name: `_${service}.${domain}`,
       schema: {
         id: { type: String, required: true, unique: true },
         saved: { type: Date, required: true },
