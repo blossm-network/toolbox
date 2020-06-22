@@ -69,7 +69,7 @@ describe("Event handler", () => {
     });
 
     expect(storeFake).to.have.been.calledWith({
-      name: `${context}.${name}.numbers`,
+      name: `_${context}.${name}.numbers`,
       schema: {
         root: { type: String, required: true },
         number: { type: Number, required: true, default: 0 },
@@ -166,7 +166,7 @@ describe("Event handler", () => {
     });
 
     expect(storeFake).to.have.been.calledWith({
-      name: `${context}.${name}.numbers`,
+      name: `_${context}.${name}.numbers`,
       schema: {
         root: { type: String, required: true },
         number: { type: Number, required: true, default: 0 },
@@ -268,7 +268,7 @@ describe("Event handler", () => {
     });
 
     expect(storeFake).to.have.been.calledWith({
-      name: `${context}.${service}.${domain}.${name}.numbers`,
+      name: `_${context}.${service}.${domain}.${name}.numbers`,
       schema: {
         root: { type: String, required: true },
         number: { type: Number, required: true, default: 0 },

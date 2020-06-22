@@ -11,7 +11,7 @@ const numberStore = async () => {
   }
 
   _numberStore = deps.db.store({
-    name: `${process.env.CONTEXT}${
+    name: `_${process.env.CONTEXT}${
       process.env.SERVICE ? `.${process.env.SERVICE}` : ""
     }${process.env.DOMAIN ? `.${process.env.DOMAIN}` : ""}.${
       process.env.NAME

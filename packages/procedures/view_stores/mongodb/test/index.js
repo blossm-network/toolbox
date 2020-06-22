@@ -111,7 +111,7 @@ describe("View store", () => {
     });
 
     expect(storeFake).to.have.been.calledWith({
-      name: `${context}.${service}.${domain}.${name}`,
+      name: `_${context}.${service}.${domain}.${name}`,
       schema: {
         body: {
           a: 1,
@@ -335,7 +335,7 @@ describe("View store", () => {
     });
 
     expect(storeFake).to.have.been.calledWith({
-      name: `${context}.${name}`,
+      name: `_${context}.${name}`,
       schema: {
         body: {
           a: 1,
@@ -451,7 +451,7 @@ describe("View store", () => {
     await mongodbViewStore({ schema, indexes, getFn, putFn });
 
     expect(storeFake).to.have.been.calledWith({
-      name: `${context}.${service}.${domain}.${name}`,
+      name: `_${context}.${service}.${domain}.${name}`,
       schema: {
         body: {
           a: 1,
@@ -571,7 +571,7 @@ describe("View store", () => {
     await mongodbViewStore({ schema, indexes });
 
     expect(storeFake).to.have.been.calledWith({
-      name: `${context}.${service}.${domain}.${name}`,
+      name: `_${context}.${service}.${domain}.${name}`,
       schema: {
         body: {
           a: 1,
@@ -646,7 +646,7 @@ describe("View store", () => {
     expect(secretFake).to.have.been.calledWith("mongodb-view-store");
 
     expect(storeFake).to.have.been.calledWith({
-      name: `${context}.${service}.${domain}.${name}`,
+      name: `_${context}.${service}.${domain}.${name}`,
       schema: {
         body: {
           a: 1,
@@ -848,7 +848,7 @@ describe("View store", () => {
     await mongodbViewStore({ schema, indexes });
 
     expect(storeFake).to.have.been.calledWith({
-      name: `${context}.${service}.${domain}.${name}`,
+      name: `_${context}.${service}.${domain}.${name}`,
       schema: {
         body: {
           a: 1,
