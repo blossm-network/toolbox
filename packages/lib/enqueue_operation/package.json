@@ -1,6 +1,6 @@
 {
   "name": "@blossm/enqueue-operation",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Enqueues an operation.",
   "main": "index.js",
   "author": "blossm.network",
