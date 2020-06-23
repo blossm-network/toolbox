@@ -1,6 +1,7 @@
 const { post, put, get, delete: del, stream } = require("@blossm/request");
 const { construct } = require("@blossm/errors");
 const operationToken = require("@blossm/operation-token");
+const enqueueOperation = require("@blossm/enqueue-operation");
 const operationUrl = require("@blossm/operation-url");
 const networkToken = require("@blossm/network-token");
 const networkUrl = require("@blossm/network-url");
@@ -13,5 +14,6 @@ exports.stream = stream;
 exports.constructError = construct;
 exports.operationUrl = operationUrl;
 exports.operationToken = operationToken;
+exports.enqueueOperation = enqueueOperation;
 exports.networkUrl = networkUrl;
 exports.networkToken = networkToken;

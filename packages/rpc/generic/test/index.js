@@ -81,20 +81,24 @@ describe("Operation", () => {
     const operationUrlFake = fake.returns(url);
     replace(deps, "operationUrl", operationUrlFake);
 
-    const enqueueFnFake = fake.returns(response);
+    const enqueueOperationFake = fake.returns(response);
+    replace(deps, "enqueueOperation", enqueueOperationFake);
+
+    const enqueueFn = "some-enqueue-fn";
     const result = await operation(operarationPart1, operarationPart2)
       .post(data)
       .in({ context, host })
-      .with({ internalTokenFn: tokenFn, claims, enqueueFn: enqueueFnFake });
+      .with({ internalTokenFn: tokenFn, claims, enqueueFn });
 
-    expect(enqueueFnFake).to.have.been.calledWith({
+    expect(enqueueOperationFake).to.have.been.calledWith({
+      enqueueFn,
       url,
       data: {
         ...data,
         context,
         claims,
       },
-      token,
+      operation: [operarationPart1, operarationPart2],
     });
     expect(operationTokenFake).to.have.been.calledWith({
       tokenFn,

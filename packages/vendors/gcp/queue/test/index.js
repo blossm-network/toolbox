@@ -20,10 +20,16 @@ const data = { a: 1 };
 const project = "some-project";
 const location = "some-location";
 const name = "some-name";
+const operationName = "some-operation-name";
+const operationHash = "some-operation-hash";
 const serviceAccountEmail = "some-service-account-email";
-const audience = "some-audience";
+
+const region = "some-region";
+const computeUrlId = "some-compute-url-id";
 
 process.env.GCP_PROJECT = project;
+process.env.GCP_REGION = region;
+process.env.GCP_COMPUTE_URL_ID = computeUrlId;
 
 describe("Queue", () => {
   beforeEach(() => {
@@ -66,13 +72,14 @@ describe("Queue", () => {
   it("should call enqueue with the correct params", async () => {
     const result = await queue.enqueue({
       serviceAccountEmail,
-      audience,
       project,
       queue: name,
       location,
     })({
       url,
       data,
+      name: operationName,
+      hash: operationHash,
     });
     expect(queuePathFake).to.have.been.calledWith(project, location);
     expect(createTaskFake).to.have.been.calledWith({
@@ -83,7 +90,7 @@ describe("Queue", () => {
           httpMethod: "POST",
           oidcToken: {
             serviceAccountEmail,
-            audience,
+            audience: `https://${region}-${operationName}-${operationHash}-${computeUrlId}-uc.a.run.app`,
           },
           headers: {
             "content-type": "application/json",
@@ -131,7 +138,6 @@ describe("Queue", () => {
     const token = "some-token";
     const result = await queue.enqueue({
       serviceAccountEmail,
-      audience,
       project,
       queue: name,
       location,

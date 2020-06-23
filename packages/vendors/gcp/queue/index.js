@@ -15,12 +15,11 @@ exports.create = async ({ project, location, name }) => {
 
 exports.enqueue = ({
   serviceAccountEmail,
-  audience,
   project = process.env.GCP_PROJECT,
   location = process.env.GCP_REGION,
   queue,
   wait = 0,
-}) => async ({ url, data = {}, token }) => {
+}) => async ({ url, data = {}, token, hash, name }) => {
   const parent = client.queuePath(project, location, queue);
 
   const string = JSON.stringify(data);
@@ -35,7 +34,10 @@ exports.enqueue = ({
           serviceAccountEmail:
             serviceAccountEmail ||
             `executer@${project}.iam.gserviceaccount.com`,
-          ...(audience && { audience }),
+          ...(hash &&
+            name && {
+              audience: `https://${process.env.GCP_REGION}-${name}-${hash}-${process.env.GCP_COMPUTE_URL_ID}-uc.a.run.app`,
+            }),
         },
       }),
       headers: {

@@ -70,7 +70,12 @@ const common = ({ method, dataParam, operation, id, data }) => {
 
           const response =
             enqueueFn && method == deps.post
-              ? await enqueueFn({ url, data: requestData, token })
+              ? await deps.enqueueOperation({
+                  enqueueFn,
+                  url,
+                  data: requestData,
+                  operation,
+                })
               : await method(url, {
                   [dataParam]: requestData,
                   ...(token && {
@@ -95,9 +100,9 @@ const common = ({ method, dataParam, operation, id, data }) => {
             const parsedBody = response.body ? jsonString(response.body) : null;
             throw deps.constructError({
               statusCode: response.statusCode,
-              message: parsedBody.message || "Not specified",
-              ...(parsedBody.info && { info: parsedBody.info }),
-              ...(parsedBody.code && { code: parsedBody.code }),
+              message: (parsedBody && parsedBody.message) || "Not specified",
+              ...(parsedBody && parsedBody.info && { info: parsedBody.info }),
+              ...(parsedBody && parsedBody.code && { code: parsedBody.code }),
             });
           }
 

@@ -1,7 +1,7 @@
 {
-  "name": "@blossm/gcp-queue",
-  "version": "0.0.15",
-  "description": "Queues and task.",
+  "name": "@blossm/enqueue-operation",
+  "version": "0.0.0",
+  "description": "Enqueues an operation.",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -14,7 +14,9 @@
     "test": "mocha --recursive"
   },
   "dependencies": {
-    "@google-cloud/tasks": "^2.0.0"
+    "@blossm/operation-hash": "^0.0.10",
+    "@blossm/service-name-consts": "^0.0.2",
+    "@blossm/trim-string": "^0.0.4"
   },
   "devDependencies": {
     "mocha": "^7.1.1",
