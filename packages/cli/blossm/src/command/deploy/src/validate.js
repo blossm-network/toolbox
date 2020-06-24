@@ -25,7 +25,8 @@ const validateObject = ({ object, expectation, path, context }) => {
           title: expectation[property].title || property,
           path: `${path}.${property}`,
           optional:
-            expectation[property].optional || expectation[property].default,
+            expectation[property].optional ||
+            expectation[property].default != undefined,
         }),
       ]);
       if (error) throw error;
@@ -67,7 +68,8 @@ const validateObject = ({ object, expectation, path, context }) => {
           },
         }),
         optional:
-          expectation[property].optional || expectation[property].default,
+          expectation[property].optional ||
+          expectation[property].default != undefined,
       }),
     ]);
     if (error) throw error;
