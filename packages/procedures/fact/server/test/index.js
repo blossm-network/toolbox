@@ -17,14 +17,21 @@ describe("Fact", () => {
     const getFake = fake.returns({
       listen: listenFake,
     });
-    const serverFake = fake.returns({
+    const streamFake = fake.returns({
       get: getFake,
+    });
+    const serverFake = fake.returns({
+      get: streamFake,
     });
     replace(deps, "server", serverFake);
 
     const factGetResult = "some-get-result";
     const factGetFake = fake.returns(factGetResult);
     replace(deps, "get", factGetFake);
+
+    const factStreamResult = "some-stream-result";
+    const factStreamFake = fake.returns(factStreamResult);
+    replace(deps, "stream", factStreamFake);
 
     const result = await fact({
       mainFn,
@@ -34,7 +41,11 @@ describe("Fact", () => {
     expect(listenFake).to.have.been.calledWith();
     expect(serverFake).to.have.been.calledWith();
     expect(getFake).to.have.been.calledWith(factGetResult, { path: "/:root?" });
+    expect(streamFake).to.have.been.calledWith(factStreamResult, {
+      path: "/stream/:root?",
+    });
     expect(factGetFake).to.have.been.calledWith({ mainFn });
+    expect(factStreamFake).to.have.been.calledWith({ mainFn });
   });
   it("should throw correctly", async () => {
     const error = new Error("some-message");
@@ -42,14 +53,13 @@ describe("Fact", () => {
     const getFake = fake.returns({
       listen: listenFake,
     });
-    const serverFake = fake.returns({
+    const streamFake = fake.returns({
       get: getFake,
     });
+    const serverFake = fake.returns({
+      get: streamFake,
+    });
     replace(deps, "server", serverFake);
-
-    const factGetResult = "some-get-result";
-    const factGetFake = fake.returns(factGetResult);
-    replace(deps, "get", factGetFake);
 
     try {
       await fact({ mainFn });
