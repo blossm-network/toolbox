@@ -152,10 +152,10 @@ module.exports = (...operation) => {
           deps.stream(
             url,
             (data) => {
+              const string = data.toString();
               //TODO
               //eslint-disable-next-line no-console
-              console.log({ dataChunk: data });
-              const string = data.toString();
+              console.log({ dataChunk: string });
               let parsedData = jsonString(progress + string);
               if (!parsedData) {
                 progress = progress + string;
