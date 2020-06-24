@@ -171,16 +171,7 @@ module.exports = (...operation) => {
             url,
             async (data) => {
               const string = data.toString();
-              //TODO
-              //eslint-disable-next-line no-console
-              console.log({
-                dataChunk: string,
-                total: progress + string,
-              });
               let { parsedData, leftover } = jsonString(progress + string);
-              //TODO
-              //eslint-disable-next-line no-console
-              console.log({ parsedData, leftover });
               for (const d of parsedData) await fn(d);
               progress = leftover;
             },
