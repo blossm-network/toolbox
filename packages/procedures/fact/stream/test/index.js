@@ -31,7 +31,7 @@ describe("Fact stream", () => {
       },
     };
 
-    const writeFake = fake();
+    const writeFake = fake.returns(true);
     const flushFake = fake();
     const endFake = fake();
 
@@ -75,7 +75,7 @@ describe("Fact stream", () => {
       },
     };
 
-    const writeFake = fake();
+    const writeFake = fake.returns(true);
     const flushFake = fake();
     const endFake = fake();
 
