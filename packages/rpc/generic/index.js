@@ -169,7 +169,7 @@ module.exports = (...operation) => {
         method: (url, data) =>
           deps.stream(
             url,
-            (data) => {
+            async (data) => {
               const string = data.toString();
               //TODO
               //eslint-disable-next-line no-console
@@ -181,7 +181,7 @@ module.exports = (...operation) => {
               //TODO
               //eslint-disable-next-line no-console
               console.log({ parsedData, leftover });
-              for (const d of parsedData) fn(d);
+              for (const d of parsedData) await fn(d);
               progress = leftover;
             },
             data

@@ -465,7 +465,7 @@ describe("Operation", () => {
 
     expect(streamFake).to.have.been.calledWith(
       url,
-      match((func) => {
+      match(async (func) => {
         const obj = { a: 1, b: { c: 3 } };
         const obj1 = { k: 1, b: { c: 3 } };
         const obj2 = { p: 1, b: { c: 3 } };
@@ -476,13 +476,15 @@ describe("Operation", () => {
         const buffer = Buffer.from(
           stringObj + stringObj1 + stringObj2 + leftover
         );
-        func(buffer);
-        func(Buffer.from("}"));
+        await func(buffer);
+        await func(Buffer.from('}{ "w": 4'));
+        await func(Buffer.from("}"));
         return (
           fnFake.getCall(0).calledWith({ a: 1, b: { c: 3 } }) &&
-          fnFake.getCall(1).calledWith({ k: 1, b: { c: 3 } }) &&
-          fnFake.getCall(2).calledWith({ p: 1, b: { c: 3 } }) &&
-          fnFake.getCall(3).calledWith({ q: 3 })
+            fnFake.getCall(1).calledWith({ k: 1, b: { c: 3 } }) &&
+            fnFake.getCall(2).calledWith({ p: 1, b: { c: 3 } }) &&
+            fnFake.getCall(3).calledWith({ q: 3 }),
+          fnFake.getCall(4).calledWith({ w: 4 })
         );
       }),
       {
