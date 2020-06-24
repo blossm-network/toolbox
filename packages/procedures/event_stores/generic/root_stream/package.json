@@ -1,7 +1,7 @@
 {
   "name": "@blossm/event-store-root-stream",
   "description": "An event store GET handler for streaming roots.",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
