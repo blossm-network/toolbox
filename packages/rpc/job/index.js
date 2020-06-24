@@ -11,9 +11,9 @@ module.exports = ({ name, domain, service }) => {
       key,
     } = {},
     enqueue: { fn: enqueueFn, wait: enqueueWait } = {},
-  } = {}) => async (payload) => {
+  } = {}) => (payload) => {
     const data = { payload };
-    return await deps
+    return deps
       .rpc(
         name,
         ...(domain ? [domain] : []),

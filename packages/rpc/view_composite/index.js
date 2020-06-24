@@ -9,8 +9,8 @@ module.exports = ({ name, domain, service, context = process.env.CONTEXT }) => {
       externalFn: externalTokenFn,
       key,
     } = {},
-  } = {}) => async ({ query, sort, root }) =>
-    await deps
+  } = {}) => ({ query, sort, root }) =>
+    deps
       .rpc(
         name,
         ...(domain ? [domain] : []),

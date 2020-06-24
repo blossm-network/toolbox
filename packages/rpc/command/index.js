@@ -12,10 +12,7 @@ module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
       key,
     } = {},
     enqueue: { fn: enqueueFn, wait: enqueueWait } = {},
-  } = {}) => async (
-    payload = {},
-    { trace, issued, root, path, options } = {}
-  ) => {
+  } = {}) => (payload = {}, { trace, issued, root, path, options } = {}) => {
     const headers = {
       issued: issued || deps.dateString(),
       ...(trace != undefined && { trace }),
@@ -42,7 +39,7 @@ module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
       ...(options && { options }),
     };
 
-    return await deps
+    return deps
       .rpc(name, domain, service, "command")
       .post(data)
       .in({

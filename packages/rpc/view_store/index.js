@@ -16,8 +16,8 @@ module.exports = ({
       externalFn: externalTokenFn,
       key,
     } = {},
-  } = {}) => async ({ query, sort, root } = {}) =>
-    await deps
+  } = {}) => ({ query, sort, root } = {}) =>
+    deps
       .rpc(
         name,
         ...(domain ? [domain] : []),
@@ -83,8 +83,8 @@ module.exports = ({
   const update = ({
     contexts,
     token: { internalFn: internalTokenFn } = {},
-  } = {}) => async (root, view) =>
-    await deps
+  } = {}) => (root, view) =>
+    deps
       .rpc(
         name,
         ...(domain ? [domain] : []),
@@ -102,8 +102,8 @@ module.exports = ({
   const del = ({
     contexts,
     token: { internalFn: internalTokenFn } = {},
-  } = {}) => async (root) =>
-    await deps
+  } = {}) => (root) =>
+    deps
       .rpc(
         name,
         ...(domain ? [domain] : []),
