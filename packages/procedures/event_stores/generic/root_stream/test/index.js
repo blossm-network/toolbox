@@ -18,11 +18,12 @@ describe("Event store root stream", () => {
     };
 
     const endFake = fake();
-    const writeResult = "some-write-result";
-    const writeFake = fake.returns(writeResult);
+    const writeFake = fake();
+    const flushFake = fake();
     const res = {
       end: endFake,
       write: writeFake,
+      flush: flushFake,
     };
 
     await stream({ rootStreamFn: rootStreamFake })(req, res);
@@ -31,11 +32,12 @@ describe("Event store root stream", () => {
       fn: match((fn) => {
         const root = "some-root";
         const data = { root };
-        const result = fn(data);
-        return result == writeResult && writeFake.calledWith(root);
+        fn(data);
+        return writeFake.calledWith(root);
       }),
     });
     expect(endFake).to.have.been.calledWith();
+    expect(flushFake).to.have.been.calledWith();
   });
   it("should call with the correct params and optionals missing", async () => {
     const rootStreamFake = fake();
@@ -45,11 +47,12 @@ describe("Event store root stream", () => {
     };
 
     const endFake = fake();
-    const writeResult = "some-write-result";
-    const writeFake = fake.returns(writeResult);
+    const writeFake = fake();
+    const flushFake = fake();
     const res = {
       end: endFake,
       write: writeFake,
+      flush: flushFake,
     };
 
     await stream({ rootStreamFn: rootStreamFake })(req, res);
@@ -57,10 +60,11 @@ describe("Event store root stream", () => {
       fn: match((fn) => {
         const root = "some-root";
         const data = { root };
-        const result = fn(data);
-        return result == writeResult && writeFake.calledWith(root);
+        fn(data);
+        return writeFake.calledWith(root);
       }),
     });
     expect(endFake).to.have.been.calledWith();
+    expect(flushFake).to.have.been.calledWith();
   });
 });

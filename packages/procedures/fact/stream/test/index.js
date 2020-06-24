@@ -31,13 +31,14 @@ describe("Fact stream", () => {
       },
     };
 
-    const writeResult = "some-write-result";
-    const writeFake = fake.returns(writeResult);
+    const writeFake = fake();
+    const flushFake = fake();
     const endFake = fake();
 
     const res = {
       write: writeFake,
       end: endFake,
+      flush: flushFake,
     };
 
     await stream({
@@ -48,14 +49,13 @@ describe("Fact stream", () => {
       query,
       streamFn: match((fn) => {
         const data = { a: 4 };
-        const result = fn(data);
-        return (
-          writeFake.calledWith(JSON.stringify(data)) && result == writeResult
-        );
+        fn(data);
+        return writeFake.calledWith(JSON.stringify(data));
       }),
       parallel: 100,
     });
     expect(endFake).to.have.been.calledWith();
+    expect(flushFake).to.have.been.calledWith();
   });
   it("should call with the correct params with context and headers", async () => {
     const mainFnFake = fake();
@@ -75,13 +75,14 @@ describe("Fact stream", () => {
       },
     };
 
-    const writeResult = "some-write-result";
-    const writeFake = fake.returns(writeResult);
+    const writeFake = fake();
+    const flushFake = fake();
     const endFake = fake();
 
     const res = {
       write: writeFake,
       end: endFake,
+      flush: flushFake,
     };
 
     await stream({
@@ -94,14 +95,13 @@ describe("Fact stream", () => {
       root,
       streamFn: match((fn) => {
         const data = { a: 4 };
-        const result = fn(data);
-        return (
-          writeFake.calledWith(JSON.stringify(data)) && result == writeResult
-        );
+        fn(data);
+        return writeFake.calledWith(JSON.stringify(data));
       }),
       parallel,
     });
     expect(endFake).to.have.been.calledWith();
+    expect(flushFake).to.have.been.calledWith();
   });
   it("should throw correctly", async () => {
     const errorMessage = "some-error-message";

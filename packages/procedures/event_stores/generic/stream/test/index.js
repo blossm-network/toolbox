@@ -36,11 +36,12 @@ describe("Event store stream", () => {
     };
 
     const endFake = fake();
-    const writeResult = "some-write-result";
-    const writeFake = fake.returns(writeResult);
+    const writeFake = fake();
+    const flushFake = fake();
     const res = {
       end: endFake,
       write: writeFake,
+      flush: flushFake,
     };
 
     await stream({ streamFn: streamFake })(req, res);
@@ -50,13 +51,12 @@ describe("Event store stream", () => {
       parallel: 2,
       fn: match((fn) => {
         const event = { a: 1 };
-        const result = fn(event);
-        return (
-          result == writeResult && writeFake.calledWith(JSON.stringify(event))
-        );
+        fn(event);
+        return writeFake.calledWith(JSON.stringify(event));
       }),
     });
     expect(endFake).to.have.been.calledWith();
+    expect(flushFake).to.have.been.calledWith();
   });
   it("should call with the correct params and optionals missing", async () => {
     const streamFake = fake();
@@ -71,11 +71,12 @@ describe("Event store stream", () => {
     };
 
     const endFake = fake();
-    const writeResult = "some-write-result";
-    const writeFake = fake.returns(writeResult);
+    const writeFake = fake();
+    const flushFake = fake();
     const res = {
       end: endFake,
       write: writeFake,
+      flush: flushFake,
     };
 
     await stream({ streamFn: streamFake })(req, res);
@@ -84,12 +85,11 @@ describe("Event store stream", () => {
       from,
       fn: match((fn) => {
         const event = { a: 1 };
-        const result = fn(event);
-        return (
-          result == writeResult && writeFake.calledWith(JSON.stringify(event))
-        );
+        fn(event);
+        return writeFake.calledWith(JSON.stringify(event));
       }),
     });
     expect(endFake).to.have.been.calledWith();
+    expect(flushFake).to.have.been.calledWith();
   });
 });

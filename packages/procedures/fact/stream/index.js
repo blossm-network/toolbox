@@ -8,7 +8,8 @@ module.exports = ({ mainFn }) => {
         //TODO
         //eslint-disable-next-line no-console
         console.log(" streaming data", { data });
-        return res.write(JSON.stringify(data));
+        res.write(JSON.stringify(data));
+        res.flush();
       },
       parallel: req.query.parallel || 100,
     });

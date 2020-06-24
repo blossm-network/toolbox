@@ -30,13 +30,15 @@ module.exports = ({ streamFn, queryFn = defaultFn }) => {
       },
       ...(req.query.sort && { sort: req.query.sort }),
       ...(req.query.parallel && { parallel: req.query.parallel }),
-      fn: (view) =>
+      fn: (view) => {
         res.write(
           JSON.stringify({
             body: view.body,
             headers: { root: view.headers.root, trace: view.headers.trace },
           })
         ),
+          res.flush();
+      },
     });
 
     res.end();
