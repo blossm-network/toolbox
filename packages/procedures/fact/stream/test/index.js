@@ -48,7 +48,7 @@ describe("Fact stream", () => {
       streamFn: match((fn) => {
         const data = { a: 4 };
         fn(data);
-        return writeFake.calledWith(data); //JSON.stringify(data));
+        return writeFake.calledWith(JSON.stringify(data));
       }),
       parallel: 100,
     });
@@ -91,7 +91,7 @@ describe("Fact stream", () => {
       streamFn: match((fn) => {
         const data = { a: 4 };
         fn(data);
-        return writeFake.calledWith(data); //JSON.stringify(data));
+        return writeFake.calledWith(JSON.stringify(data));
       }),
       parallel,
     });
