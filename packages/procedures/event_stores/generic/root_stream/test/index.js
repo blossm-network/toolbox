@@ -31,7 +31,7 @@ describe("Event store root stream", () => {
         const root = "some-root";
         const data = { root };
         fn(data);
-        return writeFake.calledWith(root);
+        return writeFake.calledWith({ root });
       }),
     });
     expect(endFake).to.have.been.calledWith();
@@ -56,7 +56,7 @@ describe("Event store root stream", () => {
         const root = "some-root";
         const data = { root };
         fn(data);
-        return writeFake.calledWith(root);
+        return writeFake.calledWith({ root });
       }),
     });
     expect(endFake).to.have.been.calledWith();
