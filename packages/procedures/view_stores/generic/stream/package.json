@@ -1,7 +1,7 @@
 {
   "name": "@blossm/view-store-stream",
   "description": "A view store GET handler for streaming results.",
-  "version": "0.0.44",
+  "version": "0.0.45",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
