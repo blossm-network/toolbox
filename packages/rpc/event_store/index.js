@@ -11,7 +11,7 @@ module.exports = ({ domain, service = process.env.SERVICE } = {}) => {
       externalFn: externalTokenFn,
       key,
     } = {},
-  } = {}) => async (events) => {
+  } = {}) => (events) => {
     const normalizedEvents = events.map((event) => {
       return {
         data: {
@@ -32,7 +32,7 @@ module.exports = ({ domain, service = process.env.SERVICE } = {}) => {
       };
     });
 
-    await deps
+    return deps
       .rpc(domain, service, "event-store")
       .post({ events: normalizedEvents })
       .in({
@@ -54,8 +54,8 @@ module.exports = ({ domain, service = process.env.SERVICE } = {}) => {
       externalFn: externalTokenFn,
       key,
     } = {},
-  } = {}) => async (root) =>
-    await deps
+  } = {}) => (root) =>
+    deps
       .rpc(domain, service, "event-store")
       .get({ id: root })
       .in({
@@ -76,8 +76,8 @@ module.exports = ({ domain, service = process.env.SERVICE } = {}) => {
       externalFn: externalTokenFn,
       key: tokenKey,
     } = {},
-  } = {}) => async ({ key, value }) =>
-    await deps
+  } = {}) => ({ key, value }) =>
+    deps
       .rpc(domain, service, "event-store")
       .get({ key, value })
       .in({
@@ -97,8 +97,8 @@ module.exports = ({ domain, service = process.env.SERVICE } = {}) => {
       externalFn: externalTokenFn,
       key,
     } = {},
-  } = {}) => async (fn, { root, from, parallel }) =>
-    await deps
+  } = {}) => (fn, { root, from, parallel }) =>
+    deps
       .rpc(domain, service, "event-store")
       .stream(fn, { id: root, from, ...(parallel && { parallel }) })
       .in({
@@ -120,8 +120,8 @@ module.exports = ({ domain, service = process.env.SERVICE } = {}) => {
       externalFn: externalTokenFn,
       key,
     } = {},
-  } = {}) => async (fn, { parallel } = {}) =>
-    await deps
+  } = {}) => (fn, { parallel } = {}) =>
+    deps
       .rpc(domain, service, "event-store")
       .stream(fn, { ...(parallel && { parallel }) })
       .in({
@@ -143,8 +143,8 @@ module.exports = ({ domain, service = process.env.SERVICE } = {}) => {
       externalFn: externalTokenFn,
       key,
     } = {},
-  } = {}) => async (root) =>
-    await deps
+  } = {}) => (root) =>
+    deps
       .rpc(domain, service, "event-store")
       .get({ id: root })
       .in({

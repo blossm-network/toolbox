@@ -11,8 +11,8 @@ module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
       externalFn: externalTokenFn,
       key,
     } = {},
-  } = {}) => async ({ query, id } = {}) => {
-    return await deps
+  } = {}) => ({ query, id } = {}) =>
+    deps
       .rpc(
         name,
         ...(domain ? [domain] : []),
@@ -35,7 +35,6 @@ module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
         ...(claims && { claims }),
         ...(!internal && { path: `/${name}` }),
       });
-  };
   const stream = ({
     context,
     claims,
@@ -45,8 +44,8 @@ module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
       externalFn: externalTokenFn,
       key,
     } = {},
-  } = {}) => async (fn, { query, id } = {}) => {
-    return await deps
+  } = {}) => (fn, { query, id } = {}) =>
+    deps
       .rpc(
         name,
         ...(domain ? [domain] : []),
@@ -69,7 +68,6 @@ module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
         ...(key && { key }),
         ...(claims && { claims }),
       });
-  };
 
   return {
     set: ({ context, claims, token, currentToken }) => {
