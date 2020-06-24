@@ -1,7 +1,7 @@
 {
   "name": "@blossm/job-rpc",
   "description": "Triggers a job.",
-  "version": "0.0.154",
+  "version": "0.0.155",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -14,7 +14,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/rpc": "^0.0.151"
+    "@blossm/rpc": "^0.0.152"
   },
   "devDependencies": {
     "chai-datetime": "^1.5.0",
