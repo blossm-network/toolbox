@@ -6,7 +6,7 @@ module.exports = ({ streamFn }) => {
       ...(req.query.parallel && { parallel: req.query.parallel }),
       fn: (event) => {
         res.write(JSON.stringify(event));
-        res.flush();
+        // res.flush();
       },
     });
 

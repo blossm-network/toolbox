@@ -36,8 +36,8 @@ module.exports = ({ streamFn, queryFn = defaultFn }) => {
             body: view.body,
             headers: { root: view.headers.root, trace: view.headers.trace },
           })
-        ),
-          res.flush();
+        );
+        // res.flush();
       },
     });
 

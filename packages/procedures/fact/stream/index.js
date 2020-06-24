@@ -8,21 +8,21 @@ module.exports = ({ mainFn }) => {
         //TODO
         //eslint-disable-next-line no-console
         console.log(" streaming data", { data });
-        const needsDrain = !res.write(JSON.stringify(data));
+        res.write(JSON.stringify(data));
 
-        //TODO
-        //eslint-disable-next-line no-console
-        console.log({ needsDrain });
+        // //TODO
+        // //eslint-disable-next-line no-console
+        // console.log({ needsDrain });
 
-        if (needsDrain) {
-          res.on("drain", function () {
-            res.flush();
-          });
-        } else {
-          res.flush();
-        }
+        // if (needsDrain) {
+        //   res.on("drain", function () {
+        //     res.flush();
+        //   });
+        // } else {
+        //   res.flush();
+        // }
 
-        // res.flush();
+        // // res.flush();
       },
       parallel: req.query.parallel || 100,
     });

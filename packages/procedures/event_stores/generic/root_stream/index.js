@@ -4,7 +4,7 @@ module.exports = ({ rootStreamFn }) => {
       ...(req.query.parallel && { parallel: req.query.parallel }),
       fn: (data) => {
         res.write(data.root);
-        res.flush();
+        // res.flush();
       },
     });
 
