@@ -32,14 +32,11 @@ describe("Fact stream", () => {
     };
 
     const writeFake = fake.returns(true);
-    //TODO
-    // const flushFake = fake();
     const endFake = fake();
 
     const res = {
       write: writeFake,
       end: endFake,
-      // flush: flushFake,
     };
 
     await stream({
@@ -56,7 +53,6 @@ describe("Fact stream", () => {
       parallel: 100,
     });
     expect(endFake).to.have.been.calledWith();
-    // expect(flushFake).to.have.been.calledWith();
   });
   it("should call with the correct params with context and headers", async () => {
     const mainFnFake = fake();
@@ -77,13 +73,11 @@ describe("Fact stream", () => {
     };
 
     const writeFake = fake.returns(true);
-    // const flushFake = fake();
     const endFake = fake();
 
     const res = {
       write: writeFake,
       end: endFake,
-      // flush: flushFake,
     };
 
     await stream({
@@ -102,7 +96,6 @@ describe("Fact stream", () => {
       parallel,
     });
     expect(endFake).to.have.been.calledWith();
-    // expect(flushFake).to.have.been.calledWith();
   });
   it("should throw correctly", async () => {
     const errorMessage = "some-error-message";

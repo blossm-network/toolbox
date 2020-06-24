@@ -56,11 +56,9 @@ describe("View store get", () => {
 
     const endFake = fake();
     const writeFake = fake();
-    // const flushFake = fake();
     const res = {
       end: endFake,
       write: writeFake,
-      // flush: flushFake,
     };
 
     await stream({ streamFn: streamFake })(req, res);
@@ -89,7 +87,6 @@ describe("View store get", () => {
       }),
     });
     expect(endFake).to.have.been.calledWith();
-    // expect(flushFake).to.have.been.calledWith();
   });
   it("should call with the correct params with no query and trace", async () => {
     const streamFake = fake();
@@ -106,11 +103,9 @@ describe("View store get", () => {
 
     const endFake = fake();
     const writeFake = fake();
-    // const flushFake = fake();
     const res = {
       end: endFake,
       write: writeFake,
-      // flush: flushFake,
     };
 
     await stream({ streamFn: streamFake })(req, res);
@@ -138,7 +133,6 @@ describe("View store get", () => {
       }),
     });
     expect(endFake).to.have.been.calledWith();
-    // expect(flushFake).to.have.been.calledWith();
   });
   it("should call with the correct params with no env domain", async () => {
     const streamFake = fake();
@@ -156,11 +150,9 @@ describe("View store get", () => {
 
     const endFake = fake();
     const writeFake = fake();
-    // const flushFake = fake();
     const res = {
       end: endFake,
       write: writeFake,
-      // flush: flushFake,
     };
 
     const otherQuery = { "some-other-query-key": 1 };
@@ -188,7 +180,6 @@ describe("View store get", () => {
       }),
     });
     expect(endFake).to.have.been.calledWith();
-    // expect(flushFake).to.have.been.calledWith();
   });
   it("should call with the correct params with no env service", async () => {
     const streamFake = fake();
@@ -208,11 +199,9 @@ describe("View store get", () => {
 
     const endFake = fake();
     const writeFake = fake();
-    // const flushFake = fake();
     const res = {
       end: endFake,
       write: writeFake,
-      // flush: flushFake,
     };
     delete process.env.SERVICE;
     await stream({ streamFn: streamFake })(req, res);
@@ -235,6 +224,5 @@ describe("View store get", () => {
       }),
     });
     expect(endFake).to.have.been.calledWith();
-    // expect(flushFake).to.have.been.calledWith();
   });
 });

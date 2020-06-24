@@ -4,32 +4,10 @@ module.exports = ({ mainFn }) => {
       query: req.query.query,
       ...(req.params.root && { root: req.params.root }),
       ...(req.query.context && { context: req.query.context }),
-      streamFn: (data) => {
-        //TODO
-        //eslint-disable-next-line no-console
-        console.log(" streaming data", { data });
-        res.write(JSON.stringify(data));
-
-        // //TODO
-        // //eslint-disable-next-line no-console
-        // console.log({ needsDrain });
-
-        // if (needsDrain) {
-        //   res.on("drain", function () {
-        //     res.flush();
-        //   });
-        // } else {
-        //   res.flush();
-        // }
-
-        // // res.flush();
-      },
+      streamFn: (data) => res.write(JSON.stringify(data)),
       parallel: req.query.parallel || 100,
     });
 
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log("ending stream");
     res.end();
   };
 };

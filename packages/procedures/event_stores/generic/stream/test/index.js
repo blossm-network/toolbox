@@ -37,11 +37,9 @@ describe("Event store stream", () => {
 
     const endFake = fake();
     const writeFake = fake();
-    // const flushFake = fake();
     const res = {
       end: endFake,
       write: writeFake,
-      // flush: flushFake,
     };
 
     await stream({ streamFn: streamFake })(req, res);
@@ -56,7 +54,6 @@ describe("Event store stream", () => {
       }),
     });
     expect(endFake).to.have.been.calledWith();
-    // expect(flushFake).to.have.been.calledWith();
   });
   it("should call with the correct params and optionals missing", async () => {
     const streamFake = fake();
@@ -72,11 +69,9 @@ describe("Event store stream", () => {
 
     const endFake = fake();
     const writeFake = fake();
-    // const flushFake = fake();
     const res = {
       end: endFake,
       write: writeFake,
-      // flush: flushFake,
     };
 
     await stream({ streamFn: streamFake })(req, res);
@@ -90,6 +85,5 @@ describe("Event store stream", () => {
       }),
     });
     expect(endFake).to.have.been.calledWith();
-    // expect(flushFake).to.have.been.calledWith();
   });
 });
