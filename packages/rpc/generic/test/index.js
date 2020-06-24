@@ -423,7 +423,65 @@ describe("Operation", () => {
         const stringObj = JSON.stringify(obj);
         const buffer = Buffer.from(stringObj);
         func(buffer);
-        return fnFake.calledWith(obj);
+        return fnFake.calledWith({ a: 1 });
+      }),
+      {
+        query: {
+          ...data,
+          context,
+          claims,
+          token: currentToken,
+        },
+        headers: {
+          authorization: `${type} ${token}`,
+        },
+      }
+    );
+    expect(operationTokenFake).to.have.been.calledWith({
+      tokenFn,
+      operation: [operarationPart1, operarationPart2],
+    });
+    expect(operationUrlFake).to.have.been.calledWith({
+      operation: [operarationPart1, operarationPart2],
+      host,
+    });
+    expect(result).to.equal();
+  });
+  it("should call stream with the correct params with multiple parsedData", async () => {
+    const streamFake = fake();
+    replace(deps, "stream", streamFake);
+
+    const operationTokenFake = fake.returns({ token, type });
+    replace(deps, "operationToken", operationTokenFake);
+
+    const operationUrlFake = fake.returns(url);
+    replace(deps, "operationUrl", operationUrlFake);
+
+    const fnFake = fake();
+    const result = await operation(operarationPart1, operarationPart2)
+      .stream(fnFake, data)
+      .in({ context, host })
+      .with({ internalTokenFn: tokenFn, currentToken, claims });
+
+    expect(streamFake).to.have.been.calledWith(
+      url,
+      match((func) => {
+        const obj = { a: 1, b: { c: 3 } };
+        const obj1 = { k: 1, b: { c: 3 } };
+        const obj2 = { p: 1, b: { c: 3 } };
+        const stringObj = JSON.stringify(obj);
+        const stringObj1 = JSON.stringify(obj1);
+        const stringObj2 = JSON.stringify(obj2);
+        const leftover = "some-left-over";
+        const buffer = Buffer.from(
+          stringObj + stringObj1 + stringObj2 + leftover
+        );
+        func(buffer);
+        return (
+          fnFake.getCall(0).calledWith({ a: 1, b: { c: 3 } }) &&
+          fnFake.getCall(1).calledWith({ k: 1, b: { c: 3 } }) &&
+          fnFake.getCall(2).calledWith({ p: 1, b: { c: 3 } })
+        );
       }),
       {
         query: {

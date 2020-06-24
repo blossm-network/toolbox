@@ -12,11 +12,27 @@ const formatResponse = (data) => {
 };
 
 const jsonString = (string) => {
-  try {
-    return JSON.parse(string);
-  } catch (e) {
-    return null;
+  let objectOpenIndex;
+  let objectCloseIndex;
+  let openCount = 0;
+  const parsedData = [];
+  for (let i = 0; i < string.length; i++) {
+    const char = string.charAt(i);
+    if (char == "{") {
+      if (objectOpenIndex == undefined) objectOpenIndex = i;
+      openCount++;
+    } else if (char == "}") {
+      openCount--;
+      if (openCount == 0) {
+        parsedData.push(
+          JSON.parse(string.substr(objectOpenIndex, i - objectOpenIndex + 1))
+        );
+        objectOpenIndex = null;
+        objectCloseIndex = i + 1;
+      }
+    }
   }
+  return { parsedData, leftover: string.substr(objectCloseIndex) };
 };
 
 const common = ({ method, dataParam, operation, id, data }) => {
@@ -97,7 +113,9 @@ const common = ({ method, dataParam, operation, id, data }) => {
               network,
               token,
             });
-            const parsedBody = response.body ? jsonString(response.body) : null;
+            const {
+              parsedData: [parsedBody],
+            } = response.body ? jsonString(response.body) : null;
             throw deps.constructError({
               statusCode: response.statusCode,
               message: (parsedBody && parsedBody.message) || "Not specified",
@@ -151,24 +169,21 @@ module.exports = (...operation) => {
         method: (url, data) =>
           deps.stream(
             url,
-            async (data) => {
+            (data) => {
               const string = data.toString();
               //TODO
               //eslint-disable-next-line no-console
               console.log({ dataChunk: string, total: progress + string });
-              let parsedData = jsonString(progress + string);
+              let { parsedData, leftover } = jsonString(progress + string);
               //TODO
               //eslint-disable-next-line no-console
-              console.log({ parsedData });
-              if (!parsedData) {
-                progress = progress + string;
-                return;
+              console.log({ parsedData, leftover });
+              for (const d of parsedData) fn(d);
+              if (leftover) {
+                progress = progress + leftover;
+              } else {
+                progress = "";
               }
-              //TODO
-              //eslint-disable-next-line no-console
-              console.log({ parsedDataChunk: parsedData });
-              progress = "";
-              await fn(parsedData);
             },
             data
           ),
