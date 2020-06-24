@@ -183,7 +183,7 @@ module.exports = (...operation) => {
               //eslint-disable-next-line no-console
               console.log({ parsedData, leftover });
               for (const d of parsedData) fn(d);
-              if (leftover) {
+              if (leftover.length > 0) {
                 progress = progress + leftover;
               } else {
                 progress = "";

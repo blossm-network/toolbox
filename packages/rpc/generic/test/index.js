@@ -472,15 +472,17 @@ describe("Operation", () => {
         const stringObj = JSON.stringify(obj);
         const stringObj1 = JSON.stringify(obj1);
         const stringObj2 = JSON.stringify(obj2);
-        const leftover = "some-left-over";
+        const leftover = '{ "q": 3';
         const buffer = Buffer.from(
           stringObj + stringObj1 + stringObj2 + leftover
         );
         func(buffer);
+        func(Buffer.from("}"));
         return (
           fnFake.getCall(0).calledWith({ a: 1, b: { c: 3 } }) &&
           fnFake.getCall(1).calledWith({ k: 1, b: { c: 3 } }) &&
-          fnFake.getCall(2).calledWith({ p: 1, b: { c: 3 } })
+          fnFake.getCall(2).calledWith({ p: 1, b: { c: 3 } }) &&
+          fnFake.getCall(3).calledWith({ q: 3 })
         );
       }),
       {
