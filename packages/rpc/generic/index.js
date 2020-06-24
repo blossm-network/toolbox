@@ -176,18 +176,13 @@ module.exports = (...operation) => {
               console.log({
                 dataChunk: string,
                 total: progress + string,
-                numLines: string.split(/\r\n|\r|\n/).length,
               });
               let { parsedData, leftover } = jsonString(progress + string);
               //TODO
               //eslint-disable-next-line no-console
               console.log({ parsedData, leftover });
               for (const d of parsedData) fn(d);
-              if (leftover.length > 0) {
-                progress = progress + leftover;
-              } else {
-                progress = "";
-              }
+              progress = leftover;
             },
             data
           ),
