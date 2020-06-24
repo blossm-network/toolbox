@@ -151,7 +151,7 @@ module.exports = (...operation) => {
         method: (url, data) =>
           deps.stream(
             url,
-            (data) => {
+            async (data) => {
               const string = data.toString();
               //TODO
               //eslint-disable-next-line no-console
@@ -165,7 +165,7 @@ module.exports = (...operation) => {
               //eslint-disable-next-line no-console
               console.log({ parsedDataChunk: parsedData });
               progress = "";
-              fn(parsedData);
+              await fn(parsedData);
             },
             data
           ),
