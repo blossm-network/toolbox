@@ -155,8 +155,11 @@ module.exports = (...operation) => {
               const string = data.toString();
               //TODO
               //eslint-disable-next-line no-console
-              console.log({ dataChunk: string });
+              console.log({ dataChunk: string, total: progress + string });
               let parsedData = jsonString(progress + string);
+              //TODO
+              //eslint-disable-next-line no-console
+              console.log({ parsedData });
               if (!parsedData) {
                 progress = progress + string;
                 return;
