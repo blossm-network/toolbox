@@ -137,7 +137,8 @@ describe("Event store integration tests", () => {
     await request.stream(
       `${url}/roots`,
       (data) => {
-        expect(data.toString()).to.equal(root);
+        const parsedData = JSON.parse(data.toString().trim());
+        expect(parsedData.root).to.equal(root);
       },
       {
         query: {},
