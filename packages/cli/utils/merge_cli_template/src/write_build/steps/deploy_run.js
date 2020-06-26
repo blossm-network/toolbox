@@ -34,7 +34,7 @@ module.exports = ({
       "--platform=managed",
       `--memory=${memory}`,
       `--timeout=${timeout}`,
-      `--vpc-connector=${region}-network`,
+      // `--vpc-connector=${region}-network`,
       ...(allowUnauthenticated ? ["--allow-unauthenticated"] : []),
       `--project=${project}`,
       `--region=${region}`,
