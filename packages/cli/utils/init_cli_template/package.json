@@ -16,8 +16,7 @@
   "dependencies": {
     "@blossm/normalize-cli": "^0.0.14",
     "@blossm/robo-say": "^0.0.7",
-    "chalk": "^2.4.2",
-    "ncp": "^2.0.0"
+    "chalk": "^2.4.2"
   },
   "devDependencies": {
     "mocha": "^7.1.1"
