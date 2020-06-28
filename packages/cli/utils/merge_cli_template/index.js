@@ -653,9 +653,7 @@ const configure = async (workingDir, configFn, env, strict) => {
         ? `${envUriSpecifier(env)}${baseCoreNetwork}`
         : env == "production"
         ? baseCoreNetwork
-        : //TODO
-          // : `snd.${baseCoreNetwork}`,
-          `dev.${baseCoreNetwork}`;
+        : `snd.${baseCoreNetwork}`;
 
     const dnsZone =
       config["gcp-dns-zone"] || blossmConfig.vendors.cloud.gcp.dnsZone;

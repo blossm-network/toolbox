@@ -17,10 +17,9 @@ module.exports = ({
       name,
       domain,
       ...(service && { service }),
-      //TODO change to snd
       ...(network && {
         network: `${
-          process.env.NODE_ENV == "production" ? "" : "dev."
+          process.env.NODE_ENV == "production" ? "" : "snd."
         }${network}`,
       }),
     })
