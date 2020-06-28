@@ -7,7 +7,7 @@ const rootDir = require("@blossm/cli-root-dir");
 
 const databaseService = require("./database_service");
 
-const findEnvForDependency = (dependency, dir) => {
+const findEnvForDependency = (env, dependency, dir) => {
   for (const file of fs.readdirSync(dir)) {
     const filePath = path.join(dir, file);
 
@@ -20,9 +20,9 @@ const findEnvForDependency = (dependency, dir) => {
         (!dependency.service || dependency.service == blossmConfig.service) &&
         (!dependency.name || dependency.name == blossmConfig.name)
       )
-        return blossmConfig.env && blossmConfig.env["development"];
+        return blossmConfig.env && blossmConfig.env[env];
     } else if (fs.statSync(filePath).isDirectory()) {
-      const envVars = findEnvForDependency(dependency, filePath);
+      const envVars = findEnvForDependency(env, dependency, filePath);
       if (envVars) return envVars;
     }
   }
@@ -80,7 +80,7 @@ module.exports = ({
   let services = {};
   let includeDatabase = false;
   for (const dependency of config.testing.dependencies) {
-    const customEnv = findEnvForDependency(dependency, rootDir.path());
+    const customEnv = findEnvForDependency(env, dependency, rootDir.path());
 
     const commonServiceImagePrefix = `${
       coreNetwork && dependency.network == coreNetwork
