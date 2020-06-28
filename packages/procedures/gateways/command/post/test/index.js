@@ -257,7 +257,7 @@ describe("Command gateway post", () => {
       name,
       domain,
       service,
-      network: `dev.${network}`,
+      network: `snd.${network}`,
     });
     expect(setFake).to.have.been.calledWith({
       token: {
