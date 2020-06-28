@@ -1,7 +1,7 @@
 {
   "name": "@blossm/mongodb-event-store",
   "description": "A mongodb event store server.",
-  "version": "0.0.212",
+  "version": "0.0.213",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
