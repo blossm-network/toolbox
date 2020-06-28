@@ -735,6 +735,7 @@ const configure = async (workingDir, configFn, env, strict) => {
       procedure,
       port: 80,
       mainContainerName,
+      env,
       network: "local.network",
       host: "local.network",
       service,
