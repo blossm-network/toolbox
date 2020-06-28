@@ -19,7 +19,7 @@ const formatSchema = (schema) => {
           };
     newSchema[property].required = false;
     newSchema[property].unique = false;
-    newSchema[property].default = undefined;
+    delete newSchema[property].default;
   }
   return newSchema;
 };
@@ -29,6 +29,10 @@ const eventStore = async ({ schema, indexes }) => {
     logger.info("Thank you existing event store database.");
     return _eventStore;
   }
+
+  //TODO
+  //eslint-disable-next-line no-console
+  console.log({ schema, formatted: formatSchema(schema) });
 
   _eventStore = deps.db.store({
     name: `_${process.env.SERVICE}.${process.env.DOMAIN}`,

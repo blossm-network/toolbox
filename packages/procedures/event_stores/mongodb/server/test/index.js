@@ -113,7 +113,6 @@ describe("Mongodb event store", () => {
             type: String,
             required: false,
             unique: false,
-            default: undefined,
           },
         },
         headers: {
@@ -289,7 +288,6 @@ describe("Mongodb event store", () => {
             type: String,
             required: false,
             unique: false,
-            default: undefined,
           },
         },
         headers: {
@@ -433,7 +431,6 @@ describe("Mongodb event store", () => {
             type: String,
             required: false,
             unique: false,
-            default: undefined,
           },
         },
         headers: {
