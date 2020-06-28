@@ -2,11 +2,7 @@ const roboSay = require("@blossm/robo-say");
 const { spawnSync } = require("child_process");
 const path = require("path");
 const fs = require("fs-extra");
-const { promisify } = require("util");
-const ncp = require("ncp");
 const { red } = require("chalk");
-
-const copy = promisify(ncp);
 
 const installDependenciesIfNeeded = async (workingDir, input) => {
   const lockFile = "yarn.lock";
@@ -39,7 +35,7 @@ const installDependenciesIfNeeded = async (workingDir, input) => {
   fs.removeSync(modulesPath);
   fs.mkdirSync(modulesPath);
 
-  await copy(path.resolve(workingDir, modules), modulesPath);
+  await fs.copy(path.resolve(workingDir, modules), modulesPath);
 };
 
 module.exports = async ({ workingDir, input }) => {

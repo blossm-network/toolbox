@@ -1,7 +1,6 @@
 const roboSay = require("@blossm/robo-say");
 
 const rootDir = require("@blossm/cli-root-dir");
-// const ncp = require("ncp");
 const { promisify } = require("util");
 const yaml = require("yaml");
 const path = require("path");
@@ -9,7 +8,6 @@ const fs = require("fs-extra");
 const { red } = require("chalk");
 
 const access = promisify(fs.access);
-// const copy = promisify(ncp);
 
 const writeCompose = require("./src/write_compose");
 const writeBuild = require("./src/write_build");
@@ -300,9 +298,7 @@ const copySource = async (p, workingDir) => {
     fs.removeSync(workingDir);
     process.exit(1);
   }
-  await fs.copy(srcDir, workingDir, {
-    clobber: true,
-  });
+  await fs.copy(srcDir, workingDir);
 };
 
 const topicsForDependencies = (config, events) => {

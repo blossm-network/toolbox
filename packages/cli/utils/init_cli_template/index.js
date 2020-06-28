@@ -1,13 +1,11 @@
 const roboSay = require("@blossm/robo-say");
 const normalize = require("@blossm/normalize-cli");
 const fs = require("fs");
-const ncp = require("ncp");
 const path = require("path");
 const { green, red } = require("chalk");
 const { promisify } = require("util");
 
 const access = promisify(fs.access);
-const copy = promisify(ncp);
 
 module.exports = ({ domain, dir }) => async (args) => {
   //eslint-disable-next-line no-console
@@ -36,7 +34,7 @@ module.exports = ({ domain, dir }) => async (args) => {
     process.exit(1);
   }
 
-  await copy(templateDirectory, targetDirectory, { clobber: true });
+  await fs.copy(templateDirectory, targetDirectory);
 
   //eslint-disable-next-line no-console
   console.log(roboSay("Woohoo!"), green.bold("done"));
