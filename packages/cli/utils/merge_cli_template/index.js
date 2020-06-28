@@ -1,7 +1,7 @@
 const roboSay = require("@blossm/robo-say");
 
 const rootDir = require("@blossm/cli-root-dir");
-const ncp = require("ncp");
+// const ncp = require("ncp");
 const { promisify } = require("util");
 const yaml = require("yaml");
 const path = require("path");
@@ -9,7 +9,7 @@ const fs = require("fs-extra");
 const { red } = require("chalk");
 
 const access = promisify(fs.access);
-const copy = promisify(ncp);
+// const copy = promisify(ncp);
 
 const writeCompose = require("./src/write_compose");
 const writeBuild = require("./src/write_build");
@@ -264,7 +264,7 @@ const copyScript = async (scriptDir, workingDir) => {
     fs.removeSync(workingDir);
     process.exit(1);
   }
-  await copy(scripts, workingDir);
+  await fs.copy(scripts, workingDir);
 };
 
 const copyTemplate = async (templateDir, workingDir) => {
@@ -282,7 +282,7 @@ const copyTemplate = async (templateDir, workingDir) => {
     fs.removeSync(workingDir);
     process.exit(1);
   }
-  await copy(template, workingDir);
+  await fs.copy(template, workingDir);
 };
 
 const copySource = async (p, workingDir) => {
@@ -300,7 +300,7 @@ const copySource = async (p, workingDir) => {
     fs.removeSync(workingDir);
     process.exit(1);
   }
-  await copy(srcDir, workingDir, {
+  await fs.copy(srcDir, workingDir, {
     clobber: true,
   });
 };
