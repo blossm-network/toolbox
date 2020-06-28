@@ -58,7 +58,7 @@ module.exports = ({
   };
   const commonEnvironment = {
     PORT: `${port}`,
-    NODE_ENV: env,
+    NODE_ENV: "local",
     NETWORK: network,
     CORE_NETWORK: coreNetwork,
     HOST: host,

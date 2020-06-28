@@ -16,7 +16,6 @@ module.exports = ({
   domain,
   name,
   store,
-  env,
   secretBucket,
   secretBucketKeyLocation,
   secretBucketKeyRing,
@@ -33,7 +32,7 @@ module.exports = ({
     ports: [`${port}`],
     environment: {
       PORT: `${port}`,
-      NODE_ENV: env,
+      NODE_ENV: "local",
       ...(domain && { DOMAIN: domain }),
       ...(service && { SERVICE: service }),
       NETWORK: network,
