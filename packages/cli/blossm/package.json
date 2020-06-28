@@ -1,6 +1,6 @@
 {
   "name": "@blossm/cli",
-  "version": "0.0.955",
+  "version": "0.0.956",
   "description": "A command line tool for interacting with a blossm network.",
   "main": "index.js",
   "scripts": {
@@ -15,7 +15,7 @@
   "author": "blossm.network",
   "dependencies": {
     "@blossm/cli-root-dir": "^0.0.8",
-    "@blossm/deploy-cli-template": "^0.0.457",
+    "@blossm/deploy-cli-template": "^0.0.458",
     "@blossm/execute-cli-template": "^0.0.31",
     "@blossm/gcp-queue": "^0.0.16",
     "@blossm/gcp-secret": "^0.0.47",
