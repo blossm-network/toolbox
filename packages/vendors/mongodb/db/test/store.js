@@ -41,6 +41,7 @@ describe("Returns a model", () => {
       strict: true,
       typePojoToMixed: false,
       minimize: false,
+      useNestedStrict: true,
       typeKey: "$type",
     });
     expect(indexFake.getCall(0)).to.have.been.calledWith(
@@ -72,6 +73,7 @@ describe("Returns a model", () => {
         strict: false,
         typePojoToMixed: false,
         minimize: false,
+        useNestedStrict: true,
         typeKey: "$type",
       }
     );
@@ -131,6 +133,7 @@ describe("Returns a model", () => {
       strict: true,
       typePojoToMixed: false,
       minimize: false,
+      useNestedStrict: true,
       typeKey: "$type",
     });
     expect(indexFake.getCall(0)).to.have.been.calledWith(

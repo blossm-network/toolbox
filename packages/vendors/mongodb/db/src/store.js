@@ -45,6 +45,7 @@ module.exports = ({
   const store = new deps.mongoose.Schema(schema || {}, {
     strict: schema != undefined,
     typePojoToMixed: false,
+    useNestedStrict: true,
     minimize: false,
     typeKey: "$type",
   });
