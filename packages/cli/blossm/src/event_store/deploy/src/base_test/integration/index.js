@@ -338,6 +338,10 @@ describe("Event store integration tests", () => {
   });
 
   const findBadValue = (schema, property) => {
+    //TODO
+    //eslint-disable-next-line
+    console.log({ schema, property });
+
     return schema[property] == "String" ||
       (typeof schema[property] == "object" &&
         !(schema[property] instanceof Array) &&
@@ -349,6 +353,9 @@ describe("Event store integration tests", () => {
   };
 
   const badObjectValue = async (key, schema) => {
+    //TODO
+    //eslint-disable-next-line
+    console.log({ schema, key });
     for (const property in schema) {
       const badValue = findBadValue(schema, property);
       await testIncorrectParams({
