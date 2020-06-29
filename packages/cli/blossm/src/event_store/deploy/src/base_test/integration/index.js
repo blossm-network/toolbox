@@ -256,6 +256,11 @@ describe("Event store integration tests", () => {
   });
   const testIncorrectParams = async ({ payload, action }) => {
     const root = uuid();
+
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log({ payload });
+
     const response = await request.post(url, {
       body: {
         events: [
@@ -276,6 +281,9 @@ describe("Event store integration tests", () => {
         ],
       },
     });
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log({ response });
     expect(response.statusCode).to.equal(500);
   };
   it("should not return an error if two simultaneous events are attempted", async () => {
