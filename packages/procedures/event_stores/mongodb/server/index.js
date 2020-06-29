@@ -91,18 +91,12 @@ const eventStore = async ({ schema, indexes }) => {
     return _eventStore;
   }
 
-  //TODO
-  //eslint-disable-next-line
-  console.log({
-    formatted: formatSchema(schema),
-    removeIds: deps.removeIds({ schema: formatSchema(schema) }),
-  });
   _eventStore = deps.db.store({
     name: `_${process.env.SERVICE}.${process.env.DOMAIN}`,
     schema: {
       id: { $type: String, required: true, unique: true },
       saved: { $type: Date, required: true },
-      payload: deps.removeIds({ schema: formatSchema(schema) }),
+      payload: schema,
       headers: {
         root: { $type: String, required: true },
         number: { $type: Number, required: true },
@@ -189,7 +183,7 @@ const snapshotStore = async ({ schema, indexes }) => {
         lastEventNumber: { $type: Number, required: true },
         _id: false,
       },
-      state: deps.removeIds({ schema: formatSchema(schema) }),
+      state: schema,
     },
     indexes: [
       [{ "headers.root": 1 }],
@@ -232,12 +226,18 @@ module.exports = async ({
   // archiveSnapshotFn,
   // archiveEventsFn
 } = {}) => {
+  const formattedSchema = deps.removeIds({ schema: formatSchema(schema) });
+
+  //TODO
+  //eslint-disable-next-line no-console
+  console.log({ formatSchema, scene: formatSchema.scene });
+
   const eStore = await eventStore({
-    schema,
+    schema: formattedSchema,
     indexes,
   });
   const sStore = await snapshotStore({
-    schema,
+    schema: formattedSchema,
     indexes,
   });
   const cStore = await countsStore();

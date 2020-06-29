@@ -58,14 +58,8 @@ describe("Mongodb event store", () => {
     const eventStoreFake = fake();
     replace(deps, "eventStore", eventStoreFake);
 
-    const eventStoreSchema = "some-event-store-schema";
-    const snapshotStoreSchema = "some-snapshot-schema";
-
-    const removeIdsFake = stub()
-      .onCall(0)
-      .returns(eventStoreSchema)
-      .onCall(1)
-      .returns(snapshotStoreSchema);
+    const storeSchema = "some-store-schema";
+    const removeIdsFake = fake.returns(storeSchema);
 
     replace(deps, "removeIds", removeIdsFake);
 
@@ -109,13 +103,12 @@ describe("Mongodb event store", () => {
         },
       },
     });
-    expect(removeIdsFake).to.have.been.calledTwice;
     expect(storeFake).to.have.been.calledWith({
       name: `_${service}.${domain}`,
       schema: {
         id: { $type: String, required: true, unique: true },
         saved: { $type: Date, required: true },
-        payload: eventStoreSchema,
+        payload: storeSchema,
         headers: {
           root: { $type: String, required: true },
           number: { $type: Number, required: true },
@@ -186,7 +179,7 @@ describe("Mongodb event store", () => {
           lastEventNumber: { $type: Number, required: true },
           _id: false,
         },
-        state: snapshotStoreSchema,
+        state: storeSchema,
       },
       indexes: [[{ "headers.root": 1 }]],
     });
@@ -248,13 +241,8 @@ describe("Mongodb event store", () => {
     const eventStoreFake = fake();
     replace(deps, "eventStore", eventStoreFake);
 
-    const eventStoreSchema = "some-event-store-schema";
-    const snapshotStoreSchema = "some-snapshot-schema";
-    const removeIdsFake = stub()
-      .onCall(0)
-      .returns(eventStoreSchema)
-      .onCall(1)
-      .returns(snapshotStoreSchema);
+    const storeSchema = "some-store-schema";
+    const removeIdsFake = fake.returns(storeSchema);
 
     replace(deps, "removeIds", removeIdsFake);
 
@@ -297,7 +285,7 @@ describe("Mongodb event store", () => {
       schema: {
         id: { $type: String, required: true, unique: true },
         saved: { $type: Date, required: true },
-        payload: eventStoreSchema,
+        payload: storeSchema,
         headers: {
           root: { $type: String, required: true },
           number: { $type: Number, required: true },
@@ -369,7 +357,7 @@ describe("Mongodb event store", () => {
           lastEventNumber: { $type: Number, required: true },
           _id: false,
         },
-        state: snapshotStoreSchema,
+        state: storeSchema,
       },
       indexes: [[{ "headers.root": 1 }], [{ [index]: 1 }]],
     });
@@ -398,13 +386,8 @@ describe("Mongodb event store", () => {
     const eventStoreFake = fake();
     replace(deps, "eventStore", eventStoreFake);
 
-    const eventStoreSchema = "some-event-store-schema";
-    const snapshotStoreSchema = "some-snapshot-schema";
-    const removeIdsFake = stub()
-      .onCall(0)
-      .returns(eventStoreSchema)
-      .onCall(1)
-      .returns(snapshotStoreSchema);
+    const storeSchema = "some-store-schema";
+    const removeIdsFake = fake.returns(storeSchema);
 
     replace(deps, "removeIds", removeIdsFake);
 
@@ -438,13 +421,12 @@ describe("Mongodb event store", () => {
         },
       },
     });
-    expect(removeIdsFake).to.have.been.calledTwice;
     expect(storeFake).to.have.been.calledWith({
       name: `_${service}.${domain}`,
       schema: {
         id: { $type: String, required: true, unique: true },
         saved: { $type: Date, required: true },
-        payload: eventStoreSchema,
+        payload: storeSchema,
         headers: {
           root: { $type: String, required: true },
           number: { $type: Number, required: true },
@@ -523,13 +505,8 @@ describe("Mongodb event store", () => {
     const eventStoreFake = fake();
     replace(deps, "eventStore", eventStoreFake);
 
-    const eventStoreSchema = "some-event-store-schema";
-    const snapshotStoreSchema = "some-snapshot-schema";
-    const removeIdsFake = stub()
-      .onCall(0)
-      .returns(eventStoreSchema)
-      .onCall(1)
-      .returns(snapshotStoreSchema);
+    const storeSchema = "some-schema";
+    const removeIdsFake = fake.returns(storeSchema);
 
     replace(deps, "removeIds", removeIdsFake);
 
@@ -584,9 +561,6 @@ describe("Mongodb event store", () => {
             b: 5,
           },
           required: false,
-          required: false,
-          unique: false,
-          default: undefined,
           unique: false,
           default: undefined,
         },
@@ -604,13 +578,12 @@ describe("Mongodb event store", () => {
         },
       },
     });
-    expect(removeIdsFake).to.have.been.calledTwice;
     expect(storeFake).to.have.been.calledWith({
       name: `_${service}.${domain}`,
       schema: {
         id: { $type: String, required: true, unique: true },
         saved: { $type: Date, required: true },
-        payload: eventStoreSchema,
+        payload: storeSchema,
         headers: {
           root: { $type: String, required: true },
           number: { $type: Number, required: true },
