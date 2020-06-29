@@ -236,6 +236,9 @@ module.exports = async ({
     schema: formattedSchema,
     indexes,
   });
+  //TODO
+  //eslint-disable-next-line no-console
+  console.log({ eStore });
   const sStore = await snapshotStore({
     schema: formattedSchema,
     indexes,
