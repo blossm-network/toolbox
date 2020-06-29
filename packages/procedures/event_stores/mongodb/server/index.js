@@ -230,7 +230,7 @@ module.exports = async ({
 
   //TODO
   //eslint-disable-next-line no-console
-  console.log({ formatSchema, scene: formatSchema.scene });
+  console.log({ formattedSchema, scene: formattedSchema.scene });
 
   const eStore = await eventStore({
     schema: formattedSchema,
