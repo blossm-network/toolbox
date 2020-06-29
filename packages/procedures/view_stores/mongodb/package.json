@@ -1,7 +1,7 @@
 {
   "name": "@blossm/mongodb-view-store",
   "description": "A mongodb view store server.",
-  "version": "0.0.173",
+  "version": "0.0.174",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -17,7 +17,7 @@
     "@blossm/datetime": "^0.0.5",
     "@blossm/gcp-secret": "^0.0.47",
     "@blossm/logger": "^0.0.8",
-    "@blossm/mongodb-database": "^0.0.64",
+    "@blossm/mongodb-database": "^0.0.65",
     "@blossm/remove-ids-from-mongodb-schema": "^0.0.9",
     "@blossm/view-store": "^0.0.149"
   },
