@@ -4,6 +4,7 @@ const removeIds = require("..");
 const schema = {
   a: 1,
   b: { c: 2 },
+  v: { $type: { n: 1 } },
   d: { $type: String },
   e: { $type: [{ type: { $type: String } }] },
   f: [{ g: 1 }],
@@ -21,6 +22,7 @@ describe("Remove ids from nested schema", () => {
         c: 2,
         _id: false,
       },
+      v: { $type: { n: 1, _id: false } },
       d: { $type: String },
       e: { $type: [{ type: { $type: String }, _id: false }] },
       f: [{ g: 1, _id: false }],
