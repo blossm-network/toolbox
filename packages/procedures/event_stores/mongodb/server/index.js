@@ -33,6 +33,12 @@ const eventStore = async ({ schema, indexes }) => {
     return _eventStore;
   }
 
+  //TODO
+  //eslint-disable-next-line no-console
+  console.log({
+    format: formatSchema(schema),
+    device: formatSchema(schema).device,
+  });
   _eventStore = deps.db.store({
     name: `_${process.env.SERVICE}.${process.env.DOMAIN}`,
     schema: {
