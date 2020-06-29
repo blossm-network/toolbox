@@ -1,7 +1,7 @@
 {
   "name": "@blossm/mongodb-event-store-root-stream",
   "description": "A mongodb event store server function to stream all roots.",
-  "version": "0.0.19",
+  "version": "0.0.20",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -14,7 +14,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/mongodb-database": "^0.0.62"
+    "@blossm/mongodb-database": "^0.0.63"
   },
   "devDependencies": {
     "chai-datetime": "^1.5.0",
