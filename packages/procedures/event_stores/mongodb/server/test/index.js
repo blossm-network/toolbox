@@ -556,6 +556,10 @@ describe("Mongodb event store", () => {
         type: { type: String },
         b: "some-b",
       },
+      c: {
+        v: 3,
+        b: 5,
+      },
       e: { type: [{ type: { type: String } }] },
       f: [{ g: 1 }],
     };
@@ -571,6 +575,18 @@ describe("Mongodb event store", () => {
             b: "some-b",
           },
           required: false,
+          unique: false,
+          default: undefined,
+        },
+        c: {
+          $type: {
+            v: 3,
+            b: 5,
+          },
+          required: false,
+          required: false,
+          unique: false,
+          default: undefined,
           unique: false,
           default: undefined,
         },

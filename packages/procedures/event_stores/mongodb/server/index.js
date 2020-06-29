@@ -91,6 +91,10 @@ const eventStore = async ({ schema, indexes }) => {
     return _eventStore;
   }
 
+  console.log({
+    formatted: formatSchema(schema),
+    removeIds: deps.removeIds({ schema: formatSchema(schema) }),
+  });
   _eventStore = deps.db.store({
     name: `_${process.env.SERVICE}.${process.env.DOMAIN}`,
     schema: {
