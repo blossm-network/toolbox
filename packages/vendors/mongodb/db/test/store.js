@@ -38,7 +38,7 @@ describe("Returns a model", () => {
     expect(result).to.equal(modelObject);
     expect(modelFake).to.have.been.calledWith(name, schemaObj, name);
     expect(schemaFake).to.have.been.calledWith(schema, {
-      strict: true,
+      strict: "throw",
       typePojoToMixed: false,
       minimize: false,
       useNestedStrict: true,
@@ -130,7 +130,7 @@ describe("Returns a model", () => {
     expect(result).to.equal(modelObject);
     expect(modelFake).to.have.been.calledWith(name, schemaObj, name);
     expect(schemaFake).to.have.been.calledWith(schema, {
-      strict: true,
+      strict: "throw",
       typePojoToMixed: false,
       minimize: false,
       useNestedStrict: true,
