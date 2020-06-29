@@ -38,6 +38,7 @@ const eventStore = async ({ schema, indexes }) => {
   console.log({
     format: formatSchema(schema),
     device: formatSchema(schema).device,
+    type: formatSchema(schema).device.type,
   });
   _eventStore = deps.db.store({
     name: `_${process.env.SERVICE}.${process.env.DOMAIN}`,
