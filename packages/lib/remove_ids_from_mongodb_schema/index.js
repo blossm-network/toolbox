@@ -36,6 +36,7 @@ const removeIds = ({ schema, subdocumentsOnly = true }) => {
       (typeof schema.$type == "object" && !(schema.$type instanceof Array)))
   )
     schema._id = false;
+
   return schema;
 };
 

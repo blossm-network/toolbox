@@ -99,6 +99,10 @@ describe("View store", () => {
     const viewStoreFake = fake();
     replace(deps, "viewStore", viewStoreFake);
 
+    const viewStoreSchema = "some-view-store-schema";
+    const removeIdsFake = fake.returns(viewStoreSchema);
+    replace(deps, "removeIds", removeIdsFake);
+
     const getFn = "some-get-fn";
     const putFn = "some-put-fn";
 
@@ -110,32 +114,275 @@ describe("View store", () => {
       one,
     });
 
+    expect(removeIdsFake).to.have.been.calledWith({
+      schema: {
+        a: 1,
+        b: {
+          $type: {
+            c: 2,
+          },
+        },
+      },
+    });
     expect(storeFake).to.have.been.calledWith({
       name: `_${context}.${service}.${domain}.${name}`,
       schema: {
-        body: {
-          a: 1,
-          b: {
-            c: 2,
-            _id: false,
-          },
-          _id: false,
-        },
+        body: viewStoreSchema,
         headers: {
           _id: false,
           root: { $type: String, required: true, unique: true },
           trace: { $type: String },
           [context]: {
-            root: String,
-            service: String,
-            network: String,
-            _id: false,
+            $type: {
+              root: String,
+              service: String,
+              network: String,
+              _id: false,
+            },
           },
           [domain]: {
-            root: String,
-            service: String,
-            network: String,
-            _id: false,
+            $type: {
+              root: String,
+              service: String,
+              network: String,
+              _id: false,
+            },
+          },
+          created: {
+            $type: Date,
+            required: true,
+            default: match((fn) => {
+              const date = fn();
+              return date == dateString;
+            }),
+          },
+          modified: {
+            $type: Date,
+            required: true,
+            default: match((fn) => {
+              const date = fn();
+              return date == dateString;
+            }),
+          },
+        },
+      },
+      indexes: [
+        [{ root: 1 }],
+        [
+          { "headers.some-context.root": 1 },
+          { "headers.some-context.service": 1 },
+          { "headers.some-context.network": 1 },
+        ],
+        [
+          { "headers.some-domain.root": 1 },
+          { "headers.some-domain.service": 1 },
+          { "headers.some-domain.network": 1 },
+        ],
+        [{ "body.some-index": 1 }],
+      ],
+      connection: {
+        protocol,
+        user,
+        password,
+        host,
+        database,
+        parameters: {
+          authSource: "admin",
+          retryWrites: true,
+          w: "majority",
+        },
+        autoIndex: true,
+      },
+    });
+    expect(secretFake).to.have.been.calledWith("mongodb-view-store");
+
+    const root = "some-root";
+
+    const limit = "some-limit";
+    const skip = "some-skip";
+    const findFnResult = await viewStoreFake.lastCall.lastArg.findFn({
+      limit,
+      skip,
+      query,
+      sort,
+    });
+
+    expect(findFake).to.have.been.calledWith({
+      store,
+      query,
+      limit,
+      skip,
+      sort,
+      options: {
+        lean: true,
+      },
+    });
+    expect(findFnResult).to.equal(foundObjs);
+
+    const countFnResult = await viewStoreFake.lastCall.lastArg.countFn({
+      query,
+    });
+
+    expect(countFake).to.have.been.calledWith({
+      store,
+      query,
+    });
+
+    expect(countFnResult).to.equal(count);
+
+    const steamFnResult = await viewStoreFake.lastCall.lastArg.streamFn({
+      query: query2,
+      sort: sort2,
+      parallel,
+      fn: fnFake,
+    });
+
+    expect(findFake).to.have.been.calledWith({
+      store,
+      query: query2,
+      sort: sort2,
+      options: {
+        lean: true,
+      },
+    });
+    expect(steamFnResult).to.equal(foundObjs);
+
+    const writeFnResult = await viewStoreFake.lastCall.lastArg.writeFn({
+      root,
+      data,
+    });
+    expect(writeFake).to.have.been.calledWith({
+      store,
+      query: { "headers.root": root },
+      update: {
+        $set: data,
+      },
+      options: {
+        lean: true,
+        omitUndefined: true,
+        upsert: true,
+        new: true,
+        runValidators: true,
+        setDefaultsOnInsert: true,
+      },
+    });
+    expect(writeFnResult).to.equal(writeResult);
+
+    const removeFnResult = await viewStoreFake.lastCall.lastArg.removeFn(query);
+    expect(removeFake).to.have.been.calledWith({
+      store,
+      query,
+    });
+    expect(removeFnResult).to.equal(removeResult);
+
+    expect(viewStoreFake).to.have.been.calledWith({
+      streamFn: match(
+        (fn) => expect(fn({ query, sort, parallel, fn: fnFake })).to.exist
+      ),
+      findFn: match((fn) => expect(fn({ query, sort })).to.exist),
+      countFn: match((fn) => expect(fn({ query })).to.exist),
+      writeFn: match((fn) => expect(fn({ root, data })).to.exist),
+      removeFn: match((fn) => expect(fn(query)).to.exist),
+      getFn,
+      putFn,
+      one,
+    });
+
+    await mongodbViewStore({ schema });
+    expect(storeFake).to.have.been.calledOnce;
+  });
+  it("should call with the correct params with nested types in schema", async () => {
+    const store = "some-store";
+    const storeFake = fake.returns(store);
+
+    const cursorFake = fake.returns({
+      eachAsync: async (fn, options) => {
+        const view = { a: 1 };
+        await fn(view);
+        expect(fnFake).to.have.been.calledWith(view);
+        expect(options).to.deep.equal({ parallel });
+        return foundObjs;
+      },
+    });
+
+    const foundObjs = {
+      cursor: cursorFake,
+    };
+    const findFake = fake.returns(foundObjs);
+    const countFake = fake.returns(count);
+    const writeFake = fake.returns(writeResult);
+    const removeFake = fake.returns(removeResult);
+
+    const db = {
+      store: storeFake,
+      find: findFake,
+      count: countFake,
+      write: writeFake,
+      remove: removeFake,
+    };
+    replace(deps, "db", db);
+
+    const secretFake = fake.returns(password);
+    replace(deps, "secret", secretFake);
+
+    const dateString = "some-date";
+    const dateStringFake = fake.returns(dateString);
+    replace(deps, "dateString", dateStringFake);
+
+    const viewStoreFake = fake();
+    replace(deps, "viewStore", viewStoreFake);
+
+    const getFn = "some-get-fn";
+    const putFn = "some-put-fn";
+
+    const viewStoreSchema = "some-view-store-schema";
+    const removeIdsFake = fake.returns(viewStoreSchema);
+    replace(deps, "removeIds", removeIdsFake);
+
+    const nestedTypeSchema = { b: { type: { $type: String }, c: 2 } };
+    await mongodbViewStore({
+      schema: nestedTypeSchema,
+      indexes,
+      getFn,
+      putFn,
+      one,
+    });
+
+    expect(removeIdsFake).to.have.been.calledWith({
+      schema: {
+        b: {
+          $type: {
+            type: {
+              $type: String,
+            },
+            c: 2,
+          },
+        },
+      },
+    });
+    expect(storeFake).to.have.been.calledWith({
+      name: `_${context}.${service}.${domain}.${name}`,
+      schema: {
+        body: viewStoreSchema,
+        headers: {
+          _id: false,
+          root: { $type: String, required: true, unique: true },
+          trace: { $type: String },
+          [context]: {
+            $type: {
+              root: String,
+              service: String,
+              network: String,
+              _id: false,
+            },
+          },
+          [domain]: {
+            $type: {
+              root: String,
+              service: String,
+              network: String,
+              _id: false,
+            },
           },
           created: {
             $type: Date,
@@ -324,6 +571,10 @@ describe("View store", () => {
     const getFn = "some-get-fn";
     const putFn = "some-put-fn";
 
+    const viewStoreSchema = "some-view-store-schema";
+    const removeIdsFake = fake.returns(viewStoreSchema);
+    replace(deps, "removeIds", removeIdsFake);
+
     delete process.env.DOMAIN;
     delete process.env.SERVICE;
     process.env.NODE_ENV = "local";
@@ -334,26 +585,31 @@ describe("View store", () => {
       putFn,
     });
 
+    expect(removeIdsFake).to.have.been.calledWith({
+      schema: {
+        a: 1,
+        b: {
+          $type: {
+            c: 2,
+          },
+        },
+      },
+    });
     expect(storeFake).to.have.been.calledWith({
       name: `_${context}.${name}`,
       schema: {
-        body: {
-          a: 1,
-          b: {
-            c: 2,
-            _id: false,
-          },
-          _id: false,
-        },
+        body: viewStoreSchema,
         headers: {
           _id: false,
           root: { $type: String, required: true, unique: true },
           trace: { $type: String },
           [context]: {
-            root: String,
-            service: String,
-            network: String,
-            _id: false,
+            $type: {
+              root: String,
+              service: String,
+              network: String,
+              _id: false,
+            },
           },
           created: {
             $type: Date,
@@ -441,44 +697,55 @@ describe("View store", () => {
     const getFn = "some-get-fn";
     const putFn = "some-put-fn";
 
+    const viewStoreSchema = "some-view-store-schema";
+    const removeIdsFake = fake.returns(viewStoreSchema);
+    replace(deps, "removeIds", removeIdsFake);
+
     const schema = {
       a: 1,
       b: { c: 2 },
-      d: { $type: String },
-      e: { $type: [{ $type: { $type: String } }] },
+      d: { type: String },
+      e: { type: [{ type: { type: String } }] },
       f: [{ g: 1 }],
     };
     await mongodbViewStore({ schema, indexes, getFn, putFn });
 
+    expect(removeIdsFake).to.have.been.calledWith({
+      schema: {
+        a: 1,
+        b: {
+          $type: {
+            c: 2,
+          },
+        },
+        d: { $type: String },
+        e: { $type: [{ type: { $type: String } }] },
+        f: { $type: [{ g: 1 }] },
+      },
+    });
     expect(storeFake).to.have.been.calledWith({
       name: `_${context}.${service}.${domain}.${name}`,
       schema: {
-        body: {
-          a: 1,
-          b: {
-            c: 2,
-            _id: false,
-          },
-          d: { $type: String },
-          e: { $type: [{ $type: { $type: String }, _id: false }] },
-          f: [{ g: 1, _id: false }],
-          _id: false,
-        },
+        body: viewStoreSchema,
         headers: {
           _id: false,
           root: { $type: String, required: true, unique: true },
           trace: { $type: String },
           [context]: {
-            root: String,
-            service: String,
-            network: String,
-            _id: false,
+            $type: {
+              root: String,
+              service: String,
+              network: String,
+              _id: false,
+            },
           },
           [domain]: {
-            root: String,
-            service: String,
-            network: String,
-            _id: false,
+            $type: {
+              root: String,
+              service: String,
+              network: String,
+              _id: false,
+            },
           },
           created: {
             $type: Date,
@@ -568,109 +835,45 @@ describe("View store", () => {
     const viewStoreFake = fake();
     replace(deps, "viewStore", viewStoreFake);
 
+    const viewStoreSchema = "some-view-store-schema";
+    const removeIdsFake = fake.returns(viewStoreSchema);
+    replace(deps, "removeIds", removeIdsFake);
+
     await mongodbViewStore({ schema, indexes });
 
-    expect(storeFake).to.have.been.calledWith({
-      name: `_${context}.${service}.${domain}.${name}`,
+    expect(removeIdsFake).to.have.been.calledWith({
       schema: {
-        body: {
-          a: 1,
-          b: {
+        a: 1,
+        b: {
+          $type: {
             c: 2,
-            _id: false,
-          },
-          _id: false,
-        },
-        headers: {
-          _id: false,
-          root: { $type: String, required: true, unique: true },
-          trace: { $type: String },
-          [context]: {
-            root: String,
-            service: String,
-            network: String,
-            _id: false,
-          },
-          [domain]: {
-            root: String,
-            service: String,
-            network: String,
-            _id: false,
-          },
-          created: {
-            $type: Date,
-            required: true,
-            default: match((fn) => {
-              const date = fn();
-              return date == dateString;
-            }),
-          },
-          modified: {
-            $type: Date,
-            required: true,
-            default: match((fn) => {
-              const date = fn();
-              return date == dateString;
-            }),
           },
         },
-      },
-      indexes: [
-        [{ root: 1 }],
-        [
-          { "headers.some-context.root": 1 },
-          { "headers.some-context.service": 1 },
-          { "headers.some-context.network": 1 },
-        ],
-        [
-          { "headers.some-domain.root": 1 },
-          { "headers.some-domain.service": 1 },
-          { "headers.some-domain.network": 1 },
-        ],
-        [{ "body.some-index": 1 }],
-      ],
-      connection: {
-        protocol,
-        user,
-        password,
-        host,
-        database,
-        parameters: {
-          authSource: "admin",
-          retryWrites: true,
-          w: "majority",
-        },
-        autoIndex: true,
       },
     });
-    expect(secretFake).to.have.been.calledWith("mongodb-view-store");
-
     expect(storeFake).to.have.been.calledWith({
       name: `_${context}.${service}.${domain}.${name}`,
       schema: {
-        body: {
-          a: 1,
-          b: {
-            c: 2,
-            _id: false,
-          },
-          _id: false,
-        },
+        body: viewStoreSchema,
         headers: {
           _id: false,
           root: { $type: String, required: true, unique: true },
           trace: { $type: String },
           [context]: {
-            root: String,
-            service: String,
-            network: String,
-            _id: false,
+            $type: {
+              root: String,
+              service: String,
+              network: String,
+              _id: false,
+            },
           },
           [domain]: {
-            root: String,
-            service: String,
-            network: String,
-            _id: false,
+            $type: {
+              root: String,
+              service: String,
+              network: String,
+              _id: false,
+            },
           },
           created: {
             $type: Date,
@@ -845,34 +1048,46 @@ describe("View store", () => {
     const viewStoreFake = fake();
     replace(deps, "viewStore", viewStoreFake);
 
+    const viewStoreSchema = "some-view-store-schema";
+    const removeIdsFake = fake.returns(viewStoreSchema);
+    replace(deps, "removeIds", removeIdsFake);
+
     await mongodbViewStore({ schema, indexes });
+
+    expect(removeIdsFake).to.have.been.calledWith({
+      schema: {
+        a: 1,
+        b: {
+          $type: {
+            c: 2,
+          },
+        },
+      },
+    });
 
     expect(storeFake).to.have.been.calledWith({
       name: `_${context}.${service}.${domain}.${name}`,
       schema: {
-        body: {
-          a: 1,
-          b: {
-            c: 2,
-            _id: false,
-          },
-          _id: false,
-        },
+        body: viewStoreSchema,
         headers: {
           _id: false,
           root: { $type: String, required: true, unique: true },
           trace: { $type: String },
           [context]: {
-            root: String,
-            service: String,
-            network: String,
-            _id: false,
+            $type: {
+              root: String,
+              service: String,
+              network: String,
+              _id: false,
+            },
           },
           [domain]: {
-            root: String,
-            service: String,
-            network: String,
-            _id: false,
+            $type: {
+              root: String,
+              service: String,
+              network: String,
+              _id: false,
+            },
           },
           created: {
             $type: Date,

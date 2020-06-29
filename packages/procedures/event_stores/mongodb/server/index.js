@@ -12,12 +12,55 @@ const formatSchema = (schema) => {
   const newSchema = {};
   for (const property in schema) {
     newSchema[property] =
-      typeof schema[property] == "object" &&
-      schema[property].type != undefined &&
-      typeof schema[property].type != "object"
+      schema[property] instanceof Array
+        ? {
+            $type: schema[property].map((obj) =>
+              typeof obj != "object"
+                ? obj
+                : obj.type != undefined && typeof obj.type != "object"
+                ? {
+                    ...obj,
+                    $type: obj.type,
+                  }
+                : {
+                    ...obj,
+                    ...(obj.type != undefined &&
+                      obj.type.type != undefined && {
+                        type: {
+                          $type: obj.type.type,
+                        },
+                      }),
+                  }
+            ),
+          }
+        : typeof schema[property] == "object" &&
+          schema[property].type != undefined &&
+          typeof schema[property].type != "object"
         ? {
             ...schema[property],
             $type: schema[property].type,
+          }
+        : schema[property].type instanceof Array
+        ? {
+            //same as map above
+            $type: schema[property].type.map((obj) =>
+              typeof obj != "object"
+                ? obj
+                : obj.type != undefined && typeof obj.type != "object"
+                ? {
+                    ...obj,
+                    $type: obj.type,
+                  }
+                : {
+                    ...obj,
+                    ...(obj.type != undefined &&
+                      obj.type.type != undefined && {
+                        type: {
+                          $type: obj.type.type,
+                        },
+                      }),
+                  }
+            ),
           }
         : {
             $type:
@@ -53,7 +96,7 @@ const eventStore = async ({ schema, indexes }) => {
     schema: {
       id: { $type: String, required: true, unique: true },
       saved: { $type: Date, required: true },
-      payload: formatSchema(schema),
+      payload: deps.removeIds({ schema: formatSchema(schema) }),
       headers: {
         root: { $type: String, required: true },
         number: { $type: Number, required: true },
@@ -71,8 +114,8 @@ const eventStore = async ({ schema, indexes }) => {
             exp: String,
             iat: String,
             jti: String,
+            _id: false,
           },
-          _id: false,
         },
         trace: { $type: String },
         created: { $type: Date, required: true },
@@ -88,11 +131,12 @@ const eventStore = async ({ schema, indexes }) => {
               procedure: { $type: String, required: true },
               hash: { $type: String, required: true },
               issued: { $type: Date },
+              _id: false,
             },
           ],
-          _id: false,
           default: [],
         },
+        _id: false,
       },
     },
     indexes: [
@@ -137,8 +181,9 @@ const snapshotStore = async ({ schema, indexes }) => {
       headers: {
         root: { $type: String, required: true, unique: true },
         lastEventNumber: { $type: Number, required: true },
+        _id: false,
       },
-      state: schema,
+      state: deps.removeIds({ schema: formatSchema(schema) }),
     },
     indexes: [
       [{ "headers.root": 1 }],
@@ -182,11 +227,11 @@ module.exports = async ({
   // archiveEventsFn
 } = {}) => {
   const eStore = await eventStore({
-    schema: deps.removeIds({ schema }),
+    schema,
     indexes,
   });
   const sStore = await snapshotStore({
-    schema: deps.removeIds({ schema }),
+    schema,
     indexes,
   });
   const cStore = await countsStore();

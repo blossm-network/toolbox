@@ -4,6 +4,78 @@ const deps = require("./deps");
 
 let _viewStore;
 
+const formatTypesInSchema = (schema) => {
+  const newSchema = {};
+  for (const property in schema) {
+    newSchema[property] =
+      typeof schema[property] != "object"
+        ? schema[property]
+        : schema[property] instanceof Array
+        ? {
+            $type: schema[property].map((obj) =>
+              typeof obj != "object"
+                ? obj
+                : obj.type != undefined && typeof obj.type != "object"
+                ? {
+                    ...obj,
+                    $type: obj.type,
+                  }
+                : {
+                    ...obj,
+                    ...(obj.type != undefined &&
+                      obj.type.type != undefined && {
+                        type: {
+                          $type: obj.type.type,
+                        },
+                      }),
+                  }
+            ),
+          }
+        : schema[property].type != undefined &&
+          typeof schema[property].type != "object"
+        ? {
+            ...schema[property],
+            $type: schema[property].type,
+          }
+        : schema[property].type instanceof Array
+        ? {
+            //same as map above
+            $type: schema[property].type.map((obj) =>
+              typeof obj != "object"
+                ? obj
+                : obj.type != undefined && typeof obj.type != "object"
+                ? {
+                    ...obj,
+                    $type: obj.type,
+                  }
+                : {
+                    ...obj,
+                    ...(obj.type != undefined &&
+                      obj.type.type != undefined && {
+                        type: {
+                          $type: obj.type.type,
+                        },
+                      }),
+                  }
+            ),
+          }
+        : {
+            $type: {
+              ...schema[property],
+              ...(schema[property].type != undefined &&
+                schema[property].type.type != undefined && {
+                  type: {
+                    $type: schema[property].type.type,
+                  },
+                }),
+            },
+          };
+
+    delete newSchema[property].type;
+  }
+  return newSchema;
+};
+
 const viewStore = async ({ schema, indexes }) => {
   if (_viewStore != undefined) {
     logger.info("Thank you existing database.");
@@ -34,20 +106,26 @@ const viewStore = async ({ schema, indexes }) => {
 
 module.exports = async ({ schema, indexes, getFn, putFn, one } = {}) => {
   const formattedSchema = {
-    body: schema,
+    body: deps.removeIds({ schema: formatTypesInSchema(schema) }),
     headers: {
       root: { $type: String, required: true, unique: true },
       trace: { $type: String },
       [process.env.CONTEXT]: {
-        root: String,
-        service: String,
-        network: String,
-      },
-      ...(process.env.DOMAIN && {
-        [process.env.DOMAIN]: {
+        $type: {
           root: String,
           service: String,
           network: String,
+          _id: false,
+        },
+      },
+      ...(process.env.DOMAIN && {
+        [process.env.DOMAIN]: {
+          $type: {
+            root: String,
+            service: String,
+            network: String,
+            _id: false,
+          },
         },
       }),
       created: {
@@ -60,6 +138,7 @@ module.exports = async ({ schema, indexes, getFn, putFn, one } = {}) => {
         required: true,
         default: deps.dateString,
       },
+      _id: false,
     },
   };
 
@@ -96,7 +175,7 @@ module.exports = async ({ schema, indexes, getFn, putFn, one } = {}) => {
   }
 
   const store = await viewStore({
-    schema: deps.removeIds({ schema: formattedSchema }),
+    schema: formattedSchema,
     indexes: allIndexes,
   });
 
