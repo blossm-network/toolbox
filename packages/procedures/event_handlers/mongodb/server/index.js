@@ -17,8 +17,8 @@ const numberStore = async () => {
       process.env.NAME
     }.numbers`,
     schema: {
-      root: { type: String, required: true },
-      number: { type: Number, required: true, default: 0 },
+      root: { $type: String, required: true },
+      number: { $type: Number, required: true, default: 0 },
     },
     indexes: [[{ root: 1 }], [{ number: 1 }]],
     connection: {

@@ -123,8 +123,8 @@ describe("View store", () => {
         },
         headers: {
           _id: false,
-          root: { type: String, required: true, unique: true },
-          trace: { type: String },
+          root: { $type: String, required: true, unique: true },
+          trace: { $type: String },
           [context]: {
             root: String,
             service: String,
@@ -138,7 +138,7 @@ describe("View store", () => {
             _id: false,
           },
           created: {
-            type: Date,
+            $type: Date,
             required: true,
             default: match((fn) => {
               const date = fn();
@@ -146,7 +146,7 @@ describe("View store", () => {
             }),
           },
           modified: {
-            type: Date,
+            $type: Date,
             required: true,
             default: match((fn) => {
               const date = fn();
@@ -347,8 +347,8 @@ describe("View store", () => {
         },
         headers: {
           _id: false,
-          root: { type: String, required: true, unique: true },
-          trace: { type: String },
+          root: { $type: String, required: true, unique: true },
+          trace: { $type: String },
           [context]: {
             root: String,
             service: String,
@@ -356,7 +356,7 @@ describe("View store", () => {
             _id: false,
           },
           created: {
-            type: Date,
+            $type: Date,
             required: true,
             default: match((fn) => {
               const date = fn();
@@ -364,7 +364,7 @@ describe("View store", () => {
             }),
           },
           modified: {
-            type: Date,
+            $type: Date,
             required: true,
             default: match((fn) => {
               const date = fn();
@@ -444,8 +444,8 @@ describe("View store", () => {
     const schema = {
       a: 1,
       b: { c: 2 },
-      d: { type: String },
-      e: { type: [{ type: { type: String } }] },
+      d: { $type: String },
+      e: { $type: [{ $type: { $type: String } }] },
       f: [{ g: 1 }],
     };
     await mongodbViewStore({ schema, indexes, getFn, putFn });
@@ -459,15 +459,15 @@ describe("View store", () => {
             c: 2,
             _id: false,
           },
-          d: { type: String },
-          e: { type: [{ type: { type: String }, _id: false }] },
+          d: { $type: String },
+          e: { $type: [{ $type: { $type: String }, _id: false }] },
           f: [{ g: 1, _id: false }],
           _id: false,
         },
         headers: {
           _id: false,
-          root: { type: String, required: true, unique: true },
-          trace: { type: String },
+          root: { $type: String, required: true, unique: true },
+          trace: { $type: String },
           [context]: {
             root: String,
             service: String,
@@ -481,7 +481,7 @@ describe("View store", () => {
             _id: false,
           },
           created: {
-            type: Date,
+            $type: Date,
             required: true,
             default: match((fn) => {
               const date = fn();
@@ -489,7 +489,7 @@ describe("View store", () => {
             }),
           },
           modified: {
-            type: Date,
+            $type: Date,
             required: true,
             default: match((fn) => {
               const date = fn();
@@ -583,8 +583,8 @@ describe("View store", () => {
         },
         headers: {
           _id: false,
-          root: { type: String, required: true, unique: true },
-          trace: { type: String },
+          root: { $type: String, required: true, unique: true },
+          trace: { $type: String },
           [context]: {
             root: String,
             service: String,
@@ -598,7 +598,7 @@ describe("View store", () => {
             _id: false,
           },
           created: {
-            type: Date,
+            $type: Date,
             required: true,
             default: match((fn) => {
               const date = fn();
@@ -606,7 +606,7 @@ describe("View store", () => {
             }),
           },
           modified: {
-            type: Date,
+            $type: Date,
             required: true,
             default: match((fn) => {
               const date = fn();
@@ -658,8 +658,8 @@ describe("View store", () => {
         },
         headers: {
           _id: false,
-          root: { type: String, required: true, unique: true },
-          trace: { type: String },
+          root: { $type: String, required: true, unique: true },
+          trace: { $type: String },
           [context]: {
             root: String,
             service: String,
@@ -673,7 +673,7 @@ describe("View store", () => {
             _id: false,
           },
           created: {
-            type: Date,
+            $type: Date,
             required: true,
             default: match((fn) => {
               const date = fn();
@@ -681,7 +681,7 @@ describe("View store", () => {
             }),
           },
           modified: {
-            type: Date,
+            $type: Date,
             required: true,
             default: match((fn) => {
               const date = fn();
@@ -860,8 +860,8 @@ describe("View store", () => {
         },
         headers: {
           _id: false,
-          root: { type: String, required: true, unique: true },
-          trace: { type: String },
+          root: { $type: String, required: true, unique: true },
+          trace: { $type: String },
           [context]: {
             root: String,
             service: String,
@@ -875,7 +875,7 @@ describe("View store", () => {
             _id: false,
           },
           created: {
-            type: Date,
+            $type: Date,
             required: true,
             default: match((fn) => {
               const date = fn();
@@ -883,7 +883,7 @@ describe("View store", () => {
             }),
           },
           modified: {
-            type: Date,
+            $type: Date,
             required: true,
             default: match((fn) => {
               const date = fn();

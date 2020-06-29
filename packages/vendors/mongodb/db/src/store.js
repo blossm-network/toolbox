@@ -44,7 +44,12 @@ module.exports = ({
 
   const store = new deps.mongoose.Schema(
     {},
-    { strict: schema != undefined, typePojoToMixed: false, minimize: false }
+    {
+      strict: schema != undefined,
+      typePojoToMixed: false,
+      minimize: false,
+      typeKey: "$type",
+    }
   );
 
   if (schema) store.add(schema);

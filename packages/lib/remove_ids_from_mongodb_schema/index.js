@@ -10,15 +10,15 @@ const removeIds = ({ schema, subdocumentsOnly = true }) => {
       });
     } else if (
       typeof schema[property] == "object" &&
-      schema[property].type instanceof Array
+      schema[property].$type instanceof Array
     ) {
-      schema[property].type[0] = removeIds({
-        schema: schema[property].type[0],
+      schema[property].$type[0] = removeIds({
+        schema: schema[property].$type[0],
         subdocumentsOnly: false,
       });
     } else if (
       typeof schema[property] == "object" &&
-      schema[property].type == undefined
+      schema[property].$type == undefined
     ) {
       for (const key in schema[property]) {
         schema[property][key] = removeIds({
@@ -32,8 +32,8 @@ const removeIds = ({ schema, subdocumentsOnly = true }) => {
 
   if (
     !subdocumentsOnly &&
-    (schema.type == undefined ||
-      (typeof schema.type == "object" && !(schema.type instanceof Array)))
+    (schema.$type == undefined ||
+      (typeof schema.$type == "object" && !(schema.$type instanceof Array)))
   )
     schema._id = false;
   return schema;

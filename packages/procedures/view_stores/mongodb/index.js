@@ -36,8 +36,8 @@ module.exports = async ({ schema, indexes, getFn, putFn, one } = {}) => {
   const formattedSchema = {
     body: schema,
     headers: {
-      root: { type: String, required: true, unique: true },
-      trace: { type: String },
+      root: { $type: String, required: true, unique: true },
+      trace: { $type: String },
       [process.env.CONTEXT]: {
         root: String,
         service: String,
@@ -51,12 +51,12 @@ module.exports = async ({ schema, indexes, getFn, putFn, one } = {}) => {
         },
       }),
       created: {
-        type: Date,
+        $type: Date,
         required: true,
         default: deps.dateString,
       },
       modified: {
-        type: Date,
+        $type: Date,
         required: true,
         default: deps.dateString,
       },
