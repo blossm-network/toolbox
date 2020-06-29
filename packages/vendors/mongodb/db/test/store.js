@@ -39,7 +39,7 @@ describe("Returns a model", () => {
     expect(modelFake).to.have.been.calledWith(name, schemaObj, name);
     expect(schemaFake).to.have.been.calledWith(schema, {
       strict: true,
-      typePojoToMixed: false,
+      // typePojoToMixed: false,
       minimize: false,
       useNestedStrict: true,
       typeKey: "$type",
@@ -71,7 +71,7 @@ describe("Returns a model", () => {
       {},
       {
         strict: false,
-        typePojoToMixed: false,
+        // typePojoToMixed: false,
         minimize: false,
         useNestedStrict: true,
         typeKey: "$type",
@@ -131,7 +131,7 @@ describe("Returns a model", () => {
     expect(modelFake).to.have.been.calledWith(name, schemaObj, name);
     expect(schemaFake).to.have.been.calledWith(schema, {
       strict: true,
-      typePojoToMixed: false,
+      // typePojoToMixed: false,
       minimize: false,
       useNestedStrict: true,
       typeKey: "$type",

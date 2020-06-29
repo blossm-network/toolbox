@@ -44,15 +44,13 @@ module.exports = ({
 
   const store = new deps.mongoose.Schema(schema || {}, {
     strict: schema != undefined,
-    typePojoToMixed: false,
+    // typePojoToMixed: false,
     useNestedStrict: true,
     minimize: false,
     typeKey: "$type",
   });
 
-  for (const index of indexes) {
-    store.index(...index);
-  }
+  for (const index of indexes) store.index(...index);
 
   return deps.mongoose.model(name, store, name);
 };
