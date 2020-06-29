@@ -403,7 +403,7 @@ describe("Event store integration tests", () => {
       if (
         typeof schema[property] == "object" &&
         !(schema[property] instanceof Array) &&
-        schema[property]["type"] == undefined
+        schema[property]["$type"] == undefined
       ) {
         badValue = await badObjectValue(property, schema[property]);
       } else if (schema[property] instanceof Array) {
