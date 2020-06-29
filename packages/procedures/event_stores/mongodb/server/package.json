@@ -1,7 +1,7 @@
 {
   "name": "@blossm/mongodb-event-store",
   "description": "A mongodb event store server.",
-  "version": "0.0.220",
+  "version": "0.0.221",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -26,7 +26,7 @@
     "@blossm/mongodb-event-store-root-stream": "^0.0.12",
     "@blossm/mongodb-event-store-save-events": "^0.0.34",
     "@blossm/mongodb-event-store-stream": "^0.0.14",
-    "@blossm/remove-ids-from-mongodb-schema": "^0.0.7"
+    "@blossm/remove-ids-from-mongodb-schema": "^0.0.8"
   },
   "devDependencies": {
     "chai-datetime": "^1.5.0",
