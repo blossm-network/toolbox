@@ -42,17 +42,12 @@ module.exports = ({
     });
   }
 
-  const store = new deps.mongoose.Schema(
-    {},
-    {
-      strict: schema != undefined,
-      typePojoToMixed: false,
-      minimize: false,
-      typeKey: "$type",
-    }
-  );
-
-  if (schema) store.add(schema);
+  const store = new deps.mongoose.Schema(schema || {}, {
+    strict: schema != undefined,
+    typePojoToMixed: false,
+    minimize: false,
+    typeKey: "$type",
+  });
 
   for (const index of indexes) {
     store.index(...index);

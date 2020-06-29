@@ -16,11 +16,9 @@ describe("Returns a model", () => {
   });
 
   it("it should return a model object that is instatiatable", () => {
-    const addFake = fake();
     const indexFake = fake();
 
     const schemaObj = {
-      add: addFake,
       index: indexFake,
     };
 
@@ -39,27 +37,21 @@ describe("Returns a model", () => {
 
     expect(result).to.equal(modelObject);
     expect(modelFake).to.have.been.calledWith(name, schemaObj, name);
-    expect(schemaFake).to.have.been.calledWith(
-      {},
-      {
-        strict: true,
-        typePojoToMixed: false,
-        minimize: false,
-        typeKey: "$type",
-      }
-    );
-    expect(addFake).to.have.been.calledWith(schema);
+    expect(schemaFake).to.have.been.calledWith(schema, {
+      strict: true,
+      typePojoToMixed: false,
+      minimize: false,
+      typeKey: "$type",
+    });
     expect(indexFake.getCall(0)).to.have.been.calledWith(
       indexPart1,
       indexPart2
     );
   });
   it("it should return a model object with optionals missing", () => {
-    const addFake = fake();
     const indexFake = fake();
 
     const schemaObj = {
-      add: addFake,
       index: indexFake,
     };
 
@@ -83,15 +75,12 @@ describe("Returns a model", () => {
         typeKey: "$type",
       }
     );
-    expect(addFake).to.not.have.been.called;
     expect(indexFake).to.not.have.been.called;
   });
   it("it should return a model object with connection properties passed in", () => {
-    const addFake = fake();
     const indexFake = fake();
 
     const schemaObj = {
-      add: addFake,
       index: indexFake,
     };
 
@@ -138,16 +127,12 @@ describe("Returns a model", () => {
 
     expect(result).to.equal(modelObject);
     expect(modelFake).to.have.been.calledWith(name, schemaObj, name);
-    expect(schemaFake).to.have.been.calledWith(
-      {},
-      {
-        strict: true,
-        typePojoToMixed: false,
-        minimize: false,
-        typeKey: "$type",
-      }
-    );
-    expect(addFake).to.have.been.calledWith(schema);
+    expect(schemaFake).to.have.been.calledWith(schema, {
+      strict: true,
+      typePojoToMixed: false,
+      minimize: false,
+      typeKey: "$type",
+    });
     expect(indexFake.getCall(0)).to.have.been.calledWith(
       indexPart1,
       indexPart2
