@@ -513,7 +513,7 @@ describe("Mongodb event store", () => {
     const eventStoreFake = fake();
     replace(deps, "eventStore", eventStoreFake);
 
-    const eventStoreSchema = { a: { type: { type: String } } };
+    const eventStoreSchema = { a: { type: { type: String }, b: "some-b" } };
     const snapshotStoreSchema = "some-snapshot-schema";
     const removeIdsFake = stub()
       .onCall(0)
@@ -557,6 +557,7 @@ describe("Mongodb event store", () => {
               type: {
                 $type: String,
               },
+              b: "some-b",
             },
             required: false,
             unique: false,

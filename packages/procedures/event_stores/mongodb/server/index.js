@@ -12,19 +12,26 @@ const formatSchema = (schema) => {
   const newSchema = {};
   for (const property in schema) {
     newSchema[property] =
-      typeof schema[property] == "object" && schema[property].type != undefined
+      typeof schema[property] == "object" &&
+      schema[property].type != undefined &&
+      typeof schema[property].type != "object"
         ? {
             ...schema[property],
-            $type:
-              typeof schema[property].type == "object" &&
-              schema[property].type.type != undefined
-                ? {
-                    type: { $type: schema[property].type.type },
-                  }
-                : schema[property].type,
+            $type: schema[property].type,
           }
         : {
-            $type: schema[property],
+            $type:
+              typeof schema[property] != "object"
+                ? schema[property]
+                : {
+                    ...schema[property],
+                    ...(schema[property].type != undefined &&
+                      schema[property].type.type != undefined && {
+                        type: {
+                          $type: schema[property].type.type,
+                        },
+                      }),
+                  },
           };
 
     delete newSchema[property].type;
