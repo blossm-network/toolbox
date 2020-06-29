@@ -72,20 +72,10 @@ const envProject = ({ env, config }) => {
   }
 };
 
-const envPublicKeyUrl = ({ env, config }) => {
-  switch (env) {
-    case "production":
-      return config.publicKeyUrls.production;
-    case "sandbox":
-      return config.publicKeyUrls.sandbox;
-    case "staging":
-      return config.publicKeyUrls.staging;
-    case "development":
-      return config.publicKeyUrls.development;
-    default:
-      return "";
-  }
-};
+const envPublicKeyUrl = ({ env, config }) =>
+  `https://f.${envUriSpecifier(env)}${
+    config.core ? config.core.network : config.network
+  }/public-key`;
 
 const envComputeUrlId = ({ env, config }) => {
   switch (env) {
@@ -643,7 +633,9 @@ const configure = async (workingDir, configFn, env, strict) => {
     const region =
       config["gcp-region"] || blossmConfig.vendors.cloud.gcp.defaults.region;
     const network = blossmConfig.network;
-    const baseCoreNetwork = (blossmConfig.core || {}).network || network;
+    const baseCoreNetwork = blossmConfig.core
+      ? blossmConfig.core.network
+      : network;
     const coreNetwork =
       baseCoreNetwork == network
         ? `${envUriSpecifier(env)}${baseCoreNetwork}`
