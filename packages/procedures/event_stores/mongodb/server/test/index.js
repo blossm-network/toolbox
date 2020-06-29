@@ -113,6 +113,7 @@ describe("Mongodb event store", () => {
             type: String,
             required: false,
             unique: false,
+            default: undefined,
           },
         },
         headers: {
@@ -288,6 +289,7 @@ describe("Mongodb event store", () => {
             type: String,
             required: false,
             unique: false,
+            default: undefined,
           },
         },
         headers: {
@@ -431,6 +433,134 @@ describe("Mongodb event store", () => {
             type: String,
             required: false,
             unique: false,
+            default: undefined,
+          },
+        },
+        headers: {
+          root: { type: String, required: true },
+          number: { type: Number, required: true },
+          topic: { type: String, required: true },
+          version: { type: Number, required: true },
+          action: { type: String, required: true },
+          domain: { type: String, required: true },
+          service: { type: String, required: true },
+          trace: { type: String },
+          context: { type: Object },
+          claims: {
+            type: {
+              iss: String,
+              aud: String,
+              sub: String,
+              exp: String,
+              iat: String,
+              jti: String,
+            },
+            _id: false,
+          },
+          created: { type: Date, required: true },
+          idempotency: { type: String, required: true, unique: true },
+          path: {
+            type: [
+              {
+                name: { type: String },
+                domain: { type: String },
+                service: { type: String },
+                network: { type: String, required: true },
+                host: { type: String, required: true },
+                procedure: { type: String, required: true },
+                hash: { type: String, required: true },
+                issued: { type: Date },
+              },
+            ],
+            _id: false,
+            default: [],
+          },
+        },
+      },
+      indexes: [
+        [{ id: 1 }],
+        [{ "headers.root": 1 }],
+        [{ "headers.root": 1, "headers.number": 1, _id: 1, __v: 1 }],
+      ],
+      connection: {
+        protocol,
+        user,
+        password,
+        host,
+        database,
+        parameters: {
+          authSource: "admin",
+          retryWrites: true,
+          w: "majority",
+        },
+        autoIndex: true,
+      },
+    });
+  });
+  it("should call with the correct params when schema has object property with nested type", async () => {
+    const mongodbEventStore = require("..");
+    const eStore = "some-event-store";
+    const sStore = "some-snapshot-store";
+    const storeFake = stub()
+      .onCall(0)
+      .returns(eStore)
+      .onCall(1)
+      .returns(sStore);
+
+    const secretFake = fake.returns(password);
+    replace(deps, "secret", secretFake);
+
+    const eventStoreFake = fake();
+    replace(deps, "eventStore", eventStoreFake);
+
+    const eventStoreSchema = { a: { type: { type: String } } };
+    const snapshotStoreSchema = "some-snapshot-schema";
+    const removeIdsFake = stub()
+      .onCall(0)
+      .returns(eventStoreSchema)
+      .onCall(1)
+      .returns(snapshotStoreSchema);
+
+    replace(deps, "removeIds", removeIdsFake);
+
+    const db = {
+      store: storeFake,
+    };
+    replace(deps, "db", db);
+
+    const saveEventsResult = "some-save-event-result";
+    const saveEventsFake = fake.returns(saveEventsResult);
+    replace(deps, "saveEvents", saveEventsFake);
+    const aggregateResult = "some-aggregate-result";
+    const aggregateFake = fake.returns(aggregateResult);
+    replace(deps, "aggregate", aggregateFake);
+    const queryResult = "some-query-result";
+    const queryFake = fake.returns(queryResult);
+    replace(deps, "query", queryFake);
+    const streamResult = "some-query-result";
+    const streamFake = fake.returns(streamResult);
+    replace(deps, "stream", streamFake);
+    await mongodbEventStore({ schema, publishFn });
+
+    expect(removeIdsFake).to.have.been.calledWith({
+      schema,
+    });
+    expect(removeIdsFake).to.have.been.calledTwice;
+    expect(storeFake).to.have.been.calledWith({
+      name: `_${service}.${domain}`,
+      schema: {
+        id: { type: String, required: true, unique: true },
+        saved: { type: Date, required: true },
+        payload: {
+          a: {
+            type: {
+              type: {
+                type: String,
+              },
+            },
+            required: false,
+            unique: false,
+            default: undefined,
           },
         },
         headers: {
