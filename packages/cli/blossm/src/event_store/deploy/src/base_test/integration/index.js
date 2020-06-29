@@ -412,6 +412,10 @@ describe("Event store integration tests", () => {
         badValue = findBadValue(schema, property);
       }
 
+      //TODO
+      //eslint-disable-next-line
+      console.log({badValue, property});
+
       const [exampleToUse] = [
         example0,
         example1,
