@@ -447,7 +447,7 @@ describe("View store base integration tests", () => {
       const badValue =
         schema[property] == "String" ||
         (typeof schema[property] == "object" &&
-          schema[property]["$type"] == "String")
+          schema[property]["type"] == "String")
           ? { a: 1 } //pass an object to a String property
           : "some-string"; // or, pass a string to a non-String property
       const root = "some-root";

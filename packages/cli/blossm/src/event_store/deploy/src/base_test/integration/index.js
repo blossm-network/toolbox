@@ -333,9 +333,9 @@ describe("Event store integration tests", () => {
     return schema[property] == "String" ||
       (typeof schema[property] == "object" &&
         !(schema[property] instanceof Array) &&
-        (schema[property]["$type"] == "String" ||
-          (typeof schema[property]["$type"] == "object" &&
-            schema[property]["$type"]["$type"] == "String")))
+        (schema[property]["type"] == "String" ||
+          (typeof schema[property]["type"] == "object" &&
+            schema[property]["type"]["type"] == "String")))
       ? { a: 1 } //pass an object to a String property
       : "some-string"; // or, pass a string to a non-String property
   };
@@ -403,7 +403,7 @@ describe("Event store integration tests", () => {
       if (
         typeof schema[property] == "object" &&
         !(schema[property] instanceof Array) &&
-        schema[property]["$type"] == undefined
+        schema[property]["type"] == undefined
       ) {
         badValue = await badObjectValue(property, schema[property]);
       } else if (schema[property] instanceof Array) {
