@@ -1,4 +1,3 @@
-const mongoose = require("mongoose");
 const logger = require("@blossm/logger");
 
 const deps = require("../deps");
@@ -20,7 +19,7 @@ module.exports = ({
     ...(parameters ? [parameters] : [])
   );
 
-  mongoose.connect(connectionString, {
+  deps.mongoose.connect(connectionString, {
     useNewUrlParser: true,
     useCreateIndex: true,
     useUnifiedTopology: true,
@@ -29,7 +28,7 @@ module.exports = ({
     poolSize,
   });
 
-  const db = mongoose.connection;
+  const db = deps.mongoose.connection;
 
   if (onError != undefined) db.on("error", onError);
 

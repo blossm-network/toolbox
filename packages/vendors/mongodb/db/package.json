@@ -16,7 +16,7 @@
   "dependencies": {
     "@blossm/errors": "^0.0.35",
     "@blossm/url-encode-query-data": "^0.0.5",
-    "mongoose": "^5.7.1",
+    "@blossm/mongoose": "*",
     "restify-errors": "^8.0.0"
   },
   "devDependencies": {

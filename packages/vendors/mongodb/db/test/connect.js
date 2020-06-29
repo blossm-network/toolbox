@@ -1,6 +1,5 @@
 const { expect } = require("chai").use(require("sinon-chai"));
 const { restore, replace, replaceGetter, fake } = require("sinon");
-const mongoose = require("mongoose");
 
 const { connect } = require("../index");
 const deps = require("../deps");
@@ -26,8 +25,8 @@ describe("Connects", () => {
     restore();
   });
   beforeEach(() => {
-    replace(mongoose, "connect", connectFake);
-    replaceGetter(mongoose, "connection", connectionFake);
+    replace(deps.mongoose, "connect", connectFake);
+    replaceGetter(deps.mongoose, "connection", connectionFake);
   });
 
   it("it should connect if all the params are normal, and ommittable params omitted", () => {
@@ -125,8 +124,8 @@ describe("Returns the right object", () => {
       on: onFake,
       once: onceFake,
     };
-    replace(mongoose, "connect", fake());
-    replaceGetter(mongoose, "connection", fake.returns(returnValue));
+    replace(deps.mongoose, "connect", fake());
+    replaceGetter(deps.mongoose, "connection", fake.returns(returnValue));
 
     expect(connect({ protocol, user, password, host, database })).to.equal(
       returnValue
