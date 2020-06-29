@@ -91,6 +91,8 @@ const eventStore = async ({ schema, indexes }) => {
     return _eventStore;
   }
 
+  //TODO
+  //eslint-disable-next-line
   console.log({
     formatted: formatSchema(schema),
     removeIds: deps.removeIds({ schema: formatSchema(schema) }),
