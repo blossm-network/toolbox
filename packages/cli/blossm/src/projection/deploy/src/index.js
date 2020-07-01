@@ -42,10 +42,7 @@ module.exports = eventHandler({
             },
           }),
       },
-      body: {
-        ...body,
-        ...(event.headers.trace && { trace: event.headers.trace }),
-      },
+      body,
     };
   },
   commitFn: async (state) => {
