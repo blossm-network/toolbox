@@ -58,11 +58,6 @@ describe("Mongodb event store", () => {
     const eventStoreFake = fake();
     replace(deps, "eventStore", eventStoreFake);
 
-    const storeSchema = "some-store-schema";
-    const removeIdsFake = fake.returns(storeSchema);
-
-    replace(deps, "removeIds", removeIdsFake);
-
     const db = {
       store: storeFake,
     };
@@ -90,25 +85,38 @@ describe("Mongodb event store", () => {
     const streamFake = fake.returns(streamResult);
     replace(deps, "stream", streamFake);
 
+    const formattedSchemaWithOptions = "some-formatted-schema-with-options";
+    const formattedSchema = "some-formatted-schema";
+    const formatSchemaFake = stub()
+      .onFirstCall()
+      .returns(formattedSchemaWithOptions)
+      .returns(formattedSchema);
+    replace(deps, "formatSchema", formatSchemaFake);
+
     const schema = { a: String };
     await mongodbEventStore({ schema, handlers, publishFn });
 
-    expect(removeIdsFake).to.have.been.calledWith({
-      schema: {
-        a: {
-          $type: String,
+    expect(formatSchemaFake.getCall(0)).to.have.been.calledWith(
+      schema,
+      "$type",
+      {
+        options: {
           required: false,
           unique: false,
           default: undefined,
         },
-      },
-    });
+      }
+    );
+    expect(formatSchemaFake.getCall(1)).to.have.been.calledWith(
+      schema,
+      "$type"
+    );
     expect(storeFake).to.have.been.calledWith({
       name: `_${service}.${domain}`,
       schema: {
         id: { $type: String, required: true, unique: true },
         saved: { $type: Date, required: true },
-        payload: storeSchema,
+        payload: formattedSchemaWithOptions,
         headers: {
           root: { $type: String, required: true },
           number: { $type: Number, required: true },
@@ -120,15 +128,15 @@ describe("Mongodb event store", () => {
           trace: { $type: String },
           context: { $type: Object },
           claims: {
-            // $type: {
-            iss: String,
-            aud: String,
-            sub: String,
-            exp: String,
-            iat: String,
-            jti: String,
-            _id: false,
-            // },
+            $type: {
+              iss: String,
+              aud: String,
+              sub: String,
+              exp: String,
+              iat: String,
+              jti: String,
+              _id: false,
+            },
           },
           created: { $type: Date, required: true },
           idempotency: { $type: String, required: true, unique: true },
@@ -151,6 +159,7 @@ describe("Mongodb event store", () => {
           _id: false,
         },
       },
+      typeKey: "$type",
       indexes: [
         [{ id: 1 }],
         [{ "headers.root": 1 }],
@@ -179,8 +188,9 @@ describe("Mongodb event store", () => {
           lastEventNumber: { $type: Number, required: true },
           _id: false,
         },
-        state: storeSchema,
+        state: formattedSchema,
       },
+      typeKey: "$type",
       indexes: [[{ "headers.root": 1 }]],
     });
     expect(secretFake).to.have.been.calledWith("mongodb-event-store");
@@ -241,10 +251,13 @@ describe("Mongodb event store", () => {
     const eventStoreFake = fake();
     replace(deps, "eventStore", eventStoreFake);
 
-    const storeSchema = "some-store-schema";
-    const removeIdsFake = fake.returns(storeSchema);
-
-    replace(deps, "removeIds", removeIdsFake);
+    const formattedSchemaWithOptions = "some-formatted-schema-with-options";
+    const formattedSchema = "some-formatted-schema";
+    const formatSchemaFake = stub()
+      .onFirstCall()
+      .returns(formattedSchemaWithOptions)
+      .returns(formattedSchema);
+    replace(deps, "formatSchema", formatSchemaFake);
 
     const db = {
       store: storeFake,
@@ -270,22 +283,27 @@ describe("Mongodb event store", () => {
     const schema = { a: String };
     await mongodbEventStore({ schema, indexes: [index], publishFn });
 
-    expect(removeIdsFake).to.have.been.calledWith({
-      schema: {
-        a: {
-          $type: String,
+    expect(formatSchemaFake.getCall(0)).to.have.been.calledWith(
+      schema,
+      "$type",
+      {
+        options: {
           required: false,
           unique: false,
           default: undefined,
         },
-      },
-    });
+      }
+    );
+    expect(formatSchemaFake.getCall(1)).to.have.been.calledWith(
+      schema,
+      "$type"
+    );
     expect(storeFake).to.have.been.calledWith({
       name: `_${service}.${domain}`,
       schema: {
         id: { $type: String, required: true, unique: true },
         saved: { $type: Date, required: true },
-        payload: storeSchema,
+        payload: formattedSchemaWithOptions,
         headers: {
           root: { $type: String, required: true },
           number: { $type: Number, required: true },
@@ -297,15 +315,15 @@ describe("Mongodb event store", () => {
           trace: { $type: String },
           context: { $type: Object },
           claims: {
-            // $type: {
-            iss: String,
-            aud: String,
-            sub: String,
-            exp: String,
-            iat: String,
-            jti: String,
-            _id: false,
-            // },
+            $type: {
+              iss: String,
+              aud: String,
+              sub: String,
+              exp: String,
+              iat: String,
+              jti: String,
+              _id: false,
+            },
           },
           created: { $type: Date, required: true },
           idempotency: { $type: String, required: true, unique: true },
@@ -328,6 +346,7 @@ describe("Mongodb event store", () => {
           _id: false,
         },
       },
+      typeKey: "$type",
       indexes: [
         [{ id: 1 }],
         [{ "headers.root": 1 }],
@@ -357,8 +376,9 @@ describe("Mongodb event store", () => {
           lastEventNumber: { $type: Number, required: true },
           _id: false,
         },
-        state: storeSchema,
+        state: formattedSchema,
       },
+      typeKey: "$type",
       indexes: [[{ "headers.root": 1 }], [{ [index]: 1 }]],
     });
     expect(storeFake).to.have.been.calledWith({
@@ -367,6 +387,7 @@ describe("Mongodb event store", () => {
         root: { $type: String, required: true, unique: true },
         value: { $type: Number, required: true, default: 0 },
       },
+      typeKey: "$type",
       indexes: [[{ root: 1 }]],
     });
   });
@@ -386,10 +407,13 @@ describe("Mongodb event store", () => {
     const eventStoreFake = fake();
     replace(deps, "eventStore", eventStoreFake);
 
-    const storeSchema = "some-store-schema";
-    const removeIdsFake = fake.returns(storeSchema);
-
-    replace(deps, "removeIds", removeIdsFake);
+    const formattedSchemaWithOptions = "some-formatted-schema-with-options";
+    const formattedSchema = "some-formatted-schema";
+    const formatSchemaFake = stub()
+      .onFirstCall()
+      .returns(formattedSchemaWithOptions)
+      .returns(formattedSchema);
+    replace(deps, "formatSchema", formatSchemaFake);
 
     const db = {
       store: storeFake,
@@ -411,22 +435,27 @@ describe("Mongodb event store", () => {
     const schema = { a: { type: String } };
     await mongodbEventStore({ schema, publishFn });
 
-    expect(removeIdsFake).to.have.been.calledWith({
-      schema: {
-        a: {
-          $type: String,
+    expect(formatSchemaFake.getCall(0)).to.have.been.calledWith(
+      schema,
+      "$type",
+      {
+        options: {
           required: false,
           unique: false,
           default: undefined,
         },
-      },
-    });
+      }
+    );
+    expect(formatSchemaFake.getCall(1)).to.have.been.calledWith(
+      schema,
+      "$type"
+    );
     expect(storeFake).to.have.been.calledWith({
       name: `_${service}.${domain}`,
       schema: {
         id: { $type: String, required: true, unique: true },
         saved: { $type: Date, required: true },
-        payload: storeSchema,
+        payload: formattedSchemaWithOptions,
         headers: {
           root: { $type: String, required: true },
           number: { $type: Number, required: true },
@@ -438,172 +467,15 @@ describe("Mongodb event store", () => {
           trace: { $type: String },
           context: { $type: Object },
           claims: {
-            // $type: {
-            iss: String,
-            aud: String,
-            sub: String,
-            exp: String,
-            iat: String,
-            jti: String,
-            _id: false,
-            // },
-          },
-          created: { $type: Date, required: true },
-          idempotency: { $type: String, required: true, unique: true },
-          path: {
-            $type: [
-              {
-                name: { $type: String },
-                domain: { $type: String },
-                service: { $type: String },
-                network: { $type: String, required: true },
-                host: { $type: String, required: true },
-                procedure: { $type: String, required: true },
-                hash: { $type: String, required: true },
-                issued: { $type: Date },
-                _id: false,
-              },
-            ],
-            default: [],
-          },
-          _id: false,
-        },
-      },
-      indexes: [
-        [{ id: 1 }],
-        [{ "headers.root": 1 }],
-        [{ "headers.root": 1, "headers.number": 1, _id: 1, __v: 1 }],
-      ],
-      connection: {
-        protocol,
-        user,
-        password,
-        host,
-        database,
-        parameters: {
-          authSource: "admin",
-          retryWrites: true,
-          w: "majority",
-        },
-        autoIndex: true,
-      },
-    });
-  });
-  it("should call with the correct params when schema has object property with nested type", async () => {
-    const mongodbEventStore = require("..");
-    const eStore = "some-event-store";
-    const sStore = "some-snapshot-store";
-    const storeFake = stub()
-      .onCall(0)
-      .returns(eStore)
-      .onCall(1)
-      .returns(sStore);
-
-    const secretFake = fake.returns(password);
-    replace(deps, "secret", secretFake);
-
-    const eventStoreFake = fake();
-    replace(deps, "eventStore", eventStoreFake);
-
-    const storeSchema = "some-schema";
-    const removeIdsFake = fake.returns(storeSchema);
-
-    replace(deps, "removeIds", removeIdsFake);
-
-    const db = {
-      store: storeFake,
-    };
-    replace(deps, "db", db);
-
-    const saveEventsResult = "some-save-event-result";
-    const saveEventsFake = fake.returns(saveEventsResult);
-    replace(deps, "saveEvents", saveEventsFake);
-    const aggregateResult = "some-aggregate-result";
-    const aggregateFake = fake.returns(aggregateResult);
-    replace(deps, "aggregate", aggregateFake);
-    const queryResult = "some-query-result";
-    const queryFake = fake.returns(queryResult);
-    replace(deps, "query", queryFake);
-    const streamResult = "some-query-result";
-    const streamFake = fake.returns(streamResult);
-    replace(deps, "stream", streamFake);
-
-    const schema = {
-      a: {
-        type: { type: String },
-        b: "some-b",
-      },
-      c: {
-        v: 3,
-        b: 5,
-      },
-      e: { type: [{ type: { type: String } }] },
-      f: [{ g: 1 }],
-    };
-    await mongodbEventStore({ schema, publishFn });
-
-    expect(removeIdsFake).to.have.been.calledWith({
-      schema: {
-        a: {
-          $type: {
-            type: {
-              $type: String,
+            $type: {
+              iss: String,
+              aud: String,
+              sub: String,
+              exp: String,
+              iat: String,
+              jti: String,
+              _id: false,
             },
-            b: "some-b",
-          },
-          required: false,
-          unique: false,
-          default: undefined,
-        },
-        c: {
-          $type: {
-            v: 3,
-            b: 5,
-          },
-          required: false,
-          unique: false,
-          default: undefined,
-        },
-        e: {
-          $type: [{ type: { $type: String } }],
-          required: false,
-          unique: false,
-          default: undefined,
-        },
-        f: {
-          $type: [{ g: 1 }],
-          required: false,
-          unique: false,
-          default: undefined,
-        },
-      },
-    });
-    expect(storeFake).to.have.been.calledWith({
-      name: `_${service}.${domain}`,
-      schema: {
-        id: { $type: String, required: true, unique: true },
-        saved: { $type: Date, required: true },
-        payload: storeSchema,
-        headers: {
-          root: { $type: String, required: true },
-          number: { $type: Number, required: true },
-          topic: { $type: String, required: true },
-          version: { $type: Number, required: true },
-          action: { $type: String, required: true },
-          domain: { $type: String, required: true },
-          service: { $type: String, required: true },
-          trace: { $type: String },
-          context: { $type: Object },
-          claims: {
-            // $type: {
-            iss: String,
-            aud: String,
-            sub: String,
-            exp: String,
-            iat: String,
-            jti: String,
-            _id: false,
-            // },
           },
           created: { $type: Date, required: true },
           idempotency: { $type: String, required: true, unique: true },
@@ -626,6 +498,7 @@ describe("Mongodb event store", () => {
           _id: false,
         },
       },
+      typeKey: "$type",
       indexes: [
         [{ id: 1 }],
         [{ "headers.root": 1 }],

@@ -5,6 +5,7 @@ module.exports = ({
   name,
   schema,
   indexes = [],
+  typeKey,
   connection: {
     protocol,
     user,
@@ -47,14 +48,10 @@ module.exports = ({
     typePojoToMixed: false,
     useNestedStrict: true,
     minimize: false,
-    typeKey: "$type",
+    ...(typeKey && { typeKey }),
   });
 
   for (const index of indexes) store.index(...index);
-
-  //TODO
-  //eslint-disable-next-line no-console
-  console.log({ vstore: store });
 
   return deps.mongoose.model(name, store, name);
 };

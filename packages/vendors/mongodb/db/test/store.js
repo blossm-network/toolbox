@@ -33,7 +33,8 @@ describe("Returns a model", () => {
     const indexPart1 = "some-index-part-1";
     const indexPart2 = "some-index-part-2";
     const indexes = [[indexPart1, indexPart2]];
-    const result = store({ name, schema, indexes });
+    const typeKey = "some-type-key";
+    const result = store({ name, schema, indexes, typeKey });
 
     expect(result).to.equal(modelObject);
     expect(modelFake).to.have.been.calledWith(name, schemaObj, name);
@@ -42,7 +43,7 @@ describe("Returns a model", () => {
       typePojoToMixed: false,
       minimize: false,
       useNestedStrict: true,
-      typeKey: "$type",
+      typeKey,
     });
     expect(indexFake.getCall(0)).to.have.been.calledWith(
       indexPart1,
@@ -74,7 +75,6 @@ describe("Returns a model", () => {
         typePojoToMixed: false,
         minimize: false,
         useNestedStrict: true,
-        typeKey: "$type",
       }
     );
     expect(indexFake).to.not.have.been.called;
@@ -134,7 +134,6 @@ describe("Returns a model", () => {
       typePojoToMixed: false,
       minimize: false,
       useNestedStrict: true,
-      typeKey: "$type",
     });
     expect(indexFake.getCall(0)).to.have.been.calledWith(
       indexPart1,

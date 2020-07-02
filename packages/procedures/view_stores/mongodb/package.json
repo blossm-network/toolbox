@@ -18,7 +18,7 @@
     "@blossm/gcp-secret": "^0.0.47",
     "@blossm/logger": "^0.0.8",
     "@blossm/mongodb-database": "^0.0.66",
-    "@blossm/remove-ids-from-mongodb-schema": "^0.0.9",
+    "@blossm/format-mongodb-schema": "*",
     "@blossm/view-store": "^0.0.149"
   },
   "devDependencies": {

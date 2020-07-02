@@ -6,84 +6,7 @@ let _eventStore;
 let _snapshotStore;
 let _countsStore;
 
-//make all properties not required since events may
-//not contain the full schema.
-const formatSchema = (schema) => {
-  const newSchema = {};
-  for (const property in schema) {
-    newSchema[property] =
-      schema[property] instanceof Array
-        ? {
-            $type: schema[property].map((obj) =>
-              typeof obj != "object"
-                ? obj
-                : obj.type != undefined && typeof obj.type != "object"
-                ? {
-                    ...obj,
-                    $type: obj.type,
-                  }
-                : {
-                    ...obj,
-                    ...(obj.type != undefined &&
-                      obj.type.type != undefined && {
-                        type: {
-                          $type: obj.type.type,
-                        },
-                      }),
-                  }
-            ),
-          }
-        : typeof schema[property] == "object" &&
-          schema[property].type != undefined &&
-          typeof schema[property].type != "object"
-        ? {
-            ...schema[property],
-            $type: schema[property].type,
-          }
-        : schema[property].type instanceof Array
-        ? {
-            //same as map above
-            $type: schema[property].type.map((obj) =>
-              typeof obj != "object"
-                ? obj
-                : obj.type != undefined && typeof obj.type != "object"
-                ? {
-                    ...obj,
-                    $type: obj.type,
-                  }
-                : {
-                    ...obj,
-                    ...(obj.type != undefined &&
-                      obj.type.type != undefined && {
-                        type: {
-                          $type: obj.type.type,
-                        },
-                      }),
-                  }
-            ),
-          }
-        : {
-            $type:
-              typeof schema[property] != "object"
-                ? schema[property]
-                : {
-                    ...schema[property],
-                    ...(schema[property].type != undefined &&
-                      schema[property].type.type != undefined && {
-                        type: {
-                          $type: schema[property].type.type,
-                        },
-                      }),
-                  },
-          };
-
-    delete newSchema[property].type;
-    newSchema[property].required = false;
-    newSchema[property].unique = false;
-    newSchema[property].default = undefined;
-  }
-  return newSchema;
-};
+const typeKey = "$type";
 
 const eventStore = async ({ schema, indexes }) => {
   if (_eventStore != undefined) {
@@ -94,43 +17,43 @@ const eventStore = async ({ schema, indexes }) => {
   _eventStore = deps.db.store({
     name: `_${process.env.SERVICE}.${process.env.DOMAIN}`,
     schema: {
-      id: { $type: String, required: true, unique: true },
-      saved: { $type: Date, required: true },
+      id: { [typeKey]: String, required: true, unique: true },
+      saved: { [typeKey]: Date, required: true },
       payload: schema,
       headers: {
-        root: { $type: String, required: true },
-        number: { $type: Number, required: true },
-        topic: { $type: String, required: true },
-        action: { $type: String, required: true },
-        domain: { $type: String, required: true },
-        service: { $type: String, required: true },
-        version: { $type: Number, required: true },
-        context: { $type: Object },
+        root: { [typeKey]: String, required: true },
+        number: { [typeKey]: Number, required: true },
+        topic: { [typeKey]: String, required: true },
+        action: { [typeKey]: String, required: true },
+        domain: { [typeKey]: String, required: true },
+        service: { [typeKey]: String, required: true },
+        version: { [typeKey]: Number, required: true },
+        context: { [typeKey]: Object },
         claims: {
-          // $type: {
-          iss: String,
-          aud: String,
-          sub: String,
-          exp: String,
-          iat: String,
-          jti: String,
-          _id: false,
-          // },
+          [typeKey]: {
+            iss: String,
+            aud: String,
+            sub: String,
+            exp: String,
+            iat: String,
+            jti: String,
+            _id: false,
+          },
         },
-        trace: { $type: String },
-        created: { $type: Date, required: true },
-        idempotency: { $type: String, required: true, unique: true },
+        trace: { [typeKey]: String },
+        created: { [typeKey]: Date, required: true },
+        idempotency: { [typeKey]: String, required: true, unique: true },
         path: {
-          $type: [
+          [typeKey]: [
             {
-              name: { $type: String },
-              domain: { $type: String },
-              service: { $type: String },
-              network: { $type: String, required: true },
-              host: { $type: String, required: true },
-              procedure: { $type: String, required: true },
-              hash: { $type: String, required: true },
-              issued: { $type: Date },
+              name: { [typeKey]: String },
+              domain: { [typeKey]: String },
+              service: { [typeKey]: String },
+              network: { [typeKey]: String, required: true },
+              host: { [typeKey]: String, required: true },
+              procedure: { [typeKey]: String, required: true },
+              hash: { [typeKey]: String, required: true },
+              issued: { [typeKey]: Date },
               _id: false,
             },
           ],
@@ -139,6 +62,7 @@ const eventStore = async ({ schema, indexes }) => {
         _id: false,
       },
     },
+    typeKey,
     indexes: [
       [{ id: 1 }],
       [{ "headers.root": 1 }],
@@ -177,14 +101,15 @@ const snapshotStore = async ({ schema, indexes }) => {
   _snapshotStore = deps.db.store({
     name: `_${process.env.SERVICE}.${process.env.DOMAIN}.snapshots`,
     schema: {
-      created: { $type: Date, required: true },
+      created: { [typeKey]: Date, required: true },
       headers: {
-        root: { $type: String, required: true, unique: true },
-        lastEventNumber: { $type: Number, required: true },
+        root: { [typeKey]: String, required: true, unique: true },
+        lastEventNumber: { [typeKey]: Number, required: true },
         _id: false,
       },
       state: schema,
     },
+    typeKey,
     indexes: [
       [{ "headers.root": 1 }],
       ...(indexes.length == 0
@@ -209,9 +134,10 @@ const countsStore = async () => {
   _countsStore = deps.db.store({
     name: `_${process.env.SERVICE}.${process.env.DOMAIN}.counts`,
     schema: {
-      root: { $type: String, required: true, unique: true },
-      value: { $type: Number, required: true, default: 0 },
+      root: { [typeKey]: String, required: true, unique: true },
+      value: { [typeKey]: Number, required: true, default: 0 },
     },
+    typeKey,
     indexes: [[{ root: 1 }]],
   });
 
@@ -226,21 +152,18 @@ module.exports = async ({
   // archiveSnapshotFn,
   // archiveEventsFn
 } = {}) => {
-  const formattedSchema = deps.removeIds({ schema: formatSchema(schema) });
-
-  //TODO
-  //eslint-disable-next-line no-console
-  console.log({ formattedSchema, scene: formattedSchema.scene });
-
   const eStore = await eventStore({
-    schema: formattedSchema,
+    schema: deps.formatSchema(schema, typeKey, {
+      options: {
+        required: false,
+        unique: false,
+        default: undefined,
+      },
+    }),
     indexes,
   });
-  //TODO
-  //eslint-disable-next-line no-console
-  console.log({ eStore });
   const sStore = await snapshotStore({
-    schema: formattedSchema,
+    schema: deps.formatSchema(schema, typeKey),
     indexes,
   });
   const cStore = await countsStore();
