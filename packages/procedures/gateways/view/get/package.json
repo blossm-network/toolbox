@@ -14,7 +14,6 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/gcp-token": "^0.0.29",
     "@blossm/view-composite-rpc": "^0.0.46",
     "@blossm/view-store-rpc": "^0.0.181"
   },

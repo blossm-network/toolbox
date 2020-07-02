@@ -1,5 +1,4 @@
 const { store } = require("@blossm/mongodb-database");
-const { get: secret } = require("@blossm/gcp-secret");
 const { string: dateString } = require("@blossm/datetime");
 const eventStore = require("@blossm/event-store");
 const saveEvents = require("@blossm/mongodb-event-store-save-events");
@@ -11,7 +10,6 @@ const rootStream = require("@blossm/mongodb-event-store-root-stream");
 const count = require("@blossm/mongodb-event-store-count");
 const formatSchema = require("@blossm/format-mongodb-schema");
 
-exports.secret = secret;
 exports.dateString = dateString;
 exports.eventStore = eventStore;
 exports.db = { store };
