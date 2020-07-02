@@ -19,6 +19,7 @@ describe("Format schema", () => {
       v: { n: Number },
       d: String,
       p: [{ type: String }],
+      t: { type: String, unique: true },
       u: [{ g: Number }],
       g: { a: { b: Number } },
       h: { a: { b: String, c: String, d: String } },
@@ -60,6 +61,7 @@ describe("Format schema", () => {
       v: { [typeKey]: { n: Number, _id: false } },
       d: { [typeKey]: String },
       p: { [typeKey]: [{ [typeKey]: String }] },
+      t: { [typeKey]: String, unique: true },
       u: { [typeKey]: [{ [typeKey]: { g: Number, _id: false } }] },
       g: {
         [typeKey]: { a: { [typeKey]: { b: Number, _id: false } }, _id: false },
