@@ -8,7 +8,7 @@ let _countsStore;
 
 const typeKey = "$type";
 
-const eventStore = async ({ schema, indexes }) => {
+const eventStore = async ({ schema, indexes, secretFn }) => {
   if (_eventStore != undefined) {
     logger.info("Thank you existing event store database.");
     return _eventStore;
@@ -81,7 +81,7 @@ const eventStore = async ({ schema, indexes }) => {
       password:
         process.env.NODE_ENV == "local"
           ? process.env.MONGODB_USER_PASSWORD
-          : await deps.secret("mongodb-event-store"),
+          : await secretFn("mongodb-event-store"),
       host: process.env.MONGODB_HOST,
       database: process.env.MONGODB_DATABASE,
       parameters: { authSource: "admin", retryWrites: true, w: "majority" },
@@ -148,6 +148,7 @@ module.exports = async ({
   schema,
   indexes = [],
   handlers,
+  secretFn,
   publishFn,
   // archiveSnapshotFn,
   // archiveEventsFn
@@ -161,6 +162,7 @@ module.exports = async ({
       },
     }),
     indexes,
+    secretFn,
   });
   const sStore = await snapshotStore({
     schema: deps.formatSchema(schema, typeKey),

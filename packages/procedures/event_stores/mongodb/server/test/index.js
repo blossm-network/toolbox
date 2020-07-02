@@ -53,7 +53,6 @@ describe("Mongodb event store", () => {
       .returns(cStore);
 
     const secretFake = fake.returns(password);
-    replace(deps, "secret", secretFake);
 
     const eventStoreFake = fake();
     replace(deps, "eventStore", eventStoreFake);
@@ -94,7 +93,12 @@ describe("Mongodb event store", () => {
     replace(deps, "formatSchema", formatSchemaFake);
 
     const schema = { a: String };
-    await mongodbEventStore({ schema, handlers, publishFn });
+    await mongodbEventStore({
+      schema,
+      handlers,
+      secretFn: secretFake,
+      publishFn,
+    });
 
     expect(formatSchemaFake.getCall(0)).to.have.been.calledWith(
       schema,
@@ -246,7 +250,6 @@ describe("Mongodb event store", () => {
       .returns(sStore);
 
     const secretFake = fake.returns(password);
-    replace(deps, "secret", secretFake);
 
     const eventStoreFake = fake();
     replace(deps, "eventStore", eventStoreFake);
@@ -281,7 +284,12 @@ describe("Mongodb event store", () => {
     process.env.NODE_ENV = "local";
 
     const schema = { a: String };
-    await mongodbEventStore({ schema, indexes: [index], publishFn });
+    await mongodbEventStore({
+      schema,
+      indexes: [index],
+      secretFn: secretFake,
+      publishFn,
+    });
 
     expect(formatSchemaFake.getCall(0)).to.have.been.calledWith(
       schema,
@@ -402,7 +410,6 @@ describe("Mongodb event store", () => {
       .returns(sStore);
 
     const secretFake = fake.returns(password);
-    replace(deps, "secret", secretFake);
 
     const eventStoreFake = fake();
     replace(deps, "eventStore", eventStoreFake);
@@ -433,7 +440,7 @@ describe("Mongodb event store", () => {
     const streamFake = fake.returns(streamResult);
     replace(deps, "stream", streamFake);
     const schema = { a: { type: String } };
-    await mongodbEventStore({ schema, publishFn });
+    await mongodbEventStore({ schema, secretFn: secretFake, publishFn });
 
     expect(formatSchemaFake.getCall(0)).to.have.been.calledWith(
       schema,

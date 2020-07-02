@@ -33,7 +33,7 @@ module.exports = ({
       newSeenEventNumber = event.headers.number;
     });
 
-    if (state) await commitFn(state);
+    if (state && commitFn) await commitFn(state);
 
     if (newSeenEventNumber != undefined)
       await saveNextEventNumberFn({ root, from: newSeenEventNumber });

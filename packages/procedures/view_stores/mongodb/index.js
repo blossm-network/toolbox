@@ -6,7 +6,7 @@ let _viewStore;
 
 const typeKey = "$type";
 
-const viewStore = async ({ schema, indexes }) => {
+const viewStore = async ({ schema, indexes, secretFn }) => {
   if (_viewStore != undefined) {
     logger.info("Thank you existing database.");
     return _viewStore;
@@ -60,7 +60,7 @@ const viewStore = async ({ schema, indexes }) => {
       password:
         process.env.NODE_ENV == "local"
           ? process.env.MONGODB_USER_PASSWORD
-          : await deps.secret("mongodb-view-store"),
+          : await secretFn("mongodb-view-store"),
       host: process.env.MONGODB_HOST,
       database: process.env.MONGODB_DATABASE,
       parameters: { authSource: "admin", retryWrites: true, w: "majority" },
@@ -70,7 +70,14 @@ const viewStore = async ({ schema, indexes }) => {
   return _viewStore;
 };
 
-module.exports = async ({ schema, indexes, getFn, putFn, one } = {}) => {
+module.exports = async ({
+  schema,
+  indexes,
+  secretFn,
+  getFn,
+  putFn,
+  one,
+} = {}) => {
   const allIndexes = [
     [{ root: 1 }],
     [
@@ -106,6 +113,7 @@ module.exports = async ({ schema, indexes, getFn, putFn, one } = {}) => {
   const store = await viewStore({
     schema,
     indexes: allIndexes,
+    secretFn,
   });
 
   const streamFn = async ({ query, sort, parallel, fn }) => {

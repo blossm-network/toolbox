@@ -15,7 +15,6 @@
   },
   "dependencies": {
     "@blossm/event-handler": "^0.0.186",
-    "@blossm/gcp-secret": "^0.0.47",
     "@blossm/logger": "^0.0.8",
     "@blossm/mongodb-database": "^0.0.67"
   },

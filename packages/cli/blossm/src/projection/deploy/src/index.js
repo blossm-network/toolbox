@@ -5,6 +5,7 @@ const eventStore = require("@blossm/event-store-rpc");
 const gcpToken = require("@blossm/gcp-token");
 const nodeExternalToken = require("@blossm/node-external-token");
 const channelName = require("@blossm/channel-name");
+const { get: secret } = require("@blossm/gcp-secret");
 
 const handlers = require("./handlers.js");
 
@@ -101,4 +102,5 @@ module.exports = eventHandler({
         token: { internalFn: gcpToken },
       })
       .stream(fn, { root, from }),
+  secretFn: secret,
 });

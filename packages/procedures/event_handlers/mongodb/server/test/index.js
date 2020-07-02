@@ -53,7 +53,6 @@ describe("Event handler", () => {
     replace(deps, "db", db);
 
     const secretFake = fake.returns(password);
-    replace(deps, "secret", secretFake);
 
     const eventHandlerFake = fake();
     replace(deps, "eventHandler", eventHandlerFake);
@@ -66,6 +65,7 @@ describe("Event handler", () => {
       mainFn,
       commitFn,
       streamFn,
+      secretFn: secretFake,
     });
 
     expect(storeFake).to.have.been.calledWith({
@@ -151,7 +151,6 @@ describe("Event handler", () => {
     replace(deps, "db", db);
 
     const secretFake = fake.returns(password);
-    replace(deps, "secret", secretFake);
 
     const eventHandlerFake = fake();
     replace(deps, "eventHandler", eventHandlerFake);
@@ -164,6 +163,7 @@ describe("Event handler", () => {
       mainFn,
       commitFn,
       streamFn,
+      secretFn: secretFake,
     });
 
     expect(storeFake).to.have.been.calledWith({
@@ -250,7 +250,6 @@ describe("Event handler", () => {
     replace(deps, "db", db);
 
     const secretFake = fake.returns(password);
-    replace(deps, "secret", secretFake);
 
     const eventHandlerFake = fake();
     replace(deps, "eventHandler", eventHandlerFake);
@@ -267,6 +266,7 @@ describe("Event handler", () => {
       mainFn,
       commitFn,
       streamFn,
+      secretFn: secretFake,
     });
 
     expect(storeFake).to.have.been.calledWith({

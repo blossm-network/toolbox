@@ -6,7 +6,7 @@ let _numberStore;
 
 const typeKey = "$type";
 
-const numberStore = async () => {
+const numberStore = async ({ secretFn }) => {
   if (_numberStore != undefined) {
     logger.info("Thank you existing count store database.");
     return _numberStore;
@@ -30,7 +30,7 @@ const numberStore = async () => {
       password:
         process.env.NODE_ENV == "local"
           ? process.env.MONGODB_USER_PASSWORD
-          : await deps.secret("mongodb-event-handler"),
+          : await secretFn("mongodb-event-handler"),
       host: process.env.MONGODB_HOST,
       database: process.env.MONGODB_DATABASE,
       parameters: { authSource: "admin", retryWrites: true, w: "majority" },
@@ -41,8 +41,8 @@ const numberStore = async () => {
   return _numberStore;
 };
 
-module.exports = async ({ mainFn, commitFn, streamFn } = {}) => {
-  const store = await numberStore();
+module.exports = async ({ mainFn, commitFn, streamFn, secretFn } = {}) => {
+  const store = await numberStore({ secretFn });
 
   const nextEventNumberFn = async ({ root }) => {
     const [{ number } = { number: 0 }] = await deps.db.find({

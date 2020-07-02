@@ -90,7 +90,6 @@ describe("View store", () => {
     replace(deps, "db", db);
 
     const secretFake = fake.returns(password);
-    replace(deps, "secret", secretFake);
 
     const dateString = "some-date";
     const dateStringFake = fake.returns(dateString);
@@ -109,6 +108,7 @@ describe("View store", () => {
     await mongodbViewStore({
       schema,
       indexes,
+      secretFn: secretFake,
       getFn,
       putFn,
       one,
@@ -315,7 +315,6 @@ describe("View store", () => {
     replace(deps, "db", db);
 
     const secretFake = fake.returns(password);
-    replace(deps, "secret", secretFake);
 
     const dateString = "some-date";
     const dateStringFake = fake.returns(dateString);
@@ -337,6 +336,7 @@ describe("View store", () => {
     await mongodbViewStore({
       schema,
       indexes,
+      secretFn: secretFake,
       getFn,
       putFn,
     });
@@ -433,7 +433,6 @@ describe("View store", () => {
     replace(deps, "db", db);
 
     const secretFake = fake.returns(password);
-    replace(deps, "secret", secretFake);
 
     const dateString = "some-date";
     const dateStringFake = fake.returns(dateString);
@@ -456,7 +455,13 @@ describe("View store", () => {
       e: { type: [{ type: { type: String } }] },
       f: [{ g: 1 }],
     };
-    await mongodbViewStore({ schema, indexes, getFn, putFn });
+    await mongodbViewStore({
+      schema,
+      indexes,
+      secretFn: secretFake,
+      getFn,
+      putFn,
+    });
 
     expect(formatSchemaFake).to.have.been.calledWith(schema, "$type");
     expect(storeFake).to.have.been.calledWith({
@@ -563,7 +568,6 @@ describe("View store", () => {
     replace(deps, "db", db);
 
     const secretFake = fake.returns(password);
-    replace(deps, "secret", secretFake);
 
     const dateString = "some-date";
     const dateStringFake = fake.returns(dateString);
@@ -576,7 +580,7 @@ describe("View store", () => {
     const formatSchemaFake = fake.returns(formattedSchema);
     replace(deps, "formatSchema", formatSchemaFake);
 
-    await mongodbViewStore({ schema, indexes });
+    await mongodbViewStore({ schema, indexes, secretFn: secretFake });
 
     expect(formatSchemaFake).to.have.been.calledWith(schema, "$type");
     expect(storeFake).to.have.been.calledWith({
@@ -768,7 +772,6 @@ describe("View store", () => {
     replace(deps, "db", db);
 
     const secretFake = fake.returns(password);
-    replace(deps, "secret", secretFake);
 
     const dateString = "some-date";
     const dateStringFake = fake.returns(dateString);
@@ -781,7 +784,7 @@ describe("View store", () => {
     const formatSchemaFake = fake.returns(formattedSchema);
     replace(deps, "formatSchema", formatSchemaFake);
 
-    await mongodbViewStore({ schema, indexes });
+    await mongodbViewStore({ schema, indexes, secretFn: secretFake });
 
     expect(formatSchemaFake).to.have.been.calledWith(schema, "$type");
     expect(storeFake).to.have.been.calledWith({
