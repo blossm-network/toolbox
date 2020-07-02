@@ -1,17 +1,13 @@
 #
-# Specify the name and context of this projection, and optionally the
-# domain and service.
+# Specify the name and context of this projection.
 #
 name: some-name
-domain: some-optional-domain
-service: some-optional-service
 context: some-context
 
 #
 # Set the event-store from which this projection will listen for events.
 #
 store:
-  action: some-event-action
   domain: some-event-domain
   service: core
 

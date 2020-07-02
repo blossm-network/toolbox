@@ -1,12 +1,6 @@
 const deps = require("./deps");
 
-module.exports = ({
-  name,
-  domain,
-  service,
-  context = process.env.CONTEXT,
-  network,
-}) => {
+module.exports = ({ name, context = process.env.CONTEXT, network }) => {
   const internal = !network || network == process.env.NETWORK;
   const read = ({
     contexts,
@@ -18,13 +12,7 @@ module.exports = ({
     } = {},
   } = {}) => ({ query, sort, root } = {}) =>
     deps
-      .rpc(
-        name,
-        ...(domain ? [domain] : []),
-        ...(service ? [service] : []),
-        context,
-        "view-store"
-      )
+      .rpc(name, context, "view-store")
       .get({
         ...(query && { query }),
         ...(sort && { sort }),
@@ -34,7 +22,7 @@ module.exports = ({
         ...(contexts && { context: contexts }),
         ...(!internal && {
           network,
-          host: `v${domain ? `.${domain}` : ""}.${context}.${network}`,
+          host: `v.${context}.${network}`,
         }),
       })
       .with({
@@ -85,13 +73,7 @@ module.exports = ({
     token: { internalFn: internalTokenFn } = {},
   } = {}) => (root, view) =>
     deps
-      .rpc(
-        name,
-        ...(domain ? [domain] : []),
-        ...(service ? [service] : []),
-        context,
-        "view-store"
-      )
+      .rpc(name, context, "view-store")
       .put(root, { view })
       .in({
         ...(contexts && { context: contexts }),
@@ -104,13 +86,7 @@ module.exports = ({
     token: { internalFn: internalTokenFn } = {},
   } = {}) => (root) =>
     deps
-      .rpc(
-        name,
-        ...(domain ? [domain] : []),
-        ...(service ? [service] : []),
-        context,
-        "view-store"
-      )
+      .rpc(name, context, "view-store")
       .delete(root)
       .in({
         ...(contexts && { context: contexts }),

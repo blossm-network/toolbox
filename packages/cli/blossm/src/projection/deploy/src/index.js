@@ -16,10 +16,11 @@ module.exports = eventHandler({
     if (!handlers[event.headers.action]) return state;
 
     const {
-      [process.env.DOMAIN]: {
-        root: domainRoot,
-        service: domainService,
-        network: domainNetwork,
+      source: {
+        root: sourceRoot,
+        domain: sourceDomain,
+        service: sourceService,
+        network: sourceNetwork,
       } = {},
       body,
     } = handlers[event.headers.action](state, event);
@@ -32,15 +33,25 @@ module.exports = eventHandler({
           event.headers.context[process.env.CONTEXT] && {
             [process.env.CONTEXT]: event.headers.context[process.env.CONTEXT],
           }),
-        ...(process.env.DOMAIN &&
-          domainRoot &&
-          domainService &&
-          domainNetwork && {
-            [process.env.DOMAIN]: {
-              root: domainRoot,
-              service: domainService,
-              network: domainNetwork,
-            },
+        ...(sourceRoot &&
+          sourceDomain &&
+          sourceService &&
+          sourceNetwork && {
+            sources: [
+              ...state.headers.sources.filter(
+                (source) =>
+                  source.root != sourceRoot &&
+                  source.domain != sourceDomain &&
+                  source.service != sourceService &&
+                  source.network != sourceNetwork
+              ),
+              {
+                root: sourceRoot,
+                domain: sourceDomain,
+                service: sourceService,
+                network: sourceNetwork,
+              },
+            ],
           }),
       },
       body,
@@ -49,8 +60,6 @@ module.exports = eventHandler({
   commitFn: async (state) => {
     const { body: newView } = await viewStore({
       name: config.name,
-      ...(config.domain && { domain: config.domain }),
-      ...(config.service && { service: config.service }),
       context: config.context,
     })
       .set({
@@ -61,37 +70,52 @@ module.exports = eventHandler({
         body: state.body,
       });
 
-    const channel = channelName({
-      name: process.env.NAME,
-      ...(process.env.DOMAIN && {
-        domain: process.env.DOMAIN,
-        domainRoot: newView.headers[process.env.DOMAIN].root,
-        domainService: newView.headers[process.env.DOMAIN].service,
-        domainNetwork: newView.headers[process.env.DOMAIN].network,
-      }),
-      context: process.env.CONTEXT,
-      contextRoot: newView.headers[process.env.CONTEXT].root,
-      contextService: newView.headers[process.env.CONTEXT].service,
-      contextNetwork: newView.headers[process.env.CONTEXT].network,
-    });
-
-    command({
-      name: "push",
-      domain: "updates",
-      service: "system",
-      network: process.env.CORE_NETWORK,
-    })
-      .set({
-        token: {
-          externalFn: nodeExternalToken,
-          internalFn: gcpToken,
-          key: "access",
-        },
-      })
-      .issue({
-        view: newView,
-        channel,
+    const channels = [];
+    if (newView.headers.sources.length > 0) {
+      for (const source of newView.headers.sources) {
+        const channel = channelName({
+          name: process.env.NAME,
+          sourceRoot: source.root,
+          sourceDomain: source.domain,
+          sourceService: source.service,
+          sourceNetwork: source.network,
+          context: process.env.CONTEXT,
+          contextRoot: newView.headers[process.env.CONTEXT].root,
+          contextService: newView.headers[process.env.CONTEXT].service,
+          contextNetwork: newView.headers[process.env.CONTEXT].network,
+        });
+        channels.push(channel);
+      }
+    } else {
+      const channel = channelName({
+        name: process.env.NAME,
+        context: process.env.CONTEXT,
+        contextRoot: newView.headers[process.env.CONTEXT].root,
+        contextService: newView.headers[process.env.CONTEXT].service,
+        contextNetwork: newView.headers[process.env.CONTEXT].network,
       });
+      channels.push(channel);
+    }
+
+    for (const channel of channels) {
+      command({
+        name: "push",
+        domain: "updates",
+        service: "system",
+        network: process.env.CORE_NETWORK,
+      })
+        .set({
+          token: {
+            externalFn: nodeExternalToken,
+            internalFn: gcpToken,
+            key: "access",
+          },
+        })
+        .issue({
+          view: newView,
+          channel,
+        });
+    }
   },
   streamFn: ({ root, from }, fn) =>
     eventStore({

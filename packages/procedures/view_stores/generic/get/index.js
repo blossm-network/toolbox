@@ -28,15 +28,9 @@ module.exports = ({
         service: context.service,
         network: context.network,
       },
-      ...(req.params.root &&
-        process.env.DOMAIN &&
-        process.env.SERVICE && {
-          [`headers.${process.env.DOMAIN}`]: {
-            root: req.params.root,
-            service: process.env.SERVICE,
-            network: process.env.NETWORK,
-          },
-        }),
+      ...(req.params.root && {
+        "headers.sources.root": req.params.root,
+      }),
     };
 
     if (req.query.limit) req.query.limit = parseInt(req.query.limit);

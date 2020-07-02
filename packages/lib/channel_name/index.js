@@ -1,16 +1,16 @@
 module.exports = ({
   name,
-  domain,
-  domainRoot,
-  domainService,
-  domainNetwork,
+  sourceRoot,
+  sourceDomain,
+  sourceService,
+  sourceNetwork,
   context,
   contextRoot,
   contextService,
   contextNetwork,
 }) =>
-  `${name}${domain ? `.${domain}` : ""}${domainRoot ? `.${domainRoot}` : ""}${
-    domainService ? `.${domainService}` : ""
-  }${
-    domainNetwork ? `.${domainNetwork}` : ""
+  `${name}${sourceRoot ? `.${sourceRoot}` : ""}${
+    sourceDomain ? `.${sourceDomain}` : ""
+  }${sourceService ? `.${sourceService}` : ""}${
+    sourceNetwork ? `.${sourceNetwork}` : ""
   }.${context}.${contextRoot}.${contextService}.${contextNetwork}`;

@@ -1,10 +1,7 @@
 #
-# Give your view-store a unique name, and specify which context it's in. Optionally add the
-# domain and service.
+# Give your view-store a unique name, and specify which context it's in.
 #
 name: some-name
-domain: some-optional-domain
-service: some-optional-service
 context: some-context
 
 #

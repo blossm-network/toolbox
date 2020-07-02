@@ -29,16 +29,19 @@ const viewStore = async ({ schema, indexes, secretFn }) => {
             _id: false,
           },
         },
-        ...(process.env.DOMAIN && {
-          [process.env.DOMAIN]: {
-            [typeKey]: {
-              root: String,
-              service: String,
-              network: String,
-              _id: false,
+        sources: {
+          [typeKey]: {
+            root: {
+              [typeKey]: String,
+              unique: true,
             },
+            domain: String,
+            service: String,
+            network: String,
+            _id: false,
           },
-        }),
+          default: [],
+        },
         created: {
           [typeKey]: Date,
           required: true,
@@ -85,15 +88,7 @@ module.exports = async ({
       { [`headers.${process.env.CONTEXT}.service`]: 1 },
       { [`headers.${process.env.CONTEXT}.network`]: 1 },
     ],
-    ...(process.env.DOMAIN
-      ? [
-          [
-            { [`headers.${process.env.DOMAIN}.root`]: 1 },
-            { [`headers.${process.env.DOMAIN}.service`]: 1 },
-            { [`headers.${process.env.DOMAIN}.network`]: 1 },
-          ],
-        ]
-      : []),
+    [{ [`headers.sources.root`]: 1 }],
   ];
 
   if (indexes) {

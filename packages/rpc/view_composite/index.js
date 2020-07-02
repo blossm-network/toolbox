@@ -1,6 +1,6 @@
 const deps = require("./deps");
 
-module.exports = ({ name, domain, service, context = process.env.CONTEXT }) => {
+module.exports = ({ name, context = process.env.CONTEXT }) => {
   const read = ({
     contexts,
     currentToken,
@@ -11,13 +11,7 @@ module.exports = ({ name, domain, service, context = process.env.CONTEXT }) => {
     } = {},
   } = {}) => ({ query, sort, root }) =>
     deps
-      .rpc(
-        name,
-        ...(domain ? [domain] : []),
-        ...(service ? [service] : []),
-        context,
-        "view-composite"
-      )
+      .rpc(name, context, "view-composite")
       .get({ query, ...(sort && { sort }), ...(root && { id: root }) })
       .in({
         ...(contexts && { context: contexts }),
