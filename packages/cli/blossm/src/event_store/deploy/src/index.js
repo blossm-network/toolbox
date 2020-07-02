@@ -8,6 +8,6 @@ module.exports = eventStore({
   schema: config.schema,
   indexes: config.indexes,
   handlers,
-  secretfn: secret,
+  secretFn: secret,
   publishFn: pubsub.publish,
 });
