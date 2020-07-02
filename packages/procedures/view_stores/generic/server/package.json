@@ -15,7 +15,6 @@
   },
   "dependencies": {
     "@blossm/datetime": "^0.0.5",
-    "@blossm/gcp-secret": "^0.0.47",
     "@blossm/logger": "^0.0.8",
     "@blossm/server": "^0.0.23",
     "@blossm/view-store-delete": "^0.0.47",
