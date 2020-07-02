@@ -123,21 +123,26 @@ describe("View store", () => {
           _id: false,
           root: { $type: String, required: true, unique: true },
           trace: { $type: String },
-          [context]: {
+          context: {
             $type: {
               root: String,
+              domain: String,
               service: String,
               network: String,
               _id: false,
             },
           },
-          [domain]: {
-            $type: {
-              root: String,
-              service: String,
-              network: String,
-              _id: false,
-            },
+          sources: {
+            $type: [
+              {
+                root: String,
+                domain: String,
+                service: String,
+                network: String,
+                _id: false,
+              },
+            ],
+            default: [],
           },
           created: {
             $type: Date,
@@ -161,14 +166,16 @@ describe("View store", () => {
       indexes: [
         [{ root: 1 }],
         [
-          { "headers.some-context.root": 1 },
-          { "headers.some-context.service": 1 },
-          { "headers.some-context.network": 1 },
+          { "headers.context.root": 1 },
+          { "headers.context.domain": 1 },
+          { "headers.context.service": 1 },
+          { "headers.context.network": 1 },
         ],
         [
-          { "headers.some-domain.root": 1 },
-          { "headers.some-domain.service": 1 },
-          { "headers.some-domain.network": 1 },
+          { "headers.sources.root": 1 },
+          { "headers.sources.domain": 1 },
+          { "headers.sources.service": 1 },
+          { "headers.sources.network": 1 },
         ],
         [{ "body.some-index": 1 }],
       ],
@@ -350,13 +357,26 @@ describe("View store", () => {
           _id: false,
           root: { $type: String, required: true, unique: true },
           trace: { $type: String },
-          [context]: {
+          context: {
             $type: {
               root: String,
+              domain: String,
               service: String,
               network: String,
               _id: false,
             },
+          },
+          sources: {
+            $type: [
+              {
+                root: String,
+                domain: String,
+                service: String,
+                network: String,
+                _id: false,
+              },
+            ],
+            default: [],
           },
           created: {
             $type: Date,
@@ -380,9 +400,16 @@ describe("View store", () => {
       indexes: [
         [{ root: 1 }],
         [
-          { "headers.some-context.root": 1 },
-          { "headers.some-context.service": 1 },
-          { "headers.some-context.network": 1 },
+          { "headers.context.root": 1 },
+          { "headers.context.domain": 1 },
+          { "headers.context.service": 1 },
+          { "headers.context.network": 1 },
+        ],
+        [
+          { [`headers.sources.root`]: 1 },
+          { [`headers.sources.domain`]: 1 },
+          { [`headers.sources.service`]: 1 },
+          { [`headers.sources.network`]: 1 },
         ],
         [{ "body.some-index": 1 }],
       ],
@@ -472,21 +499,26 @@ describe("View store", () => {
           _id: false,
           root: { $type: String, required: true, unique: true },
           trace: { $type: String },
-          [context]: {
+          context: {
             $type: {
               root: String,
+              domain: String,
               service: String,
               network: String,
               _id: false,
             },
           },
-          [domain]: {
-            $type: {
-              root: String,
-              service: String,
-              network: String,
-              _id: false,
-            },
+          sources: {
+            $type: [
+              {
+                root: String,
+                domain: String,
+                service: String,
+                network: String,
+                _id: false,
+              },
+            ],
+            default: [],
           },
           created: {
             $type: Date,
@@ -510,14 +542,16 @@ describe("View store", () => {
       indexes: [
         [{ root: 1 }],
         [
-          { "headers.some-context.root": 1 },
-          { "headers.some-context.service": 1 },
-          { "headers.some-context.network": 1 },
+          { "headers.context.root": 1 },
+          { "headers.context.domain": 1 },
+          { "headers.context.service": 1 },
+          { "headers.context.network": 1 },
         ],
         [
-          { "headers.some-domain.root": 1 },
-          { "headers.some-domain.service": 1 },
-          { "headers.some-domain.network": 1 },
+          { "headers.sources.root": 1 },
+          { "headers.sources.domain": 1 },
+          { "headers.sources.service": 1 },
+          { "headers.sources.network": 1 },
         ],
         [{ "body.some-index": 1 }],
       ],
@@ -591,21 +625,26 @@ describe("View store", () => {
           _id: false,
           root: { $type: String, required: true, unique: true },
           trace: { $type: String },
-          [context]: {
+          context: {
             $type: {
               root: String,
+              domain: String,
               service: String,
               network: String,
               _id: false,
             },
           },
-          [domain]: {
-            $type: {
-              root: String,
-              service: String,
-              network: String,
-              _id: false,
-            },
+          sources: {
+            $type: [
+              {
+                root: String,
+                domain: String,
+                service: String,
+                network: String,
+                _id: false,
+              },
+            ],
+            default: [],
           },
           created: {
             $type: Date,
@@ -629,14 +668,16 @@ describe("View store", () => {
       indexes: [
         [{ root: 1 }],
         [
-          { "headers.some-context.root": 1 },
-          { "headers.some-context.service": 1 },
-          { "headers.some-context.network": 1 },
+          { "headers.context.root": 1 },
+          { "headers.context.domain": 1 },
+          { "headers.context.service": 1 },
+          { "headers.context.network": 1 },
         ],
         [
-          { "headers.some-domain.root": 1 },
-          { "headers.some-domain.service": 1 },
-          { "headers.some-domain.network": 1 },
+          { "headers.sources.root": 1 },
+          { "headers.sources.domain": 1 },
+          { "headers.sources.service": 1 },
+          { "headers.sources.network": 1 },
         ],
         [{ "body.some-index": 1 }],
       ],
@@ -795,21 +836,26 @@ describe("View store", () => {
           _id: false,
           root: { $type: String, required: true, unique: true },
           trace: { $type: String },
-          [context]: {
+          context: {
             $type: {
               root: String,
+              domain: String,
               service: String,
               network: String,
               _id: false,
             },
           },
-          [domain]: {
-            $type: {
-              root: String,
-              service: String,
-              network: String,
-              _id: false,
-            },
+          sources: {
+            $type: [
+              {
+                root: String,
+                domain: String,
+                service: String,
+                network: String,
+                _id: false,
+              },
+            ],
+            default: [],
           },
           created: {
             $type: Date,
@@ -833,14 +879,16 @@ describe("View store", () => {
       indexes: [
         [{ root: 1 }],
         [
-          { "headers.some-context.root": 1 },
-          { "headers.some-context.service": 1 },
-          { "headers.some-context.network": 1 },
+          { "headers.context.root": 1 },
+          { "headers.context.domain": 1 },
+          { "headers.context.service": 1 },
+          { "headers.context.network": 1 },
         ],
         [
-          { "headers.some-domain.root": 1 },
-          { "headers.some-domain.service": 1 },
-          { "headers.some-domain.network": 1 },
+          { "headers.sources.root": 1 },
+          { "headers.sources.domain": 1 },
+          { "headers.sources.service": 1 },
+          { "headers.sources.network": 1 },
         ],
         [{ "body.some-index": 1 }],
       ],

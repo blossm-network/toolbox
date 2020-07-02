@@ -5,8 +5,6 @@ const deps = require("../deps");
 const viewComposite = require("..");
 
 const name = "some-name";
-const domain = "some-domain";
-const service = "some-service";
 const context = "some-context";
 
 const internalTokenFn = "some-internal-token-fn";
@@ -43,8 +41,6 @@ describe("Get composite views", () => {
 
     const { body: result } = await viewComposite({
       name,
-      domain,
-      service,
       context,
     })
       .set({
@@ -58,13 +54,7 @@ describe("Get composite views", () => {
       })
       .read({ query, sort, root });
 
-    expect(rpcFake).to.have.been.calledWith(
-      name,
-      domain,
-      service,
-      context,
-      "view-composite"
-    );
+    expect(rpcFake).to.have.been.calledWith(name, context, "view-composite");
     expect(getFake).to.have.been.calledWith({ query, sort, id: root });
     expect(inFake).to.have.been.calledWith({ context: contexts });
     expect(withFake).to.have.been.calledWith({

@@ -72,10 +72,11 @@ describe("View store", () => {
     expect(listenFake).to.have.been.calledOnce;
     expect(serverFake).to.have.been.calledOnce;
     expect(firstGetFake).to.have.been.calledWith(viewStoreStreamResult, {
-      path: "/stream/:root?",
+      path:
+        "/stream/:sourceNetwork?/:sourceService?/:sourceDomain?/:sourceRoot?",
     });
     expect(secondGetFake).to.have.been.calledWith(viewStoreGetResult, {
-      path: "/:root?",
+      path: "/:sourceNetwork?/:sourceService?/:sourceDomain?/:sourceRoot?",
     });
     expect(putFake).to.have.been.calledWith(viewStorePutResult, {
       path: "/:root",
@@ -154,7 +155,8 @@ describe("View store", () => {
     expect(serverFake).to.have.been.calledOnce;
     expect(secondGetFake).to.have.been.calledWith(viewStoreGetResult);
     expect(firstGetFake).to.have.been.calledWith(viewStoreStreamResult, {
-      path: "/stream/:root?",
+      path:
+        "/stream/:sourceNetwork?/:sourceService?/:sourceDomain?/:sourceRoot?",
     });
     expect(putFake).to.have.been.calledWith(viewStorePutResult, {
       path: "/:root",

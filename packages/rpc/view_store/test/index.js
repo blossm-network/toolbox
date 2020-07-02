@@ -5,8 +5,6 @@ const deps = require("../deps");
 const viewStore = require("..");
 
 const name = "some-name";
-const domain = "some-domain";
-const service = "some-service";
 const context = "some-context";
 const network = "some-network";
 
@@ -46,8 +44,6 @@ describe("Get views", () => {
 
     const { body: result } = await viewStore({
       name,
-      domain,
-      service,
       context,
       network,
     })
@@ -62,13 +58,7 @@ describe("Get views", () => {
       })
       .read({ query, sort, root });
 
-    expect(rpcFake).to.have.been.calledWith(
-      name,
-      domain,
-      service,
-      context,
-      "view-store"
-    );
+    expect(rpcFake).to.have.been.calledWith(name, context, "view-store");
     expect(getFake).to.have.been.calledWith({ query, sort, id: root });
     expect(inFake).to.have.been.calledWith({ context: contexts });
     expect(withFake).to.have.been.calledWith({
@@ -273,7 +263,7 @@ describe("Get views", () => {
     });
     replace(deps, "rpc", rpcFake);
 
-    await viewStore({ name, domain, service, context })
+    await viewStore({ name, context })
       .set({
         context: contexts,
         token: {
@@ -282,13 +272,7 @@ describe("Get views", () => {
       })
       .update(root, view);
 
-    expect(rpcFake).to.have.been.calledWith(
-      name,
-      domain,
-      service,
-      context,
-      "view-store"
-    );
+    expect(rpcFake).to.have.been.calledWith(name, context, "view-store");
     expect(putFake).to.have.been.calledWith(root, { view });
     expect(inFake).to.have.been.calledWith({ context: contexts });
     expect(withFake).to.have.been.calledWith({
@@ -328,7 +312,7 @@ describe("Get views", () => {
     });
     replace(deps, "rpc", rpcFake);
 
-    await viewStore({ name, domain, service, context })
+    await viewStore({ name, context })
       .set({
         context: contexts,
         token: {
@@ -337,13 +321,7 @@ describe("Get views", () => {
       })
       .delete(root);
 
-    expect(rpcFake).to.have.been.calledWith(
-      name,
-      domain,
-      service,
-      context,
-      "view-store"
-    );
+    expect(rpcFake).to.have.been.calledWith(name, context, "view-store");
     expect(deleteFake).to.have.been.calledWith(root);
     expect(inFake).to.have.been.calledWith({ context: contexts });
     expect(withFake).to.have.been.calledWith({

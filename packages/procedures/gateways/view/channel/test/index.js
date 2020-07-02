@@ -49,21 +49,23 @@ describe("View gateway get", () => {
     expect(sendFake).to.have.been.calledWith(channelName);
     expect(channelNameFake).to.have.been.calledWith({
       name,
-      context,
-      contextRoot: queryContextRoot,
-      contextService: queryContextService,
-      contextNetwork: queryContextNetwork,
+      context: {
+        root: queryContextRoot,
+        domain: context,
+        service: queryContextService,
+        network: queryContextNetwork,
+      },
     });
   });
-  it("should call with the correct params with domain and service", async () => {
+  it("should call with the correct params with source", async () => {
     const queryContextRoot = "some-query-context-root";
     const queryContextService = "some-query-context-service";
     const queryContextNetwork = "some-query-context-network";
-    const queryDomainRoot = "some-query-domain-root";
-    const queryDomainService = "some-query-domain-service";
-    const queryDomainNetwork = "some-query-domain-network";
+    const querySourceRoot = "some-query-source-root";
+    const querySourceDomain = "some-query-source-domain";
+    const querySourceService = "some-query-source-service";
+    const querySourceNetwork = "some-query-source-network";
 
-    const domain = "some-domain";
     const queryContext = {
       [context]: {
         root: queryContextRoot,
@@ -75,10 +77,11 @@ describe("View gateway get", () => {
     const query = {
       name,
       context: queryContext,
-      [domain]: {
-        root: queryDomainRoot,
-        service: queryDomainService,
-        network: queryDomainNetwork,
+      source: {
+        root: querySourceRoot,
+        domain: querySourceDomain,
+        service: querySourceService,
+        network: querySourceNetwork,
       },
     };
 
@@ -98,21 +101,23 @@ describe("View gateway get", () => {
     const channelNameFake = fake.returns(channelName);
     replace(deps, "channelName", channelNameFake);
 
-    process.env.DOMAIN = domain;
-
     await get(req, res);
 
     expect(sendFake).to.have.been.calledWith(channelName);
     expect(channelNameFake).to.have.been.calledWith({
       name,
-      domain,
-      domainRoot: queryDomainRoot,
-      domainService: queryDomainService,
-      domainNetwork: queryDomainNetwork,
-      context,
-      contextRoot: queryContextRoot,
-      contextService: queryContextService,
-      contextNetwork: queryContextNetwork,
+      source: {
+        root: querySourceRoot,
+        domain: querySourceDomain,
+        service: querySourceService,
+        network: querySourceNetwork,
+      },
+      context: {
+        root: queryContextRoot,
+        domain: context,
+        service: queryContextService,
+        network: queryContextNetwork,
+      },
     });
   });
   it("should throw if no context", async () => {

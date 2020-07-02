@@ -21,25 +21,25 @@ const viewStore = async ({ schema, indexes, secretFn }) => {
       headers: {
         root: { [typeKey]: String, required: true, unique: true },
         trace: { [typeKey]: String },
-        [process.env.CONTEXT]: {
+        context: {
           [typeKey]: {
             root: String,
+            domain: String,
             service: String,
             network: String,
             _id: false,
           },
         },
         sources: {
-          [typeKey]: {
-            root: {
-              [typeKey]: String,
-              unique: true,
+          [typeKey]: [
+            {
+              root: String,
+              domain: String,
+              service: String,
+              network: String,
+              _id: false,
             },
-            domain: String,
-            service: String,
-            network: String,
-            _id: false,
-          },
+          ],
           default: [],
         },
         created: {
@@ -84,11 +84,17 @@ module.exports = async ({
   const allIndexes = [
     [{ root: 1 }],
     [
-      { [`headers.${process.env.CONTEXT}.root`]: 1 },
-      { [`headers.${process.env.CONTEXT}.service`]: 1 },
-      { [`headers.${process.env.CONTEXT}.network`]: 1 },
+      { [`headers.context.root`]: 1 },
+      { [`headers.context.domain`]: 1 },
+      { [`headers.context.service`]: 1 },
+      { [`headers.context.network`]: 1 },
     ],
-    [{ [`headers.sources.root`]: 1 }],
+    [
+      { [`headers.sources.root`]: 1 },
+      { [`headers.sources.domain`]: 1 },
+      { [`headers.sources.service`]: 1 },
+      { [`headers.sources.network`]: 1 },
+    ],
   ];
 
   if (indexes) {

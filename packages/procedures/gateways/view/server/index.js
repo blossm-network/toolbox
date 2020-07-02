@@ -2,8 +2,6 @@ const deps = require("./deps");
 
 module.exports = async ({
   views,
-  domain = process.env.DOMAIN,
-  service = process.env.SERVICE,
   context = process.env.CONTEXT,
   whitelist,
   permissionsLookupFn,
@@ -59,8 +57,6 @@ module.exports = async ({
 
   for (const {
     name,
-    service: viewService,
-    context: viewContext,
     network,
     procedure,
     key = "access",
@@ -71,9 +67,6 @@ module.exports = async ({
       deps.get({
         procedure,
         name,
-        ...(domain && { domain }),
-        ...((viewService || service) && { service: viewService || service }),
-        ...((viewContext || context) && { context: viewContext || context }),
         ...(network && { network }),
         internalTokenFn,
         nodeExternalTokenFn,

@@ -13,14 +13,21 @@ module.exports = ({ streamFn, queryFn = defaultFn }) => {
     await streamFn({
       query: {
         ...formattedQueryBody,
-        [`headers.${process.env.CONTEXT}`]: {
+        "headers.context": {
           root: context.root,
+          domain: process.env.CONTEXT,
           service: context.service,
           network: context.network,
         },
-        ...(req.params.root && {
-          "headers.sources.root": req.params.root,
-        }),
+        ...(req.params.sourceRoot &&
+          req.params.sourceDomain &&
+          req.params.sourceService &&
+          req.params.sourceNetwork && {
+            "headers.sources.root": req.params.sourceRoot,
+            "headers.sources.domain": req.params.sourceDomain,
+            "headers.sources.service": req.params.sourceService,
+            "headers.sources.network": req.params.sourceNetwork,
+          }),
       },
       ...(req.query.sort && { sort: req.query.sort }),
       ...(req.query.parallel && { parallel: req.query.parallel }),

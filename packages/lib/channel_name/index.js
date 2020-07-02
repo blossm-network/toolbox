@@ -1,16 +1,20 @@
 module.exports = ({
   name,
-  sourceRoot,
-  sourceDomain,
-  sourceService,
-  sourceNetwork,
-  context,
-  contextRoot,
-  contextService,
-  contextNetwork,
+  source: {
+    root: sourceRoot,
+    domain: sourceDomain,
+    service: sourceService,
+    network: sourceNetwork,
+  } = {},
+  context: {
+    root: contextRoot,
+    domain: contextDomain,
+    service: contextService,
+    network: contextNetwork,
+  },
 }) =>
   `${name}${sourceRoot ? `.${sourceRoot}` : ""}${
     sourceDomain ? `.${sourceDomain}` : ""
   }${sourceService ? `.${sourceService}` : ""}${
     sourceNetwork ? `.${sourceNetwork}` : ""
-  }.${context}.${contextRoot}.${contextService}.${contextNetwork}`;
+  }.${contextRoot}.${contextDomain}.${contextService}.${contextNetwork}`;

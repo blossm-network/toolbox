@@ -1,9 +1,6 @@
 #
-# The base URL of this gateway will be v.[domain].[service].[context].[network]
-# 'domain' and 'service' are optional.
+# The base URL of this gateway will be v.[domain].[network].
 #
-domain: some-optional-domain
-service: some-optional-service
 context: some-context
 
 #

@@ -6,9 +6,7 @@ const gateway = require("..");
 const whitelist = "some-whitelist";
 const permissionsLookupFn = "some-permissions-fn";
 const terminatedSessionCheckFn = "some-terminated-session-check-fn";
-const domain = "some-domain";
 const context = "some-context";
-const service = "some-service";
 const network = "some-network";
 const algorithm = "some-algorithm";
 const audience = "some-audience";
@@ -21,10 +19,6 @@ process.env.CONTEXT = context;
 process.env.NETWORK = network;
 
 describe("View gateway", () => {
-  beforeEach(() => {
-    process.env.SERVICE = service;
-    process.env.DOMAIN = domain;
-  });
   afterEach(() => {
     restore();
   });
@@ -93,9 +87,6 @@ describe("View gateway", () => {
     expect(gatewayGetFake).to.have.been.calledWith({
       procedure,
       name,
-      domain,
-      service,
-      context,
       internalTokenFn,
       nodeExternalTokenFn,
       key: "access",
@@ -241,7 +232,6 @@ describe("View gateway", () => {
     expect(gatewayGetFake).to.have.been.calledWith({
       procedure,
       name,
-      context,
       internalTokenFn,
       nodeExternalTokenFn,
       key: "access",
@@ -345,9 +335,6 @@ describe("View gateway", () => {
     expect(gatewayGetFake).to.have.been.calledWith({
       procedure,
       name,
-      domain,
-      service,
-      context,
       internalTokenFn,
       nodeExternalTokenFn,
       key: "access",
@@ -451,9 +438,6 @@ describe("View gateway", () => {
     expect(gatewayGetFake).to.have.been.calledWith({
       name,
       procedure,
-      domain,
-      service,
-      context,
       internalTokenFn,
       nodeExternalTokenFn,
       key,
@@ -501,7 +485,7 @@ describe("View gateway", () => {
       ],
     });
   });
-  it("should call with the correct params with multiple views with different protections, service, context, and network", async () => {
+  it("should call with the correct params with multiple views with different protections and network", async () => {
     const corsMiddlewareFake = fake();
     replace(deps, "corsMiddleware", corsMiddlewareFake);
 
@@ -544,16 +528,12 @@ describe("View gateway", () => {
     const name1 = "some-name1";
     const name2 = "some-name2";
     const name3 = "some-name3";
-    const viewService = "some-view-service";
-    const viewContext = "some-view-context";
     const viewNetwork = "some-view-network";
     const views = [
       {
         name: name1,
         procedure,
         protection: "none",
-        service: viewService,
-        context: viewContext,
         network: viewNetwork,
       },
       { name: name2, procedure, protection: "none" },
@@ -578,9 +558,6 @@ describe("View gateway", () => {
     expect(gatewayGetFake).to.have.been.calledWith({
       procedure,
       name: name1,
-      domain,
-      service: viewService,
-      context: viewContext,
       network: viewNetwork,
       internalTokenFn,
       nodeExternalTokenFn,
@@ -589,9 +566,6 @@ describe("View gateway", () => {
     expect(gatewayGetFake).to.have.been.calledWith({
       procedure,
       name: name2,
-      domain,
-      service,
-      context,
       internalTokenFn,
       nodeExternalTokenFn,
       key: "access",
@@ -599,9 +573,6 @@ describe("View gateway", () => {
     expect(gatewayGetFake).to.have.been.calledWith({
       procedure,
       name: name3,
-      domain,
-      service,
-      context,
       internalTokenFn,
       nodeExternalTokenFn,
       key: "access",
@@ -640,89 +611,6 @@ describe("View gateway", () => {
       terminatedSessionCheckFn,
       internalTokenFn,
       context,
-      permissions: [
-        {
-          service: permissionService,
-          domain: permissionDomain,
-          privilege: permissionPrivilege,
-        },
-      ],
-    });
-  });
-  it("should call with the correct params with passed in domain and context", async () => {
-    const corsMiddlewareFake = fake();
-    replace(deps, "corsMiddleware", corsMiddlewareFake);
-
-    const authenticationResult = "some-authentication";
-    const authenticationFake = fake.returns(authenticationResult);
-    replace(deps, "authentication", authenticationFake);
-
-    const authorizationResult = "some-authorization";
-    const authorizationFake = fake.returns(authorizationResult);
-    replace(deps, "authorization", authorizationFake);
-
-    const listenFake = fake();
-    const getFake = fake.returns({
-      listen: listenFake,
-    });
-    const channelGetFake = fake.returns({
-      get: getFake,
-    });
-    const serverFake = fake.returns({
-      get: channelGetFake,
-    });
-    replace(deps, "server", serverFake);
-
-    const gatewayGetResult = "some-get-result";
-    const gatewayGetFake = fake.returns(gatewayGetResult);
-    replace(deps, "get", gatewayGetFake);
-
-    const permissionService = "some-permission-service";
-    const permissionDomain = "some-permission-domain";
-    const permissionPrivilege = "some-permission-privilege";
-    const permissions = [
-      `${permissionService}:${permissionDomain}:${permissionPrivilege}`,
-    ];
-    const name = "some-name";
-    const views = [{ name, procedure, permissions }];
-
-    const otherDomain = "some-other-domain";
-    const otherService = "some-other-service";
-    const otherContext = "some-other-context";
-
-    const verifyFnResult = "some-verify-fn";
-    const verifyFnFake = fake.returns(verifyFnResult);
-
-    await gateway({
-      views,
-      domain: otherDomain,
-      service: otherService,
-      context: otherContext,
-      whitelist,
-      permissionsLookupFn,
-      terminatedSessionCheckFn,
-      verifyFn: verifyFnFake,
-      algorithm,
-      audience,
-      internalTokenFn,
-      nodeExternalTokenFn,
-    });
-
-    expect(gatewayGetFake).to.have.been.calledWith({
-      procedure,
-      name,
-      domain: otherDomain,
-      service: otherService,
-      context: otherContext,
-      internalTokenFn,
-      nodeExternalTokenFn,
-      key: "access",
-    });
-    expect(authorizationFake).to.have.been.calledWith({
-      permissionsLookupFn,
-      terminatedSessionCheckFn,
-      internalTokenFn,
-      context: otherContext,
       permissions: [
         {
           service: permissionService,

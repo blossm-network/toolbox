@@ -75,24 +75,30 @@ module.exports = eventHandler({
       for (const source of newView.headers.sources) {
         const channel = channelName({
           name: process.env.NAME,
-          sourceRoot: source.root,
-          sourceDomain: source.domain,
-          sourceService: source.service,
-          sourceNetwork: source.network,
-          context: process.env.CONTEXT,
-          contextRoot: newView.headers[process.env.CONTEXT].root,
-          contextService: newView.headers[process.env.CONTEXT].service,
-          contextNetwork: newView.headers[process.env.CONTEXT].network,
+          source: {
+            root: source.root,
+            domain: source.domain,
+            service: source.service,
+            network: source.network,
+          },
+          context: {
+            root: newView.headers[process.env.CONTEXT].root,
+            domain: process.env.CONTEXT,
+            service: newView.headers[process.env.CONTEXT].service,
+            network: newView.headers[process.env.CONTEXT].network,
+          },
         });
         channels.push(channel);
       }
     } else {
       const channel = channelName({
         name: process.env.NAME,
-        context: process.env.CONTEXT,
-        contextRoot: newView.headers[process.env.CONTEXT].root,
-        contextService: newView.headers[process.env.CONTEXT].service,
-        contextNetwork: newView.headers[process.env.CONTEXT].network,
+        context: {
+          domain: process.env.CONTEXT,
+          root: newView.headers[process.env.CONTEXT].root,
+          service: newView.headers[process.env.CONTEXT].service,
+          network: newView.headers[process.env.CONTEXT].network,
+        },
       });
       channels.push(channel);
     }

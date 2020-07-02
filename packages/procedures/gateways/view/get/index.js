@@ -3,8 +3,6 @@ const deps = require("./deps");
 module.exports = ({
   procedure,
   name,
-  domain,
-  service,
   network,
   internalTokenFn,
   nodeExternalTokenFn,
@@ -15,8 +13,6 @@ module.exports = ({
       const { body: response } = await deps
         .viewStore({
           name,
-          ...(domain && { domain }),
-          ...(service && { service }),
           ...(network && { network }),
         })
         .set({
@@ -44,8 +40,6 @@ module.exports = ({
       const { body: response } = await deps
         .viewComposite({
           name,
-          ...(domain && { domain }),
-          ...(service && { service }),
         })
         .set({
           token: {

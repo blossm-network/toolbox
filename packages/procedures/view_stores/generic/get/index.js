@@ -23,14 +23,21 @@ module.exports = ({
 
     const query = {
       ...formattedQueryBody,
-      [`headers.${process.env.CONTEXT}`]: {
+      "headers.context": {
         root: context.root,
+        domain: process.env.CONTEXT,
         service: context.service,
         network: context.network,
       },
-      ...(req.params.root && {
-        "headers.sources.root": req.params.root,
-      }),
+      ...(req.params.sourceRoot &&
+        req.params.sourceDomain &&
+        req.params.sourceService &&
+        req.params.sourceNetwork && {
+          "headers.sources.root": req.params.sourceRoot,
+          "headers.sources.domain": req.params.sourceDomain,
+          "headers.sources.service": req.params.sourceService,
+          "headers.sources.network": req.params.sourceNetwork,
+        }),
     };
 
     if (req.query.limit) req.query.limit = parseInt(req.query.limit);
@@ -69,8 +76,11 @@ module.exports = ({
     }/channel?query%5Bname%5D=${process.env.NAME}&query%5Bcontext%5D=${
       process.env.CONTEXT
     }&query%5Bnetwork%5D=${process.env.NETWORK}${
-      req.params.root && process.env.DOMAIN && process.env.SERVICE
-        ? `&query%5Bdomain%5D=${process.env.DOMAIN}&query%5B${process.env.DOMAIN}%5D%5Broot%5D=${req.params.root}&query%5B${process.env.DOMAIN}%5D%5Bservice%5D=${process.env.SERVICE}&query%5B${process.env.DOMAIN}%5D%5Bnetwork%5D=${process.env.NETWORK}`
+      req.params.sourceRoot &&
+      req.params.sourceDomain &&
+      req.params.sourceService &&
+      req.params.sourceNetwork
+        ? `query%5Bsource%5D%5Broot%5D=${req.params.sourceRoot}&query%5Bsource%5D%5Bdomain%5D=${req.params.sourceDomain}&query%5Bsource%5D%5Bservice%5D=${req.params.sourceService}&query%5B$source%5D%5Bnetwork%5D=${req.params.sourceNetwork}`
         : ""
     }`;
 

@@ -13,7 +13,8 @@ module.exports = async ({
   deps
     .server()
     .get(deps.stream({ streamFn, ...(queryFn && { queryFn }) }), {
-      path: "/stream/:root?",
+      path:
+        "/stream/:sourceNetwork?/:sourceService?/:sourceDomain?/:sourceRoot?",
     })
     .get(
       deps.get({
@@ -23,7 +24,7 @@ module.exports = async ({
         ...(one && { one }),
       }),
       {
-        path: "/:root?",
+        path: "/:sourceNetwork?/:sourceService?/:sourceDomain?/:sourceRoot?",
       }
     )
     .put(deps.put({ writeFn, ...(putFn && { viewFn: putFn }) }), {
