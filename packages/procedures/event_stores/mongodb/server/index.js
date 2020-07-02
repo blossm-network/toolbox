@@ -153,6 +153,18 @@ module.exports = async ({
   // archiveSnapshotFn,
   // archiveEventsFn
 } = {}) => {
+  //TODO
+  //eslint-disable-next-line
+  console.log({
+    schema,
+    formattedSchema: deps.formatSchema(schema, typeKey, {
+      options: {
+        required: false,
+        unique: false,
+        default: undefined,
+      },
+    }),
+  });
   const eStore = await eventStore({
     schema: deps.formatSchema(schema, typeKey, {
       options: {
