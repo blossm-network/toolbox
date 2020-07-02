@@ -19,6 +19,7 @@ const eventStore = async ({ schema, indexes, secretFn }) => {
     //eslint-disable-next-line no-console
     console.log({
       b: schema[k],
+      type: schema[k].$type,
     });
   }
   if (_eventStore != undefined) {
