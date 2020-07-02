@@ -74,6 +74,7 @@ describe("Event handler", () => {
         root: { $type: String, required: true },
         number: { $type: Number, required: true, default: 0 },
       },
+      typeKey: "$type",
       indexes: [[{ root: 1 }], [{ number: 1 }]],
       connection: {
         protocol,
@@ -171,6 +172,7 @@ describe("Event handler", () => {
         root: { $type: String, required: true },
         number: { $type: Number, required: true, default: 0 },
       },
+      typeKey: "$type",
       indexes: [[{ root: 1 }], [{ number: 1 }]],
       connection: {
         protocol,
@@ -273,6 +275,7 @@ describe("Event handler", () => {
         root: { $type: String, required: true },
         number: { $type: Number, required: true, default: 0 },
       },
+      typeKey: "$type",
       indexes: [[{ root: 1 }], [{ number: 1 }]],
       connection: {
         protocol,

@@ -4,6 +4,8 @@ const deps = require("./deps");
 
 let _numberStore;
 
+const typeKey = "$type";
+
 const numberStore = async () => {
   if (_numberStore != undefined) {
     logger.info("Thank you existing count store database.");
@@ -17,9 +19,10 @@ const numberStore = async () => {
       process.env.NAME
     }.numbers`,
     schema: {
-      root: { $type: String, required: true },
-      number: { $type: Number, required: true, default: 0 },
+      root: { [typeKey]: String, required: true },
+      number: { [typeKey]: Number, required: true, default: 0 },
     },
+    typeKey,
     indexes: [[{ root: 1 }], [{ number: 1 }]],
     connection: {
       protocol: process.env.MONGODB_PROTOCOL,
