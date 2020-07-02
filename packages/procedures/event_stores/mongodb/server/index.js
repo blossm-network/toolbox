@@ -9,6 +9,18 @@ let _countsStore;
 const typeKey = "$type";
 
 const eventStore = async ({ schema, indexes, secretFn }) => {
+  //TODO
+  //eslint-disable-next-line no-console
+  console.log({
+    formattedSchema: schema,
+  });
+  for (const k in schema) {
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log({
+      b: schema[k],
+    });
+  }
   if (_eventStore != undefined) {
     logger.info("Thank you existing event store database.");
     return _eventStore;
@@ -157,13 +169,6 @@ module.exports = async ({
   //eslint-disable-next-line
   console.log({
     schema,
-    formattedSchema: deps.formatSchema(schema, typeKey, {
-      options: {
-        required: false,
-        unique: false,
-        default: undefined,
-      },
-    }),
   });
   const eStore = await eventStore({
     schema: deps.formatSchema(schema, typeKey, {
