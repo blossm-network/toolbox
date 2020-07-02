@@ -5,6 +5,7 @@
     "@blossm/command-rpc": "*",
     "@blossm/event-store-rpc": "*",
     "@blossm/gcp-token": "*",
+    "@blossm/gcp-secret": "*",
     "@blossm/node-external-token": "*",
     "@blossm/channel-name": "*"
   },
