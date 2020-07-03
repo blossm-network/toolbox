@@ -20,7 +20,7 @@ const eventStore = async ({ schema, indexes, secretFn }) => {
     console.log({
       b: schema[k],
       type: schema[k].$type,
-      typeAgain: schema[k].$type[0].$type,
+      ...(schema[k].$type && { typeAgain: schema[k].$type[0].$type }),
     });
   }
   if (_eventStore != undefined) {
