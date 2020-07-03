@@ -9,6 +9,19 @@ let _countsStore;
 const typeKey = "$type";
 
 const eventStore = async ({ schema, indexes, secretFn }) => {
+  //TODO
+  //eslint-disable-next-line no-console
+  console.log({ formattedSchema: schema });
+
+  for (const key in schema) {
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log({
+      key,
+      val: schema[key],
+      ...(typeof schema[key] == "object" && { type: schema[key].$type }),
+    });
+  }
   if (_eventStore != undefined) {
     logger.info("Thank you existing event store database.");
     return _eventStore;
