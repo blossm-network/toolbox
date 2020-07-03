@@ -34,7 +34,9 @@ const formatSchemaValue = (value, typeKey, { wrapType = true } = {}) => {
         value[key] != undefined &&
         value[key].type != undefined
       ) {
-        newSchema[key] = formatSchemaValue(value[key].type, typeKey);
+        newSchema[key] = formatSchemaValue(value[key].type, typeKey, {
+          wrapType: false,
+        });
       } else if (typeof value[key] == "object") {
         newSchema[key] = formatSchemaValue(value[key], typeKey);
       } else {

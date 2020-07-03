@@ -31,9 +31,7 @@ describe("Format schema", () => {
     expect(formattedSchema).to.deep.equal({
       a: {
         [typeKey]: {
-          type: {
-            [typeKey]: String,
-          },
+          type: String,
           b: String,
           _id: false,
         },
@@ -46,7 +44,7 @@ describe("Format schema", () => {
         },
       },
       e: {
-        [typeKey]: [{ type: { [typeKey]: String }, _id: false }],
+        [typeKey]: [{ type: String, _id: false }],
       },
       f: {
         [typeKey]: [{ g: String, _id: false }],
@@ -110,9 +108,7 @@ describe("Format schema", () => {
     expect(formattedSchema).to.deep.equal({
       a: {
         [typeKey]: {
-          type: {
-            [typeKey]: String,
-          },
+          type: String,
           b: String,
           _id: false,
         },
@@ -129,7 +125,7 @@ describe("Format schema", () => {
         someMore: "oPtIoNs",
       },
       e: {
-        [typeKey]: [{ type: { [typeKey]: String }, _id: false }],
+        [typeKey]: [{ type: String, _id: false }],
         some: "options",
         someMore: "oPtIoNs",
       },
