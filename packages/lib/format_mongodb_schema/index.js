@@ -1,9 +1,13 @@
-const formatSchemaValue = (value, typeKey) => {
+const formatSchemaValue = (value, typeKey, { wrapType = true } = {}) => {
   if (typeof value != "object") {
-    return { [typeKey]: value };
+    return wrapType ? { [typeKey]: value } : value;
   } else if (value instanceof Array) {
     return {
-      [typeKey]: value.map((e) => formatSchemaValue(e, typeKey)),
+      [typeKey]: value.map((e) =>
+        formatSchemaValue(e, typeKey, {
+          wrapType: false,
+        })
+      ),
     };
   } else if (value.type != undefined && typeof value.type != "object") {
     let formattedObj = {
@@ -14,7 +18,11 @@ const formatSchemaValue = (value, typeKey) => {
     return formattedObj;
   } else if (value.type != undefined && value.type instanceof Array) {
     let formattedObj = {
-      [typeKey]: value.type.map((e) => formatSchemaValue(e, typeKey)),
+      [typeKey]: value.type.map((e) =>
+        formatSchemaValue(e, typeKey, {
+          wrapType: false,
+        })
+      ),
     };
     delete formattedObj.type;
     return formattedObj;
@@ -33,9 +41,11 @@ const formatSchemaValue = (value, typeKey) => {
         newSchema[key] = value[key];
       }
     }
-    return {
-      [typeKey]: newSchema,
-    };
+    return wrapType
+      ? {
+          [typeKey]: newSchema,
+        }
+      : newSchema;
   }
 };
 

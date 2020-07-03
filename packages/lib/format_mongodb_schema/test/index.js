@@ -18,7 +18,7 @@ describe("Format schema", () => {
       b: { c: Number },
       v: { n: Number },
       d: String,
-      p: [{ type: String }],
+      p: [String],
       t: { type: String, unique: true },
       u: [{ g: Number }],
       g: { a: { b: Number } },
@@ -46,10 +46,10 @@ describe("Format schema", () => {
         },
       },
       e: {
-        [typeKey]: [{ [typeKey]: { type: { [typeKey]: String }, _id: false } }],
+        [typeKey]: [{ type: { [typeKey]: String }, _id: false }],
       },
       f: {
-        [typeKey]: [{ [typeKey]: { g: String, _id: false } }],
+        [typeKey]: [{ g: String, _id: false }],
       },
       y: { [typeKey]: String },
       b: {
@@ -60,9 +60,9 @@ describe("Format schema", () => {
       },
       v: { [typeKey]: { n: Number, _id: false } },
       d: { [typeKey]: String },
-      p: { [typeKey]: [{ [typeKey]: String }] },
+      p: { [typeKey]: [String] },
       t: { [typeKey]: String, unique: true },
-      u: { [typeKey]: [{ [typeKey]: { g: Number, _id: false } }] },
+      u: { [typeKey]: [{ g: Number, _id: false }] },
       g: {
         [typeKey]: { a: { [typeKey]: { b: Number, _id: false } }, _id: false },
       },
@@ -129,16 +129,12 @@ describe("Format schema", () => {
         someMore: "oPtIoNs",
       },
       e: {
-        [typeKey]: [{ [typeKey]: { type: { [typeKey]: String }, _id: false } }],
+        [typeKey]: [{ type: { [typeKey]: String }, _id: false }],
         some: "options",
         someMore: "oPtIoNs",
       },
       f: {
-        [typeKey]: [
-          {
-            [typeKey]: { g: String, _id: false },
-          },
-        ],
+        [typeKey]: [{ g: String, _id: false }],
         some: "options",
         someMore: "oPtIoNs",
       },
