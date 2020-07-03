@@ -98,6 +98,7 @@ describe("Format schema", () => {
         b: Number,
       },
       e: { type: [{ type: { type: String } }] },
+      f: [{ g: String }],
     };
     const typeKey = "some-type-key";
     const options = {
@@ -129,6 +130,15 @@ describe("Format schema", () => {
       },
       e: {
         [typeKey]: [{ [typeKey]: { type: { [typeKey]: String }, _id: false } }],
+        some: "options",
+        someMore: "oPtIoNs",
+      },
+      f: {
+        [typeKey]: [
+          {
+            [typeKey]: { g: String, _id: false },
+          },
+        ],
         some: "options",
         someMore: "oPtIoNs",
       },
