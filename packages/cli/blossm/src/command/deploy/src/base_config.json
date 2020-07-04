@@ -1,10 +1,12 @@
 {
   "dependencies": {
     "@blossm/command": "*",
+    "@blossm/command-rpc": "*",
     "@blossm/validator": "*",
     "@blossm/crypt": "*",
     "@blossm/errors": "*",
-    "@blossm/gcp-token": "*"
+    "@blossm/gcp-token": "*",
+    "@blossm/node-external-token": "*"
   },
   "devDependencies": {
     "localenv": "^0.2.2",

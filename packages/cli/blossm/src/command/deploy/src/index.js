@@ -1,6 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 const command = require("@blossm/command");
+const commandRpc = require("@blossm/command-rpc");
 const eventStore = require("@blossm/event-store-rpc");
 const nodeExternalToken = require("@blossm/node-external-token");
 const gcpToken = require("@blossm/gcp-token");
@@ -56,7 +57,7 @@ module.exports = command({
     wait = 0,
     principal = "user",
   }) => {
-    const { body: aggregate } = await command({
+    const { body: aggregate } = await commandRpc({
       name,
       domain,
       ...(service && { service }),
