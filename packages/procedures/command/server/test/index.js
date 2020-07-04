@@ -7,7 +7,7 @@ const command = require("..");
 const mainFn = "some-main-fn";
 const aggregateFn = "some-aggregate-fn";
 const commandFn = "some-command-fn";
-const queryAggregateFn = "some-query-aggregate-fn";
+const queryAggregatesFn = "some-query-aggregates-fn";
 const readFactFn = "some-read-fact-fn";
 const streamFactFn = "some-stream-fact-fn";
 const addFn = "some-add-fn";
@@ -41,7 +41,7 @@ describe("Command handler", () => {
       mainFn,
       aggregateFn,
       commandFn,
-      queryAggregateFn,
+      queryAggregatesFn,
       readFactFn,
       streamFactFn,
       addFn,
@@ -59,7 +59,7 @@ describe("Command handler", () => {
       mainFn,
       aggregateFn,
       commandFn,
-      queryAggregateFn,
+      queryAggregatesFn,
       readFactFn,
       streamFactFn,
       validateFn,
@@ -88,7 +88,7 @@ describe("Command handler", () => {
       aggregateFn,
       commandFn,
 
-      queryAggregateFn,
+      queryAggregatesFn,
       readFactFn,
       streamFactFn,
       addFn,
@@ -102,7 +102,7 @@ describe("Command handler", () => {
       mainFn,
       aggregateFn,
       commandFn,
-      queryAggregateFn,
+      queryAggregatesFn,
       readFactFn,
       streamFactFn,
       addFn,
@@ -129,8 +129,7 @@ describe("Command handler", () => {
         mainFn,
         aggregateFn,
         commandFn,
-
-        queryAggregateFn,
+        queryAggregatesFn,
         readFactFn,
         streamFactFn,
         addFn,
