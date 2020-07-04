@@ -52,7 +52,7 @@ module.exports = commandProcedure({
     root,
     options,
     context: contextOverride = context,
-    clams: claimsOverride = claims,
+    claims: claimsOverride = claims,
     async = false,
     wait = 0,
     principal = "user",
