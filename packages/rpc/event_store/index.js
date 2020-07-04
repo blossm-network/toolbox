@@ -15,6 +15,7 @@ module.exports = ({ domain, service = process.env.SERVICE } = {}) => {
     const normalizedEvents = events.map((event) => {
       return {
         data: {
+          root: event.data.root,
           headers: {
             ...event.data.headers,
             created: dateString(),

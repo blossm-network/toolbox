@@ -82,6 +82,7 @@ describe("Event store", () => {
       .add([
         {
           data: {
+            root,
             headers: {
               topic,
               action: eventAction,
@@ -102,6 +103,7 @@ describe("Event store", () => {
       events: [
         {
           data: {
+            root,
             headers: {
               context,
               claims,
@@ -158,6 +160,7 @@ describe("Event store", () => {
       .add([
         {
           data: {
+            root,
             headers: {
               topic,
               action: eventAction,
@@ -182,6 +185,7 @@ describe("Event store", () => {
       events: [
         {
           data: {
+            root,
             headers: {
               context: {
                 b: 2,
@@ -230,6 +234,7 @@ describe("Event store", () => {
     await eventStore({ domain }).add([
       {
         data: {
+          root,
           headers: {
             topic,
             action: eventAction,
@@ -247,6 +252,7 @@ describe("Event store", () => {
       events: [
         {
           data: {
+            root,
             headers: {
               topic,
               action: eventAction,
