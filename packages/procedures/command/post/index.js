@@ -7,6 +7,9 @@ module.exports = ({
   fillFn,
   aggregateFn,
   commandFn,
+  queryAggregatesFn,
+  readFactFn,
+  streamFactFn,
   addFn,
 }) => {
   return async (req, res) => {
@@ -35,6 +38,22 @@ module.exports = ({
       aggregateFn: aggregateFn({
         ...(req.body.context && { context: req.body.context }),
         ...(req.body.claims && { claims: req.body.claims }),
+        ...(req.body.token && { token: req.body.token }),
+      }),
+      queryAggregatesFn: queryAggregatesFn({
+        ...(req.body.context && { context: req.body.context }),
+        ...(req.body.claims && { claims: req.body.claims }),
+        ...(req.body.token && { token: req.body.token }),
+      }),
+      readFactFn: readFactFn({
+        ...(req.body.context && { context: req.body.context }),
+        ...(req.body.claims && { claims: req.body.claims }),
+        ...(req.body.token && { token: req.body.token }),
+      }),
+      streamFactFn: streamFactFn({
+        ...(req.body.context && { context: req.body.context }),
+        ...(req.body.claims && { claims: req.body.claims }),
+        ...(req.body.token && { token: req.body.token }),
       }),
       commandFn: commandFn({
         ...(req.body.claims && { claims: req.body.claims }),

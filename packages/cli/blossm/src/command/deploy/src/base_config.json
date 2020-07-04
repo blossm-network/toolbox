@@ -3,6 +3,7 @@
     "@blossm/command": "*",
     "@blossm/command-rpc": "*",
     "@blossm/event-store-rpc": "*",
+    "@blossm/fact-rpc": "*",
     "@blossm/validator": "*",
     "@blossm/crypt": "*",
     "@blossm/errors": "*",

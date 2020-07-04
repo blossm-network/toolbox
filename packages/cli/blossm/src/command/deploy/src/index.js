@@ -2,6 +2,7 @@ const fs = require("fs");
 const path = require("path");
 const commandProcedure = require("@blossm/command");
 const command = require("@blossm/command-rpc");
+const fact = require("@blossm/fact-rpc");
 const eventStore = require("@blossm/event-store-rpc");
 const nodeExternalToken = require("@blossm/node-external-token");
 const gcpToken = require("@blossm/gcp-token");
@@ -22,7 +23,7 @@ module.exports = commandProcedure({
   ...(validate && { validateFn: validate }),
   ...(normalize && { normalizeFn: normalize }),
   ...(fill && { fillFn: fill }),
-  aggregateFn: ({ context, claims }) => async (
+  aggregateFn: ({ context, claims, token }) => async (
     root,
     {
       domain = process.env.DOMAIN,
@@ -34,6 +35,7 @@ module.exports = commandProcedure({
       .set({
         ...(context && { context }),
         ...(claims && { claims }),
+        ...(token && { currentToken: token }),
         token: { internalFn: gcpToken },
       })
       .aggregate(root);
@@ -81,6 +83,95 @@ module.exports = commandProcedure({
         ...(options && { options }),
         headers: { trace, idempotency, path },
       }),
+  queryAggregatesFn: ({ context, claims, token }) => ({
+    domain,
+    service,
+    network,
+    key,
+    value,
+    context: contextOverride = context,
+    claims: claimsOverride = claims,
+    principal = "user",
+  }) =>
+    eventStore({
+      domain,
+      ...(service && { service }),
+      ...(network && { network }),
+    })
+      .set({
+        ...(contextOverride && { context: contextOverride }),
+        ...(claimsOverride && { claims: claimsOverride }),
+        ...(token && { currentToken: token }),
+        token: {
+          internalFn: gcpToken,
+          externalFn: ({ network, key } = {}) =>
+            principal == "user"
+              ? { token, type: "Bearer" }
+              : nodeExternalToken({ network, key }),
+        },
+      })
+      .query({ key, value }),
+  readFactFn: ({ context, claims, token }) => ({
+    name,
+    domain,
+    service,
+    network,
+    query,
+    id,
+    context: contextOverride = context,
+    claims: claimsOverride = claims,
+    principal = "user",
+  }) =>
+    fact({
+      name,
+      domain,
+      ...(service && { service }),
+      ...(network && { network }),
+    })
+      .set({
+        ...(contextOverride && { context: contextOverride }),
+        ...(claimsOverride && { claims: claimsOverride }),
+        ...(token && { currentToken: token }),
+        token: {
+          internalFn: gcpToken,
+          externalFn: ({ network, key } = {}) =>
+            principal == "user"
+              ? { token, type: "Bearer" }
+              : nodeExternalToken({ network, key }),
+        },
+      })
+      .read({ query, id }),
+  streamFactFn: ({ context, claims, token }) => ({
+    name,
+    domain,
+    service,
+    network,
+    query,
+    id,
+    context: contextOverride = context,
+    claims: claimsOverride = claims,
+    principal = "user",
+    fn,
+  }) =>
+    fact({
+      name,
+      domain,
+      ...(service && { service }),
+      ...(network && { network }),
+    })
+      .set({
+        ...(contextOverride && { context: contextOverride }),
+        ...(claimsOverride && { claims: claimsOverride }),
+        ...(token && { currentToken: token }),
+        token: {
+          internalFn: gcpToken,
+          externalFn: ({ network, key } = {}) =>
+            principal == "user"
+              ? { token, type: "Bearer" }
+              : nodeExternalToken({ network, key }),
+        },
+      })
+      .stream(fn, { query, id }),
   addFn: ({ domain, service, context, claims, events }) =>
     eventStore({ domain, service })
       .set({
@@ -89,14 +180,4 @@ module.exports = commandProcedure({
         token: { internalFn: gcpToken },
       })
       .add(events),
-  // taskFn: ({ url, body, wait }) =>
-  //   gcpTask({
-  //     url,
-  //     data,
-  //     token,
-  //     project,
-  //     location,
-  //     queue,
-  //     wait: 0,
-  //   }),
 });
