@@ -59,7 +59,7 @@ describe("Mongodb event store aggregate", () => {
     expect(findFake).to.have.been.calledWith({
       store: eventStore,
       query: {
-        "headers.root": root,
+        root,
       },
       sort: {
         "headers.number": 1,
@@ -71,7 +71,7 @@ describe("Mongodb event store aggregate", () => {
     expect(findOneFake).to.have.been.calledWith({
       store: snapshotStore,
       query: {
-        "headers.root": root,
+        root,
       },
       options: {
         lean: true,
@@ -100,7 +100,7 @@ describe("Mongodb event store aggregate", () => {
     expect(findFake).to.have.been.calledWith({
       store: eventStore,
       query: {
-        "headers.root": root,
+        root,
       },
       sort: {
         "headers.number": 1,
@@ -112,7 +112,7 @@ describe("Mongodb event store aggregate", () => {
     expect(findOneFake).to.have.been.calledWith({
       store: snapshotStore,
       query: {
-        "headers.root": root,
+        root,
       },
       options: {
         lean: true,
@@ -141,7 +141,7 @@ describe("Mongodb event store aggregate", () => {
     expect(findFake).to.have.been.calledWith({
       store: eventStore,
       query: {
-        "headers.root": root,
+        root,
       },
       sort: {
         "headers.number": 1,
@@ -153,7 +153,7 @@ describe("Mongodb event store aggregate", () => {
     expect(findOneFake).to.have.been.calledWith({
       store: snapshotStore,
       query: {
-        "headers.root": root,
+        root,
       },
       options: {
         lean: true,

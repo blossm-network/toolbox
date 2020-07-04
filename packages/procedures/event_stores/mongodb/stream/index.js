@@ -9,7 +9,7 @@ module.exports = ({ eventStore }) => async ({
   const cursor = deps.db
     .find({
       store: eventStore,
-      query: { "headers.root": root, "headers.number": { $gte: from } },
+      query: { root, "headers.number": { $gte: from } },
       sort: { "headers.number": 1 },
       options: { lean: true },
     })

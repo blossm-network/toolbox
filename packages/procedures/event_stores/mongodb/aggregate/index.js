@@ -5,7 +5,7 @@ module.exports = ({ eventStore, snapshotStore, handlers }) => async (root) => {
     deps.db.find({
       store: eventStore,
       query: {
-        "headers.root": root,
+        root,
       },
       sort: {
         "headers.number": 1,
@@ -17,7 +17,7 @@ module.exports = ({ eventStore, snapshotStore, handlers }) => async (root) => {
     deps.db.findOne({
       store: snapshotStore,
       query: {
-        "headers.root": root,
+        root,
       },
       options: {
         lean: true,

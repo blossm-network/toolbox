@@ -19,9 +19,9 @@ const eventStore = async ({ schema, indexes, secretFn }) => {
     schema: {
       id: { [typeKey]: String, required: true, unique: true },
       saved: { [typeKey]: Date, required: true },
+      root: { [typeKey]: String, required: true },
       payload: schema,
       headers: {
-        root: { [typeKey]: String, required: true },
         number: { [typeKey]: Number, required: true },
         topic: { [typeKey]: String, required: true },
         action: { [typeKey]: String, required: true },
@@ -47,6 +47,7 @@ const eventStore = async ({ schema, indexes, secretFn }) => {
           [typeKey]: [
             {
               name: { [typeKey]: String },
+              id: { [typeKey]: String },
               domain: { [typeKey]: String },
               service: { [typeKey]: String },
               network: { [typeKey]: String, required: true },
@@ -54,6 +55,7 @@ const eventStore = async ({ schema, indexes, secretFn }) => {
               procedure: { [typeKey]: String, required: true },
               hash: { [typeKey]: String, required: true },
               issued: { [typeKey]: Date },
+              timestamp: { [typeKey]: Date },
               _id: false,
             },
           ],
@@ -65,8 +67,8 @@ const eventStore = async ({ schema, indexes, secretFn }) => {
     typeKey,
     indexes: [
       [{ id: 1 }],
-      [{ "headers.root": 1 }],
-      [{ "headers.root": 1, "headers.number": 1, _id: 1, __v: 1 }],
+      [{ root: 1 }],
+      [{ root: 1, "headers.number": 1, _id: 1, __v: 1 }],
       ...(indexes.length == 0
         ? []
         : [
@@ -102,8 +104,8 @@ const snapshotStore = async ({ schema, indexes }) => {
     name: `_${process.env.SERVICE}.${process.env.DOMAIN}.snapshots`,
     schema: {
       created: { [typeKey]: Date, required: true },
+      root: { [typeKey]: String, required: true, unique: true },
       headers: {
-        root: { [typeKey]: String, required: true, unique: true },
         lastEventNumber: { [typeKey]: Number, required: true },
         _id: false,
       },
@@ -111,7 +113,7 @@ const snapshotStore = async ({ schema, indexes }) => {
     },
     typeKey,
     indexes: [
-      [{ "headers.root": 1 }],
+      [{ root: 1 }],
       ...(indexes.length == 0
         ? []
         : [

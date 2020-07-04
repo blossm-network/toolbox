@@ -120,9 +120,9 @@ describe("Mongodb event store", () => {
       schema: {
         id: { $type: String, required: true, unique: true },
         saved: { $type: Date, required: true },
+        root: { $type: String, required: true },
         payload: formattedSchemaWithOptions,
         headers: {
-          root: { $type: String, required: true },
           number: { $type: Number, required: true },
           topic: { $type: String, required: true },
           version: { $type: Number, required: true },
@@ -147,6 +147,7 @@ describe("Mongodb event store", () => {
           path: {
             $type: [
               {
+                id: { $type: String },
                 name: { $type: String },
                 domain: { $type: String },
                 service: { $type: String },
@@ -155,6 +156,7 @@ describe("Mongodb event store", () => {
                 procedure: { $type: String, required: true },
                 hash: { $type: String, required: true },
                 issued: { $type: Date },
+                timestamp: { $type: Date },
                 _id: false,
               },
             ],
@@ -166,8 +168,8 @@ describe("Mongodb event store", () => {
       typeKey: "$type",
       indexes: [
         [{ id: 1 }],
-        [{ "headers.root": 1 }],
-        [{ "headers.root": 1, "headers.number": 1, _id: 1, __v: 1 }],
+        [{ root: 1 }],
+        [{ root: 1, "headers.number": 1, _id: 1, __v: 1 }],
       ],
       connection: {
         protocol,
@@ -187,15 +189,15 @@ describe("Mongodb event store", () => {
       name: `_${service}.${domain}.snapshots`,
       schema: {
         created: { $type: Date, required: true },
+        root: { $type: String, required: true, unique: true },
         headers: {
-          root: { $type: String, required: true, unique: true },
           lastEventNumber: { $type: Number, required: true },
           _id: false,
         },
         state: formattedSchema,
       },
       typeKey: "$type",
-      indexes: [[{ "headers.root": 1 }]],
+      indexes: [[{ root: 1 }]],
     });
     expect(secretFake).to.have.been.calledWith("mongodb-event-store");
 
@@ -312,8 +314,8 @@ describe("Mongodb event store", () => {
         id: { $type: String, required: true, unique: true },
         saved: { $type: Date, required: true },
         payload: formattedSchemaWithOptions,
+        root: { $type: String, required: true },
         headers: {
-          root: { $type: String, required: true },
           number: { $type: Number, required: true },
           topic: { $type: String, required: true },
           version: { $type: Number, required: true },
@@ -338,6 +340,7 @@ describe("Mongodb event store", () => {
           path: {
             $type: [
               {
+                id: { $type: String },
                 name: { $type: String },
                 domain: { $type: String },
                 service: { $type: String },
@@ -346,6 +349,7 @@ describe("Mongodb event store", () => {
                 procedure: { $type: String, required: true },
                 hash: { $type: String, required: true },
                 issued: { $type: Date },
+                timestamp: { $type: Date },
                 _id: false,
               },
             ],
@@ -357,8 +361,8 @@ describe("Mongodb event store", () => {
       typeKey: "$type",
       indexes: [
         [{ id: 1 }],
-        [{ "headers.root": 1 }],
-        [{ "headers.root": 1, "headers.number": 1, _id: 1, __v: 1 }],
+        [{ root: 1 }],
+        [{ root: 1, "headers.number": 1, _id: 1, __v: 1 }],
         [{ [index]: 1 }],
       ],
       connection: {
@@ -379,15 +383,15 @@ describe("Mongodb event store", () => {
       name: `_${service}.${domain}.snapshots`,
       schema: {
         created: { $type: Date, required: true },
+        root: { $type: String, required: true, unique: true },
         headers: {
-          root: { $type: String, required: true, unique: true },
           lastEventNumber: { $type: Number, required: true },
           _id: false,
         },
         state: formattedSchema,
       },
       typeKey: "$type",
-      indexes: [[{ "headers.root": 1 }], [{ [index]: 1 }]],
+      indexes: [[{ root: 1 }], [{ [index]: 1 }]],
     });
     expect(storeFake).to.have.been.calledWith({
       name: `_${service}.${domain}.counts`,
@@ -462,9 +466,9 @@ describe("Mongodb event store", () => {
       schema: {
         id: { $type: String, required: true, unique: true },
         saved: { $type: Date, required: true },
+        root: { $type: String, required: true },
         payload: formattedSchemaWithOptions,
         headers: {
-          root: { $type: String, required: true },
           number: { $type: Number, required: true },
           topic: { $type: String, required: true },
           version: { $type: Number, required: true },
@@ -490,6 +494,7 @@ describe("Mongodb event store", () => {
             $type: [
               {
                 name: { $type: String },
+                id: { $type: String },
                 domain: { $type: String },
                 service: { $type: String },
                 network: { $type: String, required: true },
@@ -497,6 +502,7 @@ describe("Mongodb event store", () => {
                 procedure: { $type: String, required: true },
                 hash: { $type: String, required: true },
                 issued: { $type: Date },
+                timestamp: { $type: Date },
                 _id: false,
               },
             ],
@@ -508,8 +514,8 @@ describe("Mongodb event store", () => {
       typeKey: "$type",
       indexes: [
         [{ id: 1 }],
-        [{ "headers.root": 1 }],
-        [{ "headers.root": 1, "headers.number": 1, _id: 1, __v: 1 }],
+        [{ root: 1 }],
+        [{ root: 1, "headers.number": 1, _id: 1, __v: 1 }],
       ],
       connection: {
         protocol,
