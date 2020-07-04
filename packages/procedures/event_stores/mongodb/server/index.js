@@ -207,7 +207,7 @@ module.exports = async ({
 // const saveSnapshotFn = async snapshot => {
 //   const savedSnapshot = await deps.db.write({
 //     store: sStore,
-//     query: { "headers.root": snapshot.headers.root },
+//     query: { "root": snapshot.root },
 //     update: {
 //       $set: snapshot
 //     },
@@ -223,11 +223,11 @@ module.exports = async ({
 
 //   await Promise.all([
 //     archiveSnapshotFn({
-//       root: savedSnapshot.headers.root,
+//       root: savedSnapshot.root,
 //       snapshot: savedSnapshot
 //     }),
 //     cleanOldEvents({
-//       root: savedSnapshot.headers.root,
+//       root: savedSnapshot.root,
 //       number: savedSnapshot.headers.lastEventNumber
 //     })
 //   ]);
@@ -235,7 +235,7 @@ module.exports = async ({
 
 // const cleanOldEvents = async ({ root, number }) => {
 //   const query = {
-//     "headers.root": root,
+//     "root": root,
 //     "headers.number": {
 //       $lte: number
 //     }

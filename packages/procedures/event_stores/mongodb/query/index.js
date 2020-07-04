@@ -52,7 +52,7 @@ module.exports = ({ eventStore, snapshotStore, handlers }) => async ({
 
   if (events.length == 0) {
     const aggregates = await Promise.all(
-      snapshots.map((snapshot) => aggregateFn(snapshot.headers.root))
+      snapshots.map((snapshot) => aggregateFn(snapshot.root))
     );
 
     return aggregates;
@@ -60,8 +60,8 @@ module.exports = ({ eventStore, snapshotStore, handlers }) => async ({
 
   const candidateRoots = [
     ...new Set([
-      ...snapshots.map((snapshot) => snapshot.headers.root),
-      ...events.map((event) => event.headers.root),
+      ...snapshots.map((snapshot) => snapshot.root),
+      ...events.map((event) => event.root),
     ]),
   ];
 

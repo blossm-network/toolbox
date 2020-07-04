@@ -42,15 +42,16 @@ module.exports = ({ eventStore, snapshotStore, handlers }) => async (root) => {
           });
 
         return {
+          root: accumulator.root,
           headers: {
-            root: accumulator.headers.root,
             lastEventNumber: event.headers.number,
           },
           state: handler(accumulator.state, event.payload),
         };
       },
       {
-        headers: snapshot ? snapshot.headers : { root },
+        root: snapshot ? snapshot.root : root,
+        headers: snapshot ? snapshot.headers : {},
         state: snapshot ? snapshot.state : {},
       }
     );

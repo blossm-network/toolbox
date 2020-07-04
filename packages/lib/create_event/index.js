@@ -14,8 +14,8 @@ module.exports = ({
   path,
 } = {}) => {
   return {
+    root: root || deps.uuid(),
     headers: {
-      root: root || deps.uuid(),
       action,
       domain,
       service,

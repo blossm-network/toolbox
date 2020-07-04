@@ -16,11 +16,8 @@ describe("Mongodb event store query", () => {
 
     const snapshotRoot = "some-snapshot-root";
     const eventRoot = "some-event-root";
-    const findSnapshotResult = [{ headers: { root: snapshotRoot } }];
-    const findEventResult = [
-      { headers: { root: eventRoot } },
-      { headers: { root: eventRoot } },
-    ];
+    const findSnapshotResult = [{ root: snapshotRoot }];
+    const findEventResult = [{ root: eventRoot }, { root: eventRoot }];
     const handlers = "some-handlers";
 
     const findFake = stub()
@@ -35,8 +32,9 @@ describe("Mongodb event store query", () => {
     replace(deps, "db", db);
 
     const aggregateResult = {
+      root,
       state: { a: 1, b: 2, c: 3, d: 4 },
-      headers: { root, lastEventNumber: 2 },
+      headers: { lastEventNumber: 2 },
     };
     const aggregateResultFake = fake.returns(aggregateResult);
     const aggregateFake = fake.returns(aggregateResultFake);
@@ -77,12 +75,14 @@ describe("Mongodb event store query", () => {
 
     expect(queryFnResult).to.deep.equal([
       {
+        root,
         state: { a: 1, b: 2, c: 3, d: 4 },
-        headers: { root, lastEventNumber: 2 },
+        headers: { lastEventNumber: 2 },
       },
       {
+        root,
         state: { a: 1, b: 2, c: 3, d: 4 },
-        headers: { root, lastEventNumber: 2 },
+        headers: { lastEventNumber: 2 },
       },
     ]);
   });
@@ -91,10 +91,7 @@ describe("Mongodb event store query", () => {
     const snapshotStore = "some-snapshot-store";
 
     const eventRoot = "some-event-root";
-    const findEventResult = [
-      { headers: { root: eventRoot } },
-      { headers: { root: eventRoot } },
-    ];
+    const findEventResult = [{ root: eventRoot }, { root: eventRoot }];
     const handlers = "some-handlers";
 
     const findFake = stub()
@@ -109,8 +106,9 @@ describe("Mongodb event store query", () => {
     replace(deps, "db", db);
 
     const aggregateResult = {
+      root,
       state: { a: 1, b: 2, c: 3, d: 4 },
-      headers: { root, lastEventNumber: 2 },
+      headers: { lastEventNumber: 2 },
     };
     const aggregateResultFake = fake.returns(aggregateResult);
     const aggregateFake = fake.returns(aggregateResultFake);
@@ -150,8 +148,9 @@ describe("Mongodb event store query", () => {
 
     expect(queryFnResult).to.deep.equal([
       {
+        root,
         state: { a: 1, b: 2, c: 3, d: 4 },
-        headers: { root, lastEventNumber: 2 },
+        headers: { lastEventNumber: 2 },
       },
     ]);
   });
@@ -161,11 +160,8 @@ describe("Mongodb event store query", () => {
 
     const snapshotRoot = "some-snapshot-root";
     const eventRoot = "some-event-root";
-    const findSnapshotResult = [{ headers: { root: snapshotRoot } }];
-    const findEventResult = [
-      { headers: { root: eventRoot } },
-      { headers: { root: eventRoot } },
-    ];
+    const findSnapshotResult = [{ root: snapshotRoot }];
+    const findEventResult = [{ root: eventRoot }, { root: eventRoot }];
     const handlers = "some-handlers";
 
     const findFake = stub()
@@ -180,8 +176,9 @@ describe("Mongodb event store query", () => {
     replace(deps, "db", db);
 
     const aggregateResult = {
+      root,
       state: { a: { b: { c: 1 } }, d: "sure", e: true },
-      headers: { root, lastEventNumber: 2 },
+      headers: { lastEventNumber: 2 },
     };
     const aggregateResultFake = fake.returns(aggregateResult);
     const aggregateFake = fake.returns(aggregateResultFake);
@@ -222,12 +219,14 @@ describe("Mongodb event store query", () => {
 
     expect(queryFnResult).to.deep.equal([
       {
+        root,
         state: { a: { b: { c: 1 } }, d: "sure", e: true },
-        headers: { root, lastEventNumber: 2 },
+        headers: { lastEventNumber: 2 },
       },
       {
+        root,
         state: { a: { b: { c: 1 } }, d: "sure", e: true },
-        headers: { root, lastEventNumber: 2 },
+        headers: { lastEventNumber: 2 },
       },
     ]);
   });
@@ -236,7 +235,7 @@ describe("Mongodb event store query", () => {
     const snapshotStore = "some-snapshot-store";
 
     const snapshotRoot = "some-snapshot-root";
-    const findSnapshotResult = [{ headers: { root: snapshotRoot } }];
+    const findSnapshotResult = [{ root: snapshotRoot }];
     const handlers = "some-handlers";
 
     const findFake = stub()
@@ -251,8 +250,9 @@ describe("Mongodb event store query", () => {
     replace(deps, "db", db);
 
     const aggregateResult = {
+      root,
       state: { a: 1, b: 2, c: 3, d: 4 },
-      headers: { root, lastEventNumber: 2 },
+      headers: { lastEventNumber: 2 },
     };
     const aggregateResultFake = fake.returns(aggregateResult);
     const aggregateFake = fake.returns(aggregateResultFake);
@@ -292,8 +292,9 @@ describe("Mongodb event store query", () => {
 
     expect(queryFnResult).to.deep.equal([
       {
+        root,
         state: { a: 1, b: 2, c: 3, d: 4 },
-        headers: { root, lastEventNumber: 2 },
+        headers: { lastEventNumber: 2 },
       },
     ]);
   });
@@ -311,8 +312,9 @@ describe("Mongodb event store query", () => {
     replace(deps, "db", db);
 
     const aggregateResult = {
+      root,
       state: { a: 1, b: 2, c: 3, d: 4 },
-      headers: { root, lastEventNumber: 2 },
+      headers: { lastEventNumber: 2 },
     };
     const aggregateResultFake = fake.returns(aggregateResult);
     const aggregateFake = fake.returns(aggregateResultFake);

@@ -8,10 +8,11 @@ const root = "some-root";
 const action = "some-action";
 const otherAction = "some-other-action";
 const findResult = [
-  { payload: { b: 2, c: 2 }, headers: { number: 1, root, action } },
+  { root, payload: { b: 2, c: 2 }, headers: { number: 1, action } },
   {
+    root,
     payload: { c: 3, d: 4 },
-    headers: { number: 2, root, action: otherAction },
+    headers: { number: 2, action: otherAction },
   },
 ];
 const handlers = {
@@ -30,8 +31,9 @@ const handlers = {
   },
 };
 const findOneResult = {
+  root,
   state: { a: 1, b: 1 },
-  headers: { lastEventNumber: 0, root },
+  headers: { lastEventNumber: 0 },
 };
 
 const eventStore = "some-event-store";
@@ -78,8 +80,9 @@ describe("Mongodb event store aggregate", () => {
       },
     });
     expect(result).to.deep.equal({
+      root,
       state: { a: 1, b: 2, c: 3, d: 4, e: 5 },
-      headers: { root, lastEventNumber: 2 },
+      headers: { lastEventNumber: 2 },
     });
   });
   it("should call with the correct params with no snapshot found", async () => {
@@ -119,8 +122,9 @@ describe("Mongodb event store aggregate", () => {
       },
     });
     expect(result).to.deep.equal({
+      root,
       state: { b: 2, c: 3, d: 4, e: 5 },
-      headers: { root, lastEventNumber: 2 },
+      headers: { lastEventNumber: 2 },
     });
   });
   it("should call with the correct params with no snapshot or events found", async () => {

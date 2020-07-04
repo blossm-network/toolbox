@@ -10,7 +10,6 @@ let clock;
 
 const now = new Date();
 
-const action = "some-action";
 const root = "some-root";
 const domain = "some-domain";
 const service = "some-service";
@@ -23,8 +22,8 @@ const eventNumber = "some-event-number";
 const eventTopic = "some-event-topic";
 
 const writtenEvent = {
+  root: eventRoot,
   headers: {
-    root: eventRoot,
     number: eventNumber,
     topic: eventTopic,
   },
@@ -34,9 +33,9 @@ const writtenEvents = [writtenEvent];
 const events = [
   {
     data: {
+      root,
       headers: {
         b: 2,
-        root,
         topic,
         idempotency,
       },
@@ -87,9 +86,9 @@ describe("Event store post", () => {
         id: `${root}_${currentEventsForRoot}`,
         saved: deps.dateString(),
         a: 1,
+        root,
         headers: {
           b: 2,
-          root,
           number: currentEventsForRoot,
           topic,
           idempotency,
@@ -137,9 +136,9 @@ describe("Event store post", () => {
         id: `${root}_${currentEventsForRoot}`,
         saved: deps.dateString(),
         a: 1,
+        root,
         headers: {
           b: 2,
-          root,
           number: currentEventsForRoot,
           topic,
           idempotency,
@@ -173,9 +172,9 @@ describe("Event store post", () => {
           ...events,
           {
             data: {
+              root: "some-other-root",
               headers: {
                 b: 2,
-                root: "some-other-root",
                 topic,
                 idempotency,
               },
@@ -201,9 +200,9 @@ describe("Event store post", () => {
         id: `${root}_${currentEventsForRoot}`,
         saved: deps.dateString(),
         a: 1,
+        root,
         headers: {
           b: 2,
-          root,
           number: currentEventsForRoot,
           topic,
           idempotency,
@@ -213,9 +212,9 @@ describe("Event store post", () => {
         id: `${root}_${currentEventsForRoot + 1}`,
         saved: deps.dateString(),
         a: 1,
+        root,
         headers: {
           b: 2,
-          root,
           number: currentEventsForRoot + 1,
           topic,
           idempotency,
@@ -225,9 +224,9 @@ describe("Event store post", () => {
         id: "some-other-root_9",
         saved: deps.dateString(),
         a: 1,
+        root: "some-other-root",
         headers: {
           b: 2,
-          root: "some-other-root",
           number: 9,
           topic,
           idempotency,
@@ -259,9 +258,9 @@ describe("Event store post", () => {
         events: [
           {
             data: {
+              root,
               headers: {
                 b: 2,
-                root,
                 topic,
               },
               a: 1,
@@ -290,9 +289,9 @@ describe("Event store post", () => {
         id: `${root}_${currentEventsForRoot}`,
         saved: deps.dateString(),
         a: 1,
+        root,
         headers: {
           b: 2,
-          root,
           number: currentEventsForRoot,
           topic,
           idempotency: uuid,

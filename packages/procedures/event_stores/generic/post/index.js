@@ -5,9 +5,8 @@ module.exports = ({ saveEventsFn, reserveRootCountsFn, publishFn }) => {
     const eventNumberOffsets = {};
 
     const eventRootCounts = req.body.events.reduce((result, event) => {
-      if (result[event.data.headers.root] == undefined)
-        result[event.data.headers.root] = 0;
-      result[event.data.headers.root]++;
+      if (result[event.data.root] == undefined) result[event.data.root] = 0;
+      result[event.data.root]++;
       return result;
     }, {});
 
@@ -27,8 +26,8 @@ module.exports = ({ saveEventsFn, reserveRootCountsFn, publishFn }) => {
     );
 
     const normalizedEvents = req.body.events.map((event) => {
-      if (!eventNumberOffsets[event.data.headers.root])
-        eventNumberOffsets[event.data.headers.root] = 0;
+      if (!eventNumberOffsets[event.data.root])
+        eventNumberOffsets[event.data.root] = 0;
 
       const topicParts = event.data.headers.topic.split(".");
       const topicDomain = topicParts[0];
@@ -48,11 +47,11 @@ module.exports = ({ saveEventsFn, reserveRootCountsFn, publishFn }) => {
           }
         );
 
-      const root = event.data.headers.root;
+      const root = event.data.root;
 
       const number =
-        currentEventCounts[event.data.headers.root] +
-        eventNumberOffsets[event.data.headers.root];
+        currentEventCounts[event.data.root] +
+        eventNumberOffsets[event.data.root];
 
       if (event.number && event.number != number)
         throw deps.preconditionFailedError.message("Event number incorrect.", {
@@ -72,7 +71,7 @@ module.exports = ({ saveEventsFn, reserveRootCountsFn, publishFn }) => {
         saved: now,
       };
 
-      eventNumberOffsets[event.data.headers.root]++;
+      eventNumberOffsets[event.data.root]++;
       return normalizedEvent;
     });
 
@@ -81,7 +80,7 @@ module.exports = ({ saveEventsFn, reserveRootCountsFn, publishFn }) => {
       savedEvents.map((e) =>
         publishFn(
           {
-            root: e.headers.root,
+            root: e.root,
           },
           e.headers.topic
         )

@@ -14,7 +14,7 @@
  */
 
 module.exports = async (event) => {
-  const root = event.headers.root;
+  const root = event.root;
   const context = event.headers.context;
 
   //eslint-disable-next-line no-console
