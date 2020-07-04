@@ -1,7 +1,7 @@
 const fs = require("fs");
 const path = require("path");
-const command = require("@blossm/command");
-const commandRpc = require("@blossm/command-rpc");
+const commandProcedure = require("@blossm/command");
+const command = require("@blossm/command-rpc");
 const eventStore = require("@blossm/event-store-rpc");
 const nodeExternalToken = require("@blossm/node-external-token");
 const gcpToken = require("@blossm/gcp-token");
@@ -17,7 +17,7 @@ const normalize =
 const fill =
   fs.existsSync(path.resolve(__dirname, "./fill.js")) && require("./fill");
 
-module.exports = command({
+module.exports = commandProcedure({
   mainFn: main,
   ...(validate && { validateFn: validate }),
   ...(normalize && { normalizeFn: normalize }),
@@ -52,12 +52,12 @@ module.exports = command({
     root,
     options,
     context: contextOverride = context,
-    claims: claimsOverride = claims,
+    clams: claimsOverride = claims,
     async = false,
     wait = 0,
     principal = "user",
-  }) => {
-    const { body: aggregate } = await commandRpc({
+  }) =>
+    await commandRpc({
       name,
       domain,
       ...(service && { service }),
@@ -76,13 +76,11 @@ module.exports = command({
         },
         ...(async && { enqueue: { fn: enqueue, wait } }),
       })
-      .issue(payload, { root, options, headers: { trace, idempotency, path } });
-
-    return {
-      lastEventNumber: aggregate.headers.lastEventNumber,
-      aggregate: aggregate.state,
-    };
-  },
+      .issue(payload, {
+        ...(root && { root }),
+        ...(options && { options }),
+        headers: { trace, idempotency, path },
+      }),
   addFn: ({ domain, service, context, claims, events }) =>
     eventStore({ domain, service })
       .set({
