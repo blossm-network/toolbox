@@ -6,6 +6,7 @@ const command = require("..");
 
 const mainFn = "some-main-fn";
 const aggregateFn = "some-aggregate-fn";
+const commandFn = "some-command-fn";
 const addFn = "some-add-fn";
 const validateFn = "some-validate-fn";
 const normalizeFn = "some-normalize-fn";
@@ -36,6 +37,7 @@ describe("Command handler", () => {
       version,
       mainFn,
       aggregateFn,
+      commandFn,
       addFn,
       validateFn,
       normalizeFn,
@@ -50,6 +52,7 @@ describe("Command handler", () => {
       version,
       mainFn,
       aggregateFn,
+      commandFn,
       validateFn,
       normalizeFn,
       addFn,
@@ -70,7 +73,7 @@ describe("Command handler", () => {
     const commandPostFake = fake.returns(commandPostResult);
     replace(deps, "post", commandPostFake);
 
-    await command({ version, mainFn, aggregateFn, addFn });
+    await command({ version, mainFn, aggregateFn, commandFn, addFn });
 
     expect(listenFake).to.have.been.calledWith();
     expect(serverFake).to.have.been.calledWith();
@@ -79,6 +82,7 @@ describe("Command handler", () => {
       version,
       mainFn,
       aggregateFn,
+      commandFn,
       addFn,
     });
   });
@@ -98,7 +102,7 @@ describe("Command handler", () => {
     replace(deps, "post", commandPostFake);
 
     try {
-      await command({ version, mainFn, aggregateFn, addFn });
+      await command({ version, mainFn, aggregateFn, commandFn, addFn });
 
       //shouldn't get called
       expect(1).to.equal(0);
