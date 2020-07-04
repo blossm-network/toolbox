@@ -7,6 +7,7 @@
     "@blossm/crypt": "*",
     "@blossm/errors": "*",
     "@blossm/gcp-token": "*",
+    "@blossm/gcp-queue": "*",
     "@blossm/node-external-token": "*"
   },
   "devDependencies": {
