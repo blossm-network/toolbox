@@ -43,7 +43,7 @@ module.exports = commandProcedure({
       aggregate: aggregate.state,
     };
   },
-  commandFn: ({ path, idempotency, context, claims, token, trace }) => async ({
+  commandFn: ({ path, idempotency, context, claims, token, trace }) => ({
     name,
     domain,
     service,
@@ -57,7 +57,7 @@ module.exports = commandProcedure({
     wait = 0,
     principal = "user",
   }) =>
-    await commandRpc({
+    command({
       name,
       domain,
       ...(service && { service }),
