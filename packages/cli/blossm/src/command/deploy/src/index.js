@@ -2,8 +2,9 @@ const fs = require("fs");
 const path = require("path");
 const command = require("@blossm/command");
 const eventStore = require("@blossm/event-store-rpc");
+const nodeExternalToken = require("@blossm/node-external-token");
 const gcpToken = require("@blossm/gcp-token");
-// const gcpTask = require("@blossm/gcp-task");
+const { enqueue } = require("@blossm/gcp-queue");
 
 const main = require("./main.js");
 const validate =
@@ -35,6 +36,46 @@ module.exports = command({
         token: { internalFn: gcpToken },
       })
       .aggregate(root);
+
+    return {
+      lastEventNumber: aggregate.headers.lastEventNumber,
+      aggregate: aggregate.state,
+    };
+  },
+  commandFn: ({ path, idempotency, context, claims, token, trace }) => async ({
+    name,
+    domain,
+    service,
+    network,
+    payload,
+    root,
+    options,
+    context: contextOverride = context,
+    cliams: claimsOverride = claims,
+    async = false,
+    wait = 0,
+    principal = "user",
+  }) => {
+    const { body: aggregate } = await command({
+      name,
+      domain,
+      ...(service && { service }),
+      ...(network && { network }),
+    })
+      .set({
+        ...(contextOverride && { context: contextOverride }),
+        ...(claimsOverride && { claims: claimsOverride }),
+        ...(token && { currentToken: token }),
+        token: {
+          internalFn: gcpToken,
+          externalFn: ({ network, key } = {}) =>
+            principal == "user"
+              ? { token, type: "Bearer" }
+              : nodeExternalToken({ network, key }),
+        },
+        ...(async && { enqueue: { fn: enqueue, wait } }),
+      })
+      .issue(payload, { root, options, headers: { trace, idempotency, path } });
 
     return {
       lastEventNumber: aggregate.headers.lastEventNumber,

@@ -11,11 +11,21 @@ module.exports = async (params) => {
       title: "payload",
       path: "payload",
     }),
+    string(params.root, {
+      optional: true,
+      title: "root",
+      path: "root",
+    }),
   ]);
 
   if (error) throw error;
 
   const headersError = findError([
+    string(params.headers.idempotency, {
+      optional: true,
+      title: "idempotency",
+      path: "headers.idempotency",
+    }),
     string(params.headers.trace, {
       optional: true,
       title: "trace",

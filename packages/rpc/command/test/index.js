@@ -20,7 +20,6 @@ const options = "some-options";
 const trace = "some-trace";
 const internalTokenFn = "some-internal-token-fn";
 const externalTokenFn = "some-external-token-fn";
-const issued = "some-issued";
 
 const context = { c: 2 };
 const claims = "some-claims";
@@ -87,9 +86,10 @@ describe("Issue command", () => {
         },
       })
       .issue(payload, {
-        trace,
-        issued,
-        path,
+        headers: {
+          trace,
+          path,
+        },
         root,
         options,
       });
@@ -99,22 +99,9 @@ describe("Issue command", () => {
     expect(postFake).to.have.been.calledWith({
       payload,
       headers: {
-        issued,
+        issued: deps.dateString(),
         trace,
-        path: [
-          "some-path",
-          {
-            timestamp: deps.dateString(),
-            issued,
-            procedure: envProcedure,
-            hash: envHash,
-            network,
-            host: envHost,
-            name: envName,
-            domain: envDomain,
-            service: envService,
-          },
-        ],
+        path,
       },
       root,
       options,
@@ -157,18 +144,6 @@ describe("Issue command", () => {
       payload,
       headers: {
         issued: deps.dateString(),
-        path: [
-          {
-            timestamp: deps.dateString(),
-            procedure: envProcedure,
-            hash: envHash,
-            network,
-            host: envHost,
-            name: envName,
-            domain: envDomain,
-            service: envService,
-          },
-        ],
       },
     });
     expect(inFake).to.have.been.calledWith({});
@@ -200,18 +175,6 @@ describe("Issue command", () => {
       payload,
       headers: {
         issued: deps.dateString(),
-        path: [
-          {
-            timestamp: deps.dateString(),
-            procedure: envProcedure,
-            hash: envHash,
-            network,
-            host: envHost,
-            name: envName,
-            domain: envDomain,
-            service: envService,
-          },
-        ],
       },
     });
     expect(inFake).to.have.been.calledWith({});
@@ -245,28 +208,15 @@ describe("Issue command", () => {
       network: otherNetwork,
     })
       .set({ context, claims, token: { externalFn: externalTokenFn } })
-      .issue(payload, { trace, issued, root, options });
+      .issue(payload, { headers: { trace }, root, options });
 
     expect(result).to.equal(response);
     expect(rpcFake).to.have.been.calledWith(name, domain, service, "command");
     expect(postFake).to.have.been.calledWith({
       payload,
       headers: {
-        issued,
+        issued: deps.dateString(),
         trace,
-        path: [
-          {
-            timestamp: deps.dateString(),
-            issued,
-            procedure: envProcedure,
-            hash: envHash,
-            network,
-            host: envHost,
-            name: envName,
-            domain: envDomain,
-            service: envService,
-          },
-        ],
       },
       root,
       options,

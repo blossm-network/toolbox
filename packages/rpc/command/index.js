@@ -12,24 +12,15 @@ module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
       key,
     } = {},
     enqueue: { fn: enqueueFn, wait: enqueueWait } = {},
-  } = {}) => (payload = {}, { trace, issued, root, path, options } = {}) => {
+  } = {}) => (
+    payload = {},
+    { root, options, headers: { trace, idempotency, path } = {} } = {}
+  ) => {
     const headers = {
-      issued: issued || deps.dateString(),
-      ...(trace != undefined && { trace }),
-      path: [
-        ...(path || []),
-        {
-          timestamp: deps.dateString(),
-          ...(issued && { issued }),
-          procedure: process.env.PROCEDURE,
-          hash: process.env.OPERATION_HASH,
-          network: process.env.NETWORK,
-          host: process.env.HOST,
-          ...(process.env.NAME && { name: process.env.NAME }),
-          ...(process.env.DOMAIN && { domain: process.env.DOMAIN }),
-          ...(process.env.SERVICE && { service: process.env.SERVICE }),
-        },
-      ],
+      issued: deps.dateString(),
+      ...(trace && { trace }),
+      ...(idempotency && { idempotency }),
+      ...(path && { path }),
     };
 
     const data = {
@@ -68,7 +59,13 @@ module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
   return {
     set: ({ context, claims, token, currentToken, enqueue }) => {
       return {
-        issue: issue({ context, claims, token, currentToken, enqueue }),
+        issue: issue({
+          context,
+          claims,
+          token,
+          currentToken,
+          enqueue,
+        }),
       };
     },
     issue: issue(),

@@ -15,6 +15,7 @@ const eventAction = "some-event-action";
 const cleanedPayload = "some-cleaned-payload";
 const filledPayload = "some-filled-payload";
 const aggregateFn = "some-aggregate-fn";
+const commandFn = "some-command-fn";
 const response = { some: "response" };
 const root = "some-root";
 const options = "some-options";
@@ -106,6 +107,7 @@ describe("Command handler post", () => {
 
     const addFnFake = fake();
     const aggregateFnFake = fake.returns(aggregateFn);
+    const commandFnFake = fake.returns(commandFn);
 
     await post({
       mainFn: mainFnFake,
@@ -113,14 +115,35 @@ describe("Command handler post", () => {
       normalizeFn: normalizeFnFake,
       addFn: addFnFake,
       aggregateFn: aggregateFnFake,
+      commandFn: commandFnFake,
     })(req, res);
 
     expect(aggregateFnFake).to.have.been.calledWith({});
+    expect(commandFnFake).to.have.been.calledWith({
+      idempotency,
+      trace,
+      path: [
+        ...(req.body.headers.path || []),
+        {
+          procedure,
+          hash,
+          id: commandId,
+          issued,
+          timestamp: deps.dateString(),
+          name,
+          domain,
+          service,
+          network,
+          host,
+        },
+      ],
+    });
     expect(normalizeFnFake).to.have.been.calledWith(payload);
     expect(validateFnFake).to.have.been.calledWith(payload);
     expect(mainFnFake).to.have.been.calledWith({
       payload: cleanedPayload,
       aggregateFn,
+      commandFn,
     });
 
     expect(createEventFake).to.have.been.calledWith({
@@ -205,6 +228,7 @@ describe("Command handler post", () => {
 
     const addFnFake = fake();
     const aggregateFnFake = fake.returns(aggregateFn);
+    const commandFnFake = fake.returns(commandFn);
 
     await post({
       mainFn: mainFnFake,
@@ -212,14 +236,35 @@ describe("Command handler post", () => {
       normalizeFn: normalizeFnFake,
       addFn: addFnFake,
       aggregateFn: aggregateFnFake,
+      commandFn: commandFnFake,
     })(req, res);
 
     expect(aggregateFnFake).to.have.been.calledWith({});
+    expect(commandFnFake).to.have.been.calledWith({
+      idempotency,
+      trace,
+      path: [
+        ...(req.body.headers.path || []),
+        {
+          procedure,
+          hash,
+          id: commandId,
+          issued,
+          timestamp: deps.dateString(),
+          name,
+          domain,
+          service,
+          network,
+          host,
+        },
+      ],
+    });
     expect(normalizeFnFake).to.have.been.calledWith(payload);
     expect(validateFnFake).to.have.been.calledWith(payload);
     expect(mainFnFake).to.have.been.calledWith({
       payload: cleanedPayload,
       aggregateFn,
+      commandFn,
     });
 
     expect(createEventFake).to.have.been.calledWith({
@@ -303,6 +348,7 @@ describe("Command handler post", () => {
 
     const addFnFake = fake();
     const aggregateFnFake = fake.returns(aggregateFn);
+    const commandFnFake = fake.returns(commandFn);
 
     await post({
       mainFn: mainFnFake,
@@ -310,6 +356,7 @@ describe("Command handler post", () => {
       normalizeFn: normalizeFnFake,
       addFn: addFnFake,
       aggregateFn: aggregateFnFake,
+      commandFn: commandFnFake,
     })(req, res);
 
     expect(createEventFake).to.have.been.calledWith({
@@ -384,6 +431,7 @@ describe("Command handler post", () => {
 
     const addFnFake = fake();
     const aggregateFnFake = fake.returns(aggregateFn);
+    const commandFnFake = fake.returns(commandFn);
 
     await post({
       mainFn: mainFnFake,
@@ -391,10 +439,30 @@ describe("Command handler post", () => {
       normalizeFn: normalizeFnFake,
       fillFn: fillFnFake,
       aggregateFn: aggregateFnFake,
+      commandFn: commandFnFake,
       addFn: addFnFake,
     })(req, res);
 
     expect(aggregateFnFake).to.have.been.calledWith({});
+    expect(commandFnFake).to.have.been.calledWith({
+      idempotency,
+      trace,
+      path: [
+        ...(req.body.headers.path || []),
+        {
+          procedure,
+          hash,
+          id: commandId,
+          issued,
+          timestamp: deps.dateString(),
+          name,
+          domain,
+          service,
+          network,
+          host,
+        },
+      ],
+    });
     expect(fillFnFake).to.have.been.calledWith(payload);
     expect(normalizeFnFake).to.have.been.calledWith(filledPayload);
     expect(validateFnFake).to.have.been.calledWith(payload);
@@ -441,16 +509,37 @@ describe("Command handler post", () => {
 
     const addFnFake = fake();
     const aggregateFnFake = fake.returns(aggregateFn);
+    const commandFnFake = fake.returns(commandFn);
 
     await post({
       mainFn: mainFnFake,
       validateFn: validateFnFake,
       normalizeFn: normalizeFnFake,
       aggregateFn: aggregateFnFake,
+      commandFn: commandFnFake,
       addFn: addFnFake,
     })(req, res);
 
     expect(aggregateFnFake).to.have.been.calledWith({});
+    expect(commandFnFake).to.have.been.calledWith({
+      idempotency,
+      trace,
+      path: [
+        ...(req.body.headers.path || []),
+        {
+          procedure,
+          hash,
+          id: commandId,
+          issued,
+          timestamp: deps.dateString(),
+          name,
+          domain,
+          service,
+          network,
+          host,
+        },
+      ],
+    });
     expect(thenFnFake).to.have.been.calledWith();
     expect(normalizeFnFake).to.have.been.calledWith(payload);
     expect(validateFnFake).to.have.been.calledWith(payload);
@@ -494,21 +583,43 @@ describe("Command handler post", () => {
 
     const addFnFake = fake();
     const aggregateFnFake = fake.returns(aggregateFn);
+    const commandFnFake = fake.returns(commandFn);
 
     await post({
       mainFn: mainFnFake,
       validateFn: validateFnFake,
       normalizeFn: normalizeFnFake,
       aggregateFn: aggregateFnFake,
+      commandFn: commandFnFake,
       addFn: addFnFake,
     })(req, res);
 
     expect(aggregateFnFake).to.have.been.calledWith({});
+    expect(commandFnFake).to.have.been.calledWith({
+      idempotency,
+      trace,
+      path: [
+        ...(req.body.headers.path || []),
+        {
+          procedure,
+          hash,
+          id: commandId,
+          issued,
+          timestamp: deps.dateString(),
+          name,
+          domain,
+          service,
+          network,
+          host,
+        },
+      ],
+    });
     expect(normalizeFnFake).to.have.been.calledWith(payload);
     expect(validateFnFake).to.have.been.calledWith(payload);
     expect(mainFnFake).to.have.been.calledWith({
       payload: cleanedPayload,
       aggregateFn,
+      commandFn,
     });
     expect(addFnFake).to.have.been.calledWith({
       domain,
@@ -577,21 +688,43 @@ describe("Command handler post", () => {
 
     const addFnFake = fake();
     const aggregateFnFake = fake.returns(aggregateFn);
+    const commandFnFake = fake.returns(commandFn);
 
     await post({
       mainFn: mainFnFake,
       validateFn: validateFnFake,
       normalizeFn: normalizeFnFake,
       aggregateFn: aggregateFnFake,
+      commandFn: commandFnFake,
       addFn: addFnFake,
     })(req, res);
 
     expect(aggregateFnFake).to.have.been.calledWith({});
+    expect(commandFnFake).to.have.been.calledWith({
+      idempotency,
+      trace,
+      path: [
+        ...(req.body.headers.path || []),
+        {
+          procedure,
+          hash,
+          id: commandId,
+          issued,
+          timestamp: deps.dateString(),
+          name,
+          domain,
+          service,
+          network,
+          host,
+        },
+      ],
+    });
     expect(normalizeFnFake).to.have.been.calledWith(payload);
     expect(validateFnFake).to.have.been.calledWith(payload);
     expect(mainFnFake).to.have.been.calledWith({
       payload: cleanedPayload,
       aggregateFn,
+      commandFn,
     });
 
     expect(setResponseFake).to.have.been.calledWith({});
@@ -628,21 +761,43 @@ describe("Command handler post", () => {
 
     const addFnFake = fake();
     const aggregateFnFake = fake.returns(aggregateFn);
+    const commandFnFake = fake.returns(commandFn);
 
     await post({
       mainFn: mainFnFake,
       validateFn: validateFnFake,
       normalizeFn: normalizeFnFake,
       aggregateFn: aggregateFnFake,
+      commandFn: commandFnFake,
       addFn: addFnFake,
     })(req, res);
 
     expect(aggregateFnFake).to.have.been.calledWith({});
+    expect(commandFnFake).to.have.been.calledWith({
+      idempotency,
+      trace,
+      path: [
+        ...(req.body.headers.path || []),
+        {
+          procedure,
+          hash,
+          id: commandId,
+          issued,
+          timestamp: deps.dateString(),
+          name,
+          domain,
+          service,
+          network,
+          host,
+        },
+      ],
+    });
     expect(normalizeFnFake).to.have.been.calledWith(payload);
     expect(validateFnFake).to.have.been.calledWith(payload);
     expect(mainFnFake).to.have.been.calledWith({
       payload: cleanedPayload,
       aggregateFn,
+      commandFn,
     });
 
     expect(setResponseFake).to.have.been.calledWith({});
@@ -700,16 +855,40 @@ describe("Command handler post", () => {
     };
 
     const aggregateFnFake = fake.returns(aggregateFn);
+    const commandFnFake = fake.returns(commandFn);
 
     await post({
       mainFn: mainFnFake,
       validateFn: validateFnFake,
       normalizeFn: normalizeFnFake,
       aggregateFn: aggregateFnFake,
+      commandFn: commandFnFake,
       addFn: addFnFake,
     })(req, res);
 
     expect(aggregateFnFake).to.have.been.calledWith({ context, claims });
+    expect(commandFnFake).to.have.been.calledWith({
+      idempotency,
+      trace,
+      context,
+      claims,
+      token,
+      path: [
+        ...(req.body.headers.path || []),
+        {
+          procedure,
+          hash,
+          id: commandId,
+          issued,
+          timestamp: deps.dateString(),
+          name,
+          domain,
+          service,
+          network,
+          host,
+        },
+      ],
+    });
     expect(normalizeFnFake).to.have.been.calledWith(payload);
     expect(validateFnFake).to.have.been.calledWith(payload, {
       context,
@@ -717,11 +896,11 @@ describe("Command handler post", () => {
     expect(mainFnFake).to.have.been.calledWith({
       payload: cleanedPayload,
       root: currentRoot,
-      options,
       context,
+      options,
       claims,
-      token,
       aggregateFn,
+      commandFn,
     });
 
     expect(addFnFake).to.have.been.calledWith({
@@ -796,17 +975,39 @@ describe("Command handler post", () => {
 
     const addFnFake = fake();
     const aggregateFnFake = fake.returns(aggregateFn);
+    const commandFnFake = fake.returns(commandFn);
 
     await post({
       mainFn: mainFnFake,
       aggregateFn: aggregateFnFake,
+      commandFn: commandFnFake,
       addFn: addFnFake,
     })(req, res);
 
     expect(aggregateFnFake).to.have.been.calledWith({});
+    expect(commandFnFake).to.have.been.calledWith({
+      idempotency,
+      trace,
+      path: [
+        ...(req.body.headers.path || []),
+        {
+          procedure,
+          hash,
+          id: commandId,
+          issued,
+          timestamp: deps.dateString(),
+          name,
+          domain,
+          service,
+          network,
+          host,
+        },
+      ],
+    });
     expect(mainFnFake).to.have.been.calledWith({
       payload,
       aggregateFn,
+      commandFn,
     });
 
     expect(addFnFake).to.have.been.calledWith({
@@ -890,16 +1091,39 @@ describe("Command handler post", () => {
 
     const addFnFake = fake();
     const aggregateFnFake = fake.returns(aggregateFn);
+    const commandFnFake = fake.returns(commandFn);
 
     await post({
       mainFn: mainFnFake,
       validateFn: validateFnFake,
       normalizeFn: normalizeFnFake,
       aggregateFn: aggregateFnFake,
+      commandFn: commandFnFake,
       addFn: addFnFake,
     })(req, res);
 
     expect(aggregateFnFake).to.have.been.calledWith({ context, claims });
+    expect(commandFnFake).to.have.been.calledWith({
+      idempotency,
+      trace,
+      context,
+      claims,
+      path: [
+        ...(req.body.headers.path || []),
+        {
+          procedure,
+          hash,
+          id: commandId,
+          issued,
+          timestamp: deps.dateString(),
+          name,
+          domain,
+          service,
+          network,
+          host,
+        },
+      ],
+    });
     expect(normalizeFnFake).to.have.been.calledWith(payload);
     expect(validateFnFake).to.have.been.calledWith(payload, {
       context,
@@ -909,6 +1133,7 @@ describe("Command handler post", () => {
       context,
       claims,
       aggregateFn,
+      commandFn,
     });
 
     expect(addFnFake).to.have.been.calledWith({
@@ -995,16 +1220,39 @@ describe("Command handler post", () => {
 
     const addFnFake = fake();
     const aggregateFnFake = fake.returns(aggregateFn);
+    const commandFnFake = fake.returns(commandFn);
 
     await post({
       mainFn: mainFnFake,
       validateFn: validateFnFake,
       normalizeFn: normalizeFnFake,
       aggregateFn: aggregateFnFake,
+      commandFn: commandFnFake,
       addFn: addFnFake,
     })(req, res);
 
     expect(aggregateFnFake).to.have.been.calledWith({ context, claims });
+    expect(commandFnFake).to.have.been.calledWith({
+      idempotency,
+      trace,
+      context,
+      claims,
+      path: [
+        ...(req.body.headers.path || []),
+        {
+          procedure,
+          hash,
+          id: commandId,
+          issued,
+          timestamp: deps.dateString(),
+          name,
+          domain,
+          service,
+          network,
+          host,
+        },
+      ],
+    });
     expect(normalizeFnFake).to.have.been.calledWith(payload);
     expect(validateFnFake).to.have.been.calledWith(payload, { context });
     expect(mainFnFake).to.have.been.calledWith({
@@ -1012,6 +1260,7 @@ describe("Command handler post", () => {
       context,
       claims,
       aggregateFn,
+      commandFn,
     });
 
     expect(createEventFake).to.have.been.calledWith({
@@ -1127,16 +1376,39 @@ describe("Command handler post", () => {
 
     const addFnFake = fake();
     const aggregateFnFake = fake.returns(aggregateFn);
+    const commandFnFake = fake.returns(commandFn);
 
     await post({
       mainFn: mainFnFake,
       validateFn: validateFnFake,
       normalizeFn: normalizeFnFake,
       aggregateFn: aggregateFnFake,
+      commandFn: commandFnFake,
       addFn: addFnFake,
     })(req, res);
 
     expect(aggregateFnFake).to.have.been.calledWith({ context, claims });
+    expect(commandFnFake).to.have.been.calledWith({
+      idempotency,
+      trace,
+      context,
+      claims,
+      path: [
+        ...(req.body.headers.path || []),
+        {
+          procedure,
+          hash,
+          id: commandId,
+          issued,
+          timestamp: deps.dateString(),
+          name,
+          domain,
+          service,
+          network,
+          host,
+        },
+      ],
+    });
     expect(normalizeFnFake).to.have.been.calledWith(payload);
     expect(validateFnFake).to.have.been.calledWith(payload, { context });
     expect(mainFnFake).to.have.been.calledWith({
@@ -1144,6 +1416,7 @@ describe("Command handler post", () => {
       context,
       claims,
       aggregateFn,
+      commandFn,
     });
 
     expect(createEventFake).to.have.been.calledWith({
@@ -1253,6 +1526,7 @@ describe("Command handler post", () => {
 
     const addFnFake = fake();
     const aggregateFnFake = fake.returns(aggregateFn);
+    const commandFnFake = fake.returns(commandFn);
 
     await post({
       mainFn: mainFnFake,
@@ -1260,15 +1534,37 @@ describe("Command handler post", () => {
       normalizeFn: normalizeFnFake,
       addFn: addFnFake,
       aggregateFn: aggregateFnFake,
+      commandFn: commandFnFake,
     })(req, res);
 
     expect(aggregateFnFake).to.have.been.calledWith({ claims });
+    expect(commandFnFake).to.have.been.calledWith({
+      idempotency,
+      trace,
+      claims,
+      path: [
+        ...(req.body.headers.path || []),
+        {
+          procedure,
+          hash,
+          id: commandId,
+          issued,
+          timestamp: deps.dateString(),
+          name,
+          domain,
+          service,
+          network,
+          host,
+        },
+      ],
+    });
     expect(normalizeFnFake).to.have.been.calledWith(payload);
     expect(validateFnFake).to.have.been.calledWith(payload, {});
     expect(mainFnFake).to.have.been.calledWith({
       payload: cleanedPayload,
       claims,
       aggregateFn,
+      commandFn,
     });
 
     expect(createEventFake).to.have.been.calledWith({

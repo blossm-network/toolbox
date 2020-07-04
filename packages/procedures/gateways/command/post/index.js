@@ -10,7 +10,7 @@ module.exports = ({
   key,
 } = {}) => async (req, res) => {
   await deps.validate(req.body);
-  const { root, payload, headers } = req.body;
+  const { payload, headers, root } = req.body;
 
   let { body: response, headers: responseHeaders = {}, statusCode } = await deps
     .command({
@@ -36,7 +36,25 @@ module.exports = ({
       ...(req.context && { context: req.context }),
       ...(req.claims && { claims: req.claims }),
     })
-    .issue(payload, { ...headers, root });
+    .issue(payload, {
+      ...(root && { root }),
+      headers: {
+        ...(headers.idempotency && { idempotency: headers.idempotency }),
+        ...(headers.trace && { trace: headers.trace }),
+        path: [
+          {
+            timestamp: deps.dateString(),
+            issued: headers.issued,
+            procedure: process.env.PROCEDURE,
+            hash: process.env.OPERATION_HASH,
+            domain: process.env.DOMAIN,
+            service: process.env.SERVICE,
+            network: process.env.NETWORK,
+            host: process.env.HOST,
+          },
+        ],
+      },
+    });
 
   // If the response has tokens, send them as cookies.
   if (response && response.tokens) {
@@ -50,14 +68,6 @@ module.exports = ({
         secure: process.env.NODE_ENV != "development", //true,
       });
     }
-
-    // // If removing tokens makes the response empty, set it to null to properly return a 204.
-    // if (Object.keys(response).length == 1) {
-    //   response = null;
-    //   statusCode = 204;
-    // } else {
-    //   delete response.tokens;
-    // }
   }
 
   res.set(responseHeaders).status(statusCode).send(response);

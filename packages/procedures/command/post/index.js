@@ -6,6 +6,7 @@ module.exports = ({
   normalizeFn,
   fillFn,
   aggregateFn,
+  commandFn,
   addFn,
 }) => {
   return async (req, res) => {
@@ -17,6 +18,8 @@ module.exports = ({
     if (fillFn) req.body.payload = await fillFn(req.body.payload);
     if (normalizeFn) req.body.payload = await normalizeFn(req.body.payload);
 
+    const commandId = deps.uuid();
+
     const {
       events = [],
       response,
@@ -27,16 +30,38 @@ module.exports = ({
       payload: req.body.payload,
       ...(req.body.root && { root: req.body.root }),
       ...(req.body.options && { options: req.body.options }),
-      ...(req.body.token && { token: req.body.token }),
       ...(req.body.claims && { claims: req.body.claims }),
       ...(req.body.context && { context: req.body.context }),
       aggregateFn: aggregateFn({
         ...(req.body.context && { context: req.body.context }),
         ...(req.body.claims && { claims: req.body.claims }),
       }),
+      commandFn: commandFn({
+        ...(req.body.claims && { claims: req.body.claims }),
+        ...(req.body.context && { context: req.body.context }),
+        ...(req.body.token && { token: req.body.token }),
+        ...(req.body.headers.idempotency && {
+          idempotency: req.body.headers.idempotency,
+        }),
+        ...(req.body.headers.trace && { trace: req.body.headers.trace }),
+        path: [
+          ...(req.body.headers.path || []),
+          {
+            id: commandId,
+            timestamp: deps.dateString(),
+            issued: req.body.headers.issued,
+            procedure: process.env.PROCEDURE,
+            hash: process.env.OPERATION_HASH,
+            name: process.env.NAME,
+            domain: process.env.DOMAIN,
+            service: process.env.SERVICE,
+            network: process.env.NETWORK,
+            host: process.env.HOST,
+          },
+        ],
+      }),
     });
 
-    const commandId = deps.uuid();
     const eventsPerStore = {};
 
     for (const {

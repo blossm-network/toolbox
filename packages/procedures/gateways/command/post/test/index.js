@@ -1,12 +1,19 @@
 const { expect } = require("chai").use(require("sinon-chai"));
-const { restore, replace, fake, match } = require("sinon");
+const { restore, replace, fake, match, useFakeTimers } = require("sinon");
 
 const deps = require("../deps");
 const post = require("..");
 
+let clock;
+
+const now = new Date();
+
 const response = { a: 1 };
 const payload = "some-payload";
-const headers = "some-headers";
+const issued = "some-issued";
+const headers = {
+  issued,
+};
 const name = "some-name";
 const domain = "some-domain";
 const context = "some-context";
@@ -17,21 +24,33 @@ const key = "some-key";
 const externalTokenNetwork = "some-external-token-network";
 const externalTokenKey = "some-external-token-key";
 
-const root = "some-root";
+const procedure = "some-procedure";
+const hash = "some-hash";
+const envDomain = "some-env-domain";
+const envService = "some-env-service";
+const envNetwork = "some-network";
+const host = "some-host";
+
+process.env.OPERATION_HASH = hash;
+process.env.DOMAIN = envDomain;
+process.env.SERVICE = envService;
+process.env.NETWORK = envNetwork;
+process.env.HOST = host;
+process.env.PROCEDURE = procedure;
 
 const body = {
   payload,
   headers,
-  root,
 };
 
 describe("Command gateway post", () => {
   beforeEach(() => {
-    delete process.env.NETWORK;
     process.env.NODE_ENV = "production";
+    clock = useFakeTimers(now.getTime());
   });
   afterEach(() => {
     restore();
+    clock.restore();
   });
   it("should call with the correct params", async () => {
     const validateFake = fake();
@@ -103,9 +122,22 @@ describe("Command gateway post", () => {
         key,
       },
     });
+
     expect(issueFake).to.have.been.calledWith(payload, {
-      ...headers,
-      root,
+      headers: {
+        path: [
+          {
+            procedure,
+            hash,
+            issued,
+            timestamp: deps.dateString(),
+            domain: envDomain,
+            service: envService,
+            network: envNetwork,
+            host,
+          },
+        ],
+      },
     });
     expect(statusFake).to.have.been.calledWith(statusCode);
     expect(sendFake).to.have.been.calledWith({
@@ -158,7 +190,6 @@ describe("Command gateway post", () => {
     const service = "some-random-service";
     const nodeExternalTokenResult = "some-node-external-token-result";
     const nodeExternalTokenFnFake = fake.returns(nodeExternalTokenResult);
-    process.env.NETWORK = "some-random-env-network";
     await post({
       name,
       domain,
@@ -190,8 +221,20 @@ describe("Command gateway post", () => {
       context,
     });
     expect(issueFake).to.have.been.calledWith(payload, {
-      ...headers,
-      root,
+      headers: {
+        path: [
+          {
+            procedure,
+            hash,
+            issued,
+            timestamp: deps.dateString(),
+            domain: envDomain,
+            service: envService,
+            network: envNetwork,
+            host,
+          },
+        ],
+      },
     });
     expect(statusFake).to.have.been.calledWith(statusCode);
   });
@@ -240,7 +283,6 @@ describe("Command gateway post", () => {
     const service = "some-random-service";
     const nodeExternalTokenResult = "some-node-external-token-result";
     const nodeExternalTokenFnFake = fake.returns(nodeExternalTokenResult);
-    process.env.NETWORK = "some-random-env-network";
     process.env.NODE_ENV = "something-else";
     await post({
       name,
@@ -273,8 +315,20 @@ describe("Command gateway post", () => {
       context,
     });
     expect(issueFake).to.have.been.calledWith(payload, {
-      ...headers,
-      root,
+      headers: {
+        path: [
+          {
+            procedure,
+            hash,
+            issued,
+            timestamp: deps.dateString(),
+            domain: envDomain,
+            service: envService,
+            network: envNetwork,
+            host,
+          },
+        ],
+      },
     });
     expect(statusFake).to.have.been.calledWith(statusCode);
   });
@@ -348,13 +402,25 @@ describe("Command gateway post", () => {
       claims,
     });
     expect(issueFake).to.have.been.calledWith(payload, {
-      ...headers,
-      root,
+      headers: {
+        path: [
+          {
+            procedure,
+            hash,
+            issued,
+            timestamp: deps.dateString(),
+            domain: envDomain,
+            service: envService,
+            network: envNetwork,
+            host,
+          },
+        ],
+      },
     });
     expect(statusFake).to.have.been.calledWith(statusCode);
     expect(sendFake).to.have.been.calledWith();
   });
-  it("should call with the correct params if tokens is in the response and token in req", async () => {
+  it("should call with the correct params if tokens is in the response, token in req, idempotenct and trace in req.headers, and root", async () => {
     const validateFake = fake();
     replace(deps, "validate", validateFake);
 
@@ -387,10 +453,21 @@ describe("Command gateway post", () => {
     replace(deps, "command", commandFake);
 
     const reqToken = "some-req-token";
+    const idempotency = "some-idempotency";
+    const trace = "some-trace";
+    const root = "some-root";
     const req = {
       context,
       claims,
-      body,
+      body: {
+        ...body,
+        headers: {
+          ...body.headers,
+          idempotency,
+          trace,
+        },
+        root,
+      },
       token: reqToken,
       params: {},
     };
@@ -429,7 +506,15 @@ describe("Command gateway post", () => {
       httpOnly: true,
       secure: true,
     });
-    expect(validateFake).to.have.been.calledWith(body);
+    expect(validateFake).to.have.been.calledWith({
+      ...body,
+      headers: {
+        ...body.headers,
+        idempotency,
+        trace,
+      },
+      root,
+    });
     expect(commandFake).to.have.been.calledWith({
       name,
       domain,
@@ -448,8 +533,23 @@ describe("Command gateway post", () => {
       claims,
     });
     expect(issueFake).to.have.been.calledWith(payload, {
-      ...headers,
       root,
+      headers: {
+        idempotency,
+        trace,
+        path: [
+          {
+            procedure,
+            hash,
+            issued,
+            timestamp: deps.dateString(),
+            domain: envDomain,
+            service: envService,
+            network: envNetwork,
+            host,
+          },
+        ],
+      },
     });
     expect(sendFake).to.have.been.calledWith({ tokens: [token1, token2] });
     expect(statusFake).to.have.been.calledWith(statusCode);

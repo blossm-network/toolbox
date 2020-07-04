@@ -10,7 +10,9 @@ const goodParams = {
   headers: {
     root: "some-root",
     trace: "trace!",
+    idempotency: "some-idempotency",
   },
+  root: "some-root",
 };
 
 let clock;
@@ -45,7 +47,7 @@ describe("Validate command", () => {
       expect(e.statusCode).to.equal(409);
     }
   });
-  it("should throw if a no header is passed", async () => {
+  it("should throw if no header is passed", async () => {
     const params = {
       ...goodParams,
       headers: undefined,
@@ -108,7 +110,7 @@ describe("Validate command", () => {
       expect(e.statusCode).to.equal(409);
     }
   });
-  it("should throw if a no issued timestamp is passed", async () => {
+  it("should throw if no issued timestamp is passed", async () => {
     const params = {
       ...goodParams,
       headers: {
@@ -180,6 +182,34 @@ describe("Validate command", () => {
     const params = {
       ...goodParams,
       payload: undefined,
+    };
+    try {
+      validateCommand(params);
+    } catch (e) {
+      //shouldn't get called
+      expect(1).to.equal(0);
+    }
+  });
+  it("should not throw if a no root is passed", async () => {
+    const params = {
+      ...goodParams,
+      ...goodParams.headers,
+      root: undefined,
+    };
+    try {
+      validateCommand(params);
+    } catch (e) {
+      //shouldn't get called
+      expect(1).to.equal(0);
+    }
+  });
+  it("should not throw if a no headers idempotency is passed", async () => {
+    const params = {
+      ...goodParams,
+      headers: {
+        ...goodParams.headers,
+        idempotency: undefined,
+      },
     };
     try {
       validateCommand(params);
