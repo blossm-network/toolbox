@@ -2,6 +2,7 @@
   "dependencies": {
     "@blossm/command": "*",
     "@blossm/command-rpc": "*",
+    "@blossm/event-store-rpc": "*",
     "@blossm/validator": "*",
     "@blossm/crypt": "*",
     "@blossm/errors": "*",
@@ -16,7 +17,6 @@
     "sinon-chai": "^3.5.0",
     "chai-datetime": "^1.5.0",
     "@blossm/datetime": "*",
-    "@blossm/event-store-rpc": "*",
     "@blossm/request": "*",
     "@blossm/uuid": "*",
     "@blossm/view-store-rpc": "*",
