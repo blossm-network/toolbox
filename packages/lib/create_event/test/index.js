@@ -13,7 +13,9 @@ const pathName = "path-name!";
 const pathDomain = "path-domain!";
 const pathService = "path-service!";
 const pathNetwork = "path-network!";
+const pathTimestamp = "path-timestamp!";
 const pathIssued = "some-issued-date";
+const pathId = "some-id";
 const pathHost = "some-path-host";
 const pathHash = "some-path-hash";
 const pathProcedure = "some-path-procedure";
@@ -46,9 +48,11 @@ describe("Create event", () => {
       path: [
         {
           issued: pathIssued,
+          id: pathId,
           name: pathName,
           domain: pathDomain,
           service: pathService,
+          timestamp: pathTimestamp,
           network: pathNetwork,
           host: pathHost,
           hash: pathHash,
@@ -76,9 +80,11 @@ describe("Create event", () => {
         path: [
           {
             issued: pathIssued,
+            id: pathId,
             name: pathName,
             domain: pathDomain,
             service: pathService,
+            timestamp: pathTimestamp,
             network: pathNetwork,
             host: pathHost,
             hash: pathHash,
@@ -106,6 +112,7 @@ describe("Create event", () => {
       service,
       path: [
         {
+          timestamp: pathTimestamp,
           network: pathNetwork,
           host: pathHost,
           hash: pathHash,
@@ -128,6 +135,7 @@ describe("Create event", () => {
         created: dateString(),
         path: [
           {
+            timestamp: pathTimestamp,
             network: pathNetwork,
             host: pathHost,
             hash: pathHash,
@@ -148,9 +156,11 @@ describe("Create event", () => {
       path: [
         {
           issued: pathIssued,
+          id: pathId,
           name: pathName,
           domain: pathDomain,
           service: pathService,
+          timestamp: pathTimestamp,
           network: pathNetwork,
           host: pathHost,
           hash: pathHash,
@@ -176,9 +186,11 @@ describe("Create event", () => {
         path: [
           {
             issued: pathIssued,
+            id: pathId,
             name: pathName,
             domain: pathDomain,
             service: pathService,
+            timestamp: pathTimestamp,
             network: pathNetwork,
             host: pathHost,
             hash: pathHash,
@@ -198,9 +210,11 @@ describe("Create event", () => {
       path: [
         {
           issued: pathIssued,
+          id: pathId,
           name: pathName,
           domain: pathDomain,
           service: pathService,
+          timestamp: pathTimestamp,
           network: pathNetwork,
           host: pathHost,
           hash: pathHash,
@@ -227,9 +241,11 @@ describe("Create event", () => {
         path: [
           {
             issued: pathIssued,
+            id: pathId,
             name: pathName,
             domain: pathDomain,
             service: pathService,
+            timestamp: pathTimestamp,
             network: pathNetwork,
             host: pathHost,
             hash: pathHash,

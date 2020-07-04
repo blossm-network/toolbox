@@ -32,6 +32,8 @@ module.exports = ({
             ...(p.domain && { domain: p.domain }),
             ...(p.service && { service: p.service }),
             ...(p.issued && { issued: p.issued }),
+            ...(p.id && { id: p.id }),
+            timestamp: p.timestamp,
             network: p.network,
             hash: p.hash,
             procedure: p.procedure,
