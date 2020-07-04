@@ -2,14 +2,14 @@
   "dependencies": {
     "@blossm/command": "*",
     "@blossm/command-rpc": "*",
-    "@blossm/event-store-rpc": "*",
     "@blossm/fact-rpc": "*",
     "@blossm/validator": "*",
     "@blossm/crypt": "*",
     "@blossm/errors": "*",
-    "@blossm/gcp-token": "*",
     "@blossm/gcp-queue": "*",
-    "@blossm/node-external-token": "*"
+    "@blossm/event-store-rpc": "*",
+    "@blossm/node-external-token": "*",
+    "@blossm/gcp-token": "*"
   },
   "devDependencies": {
     "localenv": "^0.2.2",

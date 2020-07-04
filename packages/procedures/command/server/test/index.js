@@ -7,6 +7,9 @@ const command = require("..");
 const mainFn = "some-main-fn";
 const aggregateFn = "some-aggregate-fn";
 const commandFn = "some-command-fn";
+const queryAggregateFn = "some-query-aggregate-fn";
+const readFactFn = "some-read-fact-fn";
+const streamFactFn = "some-stream-fact-fn";
 const addFn = "some-add-fn";
 const validateFn = "some-validate-fn";
 const normalizeFn = "some-normalize-fn";
@@ -38,6 +41,9 @@ describe("Command handler", () => {
       mainFn,
       aggregateFn,
       commandFn,
+      queryAggregateFn,
+      readFactFn,
+      streamFactFn,
       addFn,
       validateFn,
       normalizeFn,
@@ -53,6 +59,9 @@ describe("Command handler", () => {
       mainFn,
       aggregateFn,
       commandFn,
+      queryAggregateFn,
+      readFactFn,
+      streamFactFn,
       validateFn,
       normalizeFn,
       addFn,
@@ -73,7 +82,17 @@ describe("Command handler", () => {
     const commandPostFake = fake.returns(commandPostResult);
     replace(deps, "post", commandPostFake);
 
-    await command({ version, mainFn, aggregateFn, commandFn, addFn });
+    await command({
+      version,
+      mainFn,
+      aggregateFn,
+      commandFn,
+
+      queryAggregateFn,
+      readFactFn,
+      streamFactFn,
+      addFn,
+    });
 
     expect(listenFake).to.have.been.calledWith();
     expect(serverFake).to.have.been.calledWith();
@@ -83,6 +102,9 @@ describe("Command handler", () => {
       mainFn,
       aggregateFn,
       commandFn,
+      queryAggregateFn,
+      readFactFn,
+      streamFactFn,
       addFn,
     });
   });
@@ -102,7 +124,17 @@ describe("Command handler", () => {
     replace(deps, "post", commandPostFake);
 
     try {
-      await command({ version, mainFn, aggregateFn, commandFn, addFn });
+      await command({
+        version,
+        mainFn,
+        aggregateFn,
+        commandFn,
+
+        queryAggregateFn,
+        readFactFn,
+        streamFactFn,
+        addFn,
+      });
 
       //shouldn't get called
       expect(1).to.equal(0);

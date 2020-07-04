@@ -5,6 +5,7 @@ const deps = require("../deps");
 const fact = require("..");
 
 const mainFn = "some-main-fn";
+const queryAggregatesFn = "some-query-aggregates-fn";
 
 describe("Fact", () => {
   afterEach(() => {
@@ -35,6 +36,7 @@ describe("Fact", () => {
 
     const result = await fact({
       mainFn,
+      queryAggregatesFn,
     });
 
     expect(result).to.equal(returnValue);
@@ -44,8 +46,11 @@ describe("Fact", () => {
     expect(streamFake).to.have.been.calledWith(factStreamResult, {
       path: "/stream/:root?",
     });
-    expect(factGetFake).to.have.been.calledWith({ mainFn });
-    expect(factStreamFake).to.have.been.calledWith({ mainFn });
+    expect(factGetFake).to.have.been.calledWith({ mainFn, queryAggregatesFn });
+    expect(factStreamFake).to.have.been.calledWith({
+      mainFn,
+      queryAggregatesFn,
+    });
   });
   it("should throw correctly", async () => {
     const error = new Error("some-message");
@@ -62,7 +67,7 @@ describe("Fact", () => {
     replace(deps, "server", serverFake);
 
     try {
-      await fact({ mainFn });
+      await fact({ mainFn, queryAggregatesFn });
 
       //shouldn't get called
       expect(1).to.equal(0);

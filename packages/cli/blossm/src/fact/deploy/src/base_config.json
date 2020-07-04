@@ -1,6 +1,9 @@
 {
   "dependencies": {
-    "@blossm/fact": "*"
+    "@blossm/fact": "*",
+    "@blossm/event-store-rpc": "*",
+    "@blossm/node-external-token": "*",
+    "@blossm/gcp-token": "*"
   },
   "devDependencies": {
     "chai": "^4.2.0",
