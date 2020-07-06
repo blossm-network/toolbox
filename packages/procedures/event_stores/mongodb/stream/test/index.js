@@ -39,8 +39,8 @@ describe("Mongodb event store stream", () => {
     });
     expect(findFake).to.have.been.calledWith({
       store: eventStore,
-      query: { root, "headers.number": { $gte: from } },
-      sort: { "headers.number": 1 },
+      query: { "data.root": root, "data.number": { $gte: from } },
+      sort: { "data.number": 1 },
       options: {
         lean: true,
       },
@@ -73,8 +73,8 @@ describe("Mongodb event store stream", () => {
 
     expect(findFake).to.have.been.calledWith({
       store: eventStore,
-      query: { root, "headers.number": { $gte: from } },
-      sort: { "headers.number": 1 },
+      query: { "data.root": root, "data.number": { $gte: from } },
+      sort: { "data.number": 1 },
       options: {
         lean: true,
       },

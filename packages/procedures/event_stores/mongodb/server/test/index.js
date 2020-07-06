@@ -28,6 +28,7 @@ process.env.MONGODB_HOST = host;
 process.env.MONGODB_DATABASE = database;
 
 const publishFn = "some-publish-fn";
+const hashFn = "some-hash-fn";
 
 describe("Mongodb event store", () => {
   beforeEach(() => {
@@ -98,6 +99,7 @@ describe("Mongodb event store", () => {
       handlers,
       secretFn: secretFake,
       publishFn,
+      hashFn,
     });
 
     expect(formatSchemaFake.getCall(0)).to.have.been.calledWith(
@@ -118,58 +120,62 @@ describe("Mongodb event store", () => {
     expect(storeFake).to.have.been.calledWith({
       name: `_${service}.${domain}`,
       schema: {
-        id: { $type: String, required: true, unique: true },
-        saved: { $type: Date, required: true },
-        root: { $type: String, required: true },
-        payload: formattedSchemaWithOptions,
-        headers: {
+        hash: { $type: String, required: true, unique: true },
+        data: {
+          id: { $type: String, required: true, unique: true },
+          saved: { $type: Date, required: true },
+          root: { $type: String, required: true },
+          payload: formattedSchemaWithOptions,
           number: { $type: Number, required: true },
-          topic: { $type: String, required: true },
-          version: { $type: Number, required: true },
-          action: { $type: String, required: true },
-          domain: { $type: String, required: true },
-          service: { $type: String, required: true },
-          trace: { $type: String },
-          context: { $type: Object },
-          claims: {
-            $type: {
-              iss: String,
-              aud: String,
-              sub: String,
-              exp: String,
-              iat: String,
-              jti: String,
-              _id: false,
-            },
-          },
-          created: { $type: Date, required: true },
-          idempotency: { $type: String, required: true, unique: true },
-          path: {
-            $type: [
-              {
-                id: { $type: String },
-                name: { $type: String },
-                domain: { $type: String },
-                service: { $type: String },
-                network: { $type: String, required: true },
-                host: { $type: String, required: true },
-                procedure: { $type: String, required: true },
-                hash: { $type: String, required: true },
-                issued: { $type: Date },
-                timestamp: { $type: Date },
+          headers: {
+            topic: { $type: String, required: true },
+            version: { $type: Number, required: true },
+            action: { $type: String, required: true },
+            domain: { $type: String, required: true },
+            service: { $type: String, required: true },
+            trace: { $type: String },
+            context: { $type: Object },
+            claims: {
+              $type: {
+                iss: String,
+                aud: String,
+                sub: String,
+                exp: String,
+                iat: String,
+                jti: String,
                 _id: false,
               },
-            ],
-            default: [],
+            },
+            created: { $type: Date, required: true },
+            idempotency: { $type: String, required: true, unique: true },
+            path: {
+              $type: [
+                {
+                  id: { $type: String },
+                  name: { $type: String },
+                  domain: { $type: String },
+                  service: { $type: String },
+                  network: { $type: String, required: true },
+                  host: { $type: String, required: true },
+                  procedure: { $type: String, required: true },
+                  hash: { $type: String, required: true },
+                  issued: { $type: Date },
+                  timestamp: { $type: Date },
+                  _id: false,
+                },
+              ],
+              default: [],
+            },
+            _id: false,
           },
           _id: false,
         },
       },
       typeKey: "$type",
       indexes: [
-        [{ id: 1 }],
-        [{ root: 1 }],
-        [{ root: 1, "headers.number": 1, _id: 1, __v: 1 }],
+        [{ "data.id": 1 }],
+        [{ "data.root": 1 }],
+        [{ "data.root": 1, "data.number": 1, _id: 1, __v: 1 }],
       ],
       connection: {
         protocol,
@@ -190,10 +196,7 @@ describe("Mongodb event store", () => {
       schema: {
         created: { $type: Date, required: true },
         root: { $type: String, required: true, unique: true },
-        headers: {
-          lastEventNumber: { $type: Number, required: true },
-          _id: false,
-        },
+        lastEventNumber: { $type: Number, required: true },
         state: formattedSchema,
       },
       typeKey: "$type",
@@ -236,6 +239,7 @@ describe("Mongodb event store", () => {
       rootStreamFn: rootStreamResult,
       countFn: countResult,
       publishFn,
+      hashFn,
     });
 
     await mongodbEventStore();
@@ -291,6 +295,7 @@ describe("Mongodb event store", () => {
       indexes: [index],
       secretFn: secretFake,
       publishFn,
+      hashFn,
     });
 
     expect(formatSchemaFake.getCall(0)).to.have.been.calledWith(
@@ -311,59 +316,63 @@ describe("Mongodb event store", () => {
     expect(storeFake).to.have.been.calledWith({
       name: `_${service}.${domain}`,
       schema: {
-        id: { $type: String, required: true, unique: true },
-        saved: { $type: Date, required: true },
-        payload: formattedSchemaWithOptions,
-        root: { $type: String, required: true },
-        headers: {
+        hash: { $type: String, required: true, unique: true },
+        data: {
+          id: { $type: String, required: true, unique: true },
+          saved: { $type: Date, required: true },
+          payload: formattedSchemaWithOptions,
+          root: { $type: String, required: true },
           number: { $type: Number, required: true },
-          topic: { $type: String, required: true },
-          version: { $type: Number, required: true },
-          action: { $type: String, required: true },
-          domain: { $type: String, required: true },
-          service: { $type: String, required: true },
-          trace: { $type: String },
-          context: { $type: Object },
-          claims: {
-            $type: {
-              iss: String,
-              aud: String,
-              sub: String,
-              exp: String,
-              iat: String,
-              jti: String,
-              _id: false,
-            },
-          },
-          created: { $type: Date, required: true },
-          idempotency: { $type: String, required: true, unique: true },
-          path: {
-            $type: [
-              {
-                id: { $type: String },
-                name: { $type: String },
-                domain: { $type: String },
-                service: { $type: String },
-                network: { $type: String, required: true },
-                host: { $type: String, required: true },
-                procedure: { $type: String, required: true },
-                hash: { $type: String, required: true },
-                issued: { $type: Date },
-                timestamp: { $type: Date },
+          headers: {
+            topic: { $type: String, required: true },
+            version: { $type: Number, required: true },
+            action: { $type: String, required: true },
+            domain: { $type: String, required: true },
+            service: { $type: String, required: true },
+            trace: { $type: String },
+            context: { $type: Object },
+            claims: {
+              $type: {
+                iss: String,
+                aud: String,
+                sub: String,
+                exp: String,
+                iat: String,
+                jti: String,
                 _id: false,
               },
-            ],
-            default: [],
+            },
+            created: { $type: Date, required: true },
+            idempotency: { $type: String, required: true, unique: true },
+            path: {
+              $type: [
+                {
+                  id: { $type: String },
+                  name: { $type: String },
+                  domain: { $type: String },
+                  service: { $type: String },
+                  network: { $type: String, required: true },
+                  host: { $type: String, required: true },
+                  procedure: { $type: String, required: true },
+                  hash: { $type: String, required: true },
+                  issued: { $type: Date },
+                  timestamp: { $type: Date },
+                  _id: false,
+                },
+              ],
+              default: [],
+            },
+            _id: false,
           },
           _id: false,
         },
       },
       typeKey: "$type",
       indexes: [
-        [{ id: 1 }],
-        [{ root: 1 }],
-        [{ root: 1, "headers.number": 1, _id: 1, __v: 1 }],
-        [{ [index]: 1 }],
+        [{ "data.id": 1 }],
+        [{ "data.root": 1 }],
+        [{ "data.root": 1, "data.number": 1, _id: 1, __v: 1 }],
+        [{ [`data.payload.${index}`]: 1 }],
       ],
       connection: {
         protocol,
@@ -384,14 +393,11 @@ describe("Mongodb event store", () => {
       schema: {
         created: { $type: Date, required: true },
         root: { $type: String, required: true, unique: true },
-        headers: {
-          lastEventNumber: { $type: Number, required: true },
-          _id: false,
-        },
+        lastEventNumber: { $type: Number, required: true },
         state: formattedSchema,
       },
       typeKey: "$type",
-      indexes: [[{ root: 1 }], [{ [index]: 1 }]],
+      indexes: [[{ root: 1 }], [{ [`state.${index}`]: 1 }]],
     });
     expect(storeFake).to.have.been.calledWith({
       name: `_${service}.${domain}.counts`,
@@ -444,7 +450,12 @@ describe("Mongodb event store", () => {
     const streamFake = fake.returns(streamResult);
     replace(deps, "stream", streamFake);
     const schema = { a: { type: String } };
-    await mongodbEventStore({ schema, secretFn: secretFake, publishFn });
+    await mongodbEventStore({
+      schema,
+      secretFn: secretFake,
+      publishFn,
+      hashFn,
+    });
 
     expect(formatSchemaFake.getCall(0)).to.have.been.calledWith(
       schema,
@@ -464,58 +475,62 @@ describe("Mongodb event store", () => {
     expect(storeFake).to.have.been.calledWith({
       name: `_${service}.${domain}`,
       schema: {
-        id: { $type: String, required: true, unique: true },
-        saved: { $type: Date, required: true },
-        root: { $type: String, required: true },
-        payload: formattedSchemaWithOptions,
-        headers: {
+        hash: { $type: String, required: true, unique: true },
+        data: {
+          saved: { $type: Date, required: true },
+          id: { $type: String, required: true, unique: true },
+          root: { $type: String, required: true },
+          payload: formattedSchemaWithOptions,
           number: { $type: Number, required: true },
-          topic: { $type: String, required: true },
-          version: { $type: Number, required: true },
-          action: { $type: String, required: true },
-          domain: { $type: String, required: true },
-          service: { $type: String, required: true },
-          trace: { $type: String },
-          context: { $type: Object },
-          claims: {
-            $type: {
-              iss: String,
-              aud: String,
-              sub: String,
-              exp: String,
-              iat: String,
-              jti: String,
-              _id: false,
-            },
-          },
-          created: { $type: Date, required: true },
-          idempotency: { $type: String, required: true, unique: true },
-          path: {
-            $type: [
-              {
-                name: { $type: String },
-                id: { $type: String },
-                domain: { $type: String },
-                service: { $type: String },
-                network: { $type: String, required: true },
-                host: { $type: String, required: true },
-                procedure: { $type: String, required: true },
-                hash: { $type: String, required: true },
-                issued: { $type: Date },
-                timestamp: { $type: Date },
+          headers: {
+            topic: { $type: String, required: true },
+            version: { $type: Number, required: true },
+            action: { $type: String, required: true },
+            domain: { $type: String, required: true },
+            service: { $type: String, required: true },
+            trace: { $type: String },
+            context: { $type: Object },
+            claims: {
+              $type: {
+                iss: String,
+                aud: String,
+                sub: String,
+                exp: String,
+                iat: String,
+                jti: String,
                 _id: false,
               },
-            ],
-            default: [],
+            },
+            created: { $type: Date, required: true },
+            idempotency: { $type: String, required: true, unique: true },
+            path: {
+              $type: [
+                {
+                  name: { $type: String },
+                  id: { $type: String },
+                  domain: { $type: String },
+                  service: { $type: String },
+                  network: { $type: String, required: true },
+                  host: { $type: String, required: true },
+                  procedure: { $type: String, required: true },
+                  hash: { $type: String, required: true },
+                  issued: { $type: Date },
+                  timestamp: { $type: Date },
+                  _id: false,
+                },
+              ],
+              default: [],
+            },
+            _id: false,
           },
           _id: false,
         },
       },
       typeKey: "$type",
       indexes: [
-        [{ id: 1 }],
-        [{ root: 1 }],
-        [{ root: 1, "headers.number": 1, _id: 1, __v: 1 }],
+        [{ "data.id": 1 }],
+        [{ "data.root": 1 }],
+        [{ "data.root": 1, "data.number": 1, _id: 1, __v: 1 }],
       ],
       connection: {
         protocol,

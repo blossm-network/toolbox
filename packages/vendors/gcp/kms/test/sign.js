@@ -34,9 +34,14 @@ describe("Kms sign", () => {
       },
     });
     replace(crypto, "createHash", createHashFake);
-    const result = await sign({ ring, key, location, version, project })(
-      message
-    );
+    const result = await sign({
+      ring,
+      key,
+      location,
+      version,
+      project,
+      message,
+    });
     expect(pathFake).to.have.been.calledWith(
       project,
       location,
@@ -72,7 +77,7 @@ describe("Kms sign", () => {
     });
     replace(crypto, "createHash", createHashFake);
     try {
-      await sign({ key, ring, location, version, project })(message);
+      await sign({ message, key, ring, location, version, project });
 
       //shouldn't get called
       expect(1).to.equal(2);

@@ -2,7 +2,9 @@
   "dependencies": {
     "@blossm/mongodb-event-store": "*",
     "@blossm/gcp-pubsub": "*",
-    "@blossm/gcp-secret": "*"
+    "@blossm/gcp-secret": "*",
+    "@blossm/gcp-kms": "*",
+    "@blossm/cononical-string": "*"
   },
   "devDependencies": {
     "localenv": "^0.2.2",

@@ -8,11 +8,14 @@ const root = "some-root";
 const action = "some-action";
 const otherAction = "some-other-action";
 const findResult = [
-  { root, payload: { b: 2, c: 2 }, headers: { number: 1, action } },
+  { data: { root, number: 1, payload: { b: 2, c: 2 }, headers: { action } } },
   {
-    root,
-    payload: { c: 3, d: 4 },
-    headers: { number: 2, action: otherAction },
+    data: {
+      root,
+      number: 2,
+      payload: { c: 3, d: 4 },
+      headers: { action: otherAction },
+    },
   },
 ];
 const handlers = {
@@ -33,7 +36,7 @@ const handlers = {
 const findOneResult = {
   root,
   state: { a: 1, b: 1 },
-  headers: { lastEventNumber: 0 },
+  lastEventNumber: 0,
 };
 
 const eventStore = "some-event-store";
@@ -61,10 +64,10 @@ describe("Mongodb event store aggregate", () => {
     expect(findFake).to.have.been.calledWith({
       store: eventStore,
       query: {
-        root,
+        "data.root": root,
       },
       sort: {
-        "headers.number": 1,
+        "data.number": 1,
       },
       options: {
         lean: true,
@@ -82,7 +85,7 @@ describe("Mongodb event store aggregate", () => {
     expect(result).to.deep.equal({
       root,
       state: { a: 1, b: 2, c: 3, d: 4, e: 5 },
-      headers: { lastEventNumber: 2 },
+      lastEventNumber: 2,
     });
   });
   it("should call with the correct params with no snapshot found", async () => {
@@ -103,10 +106,10 @@ describe("Mongodb event store aggregate", () => {
     expect(findFake).to.have.been.calledWith({
       store: eventStore,
       query: {
-        root,
+        "data.root": root,
       },
       sort: {
-        "headers.number": 1,
+        "data.number": 1,
       },
       options: {
         lean: true,
@@ -124,7 +127,7 @@ describe("Mongodb event store aggregate", () => {
     expect(result).to.deep.equal({
       root,
       state: { b: 2, c: 3, d: 4, e: 5 },
-      headers: { lastEventNumber: 2 },
+      lastEventNumber: 2,
     });
   });
   it("should call with the correct params with no snapshot or events found", async () => {
@@ -145,10 +148,10 @@ describe("Mongodb event store aggregate", () => {
     expect(findFake).to.have.been.calledWith({
       store: eventStore,
       query: {
-        root,
+        "data.root": root,
       },
       sort: {
-        "headers.number": 1,
+        "data.number": 1,
       },
       options: {
         lean: true,

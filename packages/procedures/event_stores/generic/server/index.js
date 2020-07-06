@@ -7,6 +7,7 @@ module.exports = async ({
   streamFn,
   reserveRootCountsFn,
   publishFn,
+  hashFn,
   rootStreamFn,
   countFn,
 } = {}) => {
@@ -27,6 +28,7 @@ module.exports = async ({
         saveEventsFn,
         reserveRootCountsFn,
         publishFn,
+        hashFn,
       })
     )
     .listen();

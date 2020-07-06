@@ -1,6 +1,8 @@
 const eventStore = require("@blossm/mongodb-event-store");
 const pubsub = require("@blossm/gcp-pubsub");
 const { get: secret } = require("@blossm/gcp-secret");
+const { encrypt } = require("@blossm/gcp-kms");
+const cononicalString = require("@blossm/cononical-string");
 const handlers = require("./handlers");
 const config = require("./config.json");
 
@@ -10,4 +12,15 @@ module.exports = eventStore({
   handlers,
   secretFn: secret,
   publishFn: pubsub.publish,
+  hashFn: async (object) => {
+    const message = cononicalString(object);
+    return await encrypt({
+      message,
+      format: "hex",
+      key: "signature",
+      ring: "event-hash",
+      location: "global",
+      project: process.env.GCP_PROJECT,
+    });
+  },
 });

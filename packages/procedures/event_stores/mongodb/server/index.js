@@ -17,63 +17,67 @@ const eventStore = async ({ schema, indexes, secretFn }) => {
   _eventStore = deps.db.store({
     name: `_${process.env.SERVICE}.${process.env.DOMAIN}`,
     schema: {
-      id: { [typeKey]: String, required: true, unique: true },
-      saved: { [typeKey]: Date, required: true },
-      root: { [typeKey]: String, required: true },
-      payload: schema,
-      headers: {
+      hash: { [typeKey]: String, required: true, unique: true },
+      data: {
+        id: { [typeKey]: String, required: true, unique: true },
+        saved: { [typeKey]: Date, required: true },
         number: { [typeKey]: Number, required: true },
-        topic: { [typeKey]: String, required: true },
-        action: { [typeKey]: String, required: true },
-        domain: { [typeKey]: String, required: true },
-        service: { [typeKey]: String, required: true },
-        version: { [typeKey]: Number, required: true },
-        context: { [typeKey]: Object },
-        claims: {
-          [typeKey]: {
-            iss: String,
-            aud: String,
-            sub: String,
-            exp: String,
-            iat: String,
-            jti: String,
-            _id: false,
-          },
-        },
-        trace: { [typeKey]: String },
-        created: { [typeKey]: Date, required: true },
-        idempotency: { [typeKey]: String, required: true, unique: true },
-        path: {
-          [typeKey]: [
-            {
-              name: { [typeKey]: String },
-              id: { [typeKey]: String },
-              domain: { [typeKey]: String },
-              service: { [typeKey]: String },
-              network: { [typeKey]: String, required: true },
-              host: { [typeKey]: String, required: true },
-              procedure: { [typeKey]: String, required: true },
-              hash: { [typeKey]: String, required: true },
-              issued: { [typeKey]: Date },
-              timestamp: { [typeKey]: Date },
+        root: { [typeKey]: String, required: true },
+        payload: schema,
+        headers: {
+          topic: { [typeKey]: String, required: true },
+          action: { [typeKey]: String, required: true },
+          domain: { [typeKey]: String, required: true },
+          service: { [typeKey]: String, required: true },
+          version: { [typeKey]: Number, required: true },
+          context: { [typeKey]: Object },
+          claims: {
+            [typeKey]: {
+              iss: String,
+              aud: String,
+              sub: String,
+              exp: String,
+              iat: String,
+              jti: String,
               _id: false,
             },
-          ],
-          default: [],
+          },
+          trace: { [typeKey]: String },
+          created: { [typeKey]: Date, required: true },
+          idempotency: { [typeKey]: String, required: true, unique: true },
+          path: {
+            [typeKey]: [
+              {
+                name: { [typeKey]: String },
+                id: { [typeKey]: String },
+                domain: { [typeKey]: String },
+                service: { [typeKey]: String },
+                network: { [typeKey]: String, required: true },
+                host: { [typeKey]: String, required: true },
+                procedure: { [typeKey]: String, required: true },
+                hash: { [typeKey]: String, required: true },
+                issued: { [typeKey]: Date },
+                timestamp: { [typeKey]: Date },
+                _id: false,
+              },
+            ],
+            default: [],
+          },
+          _id: false,
         },
         _id: false,
       },
     },
     typeKey,
     indexes: [
-      [{ id: 1 }],
-      [{ root: 1 }],
-      [{ root: 1, "headers.number": 1, _id: 1, __v: 1 }],
+      [{ "data.id": 1 }],
+      [{ "data.root": 1 }],
+      [{ "data.root": 1, "data.number": 1, _id: 1, __v: 1 }],
       ...(indexes.length == 0
         ? []
         : [
             indexes.map((index) => {
-              return { [index]: 1 };
+              return { [`data.payload.${index}`]: 1 };
             }),
           ]),
     ],
@@ -105,10 +109,7 @@ const snapshotStore = async ({ schema, indexes }) => {
     schema: {
       created: { [typeKey]: Date, required: true },
       root: { [typeKey]: String, required: true, unique: true },
-      headers: {
-        lastEventNumber: { [typeKey]: Number, required: true },
-        _id: false,
-      },
+      lastEventNumber: { [typeKey]: Number, required: true },
       state: schema,
     },
     typeKey,
@@ -118,7 +119,7 @@ const snapshotStore = async ({ schema, indexes }) => {
         ? []
         : [
             indexes.map((index) => {
-              return { [index]: 1 };
+              return { [`state.${index}`]: 1 };
             }),
           ]),
     ],
@@ -152,6 +153,7 @@ module.exports = async ({
   handlers,
   secretFn,
   publishFn,
+  hashFn,
   // archiveSnapshotFn,
   // archiveEventsFn
 } = {}) => {
@@ -201,6 +203,7 @@ module.exports = async ({
     }),
     // saveSnapshotFn,
     publishFn,
+    hashFn,
   });
 };
 

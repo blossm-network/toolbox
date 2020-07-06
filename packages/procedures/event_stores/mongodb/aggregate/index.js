@@ -5,10 +5,10 @@ module.exports = ({ eventStore, snapshotStore, handlers }) => async (root) => {
     deps.db.find({
       store: eventStore,
       query: {
-        root,
+        "data.root": root,
       },
       sort: {
-        "headers.number": 1,
+        "data.number": 1,
       },
       options: {
         lean: true,
@@ -29,29 +29,26 @@ module.exports = ({ eventStore, snapshotStore, handlers }) => async (root) => {
 
   const aggregate = events
     .filter((event) =>
-      snapshot ? event.headers.number > snapshot.headers.lastEventNumber : true
+      snapshot ? event.data.number > snapshot.lastEventNumber : true
     )
     .reduce(
       (accumulator, event) => {
-        const handler = handlers[event.headers.action];
+        const handler = handlers[event.data.headers.action];
         if (!handler)
           throw deps.badRequestError.message("Event handler not specified.", {
             info: {
-              action: event.headers.action,
+              action: event.data.headers.action,
             },
           });
 
         return {
           root: accumulator.root,
-          headers: {
-            lastEventNumber: event.headers.number,
-          },
-          state: handler(accumulator.state, event.payload),
+          lastEventNumber: event.data.number,
+          state: handler(accumulator.state, event.data.payload),
         };
       },
       {
         root: snapshot ? snapshot.root : root,
-        headers: snapshot ? snapshot.headers : {},
         state: snapshot ? snapshot.state : {},
       }
     );

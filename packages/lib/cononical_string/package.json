@@ -1,0 +1,22 @@
+{
+  "name": "@blossm/cononical-string",
+  "version": "0.0.0",
+  "description": "Creates a string of an object that is the same regardless of object property order.",
+  "main": "index.js",
+  "author": "blossm.network",
+  "engines": {
+    "node": ">= 10.16.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "mocha --recursive"
+  },
+  "dependencies": {
+    "canonical-json": "^0.0.4"
+  },
+  "devDependencies": {
+    "mocha": "^7.1.1"
+  }
+}

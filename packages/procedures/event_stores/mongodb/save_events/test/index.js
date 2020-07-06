@@ -6,7 +6,6 @@ const saveEvent = require("..");
 const deps = require("../deps");
 
 const createResult = { a: 1 };
-const id = "some-id";
 
 const action = "some-action";
 const handlers = { [action]: () => {} };
@@ -27,9 +26,10 @@ describe("Mongodb event store create event", () => {
 
     const events = [
       {
-        id,
-        headers: {
-          action,
+        data: {
+          headers: {
+            action,
+          },
         },
       },
     ];
@@ -61,10 +61,12 @@ describe("Mongodb event store create event", () => {
 
     const events = [
       {
-        id,
-        headers: {
-          action,
+        data: {
           number: "some-number",
+
+          headers: {
+            action,
+          },
         },
       },
     ];
@@ -102,10 +104,11 @@ describe("Mongodb event store create event", () => {
     });
     const events = [
       {
-        id,
-        headers: {
-          action: "bogus",
-          number: "some-number",
+        data: {
+          headers: {
+            action: "bogus",
+            number: "some-number",
+          },
         },
       },
     ];

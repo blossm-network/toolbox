@@ -17,7 +17,10 @@ describe("Mongodb event store query", () => {
     const snapshotRoot = "some-snapshot-root";
     const eventRoot = "some-event-root";
     const findSnapshotResult = [{ root: snapshotRoot }];
-    const findEventResult = [{ root: eventRoot }, { root: eventRoot }];
+    const findEventResult = [
+      { data: { root: eventRoot } },
+      { data: { root: eventRoot } },
+    ];
     const handlers = "some-handlers";
 
     const findFake = stub()
@@ -34,7 +37,7 @@ describe("Mongodb event store query", () => {
     const aggregateResult = {
       root,
       state: { a: 1, b: 2, c: 3, d: 4 },
-      headers: { lastEventNumber: 2 },
+      lastEventNumber: 2,
     };
     const aggregateResultFake = fake.returns(aggregateResult);
     const aggregateFake = fake.returns(aggregateResultFake);
@@ -57,7 +60,7 @@ describe("Mongodb event store query", () => {
     expect(findFake).to.have.been.calledWith({
       store: eventStore,
       query: {
-        "payload.a": 1,
+        "data.payload.a": 1,
       },
       options: {
         lean: true,
@@ -77,12 +80,12 @@ describe("Mongodb event store query", () => {
       {
         root,
         state: { a: 1, b: 2, c: 3, d: 4 },
-        headers: { lastEventNumber: 2 },
+        lastEventNumber: 2,
       },
       {
         root,
         state: { a: 1, b: 2, c: 3, d: 4 },
-        headers: { lastEventNumber: 2 },
+        lastEventNumber: 2,
       },
     ]);
   });
@@ -91,7 +94,10 @@ describe("Mongodb event store query", () => {
     const snapshotStore = "some-snapshot-store";
 
     const eventRoot = "some-event-root";
-    const findEventResult = [{ root: eventRoot }, { root: eventRoot }];
+    const findEventResult = [
+      { data: { root: eventRoot } },
+      { data: { root: eventRoot } },
+    ];
     const handlers = "some-handlers";
 
     const findFake = stub()
@@ -108,7 +114,7 @@ describe("Mongodb event store query", () => {
     const aggregateResult = {
       root,
       state: { a: 1, b: 2, c: 3, d: 4 },
-      headers: { lastEventNumber: 2 },
+      lastEventNumber: 2,
     };
     const aggregateResultFake = fake.returns(aggregateResult);
     const aggregateFake = fake.returns(aggregateResultFake);
@@ -130,7 +136,7 @@ describe("Mongodb event store query", () => {
     expect(findFake).to.have.been.calledWith({
       store: eventStore,
       query: {
-        "payload.a": 1,
+        "data.payload.a": 1,
       },
       options: {
         lean: true,
@@ -150,7 +156,7 @@ describe("Mongodb event store query", () => {
       {
         root,
         state: { a: 1, b: 2, c: 3, d: 4 },
-        headers: { lastEventNumber: 2 },
+        lastEventNumber: 2,
       },
     ]);
   });
@@ -161,7 +167,10 @@ describe("Mongodb event store query", () => {
     const snapshotRoot = "some-snapshot-root";
     const eventRoot = "some-event-root";
     const findSnapshotResult = [{ root: snapshotRoot }];
-    const findEventResult = [{ root: eventRoot }, { root: eventRoot }];
+    const findEventResult = [
+      { data: { root: eventRoot } },
+      { data: { root: eventRoot } },
+    ];
     const handlers = "some-handlers";
 
     const findFake = stub()
@@ -178,7 +187,7 @@ describe("Mongodb event store query", () => {
     const aggregateResult = {
       root,
       state: { a: { b: { c: 1 } }, d: "sure", e: true },
-      headers: { lastEventNumber: 2 },
+      lastEventNumber: 2,
     };
     const aggregateResultFake = fake.returns(aggregateResult);
     const aggregateFake = fake.returns(aggregateResultFake);
@@ -201,7 +210,7 @@ describe("Mongodb event store query", () => {
     expect(findFake).to.have.been.calledWith({
       store: eventStore,
       query: {
-        "payload.a.b.c": 1,
+        "data.payload.a.b.c": 1,
       },
       options: {
         lean: true,
@@ -221,12 +230,12 @@ describe("Mongodb event store query", () => {
       {
         root,
         state: { a: { b: { c: 1 } }, d: "sure", e: true },
-        headers: { lastEventNumber: 2 },
+        lastEventNumber: 2,
       },
       {
         root,
         state: { a: { b: { c: 1 } }, d: "sure", e: true },
-        headers: { lastEventNumber: 2 },
+        lastEventNumber: 2,
       },
     ]);
   });
@@ -252,7 +261,7 @@ describe("Mongodb event store query", () => {
     const aggregateResult = {
       root,
       state: { a: 1, b: 2, c: 3, d: 4 },
-      headers: { lastEventNumber: 2 },
+      lastEventNumber: 2,
     };
     const aggregateResultFake = fake.returns(aggregateResult);
     const aggregateFake = fake.returns(aggregateResultFake);
@@ -274,7 +283,7 @@ describe("Mongodb event store query", () => {
     expect(findFake).to.have.been.calledWith({
       store: eventStore,
       query: {
-        "payload.a": 1,
+        "data.payload.a": 1,
       },
       options: {
         lean: true,
@@ -294,7 +303,7 @@ describe("Mongodb event store query", () => {
       {
         root,
         state: { a: 1, b: 2, c: 3, d: 4 },
-        headers: { lastEventNumber: 2 },
+        lastEventNumber: 2,
       },
     ]);
   });
@@ -314,7 +323,7 @@ describe("Mongodb event store query", () => {
     const aggregateResult = {
       root,
       state: { a: 1, b: 2, c: 3, d: 4 },
-      headers: { lastEventNumber: 2 },
+      lastEventNumber: 2,
     };
     const aggregateResultFake = fake.returns(aggregateResult);
     const aggregateFake = fake.returns(aggregateResultFake);

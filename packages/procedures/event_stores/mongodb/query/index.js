@@ -38,7 +38,7 @@ module.exports = ({ eventStore, snapshotStore, handlers }) => async ({
     deps.db.find({
       store: eventStore,
       query: {
-        [`payload.${key}`]: value,
+        [`data.payload.${key}`]: value,
       },
       options: {
         lean: true,
@@ -61,7 +61,7 @@ module.exports = ({ eventStore, snapshotStore, handlers }) => async ({
   const candidateRoots = [
     ...new Set([
       ...snapshots.map((snapshot) => snapshot.root),
-      ...events.map((event) => event.root),
+      ...events.map((event) => event.data.root),
     ]),
   ];
 

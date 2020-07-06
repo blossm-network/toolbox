@@ -1,6 +1,6 @@
 const deps = require("./deps");
 
-module.exports = ({ saveEventsFn, reserveRootCountsFn, publishFn }) => {
+module.exports = ({ saveEventsFn, reserveRootCountsFn, publishFn, hashFn }) => {
   return async (req, res) => {
     const eventNumberOffsets = {};
 
@@ -25,55 +25,73 @@ module.exports = ({ saveEventsFn, reserveRootCountsFn, publishFn }) => {
       {}
     );
 
-    const normalizedEvents = req.body.events.map((event) => {
-      if (!eventNumberOffsets[event.data.root])
-        eventNumberOffsets[event.data.root] = 0;
+    const normalizedEvents = [];
 
-      const topicParts = event.data.headers.topic.split(".");
-      const topicDomain = topicParts[0];
-      const topicService = topicParts[1];
+    const eventsByRoot = {};
+    for (const event of req.body.events) {
+      if (eventsByRoot[event.data.root] == undefined)
+        eventsByRoot[event.data.root] = [];
+      eventsByRoot[event.data.root].push(event);
+    }
+    await Promise.all(
+      Object.keys(eventsByRoot).map(async (key) => {
+        for (const event of eventsByRoot[key]) {
+          if (!eventNumberOffsets[event.data.root])
+            eventNumberOffsets[event.data.root] = 0;
 
-      if (
-        topicDomain != process.env.DOMAIN ||
-        topicService != process.env.SERVICE
-      )
-        throw deps.badRequestError.message(
-          "This event store can't accept this event.",
-          {
-            info: {
-              expected: `${process.env.DOMAIN}.${process.env.SERVICE}`,
-              actual: `${topicDomain}.${topicService}`,
+          const topicParts = event.data.headers.topic.split(".");
+          const topicDomain = topicParts[0];
+          const topicService = topicParts[1];
+
+          if (
+            topicDomain != process.env.DOMAIN ||
+            topicService != process.env.SERVICE
+          )
+            throw deps.badRequestError.message(
+              "This event store can't accept this event.",
+              {
+                info: {
+                  expected: `${process.env.DOMAIN}.${process.env.SERVICE}`,
+                  actual: `${topicDomain}.${topicService}`,
+                },
+              }
+            );
+
+          const root = event.data.root;
+
+          const number =
+            currentEventCounts[event.data.root] +
+            eventNumberOffsets[event.data.root];
+
+          if (event.number && event.number != number)
+            throw deps.preconditionFailedError.message(
+              "Event number incorrect.",
+              {
+                info: { expected: req.body.number, actual: number },
+              }
+            );
+
+          const now = deps.dateString();
+
+          const data = {
+            number,
+            root: event.data.root,
+            id: `${root}_${number}`,
+            saved: now,
+            payload: event.data.payload,
+            headers: {
+              ...event.data.headers,
+              idempotency: event.data.headers.idempotency || deps.uuid(),
             },
-          }
-        );
+          };
 
-      const root = event.data.root;
+          const hash = await hashFn(data);
 
-      const number =
-        currentEventCounts[event.data.root] +
-        eventNumberOffsets[event.data.root];
-
-      if (event.number && event.number != number)
-        throw deps.preconditionFailedError.message("Event number incorrect.", {
-          info: { expected: req.body.number, actual: number },
-        });
-
-      const now = deps.dateString();
-
-      const normalizedEvent = {
-        ...event.data,
-        headers: {
-          ...event.data.headers,
-          number,
-          idempotency: event.data.headers.idempotency || deps.uuid(),
-        },
-        id: `${root}_${number}`,
-        saved: now,
-      };
-
-      eventNumberOffsets[event.data.root]++;
-      return normalizedEvent;
-    });
+          eventNumberOffsets[event.data.root]++;
+          normalizedEvents.push({ data, hash });
+        }
+      })
+    );
 
     const savedEvents = await saveEventsFn(normalizedEvents);
     await Promise.all(

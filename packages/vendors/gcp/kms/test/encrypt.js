@@ -33,6 +33,31 @@ describe("Kms encrypt", () => {
     });
     expect(result).to.equal(buffer.toString("base64"));
   });
+  it("should encrypt correctly with different format", async () => {
+    const path = "some-path";
+    const pathFake = fake.returns(path);
+    const kmsClient = function () {};
+    kmsClient.prototype.cryptoKeyPath = pathFake;
+    const encrpytedMessage = "some-encrypted-message";
+    const buffer = Buffer.from(encrpytedMessage);
+    const encryptFake = fake.returns([{ ciphertext: buffer }]);
+    kmsClient.prototype.encrypt = encryptFake;
+    replace(kms, "KeyManagementServiceClient", kmsClient);
+    const result = await encrypt({
+      message,
+      key,
+      ring,
+      location,
+      project,
+      format: "hex",
+    });
+    expect(pathFake).to.have.been.calledWith(project, location, ring, key);
+    expect(encryptFake).to.have.been.calledWith({
+      name: path,
+      plaintext: Buffer.from(message),
+    });
+    expect(result).to.equal(buffer.toString("hex"));
+  });
   it("should encrypt correctly with new lines removed", async () => {
     const path = "some-path";
     const pathFake = fake.returns(path);

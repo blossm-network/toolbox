@@ -2,12 +2,12 @@ const deps = require("./deps");
 
 module.exports = ({ eventStore, handlers }) => async (events) => {
   for (const event of events) {
-    const handler = handlers[event.headers.action];
+    const handler = handlers[event.data.headers.action];
 
     if (!handler)
       throw deps.badRequestError.message("Event handler not specified.", {
         info: {
-          action: event.headers.action,
+          action: event.data.headers.action,
         },
       });
   }
