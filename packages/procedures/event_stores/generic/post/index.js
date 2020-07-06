@@ -98,9 +98,9 @@ module.exports = ({ saveEventsFn, reserveRootCountsFn, publishFn, hashFn }) => {
       savedEvents.map((e) =>
         publishFn(
           {
-            root: e.root,
+            root: e.data.root,
           },
-          e.headers.topic
+          e.data.headers.topic
         )
       )
     );

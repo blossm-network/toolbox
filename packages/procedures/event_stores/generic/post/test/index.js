@@ -22,10 +22,12 @@ const eventNumber = "some-event-number";
 const eventTopic = "some-event-topic";
 
 const writtenEvent = {
-  root: eventRoot,
-  number: eventNumber,
-  headers: {
-    topic: eventTopic,
+  data: {
+    root: eventRoot,
+    number: eventNumber,
+    headers: {
+      topic: eventTopic,
+    },
   },
 };
 const writtenEvents = [writtenEvent];
