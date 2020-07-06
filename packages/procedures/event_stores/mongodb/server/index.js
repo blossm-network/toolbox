@@ -25,6 +25,7 @@ const eventStore = async ({ schema, indexes, secretFn }) => {
             id: { [typeKey]: String, required: true },
             type: { [typeKey]: String, required: true },
             metadata: { [typeKey]: Object },
+            _id: false,
           },
         ],
         default: [],

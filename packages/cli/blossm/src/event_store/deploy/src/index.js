@@ -28,13 +28,6 @@ module.exports = eventStore({
 
     try {
       const submittedHashes = await chainpoint.submitHashes(hash);
-      //TODO
-      //eslint-disable-next-line no-console
-      console.log({
-        map: submittedHashes.map((h) => {
-          return { type: "chainpoint", id: h.id, metadata: { uri: h.uri } };
-        }),
-      });
       return submittedHashes.map((h) => {
         return { type: "chainpoint", id: h.id, metadata: { uri: h.uri } };
       });
