@@ -83,7 +83,7 @@ describe("Mongodb event store create event", () => {
       //shouldn't get called
       expect(1).to.equal(2);
     } catch (e) {
-      expect(messageFake).to.have.been.calledWith("Event number duplicate.");
+      expect(messageFake).to.have.been.calledWith("Duplicate.");
       expect(e).to.equal(error);
     }
   });

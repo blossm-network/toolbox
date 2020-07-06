@@ -25,10 +25,7 @@ module.exports = ({ eventStore, handlers }) => async (events) => {
     return groomedResults;
   } catch (e) {
     if (e.code == 11000) {
-      //TODO
-      //eslint-disable-next-line no-console
-      console.log({ decplicateError: e });
-      throw deps.preconditionFailedError.message("Event number duplicate.");
+      throw deps.preconditionFailedError.message("Duplicate.");
     } else {
       throw e;
     }

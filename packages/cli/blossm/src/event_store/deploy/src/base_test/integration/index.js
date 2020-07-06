@@ -503,9 +503,6 @@ describe("Event store integration tests", () => {
         ],
       },
     });
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log({ response });
     expect(response.statusCode).to.equal(412);
   });
   it("should return an error if action is not recognized", async () => {
