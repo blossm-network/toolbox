@@ -14,6 +14,17 @@ module.exports = async ({
 
   const digest = crypto.createHash("SHA256").update(message).digest();
 
+  //TODO
+  //eslint-disable-next-line no-console
+  console.log({
+    message,
+    format,
+    project,
+    location,
+    ring,
+    key,
+    version,
+  });
   const versionPath = client.cryptoKeyVersionPath(
     project,
     location,
