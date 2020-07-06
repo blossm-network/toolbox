@@ -461,47 +461,47 @@ describe("Event store integration tests", () => {
         ],
       },
     });
-    it("should return an error if same idempotency", async () => {
-      const root = uuid();
-      const idempotency = uuid();
+    expect(response.statusCode).to.equal(412);
+  });
+  it("should return an error if same idempotency", async () => {
+    const root = uuid();
+    const idempotency = uuid();
 
-      const response = await request.post(url, {
-        body: {
-          events: [
-            {
-              data: {
-                root,
-                headers: {
-                  topic,
-                  version,
-                  created,
-                  action: testing.action,
-                  domain,
-                  service,
-                  idempotency,
-                },
-                payload: example0,
+    const response = await request.post(url, {
+      body: {
+        events: [
+          {
+            data: {
+              root,
+              headers: {
+                topic,
+                version,
+                created,
+                action: testing.action,
+                domain,
+                service,
+                idempotency,
               },
+              payload: example0,
             },
-            {
-              data: {
-                root,
-                headers: {
-                  topic,
-                  version,
-                  created,
-                  action: testing.action,
-                  domain,
-                  service,
-                  idempotency,
-                },
-                payload: example0,
+          },
+          {
+            data: {
+              root,
+              headers: {
+                topic,
+                version,
+                created,
+                action: testing.action,
+                domain,
+                service,
+                idempotency,
               },
+              payload: example0,
             },
-          ],
-        },
-      });
-      expect(response.statusCode).to.equal(412);
+          },
+        ],
+      },
     });
     expect(response.statusCode).to.equal(412);
   });
