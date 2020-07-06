@@ -25,7 +25,6 @@ const topic = `${process.env.DOMAIN}.${process.env.SERVICE}`;
 const sub = "some-sub";
 const version = 0;
 const created = dateString();
-const idempotency = "some-idempotency";
 
 describe("Event store integration tests", () => {
   const example0 = testing.examples.first;
