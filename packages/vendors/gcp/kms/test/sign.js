@@ -34,14 +34,9 @@ describe("Kms sign", () => {
       },
     });
     replace(crypto, "createHash", createHashFake);
-    const result = await sign({
-      ring,
-      key,
-      location,
-      version,
-      project,
-      message,
-    });
+    const result = await sign({ ring, key, location, version, project })(
+      message
+    );
     expect(pathFake).to.have.been.calledWith(
       project,
       location,
