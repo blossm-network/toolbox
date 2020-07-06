@@ -31,6 +31,6 @@ describe("Chainpoint", () => {
       { id: proofId2, uri: uri2 },
       { id: proofId3, uri: uri3 },
     ]);
-    expect(submitHashesFake).to.have.been.calledWith(hash);
+    expect(submitHashesFake).to.have.been.calledWith([hash]);
   });
 });
