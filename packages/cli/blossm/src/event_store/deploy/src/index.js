@@ -20,7 +20,7 @@ module.exports = eventStore({
       key: "sig",
       ring: "event-hash",
       location: "global",
-      version: 1,
+      version: "1",
       project: process.env.GCP_PROJECT,
     });
     //TODO
