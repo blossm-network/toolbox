@@ -14,7 +14,7 @@ module.exports = eventStore({
   publishFn: pubsub.publish,
   hashFn: async (object) => {
     const message = cononicalString(object);
-    return await encrypt({
+    const encrypted = await encrypt({
       message,
       format: "hex",
       key: "signature",
@@ -22,5 +22,9 @@ module.exports = eventStore({
       location: "global",
       project: process.env.GCP_PROJECT,
     });
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log({ encrypted });
+    return encrypted;
   },
 });

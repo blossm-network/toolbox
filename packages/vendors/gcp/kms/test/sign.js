@@ -77,7 +77,7 @@ describe("Kms sign", () => {
     });
     replace(crypto, "createHash", createHashFake);
     try {
-      await sign({ message, key, ring, location, version, project });
+      await sign({ key, ring, location, version, project })(message);
 
       //shouldn't get called
       expect(1).to.equal(2);
