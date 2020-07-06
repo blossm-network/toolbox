@@ -12,7 +12,7 @@ const countFn = "some-count-fn";
 const saveEventsFn = "some-save-events-fn";
 const publishFn = "some-publish-fn";
 const hashFn = "some-hash-fn";
-const proofFn = "some-proof-fn";
+const proofsFn = "some-proofs-fn";
 
 describe("Event store", () => {
   beforeEach(() => {
@@ -66,7 +66,7 @@ describe("Event store", () => {
       streamFn,
       publishFn,
       hashFn,
-      proofFn,
+      proofsFn,
       rootStreamFn,
       countFn,
     });
@@ -94,7 +94,7 @@ describe("Event store", () => {
       reserveRootCountsFn,
       publishFn,
       hashFn,
-      proofFn,
+      proofsFn,
     });
   });
 });

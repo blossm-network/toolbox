@@ -18,9 +18,15 @@ const eventStore = async ({ schema, indexes, secretFn }) => {
     name: `_${process.env.SERVICE}.${process.env.DOMAIN}`,
     schema: {
       hash: { [typeKey]: String, required: true, unique: true },
-      proof: {
-        id: { [typeKey]: String, required: true },
-        type: { [typeKey]: String, required: true },
+      proofs: {
+        [typeKey]: [
+          {
+            id: { [typeKey]: String, required: true },
+            type: { [typeKey]: String, required: true },
+            metadata: { [typeKey]: Object },
+          },
+        ],
+        default: [],
       },
       data: {
         id: { [typeKey]: String, required: true, unique: true },
@@ -158,7 +164,7 @@ module.exports = async ({
   secretFn,
   publishFn,
   hashFn,
-  proofFn,
+  proofsFn,
   // archiveSnapshotFn,
   // archiveEventsFn
 } = {}) => {
@@ -209,7 +215,7 @@ module.exports = async ({
     // saveSnapshotFn,
     publishFn,
     hashFn,
-    proofFn,
+    proofsFn,
   });
 };
 

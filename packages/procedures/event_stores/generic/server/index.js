@@ -8,7 +8,7 @@ module.exports = async ({
   reserveRootCountsFn,
   publishFn,
   hashFn,
-  proofFn,
+  proofsFn,
   rootStreamFn,
   countFn,
 } = {}) => {
@@ -30,7 +30,7 @@ module.exports = async ({
         reserveRootCountsFn,
         publishFn,
         hashFn,
-        proofFn,
+        proofsFn,
       })
     )
     .listen();

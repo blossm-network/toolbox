@@ -5,7 +5,7 @@ module.exports = ({
   reserveRootCountsFn,
   publishFn,
   hashFn,
-  proofFn,
+  proofsFn,
 }) => {
   return async (req, res) => {
     const eventNumberOffsets = {};
@@ -89,13 +89,19 @@ module.exports = ({
           };
 
           const hash = await hashFn(data);
-          const { type: proofType, id: proofId } = await proofFn(hash);
+          const proofs = await proofsFn(hash);
 
           eventNumberOffsets[event.data.root]++;
           normalizedEvents.push({
             data,
             hash,
-            proof: { type: proofType, id: proofId },
+            proofs: proofs.map((proof) => {
+              return {
+                type: proof.type,
+                id: proof.id,
+                metadata: proof.metadata,
+              };
+            }),
           });
         }
       })

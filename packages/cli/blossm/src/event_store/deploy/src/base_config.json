@@ -3,6 +3,7 @@
     "@blossm/mongodb-event-store": "*",
     "@blossm/gcp-pubsub": "*",
     "@blossm/gcp-secret": "*",
+    "@blossm/logger": "*",
     "@blossm/chainpoint": "*",
     "@blossm/cononical-string": "*"
   },

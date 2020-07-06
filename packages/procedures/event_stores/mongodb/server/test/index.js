@@ -29,7 +29,7 @@ process.env.MONGODB_DATABASE = database;
 
 const publishFn = "some-publish-fn";
 const hashFn = "some-hash-fn";
-const proofFn = "some-proof-fn";
+const proofsFn = "somle-proofs-fn";
 
 describe("Mongodb event store", () => {
   beforeEach(() => {
@@ -101,7 +101,7 @@ describe("Mongodb event store", () => {
       secretFn: secretFake,
       publishFn,
       hashFn,
-      proofFn,
+      proofsFn,
     });
 
     expect(formatSchemaFake.getCall(0)).to.have.been.calledWith(
@@ -123,9 +123,15 @@ describe("Mongodb event store", () => {
       name: `_${service}.${domain}`,
       schema: {
         hash: { $type: String, required: true, unique: true },
-        proof: {
-          id: { $type: String, required: true },
-          type: { $type: String, required: true },
+        proofs: {
+          $type: [
+            {
+              id: { $type: String, required: true },
+              type: { $type: String, required: true },
+              metadata: { $type: Object },
+            },
+          ],
+          default: [],
         },
         data: {
           id: { $type: String, required: true, unique: true },
@@ -246,7 +252,7 @@ describe("Mongodb event store", () => {
       countFn: countResult,
       publishFn,
       hashFn,
-      proofFn,
+      proofsFn,
     });
 
     await mongodbEventStore();
@@ -303,7 +309,7 @@ describe("Mongodb event store", () => {
       secretFn: secretFake,
       publishFn,
       hashFn,
-      proofFn,
+      proofsFn,
     });
 
     expect(formatSchemaFake.getCall(0)).to.have.been.calledWith(
@@ -325,9 +331,15 @@ describe("Mongodb event store", () => {
       name: `_${service}.${domain}`,
       schema: {
         hash: { $type: String, required: true, unique: true },
-        proof: {
-          id: { $type: String, required: true },
-          type: { $type: String, required: true },
+        proofs: {
+          $type: [
+            {
+              id: { $type: String, required: true },
+              type: { $type: String, required: true },
+              metadata: { $type: Object },
+            },
+          ],
+          default: [],
         },
         data: {
           id: { $type: String, required: true, unique: true },
@@ -467,7 +479,7 @@ describe("Mongodb event store", () => {
       secretFn: secretFake,
       publishFn,
       hashFn,
-      proofFn,
+      proofsFn,
     });
 
     expect(formatSchemaFake.getCall(0)).to.have.been.calledWith(
@@ -489,9 +501,15 @@ describe("Mongodb event store", () => {
       name: `_${service}.${domain}`,
       schema: {
         hash: { $type: String, required: true, unique: true },
-        proof: {
-          id: { $type: String, required: true },
-          type: { $type: String, required: true },
+        proofs: {
+          $type: [
+            {
+              id: { $type: String, required: true },
+              type: { $type: String, required: true },
+              metadata: { $type: Object },
+            },
+          ],
+          default: [],
         },
         data: {
           saved: { $type: Date, required: true },
