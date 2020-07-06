@@ -24,7 +24,10 @@ module.exports = eventStore({
       process.env.NODE_ENV != "sandbox"
     )
       return { type: "none", id: "none" };
-    const { hashIdNode: id } = await chainpoint.submitHashes([hash]);
-    return { type: "chainpoint", id };
+    const res = await chainpoint.submitHashes([hash]);
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log({ chainpointRes: res });
+    return { type: "chainpoint", id: res[0].id };
   },
 });
