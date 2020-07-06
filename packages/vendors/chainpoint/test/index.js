@@ -8,27 +8,29 @@ describe("Chainpoint", () => {
     restore();
   });
   it("it should submit hashes correctly", async () => {
-    const hash1 = "some-hash1";
-    const hash2 = "some-hash2";
+    const hash = "some-hash";
     const proofId1 = "some-proof-id1";
     const proofId2 = "some-proof-id2";
+    const proofId3 = "some-proof-id3";
     const uri1 = "some-hash-uri1";
     const uri2 = "some-hash-uri2";
+    const uri3 = "some-hash-uri3";
     const submitHashesFake = fake.returns([
-      { hash: hash2, proofId: proofId2, uri: uri2 },
-      { hash: hash1, proofId: proofId1, uri: uri1 },
+      { hash, proofId: proofId1, uri: uri1 },
+      { hash, proofId: proofId2, uri: uri2 },
+      { hash, proofId: proofId3, uri: uri3 },
       { hash: "bogus", proofId: "bogus", uri: "bogus" },
     ]);
     replace(deps, "chainpoint", {
       submitHashes: submitHashesFake,
     });
-    const hashes = [hash1, hash2];
-    const result = await submitHashes(hashes);
+    const result = await submitHashes(hash);
 
     expect(result).to.deep.equal([
       { id: proofId1, uri: uri1 },
       { id: proofId2, uri: uri2 },
+      { id: proofId3, uri: uri3 },
     ]);
-    expect(submitHashesFake).to.have.been.calledWith(hashes);
+    expect(submitHashesFake).to.have.been.calledWith(hash);
   });
 });

@@ -27,7 +27,7 @@ module.exports = eventStore({
       return [];
 
     try {
-      const submittedHashes = await chainpoint.submitHashes([hash]);
+      const submittedHashes = await chainpoint.submitHashes(hash);
       //TODO
       //eslint-disable-next-line no-console
       console.log({
