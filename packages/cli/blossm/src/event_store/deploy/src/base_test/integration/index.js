@@ -503,6 +503,8 @@ describe("Event store integration tests", () => {
         ],
       },
     });
+    //TODO
+    //eslint-disable-next-line no-console
     console.log({ response });
     expect(response.statusCode).to.equal(412);
   });
