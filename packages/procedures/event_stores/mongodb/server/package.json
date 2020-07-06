@@ -1,7 +1,7 @@
 {
   "name": "@blossm/mongodb-event-store",
   "description": "A mongodb event store server.",
-  "version": "0.0.258",
+  "version": "0.0.259",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -24,7 +24,7 @@
     "@blossm/mongodb-event-store-query": "^0.0.57",
     "@blossm/mongodb-event-store-reserve-root-counts": "^0.0.41",
     "@blossm/mongodb-event-store-root-stream": "^0.0.24",
-    "@blossm/mongodb-event-store-save-events": "^0.0.51",
+    "@blossm/mongodb-event-store-save-events": "^0.0.52",
     "@blossm/mongodb-event-store-stream": "^0.0.28"
   },
   "devDependencies": {
