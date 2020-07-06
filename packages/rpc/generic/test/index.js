@@ -34,6 +34,7 @@ const bodyResponse = {
 describe("Operation", () => {
   beforeEach(() => {
     process.env.HOST = host;
+    process.env.NODE_ENV = "not-local";
   });
   afterEach(() => {
     restore();
@@ -109,6 +110,47 @@ describe("Operation", () => {
       host,
     });
     expect(result).to.deep.equal({ statusCode });
+  });
+  it("should call post with the correct params with enqueueFn in local env", async () => {
+    const post = fake.returns(response);
+    replace(deps, "post", post);
+
+    const operationTokenFake = fake.returns({ token, type });
+    replace(deps, "operationToken", operationTokenFake);
+
+    const operationUrlFake = fake.returns(url);
+    replace(deps, "operationUrl", operationUrlFake);
+
+    const enqueueOperationFake = fake.returns(response);
+    replace(deps, "enqueueOperation", enqueueOperationFake);
+
+    const enqueueFn = "some-enqueue-fn";
+    process.env.NODE_ENV = "local";
+    const result = await operation(operarationPart1, operarationPart2)
+      .post(data)
+      .in({ context, host })
+      .with({ internalTokenFn: tokenFn, claims, enqueueFn });
+
+    expect(post).to.have.been.calledWith(url, {
+      body: {
+        ...data,
+        context,
+        claims,
+      },
+      headers: {
+        authorization: `${type} ${token}`,
+      },
+    });
+    expect(enqueueOperationFake).to.not.have.been.called;
+    expect(operationTokenFake).to.have.been.calledWith({
+      tokenFn,
+      operation: [operarationPart1, operarationPart2],
+    });
+    expect(operationUrlFake).to.have.been.calledWith({
+      operation: [operarationPart1, operarationPart2],
+      host,
+    });
+    expect(result).to.deep.equal({});
   });
 
   it("should call post with the correct params with env host and service", async () => {

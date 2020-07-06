@@ -84,8 +84,11 @@ const common = ({ method, dataParam, operation, id, data }) => {
             }),
           };
 
+          const shouldEnqueue = enqueueFn && method == deps.post;
+
           const response =
-            enqueueFn && method == deps.post
+            //don't enqueue if on local
+            shouldEnqueue && process.env.NODE_ENV != "local"
               ? await deps.enqueueOperation({
                   enqueueFn,
                   url,
@@ -124,13 +127,16 @@ const common = ({ method, dataParam, operation, id, data }) => {
             });
           }
 
-          return {
-            ...(response.body && { body: formatResponse(response.body) }),
-            ...(response.headers && {
-              headers: formatResponse(response.headers),
-            }),
-            statusCode: response.statusCode,
-          };
+          //If the enqueuing was skipped because of local env, dont return the response in order to simulate enqueuing.
+          return shouldEnqueue && process.env.NODE_ENV == "local"
+            ? {}
+            : {
+                ...(response.body && { body: formatResponse(response.body) }),
+                ...(response.headers && {
+                  headers: formatResponse(response.headers),
+                }),
+                statusCode: response.statusCode,
+              };
         },
       };
     },
