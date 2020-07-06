@@ -65,6 +65,8 @@ const construct = ({ statusCode, code, message, info }) => {
           return conflict.message(message, { info });
       }
       return invalidArgument.message(message, { info });
+    case 412:
+      return preconditionFailed.message(message, { info });
     case 500:
       return internalServer.message(message, { info });
   }

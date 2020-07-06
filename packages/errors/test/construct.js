@@ -82,7 +82,7 @@ describe("Construct", () => {
       message,
     });
   });
-  it("404 correct", () => {
+  it("403 correct", () => {
     const error = construct({ statusCode: 403, message });
     expect(error.toJSON()).to.deep.equal({
       statusCode: 403,
@@ -91,7 +91,7 @@ describe("Construct", () => {
       message,
     });
   });
-  it("404 correct with info", () => {
+  it("403 correct with info", () => {
     const error = construct({ statusCode: 403, message, info });
     expect(error.toJSON()).to.deep.equal({
       statusCode: 403,
@@ -114,6 +114,24 @@ describe("Construct", () => {
     expect(error.toJSON()).to.deep.equal({
       statusCode: 404,
       code: "ResourceNotFound",
+      info,
+      message,
+    });
+  });
+  it("412 correct", () => {
+    const error = construct({ statusCode: 412, message });
+    expect(error.toJSON()).to.deep.equal({
+      statusCode: 412,
+      code: "PreconditionFailed",
+      info: {},
+      message,
+    });
+  });
+  it("412 correct with info", () => {
+    const error = construct({ statusCode: 412, message, info });
+    expect(error.toJSON()).to.deep.equal({
+      statusCode: 412,
+      code: "PreconditionFailed",
       info,
       message,
     });
