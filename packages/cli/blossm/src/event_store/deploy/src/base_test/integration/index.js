@@ -503,7 +503,8 @@ describe("Event store integration tests", () => {
         ],
       },
     });
-    expect(response.statusCode).to.equal(400);
+    console.log({ response });
+    expect(response.statusCode).to.equal(412);
   });
   it("should return an error if action is not recognized", async () => {
     const root = uuid();
