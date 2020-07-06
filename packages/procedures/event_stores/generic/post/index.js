@@ -85,10 +85,7 @@ module.exports = ({
             id: `${root}_${number}`,
             saved: now,
             payload: event.data.payload,
-            headers: {
-              ...event.data.headers,
-              idempotency: event.data.headers.idempotency || deps.uuid(),
-            },
+            headers: event.data.headers,
           };
 
           const hash = await hashFn(data);
