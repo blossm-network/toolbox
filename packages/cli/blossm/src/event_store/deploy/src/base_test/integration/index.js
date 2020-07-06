@@ -123,7 +123,7 @@ describe("Event store integration tests", () => {
       `${url}/stream/${root}`,
       (data) => {
         const parsedData = JSON.parse(data.toString().trim());
-        expect(parsedData.headers.number).to.equal(currentNumber);
+        expect(parsedData.data.number).to.equal(currentNumber);
         currentNumber++;
       },
       {
