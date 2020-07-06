@@ -20,7 +20,7 @@ module.exports = eventStore({
   },
   proofFn: async (hash) => {
     if (
-      process.env.NODE_ENV != "production" ||
+      process.env.NODE_ENV != "production" &&
       process.env.NODE_ENV != "sandbox"
     )
       return { type: "none", id: "none" };
