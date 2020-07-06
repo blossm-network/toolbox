@@ -5,6 +5,7 @@ const deps = require("./deps");
 let _eventStore;
 let _snapshotStore;
 let _countsStore;
+// let _proofsStore;
 
 const typeKey = "$type";
 
@@ -140,7 +141,7 @@ const snapshotStore = async ({ schema, indexes }) => {
 
 const countsStore = async () => {
   if (_countsStore != undefined) {
-    logger.info("Thank you existing count store database.");
+    logger.info("Thank you existing counts store database.");
     return _countsStore;
   }
 
@@ -156,6 +157,25 @@ const countsStore = async () => {
 
   return _countsStore;
 };
+
+// const proofsStore = async () => {
+//   if (_proofsStore != undefined) {
+//     logger.info("Thank you existing proofs store database.");
+//     return _countsStore;
+//   }
+
+//   _proofsStore = deps.db.store({
+//     name: `_${process.env.SERVICE}.${process.env.DOMAIN}.proofs`,
+//     schema: {
+//       id: { [typeKey]: String, required: true, unique: true },
+//       value: { [typeKey]: Object, required: true },
+//     },
+//     typeKey,
+//     indexes: [[{ id: 1 }]],
+//   });
+
+//   return _proofsStore;
+// };
 
 module.exports = async ({
   schema,
@@ -184,6 +204,7 @@ module.exports = async ({
     indexes,
   });
   const cStore = await countsStore();
+  // const pStore = await proofsStore();
 
   deps.eventStore({
     aggregateFn: deps.aggregate({
@@ -203,6 +224,9 @@ module.exports = async ({
     streamFn: deps.stream({
       eventStore: eStore,
     }),
+    // saveProofFn: deps.saveProof({
+    //   proofsStore: pStore,
+    // }),
     reserveRootCountsFn: deps.reserveRootCounts({
       countsStore: cStore,
     }),
