@@ -19,7 +19,10 @@ module.exports = eventStore({
     return crypto.createHash("sha256").update(message).digest("hex");
   },
   proofFn: async (hash) => {
-    if (process.env.NODE_ENV != "production" || process.env.NODE != "sandbox")
+    if (
+      process.env.NODE_ENV != "production" ||
+      process.env.NODE_ENV != "sandbox"
+    )
       return { type: "none", id: "none" };
     const { hashIdNode: id } = await chainpoint.submitHashes([hash]);
     return { type: "chainpoint", id };
