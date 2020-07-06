@@ -3,7 +3,7 @@
     "@blossm/mongodb-event-store": "*",
     "@blossm/gcp-pubsub": "*",
     "@blossm/gcp-secret": "*",
-    "@blossm/gcp-kms": "*",
+    "@blossm/chainpoint": "*",
     "@blossm/cononical-string": "*"
   },
   "devDependencies": {

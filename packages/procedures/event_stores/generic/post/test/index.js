@@ -48,6 +48,8 @@ const events = [
 ];
 const currentEventsForRoot = 0;
 const hash = "some-hash";
+const proofId = "some-proof-id";
+const proofType = "some-proof-type";
 
 const reserveRootCount = { root, value: currentEventsForRoot + events.length };
 
@@ -68,6 +70,7 @@ describe("Event store post", () => {
     const reserveRootCountsFnFake = fake.returns(reserveRootCount);
     const publishFnFake = fake();
     const hashFnFake = fake.returns(hash);
+    const proofFnFake = fake.returns({ id: proofId, type: proofType });
 
     const req = {
       body: {
@@ -85,6 +88,7 @@ describe("Event store post", () => {
       reserveRootCountsFn: reserveRootCountsFnFake,
       publishFn: publishFnFake,
       hashFn: hashFnFake,
+      proofFn: proofFnFake,
     })(req, res);
 
     expect(saveEventsFnFake).to.have.been.calledWith([
@@ -102,6 +106,7 @@ describe("Event store post", () => {
           },
         },
         hash,
+        proof: { type: proofType, id: proofId },
       },
     ]);
     expect(reserveRootCountsFnFake).to.have.been.calledWith({
@@ -120,6 +125,7 @@ describe("Event store post", () => {
         idempotency,
       },
     });
+    expect(proofFnFake).to.have.been.calledWith(hash);
     expect(publishFnFake).to.have.been.calledWith(
       { root: eventRoot },
       eventTopic
@@ -136,6 +142,7 @@ describe("Event store post", () => {
     const reserveRootCountsFnFake = fake.returns(reserveRootCount);
     const publishFnFake = fake();
     const hashFnFake = fake.returns(hash);
+    const proofFnFake = fake.returns({ id: proofId, type: proofType });
 
     const req = {
       body: {
@@ -158,6 +165,7 @@ describe("Event store post", () => {
       reserveRootCountsFn: reserveRootCountsFnFake,
       publishFn: publishFnFake,
       hashFn: hashFnFake,
+      proofFn: proofFnFake,
     })(req, res);
 
     expect(saveEventsFnFake).to.have.been.calledWith([
@@ -175,6 +183,7 @@ describe("Event store post", () => {
           },
         },
         hash,
+        proof: { type: proofType, id: proofId },
       },
     ]);
     expect(reserveRootCountsFnFake).to.have.been.calledWith({
@@ -193,6 +202,7 @@ describe("Event store post", () => {
         idempotency,
       },
     });
+    expect(proofFnFake).to.have.been.calledWith(hash);
     expect(publishFnFake).to.have.been.calledWith(
       { root: eventRoot },
       eventTopic
@@ -219,6 +229,21 @@ describe("Event store post", () => {
       .returns(hash2)
       .onThirdCall()
       .returns(hash3);
+
+    const proofId1 = "some-proof-id1";
+    const proofId2 = "some-proof-id2";
+    const proofId3 = "some-proof-id3";
+    const proofType1 = "some-proof-type1";
+    const proofType2 = "some-proof-type2";
+    const proofType3 = "some-proof-type3";
+
+    const proofFnFake = stub()
+      .onFirstCall()
+      .returns({ id: proofId1, type: proofType1 })
+      .onSecondCall()
+      .returns({ id: proofId2, type: proofType2 })
+      .onThirdCall()
+      .returns({ id: proofId3, type: proofType3 });
 
     const req = {
       body: {
@@ -250,6 +275,7 @@ describe("Event store post", () => {
       reserveRootCountsFn: reserveRootCountsFnFake,
       publishFn: publishFnFake,
       hashFn: hashFnFake,
+      proofFn: proofFnFake,
     })(req, res);
 
     expect(saveEventsFnFake).to.have.been.calledWith([
@@ -267,6 +293,7 @@ describe("Event store post", () => {
           },
         },
         hash: hash1,
+        proof: { type: proofType1, id: proofId1 },
       },
       {
         data: {
@@ -282,6 +309,7 @@ describe("Event store post", () => {
           },
         },
         hash: hash2,
+        proof: { type: proofType2, id: proofId2 },
       },
       {
         data: {
@@ -297,6 +325,7 @@ describe("Event store post", () => {
           },
         },
         hash: hash3,
+        proof: { type: proofType3, id: proofId3 },
       },
     ]);
     expect(reserveRootCountsFnFake).to.have.been.calledWith({
@@ -344,6 +373,9 @@ describe("Event store post", () => {
         idempotency,
       },
     });
+    expect(proofFnFake.getCall(0)).to.have.been.calledWith(hash1);
+    expect(proofFnFake.getCall(1)).to.have.been.calledWith(hash2);
+    expect(proofFnFake.getCall(2)).to.have.been.calledWith(hash3);
     expect(publishFnFake).to.have.been.calledWith(
       { root: eventRoot },
       eventTopic
@@ -355,6 +387,7 @@ describe("Event store post", () => {
     const reserveRootCountsFnFake = fake.returns(reserveRootCount);
     const publishFnFake = fake();
     const hashFnFake = fake.returns(hash);
+    const proofFnFake = fake.returns({ id: proofId, type: proofType });
 
     const req = {
       body: {
@@ -387,6 +420,7 @@ describe("Event store post", () => {
       reserveRootCountsFn: reserveRootCountsFnFake,
       publishFn: publishFnFake,
       hashFn: hashFnFake,
+      proofFn: proofFnFake,
     })(req, res);
 
     expect(saveEventsFnFake).to.have.been.calledWith([
@@ -404,6 +438,7 @@ describe("Event store post", () => {
           },
         },
         hash,
+        proof: { type: proofType, id: proofId },
       },
     ]);
     expect(reserveRootCountsFnFake).to.have.been.calledWith({

@@ -1,9 +1,11 @@
+const crypto = require("crypto");
 const eventStore = require("@blossm/mongodb-event-store");
 const pubsub = require("@blossm/gcp-pubsub");
 const { get: secret } = require("@blossm/gcp-secret");
-const { sign } = require("@blossm/gcp-kms");
 const cononicalString = require("@blossm/cononical-string");
 const handlers = require("./handlers");
+const chainpoint = require("@blossm/chainpoint");
+
 const config = require("./config.json");
 
 module.exports = eventStore({
@@ -14,18 +16,12 @@ module.exports = eventStore({
   publishFn: pubsub.publish,
   hashFn: async (object) => {
     const message = cononicalString(object);
-    const signed = await sign({
-      message,
-      format: "hex",
-      key: "sig",
-      ring: "event-hash",
-      location: "global",
-      version: "1",
-      project: process.env.GCP_PROJECT,
-    });
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log({ signed });
-    return signed;
+    return crypto.createHash("sha256").update(message).digest("hex");
+  },
+  proofFn: async (hash) => {
+    if (process.env.NODE_ENV != "production" || process.env.NODE != "sandbox")
+      return { type: "none", id: "none" };
+    const { hashIdNode: id } = await chainpoint.submitHashes([hash]);
+    return { type: "chainpoint", id };
   },
 });

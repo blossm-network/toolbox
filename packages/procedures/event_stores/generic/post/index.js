@@ -1,6 +1,12 @@
 const deps = require("./deps");
 
-module.exports = ({ saveEventsFn, reserveRootCountsFn, publishFn, hashFn }) => {
+module.exports = ({
+  saveEventsFn,
+  reserveRootCountsFn,
+  publishFn,
+  hashFn,
+  proofFn,
+}) => {
   return async (req, res) => {
     const eventNumberOffsets = {};
 
@@ -86,9 +92,14 @@ module.exports = ({ saveEventsFn, reserveRootCountsFn, publishFn, hashFn }) => {
           };
 
           const hash = await hashFn(data);
+          const { type: proofType, id: proofId } = await proofFn(hash);
 
           eventNumberOffsets[event.data.root]++;
-          normalizedEvents.push({ data, hash });
+          normalizedEvents.push({
+            data,
+            hash,
+            proof: { type: proofType, id: proofId },
+          });
         }
       })
     );
