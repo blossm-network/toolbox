@@ -34,9 +34,15 @@ describe("Kms sign", () => {
       },
     });
     replace(crypto, "createHash", createHashFake);
-    const result = await sign({ ring, key, location, version, project })(
-      message
-    );
+    const result = await sign({
+      ring,
+      key,
+      location,
+      version,
+      project,
+      message,
+    });
+    message;
     expect(pathFake).to.have.been.calledWith(
       project,
       location,
@@ -45,6 +51,49 @@ describe("Kms sign", () => {
       version
     );
     expect(result).to.equal(Buffer.from(signature).toString("base64"));
+    expect(signFake).to.have.been.calledWith({
+      name: path,
+      digest: {
+        sha256,
+      },
+    });
+  });
+  it("should sign correctly in custom format", async () => {
+    const path = "some-path";
+    const pathFake = fake.returns(path);
+    const kmsClient = function () {};
+    kmsClient.prototype.cryptoKeyVersionPath = pathFake;
+    const signature = "some-sig";
+    const signFake = fake.returns([{ signature: Buffer.from(signature) }]);
+    kmsClient.prototype.asymmetricSign = signFake;
+    replace(kms, "KeyManagementServiceClient", kmsClient);
+    const sha256 = "some-sha256-digest";
+    const createHashFake = fake.returns({
+      update: () => {
+        return {
+          digest: () => sha256,
+        };
+      },
+    });
+    replace(crypto, "createHash", createHashFake);
+    const result = await sign({
+      ring,
+      key,
+      location,
+      version,
+      project,
+      message,
+      format: "hex",
+    });
+    message;
+    expect(pathFake).to.have.been.calledWith(
+      project,
+      location,
+      ring,
+      key,
+      version
+    );
+    expect(result).to.equal(Buffer.from(signature).toString("hex"));
     expect(signFake).to.have.been.calledWith({
       name: path,
       digest: {
@@ -72,7 +121,7 @@ describe("Kms sign", () => {
     });
     replace(crypto, "createHash", createHashFake);
     try {
-      await sign({ key, ring, location, version, project })(message);
+      await sign({ message, key, ring, location, version, project });
 
       //shouldn't get called
       expect(1).to.equal(2);

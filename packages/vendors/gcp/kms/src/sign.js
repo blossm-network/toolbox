@@ -1,9 +1,15 @@
 const kms = require("@google-cloud/kms");
 const crypto = require("crypto");
 
-module.exports = ({ key, ring, location, version, project }) => async (
-  message
-) => {
+module.exports = async ({
+  message,
+  format = "base64",
+  key,
+  ring,
+  location,
+  version,
+  project,
+}) => {
   const client = new kms.KeyManagementServiceClient();
 
   const digest = crypto.createHash("SHA256").update(message).digest();
@@ -21,5 +27,5 @@ module.exports = ({ key, ring, location, version, project }) => async (
     digest: { sha256: digest },
   });
 
-  return signature.toString("base64");
+  return signature.toString(format);
 };
