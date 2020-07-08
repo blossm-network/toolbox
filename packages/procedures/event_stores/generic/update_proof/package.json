@@ -1,7 +1,7 @@
 {
   "name": "@blossm/event-store-update-proof",
   "description": "An event store POST handler for saving updated proof info.",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -14,7 +14,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/chainpoint": "*",
+    "@blossm/chainpoint": "^0.0.8",
     "@blossm/errors": "*"
   },
   "devDependencies": {
