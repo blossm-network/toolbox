@@ -20,14 +20,7 @@ const eventStore = async ({ schema, indexes, secretFn }) => {
     schema: {
       hash: { [typeKey]: String, required: true, unique: true },
       proofs: {
-        [typeKey]: [
-          {
-            id: { [typeKey]: String, required: true },
-            type: { [typeKey]: String, required: true },
-            metadata: { [typeKey]: Object },
-            _id: false,
-          },
-        ],
+        [typeKey]: [String],
         default: [],
       },
       data: {

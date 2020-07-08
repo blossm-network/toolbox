@@ -136,14 +136,7 @@ describe("Mongodb event store", () => {
       schema: {
         hash: { $type: String, required: true, unique: true },
         proofs: {
-          $type: [
-            {
-              id: { $type: String, required: true },
-              type: { $type: String, required: true },
-              metadata: { $type: Object },
-              _id: false,
-            },
-          ],
+          $type: [String],
           default: [],
         },
         data: {
@@ -394,14 +387,7 @@ describe("Mongodb event store", () => {
       schema: {
         hash: { $type: String, required: true, unique: true },
         proofs: {
-          $type: [
-            {
-              id: { $type: String, required: true },
-              type: { $type: String, required: true },
-              metadata: { $type: Object },
-              _id: false,
-            },
-          ],
+          $type: [String],
           default: [],
         },
         data: {
@@ -594,14 +580,7 @@ describe("Mongodb event store", () => {
       schema: {
         hash: { $type: String, required: true, unique: true },
         proofs: {
-          $type: [
-            {
-              id: { $type: String, required: true },
-              type: { $type: String, required: true },
-              metadata: { $type: Object },
-              _id: false,
-            },
-          ],
+          $type: [String],
           default: [],
         },
         data: {
