@@ -5,7 +5,7 @@ const deps = require("./deps");
 let _eventStore;
 let _snapshotStore;
 let _countsStore;
-// let _proofsStore;
+let _proofsStore;
 
 const typeKey = "$type";
 
@@ -159,24 +159,28 @@ const countsStore = async () => {
   return _countsStore;
 };
 
-// const proofsStore = async () => {
-//   if (_proofsStore != undefined) {
-//     logger.info("Thank you existing proofs store database.");
-//     return _countsStore;
-//   }
+const proofsStore = async () => {
+  if (_proofsStore != undefined) {
+    logger.info("Thank you existing proofs store database.");
+    return _countsStore;
+  }
 
-//   _proofsStore = deps.db.store({
-//     name: `_${process.env.SERVICE}.${process.env.DOMAIN}.proofs`,
-//     schema: {
-//       id: { [typeKey]: String, required: true, unique: true },
-//       value: { [typeKey]: Object, required: true },
-//     },
-//     typeKey,
-//     indexes: [[{ id: 1 }]],
-//   });
+  _proofsStore = deps.db.store({
+    name: `_${process.env.SERVICE}.${process.env.DOMAIN}.proofs`,
+    schema: {
+      id: { [typeKey]: String, required: true, unique: true },
+      type: { [typeKey]: String, required: true },
+      uri: { [typeKey]: String, required: true },
+      created: { [typeKey]: Date, required: true },
+      updated: { [typeKey]: Date, required: true },
+      metadata: { [typeKey]: Object, default: {} },
+    },
+    typeKey,
+    indexes: [[{ id: 1 }]],
+  });
 
-//   return _proofsStore;
-// };
+  return _proofsStore;
+};
 
 module.exports = async ({
   schema,
@@ -205,7 +209,7 @@ module.exports = async ({
     indexes,
   });
   const cStore = await countsStore();
-  // const pStore = await proofsStore();
+  const pStore = await proofsStore();
 
   deps.eventStore({
     aggregateFn: deps.aggregate({
@@ -225,9 +229,15 @@ module.exports = async ({
     streamFn: deps.stream({
       eventStore: eStore,
     }),
-    // saveProofFn: deps.saveProof({
-    //   proofsStore: pStore,
-    // }),
+    updateProofFn: deps.updateProof({
+      proofsStore: pStore,
+    }),
+    getProofFn: deps.getProof({
+      proofsStore: pStore,
+    }),
+    saveProofsFn: deps.saveProofs({
+      proofsStore: pStore,
+    }),
     reserveRootCountsFn: deps.reserveRootCounts({
       countsStore: cStore,
     }),

@@ -1,9 +1,7 @@
-module.exports = ({ countFn }) => {
-  return async (req, res) => {
-    const result = await countFn({
-      root: req.params.root,
-    });
+module.exports = ({ countFn }) => async (req, res) => {
+  const result = await countFn({
+    root: req.params.root,
+  });
 
-    res.send({ count: result });
-  };
+  res.send({ count: result });
 };

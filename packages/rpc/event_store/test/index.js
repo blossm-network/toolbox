@@ -579,4 +579,94 @@ describe("Event store", () => {
     });
     expect(result).to.equal(count);
   });
+  it("should call root count with the right params with optionals missing", async () => {
+    const count = "some-count";
+    const withFake = fake.returns(count);
+    const inFake = fake.returns({
+      with: withFake,
+    });
+    const getFake = fake.returns({
+      in: inFake,
+    });
+    const rpcFake = fake.returns({
+      get: getFake,
+    });
+    replace(deps, "rpc", rpcFake);
+
+    const result = await eventStore({ domain, service }).count(root);
+
+    expect(rpcFake).to.have.been.calledWith(domain, service, "event-store");
+    expect(getFake).to.have.been.calledWith({
+      id: root,
+    });
+    expect(inFake).to.have.been.calledWith({});
+    expect(withFake).to.have.been.calledWith({
+      path: "/count",
+    });
+    expect(result).to.equal(count);
+  });
+  it("should call update proof with the right params", async () => {
+    const proof = "some-proof";
+    const id = "some-id";
+    const withFake = fake.returns(proof);
+    const inFake = fake.returns({
+      with: withFake,
+    });
+    const putFake = fake.returns({
+      in: inFake,
+    });
+    const rpcFake = fake.returns({
+      put: putFake,
+    });
+    replace(deps, "rpc", rpcFake);
+
+    const result = await eventStore({ domain, service })
+      .set({
+        context,
+        claims,
+        token: {
+          internalFn: internalTokenFn,
+          externalFn: externalTokenFn,
+          key,
+        },
+      })
+      .updateProof(id);
+
+    expect(rpcFake).to.have.been.calledWith(domain, service, "event-store");
+    expect(putFake).to.have.been.calledWith(id);
+    expect(inFake).to.have.been.calledWith({
+      context,
+    });
+    expect(withFake).to.have.been.calledWith({
+      path: "/proof",
+      internalTokenFn,
+      claims,
+    });
+    expect(result).to.equal(proof);
+  });
+  it("should call root count with the right params with optionals missing", async () => {
+    const proof = "some-proof";
+    const id = "some-id";
+    const withFake = fake.returns(proof);
+    const inFake = fake.returns({
+      with: withFake,
+    });
+    const putFake = fake.returns({
+      in: inFake,
+    });
+    const rpcFake = fake.returns({
+      put: putFake,
+    });
+    replace(deps, "rpc", rpcFake);
+
+    const result = await eventStore({ domain, service }).updateProof(id);
+
+    expect(rpcFake).to.have.been.calledWith(domain, service, "event-store");
+    expect(putFake).to.have.been.calledWith(id);
+    expect(inFake).to.have.been.calledWith({});
+    expect(withFake).to.have.been.calledWith({
+      path: "/proof",
+    });
+    expect(result).to.equal(proof);
+  });
 });

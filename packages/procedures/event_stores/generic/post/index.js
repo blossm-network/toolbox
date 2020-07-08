@@ -6,42 +6,44 @@ module.exports = ({
   publishFn,
   hashFn,
   proofsFn,
-}) => {
-  return async (req, res) => {
-    const eventNumberOffsets = {};
+  saveProofsFn,
+}) => async (req, res) => {
+  const eventNumberOffsets = {};
 
-    const eventRootCounts = req.body.events.reduce((result, event) => {
-      if (result[event.data.root] == undefined) result[event.data.root] = 0;
-      result[event.data.root]++;
+  const eventRootCounts = req.body.events.reduce((result, event) => {
+    if (result[event.data.root] == undefined) result[event.data.root] = 0;
+    result[event.data.root]++;
+    return result;
+  }, {});
+
+  const [...updatedCountObjects] = await Promise.all(
+    Object.keys(eventRootCounts).map((root) =>
+      reserveRootCountsFn({ root, amount: eventRootCounts[root] })
+    )
+  );
+
+  const currentEventCounts = updatedCountObjects.reduce(
+    (result, countObject) => {
+      result[countObject.root] =
+        countObject.value - eventRootCounts[countObject.root];
       return result;
-    }, {});
+    },
+    {}
+  );
 
-    const [...updatedCountObjects] = await Promise.all(
-      Object.keys(eventRootCounts).map((root) =>
-        reserveRootCountsFn({ root, amount: eventRootCounts[root] })
-      )
-    );
+  const normalizedEvents = [];
+  const allProofs = [];
 
-    const currentEventCounts = updatedCountObjects.reduce(
-      (result, countObject) => {
-        result[countObject.root] =
-          countObject.value - eventRootCounts[countObject.root];
-        return result;
-      },
-      {}
-    );
-
-    const normalizedEvents = [];
-
-    const eventsByRoot = {};
-    for (const event of req.body.events) {
-      if (eventsByRoot[event.data.root] == undefined)
-        eventsByRoot[event.data.root] = [];
-      eventsByRoot[event.data.root].push(event);
-    }
-    await Promise.all(
-      Object.keys(eventsByRoot).map(async (key) => {
-        for (const event of eventsByRoot[key]) {
+  const eventsByRoot = {};
+  for (const event of req.body.events) {
+    if (eventsByRoot[event.data.root] == undefined)
+      eventsByRoot[event.data.root] = [];
+    eventsByRoot[event.data.root].push(event);
+  }
+  await Promise.all(
+    Object.keys(eventsByRoot).map(async (key) => {
+      await Promise.all(
+        eventsByRoot[key].map(async (event) => {
           if (!eventNumberOffsets[event.data.root])
             eventNumberOffsets[event.data.root] = 0;
 
@@ -77,6 +79,8 @@ module.exports = ({
               }
             );
 
+          eventNumberOffsets[event.data.root]++;
+
           const now = deps.dateString();
 
           const data = {
@@ -91,34 +95,36 @@ module.exports = ({
           const hash = await hashFn(data);
           const proofs = await proofsFn(hash);
 
-          eventNumberOffsets[event.data.root]++;
+          for (const proof of proofs) {
+            proof.id = deps.uuid();
+          }
+
           normalizedEvents.push({
             data,
             hash,
-            proofs: proofs.map((proof) => {
-              return {
-                type: proof.type,
-                id: proof.id,
-                metadata: proof.metadata,
-              };
-            }),
+            proofs: proofs.map((proof) => proof.id),
           });
-        }
-      })
-    );
+          allProofs.push(...proofs);
+        })
+      );
+    })
+  );
 
-    const savedEvents = await saveEventsFn(normalizedEvents);
-    await Promise.all(
-      savedEvents.map((e) =>
-        publishFn(
-          {
-            root: e.data.root,
-          },
-          e.data.headers.topic
-        )
+  const [savedEvents] = await Promise.all([
+    saveEventsFn(normalizedEvents),
+    saveProofsFn(allProofs),
+  ]);
+
+  await Promise.all(
+    savedEvents.map((e) =>
+      publishFn(
+        {
+          root: e.data.root,
+        },
+        e.data.headers.topic
       )
-    );
+    )
+  );
 
-    res.sendStatus(204);
-  };
+  res.sendStatus(204);
 };

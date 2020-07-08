@@ -7,8 +7,11 @@ module.exports = async ({
   streamFn,
   reserveRootCountsFn,
   publishFn,
+  getProofFn,
+  updateProofFn,
   hashFn,
   proofsFn,
+  saveProofsFn,
   rootStreamFn,
   countFn,
 } = {}) => {
@@ -24,6 +27,13 @@ module.exports = async ({
       path: "/roots",
     })
     .get(deps.get({ aggregateFn, queryFn }), { path: "/:root?" })
+    .put(
+      deps.updateProof({
+        getProofFn,
+        updateProofFn,
+      }),
+      { path: "/proof/:id" }
+    )
     .post(
       deps.post({
         saveEventsFn,
@@ -31,6 +41,7 @@ module.exports = async ({
         publishFn,
         hashFn,
         proofsFn,
+        saveProofsFn,
       })
     )
     .listen();

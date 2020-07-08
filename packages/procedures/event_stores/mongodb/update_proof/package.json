@@ -1,6 +1,6 @@
 {
-  "name": "@blossm/mongodb-event-store-save-events",
-  "description": "A mongodb event store server event saving function.",
+  "name": "@blossm/mongodb-event-store-update-proof",
+  "description": "A mongodb event store server proof updating function.",
   "version": "0.0.54",
   "main": "index.js",
   "author": "blossm.network",
@@ -14,11 +14,11 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/errors": "^0.0.36",
-    "@blossm/mongodb-database": "^0.0.68"
+    "@blossm/errors": "*",
+    "@blossm/mongodb-database": "*",
+    "@blossm/datetime": "*"
   },
   "devDependencies": {
-    "chai-datetime": "^1.5.0",
     "mocha": "^7.1.1",
     "sinon": "^7.3.2",
     "sinon-chai": "^3.5.0"

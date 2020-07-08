@@ -25,7 +25,10 @@
     "@blossm/mongodb-event-store-reserve-root-counts": "^0.0.42",
     "@blossm/mongodb-event-store-root-stream": "^0.0.25",
     "@blossm/mongodb-event-store-save-events": "^0.0.54",
-    "@blossm/mongodb-event-store-stream": "^0.0.29"
+    "@blossm/mongodb-event-store-stream": "^0.0.29",
+    "@blossm/mongodb-event-store-save-proofs": "*",
+    "@blossm/mongodb-event-store-update-proof": "*",
+    "@blossm/mongodb-event-store-get-proof": "*"
   },
   "devDependencies": {
     "chai-datetime": "^1.5.0",

@@ -21,6 +21,8 @@ const eventRoot = "some-event-root";
 const eventNumber = "some-event-number";
 const eventTopic = "some-event-topic";
 
+const id = "some-id";
+
 const writtenEvent = {
   data: {
     root: eventRoot,
@@ -48,9 +50,6 @@ const events = [
 ];
 const currentEventsForRoot = 0;
 const hash = "some-hash";
-const proofId = "some-proof-id";
-const proofType = "some-proof-type";
-const proofMetadata = "some-proof-metadata";
 
 const reserveRootCount = { root, value: currentEventsForRoot + events.length };
 
@@ -73,11 +72,13 @@ describe("Event store post", () => {
     const hashFnFake = fake.returns(hash);
     const proofsFnFake = fake.returns([
       {
-        id: proofId,
-        type: proofType,
-        metadata: proofMetadata,
+        a: 1,
       },
     ]);
+    const saveProofsFnFake = fake();
+
+    const uuidFake = fake.returns(id);
+    replace(deps, "uuid", uuidFake);
 
     const req = {
       body: {
@@ -96,6 +97,7 @@ describe("Event store post", () => {
       publishFn: publishFnFake,
       hashFn: hashFnFake,
       proofsFn: proofsFnFake,
+      saveProofsFn: saveProofsFnFake,
     })(req, res);
 
     expect(saveEventsFnFake).to.have.been.calledWith([
@@ -113,9 +115,10 @@ describe("Event store post", () => {
           },
         },
         hash,
-        proofs: [{ type: proofType, id: proofId, metadata: proofMetadata }],
+        proofs: [id],
       },
     ]);
+    expect(saveProofsFnFake).to.have.been.calledWith([{ id, a: 1 }]);
     expect(reserveRootCountsFnFake).to.have.been.calledWith({
       root,
       amount: 1,
@@ -149,9 +152,11 @@ describe("Event store post", () => {
     const reserveRootCountsFnFake = fake.returns(reserveRootCount);
     const publishFnFake = fake();
     const hashFnFake = fake.returns(hash);
-    const proofsFnFake = fake.returns([
-      { id: proofId, type: proofType, metadata: proofMetadata },
-    ]);
+    const proofsFnFake = fake.returns([{ a: 1 }]);
+    const saveProofsFnFake = fake();
+
+    const uuidFake = fake.returns(id);
+    replace(deps, "uuid", uuidFake);
 
     const req = {
       body: {
@@ -175,6 +180,7 @@ describe("Event store post", () => {
       publishFn: publishFnFake,
       hashFn: hashFnFake,
       proofsFn: proofsFnFake,
+      saveProofsFn: saveProofsFnFake,
     })(req, res);
 
     expect(saveEventsFnFake).to.have.been.calledWith([
@@ -192,9 +198,10 @@ describe("Event store post", () => {
           },
         },
         hash,
-        proofs: [{ type: proofType, id: proofId, metadata: proofMetadata }],
+        proofs: [id],
       },
     ]);
+    expect(saveProofsFnFake).to.have.been.calledWith([{ id, a: 1 }]);
     expect(reserveRootCountsFnFake).to.have.been.calledWith({
       root,
       amount: 1,
@@ -239,29 +246,31 @@ describe("Event store post", () => {
       .onThirdCall()
       .returns(hash3);
 
-    const proofId1 = "some-proof-id1";
-    const proofId2 = "some-proof-id2";
-    const proofId3 = "some-proof-id3";
-    const proofId4 = "some-proof-id4";
-    const proofType1 = "some-proof-type1";
-    const proofType2 = "some-proof-type2";
-    const proofType3 = "some-proof-type3";
-    const proofType4 = "some-proof-type4";
-    const proofMetadata1 = "some-proof-metadata1";
-    const proofMetadata2 = "some-proof-metadata2";
-    const proofMetadata3 = "some-proof-metadata3";
-    const proofMetadata4 = "some-proof-metadata4";
-
     const proofsFnFake = stub()
       .onFirstCall()
-      .returns([{ id: proofId1, type: proofType1, metadata: proofMetadata1 }])
+      .returns([{ a: 1 }])
       .onSecondCall()
-      .returns([{ id: proofId2, type: proofType2, metadata: proofMetadata2 }])
+      .returns([{ b: 2 }])
       .onThirdCall()
-      .returns([
-        { id: proofId3, type: proofType3, metadata: proofMetadata3 },
-        { id: proofId4, type: proofType4, metadata: proofMetadata4 },
-      ]);
+      .returns([{ c: 3 }, { d: 4 }]);
+    const saveProofsFnFake = fake();
+
+    const id1 = "some-id1";
+    const id2 = "some-id2";
+    const id3 = "some-id3";
+    const id4 = "some-id4";
+
+    const uuidFake = stub()
+      .onFirstCall()
+      .returns(id1)
+      .onSecondCall()
+      .returns(id2)
+      .onThirdCall()
+      .returns(id3)
+      .onCall(3)
+      .returns(id4);
+
+    replace(deps, "uuid", uuidFake);
 
     const req = {
       body: {
@@ -294,6 +303,7 @@ describe("Event store post", () => {
       publishFn: publishFnFake,
       hashFn: hashFnFake,
       proofsFn: proofsFnFake,
+      saveProofsFn: saveProofsFnFake,
     })(req, res);
 
     expect(saveEventsFnFake).to.have.been.calledWith([
@@ -311,23 +321,7 @@ describe("Event store post", () => {
           },
         },
         hash: hash1,
-        proofs: [{ type: proofType1, id: proofId1, metadata: proofMetadata1 }],
-      },
-      {
-        data: {
-          id: "some-other-root_9",
-          saved: deps.dateString(),
-          payload,
-          root: "some-other-root",
-          number: 9,
-          headers: {
-            b: 2,
-            topic,
-            idempotency,
-          },
-        },
-        hash: hash2,
-        proofs: [{ type: proofType2, id: proofId2, metadata: proofMetadata2 }],
+        proofs: [id1],
       },
       {
         data: {
@@ -342,12 +336,31 @@ describe("Event store post", () => {
             idempotency,
           },
         },
-        hash: hash3,
-        proofs: [
-          { type: proofType3, id: proofId3, metadata: proofMetadata3 },
-          { type: proofType4, id: proofId4, metadata: proofMetadata4 },
-        ],
+        hash: hash2,
+        proofs: [id2],
       },
+      {
+        data: {
+          id: "some-other-root_9",
+          saved: deps.dateString(),
+          payload,
+          root: "some-other-root",
+          number: 9,
+          headers: {
+            b: 2,
+            topic,
+            idempotency,
+          },
+        },
+        hash: hash3,
+        proofs: [id3, id4],
+      },
+    ]);
+    expect(saveProofsFnFake).to.have.been.calledWith([
+      { id: id1, a: 1 },
+      { id: id2, b: 2 },
+      { id: id3, c: 3 },
+      { id: id4, d: 4 },
     ]);
     expect(reserveRootCountsFnFake).to.have.been.calledWith({
       root,
@@ -371,11 +384,11 @@ describe("Event store post", () => {
       },
     });
     expect(hashFnFake.getCall(1)).to.have.been.calledWith({
-      id: "some-other-root_9",
+      id: `${root}_${currentEventsForRoot + 1}`,
       saved: deps.dateString(),
       payload,
-      root: "some-other-root",
-      number: 9,
+      root,
+      number: currentEventsForRoot + 1,
       headers: {
         b: 2,
         topic,
@@ -383,11 +396,11 @@ describe("Event store post", () => {
       },
     });
     expect(hashFnFake.getCall(2)).to.have.been.calledWith({
-      id: `${root}_${currentEventsForRoot + 1}`,
+      id: "some-other-root_9",
       saved: deps.dateString(),
       payload,
-      root,
-      number: currentEventsForRoot + 1,
+      root: "some-other-root",
+      number: 9,
       headers: {
         b: 2,
         topic,

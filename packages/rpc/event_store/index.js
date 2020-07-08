@@ -159,6 +159,24 @@ module.exports = ({ domain, service = process.env.SERVICE } = {}) => {
         ...(claims && { claims }),
       });
 
+  const updateProof = ({
+    context,
+    claims,
+    token: { internalFn: internalTokenFn } = {},
+  } = {}) => (id) => {
+    return deps
+      .rpc(domain, service, "event-store")
+      .put(id)
+      .in({
+        ...(context && { context }),
+      })
+      .with({
+        path: `/proof`,
+        ...(internalTokenFn && { internalTokenFn }),
+        ...(claims && { claims }),
+      });
+  };
+
   return {
     set: ({ context, claims, token } = {}) => {
       return {
@@ -168,6 +186,7 @@ module.exports = ({ domain, service = process.env.SERVICE } = {}) => {
         rootStream: rootStream({ context, claims, token }),
         count: count({ context, claims, token }),
         aggregate: aggregate({ context, claims, token }),
+        updateProof: updateProof({ context, claims, token }),
       };
     },
     add: add(),
@@ -176,5 +195,6 @@ module.exports = ({ domain, service = process.env.SERVICE } = {}) => {
     stream: stream(),
     rootStream: rootStream(),
     count: count(),
+    updateProof: updateProof(),
   };
 };

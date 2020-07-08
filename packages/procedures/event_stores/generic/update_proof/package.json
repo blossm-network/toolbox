@@ -1,7 +1,7 @@
 {
-  "name": "@blossm/mongodb-event-store-save-events",
-  "description": "A mongodb event store server event saving function.",
-  "version": "0.0.54",
+  "name": "@blossm/event-store-update-proof",
+  "description": "An event store POST handler for saving updated proof info.",
+  "version": "0.0.7",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -14,8 +14,8 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/errors": "^0.0.36",
-    "@blossm/mongodb-database": "^0.0.68"
+    "@blossm/chainpoint": "*",
+    "@blossm/errors": "*"
   },
   "devDependencies": {
     "chai-datetime": "^1.5.0",

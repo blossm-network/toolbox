@@ -13,6 +13,9 @@ const saveEventsFn = "some-save-events-fn";
 const publishFn = "some-publish-fn";
 const hashFn = "some-hash-fn";
 const proofsFn = "some-proofs-fn";
+const saveProofsFn = "some-save-proofs-fn";
+const updateProofFn = "some-update-proof-fn";
+const getProofFn = "some-get-proof-fn";
 
 describe("Event store", () => {
   beforeEach(() => {
@@ -27,8 +30,11 @@ describe("Event store", () => {
     const postFake = fake.returns({
       listen: listenFake,
     });
-    const getFake = fake.returns({
+    const updateProofFake = fake.returns({
       post: postFake,
+    });
+    const getFake = fake.returns({
+      put: updateProofFake,
     });
     const rootStreamFake = fake.returns({
       get: getFake,
@@ -52,6 +58,9 @@ describe("Event store", () => {
     const eventStoreRootStreamResult = "some-root-stream-result";
     const eventStoreRootStreamFake = fake.returns(eventStoreRootStreamResult);
     replace(deps, "rootStream", eventStoreRootStreamFake);
+    const eventStoreUpdateProofResult = "some-update-proof-result";
+    const eventStoreUpdateProofFake = fake.returns(eventStoreUpdateProofResult);
+    replace(deps, "updateProof", eventStoreUpdateProofFake);
     const eventStoreCountResult = "some-count-result";
     const eventStoreCountFake = fake.returns(eventStoreCountResult);
     replace(deps, "count", eventStoreCountFake);
@@ -68,6 +77,9 @@ describe("Event store", () => {
       hashFn,
       proofsFn,
       rootStreamFn,
+      updateProofFn,
+      getProofFn,
+      saveProofsFn,
       countFn,
     });
     expect(listenFake).to.have.been.calledOnce;
@@ -84,17 +96,28 @@ describe("Event store", () => {
     expect(countFake).to.have.been.calledWith(eventStoreCountResult, {
       path: "/count/:root",
     });
+    expect(updateProofFake).to.have.been.calledWith(
+      eventStoreUpdateProofResult,
+      {
+        path: "/proof/:id",
+      }
+    );
     expect(postFake).to.have.been.calledWith(eventStorePostResult);
     expect(eventStoreGetFake).to.have.been.calledWith({ aggregateFn, queryFn });
     expect(eventStoreStreamFake).to.have.been.calledWith({ streamFn });
     expect(eventStoreRootStreamFake).to.have.been.calledWith({ rootStreamFn });
     expect(eventStoreCountFake).to.have.been.calledWith({ countFn });
+    expect(eventStoreUpdateProofFake).to.have.been.calledWith({
+      updateProofFn,
+      getProofFn,
+    });
     expect(eventStorePostFake).to.have.been.calledWith({
       saveEventsFn,
       reserveRootCountsFn,
       publishFn,
       hashFn,
       proofsFn,
+      saveProofsFn,
     });
   });
 });

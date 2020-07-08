@@ -1,7 +1,7 @@
 {
-  "name": "@blossm/mongodb-event-store-save-events",
-  "description": "A mongodb event store server event saving function.",
-  "version": "0.0.54",
+  "name": "@blossm/mongodb-event-store-get-proof",
+  "description": "A mongodb event store server function to get a proof.",
+  "version": "0.0.0",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -14,7 +14,6 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/errors": "^0.0.36",
     "@blossm/mongodb-database": "^0.0.68"
   },
   "devDependencies": {

@@ -17,27 +17,24 @@ module.exports = ({
   streamFn,
   nextEventNumberFn,
   saveNextEventNumberFn,
-}) => {
-  return async (req, res) => {
-    const {
-      root,
-      forceFrom: number = await nextEventNumberFn({ root }),
-    } = data(req);
+}) => async (req, res) => {
+  const { root, forceFrom: number = await nextEventNumberFn({ root }) } = data(
+    req
+  );
 
-    let state;
-    let newSeenEventNumber;
+  let state;
+  let newSeenEventNumber;
 
-    // TODO write a better test for this. idk a way to do it quickly.
-    await streamFn({ root, from: number }, (event) => {
-      state = mainFn(state, event);
-      newSeenEventNumber = event.headers.number;
-    });
+  // TODO write a better test for this. idk a way to do it quickly.
+  await streamFn({ root, from: number }, (event) => {
+    state = mainFn(state, event);
+    newSeenEventNumber = event.headers.number;
+  });
 
-    if (state && commitFn) await commitFn(state);
+  if (state && commitFn) await commitFn(state);
 
-    if (newSeenEventNumber != undefined)
-      await saveNextEventNumberFn({ root, from: newSeenEventNumber });
+  if (newSeenEventNumber != undefined)
+    await saveNextEventNumberFn({ root, from: newSeenEventNumber });
 
-    res.sendStatus(204);
-  };
+  res.sendStatus(204);
 };

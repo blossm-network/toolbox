@@ -5,6 +5,7 @@ const stream = require("@blossm/event-store-stream");
 const rootStream = require("@blossm/event-store-root-stream");
 const count = require("@blossm/event-store-count");
 const post = require("@blossm/event-store-post");
+const updateProof = require("@blossm/event-store-update-proof");
 
 exports.store = store;
 exports.server = server;
@@ -13,3 +14,4 @@ exports.post = post;
 exports.rootStream = rootStream;
 exports.count = count;
 exports.stream = stream;
+exports.updateProof = updateProof;
