@@ -32,15 +32,32 @@ describe("Mongodb event store save proofs", () => {
     const id = "some-id";
     const type = "some-proof-type";
 
+    const otherMetadata = "some-other-proof-metadata";
+    const otherId = "some-other-id";
+    const otherType = "some-other-proof-type";
+
     const proofs = [
       {
         metadata,
         id,
         type,
       },
+      {
+        metadata: otherMetadata,
+        id: otherId,
+        type: otherType,
+      },
     ];
-    const saveProofFnResult = await saveProofs({ proofsStore })(proofs);
+    const updateProofFnFake = fake();
+
+    const saveProofFnResult = await saveProofs({
+      proofsStore,
+      updateProofFn: updateProofFnFake,
+    })(proofs);
+
     expect(saveProofFnResult).to.be.undefined;
+    expect(updateProofFnFake.getCall(0)).to.have.been.calledWith(id);
+    expect(updateProofFnFake.getCall(1)).to.have.been.calledWith(otherId);
     expect(createFake).to.have.been.calledWith({
       store: proofsStore,
       data: [
@@ -50,6 +67,13 @@ describe("Mongodb event store save proofs", () => {
           created: deps.dateString(),
           updated: deps.dateString(),
           metadata,
+        },
+        {
+          type: otherType,
+          id: otherId,
+          created: deps.dateString(),
+          updated: deps.dateString(),
+          metadata: otherMetadata,
         },
       ],
     });

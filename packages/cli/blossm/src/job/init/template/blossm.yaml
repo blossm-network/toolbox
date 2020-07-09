@@ -1,10 +1,10 @@
 #
 # Give your job a name,
-# and specify which domain and service it's for.
+# and optionally specify which domain and service it's for.
 #
 name: some-action
-domain: some-domain
-service: some-service
+domain: some-optional-domain
+service: some-optional-service
 
 #
 # Add dependencies and devDependencies, just like a package.json file.

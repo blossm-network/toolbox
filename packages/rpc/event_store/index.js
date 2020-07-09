@@ -11,6 +11,7 @@ module.exports = ({ domain, service = process.env.SERVICE } = {}) => {
       externalFn: externalTokenFn,
       key,
     } = {},
+    enqueue: { fn: enqueueFn, wait: enqueueWait } = {},
   } = {}) => (events) => {
     const normalizedEvents = events.map((event) => {
       return {
@@ -44,6 +45,12 @@ module.exports = ({ domain, service = process.env.SERVICE } = {}) => {
         ...(externalTokenFn && { externalTokenFn }),
         ...(key && { key }),
         ...(claims && { claims }),
+        ...(enqueueFn && {
+          enqueueFn: enqueueFn({
+            queue: `e-${service}-${domain}`,
+            ...(enqueueWait && { wait: enqueueWait }),
+          }),
+        }),
       });
   };
 
@@ -163,8 +170,9 @@ module.exports = ({ domain, service = process.env.SERVICE } = {}) => {
     context,
     claims,
     token: { internalFn: internalTokenFn } = {},
-  } = {}) => (id) => {
-    return deps
+    enqueue: { fn: enqueueFn, wait: enqueueWait } = {},
+  } = {}) => (id) =>
+    deps
       .rpc(domain, service, "event-store")
       .put(id)
       .in({
@@ -174,19 +182,24 @@ module.exports = ({ domain, service = process.env.SERVICE } = {}) => {
         path: `/proof`,
         ...(internalTokenFn && { internalTokenFn }),
         ...(claims && { claims }),
+        ...(enqueueFn && {
+          enqueueFn: enqueueFn({
+            queue: `e-${service}-${domain}`,
+            ...(enqueueWait && { wait: enqueueWait }),
+          }),
+        }),
       });
-  };
 
   return {
-    set: ({ context, claims, token } = {}) => {
+    set: ({ context, claims, token, enqueue } = {}) => {
       return {
-        add: add({ context, claims, token }),
+        add: add({ context, claims, token, enqueue }),
         query: query({ context, claims, token }),
         stream: stream({ context, claims, token }),
         rootStream: rootStream({ context, claims, token }),
         count: count({ context, claims, token }),
         aggregate: aggregate({ context, claims, token }),
-        updateProof: updateProof({ context, claims, token }),
+        updateProof: updateProof({ context, claims, token, enqueue }),
       };
     },
     add: add(),

@@ -182,6 +182,7 @@ module.exports = async ({
   publishFn,
   hashFn,
   proofsFn,
+  updateProofFn,
   // archiveSnapshotFn,
   // archiveEventsFn
 } = {}) => {
@@ -229,6 +230,7 @@ module.exports = async ({
     }),
     saveProofsFn: deps.saveProofs({
       proofsStore: pStore,
+      updateProofFn,
     }),
     reserveRootCountsFn: deps.reserveRootCounts({
       countsStore: cStore,

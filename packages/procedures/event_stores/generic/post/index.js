@@ -95,9 +95,7 @@ module.exports = ({
           const hash = await hashFn(data);
           const proofs = await proofsFn(hash);
 
-          for (const proof of proofs) {
-            proof.id = deps.uuid();
-          }
+          for (const proof of proofs) proof.id = deps.uuid();
 
           normalizedEvents.push({
             data,

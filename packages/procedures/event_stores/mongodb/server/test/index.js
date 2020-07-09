@@ -29,7 +29,8 @@ process.env.MONGODB_DATABASE = database;
 
 const publishFn = "some-publish-fn";
 const hashFn = "some-hash-fn";
-const proofsFn = "somle-proofs-fn";
+const proofsFn = "some-proofs-fn";
+const updateProofFn = "some-update-proof-fn";
 
 describe("Mongodb event store", () => {
   beforeEach(() => {
@@ -114,6 +115,7 @@ describe("Mongodb event store", () => {
       publishFn,
       hashFn,
       proofsFn,
+      updateProofFn,
     });
 
     expect(formatSchemaFake.getCall(0)).to.have.been.calledWith(
@@ -271,6 +273,7 @@ describe("Mongodb event store", () => {
     });
     expect(saveProofsFake).to.have.been.calledWith({
       proofsStore: pStore,
+      updateProofFn,
     });
     expect(updateProofFake).to.have.been.calledWith({
       proofsStore: pStore,

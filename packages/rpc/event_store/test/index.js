@@ -69,6 +69,10 @@ describe("Event store", () => {
 
     const trace = "trace";
 
+    const enqueueFnResult = "some-enqueue-fn-result";
+    const enqueueFnFake = fake.returns(enqueueFnResult);
+    const enqueueWait = "some-enqueue-wait";
+
     await eventStore({ domain, service })
       .set({
         context,
@@ -77,6 +81,10 @@ describe("Event store", () => {
           internalFn: internalTokenFn,
           externalFn: externalTokenFn,
           key,
+        },
+        enqueue: {
+          fn: enqueueFnFake,
+          wait: enqueueWait,
         },
       })
       .add([
@@ -130,6 +138,11 @@ describe("Event store", () => {
       externalTokenFn,
       key,
       claims,
+      enqueueFn: enqueueFnResult,
+    });
+    expect(enqueueFnFake).to.have.been.calledWith({
+      queue: `e-${service}-${domain}`,
+      wait: enqueueWait,
     });
   });
   it("should call add with the right params with event header context", async () => {
@@ -620,6 +633,9 @@ describe("Event store", () => {
     });
     replace(deps, "rpc", rpcFake);
 
+    const enqueueFnResult = "some-enqueue-fn-result";
+    const enqueueFnFake = fake.returns(enqueueFnResult);
+    const enqueueWait = "some-enqueue-wait";
     const result = await eventStore({ domain, service })
       .set({
         context,
@@ -628,6 +644,10 @@ describe("Event store", () => {
           internalFn: internalTokenFn,
           externalFn: externalTokenFn,
           key,
+        },
+        enqueue: {
+          fn: enqueueFnFake,
+          wait: enqueueWait,
         },
       })
       .updateProof(id);
@@ -641,6 +661,11 @@ describe("Event store", () => {
       path: "/proof",
       internalTokenFn,
       claims,
+      enqueueFn: enqueueFnResult,
+    });
+    expect(enqueueFnFake).to.have.been.calledWith({
+      queue: `e-${service}-${domain}`,
+      wait: enqueueWait,
     });
     expect(result).to.equal(proof);
   });
