@@ -18,7 +18,7 @@ describe("Event store update proof", () => {
     replace(deps, "getProof", getProofFake);
 
     const updateProofFnFake = fake();
-    const storedProof = { uri };
+    const storedProof = { metadata: { uri } };
     const getProofFnFake = fake.returns(storedProof);
 
     const req = {
@@ -52,7 +52,7 @@ describe("Event store update proof", () => {
     replace(deps, "getProof", getProofFake);
 
     const updateProofFnFake = fake();
-    const storedProof = { uri };
+    const storedProof = { metadata: { uri } };
     const getProofFnFake = fake.returns(storedProof);
 
     const req = {

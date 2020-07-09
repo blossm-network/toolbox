@@ -6,7 +6,6 @@ module.exports = ({ proofsStore }) => async (proofs) => {
     store: proofsStore,
     data: proofs.map((p) => {
       return {
-        uri: p.uri,
         type: p.type,
         id: p.id,
         created: date,

@@ -8,7 +8,7 @@ module.exports = ({ getProofFn, updateProofFn }) => async (req, res) => {
 
   const proof = await deps.getProof({
     id: req.params.id,
-    uri: storedProof.uri,
+    uri: storedProof.metadata.uri,
   });
 
   if (!proof) return res.status(204).send();

@@ -30,14 +30,12 @@ describe("Mongodb event store save proofs", () => {
 
     const metadata = "some-proof-metadata";
     const id = "some-id";
-    const uri = "some-proof-uri";
     const type = "some-proof-type";
 
     const proofs = [
       {
         metadata,
         id,
-        uri,
         type,
       },
     ];
@@ -47,7 +45,6 @@ describe("Mongodb event store save proofs", () => {
       store: proofsStore,
       data: [
         {
-          uri,
           type,
           id,
           created: deps.dateString(),
