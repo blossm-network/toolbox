@@ -1,6 +1,6 @@
 const roboSay = require("@blossm/robo-say");
 const normalize = require("@blossm/normalize-cli");
-const fs = require("fs");
+const fs = require("fs-extra");
 const path = require("path");
 const { green, red } = require("chalk");
 const { promisify } = require("util");
