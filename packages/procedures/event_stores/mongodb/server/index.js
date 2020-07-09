@@ -163,7 +163,6 @@ const proofsStore = async () => {
     schema: {
       id: { [typeKey]: String, required: true, unique: true },
       type: { [typeKey]: String, required: true },
-      uri: { [typeKey]: String, required: true },
       created: { [typeKey]: Date, required: true },
       updated: { [typeKey]: Date, required: true },
       metadata: { [typeKey]: Object, default: {} },
