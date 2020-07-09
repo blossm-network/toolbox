@@ -47,7 +47,7 @@ module.exports = ({ domain, service = process.env.SERVICE } = {}) => {
         ...(claims && { claims }),
         ...(enqueueFn && {
           enqueueFn: enqueueFn({
-            queue: `e-${service}-${domain}`,
+            queue: `s-${service}-${domain}`,
             ...(enqueueWait && { wait: enqueueWait }),
           }),
         }),
@@ -184,7 +184,7 @@ module.exports = ({ domain, service = process.env.SERVICE } = {}) => {
         ...(claims && { claims }),
         ...(enqueueFn && {
           enqueueFn: enqueueFn({
-            queue: `e-${service}-${domain}`,
+            queue: `s-${service}-${domain}`,
             ...(enqueueWait && { wait: enqueueWait }),
           }),
         }),

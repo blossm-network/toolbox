@@ -16,6 +16,7 @@ const abortDnsTransaction = require("./steps/abort_dns_transaction");
 const createPubsubTopic = require("./steps/create_pubsub_topic");
 const mapDomain = require("./steps/map_domain");
 const writeEnv = require("./steps/write_env");
+const createQueue = require("./steps/create_queue");
 
 module.exports = ({
   domain,
@@ -65,7 +66,6 @@ module.exports = ({
       project,
       procedure,
       operationHash,
-      // coreNetwork,
       region,
       secretBucket,
       secretBucketKeyRing,
@@ -116,6 +116,10 @@ module.exports = ({
               ...dependencyKeyEnvironmentVariables,
             },
             labels: { domain, service },
+          }),
+          createQueue({
+            name: `s-${service}-${domain}`,
+            project,
           }),
           startDnsTransaction({ dnsZone, project }),
           addDnsTransaction({ uri, dnsZone, project }),
