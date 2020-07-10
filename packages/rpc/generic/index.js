@@ -84,7 +84,8 @@ const common = ({ method, dataParam, operation, id, data }) => {
             }),
           };
 
-          const shouldEnqueue = enqueueFn && method == deps.post;
+          const shouldEnqueue =
+            enqueueFn && (method == deps.post || method == deps.put);
 
           const response =
             //don't enqueue if on local

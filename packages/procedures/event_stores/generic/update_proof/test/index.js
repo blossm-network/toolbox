@@ -5,6 +5,7 @@ const updateProof = require("..");
 const deps = require("../deps");
 
 const id = "some-id";
+const proofId = "some-proof-id";
 const uri = "some-uri";
 
 describe("Event store update proof", () => {
@@ -18,7 +19,7 @@ describe("Event store update proof", () => {
     replace(deps, "getProof", getProofFake);
 
     const updateProofFnFake = fake();
-    const storedProof = { metadata: { uri } };
+    const storedProof = { metadata: { uri, proofId } };
     const getProofFnFake = fake.returns(storedProof);
 
     const req = {
@@ -38,7 +39,7 @@ describe("Event store update proof", () => {
     })(req, res);
 
     expect(getProofFake).to.have.been.calledWith({
-      id,
+      id: proofId,
       uri,
     });
     expect(updateProofFnFake).to.have.been.calledWith({
@@ -52,7 +53,7 @@ describe("Event store update proof", () => {
     replace(deps, "getProof", getProofFake);
 
     const updateProofFnFake = fake();
-    const storedProof = { metadata: { uri } };
+    const storedProof = { metadata: { uri, proofId } };
     const getProofFnFake = fake.returns(storedProof);
 
     const req = {
@@ -74,7 +75,7 @@ describe("Event store update proof", () => {
       updateProofFn: updateProofFnFake,
     })(req, res);
     expect(getProofFake).to.have.been.calledWith({
-      id,
+      id: proofId,
       uri,
     });
     expect(statusFake).to.have.been.calledWith(204);
