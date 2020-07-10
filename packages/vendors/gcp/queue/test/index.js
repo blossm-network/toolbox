@@ -75,12 +75,12 @@ describe("Queue", () => {
       project,
       queue: name,
       location,
-      method: "put",
     })({
       url,
       data,
       name: operationName,
       hash: operationHash,
+      method: "put",
     });
     expect(queuePathFake).to.have.been.calledWith(project, location);
     expect(createTaskFake).to.have.been.calledWith({

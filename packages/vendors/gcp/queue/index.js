@@ -17,10 +17,9 @@ exports.enqueue = ({
   serviceAccountEmail,
   project = process.env.GCP_PROJECT,
   location = process.env.GCP_REGION,
-  method = "post",
   queue,
   wait = 0,
-}) => async ({ url, data = {}, token, hash, name }) => {
+}) => async ({ url, data = {}, token, hash, name, method = "post" }) => {
   const parent = client.queuePath(project, location, queue);
 
   const string = JSON.stringify(data);
