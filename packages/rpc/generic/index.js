@@ -94,6 +94,14 @@ const common = ({ method, dataParam, operation, id, data }) => {
                   url,
                   data: requestData,
                   operation,
+                  method:
+                    method == deps.post
+                      ? "post"
+                      : method == deps.put
+                      ? "put"
+                      : method == deps.delete
+                      ? "delete"
+                      : null,
                 })
               : await method(url, {
                   [dataParam]: requestData,

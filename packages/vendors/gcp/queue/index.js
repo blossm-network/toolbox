@@ -17,6 +17,7 @@ exports.enqueue = ({
   serviceAccountEmail,
   project = process.env.GCP_PROJECT,
   location = process.env.GCP_REGION,
+  method = "post",
   queue,
   wait = 0,
 }) => async ({ url, data = {}, token, hash, name }) => {
@@ -27,7 +28,7 @@ exports.enqueue = ({
   const body = Buffer.from(string).toString("base64");
   const task = {
     httpRequest: {
-      httpMethod: "POST",
+      httpMethod: method.toUpperCase(),
       url,
       ...(!token && {
         oidcToken: {

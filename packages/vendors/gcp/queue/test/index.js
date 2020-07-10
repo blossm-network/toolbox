@@ -75,6 +75,7 @@ describe("Queue", () => {
       project,
       queue: name,
       location,
+      method: "put",
     })({
       url,
       data,
@@ -87,7 +88,7 @@ describe("Queue", () => {
       task: {
         httpRequest: {
           url,
-          httpMethod: "POST",
+          httpMethod: "PUT",
           oidcToken: {
             serviceAccountEmail,
             audience: `https://${region}-${operationName}-${operationHash}-${computeUrlId}-uc.a.run.app`,

@@ -100,6 +100,7 @@ describe("Operation", () => {
         claims,
       },
       operation: [operarationPart1, operarationPart2],
+      method: "post",
     });
     expect(operationTokenFake).to.have.been.calledWith({
       tokenFn,
@@ -110,6 +111,61 @@ describe("Operation", () => {
       host,
     });
     expect(result).to.deep.equal({ statusCode });
+  });
+  it("should call put with the correct params with enqueueFn", async () => {
+    const operationTokenFake = fake.returns({ token, type });
+    replace(deps, "operationToken", operationTokenFake);
+
+    const operationUrlFake = fake.returns(url);
+    replace(deps, "operationUrl", operationUrlFake);
+
+    const enqueueOperationFake = fake.returns(response);
+    replace(deps, "enqueueOperation", enqueueOperationFake);
+
+    const enqueueFn = "some-enqueue-fn";
+    await operation(operarationPart1, operarationPart2)
+      .put(id, data)
+      .in({ context, host })
+      .with({ internalTokenFn: tokenFn, claims, enqueueFn });
+
+    expect(enqueueOperationFake).to.have.been.calledWith({
+      enqueueFn,
+      url,
+      data: {
+        ...data,
+        context,
+        claims,
+      },
+      operation: [operarationPart1, operarationPart2],
+      method: "put",
+    });
+  });
+  it("should call delete with the correct params with enqueueFn", async () => {
+    const operationTokenFake = fake.returns({ token, type });
+    replace(deps, "operationToken", operationTokenFake);
+
+    const operationUrlFake = fake.returns(url);
+    replace(deps, "operationUrl", operationUrlFake);
+
+    const enqueueOperationFake = fake.returns(response);
+    replace(deps, "enqueueOperation", enqueueOperationFake);
+
+    const enqueueFn = "some-enqueue-fn";
+    await operation(operarationPart1, operarationPart2)
+      .delete(id)
+      .in({ context, host })
+      .with({ internalTokenFn: tokenFn, claims, enqueueFn });
+
+    expect(enqueueOperationFake).to.have.been.calledWith({
+      enqueueFn,
+      url,
+      data: {
+        context,
+        claims,
+      },
+      operation: [operarationPart1, operarationPart2],
+      method: "delete",
+    });
   });
   it("should call post with the correct params with enqueueFn in local env", async () => {
     const post = fake.returns(response);
