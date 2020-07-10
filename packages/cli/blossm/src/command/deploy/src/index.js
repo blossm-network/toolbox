@@ -177,7 +177,10 @@ module.exports = commandProcedure({
       .set({
         ...(context && { context }),
         ...(claims && { claims }),
-        token: { internalFn: gcpToken },
+        token: {
+          internalFn: gcpToken,
+          enqueue: { fn: enqueue },
+        },
       })
       .add(events),
 });
