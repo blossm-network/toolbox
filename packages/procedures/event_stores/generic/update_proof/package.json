@@ -1,7 +1,7 @@
 {
   "name": "@blossm/event-store-update-proof",
   "description": "An event store POST handler for saving updated proof info.",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
