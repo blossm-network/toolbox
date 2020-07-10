@@ -22,9 +22,7 @@ describe("Mongodb event store get proof", () => {
 
     replace(deps, "db", db);
 
-    const result = await getProof({ proofsStore })({
-      id,
-    });
+    const result = await getProof({ proofsStore })(id);
     expect(findFake).to.have.been.calledWith({
       store: proofsStore,
       query: { id },

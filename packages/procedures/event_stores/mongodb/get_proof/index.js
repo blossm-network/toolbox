@@ -1,6 +1,6 @@
 const deps = require("./deps");
 
-module.exports = ({ proofsStore }) => async ({ id }) => {
+module.exports = ({ proofsStore }) => async (id) => {
   const [proof] = await deps.db.find({
     store: proofsStore,
     query: { id },
