@@ -179,8 +179,8 @@ module.exports = commandProcedure({
         ...(claims && { claims }),
         token: {
           internalFn: gcpToken,
-          enqueue: { fn: enqueue },
         },
+        enqueue: { fn: enqueue },
       })
       .add(events),
 });
