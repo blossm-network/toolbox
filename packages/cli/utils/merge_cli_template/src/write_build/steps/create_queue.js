@@ -9,7 +9,8 @@ module.exports = ({ name, project }) => {
       oneLine`
     gcloud tasks queues create ${name}
     --log-sampling-ratio=0.1
-    --project=${project} || exit 0
+    --project=${project} 
+    --quiet || exit 0
     `,
     ],
   };
