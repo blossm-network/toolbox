@@ -6,6 +6,14 @@ module.exports = ({ getProofFn, updateProofFn }) => async (req, res) => {
   if (!storedProof)
     throw deps.resourceNotFoundError.message("This proof wasn't found.");
 
+  //TODO
+  //eslint-disable-next-line no-console
+  console.log({
+    storedProof,
+    id: req.params.id,
+    metadata: storedProof.metadata,
+  });
+
   const proof = await deps.getProof({
     id: req.params.id,
     uri: storedProof.metadata.uri,
