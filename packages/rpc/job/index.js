@@ -32,7 +32,7 @@ module.exports = ({ name, domain, service }) => {
         ...(claims && { claims }),
         ...(enqueueFn && {
           enqueueFn: enqueueFn({
-            queue: `j${service ? `-${service}` : ""}${
+            queue: `job${service ? `-${service}` : ""}${
               domain ? `-${domain}` : ""
             }-${name}`,
             ...(enqueueWait && { wait: enqueueWait }),
