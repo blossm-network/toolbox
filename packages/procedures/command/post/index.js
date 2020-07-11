@@ -135,6 +135,9 @@ module.exports = ({
   const fns = [];
   for (const service in eventsPerStore) {
     for (const domain in eventsPerStore[service]) {
+      //TODO
+      //eslint-disable-next-line no-console
+      console.log({ service, domain });
       fns.push(
         addFn({
           domain,
