@@ -33,8 +33,14 @@ exports.enqueue = ({
     wait,
     project,
     location,
+    upperMethod: method.toUpperCase(),
+    audience: `https://${process.env.GCP_REGION}-${name}-${hash}-${process.env.GCP_COMPUTE_URL_ID}-uc.a.run.app`,
   });
   const parent = client.queuePath(project, location, queue);
+
+  //TODO
+  //eslint-disable-next-line no-console
+  console.log("slime");
 
   const string = JSON.stringify(data);
 
