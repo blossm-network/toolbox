@@ -22,6 +22,20 @@ exports.enqueue = ({
 }) => async ({ url, data = {}, token, hash, name, method = "post" }) => {
   const parent = client.queuePath(project, location, queue);
 
+  //TODO
+  //eslint-disable-next-line no-console
+  console.log({
+    url,
+    data,
+    token,
+    hash,
+    name,
+    method,
+    queue,
+    wait,
+    project,
+    location,
+  });
   const string = JSON.stringify(data);
 
   const body = Buffer.from(string).toString("base64");
