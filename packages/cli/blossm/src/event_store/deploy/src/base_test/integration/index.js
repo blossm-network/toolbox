@@ -22,7 +22,7 @@ const {
 } = require("@blossm/gcp-pubsub");
 
 const topic = `${process.env.DOMAIN}.${process.env.SERVICE}`;
-const sub = uuid();
+const sub = `a${uuid()}`; //needs to start with a letter
 const version = 0;
 const created = dateString();
 
