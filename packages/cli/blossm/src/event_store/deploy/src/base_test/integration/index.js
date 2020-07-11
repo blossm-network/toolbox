@@ -22,7 +22,7 @@ const {
 } = require("@blossm/gcp-pubsub");
 
 const topic = `${process.env.DOMAIN}.${process.env.SERVICE}`;
-const sub = "some-sub";
+const sub = uuid();
 const version = 0;
 const created = dateString();
 
