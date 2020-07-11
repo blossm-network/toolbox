@@ -20,27 +20,7 @@ exports.enqueue = ({
   queue,
   wait = 0,
 }) => async ({ url, data = {}, token, hash, name, method = "post" }) => {
-  //TODO
-  //eslint-disable-next-line no-console
-  console.log({
-    url,
-    data,
-    token,
-    hash,
-    name,
-    method,
-    queue,
-    wait,
-    project,
-    location,
-    upperMethod: method.toUpperCase(),
-    audience: `https://${process.env.GCP_REGION}-${name}-${hash}-${process.env.GCP_COMPUTE_URL_ID}-uc.a.run.app`,
-  });
   const parent = client.queuePath(project, location, queue);
-
-  //TODO
-  //eslint-disable-next-line no-console
-  console.log("slime: ", parent);
 
   const string = JSON.stringify(data);
 
@@ -71,10 +51,6 @@ exports.enqueue = ({
     },
   };
 
-  //TODO
-  //eslint-disable-next-line no-console
-  console.log("oof: ", { parent, task });
-
   const request = {
     parent,
     task,
@@ -82,8 +58,5 @@ exports.enqueue = ({
 
   const [response] = await client.createTask(request);
 
-  //TODO
-  //eslint-disable-next-line no-console
-  console.log("ouch: ", { response });
   return response;
 };

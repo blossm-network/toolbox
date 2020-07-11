@@ -50,16 +50,6 @@ const common = ({ method, dataParam, operation, id, data }) => {
         } = {}) => {
           const internal = host == process.env.HOST;
 
-          //TODO
-          //eslint-disable-next-line no-console
-          console.log({
-            path,
-            data,
-            id,
-            context,
-            network,
-            host,
-          });
           const { token, type } =
             (internal
               ? await deps.operationToken({
