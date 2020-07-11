@@ -142,7 +142,7 @@ module.exports = ({
             },
           }),
           createQueue({
-            name: `e-${context}${service ? `-${service}` : ""}${
+            name: `event-handler-${context}${service ? `-${service}` : ""}${
               domain ? `-${domain}` : ""
             }-${name}`,
             project,

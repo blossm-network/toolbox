@@ -83,7 +83,7 @@ describe("Job", () => {
       enqueueFn: enqueueFnResult,
     });
     expect(enqueueFnFake).to.have.been.calledWith({
-      queue: `j-${service}-${domain}-${name}`,
+      queue: `job-${service}-${domain}-${name}`,
       wait: enqueueWait,
     });
   });
@@ -141,7 +141,7 @@ describe("Job", () => {
       enqueueFn: enqueueFnResult,
     });
     expect(enqueueFnFake).to.have.been.calledWith({
-      queue: `j-${name}`,
+      queue: `job-${name}`,
     });
   });
 });

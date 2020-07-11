@@ -124,7 +124,7 @@ module.exports = ({
             },
           }),
           createQueue({
-            name: `j${service ? `-${service}` : ""}${
+            name: `job${service ? `-${service}` : ""}${
               domain ? `-${domain}` : ""
             }-${name}`,
             project,

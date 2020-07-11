@@ -118,7 +118,7 @@ module.exports = ({
             labels: { domain, service },
           }),
           createQueue({
-            name: `s-${service}-${domain}`,
+            name: `event-store-${service}-${domain}`,
             project,
           }),
           startDnsTransaction({ dnsZone, project }),
