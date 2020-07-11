@@ -40,7 +40,7 @@ exports.enqueue = ({
 
   //TODO
   //eslint-disable-next-line no-console
-  console.log("slime");
+  console.log("slime: ", parent);
 
   const string = JSON.stringify(data);
 
