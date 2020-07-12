@@ -34,7 +34,11 @@ module.exports = eventStore({
     try {
       const submittedHashes = await chainpoint.submitHash(hash);
       return submittedHashes.map((h) => {
-        return { type: "chainpoint", metadata: { proofId: h.id, uri: h.uri } };
+        return {
+          type: "chainpoint",
+          hash,
+          metadata: { proofId: h.id, uri: h.uri },
+        };
       });
     } catch (e) {
       logger.error("Error creating proofs", { e, hash });
