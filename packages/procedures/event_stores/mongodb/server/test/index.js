@@ -236,6 +236,7 @@ describe("Mongodb event store", () => {
       schema: {
         id: { $type: String, required: true, unique: true },
         type: { $type: String, required: true },
+        hash: { $type: String, required: true },
         created: { $type: Date, required: true },
         updated: { $type: Date, required: true },
         metadata: { $type: Object, default: {} },
@@ -488,6 +489,7 @@ describe("Mongodb event store", () => {
       schema: {
         id: { $type: String, required: true, unique: true },
         type: { $type: String, required: true },
+        hash: { $type: String, required: true },
         created: { $type: Date, required: true },
         updated: { $type: Date, required: true },
         metadata: { $type: Object, default: {} },
@@ -679,6 +681,7 @@ describe("Mongodb event store", () => {
       schema: {
         id: { $type: String, required: true, unique: true },
         type: { $type: String, required: true },
+        hash: { $type: String, required: true },
         created: { $type: Date, required: true },
         updated: { $type: Date, required: true },
         metadata: { $type: Object, default: {} },
