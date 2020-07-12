@@ -664,7 +664,7 @@ describe("Event store", () => {
       enqueueFn: enqueueFnResult,
     });
     expect(enqueueFnFake).to.have.been.calledWith({
-      queue: `event-store-${service}-${domain}-proof`,
+      queue: `event-store-${service}-${domain}-proofs`,
       wait: enqueueWait,
     });
     expect(result).to.equal(proof);
