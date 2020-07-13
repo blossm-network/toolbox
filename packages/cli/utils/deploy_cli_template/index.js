@@ -3,7 +3,7 @@ const roboSay = require("@blossm/robo-say");
 const mergeCliTemplate = require("@blossm/merge-cli-template");
 const testCliTemplate = require("@blossm/test-cli-template");
 const fs = require("fs-extra");
-const { spawn } = require("child_process");
+const { spawnSync } = require("child_process");
 const rootDir = require("@blossm/cli-root-dir");
 const path = require("path");
 const { green } = require("chalk");
@@ -30,10 +30,7 @@ const build = async ({ workingDir, env }) => {
   for (const e of env == "all"
     ? ["development", "staging", "sandbox", "production"]
     : [env]) {
-    //TODO
-    //eslint-disable-next-line
-    console.log({ e, env, p: envProject({ config: blossmConfig, env: e }), workingDir });
-    spawn(
+    spawnSync(
       "gcloud",
       [
         "builds",
@@ -48,20 +45,6 @@ const build = async ({ workingDir, env }) => {
       }
     );
   }
-  // spawnSync(
-  //   "gcloud",
-  //   [
-  //     "builds",
-  //     "submit",
-  //     ".",
-  //     "--config=build.yaml",
-  //     `--project=${envProject({ config: blossmConfig, env })}`,
-  //   ],
-  //   {
-  //     stdio: [process.stdin, process.stdout, process.stderr],
-  //     cwd: workingDir,
-  //   }
-  // );
 };
 
 module.exports = ({ domain, dir }) => async (args, configFn) => {
