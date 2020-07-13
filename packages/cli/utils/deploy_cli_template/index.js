@@ -30,6 +30,9 @@ const build = async ({ workingDir, env }) => {
   for (const e of env == "all"
     ? ["development", "staging", "sandbox", "production"]
     : [env]) {
+    //TODO
+    //eslint-disable-next-line
+    console.log({ e, env, p: envProject({ config: blossmConfig, env: e }), workingDir });
     spawn(
       "gcloud",
       [
@@ -77,7 +80,7 @@ module.exports = ({ domain, dir }) => async (args, configFn) => {
         name: "env",
         type: String,
         short: "e",
-        choices: ["production", "sandbox", "staging", "development"],
+        choices: ["production", "sandbox", "staging", "development", "all"],
         default: "development",
       },
       {
