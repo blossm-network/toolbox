@@ -1,6 +1,6 @@
 {
   "name": "@blossm/deploy-cli-template",
-  "version": "0.0.474",
+  "version": "0.0.475",
   "description": "Deploys a template to cloud build.",
   "main": "index.js",
   "author": "blossm.network",
