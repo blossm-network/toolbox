@@ -27,20 +27,23 @@ const envProject = ({ env, config }) => {
 const build = async ({ workingDir, env }) => {
   const blossmConfig = rootDir.config();
 
-  spawnSync(
-    "gcloud",
-    [
-      "builds",
-      "submit",
-      ".",
-      "--config=build.yaml",
-      `--project=${envProject({ config: blossmConfig, env })}`,
-    ],
-    {
-      stdio: [process.stdin, process.stdout, process.stderr],
-      cwd: workingDir,
-    }
-  );
+  await new Promise(function (resolve, reject) {
+    const { error } = spawnSync(
+      "gcloud",
+      [
+        "builds",
+        "submit",
+        ".",
+        "--config=build.yaml",
+        `--project=${envProject({ config: blossmConfig, env })}`,
+      ],
+      {
+        stdio: [process.stdin, process.stdout, process.stderr],
+        cwd: workingDir,
+      }
+    );
+    return error ? reject(error) : resolve();
+  });
 };
 
 module.exports = ({ domain, dir }) => async (args, configFn) => {
