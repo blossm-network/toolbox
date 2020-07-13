@@ -1,6 +1,6 @@
 const deps = require("./deps");
 
-module.exports = ({ proofsStore, updateProofFn }) => async (proofs) => {
+module.exports = ({ proofsStore }) => async (proofs, { transaction } = {}) => {
   const date = deps.dateString();
   await Promise.all([
     deps.db.create({
@@ -14,7 +14,7 @@ module.exports = ({ proofsStore, updateProofFn }) => async (proofs) => {
           metadata: p.metadata,
         };
       }),
+      ...(transaction && { options: { session: transaction } }),
     }),
-    ...proofs.map((proof) => updateProofFn(proof.id)),
   ]);
 };

@@ -1,7 +1,7 @@
 const { expect } = require("chai")
   .use(require("chai-datetime"))
   .use(require("sinon-chai"));
-const { restore, replace, fake, stub, useFakeTimers } = require("sinon");
+const { restore, replace, fake, stub, match, useFakeTimers } = require("sinon");
 
 const deps = require("../deps");
 
@@ -18,6 +18,7 @@ const host = "some-host";
 const database = "some-db";
 const password = "some-password";
 const handlers = "some-handlers";
+const transaction = "some-transaction";
 
 process.env.DOMAIN = domain;
 process.env.SERVICE = service;
@@ -30,7 +31,7 @@ process.env.MONGODB_DATABASE = database;
 const publishFn = "some-publish-fn";
 const hashFn = "some-hash-fn";
 const proofsFn = "some-proofs-fn";
-const updateProofFn = "some-update-proof-fn";
+const scheduleUpdateForProofFn = "some-schedule-update-for-proof-fn";
 
 describe("Mongodb event store", () => {
   beforeEach(() => {
@@ -63,8 +64,10 @@ describe("Mongodb event store", () => {
     const eventStoreFake = fake();
     replace(deps, "eventStore", eventStoreFake);
 
+    const startSessionFake = fake.returns(transaction);
     const db = {
       store: storeFake,
+      startSession: startSessionFake,
     };
     replace(deps, "db", db);
 
@@ -115,7 +118,7 @@ describe("Mongodb event store", () => {
       publishFn,
       hashFn,
       proofsFn,
-      updateProofFn,
+      scheduleUpdateForProofFn,
     });
 
     expect(formatSchemaFake.getCall(0)).to.have.been.calledWith(
@@ -274,7 +277,6 @@ describe("Mongodb event store", () => {
     });
     expect(saveProofsFake).to.have.been.calledWith({
       proofsStore: pStore,
-      updateProofFn,
     });
     expect(updateProofFake).to.have.been.calledWith({
       proofsStore: pStore,
@@ -296,6 +298,22 @@ describe("Mongodb event store", () => {
       saveProofsFn: saveProofsResult,
       updateProofFn: updateProofResult,
       getProofFn: getProofResult,
+      scheduleUpdateForProofFn,
+      startTransactionFn: match(async (fn) => {
+        const response = await fn();
+        return response == transaction && startSessionFake.calledWith();
+      }),
+      commitTransactionFn: match(async (fn) => {
+        const commitTransactionFake = fake();
+        const endSessionFake = fake();
+        await fn({
+          commitTransaction: commitTransactionFake,
+          endSession: endSessionFake,
+        });
+        return (
+          commitTransactionFake.calledWith() && endSessionFake.calledWith()
+        );
+      }),
     });
 
     await mongodbEventStore();

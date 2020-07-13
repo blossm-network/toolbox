@@ -1,6 +1,9 @@
 const deps = require("./deps");
 
-module.exports = ({ eventStore, handlers }) => async (events) => {
+module.exports = ({ eventStore, handlers }) => async (
+  events,
+  { transaction } = {}
+) => {
   for (const event of events) {
     const handler = handlers[event.data.headers.action];
 
@@ -16,6 +19,7 @@ module.exports = ({ eventStore, handlers }) => async (events) => {
     const results = await deps.db.create({
       store: eventStore,
       data: events,
+      ...(transaction && { options: { session: transaction } }),
     });
     const groomedResults = results.map((result) => {
       delete result._id;

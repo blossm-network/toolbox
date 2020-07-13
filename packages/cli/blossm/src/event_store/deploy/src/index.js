@@ -45,7 +45,7 @@ module.exports = eventStore({
       return [];
     }
   },
-  updateProofFn: (proofId) =>
+  scheduleUpdateForProof: (proofId) =>
     eventStoreRpc({ domain: process.env.DOMAIN, service: process.env.SERVICE })
       .set({
         token: { internalFn: gcpToken },

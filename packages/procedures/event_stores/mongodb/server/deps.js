@@ -1,4 +1,4 @@
-const { store } = require("@blossm/mongodb-database");
+const { store, startSession } = require("@blossm/mongodb-database");
 const { string: dateString } = require("@blossm/datetime");
 const eventStore = require("@blossm/event-store");
 const saveEvents = require("@blossm/mongodb-event-store-save-events");
@@ -15,7 +15,7 @@ const formatSchema = require("@blossm/format-mongodb-schema");
 
 exports.dateString = dateString;
 exports.eventStore = eventStore;
-exports.db = { store };
+exports.db = { store, startSession };
 exports.saveEvents = saveEvents;
 exports.aggregate = aggregate;
 exports.reserveRootCounts = reserveRootCounts;

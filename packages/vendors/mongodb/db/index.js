@@ -9,6 +9,7 @@ const count = require("./src/operations/count");
 const updateMany = require("./src/operations/update_many");
 const connect = require("./src/connect");
 const store = require("./src/store");
+const startSession = require("./src/start_session");
 
 module.exports = {
   find,
@@ -22,4 +23,5 @@ module.exports = {
   mapReduce,
   connect,
   store,
+  startSession,
 };

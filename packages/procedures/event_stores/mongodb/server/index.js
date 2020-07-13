@@ -183,7 +183,7 @@ module.exports = async ({
   publishFn,
   hashFn,
   proofsFn,
-  updateProofFn,
+  scheduleUpdateForProofFn,
   // archiveSnapshotFn,
   // archiveEventsFn
 } = {}) => {
@@ -231,7 +231,6 @@ module.exports = async ({
     }),
     saveProofsFn: deps.saveProofs({
       proofsStore: pStore,
-      updateProofFn,
     }),
     reserveRootCountsFn: deps.reserveRootCounts({
       countsStore: cStore,
@@ -242,10 +241,20 @@ module.exports = async ({
     countFn: deps.count({
       countsStore: cStore,
     }),
+    startTransactionFn: async () => {
+      const session = await deps.db.startSession();
+      session.startTransaction();
+      return session;
+    },
+    commitTransactionFn: (session) => {
+      session.commitTransaction();
+      session.endSession();
+    },
     // saveSnapshotFn,
     publishFn,
     hashFn,
     proofsFn,
+    scheduleUpdateForProofFn,
   });
 };
 

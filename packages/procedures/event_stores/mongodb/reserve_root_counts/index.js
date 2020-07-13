@@ -1,6 +1,6 @@
 const deps = require("./deps");
 
-module.exports = ({ countsStore }) => ({ root, amount }) =>
+module.exports = ({ countsStore }) => ({ root, amount, transaction }) =>
   deps.db.write({
     store: countsStore,
     query: { root },
@@ -12,5 +12,6 @@ module.exports = ({ countsStore }) => ({ root, amount }) =>
       new: true,
       runValidators: true,
       setDefaultsOnInsert: true,
+      ...(transaction && { session: transaction }),
     },
   });

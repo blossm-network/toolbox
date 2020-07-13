@@ -7,6 +7,7 @@ const deps = require("../deps");
 
 const root = "some-root";
 const amount = 1;
+const transaction = "some-transaction";
 const countsStore = "some-count-store";
 
 describe("Mongodb event store reserve root count", () => {
@@ -14,6 +15,38 @@ describe("Mongodb event store reserve root count", () => {
     restore();
   });
   it("should call with the correct params", async () => {
+    const writeResult = "some-write-result";
+    const writeFake = fake.returns(writeResult);
+
+    const db = {
+      write: writeFake,
+    };
+    replace(deps, "db", db);
+
+    const result = await reserveRootCount({ countsStore })({
+      root,
+      amount,
+      transaction,
+    });
+    expect(writeFake).to.have.been.calledWith({
+      store: countsStore,
+      query: { root },
+      update: {
+        $inc: { value: amount },
+      },
+      options: {
+        lean: true,
+        omitUndefined: true,
+        upsert: true,
+        new: true,
+        runValidators: true,
+        setDefaultsOnInsert: true,
+        session: transaction,
+      },
+    });
+    expect(result).to.deep.equal(writeResult);
+  });
+  it("should call with the correct params with optionals omitted", async () => {
     const writeResult = "some-write-result";
     const writeFake = fake.returns(writeResult);
 

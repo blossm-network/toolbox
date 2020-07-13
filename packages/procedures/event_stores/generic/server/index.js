@@ -13,6 +13,9 @@ module.exports = async ({
   proofsFn,
   saveProofsFn,
   rootStreamFn,
+  scheduleUpdateForProofFn,
+  startTransactionFn,
+  commitTransactionFn,
   countFn,
 } = {}) => {
   deps
@@ -42,6 +45,9 @@ module.exports = async ({
         hashFn,
         proofsFn,
         saveProofsFn,
+        scheduleUpdateForProofFn,
+        startTransactionFn,
+        commitTransactionFn,
       })
     )
     .listen();

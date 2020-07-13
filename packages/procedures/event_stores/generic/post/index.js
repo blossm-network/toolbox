@@ -7,6 +7,9 @@ module.exports = ({
   hashFn,
   proofsFn,
   saveProofsFn,
+  scheduleUpdateForProof,
+  startTransactionFn,
+  commitTransactionFn,
 }) => async (req, res) => {
   const eventNumberOffsets = {};
 
@@ -16,9 +19,11 @@ module.exports = ({
     return result;
   }, {});
 
+  const transaction = await startTransactionFn();
+
   const [...updatedCountObjects] = await Promise.all(
     Object.keys(eventRootCounts).map((root) =>
-      reserveRootCountsFn({ root, amount: eventRootCounts[root] })
+      reserveRootCountsFn({ root, amount: eventRootCounts[root], transaction })
     )
   );
 
@@ -108,21 +113,22 @@ module.exports = ({
     })
   );
 
-  const [savedEvents] = await Promise.all([
-    saveEventsFn(normalizedEvents),
-    saveProofsFn(allProofs),
-  ]);
+  const savedEvents = await saveEventsFn(normalizedEvents, { transaction });
+  await saveProofsFn(allProofs, { transaction });
 
-  await Promise.all(
-    savedEvents.map((e) =>
+  await commitTransactionFn(transaction);
+
+  await Promise.all([
+    ...savedEvents.map((e) =>
       publishFn(
         {
           root: e.data.root,
         },
         e.data.headers.topic
       )
-    )
-  );
+    ),
+    ...allProofs.map((proof) => scheduleUpdateForProof(proof)),
+  ]);
 
   res.sendStatus(204);
 };

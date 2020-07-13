@@ -15,6 +15,9 @@ const hashFn = "some-hash-fn";
 const proofsFn = "some-proofs-fn";
 const saveProofsFn = "some-save-proofs-fn";
 const updateProofFn = "some-update-proof-fn";
+const scheduleUpdateForProofFn = "some-schedule-update-for-proof-fn";
+const startTransactionFn = "some-start-transaction-fn";
+const commitTransactionFn = "some-commit-transaction-fn";
 const getProofFn = "some-get-proof-fn";
 
 describe("Event store", () => {
@@ -78,6 +81,9 @@ describe("Event store", () => {
       proofsFn,
       rootStreamFn,
       updateProofFn,
+      scheduleUpdateForProofFn,
+      startTransactionFn,
+      commitTransactionFn,
       getProofFn,
       saveProofsFn,
       countFn,
@@ -118,6 +124,9 @@ describe("Event store", () => {
       hashFn,
       proofsFn,
       saveProofsFn,
+      scheduleUpdateForProofFn,
+      startTransactionFn,
+      commitTransactionFn,
     });
   });
 });

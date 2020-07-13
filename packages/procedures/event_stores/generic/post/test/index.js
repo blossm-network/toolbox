@@ -22,6 +22,7 @@ const eventNumber = "some-event-number";
 const eventTopic = "some-event-topic";
 
 const id = "some-id";
+const transaction = "some-transaction";
 
 const writtenEvent = {
   data: {
@@ -77,6 +78,10 @@ describe("Event store post", () => {
     ]);
     const saveProofsFnFake = fake();
 
+    const scheduleUpdateForProofFake = fake();
+    const startTransactionFnFake = fake.returns(transaction);
+    const commitTransactionFnFake = fake();
+
     const uuidFake = fake.returns(id);
     replace(deps, "uuid", uuidFake);
 
@@ -98,6 +103,9 @@ describe("Event store post", () => {
       hashFn: hashFnFake,
       proofsFn: proofsFnFake,
       saveProofsFn: saveProofsFnFake,
+      scheduleUpdateForProof: scheduleUpdateForProofFake,
+      startTransactionFn: startTransactionFnFake,
+      commitTransactionFn: commitTransactionFnFake,
     })(req, res);
 
     expect(saveEventsFnFake).to.have.been.calledWith([
@@ -122,6 +130,7 @@ describe("Event store post", () => {
     expect(reserveRootCountsFnFake).to.have.been.calledWith({
       root,
       amount: 1,
+      transaction,
     });
     expect(hashFnFake).to.have.been.calledWith({
       id: `${root}_${currentEventsForRoot}`,
@@ -140,6 +149,13 @@ describe("Event store post", () => {
       { root: eventRoot },
       eventTopic
     );
+    expect(scheduleUpdateForProofFake.getCall(0)).to.have.been.calledWith({
+      id,
+      a: 1,
+    });
+    expect(scheduleUpdateForProofFake).to.have.been.calledOnce;
+    expect(startTransactionFnFake).to.have.been.calledWith();
+    expect(commitTransactionFnFake).to.have.been.calledWith(transaction);
     expect(sendStatusFake).to.have.been.calledWith(204);
   });
   it("should call with the correct params with correct number", async () => {
@@ -154,6 +170,10 @@ describe("Event store post", () => {
     const hashFnFake = fake.returns(hash);
     const proofsFnFake = fake.returns([{ a: 1 }]);
     const saveProofsFnFake = fake();
+
+    const scheduleUpdateForProofFake = fake();
+    const startTransactionFnFake = fake.returns(transaction);
+    const commitTransactionFnFake = fake();
 
     const uuidFake = fake.returns(id);
     replace(deps, "uuid", uuidFake);
@@ -181,6 +201,9 @@ describe("Event store post", () => {
       hashFn: hashFnFake,
       proofsFn: proofsFnFake,
       saveProofsFn: saveProofsFnFake,
+      scheduleUpdateForProof: scheduleUpdateForProofFake,
+      startTransactionFn: startTransactionFnFake,
+      commitTransactionFn: commitTransactionFnFake,
     })(req, res);
 
     expect(saveEventsFnFake).to.have.been.calledWith([
@@ -205,6 +228,7 @@ describe("Event store post", () => {
     expect(reserveRootCountsFnFake).to.have.been.calledWith({
       root,
       amount: 1,
+      transaction,
     });
     expect(hashFnFake).to.have.been.calledWith({
       id: `${root}_${number}`,
@@ -223,6 +247,13 @@ describe("Event store post", () => {
       { root: eventRoot },
       eventTopic
     );
+    expect(scheduleUpdateForProofFake.getCall(0)).to.have.been.calledWith({
+      id,
+      a: 1,
+    });
+    expect(scheduleUpdateForProofFake).to.have.been.calledOnce;
+    expect(startTransactionFnFake).to.have.been.calledWith();
+    expect(commitTransactionFnFake).to.have.been.calledWith(transaction);
     expect(sendStatusFake).to.have.been.calledWith(204);
   });
   it("should call with the correct params with multiple events with the same root and different roots", async () => {
@@ -259,6 +290,10 @@ describe("Event store post", () => {
     const id2 = "some-id2";
     const id3 = "some-id3";
     const id4 = "some-id4";
+
+    const scheduleUpdateForProofFake = fake();
+    const startTransactionFnFake = fake.returns(transaction);
+    const commitTransactionFnFake = fake();
 
     const uuidFake = stub()
       .onFirstCall()
@@ -304,6 +339,9 @@ describe("Event store post", () => {
       hashFn: hashFnFake,
       proofsFn: proofsFnFake,
       saveProofsFn: saveProofsFnFake,
+      scheduleUpdateForProof: scheduleUpdateForProofFake,
+      startTransactionFn: startTransactionFnFake,
+      commitTransactionFn: commitTransactionFnFake,
     })(req, res);
 
     expect(saveEventsFnFake).to.have.been.calledWith([
@@ -365,10 +403,12 @@ describe("Event store post", () => {
     expect(reserveRootCountsFnFake).to.have.been.calledWith({
       root,
       amount: 2,
+      transaction,
     });
     expect(reserveRootCountsFnFake).to.have.been.calledWith({
       root: "some-other-root",
       amount: 1,
+      transaction,
     });
     expect(reserveRootCountsFnFake).to.have.been.calledTwice;
     expect(hashFnFake.getCall(0)).to.have.been.calledWith({
@@ -414,12 +454,32 @@ describe("Event store post", () => {
       { root: eventRoot },
       eventTopic
     );
+    expect(scheduleUpdateForProofFake.getCall(0)).to.have.been.calledWith({
+      id: id1,
+      a: 1,
+    });
+    expect(scheduleUpdateForProofFake.getCall(1)).to.have.been.calledWith({
+      id: id2,
+      b: 2,
+    });
+    expect(scheduleUpdateForProofFake.getCall(2)).to.have.been.calledWith({
+      id: id3,
+      c: 3,
+    });
+    expect(scheduleUpdateForProofFake.getCall(3)).to.have.been.calledWith({
+      id: id4,
+      d: 4,
+    });
+    expect(scheduleUpdateForProofFake).to.have.callCount(4);
+    expect(startTransactionFnFake).to.have.been.calledWith();
+    expect(commitTransactionFnFake).to.have.been.calledWith(transaction);
     expect(sendStatusFake).to.have.been.calledWith(204);
   });
   it("should throw if event number is incorrect", async () => {
     const saveEventsFnFake = fake.returns(writtenEvents);
     const reserveRootCountsFnFake = fake.returns(reserveRootCount);
     const publishFnFake = fake();
+    const startTransactionFnFake = fake.returns(transaction);
 
     const req = {
       body: {
@@ -437,6 +497,7 @@ describe("Event store post", () => {
         saveEventsFn: saveEventsFnFake,
         reserveRootCountsFn: reserveRootCountsFnFake,
         publishFn: publishFnFake,
+        startTransactionFn: startTransactionFnFake,
       })(req);
     } catch (e) {
       expect(e.statusCode).to.equal(412);
@@ -455,11 +516,13 @@ describe("Event store post", () => {
       },
     };
 
+    const startTransactionFnFake = fake.returns(transaction);
     try {
       await post({
         saveEventsFn: saveEventsFnFake,
         reserveRootCountsFn: reserveRootCountsFnFake,
         publishFn: publishFnFake,
+        startTransactionFn: startTransactionFnFake,
       })(req);
     } catch (e) {
       expect(e).to.equal(error);
@@ -488,10 +551,12 @@ describe("Event store post", () => {
     replace(deps, "badRequestError", {
       message: messageFake,
     });
+    const startTransactionFnFake = fake.returns(transaction);
     try {
       await post({
         publishFn: publishFnFake,
         reserveRootCountsFn: reserveRootCountsFnFake,
+        startTransactionFn: startTransactionFnFake,
       })(req);
     } catch (e) {
       expect(messageFake).to.have.been.calledWith(
@@ -523,10 +588,12 @@ describe("Event store post", () => {
     replace(deps, "badRequestError", {
       message: messageFake,
     });
+    const startTransactionFnFake = fake.returns(transaction);
     try {
       await post({
         publishFn: publishFnFake,
         reserveRootCountsFn: reserveRootCountsFnFake,
+        startTransactionFn: startTransactionFnFake,
       })(req);
     } catch (e) {
       expect(messageFake).to.have.been.calledWith(

@@ -10,7 +10,7 @@ schema[commonKey] = { type: String, default: schemaValue };
 
 const deps = require("../deps");
 
-describe("Returns a model", () => {
+describe("Store", () => {
   afterEach(() => {
     restore();
   });

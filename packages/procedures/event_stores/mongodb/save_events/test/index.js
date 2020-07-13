@@ -8,6 +8,7 @@ const deps = require("../deps");
 const createResult = { a: 1 };
 
 const action = "some-action";
+const transaction = "some-transaction";
 const handlers = { [action]: () => {} };
 
 describe("Mongodb event store create event", () => {
@@ -15,6 +16,39 @@ describe("Mongodb event store create event", () => {
     restore();
   });
   it("should call with the correct params", async () => {
+    const eventStore = "some-event-store";
+
+    const createFake = fake.returns([{ ...createResult, __v: 3, _id: 4 }]);
+
+    const db = {
+      create: createFake,
+    };
+    replace(deps, "db", db);
+
+    const events = [
+      {
+        data: {
+          headers: {
+            action,
+          },
+        },
+      },
+    ];
+
+    const saveEventsFnResult = await saveEvent({ eventStore, handlers })(
+      events,
+      { transaction }
+    );
+    expect(createFake).to.have.been.calledWith({
+      store: eventStore,
+      data: events,
+      options: {
+        session: transaction,
+      },
+    });
+    expect(saveEventsFnResult).to.deep.equal([createResult]);
+  });
+  it("should call with the correct params with optionals omitted", async () => {
     const eventStore = "some-event-store";
 
     const createFake = fake.returns([{ ...createResult, __v: 3, _id: 4 }]);
