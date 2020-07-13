@@ -247,9 +247,9 @@ module.exports = async ({
       session.startTransaction();
       return session;
     },
-    commitTransactionFn: (session) => {
-      session.commitTransaction();
-      session.endSession();
+    commitTransactionFn: async (session) => {
+      await session.commitTransaction();
+      await session.endSession();
     },
     // saveSnapshotFn,
     publishFn,
