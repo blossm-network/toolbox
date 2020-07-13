@@ -21,10 +21,6 @@ module.exports = ({
 
   const transaction = await startTransactionFn();
 
-  //TODO
-  //eslint-disable-next-line no-console
-  console.log(`1: ${transaction != null}`);
-
   const [...updatedCountObjects] = await Promise.all(
     Object.keys(eventRootCounts).map((root) =>
       reserveRootCountsFn({
@@ -34,10 +30,6 @@ module.exports = ({
       })
     )
   );
-
-  //TODO
-  //eslint-disable-next-line no-console
-  console.log(`2`);
 
   const currentEventCounts = updatedCountObjects.reduce(
     (result, countObject) => {
@@ -125,25 +117,13 @@ module.exports = ({
     })
   );
 
-  //TODO
-  //eslint-disable-next-line no-console
-  console.log(`3`);
-
   const savedEvents = await saveEventsFn(
     normalizedEvents,
     ...(transaction ? [{ transaction }] : [])
   );
   await saveProofsFn(allProofs, ...(transaction ? [{ transaction }] : []));
 
-  //TODO
-  //eslint-disable-next-line no-console
-  console.log(`4`);
-
   if (transaction) await commitTransactionFn(transaction);
-
-  //TODO
-  //eslint-disable-next-line no-console
-  console.log(`5`);
 
   await Promise.all([
     ...savedEvents.map((e) =>
@@ -156,9 +136,6 @@ module.exports = ({
     ),
     ...allProofs.map((proof) => scheduleUpdateForProof(proof.id)),
   ]);
-  //TODO
-  //eslint-disable-next-line no-console
-  console.log(`6`);
 
   res.sendStatus(204);
 };
