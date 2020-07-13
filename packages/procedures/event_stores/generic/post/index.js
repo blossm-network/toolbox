@@ -21,6 +21,10 @@ module.exports = ({
 
   const transaction = await startTransactionFn();
 
+  //TODO
+  //eslint-disable-next-line no-console
+  console.log({ transaction2: transaction });
+
   const [...updatedCountObjects] = await Promise.all(
     Object.keys(eventRootCounts).map((root) =>
       reserveRootCountsFn({

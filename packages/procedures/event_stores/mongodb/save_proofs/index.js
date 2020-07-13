@@ -2,6 +2,10 @@ const deps = require("./deps");
 
 module.exports = ({ proofsStore }) => async (proofs, { transaction } = {}) => {
   const date = deps.dateString();
+  //TODO
+  //eslint-disable-next-line no-console
+  console.log({ transaction1: transaction });
+
   await Promise.all([
     deps.db.create({
       store: proofsStore,
