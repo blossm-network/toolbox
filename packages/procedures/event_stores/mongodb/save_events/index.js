@@ -4,6 +4,10 @@ module.exports = ({ eventStore, handlers }) => async (
   events,
   { transaction } = {}
 ) => {
+  //TODO
+  //eslint-disable-next-line no-console
+  console.log(`8 ${transaction}`);
+
   for (const event of events) {
     const handler = handlers[event.data.headers.action];
 
