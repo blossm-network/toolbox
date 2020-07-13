@@ -31,21 +31,25 @@ describe("Mongodb event store save proofs", () => {
 
     const metadata = "some-proof-metadata";
     const id = "some-id";
+    const hash = "some-hash";
     const type = "some-proof-type";
 
     const otherMetadata = "some-other-proof-metadata";
     const otherId = "some-other-id";
+    const otherHash = "some-other-hash";
     const otherType = "some-other-proof-type";
 
     const proofs = [
       {
         metadata,
         id,
+        hash,
         type,
       },
       {
         metadata: otherMetadata,
         id: otherId,
+        hash: otherHash,
         type: otherType,
       },
     ];
@@ -61,6 +65,7 @@ describe("Mongodb event store save proofs", () => {
         {
           type,
           id,
+          hash,
           created: deps.dateString(),
           updated: deps.dateString(),
           metadata,
@@ -68,6 +73,7 @@ describe("Mongodb event store save proofs", () => {
         {
           type: otherType,
           id: otherId,
+          hash: otherHash,
           created: deps.dateString(),
           updated: deps.dateString(),
           metadata: otherMetadata,
@@ -90,21 +96,25 @@ describe("Mongodb event store save proofs", () => {
 
     const metadata = "some-proof-metadata";
     const id = "some-id";
+    const hash = "some-hash";
     const type = "some-proof-type";
 
     const otherMetadata = "some-other-proof-metadata";
     const otherId = "some-other-id";
+    const otherHash = "some-other-hash";
     const otherType = "some-other-proof-type";
 
     const proofs = [
       {
         metadata,
         id,
+        hash,
         type,
       },
       {
         metadata: otherMetadata,
         id: otherId,
+        hash: otherHash,
         type: otherType,
       },
     ];
@@ -120,6 +130,7 @@ describe("Mongodb event store save proofs", () => {
         {
           type,
           id,
+          hash,
           created: deps.dateString(),
           updated: deps.dateString(),
           metadata,
@@ -127,6 +138,7 @@ describe("Mongodb event store save proofs", () => {
         {
           type: otherType,
           id: otherId,
+          hash: otherHash,
           created: deps.dateString(),
           updated: deps.dateString(),
           metadata: otherMetadata,

@@ -10,6 +10,7 @@ module.exports = ({ proofsStore }) => async (proofs, { transaction } = {}) => {
         return {
           type: p.type,
           id: p.id,
+          hash: p.hash,
           created: date,
           updated: date,
           metadata: p.metadata,
