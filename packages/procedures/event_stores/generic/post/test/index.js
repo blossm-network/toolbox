@@ -78,7 +78,7 @@ describe("Event store post", () => {
     ]);
     const saveProofsFnFake = fake();
 
-    const scheduleUpdateForProofFake = fake();
+    const scheduleUpdateForProofFnFake = fake();
     const startTransactionFnFake = fake.returns(transaction);
     const commitTransactionFnFake = fake();
 
@@ -103,7 +103,7 @@ describe("Event store post", () => {
       hashFn: hashFnFake,
       proofsFn: proofsFnFake,
       saveProofsFn: saveProofsFnFake,
-      scheduleUpdateForProof: scheduleUpdateForProofFake,
+      scheduleUpdateForProofFn: scheduleUpdateForProofFnFake,
       startTransactionFn: startTransactionFnFake,
       commitTransactionFn: commitTransactionFnFake,
     })(req, res);
@@ -149,8 +149,8 @@ describe("Event store post", () => {
       { root: eventRoot },
       eventTopic
     );
-    expect(scheduleUpdateForProofFake.getCall(0)).to.have.been.calledWith(id);
-    expect(scheduleUpdateForProofFake).to.have.been.calledOnce;
+    expect(scheduleUpdateForProofFnFake.getCall(0)).to.have.been.calledWith(id);
+    expect(scheduleUpdateForProofFnFake).to.have.been.calledOnce;
     expect(startTransactionFnFake).to.have.been.calledWith();
     expect(commitTransactionFnFake).to.have.been.calledWith(transaction);
     expect(sendStatusFake).to.have.been.calledWith(204);
@@ -168,7 +168,7 @@ describe("Event store post", () => {
     const proofsFnFake = fake.returns([{ a: 1 }]);
     const saveProofsFnFake = fake();
 
-    const scheduleUpdateForProofFake = fake();
+    const scheduleUpdateForProofFnFake = fake();
     const startTransactionFnFake = fake.returns(transaction);
     const commitTransactionFnFake = fake();
 
@@ -198,7 +198,7 @@ describe("Event store post", () => {
       hashFn: hashFnFake,
       proofsFn: proofsFnFake,
       saveProofsFn: saveProofsFnFake,
-      scheduleUpdateForProof: scheduleUpdateForProofFake,
+      scheduleUpdateForProofFn: scheduleUpdateForProofFnFake,
       startTransactionFn: startTransactionFnFake,
       commitTransactionFn: commitTransactionFnFake,
     })(req, res);
@@ -244,8 +244,8 @@ describe("Event store post", () => {
       { root: eventRoot },
       eventTopic
     );
-    expect(scheduleUpdateForProofFake.getCall(0)).to.have.been.calledWith(id);
-    expect(scheduleUpdateForProofFake).to.have.been.calledOnce;
+    expect(scheduleUpdateForProofFnFake.getCall(0)).to.have.been.calledWith(id);
+    expect(scheduleUpdateForProofFnFake).to.have.been.calledOnce;
     expect(startTransactionFnFake).to.have.been.calledWith();
     expect(commitTransactionFnFake).to.have.been.calledWith(transaction);
     expect(sendStatusFake).to.have.been.calledWith(204);
@@ -285,7 +285,7 @@ describe("Event store post", () => {
     const id3 = "some-id3";
     const id4 = "some-id4";
 
-    const scheduleUpdateForProofFake = fake();
+    const scheduleUpdateForProofFnFake = fake();
     const startTransactionFnFake = fake.returns(transaction);
     const commitTransactionFnFake = fake();
 
@@ -333,7 +333,7 @@ describe("Event store post", () => {
       hashFn: hashFnFake,
       proofsFn: proofsFnFake,
       saveProofsFn: saveProofsFnFake,
-      scheduleUpdateForProof: scheduleUpdateForProofFake,
+      scheduleUpdateForProofFn: scheduleUpdateForProofFnFake,
       startTransactionFn: startTransactionFnFake,
       commitTransactionFn: commitTransactionFnFake,
     })(req, res);
@@ -448,11 +448,19 @@ describe("Event store post", () => {
       { root: eventRoot },
       eventTopic
     );
-    expect(scheduleUpdateForProofFake.getCall(0)).to.have.been.calledWith(id1);
-    expect(scheduleUpdateForProofFake.getCall(1)).to.have.been.calledWith(id2);
-    expect(scheduleUpdateForProofFake.getCall(2)).to.have.been.calledWith(id3);
-    expect(scheduleUpdateForProofFake.getCall(3)).to.have.been.calledWith(id4);
-    expect(scheduleUpdateForProofFake).to.have.callCount(4);
+    expect(scheduleUpdateForProofFnFake.getCall(0)).to.have.been.calledWith(
+      id1
+    );
+    expect(scheduleUpdateForProofFnFake.getCall(1)).to.have.been.calledWith(
+      id2
+    );
+    expect(scheduleUpdateForProofFnFake.getCall(2)).to.have.been.calledWith(
+      id3
+    );
+    expect(scheduleUpdateForProofFnFake.getCall(3)).to.have.been.calledWith(
+      id4
+    );
+    expect(scheduleUpdateForProofFnFake).to.have.callCount(4);
     expect(startTransactionFnFake).to.have.been.calledWith();
     expect(commitTransactionFnFake).to.have.been.calledWith(transaction);
     expect(sendStatusFake).to.have.been.calledWith(204);
@@ -469,7 +477,7 @@ describe("Event store post", () => {
     ]);
     const saveProofsFnFake = fake();
 
-    const scheduleUpdateForProofFake = fake();
+    const scheduleUpdateForProofFnFake = fake();
     const startTransactionFnFake = fake();
     const commitTransactionFnFake = fake();
 
@@ -494,7 +502,7 @@ describe("Event store post", () => {
       hashFn: hashFnFake,
       proofsFn: proofsFnFake,
       saveProofsFn: saveProofsFnFake,
-      scheduleUpdateForProof: scheduleUpdateForProofFake,
+      scheduleUpdateForProofFn: scheduleUpdateForProofFnFake,
       startTransactionFn: startTransactionFnFake,
       commitTransactionFn: commitTransactionFnFake,
     })(req, res);
@@ -539,8 +547,8 @@ describe("Event store post", () => {
       { root: eventRoot },
       eventTopic
     );
-    expect(scheduleUpdateForProofFake.getCall(0)).to.have.been.calledWith(id);
-    expect(scheduleUpdateForProofFake).to.have.been.calledOnce;
+    expect(scheduleUpdateForProofFnFake.getCall(0)).to.have.been.calledWith(id);
+    expect(scheduleUpdateForProofFnFake).to.have.been.calledOnce;
     expect(startTransactionFnFake).to.have.been.calledWith();
     expect(commitTransactionFnFake).to.not.have.been.called;
     expect(sendStatusFake).to.have.been.calledWith(204);

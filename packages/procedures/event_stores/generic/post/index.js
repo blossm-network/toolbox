@@ -7,7 +7,7 @@ module.exports = ({
   hashFn,
   proofsFn,
   saveProofsFn,
-  scheduleUpdateForProof,
+  scheduleUpdateForProofFn,
   startTransactionFn,
   commitTransactionFn,
 }) => async (req, res) => {
@@ -134,7 +134,7 @@ module.exports = ({
         e.data.headers.topic
       )
     ),
-    ...allProofs.map((proof) => scheduleUpdateForProof(proof.id)),
+    ...allProofs.map((proof) => scheduleUpdateForProofFn(proof.id)),
   ]);
 
   res.sendStatus(204);
