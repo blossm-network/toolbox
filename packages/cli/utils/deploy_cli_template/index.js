@@ -3,7 +3,7 @@ const roboSay = require("@blossm/robo-say");
 const mergeCliTemplate = require("@blossm/merge-cli-template");
 const testCliTemplate = require("@blossm/test-cli-template");
 const fs = require("fs-extra");
-const { spawnSync } = require("child_process");
+const { spawn } = require("child_process");
 const rootDir = require("@blossm/cli-root-dir");
 const path = require("path");
 const { green } = require("chalk");
@@ -27,20 +27,38 @@ const envProject = ({ env, config }) => {
 const build = async ({ workingDir, env }) => {
   const blossmConfig = rootDir.config();
 
-  spawnSync(
-    "gcloud",
-    [
-      "builds",
-      "submit",
-      ".",
-      "--config=build.yaml",
-      `--project=${envProject({ config: blossmConfig, env })}`,
-    ],
-    {
-      stdio: [process.stdin, process.stdout, process.stderr],
-      cwd: workingDir,
-    }
-  );
+  for (const e of env == "all"
+    ? ["development", "staging", "sandbox", "production"]
+    : [env]) {
+    spawn(
+      "gcloud",
+      [
+        "builds",
+        "submit",
+        ".",
+        "--config=build.yaml",
+        `--project=${envProject({ config: blossmConfig, env: e })}`,
+      ],
+      {
+        stdio: [process.stdin, process.stdout, process.stderr],
+        cwd: workingDir,
+      }
+    );
+  }
+  // spawnSync(
+  //   "gcloud",
+  //   [
+  //     "builds",
+  //     "submit",
+  //     ".",
+  //     "--config=build.yaml",
+  //     `--project=${envProject({ config: blossmConfig, env })}`,
+  //   ],
+  //   {
+  //     stdio: [process.stdin, process.stdout, process.stderr],
+  //     cwd: workingDir,
+  //   }
+  // );
 };
 
 module.exports = ({ domain, dir }) => async (args, configFn) => {
