@@ -23,7 +23,11 @@ module.exports = ({
 
   const [...updatedCountObjects] = await Promise.all(
     Object.keys(eventRootCounts).map((root) =>
-      reserveRootCountsFn({ root, amount: eventRootCounts[root], transaction })
+      reserveRootCountsFn({
+        root,
+        amount: eventRootCounts[root],
+        ...(transaction && { transaction }),
+      })
     )
   );
 
@@ -113,10 +117,13 @@ module.exports = ({
     })
   );
 
-  const savedEvents = await saveEventsFn(normalizedEvents, { transaction });
-  await saveProofsFn(allProofs, { transaction });
+  const savedEvents = await saveEventsFn(
+    normalizedEvents,
+    ...(transaction ? [{ transaction }] : [])
+  );
+  await saveProofsFn(allProofs, ...(transaction ? [{ transaction }] : []));
 
-  await commitTransactionFn(transaction);
+  if (transaction) await commitTransactionFn(transaction);
 
   await Promise.all([
     ...savedEvents.map((e) =>

@@ -18,7 +18,6 @@ const host = "some-host";
 const database = "some-db";
 const password = "some-password";
 const handlers = "some-handlers";
-const transaction = "some-transaction";
 
 process.env.DOMAIN = domain;
 process.env.SERVICE = service;
@@ -64,6 +63,8 @@ describe("Mongodb event store", () => {
     const eventStoreFake = fake();
     replace(deps, "eventStore", eventStoreFake);
 
+    const startTransactionFake = fake();
+    const transaction = { startTransaction: startTransactionFake };
     const startSessionFake = fake.returns(transaction);
     const db = {
       store: storeFake,
@@ -375,6 +376,15 @@ describe("Mongodb event store", () => {
     const getProofResult = "some-get-proof-result";
     const getProofFake = fake.returns(getProofResult);
     replace(deps, "getProof", getProofFake);
+    const reserveRootCountsResult = "some-reserve-root-count-result";
+    const reserveRootCountsFake = fake.returns(reserveRootCountsResult);
+    replace(deps, "reserveRootCounts", reserveRootCountsFake);
+    const rootStreamResult = "some-root-stream-result";
+    const rootStreamFake = fake.returns(rootStreamResult);
+    replace(deps, "rootStream", rootStreamFake);
+    const countResult = "some-count-result";
+    const countFake = fake.returns(countResult);
+    replace(deps, "count", countFake);
 
     process.env.NODE_ENV = "local";
 
@@ -386,6 +396,7 @@ describe("Mongodb event store", () => {
       publishFn,
       hashFn,
       proofsFn,
+      scheduleUpdateForProofFn,
     });
 
     expect(formatSchemaFake.getCall(0)).to.have.been.calledWith(
@@ -514,6 +525,37 @@ describe("Mongodb event store", () => {
       },
       typeKey: "$type",
       indexes: [[{ id: 1 }]],
+    });
+    expect(eventStoreFake).to.have.been.calledWith({
+      aggregateFn: aggregateResult,
+      saveEventsFn: saveEventsResult,
+      queryFn: queryResult,
+      streamFn: streamResult,
+      reserveRootCountsFn: reserveRootCountsResult,
+      rootStreamFn: rootStreamResult,
+      countFn: countResult,
+      publishFn,
+      hashFn,
+      proofsFn,
+      saveProofsFn: saveProofsResult,
+      updateProofFn: updateProofResult,
+      getProofFn: getProofResult,
+      scheduleUpdateForProofFn,
+      startTransactionFn: match(async (fn) => {
+        const response = await fn();
+        return response == null;
+      }),
+      commitTransactionFn: match(async (fn) => {
+        const commitTransactionFake = fake();
+        const endSessionFake = fake();
+        await fn({
+          commitTransaction: commitTransactionFake,
+          endSession: endSessionFake,
+        });
+        return (
+          commitTransactionFake.calledWith() && endSessionFake.calledWith()
+        );
+      }),
     });
   });
   it("should call with the correct params when schema has object property", async () => {

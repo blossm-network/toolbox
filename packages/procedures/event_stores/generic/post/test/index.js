@@ -475,6 +475,98 @@ describe("Event store post", () => {
     expect(commitTransactionFnFake).to.have.been.calledWith(transaction);
     expect(sendStatusFake).to.have.been.calledWith(204);
   });
+  it("should call with the correct params if transaction is null", async () => {
+    const saveEventsFnFake = fake.returns(writtenEvents);
+    const reserveRootCountsFnFake = fake.returns(reserveRootCount);
+    const publishFnFake = fake();
+    const hashFnFake = fake.returns(hash);
+    const proofsFnFake = fake.returns([
+      {
+        a: 1,
+      },
+    ]);
+    const saveProofsFnFake = fake();
+
+    const scheduleUpdateForProofFake = fake();
+    const startTransactionFnFake = fake.returns(transaction);
+    const commitTransactionFnFake = fake();
+
+    const uuidFake = fake.returns(id);
+    replace(deps, "uuid", uuidFake);
+
+    const req = {
+      body: {
+        events,
+      },
+    };
+
+    const sendStatusFake = fake();
+    const res = {
+      sendStatus: sendStatusFake,
+    };
+
+    await post({
+      saveEventsFn: saveEventsFnFake,
+      reserveRootCountsFn: reserveRootCountsFnFake,
+      publishFn: publishFnFake,
+      hashFn: hashFnFake,
+      proofsFn: proofsFnFake,
+      saveProofsFn: saveProofsFnFake,
+      scheduleUpdateForProof: scheduleUpdateForProofFake,
+      startTransactionFn: startTransactionFnFake,
+      commitTransactionFn: commitTransactionFnFake,
+    })(req, res);
+
+    expect(saveEventsFnFake).to.have.been.calledWith([
+      {
+        data: {
+          id: `${root}_${currentEventsForRoot}`,
+          saved: deps.dateString(),
+          payload,
+          root,
+          number: currentEventsForRoot,
+          headers: {
+            b: 2,
+            topic,
+            idempotency,
+          },
+        },
+        hash,
+        proofs: [id],
+      },
+    ]);
+    expect(saveProofsFnFake).to.have.been.calledWith([{ id, a: 1 }]);
+    expect(reserveRootCountsFnFake).to.have.been.calledWith({
+      root,
+      amount: 1,
+      transaction,
+    });
+    expect(hashFnFake).to.have.been.calledWith({
+      id: `${root}_${currentEventsForRoot}`,
+      saved: deps.dateString(),
+      payload,
+      root,
+      number: currentEventsForRoot,
+      headers: {
+        b: 2,
+        topic,
+        idempotency,
+      },
+    });
+    expect(proofsFnFake).to.have.been.calledWith(hash);
+    expect(publishFnFake).to.have.been.calledWith(
+      { root: eventRoot },
+      eventTopic
+    );
+    expect(scheduleUpdateForProofFake.getCall(0)).to.have.been.calledWith({
+      id,
+      a: 1,
+    });
+    expect(scheduleUpdateForProofFake).to.have.been.calledOnce;
+    expect(startTransactionFnFake).to.have.been.calledWith();
+    expect(commitTransactionFnFake).to.have.been.calledWith(transaction);
+    expect(sendStatusFake).to.have.been.calledWith(204);
+  });
   it("should throw if event number is incorrect", async () => {
     const saveEventsFnFake = fake.returns(writtenEvents);
     const reserveRootCountsFnFake = fake.returns(reserveRootCount);
