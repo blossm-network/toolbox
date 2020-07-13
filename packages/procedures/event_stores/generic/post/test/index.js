@@ -488,7 +488,7 @@ describe("Event store post", () => {
     const saveProofsFnFake = fake();
 
     const scheduleUpdateForProofFake = fake();
-    const startTransactionFnFake = fake.returns(transaction);
+    const startTransactionFnFake = fake();
     const commitTransactionFnFake = fake();
 
     const uuidFake = fake.returns(id);
@@ -539,7 +539,6 @@ describe("Event store post", () => {
     expect(reserveRootCountsFnFake).to.have.been.calledWith({
       root,
       amount: 1,
-      transaction,
     });
     expect(hashFnFake).to.have.been.calledWith({
       id: `${root}_${currentEventsForRoot}`,
@@ -564,7 +563,7 @@ describe("Event store post", () => {
     });
     expect(scheduleUpdateForProofFake).to.have.been.calledOnce;
     expect(startTransactionFnFake).to.have.been.calledWith();
-    expect(commitTransactionFnFake).to.have.been.calledWith(transaction);
+    expect(commitTransactionFnFake).to.not.have.been.called;
     expect(sendStatusFake).to.have.been.calledWith(204);
   });
   it("should throw if event number is incorrect", async () => {
