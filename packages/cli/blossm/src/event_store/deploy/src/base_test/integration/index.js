@@ -176,360 +176,360 @@ describe("Event store integration tests", () => {
       }
     }
   });
-  it("should return successfully adding two events together", async () => {
-    const root = uuid();
+  // it("should return successfully adding two events together", async () => {
+  //   const root = uuid();
 
-    const response = await request.post(url, {
-      body: {
-        events: [
-          {
-            data: {
-              root,
-              headers: {
-                topic,
-                version,
-                created,
-                action: example0.action,
-                domain,
-                service,
-                idempotency: uuid(),
-              },
-              payload: example0.payload,
-            },
-          },
-          {
-            data: {
-              root,
-              headers: {
-                topic,
-                version,
-                created,
-                action: example1.action,
-                domain,
-                service,
-                idempotency: uuid(),
-              },
-              payload: example1.payload,
-            },
-          },
-        ],
-      },
-    });
+  //   const response = await request.post(url, {
+  //     body: {
+  //       events: [
+  //         {
+  //           data: {
+  //             root,
+  //             headers: {
+  //               topic,
+  //               version,
+  //               created,
+  //               action: example0.action,
+  //               domain,
+  //               service,
+  //               idempotency: uuid(),
+  //             },
+  //             payload: example0.payload,
+  //           },
+  //         },
+  //         {
+  //           data: {
+  //             root,
+  //             headers: {
+  //               topic,
+  //               version,
+  //               created,
+  //               action: example1.action,
+  //               domain,
+  //               service,
+  //               idempotency: uuid(),
+  //             },
+  //             payload: example1.payload,
+  //           },
+  //         },
+  //       ],
+  //     },
+  //   });
 
-    expect(response.statusCode).to.equal(204);
-  });
+  //   expect(response.statusCode).to.equal(204);
+  // });
 
-  it("should publish event successfully", (done) => {
-    subscribe({
-      topic,
-      name: sub,
-      fn: async (_, subscription) => {
-        if (!subscription) throw "Subscription wasn't made";
-        const root = uuid();
-        subscription.once("message", async (message) => {
-          const dataString = Buffer.from(message.data, "base64")
-            .toString()
-            .trim();
-          const data = JSON.parse(dataString);
-          expect(data.root).to.equal(root);
-          await unsubscribe({ topic, name: sub });
-          done();
-        });
-        request.post(url, {
-          body: {
-            events: [
-              {
-                data: {
-                  root,
-                  headers: {
-                    topic,
-                    version,
-                    created,
-                    action: example0.action,
-                    domain,
-                    service,
-                    idempotency: uuid(),
-                  },
-                  payload: example0.payload,
-                },
-              },
-            ],
-          },
-        });
-      },
-    });
-  });
-  const testIncorrectParams = async ({ payload, action }) => {
-    const root = uuid();
+  // it("should publish event successfully", (done) => {
+  //   subscribe({
+  //     topic,
+  //     name: sub,
+  //     fn: async (_, subscription) => {
+  //       if (!subscription) throw "Subscription wasn't made";
+  //       const root = uuid();
+  //       subscription.once("message", async (message) => {
+  //         const dataString = Buffer.from(message.data, "base64")
+  //           .toString()
+  //           .trim();
+  //         const data = JSON.parse(dataString);
+  //         expect(data.root).to.equal(root);
+  //         await unsubscribe({ topic, name: sub });
+  //         done();
+  //       });
+  //       request.post(url, {
+  //         body: {
+  //           events: [
+  //             {
+  //               data: {
+  //                 root,
+  //                 headers: {
+  //                   topic,
+  //                   version,
+  //                   created,
+  //                   action: example0.action,
+  //                   domain,
+  //                   service,
+  //                   idempotency: uuid(),
+  //                 },
+  //                 payload: example0.payload,
+  //               },
+  //             },
+  //           ],
+  //         },
+  //       });
+  //     },
+  //   });
+  // });
+  // const testIncorrectParams = async ({ payload, action }) => {
+  //   const root = uuid();
 
-    const response = await request.post(url, {
-      body: {
-        events: [
-          {
-            data: {
-              root,
-              headers: {
-                topic,
-                version,
-                created,
-                action,
-                domain,
-                service,
-                idempotency: uuid(),
-              },
-              payload,
-            },
-          },
-        ],
-      },
-    });
-    expect(response.statusCode).to.equal(500);
-  };
-  it("should not return an error if two simultaneous events are attempted", async () => {
-    const root = uuid();
+  //   const response = await request.post(url, {
+  //     body: {
+  //       events: [
+  //         {
+  //           data: {
+  //             root,
+  //             headers: {
+  //               topic,
+  //               version,
+  //               created,
+  //               action,
+  //               domain,
+  //               service,
+  //               idempotency: uuid(),
+  //             },
+  //             payload,
+  //           },
+  //         },
+  //       ],
+  //     },
+  //   });
+  //   expect(response.statusCode).to.equal(500);
+  // };
+  // it("should not return an error if two simultaneous events are attempted", async () => {
+  //   const root = uuid();
 
-    const [response0, response1] = await Promise.all([
-      request.post(url, {
-        body: {
-          events: [
-            {
-              data: {
-                root,
-                headers: {
-                  topic,
-                  version,
-                  created,
-                  action: example0.action,
-                  domain,
-                  service,
-                  idempotency: uuid(),
-                },
-                payload: example0.payload,
-              },
-            },
-          ],
-        },
-      }),
+  //   const [response0, response1] = await Promise.all([
+  //     request.post(url, {
+  //       body: {
+  //         events: [
+  //           {
+  //             data: {
+  //               root,
+  //               headers: {
+  //                 topic,
+  //                 version,
+  //                 created,
+  //                 action: example0.action,
+  //                 domain,
+  //                 service,
+  //                 idempotency: uuid(),
+  //               },
+  //               payload: example0.payload,
+  //             },
+  //           },
+  //         ],
+  //       },
+  //     }),
 
-      request.post(url, {
-        body: {
-          events: [
-            {
-              data: {
-                root,
-                headers: {
-                  topic,
-                  version,
-                  created,
-                  action: example1.action,
-                  domain,
-                  service,
-                  idempotency: uuid(),
-                },
-                payload: example1.payload,
-              },
-            },
-          ],
-        },
-      }),
-    ]);
+  //     request.post(url, {
+  //       body: {
+  //         events: [
+  //           {
+  //             data: {
+  //               root,
+  //               headers: {
+  //                 topic,
+  //                 version,
+  //                 created,
+  //                 action: example1.action,
+  //                 domain,
+  //                 service,
+  //                 idempotency: uuid(),
+  //               },
+  //               payload: example1.payload,
+  //             },
+  //           },
+  //         ],
+  //       },
+  //     }),
+  //   ]);
 
-    expect(response0.statusCode).to.equal(204);
-    expect(response1.statusCode).to.equal(204);
-  });
+  //   expect(response0.statusCode).to.equal(204);
+  //   expect(response1.statusCode).to.equal(204);
+  // });
 
-  const findBadValue = (schema, property) => {
-    return schema[property] == "String" ||
-      (typeof schema[property] == "object" &&
-        !(schema[property] instanceof Array) &&
-        (schema[property]["type"] == "String" ||
-          (typeof schema[property]["type"] == "object" &&
-            schema[property]["type"]["type"] == "String")))
-      ? { a: 1 } //pass an object to a String property
-      : "some-string"; // or, pass a string to a non-String property
-  };
+  // const findBadValue = (schema, property) => {
+  //   return schema[property] == "String" ||
+  //     (typeof schema[property] == "object" &&
+  //       !(schema[property] instanceof Array) &&
+  //       (schema[property]["type"] == "String" ||
+  //         (typeof schema[property]["type"] == "object" &&
+  //           schema[property]["type"]["type"] == "String")))
+  //     ? { a: 1 } //pass an object to a String property
+  //     : "some-string"; // or, pass a string to a non-String property
+  // };
 
-  const badObjectValue = async (key, schema) => {
-    for (const property in schema) {
-      const badValue = findBadValue(schema, property);
-      await testIncorrectParams({
-        payload: {
-          ...example0.payload,
-          [key]: { [property]: badValue },
-        },
-        action: example0.action,
-      });
-    }
-    return "bad-object";
-  };
+  // const badObjectValue = async (key, schema) => {
+  //   for (const property in schema) {
+  //     const badValue = findBadValue(schema, property);
+  //     await testIncorrectParams({
+  //       payload: {
+  //         ...example0.payload,
+  //         [key]: { [property]: badValue },
+  //       },
+  //       action: example0.action,
+  //     });
+  //   }
+  //   return "bad-object";
+  // };
 
-  const badArrayValue = async (property, schema) => {
-    const element = schema[0];
-    const [exampleToUse] = [
-      example0,
-      example1,
-      ...(testing.examples.more || []),
-    ].filter((example) => example.payload[property] != undefined);
+  // const badArrayValue = async (property, schema) => {
+  //   const element = schema[0];
+  //   const [exampleToUse] = [
+  //     example0,
+  //     example1,
+  //     ...(testing.examples.more || []),
+  //   ].filter((example) => example.payload[property] != undefined);
 
-    if (!exampleToUse) return "bad-array";
+  //   if (!exampleToUse) return "bad-array";
 
-    await testIncorrectParams({
-      payload: {
-        ...exampleToUse.payload,
-        [property]: "not-an-array",
-      },
-      action: exampleToUse.action,
-    });
+  //   await testIncorrectParams({
+  //     payload: {
+  //       ...exampleToUse.payload,
+  //       [property]: "not-an-array",
+  //     },
+  //     action: exampleToUse.action,
+  //   });
 
-    if (typeof element == "object") {
-      for (const objProperty in element) {
-        //root
-        const badValue = findBadValue(element, objProperty);
-        await testIncorrectParams({
-          payload: {
-            ...exampleToUse.payload,
-            [property]: [{ [objProperty]: badValue }],
-          },
-          action: exampleToUse.action,
-        });
-      }
-    } else {
-      const badValue = element == "String" ? { a: 1 } : "some-string";
-      await testIncorrectParams({
-        payload: { ...exampleToUse.payload, [property]: [badValue] },
-        action: exampleToUse.action,
-      });
-    }
+  //   if (typeof element == "object") {
+  //     for (const objProperty in element) {
+  //       //root
+  //       const badValue = findBadValue(element, objProperty);
+  //       await testIncorrectParams({
+  //         payload: {
+  //           ...exampleToUse.payload,
+  //           [property]: [{ [objProperty]: badValue }],
+  //         },
+  //         action: exampleToUse.action,
+  //       });
+  //     }
+  //   } else {
+  //     const badValue = element == "String" ? { a: 1 } : "some-string";
+  //     await testIncorrectParams({
+  //       payload: { ...exampleToUse.payload, [property]: [badValue] },
+  //       action: exampleToUse.action,
+  //     });
+  //   }
 
-    return "bad-array";
-  };
+  //   return "bad-array";
+  // };
 
-  it("should return an error if incorrect params", async () => {
-    //Grab a property from the schema and pass a wrong value to it.
-    for (const property in schema) {
-      if (schema[property] == "Object") continue;
-      let badValue;
-      if (
-        typeof schema[property] == "object" &&
-        !(schema[property] instanceof Array) &&
-        schema[property]["type"] == undefined
-      ) {
-        badValue = await badObjectValue(property, schema[property]);
-      } else if (schema[property] instanceof Array) {
-        badValue = await badArrayValue(property, schema[property]);
-      } else {
-        badValue = findBadValue(schema, property);
-      }
+  // it("should return an error if incorrect params", async () => {
+  //   //Grab a property from the schema and pass a wrong value to it.
+  //   for (const property in schema) {
+  //     if (schema[property] == "Object") continue;
+  //     let badValue;
+  //     if (
+  //       typeof schema[property] == "object" &&
+  //       !(schema[property] instanceof Array) &&
+  //       schema[property]["type"] == undefined
+  //     ) {
+  //       badValue = await badObjectValue(property, schema[property]);
+  //     } else if (schema[property] instanceof Array) {
+  //       badValue = await badArrayValue(property, schema[property]);
+  //     } else {
+  //       badValue = findBadValue(schema, property);
+  //     }
 
-      const [exampleToUse] = [
-        example0,
-        example1,
-        ...(testing.examples.more || []),
-      ].filter((example) => example.payload[property] != undefined);
+  //     const [exampleToUse] = [
+  //       example0,
+  //       example1,
+  //       ...(testing.examples.more || []),
+  //     ].filter((example) => example.payload[property] != undefined);
 
-      if (!exampleToUse) return;
+  //     if (!exampleToUse) return;
 
-      await testIncorrectParams({
-        payload: { ...exampleToUse.payload, [property]: badValue },
-        action: exampleToUse.action,
-      });
-    }
-  });
+  //     await testIncorrectParams({
+  //       payload: { ...exampleToUse.payload, [property]: badValue },
+  //       action: exampleToUse.action,
+  //     });
+  //   }
+  // });
 
-  it("should return an error if bad number", async () => {
-    const root = uuid();
+  // it("should return an error if bad number", async () => {
+  //   const root = uuid();
 
-    const response = await request.post(url, {
-      body: {
-        events: [
-          {
-            data: {
-              root,
-              headers: {
-                topic,
-                version,
-                created,
-                action: example0.action,
-                domain,
-                service,
-                idempotency: uuid(),
-              },
-              payload: example0.payload,
-            },
-            number: 2,
-          },
-        ],
-      },
-    });
-    expect(response.statusCode).to.equal(412);
-  });
-  it("should return an error if same idempotency", async () => {
-    const root = uuid();
-    const idempotency = uuid();
+  //   const response = await request.post(url, {
+  //     body: {
+  //       events: [
+  //         {
+  //           data: {
+  //             root,
+  //             headers: {
+  //               topic,
+  //               version,
+  //               created,
+  //               action: example0.action,
+  //               domain,
+  //               service,
+  //               idempotency: uuid(),
+  //             },
+  //             payload: example0.payload,
+  //           },
+  //           number: 2,
+  //         },
+  //       ],
+  //     },
+  //   });
+  //   expect(response.statusCode).to.equal(412);
+  // });
+  // it("should return an error if same idempotency", async () => {
+  //   const root = uuid();
+  //   const idempotency = uuid();
 
-    const response = await request.post(url, {
-      body: {
-        events: [
-          {
-            data: {
-              root,
-              headers: {
-                topic,
-                version,
-                created,
-                action: example0.action,
-                domain,
-                service,
-                idempotency,
-              },
-              payload: example0.payload,
-            },
-          },
-          {
-            data: {
-              root,
-              headers: {
-                topic,
-                version,
-                created,
-                action: example0.action,
-                domain,
-                service,
-                idempotency,
-              },
-              payload: example0.payload,
-            },
-          },
-        ],
-      },
-    });
-    expect(response.statusCode).to.equal(412);
-  });
-  it("should return an error if action is not recognized", async () => {
-    const root = uuid();
+  //   const response = await request.post(url, {
+  //     body: {
+  //       events: [
+  //         {
+  //           data: {
+  //             root,
+  //             headers: {
+  //               topic,
+  //               version,
+  //               created,
+  //               action: example0.action,
+  //               domain,
+  //               service,
+  //               idempotency,
+  //             },
+  //             payload: example0.payload,
+  //           },
+  //         },
+  //         {
+  //           data: {
+  //             root,
+  //             headers: {
+  //               topic,
+  //               version,
+  //               created,
+  //               action: example0.action,
+  //               domain,
+  //               service,
+  //               idempotency,
+  //             },
+  //             payload: example0.payload,
+  //           },
+  //         },
+  //       ],
+  //     },
+  //   });
+  //   expect(response.statusCode).to.equal(412);
+  // });
+  // it("should return an error if action is not recognized", async () => {
+  //   const root = uuid();
 
-    const response = await request.post(url, {
-      body: {
-        events: [
-          {
-            data: {
-              root,
-              headers: {
-                topic,
-                version,
-                created,
-                action: "bogus",
-                domain,
-                service,
-                idempotency: uuid(),
-              },
-              payload: example0.payload,
-            },
-          },
-        ],
-      },
-    });
+  //   const response = await request.post(url, {
+  //     body: {
+  //       events: [
+  //         {
+  //           data: {
+  //             root,
+  //             headers: {
+  //               topic,
+  //               version,
+  //               created,
+  //               action: "bogus",
+  //               domain,
+  //               service,
+  //               idempotency: uuid(),
+  //             },
+  //             payload: example0.payload,
+  //           },
+  //         },
+  //       ],
+  //     },
+  //   });
 
-    expect(response.statusCode).to.equal(400);
-  });
+  //   expect(response.statusCode).to.equal(400);
+  // });
 });
