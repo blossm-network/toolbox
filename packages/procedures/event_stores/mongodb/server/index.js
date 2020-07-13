@@ -241,16 +241,7 @@ module.exports = async ({
     countFn: deps.count({
       countsStore: cStore,
     }),
-    startTransactionFn: async () => {
-      if (process.env.NODE_ENV == "local") return null;
-      const session = await deps.db.startSession();
-      session.startTransaction();
-      return session;
-    },
-    commitTransactionFn: async (session) => {
-      await session.commitTransaction();
-      await session.endSession();
-    },
+    createTransactionFn: deps.createTransaction,
     // saveSnapshotFn,
     publishFn,
     hashFn,

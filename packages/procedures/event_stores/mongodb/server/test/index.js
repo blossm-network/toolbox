@@ -1,7 +1,7 @@
 const { expect } = require("chai")
   .use(require("chai-datetime"))
   .use(require("sinon-chai"));
-const { restore, replace, fake, stub, match, useFakeTimers } = require("sinon");
+const { restore, replace, fake, stub, useFakeTimers } = require("sinon");
 
 const deps = require("../deps");
 
@@ -293,6 +293,7 @@ describe("Mongodb event store", () => {
       reserveRootCountsFn: reserveRootCountsResult,
       rootStreamFn: rootStreamResult,
       countFn: countResult,
+      createTransactionFn: deps.createTransaction,
       publishFn,
       hashFn,
       proofsFn,
@@ -300,21 +301,6 @@ describe("Mongodb event store", () => {
       updateProofFn: updateProofResult,
       getProofFn: getProofResult,
       scheduleUpdateForProofFn,
-      startTransactionFn: match(async (fn) => {
-        const response = await fn();
-        return response == transaction && startSessionFake.calledWith();
-      }),
-      commitTransactionFn: match(async (fn) => {
-        const commitTransactionFake = fake();
-        const endSessionFake = fake();
-        await fn({
-          commitTransaction: commitTransactionFake,
-          endSession: endSessionFake,
-        });
-        return (
-          commitTransactionFake.calledWith() && endSessionFake.calledWith()
-        );
-      }),
     });
 
     await mongodbEventStore();
@@ -541,21 +527,7 @@ describe("Mongodb event store", () => {
       updateProofFn: updateProofResult,
       getProofFn: getProofResult,
       scheduleUpdateForProofFn,
-      startTransactionFn: match(async (fn) => {
-        const response = await fn();
-        return response == null;
-      }),
-      commitTransactionFn: match(async (fn) => {
-        const commitTransactionFake = fake();
-        const endSessionFake = fake();
-        await fn({
-          commitTransaction: commitTransactionFake,
-          endSession: endSessionFake,
-        });
-        return (
-          commitTransactionFake.calledWith() && endSessionFake.calledWith()
-        );
-      }),
+      createTransactionFn: deps.createTransaction,
     });
   });
   it("should call with the correct params when schema has object property", async () => {

@@ -1,7 +1,7 @@
 {
-  "name": "@blossm/mongodb-event-store-save-proofs",
-  "description": "A mongodb event store server proof saving function.",
-  "version": "0.0.65",
+  "name": "@blossm/event-store-post-transaction",
+  "description": "An event store POST handler transaction.",
+  "version": "0.0.0",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -14,8 +14,9 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/datetime": "*",
-    "@blossm/mongodb-database": "^0.0.70"
+    "@blossm/datetime": "^0.0.5",
+    "@blossm/errors": "^0.0.36",
+    "@blossm/uuid": "^0.0.5"
   },
   "devDependencies": {
     "chai-datetime": "^1.5.0",

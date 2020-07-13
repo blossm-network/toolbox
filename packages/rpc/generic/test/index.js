@@ -563,27 +563,9 @@ describe("Operation", () => {
 
     expect(streamFake).to.have.been.calledWith(
       url,
-      match(async (func) => {
-        const obj = { a: 1, b: { c: 3 } };
-        const obj1 = { k: 1, b: { c: 3 } };
-        const obj2 = { p: 1, b: { c: 3 } };
-        const stringObj = JSON.stringify(obj);
-        const stringObj1 = JSON.stringify(obj1);
-        const stringObj2 = JSON.stringify(obj2);
-        const leftover = '{ "q": 3';
-        const buffer = Buffer.from(
-          stringObj + stringObj1 + stringObj2 + leftover
-        );
-        await func(buffer);
-        await func(Buffer.from('}{ "w": 4'));
-        await func(Buffer.from("}"));
-        return (
-          fnFake.getCall(0).calledWith({ a: 1, b: { c: 3 } }) &&
-            fnFake.getCall(1).calledWith({ k: 1, b: { c: 3 } }) &&
-            fnFake.getCall(2).calledWith({ p: 1, b: { c: 3 } }) &&
-            fnFake.getCall(3).calledWith({ q: 3 }),
-          fnFake.getCall(4).calledWith({ w: 4 })
-        );
+      match((func) => {
+        const response = func("some-data");
+        return Promise.resolve(response) == response;
       }),
       {
         query: {
@@ -606,6 +588,23 @@ describe("Operation", () => {
       host,
     });
     expect(result).to.equal();
+
+    const obj = { a: 1, b: { c: 3 } };
+    const obj1 = { k: 1, b: { c: 3 } };
+    const obj2 = { p: 1, b: { c: 3 } };
+    const stringObj = JSON.stringify(obj);
+    const stringObj1 = JSON.stringify(obj1);
+    const stringObj2 = JSON.stringify(obj2);
+    const leftover = '{ "q": 3';
+    const buffer = Buffer.from(stringObj + stringObj1 + stringObj2 + leftover);
+    await streamFake.lastCall.args[1](buffer);
+    await streamFake.lastCall.args[1](Buffer.from('}{ "w": 4'));
+    await streamFake.lastCall.args[1](Buffer.from("}"));
+    expect(fnFake.getCall(0)).to.have.been.calledWith({ a: 1, b: { c: 3 } });
+    expect(fnFake.getCall(1)).calledWith({ k: 1, b: { c: 3 } });
+    expect(fnFake.getCall(2)).calledWith({ p: 1, b: { c: 3 } });
+    expect(fnFake.getCall(3)).calledWith({ q: 3 });
+    expect(fnFake.getCall(4)).calledWith({ w: 4 });
   });
   it("should call stream with the correct params with id", async () => {
     const streamFake = fake();
