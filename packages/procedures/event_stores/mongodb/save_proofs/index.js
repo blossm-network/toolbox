@@ -4,7 +4,7 @@ module.exports = ({ proofsStore }) => async (proofs, { transaction } = {}) => {
   const date = deps.dateString();
   //TODO
   //eslint-disable-next-line no-console
-  console.log({ transaction1: transaction });
+  console.log(`5 ${transaction == undefined}`);
 
   await Promise.all([
     deps.db.create({

@@ -149,10 +149,7 @@ describe("Event store post", () => {
       { root: eventRoot },
       eventTopic
     );
-    expect(scheduleUpdateForProofFake.getCall(0)).to.have.been.calledWith({
-      id,
-      a: 1,
-    });
+    expect(scheduleUpdateForProofFake.getCall(0)).to.have.been.calledWith(id);
     expect(scheduleUpdateForProofFake).to.have.been.calledOnce;
     expect(startTransactionFnFake).to.have.been.calledWith();
     expect(commitTransactionFnFake).to.have.been.calledWith(transaction);
@@ -247,10 +244,7 @@ describe("Event store post", () => {
       { root: eventRoot },
       eventTopic
     );
-    expect(scheduleUpdateForProofFake.getCall(0)).to.have.been.calledWith({
-      id,
-      a: 1,
-    });
+    expect(scheduleUpdateForProofFake.getCall(0)).to.have.been.calledWith(id);
     expect(scheduleUpdateForProofFake).to.have.been.calledOnce;
     expect(startTransactionFnFake).to.have.been.calledWith();
     expect(commitTransactionFnFake).to.have.been.calledWith(transaction);
@@ -454,22 +448,10 @@ describe("Event store post", () => {
       { root: eventRoot },
       eventTopic
     );
-    expect(scheduleUpdateForProofFake.getCall(0)).to.have.been.calledWith({
-      id: id1,
-      a: 1,
-    });
-    expect(scheduleUpdateForProofFake.getCall(1)).to.have.been.calledWith({
-      id: id2,
-      b: 2,
-    });
-    expect(scheduleUpdateForProofFake.getCall(2)).to.have.been.calledWith({
-      id: id3,
-      c: 3,
-    });
-    expect(scheduleUpdateForProofFake.getCall(3)).to.have.been.calledWith({
-      id: id4,
-      d: 4,
-    });
+    expect(scheduleUpdateForProofFake.getCall(0)).to.have.been.calledWith(id1);
+    expect(scheduleUpdateForProofFake.getCall(1)).to.have.been.calledWith(id2);
+    expect(scheduleUpdateForProofFake.getCall(2)).to.have.been.calledWith(id3);
+    expect(scheduleUpdateForProofFake.getCall(3)).to.have.been.calledWith(id4);
     expect(scheduleUpdateForProofFake).to.have.callCount(4);
     expect(startTransactionFnFake).to.have.been.calledWith();
     expect(commitTransactionFnFake).to.have.been.calledWith(transaction);
@@ -557,10 +539,7 @@ describe("Event store post", () => {
       { root: eventRoot },
       eventTopic
     );
-    expect(scheduleUpdateForProofFake.getCall(0)).to.have.been.calledWith({
-      id,
-      a: 1,
-    });
+    expect(scheduleUpdateForProofFake.getCall(0)).to.have.been.calledWith(id);
     expect(scheduleUpdateForProofFake).to.have.been.calledOnce;
     expect(startTransactionFnFake).to.have.been.calledWith();
     expect(commitTransactionFnFake).to.not.have.been.called;
