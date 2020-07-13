@@ -193,6 +193,7 @@ describe("Command handler post", () => {
           number: correctNumber,
         },
       ],
+      async: false,
     });
     expect(setResponseFake).to.have.been.calledWith({});
     expect(statusFake).to.have.been.calledWith(202);
@@ -326,6 +327,7 @@ describe("Command handler post", () => {
           number: correctNumber,
         },
       ],
+      async: false,
     });
     expect(setResponseFake).to.have.been.calledWith(responseHeaders);
     expect(statusFake).to.have.been.calledWith(statusCode);
@@ -688,6 +690,7 @@ describe("Command handler post", () => {
       domain,
       service,
       events: [{ data: event, number: correctNumber }],
+      async: false,
     });
 
     expect(createEventFake).to.have.been.calledWith({
@@ -1016,6 +1019,7 @@ describe("Command handler post", () => {
       context,
       claims,
       events: [{ data: event, number: correctNumber }],
+      async: false,
     });
 
     expect(createEventFake).to.have.been.calledWith({
@@ -1047,7 +1051,7 @@ describe("Command handler post", () => {
     expect(statusFake).to.have.been.calledWith(202);
     expect(sendFake).to.have.been.calledWith({ ...response, _id: commandId });
   });
-  it("should call with the correct params with no clean or validate, correctNubmer, and empty response", async () => {
+  it("should call with the correct params with no clean or validate, correctNumber, and empty response", async () => {
     const createEventFake = fake.returns(event);
     replace(deps, "createEvent", createEventFake);
 
@@ -1133,6 +1137,7 @@ describe("Command handler post", () => {
       domain,
       service,
       events: [{ data: event }],
+      async: true,
     });
     expect(createEventFake).to.have.been.calledWith({
       payload: eventPayload,
@@ -1273,6 +1278,7 @@ describe("Command handler post", () => {
       context,
       claims,
       events: [{ data: event, number: correctNumber }],
+      async: false,
     });
     expect(createEventFake).to.have.been.calledWith({
       payload: eventPayload,
@@ -1461,6 +1467,7 @@ describe("Command handler post", () => {
         { data: event, number: correctNumber },
         { data: event, number: otherCorrectNumber },
       ],
+      async: false,
     });
     expect(setResponseFake).to.have.been.calledWith({});
     expect(statusFake).to.have.been.calledWith(202);
@@ -1626,6 +1633,7 @@ describe("Command handler post", () => {
       context,
       claims,
       events: [{ data: event, number: correctNumber }],
+      async: false,
     });
     expect(addFnFake).to.have.been.calledWith({
       domain: differentDomain,
@@ -1633,6 +1641,7 @@ describe("Command handler post", () => {
       context,
       claims,
       events: [{ data: event, number: otherCorrectNumber }],
+      async: false,
     });
     expect(addFnFake).to.have.been.calledTwice;
     expect(setResponseFake).to.have.been.calledWith({});
@@ -1767,6 +1776,7 @@ describe("Command handler post", () => {
         },
       ],
       claims,
+      async: false,
     });
     expect(setResponseFake).to.have.been.calledWith({});
     expect(statusFake).to.have.been.calledWith(202);

@@ -142,6 +142,10 @@ module.exports = ({
           ...(req.body.context && { context: req.body.context }),
           ...(req.body.claims && { claims: req.body.claims }),
           events: eventsPerStore[service][domain],
+          //If the events number is incorrect, the error should be returned to the command issuer.
+          async: !eventsPerStore[service][domain].some(
+            (normalizedEvent) => normalizedEvent.number != undefined
+          ),
         })
       );
     }

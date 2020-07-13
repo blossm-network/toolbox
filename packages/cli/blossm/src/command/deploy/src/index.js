@@ -172,7 +172,7 @@ module.exports = commandProcedure({
         },
       })
       .stream(fn, { query, id }),
-  addFn: ({ domain, service, context, claims, events }) =>
+  addFn: ({ domain, service, context, claims, events, async }) =>
     eventStore({ domain, service })
       .set({
         ...(context && { context }),
@@ -180,7 +180,7 @@ module.exports = commandProcedure({
         token: {
           internalFn: gcpToken,
         },
-        enqueue: { fn: enqueue },
+        ...(async && { enqueue: { fn: enqueue } }),
       })
       .add(events),
 });
