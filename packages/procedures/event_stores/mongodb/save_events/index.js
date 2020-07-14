@@ -1,4 +1,5 @@
 const deps = require("./deps");
+const logger = require("@blossm/logger");
 
 module.exports = ({ eventStore, handlers }) => async (
   events,
@@ -29,6 +30,11 @@ module.exports = ({ eventStore, handlers }) => async (
     return groomedResults;
   } catch (e) {
     if (e.code == 11000) {
+      logger.verbose("blossm: 11000 Mongodb duplicate error", {
+        e,
+        code: e.code,
+        message: e.message,
+      });
       throw deps.preconditionFailedError.message("Duplicate.");
     } else {
       throw e;

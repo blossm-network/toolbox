@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@blossm/errors": "^0.0.36",
+    "@blossm/logger": "*",
     "@blossm/mongodb-database": "^0.0.70"
   },
   "devDependencies": {

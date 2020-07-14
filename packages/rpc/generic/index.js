@@ -119,7 +119,7 @@ const common = ({ method, dataParam, operation, id, data }) => {
             logger.info("response errored: ", {
               response,
               url,
-              data,
+              data: requestData,
               context,
               network,
               token,

@@ -1,6 +1,8 @@
 const deps = require("./deps");
 
 module.exports = ({ eventStore, snapshotStore, handlers }) => async (root) => {
+  //TODO easy. Make events retrieval a stream. See @blossm/mongodb-event-store-root-stream.
+  //This will make the fns memory footprint smaller and less prone to crashes.
   const [events, snapshot] = await Promise.all([
     deps.db.find({
       store: eventStore,

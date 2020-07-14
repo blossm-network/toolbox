@@ -58,6 +58,7 @@ module.exports = ({
       ...(req.body.claims && { claims: req.body.claims }),
       ...(req.body.context && { context: req.body.context }),
       ...(req.body.token && { token: req.body.token }),
+      //TODO fix idempotency. A good candidate would be idempotency + topic + path.
       ...(req.body.headers.idempotency && {
         idempotency: req.body.headers.idempotency,
       }),
@@ -78,6 +79,7 @@ module.exports = ({
         },
       ],
     }),
+    //TODO add countFn
   });
 
   const eventsPerStore = {};
@@ -143,6 +145,7 @@ module.exports = ({
           ...(req.body.claims && { claims: req.body.claims }),
           events: eventsPerStore[service][domain],
           //If the events number is incorrect, the error should be returned to the command issuer.
+          //TODO add idempotency
           async: !eventsPerStore[service][domain].some(
             (normalizedEvent) => normalizedEvent.number != undefined
           ),
