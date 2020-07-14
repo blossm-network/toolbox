@@ -60,12 +60,11 @@ module.exports = ({ eventStore, handlers }) => async (
       for (const duplicateKeyObject of duplicateKeyObjects) {
         for (const key in duplicateKeyObject) {
           ///If the only errors are idempotency collisions, continue without throwing.
-          if (key != "data.headers.idempotency") {
+          if (key != "data.headers.idempotency")
             throw deps.preconditionFailedError.message("Duplicates.", {
               info: duplicateKeyObjects,
               cause: err,
             });
-          }
         }
       }
 
