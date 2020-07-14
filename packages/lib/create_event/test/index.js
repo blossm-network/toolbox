@@ -68,7 +68,8 @@ describe("Create event", () => {
     expect(value).to.deep.equal({
       root,
       headers: {
-        idempotency,
+        idempotency:
+          "some-idempotency-some-action-some-domain-some-service-some-path-hash",
         action,
         domain,
         service,
@@ -125,7 +126,8 @@ describe("Create event", () => {
     expect(value).to.deep.equal({
       root: rootUuid,
       headers: {
-        idempotency: idempUuid,
+        idempotency:
+          "idemptUuid!-some-action-some-domain-some-service-some-path-hash",
         action,
         domain,
         service,
@@ -175,7 +177,8 @@ describe("Create event", () => {
     expect(value).to.deep.equal({
       root,
       headers: {
-        idempotency,
+        idempotency:
+          "some-idempotency-some-action-some-domain-some-service-some-path-hash",
         action,
         domain,
         service,
@@ -230,7 +233,8 @@ describe("Create event", () => {
     expect(value).to.deep.equal({
       root,
       headers: {
-        idempotency,
+        idempotency:
+          "some-idempotency-some-action-some-domain-some-service-some-path-hash",
         action,
         domain,
         service,

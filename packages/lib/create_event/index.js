@@ -22,7 +22,12 @@ module.exports = ({
       topic: `${domain}.${service}`,
       version,
       created: dateString(),
-      idempotency: idempotency || deps.uuid(),
+      idempotency: `${
+        idempotency || deps.uuid()
+      }-${action}-${domain}-${service}-${path.reduce(
+        (result, p) => result + p.hash,
+        ""
+      )}`,
       ...(context && { context }),
       ...(trace && { trace }),
       ...(path && {

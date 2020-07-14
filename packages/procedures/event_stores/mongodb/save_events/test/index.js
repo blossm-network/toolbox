@@ -44,6 +44,7 @@ describe("Mongodb event store create event", () => {
       data: events,
       options: {
         session: transaction,
+        ordered: false,
       },
     });
     expect(saveEventsFnResult).to.deep.equal([createResult]);
@@ -74,6 +75,9 @@ describe("Mongodb event store create event", () => {
     expect(createFake).to.have.been.calledWith({
       store: eventStore,
       data: events,
+      options: {
+        ordered: false,
+      },
     });
     expect(saveEventsFnResult).to.deep.equal([createResult]);
   });
@@ -84,9 +88,16 @@ describe("Mongodb event store create event", () => {
       constructor() {
         super();
         this.code = 11000;
+        this.writeErrors = [
+          {
+            errmsg: "asdfasdf asdf asdf key: { some-key: 'some-value' }",
+          },
+        ];
       }
     }
-    const createFake = fake.rejects(new DuplicateError());
+
+    const thrownError = new DuplicateError();
+    const createFake = fake.rejects(thrownError);
 
     const db = {
       create: createFake,
@@ -97,7 +108,6 @@ describe("Mongodb event store create event", () => {
       {
         data: {
           number: "some-number",
-
           headers: {
             action,
           },
@@ -106,6 +116,7 @@ describe("Mongodb event store create event", () => {
     ];
 
     const error = new Error();
+
     const messageFake = fake.returns(error);
     replace(deps, "preconditionFailedError", {
       message: messageFake,
@@ -117,9 +128,168 @@ describe("Mongodb event store create event", () => {
       //shouldn't get called
       expect(1).to.equal(2);
     } catch (e) {
-      expect(messageFake).to.have.been.calledWith("Duplicate.");
+      expect(messageFake).to.have.been.calledWith("Duplicates.", {
+        info: [{ "some-key": "some-value" }],
+        cause: thrownError,
+      });
       expect(e).to.equal(error);
     }
+  });
+  it("should throw if not 11000", async () => {
+    const eventStore = "some-event-store";
+
+    class SomeError extends Error {
+      constructor() {
+        super();
+        this.code = 3333;
+        this.writeErrors = [
+          {
+            errmsg: "asdfasdf asdf asdf key: { some-key: 'some-value' }",
+          },
+        ];
+      }
+    }
+
+    const thrownError = new SomeError();
+    const createFake = fake.rejects(thrownError);
+
+    const db = {
+      create: createFake,
+    };
+    replace(deps, "db", db);
+
+    const events = [
+      {
+        data: {
+          number: "some-number",
+          headers: {
+            action,
+          },
+        },
+      },
+    ];
+
+    try {
+      await saveEvent({ eventStore, handlers })(events);
+
+      //shouldn't get called
+      expect(1).to.equal(2);
+    } catch (e) {
+      expect(e).to.equal(thrownError);
+    }
+  });
+  it("should throw correct error when events have a duplicate id and idempotency", async () => {
+    const eventStore = "some-event-store";
+
+    class DuplicateError extends Error {
+      constructor() {
+        super();
+        this.code = 11000;
+        this.writeErrors = [
+          {
+            errmsg: "asdfasdf asdf asdf key: { some-key: 'some-value' }",
+          },
+          {
+            errmsg:
+              "asdfasdf asdf asdf key: { data.headers.idempotency: 'some-idempotency' }",
+          },
+        ];
+      }
+    }
+
+    const thrownError = new DuplicateError();
+    const createFake = fake.rejects(thrownError);
+
+    const db = {
+      create: createFake,
+    };
+    replace(deps, "db", db);
+
+    const events = [
+      {
+        data: {
+          number: "some-number",
+          headers: {
+            action,
+          },
+        },
+      },
+    ];
+
+    const error = new Error();
+
+    const messageFake = fake.returns(error);
+    replace(deps, "preconditionFailedError", {
+      message: messageFake,
+    });
+
+    try {
+      await saveEvent({ eventStore, handlers })(events);
+
+      //shouldn't get called
+      expect(1).to.equal(2);
+    } catch (e) {
+      expect(messageFake).to.have.been.calledWith("Duplicates.", {
+        info: [
+          { "some-key": "some-value" },
+          { "data.headers.idempotency": "some-idempotency" },
+        ],
+        cause: thrownError,
+      });
+      expect(e).to.equal(error);
+    }
+  });
+  it("should not throw if only idempotencies are in conflict", async () => {
+    const eventStore = "some-event-store";
+
+    class DuplicateError extends Error {
+      constructor() {
+        super();
+        this.code = 11000;
+        this.writeErrors = [
+          {
+            errmsg:
+              "asdfasdf asdf asdf key: { data.headers.idempotency: 'some-other-idempotency' }",
+          },
+          {
+            errmsg:
+              "asdfasdf asdf asdf key: { data.headers.idempotency: 'some-idempotency' }",
+          },
+        ];
+        this.insertedDocs = [{ ...createResult, __v: 3, _id: 4 }];
+      }
+    }
+
+    const thrownError = new DuplicateError();
+    const createFake = fake.rejects(thrownError);
+
+    const db = {
+      create: createFake,
+    };
+    replace(deps, "db", db);
+
+    const events = [
+      {
+        data: {
+          number: "some-number",
+          headers: {
+            action,
+          },
+        },
+      },
+    ];
+
+    const saveEventsFnResult = await saveEvent({ eventStore, handlers })(
+      events
+    );
+    expect(createFake).to.have.been.calledWith({
+      store: eventStore,
+      data: events,
+      options: {
+        ordered: false,
+      },
+    });
+    expect(saveEventsFnResult).to.deep.equal([createResult]);
   });
   it("should throw if adding event with unrecognized action", async () => {
     const eventStore = "some-event-store";

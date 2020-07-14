@@ -1,6 +1,13 @@
 const deps = require("./deps");
 const logger = require("@blossm/logger");
 
+const groomResults = (results) =>
+  results.map((result) => {
+    delete result._id;
+    delete result.__v;
+    return result;
+  });
+
 module.exports = ({ eventStore, handlers }) => async (
   events,
   { transaction } = {}
@@ -20,24 +27,51 @@ module.exports = ({ eventStore, handlers }) => async (
     const results = await deps.db.create({
       store: eventStore,
       data: events,
-      ...(transaction && { options: { session: transaction } }),
+      options: {
+        ordered: false,
+        ...(transaction && { session: transaction }),
+      },
     });
-    const groomedResults = results.map((result) => {
-      delete result._id;
-      delete result.__v;
-      return result;
-    });
-    return groomedResults;
-  } catch (e) {
-    if (e.code == 11000) {
-      logger.verbose("blossm: 11000 Mongodb duplicate error", {
-        e,
-        code: e.code,
-        message: e.message,
-      });
-      throw deps.preconditionFailedError.message("Duplicate.");
+    return groomResults(results);
+  } catch (err) {
+    logger.verbose("Insert all error", { err });
+
+    if (err.code == 11000) {
+      const duplicateKeyObjects = [];
+      const start = "key: {";
+      const end = "}";
+
+      for (const error of err.writeErrors) {
+        const startIndex = error.errmsg.lastIndexOf(start);
+        const endIndex = error.errmsg.lastIndexOf(end);
+        if (startIndex < 0 || endIndex < 0) continue;
+
+        const string = error.errmsg.substr(
+          startIndex + start.length,
+          endIndex - startIndex - start.length
+        );
+        const [key, value] = string.trim().split(":");
+        const object = {
+          [key.trim().replace(/'/g, "")]: value.trim().replace(/'/g, ""),
+        };
+        duplicateKeyObjects.push(object);
+      }
+
+      for (const duplicateKeyObject of duplicateKeyObjects) {
+        for (const key in duplicateKeyObject) {
+          ///If the only errors are idempotency collisions, continue without throwing.
+          if (key != "data.headers.idempotency") {
+            throw deps.preconditionFailedError.message("Duplicates.", {
+              info: duplicateKeyObjects,
+              cause: err,
+            });
+          }
+        }
+      }
+
+      return groomResults(err.insertedDocs);
     } else {
-      throw e;
+      throw err;
     }
   }
 };
