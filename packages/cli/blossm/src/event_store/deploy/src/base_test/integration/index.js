@@ -463,7 +463,7 @@ describe("Event store integration tests", () => {
     });
     expect(response.statusCode).to.equal(412);
   });
-  it("should return an error if same idempotency", async () => {
+  it("should not return an error if same idempotency, but only one should be saved", async () => {
     const root = uuid();
     const idempotency = uuid();
 
@@ -503,7 +503,9 @@ describe("Event store integration tests", () => {
         ],
       },
     });
-    expect(response.statusCode).to.equal(412);
+    expect(response.statusCode).to.equal(204);
+    const count = await request.get(`${url}/count/${root}`);
+    expect(count).to.equal(1);
   });
   it("should return an error if action is not recognized", async () => {
     const root = uuid();
