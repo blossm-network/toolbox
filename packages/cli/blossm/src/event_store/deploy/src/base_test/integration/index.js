@@ -504,8 +504,10 @@ describe("Event store integration tests", () => {
       },
     });
     expect(response.statusCode).to.equal(204);
-    const count = await request.get(`${url}/count/${root}`);
-    expect(count).to.equal(1);
+    const countResponse = await request.get(`${url}/count/${root}`);
+    const parsedCountBody = JSON.parse(countResponse.body);
+
+    expect(parsedCountBody.count).to.equal(1);
   });
   it("should return an error if action is not recognized", async () => {
     const root = uuid();
