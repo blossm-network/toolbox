@@ -34,7 +34,7 @@ module.exports = ({ eventStore, handlers }) => async (
     });
     return groomResults(results);
   } catch (err) {
-    logger.verbose("Insert all error", { err });
+    logger.verbose("Insert all error", { err, writeErrors: err.writeErrors });
 
     if (err.code == 11000) {
       const duplicateKeyObjects = [];
@@ -69,6 +69,7 @@ module.exports = ({ eventStore, handlers }) => async (
         }
       }
 
+      logger.verbose("Insert all error", { err: err.insertedDocs });
       return groomResults(err.insertedDocs);
     } else {
       throw err;
