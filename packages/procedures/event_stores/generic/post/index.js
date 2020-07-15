@@ -19,16 +19,6 @@ module.exports = ({
           event.data.headers.idempotency
         );
 
-        //TODO
-        //eslint-disable-next-line no-console
-        console.log({
-          conflict,
-          uniq: uniqueEvents.some(
-            (uniqueEvent) =>
-              uniqueEvent.data.headers.idempotency ==
-              event.data.headers.idempotency
-          ),
-        });
         //If theres no idempotency conflict in the database and no local conflict, proceed.
         if (
           conflict ||

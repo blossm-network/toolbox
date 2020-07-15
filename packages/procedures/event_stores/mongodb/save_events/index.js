@@ -32,17 +32,9 @@ module.exports = ({ eventStore, handlers }) => async (
       ...(transaction && { options: { session: transaction } }),
       // },
     });
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log({
-      results: results.map((r) => (r.data ? r.data.payload : "doop")),
-    });
     return groomResults(results);
   } catch (err) {
     logger.verbose("Insert all error", { err, writeErrors: err.writeErrors });
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log({ err });
 
     if (err.code == 11000) {
       const duplicateKeyObjects = [];
