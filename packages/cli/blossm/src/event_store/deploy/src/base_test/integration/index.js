@@ -262,6 +262,8 @@ describe("Event store integration tests", () => {
   const testIncorrectParams = async ({ payload, action }) => {
     const root = uuid();
 
+    //TODO
+    console.log({ payload, action });
     const response = await request.post(url, {
       body: {
         events: [
