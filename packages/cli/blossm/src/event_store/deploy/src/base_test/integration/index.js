@@ -219,72 +219,72 @@ describe("Event store integration tests", () => {
     expect(response.statusCode).to.equal(204);
   });
 
-  it("should publish event successfully", (done) => {
-    subscribe({
-      topic,
-      name: sub,
-      fn: async (_, subscription) => {
-        if (!subscription) throw "Subscription wasn't made";
-        const root = uuid();
-        subscription.once("message", async (message) => {
-          const dataString = Buffer.from(message.data, "base64")
-            .toString()
-            .trim();
-          const data = JSON.parse(dataString);
-          expect(data.root).to.equal(root);
-          await unsubscribe({ topic, name: sub });
-          done();
-        });
-        request.post(url, {
-          body: {
-            events: [
-              {
-                data: {
-                  root,
-                  headers: {
-                    topic,
-                    version,
-                    created,
-                    action: example0.action,
-                    domain,
-                    service,
-                    idempotency: uuid(),
-                  },
-                  payload: example0.payload,
-                },
-              },
-            ],
-          },
-        });
-      },
-    });
-  });
-  const testIncorrectParams = async ({ payload, action }) => {
-    const root = uuid();
+  // it("should publish event successfully", (done) => {
+  //   subscribe({
+  //     topic,
+  //     name: sub,
+  //     fn: async (_, subscription) => {
+  //       if (!subscription) throw "Subscription wasn't made";
+  //       const root = uuid();
+  //       subscription.once("message", async (message) => {
+  //         const dataString = Buffer.from(message.data, "base64")
+  //           .toString()
+  //           .trim();
+  //         const data = JSON.parse(dataString);
+  //         expect(data.root).to.equal(root);
+  //         await unsubscribe({ topic, name: sub });
+  //         done();
+  //       });
+  //       request.post(url, {
+  //         body: {
+  //           events: [
+  //             {
+  //               data: {
+  //                 root,
+  //                 headers: {
+  //                   topic,
+  //                   version,
+  //                   created,
+  //                   action: example0.action,
+  //                   domain,
+  //                   service,
+  //                   idempotency: uuid(),
+  //                 },
+  //                 payload: example0.payload,
+  //               },
+  //             },
+  //           ],
+  //         },
+  //       });
+  //     },
+  //   });
+  // });
+  // const testIncorrectParams = async ({ payload, action }) => {
+  //   const root = uuid();
 
-    const response = await request.post(url, {
-      body: {
-        events: [
-          {
-            data: {
-              root,
-              headers: {
-                topic,
-                version,
-                created,
-                action,
-                domain,
-                service,
-                idempotency: uuid(),
-              },
-              payload,
-            },
-          },
-        ],
-      },
-    });
-    expect(response.statusCode).to.equal(500);
-  };
+  //   const response = await request.post(url, {
+  //     body: {
+  //       events: [
+  //         {
+  //           data: {
+  //             root,
+  //             headers: {
+  //               topic,
+  //               version,
+  //               created,
+  //               action,
+  //               domain,
+  //               service,
+  //               idempotency: uuid(),
+  //             },
+  //             payload,
+  //           },
+  //         },
+  //       ],
+  //     },
+  //   });
+  //   expect(response.statusCode).to.equal(500);
+  // };
   it("should not return an error if two simultaneous events are attempted", async () => {
     const root = uuid();
 
