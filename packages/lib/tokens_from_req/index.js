@@ -2,6 +2,12 @@ module.exports = (req, { cookieKey } = {}) => {
   const headers = req.headers;
   const authorization = headers.authorization;
   const cookies = req.cookies || {};
+  //TODO
+  //eslint-disable-next-line no-console
+  console.log({
+    req,
+    cookies,
+  });
 
   const token = cookieKey && cookies[cookieKey];
 
