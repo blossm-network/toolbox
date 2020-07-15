@@ -24,7 +24,7 @@ module.exports = ({
       created: dateString(),
       idempotency: `${
         idempotency || deps.uuid()
-      }-${action}-${domain}-${service}-${path.reduce(
+      }-${action}-${domain}-${service}-${(path || []).reduce(
         (result, p) => result + p.hash,
         ""
       )}`,
