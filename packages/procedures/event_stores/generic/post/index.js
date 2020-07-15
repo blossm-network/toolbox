@@ -15,6 +15,7 @@ module.exports = ({
   await Promise.all(
     req.body.events.map(async (event) => {
       if (event.data.headers.idempotency != undefined) {
+        //TODO check local conflict before db conflict. Tiny win.
         const conflict = await idempotencyConflictCheckFn(
           event.data.headers.idempotency
         );

@@ -14,6 +14,16 @@ module.exports = ({
   asyncHandler(async (req, _, next) => {
     const tokens = deps.tokensFromReq(req, { cookieKey });
     const jwt = tokens.bearer || tokens.cookie;
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log({
+      cookies: req.cookies,
+      tokens,
+      jwt,
+      cookit: tokens.cookie,
+      cookieKey,
+    });
+
     if (jwt) req.token = jwt;
     try {
       const claims = await deps.authenticate({
