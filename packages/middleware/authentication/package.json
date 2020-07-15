@@ -1,6 +1,6 @@
 {
   "name": "@blossm/authentication-middleware",
-  "version": "0.0.109",
+  "version": "0.0.110",
   "description": "Authentication middleware for the network.",
   "main": "index.js",
   "author": "blossm.network",
