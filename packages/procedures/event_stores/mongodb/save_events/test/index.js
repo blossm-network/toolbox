@@ -44,7 +44,7 @@ describe("Mongodb event store create event", () => {
       data: events,
       options: {
         session: transaction,
-        ordered: false,
+        // ordered: false,
       },
     });
     expect(saveEventsFnResult).to.deep.equal([createResult]);
@@ -75,9 +75,9 @@ describe("Mongodb event store create event", () => {
     expect(createFake).to.have.been.calledWith({
       store: eventStore,
       data: events,
-      options: {
-        ordered: false,
-      },
+      // options: {
+      //   ordered: false,
+      // },
     });
     expect(saveEventsFnResult).to.deep.equal([createResult]);
   });
