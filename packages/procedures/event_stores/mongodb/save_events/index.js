@@ -34,7 +34,9 @@ module.exports = ({ eventStore, handlers }) => async (
     });
     //TODO
     //eslint-disable-next-line no-console
-    console.log({ results: results.map((r) => r.data.payload) });
+    console.log({
+      results: results.map((r) => (r.data ? r.data.payload : "doop")),
+    });
     return groomResults(results);
   } catch (err) {
     logger.verbose("Insert all error", { err, writeErrors: err.writeErrors });
