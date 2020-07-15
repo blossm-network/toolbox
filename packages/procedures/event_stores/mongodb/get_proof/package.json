@@ -1,7 +1,7 @@
 {
   "name": "@blossm/mongodb-event-store-get-proof",
   "description": "A mongodb event store server function to get a proof.",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -14,7 +14,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/mongodb-database": "^0.0.70"
+    "@blossm/mongodb-database": "^0.0.71"
   },
   "devDependencies": {
     "chai-datetime": "^1.5.0",
