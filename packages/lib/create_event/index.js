@@ -24,10 +24,11 @@ module.exports = ({
       created: dateString(),
       idempotency: `${
         idempotency || deps.uuid()
-      }-${action}-${domain}-${service}-${(path || []).reduce(
-        (result, p) => result + p.hash,
-        ""
-      )}`,
+      }-${action}-${domain}-${service}${
+        path
+          ? `-${(path || []).reduce((result, p) => result + p.hash, "")}`
+          : ""
+      }`,
       ...(context && { context }),
       ...(trace && { trace }),
       ...(path && {
