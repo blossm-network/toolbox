@@ -3,7 +3,6 @@ const { restore, fake } = require("sinon");
 const { findOne } = require("../index");
 
 const query = "some-query";
-const select = "some-select";
 
 describe("Find one", () => {
   afterEach(() => {
@@ -21,6 +20,18 @@ describe("Find one", () => {
     expect(result).to.equal(execResult);
     expect(findOneFake).to.have.been.calledWith(query, { _id: 0, __v: 0 }, {});
   });
+  it("it should return the correct result with inclusive select", async () => {
+    const execResult = 4;
+    const findOneFake = fake.returns(execResult);
+    const store = {
+      findOne: findOneFake,
+    };
+    const select = { a: 1 };
+    const result = await findOne({ store, query, select });
+
+    expect(result).to.equal(execResult);
+    expect(findOneFake).to.have.been.calledWith(query, { a: 1 }, {});
+  });
   it("it should return the correct result if select is passed", async () => {
     const execResult = 4;
     const findOneFake = fake.returns(execResult);
@@ -30,11 +41,12 @@ describe("Find one", () => {
     };
 
     const sort = "some-sort";
+    const select = { a: 0 };
     const result = await findOne({ store, query, select, sort });
 
     expect(findOneFake).to.have.been.calledWith(
       query,
-      { ...select, _id: 0, __v: 0 },
+      { a: 0, _id: 0, __v: 0 },
       { sort }
     );
     expect(result).to.equal(execResult);

@@ -19,6 +19,18 @@ describe("Find", () => {
     expect(result).to.equal(execResult);
     expect(findFake).to.have.been.calledWith(query, { _id: 0, __v: 0 }, {});
   });
+  it("it should return the correct result with select inclusion", async () => {
+    const execResult = 4;
+    const findFake = fake.returns(execResult);
+    const store = {
+      find: findFake,
+    };
+    const select = { a: 1 };
+    const result = await find({ store, query, select });
+
+    expect(result).to.equal(execResult);
+    expect(findFake).to.have.been.calledWith(query, { a: 1 }, {});
+  });
   it("it should return the correct result with all optional parameters included", async () => {
     const execResult = 4;
     const findFake = fake.returns(execResult);
@@ -27,7 +39,7 @@ describe("Find", () => {
     };
 
     const sort = "some-sort";
-    const select = "some-select";
+    const select = { a: 0 };
     const skip = "some-skip";
     const limit = "some-limit";
     const options = { a: 1 };
@@ -45,7 +57,7 @@ describe("Find", () => {
     expect(result).to.equal(execResult);
     expect(findFake).to.have.been.calledWith(
       query,
-      { ...select, _id: 0, __v: 0 },
+      { a: 0, _id: 0, __v: 0 },
       {
         skip,
         sort,
