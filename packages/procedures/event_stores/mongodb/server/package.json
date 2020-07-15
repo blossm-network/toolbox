@@ -1,7 +1,7 @@
 {
   "name": "@blossm/mongodb-event-store",
   "description": "A mongodb event store server.",
-  "version": "0.0.289",
+  "version": "0.0.290",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@blossm/datetime": "^0.0.5",
-    "@blossm/event-store": "^0.0.148",
+    "@blossm/event-store": "^0.0.149",
     "@blossm/format-mongodb-schema": "^0.0.5",
     "@blossm/logger": "^0.0.8",
     "@blossm/mongodb-database": "^0.0.70",
@@ -23,14 +23,14 @@
     "@blossm/mongodb-event-store-count": "^0.0.27",
     "@blossm/mongodb-event-store-create-transaction": "^0.0.1",
     "@blossm/mongodb-event-store-get-proof": "^0.0.4",
+    "@blossm/mongodb-event-store-idempotency-conflict-check": "^0.0.1",
     "@blossm/mongodb-event-store-query": "^0.0.61",
     "@blossm/mongodb-event-store-reserve-root-counts": "^0.0.44",
     "@blossm/mongodb-event-store-root-stream": "^0.0.27",
-    "@blossm/mongodb-event-store-save-events": "^0.0.62",
+    "@blossm/mongodb-event-store-save-events": "^0.0.63",
     "@blossm/mongodb-event-store-save-proofs": "^0.0.66",
     "@blossm/mongodb-event-store-stream": "^0.0.31",
-    "@blossm/mongodb-event-store-update-proof": "^0.0.57",
-    "@blossm/mongodb-event-store-idempotency-conflict-check": "*"
+    "@blossm/mongodb-event-store-update-proof": "^0.0.57"
   },
   "devDependencies": {
     "chai-datetime": "^1.5.0",
