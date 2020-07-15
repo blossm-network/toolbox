@@ -96,6 +96,12 @@ describe("Mongodb event store", () => {
     const saveProofsResult = "some-save-proofs-result";
     const saveProofsFake = fake.returns(saveProofsResult);
     replace(deps, "saveProofs", saveProofsFake);
+    const idempotencyConflictCheckResult =
+      "some-idempotency-conflict-check-result";
+    const idempotencyConflictCheckFake = fake.returns(
+      idempotencyConflictCheckResult
+    );
+    replace(deps, "idempotencyConflictCheck", idempotencyConflictCheckFake);
     const updateProofResult = "some-update-proof-result";
     const updateProofFake = fake.returns(updateProofResult);
     replace(deps, "updateProof", updateProofFake);
@@ -199,6 +205,7 @@ describe("Mongodb event store", () => {
       indexes: [
         [{ "data.id": 1 }],
         [{ "data.root": 1 }],
+        [{ "data.headers.idempotency": 1 }],
         [{ "data.root": 1, "data.number": 1, _id: 1, __v: 1 }],
       ],
       connection: {
@@ -279,6 +286,9 @@ describe("Mongodb event store", () => {
     expect(saveProofsFake).to.have.been.calledWith({
       proofsStore: pStore,
     });
+    expect(idempotencyConflictCheckFake).to.have.been.calledWith({
+      eventStore: eStore,
+    });
     expect(updateProofFake).to.have.been.calledWith({
       proofsStore: pStore,
     });
@@ -300,6 +310,7 @@ describe("Mongodb event store", () => {
       saveProofsFn: saveProofsResult,
       updateProofFn: updateProofResult,
       getProofFn: getProofResult,
+      idempotencyConflictCheckFn: idempotencyConflictCheckResult,
       scheduleUpdateForProofFn,
     });
 
@@ -356,6 +367,12 @@ describe("Mongodb event store", () => {
     const saveProofsResult = "some-save-proofs-result";
     const saveProofsFake = fake.returns(saveProofsResult);
     replace(deps, "saveProofs", saveProofsFake);
+    const idempotencyConflictCheckResult =
+      "some-idempotency-conflict-check-result";
+    const idempotencyConflictCheckFake = fake.returns(
+      idempotencyConflictCheckResult
+    );
+    replace(deps, "idempotencyConflictCheck", idempotencyConflictCheckFake);
     const updateProofResult = "some-update-proof-result";
     const updateProofFake = fake.returns(updateProofResult);
     replace(deps, "updateProof", updateProofFake);
@@ -462,6 +479,7 @@ describe("Mongodb event store", () => {
       indexes: [
         [{ "data.id": 1 }],
         [{ "data.root": 1 }],
+        [{ "data.headers.idempotency": 1 }],
         [{ "data.root": 1, "data.number": 1, _id: 1, __v: 1 }],
         [{ [`data.payload.${index}`]: 1 }],
       ],
@@ -524,6 +542,7 @@ describe("Mongodb event store", () => {
       hashFn,
       proofsFn,
       saveProofsFn: saveProofsResult,
+      idempotencyConflictCheckFn: idempotencyConflictCheckResult,
       updateProofFn: updateProofResult,
       getProofFn: getProofResult,
       scheduleUpdateForProofFn,
@@ -579,6 +598,12 @@ describe("Mongodb event store", () => {
     const saveProofsResult = "some-save-proofs-result";
     const saveProofsFake = fake.returns(saveProofsResult);
     replace(deps, "saveProofs", saveProofsFake);
+    const idempotencyConflictCheckResult =
+      "some-idempotency-conflict-check-result";
+    const idempotencyConflictCheckFake = fake.returns(
+      idempotencyConflictCheckResult
+    );
+    replace(deps, "idempotencyConflictCheck", idempotencyConflictCheckFake);
     const updateProofResult = "some-update-proof-result";
     const updateProofFake = fake.returns(updateProofResult);
     replace(deps, "updateProof", updateProofFake);
@@ -672,6 +697,7 @@ describe("Mongodb event store", () => {
       indexes: [
         [{ "data.id": 1 }],
         [{ "data.root": 1 }],
+        [{ "data.headers.idempotency": 1 }],
         [{ "data.root": 1, "data.number": 1, _id: 1, __v: 1 }],
       ],
       connection: {

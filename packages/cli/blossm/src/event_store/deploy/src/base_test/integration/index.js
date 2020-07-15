@@ -504,22 +504,6 @@ describe("Event store integration tests", () => {
       },
     });
     expect(response.statusCode).to.equal(204);
-    await request.stream(
-      `${url}/stream/${root}`,
-      (data) => {
-        const parsedData = JSON.parse(data.toString().trim());
-        console.log({ parsedData });
-        console.log({ data: parsedData.data });
-        if (parsedData.data) {
-          console.log({ payload: parsedData.data.payload });
-        }
-      },
-      {
-        query: {
-          from: 0,
-        },
-      }
-    );
     const countResponse = await request.get(`${url}/count/${root}`);
     const parsedCountBody = JSON.parse(countResponse.body);
 

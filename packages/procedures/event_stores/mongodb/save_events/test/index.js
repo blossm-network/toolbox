@@ -239,58 +239,6 @@ describe("Mongodb event store create event", () => {
       expect(e).to.equal(error);
     }
   });
-  it("should not throw if only idempotencies are in conflict", async () => {
-    const eventStore = "some-event-store";
-
-    class DuplicateError extends Error {
-      constructor() {
-        super();
-        this.code = 11000;
-        this.writeErrors = [
-          {
-            errmsg:
-              "asdfasdf asdf asdf key: { data.headers.idempotency: 'some-other-idempotency' }",
-          },
-          {
-            errmsg:
-              "asdfasdf asdf asdf key: { data.headers.idempotency: 'some-idempotency' }",
-          },
-        ];
-        this.insertedDocs = [{ ...createResult, __v: 3, _id: 4 }];
-      }
-    }
-
-    const thrownError = new DuplicateError();
-    const createFake = fake.rejects(thrownError);
-
-    const db = {
-      create: createFake,
-    };
-    replace(deps, "db", db);
-
-    const events = [
-      {
-        data: {
-          number: "some-number",
-          headers: {
-            action,
-          },
-        },
-      },
-    ];
-
-    const saveEventsFnResult = await saveEvent({ eventStore, handlers })(
-      events
-    );
-    expect(createFake).to.have.been.calledWith({
-      store: eventStore,
-      data: events,
-      options: {
-        ordered: false,
-      },
-    });
-    expect(saveEventsFnResult).to.deep.equal([createResult]);
-  });
   it("should throw if adding event with unrecognized action", async () => {
     const eventStore = "some-event-store";
 

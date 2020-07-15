@@ -77,6 +77,7 @@ const eventStore = async ({ schema, indexes, secretFn }) => {
     indexes: [
       [{ "data.id": 1 }],
       [{ "data.root": 1 }],
+      [{ "data.headers.idempotency": 1 }],
       [{ "data.root": 1, "data.number": 1, _id: 1, __v: 1 }],
       ...(indexes.length == 0
         ? []
@@ -240,6 +241,9 @@ module.exports = async ({
     }),
     countFn: deps.count({
       countsStore: cStore,
+    }),
+    idempotencyConflictCheckFn: deps.idempotencyConflictCheck({
+      eventStore: eStore,
     }),
     createTransactionFn: deps.createTransaction,
     // saveSnapshotFn,

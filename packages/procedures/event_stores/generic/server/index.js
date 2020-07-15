@@ -15,6 +15,7 @@ module.exports = async ({
   rootStreamFn,
   scheduleUpdateForProofFn,
   createTransactionFn,
+  idempotencyConflictCheckFn,
   countFn,
 } = {}) => {
   deps
@@ -46,6 +47,7 @@ module.exports = async ({
         saveProofsFn,
         scheduleUpdateForProofFn,
         createTransactionFn,
+        idempotencyConflictCheckFn,
       })
     )
     .listen();

@@ -57,19 +57,10 @@ module.exports = ({ eventStore, handlers }) => async (
         duplicateKeyObjects.push(object);
       }
 
-      for (const duplicateKeyObject of duplicateKeyObjects) {
-        for (const key in duplicateKeyObject) {
-          ///If the only errors are idempotency collisions, continue without throwing.
-          if (key != "data.headers.idempotency")
-            throw deps.preconditionFailedError.message("Duplicates.", {
-              info: duplicateKeyObjects,
-              cause: err,
-            });
-        }
-      }
-
-      logger.verbose("Insert all error", { err: err.insertedDocs });
-      return groomResults(err.insertedDocs);
+      throw deps.preconditionFailedError.message("Duplicates.", {
+        info: duplicateKeyObjects,
+        cause: err,
+      });
     } else {
       throw err;
     }

@@ -13,6 +13,7 @@ const saveProofs = require("@blossm/mongodb-event-store-save-proofs");
 const getProof = require("@blossm/mongodb-event-store-get-proof");
 const createTransaction = require("@blossm/mongodb-event-store-create-transaction");
 const formatSchema = require("@blossm/format-mongodb-schema");
+const idempotencyConflictCheck = require("@blossm/mongodb-event-store-idempotency-conflict-check");
 
 exports.dateString = dateString;
 exports.eventStore = eventStore;
@@ -26,6 +27,7 @@ exports.rootStream = rootStream;
 exports.updateProof = updateProof;
 exports.getProof = getProof;
 exports.createTransaction = createTransaction;
+exports.idempotencyConflictCheck = idempotencyConflictCheck;
 exports.count = count;
 exports.formatSchema = formatSchema;
 exports.saveProofs = saveProofs;

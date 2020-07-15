@@ -17,6 +17,7 @@ const saveProofsFn = "some-save-proofs-fn";
 const updateProofFn = "some-update-proof-fn";
 const scheduleUpdateForProofFn = "some-schedule-update-for-proof-fn";
 const createTransactionFn = "some-create-transaction-fn";
+const idempotencyConflictCheckFn = "some-idempotency-conflict-check-fn";
 const getProofFn = "some-get-proof-fn";
 
 describe("Event store", () => {
@@ -84,6 +85,7 @@ describe("Event store", () => {
       createTransactionFn,
       getProofFn,
       saveProofsFn,
+      idempotencyConflictCheckFn,
       countFn,
     });
     expect(listenFake).to.have.been.calledOnce;
@@ -123,6 +125,7 @@ describe("Event store", () => {
       proofsFn,
       saveProofsFn,
       scheduleUpdateForProofFn,
+      idempotencyConflictCheckFn,
       createTransactionFn,
     });
   });
