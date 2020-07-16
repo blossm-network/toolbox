@@ -15,11 +15,13 @@
   },
   "dependencies": {
     "@blossm/url-encode-query-data": "^0.0.5",
-    "request": "^1.2.0"
+    "request": "^1.2.0",
+    "sorted-union-stream": "^3.0.1"
   },
   "devDependencies": {
     "mocha": "^7.1.1",
     "sinon": "^7.3.2",
-    "sinon-chai": "^3.5.0"
+    "sinon-chai": "^3.5.0",
+    "streamx": "^2.6.4"
   }
 }

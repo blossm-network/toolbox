@@ -23,6 +23,25 @@ const common = async ({ method, url, params, headers }) =>
     )
   );
 
+const jointStream = (streams, sortFn) => {
+  switch (streams.length) {
+    case 1:
+      return streams[0];
+    case 2:
+      return new deps.union(streams[0], streams[1], sortFn);
+    default: {
+      const half = Math.ceil(streams.length / 2);
+      const firstHalf = streams.splice(0, half);
+      const secondHalf = streams.splice(-half);
+      return new deps.union(
+        jointStream(firstHalf, sortFn),
+        jointStream(secondHalf, sortFn),
+        sortFn
+      );
+    }
+  }
+};
+
 exports.post = async (url, { body, headers } = {}) =>
   await common({ method: "POST", url, params: body, headers });
 
@@ -39,7 +58,7 @@ exports.get = async (url, { query, headers } = {}) =>
     headers,
   });
 
-exports.stream = async (url, onData, { query, headers } = {}) => {
+exports.stream = async (url, onDataFn, { query, headers } = {}) => {
   let processingData = false;
   let finishedProcessingAllData = false;
   return new Promise((resolve, reject) =>
@@ -51,7 +70,35 @@ exports.stream = async (url, onData, { query, headers } = {}) => {
       })
       .on("data", async (data) => {
         processingData = true;
-        await onData(data);
+        await onDataFn(data);
+        processingData = false;
+        if (finishedProcessingAllData) resolve();
+      })
+      .on("error", reject)
+      .on("end", () => {
+        finishedProcessingAllData = true;
+        if (!processingData) resolve();
+      })
+  );
+};
+
+exports.streamMany = async (requests, onDataFn, sortFn) => {
+  const requestStreams = requests.map(({ url, query, headers }) =>
+    deps.request({
+      url: deps.urlEncodeQueryData(url, query),
+      method: "GET",
+      ...(headers != undefined && { headers }),
+    })
+  );
+
+  let processingData = false;
+  let finishedProcessingAllData = false;
+
+  return new Promise((resolve, reject) =>
+    jointStream(requestStreams, sortFn)
+      .on("data", async (data) => {
+        processingData = true;
+        await onDataFn(data);
         processingData = false;
         if (finishedProcessingAllData) resolve();
       })
