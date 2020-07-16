@@ -26,8 +26,8 @@ module.exports = gateway({
   }),
   terminatedSessionCheckFn: terminatedSessionCheck,
   verifyFn: ({ key }) =>
-    //TODO figure out why this condition exists.
-    //note: maybe because challenge doesnt need protection.
+    // The public key is an access key.
+    // The local dev uses the images from the core network that uses gcp keys.
     key == "access" && process.env.NODE_ENV != "local"
       ? verify({
           url: process.env.PUBLIC_KEY_URL,

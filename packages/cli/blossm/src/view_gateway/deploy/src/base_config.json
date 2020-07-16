@@ -11,6 +11,7 @@
   "devDependencies": {
     "localenv": "^0.2.2",
     "chai": "^4.2.0",
+    "mocha": "^7.1.1",
     "@blossm/request": "*",
     "@blossm/jwt": "*",
     "@blossm/datetime": "*",
