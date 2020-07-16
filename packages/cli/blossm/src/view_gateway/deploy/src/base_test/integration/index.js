@@ -38,8 +38,8 @@ describe("View gateway integration tests", () => {
                 ? view.privileges.map((privilege) => {
                     return {
                       privilege,
-                      //TODO this doesnt exist
-                      domain: process.env.DOMAIN,
+                      //TODO finegle this
+                      domain: view.domain,
                       context: process.env.CONTEXT,
                     };
                   })
@@ -48,30 +48,25 @@ describe("View gateway integration tests", () => {
           ];
     }, []);
 
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log({ requiredPermissions });
-
     const needsToken = views.some(
       (c) => c.protection == undefined || c.protection == "strict"
     );
 
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log({ needsToken });
     const { token } = needsToken
       ? await getToken({ permissions: requiredPermissions })
       : {};
 
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log({ token });
-    const {
-      claims: { context: tokenContext },
-    } = decode(token);
     const parallelFns = [];
     for (const view of views) {
       parallelFns.push(async () => {
+        //Channels are only available to contexts.
+        if (!token) return;
+
+        const {
+          claims: { context: tokenContext },
+        } = decode(token);
+
+        //Test channel getting.
         const response = await request.get(`${url}`, {
           body: {
             query: {

@@ -120,7 +120,7 @@ describe("View gateway get", () => {
       },
     });
   });
-  it("should throw if no context", async () => {
+  it("should throw if no context property", async () => {
     const error = "some-error";
     const messageFake = fake.returns(error);
     replace(deps, "forbiddenError", {
@@ -129,6 +129,22 @@ describe("View gateway get", () => {
 
     try {
       await get({ query: { context: {} } });
+    } catch (e) {
+      expect(messageFake).to.have.been.calledWith(
+        "Missing required permissions."
+      );
+      expect(e).to.equal(error);
+    }
+  });
+  it("should throw if no context", async () => {
+    const error = "some-error";
+    const messageFake = fake.returns(error);
+    replace(deps, "forbiddenError", {
+      message: messageFake,
+    });
+
+    try {
+      await get({ query: {} });
     } catch (e) {
       expect(messageFake).to.have.been.calledWith(
         "Missing required permissions."

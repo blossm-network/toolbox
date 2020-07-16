@@ -7,18 +7,6 @@ module.exports = async ({
   signFn,
   algorithm = "ES256",
 }) => {
-  //TODO
-  //eslint-disable-next-line
-  console.log({
-    issuer,
-    subject,
-    audience,
-    expiresIn,
-    activeIn,
-    payload,
-    signFn,
-    algorithm,
-  });
   const header = {
     alg: algorithm,
     typ: "JWT",
@@ -45,17 +33,8 @@ module.exports = async ({
   );
   const token = `${encodedHeader}.${encodedPayload}`;
 
-  //TODO
-  //eslint-disable-next-line no-console
-  console.log({ tokenBody: token, encodedPayload });
   const signature = await signFn(token);
-  //TODO
-  //eslint-disable-next-line no-console
-  console.log({ signature });
   const encodedSignature = base64url.fromBase64(signature);
 
-  //TODO
-  //eslint-disable-next-line no-console
-  console.log({ result: `${token}.${encodedSignature}` });
   return `${token}.${encodedSignature}`;
 };

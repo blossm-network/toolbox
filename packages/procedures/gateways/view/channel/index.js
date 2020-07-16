@@ -1,7 +1,7 @@
 const deps = require("./deps");
 
 module.exports = (req, res) => {
-  if (!req.query.context[process.env.CONTEXT])
+  if (!req.query.context || !req.query.context[process.env.CONTEXT])
     throw deps.forbiddenError.message("Missing required permissions.");
 
   const channel = deps.channelName({

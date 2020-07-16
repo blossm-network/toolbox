@@ -29,6 +29,7 @@ module.exports = async ({
           const { permissions, protection = "strict" } = views.find(
             (v) => v.name == req.query.name
           );
+          //Channels are only available to protected views.
           if (protection != "strict") return next();
 
           //Set the req context since the authenticate middleware isn't called.
