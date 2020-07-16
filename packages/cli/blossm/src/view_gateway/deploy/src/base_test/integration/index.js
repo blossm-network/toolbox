@@ -38,6 +38,7 @@ describe("View gateway integration tests", () => {
                 ? view.privileges.map((privilege) => {
                     return {
                       privilege,
+                      //TODO this doesnt exist
                       domain: process.env.DOMAIN,
                       context: process.env.CONTEXT,
                     };
@@ -47,14 +48,24 @@ describe("View gateway integration tests", () => {
           ];
     }, []);
 
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log({ requiredPermissions });
+
     const needsToken = views.some(
       (c) => c.protection == undefined || c.protection == "strict"
     );
 
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log({ needsToken });
     const { token } = needsToken
       ? await getToken({ permissions: requiredPermissions })
       : {};
 
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log({ token });
     const {
       claims: { context: tokenContext },
     } = decode(token);
