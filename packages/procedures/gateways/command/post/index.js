@@ -58,7 +58,7 @@ module.exports = ({
 
   //TODO
   //eslint-disable-next-line no-console
-  console.log({ responseHeaders });
+  console.log({ response, responseHeaders });
   // If the response has tokens, send them as cookies.
   if (response && response.tokens) {
     for (const token of response.tokens) {
@@ -67,15 +67,20 @@ module.exports = ({
       res.cookie(cookieName, token.value, {
         domain: token.network,
         //TODO
-        httpOnly: process.env.NODE_ENV != "development",
-        secure: process.env.NODE_ENV != "development", //true,
+        httpOnly:
+          process.env.NODE_ENV != "development" &&
+          process.env.NODE_ENV != "staging",
+        secure:
+          process.env.NODE_ENV != "development" &&
+          process.env.NODE_ENV != "staging", //true,
       });
     }
   }
 
-  //TODO
-  //eslint-disable-next-line no-console
-  console.log({ res });
+  // if (responseHeaders["set-cookie"])
+  //   //TODO
+  //   //eslint-disable-next-line no-console
+  //   console.log({ res });
 
-  res.set(responseHeaders).status(statusCode).send(response);
+  res.status(statusCode).send(response);
 };
