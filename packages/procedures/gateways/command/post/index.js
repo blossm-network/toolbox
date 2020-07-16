@@ -62,6 +62,9 @@ module.exports = ({
   // If the response has tokens, send them as cookies.
   if (response && response.tokens) {
     for (const token of response.tokens) {
+      //TODO
+      //eslint-disable-next-line no-console
+      console.log({ token });
       if (!token.network || !token.type || !token.value) continue;
       const cookieName = token.type;
       res.cookie(cookieName, token.value, {

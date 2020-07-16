@@ -20,7 +20,7 @@ module.exports = ({
       cookies: req.cookies,
       tokens,
       jwt,
-      cookit: tokens.cookie,
+      cookie: tokens.cookie,
       cookieKey,
     });
 

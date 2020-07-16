@@ -5,7 +5,6 @@ module.exports = (req, { cookieKey } = {}) => {
   //TODO
   //eslint-disable-next-line no-console
   console.log({
-    req,
     cookies,
   });
 
