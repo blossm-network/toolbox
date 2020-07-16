@@ -12,10 +12,6 @@ module.exports = ({
   await deps.validate(req.body);
   const { payload, headers, root } = req.body;
 
-  //TODO
-  //eslint-disable-next-line no-console
-  console.log({ reqToken: req.token });
-
   let { body: response, headers: responseHeaders = {}, statusCode } = await deps
     .command({
       name,
@@ -60,34 +56,18 @@ module.exports = ({
       },
     });
 
-  //TODO
-  //eslint-disable-next-line no-console
-  console.log({ response, responseHeaders });
   // If the response has tokens, send them as cookies.
   if (response && response.tokens) {
     for (const token of response.tokens) {
-      //TODO
-      //eslint-disable-next-line no-console
-      console.log({ token });
       if (!token.network || !token.type || !token.value) continue;
       const cookieName = token.type;
       res.cookie(cookieName, token.value, {
         domain: token.network,
-        //TODO
         httpOnly: true,
-        // process.env.NODE_ENV != "development" &&
-        // process.env.NODE_ENV != "staging",
         secure: true,
-        // process.env.NODE_ENV != "development" &&
-        // process.env.NODE_ENV != "staging", //true,
       });
     }
   }
-
-  // if (responseHeaders["set-cookie"])
-  //   //TODO
-  //   //eslint-disable-next-line no-console
-  //   console.log({ res });
 
   res.status(statusCode).send(response);
 };
