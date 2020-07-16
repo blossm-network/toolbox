@@ -1,5 +1,3 @@
-// const { info } = require("restify-errors");
-
 module.exports = function () {
   return {
     statusCode: this.statusCode,

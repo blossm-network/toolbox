@@ -73,9 +73,11 @@ const envProject = ({ env, config }) => {
 };
 
 const envPublicKeyUrl = ({ env, config }) =>
-  `https://f.${envUriSpecifier(env)}${
-    config.core ? config.core.network : config.network
-  }/public-key`;
+  config.core && config.core.network != config.network
+    ? `https://f.${env == "production" ? "" : "snd."}${
+        config.core.network
+      }/public-key`
+    : `https://f.${envUriSpecifier(env)}${config.network}/public-key`;
 
 const envComputeUrlId = ({ env, config }) => {
   switch (env) {
