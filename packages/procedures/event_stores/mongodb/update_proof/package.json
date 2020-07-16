@@ -1,7 +1,7 @@
 {
   "name": "@blossm/mongodb-event-store-update-proof",
   "description": "A mongodb event store server proof updating function.",
-  "version": "0.0.59",
+  "version": "0.0.60",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -15,8 +15,8 @@
   },
   "dependencies": {
     "@blossm/datetime": "*",
-    "@blossm/errors": "*",
-    "@blossm/mongodb-database": "^0.0.72"
+    "@blossm/errors": "^0.0.37",
+    "@blossm/mongodb-database": "^0.0.73"
   },
   "devDependencies": {
     "mocha": "^7.1.1",

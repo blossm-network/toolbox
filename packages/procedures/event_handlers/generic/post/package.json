@@ -1,7 +1,7 @@
 {
   "name": "@blossm/event-handler-post",
   "description": "An event handler server POST handler.",
-  "version": "0.0.177",
+  "version": "0.0.178",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -14,7 +14,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/errors": "^0.0.36"
+    "@blossm/errors": "^0.0.37"
   },
   "devDependencies": {
     "chai-datetime": "^1.5.0",
