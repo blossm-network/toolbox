@@ -74,9 +74,9 @@ module.exports = ({
       res.cookie(cookieName, token.value, {
         domain: token.network,
         //TODO
-        httpOnly:
-          process.env.NODE_ENV != "development" &&
-          process.env.NODE_ENV != "staging",
+        httpOnly: true,
+        // process.env.NODE_ENV != "development" &&
+        // process.env.NODE_ENV != "staging",
         secure:
           process.env.NODE_ENV != "development" &&
           process.env.NODE_ENV != "staging", //true,
