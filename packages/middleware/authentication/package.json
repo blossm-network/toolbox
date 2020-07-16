@@ -1,6 +1,6 @@
 {
   "name": "@blossm/authentication-middleware",
-  "version": "0.0.111",
+  "version": "0.0.112",
   "description": "Authentication middleware for the network.",
   "main": "index.js",
   "author": "blossm.network",
@@ -16,7 +16,7 @@
   "dependencies": {
     "@blossm/authenticate": "^0.0.78",
     "@blossm/gcp-kms": "^0.0.35",
-    "@blossm/tokens-from-req": "^0.0.16",
+    "@blossm/tokens-from-req": "^0.0.17",
     "express-async-handler": "^1.1.4"
   },
   "devDependencies": {
