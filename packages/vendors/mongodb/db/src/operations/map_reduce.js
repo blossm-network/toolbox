@@ -7,8 +7,8 @@ module.exports = async ({
   reduce,
   finalize,
   out,
-}) => {
-  return await store.mapReduce({
+}) =>
+  await store.mapReduce({
     map,
     reduce,
     out,
@@ -18,4 +18,3 @@ module.exports = async ({
     ...(sort && { sort }),
     ...(finalize && { finalize }),
   });
-};

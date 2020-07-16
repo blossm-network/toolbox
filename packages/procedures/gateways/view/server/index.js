@@ -26,11 +26,11 @@ module.exports = async ({
       path: "/",
       preMiddleware: [
         (req, res, next) => {
-          const { permissions, protection = "strict" } = views.find(
-            (v) => v.name == req.query.name
-          );
+          const view = views.find((v) => v.name == req.query.name);
+
           //Channels are only available to protected views.
-          if (protection != "strict") return next();
+          if (!view || (view.protection && view.protection != "strict"))
+            return next();
 
           //Set the req context since the authenticate middleware isn't called.
           req.context = req.query.context;
@@ -41,8 +41,8 @@ module.exports = async ({
             internalTokenFn,
             context,
             permissions:
-              permissions instanceof Array
-                ? permissions.map((permission) => {
+              view.permissions instanceof Array
+                ? view.permissions.map((permission) => {
                     const [service, domain, privilege] = permission.split(":");
                     return {
                       service,
@@ -50,7 +50,7 @@ module.exports = async ({
                       privilege,
                     };
                   })
-                : permissions,
+                : view.permissions,
           })(req, res, next);
         },
       ],
@@ -61,7 +61,7 @@ module.exports = async ({
     network,
     procedure,
     key = "access",
-    permissions,
+    permissions = "none",
     protection = "strict",
   } of views) {
     server = server.get(

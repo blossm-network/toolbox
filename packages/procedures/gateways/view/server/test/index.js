@@ -276,7 +276,7 @@ describe("View gateway", () => {
       ],
     });
   });
-  it("should call with the correct params with privileges set to none", async () => {
+  it("should call with the correct params with privileges defaulted to none", async () => {
     const corsMiddlewareFake = fake();
     replace(deps, "corsMiddleware", corsMiddlewareFake);
 
@@ -313,9 +313,8 @@ describe("View gateway", () => {
     const gatewayGetFake = fake.returns(gatewayGetResult);
     replace(deps, "get", gatewayGetFake);
 
-    const permissions = "none";
     const name = "some-name";
-    const views = [{ name, procedure, permissions, context }];
+    const views = [{ name, procedure, context }];
 
     const verifyFnResult = "some-verify-fn";
     const verifyFnFake = fake.returns(verifyFnResult);

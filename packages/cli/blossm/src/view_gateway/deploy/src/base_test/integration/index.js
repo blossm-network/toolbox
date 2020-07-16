@@ -29,23 +29,9 @@ describe("View gateway integration tests", () => {
   );
   it("should return successfully", async () => {
     const requiredPermissions = views.reduce((permissions, view) => {
-      return view.privileges == "none"
+      return !view.permissions || view.permissions == "none"
         ? permissions
-        : [
-            ...new Set([
-              ...permissions,
-              ...(view.privileges
-                ? view.privileges.map((privilege) => {
-                    return {
-                      privilege,
-                      //TODO finegle this
-                      domain: view.domain,
-                      context: process.env.CONTEXT,
-                    };
-                  })
-                : []),
-            ]),
-          ];
+        : [...new Set([...permissions, ...view.permissions])];
     }, []);
 
     const needsToken = views.some(

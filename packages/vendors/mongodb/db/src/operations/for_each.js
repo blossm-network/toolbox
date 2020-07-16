@@ -1,5 +1,5 @@
-module.exports = async ({ store, query, fn }) => {
-  return await new Promise((resolve, reject) => {
+module.exports = async ({ store, query, fn }) =>
+  await new Promise((resolve, reject) => {
     store
       .find(query)
       .cursor()
@@ -7,4 +7,3 @@ module.exports = async ({ store, query, fn }) => {
       .on("error", (err) => reject(err))
       .on("end", () => resolve());
   });
-};
