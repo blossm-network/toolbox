@@ -6,6 +6,7 @@
     "@blossm/gcp-token": "*",
     "@blossm/gcp-storage": "*",
     "@blossm/terminated-session-check": "*",
+    "@blossm/node-external-token": "*",
     "@blossm/permissions-lookup": "*"
   },
   "devDependencies": {
