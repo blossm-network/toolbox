@@ -56,6 +56,9 @@ module.exports = ({
       },
     });
 
+  //TODO
+  //eslint-disable-next-line no-console
+  console.log({ responseHeaders });
   // If the response has tokens, send them as cookies.
   if (response && response.tokens) {
     for (const token of response.tokens) {
@@ -69,6 +72,10 @@ module.exports = ({
       });
     }
   }
+
+  //TODO
+  //eslint-disable-next-line no-console
+  console.log({ res });
 
   res.set(responseHeaders).status(statusCode).send(response);
 };
