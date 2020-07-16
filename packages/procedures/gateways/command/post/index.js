@@ -77,9 +77,9 @@ module.exports = ({
         httpOnly: true,
         // process.env.NODE_ENV != "development" &&
         // process.env.NODE_ENV != "staging",
-        secure:
-          process.env.NODE_ENV != "development" &&
-          process.env.NODE_ENV != "staging", //true,
+        secure: true,
+        // process.env.NODE_ENV != "development" &&
+        // process.env.NODE_ENV != "staging", //true,
       });
     }
   }
