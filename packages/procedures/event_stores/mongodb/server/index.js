@@ -78,7 +78,18 @@ const eventStore = async ({ schema, indexes, secretFn }) => {
       [{ "data.id": 1 }],
       [{ "data.root": 1 }],
       [{ "data.headers.idempotency": 1 }],
-      [{ "data.root": 1, "data.number": 1, _id: 1, __v: 1 }],
+      //TODO test
+      //research mongo to see if optional values should be in index.
+      [
+        {
+          "data.headers.action": 1,
+          "data.root": 1,
+          "data.number": 1,
+          "data.saved": 1,
+          _id: 1,
+          __v: 1,
+        },
+      ],
       ...(indexes.length == 0
         ? []
         : [

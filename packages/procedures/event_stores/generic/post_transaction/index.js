@@ -14,6 +14,8 @@ module.exports = ({
     return result;
   }, {});
 
+  const now = deps.dateString();
+
   const eventNumberOffsets = {};
   const allProofs = [];
 
@@ -85,13 +87,12 @@ module.exports = ({
 
           eventNumberOffsets[event.data.root]++;
 
-          const now = deps.dateString();
-
           const data = {
             number,
             root: event.data.root,
             id: `${root}_${number}`,
             saved: now,
+            topic: event.data.topic,
             payload: event.data.payload,
             headers: event.data.headers,
           };

@@ -3,7 +3,7 @@
     "@blossm/mongodb-event-handler": "*",
     "@blossm/view-store-rpc": "*",
     "@blossm/command-rpc": "*",
-    "@blossm/event-store-rpc": "*",
+    "@blossm/event-stores-rpc": "*",
     "@blossm/gcp-token": "*",
     "@blossm/gcp-secret": "*",
     "@blossm/node-external-token": "*",

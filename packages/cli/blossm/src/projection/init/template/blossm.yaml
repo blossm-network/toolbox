@@ -7,9 +7,11 @@ context: some-context
 #
 # Set the event-store from which this projection will listen for events.
 #
-store:
-  domain: some-event-domain
-  service: core
+stores:
+  - domain: some-event-domain
+    service: core
+    actions:
+      - some-action
 
 #
 # Add dependencies and devDependencies, just like a package.json file.

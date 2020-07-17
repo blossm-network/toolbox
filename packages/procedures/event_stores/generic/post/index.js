@@ -48,9 +48,11 @@ module.exports = ({
 
   await Promise.all([
     ...events.map((e) => {
+      //TODO only need to send one of these per store per topic.
       return publishFn(
         {
-          root: e.data.root,
+          //TODO test
+          saved: e.data.saved,
         },
         e.data.headers.topic
       );

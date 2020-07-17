@@ -71,10 +71,11 @@ module.exports = ({ name, context = process.env.CONTEXT, network }) => {
   const update = ({
     contexts,
     token: { internalFn: internalTokenFn } = {},
-  } = {}) => (root, view) =>
+    //TODO test
+  } = {}) => ({ query, update }) =>
     deps
       .rpc(name, context, "view-store")
-      .put(root, { view })
+      .post({ query, update })
       .in({
         ...(contexts && { context: contexts }),
       })

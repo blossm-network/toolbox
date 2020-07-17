@@ -11,30 +11,17 @@ const data = (req) => {
   }
 };
 
-module.exports = ({
-  mainFn,
-  commitFn,
-  streamFn,
-  nextEventNumberFn,
-  saveNextEventNumberFn,
-}) => async (req, res) => {
-  const { root, forceFrom: number = await nextEventNumberFn({ root }) } = data(
-    req
-  );
+//TODO test
+module.exports = ({ mainFn, streamFn }) => async (req, res) => {
+  const { from } = data(req);
 
-  let state;
-  let newSeenEventNumber;
-
-  // TODO write a better test for this. idk a way to do it quickly.
-  await streamFn({ root, from: number }, (event) => {
-    state = mainFn(state, event);
-    newSeenEventNumber = event.headers.number;
+  await streamFn({
+    from,
+    fn: mainFn,
+    //chronological
+    sortFn: (a, b) =>
+      a.data.saved < b.data.saved ? -1 : a.data.saved > b.data.saved ? 1 : 0,
   });
-
-  if (state && commitFn) await commitFn(state);
-
-  if (newSeenEventNumber != undefined)
-    await saveNextEventNumberFn({ root, from: newSeenEventNumber });
 
   res.sendStatus(204);
 };

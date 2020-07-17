@@ -73,6 +73,7 @@ const viewStore = async ({ schema, indexes, secretFn }) => {
   return _viewStore;
 };
 
+//TODO fix schema to adapt to changes
 module.exports = async ({
   schema,
   indexes,
@@ -150,7 +151,7 @@ module.exports = async ({
       query,
     });
 
-  const writeFn = async ({ root, data }) => {
+  const writeFn = async ({ query, data }) => {
     const update = {};
     const setKey = "$set";
     for (const key of Object.keys(data)) {
@@ -168,7 +169,7 @@ module.exports = async ({
     }
     return await deps.db.write({
       store,
-      query: { "headers.root": root },
+      query,
       update,
       options: {
         lean: true,
