@@ -1,7 +1,7 @@
 {
   "name": "@blossm/event-store-post-transaction",
   "description": "An event store POST handler transaction.",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
