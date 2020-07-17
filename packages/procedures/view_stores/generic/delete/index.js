@@ -1,7 +1,7 @@
 const deps = require("./deps");
 
 module.exports = ({ removeFn }) => async (req, res) => {
-  if (req.query.query == undefined && req.params.root == undefined)
+  if (!req.query.query)
     throw deps.badRequestError.message(
       "Missing query parameter in the url's query."
     );
@@ -13,7 +13,12 @@ module.exports = ({ removeFn }) => async (req, res) => {
 
   const { deletedCount } = await removeFn({
     ...formattedQueryBody,
-    ...(req.params.root && { "headers.root": req.params.root }),
+    ...(req.query.context && {
+      "headers.context.root": req.query.context.root,
+      "headers.context.domain": req.query.context.domain,
+      "headers.context.service": req.query.context.service,
+      "headers.context.network": req.query.context.network,
+    }),
   });
 
   res.status(200).send({ deletedCount });

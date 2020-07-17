@@ -4,8 +4,17 @@ const { restore, replace, fake } = require("sinon");
 const del = require("..");
 const deps = require("../deps");
 
-const root = "some-root";
 const query = { a: 1 };
+const contextRoot = "some-context-root";
+const contextDomain = "some-context-domain";
+const contextService = "some-context-service";
+const contextNetwork = "some-context-network";
+const context = {
+  root: contextRoot,
+  domain: contextDomain,
+  service: contextService,
+  network: contextNetwork,
+};
 const deletedCount = 3;
 
 describe("View store delete", () => {
@@ -13,13 +22,14 @@ describe("View store delete", () => {
     restore();
   });
 
-  it("should call with the correct params with root only", async () => {
+  it("should call with the correct params with context only", async () => {
     const removeFake = fake.returns({ deletedCount });
 
-    const params = { root };
     const req = {
-      params,
-      query: {},
+      query: {
+        context,
+        query: {},
+      },
     };
 
     const sendFake = fake();
@@ -31,16 +41,19 @@ describe("View store delete", () => {
     };
 
     await del({ removeFn: removeFake })(req, res);
-    expect(removeFake).to.have.been.calledWith({ "headers.root": root });
+    expect(removeFake).to.have.been.calledWith({
+      "headers.context.root": contextRoot,
+      "headers.context.domain": contextDomain,
+      "headers.context.service": contextService,
+      "headers.context.network": contextNetwork,
+    });
     expect(statusFake).to.have.been.calledWith(200);
     expect(sendFake).to.have.been.calledWith({ deletedCount });
   });
-  it("should call with the correct params with query only", async () => {
+  it("should call with the correct params with query", async () => {
     const removeFake = fake.returns({ deletedCount });
 
-    const params = {};
     const req = {
-      params,
       query: {
         query,
       },
@@ -59,16 +72,13 @@ describe("View store delete", () => {
     expect(statusFake).to.have.been.calledWith(200);
     expect(sendFake).to.have.been.calledWith({ deletedCount });
   });
-  it("should call with the correct params with query and root", async () => {
+  it("should call with the correct params with query and context", async () => {
     const removeFake = fake.returns({ deletedCount });
 
-    const params = {
-      root,
-    };
     const req = {
-      params,
       query: {
         query,
+        context,
       },
     };
 
@@ -83,7 +93,10 @@ describe("View store delete", () => {
     await del({ removeFn: removeFake })(req, res);
     expect(removeFake).to.have.been.calledWith({
       "body.a": 1,
-      "headers.root": root,
+      "headers.context.root": contextRoot,
+      "headers.context.domain": contextDomain,
+      "headers.context.service": contextService,
+      "headers.context.network": contextNetwork,
     });
     expect(statusFake).to.have.been.calledWith(200);
     expect(sendFake).to.have.been.calledWith({ deletedCount });
@@ -92,7 +105,6 @@ describe("View store delete", () => {
     const removeFake = fake.returns({ deletedCount });
 
     const req = {
-      params: {},
       query: {},
     };
 

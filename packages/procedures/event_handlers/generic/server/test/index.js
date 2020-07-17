@@ -7,8 +7,6 @@ const eventHandler = require("..");
 const mainFn = "some-main-fn";
 const commitFn = "some-commit-fn";
 const streamFn = "some-stream-fn";
-const nextEventNumberFn = "some-next-event-number-fn";
-const saveNextEventNumberFn = "some-increment-next-event-number-fn";
 
 describe("Event handler", () => {
   afterEach(() => {
@@ -33,8 +31,6 @@ describe("Event handler", () => {
       mainFn,
       commitFn,
       streamFn,
-      nextEventNumberFn,
-      saveNextEventNumberFn,
     });
 
     expect(listenFake).to.have.been.calledOnce;
@@ -44,8 +40,6 @@ describe("Event handler", () => {
       mainFn,
       commitFn,
       streamFn,
-      nextEventNumberFn,
-      saveNextEventNumberFn,
     });
   });
   it("should throw correctly", async () => {

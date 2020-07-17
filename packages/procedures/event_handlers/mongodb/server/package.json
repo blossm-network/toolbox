@@ -14,9 +14,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/event-handler": "^0.0.190",
-    "@blossm/logger": "^0.0.8",
-    "@blossm/mongodb-database": "^0.0.74"
+    "@blossm/event-handler": "^0.0.190"
   },
   "devDependencies": {
     "mocha": "^7.1.1",

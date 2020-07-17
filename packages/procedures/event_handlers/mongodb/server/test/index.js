@@ -4,17 +4,17 @@ const { restore, replace, fake } = require("sinon");
 const deps = require("../deps");
 
 const protocol = "some-db-protocol";
-const domain = "some-domain";
-const service = "some-service";
+// const domain = "some-domain";
+// const service = "some-service";
 const name = "some-name";
 const context = "some-context";
 const user = "some-db-user";
 const userPassword = "some-db-user-password";
 const host = "some-host";
 const database = "some-db";
-const password = "some-password";
+// const password = "some-password";
 
-const writeResult = "some-write-result";
+// const writeResult = "some-write-result";
 
 process.env.NAME = name;
 process.env.CONTEXT = context;
@@ -38,258 +38,263 @@ describe("Event handler", () => {
   });
 
   it("should call with the correct params", async () => {
-    const store = "some-store";
-    const storeFake = fake.returns(store);
+    // const store = "some-store";
+    // const storeFake = fake.returns(store);
 
-    const number = "some-number";
-    const findFake = fake.returns([{ number }]);
-    const writeFake = fake.returns(writeResult);
+    // const number = "some-number";
+    // const findFake = fake.returns([{ number }]);
+    // const writeFake = fake.returns(writeResult);
 
-    const db = {
-      store: storeFake,
-      find: findFake,
-      write: writeFake,
-    };
-    replace(deps, "db", db);
+    // const db = {
+    //   store: storeFake,
+    //   find: findFake,
+    //   write: writeFake,
+    // };
+    // replace(deps, "db", db);
 
-    const secretFake = fake.returns(password);
-
-    const eventHandlerFake = fake();
-    replace(deps, "eventHandler", eventHandlerFake);
-
-    const mainFn = "main-fn";
-    const commitFn = "commit-fn";
-    const streamFn = "stream-fn";
-
-    await mongodbEventHandler({
-      mainFn,
-      commitFn,
-      streamFn,
-      secretFn: secretFake,
-    });
-
-    expect(storeFake).to.have.been.calledWith({
-      name: `_${context}.${name}.numbers`,
-      schema: {
-        root: { $type: String, required: true },
-        number: { $type: Number, required: true, default: 0 },
-      },
-      typeKey: "$type",
-      indexes: [[{ root: 1 }], [{ number: 1 }]],
-      connection: {
-        protocol,
-        user,
-        password,
-        host,
-        database,
-        parameters: {
-          authSource: "admin",
-          retryWrites: true,
-          w: "majority",
-        },
-        autoIndex: true,
-      },
-    });
-    expect(secretFake).to.have.been.calledWith("mongodb-event-handler");
-
-    const root = "some-root";
-
-    const numberFnResult = await eventHandlerFake.lastCall.lastArg.nextEventNumberFn(
-      {
-        root,
-      }
-    );
-
-    expect(findFake).to.have.been.calledWith({
-      store,
-      query: { root },
-      pageSize: 1,
-      options: {
-        lean: true,
-      },
-    });
-    expect(numberFnResult).to.equal(number);
-
-    const from = "some-from";
-    const incrementFnResult = await eventHandlerFake.lastCall.lastArg.saveNextEventNumberFn(
-      {
-        root,
-        from,
-      }
-    );
-
-    expect(writeFake).to.have.been.calledWith({
-      store,
-      query: { root, number: { $gte: from } },
-      update: {
-        $set: { number: from + 1 },
-      },
-      options: {
-        lean: true,
-        upsert: true,
-        new: true,
-        setDefaultsOnInsert: true,
-      },
-    });
-    expect(incrementFnResult).to.equal(writeResult);
-
-    await mongodbEventHandler({ mainFn, commitFn, streamFn });
-    expect(storeFake).to.have.been.calledOnce;
-  });
-  it("should call with the correct params if find returns nothing", async () => {
-    const store = "some-store";
-    const storeFake = fake.returns(store);
-
-    const findFake = fake.returns([]);
-    const writeFake = fake.returns(writeResult);
-
-    const db = {
-      store: storeFake,
-      find: findFake,
-      write: writeFake,
-    };
-    replace(deps, "db", db);
-
-    const secretFake = fake.returns(password);
+    // const secretFake = fake.returns(password);
 
     const eventHandlerFake = fake();
     replace(deps, "eventHandler", eventHandlerFake);
 
     const mainFn = "main-fn";
-    const commitFn = "commit-fn";
+    // const commitFn = "commit-fn";
     const streamFn = "stream-fn";
 
     await mongodbEventHandler({
       mainFn,
-      commitFn,
+      // commitFn,
       streamFn,
-      secretFn: secretFake,
+      // secretFn: secretFake,
     });
 
-    expect(storeFake).to.have.been.calledWith({
-      name: `_${context}.${name}.numbers`,
-      schema: {
-        root: { $type: String, required: true },
-        number: { $type: Number, required: true, default: 0 },
-      },
-      typeKey: "$type",
-      indexes: [[{ root: 1 }], [{ number: 1 }]],
-      connection: {
-        protocol,
-        user,
-        password,
-        host,
-        database,
-        parameters: {
-          authSource: "admin",
-          retryWrites: true,
-          w: "majority",
-        },
-        autoIndex: true,
-      },
-    });
-    expect(secretFake).to.have.been.calledWith("mongodb-event-handler");
-
-    const root = "some-root";
-
-    const numberFnResult = await eventHandlerFake.lastCall.lastArg.nextEventNumberFn(
-      {
-        root,
-      }
-    );
-
-    expect(findFake).to.have.been.calledWith({
-      store,
-      query: { root },
-      pageSize: 1,
-      options: {
-        lean: true,
-      },
-    });
-    expect(numberFnResult).to.equal(0);
-
-    const from = "some-from";
-    const incrementFnResult = await eventHandlerFake.lastCall.lastArg.saveNextEventNumberFn(
-      {
-        root,
-        from,
-      }
-    );
-
-    expect(writeFake).to.have.been.calledWith({
-      store,
-      query: { root, number: { $gte: from } },
-      update: {
-        $set: { number: from + 1 },
-      },
-      options: {
-        lean: true,
-        upsert: true,
-        new: true,
-        setDefaultsOnInsert: true,
-      },
-    });
-    expect(incrementFnResult).to.equal(writeResult);
-
-    await mongodbEventHandler({ mainFn, commitFn, streamFn });
-    expect(storeFake).to.have.been.calledOnce;
-  });
-  it("should call with the correct params with domain and service and local env", async () => {
-    const store = "some-store";
-    const storeFake = fake.returns(store);
-
-    const number = "some-number";
-    const findFake = fake.returns([{ number }]);
-    const writeFake = fake.returns(writeResult);
-
-    const db = {
-      store: storeFake,
-      find: findFake,
-      write: writeFake,
-    };
-    replace(deps, "db", db);
-
-    const secretFake = fake.returns(password);
-
-    const eventHandlerFake = fake();
-    replace(deps, "eventHandler", eventHandlerFake);
-
-    const mainFn = "main-fn";
-    const commitFn = "commit-fn";
-    const streamFn = "stream-fn";
-
-    process.env.DOMAIN = domain;
-    process.env.SERVICE = service;
-    process.env.NODE_ENV = "local";
-
-    await mongodbEventHandler({
+    expect(eventHandlerFake).to.have.been.calledWith({
       mainFn,
-      commitFn,
       streamFn,
-      secretFn: secretFake,
     });
 
-    expect(storeFake).to.have.been.calledWith({
-      name: `_${context}.${service}.${domain}.${name}.numbers`,
-      schema: {
-        root: { $type: String, required: true },
-        number: { $type: Number, required: true, default: 0 },
-      },
-      typeKey: "$type",
-      indexes: [[{ root: 1 }], [{ number: 1 }]],
-      connection: {
-        protocol,
-        user,
-        password: userPassword,
-        host,
-        database,
-        parameters: {
-          authSource: "admin",
-          retryWrites: true,
-          w: "majority",
-        },
-        autoIndex: true,
-      },
-    });
+    // expect(storeFake).to.have.been.calledWith({
+    //   name: `_${context}.${name}.numbers`,
+    //   schema: {
+    //     root: { $type: String, required: true },
+    //     number: { $type: Number, required: true, default: 0 },
+    //   },
+    //   typeKey: "$type",
+    //   indexes: [[{ root: 1 }], [{ number: 1 }]],
+    //   connection: {
+    //     protocol,
+    //     user,
+    //     password,
+    //     host,
+    //     database,
+    //     parameters: {
+    //       authSource: "admin",
+    //       retryWrites: true,
+    //       w: "majority",
+    //     },
+    //     autoIndex: true,
+    //   },
+    // });
+    // expect(secretFake).to.have.been.calledWith("mongodb-event-handler");
+
+    // const root = "some-root";
+
+    // const numberFnResult = await eventHandlerFake.lastCall.lastArg.nextEventNumberFn(
+    //   {
+    //     root,
+    //   }
+    // );
+
+    // expect(findFake).to.have.been.calledWith({
+    //   store,
+    //   query: { root },
+    //   pageSize: 1,
+    //   options: {
+    //     lean: true,
+    //   },
+    // });
+    // expect(numberFnResult).to.equal(number);
+
+    // const from = "some-from";
+    // const incrementFnResult = await eventHandlerFake.lastCall.lastArg.saveNextEventNumberFn(
+    //   {
+    //     root,
+    //     from,
+    //   }
+    // );
+
+    // expect(writeFake).to.have.been.calledWith({
+    //   store,
+    //   query: { root, number: { $gte: from } },
+    //   update: {
+    //     $set: { number: from + 1 },
+    //   },
+    //   options: {
+    //     lean: true,
+    //     upsert: true,
+    //     new: true,
+    //     setDefaultsOnInsert: true,
+    //   },
+    // });
+    // expect(incrementFnResult).to.equal(writeResult);
+
+    // await mongodbEventHandler({ mainFn, commitFn, streamFn });
+    // expect(storeFake).to.have.been.calledOnce;
   });
+  // it("should call with the correct params if find returns nothing", async () => {
+  //   const store = "some-store";
+  //   const storeFake = fake.returns(store);
+
+  //   const findFake = fake.returns([]);
+  //   const writeFake = fake.returns(writeResult);
+
+  //   const db = {
+  //     store: storeFake,
+  //     find: findFake,
+  //     write: writeFake,
+  //   };
+  //   replace(deps, "db", db);
+
+  //   const secretFake = fake.returns(password);
+
+  //   const eventHandlerFake = fake();
+  //   replace(deps, "eventHandler", eventHandlerFake);
+
+  //   const mainFn = "main-fn";
+  //   const commitFn = "commit-fn";
+  //   const streamFn = "stream-fn";
+
+  //   await mongodbEventHandler({
+  //     mainFn,
+  //     commitFn,
+  //     streamFn,
+  //     secretFn: secretFake,
+  //   });
+
+  //   expect(storeFake).to.have.been.calledWith({
+  //     name: `_${context}.${name}.numbers`,
+  //     schema: {
+  //       root: { $type: String, required: true },
+  //       number: { $type: Number, required: true, default: 0 },
+  //     },
+  //     typeKey: "$type",
+  //     indexes: [[{ root: 1 }], [{ number: 1 }]],
+  //     connection: {
+  //       protocol,
+  //       user,
+  //       password,
+  //       host,
+  //       database,
+  //       parameters: {
+  //         authSource: "admin",
+  //         retryWrites: true,
+  //         w: "majority",
+  //       },
+  //       autoIndex: true,
+  //     },
+  //   });
+  //   expect(secretFake).to.have.been.calledWith("mongodb-event-handler");
+
+  //   const root = "some-root";
+
+  //   const numberFnResult = await eventHandlerFake.lastCall.lastArg.nextEventNumberFn(
+  //     {
+  //       root,
+  //     }
+  //   );
+
+  //   expect(findFake).to.have.been.calledWith({
+  //     store,
+  //     query: { root },
+  //     pageSize: 1,
+  //     options: {
+  //       lean: true,
+  //     },
+  //   });
+  //   expect(numberFnResult).to.equal(0);
+
+  //   const from = "some-from";
+  //   const incrementFnResult = await eventHandlerFake.lastCall.lastArg.saveNextEventNumberFn(
+  //     {
+  //       root,
+  //       from,
+  //     }
+  //   );
+
+  //   expect(writeFake).to.have.been.calledWith({
+  //     store,
+  //     query: { root, number: { $gte: from } },
+  //     update: {
+  //       $set: { number: from + 1 },
+  //     },
+  //     options: {
+  //       lean: true,
+  //       upsert: true,
+  //       new: true,
+  //       setDefaultsOnInsert: true,
+  //     },
+  //   });
+  //   expect(incrementFnResult).to.equal(writeResult);
+
+  //   await mongodbEventHandler({ mainFn, commitFn, streamFn });
+  //   expect(storeFake).to.have.been.calledOnce;
+  // });
+  // it("should call with the correct params with domain and service and local env", async () => {
+  //   const store = "some-store";
+  //   const storeFake = fake.returns(store);
+
+  //   const number = "some-number";
+  //   const findFake = fake.returns([{ number }]);
+  //   const writeFake = fake.returns(writeResult);
+
+  //   const db = {
+  //     store: storeFake,
+  //     find: findFake,
+  //     write: writeFake,
+  //   };
+  //   replace(deps, "db", db);
+
+  //   const secretFake = fake.returns(password);
+
+  //   const eventHandlerFake = fake();
+  //   replace(deps, "eventHandler", eventHandlerFake);
+
+  //   const mainFn = "main-fn";
+  //   const commitFn = "commit-fn";
+  //   const streamFn = "stream-fn";
+
+  //   process.env.DOMAIN = domain;
+  //   process.env.SERVICE = service;
+  //   process.env.NODE_ENV = "local";
+
+  //   await mongodbEventHandler({
+  //     mainFn,
+  //     commitFn,
+  //     streamFn,
+  //     secretFn: secretFake,
+  //   });
+
+  //   expect(storeFake).to.have.been.calledWith({
+  //     name: `_${context}.${service}.${domain}.${name}.numbers`,
+  //     schema: {
+  //       root: { $type: String, required: true },
+  //       number: { $type: Number, required: true, default: 0 },
+  //     },
+  //     typeKey: "$type",
+  //     indexes: [[{ root: 1 }], [{ number: 1 }]],
+  //     connection: {
+  //       protocol,
+  //       user,
+  //       password: userPassword,
+  //       host,
+  //       database,
+  //       parameters: {
+  //         authSource: "admin",
+  //         retryWrites: true,
+  //         w: "majority",
+  //       },
+  //       autoIndex: true,
+  //     },
+  //   });
+  // });
 });

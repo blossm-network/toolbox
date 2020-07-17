@@ -15,7 +15,6 @@ const key = "some-key";
 
 const query = "some-query";
 const sort = "some-sort";
-const view = "some-view";
 const root = "some-root";
 const contexts = { c: 2 };
 
@@ -255,14 +254,15 @@ describe("Get views", () => {
     const inFake = fake.returns({
       with: withFake,
     });
-    const putFake = fake.returns({
+    const postFake = fake.returns({
       in: inFake,
     });
     const rpcFake = fake.returns({
-      put: putFake,
+      post: postFake,
     });
     replace(deps, "rpc", rpcFake);
 
+    const update = "some-update";
     await viewStore({ name, context })
       .set({
         context: contexts,
@@ -270,10 +270,10 @@ describe("Get views", () => {
           internalFn: internalTokenFn,
         },
       })
-      .update(root, view);
+      .update({ query, update });
 
     expect(rpcFake).to.have.been.calledWith(name, context, "view-store");
-    expect(putFake).to.have.been.calledWith(root, { view });
+    expect(postFake).to.have.been.calledWith({ query, update });
     expect(inFake).to.have.been.calledWith({ context: contexts });
     expect(withFake).to.have.been.calledWith({
       internalTokenFn,
@@ -284,18 +284,19 @@ describe("Get views", () => {
     const inFake = fake.returns({
       with: withFake,
     });
-    const putFake = fake.returns({
+    const postFake = fake.returns({
       in: inFake,
     });
     const rpcFake = fake.returns({
-      put: putFake,
+      post: postFake,
     });
     replace(deps, "rpc", rpcFake);
 
-    await viewStore({ name }).update(root, view);
+    const update = "some-update";
+    await viewStore({ name }).update({ query, update });
 
     expect(rpcFake).to.have.been.calledWith(name, envContext, "view-store");
-    expect(putFake).to.have.been.calledWith(root, { view });
+    expect(postFake).to.have.been.calledWith({ query, update });
     expect(inFake).to.have.been.calledWith({});
     expect(withFake).to.have.been.calledWith();
   });

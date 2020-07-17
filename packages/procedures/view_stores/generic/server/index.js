@@ -1,21 +1,21 @@
 const deps = require("./deps");
 
 module.exports = async ({
-  streamFn,
+  // streamFn,
   findFn,
   writeFn,
   removeFn,
   queryFn,
-  putFn,
+  updateFn,
   countFn,
   one,
 } = {}) => {
   deps
     .server()
-    .get(deps.stream({ streamFn, ...(queryFn && { queryFn }) }), {
-      path:
-        "/stream/:sourceNetwork?/:sourceService?/:sourceDomain?/:sourceRoot?",
-    })
+    // .get(deps.stream({ streamFn, ...(queryFn && { queryFn }) }), {
+    //   path:
+    //     "/stream/:sourceNetwork?/:sourceService?/:sourceDomain?/:sourceRoot?",
+    // })
     .get(
       deps.get({
         findFn,
@@ -27,11 +27,7 @@ module.exports = async ({
         path: "/:sourceNetwork?/:sourceService?/:sourceDomain?/:sourceRoot?",
       }
     )
-    .put(deps.put({ writeFn, ...(putFn && { viewFn: putFn }) }), {
-      path: "/:root",
-    })
-    .delete(deps.delete({ removeFn }), {
-      path: "/:root",
-    })
+    .post(deps.post({ writeFn, ...(updateFn && { updateFn }) }))
+    .delete(deps.delete({ removeFn }))
     .listen();
 };

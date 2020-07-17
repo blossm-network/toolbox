@@ -71,7 +71,6 @@ module.exports = ({ name, context = process.env.CONTEXT, network }) => {
   const update = ({
     contexts,
     token: { internalFn: internalTokenFn } = {},
-    //TODO test
   } = {}) => ({ query, update }) =>
     deps
       .rpc(name, context, "view-store")
@@ -85,10 +84,10 @@ module.exports = ({ name, context = process.env.CONTEXT, network }) => {
   const del = ({
     contexts,
     token: { internalFn: internalTokenFn } = {},
-  } = {}) => (root) =>
+  } = {}) => (id) =>
     deps
       .rpc(name, context, "view-store")
-      .delete(root)
+      .delete(id)
       .in({
         ...(contexts && { context: contexts }),
       })

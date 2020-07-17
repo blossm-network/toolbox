@@ -36,14 +36,20 @@ describe("Event store post", () => {
 
     const publishFnFake = fake();
     const scheduleUpdateForProofFnFake = fake();
-    const savedEventRoot = "some-saved-event-root";
     const savedEventHeadersTopic = "some-saved-event-headers-topic";
     const savedProofId = "some-saved-proof-id";
+    const savedEventSavedTimestamp = "some-event-saved-timestamp";
     const createTransactionFnFake = fake.returns({
       events: [
         {
           data: {
-            root: savedEventRoot,
+            saved: savedEventSavedTimestamp,
+            headers: { topic: savedEventHeadersTopic },
+          },
+        },
+        {
+          data: {
+            saved: savedEventSavedTimestamp,
             headers: { topic: savedEventHeadersTopic },
           },
         },
@@ -76,9 +82,10 @@ describe("Event store post", () => {
       saveProofsFn,
     });
     expect(publishFnFake).to.have.been.calledWith(
-      { root: savedEventRoot },
+      { from: savedEventSavedTimestamp },
       savedEventHeadersTopic
     );
+    expect(publishFnFake).to.have.been.calledOnce;
     expect(scheduleUpdateForProofFnFake).to.have.been.calledWith(savedProofId);
     expect(sendStatusFake).to.have.been.calledWith(204);
   });
@@ -110,14 +117,14 @@ describe("Event store post", () => {
 
     const publishFnFake = fake();
     const scheduleUpdateForProofFnFake = fake();
-    const savedEventRoot = "some-saved-event-root";
     const savedEventHeadersTopic = "some-saved-event-headers-topic";
     const savedProofId = "some-saved-proof-id";
+    const savedEventSavedTimestamp = "some-event-saved-timestamp";
     const createTransactionFnFake = fake.returns({
       events: [
         {
           data: {
-            root: savedEventRoot,
+            saved: savedEventSavedTimestamp,
             headers: { topic: savedEventHeadersTopic },
           },
         },
@@ -157,7 +164,7 @@ describe("Event store post", () => {
       saveProofsFn,
     });
     expect(publishFnFake).to.have.been.calledWith(
-      { root: savedEventRoot },
+      { from: savedEventSavedTimestamp },
       savedEventHeadersTopic
     );
     expect(scheduleUpdateForProofFnFake).to.have.been.calledWith(savedProofId);
@@ -192,14 +199,14 @@ describe("Event store post", () => {
 
     const publishFnFake = fake();
     const scheduleUpdateForProofFnFake = fake();
-    const savedEventRoot = "some-saved-event-root";
     const savedEventHeadersTopic = "some-saved-event-headers-topic";
     const savedProofId = "some-saved-proof-id";
+    const savedEventSavedTimestamp = "some-event-saved-timestamp";
     const createTransactionFnFake = fake.returns({
       events: [
         {
           data: {
-            root: savedEventRoot,
+            saved: savedEventSavedTimestamp,
             headers: { topic: savedEventHeadersTopic },
           },
         },
@@ -242,7 +249,7 @@ describe("Event store post", () => {
       saveProofsFn,
     });
     expect(publishFnFake).to.have.been.calledWith(
-      { root: savedEventRoot },
+      { from: savedEventSavedTimestamp },
       savedEventHeadersTopic
     );
     expect(scheduleUpdateForProofFnFake).to.have.been.calledWith(savedProofId);
@@ -277,14 +284,14 @@ describe("Event store post", () => {
 
     const publishFnFake = fake();
     const scheduleUpdateForProofFnFake = fake();
-    const savedEventRoot = "some-saved-event-root";
     const savedEventHeadersTopic = "some-saved-event-headers-topic";
     const savedProofId = "some-saved-proof-id";
+    const savedEventSavedTimestamp = "some-event-saved-timestamp";
     const createTransactionFnFake = fake.returns({
       events: [
         {
           data: {
-            root: savedEventRoot,
+            saved: savedEventSavedTimestamp,
             headers: { topic: savedEventHeadersTopic },
           },
         },
@@ -328,7 +335,7 @@ describe("Event store post", () => {
       saveProofsFn,
     });
     expect(publishFnFake).to.have.been.calledWith(
-      { root: savedEventRoot },
+      { from: savedEventSavedTimestamp },
       savedEventHeadersTopic
     );
     expect(scheduleUpdateForProofFnFake).to.have.been.calledWith(savedProofId);

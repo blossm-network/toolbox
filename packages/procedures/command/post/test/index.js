@@ -19,6 +19,7 @@ const commandFn = "some-command-fn";
 const queryAggregatesFn = "some-query-aggregates-fn";
 const readFactFn = "some-read-fact-fn";
 const streamFactFn = "some-steram-fact-fn";
+const countFn = "some-count-fn";
 const response = { some: "response" };
 const root = "some-root";
 const options = "some-options";
@@ -114,6 +115,7 @@ describe("Command handler post", () => {
     const queryAggregatesFnFake = fake.returns(queryAggregatesFn);
     const readFactFnFake = fake.returns(readFactFn);
     const streamFactFnFake = fake.returns(streamFactFn);
+    const countFnFake = fake.returns(countFn);
 
     await post({
       mainFn: mainFnFake,
@@ -125,12 +127,14 @@ describe("Command handler post", () => {
       queryAggregatesFn: queryAggregatesFnFake,
       readFactFn: readFactFnFake,
       streamFactFn: streamFactFnFake,
+      countFn: countFnFake,
     })(req, res);
 
     expect(aggregateFnFake).to.have.been.calledWith({});
     expect(queryAggregatesFnFake).to.have.been.calledWith({});
     expect(readFactFnFake).to.have.been.calledWith({});
     expect(streamFactFnFake).to.have.been.calledWith({});
+    expect(countFnFake).to.have.been.calledWith({});
     expect(commandFnFake).to.have.been.calledWith({
       idempotency,
       trace,
@@ -159,6 +163,7 @@ describe("Command handler post", () => {
       queryAggregatesFn,
       readFactFn,
       streamFactFn,
+      countFn,
     });
 
     expect(createEventFake).to.have.been.calledWith({
@@ -248,6 +253,7 @@ describe("Command handler post", () => {
     const queryAggregatesFnFake = fake.returns(queryAggregatesFn);
     const readFactFnFake = fake.returns(readFactFn);
     const streamFactFnFake = fake.returns(streamFactFn);
+    const countFnFake = fake.returns(countFn);
 
     await post({
       mainFn: mainFnFake,
@@ -259,12 +265,14 @@ describe("Command handler post", () => {
       queryAggregatesFn: queryAggregatesFnFake,
       readFactFn: readFactFnFake,
       streamFactFn: streamFactFnFake,
+      countFn: countFnFake,
     })(req, res);
 
     expect(aggregateFnFake).to.have.been.calledWith({});
     expect(queryAggregatesFnFake).to.have.been.calledWith({});
     expect(readFactFnFake).to.have.been.calledWith({});
     expect(streamFactFnFake).to.have.been.calledWith({});
+    expect(countFnFake).to.have.been.calledWith({});
     expect(commandFnFake).to.have.been.calledWith({
       idempotency,
       trace,
@@ -293,6 +301,7 @@ describe("Command handler post", () => {
       queryAggregatesFn,
       readFactFn,
       streamFactFn,
+      countFn,
     });
 
     expect(createEventFake).to.have.been.calledWith({
@@ -381,6 +390,7 @@ describe("Command handler post", () => {
     const queryAggregatesFnFake = fake.returns(queryAggregatesFn);
     const readFactFnFake = fake.returns(readFactFn);
     const streamFactFnFake = fake.returns(streamFactFn);
+    const countFnFake = fake.returns(countFn);
 
     await post({
       mainFn: mainFnFake,
@@ -392,6 +402,7 @@ describe("Command handler post", () => {
       queryAggregatesFn: queryAggregatesFnFake,
       readFactFn: readFactFnFake,
       streamFactFn: streamFactFnFake,
+      countFn: countFnFake,
     })(req, res);
 
     expect(createEventFake).to.have.been.calledWith({
@@ -470,6 +481,7 @@ describe("Command handler post", () => {
     const queryAggregatesFnFake = fake.returns(queryAggregatesFn);
     const readFactFnFake = fake.returns(readFactFn);
     const streamFactFnFake = fake.returns(streamFactFn);
+    const countFnFake = fake.returns(countFn);
 
     await post({
       mainFn: mainFnFake,
@@ -482,12 +494,14 @@ describe("Command handler post", () => {
       readFactFn: readFactFnFake,
       streamFactFn: streamFactFnFake,
       addFn: addFnFake,
+      countFn: countFnFake,
     })(req, res);
 
     expect(aggregateFnFake).to.have.been.calledWith({});
     expect(queryAggregatesFnFake).to.have.been.calledWith({});
     expect(readFactFnFake).to.have.been.calledWith({});
     expect(streamFactFnFake).to.have.been.calledWith({});
+    expect(countFnFake).to.have.been.calledWith({});
     expect(commandFnFake).to.have.been.calledWith({
       idempotency,
       trace,
@@ -557,6 +571,7 @@ describe("Command handler post", () => {
     const queryAggregatesFnFake = fake.returns(queryAggregatesFn);
     const readFactFnFake = fake.returns(readFactFn);
     const streamFactFnFake = fake.returns(streamFactFn);
+    const countFnFake = fake.returns(countFn);
 
     await post({
       mainFn: mainFnFake,
@@ -567,6 +582,7 @@ describe("Command handler post", () => {
       queryAggregatesFn: queryAggregatesFnFake,
       readFactFn: readFactFnFake,
       streamFactFn: streamFactFnFake,
+      countFn: countFnFake,
       addFn: addFnFake,
     })(req, res);
 
@@ -574,6 +590,7 @@ describe("Command handler post", () => {
     expect(queryAggregatesFnFake).to.have.been.calledWith({});
     expect(readFactFnFake).to.have.been.calledWith({});
     expect(streamFactFnFake).to.have.been.calledWith({});
+    expect(countFnFake).to.have.been.calledWith({});
     expect(commandFnFake).to.have.been.calledWith({
       idempotency,
       trace,
@@ -640,6 +657,7 @@ describe("Command handler post", () => {
     const queryAggregatesFnFake = fake.returns(queryAggregatesFn);
     const readFactFnFake = fake.returns(readFactFn);
     const streamFactFnFake = fake.returns(streamFactFn);
+    const countFnFake = fake.returns(countFn);
 
     await post({
       mainFn: mainFnFake,
@@ -650,6 +668,7 @@ describe("Command handler post", () => {
       queryAggregatesFn: queryAggregatesFnFake,
       readFactFn: readFactFnFake,
       streamFactFn: streamFactFnFake,
+      countFn: countFnFake,
       addFn: addFnFake,
     })(req, res);
 
@@ -657,6 +676,7 @@ describe("Command handler post", () => {
     expect(queryAggregatesFnFake).to.have.been.calledWith({});
     expect(readFactFnFake).to.have.been.calledWith({});
     expect(streamFactFnFake).to.have.been.calledWith({});
+    expect(countFnFake).to.have.been.calledWith({});
     expect(commandFnFake).to.have.been.calledWith({
       idempotency,
       trace,
@@ -685,6 +705,7 @@ describe("Command handler post", () => {
       queryAggregatesFn,
       readFactFn,
       streamFactFn,
+      countFn,
     });
     expect(addFnFake).to.have.been.calledWith({
       domain,
@@ -758,6 +779,7 @@ describe("Command handler post", () => {
     const queryAggregatesFnFake = fake.returns(queryAggregatesFn);
     const readFactFnFake = fake.returns(readFactFn);
     const streamFactFnFake = fake.returns(streamFactFn);
+    const countFnFake = fake.returns(countFn);
 
     await post({
       mainFn: mainFnFake,
@@ -768,6 +790,7 @@ describe("Command handler post", () => {
       queryAggregatesFn: queryAggregatesFnFake,
       readFactFn: readFactFnFake,
       streamFactFn: streamFactFnFake,
+      countFn: countFnFake,
       addFn: addFnFake,
     })(req, res);
 
@@ -775,6 +798,7 @@ describe("Command handler post", () => {
     expect(queryAggregatesFnFake).to.have.been.calledWith({});
     expect(readFactFnFake).to.have.been.calledWith({});
     expect(streamFactFnFake).to.have.been.calledWith({});
+    expect(countFnFake).to.have.been.calledWith({});
     expect(commandFnFake).to.have.been.calledWith({
       idempotency,
       trace,
@@ -803,6 +827,7 @@ describe("Command handler post", () => {
       queryAggregatesFn,
       readFactFn,
       streamFactFn,
+      countFn,
     });
 
     expect(setResponseFake).to.have.been.calledWith({});
@@ -843,6 +868,7 @@ describe("Command handler post", () => {
     const queryAggregatesFnFake = fake.returns(queryAggregatesFn);
     const readFactFnFake = fake.returns(readFactFn);
     const streamFactFnFake = fake.returns(streamFactFn);
+    const countFnFake = fake.returns(countFn);
 
     await post({
       mainFn: mainFnFake,
@@ -853,6 +879,7 @@ describe("Command handler post", () => {
       queryAggregatesFn: queryAggregatesFnFake,
       readFactFn: readFactFnFake,
       streamFactFn: streamFactFnFake,
+      countFn: countFnFake,
       addFn: addFnFake,
     })(req, res);
 
@@ -860,6 +887,7 @@ describe("Command handler post", () => {
     expect(queryAggregatesFnFake).to.have.been.calledWith({});
     expect(readFactFnFake).to.have.been.calledWith({});
     expect(streamFactFnFake).to.have.been.calledWith({});
+    expect(countFnFake).to.have.been.calledWith({});
     expect(commandFnFake).to.have.been.calledWith({
       idempotency,
       trace,
@@ -888,6 +916,7 @@ describe("Command handler post", () => {
       queryAggregatesFn,
       readFactFn,
       streamFactFn,
+      countFn,
     });
 
     expect(setResponseFake).to.have.been.calledWith({});
@@ -949,6 +978,7 @@ describe("Command handler post", () => {
     const queryAggregatesFnFake = fake.returns(queryAggregatesFn);
     const readFactFnFake = fake.returns(readFactFn);
     const streamFactFnFake = fake.returns(streamFactFn);
+    const countFnFake = fake.returns(countFn);
 
     await post({
       mainFn: mainFnFake,
@@ -959,6 +989,7 @@ describe("Command handler post", () => {
       queryAggregatesFn: queryAggregatesFnFake,
       readFactFn: readFactFnFake,
       streamFactFn: streamFactFnFake,
+      countFn: countFnFake,
       addFn: addFnFake,
     })(req, res);
 
@@ -970,6 +1001,11 @@ describe("Command handler post", () => {
     });
     expect(readFactFnFake).to.have.been.calledWith({ context, claims, token });
     expect(streamFactFnFake).to.have.been.calledWith({
+      context,
+      claims,
+      token,
+    });
+    expect(countFnFake).to.have.been.calledWith({
       context,
       claims,
       token,
@@ -1011,6 +1047,7 @@ describe("Command handler post", () => {
       queryAggregatesFn,
       readFactFn,
       streamFactFn,
+      countFn,
     });
 
     expect(addFnFake).to.have.been.calledWith({
@@ -1090,6 +1127,7 @@ describe("Command handler post", () => {
     const queryAggregatesFnFake = fake.returns(queryAggregatesFn);
     const readFactFnFake = fake.returns(readFactFn);
     const streamFactFnFake = fake.returns(streamFactFn);
+    const countFnFake = fake.returns(countFn);
 
     await post({
       mainFn: mainFnFake,
@@ -1099,12 +1137,14 @@ describe("Command handler post", () => {
       readFactFn: readFactFnFake,
       streamFactFn: streamFactFnFake,
       addFn: addFnFake,
+      countFn: countFnFake,
     })(req, res);
 
     expect(aggregateFnFake).to.have.been.calledWith({});
     expect(queryAggregatesFnFake).to.have.been.calledWith({});
     expect(readFactFnFake).to.have.been.calledWith({});
     expect(streamFactFnFake).to.have.been.calledWith({});
+    expect(countFnFake).to.have.been.calledWith({});
     expect(commandFnFake).to.have.been.calledWith({
       idempotency,
       trace,
@@ -1131,6 +1171,7 @@ describe("Command handler post", () => {
       queryAggregatesFn,
       readFactFn,
       streamFactFn,
+      countFn,
     });
 
     expect(addFnFake).to.have.been.calledWith({
@@ -1219,6 +1260,7 @@ describe("Command handler post", () => {
     const queryAggregatesFnFake = fake.returns(queryAggregatesFn);
     const readFactFnFake = fake.returns(readFactFn);
     const streamFactFnFake = fake.returns(streamFactFn);
+    const countFnFake = fake.returns(countFn);
 
     await post({
       mainFn: mainFnFake,
@@ -1229,6 +1271,7 @@ describe("Command handler post", () => {
       queryAggregatesFn: queryAggregatesFnFake,
       readFactFn: readFactFnFake,
       streamFactFn: streamFactFnFake,
+      countFn: countFnFake,
       addFn: addFnFake,
     })(req, res);
 
@@ -1236,6 +1279,7 @@ describe("Command handler post", () => {
     expect(queryAggregatesFnFake).to.have.been.calledWith({ context, claims });
     expect(readFactFnFake).to.have.been.calledWith({ context, claims });
     expect(streamFactFnFake).to.have.been.calledWith({ context, claims });
+    expect(countFnFake).to.have.been.calledWith({ context, claims });
     expect(commandFnFake).to.have.been.calledWith({
       idempotency,
       trace,
@@ -1270,6 +1314,7 @@ describe("Command handler post", () => {
       queryAggregatesFn,
       readFactFn,
       streamFactFn,
+      countFn,
     });
 
     expect(addFnFake).to.have.been.calledWith({
@@ -1361,6 +1406,7 @@ describe("Command handler post", () => {
     const queryAggregatesFnFake = fake.returns(queryAggregatesFn);
     const readFactFnFake = fake.returns(readFactFn);
     const streamFactFnFake = fake.returns(streamFactFn);
+    const countFnFake = fake.returns(countFn);
 
     await post({
       mainFn: mainFnFake,
@@ -1371,6 +1417,7 @@ describe("Command handler post", () => {
       queryAggregatesFn: queryAggregatesFnFake,
       readFactFn: readFactFnFake,
       streamFactFn: streamFactFnFake,
+      countFn: countFnFake,
       addFn: addFnFake,
     })(req, res);
 
@@ -1378,6 +1425,7 @@ describe("Command handler post", () => {
     expect(queryAggregatesFnFake).to.have.been.calledWith({ context, claims });
     expect(readFactFnFake).to.have.been.calledWith({ context, claims });
     expect(streamFactFnFake).to.have.been.calledWith({ context, claims });
+    expect(countFnFake).to.have.been.calledWith({ context, claims });
     expect(commandFnFake).to.have.been.calledWith({
       idempotency,
       trace,
@@ -1410,6 +1458,7 @@ describe("Command handler post", () => {
       queryAggregatesFn,
       readFactFn,
       streamFactFn,
+      countFn,
     });
 
     expect(createEventFake).to.have.been.calledWith({
@@ -1530,6 +1579,7 @@ describe("Command handler post", () => {
     const queryAggregatesFnFake = fake.returns(queryAggregatesFn);
     const readFactFnFake = fake.returns(readFactFn);
     const streamFactFnFake = fake.returns(streamFactFn);
+    const countFnFake = fake.returns(countFn);
 
     await post({
       mainFn: mainFnFake,
@@ -1540,6 +1590,7 @@ describe("Command handler post", () => {
       queryAggregatesFn: queryAggregatesFnFake,
       readFactFn: readFactFnFake,
       streamFactFn: streamFactFnFake,
+      countFn: countFnFake,
       addFn: addFnFake,
     })(req, res);
 
@@ -1547,6 +1598,7 @@ describe("Command handler post", () => {
     expect(queryAggregatesFnFake).to.have.been.calledWith({ context, claims });
     expect(readFactFnFake).to.have.been.calledWith({ context, claims });
     expect(streamFactFnFake).to.have.been.calledWith({ context, claims });
+    expect(countFnFake).to.have.been.calledWith({ context, claims });
     expect(commandFnFake).to.have.been.calledWith({
       idempotency,
       trace,
@@ -1579,6 +1631,7 @@ describe("Command handler post", () => {
       queryAggregatesFn,
       readFactFn,
       streamFactFn,
+      countFn,
     });
 
     expect(createEventFake).to.have.been.calledWith({
@@ -1694,6 +1747,7 @@ describe("Command handler post", () => {
     const queryAggregatesFnFake = fake.returns(queryAggregatesFn);
     const readFactFnFake = fake.returns(readFactFn);
     const streamFactFnFake = fake.returns(streamFactFn);
+    const countFnFake = fake.returns(countFn);
 
     await post({
       mainFn: mainFnFake,
@@ -1705,12 +1759,14 @@ describe("Command handler post", () => {
       queryAggregatesFn: queryAggregatesFnFake,
       readFactFn: readFactFnFake,
       streamFactFn: streamFactFnFake,
+      countFn: countFnFake,
     })(req, res);
 
     expect(aggregateFnFake).to.have.been.calledWith({ claims });
     expect(queryAggregatesFnFake).to.have.been.calledWith({ claims });
     expect(readFactFnFake).to.have.been.calledWith({ claims });
     expect(streamFactFnFake).to.have.been.calledWith({ claims });
+    expect(countFnFake).to.have.been.calledWith({ claims });
     expect(commandFnFake).to.have.been.calledWith({
       idempotency,
       trace,
@@ -1741,6 +1797,7 @@ describe("Command handler post", () => {
       queryAggregatesFn,
       readFactFn,
       streamFactFn,
+      countFn,
     });
 
     expect(createEventFake).to.have.been.calledWith({

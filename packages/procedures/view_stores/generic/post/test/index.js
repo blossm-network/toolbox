@@ -11,20 +11,17 @@ let clock;
 
 const now = new Date();
 
-const root = "some-root";
 const writeResult = "some-write-result";
+const query = "query";
 const body = {
-  view: {
+  update: {
     body: {
       a: 1,
     },
-    headers: {
-      b: 2,
-    },
+    trace: 2,
+    context: 3,
   },
-};
-const params = {
-  root,
+  query,
 };
 
 describe("View store put", () => {
@@ -40,7 +37,6 @@ describe("View store put", () => {
     const writeFake = fake.returns(writeResult);
 
     const req = {
-      params,
       body,
     };
 
@@ -55,10 +51,11 @@ describe("View store put", () => {
     await put({ writeFn: writeFake })(req, res);
 
     expect(writeFake).to.have.been.calledWith({
-      root,
+      query,
       data: {
         "body.a": 1,
-        "headers.b": 2,
+        "headers.trace": 2,
+        "headers.context": 3,
         "headers.modified": deps.dateString(),
       },
     });
@@ -70,7 +67,6 @@ describe("View store put", () => {
     const writeFake = fake.returns(writeResult);
 
     const req = {
-      params,
       body,
     };
 
@@ -83,19 +79,19 @@ describe("View store put", () => {
     };
 
     const fnFake = fake.returns({ body: { c: 3 }, headers: { b: 2 } });
-    await put({ writeFn: writeFake, viewFn: fnFake })(req, res);
+    await put({ writeFn: writeFake, updateFn: fnFake })(req, res);
 
     expect(writeFake).to.have.been.calledWith({
-      root,
+      query,
       data: {
         "body.c": 3,
-        "headers.b": 2,
         "headers.modified": deps.dateString(),
       },
     });
     expect(fnFake).to.have.been.calledWith({
       body: { a: 1 },
-      headers: { b: 2 },
+      trace: 2,
+      context: 3,
     });
     expect(statusFake).to.have.been.calledWith(200);
     expect(sendFake).to.have.been.calledWith(writeResult);
@@ -104,8 +100,7 @@ describe("View store put", () => {
     const writeFake = fake();
 
     const req = {
-      params: {},
-      body,
+      body: {},
     };
 
     const sendFake = fake();
@@ -131,7 +126,7 @@ describe("View store put", () => {
       expect(1).to.equal(0);
     } catch (e) {
       expect(messageFake).to.have.been.calledWith(
-        "Missing root url parameter."
+        "Missing query parameter in the body."
       );
       expect(e).to.equal(error);
     }

@@ -15,7 +15,6 @@ module.exports = ({
   await Promise.all(
     req.body.events.map(async (event) => {
       if (event.data.headers.idempotency != undefined) {
-        //TODO check local conflict before db conflict. Tiny win.
         const conflict = await idempotencyConflictCheckFn(
           event.data.headers.idempotency
         );
@@ -46,16 +45,18 @@ module.exports = ({
     })
   );
 
+  //No need to publish to the same topic twice.
+  let publishedTopics = [];
   await Promise.all([
     ...events.map((e) => {
-      //TODO only need to send one of these per store per topic.
-      return publishFn(
+      if (publishedTopics.includes(e.data.headers.topic)) return;
+      publishFn(
         {
-          //TODO test
-          saved: e.data.saved,
+          from: e.data.saved,
         },
         e.data.headers.topic
       );
+      publishedTopics.push(e.data.headers.topic);
     }),
     ...proofs.map((proof) => scheduleUpdateForProofFn(proof.id)),
   ]);

@@ -11,14 +11,13 @@ const data = (req) => {
   }
 };
 
-//TODO test
 module.exports = ({ mainFn, streamFn }) => async (req, res) => {
   const { from } = data(req);
 
   await streamFn({
     from,
     fn: mainFn,
-    //chronological
+    // chronological
     sortFn: (a, b) =>
       a.data.saved < b.data.saved ? -1 : a.data.saved > b.data.saved ? 1 : 0,
   });

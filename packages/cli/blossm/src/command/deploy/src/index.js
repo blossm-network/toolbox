@@ -183,4 +183,15 @@ module.exports = commandProcedure({
         ...(async && { enqueue: { fn: enqueue } }),
       })
       .add(events),
+  countFn: ({ context, claims, token }) => ({ domain, service, root }) =>
+    eventStore({ domain, service })
+      .set({
+        ...(context && { context }),
+        ...(claims && { claims }),
+        ...(token && { currentToken: token }),
+        token: {
+          internalFn: gcpToken,
+        },
+      })
+      .count(root),
 });

@@ -121,7 +121,7 @@ describe("View store", () => {
         body: formattedSchema,
         headers: {
           _id: false,
-          root: { $type: String, required: true, unique: true },
+          id: { $type: String, required: true, unique: true },
           trace: { $type: String },
           context: {
             $type: {
@@ -131,18 +131,7 @@ describe("View store", () => {
               network: String,
               _id: false,
             },
-          },
-          sources: {
-            $type: [
-              {
-                root: String,
-                domain: String,
-                service: String,
-                network: String,
-                _id: false,
-              },
-            ],
-            default: [],
+            required: true,
           },
           created: {
             $type: Date,
@@ -164,18 +153,12 @@ describe("View store", () => {
       },
       typeKey: "$type",
       indexes: [
-        [{ root: 1 }],
+        [{ id: 1 }],
         [
           { "headers.context.root": 1 },
           { "headers.context.domain": 1 },
           { "headers.context.service": 1 },
           { "headers.context.network": 1 },
-        ],
-        [
-          { "headers.sources.root": 1 },
-          { "headers.sources.domain": 1 },
-          { "headers.sources.service": 1 },
-          { "headers.sources.network": 1 },
         ],
         [{ "body.some-index": 1 }],
       ],
@@ -194,8 +177,6 @@ describe("View store", () => {
       },
     });
     expect(secretFake).to.have.been.calledWith("mongodb-view-store");
-
-    const root = "some-root";
 
     const limit = "some-limit";
     const skip = "some-skip";
@@ -247,12 +228,12 @@ describe("View store", () => {
     expect(steamFnResult).to.equal(foundObjs);
 
     const writeFnResult = await viewStoreFake.lastCall.lastArg.writeFn({
-      root,
+      query,
       data,
     });
     expect(writeFake).to.have.been.calledWith({
       store,
-      query: { "headers.root": root },
+      query,
       update: {
         $set: data,
       },
@@ -280,7 +261,7 @@ describe("View store", () => {
       ),
       findFn: match((fn) => expect(fn({ query, sort })).to.exist),
       countFn: match((fn) => expect(fn({ query })).to.exist),
-      writeFn: match((fn) => expect(fn({ root, data })).to.exist),
+      writeFn: match((fn) => expect(fn({ query, data })).to.exist),
       removeFn: match((fn) => expect(fn(query)).to.exist),
       getFn,
       putFn,
@@ -355,7 +336,7 @@ describe("View store", () => {
         body: formattedSchema,
         headers: {
           _id: false,
-          root: { $type: String, required: true, unique: true },
+          id: { $type: String, required: true, unique: true },
           trace: { $type: String },
           context: {
             $type: {
@@ -365,18 +346,7 @@ describe("View store", () => {
               network: String,
               _id: false,
             },
-          },
-          sources: {
-            $type: [
-              {
-                root: String,
-                domain: String,
-                service: String,
-                network: String,
-                _id: false,
-              },
-            ],
-            default: [],
+            required: true,
           },
           created: {
             $type: Date,
@@ -398,18 +368,12 @@ describe("View store", () => {
       },
       typeKey: "$type",
       indexes: [
-        [{ root: 1 }],
+        [{ id: 1 }],
         [
           { "headers.context.root": 1 },
           { "headers.context.domain": 1 },
           { "headers.context.service": 1 },
           { "headers.context.network": 1 },
-        ],
-        [
-          { [`headers.sources.root`]: 1 },
-          { [`headers.sources.domain`]: 1 },
-          { [`headers.sources.service`]: 1 },
-          { [`headers.sources.network`]: 1 },
         ],
         [{ "body.some-index": 1 }],
       ],
@@ -497,7 +461,7 @@ describe("View store", () => {
         body: formattedSchema,
         headers: {
           _id: false,
-          root: { $type: String, required: true, unique: true },
+          id: { $type: String, required: true, unique: true },
           trace: { $type: String },
           context: {
             $type: {
@@ -507,18 +471,7 @@ describe("View store", () => {
               network: String,
               _id: false,
             },
-          },
-          sources: {
-            $type: [
-              {
-                root: String,
-                domain: String,
-                service: String,
-                network: String,
-                _id: false,
-              },
-            ],
-            default: [],
+            required: true,
           },
           created: {
             $type: Date,
@@ -540,18 +493,12 @@ describe("View store", () => {
       },
       typeKey: "$type",
       indexes: [
-        [{ root: 1 }],
+        [{ id: 1 }],
         [
           { "headers.context.root": 1 },
           { "headers.context.domain": 1 },
           { "headers.context.service": 1 },
           { "headers.context.network": 1 },
-        ],
-        [
-          { "headers.sources.root": 1 },
-          { "headers.sources.domain": 1 },
-          { "headers.sources.service": 1 },
-          { "headers.sources.network": 1 },
         ],
         [{ "body.some-index": 1 }],
       ],
@@ -623,7 +570,7 @@ describe("View store", () => {
         body: formattedSchema,
         headers: {
           _id: false,
-          root: { $type: String, required: true, unique: true },
+          id: { $type: String, required: true, unique: true },
           trace: { $type: String },
           context: {
             $type: {
@@ -633,18 +580,7 @@ describe("View store", () => {
               network: String,
               _id: false,
             },
-          },
-          sources: {
-            $type: [
-              {
-                root: String,
-                domain: String,
-                service: String,
-                network: String,
-                _id: false,
-              },
-            ],
-            default: [],
+            required: true,
           },
           created: {
             $type: Date,
@@ -666,18 +602,12 @@ describe("View store", () => {
       },
       typeKey: "$type",
       indexes: [
-        [{ root: 1 }],
+        [{ id: 1 }],
         [
           { "headers.context.root": 1 },
           { "headers.context.domain": 1 },
           { "headers.context.service": 1 },
           { "headers.context.network": 1 },
-        ],
-        [
-          { "headers.sources.root": 1 },
-          { "headers.sources.domain": 1 },
-          { "headers.sources.service": 1 },
-          { "headers.sources.network": 1 },
         ],
         [{ "body.some-index": 1 }],
       ],
@@ -696,8 +626,6 @@ describe("View store", () => {
       },
     });
     expect(secretFake).to.have.been.calledWith("mongodb-view-store");
-
-    const root = "some-root";
 
     const findFnResult = await viewStoreFake.lastCall.lastArg.findFn({
       query,
@@ -742,12 +670,12 @@ describe("View store", () => {
     expect(steamFnResult).to.equal(foundObjs);
 
     const writeFnResult = await viewStoreFake.lastCall.lastArg.writeFn({
-      root,
+      query,
       data,
     });
     expect(writeFake).to.have.been.calledWith({
       store,
-      query: { "headers.root": root },
+      query,
       update: {
         $set: data,
       },
@@ -775,8 +703,8 @@ describe("View store", () => {
       ),
       findFn: match((fn) => expect(fn({ query, sort })).to.exist),
       countFn: match((fn) => expect(fn({ query, sort })).to.exist),
-      writeFn: match((fn) => expect(fn({ root, data })).to.exist),
-      removeFn: match((fn) => expect(fn({ root })).to.exist),
+      writeFn: match((fn) => expect(fn({ query, data })).to.exist),
+      removeFn: match((fn) => expect(fn(query)).to.exist),
     });
     await mongodbViewStore();
     expect(storeFake).to.have.been.calledOnce;
@@ -834,7 +762,7 @@ describe("View store", () => {
         body: formattedSchema,
         headers: {
           _id: false,
-          root: { $type: String, required: true, unique: true },
+          id: { $type: String, required: true, unique: true },
           trace: { $type: String },
           context: {
             $type: {
@@ -844,18 +772,7 @@ describe("View store", () => {
               network: String,
               _id: false,
             },
-          },
-          sources: {
-            $type: [
-              {
-                root: String,
-                domain: String,
-                service: String,
-                network: String,
-                _id: false,
-              },
-            ],
-            default: [],
+            required: true,
           },
           created: {
             $type: Date,
@@ -877,18 +794,12 @@ describe("View store", () => {
       },
       typeKey: "$type",
       indexes: [
-        [{ root: 1 }],
+        [{ id: 1 }],
         [
           { "headers.context.root": 1 },
           { "headers.context.domain": 1 },
           { "headers.context.service": 1 },
           { "headers.context.network": 1 },
-        ],
-        [
-          { "headers.sources.root": 1 },
-          { "headers.sources.domain": 1 },
-          { "headers.sources.service": 1 },
-          { "headers.sources.network": 1 },
         ],
         [{ "body.some-index": 1 }],
       ],
@@ -907,8 +818,6 @@ describe("View store", () => {
       },
     });
     expect(secretFake).to.have.been.calledWith("mongodb-view-store");
-
-    const root = "some-root";
 
     const findFnResult = await viewStoreFake.lastCall.lastArg.findFn({
       query,
@@ -955,7 +864,7 @@ describe("View store", () => {
     const mongoKey = "$some-mongo-key";
     const plainKey = "some-plain-key";
     const writeFnResult = await viewStoreFake.lastCall.lastArg.writeFn({
-      root,
+      query,
       data: {
         [mongoKey]: { a: 3 },
         [plainKey]: 5,
@@ -964,7 +873,7 @@ describe("View store", () => {
     });
     expect(writeFake).to.have.been.calledWith({
       store,
-      query: { "headers.root": root },
+      query,
       update: {
         $set: {
           [plainKey]: 5,

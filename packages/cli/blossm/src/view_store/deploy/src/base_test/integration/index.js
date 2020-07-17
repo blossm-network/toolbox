@@ -17,7 +17,6 @@ const contextNetwork = "some-context-network";
 const domainRoot =
   process.env.DOMAIN && process.env.SERVICE ? "some-domain-root" : null;
 
-//TODO add tests for headers.sources uniq root conflict.
 describe("View store base integration tests", () => {
   const testParamQueries = async () => {
     const root = "some-root";

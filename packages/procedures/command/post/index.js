@@ -10,6 +10,7 @@ module.exports = ({
   queryAggregatesFn,
   readFactFn,
   streamFactFn,
+  countFn,
   addFn,
 }) => async (req, res) => {
   if (validateFn) {
@@ -78,7 +79,11 @@ module.exports = ({
         },
       ],
     }),
-    //TODO add countFn
+    countFn: countFn({
+      ...(req.body.context && { context: req.body.context }),
+      ...(req.body.claims && { claims: req.body.claims }),
+      ...(req.body.token && { token: req.body.token }),
+    }),
   });
 
   const eventsPerStore = {};

@@ -19,7 +19,7 @@ const viewStore = async ({ schema, indexes, secretFn }) => {
     schema: {
       body: deps.formatSchema(schema, typeKey),
       headers: {
-        root: { [typeKey]: String, required: true, unique: true },
+        id: { [typeKey]: String, required: true, unique: true },
         trace: { [typeKey]: String },
         context: {
           [typeKey]: {
@@ -29,18 +29,7 @@ const viewStore = async ({ schema, indexes, secretFn }) => {
             network: String,
             _id: false,
           },
-        },
-        sources: {
-          [typeKey]: [
-            {
-              root: String,
-              domain: String,
-              service: String,
-              network: String,
-              _id: false,
-            },
-          ],
-          default: [],
+          required: true,
         },
         created: {
           [typeKey]: Date,
@@ -73,7 +62,6 @@ const viewStore = async ({ schema, indexes, secretFn }) => {
   return _viewStore;
 };
 
-//TODO fix schema to adapt to changes
 module.exports = async ({
   schema,
   indexes,
@@ -83,18 +71,12 @@ module.exports = async ({
   one,
 } = {}) => {
   const allIndexes = [
-    [{ root: 1 }],
+    [{ id: 1 }],
     [
       { [`headers.context.root`]: 1 },
       { [`headers.context.domain`]: 1 },
       { [`headers.context.service`]: 1 },
       { [`headers.context.network`]: 1 },
-    ],
-    [
-      { [`headers.sources.root`]: 1 },
-      { [`headers.sources.domain`]: 1 },
-      { [`headers.sources.service`]: 1 },
-      { [`headers.sources.network`]: 1 },
     ],
   ];
 
@@ -167,6 +149,7 @@ module.exports = async ({
         };
       }
     }
+
     return await deps.db.write({
       store,
       query,

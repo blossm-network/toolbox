@@ -204,9 +204,10 @@ describe("Mongodb event store", () => {
       typeKey: "$type",
       indexes: [
         [{ "data.id": 1 }],
-        [{ "data.root": 1 }],
         [{ "data.headers.idempotency": 1 }],
-        [{ "data.root": 1, "data.number": 1, _id: 1, __v: 1 }],
+        [{ "data.root": 1 }],
+        [{ "data.root": 1, "data.number": 1 }],
+        [{ "data.saved": 1, "data.number": 1, "data.headers.action": 1 }], //, _id: 1, __v: 1 }],
       ],
       connection: {
         protocol,
@@ -478,9 +479,10 @@ describe("Mongodb event store", () => {
       typeKey: "$type",
       indexes: [
         [{ "data.id": 1 }],
-        [{ "data.root": 1 }],
         [{ "data.headers.idempotency": 1 }],
-        [{ "data.root": 1, "data.number": 1, _id: 1, __v: 1 }],
+        [{ "data.root": 1 }],
+        [{ "data.root": 1, "data.number": 1 }],
+        [{ "data.saved": 1, "data.number": 1, "data.headers.action": 1 }], //, _id: 1, __v: 1 }],
         [{ [`data.payload.${index}`]: 1 }],
       ],
       connection: {
@@ -696,9 +698,10 @@ describe("Mongodb event store", () => {
       typeKey: "$type",
       indexes: [
         [{ "data.id": 1 }],
-        [{ "data.root": 1 }],
         [{ "data.headers.idempotency": 1 }],
-        [{ "data.root": 1, "data.number": 1, _id: 1, __v: 1 }],
+        [{ "data.root": 1 }],
+        [{ "data.root": 1, "data.number": 1 }],
+        [{ "data.saved": 1, "data.number": 1, "data.headers.action": 1 }], //, _id: 1, __v: 1 }],
       ],
       connection: {
         protocol,

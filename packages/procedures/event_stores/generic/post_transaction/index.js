@@ -92,7 +92,6 @@ module.exports = ({
             root: event.data.root,
             id: `${root}_${number}`,
             saved: now,
-            topic: event.data.topic,
             payload: event.data.payload,
             headers: event.data.headers,
           };

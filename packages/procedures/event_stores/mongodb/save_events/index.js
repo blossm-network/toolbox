@@ -27,10 +27,7 @@ module.exports = ({ eventStore, handlers }) => async (
     const results = await deps.db.create({
       store: eventStore,
       data: events,
-      // options: {
-      // ordered: false,
       ...(transaction && { options: { session: transaction } }),
-      // },
     });
     return groomResults(results);
   } catch (err) {

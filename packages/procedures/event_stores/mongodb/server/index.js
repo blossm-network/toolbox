@@ -76,18 +76,18 @@ const eventStore = async ({ schema, indexes, secretFn }) => {
     typeKey,
     indexes: [
       [{ "data.id": 1 }],
-      [{ "data.root": 1 }],
       [{ "data.headers.idempotency": 1 }],
-      //TODO test
-      //research mongo to see if optional values should be in index.
+      [{ "data.root": 1 }],
+      //Need this in order to query by root and sort by number.
+      [{ "data.root": 1, "data.number": 1 }],
+      //Can omit root from this because it has its own index and isnt useful for sort.
       [
         {
-          "data.headers.action": 1,
-          "data.root": 1,
-          "data.number": 1,
           "data.saved": 1,
-          _id: 1,
-          __v: 1,
+          "data.number": 1,
+          "data.headers.action": 1,
+          // _id: 1,
+          // __v: 1,
         },
       ],
       ...(indexes.length == 0

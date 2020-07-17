@@ -1,13 +1,12 @@
 const { expect } = require("chai").use(require("sinon-chai"));
-const { restore, fake, replace } = require("sinon");
+const { restore, fake, replace, match } = require("sinon");
 
 const post = require("..");
 const deps = require("../deps");
 
-const number = "some-number";
-const root = "some-root";
+const from = 5;
 
-const data = Buffer.from(JSON.stringify({ root }));
+const data = Buffer.from(JSON.stringify({ from }));
 
 describe("Command handler post", () => {
   afterEach(() => {
@@ -15,12 +14,8 @@ describe("Command handler post", () => {
   });
 
   it("should call with the correct params", async () => {
-    const state = "some-state";
-    const mainFnFake = fake.returns(state);
-    const commitFnFake = fake();
+    const mainFn = "some-main-fn";
     const streamFnFake = fake();
-    const nextEventNumberFnFake = fake.returns(number);
-    const saveNextEventNumberFnFake = fake();
 
     const req = {
       body: {
@@ -34,67 +29,20 @@ describe("Command handler post", () => {
     };
 
     await post({
-      mainFn: mainFnFake,
-      commitFn: commitFnFake,
+      mainFn,
       streamFn: streamFnFake,
-      nextEventNumberFn: nextEventNumberFnFake,
-      saveNextEventNumberFn: saveNextEventNumberFnFake,
     })(req, res);
 
-    expect(nextEventNumberFnFake).to.have.been.calledWith({ root });
-    expect(streamFnFake).to.have.been.calledWith({ root, from: number });
-
-    const eventNumber = "some-number";
-    const event = {
-      headers: { number: eventNumber },
-    };
-
-    streamFnFake.lastCall.lastArg(event);
-
-    expect(mainFnFake).to.have.been.calledWith(undefined, event);
-    expect(commitFnFake).to.not.have.been.called;
-    expect(saveNextEventNumberFnFake).to.not.have.been.called;
-
-    expect(sendStatusFake).to.have.been.calledWith(204);
-  });
-  it("should call with the correct params if forced", async () => {
-    const mainFnFake = fake();
-    const streamFnFake = fake();
-    const saveNextEventNumberFnFake = fake();
-    const nextEventNumberFnFake = fake.returns(number);
-
-    const forceFrom = "some-force-number";
-    const data = Buffer.from(JSON.stringify({ root, forceFrom }));
-    const req = {
-      body: {
-        message: { data },
-      },
-    };
-
-    const sendStatusFake = fake();
-    const res = {
-      sendStatus: sendStatusFake,
-    };
-
-    await post({
-      mainFn: mainFnFake,
-      streamFn: streamFnFake,
-      nextEventNumberFn: nextEventNumberFnFake,
-      saveNextEventNumberFn: saveNextEventNumberFnFake,
-    })(req, res);
-
-    expect(nextEventNumberFnFake).to.not.have.been.called;
-    expect(streamFnFake).to.have.been.calledWith({ root, from: forceFrom });
-
-    const eventNumber = "some-number";
-    const event = {
-      headers: { number: eventNumber },
-    };
-
-    await streamFnFake.lastCall.lastArg(event);
-
-    expect(mainFnFake).to.have.been.calledWith(undefined, event);
-    expect(saveNextEventNumberFnFake).to.not.have.been.called;
+    expect(streamFnFake).to.have.been.calledWith({
+      from,
+      fn: mainFn,
+      sortFn: match((fn) => {
+        const a = { data: { saved: 0 } };
+        const b = { data: { saved: 1 } };
+        const result = fn(a, b);
+        return result == -1;
+      }),
+    });
 
     expect(sendStatusFake).to.have.been.calledWith(204);
   });

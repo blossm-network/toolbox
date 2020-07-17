@@ -7,6 +7,7 @@ const deps = require("../deps");
 
 const eventStore = "some-event-store";
 const root = "some-root";
+const actions = "some-actions";
 const from = "some-from";
 const parallel = "some-parallel";
 const fn = "some-fn";
@@ -33,14 +34,19 @@ describe("Mongodb event store stream", () => {
 
     const result = await stream({ eventStore })({
       root,
+      actions,
       from,
       parallel,
       fn,
     });
     expect(findFake).to.have.been.calledWith({
       store: eventStore,
-      query: { "data.root": root, "data.number": { $gte: from } },
-      sort: { "data.number": 1 },
+      query: {
+        "data.saved": { $gte: from },
+        "data.root": root,
+        "data.headers.action": { $in: actions },
+      },
+      sort: { "data.saved": 1, "data.number": 1 },
       options: {
         lean: true,
       },
@@ -66,15 +72,14 @@ describe("Mongodb event store stream", () => {
     replace(deps, "db", db);
 
     const result = await stream({ eventStore })({
-      root,
       from,
       fn,
     });
 
     expect(findFake).to.have.been.calledWith({
       store: eventStore,
-      query: { "data.root": root, "data.number": { $gte: from } },
-      sort: { "data.number": 1 },
+      query: { "data.saved": { $gte: from } },
+      sort: { "data.saved": 1, "data.number": 1 },
       options: {
         lean: true,
       },
