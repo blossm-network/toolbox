@@ -12,7 +12,7 @@ module.exports = ({ eventStore, snapshotStore, handlers }) => async (root) => {
   });
 
   const cursor = deps.db
-    .stream({
+    .find({
       store: eventStore,
       query: {
         "data.root": root,

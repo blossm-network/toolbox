@@ -40,13 +40,13 @@ describe("Mongodb event store aggregate", () => {
     restore();
   });
   it("should call with the correct params", async () => {
-    const streamFake = fake.returns({
+    const findFake = fake.returns({
       cursor: cursorFake,
     });
     const findOneFake = fake.returns(findOneResult);
 
     const db = {
-      stream: streamFake,
+      find: findFake,
       findOne: findOneFake,
     };
 
@@ -56,7 +56,7 @@ describe("Mongodb event store aggregate", () => {
       root
     );
 
-    expect(streamFake).to.have.been.calledWith({
+    expect(findFake).to.have.been.calledWith({
       store: eventStore,
       query: {
         "data.root": root,
@@ -96,13 +96,13 @@ describe("Mongodb event store aggregate", () => {
     });
   });
   it("should call with the correct params with no snapshot found", async () => {
-    const streamFake = fake.returns({
+    const findFake = fake.returns({
       cursor: cursorFake,
     });
     const findOneFake = fake.returns();
 
     const db = {
-      stream: streamFake,
+      find: findFake,
       findOne: findOneFake,
     };
 
@@ -112,7 +112,7 @@ describe("Mongodb event store aggregate", () => {
       root
     );
 
-    expect(streamFake).to.have.been.calledWith({
+    expect(findFake).to.have.been.calledWith({
       store: eventStore,
       query: {
         "data.root": root,
@@ -155,13 +155,13 @@ describe("Mongodb event store aggregate", () => {
     const otherCursorFake = fake.returns({
       eachAsync: eachAsyncFake,
     });
-    const streamFake = fake.returns({
+    const findFake = fake.returns({
       cursor: otherCursorFake,
     });
     const findOneFake = fake.returns();
 
     const db = {
-      stream: streamFake,
+      find: findFake,
       findOne: findOneFake,
     };
 
@@ -171,7 +171,7 @@ describe("Mongodb event store aggregate", () => {
       root
     );
 
-    expect(streamFake).to.have.been.calledWith({
+    expect(findFake).to.have.been.calledWith({
       store: eventStore,
       query: {
         "data.root": root,
@@ -195,13 +195,13 @@ describe("Mongodb event store aggregate", () => {
     expect(result).to.be.undefined;
   });
   it("should throw if a handler isn't specified", async () => {
-    const streamFake = fake.returns({
+    const findFake = fake.returns({
       cursor: cursorFake,
     });
     const findOneFake = fake.returns(findOneResult);
 
     const db = {
-      stream: streamFake,
+      find: findFake,
       findOne: findOneFake,
     };
 
