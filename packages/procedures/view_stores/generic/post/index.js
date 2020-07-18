@@ -9,6 +9,11 @@ module.exports = ({ writeFn, updateFn = defaultFn }) => {
         "Missing query parameter in the body."
       );
 
+    const context = req.body.context[process.env.CONTEXT];
+
+    if (!context)
+      throw deps.forbiddenError.message("Missing required permissions.");
+
     const customUpdate = updateFn(req.body.update);
     //TODO
     //eslint-disable-next-line no-console
@@ -30,8 +35,20 @@ module.exports = ({ writeFn, updateFn = defaultFn }) => {
     //eslint-disable-next-line no-console
     console.log({ data });
 
+    const formattedQuery = {};
+    for (const key in req.body.query) {
+      formattedQuery[`body.${key}`] = req.body.query[key];
+    }
     const newView = await writeFn({
-      query: req.body.query,
+      query: {
+        ...formattedQuery,
+        "headers.context": {
+          root: context.root,
+          domain: process.env.CONTEXT,
+          service: context.service,
+          network: context.network,
+        },
+      },
       data,
     });
 
