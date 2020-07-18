@@ -14,9 +14,6 @@ const contextRoot = "some-context-root";
 const contextService = "some-context-service";
 const contextNetwork = "some-context-network";
 
-const domainRoot =
-  process.env.DOMAIN && process.env.SERVICE ? "some-domain-root" : null;
-
 describe("View store base integration tests", () => {
   const testParamQueries = async () => {
     const id = "some-id";
