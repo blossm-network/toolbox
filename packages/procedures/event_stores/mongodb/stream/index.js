@@ -11,7 +11,6 @@ module.exports = ({ eventStore }) => async ({
     .find({
       store: eventStore,
       query: {
-        //TODO add integration test for this
         "data.saved": { $gte: from },
         ...(root && { "data.root": root }),
         ...(actions && { "data.headers.action": { $in: actions } }),

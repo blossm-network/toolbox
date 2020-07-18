@@ -1,7 +1,8 @@
 {
   "dependencies": {
     "@blossm/mongodb-event-handler": "*",
-    "@blossm/gcp-secret": "*"
+    "@blossm/gcp-secret": "*",
+    "@blossm/event-stores-rpc": "*"
   },
   "devDependencies": {
     "chai": "^4.2.0",

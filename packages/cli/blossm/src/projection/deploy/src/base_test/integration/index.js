@@ -26,10 +26,10 @@ describe("Projection integration tests", () => {
     for (const example of testing.examples) {
       const event = createEvent({
         root: example.root,
-        action: example.action,
+        action: example.action.name,
         payload: example.payload,
-        domain: process.env.STORE_DOMAIN,
-        service: process.env.STORE_SERVICE,
+        domain: example.action.domain,
+        service: example.action.service,
         context: {
           [context]: {
             root: contextRoot,
@@ -40,8 +40,8 @@ describe("Projection integration tests", () => {
       });
 
       await eventStore({
-        domain: process.env.STORE_DOMAIN,
-        service: process.env.STORE_SERVICE,
+        domain: example.action.domain,
+        service: example.action.service,
       }).add([{ data: event }]);
 
       const response = await request.post(url, {

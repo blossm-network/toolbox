@@ -25,7 +25,7 @@ module.exports = ({
   service,
   context,
   name,
-  store,
+  stores,
   project,
   network,
   computeUrlId,
@@ -82,8 +82,6 @@ module.exports = ({
         ...(service && { SERVICE: service }),
         CONTEXT: context,
         NAME: name,
-        STORE_DOMAIN: store.domain,
-        STORE_SERVICE: store.service,
         ...dependencyKeyEnvironmentVariables,
         ...envVars,
         ...devEnvVars,
@@ -124,8 +122,6 @@ module.exports = ({
               ...(domain && { DOMAIN: domain }),
               ...(service && { SERVICE: service }),
               CONTEXT: context,
-              STORE_DOMAIN: store.domain,
-              STORE_SERVICE: store.service,
               MONGODB_DATABASE: "event-handler",
               MONGODB_USER: mongodbUser,
               MONGODB_HOST: mongodbHost,
@@ -137,8 +133,6 @@ module.exports = ({
               ...(domain && { domain }),
               ...(service && { service }),
               ...(context && { context }),
-              "store-domain": store.domain,
-              "store-service": store.service,
             },
           }),
           createQueue({
@@ -162,20 +156,27 @@ module.exports = ({
             serviceName,
             project,
           }),
-          createPubsubSubscription({
-            name,
-            ...(domain && { domain }),
-            ...(service && { service }),
-            ...(context && { context }),
-            operationHash,
-            operationName,
-            storeDomain: store.domain,
-            storeService: store.service,
-            procedure,
-            region,
-            computeUrlId,
-            project,
-          }),
+          ...stores
+            .map((store) =>
+              store.actions.map((action) =>
+                createPubsubSubscription({
+                  name,
+                  ...(domain && { domain }),
+                  ...(service && { service }),
+                  ...(context && { context }),
+                  operationHash,
+                  operationName,
+                  storeDomain: store.domain,
+                  storeService: store.service,
+                  storeAction: action,
+                  procedure,
+                  region,
+                  computeUrlId,
+                  project,
+                })
+              )
+            )
+            .flat(),
         ]
       : [dockerComposeLogs]),
   ];

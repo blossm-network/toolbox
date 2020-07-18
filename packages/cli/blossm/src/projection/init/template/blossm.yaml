@@ -5,7 +5,7 @@ name: some-name
 context: some-context
 
 #
-# Set the event-store from which this projection will listen for events.
+# Set the event-stores from which this projection will listen for actions.
 #
 stores:
   - domain: some-event-domain
@@ -37,7 +37,10 @@ testing:
   # overwrites the state of the aggregate.
   #
   handlers:
-    - action: register
+    - action:
+        name: register
+        domain: some-domain
+        service: some-service
       examples:
         - event:
             payload:
@@ -62,7 +65,10 @@ testing:
   # single object or an array of objects is expected.
   #
   examples:
-    - action: some-action
+    - action:
+        name: some-action
+        domain: some-domain
+        service: some-service
       root: some-root
       payload:
         name: some-name

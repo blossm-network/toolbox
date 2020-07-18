@@ -653,7 +653,6 @@ const configure = async (workingDir, configFn, env, strict) => {
     const context = config.context;
     const procedure = config.procedure;
     const name = config.name;
-    const store = config.store;
     const envVars = config.env && config.env[env];
     const devEnvVars = config.devEnv && config.devEnv[env];
 
@@ -688,7 +687,6 @@ const configure = async (workingDir, configFn, env, strict) => {
       domain,
       context,
       name,
-      store,
       project,
       procedure,
       network,
@@ -737,7 +735,6 @@ const configure = async (workingDir, configFn, env, strict) => {
       coreNetwork,
       domain,
       name,
-      store,
       secretBucket,
       secretBucketKeyLocation,
       secretBucketKeyRing,

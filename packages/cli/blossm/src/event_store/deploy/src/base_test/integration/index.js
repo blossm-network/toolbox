@@ -40,6 +40,7 @@ describe("Event store integration tests", () => {
 
   it("should return successfully", async () => {
     const root = uuid();
+    const now = dateString();
 
     const countResponse = await request.get(`${url}/count/${root}`);
     const parsedCountBody = JSON.parse(countResponse.body);
@@ -122,7 +123,7 @@ describe("Event store integration tests", () => {
     //Test stream
     let currentNumber = 0;
     await request.stream(
-      `${url}/stream/${root}`,
+      `${url}/stream`,
       (data) => {
         const parsedData = JSON.parse(data.toString().trim());
         expect(parsedData.data.number).to.equal(currentNumber);
@@ -130,10 +131,11 @@ describe("Event store integration tests", () => {
       },
       {
         query: {
-          from: 0,
+          from: now,
         },
       }
     );
+    expect(currentNumber).to.equal(2);
 
     //Test root stream
     await request.stream(
@@ -146,6 +148,44 @@ describe("Event store integration tests", () => {
         query: {},
       }
     );
+
+    //Test stream with actions and root qualifiers
+    await request.post(url, {
+      body: {
+        events: [
+          {
+            data: {
+              root: uuid(),
+              headers: {
+                topic,
+                version,
+                created,
+                action: example0.action,
+                domain,
+                service,
+                idempotency: uuid(),
+              },
+              payload: example0.payload,
+            },
+          },
+        ],
+      },
+    });
+
+    let rootActionCount = 0;
+    await request.stream(
+      `${url}/stream/${root}`,
+      () => {
+        rootActionCount++;
+      },
+      {
+        query: {
+          from: now,
+          actions: [example0.action],
+        },
+      }
+    );
+    expect(rootActionCount).to.equal(1);
 
     ///Test indexes
     for (const index of indexes || []) {
