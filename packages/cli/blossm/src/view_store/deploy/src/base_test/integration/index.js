@@ -38,7 +38,7 @@ describe("View store base integration tests", () => {
         },
         context: {
           root: contextRoot,
-          domain: [process.env.CONTEXT],
+          domain: process.env.CONTEXT,
           service: contextService,
           network: contextNetwork,
         },
@@ -53,11 +53,10 @@ describe("View store base integration tests", () => {
     const response1 = await request.get(url, {
       query: {
         context: {
-          [process.env.CONTEXT]: {
-            root: contextRoot,
-            service: contextService,
-            network: contextNetwork,
-          },
+          root: contextRoot,
+          domain: process.env.CONTEXT,
+          service: contextService,
+          network: contextNetwork,
         },
       },
     });
@@ -100,7 +99,7 @@ describe("View store base integration tests", () => {
           },
           context: {
             root: contextRoot,
-            domain: [process.env.CONTEXT],
+            domain: process.env.CONTEXT,
             service: contextService,
             network: contextNetwork,
           },
@@ -116,11 +115,10 @@ describe("View store base integration tests", () => {
         query: {
           ...(more.query && { query: more.query }),
           context: {
-            [process.env.CONTEXT]: {
-              root: contextRoot,
-              service: contextService,
-              network: contextNetwork,
-            },
+            root: contextRoot,
+            domain: process.env.CONTEXT,
+            service: contextService,
+            network: contextNetwork,
           },
         },
       });
@@ -155,7 +153,7 @@ describe("View store base integration tests", () => {
         },
         context: {
           root: contextRoot,
-          domain: [process.env.CONTEXT],
+          domain: process.env.CONTEXT,
           service: contextService,
           network: contextNetwork,
         },
@@ -171,11 +169,10 @@ describe("View store base integration tests", () => {
     const response3 = await request.get(url, {
       query: {
         context: {
-          [process.env.CONTEXT]: {
-            root: contextRoot,
-            service: contextService,
-            network: contextNetwork,
-          },
+          root: contextRoot,
+          domain: process.env.CONTEXT,
+          service: contextService,
+          network: contextNetwork,
         },
       },
     });
@@ -215,7 +212,7 @@ describe("View store base integration tests", () => {
         },
         context: {
           root: contextRoot,
-          domain: [process.env.CONTEXT],
+          domain: process.env.CONTEXT,
           service: contextService,
           network: contextNetwork,
         },
@@ -225,11 +222,10 @@ describe("View store base integration tests", () => {
     const response5 = await request.get(url, {
       query: {
         context: {
-          [process.env.CONTEXT]: {
-            root: contextRoot,
-            service: contextService,
-            network: contextNetwork,
-          },
+          root: contextRoot,
+          domain: process.env.CONTEXT,
+          service: contextService,
+          network: contextNetwork,
         },
         sort: {
           "headers.root": 1,
@@ -254,11 +250,10 @@ describe("View store base integration tests", () => {
     const response6 = await request.get(url, {
       query: {
         context: {
-          [process.env.CONTEXT]: {
-            root: contextRoot,
-            service: contextService,
-            network: contextNetwork,
-          },
+          root: contextRoot,
+          domain: process.env.CONTEXT,
+          service: contextService,
+          network: contextNetwork,
         },
         sort: {
           id: -1,
@@ -297,7 +292,7 @@ describe("View store base integration tests", () => {
         },
         context: {
           root: contextRoot,
-          domain: [process.env.CONTEXT],
+          domain: process.env.CONTEXT,
           service: contextService,
           network: contextNetwork,
         },
@@ -308,11 +303,10 @@ describe("View store base integration tests", () => {
       const response7 = await request.get(url, {
         query: {
           context: {
-            [process.env.CONTEXT]: {
-              root: contextRoot,
-              service: contextService,
-              network: contextNetwork,
-            },
+            root: contextRoot,
+            domain: process.env.CONTEXT,
+            service: contextService,
+            network: contextNetwork,
           },
           limit: 1,
           skip: 1,
@@ -455,21 +449,13 @@ describe("View store base integration tests", () => {
           query: {
             id,
           },
-          view: {
+          update: {
             body: { id, [property]: badValue },
-            headers: {
-              [process.env.CONTEXT]: {
-                root: contextRoot,
-                service: contextService,
-                network: contextNetwork,
-              },
-              ...(domainRoot && {
-                [process.env.DOMAIN]: {
-                  root: domainRoot,
-                  service: process.env.SERVICE,
-                  network: process.env.NETWORK,
-                },
-              }),
+            context: {
+              root: contextRoot,
+              domain: process.env.CONTEXT,
+              service: contextService,
+              network: contextNetwork,
             },
           },
         },
