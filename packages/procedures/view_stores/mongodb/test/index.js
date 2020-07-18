@@ -119,7 +119,7 @@ describe("View store", () => {
       name: `_${context}.${service}.${domain}.${name}`,
       schema: {
         body: {
-          id: { $type: String, required: true, unique: true },
+          id: { $type: String, unique: true },
           ...formattedSchema,
         },
         headers: {
@@ -155,7 +155,7 @@ describe("View store", () => {
       },
       typeKey: "$type",
       indexes: [
-        [{ id: 1 }],
+        [{ "body.id": 1 }],
         [
           { "headers.context.root": 1 },
           { "headers.context.domain": 1 },
@@ -336,12 +336,11 @@ describe("View store", () => {
       name: `_${context}.${name}`,
       schema: {
         body: {
-          id: { $type: String, required: true, unique: true },
+          id: { $type: String, unique: true },
           ...formattedSchema,
         },
         headers: {
           _id: false,
-          id: { $type: String, required: true, unique: true },
           trace: { $type: String },
           context: {
             $type: {
@@ -373,7 +372,7 @@ describe("View store", () => {
       },
       typeKey: "$type",
       indexes: [
-        [{ id: 1 }],
+        [{ "body.id": 1 }],
         [
           { "headers.context.root": 1 },
           { "headers.context.domain": 1 },
@@ -464,12 +463,11 @@ describe("View store", () => {
       name: `_${context}.${service}.${domain}.${name}`,
       schema: {
         body: {
-          id: { $type: String, required: true, unique: true },
+          id: { $type: String, unique: true },
           ...formattedSchema,
         },
         headers: {
           _id: false,
-          id: { $type: String, required: true, unique: true },
           trace: { $type: String },
           context: {
             $type: {
@@ -501,7 +499,7 @@ describe("View store", () => {
       },
       typeKey: "$type",
       indexes: [
-        [{ id: 1 }],
+        [{ "body.id": 1 }],
         [
           { "headers.context.root": 1 },
           { "headers.context.domain": 1 },
@@ -576,12 +574,11 @@ describe("View store", () => {
       name: `_${context}.${service}.${domain}.${name}`,
       schema: {
         body: {
-          id: { $type: String, required: true, unique: true },
+          id: { $type: String, unique: true },
           ...formattedSchema,
         },
         headers: {
           _id: false,
-          id: { $type: String, required: true, unique: true },
           trace: { $type: String },
           context: {
             $type: {
@@ -613,7 +610,7 @@ describe("View store", () => {
       },
       typeKey: "$type",
       indexes: [
-        [{ id: 1 }],
+        [{ "body.id": 1 }],
         [
           { "headers.context.root": 1 },
           { "headers.context.domain": 1 },
@@ -760,7 +757,7 @@ describe("View store", () => {
     const viewStoreFake = fake();
     replace(deps, "viewStore", viewStoreFake);
 
-    const formattedSchema = "some-formatted-schema";
+    const formattedSchema = { a: 1 };
     const formatSchemaFake = fake.returns(formattedSchema);
     replace(deps, "formatSchema", formatSchemaFake);
 
@@ -771,12 +768,11 @@ describe("View store", () => {
       name: `_${context}.${service}.${domain}.${name}`,
       schema: {
         body: {
-          id: { $type: String, required: true, unique: true },
+          id: { $type: String, unique: true },
           ...formattedSchema,
         },
         headers: {
           _id: false,
-          id: { $type: String, required: true, unique: true },
           trace: { $type: String },
           context: {
             $type: {
@@ -808,7 +804,7 @@ describe("View store", () => {
       },
       typeKey: "$type",
       indexes: [
-        [{ id: 1 }],
+        [{ "body.id": 1 }],
         [
           { "headers.context.root": 1 },
           { "headers.context.domain": 1 },

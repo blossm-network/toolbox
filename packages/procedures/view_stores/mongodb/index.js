@@ -18,7 +18,7 @@ const viewStore = async ({ schema, indexes, secretFn }) => {
     }${process.env.DOMAIN ? `.${process.env.DOMAIN}` : ""}.${process.env.NAME}`,
     schema: {
       body: {
-        id: { [typeKey]: String, required: true, unique: true },
+        id: { [typeKey]: String, unique: true },
         ...deps.formatSchema(schema, typeKey),
       },
       headers: {
@@ -73,12 +73,12 @@ module.exports = async ({
   one,
 } = {}) => {
   const allIndexes = [
-    [{ id: 1 }],
+    [{ "body.id": 1 }],
     [
-      { [`headers.context.root`]: 1 },
-      { [`headers.context.domain`]: 1 },
-      { [`headers.context.service`]: 1 },
-      { [`headers.context.network`]: 1 },
+      { ["headers.context.root"]: 1 },
+      { ["headers.context.domain"]: 1 },
+      { ["headers.context.service"]: 1 },
+      { ["headers.context.network"]: 1 },
     ],
   ];
 
