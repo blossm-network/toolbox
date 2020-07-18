@@ -1,7 +1,7 @@
 {
   "name": "@blossm/view-composite-rpc",
   "description": "Gets a composite view.",
-  "version": "0.0.62",
+  "version": "0.0.63",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -14,7 +14,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/rpc": "^0.0.167"
+    "@blossm/rpc": "^0.0.168"
   },
   "devDependencies": {
     "chai-datetime": "^1.5.0",
