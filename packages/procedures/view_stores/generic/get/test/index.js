@@ -24,11 +24,10 @@ const coreNetwork = "some-core-network";
 const nextUrl = "some-next-url";
 
 const context = {
-  [envContext]: {
-    root: envContextRoot,
-    service: envContextService,
-    network: envContextNetwork,
-  },
+  root: envContextRoot,
+  domain: [envContext],
+  service: envContextService,
+  network: envContextNetwork,
 };
 
 process.env.NAME = envName;
@@ -381,9 +380,7 @@ describe("View store get", () => {
     const countFake = fake.returns(0);
 
     const req = {
-      query: {
-        context: {},
-      },
+      query: {},
     };
 
     const sendFake = fake();
