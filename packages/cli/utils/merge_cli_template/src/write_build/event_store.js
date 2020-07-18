@@ -23,6 +23,7 @@ module.exports = ({
   region,
   project,
   network,
+  actions,
   envUriSpecifier,
   dnsZone,
   service,
@@ -135,11 +136,14 @@ module.exports = ({
             project,
             region,
           }),
-          createPubsubTopic({
-            domain,
-            service,
-            project,
-          }),
+          ...actions.map((action) =>
+            createPubsubTopic({
+              action,
+              domain,
+              service,
+              project,
+            })
+          ),
         ]
       : [dockerComposeLogs]),
   ];

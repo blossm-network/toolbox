@@ -5,6 +5,10 @@
 domain: some-domain
 service: some-service
 
+# Specify the actions that this event-store can handle.
+actions:
+  - some-action
+
 #
 # Give your event-store a schema.
 #

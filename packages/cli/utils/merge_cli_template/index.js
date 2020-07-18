@@ -651,6 +651,8 @@ const configure = async (workingDir, configFn, env, strict) => {
     const domain = config.domain;
     const service = config.service;
     const context = config.context;
+    const actions = config.actions;
+    const stores = config.stores;
     const procedure = config.procedure;
     const name = config.name;
     const envVars = config.env && config.env[env];
@@ -685,6 +687,8 @@ const configure = async (workingDir, configFn, env, strict) => {
       publicKeyUrl,
       region,
       domain,
+      actions,
+      stores,
       context,
       name,
       project,
