@@ -49,12 +49,12 @@ testing:
     # different values in order to test overwritting.
     #
     first:
-      put:
+      post:
         name: some-name
       get:
         name: some-name
     second:
-      put:
+      post:
         name: some-other-name
       get:
         name: some-other-name
