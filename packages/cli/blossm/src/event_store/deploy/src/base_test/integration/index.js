@@ -155,12 +155,12 @@ describe("Event store integration tests", () => {
         events: [
           {
             data: {
-              root: uuid(),
+              root,
               headers: {
                 topic,
                 version,
                 created,
-                action: example0.action,
+                action: "some-bogus",
                 domain,
                 service,
                 idempotency: uuid(),
@@ -185,7 +185,48 @@ describe("Event store integration tests", () => {
         },
       }
     );
-    expect(rootActionCount).to.equal(1);
+    expect(rootActionCount).to.equal(
+      example0.action == example1.action ? 2 : 1
+    );
+
+    //Test stream with saved qualifiers
+    const newSavedDate = dateString();
+    await request.post(url, {
+      body: {
+        events: [
+          {
+            data: {
+              root,
+              headers: {
+                topic,
+                version,
+                created,
+                action: example0.action,
+                domain,
+                service,
+                idempotency: uuid(),
+              },
+              payload: example0.payload,
+            },
+          },
+        ],
+      },
+    });
+
+    let savedCount = 0;
+    await request.stream(
+      `${url}/stream/${root}`,
+      () => {
+        savedCount++;
+      },
+      {
+        query: {
+          from: newSavedDate,
+        },
+      }
+    );
+
+    expect(savedCount).to.equal(1);
 
     ///Test indexes
     for (const index of indexes || []) {
