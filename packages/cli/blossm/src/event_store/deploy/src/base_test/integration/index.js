@@ -313,7 +313,7 @@ describe("Event store integration tests", () => {
             .toString()
             .trim();
           const data = JSON.parse(dataString);
-          expect(data.from).to.be.afterTime(preSaveDate);
+          expect(new Date(data.from)).to.be.afterTime(new Date(preSaveDate));
           await unsubscribe({ topic, name: sub });
           done();
         });
