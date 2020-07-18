@@ -19,11 +19,10 @@ const envContextService = "some-env-context-service";
 const envContextNetwork = "some-env-context-network";
 
 const context = {
-  [envContext]: {
-    root: envContextRoot,
-    service: envContextService,
-    network: envContextNetwork,
-  },
+  root: envContextRoot,
+  domain: envContext,
+  service: envContextService,
+  network: envContextNetwork,
 };
 
 const body = {
@@ -175,7 +174,6 @@ describe("View store put", () => {
     const req = {
       body: {
         query: {},
-        context: {},
       },
     };
 
