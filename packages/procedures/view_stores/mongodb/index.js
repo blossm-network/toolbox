@@ -169,6 +169,9 @@ module.exports = async ({
       query,
     });
 
+  //TODO
+  //eslint-disable-next-line no-console
+  console.log({ storeExists: store != undefined });
   deps.viewStore({
     streamFn,
     findFn,
