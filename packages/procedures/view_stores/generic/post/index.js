@@ -10,6 +10,9 @@ module.exports = ({ writeFn, updateFn = defaultFn }) => {
       );
 
     const customUpdate = updateFn(req.body.update);
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log({ customUpdate });
 
     const formattedBody = {};
 
@@ -22,6 +25,10 @@ module.exports = ({ writeFn, updateFn = defaultFn }) => {
       ...(customUpdate.context && { "headers.context": customUpdate.context }),
       "headers.modified": deps.dateString(),
     };
+
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log({ data });
 
     const newView = await writeFn({
       query: req.body.query,

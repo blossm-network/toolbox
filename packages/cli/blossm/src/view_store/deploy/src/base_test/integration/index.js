@@ -35,12 +35,11 @@ describe("View store base integration tests", () => {
             id,
             ...example0.post,
           },
-          headers: {
-            [process.env.CONTEXT]: {
-              root: contextRoot,
-              service: contextService,
-              network: contextNetwork,
-            },
+          context: {
+            root: contextRoot,
+            domain: [process.env.CONTEXT],
+            service: contextService,
+            network: contextNetwork,
           },
         },
       },
@@ -98,12 +97,11 @@ describe("View store base integration tests", () => {
               id: moreId,
               ...more.post,
             },
-            headers: {
-              [process.env.CONTEXT]: {
-                root: contextRoot,
-                service: contextService,
-                network: contextNetwork,
-              },
+            context: {
+              root: contextRoot,
+              domain: [process.env.CONTEXT],
+              service: contextService,
+              network: contextNetwork,
             },
           },
         },
@@ -154,12 +152,11 @@ describe("View store base integration tests", () => {
         },
         update: {
           body: example1.post,
-          headers: {
-            [process.env.CONTEXT]: {
-              root: contextRoot,
-              service: contextService,
-              network: contextNetwork,
-            },
+          context: {
+            root: contextRoot,
+            domain: [process.env.CONTEXT],
+            service: contextService,
+            network: contextNetwork,
           },
         },
       },
@@ -215,12 +212,11 @@ describe("View store base integration tests", () => {
             id: otherId,
             ...example1.post,
           },
-          headers: {
-            [process.env.CONTEXT]: {
-              root: contextRoot,
-              service: contextService,
-              network: contextNetwork,
-            },
+          context: {
+            root: contextRoot,
+            domain: [process.env.CONTEXT],
+            service: contextService,
+            network: contextNetwork,
           },
         },
       },
@@ -298,12 +294,11 @@ describe("View store base integration tests", () => {
         },
         update: {
           body: { id: yetAnotherId, a: 1 },
-          headers: {
-            [process.env.CONTEXT]: {
-              root: contextRoot,
-              service: contextService,
-              network: contextNetwork,
-            },
+          context: {
+            root: contextRoot,
+            domain: [process.env.CONTEXT],
+            service: contextService,
+            network: contextNetwork,
           },
         },
       },
