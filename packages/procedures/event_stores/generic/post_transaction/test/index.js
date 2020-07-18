@@ -28,23 +28,20 @@ const writtenEvent = {
   data: {
     root: eventRoot,
     number: eventNumber,
-    headers: {
-      topic: eventTopic,
-    },
+    topic: eventTopic,
   },
 };
 const writtenEvents = [writtenEvent];
 
 const payload = { a: 1 };
+const headers = { b: 2 };
 const events = [
   {
     data: {
       root,
-      headers: {
-        b: 2,
-        topic,
-        idempotency,
-      },
+      headers,
+      topic,
+      idempotency,
       payload,
     },
   },
@@ -102,11 +99,9 @@ describe("Event store post", () => {
           payload,
           root,
           number: currentEventsForRoot,
-          headers: {
-            b: 2,
-            topic,
-            idempotency,
-          },
+          headers,
+          topic,
+          idempotency,
         },
         hash,
         proofs: [id],
@@ -124,11 +119,9 @@ describe("Event store post", () => {
       payload,
       root,
       number: currentEventsForRoot,
-      headers: {
-        b: 2,
-        topic,
-        idempotency,
-      },
+      headers,
+      topic,
+      idempotency,
     });
     expect(proofsFnFake).to.have.been.calledWith(hash);
   });
@@ -174,11 +167,9 @@ describe("Event store post", () => {
           payload,
           root,
           number,
-          headers: {
-            b: 2,
-            topic,
-            idempotency,
-          },
+          headers,
+          topic,
+          idempotency,
         },
         hash,
         proofs: [id],
@@ -196,11 +187,9 @@ describe("Event store post", () => {
       payload,
       root,
       number,
-      headers: {
-        b: 2,
-        topic,
-        idempotency,
-      },
+      headers,
+      topic,
+      idempotency,
     });
     expect(proofsFnFake).to.have.been.calledWith(hash);
   });
@@ -257,11 +246,9 @@ describe("Event store post", () => {
         {
           data: {
             root: "some-other-root",
-            headers: {
-              b: 2,
-              topic,
-              idempotency,
-            },
+            headers,
+            topic,
+            idempotency,
             payload,
           },
         },
@@ -291,11 +278,9 @@ describe("Event store post", () => {
           payload,
           root,
           number: currentEventsForRoot,
-          headers: {
-            b: 2,
-            topic,
-            idempotency,
-          },
+          headers,
+          topic,
+          idempotency,
         },
         hash: hash1,
         proofs: [id1],
@@ -307,11 +292,9 @@ describe("Event store post", () => {
           payload,
           root,
           number: currentEventsForRoot + 1,
-          headers: {
-            b: 2,
-            topic,
-            idempotency,
-          },
+          headers,
+          topic,
+          idempotency,
         },
         hash: hash2,
         proofs: [id2],
@@ -323,11 +306,9 @@ describe("Event store post", () => {
           payload,
           root: "some-other-root",
           number: 9,
-          headers: {
-            b: 2,
-            topic,
-            idempotency,
-          },
+          headers,
+          topic,
+          idempotency,
         },
         hash: hash3,
         proofs: [id3, id4],
@@ -356,11 +337,9 @@ describe("Event store post", () => {
       payload,
       root,
       number: currentEventsForRoot,
-      headers: {
-        b: 2,
-        topic,
-        idempotency,
-      },
+      headers,
+      topic,
+      idempotency,
     });
     expect(hashFnFake.getCall(1)).to.have.been.calledWith({
       id: `${root}_${currentEventsForRoot + 1}`,
@@ -368,11 +347,9 @@ describe("Event store post", () => {
       payload,
       root,
       number: currentEventsForRoot + 1,
-      headers: {
-        b: 2,
-        topic,
-        idempotency,
-      },
+      headers,
+      topic,
+      idempotency,
     });
     expect(hashFnFake.getCall(2)).to.have.been.calledWith({
       id: "some-other-root_9",
@@ -380,11 +357,9 @@ describe("Event store post", () => {
       payload,
       root: "some-other-root",
       number: 9,
-      headers: {
-        b: 2,
-        topic,
-        idempotency,
-      },
+      headers,
+      topic,
+      idempotency,
     });
     expect(proofsFnFake.getCall(0)).to.have.been.calledWith(hash1);
     expect(proofsFnFake.getCall(1)).to.have.been.calledWith(hash2);
@@ -426,11 +401,9 @@ describe("Event store post", () => {
           payload,
           root,
           number: currentEventsForRoot,
-          headers: {
-            b: 2,
-            topic,
-            idempotency,
-          },
+          headers,
+          topic,
+          idempotency,
         },
         hash,
         proofs: [id],
@@ -447,11 +420,9 @@ describe("Event store post", () => {
       payload,
       root,
       number: currentEventsForRoot,
-      headers: {
-        b: 2,
-        topic,
-        idempotency,
-      },
+      headers,
+      topic,
+      idempotency,
     });
     expect(proofsFnFake).to.have.been.calledWith(hash);
   });
@@ -507,9 +478,7 @@ describe("Event store post", () => {
         events: [
           {
             data: {
-              headers: {
-                topic: `some-bad-domain.${service}`,
-              },
+              topic: `some-action.some-bad-domain.${service}`,
             },
           },
         ],
@@ -535,9 +504,7 @@ describe("Event store post", () => {
         events: [
           {
             data: {
-              headers: {
-                topic: `${domain}.some-bad-service`,
-              },
+              topic: `some-action.${domain}.some-bad-service`,
             },
           },
         ],

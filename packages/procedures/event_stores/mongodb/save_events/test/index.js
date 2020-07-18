@@ -191,7 +191,7 @@ describe("Mongodb event store create event", () => {
           },
           {
             errmsg:
-              "asdfasdf asdf asdf key: { data.headers.idempotency: 'some-idempotency' }",
+              "asdfasdf asdf asdf key: { data.idempotency: 'some-idempotency' }",
           },
         ];
       }
@@ -232,7 +232,7 @@ describe("Mongodb event store create event", () => {
       expect(messageFake).to.have.been.calledWith("Duplicates.", {
         info: [
           { "some-key": "some-value" },
-          { "data.headers.idempotency": "some-idempotency" },
+          { "data.idempotency": "some-idempotency" },
         ],
         cause: thrownError,
       });

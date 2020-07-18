@@ -67,13 +67,13 @@ describe("Create event", () => {
 
     expect(value).to.deep.equal({
       root,
+      topic: `${action}.${domain}.${service}`,
+      idempotency:
+        "some-idempotency-some-action-some-domain-some-service-some-path-hash",
       headers: {
-        idempotency:
-          "some-idempotency-some-action-some-domain-some-service-some-path-hash",
         action,
         domain,
         service,
-        topic: `${action}.${domain}.${service}`,
         version,
         trace,
         context,
@@ -125,13 +125,13 @@ describe("Create event", () => {
 
     expect(value).to.deep.equal({
       root: rootUuid,
+      topic: `${action}.${domain}.${service}`,
+      idempotency:
+        "idemptUuid!-some-action-some-domain-some-service-some-path-hash",
       headers: {
-        idempotency:
-          "idemptUuid!-some-action-some-domain-some-service-some-path-hash",
         action,
         domain,
         service,
-        topic: `${action}.${domain}.${service}`,
         version: 0,
         trace,
         created: dateString(),
@@ -176,13 +176,13 @@ describe("Create event", () => {
 
     expect(value).to.deep.equal({
       root,
+      topic: `${action}.${domain}.${service}`,
+      idempotency:
+        "some-idempotency-some-action-some-domain-some-service-some-path-hash",
       headers: {
-        idempotency:
-          "some-idempotency-some-action-some-domain-some-service-some-path-hash",
         action,
         domain,
         service,
-        topic: `${action}.${domain}.${service}`,
         version,
         trace,
         created: dateString(),
@@ -232,13 +232,13 @@ describe("Create event", () => {
 
     expect(value).to.deep.equal({
       root,
+      topic: `${action}.${domain}.${service}`,
+      idempotency:
+        "some-idempotency-some-action-some-domain-some-service-some-path-hash",
       headers: {
-        idempotency:
-          "some-idempotency-some-action-some-domain-some-service-some-path-hash",
         action,
         domain,
         service,
-        topic: `${action}.${domain}.${service}`,
         version,
         trace,
         created: dateString(),

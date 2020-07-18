@@ -53,7 +53,7 @@ module.exports = ({
           if (!eventNumberOffsets[event.data.root])
             eventNumberOffsets[event.data.root] = 0;
 
-          const topicParts = event.data.headers.topic.split(".");
+          const topicParts = event.data.topic.split(".");
           const topicDomain = topicParts[1];
           const topicService = topicParts[2];
 
@@ -90,6 +90,8 @@ module.exports = ({
           const data = {
             number,
             root: event.data.root,
+            topic: event.data.topic,
+            idempotency: event.data.idempotency,
             id: `${root}_${number}`,
             saved: now,
             payload: event.data.payload,

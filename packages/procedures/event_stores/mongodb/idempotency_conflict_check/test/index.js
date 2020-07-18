@@ -25,7 +25,7 @@ describe("Mongodb event store idempotency conflict check", () => {
     expect(findFake).to.have.been.calledWith({
       store: eventStore,
       query: {
-        "data.headers.idempotency": idempotency,
+        "data.idempotency": idempotency,
       },
       limit: 1,
       select: { root: 1 },
@@ -48,7 +48,7 @@ describe("Mongodb event store idempotency conflict check", () => {
     expect(findFake).to.have.been.calledWith({
       store: eventStore,
       query: {
-        "data.headers.idempotency": idempotency,
+        "data.idempotency": idempotency,
       },
       limit: 1,
       select: { root: 1 },

@@ -14,9 +14,9 @@ module.exports = ({
   const uniqueEvents = [];
   await Promise.all(
     req.body.events.map(async (event) => {
-      if (event.data.headers.idempotency != undefined) {
+      if (event.data.idempotency != undefined) {
         const conflict = await idempotencyConflictCheckFn(
-          event.data.headers.idempotency
+          event.data.idempotency
         );
 
         //If theres no idempotency conflict in the database and no local conflict, proceed.
@@ -24,8 +24,7 @@ module.exports = ({
           conflict ||
           uniqueEvents.some(
             (uniqueEvent) =>
-              uniqueEvent.data.headers.idempotency ==
-              event.data.headers.idempotency
+              uniqueEvent.data.idempotency == event.data.idempotency
           )
         )
           return;
@@ -49,14 +48,14 @@ module.exports = ({
   let publishedTopics = [];
   await Promise.all([
     ...events.map((e) => {
-      if (publishedTopics.includes(e.data.headers.topic)) return;
-      publishFn(
+      if (publishedTopics.includes(e.data.topic)) return;
+      publishedTopics.push(e.data.topic);
+      return publishFn(
         {
           from: e.data.saved,
         },
-        e.data.headers.topic
+        e.data.topic
       );
-      publishedTopics.push(e.data.headers.topic);
     }),
     ...proofs.map((proof) => scheduleUpdateForProofFn(proof.id)),
   ]);

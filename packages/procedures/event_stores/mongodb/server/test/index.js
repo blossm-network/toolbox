@@ -155,10 +155,11 @@ describe("Mongodb event store", () => {
           id: { $type: String, required: true, unique: true },
           saved: { $type: Date, required: true },
           root: { $type: String, required: true },
+          topic: { $type: String, required: true },
+          idempotency: { $type: String, required: true, unique: true },
           payload: formattedSchemaWithOptions,
           number: { $type: Number, required: true },
           headers: {
-            topic: { $type: String, required: true },
             version: { $type: Number, required: true },
             action: { $type: String, required: true },
             domain: { $type: String, required: true },
@@ -177,7 +178,6 @@ describe("Mongodb event store", () => {
               },
             },
             created: { $type: Date, required: true },
-            idempotency: { $type: String, required: true, unique: true },
             path: {
               $type: [
                 {
@@ -204,7 +204,7 @@ describe("Mongodb event store", () => {
       typeKey: "$type",
       indexes: [
         [{ "data.id": 1 }],
-        [{ "data.headers.idempotency": 1 }],
+        [{ "data.idempotency": 1 }],
         [{ "data.root": 1 }],
         [{ "data.root": 1, "data.number": 1 }],
         [{ "data.saved": 1, "data.number": 1, "data.headers.action": 1 }], //, _id: 1, __v: 1 }],
@@ -431,9 +431,10 @@ describe("Mongodb event store", () => {
           saved: { $type: Date, required: true },
           payload: formattedSchemaWithOptions,
           root: { $type: String, required: true },
+          topic: { $type: String, required: true },
+          idempotency: { $type: String, required: true, unique: true },
           number: { $type: Number, required: true },
           headers: {
-            topic: { $type: String, required: true },
             version: { $type: Number, required: true },
             action: { $type: String, required: true },
             domain: { $type: String, required: true },
@@ -452,7 +453,6 @@ describe("Mongodb event store", () => {
               },
             },
             created: { $type: Date, required: true },
-            idempotency: { $type: String, required: true, unique: true },
             path: {
               $type: [
                 {
@@ -479,7 +479,7 @@ describe("Mongodb event store", () => {
       typeKey: "$type",
       indexes: [
         [{ "data.id": 1 }],
-        [{ "data.headers.idempotency": 1 }],
+        [{ "data.idempotency": 1 }],
         [{ "data.root": 1 }],
         [{ "data.root": 1, "data.number": 1 }],
         [{ "data.saved": 1, "data.number": 1, "data.headers.action": 1 }], //, _id: 1, __v: 1 }],
@@ -649,10 +649,11 @@ describe("Mongodb event store", () => {
           saved: { $type: Date, required: true },
           id: { $type: String, required: true, unique: true },
           root: { $type: String, required: true },
+          topic: { $type: String, required: true },
+          idempotency: { $type: String, required: true, unique: true },
           payload: formattedSchemaWithOptions,
           number: { $type: Number, required: true },
           headers: {
-            topic: { $type: String, required: true },
             version: { $type: Number, required: true },
             action: { $type: String, required: true },
             domain: { $type: String, required: true },
@@ -671,7 +672,6 @@ describe("Mongodb event store", () => {
               },
             },
             created: { $type: Date, required: true },
-            idempotency: { $type: String, required: true, unique: true },
             path: {
               $type: [
                 {
@@ -698,7 +698,7 @@ describe("Mongodb event store", () => {
       typeKey: "$type",
       indexes: [
         [{ "data.id": 1 }],
-        [{ "data.headers.idempotency": 1 }],
+        [{ "data.idempotency": 1 }],
         [{ "data.root": 1 }],
         [{ "data.root": 1, "data.number": 1 }],
         [{ "data.saved": 1, "data.number": 1, "data.headers.action": 1 }], //, _id: 1, __v: 1 }],

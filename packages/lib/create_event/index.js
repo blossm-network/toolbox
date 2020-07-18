@@ -15,20 +15,16 @@ module.exports = ({
 } = {}) => {
   return {
     root: root || deps.uuid(),
+    topic: `${action}.${domain}.${service}`,
+    idempotency: `${idempotency || deps.uuid()}-${action}-${domain}-${service}${
+      path ? `-${(path || []).reduce((result, p) => result + p.hash, "")}` : ""
+    }`,
     headers: {
       action,
       domain,
       service,
-      topic: `${action}.${domain}.${service}`,
       version,
       created: dateString(),
-      idempotency: `${
-        idempotency || deps.uuid()
-      }-${action}-${domain}-${service}${
-        path
-          ? `-${(path || []).reduce((result, p) => result + p.hash, "")}`
-          : ""
-      }`,
       ...(context && { context }),
       ...(trace && { trace }),
       ...(path && {

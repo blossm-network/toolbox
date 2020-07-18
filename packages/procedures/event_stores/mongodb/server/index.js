@@ -28,9 +28,10 @@ const eventStore = async ({ schema, indexes, secretFn }) => {
         saved: { [typeKey]: Date, required: true },
         number: { [typeKey]: Number, required: true },
         root: { [typeKey]: String, required: true },
+        idempotency: { [typeKey]: String, required: true, unique: true },
+        topic: { [typeKey]: String, required: true },
         payload: schema,
         headers: {
-          topic: { [typeKey]: String, required: true },
           action: { [typeKey]: String, required: true },
           domain: { [typeKey]: String, required: true },
           service: { [typeKey]: String, required: true },
@@ -49,7 +50,6 @@ const eventStore = async ({ schema, indexes, secretFn }) => {
           },
           trace: { [typeKey]: String },
           created: { [typeKey]: Date, required: true },
-          idempotency: { [typeKey]: String, required: true, unique: true },
           path: {
             [typeKey]: [
               {
@@ -76,7 +76,7 @@ const eventStore = async ({ schema, indexes, secretFn }) => {
     typeKey,
     indexes: [
       [{ "data.id": 1 }],
-      [{ "data.headers.idempotency": 1 }],
+      [{ "data.idempotency": 1 }],
       [{ "data.root": 1 }],
       //Need this in order to query by root and sort by number.
       [{ "data.root": 1, "data.number": 1 }],

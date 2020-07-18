@@ -5,7 +5,7 @@ const { restore, fake, stub, replace } = require("sinon");
 const post = require("..");
 const deps = require("../deps");
 
-const events = [{ data: { headers: {} } }, { data: { headers: {} } }];
+const events = [{ data: {} }, { data: {} }];
 
 describe("Event store post", () => {
   afterEach(() => {
@@ -44,13 +44,13 @@ describe("Event store post", () => {
         {
           data: {
             saved: savedEventSavedTimestamp,
-            headers: { topic: savedEventHeadersTopic },
+            topic: savedEventHeadersTopic,
           },
         },
         {
           data: {
             saved: savedEventSavedTimestamp,
-            headers: { topic: savedEventHeadersTopic },
+            topic: savedEventHeadersTopic,
           },
         },
       ],
@@ -97,10 +97,7 @@ describe("Event store post", () => {
     const idempotency = "some-idempotency";
     const req = {
       body: {
-        events: [
-          { data: { headers: { idempotency } } },
-          { data: { headers: { idempotency } } },
-        ],
+        events: [{ data: { idempotency } }, { data: { idempotency } }],
       },
     };
 
@@ -125,7 +122,7 @@ describe("Event store post", () => {
         {
           data: {
             saved: savedEventSavedTimestamp,
-            headers: { topic: savedEventHeadersTopic },
+            topic: savedEventHeadersTopic,
           },
         },
       ],
@@ -156,7 +153,7 @@ describe("Event store post", () => {
       postTransactionResult
     );
     expect(postTransactionFake).to.have.been.calledWith({
-      events: [{ data: { headers: { idempotency } } }],
+      events: [{ data: { idempotency } }],
       saveEventsFn,
       reserveRootCountsFn,
       hashFn,
@@ -180,8 +177,8 @@ describe("Event store post", () => {
     const req = {
       body: {
         events: [
-          { data: { headers: { idempotency: idempotency1 } } },
-          { data: { headers: { idempotency: idempotency2 } } },
+          { data: { idempotency: idempotency1 } },
+          { data: { idempotency: idempotency2 } },
         ],
       },
     };
@@ -207,7 +204,7 @@ describe("Event store post", () => {
         {
           data: {
             saved: savedEventSavedTimestamp,
-            headers: { topic: savedEventHeadersTopic },
+            topic: savedEventHeadersTopic,
           },
         },
       ],
@@ -239,8 +236,8 @@ describe("Event store post", () => {
     );
     expect(postTransactionFake).to.have.been.calledWith({
       events: [
-        { data: { headers: { idempotency: idempotency1 } } },
-        { data: { headers: { idempotency: idempotency2 } } },
+        { data: { idempotency: idempotency1 } },
+        { data: { idempotency: idempotency2 } },
       ],
       saveEventsFn,
       reserveRootCountsFn,
@@ -265,8 +262,8 @@ describe("Event store post", () => {
     const req = {
       body: {
         events: [
-          { data: { headers: { idempotency: idempotency1 } } },
-          { data: { headers: { idempotency: idempotency2 } } },
+          { data: { idempotency: idempotency1 } },
+          { data: { idempotency: idempotency2 } },
         ],
       },
     };
@@ -292,7 +289,7 @@ describe("Event store post", () => {
         {
           data: {
             saved: savedEventSavedTimestamp,
-            headers: { topic: savedEventHeadersTopic },
+            topic: savedEventHeadersTopic,
           },
         },
       ],
@@ -327,7 +324,7 @@ describe("Event store post", () => {
       postTransactionResult
     );
     expect(postTransactionFake).to.have.been.calledWith({
-      events: [{ data: { headers: { idempotency: idempotency1 } } }],
+      events: [{ data: { idempotency: idempotency1 } }],
       saveEventsFn,
       reserveRootCountsFn,
       hashFn,
