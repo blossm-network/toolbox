@@ -14,11 +14,6 @@ stores:
       - some-action
 
 #
-# Add dependencies and devDependencies, just like a package.json file.
-#
-devDependencies:
-
-#
 # The following properties are used for automated testing.
 #
 testing:

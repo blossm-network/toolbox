@@ -16,7 +16,8 @@ module.exports = ({ mainFn, streamFn }) => async (req, res) => {
 
   await streamFn({
     from,
-    fn: mainFn,
+    fn: (event) =>
+      mainFn({ payload: event.data.payload, root: event.data.root }),
     // chronological
     sortFn: (a, b) =>
       a.data.saved < b.data.saved ? -1 : a.data.saved > b.data.saved ? 1 : 0,

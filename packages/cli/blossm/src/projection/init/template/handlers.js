@@ -1,16 +1,11 @@
 module.exports = {
   "some-service": {
     "some-domain": {
-      "some-action": (event) => {
+      "some-action": ({ payload, root }) => {
         return {
           body: {
-            name: event.name,
+            name: payload.name,
           },
-          // domain: {
-          //   root: "some-domain-root",
-          //   service: "some-domain-service",
-          //   network: "some-domain-network",
-          // },
         };
       },
     },

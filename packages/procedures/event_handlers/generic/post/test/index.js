@@ -14,7 +14,7 @@ describe("Command handler post", () => {
   });
 
   it("should call with the correct params", async () => {
-    const mainFn = "some-main-fn";
+    const mainFnFake = fake();
     const streamFnFake = fake();
 
     const req = {
@@ -29,13 +29,19 @@ describe("Command handler post", () => {
     };
 
     await post({
-      mainFn,
+      mainFn: mainFnFake,
       streamFn: streamFnFake,
     })(req, res);
 
     expect(streamFnFake).to.have.been.calledWith({
       from,
-      fn: mainFn,
+      fn: match((fn) => {
+        const root = "some-root";
+        const payload = "some-payload";
+        const event = { data: { root, payload } };
+        fn(event);
+        return mainFnFake.calledWith({ payload, root });
+      }),
       sortFn: match((fn) => {
         const a = { data: { saved: 0 } };
         const b = { data: { saved: 1 } };
