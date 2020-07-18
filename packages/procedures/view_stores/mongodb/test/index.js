@@ -118,10 +118,12 @@ describe("View store", () => {
     expect(storeFake).to.have.been.calledWith({
       name: `_${context}.${service}.${domain}.${name}`,
       schema: {
-        body: formattedSchema,
+        body: {
+          id: { $type: String, required: true, unique: true },
+          ...formattedSchema,
+        },
         headers: {
           _id: false,
-          id: { $type: String, required: true, unique: true },
           trace: { $type: String },
           context: {
             $type: {
@@ -333,7 +335,10 @@ describe("View store", () => {
     expect(storeFake).to.have.been.calledWith({
       name: `_${context}.${name}`,
       schema: {
-        body: formattedSchema,
+        body: {
+          id: { $type: String, required: true, unique: true },
+          ...formattedSchema,
+        },
         headers: {
           _id: false,
           id: { $type: String, required: true, unique: true },
@@ -458,7 +463,10 @@ describe("View store", () => {
     expect(storeFake).to.have.been.calledWith({
       name: `_${context}.${service}.${domain}.${name}`,
       schema: {
-        body: formattedSchema,
+        body: {
+          id: { $type: String, required: true, unique: true },
+          ...formattedSchema,
+        },
         headers: {
           _id: false,
           id: { $type: String, required: true, unique: true },
@@ -567,7 +575,10 @@ describe("View store", () => {
     expect(storeFake).to.have.been.calledWith({
       name: `_${context}.${service}.${domain}.${name}`,
       schema: {
-        body: formattedSchema,
+        body: {
+          id: { $type: String, required: true, unique: true },
+          ...formattedSchema,
+        },
         headers: {
           _id: false,
           id: { $type: String, required: true, unique: true },
@@ -759,7 +770,10 @@ describe("View store", () => {
     expect(storeFake).to.have.been.calledWith({
       name: `_${context}.${service}.${domain}.${name}`,
       schema: {
-        body: formattedSchema,
+        body: {
+          id: { $type: String, required: true, unique: true },
+          ...formattedSchema,
+        },
         headers: {
           _id: false,
           id: { $type: String, required: true, unique: true },
