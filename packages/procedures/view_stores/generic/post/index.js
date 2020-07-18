@@ -4,6 +4,9 @@ const defaultFn = (update) => update;
 
 module.exports = ({ writeFn, updateFn = defaultFn }) => {
   return async (req, res) => {
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log("HELLL$O");
     if (!req.body.query)
       throw deps.badRequestError.message(
         "Missing query parameter in the body."
@@ -11,9 +14,12 @@ module.exports = ({ writeFn, updateFn = defaultFn }) => {
 
     //TODO
     //eslint-disable-next-line no-console
-    console.log({ body: req.body });
+    console.log({ boidy: req.body, env: process.env.CONTEXT });
 
     const context = req.body.context[process.env.CONTEXT];
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log({ context });
 
     if (!context)
       throw deps.forbiddenError.message("Missing required permissions.");

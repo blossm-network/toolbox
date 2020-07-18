@@ -22,6 +22,10 @@ describe("View store base integration tests", () => {
     expect(example0).to.exist;
     expect(example1).to.exist;
 
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log("hi");
+
     const response0 = await request.post(url, {
       body: {
         query: {
