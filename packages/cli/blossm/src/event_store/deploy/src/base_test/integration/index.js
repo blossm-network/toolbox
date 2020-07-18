@@ -1,5 +1,5 @@
 require("localenv");
-const { expect } = require("chai");
+const { expect } = require("chai").use(require("chai-datetime"));
 const request = require("@blossm/request");
 const { string: dateString } = require("@blossm/datetime");
 const uuid = require("@blossm/uuid");
@@ -301,7 +301,7 @@ describe("Event store integration tests", () => {
   });
 
   it("should publish event successfully", (done) => {
-    const now = dateString();
+    const preSaveDate = dateString();
     subscribe({
       topic,
       name: sub,
@@ -313,7 +313,7 @@ describe("Event store integration tests", () => {
             .toString()
             .trim();
           const data = JSON.parse(dataString);
-          expect(data.from).to.be.greaterThan(now);
+          expect(data.from).to.be.afterTime(preSaveDate);
           await unsubscribe({ topic, name: sub });
           done();
         });
