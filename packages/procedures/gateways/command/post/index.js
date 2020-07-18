@@ -12,7 +12,7 @@ module.exports = ({
   await deps.validate(req.body);
   const { payload, headers, root } = req.body;
 
-  let { body: response, headers: responseHeaders = {}, statusCode } = await deps
+  let { body: response, statusCode } = await deps
     .command({
       name,
       domain,
@@ -61,6 +61,7 @@ module.exports = ({
     for (const token of response.tokens) {
       if (!token.network || !token.type || !token.value) continue;
       const cookieName = token.type;
+      //TODO parse token for exp
       res.cookie(cookieName, token.value, {
         domain: token.network,
         httpOnly: true,

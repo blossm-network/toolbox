@@ -301,6 +301,7 @@ describe("Event store integration tests", () => {
   });
 
   it("should publish event successfully", (done) => {
+    const now = dateString();
     subscribe({
       topic,
       name: sub,
@@ -312,7 +313,7 @@ describe("Event store integration tests", () => {
             .toString()
             .trim();
           const data = JSON.parse(dataString);
-          expect(data.root).to.equal(root);
+          expect(data.saved).to.be.greaterThan(now);
           await unsubscribe({ topic, name: sub });
           done();
         });
