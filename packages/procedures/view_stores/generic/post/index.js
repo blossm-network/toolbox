@@ -15,9 +15,17 @@ module.exports = ({ writeFn, updateFn = defaultFn }) => {
       throw deps.forbiddenError.message("Missing required permissions.");
 
     const customUpdate = updateFn(req.body.update);
+
     //TODO
     //eslint-disable-next-line no-console
     console.log({ customUpdate });
+
+    const contextProperty = {
+      root: context.root,
+      domain: process.env.CONTEXT,
+      service: context.service,
+      network: context.network,
+    };
 
     const formattedBody = {};
 
@@ -27,7 +35,7 @@ module.exports = ({ writeFn, updateFn = defaultFn }) => {
     const data = {
       ...formattedBody,
       ...(customUpdate.trace && { "headers.trace": customUpdate.trace }),
-      ...(customUpdate.context && { "headers.context": customUpdate.context }),
+      "headers.context": contextProperty,
       "headers.modified": deps.dateString(),
     };
 
@@ -42,12 +50,10 @@ module.exports = ({ writeFn, updateFn = defaultFn }) => {
     const newView = await writeFn({
       query: {
         ...formattedQuery,
-        "headers.context": {
-          root: context.root,
-          domain: process.env.CONTEXT,
-          service: context.service,
-          network: context.network,
-        },
+        "headers.context.root": contextProperty.root,
+        "headers.context.domain": contextProperty.domain,
+        "headers.context.service": contextProperty.service,
+        "headers.context.network": contextProperty.network,
       },
       data,
     });

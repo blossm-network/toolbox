@@ -68,17 +68,20 @@ describe("View store put", () => {
     expect(writeFake).to.have.been.calledWith({
       query: {
         "body.some": "query",
+        "headers.context.root": envContextRoot,
+        "headers.context.domain": "some-env-context",
+        "headers.context.service": envContextService,
+        "headers.context.network": envContextNetwork,
+      },
+      data: {
+        "body.a": 1,
+        "headers.trace": 2,
         "headers.context": {
           root: envContextRoot,
           domain: "some-env-context",
           service: envContextService,
           network: envContextNetwork,
         },
-      },
-      data: {
-        "body.a": 1,
-        "headers.trace": 2,
-        "headers.context": 3,
         "headers.modified": deps.dateString(),
       },
     });
@@ -107,15 +110,19 @@ describe("View store put", () => {
     expect(writeFake).to.have.been.calledWith({
       query: {
         "body.some": "query",
+        "headers.context.root": envContextRoot,
+        "headers.context.domain": "some-env-context",
+        "headers.context.service": envContextService,
+        "headers.context.network": envContextNetwork,
+      },
+      data: {
+        "body.c": 3,
         "headers.context": {
           root: envContextRoot,
           domain: "some-env-context",
           service: envContextService,
           network: envContextNetwork,
         },
-      },
-      data: {
-        "body.c": 3,
         "headers.modified": deps.dateString(),
       },
     });
