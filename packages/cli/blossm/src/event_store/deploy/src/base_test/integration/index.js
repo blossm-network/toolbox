@@ -53,14 +53,14 @@ describe("Event store integration tests", () => {
           {
             data: {
               root,
+              idempotency: uuid(),
+              topic,
               headers: {
-                topic,
                 action: example0.action,
                 domain,
                 service,
                 version,
                 created,
-                idempotency: uuid(),
               },
               payload: example0.payload,
             },
@@ -92,14 +92,14 @@ describe("Event store integration tests", () => {
           {
             data: {
               root,
+              topic,
+              idempotency: uuid(),
               headers: {
-                topic,
                 version,
                 created,
                 action: example1.action,
                 domain,
                 service,
-                idempotency: uuid(),
               },
               payload: example1.payload,
             },
@@ -156,14 +156,14 @@ describe("Event store integration tests", () => {
           {
             data: {
               root,
+              topic,
+              idempotency: uuid(),
               headers: {
-                topic,
                 version,
                 created,
                 action: "some-bogus",
                 domain,
                 service,
-                idempotency: uuid(),
               },
               payload: example0.payload,
             },
@@ -197,14 +197,14 @@ describe("Event store integration tests", () => {
           {
             data: {
               root,
+              topic,
+              idempotency: uuid(),
               headers: {
-                topic,
                 version,
                 created,
                 action: example0.action,
                 domain,
                 service,
-                idempotency: uuid(),
               },
               payload: example0.payload,
             },
@@ -266,14 +266,14 @@ describe("Event store integration tests", () => {
           {
             data: {
               root,
+              topic,
+              idempotency: uuid(),
               headers: {
-                topic,
                 version,
                 created,
                 action: example0.action,
                 domain,
                 service,
-                idempotency: uuid(),
               },
               payload: example0.payload,
             },
@@ -281,14 +281,14 @@ describe("Event store integration tests", () => {
           {
             data: {
               root,
+              topic,
+              idempotency: uuid(),
               headers: {
-                topic,
                 version,
                 created,
                 action: example1.action,
                 domain,
                 service,
-                idempotency: uuid(),
               },
               payload: example1.payload,
             },
@@ -323,14 +323,14 @@ describe("Event store integration tests", () => {
               {
                 data: {
                   root,
+                  topic,
+                  idempotency: uuid(),
                   headers: {
-                    topic,
                     version,
                     created,
                     action: example0.action,
                     domain,
                     service,
-                    idempotency: uuid(),
                   },
                   payload: example0.payload,
                 },
@@ -350,14 +350,14 @@ describe("Event store integration tests", () => {
           {
             data: {
               root,
+              topic,
+              idempotency: uuid(),
               headers: {
-                topic,
                 version,
                 created,
                 action,
                 domain,
                 service,
-                idempotency: uuid(),
               },
               payload,
             },
@@ -377,14 +377,14 @@ describe("Event store integration tests", () => {
             {
               data: {
                 root,
+                topic,
+                idempotency: uuid(),
                 headers: {
-                  topic,
                   version,
                   created,
                   action: example0.action,
                   domain,
                   service,
-                  idempotency: uuid(),
                 },
                 payload: example0.payload,
               },
@@ -399,14 +399,14 @@ describe("Event store integration tests", () => {
             {
               data: {
                 root,
+                topic,
+                idempotency: uuid(),
                 headers: {
-                  topic,
                   version,
                   created,
                   action: example1.action,
                   domain,
                   service,
-                  idempotency: uuid(),
                 },
                 payload: example1.payload,
               },
@@ -527,14 +527,14 @@ describe("Event store integration tests", () => {
           {
             data: {
               root,
+              topic,
+              idempotency: uuid(),
               headers: {
-                topic,
                 version,
                 created,
                 action: example0.action,
                 domain,
                 service,
-                idempotency: uuid(),
               },
               payload: example0.payload,
             },
@@ -555,14 +555,14 @@ describe("Event store integration tests", () => {
           {
             data: {
               root,
+              topic,
+              idempotency,
               headers: {
-                topic,
                 version,
                 created,
                 action: example0.action,
                 domain,
                 service,
-                idempotency,
               },
               payload: { ...example0.payload, b: 2 },
             },
@@ -570,14 +570,14 @@ describe("Event store integration tests", () => {
           {
             data: {
               root,
+              topic,
+              idempotency,
               headers: {
-                topic,
                 version,
                 created,
                 action: example0.action,
                 domain,
                 service,
-                idempotency,
               },
               payload: { ...example0.payload, a: 1 },
             },
@@ -592,14 +592,14 @@ describe("Event store integration tests", () => {
           {
             data: {
               root,
+              topic,
+              idempotency,
               headers: {
-                topic,
                 version,
                 created,
                 action: example0.action,
                 domain,
                 service,
-                idempotency,
               },
               payload: example0.payload,
             },
@@ -607,14 +607,14 @@ describe("Event store integration tests", () => {
           {
             data: {
               root,
+              topic,
+              idempotency,
               headers: {
-                topic,
                 version,
                 created,
                 action: example0.action,
                 domain,
                 service,
-                idempotency,
               },
               payload: example0.payload,
             },
@@ -637,14 +637,14 @@ describe("Event store integration tests", () => {
           {
             data: {
               root,
+              topic,
+              idempotency: uuid(),
               headers: {
-                topic,
                 version,
                 created,
                 action: "bogus",
                 domain,
                 service,
-                idempotency: uuid(),
               },
               payload: example0.payload,
             },
