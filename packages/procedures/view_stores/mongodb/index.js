@@ -19,6 +19,7 @@ const viewStore = async ({ schema, indexes, secretFn }) => {
     schema: {
       body: deps.formatSchema(schema, typeKey),
       headers: {
+        id: { [typeKey]: String, required: true, unique: true },
         trace: { [typeKey]: String },
         context: {
           [typeKey]: {
@@ -70,6 +71,7 @@ module.exports = async ({
   one,
 } = {}) => {
   const allIndexes = [
+    [{ id: 1 }],
     [
       { [`headers.context.root`]: 1 },
       { [`headers.context.domain`]: 1 },
@@ -169,9 +171,6 @@ module.exports = async ({
       query,
     });
 
-  //TODO
-  //eslint-disable-next-line no-console
-  console.log({ storeExists: store != undefined });
   deps.viewStore({
     streamFn,
     findFn,
