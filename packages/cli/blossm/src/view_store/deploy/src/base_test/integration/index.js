@@ -19,56 +19,64 @@ const domainRoot =
 
 describe("View store base integration tests", () => {
   const testParamQueries = async () => {
-    const root = "some-root";
+    const id = "some-id";
     const example0 = testing.examples.first;
     const example1 = testing.examples.second;
     expect(example0).to.exist;
     expect(example1).to.exist;
 
-    const response0 = await request.put(`${url}/${root}`, {
+    const response0 = await request.post(url, {
       body: {
-        view: {
-          body: example0.put,
+        query: {
+          id,
+        },
+        update: {
+          body: {
+            id,
+            ...example0.post,
+          },
           headers: {
             [process.env.CONTEXT]: {
               root: contextRoot,
               service: contextService,
               network: contextNetwork,
             },
-            ...(domainRoot && {
-              [process.env.DOMAIN]: {
-                root: domainRoot,
-                service: process.env.SERVICE,
-                network: process.env.NETWORK,
-              },
-            }),
           },
         },
       },
     });
 
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log({ response0 });
     expect(response0.statusCode).to.equal(200);
 
-    const response1 = await request.get(
-      `${url}${domainRoot ? `/${domainRoot}` : ""}`,
-      {
-        query: {
-          context: {
-            [process.env.CONTEXT]: {
-              root: contextRoot,
-              service: contextService,
-              network: contextNetwork,
-            },
+    const response1 = await request.get(url, {
+      query: {
+        context: {
+          [process.env.CONTEXT]: {
+            root: contextRoot,
+            service: contextService,
+            network: contextNetwork,
           },
         },
-      }
-    );
+      },
+    });
 
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log({ response1 });
+
+    expect(response1.statusCode).to.equal(200);
     const { updates: updates0, count: count0, content: content0 } = JSON.parse(
       response1.body
     );
 
     const parsedBody0 = one ? content0 : content0[0];
+
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log({ parsedBody0 });
 
     expect(updates0).to.exist;
     !one ? expect(count0).to.equal(1) : expect(count0).to.be.undefined;
@@ -79,47 +87,49 @@ describe("View store base integration tests", () => {
     }
 
     for (const more of testing.examples.more || []) {
-      const moreRoot = uuid();
-      const moreResponse0 = await request.put(`${url}/${moreRoot}`, {
+      const moreId = uuid();
+      const moreResponse0 = await request.post(url, {
         body: {
-          view: {
-            body: more.put,
+          query: {
+            id: moreId,
+          },
+          update: {
+            body: {
+              id: moreId,
+              ...more.post,
+            },
             headers: {
               [process.env.CONTEXT]: {
                 root: contextRoot,
                 service: contextService,
                 network: contextNetwork,
               },
-              ...(domainRoot && {
-                [process.env.DOMAIN]: {
-                  root: domainRoot,
-                  service: process.env.SERVICE,
-                  network: process.env.NETWORK,
-                },
-              }),
             },
           },
         },
       });
 
+      //TODO
+      //eslint-disable-next-line no-console
+      console.log({ moreResponse0 });
       expect(moreResponse0.statusCode).to.equal(200);
 
-      const moreResponse1 = await request.get(
-        `${url}${domainRoot ? `/${domainRoot}` : ""}`,
-        {
-          query: {
-            ...(more.query && { query: more.query }),
-            context: {
-              [process.env.CONTEXT]: {
-                root: contextRoot,
-                service: contextService,
-                network: contextNetwork,
-              },
+      const moreResponse1 = await request.get(url, {
+        query: {
+          ...(more.query && { query: more.query }),
+          context: {
+            [process.env.CONTEXT]: {
+              root: contextRoot,
+              service: contextService,
+              network: contextNetwork,
             },
           },
-        }
-      );
+        },
+      });
 
+      //TODO
+      //eslint-disable-next-line no-console
+      console.log({ moreResponse1 });
       const {
         updates: moreUpdate,
         count: moreCount,
@@ -137,10 +147,13 @@ describe("View store base integration tests", () => {
       }
     }
 
-    const response2 = await request.put(`${url}/${root}`, {
+    const response2 = await request.post(url, {
       body: {
-        view: {
-          body: example1.put,
+        query: {
+          id,
+        },
+        update: {
+          body: example1.post,
           headers: {
             [process.env.CONTEXT]: {
               root: contextRoot,
@@ -148,40 +161,41 @@ describe("View store base integration tests", () => {
               network: contextNetwork,
             },
           },
-          ...(domainRoot && {
-            [process.env.DOMAIN]: {
-              root: domainRoot,
-              service: process.env.SERVICE,
-              network: process.env.NETWORK,
-            },
-          }),
         },
       },
     });
 
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log({ response2 });
+
     expect(response2.statusCode).to.equal(200);
 
-    const response3 = await request.get(
-      `${url}${domainRoot ? `/${domainRoot}` : ""}`,
-      {
-        query: {
-          context: {
-            [process.env.CONTEXT]: {
-              root: contextRoot,
-              service: contextService,
-              network: contextNetwork,
-            },
+    const response3 = await request.get(url, {
+      query: {
+        context: {
+          [process.env.CONTEXT]: {
+            root: contextRoot,
+            service: contextService,
+            network: contextNetwork,
           },
         },
-      }
-    );
+      },
+    });
 
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log({ response3 });
     expect(response3.statusCode).to.equal(200);
     const { updates: updates1, count: count1, content: content1 } = JSON.parse(
       response3.body
     );
 
     const parsedBody1 = one ? content1 : content1[0];
+
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log({ parsedBody1 });
 
     expect(updates1).to.exist;
     !one ? expect(count1).to.equal(1) : expect(count1).to.be.undefined;
@@ -190,11 +204,17 @@ describe("View store base integration tests", () => {
       expect(parsedBody1.body[key]).to.deep.equal(example1.get[key]);
     }
 
-    const otherRoot = "a";
-    await request.put(`${url}/${otherRoot}`, {
+    const otherId = "a";
+    await request.post(url, {
       body: {
-        view: {
-          body: example1.put,
+        query: {
+          id: otherId,
+        },
+        update: {
+          body: {
+            id: otherId,
+            ...example1.post,
+          },
           headers: {
             [process.env.CONTEXT]: {
               root: contextRoot,
@@ -202,34 +222,28 @@ describe("View store base integration tests", () => {
               network: contextNetwork,
             },
           },
-          ...(domainRoot && {
-            [process.env.DOMAIN]: {
-              root: domainRoot,
-              service: process.env.SERVICE,
-              network: process.env.NETWORK,
-            },
-          }),
         },
       },
     });
 
-    const response5 = await request.get(
-      `${url}${domainRoot ? `/${domainRoot}` : ""}`,
-      {
-        query: {
-          context: {
-            [process.env.CONTEXT]: {
-              root: contextRoot,
-              service: contextService,
-              network: contextNetwork,
-            },
-          },
-          sort: {
-            "headers.root": 1,
+    const response5 = await request.get(url, {
+      query: {
+        context: {
+          [process.env.CONTEXT]: {
+            root: contextRoot,
+            service: contextService,
+            network: contextNetwork,
           },
         },
-      }
-    );
+        sort: {
+          "headers.root": 1,
+        },
+      },
+    });
+
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log({ response5 });
 
     const { updates: updates2, count: count2, content: content2 } = JSON.parse(
       response5.body
@@ -241,23 +255,24 @@ describe("View store base integration tests", () => {
     expect(updates2).to.exist;
     !one ? expect(count2).to.equal(2) : expect(count2).to.be.undefined;
 
-    const response6 = await request.get(
-      `${url}${domainRoot ? `/${domainRoot}` : ""}`,
-      {
-        query: {
-          context: {
-            [process.env.CONTEXT]: {
-              root: contextRoot,
-              service: contextService,
-              network: contextNetwork,
-            },
-          },
-          sort: {
-            "headers.root": -1,
+    const response6 = await request.get(url, {
+      query: {
+        context: {
+          [process.env.CONTEXT]: {
+            root: contextRoot,
+            service: contextService,
+            network: contextNetwork,
           },
         },
-      }
-    );
+        sort: {
+          id: -1,
+        },
+      },
+    });
+
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log({ response6 });
 
     const { updates: updates3, count: count3, content: content3 } = JSON.parse(
       response6.body
@@ -275,11 +290,14 @@ describe("View store base integration tests", () => {
       expect(firstSort2).to.deep.equal(secondSort1);
     }
 
-    const yetAnotherRoot = "z";
-    await request.put(`${url}/${yetAnotherRoot}`, {
+    const yetAnotherId = "z";
+    await request.post(url, {
       body: {
-        view: {
-          body: { a: 1 },
+        query: {
+          id: yetAnotherId,
+        },
+        update: {
+          body: { id: yetAnotherId, a: 1 },
           headers: {
             [process.env.CONTEXT]: {
               root: contextRoot,
@@ -287,37 +305,27 @@ describe("View store base integration tests", () => {
               network: contextNetwork,
             },
           },
-          ...(domainRoot && {
-            [process.env.DOMAIN]: {
-              root: domainRoot,
-              service: process.env.SERVICE,
-              network: process.env.NETWORK,
-            },
-          }),
         },
       },
     });
 
     if (!one) {
-      const response7 = await request.get(
-        `${url}${domainRoot ? `/${domainRoot}` : ""}`,
-        {
-          query: {
-            context: {
-              [process.env.CONTEXT]: {
-                root: contextRoot,
-                service: contextService,
-                network: contextNetwork,
-              },
-            },
-            limit: 1,
-            skip: 1,
-            sort: {
-              "headers.root": 1,
+      const response7 = await request.get(url, {
+        query: {
+          context: {
+            [process.env.CONTEXT]: {
+              root: contextRoot,
+              service: contextService,
+              network: contextNetwork,
             },
           },
-        }
-      );
+          limit: 1,
+          skip: 1,
+          sort: {
+            id: 1,
+          },
+        },
+      });
 
       const {
         updates: updates4,
@@ -332,113 +340,109 @@ describe("View store base integration tests", () => {
       expect(content4[0]).to.deep.equal(firstSort2);
     }
 
-    const response8 = await request.delete(`${url}/${root}`);
+    const response8 = await request.delete(url, { query: { id } });
     const parsedBody8 = JSON.parse(response8.body);
     expect(response8.statusCode).to.equal(200);
     expect(parsedBody8.deletedCount).to.equal(1);
   };
 
-  const testStreaming = async () => {
-    const example0 = testing.examples.first;
-    const example1 = testing.examples.second;
+  // const testStreaming = async () => {
+  //   const example0 = testing.examples.first;
+  //   const example1 = testing.examples.second;
 
-    expect(example0).to.exist;
-    expect(example1).to.exist;
+  //   expect(example0).to.exist;
+  //   expect(example1).to.exist;
 
-    const root0 = "some-root";
-    const root1 = "some-other-root";
+  //   const id0 = "some-id";
+  //   const id1 = "some-other-id";
 
-    const response = await request.put(`${url}/${root0}`, {
-      body: {
-        view: {
-          body: example0.put,
-          headers: {
-            [process.env.CONTEXT]: {
-              root: contextRoot,
-              service: contextService,
-              network: contextNetwork,
-            },
-            ...(domainRoot && {
-              [process.env.DOMAIN]: {
-                root: domainRoot,
-                service: process.env.SERVICE,
-                network: process.env.NETWORK,
-              },
-            }),
-          },
-        },
-      },
-    });
+  //   const response = await request.post(url, {
+  //     body: {
+  //       query: {
+  //         id: id0,
+  //       },
+  //       view: {
+  //         body: { id: id0, ...example0.put },
+  //         headers: {
+  //           [process.env.CONTEXT]: {
+  //             root: contextRoot,
+  //             service: contextService,
+  //             network: contextNetwork,
+  //           },
+  //         },
+  //       },
+  //     },
+  //   });
 
-    expect(response.statusCode).to.equal(200);
-    const response1 = await request.put(`${url}/${root1}`, {
-      body: {
-        view: {
-          body: example1.put,
-          headers: {
-            [process.env.CONTEXT]: {
-              root: contextRoot,
-              service: contextService,
-              network: contextNetwork,
-            },
-            ...(domainRoot && {
-              [process.env.DOMAIN]: {
-                root: domainRoot,
-                service: process.env.SERVICE,
-                network: process.env.NETWORK,
-              },
-            }),
-          },
-        },
-      },
-    });
-    expect(response1.statusCode).to.equal(200);
-    let roots = [];
-    await request.stream(
-      `${url}/stream${domainRoot ? `/${domainRoot}` : ""}`,
-      (data) => {
-        const parsedData = JSON.parse(data.toString().trim());
-        roots.push(parsedData.headers.root);
+  //   expect(response.statusCode).to.equal(200);
+  //   const response1 = await request.put(`${url}/${root1}`, {
+  //     body: {
+  //       view: {
+  //         body: example1.put,
+  //         headers: {
+  //           [process.env.CONTEXT]: {
+  //             root: contextRoot,
+  //             service: contextService,
+  //             network: contextNetwork,
+  //           },
+  //           ...(domainRoot && {
+  //             [process.env.DOMAIN]: {
+  //               root: domainRoot,
+  //               service: process.env.SERVICE,
+  //               network: process.env.NETWORK,
+  //             },
+  //           }),
+  //         },
+  //       },
+  //     },
+  //   });
+  //   expect(response1.statusCode).to.equal(200);
+  //   let roots = [];
+  //   await request.stream(
+  //     `${url}/stream${domainRoot ? `/${domainRoot}` : ""}`,
+  //     (data) => {
+  //       const parsedData = JSON.parse(data.toString().trim());
+  //       roots.push(parsedData.headers.root);
 
-        if (data.root == root0) {
-          for (const key in example0.get) {
-            if (key == "root") {
-              expect(parsedData.body[key]).to.deep.equal(root0);
-            } else {
-              expect(parsedData.body[key]).to.deep.equal(example0.get[key]);
-            }
-          }
-        }
+  //       if (data.root == root0) {
+  //         for (const key in example0.get) {
+  //           if (key == "root") {
+  //             expect(parsedData.body[key]).to.deep.equal(root0);
+  //           } else {
+  //             expect(parsedData.body[key]).to.deep.equal(example0.get[key]);
+  //           }
+  //         }
+  //       }
 
-        if (data.roots == root1) {
-          for (const key in example1.get) {
-            if (key == "root") {
-              expect(parsedData.body[key]).to.deep.equal(root1);
-            } else {
-              expect(parsedData.body[key]).to.deep.equal(example1.get[key]);
-            }
-          }
-        }
-      },
-      {
-        query: {
-          context: {
-            [process.env.CONTEXT]: {
-              root: contextRoot,
-              service: contextService,
-              network: contextNetwork,
-            },
-          },
-        },
-      }
-    );
-    expect(roots).to.include(root0);
-    expect(roots).to.include(root1);
-  };
+  //       if (data.roots == root1) {
+  //         for (const key in example1.get) {
+  //           if (key == "root") {
+  //             expect(parsedData.body[key]).to.deep.equal(root1);
+  //           } else {
+  //             expect(parsedData.body[key]).to.deep.equal(example1.get[key]);
+  //           }
+  //         }
+  //       }
+  //     },
+  //     {
+  //       query: {
+  //         context: {
+  //           [process.env.CONTEXT]: {
+  //             root: contextRoot,
+  //             service: contextService,
+  //             network: contextNetwork,
+  //           },
+  //         },
+  //       },
+  //     }
+  //   );
+  //   expect(roots).to.include(root0);
+  //   expect(roots).to.include(root1);
+  // };
 
   it("should return successfully", async () => {
     await testParamQueries();
-    await testStreaming();
+    // await testStreaming();
   });
 
   it("should return an error if incorrect params", async () => {
@@ -450,11 +454,14 @@ describe("View store base integration tests", () => {
           schema[property]["type"] == "String")
           ? { a: 1 } //pass an object to a String property
           : "some-string"; // or, pass a string to a non-String property
-      const root = "some-root";
-      const response = await request.put(`${url}/${root}`, {
+      const id = "some-id";
+      const response = await request.post(url, {
         body: {
+          query: {
+            id,
+          },
           view: {
-            body: { [property]: badValue },
+            body: { id, [property]: badValue },
             headers: {
               [process.env.CONTEXT]: {
                 root: contextRoot,
@@ -472,6 +479,9 @@ describe("View store base integration tests", () => {
           },
         },
       });
+      //TODO
+      //eslint-disable-next-line no-console
+      console.log({ response });
       expect(response.statusCode).to.equal(500);
       return;
     }

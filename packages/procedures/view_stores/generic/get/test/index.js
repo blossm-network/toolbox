@@ -6,10 +6,6 @@ const deps = require("../deps");
 
 const obj = { a: "some-obj" };
 const sort = { a: "1" };
-const sourceRoot = "some-source-root";
-const sourceDomain = "some-source-domain";
-const sourceService = "some-source-service";
-const sourceNetwork = "some-source-network";
 
 const objRoot = "some-obj-root";
 const count = "some-count";
@@ -58,8 +54,6 @@ describe("View store get", () => {
     const findFake = fake.returns(results);
     const countFake = fake.returns(200);
 
-    const params = { sourceRoot, sourceDomain, sourceService, sourceNetwork };
-
     const query = { "some-query-key": 1 };
 
     const urlEncodeQueryDataFake = fake.returns(nextUrl);
@@ -71,7 +65,6 @@ describe("View store get", () => {
         context,
         query,
       },
-      params,
     };
 
     const sendFake = fake();
@@ -82,7 +75,7 @@ describe("View store get", () => {
     expect(findFake).to.have.been.calledWith({
       limit: 100,
       skip: 0,
-      sort: { a: 1 },
+      sort: { "body.a": 1 },
       query: {
         "body.some-query-key": 1,
         "headers.context": {
@@ -91,10 +84,6 @@ describe("View store get", () => {
           service: envContextService,
           network: envContextNetwork,
         },
-        "headers.sources.root": sourceRoot,
-        "headers.sources.domain": sourceDomain,
-        "headers.sources.service": sourceService,
-        "headers.sources.network": sourceNetwork,
       },
     });
     expect(countFake).to.have.been.calledWith({
@@ -106,10 +95,6 @@ describe("View store get", () => {
           service: envContextService,
           network: envContextNetwork,
         },
-        "headers.sources.root": sourceRoot,
-        "headers.sources.domain": sourceDomain,
-        "headers.sources.service": sourceService,
-        "headers.sources.network": sourceNetwork,
       },
     });
     expect(urlEncodeQueryDataFake).to.have.been.calledWith(
@@ -124,7 +109,7 @@ describe("View store get", () => {
     expect(sendFake).to.have.been.calledWith({
       content: results,
       updates:
-        "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-networkquery%5Bsource%5D%5Broot%5D=some-source-root&query%5Bsource%5D%5Bdomain%5D=some-source-domain&query%5Bsource%5D%5Bservice%5D=some-source-service&query%5B$source%5D%5Bnetwork%5D=some-source-network",
+        "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
       next: nextUrl,
       count: 200,
     });
@@ -132,8 +117,6 @@ describe("View store get", () => {
   it("should call with the correct params if limit reached", async () => {
     const findFake = fake.returns([{ body: obj, headers: { root: objRoot } }]);
     const countFake = fake.returns(3);
-
-    const params = { sourceRoot, sourceDomain, sourceService, sourceNetwork };
 
     const query = { "some-query-key": 1 };
 
@@ -151,7 +134,6 @@ describe("View store get", () => {
         skip,
         limit,
       },
-      params,
     };
 
     const sendFake = fake();
@@ -162,7 +144,7 @@ describe("View store get", () => {
     expect(findFake).to.have.been.calledWith({
       limit: 1,
       skip: 1,
-      sort: { a: 1 },
+      sort: { "body.a": 1 },
       query: {
         "body.some-query-key": 1,
         "headers.context": {
@@ -171,10 +153,6 @@ describe("View store get", () => {
           service: envContextService,
           network: envContextNetwork,
         },
-        "headers.sources.root": sourceRoot,
-        "headers.sources.domain": sourceDomain,
-        "headers.sources.service": sourceService,
-        "headers.sources.network": sourceNetwork,
       },
     });
     expect(countFake).to.have.been.calledWith({
@@ -186,10 +164,6 @@ describe("View store get", () => {
           service: envContextService,
           network: envContextNetwork,
         },
-        "headers.sources.root": sourceRoot,
-        "headers.sources.domain": sourceDomain,
-        "headers.sources.service": sourceService,
-        "headers.sources.network": sourceNetwork,
       },
     });
     expect(urlEncodeQueryDataFake).to.have.been.calledWith(
@@ -204,7 +178,7 @@ describe("View store get", () => {
     expect(sendFake).to.have.been.calledWith({
       content: [{ body: obj, headers: { root: objRoot } }],
       updates:
-        "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-networkquery%5Bsource%5D%5Broot%5D=some-source-root&query%5Bsource%5D%5Bdomain%5D=some-source-domain&query%5Bsource%5D%5Bservice%5D=some-source-service&query%5B$source%5D%5Bnetwork%5D=some-source-network",
+        "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
       next: nextUrl,
       count: 3,
     });
@@ -212,8 +186,6 @@ describe("View store get", () => {
   it("should call with the correct params if all objects already retrieved with skip and limit", async () => {
     const findFake = fake.returns([{ body: obj, headers: { root: objRoot } }]);
     const countFake = fake.returns(1);
-
-    const params = { sourceRoot, sourceDomain, sourceService, sourceNetwork };
 
     const query = { "some-query-key": 1 };
 
@@ -231,7 +203,6 @@ describe("View store get", () => {
         skip,
         limit,
       },
-      params,
     };
 
     const sendFake = fake();
@@ -242,7 +213,7 @@ describe("View store get", () => {
     expect(findFake).to.have.been.calledWith({
       limit: 1,
       skip: 0,
-      sort: { a: 1 },
+      sort: { "body.a": 1 },
       query: {
         "body.some-query-key": 1,
         "headers.context": {
@@ -251,10 +222,6 @@ describe("View store get", () => {
           service: envContextService,
           network: envContextNetwork,
         },
-        "headers.sources.root": sourceRoot,
-        "headers.sources.domain": sourceDomain,
-        "headers.sources.service": sourceService,
-        "headers.sources.network": sourceNetwork,
       },
     });
     expect(countFake).to.have.been.calledWith({
@@ -266,17 +233,13 @@ describe("View store get", () => {
           service: envContextService,
           network: envContextNetwork,
         },
-        "headers.sources.root": sourceRoot,
-        "headers.sources.domain": sourceDomain,
-        "headers.sources.service": sourceService,
-        "headers.sources.network": sourceNetwork,
       },
     });
     expect(urlEncodeQueryDataFake).to.not.have.been.called;
     expect(sendFake).to.have.been.calledWith({
       content: [{ body: obj, headers: { root: objRoot } }],
       updates:
-        "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-networkquery%5Bsource%5D%5Broot%5D=some-source-root&query%5Bsource%5D%5Bdomain%5D=some-source-domain&query%5Bsource%5D%5Bservice%5D=some-source-service&query%5B$source%5D%5Bnetwork%5D=some-source-network",
+        "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
       count: 1,
     });
   });
@@ -287,8 +250,6 @@ describe("View store get", () => {
     ]);
     const countFake = fake.returns(count);
 
-    const params = { sourceRoot, sourceDomain, sourceService, sourceNetwork };
-
     const urlEncodeQueryDataFake = fake.returns(nextUrl);
     replace(deps, "urlEncodeQueryData", urlEncodeQueryDataFake);
 
@@ -296,7 +257,6 @@ describe("View store get", () => {
       query: {
         context,
       },
-      params,
     };
 
     const sendFake = fake();
@@ -314,10 +274,6 @@ describe("View store get", () => {
           service: envContextService,
           network: envContextNetwork,
         },
-        "headers.sources.root": sourceRoot,
-        "headers.sources.domain": sourceDomain,
-        "headers.sources.service": sourceService,
-        "headers.sources.network": sourceNetwork,
       },
     });
     expect(countFake).to.have.been.calledWith({
@@ -328,17 +284,13 @@ describe("View store get", () => {
           service: envContextService,
           network: envContextNetwork,
         },
-        "headers.sources.root": sourceRoot,
-        "headers.sources.domain": sourceDomain,
-        "headers.sources.service": sourceService,
-        "headers.sources.network": sourceNetwork,
       },
     });
     expect(urlEncodeQueryDataFake).to.not.have.been.called;
     expect(sendFake).to.have.been.calledWith({
       content: [{ body: obj, headers: { root: objRoot, trace } }],
       updates:
-        "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-networkquery%5Bsource%5D%5Broot%5D=some-source-root&query%5Bsource%5D%5Bdomain%5D=some-source-domain&query%5Bsource%5D%5Bservice%5D=some-source-service&query%5B$source%5D%5Bnetwork%5D=some-source-network",
+        "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
       count,
     });
   });
@@ -378,7 +330,7 @@ describe("View store get", () => {
     expect(findFake).to.have.been.calledWith({
       limit: 1,
       skip: 0,
-      sort: { a: 1 },
+      sort: { "body.a": 1 },
       query: {
         "body.some-other-query-key": 1,
         "headers.context": {
@@ -400,12 +352,10 @@ describe("View store get", () => {
     const findFake = fake.returns([]);
     const countFake = fake.returns(0);
 
-    const params = { sourceRoot, sourceDomain, sourceService, sourceNetwork };
     const req = {
       query: {
         context,
       },
-      params,
     };
 
     const sendFake = fake();
@@ -430,12 +380,10 @@ describe("View store get", () => {
     const findFake = fake.returns([]);
     const countFake = fake.returns(0);
 
-    const params = { sourceRoot, sourceDomain, sourceService, sourceNetwork };
     const req = {
       query: {
         context: {},
       },
-      params,
     };
 
     const sendFake = fake();

@@ -121,7 +121,6 @@ describe("View store", () => {
         body: formattedSchema,
         headers: {
           _id: false,
-          id: { $type: String, required: true, unique: true },
           trace: { $type: String },
           context: {
             $type: {
@@ -153,7 +152,6 @@ describe("View store", () => {
       },
       typeKey: "$type",
       indexes: [
-        [{ id: 1 }],
         [
           { "headers.context.root": 1 },
           { "headers.context.domain": 1 },
@@ -336,7 +334,6 @@ describe("View store", () => {
         body: formattedSchema,
         headers: {
           _id: false,
-          id: { $type: String, required: true, unique: true },
           trace: { $type: String },
           context: {
             $type: {
@@ -368,7 +365,6 @@ describe("View store", () => {
       },
       typeKey: "$type",
       indexes: [
-        [{ id: 1 }],
         [
           { "headers.context.root": 1 },
           { "headers.context.domain": 1 },
@@ -461,7 +457,6 @@ describe("View store", () => {
         body: formattedSchema,
         headers: {
           _id: false,
-          id: { $type: String, required: true, unique: true },
           trace: { $type: String },
           context: {
             $type: {
@@ -493,7 +488,6 @@ describe("View store", () => {
       },
       typeKey: "$type",
       indexes: [
-        [{ id: 1 }],
         [
           { "headers.context.root": 1 },
           { "headers.context.domain": 1 },
@@ -570,7 +564,6 @@ describe("View store", () => {
         body: formattedSchema,
         headers: {
           _id: false,
-          id: { $type: String, required: true, unique: true },
           trace: { $type: String },
           context: {
             $type: {
@@ -602,7 +595,6 @@ describe("View store", () => {
       },
       typeKey: "$type",
       indexes: [
-        [{ id: 1 }],
         [
           { "headers.context.root": 1 },
           { "headers.context.domain": 1 },
@@ -762,7 +754,6 @@ describe("View store", () => {
         body: formattedSchema,
         headers: {
           _id: false,
-          id: { $type: String, required: true, unique: true },
           trace: { $type: String },
           context: {
             $type: {
@@ -794,7 +785,6 @@ describe("View store", () => {
       },
       typeKey: "$type",
       indexes: [
-        [{ id: 1 }],
         [
           { "headers.context.root": 1 },
           { "headers.context.domain": 1 },

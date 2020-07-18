@@ -29,15 +29,6 @@ module.exports = ({
         service: context.service,
         network: context.network,
       },
-      ...(req.params.sourceRoot &&
-        req.params.sourceDomain &&
-        req.params.sourceService &&
-        req.params.sourceNetwork && {
-          "headers.sources.root": req.params.sourceRoot,
-          "headers.sources.domain": req.params.sourceDomain,
-          "headers.sources.service": req.params.sourceService,
-          "headers.sources.network": req.params.sourceNetwork,
-        }),
     };
 
     if (req.query.limit) req.query.limit = parseInt(req.query.limit);
@@ -51,12 +42,18 @@ module.exports = ({
     const limit = one ? 1 : req.query.limit || defaultLimit;
     const skip = one ? 0 : req.query.skip || 0;
 
+    let formattedSort;
+    if (req.query.sort) {
+      formattedSort = {};
+      for (const key in req.query.sort)
+        formattedSort[`body.${key}`] = req.query.sort[key];
+    }
     const [results, count] = await Promise.all([
       findFn({
         query,
         limit,
         skip,
-        ...(req.query.sort && { sort: req.query.sort }),
+        ...(formattedSort && { sort: formattedSort }),
       }),
       ...(one ? [] : [countFn({ query })]),
     ]);
@@ -71,18 +68,7 @@ module.exports = ({
       };
     });
 
-    const updates = `https://updates.${
-      process.env.CORE_NETWORK
-    }/channel?query%5Bname%5D=${process.env.NAME}&query%5Bcontext%5D=${
-      process.env.CONTEXT
-    }&query%5Bnetwork%5D=${process.env.NETWORK}${
-      req.params.sourceRoot &&
-      req.params.sourceDomain &&
-      req.params.sourceService &&
-      req.params.sourceNetwork
-        ? `query%5Bsource%5D%5Broot%5D=${req.params.sourceRoot}&query%5Bsource%5D%5Bdomain%5D=${req.params.sourceDomain}&query%5Bsource%5D%5Bservice%5D=${req.params.sourceService}&query%5B$source%5D%5Bnetwork%5D=${req.params.sourceNetwork}`
-        : ""
-    }`;
+    const updates = `https://updates.${process.env.CORE_NETWORK}/channel?query%5Bname%5D=${process.env.NAME}&query%5Bcontext%5D=${process.env.CONTEXT}&query%5Bnetwork%5D=${process.env.NETWORK}`;
 
     if (!one) {
       const limit = req.query.limit || defaultLimit;

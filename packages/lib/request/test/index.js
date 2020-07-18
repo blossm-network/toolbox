@@ -99,15 +99,17 @@ describe("Request", () => {
     expect(reply).to.deep.equal({ ...response, body });
   });
   it("should call delete with correct params", async () => {
+    const params = { hello: "there" };
     const url = "http://google.com";
     replace(deps, "request", (options, callback) => {
       expect(options).to.deep.equal({
         url,
         method: "DELETE",
+        json: params,
       });
       callback(null, response, body);
     });
-    const reply = await request.delete(url);
+    const reply = await request.delete(url, { query: params });
     expect(reply).to.deep.equal({ ...response, body });
   });
 
