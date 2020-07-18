@@ -14,7 +14,7 @@ const root = "some-root";
 const domain = "some-domain";
 const service = "some-service";
 
-const topic = `${domain}.${service}`;
+const topic = `some-action.${domain}.${service}`;
 const idempotency = "some-idempotency";
 
 const eventRoot = "some-event-root";

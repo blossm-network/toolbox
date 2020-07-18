@@ -54,8 +54,8 @@ module.exports = ({
             eventNumberOffsets[event.data.root] = 0;
 
           const topicParts = event.data.headers.topic.split(".");
-          const topicDomain = topicParts[0];
-          const topicService = topicParts[1];
+          const topicDomain = topicParts[1];
+          const topicService = topicParts[2];
 
           if (
             topicDomain != process.env.DOMAIN ||

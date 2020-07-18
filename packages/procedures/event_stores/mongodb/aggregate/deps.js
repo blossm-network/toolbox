@@ -1,5 +1,5 @@
-const { findOne, find } = require("@blossm/mongodb-database");
+const { findOne, stream } = require("@blossm/mongodb-database");
 const { badRequest } = require("@blossm/errors");
 
-exports.db = { findOne, find };
+exports.db = { findOne, stream };
 exports.badRequestError = badRequest;
