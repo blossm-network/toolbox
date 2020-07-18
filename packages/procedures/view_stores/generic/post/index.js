@@ -9,6 +9,10 @@ module.exports = ({ writeFn, updateFn = defaultFn }) => {
         "Missing query parameter in the body."
       );
 
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log({ body: req.body });
+
     const context = req.body.context[process.env.CONTEXT];
 
     if (!context)
