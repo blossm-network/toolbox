@@ -313,7 +313,7 @@ describe("Event store integration tests", () => {
             .toString()
             .trim();
           const data = JSON.parse(dataString);
-          expect(data.saved).to.be.greaterThan(now);
+          expect(data.from).to.be.greaterThan(now);
           await unsubscribe({ topic, name: sub });
           done();
         });
