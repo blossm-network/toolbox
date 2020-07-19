@@ -46,6 +46,9 @@ module.exports = ({ eventStore, snapshotStore, handlers }) => async ({
     }),
   ]);
 
+  //TODO
+  console.log({ events });
+
   if (snapshots.length == 0 && events.length == 0) return [];
 
   const aggregateFn = deps.aggregate({ eventStore, snapshotStore, handlers });

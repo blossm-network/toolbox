@@ -15,6 +15,35 @@ const eventStore = async ({ schema, indexes, secretFn }) => {
     return _eventStore;
   }
 
+  //TODO
+  console.log({
+    schema,
+
+    indexes: [
+      [{ "data.id": 1 }],
+      [{ "data.idempotency": 1 }],
+      [{ "data.root": 1 }],
+      //Need this in order to query by root and sort by number.
+      [{ "data.root": 1, "data.number": 1 }],
+      //Can omit root from this because it has its own index and isnt useful for sort.
+      [
+        {
+          "data.saved": 1,
+          "data.number": 1,
+          "data.headers.action": 1,
+          // _id: 1,
+          // __v: 1,
+        },
+      ],
+      ...(indexes.length == 0
+        ? []
+        : [
+            indexes.map((index) => {
+              return { [`data.payload.${index}`]: 1 };
+            }),
+          ]),
+    ],
+  });
   _eventStore = deps.db.store({
     name: `_${process.env.SERVICE}.${process.env.DOMAIN}`,
     schema: {
