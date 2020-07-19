@@ -107,8 +107,8 @@ exports.streamMany = async (requests, onDataFn, sortFn) => {
         processingData = false;
         if (finishedProcessingAllData) resolve();
       })
-      .on("error", reject)
-      .on("end", () => {
+      .on("close", (err) => {
+        if (err) return reject(err);
         finishedProcessingAllData = true;
         if (!processingData) resolve();
       })
