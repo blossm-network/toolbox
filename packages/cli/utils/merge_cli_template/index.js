@@ -522,7 +522,7 @@ const writeConfig = ({ config, coreNetwork, workingDir }) => {
           mocks: dependency.mocks.map((mock) => {
             return {
               method: "post",
-              path: mock.command,
+              path: `/${mock.command}`,
               ...(mock.code && { code: mock.code }),
               ...(mock.response && { response: mock.response }),
               ...(mock.calls && { calls: mock.calls }),
@@ -537,7 +537,7 @@ const writeConfig = ({ config, coreNetwork, workingDir }) => {
           mocks: dependency.mocks.map((mock) => {
             return {
               method: "get",
-              path: `/${dependency.name}`,
+              path: `/${mock.view}`,
               ...(mock.code && { code: mock.code }),
               ...(mock.response && { response: mock.response }),
               ...(mock.calls && { calls: mock.calls }),
@@ -559,7 +559,7 @@ const writeConfig = ({ config, coreNetwork, workingDir }) => {
           mocks: dependency.mocks.map((mock) => {
             return {
               method: "get",
-              path: `/${dependency.name}`,
+              path: `/${mock.fact}`,
               ...(mock.code && { code: mock.code }),
               ...(mock.response && { response: mock.response }),
               ...(mock.calls && { calls: mock.calls }),
