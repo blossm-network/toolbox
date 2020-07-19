@@ -1,7 +1,7 @@
 {
   "name": "@blossm/mongodb-event-store-query",
   "description": "A mongodb event store server query function.",
-  "version": "0.0.69",
+  "version": "0.0.70",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
