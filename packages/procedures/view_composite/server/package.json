@@ -1,7 +1,7 @@
 {
   "name": "@blossm/view-composite",
   "description": "A generic view composite server.",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@blossm/server": "^0.0.24",
-    "@blossm/view-composite-get": "^0.0.2"
+    "@blossm/view-composite-get": "^0.0.3"
   },
   "devDependencies": {
     "chai-datetime": "^1.5.0",
