@@ -45,7 +45,7 @@ describe("Projection integration tests", () => {
           message: {
             data: Buffer.from(
               JSON.stringify({
-                saved: dateBefore,
+                from: dateBefore,
               })
             ),
           },
