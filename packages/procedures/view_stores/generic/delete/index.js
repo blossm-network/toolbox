@@ -1,6 +1,8 @@
 const deps = require("./deps");
 
 module.exports = ({ removeFn }) => async (req, res) => {
+  console.log({ query: req.query.query });
+  console.log({ body: req.query.body });
   if (!req.query.query)
     throw deps.badRequestError.message(
       "Missing query parameter in the url's query."
