@@ -4,11 +4,6 @@ const defaultFn = (update) => update;
 
 module.exports = ({ writeFn, updateFn = defaultFn }) => {
   return async (req, res) => {
-    if (!req.body.query)
-      throw deps.badRequestError.message(
-        "Missing query parameter in the body."
-      );
-
     if (!req.body.context)
       throw deps.forbiddenError.message("Missing required permissions.");
 
@@ -33,10 +28,15 @@ module.exports = ({ writeFn, updateFn = defaultFn }) => {
       "headers.modified": deps.dateString(),
     };
 
-    const formattedQuery = {};
-    for (const key in req.body.query) {
-      formattedQuery[`body.${key}`] = req.body.query[key];
+    let formattedQuery;
+
+    if (req.body.query) {
+      if (!formattedQuery) formattedQuery = {};
+      for (const key in req.body.query) {
+        formattedQuery[`body.${key}`] = req.body.query[key];
+      }
     }
+
     const newView = await writeFn({
       query: {
         ...formattedQuery,

@@ -74,7 +74,7 @@ module.exports = ({ name, context = process.env.CONTEXT, network }) => {
   } = {}) => ({ query, update }) =>
     deps
       .rpc(name, context, "view-store")
-      .post({ query, update })
+      .post({ ...(query && { query }), update })
       .in({
         ...(contexts && { context: contexts }),
       })

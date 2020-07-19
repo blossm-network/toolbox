@@ -57,7 +57,7 @@ module.exports = eventHandler({
         token: { internalFn: gcpToken },
       })
       .update({
-        query,
+        ...(query && { query }),
         update: {
           body,
           headers,

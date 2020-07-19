@@ -133,11 +133,20 @@ describe("View store put", () => {
     expect(statusFake).to.have.been.calledWith(200);
     expect(sendFake).to.have.been.calledWith(writeResult);
   });
-  it("should throw if query is missing", async () => {
-    const writeFake = fake();
+  it("should return successfully if query is missing", async () => {
+    const writeFake = fake.returns(writeResult);
 
     const req = {
-      body: {},
+      body: {
+        update: {
+          body: {
+            a: 1,
+          },
+          trace: 2,
+          context: 3,
+        },
+        context,
+      },
     };
 
     const sendFake = fake();
@@ -154,19 +163,29 @@ describe("View store put", () => {
       message: messageFake,
     });
 
-    const fnFake = fake.returns({ $set: { b: 2 } });
+    await put({ writeFn: writeFake })(req, res);
 
-    try {
-      await put({ writeFn: writeFake, fn: fnFake })(req, res);
-
-      //shouldn't get called
-      expect(1).to.equal(0);
-    } catch (e) {
-      expect(messageFake).to.have.been.calledWith(
-        "Missing query parameter in the body."
-      );
-      expect(e).to.equal(error);
-    }
+    expect(writeFake).to.have.been.calledWith({
+      query: {
+        "headers.context.root": envContextRoot,
+        "headers.context.domain": "some-env-context",
+        "headers.context.service": envContextService,
+        "headers.context.network": envContextNetwork,
+      },
+      data: {
+        "body.a": 1,
+        "headers.trace": 2,
+        "headers.context": {
+          root: envContextRoot,
+          domain: "some-env-context",
+          service: envContextService,
+          network: envContextNetwork,
+        },
+        "headers.modified": deps.dateString(),
+      },
+    });
+    expect(statusFake).to.have.been.calledWith(200);
+    expect(sendFake).to.have.been.calledWith(writeResult);
   });
   it("should throw if context is missing", async () => {
     const writeFake = fake();

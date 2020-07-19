@@ -293,10 +293,10 @@ describe("Get views", () => {
     replace(deps, "rpc", rpcFake);
 
     const update = "some-update";
-    await viewStore({ name }).update({ query, update });
+    await viewStore({ name }).update({ update });
 
     expect(rpcFake).to.have.been.calledWith(name, envContext, "view-store");
-    expect(postFake).to.have.been.calledWith({ query, update });
+    expect(postFake).to.have.been.calledWith({ update });
     expect(inFake).to.have.been.calledWith({});
     expect(withFake).to.have.been.calledWith();
   });
