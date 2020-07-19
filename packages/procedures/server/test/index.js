@@ -537,7 +537,7 @@ describe("Server", () => {
 
     expect(result).to.equal(app);
     expect(deleteFake).to.have.been.calledWith(
-      "/:id",
+      "/:id?",
       preMiddleware,
       asyncFn,
       postMiddleware
