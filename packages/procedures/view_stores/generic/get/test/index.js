@@ -7,7 +7,7 @@ const deps = require("../deps");
 const obj = { a: "some-obj" };
 const sort = { a: "1" };
 
-const objRoot = "some-obj-root";
+const objContext = "some-obj-context";
 const count = "some-count";
 
 const envContext = "some-env-context";
@@ -48,7 +48,7 @@ describe("View store get", () => {
     const results = [];
 
     for (let i = 0; i < 100; i++) {
-      results.push({ body: obj, headers: { root: objRoot } });
+      results.push({ body: obj, headers: { context: objContext } });
     }
     const findFake = fake.returns(results);
     const countFake = fake.returns(200);
@@ -114,7 +114,9 @@ describe("View store get", () => {
     });
   });
   it("should call with the correct params if limit reached", async () => {
-    const findFake = fake.returns([{ body: obj, headers: { root: objRoot } }]);
+    const findFake = fake.returns([
+      { body: obj, headers: { context: objContext } },
+    ]);
     const countFake = fake.returns(3);
 
     const query = { "some-query-key": 1 };
@@ -175,7 +177,7 @@ describe("View store get", () => {
       }
     );
     expect(sendFake).to.have.been.calledWith({
-      content: [{ body: obj, headers: { root: objRoot } }],
+      content: [{ body: obj, headers: { context: objContext } }],
       updates:
         "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
       next: nextUrl,
@@ -183,7 +185,9 @@ describe("View store get", () => {
     });
   });
   it("should call with the correct params if all objects already retrieved with skip and limit", async () => {
-    const findFake = fake.returns([{ body: obj, headers: { root: objRoot } }]);
+    const findFake = fake.returns([
+      { body: obj, headers: { context: objContext } },
+    ]);
     const countFake = fake.returns(1);
 
     const query = { "some-query-key": 1 };
@@ -236,7 +240,7 @@ describe("View store get", () => {
     });
     expect(urlEncodeQueryDataFake).to.not.have.been.called;
     expect(sendFake).to.have.been.calledWith({
-      content: [{ body: obj, headers: { root: objRoot } }],
+      content: [{ body: obj, headers: { context: objContext } }],
       updates:
         "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
       count: 1,
@@ -245,7 +249,7 @@ describe("View store get", () => {
   it("should call with the correct params with no query and trace in headers", async () => {
     const trace = "some-trace";
     const findFake = fake.returns([
-      { body: obj, headers: { root: objRoot, trace } },
+      { body: obj, headers: { context: objContext, trace } },
     ]);
     const countFake = fake.returns(count);
 
@@ -287,14 +291,16 @@ describe("View store get", () => {
     });
     expect(urlEncodeQueryDataFake).to.not.have.been.called;
     expect(sendFake).to.have.been.calledWith({
-      content: [{ body: obj, headers: { root: objRoot, trace } }],
+      content: [{ body: obj, headers: { context: objContext, trace } }],
       updates:
         "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
       count,
     });
   });
   it("should call with the correct params with no params, one as true", async () => {
-    const findFake = fake.returns([{ body: obj, headers: { root: objRoot } }]);
+    const findFake = fake.returns([
+      { body: obj, headers: { context: objContext } },
+    ]);
     const countFake = fake.returns(count);
 
     const query = { "some-query-key": 1 };
@@ -342,7 +348,7 @@ describe("View store get", () => {
     });
     expect(countFake).to.not.have.been.called;
     expect(sendFake).to.have.been.calledWith({
-      content: { body: obj, headers: { root: objRoot } },
+      content: { body: obj, headers: { context: objContext } },
       updates:
         "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
     });
