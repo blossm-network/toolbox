@@ -63,9 +63,11 @@ module.exports = eventHandler({
       .set({
         token: { internalFn: gcpToken },
         context: {
-          root: event.data.headers.context[process.env.CONTEXT].root,
-          service: event.data.headers.context[process.env.CONTEXT].service,
-          network: event.data.headers.context[process.env.CONTEXT].network,
+          [process.env.CONTEXT]: {
+            root: event.data.headers.context[process.env.CONTEXT].root,
+            service: event.data.headers.context[process.env.CONTEXT].service,
+            network: event.data.headers.context[process.env.CONTEXT].network,
+          },
         },
       })
       .update({

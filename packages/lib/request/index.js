@@ -25,19 +25,22 @@ const common = async ({ method, url, params, headers }) =>
     );
   });
 
-const jointStream = (streams, sortFn) => {
+const jointStream = (streams, sortFn, onError) => {
   switch (streams.length) {
     case 1:
+      streams[0].on("error", onError);
       return streams[0];
     case 2:
+      streams[0].on("error", onError);
+      streams[1].on("error", onError);
       return new deps.union(streams[0], streams[1], sortFn);
     default: {
       const half = Math.ceil(streams.length / 2);
       const firstHalf = streams.splice(0, half);
       const secondHalf = streams.splice(-half);
       return new deps.union(
-        jointStream(firstHalf, sortFn),
-        jointStream(secondHalf, sortFn),
+        jointStream(firstHalf, sortFn, onError),
+        jointStream(secondHalf, sortFn, onError),
         sortFn
       );
     }
@@ -100,21 +103,23 @@ exports.streamMany = async (requests, onDataFn, sortFn) => {
 
   let processingData = false;
   let finishedProcessingAllData = false;
+  let rejected = false;
 
   return new Promise((resolve, reject) =>
-    jointStream(requestStreams, sortFn)
+    jointStream(requestStreams, sortFn, (err) => {
+      reject(err);
+      rejected = true;
+    })
       .on("data", async (data) => {
         processingData = true;
         await onDataFn(data);
         processingData = false;
-        if (finishedProcessingAllData) resolve();
+        if (!rejected && finishedProcessingAllData) resolve();
       })
-      .on("close", (err) => {
-        //TODO
-        console.log({ closedW: err });
-        if (err) return reject(err);
+      .on("error", reject)
+      .on("end", () => {
         finishedProcessingAllData = true;
-        if (!processingData) resolve();
+        if (!rejected && !processingData) resolve();
       })
   );
 };
