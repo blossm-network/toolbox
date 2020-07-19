@@ -17,8 +17,6 @@ const mapDomain = require("./steps/map_domain");
 const writeEnv = require("./steps/write_env");
 
 module.exports = ({
-  domain,
-  service,
   region,
   project,
   network,
@@ -48,9 +46,7 @@ module.exports = ({
   dependencyKeyEnvironmentVariables,
   strict,
 }) => {
-  const authUri = `v${
-    domain ? `.${domain}` : ""
-  }.${context}.${envUriSpecifier}${network}`;
+  const authUri = `v.${context}.${envUriSpecifier}${network}`;
   return [
     yarnInstall,
     ...(runUnitTests ? [unitTests] : []),
@@ -65,14 +61,11 @@ module.exports = ({
       project,
       region,
       procedure,
-      // coreNetwork,
       operationHash,
       secretBucket,
       secretBucketKeyRing,
       secretBucketKeyLocation,
       custom: {
-        ...(domain && { DOMAIN: domain }),
-        ...(service && { SERVICE: service }),
         CONTEXT: context,
         ...dependencyKeyEnvironmentVariables,
         ...(publicKeyUrl && { PUBLIC_KEY_URL: publicKeyUrl }),
@@ -110,15 +103,11 @@ module.exports = ({
             network,
             envUriSpecifier,
             env: {
-              ...(domain && { DOMAIN: domain }),
-              ...(service && { SERVICE: service }),
               CONTEXT: context,
               ...dependencyKeyEnvironmentVariables,
               ...(publicKeyUrl && { PUBLIC_KEY_URL: publicKeyUrl }),
             },
             labels: {
-              ...(domain && { domain }),
-              ...(service && { service }),
               context,
             },
           }),

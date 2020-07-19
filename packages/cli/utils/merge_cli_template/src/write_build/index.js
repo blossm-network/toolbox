@@ -60,8 +60,6 @@ const steps = ({
       return viewStore({
         imageExtension,
         region,
-        domain,
-        service,
         name,
         project,
         network,
@@ -362,8 +360,6 @@ const steps = ({
         memory,
         timeout,
         env,
-        service,
-        domain,
         procedure,
         network,
         operationHash,
@@ -419,16 +415,12 @@ const imageExtension = ({ service, context, domain, name, procedure }) => {
   switch (procedure) {
     case "view-store":
     case "view-composite":
-      return `${context}${service ? `.${service}` : ""}${
-        domain ? `.${domain}` : ""
-      }.${name}`;
+      return `${context}.${name}`;
     case "event-store":
     case "command-gateway":
       return `${service}.${domain}`;
     case "view-gateway":
-      return `${context}${service ? `.${service}` : ""}${
-        domain ? `.${domain}` : ""
-      }`;
+      return context;
     case "fact-gateway":
       if (service) {
         if (domain) return `${service}.${domain}`;
@@ -437,9 +429,7 @@ const imageExtension = ({ service, context, domain, name, procedure }) => {
       return "";
     case "event-handler":
     case "projection":
-      return `${context}${service ? `.${service}` : ""}${
-        domain ? `.${domain}` : ""
-      }.${name}`;
+      return `${context}.${name}`;
     case "command":
       return `${service}.${domain}.${name}`;
     case "job":
