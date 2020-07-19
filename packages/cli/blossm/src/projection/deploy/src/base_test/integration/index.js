@@ -7,6 +7,9 @@ const createEvent = require("@blossm/create-event");
 const request = require("@blossm/request");
 
 const { testing, name, context } = require("../../config.json");
+const {
+  dateString,
+} = require("../../../../../../../../procedures/event_stores/generic/post_transaction/deps");
 
 const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 
@@ -43,7 +46,7 @@ describe("Projection integration tests", () => {
           message: {
             data: Buffer.from(
               JSON.stringify({
-                saved: example.saved,
+                saved: dateString(),
               })
             ),
           },
