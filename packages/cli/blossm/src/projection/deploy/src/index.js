@@ -38,7 +38,7 @@ module.exports = eventHandler({
     });
 
     //TODO
-    console.log({ query, body });
+    console.log({ query, body, headers: event.data.headers });
 
     //Always set the headers to make sure the view has an updated trace and the context is set.
     const headers = {
@@ -46,10 +46,10 @@ module.exports = eventHandler({
       ...(event.data.headers.context &&
         event.data.headers.context[process.env.CONTEXT] && {
           context: {
+            root: event.data.headers.context[process.env.CONTEXT].root,
             domain: process.env.CONTEXT,
-            root: event.data.headers[process.env.CONTEXT].root,
-            service: event.data.headers[process.env.CONTEXT].service,
-            network: event.data.headers[process.env.CONTEXT].network,
+            service: event.data.headers.context[process.env.CONTEXT].service,
+            network: event.data.headers.context[process.env.CONTEXT].network,
           },
         }),
     };
