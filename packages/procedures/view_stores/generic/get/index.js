@@ -22,10 +22,10 @@ module.exports = ({
     const query = {
       ...formattedQueryBody,
       "headers.context": {
-        root: req.query.context.root,
+        root: req.query.context[process.env.CONTEXT].root,
         domain: process.env.CONTEXT,
-        service: req.query.context.service,
-        network: req.query.context.network,
+        service: req.query.context[process.env.CONTEXT].service,
+        network: req.query.context[process.env.CONTEXT].network,
       },
     };
 

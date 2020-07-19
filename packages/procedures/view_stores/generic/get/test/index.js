@@ -24,10 +24,11 @@ const coreNetwork = "some-core-network";
 const nextUrl = "some-next-url";
 
 const context = {
-  root: envContextRoot,
-  domain: [envContext],
-  service: envContextService,
-  network: envContextNetwork,
+  [envContext]: {
+    root: envContextRoot,
+    service: envContextService,
+    network: envContextNetwork,
+  },
 };
 
 process.env.NAME = envName;

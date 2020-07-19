@@ -10,12 +10,15 @@ const contextDomain = "some-context-domain";
 const contextService = "some-context-service";
 const contextNetwork = "some-context-network";
 const context = {
-  root: contextRoot,
-  domain: contextDomain,
-  service: contextService,
-  network: contextNetwork,
+  [contextDomain]: {
+    root: contextRoot,
+    service: contextService,
+    network: contextNetwork,
+  },
 };
 const deletedCount = 3;
+
+process.env.CONTEXT = contextDomain;
 
 describe("View store delete", () => {
   afterEach(() => {
