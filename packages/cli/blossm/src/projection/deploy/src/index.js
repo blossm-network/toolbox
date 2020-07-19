@@ -13,6 +13,8 @@ const config = require("./config.json");
 
 module.exports = eventHandler({
   mainFn: async (event) => {
+    //TODO
+    console.log({ event });
     //Must be able to handle this event.
     if (
       !handlers[event.headers.service] ||
@@ -35,6 +37,9 @@ module.exports = eventHandler({
       root: event.data.root,
     });
 
+    //TODO
+    console.log({ query, body });
+
     //Always set the headers to make sure the view has an updated trace and the context is set.
     const headers = {
       ...(event.headers.trace && { trace: event.headers.trace }),
@@ -49,6 +54,8 @@ module.exports = eventHandler({
         }),
     };
 
+    //TODO
+    console.log({ headers });
     const { body: newView } = await viewStore({
       name: config.name,
       context: config.context,

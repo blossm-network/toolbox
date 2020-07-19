@@ -86,6 +86,8 @@ describe("Projection integration tests", () => {
             }
           }
         } else if (example.result.values) {
+          //TODO
+          console.log({ values: example.result.values, vContent: v.content });
           expect(example.result.values.length).to.equal(v.content.length);
           for (let i = 0; i < example.result.values.length; i++) {
             let value = example.result.values[i];

@@ -14,6 +14,8 @@ const data = (req) => {
 module.exports = ({ mainFn, streamFn }) => async (req, res) => {
   const { from } = data(req);
 
+  //TODO
+  console.log({ from });
   await streamFn({
     from,
     fn: (event) => mainFn(event),
