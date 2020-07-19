@@ -1,7 +1,7 @@
 {
   "name": "@blossm/view-store-delete",
   "description": "A view store DELETE handler.",
-  "version": "0.0.51",
+  "version": "0.0.52",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
