@@ -1,6 +1,8 @@
 const deps = require("./deps");
 
 const doesMatchQuery = ({ state, query }) => {
+  //TODO
+  console.log({ state, query });
   try {
     for (const property in query) {
       const propertyParts = property.split(".");
@@ -25,6 +27,8 @@ module.exports = ({ eventStore, snapshotStore, handlers }) => async ({
       info: { key, value },
     });
 
+  //TODO
+  console.log({ key, value });
   const [snapshots, events] = await Promise.all([
     deps.db.find({
       store: snapshotStore,
