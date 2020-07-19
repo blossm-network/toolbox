@@ -2,7 +2,7 @@ const deps = require("./deps");
 
 module.exports = ({ removeFn }) => async (req, res) => {
   //TODO
-  console.log({ query: req.body.query });
+  console.log("asdffffff: ", { body: req.body, query: req.query });
   if (!req.body.query) throw deps.badRequestError.message("Missing query.");
 
   const formattedQueryBody = {};
