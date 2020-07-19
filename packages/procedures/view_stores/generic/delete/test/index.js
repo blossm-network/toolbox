@@ -26,7 +26,7 @@ describe("View store delete", () => {
     const removeFake = fake.returns({ deletedCount });
 
     const req = {
-      query: {
+      body: {
         context,
         query: {},
       },
@@ -54,7 +54,7 @@ describe("View store delete", () => {
     const removeFake = fake.returns({ deletedCount });
 
     const req = {
-      query: {
+      body: {
         query,
       },
     };
@@ -76,7 +76,7 @@ describe("View store delete", () => {
     const removeFake = fake.returns({ deletedCount });
 
     const req = {
-      query: {
+      body: {
         query,
         context,
       },
@@ -105,7 +105,7 @@ describe("View store delete", () => {
     const removeFake = fake.returns({ deletedCount });
 
     const req = {
-      query: {},
+      body: {},
     };
 
     const res = {};
@@ -123,9 +123,7 @@ describe("View store delete", () => {
       expect(1).to.equal(0);
     } catch (e) {
       expect(e).to.equal(error);
-      expect(messageFake).to.have.been.calledWith(
-        "Missing query parameter in the url's query."
-      );
+      expect(messageFake).to.have.been.calledWith("Missing query.");
     }
   });
 });

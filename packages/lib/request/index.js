@@ -1,14 +1,8 @@
 const deps = require("./deps");
 
 const common = async ({ method, url, params, headers }) =>
-  new Promise((resolve, reject) => {
-    //TODO
-    console.log({
-      url: url.startsWith("http")
-        ? url
-        : `${process.env.NODE_ENV == "local" ? "http" : "https"}://${url}`,
-    });
-    return deps.request(
+  new Promise((resolve, reject) =>
+    deps.request(
       {
         url: url.startsWith("http")
           ? url
@@ -26,8 +20,8 @@ const common = async ({ method, url, params, headers }) =>
               statusMessage: response.statusMessage,
               body,
             })
-    );
-  });
+    )
+  );
 
 const jointStream = (streams, sortFn) => {
   switch (streams.length) {

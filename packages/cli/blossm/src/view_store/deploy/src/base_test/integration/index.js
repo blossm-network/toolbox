@@ -333,7 +333,15 @@ describe("View store base integration tests", () => {
       expect(content4[0]).to.deep.equal(firstSort2);
     }
 
-    const response8 = await request.delete(url, { query: { id } });
+    const response8 = await request.delete(url, {
+      query: { id },
+      context: {
+        root: contextRoot,
+        domain: process.env.CONTEXT,
+        service: contextService,
+        network: contextNetwork,
+      },
+    });
     //TODO
     //eslint-disable-next-line no-console
     console.log({ response8 });
