@@ -518,11 +518,13 @@ const writeConfig = ({ config, coreNetwork, workingDir }) => {
             {
               method: "post",
               path: `/${dependency.name}`,
-              ...(dependency.mock.code && { code: dependency.mock.code }),
-              ...(dependency.mock.response && {
-                response: dependency.mock.response,
+              ...(dependency.mock && {
+                ...(dependency.mock.code && { code: dependency.mock.code }),
+                ...(dependency.mock.response && {
+                  response: dependency.mock.response,
+                }),
+                ...(dependency.mock.calls && { calls: dependency.mock.calls }),
               }),
-              ...(dependency.mock.calls && { calls: dependency.mock.calls }),
             },
           ],
         });
