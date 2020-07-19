@@ -229,7 +229,7 @@ describe("View store base integration tests", () => {
           network: contextNetwork,
         },
         sort: {
-          "headers.root": 1,
+          id: 1,
         },
       },
     });
@@ -270,11 +270,14 @@ describe("View store base integration tests", () => {
       response6.body
     );
 
-    const secondSort1 = one ? content2 : content3[0];
+    const secondSort1 = one ? content3 : content3[0];
     const secondSort2 = one ? null : content3[1];
     expect(updates3).to.exist;
     !one ? expect(count3).to.equal(2) : expect(count3).to.be.undefined;
 
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log({ firstSort1, firstSort2, secondSort1, secondSort2 });
     if (one) {
       expect(firstSort1).to.deep.equal(secondSort1);
     } else {
