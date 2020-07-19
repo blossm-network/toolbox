@@ -10,22 +10,10 @@ const configFn = (config) => {
   return {
     name: config.name,
     operationName: trim(
-      `${config.procedure}-${config.store.service}-${config.store.domain}-${
-        config.context
-      }${config.service ? `-${config.service}` : ""}${
-        config.domain ? `-${config.domain}` : ""
-      }-${config.name}`,
+      `${config.procedure}-${config.context}-${config.name}`,
       MAX_LENGTH
     ),
-    operationHash: hash(
-      config.name,
-      ...(config.domain ? [config.domain] : []),
-      ...(config.service ? [config.service] : []),
-      config.context,
-      config.store.domain,
-      config.store.service,
-      config.procedure
-    ),
+    operationHash: hash(config.name, config.context, config.procedure),
   };
 };
 
