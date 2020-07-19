@@ -15,7 +15,6 @@ const key = "some-key";
 
 const query = "some-query";
 const sort = "some-sort";
-const root = "some-root";
 const contexts = { c: 2 };
 
 const envContext = "some-env-context";
@@ -55,10 +54,10 @@ describe("Get views", () => {
           key,
         },
       })
-      .read({ query, sort, root });
+      .read({ query, sort });
 
     expect(rpcFake).to.have.been.calledWith(name, context, "view-store");
-    expect(getFake).to.have.been.calledWith({ query, sort, id: root });
+    expect(getFake).to.have.been.calledWith({ query, sort });
     expect(inFake).to.have.been.calledWith({ context: contexts });
     expect(withFake).to.have.been.calledWith({
       internalTokenFn,
@@ -320,10 +319,10 @@ describe("Get views", () => {
           internalFn: internalTokenFn,
         },
       })
-      .delete(root);
+      .delete(query);
 
     expect(rpcFake).to.have.been.calledWith(name, context, "view-store");
-    expect(deleteFake).to.have.been.calledWith(root);
+    expect(deleteFake).to.have.been.calledWith(query);
     expect(inFake).to.have.been.calledWith({ context: contexts });
     expect(withFake).to.have.been.calledWith({
       internalTokenFn,
@@ -342,10 +341,10 @@ describe("Get views", () => {
     });
     replace(deps, "rpc", rpcFake);
 
-    await viewStore({ name }).delete(root);
+    await viewStore({ name }).delete(query);
 
     expect(rpcFake).to.have.been.calledWith(name, envContext, "view-store");
-    expect(deleteFake).to.have.been.calledWith(root);
+    expect(deleteFake).to.have.been.calledWith(query);
     expect(inFake).to.have.been.calledWith({});
     expect(withFake).to.have.been.calledWith();
   });

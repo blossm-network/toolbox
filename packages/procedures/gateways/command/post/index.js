@@ -70,5 +70,7 @@ module.exports = ({
     }
   }
 
+  //TODO reconsider removing token from response. Maybe keep it in dev env.
+
   res.status(statusCode).send(response);
 };

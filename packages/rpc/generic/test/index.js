@@ -15,6 +15,7 @@ const id = "some-id";
 const tokenFn = "some-token-fn";
 const currentToken = "some-current-token";
 const url = "some-url";
+const query = "some-query";
 
 const host = "some-host";
 const statusCode = 204;
@@ -152,7 +153,7 @@ describe("Operation", () => {
 
     const enqueueFn = "some-enqueue-fn";
     await operation(operarationPart1, operarationPart2)
-      .delete(id)
+      .delete(query)
       .in({ context, host })
       .with({ internalTokenFn: tokenFn, claims, enqueueFn });
 
@@ -160,6 +161,7 @@ describe("Operation", () => {
       enqueueFn,
       url,
       data: {
+        query,
         context,
         claims,
       },
@@ -742,12 +744,13 @@ describe("Operation", () => {
     replace(deps, "operationUrl", operationUrlFake);
 
     const result = await operation(operarationPart1, operarationPart2)
-      .delete(id)
+      .delete(query)
       .in({ context, host })
       .with({ internalTokenFn: tokenFn, currentToken, claims });
 
     expect(del).to.have.been.calledWith(url, {
       body: {
+        query,
         context,
         token: currentToken,
         claims,
@@ -763,7 +766,6 @@ describe("Operation", () => {
     expect(operationUrlFake).to.have.been.calledWith({
       operation: [operarationPart1, operarationPart2],
       host,
-      id,
     });
     expect(result).to.deep.equal({ statusCode });
   });
@@ -793,7 +795,7 @@ describe("Operation", () => {
 
     try {
       await operation(operarationPart1, operarationPart2)
-        .delete(id)
+        .delete(query)
         .in({ context, host })
         .with({ tokenFn, claims });
 
@@ -831,7 +833,7 @@ describe("Operation", () => {
 
     try {
       await operation(operarationPart1, operarationPart2)
-        .delete(id)
+        .delete(query)
         .in({ context, host })
         .with({ tokenFn, claims });
 
@@ -863,7 +865,7 @@ describe("Operation", () => {
 
     try {
       await operation(operarationPart1, operarationPart2)
-        .delete(id)
+        .delete(query)
         .in({ context, host })
         .with({ tokenFn, claims });
 
