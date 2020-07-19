@@ -334,7 +334,13 @@ describe("View store base integration tests", () => {
     }
 
     const response8 = await request.delete(url, { query: { id } });
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log({ response8 });
     const parsedBody8 = JSON.parse(response8.body);
+    //TODO
+    //eslint-disable-next-line no-console
+    console.log({ parsedBody8 });
     expect(response8.statusCode).to.equal(200);
     expect(parsedBody8.deletedCount).to.equal(1);
   };
