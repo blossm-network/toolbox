@@ -469,12 +469,12 @@ describe("View store base integration tests", () => {
           },
           update: {
             body: { id, [property]: badValue },
-            context: {
-              root: contextRoot,
-              domain: process.env.CONTEXT,
-              service: contextService,
-              network: contextNetwork,
-            },
+          },
+          context: {
+            root: contextRoot,
+            domain: process.env.CONTEXT,
+            service: contextService,
+            network: contextNetwork,
           },
         },
       });
