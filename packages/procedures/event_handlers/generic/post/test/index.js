@@ -36,11 +36,9 @@ describe("Command handler post", () => {
     expect(streamFnFake).to.have.been.calledWith({
       from,
       fn: match((fn) => {
-        const root = "some-root";
-        const payload = "some-payload";
-        const event = { data: { root, payload } };
+        const event = "some-event";
         fn(event);
-        return mainFnFake.calledWith({ payload, root });
+        return mainFnFake.calledWith(event);
       }),
       sortFn: match((fn) => {
         const a = { data: { saved: 0 } };

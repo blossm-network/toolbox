@@ -30,7 +30,7 @@ module.exports = eventHandler({
       body,
     } = handlers[event.headers.service][event.headers.domain][
       event.headers.action
-    ](event);
+    ]({ payload: event.data.payload, root: event.data.root });
 
     //Always set the headers to make sure the view has an updated trace and the context is set.
     const headers = {
