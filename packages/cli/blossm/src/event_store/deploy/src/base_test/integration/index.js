@@ -165,7 +165,7 @@ describe("Event store integration tests", () => {
                 domain,
                 service,
               },
-              payload: example0.payload,
+              payload: example1.payload,
             },
           },
         ],
@@ -202,11 +202,11 @@ describe("Event store integration tests", () => {
               headers: {
                 version,
                 created,
-                action: example0.action,
+                action: example1.action,
                 domain,
                 service,
               },
-              payload: example0.payload,
+              payload: example1.payload,
             },
           },
         ],
@@ -231,6 +231,7 @@ describe("Event store integration tests", () => {
     ///Test indexes
     for (const index of indexes || []) {
       const indexParts = index.split(".");
+      //order matters since example1 was the last to be added.
       const example = [example1, example0].find((e) => {
         let obj = e.payload;
         for (const part of indexParts) {
