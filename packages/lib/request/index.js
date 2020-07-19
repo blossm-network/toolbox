@@ -53,7 +53,7 @@ exports.delete = async (url, { query, headers } = {}) =>
     method: "DELETE",
     url,
     headers,
-    params: query,
+    params: { query },
   });
 
 exports.get = async (url, { query, headers } = {}) =>

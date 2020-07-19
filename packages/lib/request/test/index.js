@@ -105,7 +105,7 @@ describe("Request", () => {
       expect(options).to.deep.equal({
         url,
         method: "DELETE",
-        json: params,
+        json: { query: params },
       });
       callback(null, response, body);
     });
