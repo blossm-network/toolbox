@@ -73,6 +73,8 @@ describe("Event store", () => {
     const enqueueFnFake = fake.returns(enqueueFnResult);
     const enqueueWait = "some-enqueue-wait";
 
+    const idempotency = "some-idempotency";
+
     await eventStore({ domain, service })
       .set({
         context,
@@ -91,8 +93,9 @@ describe("Event store", () => {
         {
           data: {
             root,
+            topic,
+            idempotency,
             headers: {
-              topic,
               action: eventAction,
               domain: eventDomain,
               service: eventService,
@@ -112,10 +115,11 @@ describe("Event store", () => {
         {
           data: {
             root,
+            topic,
+            idempotency,
             headers: {
               context,
               claims,
-              topic,
               action: eventAction,
               domain: eventDomain,
               service: eventService,
@@ -174,8 +178,8 @@ describe("Event store", () => {
         {
           data: {
             root,
+            topic,
             headers: {
-              topic,
               action: eventAction,
               domain: eventDomain,
               service: eventService,
@@ -199,13 +203,13 @@ describe("Event store", () => {
         {
           data: {
             root,
+            topic,
             headers: {
               context: {
                 b: 2,
                 a: "some-context",
               },
               claims,
-              topic,
               action: eventAction,
               domain: eventDomain,
               service: eventService,
@@ -248,8 +252,8 @@ describe("Event store", () => {
       {
         data: {
           root,
+          topic,
           headers: {
-            topic,
             action: eventAction,
             domain: eventDomain,
             service: eventService,
@@ -266,8 +270,8 @@ describe("Event store", () => {
         {
           data: {
             root,
+            topic,
             headers: {
-              topic,
               action: eventAction,
               domain: eventDomain,
               service: eventService,

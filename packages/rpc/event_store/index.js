@@ -17,6 +17,10 @@ module.exports = ({ domain, service = process.env.SERVICE } = {}) => {
       return {
         data: {
           root: event.data.root,
+          topic: event.data.topic,
+          ...(event.data.idempotency && {
+            idempotency: event.data.idempotency,
+          }),
           headers: {
             ...event.data.headers,
             created: dateString(),
