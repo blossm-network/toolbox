@@ -108,6 +108,8 @@ exports.streamMany = async (requests, onDataFn, sortFn) => {
         if (finishedProcessingAllData) resolve();
       })
       .on("close", (err) => {
+        //TODO
+        console.log({ closedW: err });
         if (err) return reject(err);
         finishedProcessingAllData = true;
         if (!processingData) resolve();
