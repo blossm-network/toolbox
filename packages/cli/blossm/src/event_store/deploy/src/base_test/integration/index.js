@@ -251,7 +251,9 @@ describe("Event store integration tests", () => {
       });
       expect(response4.statusCode).to.equal(200);
 
+      console.log({ response4 });
       const parsedBody4 = JSON.parse(response4.body);
+      console.log({ parsedBody4 });
       for (const key in example1.result || example1) {
         expect(parsedBody4[0].state[key]).to.deep.equal(example1.payload[key]);
       }
