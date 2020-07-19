@@ -152,9 +152,6 @@ module.exports = async ({
       }
     }
 
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log("LETS SEE: ", { query, update });
     return await deps.db.write({
       store,
       query,

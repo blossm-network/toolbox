@@ -22,10 +22,6 @@ describe("View store base integration tests", () => {
     expect(example0).to.exist;
     expect(example1).to.exist;
 
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log("hi");
-
     const response0 = await request.post(url, {
       body: {
         query: {
@@ -46,9 +42,6 @@ describe("View store base integration tests", () => {
       },
     });
 
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log({ response0 });
     expect(response0.statusCode).to.equal(200);
 
     const response1 = await request.get(url, {
@@ -62,20 +55,12 @@ describe("View store base integration tests", () => {
       },
     });
 
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log({ response1 });
-
     expect(response1.statusCode).to.equal(200);
     const { updates: updates0, count: count0, content: content0 } = JSON.parse(
       response1.body
     );
 
     const parsedBody0 = one ? content0 : content0[0];
-
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log({ parsedBody0 });
 
     expect(updates0).to.exist;
     !one ? expect(count0).to.equal(1) : expect(count0).to.be.undefined;
@@ -107,9 +92,6 @@ describe("View store base integration tests", () => {
         },
       });
 
-      //TODO
-      //eslint-disable-next-line no-console
-      console.log({ moreResponse0 });
       expect(moreResponse0.statusCode).to.equal(200);
 
       const moreResponse1 = await request.get(url, {
@@ -124,9 +106,6 @@ describe("View store base integration tests", () => {
         },
       });
 
-      //TODO
-      //eslint-disable-next-line no-console
-      console.log({ moreResponse1 });
       const {
         updates: moreUpdate,
         count: moreCount,
@@ -161,10 +140,6 @@ describe("View store base integration tests", () => {
       },
     });
 
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log({ response2 });
-
     expect(response2.statusCode).to.equal(200);
 
     const response3 = await request.get(url, {
@@ -178,19 +153,12 @@ describe("View store base integration tests", () => {
       },
     });
 
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log({ response3 });
     expect(response3.statusCode).to.equal(200);
     const { updates: updates1, count: count1, content: content1 } = JSON.parse(
       response3.body
     );
 
     const parsedBody1 = one ? content1 : content1[0];
-
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log({ parsedBody1 });
 
     expect(updates1).to.exist;
     !one ? expect(count1).to.equal(1) : expect(count1).to.be.undefined;
@@ -234,10 +202,6 @@ describe("View store base integration tests", () => {
       },
     });
 
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log({ response5 });
-
     const { updates: updates2, count: count2, content: content2 } = JSON.parse(
       response5.body
     );
@@ -262,10 +226,6 @@ describe("View store base integration tests", () => {
       },
     });
 
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log({ response6 });
-
     const { updates: updates3, count: count3, content: content3 } = JSON.parse(
       response6.body
     );
@@ -275,9 +235,6 @@ describe("View store base integration tests", () => {
     expect(updates3).to.exist;
     !one ? expect(count3).to.equal(2) : expect(count3).to.be.undefined;
 
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log({ firstSort1, firstSort2, secondSort1, secondSort2 });
     if (one) {
       expect(firstSort1).to.deep.equal(secondSort1);
     } else {
@@ -342,13 +299,7 @@ describe("View store base integration tests", () => {
         network: contextNetwork,
       },
     });
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log({ response8 });
     const parsedBody8 = JSON.parse(response8.body);
-    //TODO
-    //eslint-disable-next-line no-console
-    console.log({ parsedBody8 });
     expect(response8.statusCode).to.equal(200);
     expect(parsedBody8.deletedCount).to.equal(1);
   };
@@ -478,9 +429,6 @@ describe("View store base integration tests", () => {
           },
         },
       });
-      //TODO
-      //eslint-disable-next-line no-console
-      console.log({ response });
       expect(response.statusCode).to.equal(500);
       return;
     }
