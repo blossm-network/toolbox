@@ -7,7 +7,7 @@ const createEvent = require("@blossm/create-event");
 const request = require("@blossm/request");
 
 const { testing, name, context } = require("../../config.json");
-const { stringDate } = require("@blossm/datetime");
+const { string: stringDate } = require("@blossm/datetime");
 
 const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 
