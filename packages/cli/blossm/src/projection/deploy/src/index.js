@@ -91,10 +91,7 @@ module.exports = eventHandler({
     eventStores(
       config.stores.map(({ domain, service, actions }) => {
         return {
-          operation: {
-            domain,
-            service,
-          },
+          operation: [domain, service, "event-store"],
           query: {
             from,
             actions,
