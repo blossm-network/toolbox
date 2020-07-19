@@ -34,10 +34,11 @@ describe("View store base integration tests", () => {
           },
         },
         context: {
-          root: contextRoot,
-          domain: process.env.CONTEXT,
-          service: contextService,
-          network: contextNetwork,
+          [process.env.CONTEXT]: {
+            root: contextRoot,
+            service: contextService,
+            network: contextNetwork,
+          },
         },
       },
     });
@@ -47,10 +48,11 @@ describe("View store base integration tests", () => {
     const response1 = await request.get(url, {
       query: {
         context: {
-          root: contextRoot,
-          domain: process.env.CONTEXT,
-          service: contextService,
-          network: contextNetwork,
+          [process.env.CONTEXT]: {
+            root: contextRoot,
+            service: contextService,
+            network: contextNetwork,
+          },
         },
       },
     });
@@ -84,10 +86,11 @@ describe("View store base integration tests", () => {
             },
           },
           context: {
-            root: contextRoot,
-            domain: process.env.CONTEXT,
-            service: contextService,
-            network: contextNetwork,
+            [process.env.CONTEXT]: {
+              root: contextRoot,
+              service: contextService,
+              network: contextNetwork,
+            },
           },
         },
       });
@@ -98,10 +101,11 @@ describe("View store base integration tests", () => {
         query: {
           ...(more.query && { query: more.query }),
           context: {
-            root: contextRoot,
-            domain: process.env.CONTEXT,
-            service: contextService,
-            network: contextNetwork,
+            [process.env.CONTEXT]: {
+              root: contextRoot,
+              service: contextService,
+              network: contextNetwork,
+            },
           },
         },
       });
@@ -132,10 +136,11 @@ describe("View store base integration tests", () => {
           body: example1.post,
         },
         context: {
-          root: contextRoot,
-          domain: process.env.CONTEXT,
-          service: contextService,
-          network: contextNetwork,
+          [process.env.CONTEXT]: {
+            root: contextRoot,
+            service: contextService,
+            network: contextNetwork,
+          },
         },
       },
     });
@@ -145,10 +150,11 @@ describe("View store base integration tests", () => {
     const response3 = await request.get(url, {
       query: {
         context: {
-          root: contextRoot,
-          domain: process.env.CONTEXT,
-          service: contextService,
-          network: contextNetwork,
+          [process.env.CONTEXT]: {
+            root: contextRoot,
+            service: contextService,
+            network: contextNetwork,
+          },
         },
       },
     });
@@ -180,10 +186,11 @@ describe("View store base integration tests", () => {
           },
         },
         context: {
-          root: contextRoot,
-          domain: process.env.CONTEXT,
-          service: contextService,
-          network: contextNetwork,
+          [process.env.CONTEXT]: {
+            root: contextRoot,
+            service: contextService,
+            network: contextNetwork,
+          },
         },
       },
     });
@@ -191,10 +198,11 @@ describe("View store base integration tests", () => {
     const response5 = await request.get(url, {
       query: {
         context: {
-          root: contextRoot,
-          domain: process.env.CONTEXT,
-          service: contextService,
-          network: contextNetwork,
+          [process.env.CONTEXT]: {
+            root: contextRoot,
+            service: contextService,
+            network: contextNetwork,
+          },
         },
         sort: {
           id: 1,
@@ -215,10 +223,11 @@ describe("View store base integration tests", () => {
     const response6 = await request.get(url, {
       query: {
         context: {
-          root: contextRoot,
-          domain: process.env.CONTEXT,
-          service: contextService,
-          network: contextNetwork,
+          [process.env.CONTEXT]: {
+            root: contextRoot,
+            service: contextService,
+            network: contextNetwork,
+          },
         },
         sort: {
           id: -1,
@@ -252,10 +261,11 @@ describe("View store base integration tests", () => {
           body: { id: yetAnotherId, a: 1 },
         },
         context: {
-          root: contextRoot,
-          domain: process.env.CONTEXT,
-          service: contextService,
-          network: contextNetwork,
+          [process.env.CONTEXT]: {
+            root: contextRoot,
+            service: contextService,
+            network: contextNetwork,
+          },
         },
       },
     });
@@ -264,10 +274,11 @@ describe("View store base integration tests", () => {
       const response7 = await request.get(url, {
         query: {
           context: {
-            root: contextRoot,
-            domain: process.env.CONTEXT,
-            service: contextService,
-            network: contextNetwork,
+            [process.env.CONTEXT]: {
+              root: contextRoot,
+              service: contextService,
+              network: contextNetwork,
+            },
           },
           limit: 1,
           skip: 1,
@@ -293,10 +304,11 @@ describe("View store base integration tests", () => {
     const response8 = await request.delete(url, {
       query: { id },
       context: {
-        root: contextRoot,
-        domain: process.env.CONTEXT,
-        service: contextService,
-        network: contextNetwork,
+        [process.env.CONTEXT]: {
+          root: contextRoot,
+          service: contextService,
+          network: contextNetwork,
+        },
       },
     });
     const parsedBody8 = JSON.parse(response8.body);
@@ -422,10 +434,11 @@ describe("View store base integration tests", () => {
             body: { id, [property]: badValue },
           },
           context: {
-            root: contextRoot,
-            domain: process.env.CONTEXT,
-            service: contextService,
-            network: contextNetwork,
+            [process.env.CONTEXT]: {
+              root: contextRoot,
+              service: contextService,
+              network: contextNetwork,
+            },
           },
         },
       });

@@ -19,10 +19,11 @@ const envContextService = "some-env-context-service";
 const envContextNetwork = "some-env-context-network";
 
 const context = {
-  root: envContextRoot,
-  domain: envContext,
-  service: envContextService,
-  network: envContextNetwork,
+  [envContext]: {
+    root: envContextRoot,
+    service: envContextService,
+    network: envContextNetwork,
+  },
 };
 
 const body = {
@@ -193,6 +194,44 @@ describe("View store put", () => {
     const req = {
       body: {
         query: {},
+      },
+    };
+
+    const sendFake = fake();
+    const statusFake = fake.returns({
+      send: sendFake,
+    });
+    const res = {
+      status: statusFake,
+    };
+
+    const error = "some-error";
+    const messageFake = fake.returns(error);
+    replace(deps, "forbiddenError", {
+      message: messageFake,
+    });
+
+    const fnFake = fake.returns({ $set: { b: 2 } });
+
+    try {
+      await put({ writeFn: writeFake, fn: fnFake })(req, res);
+
+      //shouldn't get called
+      expect(1).to.equal(0);
+    } catch (e) {
+      expect(messageFake).to.have.been.calledWith(
+        "Missing required permissions."
+      );
+      expect(e).to.equal(error);
+    }
+  });
+  it("should throw if correct context is missing", async () => {
+    const writeFake = fake();
+
+    const req = {
+      body: {
+        query: {},
+        context: {},
       },
     };
 

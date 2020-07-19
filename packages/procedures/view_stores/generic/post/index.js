@@ -4,16 +4,16 @@ const defaultFn = (update) => update;
 
 module.exports = ({ writeFn, updateFn = defaultFn }) => {
   return async (req, res) => {
-    if (!req.body.context)
+    if (!req.body.context || !req.body.context[process.env.CONTEXT])
       throw deps.forbiddenError.message("Missing required permissions.");
 
     const customUpdate = updateFn(req.body.update);
 
     const context = {
-      root: req.body.context.root,
+      root: req.body.context[process.env.CONTEXT].root,
       domain: process.env.CONTEXT,
-      service: req.body.context.service,
-      network: req.body.context.network,
+      service: req.body.context[process.env.CONTEXT].service,
+      network: req.body.context[process.env.CONTEXT].network,
     };
 
     //TODO
