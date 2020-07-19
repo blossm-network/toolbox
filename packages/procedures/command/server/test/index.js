@@ -11,6 +11,7 @@ const queryAggregatesFn = "some-query-aggregates-fn";
 const readFactFn = "some-read-fact-fn";
 const streamFactFn = "some-stream-fact-fn";
 const addFn = "some-add-fn";
+const countFn = "some-count-fn";
 const validateFn = "some-validate-fn";
 const normalizeFn = "some-normalize-fn";
 const fillFn = "some-fill-fn";
@@ -45,6 +46,7 @@ describe("Command handler", () => {
       readFactFn,
       streamFactFn,
       addFn,
+      countFn,
       validateFn,
       normalizeFn,
       fillFn,
@@ -65,6 +67,7 @@ describe("Command handler", () => {
       validateFn,
       normalizeFn,
       addFn,
+      countFn,
       fillFn,
     });
   });
@@ -87,11 +90,11 @@ describe("Command handler", () => {
       mainFn,
       aggregateFn,
       commandFn,
-
       queryAggregatesFn,
       readFactFn,
       streamFactFn,
       addFn,
+      countFn,
     });
 
     expect(listenFake).to.have.been.calledWith();
@@ -106,6 +109,7 @@ describe("Command handler", () => {
       readFactFn,
       streamFactFn,
       addFn,
+      countFn,
     });
   });
   it("should throw correctly", async () => {
@@ -133,6 +137,7 @@ describe("Command handler", () => {
         readFactFn,
         streamFactFn,
         addFn,
+        countFn,
       });
 
       //shouldn't get called

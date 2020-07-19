@@ -12,6 +12,7 @@ module.exports = async ({
   streamFactFn,
   addFn,
   fillFn,
+  countFn,
 } = {}) =>
   deps
     .server()
@@ -28,6 +29,7 @@ module.exports = async ({
         ...(fillFn && { fillFn }),
         ...(validateFn && { validateFn }),
         ...(normalizeFn && { normalizeFn }),
+        ...(countFn && { countFn }),
       })
     )
     .listen();
