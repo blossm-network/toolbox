@@ -12,7 +12,7 @@ module.exports = ({
   await deps.validate(req.body);
   const { payload, headers, root } = req.body;
 
-  let { body: response, statusCode } = await deps
+  let { body: response, headers: responseHeaders, statusCode } = await deps
     .command({
       name,
       domain,
@@ -72,6 +72,9 @@ module.exports = ({
 
     delete response.tokens;
   }
+
+  if (responseHeaders && responseHeaders["Set-cookie"])
+    res.set("Set-cookie", responseHeaders["Set-cookie"]);
 
   res.status(statusCode).send(response);
 };

@@ -408,7 +408,7 @@ describe("Command gateway post", () => {
     expect(statusFake).to.have.been.calledWith(statusCode);
     expect(sendFake).to.have.been.calledWith();
   });
-  it("should call with the correct params if tokens is in the response, token in req, idempotenct and trace in req.headers, and root", async () => {
+  it("should call with the correct params if tokens is in the response, token in req, cookies in headers, idempotenct and trace in req.headers, and root", async () => {
     const validateFake = fake();
     replace(deps, "validate", validateFake);
 
@@ -428,8 +428,10 @@ describe("Command gateway post", () => {
       type: token2Type,
       value: token2Value,
     };
+    const cookie = "some-cookie";
     const issueFake = fake.returns({
       body: { tokens: [token1, token2] },
+      headers: { "Set-cookie": cookie },
       statusCode,
     });
     const setFake = fake.returns({
@@ -468,7 +470,9 @@ describe("Command gateway post", () => {
       send: sendFake,
     });
     const cookieFake = fake();
+    const resSetFake = fake();
     const res = {
+      set: resSetFake,
       cookie: cookieFake,
       status: statusFake,
     };
@@ -483,6 +487,7 @@ describe("Command gateway post", () => {
     })(req, res);
     expect(nodeExternalTokenFnFake).to.not.have.been.called;
 
+    expect(resSetFake).to.have.been.calledWith("Set-cookie", cookie);
     expect(cookieFake).to.have.been.calledTwice;
     expect(cookieFake).to.have.been.calledWith(token1Type, token1Value, {
       domain: token1Network,
