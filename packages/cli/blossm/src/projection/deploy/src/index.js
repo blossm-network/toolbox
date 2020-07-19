@@ -17,10 +17,10 @@ module.exports = eventHandler({
     console.log({ event });
     //Must be able to handle this event.
     if (
-      !handlers[event.headers.service] ||
-      !handlers[event.headers.service][event.headers.domain] ||
-      !handlers[event.headers.service][event.headers.domain][
-        event.headers.action
+      !handlers[event.data.headers.service] ||
+      !handlers[event.data.headers.service][event.data.headers.domain] ||
+      !handlers[event.data.headers.service][event.data.headers.domain][
+        event.data.headers.action
       ]
     )
       return;
@@ -30,8 +30,8 @@ module.exports = eventHandler({
       query,
       //The changes to the body of the view.
       body,
-    } = handlers[event.headers.service][event.headers.domain][
-      event.headers.action
+    } = handlers[event.data.headers.service][event.data.headers.domain][
+      event.data.headers.action
     ]({
       payload: event.data.payload,
       root: event.data.root,
@@ -42,9 +42,9 @@ module.exports = eventHandler({
 
     //Always set the headers to make sure the view has an updated trace and the context is set.
     const headers = {
-      ...(event.headers.trace && { trace: event.headers.trace }),
-      ...(event.headers.context &&
-        event.headers.context[process.env.CONTEXT] && {
+      ...(event.data.headers.trace && { trace: event.data.headers.trace }),
+      ...(event.data.headers.context &&
+        event.data.headers.context[process.env.CONTEXT] && {
           context: {
             domain: process.env.CONTEXT,
             root: event.data.headers[process.env.CONTEXT].root,
