@@ -17,7 +17,7 @@ module.exports = eventHandler({
     console.log({ event });
     //Must be able to handle this event.
     if (
-      !handlers[event.data.headers.service] ||
+      !handlers[event.headers.service] ||
       !handlers[event.data.headers.service][event.data.headers.domain] ||
       !handlers[event.data.headers.service][event.data.headers.domain][
         event.data.headers.action

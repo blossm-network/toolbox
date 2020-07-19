@@ -108,6 +108,8 @@ exports.streamMany = async (requests, onDataFn, sortFn) => {
   return new Promise((resolve, reject) =>
     jointStream(requestStreams, sortFn, (err) => {
       reject(err);
+      //TODO
+      console.log({ REJECTINGWITHERRO: err });
       rejected = true;
     })
       .on("data", async (data) => {
