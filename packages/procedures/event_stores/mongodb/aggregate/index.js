@@ -45,7 +45,7 @@ module.exports = ({ eventStore, snapshotStore, handlers }) => async (root) => {
     aggregate = {
       root: event.data.root,
       lastEventNumber: event.data.number,
-      state: handler(aggregate ? aggregate.state : null, event.data.payload),
+      state: handler(aggregate ? aggregate.state : {}, event.data.payload),
     };
   });
 
