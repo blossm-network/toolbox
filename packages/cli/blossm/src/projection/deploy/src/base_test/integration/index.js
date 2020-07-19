@@ -34,6 +34,7 @@ describe("Projection integration tests", () => {
         },
       });
 
+      const dateBefore = stringDate();
       await eventStore({
         domain: example.action.domain,
         service: example.action.service,
@@ -44,7 +45,7 @@ describe("Projection integration tests", () => {
           message: {
             data: Buffer.from(
               JSON.stringify({
-                saved: stringDate(),
+                saved: dateBefore,
               })
             ),
           },

@@ -67,8 +67,8 @@ testing:
         name: some-name
       result:
         query: {}
-        value:
-          name: some-name
+        values:
+          - name: some-name
 
 #don't change
 procedure: projection
