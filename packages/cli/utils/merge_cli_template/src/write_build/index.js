@@ -170,8 +170,6 @@ const steps = ({
       return eventHandler({
         imageExtension,
         region,
-        domain,
-        service,
         name,
         stores,
         project,

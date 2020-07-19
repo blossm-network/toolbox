@@ -21,8 +21,6 @@ const createQueue = require("./steps/create_queue");
 
 module.exports = ({
   region,
-  domain,
-  service,
   context,
   name,
   stores,
@@ -78,8 +76,6 @@ module.exports = ({
       secretBucketKeyRing,
       secretBucketKeyLocation,
       custom: {
-        ...(domain && { DOMAIN: domain }),
-        ...(service && { SERVICE: service }),
         CONTEXT: context,
         NAME: name,
         ...dependencyKeyEnvironmentVariables,
@@ -119,8 +115,6 @@ module.exports = ({
             envUriSpecifier,
             env: {
               NAME: name,
-              ...(domain && { DOMAIN: domain }),
-              ...(service && { SERVICE: service }),
               CONTEXT: context,
               MONGODB_DATABASE: "event-handler",
               MONGODB_USER: mongodbUser,
@@ -130,15 +124,11 @@ module.exports = ({
             },
             labels: {
               name,
-              ...(domain && { domain }),
-              ...(service && { service }),
               ...(context && { context }),
             },
           }),
           createQueue({
-            name: `event-handler-${context}${service ? `-${service}` : ""}${
-              domain ? `-${domain}` : ""
-            }-${name}`,
+            name: `event-handler-${context}-${name}`,
             project,
           }),
           startDnsTransaction({ dnsZone, project }),
@@ -161,8 +151,6 @@ module.exports = ({
               store.actions.map((action) =>
                 createPubsubSubscription({
                   name,
-                  ...(domain && { domain }),
-                  ...(service && { service }),
                   ...(context && { context }),
                   operationHash,
                   operationName,

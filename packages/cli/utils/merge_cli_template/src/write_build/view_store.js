@@ -18,12 +18,10 @@ const writeEnv = require("./steps/write_env");
 
 module.exports = ({
   region,
-  domain,
   name,
   project,
   network,
   context,
-  service,
   timeout,
   memory,
   envUriSpecifier,
@@ -66,15 +64,12 @@ module.exports = ({
       project,
       region,
       procedure,
-      // coreNetwork,
       operationHash,
       secretBucket,
       secretBucketKeyRing,
       secretBucketKeyLocation,
       custom: {
         NAME: name,
-        ...(domain && { DOMAIN: domain }),
-        ...(service && { SERVICE: service }),
         CONTEXT: context,
         ...dependencyKeyEnvironmentVariables,
       },
@@ -111,8 +106,6 @@ module.exports = ({
             nodeEnv: env,
             env: {
               NAME: name,
-              ...(domain && { DOMAIN: domain }),
-              ...(service && { SERVICE: service }),
               CONTEXT: context,
               MONGODB_DATABASE: "view-store",
               MONGODB_USER: mongodbUser,
@@ -122,8 +115,6 @@ module.exports = ({
             },
             labels: {
               name,
-              ...(domain && { domain }),
-              ...(service && { service }),
               context,
             },
           }),
