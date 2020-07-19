@@ -422,11 +422,16 @@ const addDefaultDependencies = ({ config, coreNetwork }) => {
           procedure: "command",
         },
         {
-          name: "push",
           domain: "updates",
           service: "system",
           network: coreNetwork,
           procedure: "command-gateway",
+          mocks: [
+            {
+              command: "push",
+              code: 202,
+            },
+          ],
         },
       ];
     case "event-handler":
@@ -514,19 +519,15 @@ const writeConfig = ({ config, coreNetwork, workingDir }) => {
         adjustedDependencies.push({
           procedure: "http",
           host: `c.${dependency.domain}.${dependency.service}.${coreNetwork}`,
-          mocks: [
-            {
+          mocks: dependency.mocks.map((mock) => {
+            return {
               method: "post",
-              path: `/${dependency.name}`,
-              ...(dependency.mock && {
-                ...(dependency.mock.code && { code: dependency.mock.code }),
-                ...(dependency.mock.response && {
-                  response: dependency.mock.response,
-                }),
-                ...(dependency.mock.calls && { calls: dependency.mock.calls }),
-              }),
-            },
-          ],
+              path: mock.command,
+              ...(mock.code && { code: mock.code }),
+              ...(mock.response && { response: mock.response }),
+              ...(mock.calls && { calls: mock.calls }),
+            };
+          }),
         });
         break;
       case "view-gateway":
