@@ -11,7 +11,7 @@ module.exports = ({ removeFn }) => async (req, res) => {
 
   const { deletedCount } = await removeFn({
     ...formattedQueryBody,
-    ...(req.query.context && {
+    ...(req.body.context && {
       "headers.context.root": req.body.context.root,
       "headers.context.domain": req.body.context.domain,
       "headers.context.service": req.body.context.service,
