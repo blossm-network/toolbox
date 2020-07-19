@@ -484,7 +484,7 @@ describe("Server", () => {
     const result = server().delete(fn).listen();
 
     expect(result).to.equal(app);
-    expect(deleteFake).to.have.been.calledWith("/:id", asyncFn);
+    expect(deleteFake).to.have.been.calledWith("/:id?", asyncFn);
     expect(getFake).to.have.been.calledWith(
       "/_sup",
       match((fn) => {

@@ -51,7 +51,7 @@ module.exports = ({ prehook, posthook } = {}) => {
     },
     delete: (
       fn,
-      { path = "/:id", preMiddleware = [], postMiddleware = [] } = {}
+      { path = "/id?", preMiddleware = [], postMiddleware = [] } = {}
     ) => {
       app.delete(
         path,
