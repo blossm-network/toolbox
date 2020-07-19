@@ -240,9 +240,15 @@ describe("Event store integration tests", () => {
         return true;
       });
       let value = example.payload;
-      for (const part of indexParts) {
-        value = value[part];
-      }
+      for (const part of indexParts) value = value[part];
+      //TODO
+      console.log({
+        p: example.payload,
+        query: {
+          key: [index],
+          value,
+        },
+      });
       const response4 = await request.get(url, {
         query: {
           key: [index],
