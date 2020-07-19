@@ -1,7 +1,7 @@
 {
   "name": "@blossm/projection-rpc",
   "description": "Replays a projection.",
-  "version": "0.0.63",
+  "version": "0.0.64",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -14,7 +14,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/rpc": "^0.0.177"
+    "@blossm/rpc": "^0.0.178"
   },
   "devDependencies": {
     "mocha": "^7.1.1",
