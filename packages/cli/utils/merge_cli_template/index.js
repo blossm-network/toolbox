@@ -402,15 +402,15 @@ const addDefaultDependencies = ({ config, coreNetwork }) => {
     case "projection":
       return [
         ...config.testing.dependencies,
-        {
-          domain: config.store.domain,
-          service: config.store.service,
-          procedure: "event-store",
-        },
+        ...config.stores.map((store) => {
+          return {
+            domain: store.domain,
+            service: store.service,
+            procedure: "event-store",
+          };
+        }),
         {
           name: config.name,
-          ...(config.domain && { domain: config.domain }),
-          ...(config.service && { domain: config.service }),
           context: config.context,
           procedure: "view-store",
         },
@@ -470,8 +470,6 @@ const addDefaultDependencies = ({ config, coreNetwork }) => {
           .map((view) => {
             return {
               name: view.name,
-              ...(config.domain && { domain: config.domain }),
-              ...(config.service && { service: config.service }),
               context: config.context,
               procedure: view.procedure,
             };
@@ -532,11 +530,7 @@ const writeConfig = ({ config, coreNetwork, workingDir }) => {
       case "view-gateway":
         adjustedDependencies.push({
           procedure: "http",
-          host: `v.${dependency.domain}${
-            dependency.service ? `.${dependency.service}` : ""
-          }${
-            dependency.context ? `.${dependency.context}` : ""
-          }.${coreNetwork}`,
+          host: `v.${dependency.context}.${coreNetwork}`,
           mocks: dependency.mocks.map((mock) => {
             return {
               method: "get",
