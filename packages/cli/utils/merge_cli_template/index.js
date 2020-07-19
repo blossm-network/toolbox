@@ -426,8 +426,7 @@ const addDefaultDependencies = ({ config, coreNetwork }) => {
           domain: "updates",
           service: "system",
           network: coreNetwork,
-          //TODO need this as command when testing in SN. might need as gateway when on rooftop.
-          production: "command", //"command-gateway",
+          procedure: "command-gateway",
         },
       ];
     case "event-handler":

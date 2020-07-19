@@ -81,7 +81,8 @@ module.exports = eventHandler({
       context: newView.headers.context,
     });
 
-    command({
+    //TODO dont push if replay
+    await command({
       name: "push",
       domain: "updates",
       service: "system",
