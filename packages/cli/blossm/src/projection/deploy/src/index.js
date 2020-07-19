@@ -40,7 +40,12 @@ module.exports = eventHandler({
       ...(event.headers.trace && { trace: event.headers.trace }),
       ...(event.headers.context &&
         event.headers.context[process.env.CONTEXT] && {
-          [process.env.CONTEXT]: event.headers.context[process.env.CONTEXT],
+          context: {
+            domain: process.env.CONTEXT,
+            root: event.data.headers[process.env.CONTEXT].root,
+            service: event.data.headers[process.env.CONTEXT].service,
+            network: event.data.headers[process.env.CONTEXT].network,
+          },
         }),
     };
 
@@ -61,12 +66,7 @@ module.exports = eventHandler({
 
     const channel = channelName({
       name: process.env.NAME,
-      context: {
-        domain: process.env.CONTEXT,
-        root: newView.headers[process.env.CONTEXT].root,
-        service: newView.headers[process.env.CONTEXT].service,
-        network: newView.headers[process.env.CONTEXT].network,
-      },
+      context: newView.headers.context,
     });
 
     command({
