@@ -27,10 +27,12 @@ describe("Event store stream", () => {
 
     const params = { root };
 
+    const actions = "some-actions";
     const req = {
       query: {
         from,
         parallel: 2,
+        actions,
       },
       params,
     };
@@ -47,6 +49,7 @@ describe("Event store stream", () => {
       root,
       from,
       parallel: 2,
+      actions,
       fn: match((fn) => {
         const event = { a: 1 };
         fn(event);
