@@ -37,9 +37,8 @@ testing:
         domain: some-domain
         service: some-service
       examples:
-        - event:
-            payload:
-              name: some-name
+        - payload:
+            name: some-name
           result:
             body:
               name: some-name
