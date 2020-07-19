@@ -103,14 +103,12 @@ describe("Request", () => {
     const url = "http://google.com";
     replace(deps, "request", (options, callback) => {
       expect(options).to.deep.equal({
-        url: `https://${resultingUrl}`,
+        url,
         method: "DELETE",
         json: params,
       });
       callback(null, response, body);
     });
-    const urlEncodeQueryDataFake = fake.returns(resultingUrl);
-    replace(deps, "urlEncodeQueryData", urlEncodeQueryDataFake);
     const reply = await request.delete(url, { query: params });
     expect(reply).to.deep.equal({ ...response, body });
   });
