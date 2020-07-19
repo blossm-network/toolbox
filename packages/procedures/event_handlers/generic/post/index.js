@@ -12,13 +12,11 @@ const data = (req) => {
 };
 
 module.exports = ({ mainFn, streamFn }) => async (req, res) => {
-  const { from } = data(req);
+  const { from, push = true } = data(req);
 
-  //TODO
-  console.log({ from });
   await streamFn({
     from,
-    fn: (event) => mainFn(event),
+    fn: (event) => mainFn(event, { push }),
     // chronological
     sortFn: (a, b) =>
       a.data.saved < b.data.saved ? -1 : a.data.saved > b.data.saved ? 1 : 0,

@@ -1,5 +1,6 @@
 const { expect } = require("chai").use(require("sinon-chai"));
 const { restore, replace, fake, match, useFakeTimers } = require("sinon");
+const { string: stringDate } = require("@blossm/datetime");
 
 const deps = require("../deps");
 const post = require("..");
@@ -139,7 +140,6 @@ describe("Command gateway post", () => {
     expect(statusFake).to.have.been.calledWith(statusCode);
     expect(sendFake).to.have.been.calledWith({
       ...response,
-      tokens: [{ a: 1 }],
     });
   });
   it("should call with the correct params on a different network and different service, with claims and context", async () => {
@@ -440,6 +440,9 @@ describe("Command gateway post", () => {
     });
     replace(deps, "command", commandFake);
 
+    const decodeFake = fake.returns({ headers: { exp: stringDate() } });
+    replace(deps, "decode", decodeFake);
+
     const reqToken = "some-req-token";
     const idempotency = "some-idempotency";
     const trace = "some-trace";
@@ -485,11 +488,13 @@ describe("Command gateway post", () => {
       domain: token1Network,
       httpOnly: true,
       secure: true,
+      expires: new Date(stringDate()),
     });
     expect(cookieFake).to.have.been.calledWith(token2Type, token2Value, {
       domain: token2Network,
       httpOnly: true,
       secure: true,
+      expires: new Date(stringDate()),
     });
     expect(validateFake).to.have.been.calledWith({
       ...body,
@@ -536,7 +541,9 @@ describe("Command gateway post", () => {
         ],
       },
     });
-    expect(sendFake).to.have.been.calledWith({ tokens: [token1, token2] });
+    expect(decodeFake.getCall(0)).to.have.been.calledWith(token1Value);
+    expect(decodeFake.getCall(1)).to.have.been.calledWith(token2Value);
+    expect(sendFake).to.have.been.calledWith({});
     expect(statusFake).to.have.been.calledWith(statusCode);
   });
   it("should throw correctly", async () => {

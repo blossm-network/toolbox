@@ -8,9 +8,7 @@ module.exports = ({ credentialsFn }) => async ({ network, key }) => {
   const { root, secret } = credentials;
   const { token, exp } = cache[`${network}.${key}`] || {};
   if (!token || exp < new Date()) {
-    const {
-      body: { token },
-    } = await deps
+    const { headers } = await deps
       .command({
         name: "open",
         domain: "connection",
@@ -29,11 +27,17 @@ module.exports = ({ credentialsFn }) => async ({ network, key }) => {
       })
       .issue({ key });
 
+    const cookies = deps.parseCookies({ headers });
+
+    const [{ value: token } = {}] = cookies.filter(
+      (c) => c.domain == network && c.name == key
+    );
+
     if (!token) return null;
 
-    const claims = await deps.decode(token.value);
+    const claims = await deps.decode(token);
     cache[`${network}.${key}`] = {
-      token: token.value,
+      token,
       exp: new Date(Date.parse(claims.exp)),
     };
   }

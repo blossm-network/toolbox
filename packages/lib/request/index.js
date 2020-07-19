@@ -1,10 +1,8 @@
 const deps = require("./deps");
 
 const common = async ({ method, url, params, headers }) =>
-  new Promise((resolve, reject) => {
-    //TODO
-    console.log({ url });
-    return deps.request(
+  new Promise((resolve, reject) =>
+    deps.request(
       {
         url: url.startsWith("http")
           ? url
@@ -22,25 +20,22 @@ const common = async ({ method, url, params, headers }) =>
               statusMessage: response.statusMessage,
               body,
             })
-    );
-  });
+    )
+  );
 
-const jointStream = (streams, sortFn, onError) => {
+const jointStream = (streams, sortFn) => {
   switch (streams.length) {
     case 1:
-      streams[0].on("error", onError);
       return streams[0];
     case 2:
-      streams[0].on("error", onError);
-      streams[1].on("error", onError);
       return new deps.union(streams[0], streams[1], sortFn);
     default: {
       const half = Math.ceil(streams.length / 2);
       const firstHalf = streams.splice(0, half);
       const secondHalf = streams.splice(-half);
       return new deps.union(
-        jointStream(firstHalf, sortFn, onError),
-        jointStream(secondHalf, sortFn, onError),
+        jointStream(firstHalf, sortFn),
+        jointStream(secondHalf, sortFn),
         sortFn
       );
     }
@@ -71,6 +66,8 @@ exports.get = async (url, { query, headers } = {}) =>
 exports.stream = async (url, onDataFn, { query, headers } = {}) => {
   let processingData = false;
   let finishedProcessingAllData = false;
+  let rejected = false;
+
   return new Promise((resolve, reject) =>
     deps
       .request({
@@ -80,14 +77,21 @@ exports.stream = async (url, onDataFn, { query, headers } = {}) => {
       })
       .on("data", async (data) => {
         processingData = true;
-        await onDataFn(data);
+        try {
+          await onDataFn(data);
+        } catch (err) {
+          if (err) {
+            reject(err);
+            rejected = true;
+          }
+        }
         processingData = false;
-        if (finishedProcessingAllData) resolve();
+        if (!rejected && finishedProcessingAllData) resolve();
       })
       .on("error", reject)
       .on("end", () => {
         finishedProcessingAllData = true;
-        if (!processingData) resolve();
+        if (!rejected && !processingData) resolve();
       })
   );
 };
@@ -106,15 +110,17 @@ exports.streamMany = async (requests, onDataFn, sortFn) => {
   let rejected = false;
 
   return new Promise((resolve, reject) =>
-    jointStream(requestStreams, sortFn, (err) => {
-      reject(err);
-      //TODO
-      console.log({ REJECTINGWITHERRO: err });
-      rejected = true;
-    })
+    jointStream(requestStreams, sortFn)
       .on("data", async (data) => {
         processingData = true;
-        await onDataFn(data);
+        try {
+          await onDataFn(data);
+        } catch (err) {
+          if (err) {
+            reject(err);
+            rejected = true;
+          }
+        }
         processingData = false;
         if (!rejected && finishedProcessingAllData) resolve();
       })

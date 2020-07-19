@@ -70,14 +70,10 @@ describe("Projection integration tests", () => {
           })
           .read(example.result.query);
 
-        //TODO
-        console.log({ v });
         expect(v.updates).to.exist;
 
         if (example.result.value) {
           for (const property in example.result.value) {
-            //TODO
-            console.log({ body: v.content.body, property });
             expect(v.content.body[property]).to.exist;
             if (example.result.value[property] != undefined) {
               expect(v.content.body[property]).to.deep.equal(
@@ -86,8 +82,6 @@ describe("Projection integration tests", () => {
             }
           }
         } else if (example.result.values) {
-          //TODO
-          console.log({ values: example.result.values, vContent: v.content });
           expect(example.result.values.length).to.equal(v.content.length);
           for (let i = 0; i < example.result.values.length; i++) {
             let value = example.result.values[i];

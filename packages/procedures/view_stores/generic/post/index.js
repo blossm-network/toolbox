@@ -16,9 +16,6 @@ module.exports = ({ writeFn, updateFn = defaultFn }) => {
       network: req.body.context[process.env.CONTEXT].network,
     };
 
-    //TODO
-    console.log({ PostingWContexT: context });
-
     const formattedBody = {};
 
     for (const key in customUpdate.body)
@@ -40,8 +37,6 @@ module.exports = ({ writeFn, updateFn = defaultFn }) => {
       }
     }
 
-    //TODO
-    console.log({ PostingWData: data, query: formattedQuery });
     const newView = await writeFn({
       query: {
         ...formattedQuery,
@@ -53,8 +48,6 @@ module.exports = ({ writeFn, updateFn = defaultFn }) => {
       data,
     });
 
-    //TODO
-    console.log({ newView });
     res.status(200).send(newView);
   };
 };

@@ -12,12 +12,10 @@ const handlers = require("./handlers.js");
 const config = require("./config.json");
 
 module.exports = eventHandler({
-  mainFn: async (event) => {
-    //TODO
-    console.log({ event });
+  mainFn: async (event, { push = true }) => {
     //Must be able to handle this event.
     if (
-      !handlers[event.headers.service] ||
+      !handlers[event.data.headers.service] ||
       !handlers[event.data.headers.service][event.data.headers.domain] ||
       !handlers[event.data.headers.service][event.data.headers.domain][
         event.data.headers.action
@@ -37,9 +35,6 @@ module.exports = eventHandler({
       root: event.data.root,
     });
 
-    //TODO
-    console.log({ query, body, headers: event.data.headers });
-
     //Always set the headers to make sure the view has an updated trace and the context is set.
     const headers = {
       ...(event.data.headers.trace && { trace: event.data.headers.trace }),
@@ -54,8 +49,6 @@ module.exports = eventHandler({
         }),
     };
 
-    //TODO
-    console.log({ headers });
     const { body: newView } = await viewStore({
       name: config.name,
       context: config.context,
@@ -78,12 +71,13 @@ module.exports = eventHandler({
         },
       });
 
+    if (!push) return;
+
     const channel = channelName({
       name: process.env.NAME,
       context: newView.headers.context,
     });
 
-    //TODO dont push if replay
     await command({
       name: "push",
       domain: "updates",

@@ -47,8 +47,6 @@ module.exports = ({
         formattedSort[`body.${key}`] = req.query.sort[key];
     }
 
-    //TODO
-    console.log({ GETTINGwQuery: query, limit, skip, formattedSort });
     const [results, count] = await Promise.all([
       findFn({
         query,
@@ -59,8 +57,6 @@ module.exports = ({
       ...(one ? [] : [countFn({ query })]),
     ]);
 
-    //TODO
-    console.log({ results });
     const formattedResults = results.map((r) => {
       return {
         body: r.body,
@@ -71,8 +67,6 @@ module.exports = ({
       };
     });
 
-    //TODO
-    console.log({ formattedResults });
     const updates = `https://updates.${process.env.CORE_NETWORK}/channel?query%5Bname%5D=${process.env.NAME}&query%5Bcontext%5D=${process.env.CONTEXT}&query%5Bnetwork%5D=${process.env.NETWORK}`;
 
     if (!one) {

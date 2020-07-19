@@ -1,4 +1,4 @@
 const deps = require("./deps");
 
-module.exports = async ({ mainFn } = {}) =>
-  deps.server().get(deps.get({ mainFn }), { path: "/:root?" }).listen();
+module.exports = async ({ mainFn, viewsFn } = {}) =>
+  deps.server().get(deps.get({ mainFn, viewsFn })).listen();

@@ -38,7 +38,45 @@ describe("Command handler post", () => {
       fn: match((fn) => {
         const event = "some-event";
         fn(event);
-        return mainFnFake.calledWith(event);
+        return mainFnFake.calledWith(event, { push: true });
+      }),
+      sortFn: match((fn) => {
+        const a = { data: { saved: 0 } };
+        const b = { data: { saved: 1 } };
+        const result = fn(a, b);
+        return result == -1;
+      }),
+    });
+
+    expect(sendStatusFake).to.have.been.calledWith(204);
+  });
+  it("should call with the correct params if push is false", async () => {
+    const mainFnFake = fake();
+    const streamFnFake = fake();
+
+    const data = Buffer.from(JSON.stringify({ from, push: false }));
+    const req = {
+      body: {
+        message: { data },
+      },
+    };
+
+    const sendStatusFake = fake();
+    const res = {
+      sendStatus: sendStatusFake,
+    };
+
+    await post({
+      mainFn: mainFnFake,
+      streamFn: streamFnFake,
+    })(req, res);
+
+    expect(streamFnFake).to.have.been.calledWith({
+      from,
+      fn: match((fn) => {
+        const event = "some-event";
+        fn(event);
+        return mainFnFake.calledWith(event, { push: false });
       }),
       sortFn: match((fn) => {
         const a = { data: { saved: 0 } };

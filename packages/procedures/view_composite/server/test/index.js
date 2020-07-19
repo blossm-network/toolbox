@@ -5,6 +5,7 @@ const deps = require("../deps");
 const composite = require("..");
 
 const mainFn = "some-main-fn";
+const viewsFn = "some-views-fn";
 
 describe("Fact", () => {
   afterEach(() => {
@@ -28,15 +29,14 @@ describe("Fact", () => {
 
     const result = await composite({
       mainFn,
+      viewsFn,
     });
 
     expect(result).to.equal(returnValue);
     expect(listenFake).to.have.been.calledWith();
     expect(serverFake).to.have.been.calledWith();
-    expect(getFake).to.have.been.calledWith(compositeGetResult, {
-      path: "/:root?",
-    });
-    expect(compositeGetFake).to.have.been.calledWith({ mainFn });
+    expect(getFake).to.have.been.calledWith(compositeGetResult);
+    expect(compositeGetFake).to.have.been.calledWith({ mainFn, viewsFn });
   });
   it("should throw correctly", async () => {
     const error = new Error("some-message");
@@ -54,7 +54,7 @@ describe("Fact", () => {
     replace(deps, "get", compositeGetFake);
 
     try {
-      await composite({ mainFn });
+      await composite({ mainFn, viewsFn });
 
       //shouldn't get called
       expect(1).to.equal(0);

@@ -61,16 +61,17 @@ module.exports = ({
     for (const token of response.tokens) {
       if (!token.network || !token.type || !token.value) continue;
       const cookieName = token.type;
-      //TODO parse token for exp
+      const { headers } = deps.decode(token.value);
       res.cookie(cookieName, token.value, {
         domain: token.network,
         httpOnly: true,
         secure: true,
+        expires: new Date(headers.exp),
       });
     }
-  }
 
-  //TODO reconsider removing token from response. Maybe keep it in dev env.
+    delete response.tokens;
+  }
 
   res.status(statusCode).send(response);
 };

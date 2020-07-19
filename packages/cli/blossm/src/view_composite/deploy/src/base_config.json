@@ -1,6 +1,8 @@
 {
   "dependencies": {
-    "@blossm/view-composite": "*"
+    "@blossm/view-composite": "*",
+    "@blossm/gcp-token": "*",
+    "@blossm/view-store-rpc": "*"
   },
   "devDependencies": {
     "chai": "^4.2.0",

@@ -13,7 +13,6 @@ process.env.DOMAIN = domain;
 process.env.SERVICE = service;
 process.env.NETWORK = network;
 
-const params = { a: 1 };
 const query = { b: 2 };
 
 describe("Composite get", () => {
@@ -25,8 +24,10 @@ describe("Composite get", () => {
     const response = "some-response";
     const mainFnFake = fake.returns(response);
 
+    const viewsFnResult = "some-views-fn-result";
+    const viewsFnFake = fake.returns(viewsFnResult);
+
     const req = {
-      params,
       query: {
         query,
       },
@@ -42,28 +43,34 @@ describe("Composite get", () => {
 
     await get({
       mainFn: mainFnFake,
+      viewsFn: viewsFnFake,
     })(req, res);
 
+    expect(viewsFnFake).to.have.been.calledWith({});
     expect(mainFnFake).to.have.been.calledWith({
       query,
+      viewsFn: viewsFnResult,
     });
     expect(statusFake).to.have.been.calledWith(200);
     expect(sendFake).to.have.been.calledWith(response);
   });
-  it("should call with the correct params with context", async () => {
+  it("should call with the correct params with context, claims, and token", async () => {
     const response = "some-response";
     const mainFnFake = fake.returns(response);
 
+    const viewsFnResult = "some-views-fn-result";
+    const viewsFnFake = fake.returns(viewsFnResult);
+
     const context = "some-context";
-    const root = "some-root";
+    const claims = "some-claims";
+    const token = "some-token";
 
     const req = {
-      params: {
-        root,
-      },
       query: {
         query,
         context,
+        claims,
+        token,
       },
     };
 
@@ -77,12 +84,14 @@ describe("Composite get", () => {
 
     await get({
       mainFn: mainFnFake,
+      viewsFn: viewsFnFake,
     })(req, res);
 
+    expect(viewsFnFake).to.have.been.calledWith({ context, claims, token });
     expect(mainFnFake).to.have.been.calledWith({
       query,
       context,
-      root,
+      viewsFn: viewsFnResult,
     });
     expect(statusFake).to.have.been.calledWith(200);
     expect(sendFake).to.have.been.calledWith(response);
@@ -90,8 +99,9 @@ describe("Composite get", () => {
   it("should throw correctly", async () => {
     const errorMessage = "some-error-message";
     const mainFnFake = fake.rejects(new Error(errorMessage));
+    const viewsFnResult = "some-views-fn-result";
+    const viewsFnFake = fake.returns(viewsFnResult);
     const req = {
-      params,
       query,
     };
 
@@ -106,6 +116,7 @@ describe("Composite get", () => {
     try {
       await get({
         mainFn: mainFnFake,
+        viewsFn: viewsFnFake,
       })(req, res);
 
       //shouldn't get called
