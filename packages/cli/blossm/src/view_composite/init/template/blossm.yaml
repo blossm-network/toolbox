@@ -1,18 +1,8 @@
 #
-# Give your view-composite a unique name, and specify which context it's in. Optionally add the
-# domain and service.
+# Give your view-composite a unique name, and specify which context it's in.
 #
 name: some-name
-domain: some-optional-domain
-service: some-optional-service
 context: some-context
-
-#
-# Add dependencies and devDependencies, just like a package.json file.
-#
-dependencies:
-  "@blossm/view-store-rpc": "*"
-  "@blossm/gcp-token": "*"
 
 #
 # The following properties are used for automated testing.
@@ -28,8 +18,6 @@ testing:
   #
   dependencies:
     - name: some-name
-      domain: some-domain
-      service: some-service
       context: some-context
       procedure: view-store
 
