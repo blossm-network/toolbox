@@ -329,6 +329,8 @@ describe("View store base integration tests", () => {
           ? expect(count4).to.equal(examples.length * 2)
           : expect(count4).to.be.undefined;
 
+        //TODO
+        console.log({ count4, content4 });
         for (const key in examples[sort.order[0]].get) {
           expect((!one ? content4[0] : content4).body[key]).to.deep.equal(
             examples[sort.order[0]].get[key]
