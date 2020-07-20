@@ -172,6 +172,7 @@ describe("View store base integration tests", () => {
         for (const example of examples) {
           await request.post(url, {
             body: {
+              id: uuid(),
               update: example.update,
               context: {
                 [process.env.CONTEXT]: {
@@ -246,6 +247,7 @@ describe("View store base integration tests", () => {
         for (const example of examples.length > 2 ? examples.slice(2) : []) {
           await request.post(url, {
             body: {
+              id: uuid(),
               update: example,
               context: {
                 [process.env.CONTEXT]: {
@@ -281,6 +283,7 @@ describe("View store base integration tests", () => {
         for (const example of examples) {
           await request.post(url, {
             body: {
+              id: uuid(),
               update: example,
               context: {
                 [process.env.CONTEXT]: {
