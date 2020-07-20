@@ -1,7 +1,8 @@
 const deps = require("./deps");
 
 module.exports = ({ removeFn }) => async (req, res) => {
-  if (!req.body.query) throw deps.badRequestError.message("Missing query.");
+  if (!req.body.query && !req.body.id)
+    throw deps.badRequestError.message("Missing query.");
 
   const formattedQueryBody = {};
   for (const key in req.body.query || {}) {
