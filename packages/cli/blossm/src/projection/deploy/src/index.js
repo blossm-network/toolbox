@@ -70,17 +70,6 @@ module.exports = eventHandler({
 
         //Always set the trace and context to make sure the view has an updated trace and the context is set.
         ...(event.data.headers.trace && { trace: event.data.headers.trace }),
-        ...(contextRoot &&
-          contextDomain &&
-          contextService &&
-          contextNetwork && {
-            context: {
-              root: contextRoot,
-              domain: contextDomain,
-              service: contextService,
-              network: contextNetwork,
-            },
-          }),
       });
 
     if (!push) return;
