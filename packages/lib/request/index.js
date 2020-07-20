@@ -51,9 +51,8 @@ exports.put = async (url, { body, headers } = {}) =>
 exports.delete = async (url, { query, headers } = {}) =>
   await common({
     method: "DELETE",
-    url,
+    url: deps.urlEncodeQueryData(url, query),
     headers,
-    params: { query },
   });
 
 exports.get = async (url, { query, headers } = {}) =>

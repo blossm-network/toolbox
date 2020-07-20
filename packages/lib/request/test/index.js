@@ -101,15 +101,17 @@ describe("Request", () => {
   it("should call delete with correct params", async () => {
     const params = { hello: "there" };
     const url = "http://google.com";
+    const urlEncodeQueryDataFake = fake.returns(resultingUrl);
+    replace(deps, "urlEncodeQueryData", urlEncodeQueryDataFake);
     replace(deps, "request", (options, callback) => {
       expect(options).to.deep.equal({
-        url,
+        url: `https://${resultingUrl}`,
         method: "DELETE",
-        json: { query: params },
       });
       callback(null, response, body);
     });
     const reply = await request.delete(url, { query: params });
+    expect(urlEncodeQueryDataFake).to.have.been.calledWith(url, params);
     expect(reply).to.deep.equal({ ...response, body });
   });
 

@@ -340,16 +340,23 @@ describe("View store base integration tests", () => {
     }
 
     const response9 = await request.delete(url, {
-      id,
-      context: {
-        [process.env.CONTEXT]: {
-          root: contextRoot,
-          service: contextService,
-          network: contextNetwork,
+      query: {
+        id,
+        context: {
+          [process.env.CONTEXT]: {
+            root: contextRoot,
+            service: contextService,
+            network: contextNetwork,
+          },
         },
       },
     });
+
+    //TODO
+    console.log({ response9 });
     const parsedBody9 = JSON.parse(response9.body);
+    //TODO
+    console.log({ parsedBody9 });
     expect(response9.statusCode).to.equal(200);
     expect(parsedBody9.deletedCount).to.equal(1);
   };

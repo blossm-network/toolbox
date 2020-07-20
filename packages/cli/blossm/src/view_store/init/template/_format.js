@@ -5,6 +5,7 @@
  * The function takes in a view as it is saved in the store,
  * and is responsible for returning a formatted view as it should be returned to requesters.
  *
+ * The function must be deterministic, meaning the output should always be the same for every input.
  */
 
 // module.exports = ({ body, headers }) => {

@@ -30,7 +30,7 @@ describe("View store delete", () => {
 
     const id = "some-id";
     const req = {
-      body: {
+      query: {
         context,
         query: {},
         id,
@@ -60,7 +60,7 @@ describe("View store delete", () => {
     const removeFake = fake.returns({ deletedCount });
 
     const req = {
-      body: {
+      query: {
         query,
       },
     };
@@ -82,7 +82,7 @@ describe("View store delete", () => {
     const removeFake = fake.returns({ deletedCount });
 
     const req = {
-      body: {
+      query: {
         query,
         context,
       },
@@ -111,7 +111,7 @@ describe("View store delete", () => {
     const removeFake = fake.returns({ deletedCount });
 
     const req = {
-      body: {},
+      query: {},
     };
 
     const res = {};
