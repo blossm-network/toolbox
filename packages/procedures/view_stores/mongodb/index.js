@@ -22,6 +22,12 @@ const viewStore = async ({ schema, indexes, secretFn }) => {
         ...deps.formatSchema(schema, typeKey),
       },
       headers: {
+        id: {
+          [typeKey]: String,
+          required: true,
+          unique: true,
+          default: deps.uuid,
+        },
         trace: { [typeKey]: String },
         context: {
           [typeKey]: {
@@ -73,7 +79,7 @@ module.exports = async ({
   one,
 } = {}) => {
   const allIndexes = [
-    [{ "body.id": 1 }],
+    [{ "headers.id": 1 }],
     [
       { ["headers.context.root"]: 1 },
       { ["headers.context.domain"]: 1 },

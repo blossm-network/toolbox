@@ -27,6 +27,8 @@ const context = {
   },
 };
 
+const id = "some-id";
+
 const body = {
   update: {
     body: {
@@ -37,6 +39,7 @@ const body = {
   },
   context,
   query,
+  id,
 };
 
 process.env.CONTEXT = envContext;
@@ -70,6 +73,7 @@ describe("View store put", () => {
     expect(writeFake).to.have.been.calledWith({
       query: {
         "body.some": "query",
+        "headers.id": id,
         "headers.context.root": envContextRoot,
         "headers.context.domain": "some-env-context",
         "headers.context.service": envContextService,
@@ -77,6 +81,7 @@ describe("View store put", () => {
       },
       data: {
         "body.a": 1,
+        "headers.id": id,
         "headers.trace": 2,
         "headers.context": {
           root: envContextRoot,
@@ -117,6 +122,7 @@ describe("View store put", () => {
     expect(writeFake).to.have.been.calledWith({
       query: {
         "body.some": "query",
+        "headers.id": id,
         "headers.context.root": envContextRoot,
         "headers.context.domain": "some-env-context",
         "headers.context.service": envContextService,
@@ -124,6 +130,7 @@ describe("View store put", () => {
       },
       data: {
         "body.c": 3,
+        "headers.id": id,
         "headers.context": {
           root: envContextRoot,
           domain: "some-env-context",
@@ -142,7 +149,7 @@ describe("View store put", () => {
     expect(statusFake).to.have.been.calledWith(200);
     expect(sendFake).to.have.been.calledWith(formattedWriteResult);
   });
-  it("should return successfully if query is missing", async () => {
+  it("should return successfully if query and id are missing", async () => {
     const writeFake = fake.returns(writeResult);
     const formatFake = fake.returns(formattedWriteResult);
 

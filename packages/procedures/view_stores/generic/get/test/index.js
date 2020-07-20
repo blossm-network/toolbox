@@ -63,11 +63,13 @@ describe("View store get", () => {
     const urlEncodeQueryDataFake = fake.returns(nextUrl);
     replace(deps, "urlEncodeQueryData", urlEncodeQueryDataFake);
 
+    const id = "some-id";
     const req = {
       query: {
         sort,
         context,
         query,
+        id,
       },
     };
 
@@ -85,6 +87,7 @@ describe("View store get", () => {
       sort: { "body.a": 1 },
       query: {
         "body.some-query-key": 1,
+        "headers.id": id,
         "headers.context": {
           root: envContextRoot,
           domain: "some-env-context",
@@ -96,6 +99,7 @@ describe("View store get", () => {
     expect(countFake).to.have.been.calledWith({
       query: {
         "body.some-query-key": 1,
+        "headers.id": id,
         "headers.context": {
           root: envContextRoot,
           domain: "some-env-context",

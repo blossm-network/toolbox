@@ -10,12 +10,13 @@ module.exports = ({ name, context = process.env.CONTEXT, network }) => {
       externalFn: externalTokenFn,
       key,
     } = {},
-  } = {}) => ({ query, sort } = {}) =>
+  } = {}) => ({ query, sort, id } = {}) =>
     deps
       .rpc(name, context, "view-store")
       .get({
         ...(query && { query }),
         ...(sort && { sort }),
+        ...(id && { id }),
       })
       .in({
         ...(contexts && { context: contexts }),
@@ -70,10 +71,10 @@ module.exports = ({ name, context = process.env.CONTEXT, network }) => {
   const update = ({
     contexts,
     token: { internalFn: internalTokenFn } = {},
-  } = {}) => ({ query, update }) =>
+  } = {}) => ({ query, update, id }) =>
     deps
       .rpc(name, context, "view-store")
-      .post({ ...(query && { query }), update })
+      .post({ ...(query && { query }), ...(id && { id }), update })
       .in({
         ...(contexts && { context: contexts }),
       })

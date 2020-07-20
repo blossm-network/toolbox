@@ -124,6 +124,12 @@ describe("View store", () => {
         },
         headers: {
           _id: false,
+          id: {
+            $type: String,
+            required: true,
+            unique: true,
+            default: deps.uuid,
+          },
           trace: { $type: String },
           context: {
             $type: {
@@ -155,7 +161,7 @@ describe("View store", () => {
       },
       typeKey: "$type",
       indexes: [
-        [{ "body.id": 1 }],
+        [{ "headers.id": 1 }],
         [
           { "headers.context.root": 1 },
           { "headers.context.domain": 1 },
@@ -341,6 +347,12 @@ describe("View store", () => {
         },
         headers: {
           _id: false,
+          id: {
+            $type: String,
+            required: true,
+            unique: true,
+            default: deps.uuid,
+          },
           trace: { $type: String },
           context: {
             $type: {
@@ -372,7 +384,7 @@ describe("View store", () => {
       },
       typeKey: "$type",
       indexes: [
-        [{ "body.id": 1 }],
+        [{ "headers.id": 1 }],
         [
           { "headers.context.root": 1 },
           { "headers.context.domain": 1 },
@@ -468,6 +480,12 @@ describe("View store", () => {
         },
         headers: {
           _id: false,
+          id: {
+            $type: String,
+            required: true,
+            unique: true,
+            default: deps.uuid,
+          },
           trace: { $type: String },
           context: {
             $type: {
@@ -499,7 +517,7 @@ describe("View store", () => {
       },
       typeKey: "$type",
       indexes: [
-        [{ "body.id": 1 }],
+        [{ "headers.id": 1 }],
         [
           { "headers.context.root": 1 },
           { "headers.context.domain": 1 },
@@ -579,6 +597,12 @@ describe("View store", () => {
         },
         headers: {
           _id: false,
+          id: {
+            $type: String,
+            required: true,
+            unique: true,
+            default: deps.uuid,
+          },
           trace: { $type: String },
           context: {
             $type: {
@@ -610,7 +634,7 @@ describe("View store", () => {
       },
       typeKey: "$type",
       indexes: [
-        [{ "body.id": 1 }],
+        [{ "headers.id": 1 }],
         [
           { "headers.context.root": 1 },
           { "headers.context.domain": 1 },
@@ -773,6 +797,12 @@ describe("View store", () => {
         },
         headers: {
           _id: false,
+          id: {
+            $type: String,
+            required: true,
+            unique: true,
+            default: deps.uuid,
+          },
           trace: { $type: String },
           context: {
             $type: {
@@ -804,7 +834,7 @@ describe("View store", () => {
       },
       typeKey: "$type",
       indexes: [
-        [{ "body.id": 1 }],
+        [{ "headers.id": 1 }],
         [
           { "headers.context.root": 1 },
           { "headers.context.domain": 1 },

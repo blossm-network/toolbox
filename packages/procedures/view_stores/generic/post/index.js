@@ -24,6 +24,7 @@ module.exports = ({ writeFn, formatFn, updateFn = defaultFn }) => {
     const data = {
       ...formattedBody,
       ...(customUpdate.trace && { "headers.trace": customUpdate.trace }),
+      ...(req.body.id && { "headers.id": req.body.id }),
       "headers.context": context,
       "headers.modified": deps.dateString(),
     };
@@ -40,6 +41,7 @@ module.exports = ({ writeFn, formatFn, updateFn = defaultFn }) => {
     const newView = await writeFn({
       query: {
         ...formattedQuery,
+        ...(req.body.id && { "headers.id": req.body.id }),
         "headers.context.root": context.root,
         "headers.context.domain": context.domain,
         "headers.context.service": context.service,

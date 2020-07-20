@@ -14,6 +14,7 @@ const currentToken = "some-current-token";
 const key = "some-key";
 
 const query = "some-query";
+const id = "some-id";
 const sort = "some-sort";
 const contexts = { c: 2 };
 
@@ -54,10 +55,10 @@ describe("Get views", () => {
           key,
         },
       })
-      .read({ query, sort });
+      .read({ query, sort, id });
 
     expect(rpcFake).to.have.been.calledWith(name, context, "view-store");
-    expect(getFake).to.have.been.calledWith({ query, sort });
+    expect(getFake).to.have.been.calledWith({ query, sort, id });
     expect(inFake).to.have.been.calledWith({ context: contexts });
     expect(withFake).to.have.been.calledWith({
       internalTokenFn,
@@ -269,10 +270,10 @@ describe("Get views", () => {
           internalFn: internalTokenFn,
         },
       })
-      .update({ query, update });
+      .update({ query, update, id });
 
     expect(rpcFake).to.have.been.calledWith(name, context, "view-store");
-    expect(postFake).to.have.been.calledWith({ query, update });
+    expect(postFake).to.have.been.calledWith({ query, update, id });
     expect(inFake).to.have.been.calledWith({ context: contexts });
     expect(withFake).to.have.been.calledWith({
       internalTokenFn,

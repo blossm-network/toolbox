@@ -25,13 +25,15 @@ describe("View store delete", () => {
     restore();
   });
 
-  it("should call with the correct params with context only", async () => {
+  it("should call with the correct params with context and id only", async () => {
     const removeFake = fake.returns({ deletedCount });
 
+    const id = "some-id";
     const req = {
       body: {
         context,
         query: {},
+        id,
       },
     };
 
@@ -45,6 +47,7 @@ describe("View store delete", () => {
 
     await del({ removeFn: removeFake })(req, res);
     expect(removeFake).to.have.been.calledWith({
+      "headers.id": id,
       "headers.context.root": contextRoot,
       "headers.context.domain": contextDomain,
       "headers.context.service": contextService,
