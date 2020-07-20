@@ -17,15 +17,13 @@ const contextNetwork = "some-context-network";
 describe("View store base integration tests", () => {
   const testParamQueries = async () => {
     const id = "some-id";
-    const example0 = testing.examples.first;
-    const example1 = testing.examples.second;
-    expect(example0).to.exist;
-    expect(example1).to.exist;
+    const examples = testing.examples;
+    expect(examples.length).to.be.greaterThan(1);
 
     const response0 = await request.post(url, {
       body: {
         id,
-        update: example0.update,
+        update: examples[0].update,
         context: {
           [process.env.CONTEXT]: {
             root: contextRoot,
@@ -63,16 +61,18 @@ describe("View store base integration tests", () => {
     //TODO
     console.log({ body: parsedBody0.body });
     expect(response1.statusCode).to.equal(200);
-    for (const key in example0.get) {
-      expect(parsedBody0.body[key]).to.deep.equal(example0.get[key]);
+    for (const key in examples[0].get) {
+      expect(parsedBody0.body[key]).to.deep.equal(examples[0].get[key]);
     }
 
-    for (const more of testing.examples.more || []) {
+    for (const example of testing.examples.length > 2
+      ? testing.examples.slice(2)
+      : []) {
       const moreId = uuid();
       const moreResponse0 = await request.post(url, {
         body: {
           id: moreId,
-          update: more.update,
+          update: example.update,
           context: {
             [process.env.CONTEXT]: {
               root: contextRoot,
@@ -87,7 +87,7 @@ describe("View store base integration tests", () => {
 
       const moreResponse1 = await request.get(url, {
         query: {
-          ...(more.query && { query: more.query }),
+          ...(example.query && { query: example.query }),
           context: {
             [process.env.CONTEXT]: {
               root: contextRoot,
@@ -110,15 +110,15 @@ describe("View store base integration tests", () => {
       !one ? expect(moreCount).to.equal(1) : expect(moreCount).to.be.undefined;
 
       expect(moreResponse1.statusCode).to.equal(200);
-      for (const key in more.get) {
-        expect(moreParsedBody.body[key]).to.deep.equal(more.get[key]);
+      for (const key in example.get) {
+        expect(moreParsedBody.body[key]).to.deep.equal(example.get[key]);
       }
     }
 
     const response2 = await request.post(url, {
       body: {
         id,
-        update: example1.update,
+        update: examples[1].update,
         context: {
           [process.env.CONTEXT]: {
             root: contextRoot,
@@ -155,16 +155,20 @@ describe("View store base integration tests", () => {
     expect(updates1).to.exist;
     !one ? expect(count1).to.equal(1) : expect(count1).to.be.undefined;
 
-    for (const key in example1.get) {
-      expect(parsedBody1.body[key]).to.deep.equal(example1.get[key]);
+    for (const key in examples[1].get) {
+      expect(parsedBody1.body[key]).to.deep.equal(examples[1].get[key]);
     }
 
     if (testing.sorts) {
       for (const sort of testing.sorts) {
+        const index = indexes[sort.index][0];
+        let reverseIndex = {};
+        for (const key in sort) reverseIndex[key] = -sort[key];
+
         await request.post(url, {
           body: {
             id: uuid(),
-            update: example1.update,
+            update: examples[1].update,
             context: {
               [process.env.CONTEXT]: {
                 root: contextRoot,
@@ -185,9 +189,7 @@ describe("View store base integration tests", () => {
                 network: contextNetwork,
               },
             },
-            sort: {
-              [sort.key]: sort.order,
-            },
+            sort: index,
           },
         });
 
@@ -213,9 +215,7 @@ describe("View store base integration tests", () => {
                 network: contextNetwork,
               },
             },
-            sort: {
-              [sort.key]: -sort.order,
-            },
+            sort: reverseIndex,
           },
         });
 
@@ -237,36 +237,12 @@ describe("View store base integration tests", () => {
           expect(firstSort2).to.deep.equal(secondSort1);
         }
 
-        await request.post(url, {
-          body: {
-            id: uuid(),
-            update: example0,
-            context: {
-              [process.env.CONTEXT]: {
-                root: contextRoot,
-                service: contextService,
-                network: contextNetwork,
-              },
-            },
-          },
-        });
-        await request.post(url, {
-          body: {
-            id: uuid(),
-            update: example1,
-            context: {
-              [process.env.CONTEXT]: {
-                root: contextRoot,
-                service: contextService,
-                network: contextNetwork,
-              },
-            },
-          },
-        });
-
-        if (!one) {
-          const response7 = await request.get(url, {
-            query: {
+        //double all examples
+        for (const example of examples) {
+          await request.post(url, {
+            body: {
+              id: uuid(),
+              update: example,
               context: {
                 [process.env.CONTEXT]: {
                   root: contextRoot,
@@ -274,26 +250,39 @@ describe("View store base integration tests", () => {
                   network: contextNetwork,
                 },
               },
-              limit: 1,
-              skip: 2,
-              sort: {
-                [sort.key]: sort.order,
-              },
             },
           });
-
-          const {
-            updates: updates4,
-            content: content4,
-            count: count4,
-          } = JSON.parse(response7.body);
-
-          expect(content4).to.have.length(1);
-          expect(updates4).to.exist;
-          !one ? expect(count4).to.equal(4) : expect(count4).to.be.undefined;
-
-          expect(content4[0]).to.deep.equal(firstSort2);
         }
+        const response7 = await request.get(url, {
+          query: {
+            context: {
+              [process.env.CONTEXT]: {
+                root: contextRoot,
+                service: contextService,
+                network: contextNetwork,
+              },
+            },
+            limit: 1,
+            skip: 1,
+            sort: index,
+          },
+        });
+
+        const {
+          updates: updates4,
+          content: content4,
+          count: count4,
+        } = JSON.parse(response7.body);
+
+        !one && expect(content4).to.have.length(1);
+        expect(updates4).to.exist;
+        !one
+          ? expect(count4).to.equal(examples.length * 2)
+          : expect(count4).to.be.undefined;
+
+        expect(!one ? content4[0] : content4).to.deep.equal(
+          examples[sort.result[0]]
+        );
       }
     }
 
