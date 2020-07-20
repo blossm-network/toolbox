@@ -48,6 +48,8 @@ module.exports = eventHandler({
       ? event.data.headers.context[process.env.CONTEXT].network
       : event.data.headers.network;
 
+    //TODO
+    console.log({ contextRoot, contextDomain, contextService, contextNetwork });
     const { body: newView } = await viewStore({
       name: config.name,
       context: config.context,
@@ -58,7 +60,7 @@ module.exports = eventHandler({
           [contextDomain]: {
             root: contextRoot,
             service: contextService,
-            network: process.env.NETWORK,
+            network: contextNetwork,
           },
         },
       })
