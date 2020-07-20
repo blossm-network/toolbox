@@ -49,8 +49,6 @@ module.exports = ({
         formattedSort[`body.${key}`] = req.query.sort[key];
     }
 
-    //TODO
-    console.log({ query, limit, skip });
     const [results, count] = await Promise.all([
       findFn({
         query,

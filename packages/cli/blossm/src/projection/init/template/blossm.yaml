@@ -40,7 +40,7 @@ testing:
         - payload:
             name: some-name
           result:
-            body:
+            update:
               name: some-name
   #
   # Add examples to run integration tests for.

@@ -14,6 +14,7 @@ const contextRoot = "some-context-root";
 const contextService = "some-context-service";
 const contextNetwork = "some-context-network";
 
+//TODO adapt expected bodies to have been run through format.js.
 describe("View store base integration tests", () => {
   const testParamQueries = async () => {
     const id = "some-id";
@@ -58,8 +59,6 @@ describe("View store base integration tests", () => {
     expect(updates0).to.exist;
     !one ? expect(count0).to.equal(1) : expect(count0).to.be.undefined;
 
-    //TODO
-    console.log({ body: parsedBody0.body });
     expect(response1.statusCode).to.equal(200);
     for (const key in examples[0].get) {
       expect(parsedBody0.body[key]).to.deep.equal(examples[0].get[key]);
@@ -148,8 +147,6 @@ describe("View store base integration tests", () => {
       response3.body
     );
 
-    //TODO
-    console.log({ updates1, count1, content1 });
     const parsedBody1 = one ? content1 : content1[0];
 
     expect(updates1).to.exist;
@@ -164,9 +161,6 @@ describe("View store base integration tests", () => {
         const index = indexes[sort.index][0];
         let reverseIndex = {};
         for (const key in index) reverseIndex[key] = -index[key];
-
-        //TODO
-        console.log({ index, reverseIndex });
 
         const newContextRoot = "some-new-context-root";
         for (const example of examples) {
@@ -205,9 +199,6 @@ describe("View store base integration tests", () => {
 
         const firstSortFirst = one ? content2 : content2[0];
         const firstSortLast = one ? null : content2[content2.length - 1];
-
-        //TODO
-        console.log({ firstSortFirst, firstSortLast, count2, updates2 });
 
         expect(updates2).to.exist;
         !one ? expect(count2).to.equal(2) : expect(count2).to.be.undefined;
@@ -275,8 +266,6 @@ describe("View store base integration tests", () => {
 
           const { content: sortedContent } = JSON.parse(response7.body);
 
-          //TODO
-          console.log({ sortedContent });
           for (let i = 0; i < sortedContent.length; i++) {
             for (const key in examples[sort.order[i]].get) {
               expect(sortedContent[i].body[key]).to.deep.equal(
@@ -329,8 +318,6 @@ describe("View store base integration tests", () => {
           ? expect(count4).to.equal(examples.length * 2)
           : expect(count4).to.be.undefined;
 
-        //TODO
-        console.log({ count4, content4 });
         for (const key in examples[sort.order[0]].get) {
           expect((!one ? content4[0] : content4).body[key]).to.deep.equal(
             examples[sort.order[0]].get[key]
@@ -352,11 +339,7 @@ describe("View store base integration tests", () => {
       },
     });
 
-    //TODO
-    console.log({ response9 });
     const parsedBody9 = JSON.parse(response9.body);
-    //TODO
-    console.log({ parsedBody9 });
     expect(response9.statusCode).to.equal(200);
     expect(parsedBody9.deletedCount).to.equal(1);
   };
