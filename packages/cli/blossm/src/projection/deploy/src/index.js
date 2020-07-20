@@ -28,22 +28,24 @@ module.exports = eventHandler({
       query,
       //The changes to the body of the view.
       update,
-      //The context that the view should be associated with.
-      context: {
-        root: contextRoot = event.data.headers.context[process.env.CONTEXT]
-          .root,
-        domain: contextDomain = process.env.CONTEXT,
-        service: contextService = event.data.headers.context[
-          process.env.CONTEXT
-        ].service,
-        network: contextNetwork = process.env.NETWORK,
-      } = {},
     } = handlers[event.data.headers.service][event.data.headers.domain][
       event.data.headers.action
     ]({
       payload: event.data.payload,
       root: event.data.root,
     });
+
+    //The context that the view should be associated with.
+    const contextRoot = event.data.headers.context[process.env.CONTEXT]
+      ? event.data.headers.context[process.env.CONTEXT].root
+      : event.data.root;
+    const contextDomain = process.env.CONTEXT;
+    const contextService = event.data.headers.context[process.env.CONTEXT]
+      ? event.data.headers.context[process.env.CONTEXT].service
+      : event.data.headers.service;
+    const contextNetwork = event.data.headers.context[process.env.CONTEXT]
+      ? event.data.headers.context[process.env.CONTEXT].network
+      : event.data.headers.network;
 
     const { body: newView } = await viewStore({
       name: config.name,
