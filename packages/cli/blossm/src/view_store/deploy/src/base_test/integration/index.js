@@ -290,7 +290,7 @@ describe("View store base integration tests", () => {
           await request.post(url, {
             body: {
               id: uuid(),
-              update: example,
+              update: example.update,
               context: {
                 [process.env.CONTEXT]: {
                   root: newContextRoot,
