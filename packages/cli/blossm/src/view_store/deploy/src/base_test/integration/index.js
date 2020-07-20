@@ -275,9 +275,11 @@ describe("View store base integration tests", () => {
 
           const { content: sortedContent } = JSON.parse(response7.body);
 
+          //TODO
+          console.log({ sortedContext });
           for (let i = 0; i < sortedContent.length; i++) {
             for (const key in examples[sort.order[i]].get) {
-              expect(sortedContent.body[key]).to.deep.equal(
+              expect(sortedContent[i].body[key]).to.deep.equal(
                 examples[sort.order[i]].get[key]
               );
             }
