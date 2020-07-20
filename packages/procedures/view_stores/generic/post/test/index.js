@@ -30,12 +30,9 @@ const context = {
 const id = "some-id";
 
 const body = {
+  trace: 2,
   update: {
-    body: {
-      a: 1,
-    },
-    trace: 2,
-    context: 3,
+    a: 1,
   },
   context,
   query,
@@ -113,7 +110,7 @@ describe("View store put", () => {
       status: statusFake,
     };
 
-    const fnFake = fake.returns({ body: { c: 3 }, headers: { b: 2 } });
+    const fnFake = fake.returns({ c: 3 });
     await put({ writeFn: writeFake, updateFn: fnFake, formatFn: formatFake })(
       req,
       res
@@ -131,6 +128,7 @@ describe("View store put", () => {
       data: {
         "body.c": 3,
         "headers.id": id,
+        "headers.trace": 2,
         "headers.context": {
           root: envContextRoot,
           domain: "some-env-context",
@@ -140,11 +138,7 @@ describe("View store put", () => {
         "headers.modified": deps.dateString(),
       },
     });
-    expect(fnFake).to.have.been.calledWith({
-      body: { a: 1 },
-      trace: 2,
-      context: 3,
-    });
+    expect(fnFake).to.have.been.calledWith({ a: 1 });
     expect(formatFake).to.have.been.calledWith(writeResult);
     expect(statusFake).to.have.been.calledWith(200);
     expect(sendFake).to.have.been.calledWith(formattedWriteResult);
@@ -155,12 +149,9 @@ describe("View store put", () => {
 
     const req = {
       body: {
+        trace: 2,
         update: {
-          body: {
-            a: 1,
-          },
-          trace: 2,
-          context: 3,
+          a: 1,
         },
         context,
       },

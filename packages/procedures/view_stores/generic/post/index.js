@@ -18,12 +18,12 @@ module.exports = ({ writeFn, formatFn, updateFn = defaultFn }) => {
 
     const formattedBody = {};
 
-    for (const key in customUpdate.body)
-      formattedBody[`body.${key}`] = customUpdate.body[key];
+    for (const key in customUpdate)
+      formattedBody[`body.${key}`] = customUpdate[key];
 
     const data = {
       ...formattedBody,
-      ...(customUpdate.trace && { "headers.trace": customUpdate.trace }),
+      ...(req.body.trace && { "headers.trace": req.body.trace }),
       ...(req.body.id && { "headers.id": req.body.id }),
       "headers.context": context,
       "headers.modified": deps.dateString(),

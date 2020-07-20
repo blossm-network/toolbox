@@ -25,9 +25,7 @@ describe("View store base integration tests", () => {
     const response0 = await request.post(url, {
       body: {
         id,
-        update: {
-          body: example0.update,
-        },
+        update: example0.update,
         context: {
           [process.env.CONTEXT]: {
             root: contextRoot,
@@ -74,9 +72,7 @@ describe("View store base integration tests", () => {
       const moreResponse0 = await request.post(url, {
         body: {
           id: moreId,
-          update: {
-            body: more.update,
-          },
+          update: more.update,
           context: {
             [process.env.CONTEXT]: {
               root: contextRoot,
@@ -124,9 +120,7 @@ describe("View store base integration tests", () => {
         query: {
           id,
         },
-        update: {
-          body: example1.update,
-        },
+        update: example1.update,
         context: {
           [process.env.CONTEXT]: {
             root: contextRoot,
@@ -169,9 +163,7 @@ describe("View store base integration tests", () => {
     await request.post(url, {
       body: {
         id: otherId,
-        update: {
-          body: example1.update,
-        },
+        update: example1.update,
         context: {
           [process.env.CONTEXT]: {
             root: contextRoot,
@@ -252,9 +244,7 @@ describe("View store base integration tests", () => {
       await request.post(url, {
         body: {
           id: yetAnotherId,
-          update: {
-            body: { a: 1 },
-          },
+          update: { a: 1 },
           context: {
             [process.env.CONTEXT]: {
               root: contextRoot,
@@ -421,12 +411,8 @@ describe("View store base integration tests", () => {
       const id = "some-id";
       const response = await request.post(url, {
         body: {
-          query: {
-            id,
-          },
-          update: {
-            body: { id, [property]: badValue },
-          },
+          id,
+          update: { id, [property]: badValue },
           context: {
             [process.env.CONTEXT]: {
               root: contextRoot,

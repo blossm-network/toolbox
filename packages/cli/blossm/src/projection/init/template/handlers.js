@@ -12,7 +12,7 @@ module.exports = {
               network: "some-network",
             },
           },
-          body: {
+          update: {
             "some-domain": {
               root,
               service: "some-service",

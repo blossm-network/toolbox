@@ -27,27 +27,13 @@ module.exports = eventHandler({
       //The query describing which items in the view store will be updated.
       query,
       //The changes to the body of the view.
-      body,
+      update,
     } = handlers[event.data.headers.service][event.data.headers.domain][
       event.data.headers.action
     ]({
       payload: event.data.payload,
       root: event.data.root,
     });
-
-    //Always set the headers to make sure the view has an updated trace and the context is set.
-    const headers = {
-      ...(event.data.headers.trace && { trace: event.data.headers.trace }),
-      ...(event.data.headers.context &&
-        event.data.headers.context[process.env.CONTEXT] && {
-          context: {
-            root: event.data.headers.context[process.env.CONTEXT].root,
-            domain: process.env.CONTEXT,
-            service: event.data.headers.context[process.env.CONTEXT].service,
-            network: event.data.headers.context[process.env.CONTEXT].network,
-          },
-        }),
-    };
 
     const { body: newView } = await viewStore({
       name: config.name,
@@ -65,10 +51,19 @@ module.exports = eventHandler({
       })
       .update({
         ...(query && { query }),
-        update: {
-          body,
-          headers,
-        },
+        update,
+
+        //Always set the trace and context to make sure the view has an updated trace and the context is set.
+        ...(event.data.headers.trace && { trace: event.data.headers.trace }),
+        ...(event.data.headers.context &&
+          event.data.headers.context[process.env.CONTEXT] && {
+            context: {
+              root: event.data.headers.context[process.env.CONTEXT].root,
+              domain: process.env.CONTEXT,
+              service: event.data.headers.context[process.env.CONTEXT].service,
+              network: event.data.headers.context[process.env.CONTEXT].network,
+            },
+          }),
       });
 
     if (!push) return;

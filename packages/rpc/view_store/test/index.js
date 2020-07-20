@@ -263,6 +263,7 @@ describe("Get views", () => {
     replace(deps, "rpc", rpcFake);
 
     const update = "some-update";
+    const trace = "some-trace";
     await viewStore({ name, context })
       .set({
         context: contexts,
@@ -270,10 +271,10 @@ describe("Get views", () => {
           internalFn: internalTokenFn,
         },
       })
-      .update({ query, update, id });
+      .update({ query, update, id, trace });
 
     expect(rpcFake).to.have.been.calledWith(name, context, "view-store");
-    expect(postFake).to.have.been.calledWith({ query, update, id });
+    expect(postFake).to.have.been.calledWith({ query, update, id, trace });
     expect(inFake).to.have.been.calledWith({ context: contexts });
     expect(withFake).to.have.been.calledWith({
       internalTokenFn,
