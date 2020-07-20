@@ -165,26 +165,29 @@ describe("View store base integration tests", () => {
         let reverseIndex = {};
         for (const key in sort) reverseIndex[key] = -sort[key];
 
-        await request.post(url, {
-          body: {
-            id: uuid(),
-            update: examples[1].update,
-            context: {
-              [process.env.CONTEXT]: {
-                root: contextRoot,
-                service: contextService,
-                network: contextNetwork,
+        const newContextRoot = "some-new-context-root";
+        for (const example of examples) {
+          const id = uuid();
+          await request.post(url, {
+            body: {
+              id,
+              update: example.update,
+              context: {
+                [process.env.CONTEXT]: {
+                  root: newContextRoot,
+                  service: contextService,
+                  network: contextNetwork,
+                },
               },
             },
-          },
-        });
+          });
+        }
 
         const response5 = await request.get(url, {
           query: {
-            id: uuid(),
             context: {
               [process.env.CONTEXT]: {
-                root: contextRoot,
+                root: newContextRoot,
                 service: contextService,
                 network: contextNetwork,
               },
@@ -199,18 +202,17 @@ describe("View store base integration tests", () => {
           content: content2,
         } = JSON.parse(response5.body);
 
-        const firstSort1 = one ? content2 : content2[0];
-        const firstSort2 = one ? null : content2[1];
+        const firstSortFirst = one ? content2 : content2[0];
+        const firstSortLast = one ? null : content2[content2.length - 1];
 
         expect(updates2).to.exist;
         !one ? expect(count2).to.equal(2) : expect(count2).to.be.undefined;
 
         const response6 = await request.get(url, {
           query: {
-            id: uuid(),
             context: {
               [process.env.CONTEXT]: {
-                root: contextRoot,
+                root: newContextRoot,
                 service: contextService,
                 network: contextNetwork,
               },
@@ -225,27 +227,27 @@ describe("View store base integration tests", () => {
           content: content3,
         } = JSON.parse(response6.body);
 
-        const secondSort1 = one ? content3 : content3[0];
-        const secondSort2 = one ? null : content3[1];
+        const secondSortFirst = one ? content3 : content3[0];
+        const secondSortLast = one ? null : content3[content3.length - 1];
         expect(updates3).to.exist;
         !one ? expect(count3).to.equal(2) : expect(count3).to.be.undefined;
 
         if (one) {
-          expect(firstSort1).to.deep.equal(secondSort1);
+          expect(firstSortFirst).to.deep.equal(secondSortFirst);
         } else {
-          expect(firstSort1).to.deep.equal(secondSort2);
-          expect(firstSort2).to.deep.equal(secondSort1);
+          expect(firstSortFirst).to.deep.equal(secondSortLast);
+          expect(firstSortLast).to.deep.equal(secondSortFirst);
         }
 
-        //double all examples
-        for (const example of examples) {
+        //add all remaining examples
+        for (const example of examples.length > 2 ? examples.slice(2) : []) {
           await request.post(url, {
             body: {
-              id: uuid(),
+              id: uuid,
               update: example,
               context: {
                 [process.env.CONTEXT]: {
-                  root: contextRoot,
+                  root: newContextRoot,
                   service: contextService,
                   network: contextNetwork,
                 },
@@ -253,11 +255,48 @@ describe("View store base integration tests", () => {
             },
           });
         }
-        const response7 = await request.get(url, {
+        if (!one) {
+          const response7 = await request.get(url, {
+            query: {
+              context: {
+                [process.env.CONTEXT]: {
+                  root: newContextRoot,
+                  service: contextService,
+                  network: contextNetwork,
+                },
+              },
+              sort: index,
+            },
+          });
+
+          const { content: sortedContent } = JSON.parse(response7.body);
+
+          for (let i = 0; i < sortedContent.length; i++) {
+            expect(sortedContent[i]).to.deep.equal(examples[sort.order[i]]);
+          }
+        }
+        //double all examples
+        for (const example of examples) {
+          await request.post(url, {
+            body: {
+              id: uuid,
+              update: example,
+              context: {
+                [process.env.CONTEXT]: {
+                  root: newContextRoot,
+                  service: contextService,
+                  network: contextNetwork,
+                },
+              },
+            },
+          });
+        }
+
+        const response8 = await request.get(url, {
           query: {
             context: {
               [process.env.CONTEXT]: {
-                root: contextRoot,
+                root: newContextRoot,
                 service: contextService,
                 network: contextNetwork,
               },
@@ -272,7 +311,7 @@ describe("View store base integration tests", () => {
           updates: updates4,
           content: content4,
           count: count4,
-        } = JSON.parse(response7.body);
+        } = JSON.parse(response8.body);
 
         !one && expect(content4).to.have.length(1);
         expect(updates4).to.exist;
@@ -286,7 +325,7 @@ describe("View store base integration tests", () => {
       }
     }
 
-    const response8 = await request.delete(url, {
+    const response9 = await request.delete(url, {
       id,
       context: {
         [process.env.CONTEXT]: {
@@ -296,9 +335,9 @@ describe("View store base integration tests", () => {
         },
       },
     });
-    const parsedBody8 = JSON.parse(response8.body);
-    expect(response8.statusCode).to.equal(200);
-    expect(parsedBody8.deletedCount).to.equal(1);
+    const parsedBody9 = JSON.parse(response9.body);
+    expect(response9.statusCode).to.equal(200);
+    expect(parsedBody9.deletedCount).to.equal(1);
   };
 
   // const testStreaming = async () => {
