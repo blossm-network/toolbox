@@ -85,6 +85,8 @@ describe("Projection integration tests", () => {
           expect(example.result.values.length).to.equal(v.content.length);
           for (let i = 0; i < example.result.values.length; i++) {
             let value = example.result.values[i];
+            //TODO
+            console.log({ value, context: v.content, i: v.content[i] });
             for (const property in value) {
               expect(v.content[i].body[property]).to.exist;
               if (value[property] != undefined) {
