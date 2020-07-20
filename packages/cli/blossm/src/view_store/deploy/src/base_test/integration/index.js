@@ -67,6 +67,8 @@ describe("View store base integration tests", () => {
     expect(updates0).to.exist;
     !one ? expect(count0).to.equal(1) : expect(count0).to.be.undefined;
 
+    //TODO
+    console.log({ body: parsedBody0.body });
     expect(response1.statusCode).to.equal(200);
     for (const key in example0.get) {
       expect(parsedBody0.body[key]).to.deep.equal(example0.get[key]);
