@@ -5,8 +5,8 @@ const { get: secret } = require("@blossm/gcp-secret");
 
 const query =
   fs.existsSync(path.resolve(__dirname, "./query.js")) && require("./query");
-const put =
-  fs.existsSync(path.resolve(__dirname, "./put.js")) && require("./put");
+const update =
+  fs.existsSync(path.resolve(__dirname, "./update.js")) && require("./update");
 
 const config = require("./config.json");
 
@@ -15,6 +15,6 @@ module.exports = viewStore({
   indexes: config.indexes,
   secretFn: secret,
   ...(query && { queryFn: query }),
-  ...(put && { postFn: put }),
+  ...(update && { updateFn: update }),
   ...(config.one && { one: config.one }),
 });
