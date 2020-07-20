@@ -118,10 +118,7 @@ describe("View store", () => {
     expect(storeFake).to.have.been.calledWith({
       name: `_${context}.${service}.${domain}.${name}`,
       schema: {
-        body: {
-          id: { $type: String, unique: true },
-          ...formattedSchema,
-        },
+        body: formattedSchema,
         headers: {
           _id: false,
           id: {
@@ -341,10 +338,7 @@ describe("View store", () => {
     expect(storeFake).to.have.been.calledWith({
       name: `_${context}.${name}`,
       schema: {
-        body: {
-          id: { $type: String, unique: true },
-          ...formattedSchema,
-        },
+        body: formattedSchema,
         headers: {
           _id: false,
           id: {
@@ -474,10 +468,7 @@ describe("View store", () => {
     expect(storeFake).to.have.been.calledWith({
       name: `_${context}.${service}.${domain}.${name}`,
       schema: {
-        body: {
-          id: { $type: String, unique: true },
-          ...formattedSchema,
-        },
+        body: formattedSchema,
         headers: {
           _id: false,
           id: {
@@ -591,10 +582,7 @@ describe("View store", () => {
     expect(storeFake).to.have.been.calledWith({
       name: `_${context}.${service}.${domain}.${name}`,
       schema: {
-        body: {
-          id: { $type: String, unique: true },
-          ...formattedSchema,
-        },
+        body: formattedSchema,
         headers: {
           _id: false,
           id: {
@@ -791,10 +779,7 @@ describe("View store", () => {
     expect(storeFake).to.have.been.calledWith({
       name: `_${context}.${service}.${domain}.${name}`,
       schema: {
-        body: {
-          id: { $type: String, unique: true },
-          ...formattedSchema,
-        },
+        body: formattedSchema,
         headers: {
           _id: false,
           id: {

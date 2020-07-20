@@ -17,10 +17,7 @@ const viewStore = async ({ schema, indexes, secretFn }) => {
       process.env.SERVICE ? `.${process.env.SERVICE}` : ""
     }${process.env.DOMAIN ? `.${process.env.DOMAIN}` : ""}.${process.env.NAME}`,
     schema: {
-      body: {
-        id: { [typeKey]: String, unique: true },
-        ...deps.formatSchema(schema, typeKey),
-      },
+      body: deps.formatSchema(schema, typeKey),
       headers: {
         id: {
           [typeKey]: String,

@@ -163,7 +163,7 @@ describe("View store base integration tests", () => {
       for (const sort of testing.sorts) {
         const index = indexes[sort.index][0];
         let reverseIndex = {};
-        for (const key in sort) reverseIndex[key] = -sort[key];
+        for (const key in index) reverseIndex[key] = -index[key];
 
         //TODO
         console.log({ index, reverseIndex });
