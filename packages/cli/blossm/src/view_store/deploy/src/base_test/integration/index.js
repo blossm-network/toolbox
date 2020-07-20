@@ -159,105 +159,12 @@ describe("View store base integration tests", () => {
       expect(parsedBody1.body[key]).to.deep.equal(example1.get[key]);
     }
 
-    const otherId = "a";
-    await request.post(url, {
-      body: {
-        id: otherId,
-        update: example1.update,
-        context: {
-          [process.env.CONTEXT]: {
-            root: contextRoot,
-            service: contextService,
-            network: contextNetwork,
-          },
-        },
-      },
-    });
-
-    if (indexes) {
-      //TODO
-      console.log({ indexes, zero: indexes[0][0] });
-      const response5 = await request.get(url, {
-        query: {
-          context: {
-            [process.env.CONTEXT]: {
-              root: contextRoot,
-              service: contextService,
-              network: contextNetwork,
-            },
-          },
-          sort: indexes[0][0],
-        },
-      });
-
-      const {
-        updates: updates2,
-        count: count2,
-        content: content2,
-      } = JSON.parse(response5.body);
-
-      const firstSort1 = one ? content2 : content2[0];
-      const firstSort2 = one ? null : content2[1];
-
-      expect(updates2).to.exist;
-      !one ? expect(count2).to.equal(2) : expect(count2).to.be.undefined;
-
-      const inverseIndexes = {};
-      for (const key in indexes[0][0]) {
-        inverseIndexes[key] = -indexes[0][0][key];
-      }
-      //TODO
-      console.log({ inverseIndexes });
-      const response6 = await request.get(url, {
-        query: {
-          context: {
-            [process.env.CONTEXT]: {
-              root: contextRoot,
-              service: contextService,
-              network: contextNetwork,
-            },
-          },
-
-          sort: inverseIndexes,
-        },
-      });
-
-      const {
-        updates: updates3,
-        count: count3,
-        content: content3,
-      } = JSON.parse(response6.body);
-
-      const secondSort1 = one ? content3 : content3[0];
-      const secondSort2 = one ? null : content3[1];
-      expect(updates3).to.exist;
-      !one ? expect(count3).to.equal(2) : expect(count3).to.be.undefined;
-
-      if (one) {
-        expect(firstSort1).to.deep.equal(secondSort1);
-      } else {
-        expect(firstSort1).to.deep.equal(secondSort2);
-        expect(firstSort2).to.deep.equal(secondSort1);
-      }
-
-      const yetAnotherId = "z";
-      await request.post(url, {
-        body: {
-          id: yetAnotherId,
-          update: { a: 1 },
-          context: {
-            [process.env.CONTEXT]: {
-              root: contextRoot,
-              service: contextService,
-              network: contextNetwork,
-            },
-          },
-        },
-      });
-
-      if (!one) {
-        const response7 = await request.get(url, {
-          query: {
+    if (testing.sorts) {
+      for (const sort of testing.sorts) {
+        await request.post(url, {
+          body: {
+            id: uuid(),
+            update: example1.update,
             context: {
               [process.env.CONTEXT]: {
                 root: contextRoot,
@@ -265,23 +172,128 @@ describe("View store base integration tests", () => {
                 network: contextNetwork,
               },
             },
-            limit: 1,
-            skip: 1,
-            sort: indexes[0][0],
+          },
+        });
+
+        const response5 = await request.get(url, {
+          query: {
+            id: uuid(),
+            context: {
+              [process.env.CONTEXT]: {
+                root: contextRoot,
+                service: contextService,
+                network: contextNetwork,
+              },
+            },
+            sort: {
+              [sort.key]: sort.order,
+            },
           },
         });
 
         const {
-          updates: updates4,
-          content: content4,
-          count: count4,
-        } = JSON.parse(response7.body);
+          updates: updates2,
+          count: count2,
+          content: content2,
+        } = JSON.parse(response5.body);
 
-        expect(content4).to.have.length(1);
-        expect(updates4).to.exist;
-        !one ? expect(count4).to.equal(3) : expect(count4).to.be.undefined;
+        const firstSort1 = one ? content2 : content2[0];
+        const firstSort2 = one ? null : content2[1];
 
-        expect(content4[0]).to.deep.equal(firstSort2);
+        expect(updates2).to.exist;
+        !one ? expect(count2).to.equal(2) : expect(count2).to.be.undefined;
+
+        const response6 = await request.get(url, {
+          query: {
+            id: uuid(),
+            context: {
+              [process.env.CONTEXT]: {
+                root: contextRoot,
+                service: contextService,
+                network: contextNetwork,
+              },
+            },
+            sort: {
+              [sort.key]: -sort.order,
+            },
+          },
+        });
+
+        const {
+          updates: updates3,
+          count: count3,
+          content: content3,
+        } = JSON.parse(response6.body);
+
+        const secondSort1 = one ? content3 : content3[0];
+        const secondSort2 = one ? null : content3[1];
+        expect(updates3).to.exist;
+        !one ? expect(count3).to.equal(2) : expect(count3).to.be.undefined;
+
+        if (one) {
+          expect(firstSort1).to.deep.equal(secondSort1);
+        } else {
+          expect(firstSort1).to.deep.equal(secondSort2);
+          expect(firstSort2).to.deep.equal(secondSort1);
+        }
+
+        await request.post(url, {
+          body: {
+            id: uuid(),
+            update: example0,
+            context: {
+              [process.env.CONTEXT]: {
+                root: contextRoot,
+                service: contextService,
+                network: contextNetwork,
+              },
+            },
+          },
+        });
+        await request.post(url, {
+          body: {
+            id: uuid(),
+            update: example1,
+            context: {
+              [process.env.CONTEXT]: {
+                root: contextRoot,
+                service: contextService,
+                network: contextNetwork,
+              },
+            },
+          },
+        });
+
+        if (!one) {
+          const response7 = await request.get(url, {
+            query: {
+              context: {
+                [process.env.CONTEXT]: {
+                  root: contextRoot,
+                  service: contextService,
+                  network: contextNetwork,
+                },
+              },
+              limit: 1,
+              skip: 2,
+              sort: {
+                [sort.key]: sort.order,
+              },
+            },
+          });
+
+          const {
+            updates: updates4,
+            content: content4,
+            count: count4,
+          } = JSON.parse(response7.body);
+
+          expect(content4).to.have.length(1);
+          expect(updates4).to.exist;
+          !one ? expect(count4).to.equal(4) : expect(count4).to.be.undefined;
+
+          expect(content4[0]).to.deep.equal(firstSort2);
+        }
       }
     }
 
