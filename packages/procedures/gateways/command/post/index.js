@@ -73,8 +73,8 @@ module.exports = ({
     delete response.tokens;
   }
 
-  if (responseHeaders && responseHeaders["Set-cookie"])
-    res.set("Set-cookie", responseHeaders["Set-cookie"]);
+  if (responseHeaders && responseHeaders["set-cookie"])
+    res.set("set-cookie", responseHeaders["set-cookie"]);
 
   res.status(statusCode).send(response);
 };

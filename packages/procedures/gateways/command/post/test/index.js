@@ -431,7 +431,7 @@ describe("Command gateway post", () => {
     const cookie = "some-cookie";
     const issueFake = fake.returns({
       body: { tokens: [token1, token2] },
-      headers: { "Set-cookie": cookie },
+      headers: { "set-cookie": cookie },
       statusCode,
     });
     const setFake = fake.returns({
@@ -487,7 +487,7 @@ describe("Command gateway post", () => {
     })(req, res);
     expect(nodeExternalTokenFnFake).to.not.have.been.called;
 
-    expect(resSetFake).to.have.been.calledWith("Set-cookie", cookie);
+    expect(resSetFake).to.have.been.calledWith("set-cookie", cookie);
     expect(cookieFake).to.have.been.calledTwice;
     expect(cookieFake).to.have.been.calledWith(token1Type, token1Value, {
       domain: token1Network,
