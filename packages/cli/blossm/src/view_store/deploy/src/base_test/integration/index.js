@@ -276,7 +276,11 @@ describe("View store base integration tests", () => {
           const { content: sortedContent } = JSON.parse(response7.body);
 
           for (let i = 0; i < sortedContent.length; i++) {
-            expect(sortedContent[i]).to.deep.equal(examples[sort.order[i]]);
+            for (const key in examples[sort.order[i]].get) {
+              expect(sortedContent.body[key]).to.deep.equal(
+                examples[sort.order[i]].get[key]
+              );
+            }
           }
         }
         //double all examples
@@ -323,9 +327,11 @@ describe("View store base integration tests", () => {
           ? expect(count4).to.equal(examples.length * 2)
           : expect(count4).to.be.undefined;
 
-        expect(!one ? content4[0] : content4).to.deep.equal(
-          examples[sort.order[0]]
-        );
+        for (const key in examples[sort.order[0]].get) {
+          expect((!one ? content4[0] : content4).body[key]).to.deep.equal(
+            examples[sort.order[0]].get[key]
+          );
+        }
       }
     }
 
