@@ -7,6 +7,7 @@ module.exports = ({
   findFn,
   countFn,
   one = false,
+  formatFn,
   queryFn = defaultQueryFn,
 }) => {
   return async (req, res) => {
@@ -57,15 +58,7 @@ module.exports = ({
       ...(one ? [] : [countFn({ query })]),
     ]);
 
-    const formattedResults = results.map((r) => {
-      return {
-        body: r.body,
-        headers: {
-          context: r.headers.context,
-          ...(r.headers.trace && { trace: r.headers.trace }),
-        },
-      };
-    });
+    const formattedResults = results.map((r) => formatFn(r));
 
     const updates = `https://updates.${process.env.CORE_NETWORK}/channel?query%5Bname%5D=${process.env.NAME}&query%5Bcontext%5D=${process.env.CONTEXT}&query%5Bnetwork%5D=${process.env.NETWORK}`;
 
@@ -89,6 +82,7 @@ module.exports = ({
               limit,
             })
           : null;
+
       res.send({
         content: formattedResults,
         updates,

@@ -2,7 +2,7 @@ const deps = require("./deps");
 
 const defaultFn = (update) => update;
 
-module.exports = ({ writeFn, updateFn = defaultFn }) => {
+module.exports = ({ writeFn, formatFn, updateFn = defaultFn }) => {
   return async (req, res) => {
     if (!req.body.context || !req.body.context[process.env.CONTEXT])
       throw deps.forbiddenError.message("Missing required permissions.");
@@ -48,6 +48,6 @@ module.exports = ({ writeFn, updateFn = defaultFn }) => {
       data,
     });
 
-    res.status(200).send(newView);
+    res.status(200).send(formatFn(newView));
   };
 };

@@ -1,5 +1,5 @@
 const { expect } = require("chai").use(require("sinon-chai"));
-const { restore, replace, fake } = require("sinon");
+const { restore, replace, fake, stub } = require("sinon");
 
 const get = require("..");
 const deps = require("../deps");
@@ -47,9 +47,13 @@ describe("View store get", () => {
 
   it("should call with the correct params", async () => {
     const results = [];
+    const formattedResults = [];
 
+    const formatFake = stub();
     for (let i = 0; i < 100; i++) {
       results.push({ body: obj, headers: { context: objContext } });
+      formattedResults.push(i);
+      formatFake.onCall(i).returns(i);
     }
     const findFake = fake.returns(results);
     const countFake = fake.returns(200);
@@ -71,7 +75,10 @@ describe("View store get", () => {
     const res = {
       send: sendFake,
     };
-    await get({ findFn: findFake, countFn: countFake })(req, res);
+    await get({ findFn: findFake, countFn: countFake, formatFn: formatFake })(
+      req,
+      res
+    );
     expect(findFake).to.have.been.calledWith({
       limit: 100,
       skip: 0,
@@ -106,8 +113,11 @@ describe("View store get", () => {
         limit: 100,
       }
     );
+    for (let i = 0; i < results.length; i++) {
+      expect(formatFake.getCall(i)).to.have.been.calledWith(results[i]);
+    }
     expect(sendFake).to.have.been.calledWith({
-      content: results,
+      content: formattedResults,
       updates:
         "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
       next: nextUrl,
@@ -118,6 +128,8 @@ describe("View store get", () => {
     const findFake = fake.returns([
       { body: obj, headers: { context: objContext } },
     ]);
+    const formattedResult = "some-formatted-result";
+    const formatFake = fake.returns(formattedResult);
     const countFake = fake.returns(3);
 
     const query = { "some-query-key": 1 };
@@ -142,7 +154,10 @@ describe("View store get", () => {
     const res = {
       send: sendFake,
     };
-    await get({ findFn: findFake, countFn: countFake })(req, res);
+    await get({ findFn: findFake, countFn: countFake, formatFn: formatFake })(
+      req,
+      res
+    );
     expect(findFake).to.have.been.calledWith({
       limit: 1,
       skip: 1,
@@ -177,8 +192,13 @@ describe("View store get", () => {
         limit: 1,
       }
     );
+    expect(formatFake.getCall(0)).to.have.been.calledWith({
+      body: obj,
+      headers: { context: objContext },
+    });
+    expect(formatFake).to.have.been.calledOnce;
     expect(sendFake).to.have.been.calledWith({
-      content: [{ body: obj, headers: { context: objContext } }],
+      content: [formattedResult],
       updates:
         "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
       next: nextUrl,
@@ -189,6 +209,8 @@ describe("View store get", () => {
     const findFake = fake.returns([
       { body: obj, headers: { context: objContext } },
     ]);
+    const formattedResult = "some-formatted-result";
+    const formatFake = fake.returns(formattedResult);
     const countFake = fake.returns(1);
 
     const query = { "some-query-key": 1 };
@@ -213,7 +235,10 @@ describe("View store get", () => {
     const res = {
       send: sendFake,
     };
-    await get({ findFn: findFake, countFn: countFake })(req, res);
+    await get({ findFn: findFake, countFn: countFake, formatFn: formatFake })(
+      req,
+      res
+    );
     expect(findFake).to.have.been.calledWith({
       limit: 1,
       skip: 0,
@@ -240,8 +265,13 @@ describe("View store get", () => {
       },
     });
     expect(urlEncodeQueryDataFake).to.not.have.been.called;
+    expect(formatFake.getCall(0)).to.have.been.calledWith({
+      body: obj,
+      headers: { context: objContext },
+    });
+    expect(formatFake).to.have.been.calledOnce;
     expect(sendFake).to.have.been.calledWith({
-      content: [{ body: obj, headers: { context: objContext } }],
+      content: [formattedResult],
       updates:
         "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
       count: 1,
@@ -252,6 +282,8 @@ describe("View store get", () => {
     const findFake = fake.returns([
       { body: obj, headers: { context: objContext, trace } },
     ]);
+    const formattedResult = "some-formatted-result";
+    const formatFake = fake.returns(formattedResult);
     const countFake = fake.returns(count);
 
     const urlEncodeQueryDataFake = fake.returns(nextUrl);
@@ -267,7 +299,10 @@ describe("View store get", () => {
     const res = {
       send: sendFake,
     };
-    await get({ findFn: findFake, countFn: countFake })(req, res);
+    await get({ findFn: findFake, countFn: countFake, formatFn: formatFake })(
+      req,
+      res
+    );
     expect(findFake).to.have.been.calledWith({
       limit: 100,
       skip: 0,
@@ -291,8 +326,13 @@ describe("View store get", () => {
       },
     });
     expect(urlEncodeQueryDataFake).to.not.have.been.called;
+    expect(formatFake.getCall(0)).to.have.been.calledWith({
+      body: obj,
+      headers: { context: objContext, trace },
+    });
+    expect(formatFake).to.have.been.calledOnce;
     expect(sendFake).to.have.been.calledWith({
-      content: [{ body: obj, headers: { context: objContext, trace } }],
+      content: [formattedResult],
       updates:
         "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
       count,
@@ -302,6 +342,8 @@ describe("View store get", () => {
     const findFake = fake.returns([
       { body: obj, headers: { context: objContext } },
     ]);
+    const formattedResult = "some-formatted-result";
+    const formatFake = fake.returns(formattedResult);
     const countFake = fake.returns(count);
 
     const query = { "some-query-key": 1 };
@@ -331,6 +373,7 @@ describe("View store get", () => {
       countFn: countFake,
       one: true,
       queryFn: queryFnFake,
+      formatFn: formatFake,
     })(req, res);
     expect(queryFnFake).to.have.been.calledWith(query);
     expect(findFake).to.have.been.calledWith({
@@ -348,8 +391,12 @@ describe("View store get", () => {
       },
     });
     expect(countFake).to.not.have.been.called;
+    expect(formatFake).to.have.been.calledWith({
+      body: obj,
+      headers: { context: objContext },
+    });
     expect(sendFake).to.have.been.calledWith({
-      content: { body: obj, headers: { context: objContext } },
+      content: formattedResult,
       updates:
         "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
     });

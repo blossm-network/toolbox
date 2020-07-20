@@ -1,5 +1,5 @@
 const { expect } = require("chai").use(require("sinon-chai"));
-const { restore, replace, fake } = require("sinon");
+const { restore, replace, fake, match } = require("sinon");
 
 const deps = require("../deps");
 
@@ -53,6 +53,7 @@ describe("View store", () => {
     const removeFn = "some-remove-fn";
     const queryFn = "some-query-fn";
     const updateFn = "some-update-fn";
+    const formatFn = "some-format-fn";
     const one = "some-one";
 
     await viewStore({
@@ -63,6 +64,7 @@ describe("View store", () => {
       removeFn,
       queryFn,
       updateFn,
+      formatFn,
       one,
     });
 
@@ -85,11 +87,13 @@ describe("View store", () => {
       findFn,
       countFn,
       queryFn,
+      formatFn,
       one,
     });
     expect(viewStorePostFake).to.have.been.calledWith({
       writeFn,
       updateFn,
+      formatFn,
     });
     expect(viewStoreDeleteFake).to.have.been.calledWith({ removeFn });
   });
@@ -151,8 +155,23 @@ describe("View store", () => {
     expect(postFake).to.have.been.calledWith(viewStorePostResult);
     expect(deleteFake).to.have.been.calledWith(viewStoreDeleteResult);
     // expect(viewStoreStreamFake).to.have.been.calledWith({ streamFn });
-    expect(viewStoreGetFake).to.have.been.calledWith({ findFn, countFn });
-    expect(viewStorePostFake).to.have.been.calledWith({ writeFn });
+    expect(viewStoreGetFake).to.have.been.calledWith({
+      findFn,
+      countFn,
+      formatFn: match((fn) => {
+        const input = "some-input";
+        const output = fn(input);
+        return input == output;
+      }),
+    });
+    expect(viewStorePostFake).to.have.been.calledWith({
+      writeFn,
+      formatFn: match((fn) => {
+        const input = "some-input";
+        const output = fn(input);
+        return input == output;
+      }),
+    });
     expect(viewStoreDeleteFake).to.have.been.calledWith({ removeFn });
   });
 });

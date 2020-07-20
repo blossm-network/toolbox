@@ -12,6 +12,7 @@ let clock;
 const now = new Date();
 
 const writeResult = "some-write-result";
+const formattedWriteResult = "some-formatted-write-result";
 const query = { some: "query" };
 const envContext = "some-env-context";
 const envContextRoot = "some-env-context-root";
@@ -50,6 +51,7 @@ describe("View store put", () => {
 
   it("should call with the correct params", async () => {
     const writeFake = fake.returns(writeResult);
+    const formatFake = fake.returns(formattedWriteResult);
 
     const req = {
       body,
@@ -63,7 +65,7 @@ describe("View store put", () => {
       status: statusFake,
     };
 
-    await put({ writeFn: writeFake })(req, res);
+    await put({ writeFn: writeFake, formatFn: formatFake })(req, res);
 
     expect(writeFake).to.have.been.calledWith({
       query: {
@@ -85,12 +87,14 @@ describe("View store put", () => {
         "headers.modified": deps.dateString(),
       },
     });
+    expect(formatFake).to.have.been.calledWith(writeResult);
     expect(statusFake).to.have.been.calledWith(200);
-    expect(sendFake).to.have.been.calledWith(writeResult);
+    expect(sendFake).to.have.been.calledWith(formattedWriteResult);
   });
 
   it("should call with the correct params with custom fn", async () => {
     const writeFake = fake.returns(writeResult);
+    const formatFake = fake.returns(formattedWriteResult);
 
     const req = {
       body,
@@ -105,7 +109,10 @@ describe("View store put", () => {
     };
 
     const fnFake = fake.returns({ body: { c: 3 }, headers: { b: 2 } });
-    await put({ writeFn: writeFake, updateFn: fnFake })(req, res);
+    await put({ writeFn: writeFake, updateFn: fnFake, formatFn: formatFake })(
+      req,
+      res
+    );
 
     expect(writeFake).to.have.been.calledWith({
       query: {
@@ -131,11 +138,13 @@ describe("View store put", () => {
       trace: 2,
       context: 3,
     });
+    expect(formatFake).to.have.been.calledWith(writeResult);
     expect(statusFake).to.have.been.calledWith(200);
-    expect(sendFake).to.have.been.calledWith(writeResult);
+    expect(sendFake).to.have.been.calledWith(formattedWriteResult);
   });
   it("should return successfully if query is missing", async () => {
     const writeFake = fake.returns(writeResult);
+    const formatFake = fake.returns(formattedWriteResult);
 
     const req = {
       body: {
@@ -164,7 +173,7 @@ describe("View store put", () => {
       message: messageFake,
     });
 
-    await put({ writeFn: writeFake })(req, res);
+    await put({ writeFn: writeFake, formatFn: formatFake })(req, res);
 
     expect(writeFake).to.have.been.calledWith({
       query: {
@@ -185,8 +194,9 @@ describe("View store put", () => {
         "headers.modified": deps.dateString(),
       },
     });
+    expect(formatFake).to.have.been.calledWith(writeResult);
     expect(statusFake).to.have.been.calledWith(200);
-    expect(sendFake).to.have.been.calledWith(writeResult);
+    expect(sendFake).to.have.been.calledWith(formattedWriteResult);
   });
   it("should throw if context is missing", async () => {
     const writeFake = fake();

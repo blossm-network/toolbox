@@ -1,5 +1,7 @@
 const deps = require("./deps");
 
+const defaultFormatFn = (content) => content;
+
 module.exports = async ({
   // streamFn,
   findFn,
@@ -7,6 +9,7 @@ module.exports = async ({
   removeFn,
   queryFn,
   updateFn,
+  formatFn = defaultFormatFn,
   countFn,
   one,
 } = {}) => {
@@ -21,13 +24,20 @@ module.exports = async ({
         findFn,
         countFn,
         ...(queryFn && { queryFn }),
+        ...(formatFn && { formatFn }),
         ...(one && { one }),
       }),
       {
         path: "/:sourceNetwork?/:sourceService?/:sourceDomain?/:sourceRoot?",
       }
     )
-    .post(deps.post({ writeFn, ...(updateFn && { updateFn }) }))
+    .post(
+      deps.post({
+        writeFn,
+        ...(updateFn && { updateFn }),
+        ...(formatFn && { formatFn }),
+      })
+    )
     .delete(deps.delete({ removeFn }))
     .listen();
 };
