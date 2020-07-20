@@ -27,8 +27,9 @@ const version = 0;
 const created = dateString();
 
 describe("Event store integration tests", () => {
-  const example0 = testing.examples.first;
-  const example1 = testing.examples.second;
+  expect(testing.examples.length).to.be.greaterThan(1);
+  const example0 = testing.examples[0];
+  const example1 = testing.examples[1];
 
   before(async () => await create(topic));
   after(async () => await del(topic));
@@ -446,11 +447,9 @@ describe("Event store integration tests", () => {
 
   const badArrayValue = async (property, schema) => {
     const element = schema[0];
-    const [exampleToUse] = [
-      example0,
-      example1,
-      ...(testing.examples.more || []),
-    ].filter((example) => example.payload[property] != undefined);
+    const [exampleToUse] = testing.examples.filter(
+      (example) => example.payload[property] != undefined
+    );
 
     if (!exampleToUse) return "bad-array";
 
@@ -502,11 +501,9 @@ describe("Event store integration tests", () => {
         badValue = findBadValue(schema, property);
       }
 
-      const [exampleToUse] = [
-        example0,
-        example1,
-        ...(testing.examples.more || []),
-      ].filter((example) => example.payload[property] != undefined);
+      const [exampleToUse] = testing.examples.filter(
+        (example) => example.payload[property] != undefined
+      );
 
       if (!exampleToUse) return;
 
