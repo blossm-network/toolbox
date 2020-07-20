@@ -1,6 +1,6 @@
 {
   "name": "@blossm/request",
-  "version": "0.0.30",
+  "version": "0.0.31",
   "description": "Http access.",
   "main": "index.js",
   "author": "blossm.network",
