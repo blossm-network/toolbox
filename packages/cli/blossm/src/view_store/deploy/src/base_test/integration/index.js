@@ -165,6 +165,9 @@ describe("View store base integration tests", () => {
         let reverseIndex = {};
         for (const key in sort) reverseIndex[key] = -sort[key];
 
+        //TODO
+        console.log({ index, reverseIndex });
+
         const newContextRoot = "some-new-context-root";
         for (const example of examples) {
           await request.post(url, {
@@ -180,7 +183,6 @@ describe("View store base integration tests", () => {
             },
           });
         }
-
         const response5 = await request.get(url, {
           query: {
             context: {
