@@ -281,7 +281,7 @@ describe("View store base integration tests", () => {
           : expect(count4).to.be.undefined;
 
         expect(!one ? content4[0] : content4).to.deep.equal(
-          examples[sort.result[0]]
+          examples[sort.order[0]]
         );
       }
     }
