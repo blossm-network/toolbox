@@ -30,7 +30,7 @@ describe("View store base integration tests", () => {
         update: {
           body: {
             id,
-            ...example0.post,
+            ...example0.update,
           },
         },
         context: {
@@ -82,7 +82,7 @@ describe("View store base integration tests", () => {
           update: {
             body: {
               id: moreId,
-              ...more.post,
+              ...more.update,
             },
           },
           context: {
@@ -133,7 +133,7 @@ describe("View store base integration tests", () => {
           id,
         },
         update: {
-          body: example1.post,
+          body: example1.update,
         },
         context: {
           [process.env.CONTEXT]: {
@@ -182,7 +182,7 @@ describe("View store base integration tests", () => {
         update: {
           body: {
             id: otherId,
-            ...example1.post,
+            ...example1.update,
           },
         },
         context: {
