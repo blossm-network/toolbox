@@ -24,14 +24,9 @@ describe("View store base integration tests", () => {
 
     const response0 = await request.post(url, {
       body: {
-        query: {
-          id,
-        },
+        id,
         update: {
-          body: {
-            id,
-            ...example0.update,
-          },
+          body: example0.update,
         },
         context: {
           [process.env.CONTEXT]: {
