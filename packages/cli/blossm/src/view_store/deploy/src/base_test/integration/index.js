@@ -167,10 +167,8 @@ describe("View store base integration tests", () => {
 
         const newContextRoot = "some-new-context-root";
         for (const example of examples) {
-          const id = uuid();
           await request.post(url, {
             body: {
-              id,
               update: example.update,
               context: {
                 [process.env.CONTEXT]: {
@@ -204,6 +202,9 @@ describe("View store base integration tests", () => {
 
         const firstSortFirst = one ? content2 : content2[0];
         const firstSortLast = one ? null : content2[content2.length - 1];
+
+        //TODO
+        console.log({ firstSortFirst, firstSortLast, count2, update2 });
 
         expect(updates2).to.exist;
         !one ? expect(count2).to.equal(2) : expect(count2).to.be.undefined;
@@ -243,7 +244,6 @@ describe("View store base integration tests", () => {
         for (const example of examples.length > 2 ? examples.slice(2) : []) {
           await request.post(url, {
             body: {
-              id: uuid,
               update: example,
               context: {
                 [process.env.CONTEXT]: {
@@ -279,7 +279,6 @@ describe("View store base integration tests", () => {
         for (const example of examples) {
           await request.post(url, {
             body: {
-              id: uuid,
               update: example,
               context: {
                 [process.env.CONTEXT]: {
