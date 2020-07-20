@@ -117,9 +117,7 @@ describe("View store base integration tests", () => {
 
     const response2 = await request.post(url, {
       body: {
-        query: {
-          id,
-        },
+        id,
         update: example1.update,
         context: {
           [process.env.CONTEXT]: {
@@ -150,6 +148,8 @@ describe("View store base integration tests", () => {
       response3.body
     );
 
+    //TODO
+    console.log({ updates1, count1, content1 });
     const parsedBody1 = one ? content1 : content1[0];
 
     expect(updates1).to.exist;
