@@ -204,7 +204,7 @@ describe("View store base integration tests", () => {
         const firstSortLast = one ? null : content2[content2.length - 1];
 
         //TODO
-        console.log({ firstSortFirst, firstSortLast, count2, update2 });
+        console.log({ firstSortFirst, firstSortLast, count2, updates2 });
 
         expect(updates2).to.exist;
         !one ? expect(count2).to.equal(2) : expect(count2).to.be.undefined;
