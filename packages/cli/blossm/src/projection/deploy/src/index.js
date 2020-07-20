@@ -35,15 +35,16 @@ module.exports = eventHandler({
       root: event.data.root,
     });
 
+    const eventHasContext = event.data.headers.context[process.env.CONTEXT];
     //The context that the view should be associated with.
-    const contextRoot = event.data.headers.context[process.env.CONTEXT]
+    const contextRoot = eventHasContext
       ? event.data.headers.context[process.env.CONTEXT].root
       : event.data.root;
     const contextDomain = process.env.CONTEXT;
-    const contextService = event.data.headers.context[process.env.CONTEXT]
+    const contextService = eventHasContext
       ? event.data.headers.context[process.env.CONTEXT].service
       : event.data.headers.service;
-    const contextNetwork = event.data.headers.context[process.env.CONTEXT]
+    const contextNetwork = eventHasContext
       ? event.data.headers.context[process.env.CONTEXT].network
       : event.data.headers.network;
 
