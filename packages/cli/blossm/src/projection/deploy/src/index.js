@@ -28,6 +28,8 @@ module.exports = eventHandler({
       query,
       //The changes to the body of the view.
       update,
+      //The context that the view should be associated with.
+      context = event.data.headers.context,
     } = handlers[event.data.headers.service][event.data.headers.domain][
       event.data.headers.action
     ]({
@@ -43,9 +45,9 @@ module.exports = eventHandler({
         token: { internalFn: gcpToken },
         context: {
           [process.env.CONTEXT]: {
-            root: event.data.headers.context[process.env.CONTEXT].root,
-            service: event.data.headers.context[process.env.CONTEXT].service,
-            network: event.data.headers.context[process.env.CONTEXT].network,
+            root: context[process.env.CONTEXT].root,
+            service: context[process.env.CONTEXT].service,
+            network: context[process.env.CONTEXT].network,
           },
         },
       })
@@ -56,12 +58,12 @@ module.exports = eventHandler({
         //Always set the trace and context to make sure the view has an updated trace and the context is set.
         ...(event.data.headers.trace && { trace: event.data.headers.trace }),
         ...(event.data.headers.context &&
-          event.data.headers.context[process.env.CONTEXT] && {
+          context[process.env.CONTEXT] && {
             context: {
-              root: event.data.headers.context[process.env.CONTEXT].root,
+              root: context[process.env.CONTEXT].root,
               domain: process.env.CONTEXT,
-              service: event.data.headers.context[process.env.CONTEXT].service,
-              network: event.data.headers.context[process.env.CONTEXT].network,
+              service: context[process.env.CONTEXT].service,
+              network: context[process.env.CONTEXT].network,
             },
           }),
       });
