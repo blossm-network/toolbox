@@ -28,6 +28,7 @@ const version = 0;
 const action = "some-action";
 const domain = "some-domain";
 const service = "some-service";
+const network = "some-network";
 const context = "some-context";
 
 describe("Create event", () => {
@@ -44,6 +45,7 @@ describe("Create event", () => {
       action,
       domain,
       service,
+      network,
       context,
       path: [
         {
@@ -74,6 +76,7 @@ describe("Create event", () => {
         action,
         domain,
         service,
+        network,
         version,
         trace,
         context,
@@ -111,6 +114,7 @@ describe("Create event", () => {
       action,
       domain,
       service,
+      network,
       path: [
         {
           timestamp: pathTimestamp,
@@ -132,6 +136,7 @@ describe("Create event", () => {
         action,
         domain,
         service,
+        network,
         version: 0,
         trace,
         created: dateString(),
@@ -154,6 +159,7 @@ describe("Create event", () => {
       action,
       domain,
       service,
+      network,
       idempotency,
       path: [
         {
@@ -183,6 +189,7 @@ describe("Create event", () => {
         action,
         domain,
         service,
+        network,
         version,
         trace,
         created: dateString(),
@@ -210,6 +217,7 @@ describe("Create event", () => {
       action,
       domain,
       service,
+      network,
       path: [
         {
           issued: pathIssued,
@@ -239,6 +247,7 @@ describe("Create event", () => {
         action,
         domain,
         service,
+        network,
         version,
         trace,
         created: dateString(),

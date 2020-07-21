@@ -35,6 +35,7 @@ const eventStore = async ({ schema, indexes, secretFn }) => {
           action: { [typeKey]: String, required: true },
           domain: { [typeKey]: String, required: true },
           service: { [typeKey]: String, required: true },
+          network: { [typeKey]: String, required: true },
           version: { [typeKey]: Number, required: true },
           context: { [typeKey]: Object, default: {} },
           claims: {

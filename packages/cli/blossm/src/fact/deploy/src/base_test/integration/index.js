@@ -68,16 +68,13 @@ const formattedPayload = async (payload) => {
 const executeStep = async (step) => {
   if (step.pre) {
     for (const { action, domain, service, root, payload } of step.pre) {
-      // const topic = `${domain}.${service}`;
-      // if (await exists(topic)) existingTopics.push(topic);
-      // stateTopics.push(topic);
-      // await create(topic);
       const stateEvent = createEvent({
         root,
         payload: await formattedPayload(payload),
         action,
         domain,
         service,
+        network: process.env.NETWORK,
       });
 
       await eventStore({ domain, service }).add([{ data: stateEvent }]);

@@ -36,6 +36,7 @@ module.exports = async ({
         action: "register",
         domain: "identity",
         service: "core",
+        network: process.env.NETWORK,
       }),
     },
   ]);
@@ -57,6 +58,7 @@ module.exports = async ({
           action: "create",
           domain: "role",
           service: "core",
+          network: process.env.NETWORK,
         }),
       },
     ]),
@@ -79,6 +81,7 @@ module.exports = async ({
           action: "add-roles",
           domain: "principal",
           service: "core",
+          network: process.env.NETWORK,
         }),
       },
     ]),
@@ -96,6 +99,7 @@ module.exports = async ({
         action: "start",
         domain: "session",
         service: "core",
+        network: process.env.NETWORK,
       }),
     },
   ]);

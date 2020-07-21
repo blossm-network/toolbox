@@ -172,6 +172,7 @@ describe("Command handler post", () => {
       action: eventAction,
       domain,
       service,
+      network,
       version: 0,
       idempotency,
       path: [
@@ -310,6 +311,7 @@ describe("Command handler post", () => {
       action: eventAction,
       domain,
       service,
+      network,
       version: 0,
       idempotency,
       path: [
@@ -411,6 +413,7 @@ describe("Command handler post", () => {
       action: eventAction,
       domain,
       service,
+      network,
       version: 0,
       idempotency,
       path: [
@@ -720,6 +723,7 @@ describe("Command handler post", () => {
       action: eventAction,
       domain,
       service,
+      network,
       version: 0,
       idempotency,
       path: [
@@ -1066,6 +1070,7 @@ describe("Command handler post", () => {
       action: eventAction,
       domain,
       service,
+      network,
       version,
       context: eventContext,
       idempotency,
@@ -1186,6 +1191,7 @@ describe("Command handler post", () => {
       action: eventAction,
       domain,
       service,
+      network,
       version: 0,
       idempotency,
       path: [
@@ -1331,6 +1337,7 @@ describe("Command handler post", () => {
       action: eventAction,
       domain: eventDomain,
       service: eventService,
+      network,
       version: 0,
       idempotency,
       path: [
@@ -1467,6 +1474,7 @@ describe("Command handler post", () => {
       action: eventAction,
       domain,
       service,
+      network,
       version: 0,
       idempotency,
       path: [
@@ -1490,6 +1498,7 @@ describe("Command handler post", () => {
       action: otherEventAction,
       domain,
       service,
+      network,
       version: 0,
       idempotency,
       path: [
@@ -1640,6 +1649,7 @@ describe("Command handler post", () => {
       action: eventAction,
       domain,
       service,
+      network,
       version: 0,
       idempotency,
       path: [
@@ -1663,6 +1673,7 @@ describe("Command handler post", () => {
       action: otherEventAction,
       domain: differentDomain,
       service: differentService,
+      network,
       version: 0,
       idempotency,
       path: [
@@ -1806,6 +1817,7 @@ describe("Command handler post", () => {
       action: eventAction,
       domain,
       service,
+      network,
       version: 0,
       idempotency,
       path: [

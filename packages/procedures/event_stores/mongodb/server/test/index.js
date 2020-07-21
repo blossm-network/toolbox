@@ -164,6 +164,7 @@ describe("Mongodb event store", () => {
             action: { $type: String, required: true },
             domain: { $type: String, required: true },
             service: { $type: String, required: true },
+            network: { $type: String, required: true },
             trace: { $type: String },
             context: { $type: Object, default: {} },
             claims: {
@@ -439,6 +440,7 @@ describe("Mongodb event store", () => {
             action: { $type: String, required: true },
             domain: { $type: String, required: true },
             service: { $type: String, required: true },
+            network: { $type: String, required: true },
             trace: { $type: String },
             context: { $type: Object, default: {} },
             claims: {
@@ -658,6 +660,7 @@ describe("Mongodb event store", () => {
             action: { $type: String, required: true },
             domain: { $type: String, required: true },
             service: { $type: String, required: true },
+            network: { $type: String, required: true },
             trace: { $type: String },
             context: { $type: Object, default: {} },
             claims: {

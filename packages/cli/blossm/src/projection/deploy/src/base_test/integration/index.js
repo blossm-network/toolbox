@@ -25,6 +25,7 @@ describe("Projection integration tests", () => {
         payload: example.payload,
         domain: example.action.domain,
         service: example.action.service,
+        network: process.env.NETWORK,
         context: {
           [context]: {
             root: contextRoot,

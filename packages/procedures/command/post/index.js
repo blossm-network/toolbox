@@ -106,6 +106,7 @@ module.exports = ({
       action,
       domain,
       service,
+      network: process.env.NETWORK,
       ...(req.body.headers.idempotency && {
         idempotency: req.body.headers.idempotency,
       }),
