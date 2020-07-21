@@ -14,6 +14,7 @@ const getProof = require("@blossm/mongodb-event-store-get-proof");
 const createTransaction = require("@blossm/mongodb-event-store-create-transaction");
 const formatSchema = require("@blossm/format-mongodb-schema");
 const idempotencyConflictCheck = require("@blossm/mongodb-event-store-idempotency-conflict-check");
+const uuid = require("@blossm/uuid");
 
 exports.dateString = dateString;
 exports.eventStore = eventStore;
@@ -31,3 +32,4 @@ exports.idempotencyConflictCheck = idempotencyConflictCheck;
 exports.count = count;
 exports.formatSchema = formatSchema;
 exports.saveProofs = saveProofs;
+exports.uuid = uuid;

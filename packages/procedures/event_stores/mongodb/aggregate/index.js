@@ -4,7 +4,10 @@ module.exports = ({ eventStore, snapshotStore, handlers }) => async (root) => {
   const snapshot = await deps.db.findOne({
     store: snapshotStore,
     query: {
-      root,
+      "data.root": root,
+    },
+    sort: {
+      "data.created": -1,
     },
     options: {
       lean: true,
@@ -16,7 +19,9 @@ module.exports = ({ eventStore, snapshotStore, handlers }) => async (root) => {
       store: eventStore,
       query: {
         "data.root": root,
-        ...(snapshot && { "data.number": { $gt: snapshot.lastEventNumber } }),
+        ...(snapshot && {
+          "data.number": { $gt: snapshot.data.lastEventNumber },
+        }),
       },
       sort: {
         "data.number": 1,
@@ -29,8 +34,10 @@ module.exports = ({ eventStore, snapshotStore, handlers }) => async (root) => {
 
   let aggregate = snapshot && {
     root,
-    lastEventNumber: snapshot ? snapshot.lastEventNumber : {},
-    state: snapshot ? snapshot.state : {},
+    lastEventNumber: snapshot ? snapshot.data.lastEventNumber : {},
+    state: snapshot ? snapshot.data.state : {},
+    events: [],
+    snapshot: { id: snapshot.data.id, hash: snapshot.hash },
   };
 
   await cursor.eachAsync((event) => {
@@ -46,6 +53,11 @@ module.exports = ({ eventStore, snapshotStore, handlers }) => async (root) => {
       root: event.data.root,
       lastEventNumber: event.data.number,
       state: handler(aggregate ? aggregate.state : {}, event.data.payload),
+      ...(aggregate && aggregate.snapshot && { snapshot: aggregate.snapshot }),
+      events: [
+        ...(aggregate ? aggregate.events : []),
+        { id: event.data.id, hash: event.hash },
+      ],
     };
   });
 

@@ -17,9 +17,14 @@ module.exports = ({ mainFn, streamFn }) => async (req, res) => {
   await streamFn({
     from,
     fn: (event) => mainFn(event, { push }),
-    // chronological
+    // chronological by when the events were created, which best represents the events' intended order.
+    //TODO test
     sortFn: (a, b) =>
-      a.data.saved < b.data.saved ? -1 : a.data.saved > b.data.saved ? 1 : 0,
+      a.data.created < b.data.created
+        ? -1
+        : a.data.created > b.data.created
+        ? 1
+        : 0,
   });
 
   res.sendStatus(204);

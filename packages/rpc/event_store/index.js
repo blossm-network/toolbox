@@ -1,5 +1,3 @@
-const { string: dateString } = require("@blossm/datetime");
-
 const deps = require("./deps");
 
 module.exports = ({ domain, service = process.env.SERVICE } = {}) => {
@@ -23,7 +21,6 @@ module.exports = ({ domain, service = process.env.SERVICE } = {}) => {
           }),
           headers: {
             ...event.data.headers,
-            created: dateString(),
             ...((context || event.data.headers.context) && {
               context: {
                 ...event.data.headers.context,

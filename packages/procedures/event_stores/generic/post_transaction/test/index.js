@@ -16,6 +16,7 @@ const service = "some-service";
 
 const topic = `some-action.${domain}.${service}`;
 const idempotency = "some-idempotency";
+const created = "some-created";
 
 const eventRoot = "some-event-root";
 const eventNumber = "some-event-number";
@@ -41,6 +42,7 @@ const events = [
       root,
       headers,
       topic,
+      created,
       idempotency,
       payload,
     },
@@ -95,7 +97,7 @@ describe("Event store post", () => {
       {
         data: {
           id: `${root}_${currentEventsForRoot}`,
-          saved: deps.dateString(),
+          created,
           payload,
           root,
           number: currentEventsForRoot,
@@ -115,7 +117,7 @@ describe("Event store post", () => {
     });
     expect(hashFnFake).to.have.been.calledWith({
       id: `${root}_${currentEventsForRoot}`,
-      saved: deps.dateString(),
+      created,
       payload,
       root,
       number: currentEventsForRoot,
@@ -163,7 +165,7 @@ describe("Event store post", () => {
       {
         data: {
           id: `${root}_${number}`,
-          saved: deps.dateString(),
+          created,
           payload,
           root,
           number,
@@ -183,7 +185,7 @@ describe("Event store post", () => {
     });
     expect(hashFnFake).to.have.been.calledWith({
       id: `${root}_${number}`,
-      saved: deps.dateString(),
+      created,
       payload,
       root,
       number,
@@ -248,6 +250,7 @@ describe("Event store post", () => {
             root: "some-other-root",
             headers,
             topic,
+            created,
             idempotency,
             payload,
           },
@@ -274,7 +277,7 @@ describe("Event store post", () => {
       {
         data: {
           id: `${root}_${currentEventsForRoot}`,
-          saved: deps.dateString(),
+          created,
           payload,
           root,
           number: currentEventsForRoot,
@@ -288,7 +291,7 @@ describe("Event store post", () => {
       {
         data: {
           id: `${root}_${currentEventsForRoot + 1}`,
-          saved: deps.dateString(),
+          created,
           payload,
           root,
           number: currentEventsForRoot + 1,
@@ -302,7 +305,7 @@ describe("Event store post", () => {
       {
         data: {
           id: "some-other-root_9",
-          saved: deps.dateString(),
+          created,
           payload,
           root: "some-other-root",
           number: 9,
@@ -333,7 +336,7 @@ describe("Event store post", () => {
     expect(reserveRootCountsFnFake).to.have.been.calledTwice;
     expect(hashFnFake.getCall(0)).to.have.been.calledWith({
       id: `${root}_${currentEventsForRoot}`,
-      saved: deps.dateString(),
+      created,
       payload,
       root,
       number: currentEventsForRoot,
@@ -343,7 +346,7 @@ describe("Event store post", () => {
     });
     expect(hashFnFake.getCall(1)).to.have.been.calledWith({
       id: `${root}_${currentEventsForRoot + 1}`,
-      saved: deps.dateString(),
+      created,
       payload,
       root,
       number: currentEventsForRoot + 1,
@@ -353,7 +356,7 @@ describe("Event store post", () => {
     });
     expect(hashFnFake.getCall(2)).to.have.been.calledWith({
       id: "some-other-root_9",
-      saved: deps.dateString(),
+      created,
       payload,
       root: "some-other-root",
       number: 9,
@@ -397,7 +400,7 @@ describe("Event store post", () => {
       {
         data: {
           id: `${root}_${currentEventsForRoot}`,
-          saved: deps.dateString(),
+          created,
           payload,
           root,
           number: currentEventsForRoot,
@@ -416,7 +419,7 @@ describe("Event store post", () => {
     });
     expect(hashFnFake).to.have.been.calledWith({
       id: `${root}_${currentEventsForRoot}`,
-      saved: deps.dateString(),
+      created,
       payload,
       root,
       number: currentEventsForRoot,

@@ -38,18 +38,18 @@ describe("Event store post", () => {
     const scheduleUpdateForProofFnFake = fake();
     const savedEventHeadersTopic = "some-saved-event-headers-topic";
     const savedProofId = "some-saved-proof-id";
-    const savedEventSavedTimestamp = "some-event-saved-timestamp";
+    const savedEventCreatedTimestamp = "some-event-created-timestamp";
     const createTransactionFnFake = fake.returns({
       events: [
         {
           data: {
-            saved: savedEventSavedTimestamp,
+            created: savedEventCreatedTimestamp,
             topic: savedEventHeadersTopic,
           },
         },
         {
           data: {
-            saved: savedEventSavedTimestamp,
+            created: savedEventCreatedTimestamp,
             topic: savedEventHeadersTopic,
           },
         },
@@ -82,7 +82,7 @@ describe("Event store post", () => {
       saveProofsFn,
     });
     expect(publishFnFake).to.have.been.calledWith(
-      { from: savedEventSavedTimestamp },
+      { from: savedEventCreatedTimestamp },
       savedEventHeadersTopic
     );
     expect(publishFnFake).to.have.been.calledOnce;
@@ -116,12 +116,12 @@ describe("Event store post", () => {
     const scheduleUpdateForProofFnFake = fake();
     const savedEventHeadersTopic = "some-saved-event-headers-topic";
     const savedProofId = "some-saved-proof-id";
-    const savedEventSavedTimestamp = "some-event-saved-timestamp";
+    const savedEventCreatedTimestamp = "some-event-created-timestamp";
     const createTransactionFnFake = fake.returns({
       events: [
         {
           data: {
-            saved: savedEventSavedTimestamp,
+            created: savedEventCreatedTimestamp,
             topic: savedEventHeadersTopic,
           },
         },
@@ -161,7 +161,7 @@ describe("Event store post", () => {
       saveProofsFn,
     });
     expect(publishFnFake).to.have.been.calledWith(
-      { from: savedEventSavedTimestamp },
+      { from: savedEventCreatedTimestamp },
       savedEventHeadersTopic
     );
     expect(scheduleUpdateForProofFnFake).to.have.been.calledWith(savedProofId);
@@ -198,12 +198,12 @@ describe("Event store post", () => {
     const scheduleUpdateForProofFnFake = fake();
     const savedEventHeadersTopic = "some-saved-event-headers-topic";
     const savedProofId = "some-saved-proof-id";
-    const savedEventSavedTimestamp = "some-event-saved-timestamp";
+    const savedEventCreatedTimestamp = "some-event-created-timestamp";
     const createTransactionFnFake = fake.returns({
       events: [
         {
           data: {
-            saved: savedEventSavedTimestamp,
+            created: savedEventCreatedTimestamp,
             topic: savedEventHeadersTopic,
           },
         },
@@ -246,7 +246,7 @@ describe("Event store post", () => {
       saveProofsFn,
     });
     expect(publishFnFake).to.have.been.calledWith(
-      { from: savedEventSavedTimestamp },
+      { from: savedEventCreatedTimestamp },
       savedEventHeadersTopic
     );
     expect(scheduleUpdateForProofFnFake).to.have.been.calledWith(savedProofId);
@@ -283,12 +283,12 @@ describe("Event store post", () => {
     const scheduleUpdateForProofFnFake = fake();
     const savedEventHeadersTopic = "some-saved-event-headers-topic";
     const savedProofId = "some-saved-proof-id";
-    const savedEventSavedTimestamp = "some-event-saved-timestamp";
+    const savedEventCreatedTimestamp = "some-event-created-timestamp";
     const createTransactionFnFake = fake.returns({
       events: [
         {
           data: {
-            saved: savedEventSavedTimestamp,
+            created: savedEventCreatedTimestamp,
             topic: savedEventHeadersTopic,
           },
         },
@@ -332,7 +332,7 @@ describe("Event store post", () => {
       saveProofsFn,
     });
     expect(publishFnFake).to.have.been.calledWith(
-      { from: savedEventSavedTimestamp },
+      { from: savedEventCreatedTimestamp },
       savedEventHeadersTopic
     );
     expect(scheduleUpdateForProofFnFake).to.have.been.calledWith(savedProofId);

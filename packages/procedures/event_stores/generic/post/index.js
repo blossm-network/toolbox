@@ -52,7 +52,7 @@ module.exports = ({
       publishedTopics.push(e.data.topic);
       return publishFn(
         {
-          from: e.data.saved,
+          from: e.data.created,
         },
         e.data.topic
       );

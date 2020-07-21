@@ -7,7 +7,7 @@ const createEvent = require("@blossm/create-event");
 const request = require("@blossm/request");
 
 const { testing, name, context } = require("../../config.json");
-const { string: stringDate } = require("@blossm/datetime");
+const { string: dateString } = require("@blossm/datetime");
 
 const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 
@@ -35,7 +35,7 @@ describe("Projection integration tests", () => {
         },
       });
 
-      const dateBefore = stringDate();
+      const dateBefore = dateString();
       await eventStore({
         domain: example.action.domain,
         service: example.action.service,

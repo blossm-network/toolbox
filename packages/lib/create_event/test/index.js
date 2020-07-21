@@ -72,6 +72,7 @@ describe("Create event", () => {
       topic: `${action}.${domain}.${service}`,
       idempotency:
         "some-idempotency-some-action-some-domain-some-service-some-path-hash",
+      created: dateString(),
       headers: {
         action,
         domain,
@@ -80,7 +81,6 @@ describe("Create event", () => {
         version,
         trace,
         context,
-        created: dateString(),
         path: [
           {
             issued: pathIssued,
@@ -132,6 +132,7 @@ describe("Create event", () => {
       topic: `${action}.${domain}.${service}`,
       idempotency:
         "idemptUuid!-some-action-some-domain-some-service-some-path-hash",
+      created: dateString(),
       headers: {
         action,
         domain,
@@ -139,7 +140,6 @@ describe("Create event", () => {
         network,
         version: 0,
         trace,
-        created: dateString(),
         path: [
           {
             timestamp: pathTimestamp,
@@ -185,6 +185,7 @@ describe("Create event", () => {
       topic: `${action}.${domain}.${service}`,
       idempotency:
         "some-idempotency-some-action-some-domain-some-service-some-path-hash",
+      created: dateString(),
       headers: {
         action,
         domain,
@@ -192,7 +193,6 @@ describe("Create event", () => {
         network,
         version,
         trace,
-        created: dateString(),
         path: [
           {
             issued: pathIssued,
@@ -243,6 +243,7 @@ describe("Create event", () => {
       topic: `${action}.${domain}.${service}`,
       idempotency:
         "some-idempotency-some-action-some-domain-some-service-some-path-hash",
+      created: dateString(),
       headers: {
         action,
         domain,
@@ -250,7 +251,6 @@ describe("Create event", () => {
         network,
         version,
         trace,
-        created: dateString(),
         path: [
           {
             issued: pathIssued,

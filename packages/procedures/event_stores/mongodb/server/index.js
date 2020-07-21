@@ -25,7 +25,12 @@ const eventStore = async ({ schema, indexes, secretFn }) => {
       },
       data: {
         id: { [typeKey]: String, required: true, unique: true },
-        saved: { [typeKey]: Date, required: true },
+        committed: {
+          [typeKey]: Date,
+          required: true,
+          default: deps.dateString,
+        },
+        created: { [typeKey]: Date, required: true },
         number: { [typeKey]: Number, required: true },
         root: { [typeKey]: String, required: true },
         idempotency: { [typeKey]: String, required: true, unique: true },
@@ -50,7 +55,6 @@ const eventStore = async ({ schema, indexes, secretFn }) => {
             },
           },
           trace: { [typeKey]: String },
-          created: { [typeKey]: Date, required: true },
           path: {
             [typeKey]: [
               {
@@ -84,7 +88,7 @@ const eventStore = async ({ schema, indexes, secretFn }) => {
       //Can omit root from this because it has its own index and isnt useful for sort.
       [
         {
-          "data.saved": 1,
+          "data.created": 1,
           "data.number": 1,
           "data.headers.action": 1,
           // _id: 1,
@@ -125,19 +129,35 @@ const snapshotStore = async ({ schema, indexes }) => {
   _snapshotStore = deps.db.store({
     name: `_${process.env.SERVICE}.${process.env.DOMAIN}.snapshots`,
     schema: {
-      created: { [typeKey]: Date, required: true },
-      root: { [typeKey]: String, required: true, unique: true },
-      lastEventNumber: { [typeKey]: Number, required: true },
-      state: schema,
+      hash: { [typeKey]: String, required: true, unique: true },
+      proofs: {
+        [typeKey]: [String],
+        default: [],
+      },
+      data: {
+        id: {
+          [typeKey]: String,
+          required: true,
+          unique: true,
+          default: deps.uuid,
+        },
+        created: { [typeKey]: Date, required: true, default: deps.dateString },
+        root: { [typeKey]: String, required: true, unique: true },
+        lastEventNumber: { [typeKey]: Number, required: true },
+        state: schema,
+        _id: false,
+      },
     },
     typeKey,
     indexes: [
-      [{ root: 1 }],
+      [{ "data.id": 1 }],
+      [{ "data.root": 1 }],
+      [{ "data.root": 1, "data.created": -1 }],
       ...(indexes.length == 0
         ? []
         : [
             indexes.map((index) => {
-              return { [`state.${index}`]: 1 };
+              return { [`data.state.${index}`]: 1 };
             }),
           ]),
     ],
@@ -177,8 +197,8 @@ const proofsStore = async () => {
       id: { [typeKey]: String, required: true, unique: true },
       type: { [typeKey]: String, required: true },
       hash: { [typeKey]: String, required: true },
-      created: { [typeKey]: Date, required: true },
-      updated: { [typeKey]: Date, required: true },
+      created: { [typeKey]: Date, required: true, default: deps.dateString },
+      updated: { [typeKey]: Date, required: true, default: deps.dateString },
       metadata: { [typeKey]: Object, default: {} },
     },
     typeKey,
@@ -265,23 +285,6 @@ module.exports = async ({
     scheduleUpdateForProofFn,
   });
 };
-
-// const saveSnapshotFn = async snapshot => {
-//   const savedSnapshot = await deps.db.write({
-//     store: sStore,
-//     query: { "root": snapshot.root },
-//     update: {
-//       $set: snapshot
-//     },
-//     options: {
-//       lean: true,
-//       omitUndefined: true,
-//       upsert: true,
-//       new: true,
-//       runValidators: false,
-//       setDefaultsOnInsert: false
-//     }
-//   });
 
 //   await Promise.all([
 //     archiveSnapshotFn({

@@ -20,13 +20,13 @@ module.exports = ({
     idempotency: `${idempotency || deps.uuid()}-${action}-${domain}-${service}${
       path ? `-${(path || []).reduce((result, p) => result + p.hash, "")}` : ""
     }`,
+    created: dateString(),
     headers: {
       action,
       domain,
       service,
       network,
       version,
-      created: dateString(),
       ...(context && { context }),
       ...(trace && { trace }),
       ...(path && {

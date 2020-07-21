@@ -12,7 +12,6 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/datetime": "^0.0.5",
     "@blossm/request": "^0.0.31",
     "@blossm/rpc": "^0.0.181"
   },

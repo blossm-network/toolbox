@@ -11,11 +11,11 @@ module.exports = ({ eventStore }) => async ({
     .find({
       store: eventStore,
       query: {
-        "data.saved": { $gte: from },
+        "data.created": { $gte: from },
         ...(root && { "data.root": root }),
         ...(actions && { "data.headers.action": { $in: actions } }),
       },
-      sort: { "data.saved": 1, "data.number": 1 },
+      sort: { "data.created": 1, "data.number": 1 },
       options: { lean: true },
     })
     .cursor();

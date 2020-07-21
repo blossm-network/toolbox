@@ -153,7 +153,8 @@ describe("Mongodb event store", () => {
         },
         data: {
           id: { $type: String, required: true, unique: true },
-          saved: { $type: Date, required: true },
+          committed: { $type: Date, required: true, default: deps.dateString },
+          created: { $type: Date, required: true },
           root: { $type: String, required: true },
           topic: { $type: String, required: true },
           idempotency: { $type: String, required: true, unique: true },
@@ -178,7 +179,6 @@ describe("Mongodb event store", () => {
                 _id: false,
               },
             },
-            created: { $type: Date, required: true },
             path: {
               $type: [
                 {
@@ -208,7 +208,7 @@ describe("Mongodb event store", () => {
         [{ "data.idempotency": 1 }],
         [{ "data.root": 1 }],
         [{ "data.root": 1, "data.number": 1 }],
-        [{ "data.saved": 1, "data.number": 1, "data.headers.action": 1 }], //, _id: 1, __v: 1 }],
+        [{ "data.created": 1, "data.number": 1, "data.headers.action": 1 }], //, _id: 1, __v: 1 }],
       ],
       connection: {
         protocol,
@@ -227,13 +227,31 @@ describe("Mongodb event store", () => {
     expect(storeFake.getCall(1)).to.have.been.calledWith({
       name: `_${service}.${domain}.snapshots`,
       schema: {
-        created: { $type: Date, required: true },
-        root: { $type: String, required: true, unique: true },
-        lastEventNumber: { $type: Number, required: true },
-        state: formattedSchema,
+        hash: { $type: String, required: true, unique: true },
+        proofs: {
+          $type: [String],
+          default: [],
+        },
+        data: {
+          id: {
+            $type: String,
+            required: true,
+            unique: true,
+            default: deps.uuid,
+          },
+          created: { $type: Date, required: true, default: deps.dateString },
+          root: { $type: String, required: true, unique: true },
+          lastEventNumber: { $type: Number, required: true },
+          state: formattedSchema,
+          _id: false,
+        },
       },
       typeKey: "$type",
-      indexes: [[{ root: 1 }]],
+      indexes: [
+        [{ "data.id": 1 }],
+        [{ "data.root": 1 }],
+        [{ "data.root": 1, "data.created": -1 }],
+      ],
     });
     expect(storeFake.getCall(2)).to.have.been.calledWith({
       name: `_${service}.${domain}.counts`,
@@ -250,8 +268,8 @@ describe("Mongodb event store", () => {
         id: { $type: String, required: true, unique: true },
         type: { $type: String, required: true },
         hash: { $type: String, required: true },
-        created: { $type: Date, required: true },
-        updated: { $type: Date, required: true },
+        created: { $type: Date, required: true, default: deps.dateString },
+        updated: { $type: Date, required: true, default: deps.dateString },
         metadata: { $type: Object, default: {} },
       },
       typeKey: "$type",
@@ -429,7 +447,8 @@ describe("Mongodb event store", () => {
         },
         data: {
           id: { $type: String, required: true, unique: true },
-          saved: { $type: Date, required: true },
+          committed: { $type: Date, required: true, default: deps.dateString },
+          created: { $type: Date, required: true },
           payload: formattedSchemaWithOptions,
           root: { $type: String, required: true },
           topic: { $type: String, required: true },
@@ -454,7 +473,6 @@ describe("Mongodb event store", () => {
                 _id: false,
               },
             },
-            created: { $type: Date, required: true },
             path: {
               $type: [
                 {
@@ -484,7 +502,7 @@ describe("Mongodb event store", () => {
         [{ "data.idempotency": 1 }],
         [{ "data.root": 1 }],
         [{ "data.root": 1, "data.number": 1 }],
-        [{ "data.saved": 1, "data.number": 1, "data.headers.action": 1 }], //, _id: 1, __v: 1 }],
+        [{ "data.created": 1, "data.number": 1, "data.headers.action": 1 }], //, _id: 1, __v: 1 }],
         [{ [`data.payload.${index}`]: 1 }],
       ],
       connection: {
@@ -504,13 +522,32 @@ describe("Mongodb event store", () => {
     expect(storeFake.getCall(1)).to.have.been.calledWith({
       name: `_${service}.${domain}.snapshots`,
       schema: {
-        created: { $type: Date, required: true },
-        root: { $type: String, required: true, unique: true },
-        lastEventNumber: { $type: Number, required: true },
-        state: formattedSchema,
+        hash: { $type: String, required: true, unique: true },
+        proofs: {
+          $type: [String],
+          default: [],
+        },
+        data: {
+          id: {
+            $type: String,
+            required: true,
+            unique: true,
+            default: deps.uuid,
+          },
+          created: { $type: Date, required: true, default: deps.dateString },
+          root: { $type: String, required: true, unique: true },
+          lastEventNumber: { $type: Number, required: true },
+          state: formattedSchema,
+          _id: false,
+        },
       },
       typeKey: "$type",
-      indexes: [[{ root: 1 }], [{ [`state.${index}`]: 1 }]],
+      indexes: [
+        [{ "data.id": 1 }],
+        [{ "data.root": 1 }],
+        [{ "data.root": 1, "data.created": -1 }],
+        [{ [`data.state.${index}`]: 1 }],
+      ],
     });
     expect(storeFake.getCall(2)).to.have.been.calledWith({
       name: `_${service}.${domain}.counts`,
@@ -527,8 +564,8 @@ describe("Mongodb event store", () => {
         id: { $type: String, required: true, unique: true },
         type: { $type: String, required: true },
         hash: { $type: String, required: true },
-        created: { $type: Date, required: true },
-        updated: { $type: Date, required: true },
+        created: { $type: Date, required: true, default: deps.dateString },
+        updated: { $type: Date, required: true, default: deps.dateString },
         metadata: { $type: Object, default: {} },
       },
       typeKey: "$type",
@@ -648,7 +685,8 @@ describe("Mongodb event store", () => {
           default: [],
         },
         data: {
-          saved: { $type: Date, required: true },
+          committed: { $type: Date, required: true, default: deps.dateString },
+          created: { $type: Date, required: true },
           id: { $type: String, required: true, unique: true },
           root: { $type: String, required: true },
           topic: { $type: String, required: true },
@@ -674,7 +712,6 @@ describe("Mongodb event store", () => {
                 _id: false,
               },
             },
-            created: { $type: Date, required: true },
             path: {
               $type: [
                 {
@@ -704,7 +741,7 @@ describe("Mongodb event store", () => {
         [{ "data.idempotency": 1 }],
         [{ "data.root": 1 }],
         [{ "data.root": 1, "data.number": 1 }],
-        [{ "data.saved": 1, "data.number": 1, "data.headers.action": 1 }], //, _id: 1, __v: 1 }],
+        [{ "data.created": 1, "data.number": 1, "data.headers.action": 1 }], //, _id: 1, __v: 1 }],
       ],
       connection: {
         protocol,
@@ -723,13 +760,31 @@ describe("Mongodb event store", () => {
     expect(storeFake.getCall(1)).to.have.been.calledWith({
       name: `_${service}.${domain}.snapshots`,
       schema: {
-        created: { $type: Date, required: true },
-        root: { $type: String, required: true, unique: true },
-        lastEventNumber: { $type: Number, required: true },
-        state: formattedSchema,
+        hash: { $type: String, required: true, unique: true },
+        proofs: {
+          $type: [String],
+          default: [],
+        },
+        data: {
+          id: {
+            $type: String,
+            required: true,
+            unique: true,
+            default: deps.uuid,
+          },
+          created: { $type: Date, required: true, default: deps.dateString },
+          root: { $type: String, required: true, unique: true },
+          lastEventNumber: { $type: Number, required: true },
+          state: formattedSchema,
+          _id: false,
+        },
       },
       typeKey: "$type",
-      indexes: [[{ root: 1 }]],
+      indexes: [
+        [{ "data.id": 1 }],
+        [{ "data.root": 1 }],
+        [{ "data.root": 1, "data.created": -1 }],
+      ],
     });
     expect(storeFake.getCall(2)).to.have.been.calledWith({
       name: `_${service}.${domain}.counts`,
@@ -746,8 +801,8 @@ describe("Mongodb event store", () => {
         id: { $type: String, required: true, unique: true },
         type: { $type: String, required: true },
         hash: { $type: String, required: true },
-        created: { $type: Date, required: true },
-        updated: { $type: Date, required: true },
+        created: { $type: Date, required: true, default: deps.dateString },
+        updated: { $type: Date, required: true, default: deps.dateString },
         metadata: { $type: Object, default: {} },
       },
       typeKey: "$type",

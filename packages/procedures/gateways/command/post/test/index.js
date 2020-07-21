@@ -1,6 +1,6 @@
 const { expect } = require("chai").use(require("sinon-chai"));
 const { restore, replace, fake, match, useFakeTimers } = require("sinon");
-const { string: stringDate } = require("@blossm/datetime");
+const { string: dateString } = require("@blossm/datetime");
 
 const deps = require("../deps");
 const post = require("..");
@@ -442,7 +442,7 @@ describe("Command gateway post", () => {
     });
     replace(deps, "command", commandFake);
 
-    const decodeFake = fake.returns({ headers: { exp: stringDate() } });
+    const decodeFake = fake.returns({ headers: { exp: dateString() } });
     replace(deps, "decode", decodeFake);
 
     const reqToken = "some-req-token";
@@ -493,13 +493,13 @@ describe("Command gateway post", () => {
       domain: token1Network,
       httpOnly: true,
       secure: true,
-      expires: new Date(stringDate()),
+      expires: new Date(dateString()),
     });
     expect(cookieFake).to.have.been.calledWith(token2Type, token2Value, {
       domain: token2Network,
       httpOnly: true,
       secure: true,
-      expires: new Date(stringDate()),
+      expires: new Date(dateString()),
     });
     expect(validateFake).to.have.been.calledWith({
       ...body,

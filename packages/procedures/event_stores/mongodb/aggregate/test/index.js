@@ -6,8 +6,12 @@ const deps = require("../deps");
 
 const root = "some-root";
 const action = "some-action";
+const eventHash = "some-event-hash";
+const eventId = "some-event-id";
 const eachAsyncFake = fake.yields({
+  hash: eventHash,
   data: {
+    id: eventId,
     root,
     number: 1,
     payload: { b: 2, c: 2 },
@@ -26,10 +30,18 @@ const handlers = {
     };
   },
 };
+
+const snapshotHash = "some-snapshot-hash";
+const snapshotId = "some-snapshot-id";
+
 const findOneResult = {
-  root,
-  state: { a: 1, b: 1 },
-  lastEventNumber: 6,
+  hash: snapshotHash,
+  data: {
+    id: snapshotId,
+    root,
+    state: { a: 1, b: 1 },
+    lastEventNumber: 6,
+  },
 };
 
 const eventStore = "some-event-store";
@@ -83,7 +95,10 @@ describe("Mongodb event store aggregate", () => {
     expect(findOneFake).to.have.been.calledWith({
       store: snapshotStore,
       query: {
-        root,
+        "data.root": root,
+      },
+      sort: {
+        "data.created": -1,
       },
       options: {
         lean: true,
@@ -93,6 +108,73 @@ describe("Mongodb event store aggregate", () => {
       root,
       state: { a: 1, b: 2, c: 2 },
       lastEventNumber: 1,
+      snapshot: { id: snapshotId, hash: snapshotHash },
+      events: [{ id: eventId, hash: eventHash }],
+    });
+  });
+  it("should call with the correct params with no events", async () => {
+    const eachAsyncFake = fake();
+    const otherCursorFake = fake.returns({
+      eachAsync: eachAsyncFake,
+    });
+    const findFake = fake.returns({
+      cursor: otherCursorFake,
+    });
+    const findOneFake = fake.returns(findOneResult);
+
+    const db = {
+      find: findFake,
+      findOne: findOneFake,
+    };
+
+    replace(deps, "db", db);
+
+    const result = await aggregate({ handlers, eventStore, snapshotStore })(
+      root
+    );
+
+    expect(findFake).to.have.been.calledWith({
+      store: eventStore,
+      query: {
+        "data.root": root,
+        "data.number": { $gt: 6 },
+      },
+      sort: {
+        "data.number": 1,
+      },
+      options: {
+        lean: true,
+      },
+    });
+    expect(eachAsyncFake).to.have.been.calledWith(
+      match((fn) => {
+        const event = {
+          data: {
+            headers: { action },
+          },
+        };
+        fn(event);
+        return true;
+      })
+    );
+    expect(findOneFake).to.have.been.calledWith({
+      store: snapshotStore,
+      query: {
+        "data.root": root,
+      },
+      sort: {
+        "data.created": -1,
+      },
+      options: {
+        lean: true,
+      },
+    });
+    expect(result).to.deep.equal({
+      root,
+      state: { a: 1, b: 1 },
+      lastEventNumber: 6,
+      snapshot: { id: snapshotId, hash: snapshotHash },
+      events: [],
     });
   });
   it("should call with the correct params with no snapshot found", async () => {
@@ -138,7 +220,10 @@ describe("Mongodb event store aggregate", () => {
     expect(findOneFake).to.have.been.calledWith({
       store: snapshotStore,
       query: {
-        root,
+        "data.root": root,
+      },
+      sort: {
+        "data.created": -1,
       },
       options: {
         lean: true,
@@ -148,6 +233,7 @@ describe("Mongodb event store aggregate", () => {
       root,
       state: { b: 2, c: 2 },
       lastEventNumber: 1,
+      events: [{ id: eventId, hash: eventHash }],
     });
   });
   it("should call with the correct params with no snapshot or events found", async () => {
@@ -186,7 +272,10 @@ describe("Mongodb event store aggregate", () => {
     expect(findOneFake).to.have.been.calledWith({
       store: snapshotStore,
       query: {
-        root,
+        "data.root": root,
+      },
+      sort: {
+        "data.created": -1,
       },
       options: {
         lean: true,

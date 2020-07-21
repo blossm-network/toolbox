@@ -16,6 +16,7 @@ module.exports = async ({
   scheduleUpdateForProofFn,
   createTransactionFn,
   idempotencyConflictCheckFn,
+  // snapshotFn,
   countFn,
 } = {}) => {
   deps
@@ -37,6 +38,12 @@ module.exports = async ({
       }),
       { path: "/proof/:id" }
     )
+    // .post(
+    //   deps.takeSnapshot({
+    //     snapshotFn,
+    //   }),
+    //   { path: "/snapshot" }
+    // )
     .post(
       deps.post({
         saveEventsFn,

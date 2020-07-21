@@ -50,14 +50,6 @@ module.exports = ({ eventStore, snapshotStore, handlers }) => async ({
 
   const aggregateFn = deps.aggregate({ eventStore, snapshotStore, handlers });
 
-  if (events.length == 0) {
-    const aggregates = await Promise.all(
-      snapshots.map((snapshot) => aggregateFn(snapshot.root))
-    );
-
-    return aggregates;
-  }
-
   const candidateRoots = [
     ...new Set([
       ...snapshots.map((snapshot) => snapshot.root),
