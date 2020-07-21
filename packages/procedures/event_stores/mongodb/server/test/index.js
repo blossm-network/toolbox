@@ -165,7 +165,7 @@ describe("Mongodb event store", () => {
             domain: { $type: String, required: true },
             service: { $type: String, required: true },
             trace: { $type: String },
-            context: { $type: Object },
+            context: { $type: Object, default: {} },
             claims: {
               $type: {
                 iss: String,
@@ -440,7 +440,7 @@ describe("Mongodb event store", () => {
             domain: { $type: String, required: true },
             service: { $type: String, required: true },
             trace: { $type: String },
-            context: { $type: Object },
+            context: { $type: Object, default: {} },
             claims: {
               $type: {
                 iss: String,
@@ -659,7 +659,7 @@ describe("Mongodb event store", () => {
             domain: { $type: String, required: true },
             service: { $type: String, required: true },
             trace: { $type: String },
-            context: { $type: Object },
+            context: { $type: Object, default: {} },
             claims: {
               $type: {
                 iss: String,
