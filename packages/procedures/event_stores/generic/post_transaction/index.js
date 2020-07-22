@@ -5,8 +5,6 @@ module.exports = ({
   saveEventsFn,
   reserveRootCountsFn,
   hashFn,
-  proofsFn,
-  saveProofsFn,
 }) => async (transaction) => {
   const eventRootCounts = events.reduce((result, event) => {
     if (result[event.data.root] == undefined) result[event.data.root] = 0;
@@ -15,7 +13,6 @@ module.exports = ({
   }, {});
 
   const eventNumberOffsets = {};
-  const allProofs = [];
 
   const [...updatedCountObjects] = await Promise.all(
     Object.keys(eventRootCounts).map((root) =>
@@ -97,16 +94,11 @@ module.exports = ({
           };
 
           const hash = await hashFn(data);
-          const proofs = await proofsFn(hash);
-
-          for (const proof of proofs) proof.id = deps.uuid();
 
           normalizedEvents.push({
             data,
             hash,
-            proofs: proofs.map((proof) => proof.id),
           });
-          allProofs.push(...proofs);
         })
       );
     })
@@ -116,7 +108,6 @@ module.exports = ({
     normalizedEvents,
     ...(transaction ? [{ transaction }] : [])
   );
-  await saveProofsFn(allProofs, ...(transaction ? [{ transaction }] : []));
 
-  return { events: savedEvents, proofs: allProofs };
+  return { events: savedEvents };
 };

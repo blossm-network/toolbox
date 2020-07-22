@@ -1,5 +1,7 @@
-const { expect } = require("chai").use(require("sinon-chai"));
-const { restore, replace, fake } = require("sinon");
+const { expect } = require("chai")
+  .use(require("chai-datetime"))
+  .use(require("sinon-chai"));
+const { restore, replace, fake, useFakeTimers } = require("sinon");
 
 const reserveRootCount = require("..");
 
@@ -10,8 +12,15 @@ const amount = 1;
 const transaction = "some-transaction";
 const countsStore = "some-count-store";
 
+let clock;
+const now = new Date();
+
 describe("Mongodb event store reserve root count", () => {
+  beforeEach(() => {
+    clock = useFakeTimers(now.getTime());
+  });
   afterEach(() => {
+    clock.restore();
     restore();
   });
   it("should call with the correct params", async () => {
@@ -33,6 +42,9 @@ describe("Mongodb event store reserve root count", () => {
       query: { root },
       update: {
         $inc: { value: amount },
+        $set: {
+          updated: deps.dateString(),
+        },
       },
       options: {
         lean: true,
@@ -64,6 +76,9 @@ describe("Mongodb event store reserve root count", () => {
       query: { root },
       update: {
         $inc: { value: amount },
+        $set: {
+          updated: deps.dateString(),
+        },
       },
       options: {
         lean: true,

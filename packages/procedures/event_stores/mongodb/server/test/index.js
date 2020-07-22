@@ -18,6 +18,7 @@ const host = "some-host";
 const database = "some-db";
 const password = "some-password";
 const handlers = "some-handlers";
+const public = "some-public";
 
 process.env.DOMAIN = domain;
 process.env.SERVICE = service;
@@ -29,8 +30,6 @@ process.env.MONGODB_DATABASE = database;
 
 const publishFn = "some-publish-fn";
 const hashFn = "some-hash-fn";
-const proofsFn = "some-proofs-fn";
-const scheduleUpdateForProofFn = "some-schedule-update-for-proof-fn";
 
 describe("Mongodb event store", () => {
   beforeEach(() => {
@@ -47,7 +46,7 @@ describe("Mongodb event store", () => {
     const eStore = "some-event-store";
     const sStore = "some-snapshot-store";
     const cStore = "some-counts-store";
-    const pStore = "some-proofs-store";
+    const bStore = "some-blockchain-store";
     const storeFake = stub()
       .onCall(0)
       .returns(eStore)
@@ -56,7 +55,7 @@ describe("Mongodb event store", () => {
       .onCall(2)
       .returns(cStore)
       .onCall(3)
-      .returns(pStore);
+      .returns(bStore);
 
     const secretFake = fake.returns(password);
 
@@ -93,21 +92,21 @@ describe("Mongodb event store", () => {
     const streamResult = "some-stream-result";
     const streamFake = fake.returns(streamResult);
     replace(deps, "stream", streamFake);
-    const saveProofsResult = "some-save-proofs-result";
-    const saveProofsFake = fake.returns(saveProofsResult);
-    replace(deps, "saveProofs", saveProofsFake);
     const idempotencyConflictCheckResult =
       "some-idempotency-conflict-check-result";
     const idempotencyConflictCheckFake = fake.returns(
       idempotencyConflictCheckResult
     );
     replace(deps, "idempotencyConflictCheck", idempotencyConflictCheckFake);
-    const updateProofResult = "some-update-proof-result";
-    const updateProofFake = fake.returns(updateProofResult);
-    replace(deps, "updateProof", updateProofFake);
-    const getProofResult = "some-get-proof-result";
-    const getProofFake = fake.returns(getProofResult);
-    replace(deps, "getProof", getProofFake);
+    const saveBlockFnResult = "some-save-block-result";
+    const saveBlockFake = fake.returns(saveBlockFnResult);
+    replace(deps, "saveBlock", saveBlockFake);
+    const saveSnapshotFnResult = "some-save-snapshot-result";
+    const saveSnapshotFake = fake.returns(saveSnapshotFnResult);
+    replace(deps, "saveSnapshot", saveSnapshotFake);
+    const latestBlockResult = "some-latest-block-result";
+    const latestBlockFake = fake.returns(latestBlockResult);
+    replace(deps, "latestBlock", latestBlockFake);
 
     const formattedSchemaWithOptions = "some-formatted-schema-with-options";
     const formattedSchema = "some-formatted-schema";
@@ -124,8 +123,7 @@ describe("Mongodb event store", () => {
       secretFn: secretFake,
       publishFn,
       hashFn,
-      proofsFn,
-      scheduleUpdateForProofFn,
+      public,
     });
 
     expect(formatSchemaFake.getCall(0)).to.have.been.calledWith(
@@ -147,10 +145,6 @@ describe("Mongodb event store", () => {
       name: `_${service}.${domain}`,
       schema: {
         hash: { $type: String, required: true, unique: true },
-        proofs: {
-          $type: [String],
-          default: [],
-        },
         data: {
           id: { $type: String, required: true, unique: true },
           committed: { $type: Date, required: true, default: deps.dateString },
@@ -228,23 +222,17 @@ describe("Mongodb event store", () => {
       name: `_${service}.${domain}.snapshots`,
       schema: {
         hash: { $type: String, required: true, unique: true },
-        proofs: {
-          $type: [String],
-          default: [],
-        },
+        previous: { $type: String, required: true, unique: true },
+        public: { $type: Boolean, required: true },
         data: {
-          id: {
-            $type: String,
-            required: true,
-            unique: true,
-            default: deps.uuid,
-          },
-          created: { $type: Date, required: true, default: deps.dateString },
-          root: { $type: String, required: true, unique: true },
-          lastEventNumber: { $type: Number, required: true },
-          state: formattedSchema,
+          $type: [String],
+          required: true,
           _id: false,
         },
+        created: { $type: Date, required: true, default: deps.dateString },
+        root: { $type: String, required: true, unique: true },
+        lastEventNumber: { $type: Number, required: true },
+        state: formattedSchema,
       },
       typeKey: "$type",
       indexes: [
@@ -258,22 +246,29 @@ describe("Mongodb event store", () => {
       schema: {
         root: { $type: String, required: true, unique: true },
         value: { $type: Number, required: true, default: 0 },
+        updated: { $type: Date, required: true, default: deps.dateString },
       },
       typeKey: "$type",
       indexes: [[{ root: 1 }]],
     });
     expect(storeFake.getCall(3)).to.have.been.calledWith({
-      name: `_${service}.${domain}.proofs`,
+      name: `_${service}.${domain}.blockchain`,
       schema: {
-        id: { $type: String, required: true, unique: true },
-        type: { $type: String, required: true },
         hash: { $type: String, required: true },
+        previous: { $type: String, required: true },
         created: { $type: Date, required: true, default: deps.dateString },
-        updated: { $type: Date, required: true, default: deps.dateString },
-        metadata: { $type: Object, default: {} },
+        boundary: { $type: Date, required: true },
+        number: { $type: Number, required: true, unique: true },
+        data: {
+          $type: Object,
+          required: true,
+        },
+        domain: { $type: String, required: true },
+        service: { $type: String, required: true },
+        network: { $type: String, required: true },
       },
       typeKey: "$type",
-      indexes: [[{ id: 1 }]],
+      indexes: [[{ number: 1 }], [{ hash: 1 }], [{ previous: 1 }]],
     });
     expect(secretFake).to.have.been.calledWith("mongodb-event-store");
 
@@ -303,17 +298,17 @@ describe("Mongodb event store", () => {
     expect(streamFake).to.have.been.calledWith({
       eventStore: eStore,
     });
-    expect(saveProofsFake).to.have.been.calledWith({
-      proofsStore: pStore,
+    expect(saveBlockFake).to.have.been.calledWith({
+      blockchainStore: bStore,
     });
     expect(idempotencyConflictCheckFake).to.have.been.calledWith({
       eventStore: eStore,
     });
-    expect(updateProofFake).to.have.been.calledWith({
-      proofsStore: pStore,
+    expect(saveSnapshotFake).to.have.been.calledWith({
+      snapshotStore: sStore,
     });
-    expect(getProofFake).to.have.been.calledWith({
-      proofsStore: pStore,
+    expect(latestBlockFake).to.have.been.calledWith({
+      blockchainStore: bStore,
     });
     expect(eventStoreFake).to.have.been.calledWith({
       aggregateFn: aggregateResult,
@@ -326,12 +321,11 @@ describe("Mongodb event store", () => {
       createTransactionFn: deps.createTransaction,
       publishFn,
       hashFn,
-      proofsFn,
-      saveProofsFn: saveProofsResult,
-      updateProofFn: updateProofResult,
-      getProofFn: getProofResult,
+      saveBlockFn: saveBlockFnResult,
+      saveSnapshotFn: saveSnapshotFnResult,
+      latestBlockFn: latestBlockResult,
+      public,
       idempotencyConflictCheckFn: idempotencyConflictCheckResult,
-      scheduleUpdateForProofFn,
     });
 
     await mongodbEventStore();
@@ -342,7 +336,7 @@ describe("Mongodb event store", () => {
     const eStore = "some-event-store";
     const sStore = "some-snapshot-store";
     const cStore = "some-counts-store";
-    const pStore = "some-proofs-store";
+    const bStore = "some-blockchain-store";
     const storeFake = stub()
       .onCall(0)
       .returns(eStore)
@@ -351,7 +345,7 @@ describe("Mongodb event store", () => {
       .onCall(2)
       .returns(cStore)
       .onCall(3)
-      .returns(pStore);
+      .returns(bStore);
 
     const secretFake = fake.returns(password);
 
@@ -384,21 +378,12 @@ describe("Mongodb event store", () => {
     const streamResult = "some-stream-result";
     const streamFake = fake.returns(streamResult);
     replace(deps, "stream", streamFake);
-    const saveProofsResult = "some-save-proofs-result";
-    const saveProofsFake = fake.returns(saveProofsResult);
-    replace(deps, "saveProofs", saveProofsFake);
     const idempotencyConflictCheckResult =
       "some-idempotency-conflict-check-result";
     const idempotencyConflictCheckFake = fake.returns(
       idempotencyConflictCheckResult
     );
     replace(deps, "idempotencyConflictCheck", idempotencyConflictCheckFake);
-    const updateProofResult = "some-update-proof-result";
-    const updateProofFake = fake.returns(updateProofResult);
-    replace(deps, "updateProof", updateProofFake);
-    const getProofResult = "some-get-proof-result";
-    const getProofFake = fake.returns(getProofResult);
-    replace(deps, "getProof", getProofFake);
     const reserveRootCountsResult = "some-reserve-root-count-result";
     const reserveRootCountsFake = fake.returns(reserveRootCountsResult);
     replace(deps, "reserveRootCounts", reserveRootCountsFake);
@@ -408,6 +393,15 @@ describe("Mongodb event store", () => {
     const countResult = "some-count-result";
     const countFake = fake.returns(countResult);
     replace(deps, "count", countFake);
+    const saveBlockFnResult = "some-save-block-result";
+    const saveBlockFake = fake.returns(saveBlockFnResult);
+    replace(deps, "saveBlock", saveBlockFake);
+    const saveSnapshotFnResult = "some-save-snapshot-result";
+    const saveSnapshotFake = fake.returns(saveSnapshotFnResult);
+    replace(deps, "saveSnapshot", saveSnapshotFake);
+    const latestBlockResult = "some-latest-block-result";
+    const latestBlockFake = fake.returns(latestBlockResult);
+    replace(deps, "latestBlock", latestBlockFake);
 
     process.env.NODE_ENV = "local";
 
@@ -418,8 +412,7 @@ describe("Mongodb event store", () => {
       secretFn: secretFake,
       publishFn,
       hashFn,
-      proofsFn,
-      scheduleUpdateForProofFn,
+      public,
     });
 
     expect(formatSchemaFake.getCall(0)).to.have.been.calledWith(
@@ -441,10 +434,6 @@ describe("Mongodb event store", () => {
       name: `_${service}.${domain}`,
       schema: {
         hash: { $type: String, required: true, unique: true },
-        proofs: {
-          $type: [String],
-          default: [],
-        },
         data: {
           id: { $type: String, required: true, unique: true },
           committed: { $type: Date, required: true, default: deps.dateString },
@@ -502,7 +491,7 @@ describe("Mongodb event store", () => {
         [{ "data.idempotency": 1 }],
         [{ "data.root": 1 }],
         [{ "data.root": 1, "data.number": 1 }],
-        [{ "data.created": 1, "data.number": 1, "data.headers.action": 1 }], //, _id: 1, __v: 1 }],
+        [{ "data.created": 1, "data.number": 1, "data.headers.action": 1 }],
         [{ [`data.payload.${index}`]: 1 }],
       ],
       connection: {
@@ -523,23 +512,17 @@ describe("Mongodb event store", () => {
       name: `_${service}.${domain}.snapshots`,
       schema: {
         hash: { $type: String, required: true, unique: true },
-        proofs: {
-          $type: [String],
-          default: [],
-        },
+        previous: { $type: String, required: true, unique: true },
+        public: { $type: Boolean, required: true },
         data: {
-          id: {
-            $type: String,
-            required: true,
-            unique: true,
-            default: deps.uuid,
-          },
-          created: { $type: Date, required: true, default: deps.dateString },
-          root: { $type: String, required: true, unique: true },
-          lastEventNumber: { $type: Number, required: true },
-          state: formattedSchema,
+          $type: [String],
+          required: true,
           _id: false,
         },
+        created: { $type: Date, required: true, default: deps.dateString },
+        root: { $type: String, required: true, unique: true },
+        lastEventNumber: { $type: Number, required: true },
+        state: formattedSchema,
       },
       typeKey: "$type",
       indexes: [
@@ -554,22 +537,29 @@ describe("Mongodb event store", () => {
       schema: {
         root: { $type: String, required: true, unique: true },
         value: { $type: Number, required: true, default: 0 },
+        updated: { $type: Date, required: true, default: deps.dateString },
       },
       typeKey: "$type",
       indexes: [[{ root: 1 }]],
     });
     expect(storeFake.getCall(3)).to.have.been.calledWith({
-      name: `_${service}.${domain}.proofs`,
+      name: `_${service}.${domain}.blockchain`,
       schema: {
-        id: { $type: String, required: true, unique: true },
-        type: { $type: String, required: true },
         hash: { $type: String, required: true },
+        previous: { $type: String, required: true },
         created: { $type: Date, required: true, default: deps.dateString },
-        updated: { $type: Date, required: true, default: deps.dateString },
-        metadata: { $type: Object, default: {} },
+        boundary: { $type: Date, required: true },
+        number: { $type: Number, required: true, unique: true },
+        data: {
+          $type: Object,
+          required: true,
+        },
+        domain: { $type: String, required: true },
+        service: { $type: String, required: true },
+        network: { $type: String, required: true },
       },
       typeKey: "$type",
-      indexes: [[{ id: 1 }]],
+      indexes: [[{ number: 1 }], [{ hash: 1 }], [{ previous: 1 }]],
     });
     expect(eventStoreFake).to.have.been.calledWith({
       aggregateFn: aggregateResult,
@@ -581,12 +571,11 @@ describe("Mongodb event store", () => {
       countFn: countResult,
       publishFn,
       hashFn,
-      proofsFn,
-      saveProofsFn: saveProofsResult,
       idempotencyConflictCheckFn: idempotencyConflictCheckResult,
-      updateProofFn: updateProofResult,
-      getProofFn: getProofResult,
-      scheduleUpdateForProofFn,
+      saveBlockFn: saveBlockFnResult,
+      saveSnapshotFn: saveSnapshotFnResult,
+      latestBlockFn: latestBlockResult,
+      public,
       createTransactionFn: deps.createTransaction,
     });
   });
@@ -595,7 +584,7 @@ describe("Mongodb event store", () => {
     const eStore = "some-event-store";
     const sStore = "some-snapshot-store";
     const cStore = "some-counts-store";
-    const pStore = "some-proofs-store";
+    const bStore = "some-blockchain-store";
     const storeFake = stub()
       .onCall(0)
       .returns(eStore)
@@ -604,7 +593,7 @@ describe("Mongodb event store", () => {
       .onCall(2)
       .returns(cStore)
       .onCall(3)
-      .returns(pStore);
+      .returns(bStore);
 
     const secretFake = fake.returns(password);
 
@@ -636,21 +625,21 @@ describe("Mongodb event store", () => {
     const streamResult = "some-query-result";
     const streamFake = fake.returns(streamResult);
     replace(deps, "stream", streamFake);
-    const saveProofsResult = "some-save-proofs-result";
-    const saveProofsFake = fake.returns(saveProofsResult);
-    replace(deps, "saveProofs", saveProofsFake);
     const idempotencyConflictCheckResult =
       "some-idempotency-conflict-check-result";
     const idempotencyConflictCheckFake = fake.returns(
       idempotencyConflictCheckResult
     );
     replace(deps, "idempotencyConflictCheck", idempotencyConflictCheckFake);
-    const updateProofResult = "some-update-proof-result";
-    const updateProofFake = fake.returns(updateProofResult);
-    replace(deps, "updateProof", updateProofFake);
-    const getProofResult = "some-get-proof-result";
-    const getProofFake = fake.returns(getProofResult);
-    replace(deps, "getProof", getProofFake);
+    const saveBlockFnResult = "some-save-block-result";
+    const saveBlockFake = fake.returns(saveBlockFnResult);
+    replace(deps, "saveBlock", saveBlockFake);
+    const saveSnapshotFnResult = "some-save-snapshot-result";
+    const saveSnapshotFake = fake.returns(saveSnapshotFnResult);
+    replace(deps, "saveSnapshot", saveSnapshotFake);
+    const latestBlockResult = "some-latest-block-result";
+    const latestBlockFake = fake.returns(latestBlockResult);
+    replace(deps, "latestBlock", latestBlockFake);
 
     const schema = { a: { type: String } };
     await mongodbEventStore({
@@ -658,7 +647,7 @@ describe("Mongodb event store", () => {
       secretFn: secretFake,
       publishFn,
       hashFn,
-      proofsFn,
+      public,
     });
 
     expect(formatSchemaFake.getCall(0)).to.have.been.calledWith(
@@ -680,10 +669,6 @@ describe("Mongodb event store", () => {
       name: `_${service}.${domain}`,
       schema: {
         hash: { $type: String, required: true, unique: true },
-        proofs: {
-          $type: [String],
-          default: [],
-        },
         data: {
           committed: { $type: Date, required: true, default: deps.dateString },
           created: { $type: Date, required: true },
@@ -761,23 +746,17 @@ describe("Mongodb event store", () => {
       name: `_${service}.${domain}.snapshots`,
       schema: {
         hash: { $type: String, required: true, unique: true },
-        proofs: {
-          $type: [String],
-          default: [],
-        },
+        previous: { $type: String, required: true, unique: true },
+        public: { $type: Boolean, required: true },
         data: {
-          id: {
-            $type: String,
-            required: true,
-            unique: true,
-            default: deps.uuid,
-          },
-          created: { $type: Date, required: true, default: deps.dateString },
-          root: { $type: String, required: true, unique: true },
-          lastEventNumber: { $type: Number, required: true },
-          state: formattedSchema,
+          $type: [String],
+          required: true,
           _id: false,
         },
+        created: { $type: Date, required: true, default: deps.dateString },
+        root: { $type: String, required: true, unique: true },
+        lastEventNumber: { $type: Number, required: true },
+        state: formattedSchema,
       },
       typeKey: "$type",
       indexes: [
@@ -791,22 +770,29 @@ describe("Mongodb event store", () => {
       schema: {
         root: { $type: String, required: true, unique: true },
         value: { $type: Number, required: true, default: 0 },
+        updated: { $type: Date, required: true, default: deps.dateString },
       },
       typeKey: "$type",
       indexes: [[{ root: 1 }]],
     });
     expect(storeFake.getCall(3)).to.have.been.calledWith({
-      name: `_${service}.${domain}.proofs`,
+      name: `_${service}.${domain}.blockchain`,
       schema: {
-        id: { $type: String, required: true, unique: true },
-        type: { $type: String, required: true },
         hash: { $type: String, required: true },
+        previous: { $type: String, required: true },
         created: { $type: Date, required: true, default: deps.dateString },
-        updated: { $type: Date, required: true, default: deps.dateString },
-        metadata: { $type: Object, default: {} },
+        boundary: { $type: Date, required: true },
+        number: { $type: Number, required: true, unique: true },
+        data: {
+          $type: Object,
+          required: true,
+        },
+        domain: { $type: String, required: true },
+        service: { $type: String, required: true },
+        network: { $type: String, required: true },
       },
       typeKey: "$type",
-      indexes: [[{ id: 1 }]],
+      indexes: [[{ number: 1 }], [{ hash: 1 }], [{ previous: 1 }]],
     });
   });
 });

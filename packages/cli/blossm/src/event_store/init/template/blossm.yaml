@@ -5,6 +5,11 @@
 domain: some-domain
 service: some-service
 
+#
+# Specify whether the data in this view store should be publicly readable.
+#
+public: false
+
 # Specify the actions that this event-store can handle.
 actions:
   - some-action

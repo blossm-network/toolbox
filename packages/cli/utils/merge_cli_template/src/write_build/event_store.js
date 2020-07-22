@@ -146,9 +146,10 @@ module.exports = ({
             })
           ),
           scheduleJob({
-            schedule: "0 0 1 * *",
+            name: `event-store-${service}-${domain}-create-block`,
+            schedule: "* * * * *",
             serviceName,
-            uri: `${uri}/snapshot`,
+            uri: `${uri}/create-block`,
             project,
             region,
           }),

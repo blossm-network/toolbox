@@ -8,7 +8,7 @@ const root = "some-root";
 const action = "some-action";
 const eventHash = "some-event-hash";
 const eventId = "some-event-id";
-const eachAsyncFake = fake.yields({
+const event = {
   hash: eventHash,
   data: {
     id: eventId,
@@ -17,7 +17,8 @@ const eachAsyncFake = fake.yields({
     payload: { b: 2, c: 2 },
     headers: { action },
   },
-});
+};
+const eachAsyncFake = fake.yields(event);
 const cursorFake = fake.returns({
   eachAsync: eachAsyncFake,
 });
@@ -32,12 +33,10 @@ const handlers = {
 };
 
 const snapshotHash = "some-snapshot-hash";
-const snapshotId = "some-snapshot-id";
 
 const findOneResult = {
   hash: snapshotHash,
   data: {
-    id: snapshotId,
     root,
     state: { a: 1, b: 1 },
     lastEventNumber: 6,
@@ -108,8 +107,8 @@ describe("Mongodb event store aggregate", () => {
       root,
       state: { a: 1, b: 2, c: 2 },
       lastEventNumber: 1,
-      snapshot: { id: snapshotId, hash: snapshotHash },
-      events: [{ id: eventId, hash: eventHash }],
+      events: [event],
+      snapshotHash,
     });
   });
   it("should call with the correct params with no events", async () => {
@@ -173,7 +172,7 @@ describe("Mongodb event store aggregate", () => {
       root,
       state: { a: 1, b: 1 },
       lastEventNumber: 6,
-      snapshot: { id: snapshotId, hash: snapshotHash },
+      snapshotHash,
       events: [],
     });
   });
@@ -233,7 +232,7 @@ describe("Mongodb event store aggregate", () => {
       root,
       state: { b: 2, c: 2 },
       lastEventNumber: 1,
-      events: [{ id: eventId, hash: eventHash }],
+      events: [event],
     });
   });
   it("should call with the correct params with no snapshot or events found", async () => {

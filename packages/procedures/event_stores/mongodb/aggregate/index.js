@@ -37,7 +37,7 @@ module.exports = ({ eventStore, snapshotStore, handlers }) => async (root) => {
     lastEventNumber: snapshot ? snapshot.data.lastEventNumber : {},
     state: snapshot ? snapshot.data.state : {},
     events: [],
-    snapshot: { id: snapshot.data.id, hash: snapshot.hash },
+    snapshotHash: snapshot.hash,
   };
 
   await cursor.eachAsync((event) => {
@@ -53,11 +53,10 @@ module.exports = ({ eventStore, snapshotStore, handlers }) => async (root) => {
       root: event.data.root,
       lastEventNumber: event.data.number,
       state: handler(aggregate ? aggregate.state : {}, event.data.payload),
-      ...(aggregate && aggregate.snapshot && { snapshot: aggregate.snapshot }),
-      events: [
-        ...(aggregate ? aggregate.events : []),
-        { id: event.data.id, hash: event.hash },
-      ],
+      ...(aggregate &&
+        aggregate.snapshotHash && { snapshotHash: aggregate.snapshotHash }),
+      //TODO test
+      events: [...(aggregate ? aggregate.events : []), event],
     };
   });
 

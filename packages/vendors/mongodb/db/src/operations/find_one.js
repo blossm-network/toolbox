@@ -1,4 +1,4 @@
-module.exports = ({ store, query, select = null, sort }) =>
+module.exports = ({ store, query, select = null, sort, options }) =>
   store.findOne(
     query,
     {
@@ -9,5 +9,5 @@ module.exports = ({ store, query, select = null, sort }) =>
         __v: 0,
       }),
     },
-    { ...(sort && { sort }) }
+    { ...(sort && { sort }), ...options }
   );

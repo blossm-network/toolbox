@@ -7,17 +7,15 @@ module.exports = async ({
   streamFn,
   reserveRootCountsFn,
   publishFn,
-  getProofFn,
-  updateProofFn,
   hashFn,
-  proofsFn,
-  saveProofsFn,
   rootStreamFn,
-  scheduleUpdateForProofFn,
   createTransactionFn,
   idempotencyConflictCheckFn,
-  // snapshotFn,
+  saveSnapshotFn,
   countFn,
+  saveBlockFn,
+  latestBlockFn,
+  public,
 } = {}) => {
   deps
     .server()
@@ -31,28 +29,25 @@ module.exports = async ({
       path: "/roots",
     })
     .get(deps.get({ aggregateFn, queryFn }), { path: "/:root?" })
-    .put(
-      deps.updateProof({
-        getProofFn,
-        updateProofFn,
+    .post(
+      deps.createBlock({
+        saveSnapshotFn,
+        aggregateFn,
+        rootStreamFn,
+        hashFn,
+        createTransactionFn,
+        saveBlockFn,
+        latestBlockFn,
+        public,
       }),
-      { path: "/proof/:id" }
+      { path: "/create-block" }
     )
-    // .post(
-    //   deps.takeSnapshot({
-    //     snapshotFn,
-    //   }),
-    //   { path: "/snapshot" }
-    // )
     .post(
       deps.post({
         saveEventsFn,
         reserveRootCountsFn,
         publishFn,
         hashFn,
-        proofsFn,
-        saveProofsFn,
-        scheduleUpdateForProofFn,
         createTransactionFn,
         idempotencyConflictCheckFn,
       })

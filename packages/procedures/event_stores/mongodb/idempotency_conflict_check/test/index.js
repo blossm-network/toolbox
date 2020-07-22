@@ -13,21 +13,20 @@ describe("Mongodb event store idempotency conflict check", () => {
     restore();
   });
   it("should call with the correct params", async () => {
-    const findFake = fake.returns([]);
+    const findOneFake = fake.returns([]);
 
     const db = {
-      find: findFake,
+      findOne: findOneFake,
     };
 
     replace(deps, "db", db);
 
     const result = await idempotencyConflictCheck({ eventStore })(idempotency);
-    expect(findFake).to.have.been.calledWith({
+    expect(findOneFake).to.have.been.calledWith({
       store: eventStore,
       query: {
         "data.idempotency": idempotency,
       },
-      limit: 1,
       select: { root: 1 },
       options: {
         lean: true,
@@ -36,21 +35,20 @@ describe("Mongodb event store idempotency conflict check", () => {
     expect(result).to.deep.equal(false);
   });
   it("should call with the correct params with conflict", async () => {
-    const findFake = fake.returns(["some"]);
+    const findOneFake = fake.returns(["some"]);
 
     const db = {
-      find: findFake,
+      findOne: findOneFake,
     };
 
     replace(deps, "db", db);
 
     const result = await idempotencyConflictCheck({ eventStore })(idempotency);
-    expect(findFake).to.have.been.calledWith({
+    expect(findOneFake).to.have.been.calledWith({
       store: eventStore,
       query: {
         "data.idempotency": idempotency,
       },
-      limit: 1,
       select: { root: 1 },
       options: {
         lean: true,

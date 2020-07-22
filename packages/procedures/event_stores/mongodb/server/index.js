@@ -5,7 +5,7 @@ const deps = require("./deps");
 let _eventStore;
 let _snapshotStore;
 let _countsStore;
-let _proofsStore;
+let _blockchainStore;
 
 const typeKey = "$type";
 
@@ -19,10 +19,6 @@ const eventStore = async ({ schema, indexes, secretFn }) => {
     name: `_${process.env.SERVICE}.${process.env.DOMAIN}`,
     schema: {
       hash: { [typeKey]: String, required: true, unique: true },
-      proofs: {
-        [typeKey]: [String],
-        default: [],
-      },
       data: {
         id: { [typeKey]: String, required: true, unique: true },
         committed: {
@@ -130,23 +126,17 @@ const snapshotStore = async ({ schema, indexes }) => {
     name: `_${process.env.SERVICE}.${process.env.DOMAIN}.snapshots`,
     schema: {
       hash: { [typeKey]: String, required: true, unique: true },
-      proofs: {
-        [typeKey]: [String],
-        default: [],
-      },
+      previous: { [typeKey]: String, required: true, unique: true },
+      public: { [typeKey]: Boolean, required: true },
       data: {
-        id: {
-          [typeKey]: String,
-          required: true,
-          unique: true,
-          default: deps.uuid,
-        },
-        created: { [typeKey]: Date, required: true, default: deps.dateString },
-        root: { [typeKey]: String, required: true, unique: true },
-        lastEventNumber: { [typeKey]: Number, required: true },
-        state: schema,
+        [typeKey]: [String],
+        required: true,
         _id: false,
       },
+      created: { [typeKey]: Date, required: true, default: deps.dateString },
+      root: { [typeKey]: String, required: true, unique: true },
+      lastEventNumber: { [typeKey]: Number, required: true },
+      state: schema,
     },
     typeKey,
     indexes: [
@@ -177,6 +167,7 @@ const countsStore = async () => {
     schema: {
       root: { [typeKey]: String, required: true, unique: true },
       value: { [typeKey]: Number, required: true, default: 0 },
+      updated: { [typeKey]: Date, required: true, default: deps.dateString },
     },
     typeKey,
     indexes: [[{ root: 1 }]],
@@ -185,27 +176,33 @@ const countsStore = async () => {
   return _countsStore;
 };
 
-const proofsStore = async () => {
-  if (_proofsStore != undefined) {
-    logger.info("Thank you existing proofs store database.");
+const blockchainStore = async () => {
+  if (_blockchainStore != undefined) {
+    logger.info("Thank you existing blockchain store database.");
     return _countsStore;
   }
 
-  _proofsStore = deps.db.store({
-    name: `_${process.env.SERVICE}.${process.env.DOMAIN}.proofs`,
+  _blockchainStore = deps.db.store({
+    name: `_${process.env.SERVICE}.${process.env.DOMAIN}.blockchain`,
     schema: {
-      id: { [typeKey]: String, required: true, unique: true },
-      type: { [typeKey]: String, required: true },
       hash: { [typeKey]: String, required: true },
+      previous: { [typeKey]: String, required: true },
       created: { [typeKey]: Date, required: true, default: deps.dateString },
-      updated: { [typeKey]: Date, required: true, default: deps.dateString },
-      metadata: { [typeKey]: Object, default: {} },
+      boundary: { [typeKey]: Date, required: true },
+      number: { [typeKey]: Number, required: true, unique: true },
+      data: {
+        [typeKey]: Object,
+        required: true,
+      },
+      domain: { [typeKey]: String, required: true },
+      service: { [typeKey]: String, required: true },
+      network: { [typeKey]: String, required: true },
     },
     typeKey,
-    indexes: [[{ id: 1 }]],
+    indexes: [[{ number: 1 }], [{ hash: 1 }], [{ previous: 1 }]],
   });
 
-  return _proofsStore;
+  return _blockchainStore;
 };
 
 module.exports = async ({
@@ -215,10 +212,7 @@ module.exports = async ({
   secretFn,
   publishFn,
   hashFn,
-  proofsFn,
-  scheduleUpdateForProofFn,
-  // archiveSnapshotFn,
-  // archiveEventsFn
+  public,
 } = {}) => {
   const eStore = await eventStore({
     schema: deps.formatSchema(schema, typeKey, {
@@ -236,7 +230,7 @@ module.exports = async ({
     indexes,
   });
   const cStore = await countsStore();
-  const pStore = await proofsStore();
+  const bStore = await blockchainStore();
 
   deps.eventStore({
     aggregateFn: deps.aggregate({
@@ -256,15 +250,6 @@ module.exports = async ({
     streamFn: deps.stream({
       eventStore: eStore,
     }),
-    updateProofFn: deps.updateProof({
-      proofsStore: pStore,
-    }),
-    getProofFn: deps.getProof({
-      proofsStore: pStore,
-    }),
-    saveProofsFn: deps.saveProofs({
-      proofsStore: pStore,
-    }),
     reserveRootCountsFn: deps.reserveRootCounts({
       countsStore: cStore,
     }),
@@ -278,48 +263,17 @@ module.exports = async ({
       eventStore: eStore,
     }),
     createTransactionFn: deps.createTransaction,
-    // saveSnapshotFn,
+    saveSnapshotFn: deps.saveSnapshot({
+      snapshotStore: sStore,
+    }),
+    saveBlockFn: deps.saveBlock({
+      blockchainStore: bStore,
+    }),
+    latestBlockFn: deps.latestBlock({
+      blockchainStore: bStore,
+    }),
     publishFn,
     hashFn,
-    proofsFn,
-    scheduleUpdateForProofFn,
+    public,
   });
 };
-
-//   await Promise.all([
-//     archiveSnapshotFn({
-//       root: savedSnapshot.root,
-//       snapshot: savedSnapshot
-//     }),
-//     cleanOldEvents({
-//       root: savedSnapshot.root,
-//       number: savedSnapshot.headers.lastEventNumber
-//     })
-//   ]);
-// };
-
-// const cleanOldEvents = async ({ root, number }) => {
-//   const query = {
-//     "root": root,
-//     "headers.number": {
-//       $lte: number
-//     }
-//   };
-
-//   const events = deps.db.find({
-//     store: eStore,
-//     query,
-//     sort: {
-//       "headers.number": 1
-//     },
-//     options: {
-//       lean: true
-//     }
-//   });
-
-//   await archiveEventsFn({ root, events });
-//   await deps.db.remove({
-//     store: eStore,
-//     query
-//   });
-// };

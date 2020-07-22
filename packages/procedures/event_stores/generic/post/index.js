@@ -5,9 +5,6 @@ module.exports = ({
   reserveRootCountsFn,
   publishFn,
   hashFn,
-  proofsFn,
-  saveProofsFn,
-  scheduleUpdateForProofFn,
   createTransactionFn,
   idempotencyConflictCheckFn,
 }) => async (req, res) => {
@@ -33,21 +30,19 @@ module.exports = ({
     })
   );
 
-  const { events, proofs } = await createTransactionFn(
+  const { events } = await createTransactionFn(
     deps.postTransaction({
       events: uniqueEvents,
       saveEventsFn,
       reserveRootCountsFn,
       hashFn,
-      proofsFn,
-      saveProofsFn,
     })
   );
 
   //No need to publish to the same topic twice.
   let publishedTopics = [];
-  await Promise.all([
-    ...events.map((e) => {
+  await Promise.all(
+    events.map((e) => {
       if (publishedTopics.includes(e.data.topic)) return;
       publishedTopics.push(e.data.topic);
       return publishFn(
@@ -56,9 +51,8 @@ module.exports = ({
         },
         e.data.topic
       );
-    }),
-    ...proofs.map((proof) => scheduleUpdateForProofFn(proof.id)),
-  ]);
+    })
+  );
 
   res.sendStatus(204);
 };

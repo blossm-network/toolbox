@@ -28,6 +28,7 @@
     "@blossm/mongodb-event-store-reserve-root-counts": "^0.0.48",
     "@blossm/mongodb-event-store-root-stream": "^0.0.31",
     "@blossm/mongodb-event-store-save-events": "^0.0.72",
+    "@blossm/mongodb-event-store-save-snapshot": "*",
     "@blossm/mongodb-event-store-save-proofs": "^0.0.71",
     "@blossm/mongodb-event-store-stream": "^0.0.38",
     "@blossm/mongodb-event-store-update-proof": "^0.0.61",

@@ -12,13 +12,11 @@ const countFn = "some-count-fn";
 const saveEventsFn = "some-save-events-fn";
 const publishFn = "some-publish-fn";
 const hashFn = "some-hash-fn";
-const proofsFn = "some-proofs-fn";
-const saveProofsFn = "some-save-proofs-fn";
-const updateProofFn = "some-update-proof-fn";
-const scheduleUpdateForProofFn = "some-schedule-update-for-proof-fn";
+const saveBlockFn = "some-save-block-fn";
 const createTransactionFn = "some-create-transaction-fn";
 const idempotencyConflictCheckFn = "some-idempotency-conflict-check-fn";
-const getProofFn = "some-get-proof-fn";
+const latestBlockFn = "some-latest-block-fn";
+const saveSnapshotFn = "some-save-snapshot-fn";
 
 describe("Event store", () => {
   beforeEach(() => {
@@ -33,11 +31,11 @@ describe("Event store", () => {
     const postFake = fake.returns({
       listen: listenFake,
     });
-    const updateProofFake = fake.returns({
+    const createBlockFake = fake.returns({
       post: postFake,
     });
     const getFake = fake.returns({
-      put: updateProofFake,
+      post: createBlockFake,
     });
     const rootStreamFake = fake.returns({
       get: getFake,
@@ -61,15 +59,16 @@ describe("Event store", () => {
     const eventStoreRootStreamResult = "some-root-stream-result";
     const eventStoreRootStreamFake = fake.returns(eventStoreRootStreamResult);
     replace(deps, "rootStream", eventStoreRootStreamFake);
-    const eventStoreUpdateProofResult = "some-update-proof-result";
-    const eventStoreUpdateProofFake = fake.returns(eventStoreUpdateProofResult);
-    replace(deps, "updateProof", eventStoreUpdateProofFake);
+    const eventStoreCreateBlockResult = "some-create-block-result";
+    const eventStoreCreateBlockFake = fake.returns(eventStoreCreateBlockResult);
+    replace(deps, "createBlock", eventStoreCreateBlockFake);
     const eventStoreCountResult = "some-count-result";
     const eventStoreCountFake = fake.returns(eventStoreCountResult);
     replace(deps, "count", eventStoreCountFake);
     const eventStorePostResult = "some-post-result";
     const eventStorePostFake = fake.returns(eventStorePostResult);
     replace(deps, "post", eventStorePostFake);
+    const public = "some-public";
     await eventStore({
       aggregateFn,
       reserveRootCountsFn,
@@ -78,15 +77,14 @@ describe("Event store", () => {
       streamFn,
       publishFn,
       hashFn,
-      proofsFn,
       rootStreamFn,
-      updateProofFn,
-      scheduleUpdateForProofFn,
       createTransactionFn,
-      getProofFn,
-      saveProofsFn,
+      latestBlockFn,
+      saveBlockFn,
       idempotencyConflictCheckFn,
       countFn,
+      saveSnapshotFn,
+      public,
     });
     expect(listenFake).to.have.been.calledOnce;
     expect(serverFake).to.have.been.calledOnce;
@@ -102,10 +100,10 @@ describe("Event store", () => {
     expect(countFake).to.have.been.calledWith(eventStoreCountResult, {
       path: "/count/:root",
     });
-    expect(updateProofFake).to.have.been.calledWith(
-      eventStoreUpdateProofResult,
+    expect(createBlockFake).to.have.been.calledWith(
+      eventStoreCreateBlockResult,
       {
-        path: "/proof/:id",
+        path: "/create-block",
       }
     );
     expect(postFake).to.have.been.calledWith(eventStorePostResult);
@@ -113,18 +111,21 @@ describe("Event store", () => {
     expect(eventStoreStreamFake).to.have.been.calledWith({ streamFn });
     expect(eventStoreRootStreamFake).to.have.been.calledWith({ rootStreamFn });
     expect(eventStoreCountFake).to.have.been.calledWith({ countFn });
-    expect(eventStoreUpdateProofFake).to.have.been.calledWith({
-      updateProofFn,
-      getProofFn,
+    expect(eventStoreCreateBlockFake).to.have.been.calledWith({
+      saveSnapshotFn,
+      aggregateFn,
+      rootStreamFn,
+      hashFn,
+      createTransactionFn,
+      saveBlockFn,
+      latestBlockFn,
+      public,
     });
     expect(eventStorePostFake).to.have.been.calledWith({
       saveEventsFn,
       reserveRootCountsFn,
       publishFn,
       hashFn,
-      proofsFn,
-      saveProofsFn,
-      scheduleUpdateForProofFn,
       idempotencyConflictCheckFn,
       createTransactionFn,
     });

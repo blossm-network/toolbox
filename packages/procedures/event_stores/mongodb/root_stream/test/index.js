@@ -29,13 +29,22 @@ describe("Mongodb event store root stream", () => {
 
     replace(deps, "db", db);
 
+    const updatedOnOrAfter = "some-updated-on-or-after";
+    const updatedBefore = "some-updated-before";
     const result = await stream({ countsStore })({
       parallel,
+      updatedOnOrAfter,
+      updatedBefore,
       fn,
     });
     expect(findFake).to.have.been.calledWith({
       store: countsStore,
-      query: {},
+      query: {
+        updated: {
+          $gte: updatedOnOrAfter,
+          $lt: updatedBefore,
+        },
+      },
       options: {
         lean: true,
       },

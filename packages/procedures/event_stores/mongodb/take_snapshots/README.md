@@ -1,1 +1,0 @@
-A mongodb event store server function that takes a snapshot of event aggregate roots.

@@ -1,0 +1,22 @@
+{
+  "name": "@blossm/merkle-tree",
+  "version": "0.0.0",
+  "description": "Computes a merkle tree.",
+  "main": "index.js",
+  "author": "blossm.network",
+  "engines": {
+    "node": ">= 10.16.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "mocha --recursive"
+  },
+  "dependencies": {
+    "merkletreejs": "^0.2.8"
+  },
+  "devDependencies": {
+    "mocha": "^7.1.1"
+  }
+}

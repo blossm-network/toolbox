@@ -31,13 +31,9 @@ describe("Event store post", () => {
     const saveEventsFn = "some-save-events-fn";
     const reserveRootCountsFn = "some-reserve-root-counts-fn";
     const hashFn = "some-hash-fn";
-    const proofsFn = "some-proofs-fn";
-    const saveProofsFn = "some-save-proofs-fn";
 
     const publishFnFake = fake();
-    const scheduleUpdateForProofFnFake = fake();
     const savedEventHeadersTopic = "some-saved-event-headers-topic";
-    const savedProofId = "some-saved-proof-id";
     const savedEventCreatedTimestamp = "some-event-created-timestamp";
     const createTransactionFnFake = fake.returns({
       events: [
@@ -54,7 +50,6 @@ describe("Event store post", () => {
           },
         },
       ],
-      proofs: [{ id: savedProofId }],
     });
     const idempotencyConflictCheckFnFake = fake();
     await post({
@@ -62,9 +57,6 @@ describe("Event store post", () => {
       reserveRootCountsFn,
       publishFn: publishFnFake,
       hashFn,
-      proofsFn,
-      saveProofsFn,
-      scheduleUpdateForProofFn: scheduleUpdateForProofFnFake,
       createTransactionFn: createTransactionFnFake,
       idempotencyConflictCheckFn: idempotencyConflictCheckFnFake,
     })(req, res);
@@ -78,15 +70,12 @@ describe("Event store post", () => {
       saveEventsFn,
       reserveRootCountsFn,
       hashFn,
-      proofsFn,
-      saveProofsFn,
     });
     expect(publishFnFake).to.have.been.calledWith(
       { from: savedEventCreatedTimestamp },
       savedEventHeadersTopic
     );
     expect(publishFnFake).to.have.been.calledOnce;
-    expect(scheduleUpdateForProofFnFake).to.have.been.calledWith(savedProofId);
     expect(sendStatusFake).to.have.been.calledWith(204);
   });
   it("should call with the correct params with event idempotency conflict passed in", async () => {
@@ -109,13 +98,9 @@ describe("Event store post", () => {
     const saveEventsFn = "some-save-events-fn";
     const reserveRootCountsFn = "some-reserve-root-counts-fn";
     const hashFn = "some-hash-fn";
-    const proofsFn = "some-proofs-fn";
-    const saveProofsFn = "some-save-proofs-fn";
 
     const publishFnFake = fake();
-    const scheduleUpdateForProofFnFake = fake();
     const savedEventHeadersTopic = "some-saved-event-headers-topic";
-    const savedProofId = "some-saved-proof-id";
     const savedEventCreatedTimestamp = "some-event-created-timestamp";
     const createTransactionFnFake = fake.returns({
       events: [
@@ -126,7 +111,6 @@ describe("Event store post", () => {
           },
         },
       ],
-      proofs: [{ id: savedProofId }],
     });
     const idempotencyConflictCheckFnFake = fake.returns(false);
 
@@ -135,9 +119,6 @@ describe("Event store post", () => {
       reserveRootCountsFn,
       publishFn: publishFnFake,
       hashFn,
-      proofsFn,
-      saveProofsFn,
-      scheduleUpdateForProofFn: scheduleUpdateForProofFnFake,
       createTransactionFn: createTransactionFnFake,
       idempotencyConflictCheckFn: idempotencyConflictCheckFnFake,
     })(req, res);
@@ -157,14 +138,11 @@ describe("Event store post", () => {
       saveEventsFn,
       reserveRootCountsFn,
       hashFn,
-      proofsFn,
-      saveProofsFn,
     });
     expect(publishFnFake).to.have.been.calledWith(
       { from: savedEventCreatedTimestamp },
       savedEventHeadersTopic
     );
-    expect(scheduleUpdateForProofFnFake).to.have.been.calledWith(savedProofId);
     expect(sendStatusFake).to.have.been.calledWith(204);
   });
   it("should call with the correct params with event no idempotency passed in", async () => {
@@ -191,13 +169,9 @@ describe("Event store post", () => {
     const saveEventsFn = "some-save-events-fn";
     const reserveRootCountsFn = "some-reserve-root-counts-fn";
     const hashFn = "some-hash-fn";
-    const proofsFn = "some-proofs-fn";
-    const saveProofsFn = "some-save-proofs-fn";
 
     const publishFnFake = fake();
-    const scheduleUpdateForProofFnFake = fake();
     const savedEventHeadersTopic = "some-saved-event-headers-topic";
-    const savedProofId = "some-saved-proof-id";
     const savedEventCreatedTimestamp = "some-event-created-timestamp";
     const createTransactionFnFake = fake.returns({
       events: [
@@ -208,7 +182,6 @@ describe("Event store post", () => {
           },
         },
       ],
-      proofs: [{ id: savedProofId }],
     });
     const idempotencyConflictCheckFnFake = fake.returns(false);
 
@@ -217,9 +190,6 @@ describe("Event store post", () => {
       reserveRootCountsFn,
       publishFn: publishFnFake,
       hashFn,
-      proofsFn,
-      saveProofsFn,
-      scheduleUpdateForProofFn: scheduleUpdateForProofFnFake,
       createTransactionFn: createTransactionFnFake,
       idempotencyConflictCheckFn: idempotencyConflictCheckFnFake,
     })(req, res);
@@ -242,14 +212,11 @@ describe("Event store post", () => {
       saveEventsFn,
       reserveRootCountsFn,
       hashFn,
-      proofsFn,
-      saveProofsFn,
     });
     expect(publishFnFake).to.have.been.calledWith(
       { from: savedEventCreatedTimestamp },
       savedEventHeadersTopic
     );
-    expect(scheduleUpdateForProofFnFake).to.have.been.calledWith(savedProofId);
     expect(sendStatusFake).to.have.been.calledWith(204);
   });
   it("should call with the correct params with idempotency fn conflict", async () => {
@@ -276,13 +243,9 @@ describe("Event store post", () => {
     const saveEventsFn = "some-save-events-fn";
     const reserveRootCountsFn = "some-reserve-root-counts-fn";
     const hashFn = "some-hash-fn";
-    const proofsFn = "some-proofs-fn";
-    const saveProofsFn = "some-save-proofs-fn";
 
     const publishFnFake = fake();
-    const scheduleUpdateForProofFnFake = fake();
     const savedEventHeadersTopic = "some-saved-event-headers-topic";
-    const savedProofId = "some-saved-proof-id";
     const savedEventCreatedTimestamp = "some-event-created-timestamp";
     const createTransactionFnFake = fake.returns({
       events: [
@@ -293,7 +256,6 @@ describe("Event store post", () => {
           },
         },
       ],
-      proofs: [{ id: savedProofId }],
     });
     const idempotencyConflictCheckFnFake = stub()
       .onFirstCall()
@@ -306,9 +268,6 @@ describe("Event store post", () => {
       reserveRootCountsFn,
       publishFn: publishFnFake,
       hashFn,
-      proofsFn,
-      saveProofsFn,
-      scheduleUpdateForProofFn: scheduleUpdateForProofFnFake,
       createTransactionFn: createTransactionFnFake,
       idempotencyConflictCheckFn: idempotencyConflictCheckFnFake,
     })(req, res);
@@ -328,14 +287,11 @@ describe("Event store post", () => {
       saveEventsFn,
       reserveRootCountsFn,
       hashFn,
-      proofsFn,
-      saveProofsFn,
     });
     expect(publishFnFake).to.have.been.calledWith(
       { from: savedEventCreatedTimestamp },
       savedEventHeadersTopic
     );
-    expect(scheduleUpdateForProofFnFake).to.have.been.calledWith(savedProofId);
     expect(sendStatusFake).to.have.been.calledWith(204);
   });
 });

@@ -69,12 +69,6 @@ describe("Event store post", () => {
     const saveEventsFnFake = fake.returns(writtenEvents);
     const reserveRootCountsFnFake = fake.returns(reserveRootCount);
     const hashFnFake = fake.returns(hash);
-    const proofsFnFake = fake.returns([
-      {
-        a: 1,
-      },
-    ]);
-    const saveProofsFnFake = fake();
 
     const uuidFake = fake.returns(id);
     replace(deps, "uuid", uuidFake);
@@ -84,13 +78,10 @@ describe("Event store post", () => {
       saveEventsFn: saveEventsFnFake,
       reserveRootCountsFn: reserveRootCountsFnFake,
       hashFn: hashFnFake,
-      proofsFn: proofsFnFake,
-      saveProofsFn: saveProofsFnFake,
     })(transaction);
 
     expect(result).to.deep.equal({
       events: writtenEvents,
-      proofs: [{ id, a: 1 }],
     });
 
     expect(saveEventsFnFake).to.have.been.calledWith([
@@ -106,10 +97,8 @@ describe("Event store post", () => {
           idempotency,
         },
         hash,
-        proofs: [id],
       },
     ]);
-    expect(saveProofsFnFake).to.have.been.calledWith([{ id, a: 1 }]);
     expect(reserveRootCountsFnFake).to.have.been.calledWith({
       root,
       amount: 1,
@@ -125,7 +114,6 @@ describe("Event store post", () => {
       topic,
       idempotency,
     });
-    expect(proofsFnFake).to.have.been.calledWith(hash);
   });
   it("should call with the correct params with correct number", async () => {
     const saveEventsFnFake = fake.returns(writtenEvents);
@@ -136,8 +124,6 @@ describe("Event store post", () => {
     };
     const reserveRootCountsFnFake = fake.returns(reserveRootCount);
     const hashFnFake = fake.returns(hash);
-    const proofsFnFake = fake.returns([{ a: 1 }]);
-    const saveProofsFnFake = fake();
 
     const uuidFake = fake.returns(id);
     replace(deps, "uuid", uuidFake);
@@ -152,13 +138,10 @@ describe("Event store post", () => {
       saveEventsFn: saveEventsFnFake,
       reserveRootCountsFn: reserveRootCountsFnFake,
       hashFn: hashFnFake,
-      proofsFn: proofsFnFake,
-      saveProofsFn: saveProofsFnFake,
     })(transaction);
 
     expect(result).to.deep.equal({
       events: writtenEvents,
-      proofs: [{ id, a: 1 }],
     });
 
     expect(saveEventsFnFake).to.have.been.calledWith([
@@ -174,10 +157,8 @@ describe("Event store post", () => {
           idempotency,
         },
         hash,
-        proofs: [id],
       },
     ]);
-    expect(saveProofsFnFake).to.have.been.calledWith([{ id, a: 1 }]);
     expect(reserveRootCountsFnFake).to.have.been.calledWith({
       root,
       amount: 1,
@@ -193,7 +174,6 @@ describe("Event store post", () => {
       topic,
       idempotency,
     });
-    expect(proofsFnFake).to.have.been.calledWith(hash);
   });
   it("should call with the correct params with multiple events with the same root and different roots", async () => {
     const saveEventsFnFake = fake.returns(writtenEvents);
@@ -214,15 +194,6 @@ describe("Event store post", () => {
       .returns(hash2)
       .onThirdCall()
       .returns(hash3);
-
-    const proofsFnFake = stub()
-      .onFirstCall()
-      .returns([{ a: 1 }])
-      .onSecondCall()
-      .returns([{ b: 2 }])
-      .onThirdCall()
-      .returns([{ c: 3 }, { d: 4 }]);
-    const saveProofsFnFake = fake();
 
     const id1 = "some-id1";
     const id2 = "some-id2";
@@ -259,18 +230,10 @@ describe("Event store post", () => {
       saveEventsFn: saveEventsFnFake,
       reserveRootCountsFn: reserveRootCountsFnFake,
       hashFn: hashFnFake,
-      proofsFn: proofsFnFake,
-      saveProofsFn: saveProofsFnFake,
     })(transaction);
 
     expect(result).to.deep.equal({
       events: writtenEvents,
-      proofs: [
-        { id: id1, a: 1 },
-        { id: id2, b: 2 },
-        { id: id3, c: 3 },
-        { id: id4, d: 4 },
-      ],
     });
 
     expect(saveEventsFnFake).to.have.been.calledWith([
@@ -286,7 +249,6 @@ describe("Event store post", () => {
           idempotency,
         },
         hash: hash1,
-        proofs: [id1],
       },
       {
         data: {
@@ -300,7 +262,6 @@ describe("Event store post", () => {
           idempotency,
         },
         hash: hash2,
-        proofs: [id2],
       },
       {
         data: {
@@ -314,14 +275,7 @@ describe("Event store post", () => {
           idempotency,
         },
         hash: hash3,
-        proofs: [id3, id4],
       },
-    ]);
-    expect(saveProofsFnFake).to.have.been.calledWith([
-      { id: id1, a: 1 },
-      { id: id2, b: 2 },
-      { id: id3, c: 3 },
-      { id: id4, d: 4 },
     ]);
     expect(reserveRootCountsFnFake).to.have.been.calledWith({
       root,
@@ -364,20 +318,11 @@ describe("Event store post", () => {
       topic,
       idempotency,
     });
-    expect(proofsFnFake.getCall(0)).to.have.been.calledWith(hash1);
-    expect(proofsFnFake.getCall(1)).to.have.been.calledWith(hash2);
-    expect(proofsFnFake.getCall(2)).to.have.been.calledWith(hash3);
   });
   it("should call with the correct params if transaction is null", async () => {
     const saveEventsFnFake = fake.returns(writtenEvents);
     const reserveRootCountsFnFake = fake.returns(reserveRootCount);
     const hashFnFake = fake.returns(hash);
-    const proofsFnFake = fake.returns([
-      {
-        a: 1,
-      },
-    ]);
-    const saveProofsFnFake = fake();
 
     const uuidFake = fake.returns(id);
     replace(deps, "uuid", uuidFake);
@@ -387,13 +332,10 @@ describe("Event store post", () => {
       saveEventsFn: saveEventsFnFake,
       reserveRootCountsFn: reserveRootCountsFnFake,
       hashFn: hashFnFake,
-      proofsFn: proofsFnFake,
-      saveProofsFn: saveProofsFnFake,
     })();
 
     expect(result).to.deep.equal({
       events: writtenEvents,
-      proofs: [{ id, a: 1 }],
     });
 
     expect(saveEventsFnFake).to.have.been.calledWith([
@@ -409,10 +351,8 @@ describe("Event store post", () => {
           idempotency,
         },
         hash,
-        proofs: [id],
       },
     ]);
-    expect(saveProofsFnFake).to.have.been.calledWith([{ id, a: 1 }]);
     expect(reserveRootCountsFnFake).to.have.been.calledWith({
       root,
       amount: 1,
@@ -427,7 +367,6 @@ describe("Event store post", () => {
       topic,
       idempotency,
     });
-    expect(proofsFnFake).to.have.been.calledWith(hash);
   });
   it("should throw if event number is incorrect", async () => {
     const saveEventsFnFake = fake.returns(writtenEvents);

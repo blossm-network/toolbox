@@ -1,5 +1,6 @@
 const deps = require("./deps");
 
+//TODO move this fn into generic.
 const doesMatchQuery = ({ state, query }) => {
   try {
     for (const property in query) {
