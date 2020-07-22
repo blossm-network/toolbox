@@ -149,7 +149,7 @@ module.exports = ({
             name: `event-store-${service}-${domain}-create-block`,
             schedule: "* * * * *",
             serviceName,
-            uri: `${uri}/create-block`,
+            uri: `https://${uri}/create-block`,
             project,
             region,
           }),
