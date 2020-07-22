@@ -151,7 +151,6 @@ module.exports = ({
             serviceName,
             uri: `https://${uri}/create-block`,
             project,
-            region,
           }),
         ]
       : [dockerComposeLogs]),
