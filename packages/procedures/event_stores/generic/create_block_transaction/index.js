@@ -31,7 +31,7 @@ module.exports = ({
       );
       const previousHash = aggregate.snapshotHash;
       const merkleRoot = deps.merkleRoot({
-        data: [...stringifiedEvents, previousHash],
+        data: [...stringifiedEvents, ...(previousHash ? [previousHash] : [])],
         hashFn,
       });
 

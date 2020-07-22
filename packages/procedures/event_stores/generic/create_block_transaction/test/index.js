@@ -338,6 +338,115 @@ describe("Event store create block transaction", () => {
       transaction,
     });
   });
+  it("should call with the correct params with no previous hash", async () => {
+    const public = true;
+    const latestBlock = {
+      boundary: previousBoundary,
+      hash: previousHash,
+      number: previousNumber,
+    };
+    const latestBlockFnFake = fake.returns(latestBlock);
+
+    const rootStreamFnFake = stub().yieldsTo("fn", { root });
+
+    const event = {};
+    const aggregate = {
+      events: [event],
+      lastEventNumber: aggregateLastEventNumber,
+      state: aggregateState,
+    };
+    const aggregateFnFake = fake.resolves(aggregate);
+
+    const cononicalStringFake = stub()
+      .onFirstCall()
+      .returns(eventCononicalString)
+      .onSecondCall()
+      .returns(snapshotCononicalString);
+    replace(deps, "cononicalString", cononicalStringFake);
+
+    const merkleRootFake = stub()
+      .onFirstCall()
+      .returns(snapshotMerkleRoot)
+      .onSecondCall()
+      .returns(blockMerkleRoot);
+    replace(deps, "merkleRoot", merkleRootFake);
+
+    const hashFnFake = fake.returns(hash);
+
+    const saveSnapshotFnFake = fake.returns(snapshot);
+
+    const saveBlockFnFake = fake();
+    await create({
+      saveSnapshotFn: saveSnapshotFnFake,
+      hashFn: hashFnFake,
+      aggregateFn: aggregateFnFake,
+      rootStreamFn: rootStreamFnFake,
+      latestBlockFn: latestBlockFnFake,
+      saveBlockFn: saveBlockFnFake,
+      public,
+    })(transaction);
+
+    expect(latestBlockFnFake).to.have.been.calledOnceWith();
+    expect(rootStreamFnFake).to.have.been.calledOnceWith({
+      updatedOnOrAfter: previousBoundary,
+      updatedBefore: deps.dateString(),
+      parallel: 100,
+      fn: match((fn) => {
+        const response = fn({ root: anotherRoot });
+        return Promise.resolve(response) == response;
+      }),
+    });
+    expect(aggregateFnFake.getCall(0)).to.have.been.calledWith(root);
+    expect(aggregateFnFake.getCall(1)).to.have.been.calledWith(anotherRoot);
+    expect(aggregateFnFake).to.have.been.calledTwice;
+    expect(cononicalStringFake.getCall(0)).to.have.been.calledWith(event);
+    expect(merkleRootFake.getCall(0)).to.have.been.calledWith({
+      data: [eventCononicalString],
+      hashFn: hashFnFake,
+    });
+
+    expect(hashFnFake).to.have.been.calledOnceWith({
+      hash: snapshotMerkleRoot,
+      data: [eventCononicalString],
+      public,
+      lastEventNumber: aggregateLastEventNumber,
+      root,
+      state: aggregateState,
+    });
+    expect(saveSnapshotFnFake).to.have.been.calledOnceWith({
+      snapshot: {
+        data: {
+          hash: snapshotMerkleRoot,
+          data: [eventCononicalString],
+          public,
+          lastEventNumber: aggregateLastEventNumber,
+          root,
+          state: aggregateState,
+        },
+        hash,
+      },
+      transaction,
+    });
+    expect(cononicalStringFake.getCall(1)).to.have.been.calledWith(snapshot);
+    expect(merkleRootFake.getCall(1)).to.have.been.calledWith({
+      data: [snapshotCononicalString, previousHash],
+      hashFn: hashFnFake,
+    });
+
+    expect(saveBlockFnFake).to.have.been.calledOnceWith({
+      block: {
+        hash: blockMerkleRoot,
+        previous: previousHash,
+        data: [snapshotCononicalString],
+        number: previousNumber + 1,
+        boundary: deps.dateString(),
+        network,
+        service,
+        domain,
+      },
+      transaction,
+    });
+  });
   it("should throw if there is no genesis block", async () => {
     const latestBlockFnFake = fake.returns();
     const error = "some-error";
