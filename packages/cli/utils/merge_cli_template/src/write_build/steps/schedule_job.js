@@ -1,5 +1,5 @@
 const { oneLine } = require("common-tags");
-module.exports = ({ name, schedule, serviceName, uri, project }) => {
+module.exports = ({ name, schedule, audience, uri, project }) => {
   return {
     name: "gcr.io/cloud-builders/gcloud",
     entrypoint: "bash",
@@ -10,7 +10,7 @@ module.exports = ({ name, schedule, serviceName, uri, project }) => {
       --schedule="${schedule}"
       --uri=${uri}
       --oidc-service-account-email=executer@${project}.iam.gserviceaccount.com
-      --oidc-token-audience=${serviceName}
+      --oidc-token-audience=${audience}
       --project=${project} || exit 0
       `,
     ],
