@@ -1,6 +1,6 @@
 {
   "name": "@blossm/merkle-tree",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Computes a merkle tree.",
   "main": "index.js",
   "author": "blossm.network",
