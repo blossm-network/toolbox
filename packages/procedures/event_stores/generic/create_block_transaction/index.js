@@ -55,42 +55,23 @@ module.exports = ({
       const stringifiedEvents = aggregate.events.map((e) =>
         public ? deps.cononicalString(e) : e.hash
       );
-      const previousHash = aggregate.snapshotHash;
+      const previousHash = aggregate.snapshotHash || genesisPrevious;
 
-      let data;
-      if (!previousHash) {
-        const genesisMerkleRoot = deps.merkleRoot({
-          data: [...stringifiedEvents, genesisPrevious],
-          hashFn,
-        });
+      const merkleRoot = deps.merkleRoot({
+        data: [...stringifiedEvents, previousHash],
+        hashFn,
+      });
 
-        data = {
-          hash: genesisMerkleRoot,
-          previous: genesisPrevious,
-          data: stringifiedEvents,
-          count: stringifiedEvents.length,
-          public,
-          lastEventNumber: aggregate.lastEventNumber,
-          root,
-          state: aggregate.state,
-        };
-      } else {
-        const merkleRoot = deps.merkleRoot({
-          data: [...stringifiedEvents, previousHash],
-          hashFn,
-        });
-
-        data = {
-          hash: merkleRoot,
-          previous: previousHash,
-          data: stringifiedEvents,
-          count: stringifiedEvents.length,
-          public,
-          lastEventNumber: aggregate.lastEventNumber,
-          root,
-          state: aggregate.state,
-        };
-      }
+      const data = {
+        hash: merkleRoot,
+        previous: previousHash,
+        data: stringifiedEvents,
+        count: stringifiedEvents.length,
+        public,
+        lastEventNumber: aggregate.lastEventNumber,
+        root,
+        state: aggregate.state,
+      };
 
       const hash = hashFn(data);
 
