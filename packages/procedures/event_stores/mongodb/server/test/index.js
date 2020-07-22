@@ -236,11 +236,7 @@ describe("Mongodb event store", () => {
         state: formattedSchema,
       },
       typeKey: "$type",
-      indexes: [
-        [{ "data.id": 1 }],
-        [{ "data.root": 1 }],
-        [{ "data.root": 1, "data.created": -1 }],
-      ],
+      indexes: [[{ root: 1 }], [{ root: 1, created: -1 }]],
     });
     expect(storeFake.getCall(2)).to.have.been.calledWith({
       name: `_${service}.${domain}.counts`,
@@ -529,10 +525,9 @@ describe("Mongodb event store", () => {
       },
       typeKey: "$type",
       indexes: [
-        [{ "data.id": 1 }],
-        [{ "data.root": 1 }],
-        [{ "data.root": 1, "data.created": -1 }],
-        [{ [`data.state.${index}`]: 1 }],
+        [{ root: 1 }],
+        [{ root: 1, created: -1 }],
+        [{ [`state.${index}`]: 1 }],
       ],
     });
     expect(storeFake.getCall(2)).to.have.been.calledWith({
@@ -764,11 +759,7 @@ describe("Mongodb event store", () => {
         state: formattedSchema,
       },
       typeKey: "$type",
-      indexes: [
-        [{ "data.id": 1 }],
-        [{ "data.root": 1 }],
-        [{ "data.root": 1, "data.created": -1 }],
-      ],
+      indexes: [[{ root: 1 }], [{ root: 1, created: -1 }]],
     });
     expect(storeFake.getCall(2)).to.have.been.calledWith({
       name: `_${service}.${domain}.counts`,

@@ -141,14 +141,13 @@ const snapshotStore = async ({ schema, indexes }) => {
     },
     typeKey,
     indexes: [
-      [{ "data.id": 1 }],
-      [{ "data.root": 1 }],
-      [{ "data.root": 1, "data.created": -1 }],
+      [{ root: 1 }],
+      [{ root: 1, created: -1 }],
       ...(indexes.length == 0
         ? []
         : [
             indexes.map((index) => {
-              return { [`data.state.${index}`]: 1 };
+              return { [`state.${index}`]: 1 };
             }),
           ]),
     ],

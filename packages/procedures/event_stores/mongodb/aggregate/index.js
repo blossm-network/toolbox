@@ -4,10 +4,10 @@ module.exports = ({ eventStore, snapshotStore, handlers }) => async (root) => {
   const snapshot = await deps.db.findOne({
     store: snapshotStore,
     query: {
-      "data.root": root,
+      root,
     },
     sort: {
-      "data.created": -1,
+      created: -1,
     },
     options: {
       lean: true,

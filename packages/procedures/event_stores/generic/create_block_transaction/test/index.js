@@ -111,29 +111,16 @@ describe("Event store create block transaction", () => {
       hashFn: hashFnFake,
     });
 
-    expect(hashFnFake).to.have.been.calledOnceWith({
-      hash: snapshotMerkleRoot,
-      previous: snapshotHash,
-      data: [eventCononicalString],
-      count: 1,
-      public,
-      lastEventNumber: aggregateLastEventNumber,
-      root,
-      state: aggregateState,
-    });
     expect(saveSnapshotFnFake).to.have.been.calledOnceWith({
       snapshot: {
-        data: {
-          hash: snapshotMerkleRoot,
-          previous: snapshotHash,
-          data: [eventCononicalString],
-          count: 1,
-          public,
-          lastEventNumber: aggregateLastEventNumber,
-          root,
-          state: aggregateState,
-        },
-        hash,
+        hash: snapshotMerkleRoot,
+        previous: snapshotHash,
+        data: [eventCononicalString],
+        count: 1,
+        public,
+        lastEventNumber: aggregateLastEventNumber,
+        root,
+        state: aggregateState,
       },
       transaction,
     });
@@ -224,29 +211,16 @@ describe("Event store create block transaction", () => {
       hashFn: hashFnFake,
     });
 
-    expect(hashFnFake).to.have.been.calledOnceWith({
-      hash: snapshotMerkleRoot,
-      previous: snapshotHash,
-      data: [eventHash],
-      count: 1,
-      public,
-      lastEventNumber: aggregateLastEventNumber,
-      root,
-      state: aggregateState,
-    });
     expect(saveSnapshotFnFake).to.have.been.calledOnceWith({
       snapshot: {
-        data: {
-          hash: snapshotMerkleRoot,
-          previous: snapshotHash,
-          data: [eventHash],
-          count: 1,
-          public,
-          lastEventNumber: aggregateLastEventNumber,
-          root,
-          state: aggregateState,
-        },
-        hash,
+        hash: snapshotMerkleRoot,
+        previous: snapshotHash,
+        data: [eventHash],
+        count: 1,
+        public,
+        lastEventNumber: aggregateLastEventNumber,
+        root,
+        state: aggregateState,
       },
     });
     expect(cononicalStringFake).to.have.been.calledOnceWith(snapshot);
@@ -412,29 +386,16 @@ describe("Event store create block transaction", () => {
       hashFn: hashFnFake,
     });
 
-    expect(hashFnFake).to.have.been.calledOnceWith({
-      hash: snapshotMerkleRoot,
-      previous: "~",
-      data: [eventCononicalString],
-      count: 1,
-      public,
-      lastEventNumber: aggregateLastEventNumber,
-      root,
-      state: aggregateState,
-    });
     expect(saveSnapshotFnFake).to.have.been.calledOnceWith({
       snapshot: {
-        data: {
-          hash: snapshotMerkleRoot,
-          previous: "~",
-          data: [eventCononicalString],
-          count: 1,
-          public,
-          lastEventNumber: aggregateLastEventNumber,
-          root,
-          state: aggregateState,
-        },
-        hash,
+        hash: snapshotMerkleRoot,
+        previous: "~",
+        data: [eventCononicalString],
+        count: 1,
+        public,
+        lastEventNumber: aggregateLastEventNumber,
+        root,
+        state: aggregateState,
       },
       transaction,
     });

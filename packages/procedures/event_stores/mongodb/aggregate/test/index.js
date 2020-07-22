@@ -94,10 +94,10 @@ describe("Mongodb event store aggregate", () => {
     expect(findOneFake).to.have.been.calledWith({
       store: snapshotStore,
       query: {
-        "data.root": root,
+        root,
       },
       sort: {
-        "data.created": -1,
+        created: -1,
       },
       options: {
         lean: true,
@@ -159,10 +159,10 @@ describe("Mongodb event store aggregate", () => {
     expect(findOneFake).to.have.been.calledWith({
       store: snapshotStore,
       query: {
-        "data.root": root,
+        root,
       },
       sort: {
-        "data.created": -1,
+        created: -1,
       },
       options: {
         lean: true,
@@ -219,10 +219,10 @@ describe("Mongodb event store aggregate", () => {
     expect(findOneFake).to.have.been.calledWith({
       store: snapshotStore,
       query: {
-        "data.root": root,
+        root,
       },
       sort: {
-        "data.created": -1,
+        created: -1,
       },
       options: {
         lean: true,
@@ -271,10 +271,10 @@ describe("Mongodb event store aggregate", () => {
     expect(findOneFake).to.have.been.calledWith({
       store: snapshotStore,
       query: {
-        "data.root": root,
+        root,
       },
       sort: {
-        "data.created": -1,
+        created: -1,
       },
       options: {
         lean: true,
