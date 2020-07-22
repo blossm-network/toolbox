@@ -190,6 +190,7 @@ const blockchainStore = async () => {
       created: { [typeKey]: Date, required: true, default: deps.dateString },
       boundary: { [typeKey]: Date, required: true },
       number: { [typeKey]: Number, required: true, unique: true },
+      count: { [typeKey]: Number, required: true },
       data: {
         [typeKey]: Object,
         required: true,

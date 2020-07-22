@@ -13,15 +13,17 @@ module.exports = ({
 
   if (!previousBlock) {
     const genesisData = ["Wherever you go, there you are."];
+    const genesisPrevious = "~";
     const merkleRoot = deps.merkleRoot({
-      data: genesisData,
+      data: [...genesisData, genesisPrevious],
       hashFn,
     });
 
     const genesisBlock = {
       hash: merkleRoot,
-      previous: "~",
+      previous: genesisPrevious,
       data: genesisData,
+      count: 1,
       number: 0,
       boundary: "2000-01-01T05:00:00.000+00:00",
       network: process.env.NETWORK,
@@ -62,6 +64,7 @@ module.exports = ({
         hash: merkleRoot,
         ...(previousHash && { previous: previousHash }),
         data: stringifiedEvents,
+        count: stringifiedEvents.length,
         public,
         lastEventNumber: aggregate.lastEventNumber,
         root,
@@ -95,6 +98,7 @@ module.exports = ({
     hash: merkleRoot,
     previous: previousBlock.hash,
     data: stringifiedSnapshots,
+    count: stringifiedSnapshots.length,
     number: previousBlock.number + 1,
     boundary,
     network: process.env.NETWORK,

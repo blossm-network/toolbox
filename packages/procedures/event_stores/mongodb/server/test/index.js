@@ -259,6 +259,7 @@ describe("Mongodb event store", () => {
         created: { $type: Date, required: true, default: deps.dateString },
         boundary: { $type: Date, required: true },
         number: { $type: Number, required: true, unique: true },
+        count: { $type: Number, required: true },
         data: {
           $type: Object,
           required: true,
@@ -550,6 +551,7 @@ describe("Mongodb event store", () => {
         created: { $type: Date, required: true, default: deps.dateString },
         boundary: { $type: Date, required: true },
         number: { $type: Number, required: true, unique: true },
+        count: { $type: Number, required: true },
         data: {
           $type: Object,
           required: true,
@@ -783,6 +785,7 @@ describe("Mongodb event store", () => {
         created: { $type: Date, required: true, default: deps.dateString },
         boundary: { $type: Date, required: true },
         number: { $type: Number, required: true, unique: true },
+        count: { $type: Number, required: true },
         data: {
           $type: Object,
           required: true,
