@@ -3,9 +3,7 @@ module.exports = ({
   name,
   schedule,
   uri,
-  region,
   serviceName,
-  operationHash,
   computeUrlId,
   project,
 }) => {
