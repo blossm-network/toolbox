@@ -466,6 +466,7 @@ describe("Event store create block transaction", () => {
     expect(saveBlockFnFake).to.have.been.calledOnceWith({
       block: {
         hash: genesisMerkleRoot,
+        previous: "~",
         data: ["Wherever you go, there you are."],
         number: 0,
         boundary: "2000-01-01T05:00:00.000+00:00",
