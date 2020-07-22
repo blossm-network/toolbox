@@ -20,6 +20,7 @@ module.exports = ({
 
     const genesisBlock = {
       hash: merkleRoot,
+      previous: "~",
       data: genesisData,
       number: 0,
       boundary: "2000-01-01T05:00:00.000+00:00",
