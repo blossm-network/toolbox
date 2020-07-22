@@ -11,9 +11,10 @@ module.exports = ({
 }) => async (transaction) => {
   const previousBlock = await latestBlockFn();
 
+  const genesisPrevious = "~";
+
   if (!previousBlock) {
     const genesisData = ["Wherever you go, there you are."];
-    const genesisPrevious = "~";
     const merkleRoot = deps.merkleRoot({
       data: [...genesisData, genesisPrevious],
       hashFn,
@@ -55,23 +56,43 @@ module.exports = ({
         public ? deps.cononicalString(e) : e.hash
       );
       const previousHash = aggregate.snapshotHash;
-      const merkleRoot = deps.merkleRoot({
-        data: [...stringifiedEvents, ...(previousHash ? [previousHash] : [])],
-        hashFn,
-      });
 
-      const data = {
-        hash: merkleRoot,
-        ...(previousHash && { previous: previousHash }),
-        data: stringifiedEvents,
-        count: stringifiedEvents.length,
-        public,
-        lastEventNumber: aggregate.lastEventNumber,
-        root,
-        state: aggregate.state,
-      };
+      let data;
+      if (!previousHash) {
+        const genesisMerkleRoot = deps.merkleRoot({
+          data: [...stringifiedEvents, genesisPrevious],
+          hashFn,
+        });
 
-      const hash = await hashFn(data);
+        data = {
+          hash: genesisMerkleRoot,
+          previous: genesisPrevious,
+          data: stringifiedEvents,
+          count: stringifiedEvents.length,
+          public,
+          lastEventNumber: aggregate.lastEventNumber,
+          root,
+          state: aggregate.state,
+        };
+      } else {
+        const merkleRoot = deps.merkleRoot({
+          data: [...stringifiedEvents, previousHash],
+          hashFn,
+        });
+
+        data = {
+          hash: merkleRoot,
+          previous: previousHash,
+          data: stringifiedEvents,
+          count: stringifiedEvents.length,
+          public,
+          lastEventNumber: aggregate.lastEventNumber,
+          root,
+          state: aggregate.state,
+        };
+      }
+
+      const hash = hashFn(data);
 
       const normalizedSnapshot = {
         data,

@@ -408,12 +408,13 @@ describe("Event store create block transaction", () => {
     expect(aggregateFnFake).to.have.been.calledTwice;
     expect(cononicalStringFake.getCall(0)).to.have.been.calledWith(event);
     expect(merkleRootFake.getCall(0)).to.have.been.calledWith({
-      data: [eventCononicalString],
+      data: [eventCononicalString, "~"],
       hashFn: hashFnFake,
     });
 
     expect(hashFnFake).to.have.been.calledOnceWith({
       hash: snapshotMerkleRoot,
+      previous: "~",
       data: [eventCononicalString],
       count: 1,
       public,
@@ -425,6 +426,7 @@ describe("Event store create block transaction", () => {
       snapshot: {
         data: {
           hash: snapshotMerkleRoot,
+          previous: "~",
           data: [eventCononicalString],
           count: 1,
           public,
