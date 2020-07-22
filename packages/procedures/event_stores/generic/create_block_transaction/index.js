@@ -14,7 +14,7 @@ module.exports = ({
   if (!previousBlock) {
     const genesisData = ["Wherever you go, there you are."];
     const genesisPrevious = "~";
-    const merkleRoot = deps.merkleRoot({
+    const merkleRoot = await deps.merkleRoot({
       data: [...genesisData, genesisPrevious],
       hashFn,
     });
