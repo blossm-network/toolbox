@@ -43,6 +43,8 @@ const query = {
   value: "some-value",
 };
 
+const created = "some-created";
+
 describe("Event store", () => {
   beforeEach(() => {
     clock = useFakeTimers(now.getTime());
@@ -94,6 +96,7 @@ describe("Event store", () => {
             root,
             topic,
             idempotency,
+            created,
             headers: {
               action: eventAction,
               domain: eventDomain,
@@ -116,6 +119,7 @@ describe("Event store", () => {
             root,
             topic,
             idempotency,
+            created,
             headers: {
               context,
               claims,
@@ -177,6 +181,7 @@ describe("Event store", () => {
           data: {
             root,
             topic,
+            created,
             headers: {
               action: eventAction,
               domain: eventDomain,
@@ -202,6 +207,7 @@ describe("Event store", () => {
           data: {
             root,
             topic,
+            created,
             headers: {
               context: {
                 b: 2,
@@ -250,6 +256,7 @@ describe("Event store", () => {
         data: {
           root,
           topic,
+          created,
           headers: {
             action: eventAction,
             domain: eventDomain,
@@ -268,6 +275,7 @@ describe("Event store", () => {
           data: {
             root,
             topic,
+            created,
             headers: {
               action: eventAction,
               domain: eventDomain,

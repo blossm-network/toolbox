@@ -1,11 +1,7 @@
 const { MerkleTree } = require("merkletreejs");
 
 exports.root = ({ data, hashFn }) => {
-  //todo
-  console.log({ data });
   const leaves = data.map(hashFn);
-  //todo
-  console.log({ leaves });
   const tree = new MerkleTree(leaves, hashFn);
   const root = tree.getRoot().toString("hex");
   return root;

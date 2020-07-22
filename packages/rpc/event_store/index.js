@@ -19,6 +19,7 @@ module.exports = ({ domain, service = process.env.SERVICE } = {}) => {
           ...(event.data.idempotency && {
             idempotency: event.data.idempotency,
           }),
+          created: event.data.created,
           headers: {
             ...event.data.headers,
             ...((context || event.data.headers.context) && {
