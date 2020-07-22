@@ -447,23 +447,33 @@ describe("Event store create block transaction", () => {
       transaction,
     });
   });
-  it("should throw if there is no genesis block", async () => {
+  it("should make a genesis block", async () => {
     const latestBlockFnFake = fake.returns();
-    const error = "some-error";
-    const messageFake = fake.returns(error);
-    replace(deps, "preconditionFailedError", {
-      message: messageFake,
+    const genesisMerkleRoot = "some-genesis-merkle-root";
+    const merkleRootFake = fake.returns(genesisMerkleRoot);
+    replace(deps, "merkleRoot", merkleRootFake);
+    const saveBlockFnFake = fake();
+    const hashFn = "some-hash-fn";
+    await create({
+      latestBlockFn: latestBlockFnFake,
+      saveBlockFn: saveBlockFnFake,
+      hashFn,
+    })(transaction);
+    expect(merkleRootFake).to.have.been.calledOnceWith({
+      data: ["Wherever you go, there you are."],
+      hashFn,
     });
-    try {
-      await create({
-        latestBlockFn: latestBlockFnFake,
-      })(transaction);
-
-      //shouldn't get called
-      expect(1).to.equal(0);
-    } catch (e) {
-      expect(messageFake).to.have.been.calledWith("There is no genesis block.");
-      expect(e).to.equal(error);
-    }
+    expect(saveBlockFnFake).to.have.been.calledOnceWith({
+      block: {
+        hash: genesisMerkleRoot,
+        data: ["Wherever you go, there you are."],
+        number: 0,
+        boundary: "2000-01-01T05:00:00.000+00:00",
+        network,
+        service,
+        domain,
+      },
+      transaction,
+    });
   });
 });

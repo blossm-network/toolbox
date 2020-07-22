@@ -11,8 +11,30 @@ module.exports = ({
 }) => async (transaction) => {
   const previousBlock = await latestBlockFn();
 
-  if (!previousBlock)
-    throw deps.preconditionFailedError.message("There is no genesis block.");
+  if (!previousBlock) {
+    const genesisData = ["Wherever you go, there you are."];
+    const merkleRoot = deps.merkleRoot({
+      data: genesisData,
+      hashFn,
+    });
+
+    const genesisBlock = {
+      hash: merkleRoot,
+      data: genesisData,
+      number: 0,
+      boundary: "2000-01-01T05:00:00.000+00:00",
+      network: process.env.NETWORK,
+      service: process.env.SERVICE,
+      domain: process.env.DOMAIN,
+    };
+
+    await saveBlockFn({
+      block: genesisBlock,
+      ...(transaction && { transaction }),
+    });
+
+    return;
+  }
 
   const snapshots = [];
 

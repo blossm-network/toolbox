@@ -7,7 +7,7 @@ module.exports = ({ name, schedule, serviceName, uri, project }) => {
       "-c",
       oneLine`
       gcloud beta scheduler jobs create http ${name}
-      --schedule=${schedule}
+      --schedule="${schedule}"
       --uri=${uri}
       --oidc-service-account-email=executer@${project}.iam.gserviceaccount.com
       --oidc-token-audience=${serviceName}
