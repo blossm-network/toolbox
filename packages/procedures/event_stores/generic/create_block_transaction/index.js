@@ -62,7 +62,7 @@ module.exports = ({
         hashFn,
       });
 
-      const data = {
+      const normalizedSnapshot = {
         hash: merkleRoot,
         previous: previousHash,
         data: stringifiedEvents,
@@ -71,13 +71,6 @@ module.exports = ({
         lastEventNumber: aggregate.lastEventNumber,
         root,
         state: aggregate.state,
-      };
-
-      const hash = hashFn(data);
-
-      const normalizedSnapshot = {
-        data,
-        hash,
       };
 
       const snapshot = await saveSnapshotFn({

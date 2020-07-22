@@ -133,6 +133,7 @@ const snapshotStore = async ({ schema, indexes }) => {
         required: true,
         _id: false,
       },
+      count: { [typeKey]: Number, required: true },
       created: { [typeKey]: Date, required: true, default: deps.dateString },
       root: { [typeKey]: String, required: true, unique: true },
       lastEventNumber: { [typeKey]: Number, required: true },
