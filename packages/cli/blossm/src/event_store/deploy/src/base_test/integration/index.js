@@ -24,7 +24,6 @@ const {
 const topic = `some-topic.${process.env.DOMAIN}.${process.env.SERVICE}`;
 const sub = `a${uuid()}`; //needs to start with a letter
 const version = 0;
-const created = dateString();
 
 describe("Event store integration tests", () => {
   expect(testing.examples.length).to.be.greaterThan(1);
@@ -56,7 +55,7 @@ describe("Event store integration tests", () => {
               root,
               idempotency: uuid(),
               topic,
-              created,
+              created: dateString(),
               headers: {
                 action: example0.action,
                 domain,
@@ -96,7 +95,7 @@ describe("Event store integration tests", () => {
               root,
               topic,
               idempotency: uuid(),
-              created,
+              created: dateString(),
               headers: {
                 version,
                 action: example1.action,
@@ -161,7 +160,7 @@ describe("Event store integration tests", () => {
               root,
               topic,
               idempotency: uuid(),
-              created,
+              created: dateString(),
               headers: {
                 version,
                 action: "some-bogus",
@@ -203,7 +202,7 @@ describe("Event store integration tests", () => {
               root,
               topic,
               idempotency: uuid(),
-              created,
+              created: dateString(),
               headers: {
                 version,
                 action: example1.action,
