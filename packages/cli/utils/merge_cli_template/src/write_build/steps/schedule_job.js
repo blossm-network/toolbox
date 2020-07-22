@@ -19,7 +19,7 @@ module.exports = ({
       --schedule="${schedule}"
       --uri=https://${uri},
       --oidc-service-account-email=executer@${project}.iam.gserviceaccount.com
-      --oidc-token-audience=https://${region}-${serviceName}-${operationHash}-${computeUrlId}-uc.a.run.app,
+      --oidc-token-audience=https://${serviceName}-${computeUrlId}-uc.a.run.app,
       --project=${project} || exit 0
       `,
     ],
