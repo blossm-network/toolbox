@@ -55,7 +55,7 @@ module.exports = ({
         public ? deps.cononicalString(e) : e.hash
       );
       const previousHash = aggregate.snapshotHash;
-      const merkleRoot = deps.merkleRoot({
+      const merkleRoot = await deps.merkleRoot({
         data: [...stringifiedEvents, ...(previousHash ? [previousHash] : [])],
         hashFn,
       });
@@ -89,7 +89,7 @@ module.exports = ({
   });
 
   const stringifiedSnapshots = snapshots.map((s) => deps.cononicalString(s));
-  const merkleRoot = deps.merkleRoot({
+  const merkleRoot = await deps.merkleRoot({
     data: [...stringifiedSnapshots, previousBlock.hash],
     hashFn,
   });
