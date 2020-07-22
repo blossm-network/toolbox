@@ -1,7 +1,7 @@
 {
   "name": "@blossm/mongodb-event-store-idempotency-conflict-check",
   "description": "A mongodb event store server idempotency check function.",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
