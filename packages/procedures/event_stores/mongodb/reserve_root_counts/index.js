@@ -6,7 +6,6 @@ module.exports = ({ countsStore }) => ({ root, amount, transaction }) =>
     query: { root },
     update: {
       $inc: { value: amount },
-      //TODO test
       $set: {
         updated: deps.dateString(),
       },

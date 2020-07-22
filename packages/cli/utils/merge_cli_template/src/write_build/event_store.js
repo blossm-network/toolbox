@@ -148,8 +148,11 @@ module.exports = ({
           scheduleJob({
             name: `event-store-${service}-${domain}-create-block`,
             schedule: "* * * * *",
-            audience: `https://${region}-${serviceName}-${operationHash}-${computeUrlId}-uc.a.run.app`,
-            uri: `https://${uri}/create-block`,
+            region,
+            serviceName,
+            operationHash,
+            computeUrlId,
+            uri: `${uri}/create-block`,
             project,
           }),
         ]

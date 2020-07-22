@@ -55,7 +55,6 @@ module.exports = ({ eventStore, snapshotStore, handlers }) => async (root) => {
       state: handler(aggregate ? aggregate.state : {}, event.data.payload),
       ...(aggregate &&
         aggregate.snapshotHash && { snapshotHash: aggregate.snapshotHash }),
-      //TODO test
       events: [...(aggregate ? aggregate.events : []), event],
     };
   });
