@@ -13,7 +13,7 @@ module.exports = eventStore({
   handlers,
   secretFn: secret,
   publishFn: pubsub.publish,
-  hashFn: async (object) => {
+  hashFn: (object) => {
     const message = cononicalString(object);
     return crypto.createHash("sha256").update(message).digest("hex");
   },

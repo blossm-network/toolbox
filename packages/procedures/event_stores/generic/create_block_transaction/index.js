@@ -14,7 +14,7 @@ module.exports = ({
   if (!previousBlock) {
     const genesisData = ["Wherever you go, there you are."];
     const genesisPrevious = "~";
-    const merkleRoot = await deps.merkleRoot({
+    const merkleRoot = deps.merkleRoot({
       data: [...genesisData, genesisPrevious],
       hashFn,
     });
@@ -55,7 +55,7 @@ module.exports = ({
         public ? deps.cononicalString(e) : e.hash
       );
       const previousHash = aggregate.snapshotHash;
-      const merkleRoot = await deps.merkleRoot({
+      const merkleRoot = deps.merkleRoot({
         data: [...stringifiedEvents, ...(previousHash ? [previousHash] : [])],
         hashFn,
       });
@@ -89,7 +89,7 @@ module.exports = ({
   });
 
   const stringifiedSnapshots = snapshots.map((s) => deps.cononicalString(s));
-  const merkleRoot = await deps.merkleRoot({
+  const merkleRoot = deps.merkleRoot({
     data: [...stringifiedSnapshots, previousBlock.hash],
     hashFn,
   });
