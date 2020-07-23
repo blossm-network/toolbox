@@ -127,7 +127,9 @@ describe("Event store integration tests", () => {
     await request.stream(
       `${url}/stream`,
       (data) => {
-        const parsedData = JSON.parse(data.toString().trim());
+        //TODO trim?
+        const parsedData = JSON.parse(data.toString());
+        console.log({ parsedData });
         expect(parsedData.number).to.equal(currentNumber);
         currentNumber++;
       },
