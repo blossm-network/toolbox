@@ -353,14 +353,14 @@ describe("Event store integration tests", () => {
 
     const response = await request.post(url, {
       body: {
-        events: [
+        eventData: [
           {
-            data: {
-              root,
-              topic,
-              idempotency: uuid(),
-              created: dateString(),
+            event: {
               headers: {
+                root,
+                topic,
+                idempotency: uuid(),
+                created: dateString(),
                 version,
                 action,
                 domain,
