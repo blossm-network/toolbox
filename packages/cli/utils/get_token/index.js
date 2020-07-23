@@ -20,26 +20,28 @@ module.exports = async ({
   await eventStore({
     domain: "identity",
     service: "core",
-  }).add([
-    {
-      data: createEvent({
-        root: identityRoot,
-        payload: {
-          principal: {
-            root: principalRoot,
-            service: process.env.SERVICE,
-            network: process.env.NETWORK,
+  }).add({
+    eventData: [
+      {
+        event: createEvent({
+          root: identityRoot,
+          payload: {
+            principal: {
+              root: principalRoot,
+              service: process.env.SERVICE,
+              network: process.env.NETWORK,
+            },
+            phone: await hash(phone),
+            id,
           },
-          phone: await hash(phone),
-          id,
-        },
-        action: "register",
-        domain: "identity",
-        service: "core",
-        network: process.env.NETWORK,
-      }),
-    },
-  ]);
+          action: "register",
+          domain: "identity",
+          service: "core",
+          network: process.env.NETWORK,
+        }),
+      },
+    ],
+  });
 
   // Add permissions to the role
   // and add role to the principal.
@@ -47,62 +49,68 @@ module.exports = async ({
     eventStore({
       domain: "role",
       service: "core",
-    }).add([
-      {
-        data: createEvent({
-          root: roleRoot,
-          payload: {
-            id: roleId,
-            permissions,
-          },
-          action: "create",
-          domain: "role",
-          service: "core",
-          network: process.env.NETWORK,
-        }),
-      },
-    ]),
+    }).add({
+      eventData: [
+        {
+          event: createEvent({
+            root: roleRoot,
+            payload: {
+              id: roleId,
+              permissions,
+            },
+            action: "create",
+            domain: "role",
+            service: "core",
+            network: process.env.NETWORK,
+          }),
+        },
+      ],
+    }),
     eventStore({
       domain: "principal",
       service: "core",
-    }).add([
-      {
-        data: createEvent({
-          root: principalRoot,
-          payload: {
-            roles: [
-              {
-                id: roleId,
-                service: process.env.SERVICE,
-                network: process.env.NETWORK,
-              },
-            ],
-          },
-          action: "add-roles",
-          domain: "principal",
-          service: "core",
-          network: process.env.NETWORK,
-        }),
-      },
-    ]),
+    }).add({
+      eventData: [
+        {
+          event: createEvent({
+            root: principalRoot,
+            payload: {
+              roles: [
+                {
+                  id: roleId,
+                  service: process.env.SERVICE,
+                  network: process.env.NETWORK,
+                },
+              ],
+            },
+            action: "add-roles",
+            domain: "principal",
+            service: "core",
+            network: process.env.NETWORK,
+          }),
+        },
+      ],
+    }),
   ]);
 
   // Add a session.
   await eventStore({
     domain: "session",
     service: "core",
-  }).add([
-    {
-      data: createEvent({
-        root: sessionRoot,
-        payload: {},
-        action: "start",
-        domain: "session",
-        service: "core",
-        network: process.env.NETWORK,
-      }),
-    },
-  ]);
+  }).add({
+    eventData: [
+      {
+        event: createEvent({
+          root: sessionRoot,
+          payload: {},
+          action: "start",
+          domain: "session",
+          service: "core",
+          network: process.env.NETWORK,
+        }),
+      },
+    ],
+  });
 
   const {
     body: { tokens },

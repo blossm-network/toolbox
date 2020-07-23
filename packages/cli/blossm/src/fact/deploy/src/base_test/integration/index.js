@@ -77,7 +77,9 @@ const executeStep = async (step) => {
         network: process.env.NETWORK,
       });
 
-      await eventStore({ domain, service }).add([{ data: stateEvent }]);
+      await eventStore({ domain, service }).add({
+        eventData: [{ data: stateEvent }],
+      });
     }
   }
 

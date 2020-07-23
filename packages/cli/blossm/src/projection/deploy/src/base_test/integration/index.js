@@ -40,7 +40,7 @@ describe("Projection integration tests", () => {
       await eventStore({
         domain: example.action.domain,
         service: example.action.service,
-      }).add([{ data: event }]);
+      }).add({ eventData: [{ data: event }] });
 
       const response = await request.post(url, {
         body: {
