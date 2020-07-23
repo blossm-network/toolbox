@@ -1,6 +1,6 @@
 {
   "name": "@blossm/rlp",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Recursive length prefix encoding and decoding.",
   "main": "index.js",
   "author": "blossm.network",

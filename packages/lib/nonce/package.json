@@ -1,6 +1,6 @@
 {
   "name": "@blossm/nonce",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Create a nonce.",
   "main": "index.js",
   "author": "blossm.network",
@@ -10,7 +10,6 @@
   "publishConfig": {
     "access": "public"
   },
-  "dependencies": {},
   "scripts": {
     "test": "mocha --recursive"
   },
