@@ -180,7 +180,7 @@ describe("Mongodb event store", () => {
         },
         context: { $type: Object },
         scenario: {
-          trace: { $type: Number },
+          trace: { $type: String },
           claims: {
             $type: {
               iss: String,
@@ -529,7 +529,7 @@ describe("Mongodb event store", () => {
         },
         context: { $type: Object },
         scenario: {
-          trace: { $type: Number },
+          trace: { $type: String },
           claims: {
             $type: {
               iss: String,
@@ -824,7 +824,7 @@ describe("Mongodb event store", () => {
         },
         context: { $type: Object },
         scenario: {
-          trace: { $type: Number },
+          trace: { $type: String },
           claims: {
             $type: {
               iss: String,
