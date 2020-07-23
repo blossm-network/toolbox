@@ -1,6 +1,6 @@
 {
   "name": "@blossm/hash",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "SHA 256 hash.",
   "main": "index.js",
   "author": "blossm.network",
