@@ -109,6 +109,7 @@ module.exports = ({
             service: event.headers.service,
             network: event.headers.network,
             topic: event.headers.topic,
+            version: event.headers.version,
             committed: deps.dateString(),
             nonce: deps.nonce(),
             number: allottedNumber,
