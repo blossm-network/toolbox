@@ -549,6 +549,8 @@ describe("Event store integration tests", () => {
         ],
       },
     });
+    //TODO
+    console.log({ response });
     expect(response.statusCode).to.equal(412);
   });
   it("should not return an error if same idempotency, but only one should be saved", async () => {
