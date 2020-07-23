@@ -8,6 +8,8 @@ module.exports = ({ eventStore }) => async ({
   fn,
 }) => {
   //TODO what i really want here is to stream aggregates.
+
+  //look for a snapshot. if its there, pass it to fn and stream events past it.
   const cursor = deps.db
     .find({
       store: eventStore,

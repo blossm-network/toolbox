@@ -13,12 +13,12 @@ module.exports = ({ eventStore, handlers }) => async ({
   transaction,
 }) => {
   for (const event of events) {
-    const handler = handlers[event.data.headers.action];
+    const handler = handlers[event.headers.action];
 
     if (!handler)
       throw deps.badRequestError.message("Event handler not specified.", {
         info: {
-          action: event.data.headers.action,
+          action: event.headers.action,
         },
       });
   }

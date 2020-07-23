@@ -27,10 +27,8 @@ describe("Mongodb event store create event", () => {
 
     const events = [
       {
-        data: {
-          headers: {
-            action,
-          },
+        headers: {
+          action,
         },
       },
     ];
@@ -60,10 +58,8 @@ describe("Mongodb event store create event", () => {
 
     const events = [
       {
-        data: {
-          headers: {
-            action,
-          },
+        headers: {
+          action,
         },
       },
     ];
@@ -102,11 +98,9 @@ describe("Mongodb event store create event", () => {
 
     const events = [
       {
-        data: {
-          number: "some-number",
-          headers: {
-            action,
-          },
+        number: "some-number",
+        headers: {
+          action,
         },
       },
     ];
@@ -156,11 +150,9 @@ describe("Mongodb event store create event", () => {
 
     const events = [
       {
-        data: {
-          number: "some-number",
-          headers: {
-            action,
-          },
+        number: "some-number",
+        headers: {
+          action,
         },
       },
     ];
@@ -203,11 +195,9 @@ describe("Mongodb event store create event", () => {
 
     const events = [
       {
-        data: {
-          number: "some-number",
-          headers: {
-            action,
-          },
+        number: "some-number",
+        headers: {
+          action,
         },
       },
     ];
@@ -252,11 +242,9 @@ describe("Mongodb event store create event", () => {
     });
     const events = [
       {
-        data: {
-          headers: {
-            action: "bogus",
-            number: "some-number",
-          },
+        headers: {
+          action: "bogus",
+          number: "some-number",
         },
       },
     ];
