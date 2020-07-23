@@ -1,0 +1,57 @@
+Arguments: 
+  /usr/local/Cellar/node/13.12.0/bin/node /usr/local/Cellar/yarn/1.22.4/libexec/bin/yarn.js test
+
+PATH: 
+  /Users/joao/.google-cloud-sdk/bin:/Users/joao/.flutter_build/bin:/Users/joao/.yarn/bin:/Users/joao/.config/yarn/global/node_modules/.bin:/Developer/adt-bundle/sdk/tools:/Developer/adt-bundle/sdk/platform-tools:/usr/local/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin:/Users/joao/.google-cloud-sdk/bin:/Users/joao/.flutter_build/bin:/Users/joao/.yarn/bin:/Users/joao/.config/yarn/global/node_modules/.bin:/Developer/adt-bundle/sdk/tools:/Developer/adt-bundle/sdk/platform-tools
+
+Yarn version: 
+  1.22.4
+
+Node version: 
+  13.12.0
+
+Platform: 
+  darwin x64
+
+Trace: 
+  SyntaxError: /Users/joao/blossm/toolbox/packages/procedures/event_stores/generic/post_transaction/package.json: Unexpected token } in JSON at position 448
+      at JSON.parse (<anonymous>)
+      at /usr/local/Cellar/yarn/1.22.4/libexec/lib/cli.js:1625:59
+      at Generator.next (<anonymous>)
+      at step (/usr/local/Cellar/yarn/1.22.4/libexec/lib/cli.js:310:30)
+      at /usr/local/Cellar/yarn/1.22.4/libexec/lib/cli.js:321:13
+
+npm manifest: 
+  {
+    "name": "@blossm/event-store-post-transaction",
+    "description": "An event store POST handler transaction.",
+    "version": "0.0.7",
+    "main": "index.js",
+    "author": "blossm.network",
+    "engines": {
+      "node": ">= 10.16.0"
+    },
+    "scripts": {
+      "test": "mocha --recursive"
+    },
+    "publishConfig": {
+      "access": "public"
+    },
+    "dependencies": {
+      "@blossm/datetime": "^0.0.5",
+      "@blossm/nonce": "*",
+      "@blossm/errors": "^0.0.37",
+    },
+    "devDependencies": {
+      "chai-datetime": "^1.5.0",
+      "mocha": "^7.1.1",
+      "sinon": "^7.3.2",
+      "sinon-chai": "^3.5.0"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile

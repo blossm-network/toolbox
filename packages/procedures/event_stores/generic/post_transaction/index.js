@@ -1,14 +1,20 @@
 const deps = require("./deps");
 
 module.exports = ({
-  events,
+  // eventData is { event, number }, where `number` is the only acceptable number for this event.
+  eventData,
   saveEventsFn,
   reserveRootCountsFn,
   hashFn,
+  scenario: {
+    path: scenarioPath = [],
+    claims: scenarioClaims,
+    trace: scenarioTrace,
+  } = {},
 }) => async (transaction) => {
-  const eventRootCounts = events.reduce((result, event) => {
-    if (result[event.data.root] == undefined) result[event.data.root] = 0;
-    result[event.data.root]++;
+  const eventRootCounts = eventData.reduce((result, { event }) => {
+    if (result[event.headers.root] == undefined) result[event.headers.root] = 0;
+    result[event.headers.root]++;
     return result;
   }, {});
 
@@ -35,44 +41,47 @@ module.exports = ({
 
   const normalizedEvents = [];
 
-  const eventsByRoot = {};
-  for (const event of events) {
-    if (eventsByRoot[event.data.root] == undefined)
-      eventsByRoot[event.data.root] = [];
-    eventsByRoot[event.data.root].push(event);
+  const eventDataByRoot = {};
+  for (const { event, number } of eventData) {
+    if (eventDataByRoot[event.headers.root] == undefined)
+      eventDataByRoot[event.headers.root] = [];
+    eventDataByRoot[event.headers.root].push({ event, number });
   }
   await Promise.all(
-    Object.keys(eventsByRoot).map(async (key) => {
+    Object.keys(eventDataByRoot).map(async (key) => {
       await Promise.all(
-        eventsByRoot[key].map(async (event) => {
-          if (!eventNumberOffsets[event.data.root])
-            eventNumberOffsets[event.data.root] = 0;
-
-          const topicParts = event.data.topic.split(".");
-          const topicDomain = topicParts[1];
-          const topicService = topicParts[2];
+        eventDataByRoot[key].map(async ({ event, number }) => {
+          if (!eventNumberOffsets[event.headers.root])
+            eventNumberOffsets[event.headers.root] = 0;
 
           if (
-            topicDomain != process.env.DOMAIN ||
-            topicService != process.env.SERVICE
+            event.headers.domain != process.env.DOMAIN ||
+            event.headers.service != process.env.SERVICE ||
+            event.headers.network != process.env.NETWORK
           )
             throw deps.badRequestError.message(
               "This event store can't accept this event.",
               {
                 info: {
-                  expected: `${process.env.DOMAIN}.${process.env.SERVICE}`,
-                  actual: `${topicDomain}.${topicService}`,
+                  expected: {
+                    domain: process.env.DOMAIN,
+                    service: process.env.SERVICE,
+                    network: process.env.NETWORK,
+                  },
+                  actual: {
+                    domain: event.headers.domain,
+                    service: event.headers.service,
+                    network: event.headers.network,
+                  },
                 },
               }
             );
 
-          const root = event.data.root;
+          const allottedNumber =
+            currentEventCounts[event.headers.root] +
+            eventNumberOffsets[event.headers.root];
 
-          const number =
-            currentEventCounts[event.data.root] +
-            eventNumberOffsets[event.data.root];
-
-          if (event.number && event.number != number)
+          if (number != undefined && number != allottedNumber)
             throw deps.preconditionFailedError.message(
               "Event number incorrect.",
               {
@@ -80,34 +89,54 @@ module.exports = ({
               }
             );
 
-          eventNumberOffsets[event.data.root]++;
+          eventNumberOffsets[event.headers.root]++;
 
-          const data = {
-            number,
-            root: event.data.root,
-            topic: event.data.topic,
-            created: event.data.created,
-            idempotency: event.data.idempotency,
-            id: `${root}_${number}`,
-            payload: event.data.payload,
-            headers: event.data.headers,
+          const context = event.context || {};
+          const payload = event.payload || {};
+          const scenario = {
+            ...(scenarioClaims && { claims: scenarioClaims }),
+            ...(scenarioTrace && { trace: scenarioTrace }),
+            path: scenarioPath,
+          };
+          const hashedPayload = hashFn(payload);
+          const hashedContext = hashFn(context);
+          const hashedScenario = hashFn(scenario);
+
+          const headers = {
+            root: event.headers.root,
+            action: event.headers.action,
+            domain: event.headers.domain,
+            service: event.headers.service,
+            network: event.headers.network,
+            topic: event.headers.topic,
+            committed: deps.dateString(),
+            nonce: deps.nonce(),
+            number: allottedNumber,
+            hashes: {
+              payload: hashedPayload,
+              context: hashedContext,
+              scenario: hashedScenario,
+            },
           };
 
-          const hash = await hashFn(data);
+          const hash = hashFn(headers);
 
           normalizedEvents.push({
-            data,
             hash,
+            headers,
+            payload,
+            context,
+            scenario,
           });
         })
       );
     })
   );
 
-  const savedEvents = await saveEventsFn(
-    normalizedEvents,
-    ...(transaction ? [{ transaction }] : [])
-  );
+  const savedEvents = await saveEventsFn({
+    events: normalizedEvents,
+    ...(transaction && { transaction }),
+  });
 
   return { events: savedEvents };
 };

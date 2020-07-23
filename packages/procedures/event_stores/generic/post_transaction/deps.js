@@ -1,8 +1,8 @@
 const { string: dateString } = require("@blossm/datetime");
-const uuid = require("@blossm/uuid");
+const nonce = require("@blossm/nonce");
 const { preconditionFailed, badRequest } = require("@blossm/errors");
 
 exports.dateString = dateString;
-exports.uuid = uuid;
+exports.nonce = nonce;
 exports.preconditionFailedError = preconditionFailed;
 exports.badRequestError = badRequest;

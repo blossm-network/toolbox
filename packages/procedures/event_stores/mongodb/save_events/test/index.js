@@ -35,16 +35,15 @@ describe("Mongodb event store create event", () => {
       },
     ];
 
-    const saveEventsFnResult = await saveEvent({ eventStore, handlers })(
+    const saveEventsFnResult = await saveEvent({ eventStore, handlers })({
       events,
-      { transaction }
-    );
+      transaction,
+    });
     expect(createFake).to.have.been.calledWith({
       store: eventStore,
       data: events,
       options: {
         session: transaction,
-        // ordered: false,
       },
     });
     expect(saveEventsFnResult).to.deep.equal([createResult]);
@@ -69,15 +68,12 @@ describe("Mongodb event store create event", () => {
       },
     ];
 
-    const saveEventsFnResult = await saveEvent({ eventStore, handlers })(
-      events
-    );
+    const saveEventsFnResult = await saveEvent({ eventStore, handlers })({
+      events,
+    });
     expect(createFake).to.have.been.calledWith({
       store: eventStore,
       data: events,
-      // options: {
-      //   ordered: false,
-      // },
     });
     expect(saveEventsFnResult).to.deep.equal([createResult]);
   });
@@ -123,7 +119,7 @@ describe("Mongodb event store create event", () => {
     });
 
     try {
-      await saveEvent({ eventStore, handlers })(events);
+      await saveEvent({ eventStore, handlers })({ events });
 
       //shouldn't get called
       expect(1).to.equal(2);
@@ -170,7 +166,7 @@ describe("Mongodb event store create event", () => {
     ];
 
     try {
-      await saveEvent({ eventStore, handlers })(events);
+      await saveEvent({ eventStore, handlers })({ events });
 
       //shouldn't get called
       expect(1).to.equal(2);
@@ -224,7 +220,7 @@ describe("Mongodb event store create event", () => {
     });
 
     try {
-      await saveEvent({ eventStore, handlers })(events);
+      await saveEvent({ eventStore, handlers })({ events });
 
       //shouldn't get called
       expect(1).to.equal(2);
@@ -265,7 +261,7 @@ describe("Mongodb event store create event", () => {
       },
     ];
     try {
-      await saveEvent({ eventStore, handlers })(events);
+      await saveEvent({ eventStore, handlers })({ events });
 
       //shouldn't get called
       expect(1).to.equal(2);

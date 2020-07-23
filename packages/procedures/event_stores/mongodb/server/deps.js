@@ -15,6 +15,7 @@ const latestBlock = require("@blossm/mongodb-event-store-latest-block");
 const formatSchema = require("@blossm/format-mongodb-schema");
 const idempotencyConflictCheck = require("@blossm/mongodb-event-store-idempotency-conflict-check");
 const uuid = require("@blossm/uuid");
+const nonce = require("@blossm/nonce");
 
 exports.dateString = dateString;
 exports.eventStore = eventStore;
@@ -33,3 +34,4 @@ exports.formatSchema = formatSchema;
 exports.uuid = uuid;
 exports.saveBlock = saveBlock;
 exports.latestBlock = latestBlock;
+exports.nonce = nonce;

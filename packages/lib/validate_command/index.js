@@ -26,11 +26,6 @@ module.exports = async (params) => {
       title: "idempotency",
       path: "headers.idempotency",
     }),
-    string(params.headers.trace, {
-      optional: true,
-      title: "trace",
-      path: "headers.trace",
-    }),
     date(params.headers.issued, {
       title: "issued date",
       headers: "headers.issued",

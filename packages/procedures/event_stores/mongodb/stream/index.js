@@ -7,15 +7,16 @@ module.exports = ({ eventStore }) => async ({
   parallel = 1,
   fn,
 }) => {
+  //TODO what i really want here is to stream aggregates.
   const cursor = deps.db
     .find({
       store: eventStore,
       query: {
-        "data.created": { $gte: from },
-        ...(root && { "data.root": root }),
-        ...(actions && { "data.headers.action": { $in: actions } }),
+        "headers.created": { $gte: from },
+        ...(root && { "headers.root": root }),
+        ...(actions && { "headers.action": { $in: actions } }),
       },
-      sort: { "data.created": 1, "data.number": 1 },
+      sort: { "headers.created": 1, "headers.number": 1 },
       options: { lean: true },
     })
     .cursor();

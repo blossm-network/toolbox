@@ -40,7 +40,6 @@ module.exports = ({
       ...(root && { root }),
       headers: {
         ...(headers.idempotency && { idempotency: headers.idempotency }),
-        ...(headers.trace && { trace: headers.trace }),
         path: [
           {
             timestamp: deps.dateString(),

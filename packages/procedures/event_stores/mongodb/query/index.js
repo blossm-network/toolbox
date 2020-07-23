@@ -26,6 +26,7 @@ module.exports = ({ eventStore, snapshotStore, handlers }) => async ({
       info: { key, value },
     });
 
+  //TODO first get snapshot, then get events. Avoid streaming all event results.
   const [snapshots, events] = await Promise.all([
     deps.db.find({
       store: snapshotStore,
@@ -39,7 +40,7 @@ module.exports = ({ eventStore, snapshotStore, handlers }) => async ({
     deps.db.find({
       store: eventStore,
       query: {
-        [`data.payload.${key}`]: value,
+        [`payload.${key}`]: value,
       },
       options: {
         lean: true,
@@ -53,8 +54,8 @@ module.exports = ({ eventStore, snapshotStore, handlers }) => async ({
 
   const candidateRoots = [
     ...new Set([
-      ...snapshots.map((snapshot) => snapshot.root),
-      ...events.map((event) => event.data.root),
+      ...snapshots.map((snapshot) => snapshot.headers.root),
+      ...events.map((event) => event.headers.root),
     ]),
   ];
 

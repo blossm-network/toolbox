@@ -11,7 +11,7 @@ describe("Projection handlers tests", () => {
         const result = handlers[handler.action.service][handler.action.domain][
           handler.action.name
         ]({
-          payload: example.payload,
+          state: example.state,
           ...(example.root && { root: example.root }),
         });
         expect(result).to.deep.equal(example.result);

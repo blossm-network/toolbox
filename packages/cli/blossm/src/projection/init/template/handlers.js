@@ -1,27 +1,25 @@
 module.exports = {
   "some-service": {
-    "some-domain": {
-      "some-action": ({ payload, root }) => {
-        //eslint-disable-next-line no-console
-        console.log({ payload, root });
-        return {
-          query: {
-            "some-domain": {
-              root,
-              service: "some-service",
-              network: "some-network",
-            },
+    "some-domain": ({ state, root }) => {
+      //eslint-disable-next-line no-console
+      console.log({ state, root });
+      return {
+        query: {
+          "some-domain": {
+            root,
+            service: "some-service",
+            network: "some-network",
           },
-          update: {
-            "some-domain": {
-              root,
-              service: "some-service",
-              network: "some-network",
-            },
-            name: payload.name,
+        },
+        update: {
+          "some-domain": {
+            root,
+            service: "some-service",
+            network: "some-network",
           },
-        };
-      },
+          name: state.name,
+        },
+      };
     },
   },
 };

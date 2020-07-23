@@ -5,7 +5,6 @@ module.exports = ({
   root,
   payload,
   version = 0,
-  trace,
   action,
   domain,
   service,
@@ -15,37 +14,24 @@ module.exports = ({
   path,
 } = {}) => {
   return {
-    root: root || deps.uuid(),
-    topic: `${action}.${domain}.${service}`,
-    idempotency: `${idempotency || deps.uuid()}-${action}-${domain}-${service}${
-      path ? `-${(path || []).reduce((result, p) => result + p.hash, "")}` : ""
-    }`,
-    created: dateString(),
     headers: {
+      root: root || deps.uuid(),
+      topic: `${action}.${domain}.${service}`,
+      idempotency: `${
+        idempotency || deps.uuid()
+      }-${action}-${domain}-${service}${
+        path
+          ? `-${(path || []).reduce((result, p) => result + p.hash, "")}`
+          : ""
+      }`,
+      created: dateString(),
       action,
       domain,
       service,
       network,
       version,
-      ...(context && { context }),
-      ...(trace && { trace }),
-      ...(path && {
-        path: path.map((p) => {
-          return {
-            ...(p.name && { name: p.name }),
-            ...(p.domain && { domain: p.domain }),
-            ...(p.service && { service: p.service }),
-            ...(p.issued && { issued: p.issued }),
-            ...(p.id && { id: p.id }),
-            timestamp: p.timestamp,
-            network: p.network,
-            hash: p.hash,
-            procedure: p.procedure,
-            host: p.host,
-          };
-        }),
-      }),
     },
+    ...(context && { context }),
     payload,
   };
 };

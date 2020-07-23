@@ -12,14 +12,11 @@ const handlers = require("./handlers.js");
 const config = require("./config.json");
 
 module.exports = eventHandler({
-  mainFn: async (event, { push = true }) => {
-    //Must be able to handle this event.
+  mainFn: async (aggregate, { push = true }) => {
+    //Must be able to handle this aggregate.
     if (
-      !handlers[event.data.headers.service] ||
-      !handlers[event.data.headers.service][event.data.headers.domain] ||
-      !handlers[event.data.headers.service][event.data.headers.domain][
-        event.data.headers.action
-      ]
+      !handlers[aggregate.service] ||
+      !handlers[aggregate.service][aggregate.domain]
     )
       return;
 
@@ -28,27 +25,25 @@ module.exports = eventHandler({
       query,
       //The changes to the body of the view.
       update,
-    } = handlers[event.data.headers.service][event.data.headers.domain][
-      event.data.headers.action
-    ]({
-      payload: event.data.payload,
-      root: event.data.root,
+    } = handlers[aggregate.service][aggregate.domain]({
+      state: aggregate.state,
+      root: aggregate.root,
     });
 
-    const eventHasContext =
-      event.data.headers.context &&
-      event.data.headers.context[process.env.CONTEXT];
+    const aggregateContext =
+      aggregate.context && aggregate.context[process.env.CONTEXT];
+
     //The context that the view should be associated with.
-    const contextRoot = eventHasContext
-      ? event.data.headers.context[process.env.CONTEXT].root
-      : event.data.root;
+    const contextRoot = aggregateContext
+      ? aggregateContext.root
+      : aggregate.root;
     const contextDomain = process.env.CONTEXT;
-    const contextService = eventHasContext
-      ? event.data.headers.context[process.env.CONTEXT].service
-      : event.data.headers.service;
-    const contextNetwork = eventHasContext
-      ? event.data.headers.context[process.env.CONTEXT].network
-      : event.data.headers.network;
+    const contextService = aggregateContext
+      ? aggregateContext.service
+      : aggregate.service;
+    const contextNetwork = aggregateContext
+      ? aggregateContext.network
+      : aggregate.network;
 
     const { body: newView } = await viewStore({
       name: config.name,
@@ -69,7 +64,7 @@ module.exports = eventHandler({
         update,
 
         //Always set the trace and context to make sure the view has an updated trace and the context is set.
-        ...(event.data.headers.trace && { trace: event.data.headers.trace }),
+        ...(aggregate.trace && { trace: aggregate.trace }),
       });
 
     if (!push) return;

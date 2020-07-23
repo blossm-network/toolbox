@@ -1,5 +1,5 @@
 const { expect } = require("chai").use(require("sinon-chai"));
-const { restore, replace, fake, match } = require("sinon");
+const { restore, replace, fake } = require("sinon");
 const aggregate = require("..");
 
 const deps = require("../deps");
@@ -7,21 +7,39 @@ const deps = require("../deps");
 const root = "some-root";
 const action = "some-action";
 const eventHash = "some-event-hash";
-const eventId = "some-event-id";
+const eventNonce = "some-event-nonce";
+const eventTrace = "some-event-trace";
+
+const aRoot = "some-a-root";
+const aService = "some-a-service";
+const aNetwork = "some-a-network";
+const bRoot = "some-b-root";
+const bService = "some-b-service";
+const bNetwork = "some-b-network";
+
 const event = {
   hash: eventHash,
-  data: {
-    id: eventId,
+  headers: {
+    nonce: eventNonce,
     root,
     number: 1,
-    payload: { b: 2, c: 2 },
-    headers: { action },
+    action,
   },
+  trace: eventTrace,
+  context: {
+    a: {
+      root: aRoot,
+      service: aService,
+      network: aNetwork,
+    },
+    b: {
+      root: bRoot,
+      service: bService,
+      network: bNetwork,
+    },
+  },
+  payload: { b: 2, c: 2 },
 };
-const eachAsyncFake = fake.yields(event);
-const cursorFake = fake.returns({
-  eachAsync: eachAsyncFake,
-});
 
 const handlers = {
   [action]: (state, payload) => {
@@ -32,25 +50,44 @@ const handlers = {
   },
 };
 
-const snapshotHash = "some-snapshot-hash";
+const trace = "some-trace";
 
 const findOneResult = {
-  hash: snapshotHash,
-  data: {
+  headers: {
     root,
     state: { a: 1, b: 1 },
     lastEventNumber: 6,
+    trace: [trace],
+  },
+  context: {
+    a: {
+      root: aRoot,
+      service: aService,
+      network: aNetwork,
+    },
   },
 };
 
 const eventStore = "some-event-store";
 const snapshotStore = "some-snapshot-store";
 
+const envDomain = "some-env-domain";
+const envService = "some-env-service";
+const envNetwork = "some-env-network";
+
+process.env.DOMAIN = envDomain;
+process.env.SERVICE = envService;
+process.env.NETWORK = envNetwork;
+
 describe("Mongodb event store aggregate", () => {
   afterEach(() => {
     restore();
   });
   it("should call with the correct params", async () => {
+    const eachAsyncFake = fake.yields(event);
+    const cursorFake = fake.returns({
+      eachAsync: eachAsyncFake,
+    });
     const findFake = fake.returns({
       cursor: cursorFake,
     });
@@ -70,34 +107,24 @@ describe("Mongodb event store aggregate", () => {
     expect(findFake).to.have.been.calledWith({
       store: eventStore,
       query: {
-        "data.root": root,
-        "data.number": { $gt: 6 },
+        "headers.root": root,
+        "headers.number": { $gt: 6 },
       },
       sort: {
-        "data.number": 1,
+        "headers.number": 1,
       },
       options: {
         lean: true,
       },
     });
-    expect(eachAsyncFake).to.have.been.calledWith(
-      match((fn) => {
-        const event = {
-          data: {
-            headers: { action },
-          },
-        };
-        fn(event);
-        return true;
-      })
-    );
+    expect(eachAsyncFake).to.have.been.calledOnce;
     expect(findOneFake).to.have.been.calledWith({
       store: snapshotStore,
       query: {
-        root,
+        "headers.root": root,
       },
       sort: {
-        created: -1,
+        "headers.created": -1,
       },
       options: {
         lean: true,
@@ -105,10 +132,19 @@ describe("Mongodb event store aggregate", () => {
     });
     expect(result).to.deep.equal({
       root,
+      domain: envDomain,
+      service: envService,
+      network: envNetwork,
       state: { a: 1, b: 2, c: 2 },
       lastEventNumber: 1,
-      events: [event],
-      snapshotHash,
+      trace: [eventTrace, trace],
+      context: {
+        a: {
+          root: aRoot,
+          service: aService,
+          network: aNetwork,
+        },
+      },
     });
   });
   it("should call with the correct params with no events", async () => {
@@ -135,34 +171,24 @@ describe("Mongodb event store aggregate", () => {
     expect(findFake).to.have.been.calledWith({
       store: eventStore,
       query: {
-        "data.root": root,
-        "data.number": { $gt: 6 },
+        "headers.root": root,
+        "headers.number": { $gt: 6 },
       },
       sort: {
-        "data.number": 1,
+        "headers.number": 1,
       },
       options: {
         lean: true,
       },
     });
-    expect(eachAsyncFake).to.have.been.calledWith(
-      match((fn) => {
-        const event = {
-          data: {
-            headers: { action },
-          },
-        };
-        fn(event);
-        return true;
-      })
-    );
+    expect(eachAsyncFake).to.have.been.calledOnce;
     expect(findOneFake).to.have.been.calledWith({
       store: snapshotStore,
       query: {
-        root,
+        "headers.root": root,
       },
       sort: {
-        created: -1,
+        "headers.created": -1,
       },
       options: {
         lean: true,
@@ -172,15 +198,28 @@ describe("Mongodb event store aggregate", () => {
       root,
       state: { a: 1, b: 1 },
       lastEventNumber: 6,
-      snapshotHash,
-      events: [],
+      domain: envDomain,
+      service: envService,
+      network: envNetwork,
+      trace: [trace],
+      context: {
+        a: {
+          root: aRoot,
+          service: aService,
+          network: aNetwork,
+        },
+      },
     });
   });
   it("should call with the correct params with no snapshot found", async () => {
+    const eachAsyncFake = fake.yields(event);
+    const cursorFake = fake.returns({
+      eachAsync: eachAsyncFake,
+    });
     const findFake = fake.returns({
       cursor: cursorFake,
     });
-    const findOneFake = fake.returns();
+    const findOneFake = fake();
 
     const db = {
       find: findFake,
@@ -196,33 +235,23 @@ describe("Mongodb event store aggregate", () => {
     expect(findFake).to.have.been.calledWith({
       store: eventStore,
       query: {
-        "data.root": root,
+        "headers.root": root,
       },
       sort: {
-        "data.number": 1,
+        "headers.number": 1,
       },
       options: {
         lean: true,
       },
     });
-    expect(eachAsyncFake).to.have.been.calledWith(
-      match((fn) => {
-        const event = {
-          data: {
-            headers: { action },
-          },
-        };
-        fn(event);
-        return true;
-      })
-    );
+    expect(eachAsyncFake).to.have.been.calledOnce;
     expect(findOneFake).to.have.been.calledWith({
       store: snapshotStore,
       query: {
-        root,
+        "headers.root": root,
       },
       sort: {
-        created: -1,
+        "headers.created": -1,
       },
       options: {
         lean: true,
@@ -232,7 +261,22 @@ describe("Mongodb event store aggregate", () => {
       root,
       state: { b: 2, c: 2 },
       lastEventNumber: 1,
-      events: [event],
+      domain: envDomain,
+      service: envService,
+      network: envNetwork,
+      trace: [eventTrace],
+      context: {
+        a: {
+          root: aRoot,
+          service: aService,
+          network: aNetwork,
+        },
+        b: {
+          root: bRoot,
+          service: bService,
+          network: bNetwork,
+        },
+      },
     });
   });
   it("should call with the correct params with no snapshot or events found", async () => {
@@ -259,10 +303,10 @@ describe("Mongodb event store aggregate", () => {
     expect(findFake).to.have.been.calledWith({
       store: eventStore,
       query: {
-        "data.root": root,
+        "headers.root": root,
       },
       sort: {
-        "data.number": 1,
+        "headers.number": 1,
       },
       options: {
         lean: true,
@@ -271,10 +315,10 @@ describe("Mongodb event store aggregate", () => {
     expect(findOneFake).to.have.been.calledWith({
       store: snapshotStore,
       query: {
-        root,
+        "headers.root": root,
       },
       sort: {
-        created: -1,
+        "headers.created": -1,
       },
       options: {
         lean: true,
@@ -283,6 +327,10 @@ describe("Mongodb event store aggregate", () => {
     expect(result).to.be.undefined;
   });
   it("should throw if a handler isn't specified", async () => {
+    const eachAsyncFake = fake.yields(event);
+    const cursorFake = fake.returns({
+      eachAsync: eachAsyncFake,
+    });
     const findFake = fake.returns({
       cursor: cursorFake,
     });

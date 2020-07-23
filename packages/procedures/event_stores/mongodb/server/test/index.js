@@ -139,70 +139,93 @@ describe("Mongodb event store", () => {
     );
     expect(formatSchemaFake.getCall(1)).to.have.been.calledWith(
       schema,
-      "$type"
+      "$type",
+      {
+        options: {
+          default: undefined,
+        },
+      }
     );
     expect(storeFake.getCall(0)).to.have.been.calledWith({
       name: `_${service}.${domain}`,
       schema: {
         hash: { $type: String, required: true, unique: true },
-        data: {
-          id: { $type: String, required: true, unique: true },
-          committed: { $type: Date, required: true, default: deps.dateString },
+        headers: {
+          nonce: {
+            $type: String,
+            required: true,
+            unique: true,
+          },
+          hashes: {
+            payload: { $type: String, required: true },
+            context: { $type: String, required: true },
+            scenario: { $type: String, required: true },
+            _id: false,
+          },
+          committed: {
+            $type: Date,
+            required: true,
+          },
           created: { $type: Date, required: true },
+          number: { $type: Number, required: true },
           root: { $type: String, required: true },
           topic: { $type: String, required: true },
           idempotency: { $type: String, required: true, unique: true },
-          payload: formattedSchemaWithOptions,
-          number: { $type: Number, required: true },
-          headers: {
-            version: { $type: Number, required: true },
-            action: { $type: String, required: true },
-            domain: { $type: String, required: true },
-            service: { $type: String, required: true },
-            network: { $type: String, required: true },
-            trace: { $type: String },
-            context: { $type: Object, default: {} },
-            claims: {
-              $type: {
-                iss: String,
-                aud: String,
-                sub: String,
-                exp: String,
-                iat: String,
-                jti: String,
+          action: { $type: String, required: true },
+          domain: { $type: String, required: true },
+          service: { $type: String, required: true },
+          network: { $type: String, required: true },
+          version: { $type: Number, required: true },
+          _id: false,
+        },
+        context: { $type: Object },
+        scenario: {
+          trace: { $type: Number },
+          claims: {
+            $type: {
+              iss: String,
+              aud: String,
+              sub: String,
+              exp: String,
+              iat: String,
+              jti: String,
+              _id: false,
+            },
+          },
+          path: {
+            $type: [
+              {
+                id: { $type: String },
+                name: { $type: String },
+                domain: { $type: String },
+                service: { $type: String },
+                network: { $type: String, required: true },
+                host: { $type: String, required: true },
+                procedure: { $type: String, required: true },
+                hash: { $type: String, required: true },
+                issued: { $type: Date },
+                timestamp: { $type: Date },
                 _id: false,
               },
-            },
-            path: {
-              $type: [
-                {
-                  id: { $type: String },
-                  name: { $type: String },
-                  domain: { $type: String },
-                  service: { $type: String },
-                  network: { $type: String, required: true },
-                  host: { $type: String, required: true },
-                  procedure: { $type: String, required: true },
-                  hash: { $type: String, required: true },
-                  issued: { $type: Date },
-                  timestamp: { $type: Date },
-                  _id: false,
-                },
-              ],
-              default: [],
-            },
-            _id: false,
+            ],
           },
           _id: false,
         },
+        payload: formattedSchemaWithOptions,
       },
       typeKey: "$type",
       indexes: [
-        [{ "data.id": 1 }],
-        [{ "data.idempotency": 1 }],
-        [{ "data.root": 1 }],
-        [{ "data.root": 1, "data.number": 1 }],
-        [{ "data.created": 1, "data.number": 1, "data.headers.action": 1 }], //, _id: 1, __v: 1 }],
+        [{ hash: 1 }],
+        [{ "headers.idempotency": 1 }],
+        [{ "headers.root": 1 }],
+        [{ "headers.root": 1, "headers.number": 1 }],
+        [
+          {
+            "headers.created": 1,
+            "headers.number": 1,
+            "headers.action": 1,
+          },
+        ],
       ],
       connection: {
         protocol,
@@ -221,22 +244,40 @@ describe("Mongodb event store", () => {
     expect(storeFake.getCall(1)).to.have.been.calledWith({
       name: `_${service}.${domain}.snapshots`,
       schema: {
-        hash: { $type: String, required: true, unique: true },
-        previous: { $type: String, required: true, unique: true },
-        public: { $type: Boolean, required: true },
-        data: {
-          $type: [String],
-          required: true,
+        headers: {
+          nonce: {
+            $type: String,
+            required: true,
+            unique: true,
+          },
+          hashes: {
+            events: { $type: String, required: true, unique: true },
+            context: { $type: String, required: true, unique: true },
+            previous: { $type: String, required: true, unique: true },
+            _id: false,
+          },
+          created: { $type: Date, required: true },
+          root: { $type: String, required: true, unique: true },
+          public: { $type: Boolean, required: true },
+          domain: { $type: String, required: true },
+          service: { $type: String, required: true },
+          network: { $type: String, required: true },
+          eventCount: { $type: Number, required: true },
+          lastEventNumber: { $type: Number, required: true },
           _id: false,
         },
-        count: { $type: Number, required: true },
-        created: { $type: Date, required: true, default: deps.dateString },
-        root: { $type: String, required: true, unique: true },
-        lastEventNumber: { $type: Number, required: true },
+        events: {
+          $type: [Buffer],
+          required: true,
+        },
+        context: { $type: Object },
         state: formattedSchema,
       },
       typeKey: "$type",
-      indexes: [[{ root: 1 }], [{ root: 1, created: -1 }]],
+      indexes: [
+        [{ "headers.root": 1 }],
+        [{ "headers.root": 1, "headers.created": -1 }],
+      ],
     });
     expect(storeFake.getCall(2)).to.have.been.calledWith({
       name: `_${service}.${domain}.counts`,
@@ -252,21 +293,42 @@ describe("Mongodb event store", () => {
       name: `_${service}.${domain}.blockchain`,
       schema: {
         hash: { $type: String, required: true },
-        previous: { $type: String, required: true },
-        created: { $type: Date, required: true, default: deps.dateString },
-        boundary: { $type: Date, required: true },
-        number: { $type: Number, required: true, unique: true },
-        count: { $type: Number, required: true },
-        data: {
-          $type: Object,
+        headers: {
+          nonce: {
+            $type: String,
+            required: true,
+            unique: true,
+          },
+          hashes: {
+            previous: { $type: String, required: true },
+            events: { $type: String, required: true },
+            snapshots: { $type: String, required: true },
+            _id: false,
+          },
+          counts: {
+            event: { $type: Number, required: true },
+            snapshot: { $type: Number, required: true },
+            _id: false,
+          },
+          created: { $type: Date, required: true },
+          boundary: { $type: Date, required: true },
+          number: { $type: Number, required: true, unique: true },
+          domain: { $type: String, required: true },
+          service: { $type: String, required: true },
+          network: { $type: String, required: true },
+          _id: false,
+        },
+        events: {
+          $type: [Buffer],
           required: true,
         },
-        domain: { $type: String, required: true },
-        service: { $type: String, required: true },
-        network: { $type: String, required: true },
+        snapshots: {
+          $type: [Buffer],
+          required: true,
+        },
       },
       typeKey: "$type",
-      indexes: [[{ number: 1 }], [{ hash: 1 }], [{ previous: 1 }]],
+      indexes: [[{ "headers.number": 1 }]],
     });
     expect(secretFake).to.have.been.calledWith("mongodb-event-store");
 
@@ -426,71 +488,94 @@ describe("Mongodb event store", () => {
     );
     expect(formatSchemaFake.getCall(1)).to.have.been.calledWith(
       schema,
-      "$type"
+      "$type",
+      {
+        options: {
+          default: undefined,
+        },
+      }
     );
     expect(storeFake.getCall(0)).to.have.been.calledWith({
       name: `_${service}.${domain}`,
       schema: {
         hash: { $type: String, required: true, unique: true },
-        data: {
-          id: { $type: String, required: true, unique: true },
-          committed: { $type: Date, required: true, default: deps.dateString },
+        headers: {
+          nonce: {
+            $type: String,
+            required: true,
+            unique: true,
+          },
+          hashes: {
+            payload: { $type: String, required: true },
+            context: { $type: String, required: true },
+            scenario: { $type: String, required: true },
+            _id: false,
+          },
+          committed: {
+            $type: Date,
+            required: true,
+          },
           created: { $type: Date, required: true },
-          payload: formattedSchemaWithOptions,
+          number: { $type: Number, required: true },
           root: { $type: String, required: true },
           topic: { $type: String, required: true },
           idempotency: { $type: String, required: true, unique: true },
-          number: { $type: Number, required: true },
-          headers: {
-            version: { $type: Number, required: true },
-            action: { $type: String, required: true },
-            domain: { $type: String, required: true },
-            service: { $type: String, required: true },
-            network: { $type: String, required: true },
-            trace: { $type: String },
-            context: { $type: Object, default: {} },
-            claims: {
-              $type: {
-                iss: String,
-                aud: String,
-                sub: String,
-                exp: String,
-                iat: String,
-                jti: String,
+          action: { $type: String, required: true },
+          domain: { $type: String, required: true },
+          service: { $type: String, required: true },
+          network: { $type: String, required: true },
+          version: { $type: Number, required: true },
+          _id: false,
+        },
+        context: { $type: Object },
+        scenario: {
+          trace: { $type: Number },
+          claims: {
+            $type: {
+              iss: String,
+              aud: String,
+              sub: String,
+              exp: String,
+              iat: String,
+              jti: String,
+              _id: false,
+            },
+          },
+          path: {
+            $type: [
+              {
+                id: { $type: String },
+                name: { $type: String },
+                domain: { $type: String },
+                service: { $type: String },
+                network: { $type: String, required: true },
+                host: { $type: String, required: true },
+                procedure: { $type: String, required: true },
+                hash: { $type: String, required: true },
+                issued: { $type: Date },
+                timestamp: { $type: Date },
                 _id: false,
               },
-            },
-            path: {
-              $type: [
-                {
-                  id: { $type: String },
-                  name: { $type: String },
-                  domain: { $type: String },
-                  service: { $type: String },
-                  network: { $type: String, required: true },
-                  host: { $type: String, required: true },
-                  procedure: { $type: String, required: true },
-                  hash: { $type: String, required: true },
-                  issued: { $type: Date },
-                  timestamp: { $type: Date },
-                  _id: false,
-                },
-              ],
-              default: [],
-            },
-            _id: false,
+            ],
           },
           _id: false,
         },
+        payload: formattedSchemaWithOptions,
       },
       typeKey: "$type",
       indexes: [
-        [{ "data.id": 1 }],
-        [{ "data.idempotency": 1 }],
-        [{ "data.root": 1 }],
-        [{ "data.root": 1, "data.number": 1 }],
-        [{ "data.created": 1, "data.number": 1, "data.headers.action": 1 }],
-        [{ [`data.payload.${index}`]: 1 }],
+        [{ hash: 1 }],
+        [{ "headers.idempotency": 1 }],
+        [{ "headers.root": 1 }],
+        [{ "headers.root": 1, "headers.number": 1 }],
+        [
+          {
+            "headers.created": 1,
+            "headers.number": 1,
+            "headers.action": 1,
+          },
+        ],
+        [{ [`payload.${index}`]: 1 }],
       ],
       connection: {
         protocol,
@@ -509,24 +594,39 @@ describe("Mongodb event store", () => {
     expect(storeFake.getCall(1)).to.have.been.calledWith({
       name: `_${service}.${domain}.snapshots`,
       schema: {
-        hash: { $type: String, required: true, unique: true },
-        previous: { $type: String, required: true, unique: true },
-        public: { $type: Boolean, required: true },
-        data: {
-          $type: [String],
-          required: true,
+        headers: {
+          nonce: {
+            $type: String,
+            required: true,
+            unique: true,
+          },
+          hashes: {
+            context: { $type: String, required: true, unique: true },
+            events: { $type: String, required: true, unique: true },
+            previous: { $type: String, required: true, unique: true },
+            _id: false,
+          },
+          created: { $type: Date, required: true },
+          root: { $type: String, required: true, unique: true },
+          public: { $type: Boolean, required: true },
+          domain: { $type: String, required: true },
+          service: { $type: String, required: true },
+          network: { $type: String, required: true },
+          eventCount: { $type: Number, required: true },
+          lastEventNumber: { $type: Number, required: true },
           _id: false,
         },
-        count: { $type: Number, required: true },
-        created: { $type: Date, required: true, default: deps.dateString },
-        root: { $type: String, required: true, unique: true },
-        lastEventNumber: { $type: Number, required: true },
+        events: {
+          $type: [Buffer],
+          required: true,
+        },
+        context: { $type: Object },
         state: formattedSchema,
       },
       typeKey: "$type",
       indexes: [
-        [{ root: 1 }],
-        [{ root: 1, created: -1 }],
+        [{ "headers.root": 1 }],
+        [{ "headers.root": 1, "headers.created": -1 }],
         [{ [`state.${index}`]: 1 }],
       ],
     });
@@ -544,21 +644,42 @@ describe("Mongodb event store", () => {
       name: `_${service}.${domain}.blockchain`,
       schema: {
         hash: { $type: String, required: true },
-        previous: { $type: String, required: true },
-        created: { $type: Date, required: true, default: deps.dateString },
-        boundary: { $type: Date, required: true },
-        number: { $type: Number, required: true, unique: true },
-        count: { $type: Number, required: true },
-        data: {
-          $type: Object,
+        headers: {
+          nonce: {
+            $type: String,
+            required: true,
+            unique: true,
+          },
+          hashes: {
+            previous: { $type: String, required: true },
+            events: { $type: String, required: true },
+            snapshots: { $type: String, required: true },
+            _id: false,
+          },
+          counts: {
+            event: { $type: Number, required: true },
+            snapshot: { $type: Number, required: true },
+            _id: false,
+          },
+          created: { $type: Date, required: true },
+          boundary: { $type: Date, required: true },
+          number: { $type: Number, required: true, unique: true },
+          domain: { $type: String, required: true },
+          service: { $type: String, required: true },
+          network: { $type: String, required: true },
+          _id: false,
+        },
+        events: {
+          $type: [Buffer],
           required: true,
         },
-        domain: { $type: String, required: true },
-        service: { $type: String, required: true },
-        network: { $type: String, required: true },
+        snapshots: {
+          $type: [Buffer],
+          required: true,
+        },
       },
       typeKey: "$type",
-      indexes: [[{ number: 1 }], [{ hash: 1 }], [{ previous: 1 }]],
+      indexes: [[{ "headers.number": 1 }]],
     });
     expect(eventStoreFake).to.have.been.calledWith({
       aggregateFn: aggregateResult,
@@ -662,70 +783,93 @@ describe("Mongodb event store", () => {
     );
     expect(formatSchemaFake.getCall(1)).to.have.been.calledWith(
       schema,
-      "$type"
+      "$type",
+      {
+        options: {
+          default: undefined,
+        },
+      }
     );
     expect(storeFake.getCall(0)).to.have.been.calledWith({
       name: `_${service}.${domain}`,
       schema: {
         hash: { $type: String, required: true, unique: true },
-        data: {
-          committed: { $type: Date, required: true, default: deps.dateString },
+        headers: {
+          nonce: {
+            $type: String,
+            required: true,
+            unique: true,
+          },
+          hashes: {
+            payload: { $type: String, required: true },
+            context: { $type: String, required: true },
+            scenario: { $type: String, required: true },
+            _id: false,
+          },
+          committed: {
+            $type: Date,
+            required: true,
+          },
           created: { $type: Date, required: true },
-          id: { $type: String, required: true, unique: true },
+          number: { $type: Number, required: true },
           root: { $type: String, required: true },
           topic: { $type: String, required: true },
           idempotency: { $type: String, required: true, unique: true },
-          payload: formattedSchemaWithOptions,
-          number: { $type: Number, required: true },
-          headers: {
-            version: { $type: Number, required: true },
-            action: { $type: String, required: true },
-            domain: { $type: String, required: true },
-            service: { $type: String, required: true },
-            network: { $type: String, required: true },
-            trace: { $type: String },
-            context: { $type: Object, default: {} },
-            claims: {
-              $type: {
-                iss: String,
-                aud: String,
-                sub: String,
-                exp: String,
-                iat: String,
-                jti: String,
+          action: { $type: String, required: true },
+          domain: { $type: String, required: true },
+          service: { $type: String, required: true },
+          network: { $type: String, required: true },
+          version: { $type: Number, required: true },
+          _id: false,
+        },
+        context: { $type: Object },
+        scenario: {
+          trace: { $type: Number },
+          claims: {
+            $type: {
+              iss: String,
+              aud: String,
+              sub: String,
+              exp: String,
+              iat: String,
+              jti: String,
+              _id: false,
+            },
+          },
+          path: {
+            $type: [
+              {
+                id: { $type: String },
+                name: { $type: String },
+                domain: { $type: String },
+                service: { $type: String },
+                network: { $type: String, required: true },
+                host: { $type: String, required: true },
+                procedure: { $type: String, required: true },
+                hash: { $type: String, required: true },
+                issued: { $type: Date },
+                timestamp: { $type: Date },
                 _id: false,
               },
-            },
-            path: {
-              $type: [
-                {
-                  name: { $type: String },
-                  id: { $type: String },
-                  domain: { $type: String },
-                  service: { $type: String },
-                  network: { $type: String, required: true },
-                  host: { $type: String, required: true },
-                  procedure: { $type: String, required: true },
-                  hash: { $type: String, required: true },
-                  issued: { $type: Date },
-                  timestamp: { $type: Date },
-                  _id: false,
-                },
-              ],
-              default: [],
-            },
-            _id: false,
+            ],
           },
           _id: false,
         },
+        payload: formattedSchemaWithOptions,
       },
       typeKey: "$type",
       indexes: [
-        [{ "data.id": 1 }],
-        [{ "data.idempotency": 1 }],
-        [{ "data.root": 1 }],
-        [{ "data.root": 1, "data.number": 1 }],
-        [{ "data.created": 1, "data.number": 1, "data.headers.action": 1 }], //, _id: 1, __v: 1 }],
+        [{ hash: 1 }],
+        [{ "headers.idempotency": 1 }],
+        [{ "headers.root": 1 }],
+        [{ "headers.root": 1, "headers.number": 1 }],
+        [
+          {
+            "headers.created": 1,
+            "headers.number": 1,
+            "headers.action": 1,
+          },
+        ],
       ],
       connection: {
         protocol,
@@ -744,22 +888,40 @@ describe("Mongodb event store", () => {
     expect(storeFake.getCall(1)).to.have.been.calledWith({
       name: `_${service}.${domain}.snapshots`,
       schema: {
-        hash: { $type: String, required: true, unique: true },
-        previous: { $type: String, required: true, unique: true },
-        public: { $type: Boolean, required: true },
-        data: {
-          $type: [String],
-          required: true,
+        headers: {
+          nonce: {
+            $type: String,
+            required: true,
+            unique: true,
+          },
+          hashes: {
+            context: { $type: String, required: true, unique: true },
+            events: { $type: String, required: true, unique: true },
+            previous: { $type: String, required: true, unique: true },
+            _id: false,
+          },
+          created: { $type: Date, required: true },
+          root: { $type: String, required: true, unique: true },
+          public: { $type: Boolean, required: true },
+          domain: { $type: String, required: true },
+          service: { $type: String, required: true },
+          network: { $type: String, required: true },
+          eventCount: { $type: Number, required: true },
+          lastEventNumber: { $type: Number, required: true },
           _id: false,
         },
-        count: { $type: Number, required: true },
-        created: { $type: Date, required: true, default: deps.dateString },
-        root: { $type: String, required: true, unique: true },
-        lastEventNumber: { $type: Number, required: true },
+        events: {
+          $type: [Buffer],
+          required: true,
+        },
+        context: { $type: Object },
         state: formattedSchema,
       },
       typeKey: "$type",
-      indexes: [[{ root: 1 }], [{ root: 1, created: -1 }]],
+      indexes: [
+        [{ "headers.root": 1 }],
+        [{ "headers.root": 1, "headers.created": -1 }],
+      ],
     });
     expect(storeFake.getCall(2)).to.have.been.calledWith({
       name: `_${service}.${domain}.counts`,
@@ -775,21 +937,42 @@ describe("Mongodb event store", () => {
       name: `_${service}.${domain}.blockchain`,
       schema: {
         hash: { $type: String, required: true },
-        previous: { $type: String, required: true },
-        created: { $type: Date, required: true, default: deps.dateString },
-        boundary: { $type: Date, required: true },
-        number: { $type: Number, required: true, unique: true },
-        count: { $type: Number, required: true },
-        data: {
-          $type: Object,
+        headers: {
+          nonce: {
+            $type: String,
+            required: true,
+            unique: true,
+          },
+          hashes: {
+            previous: { $type: String, required: true },
+            events: { $type: String, required: true },
+            snapshots: { $type: String, required: true },
+            _id: false,
+          },
+          counts: {
+            event: { $type: Number, required: true },
+            snapshot: { $type: Number, required: true },
+            _id: false,
+          },
+          created: { $type: Date, required: true },
+          boundary: { $type: Date, required: true },
+          number: { $type: Number, required: true, unique: true },
+          domain: { $type: String, required: true },
+          service: { $type: String, required: true },
+          network: { $type: String, required: true },
+          _id: false,
+        },
+        events: {
+          $type: [Buffer],
           required: true,
         },
-        domain: { $type: String, required: true },
-        service: { $type: String, required: true },
-        network: { $type: String, required: true },
+        snapshots: {
+          $type: [Buffer],
+          required: true,
+        },
       },
       typeKey: "$type",
-      indexes: [[{ number: 1 }], [{ hash: 1 }], [{ previous: 1 }]],
+      indexes: [[{ "headers.number": 1 }]],
     });
   });
 });

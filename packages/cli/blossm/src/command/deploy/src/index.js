@@ -172,7 +172,7 @@ module.exports = commandProcedure({
         },
       })
       .stream(fn, { query, id }),
-  addFn: ({ domain, service, context, claims, events, async }) =>
+  addFn: ({ domain, service, context, claims, eventData, scenario, async }) =>
     eventStore({ domain, service })
       .set({
         ...(context && { context }),
@@ -182,7 +182,7 @@ module.exports = commandProcedure({
         },
         ...(async && { enqueue: { fn: enqueue } }),
       })
-      .add(events),
+      .add({ eventData, scenario }),
   countFn: ({ context, claims, token }) => ({ domain, service, root }) =>
     eventStore({ domain, service })
       .set({

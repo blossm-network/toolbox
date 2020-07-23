@@ -37,7 +37,7 @@ testing:
         domain: some-domain
         service: some-service
       examples:
-        - payload:
+        - state:
             name: some-name
           result:
             update:
@@ -63,7 +63,7 @@ testing:
         name: some-action
         domain: some-domain
         service: some-service
-      payload:
+      state:
         name: some-name
       result:
         query: {}

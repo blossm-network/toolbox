@@ -15,87 +15,97 @@ const eventStore = async ({ schema, indexes, secretFn }) => {
     return _eventStore;
   }
 
+  //DONT set default values because the hashes will be computed before the defaults are saved.
   _eventStore = deps.db.store({
     name: `_${process.env.SERVICE}.${process.env.DOMAIN}`,
     schema: {
       hash: { [typeKey]: String, required: true, unique: true },
-      data: {
-        id: { [typeKey]: String, required: true, unique: true },
+      headers: {
+        nonce: {
+          [typeKey]: String,
+          required: true,
+          unique: true,
+          //TODO no defaults because hash.
+          //Look for other defaults in this file.
+        },
+        hashes: {
+          payload: { [typeKey]: String, required: true },
+          context: { [typeKey]: String, required: true },
+          scenario: { [typeKey]: String, required: true },
+          _id: false,
+        },
         committed: {
           [typeKey]: Date,
           required: true,
-          default: deps.dateString,
+          //TODO no defaults because hash.
         },
         created: { [typeKey]: Date, required: true },
         number: { [typeKey]: Number, required: true },
         root: { [typeKey]: String, required: true },
-        idempotency: { [typeKey]: String, required: true, unique: true },
         topic: { [typeKey]: String, required: true },
-        payload: schema,
-        headers: {
-          action: { [typeKey]: String, required: true },
-          domain: { [typeKey]: String, required: true },
-          service: { [typeKey]: String, required: true },
-          network: { [typeKey]: String, required: true },
-          version: { [typeKey]: Number, required: true },
-          context: { [typeKey]: Object, default: {} },
-          claims: {
-            [typeKey]: {
-              iss: String,
-              aud: String,
-              sub: String,
-              exp: String,
-              iat: String,
-              jti: String,
+        idempotency: { [typeKey]: String, required: true, unique: true },
+        action: { [typeKey]: String, required: true },
+        domain: { [typeKey]: String, required: true },
+        service: { [typeKey]: String, required: true },
+        network: { [typeKey]: String, required: true },
+        version: { [typeKey]: Number, required: true },
+        _id: false,
+      },
+      context: { [typeKey]: Object },
+      scenario: {
+        trace: { [typeKey]: Number },
+        claims: {
+          [typeKey]: {
+            iss: String,
+            aud: String,
+            sub: String,
+            exp: String,
+            iat: String,
+            jti: String,
+            _id: false,
+          },
+        },
+        path: {
+          [typeKey]: [
+            {
+              name: { [typeKey]: String },
+              id: { [typeKey]: String },
+              domain: { [typeKey]: String },
+              service: { [typeKey]: String },
+              network: { [typeKey]: String, required: true },
+              host: { [typeKey]: String, required: true },
+              procedure: { [typeKey]: String, required: true },
+              hash: { [typeKey]: String, required: true },
+              issued: { [typeKey]: Date },
+              timestamp: { [typeKey]: Date },
               _id: false,
             },
-          },
-          trace: { [typeKey]: String },
-          path: {
-            [typeKey]: [
-              {
-                name: { [typeKey]: String },
-                id: { [typeKey]: String },
-                domain: { [typeKey]: String },
-                service: { [typeKey]: String },
-                network: { [typeKey]: String, required: true },
-                host: { [typeKey]: String, required: true },
-                procedure: { [typeKey]: String, required: true },
-                hash: { [typeKey]: String, required: true },
-                issued: { [typeKey]: Date },
-                timestamp: { [typeKey]: Date },
-                _id: false,
-              },
-            ],
-            default: [],
-          },
-          _id: false,
+          ],
         },
         _id: false,
       },
+      payload: schema,
     },
     typeKey,
     indexes: [
-      [{ "data.id": 1 }],
-      [{ "data.idempotency": 1 }],
-      [{ "data.root": 1 }],
+      [{ hash: 1 }],
+      [{ "headers.idempotency": 1 }],
+      [{ "headers.root": 1 }],
       //Need this in order to query by root and sort by number.
-      [{ "data.root": 1, "data.number": 1 }],
+      [{ "headers.root": 1, "headers.number": 1 }],
       //Can omit root from this because it has its own index and isnt useful for sort.
       [
         {
-          "data.created": 1,
-          "data.number": 1,
-          "data.headers.action": 1,
-          // _id: 1,
-          // __v: 1,
+          "headers.created": 1,
+          "headers.number": 1,
+          "headers.action": 1,
         },
       ],
       ...(indexes.length == 0
         ? []
         : [
             indexes.map((index) => {
-              return { [`data.payload.${index}`]: 1 };
+              return { [`payload.${index}`]: 1 };
             }),
           ]),
     ],
@@ -125,24 +135,39 @@ const snapshotStore = async ({ schema, indexes }) => {
   _snapshotStore = deps.db.store({
     name: `_${process.env.SERVICE}.${process.env.DOMAIN}.snapshots`,
     schema: {
-      hash: { [typeKey]: String, required: true, unique: true },
-      previous: { [typeKey]: String, required: true, unique: true },
-      public: { [typeKey]: Boolean, required: true },
-      data: {
-        [typeKey]: [String],
-        required: true,
+      headers: {
+        nonce: {
+          [typeKey]: String,
+          required: true,
+          unique: true,
+        },
+        hashes: {
+          events: { [typeKey]: String, required: true, unique: true },
+          context: { [typeKey]: String, required: true, unique: true },
+          previous: { [typeKey]: String, required: true, unique: true },
+          _id: false,
+        },
+        created: { [typeKey]: Date, required: true },
+        root: { [typeKey]: String, required: true, unique: true },
+        public: { [typeKey]: Boolean, required: true },
+        domain: { [typeKey]: String, required: true },
+        service: { [typeKey]: String, required: true },
+        network: { [typeKey]: String, required: true },
+        eventCount: { [typeKey]: Number, required: true },
+        lastEventNumber: { [typeKey]: Number, required: true },
         _id: false,
       },
-      count: { [typeKey]: Number, required: true },
-      created: { [typeKey]: Date, required: true, default: deps.dateString },
-      root: { [typeKey]: String, required: true, unique: true },
-      lastEventNumber: { [typeKey]: Number, required: true },
+      context: { [typeKey]: Object },
+      events: {
+        [typeKey]: [Buffer],
+        required: true,
+      },
       state: schema,
     },
     typeKey,
     indexes: [
-      [{ root: 1 }],
-      [{ root: 1, created: -1 }],
+      [{ "headers.root": 1 }],
+      [{ "headers.root": 1, "headers.created": -1 }],
       ...(indexes.length == 0
         ? []
         : [
@@ -186,21 +211,42 @@ const blockchainStore = async () => {
     name: `_${process.env.SERVICE}.${process.env.DOMAIN}.blockchain`,
     schema: {
       hash: { [typeKey]: String, required: true },
-      previous: { [typeKey]: String, required: true },
-      created: { [typeKey]: Date, required: true, default: deps.dateString },
-      boundary: { [typeKey]: Date, required: true },
-      number: { [typeKey]: Number, required: true, unique: true },
-      count: { [typeKey]: Number, required: true },
-      data: {
-        [typeKey]: Object,
+      headers: {
+        nonce: {
+          [typeKey]: String,
+          required: true,
+          unique: true,
+        },
+        hashes: {
+          previous: { [typeKey]: String, required: true },
+          events: { [typeKey]: String, required: true },
+          snapshots: { [typeKey]: String, required: true },
+          _id: false,
+        },
+        counts: {
+          event: { [typeKey]: Number, required: true },
+          snapshot: { [typeKey]: Number, required: true },
+          _id: false,
+        },
+        created: { [typeKey]: Date, required: true },
+        boundary: { [typeKey]: Date, required: true },
+        number: { [typeKey]: Number, required: true, unique: true },
+        domain: { [typeKey]: String, required: true },
+        service: { [typeKey]: String, required: true },
+        network: { [typeKey]: String, required: true },
+        _id: false,
+      },
+      events: {
+        [typeKey]: [Buffer],
         required: true,
       },
-      domain: { [typeKey]: String, required: true },
-      service: { [typeKey]: String, required: true },
-      network: { [typeKey]: String, required: true },
+      snapshots: {
+        [typeKey]: [Buffer],
+        required: true,
+      },
     },
     typeKey,
-    indexes: [[{ number: 1 }], [{ hash: 1 }], [{ previous: 1 }]],
+    indexes: [[{ "headers.number": 1 }]],
   });
 
   return _blockchainStore;
@@ -227,7 +273,9 @@ module.exports = async ({
     secretFn,
   });
   const sStore = await snapshotStore({
-    schema: deps.formatSchema(schema, typeKey),
+    schema: deps.formatSchema(schema, typeKey, {
+      options: { default: undefined },
+    }),
     indexes,
   });
   const cStore = await countsStore();

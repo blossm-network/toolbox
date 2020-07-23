@@ -1,16 +1,25 @@
-const { MerkleTree } = require("merkletreejs");
+const { BaseTrie: Trie } = require("merkle-patricia-tree");
 
-exports.root = ({ data, hashFn }) => {
-  const leaves = data.map(hashFn);
-  const tree = new MerkleTree(leaves, hashFn);
-  const root = tree.getRoot().toString("hex");
-  return root;
+exports.root = async (pairs) => {
+  const trie = new Trie();
+  const ops = pairs.map((pair) => ({
+    type: "put",
+    key: Buffer.from(pair.key),
+    value: Buffer.from(pair.value),
+  }));
+  await trie.batch(ops);
+  return trie.root;
 };
 
-exports.verify = ({ element, data, root, hashFn }) => {
-  const leaves = data.map(hashFn);
-  const tree = new MerkleTree(leaves, hashFn);
-  const leaf = hashFn(element);
-  const proof = tree.getProof(leaf);
-  return tree.verify(proof, leaf, root);
+exports.verify = async ({ pairs, key, value, root }) => {
+  const trie = new Trie();
+  const ops = pairs.map((pair) => ({
+    type: "put",
+    key: Buffer.from(pair.key),
+    value: Buffer.from(pair.value),
+  }));
+  await trie.batch(ops);
+  const proof = await Trie.createProof(trie, Buffer.from(key));
+  const recordedValue = await Trie.verifyProof(root, Buffer.from(key), proof);
+  return recordedValue == null ? false : value == recordedValue.toString();
 };

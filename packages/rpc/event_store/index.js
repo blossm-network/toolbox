@@ -10,35 +10,22 @@ module.exports = ({ domain, service = process.env.SERVICE } = {}) => {
       key,
     } = {},
     enqueue: { fn: enqueueFn, wait: enqueueWait } = {},
-  } = {}) => (events) => {
-    const normalizedEvents = events.map((event) => {
-      return {
-        data: {
-          root: event.data.root,
-          topic: event.data.topic,
-          ...(event.data.idempotency && {
-            idempotency: event.data.idempotency,
-          }),
-          created: event.data.created,
-          headers: {
-            ...event.data.headers,
-            ...((context || event.data.headers.context) && {
-              context: {
-                ...event.data.headers.context,
-                ...context,
-              },
-            }),
-            ...(claims && { claims }),
-          },
-          payload: event.data.payload,
-        },
-        ...(event.number && { number: event.number }),
-      };
-    });
-
+  } = {}) => ({
+    eventData,
+    scenario: { trace: scenarioTrace, path: scenarioPath } = {},
+  }) => {
     return deps
       .rpc(domain, service, "event-store")
-      .post({ events: normalizedEvents })
+      .post({
+        eventData,
+        ...((claims || scenarioTrace || scenarioPath) && {
+          scenario: {
+            ...(claims && { claims }),
+            ...(scenarioPath && { path: scenarioPath }),
+            ...(scenarioTrace && { trace: scenarioTrace }),
+          },
+        }),
+      })
       .in({
         ...(context && { context }),
       })

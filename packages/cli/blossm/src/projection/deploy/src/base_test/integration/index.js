@@ -18,6 +18,7 @@ describe("Projection integration tests", () => {
     const contextService = "some-context-service";
     const contextNetwork = "some-context-network";
 
+    //TODO
     for (const example of testing.examples) {
       const event = createEvent({
         root: example.root,

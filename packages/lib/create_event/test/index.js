@@ -8,7 +8,6 @@ let clock;
 
 const now = new Date();
 
-const trace = "trade!";
 const pathName = "path-name!";
 const pathDomain = "path-domain!";
 const pathService = "path-service!";
@@ -41,7 +40,6 @@ describe("Create event", () => {
   });
   it("should get called with expected params", async () => {
     const value = createEvent({
-      trace,
       action,
       domain,
       service,
@@ -68,39 +66,24 @@ describe("Create event", () => {
     });
 
     expect(value).to.deep.equal({
-      root,
-      topic: `${action}.${domain}.${service}`,
-      idempotency:
-        "some-idempotency-some-action-some-domain-some-service-some-path-hash",
-      created: dateString(),
       headers: {
+        root,
+        topic: `${action}.${domain}.${service}`,
+        idempotency:
+          "some-idempotency-some-action-some-domain-some-service-some-path-hash",
+        created: dateString(),
         action,
         domain,
         service,
         network,
         version,
-        trace,
-        context,
-        path: [
-          {
-            issued: pathIssued,
-            id: pathId,
-            name: pathName,
-            domain: pathDomain,
-            service: pathService,
-            timestamp: pathTimestamp,
-            network: pathNetwork,
-            host: pathHost,
-            hash: pathHash,
-            procedure: pathProcedure,
-          },
-        ],
       },
       payload,
+      context,
     });
   });
 
-  it("should get called with expected params if root, idempotency, version, and path properties are missing", async () => {
+  it("should get called with expected params if root, idempotency, and version properties are missing", async () => {
     const rootUuid = "rootUuid!";
     const idempUuid = "idemptUuid!";
     replace(
@@ -110,52 +93,30 @@ describe("Create event", () => {
     );
 
     const value = createEvent({
-      trace,
       action,
       domain,
       service,
       network,
-      path: [
-        {
-          timestamp: pathTimestamp,
-          network: pathNetwork,
-          host: pathHost,
-          hash: pathHash,
-          procedure: pathProcedure,
-        },
-      ],
       payload,
     });
 
     expect(value).to.deep.equal({
-      root: rootUuid,
-      topic: `${action}.${domain}.${service}`,
-      idempotency:
-        "idemptUuid!-some-action-some-domain-some-service-some-path-hash",
-      created: dateString(),
       headers: {
+        root: rootUuid,
+        topic: `${action}.${domain}.${service}`,
+        idempotency: "idemptUuid!-some-action-some-domain-some-service",
+        created: dateString(),
         action,
         domain,
         service,
         network,
         version: 0,
-        trace,
-        path: [
-          {
-            timestamp: pathTimestamp,
-            network: pathNetwork,
-            host: pathHost,
-            hash: pathHash,
-            procedure: pathProcedure,
-          },
-        ],
       },
       payload,
     });
   });
   it("should get called with expected params if authorized is missing", async () => {
     const value = createEvent({
-      trace,
       action,
       domain,
       service,
@@ -181,39 +142,23 @@ describe("Create event", () => {
     });
 
     expect(value).to.deep.equal({
-      root,
-      topic: `${action}.${domain}.${service}`,
-      idempotency:
-        "some-idempotency-some-action-some-domain-some-service-some-path-hash",
-      created: dateString(),
       headers: {
+        root,
+        topic: `${action}.${domain}.${service}`,
+        idempotency:
+          "some-idempotency-some-action-some-domain-some-service-some-path-hash",
+        created: dateString(),
         action,
         domain,
         service,
         network,
         version,
-        trace,
-        path: [
-          {
-            issued: pathIssued,
-            id: pathId,
-            name: pathName,
-            domain: pathDomain,
-            service: pathService,
-            timestamp: pathTimestamp,
-            network: pathNetwork,
-            host: pathHost,
-            hash: pathHash,
-            procedure: pathProcedure,
-          },
-        ],
       },
       payload,
     });
   });
   it("should get called with expected params if context is missing", async () => {
     const value = createEvent({
-      trace,
       action,
       domain,
       service,
@@ -239,32 +184,17 @@ describe("Create event", () => {
     });
 
     expect(value).to.deep.equal({
-      root,
-      topic: `${action}.${domain}.${service}`,
-      idempotency:
-        "some-idempotency-some-action-some-domain-some-service-some-path-hash",
-      created: dateString(),
       headers: {
+        root,
+        topic: `${action}.${domain}.${service}`,
+        idempotency:
+          "some-idempotency-some-action-some-domain-some-service-some-path-hash",
+        created: dateString(),
         action,
         domain,
         service,
         network,
         version,
-        trace,
-        path: [
-          {
-            issued: pathIssued,
-            id: pathId,
-            name: pathName,
-            domain: pathDomain,
-            service: pathService,
-            timestamp: pathTimestamp,
-            network: pathNetwork,
-            host: pathHost,
-            hash: pathHash,
-            procedure: pathProcedure,
-          },
-        ],
       },
       payload,
     });

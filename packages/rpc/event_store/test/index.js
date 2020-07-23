@@ -10,17 +10,6 @@ let clock;
 
 const now = new Date();
 
-const payload = {
-  a: 1,
-  b: 2,
-};
-
-const topic = "topic";
-const version = "version";
-const eventAction = "some-event-action";
-const eventDomain = "some-event-domain";
-const eventService = "some-event-service";
-const path = "some-path";
 const service = "some-service";
 const domain = "some-domain";
 const root = "some-root";
@@ -36,14 +25,15 @@ const context = { a: "some-context" };
 const claims = "some-claims";
 const internalTokenFn = "some-internal-token-fn";
 const externalTokenFn = "some-external-token-fn";
-const number = "some-number";
 
 const query = {
   key: "some-key",
   value: "some-value",
 };
 
-const created = "some-created";
+const path = "some-path";
+const trace = "some-trace";
+const eventData = "some-event-data";
 
 describe("Event store", () => {
   beforeEach(() => {
@@ -68,13 +58,9 @@ describe("Event store", () => {
     });
     replace(deps, "rpc", rpcFake);
 
-    const trace = "trace";
-
     const enqueueFnResult = "some-enqueue-fn-result";
     const enqueueFnFake = fake.returns(enqueueFnResult);
     const enqueueWait = "some-enqueue-wait";
-
-    const idempotency = "some-idempotency";
 
     await eventStore({ domain, service })
       .set({
@@ -90,51 +76,12 @@ describe("Event store", () => {
           wait: enqueueWait,
         },
       })
-      .add([
-        {
-          data: {
-            root,
-            topic,
-            idempotency,
-            created,
-            headers: {
-              action: eventAction,
-              domain: eventDomain,
-              service: eventService,
-              version,
-              trace,
-              path,
-            },
-            payload,
-          },
-          number,
-        },
-      ]);
+      .add({ eventData, scenario: { trace, path } });
 
     expect(rpcFake).to.have.been.calledWith(domain, service, "event-store");
     expect(postFake).to.have.been.calledWith({
-      events: [
-        {
-          data: {
-            root,
-            topic,
-            idempotency,
-            created,
-            headers: {
-              context,
-              claims,
-              action: eventAction,
-              domain: eventDomain,
-              service: eventService,
-              version,
-              path,
-              trace,
-            },
-            payload,
-          },
-          number,
-        },
-      ],
+      eventData,
+      scenario: { trace, path, claims },
     });
     expect(inFake).to.have.been.calledWith({
       context,
@@ -151,7 +98,7 @@ describe("Event store", () => {
       wait: enqueueWait,
     });
   });
-  it("should call add with the right params with event header context", async () => {
+  it("should call add with the right params with event header context and no trace", async () => {
     const withFake = fake();
     const inFake = fake.returns({
       with: withFake,
@@ -164,8 +111,6 @@ describe("Event store", () => {
     });
     replace(deps, "rpc", rpcFake);
 
-    const trace = "trace";
-
     await eventStore({ domain, service })
       .set({
         context,
@@ -176,56 +121,11 @@ describe("Event store", () => {
           key,
         },
       })
-      .add([
-        {
-          data: {
-            root,
-            topic,
-            created,
-            headers: {
-              action: eventAction,
-              domain: eventDomain,
-              service: eventService,
-              version,
-              trace,
-              path,
-              context: {
-                a: 1,
-                b: 2,
-              },
-            },
-            payload,
-          },
-          number,
-        },
-      ]);
-
+      .add({ eventData, scenario: { path } });
     expect(rpcFake).to.have.been.calledWith(domain, service, "event-store");
     expect(postFake).to.have.been.calledWith({
-      events: [
-        {
-          data: {
-            root,
-            topic,
-            created,
-            headers: {
-              context: {
-                b: 2,
-                a: "some-context",
-              },
-              claims,
-              action: eventAction,
-              domain: eventDomain,
-              service: eventService,
-              version,
-              path,
-              trace,
-            },
-            payload,
-          },
-          number,
-        },
-      ],
+      eventData,
+      scenario: { path, claims },
     });
     expect(inFake).to.have.been.calledWith({
       context,
@@ -251,42 +151,10 @@ describe("Event store", () => {
     });
     replace(deps, "rpc", rpcFake);
 
-    await eventStore({ domain }).add([
-      {
-        data: {
-          root,
-          topic,
-          created,
-          headers: {
-            action: eventAction,
-            domain: eventDomain,
-            service: eventService,
-            version,
-          },
-          payload,
-        },
-      },
-    ]);
+    await eventStore({ domain }).add({ eventData });
 
     expect(rpcFake).to.have.been.calledWith(domain, envService, "event-store");
-    expect(postFake).to.have.been.calledWith({
-      events: [
-        {
-          data: {
-            root,
-            topic,
-            created,
-            headers: {
-              action: eventAction,
-              domain: eventDomain,
-              service: eventService,
-              version,
-            },
-            payload,
-          },
-        },
-      ],
-    });
+    expect(postFake).to.have.been.calledWith({ eventData });
     expect(inFake).to.have.been.calledWith({});
     expect(withFake).to.have.been.calledWith({});
   });

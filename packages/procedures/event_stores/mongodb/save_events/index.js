@@ -8,10 +8,10 @@ const groomResults = (results) =>
     return result;
   });
 
-module.exports = ({ eventStore, handlers }) => async (
+module.exports = ({ eventStore, handlers }) => async ({
   events,
-  { transaction } = {}
-) => {
+  transaction,
+}) => {
   for (const event of events) {
     const handler = handlers[event.data.headers.action];
 

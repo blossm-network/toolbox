@@ -1,7 +1,7 @@
 {
-  "name": "@blossm/merkle-tree",
-  "version": "0.0.4",
-  "description": "Computes a merkle tree.",
+  "name": "@blossm/hash",
+  "version": "0.0.0",
+  "description": "SHA 256 hash.",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -10,11 +10,11 @@
   "publishConfig": {
     "access": "public"
   },
+  "dependencies": {
+    "keccak": "^3.0.1"
+  },
   "scripts": {
     "test": "mocha --recursive"
-  },
-  "dependencies": {
-    "merkle-patricia-tree": "^4.0.0"
   },
   "devDependencies": {
     "mocha": "^7.1.1"

@@ -408,7 +408,7 @@ describe("Command gateway post", () => {
     expect(statusFake).to.have.been.calledWith(statusCode);
     expect(sendFake).to.have.been.calledWith();
   });
-  it("should call with the correct params if tokens is in the response, token in req, cookies in headers, idempotenct and trace in req.headers, and root", async () => {
+  it("should call with the correct params if tokens is in the response, token in req, cookies in headers, and idempotenct in req.headers, and root", async () => {
     const validateFake = fake();
     replace(deps, "validate", validateFake);
 
@@ -447,7 +447,6 @@ describe("Command gateway post", () => {
 
     const reqToken = "some-req-token";
     const idempotency = "some-idempotency";
-    const trace = "some-trace";
     const root = "some-root";
     const req = {
       context,
@@ -457,7 +456,6 @@ describe("Command gateway post", () => {
         headers: {
           ...body.headers,
           idempotency,
-          trace,
         },
         root,
       },
@@ -506,7 +504,6 @@ describe("Command gateway post", () => {
       headers: {
         ...body.headers,
         idempotency,
-        trace,
       },
       root,
     });
@@ -531,7 +528,6 @@ describe("Command gateway post", () => {
       root,
       headers: {
         idempotency,
-        trace,
         path: [
           {
             procedure,

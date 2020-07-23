@@ -26,7 +26,7 @@ describe("Mongodb event store get block", () => {
       store: blockchainStore,
       query: {},
       sort: {
-        number: -1,
+        "headers.number": -1,
       },
       options: {
         lean: true,

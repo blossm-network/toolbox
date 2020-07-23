@@ -9,7 +9,6 @@ const goodParams = {
   payload: { a: 1 },
   headers: {
     root: "some-root",
-    trace: "trace!",
     idempotency: "some-idempotency",
   },
   root: "some-root",
@@ -59,38 +58,6 @@ describe("Validate command", () => {
       expect(1).to.equal(0);
     } catch (e) {
       expect(e.statusCode).to.equal(409);
-    }
-  });
-  it("should throw if a bad trace is passed", async () => {
-    const params = {
-      ...goodParams,
-      headers: {
-        ...goodParams.headers,
-        trace: 123,
-      },
-    };
-    try {
-      await validateCommand(params);
-
-      //shouldn't get called
-      expect(1).to.equal(0);
-    } catch (e) {
-      expect(e.statusCode).to.equal(409);
-    }
-  });
-  it("should allow no trace is passed", async () => {
-    const params = {
-      ...goodParams,
-      headers: {
-        ...goodParams.headers,
-        trace: undefined,
-      },
-    };
-    try {
-      validateCommand(params);
-    } catch (e) {
-      //shouldn't get called
-      expect(1).to.equal(0);
     }
   });
   it("should throw if a bad issued timestamp is passed", async () => {

@@ -16,10 +16,10 @@ describe("Mongodb event store query", () => {
 
     const snapshotRoot = "some-snapshot-root";
     const eventRoot = "some-event-root";
-    const findSnapshotResult = [{ root: snapshotRoot }];
+    const findSnapshotResult = [{ headers: { root: snapshotRoot } }];
     const findEventResult = [
-      { data: { root: eventRoot } },
-      { data: { root: eventRoot } },
+      { headers: { root: eventRoot } },
+      { headers: { root: eventRoot } },
     ];
     const handlers = "some-handlers";
 
@@ -60,7 +60,7 @@ describe("Mongodb event store query", () => {
     expect(findFake).to.have.been.calledWith({
       store: eventStore,
       query: {
-        "data.payload.a": 1,
+        "payload.a": 1,
       },
       options: {
         lean: true,
@@ -95,8 +95,8 @@ describe("Mongodb event store query", () => {
 
     const eventRoot = "some-event-root";
     const findEventResult = [
-      { data: { root: eventRoot } },
-      { data: { root: eventRoot } },
+      { headers: { root: eventRoot } },
+      { headers: { root: eventRoot } },
     ];
     const handlers = "some-handlers";
 
@@ -136,7 +136,7 @@ describe("Mongodb event store query", () => {
     expect(findFake).to.have.been.calledWith({
       store: eventStore,
       query: {
-        "data.payload.a": 1,
+        "payload.a": 1,
       },
       options: {
         lean: true,
@@ -166,10 +166,10 @@ describe("Mongodb event store query", () => {
 
     const snapshotRoot = "some-snapshot-root";
     const eventRoot = "some-event-root";
-    const findSnapshotResult = [{ root: snapshotRoot }];
+    const findSnapshotResult = [{ headers: { root: snapshotRoot } }];
     const findEventResult = [
-      { data: { root: eventRoot } },
-      { data: { root: eventRoot } },
+      { headers: { root: eventRoot } },
+      { headers: { root: eventRoot } },
     ];
     const handlers = "some-handlers";
 
@@ -210,7 +210,7 @@ describe("Mongodb event store query", () => {
     expect(findFake).to.have.been.calledWith({
       store: eventStore,
       query: {
-        "data.payload.a.b.c": 1,
+        "payload.a.b.c": 1,
       },
       options: {
         lean: true,
@@ -244,7 +244,7 @@ describe("Mongodb event store query", () => {
     const snapshotStore = "some-snapshot-store";
 
     const snapshotRoot = "some-snapshot-root";
-    const findSnapshotResult = [{ root: snapshotRoot }];
+    const findSnapshotResult = [{ headers: { root: snapshotRoot } }];
     const handlers = "some-handlers";
 
     const findFake = stub()
@@ -283,7 +283,7 @@ describe("Mongodb event store query", () => {
     expect(findFake).to.have.been.calledWith({
       store: eventStore,
       query: {
-        "data.payload.a": 1,
+        "payload.a": 1,
       },
       options: {
         lean: true,

@@ -4,10 +4,10 @@ module.exports = ({ eventStore, snapshotStore, handlers }) => async (root) => {
   const snapshot = await deps.db.findOne({
     store: snapshotStore,
     query: {
-      root,
+      "headers.root": root,
     },
     sort: {
-      created: -1,
+      "headers.created": -1,
     },
     options: {
       lean: true,
@@ -18,13 +18,13 @@ module.exports = ({ eventStore, snapshotStore, handlers }) => async (root) => {
     .find({
       store: eventStore,
       query: {
-        "data.root": root,
+        "headers.root": root,
         ...(snapshot && {
-          "data.number": { $gt: snapshot.data.lastEventNumber },
+          "headers.number": { $gt: snapshot.headers.lastEventNumber },
         }),
       },
       sort: {
-        "data.number": 1,
+        "headers.number": 1,
       },
       options: {
         lean: true,
@@ -32,32 +32,54 @@ module.exports = ({ eventStore, snapshotStore, handlers }) => async (root) => {
     })
     .cursor();
 
-  let aggregate = snapshot && {
+  const aggregate = {
     root,
-    lastEventNumber: snapshot ? snapshot.data.lastEventNumber : {},
-    state: snapshot ? snapshot.data.state : {},
-    events: [],
-    snapshotHash: snapshot.hash,
+    domain: process.env.DOMAIN,
+    service: process.env.SERVICE,
+    network: process.env.NETWORK,
+    ...(snapshot && {
+      lastEventNumber: snapshot.headers.lastEventNumber,
+      state: snapshot.headers.state,
+      trace: snapshot.headers.trace,
+      context: snapshot.context,
+    }),
   };
 
   await cursor.eachAsync((event) => {
-    const handler = handlers[event.data.headers.action];
+    const handler = handlers[event.headers.action];
     if (!handler)
       throw deps.badRequestError.message("Event handler not specified.", {
         info: {
-          action: event.data.headers.action,
+          action: event.headers.action,
         },
       });
 
-    aggregate = {
-      root: event.data.root,
-      lastEventNumber: event.data.number,
-      state: handler(aggregate ? aggregate.state : {}, event.data.payload),
-      ...(aggregate &&
-        aggregate.snapshotHash && { snapshotHash: aggregate.snapshotHash }),
-      events: [...(aggregate ? aggregate.events : []), event],
-    };
+    aggregate.lastEventNumber = event.headers.number;
+    aggregate.state = handler(aggregate.state || {}, event.payload);
+    aggregate.trace = [
+      ...(event.trace ? [event.trace] : []),
+      ...(aggregate.trace || []),
+    ].slice(0, 10);
+
+    if (aggregate.context) {
+      const keys = Object.keys(aggregate.context);
+      const commonContextKeys = keys.filter((key) => {
+        const value = event.context[key];
+        return (
+          value &&
+          value.root == aggregate.context[key].root &&
+          value.service == aggregate.context[key].service &&
+          value.network == aggregate.context[key].network
+        );
+      });
+      aggregate.context = commonContextKeys.reduce((result, key) => {
+        result[key] = aggregate.context[key];
+        return result;
+      }, {});
+    } else {
+      aggregate.context = event.context;
+    }
   });
 
-  return aggregate;
+  return aggregate.state && aggregate;
 };

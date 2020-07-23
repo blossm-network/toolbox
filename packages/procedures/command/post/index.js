@@ -22,6 +22,23 @@ module.exports = ({
   if (normalizeFn) req.body.payload = await normalizeFn(req.body.payload);
 
   const commandId = deps.uuid();
+  const trace = deps.uuid();
+
+  const path = [
+    ...(req.body.headers.path || []),
+    {
+      procedure: process.env.PROCEDURE,
+      id: commandId,
+      timestamp: deps.dateString(),
+      issued: req.body.headers.issued,
+      name: process.env.NAME,
+      domain: process.env.DOMAIN,
+      service: process.env.SERVICE,
+      network: process.env.NETWORK,
+      host: process.env.HOST,
+      hash: process.env.OPERATION_HASH,
+    },
+  ];
 
   const {
     events = [],
@@ -62,22 +79,8 @@ module.exports = ({
       ...(req.body.headers.idempotency && {
         idempotency: req.body.headers.idempotency,
       }),
-      ...(req.body.headers.trace && { trace: req.body.headers.trace }),
-      path: [
-        ...(req.body.headers.path || []),
-        {
-          id: commandId,
-          timestamp: deps.dateString(),
-          issued: req.body.headers.issued,
-          procedure: process.env.PROCEDURE,
-          hash: process.env.OPERATION_HASH,
-          name: process.env.NAME,
-          domain: process.env.DOMAIN,
-          service: process.env.SERVICE,
-          network: process.env.NETWORK,
-          host: process.env.HOST,
-        },
-      ],
+      trace,
+      path,
     }),
     countFn: countFn({
       ...(req.body.context && { context: req.body.context }),
@@ -86,7 +89,7 @@ module.exports = ({
     }),
   });
 
-  const eventsPerStore = {};
+  const eventDataPerStore = {};
 
   for (const {
     root,
@@ -98,10 +101,9 @@ module.exports = ({
     domain = process.env.DOMAIN,
     service = process.env.SERVICE,
   } of events) {
-    const eventData = deps.createEvent({
+    const event = deps.createEvent({
       ...(root && { root }),
       payload,
-      ...(req.body.headers.trace && { trace: req.body.headers.trace }),
       version,
       action,
       domain,
@@ -110,48 +112,40 @@ module.exports = ({
       ...(req.body.headers.idempotency && {
         idempotency: req.body.headers.idempotency,
       }),
-      ...(context && { context }),
-      path: [
-        ...(req.body.headers.path || []),
-        {
-          procedure: process.env.PROCEDURE,
-          id: commandId,
-          timestamp: deps.dateString(),
-          issued: req.body.headers.issued,
-          name: process.env.NAME,
-          domain: process.env.DOMAIN,
-          service: process.env.SERVICE,
-          network: process.env.NETWORK,
-          host: process.env.HOST,
-          hash: process.env.OPERATION_HASH,
-        },
-      ],
+      ...((context || req.body.context) && {
+        context: context || req.body.context,
+      }),
+      path,
     });
-    const normalizedEvent = {
-      data: eventData,
+    const normalizedEventData = {
+      event,
       ...(correctNumber && { number: correctNumber }),
     };
 
-    eventsPerStore[service] = eventsPerStore[service] || {};
+    eventDataPerStore[service] = eventDataPerStore[service] || {};
 
-    eventsPerStore[service][domain] = eventsPerStore[service][domain]
-      ? eventsPerStore[service][domain].concat([normalizedEvent])
-      : [normalizedEvent];
+    eventDataPerStore[service][domain] = eventDataPerStore[service][domain]
+      ? eventDataPerStore[service][domain].concat([normalizedEventData])
+      : [normalizedEventData];
   }
 
   const fns = [];
-  for (const service in eventsPerStore) {
-    for (const domain in eventsPerStore[service]) {
+  for (const service in eventDataPerStore) {
+    for (const domain in eventDataPerStore[service]) {
       fns.push(
         addFn({
           domain,
           service,
           ...(req.body.context && { context: req.body.context }),
           ...(req.body.claims && { claims: req.body.claims }),
-          events: eventsPerStore[service][domain],
-          async: !eventsPerStore[service][domain].some(
+          eventData: eventDataPerStore[service][domain],
+          async: !eventDataPerStore[service][domain].some(
             (normalizedEvent) => normalizedEvent.number != undefined
           ),
+          scenario: {
+            trace,
+            path,
+          },
         })
       );
     }
@@ -167,7 +161,7 @@ module.exports = ({
       .status(statusCode || (events.length ? 202 : 200))
       .send({
         ...response,
-        ...(events.length && { _id: commandId }),
+        ...(events.length && { _id: commandId, _trace: trace }),
       });
   } else {
     res.set(headers).sendStatus(204);

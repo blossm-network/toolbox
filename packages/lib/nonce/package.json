@@ -10,9 +10,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "dependencies": {
-    "nonce": "^1.0.4"
-  },
+  "dependencies": {},
   "scripts": {
     "test": "mocha --recursive"
   },
