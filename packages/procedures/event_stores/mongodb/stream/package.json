@@ -1,7 +1,7 @@
 {
   "name": "@blossm/mongodb-event-store-stream",
   "description": "A mongodb event store server stream function.",
-  "version": "0.0.40",
+  "version": "0.0.41",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
