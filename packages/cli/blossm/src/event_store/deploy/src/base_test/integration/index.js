@@ -129,8 +129,7 @@ describe("Event store integration tests", () => {
       (data) => {
         //TODO trim?
         const parsedData = JSON.parse(data.toString());
-        console.log({ parsedData });
-        expect(parsedData.number).to.equal(currentNumber);
+        expect(parsedData.headers.number).to.equal(currentNumber);
         currentNumber++;
       },
       {
