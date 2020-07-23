@@ -9,7 +9,8 @@ const integrationTests = require("./steps/integration_tests");
 const dockerComposeLogs = require("./steps/docker_compose_logs");
 const dockerPush = require("./steps/docker_push");
 const deployRun = require("./steps/deploy_run");
-const scheduleJob = require("./steps/schedule_job");
+//TODO
+// const scheduleJob = require("./steps/schedule_job");
 const startDnsTransaction = require("./steps/start_dns_transaction");
 const addDnsTransaction = require("./steps/add_dns_transaction");
 const executeDnsTransaction = require("./steps/execute_dns_transaction");
@@ -145,14 +146,14 @@ module.exports = ({
               project,
             })
           ),
-          scheduleJob({
-            name: `event-store-${service}-${domain}-create-block`,
-            schedule: "* * * * *",
-            serviceName,
-            computeUrlId,
-            uri: `${uri}/create-block`,
-            project,
-          }),
+          // scheduleJob({
+          //   name: `event-store-${service}-${domain}-create-block`,
+          //   schedule: "* * * * *",
+          //   serviceName,
+          //   computeUrlId,
+          //   uri: `${uri}/create-block`,
+          //   project,
+          // }),
         ]
       : [dockerComposeLogs]),
   ];

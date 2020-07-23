@@ -541,6 +541,7 @@ describe("Event store integration tests", () => {
                 action: example0.action,
                 domain,
                 service,
+                network: process.env.NETWORK,
               },
               payload: example0.payload,
             },
@@ -549,8 +550,6 @@ describe("Event store integration tests", () => {
         ],
       },
     });
-    //TODO
-    console.log({ response });
     expect(response.statusCode).to.equal(412);
   });
   it("should not return an error if same idempotency, but only one should be saved", async () => {
