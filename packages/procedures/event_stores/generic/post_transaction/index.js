@@ -111,6 +111,7 @@ module.exports = ({
             topic: event.headers.topic,
             version: event.headers.version,
             created: event.headers.created,
+            idempotency: event.headers.idempotency,
             committed: deps.dateString(),
             nonce: deps.nonce(),
             number: allottedNumber,
