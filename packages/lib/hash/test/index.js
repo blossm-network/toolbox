@@ -6,8 +6,8 @@ describe("Keccak Hash string", () => {
   it("it should create a unique hash", async () => {
     const someString = "some-string";
     const someOtherString = "some-other-string";
-    const n1 = hash.update(someString).create();
-    const n2 = hash.update(someOtherString).create();
+    const n1 = hash(someString).create();
+    const n2 = hash(someOtherString).create();
 
     expect(n1).to.exist;
     expect(n2).to.exist;
@@ -17,9 +17,9 @@ describe("Keccak Hash string", () => {
     const someBuffer = Buffer.from("some-string");
     const someOtherBuffer = Buffer.from("some-other-string");
     const someSameBuffer = Buffer.from("some-other-string");
-    const n1 = hash.update(someBuffer).create();
-    const n2 = hash.update(someOtherBuffer).create();
-    const n3 = hash.update(someSameBuffer).create();
+    const n1 = hash(someBuffer).create();
+    const n2 = hash(someOtherBuffer).create();
+    const n3 = hash(someSameBuffer).create();
 
     expect(n1).to.exist;
     expect(n2).to.exist;
@@ -31,9 +31,9 @@ describe("Keccak Hash string", () => {
     const someOtherString = "a";
     const someSameString = "b";
     const someRandomString = "bc";
-    const n1 = hash.update(someString).create();
-    const n2 = hash.update(someOtherString).update(someSameString).create();
-    const n3 = hash.update(someRandomString).create();
+    const n1 = hash(someString).create();
+    const n2 = hash(someOtherString).update(someSameString).create();
+    const n3 = hash(someRandomString).create();
 
     expect(n1).to.exist;
     expect(n2).to.exist;

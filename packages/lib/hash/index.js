@@ -8,4 +8,4 @@ const update = (text, { hash } = {}) => {
   };
 };
 
-exports.update = update;
+module.exports = update;
