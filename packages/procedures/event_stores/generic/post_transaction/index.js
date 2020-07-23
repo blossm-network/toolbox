@@ -110,6 +110,7 @@ module.exports = ({
             network: event.headers.network,
             topic: event.headers.topic,
             version: event.headers.version,
+            created: event.headers.created,
             committed: deps.dateString(),
             nonce: deps.nonce(),
             number: allottedNumber,

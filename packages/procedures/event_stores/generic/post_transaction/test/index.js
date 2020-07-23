@@ -26,6 +26,7 @@ const payload = { a: 1 };
 const idempotency = "some-idempotency";
 const action = "some-action";
 const version = "some-version";
+const created = "some-created";
 const headers = {
   root,
   topic,
@@ -34,6 +35,7 @@ const headers = {
   service,
   network,
   nonce,
+  created,
   version,
 };
 const scenarioTrace = "some-scenario-trace";
@@ -120,6 +122,7 @@ describe("Event store post", () => {
             service,
             network,
             version,
+            created,
             hashes: {
               payload: payloadHash,
               context: contextHash,
@@ -153,6 +156,7 @@ describe("Event store post", () => {
       service,
       network,
       version,
+      created,
       hashes: {
         payload: payloadHash,
         context: contextHash,
@@ -212,6 +216,7 @@ describe("Event store post", () => {
             service,
             network,
             version,
+            created,
             hashes: {
               payload: payloadHash,
               context: contextHash,
@@ -245,6 +250,7 @@ describe("Event store post", () => {
       service,
       network,
       version,
+      created,
       hashes: {
         payload: payloadHash,
         context: contextHash,
@@ -299,6 +305,7 @@ describe("Event store post", () => {
             service,
             network,
             version,
+            created,
             hashes: {
               payload: payloadHash,
               context: contextHash,
@@ -332,6 +339,7 @@ describe("Event store post", () => {
       service,
       network,
       version,
+      created,
       hashes: {
         payload: payloadHash,
         context: contextHash,
@@ -444,6 +452,7 @@ describe("Event store post", () => {
             service,
             network,
             version,
+            created,
             hashes: {
               payload: payloadHash1,
               context: contextHash1,
@@ -467,6 +476,7 @@ describe("Event store post", () => {
             service,
             network,
             version,
+            created,
             hashes: {
               payload: payloadHash2,
               context: contextHash2,
@@ -490,6 +500,7 @@ describe("Event store post", () => {
             service,
             network,
             version,
+            created,
             hashes: {
               payload: payloadHash3,
               context: contextHash3,
@@ -526,6 +537,7 @@ describe("Event store post", () => {
       service,
       network,
       version,
+      created,
       hashes: {
         payload: payloadHash1,
         context: contextHash1,
@@ -543,6 +555,7 @@ describe("Event store post", () => {
       service,
       network,
       version,
+      created,
       hashes: {
         payload: payloadHash2,
         context: contextHash2,
@@ -560,6 +573,7 @@ describe("Event store post", () => {
       service,
       network,
       version,
+      created,
       hashes: {
         payload: payloadHash3,
         context: contextHash3,
@@ -603,6 +617,7 @@ describe("Event store post", () => {
             number: currentEventsForRoot,
             topic,
             committed: deps.dateString(),
+            created,
             nonce,
             action,
             domain,
@@ -640,6 +655,7 @@ describe("Event store post", () => {
       service,
       network,
       version,
+      created,
       hashes: {
         payload: payloadHash,
         context: contextHash,
