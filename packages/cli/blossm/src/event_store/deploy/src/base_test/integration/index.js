@@ -49,14 +49,14 @@ describe("Event store integration tests", () => {
 
     const response0 = await request.post(url, {
       body: {
-        events: [
+        eventData: [
           {
-            data: {
-              root,
-              idempotency: uuid(),
-              topic,
-              created: dateString(),
+            event: {
               headers: {
+                root,
+                idempotency: uuid(),
+                topic,
+                created: dateString(),
                 action: example0.action,
                 domain,
                 service,
@@ -89,14 +89,14 @@ describe("Event store integration tests", () => {
 
     const response2 = await request.post(url, {
       body: {
-        events: [
+        eventData: [
           {
-            data: {
-              root,
-              topic,
-              idempotency: uuid(),
-              created: dateString(),
+            event: {
               headers: {
+                root,
+                topic,
+                idempotency: uuid(),
+                created: dateString(),
                 version,
                 action: example1.action,
                 domain,
@@ -154,14 +154,14 @@ describe("Event store integration tests", () => {
     //Test stream with actions and root qualifiers
     await request.post(url, {
       body: {
-        events: [
+        eventData: [
           {
-            data: {
-              root,
-              topic,
-              idempotency: uuid(),
-              created: dateString(),
+            event: {
               headers: {
+                root,
+                topic,
+                idempotency: uuid(),
+                created: dateString(),
                 version,
                 action: "some-bogus",
                 domain,
@@ -196,14 +196,14 @@ describe("Event store integration tests", () => {
     const newSavedDate = dateString();
     await request.post(url, {
       body: {
-        events: [
+        eventData: [
           {
-            data: {
-              root,
-              topic,
-              idempotency: uuid(),
-              created: dateString(),
+            event: {
               headers: {
+                root,
+                topic,
+                idempotency: uuid(),
+                created: dateString(),
                 version,
                 action: example1.action,
                 domain,
@@ -265,14 +265,14 @@ describe("Event store integration tests", () => {
 
     const response = await request.post(url, {
       body: {
-        events: [
+        eventData: [
           {
-            data: {
-              root,
-              topic,
-              idempotency: uuid(),
-              created: dateString(),
+            event: {
               headers: {
+                root,
+                topic,
+                idempotency: uuid(),
+                created: dateString(),
                 version,
                 action: example0.action,
                 domain,
@@ -283,12 +283,12 @@ describe("Event store integration tests", () => {
             },
           },
           {
-            data: {
-              root,
-              topic,
-              idempotency: uuid(),
-              created: dateString(),
+            event: {
               headers: {
+                root,
+                topic,
+                idempotency: uuid(),
+                created: dateString(),
                 version,
                 action: example1.action,
                 domain,
@@ -324,14 +324,14 @@ describe("Event store integration tests", () => {
         });
         request.post(url, {
           body: {
-            events: [
+            eventData: [
               {
-                data: {
-                  root,
-                  topic,
-                  idempotency: uuid(),
-                  created: dateString(),
+                event: {
                   headers: {
+                    root,
+                    topic,
+                    idempotency: uuid(),
+                    created: dateString(),
                     version,
                     action: example0.action,
                     domain,
@@ -380,14 +380,14 @@ describe("Event store integration tests", () => {
     const [response0, response1] = await Promise.all([
       request.post(url, {
         body: {
-          events: [
+          eventData: [
             {
-              data: {
-                root,
-                topic,
-                idempotency: uuid(),
-                created: dateString(),
+              event: {
                 headers: {
+                  root,
+                  topic,
+                  idempotency: uuid(),
+                  created: dateString(),
                   version,
                   action: example0.action,
                   domain,
@@ -403,14 +403,14 @@ describe("Event store integration tests", () => {
 
       request.post(url, {
         body: {
-          events: [
+          eventData: [
             {
-              data: {
-                root,
-                topic,
-                idempotency: uuid(),
-                created: dateString(),
+              event: {
                 headers: {
+                  root,
+                  topic,
+                  idempotency: uuid(),
+                  created: dateString(),
                   version,
                   action: example1.action,
                   domain,
@@ -528,14 +528,14 @@ describe("Event store integration tests", () => {
 
     const response = await request.post(url, {
       body: {
-        events: [
+        eventData: [
           {
-            data: {
-              root,
-              topic,
-              idempotency: uuid(),
-              created: dateString(),
+            event: {
               headers: {
+                root,
+                topic,
+                idempotency: uuid(),
+                created: dateString(),
                 version,
                 action: example0.action,
                 domain,
@@ -556,14 +556,14 @@ describe("Event store integration tests", () => {
 
     const response = await request.post(url, {
       body: {
-        events: [
+        eventData: [
           {
-            data: {
-              root,
-              topic,
-              idempotency,
-              created: dateString(),
+            event: {
               headers: {
+                root,
+                topic,
+                idempotency,
+                created: dateString(),
                 version,
                 action: example0.action,
                 domain,
@@ -574,12 +574,12 @@ describe("Event store integration tests", () => {
             },
           },
           {
-            data: {
-              root,
-              topic,
-              idempotency,
-              created: dateString(),
+            event: {
               headers: {
+                root,
+                topic,
+                idempotency,
+                created: dateString(),
                 version,
                 action: example0.action,
                 domain,
@@ -595,14 +595,14 @@ describe("Event store integration tests", () => {
     expect(response.statusCode).to.equal(204);
     const otherResponse = await request.post(url, {
       body: {
-        events: [
+        eventData: [
           {
-            data: {
-              root,
-              topic,
-              idempotency,
-              created: dateString(),
+            event: {
               headers: {
+                root,
+                topic,
+                idempotency,
+                created: dateString(),
                 version,
                 action: example0.action,
                 domain,
@@ -613,12 +613,12 @@ describe("Event store integration tests", () => {
             },
           },
           {
-            data: {
-              root,
-              topic,
-              idempotency,
-              created: dateString(),
+            event: {
               headers: {
+                root,
+                topic,
+                idempotency,
+                created: dateString(),
                 version,
                 action: example0.action,
                 domain,
@@ -642,14 +642,14 @@ describe("Event store integration tests", () => {
 
     const response = await request.post(url, {
       body: {
-        events: [
+        eventData: [
           {
-            data: {
-              root,
-              topic,
-              idempotency: uuid(),
-              created: dateString(),
+            event: {
               headers: {
+                root,
+                topic,
+                idempotency: uuid(),
+                created: dateString(),
                 version,
                 action: "bogus",
                 domain,
