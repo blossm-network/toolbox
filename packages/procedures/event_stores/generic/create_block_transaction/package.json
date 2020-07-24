@@ -16,7 +16,7 @@
   "dependencies": {
     "@blossm/cononical-string": "*",
     "@blossm/datetime": "*",
-    "@blossm/encode": "*",
+    "@blossm/rlp": "*",
     "@blossm/hash": "^0.0.3",
     "@blossm/merkle-tree": "^0.0.6",
     "@blossm/nonce": "*"
