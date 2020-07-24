@@ -7,7 +7,7 @@ module.exports = ({ name, ring, project, rotation }) => {
     args: [
       "-c",
       oneLine`
-    gcloud kms key create ${name}
+    gcloud kms keys create ${name}
     --purpose=encryption
     --keyring=${ring}
     --location=global

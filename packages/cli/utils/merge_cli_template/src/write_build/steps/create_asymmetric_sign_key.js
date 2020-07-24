@@ -7,7 +7,7 @@ module.exports = ({ name, ring, location, project }) => {
     args: [
       "-c",
       oneLine`
-    gcloud kms key create ${name}
+    gcloud kms keys create ${name}
     --purpose=asymmetric-signing
     --default-algorithm=ec-sign-p256-sha256
     --keyring=${ring}
