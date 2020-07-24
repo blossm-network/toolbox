@@ -9,8 +9,10 @@ const integrationTests = require("./steps/integration_tests");
 const dockerComposeLogs = require("./steps/docker_compose_logs");
 const dockerPush = require("./steps/docker_push");
 const deployRun = require("./steps/deploy_run");
-//TODO
-// const scheduleJob = require("./steps/schedule_job");
+const createKeyRing = require("./steps/create_key_ring");
+const createSymmetricEncryptKey = require("./steps/create_symmetric_encrypt_key");
+const createAsymmetricSignKey = require("./steps/create_asymmetric_sign_key");
+const scheduleJob = require("./steps/schedule_job");
 const startDnsTransaction = require("./steps/start_dns_transaction");
 const addDnsTransaction = require("./steps/add_dns_transaction");
 const executeDnsTransaction = require("./steps/execute_dns_transaction");
@@ -90,6 +92,24 @@ module.exports = ({
             containerRegistery,
             procedure,
           }),
+          createKeyRing({
+            name: "blockchain",
+            location: "global",
+            project,
+          }),
+          createSymmetricEncryptKey({
+            name: "private",
+            ring: "blockchain",
+            location: "global",
+            rotation: "90d",
+            project,
+          }),
+          createAsymmetricSignKey({
+            name: "producer",
+            ring: "blockchain",
+            location: "global",
+            project,
+          }),
           deployRun({
             serviceName,
             procedure,
@@ -146,14 +166,14 @@ module.exports = ({
               project,
             })
           ),
-          // scheduleJob({
-          //   name: `event-store-${service}-${domain}-create-block`,
-          //   schedule: "* * * * *",
-          //   serviceName,
-          //   computeUrlId,
-          //   uri: `${uri}/create-block`,
-          //   project,
-          // }),
+          scheduleJob({
+            name: `event-store-${service}-${domain}-create-block`,
+            schedule: "* * * * *",
+            serviceName,
+            computeUrlId,
+            uri: `${uri}/create-block`,
+            project,
+          }),
         ]
       : [dockerComposeLogs]),
   ];

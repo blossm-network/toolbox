@@ -4,4 +4,5 @@ module.exports = {
   decrypt: require("./src/decrypt"),
   encrypt: require("./src/encrypt"),
   createKey: require("./src/create_key"),
+  publicKey: require("./src/public_key"),
 };

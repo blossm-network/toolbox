@@ -4,20 +4,24 @@ module.exports = ({
   saveSnapshotFn,
   aggregateFn,
   rootStreamFn,
-  hashFn,
   latestBlockFn,
   saveBlockFn,
   createTransactionFn,
+  encryptFn,
+  signFn,
+  blockPublisherPublicKeyFn,
   public,
 }) => async (_, res) => {
   await createTransactionFn(
     deps.createBlockTransaction({
       saveSnapshotFn,
-      hashFn,
       aggregateFn,
       rootStreamFn,
       latestBlockFn,
       saveBlockFn,
+      encryptFn,
+      signFn,
+      blockPublisherPublicKeyFn,
       public,
     })
   );

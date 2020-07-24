@@ -11,12 +11,14 @@ const rootStreamFn = "some-root-stream-fn";
 const countFn = "some-count-fn";
 const saveEventsFn = "some-save-events-fn";
 const publishFn = "some-publish-fn";
-const hashFn = "some-hash-fn";
 const saveBlockFn = "some-save-block-fn";
 const createTransactionFn = "some-create-transaction-fn";
 const idempotencyConflictCheckFn = "some-idempotency-conflict-check-fn";
 const latestBlockFn = "some-latest-block-fn";
 const saveSnapshotFn = "some-save-snapshot-fn";
+const encryptFn = "some-encrypt-fn";
+const signFn = "some-sign-fn";
+const blockPublisherPublicKeyFn = "some-block-publisher-public-key-fn";
 
 describe("Event store", () => {
   beforeEach(() => {
@@ -76,7 +78,6 @@ describe("Event store", () => {
       queryFn,
       streamFn,
       publishFn,
-      hashFn,
       rootStreamFn,
       createTransactionFn,
       latestBlockFn,
@@ -84,6 +85,9 @@ describe("Event store", () => {
       idempotencyConflictCheckFn,
       countFn,
       saveSnapshotFn,
+      encryptFn,
+      signFn,
+      blockPublisherPublicKeyFn,
       public,
     });
     expect(listenFake).to.have.been.calledOnce;
@@ -115,17 +119,18 @@ describe("Event store", () => {
       saveSnapshotFn,
       aggregateFn,
       rootStreamFn,
-      hashFn,
       createTransactionFn,
       saveBlockFn,
       latestBlockFn,
+      encryptFn,
+      signFn,
+      blockPublisherPublicKeyFn,
       public,
     });
     expect(eventStorePostFake).to.have.been.calledWith({
       saveEventsFn,
       reserveRootCountsFn,
       publishFn,
-      hashFn,
       idempotencyConflictCheckFn,
       createTransactionFn,
     });

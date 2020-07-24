@@ -1,6 +1,9 @@
 const deps = require("./deps");
 
-module.exports = ({ eventStore, snapshotStore, handlers }) => async (root) => {
+module.exports = ({ eventStore, snapshotStore, handlers }) => async (
+  root,
+  { includeEvents = false } = {}
+) => {
   const snapshot = await deps.db.findOne({
     store: snapshotStore,
     query: {
@@ -43,6 +46,7 @@ module.exports = ({ eventStore, snapshotStore, handlers }) => async (root) => {
       trace: snapshot.headers.trace,
       context: snapshot.context,
     }),
+    ...(includeEvents && { events: [] }),
   };
 
   await cursor.eachAsync((event) => {
@@ -79,6 +83,8 @@ module.exports = ({ eventStore, snapshotStore, handlers }) => async (root) => {
     } else {
       aggregate.context = event.context;
     }
+
+    if (includeEvents) aggregate.events.push(event);
   });
 
   return aggregate.state && aggregate;

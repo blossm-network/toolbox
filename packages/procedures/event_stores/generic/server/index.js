@@ -7,7 +7,6 @@ module.exports = async ({
   streamFn,
   reserveRootCountsFn,
   publishFn,
-  hashFn,
   rootStreamFn,
   createTransactionFn,
   idempotencyConflictCheckFn,
@@ -15,6 +14,9 @@ module.exports = async ({
   countFn,
   saveBlockFn,
   latestBlockFn,
+  encryptFn,
+  signFn,
+  blockPublisherPublicKeyFn,
   public,
 } = {}) => {
   deps
@@ -34,10 +36,12 @@ module.exports = async ({
         saveSnapshotFn,
         aggregateFn,
         rootStreamFn,
-        hashFn,
         createTransactionFn,
         saveBlockFn,
         latestBlockFn,
+        encryptFn,
+        signFn,
+        blockPublisherPublicKeyFn,
         public,
       }),
       { path: "/create-block" }
@@ -47,7 +51,6 @@ module.exports = async ({
         saveEventsFn,
         reserveRootCountsFn,
         publishFn,
-        hashFn,
         createTransactionFn,
         idempotencyConflictCheckFn,
       })

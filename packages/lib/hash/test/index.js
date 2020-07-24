@@ -26,6 +26,19 @@ describe("Keccak Hash string", () => {
     expect(n1).to.not.equal(n2);
     expect(n2).to.equal(n3);
   });
+  it("it should create a unique hash with objects", async () => {
+    const someObject = { a: 1, b: { c: 5 } };
+    const someOtherObject = { p: 1, c: { d: 5 } };
+    const someSameObject = { p: 1, c: { d: 5 } };
+    const n1 = hash(someObject).create();
+    const n2 = hash(someOtherObject).create();
+    const n3 = hash(someSameObject).create();
+
+    expect(n1).to.exist;
+    expect(n2).to.exist;
+    expect(n1).to.not.equal(n2);
+    expect(n2).to.equal(n3);
+  });
   it("it should create a unique hash if same length", async () => {
     const someString = "ab";
     const someOtherString = "a";

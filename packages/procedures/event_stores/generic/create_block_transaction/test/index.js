@@ -12,20 +12,47 @@ const now = new Date();
 
 const transaction = "some-transaction";
 
-const previousBoundary = "some-previous-boundary";
+const snapshotNonce = "some-snapshot-nonce";
+const blockNonce = "some-block-nonce";
 const previousHash = "some-previous-hash";
 const root = "some-root";
+const publicKey = "some-public-key";
 const snapshotHash = "some-snapshot-hash";
 const aggregateLastEventNumber = "some-snapshot-last-event-number";
 const aggregateState = "some-aggregate-state";
+const aggregateContext = "some-aggregate-context";
 const eventCononicalString = "some-event-connical-string";
 const snapshotCononicalString = "some-snapshot-connical-string";
+const eventsMerkleRoot = "some-events-merkle-root";
 const snapshotMerkleRoot = "some-snapshot-merkle-root";
-const hash = "some-hash";
-const anotherRoot = "another-root";
-const snapshot = "some-snapshot";
-const blockMerkleRoot = "some-block-merkle-root";
+const eventKeyHash = "some-event-key-hash";
+const contextHash = "some-context-hash";
+const stateHash = "some-state-hash";
+const blockHeadersHash = "some-block-headers-hash";
+const snapshotHeadersHash = "some-snapshot-headers-hash";
+const snapshotRootHash = "some-snapshot-root-hash";
+const encodedEventPairs = "some-encoded-event-pairs";
+const encodedAllEventPairs = "some-encoded-all-event-pairs";
+const encodedSnapshotPairs = "some-encoded-snapshot-pairs";
+const savedSnapshotRoot = "some-saved-snapshot-root";
+const signedBlockHeaderHash = "some-signed-block-header-hash";
+const snapshotState = "some-snapshot-state";
+const snapshot = {
+  headers: {
+    root: savedSnapshotRoot,
+  },
+  state: snapshotState,
+};
+const allEventsMerkleRoot = "some-all-events-merkle-root";
 const previousNumber = 4;
+const previousEnd = "some-previous-end";
+const eventHash = "some-event-hash";
+const eventPayload = "some-event-payload";
+const event = {
+  hash: eventHash,
+  payload: eventPayload,
+};
+const public = true;
 
 const network = "some-env-network";
 const service = "some-env-service";
@@ -44,21 +71,22 @@ describe("Event store create block transaction", () => {
   });
 
   it("should call with the correct params", async () => {
-    const public = true;
     const latestBlock = {
-      boundary: previousBoundary,
       hash: previousHash,
-      number: previousNumber,
+      headers: {
+        end: previousEnd,
+        number: previousNumber,
+      },
     };
     const latestBlockFnFake = fake.returns(latestBlock);
 
     const rootStreamFnFake = stub().yieldsTo("fn", { root });
 
-    const event = {};
     const aggregate = {
       events: [event],
       snapshotHash,
       lastEventNumber: aggregateLastEventNumber,
+      context: aggregateContext,
       state: aggregateState,
     };
     const aggregateFnFake = fake.resolves(aggregate);
@@ -71,184 +99,422 @@ describe("Event store create block transaction", () => {
     replace(deps, "cononicalString", cononicalStringFake);
 
     const merkleRootFake = stub()
-      .onFirstCall()
+      .onCall(0)
+      .returns(eventsMerkleRoot)
+      .onCall(1)
       .returns(snapshotMerkleRoot)
-      .onSecondCall()
-      .returns(blockMerkleRoot);
+      .onCall(2)
+      .returns(allEventsMerkleRoot);
+
     replace(deps, "merkleRoot", merkleRootFake);
 
-    const hashFnFake = fake.returns(hash);
+    const hashFake = stub()
+      .onCall(0)
+      .returns({
+        create: () => eventKeyHash,
+      })
+      .onCall(1)
+      .returns({
+        create: () => contextHash,
+      })
+      .onCall(2)
+      .returns({
+        create: () => stateHash,
+      })
+      .onCall(3)
+      .returns({
+        create: () => snapshotHeadersHash,
+      })
+      .onCall(4)
+      .returns({
+        create: () => snapshotRootHash,
+      })
+      .onCall(5)
+      .returns({
+        create: () => blockHeadersHash,
+      });
 
+    replace(deps, "hash", hashFake);
+
+    const nonceFake = stub()
+      .onCall(0)
+      .returns(snapshotNonce)
+      .onCall(1)
+      .returns(blockNonce);
+    replace(deps, "nonce", nonceFake);
     const saveSnapshotFnFake = fake.returns(snapshot);
 
     const saveBlockFnFake = fake();
+    const encryptFnFake = fake();
+
+    const signFnFake = fake.returns(signedBlockHeaderHash);
+
+    const encodeFake = stub()
+      .onCall(0)
+      .returns(encodedEventPairs)
+      .onCall(1)
+      .returns(encodedAllEventPairs)
+      .onCall(2)
+      .returns(encodedSnapshotPairs);
+    replace(deps, "encode", encodeFake);
+
+    const blockPublisherPublicKeyFnFake = fake.returns(publicKey);
     await create({
       saveSnapshotFn: saveSnapshotFnFake,
-      hashFn: hashFnFake,
       aggregateFn: aggregateFnFake,
       rootStreamFn: rootStreamFnFake,
       latestBlockFn: latestBlockFnFake,
       saveBlockFn: saveBlockFnFake,
+      encryptFn: encryptFnFake,
+      signFn: signFnFake,
+      blockPublisherPublicKeyFn: blockPublisherPublicKeyFnFake,
       public,
     })(transaction);
 
     expect(latestBlockFnFake).to.have.been.calledOnceWith();
     expect(rootStreamFnFake).to.have.been.calledOnceWith({
-      updatedOnOrAfter: previousBoundary,
+      updatedOnOrAfter: previousEnd,
       updatedBefore: deps.dateString(),
       parallel: 100,
-      fn: match((fn) => {
-        const response = fn({ root: anotherRoot });
-        return Promise.resolve(response) == response;
-      }),
+      fn: match(() => true),
     });
-    expect(aggregateFnFake.getCall(0)).to.have.been.calledWith(root);
-    expect(aggregateFnFake.getCall(1)).to.have.been.calledWith(anotherRoot);
-    expect(aggregateFnFake).to.have.been.calledTwice;
-    expect(cononicalStringFake.getCall(0)).to.have.been.calledWith(event);
-    expect(merkleRootFake.getCall(0)).to.have.been.calledWith({
-      data: [eventCononicalString, snapshotHash],
-      hashFn: hashFnFake,
+    expect(aggregateFnFake.getCall(0)).to.have.been.calledWith(root, {
+      includeEvents: true,
     });
 
+    expect(cononicalStringFake.getCall(0)).to.have.been.calledWith(event);
+
+    expect(hashFake.getCall(0)).to.have.been.calledWith(eventHash);
+    expect(hashFake.getCall(1)).to.have.been.calledWith(aggregateContext);
+    expect(hashFake.getCall(2)).to.have.been.calledWith(aggregateState);
+    expect(hashFake.getCall(3)).to.have.been.calledWith({
+      nonce: snapshotNonce,
+      block: previousNumber + 1,
+      cHash: contextHash,
+      sHash: stateHash,
+      pHash: snapshotHash,
+      created: deps.dateString(),
+      root,
+      public,
+      domain,
+      service,
+      network,
+      lastEventNumber: aggregateLastEventNumber,
+      eCount: 1,
+      eRoot: eventsMerkleRoot,
+    });
+    expect(merkleRootFake.getCall(0)).to.have.been.calledWith([
+      [eventKeyHash, eventCononicalString],
+    ]);
     expect(saveSnapshotFnFake).to.have.been.calledOnceWith({
       snapshot: {
-        hash: snapshotMerkleRoot,
-        previous: snapshotHash,
-        data: [eventCononicalString],
-        count: 1,
-        public,
-        lastEventNumber: aggregateLastEventNumber,
-        root,
+        hash: snapshotHeadersHash,
+        headers: {
+          nonce: snapshotNonce,
+          block: previousNumber + 1,
+          cHash: contextHash,
+          sHash: stateHash,
+          pHash: snapshotHash,
+          created: deps.dateString(),
+          root,
+          public,
+          domain,
+          service,
+          network,
+          lastEventNumber: aggregateLastEventNumber,
+          eCount: 1,
+          eRoot: eventsMerkleRoot,
+        },
+        context: aggregateContext,
         state: aggregateState,
+        events: encodedEventPairs,
       },
       transaction,
     });
+    expect(hashFake.getCall(4)).to.have.been.calledWith(savedSnapshotRoot);
     expect(cononicalStringFake.getCall(1)).to.have.been.calledWith(snapshot);
-    expect(merkleRootFake.getCall(1)).to.have.been.calledWith({
-      data: [snapshotCononicalString, previousHash],
-      hashFn: hashFnFake,
+    expect(merkleRootFake.getCall(1)).to.have.been.calledWith([
+      [snapshotRootHash, snapshotCononicalString],
+    ]);
+    expect(merkleRootFake.getCall(2)).to.have.been.calledWith([
+      [eventKeyHash, eventCononicalString],
+    ]);
+    expect(hashFake.getCall(5)).to.have.been.calledWith({
+      nonce: blockNonce,
+      pHash: previousHash,
+      created: deps.dateString(),
+      number: previousNumber + 1,
+      start: previousEnd,
+      end: deps.dateString(),
+      eCount: 1,
+      sCount: 1,
+      eRoot: allEventsMerkleRoot,
+      sRoot: snapshotMerkleRoot,
+      network,
+      service,
+      domain,
+      key: publicKey,
     });
+    expect(signFnFake).to.have.been.calledOnceWith(blockHeadersHash);
 
     expect(saveBlockFnFake).to.have.been.calledOnceWith({
       block: {
-        hash: blockMerkleRoot,
-        previous: previousHash,
-        data: [snapshotCononicalString],
-        count: 1,
-        number: previousNumber + 1,
-        boundary: deps.dateString(),
-        network,
-        service,
-        domain,
+        signature: signedBlockHeaderHash,
+        hash: blockHeadersHash,
+        headers: {
+          nonce: blockNonce,
+          pHash: previousHash,
+          created: deps.dateString(),
+          number: previousNumber + 1,
+          start: previousEnd,
+          end: deps.dateString(),
+          eCount: 1,
+          sCount: 1,
+          eRoot: allEventsMerkleRoot,
+          sRoot: snapshotMerkleRoot,
+          network,
+          service,
+          domain,
+          key: publicKey,
+        },
+        events: encodedAllEventPairs,
+        snapshots: encodedSnapshotPairs,
       },
       transaction,
     });
   });
-  it("should call with the correct params with public false and no transaction", async () => {
-    const public = false;
+  it("should call with the correct params with public keys and no transaction", async () => {
     const latestBlock = {
-      boundary: previousBoundary,
       hash: previousHash,
-      number: previousNumber,
+      headers: {
+        end: previousEnd,
+        number: previousNumber,
+      },
     };
     const latestBlockFnFake = fake.returns(latestBlock);
 
     const rootStreamFnFake = stub().yieldsTo("fn", { root });
 
-    const eventHash = "some-event-hash";
-    const event = {
-      hash: eventHash,
-    };
     const aggregate = {
       events: [event],
       snapshotHash,
       lastEventNumber: aggregateLastEventNumber,
+      context: aggregateContext,
       state: aggregateState,
     };
     const aggregateFnFake = fake.resolves(aggregate);
 
-    const cononicalStringFake = fake.returns(snapshotCononicalString);
+    const cononicalStringFake = stub()
+      .onFirstCall()
+      .returns(eventCononicalString)
+      .onSecondCall()
+      .returns(snapshotCononicalString);
     replace(deps, "cononicalString", cononicalStringFake);
 
     const merkleRootFake = stub()
-      .onFirstCall()
+      .onCall(0)
+      .returns(eventsMerkleRoot)
+      .onCall(1)
       .returns(snapshotMerkleRoot)
-      .onSecondCall()
-      .returns(blockMerkleRoot);
+      .onCall(2)
+      .returns(allEventsMerkleRoot);
+
     replace(deps, "merkleRoot", merkleRootFake);
 
-    const hashFnFake = fake.returns(hash);
+    const hashFake = stub()
+      .onCall(0)
+      .returns({
+        create: () => eventKeyHash,
+      })
+      .onCall(1)
+      .returns({
+        create: () => contextHash,
+      })
+      .onCall(2)
+      .returns({
+        create: () => stateHash,
+      })
+      .onCall(3)
+      .returns({
+        create: () => snapshotHeadersHash,
+      })
+      .onCall(4)
+      .returns({
+        create: () => snapshotRootHash,
+      })
+      .onCall(5)
+      .returns({
+        create: () => blockHeadersHash,
+      });
 
+    replace(deps, "hash", hashFake);
+
+    const nonceFake = stub()
+      .onCall(0)
+      .returns(snapshotNonce)
+      .onCall(1)
+      .returns(blockNonce);
+    replace(deps, "nonce", nonceFake);
     const saveSnapshotFnFake = fake.returns(snapshot);
 
     const saveBlockFnFake = fake();
+    const encryptedEventPayload = "some-encrypted-event-payload";
+    const encryptedSnapshotState = "some-encrypted-snapshot-state";
+    const encryptFnFake = stub()
+      .onCall(0)
+      .returns(encryptedEventPayload)
+      .onCall(1)
+      .returns(encryptedSnapshotState);
+
+    const signFnFake = fake.returns(signedBlockHeaderHash);
+
+    const encodeFake = stub()
+      .onCall(0)
+      .returns(encodedEventPairs)
+      .onCall(1)
+      .returns(encodedAllEventPairs)
+      .onCall(2)
+      .returns(encodedSnapshotPairs);
+    replace(deps, "encode", encodeFake);
+
+    const blockPublisherPublicKeyFnFake = fake.returns(publicKey);
     await create({
       saveSnapshotFn: saveSnapshotFnFake,
-      hashFn: hashFnFake,
       aggregateFn: aggregateFnFake,
       rootStreamFn: rootStreamFnFake,
       latestBlockFn: latestBlockFnFake,
       saveBlockFn: saveBlockFnFake,
-      public,
+      encryptFn: encryptFnFake,
+      signFn: signFnFake,
+      blockPublisherPublicKeyFn: blockPublisherPublicKeyFnFake,
+      public: false,
     })();
 
     expect(latestBlockFnFake).to.have.been.calledOnceWith();
     expect(rootStreamFnFake).to.have.been.calledOnceWith({
-      updatedOnOrAfter: previousBoundary,
+      updatedOnOrAfter: previousEnd,
       updatedBefore: deps.dateString(),
       parallel: 100,
-      fn: match((fn) => {
-        const response = fn({ root: anotherRoot });
-        return Promise.resolve(response) == response;
-      }),
+      fn: match(() => true),
     });
-    expect(aggregateFnFake.getCall(0)).to.have.been.calledWith(root);
-    expect(aggregateFnFake.getCall(1)).to.have.been.calledWith(anotherRoot);
-    expect(aggregateFnFake).to.have.been.calledTwice;
-    expect(merkleRootFake.getCall(0)).to.have.been.calledWith({
-      data: [eventHash, snapshotHash],
-      hashFn: hashFnFake,
+    expect(aggregateFnFake.getCall(0)).to.have.been.calledWith(root, {
+      includeEvents: true,
     });
 
+    expect(cononicalStringFake.getCall(0)).to.have.been.calledWith({
+      ...event,
+      payload: encryptedEventPayload,
+    });
+    expect(encryptFnFake.getCall(0)).to.have.been.calledWith(eventPayload);
+
+    expect(hashFake.getCall(0)).to.have.been.calledWith(eventHash);
+    expect(hashFake.getCall(1)).to.have.been.calledWith(aggregateContext);
+    expect(hashFake.getCall(2)).to.have.been.calledWith(aggregateState);
+    expect(hashFake.getCall(3)).to.have.been.calledWith({
+      nonce: snapshotNonce,
+      block: previousNumber + 1,
+      cHash: contextHash,
+      sHash: stateHash,
+      pHash: snapshotHash,
+      created: deps.dateString(),
+      root,
+      public: false,
+      domain,
+      service,
+      network,
+      lastEventNumber: aggregateLastEventNumber,
+      eCount: 1,
+      eRoot: eventsMerkleRoot,
+    });
+    expect(merkleRootFake.getCall(0)).to.have.been.calledWith([
+      [eventKeyHash, eventCononicalString],
+    ]);
     expect(saveSnapshotFnFake).to.have.been.calledOnceWith({
       snapshot: {
-        hash: snapshotMerkleRoot,
-        previous: snapshotHash,
-        data: [eventHash],
-        count: 1,
-        public,
-        lastEventNumber: aggregateLastEventNumber,
-        root,
+        hash: snapshotHeadersHash,
+        headers: {
+          nonce: snapshotNonce,
+          block: previousNumber + 1,
+          cHash: contextHash,
+          sHash: stateHash,
+          pHash: snapshotHash,
+          created: deps.dateString(),
+          root,
+          public: false,
+          domain,
+          service,
+          network,
+          lastEventNumber: aggregateLastEventNumber,
+          eCount: 1,
+          eRoot: eventsMerkleRoot,
+        },
+        context: aggregateContext,
         state: aggregateState,
+        events: encodedEventPairs,
       },
     });
-    expect(cononicalStringFake).to.have.been.calledOnceWith(snapshot);
-    expect(merkleRootFake.getCall(1)).to.have.been.calledWith({
-      data: [snapshotCononicalString, previousHash],
-      hashFn: hashFnFake,
+    expect(hashFake.getCall(4)).to.have.been.calledWith(savedSnapshotRoot);
+    expect(cononicalStringFake.getCall(1)).to.have.been.calledWith({
+      ...snapshot,
+      state: encryptedSnapshotState,
     });
+    expect(encryptFnFake.getCall(1)).to.have.been.calledWith(snapshotState);
+    expect(merkleRootFake.getCall(1)).to.have.been.calledWith([
+      [snapshotRootHash, snapshotCononicalString],
+    ]);
+    expect(merkleRootFake.getCall(2)).to.have.been.calledWith([
+      [eventKeyHash, eventCononicalString],
+    ]);
+    expect(hashFake.getCall(5)).to.have.been.calledWith({
+      nonce: blockNonce,
+      pHash: previousHash,
+      created: deps.dateString(),
+      number: previousNumber + 1,
+      start: previousEnd,
+      end: deps.dateString(),
+      eCount: 1,
+      sCount: 1,
+      eRoot: allEventsMerkleRoot,
+      sRoot: snapshotMerkleRoot,
+      network,
+      service,
+      domain,
+      key: publicKey,
+    });
+    expect(signFnFake).to.have.been.calledOnceWith(blockHeadersHash);
 
     expect(saveBlockFnFake).to.have.been.calledOnceWith({
       block: {
-        hash: blockMerkleRoot,
-        previous: previousHash,
-        data: [snapshotCononicalString],
-        count: 1,
-        number: previousNumber + 1,
-        boundary: deps.dateString(),
-        network,
-        service,
-        domain,
+        signature: signedBlockHeaderHash,
+        hash: blockHeadersHash,
+        headers: {
+          nonce: blockNonce,
+          pHash: previousHash,
+          created: deps.dateString(),
+          number: previousNumber + 1,
+          start: previousEnd,
+          end: deps.dateString(),
+          eCount: 1,
+          sCount: 1,
+          eRoot: allEventsMerkleRoot,
+          sRoot: snapshotMerkleRoot,
+          network,
+          service,
+          domain,
+          key: publicKey,
+        },
+        events: encodedAllEventPairs,
+        snapshots: encodedSnapshotPairs,
       },
     });
   });
-  it("should call with the correct params with no events", async () => {
-    const public = true;
+  it("should call with the correct params and no events", async () => {
     const latestBlock = {
-      boundary: previousBoundary,
       hash: previousHash,
-      number: previousNumber,
+      headers: {
+        end: previousEnd,
+        number: previousNumber,
+      },
     };
     const latestBlockFnFake = fake.returns(latestBlock);
 
@@ -258,6 +524,7 @@ describe("Event store create block transaction", () => {
       events: [],
       snapshotHash,
       lastEventNumber: aggregateLastEventNumber,
+      context: aggregateContext,
       state: aggregateState,
     };
     const aggregateFnFake = fake.resolves(aggregate);
@@ -265,75 +532,124 @@ describe("Event store create block transaction", () => {
     const cononicalStringFake = fake();
     replace(deps, "cononicalString", cononicalStringFake);
 
-    const merkleRootFake = fake.returns(blockMerkleRoot);
+    const merkleRootFake = stub()
+      .onCall(0)
+      .returns(snapshotMerkleRoot)
+      .onCall(1)
+      .returns(allEventsMerkleRoot);
+
     replace(deps, "merkleRoot", merkleRootFake);
 
-    const hashFnFake = fake();
-    const saveSnapshotFnFake = fake.returns(snapshot);
+    const hashFake = fake.returns({
+      create: () => blockHeadersHash,
+    });
+
+    replace(deps, "hash", hashFake);
+
+    const nonceFake = fake.returns(blockNonce);
+    replace(deps, "nonce", nonceFake);
+    const saveSnapshotFnFake = fake();
 
     const saveBlockFnFake = fake();
+    const encryptFnFake = fake();
+
+    const signFnFake = fake.returns(signedBlockHeaderHash);
+
+    const encodeFake = stub()
+      .onCall(0)
+      .returns(encodedAllEventPairs)
+      .onCall(1)
+      .returns(encodedSnapshotPairs);
+
+    replace(deps, "encode", encodeFake);
+
+    const blockPublisherPublicKeyFnFake = fake.returns(publicKey);
     await create({
       saveSnapshotFn: saveSnapshotFnFake,
-      hashFn: hashFnFake,
       aggregateFn: aggregateFnFake,
       rootStreamFn: rootStreamFnFake,
       latestBlockFn: latestBlockFnFake,
       saveBlockFn: saveBlockFnFake,
+      encryptFn: encryptFnFake,
+      signFn: signFnFake,
+      blockPublisherPublicKeyFn: blockPublisherPublicKeyFnFake,
       public,
     })(transaction);
 
     expect(latestBlockFnFake).to.have.been.calledOnceWith();
     expect(rootStreamFnFake).to.have.been.calledOnceWith({
-      updatedOnOrAfter: previousBoundary,
+      updatedOnOrAfter: previousEnd,
       updatedBefore: deps.dateString(),
       parallel: 100,
-      fn: match((fn) => {
-        const response = fn({ root: anotherRoot });
-        return Promise.resolve(response) == response;
-      }),
+      fn: match(() => true),
     });
-    expect(aggregateFnFake.getCall(0)).to.have.been.calledWith(root);
-    expect(aggregateFnFake.getCall(1)).to.have.been.calledWith(anotherRoot);
-    expect(aggregateFnFake).to.have.been.calledTwice;
+    expect(aggregateFnFake.getCall(0)).to.have.been.calledWith(root, {
+      includeEvents: true,
+    });
 
-    expect(hashFnFake).to.not.have.been.called;
-    expect(saveSnapshotFnFake).to.not.have.been.called;
     expect(cononicalStringFake).to.not.have.been.called;
-    expect(merkleRootFake.getCall(0)).to.have.been.calledWith({
-      data: [previousHash],
-      hashFn: hashFnFake,
+    expect(merkleRootFake.getCall(0)).to.have.been.calledWith([]);
+    expect(merkleRootFake.getCall(1)).to.have.been.calledWith([]);
+    expect(hashFake).to.have.been.calledOnceWith({
+      nonce: blockNonce,
+      pHash: previousHash,
+      created: deps.dateString(),
+      number: previousNumber + 1,
+      start: previousEnd,
+      end: deps.dateString(),
+      eCount: 0,
+      sCount: 0,
+      eRoot: allEventsMerkleRoot,
+      sRoot: snapshotMerkleRoot,
+      network,
+      service,
+      domain,
+      key: publicKey,
     });
+    expect(signFnFake).to.have.been.calledOnceWith(blockHeadersHash);
 
     expect(saveBlockFnFake).to.have.been.calledOnceWith({
       block: {
-        hash: blockMerkleRoot,
-        previous: previousHash,
-        data: [],
-        count: 0,
-        number: previousNumber + 1,
-        boundary: deps.dateString(),
-        network,
-        service,
-        domain,
+        signature: signedBlockHeaderHash,
+        hash: blockHeadersHash,
+        headers: {
+          nonce: blockNonce,
+          pHash: previousHash,
+          created: deps.dateString(),
+          number: previousNumber + 1,
+          start: previousEnd,
+          end: deps.dateString(),
+          eCount: 0,
+          sCount: 0,
+          eRoot: allEventsMerkleRoot,
+          sRoot: snapshotMerkleRoot,
+          network,
+          service,
+          domain,
+          key: publicKey,
+        },
+        events: encodedAllEventPairs,
+        snapshots: encodedSnapshotPairs,
       },
       transaction,
     });
   });
-  it("should call with the correct params with no previous hash", async () => {
-    const public = true;
+  it("should call with the correct params with no previous snapshot", async () => {
     const latestBlock = {
-      boundary: previousBoundary,
       hash: previousHash,
-      number: previousNumber,
+      headers: {
+        end: previousEnd,
+        number: previousNumber,
+      },
     };
     const latestBlockFnFake = fake.returns(latestBlock);
 
     const rootStreamFnFake = stub().yieldsTo("fn", { root });
 
-    const event = {};
     const aggregate = {
       events: [event],
       lastEventNumber: aggregateLastEventNumber,
+      context: aggregateContext,
       state: aggregateState,
     };
     const aggregateFnFake = fake.resolves(aggregate);
@@ -346,107 +662,283 @@ describe("Event store create block transaction", () => {
     replace(deps, "cononicalString", cononicalStringFake);
 
     const merkleRootFake = stub()
-      .onFirstCall()
+      .onCall(0)
+      .returns(eventsMerkleRoot)
+      .onCall(1)
       .returns(snapshotMerkleRoot)
-      .onSecondCall()
-      .returns(blockMerkleRoot);
+      .onCall(2)
+      .returns(allEventsMerkleRoot);
+
     replace(deps, "merkleRoot", merkleRootFake);
 
-    const hashFnFake = fake.returns(hash);
+    const hashFake = stub()
+      .onCall(0)
+      .returns({
+        create: () => eventKeyHash,
+      })
+      .onCall(1)
+      .returns({
+        create: () => contextHash,
+      })
+      .onCall(2)
+      .returns({
+        create: () => stateHash,
+      })
+      .onCall(3)
+      .returns({
+        create: () => snapshotHeadersHash,
+      })
+      .onCall(4)
+      .returns({
+        create: () => snapshotRootHash,
+      })
+      .onCall(5)
+      .returns({
+        create: () => blockHeadersHash,
+      });
 
+    replace(deps, "hash", hashFake);
+
+    const nonceFake = stub()
+      .onCall(0)
+      .returns(snapshotNonce)
+      .onCall(1)
+      .returns(blockNonce);
+    replace(deps, "nonce", nonceFake);
     const saveSnapshotFnFake = fake.returns(snapshot);
 
     const saveBlockFnFake = fake();
+    const encryptFnFake = fake();
+
+    const signFnFake = fake.returns(signedBlockHeaderHash);
+
+    const encodeFake = stub()
+      .onFirstCall()
+      .returns(encodedEventPairs)
+      .onCall(1)
+      .returns(encodedAllEventPairs)
+      .onCall(2)
+      .returns(encodedSnapshotPairs);
+    replace(deps, "encode", encodeFake);
+
+    const blockPublisherPublicKeyFnFake = fake.returns(publicKey);
     await create({
       saveSnapshotFn: saveSnapshotFnFake,
-      hashFn: hashFnFake,
       aggregateFn: aggregateFnFake,
       rootStreamFn: rootStreamFnFake,
       latestBlockFn: latestBlockFnFake,
       saveBlockFn: saveBlockFnFake,
+      encryptFn: encryptFnFake,
+      signFn: signFnFake,
+      blockPublisherPublicKeyFn: blockPublisherPublicKeyFnFake,
       public,
     })(transaction);
 
     expect(latestBlockFnFake).to.have.been.calledOnceWith();
     expect(rootStreamFnFake).to.have.been.calledOnceWith({
-      updatedOnOrAfter: previousBoundary,
+      updatedOnOrAfter: previousEnd,
       updatedBefore: deps.dateString(),
       parallel: 100,
-      fn: match((fn) => {
-        const response = fn({ root: anotherRoot });
-        return Promise.resolve(response) == response;
-      }),
+      fn: match(() => true),
     });
-    expect(aggregateFnFake.getCall(0)).to.have.been.calledWith(root);
-    expect(aggregateFnFake.getCall(1)).to.have.been.calledWith(anotherRoot);
-    expect(aggregateFnFake).to.have.been.calledTwice;
-    expect(cononicalStringFake.getCall(0)).to.have.been.calledWith(event);
-    expect(merkleRootFake.getCall(0)).to.have.been.calledWith({
-      data: [eventCononicalString, "~"],
-      hashFn: hashFnFake,
+    expect(aggregateFnFake.getCall(0)).to.have.been.calledWith(root, {
+      includeEvents: true,
     });
 
+    expect(cononicalStringFake.getCall(0)).to.have.been.calledWith(event);
+
+    expect(hashFake.getCall(0)).to.have.been.calledWith(eventHash);
+    expect(hashFake.getCall(1)).to.have.been.calledWith(aggregateContext);
+    expect(hashFake.getCall(2)).to.have.been.calledWith(aggregateState);
+    expect(hashFake.getCall(3)).to.have.been.calledWith({
+      nonce: snapshotNonce,
+      block: previousNumber + 1,
+      cHash: contextHash,
+      sHash: stateHash,
+      pHash: "~",
+      created: deps.dateString(),
+      root,
+      public,
+      domain,
+      service,
+      network,
+      lastEventNumber: aggregateLastEventNumber,
+      eCount: 1,
+      eRoot: eventsMerkleRoot,
+    });
+    expect(merkleRootFake.getCall(0)).to.have.been.calledWith([
+      [eventKeyHash, eventCononicalString],
+    ]);
     expect(saveSnapshotFnFake).to.have.been.calledOnceWith({
       snapshot: {
-        hash: snapshotMerkleRoot,
-        previous: "~",
-        data: [eventCononicalString],
-        count: 1,
-        public,
-        lastEventNumber: aggregateLastEventNumber,
-        root,
+        hash: snapshotHeadersHash,
+        headers: {
+          nonce: snapshotNonce,
+          block: previousNumber + 1,
+          cHash: contextHash,
+          sHash: stateHash,
+          pHash: "~",
+          created: deps.dateString(),
+          root,
+          public,
+          domain,
+          service,
+          network,
+          lastEventNumber: aggregateLastEventNumber,
+          eCount: 1,
+          eRoot: eventsMerkleRoot,
+        },
+        context: aggregateContext,
         state: aggregateState,
+        events: encodedEventPairs,
       },
       transaction,
     });
+    expect(hashFake.getCall(4)).to.have.been.calledWith(savedSnapshotRoot);
     expect(cononicalStringFake.getCall(1)).to.have.been.calledWith(snapshot);
-    expect(merkleRootFake.getCall(1)).to.have.been.calledWith({
-      data: [snapshotCononicalString, previousHash],
-      hashFn: hashFnFake,
+    expect(merkleRootFake.getCall(1)).to.have.been.calledWith([
+      [snapshotRootHash, snapshotCononicalString],
+    ]);
+    expect(merkleRootFake.getCall(2)).to.have.been.calledWith([
+      [eventKeyHash, eventCononicalString],
+    ]);
+    expect(hashFake.getCall(5)).to.have.been.calledWith({
+      nonce: blockNonce,
+      pHash: previousHash,
+      created: deps.dateString(),
+      number: previousNumber + 1,
+      start: previousEnd,
+      end: deps.dateString(),
+      eCount: 1,
+      sCount: 1,
+      eRoot: allEventsMerkleRoot,
+      sRoot: snapshotMerkleRoot,
+      network,
+      service,
+      domain,
+      key: publicKey,
     });
+    expect(signFnFake).to.have.been.calledOnceWith(blockHeadersHash);
 
     expect(saveBlockFnFake).to.have.been.calledOnceWith({
       block: {
-        hash: blockMerkleRoot,
-        previous: previousHash,
-        data: [snapshotCononicalString],
-        count: 1,
-        number: previousNumber + 1,
-        boundary: deps.dateString(),
-        network,
-        service,
-        domain,
+        signature: signedBlockHeaderHash,
+        hash: blockHeadersHash,
+        headers: {
+          nonce: blockNonce,
+          pHash: previousHash,
+          created: deps.dateString(),
+          number: previousNumber + 1,
+          start: previousEnd,
+          end: deps.dateString(),
+          eCount: 1,
+          sCount: 1,
+          eRoot: allEventsMerkleRoot,
+          sRoot: snapshotMerkleRoot,
+          network,
+          service,
+          domain,
+          key: publicKey,
+        },
+        events: encodedAllEventPairs,
+        snapshots: encodedSnapshotPairs,
       },
       transaction,
     });
   });
-  it("should make a genesis block", async () => {
+  it("should call with the correct params with no previous block", async () => {
     const latestBlockFnFake = fake.returns();
-    const genesisMerkleRoot = "some-genesis-merkle-root";
-    const merkleRootFake = fake.returns(genesisMerkleRoot);
+
+    const rootStreamFnFake = stub().yieldsTo("fn", { root });
+
+    const emptyMerkleRoot = "some-empty-merkle-root";
+    const merkleRootFake = fake.returns(emptyMerkleRoot);
+
     replace(deps, "merkleRoot", merkleRootFake);
+
+    const genesisPreviousHash = "some-genesis-previous-hash";
+    const hashFake = stub()
+      .onCall(0)
+      .returns({
+        create: () => genesisPreviousHash,
+      })
+      .onCall(1)
+      .returns({
+        create: () => blockHeadersHash,
+      });
+
+    replace(deps, "hash", hashFake);
+
+    const nonceFake = stub().onCall(0).returns(blockNonce);
+    replace(deps, "nonce", nonceFake);
+
     const saveBlockFnFake = fake();
-    const hashFn = "some-hash-fn";
+    const encryptFnFake = fake();
+
+    const signFnFake = fake.returns(signedBlockHeaderHash);
+
+    const encodeFake = stub()
+      .onCall(0)
+      .returns(encodedAllEventPairs)
+      .onCall(1)
+      .returns(encodedSnapshotPairs);
+    replace(deps, "encode", encodeFake);
+
+    const blockPublisherPublicKeyFnFake = fake.returns(publicKey);
     await create({
+      rootStreamFn: rootStreamFnFake,
       latestBlockFn: latestBlockFnFake,
       saveBlockFn: saveBlockFnFake,
-      hashFn,
+      encryptFn: encryptFnFake,
+      signFn: signFnFake,
+      blockPublisherPublicKeyFn: blockPublisherPublicKeyFnFake,
+      public,
     })(transaction);
-    expect(merkleRootFake).to.have.been.calledOnceWith({
-      data: ["Wherever you go, there you are.", "~"],
-      hashFn,
+
+    expect(latestBlockFnFake).to.have.been.calledOnceWith();
+
+    expect(hashFake.getCall(0)).to.have.been.calledWith("~");
+    expect(merkleRootFake.getCall(0)).to.have.been.calledWith([]);
+    expect(hashFake.getCall(1)).to.have.been.calledWith({
+      nonce: blockNonce,
+      pHash: genesisPreviousHash,
+      created: deps.dateString(),
+      number: 0,
+      start: "2020-01-01T05:00:00.000+00:00",
+      end: deps.dateString(),
+      eCount: 0,
+      sCount: 0,
+      eRoot: emptyMerkleRoot,
+      sRoot: emptyMerkleRoot,
+      network,
+      service,
+      domain,
+      key: publicKey,
     });
+    expect(signFnFake).to.have.been.calledOnceWith(blockHeadersHash);
+
     expect(saveBlockFnFake).to.have.been.calledOnceWith({
       block: {
-        hash: genesisMerkleRoot,
-        previous: "~",
-        data: ["Wherever you go, there you are."],
-        count: 1,
-        number: 0,
-        boundary: "2000-01-01T05:00:00.000+00:00",
-        network,
-        service,
-        domain,
+        signature: signedBlockHeaderHash,
+        hash: blockHeadersHash,
+        headers: {
+          nonce: blockNonce,
+          pHash: genesisPreviousHash,
+          created: deps.dateString(),
+          number: 0,
+          start: "2020-01-01T05:00:00.000+00:00",
+          end: deps.dateString(),
+          eCount: 0,
+          sCount: 0,
+          eRoot: emptyMerkleRoot,
+          sRoot: emptyMerkleRoot,
+          network,
+          service,
+          domain,
+          key: publicKey,
+        },
+        events: encodedAllEventPairs,
+        snapshots: encodedSnapshotPairs,
       },
       transaction,
     });

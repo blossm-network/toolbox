@@ -84,15 +84,18 @@ describe("Event store post", () => {
   it("should call with the correct params", async () => {
     const saveEventsFnFake = fake.returns(writtenEvents);
     const reserveRootCountsFnFake = fake.returns(reserveRootCount);
-    const hashFnFake = stub()
+
+    const hashFake = stub()
       .onCall(0)
-      .returns(payloadHash)
+      .returns({ create: () => payloadHash })
       .onCall(1)
-      .returns(contextHash)
+      .returns({ create: () => contextHash })
       .onCall(2)
-      .returns(scenarioHash)
+      .returns({ create: () => scenarioHash })
       .onCall(3)
-      .returns(hash);
+      .returns({ create: () => hash });
+
+    replace(deps, "hash", hashFake);
 
     const nonceFake = fake.returns(nonce);
     replace(deps, "nonce", nonceFake);
@@ -102,7 +105,6 @@ describe("Event store post", () => {
       scenario,
       saveEventsFn: saveEventsFnFake,
       reserveRootCountsFn: reserveRootCountsFnFake,
-      hashFn: hashFnFake,
     })(transaction);
 
     expect(result).to.deep.equal({
@@ -144,10 +146,10 @@ describe("Event store post", () => {
       amount: 1,
       transaction,
     });
-    expect(hashFnFake.getCall(0)).to.have.been.calledWith(payload);
-    expect(hashFnFake.getCall(1)).to.have.been.calledWith(context);
-    expect(hashFnFake.getCall(2)).to.have.been.calledWith(scenario);
-    expect(hashFnFake.getCall(3)).to.have.been.calledWith({
+    expect(hashFake.getCall(0)).to.have.been.calledWith(payload);
+    expect(hashFake.getCall(1)).to.have.been.calledWith(context);
+    expect(hashFake.getCall(2)).to.have.been.calledWith(scenario);
+    expect(hashFake.getCall(3)).to.have.been.calledWith({
       root,
       number: currentEventsForRoot,
       topic,
@@ -175,15 +177,24 @@ describe("Event store post", () => {
       value: number + eventData.length,
     };
     const reserveRootCountsFnFake = fake.returns(reserveRootCount);
-    const hashFnFake = stub()
+    const hashFake = stub()
       .onCall(0)
-      .returns(payloadHash)
+      .returns({
+        create: () => payloadHash,
+      })
       .onCall(1)
-      .returns(contextHash)
+      .returns({
+        create: () => contextHash,
+      })
       .onCall(2)
-      .returns(scenarioHash)
+      .returns({
+        create: () => scenarioHash,
+      })
       .onCall(3)
-      .returns(hash);
+      .returns({
+        create: () => hash,
+      });
+    replace(deps, "hash", hashFake);
 
     const nonceFake = fake.returns(nonce);
     replace(deps, "nonce", nonceFake);
@@ -198,7 +209,6 @@ describe("Event store post", () => {
       scenario,
       saveEventsFn: saveEventsFnFake,
       reserveRootCountsFn: reserveRootCountsFnFake,
-      hashFn: hashFnFake,
     })(transaction);
 
     expect(result).to.deep.equal({
@@ -240,10 +250,10 @@ describe("Event store post", () => {
       amount: 1,
       transaction,
     });
-    expect(hashFnFake.getCall(0)).to.have.been.calledWith(payload);
-    expect(hashFnFake.getCall(1)).to.have.been.calledWith(context);
-    expect(hashFnFake.getCall(2)).to.have.been.calledWith(scenario);
-    expect(hashFnFake.getCall(3)).to.have.been.calledWith({
+    expect(hashFake.getCall(0)).to.have.been.calledWith(payload);
+    expect(hashFake.getCall(1)).to.have.been.calledWith(context);
+    expect(hashFake.getCall(2)).to.have.been.calledWith(scenario);
+    expect(hashFake.getCall(3)).to.have.been.calledWith({
       root,
       number,
       topic,
@@ -266,15 +276,25 @@ describe("Event store post", () => {
   it("should call with the correct params with no scenario, payload, or context", async () => {
     const saveEventsFnFake = fake.returns(writtenEvents);
     const reserveRootCountsFnFake = fake.returns(reserveRootCount);
-    const hashFnFake = stub()
+    const hashFake = stub()
       .onCall(0)
-      .returns(payloadHash)
+      .returns({
+        create: () => payloadHash,
+      })
       .onCall(1)
-      .returns(contextHash)
+      .returns({
+        create: () => contextHash,
+      })
       .onCall(2)
-      .returns(scenarioHash)
+      .returns({
+        create: () => scenarioHash,
+      })
       .onCall(3)
-      .returns(hash);
+      .returns({
+        create: () => hash,
+      });
+
+    replace(deps, "hash", hashFake);
 
     const nonceFake = fake.returns(nonce);
     replace(deps, "nonce", nonceFake);
@@ -289,7 +309,6 @@ describe("Event store post", () => {
       ],
       saveEventsFn: saveEventsFnFake,
       reserveRootCountsFn: reserveRootCountsFnFake,
-      hashFn: hashFnFake,
     })(transaction);
 
     expect(result).to.deep.equal({
@@ -331,10 +350,10 @@ describe("Event store post", () => {
       amount: 1,
       transaction,
     });
-    expect(hashFnFake.getCall(0)).to.have.been.calledWith({});
-    expect(hashFnFake.getCall(1)).to.have.been.calledWith({});
-    expect(hashFnFake.getCall(2)).to.have.been.calledWith({ path: [] });
-    expect(hashFnFake.getCall(3)).to.have.been.calledWith({
+    expect(hashFake.getCall(0)).to.have.been.calledWith({});
+    expect(hashFake.getCall(1)).to.have.been.calledWith({});
+    expect(hashFake.getCall(2)).to.have.been.calledWith({ path: [] });
+    expect(hashFake.getCall(3)).to.have.been.calledWith({
       root,
       number: currentEventsForRoot,
       topic,
@@ -375,31 +394,57 @@ describe("Event store post", () => {
     const scenarioHash2 = "some-scenario-hash2";
     const scenarioHash3 = "some-scenario-hash3";
 
-    const hashFnFake = stub()
+    const hashFake = stub()
       .onCall(0)
-      .returns(payloadHash1)
+      .returns({
+        create: () => payloadHash1,
+      })
       .onCall(1)
-      .returns(contextHash1)
+      .returns({
+        create: () => contextHash1,
+      })
       .onCall(2)
-      .returns(scenarioHash1)
+      .returns({
+        create: () => scenarioHash1,
+      })
       .onCall(3)
-      .returns(hash1)
+      .returns({
+        create: () => hash1,
+      })
       .onCall(4)
-      .returns(payloadHash2)
+      .returns({
+        create: () => payloadHash2,
+      })
       .onCall(5)
-      .returns(contextHash2)
+      .returns({
+        create: () => contextHash2,
+      })
       .onCall(6)
-      .returns(scenarioHash2)
+      .returns({
+        create: () => scenarioHash2,
+      })
       .onCall(7)
-      .returns(hash2)
+      .returns({
+        create: () => hash2,
+      })
       .onCall(8)
-      .returns(payloadHash3)
+      .returns({
+        create: () => payloadHash3,
+      })
       .onCall(9)
-      .returns(contextHash3)
+      .returns({
+        create: () => contextHash3,
+      })
       .onCall(10)
-      .returns(scenarioHash3)
+      .returns({
+        create: () => scenarioHash3,
+      })
       .onCall(11)
-      .returns(hash3);
+      .returns({
+        create: () => hash3,
+      });
+
+    replace(deps, "hash", hashFake);
 
     const nonce1 = "some-nonce1";
     const nonce2 = "some-nonce2";
@@ -438,7 +483,6 @@ describe("Event store post", () => {
       scenario,
       saveEventsFn: saveEventsFnFake,
       reserveRootCountsFn: reserveRootCountsFnFake,
-      hashFn: hashFnFake,
     })(transaction);
 
     expect(result).to.deep.equal({
@@ -536,7 +580,7 @@ describe("Event store post", () => {
       transaction,
     });
     expect(reserveRootCountsFnFake).to.have.been.calledTwice;
-    expect(hashFnFake.getCall(3)).to.have.been.calledWith({
+    expect(hashFake.getCall(3)).to.have.been.calledWith({
       root,
       number: currentEventsForRoot,
       topic,
@@ -555,7 +599,7 @@ describe("Event store post", () => {
         scenario: scenarioHash1,
       },
     });
-    expect(hashFnFake.getCall(7)).to.have.been.calledWith({
+    expect(hashFake.getCall(7)).to.have.been.calledWith({
       root,
       number: currentEventsForRoot + 1,
       topic,
@@ -574,7 +618,7 @@ describe("Event store post", () => {
         scenario: scenarioHash2,
       },
     });
-    expect(hashFnFake.getCall(11)).to.have.been.calledWith({
+    expect(hashFake.getCall(11)).to.have.been.calledWith({
       root: "some-other-root",
       number: 9,
       topic,
@@ -597,15 +641,24 @@ describe("Event store post", () => {
   it("should call with the correct params if transaction is null", async () => {
     const saveEventsFnFake = fake.returns(writtenEvents);
     const reserveRootCountsFnFake = fake.returns(reserveRootCount);
-    const hashFnFake = stub()
+    const hashFake = stub()
       .onCall(0)
-      .returns(payloadHash)
+      .returns({
+        create: () => payloadHash,
+      })
       .onCall(1)
-      .returns(contextHash)
+      .returns({
+        create: () => contextHash,
+      })
       .onCall(2)
-      .returns(scenarioHash)
+      .returns({
+        create: () => scenarioHash,
+      })
       .onCall(3)
-      .returns(hash);
+      .returns({
+        create: () => hash,
+      });
+    replace(deps, "hash", hashFake);
 
     const nonceFake = fake.returns(nonce);
     replace(deps, "nonce", nonceFake);
@@ -615,7 +668,6 @@ describe("Event store post", () => {
       scenario,
       saveEventsFn: saveEventsFnFake,
       reserveRootCountsFn: reserveRootCountsFnFake,
-      hashFn: hashFnFake,
     })();
 
     expect(result).to.deep.equal({
@@ -655,10 +707,10 @@ describe("Event store post", () => {
       root,
       amount: 1,
     });
-    expect(hashFnFake.getCall(0)).to.have.been.calledWith(payload);
-    expect(hashFnFake.getCall(1)).to.have.been.calledWith(context);
-    expect(hashFnFake.getCall(2)).to.have.been.calledWith(scenario);
-    expect(hashFnFake.getCall(3)).to.have.been.calledWith({
+    expect(hashFake.getCall(0)).to.have.been.calledWith(payload);
+    expect(hashFake.getCall(1)).to.have.been.calledWith(context);
+    expect(hashFake.getCall(2)).to.have.been.calledWith(scenario);
+    expect(hashFake.getCall(3)).to.have.been.calledWith({
       root,
       number: currentEventsForRoot,
       topic,

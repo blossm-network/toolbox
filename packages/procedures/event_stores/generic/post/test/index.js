@@ -32,7 +32,6 @@ describe("Event store post", () => {
 
     const saveEventsFn = "some-save-events-fn";
     const reserveRootCountsFn = "some-reserve-root-counts-fn";
-    const hashFn = "some-hash-fn";
 
     const publishFnFake = fake();
     const savedEventHeadersTopic = "some-saved-event-headers-topic";
@@ -58,7 +57,6 @@ describe("Event store post", () => {
       saveEventsFn,
       reserveRootCountsFn,
       publishFn: publishFnFake,
-      hashFn,
       createTransactionFn: createTransactionFnFake,
       idempotencyConflictCheckFn: idempotencyConflictCheckFnFake,
     })(req, res);
@@ -72,7 +70,6 @@ describe("Event store post", () => {
       scenario,
       saveEventsFn,
       reserveRootCountsFn,
-      hashFn,
     });
     expect(publishFnFake).to.have.been.calledWith(
       { from: savedEventCreatedTimestamp },
@@ -104,7 +101,6 @@ describe("Event store post", () => {
 
     const saveEventsFn = "some-save-events-fn";
     const reserveRootCountsFn = "some-reserve-root-counts-fn";
-    const hashFn = "some-hash-fn";
 
     const publishFnFake = fake();
     const savedEventHeadersTopic = "some-saved-event-headers-topic";
@@ -125,7 +121,6 @@ describe("Event store post", () => {
       saveEventsFn,
       reserveRootCountsFn,
       publishFn: publishFnFake,
-      hashFn,
       createTransactionFn: createTransactionFnFake,
       idempotencyConflictCheckFn: idempotencyConflictCheckFnFake,
     })(req, res);
@@ -145,7 +140,6 @@ describe("Event store post", () => {
       scenario,
       saveEventsFn,
       reserveRootCountsFn,
-      hashFn,
     });
     expect(publishFnFake).to.have.been.calledWith(
       { from: savedEventCreatedTimestamp },
@@ -177,7 +171,6 @@ describe("Event store post", () => {
 
     const saveEventsFn = "some-save-events-fn";
     const reserveRootCountsFn = "some-reserve-root-counts-fn";
-    const hashFn = "some-hash-fn";
 
     const publishFnFake = fake();
     const savedEventHeadersTopic = "some-saved-event-headers-topic";
@@ -198,7 +191,6 @@ describe("Event store post", () => {
       saveEventsFn,
       reserveRootCountsFn,
       publishFn: publishFnFake,
-      hashFn,
       createTransactionFn: createTransactionFnFake,
       idempotencyConflictCheckFn: idempotencyConflictCheckFnFake,
     })(req, res);
@@ -221,7 +213,6 @@ describe("Event store post", () => {
       scenario,
       saveEventsFn,
       reserveRootCountsFn,
-      hashFn,
     });
     expect(publishFnFake).to.have.been.calledWith(
       { from: savedEventCreatedTimestamp },
@@ -253,7 +244,6 @@ describe("Event store post", () => {
 
     const saveEventsFn = "some-save-events-fn";
     const reserveRootCountsFn = "some-reserve-root-counts-fn";
-    const hashFn = "some-hash-fn";
 
     const publishFnFake = fake();
     const savedEventHeadersTopic = "some-saved-event-headers-topic";
@@ -278,7 +268,6 @@ describe("Event store post", () => {
       saveEventsFn,
       reserveRootCountsFn,
       publishFn: publishFnFake,
-      hashFn,
       createTransactionFn: createTransactionFnFake,
       idempotencyConflictCheckFn: idempotencyConflictCheckFnFake,
     })(req, res);
@@ -298,7 +287,6 @@ describe("Event store post", () => {
       scenario,
       saveEventsFn,
       reserveRootCountsFn,
-      hashFn,
     });
     expect(publishFnFake).to.have.been.calledWith(
       { from: savedEventCreatedTimestamp },

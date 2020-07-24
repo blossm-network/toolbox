@@ -115,12 +115,13 @@ describe("Kms verify", () => {
     const result = await verify({ key, ring, location, version, project })({
       message,
       signature,
+      format: "hex",
     });
 
     expect(result).to.equal(isVerified);
     expect(getKeyFake).to.have.not.been.called;
     expect(updateFake).to.have.been.calledWith(message);
-    expect(verifyFake).to.have.been.calledWith(pem, signature, "base64");
+    expect(verifyFake).to.have.been.calledWith(pem, signature, "hex");
     expect(pathFake).to.have.not.been.called;
   });
 

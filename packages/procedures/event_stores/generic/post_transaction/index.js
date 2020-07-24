@@ -5,7 +5,6 @@ module.exports = ({
   eventData,
   saveEventsFn,
   reserveRootCountsFn,
-  hashFn,
   scenario: {
     path: scenarioPath = [],
     claims: scenarioClaims,
@@ -98,9 +97,9 @@ module.exports = ({
             ...(scenarioTrace && { trace: scenarioTrace }),
             path: scenarioPath,
           };
-          const hashedPayload = hashFn(payload);
-          const hashedContext = hashFn(context);
-          const hashedScenario = hashFn(scenario);
+          const hashedPayload = deps.hash(payload).create();
+          const hashedContext = deps.hash(context).create();
+          const hashedScenario = deps.hash(scenario).create();
 
           const headers = {
             root: event.headers.root,
@@ -122,7 +121,7 @@ module.exports = ({
             },
           };
 
-          const hash = hashFn(headers);
+          const hash = deps.hash(headers).create();
 
           normalizedEvents.push({
             hash,

@@ -16,6 +16,7 @@
   "dependencies": {
     "@blossm/datetime": "^0.0.5",
     "@blossm/errors": "^0.0.37",
+    "@blossm/hash": "*",
     "@blossm/nonce": "^0.0.5"
   },
   "devDependencies": {

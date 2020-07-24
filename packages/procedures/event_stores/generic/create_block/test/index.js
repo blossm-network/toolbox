@@ -24,12 +24,14 @@ describe("Event store post", () => {
       sendStatus: sendStatusFake,
     };
 
-    const hashFn = "some-hash-fn";
     const saveSnapshotFn = "some-save-snapshot-fn";
     const aggregateFn = "some-aggregate-fn";
     const rootStreamFn = "some-root-stream-fn";
     const latestBlockFn = "some-latest-block-fn";
     const saveBlockFn = "some-save-block-fn";
+    const encryptFn = "some-encrypt-fn";
+    const signFn = "some-sign-fn";
+    const blockPublisherPublicKeyFn = "some-block-publisher-key-fn";
     const public = "some public";
 
     const createTransactionFnFake = fake();
@@ -37,10 +39,12 @@ describe("Event store post", () => {
       saveSnapshotFn,
       aggregateFn,
       rootStreamFn,
-      hashFn,
       latestBlockFn,
       saveBlockFn,
       createTransactionFn: createTransactionFnFake,
+      encryptFn,
+      signFn,
+      blockPublisherPublicKeyFn,
       public,
     })(req, res);
 
@@ -49,11 +53,13 @@ describe("Event store post", () => {
     );
     expect(createBlockTransactionFake).to.have.been.calledWith({
       saveSnapshotFn,
-      hashFn,
       aggregateFn,
       rootStreamFn,
       latestBlockFn,
       saveBlockFn,
+      encryptFn,
+      signFn,
+      blockPublisherPublicKeyFn,
       public,
     });
     expect(sendStatusFake).to.have.been.calledWith(200);

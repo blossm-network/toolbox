@@ -147,6 +147,73 @@ describe("Mongodb event store aggregate", () => {
       },
     });
   });
+  it("should call with the correct params if includeEvents", async () => {
+    const eachAsyncFake = fake.yields(event);
+    const cursorFake = fake.returns({
+      eachAsync: eachAsyncFake,
+    });
+    const findFake = fake.returns({
+      cursor: cursorFake,
+    });
+    const findOneFake = fake.returns(findOneResult);
+
+    const db = {
+      find: findFake,
+      findOne: findOneFake,
+    };
+
+    replace(deps, "db", db);
+
+    const result = await aggregate({
+      handlers,
+      eventStore,
+      snapshotStore,
+    })(root, { includeEvents: true });
+
+    expect(findFake).to.have.been.calledWith({
+      store: eventStore,
+      query: {
+        "headers.root": root,
+        "headers.number": { $gt: 6 },
+      },
+      sort: {
+        "headers.number": 1,
+      },
+      options: {
+        lean: true,
+      },
+    });
+    expect(eachAsyncFake).to.have.been.calledOnce;
+    expect(findOneFake).to.have.been.calledWith({
+      store: snapshotStore,
+      query: {
+        "headers.root": root,
+      },
+      sort: {
+        "headers.created": -1,
+      },
+      options: {
+        lean: true,
+      },
+    });
+    expect(result).to.deep.equal({
+      root,
+      domain: envDomain,
+      service: envService,
+      network: envNetwork,
+      state: { a: 1, b: 2, c: 2 },
+      lastEventNumber: 1,
+      trace: [eventTrace, trace],
+      context: {
+        a: {
+          root: aRoot,
+          service: aService,
+          network: aNetwork,
+        },
+      },
+      events: [event],
+    });
+  });
   it("should call with the correct params with no events", async () => {
     const eachAsyncFake = fake();
     const otherCursorFake = fake.returns({

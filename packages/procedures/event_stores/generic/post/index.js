@@ -4,7 +4,6 @@ module.exports = ({
   saveEventsFn,
   reserveRootCountsFn,
   publishFn,
-  hashFn,
   createTransactionFn,
   idempotencyConflictCheckFn,
 }) => async (req, res) => {
@@ -36,7 +35,6 @@ module.exports = ({
       scenario: req.body.scenario,
       saveEventsFn,
       reserveRootCountsFn,
-      hashFn,
     })
   );
 

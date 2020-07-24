@@ -1,27 +1,22 @@
 const crypto = require("crypto");
 
-const kms = require("@google-cloud/kms");
+const publicKey = require("./public_key");
 
 let publicKeys = {};
 
 module.exports = ({ key, ring, location, version, project }) => async ({
   message,
   signature,
+  format = "base64",
 }) => {
   const instanceKey = `${project}.${ring}.${key}`;
   if (publicKeys[instanceKey] == undefined) {
-    const client = new kms.KeyManagementServiceClient();
-
-    const versionPath = client.cryptoKeyVersionPath(
-      project,
-      location,
-      ring,
+    const pem = await publicKey({
       key,
-      version
-    );
-
-    const [{ pem }] = await client.getPublicKey({
-      name: versionPath,
+      ring,
+      location,
+      version,
+      project,
     });
 
     publicKeys[instanceKey] = pem;
@@ -30,5 +25,5 @@ module.exports = ({ key, ring, location, version, project }) => async ({
   return crypto
     .createVerify("SHA256")
     .update(message)
-    .verify(publicKeys[instanceKey], signature, "base64");
+    .verify(publicKeys[instanceKey], signature, format);
 };
