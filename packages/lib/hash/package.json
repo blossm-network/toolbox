@@ -1,6 +1,6 @@
 {
   "name": "@blossm/hash",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "SHA 256 hash.",
   "main": "index.js",
   "author": "blossm.network",
@@ -11,8 +11,8 @@
     "access": "public"
   },
   "dependencies": {
-    "keccak": "^3.0.1",
-    "@blossm/cononical-string": "*"
+    "@blossm/cononical-string": "*",
+    "keccak": "^3.0.1"
   },
   "scripts": {
     "test": "mocha --recursive"
