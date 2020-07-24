@@ -1,6 +1,6 @@
 {
   "name": "@blossm/execute-cli-template",
-  "version": "0.0.39",
+  "version": "0.0.40",
   "description": "Queues a procedure for execution.",
   "main": "index.js",
   "author": "blossm.network",
@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@blossm/gcp-queue": "^0.0.24",
-    "@blossm/normalize-cli": "^0.0.14",
+    "@blossm/normalize-cli": "^0.0.15",
     "@blossm/robo-say": "^0.0.7",
     "chalk": "^2.4.2",
     "fs-extra": "^8.1.0",
