@@ -169,7 +169,7 @@ module.exports = ({
           ),
           scheduleJob({
             name: `event-store-${service}-${domain}-create-block`,
-            schedule: "* * * * *",
+            schedule: "*/7 * * * *",
             serviceName,
             computeUrlId,
             uri: `${uri}/create-block`,
