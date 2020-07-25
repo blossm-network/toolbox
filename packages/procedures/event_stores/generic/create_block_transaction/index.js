@@ -127,7 +127,7 @@ module.exports = ({
         ...(transaction && { transaction }),
       });
 
-      snapshots.push(snapshot.events);
+      snapshots.push(snapshot);
     },
     parallel: 100,
   });
