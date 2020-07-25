@@ -35,7 +35,7 @@ describe("Mongodb event store save snapshot", () => {
       update: snapshot,
       options: { lean: true, session: transaction },
     });
-    expect(result).to.deep.equal(writeFake);
+    expect(result).to.deep.equal(writeResult);
   });
   it("should call with the correct params with optionals omitted", async () => {
     const writeResult = "some-write-result";
@@ -53,6 +53,9 @@ describe("Mongodb event store save snapshot", () => {
         hash,
       },
       update: snapshot,
+      options: {
+        lean: true,
+      },
     });
     expect(result).to.deep.equal(writeResult);
   });
