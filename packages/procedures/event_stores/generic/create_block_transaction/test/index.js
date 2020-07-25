@@ -6,7 +6,6 @@ const { restore, fake, match, stub, replace, useFakeTimers } = require("sinon");
 
 const create = require("..");
 const deps = require("../deps");
-const { cononicalString } = require("@blossm/hash/deps");
 
 let clock;
 const now = new Date();
