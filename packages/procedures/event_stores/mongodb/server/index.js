@@ -220,7 +220,7 @@ const blockchainStore = async () => {
         domain: { [typeKey]: String, required: true },
         service: { [typeKey]: String, required: true },
         network: { [typeKey]: String, required: true },
-        key: { [typeKey]: String, required: true },
+        key: { [typeKey]: Buffer, required: true },
         _id: false,
       },
       events: { [typeKey]: Buffer, required: true },
