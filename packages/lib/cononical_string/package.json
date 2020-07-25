@@ -1,6 +1,6 @@
 {
   "name": "@blossm/cononical-string",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Creates a string of an object that is the same regardless of object property order.",
   "main": "index.js",
   "author": "blossm.network",
