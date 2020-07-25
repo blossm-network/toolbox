@@ -38,12 +38,19 @@ const encodedAllEventPairs = "some-encoded-all-event-pairs";
 const encodedSnapshotPairs = "some-encoded-snapshot-pairs";
 const savedSnapshotRoot = "some-saved-snapshot-root";
 const signedBlockHeaderHash = "some-signed-block-header-hash";
-const snapshotState = "some-snapshot-state";
+const savedSnapshotState = "some-saved-snapshot-state";
+const savedSnapshotHash = "some-saved-snapshot-hash";
+const savedSnapshotContext = "some-saved-snapshot-context";
+const savedSnapshotHeaders = {
+  root: savedSnapshotRoot,
+};
+const savedSnapshotEvents = "some-saved-snapshot-events";
 const snapshot = {
-  headers: {
-    root: savedSnapshotRoot,
-  },
-  state: snapshotState,
+  hash: savedSnapshotHash,
+  context: savedSnapshotContext,
+  headers: savedSnapshotHeaders,
+  state: savedSnapshotState,
+  events: savedSnapshotEvents,
 };
 const allEventsMerkleRoot = "some-all-events-merkle-root";
 const previousNumber = 4;
@@ -234,7 +241,12 @@ describe("Event store create block transaction", () => {
       transaction,
     });
     expect(hashFake.getCall(4)).to.have.been.calledWith(savedSnapshotRoot);
-    expect(cononicalStringFake.getCall(1)).to.have.been.calledWith(snapshot);
+    expect(cononicalStringFake.getCall(1)).to.have.been.calledWith({
+      hash: savedSnapshotHash,
+      headers: savedSnapshotHeaders,
+      context: savedSnapshotContext,
+      state: savedSnapshotState,
+    });
     expect(merkleRootFake.getCall(1)).to.have.been.calledWith([
       [snapshotRootHash, snapshotCononicalString],
     ]);
@@ -466,10 +478,12 @@ describe("Event store create block transaction", () => {
     });
     expect(hashFake.getCall(4)).to.have.been.calledWith(savedSnapshotRoot);
     expect(cononicalStringFake.getCall(2)).to.have.been.calledWith(
-      snapshotState
+      savedSnapshotState
     );
     expect(cononicalStringFake.getCall(3)).to.have.been.calledWith({
-      ...snapshot,
+      hash: savedSnapshotHash,
+      headers: savedSnapshotHeaders,
+      context: savedSnapshotContext,
       state: encryptedSnapshotState,
     });
     expect(encryptFnFake.getCall(1)).to.have.been.calledWith(
@@ -811,7 +825,12 @@ describe("Event store create block transaction", () => {
       transaction,
     });
     expect(hashFake.getCall(4)).to.have.been.calledWith(savedSnapshotRoot);
-    expect(cononicalStringFake.getCall(1)).to.have.been.calledWith(snapshot);
+    expect(cononicalStringFake.getCall(1)).to.have.been.calledWith({
+      hash: savedSnapshotHash,
+      headers: savedSnapshotHeaders,
+      context: savedSnapshotContext,
+      state: savedSnapshotState,
+    });
     expect(merkleRootFake.getCall(1)).to.have.been.calledWith([
       [snapshotRootHash, snapshotCononicalString],
     ]);

@@ -12,7 +12,7 @@ module.exports = ({
   //TODO
   console.log({ forwardedFor: req.headers["x-forwarded-for"] });
   //TODO
-  console.log({ remoteAddress: req.connection.remoteAddress });
+  console.log({ connection: req.connection });
   await deps.validate(req.body);
   const { payload, headers, root } = req.body;
 

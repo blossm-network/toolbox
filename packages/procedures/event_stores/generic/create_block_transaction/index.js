@@ -127,7 +127,12 @@ module.exports = ({
         ...(transaction && { transaction }),
       });
 
-      snapshots.push(snapshot);
+      snapshots.push({
+        hash: snapshot.hash,
+        headers: snapshot.headers,
+        context: snapshot.context,
+        state: snapshot.state,
+      });
     },
     parallel: 100,
   });
