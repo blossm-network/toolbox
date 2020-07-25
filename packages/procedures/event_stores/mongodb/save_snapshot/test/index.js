@@ -33,7 +33,14 @@ describe("Mongodb event store save snapshot", () => {
         hash,
       },
       update: snapshot,
-      options: { lean: true, session: transaction },
+      options: {
+        lean: true,
+        omitUndefined: true,
+        upsert: true,
+        new: true,
+        runValidators: true,
+        session: transaction,
+      },
     });
     expect(result).to.deep.equal(writeResult);
   });
@@ -55,6 +62,10 @@ describe("Mongodb event store save snapshot", () => {
       update: snapshot,
       options: {
         lean: true,
+        omitUndefined: true,
+        upsert: true,
+        new: true,
+        runValidators: true,
       },
     });
     expect(result).to.deep.equal(writeResult);

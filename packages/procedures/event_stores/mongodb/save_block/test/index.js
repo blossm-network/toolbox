@@ -33,7 +33,14 @@ describe("Mongodb event store save block", () => {
         hash,
       },
       update: block,
-      options: { session: transaction, lean: true },
+      options: {
+        session: transaction,
+        lean: true,
+        omitUndefined: true,
+        upsert: true,
+        new: true,
+        runValidators: true,
+      },
     });
     expect(result).to.deep.equal(writeResult);
   });
@@ -55,6 +62,10 @@ describe("Mongodb event store save block", () => {
       update: block,
       options: {
         lean: true,
+        omitUndefined: true,
+        upsert: true,
+        new: true,
+        runValidators: true,
       },
     });
     expect(result).to.deep.equal(writeResult);
