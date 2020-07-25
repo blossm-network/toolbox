@@ -151,11 +151,13 @@ module.exports = ({
     })
   );
 
+  console.log("1");
   const [snapshotsMerkleRoot, allEventsMerkleRoot] = await Promise.all([
     deps.merkleRoot(stringifiedSnapshotPairs),
     deps.merkleRoot(allStringifiedEventPairs),
   ]);
 
+  console.log("2");
   const blockHeaders = {
     nonce: deps.nonce(),
     pHash: previousBlock.hash,
@@ -173,9 +175,11 @@ module.exports = ({
     key: await blockPublisherPublicKeyFn(),
   };
 
+  console.log("3");
   const blockHeadersHash = deps.hash(blockHeaders).create();
   const signedBlockHeadersHash = await signFn(blockHeadersHash);
 
+  console.log("4");
   const normalizedBlock = {
     signature: signedBlockHeadersHash,
     hash: blockHeadersHash,
@@ -184,6 +188,7 @@ module.exports = ({
     snapshots: deps.encode(stringifiedSnapshotPairs),
   };
 
+  console.log("5");
   await saveBlockFn({
     block: normalizedBlock,
     ...(transaction && { transaction }),

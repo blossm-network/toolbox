@@ -13,6 +13,7 @@ describe("Stringify object", () => {
         },
       },
       g: [{ h: 8, i: 9 }, { j: 10 }, { k: 11 }],
+      h: stringify({ o: 9 }),
     };
     const obj2 = {
       b: {
@@ -22,6 +23,7 @@ describe("Stringify object", () => {
         },
         d: [4, 5, 6],
       },
+      h: stringify({ o: 9 }),
       g: [{ i: 9, h: 8 }, { j: 10 }, { k: 11 }],
       a: 2,
     };
