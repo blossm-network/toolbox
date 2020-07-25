@@ -38,13 +38,15 @@ module.exports = eventStore({
     }),
   blockPublisherPublicKeyFn: async () => {
     if (!blockPublisherPublicKey) {
-      blockPublisherPublicKey = await publicKey({
-        key: blockchainProducerKey,
-        ring: blockchainProducerKeyRing,
-        location: "global",
-        version: "1",
-        project: process.env.GCP_PROJECT,
-      });
+      blockPublisherPublicKey = Buffer.from(
+        await publicKey({
+          key: blockchainProducerKey,
+          ring: blockchainProducerKeyRing,
+          location: "global",
+          version: "1",
+          project: process.env.GCP_PROJECT,
+        })
+      ).toString("hex");
     }
     return blockPublisherPublicKey;
   },
