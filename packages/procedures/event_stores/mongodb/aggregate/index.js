@@ -70,10 +70,11 @@ module.exports = ({ eventStore, snapshotStore, handlers }) => async (
       const commonContextKeys = keys.filter((key) => {
         const value = event.context[key];
         return (
-          value &&
-          value.root == aggregate.context[key].root &&
-          value.service == aggregate.context[key].service &&
-          value.network == aggregate.context[key].network
+          value === aggregate.context[key] ||
+          (value &&
+            value.root == aggregate.context[key].root &&
+            value.service == aggregate.context[key].service &&
+            value.network == aggregate.context[key].network)
         );
       });
       aggregate.context = commonContextKeys.reduce((result, key) => {

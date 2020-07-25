@@ -37,6 +37,7 @@ const event = {
       service: bService,
       network: bNetwork,
     },
+    c: "some-c",
   },
   payload: { b: 2, c: 2 },
 };
@@ -65,6 +66,7 @@ const findOneResult = {
       service: aService,
       network: aNetwork,
     },
+    c: "some-c",
   },
 };
 
@@ -144,6 +146,7 @@ describe("Mongodb event store aggregate", () => {
           service: aService,
           network: aNetwork,
         },
+        c: "some-c",
       },
     });
   });
@@ -210,6 +213,7 @@ describe("Mongodb event store aggregate", () => {
           service: aService,
           network: aNetwork,
         },
+        c: "some-c",
       },
       events: [event],
     });
@@ -275,6 +279,7 @@ describe("Mongodb event store aggregate", () => {
           service: aService,
           network: aNetwork,
         },
+        c: "some-c",
       },
     });
   });
@@ -343,6 +348,7 @@ describe("Mongodb event store aggregate", () => {
           service: bService,
           network: bNetwork,
         },
+        c: "some-c",
       },
     });
   });
