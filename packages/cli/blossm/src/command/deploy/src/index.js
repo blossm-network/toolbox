@@ -45,7 +45,7 @@ module.exports = commandProcedure({
       aggregate: aggregate.state,
     };
   },
-  commandFn: ({ path, idempotency, context, claims, token, trace }) => ({
+  commandFn: ({ path, idempotency, context, claims, token, trace, ip }) => ({
     name,
     domain,
     service,
@@ -81,7 +81,14 @@ module.exports = commandProcedure({
       .issue(payload, {
         ...(root && { root }),
         ...(options && { options }),
-        headers: { trace, idempotency, path },
+        headers: {
+          ...(idempotency && { idempotency }),
+        },
+        scenario: {
+          ...(ip && { ip }),
+          ...(trace && { trace }),
+          ...(path && { path }),
+        },
       }),
   queryAggregatesFn: ({ context, claims, token }) => ({
     domain,

@@ -9,10 +9,6 @@ module.exports = ({
   nodeExternalTokenFn,
   key,
 } = {}) => async (req, res) => {
-  //TODO
-  console.log({ forwardedFor: req.headers["x-forwarded-for"] });
-  //TODO
-  console.log({ connection: req.connection });
   await deps.validate(req.body);
   const { payload, headers, root } = req.body;
 
@@ -42,8 +38,11 @@ module.exports = ({
     })
     .issue(payload, {
       ...(root && { root }),
-      headers: {
-        ...(headers.idempotency && { idempotency: headers.idempotency }),
+      ...(headers.idempotency && {
+        headers: { idempotency: headers.idempotency },
+      }),
+      scenario: {
+        ip: req.headers["x-forwarded-for"],
         path: [
           {
             timestamp: deps.dateString(),

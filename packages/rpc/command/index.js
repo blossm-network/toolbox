@@ -14,18 +14,28 @@ module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
     enqueue: { fn: enqueueFn, wait: enqueueWait } = {},
   } = {}) => (
     payload = {},
-    { root, options, headers: { trace, idempotency, path } = {} } = {}
+    {
+      root,
+      options,
+      headers: { idempotency } = {},
+      scenario: { ip, trace, path } = {},
+    } = {}
   ) => {
     const headers = {
       issued: deps.dateString(),
-      ...(trace && { trace }),
       ...(idempotency && { idempotency }),
+    };
+
+    const scenario = {
+      ...(ip && { ip }),
+      ...(trace && { trace }),
       ...(path && { path }),
     };
 
     const data = {
       payload,
       headers,
+      scenario,
       ...(root && { root }),
       ...(options && { options }),
     };

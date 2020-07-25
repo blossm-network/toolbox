@@ -38,12 +38,15 @@ const headers = {
   idempotency,
 };
 const scenarioTrace = "some-scenario-trace";
+const scenarioIp = "some-scenario-ip";
 const scenarioPath = "some-scenario-path";
 const scenarioClaims = "some-scenario-claims";
 const scenario = {
   trace: scenarioTrace,
+  ip: scenarioIp,
   path: scenarioPath,
   claims: scenarioClaims,
+  some: "bogus",
 };
 const eventData = [
   {
@@ -132,7 +135,12 @@ describe("Event store post", () => {
           hash,
           payload,
           context,
-          scenario,
+          scenario: {
+            trace: scenarioTrace,
+            ip: scenarioIp,
+            path: scenarioPath,
+            claims: scenarioClaims,
+          },
         },
       ],
       transaction,
@@ -144,7 +152,12 @@ describe("Event store post", () => {
     });
     expect(hashFake.getCall(0)).to.have.been.calledWith(payload);
     expect(hashFake.getCall(1)).to.have.been.calledWith(context);
-    expect(hashFake.getCall(2)).to.have.been.calledWith(scenario);
+    expect(hashFake.getCall(2)).to.have.been.calledWith({
+      trace: scenarioTrace,
+      ip: scenarioIp,
+      path: scenarioPath,
+      claims: scenarioClaims,
+    });
     expect(hashFake.getCall(3)).to.have.been.calledWith({
       root,
       number: currentEventsForRoot,
@@ -232,7 +245,12 @@ describe("Event store post", () => {
           hash,
           payload,
           context,
-          scenario,
+          scenario: {
+            trace: scenarioTrace,
+            ip: scenarioIp,
+            path: scenarioPath,
+            claims: scenarioClaims,
+          },
         },
       ],
       transaction,
@@ -244,7 +262,12 @@ describe("Event store post", () => {
     });
     expect(hashFake.getCall(0)).to.have.been.calledWith(payload);
     expect(hashFake.getCall(1)).to.have.been.calledWith(context);
-    expect(hashFake.getCall(2)).to.have.been.calledWith(scenario);
+    expect(hashFake.getCall(2)).to.have.been.calledWith({
+      trace: scenarioTrace,
+      ip: scenarioIp,
+      path: scenarioPath,
+      claims: scenarioClaims,
+    });
     expect(hashFake.getCall(3)).to.have.been.calledWith({
       root,
       number,
@@ -502,7 +525,12 @@ describe("Event store post", () => {
           hash: hash1,
           payload,
           context,
-          scenario,
+          scenario: {
+            trace: scenarioTrace,
+            ip: scenarioIp,
+            path: scenarioPath,
+            claims: scenarioClaims,
+          },
         },
         {
           headers: {
@@ -525,7 +553,12 @@ describe("Event store post", () => {
           hash: hash2,
           payload,
           context,
-          scenario,
+          scenario: {
+            trace: scenarioTrace,
+            ip: scenarioIp,
+            path: scenarioPath,
+            claims: scenarioClaims,
+          },
         },
         {
           headers: {
@@ -548,7 +581,12 @@ describe("Event store post", () => {
           hash: hash3,
           payload: "some-other-payload",
           context: "some-other-context",
-          scenario,
+          scenario: {
+            trace: scenarioTrace,
+            ip: scenarioIp,
+            path: scenarioPath,
+            claims: scenarioClaims,
+          },
         },
       ],
       transaction,
@@ -675,7 +713,12 @@ describe("Event store post", () => {
           hash,
           payload,
           context,
-          scenario,
+          scenario: {
+            trace: scenarioTrace,
+            ip: scenarioIp,
+            path: scenarioPath,
+            claims: scenarioClaims,
+          },
         },
       ],
     });
@@ -685,7 +728,12 @@ describe("Event store post", () => {
     });
     expect(hashFake.getCall(0)).to.have.been.calledWith(payload);
     expect(hashFake.getCall(1)).to.have.been.calledWith(context);
-    expect(hashFake.getCall(2)).to.have.been.calledWith(scenario);
+    expect(hashFake.getCall(2)).to.have.been.calledWith({
+      trace: scenarioTrace,
+      ip: scenarioIp,
+      path: scenarioPath,
+      claims: scenarioClaims,
+    });
     expect(hashFake.getCall(3)).to.have.been.calledWith({
       root,
       number: currentEventsForRoot,

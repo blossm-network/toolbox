@@ -181,6 +181,7 @@ describe("Mongodb event store", () => {
         },
         context: { $type: Object },
         scenario: {
+          ip: { $type: String },
           trace: { $type: String },
           claims: {
             $type: {
@@ -520,6 +521,7 @@ describe("Mongodb event store", () => {
         },
         context: { $type: Object },
         scenario: {
+          ip: { $type: String },
           trace: { $type: String },
           claims: {
             $type: {
@@ -805,6 +807,7 @@ describe("Mongodb event store", () => {
         },
         context: { $type: Object },
         scenario: {
+          ip: { $type: String },
           trace: { $type: String },
           claims: {
             $type: {

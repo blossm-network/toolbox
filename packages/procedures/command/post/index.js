@@ -25,7 +25,7 @@ module.exports = ({
   const trace = deps.uuid();
 
   const path = [
-    ...(req.body.headers.path || []),
+    ...(req.body.scenario.path || []),
     {
       procedure: process.env.PROCEDURE,
       id: commandId,
@@ -52,6 +52,7 @@ module.exports = ({
     ...(req.body.options && { options: req.body.options }),
     ...(req.body.claims && { claims: req.body.claims }),
     ...(req.body.context && { context: req.body.context }),
+    ...(req.body.scenario.ip && { ip: req.body.scenario.ip }),
     aggregateFn: aggregateFn({
       ...(req.body.context && { context: req.body.context }),
       ...(req.body.claims && { claims: req.body.claims }),
@@ -76,6 +77,7 @@ module.exports = ({
       ...(req.body.claims && { claims: req.body.claims }),
       ...(req.body.context && { context: req.body.context }),
       ...(req.body.token && { token: req.body.token }),
+      ...(req.body.scenario.ip && { ip: req.body.scenario.ip }),
       ...(req.body.headers.idempotency && {
         idempotency: req.body.headers.idempotency,
       }),
@@ -143,6 +145,7 @@ module.exports = ({
             (normalizedEvent) => normalizedEvent.number != undefined
           ),
           scenario: {
+            ...(req.body.scenario.ip && { ip: req.body.scenario.ip }),
             trace,
             path,
           },

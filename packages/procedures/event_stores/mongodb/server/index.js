@@ -46,6 +46,7 @@ const eventStore = async ({ schema, indexes, secretFn }) => {
       },
       context: { [typeKey]: Object },
       scenario: {
+        ip: { [typeKey]: String },
         trace: { [typeKey]: String },
         claims: {
           [typeKey]: {

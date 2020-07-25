@@ -34,15 +34,16 @@ const context = "some-context";
 const claims = "some-claims";
 const trace = "some-trace";
 const issued = "some-issued";
-const accepted = "some-accepted";
-const broadcasted = "some-broadcasted";
 const idempotency = "some-idempotency";
+const ip = "some-ip";
 
 const headers = {
   issued,
-  accepted,
-  broadcasted,
   idempotency,
+};
+
+const scenario = {
+  ip,
 };
 
 const name = "some-name";
@@ -98,6 +99,7 @@ describe("Command handler post", () => {
       body: {
         payload,
         headers,
+        scenario,
       },
     };
 
@@ -141,8 +143,8 @@ describe("Command handler post", () => {
     expect(commandFnFake).to.have.been.calledWith({
       idempotency,
       trace,
+      ip,
       path: [
-        ...(req.body.headers.path || []),
         {
           procedure,
           hash,
@@ -161,6 +163,7 @@ describe("Command handler post", () => {
     expect(validateFnFake).to.have.been.calledWith(payload);
     expect(mainFnFake).to.have.been.calledWith({
       payload: cleanedPayload,
+      ip,
       aggregateFn,
       commandFn,
       queryAggregatesFn,
@@ -202,6 +205,7 @@ describe("Command handler post", () => {
         },
       ],
       scenario: {
+        ip,
         trace,
         path: [
           {
@@ -261,6 +265,7 @@ describe("Command handler post", () => {
       body: {
         payload,
         headers,
+        scenario,
       },
     };
 
@@ -304,8 +309,8 @@ describe("Command handler post", () => {
     expect(commandFnFake).to.have.been.calledWith({
       idempotency,
       trace,
+      ip,
       path: [
-        ...(req.body.headers.path || []),
         {
           procedure,
           hash,
@@ -324,6 +329,7 @@ describe("Command handler post", () => {
     expect(validateFnFake).to.have.been.calledWith(payload);
     expect(mainFnFake).to.have.been.calledWith({
       payload: cleanedPayload,
+      ip,
       aggregateFn,
       commandFn,
       queryAggregatesFn,
@@ -365,6 +371,7 @@ describe("Command handler post", () => {
         },
       ],
       scenario: {
+        ip,
         trace,
         path: [
           {
@@ -391,7 +398,7 @@ describe("Command handler post", () => {
       _trace: trace,
     });
   });
-  it("should call with the correct params with added header path", async () => {
+  it("should call with the correct params with added scenario path", async () => {
     const validateFnFake = fake();
     const normalizeFnFake = fake.returns(cleanedPayload);
 
@@ -419,8 +426,9 @@ describe("Command handler post", () => {
     const req = {
       body: {
         payload,
-        headers: {
-          ...headers,
+        headers,
+        scenario: {
+          ...scenario,
           path: [otherPath],
         },
       },
@@ -519,6 +527,7 @@ describe("Command handler post", () => {
       body: {
         payload,
         headers,
+        scenario,
       },
     };
 
@@ -563,8 +572,8 @@ describe("Command handler post", () => {
     expect(commandFnFake).to.have.been.calledWith({
       idempotency,
       trace,
+      ip,
       path: [
-        ...(req.body.headers.path || []),
         {
           procedure,
           hash,
@@ -613,6 +622,7 @@ describe("Command handler post", () => {
       body: {
         payload,
         headers,
+        scenario,
       },
     };
 
@@ -656,8 +666,8 @@ describe("Command handler post", () => {
     expect(commandFnFake).to.have.been.calledWith({
       idempotency,
       trace,
+      ip,
       path: [
-        ...(req.body.headers.path || []),
         {
           procedure,
           hash,
@@ -703,6 +713,7 @@ describe("Command handler post", () => {
       body: {
         payload,
         headers,
+        scenario,
       },
     };
 
@@ -746,6 +757,7 @@ describe("Command handler post", () => {
     expect(commandFnFake).to.have.been.calledWith({
       idempotency,
       trace,
+      ip,
       path: [
         ...(req.body.headers.path || []),
         {
@@ -766,6 +778,7 @@ describe("Command handler post", () => {
     expect(validateFnFake).to.have.been.calledWith(payload);
     expect(mainFnFake).to.have.been.calledWith({
       payload: cleanedPayload,
+      ip,
       aggregateFn,
       commandFn,
       queryAggregatesFn,
@@ -778,6 +791,7 @@ describe("Command handler post", () => {
       service,
       eventData: [{ event, number: correctNumber }],
       scenario: {
+        ip,
         trace,
         path: [
           {
@@ -846,6 +860,7 @@ describe("Command handler post", () => {
       body: {
         payload,
         headers,
+        scenario,
       },
     };
 
@@ -889,8 +904,8 @@ describe("Command handler post", () => {
     expect(commandFnFake).to.have.been.calledWith({
       idempotency,
       trace,
+      ip,
       path: [
-        ...(req.body.headers.path || []),
         {
           procedure,
           hash,
@@ -909,6 +924,7 @@ describe("Command handler post", () => {
     expect(validateFnFake).to.have.been.calledWith(payload);
     expect(mainFnFake).to.have.been.calledWith({
       payload: cleanedPayload,
+      ip,
       aggregateFn,
       commandFn,
       queryAggregatesFn,
@@ -942,6 +958,7 @@ describe("Command handler post", () => {
       body: {
         payload,
         headers,
+        scenario: {},
       },
     };
 
@@ -1050,6 +1067,7 @@ describe("Command handler post", () => {
         root: currentRoot,
         payload,
         headers,
+        scenario: {},
         options,
         context,
         claims,
@@ -1227,6 +1245,7 @@ describe("Command handler post", () => {
       body: {
         payload,
         headers,
+        scenario: {},
       },
     };
 
@@ -1383,6 +1402,7 @@ describe("Command handler post", () => {
       body: {
         payload,
         headers,
+        scenario: {},
         context,
         claims,
       },
@@ -1555,6 +1575,7 @@ describe("Command handler post", () => {
       body: {
         payload,
         headers,
+        scenario: {},
         context,
         claims,
       },
@@ -1755,6 +1776,7 @@ describe("Command handler post", () => {
       body: {
         payload,
         headers,
+        scenario: {},
         context,
         claims,
       },
@@ -1968,6 +1990,7 @@ describe("Command handler post", () => {
       body: {
         payload,
         headers,
+        scenario: {},
         claims,
       },
     };

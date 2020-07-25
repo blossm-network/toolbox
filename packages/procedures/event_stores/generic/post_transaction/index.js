@@ -9,6 +9,7 @@ module.exports = ({
     path: scenarioPath = [],
     claims: scenarioClaims,
     trace: scenarioTrace,
+    ip: scenarioIp,
   } = {},
 }) => async (transaction) => {
   const eventRootCounts = eventData.reduce((result, { event }) => {
@@ -95,6 +96,7 @@ module.exports = ({
           const scenario = {
             ...(scenarioClaims && { claims: scenarioClaims }),
             ...(scenarioTrace && { trace: scenarioTrace }),
+            ...(scenarioIp && { ip: scenarioIp }),
             path: scenarioPath,
           };
           const hashedPayload = deps.hash(payload).create();

@@ -67,6 +67,8 @@ describe("Issue command", () => {
     replace(deps, "rpc", rpcFake);
 
     const path = ["some-path"];
+    const ip = "some-ip";
+    const idempotency = "some-idempotency";
     const enqueueFnResult = "some-enqueue-fn-result";
     const enqueueFnFake = fake.returns(enqueueFnResult);
     const enqueueWait = "some-enqueue-wait";
@@ -87,7 +89,11 @@ describe("Issue command", () => {
       })
       .issue(payload, {
         headers: {
+          idempotency,
+        },
+        scenario: {
           trace,
+          ip,
           path,
         },
         root,
@@ -100,6 +106,10 @@ describe("Issue command", () => {
       payload,
       headers: {
         issued: deps.dateString(),
+        idempotency,
+      },
+      scenario: {
+        ip,
         trace,
         path,
       },
@@ -145,6 +155,7 @@ describe("Issue command", () => {
       headers: {
         issued: deps.dateString(),
       },
+      scenario: {},
     });
     expect(inFake).to.have.been.calledWith({});
     expect(withFake).to.have.been.calledWith({});
@@ -176,6 +187,7 @@ describe("Issue command", () => {
       headers: {
         issued: deps.dateString(),
       },
+      scenario: {},
     });
     expect(inFake).to.have.been.calledWith({});
     expect(withFake).to.have.been.calledWith({
@@ -208,7 +220,7 @@ describe("Issue command", () => {
       network: otherNetwork,
     })
       .set({ context, claims, token: { externalFn: externalTokenFn } })
-      .issue(payload, { headers: { trace }, root, options });
+      .issue(payload, { root, options });
 
     expect(result).to.equal(response);
     expect(rpcFake).to.have.been.calledWith(name, domain, service, "command");
@@ -216,8 +228,8 @@ describe("Issue command", () => {
       payload,
       headers: {
         issued: deps.dateString(),
-        trace,
       },
+      scenario: {},
       root,
       options,
     });
