@@ -16,7 +16,7 @@ module.exports = ({
   const genesisPrevious = "~";
 
   if (!previousBlock) {
-    const emptyMerkleRoot = deps.merkleRoot([]);
+    const emptyMerkleRoot = await deps.merkleRoot([]);
 
     const blockHeaders = {
       nonce: deps.nonce(),
