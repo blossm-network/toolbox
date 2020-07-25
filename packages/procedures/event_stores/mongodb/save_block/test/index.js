@@ -27,7 +27,7 @@ describe("Mongodb event store save block", () => {
     expect(createFake).to.have.been.calledWith({
       store: blockchainStore,
       data: block,
-      options: { session: transaction },
+      options: { session: transaction, lean: true },
     });
     expect(result).to.deep.equal(createResult);
   });
@@ -44,6 +44,9 @@ describe("Mongodb event store save block", () => {
     expect(createFake).to.have.been.calledWith({
       store: blockchainStore,
       data: block,
+      options: {
+        lean: true,
+      },
     });
     expect(result).to.deep.equal(createResult);
   });

@@ -27,7 +27,7 @@ describe("Mongodb event store save snapshot", () => {
     expect(createFake).to.have.been.calledWith({
       store: snapshotStore,
       data: snapshot,
-      options: { session: transaction },
+      options: { session: transaction, lean: true },
     });
     expect(result).to.deep.equal(createResult);
   });
@@ -44,6 +44,9 @@ describe("Mongodb event store save snapshot", () => {
     expect(createFake).to.have.been.calledWith({
       store: snapshotStore,
       data: snapshot,
+      options: {
+        lean: true,
+      },
     });
     expect(result).to.deep.equal(createResult);
   });
