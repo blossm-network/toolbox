@@ -42,7 +42,7 @@ module.exports = eventStore({
         key: blockchainProducerKey,
         ring: blockchainProducerKeyRing,
         location: "global",
-        version: 0,
+        version: "0",
         project: process.env.GCP_PROJECT,
       });
     }
