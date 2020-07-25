@@ -71,7 +71,9 @@ module.exports = ({
 
       const stringifiedEventPairs = [];
       await Promise.all(
-        aggregate.events.map(async (e) =>
+        aggregate.events.map(async (e) => {
+          //TODO
+          console.log({ e });
           stringifiedEventPairs.push([
             deps.hash(e.hash).create(),
             deps.cononicalString(
@@ -82,8 +84,8 @@ module.exports = ({
                     payload: await encryptFn(deps.cononicalString(e.payload)),
                   }
             ),
-          ])
-        )
+          ]);
+        })
       );
 
       allStringifiedEventPairs.push(...stringifiedEventPairs);
@@ -134,7 +136,9 @@ module.exports = ({
 
   const stringifiedSnapshotPairs = [];
   await Promise.all(
-    snapshots.map(async (s) =>
+    snapshots.map(async (s) => {
+      //TODO
+      console.log({ s });
       stringifiedSnapshotPairs.push([
         //The root is the key so that we can ask "does this block contain a state change for this root?".
         deps.hash(s.headers.root).create(),
@@ -143,8 +147,8 @@ module.exports = ({
             ? s
             : { ...s, state: await encryptFn(deps.cononicalString(s.state)) }
         ),
-      ])
-    )
+      ]);
+    })
   );
 
   const [snapshotsMerkleRoot, allEventsMerkleRoot] = await Promise.all([
