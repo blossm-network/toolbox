@@ -1,6 +1,6 @@
 {
   "name": "@blossm/hash",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "SHA 256 hash.",
   "main": "index.js",
   "author": "blossm.network",
@@ -11,7 +11,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/cononical-string": "^0.0.2",
+    "@blossm/cononical-string": "^0.0.3",
     "keccak": "^3.0.1"
   },
   "scripts": {
