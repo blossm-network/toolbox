@@ -127,11 +127,9 @@ describe("Event store post", () => {
             version,
             created,
             idempotency,
-            hashes: {
-              payload: payloadHash,
-              context: contextHash,
-              scenario: scenarioHash,
-            },
+            pHash: payloadHash,
+            cHash: contextHash,
+            sHash: scenarioHash,
           },
           hash,
           payload,
@@ -162,11 +160,9 @@ describe("Event store post", () => {
       version,
       created,
       idempotency,
-      hashes: {
-        payload: payloadHash,
-        context: contextHash,
-        scenario: scenarioHash,
-      },
+      pHash: payloadHash,
+      cHash: contextHash,
+      sHash: scenarioHash,
     });
   });
   it("should call with the correct params with correct number", async () => {
@@ -231,11 +227,9 @@ describe("Event store post", () => {
             version,
             created,
             idempotency,
-            hashes: {
-              payload: payloadHash,
-              context: contextHash,
-              scenario: scenarioHash,
-            },
+            pHash: payloadHash,
+            cHash: contextHash,
+            sHash: scenarioHash,
           },
           hash,
           payload,
@@ -266,11 +260,9 @@ describe("Event store post", () => {
       version,
       created,
       idempotency,
-      hashes: {
-        payload: payloadHash,
-        context: contextHash,
-        scenario: scenarioHash,
-      },
+      pHash: payloadHash,
+      cHash: contextHash,
+      sHash: scenarioHash,
     });
   });
   it("should call with the correct params with no scenario, payload, or context", async () => {
@@ -331,11 +323,9 @@ describe("Event store post", () => {
             version,
             created,
             idempotency,
-            hashes: {
-              payload: payloadHash,
-              context: contextHash,
-              scenario: scenarioHash,
-            },
+            pHash: payloadHash,
+            cHash: contextHash,
+            sHash: scenarioHash,
           },
           hash,
           payload: {},
@@ -366,11 +356,9 @@ describe("Event store post", () => {
       version,
       created,
       idempotency,
-      hashes: {
-        payload: payloadHash,
-        context: contextHash,
-        scenario: scenarioHash,
-      },
+      pHash: payloadHash,
+      cHash: contextHash,
+      sHash: scenarioHash,
     });
   });
   it("should call with the correct params with multiple events with the same root and different roots", async () => {
@@ -505,11 +493,9 @@ describe("Event store post", () => {
             version,
             created,
             idempotency,
-            hashes: {
-              payload: payloadHash1,
-              context: contextHash1,
-              scenario: scenarioHash1,
-            },
+            pHash: payloadHash,
+            cHash: contextHash,
+            sHash: scenarioHash,
           },
           hash: hash1,
           payload,
@@ -530,11 +516,9 @@ describe("Event store post", () => {
             version,
             created,
             idempotency,
-            hashes: {
-              payload: payloadHash2,
-              context: contextHash2,
-              scenario: scenarioHash2,
-            },
+            pHash: payloadHash,
+            cHash: contextHash,
+            sHash: scenarioHash,
           },
           hash: hash2,
           payload,
@@ -555,11 +539,9 @@ describe("Event store post", () => {
             created,
             idempotency: "some-other-idempotency",
             version: "some-other-version",
-            hashes: {
-              payload: payloadHash3,
-              context: contextHash3,
-              scenario: scenarioHash3,
-            },
+            pHash: payloadHash,
+            cHash: contextHash,
+            sHash: scenarioHash,
           },
           hash: hash3,
           payload: "some-other-payload",
@@ -593,11 +575,9 @@ describe("Event store post", () => {
       version,
       created,
       idempotency,
-      hashes: {
-        payload: payloadHash1,
-        context: contextHash1,
-        scenario: scenarioHash1,
-      },
+      pHash: payloadHash1,
+      cHash: contextHash1,
+      sHash: scenarioHash1,
     });
     expect(hashFake.getCall(7)).to.have.been.calledWith({
       root,
@@ -612,11 +592,9 @@ describe("Event store post", () => {
       version,
       created,
       idempotency,
-      hashes: {
-        payload: payloadHash2,
-        context: contextHash2,
-        scenario: scenarioHash2,
-      },
+      pHash: payloadHash2,
+      cHash: contextHash2,
+      sHash: scenarioHash2,
     });
     expect(hashFake.getCall(11)).to.have.been.calledWith({
       root: "some-other-root",
@@ -631,11 +609,9 @@ describe("Event store post", () => {
       created,
       idempotency: "some-other-idempotency",
       version: "some-other-version",
-      hashes: {
-        payload: payloadHash3,
-        context: contextHash3,
-        scenario: scenarioHash3,
-      },
+      pHash: payloadHash3,
+      cHash: contextHash3,
+      sHash: scenarioHash3,
     });
   });
   it("should call with the correct params if transaction is null", async () => {
@@ -690,11 +666,9 @@ describe("Event store post", () => {
             service,
             network,
             version,
-            hashes: {
-              payload: payloadHash,
-              context: contextHash,
-              scenario: scenarioHash,
-            },
+            pHash: payloadHash,
+            cHash: contextHash,
+            sHash: scenarioHash,
           },
           hash,
           payload,
@@ -723,11 +697,9 @@ describe("Event store post", () => {
       version,
       created,
       idempotency,
-      hashes: {
-        payload: payloadHash,
-        context: contextHash,
-        scenario: scenarioHash,
-      },
+      pHash: payloadHash,
+      cHash: contextHash,
+      sHash: scenarioHash,
     });
   });
   it("should throw if event number is incorrect", async () => {

@@ -114,11 +114,9 @@ module.exports = ({
             committed: deps.dateString(),
             nonce: deps.nonce(),
             number: allottedNumber,
-            hashes: {
-              payload: hashedPayload,
-              context: hashedContext,
-              scenario: hashedScenario,
-            },
+            pHash: hashedPayload,
+            cHash: hashedContext,
+            sHash: hashedScenario,
           };
 
           const hash = deps.hash(headers).create();

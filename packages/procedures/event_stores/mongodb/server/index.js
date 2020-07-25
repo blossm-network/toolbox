@@ -15,7 +15,6 @@ const eventStore = async ({ schema, indexes, secretFn }) => {
     return _eventStore;
   }
 
-  //DONT set default values because the hashes will be computed before the defaults are saved.
   _eventStore = deps.db.store({
     name: `_${process.env.SERVICE}.${process.env.DOMAIN}`,
     schema: {
@@ -25,19 +24,13 @@ const eventStore = async ({ schema, indexes, secretFn }) => {
           [typeKey]: String,
           required: true,
           unique: true,
-          //TODO no defaults because hash.
-          //Look for other defaults in this file.
         },
-        hashes: {
-          payload: { [typeKey]: String, required: true },
-          context: { [typeKey]: String, required: true },
-          scenario: { [typeKey]: String, required: true },
-          _id: false,
-        },
+        pHash: { [typeKey]: String, required: true },
+        cHash: { [typeKey]: String, required: true },
+        sHash: { [typeKey]: String, required: true },
         committed: {
           [typeKey]: Date,
           required: true,
-          //TODO no defaults because hash.
         },
         created: { [typeKey]: Date, required: true },
         number: { [typeKey]: Number, required: true },

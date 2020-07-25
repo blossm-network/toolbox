@@ -160,12 +160,10 @@ describe("Mongodb event store", () => {
             required: true,
             unique: true,
           },
-          hashes: {
-            payload: { $type: String, required: true },
-            context: { $type: String, required: true },
-            scenario: { $type: String, required: true },
-            _id: false,
-          },
+          pHash: { $type: String, required: true },
+          cHash: { $type: String, required: true },
+          sHash: { $type: String, required: true },
+          _id: false,
           committed: {
             $type: Date,
             required: true,
@@ -501,12 +499,9 @@ describe("Mongodb event store", () => {
             required: true,
             unique: true,
           },
-          hashes: {
-            payload: { $type: String, required: true },
-            context: { $type: String, required: true },
-            scenario: { $type: String, required: true },
-            _id: false,
-          },
+          pHash: { $type: String, required: true },
+          cHash: { $type: String, required: true },
+          sHash: { $type: String, required: true },
           committed: {
             $type: Date,
             required: true,
@@ -788,12 +783,9 @@ describe("Mongodb event store", () => {
             required: true,
             unique: true,
           },
-          hashes: {
-            payload: { $type: String, required: true },
-            context: { $type: String, required: true },
-            scenario: { $type: String, required: true },
-            _id: false,
-          },
+          pHash: { $type: String, required: true },
+          cHash: { $type: String, required: true },
+          sHash: { $type: String, required: true },
           committed: {
             $type: Date,
             required: true,
