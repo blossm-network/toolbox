@@ -142,10 +142,14 @@ function str(key, holder) {
       } else {
         // Otherwise, iterate through all of the keys in the object.
         var keysSorted = Object.keys(value).sort();
+        console.log({ keysSorted });
         for (i in keysSorted) {
           k = keysSorted[i];
+          console.log({ i, k });
           if (Object.prototype.hasOwnProperty.call(value, k)) {
+            console.log("hi");
             v = str(k, value);
+            console.log({ v3: v });
             if (v) {
               partial.push(quote(k) + (gap ? ": " : ":") + v);
             }
