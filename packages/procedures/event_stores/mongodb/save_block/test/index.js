@@ -49,7 +49,10 @@ describe("Mongodb event store save block", () => {
     });
     expect(writeFake).to.have.been.calledWith({
       store: blockchainStore,
-      data: block,
+      query: {
+        hash,
+      },
+      update: block,
       options: {
         lean: true,
       },

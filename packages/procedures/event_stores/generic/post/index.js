@@ -29,7 +29,7 @@ module.exports = ({
     })
   );
 
-  const { events } = await createTransactionFn(
+  const { receipt } = await createTransactionFn(
     deps.postTransaction({
       eventData: uniqueEventData,
       scenario: req.body.scenario,
@@ -41,14 +41,14 @@ module.exports = ({
   //No need to publish to the same topic twice.
   let publishedTopics = [];
   await Promise.all(
-    events.map((e) => {
-      if (publishedTopics.includes(e.headers.topic)) return;
-      publishedTopics.push(e.headers.topic);
+    receipt.map((e) => {
+      if (publishedTopics.includes(e.topic)) return;
+      publishedTopics.push(e.topic);
       return publishFn(
         {
-          from: e.headers.created,
+          from: e.created,
         },
-        e.headers.topic
+        e.topic
       );
     })
   );

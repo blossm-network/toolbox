@@ -37,18 +37,14 @@ describe("Event store post", () => {
     const savedEventHeadersTopic = "some-saved-event-headers-topic";
     const savedEventCreatedTimestamp = "some-event-created-timestamp";
     const createTransactionFnFake = fake.returns({
-      events: [
+      receipt: [
         {
-          headers: {
-            created: savedEventCreatedTimestamp,
-            topic: savedEventHeadersTopic,
-          },
+          created: savedEventCreatedTimestamp,
+          topic: savedEventHeadersTopic,
         },
         {
-          headers: {
-            created: savedEventCreatedTimestamp,
-            topic: savedEventHeadersTopic,
-          },
+          created: savedEventCreatedTimestamp,
+          topic: savedEventHeadersTopic,
         },
       ],
     });
@@ -106,12 +102,10 @@ describe("Event store post", () => {
     const savedEventHeadersTopic = "some-saved-event-headers-topic";
     const savedEventCreatedTimestamp = "some-event-created-timestamp";
     const createTransactionFnFake = fake.returns({
-      events: [
+      receipt: [
         {
-          headers: {
-            created: savedEventCreatedTimestamp,
-            topic: savedEventHeadersTopic,
-          },
+          created: savedEventCreatedTimestamp,
+          topic: savedEventHeadersTopic,
         },
       ],
     });
@@ -176,12 +170,10 @@ describe("Event store post", () => {
     const savedEventHeadersTopic = "some-saved-event-headers-topic";
     const savedEventCreatedTimestamp = "some-event-created-timestamp";
     const createTransactionFnFake = fake.returns({
-      events: [
+      receipt: [
         {
-          headers: {
-            created: savedEventCreatedTimestamp,
-            topic: savedEventHeadersTopic,
-          },
+          created: savedEventCreatedTimestamp,
+          topic: savedEventHeadersTopic,
         },
       ],
     });
@@ -249,12 +241,10 @@ describe("Event store post", () => {
     const savedEventHeadersTopic = "some-saved-event-headers-topic";
     const savedEventCreatedTimestamp = "some-event-created-timestamp";
     const createTransactionFnFake = fake.returns({
-      events: [
+      receipt: [
         {
-          headers: {
-            created: savedEventCreatedTimestamp,
-            topic: savedEventHeadersTopic,
-          },
+          created: savedEventCreatedTimestamp,
+          topic: savedEventHeadersTopic,
         },
       ],
     });

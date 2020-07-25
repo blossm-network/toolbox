@@ -20,8 +20,6 @@ const nonce = "some-nonce";
 
 const transaction = "some-transaction";
 
-const writtenEvents = "saved-events";
-
 const payload = { a: 1 };
 const idempotency = "some-idempotency";
 const action = "some-action";
@@ -82,7 +80,7 @@ describe("Event store post", () => {
   });
 
   it("should call with the correct params", async () => {
-    const saveEventsFnFake = fake.returns(writtenEvents);
+    const saveEventsFnFake = fake();
     const reserveRootCountsFnFake = fake.returns(reserveRootCount);
 
     const hashFake = stub()
@@ -108,7 +106,7 @@ describe("Event store post", () => {
     })(transaction);
 
     expect(result).to.deep.equal({
-      events: writtenEvents,
+      receipt: [{ topic, created }],
     });
 
     expect(saveEventsFnFake).to.have.been.calledWith({
@@ -166,7 +164,7 @@ describe("Event store post", () => {
     });
   });
   it("should call with the correct params with correct number", async () => {
-    const saveEventsFnFake = fake.returns(writtenEvents);
+    const saveEventsFnFake = fake();
     const number = currentEventsForRoot + 12;
     const reserveRootCount = {
       root,
@@ -208,7 +206,7 @@ describe("Event store post", () => {
     })(transaction);
 
     expect(result).to.deep.equal({
-      events: writtenEvents,
+      receipt: [{ created, topic }],
     });
 
     expect(saveEventsFnFake).to.have.been.calledWith({
@@ -266,7 +264,7 @@ describe("Event store post", () => {
     });
   });
   it("should call with the correct params with no scenario, payload, or context", async () => {
-    const saveEventsFnFake = fake.returns(writtenEvents);
+    const saveEventsFnFake = fake();
     const reserveRootCountsFnFake = fake.returns(reserveRootCount);
     const hashFake = stub()
       .onCall(0)
@@ -304,7 +302,7 @@ describe("Event store post", () => {
     })(transaction);
 
     expect(result).to.deep.equal({
-      events: writtenEvents,
+      receipt: [{ created, topic }],
     });
 
     expect(saveEventsFnFake).to.have.been.calledWith({
@@ -362,7 +360,7 @@ describe("Event store post", () => {
     });
   });
   it("should call with the correct params with multiple events with the same root and different roots", async () => {
-    const saveEventsFnFake = fake.returns(writtenEvents);
+    const saveEventsFnFake = fake();
     const reserveRootCountsFnFake = stub()
       .onFirstCall()
       .returns({ value: currentEventsForRoot + 2, root })
@@ -474,7 +472,11 @@ describe("Event store post", () => {
     })(transaction);
 
     expect(result).to.deep.equal({
-      events: writtenEvents,
+      receipt: [
+        { created, topic },
+        { created, topic },
+        { created, topic },
+      ],
     });
 
     expect(saveEventsFnFake).to.have.been.calledWith({
@@ -615,7 +617,7 @@ describe("Event store post", () => {
     });
   });
   it("should call with the correct params if transaction is null", async () => {
-    const saveEventsFnFake = fake.returns(writtenEvents);
+    const saveEventsFnFake = fake();
     const reserveRootCountsFnFake = fake.returns(reserveRootCount);
     const hashFake = stub()
       .onCall(0)
@@ -647,7 +649,7 @@ describe("Event store post", () => {
     })();
 
     expect(result).to.deep.equal({
-      events: writtenEvents,
+      receipt: [{ created, topic }],
     });
 
     expect(saveEventsFnFake).to.have.been.calledWith({
@@ -703,7 +705,7 @@ describe("Event store post", () => {
     });
   });
   it("should throw if event number is incorrect", async () => {
-    const saveEventsFnFake = fake.returns(writtenEvents);
+    const saveEventsFnFake = fake();
     const reserveRootCountsFnFake = fake.returns(reserveRootCount);
 
     const req = {
@@ -729,7 +731,7 @@ describe("Event store post", () => {
 
   it("should throw correctly", async () => {
     const error = new Error();
-    const saveEventsFnFake = fake.returns(writtenEvents);
+    const saveEventsFnFake = fake();
     const reserveRootCountsFnFake = fake.rejects(error);
 
     try {

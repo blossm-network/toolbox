@@ -1,13 +1,6 @@
 const deps = require("./deps");
 const logger = require("@blossm/logger");
 
-const groomResults = (results) =>
-  results.map((result) => {
-    delete result._id;
-    delete result.__v;
-    return result;
-  });
-
 module.exports = ({ eventStore, handlers }) => async ({
   events,
   transaction,
@@ -24,12 +17,11 @@ module.exports = ({ eventStore, handlers }) => async ({
   }
 
   try {
-    const results = await deps.db.create({
+    await deps.db.create({
       store: eventStore,
       data: events,
       ...(transaction && { options: { session: transaction } }),
     });
-    return groomResults(results);
   } catch (err) {
     logger.verbose("Insert all error", { err, writeErrors: err.writeErrors });
 

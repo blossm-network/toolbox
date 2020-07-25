@@ -133,10 +133,15 @@ module.exports = ({
     })
   );
 
-  const savedEvents = await saveEventsFn({
+  await saveEventsFn({
     events: normalizedEvents,
     ...(transaction && { transaction }),
   });
 
-  return { events: savedEvents };
+  return {
+    receipt: normalizedEvents.map((e) => ({
+      topic: e.headers.topic,
+      created: e.headers.created,
+    })),
+  };
 };

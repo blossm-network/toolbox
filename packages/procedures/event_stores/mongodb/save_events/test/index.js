@@ -33,7 +33,7 @@ describe("Mongodb event store create event", () => {
       },
     ];
 
-    const saveEventsFnResult = await saveEvent({ eventStore, handlers })({
+    await saveEvent({ eventStore, handlers })({
       events,
       transaction,
     });
@@ -44,7 +44,6 @@ describe("Mongodb event store create event", () => {
         session: transaction,
       },
     });
-    expect(saveEventsFnResult).to.deep.equal([createResult]);
   });
   it("should call with the correct params with optionals omitted", async () => {
     const eventStore = "some-event-store";
@@ -64,14 +63,13 @@ describe("Mongodb event store create event", () => {
       },
     ];
 
-    const saveEventsFnResult = await saveEvent({ eventStore, handlers })({
+    await saveEvent({ eventStore, handlers })({
       events,
     });
     expect(createFake).to.have.been.calledWith({
       store: eventStore,
       data: events,
     });
-    expect(saveEventsFnResult).to.deep.equal([createResult]);
   });
   it("should throw correct error when events have a duplicate id", async () => {
     const eventStore = "some-event-store";
