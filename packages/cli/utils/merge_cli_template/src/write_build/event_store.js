@@ -102,6 +102,7 @@ module.exports = ({
             ring: "blockchain",
             location: "global",
             rotation: "90d",
+            next: "+p90d",
             project,
           }),
           createAsymmetricSignKey({

@@ -1,6 +1,6 @@
 const { oneLine } = require("common-tags");
 
-module.exports = ({ name, ring, project, rotation }) => {
+module.exports = ({ name, ring, project, next, rotation }) => {
   return {
     name: "gcr.io/cloud-builders/gcloud",
     entrypoint: "bash",
@@ -12,6 +12,7 @@ module.exports = ({ name, ring, project, rotation }) => {
     --keyring=${ring}
     --location=global
     --rotation-period=${rotation}
+    --next-rotation-time=${next}
     --project=${project} || exit 0
     `,
     ],
