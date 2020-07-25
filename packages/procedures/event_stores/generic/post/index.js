@@ -7,10 +7,6 @@ module.exports = ({
   createTransactionFn,
   idempotencyConflictCheckFn,
 }) => async (req, res) => {
-  //TODO
-  console.log({ forwardedFor: req.headers["x-forwarded-for"] });
-  //TODO
-  console.log({ remoteAddress: req.connection.remoteAddress });
   const uniqueEventData = [];
   await Promise.all(
     req.body.eventData.map(async ({ event, number }) => {

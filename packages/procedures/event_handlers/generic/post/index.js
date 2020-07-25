@@ -19,9 +19,9 @@ module.exports = ({ mainFn, streamFn }) => async (req, res) => {
     fn: (event) => mainFn(event, { push }),
     // chronological by when the events were created, which best represents the events' intended order.
     sortFn: (a, b) =>
-      a.data.created < b.data.created
+      a.headers.created < b.headers.created
         ? -1
-        : a.data.created > b.data.created
+        : a.headers.created > b.headers.created
         ? 1
         : 0,
   });

@@ -41,8 +41,8 @@ describe("Command handler post", () => {
         return mainFnFake.calledWith(event, { push: true });
       }),
       sortFn: match((fn) => {
-        const a = { data: { created: 0 } };
-        const b = { data: { created: 1 } };
+        const a = { headers: { created: 0 } };
+        const b = { headers: { created: 1 } };
         const result = fn(a, b);
         return result == -1;
       }),
@@ -79,8 +79,8 @@ describe("Command handler post", () => {
         return mainFnFake.calledWith(event, { push: false });
       }),
       sortFn: match((fn) => {
-        const a = { data: { created: 0 } };
-        const b = { data: { created: 1 } };
+        const a = { headers: { created: 0 } };
+        const b = { headers: { created: 1 } };
         const result = fn(a, b);
         return result == -1;
       }),

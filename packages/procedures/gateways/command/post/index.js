@@ -9,6 +9,10 @@ module.exports = ({
   nodeExternalTokenFn,
   key,
 } = {}) => async (req, res) => {
+  //TODO
+  console.log({ forwardedFor: req.headers["x-forwarded-for"] });
+  //TODO
+  console.log({ remoteAddress: req.connection.remoteAddress });
   await deps.validate(req.body);
   const { payload, headers, root } = req.body;
 
