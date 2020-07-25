@@ -156,6 +156,7 @@ const snapshotStore = async ({ schema, indexes }) => {
     },
     typeKey,
     indexes: [
+      [{ hash: 1 }],
       [{ "headers.root": 1 }],
       [{ "headers.root": 1, "headers.created": -1 }],
       ...(indexes.length == 0

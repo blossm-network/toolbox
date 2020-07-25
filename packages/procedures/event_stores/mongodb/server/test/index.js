@@ -273,6 +273,7 @@ describe("Mongodb event store", () => {
       },
       typeKey: "$type",
       indexes: [
+        [{ hash: 1 }],
         [{ "headers.root": 1 }],
         [{ "headers.root": 1, "headers.created": -1 }],
       ],
@@ -612,6 +613,7 @@ describe("Mongodb event store", () => {
       },
       typeKey: "$type",
       indexes: [
+        [{ hash: 1 }],
         [{ "headers.root": 1 }],
         [{ "headers.root": 1, "headers.created": -1 }],
         [{ [`state.${index}`]: 1 }],
@@ -895,6 +897,7 @@ describe("Mongodb event store", () => {
       },
       typeKey: "$type",
       indexes: [
+        [{ hash: 1 }],
         [{ "headers.root": 1 }],
         [{ "headers.root": 1, "headers.created": -1 }],
       ],

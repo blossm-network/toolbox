@@ -127,7 +127,7 @@ module.exports = ({
         ...(transaction && { transaction }),
       });
 
-      snapshots.push(snapshot);
+      snapshots.push(snapshot.events);
     },
     parallel: 100,
   });
@@ -141,7 +141,10 @@ module.exports = ({
         deps.cononicalString(
           public
             ? s
-            : { ...s, state: await encryptFn(deps.cononicalString(s.state)) }
+            : {
+                ...s,
+                state: await encryptFn(deps.cononicalString(s.state)),
+              }
         ),
       ]);
     })
