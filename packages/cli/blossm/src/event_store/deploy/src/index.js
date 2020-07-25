@@ -24,7 +24,7 @@ module.exports = eventStore({
       key: blockchainProducerKey,
       ring: blockchainProducerKeyRing,
       location: "global",
-      version: "0",
+      version: "1",
       project: process.env.GCP_PROJECT,
     }),
   encryptFn: (message) =>
