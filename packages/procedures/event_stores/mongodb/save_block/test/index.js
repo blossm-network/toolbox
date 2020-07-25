@@ -18,7 +18,7 @@ describe("Mongodb event store save block", () => {
   });
   it("should call with the correct params", async () => {
     const writeResult = "some-write-result";
-    const writeFake = fake.returns([writeResult]);
+    const writeFake = fake.returns(writeResult);
     const db = {
       write: writeFake,
     };
@@ -39,7 +39,7 @@ describe("Mongodb event store save block", () => {
   });
   it("should call with the correct params with optionals omitted", async () => {
     const writeResult = "some-write-result";
-    const writeFake = fake.returns([writeResult]);
+    const writeFake = fake.returns(writeResult);
     const db = {
       write: writeFake,
     };

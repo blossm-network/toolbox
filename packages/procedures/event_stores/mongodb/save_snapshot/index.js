@@ -1,7 +1,7 @@
 const deps = require("./deps");
 
-module.exports = ({ snapshotStore }) => async ({ snapshot, transaction }) => {
-  const [result] = await deps.db.write({
+module.exports = ({ snapshotStore }) => async ({ snapshot, transaction }) =>
+  await deps.db.write({
     store: snapshotStore,
     query: {
       hash: snapshot.hash,
@@ -12,5 +12,3 @@ module.exports = ({ snapshotStore }) => async ({ snapshot, transaction }) => {
       ...(transaction && { session: transaction }),
     },
   });
-  return result;
-};

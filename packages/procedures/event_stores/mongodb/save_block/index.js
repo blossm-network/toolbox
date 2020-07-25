@@ -1,7 +1,7 @@
 const deps = require("./deps");
 
-module.exports = ({ blockchainStore }) => async ({ block, transaction }) => {
-  const [result] = await deps.db.write({
+module.exports = ({ blockchainStore }) => async ({ block, transaction }) =>
+  await deps.db.write({
     store: blockchainStore,
     query: {
       hash: block.hash,
@@ -12,5 +12,3 @@ module.exports = ({ blockchainStore }) => async ({ block, transaction }) => {
       ...(transaction && { session: transaction }),
     },
   });
-  return result;
-};
