@@ -6,6 +6,7 @@ const { restore, fake, match, stub, replace, useFakeTimers } = require("sinon");
 
 const create = require("..");
 const deps = require("../deps");
+const { cononicalString } = require("@blossm/hash/deps");
 
 let clock;
 const now = new Date();
@@ -22,7 +23,9 @@ const aggregateLastEventNumber = "some-snapshot-last-event-number";
 const aggregateState = "some-aggregate-state";
 const aggregateContext = "some-aggregate-context";
 const eventCononicalString = "some-event-connical-string";
-const snapshotCononicalString = "some-snapshot-connical-string";
+const eventPayloadCononicalString = "some-event-payload-cononical-string";
+const snapshotCononicalString = "some-snapshot-cononical-string";
+const snapshotStateCononicalString = "some-snapshot-state-cononical-string";
 const eventsMerkleRoot = "some-events-merkle-root";
 const snapshotMerkleRoot = "some-snapshot-merkle-root";
 const eventKeyHash = "some-event-key-hash";
@@ -305,9 +308,13 @@ describe("Event store create block transaction", () => {
     const aggregateFnFake = fake.resolves(aggregate);
 
     const cononicalStringFake = stub()
-      .onFirstCall()
+      .onCall(0)
+      .returns(eventPayloadCononicalString)
+      .onCall(1)
       .returns(eventCononicalString)
-      .onSecondCall()
+      .onCall(2)
+      .returns(snapshotStateCononicalString)
+      .onCall(3)
       .returns(snapshotCononicalString);
     replace(deps, "cononicalString", cononicalStringFake);
 
@@ -401,11 +408,16 @@ describe("Event store create block transaction", () => {
       includeEvents: true,
     });
 
-    expect(cononicalStringFake.getCall(0)).to.have.been.calledWith({
+    expect(cononicalStringFake.getCall(0)).to.have.been.calledWith(
+      eventPayload
+    );
+    expect(cononicalStringFake.getCall(1)).to.have.been.calledWith({
       ...event,
       payload: encryptedEventPayload,
     });
-    expect(encryptFnFake.getCall(0)).to.have.been.calledWith(eventPayload);
+    expect(encryptFnFake.getCall(0)).to.have.been.calledWith(
+      eventPayloadCononicalString
+    );
 
     expect(hashFake.getCall(0)).to.have.been.calledWith(eventHash);
     expect(hashFake.getCall(1)).to.have.been.calledWith(aggregateContext);
@@ -454,11 +466,16 @@ describe("Event store create block transaction", () => {
       },
     });
     expect(hashFake.getCall(4)).to.have.been.calledWith(savedSnapshotRoot);
-    expect(cononicalStringFake.getCall(1)).to.have.been.calledWith({
+    expect(cononicalStringFake.getCall(2)).to.have.been.calledWith(
+      snapshotState
+    );
+    expect(cononicalStringFake.getCall(3)).to.have.been.calledWith({
       ...snapshot,
       state: encryptedSnapshotState,
     });
-    expect(encryptFnFake.getCall(1)).to.have.been.calledWith(snapshotState);
+    expect(encryptFnFake.getCall(1)).to.have.been.calledWith(
+      snapshotStateCononicalString
+    );
     expect(merkleRootFake.getCall(1)).to.have.been.calledWith([
       [snapshotRootHash, snapshotCononicalString],
     ]);

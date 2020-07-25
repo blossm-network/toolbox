@@ -75,7 +75,12 @@ module.exports = ({
           stringifiedEventPairs.push([
             deps.hash(e.hash).create(),
             deps.cononicalString(
-              public ? e : { ...e, payload: await encryptFn(e.payload) }
+              public
+                ? e
+                : {
+                    ...e,
+                    payload: await encryptFn(deps.cononicalString(e.payload)),
+                  }
             ),
           ])
         )
@@ -134,7 +139,9 @@ module.exports = ({
         //The root is the key so that we can ask "does this block contain a state change for this root?".
         deps.hash(s.headers.root).create(),
         deps.cononicalString(
-          public ? s : { ...s, state: await encryptFn(s.state) }
+          public
+            ? s
+            : { ...s, state: await encryptFn(deps.cononicalString(s.state)) }
         ),
       ])
     )

@@ -163,7 +163,6 @@ describe("Mongodb event store", () => {
           pHash: { $type: String, required: true },
           cHash: { $type: String, required: true },
           sHash: { $type: String, required: true },
-          _id: false,
           committed: {
             $type: Date,
             required: true,
