@@ -138,7 +138,7 @@ module.exports = ({
   await Promise.all(
     snapshots.map(async (s) => {
       //TODO
-      console.log({ s });
+      console.log({ s, state: s.state });
       stringifiedSnapshotPairs.push([
         //The root is the key so that we can ask "does this block contain a state change for this root?".
         deps.hash(s.headers.root).create(),
