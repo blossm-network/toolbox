@@ -1,7 +1,7 @@
 {
   "name": "@blossm/mongodb-event-store-save-snapshot",
   "description": "A mongodb event store server function that saves a snapshot of event aggregate roots.",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
