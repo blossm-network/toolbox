@@ -2,6 +2,7 @@ require("localenv");
 const { expect } = require("chai").use(require("chai-datetime"));
 const request = require("@blossm/request");
 const { string: dateString } = require("@blossm/datetime");
+const hash = require("@blossm/hash");
 const uuid = require("@blossm/uuid");
 
 const {
@@ -51,8 +52,12 @@ describe("Event store integration tests", () => {
 
     //TODO
     console.log({ genesisBlockResponse });
-    expect(blockResponse.statusCode).to.equal(200);
-    const parsedGenesisBlockBody = JSON.parse(blockResponse.body);
+    expect(genesisBlockResponse.statusCode).to.equal(200);
+    const parsedGenesisBlockBody = JSON.parse(genesisBlockResponse.body);
+    expect(parsedGenesisBlockBody.hash).to.equal(
+      hash(parsedGenesisBlockBody.headers).create()
+    );
+    console.log(parsedGenesisBlockBody.events.toString());
     //TODO
     console.log({ parsedGenesisBlockBody });
 

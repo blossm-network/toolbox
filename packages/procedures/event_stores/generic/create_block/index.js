@@ -26,7 +26,5 @@ module.exports = ({
     })
   );
 
-  //TODO
-  console.log({ block1: block });
   res.send(block);
 };

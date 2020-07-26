@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "@blossm/mongodb-event-store": "*",
+    "@blossm/hash": "*",
     "@blossm/gcp-pubsub": "*",
     "@blossm/gcp-secret": "*"
   },

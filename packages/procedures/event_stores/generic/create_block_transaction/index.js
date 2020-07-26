@@ -194,8 +194,5 @@ module.exports = ({
     ...(transaction && { transaction }),
   });
 
-  //TODO
-  console.log({ block0: block });
-
   return block;
 };
