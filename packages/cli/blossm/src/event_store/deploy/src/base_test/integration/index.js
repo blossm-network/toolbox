@@ -56,7 +56,7 @@ describe("Event store integration tests", () => {
                 root,
                 idempotency: uuid(),
                 topic,
-                created: dateString(),
+                created: now,
                 action: example0.action,
                 domain,
                 service,
@@ -86,8 +86,6 @@ describe("Event store integration tests", () => {
         example0.payload[property]
       );
     }
-
-    const midTime = dateString();
 
     const response2 = await request.post(url, {
       body: {
@@ -184,7 +182,7 @@ describe("Event store integration tests", () => {
       },
       {
         query: {
-          timestamp: midTime,
+          timestamp: now,
         },
       }
     );
