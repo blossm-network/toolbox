@@ -154,7 +154,8 @@ describe("Event store integration tests", () => {
                 root: root2,
                 topic,
                 idempotency: uuid(),
-                created: dateString(),
+                //Use the previous date
+                created: now,
                 version,
                 action: "some-bogus",
                 domain,
