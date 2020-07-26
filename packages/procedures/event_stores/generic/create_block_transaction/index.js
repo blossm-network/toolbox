@@ -20,7 +20,9 @@ module.exports = ({
 
     const blockHeaders = {
       nonce: deps.nonce(),
-      pHash: Buffer.from(deps.hash(genesisPrevious).create()),
+      pHash: Buffer.from(deps.hash(genesisPrevious).create()).toString(
+        "base64"
+      ),
       created: deps.dateString(),
       number: 0,
       start: "2020-01-01T05:00:00.000+00:00",
@@ -32,7 +34,7 @@ module.exports = ({
       network: process.env.NETWORK,
       service: process.env.SERVICE,
       domain: process.env.DOMAIN,
-      key: Buffer.from(await blockPublisherPublicKeyFn()),
+      key: Buffer.from(await blockPublisherPublicKeyFn()).toString("base64"),
     };
 
     //TODO
@@ -42,7 +44,7 @@ module.exports = ({
     const signedBlockHeadersHash = await signFn(blockHeadersHash);
 
     const genesisBlock = {
-      signature: Buffer.from(signedBlockHeadersHash),
+      signature: Buffer.from(signedBlockHeadersHash).toString("base64"),
       hash: blockHeadersHash,
       headers: blockHeaders,
       events: deps.encode([]),
@@ -101,8 +103,8 @@ module.exports = ({
       const snapshotHeaders = {
         nonce: deps.nonce(),
         block: nextBlockNumber,
-        cHash: Buffer.from(contextHash),
-        sHash: Buffer.from(stateHash),
+        cHash: Buffer.from(contextHash).toString("base64"),
+        sHash: Buffer.from(stateHash).toString("base64"),
         pHash: previousHash,
         created: deps.dateString(),
         root,
@@ -166,7 +168,7 @@ module.exports = ({
 
   const blockHeaders = {
     nonce: deps.nonce(),
-    pHash: Buffer.from(previousBlock.hash),
+    pHash: Buffer.from(previousBlock.hash).toString("base64"),
     created: deps.dateString(),
     number: previousBlock.headers.number + 1,
     start: previousBlock.headers.end,
@@ -178,7 +180,7 @@ module.exports = ({
     network: process.env.NETWORK,
     service: process.env.SERVICE,
     domain: process.env.DOMAIN,
-    key: Buffer.from(await blockPublisherPublicKeyFn()),
+    key: Buffer.from(await blockPublisherPublicKeyFn()).toString("base64"),
   };
 
   //TODO
@@ -187,7 +189,7 @@ module.exports = ({
   const signedBlockHeadersHash = await signFn(blockHeadersHash);
 
   const normalizedBlock = {
-    signature: Buffer.from(signedBlockHeadersHash),
+    signature: Buffer.from(signedBlockHeadersHash).toString("base64"),
     hash: blockHeadersHash,
     headers: blockHeaders,
     events: deps.encode(allStringifiedEventPairs),
