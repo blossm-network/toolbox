@@ -25,7 +25,7 @@ module.exports = ({
       pHash: deps.hash(genesisPrevious).create(),
       created: deps.dateString(),
       number: 0,
-      start: "2020-01-01T05:00:00.000+00:00",
+      start: "2020-01-01T05:00:00.000Z",
       end: deps.dateString(),
       eCount: 0,
       sCount: 0,
