@@ -91,9 +91,9 @@ describe("Mongodb event store", () => {
     const queryResult = "some-query-result";
     const queryFake = fake.returns(queryResult);
     replace(deps, "query", queryFake);
-    const streamResult = "some-stream-result";
-    const streamFake = fake.returns(streamResult);
-    replace(deps, "stream", streamFake);
+    const aggregateStreamResult = "some-aggregate-stream-result";
+    const aggregateStreamFake = fake.returns(aggregateStreamResult);
+    replace(deps, "aggregateStream", aggregateStreamFake);
     const idempotencyConflictCheckResult =
       "some-idempotency-conflict-check-result";
     const idempotencyConflictCheckFake = fake.returns(
@@ -347,7 +347,7 @@ describe("Mongodb event store", () => {
       snapshotStore: sStore,
       handlers,
     });
-    expect(streamFake).to.have.been.calledWith({
+    expect(aggregateStreamFake).to.have.been.calledWith({
       eventStore: eStore,
     });
     expect(saveBlockFake).to.have.been.calledWith({
@@ -366,7 +366,7 @@ describe("Mongodb event store", () => {
       aggregateFn: aggregateResult,
       saveEventsFn: saveEventsResult,
       queryFn: queryResult,
-      streamFn: streamResult,
+      aggregateStreamFn: aggregateStreamResult,
       reserveRootCountsFn: reserveRootCountsResult,
       rootStreamFn: rootStreamResult,
       countFn: countResult,
@@ -429,9 +429,9 @@ describe("Mongodb event store", () => {
     const queryResult = "some-query-result";
     const queryFake = fake.returns(queryResult);
     replace(deps, "query", queryFake);
-    const streamResult = "some-stream-result";
-    const streamFake = fake.returns(streamResult);
-    replace(deps, "stream", streamFake);
+    const aggregateStreamResult = "some-aggregate-stream-result";
+    const aggregateStreamFake = fake.returns(aggregateStreamResult);
+    replace(deps, "aggregateStream", aggregateStreamFake);
     const idempotencyConflictCheckResult =
       "some-idempotency-conflict-check-result";
     const idempotencyConflictCheckFake = fake.returns(
@@ -669,7 +669,7 @@ describe("Mongodb event store", () => {
       aggregateFn: aggregateResult,
       saveEventsFn: saveEventsResult,
       queryFn: queryResult,
-      streamFn: streamResult,
+      aggregateStreamFn: aggregateStreamResult,
       reserveRootCountsFn: reserveRootCountsResult,
       rootStreamFn: rootStreamResult,
       countFn: countResult,
@@ -728,9 +728,9 @@ describe("Mongodb event store", () => {
     const queryResult = "some-query-result";
     const queryFake = fake.returns(queryResult);
     replace(deps, "query", queryFake);
-    const streamResult = "some-query-result";
-    const streamFake = fake.returns(streamResult);
-    replace(deps, "stream", streamFake);
+    const aggregateStreamResult = "some-aggregate-stream-result";
+    const aggregateStreamFake = fake.returns(aggregateStreamResult);
+    replace(deps, "aggregateStream", aggregateStreamFake);
     const idempotencyConflictCheckResult =
       "some-idempotency-conflict-check-result";
     const idempotencyConflictCheckFake = fake.returns(
