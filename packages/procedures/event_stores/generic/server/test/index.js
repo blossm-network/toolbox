@@ -6,7 +6,7 @@ const deps = require("../deps");
 const aggregateFn = "some-aggregate-fn";
 const reserveRootCountsFn = "some-reserve-root-counts-fn";
 const queryFn = "some-query-fn";
-const streamFn = "some-stream-fn";
+const aggregateStreamFn = "some-aggregate-stream-fn";
 const rootStreamFn = "some-root-stream-fn";
 const countFn = "some-count-fn";
 const saveEventsFn = "some-save-events-fn";
@@ -45,19 +45,21 @@ describe("Event store", () => {
     const countFake = fake.returns({
       get: rootStreamFake,
     });
-    const streamFake = fake.returns({
+    const aggregateStreamFake = fake.returns({
       get: countFake,
     });
     const serverFake = fake.returns({
-      get: streamFake,
+      get: aggregateStreamFake,
     });
     replace(deps, "server", serverFake);
     const eventStoreGetResult = "some-get-result";
     const eventStoreGetFake = fake.returns(eventStoreGetResult);
     replace(deps, "get", eventStoreGetFake);
-    const eventStoreStreamResult = "some-stream-result";
-    const eventStoreStreamFake = fake.returns(eventStoreStreamResult);
-    replace(deps, "stream", eventStoreStreamFake);
+    const eventStoreAggregateStreamResult = "some-aggregate-stream-result";
+    const eventStoreAggregateStreamFake = fake.returns(
+      eventStoreAggregateStreamResult
+    );
+    replace(deps, "aggregateStream", eventStoreAggregateStreamFake);
     const eventStoreRootStreamResult = "some-root-stream-result";
     const eventStoreRootStreamFake = fake.returns(eventStoreRootStreamResult);
     replace(deps, "rootStream", eventStoreRootStreamFake);
@@ -76,7 +78,7 @@ describe("Event store", () => {
       reserveRootCountsFn,
       saveEventsFn,
       queryFn,
-      streamFn,
+      aggregateStreamFn,
       publishFn,
       rootStreamFn,
       createTransactionFn,
@@ -95,9 +97,12 @@ describe("Event store", () => {
     expect(getFake).to.have.been.calledWith(eventStoreGetResult, {
       path: "/:root?",
     });
-    expect(streamFake).to.have.been.calledWith(eventStoreStreamResult, {
-      path: "/stream/:root?",
-    });
+    expect(aggregateStreamFake).to.have.been.calledWith(
+      eventStoreAggregateStreamResult,
+      {
+        path: "/stream-aggregates",
+      }
+    );
     expect(rootStreamFake).to.have.been.calledWith(eventStoreRootStreamResult, {
       path: "/roots",
     });
@@ -112,7 +117,9 @@ describe("Event store", () => {
     );
     expect(postFake).to.have.been.calledWith(eventStorePostResult);
     expect(eventStoreGetFake).to.have.been.calledWith({ aggregateFn, queryFn });
-    expect(eventStoreStreamFake).to.have.been.calledWith({ streamFn });
+    expect(eventStoreAggregateStreamFake).to.have.been.calledWith({
+      aggregateStreamFn,
+    });
     expect(eventStoreRootStreamFake).to.have.been.calledWith({ rootStreamFn });
     expect(eventStoreCountFake).to.have.been.calledWith({ countFn });
     expect(eventStoreCreateBlockFake).to.have.been.calledWith({

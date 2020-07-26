@@ -52,18 +52,17 @@ const envComputeUrlId = ({ env, config }) => {
 const queueName = ({ config }) => {
   switch (config.procedure) {
     case "command":
-      return `c.${config.service}.${config.domain}.${config.name}`;
+      return `command-${config.service}-${config.domain}-${config.name}`;
     case "job":
-      return `j${config.service ? `.${config.service}` : ""}${
-        config.domain ? `.${config.domain}` : ""
-      }.${config.name}`;
+      return `job-${config.service ? `-${config.service}` : ""}${
+        config.domain ? `-${config.domain}` : ""
+      }-${config.name}`;
     case "projection":
     case "event-handler":
-      return `e.${config.context}${config.service ? `.${config.service}` : ""}${
-        config.domain ? `.${config.domain}` : ""
-      }.${config.name}`;
+      return `event-handler-${config.context}-${config.name}`;
   }
 };
+
 const execute = async (input, configFn) => {
   const functionPath = path.resolve(
     process.cwd(),
@@ -113,12 +112,6 @@ module.exports = ({ domain }) => async (args, configFn) => {
     entrypointDefault: ".",
     args,
     flags: [
-      {
-        name: "queue",
-        type: String,
-        short: "q",
-        required: true,
-      },
       {
         name: "env",
         type: String,

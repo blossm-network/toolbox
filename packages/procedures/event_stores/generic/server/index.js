@@ -4,7 +4,7 @@ module.exports = async ({
   aggregateFn,
   saveEventsFn,
   queryFn,
-  streamFn,
+  aggregateStreamFn,
   reserveRootCountsFn,
   publishFn,
   rootStreamFn,
@@ -21,8 +21,8 @@ module.exports = async ({
 } = {}) => {
   deps
     .server()
-    .get(deps.stream({ streamFn }), {
-      path: "/stream/:root?",
+    .get(deps.aggregateStream({ aggregateStreamFn }), {
+      path: "/stream-aggregates",
     })
     .get(deps.count({ countFn }), {
       path: "/count/:root",

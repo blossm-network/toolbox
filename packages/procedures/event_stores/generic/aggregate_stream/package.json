@@ -1,7 +1,7 @@
 {
-  "name": "@blossm/event-store-update-proof",
-  "description": "An event store POST handler for saving updated proof info.",
-  "version": "0.0.12",
+  "name": "@blossm/event-store-aggregate-stream",
+  "description": "An event store GET handler for streaming aggregates.",
+  "version": "0.0.0",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -12,10 +12,6 @@
   },
   "publishConfig": {
     "access": "public"
-  },
-  "dependencies": {
-    "@blossm/chainpoint": "^0.0.8",
-    "@blossm/errors": "^0.0.37"
   },
   "devDependencies": {
     "chai-datetime": "^1.5.0",

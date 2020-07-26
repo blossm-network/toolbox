@@ -13,7 +13,6 @@ const now = new Date();
 const service = "some-service";
 const domain = "some-domain";
 const root = "some-root";
-const from = "some-from";
 const parallel = "some-parallel";
 const key = "some-key";
 
@@ -300,6 +299,8 @@ describe("Event store", () => {
     });
     replace(deps, "rpc", rpcFake);
 
+    const timestamp = "some-timestamp";
+
     const fn = "some-fn";
     const result = await eventStore({ domain, service })
       .set({
@@ -311,19 +312,18 @@ describe("Event store", () => {
           key,
         },
       })
-      .stream(fn, { root, from, parallel });
+      .aggregateStream(fn, { timestamp, parallel });
 
     expect(rpcFake).to.have.been.calledWith(domain, service, "event-store");
     expect(streamFake).to.have.been.calledWith(fn, {
-      id: root,
-      from,
+      timestamp,
       parallel,
     });
     expect(inFake).to.have.been.calledWith({
       context,
     });
     expect(withFake).to.have.been.calledWith({
-      path: "/stream",
+      path: "/stream-aggregates",
       internalTokenFn,
       externalTokenFn,
       key,
@@ -346,16 +346,16 @@ describe("Event store", () => {
     replace(deps, "rpc", rpcFake);
 
     const fn = "some-fn";
-    const result = await eventStore({ domain, service }).stream(fn, {
-      root,
-      from,
-    });
+    const result = await eventStore({ domain, service }).aggregateStream(
+      fn,
+      {}
+    );
 
     expect(rpcFake).to.have.been.calledWith(domain, service, "event-store");
-    expect(streamFake).to.have.been.calledWith(fn, { id: root, from });
+    expect(streamFake).to.have.been.calledWith(fn);
     expect(inFake).to.have.been.calledWith({});
     expect(withFake).to.have.been.calledWith({
-      path: `/stream`,
+      path: `/stream-aggregates`,
     });
     expect(result).to.equal(stream);
   });
@@ -494,81 +494,5 @@ describe("Event store", () => {
       path: "/count",
     });
     expect(result).to.equal(count);
-  });
-  it("should call update proof with the right params", async () => {
-    const proof = "some-proof";
-    const id = "some-id";
-    const withFake = fake.returns(proof);
-    const inFake = fake.returns({
-      with: withFake,
-    });
-    const putFake = fake.returns({
-      in: inFake,
-    });
-    const rpcFake = fake.returns({
-      put: putFake,
-    });
-    replace(deps, "rpc", rpcFake);
-
-    const enqueueFnResult = "some-enqueue-fn-result";
-    const enqueueFnFake = fake.returns(enqueueFnResult);
-    const enqueueWait = "some-enqueue-wait";
-    const result = await eventStore({ domain, service })
-      .set({
-        context,
-        claims,
-        token: {
-          internalFn: internalTokenFn,
-          externalFn: externalTokenFn,
-          key,
-        },
-        enqueue: {
-          fn: enqueueFnFake,
-          wait: enqueueWait,
-        },
-      })
-      .updateProof(id);
-
-    expect(rpcFake).to.have.been.calledWith(domain, service, "event-store");
-    expect(putFake).to.have.been.calledWith(id);
-    expect(inFake).to.have.been.calledWith({
-      context,
-    });
-    expect(withFake).to.have.been.calledWith({
-      path: "/proof",
-      internalTokenFn,
-      claims,
-      enqueueFn: enqueueFnResult,
-    });
-    expect(enqueueFnFake).to.have.been.calledWith({
-      queue: `event-store-${service}-${domain}-proofs`,
-      wait: enqueueWait,
-    });
-    expect(result).to.equal(proof);
-  });
-  it("should call root count with the right params with optionals missing", async () => {
-    const proof = "some-proof";
-    const id = "some-id";
-    const withFake = fake.returns(proof);
-    const inFake = fake.returns({
-      with: withFake,
-    });
-    const putFake = fake.returns({
-      in: inFake,
-    });
-    const rpcFake = fake.returns({
-      put: putFake,
-    });
-    replace(deps, "rpc", rpcFake);
-
-    const result = await eventStore({ domain, service }).updateProof(id);
-
-    expect(rpcFake).to.have.been.calledWith(domain, service, "event-store");
-    expect(putFake).to.have.been.calledWith(id);
-    expect(inFake).to.have.been.calledWith({});
-    expect(withFake).to.have.been.calledWith({
-      path: "/proof",
-    });
-    expect(result).to.equal(proof);
   });
 });

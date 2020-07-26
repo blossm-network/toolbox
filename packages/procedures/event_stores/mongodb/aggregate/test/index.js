@@ -25,7 +25,9 @@ const event = {
     number: 1,
     action,
   },
-  trace: eventTrace,
+  scenario: {
+    trace: eventTrace,
+  },
   context: {
     a: {
       root: aRoot,
@@ -128,6 +130,9 @@ describe("Mongodb event store aggregate", () => {
       sort: {
         "headers.created": -1,
       },
+      select: {
+        events: -1,
+      },
       options: {
         lean: true,
       },
@@ -150,7 +155,7 @@ describe("Mongodb event store aggregate", () => {
       },
     });
   });
-  it("should call with the correct params if includeEvents", async () => {
+  it("should call with the correct params if includeEvents and theres a timestamp", async () => {
     const eachAsyncFake = fake.yields(event);
     const cursorFake = fake.returns({
       eachAsync: eachAsyncFake,
@@ -167,17 +172,19 @@ describe("Mongodb event store aggregate", () => {
 
     replace(deps, "db", db);
 
+    const timestamp = "some-timestamp";
     const result = await aggregate({
       handlers,
       eventStore,
       snapshotStore,
-    })(root, { includeEvents: true });
+    })(root, { includeEvents: true, timestamp });
 
     expect(findFake).to.have.been.calledWith({
       store: eventStore,
       query: {
         "headers.root": root,
         "headers.number": { $gt: 6 },
+        "headers.created": { $lte: timestamp },
       },
       sort: {
         "headers.number": 1,
@@ -191,9 +198,13 @@ describe("Mongodb event store aggregate", () => {
       store: snapshotStore,
       query: {
         "headers.root": root,
+        "headers.created": { $lte: timestamp },
       },
       sort: {
         "headers.created": -1,
+      },
+      select: {
+        events: -1,
       },
       options: {
         lean: true,
@@ -261,6 +272,9 @@ describe("Mongodb event store aggregate", () => {
       sort: {
         "headers.created": -1,
       },
+      select: {
+        events: -1,
+      },
       options: {
         lean: true,
       },
@@ -324,6 +338,9 @@ describe("Mongodb event store aggregate", () => {
       },
       sort: {
         "headers.created": -1,
+      },
+      select: {
+        events: -1,
       },
       options: {
         lean: true,
@@ -392,6 +409,9 @@ describe("Mongodb event store aggregate", () => {
       },
       sort: {
         "headers.created": -1,
+      },
+      select: {
+        events: -1,
       },
       options: {
         lean: true,

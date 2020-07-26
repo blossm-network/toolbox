@@ -19,8 +19,7 @@
     "@blossm/event-store-get": "^0.0.53",
     "@blossm/event-store-post": "^0.0.120",
     "@blossm/event-store-root-stream": "^0.0.8",
-    "@blossm/event-store-stream": "^0.0.9",
-    "@blossm/event-store-update-proof": "^0.0.12",
+    "@blossm/event-store-aggregate-stream": "*",
     "@blossm/logger": "^0.0.8",
     "@blossm/server": "^0.0.24"
   },

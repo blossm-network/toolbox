@@ -2,15 +2,21 @@ const deps = require("./deps");
 
 module.exports = ({ eventStore, snapshotStore, handlers }) => async (
   root,
-  { includeEvents = false } = {}
+  { timestamp, includeEvents = false } = {}
 ) => {
   const snapshot = await deps.db.findOne({
     store: snapshotStore,
     query: {
       "headers.root": root,
+      ...(timestamp != undefined && {
+        "headers.created": { $lte: timestamp },
+      }),
     },
     sort: {
       "headers.created": -1,
+    },
+    select: {
+      events: -1,
     },
     options: {
       lean: true,
@@ -24,6 +30,9 @@ module.exports = ({ eventStore, snapshotStore, handlers }) => async (
         "headers.root": root,
         ...(snapshot && {
           "headers.number": { $gt: snapshot.headers.lastEventNumber },
+        }),
+        ...(timestamp != undefined && {
+          "headers.created": { $lte: timestamp },
         }),
       },
       sort: {
@@ -61,7 +70,7 @@ module.exports = ({ eventStore, snapshotStore, handlers }) => async (
     aggregate.lastEventNumber = event.headers.number;
     aggregate.state = handler(aggregate.state || {}, event.payload);
     aggregate.trace = [
-      ...(event.trace ? [event.trace] : []),
+      ...(event.scenario.trace ? [event.scenario.trace] : []),
       ...(aggregate.trace || []),
     ].slice(0, 10);
 

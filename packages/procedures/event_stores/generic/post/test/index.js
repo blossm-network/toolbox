@@ -68,7 +68,7 @@ describe("Event store post", () => {
       reserveRootCountsFn,
     });
     expect(publishFnFake).to.have.been.calledWith(
-      { from: savedEventCreatedTimestamp },
+      { from: savedEventCreatedTimestamp, push: true },
       savedEventHeadersTopic
     );
     expect(publishFnFake).to.have.been.calledOnce;
@@ -136,7 +136,7 @@ describe("Event store post", () => {
       reserveRootCountsFn,
     });
     expect(publishFnFake).to.have.been.calledWith(
-      { from: savedEventCreatedTimestamp },
+      { from: savedEventCreatedTimestamp, push: true },
       savedEventHeadersTopic
     );
     expect(sendStatusFake).to.have.been.calledWith(204);
@@ -207,7 +207,7 @@ describe("Event store post", () => {
       reserveRootCountsFn,
     });
     expect(publishFnFake).to.have.been.calledWith(
-      { from: savedEventCreatedTimestamp },
+      { from: savedEventCreatedTimestamp, push: true },
       savedEventHeadersTopic
     );
     expect(sendStatusFake).to.have.been.calledWith(204);
@@ -279,7 +279,7 @@ describe("Event store post", () => {
       reserveRootCountsFn,
     });
     expect(publishFnFake).to.have.been.calledWith(
-      { from: savedEventCreatedTimestamp },
+      { from: savedEventCreatedTimestamp, push: true },
       savedEventHeadersTopic
     );
     expect(sendStatusFake).to.have.been.calledWith(204);

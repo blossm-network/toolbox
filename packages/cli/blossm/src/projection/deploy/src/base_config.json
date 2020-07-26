@@ -1,9 +1,9 @@
 {
   "dependencies": {
-    "@blossm/mongodb-event-handler": "*",
+    "@blossm/event-handler": "*",
     "@blossm/view-store-rpc": "*",
     "@blossm/command-rpc": "*",
-    "@blossm/event-stores-rpc": "*",
+    "@blossm/event-store-rpc": "*",
     "@blossm/gcp-token": "*",
     "@blossm/gcp-secret": "*",
     "@blossm/node-external-token": "*",

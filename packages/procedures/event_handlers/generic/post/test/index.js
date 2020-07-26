@@ -15,7 +15,7 @@ describe("Command handler post", () => {
 
   it("should call with the correct params", async () => {
     const mainFnFake = fake();
-    const streamFnFake = fake();
+    const aggregateStreamFnFake = fake();
 
     const req = {
       body: {
@@ -30,15 +30,15 @@ describe("Command handler post", () => {
 
     await post({
       mainFn: mainFnFake,
-      streamFn: streamFnFake,
+      aggregateStreamFn: aggregateStreamFnFake,
     })(req, res);
 
-    expect(streamFnFake).to.have.been.calledWith({
+    expect(aggregateStreamFnFake).to.have.been.calledWith({
       from,
       fn: match((fn) => {
-        const event = "some-event";
-        fn(event);
-        return mainFnFake.calledWith(event, { push: true });
+        const aggregate = "some-aggregate";
+        fn(aggregate);
+        return mainFnFake.calledWith(aggregate, { push: false });
       }),
       sortFn: match((fn) => {
         const a = { headers: { created: 0 } };
@@ -52,7 +52,7 @@ describe("Command handler post", () => {
   });
   it("should call with the correct params if push is false", async () => {
     const mainFnFake = fake();
-    const streamFnFake = fake();
+    const aggregateStreamFnFake = fake();
 
     const data = Buffer.from(JSON.stringify({ from, push: false }));
     const req = {
@@ -68,15 +68,15 @@ describe("Command handler post", () => {
 
     await post({
       mainFn: mainFnFake,
-      streamFn: streamFnFake,
+      aggregateStreamFn: aggregateStreamFnFake,
     })(req, res);
 
-    expect(streamFnFake).to.have.been.calledWith({
+    expect(aggregateStreamFnFake).to.have.been.calledWith({
       from,
       fn: match((fn) => {
-        const event = "some-event";
-        fn(event);
-        return mainFnFake.calledWith(event, { push: false });
+        const aggregate = "some-aggregate";
+        fn(aggregate);
+        return mainFnFake.calledWith(aggregate, { push: false });
       }),
       sortFn: match((fn) => {
         const a = { headers: { created: 0 } };

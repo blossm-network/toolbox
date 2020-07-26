@@ -47,6 +47,7 @@ module.exports = ({
       return publishFn(
         {
           from: e.created,
+          push: true,
         },
         e.topic
       );

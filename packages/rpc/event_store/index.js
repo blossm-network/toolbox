@@ -87,7 +87,7 @@ module.exports = ({ domain, service = process.env.SERVICE } = {}) => {
         ...(tokenKey && { key: tokenKey }),
         ...(claims && { claims }),
       });
-  const stream = ({
+  const aggregateStream = ({
     context,
     claims,
     token: {
@@ -95,15 +95,18 @@ module.exports = ({ domain, service = process.env.SERVICE } = {}) => {
       externalFn: externalTokenFn,
       key,
     } = {},
-  } = {}) => (fn, { root, from, parallel }) =>
+  } = {}) => (fn, { timestamp, parallel }) =>
     deps
       .rpc(domain, service, "event-store")
-      .stream(fn, { id: root, from, ...(parallel && { parallel }) })
+      .stream(fn, {
+        ...(timestamp && { timestamp }),
+        ...(parallel && { parallel }),
+      })
       .in({
         ...(context && { context }),
       })
       .with({
-        path: `/stream`,
+        path: `/stream-aggregates`,
         ...(internalTokenFn && { internalTokenFn }),
         ...(externalTokenFn && { externalTokenFn }),
         ...(key && { key }),
@@ -156,48 +159,22 @@ module.exports = ({ domain, service = process.env.SERVICE } = {}) => {
         ...(claims && { claims }),
       });
 
-  const updateProof = ({
-    context,
-    claims,
-    token: { internalFn: internalTokenFn } = {},
-    enqueue: { fn: enqueueFn, wait: enqueueWait } = {},
-  } = {}) => (id) =>
-    deps
-      .rpc(domain, service, "event-store")
-      .put(id)
-      .in({
-        ...(context && { context }),
-      })
-      .with({
-        path: `/proof`,
-        ...(internalTokenFn && { internalTokenFn }),
-        ...(claims && { claims }),
-        ...(enqueueFn && {
-          enqueueFn: enqueueFn({
-            queue: `event-store-${service}-${domain}-proofs`,
-            ...(enqueueWait && { wait: enqueueWait }),
-          }),
-        }),
-      });
-
   return {
     set: ({ context, claims, token, enqueue } = {}) => {
       return {
         add: add({ context, claims, token, enqueue }),
         query: query({ context, claims, token }),
-        stream: stream({ context, claims, token }),
+        aggregateStream: aggregateStream({ context, claims, token }),
         rootStream: rootStream({ context, claims, token }),
         count: count({ context, claims, token }),
         aggregate: aggregate({ context, claims, token }),
-        updateProof: updateProof({ context, claims, token, enqueue }),
       };
     },
     add: add(),
     aggregate: aggregate(),
     query: query(),
-    stream: stream(),
+    aggregateStream: aggregateStream(),
     rootStream: rootStream(),
     count: count(),
-    updateProof: updateProof(),
   };
 };

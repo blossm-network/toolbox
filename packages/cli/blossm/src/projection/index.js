@@ -5,6 +5,7 @@ const { MAX_LENGTH } = require("@blossm/service-name-consts");
 
 const deploy = require("./deploy");
 const init = require("./init");
+const replay = require("./replay");
 
 const configFn = (config) => {
   return {
@@ -20,7 +21,7 @@ const configFn = (config) => {
 module.exports = async (args) => {
   const input = await normalize({
     entrypointType: "action",
-    choices: ["deploy", "init"],
+    choices: ["deploy", "init", "replay"],
     args,
   });
 
@@ -29,5 +30,7 @@ module.exports = async (args) => {
       return deploy(input.args, configFn);
     case "init":
       return init(input.args);
+    case "replay":
+      return replay(input.args);
   }
 };

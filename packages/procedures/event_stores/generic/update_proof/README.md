@@ -1,1 +1,0 @@
-An event store POST handler for saving updated proof info.

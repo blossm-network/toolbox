@@ -1,7 +1,7 @@
-const eventHandler = require("@blossm/mongodb-event-handler");
+const eventHandler = require("@blossm/event-handler");
 const command = require("@blossm/command-rpc");
 const viewStore = require("@blossm/view-store-rpc");
-const eventStores = require("@blossm/event-stores-rpc");
+const eventStore = require("@blossm/event-store-rpc");
 const gcpToken = require("@blossm/gcp-token");
 const nodeExternalToken = require("@blossm/node-external-token");
 const channelName = require("@blossm/channel-name");
@@ -92,23 +92,15 @@ module.exports = eventHandler({
         channel,
       });
   },
-  streamFn: ({ from, fn, sortFn }) =>
-    eventStores(
-      config.stores.map(({ domain, service, actions }) => {
-        return {
-          operation: [domain, service, "event-store"],
-          query: {
-            from,
-            actions,
-            parallel: 1,
-          },
-        };
+  aggregateStreamFn: ({ timestamp, fn, sortFn }) =>
+    Promise.all(
+      config.eventStores.map(({ domain, service }) => {
+        const { state } = eventStore({ domain, service })
+          .set({
+            token: { internalFn: gcpToken },
+          })
+          .streamAggregates(fn, sortFn, { ...(timestamp && { timestamp }) });
       })
-    )
-      .set({
-        token: { internalFn: gcpToken },
-      })
-      .stream(fn, sortFn),
-
+    ),
   secretFn: secret,
 });
