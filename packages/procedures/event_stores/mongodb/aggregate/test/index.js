@@ -131,7 +131,7 @@ describe("Mongodb event store aggregate", () => {
         "headers.created": -1,
       },
       select: {
-        events: -1,
+        events: 0,
       },
       options: {
         lean: true,
@@ -204,7 +204,7 @@ describe("Mongodb event store aggregate", () => {
         "headers.created": -1,
       },
       select: {
-        events: -1,
+        events: 0,
       },
       options: {
         lean: true,
@@ -273,7 +273,7 @@ describe("Mongodb event store aggregate", () => {
         "headers.created": -1,
       },
       select: {
-        events: -1,
+        events: 0,
       },
       options: {
         lean: true,
@@ -340,7 +340,7 @@ describe("Mongodb event store aggregate", () => {
         "headers.created": -1,
       },
       select: {
-        events: -1,
+        events: 0,
       },
       options: {
         lean: true,
@@ -411,7 +411,7 @@ describe("Mongodb event store aggregate", () => {
         "headers.created": -1,
       },
       select: {
-        events: -1,
+        events: 0,
       },
       options: {
         lean: true,

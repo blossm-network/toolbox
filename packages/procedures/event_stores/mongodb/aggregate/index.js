@@ -16,7 +16,7 @@ module.exports = ({ eventStore, snapshotStore, handlers }) => async (
       "headers.created": -1,
     },
     select: {
-      events: -1,
+      events: 0,
     },
     options: {
       lean: true,
