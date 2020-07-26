@@ -4,9 +4,9 @@ const { expect } = require("chai").use(require("chai-datetime"));
 const request = require("@blossm/request");
 const { string: dateString } = require("@blossm/datetime");
 const hash = require("@blossm/hash");
-const { decode } = require("@blossm/rlp");
-const { verify } = require("@blossm/merkle-tree");
-const cononical = require("@blossm/cononical-string");
+// const { decode } = require("@blossm/rlp");
+// const { verify } = require("@blossm/merkle-tree");
+// const cononical = require("@blossm/cononical-string");
 const uuid = require("@blossm/uuid");
 
 const {
@@ -182,7 +182,7 @@ describe("Event store integration tests", () => {
     });
     const root3 = uuid();
     //Test stream with actions and root qualifiers
-    const root3Response = await request.post(url, {
+    await request.post(url, {
       body: {
         eventData: [
           {
@@ -205,10 +205,6 @@ describe("Event store integration tests", () => {
         ],
       },
     });
-    const parsedRoot3ResponseBody = JSON.parse(root3Response.body);
-
-    //TODO
-    console.log({ parsedRoot3ResponseBody });
 
     let aggregateCount = 0;
     await request.stream(
@@ -257,15 +253,6 @@ describe("Event store integration tests", () => {
           "base64"
         )
     ).to.be.true;
-
-    expect(
-      verify({
-        pairs: decode(parsedBlockBody.events),
-        key: parsedRoot3ResponseBody.hash,
-        value: cononical(parsedRoot3ResponseBody),
-        root: parsedBlockBody.headers.eRoot,
-      })
-    );
 
     await request.stream(`${url}/stream-aggregates`, (data) => {
       const parsedData = JSON.parse(data.toString());
