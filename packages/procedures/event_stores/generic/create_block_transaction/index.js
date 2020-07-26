@@ -16,7 +16,9 @@ module.exports = ({
   const genesisPrevious = "~";
 
   if (!previousBlock) {
-    const emptyMerkleRoot = await deps.merkleRoot([]);
+    const emptyMerkleRoot = await (await deps.merkleRoot([])).toString(
+      "base64"
+    );
 
     const blockHeaders = {
       nonce: deps.nonce(),
@@ -113,7 +115,7 @@ module.exports = ({
         lastEventNumber: aggregate.headers.lastEventNumber,
         trace: aggregate.headers.trace,
         eCount: stringifiedEventPairs.length,
-        eRoot: eventsMerkleRoot,
+        eRoot: eventsMerkleRoot.toString("base64"),
       };
 
       const snapshotHeadersHash = deps.hash(snapshotHeaders).create();
@@ -173,8 +175,8 @@ module.exports = ({
     end: boundary,
     eCount: allStringifiedEventPairs.length,
     sCount: stringifiedSnapshotPairs.length,
-    eRoot: allEventsMerkleRoot,
-    sRoot: snapshotsMerkleRoot,
+    eRoot: allEventsMerkleRoot.toString("base64"),
+    sRoot: snapshotsMerkleRoot.toString("base64"),
     network: process.env.NETWORK,
     service: process.env.SERVICE,
     domain: process.env.DOMAIN,

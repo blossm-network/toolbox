@@ -26,8 +26,8 @@ const eventCononicalString = "some-event-connical-string";
 const eventPayloadCononicalString = "some-event-payload-cononical-string";
 const snapshotCononicalString = "some-snapshot-cononical-string";
 const snapshotStateCononicalString = "some-snapshot-state-cononical-string";
-const eventsMerkleRoot = "some-events-merkle-root";
-const snapshotMerkleRoot = "some-snapshot-merkle-root";
+const eventsMerkleRoot = Buffer.from("some-events-merkle-root");
+const snapshotMerkleRoot = Buffer.from("some-snapshot-merkle-root");
 const eventKeyHash = "some-event-key-hash";
 const contextHash = "some-context-hash";
 const stateHash = "some-state-hash";
@@ -53,7 +53,7 @@ const snapshot = {
   state: savedSnapshotState,
   events: savedSnapshotEvents,
 };
-const allEventsMerkleRoot = "some-all-events-merkle-root";
+const allEventsMerkleRoot = Buffer.from("some-all-events-merkle-root");
 const previousNumber = 4;
 const previousEnd = "some-previous-end";
 const eventHash = "some-event-hash";
@@ -217,7 +217,7 @@ describe("Event store create block transaction", () => {
       network,
       lastEventNumber: aggregateLastEventNumber,
       eCount: 1,
-      eRoot: eventsMerkleRoot,
+      eRoot: eventsMerkleRoot.toString("base64"),
     });
     expect(merkleRootFake.getCall(0)).to.have.been.calledWith([
       [eventKeyHash, eventCononicalString],
@@ -240,7 +240,7 @@ describe("Event store create block transaction", () => {
           network,
           lastEventNumber: aggregateLastEventNumber,
           eCount: 1,
-          eRoot: eventsMerkleRoot,
+          eRoot: eventsMerkleRoot.toString("base64"),
         },
         context: aggregateContext,
         state: aggregateState,
@@ -270,8 +270,8 @@ describe("Event store create block transaction", () => {
       end: deps.dateString(),
       eCount: 1,
       sCount: 1,
-      eRoot: allEventsMerkleRoot,
-      sRoot: snapshotMerkleRoot,
+      eRoot: allEventsMerkleRoot.toString("base64"),
+      sRoot: snapshotMerkleRoot.toString("base64"),
       network,
       service,
       domain,
@@ -292,8 +292,8 @@ describe("Event store create block transaction", () => {
           end: deps.dateString(),
           eCount: 1,
           sCount: 1,
-          eRoot: allEventsMerkleRoot,
-          sRoot: snapshotMerkleRoot,
+          eRoot: allEventsMerkleRoot.toString("base64"),
+          sRoot: snapshotMerkleRoot.toString("base64"),
           network,
           service,
           domain,
@@ -459,7 +459,7 @@ describe("Event store create block transaction", () => {
       network,
       lastEventNumber: aggregateLastEventNumber,
       eCount: 1,
-      eRoot: eventsMerkleRoot,
+      eRoot: eventsMerkleRoot.toString("base64"),
     });
     expect(merkleRootFake.getCall(0)).to.have.been.calledWith([
       [eventKeyHash, eventCononicalString],
@@ -482,7 +482,7 @@ describe("Event store create block transaction", () => {
           network,
           lastEventNumber: aggregateLastEventNumber,
           eCount: 1,
-          eRoot: eventsMerkleRoot,
+          eRoot: eventsMerkleRoot.toString("base64"),
         },
         context: aggregateContext,
         state: aggregateState,
@@ -517,8 +517,8 @@ describe("Event store create block transaction", () => {
       end: deps.dateString(),
       eCount: 1,
       sCount: 1,
-      eRoot: allEventsMerkleRoot,
-      sRoot: snapshotMerkleRoot,
+      eRoot: allEventsMerkleRoot.toString("base64"),
+      sRoot: snapshotMerkleRoot.toString("base64"),
       network,
       service,
       domain,
@@ -539,8 +539,8 @@ describe("Event store create block transaction", () => {
           end: deps.dateString(),
           eCount: 1,
           sCount: 1,
-          eRoot: allEventsMerkleRoot,
-          sRoot: snapshotMerkleRoot,
+          eRoot: allEventsMerkleRoot.toString("base64"),
+          sRoot: snapshotMerkleRoot.toString("base64"),
           network,
           service,
           domain,
@@ -645,8 +645,8 @@ describe("Event store create block transaction", () => {
       end: deps.dateString(),
       eCount: 0,
       sCount: 0,
-      eRoot: allEventsMerkleRoot,
-      sRoot: snapshotMerkleRoot,
+      eRoot: allEventsMerkleRoot.toString("base64"),
+      sRoot: snapshotMerkleRoot.toString("base64"),
       network,
       service,
       domain,
@@ -667,8 +667,8 @@ describe("Event store create block transaction", () => {
           end: deps.dateString(),
           eCount: 0,
           sCount: 0,
-          eRoot: allEventsMerkleRoot,
-          sRoot: snapshotMerkleRoot,
+          eRoot: allEventsMerkleRoot.toString("base64"),
+          sRoot: snapshotMerkleRoot.toString("base64"),
           network,
           service,
           domain,
@@ -814,7 +814,7 @@ describe("Event store create block transaction", () => {
       network,
       lastEventNumber: aggregateLastEventNumber,
       eCount: 1,
-      eRoot: eventsMerkleRoot,
+      eRoot: eventsMerkleRoot.toString("base64"),
     });
     expect(merkleRootFake.getCall(0)).to.have.been.calledWith([
       [eventKeyHash, eventCononicalString],
@@ -837,7 +837,7 @@ describe("Event store create block transaction", () => {
           network,
           lastEventNumber: aggregateLastEventNumber,
           eCount: 1,
-          eRoot: eventsMerkleRoot,
+          eRoot: eventsMerkleRoot.toString("base64"),
         },
         context: aggregateContext,
         state: aggregateState,
@@ -867,8 +867,8 @@ describe("Event store create block transaction", () => {
       end: deps.dateString(),
       eCount: 1,
       sCount: 1,
-      eRoot: allEventsMerkleRoot,
-      sRoot: snapshotMerkleRoot,
+      eRoot: allEventsMerkleRoot.toString("base64"),
+      sRoot: snapshotMerkleRoot.toString("base64"),
       network,
       service,
       domain,
@@ -889,8 +889,8 @@ describe("Event store create block transaction", () => {
           end: deps.dateString(),
           eCount: 1,
           sCount: 1,
-          eRoot: allEventsMerkleRoot,
-          sRoot: snapshotMerkleRoot,
+          eRoot: allEventsMerkleRoot.toString("base64"),
+          sRoot: snapshotMerkleRoot.toString("base64"),
           network,
           service,
           domain,
