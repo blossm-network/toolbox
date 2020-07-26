@@ -1,4 +1,3 @@
-//TODO test
 module.exports = ({ aggregateStreamFn }) => async (req, res) => {
   await aggregateStreamFn({
     timestamp: req.query.timestamp,
