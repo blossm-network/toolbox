@@ -12,7 +12,7 @@ module.exports = ({
   blockPublisherPublicKeyFn,
   public,
 }) => async (_, res) => {
-  await createTransactionFn(
+  const block = await createTransactionFn(
     deps.createBlockTransaction({
       saveSnapshotFn,
       aggregateFn,
@@ -26,5 +26,5 @@ module.exports = ({
     })
   );
 
-  res.sendStatus(200);
+  res.send(block);
 };

@@ -34,8 +34,9 @@ describe("Event store post", () => {
     const blockPublisherPublicKeyFn = "some-block-publisher-key-fn";
     const public = "some public";
 
-    const createTransactionFnFake = fake();
-    await createBlock({
+    const createdTransactionResult = "some-created-transaction-result";
+    const createTransactionFnFake = fake.returns(createdTransactionResult);
+    const result = await createBlock({
       saveSnapshotFn,
       aggregateFn,
       rootStreamFn,
@@ -48,6 +49,7 @@ describe("Event store post", () => {
       public,
     })(req, res);
 
+    expect(result).to.deep.equal(createdTransactionResult);
     expect(createTransactionFnFake).to.have.been.calledWith(
       createBlockTransactionResult
     );
