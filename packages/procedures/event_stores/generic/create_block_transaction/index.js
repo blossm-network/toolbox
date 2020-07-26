@@ -189,8 +189,10 @@ module.exports = ({
     snapshots: deps.encode(stringifiedSnapshotPairs),
   };
 
-  await saveBlockFn({
+  const block = await saveBlockFn({
     block: normalizedBlock,
     ...(transaction && { transaction }),
   });
+
+  return block;
 };

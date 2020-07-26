@@ -203,6 +203,9 @@ describe("Event store integration tests", () => {
           expect(parsedData.headers.lastEventNumber).to.equal(0);
         } else if (parsedData.headers.root == root3) {
           expect(parsedData.headers.lastEventNumber).to.equal(0);
+        } else {
+          //shouldn't get called
+          expect(1).to.equal(2);
         }
       },
       {
@@ -212,6 +215,20 @@ describe("Event store integration tests", () => {
       }
     );
     expect(aggregateCount).to.equal(2);
+
+    //test stream with snapshot.
+    const blockResponse = await request.post(`${url}/create-block`);
+
+    expect(blockResponse.statusCode).to.equal(200);
+    //TODO
+    console.log({ blockResponse });
+
+    await request.stream(`${url}/stream-aggregates`, (data) => {
+      const parsedData = JSON.parse(data.toString());
+      expect(parsedData.headers.lastEventNumber).to.equal(1);
+      currentNumber++;
+    });
+    expect(currentNumber).to.equal(1);
 
     //Test stream with saved qualifiers
     // const newSavedDate = dateString();
