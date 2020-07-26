@@ -30,7 +30,7 @@
     "@blossm/mongodb-event-store-save-block": "^0.0.5",
     "@blossm/mongodb-event-store-save-events": "^0.0.77",
     "@blossm/mongodb-event-store-save-snapshot": "^0.0.11",
-    "@blossm/mongodb-event-store-stream": "^0.0.41",
+    "@blossm/mongodb-event-store-aggregate-stream": "*",
     "@blossm/nonce": "^0.0.5",
     "@blossm/uuid": "*"
   },
