@@ -19,9 +19,9 @@ describe("Event store post", () => {
 
     const req = {};
 
-    const sendStatusFake = fake();
+    const sendFake = fake();
     const res = {
-      sendStatus: sendStatusFake,
+      send: sendFake,
     };
 
     const saveSnapshotFn = "some-save-snapshot-fn";
@@ -36,7 +36,7 @@ describe("Event store post", () => {
 
     const createdTransactionResult = "some-created-transaction-result";
     const createTransactionFnFake = fake.returns(createdTransactionResult);
-    const result = await createBlock({
+    await createBlock({
       saveSnapshotFn,
       aggregateFn,
       rootStreamFn,
@@ -49,7 +49,6 @@ describe("Event store post", () => {
       public,
     })(req, res);
 
-    expect(result).to.deep.equal(createdTransactionResult);
     expect(createTransactionFnFake).to.have.been.calledWith(
       createBlockTransactionResult
     );
@@ -64,6 +63,6 @@ describe("Event store post", () => {
       blockPublisherPublicKeyFn,
       public,
     });
-    expect(sendStatusFake).to.have.been.calledWith(200);
+    expect(sendFake).to.have.been.calledWith(createBlockTransactionResult);
   });
 });
