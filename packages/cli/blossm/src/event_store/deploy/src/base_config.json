@@ -1,7 +1,6 @@
 {
   "dependencies": {
     "@blossm/mongodb-event-store": "*",
-    "@blossm/hash": "*",
     "@blossm/gcp-pubsub": "*",
     "@blossm/gcp-secret": "*"
   },
@@ -12,6 +11,10 @@
     "chai-datetime": "^1.5.0",
     "@blossm/request": "*",
     "@blossm/datetime": "*",
-    "@blossm/uuid": "*"
+    "@blossm/uuid": "*",
+    "@blossm/cononical-string": "*",
+    "@blossm/hash": "*",
+    "@blossm/rlp": "*",
+    "@blossm/merkle-tree": "*"
   }
 }

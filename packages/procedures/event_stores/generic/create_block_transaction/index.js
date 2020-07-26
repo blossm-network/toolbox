@@ -37,12 +37,7 @@ module.exports = ({
       key: Buffer.from(await blockPublisherPublicKeyFn()).toString("base64"),
     };
 
-    //TODO
-    console.log({ genesisBlockHeaders: blockHeaders });
-    console.log({ jsonHeaders: JSON.stringify(blockHeaders) });
-
     const blockHeadersHash = deps.hash(blockHeaders).create();
-    console.log({ blockHeadersHash });
     const signedBlockHeadersHash = await signFn(blockHeadersHash);
 
     const genesisBlock = {
@@ -185,8 +180,6 @@ module.exports = ({
     key: Buffer.from(await blockPublisherPublicKeyFn()).toString("base64"),
   };
 
-  //TODO
-  console.log({ blockHeaders });
   const blockHeadersHash = deps.hash(blockHeaders).create();
   const signedBlockHeadersHash = await signFn(blockHeadersHash);
 
