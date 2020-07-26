@@ -205,8 +205,8 @@ describe("Event store create block transaction", () => {
     expect(hashFake.getCall(3)).to.have.been.calledWith({
       nonce: snapshotNonce,
       block: previousNumber + 1,
-      cHash: contextHash,
-      sHash: stateHash,
+      cHash: Buffer.from(contextHash),
+      sHash: Buffer.from(stateHash),
       pHash: snapshotHash,
       created: deps.dateString(),
       root,
@@ -228,8 +228,8 @@ describe("Event store create block transaction", () => {
         headers: {
           nonce: snapshotNonce,
           block: previousNumber + 1,
-          cHash: contextHash,
-          sHash: stateHash,
+          cHash: Buffer.from(contextHash),
+          sHash: Buffer.from(stateHash),
           pHash: snapshotHash,
           created: deps.dateString(),
           trace,
@@ -263,7 +263,7 @@ describe("Event store create block transaction", () => {
     ]);
     expect(hashFake.getCall(5)).to.have.been.calledWith({
       nonce: blockNonce,
-      pHash: previousHash,
+      pHash: Buffer.from(previousHash),
       created: deps.dateString(),
       number: previousNumber + 1,
       start: previousEnd,
@@ -275,17 +275,17 @@ describe("Event store create block transaction", () => {
       network,
       service,
       domain,
-      key: publicKey,
+      key: Buffer.from(publicKey),
     });
     expect(signFnFake).to.have.been.calledOnceWith(blockHeadersHash);
 
     expect(saveBlockFnFake).to.have.been.calledOnceWith({
       block: {
-        signature: signedBlockHeaderHash,
+        signature: Buffer.from(signedBlockHeaderHash),
         hash: blockHeadersHash,
         headers: {
           nonce: blockNonce,
-          pHash: previousHash,
+          pHash: Buffer.from(previousHash),
           created: deps.dateString(),
           number: previousNumber + 1,
           start: previousEnd,
@@ -297,7 +297,7 @@ describe("Event store create block transaction", () => {
           network,
           service,
           domain,
-          key: publicKey,
+          key: Buffer.from(publicKey),
         },
         events: encodedAllEventPairs,
         snapshots: encodedSnapshotPairs,
@@ -447,8 +447,8 @@ describe("Event store create block transaction", () => {
     expect(hashFake.getCall(3)).to.have.been.calledWith({
       nonce: snapshotNonce,
       block: previousNumber + 1,
-      cHash: contextHash,
-      sHash: stateHash,
+      cHash: Buffer.from(contextHash),
+      sHash: Buffer.from(stateHash),
       pHash: snapshotHash,
       created: deps.dateString(),
       root,
@@ -470,8 +470,8 @@ describe("Event store create block transaction", () => {
         headers: {
           nonce: snapshotNonce,
           block: previousNumber + 1,
-          cHash: contextHash,
-          sHash: stateHash,
+          cHash: Buffer.from(contextHash),
+          sHash: Buffer.from(stateHash),
           pHash: snapshotHash,
           created: deps.dateString(),
           root,
@@ -510,7 +510,7 @@ describe("Event store create block transaction", () => {
     ]);
     expect(hashFake.getCall(5)).to.have.been.calledWith({
       nonce: blockNonce,
-      pHash: previousHash,
+      pHash: Buffer.from(previousHash),
       created: deps.dateString(),
       number: previousNumber + 1,
       start: previousEnd,
@@ -522,17 +522,17 @@ describe("Event store create block transaction", () => {
       network,
       service,
       domain,
-      key: publicKey,
+      key: Buffer.from(publicKey),
     });
     expect(signFnFake).to.have.been.calledOnceWith(blockHeadersHash);
 
     expect(saveBlockFnFake).to.have.been.calledOnceWith({
       block: {
-        signature: signedBlockHeaderHash,
+        signature: Buffer.from(signedBlockHeaderHash),
         hash: blockHeadersHash,
         headers: {
           nonce: blockNonce,
-          pHash: previousHash,
+          pHash: Buffer.from(previousHash),
           created: deps.dateString(),
           number: previousNumber + 1,
           start: previousEnd,
@@ -544,7 +544,7 @@ describe("Event store create block transaction", () => {
           network,
           service,
           domain,
-          key: publicKey,
+          key: Buffer.from(publicKey),
         },
         events: encodedAllEventPairs,
         snapshots: encodedSnapshotPairs,
@@ -638,7 +638,7 @@ describe("Event store create block transaction", () => {
     expect(merkleRootFake.getCall(1)).to.have.been.calledWith([]);
     expect(hashFake).to.have.been.calledOnceWith({
       nonce: blockNonce,
-      pHash: previousHash,
+      pHash: Buffer.from(previousHash),
       created: deps.dateString(),
       number: previousNumber + 1,
       start: previousEnd,
@@ -650,17 +650,17 @@ describe("Event store create block transaction", () => {
       network,
       service,
       domain,
-      key: publicKey,
+      key: Buffer.from(publicKey),
     });
     expect(signFnFake).to.have.been.calledOnceWith(blockHeadersHash);
 
     expect(saveBlockFnFake).to.have.been.calledOnceWith({
       block: {
-        signature: signedBlockHeaderHash,
+        signature: Buffer.from(signedBlockHeaderHash),
         hash: blockHeadersHash,
         headers: {
           nonce: blockNonce,
-          pHash: previousHash,
+          pHash: Buffer.from(previousHash),
           created: deps.dateString(),
           number: previousNumber + 1,
           start: previousEnd,
@@ -672,7 +672,7 @@ describe("Event store create block transaction", () => {
           network,
           service,
           domain,
-          key: publicKey,
+          key: Buffer.from(publicKey),
         },
         events: encodedAllEventPairs,
         snapshots: encodedSnapshotPairs,
@@ -802,8 +802,8 @@ describe("Event store create block transaction", () => {
     expect(hashFake.getCall(3)).to.have.been.calledWith({
       nonce: snapshotNonce,
       block: previousNumber + 1,
-      cHash: contextHash,
-      sHash: stateHash,
+      cHash: Buffer.from(contextHash),
+      sHash: Buffer.from(stateHash),
       pHash: "~",
       trace,
       created: deps.dateString(),
@@ -825,8 +825,8 @@ describe("Event store create block transaction", () => {
         headers: {
           nonce: snapshotNonce,
           block: previousNumber + 1,
-          cHash: contextHash,
-          sHash: stateHash,
+          cHash: Buffer.from(contextHash),
+          sHash: Buffer.from(stateHash),
           trace,
           pHash: "~",
           created: deps.dateString(),
@@ -860,7 +860,7 @@ describe("Event store create block transaction", () => {
     ]);
     expect(hashFake.getCall(5)).to.have.been.calledWith({
       nonce: blockNonce,
-      pHash: previousHash,
+      pHash: Buffer.from(previousHash),
       created: deps.dateString(),
       number: previousNumber + 1,
       start: previousEnd,
@@ -872,17 +872,17 @@ describe("Event store create block transaction", () => {
       network,
       service,
       domain,
-      key: publicKey,
+      key: Buffer.from(publicKey),
     });
     expect(signFnFake).to.have.been.calledOnceWith(blockHeadersHash);
 
     expect(saveBlockFnFake).to.have.been.calledOnceWith({
       block: {
-        signature: signedBlockHeaderHash,
+        signature: Buffer.from(signedBlockHeaderHash),
         hash: blockHeadersHash,
         headers: {
           nonce: blockNonce,
-          pHash: previousHash,
+          pHash: Buffer.from(previousHash),
           created: deps.dateString(),
           number: previousNumber + 1,
           start: previousEnd,
@@ -894,7 +894,7 @@ describe("Event store create block transaction", () => {
           network,
           service,
           domain,
-          key: publicKey,
+          key: Buffer.from(publicKey),
         },
         events: encodedAllEventPairs,
         snapshots: encodedSnapshotPairs,
@@ -959,7 +959,7 @@ describe("Event store create block transaction", () => {
     expect(merkleRootFake.getCall(0)).to.have.been.calledWith([]);
     expect(hashFake.getCall(1)).to.have.been.calledWith({
       nonce: blockNonce,
-      pHash: genesisPreviousHash,
+      pHash: Buffer.from(genesisPreviousHash),
       created: deps.dateString(),
       number: 0,
       start: "2020-01-01T05:00:00.000+00:00",
@@ -971,17 +971,17 @@ describe("Event store create block transaction", () => {
       network,
       service,
       domain,
-      key: publicKey,
+      key: Buffer.from(publicKey),
     });
     expect(signFnFake).to.have.been.calledOnceWith(blockHeadersHash);
 
     expect(saveBlockFnFake).to.have.been.calledOnceWith({
       block: {
-        signature: signedBlockHeaderHash,
+        signature: Buffer.from(signedBlockHeaderHash),
         hash: blockHeadersHash,
         headers: {
           nonce: blockNonce,
-          pHash: genesisPreviousHash,
+          pHash: Buffer.from(genesisPreviousHash),
           created: deps.dateString(),
           number: 0,
           start: "2020-01-01T05:00:00.000+00:00",
@@ -993,7 +993,7 @@ describe("Event store create block transaction", () => {
           network,
           service,
           domain,
-          key: publicKey,
+          key: Buffer.from(publicKey),
         },
         events: encodedAllEventPairs,
         snapshots: encodedSnapshotPairs,

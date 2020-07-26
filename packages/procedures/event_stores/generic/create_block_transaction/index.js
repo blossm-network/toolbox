@@ -20,7 +20,7 @@ module.exports = ({
 
     const blockHeaders = {
       nonce: deps.nonce(),
-      pHash: deps.hash(genesisPrevious).create(),
+      pHash: Buffer.from(deps.hash(genesisPrevious).create()),
       created: deps.dateString(),
       number: 0,
       start: "2020-01-01T05:00:00.000+00:00",
@@ -32,7 +32,7 @@ module.exports = ({
       network: process.env.NETWORK,
       service: process.env.SERVICE,
       domain: process.env.DOMAIN,
-      key: await blockPublisherPublicKeyFn(),
+      key: Buffer.from(await blockPublisherPublicKeyFn()),
     };
 
     //TODO
@@ -42,7 +42,7 @@ module.exports = ({
     const signedBlockHeadersHash = await signFn(blockHeadersHash);
 
     const genesisBlock = {
-      signature: signedBlockHeadersHash,
+      signature: Buffer.from(signedBlockHeadersHash),
       hash: blockHeadersHash,
       headers: blockHeaders,
       events: deps.encode([]),
@@ -101,8 +101,8 @@ module.exports = ({
       const snapshotHeaders = {
         nonce: deps.nonce(),
         block: nextBlockNumber,
-        cHash: contextHash,
-        sHash: stateHash,
+        cHash: Buffer.from(contextHash),
+        sHash: Buffer.from(stateHash),
         pHash: previousHash,
         created: deps.dateString(),
         root,
@@ -166,7 +166,7 @@ module.exports = ({
 
   const blockHeaders = {
     nonce: deps.nonce(),
-    pHash: previousBlock.hash,
+    pHash: Buffer.from(previousBlock.hash),
     created: deps.dateString(),
     number: previousBlock.headers.number + 1,
     start: previousBlock.headers.end,
@@ -178,7 +178,7 @@ module.exports = ({
     network: process.env.NETWORK,
     service: process.env.SERVICE,
     domain: process.env.DOMAIN,
-    key: await blockPublisherPublicKeyFn(),
+    key: Buffer.from(await blockPublisherPublicKeyFn()),
   };
 
   //TODO
@@ -187,7 +187,7 @@ module.exports = ({
   const signedBlockHeadersHash = await signFn(blockHeadersHash);
 
   const normalizedBlock = {
-    signature: signedBlockHeadersHash,
+    signature: Buffer.from(signedBlockHeadersHash),
     hash: blockHeadersHash,
     headers: blockHeaders,
     events: deps.encode(allStringifiedEventPairs),
