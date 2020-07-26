@@ -284,6 +284,9 @@ module.exports = async ({
     }),
     aggregateStreamFn: deps.aggregateStream({
       eventStore: eStore,
+      snapshotStore: sStore,
+      countsStore: cStore,
+      handlers,
     }),
     reserveRootCountsFn: deps.reserveRootCounts({
       countsStore: cStore,

@@ -348,7 +348,10 @@ describe("Mongodb event store", () => {
       handlers,
     });
     expect(aggregateStreamFake).to.have.been.calledWith({
+      snapshotStore: sStore,
       eventStore: eStore,
+      countsStore: cStore,
+      handlers,
     });
     expect(saveBlockFake).to.have.been.calledWith({
       blockchainStore: bStore,
