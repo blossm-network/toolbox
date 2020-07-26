@@ -39,8 +39,10 @@ module.exports = ({
 
     //TODO
     console.log({ genesisBlockHeaders: blockHeaders });
+    console.log({ jsonHeaders: JSON.stringify(blockHeaders) });
 
     const blockHeadersHash = deps.hash(blockHeaders).create();
+    console.log({ blockHeadersHash });
     const signedBlockHeadersHash = await signFn(blockHeadersHash);
 
     const genesisBlock = {

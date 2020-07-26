@@ -56,8 +56,9 @@ describe("Event store integration tests", () => {
     const parsedGenesisBlockBody = JSON.parse(genesisBlockResponse.body);
     //TODO
     console.log({
-      parsedGenesisBlockBody,
       headers: parsedGenesisBlockBody.headers,
+      hash: parsedGenesisBlockBody.hash,
+      json: JSON.stringify(parsedGenesisBlockBody.headers),
     });
     expect(parsedGenesisBlockBody.hash).to.equal(
       hash(parsedGenesisBlockBody.headers).create()
