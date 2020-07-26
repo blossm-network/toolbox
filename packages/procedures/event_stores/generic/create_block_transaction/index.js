@@ -35,6 +35,9 @@ module.exports = ({
       key: await blockPublisherPublicKeyFn(),
     };
 
+    //TODO
+    console.log({ genesisBlockHeaders: blockHeaders });
+
     const blockHeadersHash = deps.hash(blockHeaders).create();
     const signedBlockHeadersHash = await signFn(blockHeadersHash);
 
