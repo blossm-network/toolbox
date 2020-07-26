@@ -47,6 +47,15 @@ describe("Event store integration tests", () => {
 
     expect(parsedCountBody.count).to.equal(0);
 
+    const genesisBlockResponse = await request.post(`${url}/create-block`);
+
+    //TODO
+    console.log({ genesisBlockResponse });
+    expect(blockResponse.statusCode).to.equal(200);
+    const parsedGenesisBlockBody = JSON.parse(blockResponse.body);
+    //TODO
+    console.log({ parsedGenesisBlockBody });
+
     const response0 = await request.post(url, {
       body: {
         eventData: [

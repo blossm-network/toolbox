@@ -928,7 +928,8 @@ describe("Event store create block transaction", () => {
     const nonceFake = stub().onCall(0).returns(blockNonce);
     replace(deps, "nonce", nonceFake);
 
-    const saveBlockFnFake = fake();
+    const genesisBlock = "some-genesis-bock";
+    const saveBlockFnFake = fake.returns(genesisBlock);
     const encryptFnFake = fake();
 
     const signFnFake = fake.returns(signedBlockHeaderHash);
@@ -941,7 +942,7 @@ describe("Event store create block transaction", () => {
     replace(deps, "encode", encodeFake);
 
     const blockPublisherPublicKeyFnFake = fake.returns(publicKey);
-    await create({
+    const result = await create({
       rootStreamFn: rootStreamFnFake,
       latestBlockFn: latestBlockFnFake,
       saveBlockFn: saveBlockFnFake,
@@ -951,6 +952,7 @@ describe("Event store create block transaction", () => {
       public,
     })(transaction);
 
+    expect(result).to.deep.equal(genesisBlock);
     expect(latestBlockFnFake).to.have.been.calledOnceWith();
 
     expect(hashFake.getCall(0)).to.have.been.calledWith("~");

@@ -46,12 +46,12 @@ module.exports = ({
       snapshots: deps.encode([]),
     };
 
-    await saveBlockFn({
+    const genesisBlock = await saveBlockFn({
       block: genesisBlock,
       ...(transaction && { transaction }),
     });
 
-    return;
+    return genesisBlock;
   }
 
   const snapshots = [];
