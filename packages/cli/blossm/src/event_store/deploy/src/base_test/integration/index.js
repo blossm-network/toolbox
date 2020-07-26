@@ -130,7 +130,7 @@ describe("Event store integration tests", () => {
         const parsedData = JSON.parse(data.toString());
         //TODO
         console.log({ parsedData });
-        expect(parsedData.headers.lastEventNumber).to.equal(currentNumber);
+        expect(parsedData.lastEventNumber).to.equal(currentNumber);
         currentNumber++;
       },
       {
