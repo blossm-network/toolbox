@@ -63,6 +63,6 @@ describe("Event store post", () => {
       blockPublisherPublicKeyFn,
       public,
     });
-    expect(sendFake).to.have.been.calledWith(createBlockTransactionResult);
+    expect(sendFake).to.have.been.calledWith(createdTransactionResult);
   });
 });
