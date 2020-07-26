@@ -54,12 +54,15 @@ describe("Event store integration tests", () => {
     console.log({ genesisBlockResponse });
     expect(genesisBlockResponse.statusCode).to.equal(200);
     const parsedGenesisBlockBody = JSON.parse(genesisBlockResponse.body);
+    //TODO
+    console.log({
+      parsedGenesisBlockBody,
+      headers: parsedGenesisBlockBody.headers,
+    });
     expect(parsedGenesisBlockBody.hash).to.equal(
       hash(parsedGenesisBlockBody.headers).create()
     );
     console.log(parsedGenesisBlockBody.events.toString());
-    //TODO
-    console.log({ parsedGenesisBlockBody });
 
     const response0 = await request.post(url, {
       body: {
