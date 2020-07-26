@@ -144,7 +144,6 @@ describe("Event store integration tests", () => {
     );
 
     const root2 = uuid();
-    //Test stream with actions and root qualifiers
     await request.post(url, {
       body: {
         eventData: [
@@ -155,9 +154,34 @@ describe("Event store integration tests", () => {
                 topic,
                 idempotency: uuid(),
                 //Use the previous date
+                created: dateString(),
+                version,
+                action: example1.action,
+                domain,
+                service,
+                network: process.env.NETWORK,
+              },
+              payload: example1.payload,
+            },
+          },
+        ],
+      },
+    });
+    const root3 = uuid();
+    //Test stream with actions and root qualifiers
+    await request.post(url, {
+      body: {
+        eventData: [
+          {
+            event: {
+              headers: {
+                root: root3,
+                topic,
+                idempotency: uuid(),
+                //Use the previous date
                 created: now,
                 version,
-                action: "some-bogus",
+                action: example1.action,
                 domain,
                 service,
                 network: process.env.NETWORK,
