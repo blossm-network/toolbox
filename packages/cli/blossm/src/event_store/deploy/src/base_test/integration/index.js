@@ -237,7 +237,7 @@ describe("Event store integration tests", () => {
     expect(parsedBlockBody.hash).to.equal(
       hash(parsedBlockBody.headers).create()
     );
-    expect(parsedBlockBody.headers.pHash).toEqual(parsedGenesisBlockBody.hash);
+    expect(parsedBlockBody.headers.pHash).to.equal(parsedGenesisBlockBody.hash);
     expect(parsedBlockBody.headers.number).to.equal(1);
 
     //TODO
