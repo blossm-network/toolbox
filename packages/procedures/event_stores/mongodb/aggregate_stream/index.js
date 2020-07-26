@@ -20,6 +20,7 @@ module.exports = ({ eventStore, snapshotStore, countsStore, handlers }) => ({
         state: aggregate.state,
         headers: aggregate.headers,
         context: aggregate.context,
+        lastEventNumber: aggregate.lastEventNumber,
       });
     },
   });

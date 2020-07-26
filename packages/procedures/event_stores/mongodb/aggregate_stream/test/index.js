@@ -12,6 +12,11 @@ const handlers = "some-handlers";
 const root = "some-root";
 const timestamp = "some-timestamp";
 
+const aggregateState = "some-aggragate-state";
+const aggregateHeaders = "some-aggragate-headers";
+const aggregateContext = "some-aggragate-context";
+const aggregateLastEventNumber = "some-aggregate-last-event-number";
+
 describe("Mongodb event store aggregate stream", () => {
   afterEach(() => {
     restore();
@@ -25,13 +30,11 @@ describe("Mongodb event store aggregate stream", () => {
 
     replace(deps, "rootStream", rootStreamOuterFake);
 
-    const aggregateState = "some-aggragate-state";
-    const aggregateHeaders = "some-aggragate-headers";
-    const aggregateContext = "some-aggragate-context";
     const aggregate = {
       state: aggregateState,
       headers: aggregateHeaders,
       context: aggregateContext,
+      lastEventNumber: aggregateLastEventNumber,
     };
     const aggregateFake = fake.returns(aggregate);
     const aggregateOuterFake = fake.returns(aggregateFake);
@@ -60,6 +63,7 @@ describe("Mongodb event store aggregate stream", () => {
       state: aggregateState,
       headers: aggregateHeaders,
       context: aggregateContext,
+      lastEventNumber: aggregateLastEventNumber,
     });
     expect(result).to.deep.equal(streamResult);
   });
@@ -72,13 +76,11 @@ describe("Mongodb event store aggregate stream", () => {
 
     replace(deps, "rootStream", rootStreamOuterFake);
 
-    const aggregateState = "some-aggragate-state";
-    const aggregateHeaders = "some-aggragate-headers";
-    const aggregateContext = "some-aggragate-context";
     const aggregate = {
       state: aggregateState,
       headers: aggregateHeaders,
       context: aggregateContext,
+      lastEventNumber: aggregateLastEventNumber,
     };
     const aggregateFake = fake.returns(aggregate);
     const aggregateOuterFake = fake.returns(aggregateFake);
@@ -106,40 +108,8 @@ describe("Mongodb event store aggregate stream", () => {
       state: aggregateState,
       headers: aggregateHeaders,
       context: aggregateContext,
+      lastEventNumber: aggregateLastEventNumber,
     });
     expect(result).to.deep.equal(streamResult);
   });
-  // it("should call with the correct params an optionals missing", async () => {
-  //   const streamResult = "stream-result";
-  //   const eachAsyncFake = fake.returns(streamResult);
-  //   const cursorFake = fake.returns({
-  //     eachAsync: eachAsyncFake,
-  //   });
-  //   const findFake = fake.returns({
-  //     cursor: cursorFake,
-  //   });
-
-  //   const db = {
-  //     find: findFake,
-  //   };
-
-  //   replace(deps, "db", db);
-
-  //   const result = await aggregateStream({ eventStore })({
-  //     from,
-  //     fn,
-  //   });
-
-  //   expect(findFake).to.have.been.calledWith({
-  //     store: eventStore,
-  //     query: { "headers.created": { $gte: from } },
-  //     sort: { "headers.created": 1, "headers.number": 1 },
-  //     options: {
-  //       lean: true,
-  //     },
-  //   });
-  //   expect(cursorFake).to.have.been.calledWith();
-  //   expect(eachAsyncFake).to.have.been.calledWith(fn, { parallel: 100 });
-  //   expect(result).to.deep.equal(streamResult);
-  // });
 });
