@@ -15,7 +15,6 @@ const timestamp = "some-timestamp";
 const aggregateState = "some-aggragate-state";
 const aggregateHeaders = "some-aggragate-headers";
 const aggregateContext = "some-aggragate-context";
-const aggregateLastEventNumber = "some-aggregate-last-event-number";
 
 describe("Mongodb event store aggregate stream", () => {
   afterEach(() => {
@@ -34,7 +33,6 @@ describe("Mongodb event store aggregate stream", () => {
       state: aggregateState,
       headers: aggregateHeaders,
       context: aggregateContext,
-      lastEventNumber: aggregateLastEventNumber,
     };
     const aggregateFake = fake.returns(aggregate);
     const aggregateOuterFake = fake.returns(aggregateFake);
@@ -63,7 +61,6 @@ describe("Mongodb event store aggregate stream", () => {
       state: aggregateState,
       headers: aggregateHeaders,
       context: aggregateContext,
-      lastEventNumber: aggregateLastEventNumber,
     });
     expect(result).to.deep.equal(streamResult);
   });
@@ -80,7 +77,6 @@ describe("Mongodb event store aggregate stream", () => {
       state: aggregateState,
       headers: aggregateHeaders,
       context: aggregateContext,
-      lastEventNumber: aggregateLastEventNumber,
     };
     const aggregateFake = fake.returns(aggregate);
     const aggregateOuterFake = fake.returns(aggregateFake);
@@ -108,7 +104,6 @@ describe("Mongodb event store aggregate stream", () => {
       state: aggregateState,
       headers: aggregateHeaders,
       context: aggregateContext,
-      lastEventNumber: aggregateLastEventNumber,
     });
     expect(result).to.deep.equal(streamResult);
   });
