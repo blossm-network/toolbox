@@ -25,7 +25,7 @@ const viewStore = async ({ schema, indexes, secretFn }) => {
           unique: true,
           default: deps.uuid,
         },
-        trace: { [typeKey]: String },
+        trace: { [typeKey]: [String] },
         context: {
           [typeKey]: {
             root: String,

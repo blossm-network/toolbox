@@ -7,7 +7,6 @@ const createEvent = require("@blossm/create-event");
 const request = require("@blossm/request");
 
 const { testing, name, context } = require("../../config.json");
-const { string: dateString } = require("@blossm/datetime");
 
 const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 
@@ -18,7 +17,6 @@ describe("Projection integration tests", () => {
     const contextService = "some-context-service";
     const contextNetwork = "some-context-network";
 
-    //TODO
     for (const example of testing.examples) {
       const event = createEvent({
         root: example.root,
@@ -36,7 +34,6 @@ describe("Projection integration tests", () => {
         },
       });
 
-      const dateBefore = dateString();
       await eventStore({
         domain: example.action.domain,
         service: example.action.service,
@@ -45,11 +42,7 @@ describe("Projection integration tests", () => {
       const response = await request.post(url, {
         body: {
           message: {
-            data: Buffer.from(
-              JSON.stringify({
-                from: dateBefore,
-              })
-            ),
+            data: Buffer.from(JSON.stringify({})),
           },
         },
       });

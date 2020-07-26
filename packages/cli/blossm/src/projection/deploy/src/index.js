@@ -12,11 +12,14 @@ const handlers = require("./handlers.js");
 const config = require("./config.json");
 
 module.exports = eventHandler({
-  mainFn: async (aggregate, { push = true }) => {
+  mainFn: async (aggregate, { push }) => {
+    //TODO
+    console.group("Aggregate!", { aggregate });
+
     //Must be able to handle this aggregate.
     if (
-      !handlers[aggregate.service] ||
-      !handlers[aggregate.service][aggregate.domain]
+      !handlers[aggregate.headers.service] ||
+      !handlers[aggregate.headers.service][aggregate.headers.domain]
     )
       return;
 
@@ -25,9 +28,9 @@ module.exports = eventHandler({
       query,
       //The changes to the body of the view.
       update,
-    } = handlers[aggregate.service][aggregate.domain]({
+    } = handlers[aggregate.headers.service][aggregate.headers.domain]({
       state: aggregate.state,
-      root: aggregate.root,
+      root: aggregate.headers.root,
     });
 
     const aggregateContext =
@@ -36,14 +39,14 @@ module.exports = eventHandler({
     //The context that the view should be associated with.
     const contextRoot = aggregateContext
       ? aggregateContext.root
-      : aggregate.root;
+      : aggregate.headers.root;
     const contextDomain = process.env.CONTEXT;
     const contextService = aggregateContext
       ? aggregateContext.service
-      : aggregate.service;
+      : aggregate.headers.service;
     const contextNetwork = aggregateContext
       ? aggregateContext.network
-      : aggregate.network;
+      : aggregate.headers.network;
 
     const { body: newView } = await viewStore({
       name: config.name,
@@ -94,13 +97,13 @@ module.exports = eventHandler({
   },
   aggregateStreamFn: ({ timestamp, fn, sortFn }) =>
     Promise.all(
-      config.eventStores.map(({ domain, service }) => {
-        const { state } = eventStore({ domain, service })
+      config.eventStores.map(({ domain, service }) =>
+        eventStore({ domain, service })
           .set({
             token: { internalFn: gcpToken },
           })
-          .streamAggregates(fn, sortFn, { ...(timestamp && { timestamp }) });
-      })
+          .streamAggregates(fn, sortFn, { ...(timestamp && { timestamp }) })
+      )
     ),
   secretFn: secret,
 });

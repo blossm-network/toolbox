@@ -127,7 +127,7 @@ describe("View store", () => {
             unique: true,
             default: deps.uuid,
           },
-          trace: { $type: String },
+          trace: { $type: [String] },
           context: {
             $type: {
               root: String,
@@ -347,7 +347,7 @@ describe("View store", () => {
             unique: true,
             default: deps.uuid,
           },
-          trace: { $type: String },
+          trace: { $type: [String] },
           context: {
             $type: {
               root: String,
@@ -477,7 +477,7 @@ describe("View store", () => {
             unique: true,
             default: deps.uuid,
           },
-          trace: { $type: String },
+          trace: { $type: [String] },
           context: {
             $type: {
               root: String,
@@ -591,7 +591,7 @@ describe("View store", () => {
             unique: true,
             default: deps.uuid,
           },
-          trace: { $type: String },
+          trace: { $type: [String] },
           context: {
             $type: {
               root: String,
@@ -788,7 +788,7 @@ describe("View store", () => {
             unique: true,
             default: deps.uuid,
           },
-          trace: { $type: String },
+          trace: { $type: [String] },
           context: {
             $type: {
               root: String,

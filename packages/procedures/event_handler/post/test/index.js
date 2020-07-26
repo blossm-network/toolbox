@@ -4,9 +4,9 @@ const { restore, fake, replace, match } = require("sinon");
 const post = require("..");
 const deps = require("../deps");
 
-const from = 5;
+const timestamp = 5;
 
-const data = Buffer.from(JSON.stringify({ from }));
+const data = Buffer.from(JSON.stringify({ timestamp }));
 
 describe("Command handler post", () => {
   afterEach(() => {
@@ -34,7 +34,7 @@ describe("Command handler post", () => {
     })(req, res);
 
     expect(aggregateStreamFnFake).to.have.been.calledWith({
-      from,
+      timestamp,
       fn: match((fn) => {
         const aggregate = "some-aggregate";
         fn(aggregate);
@@ -50,11 +50,11 @@ describe("Command handler post", () => {
 
     expect(sendStatusFake).to.have.been.calledWith(204);
   });
-  it("should call with the correct params if push is false", async () => {
+  it("should call with the correct params if push is false and no timestamp", async () => {
     const mainFnFake = fake();
     const aggregateStreamFnFake = fake();
 
-    const data = Buffer.from(JSON.stringify({ from, push: false }));
+    const data = Buffer.from(JSON.stringify({ push: false }));
     const req = {
       body: {
         message: { data },
@@ -72,7 +72,6 @@ describe("Command handler post", () => {
     })(req, res);
 
     expect(aggregateStreamFnFake).to.have.been.calledWith({
-      from,
       fn: match((fn) => {
         const aggregate = "some-aggregate";
         fn(aggregate);

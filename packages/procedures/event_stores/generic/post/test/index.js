@@ -35,15 +35,12 @@ describe("Event store post", () => {
 
     const publishFnFake = fake();
     const savedEventHeadersTopic = "some-saved-event-headers-topic";
-    const savedEventCreatedTimestamp = "some-event-created-timestamp";
     const createTransactionFnFake = fake.returns({
       receipt: [
         {
-          created: savedEventCreatedTimestamp,
           topic: savedEventHeadersTopic,
         },
         {
-          created: savedEventCreatedTimestamp,
           topic: savedEventHeadersTopic,
         },
       ],
@@ -68,7 +65,7 @@ describe("Event store post", () => {
       reserveRootCountsFn,
     });
     expect(publishFnFake).to.have.been.calledWith(
-      { from: savedEventCreatedTimestamp, push: true },
+      { push: true },
       savedEventHeadersTopic
     );
     expect(publishFnFake).to.have.been.calledOnce;
@@ -100,11 +97,9 @@ describe("Event store post", () => {
 
     const publishFnFake = fake();
     const savedEventHeadersTopic = "some-saved-event-headers-topic";
-    const savedEventCreatedTimestamp = "some-event-created-timestamp";
     const createTransactionFnFake = fake.returns({
       receipt: [
         {
-          created: savedEventCreatedTimestamp,
           topic: savedEventHeadersTopic,
         },
       ],
@@ -136,7 +131,7 @@ describe("Event store post", () => {
       reserveRootCountsFn,
     });
     expect(publishFnFake).to.have.been.calledWith(
-      { from: savedEventCreatedTimestamp, push: true },
+      { push: true },
       savedEventHeadersTopic
     );
     expect(sendStatusFake).to.have.been.calledWith(204);
@@ -168,11 +163,9 @@ describe("Event store post", () => {
 
     const publishFnFake = fake();
     const savedEventHeadersTopic = "some-saved-event-headers-topic";
-    const savedEventCreatedTimestamp = "some-event-created-timestamp";
     const createTransactionFnFake = fake.returns({
       receipt: [
         {
-          created: savedEventCreatedTimestamp,
           topic: savedEventHeadersTopic,
         },
       ],
@@ -207,7 +200,7 @@ describe("Event store post", () => {
       reserveRootCountsFn,
     });
     expect(publishFnFake).to.have.been.calledWith(
-      { from: savedEventCreatedTimestamp, push: true },
+      { push: true },
       savedEventHeadersTopic
     );
     expect(sendStatusFake).to.have.been.calledWith(204);
@@ -239,11 +232,9 @@ describe("Event store post", () => {
 
     const publishFnFake = fake();
     const savedEventHeadersTopic = "some-saved-event-headers-topic";
-    const savedEventCreatedTimestamp = "some-event-created-timestamp";
     const createTransactionFnFake = fake.returns({
       receipt: [
         {
-          created: savedEventCreatedTimestamp,
           topic: savedEventHeadersTopic,
         },
       ],
@@ -279,7 +270,7 @@ describe("Event store post", () => {
       reserveRootCountsFn,
     });
     expect(publishFnFake).to.have.been.calledWith(
-      { from: savedEventCreatedTimestamp, push: true },
+      { push: true },
       savedEventHeadersTopic
     );
     expect(sendStatusFake).to.have.been.calledWith(204);

@@ -12,10 +12,10 @@ const data = (req) => {
 };
 
 module.exports = ({ mainFn, aggregateStreamFn }) => async (req, res) => {
-  const { from, push = false } = data(req);
+  const { timestamp, push = false } = data(req);
 
   await aggregateStreamFn({
-    from,
+    ...(timestamp && { timestamp }),
     fn: (aggregate) => mainFn(aggregate, { push }),
     // chronological by when the events were created, which best represents the events' intended order.
     sortFn: (a, b) =>
