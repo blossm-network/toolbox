@@ -93,7 +93,7 @@ module.exports = ({
       const contextHash = deps.hash(aggregate.context).create();
       const stateHash = deps.hash(aggregate.state).create();
 
-      const previousHash = aggregate.snapshotHash || genesisPrevious;
+      const previousHash = aggregate.headers.snapshotHash || genesisPrevious;
 
       const snapshotHeaders = {
         nonce: deps.nonce(),
@@ -107,7 +107,8 @@ module.exports = ({
         domain: process.env.DOMAIN,
         service: process.env.SERVICE,
         network: process.env.NETWORK,
-        lastEventNumber: aggregate.lastEventNumber,
+        lastEventNumber: aggregate.headers.lastEventNumber,
+        trace: aggregate.headers.trace,
         eCount: stringifiedEventPairs.length,
         eRoot: eventsMerkleRoot,
       };

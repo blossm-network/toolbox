@@ -54,8 +54,10 @@ const handlers = {
 };
 
 const trace = "some-trace";
+const snapshotHash = "some-snapshot-hash";
 
 const findOneResult = {
+  hash: snapshotHash,
   headers: {
     root,
     state: { a: 1, b: 1 },
@@ -138,13 +140,16 @@ describe("Mongodb event store aggregate", () => {
       },
     });
     expect(result).to.deep.equal({
-      root,
-      domain: envDomain,
-      service: envService,
-      network: envNetwork,
+      headers: {
+        root,
+        snapshotHash,
+        domain: envDomain,
+        service: envService,
+        network: envNetwork,
+        lastEventNumber: 1,
+        trace: [eventTrace, trace],
+      },
       state: { a: 1, b: 2, c: 2 },
-      lastEventNumber: 1,
-      trace: [eventTrace, trace],
       context: {
         a: {
           root: aRoot,
@@ -211,13 +216,16 @@ describe("Mongodb event store aggregate", () => {
       },
     });
     expect(result).to.deep.equal({
-      root,
-      domain: envDomain,
-      service: envService,
-      network: envNetwork,
+      headers: {
+        root,
+        snapshotHash,
+        domain: envDomain,
+        service: envService,
+        network: envNetwork,
+        lastEventNumber: 1,
+        trace: [eventTrace, trace],
+      },
       state: { a: 1, b: 2, c: 2 },
-      lastEventNumber: 1,
-      trace: [eventTrace, trace],
       context: {
         a: {
           root: aRoot,
@@ -280,13 +288,16 @@ describe("Mongodb event store aggregate", () => {
       },
     });
     expect(result).to.deep.equal({
-      root,
+      headers: {
+        lastEventNumber: 6,
+        domain: envDomain,
+        service: envService,
+        network: envNetwork,
+        trace: [trace],
+        root,
+        snapshotHash,
+      },
       state: { a: 1, b: 1 },
-      lastEventNumber: 6,
-      domain: envDomain,
-      service: envService,
-      network: envNetwork,
-      trace: [trace],
       context: {
         a: {
           root: aRoot,
@@ -347,13 +358,15 @@ describe("Mongodb event store aggregate", () => {
       },
     });
     expect(result).to.deep.equal({
-      root,
+      headers: {
+        root,
+        lastEventNumber: 1,
+        trace: [eventTrace],
+        domain: envDomain,
+        service: envService,
+        network: envNetwork,
+      },
       state: { b: 2, c: 2 },
-      lastEventNumber: 1,
-      domain: envDomain,
-      service: envService,
-      network: envNetwork,
-      trace: [eventTrace],
       context: {
         a: {
           root: aRoot,

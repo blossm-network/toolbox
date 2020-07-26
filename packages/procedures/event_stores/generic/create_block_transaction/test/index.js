@@ -18,6 +18,7 @@ const previousHash = "some-previous-hash";
 const root = "some-root";
 const publicKey = "some-public-key";
 const snapshotHash = "some-snapshot-hash";
+const trace = "some-trace";
 const aggregateLastEventNumber = "some-snapshot-last-event-number";
 const aggregateState = "some-aggregate-state";
 const aggregateContext = "some-aggregate-context";
@@ -92,9 +93,12 @@ describe("Event store create block transaction", () => {
     const rootStreamFnFake = stub().yieldsTo("fn", { root });
 
     const aggregate = {
+      headers: {
+        snapshotHash,
+        trace,
+        lastEventNumber: aggregateLastEventNumber,
+      },
       events: [event],
-      snapshotHash,
-      lastEventNumber: aggregateLastEventNumber,
       context: aggregateContext,
       state: aggregateState,
     };
@@ -205,6 +209,7 @@ describe("Event store create block transaction", () => {
       created: deps.dateString(),
       root,
       public,
+      trace,
       domain,
       service,
       network,
@@ -225,6 +230,7 @@ describe("Event store create block transaction", () => {
           sHash: stateHash,
           pHash: snapshotHash,
           created: deps.dateString(),
+          trace,
           root,
           public,
           domain,
@@ -310,9 +316,12 @@ describe("Event store create block transaction", () => {
     const rootStreamFnFake = stub().yieldsTo("fn", { root });
 
     const aggregate = {
+      headers: {
+        snapshotHash,
+        trace,
+        lastEventNumber: aggregateLastEventNumber,
+      },
       events: [event],
-      snapshotHash,
-      lastEventNumber: aggregateLastEventNumber,
       context: aggregateContext,
       state: aggregateState,
     };
@@ -441,6 +450,7 @@ describe("Event store create block transaction", () => {
       pHash: snapshotHash,
       created: deps.dateString(),
       root,
+      trace,
       public: false,
       domain,
       service,
@@ -463,6 +473,7 @@ describe("Event store create block transaction", () => {
           pHash: snapshotHash,
           created: deps.dateString(),
           root,
+          trace,
           public: false,
           domain,
           service,
@@ -551,9 +562,12 @@ describe("Event store create block transaction", () => {
     const rootStreamFnFake = stub().yieldsTo("fn", { root });
 
     const aggregate = {
+      headers: {
+        snapshotHash,
+        trace,
+        lastEventNumber: aggregateLastEventNumber,
+      },
       events: [],
-      snapshotHash,
-      lastEventNumber: aggregateLastEventNumber,
       context: aggregateContext,
       state: aggregateState,
     };
@@ -677,8 +691,11 @@ describe("Event store create block transaction", () => {
     const rootStreamFnFake = stub().yieldsTo("fn", { root });
 
     const aggregate = {
+      headers: {
+        lastEventNumber: aggregateLastEventNumber,
+        trace,
+      },
       events: [event],
-      lastEventNumber: aggregateLastEventNumber,
       context: aggregateContext,
       state: aggregateState,
     };
@@ -786,6 +803,7 @@ describe("Event store create block transaction", () => {
       cHash: contextHash,
       sHash: stateHash,
       pHash: "~",
+      trace,
       created: deps.dateString(),
       root,
       public,
@@ -807,6 +825,7 @@ describe("Event store create block transaction", () => {
           block: previousNumber + 1,
           cHash: contextHash,
           sHash: stateHash,
+          trace,
           pHash: "~",
           created: deps.dateString(),
           root,

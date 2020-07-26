@@ -45,14 +45,19 @@ module.exports = ({ eventStore, snapshotStore, handlers }) => async (
     .cursor();
 
   const aggregate = {
-    root,
-    domain: process.env.DOMAIN,
-    service: process.env.SERVICE,
-    network: process.env.NETWORK,
+    headers: {
+      root,
+      domain: process.env.DOMAIN,
+      service: process.env.SERVICE,
+      network: process.env.NETWORK,
+      ...(snapshot && {
+        lastEventNumber: snapshot.headers.lastEventNumber,
+        trace: snapshot.headers.trace,
+        snapshotHash: snapshot.hash,
+      }),
+    },
     ...(snapshot && {
-      lastEventNumber: snapshot.headers.lastEventNumber,
       state: snapshot.headers.state,
-      trace: snapshot.headers.trace,
       context: snapshot.context,
     }),
     ...(includeEvents && { events: [] }),
@@ -69,11 +74,11 @@ module.exports = ({ eventStore, snapshotStore, handlers }) => async (
 
     //TODO
     console.log({ event });
-    aggregate.lastEventNumber = event.headers.number;
+    aggregate.headers.lastEventNumber = event.headers.number;
     aggregate.state = handler(aggregate.state || {}, event.payload);
-    aggregate.trace = [
+    aggregate.headers.trace = [
       ...(event.scenario.trace ? [event.scenario.trace] : []),
-      ...(aggregate.trace || []),
+      ...(aggregate.headers.trace || []),
     ].slice(0, 10);
 
     if (aggregate.context) {
