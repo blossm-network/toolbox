@@ -205,8 +205,8 @@ describe("Event store create block transaction", () => {
     expect(hashFake.getCall(3)).to.have.been.calledWith({
       nonce: snapshotNonce,
       block: previousNumber + 1,
-      cHash: Buffer.from(contextHash).toString("base64"),
-      sHash: Buffer.from(stateHash).toString("base64"),
+      cHash: contextHash,
+      sHash: stateHash,
       pHash: snapshotHash,
       created: deps.dateString(),
       root,
@@ -228,8 +228,8 @@ describe("Event store create block transaction", () => {
         headers: {
           nonce: snapshotNonce,
           block: previousNumber + 1,
-          cHash: Buffer.from(contextHash).toString("base64"),
-          sHash: Buffer.from(stateHash).toString("base64"),
+          cHash: contextHash,
+          sHash: stateHash,
           pHash: snapshotHash,
           created: deps.dateString(),
           trace,
@@ -263,7 +263,7 @@ describe("Event store create block transaction", () => {
     ]);
     expect(hashFake.getCall(5)).to.have.been.calledWith({
       nonce: blockNonce,
-      pHash: Buffer.from(previousHash).toString("base64"),
+      pHash: previousHash,
       created: deps.dateString(),
       number: previousNumber + 1,
       start: previousEnd,
@@ -281,11 +281,11 @@ describe("Event store create block transaction", () => {
 
     expect(saveBlockFnFake).to.have.been.calledOnceWith({
       block: {
-        signature: Buffer.from(signedBlockHeaderHash).toString("base64"),
+        signature: signedBlockHeaderHash,
         hash: blockHeadersHash,
         headers: {
           nonce: blockNonce,
-          pHash: Buffer.from(previousHash).toString("base64"),
+          pHash: previousHash,
           created: deps.dateString(),
           number: previousNumber + 1,
           start: previousEnd,
@@ -447,8 +447,8 @@ describe("Event store create block transaction", () => {
     expect(hashFake.getCall(3)).to.have.been.calledWith({
       nonce: snapshotNonce,
       block: previousNumber + 1,
-      cHash: Buffer.from(contextHash).toString("base64"),
-      sHash: Buffer.from(stateHash).toString("base64"),
+      cHash: contextHash,
+      sHash: stateHash,
       pHash: snapshotHash,
       created: deps.dateString(),
       root,
@@ -470,8 +470,8 @@ describe("Event store create block transaction", () => {
         headers: {
           nonce: snapshotNonce,
           block: previousNumber + 1,
-          cHash: Buffer.from(contextHash).toString("base64"),
-          sHash: Buffer.from(stateHash).toString("base64"),
+          cHash: contextHash,
+          sHash: stateHash,
           pHash: snapshotHash,
           created: deps.dateString(),
           root,
@@ -510,7 +510,7 @@ describe("Event store create block transaction", () => {
     ]);
     expect(hashFake.getCall(5)).to.have.been.calledWith({
       nonce: blockNonce,
-      pHash: Buffer.from(previousHash).toString("base64"),
+      pHash: previousHash,
       created: deps.dateString(),
       number: previousNumber + 1,
       start: previousEnd,
@@ -528,11 +528,11 @@ describe("Event store create block transaction", () => {
 
     expect(saveBlockFnFake).to.have.been.calledOnceWith({
       block: {
-        signature: Buffer.from(signedBlockHeaderHash).toString("base64"),
+        signature: signedBlockHeaderHash,
         hash: blockHeadersHash,
         headers: {
           nonce: blockNonce,
-          pHash: Buffer.from(previousHash).toString("base64"),
+          pHash: previousHash,
           created: deps.dateString(),
           number: previousNumber + 1,
           start: previousEnd,
@@ -638,7 +638,7 @@ describe("Event store create block transaction", () => {
     expect(merkleRootFake.getCall(1)).to.have.been.calledWith([]);
     expect(hashFake).to.have.been.calledOnceWith({
       nonce: blockNonce,
-      pHash: Buffer.from(previousHash).toString("base64"),
+      pHash: previousHash,
       created: deps.dateString(),
       number: previousNumber + 1,
       start: previousEnd,
@@ -656,11 +656,11 @@ describe("Event store create block transaction", () => {
 
     expect(saveBlockFnFake).to.have.been.calledOnceWith({
       block: {
-        signature: Buffer.from(signedBlockHeaderHash).toString("base64"),
+        signature: signedBlockHeaderHash,
         hash: blockHeadersHash,
         headers: {
           nonce: blockNonce,
-          pHash: Buffer.from(previousHash).toString("base64"),
+          pHash: previousHash,
           created: deps.dateString(),
           number: previousNumber + 1,
           start: previousEnd,
@@ -802,8 +802,8 @@ describe("Event store create block transaction", () => {
     expect(hashFake.getCall(3)).to.have.been.calledWith({
       nonce: snapshotNonce,
       block: previousNumber + 1,
-      cHash: Buffer.from(contextHash).toString("base64"),
-      sHash: Buffer.from(stateHash).toString("base64"),
+      cHash: contextHash,
+      sHash: stateHash,
       pHash: "~",
       trace,
       created: deps.dateString(),
@@ -825,8 +825,8 @@ describe("Event store create block transaction", () => {
         headers: {
           nonce: snapshotNonce,
           block: previousNumber + 1,
-          cHash: Buffer.from(contextHash).toString("base64"),
-          sHash: Buffer.from(stateHash).toString("base64"),
+          cHash: contextHash,
+          sHash: stateHash,
           trace,
           pHash: "~",
           created: deps.dateString(),
@@ -860,7 +860,7 @@ describe("Event store create block transaction", () => {
     ]);
     expect(hashFake.getCall(5)).to.have.been.calledWith({
       nonce: blockNonce,
-      pHash: Buffer.from(previousHash).toString("base64"),
+      pHash: previousHash,
       created: deps.dateString(),
       number: previousNumber + 1,
       start: previousEnd,
@@ -878,11 +878,11 @@ describe("Event store create block transaction", () => {
 
     expect(saveBlockFnFake).to.have.been.calledOnceWith({
       block: {
-        signature: Buffer.from(signedBlockHeaderHash).toString("base64"),
+        signature: signedBlockHeaderHash,
         hash: blockHeadersHash,
         headers: {
           nonce: blockNonce,
-          pHash: Buffer.from(previousHash).toString("base64"),
+          pHash: previousHash,
           created: deps.dateString(),
           number: previousNumber + 1,
           start: previousEnd,
@@ -959,7 +959,7 @@ describe("Event store create block transaction", () => {
     expect(merkleRootFake.getCall(0)).to.have.been.calledWith([]);
     expect(hashFake.getCall(1)).to.have.been.calledWith({
       nonce: blockNonce,
-      pHash: Buffer.from(genesisPreviousHash).toString("base64"),
+      pHash: genesisPreviousHash,
       created: deps.dateString(),
       number: 0,
       start: "2020-01-01T05:00:00.000+00:00",
@@ -977,11 +977,11 @@ describe("Event store create block transaction", () => {
 
     expect(saveBlockFnFake).to.have.been.calledOnceWith({
       block: {
-        signature: Buffer.from(signedBlockHeaderHash).toString("base64"),
+        signature: signedBlockHeaderHash,
         hash: blockHeadersHash,
         headers: {
           nonce: blockNonce,
-          pHash: Buffer.from(genesisPreviousHash).toString("base64"),
+          pHash: genesisPreviousHash,
           created: deps.dateString(),
           number: 0,
           start: "2020-01-01T05:00:00.000+00:00",
