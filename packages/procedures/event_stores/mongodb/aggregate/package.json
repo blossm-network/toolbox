@@ -1,7 +1,7 @@
 {
   "name": "@blossm/mongodb-event-store-aggregate",
   "description": "A mongodb event store server aggregate function.",
-  "version": "0.0.79",
+  "version": "0.0.80",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
