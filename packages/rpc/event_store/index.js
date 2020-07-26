@@ -12,7 +12,7 @@ module.exports = ({ domain, service = process.env.SERVICE } = {}) => {
     enqueue: { fn: enqueueFn, wait: enqueueWait } = {},
   } = {}) => ({
     eventData,
-    scenario: { trace: scenarioTrace, path: scenarioPath } = {},
+    scenario: { trace: scenarioTrace, path: scenarioPath, ip: scenarioIp } = {},
   }) => {
     return deps
       .rpc(domain, service, "event-store")
@@ -22,6 +22,7 @@ module.exports = ({ domain, service = process.env.SERVICE } = {}) => {
           scenario: {
             ...(claims && { claims }),
             ...(scenarioPath && { path: scenarioPath }),
+            ...(scenarioIp && { ip: scenarioIp }),
             ...(scenarioTrace && { trace: scenarioTrace }),
           },
         }),

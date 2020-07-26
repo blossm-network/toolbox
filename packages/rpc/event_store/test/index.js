@@ -33,6 +33,7 @@ const query = {
 
 const path = "some-path";
 const trace = "some-trace";
+const ip = "some-ip";
 const eventData = "some-event-data";
 
 describe("Event store", () => {
@@ -76,12 +77,12 @@ describe("Event store", () => {
           wait: enqueueWait,
         },
       })
-      .add({ eventData, scenario: { trace, path } });
+      .add({ eventData, scenario: { trace, ip, path } });
 
     expect(rpcFake).to.have.been.calledWith(domain, service, "event-store");
     expect(postFake).to.have.been.calledWith({
       eventData,
-      scenario: { trace, path, claims },
+      scenario: { trace, ip, path, claims },
     });
     expect(inFake).to.have.been.calledWith({
       context,
@@ -98,7 +99,7 @@ describe("Event store", () => {
       wait: enqueueWait,
     });
   });
-  it("should call add with the right params with event header context and no trace", async () => {
+  it("should call add with the right params with event header context and no trace or ip", async () => {
     const withFake = fake();
     const inFake = fake.returns({
       with: withFake,
