@@ -72,8 +72,6 @@ module.exports = ({ eventStore, snapshotStore, handlers }) => async (
         },
       });
 
-    //TODO
-    console.log({ event });
     aggregate.headers.lastEventNumber = event.headers.number;
     aggregate.state = handler(aggregate.state || {}, event.payload);
     aggregate.headers.trace = [
@@ -104,7 +102,5 @@ module.exports = ({ eventStore, snapshotStore, handlers }) => async (
     if (includeEvents) aggregate.events.push(event);
   });
 
-  //TODO
-  console.log({ aggregate });
   return aggregate.state && aggregate;
 };
