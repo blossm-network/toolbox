@@ -201,7 +201,7 @@ describe("Event store integration tests", () => {
         const parsedData = JSON.parse(data.toString());
         if (parsedData.headers.root == root) {
           expect(parsedData.headers.lastEventNumber).to.equal(0);
-        } else if (parsedData.headers.root == root2) {
+        } else if (parsedData.headers.root == root3) {
           expect(parsedData.headers.lastEventNumber).to.equal(0);
         }
       },
