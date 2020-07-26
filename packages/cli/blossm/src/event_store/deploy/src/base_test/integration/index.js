@@ -243,12 +243,17 @@ describe("Event store integration tests", () => {
     //TODO
     console.log({ blockResponse });
 
+    console.log({
+      hash: parsedBlockBody.hash,
+      key: Buffer.from(parsedBlockBody.headers.key, "base64").toString("utf8"),
+      sig: parsedBlockBody.signature,
+    });
     expect(
       crypto
         .createVerify("SHA256")
         .update(parsedBlockBody.hash)
         .verify(
-          parsedBlockBody.headers.key,
+          Buffer.from(parsedBlockBody.headers.key, "base64").toString("utf8"),
           parsedBlockBody.signature,
           "base64"
         )
