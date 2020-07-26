@@ -87,6 +87,8 @@ describe("Event store integration tests", () => {
       );
     }
 
+    const midTime = dateString();
+
     const response2 = await request.post(url, {
       body: {
         eventData: [
@@ -124,28 +126,18 @@ describe("Event store integration tests", () => {
 
     //Test stream
     let currentNumber = 0;
-    await request.stream(
-      `${url}/stream-aggregates`,
-      (data) => {
-        const parsedData = JSON.parse(data.toString());
-        //TODO
-        console.log({ parsedData });
-        expect(parsedData.headers.lastEventNumber).to.equal(currentNumber);
-        currentNumber++;
-      },
-      {
-        query: {
-          from: now,
-        },
-      }
-    );
-    expect(currentNumber).to.equal(2);
+    await request.stream(`${url}/stream-aggregates`, (data) => {
+      const parsedData = JSON.parse(data.toString());
+      expect(parsedData.headers.lastEventNumber).to.equal(1);
+      currentNumber++;
+    });
+    expect(currentNumber).to.equal(1);
 
     //Test root stream
     await request.stream(
       `${url}/roots`,
       (data) => {
-        const parsedData = JSON.parse(data.toString().trim());
+        const parsedData = JSON.parse(data.toString());
         expect(parsedData.root).to.equal(root);
       },
       {
@@ -153,6 +145,7 @@ describe("Event store integration tests", () => {
       }
     );
 
+    const root2 = uuid();
     //Test stream with actions and root qualifiers
     await request.post(url, {
       body: {
@@ -160,7 +153,7 @@ describe("Event store integration tests", () => {
           {
             event: {
               headers: {
-                root,
+                root: root2,
                 topic,
                 idempotency: uuid(),
                 created: dateString(),
@@ -177,22 +170,25 @@ describe("Event store integration tests", () => {
       },
     });
 
-    // let rootActionCount = 0;
-    // await request.stream(
-    //   `${url}/stream/${root}`,
-    //   () => {
-    //     rootActionCount++;
-    //   },
-    //   {
-    //     query: {
-    //       from: now,
-    //       actions: [example0.action],
-    //     },
-    //   }
-    // );
-    // expect(rootActionCount).to.equal(
-    //   example0.action == example1.action ? 2 : 1
-    // );
+    let aggregateCount = 0;
+    await request.stream(
+      `${url}/stream-aggregates`,
+      (data) => {
+        aggregateCount++;
+        const parsedData = JSON.parse(data.toString());
+        if (parsedData.headers.root == root) {
+          expect(parsedData.headers.lastEventNumber).to.equal(0);
+        } else if (parsedData.headers.root == root2) {
+          expect(parsedData.headers.lastEventNumber).to.equal(0);
+        }
+      },
+      {
+        query: {
+          timestamp: midTime,
+        },
+      }
+    );
+    expect(aggregateCount).to.equal(2);
 
     //Test stream with saved qualifiers
     // const newSavedDate = dateString();
