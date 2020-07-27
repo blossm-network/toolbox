@@ -63,7 +63,7 @@ testing:
         name: some-action
         domain: some-domain
         service: some-service
-      state:
+      payload:
         name: some-name
       result:
         query: {}
