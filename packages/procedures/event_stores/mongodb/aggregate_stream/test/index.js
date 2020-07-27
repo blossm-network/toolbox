@@ -1,5 +1,5 @@
 const { expect } = require("chai").use(require("sinon-chai"));
-const { restore, replace, fake, stub } = require("sinon");
+const { restore, replace, fake, stub, match } = require("sinon");
 
 const aggregateStream = require("..");
 
@@ -39,6 +39,7 @@ describe("Mongodb event store aggregate stream", () => {
     replace(deps, "aggregate", aggregateOuterFake);
 
     const fnFake = fake();
+    const parallel = "some-parallel";
     const result = await aggregateStream({
       eventStore,
       snapshotStore,
@@ -46,17 +47,24 @@ describe("Mongodb event store aggregate stream", () => {
       handlers,
     })({
       timestamp,
+      parallel,
       fn: fnFake,
     });
     expect(rootStreamOuterFake).to.have.been.calledWith({
       countsStore,
+    });
+    expect(rootStreamFake).to.have.been.calledWith({
+      parallel,
+      fn: match(() => true),
     });
     expect(aggregateOuterFake).to.have.been.calledWith({
       snapshotStore,
       eventStore,
       handlers,
     });
-    expect(aggregateFake).to.have.been.calledWith(root, { timestamp });
+    expect(aggregateFake).to.have.been.calledWith(root, {
+      timestamp,
+    });
     expect(fnFake).to.have.been.calledWith({
       state: aggregateState,
       headers: aggregateHeaders,
@@ -93,6 +101,10 @@ describe("Mongodb event store aggregate stream", () => {
     });
     expect(rootStreamOuterFake).to.have.been.calledWith({
       countsStore,
+    });
+    expect(rootStreamFake).to.have.been.calledWith({
+      parallel: 1,
+      fn: match(() => true),
     });
     expect(aggregateOuterFake).to.have.been.calledWith({
       snapshotStore,

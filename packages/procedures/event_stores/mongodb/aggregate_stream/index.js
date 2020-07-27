@@ -2,11 +2,11 @@ const deps = require("./deps");
 
 module.exports = ({ eventStore, snapshotStore, countsStore, handlers }) => ({
   timestamp,
+  parallel = 1,
   fn,
 }) =>
   deps.rootStream({ countsStore })({
-    //Arbitrarily big number. May need refining.
-    parallel: 100,
+    parallel,
     fn: async ({ root }) => {
       const aggregate = await deps.aggregate({
         eventStore,

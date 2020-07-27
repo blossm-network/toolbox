@@ -67,7 +67,7 @@ module.exports = eventHandler({
         update,
 
         //Always set the trace and context to make sure the view has an updated trace and the context is set.
-        ...(aggregate.trace && { trace: aggregate.trace }),
+        ...(aggregate.headers.trace && { trace: aggregate.headers.trace }),
       });
 
     if (!push) return;
@@ -95,7 +95,7 @@ module.exports = eventHandler({
         channel,
       });
   },
-  aggregateStreamFn: ({ timestamp, fn, sortFn, domain, service }) =>
+  aggregateStreamFn: ({ timestamp, fn, domain, service }) =>
     Promise.all(
       config.events
         .filter((event) =>
@@ -108,7 +108,10 @@ module.exports = eventHandler({
             .set({
               token: { internalFn: gcpToken },
             })
-            .streamAggregates(fn, sortFn, { ...(timestamp && { timestamp }) })
+            .aggregateStream(fn, {
+              parallel: 100,
+              ...(timestamp && { timestamp }),
+            })
         )
     ),
   secretFn: secret,
