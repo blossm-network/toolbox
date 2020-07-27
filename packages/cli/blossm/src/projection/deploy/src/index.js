@@ -98,9 +98,9 @@ module.exports = eventHandler({
   aggregateStreamFn: ({ timestamp, fn, sortFn, domain, service }) =>
     Promise.all(
       config.events
-        .filter((store) =>
+        .filter((event) =>
           domain && service
-            ? store.domain == domain && store.service == service
+            ? event.domain == domain && event.service == service
             : true
         )
         .map(({ domain, service }) =>
