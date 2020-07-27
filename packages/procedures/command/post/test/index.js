@@ -232,7 +232,7 @@ describe("Command handler post", () => {
       _tx: txId,
     });
   });
-  it("should call with the correct params with status code and headers", async () => {
+  it("should call with the correct params with status code and headers and txid", async () => {
     const validateFnFake = fake();
     const normalizeFnFake = fake.returns(cleanedPayload);
 
@@ -261,11 +261,15 @@ describe("Command handler post", () => {
       statusCode,
       headers: responseHeaders,
     });
+    const bodyTxId = "some-txid";
     const req = {
       body: {
         payload,
         headers,
-        tx,
+        tx: {
+          ...tx,
+          id: bodyTxId,
+        },
       },
     };
 
@@ -308,7 +312,7 @@ describe("Command handler post", () => {
     expect(countFnFake).to.have.been.calledWith({});
     expect(commandFnFake).to.have.been.calledWith({
       idempotency,
-      txId,
+      txId: bodyTxId,
       ip,
       path: [
         {
@@ -372,7 +376,7 @@ describe("Command handler post", () => {
       ],
       tx: {
         ip,
-        id: txId,
+        id: bodyTxId,
         path: [
           {
             procedure,
@@ -395,7 +399,7 @@ describe("Command handler post", () => {
     expect(sendFake).to.have.been.calledWith({
       ...response,
       _id: commandId,
-      _tx: txId,
+      _tx: bodyTxId,
     });
   });
   it("should call with the correct params with added tx path", async () => {
