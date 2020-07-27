@@ -41,7 +41,7 @@ module.exports = ({
       ...(headers.idempotency && {
         headers: { idempotency: headers.idempotency },
       }),
-      scenario: {
+      tx: {
         ip: req.headers["x-forwarded-for"],
         path: [
           {

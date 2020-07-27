@@ -31,7 +31,7 @@ const query = {
 };
 
 const path = "some-path";
-const trace = "some-trace";
+const id = "some-id";
 const ip = "some-ip";
 const eventData = "some-event-data";
 
@@ -76,12 +76,12 @@ describe("Event store", () => {
           wait: enqueueWait,
         },
       })
-      .add({ eventData, scenario: { trace, ip, path } });
+      .add({ eventData, tx: { id, ip, path } });
 
     expect(rpcFake).to.have.been.calledWith(domain, service, "event-store");
     expect(postFake).to.have.been.calledWith({
       eventData,
-      scenario: { trace, ip, path, claims },
+      tx: { id, ip, path, claims },
     });
     expect(inFake).to.have.been.calledWith({
       context,
@@ -98,7 +98,7 @@ describe("Event store", () => {
       wait: enqueueWait,
     });
   });
-  it("should call add with the right params with event header context and no trace or ip", async () => {
+  it("should call add with the right params with event header context and no id or ip", async () => {
     const withFake = fake();
     const inFake = fake.returns({
       with: withFake,
@@ -121,11 +121,11 @@ describe("Event store", () => {
           key,
         },
       })
-      .add({ eventData, scenario: { path } });
+      .add({ eventData, tx: { path } });
     expect(rpcFake).to.have.been.calledWith(domain, service, "event-store");
     expect(postFake).to.have.been.calledWith({
       eventData,
-      scenario: { path, claims },
+      tx: { path, claims },
     });
     expect(inFake).to.have.been.calledWith({
       context,

@@ -131,7 +131,7 @@ module.exports = ({
         context: aggregate.context,
         state: aggregate.state,
         events: deps.encode(stringifiedEventPairs),
-        trace: aggregate.trace,
+        txIds: aggregate.txIds,
       };
 
       const snapshot = await saveSnapshotFn({

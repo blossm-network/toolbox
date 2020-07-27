@@ -27,7 +27,7 @@ const eventStore = async ({ schema, indexes, secretFn }) => {
         },
         pHash: { [typeKey]: String, required: true },
         cHash: { [typeKey]: String, required: true },
-        sHash: { [typeKey]: String, required: true },
+        tHash: { [typeKey]: String, required: true },
         committed: {
           [typeKey]: Date,
           required: true,
@@ -45,9 +45,9 @@ const eventStore = async ({ schema, indexes, secretFn }) => {
         _id: false,
       },
       context: { [typeKey]: Object },
-      scenario: {
+      tx: {
         ip: { [typeKey]: String },
-        trace: { [typeKey]: String },
+        id: { [typeKey]: String },
         claims: {
           [typeKey]: {
             iss: String,
@@ -154,7 +154,7 @@ const snapshotStore = async ({ schema, indexes }) => {
       context: { [typeKey]: Object },
       state: schema,
       events: { [typeKey]: Buffer, required: true },
-      trace: { [typeKey]: [String] },
+      txIds: { [typeKey]: [String] },
     },
     typeKey,
     indexes: [

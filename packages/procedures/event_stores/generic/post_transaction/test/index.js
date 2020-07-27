@@ -37,15 +37,15 @@ const headers = {
   version,
   idempotency,
 };
-const scenarioTrace = "some-scenario-trace";
-const scenarioIp = "some-scenario-ip";
-const scenarioPath = "some-scenario-path";
-const scenarioClaims = "some-scenario-claims";
-const scenario = {
-  trace: scenarioTrace,
-  ip: scenarioIp,
-  path: scenarioPath,
-  claims: scenarioClaims,
+const txId = "some-tx-id";
+const txIp = "some-tx-ip";
+const txPath = "some-tx-path";
+const txClaims = "some-tx-claims";
+const tx = {
+  id: txId,
+  ip: txIp,
+  path: txPath,
+  claims: txClaims,
   some: "bogus",
 };
 const eventData = [
@@ -62,7 +62,7 @@ const hash = "some-hash";
 
 const payloadHash = "some-payload-hash";
 const contextHash = "some-context-hash";
-const scenarioHash = "some-scenario-hash";
+const txHash = "some-tx-hash";
 
 const reserveRootCount = {
   root,
@@ -92,7 +92,7 @@ describe("Event store post", () => {
       .onCall(1)
       .returns({ create: () => contextHash })
       .onCall(2)
-      .returns({ create: () => scenarioHash })
+      .returns({ create: () => txHash })
       .onCall(3)
       .returns({ create: () => hash });
 
@@ -103,7 +103,7 @@ describe("Event store post", () => {
 
     const result = await postTransaction({
       eventData,
-      scenario,
+      tx,
       saveEventsFn: saveEventsFnFake,
       reserveRootCountsFn: reserveRootCountsFnFake,
     })(transaction);
@@ -130,16 +130,16 @@ describe("Event store post", () => {
             idempotency,
             pHash: payloadHash,
             cHash: contextHash,
-            sHash: scenarioHash,
+            tHash: txHash,
           },
           hash,
           payload,
           context,
-          scenario: {
-            trace: scenarioTrace,
-            ip: scenarioIp,
-            path: scenarioPath,
-            claims: scenarioClaims,
+          tx: {
+            id: txId,
+            ip: txIp,
+            path: txPath,
+            claims: txClaims,
           },
         },
       ],
@@ -153,10 +153,10 @@ describe("Event store post", () => {
     expect(hashFake.getCall(0)).to.have.been.calledWith(payload);
     expect(hashFake.getCall(1)).to.have.been.calledWith(context);
     expect(hashFake.getCall(2)).to.have.been.calledWith({
-      trace: scenarioTrace,
-      ip: scenarioIp,
-      path: scenarioPath,
-      claims: scenarioClaims,
+      id: txId,
+      ip: txIp,
+      path: txPath,
+      claims: txClaims,
     });
     expect(hashFake.getCall(3)).to.have.been.calledWith({
       root,
@@ -173,7 +173,7 @@ describe("Event store post", () => {
       idempotency,
       pHash: payloadHash,
       cHash: contextHash,
-      sHash: scenarioHash,
+      tHash: txHash,
     });
   });
   it("should call with the correct params with correct number", async () => {
@@ -195,7 +195,7 @@ describe("Event store post", () => {
       })
       .onCall(2)
       .returns({
-        create: () => scenarioHash,
+        create: () => txHash,
       })
       .onCall(3)
       .returns({
@@ -213,7 +213,7 @@ describe("Event store post", () => {
           number,
         },
       ],
-      scenario,
+      tx,
       saveEventsFn: saveEventsFnFake,
       reserveRootCountsFn: reserveRootCountsFnFake,
     })(transaction);
@@ -240,16 +240,16 @@ describe("Event store post", () => {
             idempotency,
             pHash: payloadHash,
             cHash: contextHash,
-            sHash: scenarioHash,
+            tHash: txHash,
           },
           hash,
           payload,
           context,
-          scenario: {
-            trace: scenarioTrace,
-            ip: scenarioIp,
-            path: scenarioPath,
-            claims: scenarioClaims,
+          tx: {
+            id: txId,
+            ip: txIp,
+            path: txPath,
+            claims: txClaims,
           },
         },
       ],
@@ -263,10 +263,10 @@ describe("Event store post", () => {
     expect(hashFake.getCall(0)).to.have.been.calledWith(payload);
     expect(hashFake.getCall(1)).to.have.been.calledWith(context);
     expect(hashFake.getCall(2)).to.have.been.calledWith({
-      trace: scenarioTrace,
-      ip: scenarioIp,
-      path: scenarioPath,
-      claims: scenarioClaims,
+      id: txId,
+      ip: txIp,
+      path: txPath,
+      claims: txClaims,
     });
     expect(hashFake.getCall(3)).to.have.been.calledWith({
       root,
@@ -283,10 +283,10 @@ describe("Event store post", () => {
       idempotency,
       pHash: payloadHash,
       cHash: contextHash,
-      sHash: scenarioHash,
+      tHash: txHash,
     });
   });
-  it("should call with the correct params with no scenario, payload, or context", async () => {
+  it("should call with the correct params with no tx, payload, or context", async () => {
     const saveEventsFnFake = fake();
     const reserveRootCountsFnFake = fake.returns(reserveRootCount);
     const hashFake = stub()
@@ -300,7 +300,7 @@ describe("Event store post", () => {
       })
       .onCall(2)
       .returns({
-        create: () => scenarioHash,
+        create: () => txHash,
       })
       .onCall(3)
       .returns({
@@ -346,12 +346,12 @@ describe("Event store post", () => {
             idempotency,
             pHash: payloadHash,
             cHash: contextHash,
-            sHash: scenarioHash,
+            tHash: txHash,
           },
           hash,
           payload: {},
           context: {},
-          scenario: { path: [] },
+          tx: { path: [] },
         },
       ],
       transaction,
@@ -379,7 +379,7 @@ describe("Event store post", () => {
       idempotency,
       pHash: payloadHash,
       cHash: contextHash,
-      sHash: scenarioHash,
+      tHash: txHash,
     });
   });
   it("should call with the correct params with multiple events with the same root and different roots", async () => {
@@ -399,9 +399,9 @@ describe("Event store post", () => {
     const contextHash1 = "some-context-hash1";
     const contextHash2 = "some-context-hash2";
     const contextHash3 = "some-context-hash3";
-    const scenarioHash1 = "some-scenario-hash1";
-    const scenarioHash2 = "some-scenario-hash2";
-    const scenarioHash3 = "some-scenario-hash3";
+    const txHash1 = "some-tx-hash1";
+    const txHash2 = "some-tx-hash2";
+    const txHash3 = "some-tx-hash3";
 
     const hashFake = stub()
       .onCall(0)
@@ -414,7 +414,7 @@ describe("Event store post", () => {
       })
       .onCall(2)
       .returns({
-        create: () => scenarioHash1,
+        create: () => txHash1,
       })
       .onCall(3)
       .returns({
@@ -430,7 +430,7 @@ describe("Event store post", () => {
       })
       .onCall(6)
       .returns({
-        create: () => scenarioHash2,
+        create: () => txHash2,
       })
       .onCall(7)
       .returns({
@@ -446,7 +446,7 @@ describe("Event store post", () => {
       })
       .onCall(10)
       .returns({
-        create: () => scenarioHash3,
+        create: () => txHash3,
       })
       .onCall(11)
       .returns({
@@ -489,7 +489,7 @@ describe("Event store post", () => {
           },
         },
       ],
-      scenario,
+      tx,
       saveEventsFn: saveEventsFnFake,
       reserveRootCountsFn: reserveRootCountsFnFake,
     })(transaction);
@@ -520,16 +520,16 @@ describe("Event store post", () => {
             idempotency,
             pHash: payloadHash1,
             cHash: contextHash1,
-            sHash: scenarioHash1,
+            tHash: txHash1,
           },
           hash: hash1,
           payload,
           context,
-          scenario: {
-            trace: scenarioTrace,
-            ip: scenarioIp,
-            path: scenarioPath,
-            claims: scenarioClaims,
+          tx: {
+            id: txId,
+            ip: txIp,
+            path: txPath,
+            claims: txClaims,
           },
         },
         {
@@ -548,16 +548,16 @@ describe("Event store post", () => {
             idempotency,
             pHash: payloadHash2,
             cHash: contextHash2,
-            sHash: scenarioHash2,
+            tHash: txHash2,
           },
           hash: hash2,
           payload,
           context,
-          scenario: {
-            trace: scenarioTrace,
-            ip: scenarioIp,
-            path: scenarioPath,
-            claims: scenarioClaims,
+          tx: {
+            id: txId,
+            ip: txIp,
+            path: txPath,
+            claims: txClaims,
           },
         },
         {
@@ -576,16 +576,16 @@ describe("Event store post", () => {
             version: "some-other-version",
             pHash: payloadHash3,
             cHash: contextHash3,
-            sHash: scenarioHash3,
+            tHash: txHash3,
           },
           hash: hash3,
           payload: "some-other-payload",
           context: "some-other-context",
-          scenario: {
-            trace: scenarioTrace,
-            ip: scenarioIp,
-            path: scenarioPath,
-            claims: scenarioClaims,
+          tx: {
+            id: txId,
+            ip: txIp,
+            path: txPath,
+            claims: txClaims,
           },
         },
       ],
@@ -617,7 +617,7 @@ describe("Event store post", () => {
       idempotency,
       pHash: payloadHash1,
       cHash: contextHash1,
-      sHash: scenarioHash1,
+      tHash: txHash1,
     });
     expect(hashFake.getCall(7)).to.have.been.calledWith({
       root,
@@ -634,7 +634,7 @@ describe("Event store post", () => {
       idempotency,
       pHash: payloadHash2,
       cHash: contextHash2,
-      sHash: scenarioHash2,
+      tHash: txHash2,
     });
     expect(hashFake.getCall(11)).to.have.been.calledWith({
       root: "some-other-root",
@@ -651,7 +651,7 @@ describe("Event store post", () => {
       version: "some-other-version",
       pHash: payloadHash3,
       cHash: contextHash3,
-      sHash: scenarioHash3,
+      tHash: txHash3,
     });
   });
   it("should call with the correct params if transaction is null", async () => {
@@ -668,7 +668,7 @@ describe("Event store post", () => {
       })
       .onCall(2)
       .returns({
-        create: () => scenarioHash,
+        create: () => txHash,
       })
       .onCall(3)
       .returns({
@@ -681,7 +681,7 @@ describe("Event store post", () => {
 
     const result = await postTransaction({
       eventData,
-      scenario,
+      tx,
       saveEventsFn: saveEventsFnFake,
       reserveRootCountsFn: reserveRootCountsFnFake,
     })();
@@ -708,16 +708,16 @@ describe("Event store post", () => {
             version,
             pHash: payloadHash,
             cHash: contextHash,
-            sHash: scenarioHash,
+            tHash: txHash,
           },
           hash,
           payload,
           context,
-          scenario: {
-            trace: scenarioTrace,
-            ip: scenarioIp,
-            path: scenarioPath,
-            claims: scenarioClaims,
+          tx: {
+            id: txId,
+            ip: txIp,
+            path: txPath,
+            claims: txClaims,
           },
         },
       ],
@@ -729,10 +729,10 @@ describe("Event store post", () => {
     expect(hashFake.getCall(0)).to.have.been.calledWith(payload);
     expect(hashFake.getCall(1)).to.have.been.calledWith(context);
     expect(hashFake.getCall(2)).to.have.been.calledWith({
-      trace: scenarioTrace,
-      ip: scenarioIp,
-      path: scenarioPath,
-      claims: scenarioClaims,
+      id: txId,
+      ip: txIp,
+      path: txPath,
+      claims: txClaims,
     });
     expect(hashFake.getCall(3)).to.have.been.calledWith({
       root,
@@ -749,7 +749,7 @@ describe("Event store post", () => {
       idempotency,
       pHash: payloadHash,
       cHash: contextHash,
-      sHash: scenarioHash,
+      tHash: txHash,
     });
   });
   it("should throw if event number is incorrect", async () => {
@@ -768,7 +768,7 @@ describe("Event store post", () => {
             number: currentEventsForRoot + 1,
           },
         ],
-        scenario,
+        tx,
         saveEventsFn: saveEventsFnFake,
         reserveRootCountsFn: reserveRootCountsFnFake,
       })(req);
@@ -785,7 +785,7 @@ describe("Event store post", () => {
     try {
       await postTransaction({
         eventData,
-        scenario,
+        tx,
         saveEventsFn: saveEventsFnFake,
         reserveRootCountsFn: reserveRootCountsFnFake,
       })(transaction);
@@ -814,7 +814,7 @@ describe("Event store post", () => {
             },
           },
         ],
-        scenario,
+        tx,
         reserveRootCountsFn: reserveRootCountsFnFake,
       })(transaction);
     } catch (e) {
@@ -845,7 +845,7 @@ describe("Event store post", () => {
             },
           },
         ],
-        scenario,
+        tx,
         reserveRootCountsFn: reserveRootCountsFnFake,
       })(transaction);
     } catch (e) {
@@ -876,7 +876,7 @@ describe("Event store post", () => {
             },
           },
         ],
-        scenario,
+        tx,
         reserveRootCountsFn: reserveRootCountsFnFake,
       })(transaction);
     } catch (e) {

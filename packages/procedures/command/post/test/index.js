@@ -32,7 +32,7 @@ const event = {
 const correctNumber = 4;
 const context = "some-context";
 const claims = "some-claims";
-const trace = "some-trace";
+const txId = "some-txId";
 const issued = "some-issued";
 const idempotency = "some-idempotency";
 const ip = "some-ip";
@@ -42,7 +42,7 @@ const headers = {
   idempotency,
 };
 
-const scenario = {
+const tx = {
   ip,
 };
 
@@ -81,7 +81,7 @@ describe("Command handler post", () => {
     replace(
       deps,
       "uuid",
-      stub().onFirstCall().returns(commandId).onSecondCall().returns(trace)
+      stub().onFirstCall().returns(commandId).onSecondCall().returns(txId)
     );
 
     const events = [
@@ -99,7 +99,7 @@ describe("Command handler post", () => {
       body: {
         payload,
         headers,
-        scenario,
+        tx,
       },
     };
 
@@ -142,7 +142,7 @@ describe("Command handler post", () => {
     expect(countFnFake).to.have.been.calledWith({});
     expect(commandFnFake).to.have.been.calledWith({
       idempotency,
-      trace,
+      txId,
       ip,
       path: [
         {
@@ -204,9 +204,9 @@ describe("Command handler post", () => {
           number: correctNumber,
         },
       ],
-      scenario: {
+      tx: {
         ip,
-        trace,
+        id: txId,
         path: [
           {
             procedure,
@@ -229,7 +229,7 @@ describe("Command handler post", () => {
     expect(sendFake).to.have.been.calledWith({
       ...response,
       _id: commandId,
-      _trace: trace,
+      _tx: txId,
     });
   });
   it("should call with the correct params with status code and headers", async () => {
@@ -242,7 +242,7 @@ describe("Command handler post", () => {
     replace(
       deps,
       "uuid",
-      stub().onFirstCall().returns(commandId).onSecondCall().returns(trace)
+      stub().onFirstCall().returns(commandId).onSecondCall().returns(txId)
     );
 
     const statusCode = "some-status-code";
@@ -265,7 +265,7 @@ describe("Command handler post", () => {
       body: {
         payload,
         headers,
-        scenario,
+        tx,
       },
     };
 
@@ -308,7 +308,7 @@ describe("Command handler post", () => {
     expect(countFnFake).to.have.been.calledWith({});
     expect(commandFnFake).to.have.been.calledWith({
       idempotency,
-      trace,
+      txId,
       ip,
       path: [
         {
@@ -370,9 +370,9 @@ describe("Command handler post", () => {
           number: correctNumber,
         },
       ],
-      scenario: {
+      tx: {
         ip,
-        trace,
+        id: txId,
         path: [
           {
             procedure,
@@ -395,10 +395,10 @@ describe("Command handler post", () => {
     expect(sendFake).to.have.been.calledWith({
       ...response,
       _id: commandId,
-      _trace: trace,
+      _tx: txId,
     });
   });
-  it("should call with the correct params with added scenario path", async () => {
+  it("should call with the correct params with added tx path", async () => {
     const validateFnFake = fake();
     const normalizeFnFake = fake.returns(cleanedPayload);
 
@@ -408,7 +408,7 @@ describe("Command handler post", () => {
     replace(
       deps,
       "uuid",
-      stub().onFirstCall().returns(commandId).onSecondCall().returns(trace)
+      stub().onFirstCall().returns(commandId).onSecondCall().returns(txId)
     );
 
     const events = [
@@ -427,8 +427,8 @@ describe("Command handler post", () => {
       body: {
         payload,
         headers,
-        scenario: {
-          ...scenario,
+        tx: {
+          ...tx,
           path: [otherPath],
         },
       },
@@ -495,7 +495,7 @@ describe("Command handler post", () => {
     expect(sendFake).to.have.been.calledWith({
       ...response,
       _id: commandId,
-      _trace: trace,
+      _tx: txId,
     });
   });
   it("should call with the correct params with fillFn", async () => {
@@ -509,7 +509,7 @@ describe("Command handler post", () => {
     replace(
       deps,
       "uuid",
-      stub().onFirstCall().returns(commandId).onSecondCall().returns(trace)
+      stub().onFirstCall().returns(commandId).onSecondCall().returns(txId)
     );
     const events = [
       {
@@ -527,7 +527,7 @@ describe("Command handler post", () => {
       body: {
         payload,
         headers,
-        scenario,
+        tx,
       },
     };
 
@@ -571,7 +571,7 @@ describe("Command handler post", () => {
     expect(countFnFake).to.have.been.calledWith({});
     expect(commandFnFake).to.have.been.calledWith({
       idempotency,
-      trace,
+      txId,
       ip,
       path: [
         {
@@ -602,7 +602,7 @@ describe("Command handler post", () => {
     replace(
       deps,
       "uuid",
-      stub().onFirstCall().returns(commandId).onSecondCall().returns(trace)
+      stub().onFirstCall().returns(commandId).onSecondCall().returns(txId)
     );
     const events = [
       {
@@ -622,7 +622,7 @@ describe("Command handler post", () => {
       body: {
         payload,
         headers,
-        scenario,
+        tx,
       },
     };
 
@@ -665,7 +665,7 @@ describe("Command handler post", () => {
     expect(countFnFake).to.have.been.calledWith({});
     expect(commandFnFake).to.have.been.calledWith({
       idempotency,
-      trace,
+      txId,
       ip,
       path: [
         {
@@ -696,7 +696,7 @@ describe("Command handler post", () => {
     replace(
       deps,
       "uuid",
-      stub().onFirstCall().returns(commandId).onSecondCall().returns(trace)
+      stub().onFirstCall().returns(commandId).onSecondCall().returns(txId)
     );
     const events = [
       {
@@ -713,7 +713,7 @@ describe("Command handler post", () => {
       body: {
         payload,
         headers,
-        scenario,
+        tx,
       },
     };
 
@@ -756,7 +756,7 @@ describe("Command handler post", () => {
     expect(countFnFake).to.have.been.calledWith({});
     expect(commandFnFake).to.have.been.calledWith({
       idempotency,
-      trace,
+      txId,
       ip,
       path: [
         ...(req.body.headers.path || []),
@@ -790,9 +790,9 @@ describe("Command handler post", () => {
       domain,
       service,
       eventData: [{ event, number: correctNumber }],
-      scenario: {
+      tx: {
         ip,
-        trace,
+        id: txId,
         path: [
           {
             procedure,
@@ -836,7 +836,7 @@ describe("Command handler post", () => {
     });
     expect(setResponseFake).to.have.been.calledWith({});
     expect(statusFake).to.have.been.calledWith(202);
-    expect(sendFake).to.have.been.calledWith({ _id: commandId, _trace: trace });
+    expect(sendFake).to.have.been.calledWith({ _id: commandId, _tx: txId });
   });
   it("should call with the correct params with no events", async () => {
     const validateFnFake = fake();
@@ -848,7 +848,7 @@ describe("Command handler post", () => {
     replace(
       deps,
       "uuid",
-      stub().onFirstCall().returns(commandId).onSecondCall().returns(trace)
+      stub().onFirstCall().returns(commandId).onSecondCall().returns(txId)
     );
     const events = [];
     const mainFnFake = fake.returns({
@@ -860,7 +860,7 @@ describe("Command handler post", () => {
       body: {
         payload,
         headers,
-        scenario,
+        tx,
       },
     };
 
@@ -903,7 +903,7 @@ describe("Command handler post", () => {
     expect(countFnFake).to.have.been.calledWith({});
     expect(commandFnFake).to.have.been.calledWith({
       idempotency,
-      trace,
+      txId,
       ip,
       path: [
         {
@@ -947,7 +947,7 @@ describe("Command handler post", () => {
     replace(
       deps,
       "uuid",
-      stub().onFirstCall().returns(commandId).onSecondCall().returns(trace)
+      stub().onFirstCall().returns(commandId).onSecondCall().returns(txId)
     );
     const events = [];
     const mainFnFake = fake.returns({
@@ -958,7 +958,7 @@ describe("Command handler post", () => {
       body: {
         payload,
         headers,
-        scenario: {},
+        tx: {},
       },
     };
 
@@ -998,7 +998,7 @@ describe("Command handler post", () => {
     expect(countFnFake).to.have.been.calledWith({});
     expect(commandFnFake).to.have.been.calledWith({
       idempotency,
-      trace,
+      txId,
       path: [
         ...(req.body.headers.path || []),
         {
@@ -1040,7 +1040,7 @@ describe("Command handler post", () => {
     replace(
       deps,
       "uuid",
-      stub().onFirstCall().returns(commandId).onSecondCall().returns(trace)
+      stub().onFirstCall().returns(commandId).onSecondCall().returns(txId)
     );
     const version = "some-version";
     const eventContext = { some: "event-context" };
@@ -1067,7 +1067,7 @@ describe("Command handler post", () => {
         root: currentRoot,
         payload,
         headers,
-        scenario: {},
+        tx: {},
         options,
         context,
         claims,
@@ -1125,7 +1125,7 @@ describe("Command handler post", () => {
     });
     expect(commandFnFake).to.have.been.calledWith({
       idempotency,
-      trace,
+      txId,
       context,
       claims,
       token,
@@ -1170,8 +1170,8 @@ describe("Command handler post", () => {
       claims,
       eventData: [{ event, number: correctNumber }],
       async: false,
-      scenario: {
-        trace,
+      tx: {
+        id: txId,
         path: [
           {
             procedure,
@@ -1219,7 +1219,7 @@ describe("Command handler post", () => {
     expect(sendFake).to.have.been.calledWith({
       ...response,
       _id: commandId,
-      _trace: trace,
+      _tx: txId,
     });
   });
   it("should call with the correct params with no clean or validate, correctNumber, and empty response", async () => {
@@ -1229,7 +1229,7 @@ describe("Command handler post", () => {
     replace(
       deps,
       "uuid",
-      stub().onFirstCall().returns(commandId).onSecondCall().returns(trace)
+      stub().onFirstCall().returns(commandId).onSecondCall().returns(txId)
     );
     const events = [
       {
@@ -1245,7 +1245,7 @@ describe("Command handler post", () => {
       body: {
         payload,
         headers,
-        scenario: {},
+        tx: {},
       },
     };
 
@@ -1286,7 +1286,7 @@ describe("Command handler post", () => {
     expect(countFnFake).to.have.been.calledWith({});
     expect(commandFnFake).to.have.been.calledWith({
       idempotency,
-      trace,
+      txId,
       path: [
         ...(req.body.headers.path || []),
         {
@@ -1318,8 +1318,8 @@ describe("Command handler post", () => {
       service,
       eventData: [{ event }],
       async: true,
-      scenario: {
-        trace,
+      tx: {
+        id: txId,
         path: [
           {
             procedure,
@@ -1364,7 +1364,7 @@ describe("Command handler post", () => {
     expect(sendFake).to.have.been.calledWith({
       ...response,
       _id: commandId,
-      _trace: trace,
+      _tx: txId,
     });
   });
   it("should call with the correct params without default action, domain, service, and networks", async () => {
@@ -1377,7 +1377,7 @@ describe("Command handler post", () => {
     replace(
       deps,
       "uuid",
-      stub().onFirstCall().returns(commandId).onSecondCall().returns(trace)
+      stub().onFirstCall().returns(commandId).onSecondCall().returns(txId)
     );
 
     const eventDomain = "some-other-event-domain";
@@ -1402,7 +1402,7 @@ describe("Command handler post", () => {
       body: {
         payload,
         headers,
-        scenario: {},
+        tx: {},
         context,
         claims,
       },
@@ -1447,7 +1447,7 @@ describe("Command handler post", () => {
     expect(countFnFake).to.have.been.calledWith({ context, claims });
     expect(commandFnFake).to.have.been.calledWith({
       idempotency,
-      trace,
+      txId,
       context,
       claims,
       path: [
@@ -1488,8 +1488,8 @@ describe("Command handler post", () => {
       context,
       claims,
       eventData: [{ event, number: correctNumber }],
-      scenario: {
-        trace,
+      tx: {
+        id: txId,
         path: [
           {
             procedure,
@@ -1536,7 +1536,7 @@ describe("Command handler post", () => {
     expect(sendFake).to.have.been.calledWith({
       ...response,
       _id: commandId,
-      _trace: trace,
+      _tx: txId,
     });
   });
 
@@ -1550,7 +1550,7 @@ describe("Command handler post", () => {
     replace(
       deps,
       "uuid",
-      stub().onFirstCall().returns(commandId).onSecondCall().returns(trace)
+      stub().onFirstCall().returns(commandId).onSecondCall().returns(txId)
     );
     const otherEventPayload = "some-other-event-payload";
     const otherEventAction = "some-other-event-action";
@@ -1575,7 +1575,7 @@ describe("Command handler post", () => {
       body: {
         payload,
         headers,
-        scenario: {},
+        tx: {},
         context,
         claims,
       },
@@ -1620,7 +1620,7 @@ describe("Command handler post", () => {
     expect(countFnFake).to.have.been.calledWith({ context, claims });
     expect(commandFnFake).to.have.been.calledWith({
       idempotency,
-      trace,
+      txId,
       context,
       claims,
       path: [
@@ -1710,8 +1710,8 @@ describe("Command handler post", () => {
         { event, number: correctNumber },
         { event, number: otherCorrectNumber },
       ],
-      scenario: {
-        trace,
+      tx: {
+        id: txId,
         path: [
           {
             procedure,
@@ -1734,7 +1734,7 @@ describe("Command handler post", () => {
     expect(sendFake).to.have.been.calledWith({
       ...response,
       _id: commandId,
-      _trace: trace,
+      _tx: txId,
     });
   });
   it("should call with the correct params with many events in different domains and services", async () => {
@@ -1747,7 +1747,7 @@ describe("Command handler post", () => {
     replace(
       deps,
       "uuid",
-      stub().onFirstCall().returns(commandId).onSecondCall().returns(trace)
+      stub().onFirstCall().returns(commandId).onSecondCall().returns(txId)
     );
     const otherEventPayload = "some-other-event-payload";
     const otherEventAction = "some-other-event-action";
@@ -1776,7 +1776,7 @@ describe("Command handler post", () => {
       body: {
         payload,
         headers,
-        scenario: {},
+        tx: {},
         context,
         claims,
       },
@@ -1821,7 +1821,7 @@ describe("Command handler post", () => {
     expect(countFnFake).to.have.been.calledWith({ context, claims });
     expect(commandFnFake).to.have.been.calledWith({
       idempotency,
-      trace,
+      txId,
       context,
       claims,
       path: [
@@ -1908,8 +1908,8 @@ describe("Command handler post", () => {
       context,
       claims,
       eventData: [{ event, number: correctNumber }],
-      scenario: {
-        trace,
+      tx: {
+        id: txId,
         path: [
           {
             id: commandId,
@@ -1933,8 +1933,8 @@ describe("Command handler post", () => {
       context,
       claims,
       eventData: [{ event, number: otherCorrectNumber }],
-      scenario: {
-        trace,
+      tx: {
+        id: txId,
         path: [
           {
             id: commandId,
@@ -1958,7 +1958,7 @@ describe("Command handler post", () => {
     expect(sendFake).to.have.been.calledWith({
       ...response,
       _id: commandId,
-      _trace: trace,
+      _tx: txId,
     });
   });
   it("should call with the correct params with core network removed from aud", async () => {
@@ -1971,7 +1971,7 @@ describe("Command handler post", () => {
     replace(
       deps,
       "uuid",
-      stub().onFirstCall().returns(commandId).onSecondCall().returns(trace)
+      stub().onFirstCall().returns(commandId).onSecondCall().returns(txId)
     );
 
     const events = [
@@ -1990,7 +1990,7 @@ describe("Command handler post", () => {
       body: {
         payload,
         headers,
-        scenario: {},
+        tx: {},
         claims,
       },
     };
@@ -2034,7 +2034,7 @@ describe("Command handler post", () => {
     expect(countFnFake).to.have.been.calledWith({ claims });
     expect(commandFnFake).to.have.been.calledWith({
       idempotency,
-      trace,
+      txId,
       claims,
       path: [
         ...(req.body.headers.path || []),
@@ -2098,8 +2098,8 @@ describe("Command handler post", () => {
         },
       ],
       claims,
-      scenario: {
-        trace,
+      tx: {
+        id: txId,
         path: [
           {
             procedure,
@@ -2122,7 +2122,7 @@ describe("Command handler post", () => {
     expect(sendFake).to.have.been.calledWith({
       ...response,
       _id: commandId,
-      _trace: trace,
+      _tx: txId,
     });
   });
 });

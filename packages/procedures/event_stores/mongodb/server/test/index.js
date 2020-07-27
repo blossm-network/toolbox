@@ -171,7 +171,7 @@ describe("Mongodb event store", () => {
           },
           pHash: { $type: String, required: true },
           cHash: { $type: String, required: true },
-          sHash: { $type: String, required: true },
+          tHash: { $type: String, required: true },
           committed: {
             $type: Date,
             required: true,
@@ -189,9 +189,9 @@ describe("Mongodb event store", () => {
           _id: false,
         },
         context: { $type: Object },
-        scenario: {
+        tx: {
           ip: { $type: String },
-          trace: { $type: String },
+          id: { $type: String },
           claims: {
             $type: {
               iss: String,
@@ -280,7 +280,7 @@ describe("Mongodb event store", () => {
         context: { $type: Object },
         state: formattedSchema,
         events: { $type: Buffer, required: true },
-        trace: { $type: [String] },
+        txIds: { $type: [String] },
       },
       typeKey: "$type",
       indexes: [
@@ -536,7 +536,7 @@ describe("Mongodb event store", () => {
           },
           pHash: { $type: String, required: true },
           cHash: { $type: String, required: true },
-          sHash: { $type: String, required: true },
+          tHash: { $type: String, required: true },
           committed: {
             $type: Date,
             required: true,
@@ -554,9 +554,9 @@ describe("Mongodb event store", () => {
           _id: false,
         },
         context: { $type: Object },
-        scenario: {
+        tx: {
           ip: { $type: String },
-          trace: { $type: String },
+          id: { $type: String },
           claims: {
             $type: {
               iss: String,
@@ -646,7 +646,7 @@ describe("Mongodb event store", () => {
         context: { $type: Object },
         state: formattedSchema,
         events: { $type: Buffer, required: true },
-        trace: { $type: [String] },
+        txIds: { $type: [String] },
       },
       typeKey: "$type",
       indexes: [
@@ -837,7 +837,7 @@ describe("Mongodb event store", () => {
           },
           pHash: { $type: String, required: true },
           cHash: { $type: String, required: true },
-          sHash: { $type: String, required: true },
+          tHash: { $type: String, required: true },
           committed: {
             $type: Date,
             required: true,
@@ -855,9 +855,9 @@ describe("Mongodb event store", () => {
           _id: false,
         },
         context: { $type: Object },
-        scenario: {
+        tx: {
           ip: { $type: String },
-          trace: { $type: String },
+          id: { $type: String },
           claims: {
             $type: {
               iss: String,
@@ -946,7 +946,7 @@ describe("Mongodb event store", () => {
         context: { $type: Object },
         state: formattedSchema,
         events: { $type: Buffer, required: true },
-        trace: { $type: [String] },
+        txIds: { $type: [String] },
       },
       typeKey: "$type",
       indexes: [

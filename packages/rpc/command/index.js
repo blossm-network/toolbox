@@ -18,7 +18,7 @@ module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
       root,
       options,
       headers: { idempotency } = {},
-      scenario: { ip, trace, path } = {},
+      tx: { ip, id, path } = {},
     } = {}
   ) => {
     const headers = {
@@ -26,16 +26,16 @@ module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
       ...(idempotency && { idempotency }),
     };
 
-    const scenario = {
+    const tx = {
       ...(ip && { ip }),
-      ...(trace && { trace }),
+      ...(id && { id }),
       ...(path && { path }),
     };
 
     const data = {
       payload,
       headers,
-      scenario,
+      tx,
       ...(root && { root }),
       ...(options && { options }),
     };

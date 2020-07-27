@@ -35,7 +35,7 @@ module.exports = ({ findOneSnapshotFn, eventStreamFn, handlers }) => async (
       context: snapshot.context,
     }),
     ...(snapshot && {
-      trace: snapshot.trace,
+      txIds: snapshot.txIds,
     }),
     ...(includeEvents && { events: [] }),
   };
@@ -64,9 +64,9 @@ module.exports = ({ findOneSnapshotFn, eventStreamFn, handlers }) => async (
 
       aggregate.headers.lastEventNumber = event.headers.number;
       aggregate.state = handler(aggregate.state || {}, event.payload);
-      aggregate.trace = [
-        ...(event.scenario.trace ? [event.scenario.trace] : []),
-        ...(aggregate.trace || []),
+      aggregate.txIds = [
+        ...(event.tx.id ? [event.tx.id] : []),
+        ...(aggregate.txIds || []),
       ].slice(0, 10);
 
       if (aggregate.context) {

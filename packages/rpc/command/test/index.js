@@ -17,7 +17,7 @@ const network = "some-network";
 
 const payload = { a: 1 };
 const options = "some-options";
-const trace = "some-trace";
+const id = "some-id";
 const internalTokenFn = "some-internal-token-fn";
 const externalTokenFn = "some-external-token-fn";
 
@@ -91,8 +91,8 @@ describe("Issue command", () => {
         headers: {
           idempotency,
         },
-        scenario: {
-          trace,
+        tx: {
+          id,
           ip,
           path,
         },
@@ -108,9 +108,9 @@ describe("Issue command", () => {
         issued: deps.dateString(),
         idempotency,
       },
-      scenario: {
+      tx: {
         ip,
-        trace,
+        id,
         path,
       },
       root,
@@ -155,7 +155,7 @@ describe("Issue command", () => {
       headers: {
         issued: deps.dateString(),
       },
-      scenario: {},
+      tx: {},
     });
     expect(inFake).to.have.been.calledWith({});
     expect(withFake).to.have.been.calledWith({});
@@ -187,7 +187,7 @@ describe("Issue command", () => {
       headers: {
         issued: deps.dateString(),
       },
-      scenario: {},
+      tx: {},
     });
     expect(inFake).to.have.been.calledWith({});
     expect(withFake).to.have.been.calledWith({
@@ -229,7 +229,7 @@ describe("Issue command", () => {
       headers: {
         issued: deps.dateString(),
       },
-      scenario: {},
+      tx: {},
       root,
       options,
     });

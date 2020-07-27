@@ -25,7 +25,7 @@ module.exports = ({ writeFn, formatFn, updateFn = defaultFn }) => {
       ...formattedBody,
       ...(req.body.trace && {
         [`trace.${req.body.trace.service}.${req.body.trace.domain}`]: req.body
-          .trace.value,
+          .trace.txId,
       }),
       ...(req.body.id && { "headers.id": req.body.id }),
       "headers.context": context,

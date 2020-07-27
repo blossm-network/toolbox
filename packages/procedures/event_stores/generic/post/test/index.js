@@ -6,7 +6,7 @@ const post = require("..");
 const deps = require("../deps");
 
 const eventData = [{ event: { headers: {} } }, { event: { headers: {} } }];
-const scenario = "some-scenario";
+const tx = "some-tx";
 
 const domain = "some-domain";
 const service = "some-service";
@@ -29,7 +29,7 @@ describe("Event store post", () => {
     const req = {
       body: {
         eventData,
-        scenario,
+        tx,
       },
     };
 
@@ -68,7 +68,7 @@ describe("Event store post", () => {
     );
     expect(postTransactionFake).to.have.been.calledWith({
       eventData,
-      scenario,
+      tx,
       saveEventsFn,
       reserveRootCountsFn,
     });
@@ -95,7 +95,7 @@ describe("Event store post", () => {
           { event: { headers: { idempotency } } },
           { event: { headers: { idempotency } } },
         ],
-        scenario,
+        tx,
       },
     };
 
@@ -138,7 +138,7 @@ describe("Event store post", () => {
     );
     expect(postTransactionFake).to.have.been.calledWith({
       eventData: [{ event: { headers: { idempotency } } }],
-      scenario,
+      tx,
       saveEventsFn,
       reserveRootCountsFn,
     });
@@ -165,7 +165,7 @@ describe("Event store post", () => {
           { event: { headers: { idempotency: idempotency1 } } },
           { event: { headers: { idempotency: idempotency2 } } },
         ],
-        scenario,
+        tx,
       },
     };
 
@@ -211,7 +211,7 @@ describe("Event store post", () => {
         { event: { headers: { idempotency: idempotency1 } } },
         { event: { headers: { idempotency: idempotency2 } } },
       ],
-      scenario,
+      tx,
       saveEventsFn,
       reserveRootCountsFn,
     });
@@ -238,7 +238,7 @@ describe("Event store post", () => {
           { event: { headers: { idempotency: idempotency1 } } },
           { event: { headers: { idempotency: idempotency2 } } },
         ],
-        scenario,
+        tx,
       },
     };
 
@@ -285,7 +285,7 @@ describe("Event store post", () => {
     );
     expect(postTransactionFake).to.have.been.calledWith({
       eventData: [{ event: { headers: { idempotency: idempotency1 } } }],
-      scenario,
+      tx,
       saveEventsFn,
       reserveRootCountsFn,
     });

@@ -281,10 +281,10 @@ describe("View store get", () => {
       count: 1,
     });
   });
-  it("should call with the correct params with no query and trace in headers", async () => {
-    const trace = "some-trace";
+  it("should call with the correct params with no query and txId in headers", async () => {
+    const txIds = "some-txIds";
     const findFake = fake.returns([
-      { body: obj, headers: { context: objContext, trace } },
+      { body: obj, headers: { context: objContext, txIds } },
     ]);
     const formattedResult = "some-formatted-result";
     const formatFake = fake.returns(formattedResult);
@@ -332,7 +332,7 @@ describe("View store get", () => {
     expect(urlEncodeQueryDataFake).to.not.have.been.called;
     expect(formatFake.getCall(0)).to.have.been.calledWith({
       body: obj,
-      headers: { context: objContext, trace },
+      headers: { context: objContext, txIds },
     });
     expect(formatFake).to.have.been.calledOnce;
     expect(sendFake).to.have.been.calledWith({

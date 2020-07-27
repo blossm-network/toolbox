@@ -8,7 +8,7 @@ const root = "some-root";
 const action = "some-action";
 const eventHash = "some-event-hash";
 const eventNonce = "some-event-nonce";
-const eventTrace = "some-event-trace";
+const eventTxId = "some-event-txid";
 
 const aRoot = "some-a-root";
 const aService = "some-a-service";
@@ -25,8 +25,8 @@ const event = {
     number: 1,
     action,
   },
-  scenario: {
-    trace: eventTrace,
+  tx: {
+    id: eventTxId,
   },
   context: {
     a: {
@@ -53,7 +53,7 @@ const handlers = {
   },
 };
 
-const trace = "some-trace";
+const txId = "some-txid";
 const snapshotHash = "some-snapshot-hash";
 
 const findOneResult = {
@@ -71,7 +71,7 @@ const findOneResult = {
     },
     c: "some-c",
   },
-  trace: [trace],
+  txIds: [txId],
 };
 
 const envDomain = "some-env-domain";
@@ -135,7 +135,7 @@ describe("Mongodb event store aggregate", () => {
         },
         c: "some-c",
       },
-      trace: [eventTrace, trace],
+      txIds: [eventTxId, txId],
     });
   });
   it("should call with the correct params if includeEvents and theres a timestamp", async () => {
@@ -191,7 +191,7 @@ describe("Mongodb event store aggregate", () => {
         c: "some-c",
       },
       events: [event],
-      trace: [eventTrace, trace],
+      txIds: [eventTxId, txId],
     });
   });
   it("should call with the correct params with no events", async () => {
@@ -243,7 +243,7 @@ describe("Mongodb event store aggregate", () => {
         },
         c: "some-c",
       },
-      trace: [trace],
+      txIds: [txId],
     });
   });
   it("should call with the correct params with no snapshot found", async () => {
@@ -298,7 +298,7 @@ describe("Mongodb event store aggregate", () => {
         },
         c: "some-c",
       },
-      trace: [eventTrace],
+      txIds: [eventTxId],
     });
   });
   it("should call with the correct params with no snapshot or events found", async () => {

@@ -45,7 +45,7 @@ module.exports = commandProcedure({
       aggregate: aggregate.state,
     };
   },
-  commandFn: ({ path, idempotency, context, claims, token, trace, ip }) => ({
+  commandFn: ({ path, idempotency, context, claims, token, txId, ip }) => ({
     name,
     domain,
     service,
@@ -84,9 +84,9 @@ module.exports = commandProcedure({
         headers: {
           ...(idempotency && { idempotency }),
         },
-        scenario: {
+        tx: {
           ...(ip && { ip }),
-          ...(trace && { trace }),
+          ...(txId && { id: txId }),
           ...(path && { path }),
         },
       }),
@@ -179,7 +179,7 @@ module.exports = commandProcedure({
         },
       })
       .stream(fn, { query, id }),
-  addFn: ({ domain, service, context, claims, eventData, scenario, async }) =>
+  addFn: ({ domain, service, context, claims, eventData, tx, async }) =>
     eventStore({ domain, service })
       .set({
         ...(context && { context }),
@@ -189,7 +189,7 @@ module.exports = commandProcedure({
         },
         ...(async && { enqueue: { fn: enqueue } }),
       })
-      .add({ eventData, scenario }),
+      .add({ eventData, tx }),
   countFn: ({ context, claims, token }) => ({ domain, service, root }) =>
     eventStore({ domain, service })
       .set({

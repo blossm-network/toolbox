@@ -32,7 +32,7 @@ module.exports = ({
   const { receipt } = await createTransactionFn(
     deps.postTransaction({
       eventData: uniqueEventData,
-      scenario: req.body.scenario,
+      tx: req.body.tx,
       saveEventsFn,
       reserveRootCountsFn,
     })

@@ -5,12 +5,7 @@ module.exports = ({
   eventData,
   saveEventsFn,
   reserveRootCountsFn,
-  scenario: {
-    path: scenarioPath = [],
-    claims: scenarioClaims,
-    trace: scenarioTrace,
-    ip: scenarioIp,
-  } = {},
+  tx: { path: txPath = [], claims: txClaims, id: txId, ip: txIp } = {},
 }) => async (transaction) => {
   const eventRootCounts = eventData.reduce((result, { event }) => {
     if (result[event.headers.root] == undefined) result[event.headers.root] = 0;
@@ -93,15 +88,15 @@ module.exports = ({
 
           const context = event.context || {};
           const payload = event.payload || {};
-          const scenario = {
-            ...(scenarioClaims && { claims: scenarioClaims }),
-            ...(scenarioTrace && { trace: scenarioTrace }),
-            ...(scenarioIp && { ip: scenarioIp }),
-            path: scenarioPath,
+          const tx = {
+            ...(txClaims && { claims: txClaims }),
+            ...(txId && { id: txId }),
+            ...(txIp && { ip: txIp }),
+            path: txPath,
           };
           const hashedPayload = deps.hash(payload).create();
           const hashedContext = deps.hash(context).create();
-          const hashedScenario = deps.hash(scenario).create();
+          const hashedTx = deps.hash(tx).create();
 
           const headers = {
             root: event.headers.root,
@@ -118,7 +113,7 @@ module.exports = ({
             number: allottedNumber,
             pHash: hashedPayload,
             cHash: hashedContext,
-            sHash: hashedScenario,
+            tHash: hashedTx,
           };
 
           const hash = deps.hash(headers).create();
@@ -128,7 +123,7 @@ module.exports = ({
             headers,
             payload,
             context,
-            scenario,
+            tx,
           });
         })
       );

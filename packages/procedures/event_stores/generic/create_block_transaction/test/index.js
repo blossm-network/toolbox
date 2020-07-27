@@ -18,7 +18,7 @@ const previousHash = "some-previous-hash";
 const root = "some-root";
 const publicKey = "some-public-key";
 const snapshotHash = "some-snapshot-hash";
-const trace = "some-trace";
+const txIds = "some-txids";
 const aggregateLastEventNumber = "some-snapshot-last-event-number";
 const aggregateState = "some-aggregate-state";
 const aggregateContext = "some-aggregate-context";
@@ -103,7 +103,7 @@ describe("Event store create block transaction", () => {
       events: [event],
       context: aggregateContext,
       state: aggregateState,
-      trace,
+      txIds,
     };
     const aggregateFnFake = fake.returns(aggregate);
     const aggregateOuterFnFake = fake.returns(aggregateFnFake);
@@ -251,7 +251,7 @@ describe("Event store create block transaction", () => {
         context: aggregateContext,
         state: aggregateState,
         events: encodedEventPairs,
-        trace,
+        txIds,
       },
       transaction,
     });
@@ -332,7 +332,7 @@ describe("Event store create block transaction", () => {
       events: [event],
       context: aggregateContext,
       state: aggregateState,
-      trace,
+      txIds,
     };
     const aggregateFnFake = fake.returns(aggregate);
     const aggregateOuterFnFake = fake.returns(aggregateFnFake);
@@ -497,7 +497,7 @@ describe("Event store create block transaction", () => {
         context: aggregateContext,
         state: aggregateState,
         events: encodedEventPairs,
-        trace,
+        txIds,
       },
     });
     expect(hashFake.getCall(4)).to.have.been.calledWith(savedSnapshotRoot);
@@ -582,7 +582,7 @@ describe("Event store create block transaction", () => {
       events: [],
       context: aggregateContext,
       state: aggregateState,
-      trace,
+      txIds,
     };
     const aggregateFnFake = fake.returns(aggregate);
     const aggregateOuterFnFake = fake.returns(aggregateFnFake);
@@ -715,7 +715,7 @@ describe("Event store create block transaction", () => {
       events: [event],
       context: aggregateContext,
       state: aggregateState,
-      trace,
+      txIds,
     };
     const aggregateFnFake = fake.returns(aggregate);
     const aggregateOuterFnFake = fake.returns(aggregateFnFake);
@@ -866,7 +866,7 @@ describe("Event store create block transaction", () => {
         context: aggregateContext,
         state: aggregateState,
         events: encodedEventPairs,
-        trace,
+        txIds,
       },
       transaction,
     });

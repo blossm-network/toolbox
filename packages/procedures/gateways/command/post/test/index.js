@@ -121,7 +121,7 @@ describe("Command gateway post", () => {
       },
     });
     expect(issueFake).to.have.been.calledWith(payload, {
-      scenario: {
+      tx: {
         ip,
         path: [
           {
@@ -213,7 +213,7 @@ describe("Command gateway post", () => {
       context,
     });
     expect(issueFake).to.have.been.calledWith(payload, {
-      scenario: {
+      tx: {
         ip,
         path: [
           {
@@ -303,7 +303,7 @@ describe("Command gateway post", () => {
       context,
     });
     expect(issueFake).to.have.been.calledWith(payload, {
-      scenario: {
+      tx: {
         ip,
         path: [
           {
@@ -386,7 +386,7 @@ describe("Command gateway post", () => {
       claims,
     });
     expect(issueFake).to.have.been.calledWith(payload, {
-      scenario: {
+      tx: {
         ip,
         path: [
           {
@@ -523,7 +523,7 @@ describe("Command gateway post", () => {
       headers: {
         idempotency,
       },
-      scenario: {
+      tx: {
         ip,
         path: [
           {

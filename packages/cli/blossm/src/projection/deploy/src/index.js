@@ -63,12 +63,11 @@ module.exports = eventHandler({
         ...(query && { query }),
         update,
 
-        //Always set the trace to make sure the view has an updated trace and the context is set.
-        ...(aggregate.headers.trace && {
+        ...(aggregate.headers.txIds && {
           trace: {
             domain: aggregate.headers.domain,
             service: aggregate.headers.service,
-            value: aggregate.headers.trace,
+            txIds: aggregate.headers.txIds,
           },
         }),
       });

@@ -93,7 +93,7 @@ const executeStep = async (step) => {
       },
       options: step.options,
       context: step.context,
-      scenario: {
+      tx: {
         ip: step.ip,
       },
       payload: step.payload,

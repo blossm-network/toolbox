@@ -22,10 +22,10 @@ module.exports = ({
   if (normalizeFn) req.body.payload = await normalizeFn(req.body.payload);
 
   const commandId = deps.uuid();
-  const trace = deps.uuid();
+  const txId = deps.uuid();
 
   const path = [
-    ...(req.body.scenario.path || []),
+    ...(req.body.tx.path || []),
     {
       procedure: process.env.PROCEDURE,
       id: commandId,
@@ -52,7 +52,7 @@ module.exports = ({
     ...(req.body.options && { options: req.body.options }),
     ...(req.body.claims && { claims: req.body.claims }),
     ...(req.body.context && { context: req.body.context }),
-    ...(req.body.scenario.ip && { ip: req.body.scenario.ip }),
+    ...(req.body.tx.ip && { ip: req.body.tx.ip }),
     aggregateFn: aggregateFn({
       ...(req.body.context && { context: req.body.context }),
       ...(req.body.claims && { claims: req.body.claims }),
@@ -77,11 +77,11 @@ module.exports = ({
       ...(req.body.claims && { claims: req.body.claims }),
       ...(req.body.context && { context: req.body.context }),
       ...(req.body.token && { token: req.body.token }),
-      ...(req.body.scenario.ip && { ip: req.body.scenario.ip }),
+      ...(req.body.tx.ip && { ip: req.body.tx.ip }),
       ...(req.body.headers.idempotency && {
         idempotency: req.body.headers.idempotency,
       }),
-      trace,
+      txId,
       path,
     }),
     countFn: countFn({
@@ -144,9 +144,9 @@ module.exports = ({
           async: !eventDataPerStore[service][domain].some(
             (normalizedEvent) => normalizedEvent.number != undefined
           ),
-          scenario: {
-            ...(req.body.scenario.ip && { ip: req.body.scenario.ip }),
-            trace,
+          tx: {
+            ...(req.body.tx.ip && { ip: req.body.tx.ip }),
+            id: txId,
             path,
           },
         })
@@ -164,7 +164,7 @@ module.exports = ({
       .status(statusCode || (events.length ? 202 : 200))
       .send({
         ...response,
-        ...(events.length && { _id: commandId, _trace: trace }),
+        ...(events.length && { _id: commandId, _tx: txId }),
       });
   } else {
     res.set(headers).sendStatus(204);
