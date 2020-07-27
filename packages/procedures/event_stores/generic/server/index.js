@@ -2,7 +2,6 @@ const deps = require("./deps");
 
 module.exports = async ({
   saveEventsFn,
-  aggregateStreamFn,
   reserveRootCountsFn,
   publishFn,
   rootStreamFn,
@@ -24,9 +23,17 @@ module.exports = async ({
 } = {}) => {
   deps
     .server()
-    .get(deps.aggregateStream({ aggregateStreamFn }), {
-      path: "/stream-aggregates",
-    })
+    .get(
+      deps.aggregateStream({
+        rootStreamFn,
+        findOneSnapshotFn,
+        eventStreamFn,
+        handlers,
+      }),
+      {
+        path: "/stream-aggregates",
+      }
+    )
     .get(deps.count({ countFn }), {
       path: "/count/:root",
     })

@@ -1,31 +1,45 @@
 const { expect } = require("chai").use(require("sinon-chai"));
-const { restore, fake, match } = require("sinon");
+const { restore, replace, fake, stub, match } = require("sinon");
 
-const streamAggregates = require("..");
+const aggregateStream = require("..");
 
+const deps = require("../deps");
+
+const findOneSnapshotFn = "some-find-one-snapshot-fn";
+const eventStreamFn = "some-event-stream-fn";
+
+const handlers = "some-handlers";
 const root = "some-root";
-
-const envDomain = "some-env-domain";
-const envService = "some-env-service";
-const envNetwork = "some-env-network";
-
 const timestamp = "some-timestamp";
-const parallel = "some-parallel";
 
-process.env.NETWORK = envNetwork;
+const aggregateState = "some-aggragate-state";
+const aggregateHeaders = "some-aggragate-headers";
+const aggregateContext = "some-aggragate-context";
 
-describe("Event store stream", () => {
-  beforeEach(() => {
-    process.env.DOMAIN = envDomain;
-    process.env.SERVICE = envService;
-  });
+describe("Event store aggregate stream", () => {
   afterEach(() => {
     restore();
   });
-
   it("should call with the correct params", async () => {
-    const aggregateStreamFake = fake();
+    const streamResult = "stream-result";
+    const rootStreamFake = stub()
+      .yieldsTo("fn", { root })
+      .returns(streamResult);
 
+    const aggregate = {
+      state: aggregateState,
+      headers: aggregateHeaders,
+      context: aggregateContext,
+    };
+    const aggregateFake = fake.returns(aggregate);
+    const aggregateOuterFake = fake.returns(aggregateFake);
+    replace(deps, "aggregate", aggregateOuterFake);
+
+    const stringifyResult = "some-stringify-fake";
+    const stringifyFake = fake.returns(stringifyResult);
+    replace(JSON, "stringify", stringifyFake);
+
+    const parallel = "some-parallel";
     const params = { root };
 
     const req = {
@@ -42,24 +56,46 @@ describe("Event store stream", () => {
       end: endFake,
       write: writeFake,
     };
+    await aggregateStream({
+      rootStreamFn: rootStreamFake,
+      findOneSnapshotFn,
+      eventStreamFn,
+      handlers,
+    })(req, res);
 
-    await streamAggregates({ aggregateStreamFn: aggregateStreamFake })(
-      req,
-      res
-    );
-    expect(aggregateStreamFake).to.have.been.calledWith({
-      timestamp,
+    expect(rootStreamFake).to.have.been.calledWith({
       parallel,
-      fn: match((fn) => {
-        const aggregate = { a: 1 };
-        fn(aggregate);
-        return writeFake.calledWith(JSON.stringify(aggregate));
-      }),
+      fn: match(() => true),
     });
-    expect(endFake).to.have.been.calledWith();
+    expect(aggregateFake).to.have.been.calledWith(root, {
+      timestamp,
+    });
+    expect(writeFake).to.have.been.calledWith(stringifyResult);
+    expect(stringifyFake).to.have.been.calledWith({
+      state: aggregateState,
+      headers: aggregateHeaders,
+      context: aggregateContext,
+    });
+    expect(endFake).to.have.been.calledOnce;
   });
   it("should call with the correct params with optionals missing", async () => {
-    const aggregateStreamFake = fake();
+    const streamResult = "stream-result";
+    const rootStreamFake = stub()
+      .yieldsTo("fn", { root })
+      .returns(streamResult);
+
+    const aggregate = {
+      state: aggregateState,
+      headers: aggregateHeaders,
+      context: aggregateContext,
+    };
+    const aggregateFake = fake.returns(aggregate);
+    const aggregateOuterFake = fake.returns(aggregateFake);
+    replace(deps, "aggregate", aggregateOuterFake);
+
+    const stringifyResult = "some-stringify-fake";
+    const stringifyFake = fake.returns(stringifyResult);
+    replace(JSON, "stringify", stringifyFake);
 
     const params = { root };
 
@@ -74,18 +110,23 @@ describe("Event store stream", () => {
       end: endFake,
       write: writeFake,
     };
+    await aggregateStream({
+      rootStreamFn: rootStreamFake,
+      findOneSnapshotFn,
+      eventStreamFn,
+      handlers,
+    })(req, res);
 
-    await streamAggregates({ aggregateStreamFn: aggregateStreamFake })(
-      req,
-      res
-    );
-    expect(aggregateStreamFake).to.have.been.calledWith({
-      fn: match((fn) => {
-        const aggregate = { a: 1 };
-        fn(aggregate);
-        return writeFake.calledWith(JSON.stringify(aggregate));
-      }),
+    expect(rootStreamFake).to.have.been.calledWith({
+      fn: match(() => true),
     });
-    expect(endFake).to.have.been.calledWith();
+    expect(aggregateFake).to.have.been.calledWith(root, {});
+    expect(writeFake).to.have.been.calledWith(stringifyResult);
+    expect(stringifyFake).to.have.been.calledWith({
+      state: aggregateState,
+      headers: aggregateHeaders,
+      context: aggregateContext,
+    });
+    expect(endFake).to.have.been.calledOnce;
   });
 });

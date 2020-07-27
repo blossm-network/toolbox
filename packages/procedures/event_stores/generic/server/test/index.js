@@ -9,7 +9,6 @@ const findOneSnapshotFn = "some-find-one-snapshot-fn";
 const eventStreamFn = "some-event-steam-fn";
 const handlers = "some-handlers";
 const reserveRootCountsFn = "some-reserve-root-counts-fn";
-const aggregateStreamFn = "some-aggregate-stream-fn";
 const rootStreamFn = "some-root-stream-fn";
 const countFn = "some-count-fn";
 const saveEventsFn = "some-save-events-fn";
@@ -84,7 +83,6 @@ describe("Event store", () => {
       handlers,
       reserveRootCountsFn,
       saveEventsFn,
-      aggregateStreamFn,
       publishFn,
       rootStreamFn,
       createTransactionFn,
@@ -130,7 +128,10 @@ describe("Event store", () => {
       handlers,
     });
     expect(eventStoreAggregateStreamFake).to.have.been.calledWith({
-      aggregateStreamFn,
+      rootStreamFn,
+      findOneSnapshotFn,
+      eventStreamFn,
+      handlers,
     });
     expect(eventStoreRootStreamFake).to.have.been.calledWith({ rootStreamFn });
     expect(eventStoreCountFake).to.have.been.calledWith({ countFn });

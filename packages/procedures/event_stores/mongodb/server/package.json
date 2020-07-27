@@ -19,7 +19,6 @@
     "@blossm/format-mongodb-schema": "^0.0.5",
     "@blossm/logger": "^0.0.8",
     "@blossm/mongodb-database": "^0.0.76",
-    "@blossm/mongodb-event-store-aggregate-stream": "^0.0.10",
     "@blossm/mongodb-event-store-count": "^0.0.33",
     "@blossm/mongodb-event-store-create-transaction": "^0.0.7",
     "@blossm/mongodb-event-store-event-stream": "^0.0.2",
