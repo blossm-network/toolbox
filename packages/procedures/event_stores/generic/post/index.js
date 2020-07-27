@@ -44,7 +44,14 @@ module.exports = ({
     receipt.map((e) => {
       if (publishedTopics.includes(e.topic)) return;
       publishedTopics.push(e.topic);
-      return publishFn({}, e.topic);
+      return publishFn(
+        {
+          domain: process.env.DOMAIN,
+          service: process.env.SERVICE,
+          network: process.env.NETWORK,
+        },
+        e.topic
+      );
     })
   );
 

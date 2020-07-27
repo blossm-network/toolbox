@@ -6,7 +6,10 @@ const deps = require("../deps");
 
 const timestamp = 5;
 
-const data = Buffer.from(JSON.stringify({ timestamp }));
+const domain = "some-domain";
+const service = "some-service";
+
+const data = Buffer.from(JSON.stringify({ timestamp, domain, service }));
 
 describe("Command handler post", () => {
   afterEach(() => {
@@ -35,6 +38,8 @@ describe("Command handler post", () => {
 
     expect(aggregateStreamFnFake).to.have.been.calledWith({
       timestamp,
+      domain,
+      service,
       fn: match((fn) => {
         const aggregate = "some-aggregate";
         fn(aggregate);
@@ -50,7 +55,7 @@ describe("Command handler post", () => {
 
     expect(sendStatusFake).to.have.been.calledWith(204);
   });
-  it("should call with the correct params if push is false and no timestamp", async () => {
+  it("should call with the correct params if push is false and no timestamp, domain, or service", async () => {
     const mainFnFake = fake();
     const aggregateStreamFnFake = fake();
 

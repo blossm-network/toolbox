@@ -95,15 +95,21 @@ module.exports = eventHandler({
         channel,
       });
   },
-  aggregateStreamFn: ({ timestamp, fn, sortFn }) =>
+  aggregateStreamFn: ({ timestamp, fn, sortFn, domain, service }) =>
     Promise.all(
-      config.eventStores.map(({ domain, service }) =>
-        eventStore({ domain, service })
-          .set({
-            token: { internalFn: gcpToken },
-          })
-          .streamAggregates(fn, sortFn, { ...(timestamp && { timestamp }) })
-      )
+      config.eventStores
+        .filter((store) =>
+          domain && service
+            ? store.domain == domain && store.service == service
+            : true
+        )
+        .map(({ domain, service }) =>
+          eventStore({ domain, service })
+            .set({
+              token: { internalFn: gcpToken },
+            })
+            .streamAggregates(fn, sortFn, { ...(timestamp && { timestamp }) })
+        )
     ),
   secretFn: secret,
 });

@@ -8,6 +8,14 @@ const deps = require("../deps");
 const eventData = [{ event: { headers: {} } }, { event: { headers: {} } }];
 const scenario = "some-scenario";
 
+const domain = "some-domain";
+const service = "some-service";
+const network = "some-network";
+
+process.env.DOMAIN = domain;
+process.env.SERVICE = service;
+process.env.NETWORK = network;
+
 describe("Event store post", () => {
   afterEach(() => {
     restore();
@@ -64,7 +72,14 @@ describe("Event store post", () => {
       saveEventsFn,
       reserveRootCountsFn,
     });
-    expect(publishFnFake).to.have.been.calledWith({}, savedEventHeadersTopic);
+    expect(publishFnFake).to.have.been.calledWith(
+      {
+        domain: process.env.DOMAIN,
+        service: process.env.SERVICE,
+        network: process.env.NETWORK,
+      },
+      savedEventHeadersTopic
+    );
     expect(publishFnFake).to.have.been.calledOnce;
     expect(sendStatusFake).to.have.been.calledWith(204);
   });
@@ -127,7 +142,14 @@ describe("Event store post", () => {
       saveEventsFn,
       reserveRootCountsFn,
     });
-    expect(publishFnFake).to.have.been.calledWith({}, savedEventHeadersTopic);
+    expect(publishFnFake).to.have.been.calledWith(
+      {
+        domain: process.env.DOMAIN,
+        service: process.env.SERVICE,
+        network: process.env.NETWORK,
+      },
+      savedEventHeadersTopic
+    );
     expect(sendStatusFake).to.have.been.calledWith(204);
   });
   it("should call with the correct params with event no idempotency passed in", async () => {
@@ -193,7 +215,14 @@ describe("Event store post", () => {
       saveEventsFn,
       reserveRootCountsFn,
     });
-    expect(publishFnFake).to.have.been.calledWith({}, savedEventHeadersTopic);
+    expect(publishFnFake).to.have.been.calledWith(
+      {
+        domain: process.env.DOMAIN,
+        service: process.env.SERVICE,
+        network: process.env.NETWORK,
+      },
+      savedEventHeadersTopic
+    );
     expect(sendStatusFake).to.have.been.calledWith(204);
   });
   it("should call with the correct params with idempotency fn conflict", async () => {
@@ -260,7 +289,14 @@ describe("Event store post", () => {
       saveEventsFn,
       reserveRootCountsFn,
     });
-    expect(publishFnFake).to.have.been.calledWith({}, savedEventHeadersTopic);
+    expect(publishFnFake).to.have.been.calledWith(
+      {
+        domain: process.env.DOMAIN,
+        service: process.env.SERVICE,
+        network: process.env.NETWORK,
+      },
+      savedEventHeadersTopic
+    );
     expect(sendStatusFake).to.have.been.calledWith(204);
   });
 });
