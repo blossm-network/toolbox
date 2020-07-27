@@ -402,7 +402,7 @@ const addDefaultDependencies = ({ config, coreNetwork }) => {
     case "projection":
       return [
         ...config.testing.dependencies,
-        ...config.stores.map((store) => {
+        ...config.eventStores.map((store) => {
           return {
             domain: store.domain,
             service: store.service,
@@ -649,7 +649,7 @@ const configure = async (workingDir, configFn, env, strict) => {
     const service = config.service;
     const context = config.context;
     const actions = config.actions;
-    const stores = config.stores;
+    const stores = config.eventStores;
     const procedure = config.procedure;
     const name = config.name;
     const envVars = config.env && config.env[env];
