@@ -402,7 +402,7 @@ const addDefaultDependencies = ({ config, coreNetwork }) => {
     case "projection":
       return [
         ...config.testing.dependencies,
-        ...config.eventStores.map((store) => {
+        ...config.events.map((store) => {
           return {
             domain: store.domain,
             service: store.service,
