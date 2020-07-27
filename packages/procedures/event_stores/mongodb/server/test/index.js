@@ -273,7 +273,6 @@ describe("Mongodb event store", () => {
           service: { $type: String, required: true },
           network: { $type: String, required: true },
           lastEventNumber: { $type: Number, required: true },
-          trace: { $type: [String] },
           eCount: { $type: Number, required: true },
           eRoot: { $type: String, required: true },
           _id: false,
@@ -281,6 +280,7 @@ describe("Mongodb event store", () => {
         context: { $type: Object },
         state: formattedSchema,
         events: { $type: Buffer, required: true },
+        trace: { $type: [String] },
       },
       typeKey: "$type",
       indexes: [
@@ -639,7 +639,6 @@ describe("Mongodb event store", () => {
           service: { $type: String, required: true },
           network: { $type: String, required: true },
           lastEventNumber: { $type: Number, required: true },
-          trace: { $type: [String] },
           eCount: { $type: Number, required: true },
           eRoot: { $type: String, required: true },
           _id: false,
@@ -647,6 +646,7 @@ describe("Mongodb event store", () => {
         context: { $type: Object },
         state: formattedSchema,
         events: { $type: Buffer, required: true },
+        trace: { $type: [String] },
       },
       typeKey: "$type",
       indexes: [
@@ -939,7 +939,6 @@ describe("Mongodb event store", () => {
           service: { $type: String, required: true },
           network: { $type: String, required: true },
           lastEventNumber: { $type: Number, required: true },
-          trace: { $type: [String] },
           eCount: { $type: Number, required: true },
           eRoot: { $type: String, required: true },
           _id: false,
@@ -947,6 +946,7 @@ describe("Mongodb event store", () => {
         context: { $type: Object },
         state: formattedSchema,
         events: { $type: Buffer, required: true },
+        trace: { $type: [String] },
       },
       typeKey: "$type",
       indexes: [

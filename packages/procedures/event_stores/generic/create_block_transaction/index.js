@@ -119,7 +119,6 @@ module.exports = ({
         service: process.env.SERVICE,
         network: process.env.NETWORK,
         lastEventNumber: aggregate.headers.lastEventNumber,
-        trace: aggregate.headers.trace,
         eCount: stringifiedEventPairs.length,
         eRoot: eventsMerkleRoot.toString("base64"),
       };
@@ -132,6 +131,7 @@ module.exports = ({
         context: aggregate.context,
         state: aggregate.state,
         events: deps.encode(stringifiedEventPairs),
+        trace: aggregate.trace,
       };
 
       const snapshot = await saveSnapshotFn({

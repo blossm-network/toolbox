@@ -27,13 +27,15 @@ module.exports = ({ findOneSnapshotFn, eventStreamFn, handlers }) => async (
       network: process.env.NETWORK,
       ...(snapshot && {
         lastEventNumber: snapshot.headers.lastEventNumber,
-        trace: snapshot.headers.trace,
         snapshotHash: snapshot.hash,
       }),
     },
     ...(snapshot && {
       state: snapshot.headers.state,
       context: snapshot.context,
+    }),
+    ...(snapshot && {
+      trace: snapshot.trace,
     }),
     ...(includeEvents && { events: [] }),
   };
@@ -62,9 +64,9 @@ module.exports = ({ findOneSnapshotFn, eventStreamFn, handlers }) => async (
 
       aggregate.headers.lastEventNumber = event.headers.number;
       aggregate.state = handler(aggregate.state || {}, event.payload);
-      aggregate.headers.trace = [
+      aggregate.trace = [
         ...(event.scenario.trace ? [event.scenario.trace] : []),
-        ...(aggregate.headers.trace || []),
+        ...(aggregate.trace || []),
       ].slice(0, 10);
 
       if (aggregate.context) {

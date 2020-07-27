@@ -98,12 +98,12 @@ describe("Event store create block transaction", () => {
     const aggregate = {
       headers: {
         snapshotHash,
-        trace,
         lastEventNumber: aggregateLastEventNumber,
       },
       events: [event],
       context: aggregateContext,
       state: aggregateState,
+      trace,
     };
     const aggregateFnFake = fake.returns(aggregate);
     const aggregateOuterFnFake = fake.returns(aggregateFnFake);
@@ -219,7 +219,6 @@ describe("Event store create block transaction", () => {
       created: deps.dateString(),
       root,
       public,
-      trace,
       domain,
       service,
       network,
@@ -240,7 +239,6 @@ describe("Event store create block transaction", () => {
           sHash: stateHash,
           pHash: snapshotHash,
           created: deps.dateString(),
-          trace,
           root,
           public,
           domain,
@@ -253,6 +251,7 @@ describe("Event store create block transaction", () => {
         context: aggregateContext,
         state: aggregateState,
         events: encodedEventPairs,
+        trace,
       },
       transaction,
     });
@@ -328,12 +327,12 @@ describe("Event store create block transaction", () => {
     const aggregate = {
       headers: {
         snapshotHash,
-        trace,
         lastEventNumber: aggregateLastEventNumber,
       },
       events: [event],
       context: aggregateContext,
       state: aggregateState,
+      trace,
     };
     const aggregateFnFake = fake.returns(aggregate);
     const aggregateOuterFnFake = fake.returns(aggregateFnFake);
@@ -465,7 +464,6 @@ describe("Event store create block transaction", () => {
       pHash: snapshotHash,
       created: deps.dateString(),
       root,
-      trace,
       public: false,
       domain,
       service,
@@ -488,7 +486,6 @@ describe("Event store create block transaction", () => {
           pHash: snapshotHash,
           created: deps.dateString(),
           root,
-          trace,
           public: false,
           domain,
           service,
@@ -500,6 +497,7 @@ describe("Event store create block transaction", () => {
         context: aggregateContext,
         state: aggregateState,
         events: encodedEventPairs,
+        trace,
       },
     });
     expect(hashFake.getCall(4)).to.have.been.calledWith(savedSnapshotRoot);
@@ -579,12 +577,12 @@ describe("Event store create block transaction", () => {
     const aggregate = {
       headers: {
         snapshotHash,
-        trace,
         lastEventNumber: aggregateLastEventNumber,
       },
       events: [],
       context: aggregateContext,
       state: aggregateState,
+      trace,
     };
     const aggregateFnFake = fake.returns(aggregate);
     const aggregateOuterFnFake = fake.returns(aggregateFnFake);
@@ -713,11 +711,11 @@ describe("Event store create block transaction", () => {
     const aggregate = {
       headers: {
         lastEventNumber: aggregateLastEventNumber,
-        trace,
       },
       events: [event],
       context: aggregateContext,
       state: aggregateState,
+      trace,
     };
     const aggregateFnFake = fake.returns(aggregate);
     const aggregateOuterFnFake = fake.returns(aggregateFnFake);
@@ -833,7 +831,6 @@ describe("Event store create block transaction", () => {
       cHash: contextHash,
       sHash: stateHash,
       pHash: previousHash,
-      trace,
       created: deps.dateString(),
       root,
       public,
@@ -855,7 +852,6 @@ describe("Event store create block transaction", () => {
           block: previousNumber + 1,
           cHash: contextHash,
           sHash: stateHash,
-          trace,
           pHash: previousHash,
           created: deps.dateString(),
           root,
@@ -870,6 +866,7 @@ describe("Event store create block transaction", () => {
         context: aggregateContext,
         state: aggregateState,
         events: encodedEventPairs,
+        trace,
       },
       transaction,
     });

@@ -149,7 +149,6 @@ describe("Store", () => {
       useCreateIndex: true,
       useUnifiedTopology: true,
       useFindAndModify: false,
-      versionKey: false,
       autoIndex: false,
       poolSize: 5,
     });

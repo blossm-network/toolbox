@@ -62,7 +62,6 @@ const findOneResult = {
     root,
     state: { a: 1, b: 1 },
     lastEventNumber: 6,
-    trace: [trace],
   },
   context: {
     a: {
@@ -72,6 +71,7 @@ const findOneResult = {
     },
     c: "some-c",
   },
+  trace: [trace],
 };
 
 const envDomain = "some-env-domain";
@@ -125,7 +125,6 @@ describe("Mongodb event store aggregate", () => {
         service: envService,
         network: envNetwork,
         lastEventNumber: 1,
-        trace: [eventTrace, trace],
       },
       state: { a: 1, b: 2, c: 2 },
       context: {
@@ -136,6 +135,7 @@ describe("Mongodb event store aggregate", () => {
         },
         c: "some-c",
       },
+      trace: [eventTrace, trace],
     });
   });
   it("should call with the correct params if includeEvents and theres a timestamp", async () => {
@@ -180,7 +180,6 @@ describe("Mongodb event store aggregate", () => {
         service: envService,
         network: envNetwork,
         lastEventNumber: 1,
-        trace: [eventTrace, trace],
       },
       state: { a: 1, b: 2, c: 2 },
       context: {
@@ -192,6 +191,7 @@ describe("Mongodb event store aggregate", () => {
         c: "some-c",
       },
       events: [event],
+      trace: [eventTrace, trace],
     });
   });
   it("should call with the correct params with no events", async () => {
@@ -231,7 +231,6 @@ describe("Mongodb event store aggregate", () => {
         domain: envDomain,
         service: envService,
         network: envNetwork,
-        trace: [trace],
         root,
         snapshotHash,
       },
@@ -244,6 +243,7 @@ describe("Mongodb event store aggregate", () => {
         },
         c: "some-c",
       },
+      trace: [trace],
     });
   });
   it("should call with the correct params with no snapshot found", async () => {
@@ -280,7 +280,6 @@ describe("Mongodb event store aggregate", () => {
       headers: {
         root,
         lastEventNumber: 1,
-        trace: [eventTrace],
         domain: envDomain,
         service: envService,
         network: envNetwork,
@@ -299,6 +298,7 @@ describe("Mongodb event store aggregate", () => {
         },
         c: "some-c",
       },
+      trace: [eventTrace],
     });
   });
   it("should call with the correct params with no snapshot or events found", async () => {

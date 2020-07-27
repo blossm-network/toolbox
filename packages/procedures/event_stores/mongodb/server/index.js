@@ -149,12 +149,12 @@ const snapshotStore = async ({ schema, indexes }) => {
         lastEventNumber: { [typeKey]: Number, required: true },
         eCount: { [typeKey]: Number, required: true },
         eRoot: { [typeKey]: String, required: true },
-        trace: { [typeKey]: [String] },
         _id: false,
       },
       context: { [typeKey]: Object },
       state: schema,
       events: { [typeKey]: Buffer, required: true },
+      trace: { [typeKey]: [String] },
     },
     typeKey,
     indexes: [
