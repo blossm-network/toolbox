@@ -63,11 +63,11 @@ module.exports = eventHandler({
         ...(query && { query }),
         update,
 
-        ...(aggregate.headers.txIds && {
+        ...(aggregate.txIds && {
           trace: {
             domain: aggregate.headers.domain,
             service: aggregate.headers.service,
-            txIds: aggregate.headers.txIds,
+            txIds: aggregate.txIds,
           },
         }),
       });
