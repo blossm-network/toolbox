@@ -1,7 +1,7 @@
 {
   "name": "@blossm/event-store",
   "description": "An event store server.",
-  "version": "0.0.210",
+  "version": "0.0.211",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
