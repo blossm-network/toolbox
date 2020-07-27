@@ -324,19 +324,13 @@ describe("Event store integration tests", () => {
   });
 
   it("should publish event successfully", (done) => {
-    const preSaveDate = dateString();
     subscribe({
       topic,
       name: sub,
       fn: async (_, subscription) => {
         if (!subscription) throw "Subscription wasn't made";
         const root = uuid();
-        subscription.once("message", async (message) => {
-          const dataString = Buffer.from(message.data, "base64")
-            .toString()
-            .trim();
-          const data = JSON.parse(dataString);
-          expect(new Date(data.from)).to.be.afterTime(new Date(preSaveDate));
+        subscription.once("message", async () => {
           await unsubscribe({ topic, name: sub });
           done();
         });
