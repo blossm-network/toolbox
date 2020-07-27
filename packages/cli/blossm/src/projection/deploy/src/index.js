@@ -45,22 +45,6 @@ module.exports = eventHandler({
       ? aggregateContext.network
       : aggregate.headers.network;
 
-    //TODO
-    console.log({
-      updatee: {
-        ...(query && { query }),
-        update,
-
-        //Always set the trace to make sure the view has an updated trace and the context is set.
-        ...(aggregate.headers.trace && {
-          trace: {
-            domain: aggregate.headers.domain,
-            service: aggregate.headers.service,
-            value: aggregate.headers.trace,
-          },
-        }),
-      },
-    });
     const { body: newView } = await viewStore({
       name: config.name,
       context: config.context,
