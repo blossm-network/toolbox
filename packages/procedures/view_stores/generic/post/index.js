@@ -21,9 +21,14 @@ module.exports = ({ writeFn, formatFn, updateFn = defaultFn }) => {
     for (const key in customUpdate)
       formattedBody[`body.${key}`] = customUpdate[key];
 
+    //TODO
+    console.log({ reqBody: req.body, trace: req.body.trace });
     const data = {
       ...formattedBody,
-      ...(req.body.trace && { "headers.trace": req.body.trace }),
+      ...(req.body.trace && {
+        [`trace.${req.body.trace.service}.${req.body.trace.domain}`]: req.body
+          .trace.value,
+      }),
       ...(req.body.id && { "headers.id": req.body.id }),
       "headers.context": context,
       "headers.modified": deps.dateString(),

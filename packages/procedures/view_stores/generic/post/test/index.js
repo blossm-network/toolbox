@@ -29,8 +29,16 @@ const context = {
 
 const id = "some-id";
 
+const traceService = "some-trace-service";
+const traceDomain = "some-trace-domain";
+const traceValue = "some-trace-value";
+
 const body = {
-  trace: 2,
+  trace: {
+    service: traceService,
+    domain: traceDomain,
+    value: traceValue,
+  },
   update: {
     a: 1,
   },
@@ -79,13 +87,13 @@ describe("View store put", () => {
       data: {
         "body.a": 1,
         "headers.id": id,
-        "headers.trace": 2,
         "headers.context": {
           root: envContextRoot,
           domain: "some-env-context",
           service: envContextService,
           network: envContextNetwork,
         },
+        [`trace.${traceService}.${traceDomain}`]: traceValue,
         "headers.modified": deps.dateString(),
       },
     });
@@ -128,7 +136,6 @@ describe("View store put", () => {
       data: {
         "body.c": 3,
         "headers.id": id,
-        "headers.trace": 2,
         "headers.context": {
           root: envContextRoot,
           domain: "some-env-context",
@@ -136,6 +143,7 @@ describe("View store put", () => {
           network: envContextNetwork,
         },
         "headers.modified": deps.dateString(),
+        [`trace.${traceService}.${traceDomain}`]: traceValue,
       },
     });
     expect(fnFake).to.have.been.calledWith({ a: 1 });
@@ -149,7 +157,11 @@ describe("View store put", () => {
 
     const req = {
       body: {
-        trace: 2,
+        trace: {
+          service: traceService,
+          domain: traceDomain,
+          value: traceValue,
+        },
         update: {
           a: 1,
         },
@@ -182,7 +194,6 @@ describe("View store put", () => {
       },
       data: {
         "body.a": 1,
-        "headers.trace": 2,
         "headers.context": {
           root: envContextRoot,
           domain: "some-env-context",
@@ -190,6 +201,7 @@ describe("View store put", () => {
           network: envContextNetwork,
         },
         "headers.modified": deps.dateString(),
+        [`trace.${traceService}.${traceDomain}`]: traceValue,
       },
     });
     expect(formatFake).to.have.been.calledWith(writeResult);

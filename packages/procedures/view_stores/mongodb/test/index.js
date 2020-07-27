@@ -127,7 +127,6 @@ describe("View store", () => {
             unique: true,
             default: deps.uuid,
           },
-          trace: { $type: [String] },
           context: {
             $type: {
               root: String,
@@ -155,6 +154,7 @@ describe("View store", () => {
             }),
           },
         },
+        trace: { $type: Object },
       },
       typeKey: "$type",
       indexes: [
@@ -347,7 +347,6 @@ describe("View store", () => {
             unique: true,
             default: deps.uuid,
           },
-          trace: { $type: [String] },
           context: {
             $type: {
               root: String,
@@ -375,6 +374,7 @@ describe("View store", () => {
             }),
           },
         },
+        trace: { $type: Object },
       },
       typeKey: "$type",
       indexes: [
@@ -477,7 +477,6 @@ describe("View store", () => {
             unique: true,
             default: deps.uuid,
           },
-          trace: { $type: [String] },
           context: {
             $type: {
               root: String,
@@ -505,6 +504,7 @@ describe("View store", () => {
             }),
           },
         },
+        trace: { $type: Object },
       },
       typeKey: "$type",
       indexes: [
@@ -591,7 +591,6 @@ describe("View store", () => {
             unique: true,
             default: deps.uuid,
           },
-          trace: { $type: [String] },
           context: {
             $type: {
               root: String,
@@ -619,6 +618,7 @@ describe("View store", () => {
             }),
           },
         },
+        trace: { $type: Object },
       },
       typeKey: "$type",
       indexes: [
@@ -788,7 +788,6 @@ describe("View store", () => {
             unique: true,
             default: deps.uuid,
           },
-          trace: { $type: [String] },
           context: {
             $type: {
               root: String,
@@ -816,6 +815,7 @@ describe("View store", () => {
             }),
           },
         },
+        trace: { $type: Object },
       },
       typeKey: "$type",
       indexes: [

@@ -42,6 +42,7 @@ describe("Store", () => {
       strict: true,
       typePojoToMixed: false,
       minimize: false,
+      versionKey: false,
       useNestedStrict: true,
       typeKey,
     });
@@ -73,6 +74,7 @@ describe("Store", () => {
       {
         strict: false,
         typePojoToMixed: false,
+        versionKey: false,
         minimize: false,
         useNestedStrict: true,
       }
@@ -132,6 +134,7 @@ describe("Store", () => {
     expect(schemaFake).to.have.been.calledWith(schema, {
       strict: true,
       typePojoToMixed: false,
+      versionKey: false,
       minimize: false,
       useNestedStrict: true,
     });
@@ -146,6 +149,7 @@ describe("Store", () => {
       useCreateIndex: true,
       useUnifiedTopology: true,
       useFindAndModify: false,
+      versionKey: false,
       autoIndex: false,
       poolSize: 5,
     });
