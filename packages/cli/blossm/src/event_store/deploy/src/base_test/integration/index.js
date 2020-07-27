@@ -246,7 +246,7 @@ describe("Event store integration tests", () => {
         .verify(
           Buffer.from(parsedBlockBody.headers.key, "base64").toString("utf8"),
           parsedBlockBody.signature,
-          "hex"
+          "base64"
         )
     ).to.be.true;
 

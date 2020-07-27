@@ -143,6 +143,9 @@ describe("Event store", () => {
       encryptFn,
       signFn,
       blockPublisherPublicKeyFn,
+      findOneSnapshotFn,
+      eventStreamFn,
+      handlers,
       public,
     });
     expect(eventStorePostFake).to.have.been.calledWith({

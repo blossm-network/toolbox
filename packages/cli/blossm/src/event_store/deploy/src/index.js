@@ -20,7 +20,7 @@ module.exports = eventStore({
   signFn: (message) =>
     sign({
       message,
-      format: "hex",
+      format: "base64",
       key: blockchainProducerKey,
       ring: blockchainProducerKeyRing,
       location: "global",
@@ -34,7 +34,7 @@ module.exports = eventStore({
       ring: "blockchain",
       location: "global",
       project: process.env.GCP_PROJECT,
-      format: "hex",
+      format: "base64",
     }),
   blockPublisherPublicKeyFn: async () => {
     if (!blockPublisherPublicKey) {

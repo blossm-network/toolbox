@@ -53,6 +53,9 @@ module.exports = async ({
         encryptFn,
         signFn,
         blockPublisherPublicKeyFn,
+        findOneSnapshotFn,
+        eventStreamFn,
+        handlers,
         public,
       }),
       { path: "/create-block" }
