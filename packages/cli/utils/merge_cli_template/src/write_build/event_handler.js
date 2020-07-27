@@ -23,7 +23,7 @@ module.exports = ({
   region,
   context,
   name,
-  stores,
+  events,
   project,
   network,
   computeUrlId,
@@ -146,7 +146,7 @@ module.exports = ({
             serviceName,
             project,
           }),
-          ...stores
+          ...events
             .map((store) =>
               store.actions.map((action) =>
                 createPubsubSubscription({

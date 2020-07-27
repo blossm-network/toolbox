@@ -649,7 +649,7 @@ const configure = async (workingDir, configFn, env, strict) => {
     const service = config.service;
     const context = config.context;
     const actions = config.actions;
-    const stores = config.eventStores;
+    const events = config.events;
     const procedure = config.procedure;
     const name = config.name;
     const envVars = config.env && config.env[env];
@@ -685,7 +685,7 @@ const configure = async (workingDir, configFn, env, strict) => {
       region,
       domain,
       actions,
-      stores,
+      events,
       context,
       name,
       project,
