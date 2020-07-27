@@ -2,12 +2,14 @@ const deps = require("./deps");
 
 module.exports = ({
   saveSnapshotFn,
-  aggregateFn,
   rootStreamFn,
   latestBlockFn,
   saveBlockFn,
   encryptFn,
   signFn,
+  findOneSnapshotFn,
+  eventStreamFn,
+  handlers,
   blockPublisherPublicKeyFn,
   public,
 }) => async (transaction) => {
@@ -63,6 +65,12 @@ module.exports = ({
 
   const nextBlockNumber = previousBlock.headers.number + 1;
 
+  const aggregateFn = deps.aggregate({
+    findOneSnapshotFn,
+    eventStreamFn,
+    handlers,
+  });
+
   await rootStreamFn({
     updatedOnOrAfter: previousBlock.headers.end,
     updatedBefore: boundary,
@@ -95,7 +103,8 @@ module.exports = ({
       const contextHash = deps.hash(aggregate.context).create();
       const stateHash = deps.hash(aggregate.state).create();
 
-      const previousHash = aggregate.headers.snapshotHash || genesisPrevious;
+      const previousHash =
+        aggregate.headers.snapshotHash || deps.hash(genesisPrevious).create();
 
       const snapshotHeaders = {
         nonce: deps.nonce(),

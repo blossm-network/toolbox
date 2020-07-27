@@ -1,7 +1,7 @@
 {
-  "name": "@blossm/mongodb-event-store-aggregate",
-  "description": "A mongodb event store server aggregate function.",
-  "version": "0.0.80",
+  "name": "@blossm/event-store-query",
+  "description": "Am event store server query function.",
+  "version": "0.0.0",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -15,9 +15,10 @@
   },
   "dependencies": {
     "@blossm/errors": "^0.0.37",
-    "@blossm/mongodb-database": "^0.0.75"
+    "@blossm/event-store-aggregate": "*"
   },
   "devDependencies": {
+    "chai-datetime": "^1.5.0",
     "mocha": "^7.1.1",
     "sinon": "^7.3.2",
     "sinon-chai": "^3.5.0"

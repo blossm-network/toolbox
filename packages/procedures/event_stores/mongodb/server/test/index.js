@@ -85,9 +85,18 @@ describe("Mongodb event store", () => {
     const countResult = "some-count-result";
     const countFake = fake.returns(countResult);
     replace(deps, "count", countFake);
-    const aggregateResult = "some-aggregate-result";
-    const aggregateFake = fake.returns(aggregateResult);
-    replace(deps, "aggregate", aggregateFake);
+    const findSnapshotsResult = "some-find-snapshots-result";
+    const findSnapshotsFake = fake.returns(findSnapshotsResult);
+    replace(deps, "findSnapshots", findSnapshotsFake);
+    const findOneSnapshotResult = "some-find-one-snapshots-result";
+    const findOneSnapshotFake = fake.returns(findOneSnapshotResult);
+    replace(deps, "findOneSnapshot", findOneSnapshotFake);
+    const findEventsResult = "some-find-events-result";
+    const findEventsFake = fake.returns(findEventsResult);
+    replace(deps, "findEvents", findEventsFake);
+    const eventStreamResult = "some-event-stream-result";
+    const eventStreamFake = fake.returns(eventStreamResult);
+    replace(deps, "eventStream", eventStreamFake);
     const queryResult = "some-query-result";
     const queryFake = fake.returns(queryResult);
     replace(deps, "query", queryFake);
@@ -337,10 +346,17 @@ describe("Mongodb event store", () => {
     expect(countFake).to.have.been.calledWith({
       countsStore: cStore,
     });
-    expect(aggregateFake).to.have.been.calledWith({
-      eventStore: eStore,
+    expect(findOneSnapshotFake).to.have.been.calledWith({
       snapshotStore: sStore,
-      handlers,
+    });
+    expect(findSnapshotsFake).to.have.been.calledWith({
+      snapshotStore: sStore,
+    });
+    expect(eventStreamFake).to.have.been.calledWith({
+      eventStore: eStore,
+    });
+    expect(findEventsFake).to.have.been.calledWith({
+      eventStore: eStore,
     });
     expect(queryFake).to.have.been.calledWith({
       eventStore: eStore,
@@ -366,7 +382,11 @@ describe("Mongodb event store", () => {
       blockchainStore: bStore,
     });
     expect(eventStoreFake).to.have.been.calledWith({
-      aggregateFn: aggregateResult,
+      findOneSnapshotFn: findOneSnapshotResult,
+      findSnapshotsFn: findSnapshotsResult,
+      eventStreamFn: eventStreamResult,
+      findEventsFn: findEventsResult,
+      handlers,
       saveEventsFn: saveEventsResult,
       queryFn: queryResult,
       aggregateStreamFn: aggregateStreamResult,
@@ -426,9 +446,18 @@ describe("Mongodb event store", () => {
     const saveEventsResult = "some-save-events-result";
     const saveEventsFake = fake.returns(saveEventsResult);
     replace(deps, "saveEvents", saveEventsFake);
-    const aggregateResult = "some-aggregate-result";
-    const aggregateFake = fake.returns(aggregateResult);
-    replace(deps, "aggregate", aggregateFake);
+    const findSnapshotsResult = "some-find-snapshots-result";
+    const findSnapshotsFake = fake.returns(findSnapshotsResult);
+    replace(deps, "findSnapshots", findSnapshotsFake);
+    const findOneSnapshotResult = "some-find-one-snapshots-result";
+    const findOneSnapshotFake = fake.returns(findOneSnapshotResult);
+    replace(deps, "findOneSnapshot", findOneSnapshotFake);
+    const findEventsResult = "some-find-events-result";
+    const findEventsFake = fake.returns(findEventsResult);
+    replace(deps, "findEvents", findEventsFake);
+    const eventStreamResult = "some-event-stream-result";
+    const eventStreamFake = fake.returns(eventStreamResult);
+    replace(deps, "eventStream", eventStreamFake);
     const queryResult = "some-query-result";
     const queryFake = fake.returns(queryResult);
     replace(deps, "query", queryFake);
@@ -472,6 +501,7 @@ describe("Mongodb event store", () => {
       signFn,
       blockPublisherPublicKeyFn,
       public,
+      handlers,
     });
 
     expect(formatSchemaFake.getCall(0)).to.have.been.calledWith(
@@ -669,8 +699,12 @@ describe("Mongodb event store", () => {
       indexes: [[{ "headers.number": 1 }]],
     });
     expect(eventStoreFake).to.have.been.calledWith({
-      aggregateFn: aggregateResult,
+      findOneSnapshotFn: findOneSnapshotResult,
+      findSnapshotsFn: findSnapshotsResult,
+      eventStreamFn: eventStreamResult,
+      findEventsFn: findEventsResult,
       saveEventsFn: saveEventsResult,
+      handlers,
       queryFn: queryResult,
       aggregateStreamFn: aggregateStreamResult,
       reserveRootCountsFn: reserveRootCountsResult,
@@ -725,9 +759,18 @@ describe("Mongodb event store", () => {
     const saveEventsResult = "some-save-event-result";
     const saveEventsFake = fake.returns(saveEventsResult);
     replace(deps, "saveEvents", saveEventsFake);
-    const aggregateResult = "some-aggregate-result";
-    const aggregateFake = fake.returns(aggregateResult);
-    replace(deps, "aggregate", aggregateFake);
+    const findSnapshotsResult = "some-find-snapshots-result";
+    const findSnapshotsFake = fake.returns(findSnapshotsResult);
+    replace(deps, "findSnapshots", findSnapshotsFake);
+    const findOneSnapshotResult = "some-find-one-snapshots-result";
+    const findOneSnapshotFake = fake.returns(findOneSnapshotResult);
+    replace(deps, "findOneSnapshot", findOneSnapshotFake);
+    const findEventsResult = "some-find-events-result";
+    const findEventsFake = fake.returns(findEventsResult);
+    replace(deps, "findEvents", findEventsFake);
+    const eventStreamResult = "some-event-stream-result";
+    const eventStreamFake = fake.returns(eventStreamResult);
+    replace(deps, "eventStream", eventStreamFake);
     const queryResult = "some-query-result";
     const queryFake = fake.returns(queryResult);
     replace(deps, "query", queryFake);
@@ -753,6 +796,7 @@ describe("Mongodb event store", () => {
     const schema = { a: { type: String } };
     await mongodbEventStore({
       schema,
+      handlers,
       secretFn: secretFake,
       publishFn,
       encryptFn,

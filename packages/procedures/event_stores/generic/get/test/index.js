@@ -6,6 +6,11 @@ const deps = require("../deps");
 
 const found = "some-objs";
 const root = "some-root";
+const findSnapshotsFn = "some-find-snapshots-fn";
+const findEventsFn = "some-find-events-fn";
+const findOneSnapshotFn = "some-find-one-snapshot-fn";
+const eventStreamFn = "some-event-stream-fn";
+const handlers = "some-handlers";
 
 describe("Event store get", () => {
   afterEach(() => {
@@ -13,6 +18,8 @@ describe("Event store get", () => {
   });
   it("should call with the correct params with root", async () => {
     const aggregateFnFake = fake.returns(found);
+    const aggregateOuterFnFake = fake.returns(aggregateFnFake);
+    replace(deps, "aggregate", aggregateOuterFnFake);
     const params = {
       root,
     };
@@ -23,12 +30,26 @@ describe("Event store get", () => {
     const res = {
       send: sendFake,
     };
-    await get({ aggregateFn: aggregateFnFake })(req, res);
+    await get({
+      findSnapshotsFn,
+      findEventsFn,
+      findOneSnapshotFn,
+      eventStreamFn,
+      handlers,
+    })(req, res);
+
+    expect(aggregateOuterFnFake).to.have.been.calledWith({
+      findOneSnapshotFn,
+      eventStreamFn,
+      handlers,
+    });
     expect(aggregateFnFake).to.have.been.calledWith(root);
     expect(sendFake).to.have.been.calledWith(found);
   });
   it("should call with the correct params without root", async () => {
     const queryFnFake = fake.returns(found);
+    const queryOuterFnFake = fake.returns(queryFnFake);
+    replace(deps, "query", queryOuterFnFake);
     const params = {};
     const key = "some-key";
     const value = "some-value";
@@ -44,12 +65,27 @@ describe("Event store get", () => {
     const res = {
       send: sendFake,
     };
-    await get({ queryFn: queryFnFake })(req, res);
+    await get({
+      findSnapshotsFn,
+      findEventsFn,
+      findOneSnapshotFn,
+      eventStreamFn,
+      handlers,
+    })(req, res);
+    expect(queryOuterFnFake).to.have.been.calledWith({
+      findSnapshotsFn,
+      findEventsFn,
+      findOneSnapshotFn,
+      eventStreamFn,
+      handlers,
+    });
     expect(queryFnFake).to.have.been.calledWith(query);
     expect(sendFake).to.have.been.calledWith(found);
   });
   it("should throw correctly if not found", async () => {
     const aggregateFnFake = fake();
+    const aggregateOuterFnFake = fake.returns(aggregateFnFake);
+    replace(deps, "aggregate", aggregateOuterFnFake);
     const params = {
       root,
     };
@@ -65,7 +101,13 @@ describe("Event store get", () => {
     });
 
     try {
-      await get({ aggregateFn: aggregateFnFake })(req, res);
+      await get({
+        findSnapshotsFn,
+        findEventsFn,
+        findOneSnapshotFn,
+        eventStreamFn,
+        handlers,
+      })(req, res);
 
       //shouldn't get called
       expect(2).to.equal(1);

@@ -62,6 +62,9 @@ const event = {
   hash: eventHash,
   payload: eventPayload,
 };
+const findOneSnapshotFn = "some-find-one-snapshot-fn";
+const eventStreamFn = "some-event-stream-fn";
+const handlers = "some-handlers";
 const public = true;
 
 const network = "some-env-network";
@@ -102,7 +105,9 @@ describe("Event store create block transaction", () => {
       context: aggregateContext,
       state: aggregateState,
     };
-    const aggregateFnFake = fake.resolves(aggregate);
+    const aggregateFnFake = fake.returns(aggregate);
+    const aggregateOuterFnFake = fake.returns(aggregateFnFake);
+    replace(deps, "aggregate", aggregateOuterFnFake);
 
     const cononicalStringFake = stub()
       .onFirstCall()
@@ -182,6 +187,9 @@ describe("Event store create block transaction", () => {
       encryptFn: encryptFnFake,
       signFn: signFnFake,
       blockPublisherPublicKeyFn: blockPublisherPublicKeyFnFake,
+      findOneSnapshotFn,
+      eventStreamFn,
+      handlers,
       public,
     })(transaction);
 
@@ -327,7 +335,9 @@ describe("Event store create block transaction", () => {
       context: aggregateContext,
       state: aggregateState,
     };
-    const aggregateFnFake = fake.resolves(aggregate);
+    const aggregateFnFake = fake.returns(aggregate);
+    const aggregateOuterFnFake = fake.returns(aggregateFnFake);
+    replace(deps, "aggregate", aggregateOuterFnFake);
 
     const cononicalStringFake = stub()
       .onCall(0)
@@ -416,6 +426,9 @@ describe("Event store create block transaction", () => {
       encryptFn: encryptFnFake,
       signFn: signFnFake,
       blockPublisherPublicKeyFn: blockPublisherPublicKeyFnFake,
+      findOneSnapshotFn,
+      eventStreamFn,
+      handlers,
       public: false,
     })();
 
@@ -573,7 +586,9 @@ describe("Event store create block transaction", () => {
       context: aggregateContext,
       state: aggregateState,
     };
-    const aggregateFnFake = fake.resolves(aggregate);
+    const aggregateFnFake = fake.returns(aggregate);
+    const aggregateOuterFnFake = fake.returns(aggregateFnFake);
+    replace(deps, "aggregate", aggregateOuterFnFake);
 
     const cononicalStringFake = fake();
     replace(deps, "cononicalString", cononicalStringFake);
@@ -619,6 +634,9 @@ describe("Event store create block transaction", () => {
       encryptFn: encryptFnFake,
       signFn: signFnFake,
       blockPublisherPublicKeyFn: blockPublisherPublicKeyFnFake,
+      findOneSnapshotFn,
+      eventStreamFn,
+      handlers,
       public,
     })(transaction);
 
@@ -701,7 +719,9 @@ describe("Event store create block transaction", () => {
       context: aggregateContext,
       state: aggregateState,
     };
-    const aggregateFnFake = fake.resolves(aggregate);
+    const aggregateFnFake = fake.returns(aggregate);
+    const aggregateOuterFnFake = fake.returns(aggregateFnFake);
+    replace(deps, "aggregate", aggregateOuterFnFake);
 
     const cononicalStringFake = stub()
       .onFirstCall()
@@ -735,13 +755,17 @@ describe("Event store create block transaction", () => {
       })
       .onCall(3)
       .returns({
-        create: () => snapshotHeadersHash,
+        create: () => previousHash,
       })
       .onCall(4)
       .returns({
-        create: () => snapshotRootHash,
+        create: () => snapshotHeadersHash,
       })
       .onCall(5)
+      .returns({
+        create: () => snapshotRootHash,
+      })
+      .onCall(6)
       .returns({
         create: () => blockHeadersHash,
       });
@@ -780,6 +804,9 @@ describe("Event store create block transaction", () => {
       encryptFn: encryptFnFake,
       signFn: signFnFake,
       blockPublisherPublicKeyFn: blockPublisherPublicKeyFnFake,
+      findOneSnapshotFn,
+      eventStreamFn,
+      handlers,
       public,
     })(transaction);
 
@@ -799,12 +826,13 @@ describe("Event store create block transaction", () => {
     expect(hashFake.getCall(0)).to.have.been.calledWith(eventHash);
     expect(hashFake.getCall(1)).to.have.been.calledWith(aggregateContext);
     expect(hashFake.getCall(2)).to.have.been.calledWith(aggregateState);
-    expect(hashFake.getCall(3)).to.have.been.calledWith({
+    expect(hashFake.getCall(3)).to.have.been.calledWith("~");
+    expect(hashFake.getCall(4)).to.have.been.calledWith({
       nonce: snapshotNonce,
       block: previousNumber + 1,
       cHash: contextHash,
       sHash: stateHash,
-      pHash: "~",
+      pHash: previousHash,
       trace,
       created: deps.dateString(),
       root,
@@ -828,7 +856,7 @@ describe("Event store create block transaction", () => {
           cHash: contextHash,
           sHash: stateHash,
           trace,
-          pHash: "~",
+          pHash: previousHash,
           created: deps.dateString(),
           root,
           public,
@@ -845,7 +873,7 @@ describe("Event store create block transaction", () => {
       },
       transaction,
     });
-    expect(hashFake.getCall(4)).to.have.been.calledWith(savedSnapshotRoot);
+    expect(hashFake.getCall(5)).to.have.been.calledWith(savedSnapshotRoot);
     expect(cononicalStringFake.getCall(1)).to.have.been.calledWith({
       hash: savedSnapshotHash,
       headers: savedSnapshotHeaders,
@@ -858,7 +886,7 @@ describe("Event store create block transaction", () => {
     expect(merkleRootFake.getCall(2)).to.have.been.calledWith([
       [eventKeyHash, eventCononicalString],
     ]);
-    expect(hashFake.getCall(5)).to.have.been.calledWith({
+    expect(hashFake.getCall(6)).to.have.been.calledWith({
       nonce: blockNonce,
       pHash: previousHash,
       created: deps.dateString(),
@@ -949,6 +977,9 @@ describe("Event store create block transaction", () => {
       encryptFn: encryptFnFake,
       signFn: signFnFake,
       blockPublisherPublicKeyFn: blockPublisherPublicKeyFnFake,
+      findOneSnapshotFn,
+      eventStreamFn,
+      handlers,
       public,
     })(transaction);
 

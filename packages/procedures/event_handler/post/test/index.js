@@ -38,7 +38,7 @@ describe("Command handler post", () => {
       fn: match((fn) => {
         const aggregate = "some-aggregate";
         fn(aggregate);
-        return mainFnFake.calledWith(aggregate, { push: false });
+        return mainFnFake.calledWith(aggregate, { push: true });
       }),
       sortFn: match((fn) => {
         const a = { headers: { created: 0 } };
@@ -59,6 +59,40 @@ describe("Command handler post", () => {
       body: {
         message: { data },
       },
+    };
+
+    const sendStatusFake = fake();
+    const res = {
+      sendStatus: sendStatusFake,
+    };
+
+    await post({
+      mainFn: mainFnFake,
+      aggregateStreamFn: aggregateStreamFnFake,
+    })(req, res);
+
+    expect(aggregateStreamFnFake).to.have.been.calledWith({
+      fn: match((fn) => {
+        const aggregate = "some-aggregate";
+        fn(aggregate);
+        return mainFnFake.calledWith(aggregate, { push: false });
+      }),
+      sortFn: match((fn) => {
+        const a = { headers: { created: 0 } };
+        const b = { headers: { created: 1 } };
+        const result = fn(a, b);
+        return result == -1;
+      }),
+    });
+
+    expect(sendStatusFake).to.have.been.calledWith(204);
+  });
+  it("should call with the correct params with no message", async () => {
+    const mainFnFake = fake();
+    const aggregateStreamFnFake = fake();
+
+    const req = {
+      body: {},
     };
 
     const sendStatusFake = fake();

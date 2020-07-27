@@ -268,11 +268,19 @@ module.exports = async ({
   const bStore = await blockchainStore();
 
   deps.eventStore({
-    aggregateFn: deps.aggregate({
-      eventStore: eStore,
+    findSnapshotsFn: deps.findSnapshots({
       snapshotStore: sStore,
-      handlers,
     }),
+    findEventsFn: deps.findEvents({
+      eventStore: eStore,
+    }),
+    findOneSnapshotFn: deps.findOneSnapshot({
+      snapshotStore: sStore,
+    }),
+    eventStreamFn: deps.eventStream({
+      eventStore: eStore,
+    }),
+    handlers,
     saveEventsFn: deps.saveEvents({
       eventStore: eStore,
       handlers,

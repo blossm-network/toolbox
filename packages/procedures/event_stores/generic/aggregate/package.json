@@ -1,7 +1,7 @@
 {
-  "name": "@blossm/event-store-get",
-  "description": "An event store GET handler.",
-  "version": "0.0.53",
+  "name": "@blossm/event-store-aggregate",
+  "description": "An event store server aggregate function.",
+  "version": "0.0.0",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -14,12 +14,9 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/errors": "^0.0.37",
-    "@blossm/event-store-query": "*",
-    "@blossm/event-store-aggregate": "*"
+    "@blossm/errors": "^0.0.37"
   },
   "devDependencies": {
-    "chai-datetime": "^1.5.0",
     "mocha": "^7.1.1",
     "sinon": "^7.3.2",
     "sinon-chai": "^3.5.0"

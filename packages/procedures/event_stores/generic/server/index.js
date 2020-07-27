@@ -1,9 +1,7 @@
 const deps = require("./deps");
 
 module.exports = async ({
-  aggregateFn,
   saveEventsFn,
-  queryFn,
   aggregateStreamFn,
   reserveRootCountsFn,
   publishFn,
@@ -17,6 +15,11 @@ module.exports = async ({
   encryptFn,
   signFn,
   blockPublisherPublicKeyFn,
+  findSnapshotsFn,
+  findEventsFn,
+  findOneSnapshotFn,
+  eventStreamFn,
+  handlers,
   public,
 } = {}) => {
   deps
@@ -30,11 +33,19 @@ module.exports = async ({
     .get(deps.rootStream({ rootStreamFn }), {
       path: "/roots",
     })
-    .get(deps.get({ aggregateFn, queryFn }), { path: "/:root?" })
+    .get(
+      deps.get({
+        findSnapshotsFn,
+        findEventsFn,
+        findOneSnapshotFn,
+        eventStreamFn,
+        handlers,
+      }),
+      { path: "/:root?" }
+    )
     .post(
       deps.createBlock({
         saveSnapshotFn,
-        aggregateFn,
         rootStreamFn,
         createTransactionFn,
         saveBlockFn,
@@ -53,6 +64,9 @@ module.exports = async ({
         publishFn,
         createTransactionFn,
         idempotencyConflictCheckFn,
+        findOneSnapshotFn,
+        eventStreamFn,
+        handlers,
       })
     )
     .listen();

@@ -44,12 +44,7 @@ module.exports = ({
     receipt.map((e) => {
       if (publishedTopics.includes(e.topic)) return;
       publishedTopics.push(e.topic);
-      return publishFn(
-        {
-          push: true,
-        },
-        e.topic
-      );
+      return publishFn({}, e.topic);
     })
   );
 

@@ -64,10 +64,7 @@ describe("Event store post", () => {
       saveEventsFn,
       reserveRootCountsFn,
     });
-    expect(publishFnFake).to.have.been.calledWith(
-      { push: true },
-      savedEventHeadersTopic
-    );
+    expect(publishFnFake).to.have.been.calledWith({}, savedEventHeadersTopic);
     expect(publishFnFake).to.have.been.calledOnce;
     expect(sendStatusFake).to.have.been.calledWith(204);
   });
@@ -130,10 +127,7 @@ describe("Event store post", () => {
       saveEventsFn,
       reserveRootCountsFn,
     });
-    expect(publishFnFake).to.have.been.calledWith(
-      { push: true },
-      savedEventHeadersTopic
-    );
+    expect(publishFnFake).to.have.been.calledWith({}, savedEventHeadersTopic);
     expect(sendStatusFake).to.have.been.calledWith(204);
   });
   it("should call with the correct params with event no idempotency passed in", async () => {
@@ -199,10 +193,7 @@ describe("Event store post", () => {
       saveEventsFn,
       reserveRootCountsFn,
     });
-    expect(publishFnFake).to.have.been.calledWith(
-      { push: true },
-      savedEventHeadersTopic
-    );
+    expect(publishFnFake).to.have.been.calledWith({}, savedEventHeadersTopic);
     expect(sendStatusFake).to.have.been.calledWith(204);
   });
   it("should call with the correct params with idempotency fn conflict", async () => {
@@ -269,10 +260,7 @@ describe("Event store post", () => {
       saveEventsFn,
       reserveRootCountsFn,
     });
-    expect(publishFnFake).to.have.been.calledWith(
-      { push: true },
-      savedEventHeadersTopic
-    );
+    expect(publishFnFake).to.have.been.calledWith({}, savedEventHeadersTopic);
     expect(sendStatusFake).to.have.been.calledWith(204);
   });
 });

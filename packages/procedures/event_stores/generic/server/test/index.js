@@ -3,9 +3,12 @@ const { restore, replace, fake } = require("sinon");
 
 const deps = require("../deps");
 
-const aggregateFn = "some-aggregate-fn";
+const findSnapshotsFn = "some-find-snapshots-fn";
+const findEventsFn = "some-find-events-fn";
+const findOneSnapshotFn = "some-find-one-snapshot-fn";
+const eventStreamFn = "some-event-steam-fn";
+const handlers = "some-handlers";
 const reserveRootCountsFn = "some-reserve-root-counts-fn";
-const queryFn = "some-query-fn";
 const aggregateStreamFn = "some-aggregate-stream-fn";
 const rootStreamFn = "some-root-stream-fn";
 const countFn = "some-count-fn";
@@ -74,10 +77,13 @@ describe("Event store", () => {
     replace(deps, "post", eventStorePostFake);
     const public = "some-public";
     await eventStore({
-      aggregateFn,
+      findSnapshotsFn,
+      findEventsFn,
+      findOneSnapshotFn,
+      eventStreamFn,
+      handlers,
       reserveRootCountsFn,
       saveEventsFn,
-      queryFn,
       aggregateStreamFn,
       publishFn,
       rootStreamFn,
@@ -116,7 +122,13 @@ describe("Event store", () => {
       }
     );
     expect(postFake).to.have.been.calledWith(eventStorePostResult);
-    expect(eventStoreGetFake).to.have.been.calledWith({ aggregateFn, queryFn });
+    expect(eventStoreGetFake).to.have.been.calledWith({
+      findSnapshotsFn,
+      findEventsFn,
+      findOneSnapshotFn,
+      eventStreamFn,
+      handlers,
+    });
     expect(eventStoreAggregateStreamFake).to.have.been.calledWith({
       aggregateStreamFn,
     });
@@ -124,7 +136,6 @@ describe("Event store", () => {
     expect(eventStoreCountFake).to.have.been.calledWith({ countFn });
     expect(eventStoreCreateBlockFake).to.have.been.calledWith({
       saveSnapshotFn,
-      aggregateFn,
       rootStreamFn,
       createTransactionFn,
       saveBlockFn,
@@ -140,6 +151,9 @@ describe("Event store", () => {
       publishFn,
       idempotencyConflictCheckFn,
       createTransactionFn,
+      findOneSnapshotFn,
+      eventStreamFn,
+      handlers,
     });
   });
 });

@@ -12,7 +12,9 @@ const data = (req) => {
 };
 
 module.exports = ({ mainFn, aggregateStreamFn }) => async (req, res) => {
-  const { timestamp, push = false } = data(req);
+  const { timestamp, push = true } = req.body.message
+    ? data(req)
+    : { push: false };
 
   await aggregateStreamFn({
     ...(timestamp && { timestamp }),

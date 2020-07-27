@@ -1,8 +1,18 @@
 const deps = require("./deps");
 
-module.exports = ({ aggregateFn, queryFn }) => async (req, res) => {
+module.exports = ({
+  findSnapshotsFn,
+  findEventsFn,
+  findOneSnapshotFn,
+  eventStreamFn,
+  handlers,
+}) => async (req, res) => {
   if (req.params.root) {
-    const result = await aggregateFn(req.params.root);
+    const result = await deps.aggregate({
+      findOneSnapshotFn,
+      eventStreamFn,
+      handlers,
+    })(req.params.root);
 
     if (!result)
       throw deps.resourceNotFoundError.message("This root wasn't found.", {
@@ -11,7 +21,13 @@ module.exports = ({ aggregateFn, queryFn }) => async (req, res) => {
 
     res.send(result);
   } else {
-    const results = await queryFn({
+    const results = await deps.query({
+      findSnapshotsFn,
+      findEventsFn,
+      findOneSnapshotFn,
+      eventStreamFn,
+      handlers,
+    })({
       key: req.query.key,
       value: req.query.value,
     });

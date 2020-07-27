@@ -1,5 +1,5 @@
 const { expect } = require("chai").use(require("sinon-chai"));
-const { restore, replace, fake } = require("sinon");
+const { restore, replace, fake, stub, match } = require("sinon");
 const aggregate = require("..");
 
 const deps = require("../deps");
@@ -74,9 +74,6 @@ const findOneResult = {
   },
 };
 
-const eventStore = "some-event-store";
-const snapshotStore = "some-snapshot-store";
-
 const envDomain = "some-env-domain";
 const envService = "some-env-service";
 const envNetwork = "some-env-network";
@@ -90,28 +87,16 @@ describe("Mongodb event store aggregate", () => {
     restore();
   });
   it("should call with the correct params", async () => {
-    const eachAsyncFake = fake.yields(event);
-    const cursorFake = fake.returns({
-      eachAsync: eachAsyncFake,
-    });
-    const findFake = fake.returns({
-      cursor: cursorFake,
-    });
-    const findOneFake = fake.returns(findOneResult);
+    const eventStreamFnFake = stub().yieldsTo("fn", event);
+    const findOneSnapshotFnFake = fake.returns(findOneResult);
 
-    const db = {
-      find: findFake,
-      findOne: findOneFake,
-    };
+    const result = await aggregate({
+      handlers,
+      eventStreamFn: eventStreamFnFake,
+      findOneSnapshotFn: findOneSnapshotFnFake,
+    })(root);
 
-    replace(deps, "db", db);
-
-    const result = await aggregate({ handlers, eventStore, snapshotStore })(
-      root
-    );
-
-    expect(findFake).to.have.been.calledWith({
-      store: eventStore,
+    expect(eventStreamFnFake).to.have.been.calledWith({
       query: {
         "headers.root": root,
         "headers.number": { $gt: 6 },
@@ -119,13 +104,9 @@ describe("Mongodb event store aggregate", () => {
       sort: {
         "headers.number": 1,
       },
-      options: {
-        lean: true,
-      },
+      fn: match(() => true),
     });
-    expect(eachAsyncFake).to.have.been.calledOnce;
-    expect(findOneFake).to.have.been.calledWith({
-      store: snapshotStore,
+    expect(findOneSnapshotFnFake).to.have.been.calledWith({
       query: {
         "headers.root": root,
       },
@@ -134,9 +115,6 @@ describe("Mongodb event store aggregate", () => {
       },
       select: {
         events: 0,
-      },
-      options: {
-        lean: true,
       },
     });
     expect(result).to.deep.equal({
@@ -161,31 +139,17 @@ describe("Mongodb event store aggregate", () => {
     });
   });
   it("should call with the correct params if includeEvents and theres a timestamp", async () => {
-    const eachAsyncFake = fake.yields(event);
-    const cursorFake = fake.returns({
-      eachAsync: eachAsyncFake,
-    });
-    const findFake = fake.returns({
-      cursor: cursorFake,
-    });
-    const findOneFake = fake.returns(findOneResult);
-
-    const db = {
-      find: findFake,
-      findOne: findOneFake,
-    };
-
-    replace(deps, "db", db);
+    const eventStreamFnFake = stub().yieldsTo("fn", event);
+    const findOneSnapshotFnFake = fake.returns(findOneResult);
 
     const timestamp = "some-timestamp";
     const result = await aggregate({
       handlers,
-      eventStore,
-      snapshotStore,
+      eventStreamFn: eventStreamFnFake,
+      findOneSnapshotFn: findOneSnapshotFnFake,
     })(root, { includeEvents: true, timestamp });
 
-    expect(findFake).to.have.been.calledWith({
-      store: eventStore,
+    expect(eventStreamFnFake).to.have.been.calledWith({
       query: {
         "headers.root": root,
         "headers.number": { $gt: 6 },
@@ -194,13 +158,9 @@ describe("Mongodb event store aggregate", () => {
       sort: {
         "headers.number": 1,
       },
-      options: {
-        lean: true,
-      },
+      fn: match(() => true),
     });
-    expect(eachAsyncFake).to.have.been.calledOnce;
-    expect(findOneFake).to.have.been.calledWith({
-      store: snapshotStore,
+    expect(findOneSnapshotFnFake).to.have.been.calledWith({
       query: {
         "headers.root": root,
         "headers.created": { $lte: timestamp },
@@ -210,9 +170,6 @@ describe("Mongodb event store aggregate", () => {
       },
       select: {
         events: 0,
-      },
-      options: {
-        lean: true,
       },
     });
     expect(result).to.deep.equal({
@@ -238,28 +195,16 @@ describe("Mongodb event store aggregate", () => {
     });
   });
   it("should call with the correct params with no events", async () => {
-    const eachAsyncFake = fake();
-    const otherCursorFake = fake.returns({
-      eachAsync: eachAsyncFake,
-    });
-    const findFake = fake.returns({
-      cursor: otherCursorFake,
-    });
-    const findOneFake = fake.returns(findOneResult);
+    const eventStreamFnFake = fake();
+    const findOneSnapshotFnFake = fake.returns(findOneResult);
 
-    const db = {
-      find: findFake,
-      findOne: findOneFake,
-    };
+    const result = await aggregate({
+      handlers,
+      eventStreamFn: eventStreamFnFake,
+      findOneSnapshotFn: findOneSnapshotFnFake,
+    })(root);
 
-    replace(deps, "db", db);
-
-    const result = await aggregate({ handlers, eventStore, snapshotStore })(
-      root
-    );
-
-    expect(findFake).to.have.been.calledWith({
-      store: eventStore,
+    expect(eventStreamFnFake).to.have.been.calledWith({
       query: {
         "headers.root": root,
         "headers.number": { $gt: 6 },
@@ -267,13 +212,9 @@ describe("Mongodb event store aggregate", () => {
       sort: {
         "headers.number": 1,
       },
-      options: {
-        lean: true,
-      },
+      fn: match(() => true),
     });
-    expect(eachAsyncFake).to.have.been.calledOnce;
-    expect(findOneFake).to.have.been.calledWith({
-      store: snapshotStore,
+    expect(findOneSnapshotFnFake).to.have.been.calledWith({
       query: {
         "headers.root": root,
       },
@@ -282,9 +223,6 @@ describe("Mongodb event store aggregate", () => {
       },
       select: {
         events: 0,
-      },
-      options: {
-        lean: true,
       },
     });
     expect(result).to.deep.equal({
@@ -309,41 +247,25 @@ describe("Mongodb event store aggregate", () => {
     });
   });
   it("should call with the correct params with no snapshot found", async () => {
-    const eachAsyncFake = fake.yields(event);
-    const cursorFake = fake.returns({
-      eachAsync: eachAsyncFake,
-    });
-    const findFake = fake.returns({
-      cursor: cursorFake,
-    });
-    const findOneFake = fake();
+    const eventStreamFnFake = stub().yieldsTo("fn", event);
+    const findOneSnapshotFnFake = fake.returns();
 
-    const db = {
-      find: findFake,
-      findOne: findOneFake,
-    };
+    const result = await aggregate({
+      handlers,
+      eventStreamFn: eventStreamFnFake,
+      findOneSnapshotFn: findOneSnapshotFnFake,
+    })(root);
 
-    replace(deps, "db", db);
-
-    const result = await aggregate({ handlers, eventStore, snapshotStore })(
-      root
-    );
-
-    expect(findFake).to.have.been.calledWith({
-      store: eventStore,
+    expect(eventStreamFnFake).to.have.been.calledWith({
       query: {
         "headers.root": root,
       },
       sort: {
         "headers.number": 1,
       },
-      options: {
-        lean: true,
-      },
+      fn: match(() => true),
     });
-    expect(eachAsyncFake).to.have.been.calledOnce;
-    expect(findOneFake).to.have.been.calledWith({
-      store: snapshotStore,
+    expect(findOneSnapshotFnFake).to.have.been.calledWith({
       query: {
         "headers.root": root,
       },
@@ -352,9 +274,6 @@ describe("Mongodb event store aggregate", () => {
       },
       select: {
         events: 0,
-      },
-      options: {
-        lean: true,
       },
     });
     expect(result).to.deep.equal({
@@ -383,40 +302,25 @@ describe("Mongodb event store aggregate", () => {
     });
   });
   it("should call with the correct params with no snapshot or events found", async () => {
-    const eachAsyncFake = fake();
-    const otherCursorFake = fake.returns({
-      eachAsync: eachAsyncFake,
-    });
-    const findFake = fake.returns({
-      cursor: otherCursorFake,
-    });
-    const findOneFake = fake.returns();
+    const eventStreamFnFake = fake();
+    const findOneSnapshotFnFake = fake();
 
-    const db = {
-      find: findFake,
-      findOne: findOneFake,
-    };
+    const result = await aggregate({
+      handlers,
+      eventStreamFn: eventStreamFnFake,
+      findOneSnapshotFn: findOneSnapshotFnFake,
+    })(root);
 
-    replace(deps, "db", db);
-
-    const result = await aggregate({ handlers, eventStore, snapshotStore })(
-      root
-    );
-
-    expect(findFake).to.have.been.calledWith({
-      store: eventStore,
+    expect(eventStreamFnFake).to.have.been.calledWith({
       query: {
         "headers.root": root,
       },
       sort: {
         "headers.number": 1,
       },
-      options: {
-        lean: true,
-      },
+      fn: match(() => true),
     });
-    expect(findOneFake).to.have.been.calledWith({
-      store: snapshotStore,
+    expect(findOneSnapshotFnFake).to.have.been.calledWith({
       query: {
         "headers.root": root,
       },
@@ -426,28 +330,12 @@ describe("Mongodb event store aggregate", () => {
       select: {
         events: 0,
       },
-      options: {
-        lean: true,
-      },
     });
     expect(result).to.be.undefined;
   });
   it("should throw if a handler isn't specified", async () => {
-    const eachAsyncFake = fake.yields(event);
-    const cursorFake = fake.returns({
-      eachAsync: eachAsyncFake,
-    });
-    const findFake = fake.returns({
-      cursor: cursorFake,
-    });
-    const findOneFake = fake.returns(findOneResult);
-
-    const db = {
-      find: findFake,
-      findOne: findOneFake,
-    };
-
-    replace(deps, "db", db);
+    const eventStreamFnFake = stub().yieldsTo("fn", event);
+    const findOneSnapshotFnFake = fake.returns(findOneResult);
 
     const error = new Error();
     const messageFake = fake.returns(error);
@@ -455,7 +343,12 @@ describe("Mongodb event store aggregate", () => {
       message: messageFake,
     });
     try {
-      await aggregate({ handlers: {}, eventStore, snapshotStore })(root);
+      await aggregate({
+        handlers: {},
+        eventStreamFn: eventStreamFnFake,
+        findOneSnapshotFn: findOneSnapshotFnFake,
+      })(root);
+
       //shouldn't get called
       expect(1).to.equal(2);
     } catch (e) {

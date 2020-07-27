@@ -25,12 +25,14 @@ describe("Event store post", () => {
     };
 
     const saveSnapshotFn = "some-save-snapshot-fn";
-    const aggregateFn = "some-aggregate-fn";
     const rootStreamFn = "some-root-stream-fn";
     const latestBlockFn = "some-latest-block-fn";
     const saveBlockFn = "some-save-block-fn";
     const encryptFn = "some-encrypt-fn";
     const signFn = "some-sign-fn";
+    const findOneSnapshotFn = "some-find-one-snapshot-fn";
+    const eventStreamFn = "some-event-stream-fn";
+    const handlers = "some-handlers";
     const blockPublisherPublicKeyFn = "some-block-publisher-key-fn";
     const public = "some public";
 
@@ -38,7 +40,6 @@ describe("Event store post", () => {
     const createTransactionFnFake = fake.returns(createdTransactionResult);
     await createBlock({
       saveSnapshotFn,
-      aggregateFn,
       rootStreamFn,
       latestBlockFn,
       saveBlockFn,
@@ -46,6 +47,9 @@ describe("Event store post", () => {
       encryptFn,
       signFn,
       blockPublisherPublicKeyFn,
+      findOneSnapshotFn,
+      eventStreamFn,
+      handlers,
       public,
     })(req, res);
 
@@ -54,12 +58,14 @@ describe("Event store post", () => {
     );
     expect(createBlockTransactionFake).to.have.been.calledWith({
       saveSnapshotFn,
-      aggregateFn,
       rootStreamFn,
       latestBlockFn,
       saveBlockFn,
       encryptFn,
       signFn,
+      findOneSnapshotFn,
+      eventStreamFn,
+      handlers,
       blockPublisherPublicKeyFn,
       public,
     });

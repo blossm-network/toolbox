@@ -17,40 +17,41 @@ const doesMatchQuery = ({ state, query }) => {
   }
 };
 
-module.exports = ({ eventStore, snapshotStore, handlers }) => async ({
-  key,
-  value,
-}) => {
+module.exports = ({
+  findSnapshotsFn,
+  findEventsFn,
+  findOneSnapshotFn,
+  eventStreamFn,
+  handlers,
+}) => async ({ key, value }) => {
   if (!key || !value)
     throw deps.badRequestError.message("The query is missing a key or value.", {
       info: { key, value },
     });
 
-  //TODO first get snapshot, then get events. Avoid streaming all event results.
-  const [snapshots, events] = await Promise.all([
-    deps.db.find({
-      store: snapshotStore,
-      query: {
-        [`state.${key}`]: value,
-      },
-      options: {
-        lean: true,
+  const snapshots = await findSnapshotsFn({
+    query: { [`state.${key}`]: value },
+  });
+  const events = await findEventsFn({
+    query: {
+      [`payload.${key}`]: value,
+    },
+    ...(snapshots.length && {
+      sort: {
+        ["headers.created"]: {
+          $gt: snapshots.sort((a, b) =>
+            a.headers.created < b.headers.created
+              ? -1
+              : a.headers.created > b.headers.created
+              ? 1
+              : 0
+          )[0].headers.created,
+        },
       },
     }),
-    deps.db.find({
-      store: eventStore,
-      query: {
-        [`payload.${key}`]: value,
-      },
-      options: {
-        lean: true,
-      },
-    }),
-  ]);
+  });
 
   if (snapshots.length == 0 && events.length == 0) return [];
-
-  const aggregateFn = deps.aggregate({ eventStore, snapshotStore, handlers });
 
   const candidateRoots = [
     ...new Set([
@@ -59,6 +60,11 @@ module.exports = ({ eventStore, snapshotStore, handlers }) => async ({
     ]),
   ];
 
+  const aggregateFn = deps.aggregate({
+    findOneSnapshotFn,
+    eventStreamFn,
+    handlers,
+  });
   const aggregates = await Promise.all(
     candidateRoots.map((root) => aggregateFn(root))
   );
