@@ -88,6 +88,7 @@ exports.stream = async (url, onDataFn, { query, headers } = {}) => {
         if (!rejected && finishedProcessingAllData) resolve();
       })
       .on("error", (err) => {
+        if (rejected) return;
         rejected = true;
         reject(err);
       })
@@ -127,6 +128,7 @@ exports.streamMany = async (requests, onDataFn, sortFn) => {
         if (!rejected && finishedProcessingAllData) resolve();
       })
       .on("error", (err) => {
+        if (rejected) return;
         rejected = true;
         reject(err);
       })
