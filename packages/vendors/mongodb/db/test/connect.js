@@ -85,10 +85,10 @@ describe("Connects", () => {
     });
   });
 
-  it("it pass along the onError callback", () => {
+  it("it pass along the onError callback", async () => {
     const onError = (name) => name;
 
-    connect({
+    await connect({
       protocol,
       user,
       password,
@@ -100,10 +100,10 @@ describe("Connects", () => {
     expect(onFake).to.have.been.calledWith("error", onError);
   });
 
-  it("it pass along the onError callback", () => {
+  it("it pass along the onError callback", async () => {
     const onOpen = () => true;
 
-    connect({
+    await connect({
       protocol,
       user,
       password,
@@ -121,7 +121,7 @@ describe("Returns the right object", () => {
     restore();
   });
 
-  it("it should connect if all the params are normal, and ommittable params omitted", () => {
+  it("it should connect if all the params are normal, and ommittable params omitted", async () => {
     const onceFake = fake();
     const onFake = fake();
     const returnValue = {
@@ -131,9 +131,9 @@ describe("Returns the right object", () => {
     replace(deps.mongoose, "connect", fake());
     replaceGetter(deps.mongoose, "connection", fake.returns(returnValue));
 
-    expect(connect({ protocol, user, password, host, database })).to.equal(
-      returnValue
-    );
+    expect(
+      await connect({ protocol, user, password, host, database })
+    ).to.equal(returnValue);
 
     expect(onceFake).to.have.been.calledOnce;
     expect(onFake).to.have.been.calledOnce;

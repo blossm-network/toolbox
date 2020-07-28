@@ -15,7 +15,7 @@ describe("Store", () => {
     restore();
   });
 
-  it("it should return a model object that is instatiatable", () => {
+  it("it should return a model object that is instatiatable", async () => {
     const indexFake = fake();
 
     const schemaObj = {
@@ -34,7 +34,7 @@ describe("Store", () => {
     const indexPart2 = "some-index-part-2";
     const indexes = [[indexPart1, indexPart2]];
     const typeKey = "some-type-key";
-    const result = store({ name, schema, indexes, typeKey });
+    const result = await store({ name, schema, indexes, typeKey });
 
     expect(result).to.equal(modelObject);
     expect(modelFake).to.have.been.calledWith(name, schemaObj, name);
@@ -42,6 +42,8 @@ describe("Store", () => {
       strict: true,
       typePojoToMixed: false,
       minimize: false,
+      reconnectTries: 20,
+      reconnectInterval: 3000,
       versionKey: false,
       useNestedStrict: true,
       typeKey,
@@ -51,7 +53,7 @@ describe("Store", () => {
       indexPart2
     );
   });
-  it("it should return a model object with optionals missing", () => {
+  it("it should return a model object with optionals missing", async () => {
     const indexFake = fake();
 
     const schemaObj = {
@@ -65,7 +67,7 @@ describe("Store", () => {
     const modelFake = fake.returns(modelObject);
     replace(deps.mongoose, "model", modelFake);
 
-    const result = store({ name });
+    const result = await store({ name });
 
     expect(result).to.equal(modelObject);
     expect(modelFake).to.have.been.calledWith(name, schemaObj, name);
@@ -75,13 +77,15 @@ describe("Store", () => {
         strict: false,
         typePojoToMixed: false,
         versionKey: false,
+        reconnectTries: 20,
+        reconnectInterval: 3000,
         minimize: false,
         useNestedStrict: true,
       }
     );
     expect(indexFake).to.not.have.been.called;
   });
-  it("it should return a model object with connection properties passed in", () => {
+  it("it should return a model object with connection properties passed in", async () => {
     const indexFake = fake();
 
     const schemaObj = {
@@ -116,7 +120,7 @@ describe("Store", () => {
     const host = "some-host";
     const database = "some-db";
     const protocol = "some-protocol";
-    const result = store({
+    const result = await store({
       name,
       schema,
       indexes,
@@ -135,6 +139,8 @@ describe("Store", () => {
       strict: true,
       typePojoToMixed: false,
       versionKey: false,
+      reconnectTries: 20,
+      reconnectInterval: 3000,
       minimize: false,
       useNestedStrict: true,
     });
@@ -149,12 +155,14 @@ describe("Store", () => {
       useCreateIndex: true,
       useUnifiedTopology: true,
       useFindAndModify: false,
+      reconnectTries: 20,
+      reconnectInterval: 3000,
       autoIndex: false,
       poolSize: 5,
     });
   });
 
-  it("it should throw if it doesnt have a name", () => {
+  it("it should throw if it doesnt have a name", async () => {
     const error = "some-error";
     const internalServerMessageErrorFake = fake.returns(error);
     replace(deps, "internalServerError", {
@@ -162,7 +170,7 @@ describe("Store", () => {
     });
 
     try {
-      store({});
+      await store({});
 
       //shouldn't get called
       expect(1).to.equal(0);

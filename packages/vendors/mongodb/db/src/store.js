@@ -48,6 +48,8 @@ module.exports = async ({
     typePojoToMixed: false,
     versionKey: false,
     useNestedStrict: true,
+    reconnectTries: 20,
+    reconnectInterval: 3000,
     minimize: false,
     ...(typeKey && { typeKey }),
   });
