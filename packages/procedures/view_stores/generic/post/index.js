@@ -32,8 +32,6 @@ module.exports = ({ writeFn, formatFn, updateFn = defaultFn }) => {
       "headers.modified": deps.dateString(),
     };
 
-    //TODO
-    console.log({ data, body: req.body });
     let formattedQuery;
 
     if (req.body.query) {
@@ -54,8 +52,6 @@ module.exports = ({ writeFn, formatFn, updateFn = defaultFn }) => {
       },
       data,
     });
-    //TODO
-    console.log({ newView });
 
     res.status(200).send(formatFn(newView));
   };

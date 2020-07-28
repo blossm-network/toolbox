@@ -24,6 +24,7 @@ module.exports = ({
           state: aggregate.state,
           context: aggregate.context,
           headers: aggregate.headers,
+          txIds: aggregate.txIds,
         })
       );
     },

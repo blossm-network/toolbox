@@ -14,6 +14,7 @@ const timestamp = "some-timestamp";
 
 const aggregateState = "some-aggragate-state";
 const aggregateHeaders = "some-aggragate-headers";
+const aggregateTxIds = "some-aggragate-txids";
 const aggregateContext = "some-aggragate-context";
 
 describe("Event store aggregate stream", () => {
@@ -29,6 +30,7 @@ describe("Event store aggregate stream", () => {
     const aggregate = {
       state: aggregateState,
       headers: aggregateHeaders,
+      txIds: aggregateTxIds,
       context: aggregateContext,
     };
     const aggregateFake = fake.returns(aggregate);
@@ -74,6 +76,7 @@ describe("Event store aggregate stream", () => {
     expect(stringifyFake).to.have.been.calledWith({
       state: aggregateState,
       headers: aggregateHeaders,
+      txIds: aggregateTxIds,
       context: aggregateContext,
     });
     expect(endFake).to.have.been.calledOnce;
@@ -87,6 +90,7 @@ describe("Event store aggregate stream", () => {
     const aggregate = {
       state: aggregateState,
       headers: aggregateHeaders,
+      txIds: aggregateTxIds,
       context: aggregateContext,
     };
     const aggregateFake = fake.returns(aggregate);
@@ -125,6 +129,7 @@ describe("Event store aggregate stream", () => {
     expect(stringifyFake).to.have.been.calledWith({
       state: aggregateState,
       headers: aggregateHeaders,
+      txIds: aggregateTxIds,
       context: aggregateContext,
     });
     expect(endFake).to.have.been.calledOnce;
