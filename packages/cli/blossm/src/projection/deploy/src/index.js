@@ -47,6 +47,8 @@ module.exports = eventHandler({
       ? aggregateContext.network
       : aggregate.headers.network;
 
+    //TODO
+    console.log({ aggregate });
     const { body: newView } = await viewStore({
       name: config.name,
       context: config.context,
