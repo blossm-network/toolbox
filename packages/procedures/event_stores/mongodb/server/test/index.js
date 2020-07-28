@@ -225,6 +225,7 @@ describe("Mongodb event store", () => {
       indexes: [
         [{ hash: 1 }],
         [{ "headers.idempotency": 1 }],
+        [{ "tx.ip": 1 }],
         [{ "headers.root": 1 }],
         [{ "headers.root": 1, "headers.number": 1 }],
         [
@@ -583,6 +584,7 @@ describe("Mongodb event store", () => {
       indexes: [
         [{ hash: 1 }],
         [{ "headers.idempotency": 1 }],
+        [{ "tx.ip": 1 }],
         [{ "headers.root": 1 }],
         [{ "headers.root": 1, "headers.number": 1 }],
         [
@@ -883,6 +885,7 @@ describe("Mongodb event store", () => {
       indexes: [
         [{ hash: 1 }],
         [{ "headers.idempotency": 1 }],
+        [{ "tx.ip": 1 }],
         [{ "headers.root": 1 }],
         [{ "headers.root": 1, "headers.number": 1 }],
         [
