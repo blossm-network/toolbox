@@ -140,11 +140,13 @@ module.exports = ({
         txIds: aggregate.txIds,
       };
 
+      console.log({ normalizedSnapshot });
       const snapshot = await saveSnapshotFn({
         snapshot: normalizedSnapshot,
         ...(transaction && { transaction }),
       });
 
+      console.log({ snapshot });
       snapshots.push({
         hash: snapshot.hash,
         headers: snapshot.headers,
