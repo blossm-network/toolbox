@@ -13,6 +13,7 @@ const createKeyRing = require("./steps/create_key_ring");
 const createSymmetricEncryptKey = require("./steps/create_symmetric_encrypt_key");
 const createAsymmetricSignKey = require("./steps/create_asymmetric_sign_key");
 const scheduleJob = require("./steps/schedule_job");
+const updateScheduledJob = require("./steps/update_scheduled_job");
 const startDnsTransaction = require("./steps/start_dns_transaction");
 const addDnsTransaction = require("./steps/add_dns_transaction");
 const executeDnsTransaction = require("./steps/execute_dns_transaction");
@@ -82,6 +83,25 @@ module.exports = ({
         ...dependencyKeyEnvironmentVariables,
       },
     }),
+    createKeyRing({
+      name: "blockchain",
+      location: "global",
+      project,
+    }),
+    createSymmetricEncryptKey({
+      name: "private",
+      ring: "blockchain",
+      location: "global",
+      rotation: "90d",
+      next: "+p90d",
+      project,
+    }),
+    createAsymmetricSignKey({
+      name: "producer",
+      ring: "blockchain",
+      location: "global",
+      project,
+    }),
     dockerComposeUp,
     dockerComposeProcesses,
     ...(runBaseIntegrationTests ? [baseIntegrationTests({ strict })] : []),
@@ -92,25 +112,6 @@ module.exports = ({
             extension: imageExtension,
             containerRegistery,
             procedure,
-          }),
-          createKeyRing({
-            name: "blockchain",
-            location: "global",
-            project,
-          }),
-          createSymmetricEncryptKey({
-            name: "private",
-            ring: "blockchain",
-            location: "global",
-            rotation: "90d",
-            next: "+p90d",
-            project,
-          }),
-          createAsymmetricSignKey({
-            name: "producer",
-            ring: "blockchain",
-            location: "global",
-            project,
           }),
           deployRun({
             serviceName,
@@ -174,6 +175,12 @@ module.exports = ({
             serviceName,
             computeUrlId,
             uri: `${uri}/create-block`,
+            project,
+          }),
+          //Update the schedule if it's changed.
+          updateScheduledJob({
+            name: `event-store-${service}-${domain}-create-block`,
+            schedule: blockSchedule,
             project,
           }),
         ]
