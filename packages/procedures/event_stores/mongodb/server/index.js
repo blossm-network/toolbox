@@ -268,7 +268,7 @@ module.exports = async ({
   });
   const sStore = await snapshotStore({
     schema: deps.formatSchema(schema, typeKey, {
-      options: { default: undefined },
+      options: { default: undefined, unique: false },
     }),
     indexes,
   });

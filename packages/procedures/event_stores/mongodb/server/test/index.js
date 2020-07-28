@@ -153,6 +153,7 @@ describe("Mongodb event store", () => {
       {
         options: {
           default: undefined,
+          unique: false,
         },
       }
     );
@@ -516,6 +517,7 @@ describe("Mongodb event store", () => {
       {
         options: {
           default: undefined,
+          unique: false,
         },
       }
     );
@@ -821,6 +823,7 @@ describe("Mongodb event store", () => {
       {
         options: {
           default: undefined,
+          unique: false,
         },
       }
     );
