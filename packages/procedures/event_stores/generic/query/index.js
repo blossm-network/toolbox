@@ -37,6 +37,8 @@ module.exports = ({
     },
   });
 
+  //TODO
+  console.log({ snapshots, events });
   if (snapshots.length == 0 && events.length == 0) return [];
 
   const candidateRoots = [
@@ -51,10 +53,14 @@ module.exports = ({
     eventStreamFn,
     handlers,
   });
+  //TODO
+  console.log({ candidateRoots });
   const aggregates = await Promise.all(
     candidateRoots.map((root) => aggregateFn(root))
   );
 
+  //TODO
+  console.log({ aggregates });
   const filteredAggregates = aggregates.filter((aggregate) =>
     doesMatchQuery({ state: aggregate.state, query: { [key]: value } })
   );
