@@ -25,6 +25,7 @@ const aggregateContext = "some-aggregate-context";
 const eventCononicalString = "some-event-connical-string";
 const eventPayloadCononicalString = "some-event-payload-cononical-string";
 const snapshotCononicalString = "some-snapshot-cononical-string";
+const txEventsCononicalString = "some-tx-events-cononical-string";
 const snapshotStateCononicalString = "some-snapshot-state-cononical-string";
 const eventsMerkleRoot = Buffer.from("some-events-merkle-root");
 const snapshotMerkleRoot = Buffer.from("some-snapshot-merkle-root");
@@ -34,9 +35,11 @@ const stateHash = "some-state-hash";
 const blockHeadersHash = "some-block-headers-hash";
 const snapshotHeadersHash = "some-snapshot-headers-hash";
 const snapshotRootHash = "some-snapshot-root-hash";
+const txIdHash = "some-tx-id-hash";
 const encodedEventPairs = "some-encoded-event-pairs";
 const encodedAllEventPairs = "some-encoded-all-event-pairs";
 const encodedSnapshotPairs = "some-encoded-snapshot-pairs";
+const encodedTxPairs = "some-encoded-tx-pairs";
 const savedSnapshotRoot = "some-saved-snapshot-root";
 const signedBlockHeaderHash = "some-signed-block-header-hash";
 const savedSnapshotState = "some-saved-snapshot-state";
@@ -54,13 +57,18 @@ const snapshot = {
   events: savedSnapshotEvents,
 };
 const allEventsMerkleRoot = Buffer.from("some-all-events-merkle-root");
+const txsMerkleRoot = Buffer.from("some-txs-merkle-root");
 const previousNumber = 4;
 const previousEnd = "some-previous-end";
 const eventHash = "some-event-hash";
 const eventPayload = "some-event-payload";
+const txId = "some-tx-id";
 const event = {
   hash: eventHash,
   payload: eventPayload,
+  tx: {
+    id: txId,
+  },
 };
 const findOneSnapshotFn = "some-find-one-snapshot-fn";
 const eventStreamFn = "some-event-stream-fn";
@@ -110,10 +118,13 @@ describe("Event store create block transaction", () => {
     replace(deps, "aggregate", aggregateOuterFnFake);
 
     const cononicalStringFake = stub()
-      .onFirstCall()
+      .onCall(0)
       .returns(eventCononicalString)
-      .onSecondCall()
-      .returns(snapshotCononicalString);
+      .onCall(1)
+      .returns(snapshotCononicalString)
+      .onCall(2)
+      .returns(txEventsCononicalString);
+
     replace(deps, "cononicalString", cononicalStringFake);
 
     const merkleRootFake = stub()
@@ -122,7 +133,9 @@ describe("Event store create block transaction", () => {
       .onCall(1)
       .returns(snapshotMerkleRoot)
       .onCall(2)
-      .returns(allEventsMerkleRoot);
+      .returns(allEventsMerkleRoot)
+      .onCall(3)
+      .returns(txsMerkleRoot);
 
     replace(deps, "merkleRoot", merkleRootFake);
 
@@ -149,6 +162,10 @@ describe("Event store create block transaction", () => {
       })
       .onCall(5)
       .returns({
+        create: () => txIdHash,
+      })
+      .onCall(6)
+      .returns({
         create: () => blockHeadersHash,
       });
 
@@ -159,6 +176,7 @@ describe("Event store create block transaction", () => {
       .returns(snapshotNonce)
       .onCall(1)
       .returns(blockNonce);
+
     replace(deps, "nonce", nonceFake);
     const saveSnapshotFnFake = fake.returns(snapshot);
 
@@ -174,7 +192,9 @@ describe("Event store create block transaction", () => {
       .onCall(1)
       .returns(encodedAllEventPairs)
       .onCall(2)
-      .returns(encodedSnapshotPairs);
+      .returns(encodedSnapshotPairs)
+      .onCall(3)
+      .returns(encodedTxPairs);
     replace(deps, "encode", encodeFake);
 
     const blockPublisherPublicKeyFnFake = fake.returns(publicKey);
@@ -268,7 +288,12 @@ describe("Event store create block transaction", () => {
     expect(merkleRootFake.getCall(2)).to.have.been.calledWith([
       [eventKeyHash, eventCononicalString],
     ]);
-    expect(hashFake.getCall(5)).to.have.been.calledWith({
+    expect(merkleRootFake.getCall(3)).to.have.been.calledWith([
+      [txIdHash, txEventsCononicalString],
+    ]);
+    expect(hashFake.getCall(5)).to.have.been.calledWith(txId);
+    expect(cononicalStringFake.getCall(2)).to.have.been.calledWith([eventHash]);
+    expect(hashFake.getCall(6)).to.have.been.calledWith({
       nonce: blockNonce,
       pHash: previousHash,
       created: deps.dateString(),
@@ -277,8 +302,10 @@ describe("Event store create block transaction", () => {
       end: deps.dateString(),
       eCount: 1,
       sCount: 1,
+      tCount: 1,
       eRoot: allEventsMerkleRoot.toString("base64"),
       sRoot: snapshotMerkleRoot.toString("base64"),
+      tRoot: txsMerkleRoot.toString("base64"),
       network,
       service,
       domain,
@@ -299,8 +326,10 @@ describe("Event store create block transaction", () => {
           end: deps.dateString(),
           eCount: 1,
           sCount: 1,
+          tCount: 1,
           eRoot: allEventsMerkleRoot.toString("base64"),
           sRoot: snapshotMerkleRoot.toString("base64"),
+          tRoot: txsMerkleRoot.toString("base64"),
           network,
           service,
           domain,
@@ -308,6 +337,7 @@ describe("Event store create block transaction", () => {
         },
         events: encodedAllEventPairs,
         snapshots: encodedSnapshotPairs,
+        txs: encodedTxPairs,
       },
       transaction,
     });
@@ -346,7 +376,10 @@ describe("Event store create block transaction", () => {
       .onCall(2)
       .returns(snapshotStateCononicalString)
       .onCall(3)
-      .returns(snapshotCononicalString);
+      .returns(snapshotCononicalString)
+      .onCall(4)
+      .returns(txEventsCononicalString);
+
     replace(deps, "cononicalString", cononicalStringFake);
 
     const merkleRootFake = stub()
@@ -355,7 +388,9 @@ describe("Event store create block transaction", () => {
       .onCall(1)
       .returns(snapshotMerkleRoot)
       .onCall(2)
-      .returns(allEventsMerkleRoot);
+      .returns(allEventsMerkleRoot)
+      .onCall(3)
+      .returns(txsMerkleRoot);
 
     replace(deps, "merkleRoot", merkleRootFake);
 
@@ -382,6 +417,10 @@ describe("Event store create block transaction", () => {
       })
       .onCall(5)
       .returns({
+        create: () => txIdHash,
+      })
+      .onCall(6)
+      .returns({
         create: () => blockHeadersHash,
       });
 
@@ -392,6 +431,7 @@ describe("Event store create block transaction", () => {
       .returns(snapshotNonce)
       .onCall(1)
       .returns(blockNonce);
+
     replace(deps, "nonce", nonceFake);
     const saveSnapshotFnFake = fake.returns(snapshot);
 
@@ -412,7 +452,9 @@ describe("Event store create block transaction", () => {
       .onCall(1)
       .returns(encodedAllEventPairs)
       .onCall(2)
-      .returns(encodedSnapshotPairs);
+      .returns(encodedSnapshotPairs)
+      .onCall(3)
+      .returns(encodedTxPairs);
     replace(deps, "encode", encodeFake);
 
     const blockPublisherPublicKeyFnFake = fake.returns(publicKey);
@@ -519,7 +561,12 @@ describe("Event store create block transaction", () => {
     expect(merkleRootFake.getCall(2)).to.have.been.calledWith([
       [eventKeyHash, eventCononicalString],
     ]);
-    expect(hashFake.getCall(5)).to.have.been.calledWith({
+    expect(merkleRootFake.getCall(3)).to.have.been.calledWith([
+      [txIdHash, txEventsCononicalString],
+    ]);
+    expect(hashFake.getCall(5)).to.have.been.calledWith(txId);
+    expect(cononicalStringFake.getCall(4)).to.have.been.calledWith([eventHash]);
+    expect(hashFake.getCall(6)).to.have.been.calledWith({
       nonce: blockNonce,
       pHash: previousHash,
       created: deps.dateString(),
@@ -528,8 +575,10 @@ describe("Event store create block transaction", () => {
       end: deps.dateString(),
       eCount: 1,
       sCount: 1,
+      tCount: 1,
       eRoot: allEventsMerkleRoot.toString("base64"),
       sRoot: snapshotMerkleRoot.toString("base64"),
+      tRoot: txsMerkleRoot.toString("base64"),
       network,
       service,
       domain,
@@ -550,14 +599,17 @@ describe("Event store create block transaction", () => {
           end: deps.dateString(),
           eCount: 1,
           sCount: 1,
+          tCount: 1,
           eRoot: allEventsMerkleRoot.toString("base64"),
           sRoot: snapshotMerkleRoot.toString("base64"),
+          tRoot: txsMerkleRoot.toString("base64"),
           network,
           service,
           domain,
           key: Buffer.from(publicKey).toString("base64"),
         },
         events: encodedAllEventPairs,
+        txs: encodedTxPairs,
         snapshots: encodedSnapshotPairs,
       },
     });
@@ -595,7 +647,9 @@ describe("Event store create block transaction", () => {
       .onCall(0)
       .returns(snapshotMerkleRoot)
       .onCall(1)
-      .returns(allEventsMerkleRoot);
+      .returns(allEventsMerkleRoot)
+      .onCall(2)
+      .returns(txsMerkleRoot);
 
     replace(deps, "merkleRoot", merkleRootFake);
 
@@ -618,7 +672,9 @@ describe("Event store create block transaction", () => {
       .onCall(0)
       .returns(encodedAllEventPairs)
       .onCall(1)
-      .returns(encodedSnapshotPairs);
+      .returns(encodedSnapshotPairs)
+      .onCall(2)
+      .returns(encodedTxPairs);
 
     replace(deps, "encode", encodeFake);
 
@@ -652,6 +708,7 @@ describe("Event store create block transaction", () => {
     expect(cononicalStringFake).to.not.have.been.called;
     expect(merkleRootFake.getCall(0)).to.have.been.calledWith([]);
     expect(merkleRootFake.getCall(1)).to.have.been.calledWith([]);
+    expect(merkleRootFake.getCall(2)).to.have.been.calledWith([]);
     expect(hashFake).to.have.been.calledOnceWith({
       nonce: blockNonce,
       pHash: previousHash,
@@ -661,8 +718,10 @@ describe("Event store create block transaction", () => {
       end: deps.dateString(),
       eCount: 0,
       sCount: 0,
+      tCount: 0,
       eRoot: allEventsMerkleRoot.toString("base64"),
       sRoot: snapshotMerkleRoot.toString("base64"),
+      tRoot: txsMerkleRoot.toString("base64"),
       network,
       service,
       domain,
@@ -683,8 +742,10 @@ describe("Event store create block transaction", () => {
           end: deps.dateString(),
           eCount: 0,
           sCount: 0,
+          tCount: 0,
           eRoot: allEventsMerkleRoot.toString("base64"),
           sRoot: snapshotMerkleRoot.toString("base64"),
+          tRoot: txsMerkleRoot.toString("base64"),
           network,
           service,
           domain,
@@ -692,6 +753,7 @@ describe("Event store create block transaction", () => {
         },
         events: encodedAllEventPairs,
         snapshots: encodedSnapshotPairs,
+        txs: encodedTxPairs,
       },
       transaction,
     });
@@ -725,7 +787,10 @@ describe("Event store create block transaction", () => {
       .onFirstCall()
       .returns(eventCononicalString)
       .onSecondCall()
-      .returns(snapshotCononicalString);
+      .returns(snapshotCononicalString)
+      .onCall(2)
+      .returns(txEventsCononicalString);
+
     replace(deps, "cononicalString", cononicalStringFake);
 
     const merkleRootFake = stub()
@@ -734,7 +799,9 @@ describe("Event store create block transaction", () => {
       .onCall(1)
       .returns(snapshotMerkleRoot)
       .onCall(2)
-      .returns(allEventsMerkleRoot);
+      .returns(allEventsMerkleRoot)
+      .onCall(3)
+      .returns(txsMerkleRoot);
 
     replace(deps, "merkleRoot", merkleRootFake);
 
@@ -765,6 +832,10 @@ describe("Event store create block transaction", () => {
       })
       .onCall(6)
       .returns({
+        create: () => txIdHash,
+      })
+      .onCall(7)
+      .returns({
         create: () => blockHeadersHash,
       });
 
@@ -789,7 +860,10 @@ describe("Event store create block transaction", () => {
       .onCall(1)
       .returns(encodedAllEventPairs)
       .onCall(2)
-      .returns(encodedSnapshotPairs);
+      .returns(encodedSnapshotPairs)
+      .onCall(3)
+      .returns(encodedTxPairs);
+
     replace(deps, "encode", encodeFake);
 
     const blockPublisherPublicKeyFnFake = fake.returns(publicKey);
@@ -883,7 +957,12 @@ describe("Event store create block transaction", () => {
     expect(merkleRootFake.getCall(2)).to.have.been.calledWith([
       [eventKeyHash, eventCononicalString],
     ]);
-    expect(hashFake.getCall(6)).to.have.been.calledWith({
+    expect(merkleRootFake.getCall(3)).to.have.been.calledWith([
+      [txIdHash, txEventsCononicalString],
+    ]);
+    expect(hashFake.getCall(6)).to.have.been.calledWith(txId);
+    expect(cononicalStringFake.getCall(2)).to.have.been.calledWith([eventHash]);
+    expect(hashFake.getCall(7)).to.have.been.calledWith({
       nonce: blockNonce,
       pHash: previousHash,
       created: deps.dateString(),
@@ -892,8 +971,10 @@ describe("Event store create block transaction", () => {
       end: deps.dateString(),
       eCount: 1,
       sCount: 1,
+      tCount: 1,
       eRoot: allEventsMerkleRoot.toString("base64"),
       sRoot: snapshotMerkleRoot.toString("base64"),
+      tRoot: txsMerkleRoot.toString("base64"),
       network,
       service,
       domain,
@@ -914,8 +995,10 @@ describe("Event store create block transaction", () => {
           end: deps.dateString(),
           eCount: 1,
           sCount: 1,
+          tCount: 1,
           eRoot: allEventsMerkleRoot.toString("base64"),
           sRoot: snapshotMerkleRoot.toString("base64"),
+          tRoot: txsMerkleRoot.toString("base64"),
           network,
           service,
           domain,
@@ -923,6 +1006,7 @@ describe("Event store create block transaction", () => {
         },
         events: encodedAllEventPairs,
         snapshots: encodedSnapshotPairs,
+        txs: encodedTxPairs,
       },
       transaction,
     });
@@ -963,7 +1047,9 @@ describe("Event store create block transaction", () => {
       .onCall(0)
       .returns(encodedAllEventPairs)
       .onCall(1)
-      .returns(encodedSnapshotPairs);
+      .returns(encodedSnapshotPairs)
+      .onCall(2)
+      .returns(encodedTxPairs);
     replace(deps, "encode", encodeFake);
 
     const blockPublisherPublicKeyFnFake = fake.returns(publicKey);
@@ -991,11 +1077,13 @@ describe("Event store create block transaction", () => {
       created: deps.dateString(),
       number: 0,
       start: "2020-01-01T05:00:00.000Z",
-      end: deps.dateString(),
+      end: "2020-01-01T05:00:00.001Z",
       eCount: 0,
       sCount: 0,
+      tCount: 0,
       eRoot: emptyMerkleRoot,
       sRoot: emptyMerkleRoot,
+      tRoot: emptyMerkleRoot,
       network,
       service,
       domain,
@@ -1013,11 +1101,13 @@ describe("Event store create block transaction", () => {
           created: deps.dateString(),
           number: 0,
           start: "2020-01-01T05:00:00.000Z",
-          end: deps.dateString(),
+          end: "2020-01-01T05:00:00.001Z",
           eCount: 0,
           sCount: 0,
+          tCount: 0,
           eRoot: emptyMerkleRoot,
           sRoot: emptyMerkleRoot,
+          tRoot: emptyMerkleRoot,
           network,
           service,
           domain,
@@ -1025,6 +1115,7 @@ describe("Event store create block transaction", () => {
         },
         events: encodedAllEventPairs,
         snapshots: encodedSnapshotPairs,
+        txs: encodedTxPairs,
       },
       transaction,
     });

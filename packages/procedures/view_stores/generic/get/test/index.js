@@ -7,8 +7,11 @@ const deps = require("../deps");
 const obj = { a: "some-obj" };
 const sort = { a: "1" };
 
-const objContext = "some-obj-context";
 const count = "some-count";
+const txId0 = "some-tx-id0";
+const txId1 = "some-tx-id1";
+const txId2 = "some-tx-id2";
+const id = "some-id";
 
 const envContext = "some-env-context";
 const envContextRoot = "some-env-context-root";
@@ -51,9 +54,18 @@ describe("View store get", () => {
 
     const formatFake = stub();
     for (let i = 0; i < 100; i++) {
-      results.push({ body: obj, headers: { context: objContext } });
-      formattedResults.push(i);
-      formatFake.onCall(i).returns(i);
+      results.push({
+        body: obj,
+        headers: { id },
+        trace: {
+          "some-service": { "some-domain": [txId0] },
+          "some-other-service": { "some-other-domain": [txId1] },
+          "amother-service": { "another-domain": [txId2] },
+        },
+      });
+      const formattedResult = { i: "something" };
+      formattedResults.push(formattedResult);
+      formatFake.onCall(i).returns(formattedResult);
     }
     const findFake = fake.returns(results);
     const countFake = fake.returns(200);
@@ -63,7 +75,6 @@ describe("View store get", () => {
     const urlEncodeQueryDataFake = fake.returns(nextUrl);
     replace(deps, "urlEncodeQueryData", urlEncodeQueryDataFake);
 
-    const id = "some-id";
     const req = {
       query: {
         sort,
@@ -118,10 +129,19 @@ describe("View store get", () => {
       }
     );
     for (let i = 0; i < results.length; i++) {
-      expect(formatFake.getCall(i)).to.have.been.calledWith(results[i]);
+      expect(formatFake.getCall(i)).to.have.been.calledWith({
+        body: results[i].body,
+        id: results[i].headers.id,
+      });
     }
     expect(sendFake).to.have.been.calledWith({
-      content: formattedResults,
+      content: formattedResults.map((r) => ({
+        ...r,
+        headers: {
+          id,
+          trace: [txId0, txId1, txId2],
+        },
+      })),
       updates:
         "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
       next: nextUrl,
@@ -130,9 +150,17 @@ describe("View store get", () => {
   });
   it("should call with the correct params if limit reached", async () => {
     const findFake = fake.returns([
-      { body: obj, headers: { context: objContext } },
+      {
+        body: obj,
+        headers: { id },
+        trace: {
+          "some-service": { "some-domain": [txId0] },
+          "some-other-service": { "some-other-domain": [txId1] },
+          "amother-service": { "another-domain": [txId2] },
+        },
+      },
     ]);
-    const formattedResult = "some-formatted-result";
+    const formattedResult = { formatted: "result " };
     const formatFake = fake.returns(formattedResult);
     const countFake = fake.returns(3);
 
@@ -198,22 +226,32 @@ describe("View store get", () => {
     );
     expect(formatFake.getCall(0)).to.have.been.calledWith({
       body: obj,
-      headers: { context: objContext },
+      id,
     });
     expect(formatFake).to.have.been.calledOnce;
     expect(sendFake).to.have.been.calledWith({
-      content: [formattedResult],
+      content: [
+        { ...formattedResult, headers: { id, trace: [txId0, txId1, txId2] } },
+      ],
       updates:
         "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
       next: nextUrl,
       count: 3,
     });
   });
-  it("should call with the correct params if all objects already retrieved with skip and limit", async () => {
+  it("should call with the correct params if all objects already retrieved with skip and limit, duplicate txId", async () => {
     const findFake = fake.returns([
-      { body: obj, headers: { context: objContext } },
+      {
+        body: obj,
+        headers: { id },
+        trace: {
+          "some-service": { "some-domain": [txId0] },
+          "some-other-service": { "some-other-domain": [txId1] },
+          "amother-service": { "another-domain": [txId0] },
+        },
+      },
     ]);
-    const formattedResult = "some-formatted-result";
+    const formattedResult = { some: "result" };
     const formatFake = fake.returns(formattedResult);
     const countFake = fake.returns(1);
 
@@ -271,22 +309,31 @@ describe("View store get", () => {
     expect(urlEncodeQueryDataFake).to.not.have.been.called;
     expect(formatFake.getCall(0)).to.have.been.calledWith({
       body: obj,
-      headers: { context: objContext },
+      id,
     });
     expect(formatFake).to.have.been.calledOnce;
     expect(sendFake).to.have.been.calledWith({
-      content: [formattedResult],
+      content: [{ ...formattedResult, headers: { id, trace: [txId0, txId1] } }],
       updates:
         "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
       count: 1,
     });
   });
   it("should call with the correct params with no query and txId in headers", async () => {
-    const txIds = "some-txIds";
     const findFake = fake.returns([
-      { body: obj, headers: { context: objContext, txIds } },
+      {
+        body: obj,
+        headers: {
+          id,
+        },
+        trace: {
+          "some-service": { "some-domain": [txId0] },
+          "some-other-service": { "some-other-domain": [txId1] },
+          "amother-service": { "another-domain": [txId2] },
+        },
+      },
     ]);
-    const formattedResult = "some-formatted-result";
+    const formattedResult = { some: "result" };
     const formatFake = fake.returns(formattedResult);
     const countFake = fake.returns(count);
 
@@ -332,11 +379,16 @@ describe("View store get", () => {
     expect(urlEncodeQueryDataFake).to.not.have.been.called;
     expect(formatFake.getCall(0)).to.have.been.calledWith({
       body: obj,
-      headers: { context: objContext, txIds },
+      id,
     });
     expect(formatFake).to.have.been.calledOnce;
     expect(sendFake).to.have.been.calledWith({
-      content: [formattedResult],
+      content: [
+        {
+          ...formattedResult,
+          headers: { trace: [txId0, txId1, txId2], id },
+        },
+      ],
       updates:
         "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
       count,
@@ -344,9 +396,17 @@ describe("View store get", () => {
   });
   it("should call with the correct params with no params, one as true", async () => {
     const findFake = fake.returns([
-      { body: obj, headers: { context: objContext } },
+      {
+        body: obj,
+        headers: { id },
+        trace: {
+          "some-service": { "some-domain": [txId0] },
+          "some-other-service": { "some-other-domain": [txId1] },
+          "amother-service": { "another-domain": [txId2] },
+        },
+      },
     ]);
-    const formattedResult = "some-formatted-result";
+    const formattedResult = { formatted: "result" };
     const formatFake = fake.returns(formattedResult);
     const countFake = fake.returns(count);
 
@@ -397,10 +457,13 @@ describe("View store get", () => {
     expect(countFake).to.not.have.been.called;
     expect(formatFake).to.have.been.calledWith({
       body: obj,
-      headers: { context: objContext },
+      id,
     });
     expect(sendFake).to.have.been.calledWith({
-      content: formattedResult,
+      content: {
+        ...formattedResult,
+        headers: { trace: [txId0, txId1, txId2], id },
+      },
       updates:
         "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
     });

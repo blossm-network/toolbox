@@ -31,13 +31,13 @@ const id = "some-id";
 
 const traceService = "some-trace-service";
 const traceDomain = "some-trace-domain";
-const traceTxId = "some-trace-tx-id";
+const traceTxIds = "some-trace-tx-ids";
 
 const body = {
   trace: {
     service: traceService,
     domain: traceDomain,
-    txId: traceTxId,
+    txIds: traceTxIds,
   },
   update: {
     a: 1,
@@ -93,7 +93,7 @@ describe("View store put", () => {
           service: envContextService,
           network: envContextNetwork,
         },
-        [`trace.${traceService}.${traceDomain}`]: traceTxId,
+        [`trace.${traceService}.${traceDomain}`]: traceTxIds,
         "headers.modified": deps.dateString(),
       },
     });
@@ -143,7 +143,7 @@ describe("View store put", () => {
           network: envContextNetwork,
         },
         "headers.modified": deps.dateString(),
-        [`trace.${traceService}.${traceDomain}`]: traceTxId,
+        [`trace.${traceService}.${traceDomain}`]: traceTxIds,
       },
     });
     expect(fnFake).to.have.been.calledWith({ a: 1 });
@@ -160,7 +160,7 @@ describe("View store put", () => {
         trace: {
           service: traceService,
           domain: traceDomain,
-          txId: traceTxId,
+          txIds: traceTxIds,
         },
         update: {
           a: 1,
@@ -201,7 +201,7 @@ describe("View store put", () => {
           network: envContextNetwork,
         },
         "headers.modified": deps.dateString(),
-        [`trace.${traceService}.${traceDomain}`]: traceTxId,
+        [`trace.${traceService}.${traceDomain}`]: traceTxIds,
       },
     });
     expect(formatFake).to.have.been.calledWith(writeResult);

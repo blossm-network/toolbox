@@ -28,11 +28,13 @@ module.exports = ({
       created: deps.dateString(),
       number: 0,
       start: "2020-01-01T05:00:00.000Z",
-      end: deps.dateString(),
+      end: "2020-01-01T05:00:00.001Z",
       eCount: 0,
       sCount: 0,
+      tCount: 0,
       eRoot: emptyMerkleRoot,
       sRoot: emptyMerkleRoot,
+      tRoot: emptyMerkleRoot,
       network: process.env.NETWORK,
       service: process.env.SERVICE,
       domain: process.env.DOMAIN,
@@ -48,6 +50,7 @@ module.exports = ({
       headers: blockHeaders,
       events: deps.encode([]),
       snapshots: deps.encode([]),
+      txs: deps.encode([]),
     };
 
     const savedGenesisBlock = await saveBlockFn({
@@ -60,6 +63,7 @@ module.exports = ({
 
   const snapshots = [];
   const allStringifiedEventPairs = [];
+  const txs = {};
 
   const boundary = deps.dateString();
 
@@ -93,6 +97,8 @@ module.exports = ({
                   }
             ),
           ]);
+          if (!txs[e.tx.id]) txs[e.tx.id] = [];
+          txs[e.tx.id].push(e.hash);
         })
       );
 
@@ -167,9 +173,22 @@ module.exports = ({
     })
   );
 
-  const [snapshotsMerkleRoot, allEventsMerkleRoot] = await Promise.all([
+  const stringifiedTxPairs = [];
+  for (const key in txs) {
+    stringifiedTxPairs.push([
+      deps.hash(key).create(),
+      deps.cononicalString(txs[key]),
+    ]);
+  }
+
+  const [
+    snapshotsMerkleRoot,
+    allEventsMerkleRoot,
+    txsMerkleRoot,
+  ] = await Promise.all([
     deps.merkleRoot(stringifiedSnapshotPairs),
     deps.merkleRoot(allStringifiedEventPairs),
+    deps.merkleRoot(stringifiedTxPairs),
   ]);
 
   const blockHeaders = {
@@ -181,8 +200,10 @@ module.exports = ({
     end: boundary,
     eCount: allStringifiedEventPairs.length,
     sCount: stringifiedSnapshotPairs.length,
+    tCount: stringifiedTxPairs.length,
     eRoot: allEventsMerkleRoot.toString("base64"),
     sRoot: snapshotsMerkleRoot.toString("base64"),
+    tRoot: txsMerkleRoot.toString("base64"),
     network: process.env.NETWORK,
     service: process.env.SERVICE,
     domain: process.env.DOMAIN,
@@ -198,6 +219,7 @@ module.exports = ({
     headers: blockHeaders,
     events: deps.encode(allStringifiedEventPairs),
     snapshots: deps.encode(stringifiedSnapshotPairs),
+    txs: deps.encode(stringifiedTxPairs),
   };
 
   const block = await saveBlockFn({

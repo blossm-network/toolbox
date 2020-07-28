@@ -59,7 +59,22 @@ module.exports = ({
       ...(one ? [] : [countFn({ query })]),
     ]);
 
-    const formattedResults = results.map((r) => formatFn(r));
+    const formattedResults = results.map((r) => {
+      const formattedTrace = [];
+      for (const service in r.trace) {
+        for (const domain in r.trace[service]) {
+          for (const txId of r.trace[service][domain])
+            if (!formattedTrace.includes(txId)) formattedTrace.push(txId);
+        }
+      }
+      return {
+        ...formatFn({ body: r.body, id: r.headers.id }),
+        headers: {
+          trace: formattedTrace,
+          id: r.headers.id,
+        },
+      };
+    });
 
     const updates = `https://updates.${process.env.CORE_NETWORK}/channel?query%5Bname%5D=${process.env.NAME}&query%5Bcontext%5D=${process.env.CONTEXT}&query%5Bnetwork%5D=${process.env.NETWORK}`;
 

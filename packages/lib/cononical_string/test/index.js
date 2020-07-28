@@ -27,8 +27,11 @@ describe("Stringify object", () => {
       g: [{ i: 9, h: 8 }, { j: 10 }, { k: 11 }],
       a: 2,
     };
+    const obj3 = ["some", "object"];
     const string1 = stringify(obj1);
     const string2 = stringify(obj2);
+    const string3 = stringify(obj3);
     expect(string1).to.deep.equal(string2);
+    expect(string3).to.deep.equal(string3);
   });
 });

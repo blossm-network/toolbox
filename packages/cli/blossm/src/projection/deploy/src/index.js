@@ -25,6 +25,8 @@ module.exports = eventHandler({
       query,
       //The changes to the body of the view.
       update,
+      //The id of the view.
+      id,
     } = handlers[aggregate.headers.service][aggregate.headers.domain]({
       state: aggregate.state,
       root: aggregate.headers.root,
@@ -62,7 +64,7 @@ module.exports = eventHandler({
       .update({
         ...(query && { query }),
         update,
-
+        ...(id && { id }),
         ...(aggregate.txIds && {
           trace: {
             domain: aggregate.headers.domain,
