@@ -87,7 +87,10 @@ exports.stream = async (url, onDataFn, { query, headers } = {}) => {
         processingData = false;
         if (!rejected && finishedProcessingAllData) resolve();
       })
-      .on("error", reject)
+      .on("error", (err) => {
+        rejected = true;
+        reject(err);
+      })
       .on("end", () => {
         finishedProcessingAllData = true;
         if (!rejected && !processingData) resolve();
