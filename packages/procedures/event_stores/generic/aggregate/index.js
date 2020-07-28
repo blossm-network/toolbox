@@ -19,9 +19,6 @@ module.exports = ({ findOneSnapshotFn, eventStreamFn, handlers }) => async (
     },
   });
 
-  //TODO
-  console.log({ root, snapshot });
-
   const aggregate = {
     headers: {
       root,
@@ -34,7 +31,7 @@ module.exports = ({ findOneSnapshotFn, eventStreamFn, handlers }) => async (
       }),
     },
     ...(snapshot && {
-      state: snapshot.headers.state,
+      state: snapshot.state,
       context: snapshot.context,
     }),
     ...(snapshot && {
@@ -58,8 +55,6 @@ module.exports = ({ findOneSnapshotFn, eventStreamFn, handlers }) => async (
     },
     fn: (event) => {
       const handler = handlers[event.headers.action];
-      //TODO
-      console.log({ event });
       if (!handler)
         throw deps.badRequestError.message("Event handler not specified.", {
           info: {
@@ -98,7 +93,5 @@ module.exports = ({ findOneSnapshotFn, eventStreamFn, handlers }) => async (
     },
   });
 
-  //TODO
-  console.log({ aggregate });
   return aggregate.state && aggregate;
 };

@@ -60,9 +60,9 @@ const findOneResult = {
   hash: snapshotHash,
   headers: {
     root,
-    state: { a: 1, b: 1 },
     lastEventNumber: 6,
   },
+  state: { a: 1, b: 1 },
   context: {
     a: {
       root: aRoot,
