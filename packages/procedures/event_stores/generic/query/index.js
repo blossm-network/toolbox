@@ -37,8 +37,8 @@ module.exports = ({
     },
   });
 
-  //TODO
-  console.log({ snapshots, events });
+  // //TODO
+  // console.log({ snapshots, events });
   if (snapshots.length == 0 && events.length == 0) return [];
 
   const candidateRoots = [
