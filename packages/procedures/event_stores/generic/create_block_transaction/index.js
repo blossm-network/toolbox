@@ -22,6 +22,9 @@ module.exports = ({
       "base64"
     );
 
+    const emptyEncoding = deps.encode([]);
+    const emptyByteLength = Buffer.byteLength(emptyEncoding);
+
     const blockHeaders = {
       nonce: deps.nonce(),
       pHash: deps.hash(genesisPrevious).create(),
@@ -35,6 +38,9 @@ module.exports = ({
       eRoot: emptyMerkleRoot,
       sRoot: emptyMerkleRoot,
       tRoot: emptyMerkleRoot,
+      eSize: emptyByteLength,
+      sSize: emptyByteLength,
+      tSize: emptyByteLength,
       network: process.env.NETWORK,
       service: process.env.SERVICE,
       domain: process.env.DOMAIN,
@@ -48,9 +54,9 @@ module.exports = ({
       signature: signedBlockHeadersHash,
       hash: blockHeadersHash,
       headers: blockHeaders,
-      events: deps.encode([]),
-      snapshots: deps.encode([]),
-      txs: deps.encode([]),
+      events: emptyEncoding,
+      snapshots: emptyEncoding,
+      txs: emptyEncoding,
     };
 
     const savedGenesisBlock = await saveBlockFn({
@@ -112,6 +118,8 @@ module.exports = ({
       const previousHash =
         aggregate.headers.snapshotHash || deps.hash(genesisPrevious).create();
 
+      const encodedEvents = deps.encode(stringifiedEventPairs);
+
       const snapshotHeaders = {
         nonce: deps.nonce(),
         block: nextBlockNumber,
@@ -127,6 +135,7 @@ module.exports = ({
         lastEventNumber: aggregate.headers.lastEventNumber,
         eCount: stringifiedEventPairs.length,
         eRoot: eventsMerkleRoot.toString("base64"),
+        eSize: Buffer.byteLength(encodedEvents),
       };
 
       const snapshotHeadersHash = deps.hash(snapshotHeaders).create();
@@ -136,7 +145,7 @@ module.exports = ({
         headers: snapshotHeaders,
         context: aggregate.context,
         state: aggregate.state,
-        events: deps.encode(stringifiedEventPairs),
+        events: encodedEvents,
         txIds: aggregate.txIds,
       };
 
@@ -191,6 +200,10 @@ module.exports = ({
     deps.merkleRoot(stringifiedTxPairs),
   ]);
 
+  const encodedAllEvents = deps.encode(allStringifiedEventPairs);
+  const encodedSnapshots = deps.encode(stringifiedSnapshotPairs);
+  const encodedTxs = deps.encode(stringifiedTxPairs);
+
   const blockHeaders = {
     nonce: deps.nonce(),
     pHash: previousBlock.hash,
@@ -204,6 +217,9 @@ module.exports = ({
     eRoot: allEventsMerkleRoot.toString("base64"),
     sRoot: snapshotsMerkleRoot.toString("base64"),
     tRoot: txsMerkleRoot.toString("base64"),
+    eSize: Buffer.byteLength(encodedAllEvents),
+    sSize: Buffer.byteLength(encodedSnapshots),
+    tSize: Buffer.byteLength(encodedTxs),
     network: process.env.NETWORK,
     service: process.env.SERVICE,
     domain: process.env.DOMAIN,
@@ -217,9 +233,9 @@ module.exports = ({
     signature: signedBlockHeadersHash,
     hash: blockHeadersHash,
     headers: blockHeaders,
-    events: deps.encode(allStringifiedEventPairs),
-    snapshots: deps.encode(stringifiedSnapshotPairs),
-    txs: deps.encode(stringifiedTxPairs),
+    events: encodedAllEvents,
+    snapshots: encodedSnapshots,
+    txs: encodedTxs,
   };
 
   const block = await saveBlockFn({
