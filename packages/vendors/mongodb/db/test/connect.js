@@ -37,6 +37,8 @@ describe("Connects", () => {
       useCreateIndex: true,
       useUnifiedTopology: true,
       useFindAndModify: false,
+      reconnectTries: 20,
+      reconnectInterval: 3000,
       autoIndex: false,
       poolSize: 5,
     });
@@ -76,6 +78,8 @@ describe("Connects", () => {
       useCreateIndex: true,
       useUnifiedTopology: true,
       useFindAndModify: false,
+      reconnectTries: 20,
+      reconnectInterval: 3000,
       autoIndex,
       poolSize,
     });
