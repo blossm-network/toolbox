@@ -38,6 +38,7 @@ module.exports = ({
   memory,
   env,
   serviceName,
+  blockSchedule,
   containerRegistery,
   mainContainerName,
   uri,
@@ -169,7 +170,7 @@ module.exports = ({
           ),
           scheduleJob({
             name: `event-store-${service}-${domain}-create-block`,
-            schedule: "*/7 * * * *",
+            schedule: blockSchedule,
             serviceName,
             computeUrlId,
             uri: `${uri}/create-block`,

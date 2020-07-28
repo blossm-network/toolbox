@@ -629,8 +629,9 @@ const configure = async (workingDir, configFn, env, strict) => {
     const blossmConfig = rootDir.config();
     const project = envProject({ env, config: blossmConfig });
 
+    const blockSchedule = config.blockSchedule || blossmConfig.blockSchedule;
     const region =
-      config["gcp-region"] || blossmConfig.vendors.cloud.gcp.defaults.region;
+      config.region || blossmConfig.vendors.cloud.gcp.defaults.region;
     const network = blossmConfig.network;
     const baseCoreNetwork = blossmConfig.core
       ? blossmConfig.core.network
@@ -642,8 +643,7 @@ const configure = async (workingDir, configFn, env, strict) => {
         ? baseCoreNetwork
         : `snd.${baseCoreNetwork}`;
 
-    const dnsZone =
-      config["gcp-dns-zone"] || blossmConfig.vendors.cloud.gcp.dnsZone;
+    const dnsZone = config.dnsZone || blossmConfig.vendors.cloud.gcp.dnsZone;
 
     const domain = config.domain;
     const service = config.service;
@@ -701,6 +701,7 @@ const configure = async (workingDir, configFn, env, strict) => {
       }),
       mainContainerName,
       containerRegistery,
+      blockSchedule,
       envVars,
       devEnvVars,
       envUriSpecifier: envUriSpecifier(env),
