@@ -1,5 +1,6 @@
 const deps = require("./deps");
 
+//TODO store the merkle proofs elsewhere for O(log(n)) verification. Not important now.
 module.exports = ({
   saveSnapshotFn,
   rootStreamFn,
