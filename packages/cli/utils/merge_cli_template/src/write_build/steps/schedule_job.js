@@ -18,7 +18,8 @@ module.exports = ({
       --uri=https://${uri}
       --oidc-service-account-email=executer@${project}.iam.gserviceaccount.com
       --oidc-token-audience=https://${serviceName}-${computeUrlId}-uc.a.run.app
-      --project=${project} || exit 0
+      --project=${project} 
+      --quiet || exit 0
       `,
     ],
   };
