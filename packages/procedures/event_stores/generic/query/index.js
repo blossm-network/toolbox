@@ -35,19 +35,6 @@ module.exports = ({
     query: {
       [`payload.${key}`]: value,
     },
-    ...(snapshots.length && {
-      sort: {
-        ["headers.created"]: {
-          $gt: snapshots.sort((a, b) =>
-            a.headers.created < b.headers.created
-              ? -1
-              : a.headers.created > b.headers.created
-              ? 1
-              : 0
-          )[0].headers.created,
-        },
-      },
-    }),
   });
 
   if (snapshots.length == 0 && events.length == 0) return [];

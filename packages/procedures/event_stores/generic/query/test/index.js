@@ -56,10 +56,75 @@ describe("Mongodb event store query", () => {
       query: {
         "payload.a": 1,
       },
-      sort: {
-        "headers.created": {
-          $gt: created,
+    });
+    expect(findSnapshotsFnFake).to.have.been.calledOnceWith({
+      query: {
+        "state.a": 1,
+      },
+    });
+
+    expect(queryFnResult).to.deep.equal([
+      {
+        state: { a: 1, b: 2, c: 3, d: 4 },
+        headers: {
+          root,
+          lastEventNumber: 2,
         },
+      },
+      {
+        headers: {
+          root,
+          lastEventNumber: 2,
+        },
+        state: { a: 1, b: 2, c: 3, d: 4 },
+      },
+    ]);
+  });
+  it("should call query with the correct params with many snapshot and events found", async () => {
+    const snapshotRoot = "some-snapshot-root";
+    const eventRoot = "some-event-root";
+    const created = 2;
+    const lesserCreated = 1;
+    const findSnapshotResult = [
+      { headers: { root: snapshotRoot, created } },
+      { headers: { root: snapshotRoot, created: lesserCreated } },
+    ];
+    const findEventResult = [
+      { headers: { root: eventRoot } },
+      { headers: { root: eventRoot } },
+    ];
+
+    const findSnapshotsFnFake = fake.returns(findSnapshotResult);
+    const findEventsFnFake = fake.returns(findEventResult);
+
+    const aggregateResult = {
+      state: { a: 1, b: 2, c: 3, d: 4 },
+      headers: {
+        root,
+        lastEventNumber: 2,
+      },
+    };
+    const aggregateFnFake = fake.returns(aggregateResult);
+    const aggregateOuterFnFake = fake.returns(aggregateFnFake);
+    replace(deps, "aggregate", aggregateOuterFnFake);
+
+    const queryFnResult = await query({
+      findEventsFn: findEventsFnFake,
+      findSnapshotsFn: findSnapshotsFnFake,
+      findOneSnapshotFn,
+      eventStreamFn,
+      handlers,
+    })({
+      key: "a",
+      value: 1,
+    });
+
+    expect(aggregateFnFake.getCall(0)).to.have.been.calledWith(snapshotRoot);
+    expect(aggregateFnFake.getCall(1)).to.have.been.calledWith(eventRoot);
+    expect(aggregateFnFake).to.have.been.calledTwice;
+    expect(findEventsFnFake).to.have.been.calledOnceWith({
+      query: {
+        "payload.a": 1,
       },
     });
     expect(findSnapshotsFnFake).to.have.been.calledOnceWith({
@@ -182,11 +247,6 @@ describe("Mongodb event store query", () => {
       query: {
         "payload.a.b.c": 1,
       },
-      sort: {
-        "headers.created": {
-          $gt: created,
-        },
-      },
     });
     expect(findSnapshotsFnFake).to.have.been.calledWith({
       query: {
@@ -252,11 +312,6 @@ describe("Mongodb event store query", () => {
     expect(findEventsFnFake).to.have.been.calledWith({
       query: {
         "payload.a": 1,
-      },
-      sort: {
-        "headers.created": {
-          $gt: created,
-        },
       },
     });
     expect(findSnapshotsFnFake).to.have.been.calledWith({
