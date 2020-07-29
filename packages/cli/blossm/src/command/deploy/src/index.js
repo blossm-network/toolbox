@@ -40,6 +40,7 @@ module.exports = commandProcedure({
       })
       .aggregate(root);
 
+    console.log({ aggregate });
     return {
       lastEventNumber: aggregate.headers.lastEventNumber,
       aggregate: aggregate.state,
