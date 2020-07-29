@@ -120,7 +120,7 @@ module.exports = commandProcedure({
       })
       .query({ key, value });
     return aggregates.map((aggregate) => ({
-      root: aggregate.sheders.root,
+      root: aggregate.headers.root,
       state: aggregate.state,
     }));
   },
