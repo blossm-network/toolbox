@@ -1,7 +1,7 @@
 {
   "name": "@blossm/event-store-aggregate-stream",
   "description": "An event store GET handler for streaming aggregates.",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
