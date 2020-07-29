@@ -42,8 +42,6 @@ describe("Store", () => {
       strict: true,
       typePojoToMixed: false,
       minimize: false,
-      reconnectTries: 20,
-      reconnectInterval: 3000,
       versionKey: false,
       useNestedStrict: true,
       typeKey,
@@ -77,8 +75,6 @@ describe("Store", () => {
         strict: false,
         typePojoToMixed: false,
         versionKey: false,
-        reconnectTries: 20,
-        reconnectInterval: 3000,
         minimize: false,
         useNestedStrict: true,
       }
@@ -139,8 +135,6 @@ describe("Store", () => {
       strict: true,
       typePojoToMixed: false,
       versionKey: false,
-      reconnectTries: 20,
-      reconnectInterval: 3000,
       minimize: false,
       useNestedStrict: true,
     });
@@ -155,8 +149,6 @@ describe("Store", () => {
       useCreateIndex: true,
       useUnifiedTopology: true,
       useFindAndModify: false,
-      reconnectTries: 20,
-      reconnectInterval: 3000,
       autoIndex: false,
       poolSize: 5,
     });
