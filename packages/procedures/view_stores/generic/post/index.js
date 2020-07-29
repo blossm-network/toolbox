@@ -51,6 +51,12 @@ module.exports = ({ writeFn, formatFn, updateFn = defaultFn }) => {
         "headers.context.network": context.network,
       },
       data,
+      ...((req.body.upsert || req.body.id) && {
+        upsert:
+          req.body.upsert != undefined
+            ? req.body.upsert
+            : req.body.id != undefined,
+      }),
     });
 
     res.status(200).send(formatFn(newView));

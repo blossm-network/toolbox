@@ -6,6 +6,7 @@ const fact = require("..");
 
 const mainFn = "some-main-fn";
 const queryAggregatesFn = "some-query-aggregates-fn";
+const aggregateFn = "some-aggregate-fn";
 
 describe("Fact", () => {
   afterEach(() => {
@@ -37,6 +38,7 @@ describe("Fact", () => {
     const result = await fact({
       mainFn,
       queryAggregatesFn,
+      aggregateFn,
     });
 
     expect(result).to.equal(returnValue);
@@ -50,6 +52,7 @@ describe("Fact", () => {
     expect(factStreamFake).to.have.been.calledWith({
       mainFn,
       queryAggregatesFn,
+      aggregateFn,
     });
   });
   it("should throw correctly", async () => {
@@ -67,7 +70,7 @@ describe("Fact", () => {
     replace(deps, "server", serverFake);
 
     try {
-      await fact({ mainFn, queryAggregatesFn });
+      await fact({ mainFn, queryAggregatesFn, aggregateFn });
 
       //shouldn't get called
       expect(1).to.equal(0);

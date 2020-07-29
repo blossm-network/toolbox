@@ -35,4 +35,26 @@ module.exports = fact({
         },
       })
       .query({ key, value }),
+  aggregateFn: ({ context, claims, token }) => async (
+    root,
+    {
+      domain = process.env.DOMAIN,
+      service = process.env.SERVICE,
+      network = process.env.NETWORK,
+    } = {}
+  ) => {
+    const { body: aggregate } = await eventStore({ domain, service, network })
+      .set({
+        ...(context && { context }),
+        ...(claims && { claims }),
+        ...(token && { currentToken: token }),
+        token: { internalFn: gcpToken },
+      })
+      .aggregate(root);
+
+    return {
+      lastEventNumber: aggregate.headers.lastEventNumber,
+      state: aggregate.state,
+    };
+  },
 });

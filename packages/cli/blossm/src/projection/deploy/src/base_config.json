@@ -3,6 +3,7 @@
     "@blossm/event-handler": "*",
     "@blossm/view-store-rpc": "*",
     "@blossm/command-rpc": "*",
+    "@blossm/fact-rpc": "*",
     "@blossm/event-store-rpc": "*",
     "@blossm/gcp-token": "*",
     "@blossm/gcp-secret": "*",

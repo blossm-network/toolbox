@@ -4,6 +4,7 @@ const { restore, fake } = require("sinon");
 const get = require("..");
 
 const queryAggregatesFn = "some-query-aggregates-fn";
+const aggregateFn = "some-aggregate-fn";
 const action = "some-action";
 const domain = "some-domain";
 const service = "some-service";
@@ -26,6 +27,7 @@ describe("Fact get", () => {
     const response = "some-response";
     const mainFnFake = fake.returns({ response });
     const queryAggregatesFnFake = fake.returns(queryAggregatesFn);
+    const aggregateFnFake = fake.returns(aggregateFn);
 
     const req = {
       params,
@@ -48,13 +50,16 @@ describe("Fact get", () => {
     await get({
       mainFn: mainFnFake,
       queryAggregatesFn: queryAggregatesFnFake,
+      aggregateFn: aggregateFnFake,
     })(req, res);
 
     expect(mainFnFake).to.have.been.calledWith({
       query,
       queryAggregatesFn,
+      aggregateFn,
     });
     expect(queryAggregatesFnFake).to.have.been.calledWith({});
+    expect(aggregateFnFake).to.have.been.calledWith({});
     expect(setFake).to.have.been.calledWith({});
     expect(statusFake).to.have.been.calledWith(200);
     expect(sendFake).to.have.been.calledWith(response);
@@ -64,6 +69,7 @@ describe("Fact get", () => {
     const headers = "some-headers";
     const mainFnFake = fake.returns({ headers, response });
     const queryAggregatesFnFake = fake.returns(queryAggregatesFn);
+    const aggregateFnFake = fake.returns(aggregateFn);
 
     const context = "some-context";
     const claims = "some-claims";
@@ -96,6 +102,7 @@ describe("Fact get", () => {
     await get({
       mainFn: mainFnFake,
       queryAggregatesFn: queryAggregatesFnFake,
+      aggregateFn: aggregateFnFake,
     })(req, res);
 
     expect(mainFnFake).to.have.been.calledWith({
@@ -103,8 +110,14 @@ describe("Fact get", () => {
       context,
       root,
       queryAggregatesFn,
+      aggregateFn,
     });
     expect(queryAggregatesFnFake).to.have.been.calledWith({
+      context,
+      claims,
+      token,
+    });
+    expect(aggregateFnFake).to.have.been.calledWith({
       context,
       claims,
       token,
@@ -117,6 +130,7 @@ describe("Fact get", () => {
     const errorMessage = "some-error-message";
     const mainFnFake = fake.rejects(new Error(errorMessage));
     const queryAggregatesFnFake = fake.returns(queryAggregatesFn);
+    const aggregatesFnFake = fake.returns(aggregateFn);
 
     const req = {
       params,
@@ -135,6 +149,7 @@ describe("Fact get", () => {
       await get({
         mainFn: mainFnFake,
         queryAggregatesFn: queryAggregatesFnFake,
+        aggregateFn: aggregatesFnFake,
       })(req, res);
 
       //shouldn't get called

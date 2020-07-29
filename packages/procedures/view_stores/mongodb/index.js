@@ -138,7 +138,7 @@ module.exports = async ({
       query,
     });
 
-  const writeFn = async ({ query, data }) => {
+  const writeFn = async ({ query, data, upsert = false }) => {
     const update = {};
     const setKey = "$set";
     for (const key of Object.keys(data)) {
@@ -162,7 +162,7 @@ module.exports = async ({
       options: {
         lean: true,
         omitUndefined: true,
-        upsert: true,
+        upsert,
         new: true,
         runValidators: true,
         setDefaultsOnInsert: true,

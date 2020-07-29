@@ -40,10 +40,11 @@ module.exports = commandProcedure({
       })
       .aggregate(root);
 
+    //TODO
     console.log({ aggregate });
     return {
       lastEventNumber: aggregate.headers.lastEventNumber,
-      aggregate: aggregate.state,
+      state: aggregate.state,
     };
   },
   commandFn: ({ path, idempotency, context, claims, token, txId, ip }) => ({

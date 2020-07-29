@@ -1,9 +1,9 @@
 const deps = require("./deps");
 
-module.exports = async ({ mainFn, queryAggregatesFn } = {}) =>
+module.exports = async ({ mainFn, queryAggregatesFn, aggregateFn } = {}) =>
   deps
     .server()
-    .get(deps.stream({ mainFn, queryAggregatesFn }), {
+    .get(deps.stream({ mainFn, queryAggregatesFn, aggregateFn }), {
       path: "/stream/:root?",
     })
     .get(deps.get({ mainFn, queryAggregatesFn }), { path: "/:root?" })

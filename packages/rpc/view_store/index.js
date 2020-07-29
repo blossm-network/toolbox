@@ -71,12 +71,13 @@ module.exports = ({ name, context = process.env.CONTEXT, network }) => {
   const update = ({
     contexts,
     token: { internalFn: internalTokenFn } = {},
-  } = {}) => ({ query, update, id, trace }) =>
+  } = {}) => ({ query, update, id, upsert, trace }) =>
     deps
       .rpc(name, context, "view-store")
       .post({
         ...(query && { query }),
         ...(id && { id }),
+        ...(upsert && { upsert }),
         ...(trace && { trace }),
         update,
       })

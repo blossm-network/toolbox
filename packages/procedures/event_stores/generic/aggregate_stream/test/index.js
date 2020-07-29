@@ -42,12 +42,14 @@ describe("Event store aggregate stream", () => {
     replace(JSON, "stringify", stringifyFake);
 
     const parallel = "some-parallel";
+    const updatedOnOrAfter = "some-updated-on-or-after";
     const params = { root };
 
     const req = {
       query: {
         timestamp,
         parallel,
+        updatedOnOrAfter,
       },
       params,
     };
@@ -67,6 +69,7 @@ describe("Event store aggregate stream", () => {
 
     expect(rootStreamFake).to.have.been.calledWith({
       parallel,
+      updatedOnOrAfter,
       fn: match(() => true),
     });
     expect(aggregateFake).to.have.been.calledWith(root, {

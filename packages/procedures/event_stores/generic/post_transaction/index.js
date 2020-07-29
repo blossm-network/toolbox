@@ -139,6 +139,7 @@ module.exports = ({
     receipt: normalizedEvents.map((e) => ({
       topic: e.headers.topic,
       created: e.headers.created,
+      action: e.headers.action,
     })),
   };
 };

@@ -300,6 +300,7 @@ describe("Event store", () => {
     replace(deps, "rpc", rpcFake);
 
     const timestamp = "some-timestamp";
+    const updatedOnOrAfter = "some-updated-on-or-after";
 
     const fn = "some-fn";
     const result = await eventStore({ domain, service })
@@ -312,11 +313,12 @@ describe("Event store", () => {
           key,
         },
       })
-      .aggregateStream(fn, { timestamp, parallel });
+      .aggregateStream(fn, { timestamp, updatedOnOrAfter, parallel });
 
     expect(rpcFake).to.have.been.calledWith(domain, service, "event-store");
     expect(streamFake).to.have.been.calledWith(fn, {
       timestamp,
+      updatedOnOrAfter,
       parallel,
     });
     expect(inFake).to.have.been.calledWith({

@@ -8,6 +8,9 @@ module.exports = ({
 }) => async (req, res) => {
   await rootStreamFn({
     ...(req.query.parallel && { parallel: req.query.parallel }),
+    ...(req.query.updatedOnOrAfter && {
+      updatedOnOrAfter: req.query.updatedOnOrAfter,
+    }),
     fn: async ({ root }) => {
       const aggregate = await deps.aggregate({
         findOneSnapshotFn,

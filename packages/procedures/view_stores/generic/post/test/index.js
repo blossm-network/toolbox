@@ -32,8 +32,10 @@ const id = "some-id";
 const traceService = "some-trace-service";
 const traceDomain = "some-trace-domain";
 const traceTxIds = "some-trace-tx-ids";
+const upsert = "some-upsert";
 
 const body = {
+  upsert,
   trace: {
     service: traceService,
     domain: traceDomain,
@@ -96,6 +98,7 @@ describe("View store put", () => {
         [`trace.${traceService}.${traceDomain}`]: traceTxIds,
         "headers.modified": deps.dateString(),
       },
+      upsert,
     });
     expect(formatFake).to.have.been.calledWith(writeResult);
     expect(statusFake).to.have.been.calledWith(200);
@@ -107,7 +110,19 @@ describe("View store put", () => {
     const formatFake = fake.returns(formattedWriteResult);
 
     const req = {
-      body,
+      body: {
+        trace: {
+          service: traceService,
+          domain: traceDomain,
+          txIds: traceTxIds,
+        },
+        update: {
+          a: 1,
+        },
+        context,
+        query,
+        id,
+      },
     };
 
     const sendFake = fake();
@@ -145,6 +160,7 @@ describe("View store put", () => {
         "headers.modified": deps.dateString(),
         [`trace.${traceService}.${traceDomain}`]: traceTxIds,
       },
+      upsert: true,
     });
     expect(fnFake).to.have.been.calledWith({ a: 1 });
     expect(formatFake).to.have.been.calledWith(writeResult);

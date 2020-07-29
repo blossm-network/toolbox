@@ -92,11 +92,12 @@ module.exports = ({ domain, service = process.env.SERVICE } = {}) => {
       externalFn: externalTokenFn,
       key,
     } = {},
-  } = {}) => (fn, { timestamp, parallel }) =>
+  } = {}) => (fn, { timestamp, updatedOnOrAfter, parallel }) =>
     deps
       .rpc(domain, service, "event-store")
       .stream(fn, {
         ...(timestamp && { timestamp }),
+        ...(updatedOnOrAfter && { updatedOnOrAfter }),
         ...(parallel && { parallel }),
       })
       .in({

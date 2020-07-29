@@ -11,16 +11,30 @@ const data = (req) => {
   }
 };
 
-module.exports = ({ mainFn, aggregateStreamFn }) => async (req, res) => {
-  const { timestamp, domain, service, push = true } = req.body.message
+module.exports = ({
+  mainFn,
+  aggregateStreamFn,
+  aggregateFn,
+  readFactFn,
+}) => async (req, res) => {
+  const { timestamp, action, domain, service, push = true } = req.body.message
     ? data(req)
     : { push: false };
 
   await aggregateStreamFn({
-    ...(timestamp && { timestamp }),
+    ...(timestamp && { updatedOnOrAfter: timestamp }),
+    ...(action && { action }),
     ...(domain && { domain }),
     ...(service && { service }),
-    fn: (aggregate) => mainFn(aggregate, { push }),
+    //TODO test and see if theres a way to get the aggregates to come in reverse cron order.
+    fn: (aggregate) =>
+      mainFn({
+        aggregate,
+        aggregateFn,
+        readFactFn,
+        push,
+        ...(action && { action }),
+      }),
     // chronological by when the events were created, which best represents the events' intended order.
     sortFn: (a, b) =>
       a.headers.created < b.headers.created

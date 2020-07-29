@@ -6,6 +6,8 @@ const eventHandler = require("..");
 
 const mainFn = "some-main-fn";
 const aggregateStreamFn = "some-aggregate-stream-fn";
+const aggregateFn = "some-aggregate-fn";
+const readFactFn = "some-read-fact-fn";
 
 describe("Event handler", () => {
   afterEach(() => {
@@ -29,6 +31,8 @@ describe("Event handler", () => {
     await eventHandler({
       mainFn,
       aggregateStreamFn,
+      aggregateFn,
+      readFactFn,
     });
 
     expect(listenFake).to.have.been.calledOnce;
@@ -37,6 +41,8 @@ describe("Event handler", () => {
     expect(commandPostFake).to.have.been.calledWith({
       mainFn,
       aggregateStreamFn,
+      aggregateFn,
+      readFactFn,
     });
   });
   it("should throw correctly", async () => {
@@ -55,7 +61,12 @@ describe("Event handler", () => {
     replace(deps, "post", commandPostFake);
 
     try {
-      await eventHandler({ mainFn, aggregateStreamFn });
+      await eventHandler({
+        mainFn,
+        aggregateStreamFn,
+        aggregateFn,
+        readFactFn,
+      });
 
       //shouldnt call
       expect(2).to.equal(1);

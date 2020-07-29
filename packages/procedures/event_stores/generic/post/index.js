@@ -8,6 +8,9 @@ module.exports = ({
   idempotencyConflictCheckFn,
 }) => async (req, res) => {
   const uniqueEventData = [];
+
+  const timestamp = deps.dateString();
+
   await Promise.all(
     req.body.eventData.map(async ({ event, number }) => {
       if (event.headers.idempotency != undefined) {
@@ -46,9 +49,11 @@ module.exports = ({
       publishedTopics.push(e.topic);
       return publishFn(
         {
+          action: e.action,
           domain: process.env.DOMAIN,
           service: process.env.SERVICE,
           network: process.env.NETWORK,
+          timestamp,
         },
         e.topic
       );

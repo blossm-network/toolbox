@@ -1,6 +1,6 @@
 const { expect } = require("chai").use(require("sinon-chai"));
 
-const { restore, fake, stub, replace } = require("sinon");
+const { restore, fake, stub, replace, useFakeTimers } = require("sinon");
 
 const post = require("..");
 const deps = require("../deps");
@@ -16,8 +16,15 @@ process.env.DOMAIN = domain;
 process.env.SERVICE = service;
 process.env.NETWORK = network;
 
+let clock;
+const now = new Date();
+
 describe("Event store post", () => {
+  beforeEach(() => {
+    clock = useFakeTimers(now.getTime());
+  });
   afterEach(() => {
+    clock.restore();
     restore();
   });
 
@@ -43,10 +50,12 @@ describe("Event store post", () => {
 
     const publishFnFake = fake();
     const savedEventHeadersTopic = "some-saved-event-headers-topic";
+    const savedEventHeadersAction = "some-saved-event-headers-action";
     const createTransactionFnFake = fake.returns({
       receipt: [
         {
           topic: savedEventHeadersTopic,
+          action: savedEventHeadersAction,
         },
         {
           topic: savedEventHeadersTopic,
@@ -77,6 +86,8 @@ describe("Event store post", () => {
         domain: process.env.DOMAIN,
         service: process.env.SERVICE,
         network: process.env.NETWORK,
+        action: savedEventHeadersAction,
+        timestamp: deps.dateString(),
       },
       savedEventHeadersTopic
     );
@@ -109,10 +120,12 @@ describe("Event store post", () => {
 
     const publishFnFake = fake();
     const savedEventHeadersTopic = "some-saved-event-headers-topic";
+    const savedEventHeadersAction = "some-saved-event-headers-action";
     const createTransactionFnFake = fake.returns({
       receipt: [
         {
           topic: savedEventHeadersTopic,
+          action: savedEventHeadersAction,
         },
       ],
     });
@@ -147,6 +160,8 @@ describe("Event store post", () => {
         domain: process.env.DOMAIN,
         service: process.env.SERVICE,
         network: process.env.NETWORK,
+        action: savedEventHeadersAction,
+        timestamp: deps.dateString(),
       },
       savedEventHeadersTopic
     );
@@ -179,10 +194,12 @@ describe("Event store post", () => {
 
     const publishFnFake = fake();
     const savedEventHeadersTopic = "some-saved-event-headers-topic";
+    const savedEventHeadersAction = "some-saved-event-headers-action";
     const createTransactionFnFake = fake.returns({
       receipt: [
         {
           topic: savedEventHeadersTopic,
+          action: savedEventHeadersAction,
         },
       ],
     });
@@ -220,6 +237,8 @@ describe("Event store post", () => {
         domain: process.env.DOMAIN,
         service: process.env.SERVICE,
         network: process.env.NETWORK,
+        action: savedEventHeadersAction,
+        timestamp: deps.dateString(),
       },
       savedEventHeadersTopic
     );
@@ -252,10 +271,12 @@ describe("Event store post", () => {
 
     const publishFnFake = fake();
     const savedEventHeadersTopic = "some-saved-event-headers-topic";
+    const savedEventHeadersAction = "some-saved-event-headers-action";
     const createTransactionFnFake = fake.returns({
       receipt: [
         {
           topic: savedEventHeadersTopic,
+          action: savedEventHeadersAction,
         },
       ],
     });
@@ -294,6 +315,8 @@ describe("Event store post", () => {
         domain: process.env.DOMAIN,
         service: process.env.SERVICE,
         network: process.env.NETWORK,
+        action: savedEventHeadersAction,
+        timestamp: deps.dateString(),
       },
       savedEventHeadersTopic
     );

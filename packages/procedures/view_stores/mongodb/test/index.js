@@ -27,6 +27,7 @@ const sort = "some-sort";
 const sort2 = "some-other-sort";
 const query2 = "some-other-query";
 const count = "some-count";
+const upsert = "some-upsert";
 
 const writeResult = "some-write-result";
 const removeResult = "some-remove-result";
@@ -235,6 +236,7 @@ describe("View store", () => {
     const writeFnResult = await viewStoreFake.lastCall.lastArg.writeFn({
       query,
       data,
+      upsert,
     });
     expect(writeFake).to.have.been.calledWith({
       store,
@@ -245,7 +247,7 @@ describe("View store", () => {
       options: {
         lean: true,
         omitUndefined: true,
-        upsert: true,
+        upsert,
         new: true,
         runValidators: true,
         setDefaultsOnInsert: true,
@@ -532,7 +534,7 @@ describe("View store", () => {
       },
     });
   });
-  it("should call with the correct params without fns or one", async () => {
+  it("should call with the correct params without fns, one, or upsert", async () => {
     const store = "some-store";
     const storeFake = fake.returns(store);
 
@@ -702,7 +704,7 @@ describe("View store", () => {
       options: {
         lean: true,
         omitUndefined: true,
-        upsert: true,
+        upsert: false,
         new: true,
         runValidators: true,
         setDefaultsOnInsert: true,
@@ -895,6 +897,7 @@ describe("View store", () => {
         [plainKey]: 5,
         $set: { k: 9 },
       },
+      upsert,
     });
     expect(writeFake).to.have.been.calledWith({
       store,
@@ -909,7 +912,7 @@ describe("View store", () => {
       options: {
         lean: true,
         omitUndefined: true,
-        upsert: true,
+        upsert,
         new: true,
         runValidators: true,
         setDefaultsOnInsert: true,

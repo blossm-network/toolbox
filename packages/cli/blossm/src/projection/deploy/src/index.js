@@ -1,5 +1,6 @@
 const eventHandler = require("@blossm/event-handler");
 const command = require("@blossm/command-rpc");
+const fact = require("@blossm/fact-rpc");
 const viewStore = require("@blossm/view-store-rpc");
 const eventStore = require("@blossm/event-store-rpc");
 const gcpToken = require("@blossm/gcp-token");
@@ -12,7 +13,8 @@ const handlers = require("./handlers.js");
 const config = require("./config.json");
 
 module.exports = eventHandler({
-  mainFn: async (aggregate, { push }) => {
+  //TODO
+  mainFn: async ({ aggregate, action, push, aggregateFn, readFactFn }) => {
     //Must be able to handle this aggregate.
     if (
       !handlers[aggregate.headers.service] ||
@@ -20,17 +22,50 @@ module.exports = eventHandler({
     )
       return;
 
-    const {
+    let {
       //The query describing which items in the view store will be updated.
       query,
       //The changes to the body of the view.
       update,
       //The id of the view.
       id,
+      //Events that need to be replayed.
+      replay,
+      //If a new view should be created if nothing matches the query. Defaults to true if an id is returned.
+      upsert,
     } = handlers[aggregate.headers.service][aggregate.headers.domain]({
       state: aggregate.state,
       root: aggregate.headers.root,
+      readFactFn,
+      ...(action && { action }),
     });
+
+    if (replay && replay.length != 0) {
+      await Promise.all(
+        replay.forEach(async (r) => {
+          const { state } = await aggregateFn({
+            domain: r.domain,
+            service: r.service,
+            root: r.root,
+          });
+          const { query: replayQuery, update: replayUpdate } = handlers[
+            r.service
+          ][r.domain]({
+            state,
+            root: r.root,
+            readFactFn,
+          });
+          update = {
+            ...update,
+            ...replayUpdate,
+          };
+          query = {
+            ...query,
+            ...replayQuery,
+          };
+        })
+      );
+    }
 
     const aggregateContext =
       aggregate.context && aggregate.context[process.env.CONTEXT];
@@ -65,6 +100,7 @@ module.exports = eventHandler({
         ...(query && { query }),
         update,
         ...(id && { id }),
+        ...(upsert && { upsert }),
         ...(aggregate.txIds && {
           trace: {
             domain: aggregate.headers.domain,
@@ -99,7 +135,18 @@ module.exports = eventHandler({
         channel,
       });
   },
-  aggregateStreamFn: ({ timestamp, fn, domain, service }) =>
+  aggregateFn: ({ root, domain, service }) => {
+    const aggregate = eventStore({ domain, service })
+      .set({
+        token: { internalFn: gcpToken },
+      })
+      .aggregate(root);
+    return {
+      lastEventNumber: aggregate.headers.lastEventNumber,
+      state: aggregate.state,
+    };
+  },
+  aggregateStreamFn: ({ timestamp, updatedOnOrAfter, fn, domain, service }) =>
     Promise.all(
       config.events
         .filter((event) =>
@@ -115,8 +162,39 @@ module.exports = eventHandler({
             .aggregateStream(fn, {
               parallel: 100,
               ...(timestamp && { timestamp }),
+              ...(updatedOnOrAfter && { updatedOnOrAfter }),
             })
         )
     ),
+  readFactFn: ({ context, claims, token }) => ({
+    name,
+    domain,
+    service,
+    network,
+    query,
+    id,
+    context: contextOverride = context,
+    claims: claimsOverride = claims,
+    principal = "user",
+  }) =>
+    fact({
+      name,
+      domain,
+      ...(service && { service }),
+      ...(network && { network }),
+    })
+      .set({
+        ...(contextOverride && { context: contextOverride }),
+        ...(claimsOverride && { claims: claimsOverride }),
+        ...(token && { currentToken: token }),
+        token: {
+          internalFn: gcpToken,
+          externalFn: ({ network, key } = {}) =>
+            principal == "user"
+              ? { token, type: "Bearer" }
+              : nodeExternalToken({ network, key }),
+        },
+      })
+      .read({ query, id }),
   secretFn: secret,
 });
