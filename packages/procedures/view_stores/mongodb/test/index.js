@@ -104,14 +104,16 @@ describe("View store", () => {
     replace(deps, "formatSchema", formatSchemaFake);
 
     const getFn = "some-get-fn";
-    const putFn = "some-put-fn";
+    const updateFn = "some-update-fn";
+    const formatFn = "some-format-fn";
 
     await mongodbViewStore({
       schema,
       indexes,
       secretFn: secretFake,
       getFn,
-      putFn,
+      updateFn,
+      formatFn,
       one,
     });
 
@@ -271,7 +273,8 @@ describe("View store", () => {
       writeFn: match((fn) => expect(fn({ query, data })).to.exist),
       removeFn: match((fn) => expect(fn(query)).to.exist),
       getFn,
-      putFn,
+      updateFn,
+      formatFn,
       one,
     });
 
@@ -319,7 +322,8 @@ describe("View store", () => {
     replace(deps, "viewStore", viewStoreFake);
 
     const getFn = "some-get-fn";
-    const putFn = "some-put-fn";
+    const updateFn = "some-update-fn";
+    const formatFn = "some-format-fn";
 
     const formattedSchema = "some-formatted-schema";
     const formatSchemaFake = fake.returns(formattedSchema);
@@ -333,7 +337,8 @@ describe("View store", () => {
       indexes,
       secretFn: secretFake,
       getFn,
-      putFn,
+      updateFn,
+      formatFn,
     });
 
     expect(formatSchemaFake).to.have.been.calledWith(schema, "$type");
@@ -445,7 +450,8 @@ describe("View store", () => {
     replace(deps, "viewStore", viewStoreFake);
 
     const getFn = "some-get-fn";
-    const putFn = "some-put-fn";
+    const updateFn = "some-update-fn";
+    const formatFn = "some-format-fn";
 
     const formattedSchema = "some-formatted-schema";
     const formatSchemaFake = fake.returns(formattedSchema);
@@ -463,7 +469,8 @@ describe("View store", () => {
       indexes,
       secretFn: secretFake,
       getFn,
-      putFn,
+      updateFn,
+      formatFn,
     });
 
     expect(formatSchemaFake).to.have.been.calledWith(schema, "$type");

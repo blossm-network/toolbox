@@ -72,7 +72,8 @@ module.exports = async ({
   indexes,
   secretFn,
   getFn,
-  putFn,
+  updateFn,
+  formatFn,
   one,
 } = {}) => {
   const allIndexes = [
@@ -183,7 +184,8 @@ module.exports = async ({
     removeFn,
     countFn,
     ...(getFn && { getFn }),
-    ...(putFn && { putFn }),
+    ...(updateFn && { updateFn }),
+    ...(formatFn && { formatFn }),
     ...(one && { one }),
   });
 };
