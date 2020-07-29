@@ -7,7 +7,7 @@ const main = require("./main.js");
 
 module.exports = fact({
   mainFn: main,
-  queryAggregatesFn: ({ context, claims, token }) => ({
+  queryAggregatesFn: ({ context, claims, token }) => async ({
     domain,
     service,
     network,
@@ -16,8 +16,8 @@ module.exports = fact({
     context: contextOverride = context,
     claims: claimsOverride = claims,
     principal = "user",
-  }) =>
-    eventStore({
+  }) => {
+    const { body: aggregates } = await eventStore({
       domain,
       ...(service && { service }),
       ...(network && { network }),
@@ -34,7 +34,13 @@ module.exports = fact({
               : nodeExternalToken({ network, key }),
         },
       })
-      .query({ key, value }),
+      .query({ key, value });
+
+    return aggregates.map((aggregate) => ({
+      root: aggregate.sheders.root,
+      state: aggregate.state,
+    }));
+  },
   aggregateFn: ({ context, claims, token }) => async (
     root,
     {
