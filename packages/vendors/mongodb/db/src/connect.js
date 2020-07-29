@@ -2,7 +2,7 @@ const logger = require("@blossm/logger");
 
 const deps = require("../deps");
 
-module.exports = async ({
+module.exports = ({
   protocol,
   user,
   password,
@@ -19,14 +19,18 @@ module.exports = async ({
     ...(parameters ? [parameters] : [])
   );
 
-  await deps.mongoose.connect(connectionString, {
-    useNewUrlParser: true,
-    useCreateIndex: true,
-    useUnifiedTopology: true,
-    useFindAndModify: false,
-    autoIndex,
-    poolSize,
-  });
+  deps.mongoose.connect(
+    connectionString,
+    {
+      useNewUrlParser: true,
+      useCreateIndex: true,
+      useUnifiedTopology: true,
+      useFindAndModify: false,
+      autoIndex,
+      poolSize,
+    },
+    (err) => logger.error("Mongoose failed to connect", { err })
+  );
 
   const db = deps.mongoose.connection;
 

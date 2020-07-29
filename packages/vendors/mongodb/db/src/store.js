@@ -1,7 +1,7 @@
 const connect = require("./connect");
 const deps = require("../deps");
 
-module.exports = async ({
+module.exports = ({
   name,
   schema,
   indexes = [],
@@ -29,7 +29,7 @@ module.exports = async ({
     protocol != undefined &&
     database != undefined
   ) {
-    await connect({
+    connect({
       protocol,
       user,
       password,
