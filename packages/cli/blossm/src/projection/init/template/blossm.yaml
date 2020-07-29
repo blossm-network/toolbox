@@ -5,9 +5,9 @@ name: some-name
 context: some-context
 
 #
-# Set the event-stores from which this projection will listen for actions.
+# Set the events that this projection listens to.
 #
-stores:
+events:
   - domain: some-event-domain
     service: core
     actions:
