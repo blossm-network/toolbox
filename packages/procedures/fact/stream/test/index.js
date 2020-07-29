@@ -59,6 +59,7 @@ describe("Fact stream", () => {
       }),
       parallel: 100,
       queryAggregatesFn,
+      aggregateFn,
     });
     expect(queryAggregatesFnFake).to.have.been.calledWith({});
     expect(aggregateFnFake).to.have.been.calledWith({});
@@ -113,6 +114,7 @@ describe("Fact stream", () => {
       }),
       parallel,
       queryAggregatesFn,
+      aggregateFn,
     });
     expect(queryAggregatesFnFake).to.have.been.calledWith({
       context,
