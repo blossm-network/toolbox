@@ -78,7 +78,7 @@ const executeStep = async (step) => {
       });
 
       await eventStore({ domain, service }).add({
-        eventData: [{ data: stateEvent }],
+        eventData: [{ event: stateEvent }],
       });
     }
   }
@@ -111,17 +111,7 @@ const executeStep = async (step) => {
   });
 };
 
-// const existingTopics = [];
 describe("Fact integration tests", () => {
-  // after(
-  //   async () =>
-  //     await Promise.all(
-  //       [...testing.topics, ...stateTopics].map(
-  //         (t) => !existingTopics.includes(t) && del(t)
-  //       )
-  //     )
-  // );
-
   it("should return successfully", async () => {
     let i = 0;
     for (const step of testing.steps) {
