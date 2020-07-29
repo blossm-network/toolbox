@@ -49,6 +49,7 @@ module.exports = ({
       publishedTopics.push(e.topic);
       return publishFn(
         {
+          root: e.root,
           action: e.action,
           domain: process.env.DOMAIN,
           service: process.env.SERVICE,

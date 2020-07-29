@@ -4,6 +4,8 @@ const { restore, fake, match } = require("sinon");
 const stream = require("..");
 
 const queryAggregatesFn = "some-query-aggregates-fn";
+const aggregateFn = "some-aggregate-fn";
+
 const action = "some-action";
 const domain = "some-domain";
 const service = "some-service";
@@ -25,6 +27,7 @@ describe("Fact stream", () => {
   it("should call with the correct params", async () => {
     const mainFnFake = fake();
     const queryAggregatesFnFake = fake.returns(queryAggregatesFn);
+    const aggregateFnFake = fake.returns(aggregateFn);
 
     const req = {
       params,
@@ -44,6 +47,7 @@ describe("Fact stream", () => {
     await stream({
       mainFn: mainFnFake,
       queryAggregatesFn: queryAggregatesFnFake,
+      aggregateFn: aggregateFnFake,
     })(req, res);
 
     expect(mainFnFake).to.have.been.calledWith({
@@ -57,11 +61,13 @@ describe("Fact stream", () => {
       queryAggregatesFn,
     });
     expect(queryAggregatesFnFake).to.have.been.calledWith({});
+    expect(aggregateFnFake).to.have.been.calledWith({});
     expect(endFake).to.have.been.calledWith();
   });
   it("should call with the correct params with context and headers", async () => {
     const mainFnFake = fake();
     const queryAggregatesFnFake = fake.returns(queryAggregatesFn);
+    const aggregateFnFake = fake.returns(aggregateFn);
 
     const context = "some-context";
     const claims = "some-claims";
@@ -93,6 +99,7 @@ describe("Fact stream", () => {
     await stream({
       mainFn: mainFnFake,
       queryAggregatesFn: queryAggregatesFnFake,
+      aggregateFn: aggregateFnFake,
     })(req, res);
 
     expect(mainFnFake).to.have.been.calledWith({
@@ -112,12 +119,19 @@ describe("Fact stream", () => {
       claims,
       token,
     });
+    expect(aggregateFnFake).to.have.been.calledWith({
+      context,
+      claims,
+      token,
+    });
     expect(endFake).to.have.been.calledWith();
   });
   it("should throw correctly", async () => {
     const errorMessage = "some-error-message";
     const mainFnFake = fake.rejects(new Error(errorMessage));
     const queryAggregatesFnFake = fake.returns(queryAggregatesFn);
+    const aggregateFnFake = fake.returns(aggregateFn);
+
     const req = {
       params,
       query,
@@ -129,6 +143,7 @@ describe("Fact stream", () => {
       await stream({
         mainFn: mainFnFake,
         queryAggregatesFn: queryAggregatesFnFake,
+        aggregateFn: aggregateFnFake,
       })(req, res);
 
       //shouldn't get called

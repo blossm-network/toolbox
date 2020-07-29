@@ -130,7 +130,7 @@ describe("Fact get", () => {
     const errorMessage = "some-error-message";
     const mainFnFake = fake.rejects(new Error(errorMessage));
     const queryAggregatesFnFake = fake.returns(queryAggregatesFn);
-    const aggregatesFnFake = fake.returns(aggregateFn);
+    const aggregateFnFake = fake.returns(aggregateFn);
 
     const req = {
       params,
@@ -149,7 +149,7 @@ describe("Fact get", () => {
       await get({
         mainFn: mainFnFake,
         queryAggregatesFn: queryAggregatesFnFake,
-        aggregateFn: aggregatesFnFake,
+        aggregateFn: aggregateFnFake,
       })(req, res);
 
       //shouldn't get called

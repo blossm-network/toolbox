@@ -8,6 +8,10 @@ const deps = require("../deps");
 const eventData = [{ event: { headers: {} } }, { event: { headers: {} } }];
 const tx = "some-tx";
 
+const savedEventHeadersTopic = "some-saved-event-headers-topic";
+const savedEventHeadersAction = "some-saved-event-headers-action";
+const savedEventHeadersRoot = "some-saved-event-headers-root";
+
 const domain = "some-domain";
 const service = "some-service";
 const network = "some-network";
@@ -49,16 +53,18 @@ describe("Event store post", () => {
     const reserveRootCountsFn = "some-reserve-root-counts-fn";
 
     const publishFnFake = fake();
-    const savedEventHeadersTopic = "some-saved-event-headers-topic";
-    const savedEventHeadersAction = "some-saved-event-headers-action";
+
     const createTransactionFnFake = fake.returns({
       receipt: [
         {
           topic: savedEventHeadersTopic,
           action: savedEventHeadersAction,
+          root: savedEventHeadersRoot,
         },
         {
           topic: savedEventHeadersTopic,
+          action: savedEventHeadersAction,
+          root: savedEventHeadersRoot,
         },
       ],
     });
@@ -87,6 +93,7 @@ describe("Event store post", () => {
         service: process.env.SERVICE,
         network: process.env.NETWORK,
         action: savedEventHeadersAction,
+        root: savedEventHeadersRoot,
         timestamp: deps.dateString(),
       },
       savedEventHeadersTopic
@@ -119,13 +126,12 @@ describe("Event store post", () => {
     const reserveRootCountsFn = "some-reserve-root-counts-fn";
 
     const publishFnFake = fake();
-    const savedEventHeadersTopic = "some-saved-event-headers-topic";
-    const savedEventHeadersAction = "some-saved-event-headers-action";
     const createTransactionFnFake = fake.returns({
       receipt: [
         {
           topic: savedEventHeadersTopic,
           action: savedEventHeadersAction,
+          root: savedEventHeadersRoot,
         },
       ],
     });
@@ -161,6 +167,7 @@ describe("Event store post", () => {
         service: process.env.SERVICE,
         network: process.env.NETWORK,
         action: savedEventHeadersAction,
+        root: savedEventHeadersRoot,
         timestamp: deps.dateString(),
       },
       savedEventHeadersTopic
@@ -193,13 +200,12 @@ describe("Event store post", () => {
     const reserveRootCountsFn = "some-reserve-root-counts-fn";
 
     const publishFnFake = fake();
-    const savedEventHeadersTopic = "some-saved-event-headers-topic";
-    const savedEventHeadersAction = "some-saved-event-headers-action";
     const createTransactionFnFake = fake.returns({
       receipt: [
         {
           topic: savedEventHeadersTopic,
           action: savedEventHeadersAction,
+          root: savedEventHeadersRoot,
         },
       ],
     });
@@ -238,6 +244,7 @@ describe("Event store post", () => {
         service: process.env.SERVICE,
         network: process.env.NETWORK,
         action: savedEventHeadersAction,
+        root: savedEventHeadersRoot,
         timestamp: deps.dateString(),
       },
       savedEventHeadersTopic
@@ -270,13 +277,12 @@ describe("Event store post", () => {
     const reserveRootCountsFn = "some-reserve-root-counts-fn";
 
     const publishFnFake = fake();
-    const savedEventHeadersTopic = "some-saved-event-headers-topic";
-    const savedEventHeadersAction = "some-saved-event-headers-action";
     const createTransactionFnFake = fake.returns({
       receipt: [
         {
           topic: savedEventHeadersTopic,
           action: savedEventHeadersAction,
+          root: savedEventHeadersRoot,
         },
       ],
     });
@@ -316,6 +322,7 @@ describe("Event store post", () => {
         service: process.env.SERVICE,
         network: process.env.NETWORK,
         action: savedEventHeadersAction,
+        root: savedEventHeadersRoot,
         timestamp: deps.dateString(),
       },
       savedEventHeadersTopic

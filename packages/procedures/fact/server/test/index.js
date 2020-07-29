@@ -48,7 +48,11 @@ describe("Fact", () => {
     expect(streamFake).to.have.been.calledWith(factStreamResult, {
       path: "/stream/:root?",
     });
-    expect(factGetFake).to.have.been.calledWith({ mainFn, queryAggregatesFn });
+    expect(factGetFake).to.have.been.calledWith({
+      mainFn,
+      queryAggregatesFn,
+      aggregateFn,
+    });
     expect(factStreamFake).to.have.been.calledWith({
       mainFn,
       queryAggregatesFn,

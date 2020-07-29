@@ -109,7 +109,7 @@ describe("Event store post", () => {
     })(transaction);
 
     expect(result).to.deep.equal({
-      receipt: [{ topic, created, action }],
+      receipt: [{ topic, created, action, root }],
     });
 
     expect(saveEventsFnFake).to.have.been.calledWith({
@@ -219,7 +219,7 @@ describe("Event store post", () => {
     })(transaction);
 
     expect(result).to.deep.equal({
-      receipt: [{ created, topic, action }],
+      receipt: [{ created, topic, action, root }],
     });
 
     expect(saveEventsFnFake).to.have.been.calledWith({
@@ -325,7 +325,7 @@ describe("Event store post", () => {
     })(transaction);
 
     expect(result).to.deep.equal({
-      receipt: [{ created, topic, action }],
+      receipt: [{ created, topic, action, root }],
     });
 
     expect(saveEventsFnFake).to.have.been.calledWith({
@@ -496,9 +496,9 @@ describe("Event store post", () => {
 
     expect(result).to.deep.equal({
       receipt: [
-        { created, topic, action },
-        { created, topic, action },
-        { created, topic, action },
+        { created, topic, action, root },
+        { created, topic, action, root },
+        { created, topic, action, root: "some-other-root" },
       ],
     });
 
@@ -687,7 +687,7 @@ describe("Event store post", () => {
     })();
 
     expect(result).to.deep.equal({
-      receipt: [{ created, topic, action }],
+      receipt: [{ created, topic, action, root }],
     });
 
     expect(saveEventsFnFake).to.have.been.calledWith({

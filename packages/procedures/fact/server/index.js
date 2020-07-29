@@ -6,5 +6,7 @@ module.exports = async ({ mainFn, queryAggregatesFn, aggregateFn } = {}) =>
     .get(deps.stream({ mainFn, queryAggregatesFn, aggregateFn }), {
       path: "/stream/:root?",
     })
-    .get(deps.get({ mainFn, queryAggregatesFn }), { path: "/:root?" })
+    .get(deps.get({ mainFn, queryAggregatesFn, aggregateFn }), {
+      path: "/:root?",
+    })
     .listen();
