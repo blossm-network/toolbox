@@ -21,6 +21,9 @@ describe("View store base integration tests", () => {
     const examples = testing.examples;
     expect(examples.length).to.be.greaterThan(1);
 
+    //TODO
+    console.log("1");
+
     const response0 = await request.post(url, {
       body: {
         id,
@@ -35,8 +38,13 @@ describe("View store base integration tests", () => {
       },
     });
 
+    //TODO
+    console.log({ response0 });
+
     expect(response0.statusCode).to.equal(200);
 
+    //TODO
+    console.log("2");
     const response1 = await request.get(url, {
       query: {
         context: {
@@ -49,6 +57,8 @@ describe("View store base integration tests", () => {
       },
     });
 
+    //TODO
+    console.log({ response1 });
     expect(response1.statusCode).to.equal(200);
     const { updates: updates0, count: count0, content: content0 } = JSON.parse(
       response1.body
@@ -56,9 +66,14 @@ describe("View store base integration tests", () => {
 
     const parsedBody0 = one ? content0 : content0[0];
 
+    //TODO
+    console.log({ parsedBody0 });
+
     expect(updates0).to.exist;
     !one ? expect(count0).to.equal(1) : expect(count0).to.be.undefined;
 
+    //TODO
+    console.log("3");
     expect(response1.statusCode).to.equal(200);
     for (const key in examples[0].get) {
       expect(parsedBody0.body[key]).to.deep.equal(examples[0].get[key]);
