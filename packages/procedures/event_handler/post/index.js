@@ -26,7 +26,6 @@ module.exports = ({
     ...(action && { action }),
     ...(domain && { domain }),
     ...(service && { service }),
-    //TODO test and see if theres a way to get the aggregates to come in reverse cron order.
     fn: (aggregate) =>
       mainFn({
         aggregate,
@@ -35,13 +34,6 @@ module.exports = ({
         push,
         ...(action && { action }),
       }),
-    // chronological by when the events were created, which best represents the events' intended order.
-    sortFn: (a, b) =>
-      a.headers.created < b.headers.created
-        ? -1
-        : a.headers.created > b.headers.created
-        ? 1
-        : 0,
   });
 
   res.sendStatus(204);

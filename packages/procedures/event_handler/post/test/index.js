@@ -60,12 +60,6 @@ describe("Command handler post", () => {
           push: true,
         });
       }),
-      sortFn: match((fn) => {
-        const a = { headers: { created: 0 } };
-        const b = { headers: { created: 1 } };
-        const result = fn(a, b);
-        return result == -1;
-      }),
     });
 
     expect(sendStatusFake).to.have.been.calledWith(204);
@@ -104,12 +98,6 @@ describe("Command handler post", () => {
           push: false,
         });
       }),
-      sortFn: match((fn) => {
-        const a = { headers: { created: 0 } };
-        const b = { headers: { created: 1 } };
-        const result = fn(a, b);
-        return result == -1;
-      }),
     });
 
     expect(sendStatusFake).to.have.been.calledWith(204);
@@ -144,12 +132,6 @@ describe("Command handler post", () => {
           readFactFn,
           push: false,
         });
-      }),
-      sortFn: match((fn) => {
-        const a = { headers: { created: 0 } };
-        const b = { headers: { created: 1 } };
-        const result = fn(a, b);
-        return result == -1;
       }),
     });
 

@@ -13,7 +13,6 @@ const handlers = require("./handlers.js");
 const config = require("./config.json");
 
 module.exports = eventHandler({
-  //TODO
   mainFn: async ({ aggregate, action, push, aggregateFn, readFactFn }) => {
     //Must be able to handle this aggregate.
     if (
