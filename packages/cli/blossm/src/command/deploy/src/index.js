@@ -43,6 +43,7 @@ module.exports = commandProcedure({
     return {
       lastEventNumber: aggregate.headers.lastEventNumber,
       state: aggregate.state,
+      root: aggregate.headers.root,
     };
   },
   commandFn: ({ path, idempotency, context, claims, token, txId, ip }) => ({
@@ -90,7 +91,7 @@ module.exports = commandProcedure({
           ...(path && { path }),
         },
       }),
-  queryAggregatesFn: ({ context, claims, token }) => ({
+  queryAggregatesFn: ({ context, claims, token }) => async ({
     domain,
     service,
     network,
@@ -99,8 +100,8 @@ module.exports = commandProcedure({
     context: contextOverride = context,
     claims: claimsOverride = claims,
     principal = "user",
-  }) =>
-    eventStore({
+  }) => {
+    const { body: aggregates } = await eventStore({
       domain,
       ...(service && { service }),
       ...(network && { network }),
@@ -117,7 +118,12 @@ module.exports = commandProcedure({
               : nodeExternalToken({ network, key }),
         },
       })
-      .query({ key, value }),
+      .query({ key, value });
+    return aggregates.map((aggregate) => ({
+      root: aggregate.sheders.root,
+      state: aggregate.state,
+    }));
+  },
   readFactFn: ({ context, claims, token }) => ({
     name,
     domain,
