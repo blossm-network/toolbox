@@ -17,6 +17,7 @@ exports.enqueue = ({
   serviceAccountEmail,
   project = process.env.GCP_PROJECT,
   location = process.env.GCP_REGION,
+  computeUrlId = process.env.GCP_COMPUTE_URL_ID,
   queue,
   wait = 0,
 }) => async ({ url, data = {}, token, hash, name, method = "post" }) => {
@@ -34,7 +35,7 @@ exports.enqueue = ({
           serviceAccountEmail || `executer@${project}.iam.gserviceaccount.com`,
         ...(hash &&
           name && {
-            audience: `https://${process.env.GCP_REGION}-${name}-${hash}-${process.env.GCP_COMPUTE_URL_ID}-uc.a.run.app`,
+            audience: `https://${location}-${name}-${hash}-${computeUrlId}-uc.a.run.app`,
           }),
       },
     }),
@@ -48,7 +49,7 @@ exports.enqueue = ({
             `executer@${project}.iam.gserviceaccount.com`,
           ...(hash &&
             name && {
-              audience: `https://${process.env.GCP_REGION}-${name}-${hash}-${process.env.GCP_COMPUTE_URL_ID}-uc.a.run.app`,
+              audience: `https://${location}-${name}-${hash}-${computeUrlId}-uc.a.run.app`,
             }),
         },
       }),
@@ -71,7 +72,7 @@ exports.enqueue = ({
             `executer@${project}.iam.gserviceaccount.com`,
           ...(hash &&
             name && {
-              audience: `https://${process.env.GCP_REGION}-${name}-${hash}-${process.env.GCP_COMPUTE_URL_ID}-uc.a.run.app`,
+              audience: `https://${location}-${name}-${hash}-${computeUrlId}-uc.a.run.app`,
             }),
         },
       }),

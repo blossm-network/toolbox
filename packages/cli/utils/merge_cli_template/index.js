@@ -678,6 +678,8 @@ const configure = async (workingDir, configFn, env, strict) => {
 
     writeConfig({ config, coreNetwork, workingDir });
 
+    const computeUrlId = envComputeUrlId({ env, config: blossmConfig });
+
     writeBuild({
       workingDir,
       env,
@@ -705,7 +707,7 @@ const configure = async (workingDir, configFn, env, strict) => {
       envVars,
       devEnvVars,
       envUriSpecifier: envUriSpecifier(env),
-      computeUrlId: envComputeUrlId({ env, config: blossmConfig }),
+      computeUrlId,
       dnsZone,
       service,
       rolesBucket,

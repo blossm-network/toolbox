@@ -74,7 +74,8 @@ describe("Queue", () => {
       serviceAccountEmail,
       project,
       queue: name,
-      location,
+      computeUrlId: "custom-compute-url-id",
+      location: "custom-region",
     })({
       url,
       data,
@@ -91,7 +92,7 @@ describe("Queue", () => {
           httpMethod: "PUT",
           oidcToken: {
             serviceAccountEmail,
-            audience: `https://${region}-${operationName}-${operationHash}-${computeUrlId}-uc.a.run.app`,
+            audience: `https://custom-region-${operationName}-${operationHash}-custom-compute-url-id-uc.a.run.app`,
           },
           headers: {
             "content-type": "application/json",
