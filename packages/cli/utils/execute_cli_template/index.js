@@ -83,14 +83,14 @@ const execute = async (input, configFn) => {
     await enqueue({
       queue: input.queue || queueName({ config: blossmConfig }),
       serviceAccountEmail: `executer@${project}.iam.gserviceaccount.com`,
-      name: operationName,
-      hash: operationHash,
       location: "us-central1",
       project,
     })({
       url: `https://${operationHash}.${input.region}.${envUriSpecifier(
         input.env
       )}${rootConfig.network}`,
+      name: operationName,
+      hash: operationHash,
       ...(input.data && { data: JSON.parse(input.data) }),
     });
   } catch (err) {
