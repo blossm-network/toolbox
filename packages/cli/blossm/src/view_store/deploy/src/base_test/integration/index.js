@@ -82,7 +82,7 @@ describe("View store base integration tests", () => {
     expect(response1.statusCode).to.equal(200);
     const formattedExampleGet = format(examples[0].get);
     //TODO
-    console.log("4: ", { formattedExample1Get, example: examples[0].get });
+    console.log("4: ", { formattedExampleGet, example: examples[0].get });
     for (const key in formattedExampleGet) {
       expect(parsedBody0.body[key]).to.deep.equal(formattedExampleGet[key]);
     }
