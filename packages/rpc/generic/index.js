@@ -191,7 +191,7 @@ module.exports = (...operation) => {
             async (data) => {
               const string = data.toString();
               //TODO
-              console.log({ string });
+              console.log({ string, full: progress + string });
               let { parsedData, leftover } = jsonString(progress + string);
               //TODO
               console.log({ parsedData, leftover });
