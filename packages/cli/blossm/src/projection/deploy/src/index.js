@@ -14,6 +14,9 @@ const config = require("./config.json");
 
 module.exports = eventHandler({
   mainFn: async ({ aggregate, action, push, aggregateFn, readFactFn }) => {
+    //TODO
+    console.log({ aggregate });
+
     //Must be able to handle this aggregate.
     if (
       !handlers[aggregate.headers.service] ||
@@ -39,6 +42,14 @@ module.exports = eventHandler({
       ...(action && { action }),
     });
 
+    //TODO
+    console.log({
+      query,
+      update,
+      id,
+      replay,
+      upsert,
+    });
     if (replay && replay.length != 0) {
       await Promise.all(
         replay.forEach(async (r) => {
@@ -109,6 +120,8 @@ module.exports = eventHandler({
         }),
       });
 
+    //TODO
+    console.log({ newView });
     if (!newView || !push) return;
 
     const channel = channelName({
