@@ -59,7 +59,7 @@ const queueName = ({ config }) => {
       }-${config.name}`;
     case "projection":
     case "event-handler":
-      return `event-handler-${config.context}-${config.name}`;
+      return `projection-${config.context}-${config.name}`;
   }
 };
 
