@@ -32,7 +32,7 @@ module.exports = eventHandler({
       replay,
       //If a new view should be created if nothing matches the query. Defaults to true if an id is returned.
       upsert,
-    } = handlers[aggregate.headers.service][aggregate.headers.domain]({
+    } = await handlers[aggregate.headers.service][aggregate.headers.domain]({
       state: aggregate.state,
       root: aggregate.headers.root,
       readFactFn,
