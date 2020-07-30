@@ -52,9 +52,6 @@ module.exports = ({
   runIntegrationTests,
   runBaseIntegrationTests,
   dependencyKeyEnvironmentVariables,
-  mongodbUser,
-  mongodbHost,
-  mongodbProtocol,
   strict,
 }) => {
   return [
@@ -116,10 +113,6 @@ module.exports = ({
             env: {
               NAME: name,
               CONTEXT: context,
-              MONGODB_DATABASE: "event-handler",
-              MONGODB_USER: mongodbUser,
-              MONGODB_HOST: mongodbHost,
-              MONGODB_PROTOCOL: mongodbProtocol,
               ...envVars,
             },
             labels: {
@@ -128,7 +121,7 @@ module.exports = ({
             },
           }),
           createQueue({
-            name: `event-handler-${context}-${name}`,
+            name: `projection-${context}-${name}`,
             project,
           }),
           startDnsTransaction({ dnsZone, project }),
