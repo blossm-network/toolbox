@@ -29,8 +29,13 @@ module.exports = ({ credentialsFn }) => async ({ network, key }) => {
 
     //TODO
     console.log({
+      headers,
+    });
+    console.log({
       setcookie: headers["set-cookie"],
-      parsed: headers["set-cookie"].map((c) => deps.parseCookie(c)),
+    });
+    console.log({
+      // parsed: headers["set-cookie"].map((c) => deps.parseCookie(c)),
       network,
       key,
     });
