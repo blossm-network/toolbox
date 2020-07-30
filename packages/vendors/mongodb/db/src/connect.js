@@ -29,7 +29,10 @@ module.exports = ({
       autoIndex,
       poolSize,
     },
-    (err) => logger.error("Mongoose failed to connect", { err })
+    (err) =>
+      err
+        ? logger.error("Mongoose failed to connect", { err })
+        : logger.info("Mongoose connection successful.")
   );
 
   const db = deps.mongoose.connection;
