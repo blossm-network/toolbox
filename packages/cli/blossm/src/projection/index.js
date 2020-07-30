@@ -31,6 +31,6 @@ module.exports = async (args) => {
     case "init":
       return init(input.args);
     case "replay":
-      return replay(input.args);
+      return replay(input.args, configFn);
   }
 };
