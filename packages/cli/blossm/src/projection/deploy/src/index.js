@@ -159,7 +159,7 @@ module.exports = eventHandler({
               token: { internalFn: gcpToken },
             })
             .aggregateStream(fn, {
-              parallel: 100,
+              parallel: 1,
               ...(timestamp && { timestamp }),
               ...(updatedOnOrAfter && { updatedOnOrAfter }),
             })
