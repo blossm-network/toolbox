@@ -22,7 +22,9 @@ const jsonString = (string) => {
       if (objectOpenIndex == undefined) objectOpenIndex = i;
       openCount++;
     } else if (char == "}") {
+      if (openCount == 0) return;
       openCount--;
+      console.log({ string, objectOpenIndex, i });
       if (openCount == 0) {
         parsedData.push(
           JSON.parse(string.substr(objectOpenIndex, i - objectOpenIndex + 1))
@@ -192,7 +194,7 @@ module.exports = (...operation) => {
               const string = data.toString();
               //TODO
               console.log("~");
-              console.log({ string });
+              console.log({ string, progress });
               let { parsedData, leftover } = jsonString(progress + string);
               console.log({ parsedData, leftover });
               for (const d of parsedData) await fn(d);
