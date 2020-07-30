@@ -18,7 +18,7 @@ describe("Connection token", () => {
     restore();
   });
   it("should call correctly", async () => {
-    const issueFake = fake.returns({ body: { token } });
+    const issueFake = fake.returns({ body: { token: { value: token } } });
     const setFake = fake.returns({
       issue: issueFake,
     });
@@ -64,7 +64,7 @@ describe("Connection token", () => {
   });
   it("should call correctly if expired", async () => {
     const anotherNetwork = "another-network";
-    const issueFake = fake.returns({ body: { token } });
+    const issueFake = fake.returns({ body: { token: { value: token } } });
     const setFake = fake.returns({
       issue: issueFake,
     });

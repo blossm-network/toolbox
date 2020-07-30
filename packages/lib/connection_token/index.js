@@ -29,14 +29,11 @@ module.exports = ({ credentialsFn }) => async ({ network, key }) => {
       })
       .issue({ key });
 
-    //TODO
-    console.log({ token });
-
     if (!token) return null;
 
-    const claims = await deps.decode(token);
+    const claims = await deps.decode(token.value);
     cache[`${network}.${key}`] = {
-      token,
+      token: token.value,
       exp: new Date(Date.parse(claims.exp)),
     };
   }
