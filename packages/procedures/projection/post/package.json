@@ -1,7 +1,7 @@
 {
   "name": "@blossm/projection-post",
   "description": "A projection server POST handler.",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
