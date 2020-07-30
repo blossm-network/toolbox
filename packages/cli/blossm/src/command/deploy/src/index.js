@@ -137,8 +137,8 @@ module.exports = commandProcedure({
   }) =>
     fact({
       name,
-      domain,
-      ...(service && { service }),
+      ...(domain && { domain }),
+      service,
       ...(network && { network }),
     })
       .set({
