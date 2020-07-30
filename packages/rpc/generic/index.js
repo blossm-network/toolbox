@@ -184,14 +184,17 @@ module.exports = (...operation) => {
       const id = query.id;
       delete query.id;
       let progress = "";
+      let i = 0;
       return common({
         method: (url, data) =>
           deps.stream(
             url,
             async (data) => {
+              //TODO
+              console.log({ i: i++ });
               const string = data.toString();
               //TODO
-              console.log({ string, full: progress + string });
+              console.log({ string, progress, full: progress + string });
               let { parsedData, leftover } = jsonString(progress + string);
               //TODO
               console.log({ parsedData, leftover });
@@ -201,6 +204,8 @@ module.exports = (...operation) => {
                 await fn(d);
               }
               progress = leftover;
+              //TODO
+              console.log({ savedProgress: progress });
             },
             data
           ),
