@@ -21,9 +21,9 @@ const jsonString = (string) => {
     if (char == "{") {
       if (objectOpenIndex == undefined) objectOpenIndex = i;
       openCount++;
-    } else if (char == "}") {
-      if (openCount == 0) return;
+    } else if (char == "}" && openCount > 0) {
       openCount--;
+      //TODO
       console.log({ string, objectOpenIndex, i });
       if (openCount == 0) {
         parsedData.push(
