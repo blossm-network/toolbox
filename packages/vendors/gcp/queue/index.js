@@ -25,6 +25,41 @@ exports.enqueue = ({
   const string = JSON.stringify(data);
 
   const body = Buffer.from(string).toString("base64");
+
+  //TODO
+  console.log({
+    ...(!token && {
+      oidcToken: {
+        serviceAccountEmail:
+          serviceAccountEmail || `executer@${project}.iam.gserviceaccount.com`,
+        ...(hash &&
+          name && {
+            audience: `https://${process.env.GCP_REGION}-${name}-${hash}-${process.env.GCP_COMPUTE_URL_ID}-uc.a.run.app`,
+          }),
+      },
+    }),
+    httpRequest: {
+      httpMethod: method.toUpperCase(),
+      url,
+      ...(!token && {
+        oidcToken: {
+          serviceAccountEmail:
+            serviceAccountEmail ||
+            `executer@${project}.iam.gserviceaccount.com`,
+          ...(hash &&
+            name && {
+              audience: `https://${process.env.GCP_REGION}-${name}-${hash}-${process.env.GCP_COMPUTE_URL_ID}-uc.a.run.app`,
+            }),
+        },
+      }),
+      headers: {
+        "content-type": "application/json",
+        ...(token && { authorization: `Bearer ${token}` }),
+      },
+      body,
+    },
+  });
+
   const task = {
     httpRequest: {
       httpMethod: method.toUpperCase(),
@@ -51,6 +86,8 @@ exports.enqueue = ({
     },
   };
 
+  //TODO
+  console.log({ task });
   const request = {
     parent,
     task,
