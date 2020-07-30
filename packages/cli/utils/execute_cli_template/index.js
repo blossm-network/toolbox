@@ -34,21 +34,6 @@ const envUriSpecifier = (env) => {
   }
 };
 
-const envComputeUrlId = ({ env, config }) => {
-  switch (env) {
-    case "production":
-      return config.vendors.cloud.gcp.computeUrlIds.production;
-    case "sandbox":
-      return config.vendors.cloud.gcp.computeUrlIds.sandbox;
-    case "staging":
-      return config.vendors.cloud.gcp.computeUrlIds.staging;
-    case "development":
-      return config.vendors.cloud.gcp.computeUrlIds.development;
-    default:
-      return "";
-  }
-};
-
 const queueName = ({ config }) => {
   switch (config.procedure) {
     case "command":
@@ -79,6 +64,20 @@ const execute = async (input, configFn) => {
     const project = envProject({
       config: rootConfig,
       env: input.env,
+    });
+
+    //TODO
+    console.log({
+      queue: input.queue || queueName({ config: blossmConfig }),
+      serviceAccountEmail: `executer@${project}.iam.gserviceaccount.com`,
+      name: operationName,
+      hash: operationHash,
+      location: "us-central1",
+      project,
+      url: `https://${operationHash}.${input.region}.${envUriSpecifier(
+        input.env
+      )}${rootConfig.network}`,
+      ...(input.data && { data: JSON.parse(input.data) }),
     });
 
     await enqueue({
