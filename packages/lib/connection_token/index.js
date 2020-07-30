@@ -29,6 +29,9 @@ module.exports = ({ credentialsFn }) => async ({ network, key }) => {
       })
       .issue({ key });
 
+    //TODO
+    console.log({ token });
+
     if (!token) return null;
 
     const claims = await deps.decode(token);
