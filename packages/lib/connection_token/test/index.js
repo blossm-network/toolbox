@@ -17,135 +17,118 @@ const headers = {
 const key = "some-key";
 
 describe("Connection token", () => {
-  afterEach(() => {
-    restore();
-  });
-  it("should call correctly", async () => {
-    const issueFake = fake.returns({ headers });
-    const setFake = fake.returns({
-      issue: issueFake,
-    });
-    const commandFake = fake.returns({
-      set: setFake,
-    });
-    replace(deps, "command", commandFake);
-
-    const decodeFake = fake.returns({ exp });
-    replace(deps, "decode", decodeFake);
-
-    const basicTokenFake = fake.returns(basicToken);
-    replace(deps, "basicToken", basicTokenFake);
-
-    const parseCookiesFake = stub()
-      .onFirstCall()
-      .returns([{ domain: network, name: key, value: token }])
-      .onSecondCall()
-      .returns([{ domain: network, name: "new-key", value: token }]);
-    replace(deps, "parseCookies", parseCookiesFake);
-
-    const credentialsFnFake = fake.returns({ root, secret });
-    const result = await connectionToken({
-      credentialsFn: credentialsFnFake,
-    })({ network, key });
-
-    expect(commandFake).to.have.been.calledWith({
-      name: "open",
-      domain: "connection",
-      service: "system",
-      network,
-    });
-    expect(decodeFake).to.have.been.calledWith(token);
-    expect(setFake).to.have.been.calledWith({
-      token: { externalFn: match((fn) => fn() == basicToken), key: "access" },
-    });
-    expect(parseCookiesFake).to.have.been.calledWith({ headers });
-    expect(basicTokenFake).to.have.been.calledWith({
-      root,
-      secret,
-    });
-    expect(issueFake).to.have.been.calledWith({ key });
-    expect(credentialsFnFake).to.have.been.calledWith({ network });
-    expect(result).to.deep.equal({ token, type: "Bearer" });
-
-    const anotherResult = await connectionToken({
-      credentialsFn: credentialsFnFake,
-    })({ network, key });
-    expect(commandFake).to.have.been.calledOnce;
-    expect(anotherResult).to.deep.equal({ token, type: "Bearer" });
-
-    const yetAnotherResult = await connectionToken({
-      credentialsFn: credentialsFnFake,
-    })({ network, key: "new-key" });
-    expect(commandFake).to.have.been.calledTwice;
-    expect(yetAnotherResult).to.deep.equal({ token, type: "Bearer" });
-  });
-
-  it("should call correctly if expired", async () => {
-    const anotherNetwork = "another-network";
-    const issueFake = fake.returns({ headers });
-    const setFake = fake.returns({
-      issue: issueFake,
-    });
-    const commandFake = fake.returns({
-      set: setFake,
-    });
-    replace(deps, "command", commandFake);
-
-    const decodeFake = fake.returns({ exp: expiredExp });
-    replace(deps, "decode", decodeFake);
-
-    const parseCookiesFake = fake.returns([
-      { domain: anotherNetwork, name: key, value: token },
-    ]);
-    replace(deps, "parseCookies", parseCookiesFake);
-    const basicTokenFake = fake.returns(basicToken);
-    replace(deps, "basicToken", basicTokenFake);
-    const credentialsFnFake = fake.returns({ root, secret });
-    const result = await connectionToken({
-      credentialsFn: credentialsFnFake,
-    })({ network: anotherNetwork, key });
-    expect(result).to.deep.equal({ token, type: "Bearer" });
-
-    const anotherResult = await connectionToken({
-      credentialsFn: credentialsFnFake,
-    })({ network: anotherNetwork, key });
-    expect(commandFake).to.have.been.calledTwice;
-    expect(anotherResult).to.deep.equal({ token, type: "Bearer" });
-  });
-  it("should call correctly if no token", async () => {
-    const issueFake = fake.returns({ headers });
-    const setFake = fake.returns({
-      issue: issueFake,
-    });
-    const commandFake = fake.returns({
-      set: setFake,
-    });
-    replace(deps, "command", commandFake);
-
-    const decodeFake = fake.returns({ exp });
-    replace(deps, "decode", decodeFake);
-
-    const basicTokenFake = fake.returns(basicToken);
-    replace(deps, "basicToken", basicTokenFake);
-
-    const parseCookiesFake = fake.returns([
-      { domain: "nope", name: "bogus", value: token },
-    ]);
-    replace(deps, "parseCookies", parseCookiesFake);
-
-    const credentialsFnFake = fake.returns({ root, secret });
-    const result = await connectionToken({
-      credentialsFn: credentialsFnFake,
-    })({ network: "some-random-network", key });
-
-    expect(result).to.be.null;
-  });
-  it("should call correctly if no credentials", async () => {
-    const credentialsFnFake = fake();
-    const result = await connectionToken({
-      credentialsFn: credentialsFnFake,
-    })({ network });
-
-    expect(result).to.have.be.null;
-  });
+  // afterEach(() => {
+  //   restore();
+  // });
+  // it("should call correctly", async () => {
+  //   const issueFake = fake.returns({ headers });
+  //   const setFake = fake.returns({
+  //     issue: issueFake,
+  //   });
+  //   const commandFake = fake.returns({
+  //     set: setFake,
+  //   });
+  //   replace(deps, "command", commandFake);
+  //   const decodeFake = fake.returns({ exp });
+  //   replace(deps, "decode", decodeFake);
+  //   const basicTokenFake = fake.returns(basicToken);
+  //   replace(deps, "basicToken", basicTokenFake);
+  //   const parseCookiesFake = stub()
+  //     .onFirstCall()
+  //     .returns([{ domain: network, name: key, value: token }])
+  //     .onSecondCall()
+  //     .returns([{ domain: network, name: "new-key", value: token }]);
+  //   replace(deps, "parseCookies", parseCookiesFake);
+  //   const credentialsFnFake = fake.returns({ root, secret });
+  //   const result = await connectionToken({
+  //     credentialsFn: credentialsFnFake,
+  //   })({ network, key });
+  //   expect(commandFake).to.have.been.calledWith({
+  //     name: "open",
+  //     domain: "connection",
+  //     service: "system",
+  //     network,
+  //   });
+  //   expect(decodeFake).to.have.been.calledWith(token);
+  //   expect(setFake).to.have.been.calledWith({
+  //     token: { externalFn: match((fn) => fn() == basicToken), key: "access" },
+  //   });
+  //   expect(parseCookiesFake).to.have.been.calledWith({ headers });
+  //   expect(basicTokenFake).to.have.been.calledWith({
+  //     root,
+  //     secret,
+  //   });
+  //   expect(issueFake).to.have.been.calledWith({ key });
+  //   expect(credentialsFnFake).to.have.been.calledWith({ network });
+  //   expect(result).to.deep.equal({ token, type: "Bearer" });
+  //   const anotherResult = await connectionToken({
+  //     credentialsFn: credentialsFnFake,
+  //   })({ network, key });
+  //   expect(commandFake).to.have.been.calledOnce;
+  //   expect(anotherResult).to.deep.equal({ token, type: "Bearer" });
+  //   const yetAnotherResult = await connectionToken({
+  //     credentialsFn: credentialsFnFake,
+  //   })({ network, key: "new-key" });
+  //   expect(commandFake).to.have.been.calledTwice;
+  //   expect(yetAnotherResult).to.deep.equal({ token, type: "Bearer" });
+  // });
+  // it("should call correctly if expired", async () => {
+  //   const anotherNetwork = "another-network";
+  //   const issueFake = fake.returns({ headers });
+  //   const setFake = fake.returns({
+  //     issue: issueFake,
+  //   });
+  //   const commandFake = fake.returns({
+  //     set: setFake,
+  //   });
+  //   replace(deps, "command", commandFake);
+  //   const decodeFake = fake.returns({ exp: expiredExp });
+  //   replace(deps, "decode", decodeFake);
+  //   const parseCookiesFake = fake.returns([
+  //     { domain: anotherNetwork, name: key, value: token },
+  //   ]);
+  //   replace(deps, "parseCookies", parseCookiesFake);
+  //   const basicTokenFake = fake.returns(basicToken);
+  //   replace(deps, "basicToken", basicTokenFake);
+  //   const credentialsFnFake = fake.returns({ root, secret });
+  //   const result = await connectionToken({
+  //     credentialsFn: credentialsFnFake,
+  //   })({ network: anotherNetwork, key });
+  //   expect(result).to.deep.equal({ token, type: "Bearer" });
+  //   const anotherResult = await connectionToken({
+  //     credentialsFn: credentialsFnFake,
+  //   })({ network: anotherNetwork, key });
+  //   expect(commandFake).to.have.been.calledTwice;
+  //   expect(anotherResult).to.deep.equal({ token, type: "Bearer" });
+  // });
+  // it("should call correctly if no token", async () => {
+  //   const issueFake = fake.returns({ headers });
+  //   const setFake = fake.returns({
+  //     issue: issueFake,
+  //   });
+  //   const commandFake = fake.returns({
+  //     set: setFake,
+  //   });
+  //   replace(deps, "command", commandFake);
+  //   const decodeFake = fake.returns({ exp });
+  //   replace(deps, "decode", decodeFake);
+  //   const basicTokenFake = fake.returns(basicToken);
+  //   replace(deps, "basicToken", basicTokenFake);
+  //   const parseCookiesFake = fake.returns([
+  //     { domain: "nope", name: "bogus", value: token },
+  //   ]);
+  //   replace(deps, "parseCookies", parseCookiesFake);
+  //   const credentialsFnFake = fake.returns({ root, secret });
+  //   const result = await connectionToken({
+  //     credentialsFn: credentialsFnFake,
+  //   })({ network: "some-random-network", key });
+  //   expect(result).to.be.null;
+  // });
+  // it("should call correctly if no credentials", async () => {
+  //   const credentialsFnFake = fake();
+  //   const result = await connectionToken({
+  //     credentialsFn: credentialsFnFake,
+  //   })({ network });
+  //   expect(result).to.have.be.null;
+  // });
 });

@@ -17,7 +17,7 @@
     "@blossm/basic-token": "^0.0.7",
     "@blossm/command-rpc": "^0.0.218",
     "@blossm/jwt": "^0.0.57",
-    "cookie-parser": "^1.4.5"
+    "cookie": "^0.4.1"
   },
   "devDependencies": {
     "mocha": "^7.1.1"

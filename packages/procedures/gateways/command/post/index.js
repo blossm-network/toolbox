@@ -75,6 +75,7 @@ module.exports = ({
     delete response.tokens;
   }
 
+  //Need to change the network on these, cant just map them.
   if (responseHeaders && responseHeaders["set-cookie"])
     res.set("set-cookie", responseHeaders["set-cookie"]);
 

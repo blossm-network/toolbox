@@ -27,11 +27,20 @@ module.exports = ({ credentialsFn }) => async ({ network, key }) => {
       })
       .issue({ key });
 
-    const cookies = deps.parseCookies({ headers });
+    //TODO
+    console.log({
+      setcookie: headers["set-cookie"],
+      parsed: headers["set-cookie"].map((c) => deps.parseCookie(c)),
+      network,
+      key,
+    });
 
-    const [{ value: token } = {}] = cookies.filter(
-      (c) => c.domain == network && c.name == key
-    );
+    const [{ value: token } = {}] = headers["set-cookie"]
+      .map((c) => deps.parseCookie(c))
+      .filter((c) => c.domain == network && c.name == key);
+
+    //TODO
+    console.log({ token });
 
     if (!token) return null;
 
