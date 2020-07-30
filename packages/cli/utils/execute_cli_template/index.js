@@ -81,17 +81,11 @@ const execute = async (input, configFn) => {
       env: input.env,
     });
 
-    const audience = `https://${
-      input.region
-    }-${operationName}-${operationHash}-${envComputeUrlId({
-      env: input.env,
-      config: rootConfig,
-    })}-uc.a.run.app`;
-
     await enqueue({
       queue: input.queue || queueName({ config: blossmConfig }),
       serviceAccountEmail: `executer@${project}.iam.gserviceaccount.com`,
-      audience,
+      name: operationName,
+      hash: operationHash,
       location: "us-central1",
       project,
     })({
