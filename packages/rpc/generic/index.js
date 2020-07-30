@@ -198,14 +198,12 @@ module.exports = (...operation) => {
               let { parsedData, leftover } = jsonString(progress + string);
               //TODO
               console.log({ parsedData, leftover });
+              progress = leftover;
               for (const d of parsedData) {
                 //TODO
                 console.log("PLAYING FN! ", { d });
                 await fn(d);
               }
-              progress = leftover;
-              //TODO
-              console.log({ savedProgress: progress });
             },
             data
           ),
