@@ -109,7 +109,7 @@ module.exports = eventHandler({
         }),
       });
 
-    if (!push) return;
+    if (!newView || !push) return;
 
     const channel = channelName({
       name: process.env.NAME,
