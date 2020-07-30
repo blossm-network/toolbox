@@ -19,15 +19,11 @@ const contextRoot = "some-context-root";
 const contextService = "some-context-service";
 const contextNetwork = "some-context-network";
 
-//TODO adapt expected bodies to have been run through format.js.
 describe("View store base integration tests", () => {
   const testParamQueries = async () => {
     const id = "some-id";
     const examples = testing.examples;
     expect(examples.length).to.be.greaterThan(1);
-
-    //TODO
-    console.log("1");
 
     const response0 = await request.post(url, {
       body: {
@@ -43,13 +39,8 @@ describe("View store base integration tests", () => {
       },
     });
 
-    //TODO
-    console.log({ response0 });
-
     expect(response0.statusCode).to.equal(200);
 
-    //TODO
-    console.log("2");
     const response1 = await request.get(url, {
       query: {
         context: {
@@ -62,8 +53,6 @@ describe("View store base integration tests", () => {
       },
     });
 
-    //TODO
-    console.log({ response1 });
     expect(response1.statusCode).to.equal(200);
     const { updates: updates0, count: count0, content: content0 } = JSON.parse(
       response1.body
@@ -71,18 +60,11 @@ describe("View store base integration tests", () => {
 
     const parsedBody0 = one ? content0 : content0[0];
 
-    //TODO
-    console.log({ parsedBody0 });
-
     expect(updates0).to.exist;
     !one ? expect(count0).to.equal(1) : expect(count0).to.be.undefined;
 
-    //TODO
-    console.log("3: ", parsedBody0);
     expect(response1.statusCode).to.equal(200);
     const formattedExampleGet = format(examples[0].get);
-    //TODO
-    console.log("4: ", { formattedExampleGet, example: examples[0].get });
     for (const key in formattedExampleGet) {
       expect(parsedBody0.body[key]).to.deep.equal(formattedExampleGet[key]);
     }
