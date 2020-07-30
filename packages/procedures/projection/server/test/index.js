@@ -2,7 +2,7 @@ const { expect } = require("chai").use(require("sinon-chai"));
 const { restore, replace, fake } = require("sinon");
 
 const deps = require("../deps");
-const eventHandler = require("..");
+const projection = require("..");
 
 const mainFn = "some-main-fn";
 const aggregateStreamFn = "some-aggregate-stream-fn";
@@ -28,7 +28,7 @@ describe("Event handler", () => {
     const commandPostFake = fake.returns(commandPostResult);
     replace(deps, "post", commandPostFake);
 
-    await eventHandler({
+    await projection({
       mainFn,
       aggregateStreamFn,
       aggregateFn,
@@ -61,7 +61,7 @@ describe("Event handler", () => {
     replace(deps, "post", commandPostFake);
 
     try {
-      await eventHandler({
+      await projection({
         mainFn,
         aggregateStreamFn,
         aggregateFn,

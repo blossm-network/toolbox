@@ -9,12 +9,13 @@ const timestamp = 5;
 const action = "some-action";
 const domain = "some-domain";
 const service = "some-service";
+const root = "some-root";
 
 const aggregateFn = "some-aggregate-fn";
 const readFactFn = "some-read-fact-fn";
 
 const data = Buffer.from(
-  JSON.stringify({ timestamp, action, domain, service })
+  JSON.stringify({ timestamp, action, domain, service, root })
 );
 
 describe("Command handler post", () => {
@@ -46,6 +47,7 @@ describe("Command handler post", () => {
 
     expect(aggregateStreamFnFake).to.have.been.calledWith({
       updatedOnOrAfter: timestamp,
+      root,
       action,
       domain,
       service,

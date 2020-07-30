@@ -17,12 +17,14 @@ module.exports = ({
   aggregateFn,
   readFactFn,
 }) => async (req, res) => {
-  const { timestamp, action, domain, service, push = true } = req.body.message
+  const { timestamp, root, action, domain, service, push = true } = req.body
+    .message
     ? data(req)
     : { push: false };
 
   await aggregateStreamFn({
     ...(timestamp && { updatedOnOrAfter: timestamp }),
+    ...(root && { root }),
     ...(action && { action }),
     ...(domain && { domain }),
     ...(service && { service }),

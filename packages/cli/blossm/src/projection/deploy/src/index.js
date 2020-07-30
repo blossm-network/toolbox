@@ -1,4 +1,4 @@
-const eventHandler = require("@blossm/event-handler");
+const projection = require("@blossm/projection");
 const command = require("@blossm/command-rpc");
 const fact = require("@blossm/fact-rpc");
 const viewStore = require("@blossm/view-store-rpc");
@@ -12,7 +12,7 @@ const handlers = require("./handlers.js");
 
 const config = require("./config.json");
 
-module.exports = eventHandler({
+module.exports = projection({
   mainFn: async ({ aggregate, action, push, aggregateFn, readFactFn }) => {
     //Must be able to handle this aggregate.
     if (
@@ -145,7 +145,14 @@ module.exports = eventHandler({
       state: aggregate.state,
     };
   },
-  aggregateStreamFn: ({ timestamp, updatedOnOrAfter, fn, domain, service }) =>
+  aggregateStreamFn: ({
+    timestamp,
+    updatedOnOrAfter,
+    root,
+    fn,
+    domain,
+    service,
+  }) =>
     Promise.all(
       config.events
         .filter((event) =>
@@ -161,6 +168,7 @@ module.exports = eventHandler({
             .aggregateStream(fn, {
               parallel: 100,
               ...(timestamp && { timestamp }),
+              ...(root && { root }),
               ...(updatedOnOrAfter && { updatedOnOrAfter }),
             })
         )

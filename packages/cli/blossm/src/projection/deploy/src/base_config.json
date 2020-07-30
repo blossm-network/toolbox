@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "@blossm/event-handler": "*",
+    "@blossm/projection": "*",
     "@blossm/view-store-rpc": "*",
     "@blossm/command-rpc": "*",
     "@blossm/fact-rpc": "*",

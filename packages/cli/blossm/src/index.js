@@ -9,7 +9,6 @@ const init = require("./init");
 const secret = require("./secret");
 const queue = require("./queue");
 const command = require("./command");
-const eventHandler = require("./event_handler");
 const projection = require("./projection");
 const eventStore = require("./event_store");
 const viewStore = require("./view_store");
@@ -28,7 +27,6 @@ const domains = [
   "set",
   "command",
   "roles",
-  "event-handler",
   "projection",
   "view-store",
   "event-store",
@@ -65,8 +63,6 @@ const tryShortcuts = (input) => {
   switch (config.procedure) {
     case "command":
       return command(args);
-    case "event-handler":
-      return eventHandler(args);
     case "projection":
       return projection(args);
     case "event-store":
@@ -100,8 +96,6 @@ const forward = (input) => {
       return queue(input.args);
     case "command":
       return command(input.args);
-    case "event-handler":
-      return eventHandler(input.args);
     case "projection":
       return projection(input.args);
     case "event-store":

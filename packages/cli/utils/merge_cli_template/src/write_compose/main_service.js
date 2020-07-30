@@ -104,7 +104,6 @@ module.exports = ({
           NAME: name,
         },
       };
-    case "event-handler":
     case "projection":
       return {
         image: `${commonImagePrefix}.${context}${service ? `.${service}` : ""}${

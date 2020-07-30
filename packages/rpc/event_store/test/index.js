@@ -313,13 +313,14 @@ describe("Event store", () => {
           key,
         },
       })
-      .aggregateStream(fn, { timestamp, updatedOnOrAfter, parallel });
+      .aggregateStream(fn, { timestamp, updatedOnOrAfter, parallel, root });
 
     expect(rpcFake).to.have.been.calledWith(domain, service, "event-store");
     expect(streamFake).to.have.been.calledWith(fn, {
       timestamp,
       updatedOnOrAfter,
       parallel,
+      root,
     });
     expect(inFake).to.have.been.calledWith({
       context,

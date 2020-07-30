@@ -7,7 +7,7 @@ const commandGateway = require("./command_gateway");
 const viewGateway = require("./view_gateway");
 const factGateway = require("./fact_gateway");
 const command = require("./command");
-const eventHandler = require("./event_handler");
+const projection = require("./projection");
 const eventStore = require("./event_store");
 const job = require("./job");
 const fact = require("./fact");
@@ -165,9 +165,8 @@ const steps = ({
         runBaseIntegrationTests,
         strict,
       });
-    case "event-handler":
     case "projection":
-      return eventHandler({
+      return projection({
         imageExtension,
         region,
         name,
@@ -426,7 +425,6 @@ const imageExtension = ({ service, context, domain, name, procedure }) => {
         return service;
       }
       return "";
-    case "event-handler":
     case "projection":
       return `${context}.${name}`;
     case "command":

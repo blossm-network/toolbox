@@ -58,7 +58,6 @@ const queueName = ({ config }) => {
         config.domain ? `-${config.domain}` : ""
       }-${config.name}`;
     case "projection":
-    case "event-handler":
       return `projection-${config.context}-${config.name}`;
   }
 };

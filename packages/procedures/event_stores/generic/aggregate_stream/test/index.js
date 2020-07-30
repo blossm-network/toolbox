@@ -84,6 +84,67 @@ describe("Event store aggregate stream", () => {
     });
     expect(endFake).to.have.been.calledOnce;
   });
+  it("should call with the correct params with query root", async () => {
+    const streamResult = "stream-result";
+    const rootStreamFake = stub()
+      .yieldsTo("fn", { root })
+      .returns(streamResult);
+
+    const aggregate = {
+      state: aggregateState,
+      headers: aggregateHeaders,
+      txIds: aggregateTxIds,
+      context: aggregateContext,
+    };
+    const aggregateFake = fake.returns(aggregate);
+    const aggregateOuterFake = fake.returns(aggregateFake);
+    replace(deps, "aggregate", aggregateOuterFake);
+
+    const stringifyResult = "some-stringify-fake";
+    const stringifyFake = fake.returns(stringifyResult);
+    replace(JSON, "stringify", stringifyFake);
+
+    const parallel = "some-parallel";
+    const updatedOnOrAfter = "some-updated-on-or-after";
+    const params = { root };
+
+    const queryRoot = "some-query-root";
+    const req = {
+      query: {
+        timestamp,
+        parallel,
+        updatedOnOrAfter,
+        root: queryRoot,
+      },
+      params,
+    };
+
+    const endFake = fake();
+    const writeFake = fake();
+    const res = {
+      end: endFake,
+      write: writeFake,
+    };
+    await aggregateStream({
+      rootStreamFn: rootStreamFake,
+      findOneSnapshotFn,
+      eventStreamFn,
+      handlers,
+    })(req, res);
+
+    expect(rootStreamFake).to.not.have.been.called;
+    expect(aggregateFake).to.have.been.calledWith(queryRoot, {
+      timestamp,
+    });
+    expect(writeFake).to.have.been.calledWith(stringifyResult);
+    expect(stringifyFake).to.have.been.calledWith({
+      state: aggregateState,
+      headers: aggregateHeaders,
+      txIds: aggregateTxIds,
+      context: aggregateContext,
+    });
+    expect(endFake).to.have.been.calledOnce;
+  });
   it("should call with the correct params with optionals missing", async () => {
     const streamResult = "stream-result";
     const rootStreamFake = stub()

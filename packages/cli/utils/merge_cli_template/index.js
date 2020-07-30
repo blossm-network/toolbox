@@ -152,20 +152,6 @@ const envMongodbUser = ({ env, config, procedure }) => {
         default:
           return "";
       }
-    case "projection":
-    case "event-handler":
-      switch (env) {
-        case "production":
-          return config.vendors.eventHandler.mongodb.users.production;
-        case "sandbox":
-          return config.vendors.eventHandler.mongodb.users.sandbox;
-        case "staging":
-          return config.vendors.eventHandler.mongodb.users.staging;
-        case "development":
-          return config.vendors.eventHandler.mongodb.users.development;
-        default:
-          return "";
-      }
   }
 };
 
@@ -197,20 +183,6 @@ const envMongodbHost = ({ env, config, procedure }) => {
         default:
           return "";
       }
-    case "projection":
-    case "event-handler":
-      switch (env) {
-        case "production":
-          return config.vendors.eventHandler.mongodb.hosts.production;
-        case "sandbox":
-          return config.vendors.eventHandler.mongodb.hosts.sandbox;
-        case "staging":
-          return config.vendors.eventHandler.mongodb.hosts.staging;
-        case "development":
-          return config.vendors.eventHandler.mongodb.hosts.development;
-        default:
-          return "";
-      }
   }
 };
 
@@ -220,9 +192,6 @@ const mongodbProtocol = ({ config, procedure }) => {
       return config.vendors.viewStore.mongodb.protocol;
     case "event-store":
       return config.vendors.eventStore.mongodb.protocol;
-    case "projection":
-    case "event-handler":
-      return config.vendors.eventHandler.mongodb.protocol;
   }
 };
 
@@ -432,15 +401,6 @@ const addDefaultDependencies = ({ config, coreNetwork }) => {
               code: 202,
             },
           ],
-        },
-      ];
-    case "event-handler":
-      return [
-        ...config.testing.dependencies,
-        {
-          domain: config.store.domain,
-          service: config.store.service,
-          procedure: "event-store",
         },
       ];
     case "command-gateway": {
