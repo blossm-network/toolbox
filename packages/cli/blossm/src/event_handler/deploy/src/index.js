@@ -20,7 +20,7 @@ module.exports = eventHandler({
           query: {
             from,
             actions,
-            parallel: 1,
+            parallel: 100,
           },
         };
       })
