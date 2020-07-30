@@ -1,7 +1,7 @@
 {
   "name": "@blossm/projection",
   "description": "An projection server.",
-  "version": "0.0.1",
+  "version": "0.0.42",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
