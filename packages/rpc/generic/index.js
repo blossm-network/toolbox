@@ -190,8 +190,16 @@ module.exports = (...operation) => {
             url,
             async (data) => {
               const string = data.toString();
+              //TODO
+              console.log({ string });
               let { parsedData, leftover } = jsonString(progress + string);
-              for (const d of parsedData) await fn(d);
+              //TODO
+              console.log({ parsedData, leftover });
+              for (const d of parsedData) {
+                //TODO
+                console.log("PLAYING FN! ", { d });
+                await fn(d);
+              }
               progress = leftover;
             },
             data
