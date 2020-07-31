@@ -42,10 +42,11 @@ const formatSchemaValue = (
           wrapType: false,
           depth: depth + 1,
         });
-      } else if (typeof value[key] == "object" && depth < 1) {
-        newSchema[key] = formatSchemaValue(value[key], typeKey, {
-          depth: depth + 1,
-        });
+        //TODO make sure
+        // } else if (typeof value[key] == "object" && depth < 1) {
+        //   newSchema[key] = formatSchemaValue(value[key], typeKey, {
+        //     depth: depth + 1,
+        //   });
       } else {
         newSchema[key] = value[key];
       }

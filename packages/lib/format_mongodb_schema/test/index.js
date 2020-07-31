@@ -62,35 +62,53 @@ describe("Format schema", () => {
       p: { [typeKey]: [String] },
       t: { [typeKey]: String, unique: true },
       u: { [typeKey]: [{ g: Number, _id: false }] },
+      // g: {
+      //   [typeKey]: { a: { [typeKey]: { b: Number, _id: false } }, _id: false },
+      // },
+      // h: {
+      //   [typeKey]: {
+      //     a: {
+      //       [typeKey]: {
+      //         b: String,
+      //         c: String,
+      //         d: String,
+      //         _id: false,
+      //       },
+      //     },
+      //     _id: false,
+      //   },
+      // },
+      // i: {
+      //   [typeKey]: {
+      //     a: { [typeKey]: { b: String, _id: false } },
+      //     _id: false,
+      //   },
+      // },
       g: {
-        [typeKey]: { a: { [typeKey]: { b: Number, _id: false } }, _id: false },
+        [typeKey]: { a: { b: Number, _id: false }, _id: false },
       },
       h: {
         [typeKey]: {
           a: {
-            [typeKey]: {
-              b: String,
-              c: String,
-              d: String,
-              _id: false,
-            },
+            b: String,
+            c: String,
+            d: String,
+            _id: false,
           },
           _id: false,
         },
       },
       i: {
         [typeKey]: {
-          a: { [typeKey]: { b: String, _id: false } },
+          a: { b: String, _id: false },
           _id: false,
         },
       },
       j: {
         [typeKey]: {
           a: {
-            [typeKey]: {
-              b: { c: { d: String, _id: false }, _id: false },
-              _id: false,
-            },
+            b: { c: { d: String, _id: false }, _id: false },
+            _id: false,
           },
           _id: false,
         },
