@@ -1,7 +1,7 @@
 {
   "name": "@blossm/mongodb-event-store-save-block",
   "description": "A mongodb event store server block saving function.",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -14,7 +14,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/mongodb-database": "^0.0.82"
+    "@blossm/mongodb-database": "^0.0.83"
   },
   "devDependencies": {
     "chai-datetime": "^1.5.0",
