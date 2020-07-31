@@ -1,6 +1,6 @@
 {
   "name": "@blossm/format-mongodb-schema",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Formats a schema.",
   "main": "index.js",
   "author": "blossm.network",
