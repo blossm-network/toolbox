@@ -11,7 +11,14 @@ let clock;
 
 const now = new Date();
 
-const writeResult = "some-write-result";
+const writeResultBody = "some-write-result-body";
+const writeResultId = "some-write-result-id";
+const writeResult = {
+  body: writeResultBody,
+  headers: {
+    id: writeResultId,
+  },
+};
 const formattedWriteResult = "some-formatted-write-result";
 const query = { some: "query" };
 const envContext = "some-env-context";
@@ -100,7 +107,10 @@ describe("View store put", () => {
       },
       upsert,
     });
-    expect(formatFake).to.have.been.calledWith(writeResult);
+    expect(formatFake).to.have.been.calledWith({
+      body: writeResultBody,
+      id: writeResultId,
+    });
     expect(statusFake).to.have.been.calledWith(200);
     expect(sendFake).to.have.been.calledWith(formattedWriteResult);
   });
@@ -163,7 +173,10 @@ describe("View store put", () => {
       upsert: true,
     });
     expect(fnFake).to.have.been.calledWith({ a: 1 });
-    expect(formatFake).to.have.been.calledWith(writeResult);
+    expect(formatFake).to.have.been.calledWith({
+      body: writeResultBody,
+      id: writeResultId,
+    });
     expect(statusFake).to.have.been.calledWith(200);
     expect(sendFake).to.have.been.calledWith(formattedWriteResult);
   });
@@ -220,10 +233,55 @@ describe("View store put", () => {
         [`trace.${traceService}.${traceDomain}`]: traceTxIds,
       },
     });
-    expect(formatFake).to.have.been.calledWith(writeResult);
+    expect(formatFake).to.have.been.calledWith({
+      body: writeResultBody,
+      id: writeResultId,
+    });
     expect(statusFake).to.have.been.calledWith(200);
     expect(sendFake).to.have.been.calledWith(formattedWriteResult);
   });
+  it("should call with the correct params with no write result", async () => {
+    const writeFake = fake.returns();
+    const formatFake = fake.returns(formattedWriteResult);
+
+    const req = {
+      body,
+    };
+
+    const sendStatusFake = fake();
+    const res = {
+      sendStatus: sendStatusFake,
+    };
+
+    await put({ writeFn: writeFake, formatFn: formatFake })(req, res);
+
+    expect(writeFake).to.have.been.calledWith({
+      query: {
+        "body.some": "query",
+        "headers.id": id,
+        "headers.context.root": envContextRoot,
+        "headers.context.domain": "some-env-context",
+        "headers.context.service": envContextService,
+        "headers.context.network": envContextNetwork,
+      },
+      data: {
+        "body.a": 1,
+        "headers.id": id,
+        "headers.context": {
+          root: envContextRoot,
+          domain: "some-env-context",
+          service: envContextService,
+          network: envContextNetwork,
+        },
+        [`trace.${traceService}.${traceDomain}`]: traceTxIds,
+        "headers.modified": deps.dateString(),
+      },
+      upsert,
+    });
+    expect(formatFake).to.not.have.been.called;
+    expect(sendStatusFake).to.have.been.calledWith(204);
+  });
+
   it("should throw if context is missing", async () => {
     const writeFake = fake();
 

@@ -59,6 +59,12 @@ module.exports = ({ writeFn, formatFn, updateFn = defaultFn }) => {
       }),
     });
 
-    res.status(200).send(formatFn(newView));
+    if (!newView) return res.sendStatus(204);
+
+    res
+      .status(200)
+      .send(
+        newView && formatFn({ body: newView.body, id: newView.headers.id })
+      );
   };
 };

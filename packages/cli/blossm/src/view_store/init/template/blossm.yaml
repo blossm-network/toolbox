@@ -39,8 +39,8 @@ testing:
     #
     # Test the query capability of the view-store.
     #
-    # The first item contains a 'put' property that should be
-    # an object that's writted to the view-store, and a 'get' with
+    # The first item contains an 'update' property that should be
+    # an object that's written to the view-store, and a 'get' with
     # the expected result when the view-store is read. You can optionally add
     # more examples to test, in which you can include 'query' parameters
     # if you want to refine your query and test indexes.
