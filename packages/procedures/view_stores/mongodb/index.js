@@ -12,12 +12,17 @@ const viewStore = async ({ schema, indexes, secretFn }) => {
     return _viewStore;
   }
 
+  //TODO
+  console.log({ schema, typeKey });
+  const formattedSchema = deps.formatSchema(schema, typeKey);
+  console.log({ formattedSchema });
+
   _viewStore = deps.db.store({
     name: `_${process.env.CONTEXT}${
       process.env.SERVICE ? `.${process.env.SERVICE}` : ""
     }${process.env.DOMAIN ? `.${process.env.DOMAIN}` : ""}.${process.env.NAME}`,
     schema: {
-      body: deps.formatSchema(schema, typeKey),
+      body: formattedSchema,
       headers: {
         id: {
           [typeKey]: String,
