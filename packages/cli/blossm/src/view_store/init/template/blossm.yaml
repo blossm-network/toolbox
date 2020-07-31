@@ -39,8 +39,8 @@ testing:
     #
     # Test the query capability of the view-store.
     #
-    # The 'first' property contains a 'put' property that should be
-    # and object that's writted to the view-store, and a 'get' with
+    # The first item contains a 'put' property that should be
+    # an object that's writted to the view-store, and a 'get' with
     # the expected result when the view-store is read. You can optionally add
     # more examples to test, in which you can include 'query' parameters
     # if you want to refine your query and test indexes.
@@ -48,17 +48,14 @@ testing:
     # The 'second' object works the same way as 'first', but should contain
     # different values in order to test overwritting.
     #
-    first:
-      post:
+    - update:
         name: some-name
       get:
         name: some-name
-    second:
-      post:
+    - update:
         name: some-other-name
       get:
         name: some-other-name
-    more: []
 
 #don't change
 procedure: view-store
