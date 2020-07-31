@@ -52,6 +52,9 @@ module.exports = ({
     ...(typeKey && { typeKey }),
   });
 
+  //TODO
+  console.log({ schema: store });
+
   for (const index of indexes) store.index(...index);
 
   return deps.mongoose.model(name, store, name);
