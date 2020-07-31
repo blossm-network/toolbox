@@ -2,6 +2,33 @@ const logger = require("@blossm/logger");
 
 const deps = require("../deps");
 
+const maxRetryCount = 10;
+
+let tryCount = 0;
+
+const connect = ({ autoIndex, poolSize, connectionString }) => {
+  deps.mongoose.connect(
+    connectionString,
+    {
+      useNewUrlParser: true,
+      useCreateIndex: true,
+      useUnifiedTopology: true,
+      useFindAndModify: false,
+      autoIndex,
+      poolSize,
+    },
+    (err) => {
+      tryCount++;
+      if (err) {
+        logger.error(`Mongoose failed to connect on try ${tryCount}`, { err });
+        if (tryCount < maxRetryCount)
+          connect({ autoIndex, poolSize, connectionString });
+      } else {
+        logger.info(`Mongoose connection successful on try ${tryCount}.`);
+      }
+    }
+  );
+};
 module.exports = ({
   protocol,
   user,
@@ -19,21 +46,7 @@ module.exports = ({
     ...(parameters ? [parameters] : [])
   );
 
-  deps.mongoose.connect(
-    connectionString,
-    {
-      useNewUrlParser: true,
-      useCreateIndex: true,
-      useUnifiedTopology: true,
-      useFindAndModify: false,
-      autoIndex,
-      poolSize,
-    },
-    (err) =>
-      err
-        ? logger.error("Mongoose failed to connect", { err })
-        : logger.info("Mongoose connection successful.")
-  );
+  connect({ connectionString, poolSize, autoIndex });
 
   const db = deps.mongoose.connection;
 
