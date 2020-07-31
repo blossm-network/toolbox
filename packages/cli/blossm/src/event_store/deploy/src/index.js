@@ -30,7 +30,7 @@ module.exports = eventStore({
   encryptFn: (message) =>
     encrypt({
       message,
-      key: `${process.env.SERVICE_NAME}-private`,
+      key: "private",
       ring: blockchainKeyRing,
       location: "global",
       project: process.env.GCP_PROJECT,
