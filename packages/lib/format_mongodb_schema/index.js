@@ -1,4 +1,8 @@
-const formatSchemaValue = (value, typeKey, { wrapType = true } = {}) => {
+const formatSchemaValue = (
+  value,
+  typeKey,
+  { wrapType = true, depth = 0 } = {}
+) => {
   if (typeof value != "object") {
     return wrapType ? { [typeKey]: value } : value;
   } else if (value instanceof Array) {
@@ -36,9 +40,12 @@ const formatSchemaValue = (value, typeKey, { wrapType = true } = {}) => {
       ) {
         newSchema[key] = formatSchemaValue(value[key].type, typeKey, {
           wrapType: false,
+          depth: depth + 1,
         });
-      } else if (typeof value[key] == "object") {
-        newSchema[key] = formatSchemaValue(value[key], typeKey);
+      } else if (typeof value[key] == "object" && depth < 1) {
+        newSchema[key] = formatSchemaValue(value[key], typeKey, {
+          depth: depth + 1,
+        });
       } else {
         newSchema[key] = value[key];
       }
@@ -124,5 +131,6 @@ module.exports = (schema, typeKey, { options } = {}) => {
       ...options,
     };
   }
+
   return removeIds({ schema: newSchema, typeKey });
 };
