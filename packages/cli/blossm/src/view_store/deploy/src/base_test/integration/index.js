@@ -70,7 +70,7 @@ describe("View store base integration tests", () => {
     console.log({ formattedExampleGet });
     for (const key in formattedExampleGet) {
       console.log({ key });
-      expect(parsedBody0.body[key]).to.deep.equal(formattedExampleGet[key]);
+      expect(parsedBody0[key]).to.deep.equal(formattedExampleGet[key]);
     }
 
     for (const example of testing.examples.length > 2
@@ -120,9 +120,7 @@ describe("View store base integration tests", () => {
       const formattedExampleGet = format(example.get);
       expect(moreResponse1.statusCode).to.equal(200);
       for (const key in formattedExampleGet) {
-        expect(moreParsedBody.body[key]).to.deep.equal(
-          formattedExampleGet[key]
-        );
+        expect(moreParsedBody[key]).to.deep.equal(formattedExampleGet[key]);
       }
     }
 
@@ -166,7 +164,7 @@ describe("View store base integration tests", () => {
 
     const formattedExample1Get = format(examples[1].get);
     for (const key in formattedExample1Get) {
-      expect(parsedBody1.body[key]).to.deep.equal(formattedExample1Get[key]);
+      expect(parsedBody1[key]).to.deep.equal(formattedExample1Get[key]);
     }
 
     if (testing.sorts) {
@@ -282,7 +280,7 @@ describe("View store base integration tests", () => {
           for (let i = 0; i < sortedContent.length; i++) {
             const formattedExampleGet = format(examples[sort.order[i]].get);
             for (const key in formattedExampleGet.get) {
-              expect(sortedContent[i].body[key]).to.deep.equal(
+              expect(sortedContent[i][key]).to.deep.equal(
                 formattedExample1Get[key]
               );
             }
@@ -334,7 +332,7 @@ describe("View store base integration tests", () => {
 
         const formattedExample2Get = examples[sort.order[0]];
         for (const key in formattedExample2Get.get) {
-          expect((!one ? content4[0] : content4).body[key]).to.deep.equal(
+          expect((!one ? content4[0] : content4)[key]).to.deep.equal(
             formattedExample2Get.get[key]
           );
         }
