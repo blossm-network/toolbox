@@ -84,7 +84,7 @@ module.exports = ({
       },
     }),
     createKeyRing({
-      ring: `${serviceName}-blockchain`,
+      name: `${serviceName}-blockchain`,
       location: "global",
       project,
     }),
