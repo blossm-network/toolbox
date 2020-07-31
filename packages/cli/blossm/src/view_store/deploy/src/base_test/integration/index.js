@@ -66,7 +66,7 @@ describe("View store base integration tests", () => {
     expect(response1.statusCode).to.equal(200);
     const formattedExampleGet = format(examples[0].get);
 
-    console.log({ parsedBody, body: parsedBody.body });
+    console.log({ parsedBody0, body: parsedBody0.body });
     console.log({ formattedExampleGet });
     for (const key in formattedExampleGet) {
       console.log({ key });
