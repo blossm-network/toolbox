@@ -23,6 +23,7 @@ module.exports = ({
   procedure,
   publicKeyUrl,
   operationHash,
+  operationName,
   port,
   mainContainerName,
   network,
@@ -55,6 +56,8 @@ module.exports = ({
 
   const _includeDatabase = includeDatabase(config);
 
+  const serviceName = `${region}-${operationName}-${operationHash}`;
+
   const _procedureServices = procedureServices({
     config,
     databaseServiceKey,
@@ -66,6 +69,8 @@ module.exports = ({
     context,
     region,
     coreNetwork,
+    serviceName,
+    operationHash,
     containerRegistery,
     coreContainerRegistery,
     secretBucket,
@@ -92,6 +97,7 @@ module.exports = ({
     context,
     network,
     host,
+    serviceName,
     service,
     project,
     region,

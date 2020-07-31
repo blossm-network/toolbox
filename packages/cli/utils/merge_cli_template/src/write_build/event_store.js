@@ -84,13 +84,13 @@ module.exports = ({
       },
     }),
     createKeyRing({
-      name: "blockchain",
+      ring: `${serviceName}-blockchain`,
       location: "global",
       project,
     }),
     createSymmetricEncryptKey({
       name: "private",
-      ring: "blockchain",
+      ring: `${serviceName}-blockchain`,
       location: "global",
       rotation: "90d",
       next: "+p90d",
@@ -98,7 +98,7 @@ module.exports = ({
     }),
     createAsymmetricSignKey({
       name: "producer",
-      ring: "blockchain",
+      ring: `${serviceName}-blockchain`,
       location: "global",
       project,
     }),

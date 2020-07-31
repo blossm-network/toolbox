@@ -45,6 +45,7 @@ module.exports = ({
         HOST: `${region}.${envUriSpecifier}${network}`,
         PROCEDURE: procedure,
         OPERATION_HASH: operationHash,
+        SERVICE_NAME: serviceName,
         GCP_PROJECT: project,
         GCP_REGION: region,
         GCP_SECRET_BUCKET: secretBucket,

@@ -640,6 +640,8 @@ const configure = async (workingDir, configFn, env, strict) => {
 
     const computeUrlId = envComputeUrlId({ env, config: blossmConfig });
 
+    const custom = configFn(config);
+
     writeBuild({
       workingDir,
       env,
@@ -677,7 +679,7 @@ const configure = async (workingDir, configFn, env, strict) => {
       coreNetwork,
       strict,
       dependencyKeyEnvironmentVariables,
-      ...configFn(config),
+      ...custom,
     });
 
     writeCompose({
@@ -705,7 +707,7 @@ const configure = async (workingDir, configFn, env, strict) => {
       envVars,
       devEnvVars,
       dependencyKeyEnvironmentVariables,
-      ...configFn(config),
+      ...custom,
     });
   } catch (e) {
     //eslint-disable-next-line no-console

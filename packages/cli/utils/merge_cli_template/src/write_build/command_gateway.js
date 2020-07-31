@@ -69,6 +69,7 @@ module.exports = ({
       secretBucket,
       secretBucketKeyRing,
       secretBucketKeyLocation,
+      serviceName,
       custom: {
         DOMAIN: domain,
         SERVICE: service,

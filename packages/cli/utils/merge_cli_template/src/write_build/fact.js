@@ -68,6 +68,7 @@ module.exports = ({
       secretBucket,
       secretBucketKeyRing,
       secretBucketKeyLocation,
+      serviceName,
       custom: {
         NAME: name,
         ...dependencyKeyEnvironmentVariables,

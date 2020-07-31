@@ -66,6 +66,7 @@ module.exports = ({
       procedure,
       operationHash,
       secretBucket,
+      serviceName,
       secretBucketKeyRing,
       secretBucketKeyLocation,
       custom: {

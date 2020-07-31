@@ -52,6 +52,8 @@ module.exports = ({
   mongodbUser,
   mongodbUserPassword,
   dependencyKeyEnvironmentVariables,
+  operationHash,
+  serviceName,
 }) => {
   const common = {
     ports: [`${port}`],
@@ -62,6 +64,8 @@ module.exports = ({
     NETWORK: network,
     CORE_NETWORK: coreNetwork,
     HOST: host,
+    OPERATION_HASH: operationHash,
+    SERVICE_NANE: serviceName,
     GCP_PROJECT: project,
     GCP_REGION: region,
     GCP_SECRET_BUCKET: secretBucket,

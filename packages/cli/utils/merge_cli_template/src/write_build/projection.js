@@ -72,6 +72,7 @@ module.exports = ({
       secretBucket,
       secretBucketKeyRing,
       secretBucketKeyLocation,
+      serviceName,
       custom: {
         CONTEXT: context,
         NAME: name,

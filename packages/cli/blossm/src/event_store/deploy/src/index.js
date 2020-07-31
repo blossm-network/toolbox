@@ -6,8 +6,8 @@ const handlers = require("./handlers");
 
 const config = require("./config.json");
 
-const blockchainProducerKey = "producer";
-const blockchainProducerKeyRing = "blockchain";
+const blockchainProducerKey = `producer`;
+const blockchainKeyRing = `${process.env.SERVICE_NAME}-blockchain`;
 
 let blockPublisherPublicKey;
 
@@ -22,7 +22,7 @@ module.exports = eventStore({
       message,
       format: "base64",
       key: blockchainProducerKey,
-      ring: blockchainProducerKeyRing,
+      ring: blockchainKeyRing,
       location: "global",
       version: "1",
       project: process.env.GCP_PROJECT,
@@ -30,8 +30,8 @@ module.exports = eventStore({
   encryptFn: (message) =>
     encrypt({
       message,
-      key: "private",
-      ring: "blockchain",
+      key: `${process.env.SERVICE_NAME}-private`,
+      ring: blockchainKeyRing,
       location: "global",
       project: process.env.GCP_PROJECT,
       format: "base64",
@@ -40,7 +40,7 @@ module.exports = eventStore({
     if (!blockPublisherPublicKey) {
       blockPublisherPublicKey = await publicKey({
         key: blockchainProducerKey,
-        ring: blockchainProducerKeyRing,
+        ring: blockchainKeyRing,
         location: "global",
         version: "1",
         project: process.env.GCP_PROJECT,
