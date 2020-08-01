@@ -3,6 +3,8 @@ module.exports = (req, { cookieKey } = {}) => {
   const authorization = headers.authorization;
   const cookies = req.cookies || {};
 
+  console.log({ cookies, json: JSON.stringify(cookies) });
+
   const token = cookieKey && cookies[cookieKey];
 
   const tokens = {
