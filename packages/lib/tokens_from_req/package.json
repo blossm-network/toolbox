@@ -1,6 +1,6 @@
 {
   "name": "@blossm/tokens-from-req",
-  "version": "0.0.20",
+  "version": "0.0.21",
   "description": "Parses the jwt Bearer token and the Basic Auth token from the Authorization header of the request.",
   "main": "index.js",
   "author": "blossm.network",
