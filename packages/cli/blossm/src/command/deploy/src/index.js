@@ -160,6 +160,7 @@ module.exports = commandProcedure({
     service,
     network,
     query,
+    sort,
     id,
     context: contextOverride = context,
     claims: claimsOverride = claims,
@@ -184,7 +185,7 @@ module.exports = commandProcedure({
               : nodeExternalToken({ network, key }),
         },
       })
-      .stream(fn, { query, id }),
+      .stream(fn, { query, sort, id }),
   addFn: ({ domain, service, context, claims, eventData, tx, async }) =>
     eventStore({ domain, service })
       .set({

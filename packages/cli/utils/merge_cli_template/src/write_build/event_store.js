@@ -148,11 +148,11 @@ module.exports = ({
             name: `event-store-${service}-${domain}`,
             project,
             //Throttles for block creation. TODO increase when scale is necessary.
-            maxDispatchPerSecond: 1,
+            maxDispatchPerSecond: 10,
           }),
           updateQueue({
             name: `event-store-${service}-${domain}`,
-            maxDispatchPerSecond: 1,
+            maxDispatchPerSecond: 10,
           }),
           startDnsTransaction({ dnsZone, project }),
           addDnsTransaction({ uri, dnsZone, project }),
