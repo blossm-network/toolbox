@@ -22,7 +22,7 @@ module.exports = ({
   if (normalizeFn) req.body.payload = await normalizeFn(req.body.payload);
 
   const commandId = deps.uuid();
-  const txId = req.body.tx.id || deps.uuid();
+  const txId = (req.body.tx && req.body.tx.id) || deps.uuid();
 
   const path = [
     ...(req.body.tx.path || []),
