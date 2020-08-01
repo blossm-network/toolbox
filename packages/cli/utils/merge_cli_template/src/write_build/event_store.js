@@ -22,6 +22,7 @@ const createPubsubTopic = require("./steps/create_pubsub_topic");
 const mapDomain = require("./steps/map_domain");
 const writeEnv = require("./steps/write_env");
 const createQueue = require("./steps/create_queue");
+const updateQueue = require("./steps/update_queue");
 
 module.exports = ({
   domain,
@@ -146,6 +147,12 @@ module.exports = ({
           createQueue({
             name: `event-store-${service}-${domain}`,
             project,
+            //Throttles for block creation. TODO increase when scale is necessary.
+            maxDispatchPerSecond: 1,
+          }),
+          updateQueue({
+            name: `event-store-${service}-${domain}`,
+            maxDispatchPerSecond: 1,
           }),
           startDnsTransaction({ dnsZone, project }),
           addDnsTransaction({ uri, dnsZone, project }),
