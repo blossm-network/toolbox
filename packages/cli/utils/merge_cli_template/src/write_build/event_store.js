@@ -147,10 +147,6 @@ module.exports = ({
             name: `event-store-${service}-${domain}`,
             project,
           }),
-          createQueue({
-            name: `event-store-${service}-${domain}-proofs`,
-            project,
-          }),
           startDnsTransaction({ dnsZone, project }),
           addDnsTransaction({ uri, dnsZone, project }),
           executeDnsTransaction({ dnsZone, project }),
