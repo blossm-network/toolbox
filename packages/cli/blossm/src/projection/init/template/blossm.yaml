@@ -29,26 +29,33 @@ testing:
   #
   # The 'event' property specifies which handler is being tested.
   # The 'examples' property is an array of instructions
-  # with 'state', 'event', and 'result' properties.
+  # with 'state', 'root', 'action', 'readFact' and 'result' properties.
   #
   # The 'state' property specifies the state of the aggregate before
-  # the event is applied. The 'event' property specifies the event,
+  # the event is applied. The 'action' property specifies the action,
+  # the 'root' property specifies the root,
   # and the 'result' property specifies the expected state once the event is applied.
+  #
+  # The readFact property takes an array of 'calls', each of which represents an instance
+  # that the readFactFn may have been called. Pass a 'params' property that includes the expected
+  # params passed to the readFactFn, and a 'returns' property set to what you want it to return.
+  # may
   #
   # You can omit the 'state' property if the event payload entirely
   # overwrites the state of the aggregate.
   #
   handlers:
     - event:
-        action: register
         domain: some-domain
         service: some-service
       examples:
-        - state:
+        - action: register
+          root: some-root
+          state:
             name: some-name
           readFact:
             calls:
-              - calledWith:
+              - params:
                 returns:
           result:
             update:

@@ -21,14 +21,14 @@ describe("Projection handlers tests", () => {
         const result = handlers[handler.event.service][handler.event.domain]({
           state: example.state,
           ...(example.root && { root: example.root }),
-          ...(handler.event.action && { action: handler.event.action }),
+          ...(example.action && { action: example.action }),
           ...(readFactFnFake && { readFactFn: readFactFnFake }),
         });
         if (readFactFnFake) {
           let callCount = 0;
           for (const call of example.readFact.calls) {
             expect(readFactFnFake.getCall(callCount++)).to.have.been.calledWith(
-              call.calledWith
+              call.params
             );
           }
         }
