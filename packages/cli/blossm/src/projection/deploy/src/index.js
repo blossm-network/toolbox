@@ -180,17 +180,7 @@ module.exports = projection({
             })
         )
     ),
-  readFactFn: ({ context, claims, token }) => ({
-    name,
-    domain,
-    service,
-    network,
-    query,
-    id,
-    context: contextOverride = context,
-    claims: claimsOverride = claims,
-    principal = "user",
-  }) =>
+  readFactFn: ({ name, domain, service, network, query, id }) =>
     fact({
       name,
       ...(domain && { domain }),
@@ -198,15 +188,8 @@ module.exports = projection({
       ...(network && { network }),
     })
       .set({
-        ...(contextOverride && { context: contextOverride }),
-        ...(claimsOverride && { claims: claimsOverride }),
-        ...(token && { currentToken: token }),
         token: {
           internalFn: gcpToken,
-          externalFn: ({ network, key } = {}) =>
-            principal == "user"
-              ? { token, type: "Bearer" }
-              : nodeExternalToken({ network, key }),
         },
       })
       .read({ query, id }),
