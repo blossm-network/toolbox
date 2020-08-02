@@ -18,6 +18,7 @@ const replayedStates = {};
 
 module.exports = projection({
   mainFn: async ({ aggregate, action, push, aggregateFn, readFactFn }) => {
+    console.log({ push });
     //Must be able to handle this aggregate.
     if (
       !handlers[aggregate.headers.service] ||
