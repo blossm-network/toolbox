@@ -22,6 +22,11 @@ module.exports = projection({
     )
       return;
 
+    console.log({
+      service: aggregate.headers.service,
+      domain: aggregate.headers.domain,
+    });
+    
     let {
       //The query describing which items in the view store will be updated.
       query,
