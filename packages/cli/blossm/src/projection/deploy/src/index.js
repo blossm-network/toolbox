@@ -22,11 +22,6 @@ module.exports = projection({
     )
       return;
 
-    console.log({
-      service: aggregate.headers.service,
-      domain: aggregate.headers.domain,
-    });
-    
     let {
       //The query describing which items in the view store will be updated.
       query,
@@ -146,8 +141,8 @@ module.exports = projection({
         channel,
       });
   },
-  aggregateFn: ({ root, domain, service }) => {
-    const aggregate = eventStore({ domain, service })
+  aggregateFn: async ({ root, domain, service }) => {
+    const { body: aggregate } = await eventStore({ domain, service })
       .set({
         token: { internalFn: gcpToken },
       })
@@ -185,8 +180,8 @@ module.exports = projection({
             })
         )
     ),
-  readFactFn: ({ name, domain, service, network, query, id }) =>
-    fact({
+  readFactFn: async ({ name, domain, service, network, query, id }) => {
+    const { body } = await fact({
       name,
       ...(domain && { domain }),
       service,
@@ -197,6 +192,8 @@ module.exports = projection({
           internalFn: gcpToken,
         },
       })
-      .read({ query, ...(id && { id }) }),
+      .read({ query, ...(id && { id }) });
+    return body;
+  },
   secretFn: secret,
 });
