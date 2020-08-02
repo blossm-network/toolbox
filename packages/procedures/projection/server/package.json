@@ -1,7 +1,7 @@
 {
   "name": "@blossm/projection",
   "description": "An projection server.",
-  "version": "0.0.45",
+  "version": "0.0.46",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -14,8 +14,8 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/projection-play": "*",
-    "@blossm/projection-replay": "*",
+    "@blossm/projection-play": "^0.0.1",
+    "@blossm/projection-replay": "^0.0.1",
     "@blossm/server": "^0.0.24"
   },
   "devDependencies": {
