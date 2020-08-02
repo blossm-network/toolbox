@@ -9,9 +9,7 @@ describe("Projection handlers tests", () => {
   afterEach(() => restore());
   it("should return correctly", async () => {
     for (const handler of testing.handlers) {
-      console.log({ handler });
       for (const example of handler.examples) {
-        console.log({ example });
         let readFactFnFake;
         if (example.readFact) {
           readFactFnFake = stub();
@@ -34,11 +32,8 @@ describe("Projection handlers tests", () => {
             expect(readFactFnFake.getCall(callCount++)).to.have.been.calledWith(
               call.params
             );
-            console.log("ayyee");
           }
         }
-        //TODO
-        console.log({ result, exampleResult: example.result });
         expect(result).to.deep.equal(example.result);
       }
     }
