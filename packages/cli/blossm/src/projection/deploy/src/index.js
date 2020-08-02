@@ -180,8 +180,8 @@ module.exports = projection({
           domain && service
             ? event.domain == domain && event.service == service
             : config.replay
-            ? config.replay.includes(
-                (r) => r.domain == domain && r.service == service
+            ? config.replay.some(
+                (r) => r.domain == event.domain && r.service == event.service
               )
             : true
         )
