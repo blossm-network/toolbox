@@ -4,10 +4,14 @@ module.exports = ({ replayStores, playFn, rootStreamFn }) => async (_, res) => {
       rootStreamFn({
         domain: store.domain,
         service: store.service,
-        fn: async ({ root }) => {
+        fn: ({ root }) => {
           //TODO
           console.log({ root, domain: store.domain, service: store.service });
-          await playFn({ root, domain: store.domain, service: store.service });
+          return playFn({
+            root,
+            domain: store.domain,
+            service: store.service,
+          });
         },
       })
     )
