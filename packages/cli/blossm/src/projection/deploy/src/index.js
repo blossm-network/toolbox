@@ -18,7 +18,6 @@ const replayedStates = {};
 
 module.exports = projection({
   mainFn: async ({ aggregate, action, push, aggregateFn, readFactFn }) => {
-    console.log({ push });
     //Must be able to handle this aggregate.
     if (
       !handlers[aggregate.headers.service] ||
@@ -45,7 +44,6 @@ module.exports = projection({
     });
 
     if (replay && replay.length != 0) {
-      console.log({ replaying: replay, action });
       await Promise.all(
         replay
           .filter(
@@ -81,9 +79,6 @@ module.exports = projection({
             };
           })
       );
-
-      //TODO
-      console.log({ query, update });
     }
 
     const aggregateContext =
@@ -101,6 +96,7 @@ module.exports = projection({
       ? aggregateContext.network
       : aggregate.headers.network;
 
+    console.log({ push });
     const { body: newView } = await viewStore({
       name: config.name,
       context: config.context,
@@ -129,6 +125,8 @@ module.exports = projection({
           },
         }),
       });
+
+    console.log({ newView });
 
     if (!newView || !push) return;
 
