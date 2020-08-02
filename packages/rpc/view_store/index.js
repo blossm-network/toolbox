@@ -71,6 +71,7 @@ module.exports = ({ name, context = process.env.CONTEXT, network }) => {
   const update = ({
     contexts,
     token: { internalFn: internalTokenFn } = {},
+    enqueue: { fn: enqueueFn, wait: enqueueWait } = {},
   } = {}) => ({ query, update, id, upsert, trace }) =>
     deps
       .rpc(name, context, "view-store")
@@ -86,6 +87,12 @@ module.exports = ({ name, context = process.env.CONTEXT, network }) => {
       })
       .with({
         ...(internalTokenFn && { internalTokenFn }),
+        ...(enqueueFn && {
+          enqueueFn: enqueueFn({
+            queue: `view-store-${context}-${name}`,
+            ...(enqueueWait && { wait: enqueueWait }),
+          }),
+        }),
       });
   const del = ({
     contexts,
@@ -101,11 +108,11 @@ module.exports = ({ name, context = process.env.CONTEXT, network }) => {
         ...(internalTokenFn && { internalTokenFn }),
       });
   return {
-    set: ({ context: contexts, token, currentToken }) => {
+    set: ({ context: contexts, token, currentToken, enqueue }) => {
       return {
         read: read({ contexts, token, currentToken }),
         // stream: stream({ contexts, token, currentToken }),
-        update: update({ contexts, token }),
+        update: update({ contexts, token, enqueue }),
         delete: del({ contexts, token }),
       };
     },

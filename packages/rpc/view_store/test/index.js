@@ -266,11 +266,18 @@ describe("Get views", () => {
     const trace = "some-trace";
     const upsert = "some-upsert";
 
+    const enqueueFnResult = "some-enqueue-fn-result";
+    const enqueueFnFake = fake.returns(enqueueFnResult);
+    const enqueueWait = "some-enqueue-wait";
     await viewStore({ name, context })
       .set({
         context: contexts,
         token: {
           internalFn: internalTokenFn,
+        },
+        enqueue: {
+          fn: enqueueFnFake,
+          wait: enqueueWait,
         },
       })
       .update({ query, update, id, upsert, trace });
@@ -286,6 +293,11 @@ describe("Get views", () => {
     expect(inFake).to.have.been.calledWith({ context: contexts });
     expect(withFake).to.have.been.calledWith({
       internalTokenFn,
+      enqueueFn: enqueueFnResult,
+    });
+    expect(enqueueFnFake).to.have.been.calledWith({
+      queue: `view-store-${context}-${name}`,
+      wait: enqueueWait,
     });
   });
   it("should call update with the correct params and optionals omitted", async () => {
