@@ -1,4 +1,5 @@
 const projection = require("@blossm/projection");
+const projectionRpc = require("@blossm/projection-rpc");
 const command = require("@blossm/command-rpc");
 const fact = require("@blossm/fact-rpc");
 const viewStore = require("@blossm/view-store-rpc");
@@ -171,7 +172,7 @@ module.exports = projection({
     return body;
   },
   playFn: ({ root, domain, service }) => {
-    projection({
+    projectionRpc({
       name: config.name,
       context: config.context,
     })

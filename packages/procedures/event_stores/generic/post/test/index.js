@@ -98,7 +98,7 @@ describe("Event store post", () => {
       },
       savedEventHeadersTopic
     );
-    expect(publishFnFake).to.have.been.calledOnce;
+    expect(publishFnFake).to.have.been.calledTwice;
     expect(sendStatusFake).to.have.been.calledWith(204);
   });
   it("should call with the correct params with event idempotency conflict passed in", async () => {

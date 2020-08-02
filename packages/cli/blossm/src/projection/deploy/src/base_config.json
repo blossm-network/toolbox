@@ -2,6 +2,7 @@
   "dependencies": {
     "@blossm/projection": "*",
     "@blossm/view-store-rpc": "*",
+    "@blossm/projection-rpc": "*",
     "@blossm/command-rpc": "*",
     "@blossm/fact-rpc": "*",
     "@blossm/event-store-rpc": "*",

@@ -41,13 +41,9 @@ module.exports = ({
     })
   );
 
-  //No need to publish to the same topic twice.
-  let publishedTopics = [];
   await Promise.all(
-    receipt.map((e) => {
-      if (publishedTopics.includes(e.topic)) return;
-      publishedTopics.push(e.topic);
-      return publishFn(
+    receipt.map((e) =>
+      publishFn(
         {
           root: e.root,
           action: e.action,
@@ -57,8 +53,8 @@ module.exports = ({
           timestamp,
         },
         e.topic
-      );
-    })
+      )
+    )
   );
 
   res.sendStatus(204);
