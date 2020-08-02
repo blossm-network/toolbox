@@ -1,7 +1,7 @@
 {
-  "name": "@blossm/projection",
-  "description": "An projection server.",
-  "version": "0.0.45",
+  "name": "@blossm/projection-replay",
+  "description": "A projection server POST handler for replaying.",
+  "version": "0.0.0",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -12,11 +12,6 @@
   },
   "publishConfig": {
     "access": "public"
-  },
-  "dependencies": {
-    "@blossm/projection-play": "*",
-    "@blossm/projection-replay": "*",
-    "@blossm/server": "^0.0.24"
   },
   "devDependencies": {
     "chai-datetime": "^1.5.0",

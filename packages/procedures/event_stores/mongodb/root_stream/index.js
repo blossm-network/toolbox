@@ -17,6 +17,9 @@ module.exports = ({ countsStore }) => async ({
           },
         }),
       },
+      sort: {
+        updated: -1,
+      },
       options: { lean: true },
     })
     .cursor();

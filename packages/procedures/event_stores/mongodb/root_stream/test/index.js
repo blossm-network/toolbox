@@ -45,6 +45,9 @@ describe("Mongodb event store root stream", () => {
           $lt: updatedBefore,
         },
       },
+      sort: {
+        updated: -1,
+      },
       options: {
         lean: true,
       },
@@ -76,6 +79,9 @@ describe("Mongodb event store root stream", () => {
     expect(findFake).to.have.been.calledWith({
       store: countsStore,
       query: {},
+      sort: {
+        updated: -1,
+      },
       options: {
         lean: true,
       },

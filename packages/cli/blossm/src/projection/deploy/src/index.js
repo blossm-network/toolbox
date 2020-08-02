@@ -13,9 +13,6 @@ const handlers = require("./handlers.js");
 
 const config = require("./config.json");
 
-const replayedRoots = [];
-const replayedStates = {};
-
 module.exports = projection({
   mainFn: async ({ aggregate, action, push, aggregateFn, readFactFn }) => {
     //Must be able to handle this aggregate.
@@ -46,21 +43,21 @@ module.exports = projection({
     if (replay && replay.length != 0) {
       await Promise.all(
         replay
-          .filter(
-            (r) => !replayedRoots.includes(`${r.root}-${r.domain}-${r.service}`)
-          )
+          // .filter(
+          //   (r) => !replayedRoots.includes(`${r.root}-${r.domain}-${r.service}`)
+          // )
           .map(async (r) => {
-            const rId = `${r.root}-${r.domain}-${r.service}`;
-            replayedRoots.push(rId);
+            // const rId = `${r.root}-${r.domain}-${r.service}`;
+            // replayedRoots.push(rId);
             const { state } =
-              replayedStates[rId] ||
-              (await aggregateFn({
+              // replayedStates[rId] ||
+              await aggregateFn({
                 domain: r.domain,
                 service: r.service,
                 root: r.root,
-              }));
+              });
 
-            replayedStates[rId] = { state };
+            // replayedStates[rId] = { state };
 
             const { query: replayQuery, update: replayUpdate } = handlers[
               r.service
@@ -96,7 +93,6 @@ module.exports = projection({
       ? aggregateContext.network
       : aggregate.headers.network;
 
-    console.log({ push });
     const { body: newView } = await viewStore({
       name: config.name,
       context: config.context,
@@ -125,8 +121,6 @@ module.exports = projection({
           },
         }),
       });
-
-    console.log({ newView });
 
     if (!newView || !push) return;
 
@@ -159,43 +153,8 @@ module.exports = projection({
         token: { internalFn: gcpToken },
       })
       .aggregate(root);
-    return {
-      lastEventNumber: aggregate.headers.lastEventNumber,
-      state: aggregate.state,
-    };
+    return aggregate;
   },
-  aggregateStreamFn: ({
-    timestamp,
-    updatedOnOrAfter,
-    root,
-    fn,
-    domain,
-    service,
-  }) =>
-    Promise.all(
-      config.events
-        .filter((event) =>
-          domain && service
-            ? event.domain == domain && event.service == service
-            : config.replay
-            ? config.replay.some(
-                (r) => r.domain == event.domain && r.service == event.service
-              )
-            : true
-        )
-        .map(({ domain, service }) =>
-          eventStore({ domain, service })
-            .set({
-              token: { internalFn: gcpToken },
-            })
-            .aggregateStream(fn, {
-              parallel: 20,
-              ...(timestamp && { timestamp }),
-              ...(root && { root }),
-              ...(updatedOnOrAfter && { updatedOnOrAfter }),
-            })
-        )
-    ),
   readFactFn: async ({ name, domain, service, network, query, id }) => {
     const { body } = await fact({
       name,
@@ -211,5 +170,25 @@ module.exports = projection({
       .read({ query, ...(id && { id }) });
     return body;
   },
+  playFn: ({ root, domain, service }) => {
+    projection({
+      name: config.name,
+      context: config.context,
+    })
+      .set({
+        token: { internalFn: gcpToken },
+        enqueue: { fn: enqueue },
+      })
+      .play({ root, domain, service });
+  },
+  rootStreamFn: ({ fn, domain, service }) =>
+    eventStore({ domain, service })
+      .set({
+        token: { internalFn: gcpToken },
+      })
+      .rootStream(fn, {
+        parallel: 100,
+      }),
+  replayStores: config.replay || config.events,
   secretFn: secret,
 });

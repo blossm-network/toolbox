@@ -1,17 +1,26 @@
 const deps = require("./deps");
 
 module.exports = async ({
+  replayStores,
   mainFn,
-  aggregateStreamFn,
+  rootStreamFn,
+  playFn,
   aggregateFn,
   readFactFn,
 } = {}) => {
   deps
     .server()
     .post(
-      deps.post({
+      deps.replay({
+        replayStores,
+        playFn,
+        rootStreamFn,
+      }),
+      { path: "/replay" }
+    )
+    .post(
+      deps.play({
         mainFn,
-        aggregateStreamFn,
         aggregateFn,
         readFactFn,
       })

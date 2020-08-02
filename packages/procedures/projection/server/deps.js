@@ -1,5 +1,7 @@
 const server = require("@blossm/server");
-const post = require("@blossm/projection-post");
+const play = require("@blossm/projection-play");
+const replay = require("@blossm/projection-replay");
 
 exports.server = server;
-exports.post = post;
+exports.play = play;
+exports.replay = replay;

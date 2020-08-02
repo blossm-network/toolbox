@@ -7,12 +7,9 @@ const projection = require("..");
 const name = "some-name";
 const domain = "some-domain";
 const service = "some-service";
-const eventsDomain = "some-events-domain";
-const eventsService = "some-events-service";
 
 const internalTokenFn = "some-internal-token-fn";
 
-const from = "some-from";
 const root = "some-root";
 
 describe("Replay projection", () => {
@@ -33,39 +30,39 @@ describe("Replay projection", () => {
       post: postFake,
     });
     replace(deps, "rpc", rpcFake);
+    const enqueueFnResult = "some-enqueue-fn-result";
+    const enqueueFnFake = fake.returns(enqueueFnResult);
+    const enqueueWait = "some-enqueue-wait";
 
     const { body: result } = await projection({
       name,
       context,
-      domain,
-      service,
-      eventsDomain,
-      eventsService,
     })
       .set({
         token: { internalFn: internalTokenFn },
+        enqueue: {
+          fn: enqueueFnFake,
+          wait: enqueueWait,
+        },
       })
-      .replay(root, { from });
+      .play({ root, domain, service });
 
     expect(result).to.equal(response);
-    expect(rpcFake).to.have.been.calledWith(
-      name,
-      domain,
-      service,
-      context,
-      eventsDomain,
-      eventsService,
-      "projection"
-    );
+    expect(rpcFake).to.have.been.calledWith(name, context, "projection");
 
     expect(postFake).to.have.been.calledWith({
-      message: {
-        data: Buffer.from(JSON.stringify({ root, forceFrom: from })),
-      },
+      root,
+      domain,
+      service,
     });
     expect(inFake).to.have.been.calledWith({});
     expect(withFake).to.have.been.calledWith({
       internalFn: internalTokenFn,
+      enqueueFn: enqueueFnResult,
+    });
+    expect(enqueueFnFake).to.have.been.calledWith({
+      queue: `projection-${context}-${name}-play`,
+      wait: enqueueWait,
     });
   });
   it("should call with the correct params with optionals omitted", async () => {
@@ -85,22 +82,14 @@ describe("Replay projection", () => {
     const { body: result } = await projection({
       name,
       context,
-      eventsDomain,
-      eventsService,
-    }).replay(root);
+    }).play({ root, domain, service });
 
     expect(result).to.equal(response);
-    expect(rpcFake).to.have.been.calledWith(
-      name,
-      context,
-      eventsDomain,
-      eventsService,
-      "projection"
-    );
+    expect(rpcFake).to.have.been.calledWith(name, context, "projection");
     expect(postFake).to.have.been.calledWith({
-      message: {
-        data: Buffer.from(JSON.stringify({ root, forceFrom: 0 })),
-      },
+      root,
+      domain,
+      service,
     });
     expect(inFake).to.have.been.calledWith({});
     expect(withFake).to.have.been.calledWith({});

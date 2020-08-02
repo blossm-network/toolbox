@@ -58,8 +58,16 @@ const queueName = ({ config }) => {
         config.domain ? `-${config.domain}` : ""
       }-${config.name}`;
     case "projection":
-      return `projection-${config.context}-${config.name}`;
+      return `projection-${config.context}-${config.name}-replay`;
   }
+};
+
+const urlPath = ({ config }) => {
+  switch (config.procedure) {
+    case "projection":
+      return "replay";
+  }
+  return "";
 };
 
 const execute = async (input, configFn) => {
@@ -94,7 +102,7 @@ const execute = async (input, configFn) => {
     })({
       url: `https://${operationHash}.${input.region}.${envUriSpecifier(
         input.env
-      )}${rootConfig.network}`,
+      )}${rootConfig.network}/${urlPath({ config: blossmConfig })}`,
       name: operationName,
       hash: operationHash,
       ...(input.data && { data: JSON.parse(input.data) }),

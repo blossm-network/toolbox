@@ -1,52 +1,34 @@
 const deps = require("./deps");
 
-module.exports = ({
-  name,
-  context,
-  domain,
-  service,
-  eventsDomain,
-  eventsService,
-}) => {
-  const replay = ({ token: { internalFn: internalTokenFn } = {} } = {}) => (
-    root,
-    { from: number = 0 } = {}
-  ) => {
-    const data = {
-      message: {
-        data: Buffer.from(
-          JSON.stringify({
-            root,
-            forceFrom: number,
-          })
-        ),
-      },
-    };
-
+module.exports = ({ name, context }) => {
+  const play = ({
+    token: { internalFn: internalTokenFn } = {},
+    enqueue: { fn: enqueueFn, wait: enqueueWait } = {},
+  } = {}) => ({ root, domain, service }) => {
     return (
       deps
-        .rpc(
-          name,
-          ...(domain ? [domain] : []),
-          ...(service ? [service] : []),
-          context,
-          eventsDomain,
-          eventsService,
-          "projection"
-        )
-        .post(data)
+        .rpc(name, context, "projection")
+        .post({ root, domain, service })
         //TODO this line is ugly. The generic rpc package needs love.
         .in({})
-        .with({ ...(internalTokenFn && { internalFn: internalTokenFn }) })
+        .with({
+          ...(internalTokenFn && { internalFn: internalTokenFn }),
+          ...(enqueueFn && {
+            enqueueFn: enqueueFn({
+              queue: `projection-${context}-${name}-play`,
+              ...(enqueueWait && { wait: enqueueWait }),
+            }),
+          }),
+        })
     );
   };
 
   return {
-    set: ({ token }) => {
+    set: ({ token, enqueue }) => {
       return {
-        replay: replay({ token }),
+        play: play({ token, enqueue }),
       };
     },
-    replay: replay(),
+    play: play(),
   };
 };
