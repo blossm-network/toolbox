@@ -4,7 +4,7 @@ module.exports = ({ name, context }) => {
   const play = ({
     token: { internalFn: internalTokenFn } = {},
     enqueue: { fn: enqueueFn, wait: enqueueWait } = {},
-  } = {}) => ({ root, domain, service }) => {
+  } = {}) => ({ root, domain, service }) =>
     deps
       .rpc(name, context, "projection")
       .post({ root, domain, service })
@@ -19,8 +19,6 @@ module.exports = ({ name, context }) => {
           }),
         }),
       });
-  };
-
   return {
     set: ({ token, enqueue }) => {
       return {
