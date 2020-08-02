@@ -8,7 +8,8 @@
     "@blossm/gcp-token": "*",
     "@blossm/gcp-secret": "*",
     "@blossm/node-external-token": "*",
-    "@blossm/channel-name": "*"
+    "@blossm/channel-name": "*",
+    "@blossm/gcp-queue": "*"
   },
   "devDependencies": {
     "localenv": "^0.2.2",

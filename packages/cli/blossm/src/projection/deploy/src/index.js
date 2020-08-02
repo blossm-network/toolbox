@@ -7,6 +7,7 @@ const gcpToken = require("@blossm/gcp-token");
 const nodeExternalToken = require("@blossm/node-external-token");
 const channelName = require("@blossm/channel-name");
 const { get: secret } = require("@blossm/gcp-secret");
+const { enqueue } = require("@blossm/gcp-queue");
 
 const handlers = require("./handlers.js");
 
@@ -99,6 +100,7 @@ module.exports = projection({
             network: contextNetwork,
           },
         },
+        enqueue: { fn: enqueue },
       })
       .update({
         ...(query && { query }),
