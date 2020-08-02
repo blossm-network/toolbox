@@ -20,7 +20,9 @@ describe("Projection handlers tests", () => {
             readFactFnFake.onCall(callCount++).returns(call.returns);
           }
         }
-        const result = handlers[handler.event.service][handler.event.domain]({
+        const result = await handlers[handler.event.service][
+          handler.event.domain
+        ]({
           state: example.state,
           ...(example.root && { root: example.root }),
           ...(example.action && { action: example.action }),
