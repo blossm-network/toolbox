@@ -17,11 +17,15 @@ module.exports = ({
   aggregateFn,
   readFactFn,
 }) => async (req, res) => {
+  //TODO
+  console.log("posting");
   const { timestamp, root, action, domain, service, push = true } = req.body
     .message
     ? data(req)
     : { push: false };
 
+  //TODO
+  console.log({ timestamp, root, action, domain, service, push });
   await aggregateStreamFn({
     ...(timestamp && { updatedOnOrAfter: timestamp }),
     ...(root && { root }),

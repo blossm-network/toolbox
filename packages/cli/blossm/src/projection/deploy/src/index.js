@@ -192,6 +192,6 @@ module.exports = projection({
           internalFn: gcpToken,
         },
       })
-      .read({ query, id }),
+      .read({ query, ...(id && { id }) }),
   secretFn: secret,
 });
