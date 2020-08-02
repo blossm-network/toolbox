@@ -41,7 +41,7 @@ module.exports = projection({
 
     if (replay && replay.length != 0) {
       await Promise.all(
-        replay.forEach(async (r) => {
+        replay.map(async (r) => {
           const { state } = await aggregateFn({
             domain: r.domain,
             service: r.service,
