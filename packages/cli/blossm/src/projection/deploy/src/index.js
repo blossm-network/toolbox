@@ -171,8 +171,10 @@ module.exports = projection({
       .read({ query, ...(id && { id }) });
     return body;
   },
-  playFn: ({ root, domain, service }) => {
-    projectionRpc({
+  playFn: async ({ root, domain, service }) => {
+    //TODO
+    console.log("playing");
+    await projectionRpc({
       name: config.name,
       context: config.context,
     })
@@ -181,6 +183,8 @@ module.exports = projection({
         enqueue: { fn: enqueue },
       })
       .play({ root, domain, service });
+    //TODO
+    console.log("done");
   },
   rootStreamFn: ({ fn, domain, service }) =>
     eventStore({ domain, service })
