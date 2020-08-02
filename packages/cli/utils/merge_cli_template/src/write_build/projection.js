@@ -18,6 +18,7 @@ const abortDnsTransaction = require("./steps/abort_dns_transaction");
 const mapDomain = require("./steps/map_domain");
 const writeEnv = require("./steps/write_env");
 const createQueue = require("./steps/create_queue");
+const updateQueue = require("./steps/update_queue");
 
 module.exports = ({
   region,
@@ -124,6 +125,11 @@ module.exports = ({
           createQueue({
             name: `projection-${context}-${name}`,
             project,
+            maxDispatchPerSecond: 100,
+          }),
+          updateQueue({
+            name: `projection-${context}-${name}`,
+            maxDispatchPerSecond: 100,
           }),
           startDnsTransaction({ dnsZone, project }),
           addDnsTransaction({ uri, dnsZone, project }),
