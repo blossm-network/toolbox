@@ -9,7 +9,9 @@ describe("Projection handlers tests", () => {
   afterEach(() => restore());
   it("should return correctly", async () => {
     for (const handler of testing.handlers) {
+      console.log({ handlers });
       for (const example of handler.examples) {
+        console.log({ example });
         let readFactFnFake;
         if (example.readFact) {
           readFactFnFake = stub();
@@ -32,6 +34,8 @@ describe("Projection handlers tests", () => {
             );
           }
         }
+        //TODO
+        console.log({ result });
         expect(result).to.deep.equal(example.result);
       }
     }
