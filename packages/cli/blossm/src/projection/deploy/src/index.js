@@ -43,39 +43,29 @@ module.exports = projection({
 
     if (replay && replay.length != 0) {
       await Promise.all(
-        replay
-          // .filter(
-          //   (r) => !replayedRoots.includes(`${r.root}-${r.domain}-${r.service}`)
-          // )
-          .map(async (r) => {
-            // const rId = `${r.root}-${r.domain}-${r.service}`;
-            // replayedRoots.push(rId);
-            const { state } =
-              // replayedStates[rId] ||
-              await aggregateFn({
-                domain: r.domain,
-                service: r.service,
-                root: r.root,
-              });
+        replay.map(async (r) => {
+          const { state } = await aggregateFn({
+            domain: r.domain,
+            service: r.service,
+            root: r.root,
+          });
 
-            // replayedStates[rId] = { state };
-
-            const { query: replayQuery, update: replayUpdate } = handlers[
-              r.service
-            ][r.domain]({
-              state,
-              root: r.root,
-              readFactFn,
-            });
-            update = {
-              ...update,
-              ...replayUpdate,
-            };
-            query = {
-              ...query,
-              ...replayQuery,
-            };
-          })
+          const { query: replayQuery, update: replayUpdate } = handlers[
+            r.service
+          ][r.domain]({
+            state,
+            root: r.root,
+            readFactFn,
+          });
+          update = {
+            ...update,
+            ...replayUpdate,
+          };
+          query = {
+            ...query,
+            ...replayQuery,
+          };
+        })
       );
     }
 
@@ -171,10 +161,8 @@ module.exports = projection({
       .read({ query, ...(id && { id }) });
     return body;
   },
-  playFn: async ({ root, domain, service }) => {
-    //TODO
-    console.log("playing");
-    await projectionRpc({
+  playFn: ({ root, domain, service }) =>
+    projectionRpc({
       name: config.name,
       context: config.context,
     })
@@ -182,10 +170,7 @@ module.exports = projection({
         token: { internalFn: gcpToken },
         enqueue: { fn: enqueue },
       })
-      .play({ root, domain, service });
-    //TODO
-    console.log("done");
-  },
+      .play({ root, domain, service }),
   rootStreamFn: ({ fn, domain, service }) =>
     eventStore({ domain, service })
       .set({

@@ -92,7 +92,6 @@ module.exports = ({ domain, service = process.env.SERVICE } = {}) => {
       externalFn: externalTokenFn,
       key,
     } = {},
-    //TODO test
   } = {}) => (fn, { timestamp, updatedOnOrAfter, parallel, root }) =>
     deps
       .rpc(domain, service, "event-store")
