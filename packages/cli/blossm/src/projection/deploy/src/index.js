@@ -13,6 +13,9 @@ const handlers = require("./handlers.js");
 
 const config = require("./config.json");
 
+const replayedRoots = [];
+const replayedStates = {};
+
 module.exports = projection({
   mainFn: async ({ aggregate, action, push, aggregateFn, readFactFn }) => {
     //Must be able to handle this aggregate.
@@ -43,29 +46,39 @@ module.exports = projection({
     if (replay && replay.length != 0) {
       console.log({ replaying: replay, action });
       await Promise.all(
-        replay.map(async (r) => {
-          const { state } = await aggregateFn({
-            domain: r.domain,
-            service: r.service,
-            root: r.root,
-          });
-          console.log({ state, for: replay });
-          const { query: replayQuery, update: replayUpdate } = handlers[
-            r.service
-          ][r.domain]({
-            state,
-            root: r.root,
-            readFactFn,
-          });
-          update = {
-            ...update,
-            ...replayUpdate,
-          };
-          query = {
-            ...query,
-            ...replayQuery,
-          };
-        })
+        replay
+          .filter(
+            (r) => !replayedRoots.includes(`${r.root}-${r.domain}-${r.service}`)
+          )
+          .map(async (r) => {
+            const rId = `${r.root}-${r.domain}-${r.service}`;
+            replayedRoots.push(rId);
+            const { state } =
+              replayedStates[rId] ||
+              (await aggregateFn({
+                domain: r.domain,
+                service: r.service,
+                root: r.root,
+              }));
+
+            replayedStates[rId] = { state };
+
+            const { query: replayQuery, update: replayUpdate } = handlers[
+              r.service
+            ][r.domain]({
+              state,
+              root: r.root,
+              readFactFn,
+            });
+            update = {
+              ...update,
+              ...replayUpdate,
+            };
+            query = {
+              ...query,
+              ...replayQuery,
+            };
+          })
       );
 
       //TODO
@@ -100,7 +113,7 @@ module.exports = projection({
             network: contextNetwork,
           },
         },
-        enqueue: { fn: enqueue },
+        ...(!push && { enqueue: { fn: enqueue } }),
       })
       .update({
         ...(query && { query }),
@@ -165,6 +178,10 @@ module.exports = projection({
         .filter((event) =>
           domain && service
             ? event.domain == domain && event.service == service
+            : config.replay
+            ? config.replay.includes(
+                (r) => r.domain == domain && r.service == service
+              )
             : true
         )
         .map(({ domain, service }) =>
