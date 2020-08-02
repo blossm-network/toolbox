@@ -173,7 +173,7 @@ module.exports = projection({
               token: { internalFn: gcpToken },
             })
             .aggregateStream(fn, {
-              parallel: 100,
+              parallel: 20,
               ...(timestamp && { timestamp }),
               ...(root && { root }),
               ...(updatedOnOrAfter && { updatedOnOrAfter }),
