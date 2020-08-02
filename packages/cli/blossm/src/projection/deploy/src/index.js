@@ -40,6 +40,7 @@ module.exports = projection({
     });
 
     if (replay && replay.length != 0) {
+      console.log({ replaying: replay });
       await Promise.all(
         replay.map(async (r) => {
           const { state } = await aggregateFn({
@@ -47,6 +48,7 @@ module.exports = projection({
             service: r.service,
             root: r.root,
           });
+          console.log({ state, for: replay });
           const { query: replayQuery, update: replayUpdate } = handlers[
             r.service
           ][r.domain]({
@@ -65,6 +67,9 @@ module.exports = projection({
         })
       );
     }
+
+    //TODO
+    console.log({ query, update });
 
     const aggregateContext =
       aggregate.context && aggregate.context[process.env.CONTEXT];
