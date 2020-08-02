@@ -123,10 +123,12 @@ module.exports = ({
             name: `command-${service}-${domain}-${name}`,
             project,
             maxDispatchPerSecond: 100,
+            maxConcurrentDispatches: 100,
           }),
           updateQueue({
             name: `command-${service}-${domain}-${name}`,
             maxDispatchPerSecond: 100,
+            maxConcurrentDispatches: 100,
           }),
           startDnsTransaction({ dnsZone, project }),
           addDnsTransaction({ uri, dnsZone, project }),

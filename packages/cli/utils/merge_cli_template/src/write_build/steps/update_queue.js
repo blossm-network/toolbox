@@ -1,6 +1,6 @@
 const { oneLine } = require("common-tags");
 
-module.exports = ({ name, maxDispatchPerSecond }) => {
+module.exports = ({ name, maxDispatchPerSecond, maxConcurrentDispatches }) => {
   return {
     name: "gcr.io/cloud-builders/gcloud",
     entrypoint: "bash",
@@ -9,6 +9,7 @@ module.exports = ({ name, maxDispatchPerSecond }) => {
       oneLine`
     gcloud tasks queues update ${name}
     --max-dispatches-per-second=${maxDispatchPerSecond}
+    --max-concurrent-dispatches=${maxConcurrentDispatches}
     --max-concurrent-dispatches=100 || exit 0
     `,
     ],

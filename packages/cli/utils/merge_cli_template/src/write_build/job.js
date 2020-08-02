@@ -16,6 +16,7 @@ const abortDnsTransaction = require("./steps/abort_dns_transaction");
 const mapDomain = require("./steps/map_domain");
 const writeEnv = require("./steps/write_env");
 const createQueue = require("./steps/create_queue");
+const updateQueue = require("./steps/update_queue");
 
 module.exports = ({
   name,
@@ -128,6 +129,16 @@ module.exports = ({
               domain ? `-${domain}` : ""
             }-${name}`,
             project,
+            maxDispatchPerSecond: 100,
+            maxConcurrentDispatches: 100,
+          }),
+          updateQueue({
+            name: `job${service ? `-${service}` : ""}${
+              domain ? `-${domain}` : ""
+            }-${name}`,
+            project,
+            maxDispatchPerSecond: 100,
+            maxConcurrentDispatches: 100,
           }),
           startDnsTransaction({ dnsZone, project }),
           addDnsTransaction({ uri, dnsZone, project }),

@@ -122,14 +122,17 @@ module.exports = ({
               ...(context && { context }),
             },
           }),
+          //Only one replay at a time.
           createQueue({
             name: `projection-${context}-${name}`,
             project,
-            maxDispatchPerSecond: 100,
+            maxDispatchPerSecond: 1,
+            maxConcurrentDispatches: 1,
           }),
           updateQueue({
             name: `projection-${context}-${name}`,
-            maxDispatchPerSecond: 100,
+            maxDispatchPerSecond: 1,
+            maxConcurrentDispatches: 1,
           }),
           startDnsTransaction({ dnsZone, project }),
           addDnsTransaction({ uri, dnsZone, project }),
