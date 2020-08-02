@@ -1,6 +1,7 @@
 const roboSay = require("@blossm/robo-say");
 
 const rootDir = require("@blossm/cli-root-dir");
+const hash = require("@blossm/operation-hash");
 const { promisify } = require("util");
 const yaml = require("yaml");
 const path = require("path");
@@ -463,7 +464,7 @@ const addDefaultDependencies = ({ config, coreNetwork }) => {
   }
 };
 
-const writeConfig = ({ config, coreNetwork, workingDir }) => {
+const writeConfig = ({ config, coreNetwork, workingDir, host }) => {
   const newConfigPath = path.resolve(workingDir, "config.json");
   if (!config.testing) config.testing = {};
   if (!config.testing.dependencies) config.testing.dependencies = [];
@@ -528,7 +529,22 @@ const writeConfig = ({ config, coreNetwork, workingDir }) => {
         });
         break;
       default:
-        adjustedDependencies.push(dependency);
+        if (dependency.mocks) {
+          adjustedDependencies.push({
+            procedure: "http",
+            host: `${hash([
+              ...(dependency.name ? [dependency.name] : []),
+              ...(dependency.domain ? [dependency.domain] : []),
+              ...(dependency.service ? [dependency.service] : []),
+              ...(dependency.context ? [dependency.context] : []),
+              dependency.procedure,
+            ])}
+            .${host}`,
+            mocks: dependency.mocks,
+          });
+        } else {
+          adjustedDependencies.push(dependency);
+        }
     }
   }
 
@@ -636,7 +652,9 @@ const configure = async (workingDir, configFn, env, strict) => {
 
     const mainContainerName = "main";
 
-    writeConfig({ config, coreNetwork, workingDir });
+    const host = `${region}.${envUriSpecifier}${network}`;
+
+    writeConfig({ config, coreNetwork, workingDir, host });
 
     const computeUrlId = envComputeUrlId({ env, config: blossmConfig });
 
@@ -655,6 +673,7 @@ const configure = async (workingDir, configFn, env, strict) => {
       project,
       procedure,
       network,
+      host,
       timeout: configTimeout({ config, blossmConfig }),
       memory: configMemory({ config, blossmConfig }),
       mongodbUser: envMongodbUser({ env, config: blossmConfig, procedure }),

@@ -91,6 +91,7 @@ module.exports = ({
         ? coreContainerRegistery
         : containerRegistery
     }/${dependency.procedure}`;
+
     switch (dependency.procedure) {
       case "http": {
         services = {

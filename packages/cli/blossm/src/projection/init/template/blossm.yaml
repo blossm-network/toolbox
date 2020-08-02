@@ -14,13 +14,20 @@ events:
       - some-action
 
 #
+# Optionally set the stores that should be replayed when `blossm replay` is triggered.
+# If omitted, all stores specified above will replay.
+#
+replay:
+  - domain: some-event-domain
+    service: core
+#
 # The following properties are used for automated testing.
 #
 testing:
   #
   # Add tests for your handlers here.
   #
-  # The 'action' property specifies which handler is being tested.
+  # The 'event' property specifies which handler is being tested.
   # The 'examples' property is an array of instructions
   # with 'state', 'event', and 'result' properties.
   #
@@ -32,20 +39,31 @@ testing:
   # overwrites the state of the aggregate.
   #
   handlers:
-    - action:
-        name: register
+    - event:
+        action: register
         domain: some-domain
         service: some-service
       examples:
         - state:
             name: some-name
+          readFact:
+            calls:
+              - calledWith:
+                returns:
           result:
             update:
               name: some-name
   #
   # Add examples to run integration tests for.
   #
-  # The 'action' property specifies which handler is being tested.
+  # The 'pre' property is an array of instructions that allow you to set up the event state
+  # of the system before the integration test runs. For example, you can add an event to
+  # an event-store by setting the 'domain' and 'service' property to the domain and service
+  # of the event-store that you want to modify the state of, 'root' and 'action' to the root
+  # and action that describe the event, and 'payload' to the payload of the event that is
+  # being added.
+  #
+  # The 'event' property specifies which handler is being tested.
   #
   # The 'root' property specifies the root of the event being projected.
   #
@@ -59,8 +77,9 @@ testing:
   # single object or an array of objects is expected.
   #
   examples:
-    - action:
-        name: some-action
+    - pre:
+      event:
+        action: some-action
         domain: some-domain
         service: some-service
       payload:

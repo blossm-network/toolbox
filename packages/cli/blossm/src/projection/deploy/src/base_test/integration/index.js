@@ -7,6 +7,7 @@ const createEvent = require("@blossm/create-event");
 const request = require("@blossm/request");
 
 const { testing, name, context } = require("../../config.json");
+const { dateString } = require("@blossm/command-rpc/deps");
 
 const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 
@@ -18,12 +19,29 @@ describe("Projection integration tests", () => {
     const contextNetwork = "some-context-network";
 
     for (const example of testing.examples) {
+      if (example.pre) {
+        for (const { action, domain, service, root, payload } of example.pre) {
+          const stateEvent = createEvent({
+            root,
+            payload,
+            action,
+            domain,
+            service,
+            network: process.env.NETWORK,
+          });
+
+          await eventStore({ domain, service }).add({
+            eventData: [{ event: stateEvent }],
+          });
+        }
+      }
+      const now = dateString();
       const event = createEvent({
         root: example.root,
-        action: example.action.name,
+        action: example.event.name,
         payload: example.payload,
-        domain: example.action.domain,
-        service: example.action.service,
+        domain: example.event.domain,
+        service: example.event.service,
         network: process.env.NETWORK,
         context: {
           [context]: {
@@ -42,7 +60,15 @@ describe("Projection integration tests", () => {
       const response = await request.post(url, {
         body: {
           message: {
-            data: Buffer.from(JSON.stringify({})),
+            data: Buffer.from(
+              JSON.stringify({
+                root: example.root,
+                action: example.event.action,
+                domain: example.event.domain,
+                service: example.event.service,
+                timestamp: now,
+              })
+            ),
           },
         },
       });
