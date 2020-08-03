@@ -60,7 +60,6 @@ const snapshot = {
 const allEventsMerkleRoot = Buffer.from("some-all-events-merkle-root");
 const txsMerkleRoot = Buffer.from("some-txs-merkle-root");
 const previousNumber = 4;
-const previousEnd = dateString();
 const eventHash = "some-event-hash";
 const eventPayload = "some-event-payload";
 const txId = "some-tx-id";
@@ -94,6 +93,7 @@ describe("Event store create block transaction", () => {
   });
 
   it("should call with the correct params", async () => {
+    const previousEnd = dateString();
     const latestBlock = {
       hash: previousHash,
       headers: {
@@ -416,6 +416,7 @@ describe("Event store create block transaction", () => {
     });
   });
   it("should call with the correct params with public keys and no transaction", async () => {
+    const previousEnd = dateString();
     const latestBlock = {
       hash: previousHash,
       headers: {
@@ -852,6 +853,7 @@ describe("Event store create block transaction", () => {
     });
   });
   it("should call with the correct params with no previous snapshot", async () => {
+    const previousEnd = dateString();
     const latestBlock = {
       hash: previousHash,
       headers: {
