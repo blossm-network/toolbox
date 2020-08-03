@@ -18,6 +18,7 @@ describe("Projection integration tests", () => {
     const contextService = "some-context-service";
     const contextNetwork = "some-context-network";
 
+    console.log("1");
     for (const example of testing.examples) {
       if (example.pre) {
         for (const { action, domain, service, root, payload } of example.pre) {
@@ -35,6 +36,8 @@ describe("Projection integration tests", () => {
           });
         }
       }
+
+      console.log("2");
       const now = dateString();
       const event = createEvent({
         root: example.root,
@@ -57,6 +60,7 @@ describe("Projection integration tests", () => {
         service: example.event.service,
       }).add({ eventData: [{ event }] });
 
+      console.log("3");
       const response = await request.post(url, {
         body: {
           message: {
@@ -73,9 +77,11 @@ describe("Projection integration tests", () => {
         },
       });
 
+      console.log("4");
       expect(response.statusCode).to.equal(204);
 
       parallelFns.push(async () => {
+        console.log("5");
         const { body: v } = await viewStore({
           name,
           context,
@@ -91,6 +97,7 @@ describe("Projection integration tests", () => {
           })
           .read(example.result.query);
 
+        console.log({ v, content: v.content, e: example.result });
         expect(v.updates).to.exist;
 
         if (example.result.value) {
