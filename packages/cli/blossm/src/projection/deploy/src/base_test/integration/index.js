@@ -38,7 +38,7 @@ describe("Projection integration tests", () => {
       const now = dateString();
       const event = createEvent({
         root: example.root,
-        action: example.event.name,
+        action: example.event.action,
         payload: example.payload,
         domain: example.event.domain,
         service: example.event.service,
@@ -53,8 +53,8 @@ describe("Projection integration tests", () => {
       });
 
       await eventStore({
-        domain: example.action.domain,
-        service: example.action.service,
+        domain: example.event.domain,
+        service: example.event.service,
       }).add({ eventData: [{ event }] });
 
       const response = await request.post(url, {
