@@ -113,6 +113,7 @@ module.exports = projection({
         }),
       });
 
+    console.log({ newView });
     if (!newView || !push) return;
 
     const channel = channelName({
