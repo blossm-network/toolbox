@@ -15,9 +15,7 @@ const viewStore = async ({ schema, indexes, secretFn }) => {
   const formattedSchema = deps.formatSchema(schema, typeKey);
 
   _viewStore = deps.db.store({
-    name: `_${process.env.CONTEXT}${
-      process.env.SERVICE ? `.${process.env.SERVICE}` : ""
-    }${process.env.DOMAIN ? `.${process.env.DOMAIN}` : ""}.${process.env.NAME}`,
+    name: "views",
     schema: {
       body: formattedSchema,
       headers: {

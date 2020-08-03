@@ -13,8 +13,6 @@ const schema = { a: 1, b: { c: 2 } };
 const indexes = [[{ "some-index": 1 }]];
 
 const protocol = "some-db-protocol";
-const domain = "some-domain";
-const service = "some-service";
 const name = "some-name";
 const context = "some-context";
 const user = "some-db-user";
@@ -51,8 +49,6 @@ describe("View store", () => {
     mongodbViewStore = require("..");
     process.env.NODE_ENV = "some-env";
     clock = useFakeTimers(now.getTime());
-    process.env.DOMAIN = domain;
-    process.env.SERVICE = service;
   });
   afterEach(() => {
     clock.restore();
@@ -119,7 +115,7 @@ describe("View store", () => {
 
     expect(formatSchemaFake).to.have.been.calledWith(schema, "$type");
     expect(storeFake).to.have.been.calledWith({
-      name: `_${context}.${service}.${domain}.${name}`,
+      name: "views",
       schema: {
         body: formattedSchema,
         headers: {
@@ -329,8 +325,6 @@ describe("View store", () => {
     const formatSchemaFake = fake.returns(formattedSchema);
     replace(deps, "formatSchema", formatSchemaFake);
 
-    delete process.env.DOMAIN;
-    delete process.env.SERVICE;
     process.env.NODE_ENV = "local";
     await mongodbViewStore({
       schema,
@@ -343,7 +337,7 @@ describe("View store", () => {
 
     expect(formatSchemaFake).to.have.been.calledWith(schema, "$type");
     expect(storeFake).to.have.been.calledWith({
-      name: `_${context}.${name}`,
+      name: "views",
       schema: {
         body: formattedSchema,
         headers: {
@@ -475,7 +469,7 @@ describe("View store", () => {
 
     expect(formatSchemaFake).to.have.been.calledWith(schema, "$type");
     expect(storeFake).to.have.been.calledWith({
-      name: `_${context}.${service}.${domain}.${name}`,
+      name: "views",
       schema: {
         body: formattedSchema,
         headers: {
@@ -589,7 +583,7 @@ describe("View store", () => {
 
     expect(formatSchemaFake).to.have.been.calledWith(schema, "$type");
     expect(storeFake).to.have.been.calledWith({
-      name: `_${context}.${service}.${domain}.${name}`,
+      name: "views",
       schema: {
         body: formattedSchema,
         headers: {
@@ -786,7 +780,7 @@ describe("View store", () => {
 
     expect(formatSchemaFake).to.have.been.calledWith(schema, "$type");
     expect(storeFake).to.have.been.calledWith({
-      name: `_${context}.${service}.${domain}.${name}`,
+      name: "views",
       schema: {
         body: formattedSchema,
         headers: {
