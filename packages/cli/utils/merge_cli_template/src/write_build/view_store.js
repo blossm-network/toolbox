@@ -127,10 +127,12 @@ module.exports = ({
             name: `view-store-${context}-${name}`,
             project,
             maxDispatchPerSecond: 50,
+            maxConcurrentDispatches: 100,
           }),
           updateQueue({
             name: `view-store-${context}-${name}`,
             maxDispatchPerSecond: 50,
+            maxConcurrentDispatches: 100,
           }),
           startDnsTransaction({ dnsZone, project }),
           addDnsTransaction({ uri, dnsZone, project }),
