@@ -530,15 +530,31 @@ const writeConfig = ({ config, coreNetwork, workingDir }) => {
         break;
       default:
         if (dependency.mocks) {
-          adjustedDependencies.push({
-            procedure: "http",
-            host: `${hash([
+          console.log({
+            array: [
               ...(dependency.name ? [dependency.name] : []),
               ...(dependency.domain ? [dependency.domain] : []),
               ...(dependency.service ? [dependency.service] : []),
               ...(dependency.context ? [dependency.context] : []),
               dependency.procedure,
-            ])}.local.network`,
+            ],
+            hash: hash(
+              ...(dependency.name ? [dependency.name] : []),
+              ...(dependency.domain ? [dependency.domain] : []),
+              ...(dependency.service ? [dependency.service] : []),
+              ...(dependency.context ? [dependency.context] : []),
+              dependency.procedure
+            ),
+          });
+          adjustedDependencies.push({
+            procedure: "http",
+            host: `${hash(
+              ...(dependency.name ? [dependency.name] : []),
+              ...(dependency.domain ? [dependency.domain] : []),
+              ...(dependency.service ? [dependency.service] : []),
+              ...(dependency.context ? [dependency.context] : []),
+              dependency.procedure
+            )}.local.network`,
             mocks: dependency.mocks,
           });
         } else {
