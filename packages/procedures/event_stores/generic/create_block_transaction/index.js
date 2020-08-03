@@ -1,5 +1,22 @@
 const deps = require("./deps");
 
+const calculateBoundary = ({ previousBlock }) => {
+  let acceleratedBlockBoundary = new Date(previousBlock.headers.end);
+  acceleratedBlockBoundary.setSeconds(
+    acceleratedBlockBoundary.getSeconds() + 20
+  );
+
+  let maxNextBlockBoundary = new Date(previousBlock.headers.end);
+  maxNextBlockBoundary.setMinutes(acceleratedBlockBoundary.getMinutes() + 3);
+
+  const now = deps.dateString();
+  return previousBlock.headers.eCount > 100
+    ? acceleratedBlockBoundary.toISOString()
+    : maxNextBlockBoundary.toISOString() < now
+    ? maxNextBlockBoundary.toISOString()
+    : now;
+};
+
 //TODO store the merkle proofs elsewhere for O(log(n)) verification. Not important now.
 module.exports = ({
   saveSnapshotFn,
@@ -72,7 +89,7 @@ module.exports = ({
   const allStringifiedEventPairs = [];
   const txs = {};
 
-  const boundary = deps.dateString();
+  const boundary = calculateBoundary({ previousBlock });
 
   const nextBlockNumber = previousBlock.headers.number + 1;
 

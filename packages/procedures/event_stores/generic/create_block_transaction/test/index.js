@@ -59,7 +59,7 @@ const snapshot = {
 const allEventsMerkleRoot = Buffer.from("some-all-events-merkle-root");
 const txsMerkleRoot = Buffer.from("some-txs-merkle-root");
 const previousNumber = 4;
-const previousEnd = "some-previous-end";
+const previousEnd = deps.dateString();
 const eventHash = "some-event-hash";
 const eventPayload = "some-event-payload";
 const txId = "some-tx-id";
@@ -96,6 +96,7 @@ describe("Event store create block transaction", () => {
       hash: previousHash,
       headers: {
         end: previousEnd,
+        eCount: 1,
         number: previousNumber,
       },
     };
@@ -411,11 +412,16 @@ describe("Event store create block transaction", () => {
       transaction,
     });
   });
-  it("should call with the correct params with public keys and no transaction", async () => {
+  it("should call with the correct params with public keys, no transaction, and max boundary", async () => {
+    const date = new Date(deps.dateString());
+    date.setMinutes(now.getMinutes() - 7);
+    const correctDate = new Date(deps.dateString());
+    correctDate.setMinutes(now.getMinutes() - 4);
     const latestBlock = {
       hash: previousHash,
       headers: {
-        end: previousEnd,
+        end: date.toISOString(),
+        eCount: 1,
         number: previousNumber,
       },
     };
@@ -544,8 +550,8 @@ describe("Event store create block transaction", () => {
 
     expect(latestBlockFnFake).to.have.been.calledOnceWith();
     expect(rootStreamFnFake).to.have.been.calledOnceWith({
-      updatedOnOrAfter: previousEnd,
-      updatedBefore: deps.dateString(),
+      updatedOnOrAfter: date.toISOString(),
+      updatedBefore: correctDate.toISOString(),
       parallel: 100,
       fn: match(() => true),
     });
@@ -642,8 +648,8 @@ describe("Event store create block transaction", () => {
       pHash: previousHash,
       created: deps.dateString(),
       number: previousNumber + 1,
-      start: previousEnd,
-      end: deps.dateString(),
+      start: date.toISOString(),
+      end: correctDate.toISOString(),
       eCount: 1,
       sCount: 1,
       tCount: 1,
@@ -669,8 +675,8 @@ describe("Event store create block transaction", () => {
           pHash: previousHash,
           created: deps.dateString(),
           number: previousNumber + 1,
-          start: previousEnd,
-          end: deps.dateString(),
+          start: date.toISOString(),
+          end: correctDate.toISOString(),
           eCount: 1,
           sCount: 1,
           tCount: 1,
@@ -696,6 +702,7 @@ describe("Event store create block transaction", () => {
       hash: previousHash,
       headers: {
         end: previousEnd,
+        eCount: 1,
         number: previousNumber,
       },
     };
@@ -841,11 +848,16 @@ describe("Event store create block transaction", () => {
       transaction,
     });
   });
-  it("should call with the correct params with no previous snapshot", async () => {
+  it("should call with the correct params with no previous snapshot and event count high", async () => {
+    const date = new Date(deps.dateString());
+    date.setSeconds(now.getSeconds() - 30);
+    const correctDate = new Date(deps.dateString());
+    correctDate.setSeconds(now.getSeconds() - 10);
     const latestBlock = {
       hash: previousHash,
       headers: {
-        end: previousEnd,
+        end: date.toISOString(),
+        eCount: 101,
         number: previousNumber,
       },
     };
@@ -967,8 +979,8 @@ describe("Event store create block transaction", () => {
 
     expect(latestBlockFnFake).to.have.been.calledOnceWith();
     expect(rootStreamFnFake).to.have.been.calledOnceWith({
-      updatedOnOrAfter: previousEnd,
-      updatedBefore: deps.dateString(),
+      updatedOnOrAfter: date.toISOString(),
+      updatedBefore: correctDate.toISOString(),
       parallel: 100,
       fn: match(() => true),
     });
@@ -1052,8 +1064,8 @@ describe("Event store create block transaction", () => {
       pHash: previousHash,
       created: deps.dateString(),
       number: previousNumber + 1,
-      start: previousEnd,
-      end: deps.dateString(),
+      start: date.toISOString(),
+      end: correctDate.toISOString(),
       eCount: 1,
       sCount: 1,
       tCount: 1,
@@ -1079,8 +1091,8 @@ describe("Event store create block transaction", () => {
           pHash: previousHash,
           created: deps.dateString(),
           number: previousNumber + 1,
-          start: previousEnd,
-          end: deps.dateString(),
+          start: date.toISOString(),
+          end: correctDate.toISOString(),
           eCount: 1,
           sCount: 1,
           tCount: 1,
