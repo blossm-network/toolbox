@@ -74,7 +74,6 @@ const findOneSnapshotFn = "some-find-one-snapshot-fn";
 const eventStreamFn = "some-event-stream-fn";
 const handlers = "some-handlers";
 const public = true;
-const updated = deps.dateString();
 
 const network = "some-env-network";
 const service = "some-env-service";
@@ -94,6 +93,7 @@ describe("Event store create block transaction", () => {
 
   it("should call with the correct params", async () => {
     const previousEnd = dateString();
+    const updated = deps.dateString();
     const latestBlock = {
       hash: previousHash,
       headers: {
@@ -417,6 +417,7 @@ describe("Event store create block transaction", () => {
   });
   it("should call with the correct params with public keys and no transaction", async () => {
     const previousEnd = dateString();
+    const updated = deps.dateString();
     const latestBlock = {
       hash: previousHash,
       headers: {
@@ -701,6 +702,7 @@ describe("Event store create block transaction", () => {
   it("should call with the correct params and no events", async () => {
     const date = new Date(deps.dateString());
     date.setMinutes(date.getMinutes() - 3);
+    const updated = deps.dateString();
     const latestBlock = {
       hash: previousHash,
       headers: {
@@ -854,6 +856,7 @@ describe("Event store create block transaction", () => {
   });
   it("should call with the correct params with no previous snapshot", async () => {
     const previousEnd = dateString();
+    const updated = deps.dateString();
     const latestBlock = {
       hash: previousHash,
       headers: {
@@ -1118,6 +1121,7 @@ describe("Event store create block transaction", () => {
   });
   it("should call with the correct params with no previous block", async () => {
     const latestBlockFnFake = fake.returns();
+    const updated = deps.dateString();
 
     const rootStreamFnFake = stub().yieldsTo("fn", { root, updated });
 
