@@ -9,7 +9,7 @@ const counts = {};
 for (const mock of mocks) {
   const key = `${mock.method}-${mock.path}`;
   counts[key] = 0;
-  server[mock.method.toLowerCase()](mock.path, (_, res) => {
+  server[mock.method.toLowerCase()](mock.path || "/", (_, res) => {
     const count = counts[key]++;
     const code = (mock.calls && mock.calls[count].code) || mock.code;
     const response =
