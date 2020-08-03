@@ -164,6 +164,8 @@ module.exports = ({
         state: snapshot.state,
       });
 
+      //TODO
+      console.log({ updated, newEnd });
       newEnd = updated > newEnd ? updated : newEnd;
     },
     parallel: 10,
