@@ -698,10 +698,12 @@ describe("Event store create block transaction", () => {
     });
   });
   it("should call with the correct params and no events", async () => {
+    const date = new Date(deps.dateString());
+    date.setMinutes(date.getMinutes() - 3);
     const latestBlock = {
       hash: previousHash,
       headers: {
-        end: previousEnd,
+        end: date.toISOString(),
         number: previousNumber,
       },
     };
@@ -779,7 +781,7 @@ describe("Event store create block transaction", () => {
 
     expect(latestBlockFnFake).to.have.been.calledOnceWith();
     expect(rootStreamFnFake).to.have.been.calledOnceWith({
-      updatedOnOrAfter: previousEnd,
+      updatedOnOrAfter: date.toISOString(),
       updatedBefore: deps.dateString(),
       parallel: 10,
       limit: 100,
@@ -799,8 +801,8 @@ describe("Event store create block transaction", () => {
       pHash: previousHash,
       created: deps.dateString(),
       number: previousNumber + 1,
-      start: previousEnd,
-      end: deps.dateString(),
+      start: date.toISOString(),
+      end: date.toISOString(),
       eCount: 0,
       sCount: 0,
       tCount: 0,
@@ -826,8 +828,8 @@ describe("Event store create block transaction", () => {
           pHash: previousHash,
           created: deps.dateString(),
           number: previousNumber + 1,
-          start: previousEnd,
-          end: deps.dateString(),
+          start: date.toISOString(),
+          end: date.toISOString(),
           eCount: 0,
           sCount: 0,
           tCount: 0,

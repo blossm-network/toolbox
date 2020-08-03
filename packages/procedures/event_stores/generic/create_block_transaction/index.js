@@ -80,11 +80,10 @@ module.exports = ({
     handlers,
   });
 
-  const now = deps.dateString();
-  let newBoundary;
+  let newEnd;
   await rootStreamFn({
     updatedOnOrAfter: previousBlock.headers.end,
-    updatedBefore: now,
+    updatedBefore: deps.dateString(),
     //First come first serve.
     limit: 100,
     reverse: true,
@@ -165,7 +164,7 @@ module.exports = ({
         state: snapshot.state,
       });
 
-      newBoundary = updated > newBoundary ? updated : newBoundary;
+      newEnd = updated > newEnd ? updated : newEnd;
     },
     parallel: 10,
   });
@@ -216,7 +215,7 @@ module.exports = ({
     created: deps.dateString(),
     number: previousBlock.headers.number + 1,
     start: previousBlock.headers.end,
-    end: newBoundary || now,
+    end: newEnd || previousBlock.headers.end,
     eCount: allStringifiedEventPairs.length,
     sCount: stringifiedSnapshotPairs.length,
     tCount: stringifiedTxPairs.length,
