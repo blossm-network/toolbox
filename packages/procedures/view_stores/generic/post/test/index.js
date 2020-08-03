@@ -13,13 +13,26 @@ const now = new Date();
 
 const writeResultBody = "some-write-result-body";
 const writeResultId = "some-write-result-id";
+const trace1 = "some-trace";
+const trace2 = "some-other-trace";
 const writeResult = {
   body: writeResultBody,
   headers: {
     id: writeResultId,
   },
+  trace: {
+    "some-service": {
+      "some-domain": [trace1],
+    },
+    "some-other-service": {
+      "some-other-domain": [trace2],
+    },
+    "another-service": {
+      "another-domain": [trace1],
+    },
+  },
 };
-const formattedWriteResult = "some-formatted-write-result";
+const formattedWriteResult = { a: "some-formatted-write-result" };
 const query = { some: "query" };
 const envContext = "some-env-context";
 const envContextRoot = "some-env-context-root";
@@ -112,7 +125,10 @@ describe("View store put", () => {
       id: writeResultId,
     });
     expect(statusFake).to.have.been.calledWith(200);
-    expect(sendFake).to.have.been.calledWith(formattedWriteResult);
+    expect(sendFake).to.have.been.calledWith({
+      ...formattedWriteResult,
+      headers: { id: writeResultId, trace: [trace1, trace2] },
+    });
   });
 
   it("should call with the correct params with custom fn", async () => {
@@ -178,7 +194,10 @@ describe("View store put", () => {
       id: writeResultId,
     });
     expect(statusFake).to.have.been.calledWith(200);
-    expect(sendFake).to.have.been.calledWith(formattedWriteResult);
+    expect(sendFake).to.have.been.calledWith({
+      ...formattedWriteResult,
+      headers: { id: writeResultId, trace: [trace1, trace2] },
+    });
   });
   it("should return successfully if query and id are missing", async () => {
     const writeFake = fake.returns(writeResult);
@@ -238,7 +257,10 @@ describe("View store put", () => {
       id: writeResultId,
     });
     expect(statusFake).to.have.been.calledWith(200);
-    expect(sendFake).to.have.been.calledWith(formattedWriteResult);
+    expect(sendFake).to.have.been.calledWith({
+      ...formattedWriteResult,
+      headers: { id: writeResultId, trace: [trace1, trace2] },
+    });
   });
   it("should call with the correct params with no write result", async () => {
     const writeFake = fake.returns();

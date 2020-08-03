@@ -61,13 +61,19 @@ module.exports = ({ writeFn, formatFn, updateFn = defaultFn }) => {
 
     if (!newView) return res.sendStatus(204);
 
-    res.status(200).send(
-      newView && {
-        ...formatFn({ body: newView.body, id: newView.headers.id }),
-        headers: {
-          id: newView.headers.id,
-        },
+    const formattedTrace = [];
+    for (const service in newView.trace) {
+      for (const domain in newView.trace[service]) {
+        for (const txId of newView.trace[service][domain])
+          if (!formattedTrace.includes(txId)) formattedTrace.push(txId);
       }
-    );
+    }
+    res.status(200).send({
+      ...formatFn({ body: newView.body, id: newView.headers.id }),
+      headers: {
+        id: newView.headers.id,
+        trace: formattedTrace,
+      },
+    });
   };
 };
