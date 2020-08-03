@@ -29,9 +29,10 @@ describe("Event store root stream", () => {
       parallel: 2,
       fn: match((fn) => {
         const root = "some-root";
-        const data = { root };
+        const updated = "some-updated";
+        const data = { root, updated };
         fn(data);
-        return writeFake.calledWith(JSON.stringify({ root }));
+        return writeFake.calledWith(JSON.stringify({ root, updated }));
       }),
     });
     expect(endFake).to.have.been.calledWith();
@@ -54,9 +55,10 @@ describe("Event store root stream", () => {
     expect(rootStreamFake).to.have.been.calledWith({
       fn: match((fn) => {
         const root = "some-root";
-        const data = { root };
+        const updated = "some-updated";
+        const data = { root, updated };
         fn(data);
-        return writeFake.calledWith(JSON.stringify({ root }));
+        return writeFake.calledWith(JSON.stringify({ root, updated }));
       }),
     });
     expect(endFake).to.have.been.calledWith();

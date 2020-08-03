@@ -2,7 +2,7 @@ const deps = require("./deps");
 
 module.exports = ({ findOneSnapshotFn, eventStreamFn, handlers }) => async (
   root,
-  { timestamp, includeEvents = false } = {}
+  { timestamp, includeEvents = false, eventLimit } = {}
 ) => {
   const snapshot = await findOneSnapshotFn({
     query: {
@@ -28,6 +28,7 @@ module.exports = ({ findOneSnapshotFn, eventStreamFn, handlers }) => async (
       ...(snapshot && {
         lastEventNumber: snapshot.headers.lastEventNumber,
         snapshotHash: snapshot.hash,
+        timestamp: snapshot.headers.created,
       }),
     },
     ...(snapshot && {
@@ -53,6 +54,9 @@ module.exports = ({ findOneSnapshotFn, eventStreamFn, handlers }) => async (
     sort: {
       "headers.number": 1,
     },
+    ...(eventLimit && {
+      limit: eventLimit,
+    }),
     fn: (event) => {
       const handler = handlers[event.headers.action];
       if (!handler)
@@ -63,6 +67,7 @@ module.exports = ({ findOneSnapshotFn, eventStreamFn, handlers }) => async (
         });
 
       aggregate.headers.lastEventNumber = event.headers.number;
+      aggregate.headers.timestamp = event.headers.created;
       aggregate.state = handler(aggregate.state || {}, event.payload);
       aggregate.txIds = [
         ...(event.tx.id ? [event.tx.id] : []),

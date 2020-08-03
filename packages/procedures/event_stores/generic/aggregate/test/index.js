@@ -17,6 +17,9 @@ const bRoot = "some-b-root";
 const bService = "some-b-service";
 const bNetwork = "some-b-network";
 
+const snapshotCreated = "some-snapshot-created";
+const eventCreated = "some-event-created";
+
 const event = {
   hash: eventHash,
   headers: {
@@ -24,6 +27,7 @@ const event = {
     root,
     number: 1,
     action,
+    created: eventCreated,
   },
   tx: {
     id: eventTxId,
@@ -61,6 +65,7 @@ const findOneResult = {
   headers: {
     root,
     lastEventNumber: 6,
+    created: snapshotCreated,
   },
   state: { a: 1, b: 1 },
   context: {
@@ -125,6 +130,7 @@ describe("Mongodb event store aggregate", () => {
         service: envService,
         network: envNetwork,
         lastEventNumber: 1,
+        timestamp: eventCreated,
       },
       state: { a: 1, b: 2, c: 2 },
       context: {
@@ -138,16 +144,18 @@ describe("Mongodb event store aggregate", () => {
       txIds: [eventTxId, txId],
     });
   });
-  it("should call with the correct params if includeEvents and theres a timestamp", async () => {
+  it("should call with the correct params if includeEvents and theres a timestamp and eventLimit ", async () => {
     const eventStreamFnFake = stub().yieldsTo("fn", event);
     const findOneSnapshotFnFake = fake.returns(findOneResult);
 
     const timestamp = "some-timestamp";
+    const eventLimit = "some-event-limit";
+
     const result = await aggregate({
       handlers,
       eventStreamFn: eventStreamFnFake,
       findOneSnapshotFn: findOneSnapshotFnFake,
-    })(root, { includeEvents: true, timestamp });
+    })(root, { includeEvents: true, eventLimit, timestamp });
 
     expect(eventStreamFnFake).to.have.been.calledWith({
       query: {
@@ -158,6 +166,7 @@ describe("Mongodb event store aggregate", () => {
       sort: {
         "headers.number": 1,
       },
+      limit: eventLimit,
       fn: match(() => true),
     });
     expect(findOneSnapshotFnFake).to.have.been.calledWith({
@@ -180,6 +189,7 @@ describe("Mongodb event store aggregate", () => {
         service: envService,
         network: envNetwork,
         lastEventNumber: 1,
+        timestamp: eventCreated,
       },
       state: { a: 1, b: 2, c: 2 },
       context: {
@@ -233,6 +243,7 @@ describe("Mongodb event store aggregate", () => {
         network: envNetwork,
         root,
         snapshotHash,
+        timestamp: snapshotCreated,
       },
       state: { a: 1, b: 1 },
       context: {
@@ -283,6 +294,7 @@ describe("Mongodb event store aggregate", () => {
         domain: envDomain,
         service: envService,
         network: envNetwork,
+        timestamp: eventCreated,
       },
       state: { b: 2, c: 2 },
       context: {

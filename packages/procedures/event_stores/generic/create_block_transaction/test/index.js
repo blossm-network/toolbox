@@ -6,6 +6,7 @@ const { restore, fake, match, stub, replace, useFakeTimers } = require("sinon");
 
 const create = require("..");
 const deps = require("../deps");
+const { dateString } = require("@blossm/command-rpc/deps");
 
 let clock;
 const now = new Date();
@@ -59,7 +60,7 @@ const snapshot = {
 const allEventsMerkleRoot = Buffer.from("some-all-events-merkle-root");
 const txsMerkleRoot = Buffer.from("some-txs-merkle-root");
 const previousNumber = 4;
-const previousEnd = deps.dateString();
+const previousEnd = dateString();
 const eventHash = "some-event-hash";
 const eventPayload = "some-event-payload";
 const txId = "some-tx-id";
@@ -74,6 +75,7 @@ const findOneSnapshotFn = "some-find-one-snapshot-fn";
 const eventStreamFn = "some-event-stream-fn";
 const handlers = "some-handlers";
 const public = true;
+const updated = deps.dateString();
 
 const network = "some-env-network";
 const service = "some-env-service";
@@ -96,13 +98,12 @@ describe("Event store create block transaction", () => {
       hash: previousHash,
       headers: {
         end: previousEnd,
-        eCount: 1,
         number: previousNumber,
       },
     };
     const latestBlockFnFake = fake.returns(latestBlock);
 
-    const rootStreamFnFake = stub().yieldsTo("fn", { root });
+    const rootStreamFnFake = stub().yieldsTo("fn", { root, updated });
 
     const otherEventHash = "some-other-event-hash";
     const otherEvent = {
@@ -262,7 +263,9 @@ describe("Event store create block transaction", () => {
     expect(rootStreamFnFake).to.have.been.calledOnceWith({
       updatedOnOrAfter: previousEnd,
       updatedBefore: deps.dateString(),
-      parallel: 100,
+      parallel: 10,
+      limit: 100,
+      reverse: true,
       fn: match(() => true),
     });
     expect(aggregateFnFake.getCall(0)).to.have.been.calledWith(root, {
@@ -412,22 +415,17 @@ describe("Event store create block transaction", () => {
       transaction,
     });
   });
-  it("should call with the correct params with public keys, no transaction, and max boundary", async () => {
-    const date = new Date(deps.dateString());
-    date.setMinutes(now.getMinutes() - 7);
-    const correctDate = new Date(deps.dateString());
-    correctDate.setMinutes(now.getMinutes() - 4);
+  it("should call with the correct params with public keys and no transaction", async () => {
     const latestBlock = {
       hash: previousHash,
       headers: {
-        end: date.toISOString(),
-        eCount: 1,
+        end: previousEnd,
         number: previousNumber,
       },
     };
     const latestBlockFnFake = fake.returns(latestBlock);
 
-    const rootStreamFnFake = stub().yieldsTo("fn", { root });
+    const rootStreamFnFake = stub().yieldsTo("fn", { root, updated });
 
     const aggregate = {
       headers: {
@@ -550,9 +548,11 @@ describe("Event store create block transaction", () => {
 
     expect(latestBlockFnFake).to.have.been.calledOnceWith();
     expect(rootStreamFnFake).to.have.been.calledOnceWith({
-      updatedOnOrAfter: date.toISOString(),
-      updatedBefore: correctDate.toISOString(),
-      parallel: 100,
+      updatedOnOrAfter: previousEnd,
+      updatedBefore: deps.dateString(),
+      parallel: 10,
+      limit: 100,
+      reverse: true,
       fn: match(() => true),
     });
     expect(aggregateFnFake.getCall(0)).to.have.been.calledWith(root, {
@@ -648,8 +648,8 @@ describe("Event store create block transaction", () => {
       pHash: previousHash,
       created: deps.dateString(),
       number: previousNumber + 1,
-      start: date.toISOString(),
-      end: correctDate.toISOString(),
+      start: previousEnd,
+      end: deps.dateString(),
       eCount: 1,
       sCount: 1,
       tCount: 1,
@@ -675,8 +675,8 @@ describe("Event store create block transaction", () => {
           pHash: previousHash,
           created: deps.dateString(),
           number: previousNumber + 1,
-          start: date.toISOString(),
-          end: correctDate.toISOString(),
+          start: previousEnd,
+          end: deps.dateString(),
           eCount: 1,
           sCount: 1,
           tCount: 1,
@@ -702,13 +702,12 @@ describe("Event store create block transaction", () => {
       hash: previousHash,
       headers: {
         end: previousEnd,
-        eCount: 1,
         number: previousNumber,
       },
     };
     const latestBlockFnFake = fake.returns(latestBlock);
 
-    const rootStreamFnFake = stub().yieldsTo("fn", { root });
+    const rootStreamFnFake = stub().yieldsTo("fn", { root, updated });
 
     const aggregate = {
       headers: {
@@ -782,7 +781,9 @@ describe("Event store create block transaction", () => {
     expect(rootStreamFnFake).to.have.been.calledOnceWith({
       updatedOnOrAfter: previousEnd,
       updatedBefore: deps.dateString(),
-      parallel: 100,
+      parallel: 10,
+      limit: 100,
+      reverse: true,
       fn: match(() => true),
     });
     expect(aggregateFnFake.getCall(0)).to.have.been.calledWith(root, {
@@ -848,22 +849,17 @@ describe("Event store create block transaction", () => {
       transaction,
     });
   });
-  it("should call with the correct params with no previous snapshot and event count high", async () => {
-    const date = new Date(deps.dateString());
-    date.setSeconds(now.getSeconds() - 30);
-    const correctDate = new Date(deps.dateString());
-    correctDate.setSeconds(now.getSeconds() - 10);
+  it("should call with the correct params with no previous snapshot", async () => {
     const latestBlock = {
       hash: previousHash,
       headers: {
-        end: date.toISOString(),
-        eCount: 101,
+        end: previousEnd,
         number: previousNumber,
       },
     };
     const latestBlockFnFake = fake.returns(latestBlock);
 
-    const rootStreamFnFake = stub().yieldsTo("fn", { root });
+    const rootStreamFnFake = stub().yieldsTo("fn", { root, updated });
 
     const aggregate = {
       headers: {
@@ -979,9 +975,11 @@ describe("Event store create block transaction", () => {
 
     expect(latestBlockFnFake).to.have.been.calledOnceWith();
     expect(rootStreamFnFake).to.have.been.calledOnceWith({
-      updatedOnOrAfter: date.toISOString(),
-      updatedBefore: correctDate.toISOString(),
-      parallel: 100,
+      updatedOnOrAfter: previousEnd,
+      updatedBefore: deps.dateString(),
+      parallel: 10,
+      limit: 100,
+      reverse: true,
       fn: match(() => true),
     });
     expect(aggregateFnFake.getCall(0)).to.have.been.calledWith(root, {
@@ -1064,8 +1062,8 @@ describe("Event store create block transaction", () => {
       pHash: previousHash,
       created: deps.dateString(),
       number: previousNumber + 1,
-      start: date.toISOString(),
-      end: correctDate.toISOString(),
+      start: previousEnd,
+      end: deps.dateString(),
       eCount: 1,
       sCount: 1,
       tCount: 1,
@@ -1091,8 +1089,8 @@ describe("Event store create block transaction", () => {
           pHash: previousHash,
           created: deps.dateString(),
           number: previousNumber + 1,
-          start: date.toISOString(),
-          end: correctDate.toISOString(),
+          start: previousEnd,
+          end: deps.dateString(),
           eCount: 1,
           sCount: 1,
           tCount: 1,
@@ -1117,7 +1115,7 @@ describe("Event store create block transaction", () => {
   it("should call with the correct params with no previous block", async () => {
     const latestBlockFnFake = fake.returns();
 
-    const rootStreamFnFake = stub().yieldsTo("fn", { root });
+    const rootStreamFnFake = stub().yieldsTo("fn", { root, updated });
 
     const emptyMerkleRoot = "some-empty-merkle-root";
     const merkleRootFake = fake.returns(emptyMerkleRoot);

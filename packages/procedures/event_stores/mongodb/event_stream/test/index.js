@@ -30,10 +30,12 @@ describe("Mongodb event store event stream", () => {
     replace(deps, "db", db);
 
     const sort = "some-sort";
+    const limit = "some-limit";
     const query = "some-query";
     const result = await stream({ eventStore })({
       parallel,
       sort,
+      limit,
       query,
       fn,
     });
@@ -41,6 +43,7 @@ describe("Mongodb event store event stream", () => {
       store: eventStore,
       query,
       sort,
+      limit,
       options: {
         lean: true,
       },

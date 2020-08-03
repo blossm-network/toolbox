@@ -4,6 +4,8 @@ module.exports = ({ countsStore }) => async ({
   parallel = 1,
   updatedOnOrAfter,
   updatedBefore,
+  limit,
+  reverse = false,
   fn,
 }) => {
   const cursor = deps.db
@@ -18,8 +20,9 @@ module.exports = ({ countsStore }) => async ({
         }),
       },
       sort: {
-        updated: -1,
+        updated: reverse ? 1 : -1,
       },
+      ...(limit && { limit }),
       options: { lean: true },
     })
     .cursor();

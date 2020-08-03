@@ -1,22 +1,5 @@
 const deps = require("./deps");
 
-const calculateBoundary = ({ previousBlock }) => {
-  let acceleratedBlockBoundary = new Date(previousBlock.headers.end);
-  acceleratedBlockBoundary.setSeconds(
-    acceleratedBlockBoundary.getSeconds() + 20
-  );
-
-  let maxNextBlockBoundary = new Date(previousBlock.headers.end);
-  maxNextBlockBoundary.setMinutes(acceleratedBlockBoundary.getMinutes() + 3);
-
-  const now = deps.dateString();
-  return previousBlock.headers.eCount > 100
-    ? acceleratedBlockBoundary.toISOString()
-    : maxNextBlockBoundary.toISOString() < now
-    ? maxNextBlockBoundary.toISOString()
-    : now;
-};
-
 //TODO store the merkle proofs elsewhere for O(log(n)) verification. Not important now.
 module.exports = ({
   saveSnapshotFn,
@@ -89,8 +72,6 @@ module.exports = ({
   const allStringifiedEventPairs = [];
   const txs = {};
 
-  const boundary = calculateBoundary({ previousBlock });
-
   const nextBlockNumber = previousBlock.headers.number + 1;
 
   const aggregateFn = deps.aggregate({
@@ -99,10 +80,15 @@ module.exports = ({
     handlers,
   });
 
+  const now = deps.dateString();
+  let newBoundary;
   await rootStreamFn({
     updatedOnOrAfter: previousBlock.headers.end,
-    updatedBefore: boundary,
-    fn: async ({ root }) => {
+    updatedBefore: now,
+    //First come first serve.
+    limit: 100,
+    reverse: true,
+    fn: async ({ root, updated }) => {
       const aggregate = await aggregateFn(root, { includeEvents: true });
 
       if (aggregate.events.length == 0) return;
@@ -178,8 +164,10 @@ module.exports = ({
         context: snapshot.context,
         state: snapshot.state,
       });
+
+      newBoundary = updated > newBoundary ? updated : newBoundary;
     },
-    parallel: 100,
+    parallel: 10,
   });
 
   const stringifiedSnapshotPairs = [];
@@ -228,7 +216,7 @@ module.exports = ({
     created: deps.dateString(),
     number: previousBlock.headers.number + 1,
     start: previousBlock.headers.end,
-    end: boundary,
+    end: newBoundary || now,
     eCount: allStringifiedEventPairs.length,
     sCount: stringifiedSnapshotPairs.length,
     tCount: stringifiedTxPairs.length,

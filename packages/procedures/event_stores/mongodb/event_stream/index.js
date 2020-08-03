@@ -4,6 +4,7 @@ module.exports = ({ eventStore }) => async ({
   parallel = 1,
   query,
   sort,
+  limit,
   fn,
 }) => {
   const cursor = deps.db
@@ -11,6 +12,7 @@ module.exports = ({ eventStore }) => async ({
       store: eventStore,
       query,
       ...(sort && { sort }),
+      ...(limit && { limit }),
       options: { lean: true },
     })
     .cursor();

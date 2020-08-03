@@ -31,10 +31,14 @@ describe("Mongodb event store root stream", () => {
 
     const updatedOnOrAfter = "some-updated-on-or-after";
     const updatedBefore = "some-updated-before";
+    const reverse = true;
+    const limit = "some-limit";
     const result = await stream({ countsStore })({
       parallel,
       updatedOnOrAfter,
       updatedBefore,
+      limit,
+      reverse,
       fn,
     });
     expect(findFake).to.have.been.calledWith({
@@ -46,8 +50,9 @@ describe("Mongodb event store root stream", () => {
         },
       },
       sort: {
-        updated: -1,
+        updated: 1,
       },
+      limit,
       options: {
         lean: true,
       },
