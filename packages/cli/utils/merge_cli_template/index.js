@@ -652,7 +652,7 @@ const configure = async (workingDir, configFn, env, strict) => {
 
     const mainContainerName = "main";
 
-    const host = `${region}.${envUriSpecifier}${network}`;
+    const host = `${region}.${envUriSpecifier(env)}${network}`;
 
     writeConfig({ config, coreNetwork, workingDir, host });
 
