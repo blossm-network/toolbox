@@ -61,10 +61,13 @@ module.exports = ({ writeFn, formatFn, updateFn = defaultFn }) => {
 
     if (!newView) return res.sendStatus(204);
 
-    res
-      .status(200)
-      .send(
-        newView && formatFn({ body: newView.body, id: newView.headers.id })
-      );
+    res.status(200).send(
+      newView && {
+        ...formatFn({ body: newView.body, id: newView.headers.id }),
+        headers: {
+          id: newView.headers.id,
+        },
+      }
+    );
   };
 };
