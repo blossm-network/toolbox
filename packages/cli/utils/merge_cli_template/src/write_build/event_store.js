@@ -138,7 +138,7 @@ module.exports = ({
             env: {
               DOMAIN: domain,
               SERVICE: service,
-              MONGODB_DATABASE: `${service}-${domain}`,
+              MONGODB_DATABASE: `${service}_${domain}`,
               MONGODB_USER: mongodbUser,
               MONGODB_HOST: mongodbHost,
               MONGODB_PROTOCOL: mongodbProtocol,

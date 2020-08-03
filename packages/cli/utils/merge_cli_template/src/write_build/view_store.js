@@ -112,7 +112,7 @@ module.exports = ({
             env: {
               NAME: name,
               CONTEXT: context,
-              MONGODB_DATABASE: `${context}-${name}`,
+              MONGODB_DATABASE: `${context}_${name}`,
               MONGODB_USER: mongodbUser,
               MONGODB_HOST: mongodbHost,
               MONGODB_PROTOCOL: mongodbProtocol,
