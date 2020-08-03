@@ -1,7 +1,7 @@
 {
   "name": "@blossm/mongodb-view-store",
   "description": "A mongodb view store server.",
-  "version": "0.0.248",
+  "version": "0.0.249",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
