@@ -464,7 +464,7 @@ const addDefaultDependencies = ({ config, coreNetwork }) => {
   }
 };
 
-const writeConfig = ({ config, coreNetwork, workingDir, host }) => {
+const writeConfig = ({ config, coreNetwork, workingDir }) => {
   const newConfigPath = path.resolve(workingDir, "config.json");
   if (!config.testing) config.testing = {};
   if (!config.testing.dependencies) config.testing.dependencies = [];
@@ -530,6 +530,13 @@ const writeConfig = ({ config, coreNetwork, workingDir, host }) => {
         break;
       default:
         if (dependency.mocks) {
+          console.log("SHTUFF: ", [
+            ...(dependency.name ? [dependency.name] : []),
+            ...(dependency.domain ? [dependency.domain] : []),
+            ...(dependency.service ? [dependency.service] : []),
+            ...(dependency.context ? [dependency.context] : []),
+            dependency.procedure,
+          ]);
           adjustedDependencies.push({
             procedure: "http",
             host: `${hash([
@@ -538,7 +545,7 @@ const writeConfig = ({ config, coreNetwork, workingDir, host }) => {
               ...(dependency.service ? [dependency.service] : []),
               ...(dependency.context ? [dependency.context] : []),
               dependency.procedure,
-            ])}.${host}`,
+            ])}"local.network`,
             mocks: dependency.mocks,
           });
         } else {
@@ -653,7 +660,7 @@ const configure = async (workingDir, configFn, env, strict) => {
 
     const host = `${region}.${envUriSpecifier(env)}${network}`;
 
-    writeConfig({ config, coreNetwork, workingDir, host });
+    writeConfig({ config, coreNetwork, workingDir });
 
     const computeUrlId = envComputeUrlId({ env, config: blossmConfig });
 
