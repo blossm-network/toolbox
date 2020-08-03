@@ -530,13 +530,6 @@ const writeConfig = ({ config, coreNetwork, workingDir }) => {
         break;
       default:
         if (dependency.mocks) {
-          console.log("SHTUFF: ", [
-            ...(dependency.name ? [dependency.name] : []),
-            ...(dependency.domain ? [dependency.domain] : []),
-            ...(dependency.service ? [dependency.service] : []),
-            ...(dependency.context ? [dependency.context] : []),
-            dependency.procedure,
-          ]);
           adjustedDependencies.push({
             procedure: "http",
             host: `${hash([
