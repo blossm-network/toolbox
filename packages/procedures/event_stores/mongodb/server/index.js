@@ -16,7 +16,7 @@ const eventStore = async ({ schema, indexes, secretFn }) => {
   }
 
   _eventStore = deps.db.store({
-    name: `_${process.env.SERVICE}.${process.env.DOMAIN}`,
+    name: `events`,
     schema: {
       hash: { [typeKey]: String, required: true, unique: true },
       headers: {
@@ -128,7 +128,7 @@ const snapshotStore = async ({ schema, indexes }) => {
   }
 
   _snapshotStore = deps.db.store({
-    name: `_${process.env.SERVICE}.${process.env.DOMAIN}.snapshots`,
+    name: "snapshots",
     schema: {
       hash: { $type: String, required: true, unique: true },
       headers: {
@@ -183,7 +183,7 @@ const countsStore = async () => {
   }
 
   _countsStore = deps.db.store({
-    name: `_${process.env.SERVICE}.${process.env.DOMAIN}.counts`,
+    name: "counts",
     schema: {
       root: { [typeKey]: String, required: true, unique: true },
       value: { [typeKey]: Number, required: true, default: 0 },
@@ -203,7 +203,7 @@ const blockchainStore = async () => {
   }
 
   _blockchainStore = deps.db.store({
-    name: `_${process.env.SERVICE}.${process.env.DOMAIN}.blockchain`,
+    name: "blockchain",
     schema: {
       hash: { [typeKey]: String, required: true, unique: true },
       signature: { [typeKey]: String, required: true },

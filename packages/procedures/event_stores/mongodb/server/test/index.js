@@ -158,7 +158,7 @@ describe("Mongodb event store", () => {
       }
     );
     expect(storeFake.getCall(0)).to.have.been.calledWith({
-      name: `_${service}.${domain}`,
+      name: `events`,
       schema: {
         hash: { $type: String, required: true, unique: true },
         headers: {
@@ -252,7 +252,7 @@ describe("Mongodb event store", () => {
       },
     });
     expect(storeFake.getCall(1)).to.have.been.calledWith({
-      name: `_${service}.${domain}.snapshots`,
+      name: "snapshots",
       schema: {
         hash: { $type: String, required: true, unique: true },
         headers: {
@@ -290,7 +290,7 @@ describe("Mongodb event store", () => {
       ],
     });
     expect(storeFake.getCall(2)).to.have.been.calledWith({
-      name: `_${service}.${domain}.counts`,
+      name: "counts",
       schema: {
         root: { $type: String, required: true, unique: true },
         value: { $type: Number, required: true, default: 0 },
@@ -300,7 +300,7 @@ describe("Mongodb event store", () => {
       indexes: [[{ root: 1 }]],
     });
     expect(storeFake.getCall(3)).to.have.been.calledWith({
-      name: `_${service}.${domain}.blockchain`,
+      name: "blockchain",
       schema: {
         hash: { $type: String, required: true, unique: true },
         signature: { $type: String, required: true },
@@ -522,7 +522,7 @@ describe("Mongodb event store", () => {
       }
     );
     expect(storeFake.getCall(0)).to.have.been.calledWith({
-      name: `_${service}.${domain}`,
+      name: "events",
       schema: {
         hash: { $type: String, required: true, unique: true },
         headers: {
@@ -617,7 +617,7 @@ describe("Mongodb event store", () => {
       },
     });
     expect(storeFake.getCall(1)).to.have.been.calledWith({
-      name: `_${service}.${domain}.snapshots`,
+      name: "snapshots",
       schema: {
         hash: { $type: String, required: true, unique: true },
         headers: {
@@ -656,7 +656,7 @@ describe("Mongodb event store", () => {
       ],
     });
     expect(storeFake.getCall(2)).to.have.been.calledWith({
-      name: `_${service}.${domain}.counts`,
+      name: "counts",
       schema: {
         root: { $type: String, required: true, unique: true },
         value: { $type: Number, required: true, default: 0 },
@@ -666,7 +666,7 @@ describe("Mongodb event store", () => {
       indexes: [[{ root: 1 }]],
     });
     expect(storeFake.getCall(3)).to.have.been.calledWith({
-      name: `_${service}.${domain}.blockchain`,
+      name: "blockchain",
       schema: {
         hash: { $type: String, required: true, unique: true },
         signature: { $type: String, required: true },
@@ -828,7 +828,7 @@ describe("Mongodb event store", () => {
       }
     );
     expect(storeFake.getCall(0)).to.have.been.calledWith({
-      name: `_${service}.${domain}`,
+      name: "events",
       schema: {
         hash: { $type: String, required: true, unique: true },
         headers: {
@@ -922,7 +922,7 @@ describe("Mongodb event store", () => {
       },
     });
     expect(storeFake.getCall(1)).to.have.been.calledWith({
-      name: `_${service}.${domain}.snapshots`,
+      name: "snapshots",
       schema: {
         hash: { $type: String, required: true, unique: true },
         headers: {
@@ -960,7 +960,7 @@ describe("Mongodb event store", () => {
       ],
     });
     expect(storeFake.getCall(2)).to.have.been.calledWith({
-      name: `_${service}.${domain}.counts`,
+      name: "counts",
       schema: {
         root: { $type: String, required: true, unique: true },
         value: { $type: Number, required: true, default: 0 },
@@ -970,7 +970,7 @@ describe("Mongodb event store", () => {
       indexes: [[{ root: 1 }]],
     });
     expect(storeFake.getCall(3)).to.have.been.calledWith({
-      name: `_${service}.${domain}.blockchain`,
+      name: "blockchain",
       schema: {
         hash: { $type: String, required: true, unique: true },
         signature: { $type: String, required: true },
