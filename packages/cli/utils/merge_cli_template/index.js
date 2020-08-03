@@ -538,8 +538,7 @@ const writeConfig = ({ config, coreNetwork, workingDir, host }) => {
               ...(dependency.service ? [dependency.service] : []),
               ...(dependency.context ? [dependency.context] : []),
               dependency.procedure,
-            ])}
-            .${host}`,
+            ])}.${host}`,
             mocks: dependency.mocks,
           });
         } else {
