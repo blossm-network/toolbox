@@ -25,9 +25,8 @@ describe("View store base integration tests", () => {
     const examples = testing.examples;
     expect(examples.length).to.be.greaterThan(1);
 
-    const response0 = await request.post(url, {
+    const response0 = await request.put(`${url}/${id}`, {
       body: {
-        id,
         update: examples[0].update,
         context: {
           [process.env.CONTEXT]: {
@@ -74,9 +73,8 @@ describe("View store base integration tests", () => {
       ? testing.examples.slice(2)
       : []) {
       const moreId = uuid();
-      const moreResponse0 = await request.post(url, {
+      const moreResponse0 = await request.put(`${url}/${moreId}`, {
         body: {
-          id: moreId,
           update: example.update,
           context: {
             [process.env.CONTEXT]: {
@@ -121,9 +119,8 @@ describe("View store base integration tests", () => {
       }
     }
 
-    const response2 = await request.post(url, {
+    const response2 = await request.put(`${url}/${id}`, {
       body: {
-        id,
         update: examples[1].update,
         context: {
           [process.env.CONTEXT]: {
@@ -172,9 +169,8 @@ describe("View store base integration tests", () => {
 
         const newContextRoot = "some-new-context-root";
         for (const example of examples) {
-          await request.post(url, {
+          await request.put(`${url}/${uuid()}`, {
             body: {
-              id: uuid(),
               update: example.update,
               context: {
                 [process.env.CONTEXT]: {
@@ -244,9 +240,8 @@ describe("View store base integration tests", () => {
 
         //add all remaining examples
         for (const example of examples.length > 2 ? examples.slice(2) : []) {
-          await request.post(url, {
+          await request.put(`${url}/${uuid()}`, {
             body: {
-              id: uuid(),
               update: example,
               context: {
                 [process.env.CONTEXT]: {
@@ -285,9 +280,8 @@ describe("View store base integration tests", () => {
         }
         //double all examples
         for (const example of examples) {
-          await request.post(url, {
+          await request.put(`${url}/${uuid()}`, {
             body: {
-              id: uuid(),
               update: example.update,
               context: {
                 [process.env.CONTEXT]: {
@@ -463,9 +457,8 @@ describe("View store base integration tests", () => {
           ? { a: 1 } //pass an object to a String property
           : "some-string"; // or, pass a string to a non-String property
       const id = "some-id";
-      const response = await request.post(url, {
+      const response = await request.put(`${url}/${id}`, {
         body: {
-          id,
           update: { id, [property]: badValue },
           context: {
             [process.env.CONTEXT]: {
