@@ -137,7 +137,7 @@ describe("View store put", () => {
     });
   });
 
-  it("should call with the correct params with custom fn", async () => {
+  it("should call with the correct params with custom fn and no context", async () => {
     const writeFake = fake.returns(writeResult);
     const formatFake = fake.returns(formattedWriteResult);
 
@@ -151,7 +151,6 @@ describe("View store put", () => {
         update: {
           a: 1,
         },
-        context,
         query,
         id,
       },
@@ -175,20 +174,10 @@ describe("View store put", () => {
       query: {
         "body.some": "query",
         "headers.id": id,
-        "headers.context.root": envContextRoot,
-        "headers.context.domain": "some-env-context",
-        "headers.context.service": envContextService,
-        "headers.context.network": envContextNetwork,
       },
       data: {
         "body.c": 3,
         "headers.id": id,
-        "headers.context": {
-          root: envContextRoot,
-          domain: "some-env-context",
-          service: envContextService,
-          network: envContextNetwork,
-        },
         "headers.modified": deps.dateString(),
         [`trace.${traceService}.${traceDomain}`]: traceTxIds,
       },
@@ -318,79 +307,79 @@ describe("View store put", () => {
     expect(sendStatusFake).to.have.been.calledWith(204);
   });
 
-  it("should throw if context is missing", async () => {
-    const writeFake = fake();
+  // it("should throw if context is missing", async () => {
+  //   const writeFake = fake();
 
-    const req = {
-      body: {
-        query: {},
-      },
-    };
+  //   const req = {
+  //     body: {
+  //       query: {},
+  //     },
+  //   };
 
-    const sendFake = fake();
-    const statusFake = fake.returns({
-      send: sendFake,
-    });
-    const res = {
-      status: statusFake,
-    };
+  //   const sendFake = fake();
+  //   const statusFake = fake.returns({
+  //     send: sendFake,
+  //   });
+  //   const res = {
+  //     status: statusFake,
+  //   };
 
-    const error = "some-error";
-    const messageFake = fake.returns(error);
-    replace(deps, "forbiddenError", {
-      message: messageFake,
-    });
+  //   const error = "some-error";
+  //   const messageFake = fake.returns(error);
+  //   replace(deps, "forbiddenError", {
+  //     message: messageFake,
+  //   });
 
-    const fnFake = fake.returns({ $set: { b: 2 } });
+  //   const fnFake = fake.returns({ $set: { b: 2 } });
 
-    try {
-      await put({ writeFn: writeFake, fn: fnFake })(req, res);
+  //   try {
+  //     await put({ writeFn: writeFake, fn: fnFake })(req, res);
 
-      //shouldn't get called
-      expect(1).to.equal(0);
-    } catch (e) {
-      expect(messageFake).to.have.been.calledWith(
-        "Missing required permissions."
-      );
-      expect(e).to.equal(error);
-    }
-  });
-  it("should throw if correct context is missing", async () => {
-    const writeFake = fake();
+  //     //shouldn't get called
+  //     expect(1).to.equal(0);
+  //   } catch (e) {
+  //     expect(messageFake).to.have.been.calledWith(
+  //       "Missing required permissions."
+  //     );
+  //     expect(e).to.equal(error);
+  //   }
+  // });
+  // it("should throw if correct context is missing", async () => {
+  //   const writeFake = fake();
 
-    const req = {
-      body: {
-        query: {},
-        context: {},
-      },
-    };
+  //   const req = {
+  //     body: {
+  //       query: {},
+  //       context: {},
+  //     },
+  //   };
 
-    const sendFake = fake();
-    const statusFake = fake.returns({
-      send: sendFake,
-    });
-    const res = {
-      status: statusFake,
-    };
+  //   const sendFake = fake();
+  //   const statusFake = fake.returns({
+  //     send: sendFake,
+  //   });
+  //   const res = {
+  //     status: statusFake,
+  //   };
 
-    const error = "some-error";
-    const messageFake = fake.returns(error);
-    replace(deps, "forbiddenError", {
-      message: messageFake,
-    });
+  //   const error = "some-error";
+  //   const messageFake = fake.returns(error);
+  //   replace(deps, "forbiddenError", {
+  //     message: messageFake,
+  //   });
 
-    const fnFake = fake.returns({ $set: { b: 2 } });
+  //   const fnFake = fake.returns({ $set: { b: 2 } });
 
-    try {
-      await put({ writeFn: writeFake, fn: fnFake })(req, res);
+  //   try {
+  //     await put({ writeFn: writeFake, fn: fnFake })(req, res);
 
-      //shouldn't get called
-      expect(1).to.equal(0);
-    } catch (e) {
-      expect(messageFake).to.have.been.calledWith(
-        "Missing required permissions."
-      );
-      expect(e).to.equal(error);
-    }
-  });
+  //     //shouldn't get called
+  //     expect(1).to.equal(0);
+  //   } catch (e) {
+  //     expect(messageFake).to.have.been.calledWith(
+  //       "Missing required permissions."
+  //     );
+  //     expect(e).to.equal(error);
+  //   }
+  // });
 });

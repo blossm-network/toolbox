@@ -4,17 +4,15 @@ const defaultFn = (update) => update;
 
 module.exports = ({ writeFn, formatFn, updateFn = defaultFn }) => {
   return async (req, res) => {
-    if (!req.body.context || !req.body.context[process.env.CONTEXT])
-      throw deps.forbiddenError.message("Missing required permissions.");
-
     const customUpdate = updateFn(req.body.update);
 
-    const context = {
-      root: req.body.context[process.env.CONTEXT].root,
-      domain: process.env.CONTEXT,
-      service: req.body.context[process.env.CONTEXT].service,
-      network: req.body.context[process.env.CONTEXT].network,
-    };
+    const context = req.body.context &&
+      req.body.context[process.env.CONTEXT] && {
+        root: req.body.context[process.env.CONTEXT].root,
+        domain: process.env.CONTEXT,
+        service: req.body.context[process.env.CONTEXT].service,
+        network: req.body.context[process.env.CONTEXT].network,
+      };
 
     const formattedBody = {};
 
@@ -28,7 +26,7 @@ module.exports = ({ writeFn, formatFn, updateFn = defaultFn }) => {
           .trace.txIds,
       }),
       ...(req.body.id && { "headers.id": req.body.id }),
-      "headers.context": context,
+      ...(context && { "headers.context": context }),
       "headers.modified": deps.dateString(),
     };
 
@@ -47,10 +45,12 @@ module.exports = ({ writeFn, formatFn, updateFn = defaultFn }) => {
       query: {
         ...formattedQuery,
         ...(req.body.id && { "headers.id": req.body.id }),
-        "headers.context.root": context.root,
-        "headers.context.domain": context.domain,
-        "headers.context.service": context.service,
-        "headers.context.network": context.network,
+        ...(context && {
+          "headers.context.root": context.root,
+          "headers.context.domain": context.domain,
+          "headers.context.service": context.service,
+          "headers.context.network": context.network,
+        }),
       },
       data,
       ...((req.body.upsert || req.body.id) && {
