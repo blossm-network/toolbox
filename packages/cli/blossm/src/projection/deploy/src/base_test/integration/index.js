@@ -109,11 +109,9 @@ describe("Projection integration tests", () => {
             let value = example.result.values[i];
             for (const property in value) {
               console.log({ body: v.content[i].body, property, value });
-              expect(v.content[i].body[property]).to.exist;
+              expect(v.content[i][property]).to.exist;
               if (value[property] != undefined) {
-                expect(v.content[i].body[property]).to.deep.equal(
-                  value[property]
-                );
+                expect(v.content[i][property]).to.deep.equal(value[property]);
               }
             }
           }
