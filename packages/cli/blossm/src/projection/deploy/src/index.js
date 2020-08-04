@@ -73,16 +73,16 @@ module.exports = projection({
       aggregate.context && aggregate.context[process.env.CONTEXT];
 
     //The context that the view should be associated with.
-    const contextRoot = aggregateContext
-      ? aggregateContext.root
-      : aggregate.headers.root;
-    const contextDomain = process.env.CONTEXT;
-    const contextService = aggregateContext
-      ? aggregateContext.service
-      : aggregate.headers.service;
-    const contextNetwork = aggregateContext
-      ? aggregateContext.network
-      : aggregate.headers.network;
+    // const contextRoot = aggregateContext
+    //   ?
+    //   : aggregate.headers.root;
+    // const contextDomain = ;
+    // const contextService = aggregateContext
+    //   ?
+    //   : aggregate.headers.service;
+    // const contextNetwork = aggregateContext
+    //   ?
+    //   : aggregate.headers.network;
 
     const { body: newView } = await viewStore({
       name: config.name,
@@ -90,13 +90,15 @@ module.exports = projection({
     })
       .set({
         token: { internalFn: gcpToken },
-        context: {
-          [contextDomain]: {
-            root: contextRoot,
-            service: contextService,
-            network: contextNetwork,
+        ...(aggregateContext && {
+          context: {
+            [process.env.CONTEXT]: {
+              root: aggregateContext.root,
+              service: aggregateContext.service,
+              network: aggregateContext.network,
+            },
           },
-        },
+        }),
         ...(!push && { enqueue: { fn: enqueue } }),
       })
       .update({
