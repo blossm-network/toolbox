@@ -69,7 +69,6 @@ module.exports = ({
     context,
     region,
     coreNetwork,
-    serviceName,
     operationHash,
     containerRegistery,
     coreContainerRegistery,
