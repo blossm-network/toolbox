@@ -60,10 +60,11 @@ module.exports = ({
   const commonEnvironment = {
     PORT: `${port}`,
     NODE_ENV: "local",
+    //TODO this might now be the same for each procedure. Others might now either
+    // OPERATION_HASH: operationHash,
     NETWORK: network,
     CORE_NETWORK: coreNetwork,
     HOST: host,
-    OPERATION_HASH: operationHash,
     GCP_PROJECT: project,
     GCP_REGION: region,
     GCP_SECRET_BUCKET: secretBucket,
@@ -206,13 +207,19 @@ module.exports = ({
             [key]: {
               ...common,
               image: `${commonServiceImagePrefix}.${dependency.service}.${dependency.domain}.${dependency.name}:latest`,
-              container_name: `${operationHash}.${network}`,
+              container_name:
+                coreNetwork &&
+                dependency.network == coreNetwork &&
+                coreNetwork != network
+                  ? `c.${dependency.service}.${dependency.domain}.${dependency.network}`
+                  : `${operationHash}.${network}`,
               environment: {
                 ...commonEnvironment,
                 PROCEDURE: dependency.procedure,
                 OPERATION_HASH: operationHash,
                 DOMAIN: dependency.domain,
                 SERVICE: dependency.service,
+                NETWORK: dependency.network || network,
                 NAME: dependency.name,
                 ...customEnv,
               },
