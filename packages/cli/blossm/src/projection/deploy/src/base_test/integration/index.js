@@ -89,9 +89,8 @@ describe("Projection integration tests", () => {
             },
           },
         })
-        .read(step.result.query);
+        .read(step.result.query || {});
 
-      console.log({ content: v.content });
       if (step.result.value) {
         for (const property in step.result.value) {
           expect(v.content[property]).to.exist;
