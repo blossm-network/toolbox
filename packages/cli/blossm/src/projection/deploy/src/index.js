@@ -14,6 +14,61 @@ const handlers = require("./handlers.js");
 
 const config = require("./config.json");
 
+const saveId = async ({ aggregate, aggregateContext, id, update, push }) => {
+  const { body: newView } = await viewStore({
+    name: config.name,
+    context: config.context,
+  })
+    .set({
+      token: { internalFn: gcpToken },
+      ...(aggregateContext && {
+        context: {
+          [process.env.CONTEXT]: {
+            root: aggregateContext.root,
+            service: aggregateContext.service,
+            network: aggregateContext.network,
+          },
+        },
+      }),
+      ...(!push && { enqueue: { fn: enqueue } }),
+    })
+    .update({
+      id,
+      update,
+      ...(aggregate.txIds && {
+        trace: {
+          domain: aggregate.headers.domain,
+          service: aggregate.headers.service,
+          txIds: aggregate.txIds,
+        },
+      }),
+    });
+
+  if (!newView || !push) return;
+
+  const channel = channelName({
+    name: process.env.NAME,
+    context: newView.headers.context,
+  });
+
+  await command({
+    name: "push",
+    domain: "updates",
+    service: "system",
+    network: process.env.CORE_NETWORK,
+  })
+    .set({
+      token: {
+        externalFn: nodeExternalToken,
+        internalFn: gcpToken,
+        key: "access",
+      },
+    })
+    .issue({
+      view: newView,
+      channel,
+    });
+};
 module.exports = projection({
   mainFn: async ({ aggregate, action, push, aggregateFn, readFactFn }) => {
     //Must be able to handle this aggregate.
@@ -32,8 +87,6 @@ module.exports = projection({
       id,
       //Events that need to be replayed.
       replay,
-      //If a new view should be created if nothing matches the query. Defaults to true if an id is returned.
-      upsert,
     } = await handlers[aggregate.headers.service][aggregate.headers.domain]({
       state: aggregate.state,
       root: aggregate.headers.root,
@@ -69,76 +122,37 @@ module.exports = projection({
       );
     }
 
+    if (!query && !id) return;
+
     const aggregateContext =
       aggregate.context && aggregate.context[process.env.CONTEXT];
 
-    //The context that the view should be associated with.
-    // const contextRoot = aggregateContext
-    //   ?
-    //   : aggregate.headers.root;
-    // const contextDomain = ;
-    // const contextService = aggregateContext
-    //   ?
-    //   : aggregate.headers.service;
-    // const contextNetwork = aggregateContext
-    //   ?
-    //   : aggregate.headers.network;
-
-    const { body: newView } = await viewStore({
-      name: config.name,
-      context: config.context,
-    })
-      .set({
-        token: { internalFn: gcpToken },
-        ...(aggregateContext && {
-          context: {
-            [process.env.CONTEXT]: {
-              root: aggregateContext.root,
-              service: aggregateContext.service,
-              network: aggregateContext.network,
+    if (id) {
+      await saveId({ aggregate, aggregateContext, id, update, push });
+    } else {
+      await viewStore({
+        name: config.name,
+        context: config.context,
+      })
+        .set({
+          token: { internalFn: gcpToken },
+          ...(aggregateContext && {
+            context: {
+              [process.env.CONTEXT]: {
+                root: aggregateContext.root,
+                service: aggregateContext.service,
+                network: aggregateContext.network,
+              },
             },
-          },
-        }),
-        ...(!push && { enqueue: { fn: enqueue } }),
-      })
-      .update({
-        ...(query && { query }),
-        update,
-        ...(id && { id }),
-        ...(upsert && { upsert }),
-        ...(aggregate.txIds && {
-          trace: {
-            domain: aggregate.headers.domain,
-            service: aggregate.headers.service,
-            txIds: aggregate.txIds,
-          },
-        }),
-      });
-
-    if (!newView || !push) return;
-
-    const channel = channelName({
-      name: process.env.NAME,
-      context: newView.headers.context,
-    });
-
-    await command({
-      name: "push",
-      domain: "updates",
-      service: "system",
-      network: process.env.CORE_NETWORK,
-    })
-      .set({
-        token: {
-          externalFn: nodeExternalToken,
-          internalFn: gcpToken,
-          key: "access",
-        },
-      })
-      .issue({
-        view: newView,
-        channel,
-      });
+          }),
+        })
+        .idStream(
+          ({ id }) => saveId({ aggregate, aggregateContext, id, update, push }),
+          {
+            ...(query && { query }),
+          }
+        );
+    }
   },
   aggregateFn: async ({ root, domain, service }) => {
     const { body: aggregate } = await eventStore({ domain, service })

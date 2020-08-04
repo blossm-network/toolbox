@@ -23,6 +23,7 @@ module.exports = ({ mainFn, aggregateFn, readFactFn }) => async (req, res) => {
     service,
   });
 
+  //TODO
   console.log({ aggregate });
   await mainFn({
     aggregate,

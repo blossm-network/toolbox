@@ -2,6 +2,7 @@ const deps = require("./deps");
 
 const defaultFn = (update) => update;
 
+//NOT MEANT TO BE PUBLIC SINCE THERES NO REQUIRED CONTEXT CHECK.
 module.exports = ({ writeFn, formatFn, updateFn = defaultFn }) => {
   return async (req, res) => {
     const customUpdate = updateFn(req.body.update);
@@ -20,14 +21,14 @@ module.exports = ({ writeFn, formatFn, updateFn = defaultFn }) => {
       formattedBody[`body.${key}`] = customUpdate[key];
 
     const data = {
+      "headers.id": req.params.id,
+      "headers.modified": deps.dateString(),
       ...formattedBody,
       ...(req.body.trace && {
         [`trace.${req.body.trace.service}.${req.body.trace.domain}`]: req.body
           .trace.txIds,
       }),
-      ...(req.body.id && { "headers.id": req.body.id }),
       ...(context && { "headers.context": context }),
-      "headers.modified": deps.dateString(),
     };
 
     let formattedQuery;
@@ -43,8 +44,8 @@ module.exports = ({ writeFn, formatFn, updateFn = defaultFn }) => {
 
     const newView = await writeFn({
       query: {
+        "headers.id": req.params.id,
         ...formattedQuery,
-        ...(req.body.id && { "headers.id": req.body.id }),
         ...(context && {
           "headers.context.root": context.root,
           "headers.context.domain": context.domain,
@@ -53,12 +54,6 @@ module.exports = ({ writeFn, formatFn, updateFn = defaultFn }) => {
         }),
       },
       data,
-      ...((req.body.upsert || req.body.id) && {
-        upsert:
-          req.body.upsert != undefined
-            ? req.body.upsert
-            : req.body.id != undefined,
-      }),
     });
 
     console.log({ newView });

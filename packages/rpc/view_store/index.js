@@ -32,53 +32,43 @@ module.exports = ({ name, context = process.env.CONTEXT, network }) => {
         ...(key && { key }),
         ...(!internal && { path: `/${name}` }),
       });
-  // const stream = ({
-  //   contexts,
-  //   currentToken,
-  //   token: {
-  //     internalFn: internalTokenFn,
-  //     externalFn: externalTokenFn,
-  //     key,
-  //   } = {},
-  // } = {}) => async (fn, { query, sort, root } = {}) =>
-  //   await deps
-  //     .rpc(
-  //       name,
-  //       ...(domain ? [domain] : []),
-  //       ...(service ? [service] : []),
-  //       context,
-  //       "view-store"
-  //     )
-  //     .stream(fn, {
-  //       ...(query && { query }),
-  //       ...(sort && { sort }),
-  //       ...(root && { id: root }),
-  //     })
-  //     .in({
-  //       ...(contexts && { context: contexts }),
-  //       ...(!internal && {
-  //         network,
-  //         host: `v.${domain}.${context}.${network}`,
-  //       }),
-  //     })
-  //     .with({
-  //       path: `/${internal ? "" : `${name}/`}stream`,
-  //       ...(internalTokenFn && { internalTokenFn }),
-  //       ...(externalTokenFn && { externalTokenFn }),
-  //       ...(currentToken && { currentToken }),
-  //       ...(key && { key }),
-  //     });
+  const idStream = ({
+    contexts,
+    currentToken,
+    token: {
+      internalFn: internalTokenFn,
+      externalFn: externalTokenFn,
+      key,
+    } = {},
+  } = {}) => async (fn, { query, sort } = {}) =>
+    await deps
+      .rpc(name, context, "view-store")
+      .stream(fn, {
+        ...(query && { query }),
+        ...(sort && { sort }),
+      })
+      .in({
+        ...(contexts && { context: contexts }),
+        ...(!internal && {
+          network,
+          host: `v.${context}.${network}`,
+        }),
+      })
+      .with({
+        path: `/${internal ? "" : `${name}/`}stream-ids`,
+        ...(internalTokenFn && { internalTokenFn }),
+        ...(externalTokenFn && { externalTokenFn }),
+        ...(currentToken && { currentToken }),
+        ...(key && { key }),
+      });
   const update = ({
     contexts,
     token: { internalFn: internalTokenFn } = {},
     enqueue: { fn: enqueueFn, wait: enqueueWait } = {},
-  } = {}) => ({ query, update, id, upsert, trace }) =>
+  } = {}) => ({ id, update, trace }) =>
     deps
       .rpc(name, context, "view-store")
-      .post({
-        ...(query && { query }),
-        ...(id && { id }),
-        ...(upsert && { upsert }),
+      .put(id, {
         ...(trace && { trace }),
         update,
       })
@@ -111,13 +101,13 @@ module.exports = ({ name, context = process.env.CONTEXT, network }) => {
     set: ({ context: contexts, token, currentToken, enqueue }) => {
       return {
         read: read({ contexts, token, currentToken }),
-        // stream: stream({ contexts, token, currentToken }),
+        idStream: idStream({ contexts, token, currentToken }),
         update: update({ contexts, token, enqueue }),
         delete: del({ contexts, token }),
       };
     },
     read: read(),
-    // stream: stream(),
+    idStream: idStream(),
     update: update(),
     delete: del(),
   };

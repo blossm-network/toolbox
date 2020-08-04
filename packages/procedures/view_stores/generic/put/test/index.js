@@ -2,7 +2,7 @@ const { expect } = require("chai")
   .use(require("chai-datetime"))
   .use(require("sinon-chai"));
 
-const { restore, replace, fake, useFakeTimers } = require("sinon");
+const { restore, fake, useFakeTimers } = require("sinon");
 
 const put = require("..");
 const deps = require("../deps");
@@ -35,7 +35,6 @@ const writeResult = {
   },
 };
 const formattedWriteResult = { a: "some-formatted-write-result" };
-const query = { some: "query" };
 const envContext = "some-env-context";
 const envContextRoot = "some-env-context-root";
 const envContextService = "some-env-context-service";
@@ -67,8 +66,6 @@ const body = {
     a: 1,
   },
   context,
-  query,
-  id,
 };
 
 process.env.CONTEXT = envContext;
@@ -87,6 +84,9 @@ describe("View store put", () => {
 
     const req = {
       body,
+      params: {
+        id,
+      },
     };
 
     const sendFake = fake();
@@ -101,7 +101,6 @@ describe("View store put", () => {
 
     expect(writeFake).to.have.been.calledWith({
       query: {
-        "body.some": "query",
         "headers.id": id,
         "headers.context.root": envContextRoot,
         "headers.context.domain": "some-env-context",
@@ -120,7 +119,6 @@ describe("View store put", () => {
         [`trace.${traceService}.${traceDomain}`]: traceTxIds,
         "headers.modified": deps.dateString(),
       },
-      upsert,
     });
     expect(formatFake).to.have.been.calledWith({
       body: writeResultBody,
@@ -151,7 +149,8 @@ describe("View store put", () => {
         update: {
           a: 1,
         },
-        query,
+      },
+      params: {
         id,
       },
     };
@@ -172,7 +171,6 @@ describe("View store put", () => {
 
     expect(writeFake).to.have.been.calledWith({
       query: {
-        "body.some": "query",
         "headers.id": id,
       },
       data: {
@@ -181,76 +179,8 @@ describe("View store put", () => {
         "headers.modified": deps.dateString(),
         [`trace.${traceService}.${traceDomain}`]: traceTxIds,
       },
-      upsert: true,
     });
     expect(fnFake).to.have.been.calledWith({ a: 1 });
-    expect(formatFake).to.have.been.calledWith({
-      body: writeResultBody,
-      id: writeResultId,
-    });
-    expect(statusFake).to.have.been.calledWith(200);
-    expect(sendFake).to.have.been.calledWith({
-      ...formattedWriteResult,
-      headers: {
-        id: writeResultId,
-        context: writeResultContext,
-        trace: [trace1, trace2],
-      },
-    });
-  });
-  it("should return successfully if query and id are missing", async () => {
-    const writeFake = fake.returns(writeResult);
-    const formatFake = fake.returns(formattedWriteResult);
-
-    const req = {
-      body: {
-        trace: {
-          service: traceService,
-          domain: traceDomain,
-          txIds: traceTxIds,
-        },
-        update: {
-          a: 1,
-        },
-        context,
-      },
-    };
-
-    const sendFake = fake();
-    const statusFake = fake.returns({
-      send: sendFake,
-    });
-    const res = {
-      status: statusFake,
-    };
-
-    const error = "some-error";
-    const messageFake = fake.returns(error);
-    replace(deps, "badRequestError", {
-      message: messageFake,
-    });
-
-    await put({ writeFn: writeFake, formatFn: formatFake })(req, res);
-
-    expect(writeFake).to.have.been.calledWith({
-      query: {
-        "headers.context.root": envContextRoot,
-        "headers.context.domain": "some-env-context",
-        "headers.context.service": envContextService,
-        "headers.context.network": envContextNetwork,
-      },
-      data: {
-        "body.a": 1,
-        "headers.context": {
-          root: envContextRoot,
-          domain: "some-env-context",
-          service: envContextService,
-          network: envContextNetwork,
-        },
-        "headers.modified": deps.dateString(),
-        [`trace.${traceService}.${traceDomain}`]: traceTxIds,
-      },
-    });
     expect(formatFake).to.have.been.calledWith({
       body: writeResultBody,
       id: writeResultId,
@@ -271,6 +201,9 @@ describe("View store put", () => {
 
     const req = {
       body,
+      params: {
+        id,
+      },
     };
 
     const sendStatusFake = fake();
@@ -282,7 +215,6 @@ describe("View store put", () => {
 
     expect(writeFake).to.have.been.calledWith({
       query: {
-        "body.some": "query",
         "headers.id": id,
         "headers.context.root": envContextRoot,
         "headers.context.domain": "some-env-context",
@@ -301,85 +233,8 @@ describe("View store put", () => {
         [`trace.${traceService}.${traceDomain}`]: traceTxIds,
         "headers.modified": deps.dateString(),
       },
-      upsert,
     });
     expect(formatFake).to.not.have.been.called;
     expect(sendStatusFake).to.have.been.calledWith(204);
   });
-
-  // it("should throw if context is missing", async () => {
-  //   const writeFake = fake();
-
-  //   const req = {
-  //     body: {
-  //       query: {},
-  //     },
-  //   };
-
-  //   const sendFake = fake();
-  //   const statusFake = fake.returns({
-  //     send: sendFake,
-  //   });
-  //   const res = {
-  //     status: statusFake,
-  //   };
-
-  //   const error = "some-error";
-  //   const messageFake = fake.returns(error);
-  //   replace(deps, "forbiddenError", {
-  //     message: messageFake,
-  //   });
-
-  //   const fnFake = fake.returns({ $set: { b: 2 } });
-
-  //   try {
-  //     await put({ writeFn: writeFake, fn: fnFake })(req, res);
-
-  //     //shouldn't get called
-  //     expect(1).to.equal(0);
-  //   } catch (e) {
-  //     expect(messageFake).to.have.been.calledWith(
-  //       "Missing required permissions."
-  //     );
-  //     expect(e).to.equal(error);
-  //   }
-  // });
-  // it("should throw if correct context is missing", async () => {
-  //   const writeFake = fake();
-
-  //   const req = {
-  //     body: {
-  //       query: {},
-  //       context: {},
-  //     },
-  //   };
-
-  //   const sendFake = fake();
-  //   const statusFake = fake.returns({
-  //     send: sendFake,
-  //   });
-  //   const res = {
-  //     status: statusFake,
-  //   };
-
-  //   const error = "some-error";
-  //   const messageFake = fake.returns(error);
-  //   replace(deps, "forbiddenError", {
-  //     message: messageFake,
-  //   });
-
-  //   const fnFake = fake.returns({ $set: { b: 2 } });
-
-  //   try {
-  //     await put({ writeFn: writeFake, fn: fnFake })(req, res);
-
-  //     //shouldn't get called
-  //     expect(1).to.equal(0);
-  //   } catch (e) {
-  //     expect(messageFake).to.have.been.calledWith(
-  //       "Missing required permissions."
-  //     );
-  //     expect(e).to.equal(error);
-  //   }
-  // });
 });
