@@ -61,7 +61,7 @@ testing:
             update:
               name: some-name
   #
-  # Add examples to run integration tests for.
+  # Add steps to run integration tests for.
   #
   # The 'pre' property is an array of instructions that allow you to set up the event state
   # of the system before the integration test runs. For example, you can add an event to
@@ -83,7 +83,7 @@ testing:
   # Specify a 'query' to, and either 'value' or 'values', depending on whether a
   # single object or an array of objects is expected.
   #
-  examples:
+  steps:
     - pre:
       event:
         action: some-action

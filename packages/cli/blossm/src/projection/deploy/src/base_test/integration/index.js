@@ -15,7 +15,7 @@ const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 describe("Projection integration tests", () => {
   it("should return successfully", async () => {
     let stepCount = 0;
-    for (const step of testing.step) {
+    for (const step of testing.steps) {
       //eslint-disable-next-line no-console
       console.log(`Executing step ${stepCount++}`);
 
