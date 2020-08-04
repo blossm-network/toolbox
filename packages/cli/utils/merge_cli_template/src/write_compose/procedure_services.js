@@ -210,6 +210,7 @@ module.exports = ({
               container_name:
                 coreNetwork &&
                 dependency.network == coreNetwork &&
+                //TODO verify
                 coreNetwork != network
                   ? `c.${dependency.domain}.${dependency.service}.${dependency.network}`
                   : `${operationHash}.${network}`,

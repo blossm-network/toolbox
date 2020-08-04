@@ -385,11 +385,16 @@ const addDefaultDependencies = ({ config, coreNetwork }) => {
           procedure: "view-store",
         },
         {
-          name: "open",
           domain: "connection",
           service: "system",
           network: coreNetwork,
-          procedure: "command",
+          procedure: "command-gateway",
+          mocks: [
+            {
+              command: "open",
+              code: 202,
+            },
+          ],
         },
         {
           domain: "updates",
