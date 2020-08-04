@@ -81,6 +81,8 @@ describe("View store get", () => {
         sort,
         context,
         query,
+      },
+      params: {
         id,
       },
     };
@@ -182,6 +184,7 @@ describe("View store get", () => {
         skip,
         limit,
       },
+      params: {},
     };
 
     const sendFake = fake();
@@ -280,6 +283,7 @@ describe("View store get", () => {
         skip,
         limit,
       },
+      params: {},
     };
 
     const sendFake = fake();
@@ -359,6 +363,7 @@ describe("View store get", () => {
       query: {
         context,
       },
+      params: {},
     };
 
     const sendFake = fake();
@@ -491,6 +496,7 @@ describe("View store get", () => {
       query: {
         context,
       },
+      params: {},
     };
 
     const sendFake = fake();
@@ -517,6 +523,7 @@ describe("View store get", () => {
 
     const req = {
       query: {},
+      params: {},
     };
 
     const sendFake = fake();

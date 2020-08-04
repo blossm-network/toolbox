@@ -28,7 +28,7 @@ module.exports = async ({
         ...(one && { one }),
       }),
       {
-        path: "/:sourceNetwork?/:sourceService?/:sourceDomain?/:sourceRoot?",
+        path: "/:id?",
       }
     )
     .post(

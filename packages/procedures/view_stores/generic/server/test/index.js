@@ -70,19 +70,11 @@ describe("View store", () => {
 
     expect(listenFake).to.have.been.calledOnce;
     expect(serverFake).to.have.been.calledOnce;
-    // expect(firstGetFake).to.have.been.calledWith(viewStoreStreamResult, {
-    //   path:
-    //     "/stream/:sourceNetwork?/:sourceService?/:sourceDomain?/:sourceRoot?",
-    // });
     expect(getFake).to.have.been.calledWith(viewStoreGetResult, {
-      path: "/:sourceNetwork?/:sourceService?/:sourceDomain?/:sourceRoot?",
+      path: "/:id?",
     });
     expect(postFake).to.have.been.calledWith(viewStorePostResult);
     expect(deleteFake).to.have.been.calledWith(viewStoreDeleteResult);
-    // expect(viewStoreStreamFake).to.have.been.calledWith({
-    //   streamFn,
-    //   queryFn,
-    // });
     expect(viewStoreGetFake).to.have.been.calledWith({
       findFn,
       countFn,
@@ -147,7 +139,9 @@ describe("View store", () => {
 
     expect(listenFake).to.have.been.calledOnce;
     expect(serverFake).to.have.been.calledOnce;
-    expect(getFake).to.have.been.calledWith(viewStoreGetResult);
+    expect(getFake).to.have.been.calledWith(viewStoreGetResult, {
+      path: "/:id?",
+    });
     // expect(firstGetFake).to.have.been.calledWith(viewStoreStreamResult, {
     //   path:
     //     "/stream/:sourceNetwork?/:sourceService?/:sourceDomain?/:sourceRoot?",

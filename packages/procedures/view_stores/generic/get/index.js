@@ -22,7 +22,7 @@ module.exports = ({
 
     const query = {
       ...formattedQueryBody,
-      ...(req.query.id && { "headers.id": req.query.id }),
+      ...(req.params.id && { "headers.id": req.params.id }),
       "headers.context": {
         root: req.query.context[process.env.CONTEXT].root,
         domain: process.env.CONTEXT,
