@@ -74,7 +74,6 @@ describe("Projection integration tests", () => {
         },
       });
 
-      console.log({ response });
       expect(response.statusCode).to.equal(204);
 
       parallelFns.push(async () => {
@@ -109,6 +108,7 @@ describe("Projection integration tests", () => {
           for (let i = 0; i < example.result.values.length; i++) {
             let value = example.result.values[i];
             for (const property in value) {
+              console.log({ body: v.content[i].body });
               expect(v.content[i].body[property]).to.exist;
               if (value[property] != undefined) {
                 expect(v.content[i].body[property]).to.deep.equal(
