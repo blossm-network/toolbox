@@ -13,12 +13,14 @@ const now = new Date();
 
 const writeResultBody = "some-write-result-body";
 const writeResultId = "some-write-result-id";
+const writeResultContext = "some-write-result-context";
 const trace1 = "some-trace";
 const trace2 = "some-other-trace";
 const writeResult = {
   body: writeResultBody,
   headers: {
     id: writeResultId,
+    context: writeResultContext,
   },
   trace: {
     "some-service": {
@@ -127,7 +129,11 @@ describe("View store put", () => {
     expect(statusFake).to.have.been.calledWith(200);
     expect(sendFake).to.have.been.calledWith({
       ...formattedWriteResult,
-      headers: { id: writeResultId, trace: [trace1, trace2] },
+      headers: {
+        id: writeResultId,
+        context: writeResultContext,
+        trace: [trace1, trace2],
+      },
     });
   });
 
@@ -196,7 +202,11 @@ describe("View store put", () => {
     expect(statusFake).to.have.been.calledWith(200);
     expect(sendFake).to.have.been.calledWith({
       ...formattedWriteResult,
-      headers: { id: writeResultId, trace: [trace1, trace2] },
+      headers: {
+        id: writeResultId,
+        context: writeResultContext,
+        trace: [trace1, trace2],
+      },
     });
   });
   it("should return successfully if query and id are missing", async () => {
@@ -259,7 +269,11 @@ describe("View store put", () => {
     expect(statusFake).to.have.been.calledWith(200);
     expect(sendFake).to.have.been.calledWith({
       ...formattedWriteResult,
-      headers: { id: writeResultId, trace: [trace1, trace2] },
+      headers: {
+        id: writeResultId,
+        context: writeResultContext,
+        trace: [trace1, trace2],
+      },
     });
   });
   it("should call with the correct params with no write result", async () => {

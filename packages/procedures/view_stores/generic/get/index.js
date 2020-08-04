@@ -72,6 +72,7 @@ module.exports = ({
         headers: {
           trace: formattedTrace,
           id: r.headers.id,
+          context: r.headers.context,
         },
       };
     });

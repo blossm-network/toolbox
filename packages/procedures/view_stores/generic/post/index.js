@@ -72,6 +72,7 @@ module.exports = ({ writeFn, formatFn, updateFn = defaultFn }) => {
       ...formatFn({ body: newView.body, id: newView.headers.id }),
       headers: {
         id: newView.headers.id,
+        context: newView.headers.context,
         trace: formattedTrace,
       },
     });
