@@ -211,9 +211,10 @@ module.exports = ({
                 coreNetwork &&
                 dependency.network == coreNetwork &&
                 //TODO verify
-                coreNetwork != network
-                  ? `c.${dependency.domain}.${dependency.service}.${dependency.network}`
-                  : `${operationHash}.${network}`,
+                // coreNetwork != network
+                //   ? `c.${dependency.domain}.${dependency.service}.${dependency.network}`
+                // :
+                `${operationHash}.${network}`,
               environment: {
                 ...commonEnvironment,
                 PROCEDURE: dependency.procedure,

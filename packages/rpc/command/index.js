@@ -62,9 +62,10 @@ module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
         }),
         ...(key && { key }),
         ...(claims && { claims }),
-        ...(!internal &&
-          //TODO test
-          process.env.NODE_ENV != "local" && { path: `/${name}` }),
+        ...(!internal && {
+          // process.env.NODE_ENV != "local" && //TODO test
+          path: `/${name}`,
+        }),
       });
   };
 
