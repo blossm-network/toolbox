@@ -61,6 +61,7 @@ module.exports = ({ writeFn, formatFn, updateFn = defaultFn }) => {
       }),
     });
 
+    console.log({ newView });
     if (!newView) return res.sendStatus(204);
 
     //TODO this function is duplicated in /get. Refactor.
