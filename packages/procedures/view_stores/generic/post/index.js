@@ -41,6 +41,8 @@ module.exports = ({ writeFn, formatFn, updateFn = defaultFn }) => {
       }
     }
 
+    console.log({ bodyQuery: req.body.query, formattedQuery, data });
+
     const newView = await writeFn({
       query: {
         ...formattedQuery,
