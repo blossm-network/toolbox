@@ -14,14 +14,13 @@ const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 //TODO add integration tests for /replay
 describe("Projection integration tests", () => {
   it("should return successfully", async () => {
-    const parallelFns = [];
-    const contextRoot = "some-context-root";
-    const contextService = "some-context-service";
-    const contextNetwork = "some-context-network";
+    let stepCount = 0;
+    for (const step of testing.step) {
+      //eslint-disable-next-line no-console
+      console.log(`Executing step ${stepCount++}`);
 
-    for (const example of testing.examples) {
-      if (example.pre) {
-        for (const { action, domain, service, root, payload } of example.pre) {
+      if (step.pre) {
+        for (const { action, domain, service, root, payload } of step.pre) {
           const stateEvent = createEvent({
             root,
             payload,
@@ -39,24 +38,24 @@ describe("Projection integration tests", () => {
 
       const now = dateString();
       const event = createEvent({
-        root: example.root,
-        action: example.event.action,
-        payload: example.payload,
-        domain: example.event.domain,
-        service: example.event.service,
+        root: step.root,
+        action: step.event.action,
+        payload: step.payload,
+        domain: step.event.domain,
+        service: step.event.service,
         network: process.env.NETWORK,
         context: {
           [context]: {
-            root: contextRoot,
-            service: contextService,
-            network: contextNetwork,
+            root: step.contextRoot,
+            service: process.env.CONTEXT,
+            network: process.env.NETWORK,
           },
         },
       });
 
       await eventStore({
-        domain: example.event.domain,
-        service: example.event.service,
+        domain: step.event.domain,
+        service: step.event.service,
       }).add({ eventData: [{ event }] });
 
       const response = await request.post(url, {
@@ -64,10 +63,10 @@ describe("Projection integration tests", () => {
           message: {
             data: Buffer.from(
               JSON.stringify({
-                root: example.root,
-                action: example.event.action,
-                domain: example.event.domain,
-                service: example.event.service,
+                root: step.root,
+                action: step.event.action,
+                domain: step.event.domain,
+                service: step.event.service,
                 timestamp: now,
               })
             ),
@@ -77,46 +76,43 @@ describe("Projection integration tests", () => {
 
       expect(response.statusCode).to.equal(204);
 
-      parallelFns.push(async () => {
-        const { body: v } = await viewStore({
-          name,
-          context,
-        })
-          .set({
-            context: {
-              [context]: {
-                root: contextRoot,
-                service: contextService,
-                network: contextNetwork,
-              },
+      const { body: v } = await viewStore({
+        name,
+        context,
+      })
+        .set({
+          context: {
+            [context]: {
+              root: step.contextRoot,
+              service: process.env.CONTEXT,
+              network: process.env.NETWORK,
             },
-          })
-          .read(example.result.query);
+          },
+        })
+        .read(step.result.query);
 
-        if (example.result.value) {
-          for (const property in example.result.value) {
-            expect(v.content.body[property]).to.exist;
-            if (example.result.value[property] != undefined) {
-              expect(v.content.body[property]).to.deep.equal(
-                example.result.value[property]
-              );
-            }
+      console.log({ content: v.content });
+      if (step.result.value) {
+        for (const property in step.result.value) {
+          expect(v.content[property]).to.exist;
+          if (step.result.value[property] != undefined) {
+            expect(v.content[property]).to.deep.equal(
+              step.result.value[property]
+            );
           }
-        } else if (example.result.values) {
-          expect(example.result.values.length).to.equal(v.content.length);
-          for (let i = 0; i < example.result.values.length; i++) {
-            let value = example.result.values[i];
-            for (const property in value) {
-              expect(v.content[i][property]).to.exist;
-              if (value[property] != undefined) {
-                expect(v.content[i][property]).to.deep.equal(value[property]);
-              }
+        }
+      } else if (step.result.values) {
+        expect(step.result.values.length).to.equal(v.content.length);
+        for (let i = 0; i < step.result.values.length; i++) {
+          let value = step.result.values[i];
+          for (const property in value) {
+            expect(v.content[i][property]).to.exist;
+            if (value[property] != undefined) {
+              expect(v.content[i][property]).to.deep.equal(value[property]);
             }
           }
         }
-      });
+      }
     }
-
-    await Promise.all(parallelFns.map((fn) => fn()));
   });
 });
