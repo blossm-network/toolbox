@@ -52,7 +52,6 @@ module.exports = ({
   mongodbUser,
   mongodbUserPassword,
   dependencyKeyEnvironmentVariables,
-  operationHash,
 }) => {
   const common = {
     ports: [`${port}`],
@@ -60,8 +59,6 @@ module.exports = ({
   const commonEnvironment = {
     PORT: `${port}`,
     NODE_ENV: "local",
-    //TODO this might now be the same for each procedure. Others might now either
-    // OPERATION_HASH: operationHash,
     NETWORK: network,
     CORE_NETWORK: coreNetwork,
     HOST: host,
@@ -207,14 +204,7 @@ module.exports = ({
             [key]: {
               ...common,
               image: `${commonServiceImagePrefix}.${dependency.service}.${dependency.domain}.${dependency.name}:latest`,
-              container_name:
-                coreNetwork &&
-                dependency.network == coreNetwork &&
-                //TODO verify
-                // coreNetwork != network
-                //   ? `c.${dependency.domain}.${dependency.service}.${dependency.network}`
-                // :
-                `${operationHash}.${network}`,
+              container_name: `${operationHash}.${network}`,
               environment: {
                 ...commonEnvironment,
                 PROCEDURE: dependency.procedure,

@@ -92,8 +92,6 @@ describe("Projection integration tests", () => {
           })
           .read(example.result.query);
 
-        console.log({ v, content: v.content, e: example.result });
-
         if (example.result.value) {
           for (const property in example.result.value) {
             expect(v.content.body[property]).to.exist;
@@ -108,7 +106,6 @@ describe("Projection integration tests", () => {
           for (let i = 0; i < example.result.values.length; i++) {
             let value = example.result.values[i];
             for (const property in value) {
-              console.log({ body: v.content[i].body, property, value });
               expect(v.content[i][property]).to.exist;
               if (value[property] != undefined) {
                 expect(v.content[i][property]).to.deep.equal(value[property]);
