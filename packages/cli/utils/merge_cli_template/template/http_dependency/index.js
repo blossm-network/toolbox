@@ -14,7 +14,7 @@ for (const mock of mocks) {
     const code = (mock.calls && mock.calls[count].code) || mock.code;
     const response =
       (mock.calls && mock.calls[count].response) || mock.response;
-    res.status(code).send(response);
+    res.status(code).send(response || {});
   });
 }
 
