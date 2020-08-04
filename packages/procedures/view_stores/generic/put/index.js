@@ -40,8 +40,6 @@ module.exports = ({ writeFn, formatFn, updateFn = defaultFn }) => {
       }
     }
 
-    console.log({ bodyQuery: req.body.query, formattedQuery, data });
-
     const newView = await writeFn({
       query: {
         "headers.id": req.params.id,
@@ -56,7 +54,6 @@ module.exports = ({ writeFn, formatFn, updateFn = defaultFn }) => {
       data,
     });
 
-    console.log({ newView });
     if (!newView) return res.sendStatus(204);
 
     //TODO this function is duplicated in /get. Refactor.

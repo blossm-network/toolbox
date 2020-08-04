@@ -19,6 +19,7 @@ const contextRoot = "some-context-root";
 const contextService = "some-context-service";
 const contextNetwork = "some-context-network";
 
+//TODO test idStream
 describe("View store base integration tests", () => {
   const testParamQueries = async () => {
     const id = "some-id";

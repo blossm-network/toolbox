@@ -142,6 +142,7 @@ describe("Get views", () => {
     replace(deps, "rpc", rpcFake);
 
     const fn = "some-fn";
+    const parallel = "some-parallel";
     const { body: result } = await viewStore({
       name,
       context,
@@ -156,10 +157,10 @@ describe("Get views", () => {
           key,
         },
       })
-      .idStream(fn, { query, sort, id });
+      .idStream(fn, { query, sort, id, parallel });
 
     expect(rpcFake).to.have.been.calledWith(name, context, "view-store");
-    expect(streamFake).to.have.been.calledWith(fn, { query, sort });
+    expect(streamFake).to.have.been.calledWith(fn, { query, sort, parallel });
     expect(inFake).to.have.been.calledWith({ context: contexts });
     expect(withFake).to.have.been.calledWith({
       path: "/stream-ids",

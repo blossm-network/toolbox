@@ -16,15 +16,12 @@ module.exports = ({ mainFn, aggregateFn, readFactFn }) => async (req, res) => {
     ? data(req)
     : { ...req.body, action: undefined, push: false };
 
-  console.log({ root, domain, service });
   const aggregate = await aggregateFn({
     root,
     domain,
     service,
   });
 
-  //TODO
-  console.log({ aggregate });
   await mainFn({
     aggregate,
     aggregateFn,

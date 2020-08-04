@@ -40,12 +40,13 @@ module.exports = ({ name, context = process.env.CONTEXT, network }) => {
       externalFn: externalTokenFn,
       key,
     } = {},
-  } = {}) => async (fn, { query, sort } = {}) =>
+  } = {}) => async (fn, { query, sort, parallel } = {}) =>
     await deps
       .rpc(name, context, "view-store")
       .stream(fn, {
         ...(query && { query }),
         ...(sort && { sort }),
+        ...(parallel && { parallel }),
       })
       .in({
         ...(contexts && { context: contexts }),

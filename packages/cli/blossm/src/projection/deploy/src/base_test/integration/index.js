@@ -46,7 +46,7 @@ describe("Projection integration tests", () => {
         network: process.env.NETWORK,
         context: {
           [context]: {
-            root: step.contextRoot,
+            root: step.contextRoot || "some-context-root",
             service: process.env.CONTEXT,
             network: process.env.NETWORK,
           },
@@ -83,7 +83,7 @@ describe("Projection integration tests", () => {
         .set({
           context: {
             [context]: {
-              root: step.contextRoot,
+              root: step.contextRoot || "some-context-root",
               service: process.env.CONTEXT,
               network: process.env.NETWORK,
             },

@@ -149,6 +149,7 @@ module.exports = projection({
         .idStream(
           ({ id }) => saveId({ aggregate, aggregateContext, id, update, push }),
           {
+            parallel: 100,
             ...(query && { query }),
           }
         );
