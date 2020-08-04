@@ -74,6 +74,7 @@ describe("Projection integration tests", () => {
         },
       });
 
+      console.log({ response });
       expect(response.statusCode).to.equal(204);
 
       parallelFns.push(async () => {
