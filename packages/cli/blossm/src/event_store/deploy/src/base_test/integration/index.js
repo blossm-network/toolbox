@@ -4,9 +4,6 @@ const { expect } = require("chai").use(require("chai-datetime"));
 const request = require("@blossm/request");
 const { string: dateString } = require("@blossm/datetime");
 const hash = require("@blossm/hash");
-// const { decode } = require("@blossm/rlp");
-// const { verify } = require("@blossm/merkle-tree");
-// const cononical = require("@blossm/cononical-string");
 const uuid = require("@blossm/uuid");
 
 const {
@@ -30,6 +27,7 @@ const topic = `some-topic.${process.env.DOMAIN}.${process.env.SERVICE}`;
 const sub = `a${uuid()}`; //needs to start with a letter
 const version = 0;
 
+//TODO test snapshot limit of 100 per block.
 describe("Event store integration tests", () => {
   expect(testing.examples.length).to.be.greaterThan(1);
   const example0 = testing.examples[0];

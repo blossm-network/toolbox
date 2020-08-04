@@ -61,6 +61,7 @@ module.exports = ({ writeFn, formatFn, updateFn = defaultFn }) => {
 
     if (!newView) return res.sendStatus(204);
 
+    //TODO this function is duplicated in /get. Refactor.
     const formattedTrace = [];
     for (const service in newView.trace) {
       for (const domain in newView.trace[service]) {

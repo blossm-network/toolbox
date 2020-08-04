@@ -11,6 +11,7 @@ const { dateString } = require("@blossm/command-rpc/deps");
 
 const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 
+//TODO add integration tests for /replay
 describe("Projection integration tests", () => {
   it("should return successfully", async () => {
     const parallelFns = [];

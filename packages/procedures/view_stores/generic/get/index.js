@@ -59,6 +59,7 @@ module.exports = ({
       ...(one ? [] : [countFn({ query })]),
     ]);
 
+    //TODO this function is duplicated in /post. Refactor.
     const formattedResults = results.map((r) => {
       const formattedTrace = [];
       for (const service in r.trace) {
