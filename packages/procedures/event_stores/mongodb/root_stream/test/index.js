@@ -51,6 +51,7 @@ describe("Mongodb event store root stream", () => {
       },
       sort: {
         updated: 1,
+        root: 1,
       },
       limit,
       options: {
@@ -86,6 +87,7 @@ describe("Mongodb event store root stream", () => {
       query: {},
       sort: {
         updated: -1,
+        root: 1,
       },
       options: {
         lean: true,
