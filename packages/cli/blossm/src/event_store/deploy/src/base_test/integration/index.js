@@ -248,38 +248,6 @@ describe("Event store integration tests", () => {
         )
     ).to.be.true;
 
-    ///Test block limit
-    for (let i = 0; i < 120; i++) {
-      await request.post(url, {
-        body: {
-          eventData: [
-            {
-              event: {
-                headers: {
-                  root: uuid(),
-                  topic,
-                  idempotency: uuid(),
-                  //Use the previous date
-                  created: dateString(),
-                  version,
-                  action: example1.action,
-                  domain,
-                  service,
-                  network: process.env.NETWORK,
-                },
-                payload: example1.payload,
-              },
-            },
-          ],
-        },
-      });
-    }
-    const bigBlockResponse = await request.post(`${url}/create-block`);
-
-    expect(bigBlockResponse.statusCode).to.equal(200);
-    const parsedBigBlockBody = JSON.parse(blockResponse.body);
-    expect(parsedBigBlockBody.headers.sCount).to.equal(100);
-
     ///Test indexes
     for (const index of indexes || []) {
       const indexParts = index.split(".");
@@ -307,6 +275,37 @@ describe("Event store integration tests", () => {
         expect(parsedBody4[0].state[key]).to.deep.equal(example1.payload[key]);
       }
     }
+
+    ///Test block limit
+    for (let i = 0; i < 120; i++) {
+      await request.post(url, {
+        body: {
+          eventData: [
+            {
+              event: {
+                headers: {
+                  root: uuid(),
+                  topic,
+                  idempotency: uuid(),
+                  created: dateString(),
+                  version,
+                  action: example1.action,
+                  domain,
+                  service,
+                  network: process.env.NETWORK,
+                },
+                payload: example1.payload,
+              },
+            },
+          ],
+        },
+      });
+    }
+    const bigBlockResponse = await request.post(`${url}/create-block`);
+
+    expect(bigBlockResponse.statusCode).to.equal(200);
+    const parsedBigBlockBody = JSON.parse(blockResponse.body);
+    expect(parsedBigBlockBody.headers.sCount).to.equal(100);
   });
   it("should return successfully adding two events together", async () => {
     const root = uuid();
