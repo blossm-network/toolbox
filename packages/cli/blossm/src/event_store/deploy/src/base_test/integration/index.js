@@ -278,34 +278,31 @@ describe("Event store integration tests", () => {
 
     const beforeDate = dateString();
     ///Test block limit
-    const parallel = [];
+    const eventData = [];
     for (let i = 0; i < 120; i++) {
-      parallel.push(
-        request.post(url, {
-          body: {
-            eventData: [
-              {
-                event: {
-                  headers: {
-                    root: uuid(),
-                    topic,
-                    idempotency: uuid(),
-                    created: beforeDate,
-                    version,
-                    action: example1.action,
-                    domain,
-                    service,
-                    network: process.env.NETWORK,
-                  },
-                  payload: example1.payload,
-                },
-              },
-            ],
+      eventData.push({
+        event: {
+          headers: {
+            root: uuid(),
+            topic,
+            idempotency: uuid(),
+            created: beforeDate,
+            version,
+            action: example1.action,
+            domain,
+            service,
+            network: process.env.NETWORK,
           },
-        })
-      );
+          payload: example1.payload,
+        },
+      });
     }
-    await Promise.all(parallel);
+    await request.post(url, {
+      body: {
+        eventData,
+      },
+    });
+
     const bigBlockResponse = await request.post(`${url}/create-block`);
 
     expect(bigBlockResponse.statusCode).to.equal(200);
