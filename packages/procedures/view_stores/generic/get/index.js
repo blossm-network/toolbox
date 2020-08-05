@@ -102,8 +102,6 @@ module.exports = ({
             })
           : null;
 
-      //TODO
-      console.log({ emptyFn, formattedResults });
       res.send({
         content:
           formattedResults.length == 0 && emptyFn
