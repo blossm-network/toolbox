@@ -298,7 +298,8 @@ describe("Mongodb event store", () => {
       },
       typeKey: "$type",
       indexes: [
-        [{ root: 1 }][{ root: 1, updated: 1 }],
+        [{ root: 1 }],
+        [{ root: 1, updated: 1 }],
         [{ root: 1, updated: -1 }],
       ],
     });
@@ -667,7 +668,8 @@ describe("Mongodb event store", () => {
       },
       typeKey: "$type",
       indexes: [
-        [{ root: 1 }][{ root: 1, updated: 1 }],
+        [{ root: 1 }],
+        [{ root: 1, updated: 1 }],
         [{ root: 1, updated: -1 }],
       ],
     });
@@ -974,7 +976,8 @@ describe("Mongodb event store", () => {
       },
       typeKey: "$type",
       indexes: [
-        [{ root: 1 }][{ root: 1, updated: 1 }],
+        [{ root: 1 }],
+        [{ root: 1, updated: 1 }],
         [{ root: 1, updated: -1 }],
       ],
     });
