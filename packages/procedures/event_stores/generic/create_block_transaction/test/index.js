@@ -262,7 +262,6 @@ describe("Event store create block transaction", () => {
     expect(latestBlockFnFake).to.have.been.calledOnceWith();
     expect(rootStreamFnFake).to.have.been.calledOnceWith({
       updatedOnOrAfter: previousEnd,
-      updatedBefore: deps.dateString(),
       parallel: 10,
       limit: 100,
       reverse: true,
@@ -551,7 +550,6 @@ describe("Event store create block transaction", () => {
     expect(latestBlockFnFake).to.have.been.calledOnceWith();
     expect(rootStreamFnFake).to.have.been.calledOnceWith({
       updatedOnOrAfter: previousEnd,
-      updatedBefore: deps.dateString(),
       parallel: 10,
       limit: 100,
       reverse: true,
@@ -785,7 +783,6 @@ describe("Event store create block transaction", () => {
     expect(latestBlockFnFake).to.have.been.calledOnceWith();
     expect(rootStreamFnFake).to.have.been.calledOnceWith({
       updatedOnOrAfter: date.toISOString(),
-      updatedBefore: deps.dateString(),
       parallel: 10,
       limit: 100,
       reverse: true,
@@ -983,7 +980,6 @@ describe("Event store create block transaction", () => {
     expect(latestBlockFnFake).to.have.been.calledOnceWith();
     expect(rootStreamFnFake).to.have.been.calledOnceWith({
       updatedOnOrAfter: previousEnd,
-      updatedBefore: deps.dateString(),
       parallel: 10,
       limit: 100,
       reverse: true,

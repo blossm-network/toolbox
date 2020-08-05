@@ -45,8 +45,6 @@ describe("Event store integration tests", () => {
     const root = uuid();
     const now = dateString();
 
-    console.log({ root });
-
     const countResponse = await request.get(`${url}/count/${root}`);
     const parsedCountBody = JSON.parse(countResponse.body);
 
@@ -157,7 +155,6 @@ describe("Event store integration tests", () => {
     );
 
     const root2 = uuid();
-    console.log({ root2 });
     await request.post(url, {
       body: {
         eventData: [
@@ -182,7 +179,6 @@ describe("Event store integration tests", () => {
       },
     });
     const root3 = uuid();
-    console.log({ root3 });
     //Test stream with actions and root qualifiers
     await request.post(url, {
       body: {
@@ -281,12 +277,10 @@ describe("Event store integration tests", () => {
     }
 
     const beforeDate = dateString();
-    console.log({ beforeDate });
     ///Test block limit
     const eventData = [];
     for (let i = 0; i < 150; i++) {
       let k = uuid();
-      console.log({ i, k });
       eventData.push({
         event: {
           headers: {
