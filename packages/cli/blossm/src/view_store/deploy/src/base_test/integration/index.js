@@ -51,7 +51,6 @@ describe("View store base integration tests", () => {
         content: emptyContent,
       } = JSON.parse(emptyResponse.body);
 
-      console.log({ emptyUpdates, emptyContent, emptyCount });
       expect(emptyCount).to.equal(0);
       expect(emptyUpdates).to.exist;
 
@@ -99,8 +98,14 @@ describe("View store base integration tests", () => {
 
     expect(response1.statusCode).to.equal(200);
     const formattedExampleGet = format(examples[0].get);
+    console.log({ get: examples[0].get, formattedExampleGet, parsedBody0 });
 
     for (const key in formattedExampleGet) {
+      console.log({
+        key,
+        pBodyKey: parsedBody0[key],
+        eKey: formattedExampleGet[key],
+      });
       expect(parsedBody0[key]).to.deep.equal(formattedExampleGet[key]);
     }
 
