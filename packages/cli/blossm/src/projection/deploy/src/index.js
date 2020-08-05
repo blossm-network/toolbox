@@ -89,7 +89,7 @@ module.exports = projection({
       replay,
     } = await handlers[aggregate.headers.service][aggregate.headers.domain]({
       state: aggregate.state,
-      id: `${aggregate.headers.root}_${aggregate.headers.domain}_${aggregate.headers.service}_${aggregate.headers.network}`,
+      id: aggregate.headers.root,
       readFactFn,
       ...(action && { action }),
     });
@@ -109,7 +109,7 @@ module.exports = projection({
             r.service
           ][r.domain]({
             state: aggregate.state,
-            id: `${r.root}_${aggregate.headers.domain}_${aggregate.headers.service}_${aggregate.headers.network}`,
+            id: r.root,
             readFactFn,
           });
           update = {
