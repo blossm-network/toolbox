@@ -11,12 +11,11 @@ const { schema } = require("../../config.json");
 const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 
 const { testing, one, indexes } = require("../../config.json");
-const format = fs.existsSync(path.resolve(__dirname, "./format.js"))
-  ? require("./format")
+const format = fs.existsSync("../../format.js")
+  ? require("../../format")
   : (x) => x;
 
-const empty =
-  fs.existsSync(path.resolve(__dirname, "./empty.js")) && require("./empty");
+const empty = fs.existsSync("../../empty.js") && require("../../empty");
 
 const contextRoot = "some-context-root";
 const contextService = "some-context-service";
@@ -28,6 +27,8 @@ describe("View store base integration tests", () => {
     const id = "some-id";
     const examples = testing.examples;
     expect(examples.length).to.be.greaterThan(1);
+
+    console.log({ empty, tE: testing.empty });
 
     if (testing.empty && empty) {
       console.log("here!");
