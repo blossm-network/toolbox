@@ -281,10 +281,12 @@ describe("Event store integration tests", () => {
     ///Test block limit
     const eventData = [];
     for (let i = 0; i < 150; i++) {
+      let k = uuid();
+      console.log({ i, k });
       eventData.push({
         event: {
           headers: {
-            root: uuid(),
+            root: k,
             topic,
             idempotency: uuid(),
             created: beforeDate,

@@ -94,6 +94,10 @@ module.exports = ({
       console.log({ i: i++ });
       const aggregate = await aggregateFn(root, { includeEvents: true });
 
+      console.log(
+        `Length for m ${m}: ${aggregate.events.length} - ${root} ${updated}`
+      );
+
       if (aggregate.events.length == 0) return;
 
       const stringifiedEventPairs = [];
