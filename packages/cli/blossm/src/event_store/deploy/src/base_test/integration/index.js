@@ -280,7 +280,7 @@ describe("Event store integration tests", () => {
     console.log({ beforeDate });
     ///Test block limit
     const eventData = [];
-    for (let i = 0; i < 120; i++) {
+    for (let i = 0; i < 150; i++) {
       eventData.push({
         event: {
           headers: {
@@ -304,13 +304,16 @@ describe("Event store integration tests", () => {
       },
     });
 
-    console.log({ afterDate: dateString() });
     const bigBlockResponse = await request.post(`${url}/create-block`);
 
     expect(bigBlockResponse.statusCode).to.equal(200);
     const parsedBigBlockBody = JSON.parse(bigBlockResponse.body);
-    console.log({ h: parsedBigBlockBody.headers });
-    expect(parsedBigBlockBody.headers.sCount).to.equal(100);
+    expect(parsedBigBlockBody.headers.sCount).to.equal(99);
+
+    const anotherBlockResponse = await request.post(`${url}/create-block`);
+    expect(anotherBlockResponse.statusCode).to.equal(200);
+    const parsedAnotherBlockBody = JSON.parse(anotherBlockResponse.body);
+    expect(parsedAnotherBlockBody.headers.sCount).to.equal(50);
   });
   it("should return successfully adding two events together", async () => {
     const root = uuid();
