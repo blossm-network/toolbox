@@ -22,7 +22,7 @@ describe("Projection handlers tests", () => {
           handler.event.domain
         ]({
           state: example.state,
-          ...(example.id && { root: example.id }),
+          ...(example.id && { id: example.id }),
           ...(example.action && { action: example.action }),
           ...(readFactFnFake && { readFactFn: readFactFnFake }),
         });
