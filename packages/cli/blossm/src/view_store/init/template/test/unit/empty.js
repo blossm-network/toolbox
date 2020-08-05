@@ -2,15 +2,15 @@ const fs = require("fs");
 const path = require("path");
 const { expect } = require("chai").use(require("sinon-chai"));
 
-const format =
+const empty =
   fs.existsSync(path.resolve(__dirname, "../../get.js")) &&
-  require("../../format");
+  require("../../empty");
 
 describe("View store format tests", () => {
-  if (!format) return;
+  if (!empty) return;
   it("should convert correctly", async () => {
-    const body = "some-body";
-    const result = format({ body });
-    expect(result.body).to.deep.equal(body);
+    const query = "some-query";
+    const result = empty({ query });
+    expect(result.body).to.deep.equal(query);
   });
 });

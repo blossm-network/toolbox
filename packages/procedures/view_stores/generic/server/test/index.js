@@ -57,6 +57,7 @@ describe("View store", () => {
     const queryFn = "some-query-fn";
     const updateFn = "some-update-fn";
     const formatFn = "some-format-fn";
+    const emptyFn = "some-empty-fn";
     const one = "some-one";
 
     await viewStore({
@@ -68,6 +69,7 @@ describe("View store", () => {
       queryFn,
       updateFn,
       formatFn,
+      emptyFn,
       one,
     });
 
@@ -86,6 +88,7 @@ describe("View store", () => {
       countFn,
       queryFn,
       formatFn,
+      emptyFn,
       one,
     });
     expect(viewStorePutFake).to.have.been.calledWith({

@@ -9,6 +9,8 @@ const update =
   fs.existsSync(path.resolve(__dirname, "./update.js")) && require("./update");
 const format =
   fs.existsSync(path.resolve(__dirname, "./format.js")) && require("./format");
+const empty =
+  fs.existsSync(path.resolve(__dirname, "./empty.js")) && require("./empty");
 
 const config = require("./config.json");
 
@@ -19,5 +21,6 @@ module.exports = viewStore({
   ...(query && { queryFn: query }),
   ...(update && { updateFn: update }),
   ...(format && { formatFn: format }),
+  ...(empty && { emptyFn: empty }),
   ...(config.one && { one: config.one }),
 });

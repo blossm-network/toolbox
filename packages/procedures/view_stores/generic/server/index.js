@@ -10,6 +10,7 @@ module.exports = async ({
   queryFn,
   updateFn,
   formatFn = defaultFormatFn,
+  emptyFn,
   countFn,
   one,
 } = {}) => {
@@ -24,6 +25,7 @@ module.exports = async ({
         countFn,
         ...(queryFn && { queryFn }),
         ...(formatFn && { formatFn }),
+        ...(emptyFn && { emptyFn }),
         ...(one && { one }),
       }),
       {

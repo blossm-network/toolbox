@@ -15,6 +15,9 @@ const format = fs.existsSync(path.resolve(__dirname, "./format.js"))
   ? require("./format")
   : (x) => x;
 
+const empty =
+  fs.existsSync(path.resolve(__dirname, "./empty.js")) && require("./empty");
+
 const contextRoot = "some-context-root";
 const contextService = "some-context-service";
 const contextNetwork = "some-context-network";
@@ -25,6 +28,36 @@ describe("View store base integration tests", () => {
     const id = "some-id";
     const examples = testing.examples;
     expect(examples.length).to.be.greaterThan(1);
+
+    if (testing.empty && empty) {
+      const emptyResponse = await request.get(url, {
+        query: {
+          context: {
+            [process.env.CONTEXT]: {
+              root: contextRoot,
+              service: contextService,
+              network: contextNetwork,
+            },
+          },
+        },
+      });
+
+      expect(emptyResponse.statusCode).to.equal(200);
+
+      const {
+        updates: emptyUpdates,
+        count: emptyCount,
+        content: emptyContent,
+      } = JSON.parse(emptyResponse.body);
+
+      expect(emptyCount).to.equal(0);
+      expect(emptyUpdates).to.exist;
+      expect(emptyContent).to.deep.equal(emptyCount);
+
+      for (const key in empty) {
+        expect(emptyContent[key]).to.deep.equal(empty[key]);
+      }
+    }
 
     const response0 = await request.put(`${url}/${id}`, {
       body: {

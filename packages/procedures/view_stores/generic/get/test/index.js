@@ -152,6 +152,76 @@ describe("View store get", () => {
       count: 200,
     });
   });
+  it("should call with the correct params with emptyFn", async () => {
+    const findFake = fake.returns([]);
+    const countFake = fake.returns(200);
+
+    const query = { "some-query-key": 1 };
+
+    const urlEncodeQueryDataFake = fake.returns(nextUrl);
+    replace(deps, "urlEncodeQueryData", urlEncodeQueryDataFake);
+
+    const req = {
+      query: {
+        sort,
+        context,
+        query,
+      },
+      params: {
+        id,
+      },
+    };
+
+    const sendFake = fake();
+    const res = {
+      send: sendFake,
+    };
+
+    const someEmptyFnResponse = "some-empty-fn-response";
+    const emptyFnFake = fake.returns(someEmptyFnResponse);
+
+    await get({
+      findFn: findFake,
+      countFn: countFake,
+      emptyFn: emptyFnFake,
+    })(req, res);
+
+    expect(findFake).to.have.been.calledWith({
+      limit: 100,
+      skip: 0,
+      sort: { "body.a": 1 },
+      query: {
+        "body.some-query-key": 1,
+        "headers.id": id,
+        "headers.context": {
+          root: envContextRoot,
+          domain: "some-env-context",
+          service: envContextService,
+          network: envContextNetwork,
+        },
+      },
+    });
+    expect(countFake).to.have.been.calledWith({
+      query: {
+        "body.some-query-key": 1,
+        "headers.id": id,
+        "headers.context": {
+          root: envContextRoot,
+          domain: "some-env-context",
+          service: envContextService,
+          network: envContextNetwork,
+        },
+      },
+    });
+    expect(urlEncodeQueryDataFake).to.not.have.been.called;
+    expect(emptyFnFake).to.have.been.calledWith(query);
+    expect(sendFake).to.have.been.calledWith({
+      content: someEmptyFnResponse,
+      updates:
+        "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
+      count: 200,
+    });
+  });
   it("should call with the correct params if limit reached", async () => {
     const findFake = fake.returns([
       {

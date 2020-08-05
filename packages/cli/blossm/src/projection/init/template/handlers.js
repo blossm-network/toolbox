@@ -1,19 +1,19 @@
 module.exports = {
   "some-service": {
-    "some-domain": ({ state, root }) => {
+    "some-domain": ({ state, id }) => {
       //eslint-disable-next-line no-console
-      console.log({ state, root });
+      console.log({ state, id });
       return {
+        id,
         query: {
           "some-domain": {
-            root,
             service: "some-service",
             network: "some-network",
           },
         },
         update: {
           "some-domain": {
-            root,
+            id,
             service: "some-service",
             network: "some-network",
           },

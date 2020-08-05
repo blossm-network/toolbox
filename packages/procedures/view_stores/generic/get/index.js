@@ -8,6 +8,7 @@ module.exports = ({
   countFn,
   one = false,
   formatFn,
+  emptyFn,
   queryFn = defaultQueryFn,
 }) => {
   return async (req, res) => {
@@ -102,7 +103,10 @@ module.exports = ({
           : null;
 
       res.send({
-        content: formattedResults,
+        content:
+          formattedResults.length == 0 && emptyFn
+            ? emptyFn(queryBody)
+            : formattedResults,
         updates,
         ...(next && { next }),
         count,

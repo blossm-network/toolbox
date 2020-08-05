@@ -27,7 +27,6 @@ const topic = `some-topic.${process.env.DOMAIN}.${process.env.SERVICE}`;
 const sub = `a${uuid()}`; //needs to start with a letter
 const version = 0;
 
-//TODO test snapshot limit of 100 per block.
 describe("Event store integration tests", () => {
   expect(testing.examples.length).to.be.greaterThan(1);
   const example0 = testing.examples[0];
