@@ -276,35 +276,41 @@ describe("Event store integration tests", () => {
       }
     }
 
+    const beforeDate = dateString();
     ///Test block limit
+    const parallel = [];
     for (let i = 0; i < 120; i++) {
-      await request.post(url, {
-        body: {
-          eventData: [
-            {
-              event: {
-                headers: {
-                  root: uuid(),
-                  topic,
-                  idempotency: uuid(),
-                  created: dateString(),
-                  version,
-                  action: example1.action,
-                  domain,
-                  service,
-                  network: process.env.NETWORK,
+      parallel.push(
+        request.post(url, {
+          body: {
+            eventData: [
+              {
+                event: {
+                  headers: {
+                    root: uuid(),
+                    topic,
+                    idempotency: uuid(),
+                    created: beforeDate,
+                    version,
+                    action: example1.action,
+                    domain,
+                    service,
+                    network: process.env.NETWORK,
+                  },
+                  payload: example1.payload,
                 },
-                payload: example1.payload,
               },
-            },
-          ],
-        },
-      });
+            ],
+          },
+        })
+      );
     }
+    await Promise.all(parallel);
     const bigBlockResponse = await request.post(`${url}/create-block`);
 
     expect(bigBlockResponse.statusCode).to.equal(200);
     const parsedBigBlockBody = JSON.parse(blockResponse.body);
+    console.log({ h: parsedBlockBody.headers });
     expect(parsedBigBlockBody.headers.sCount).to.equal(100);
   });
   it("should return successfully adding two events together", async () => {
