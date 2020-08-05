@@ -11,13 +11,6 @@ const { schema } = require("../../config.json");
 const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 
 const { testing, one, indexes } = require("../../config.json");
-const format = fs.existsSync(path.resolve(__dirname, "../../format.js"))
-  ? require("../../format")
-  : (x) => x;
-
-const empty =
-  fs.existsSync(path.resolve(__dirname, "../../empty.js")) &&
-  require("../../empty");
 
 const contextRoot = "some-context-root";
 const contextService = "some-context-service";
@@ -30,7 +23,7 @@ describe("View store base integration tests", () => {
     const examples = testing.examples;
     expect(examples.length).to.be.greaterThan(1);
 
-    if (testing.empty && empty) {
+    if (testing.empty) {
       const emptyResponse = await request.get(url, {
         query: {
           context: {
@@ -54,8 +47,8 @@ describe("View store base integration tests", () => {
       expect(emptyCount).to.equal(0);
       expect(emptyUpdates).to.exist;
 
-      for (const key in empty) {
-        expect(emptyContent[key]).to.deep.equal(empty[key]);
+      for (const key in testing.empty) {
+        expect(emptyContent[key]).to.deep.equal(testing.empty[key]);
       }
     }
 
@@ -97,16 +90,9 @@ describe("View store base integration tests", () => {
     !one ? expect(count0).to.equal(1) : expect(count0).to.be.undefined;
 
     expect(response1.statusCode).to.equal(200);
-    const formattedExampleGet = format(examples[0].get);
-    console.log({ get: examples[0].get, formattedExampleGet, parsedBody0 });
 
-    for (const key in formattedExampleGet) {
-      console.log({
-        key,
-        pBodyKey: parsedBody0[key],
-        eKey: formattedExampleGet[key],
-      });
-      expect(parsedBody0[key]).to.deep.equal(formattedExampleGet[key]);
+    for (const key in examples[0].get) {
+      expect(parsedBody0[key]).to.deep.equal(examples[0].get[key]);
     }
 
     for (const example of testing.examples.length > 2
@@ -152,10 +138,9 @@ describe("View store base integration tests", () => {
       expect(moreUpdate).to.exist;
       !one ? expect(moreCount).to.equal(1) : expect(moreCount).to.be.undefined;
 
-      const formattedExampleGet = format(example.get);
       expect(moreResponse1.statusCode).to.equal(200);
-      for (const key in formattedExampleGet) {
-        expect(moreParsedBody[key]).to.deep.equal(formattedExampleGet[key]);
+      for (const key in example.get) {
+        expect(moreParsedBody[key]).to.deep.equal(example.get[key]);
       }
     }
 
@@ -196,9 +181,8 @@ describe("View store base integration tests", () => {
     expect(updates1).to.exist;
     !one ? expect(count1).to.equal(1) : expect(count1).to.be.undefined;
 
-    const formattedExample1Get = format(examples[1].get);
-    for (const key in formattedExample1Get) {
-      expect(parsedBody1[key]).to.deep.equal(formattedExample1Get[key]);
+    for (const key in examples[1].get) {
+      expect(parsedBody1[key]).to.deep.equal(examples[1].get[key]);
     }
 
     if (testing.sorts) {
@@ -310,11 +294,8 @@ describe("View store base integration tests", () => {
           const { content: sortedContent } = JSON.parse(response7.body);
 
           for (let i = 0; i < sortedContent.length; i++) {
-            const formattedExampleGet = format(examples[sort.order[i]].get);
-            for (const key in formattedExampleGet.get) {
-              expect(sortedContent[i][key]).to.deep.equal(
-                formattedExample1Get[key]
-              );
+            for (const key in examples[sort.order[i]].get.get) {
+              expect(sortedContent[i][key]).to.deep.equal(examples[1].get[key]);
             }
           }
         }
