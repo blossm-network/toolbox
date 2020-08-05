@@ -175,7 +175,7 @@ module.exports = ({
     parallel: 10,
   });
 
-  console.log(`AFTER ${i}`);
+  console.log(`AFTER ${i}, ${snapshots.length}`);
 
   const stringifiedSnapshotPairs = [];
   await Promise.all(
@@ -194,6 +194,7 @@ module.exports = ({
       ]);
     })
   );
+  console.log(`AFTER AGAIN ${stringifiedSnapshotPairs.length}`);
 
   const stringifiedTxPairs = [];
   for (const key in txs) {
