@@ -277,6 +277,7 @@ describe("Event store integration tests", () => {
     }
 
     const beforeDate = dateString();
+    console.log({ beforeDate });
     ///Test block limit
     const eventData = [];
     for (let i = 0; i < 120; i++) {
@@ -303,6 +304,7 @@ describe("Event store integration tests", () => {
       },
     });
 
+    console.log({ afterDate: dateString() });
     const bigBlockResponse = await request.post(`${url}/create-block`);
 
     expect(bigBlockResponse.statusCode).to.equal(200);
