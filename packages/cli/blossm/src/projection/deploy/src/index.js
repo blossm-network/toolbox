@@ -89,7 +89,7 @@ module.exports = projection({
       replay,
     } = await handlers[aggregate.headers.service][aggregate.headers.domain]({
       state: aggregate.state,
-      root: aggregate.headers.root,
+      id: `${aggregate.headers.root}_${aggregate.headers.domain}_${aggregate.headers.service}_${aggregate.headers.network}`,
       readFactFn,
       ...(action && { action }),
     });
@@ -97,17 +97,19 @@ module.exports = projection({
     if (replay && replay.length != 0) {
       await Promise.all(
         replay.map(async (r) => {
-          const { state } = await aggregateFn({
+          const aggregate = await aggregateFn({
             domain: r.domain,
             service: r.service,
             root: r.root,
           });
 
+          if (!aggregate) return;
+
           const { query: replayQuery, update: replayUpdate } = handlers[
             r.service
           ][r.domain]({
-            state,
-            root: r.root,
+            state: aggregate.state,
+            id: `${r.root}_${aggregate.headers.domain}_${aggregate.headers.service}_${aggregate.headers.network}`,
             readFactFn,
           });
           update = {
