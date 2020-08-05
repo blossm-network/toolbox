@@ -82,6 +82,7 @@ module.exports = ({
 
   let newEnd;
   let i = 1;
+  console.log("Before");
   await rootStreamFn({
     updatedOnOrAfter: previousBlock.headers.end,
     updatedBefore: deps.dateString(),
@@ -89,6 +90,7 @@ module.exports = ({
     limit: 100,
     reverse: true,
     fn: async ({ root, updated }) => {
+      const m = i;
       console.log({ i: i++ });
       const aggregate = await aggregateFn(root, { includeEvents: true });
 
@@ -167,9 +169,13 @@ module.exports = ({
       });
 
       newEnd = newEnd == undefined || updated > newEnd ? updated : newEnd;
+
+      console.log({ m });
     },
     parallel: 10,
   });
+
+  console.log(`AFTER ${i}`);
 
   const stringifiedSnapshotPairs = [];
   await Promise.all(
