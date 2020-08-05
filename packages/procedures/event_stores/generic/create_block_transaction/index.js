@@ -81,6 +81,7 @@ module.exports = ({
   });
 
   let newEnd;
+  let i = 1;
   await rootStreamFn({
     updatedOnOrAfter: previousBlock.headers.end,
     updatedBefore: deps.dateString(),
@@ -88,6 +89,7 @@ module.exports = ({
     limit: 100,
     reverse: true,
     fn: async ({ root, updated }) => {
+      console.log({ i: i++ });
       const aggregate = await aggregateFn(root, { includeEvents: true });
 
       if (aggregate.events.length == 0) return;
