@@ -30,10 +30,7 @@ describe("View store base integration tests", () => {
     const examples = testing.examples;
     expect(examples.length).to.be.greaterThan(1);
 
-    console.log({ empty, tE: testing.empty });
-
     if (testing.empty && empty) {
-      console.log("here!");
       const emptyResponse = await request.get(url, {
         query: {
           context: {
@@ -57,7 +54,6 @@ describe("View store base integration tests", () => {
       console.log({ emptyUpdates, emptyContent, emptyCount });
       expect(emptyCount).to.equal(0);
       expect(emptyUpdates).to.exist;
-      expect(emptyContent).to.deep.equal(emptyCount);
 
       for (const key in empty) {
         expect(emptyContent[key]).to.deep.equal(empty[key]);

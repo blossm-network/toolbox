@@ -101,6 +101,7 @@ describe("View store", () => {
     const getFn = "some-get-fn";
     const updateFn = "some-update-fn";
     const formatFn = "some-format-fn";
+    const emptyFn = "some-empty-fn";
 
     await mongodbViewStore({
       schema,
@@ -109,6 +110,7 @@ describe("View store", () => {
       getFn,
       updateFn,
       formatFn,
+      emptyFn,
       one,
     });
 
@@ -269,6 +271,7 @@ describe("View store", () => {
       getFn,
       updateFn,
       formatFn,
+      emptyFn,
       one,
     });
 
@@ -318,6 +321,7 @@ describe("View store", () => {
     const getFn = "some-get-fn";
     const updateFn = "some-update-fn";
     const formatFn = "some-format-fn";
+    const emptyFn = "some-empty-fn";
 
     const formattedSchema = "some-formatted-schema";
     const formatSchemaFake = fake.returns(formattedSchema);
@@ -331,6 +335,7 @@ describe("View store", () => {
       getFn,
       updateFn,
       formatFn,
+      emptyFn,
     });
 
     expect(formatSchemaFake).to.have.been.calledWith(schema, "$type");
@@ -444,6 +449,7 @@ describe("View store", () => {
     const getFn = "some-get-fn";
     const updateFn = "some-update-fn";
     const formatFn = "some-format-fn";
+    const emptyFn = "some-empty-fn";
 
     const formattedSchema = "some-formatted-schema";
     const formatSchemaFake = fake.returns(formattedSchema);
@@ -463,6 +469,7 @@ describe("View store", () => {
       getFn,
       updateFn,
       formatFn,
+      emptyFn,
     });
 
     expect(formatSchemaFake).to.have.been.calledWith(schema, "$type");

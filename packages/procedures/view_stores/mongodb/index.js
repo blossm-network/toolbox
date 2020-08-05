@@ -74,6 +74,7 @@ module.exports = async ({
   getFn,
   updateFn,
   formatFn,
+  emptyFn,
   one,
 } = {}) => {
   const allIndexes = [
@@ -186,6 +187,7 @@ module.exports = async ({
     ...(getFn && { getFn }),
     ...(updateFn && { updateFn }),
     ...(formatFn && { formatFn }),
+    ...(emptyFn && { emptyFn }),
     ...(one && { one }),
   });
 };
