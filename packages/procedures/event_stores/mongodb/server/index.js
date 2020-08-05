@@ -190,7 +190,11 @@ const countsStore = async () => {
       updated: { [typeKey]: Date, required: true, default: deps.dateString },
     },
     typeKey,
-    indexes: [[{ root: 1 }]],
+    indexes: [
+      [{ root: 1 }],
+      [{ root: 1, updated: 1 }],
+      [{ root: 1, updated: -1 }],
+    ],
   });
 
   return _countsStore;

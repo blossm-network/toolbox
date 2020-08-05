@@ -21,6 +21,7 @@ module.exports = ({ countsStore }) => async ({
       },
       sort: {
         updated: reverse ? 1 : -1,
+        root: 1,
       },
       ...(limit && { limit }),
       options: { lean: true },

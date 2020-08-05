@@ -297,7 +297,10 @@ describe("Mongodb event store", () => {
         updated: { $type: Date, required: true, default: deps.dateString },
       },
       typeKey: "$type",
-      indexes: [[{ root: 1 }]],
+      indexes: [
+        [{ root: 1 }][{ root: 1, updated: 1 }],
+        [{ root: 1, updated: -1 }],
+      ],
     });
     expect(storeFake.getCall(3)).to.have.been.calledWith({
       name: "blockchain",
@@ -663,7 +666,10 @@ describe("Mongodb event store", () => {
         updated: { $type: Date, required: true, default: deps.dateString },
       },
       typeKey: "$type",
-      indexes: [[{ root: 1 }]],
+      indexes: [
+        [{ root: 1 }][{ root: 1, updated: 1 }],
+        [{ root: 1, updated: -1 }],
+      ],
     });
     expect(storeFake.getCall(3)).to.have.been.calledWith({
       name: "blockchain",
@@ -967,7 +973,10 @@ describe("Mongodb event store", () => {
         updated: { $type: Date, required: true, default: deps.dateString },
       },
       typeKey: "$type",
-      indexes: [[{ root: 1 }]],
+      indexes: [
+        [{ root: 1 }][{ root: 1, updated: 1 }],
+        [{ root: 1, updated: -1 }],
+      ],
     });
     expect(storeFake.getCall(3)).to.have.been.calledWith({
       name: "blockchain",
