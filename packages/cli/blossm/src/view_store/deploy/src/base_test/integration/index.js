@@ -11,11 +11,13 @@ const { schema } = require("../../config.json");
 const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 
 const { testing, one, indexes } = require("../../config.json");
-const format = fs.existsSync("../../format.js")
+const format = fs.existsSync(path.resolve(__dirname, "../../format.js"))
   ? require("../../format")
   : (x) => x;
 
-const empty = fs.existsSync("../../empty.js") && require("../../empty");
+const empty =
+  fs.existsSync(path.resolve(__dirname, "../../empty.js")) &&
+  require("../../empty");
 
 const contextRoot = "some-context-root";
 const contextService = "some-context-service";
