@@ -97,29 +97,31 @@ module.exports = projection({
     if (replay && replay.length != 0) {
       await Promise.all(
         replay.map(async (r) => {
-          const aggregate = await aggregateFn({
-            domain: r.domain,
-            service: r.service,
-            root: r.root,
-          });
+          try {
+            const aggregate = await aggregateFn({
+              domain: r.domain,
+              service: r.service,
+              root: r.root,
+            });
 
-          if (!aggregate) return;
-
-          const { query: replayQuery, update: replayUpdate } = handlers[
-            r.service
-          ][r.domain]({
-            state: aggregate.state,
-            id: r.root,
-            readFactFn,
-          });
-          update = {
-            ...update,
-            ...replayUpdate,
-          };
-          query = {
-            ...query,
-            ...replayQuery,
-          };
+            const { query: replayQuery, update: replayUpdate } = handlers[
+              r.service
+            ][r.domain]({
+              state: aggregate.state,
+              id: r.root,
+              readFactFn,
+            });
+            update = {
+              ...update,
+              ...replayUpdate,
+            };
+            query = {
+              ...query,
+              ...replayQuery,
+            };
+          } catch (_) {
+            return;
+          }
         })
       );
     }
