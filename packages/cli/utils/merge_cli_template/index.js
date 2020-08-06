@@ -315,51 +315,51 @@ const eventStoreDependencies = ({ dependencies }) => {
   return result;
 };
 
-const addDefaultDependencies = ({ config, coreNetwork }) => {
+const addDefaultDependencies = ({ config, coreNetwork, network }) => {
   const tokenDependencies = [
     {
       name: "upgrade",
       domain: "session",
       service: "core",
-      network: coreNetwork,
+      network,
       procedure: "command",
     },
     {
       domain: "session",
       service: "core",
-      network: coreNetwork,
+      network,
       procedure: "event-store",
     },
     {
       domain: "role",
       service: "core",
-      network: coreNetwork,
+      network,
       procedure: "event-store",
     },
     {
       domain: "principal",
       service: "core",
-      network: coreNetwork,
+      network,
       procedure: "event-store",
     },
     {
       domain: "identity",
       service: "core",
-      network: coreNetwork,
+      network,
       procedure: "event-store",
     },
     {
       name: "terminated",
       domain: "session",
       service: "core",
-      network: coreNetwork,
+      network,
       procedure: "fact",
     },
     {
       name: "permissions",
       domain: "role",
       service: "core",
-      network: coreNetwork,
+      network,
       procedure: "fact",
     },
   ];
@@ -477,13 +477,13 @@ const addDefaultDependencies = ({ config, coreNetwork }) => {
   }
 };
 
-const writeConfig = ({ config, coreNetwork, workingDir }) => {
+const writeConfig = ({ config, coreNetwork, network, workingDir }) => {
   const newConfigPath = path.resolve(workingDir, "config.json");
   if (!config.testing) config.testing = {};
   if (!config.testing.dependencies) config.testing.dependencies = [];
 
   const { dependencies, events } = resolveTransientInfo(
-    addDefaultDependencies({ config, coreNetwork })
+    addDefaultDependencies({ config, coreNetwork, network })
   );
 
   const adjustedDependencies = [];
@@ -666,7 +666,7 @@ const configure = async (workingDir, configFn, env, strict) => {
 
     const host = `${region}.${envUriSpecifier(env)}${network}`;
 
-    writeConfig({ config, coreNetwork, workingDir });
+    writeConfig({ config, coreNetwork, network, workingDir });
 
     const computeUrlId = envComputeUrlId({ env, config: blossmConfig });
 
