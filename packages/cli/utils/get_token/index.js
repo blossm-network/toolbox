@@ -16,6 +16,11 @@ module.exports = async ({
   const principalRoot = uuid();
   const sessionRoot = uuid();
 
+  console.log("1: ", {
+    coreNetwork: process.env.CORE_NETWORK,
+    network: process.env.NETWORK,
+  });
+
   // Create the identity for the token.
   await eventStore({
     domain: "identity",
@@ -29,7 +34,7 @@ module.exports = async ({
             principal: {
               root: principalRoot,
               service: process.env.SERVICE,
-              network: process.env.CORE_NETWORK,
+              network: process.env.NETWORK,
             },
             phone: await hash(phone),
             id,
@@ -37,11 +42,13 @@ module.exports = async ({
           action: "register",
           domain: "identity",
           service: "core",
-          network: process.env.CORE_NETWORK,
+          network: process.env.NETWORK,
         }),
       },
     ],
   });
+
+  console.log(2);
 
   // Add permissions to the role
   // and add role to the principal.
@@ -61,7 +68,7 @@ module.exports = async ({
             action: "create",
             domain: "role",
             service: "core",
-            network: process.env.CORE_NETWORK,
+            network: process.env.NETWORK,
           }),
         },
       ],
@@ -79,19 +86,21 @@ module.exports = async ({
                 {
                   id: roleId,
                   service: process.env.SERVICE,
-                  network: process.env.CORE_NETWORK,
+                  network: process.env.NETWORK,
                 },
               ],
             },
             action: "add-roles",
             domain: "principal",
             service: "core",
-            network: process.env.CORE_NETWORK,
+            network: process.env.NETWORK,
           }),
         },
       ],
     }),
   ]);
+
+  console.log(3);
 
   // Add a session.
   await eventStore({
@@ -106,11 +115,13 @@ module.exports = async ({
           action: "start",
           domain: "session",
           service: "core",
-          network: process.env.CORE_NETWORK,
+          network: process.env.NETWORK,
         }),
       },
     ],
   });
+
+  console.log(4);
 
   const {
     body: { tokens },
@@ -146,5 +157,6 @@ module.exports = async ({
       { root: sessionRoot }
     );
 
+  console.log("5: ", { token: tokens[0].value });
   return { token: tokens[0].value };
 };
