@@ -30,9 +30,8 @@ views:
     procedure: view-composite
     protection: none
 
-# Not used right now.
 whitelist:
-  - "127.0.0.1"
+  - "http://localhost:4200"
 
 #don't change
 procedure: view-gateway

@@ -26,9 +26,8 @@ facts:
   - name: some-other-name
     protection: none
 
-# Not used right now.
 whitelist:
-  - "127.0.0.1"
+  - "http://localhost:4200"
 
 #don't change
 procedure: fact-gateway
