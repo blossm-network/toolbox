@@ -49,6 +49,8 @@ module.exports = ({
           if (!eventNumberOffsets[event.headers.root])
             eventNumberOffsets[event.headers.root] = 0;
 
+          //TODO
+          console.log({ event, number, json: JSON.stringify(event) });
           if (
             event.headers.domain != process.env.DOMAIN ||
             event.headers.service != process.env.SERVICE ||
