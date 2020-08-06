@@ -82,12 +82,12 @@ module.exports = ({
     handlers,
   });
 
-  let newEnd;
-  let maxNewEnd = deps.dateString();
+  let lastRootEnd;
+  let end = deps.dateString();
 
   await rootStreamFn({
     updatedOnOrAfter: previousBlock.headers.end,
-    updatedBefore: maxNewEnd,
+    updatedBefore: end,
     //If the previous block was full, the last item of the previous block will be played again, but wont be saved
     //because aggregate.events.length will be 0.
     //TODO find a way to unit test. This is integration tested though.
@@ -170,7 +170,10 @@ module.exports = ({
         state: snapshot.state,
       });
 
-      newEnd = newEnd == undefined || updated > newEnd ? updated : newEnd;
+      lastRootEnd =
+        lastRootEnd == undefined || updated > lastRootEnd
+          ? updated
+          : lastRootEnd;
     },
     parallel: 10,
   });
@@ -222,7 +225,7 @@ module.exports = ({
     created: deps.dateString(),
     number: previousBlock.headers.number + 1,
     start: previousBlock.headers.end,
-    end: sCount == blockLimit ? newEnd : maxNewEnd,
+    end: sCount == blockLimit ? lastRootEnd : end,
     eCount: allStringifiedEventPairs.length,
     sCount,
     tCount: stringifiedTxPairs.length,
