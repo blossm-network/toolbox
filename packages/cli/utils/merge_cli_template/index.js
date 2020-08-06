@@ -279,7 +279,13 @@ const topicsForDependencies = (config, events) => {
           config.facts.some(
             (f) => f.protection == undefined || f.protection == "strict"
           ))
-        ? ["session.core", "identity.core", "role.core", "principal.core"]
+        ? [
+            "start.session.core",
+            "upgrade.session.core",
+            "register.identity.core",
+            "create.role.core",
+            "add-roles.principal.core",
+          ]
         : []
     );
   return [...new Set(array)];
