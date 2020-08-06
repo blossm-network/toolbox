@@ -9,12 +9,13 @@ const terminatedSessionCheckFn = "some-terminated-session-check-fn";
 const domain = "some-domain";
 const service = "some-service";
 const network = "some-network";
-const subcontext = "some-subcontext";
+const context = "some-context";
 const algorithm = "some-algorithm";
 const keyClaimsFn = "some-token-claims-fn";
 const internalTokenFn = "some-internal-token-fn";
 const nodeExternalTokenFn = "some-node-external-token-fn";
 const audience = "some-audience";
+const redirect = "some-redirect";
 
 process.env.DOMAIN = domain;
 process.env.SERVICE = service;
@@ -52,7 +53,7 @@ describe("Command gateway", () => {
     const privilege = "some-privilege";
     const privileges = [privilege];
     const name = "some-name";
-    const commands = [{ name, privileges, subcontext }];
+    const commands = [{ name, privileges, context }];
 
     const verifyFnResult = "some-verify-fn";
     const verifyFnFake = fake.returns(verifyFnResult);
@@ -68,6 +69,7 @@ describe("Command gateway", () => {
       keyClaimsFn,
       algorithm,
       audience,
+      redirect,
     });
 
     expect(gatewayPostFake).to.have.been.calledWith({
@@ -77,6 +79,8 @@ describe("Command gateway", () => {
       internalTokenFn,
       nodeExternalTokenFn,
       key: "access",
+      redirect,
+      context,
     });
     expect(gatewayPostFake).to.have.been.calledOnce;
     expect(listenFake).to.have.been.calledWith();
@@ -113,7 +117,7 @@ describe("Command gateway", () => {
       permissions: privileges.map((privilege) => {
         return { service, domain, privilege };
       }),
-      context: subcontext,
+      context,
     });
   });
   it("should call with the correct params with privileges set to none and network in command", async () => {
@@ -144,7 +148,7 @@ describe("Command gateway", () => {
     const privileges = "none";
     const name = "some-name";
     const network = "some-network";
-    const commands = [{ name, network, privileges, subcontext, basic: true }];
+    const commands = [{ name, network, privileges, context, basic: true }];
 
     const verifyFnResult = "some-verify-fn";
     const verifyFnFake = fake.returns(verifyFnResult);
@@ -160,6 +164,7 @@ describe("Command gateway", () => {
       keyClaimsFn,
       algorithm,
       audience,
+      redirect,
     });
 
     expect(gatewayPostFake).to.have.been.calledWith({
@@ -170,6 +175,8 @@ describe("Command gateway", () => {
       internalTokenFn,
       nodeExternalTokenFn,
       key: "access",
+      redirect,
+      context,
     });
     expect(gatewayPostFake).to.have.been.calledOnce;
     expect(listenFake).to.have.been.calledWith();
@@ -203,7 +210,7 @@ describe("Command gateway", () => {
       permissionsLookupFn,
       terminatedSessionCheckFn,
       internalTokenFn,
-      context: subcontext,
+      context,
       permissions: "none",
     });
   });
@@ -255,6 +262,8 @@ describe("Command gateway", () => {
       nodeExternalTokenFn,
       algorithm,
       audience,
+      redirect,
+      context,
     });
 
     expect(authenticationFake).to.have.been.calledWith({
@@ -275,6 +284,7 @@ describe("Command gateway", () => {
       internalTokenFn,
       nodeExternalTokenFn,
       key,
+      redirect,
     });
   });
   it("should call with the correct params with multiple commands with difference protections", async () => {
@@ -311,7 +321,7 @@ describe("Command gateway", () => {
     const name2 = "some-name2";
     const commands = [
       { name: name1, protection: "none" },
-      { name: name2, privileges, subcontext },
+      { name: name2, privileges, context },
     ];
 
     const verifyFnResult = "some-verify-fn";
@@ -345,6 +355,7 @@ describe("Command gateway", () => {
       internalTokenFn,
       nodeExternalTokenFn,
       key: "access",
+      context,
     });
     expect(gatewayPostFake).to.have.been.calledTwice;
     expect(postFake).to.have.been.calledWith(gatewayPostResult, {
@@ -379,7 +390,7 @@ describe("Command gateway", () => {
       permissionsLookupFn,
       terminatedSessionCheckFn,
       internalTokenFn,
-      context: subcontext,
+      context,
       permissions: privileges.map((privilege) => {
         return { service, domain, privilege };
       }),
@@ -415,7 +426,7 @@ describe("Command gateway", () => {
     const privileges = [privilege];
 
     const name = "some-name";
-    const commands = [{ name, privileges, subcontext }];
+    const commands = [{ name, privileges, context }];
 
     const otherDomain = "some-other-domain";
     const otherService = "some-other-service";
@@ -434,6 +445,7 @@ describe("Command gateway", () => {
       terminatedSessionCheckFn,
       verifyFn: verifyFnFake,
       keyClaimsFn,
+      redirect,
     });
 
     expect(gatewayPostFake).to.have.been.calledWith({
@@ -443,12 +455,14 @@ describe("Command gateway", () => {
       internalTokenFn,
       nodeExternalTokenFn,
       key: "access",
+      redirect,
+      context,
     });
     expect(authorizationFake).to.have.been.calledWith({
       permissionsLookupFn,
       terminatedSessionCheckFn,
       internalTokenFn,
-      context: subcontext,
+      context,
       permissions: privileges.map((privilege) => {
         return { service: otherService, domain: otherDomain, privilege };
       }),

@@ -11,6 +11,7 @@ module.exports = async ({
   nodeExternalTokenFn,
   algorithm,
   audience,
+  redirect,
 }) => {
   let server = deps
     .server({
@@ -67,6 +68,7 @@ module.exports = async ({
     server = server.get(
       deps.get({
         procedure,
+        redirect,
         name,
         ...(network && { network }),
         internalTokenFn,

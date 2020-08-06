@@ -7,7 +7,6 @@ const get = require("..");
 const results = "some-result";
 const query = { a: 1 };
 const name = "some-name";
-const context = "some-context";
 const claims = "some-claims";
 const root = "some-root";
 
@@ -22,6 +21,10 @@ const envContext = "some-env-context";
 process.env.CORE_NETWORK = coreNetwork;
 process.env.NETWORK = network;
 process.env.CONTEXT = envContext;
+
+const context = {
+  [envContext]: "some-thing",
+};
 
 describe("View gateway get", () => {
   beforeEach(() => {
@@ -41,6 +44,7 @@ describe("View gateway get", () => {
     replace(deps, "viewStore", viewStoreFake);
 
     const req = {
+      context,
       query,
       params: {},
     };
@@ -65,6 +69,7 @@ describe("View gateway get", () => {
 
     expect(viewStoreFake).to.have.been.calledWith({ name });
     expect(setFake).to.have.been.calledWith({
+      context,
       token: {
         internalFn: internalTokenFn,
         externalFn: match((fn) => {
@@ -189,6 +194,7 @@ describe("View gateway get", () => {
     replace(deps, "viewComposite", viewCompositeFake);
 
     const req = {
+      context,
       query,
       params: {},
     };
@@ -213,6 +219,7 @@ describe("View gateway get", () => {
 
     expect(viewCompositeFake).to.have.been.calledWith({ name });
     expect(setFake).to.have.been.calledWith({
+      context,
       token: {
         internalFn: internalTokenFn,
         externalFn: match((fn) => {
@@ -324,5 +331,50 @@ describe("View gateway get", () => {
     } catch (e) {
       expect(e.message).to.equal(errorMessage);
     }
+  });
+  it("should redirect correctly if no context", async () => {
+    const req = {
+      query,
+      params: {},
+    };
+
+    const sendFake = fake();
+    const statusFake = fake.returns({
+      send: sendFake,
+    });
+    const res = {
+      status: statusFake,
+    };
+
+    const redirect = "some-redirect";
+    await get({
+      redirect,
+    })(req, res);
+
+    expect(statusFake).to.have.been.calledOnceWith(300);
+    expect(sendFake).to.have.been.calledOnceWith({ redirect });
+  });
+  it("should redirect correctly if no correct context", async () => {
+    const req = {
+      context: {},
+      query,
+      params: {},
+    };
+
+    const sendFake = fake();
+    const statusFake = fake.returns({
+      send: sendFake,
+    });
+    const res = {
+      status: statusFake,
+    };
+
+    const redirect = "some-redirect";
+    await get({
+      redirect,
+    })(req, res);
+
+    expect(statusFake).to.have.been.calledOnceWith(300);
+    expect(sendFake).to.have.been.calledOnceWith({ redirect });
   });
 });

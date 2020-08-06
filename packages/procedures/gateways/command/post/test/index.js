@@ -18,7 +18,11 @@ const headers = {
 };
 const name = "some-name";
 const domain = "some-domain";
-const context = "some-context";
+const procesdureContext = "some-procedure-context";
+const context = {
+  [procesdureContext]: "some-thing",
+};
+const redirect = "some-redirect";
 const claims = "some-claims";
 const internalTokenFn = "some-internal-token-fn";
 const statusCode = "some-status-code";
@@ -568,5 +572,43 @@ describe("Command gateway post", () => {
     } catch (e) {
       expect(e.message).to.equal(errorMessage);
     }
+  });
+  it("should redirect correctly with no context", async () => {
+    const req = {};
+    const sendFake = fake();
+    const statusFake = fake.returns({
+      send: sendFake,
+    });
+    const res = {
+      status: statusFake,
+    };
+    await post({
+      context,
+      redirect,
+    })(req, res);
+
+    expect(statusFake).to.have.been.calledWith(300);
+    expect(sendFake).to.have.been.calledWith({
+      redirect,
+    });
+  });
+  it("should redirect correctly with wrong context", async () => {
+    const req = {};
+    const sendFake = fake();
+    const statusFake = fake.returns({
+      send: sendFake,
+    });
+    const res = {
+      status: statusFake,
+    };
+    await post({
+      context: {},
+      redirect,
+    })(req, res);
+
+    expect(statusFake).to.have.been.calledWith(300);
+    expect(sendFake).to.have.been.calledWith({
+      redirect,
+    });
   });
 });

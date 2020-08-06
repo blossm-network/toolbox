@@ -14,8 +14,9 @@ service: core
 # to access this command. Set this to 'none' if no specific priviledges are needed,
 # but the route should still require by a valid token.
 #
-# The 'subcontext' property describes which property in the requesting token's context
+# The 'context' property describes which property in the requesting token's context
 # that the specified priviledges should refer to.
+# If a context is specified but it isn't found, the 'redirect' is used.
 #
 # Set the 'protection' property to 'none' if this route should be accessible by
 # anyone on the internet. Set 'protection' to 'context' if the route should be
@@ -24,7 +25,7 @@ service: core
 #
 commands:
   - name: some-name
-    subcontext: some-subcontext
+    context: some-context
     privileges:
       - some-permission
   - name: some-other-name

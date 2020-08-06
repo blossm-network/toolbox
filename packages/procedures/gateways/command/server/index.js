@@ -13,6 +13,7 @@ module.exports = async ({
   terminatedSessionCheckFn,
   verifyFn,
   keyClaimsFn,
+  redirect,
 }) => {
   let server = deps.server({
     prehook: (app) =>
@@ -32,7 +33,7 @@ module.exports = async ({
     privileges,
     protection = "strict",
     basic = false,
-    subcontext,
+    context,
   } of commands) {
     server = server.post(
       deps.post({
@@ -43,6 +44,8 @@ module.exports = async ({
         internalTokenFn,
         nodeExternalTokenFn,
         key,
+        ...(redirect && { redirect }),
+        ...(context && { context }),
       }),
       {
         path: `/${name}`,
@@ -62,7 +65,7 @@ module.exports = async ({
                   permissionsLookupFn,
                   terminatedSessionCheckFn,
                   internalTokenFn,
-                  context: subcontext,
+                  context,
                   permissions:
                     privileges instanceof Array
                       ? privileges.map((privilege) => {

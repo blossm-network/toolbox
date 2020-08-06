@@ -7,7 +7,11 @@ module.exports = ({
   internalTokenFn,
   nodeExternalTokenFn,
   key,
+  redirect,
 } = {}) => async (req, res) => {
+  if (!req.context || !req.context[process.env.CONTEXT])
+    return res.status(300).send({ redirect });
+
   switch (procedure) {
     case "view-store": {
       const { body: response } = await deps

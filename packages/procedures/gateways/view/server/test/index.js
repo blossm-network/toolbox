@@ -14,6 +14,7 @@ const procedure = "some-procedure";
 const reqContext = "some-req-context";
 const internalTokenFn = "some-internal-token-fn";
 const nodeExternalTokenFn = "some-node-external-token-fn";
+const redirect = "some-redirect";
 
 process.env.CONTEXT = context;
 process.env.NETWORK = network;
@@ -82,10 +83,12 @@ describe("View gateway", () => {
       nodeExternalTokenFn,
       algorithm,
       audience,
+      redirect,
     });
 
     expect(gatewayGetFake).to.have.been.calledWith({
       procedure,
+      redirect,
       name,
       internalTokenFn,
       nodeExternalTokenFn,
@@ -227,10 +230,12 @@ describe("View gateway", () => {
       internalTokenFn,
       nodeExternalTokenFn,
       audience,
+      redirect,
     });
 
     expect(gatewayGetFake).to.have.been.calledWith({
       procedure,
+      redirect,
       name,
       internalTokenFn,
       nodeExternalTokenFn,
@@ -329,10 +334,12 @@ describe("View gateway", () => {
       internalTokenFn,
       nodeExternalTokenFn,
       audience,
+      redirect,
     });
 
     expect(gatewayGetFake).to.have.been.calledWith({
       procedure,
+      redirect,
       name,
       internalTokenFn,
       nodeExternalTokenFn,
@@ -433,10 +440,12 @@ describe("View gateway", () => {
       internalTokenFn,
       nodeExternalTokenFn,
       audience,
+      redirect,
     });
     expect(gatewayGetFake).to.have.been.calledWith({
       name,
       procedure,
+      redirect,
       internalTokenFn,
       nodeExternalTokenFn,
       key,
@@ -552,10 +561,12 @@ describe("View gateway", () => {
       internalTokenFn,
       nodeExternalTokenFn,
       audience,
+      redirect,
     });
 
     expect(gatewayGetFake).to.have.been.calledWith({
       procedure,
+      redirect,
       name: name1,
       network: viewNetwork,
       internalTokenFn,
@@ -564,6 +575,7 @@ describe("View gateway", () => {
     });
     expect(gatewayGetFake).to.have.been.calledWith({
       procedure,
+      redirect,
       name: name2,
       internalTokenFn,
       nodeExternalTokenFn,
@@ -571,6 +583,7 @@ describe("View gateway", () => {
     });
     expect(gatewayGetFake).to.have.been.calledWith({
       procedure,
+      redirect,
       name: name3,
       internalTokenFn,
       nodeExternalTokenFn,
