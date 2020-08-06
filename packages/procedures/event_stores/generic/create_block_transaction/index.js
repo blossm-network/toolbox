@@ -1,5 +1,7 @@
 const deps = require("./deps");
 
+const blockLimit = 100;
+
 //TODO store the merkle proofs elsewhere for O(log(n)) verification. Not important now.
 module.exports = ({
   saveSnapshotFn,
@@ -81,11 +83,15 @@ module.exports = ({
   });
 
   let newEnd;
+  let maxNewEnd = deps.dateString();
+
   await rootStreamFn({
     updatedOnOrAfter: previousBlock.headers.end,
-    //First come first serve.
-    //The last updated root from the previous block will always play again.
-    limit: 100,
+    updatedBefore: maxNewEnd,
+    //If the previous block was full, the last item of the previous block will be played again, but wont be saved
+    //because aggregate.events.length will be 0.
+    //TODO find a way to unit test. This is integration tested though.
+    limit: blockLimit,
     reverse: true,
     fn: async ({ root, updated }) => {
       const aggregate = await aggregateFn(root, { includeEvents: true });
@@ -209,15 +215,16 @@ module.exports = ({
   const encodedSnapshots = deps.encode(stringifiedSnapshotPairs);
   const encodedTxs = deps.encode(stringifiedTxPairs);
 
+  const sCount = stringifiedSnapshotPairs.length;
   const blockHeaders = {
     nonce: deps.nonce(),
     pHash: previousBlock.hash,
     created: deps.dateString(),
     number: previousBlock.headers.number + 1,
     start: previousBlock.headers.end,
-    end: newEnd || previousBlock.headers.end,
+    end: sCount == blockLimit ? newEnd : maxNewEnd,
     eCount: allStringifiedEventPairs.length,
-    sCount: stringifiedSnapshotPairs.length,
+    sCount,
     tCount: stringifiedTxPairs.length,
     eRoot: allEventsMerkleRoot.toString("base64"),
     sRoot: snapshotsMerkleRoot.toString("base64"),
