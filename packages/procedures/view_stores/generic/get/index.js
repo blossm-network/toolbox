@@ -12,7 +12,7 @@ module.exports = ({
   queryFn = defaultQueryFn,
 }) => {
   return async (req, res) => {
-    if (!req.query.context)
+    if (!req.query.context || !req.query.context[process.env.CONTEXT])
       throw deps.forbiddenError.message("Missing required permissions.");
 
     const queryBody = queryFn(req.query.query || {});
@@ -25,6 +25,7 @@ module.exports = ({
       ...formattedQueryBody,
       ...(req.params.id && { "headers.id": req.params.id }),
       "headers.context": {
+        //TODO
         root: req.query.context[process.env.CONTEXT].root,
         domain: process.env.CONTEXT,
         service: req.query.context[process.env.CONTEXT].service,
