@@ -4,7 +4,7 @@ module.exports = (whitelist) => {
   return {
     check: (origin, callback) => {
       //TODO
-      console.log({ whitelist: [`https://${process.env.NETWORK}`, origin] });
+      console.log({ whitelist, origin });
       if (!origin || whitelist.indexOf(origin) !== -1) {
         callback(null, true);
       } else {
