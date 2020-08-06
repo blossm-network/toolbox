@@ -729,7 +729,7 @@ const configure = async (workingDir, configFn, env, strict) => {
       region,
       containerRegistery,
       coreContainerRegistery,
-      coreNetwork,
+      coreNetwork: "local.network",
       domain,
       name,
       secretBucket,
