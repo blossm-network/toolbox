@@ -10,6 +10,9 @@ const method0 = "some-method";
 const method1 = "some-other-method";
 const methods = [method0, method1];
 
+const network = "some-network";
+process.env.NETWORK = network;
+
 describe("Cors middleware", () => {
   afterEach(() => {
     restore();
@@ -38,7 +41,10 @@ describe("Cors middleware", () => {
       credentials: false,
     });
     expect(useFake).to.have.been.calledWith(corsResult);
-    expect(whitelistFake).to.have.been.calledWith(whitelist);
+    expect(whitelistFake).to.have.been.calledWith([
+      `https://${network}`,
+      ...whitelist,
+    ]);
     expect(optionsFake).to.have.been.calledWith("*", corsResult);
   });
   it("should call correctly if credentials is true", async () => {
@@ -65,7 +71,10 @@ describe("Cors middleware", () => {
       credentials: true,
     });
     expect(useFake).to.have.been.calledWith(corsResult);
-    expect(whitelistFake).to.have.been.calledWith(whitelist);
+    expect(whitelistFake).to.have.been.calledWith([
+      `https://${network}`,
+      ...whitelist,
+    ]);
     expect(optionsFake).to.have.been.calledWith("*", corsResult);
   });
 });
