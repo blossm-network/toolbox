@@ -265,7 +265,9 @@ const copySource = async (p, workingDir) => {
 
 const topicsForDependencies = (config, events) => {
   const array = (events || [])
-    .map((e) => `${e.domain}.${e.service || config.service}`)
+    .map((e) =>
+      e.actions.map((a) => `${a}.${e.domain}.${e.service || config.service}`)
+    )
     .concat(
       (config.procedure == "command-gateway" &&
         config.commands.some(

@@ -63,6 +63,7 @@ const findDependenciesAndEventsForDependency = (dependency, dir) => {
                   {
                     domain: blossmConfig.domain,
                     service: blossmConfig.service,
+                    actions: blossmConfig.actions,
                   },
                 ]
               : [],
