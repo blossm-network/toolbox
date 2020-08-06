@@ -10,7 +10,7 @@ module.exports = ({
   service,
   project,
   region,
-  coreNetwork,
+  // coreNetwork,
   containerRegistery,
   dependencyKeyEnvironmentVariables,
   domain,
@@ -36,7 +36,8 @@ module.exports = ({
       ...(domain && { DOMAIN: domain }),
       ...(service && { SERVICE: service }),
       NETWORK: network,
-      CORE_NETWORK: coreNetwork,
+      //TODO
+      CORE_NETWORK: network, //coreNetwork,
       HOST: host,
       PROCEDURE: procedure,
       OPERATION_HASH: operationHash,
