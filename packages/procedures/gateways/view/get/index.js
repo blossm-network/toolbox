@@ -10,7 +10,7 @@ module.exports = ({
   redirect,
 } = {}) => async (req, res) => {
   if (!req.context || !req.context[process.env.CONTEXT])
-    return res.status(300).send({ redirect });
+    return res.redirect(300, `https://${process.env.NETWORK}${redirect}`);
 
   switch (procedure) {
     case "view-store": {

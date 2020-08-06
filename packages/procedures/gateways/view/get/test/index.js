@@ -27,9 +27,6 @@ const context = {
 };
 
 describe("View gateway get", () => {
-  beforeEach(() => {
-    delete process.env.NETWORK;
-  });
   afterEach(() => {
     restore();
   });
@@ -338,12 +335,9 @@ describe("View gateway get", () => {
       params: {},
     };
 
-    const sendFake = fake();
-    const statusFake = fake.returns({
-      send: sendFake,
-    });
+    const redirectFake = fake();
     const res = {
-      status: statusFake,
+      redirect: redirectFake,
     };
 
     const redirect = "some-redirect";
@@ -351,8 +345,10 @@ describe("View gateway get", () => {
       redirect,
     })(req, res);
 
-    expect(statusFake).to.have.been.calledOnceWith(300);
-    expect(sendFake).to.have.been.calledOnceWith({ redirect });
+    expect(redirectFake).to.have.been.calledOnceWith(
+      300,
+      `https://${network}${redirect}`
+    );
   });
   it("should redirect correctly if no correct context", async () => {
     const req = {
@@ -361,12 +357,9 @@ describe("View gateway get", () => {
       params: {},
     };
 
-    const sendFake = fake();
-    const statusFake = fake.returns({
-      send: sendFake,
-    });
+    const redirectFake = fake();
     const res = {
-      status: statusFake,
+      redirect: redirectFake,
     };
 
     const redirect = "some-redirect";
@@ -374,7 +367,9 @@ describe("View gateway get", () => {
       redirect,
     })(req, res);
 
-    expect(statusFake).to.have.been.calledOnceWith(300);
-    expect(sendFake).to.have.been.calledOnceWith({ redirect });
+    expect(redirectFake).to.have.been.calledOnceWith(
+      300,
+      `https://${network}${redirect}`
+    );
   });
 });
