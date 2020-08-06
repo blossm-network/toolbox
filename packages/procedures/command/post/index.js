@@ -93,6 +93,8 @@ module.exports = ({
 
   const eventDataPerStore = {};
 
+  //TODO
+  console.log({ commandNet: process.env.NETWORK });
   for (const {
     root,
     payload = {},
