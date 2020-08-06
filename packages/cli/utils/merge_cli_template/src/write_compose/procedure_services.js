@@ -60,8 +60,7 @@ module.exports = ({
     PORT: `${port}`,
     NODE_ENV: "local",
     NETWORK: network,
-    //TODO double check
-    CORE_NETWORK: network, //coreNetwork
+    CORE_NETWORK: network,
     HOST: host,
     GCP_PROJECT: project,
     GCP_REGION: region,
@@ -212,8 +211,6 @@ module.exports = ({
                 OPERATION_HASH: operationHash,
                 DOMAIN: dependency.domain,
                 SERVICE: dependency.service,
-                //TODO verify
-                NETWORK: network, //dependency.network || network,
                 NAME: dependency.name,
                 ...customEnv,
               },

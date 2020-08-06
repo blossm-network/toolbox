@@ -16,11 +16,6 @@ module.exports = async ({
   const principalRoot = uuid();
   const sessionRoot = uuid();
 
-  console.log("1: ", {
-    coreNetwork: process.env.CORE_NETWORK,
-    network: process.env.NETWORK,
-  });
-
   // Create the identity for the token.
   await eventStore({
     domain: "identity",
@@ -47,8 +42,6 @@ module.exports = async ({
       },
     ],
   });
-
-  console.log(2);
 
   // Add permissions to the role
   // and add role to the principal.
@@ -100,8 +93,6 @@ module.exports = async ({
     }),
   ]);
 
-  console.log(3);
-
   // Add a session.
   await eventStore({
     domain: "session",
@@ -121,8 +112,6 @@ module.exports = async ({
     ],
   });
 
-  console.log(4);
-
   const {
     body: { tokens },
   } = await command({
@@ -141,7 +130,7 @@ module.exports = async ({
         },
       },
       claims: {
-        iss: `session.${process.env.SERVICE}.${process.env.NETWORK}/upgrade`,
+        iss: `session.core.${process.env.NETWORK}/upgrade`,
         aud: `${process.env.NETWORK}`,
         exp: "9999-12-31T00:00:00.000Z",
       },
@@ -157,6 +146,5 @@ module.exports = async ({
       { root: sessionRoot }
     );
 
-  console.log("5: ", { token: tokens[0].value });
   return { token: tokens[0].value };
 };

@@ -36,8 +36,7 @@ module.exports = ({
       ...(domain && { DOMAIN: domain }),
       ...(service && { SERVICE: service }),
       NETWORK: network,
-      //TODO
-      CORE_NETWORK: network, //coreNetwork,
+      CORE_NETWORK: network,
       HOST: host,
       PROCEDURE: procedure,
       OPERATION_HASH: operationHash,
