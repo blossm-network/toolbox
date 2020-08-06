@@ -212,7 +212,8 @@ module.exports = ({
                 OPERATION_HASH: operationHash,
                 DOMAIN: dependency.domain,
                 SERVICE: dependency.service,
-                NETWORK: dependency.network || network,
+                //TODO verify
+                NETWORK: network, //dependency.network || network,
                 NAME: dependency.name,
                 ...customEnv,
               },
