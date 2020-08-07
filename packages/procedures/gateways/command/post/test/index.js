@@ -575,34 +575,42 @@ describe("Command gateway post", () => {
   });
   it("should redirect correctly with no context", async () => {
     const req = {};
-    const redirectFake = fake();
+    const sendFake = fake();
+    const statusFake = fake.returns({
+      send: sendFake,
+    });
     const res = {
-      redirect: redirectFake,
+      status: statusFake,
     };
     await post({
       context,
       redirect,
     })(req, res);
 
-    expect(redirectFake).to.have.been.calledWith(
-      300,
-      `https://${envNetwork}${redirect}`
-    );
+    expect(statusFake).to.have.been.calledWith(300);
+    expect(sendFake).to.have.been.calledWith({
+      redirect,
+    });
   });
-  it("should redirect correctly with wrong context", async () => {
-    const req = {};
-    const redirectFake = fake();
+  it("should redirect correctly with bad context", async () => {
+    const req = {
+      context: {},
+    };
+    const sendFake = fake();
+    const statusFake = fake.returns({
+      send: sendFake,
+    });
     const res = {
-      redirect: redirectFake,
+      status: statusFake,
     };
     await post({
-      context: {},
+      context,
       redirect,
     })(req, res);
 
-    expect(redirectFake).to.have.been.calledWith(
-      300,
-      `https://${envNetwork}${redirect}`
-    );
+    expect(statusFake).to.have.been.calledWith(300);
+    expect(sendFake).to.have.been.calledWith({
+      redirect,
+    });
   });
 });

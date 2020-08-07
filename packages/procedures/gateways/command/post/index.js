@@ -12,7 +12,7 @@ module.exports = ({
   context,
 } = {}) => async (req, res) => {
   if (context && (!req.context || !req.context[context]))
-    return res.redirect(300, `https://${process.env.NETWORK}${redirect}`);
+    return res.status(300).send({ redirect });
 
   await deps.validate(req.body);
   const { payload, headers, root } = req.body;
