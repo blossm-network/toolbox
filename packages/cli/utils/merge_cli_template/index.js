@@ -636,6 +636,7 @@ const configure = async (workingDir, configFn, env, strict) => {
     const domain = config.domain;
     const service = config.service;
     const context = config.context;
+    const bootstrapContext = config.bootstrap;
     const actions = config.actions;
     const events = config.events;
     const procedure = config.procedure;
@@ -681,6 +682,7 @@ const configure = async (workingDir, configFn, env, strict) => {
       actions,
       events,
       context,
+      bootstrapContext,
       name,
       project,
       procedure,
@@ -726,6 +728,7 @@ const configure = async (workingDir, configFn, env, strict) => {
       service,
       project,
       context,
+      bootstrapContext,
       region,
       containerRegistery,
       coreContainerRegistery,

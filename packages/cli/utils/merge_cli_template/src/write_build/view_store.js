@@ -24,6 +24,7 @@ module.exports = ({
   project,
   network,
   context,
+  bootstrapContext,
   timeout,
   memory,
   envUriSpecifier,
@@ -75,6 +76,7 @@ module.exports = ({
       custom: {
         NAME: name,
         CONTEXT: context,
+        ...(bootstrapContext && { BOOTSTRAP_CONTEXT: bootstrapContext }),
         ...dependencyKeyEnvironmentVariables,
       },
     }),
@@ -112,6 +114,7 @@ module.exports = ({
             env: {
               NAME: name,
               CONTEXT: context,
+              ...(bootstrapContext && { BOOTSTRAP_CONTEXT: bootstrapContext }),
               MONGODB_DATABASE: `${context}_${name}`,
               MONGODB_USER: mongodbUser,
               MONGODB_HOST: mongodbHost,

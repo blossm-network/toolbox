@@ -20,8 +20,6 @@ const envContextService = "some-env-context-service";
 const envContextNetwork = "some-env-context-network";
 
 const envName = "some-env-name";
-const envDomain = "some-env-domain";
-const envService = "some-env-service";
 const envNetwork = "some-env-network";
 const coreNetwork = "some-core-network";
 
@@ -41,10 +39,6 @@ process.env.NETWORK = envNetwork;
 process.env.CORE_NETWORK = coreNetwork;
 
 describe("View store get", () => {
-  beforeEach(() => {
-    process.env.DOMAIN = envDomain;
-    process.env.SERVICE = envService;
-  });
   afterEach(() => {
     restore();
   });
@@ -123,9 +117,9 @@ describe("View store get", () => {
       },
     });
     expect(urlEncodeQueryDataFake).to.have.been.calledWith(
-      `https://v.${envDomain}.${envService}.${envContext}.${envNetwork}/${envName}`,
+      `https://v.${envContext}.${envNetwork}/${envName}`,
       {
-        sort: { a: 1 },
+        sort: { a: "1" },
         query,
         skip: 100,
         limit: 100,
@@ -135,6 +129,8 @@ describe("View store get", () => {
       expect(formatFake.getCall(i)).to.have.been.calledWith({
         body: results[i].body,
         id: results[i].headers.id,
+        updates:
+          "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
       });
     }
     expect(sendFake).to.have.been.calledWith({
@@ -291,9 +287,9 @@ describe("View store get", () => {
       },
     });
     expect(urlEncodeQueryDataFake).to.have.been.calledWith(
-      `https://v.${envDomain}.${envService}.${envContext}.${envNetwork}/${envName}`,
+      `https://v.${envContext}.${envNetwork}/${envName}`,
       {
-        sort: { a: 1 },
+        sort: { a: "1" },
         query,
         skip: 2,
         limit: 1,
@@ -302,6 +298,8 @@ describe("View store get", () => {
     expect(formatFake.getCall(0)).to.have.been.calledWith({
       body: obj,
       id,
+      updates:
+        "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
     });
     expect(formatFake).to.have.been.calledOnce;
     expect(sendFake).to.have.been.calledWith({
@@ -393,6 +391,8 @@ describe("View store get", () => {
     expect(formatFake.getCall(0)).to.have.been.calledWith({
       body: obj,
       id,
+      updates:
+        "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
     });
     expect(formatFake).to.have.been.calledOnce;
     expect(sendFake).to.have.been.calledWith({
@@ -470,6 +470,8 @@ describe("View store get", () => {
     expect(formatFake.getCall(0)).to.have.been.calledWith({
       body: obj,
       id,
+      updates:
+        "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
     });
     expect(formatFake).to.have.been.calledOnce;
     expect(sendFake).to.have.been.calledWith({
@@ -548,9 +550,176 @@ describe("View store get", () => {
     expect(formatFake).to.have.been.calledWith({
       body: obj,
       id,
+      updates:
+        "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
     });
     expect(sendFake).to.have.been.calledWith({
       content: {
+        ...formattedResult,
+        headers: { trace: [txId0, txId1, txId2], id, context: foundContext },
+      },
+      updates:
+        "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
+    });
+  });
+  it("should call with the correct params with bootstrap as true", async () => {
+    const findFake = fake.returns([
+      {
+        body: obj,
+        headers: { id, context: foundContext },
+        trace: {
+          "some-service": { "some-domain": [txId0] },
+          "some-other-service": { "some-other-domain": [txId1] },
+          "amother-service": { "another-domain": [txId2] },
+        },
+      },
+    ]);
+    const formattedResult = { formatted: "result" };
+    const formatFake = fake.returns(formattedResult);
+    const countFake = fake.returns(count);
+
+    const query = { "some-query-key": 1 };
+
+    const urlEncodeQueryDataFake = fake.returns(nextUrl);
+    replace(deps, "urlEncodeQueryData", urlEncodeQueryDataFake);
+
+    const bootstrapContext = "some-bootstrap-context";
+    const bootstrapRoot = "some-bootstrap-root";
+    const req = {
+      query: {
+        sort,
+        context: {
+          ...context,
+          [bootstrapContext]: {
+            root: bootstrapRoot,
+          },
+        },
+        query,
+        bootstrap: true,
+      },
+      params: {},
+    };
+
+    const sendFake = fake();
+    const res = {
+      send: sendFake,
+    };
+
+    const otherQuery = { "some-other-query-key": 1 };
+    const queryFnFake = fake.returns(otherQuery);
+    delete process.env.DOMAIN;
+    process.env.BOOTSTRAP_CONTEXT = bootstrapContext;
+    await get({
+      findFn: findFake,
+      countFn: countFake,
+      queryFn: queryFnFake,
+      formatFn: formatFake,
+    })(req, res);
+    expect(queryFnFake).to.have.been.calledWith(query);
+    expect(findFake).to.have.been.calledWith({
+      limit: 1,
+      skip: 0,
+      query: {
+        "headers.id": bootstrapRoot,
+        "headers.context": {
+          root: envContextRoot,
+          domain: "some-env-context",
+          service: envContextService,
+          network: envContextNetwork,
+        },
+      },
+    });
+    expect(countFake).to.not.have.been.called;
+    expect(formatFake).to.have.been.calledWith({
+      body: obj,
+      id,
+      updates:
+        "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
+    });
+    expect(sendFake).to.have.been.calledWith({
+      bootstrap: {
+        ...formattedResult,
+        headers: { trace: [txId0, txId1, txId2], id, context: foundContext },
+      },
+      updates:
+        "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
+    });
+  });
+  it("should call with the correct params with bootstrap as true without env variable", async () => {
+    const findFake = fake.returns([
+      {
+        body: obj,
+        headers: { id, context: foundContext },
+        trace: {
+          "some-service": { "some-domain": [txId0] },
+          "some-other-service": { "some-other-domain": [txId1] },
+          "amother-service": { "another-domain": [txId2] },
+        },
+      },
+    ]);
+    const formattedResult = { formatted: "result" };
+    const formatFake = fake.returns(formattedResult);
+    const countFake = fake.returns(count);
+
+    const query = { "some-query-key": 1 };
+
+    const urlEncodeQueryDataFake = fake.returns(nextUrl);
+    replace(deps, "urlEncodeQueryData", urlEncodeQueryDataFake);
+
+    const bootstrapContext = "some-bootstrap-context";
+    const bootstrapRoot = "some-bootstrap-root";
+    const req = {
+      query: {
+        sort,
+        context: {
+          ...context,
+          [bootstrapContext]: {
+            root: bootstrapRoot,
+          },
+        },
+        query,
+        bootstrap: true,
+      },
+      params: {},
+    };
+
+    const sendFake = fake();
+    const res = {
+      send: sendFake,
+    };
+
+    const otherQuery = { "some-other-query-key": 1 };
+    const queryFnFake = fake.returns(otherQuery);
+    delete process.env.DOMAIN;
+    delete process.env.BOOTSTRAP_CONTEXT;
+    await get({
+      findFn: findFake,
+      countFn: countFake,
+      queryFn: queryFnFake,
+      formatFn: formatFake,
+    })(req, res);
+    expect(queryFnFake).to.have.been.calledWith(query);
+    expect(findFake).to.have.been.calledWith({
+      limit: 1,
+      skip: 0,
+      query: {
+        "headers.context": {
+          root: envContextRoot,
+          domain: "some-env-context",
+          service: envContextService,
+          network: envContextNetwork,
+        },
+      },
+    });
+    expect(countFake).to.not.have.been.called;
+    expect(formatFake).to.have.been.calledWith({
+      body: obj,
+      id,
+      updates:
+        "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
+    });
+    expect(sendFake).to.have.been.calledWith({
+      bootstrap: {
         ...formattedResult,
         headers: { trace: [txId0, txId1, txId2], id, context: foundContext },
       },

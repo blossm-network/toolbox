@@ -37,6 +37,7 @@ const steps = ({
   host,
   env,
   context,
+  bootstrapContext,
   operationHash,
   operationName,
   envVars,
@@ -66,6 +67,7 @@ const steps = ({
         project,
         network,
         context,
+        bootstrapContext,
         memory,
         host,
         computeUrlId,
@@ -464,6 +466,7 @@ module.exports = ({
   memory,
   host,
   context,
+  bootstrapContext,
   envUriSpecifier,
   coreNetwork,
   containerRegistery,
@@ -496,6 +499,7 @@ module.exports = ({
     domain,
     service,
     context,
+    bootstrapContext,
   });
 
   const runUnitTests = fs.existsSync(path.resolve(workingDir, "test/unit"));
@@ -521,6 +525,7 @@ module.exports = ({
       project,
       network,
       context,
+      bootstrapContext,
       memory,
       procedure,
       envVars,

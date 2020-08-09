@@ -14,15 +14,17 @@ module.exports = ({
   return async (req, res) => {
     const queryBody = queryFn(req.query.query || {});
     const formattedQueryBody = {};
-    for (const key in queryBody) {
+    for (const key in queryBody)
       formattedQueryBody[`body.${key}`] = queryBody[key];
-    }
 
     const query = {
-      ...formattedQueryBody,
+      ...(!req.query.bootstrap && { ...formattedQueryBody }),
       ...(req.params.id && { "headers.id": req.params.id }),
+      ...(req.query.bootstrap &&
+        process.env.BOOTSTRAP_CONTEXT && {
+          "headers.id": req.query.context[process.env.BOOTSTRAP_CONTEXT].root,
+        }),
       "headers.context": {
-        //TODO
         root: req.query.context[process.env.CONTEXT].root,
         domain: process.env.CONTEXT,
         service: req.query.context[process.env.CONTEXT].service,
@@ -30,23 +32,21 @@ module.exports = ({
       },
     };
 
-    if (req.query.limit) req.query.limit = parseInt(req.query.limit);
-    if (req.query.skip) req.query.skip = parseInt(req.query.skip);
-    if (req.query.sort) {
-      for (const sort in req.query.sort) {
-        req.query.sort[sort] = parseInt(req.query.sort[sort]);
+    let formattedSort;
+    if (!req.query.bootstrap) {
+      if (req.query.limit) req.query.limit = parseInt(req.query.limit);
+      if (req.query.skip) req.query.skip = parseInt(req.query.skip);
+      if (req.query.sort) {
+        formattedSort = {};
+        for (const key in req.query.sort) {
+          formattedSort[`body.${key}`] = parseInt(req.query.sort[key]);
+        }
       }
     }
 
-    const limit = one ? 1 : req.query.limit || defaultLimit;
-    const skip = one ? 0 : req.query.skip || 0;
-
-    let formattedSort;
-    if (req.query.sort) {
-      formattedSort = {};
-      for (const key in req.query.sort)
-        formattedSort[`body.${key}`] = req.query.sort[key];
-    }
+    const limit =
+      one || req.query.bootstrap ? 1 : req.query.limit || defaultLimit;
+    const skip = one || req.query.bootstrap ? 0 : req.query.skip || 0;
 
     const [results, count] = await Promise.all([
       findFn({
@@ -55,10 +55,11 @@ module.exports = ({
         skip,
         ...(formattedSort && { sort: formattedSort }),
       }),
-      ...(one ? [] : [countFn({ query })]),
+      ...(one || req.query.bootstrap ? [] : [countFn({ query })]),
     ]);
 
-    //TODO this function is duplicated in /post. Refactor.
+    const updates = `https://updates.${process.env.CORE_NETWORK}/channel?query%5Bname%5D=${process.env.NAME}&query%5Bcontext%5D=${process.env.CONTEXT}&query%5Bnetwork%5D=${process.env.NETWORK}`;
+
     const formattedResults = results.map((r) => {
       const formattedTrace = [];
       for (const service in r.trace) {
@@ -67,8 +68,9 @@ module.exports = ({
             if (!formattedTrace.includes(txId)) formattedTrace.push(txId);
         }
       }
+
       return {
-        ...formatFn({ body: r.body, id: r.headers.id }),
+        ...formatFn({ body: r.body, id: r.headers.id, updates }),
         headers: {
           trace: formattedTrace,
           id: r.headers.id,
@@ -77,15 +79,9 @@ module.exports = ({
       };
     });
 
-    const updates = `https://updates.${process.env.CORE_NETWORK}/channel?query%5Bname%5D=${process.env.NAME}&query%5Bcontext%5D=${process.env.CONTEXT}&query%5Bnetwork%5D=${process.env.NETWORK}`;
-
-    if (!one) {
+    if (!one && !req.query.bootstrap) {
       const limit = req.query.limit || defaultLimit;
-      const url = `https://v${
-        process.env.DOMAIN && process.env.SERVICE
-          ? `.${process.env.DOMAIN}.${process.env.SERVICE}`
-          : ""
-      }.${process.env.CONTEXT}.${process.env.NETWORK}/${process.env.NAME}`;
+      const url = `https://v.${process.env.CONTEXT}.${process.env.NETWORK}/${process.env.NAME}`;
       const next =
         formattedResults.length == limit && skip + limit < count
           ? deps.urlEncodeQueryData(url, {
@@ -110,7 +106,10 @@ module.exports = ({
         count,
       });
     } else if (formattedResults.length > 0) {
-      res.send({ content: formattedResults[0], updates });
+      res.send({
+        [req.query.bootstrap ? "bootstrap" : "content"]: formattedResults[0],
+        updates,
+      });
     } else {
       throw deps.resourceNotFoundError.message("This view wasn't found.");
     }
