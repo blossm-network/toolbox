@@ -14,7 +14,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/error": "*",
+    "@blossm/errors": "*",
     "@blossm/view-composite-rpc": "^0.0.90",
     "@blossm/view-store-rpc": "^0.0.233"
   },
