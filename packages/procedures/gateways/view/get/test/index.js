@@ -220,7 +220,7 @@ describe("View gateway get", () => {
       redirect,
     })(req, res);
 
-    expect(statusFake).to.have.been.calledOnceWith(300);
+    expect(statusFake).to.have.been.calledOnceWith(403);
     expect(sendFake).to.have.been.calledOnceWith({ redirect });
   });
   it("should call with the correct params with view-composite procedure", async () => {
@@ -391,7 +391,7 @@ describe("View gateway get", () => {
       redirect,
     })(req, res);
 
-    expect(statusFake).to.have.been.calledOnceWith(300);
+    expect(statusFake).to.have.been.calledOnceWith(403);
     expect(sendFake).to.have.been.calledOnceWith({ redirect });
   });
   it("should redirect correctly if no correct context", async () => {
@@ -414,7 +414,7 @@ describe("View gateway get", () => {
       redirect,
     })(req, res);
 
-    expect(statusFake).to.have.been.calledOnceWith(300);
+    expect(statusFake).to.have.been.calledOnceWith(403);
     expect(sendFake).to.have.been.calledOnceWith({ redirect });
   });
 });

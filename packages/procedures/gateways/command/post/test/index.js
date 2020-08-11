@@ -587,7 +587,7 @@ describe("Command gateway post", () => {
       redirect,
     })(req, res);
 
-    expect(statusFake).to.have.been.calledWith(300);
+    expect(statusFake).to.have.been.calledWith(403);
     expect(sendFake).to.have.been.calledWith({
       redirect,
     });
@@ -608,7 +608,7 @@ describe("Command gateway post", () => {
       redirect,
     })(req, res);
 
-    expect(statusFake).to.have.been.calledWith(300);
+    expect(statusFake).to.have.been.calledWith(403);
     expect(sendFake).to.have.been.calledWith({
       redirect,
     });
