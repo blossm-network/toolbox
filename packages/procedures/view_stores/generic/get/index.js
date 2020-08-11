@@ -17,6 +17,13 @@ module.exports = ({
     for (const key in queryBody)
       formattedQueryBody[`body.${key}`] = queryBody[key];
 
+    if (
+      req.query.bootstrap &&
+      process.env.BOOTSTRAP_CONTEXT &&
+      !req.query.context[process.env.BOOTSTRAP_CONTEXT]
+    )
+      throw deps.forbiddenError.message("There isn't a context to bootstrap.");
+
     const query = {
       ...(!req.query.bootstrap && { ...formattedQueryBody }),
       ...(req.params.id && { "headers.id": req.params.id }),

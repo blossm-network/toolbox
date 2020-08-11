@@ -728,7 +728,6 @@ const configure = async (workingDir, configFn, env, strict) => {
       service,
       project,
       context,
-      bootstrapContext,
       region,
       containerRegistery,
       coreContainerRegistery,

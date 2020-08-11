@@ -727,6 +727,39 @@ describe("View store get", () => {
         "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
     });
   });
+  it("should throw correctly if forbidden", async () => {
+    const findFake = fake.returns([]);
+    const countFake = fake.returns(0);
+
+    const req = {
+      query: {
+        context: {},
+        bootstrap: true,
+      },
+      params: {},
+    };
+
+    const sendFake = fake();
+    const res = {
+      send: sendFake,
+    };
+
+    const error = "some-error";
+    const messageFake = fake.returns(error);
+    replace(deps, "forbiddenError", {
+      message: messageFake,
+    });
+
+    try {
+      process.env.BOOTSTRAP_CONTEXT = "something";
+      await get({ findFn: findFake, countFn: countFake })(req, res);
+    } catch (e) {
+      expect(messageFake).to.have.been.calledWith(
+        "There isn't a context to bootstrap."
+      );
+      expect(e).to.equal(error);
+    }
+  });
   it("should throw correctly if not found", async () => {
     const findFake = fake.returns([]);
     const countFake = fake.returns(0);
