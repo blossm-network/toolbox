@@ -114,7 +114,7 @@ module.exports = ({
       });
     } else if (formattedResults.length > 0) {
       res.send({
-        [req.query.bootstrap ? "bootstrap" : "content"]: formattedResults[0],
+        content: formattedResults[0],
         updates,
       });
     } else {

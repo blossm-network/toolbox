@@ -637,7 +637,7 @@ describe("View store get", () => {
         "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
     });
     expect(sendFake).to.have.been.calledWith({
-      bootstrap: {
+      content: {
         ...formattedResult,
         headers: { trace: [txId0, txId1, txId2], id, context: foundContext },
       },
@@ -719,7 +719,7 @@ describe("View store get", () => {
         "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
     });
     expect(sendFake).to.have.been.calledWith({
-      bootstrap: {
+      content: {
         ...formattedResult,
         headers: { trace: [txId0, txId1, txId2], id, context: foundContext },
       },
