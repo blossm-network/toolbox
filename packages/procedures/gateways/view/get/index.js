@@ -9,6 +9,8 @@ module.exports = ({
   key,
   redirect,
 } = {}) => async (req, res) => {
+  //TODO
+  console.log({ context: req.context });
   if (!req.context || !req.context[process.env.CONTEXT])
     return res.status(300).send({ redirect });
 

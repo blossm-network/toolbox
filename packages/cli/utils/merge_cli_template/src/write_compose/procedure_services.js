@@ -60,7 +60,7 @@ module.exports = ({
     PORT: `${port}`,
     NODE_ENV: "local",
     NETWORK: network,
-    CORE_NETWORK: coreNetwork, // network,
+    CORE_NETWORK: coreNetwork,
     HOST: host,
     GCP_PROJECT: project,
     GCP_REGION: region,
