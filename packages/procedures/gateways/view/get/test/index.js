@@ -211,17 +211,28 @@ describe("View gateway get", () => {
     const redirect = "some-redirect";
     const nodeExternalTokenResult = "some-external-token-result";
     const nodeExternalTokenFnFake = fake.returns(nodeExternalTokenResult);
-    await get({
-      procedure: "view-store",
-      name,
-      internalTokenFn,
-      nodeExternalTokenFn: nodeExternalTokenFnFake,
-      key,
-      redirect,
-    })(req, res);
 
-    expect(statusFake).to.have.been.calledOnceWith(403);
-    expect(sendFake).to.have.been.calledOnceWith({ redirect });
+    const error = "some-error";
+    const messageFake = fake.returns(error);
+    replace(deps, "forbiddenError", {
+      message: messageFake,
+    });
+    try {
+      await get({
+        procedure: "view-store",
+        name,
+        internalTokenFn,
+        nodeExternalTokenFn: nodeExternalTokenFnFake,
+        key,
+        redirect,
+      })(req, res);
+    } catch (e) {
+      expect(messageFake).to.have.been.calledWith(
+        "This context is forbidden.",
+        { info: { redirect } }
+      );
+      expect(e).to.equal(error);
+    }
   });
   it("should call with the correct params with view-composite procedure", async () => {
     const readFake = fake.returns({ body: results });
@@ -387,12 +398,22 @@ describe("View gateway get", () => {
     };
 
     const redirect = "some-redirect";
-    await get({
-      redirect,
-    })(req, res);
-
-    expect(statusFake).to.have.been.calledOnceWith(403);
-    expect(sendFake).to.have.been.calledOnceWith({ redirect });
+    const error = "some-error";
+    const messageFake = fake.returns(error);
+    replace(deps, "forbiddenError", {
+      message: messageFake,
+    });
+    try {
+      await get({
+        redirect,
+      })(req, res);
+    } catch (e) {
+      expect(messageFake).to.have.been.calledWith(
+        "This context is forbidden.",
+        { info: { redirect } }
+      );
+      expect(e).to.equal(error);
+    }
   });
   it("should redirect correctly if no correct context", async () => {
     const req = {
@@ -410,11 +431,22 @@ describe("View gateway get", () => {
     };
 
     const redirect = "some-redirect";
-    await get({
-      redirect,
-    })(req, res);
 
-    expect(statusFake).to.have.been.calledOnceWith(403);
-    expect(sendFake).to.have.been.calledOnceWith({ redirect });
+    const error = "some-error";
+    const messageFake = fake.returns(error);
+    replace(deps, "forbiddenError", {
+      message: messageFake,
+    });
+    try {
+      await get({
+        redirect,
+      })(req, res);
+    } catch (e) {
+      expect(messageFake).to.have.been.calledWith(
+        "This context is forbidden.",
+        { info: { redirect } }
+      );
+      expect(e).to.equal(error);
+    }
   });
 });

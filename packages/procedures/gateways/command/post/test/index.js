@@ -582,15 +582,24 @@ describe("Command gateway post", () => {
     const res = {
       status: statusFake,
     };
-    await post({
-      context,
-      redirect,
-    })(req, res);
 
-    expect(statusFake).to.have.been.calledWith(403);
-    expect(sendFake).to.have.been.calledWith({
-      redirect,
+    const error = "some-error";
+    const messageFake = fake.returns(error);
+    replace(deps, "forbiddenError", {
+      message: messageFake,
     });
+    try {
+      await post({
+        context,
+        redirect,
+      })(req, res);
+    } catch (e) {
+      expect(messageFake).to.have.been.calledWith(
+        "This context is forbidden.",
+        { info: { redirect } }
+      );
+      expect(e).to.equal(error);
+    }
   });
   it("should redirect correctly with bad context", async () => {
     const req = {
@@ -603,14 +612,22 @@ describe("Command gateway post", () => {
     const res = {
       status: statusFake,
     };
-    await post({
-      context,
-      redirect,
-    })(req, res);
-
-    expect(statusFake).to.have.been.calledWith(403);
-    expect(sendFake).to.have.been.calledWith({
-      redirect,
+    const error = "some-error";
+    const messageFake = fake.returns(error);
+    replace(deps, "forbiddenError", {
+      message: messageFake,
     });
+    try {
+      await post({
+        context,
+        redirect,
+      })(req, res);
+    } catch (e) {
+      expect(messageFake).to.have.been.calledWith(
+        "This context is forbidden.",
+        { info: { redirect } }
+      );
+      expect(e).to.equal(error);
+    }
   });
 });

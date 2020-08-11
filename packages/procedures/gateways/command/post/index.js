@@ -12,7 +12,9 @@ module.exports = ({
   context,
 } = {}) => async (req, res) => {
   if (context && (!req.context || !req.context[context]))
-    return res.status(403).send({ redirect });
+    throw deps.forbiddenError.message("This context is forbidden.", {
+      info: { redirect },
+    });
 
   await deps.validate(req.body);
   const { payload, headers, root } = req.body;

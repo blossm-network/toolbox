@@ -71,7 +71,7 @@ describe("Error middleware", () => {
     await errorMiddleware(err, req, res, nextFake);
     expect(statusFake).to.have.been.calledWith(statusCode);
     expect(sendFake).to.have.been.calledWith(err);
-    expect(clearCookieFake).to.have.been.calledWith("token");
+    expect(clearCookieFake).to.have.been.calledWith("access");
     expect(nextFake).to.have.been.calledWith();
   });
   it("should call correctly with headers already sent", async () => {

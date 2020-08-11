@@ -12,7 +12,9 @@ module.exports = ({
   //TODO
   console.log({ context: req.context });
   if (!req.context || !req.context[process.env.CONTEXT])
-    return res.status(403).send({ redirect });
+    throw deps.forbiddenError.message("This context is forbidden.", {
+      info: { redirect },
+    });
 
   switch (procedure) {
     case "view-store": {
@@ -43,8 +45,11 @@ module.exports = ({
         res.status(200).send(response);
         break;
       } catch (err) {
-        if (err.statusCode == 403) return res.status(403).send({ redirect });
-        throw err;
+        throw err.statusCode == 403
+          ? deps.forbiddenError.message("This context is forbidden.", {
+              info: { redirect },
+            })
+          : err;
       }
     }
     case "view-composite": {

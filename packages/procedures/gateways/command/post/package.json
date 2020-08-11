@@ -17,6 +17,7 @@
     "@blossm/command-rpc": "^0.0.223",
     "@blossm/datetime": "^0.0.5",
     "@blossm/jwt": "*",
+    "@blossm/errors": "*",
     "@blossm/validate-command": "^0.0.57"
   },
   "devDependencies": {
