@@ -118,7 +118,10 @@ describe("View store", () => {
     expect(storeFake).to.have.been.calledWith({
       name: "views",
       schema: {
-        body: formattedSchema,
+        body: {
+          $type: formattedSchema,
+          default: {},
+        },
         headers: {
           _id: false,
           id: {
@@ -342,7 +345,10 @@ describe("View store", () => {
     expect(storeFake).to.have.been.calledWith({
       name: "views",
       schema: {
-        body: formattedSchema,
+        body: {
+          $type: formattedSchema,
+          default: {},
+        },
         headers: {
           _id: false,
           id: {
@@ -476,7 +482,10 @@ describe("View store", () => {
     expect(storeFake).to.have.been.calledWith({
       name: "views",
       schema: {
-        body: formattedSchema,
+        body: {
+          $type: formattedSchema,
+          default: {},
+        },
         headers: {
           _id: false,
           id: {
@@ -590,7 +599,10 @@ describe("View store", () => {
     expect(storeFake).to.have.been.calledWith({
       name: "views",
       schema: {
-        body: formattedSchema,
+        body: {
+          $type: formattedSchema,
+          default: {},
+        },
         headers: {
           _id: false,
           id: {
@@ -787,7 +799,10 @@ describe("View store", () => {
     expect(storeFake).to.have.been.calledWith({
       name: "views",
       schema: {
-        body: formattedSchema,
+        body: {
+          $type: formattedSchema,
+          default: {},
+        },
         headers: {
           _id: false,
           id: {
