@@ -16,7 +16,7 @@ module.exports = gateway({
   algorithm: "ES256",
   audience: process.env.NETWORK,
   internalTokenFn: gcpToken,
-  ...(config.redirect && { redirect: config.redirect }),
+  redirect: config.redirect || "/",
   nodeExternalTokenFn: nodeExternalToken,
   permissionsLookupFn: permissionsLookup({
     downloadFileFn: ({ fileName, extension }) =>

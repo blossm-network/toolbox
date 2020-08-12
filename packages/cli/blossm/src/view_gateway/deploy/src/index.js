@@ -14,7 +14,7 @@ module.exports = gateway({
   whitelist: config.whitelist,
   algorithm: "ES256",
   audience: process.env.NETWORK,
-  ...(config.redirect && { redirect: config.redirect }),
+  redirect: config.redirect || "/",
   internalTokenFn: gcpToken,
   nodeExternalTokenFn: nodeExternalToken,
   permissionsLookupFn: permissionsLookup({
