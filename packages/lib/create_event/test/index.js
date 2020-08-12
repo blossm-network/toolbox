@@ -70,7 +70,7 @@ describe("Create event", () => {
         root,
         topic: `${action}.${domain}.${service}`,
         idempotency:
-          "some-idempotency-some-action-some-domain-some-service-some-path-hash",
+          "some-idempotency-root!-some-action-some-domain-some-service-some-path-hash",
         created: dateString(),
         action,
         domain,
@@ -146,7 +146,7 @@ describe("Create event", () => {
         root,
         topic: `${action}.${domain}.${service}`,
         idempotency:
-          "some-idempotency-some-action-some-domain-some-service-some-path-hash",
+          "some-idempotency-root!-some-action-some-domain-some-service-some-path-hash",
         created: dateString(),
         action,
         domain,
@@ -188,7 +188,7 @@ describe("Create event", () => {
         root,
         topic: `${action}.${domain}.${service}`,
         idempotency:
-          "some-idempotency-some-action-some-domain-some-service-some-path-hash",
+          "some-idempotency-root!-some-action-some-domain-some-service-some-path-hash",
         created: dateString(),
         action,
         domain,

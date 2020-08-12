@@ -17,9 +17,9 @@ module.exports = ({
     headers: {
       root: root || deps.uuid(),
       topic: `${action}.${domain}.${service}`,
-      idempotency: `${
-        idempotency || deps.uuid()
-      }-${action}-${domain}-${service}${
+      idempotency: `${idempotency || deps.uuid()}-${
+        root ? `${root}-` : ""
+      }${action}-${domain}-${service}${
         path
           ? `-${(path || []).reduce((result, p) => result + p.hash, "")}`
           : ""
