@@ -21,7 +21,7 @@ module.exports = ({
     args: [
       "-c",
       oneLine`
-    gcloud beta pubsub subscriptions create ${name}-${context}-${procedure}-${operationHash}-${storeAction}.${storeDomain}.${storeService}
+    gcloud beta pubsub subscriptions create ${name}-${context}-${procedure}-${operationHash}-${storeAction}-${storeDomain}-${storeService}
     --topic=${storeAction}.${storeDomain}.${storeService}
     --push-endpoint=https://${region}-${operationName}-${operationHash}-${computeUrlId}-uc.a.run.app 
     --push-auth-token-audience=https://${region}-${operationName}-${operationHash}-${computeUrlId}-uc.a.run.app 
