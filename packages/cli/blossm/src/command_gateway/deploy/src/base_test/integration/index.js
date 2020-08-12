@@ -12,13 +12,7 @@ const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 const existingTopics = [];
 describe("Command gateway integration tests", () => {
   before(async () => {
-    existingTopics.push(
-      ...testing.topics.filter(async (t) => {
-        return await exists(t);
-      })
-    );
-    //TODO
-    console.log({ existingTopics, topics: testing.topics });
+    existingTopics.push(...testing.topics.filter((t) => exists(t)));
     await Promise.all(testing.topics.map((t) => create(t)));
   });
   after(

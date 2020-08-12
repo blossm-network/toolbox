@@ -264,8 +264,6 @@ const copySource = async (p, workingDir) => {
 };
 
 const topicsForDependencies = (config, events) => {
-  //TODOo
-  console.log({ events });
   const array = (events || [])
     .map((e) =>
       e.actions.map((a) => `${a}.${e.domain}.${e.service || config.service}`)
@@ -293,8 +291,6 @@ const topicsForDependencies = (config, events) => {
           ]
         : []
     );
-  //TODO
-  console.log({ array, result: [...new Set(array)] });
   return [...new Set(array)];
 };
 

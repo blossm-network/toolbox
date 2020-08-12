@@ -1,9 +1,6 @@
 const logger = require("@blossm/logger");
 
 module.exports = (err, _, res, next) => {
-  //TODO
-  console.log({ err });
-
   if (res.headersSent) return next(err);
 
   if (!err.statusCode || err.statusCode >= 500) {

@@ -4,9 +4,6 @@ module.exports = (req, { cookieKey } = {}) => {
 
   const token = cookieKey && cookies[cookieKey];
 
-  //TODO
-  console.log({ token });
-
   const tokens = {
     ...(token != undefined && { cookie: token }),
   };
