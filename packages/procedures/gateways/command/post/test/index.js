@@ -641,4 +641,60 @@ describe("Command gateway post", () => {
       expect(e).to.equal(error);
     }
   });
+  it("should redirect correctly if command throws 403", async () => {
+    const ForbiddenError = Error;
+    ForbiddenError.prototype.statusCode = 403;
+
+    const redirect = "some-redirect";
+    const validateFake = fake();
+    replace(deps, "validate", validateFake);
+    const issueFake = fake.throws(new ForbiddenError());
+    const setFake = fake.returns({
+      issue: issueFake,
+    });
+    const commandFake = fake.returns({
+      set: setFake,
+    });
+    replace(deps, "command", commandFake);
+    const req = {
+      body,
+      params: {},
+      headers: {
+        "x-forwarded-for": ip,
+      },
+    };
+    const sendFake = fake();
+    const statusFake = fake.returns({
+      send: sendFake,
+    });
+    const cookieFake = fake();
+    const res = {
+      cookie: cookieFake,
+      status: statusFake,
+    };
+    const nodeExternalTokenResult = "some-external-token-result";
+    const nodeExternalTokenFnFake = fake.returns(nodeExternalTokenResult);
+
+    const error = "some-error";
+    const messageFake = fake.returns(error);
+    replace(deps, "forbiddenError", {
+      message: messageFake,
+    });
+    try {
+      await post({
+        name,
+        domain,
+        internalTokenFn,
+        nodeExternalTokenFn: nodeExternalTokenFnFake,
+        key,
+        redirect,
+      })(req, res);
+    } catch (e) {
+      expect(messageFake).to.have.been.calledWith(
+        "This context is forbidden.",
+        { info: { redirect } }
+      );
+      expect(e).to.equal(error);
+    }
+  });
 });

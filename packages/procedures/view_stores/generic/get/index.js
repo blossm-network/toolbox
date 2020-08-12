@@ -24,6 +24,10 @@ module.exports = ({
     )
       throw deps.forbiddenError.message("There isn't a context to bootstrap.");
 
+    //TODO
+    console.log({ query: req.query });
+    console.log({ bootstrap: req.query.bootstrap });
+
     const query = {
       ...(!req.query.bootstrap && { ...formattedQueryBody }),
       ...(req.params.id && { "headers.id": req.params.id }),

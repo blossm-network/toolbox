@@ -23,7 +23,7 @@ module.exports = ({
       NETWORK: "local.network",
       HOST: "local.network",
       NODE_ENV: "local",
-      CORE_NETWORK: `local.network`,
+      CORE_NETWORK: `local.core.network`,
       PROCEDURE: procedure,
       OPERATION_HASH: operationHash,
       SERVICE_NAME: serviceName,

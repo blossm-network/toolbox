@@ -14,9 +14,9 @@ module.exports = ({
       info: { redirect },
     });
 
-  switch (procedure) {
-    case "view-store": {
-      try {
+  try {
+    switch (procedure) {
+      case "view-store": {
         const { body: response } = await deps
           .viewStore({
             name,
@@ -42,38 +42,38 @@ module.exports = ({
 
         res.status(200).send(response);
         break;
-      } catch (err) {
-        throw err.statusCode == 403
-          ? deps.forbiddenError.message("This context is forbidden.", {
-              info: { redirect },
-            })
-          : err;
+      }
+      case "view-composite": {
+        const { body: response } = await deps
+          .viewComposite({
+            name,
+          })
+          .set({
+            token: {
+              internalFn: internalTokenFn,
+              externalFn: ({ network, key } = {}) =>
+                req.token
+                  ? { token: req.token, type: "Bearer" }
+                  : nodeExternalTokenFn({ network, key }),
+              key,
+            },
+            ...(req.token && { currentToken: req.token }),
+            ...(req.context && { context: req.context }),
+            ...(req.claims && { claims: req.claims }),
+          })
+          .read({
+            ...req.query,
+            ...(req.params.id && { id: req.params.id }),
+          });
+        res.status(200).send(response);
+        break;
       }
     }
-    case "view-composite": {
-      const { body: response } = await deps
-        .viewComposite({
-          name,
+  } catch (err) {
+    throw err.statusCode == 403
+      ? deps.forbiddenError.message("This context is forbidden.", {
+          info: { redirect },
         })
-        .set({
-          token: {
-            internalFn: internalTokenFn,
-            externalFn: ({ network, key } = {}) =>
-              req.token
-                ? { token: req.token, type: "Bearer" }
-                : nodeExternalTokenFn({ network, key }),
-            key,
-          },
-          ...(req.token && { currentToken: req.token }),
-          ...(req.context && { context: req.context }),
-          ...(req.claims && { claims: req.claims }),
-        })
-        .read({
-          ...req.query,
-          ...(req.params.id && { id: req.params.id }),
-        });
-      res.status(200).send(response);
-      break;
-    }
+      : err;
   }
 };

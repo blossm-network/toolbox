@@ -183,57 +183,6 @@ describe("View gateway get", () => {
       expect(e.message).to.equal(errorMessage);
     }
   });
-  it("should redirect correctly if view store throws 403", async () => {
-    const ForbiddenError = Error;
-    ForbiddenError.prototype.statusCode = 403;
-    const readFake = fake.throws(new ForbiddenError());
-    const setFake = fake.returns({
-      read: readFake,
-    });
-    const viewStoreFake = fake.returns({
-      set: setFake,
-    });
-    replace(deps, "viewStore", viewStoreFake);
-    const req = {
-      context,
-      query,
-      params: {},
-    };
-
-    const sendFake = fake();
-    const statusFake = fake.returns({
-      send: sendFake,
-    });
-    const res = {
-      status: statusFake,
-    };
-
-    const redirect = "some-redirect";
-    const nodeExternalTokenResult = "some-external-token-result";
-    const nodeExternalTokenFnFake = fake.returns(nodeExternalTokenResult);
-
-    const error = "some-error";
-    const messageFake = fake.returns(error);
-    replace(deps, "forbiddenError", {
-      message: messageFake,
-    });
-    try {
-      await get({
-        procedure: "view-store",
-        name,
-        internalTokenFn,
-        nodeExternalTokenFn: nodeExternalTokenFnFake,
-        key,
-        redirect,
-      })(req, res);
-    } catch (e) {
-      expect(messageFake).to.have.been.calledWith(
-        "This context is forbidden.",
-        { info: { redirect } }
-      );
-      expect(e).to.equal(error);
-    }
-  });
   it("should call with the correct params with view-composite procedure", async () => {
     const readFake = fake.returns({ body: results });
     const setFake = fake.returns({
@@ -439,6 +388,108 @@ describe("View gateway get", () => {
     });
     try {
       await get({
+        redirect,
+      })(req, res);
+    } catch (e) {
+      expect(messageFake).to.have.been.calledWith(
+        "This context is forbidden.",
+        { info: { redirect } }
+      );
+      expect(e).to.equal(error);
+    }
+  });
+  it("should redirect correctly if view store throws 403", async () => {
+    const ForbiddenError = Error;
+    ForbiddenError.prototype.statusCode = 403;
+    const readFake = fake.throws(new ForbiddenError());
+    const setFake = fake.returns({
+      read: readFake,
+    });
+    const viewStoreFake = fake.returns({
+      set: setFake,
+    });
+    replace(deps, "viewStore", viewStoreFake);
+    const req = {
+      context,
+      query,
+      params: {},
+    };
+
+    const sendFake = fake();
+    const statusFake = fake.returns({
+      send: sendFake,
+    });
+    const res = {
+      status: statusFake,
+    };
+
+    const redirect = "some-redirect";
+    const nodeExternalTokenResult = "some-external-token-result";
+    const nodeExternalTokenFnFake = fake.returns(nodeExternalTokenResult);
+
+    const error = "some-error";
+    const messageFake = fake.returns(error);
+    replace(deps, "forbiddenError", {
+      message: messageFake,
+    });
+    try {
+      await get({
+        procedure: "view-store",
+        name,
+        internalTokenFn,
+        nodeExternalTokenFn: nodeExternalTokenFnFake,
+        key,
+        redirect,
+      })(req, res);
+    } catch (e) {
+      expect(messageFake).to.have.been.calledWith(
+        "This context is forbidden.",
+        { info: { redirect } }
+      );
+      expect(e).to.equal(error);
+    }
+  });
+  it("should redirect correctly if composite throws 403", async () => {
+    const ForbiddenError = Error;
+    ForbiddenError.prototype.statusCode = 403;
+    const readFake = fake.throws(new ForbiddenError());
+    const setFake = fake.returns({
+      read: readFake,
+    });
+    const viewCompositeFake = fake.returns({
+      set: setFake,
+    });
+    replace(deps, "viewComposite", viewCompositeFake);
+    const req = {
+      context,
+      query,
+      params: {},
+    };
+
+    const sendFake = fake();
+    const statusFake = fake.returns({
+      send: sendFake,
+    });
+    const res = {
+      status: statusFake,
+    };
+
+    const redirect = "some-redirect";
+    const nodeExternalTokenResult = "some-external-token-result";
+    const nodeExternalTokenFnFake = fake.returns(nodeExternalTokenResult);
+
+    const error = "some-error";
+    const messageFake = fake.returns(error);
+    replace(deps, "forbiddenError", {
+      message: messageFake,
+    });
+    try {
+      await get({
+        procedure: "view-composite",
+        name,
+        internalTokenFn,
+        nodeExternalTokenFn: nodeExternalTokenFnFake,
+        key,
         redirect,
       })(req, res);
     } catch (e) {
