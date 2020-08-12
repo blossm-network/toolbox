@@ -69,6 +69,7 @@ module.exports = ({ findOneSnapshotFn, eventStreamFn, handlers }) => async (
       aggregate.headers.lastEventNumber = event.headers.number;
       aggregate.headers.timestamp = event.headers.created;
       aggregate.state = handler(aggregate.state || {}, event.payload);
+      //TODO remove duplicates
       aggregate.txIds = [
         ...(event.tx.id ? [event.tx.id] : []),
         ...(aggregate.txIds || []),

@@ -7,6 +7,11 @@ module.exports = ({ writeFn, formatFn, updateFn = defaultFn }) => {
   return async (req, res) => {
     const customUpdate = updateFn(req.body.update);
 
+    //TODO
+    console.log({
+      bodyContext: req.body.context,
+      envContext: process.env.CONTEXT,
+    });
     const context = req.body.context &&
       req.body.context[process.env.CONTEXT] && {
         root: req.body.context[process.env.CONTEXT].root,
