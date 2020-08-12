@@ -1,7 +1,7 @@
 {
   "name": "@blossm/command-post",
   "description": "A command handler server POST handler.",
-  "version": "0.0.182",
+  "version": "0.0.183",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
