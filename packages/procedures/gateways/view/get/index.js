@@ -16,7 +16,7 @@ module.exports = ({
     redirect,
     procedure,
     query: req.query,
-    root: req.params.root,
+    id: req.params.id,
   });
   if (!req.context || !req.context[process.env.CONTEXT])
     throw deps.forbiddenError.message("This context is forbidden.", {
@@ -49,7 +49,7 @@ module.exports = ({
           })
           .read({
             ...req.query,
-            ...(req.params.id && { root: req.params.id }),
+            ...(req.params.id && { id: req.params.id }),
           });
 
         console.log({ response });
