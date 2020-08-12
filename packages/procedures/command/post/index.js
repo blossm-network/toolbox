@@ -123,10 +123,6 @@ module.exports = ({
       event,
       ...(correctNumber && { number: correctNumber }),
     };
-    if (domain == "organization" && service == "legacy") {
-      //TODO
-      console.log({ normalizedEventData, action });
-    }
 
     eventDataPerStore[service] = eventDataPerStore[service] || {};
 
@@ -138,26 +134,6 @@ module.exports = ({
   const fns = [];
   for (const service in eventDataPerStore) {
     for (const domain in eventDataPerStore[service]) {
-      if (domain == "organization" && service == "legacy") {
-        //TODO
-        console.log({
-          adding: {
-            domain,
-            service,
-            ...(req.body.context && { context: req.body.context }),
-            ...(req.body.claims && { claims: req.body.claims }),
-            eventData: eventDataPerStore[service][domain],
-            async: !eventDataPerStore[service][domain].some(
-              (normalizedEvent) => normalizedEvent.number != undefined
-            ),
-            tx: {
-              ...(req.body.tx.ip && { ip: req.body.tx.ip }),
-              id: txId,
-              path,
-            },
-          },
-        });
-      }
       fns.push(
         addFn({
           domain,

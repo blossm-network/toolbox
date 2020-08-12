@@ -41,11 +41,6 @@ module.exports = ({
     })
   );
 
-  //TODO
-  console.log({
-    receipt,
-  });
-
   await Promise.all(
     receipt.map((e) =>
       publishFn(
