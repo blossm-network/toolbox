@@ -9,8 +9,6 @@ module.exports = ({
   key,
   redirect,
 } = {}) => async (req, res) => {
-  //TODO
-  console.log({ context: req.context, redirect });
   if (!req.context || !req.context[process.env.CONTEXT])
     throw deps.forbiddenError.message("This context is forbidden.", {
       info: { redirect },
