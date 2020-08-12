@@ -17,6 +17,8 @@ describe("Command gateway integration tests", () => {
         return await exists(t);
       })
     );
+    //TODO
+    console.log({ existingTopics, topics: testing.topics });
     await Promise.all(testing.topics.map((t) => create(t)));
   });
   after(
