@@ -26,7 +26,9 @@ module.exports = ({
   console.log("BACONNNN");
   switch (procedure) {
     case "view-store": {
+      console.log("gonne try");
       try {
+        console.log("trying");
         const { body: response } = await deps
           .viewStore({
             name,
@@ -47,7 +49,7 @@ module.exports = ({
           })
           .read({
             ...req.query,
-            ...(req.params.root && { root: req.params.root }),
+            ...(req.params.id && { root: req.params.id }),
           });
 
         console.log({ response });
@@ -81,7 +83,7 @@ module.exports = ({
         })
         .read({
           ...req.query,
-          ...(req.params.root && { root: req.params.root }),
+          ...(req.params.id && { id: req.params.id }),
         });
       res.status(200).send(response);
       break;

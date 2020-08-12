@@ -76,7 +76,7 @@ module.exports = async ({
         key,
       }),
       {
-        path: `/${name}/:root?`,
+        path: `/${name}/:id?`,
         preMiddleware: [
           deps.authentication({
             verifyFn: verifyFn({ key }),
