@@ -70,9 +70,22 @@ module.exports = ({
         },
       });
 
+    if (name == "change-scene") {
+      console.log({
+        response,
+        responseHeaders,
+        statusCode,
+      });
+    }
+
     // If the response has tokens, send them as cookies.
     if (response && response.tokens) {
       for (const token of response.tokens) {
+        if (name == "change-scene") {
+          console.log({
+            token,
+          });
+        }
         if (!token.network || !token.type || !token.value) continue;
         const cookieName = token.type;
         const { headers } = deps.decode(token.value);
