@@ -16,6 +16,7 @@ const key = "some-key";
 const query = "some-query";
 const id = "some-id";
 const sort = "some-sort";
+const bootstrap = "some-bootstrap";
 const contexts = { c: 2 };
 
 const envContext = "some-env-context";
@@ -55,10 +56,10 @@ describe("Get views", () => {
           key,
         },
       })
-      .read({ query, sort, id });
+      .read({ query, sort, id, bootstrap });
 
     expect(rpcFake).to.have.been.calledWith(name, context, "view-store");
-    expect(getFake).to.have.been.calledWith({ query, sort, id });
+    expect(getFake).to.have.been.calledWith({ query, sort, id, bootstrap });
     expect(inFake).to.have.been.calledWith({ context: contexts });
     expect(withFake).to.have.been.calledWith({
       internalTokenFn,
