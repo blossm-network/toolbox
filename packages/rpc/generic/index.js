@@ -86,6 +86,9 @@ const common = ({ method, dataParam, operation, id, data }) => {
 
           const shouldEnqueue = enqueueFn && method != deps.get;
 
+          //TODO
+          console.log({ url, requestData, shouldEnqueue });
+
           const response =
             //don't enqueue if on local
             shouldEnqueue && process.env.NODE_ENV != "local"
@@ -114,6 +117,9 @@ const common = ({ method, dataParam, operation, id, data }) => {
 
           //Stream doesn't have a reponse.
           if (!response) return;
+
+          //TODO
+          console.log({ status: response.statusCode });
 
           if (response.statusCode >= 300) {
             logger.info("response errored: ", {
