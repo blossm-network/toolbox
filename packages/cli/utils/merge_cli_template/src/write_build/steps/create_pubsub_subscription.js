@@ -28,7 +28,7 @@ module.exports = ({
     --push-auth-service-account=cloud-run-pubsub-invoker@${project}.iam.gserviceaccount.com
     --topic-project=${project}
     --expiration-period=never
-    --ack-deadline=30
+    --ack-deadline=60
     --project=${project}
       --labels=${Object.entries({
         procedure,
