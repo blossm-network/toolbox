@@ -270,6 +270,7 @@ const topicsForDependencies = (config, events) => {
     .map((e) =>
       e.actions.map((a) => `${a}.${e.domain}.${e.service || config.service}`)
     )
+    .flat()
     .concat(
       (config.procedure == "command-gateway" &&
         config.commands.some(
