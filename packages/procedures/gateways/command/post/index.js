@@ -9,9 +9,13 @@ module.exports = ({
   nodeExternalTokenFn,
   key,
   redirect,
-  context,
+  contexts,
 } = {}) => async (req, res) => {
-  if (context && (!req.context || !req.context[context]))
+  if (
+    contexts &&
+    (!req.context ||
+      contexts.filter((c) => req.context[c]).length != contexts.length)
+  )
     throw deps.forbiddenError.message("This context is forbidden.", {
       info: { redirect },
     });

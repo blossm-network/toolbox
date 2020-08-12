@@ -164,8 +164,14 @@ describe("Command gateway post", () => {
     });
     replace(deps, "command", commandFake);
     const reqToken = "some-req-token";
+    const context1 = "some-context1";
+    const context2 = "some-context2";
     const req = {
-      context,
+      context: {
+        ...context,
+        [context1]: "some",
+        [context2]: "some-other",
+      },
       claims,
       token: reqToken,
       body,
@@ -195,6 +201,7 @@ describe("Command gateway post", () => {
       key,
       network,
       service,
+      context: [context1, context2],
     })(req, res);
     expect(validateFake).to.have.been.calledWith(body);
     expect(commandFake).to.have.been.calledWith({
@@ -214,7 +221,11 @@ describe("Command gateway post", () => {
       },
       currentToken: req.token,
       claims,
-      context,
+      context: {
+        ...context,
+        [context1]: "some",
+        [context2]: "some-other",
+      },
     });
     expect(issueFake).to.have.been.calledWith(payload, {
       tx: {
@@ -590,7 +601,7 @@ describe("Command gateway post", () => {
     });
     try {
       await post({
-        context,
+        contexts: [context],
         redirect,
       })(req, res);
     } catch (e) {
@@ -619,7 +630,7 @@ describe("Command gateway post", () => {
     });
     try {
       await post({
-        context,
+        contexts: [context],
         redirect,
       })(req, res);
     } catch (e) {
