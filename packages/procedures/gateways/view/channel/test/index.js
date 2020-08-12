@@ -106,12 +106,6 @@ describe("View gateway get", () => {
     expect(sendFake).to.have.been.calledWith(channelName);
     expect(channelNameFake).to.have.been.calledWith({
       name,
-      source: {
-        root: querySourceRoot,
-        domain: querySourceDomain,
-        service: querySourceService,
-        network: querySourceNetwork,
-      },
       context: {
         root: queryContextRoot,
         domain: context,
