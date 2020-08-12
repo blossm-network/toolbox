@@ -64,8 +64,12 @@ module.exports = ({ writeFn, formatFn, updateFn = defaultFn }) => {
           if (!formattedTrace.includes(txId)) formattedTrace.push(txId);
       }
     }
+
+    const updates = `https://updates.${process.env.CORE_NETWORK}/channel?query%5Bname%5D=${process.env.NAME}&query%5Bcontext%5D=${process.env.CONTEXT}&query%5Bnetwork%5D=${process.env.NETWORK}`;
+
     res.status(200).send({
-      ...formatFn({ body: newView.body, id: newView.headers.id }),
+      //TODO needs updates
+      ...formatFn({ body: newView.body, id: newView.headers.id, updates }),
       headers: {
         id: newView.headers.id,
         context: newView.headers.context,

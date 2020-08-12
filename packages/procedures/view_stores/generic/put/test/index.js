@@ -39,6 +39,9 @@ const envContext = "some-env-context";
 const envContextRoot = "some-env-context-root";
 const envContextService = "some-env-context-service";
 const envContextNetwork = "some-env-context-network";
+const envNetwork = "some-env-network";
+const envName = "some-env-name";
+const coreNetwork = "some-core-network";
 
 const context = {
   [envContext]: {
@@ -68,7 +71,11 @@ const body = {
   context,
 };
 
+process.env.NAME = envName;
 process.env.CONTEXT = envContext;
+process.env.NETWORK = envNetwork;
+process.env.CORE_NETWORK = coreNetwork;
+
 describe("View store put", () => {
   beforeEach(() => {
     clock = useFakeTimers(now.getTime());
@@ -123,6 +130,8 @@ describe("View store put", () => {
     expect(formatFake).to.have.been.calledWith({
       body: writeResultBody,
       id: writeResultId,
+      updates:
+        "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
     });
     expect(statusFake).to.have.been.calledWith(200);
     expect(sendFake).to.have.been.calledWith({
@@ -184,6 +193,8 @@ describe("View store put", () => {
     expect(formatFake).to.have.been.calledWith({
       body: writeResultBody,
       id: writeResultId,
+      updates:
+        "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
     });
     expect(statusFake).to.have.been.calledWith(200);
     expect(sendFake).to.have.been.calledWith({
