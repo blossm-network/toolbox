@@ -7,6 +7,7 @@ const eventStore = require("@blossm/event-store-rpc");
 const gcpToken = require("@blossm/gcp-token");
 const nodeExternalToken = require("@blossm/node-external-token");
 const channelName = require("@blossm/channel-name");
+const logger = require("@blossm/logger");
 const { get: secret } = require("@blossm/gcp-secret");
 const { enqueue } = require("@blossm/gcp-queue");
 
@@ -46,32 +47,32 @@ const saveId = async ({ aggregate, aggregateContext, id, update, push }) => {
 
   if (!newView || !push) return;
 
-  //TODO
-  if (!newView.headers || !newView.headers.context) {
-    console.log({ newView: JSON.stringify(newView) });
-  }
   const channel = channelName({
     name: process.env.NAME,
     context: newView.headers.context,
   });
 
-  await command({
-    name: "push",
-    domain: "updates",
-    service: "system",
-    network: process.env.CORE_NETWORK,
-  })
-    .set({
-      token: {
-        externalFn: nodeExternalToken,
-        internalFn: gcpToken,
-        key: "access",
-      },
+  try {
+    await command({
+      name: "push",
+      domain: "updates",
+      service: "system",
+      network: process.env.CORE_NETWORK,
     })
-    .issue({
-      view: newView,
-      channel,
-    });
+      .set({
+        token: {
+          externalFn: nodeExternalToken,
+          internalFn: gcpToken,
+          key: "access",
+        },
+      })
+      .issue({
+        view: newView,
+        channel,
+      });
+  } catch (err) {
+    logger.error("Failed to push updates.", { err });
+  }
 };
 module.exports = projection({
   mainFn: async ({ aggregate, action, push, aggregateFn, readFactFn }) => {
@@ -134,9 +135,6 @@ module.exports = projection({
 
     const aggregateContext =
       aggregate.context && aggregate.context[process.env.CONTEXT];
-
-    //TODO
-    console.log({ aggregateContext, aggregate, env: process.env.CONTEXT });
 
     if (id) {
       await saveId({ aggregate, aggregateContext, id, update, push });

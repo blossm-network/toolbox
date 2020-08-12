@@ -10,6 +10,7 @@
     "@blossm/gcp-secret": "*",
     "@blossm/node-external-token": "*",
     "@blossm/channel-name": "*",
+    "@blossm/logger": "*",
     "@blossm/gcp-queue": "*"
   },
   "devDependencies": {
