@@ -67,6 +67,7 @@ module.exports = ({ writeFn, formatFn, updateFn = defaultFn }) => {
 
     const updates = `https://updates.${process.env.CORE_NETWORK}/channel?query%5Bname%5D=${process.env.NAME}&query%5Bcontext%5D=${process.env.CONTEXT}&query%5Bnetwork%5D=${process.env.NETWORK}`;
 
+    console.log({ newView });
     res.status(200).send({
       //TODO needs updates
       ...formatFn({ body: newView.body, id: newView.headers.id, updates }),
