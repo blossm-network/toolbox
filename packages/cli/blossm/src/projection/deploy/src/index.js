@@ -44,6 +44,8 @@ const saveId = async ({ aggregate, aggregateContext, id, update, push }) => {
       }),
     });
 
+  //TODO
+  console.log({ newView, id, update, aggregateContext, aggregate });
   if (!newView || !push) return;
 
   const channel = channelName({
