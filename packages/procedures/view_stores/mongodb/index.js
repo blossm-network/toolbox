@@ -17,7 +17,7 @@ const viewStore = async ({ schema, indexes, secretFn }) => {
     { body: { type: schema, default: {} } },
     typeKey
   );
-  console.log({ formattedSchema: JSON.stringify(deps.formatSchema) });
+  console.log({ formattedSchema: JSON.stringify(formattedSchema) });
 
   _viewStore = deps.db.store({
     name: "views",
