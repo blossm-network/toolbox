@@ -94,7 +94,7 @@ describe("View store", () => {
     const viewStoreFake = fake();
     replace(deps, "viewStore", viewStoreFake);
 
-    const formattedSchema = "some-formatted-schema";
+    const formattedSchema = { a: 1 };
     const formatSchemaFake = fake.returns(formattedSchema);
     replace(deps, "formatSchema", formatSchemaFake);
 
@@ -114,14 +114,14 @@ describe("View store", () => {
       one,
     });
 
-    expect(formatSchemaFake).to.have.been.calledWith(schema, "$type");
+    expect(formatSchemaFake).to.have.been.calledWith(
+      { body: { type: schema, default: {} } },
+      "$type"
+    );
     expect(storeFake).to.have.been.calledWith({
       name: "views",
       schema: {
-        body: {
-          $type: formattedSchema,
-          default: {},
-        },
+        a: 1,
         headers: {
           _id: false,
           id: {
@@ -326,7 +326,7 @@ describe("View store", () => {
     const formatFn = "some-format-fn";
     const emptyFn = "some-empty-fn";
 
-    const formattedSchema = "some-formatted-schema";
+    const formattedSchema = { a: 1 };
     const formatSchemaFake = fake.returns(formattedSchema);
     replace(deps, "formatSchema", formatSchemaFake);
 
@@ -341,14 +341,14 @@ describe("View store", () => {
       emptyFn,
     });
 
-    expect(formatSchemaFake).to.have.been.calledWith(schema, "$type");
+    expect(formatSchemaFake).to.have.been.calledWith(
+      { body: { type: schema, default: {} } },
+      "$type"
+    );
     expect(storeFake).to.have.been.calledWith({
       name: "views",
       schema: {
-        body: {
-          $type: formattedSchema,
-          default: {},
-        },
+        a: 1,
         headers: {
           _id: false,
           id: {
@@ -457,7 +457,7 @@ describe("View store", () => {
     const formatFn = "some-format-fn";
     const emptyFn = "some-empty-fn";
 
-    const formattedSchema = "some-formatted-schema";
+    const formattedSchema = { c: 3 };
     const formatSchemaFake = fake.returns(formattedSchema);
     replace(deps, "formatSchema", formatSchemaFake);
 
@@ -478,14 +478,14 @@ describe("View store", () => {
       emptyFn,
     });
 
-    expect(formatSchemaFake).to.have.been.calledWith(schema, "$type");
+    expect(formatSchemaFake).to.have.been.calledWith(
+      { body: { type: schema, default: {} } },
+      "$type"
+    );
     expect(storeFake).to.have.been.calledWith({
       name: "views",
       schema: {
-        body: {
-          $type: formattedSchema,
-          default: {},
-        },
+        c: 3,
         headers: {
           _id: false,
           id: {
@@ -589,20 +589,20 @@ describe("View store", () => {
     const viewStoreFake = fake();
     replace(deps, "viewStore", viewStoreFake);
 
-    const formattedSchema = "some-formatted-schema";
+    const formattedSchema = { b: 2 };
     const formatSchemaFake = fake.returns(formattedSchema);
     replace(deps, "formatSchema", formatSchemaFake);
 
     await mongodbViewStore({ schema, indexes, secretFn: secretFake });
 
-    expect(formatSchemaFake).to.have.been.calledWith(schema, "$type");
+    expect(formatSchemaFake).to.have.been.calledWith(
+      { body: { type: schema, default: {} } },
+      "$type"
+    );
     expect(storeFake).to.have.been.calledWith({
       name: "views",
       schema: {
-        body: {
-          $type: formattedSchema,
-          default: {},
-        },
+        b: 2,
         headers: {
           _id: false,
           id: {
@@ -795,14 +795,14 @@ describe("View store", () => {
 
     await mongodbViewStore({ schema, indexes, secretFn: secretFake });
 
-    expect(formatSchemaFake).to.have.been.calledWith(schema, "$type");
+    expect(formatSchemaFake).to.have.been.calledWith(
+      { body: { type: schema, default: {} } },
+      "$type"
+    );
     expect(storeFake).to.have.been.calledWith({
       name: "views",
       schema: {
-        body: {
-          $type: formattedSchema,
-          default: {},
-        },
+        a: 1,
         headers: {
           _id: false,
           id: {
