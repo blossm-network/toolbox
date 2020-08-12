@@ -135,6 +135,8 @@ module.exports = projection({
     const aggregateContext =
       aggregate.context && aggregate.context[process.env.CONTEXT];
 
+    console.log({ aggregateContext, aggregate, env: process.env.CONTEXT });
+
     if (id) {
       await saveId({ aggregate, aggregateContext, id, update, push });
     } else {
