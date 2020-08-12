@@ -23,6 +23,7 @@ module.exports = ({
       info: { redirect },
     });
 
+  console.log("BACONNNN");
   switch (procedure) {
     case "view-store": {
       try {
@@ -49,6 +50,7 @@ module.exports = ({
             ...(req.params.root && { root: req.params.root }),
           });
 
+        console.log({ response });
         res.status(200).send(response);
         break;
       } catch (err) {
