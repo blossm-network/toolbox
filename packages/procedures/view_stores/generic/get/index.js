@@ -13,12 +13,9 @@ module.exports = ({
 }) => {
   return async (req, res) => {
     const queryBody = queryFn(req.query.query || {});
-    console.log({ queryBody });
     const formattedQueryBody = {};
     for (const key in queryBody)
       formattedQueryBody[`body.${key}`] = queryBody[key];
-
-    console.log({ formattedQueryBody });
 
     if (
       req.query.bootstrap &&
@@ -42,7 +39,6 @@ module.exports = ({
       },
     };
 
-    console.log({ query });
     let formattedSort;
     if (!req.query.bootstrap) {
       if (req.query.limit) req.query.limit = parseInt(req.query.limit);

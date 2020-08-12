@@ -135,6 +135,7 @@ module.exports = projection({
     const aggregateContext =
       aggregate.context && aggregate.context[process.env.CONTEXT];
 
+    //TODO
     console.log({ aggregateContext, aggregate, env: process.env.CONTEXT });
 
     if (id) {
