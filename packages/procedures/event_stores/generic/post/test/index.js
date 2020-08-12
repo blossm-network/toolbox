@@ -26,6 +26,7 @@ const now = new Date();
 describe("Event store post", () => {
   beforeEach(() => {
     clock = useFakeTimers(now.getTime());
+    process.env.NODE_ENV = "not-local";
   });
   afterEach(() => {
     clock.restore();
@@ -172,6 +173,66 @@ describe("Event store post", () => {
       },
       savedEventHeadersTopic
     );
+    expect(sendStatusFake).to.have.been.calledWith(204);
+  });
+  it("should call with the correct params and not publish in local", async () => {
+    const postTransactionResult = "some-post-transaction-result";
+    const postTransactionFake = fake.returns(postTransactionResult);
+    replace(deps, "postTransaction", postTransactionFake);
+
+    const req = {
+      body: {
+        eventData,
+        tx,
+      },
+    };
+
+    const sendStatusFake = fake();
+    const res = {
+      sendStatus: sendStatusFake,
+    };
+
+    const saveEventsFn = "some-save-events-fn";
+    const reserveRootCountsFn = "some-reserve-root-counts-fn";
+
+    const publishFnFake = fake();
+
+    const createTransactionFnFake = fake.returns({
+      receipt: [
+        {
+          topic: savedEventHeadersTopic,
+          action: savedEventHeadersAction,
+          root: savedEventHeadersRoot,
+        },
+        {
+          topic: savedEventHeadersTopic,
+          action: savedEventHeadersAction,
+          root: savedEventHeadersRoot,
+        },
+      ],
+    });
+    const idempotencyConflictCheckFnFake = fake();
+
+    process.env.NODE_ENV = "local";
+    await post({
+      saveEventsFn,
+      reserveRootCountsFn,
+      publishFn: publishFnFake,
+      createTransactionFn: createTransactionFnFake,
+      idempotencyConflictCheckFn: idempotencyConflictCheckFnFake,
+    })(req, res);
+
+    expect(idempotencyConflictCheckFnFake).to.not.have.been.called;
+    expect(createTransactionFnFake).to.have.been.calledWith(
+      postTransactionResult
+    );
+    expect(postTransactionFake).to.have.been.calledWith({
+      eventData,
+      tx,
+      saveEventsFn,
+      reserveRootCountsFn,
+    });
+    expect(publishFnFake).to.not.have.been.called;
     expect(sendStatusFake).to.have.been.calledWith(204);
   });
   it("should call with the correct params with event no idempotency passed in", async () => {

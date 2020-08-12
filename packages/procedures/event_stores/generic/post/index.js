@@ -41,21 +41,22 @@ module.exports = ({
     })
   );
 
-  await Promise.all(
-    receipt.map((e) =>
-      publishFn(
-        {
-          root: e.root,
-          action: e.action,
-          domain: process.env.DOMAIN,
-          service: process.env.SERVICE,
-          network: process.env.NETWORK,
-          timestamp,
-        },
-        e.topic
+  if (process.env.NODE_ENV != "local")
+    await Promise.all(
+      receipt.map((e) =>
+        publishFn(
+          {
+            root: e.root,
+            action: e.action,
+            domain: process.env.DOMAIN,
+            service: process.env.SERVICE,
+            network: process.env.NETWORK,
+            timestamp,
+          },
+          e.topic
+        )
       )
-    )
-  );
+    );
 
   res.sendStatus(204);
 };
