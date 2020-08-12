@@ -33,15 +33,16 @@ const formatSchemaValue = (
   } else {
     let newSchema = {};
     for (const key in value) {
-      if (
-        key == "type" &&
-        value[key] != undefined &&
-        value[key].type != undefined
-      ) {
-        newSchema[key] = formatSchemaValue(value[key].type, typeKey, {
-          wrapType: false,
-          depth: depth + 1,
-        });
+      if (key == "type" && value[key] != undefined) {
+        if (value[key].type != undefined) {
+          newSchema[key] = formatSchemaValue(value[key].type, typeKey, {
+            wrapType: false,
+            depth: depth + 1,
+          });
+        } else {
+          newSchema[typeKey] = value[key];
+          wrapType = false;
+        }
       } else {
         newSchema[key] = value[key];
       }

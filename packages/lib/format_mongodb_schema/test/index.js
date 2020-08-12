@@ -25,6 +25,7 @@ describe("Format schema", () => {
       h: { a: { b: String, c: String, d: String } },
       i: { a: { b: String } },
       j: { a: { b: { c: { d: String } } } },
+      k: { type: { a: { b: { c: { d: String } } } }, default: {} },
     };
     const typeKey = "some-type-key";
 
@@ -90,6 +91,16 @@ describe("Format schema", () => {
           },
           _id: false,
         },
+      },
+      k: {
+        [typeKey]: {
+          a: {
+            b: { c: { d: String, _id: false }, _id: false },
+            _id: false,
+          },
+          _id: false,
+        },
+        default: {},
       },
     });
   });
