@@ -92,7 +92,6 @@ module.exports = ({
     port,
     mainContainerName,
     publicKeyUrl,
-    coreNetwork,
     context,
     network,
     host,
