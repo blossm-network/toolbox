@@ -45,7 +45,6 @@ module.exports = async ({
         nodeExternalTokenFn,
         key,
         ...(redirect && { redirect }),
-        ...(context && { context }),
       }),
       {
         path: `/${name}`,

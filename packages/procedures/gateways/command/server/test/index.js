@@ -80,7 +80,6 @@ describe("Command gateway", () => {
       nodeExternalTokenFn,
       key: "access",
       redirect,
-      context,
     });
     expect(gatewayPostFake).to.have.been.calledOnce;
     expect(listenFake).to.have.been.calledWith();
@@ -176,7 +175,6 @@ describe("Command gateway", () => {
       nodeExternalTokenFn,
       key: "access",
       redirect,
-      context,
     });
     expect(gatewayPostFake).to.have.been.calledOnce;
     expect(listenFake).to.have.been.calledWith();
@@ -355,7 +353,6 @@ describe("Command gateway", () => {
       internalTokenFn,
       nodeExternalTokenFn,
       key: "access",
-      context,
     });
     expect(gatewayPostFake).to.have.been.calledTwice;
     expect(postFake).to.have.been.calledWith(gatewayPostResult, {
@@ -456,7 +453,6 @@ describe("Command gateway", () => {
       nodeExternalTokenFn,
       key: "access",
       redirect,
-      context,
     });
     expect(authorizationFake).to.have.been.calledWith({
       permissionsLookupFn,

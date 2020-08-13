@@ -30,7 +30,6 @@ const event = {
   },
 };
 const correctNumber = 4;
-const context = "some-context";
 const claims = "some-claims";
 const txId = "some-txId";
 const issued = "some-issued";
@@ -1066,6 +1065,9 @@ describe("Command handler post", () => {
     });
     const currentRoot = "current-root";
     const token = "some-token";
+    const context1 = "some-context1";
+    const context2 = "some-context2";
+    const context = { [context1]: "some", [context2]: "some-other" };
     const req = {
       body: {
         root: currentRoot,
@@ -1073,8 +1075,8 @@ describe("Command handler post", () => {
         headers,
         tx: {},
         options,
-        context,
         claims,
+        context,
         token,
       },
     };
@@ -1108,6 +1110,7 @@ describe("Command handler post", () => {
       streamFactFn: streamFactFnFake,
       countFn: countFnFake,
       addFn: addFnFake,
+      contexts: [context1, context2],
     })(req, res);
 
     expect(aggregateFnFake).to.have.been.calledWith({ context, claims, token });
