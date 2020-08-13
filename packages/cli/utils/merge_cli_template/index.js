@@ -372,11 +372,11 @@ const addDefaultDependencies = ({ config, coreNetwork }) => {
         ...eventStoreDependencies({
           dependencies: config.testing.dependencies,
         }),
-        {
+        ...(config.testing.store !== false && {
           domain: config.domain,
           service: config.service,
           procedure: "event-store",
-        },
+        }),
       ];
     case "projection":
       return [

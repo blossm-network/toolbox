@@ -61,29 +61,39 @@ module.exports = ({ downloadFileFn }) => async ({
     defaultRoles,
     context,
     customRolePermissionsFn: async ({ roleId }) => {
-      try {
-        const { body: permissions } = await fact({
-          name: "permissions",
-          domain: "role",
-          service: "core",
-          ...(process.env.CORE_NETWORK && {
-            network: process.env.CORE_NETWORK,
-          }),
+      // try {
+      //TODO
+      console.log({
+        roles,
+        principal,
+        defaultRoles,
+        context,
+        network: process.env.NETWORK,
+        coreNet: process.env.CORE_NETWORK,
+        roleId,
+      });
+      const { body: permissions } = await fact({
+        name: "permissions",
+        domain: "role",
+        service: "core",
+        ...(process.env.CORE_NETWORK && {
+          network: process.env.CORE_NETWORK,
+        }),
+      })
+        .set({
+          token: {
+            internalFn: internalTokenFn,
+            externalFn: nodeExternalToken,
+            key: "access",
+          },
+          context: { network: process.env.NETWORK },
         })
-          .set({
-            token: {
-              internalFn: internalTokenFn,
-              externalFn: nodeExternalToken,
-              key: "access",
-            },
-            context: { network: process.env.NETWORK },
-          })
-          .read({ id: roleId });
+        .read({ id: roleId });
 
-        return permissions;
-      } catch (err) {
-        return [];
-      }
+      return permissions;
+      // } catch (err) {
+      //   return [];
+      // }
     },
   });
 };
