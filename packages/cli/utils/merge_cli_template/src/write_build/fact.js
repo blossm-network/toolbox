@@ -28,6 +28,7 @@ module.exports = ({
   procedure,
   network,
   localCoreNetwork,
+  localNetwork,
   env,
   operationHash,
   serviceName,
@@ -72,6 +73,7 @@ module.exports = ({
       secretBucketKeyLocation,
       serviceName,
       localCoreNetwork,
+      localNetwork,
       custom: {
         NAME: name,
         ...dependencyKeyEnvironmentVariables,

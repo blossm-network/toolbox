@@ -28,6 +28,7 @@ module.exports = ({
   dnsZone,
   context,
   localCoreNetwork,
+  localNetwork,
   computeUrlId,
   coreNetwork,
   procedure,
@@ -67,6 +68,7 @@ module.exports = ({
       operationHash,
       secretBucket,
       localCoreNetwork,
+      localNetwork,
       secretBucketKeyRing,
       secretBucketKeyLocation,
       custom: {

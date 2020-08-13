@@ -316,7 +316,7 @@ const eventStoreDependencies = ({ dependencies }) => {
   return result;
 };
 
-const addDefaultDependencies = ({ config, coreNetwork }) => {
+const addDefaultDependencies = ({ config, localCoreNetwork }) => {
   const tokenDependencies = [
     {
       name: "upgrade",
@@ -348,14 +348,14 @@ const addDefaultDependencies = ({ config, coreNetwork }) => {
       name: "terminated",
       domain: "session",
       service: "core",
-      network: coreNetwork,
+      network: localCoreNetwork,
       procedure: "fact",
     },
     {
       name: "permissions",
       domain: "role",
       service: "core",
-      network: coreNetwork,
+      network: localCoreNetwork,
       procedure: "fact",
     },
   ];
@@ -395,7 +395,7 @@ const addDefaultDependencies = ({ config, coreNetwork }) => {
         {
           domain: "connection",
           service: "system",
-          network: coreNetwork,
+          network: localCoreNetwork,
           procedure: "command-gateway",
           mocks: [
             {
@@ -407,7 +407,7 @@ const addDefaultDependencies = ({ config, coreNetwork }) => {
         {
           domain: "updates",
           service: "system",
-          network: coreNetwork,
+          network: localCoreNetwork,
           procedure: "command-gateway",
           mocks: [
             {
@@ -477,13 +477,18 @@ const addDefaultDependencies = ({ config, coreNetwork }) => {
   }
 };
 
-const writeConfig = ({ config, coreNetwork, workingDir }) => {
+const writeConfig = ({
+  config,
+  localNetwork,
+  localCoreNetwork,
+  workingDir,
+}) => {
   const newConfigPath = path.resolve(workingDir, "config.json");
   if (!config.testing) config.testing = {};
   if (!config.testing.dependencies) config.testing.dependencies = [];
 
   const { dependencies, events } = resolveTransientInfo(
-    addDefaultDependencies({ config, coreNetwork })
+    addDefaultDependencies({ config, localCoreNetwork })
   );
 
   const adjustedDependencies = [];
@@ -492,7 +497,7 @@ const writeConfig = ({ config, coreNetwork, workingDir }) => {
       case "command-gateway":
         adjustedDependencies.push({
           procedure: "http",
-          host: `c.${dependency.domain}.${dependency.service}.${coreNetwork}`,
+          host: `c.${dependency.domain}.${dependency.service}.${localCoreNetwork}`,
           mocks: dependency.mocks.map((mock) => {
             return {
               method: "post",
@@ -507,7 +512,7 @@ const writeConfig = ({ config, coreNetwork, workingDir }) => {
       case "view-gateway":
         adjustedDependencies.push({
           procedure: "http",
-          host: `v.${dependency.context}.${coreNetwork}`,
+          host: `v.${dependency.context}.${localCoreNetwork}`,
           mocks: dependency.mocks.map((mock) => {
             return {
               method: "get",
@@ -529,7 +534,7 @@ const writeConfig = ({ config, coreNetwork, workingDir }) => {
           procedure: "http",
           host: `f${dependency.domain ? `.${dependency.domain}` : ""}${
             dependency.service ? `.${dependency.service}` : ""
-          }.${coreNetwork}`,
+          }.${localCoreNetwork}`,
           mocks: dependency.mocks.map((mock) => {
             return {
               method: "get",
@@ -554,7 +559,7 @@ const writeConfig = ({ config, coreNetwork, workingDir }) => {
               ...(dependency.service ? [dependency.service] : []),
               ...(dependency.context ? [dependency.context] : []),
               dependency.procedure
-            )}.local.network`,
+            )}.${localNetwork}`,
             mocks: dependency.mocks,
           });
         } else {
@@ -668,11 +673,18 @@ const configure = async (workingDir, configFn, env, strict) => {
 
     const mainContainerName = "main";
 
-    const localCoreNetwork = "local.core.network";
+    const localNetwork = "local.network";
+    const localCoreNetwork =
+      baseCoreNetwork == network ? localNetwork : "local.core.network";
 
     const host = `${region}.${envUriSpecifier(env)}${network}`;
 
-    writeConfig({ config, coreNetwork: localCoreNetwork, workingDir });
+    writeConfig({
+      config,
+      localNetwork,
+      localCoreNetwork,
+      workingDir,
+    });
 
     const computeUrlId = envComputeUrlId({ env, config: blossmConfig });
 
@@ -703,6 +715,7 @@ const configure = async (workingDir, configFn, env, strict) => {
       }),
       mainContainerName,
       containerRegistery,
+      localNetwork,
       blockSchedule,
       envVars,
       devEnvVars,
@@ -729,8 +742,8 @@ const configure = async (workingDir, configFn, env, strict) => {
       port: 80,
       mainContainerName,
       env,
-      network: "local.network",
-      host: "local.network",
+      network: localNetwork,
+      host: localNetwork,
       service,
       project,
       context,

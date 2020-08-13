@@ -5,6 +5,7 @@ module.exports = ({
   procedure,
   operationHash,
   serviceName,
+  localNetwork,
   localCoreNetwork,
   project,
   region,
@@ -21,8 +22,8 @@ module.exports = ({
       stripIndents`
     cat >> .env <<- EOM
     ${Object.entries({
-      NETWORK: "local.network",
-      HOST: "local.network",
+      NETWORK: localNetwork,
+      HOST: localNetwork,
       NODE_ENV: "local",
       CORE_NETWORK: localCoreNetwork,
       PROCEDURE: procedure,
