@@ -52,6 +52,12 @@ module.exports = async ({
     };
   });
 
+  //TODO
+  console.log({
+    customRoleCandidates,
+    context,
+  });
+
   if (!customRolePermissionsFn || customRoleCandidates.length == 0)
     return permissions;
 
