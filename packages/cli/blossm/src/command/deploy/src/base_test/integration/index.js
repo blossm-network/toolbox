@@ -81,6 +81,13 @@ const executeStep = async (step) => {
     }
   }
 
+  const necessaryContext = {};
+  if (contexts) {
+    for (const c of contexts) {
+      necessaryContext[c] = "something";
+    }
+  }
+
   const response = await request.post(url, {
     body: {
       root: step.root,
@@ -92,7 +99,10 @@ const executeStep = async (step) => {
         id: uuid(),
       },
       options: step.options,
-      context: step.context,
+      context: {
+        ...necessaryContext,
+        ...step.context,
+      },
       tx: {
         ip: step.ip,
       },
