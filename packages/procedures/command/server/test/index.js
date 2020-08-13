@@ -16,6 +16,7 @@ const validateFn = "some-validate-fn";
 const normalizeFn = "some-normalize-fn";
 const fillFn = "some-fill-fn";
 const version = "some-version";
+const contexts = "some-contexts";
 
 describe("Command handler", () => {
   afterEach(() => {
@@ -50,6 +51,7 @@ describe("Command handler", () => {
       validateFn,
       normalizeFn,
       fillFn,
+      contexts,
     });
 
     expect(result).to.equal(returnValue);
@@ -69,6 +71,7 @@ describe("Command handler", () => {
       addFn,
       countFn,
       fillFn,
+      contexts,
     });
   });
   it("should call with the correct params with optionals omitted", async () => {

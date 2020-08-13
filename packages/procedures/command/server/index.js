@@ -13,6 +13,7 @@ module.exports = async ({
   addFn,
   fillFn,
   countFn,
+  contexts,
 } = {}) =>
   deps
     .server()
@@ -30,6 +31,7 @@ module.exports = async ({
         ...(validateFn && { validateFn }),
         ...(normalizeFn && { normalizeFn }),
         ...(countFn && { countFn }),
+        ...(contexts && { contexts }),
       })
     )
     .listen();

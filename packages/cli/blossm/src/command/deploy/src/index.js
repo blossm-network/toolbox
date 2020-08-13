@@ -18,8 +18,11 @@ const normalize =
 const fill =
   fs.existsSync(path.resolve(__dirname, "./fill.js")) && require("./fill");
 
+const config = require("./config.json");
+
 module.exports = commandProcedure({
   mainFn: main,
+  ...(config.contexts && { contexts: config.contexts }),
   ...(validate && { validateFn: validate }),
   ...(normalize && { normalizeFn: normalize }),
   ...(fill && { fillFn: fill }),
