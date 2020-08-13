@@ -546,6 +546,9 @@ const writeConfig = ({ config, coreNetwork, workingDir }) => {
           }),
         });
         break;
+      case "http":
+        adjustedDependencies.push(dependency);
+        break;
       default:
         if (dependency.mocks) {
           adjustedDependencies.push({
