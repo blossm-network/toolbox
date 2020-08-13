@@ -10,7 +10,7 @@ const request = require("@blossm/request");
 
 const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 
-const { testing } = require("../../config.json");
+const { testing, contexts } = require("../../config.json");
 
 const checkResponse = ({ data, expected }) => {
   for (const property in expected) {
@@ -120,6 +120,16 @@ const executeStep = async (step) => {
 
 describe("Command handler integration tests", () => {
   it("should return successfully", async () => {
+    if (contexts) {
+      const response = await request.post(url, {
+        body: {
+          context: {},
+        },
+      });
+
+      expect(response.statusCode).to.equal(403);
+    }
+
     let i = 0;
     for (const step of testing.steps) {
       //eslint-disable-next-line no-console
