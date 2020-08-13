@@ -2129,4 +2129,57 @@ describe("Command handler post", () => {
       _tx: txId,
     });
   });
+  it("should redirect correctly with no context", async () => {
+    const req = {
+      body: {},
+    };
+    const sendFake = fake();
+    const statusFake = fake.returns({
+      send: sendFake,
+    });
+    const res = {
+      status: statusFake,
+    };
+
+    const error = "some-error";
+    const messageFake = fake.returns(error);
+    replace(deps, "forbiddenError", {
+      message: messageFake,
+    });
+    try {
+      await post({
+        contexts: [context],
+      })(req, res);
+    } catch (e) {
+      expect(messageFake).to.have.been.calledWith("This context is forbidden.");
+      expect(e).to.equal(error);
+    }
+  });
+  it("should redirect correctly with bad context", async () => {
+    const req = {
+      body: {
+        context: {},
+      },
+    };
+    const sendFake = fake();
+    const statusFake = fake.returns({
+      send: sendFake,
+    });
+    const res = {
+      status: statusFake,
+    };
+    const error = "some-error";
+    const messageFake = fake.returns(error);
+    replace(deps, "forbiddenError", {
+      message: messageFake,
+    });
+    try {
+      await post({
+        contexts: [context],
+      })(req, res);
+    } catch (e) {
+      expect(messageFake).to.have.been.calledWith("This context is forbidden.");
+      expect(e).to.equal(error);
+    }
+  });
 });

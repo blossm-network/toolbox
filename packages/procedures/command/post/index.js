@@ -12,7 +12,15 @@ module.exports = ({
   streamFactFn,
   countFn,
   addFn,
+  contexts,
 }) => async (req, res) => {
+  if (
+    contexts &&
+    (!req.body.context ||
+      contexts.filter((c) => req.body.context[c]).length != contexts.length)
+  )
+    throw deps.forbiddenError.message("This context is forbidden.");
+
   if (validateFn) {
     await validateFn(req.body.payload, {
       ...(req.body.context && { context: req.body.context }),

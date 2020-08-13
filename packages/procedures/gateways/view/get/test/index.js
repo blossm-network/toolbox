@@ -399,8 +399,10 @@ describe("View gateway get", () => {
     }
   });
   it("should redirect correctly if view store throws 403", async () => {
+    const errMessage = "some-error-message";
     const ForbiddenError = Error;
     ForbiddenError.prototype.statusCode = 403;
+    ForbiddenError.prototype.message = errMessage;
     const readFake = fake.throws(new ForbiddenError());
     const setFake = fake.returns({
       read: readFake,
@@ -442,16 +444,17 @@ describe("View gateway get", () => {
         redirect,
       })(req, res);
     } catch (e) {
-      expect(messageFake).to.have.been.calledWith(
-        "This context is forbidden.",
-        { info: { redirect } }
-      );
+      expect(messageFake).to.have.been.calledWith(errMessage, {
+        info: { redirect },
+      });
       expect(e).to.equal(error);
     }
   });
   it("should redirect correctly if composite throws 403", async () => {
+    const errMessage = "some-error-message";
     const ForbiddenError = Error;
     ForbiddenError.prototype.statusCode = 403;
+    ForbiddenError.prototype.message = errMessage;
     const readFake = fake.throws(new ForbiddenError());
     const setFake = fake.returns({
       read: readFake,
@@ -493,10 +496,9 @@ describe("View gateway get", () => {
         redirect,
       })(req, res);
     } catch (e) {
-      expect(messageFake).to.have.been.calledWith(
-        "This context is forbidden.",
-        { info: { redirect } }
-      );
+      expect(messageFake).to.have.been.calledWith(errMessage, {
+        info: { redirect },
+      });
       expect(e).to.equal(error);
     }
   });

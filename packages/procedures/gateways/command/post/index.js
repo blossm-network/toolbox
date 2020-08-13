@@ -9,17 +9,7 @@ module.exports = ({
   nodeExternalTokenFn,
   key,
   redirect,
-  contexts,
 } = {}) => async (req, res) => {
-  if (
-    contexts &&
-    (!req.context ||
-      contexts.filter((c) => req.context[c]).length != contexts.length)
-  )
-    throw deps.forbiddenError.message("This context is forbidden.", {
-      info: { redirect },
-    });
-
   await deps.validate(req.body);
   const { payload, headers, root } = req.body;
 
@@ -106,7 +96,7 @@ module.exports = ({
     res.status(statusCode).send(response);
   } catch (err) {
     throw err.statusCode == 403
-      ? deps.forbiddenError.message("This context is forbidden.", {
+      ? deps.forbiddenError.message(err.message, {
           info: { redirect },
         })
       : err;

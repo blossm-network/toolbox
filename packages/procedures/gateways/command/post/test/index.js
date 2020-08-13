@@ -584,68 +584,13 @@ describe("Command gateway post", () => {
       expect(e.message).to.equal(errorMessage);
     }
   });
-  it("should redirect correctly with no context", async () => {
-    const req = {};
-    const sendFake = fake();
-    const statusFake = fake.returns({
-      send: sendFake,
-    });
-    const res = {
-      status: statusFake,
-    };
-
-    const error = "some-error";
-    const messageFake = fake.returns(error);
-    replace(deps, "forbiddenError", {
-      message: messageFake,
-    });
-    try {
-      await post({
-        contexts: [context],
-        redirect,
-      })(req, res);
-    } catch (e) {
-      expect(messageFake).to.have.been.calledWith(
-        "This context is forbidden.",
-        { info: { redirect } }
-      );
-      expect(e).to.equal(error);
-    }
-  });
-  it("should redirect correctly with bad context", async () => {
-    const req = {
-      context: {},
-    };
-    const sendFake = fake();
-    const statusFake = fake.returns({
-      send: sendFake,
-    });
-    const res = {
-      status: statusFake,
-    };
-    const error = "some-error";
-    const messageFake = fake.returns(error);
-    replace(deps, "forbiddenError", {
-      message: messageFake,
-    });
-    try {
-      await post({
-        contexts: [context],
-        redirect,
-      })(req, res);
-    } catch (e) {
-      expect(messageFake).to.have.been.calledWith(
-        "This context is forbidden.",
-        { info: { redirect } }
-      );
-      expect(e).to.equal(error);
-    }
-  });
   it("should redirect correctly if command throws 403", async () => {
+    const errMessage = "some-error-message";
+
     const ForbiddenError = Error;
     ForbiddenError.prototype.statusCode = 403;
+    ForbiddenError.prototype.message = errMessage;
 
-    const redirect = "some-redirect";
     const validateFake = fake();
     replace(deps, "validate", validateFake);
     const issueFake = fake.throws(new ForbiddenError());
@@ -690,10 +635,9 @@ describe("Command gateway post", () => {
         redirect,
       })(req, res);
     } catch (e) {
-      expect(messageFake).to.have.been.calledWith(
-        "This context is forbidden.",
-        { info: { redirect } }
-      );
+      expect(messageFake).to.have.been.calledWith(errMessage, {
+        info: { redirect },
+      });
       expect(e).to.equal(error);
     }
   });

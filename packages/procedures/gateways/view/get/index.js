@@ -71,7 +71,7 @@ module.exports = ({
     }
   } catch (err) {
     throw err.statusCode == 403
-      ? deps.forbiddenError.message("This context is forbidden.", {
+      ? deps.forbiddenError.message(err.message, {
           info: { redirect },
         })
       : err;
