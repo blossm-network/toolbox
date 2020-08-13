@@ -322,31 +322,26 @@ const addDefaultDependencies = ({ config, coreNetwork }) => {
       name: "upgrade",
       domain: "session",
       service: "core",
-      network: coreNetwork,
       procedure: "command",
     },
     {
       domain: "session",
       service: "core",
-      network: coreNetwork,
       procedure: "event-store",
     },
     {
       domain: "role",
       service: "core",
-      network: coreNetwork,
       procedure: "event-store",
     },
     {
       domain: "principal",
       service: "core",
-      network: coreNetwork,
       procedure: "event-store",
     },
     {
       domain: "identity",
       service: "core",
-      network: coreNetwork,
       procedure: "event-store",
     },
     {
@@ -673,9 +668,11 @@ const configure = async (workingDir, configFn, env, strict) => {
 
     const mainContainerName = "main";
 
+    const localCoreNetwork = "local.core.network";
+
     const host = `${region}.${envUriSpecifier(env)}${network}`;
 
-    writeConfig({ config, coreNetwork, workingDir });
+    writeConfig({ config, coreNetwork: localCoreNetwork, workingDir });
 
     const computeUrlId = envComputeUrlId({ env, config: blossmConfig });
 
@@ -718,6 +715,7 @@ const configure = async (workingDir, configFn, env, strict) => {
       secretBucketKeyLocation,
       secretBucketKeyRing,
       coreNetwork,
+      localCoreNetwork,
       strict,
       dependencyKeyEnvironmentVariables,
       ...custom,
@@ -740,6 +738,7 @@ const configure = async (workingDir, configFn, env, strict) => {
       containerRegistery,
       coreContainerRegistery,
       coreNetwork,
+      localCoreNetwork,
       domain,
       name,
       secretBucket,
