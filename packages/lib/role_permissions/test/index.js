@@ -2,12 +2,14 @@ const { expect } = require("chai").use(require("sinon-chai"));
 const { restore, fake } = require("sinon");
 const rolePermissions = require("..");
 
+const network = "some-network";
+
 const roles = [
   {
     id: "some-role-id",
     root: "some-role-root",
     service: "some-role-service",
-    network: "some-role-network",
+    network,
   },
 ];
 
@@ -24,6 +26,8 @@ const defaultRole = {
     permissions,
   },
 };
+
+process.env.NETWORK = network;
 
 describe("Role permissions", () => {
   afterEach(() => {
@@ -98,7 +102,7 @@ describe("Role permissions", () => {
       id: "some-custom-role-id",
       root: "some-custom-role-root",
       service: "some-custom-role-service",
-      network: "some-custom-role-network",
+      network,
     };
     const result = await rolePermissions({
       roles: [...roles, customRole],
@@ -115,6 +119,29 @@ describe("Role permissions", () => {
         privilege: permissionPriviledge,
       },
       ...customRolePermissions,
+    ]);
+  });
+  it("should not return the custom role from other network", async () => {
+    const customRolePermissions = ["some-other-permission"];
+    const customRolesPermissionsFnFake = fake.resolves(customRolePermissions);
+    const customRole = {
+      id: "some-custom-role-id",
+      root: "some-custom-role-root",
+      service: "some-custom-role-service",
+      network: "some-random-network",
+    };
+    const result = await rolePermissions({
+      roles: [...roles, customRole],
+      defaultRoles: { ...defaultRole },
+      customRolePermissionsFn: customRolesPermissionsFnFake,
+    });
+    expect(customRolesPermissionsFnFake).to.not.have.been.called;
+    expect(result).to.deep.equal([
+      {
+        service: permissionService,
+        domain: permissionDomain,
+        privilege: permissionPriviledge,
+      },
     ]);
   });
   it("should return the correct roles with multiple defaultRoles", async () => {

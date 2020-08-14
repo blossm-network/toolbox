@@ -36,9 +36,9 @@ module.exports = async ({
   }
 
   const customRoleCandidates = difference(
-    roles.map(
-      (role) => `${role.id}:${role.root}:${role.service}:${role.network}`
-    ),
+    roles
+      .filter((role) => role.network == process.env.NETWORK)
+      .map((role) => `${role.id}:${role.root}:${role.service}:${role.network}`),
     rolesFound.map(
       (role) => `${role.id}:${role.root}:${role.service}:${role.network}`
     )

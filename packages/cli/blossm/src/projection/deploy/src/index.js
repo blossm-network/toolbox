@@ -47,11 +47,6 @@ const saveId = async ({ aggregate, aggregateContext, id, update, push }) => {
 
   if (!newView || !push) return;
 
-  //TODO
-  console.log({
-    newView,
-  });
-
   const channel = channelName({
     name: process.env.NAME,
     context: newView.headers.context,
