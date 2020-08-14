@@ -7,6 +7,7 @@ const fact = require("..");
 const mainFn = "some-main-fn";
 const queryAggregatesFn = "some-query-aggregates-fn";
 const aggregateFn = "some-aggregate-fn";
+const contexts = "some-contexts";
 
 describe("Fact", () => {
   afterEach(() => {
@@ -39,6 +40,7 @@ describe("Fact", () => {
       mainFn,
       queryAggregatesFn,
       aggregateFn,
+      contexts,
     });
 
     expect(result).to.equal(returnValue);
@@ -52,11 +54,13 @@ describe("Fact", () => {
       mainFn,
       queryAggregatesFn,
       aggregateFn,
+      contexts,
     });
     expect(factStreamFake).to.have.been.calledWith({
       mainFn,
       queryAggregatesFn,
       aggregateFn,
+      contexts,
     });
   });
   it("should throw correctly", async () => {

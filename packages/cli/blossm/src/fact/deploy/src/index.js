@@ -5,8 +5,11 @@ const gcpToken = require("@blossm/gcp-token");
 
 const main = require("./main.js");
 
+const config = require("./config.json");
+
 module.exports = fact({
   mainFn: main,
+  ...(config.contexts && { contexts: config.contexts }),
   queryAggregatesFn: ({ context, claims, token }) => async ({
     domain,
     service,

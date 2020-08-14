@@ -1,7 +1,8 @@
 const { expect } = require("chai").use(require("sinon-chai"));
-const { restore, fake } = require("sinon");
+const { restore, fake, replace } = require("sinon");
 
 const get = require("..");
+const deps = require("../deps");
 
 const queryAggregatesFn = "some-query-aggregates-fn";
 const aggregateFn = "some-aggregate-fn";
@@ -71,7 +72,13 @@ describe("Fact get", () => {
     const queryAggregatesFnFake = fake.returns(queryAggregatesFn);
     const aggregateFnFake = fake.returns(aggregateFn);
 
-    const context = "some-context";
+    const context1 = "some-context1";
+    const context2 = "some-context2";
+    const context = {
+      [context1]: "some",
+      [context2]: "some-other",
+    };
+
     const claims = "some-claims";
     const token = "some-token";
     const root = "some-root";
@@ -103,6 +110,7 @@ describe("Fact get", () => {
       mainFn: mainFnFake,
       queryAggregatesFn: queryAggregatesFnFake,
       aggregateFn: aggregateFnFake,
+      contexts: [context1, context2],
     })(req, res);
 
     expect(mainFnFake).to.have.been.calledWith({
@@ -156,6 +164,59 @@ describe("Fact get", () => {
       expect(1).to.equal(2);
     } catch (e) {
       expect(e.message).to.equal(errorMessage);
+    }
+  });
+  it("should redirect correctly with no context", async () => {
+    const req = {
+      query: {},
+    };
+    const sendFake = fake();
+    const statusFake = fake.returns({
+      send: sendFake,
+    });
+    const res = {
+      status: statusFake,
+    };
+
+    const error = "some-error";
+    const messageFake = fake.returns(error);
+    replace(deps, "forbiddenError", {
+      message: messageFake,
+    });
+    try {
+      await get({
+        contexts: [context],
+      })(req, res);
+    } catch (e) {
+      expect(messageFake).to.have.been.calledWith("This context is forbidden.");
+      expect(e).to.equal(error);
+    }
+  });
+  it("should redirect correctly with bad context", async () => {
+    const req = {
+      query: {
+        context: {},
+      },
+    };
+    const sendFake = fake();
+    const statusFake = fake.returns({
+      send: sendFake,
+    });
+    const res = {
+      status: statusFake,
+    };
+    const error = "some-error";
+    const messageFake = fake.returns(error);
+    replace(deps, "forbiddenError", {
+      message: messageFake,
+    });
+    try {
+      await get({
+        contexts: [context],
+      })(req, res);
+    } catch (e) {
+      expect(messageFake).to.have.been.calledWith("This context is forbidden.");
+      expect(e).to.equal(error);
     }
   });
 });

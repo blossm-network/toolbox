@@ -1,5 +1,14 @@
-module.exports = ({ mainFn, queryAggregatesFn, aggregateFn }) => {
+const deps = require("./deps");
+
+module.exports = ({ mainFn, queryAggregatesFn, aggregateFn, contexts }) => {
   return async (req, res) => {
+    if (
+      contexts &&
+      (!req.query.context ||
+        contexts.filter((c) => req.query.context[c]).length != contexts.length)
+    )
+      throw deps.forbiddenError.message("This context is forbidden.");
+
     const { headers = {}, response } = await mainFn({
       query: req.query.query,
       ...(req.params.root && { root: req.params.root }),
