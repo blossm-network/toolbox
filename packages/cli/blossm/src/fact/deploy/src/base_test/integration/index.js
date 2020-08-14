@@ -80,9 +80,8 @@ const executeStep = async (step) => {
     }
   }
 
-  let necessaryContext;
+  const necessaryContext = {};
   if (contexts) {
-    necessaryContext = {};
     for (const c of contexts) {
       necessaryContext[c] = "something";
     }
@@ -91,10 +90,7 @@ const executeStep = async (step) => {
     `${url}${step.root ? `/${step.root}` : ""}`,
     {
       query: {
-        ...(step.context ||
-          (necessaryContext && {
-            context: { ...necessaryContext, ...step.context },
-          })),
+        context: { ...necessaryContext, ...step.context },
         ...(step.query && { query: step.query }),
       },
     }
