@@ -151,6 +151,13 @@ describe("Command handler integration tests", () => {
   it("should return an error if incorrect params", async () => {
     if (!testing.validate || !testing.validate.bad || !testing.validate.bad[0])
       return;
+
+    const necessaryContext = {};
+    if (contexts) {
+      for (const c of contexts) {
+        necessaryContext[c] = "something";
+      }
+    }
     const response = await request.post(url, {
       body: {
         headers: {
@@ -162,6 +169,7 @@ describe("Command handler integration tests", () => {
           bad: testing.validate.bad[0],
           ok: testing.validate.ok[0],
         }),
+        context: necessaryContext,
         claims: {
           iss: "some-iss",
           aud: "some-aud",
