@@ -83,6 +83,8 @@ module.exports = projection({
     )
       return;
 
+    //TODO
+    console.log({ aggregate });
     let {
       //The query describing which items in the view store will be updated.
       query,
