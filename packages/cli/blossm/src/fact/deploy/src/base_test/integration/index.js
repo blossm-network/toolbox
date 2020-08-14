@@ -1,6 +1,5 @@
 require("localenv");
 const { expect } = require("chai");
-// const { create, delete: del, exists } = require("@blossm/gcp-pubsub");
 const eventStore = require("@blossm/event-store-rpc");
 const createEvent = require("@blossm/create-event");
 const { hash } = require("@blossm/crypt");
@@ -9,9 +8,7 @@ const request = require("@blossm/request");
 
 const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 
-const { testing } = require("../../config.json");
-
-// const stateTopics = [];
+const { testing, contexts } = require("../../config.json");
 
 const checkResponse = ({ data, expected }) => {
   for (const property in expected) {
@@ -83,11 +80,21 @@ const executeStep = async (step) => {
     }
   }
 
+  let necessaryContext;
+  if (contexts) {
+    necessaryContext = {};
+    for (const c of contexts) {
+      necessaryContext[c] = "something";
+    }
+  }
   const response = await request.get(
     `${url}${step.root ? `/${step.root}` : ""}`,
     {
       query: {
-        ...(step.context && { context: step.context }),
+        ...(step.context ||
+          (necessaryContext && {
+            context: { ...necessaryContext, ...step.context },
+          })),
         ...(step.query && { query: step.query }),
       },
     }
