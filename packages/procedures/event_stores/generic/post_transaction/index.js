@@ -153,6 +153,10 @@ module.exports = ({
     })
   );
 
+  //TODO
+  console.log("normalized");
+  console.log(JSON.stringify(normalizedEvents));
+
   await saveEventsFn({
     events: normalizedEvents,
     ...(transaction && { transaction }),
