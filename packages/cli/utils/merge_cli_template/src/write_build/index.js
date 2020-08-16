@@ -447,21 +447,20 @@ const steps = ({
 const imageExtension = ({ service, context, domain, name, procedure }) => {
   switch (procedure) {
     case "view-store":
+    case "projection":
     case "view-composite":
-      return `${context}.${name}`;
+      return `${context ? `${context}.` : ""}${name}`;
     case "event-store":
     case "command-gateway":
       return `${service}.${domain}`;
     case "view-gateway":
-      return context;
+      return context || "";
     case "fact-gateway":
       if (service) {
         if (domain) return `${service}.${domain}`;
         return service;
       }
       return "";
-    case "projection":
-      return `${context}.${name}`;
     case "command":
       return `${service}.${domain}.${name}`;
     case "job":

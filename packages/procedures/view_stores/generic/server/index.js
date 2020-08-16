@@ -12,7 +12,9 @@ module.exports = async ({
   formatFn = defaultFormatFn,
   emptyFn,
   countFn,
+  groupsLookupFn,
   one,
+  group,
 } = {}) => {
   deps
     .server()
@@ -23,10 +25,12 @@ module.exports = async ({
       deps.get({
         findFn,
         countFn,
+        groupsLookupFn,
         ...(queryFn && { queryFn }),
         ...(formatFn && { formatFn }),
         ...(emptyFn && { emptyFn }),
         ...(one && { one }),
+        ...(group && { group }),
       }),
       {
         path: "/:id?",

@@ -93,7 +93,10 @@ describe("Mongodb event store aggregate", () => {
   });
   it("should call with the correct params", async () => {
     const eventStreamFnFake = stub().yieldsTo("fn", event);
-    const findOneSnapshotFnFake = fake.returns(findOneResult);
+    const findOneSnapshotFnFake = fake.returns({
+      ...findOneResult,
+      txIds: [eventTxId],
+    });
 
     const result = await aggregate({
       handlers,
@@ -141,6 +144,150 @@ describe("Mongodb event store aggregate", () => {
         },
         c: "some-c",
       },
+      groups: [],
+      txIds: [eventTxId],
+    });
+  });
+  it("should call with the correct params with group adding", async () => {
+    const eventStreamFnFake = stub().yieldsTo("fn", {
+      ...event,
+      groupsAdded: ["some-added-group"],
+    });
+    const findOneSnapshotFnFake = fake.returns({
+      ...findOneResult,
+      groups: ["some-group"],
+    });
+
+    const result = await aggregate({
+      handlers,
+      eventStreamFn: eventStreamFnFake,
+      findOneSnapshotFn: findOneSnapshotFnFake,
+    })(root);
+
+    expect(eventStreamFnFake).to.have.been.calledWith({
+      query: {
+        "headers.root": root,
+        "headers.number": { $gt: 6 },
+      },
+      sort: {
+        "headers.number": 1,
+      },
+      fn: match(() => true),
+    });
+    expect(findOneSnapshotFnFake).to.have.been.calledWith({
+      query: {
+        "headers.root": root,
+      },
+      sort: {
+        "headers.created": -1,
+      },
+      select: {
+        events: 0,
+      },
+    });
+    expect(result).to.deep.equal({
+      headers: {
+        root,
+        snapshotHash,
+        domain: envDomain,
+        service: envService,
+        network: envNetwork,
+        lastEventNumber: 1,
+        timestamp: eventCreated,
+      },
+      state: { a: 1, b: 2, c: 2 },
+      context: {
+        a: {
+          root: aRoot,
+          service: aService,
+          network: aNetwork,
+        },
+        c: "some-c",
+      },
+      groups: ["some-group", "some-added-group"],
+      txIds: [eventTxId, txId],
+    });
+  });
+  it("should call with the correct params with group removing", async () => {
+    const eventStreamFnFake = stub().yieldsTo("fn", {
+      ...event,
+      groupsRemoved: [
+        {
+          root: "some-removed-group-root",
+          service: "some-removed-group-service",
+          network: "some-removed-group-network",
+        },
+      ],
+    });
+    const findOneSnapshotFnFake = fake.returns({
+      ...findOneResult,
+      groups: [
+        {
+          root: "some-group-root",
+          service: "some-group-service",
+          network: "some-group-network",
+        },
+        {
+          root: "some-removed-group-root",
+          service: "some-removed-group-service",
+          network: "some-removed-group-network",
+        },
+      ],
+    });
+
+    const result = await aggregate({
+      handlers,
+      eventStreamFn: eventStreamFnFake,
+      findOneSnapshotFn: findOneSnapshotFnFake,
+    })(root);
+
+    expect(eventStreamFnFake).to.have.been.calledWith({
+      query: {
+        "headers.root": root,
+        "headers.number": { $gt: 6 },
+      },
+      sort: {
+        "headers.number": 1,
+      },
+      fn: match(() => true),
+    });
+    expect(findOneSnapshotFnFake).to.have.been.calledWith({
+      query: {
+        "headers.root": root,
+      },
+      sort: {
+        "headers.created": -1,
+      },
+      select: {
+        events: 0,
+      },
+    });
+    expect(result).to.deep.equal({
+      headers: {
+        root,
+        snapshotHash,
+        domain: envDomain,
+        service: envService,
+        network: envNetwork,
+        lastEventNumber: 1,
+        timestamp: eventCreated,
+      },
+      state: { a: 1, b: 2, c: 2 },
+      context: {
+        a: {
+          root: aRoot,
+          service: aService,
+          network: aNetwork,
+        },
+        c: "some-c",
+      },
+      groups: [
+        {
+          root: "some-group-root",
+          service: "some-group-service",
+          network: "some-group-network",
+        },
+      ],
       txIds: [eventTxId, txId],
     });
   });
@@ -201,6 +348,7 @@ describe("Mongodb event store aggregate", () => {
         c: "some-c",
       },
       events: [event],
+      groups: [],
       txIds: [eventTxId, txId],
     });
   });
@@ -254,6 +402,7 @@ describe("Mongodb event store aggregate", () => {
         },
         c: "some-c",
       },
+      groups: [],
       txIds: [txId],
     });
   });
@@ -310,6 +459,7 @@ describe("Mongodb event store aggregate", () => {
         },
         c: "some-c",
       },
+      groups: [],
       txIds: [eventTxId],
     });
   });

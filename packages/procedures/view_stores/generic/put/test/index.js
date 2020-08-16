@@ -72,13 +72,13 @@ const body = {
 };
 
 process.env.NAME = envName;
-process.env.CONTEXT = envContext;
 process.env.NETWORK = envNetwork;
 process.env.CORE_NETWORK = coreNetwork;
 
 describe("View store put", () => {
   beforeEach(() => {
     clock = useFakeTimers(now.getTime());
+    process.env.CONTEXT = envContext;
   });
   afterEach(() => {
     clock.restore();
@@ -195,6 +195,88 @@ describe("View store put", () => {
       id: writeResultId,
       updates:
         "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
+    });
+    expect(statusFake).to.have.been.calledWith(200);
+    expect(sendFake).to.have.been.calledWith({
+      ...formattedWriteResult,
+      headers: {
+        id: writeResultId,
+        context: writeResultContext,
+        trace: [trace1, trace2],
+      },
+    });
+  });
+  it("should call with the correct params with groups and no env context", async () => {
+    const writeFake = fake.returns(writeResult);
+    const formatFake = fake.returns(formattedWriteResult);
+
+    const group1Root = "some-group1-root";
+    const group1Service = "some-group1-service";
+    const group1Network = "some-group1-network";
+
+    const group2Root = "some-group2-root";
+    const group2Service = "some-group2-service";
+    const group2Network = "some-group2-network";
+
+    const req = {
+      body: {
+        ...body,
+        groups: [
+          {
+            root: group1Root,
+            service: group1Service,
+            network: group1Network,
+            bogus: "yep",
+          },
+          {
+            root: group2Root,
+            service: group2Service,
+            network: group2Network,
+          },
+        ],
+      },
+      params: {
+        id,
+      },
+    };
+
+    const sendFake = fake();
+    const statusFake = fake.returns({
+      send: sendFake,
+    });
+    const res = {
+      status: statusFake,
+    };
+
+    delete process.env.CONTEXT;
+    await put({ writeFn: writeFake, formatFn: formatFake })(req, res);
+
+    expect(writeFake).to.have.been.calledWith({
+      query: {
+        "headers.id": id,
+      },
+      data: {
+        "body.a": 1,
+        "headers.id": id,
+        "headers.modified": deps.dateString(),
+        "headers.groups": [
+          {
+            root: group1Root,
+            service: group1Service,
+            network: group1Network,
+          },
+          {
+            root: group2Root,
+            service: group2Service,
+            network: group2Network,
+          },
+        ],
+        [`trace.${traceService}.${traceDomain}`]: traceTxIds,
+      },
+    });
+    expect(formatFake).to.have.been.calledWith({
+      body: writeResultBody,
+      id: writeResultId,
     });
     expect(statusFake).to.have.been.calledWith(200);
     expect(sendFake).to.have.been.calledWith({

@@ -35,6 +35,7 @@ module.exports = ({ findOneSnapshotFn, eventStreamFn, handlers }) => async (
       state: snapshot.state,
       context: snapshot.context,
     }),
+    groups: (snapshot && snapshot.groups) || [],
     ...(snapshot && {
       txIds: snapshot.txIds,
     }),
@@ -69,11 +70,14 @@ module.exports = ({ findOneSnapshotFn, eventStreamFn, handlers }) => async (
       aggregate.headers.lastEventNumber = event.headers.number;
       aggregate.headers.timestamp = event.headers.created;
       aggregate.state = handler(aggregate.state || {}, event.payload);
-      //TODO remove duplicates
-      aggregate.txIds = [
+      const allTxIds = [
         ...(event.tx.id ? [event.tx.id] : []),
         ...(aggregate.txIds || []),
-      ].slice(0, 10);
+      ];
+
+      aggregate.txIds = allTxIds
+        .filter((id, index) => allTxIds.indexOf(id) === index)
+        .slice(0, 10);
 
       if (aggregate.context) {
         const keys = Object.keys(aggregate.context);
@@ -94,6 +98,22 @@ module.exports = ({ findOneSnapshotFn, eventStreamFn, handlers }) => async (
       } else {
         aggregate.context = event.context;
       }
+
+      if (event.groupsAdded)
+        aggregate.groups = aggregate.groups.concat(event.groupsAdded);
+
+      if (event.groupsRemoved)
+        aggregate.groups = aggregate.groups.filter((group) => {
+          for (const groupRemoved of event.groupsRemoved) {
+            if (
+              groupRemoved.root == group.root &&
+              groupRemoved.service == group.service &&
+              groupRemoved.network == group.network
+            )
+              return false;
+          }
+          return true;
+        });
 
       if (includeEvents) aggregate.events.push(event);
     },

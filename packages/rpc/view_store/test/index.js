@@ -20,10 +20,12 @@ const bootstrap = "some-bootstrap";
 const contexts = { c: 2 };
 
 const envContext = "some-env-context";
-process.env.CONTEXT = envContext;
 process.env.NETWORK = network;
 
 describe("Get views", () => {
+  beforeEach(() => {
+    process.env.CONTEXT = envContext;
+  });
   afterEach(() => {
     restore();
   });
@@ -106,20 +108,20 @@ describe("Get views", () => {
     replace(deps, "rpc", rpcFake);
 
     const otherNetwork = "some-other-network";
+    delete process.env.CONTEXT;
     const { body: result } = await viewStore({
       name,
-      context,
       network: otherNetwork,
     })
       .set({ context: contexts, token: { externalFn: externalTokenFn, key } })
       .read({ query, sort });
 
-    expect(rpcFake).to.have.been.calledWith(name, context, "view-store");
+    expect(rpcFake).to.have.been.calledWith(name, "view-store");
     expect(getFake).to.have.been.calledWith({ query, sort });
     expect(inFake).to.have.been.calledWith({
       context: contexts,
       network: otherNetwork,
-      host: "v.some-context.some-other-network",
+      host: "v.some-other-network",
     });
     expect(withFake).to.have.been.calledWith({
       externalTokenFn,
@@ -215,20 +217,20 @@ describe("Get views", () => {
 
     const otherNetwork = "some-other-network";
     const fn = "some-fn";
+    delete process.env.CONTEXT;
     const { body: result } = await viewStore({
       name,
-      context,
       network: otherNetwork,
     })
       .set({ context: contexts, token: { externalFn: externalTokenFn, key } })
       .idStream(fn, { query, sort });
 
-    expect(rpcFake).to.have.been.calledWith(name, context, "view-store");
+    expect(rpcFake).to.have.been.calledWith(name, "view-store");
     expect(streamFake).to.have.been.calledWith(fn, { query, sort });
     expect(inFake).to.have.been.calledWith({
       context: contexts,
       network: otherNetwork,
-      host: "v.some-context.some-other-network",
+      host: "v.some-other-network",
     });
     expect(withFake).to.have.been.calledWith({
       path: "/some-name/stream-ids",
@@ -252,6 +254,7 @@ describe("Get views", () => {
 
     const update = "some-update";
     const trace = "some-trace";
+    const groups = "some-groups";
 
     const enqueueFnResult = "some-enqueue-fn-result";
     const enqueueFnFake = fake.returns(enqueueFnResult);
@@ -267,12 +270,13 @@ describe("Get views", () => {
           wait: enqueueWait,
         },
       })
-      .update({ update, id, trace });
+      .update({ update, id, trace, groups });
 
     expect(rpcFake).to.have.been.calledWith(name, context, "view-store");
     expect(putFake).to.have.been.calledWith(id, {
       update,
       trace,
+      groups,
     });
     expect(inFake).to.have.been.calledWith({ context: contexts });
     expect(withFake).to.have.been.calledWith({
@@ -301,6 +305,28 @@ describe("Get views", () => {
     await viewStore({ name }).update({ id, update });
 
     expect(rpcFake).to.have.been.calledWith(name, envContext, "view-store");
+    expect(putFake).to.have.been.calledWith(id, { update });
+    expect(inFake).to.have.been.calledWith({});
+    expect(withFake).to.have.been.calledWith();
+  });
+  it("should call update with the correct params missing context", async () => {
+    const withFake = fake.returns({});
+    const inFake = fake.returns({
+      with: withFake,
+    });
+    const putFake = fake.returns({
+      in: inFake,
+    });
+    const rpcFake = fake.returns({
+      put: putFake,
+    });
+    replace(deps, "rpc", rpcFake);
+
+    const update = "some-update";
+    delete process.env.CONTEXT;
+    await viewStore({ name }).update({ id, update });
+
+    expect(rpcFake).to.have.been.calledWith(name, "view-store");
     expect(putFake).to.have.been.calledWith(id, { update });
     expect(inFake).to.have.been.calledWith({});
     expect(withFake).to.have.been.calledWith();
@@ -350,6 +376,27 @@ describe("Get views", () => {
     await viewStore({ name }).delete(query);
 
     expect(rpcFake).to.have.been.calledWith(name, envContext, "view-store");
+    expect(deleteFake).to.have.been.calledWith(query);
+    expect(inFake).to.have.been.calledWith({});
+    expect(withFake).to.have.been.calledWith();
+  });
+  it("should call delete with the correct params with no env context", async () => {
+    const withFake = fake.returns({});
+    const inFake = fake.returns({
+      with: withFake,
+    });
+    const deleteFake = fake.returns({
+      in: inFake,
+    });
+    const rpcFake = fake.returns({
+      delete: deleteFake,
+    });
+    replace(deps, "rpc", rpcFake);
+
+    delete process.env.CONTEXT;
+    await viewStore({ name }).delete(query);
+
+    expect(rpcFake).to.have.been.calledWith(name, "view-store");
     expect(deleteFake).to.have.been.calledWith(query);
     expect(inFake).to.have.been.calledWith({});
     expect(withFake).to.have.been.calledWith();

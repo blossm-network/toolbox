@@ -108,6 +108,8 @@ module.exports = ({
     version = 0,
     action,
     context,
+    groupsAdded,
+    groupsRemoved,
     domain = process.env.DOMAIN,
     service = process.env.SERVICE,
   } of events) {
@@ -125,6 +127,8 @@ module.exports = ({
       ...((context || req.body.context) && {
         context: context || req.body.context,
       }),
+      ...(groupsAdded && { groupsAdded }),
+      ...(groupsRemoved && { groupsRemoved }),
       path,
     });
     const normalizedEventData = {

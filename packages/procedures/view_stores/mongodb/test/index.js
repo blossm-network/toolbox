@@ -140,6 +140,19 @@ describe("View store", () => {
             },
             required: true,
           },
+          groups: [
+            {
+              $type: [
+                {
+                  root: String,
+                  service: String,
+                  network: String,
+                  _id: false,
+                },
+              ],
+              required: true,
+            },
+          ],
           created: {
             $type: Date,
             required: true,
@@ -167,6 +180,11 @@ describe("View store", () => {
           { "headers.context.domain": 1 },
           { "headers.context.service": 1 },
           { "headers.context.network": 1 },
+        ],
+        [
+          { ["headers.groups.root"]: 1 },
+          { ["headers.groups.service"]: 1 },
+          { ["headers.groups.network"]: 1 },
         ],
         [{ "body.some-index": 1 }],
       ],
@@ -367,6 +385,19 @@ describe("View store", () => {
             },
             required: true,
           },
+          groups: [
+            {
+              $type: [
+                {
+                  root: String,
+                  service: String,
+                  network: String,
+                  _id: false,
+                },
+              ],
+              required: true,
+            },
+          ],
           created: {
             $type: Date,
             required: true,
@@ -394,6 +425,11 @@ describe("View store", () => {
           { "headers.context.domain": 1 },
           { "headers.context.service": 1 },
           { "headers.context.network": 1 },
+        ],
+        [
+          { ["headers.groups.root"]: 1 },
+          { ["headers.groups.service"]: 1 },
+          { ["headers.groups.network"]: 1 },
         ],
         [{ "body.some-index": 1 }],
       ],
@@ -504,6 +540,19 @@ describe("View store", () => {
             },
             required: true,
           },
+          groups: [
+            {
+              $type: [
+                {
+                  root: String,
+                  service: String,
+                  network: String,
+                  _id: false,
+                },
+              ],
+              required: true,
+            },
+          ],
           created: {
             $type: Date,
             required: true,
@@ -531,6 +580,11 @@ describe("View store", () => {
           { "headers.context.domain": 1 },
           { "headers.context.service": 1 },
           { "headers.context.network": 1 },
+        ],
+        [
+          { ["headers.groups.root"]: 1 },
+          { ["headers.groups.service"]: 1 },
+          { ["headers.groups.network"]: 1 },
         ],
         [{ "body.some-index": 1 }],
       ],
@@ -621,6 +675,19 @@ describe("View store", () => {
             },
             required: true,
           },
+          groups: [
+            {
+              $type: [
+                {
+                  root: String,
+                  service: String,
+                  network: String,
+                  _id: false,
+                },
+              ],
+              required: true,
+            },
+          ],
           created: {
             $type: Date,
             required: true,
@@ -648,6 +715,11 @@ describe("View store", () => {
           { "headers.context.domain": 1 },
           { "headers.context.service": 1 },
           { "headers.context.network": 1 },
+        ],
+        [
+          { ["headers.groups.root"]: 1 },
+          { ["headers.groups.service"]: 1 },
+          { ["headers.groups.network"]: 1 },
         ],
         [{ "body.some-index": 1 }],
       ],
@@ -821,6 +893,19 @@ describe("View store", () => {
             },
             required: true,
           },
+          groups: [
+            {
+              $type: [
+                {
+                  root: String,
+                  service: String,
+                  network: String,
+                  _id: false,
+                },
+              ],
+              required: true,
+            },
+          ],
           created: {
             $type: Date,
             required: true,
@@ -848,6 +933,11 @@ describe("View store", () => {
           { "headers.context.domain": 1 },
           { "headers.context.service": 1 },
           { "headers.context.network": 1 },
+        ],
+        [
+          { ["headers.groups.root"]: 1 },
+          { ["headers.groups.service"]: 1 },
+          { ["headers.groups.network"]: 1 },
         ],
         [{ "body.some-index": 1 }],
       ],

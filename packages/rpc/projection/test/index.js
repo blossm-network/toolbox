@@ -81,11 +81,10 @@ describe("Replay projection", () => {
 
     const { body: result } = await projection({
       name,
-      context,
     }).play({ root, domain, service });
 
     expect(result).to.equal(response);
-    expect(rpcFake).to.have.been.calledWith(name, context, "projection");
+    expect(rpcFake).to.have.been.calledWith(name, "projection");
     expect(postFake).to.have.been.calledWith({
       root,
       domain,

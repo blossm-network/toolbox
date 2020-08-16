@@ -38,6 +38,19 @@ const viewStore = async ({ schema, indexes, secretFn }) => {
           },
           required: true,
         },
+        groups: [
+          {
+            [typeKey]: [
+              {
+                root: String,
+                service: String,
+                network: String,
+                _id: false,
+              },
+            ],
+            required: true,
+          },
+        ],
         created: {
           [typeKey]: Date,
           required: true,
@@ -87,6 +100,11 @@ module.exports = async ({
       { ["headers.context.domain"]: 1 },
       { ["headers.context.service"]: 1 },
       { ["headers.context.network"]: 1 },
+    ],
+    [
+      { ["headers.groups.root"]: 1 },
+      { ["headers.groups.service"]: 1 },
+      { ["headers.groups.network"]: 1 },
     ],
   ];
 

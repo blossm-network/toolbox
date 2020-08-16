@@ -22,6 +22,7 @@ const snapshotHash = "some-snapshot-hash";
 const txIds = "some-txids";
 const aggregateLastEventNumber = "some-snapshot-last-event-number";
 const aggregateState = "some-aggregate-state";
+const aggregateGroups = "some-aggregate-groups";
 const aggregateContext = "some-aggregate-context";
 const eventCononicalString = "some-event-connical-string";
 const eventPayloadCononicalString = "some-event-payload-cononical-string";
@@ -32,6 +33,7 @@ const eventsMerkleRoot = Buffer.from("some-events-merkle-root");
 const snapshotMerkleRoot = Buffer.from("some-snapshot-merkle-root");
 const eventKeyHash = "some-event-key-hash";
 const contextHash = "some-context-hash";
+const groupsHash = "some-groups-hash";
 const stateHash = "some-state-hash";
 const blockHeadersHash = "some-block-headers-hash";
 const snapshotHeadersHash = "some-snapshot-headers-hash";
@@ -50,9 +52,12 @@ const savedSnapshotHeaders = {
   root: savedSnapshotRoot,
 };
 const savedSnapshotEvents = "some-saved-snapshot-events";
+const savedSnapshotGroups = "some-saved-groups-events";
+
 const snapshot = {
   hash: savedSnapshotHash,
   context: savedSnapshotContext,
+  groups: savedSnapshotGroups,
   headers: savedSnapshotHeaders,
   state: savedSnapshotState,
   events: savedSnapshotEvents,
@@ -130,6 +135,7 @@ describe("Event store create block transaction", () => {
       events: [event, otherEvent, yetAnotherEvent],
       context: aggregateContext,
       state: aggregateState,
+      groups: aggregateGroups,
       txIds,
     };
     const aggregateFnFake = fake.returns(aggregate);
@@ -191,25 +197,29 @@ describe("Event store create block transaction", () => {
       })
       .onCall(4)
       .returns({
-        create: () => stateHash,
+        create: () => groupsHash,
       })
       .onCall(5)
       .returns({
-        create: () => snapshotHeadersHash,
+        create: () => stateHash,
       })
       .onCall(6)
       .returns({
-        create: () => snapshotRootHash,
+        create: () => snapshotHeadersHash,
       })
       .onCall(7)
       .returns({
-        create: () => txIdHash,
+        create: () => snapshotRootHash,
       })
       .onCall(8)
       .returns({
-        create: () => otherTxIdHash,
+        create: () => txIdHash,
       })
       .onCall(9)
+      .returns({
+        create: () => otherTxIdHash,
+      })
+      .onCall(10)
       .returns({
         create: () => blockHeadersHash,
       });
@@ -282,12 +292,14 @@ describe("Event store create block transaction", () => {
     expect(hashFake.getCall(1)).to.have.been.calledWith(otherEventHash);
     expect(hashFake.getCall(2)).to.have.been.calledWith(yetAnotherEventHash);
     expect(hashFake.getCall(3)).to.have.been.calledWith(aggregateContext);
-    expect(hashFake.getCall(4)).to.have.been.calledWith(aggregateState);
-    expect(hashFake.getCall(5)).to.have.been.calledWith({
+    expect(hashFake.getCall(4)).to.have.been.calledWith(aggregateGroups);
+    expect(hashFake.getCall(5)).to.have.been.calledWith(aggregateState);
+    expect(hashFake.getCall(6)).to.have.been.calledWith({
       nonce: snapshotNonce,
       block: previousNumber + 1,
       cHash: contextHash,
       sHash: stateHash,
+      gHash: groupsHash,
       pHash: snapshotHash,
       created: deps.dateString(),
       root,
@@ -313,6 +325,7 @@ describe("Event store create block transaction", () => {
           block: previousNumber + 1,
           cHash: contextHash,
           sHash: stateHash,
+          gHash: groupsHash,
           pHash: snapshotHash,
           created: deps.dateString(),
           root,
@@ -327,12 +340,13 @@ describe("Event store create block transaction", () => {
         },
         context: aggregateContext,
         state: aggregateState,
+        groups: aggregateGroups,
         events: encodedEventPairs,
         txIds,
       },
       transaction,
     });
-    expect(hashFake.getCall(6)).to.have.been.calledWith(savedSnapshotRoot);
+    expect(hashFake.getCall(7)).to.have.been.calledWith(savedSnapshotRoot);
     expect(cononicalStringFake.getCall(3)).to.have.been.calledWith({
       hash: savedSnapshotHash,
       headers: savedSnapshotHeaders,
@@ -351,8 +365,8 @@ describe("Event store create block transaction", () => {
       [txIdHash, txEventsCononicalString],
       [otherTxIdHash, otherTxEventsCononicalString],
     ]);
-    expect(hashFake.getCall(7)).to.have.been.calledWith(txId);
-    expect(hashFake.getCall(8)).to.have.been.calledWith(txId2);
+    expect(hashFake.getCall(8)).to.have.been.calledWith(txId);
+    expect(hashFake.getCall(9)).to.have.been.calledWith(txId2);
     expect(cononicalStringFake.getCall(4)).to.have.been.calledWith([
       eventHash,
       otherEventHash,
@@ -360,7 +374,7 @@ describe("Event store create block transaction", () => {
     expect(cononicalStringFake.getCall(5)).to.have.been.calledWith([
       yetAnotherEventHash,
     ]);
-    expect(hashFake.getCall(9)).to.have.been.calledWith({
+    expect(hashFake.getCall(10)).to.have.been.calledWith({
       nonce: blockNonce,
       pHash: previousHash,
       created: deps.dateString(),
@@ -437,6 +451,7 @@ describe("Event store create block transaction", () => {
       events: [event],
       context: aggregateContext,
       state: aggregateState,
+      groups: aggregateGroups,
       txIds,
     };
     const aggregateFnFake = fake.returns(aggregate);
@@ -480,21 +495,25 @@ describe("Event store create block transaction", () => {
       })
       .onCall(2)
       .returns({
-        create: () => stateHash,
+        create: () => groupsHash,
       })
       .onCall(3)
       .returns({
-        create: () => snapshotHeadersHash,
+        create: () => stateHash,
       })
       .onCall(4)
       .returns({
-        create: () => snapshotRootHash,
+        create: () => snapshotHeadersHash,
       })
       .onCall(5)
       .returns({
-        create: () => txIdHash,
+        create: () => snapshotRootHash,
       })
       .onCall(6)
+      .returns({
+        create: () => txIdHash,
+      })
+      .onCall(7)
       .returns({
         create: () => blockHeadersHash,
       });
@@ -574,12 +593,14 @@ describe("Event store create block transaction", () => {
 
     expect(hashFake.getCall(0)).to.have.been.calledWith(eventHash);
     expect(hashFake.getCall(1)).to.have.been.calledWith(aggregateContext);
-    expect(hashFake.getCall(2)).to.have.been.calledWith(aggregateState);
-    expect(hashFake.getCall(3)).to.have.been.calledWith({
+    expect(hashFake.getCall(2)).to.have.been.calledWith(aggregateGroups);
+    expect(hashFake.getCall(3)).to.have.been.calledWith(aggregateState);
+    expect(hashFake.getCall(4)).to.have.been.calledWith({
       nonce: snapshotNonce,
       block: previousNumber + 1,
       cHash: contextHash,
       sHash: stateHash,
+      gHash: groupsHash,
       pHash: snapshotHash,
       created: deps.dateString(),
       root,
@@ -603,6 +624,7 @@ describe("Event store create block transaction", () => {
           block: previousNumber + 1,
           cHash: contextHash,
           sHash: stateHash,
+          gHash: groupsHash,
           pHash: snapshotHash,
           created: deps.dateString(),
           root,
@@ -617,11 +639,12 @@ describe("Event store create block transaction", () => {
         },
         context: aggregateContext,
         state: aggregateState,
+        groups: aggregateGroups,
         events: encodedEventPairs,
         txIds,
       },
     });
-    expect(hashFake.getCall(4)).to.have.been.calledWith(savedSnapshotRoot);
+    expect(hashFake.getCall(5)).to.have.been.calledWith(savedSnapshotRoot);
     expect(cononicalStringFake.getCall(2)).to.have.been.calledWith(
       savedSnapshotState
     );
@@ -643,9 +666,9 @@ describe("Event store create block transaction", () => {
     expect(merkleRootFake.getCall(3)).to.have.been.calledWith([
       [txIdHash, txEventsCononicalString],
     ]);
-    expect(hashFake.getCall(5)).to.have.been.calledWith(txId);
+    expect(hashFake.getCall(6)).to.have.been.calledWith(txId);
     expect(cononicalStringFake.getCall(4)).to.have.been.calledWith([eventHash]);
-    expect(hashFake.getCall(6)).to.have.been.calledWith({
+    expect(hashFake.getCall(7)).to.have.been.calledWith({
       nonce: blockNonce,
       pHash: previousHash,
       created: deps.dateString(),
@@ -721,6 +744,7 @@ describe("Event store create block transaction", () => {
       },
       events: [],
       context: aggregateContext,
+      groups: aggregateGroups,
       state: aggregateState,
       txIds,
     };
@@ -875,6 +899,7 @@ describe("Event store create block transaction", () => {
       events: [event],
       context: aggregateContext,
       state: aggregateState,
+      groups: aggregateGroups,
       txIds,
     };
     const aggregateFnFake = fake.returns(aggregate);
@@ -914,25 +939,29 @@ describe("Event store create block transaction", () => {
       })
       .onCall(2)
       .returns({
-        create: () => stateHash,
+        create: () => groupsHash,
       })
       .onCall(3)
       .returns({
-        create: () => previousHash,
+        create: () => stateHash,
       })
       .onCall(4)
       .returns({
-        create: () => snapshotHeadersHash,
+        create: () => previousHash,
       })
       .onCall(5)
       .returns({
-        create: () => snapshotRootHash,
+        create: () => snapshotHeadersHash,
       })
       .onCall(6)
       .returns({
-        create: () => txIdHash,
+        create: () => snapshotRootHash,
       })
       .onCall(7)
+      .returns({
+        create: () => txIdHash,
+      })
+      .onCall(8)
       .returns({
         create: () => blockHeadersHash,
       });
@@ -997,13 +1026,15 @@ describe("Event store create block transaction", () => {
 
     expect(hashFake.getCall(0)).to.have.been.calledWith(eventHash);
     expect(hashFake.getCall(1)).to.have.been.calledWith(aggregateContext);
-    expect(hashFake.getCall(2)).to.have.been.calledWith(aggregateState);
-    expect(hashFake.getCall(3)).to.have.been.calledWith("~");
-    expect(hashFake.getCall(4)).to.have.been.calledWith({
+    expect(hashFake.getCall(2)).to.have.been.calledWith(aggregateGroups);
+    expect(hashFake.getCall(3)).to.have.been.calledWith(aggregateState);
+    expect(hashFake.getCall(4)).to.have.been.calledWith("~");
+    expect(hashFake.getCall(5)).to.have.been.calledWith({
       nonce: snapshotNonce,
       block: previousNumber + 1,
       cHash: contextHash,
       sHash: stateHash,
+      gHash: groupsHash,
       pHash: previousHash,
       created: deps.dateString(),
       root,
@@ -1027,6 +1058,7 @@ describe("Event store create block transaction", () => {
           block: previousNumber + 1,
           cHash: contextHash,
           sHash: stateHash,
+          gHash: groupsHash,
           pHash: previousHash,
           created: deps.dateString(),
           root,
@@ -1042,11 +1074,12 @@ describe("Event store create block transaction", () => {
         context: aggregateContext,
         state: aggregateState,
         events: encodedEventPairs,
+        groups: aggregateGroups,
         txIds,
       },
       transaction,
     });
-    expect(hashFake.getCall(5)).to.have.been.calledWith(savedSnapshotRoot);
+    expect(hashFake.getCall(6)).to.have.been.calledWith(savedSnapshotRoot);
     expect(cononicalStringFake.getCall(1)).to.have.been.calledWith({
       hash: savedSnapshotHash,
       headers: savedSnapshotHeaders,
@@ -1062,9 +1095,9 @@ describe("Event store create block transaction", () => {
     expect(merkleRootFake.getCall(3)).to.have.been.calledWith([
       [txIdHash, txEventsCononicalString],
     ]);
-    expect(hashFake.getCall(6)).to.have.been.calledWith(txId);
+    expect(hashFake.getCall(7)).to.have.been.calledWith(txId);
     expect(cononicalStringFake.getCall(2)).to.have.been.calledWith([eventHash]);
-    expect(hashFake.getCall(7)).to.have.been.calledWith({
+    expect(hashFake.getCall(8)).to.have.been.calledWith({
       nonce: blockNonce,
       pHash: previousHash,
       created: deps.dateString(),

@@ -122,6 +122,7 @@ module.exports = ({
       const eventsMerkleRoot = await deps.merkleRoot(stringifiedEventPairs);
 
       const contextHash = deps.hash(aggregate.context).create();
+      const groupsHash = deps.hash(aggregate.groups).create();
       const stateHash = deps.hash(aggregate.state).create();
 
       const previousHash =
@@ -133,6 +134,7 @@ module.exports = ({
         nonce: deps.nonce(),
         block: nextBlockNumber,
         cHash: contextHash,
+        gHash: groupsHash,
         sHash: stateHash,
         pHash: previousHash,
         created: deps.dateString(),
@@ -153,6 +155,7 @@ module.exports = ({
         hash: snapshotHeadersHash,
         headers: snapshotHeaders,
         context: aggregate.context,
+        groups: aggregate.groups,
         state: aggregate.state,
         events: encodedEvents,
         txIds: aggregate.txIds,

@@ -109,17 +109,21 @@ module.exports = ({
         {
           const operationHash = hash(
             dependency.name,
-            dependency.context,
+            ...(dependency.context ? [dependency.context] : []),
             dependency.procedure
           );
 
-          const key = `${dependency.name}-${config.context}`;
+          const key = `${dependency.name}${
+            config.context ? `-${config.context}` : ""
+          }`;
 
           services = {
             ...services,
             [key]: {
               ...common,
-              image: `${commonServiceImagePrefix}.${dependency.context}.${dependency.name}:latest`,
+              image: `${commonServiceImagePrefix}${
+                dependency.context ? `.${dependency.context}` : ""
+              }.${dependency.name}:latest`,
               container_name: `${operationHash}.${network}`,
               depends_on: [databaseServiceKey],
               environment: {
@@ -127,7 +131,7 @@ module.exports = ({
                 ...commonStoreEnvironment,
                 PROCEDURE: dependency.procedure,
                 OPERATION_HASH: operationHash,
-                CONTEXT: dependency.contxt,
+                ...(dependency.context && { CONTEXT: dependency.contxt }),
                 NAME: dependency.name,
               },
             },
@@ -139,7 +143,7 @@ module.exports = ({
         {
           const operationHash = hash(
             dependency.name,
-            dependency.context,
+            ...(dependency.context ? [dependency.context] : []),
             dependency.procedure
           );
 
@@ -149,13 +153,15 @@ module.exports = ({
             ...services,
             [key]: {
               ...common,
-              image: `${commonServiceImagePrefix}.${dependency.context}.${dependency.name}:latest`,
+              image: `${commonServiceImagePrefix}${
+                dependency.context ? `${dependency.context}` : ""
+              }.${dependency.name}:latest`,
               container_name: `${operationHash}.${network}`,
               environment: {
                 ...commonEnvironment,
                 PROCEDURE: dependency.procedure,
                 OPERATION_HASH: operationHash,
-                CONTEXT: dependency.contxt,
+                ...(dependency.context && { CONTEXT: dependency.context }),
                 NAME: dependency.name,
               },
             },

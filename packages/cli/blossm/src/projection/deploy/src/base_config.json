@@ -4,11 +4,11 @@
     "@blossm/view-store-rpc": "*",
     "@blossm/projection-rpc": "*",
     "@blossm/command-rpc": "*",
-    "@blossm/fact-rpc": "*",
     "@blossm/event-store-rpc": "*",
-    "@blossm/gcp-token": "*",
     "@blossm/gcp-secret": "*",
+    "@blossm/gcp-token": "*",
     "@blossm/node-external-token": "*",
+    "@blossm/fact-rpc": "*",
     "@blossm/channel-name": "*",
     "@blossm/logger": "*",
     "@blossm/gcp-queue": "*"

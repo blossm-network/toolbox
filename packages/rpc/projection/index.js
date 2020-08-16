@@ -6,7 +6,7 @@ module.exports = ({ name, context }) => {
     enqueue: { fn: enqueueFn, wait: enqueueWait } = {},
   } = {}) => ({ root, domain, service }) =>
     deps
-      .rpc(name, context, "projection")
+      .rpc(name, ...(context ? [context] : []), "projection")
       .post({ root, domain, service })
       //TODO this line is ugly. The generic rpc package needs love.
       .in({})
@@ -14,7 +14,7 @@ module.exports = ({ name, context }) => {
         ...(internalTokenFn && { internalFn: internalTokenFn }),
         ...(enqueueFn && {
           enqueueFn: enqueueFn({
-            queue: `projection-${context}-${name}-play`,
+            queue: `projection${context ? `-${context}` : ""}-${name}-play`,
             ...(enqueueWait && { wait: enqueueWait }),
           }),
         }),

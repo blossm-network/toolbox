@@ -27,6 +27,8 @@ const eventStore = async ({ schema, indexes, secretFn }) => {
         },
         pHash: { [typeKey]: String, required: true },
         cHash: { [typeKey]: String, required: true },
+        gaHash: { [typeKey]: String },
+        grHash: { [typeKey]: String },
         tHash: { [typeKey]: String, required: true },
         committed: {
           [typeKey]: Date,
@@ -45,6 +47,26 @@ const eventStore = async ({ schema, indexes, secretFn }) => {
         _id: false,
       },
       context: { [typeKey]: Object },
+      groupsAdded: {
+        [typeKey]: [
+          {
+            root: { [typeKey]: String },
+            service: { [typeKey]: String },
+            network: { [typeKey]: String },
+            _id: false,
+          },
+        ],
+      },
+      groupsRemoved: {
+        [typeKey]: [
+          {
+            root: { [typeKey]: String },
+            service: { [typeKey]: String },
+            network: { [typeKey]: String },
+            _id: false,
+          },
+        ],
+      },
       tx: {
         ip: { [typeKey]: String },
         id: { [typeKey]: String },
@@ -139,6 +161,7 @@ const snapshotStore = async ({ schema, indexes }) => {
         },
         block: { [typeKey]: Number, required: true },
         cHash: { [typeKey]: String, required: true },
+        gHash: { [typeKey]: String, required: true },
         sHash: { [typeKey]: String, required: true },
         pHash: { [typeKey]: String, required: true },
         created: { [typeKey]: Date, required: true },
@@ -154,6 +177,16 @@ const snapshotStore = async ({ schema, indexes }) => {
         _id: false,
       },
       context: { [typeKey]: Object },
+      groups: {
+        [typeKey]: [
+          {
+            root: { [typeKey]: String },
+            service: { [typeKey]: String },
+            network: { [typeKey]: String },
+            _id: false,
+          },
+        ],
+      },
       state: schema,
       events: { [typeKey]: Buffer, required: true },
       txIds: { [typeKey]: [String] },

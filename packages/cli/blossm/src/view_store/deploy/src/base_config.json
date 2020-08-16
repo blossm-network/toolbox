@@ -1,6 +1,8 @@
 {
   "dependencies": {
     "@blossm/mongodb-view-store": "*",
+    "@blossm/gcp-token": "*",
+    "@blossm/fact-rpc": "*",
     "@blossm/gcp-secret": "*"
   },
   "devDependencies": {

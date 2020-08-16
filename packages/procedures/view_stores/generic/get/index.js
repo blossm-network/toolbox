@@ -7,9 +7,11 @@ module.exports = ({
   findFn,
   countFn,
   one = false,
+  group,
   formatFn,
   emptyFn,
   queryFn = defaultQueryFn,
+  groupsLookupFn,
 }) => {
   return async (req, res) => {
     const queryBody = queryFn(req.query.query || {});
@@ -24,9 +26,12 @@ module.exports = ({
     )
       throw deps.forbiddenError.message("There isn't a context to bootstrap.");
 
-    //TODO
-    console.log({ query: req.query });
-    console.log({ bootstrap: req.query.bootstrap });
+    const principalGroups =
+      group &&
+      req.query.context.principal &&
+      (await groupsLookupFn({
+        token: req.query.currentToken,
+      }));
 
     const query = {
       ...(!req.query.bootstrap && { ...formattedQueryBody }),
@@ -35,12 +40,21 @@ module.exports = ({
         process.env.BOOTSTRAP_CONTEXT && {
           "headers.id": req.query.context[process.env.BOOTSTRAP_CONTEXT].root,
         }),
-      "headers.context": {
-        root: req.query.context[process.env.CONTEXT].root,
-        domain: process.env.CONTEXT,
-        service: req.query.context[process.env.CONTEXT].service,
-        network: req.query.context[process.env.CONTEXT].network,
-      },
+      ...(process.env.CONTEXT && {
+        "headers.context": {
+          root: req.query.context[process.env.CONTEXT].root,
+          domain: process.env.CONTEXT,
+          service: req.query.context[process.env.CONTEXT].service,
+          network: req.query.context[process.env.CONTEXT].network,
+        },
+      }),
+      ...(principalGroups && {
+        "headers.groups": {
+          $elemMatch: {
+            $in: principalGroups,
+          },
+        },
+      }),
     };
 
     let formattedSort;
@@ -69,7 +83,15 @@ module.exports = ({
       ...(one || req.query.bootstrap ? [] : [countFn({ query })]),
     ]);
 
-    const updates = `https://updates.${process.env.CORE_NETWORK}/channel?query%5Bname%5D=${process.env.NAME}&query%5Bcontext%5D=${process.env.CONTEXT}&query%5Bnetwork%5D=${process.env.NETWORK}`;
+    const updates = `https://updates.${
+      process.env.CORE_NETWORK
+    }/channel?query%5Bname%5D=${process.env.NAME}${
+      process.env.CONTEXT ? `&query%5Bcontext%5D=${process.env.CONTEXT}` : ""
+    }&query%5Bnetwork%5D=${process.env.NETWORK}${
+      !process.env.CONTEXT && req.query.context.principal
+        ? `&query%5Bprincipal%5D=${req.query.context.principal.root}`
+        : ""
+    }`;
 
     const formattedResults = results.map((r) => {
       const formattedTrace = [];
@@ -92,7 +114,9 @@ module.exports = ({
 
     if (!one && !req.query.bootstrap) {
       const limit = req.query.limit || defaultLimit;
-      const url = `https://v.${process.env.CONTEXT}.${process.env.NETWORK}/${process.env.NAME}`;
+      const url = `https://v${
+        process.env.CONTEXT ? `.${process.env.CONTEXT}` : ``
+      }.${process.env.NETWORK}/${process.env.NAME}`;
       const next =
         formattedResults.length == limit && skip + limit < count
           ? deps.urlEncodeQueryData(url, {

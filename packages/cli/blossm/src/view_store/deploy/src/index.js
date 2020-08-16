@@ -2,6 +2,8 @@ const fs = require("fs");
 const path = require("path");
 const viewStore = require("@blossm/mongodb-view-store");
 const { get: secret } = require("@blossm/gcp-secret");
+const fact = require("@blossm/fact-rpc");
+const gcpToken = require("@blossm/gcp-token");
 
 const query =
   fs.existsSync(path.resolve(__dirname, "./query.js")) && require("./query");
@@ -23,4 +25,23 @@ module.exports = viewStore({
   ...(format && { formatFn: format }),
   ...(empty && { emptyFn: empty }),
   ...(config.one && { one: config.one }),
+  ...(config.group && { group: config.group }),
+  groupsLookupFn: async ({ token }) => {
+    const { body } = await fact({
+      name: "groups",
+      domain: "principal",
+      service: "core",
+      network: process.env.CORE_NETWORK,
+    })
+      .set({
+        token: {
+          externalFn: () => ({ token, type: "Bearer" }),
+          internalFn: gcpToken,
+          key: "access",
+        },
+      })
+      .read();
+
+    return body;
+  },
 });

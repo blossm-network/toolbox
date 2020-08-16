@@ -79,7 +79,7 @@ module.exports = ({
       secretBucketKeyLocation,
       custom: {
         NAME: name,
-        CONTEXT: context,
+        ...(context && { CONTEXT: context }),
         ...(bootstrapContext && { BOOTSTRAP_CONTEXT: bootstrapContext }),
         ...dependencyKeyEnvironmentVariables,
       },
@@ -117,7 +117,7 @@ module.exports = ({
             nodeEnv: env,
             env: {
               NAME: name,
-              CONTEXT: context,
+              ...(context && { CONTEXT: context }),
               ...(bootstrapContext && { BOOTSTRAP_CONTEXT: bootstrapContext }),
               MONGODB_DATABASE: `${context}_${name}`,
               MONGODB_USER: mongodbUser,
@@ -127,17 +127,17 @@ module.exports = ({
             },
             labels: {
               name,
-              context,
+              ...(context && { context }),
             },
           }),
           createQueue({
-            name: `view-store-${context}-${name}`,
+            name: `view-store${context ? `-${context}` : ""}-${name}`,
             project,
             maxDispatchPerSecond: 50,
             maxConcurrentDispatches: 100,
           }),
           updateQueue({
-            name: `view-store-${context}-${name}`,
+            name: `view-store${context ? `-${context}` : ""}-${name}`,
             maxDispatchPerSecond: 50,
             maxConcurrentDispatches: 100,
           }),

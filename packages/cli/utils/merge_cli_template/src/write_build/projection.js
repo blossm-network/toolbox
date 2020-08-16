@@ -80,7 +80,7 @@ module.exports = ({
       secretBucketKeyLocation,
       serviceName,
       custom: {
-        CONTEXT: context,
+        ...(context && { CONTEXT: context }),
         NAME: name,
         ...dependencyKeyEnvironmentVariables,
         ...envVars,
@@ -120,7 +120,7 @@ module.exports = ({
             envUriSpecifier,
             env: {
               NAME: name,
-              CONTEXT: context,
+              ...(context && { CONTEXT: context }),
               ...envVars,
             },
             labels: {
@@ -130,24 +130,24 @@ module.exports = ({
           }),
           //Only one replay at a time.
           createQueue({
-            name: `projection-${context}-${name}-replay`,
+            name: `projection${context ? `-${context}` : ""}-${name}-replay`,
             project,
             maxDispatchPerSecond: 1,
             maxConcurrentDispatches: 1,
           }),
           updateQueue({
-            name: `projection-${context}-${name}-replay`,
+            name: `projection${context ? `-${context}` : ""}-${name}-replay`,
             maxDispatchPerSecond: 1,
             maxConcurrentDispatches: 1,
           }),
           createQueue({
-            name: `projection-${context}-${name}-play`,
+            name: `projection${context ? `-${context}` : ""}-${name}-play`,
             project,
             maxDispatchPerSecond: 50,
             maxConcurrentDispatches: 100,
           }),
           updateQueue({
-            name: `projection-${context}-${name}-play`,
+            name: `projection${context ? `-${context}` : ""}-${name}-play`,
             maxDispatchPerSecond: 50,
             maxConcurrentDispatches: 100,
           }),

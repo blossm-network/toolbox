@@ -2,10 +2,10 @@ const projection = require("@blossm/projection");
 const projectionRpc = require("@blossm/projection-rpc");
 const command = require("@blossm/command-rpc");
 const fact = require("@blossm/fact-rpc");
-const viewStore = require("@blossm/view-store-rpc");
-const eventStore = require("@blossm/event-store-rpc");
 const gcpToken = require("@blossm/gcp-token");
 const nodeExternalToken = require("@blossm/node-external-token");
+const viewStore = require("@blossm/view-store-rpc");
+const eventStore = require("@blossm/event-store-rpc");
 const channelName = require("@blossm/channel-name");
 const logger = require("@blossm/logger");
 const { get: secret } = require("@blossm/gcp-secret");
@@ -14,6 +14,30 @@ const { enqueue } = require("@blossm/gcp-queue");
 const handlers = require("./handlers.js");
 
 const config = require("./config.json");
+
+const pushToChannel = async ({ channel, newView }) => {
+  try {
+    await command({
+      name: "push",
+      domain: "updates",
+      service: "system",
+      network: process.env.CORE_NETWORK,
+    })
+      .set({
+        token: {
+          externalFn: nodeExternalToken,
+          internalFn: gcpToken,
+          key: "access",
+        },
+      })
+      .issue({
+        view: newView,
+        channel,
+      });
+  } catch (err) {
+    logger.error("Failed to push updates.", { err });
+  }
+};
 
 const saveId = async ({ aggregate, aggregateContext, id, update, push }) => {
   const { body: newView } = await viewStore({
@@ -47,33 +71,59 @@ const saveId = async ({ aggregate, aggregateContext, id, update, push }) => {
 
   if (!newView || !push) return;
 
-  const channel = channelName({
-    name: process.env.NAME,
-    context: newView.headers.context,
-  });
+  if (newView.headers.context) {
+    const channel = channelName({
+      name: process.env.NAME,
+      ...(newView.headers.context && {
+        context: newView.headers.context,
+      }),
+    });
 
-  try {
-    await command({
-      name: "push",
-      domain: "updates",
-      service: "system",
-      network: process.env.CORE_NETWORK,
-    })
-      .set({
-        token: {
-          externalFn: nodeExternalToken,
-          internalFn: gcpToken,
-          key: "access",
-        },
-      })
-      .issue({
-        view: newView,
-        channel,
-      });
-  } catch (err) {
-    logger.error("Failed to push updates.", { err });
+    await pushToChannel({ channel, newView });
+  }
+
+  if (newView.headers.groups) {
+    //Const get all principals
+    await Promise.all(
+      (newView.headers.groups || []).map((group) =>
+        fact({
+          name: "principals",
+          domain: "group",
+          service: group.service,
+          network: group.network,
+        })
+          .set({
+            token: {
+              externalFn: nodeExternalToken,
+              internalFn: gcpToken,
+              key: "access",
+            },
+          })
+          .stream(
+            async (principal) => {
+              const channel = channelName({
+                name: process.env.NAME,
+                ...(newView.headers.context && {
+                  context: newView.headers.context,
+                }),
+                principal,
+              });
+
+              //If there is no context, the channel is always the principal's channel.
+              await pushToChannel({ channel, newView });
+            },
+            {
+              id: group.root,
+              query: {
+                parallel: 100,
+              },
+            }
+          )
+      )
+    );
   }
 };
+
 module.exports = projection({
   mainFn: async ({ aggregate, action, push, aggregateFn, readFactFn }) => {
     //Must be able to handle this aggregate.
@@ -83,8 +133,6 @@ module.exports = projection({
     )
       return;
 
-    //TODO
-    console.log({ aggregate });
     let {
       //The query describing which items in the view store will be updated.
       query,
@@ -136,7 +184,9 @@ module.exports = projection({
     if (!query && !id) return;
 
     const aggregateContext =
-      aggregate.context && aggregate.context[process.env.CONTEXT];
+      aggregate.context &&
+      process.env.CONTEXT &&
+      aggregate.context[process.env.CONTEXT];
 
     if (id) {
       await saveId({ aggregate, aggregateContext, id, update, push });

@@ -49,7 +49,9 @@ module.exports = ({
   dependencyKeyEnvironmentVariables,
   strict,
 }) => {
-  const authUri = `v.${context}.${envUriSpecifier}${network}`;
+  const authUri = `v${
+    context ? `.${context}` : ""
+  }.${envUriSpecifier}${network}`;
   return [
     yarnInstall,
     ...(runUnitTests ? [unitTests] : []),
@@ -72,7 +74,7 @@ module.exports = ({
       secretBucketKeyRing,
       secretBucketKeyLocation,
       custom: {
-        CONTEXT: context,
+        ...(context && { CONTEXT: context }),
         ...dependencyKeyEnvironmentVariables,
         ...(publicKeyUrl && { PUBLIC_KEY_URL: publicKeyUrl }),
       },
@@ -110,12 +112,12 @@ module.exports = ({
             network,
             envUriSpecifier,
             env: {
-              CONTEXT: context,
+              ...(context && { CONTEXT: context }),
               ...dependencyKeyEnvironmentVariables,
               ...(publicKeyUrl && { PUBLIC_KEY_URL: publicKeyUrl }),
             },
             labels: {
-              context,
+              ...(context && { context }),
             },
           }),
           startDnsTransaction({ dnsZone, project }),

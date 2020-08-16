@@ -399,6 +399,8 @@ describe("Event store post", () => {
     const contextHash1 = "some-context-hash1";
     const contextHash2 = "some-context-hash2";
     const contextHash3 = "some-context-hash3";
+    const groupsAddedHash3 = "some-groups-added-hash3";
+    const groupsRemovedHash3 = "some-groups-removed-hash3";
     const txHash1 = "some-tx-hash1";
     const txHash2 = "some-tx-hash2";
     const txHash3 = "some-tx-hash3";
@@ -446,9 +448,17 @@ describe("Event store post", () => {
       })
       .onCall(10)
       .returns({
-        create: () => txHash3,
+        create: () => groupsAddedHash3,
       })
       .onCall(11)
+      .returns({
+        create: () => groupsRemovedHash3,
+      })
+      .onCall(12)
+      .returns({
+        create: () => txHash3,
+      })
+      .onCall(13)
       .returns({
         create: () => hash3,
       });
@@ -472,6 +482,8 @@ describe("Event store post", () => {
 
     replace(deps, "nonce", nonceFake);
 
+    const groupsAdded = "some-groups-added";
+    const groupsRemoved = "some-groups-removed";
     const result = await postTransaction({
       eventData: [
         ...eventData,
@@ -485,6 +497,8 @@ describe("Event store post", () => {
               version: "some-other-version",
             },
             context: "some-other-context",
+            groupsAdded,
+            groupsRemoved,
             payload: "some-other-payload",
           },
         },
@@ -576,11 +590,15 @@ describe("Event store post", () => {
             version: "some-other-version",
             pHash: payloadHash3,
             cHash: contextHash3,
+            gaHash: groupsAddedHash3,
+            grHash: groupsRemovedHash3,
             tHash: txHash3,
           },
           hash: hash3,
           payload: "some-other-payload",
           context: "some-other-context",
+          groupsAdded,
+          groupsRemoved,
           tx: {
             id: txId,
             ip: txIp,
@@ -636,7 +654,15 @@ describe("Event store post", () => {
       cHash: contextHash2,
       tHash: txHash2,
     });
-    expect(hashFake.getCall(11)).to.have.been.calledWith({
+    expect(hashFake.getCall(10)).to.have.been.calledWith(groupsAdded);
+    expect(hashFake.getCall(11)).to.have.been.calledWith(groupsRemoved);
+    expect(hashFake.getCall(12)).to.have.been.calledWith({
+      id: txId,
+      ip: txIp,
+      path: txPath,
+      claims: txClaims,
+    });
+    expect(hashFake.getCall(13)).to.have.been.calledWith({
       root: "some-other-root",
       number: 9,
       topic,
@@ -651,6 +677,8 @@ describe("Event store post", () => {
       version: "some-other-version",
       pHash: payloadHash3,
       cHash: contextHash3,
+      gaHash: groupsAddedHash3,
+      grHash: groupsRemovedHash3,
       tHash: txHash3,
     });
   });

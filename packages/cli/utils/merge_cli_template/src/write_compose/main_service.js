@@ -33,8 +33,6 @@ module.exports = ({
     environment: {
       PORT: `${port}`,
       NODE_ENV: "local",
-      ...(domain && { DOMAIN: domain }),
-      ...(service && { SERVICE: service }),
       NETWORK: network,
       CORE_NETWORK: localCoreNetwork,
       HOST: host,
@@ -65,26 +63,26 @@ module.exports = ({
   switch (procedure) {
     case "view-store":
       return {
-        image: `${commonImagePrefix}.${context}${service ? `.${service}` : ""}${
-          domain ? `.${domain}` : ""
+        image: `${commonImagePrefix}${
+          context ? `.${context}` : ""
         }.${name}:latest`,
         ...common,
         environment: {
           NAME: name,
-          CONTEXT: context,
+          ...(context && { CONTEXT: context }),
           ...common.environment,
           ...commonDatabaseEnv,
         },
       };
     case "view-composite":
       return {
-        image: `${commonImagePrefix}.${context}${service ? `.${service}` : ""}${
-          domain ? `.${domain}` : ""
+        image: `${commonImagePrefix}${
+          context ? `.${context}` : ""
         }.${name}:latest`,
         ...common,
         environment: {
           NAME: name,
-          CONTEXT: context,
+          ...(context && { CONTEXT: context }),
           ...common.environment,
         },
       };
@@ -104,19 +102,21 @@ module.exports = ({
         environment: {
           ...common.environment,
           NAME: name,
+          DOMAIN: domain,
+          SERVICE: service,
         },
       };
     case "projection":
       return {
-        image: `${commonImagePrefix}.${context}${service ? `.${service}` : ""}${
-          domain ? `.${domain}` : ""
+        image: `${commonImagePrefix}${
+          context ? `.${context}` : ""
         }.${name}:latest`,
         ...common,
         environment: {
           ...common.environment,
           ...commonDatabaseEnv,
           NAME: name,
-          CONTEXT: context,
+          ...(context && { CONTEXT: context }),
         },
       };
     case "job":
@@ -129,6 +129,8 @@ module.exports = ({
         environment: {
           ...common.environment,
           NAME: name,
+          ...(domain && { DOMAIN: domain }),
+          ...(service && { SERVICE: service }),
         },
       };
     case "command-gateway":
@@ -138,17 +140,17 @@ module.exports = ({
         environment: {
           ...common.environment,
           PUBLIC_KEY_URL: publicKeyUrl,
+          DOMAIN: domain,
+          SERVICE: service,
         },
       };
     case "view-gateway":
       return {
-        image: `${commonImagePrefix}.${context}${service ? `.${service}` : ""}${
-          domain ? `.${domain}` : ""
-        }:latest`,
+        image: `${commonImagePrefix}${context ? `.${context}` : ""}:latest`,
         ...common,
         environment: {
           ...common.environment,
-          CONTEXT: context,
+          ...(context && { CONTEXT: context }),
           PUBLIC_KEY_URL: publicKeyUrl,
         },
       };

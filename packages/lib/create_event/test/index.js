@@ -39,12 +39,16 @@ describe("Create event", () => {
     restore();
   });
   it("should get called with expected params", async () => {
+    const groupsAdded = "some-groups-added";
+    const groupsRemoved = "some-groups-removed";
     const value = createEvent({
       action,
       domain,
       service,
       network,
       context,
+      groupsAdded,
+      groupsRemoved,
       path: [
         {
           issued: pathIssued,
@@ -80,10 +84,12 @@ describe("Create event", () => {
       },
       payload,
       context,
+      groupsAdded,
+      groupsRemoved,
     });
   });
 
-  it("should get called with expected params if root, idempotency, and version properties are missing", async () => {
+  it("should get called with expected params if root, idempotency, groupsAdded, groupsRemoved, and version properties are missing", async () => {
     const rootUuid = "rootUuid!";
     const idempUuid = "idemptUuid!";
     replace(

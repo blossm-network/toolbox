@@ -1047,6 +1047,8 @@ describe("Command handler post", () => {
     );
     const version = "some-version";
     const eventContext = { some: "event-context" };
+    const groupsAdded = "some-groups-added";
+    const groupsRemoved = "some-groups-removed";
     const events = [
       {
         root: eventRoot,
@@ -1054,6 +1056,8 @@ describe("Command handler post", () => {
         action: eventAction,
         version,
         correctNumber,
+        groupsAdded,
+        groupsRemoved,
       },
     ];
 
@@ -1205,6 +1209,8 @@ describe("Command handler post", () => {
       network,
       version,
       context: eventContext,
+      groupsAdded,
+      groupsRemoved,
       idempotency,
       path: [
         {

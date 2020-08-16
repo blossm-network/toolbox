@@ -34,11 +34,13 @@ const context = {
 };
 
 process.env.NAME = envName;
-process.env.CONTEXT = envContext;
 process.env.NETWORK = envNetwork;
 process.env.CORE_NETWORK = coreNetwork;
 
 describe("View store get", () => {
+  beforeEach(() => {
+    process.env.CONTEXT = envContext;
+  });
   afterEach(() => {
     restore();
   });
@@ -144,6 +146,125 @@ describe("View store get", () => {
       })),
       updates:
         "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
+      next: nextUrl,
+      count: 200,
+    });
+  });
+  it("should call with the correct params with no env context and group to true", async () => {
+    const results = [];
+    const formattedResults = [];
+
+    const formatFake = stub();
+    for (let i = 0; i < 100; i++) {
+      results.push({
+        body: obj,
+        headers: { id, context: foundContext },
+        trace: {
+          "some-service": { "some-domain": [txId0] },
+          "some-other-service": { "some-other-domain": [txId1] },
+          "amother-service": { "another-domain": [txId2] },
+        },
+      });
+      const formattedResult = { i: "something" };
+      formattedResults.push(formattedResult);
+      formatFake.onCall(i).returns(formattedResult);
+    }
+    const findFake = fake.returns(results);
+    const countFake = fake.returns(200);
+
+    const query = { "some-query-key": 1 };
+
+    const urlEncodeQueryDataFake = fake.returns(nextUrl);
+    replace(deps, "urlEncodeQueryData", urlEncodeQueryDataFake);
+
+    const currentToken = "some-current-token";
+    const req = {
+      query: {
+        sort,
+        context: {
+          ...context,
+          principal: {
+            root: "some-context-principal-root",
+          },
+        },
+        query,
+        currentToken,
+      },
+      params: {
+        id,
+      },
+    };
+
+    const sendFake = fake();
+    const res = {
+      send: sendFake,
+    };
+    delete process.env.CONTEXT;
+    const groups = "some-groups";
+    const groupsLookupFnFake = fake.returns(groups);
+    await get({
+      findFn: findFake,
+      countFn: countFake,
+      formatFn: formatFake,
+      group: true,
+      groupsLookupFn: groupsLookupFnFake,
+    })(req, res);
+    expect(findFake).to.have.been.calledWith({
+      limit: 100,
+      skip: 0,
+      sort: { "body.a": 1 },
+      query: {
+        "body.some-query-key": 1,
+        "headers.id": id,
+        "headers.groups": {
+          $elemMatch: {
+            $in: groups,
+          },
+        },
+      },
+    });
+    expect(countFake).to.have.been.calledWith({
+      query: {
+        "body.some-query-key": 1,
+        "headers.id": id,
+        "headers.groups": {
+          $elemMatch: {
+            $in: groups,
+          },
+        },
+      },
+    });
+    expect(groupsLookupFnFake).to.have.been.calledWith({
+      token: currentToken,
+    });
+    expect(urlEncodeQueryDataFake).to.have.been.calledWith(
+      `https://v.${envNetwork}/${envName}`,
+      {
+        sort: { a: "1" },
+        query,
+        skip: 100,
+        limit: 100,
+      }
+    );
+    for (let i = 0; i < results.length; i++) {
+      expect(formatFake.getCall(i)).to.have.been.calledWith({
+        body: results[i].body,
+        id: results[i].headers.id,
+        updates:
+          "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bnetwork%5D=some-env-network&query%5Bprincipal%5D=some-context-principal-root",
+      });
+    }
+    expect(sendFake).to.have.been.calledWith({
+      content: formattedResults.map((r) => ({
+        ...r,
+        headers: {
+          id,
+          context: foundContext,
+          trace: [txId0, txId1, txId2],
+        },
+      })),
+      updates:
+        "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bnetwork%5D=some-env-network&query%5Bprincipal%5D=some-context-principal-root",
       next: nextUrl,
       count: 200,
     });

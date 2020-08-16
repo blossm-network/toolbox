@@ -12,7 +12,7 @@ module.exports = ({ name, context = process.env.CONTEXT, network }) => {
     } = {},
   } = {}) => ({ query, sort, id, bootstrap } = {}) =>
     deps
-      .rpc(name, context, "view-store")
+      .rpc(name, ...(context ? [context] : []), "view-store")
       .get({
         ...(query && { query }),
         ...(bootstrap && { bootstrap }),
@@ -23,7 +23,7 @@ module.exports = ({ name, context = process.env.CONTEXT, network }) => {
         ...(contexts && { context: contexts }),
         ...(!internal && {
           network,
-          host: `v.${context}.${network}`,
+          host: `v${context ? `.${context}` : ""}.${network}`,
         }),
       })
       .with({
@@ -43,7 +43,7 @@ module.exports = ({ name, context = process.env.CONTEXT, network }) => {
     } = {},
   } = {}) => async (fn, { query, sort, parallel } = {}) =>
     await deps
-      .rpc(name, context, "view-store")
+      .rpc(name, ...(context ? [context] : []), "view-store")
       .stream(fn, {
         ...(query && { query }),
         ...(sort && { sort }),
@@ -53,7 +53,7 @@ module.exports = ({ name, context = process.env.CONTEXT, network }) => {
         ...(contexts && { context: contexts }),
         ...(!internal && {
           network,
-          host: `v.${context}.${network}`,
+          host: `v${context ? `.${context}` : ""}.${network}`,
         }),
       })
       .with({
@@ -67,11 +67,12 @@ module.exports = ({ name, context = process.env.CONTEXT, network }) => {
     contexts,
     token: { internalFn: internalTokenFn } = {},
     enqueue: { fn: enqueueFn, wait: enqueueWait } = {},
-  } = {}) => ({ id, update, trace }) =>
+  } = {}) => ({ id, update, groups, trace }) =>
     deps
-      .rpc(name, context, "view-store")
+      .rpc(name, ...(context ? [context] : []), "view-store")
       .put(id, {
         ...(trace && { trace }),
+        ...(groups && { groups }),
         update,
       })
       .in({
@@ -81,7 +82,7 @@ module.exports = ({ name, context = process.env.CONTEXT, network }) => {
         ...(internalTokenFn && { internalTokenFn }),
         ...(enqueueFn && {
           enqueueFn: enqueueFn({
-            queue: `view-store-${context}-${name}`,
+            queue: `view-store${context ? `-${context}` : ""}-${name}`,
             ...(enqueueWait && { wait: enqueueWait }),
           }),
         }),
@@ -91,7 +92,7 @@ module.exports = ({ name, context = process.env.CONTEXT, network }) => {
     token: { internalFn: internalTokenFn } = {},
   } = {}) => (query) =>
     deps
-      .rpc(name, context, "view-store")
+      .rpc(name, ...(context ? [context] : []), "view-store")
       .delete(query)
       .in({
         ...(contexts && { context: contexts }),

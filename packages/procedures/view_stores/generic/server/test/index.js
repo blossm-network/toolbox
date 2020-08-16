@@ -58,7 +58,9 @@ describe("View store", () => {
     const updateFn = "some-update-fn";
     const formatFn = "some-format-fn";
     const emptyFn = "some-empty-fn";
+    const groupsLookupFn = "some-group-lookup-fn";
     const one = "some-one";
+    const group = "some-group";
 
     await viewStore({
       streamFn,
@@ -70,7 +72,9 @@ describe("View store", () => {
       updateFn,
       formatFn,
       emptyFn,
+      groupsLookupFn,
       one,
+      group,
     });
 
     expect(listenFake).to.have.been.calledOnce;
@@ -89,7 +93,9 @@ describe("View store", () => {
       queryFn,
       formatFn,
       emptyFn,
+      groupsLookupFn,
       one,
+      group,
     });
     expect(viewStorePutFake).to.have.been.calledWith({
       writeFn,
@@ -140,6 +146,7 @@ describe("View store", () => {
     const countFn = "some-count-fn";
     const writeFn = "some-write-fn";
     const removeFn = "some-remove-fn";
+    const groupsLookupFn = "some-group-lookup-fn";
 
     await viewStore({
       streamFn,
@@ -147,6 +154,7 @@ describe("View store", () => {
       countFn,
       writeFn,
       removeFn,
+      groupsLookupFn,
     });
 
     expect(listenFake).to.have.been.calledOnce;
@@ -163,6 +171,7 @@ describe("View store", () => {
     expect(viewStoreGetFake).to.have.been.calledWith({
       findFn,
       countFn,
+      groupsLookupFn,
       formatFn: match((fn) => {
         const input = "some-input";
         const output = fn(input);

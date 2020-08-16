@@ -7,18 +7,22 @@ module.exports = ({ writeFn, formatFn, updateFn = defaultFn }) => {
   return async (req, res) => {
     const customUpdate = updateFn(req.body.update);
 
-    //TODO
-    console.log({
-      bodyContext: req.body.context,
-      envContext: process.env.CONTEXT,
-    });
     const context = req.body.context &&
+      process.env.CONTEXT &&
       req.body.context[process.env.CONTEXT] && {
         root: req.body.context[process.env.CONTEXT].root,
         domain: process.env.CONTEXT,
         service: req.body.context[process.env.CONTEXT].service,
         network: req.body.context[process.env.CONTEXT].network,
       };
+
+    const groups =
+      req.body.groups &&
+      req.body.groups.map((group) => ({
+        root: group.root,
+        service: group.service,
+        network: group.network,
+      }));
 
     const formattedBody = {};
 
@@ -34,6 +38,7 @@ module.exports = ({ writeFn, formatFn, updateFn = defaultFn }) => {
           .trace.txIds,
       }),
       ...(context && { "headers.context": context }),
+      ...(groups && { "headers.groups": groups }),
     };
 
     let formattedQuery;
@@ -70,11 +75,16 @@ module.exports = ({ writeFn, formatFn, updateFn = defaultFn }) => {
       }
     }
 
-    const updates = `https://updates.${process.env.CORE_NETWORK}/channel?query%5Bname%5D=${process.env.NAME}&query%5Bcontext%5D=${process.env.CONTEXT}&query%5Bnetwork%5D=${process.env.NETWORK}`;
+    const updates =
+      process.env.CONTEXT &&
+      `https://updates.${process.env.CORE_NETWORK}/channel?query%5Bname%5D=${process.env.NAME}&query%5Bcontext%5D=${process.env.CONTEXT}&query%5Bnetwork%5D=${process.env.NETWORK}`;
 
     res.status(200).send({
-      //TODO needs updates
-      ...formatFn({ body: newView.body, id: newView.headers.id, updates }),
+      ...formatFn({
+        body: newView.body,
+        id: newView.headers.id,
+        ...(updates && { updates }),
+      }),
       headers: {
         id: newView.headers.id,
         context: newView.headers.context,

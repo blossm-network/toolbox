@@ -87,6 +87,8 @@ module.exports = ({
           eventNumberOffsets[event.headers.root]++;
 
           const context = event.context || {};
+          const groupsAdded = event.groupsAdded;
+          const groupsRemoved = event.groupsRemoved;
           const payload = event.payload || {};
           const tx = {
             ...(txClaims && { claims: txClaims }),
@@ -96,6 +98,10 @@ module.exports = ({
           };
           const hashedPayload = deps.hash(payload).create();
           const hashedContext = deps.hash(context).create();
+          const hashedGroupsAdded =
+            groupsAdded && deps.hash(groupsAdded).create();
+          const hashedGroupsRemoved =
+            groupsRemoved && deps.hash(groupsRemoved).create();
           const hashedTx = deps.hash(tx).create();
 
           const headers = {
@@ -113,6 +119,8 @@ module.exports = ({
             number: allottedNumber,
             pHash: hashedPayload,
             cHash: hashedContext,
+            ...(hashedGroupsAdded && { gaHash: hashedGroupsAdded }),
+            ...(hashedGroupsRemoved && { grHash: hashedGroupsRemoved }),
             tHash: hashedTx,
           };
 
@@ -123,6 +131,8 @@ module.exports = ({
             headers,
             payload,
             context,
+            ...(groupsAdded && { groupsAdded }),
+            ...(groupsRemoved && { groupsRemoved }),
             tx,
           });
         })

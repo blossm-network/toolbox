@@ -4,6 +4,9 @@
 name: some-name
 context: some-context
 
+# If the requesting principal needs to be in one of the matching view's groups. Defaults to false.
+group: false
+
 #
 # Give your view-store a schema.
 #

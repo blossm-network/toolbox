@@ -10,6 +10,8 @@ module.exports = ({
   service,
   network,
   context,
+  groupsAdded,
+  groupsRemoved,
   idempotency,
   path,
 } = {}) => {
@@ -32,6 +34,8 @@ module.exports = ({
       version,
     },
     ...(context && { context }),
+    ...(groupsAdded && { groupsAdded }),
+    ...(groupsRemoved && { groupsRemoved }),
     payload,
   };
 };

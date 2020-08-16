@@ -169,6 +169,8 @@ describe("Mongodb event store", () => {
           },
           pHash: { $type: String, required: true },
           cHash: { $type: String, required: true },
+          gaHash: { $type: String },
+          grHash: { $type: String },
           tHash: { $type: String, required: true },
           committed: {
             $type: Date,
@@ -187,6 +189,26 @@ describe("Mongodb event store", () => {
           _id: false,
         },
         context: { $type: Object },
+        groupsAdded: {
+          $type: [
+            {
+              root: { $type: String },
+              service: { $type: String },
+              network: { $type: String },
+              _id: false,
+            },
+          ],
+        },
+        groupsRemoved: {
+          $type: [
+            {
+              root: { $type: String },
+              service: { $type: String },
+              network: { $type: String },
+              _id: false,
+            },
+          ],
+        },
         tx: {
           ip: { $type: String },
           id: { $type: String },
@@ -263,6 +285,7 @@ describe("Mongodb event store", () => {
           },
           block: { $type: Number, required: true },
           cHash: { $type: String, required: true },
+          gHash: { $type: String, required: true },
           sHash: { $type: String, required: true },
           pHash: { $type: String, required: true },
           created: { $type: Date, required: true },
@@ -278,6 +301,16 @@ describe("Mongodb event store", () => {
           _id: false,
         },
         context: { $type: Object },
+        groups: {
+          $type: [
+            {
+              root: { $type: String },
+              service: { $type: String },
+              network: { $type: String },
+              _id: false,
+            },
+          ],
+        },
         state: formattedSchema,
         events: { $type: Buffer, required: true },
         txIds: { $type: [String] },
@@ -537,6 +570,8 @@ describe("Mongodb event store", () => {
           },
           pHash: { $type: String, required: true },
           cHash: { $type: String, required: true },
+          gaHash: { $type: String },
+          grHash: { $type: String },
           tHash: { $type: String, required: true },
           committed: {
             $type: Date,
@@ -555,6 +590,26 @@ describe("Mongodb event store", () => {
           _id: false,
         },
         context: { $type: Object },
+        groupsAdded: {
+          $type: [
+            {
+              root: { $type: String },
+              service: { $type: String },
+              network: { $type: String },
+              _id: false,
+            },
+          ],
+        },
+        groupsRemoved: {
+          $type: [
+            {
+              root: { $type: String },
+              service: { $type: String },
+              network: { $type: String },
+              _id: false,
+            },
+          ],
+        },
         tx: {
           ip: { $type: String },
           id: { $type: String },
@@ -632,6 +687,7 @@ describe("Mongodb event store", () => {
           },
           block: { $type: Number, required: true },
           cHash: { $type: String, required: true },
+          gHash: { $type: String, required: true },
           sHash: { $type: String, required: true },
           pHash: { $type: String, required: true },
           created: { $type: Date, required: true },
@@ -647,6 +703,16 @@ describe("Mongodb event store", () => {
           _id: false,
         },
         context: { $type: Object },
+        groups: {
+          $type: [
+            {
+              root: { $type: String },
+              service: { $type: String },
+              network: { $type: String },
+              _id: false,
+            },
+          ],
+        },
         state: formattedSchema,
         events: { $type: Buffer, required: true },
         txIds: { $type: [String] },
@@ -847,6 +913,8 @@ describe("Mongodb event store", () => {
           },
           pHash: { $type: String, required: true },
           cHash: { $type: String, required: true },
+          gaHash: { $type: String },
+          grHash: { $type: String },
           tHash: { $type: String, required: true },
           committed: {
             $type: Date,
@@ -865,6 +933,26 @@ describe("Mongodb event store", () => {
           _id: false,
         },
         context: { $type: Object },
+        groupsAdded: {
+          $type: [
+            {
+              root: { $type: String },
+              service: { $type: String },
+              network: { $type: String },
+              _id: false,
+            },
+          ],
+        },
+        groupsRemoved: {
+          $type: [
+            {
+              root: { $type: String },
+              service: { $type: String },
+              network: { $type: String },
+              _id: false,
+            },
+          ],
+        },
         tx: {
           ip: { $type: String },
           id: { $type: String },
@@ -941,6 +1029,7 @@ describe("Mongodb event store", () => {
           },
           block: { $type: Number, required: true },
           cHash: { $type: String, required: true },
+          gHash: { $type: String, required: true },
           sHash: { $type: String, required: true },
           pHash: { $type: String, required: true },
           created: { $type: Date, required: true },
@@ -956,6 +1045,16 @@ describe("Mongodb event store", () => {
           _id: false,
         },
         context: { $type: Object },
+        groups: {
+          $type: [
+            {
+              root: { $type: String },
+              service: { $type: String },
+              network: { $type: String },
+              _id: false,
+            },
+          ],
+        },
         state: formattedSchema,
         events: { $type: Buffer, required: true },
         txIds: { $type: [String] },
