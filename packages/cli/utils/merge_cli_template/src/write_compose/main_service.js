@@ -93,6 +93,8 @@ module.exports = ({
         environment: {
           ...common.environment,
           ...commonDatabaseEnv,
+          DOMAIN: domain,
+          SERVICE: service,
         },
       };
     case "command":
