@@ -44,19 +44,23 @@ describe("Event store integration tests", () => {
     const root = uuid();
     const now = dateString();
 
+    console.log("1");
     const countResponse = await request.get(`${url}/count/${root}`);
     const parsedCountBody = JSON.parse(countResponse.body);
 
+    console.log("2");
     expect(parsedCountBody.count).to.equal(0);
 
     const genesisBlockResponse = await request.post(`${url}/create-block`);
 
+    console.log("3");
     expect(genesisBlockResponse.statusCode).to.equal(200);
     const parsedGenesisBlockBody = JSON.parse(genesisBlockResponse.body);
     expect(parsedGenesisBlockBody.hash).to.equal(
       hash(parsedGenesisBlockBody.headers).create()
     );
 
+    console.log("4");
     const response0 = await request.post(url, {
       body: {
         eventData: [
@@ -80,11 +84,13 @@ describe("Event store integration tests", () => {
       },
     });
 
+    console.log("5", response0);
     expect(response0.statusCode).to.equal(204);
 
     const newCountResponse = await request.get(`${url}/count/${root}`);
     const newParsedCountBody = JSON.parse(newCountResponse.body);
 
+    console.log("6");
     expect(newParsedCountBody.count).to.equal(1);
 
     const response1 = await request.get(`${url}/${root}`);
