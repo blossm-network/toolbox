@@ -398,6 +398,8 @@ describe("Event store integration tests", () => {
   const testIncorrectParams = async ({ payload, action }) => {
     const root = uuid();
 
+    //TODO
+    console.log({ payload, action });
     const response = await request.post(url, {
       body: {
         eventData: [
@@ -420,6 +422,8 @@ describe("Event store integration tests", () => {
         ],
       },
     });
+    //TODO
+    console.log({ response });
     expect(response.statusCode).to.equal(500);
   };
   it("should not return an error if two simultaneous events are attempted", async () => {
