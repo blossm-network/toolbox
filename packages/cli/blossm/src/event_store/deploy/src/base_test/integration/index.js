@@ -518,7 +518,7 @@ describe("Event store integration tests", () => {
     if (!exampleToUse) return { some: "bad-array" };
 
     if (typeof element == "object") {
-      console.log("doop");
+      console.log("doop", { element });
       for (const objProperty in element) {
         //root
         const badValue = findBadValue(element, objProperty);
