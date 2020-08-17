@@ -2,8 +2,6 @@ const deps = require("./deps");
 
 module.exports = ({ mainFn, queryAggregatesFn, aggregateFn, contexts }) => {
   return async (req, res) => {
-    //TODO
-    console.log({ contexts, reqContext: req.query.context });
     if (
       contexts &&
       (!req.query.context ||

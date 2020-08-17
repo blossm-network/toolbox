@@ -1,4 +1,3 @@
-//TODO test
 module.exports = ({
   name,
   context: {
