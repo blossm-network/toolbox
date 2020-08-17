@@ -11,7 +11,8 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/uuid": "^0.0.5"
+    "@blossm/uuid": "^0.0.5",
+    "@blossm/cononical-string": "*"
   },
   "scripts": {
     "test": "mocha --recursive"

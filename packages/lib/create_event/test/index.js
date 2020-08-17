@@ -1,5 +1,5 @@
 const { expect } = require("chai").use(require("sinon-chai"));
-const { restore, replace, stub, useFakeTimers } = require("sinon");
+const { restore, replace, stub, fake, useFakeTimers } = require("sinon");
 const createEvent = require("../");
 const { string: dateString } = require("@blossm/datetime");
 const deps = require("../deps");
@@ -41,6 +41,11 @@ describe("Create event", () => {
   it("should get called with expected params", async () => {
     const groupsAdded = "some-groups-added";
     const groupsRemoved = "some-groups-removed";
+
+    const payloadString = "some-payload-string";
+    const cononicalStringFake = fake.returns(payloadString);
+    replace(deps, "cononicalString", cononicalStringFake);
+
     const value = createEvent({
       action,
       domain,
@@ -69,12 +74,14 @@ describe("Create event", () => {
       version,
     });
 
+    expect(cononicalStringFake).to.have.been.calledWith(payload);
     expect(value).to.deep.equal({
       headers: {
         root,
         topic: `${action}.${domain}.${service}`,
-        idempotency:
-          "some-idempotency-root!-some-action-some-domain-some-service-some-path-hash",
+        idempotency: Buffer.from(
+          `some-idempotency-root!-some-action-some-domain-some-service-some-path-hash${payloadString}`
+        ).toString("hex"),
         created: dateString(),
         action,
         domain,
@@ -98,6 +105,10 @@ describe("Create event", () => {
       stub().onFirstCall().returns(rootUuid).onSecondCall().returns(idempUuid)
     );
 
+    const payloadString = "some-payload-string";
+    const cononicalStringFake = fake.returns(payloadString);
+    replace(deps, "cononicalString", cononicalStringFake);
+
     const value = createEvent({
       action,
       domain,
@@ -106,11 +117,14 @@ describe("Create event", () => {
       payload,
     });
 
+    expect(cononicalStringFake).to.have.been.calledWith(payload);
     expect(value).to.deep.equal({
       headers: {
         root: rootUuid,
         topic: `${action}.${domain}.${service}`,
-        idempotency: "idemptUuid!-some-action-some-domain-some-service",
+        idempotency: Buffer.from(
+          `idemptUuid!-some-action-some-domain-some-service${payloadString}`
+        ).toString("hex"),
         created: dateString(),
         action,
         domain,
@@ -122,6 +136,10 @@ describe("Create event", () => {
     });
   });
   it("should get called with expected params if authorized is missing", async () => {
+    const payloadString = "some-payload-string";
+    const cononicalStringFake = fake.returns(payloadString);
+    replace(deps, "cononicalString", cononicalStringFake);
+
     const value = createEvent({
       action,
       domain,
@@ -147,12 +165,14 @@ describe("Create event", () => {
       version,
     });
 
+    expect(cononicalStringFake).to.have.been.calledWith(payload);
     expect(value).to.deep.equal({
       headers: {
         root,
         topic: `${action}.${domain}.${service}`,
-        idempotency:
-          "some-idempotency-root!-some-action-some-domain-some-service-some-path-hash",
+        idempotency: Buffer.from(
+          `some-idempotency-root!-some-action-some-domain-some-service-some-path-hash${payloadString}`
+        ).toString("hex"),
         created: dateString(),
         action,
         domain,
@@ -164,6 +184,10 @@ describe("Create event", () => {
     });
   });
   it("should get called with expected params if context is missing", async () => {
+    const payloadString = "some-payload-string";
+    const cononicalStringFake = fake.returns(payloadString);
+    replace(deps, "cononicalString", cononicalStringFake);
+
     const value = createEvent({
       action,
       domain,
@@ -189,12 +213,14 @@ describe("Create event", () => {
       version,
     });
 
+    expect(cononicalStringFake).to.have.been.calledWith(payload);
     expect(value).to.deep.equal({
       headers: {
         root,
         topic: `${action}.${domain}.${service}`,
-        idempotency:
-          "some-idempotency-root!-some-action-some-domain-some-service-some-path-hash",
+        idempotency: Buffer.from(
+          `some-idempotency-root!-some-action-some-domain-some-service-some-path-hash${payloadString}`
+        ).toString("hex"),
         created: dateString(),
         action,
         domain,
