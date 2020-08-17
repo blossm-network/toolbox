@@ -398,8 +398,6 @@ describe("Event store integration tests", () => {
   const testIncorrectParams = async ({ payload, action }) => {
     const root = uuid();
 
-    //TODO
-    console.log({ payload, action });
     const response = await request.post(url, {
       body: {
         eventData: [
@@ -422,8 +420,6 @@ describe("Event store integration tests", () => {
         ],
       },
     });
-    //TODO
-    console.log({ response });
     expect(response.statusCode).to.equal(500);
   };
   it("should not return an error if two simultaneous events are attempted", async () => {
@@ -512,9 +508,6 @@ describe("Event store integration tests", () => {
       (example) => example.payload[property] != undefined
     );
 
-    //TODO
-    console.log({ property, exampleToUse });
-
     if (!exampleToUse) return { some: "bad-array" };
 
     if (
@@ -522,9 +515,7 @@ describe("Event store integration tests", () => {
       element != "String" &&
       element != "Number"
     ) {
-      console.log("doop", { element });
       for (const objProperty in element) {
-        //root
         const badValue = findBadValue(element, objProperty);
         await testIncorrectParams({
           payload: {
@@ -536,7 +527,6 @@ describe("Event store integration tests", () => {
       }
       return "bad-array";
     } else {
-      console.log("fllom", element);
       const badValue = element == "String" ? { a: 1 } : "some-string";
       await testIncorrectParams({
         payload: { ...exampleToUse.payload, [property]: [badValue] },
