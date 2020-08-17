@@ -398,8 +398,6 @@ describe("Event store integration tests", () => {
   const testIncorrectParams = async ({ payload, action }) => {
     const root = uuid();
 
-    //TODO
-    console.log({ payload, action });
     const response = await request.post(url, {
       body: {
         eventData: [
@@ -512,12 +510,10 @@ describe("Event store integration tests", () => {
 
     if (!exampleToUse) return "bad-array";
 
-    console.log({ payload: exampleToUse.payload });
-
     await testIncorrectParams({
       payload: {
         ...exampleToUse.payload,
-        [property]: "not-an-array",
+        [property]: { not: "an-array" },
       },
       action: exampleToUse.action,
     });
