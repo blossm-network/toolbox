@@ -517,7 +517,11 @@ describe("Event store integration tests", () => {
 
     if (!exampleToUse) return { some: "bad-array" };
 
-    if (typeof element == "object") {
+    if (
+      typeof element == "object" &&
+      element != "String" &&
+      element != "Number"
+    ) {
       console.log("doop", { element });
       for (const objProperty in element) {
         //root
