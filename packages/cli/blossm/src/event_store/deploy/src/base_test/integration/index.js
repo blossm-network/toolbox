@@ -532,6 +532,7 @@ describe("Event store integration tests", () => {
       }
       return "bad-array";
     } else {
+      console.log("fllom", element);
       const badValue = element == "String" ? { a: 1 } : "some-string";
       await testIncorrectParams({
         payload: { ...exampleToUse.payload, [property]: [badValue] },
