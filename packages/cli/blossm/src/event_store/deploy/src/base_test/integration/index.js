@@ -512,7 +512,10 @@ describe("Event store integration tests", () => {
       (example) => example.payload[property] != undefined
     );
 
-    if (!exampleToUse) return "bad-array";
+    //TODO
+    console.log({ property, exampleToUse });
+
+    if (!exampleToUse) return { some: "bad-array" };
 
     await testIncorrectParams({
       payload: {
@@ -523,6 +526,7 @@ describe("Event store integration tests", () => {
     });
 
     if (typeof element == "object") {
+      console.log("doop");
       for (const objProperty in element) {
         //root
         const badValue = findBadValue(element, objProperty);
@@ -535,6 +539,7 @@ describe("Event store integration tests", () => {
         });
       }
     } else {
+      console.log("mmop");
       const badValue = element == "String" ? { a: 1 } : "some-string";
       await testIncorrectParams({
         payload: { ...exampleToUse.payload, [property]: [badValue] },
@@ -542,7 +547,7 @@ describe("Event store integration tests", () => {
       });
     }
 
-    return "bad-array";
+    return { some: "bad-array" };
   };
 
   it("should return an error if incorrect params", async () => {
