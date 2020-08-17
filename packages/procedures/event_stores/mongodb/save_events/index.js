@@ -6,8 +6,6 @@ module.exports = ({ eventStore, handlers }) => async ({
   transaction,
 }) => {
   for (const event of events) {
-    //TODO
-    console.log("EVENT: ", JSON.stringify(event));
     const handler = handlers[event.headers.action];
 
     if (!handler)

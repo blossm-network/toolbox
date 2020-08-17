@@ -126,19 +126,6 @@ module.exports = ({
 
           const hash = deps.hash(headers).create();
 
-          //TODO
-          console.log(
-            JSON.stringify({
-              hash,
-              headers,
-              payload,
-              context,
-              ...(groupsAdded && { groupsAdded }),
-              ...(groupsRemoved && { groupsRemoved }),
-              tx,
-            })
-          );
-
           normalizedEvents.push({
             hash,
             headers,
@@ -152,10 +139,6 @@ module.exports = ({
       );
     })
   );
-
-  //TODO
-  console.log("normalized");
-  console.log(JSON.stringify(normalizedEvents));
 
   await saveEventsFn({
     events: normalizedEvents,
