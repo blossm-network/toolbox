@@ -1,6 +1,6 @@
 {
   "name": "@blossm/authenticate",
-  "version": "0.0.82",
+  "version": "0.0.83",
   "description": "Authenticate requests.",
   "main": "index.js",
   "author": "blossm.network",
