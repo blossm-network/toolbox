@@ -11,7 +11,7 @@ module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
       externalFn: externalTokenFn,
       key,
     } = {},
-  } = {}) => ({ query, id } = {}) =>
+  } = {}) => ({ query, root } = {}) =>
     deps
       .rpc(
         name,
@@ -19,7 +19,7 @@ module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
         ...(service ? [service] : []),
         "fact"
       )
-      .get({ ...(query && { query }), ...(id && { id }) })
+      .get({ ...(query && { query }), ...(root && { id: root }) })
       .in({
         ...(context && { context }),
         ...(!internal && {
@@ -44,7 +44,7 @@ module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
       externalFn: externalTokenFn,
       key,
     } = {},
-  } = {}) => (fn, { query, id } = {}) =>
+  } = {}) => (fn, { query, root } = {}) =>
     deps
       .rpc(
         name,
@@ -52,7 +52,10 @@ module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
         ...(service ? [service] : []),
         "fact"
       )
-      .stream(fn, { ...(query && { query }), ...(id && { id }) })
+      .stream(fn, {
+        ...(query && { query }),
+        ...(root && { id: root }),
+      })
       .in({
         ...(context && { context }),
         ...(!internal && {

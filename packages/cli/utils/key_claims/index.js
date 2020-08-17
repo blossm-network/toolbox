@@ -2,7 +2,7 @@ const fact = require("@blossm/fact-rpc");
 const { invalidCredentials } = require("@blossm/errors");
 const { compare } = require("@blossm/crypt");
 
-module.exports = ({ token }) => async ({ id, secret }) => {
+module.exports = ({ token }) => async ({ root, secret }) => {
   const { body: key } = await fact({
     name: "state",
     domain: "key",
@@ -10,7 +10,7 @@ module.exports = ({ token }) => async ({ id, secret }) => {
     ...(process.env.CORE_NETWORK && { network: process.env.CORE_NETWORK }),
   })
     .set({ token: { internalFn: token } })
-    .read({ id });
+    .read({ id: root });
 
   if (!key) throw invalidCredentials.message("This key wasn't found.");
 

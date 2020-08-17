@@ -133,7 +133,7 @@ module.exports = commandProcedure({
     service,
     network,
     query,
-    id,
+    root,
     context: contextOverride = context,
     claims: claimsOverride = claims,
     principal = "user",
@@ -156,7 +156,7 @@ module.exports = commandProcedure({
               : nodeExternalToken({ network, key }),
         },
       })
-      .read({ query, id }),
+      .read({ query, root }),
   streamFactFn: ({ context, claims, token }) => ({
     name,
     domain,
@@ -188,7 +188,7 @@ module.exports = commandProcedure({
               : nodeExternalToken({ network, key }),
         },
       })
-      .stream(fn, { query, sort, root }),
+      .stream(fn, { query, root }),
   addFn: ({ domain, service, context, claims, eventData, tx, async }) =>
     eventStore({ domain, service })
       .set({

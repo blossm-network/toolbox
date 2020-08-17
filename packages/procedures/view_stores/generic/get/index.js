@@ -48,6 +48,7 @@ module.exports = ({
           network: req.query.context[process.env.CONTEXT].network,
         },
       }),
+      //TODO verify that this works. might not because its an array of objs, in which case save a string.
       ...(principalGroups && {
         "headers.groups": {
           $elemMatch: {

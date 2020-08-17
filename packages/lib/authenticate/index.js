@@ -18,8 +18,8 @@ module.exports = async ({
     return claims;
   } else if (basic && keyClaimsFn) {
     const credentials = Buffer.from(basic, "base64").toString("ascii");
-    const [id, secret] = credentials.split(":");
-    const claims = await keyClaimsFn({ id, secret });
+    const [root, secret] = credentials.split(":");
+    const claims = await keyClaimsFn({ root, secret });
 
     return claims;
   }

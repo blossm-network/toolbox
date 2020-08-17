@@ -113,7 +113,7 @@ const saveId = async ({ aggregate, aggregateContext, id, update, push }) => {
               await pushToChannel({ channel, newView });
             },
             {
-              id: group.root,
+              root: group.root,
               query: {
                 parallel: 100,
               },
@@ -224,7 +224,7 @@ module.exports = projection({
       .aggregate(root);
     return aggregate;
   },
-  readFactFn: async ({ name, domain, service, network, query, id }) => {
+  readFactFn: async ({ name, domain, service, network, query, root }) => {
     const { body } = await fact({
       name,
       ...(domain && { domain }),
@@ -236,7 +236,7 @@ module.exports = projection({
           internalFn: gcpToken,
         },
       })
-      .read({ query, ...(id && { id }) });
+      .read({ query, ...(root && { root }) });
     return body;
   },
   playFn: ({ root, domain, service }) =>

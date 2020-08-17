@@ -8,10 +8,10 @@ const authenticate = require("..");
 
 const verifyFn = "some-verify-fn";
 
-const basicTokenId = "some-basic-id";
+const basicTokenRoot = "some-basic-root";
 const basicTokenSecret = "some-basic-secret";
 
-const basicToken = `${basicTokenId}:${basicTokenSecret}`;
+const basicToken = `${basicTokenRoot}:${basicTokenSecret}`;
 
 const buffer = Buffer.from(basicToken).toString("base64");
 
@@ -53,7 +53,7 @@ describe("Authorize", () => {
     });
 
     expect(keyClaimsFnFake).to.have.been.calledWith({
-      id: basicTokenId,
+      root: basicTokenRoot,
       secret: basicTokenSecret,
     });
     expect(response).to.deep.equal(claims);
