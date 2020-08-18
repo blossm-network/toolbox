@@ -84,7 +84,7 @@ module.exports = ({
     const customEnv = findEnvForDependency(env, dependency, rootDir.path());
 
     const commonServiceImagePrefix = `${
-      coreNetwork && dependency.network == coreNetwork
+      localCoreNetwork && dependency.network == localCoreNetwork
         ? coreContainerRegistery
         : containerRegistery
     }/${dependency.procedure}`;
