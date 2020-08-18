@@ -16,6 +16,8 @@ module.exports = ({ writeFn, formatFn, updateFn = defaultFn }) => {
         network: req.body.context[process.env.CONTEXT].network,
       };
 
+    //TODO
+    console.log({ bodyGroups: req.body.groups });
     const groups =
       req.body.groups &&
       req.body.groups.map((group) => ({
@@ -88,6 +90,7 @@ module.exports = ({ writeFn, formatFn, updateFn = defaultFn }) => {
       headers: {
         id: newView.headers.id,
         context: newView.headers.context,
+        ...(newView.headers.groups && { groups: newView.headers.groups }),
         trace: formattedTrace,
       },
     });

@@ -60,6 +60,7 @@ const saveId = async ({ aggregate, aggregateContext, id, update, push }) => {
     .update({
       id,
       update,
+      ...(aggregate.groups && { groups: aggregate.groups }),
       ...(aggregate.txIds && {
         trace: {
           domain: aggregate.headers.domain,
@@ -82,46 +83,44 @@ const saveId = async ({ aggregate, aggregateContext, id, update, push }) => {
     await pushToChannel({ channel, newView });
   }
 
-  if (newView.headers.groups) {
-    //Const get all principals
-    await Promise.all(
-      (newView.headers.groups || []).map((group) =>
-        fact({
-          name: "principals",
-          domain: "group",
-          service: group.service,
-          network: group.network,
+  //Const get all principals
+  await Promise.all(
+    (newView.headers.groups || []).map((group) =>
+      fact({
+        name: "principals",
+        domain: "group",
+        service: group.service,
+        network: group.network,
+      })
+        .set({
+          token: {
+            externalFn: nodeExternalToken,
+            internalFn: gcpToken,
+            key: "access",
+          },
         })
-          .set({
-            token: {
-              externalFn: nodeExternalToken,
-              internalFn: gcpToken,
-              key: "access",
-            },
-          })
-          .stream(
-            async (principal) => {
-              const channel = channelName({
-                name: process.env.NAME,
-                ...(newView.headers.context && {
-                  context: newView.headers.context,
-                }),
-                principal,
-              });
+        .stream(
+          async (principal) => {
+            const channel = channelName({
+              name: process.env.NAME,
+              ...(newView.headers.context && {
+                context: newView.headers.context,
+              }),
+              principal,
+            });
 
-              //If there is no context, the channel is always the principal's channel.
-              await pushToChannel({ channel, newView });
+            //If there is no context, the channel is always the principal's channel.
+            await pushToChannel({ channel, newView });
+          },
+          {
+            root: group.root,
+            query: {
+              parallel: 100,
             },
-            {
-              root: group.root,
-              query: {
-                parallel: 100,
-              },
-            }
-          )
-      )
-    );
-  }
+          }
+        )
+    )
+  );
 };
 
 module.exports = projection({

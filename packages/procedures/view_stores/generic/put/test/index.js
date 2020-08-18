@@ -14,6 +14,7 @@ const now = new Date();
 const writeResultBody = "some-write-result-body";
 const writeResultId = "some-write-result-id";
 const writeResultContext = "some-write-result-context";
+const writeResultGroups = "some-write-result-groups";
 const trace1 = "some-trace";
 const trace2 = "some-other-trace";
 const writeResult = {
@@ -21,6 +22,7 @@ const writeResult = {
   headers: {
     id: writeResultId,
     context: writeResultContext,
+    groups: writeResultGroups,
   },
   trace: {
     "some-service": {
@@ -140,6 +142,7 @@ describe("View store put", () => {
         id: writeResultId,
         context: writeResultContext,
         trace: [trace1, trace2],
+        groups: writeResultGroups,
       },
     });
   });
@@ -203,6 +206,7 @@ describe("View store put", () => {
         id: writeResultId,
         context: writeResultContext,
         trace: [trace1, trace2],
+        groups: writeResultGroups,
       },
     });
   });
@@ -285,6 +289,7 @@ describe("View store put", () => {
         id: writeResultId,
         context: writeResultContext,
         trace: [trace1, trace2],
+        groups: writeResultGroups,
       },
     });
   });

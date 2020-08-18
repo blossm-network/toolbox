@@ -48,7 +48,7 @@ const viewStore = async ({ schema, indexes, secretFn }) => {
                 _id: false,
               },
             ],
-            required: true,
+            default: undefined,
           },
         ],
         created: {

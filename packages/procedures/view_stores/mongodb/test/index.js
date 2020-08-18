@@ -150,7 +150,7 @@ describe("View store", () => {
                   _id: false,
                 },
               ],
-              required: true,
+              default: undefined,
             },
           ],
           created: {
@@ -395,7 +395,7 @@ describe("View store", () => {
                   _id: false,
                 },
               ],
-              required: true,
+              default: undefined,
             },
           ],
           created: {
@@ -550,7 +550,7 @@ describe("View store", () => {
                   _id: false,
                 },
               ],
-              required: true,
+              default: undefined,
             },
           ],
           created: {
@@ -685,7 +685,7 @@ describe("View store", () => {
                   _id: false,
                 },
               ],
-              required: true,
+              default: undefined,
             },
           ],
           created: {
@@ -903,7 +903,7 @@ describe("View store", () => {
                   _id: false,
                 },
               ],
-              required: true,
+              default: undefined,
             },
           ],
           created: {

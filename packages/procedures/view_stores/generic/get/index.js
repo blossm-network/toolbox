@@ -109,6 +109,7 @@ module.exports = ({
           trace: formattedTrace,
           id: r.headers.id,
           context: r.headers.context,
+          ...(r.headers.groups && { groups: r.headers.groups }),
         },
       };
     });
