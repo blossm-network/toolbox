@@ -12,12 +12,15 @@ module.exports = ({ removeFn }) => async (req, res) => {
   const { deletedCount } = await removeFn({
     ...formattedQueryBody,
     ...(req.query.id && { "headers.id": req.query.id }),
-    ...(req.query.context && {
-      "headers.context.root": req.query.context[process.env.CONTEXT].root,
-      "headers.context.domain": process.env.CONTEXT,
-      "headers.context.service": req.query.context[process.env.CONTEXT].service,
-      "headers.context.network": req.query.context[process.env.CONTEXT].network,
-    }),
+    ...(req.query.context &&
+      process.env.CONTEXT && {
+        "headers.context.root": req.query.context[process.env.CONTEXT].root,
+        "headers.context.domain": process.env.CONTEXT,
+        "headers.context.service":
+          req.query.context[process.env.CONTEXT].service,
+        "headers.context.network":
+          req.query.context[process.env.CONTEXT].network,
+      }),
   });
 
   res.status(200).send({ deletedCount });

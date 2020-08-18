@@ -18,9 +18,10 @@ const context = {
 };
 const deletedCount = 3;
 
-process.env.CONTEXT = contextDomain;
-
 describe("View store delete", () => {
+  beforeEach(() => {
+    process.env.CONTEXT = contextDomain;
+  });
   afterEach(() => {
     restore();
   });
@@ -104,6 +105,56 @@ describe("View store delete", () => {
       "headers.context.service": contextService,
       "headers.context.network": contextNetwork,
     });
+    expect(statusFake).to.have.been.calledWith(200);
+    expect(sendFake).to.have.been.calledWith({ deletedCount });
+  });
+  it("should call with the correct params with context and id only and no env context", async () => {
+    const removeFake = fake.returns({ deletedCount });
+
+    const id = "some-id";
+    const req = {
+      query: {
+        context,
+        query: {},
+        id,
+      },
+    };
+
+    const sendFake = fake();
+    const statusFake = fake.returns({
+      send: sendFake,
+    });
+    const res = {
+      status: statusFake,
+    };
+
+    delete process.env.CONTEXT;
+    await del({ removeFn: removeFake })(req, res);
+    expect(removeFake).to.have.been.calledWith({
+      "headers.id": id,
+    });
+    expect(statusFake).to.have.been.calledWith(200);
+    expect(sendFake).to.have.been.calledWith({ deletedCount });
+  });
+  it("should call with the correct params with query", async () => {
+    const removeFake = fake.returns({ deletedCount });
+
+    const req = {
+      query: {
+        query,
+      },
+    };
+
+    const sendFake = fake();
+    const statusFake = fake.returns({
+      send: sendFake,
+    });
+    const res = {
+      status: statusFake,
+    };
+
+    await del({ removeFn: removeFake })(req, res);
+    expect(removeFake).to.have.been.calledWith({ "body.a": 1 });
     expect(statusFake).to.have.been.calledWith(200);
     expect(sendFake).to.have.been.calledWith({ deletedCount });
   });
