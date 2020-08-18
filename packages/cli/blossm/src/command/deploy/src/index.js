@@ -47,6 +47,7 @@ module.exports = commandProcedure({
       lastEventNumber: aggregate.headers.lastEventNumber,
       state: aggregate.state,
       root: aggregate.headers.root,
+      groups: aggregate.groups,
     };
   },
   commandFn: ({ path, idempotency, context, claims, token, txId, ip }) => ({
