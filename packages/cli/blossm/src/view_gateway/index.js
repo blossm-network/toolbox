@@ -9,15 +9,11 @@ const init = require("./init");
 const configFn = (config) => {
   return {
     operationName: trim(
-      `${config.procedure}-${config.context}${
-        config.service ? `-${config.service}` : ""
-      }${config.domain ? `-${config.domain}` : ""}`,
+      `${config.procedure}${config.context ? `-${config.context}` : ""}`,
       MAX_LENGTH
     ),
     operationHash: hash(
-      ...(config.domain ? [config.domain] : []),
-      ...(config.service ? [config.service] : []),
-      config.context,
+      ...(config.context ? [config.context] : []),
       config.procedure
     ),
   };
