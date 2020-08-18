@@ -6,7 +6,6 @@ module.exports = async ({
   externalTokenFn,
   permissions = [],
   principal,
-  privilegesContext,
   context,
 }) => {
   if (permissions == "none")
@@ -18,7 +17,6 @@ module.exports = async ({
     internalTokenFn,
     externalTokenFn,
     principal,
-    privilegesContext,
     context,
   });
 

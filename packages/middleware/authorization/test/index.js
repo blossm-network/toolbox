@@ -54,8 +54,7 @@ describe("Authorization middleware", () => {
         return result.token == token && result.type == "Bearer";
       }),
       permissions,
-      context,
-      privilegesContext: contextObj,
+      context: contextObj,
     });
     expect(terminatedSessionCheckFake).to.have.been.calledWith({
       session,

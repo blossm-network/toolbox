@@ -18,7 +18,6 @@ module.exports = ({ downloadFileFn }) => async ({
   externalTokenFn,
   principal,
   context,
-  privilegesContext,
 }) => {
   if (!principal) throw forbidden.message("Missing required permissions.");
 
@@ -53,17 +52,20 @@ module.exports = ({ downloadFileFn }) => async ({
   })
     .set({
       token: { internalFn: internalTokenFn, externalFn: externalTokenFn },
-      context,
+      context: {
+        principal,
+        network: process.env.NETWORK,
+      },
     })
     .read();
 
   //TODO
-  console.log({ roles, context, principal, privilegesContext });
+  console.log({ roles, principal, context });
 
   return await rolePermissions({
     roles,
     defaultRoles,
-    context: privilegesContext,
+    context,
     customRolePermissionsFn: async ({ roleId }) => {
       // try {
       //TODO
@@ -90,7 +92,7 @@ module.exports = ({ downloadFileFn }) => async ({
             externalFn: nodeExternalToken,
             key: "access",
           },
-          context: { network: process.env.NETWORK },
+          context: { principal, network: process.env.NETWORK },
         })
         .read({ query: { id: roleId } });
 
