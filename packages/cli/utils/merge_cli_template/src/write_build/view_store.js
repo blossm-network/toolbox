@@ -119,7 +119,7 @@ module.exports = ({
               NAME: name,
               ...(context && { CONTEXT: context }),
               ...(bootstrapContext && { BOOTSTRAP_CONTEXT: bootstrapContext }),
-              MONGODB_DATABASE: `${context}_${name}`,
+              MONGODB_DATABASE: `${context ? `${context}_` : ""}${name}`,
               MONGODB_USER: mongodbUser,
               MONGODB_HOST: mongodbHost,
               MONGODB_PROTOCOL: mongodbProtocol,
