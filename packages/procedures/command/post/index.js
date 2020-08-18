@@ -14,6 +14,8 @@ module.exports = ({
   addFn,
   contexts,
 }) => async (req, res) => {
+  //TODO
+  console.log({ contexts, rBody: req.body });
   if (
     contexts &&
     (!req.body.context ||
