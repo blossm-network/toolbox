@@ -209,6 +209,7 @@ describe("Mongodb event store", () => {
               _id: false,
             },
           ],
+          default: null,
         },
         tx: {
           ip: { $type: String },
@@ -956,6 +957,7 @@ describe("Mongodb event store", () => {
               _id: false,
             },
           ],
+          default: null,
         },
         tx: {
           ip: { $type: String },
