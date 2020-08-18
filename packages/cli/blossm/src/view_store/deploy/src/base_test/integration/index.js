@@ -21,6 +21,7 @@ describe("View store base integration tests", () => {
     const examples = testing.examples;
     expect(examples.length).to.be.greaterThan(1);
 
+    console.log("0");
     if (testing.empty) {
       const emptyResponse = await request.get(url, {
         query: {
