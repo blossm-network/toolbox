@@ -322,26 +322,31 @@ const addDefaultDependencies = ({ config, localCoreNetwork }) => {
       name: "upgrade",
       domain: "session",
       service: "core",
+      network: localCoreNetwork,
       procedure: "command",
     },
     {
       domain: "session",
       service: "core",
+      network: localCoreNetwork,
       procedure: "event-store",
     },
     {
       domain: "role",
       service: "core",
+      network: localCoreNetwork,
       procedure: "event-store",
     },
     {
       domain: "principal",
       service: "core",
+      network: localCoreNetwork,
       procedure: "event-store",
     },
     {
       domain: "identity",
       service: "core",
+      network: localCoreNetwork,
       procedure: "event-store",
     },
     {

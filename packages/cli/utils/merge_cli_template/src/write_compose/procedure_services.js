@@ -33,7 +33,6 @@ module.exports = ({
   databaseServiceKey,
   project,
   port,
-  coreNetwork,
   localCoreNetwork,
   network,
   host,
