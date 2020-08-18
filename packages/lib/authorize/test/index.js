@@ -12,7 +12,7 @@ const principal = "some-principal-root";
 const internalTokenFn = "some-internal-token-fn";
 const externalTokenFn = "some-external-token-fn";
 
-const targetContext = {
+const privilegesContext = {
   network,
   service,
   any: "any-root",
@@ -30,7 +30,7 @@ describe("Authorize", () => {
     const permissions = [{ service, domain, privilege }];
 
     const permissionsLookupFn = fake.returns(permissions);
-    const targetContext = "some-target-context";
+    const privilegesContext = "some-target-context";
 
     const document = await authorize({
       permissionsLookupFn,
@@ -39,7 +39,7 @@ describe("Authorize", () => {
       externalTokenFn,
       network,
       principal,
-      targetContext,
+      privilegesContext,
       context,
     });
 
@@ -47,7 +47,7 @@ describe("Authorize", () => {
       internalTokenFn,
       externalTokenFn,
       principal,
-      targetContext,
+      privilegesContext,
       context,
     });
     expect(document).to.deep.equal({
@@ -80,7 +80,7 @@ describe("Authorize", () => {
   });
   it("should authorize with permissions as none", async () => {
     const document = await authorize({
-      targetContext,
+      privilegesContext,
       context,
       permissions: "none",
       network,

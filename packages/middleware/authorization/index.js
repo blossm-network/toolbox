@@ -24,7 +24,7 @@ module.exports = ({
               permissions,
               ...(req.context && { context: req.context }),
               ...(req.context &&
-                context && { targetContext: req.context[context] }),
+                context && { privilegesContext: req.context[context] }),
             }),
           ]
         : []),

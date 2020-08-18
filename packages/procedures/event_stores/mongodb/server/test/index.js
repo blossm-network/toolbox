@@ -198,7 +198,7 @@ describe("Mongodb event store", () => {
               _id: false,
             },
           ],
-          default: null,
+          default: undefined,
         },
         groupsRemoved: {
           $type: [
@@ -209,7 +209,7 @@ describe("Mongodb event store", () => {
               _id: false,
             },
           ],
-          default: null,
+          default: undefined,
         },
         tx: {
           ip: { $type: String },
@@ -601,7 +601,7 @@ describe("Mongodb event store", () => {
               _id: false,
             },
           ],
-          default: null,
+          default: undefined,
         },
         groupsRemoved: {
           $type: [
@@ -612,7 +612,7 @@ describe("Mongodb event store", () => {
               _id: false,
             },
           ],
-          default: null,
+          default: undefined,
         },
         tx: {
           ip: { $type: String },
@@ -946,7 +946,7 @@ describe("Mongodb event store", () => {
               _id: false,
             },
           ],
-          default: null,
+          default: undefined,
         },
         groupsRemoved: {
           $type: [
@@ -957,7 +957,7 @@ describe("Mongodb event store", () => {
               _id: false,
             },
           ],
-          default: null,
+          default: undefined,
         },
         tx: {
           ip: { $type: String },

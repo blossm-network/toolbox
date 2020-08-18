@@ -55,7 +55,7 @@ describe("Authorization middleware", () => {
       }),
       permissions,
       context,
-      targetContext: contextObj,
+      privilegesContext: contextObj,
     });
     expect(terminatedSessionCheckFake).to.have.been.calledWith({
       session,

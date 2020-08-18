@@ -10,8 +10,8 @@ service: some-service
 # The 'name' property correlates to the fact name.
 # Each fact can be accessed by adding the URL path /<name> to the base URL.
 #
-# The 'priviledges' property describes the priviledges needed by the requester
-# to access this fact. Set this to 'none' if no specific priviledges are needed,
+# The 'privileges' property describes the privileges needed by the requester
+# to access this fact. Set this to 'none' if no specific privileges are needed,
 # but the route should still require by a valid token.
 #
 # Set the 'protection' property to 'none' if this route should be accessible by
