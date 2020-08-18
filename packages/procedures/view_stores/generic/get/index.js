@@ -28,13 +28,14 @@ module.exports = ({
 
     const principalGroups =
       group &&
+      req.query.context &&
       req.query.context.principal &&
       (await groupsLookupFn({
         token: req.query.currentToken,
       }));
 
     //TODO
-    console.log({ principalGroups });
+    console.log({ principalGroups, group });
     const query = {
       ...(!req.query.bootstrap && { ...formattedQueryBody }),
       ...(req.params.id && { "headers.id": req.params.id }),
@@ -94,7 +95,7 @@ module.exports = ({
     }/channel?query%5Bname%5D=${process.env.NAME}${
       process.env.CONTEXT ? `&query%5Bcontext%5D=${process.env.CONTEXT}` : ""
     }&query%5Bnetwork%5D=${process.env.NETWORK}${
-      !process.env.CONTEXT && req.query.context.principal
+      !process.env.CONTEXT && req.query.context && req.query.context.principal
         ? `&query%5Bprincipal%5D=${req.query.context.principal.root}`
         : ""
     }`;
