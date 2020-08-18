@@ -24,15 +24,15 @@ describe("View store base integration tests", () => {
     if (testing.empty) {
       const emptyResponse = await request.get(url, {
         query: {
-          ...(process.env.CONTEXT && {
-            context: {
+          context: {
+            ...(process.env.CONTEXT && {
               [process.env.CONTEXT]: {
                 root: contextRoot,
                 service: contextService,
                 network: contextNetwork,
               },
-            },
-          }),
+            }),
+          },
         },
       });
 
@@ -56,15 +56,15 @@ describe("View store base integration tests", () => {
     const response0 = await request.put(`${url}/${id}`, {
       body: {
         update: examples[0].update,
-        ...(process.env.CONTEXT && {
-          context: {
+        context: {
+          ...(process.env.CONTEXT && {
             [process.env.CONTEXT]: {
               root: contextRoot,
               service: contextService,
               network: contextNetwork,
             },
-          },
-        }),
+          }),
+        },
       },
     });
 
@@ -74,15 +74,15 @@ describe("View store base integration tests", () => {
     console.log("3");
     const response1 = await request.get(url, {
       query: {
-        ...(process.env.CONTEXT && {
-          context: {
+        context: {
+          ...(process.env.CONTEXT && {
             [process.env.CONTEXT]: {
               root: contextRoot,
               service: contextService,
               network: contextNetwork,
             },
-          },
-        }),
+          }),
+        },
       },
     });
 
@@ -131,15 +131,15 @@ describe("View store base integration tests", () => {
       const moreResponse1 = await request.get(url, {
         query: {
           ...(example.query && { query: example.query }),
-          ...(process.env.CONTEXT && {
-            context: {
+          context: {
+            ...(process.env.CONTEXT && {
               [process.env.CONTEXT]: {
                 root: contextRoot,
                 service: contextService,
                 network: contextNetwork,
               },
-            },
-          }),
+            }),
+          },
         },
       });
 
@@ -179,15 +179,15 @@ describe("View store base integration tests", () => {
 
     const response3 = await request.get(url, {
       query: {
-        ...(process.env.CONTEXT && {
-          context: {
+        context: {
+          ...(process.env.CONTEXT && {
             [process.env.CONTEXT]: {
               root: contextRoot,
               service: contextService,
               network: contextNetwork,
             },
-          },
-        }),
+          }),
+        },
       },
     });
 
@@ -216,29 +216,29 @@ describe("View store base integration tests", () => {
           await request.put(`${url}/${uuid()}`, {
             body: {
               update: example.update,
-              ...(process.env.CONTEXT && {
-                context: {
+              context: {
+                ...(process.env.CONTEXT && {
                   [process.env.CONTEXT]: {
                     root: newContextRoot,
                     service: contextService,
                     network: contextNetwork,
                   },
-                },
-              }),
+                }),
+              },
             },
           });
         }
         const response5 = await request.get(url, {
           query: {
-            ...(process.env.CONTEXT && {
-              context: {
+            context: {
+              ...(process.env.CONTEXT && {
                 [process.env.CONTEXT]: {
                   root: newContextRoot,
                   service: contextService,
                   network: contextNetwork,
                 },
-              },
-            }),
+              }),
+            },
             sort: index,
           },
         });
@@ -257,15 +257,15 @@ describe("View store base integration tests", () => {
 
         const response6 = await request.get(url, {
           query: {
-            ...(process.env.CONTEXT && {
-              context: {
+            context: {
+              ...(process.env.CONTEXT && {
                 [process.env.CONTEXT]: {
                   root: newContextRoot,
                   service: contextService,
                   network: contextNetwork,
                 },
-              },
-            }),
+              }),
+            },
             sort: reverseIndex,
           },
         });
@@ -293,30 +293,30 @@ describe("View store base integration tests", () => {
           await request.put(`${url}/${uuid()}`, {
             body: {
               update: example,
-              ...(process.env.CONTEXT && {
-                context: {
+              context: {
+                ...(process.env.CONTEXT && {
                   [process.env.CONTEXT]: {
                     root: newContextRoot,
                     service: contextService,
                     network: contextNetwork,
                   },
-                },
-              }),
+                }),
+              },
             },
           });
         }
         if (!one) {
           const response7 = await request.get(url, {
             query: {
-              ...(process.env.CONTEXT && {
-                context: {
+              context: {
+                ...(process.env.CONTEXT && {
                   [process.env.CONTEXT]: {
                     root: newContextRoot,
                     service: contextService,
                     network: contextNetwork,
                   },
-                },
-              }),
+                }),
+              },
               sort: index,
             },
           });
@@ -334,30 +334,30 @@ describe("View store base integration tests", () => {
           await request.put(`${url}/${uuid()}`, {
             body: {
               update: example.update,
-              ...(process.env.CONTEXT && {
-                context: {
+              context: {
+                ...(process.env.CONTEXT && {
                   [process.env.CONTEXT]: {
                     root: newContextRoot,
                     service: contextService,
                     network: contextNetwork,
                   },
-                },
-              }),
+                }),
+              },
             },
           });
         }
 
         const response8 = await request.get(url, {
           query: {
-            ...(process.env.CONTEXT && {
-              context: {
+            context: {
+              ...(process.env.CONTEXT && {
                 [process.env.CONTEXT]: {
                   root: newContextRoot,
                   service: contextService,
                   network: contextNetwork,
                 },
-              },
-            }),
+              }),
+            },
             limit: 1,
             skip: 1,
             sort: index,
@@ -388,15 +388,15 @@ describe("View store base integration tests", () => {
     const response9 = await request.delete(url, {
       query: {
         id,
-        ...(process.env.CONTEXT && {
-          context: {
+        context: {
+          ...(process.env.CONTEXT && {
             [process.env.CONTEXT]: {
               root: contextRoot,
               service: contextService,
               network: contextNetwork,
             },
-          },
-        }),
+          }),
+        },
       },
     });
 
@@ -517,15 +517,15 @@ describe("View store base integration tests", () => {
       const response = await request.put(`${url}/${id}`, {
         body: {
           update: { id, [property]: badValue },
-          ...(process.env.CONTEXT && {
-            context: {
+          context: {
+            ...(process.env.CONTEXT && {
               [process.env.CONTEXT]: {
                 root: contextRoot,
                 service: contextService,
                 network: contextNetwork,
               },
-            },
-          }),
+            }),
+          },
         },
       });
       expect(response.statusCode).to.equal(500);
