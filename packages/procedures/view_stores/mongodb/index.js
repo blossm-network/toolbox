@@ -38,19 +38,17 @@ const viewStore = async ({ schema, indexes, secretFn }) => {
           },
           required: true,
         },
-        groups: [
-          {
-            [typeKey]: [
-              {
-                root: String,
-                service: String,
-                network: String,
-                _id: false,
-              },
-            ],
-            default: undefined,
-          },
-        ],
+        groups: {
+          [typeKey]: [
+            {
+              root: String,
+              service: String,
+              network: String,
+              _id: false,
+            },
+          ],
+          default: undefined,
+        },
         created: {
           [typeKey]: Date,
           required: true,

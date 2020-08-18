@@ -140,19 +140,17 @@ describe("View store", () => {
             },
             required: true,
           },
-          groups: [
-            {
-              $type: [
-                {
-                  root: String,
-                  service: String,
-                  network: String,
-                  _id: false,
-                },
-              ],
-              default: undefined,
-            },
-          ],
+          groups: {
+            $type: [
+              {
+                root: String,
+                service: String,
+                network: String,
+                _id: false,
+              },
+            ],
+            default: undefined,
+          },
           created: {
             $type: Date,
             required: true,
@@ -385,19 +383,17 @@ describe("View store", () => {
             },
             required: true,
           },
-          groups: [
-            {
-              $type: [
-                {
-                  root: String,
-                  service: String,
-                  network: String,
-                  _id: false,
-                },
-              ],
-              default: undefined,
-            },
-          ],
+          groups: {
+            $type: [
+              {
+                root: String,
+                service: String,
+                network: String,
+                _id: false,
+              },
+            ],
+            default: undefined,
+          },
           created: {
             $type: Date,
             required: true,
@@ -540,19 +536,17 @@ describe("View store", () => {
             },
             required: true,
           },
-          groups: [
-            {
-              $type: [
-                {
-                  root: String,
-                  service: String,
-                  network: String,
-                  _id: false,
-                },
-              ],
-              default: undefined,
-            },
-          ],
+          groups: {
+            $type: [
+              {
+                root: String,
+                service: String,
+                network: String,
+                _id: false,
+              },
+            ],
+            default: undefined,
+          },
           created: {
             $type: Date,
             required: true,
@@ -675,19 +669,17 @@ describe("View store", () => {
             },
             required: true,
           },
-          groups: [
-            {
-              $type: [
-                {
-                  root: String,
-                  service: String,
-                  network: String,
-                  _id: false,
-                },
-              ],
-              default: undefined,
-            },
-          ],
+          groups: {
+            $type: [
+              {
+                root: String,
+                service: String,
+                network: String,
+                _id: false,
+              },
+            ],
+            default: undefined,
+          },
           created: {
             $type: Date,
             required: true,
@@ -893,19 +885,17 @@ describe("View store", () => {
             },
             required: true,
           },
-          groups: [
-            {
-              $type: [
-                {
-                  root: String,
-                  service: String,
-                  network: String,
-                  _id: false,
-                },
-              ],
-              default: undefined,
-            },
-          ],
+          groups: {
+            $type: [
+              {
+                root: String,
+                service: String,
+                network: String,
+                _id: false,
+              },
+            ],
+            default: undefined,
+          },
           created: {
             $type: Date,
             required: true,
