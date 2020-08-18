@@ -57,6 +57,9 @@ module.exports = ({ downloadFileFn }) => async ({
     })
     .read();
 
+  //TODO
+  console.log({ roles, context, principal, privilegesContext });
+
   return await rolePermissions({
     roles,
     defaultRoles,

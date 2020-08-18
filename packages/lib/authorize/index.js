@@ -22,6 +22,9 @@ module.exports = async ({
     context,
   });
 
+  //TODO
+  console.log({ principalPermissions });
+
   const satisfiedPermissions = principalPermissions.filter(
     (principalPermission) => {
       for (const permission of permissions) {
