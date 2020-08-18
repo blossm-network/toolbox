@@ -18,6 +18,7 @@ module.exports = ({ downloadFileFn }) => async ({
   externalTokenFn,
   principal,
   context,
+  targetContext,
 }) => {
   if (!principal) throw forbidden.message("Missing required permissions.");
 
@@ -52,14 +53,14 @@ module.exports = ({ downloadFileFn }) => async ({
   })
     .set({
       token: { internalFn: internalTokenFn, externalFn: externalTokenFn },
-      context: { network: process.env.NETWORK },
+      context,
     })
     .read();
 
   return await rolePermissions({
     roles,
     defaultRoles,
-    context,
+    context: targetContext,
     customRolePermissionsFn: async ({ roleId }) => {
       // try {
       //TODO

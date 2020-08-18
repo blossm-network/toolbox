@@ -22,7 +22,9 @@ module.exports = ({
               internalTokenFn,
               externalTokenFn,
               permissions,
-              ...(req.context && context && { context: req.context[context] }),
+              ...(req.context && { context: req.context }),
+              ...(req.context &&
+                context && { targetContext: req.context[context] }),
             }),
           ]
         : []),
