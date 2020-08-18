@@ -113,15 +113,15 @@ describe("View store base integration tests", () => {
       const moreResponse0 = await request.put(`${url}/${moreId}`, {
         body: {
           update: example.update,
-          ...(process.env.CONTEXT && {
-            context: {
+          context: {
+            ...(process.env.CONTEXT && {
               [process.env.CONTEXT]: {
                 root: contextRoot,
                 service: contextService,
                 network: contextNetwork,
               },
-            },
-          }),
+            }),
+          },
         },
       });
 
@@ -163,15 +163,15 @@ describe("View store base integration tests", () => {
     const response2 = await request.put(`${url}/${id}`, {
       body: {
         update: examples[1].update,
-        ...(process.env.CONTEXT && {
-          context: {
+        context: {
+          ...(process.env.CONTEXT && {
             [process.env.CONTEXT]: {
               root: contextRoot,
               service: contextService,
               network: contextNetwork,
             },
-          },
-        }),
+          }),
+        },
       },
     });
 
