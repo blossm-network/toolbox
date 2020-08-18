@@ -164,7 +164,6 @@ module.exports = commandProcedure({
     service,
     network,
     query,
-    sort,
     root,
     context: contextOverride = context,
     claims: claimsOverride = claims,
