@@ -56,6 +56,7 @@ const eventStore = async ({ schema, indexes, secretFn }) => {
             _id: false,
           },
         ],
+        default: null,
       },
       groupsRemoved: {
         [typeKey]: [
@@ -66,6 +67,7 @@ const eventStore = async ({ schema, indexes, secretFn }) => {
             _id: false,
           },
         ],
+        default: null,
       },
       tx: {
         ip: { [typeKey]: String },
