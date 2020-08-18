@@ -86,6 +86,9 @@ module.exports = ({
       ...(one || req.query.bootstrap ? [] : [countFn({ query })]),
     ]);
 
+    //TODO
+    console.log({ reqCon: req.query.context, query: req.query });
+
     const updates = `https://updates.${
       process.env.CORE_NETWORK
     }/channel?query%5Bname%5D=${process.env.NAME}${
