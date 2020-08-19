@@ -32,6 +32,7 @@ const data = { c: 1 };
 const fnFake = fake();
 const parallel = "some-parallel";
 const one = "some-one";
+const group = "some-group";
 
 process.env.NAME = name;
 process.env.CONTEXT = context;
@@ -112,6 +113,7 @@ describe("View store", () => {
       formatFn,
       emptyFn,
       one,
+      group,
     });
 
     expect(formatSchemaFake).to.have.been.calledWith(
@@ -292,6 +294,7 @@ describe("View store", () => {
       formatFn,
       emptyFn,
       one,
+      group,
     });
 
     await mongodbViewStore({ schema });
@@ -597,7 +600,7 @@ describe("View store", () => {
       },
     });
   });
-  it("should call with the correct params without fns, one, or upsert", async () => {
+  it("should call with the correct params without fns, one, group, or upsert", async () => {
     const store = "some-store";
     const storeFake = fake.returns(store);
 

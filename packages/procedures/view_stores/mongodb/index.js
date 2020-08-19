@@ -90,6 +90,7 @@ module.exports = async ({
   formatFn,
   emptyFn,
   one,
+  group,
 } = {}) => {
   const allIndexes = [
     [{ "headers.id": 1 }],
@@ -208,5 +209,6 @@ module.exports = async ({
     ...(formatFn && { formatFn }),
     ...(emptyFn && { emptyFn }),
     ...(one && { one }),
+    ...(group && { group }),
   });
 };

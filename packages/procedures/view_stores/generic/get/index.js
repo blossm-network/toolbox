@@ -31,7 +31,7 @@ module.exports = ({
       req.query.context &&
       req.query.context.principal &&
       (await groupsLookupFn({
-        token: req.query.currentToken,
+        token: req.query.token,
       }));
 
     //TODO
@@ -88,7 +88,16 @@ module.exports = ({
     ]);
 
     //TODO
-    console.log({ reqCon: req.query.context, query: req.query });
+    console.log({
+      reqConPrin: req.query.context.principal,
+      query,
+      formattedQueryBody,
+      "headers.groups": {
+        $elemMatch: {
+          $in: principalGroups,
+        },
+      },
+    });
 
     const updates = `https://updates.${
       process.env.CORE_NETWORK

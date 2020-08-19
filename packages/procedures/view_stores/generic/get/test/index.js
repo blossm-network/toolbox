@@ -177,7 +177,7 @@ describe("View store get", () => {
     const urlEncodeQueryDataFake = fake.returns(nextUrl);
     replace(deps, "urlEncodeQueryData", urlEncodeQueryDataFake);
 
-    const currentToken = "some-current-token";
+    const token = "some-token";
     const req = {
       query: {
         sort,
@@ -188,7 +188,7 @@ describe("View store get", () => {
           },
         },
         query,
-        currentToken,
+        token,
       },
       params: {
         id,
@@ -235,7 +235,7 @@ describe("View store get", () => {
       },
     });
     expect(groupsLookupFnFake).to.have.been.calledWith({
-      token: currentToken,
+      token,
     });
     expect(urlEncodeQueryDataFake).to.have.been.calledWith(
       `https://v.${envNetwork}/${envName}`,
