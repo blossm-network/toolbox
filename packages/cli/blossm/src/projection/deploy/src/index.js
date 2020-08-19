@@ -39,19 +39,19 @@ const pushToChannel = async ({ channel, newView }) => {
   }
 };
 
-const saveId = async ({ aggregate, aggregateContext, id, update, push }) => {
+const saveId = async ({ aggregate, id, update, push, context }) => {
   const { body: newView } = await viewStore({
     name: config.name,
     context: config.context,
   })
     .set({
       token: { internalFn: gcpToken },
-      ...(aggregateContext && {
+      ...(context && {
         context: {
           [process.env.CONTEXT]: {
-            root: aggregateContext.root,
-            service: aggregateContext.service,
-            network: aggregateContext.network,
+            root: context.root,
+            service: context.service,
+            network: context.network,
           },
         },
       }),
@@ -125,8 +125,6 @@ const saveId = async ({ aggregate, aggregateContext, id, update, push }) => {
 
 module.exports = projection({
   mainFn: async ({ aggregate, action, push, aggregateFn, readFactFn }) => {
-    //TODO
-    console.log({ aggregate });
     //Must be able to handle this aggregate.
     if (
       !handlers[aggregate.headers.service] ||
@@ -143,6 +141,8 @@ module.exports = projection({
       id,
       //Events that need to be replayed.
       replay,
+      //A context to be added to the view.
+      context,
     } = await handlers[aggregate.headers.service][aggregate.headers.domain]({
       state: aggregate.state,
       id: aggregate.headers.root,
@@ -185,12 +185,13 @@ module.exports = projection({
     if (!query && !id) return;
 
     const aggregateContext =
-      aggregate.context &&
-      process.env.CONTEXT &&
-      aggregate.context[process.env.CONTEXT];
+      context ||
+      (aggregate.context &&
+        process.env.CONTEXT &&
+        aggregate.context[process.env.CONTEXT]);
 
     if (id) {
-      await saveId({ aggregate, aggregateContext, id, update, push });
+      await saveId({ aggregate, context: aggregateContext, id, update, push });
     } else {
       await viewStore({
         name: config.name,

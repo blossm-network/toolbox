@@ -16,8 +16,6 @@ module.exports = ({ writeFn, formatFn, updateFn = defaultFn }) => {
         network: req.body.context[process.env.CONTEXT].network,
       };
 
-    //TODO
-    console.log({ bodyGroups: req.body.groups });
     const groups =
       req.body.groups &&
       req.body.groups.map((group) => ({
@@ -52,8 +50,6 @@ module.exports = ({ writeFn, formatFn, updateFn = defaultFn }) => {
       }
     }
 
-    //TODO
-    console.log({ data });
     const newView = await writeFn({
       query: {
         "headers.id": req.params.id,

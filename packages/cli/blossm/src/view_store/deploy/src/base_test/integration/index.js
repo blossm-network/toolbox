@@ -21,7 +21,6 @@ describe("View store base integration tests", () => {
     const examples = testing.examples;
     expect(examples.length).to.be.greaterThan(1);
 
-    console.log("0");
     if (testing.empty) {
       const emptyResponse = await request.get(url, {
         query: {
@@ -53,7 +52,6 @@ describe("View store base integration tests", () => {
       }
     }
 
-    console.log("1");
     const response0 = await request.put(`${url}/${id}`, {
       body: {
         update: examples[0].update,
@@ -69,10 +67,8 @@ describe("View store base integration tests", () => {
       },
     });
 
-    console.log("2");
     expect(response0.statusCode).to.equal(200);
 
-    console.log("3");
     const response1 = await request.get(url, {
       query: {
         context: {
@@ -87,13 +83,11 @@ describe("View store base integration tests", () => {
       },
     });
 
-    console.log("4");
     expect(response1.statusCode).to.equal(200);
     const { updates: updates0, count: count0, content: content0 } = JSON.parse(
       response1.body
     );
 
-    console.log("5");
     const parsedBody0 = one ? content0 : content0[0];
 
     expect(updates0).to.exist;
@@ -101,12 +95,10 @@ describe("View store base integration tests", () => {
 
     expect(response1.statusCode).to.equal(200);
 
-    console.log("6");
     for (const key in examples[0].get) {
       expect(parsedBody0[key]).to.deep.equal(examples[0].get[key]);
     }
 
-    console.log("7");
     for (const example of testing.examples.length > 2
       ? testing.examples.slice(2)
       : []) {
@@ -128,7 +120,6 @@ describe("View store base integration tests", () => {
 
       expect(moreResponse0.statusCode).to.equal(200);
 
-      console.log("8");
       const moreResponse1 = await request.get(url, {
         query: {
           ...(example.query && { query: example.query }),

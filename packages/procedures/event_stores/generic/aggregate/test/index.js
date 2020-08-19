@@ -142,6 +142,11 @@ describe("Mongodb event store aggregate", () => {
           service: aService,
           network: aNetwork,
         },
+        b: {
+          root: bRoot,
+          service: bService,
+          network: bNetwork,
+        },
         c: "some-c",
       },
       groups: [],
@@ -202,13 +207,18 @@ describe("Mongodb event store aggregate", () => {
           service: aService,
           network: aNetwork,
         },
+        b: {
+          root: bRoot,
+          service: bService,
+          network: bNetwork,
+        },
         c: "some-c",
       },
       groups: ["some-group", "some-added-group"],
       txIds: [eventTxId, txId],
     });
   });
-  it("should call with the correct params with group removing", async () => {
+  it("should call with the correct params with group removing and ignored context", async () => {
     const eventStreamFnFake = stub().yieldsTo("fn", {
       ...event,
       groupsRemoved: [
@@ -218,6 +228,19 @@ describe("Mongodb event store aggregate", () => {
           network: "some-removed-group-network",
         },
       ],
+      context: {
+        a: {
+          root: "some-root",
+          service: "some-service",
+          network: "some-network",
+        },
+        b: {
+          root: bRoot,
+          service: bService,
+          network: bNetwork,
+        },
+        c: "some-wrong-c",
+      },
     });
     const findOneSnapshotFnFake = fake.returns({
       ...findOneResult,
@@ -274,12 +297,11 @@ describe("Mongodb event store aggregate", () => {
       },
       state: { a: 1, b: 2, c: 2 },
       context: {
-        a: {
-          root: aRoot,
-          service: aService,
-          network: aNetwork,
+        b: {
+          root: bRoot,
+          service: bService,
+          network: bNetwork,
         },
-        c: "some-c",
       },
       groups: [
         {
@@ -344,6 +366,11 @@ describe("Mongodb event store aggregate", () => {
           root: aRoot,
           service: aService,
           network: aNetwork,
+        },
+        b: {
+          root: bRoot,
+          service: bService,
+          network: bNetwork,
         },
         c: "some-c",
       },

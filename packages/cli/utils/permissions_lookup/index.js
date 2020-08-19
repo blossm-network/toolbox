@@ -59,25 +59,11 @@ module.exports = ({ downloadFileFn }) => async ({
     })
     .read();
 
-  //TODO
-  console.log({ roles, principal, context });
-
   return await rolePermissions({
     roles,
     defaultRoles,
     context,
     customRolePermissionsFn: async ({ roleId }) => {
-      // try {
-      //TODO
-      console.log({
-        roles,
-        principal,
-        defaultRoles,
-        context,
-        network: process.env.NETWORK,
-        coreNet: process.env.CORE_NETWORK,
-        roleId,
-      });
       const { body: permissions } = await fact({
         name: "permissions",
         domain: "role",
@@ -97,9 +83,6 @@ module.exports = ({ downloadFileFn }) => async ({
         .read({ query: { id: roleId } });
 
       return permissions;
-      // } catch (err) {
-      //   return [];
-      // }
     },
   });
 };

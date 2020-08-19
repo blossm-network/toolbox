@@ -34,8 +34,6 @@ module.exports = ({
         token: req.query.token,
       }));
 
-    //TODO
-    console.log({ principalGroups, group });
     const query = {
       ...(!req.query.bootstrap && { ...formattedQueryBody }),
       ...(req.params.id && { "headers.id": req.params.id }),
@@ -86,18 +84,6 @@ module.exports = ({
       }),
       ...(one || req.query.bootstrap ? [] : [countFn({ query })]),
     ]);
-
-    //TODO
-    console.log({
-      ...(req.query.context && { reqConPrin: req.query.context.principal }),
-      query,
-      formattedQueryBody,
-      "headers.groups": {
-        $elemMatch: {
-          $in: principalGroups,
-        },
-      },
-    });
 
     const updates = `https://updates.${
       process.env.CORE_NETWORK
