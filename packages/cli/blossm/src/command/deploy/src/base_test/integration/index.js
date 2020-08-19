@@ -65,7 +65,14 @@ const formattedPayload = async (payload) => {
 };
 const executeStep = async (step) => {
   if (step.pre) {
-    for (const { action, domain, service, root, payload } of step.pre) {
+    for (const {
+      action,
+      domain,
+      service,
+      root,
+      payload,
+      groupsAdded,
+    } of step.pre) {
       const stateEvent = createEvent({
         root,
         payload: await formattedPayload(payload),
@@ -73,6 +80,7 @@ const executeStep = async (step) => {
         domain,
         service,
         network: process.env.NETWORK,
+        groupsAdded,
       });
 
       await eventStore({ domain, service }).add({

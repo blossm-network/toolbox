@@ -20,7 +20,14 @@ describe("Projection integration tests", () => {
       console.log(`Executing step ${stepCount++}`);
 
       if (step.pre) {
-        for (const { action, domain, service, root, payload } of step.pre) {
+        for (const {
+          action,
+          domain,
+          service,
+          root,
+          payload,
+          groupsAdded,
+        } of step.pre) {
           const stateEvent = createEvent({
             root,
             payload,
@@ -28,6 +35,7 @@ describe("Projection integration tests", () => {
             domain,
             service,
             network: process.env.NETWORK,
+            groupsAdded,
           });
 
           await eventStore({ domain, service }).add({
