@@ -185,10 +185,9 @@ module.exports = projection({
     if (!query && !id) return;
 
     const aggregateContext =
-      context ||
-      (aggregate.context &&
-        process.env.CONTEXT &&
-        aggregate.context[process.env.CONTEXT]);
+      process.env.CONTEXT &&
+      (context ||
+        (aggregate.context && aggregate.context[process.env.CONTEXT]));
 
     if (id) {
       await saveId({ aggregate, context: aggregateContext, id, update, push });
