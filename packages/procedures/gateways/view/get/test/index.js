@@ -91,6 +91,44 @@ describe("View gateway get", () => {
     expect(readFake).to.have.been.calledWith(query);
     expect(sendFake).to.have.been.calledWith(results);
   });
+  it("should call with the correct params with view-store procedure with no env context", async () => {
+    const readFake = fake.returns({ body: results });
+    const setFake = fake.returns({
+      read: readFake,
+    });
+    const viewStoreFake = fake.returns({
+      set: setFake,
+    });
+    replace(deps, "viewStore", viewStoreFake);
+
+    const req = {
+      context,
+      query,
+      params: {},
+    };
+
+    const sendFake = fake();
+    const statusFake = fake.returns({
+      send: sendFake,
+    });
+    const res = {
+      status: statusFake,
+    };
+
+    const nodeExternalTokenResult = "some-external-token-result";
+    const nodeExternalTokenFnFake = fake.returns(nodeExternalTokenResult);
+    delete process.env.CONTEXT;
+    await get({
+      procedure: "view-store",
+      name,
+      internalTokenFn,
+      nodeExternalTokenFn: nodeExternalTokenFnFake,
+      key,
+    })(req, res);
+
+    expect(readFake).to.have.been.calledWith(query);
+    expect(sendFake).to.have.been.calledWith(results);
+  });
   it("should call with the correct params with context, domain, params with view-store procedure, token, context, and claims in req", async () => {
     const readFake = fake.returns({ body: results });
     const setFake = fake.returns({

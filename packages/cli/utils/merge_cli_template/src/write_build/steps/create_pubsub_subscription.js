@@ -32,19 +32,19 @@ module.exports = ({
     --expiration-period=never
     --ack-deadline=60
     --project=${project}
-      --labels=${Object.entries({
-        procedure,
-        hash: operationHash,
-        ...(context && { context }),
-        ...(domain && { domain }),
-        ...(service && { service }),
-        name,
-        "store-domain": storeDomain,
-        "store-service": storeService,
-      }).reduce(
-        (string, [key, value]) => (string += `${key}=${value},`),
-        ""
-      )} || exit 0
+    --labels=${Object.entries({
+      procedure,
+      hash: operationHash,
+      ...(context && { context }),
+      ...(domain && { domain }),
+      ...(service && { service }),
+      name,
+      "store-domain": storeDomain,
+      "store-service": storeService,
+    }).reduce(
+      (string, [key, value]) => (string += `${key}=${value},`),
+      ""
+    )} || exit 0
     `,
     ],
   };
