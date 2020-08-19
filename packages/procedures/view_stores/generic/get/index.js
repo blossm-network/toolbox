@@ -89,7 +89,7 @@ module.exports = ({
 
     //TODO
     console.log({
-      reqConPrin: req.query.context.principal,
+      ...(req.query.context && { reqConPrin: req.query.context.principal }),
       query,
       formattedQueryBody,
       "headers.groups": {
