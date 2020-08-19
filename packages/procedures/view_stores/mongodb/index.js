@@ -89,6 +89,7 @@ module.exports = async ({
   updateFn,
   formatFn,
   emptyFn,
+  groupsLookupFn,
   one,
   group,
 } = {}) => {
@@ -204,6 +205,7 @@ module.exports = async ({
     writeFn,
     removeFn,
     countFn,
+    groupsLookupFn,
     ...(getFn && { getFn }),
     ...(updateFn && { updateFn }),
     ...(formatFn && { formatFn }),

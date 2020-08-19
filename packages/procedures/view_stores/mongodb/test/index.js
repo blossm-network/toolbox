@@ -33,6 +33,7 @@ const fnFake = fake();
 const parallel = "some-parallel";
 const one = "some-one";
 const group = "some-group";
+const groupsLookupFn = "some-group-lookup-fn";
 
 process.env.NAME = name;
 process.env.CONTEXT = context;
@@ -114,6 +115,7 @@ describe("View store", () => {
       emptyFn,
       one,
       group,
+      groupsLookupFn,
     });
 
     expect(formatSchemaFake).to.have.been.calledWith(
@@ -289,6 +291,7 @@ describe("View store", () => {
       countFn: match((fn) => expect(fn({ query })).to.exist),
       writeFn: match((fn) => expect(fn({ query, data })).to.exist),
       removeFn: match((fn) => expect(fn(query)).to.exist),
+      groupsLookupFn,
       getFn,
       updateFn,
       formatFn,
@@ -644,7 +647,12 @@ describe("View store", () => {
     const formatSchemaFake = fake.returns(formattedSchema);
     replace(deps, "formatSchema", formatSchemaFake);
 
-    await mongodbViewStore({ schema, indexes, secretFn: secretFake });
+    await mongodbViewStore({
+      schema,
+      indexes,
+      secretFn: secretFake,
+      groupsLookupFn,
+    });
 
     expect(formatSchemaFake).to.have.been.calledWith(
       { body: { type: schema, default: {} } },
@@ -812,6 +820,7 @@ describe("View store", () => {
       countFn: match((fn) => expect(fn({ query, sort })).to.exist),
       writeFn: match((fn) => expect(fn({ query, data })).to.exist),
       removeFn: match((fn) => expect(fn(query)).to.exist),
+      groupsLookupFn,
     });
     await mongodbViewStore();
     expect(storeFake).to.have.been.calledOnce;
