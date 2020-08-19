@@ -64,6 +64,7 @@ module.exports = fact({
     return {
       lastEventNumber: aggregate.headers.lastEventNumber,
       state: aggregate.state,
+      groups: aggregate.groups,
     };
   },
 });

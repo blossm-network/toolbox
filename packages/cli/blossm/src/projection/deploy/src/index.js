@@ -125,6 +125,8 @@ const saveId = async ({ aggregate, aggregateContext, id, update, push }) => {
 
 module.exports = projection({
   mainFn: async ({ aggregate, action, push, aggregateFn, readFactFn }) => {
+    //TODO
+    console.log({ aggregate });
     //Must be able to handle this aggregate.
     if (
       !handlers[aggregate.headers.service] ||
