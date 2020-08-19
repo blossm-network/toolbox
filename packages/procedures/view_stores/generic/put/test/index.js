@@ -147,7 +147,7 @@ describe("View store put", () => {
     });
   });
 
-  it("should call with the correct params with custom fn and no context", async () => {
+  it("should call with the correct params with custom fn no context", async () => {
     const writeFake = fake.returns(writeResult);
     const formatFake = fake.returns(formattedWriteResult);
 
