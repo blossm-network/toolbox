@@ -126,7 +126,9 @@ module.exports = ({
         depends_on: [
           ...(_includeDatabase ? [databaseServiceKey] : []),
           ...Object.keys(_procedureServices),
-        ],
+        ].filter((value, index, self) => {
+          return self.indexOf(value) === index;
+        }),
       },
       ..._procedureServices,
       ...(_includeDatabase && {

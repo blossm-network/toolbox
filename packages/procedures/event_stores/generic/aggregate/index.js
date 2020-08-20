@@ -76,7 +76,7 @@ module.exports = ({ findOneSnapshotFn, eventStreamFn, handlers }) => async (
       ];
 
       aggregate.txIds = allTxIds
-        .filter((id, index) => allTxIds.indexOf(id) === index)
+        .filter((id, index, self) => self.indexOf(id) === index)
         .slice(0, 10);
 
       if (aggregate.context) {
