@@ -61,7 +61,6 @@ describe("Projection integration tests", () => {
         },
       });
 
-      //TODO this is causing an pubsub topic to actually trigger
       await eventStore({
         domain: step.event.domain,
         service: step.event.service,

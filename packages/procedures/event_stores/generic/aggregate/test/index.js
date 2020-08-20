@@ -297,11 +297,13 @@ describe("Mongodb event store aggregate", () => {
       },
       state: { a: 1, b: 2, c: 2 },
       context: {
+        a: "",
         b: {
           root: bRoot,
           service: bService,
           network: bNetwork,
         },
+        c: "",
       },
       groups: [
         {

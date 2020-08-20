@@ -104,6 +104,8 @@ module.exports = ({ findOneSnapshotFn, eventStreamFn, handlers }) => async (
               value.network == aggregate.context[key].network)
           ) {
             result[key] = event.context[key];
+          } else {
+            result[key] = "";
           }
           return result;
         }, {});
