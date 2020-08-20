@@ -14,6 +14,9 @@ module.exports = ({
   groupsLookupFn,
 }) => {
   return async (req, res) => {
+    if (group && (!req.query.context || !req.query.context.principal))
+      throw deps.forbiddenError.message("This request is missing a context.");
+
     const queryBody = queryFn(req.query.query || {});
     const formattedQueryBody = {};
     for (const key in queryBody)
@@ -28,8 +31,6 @@ module.exports = ({
 
     const principalGroups =
       group &&
-      req.query.context &&
-      req.query.context.principal &&
       (await groupsLookupFn({
         token: req.query.token,
       }));
