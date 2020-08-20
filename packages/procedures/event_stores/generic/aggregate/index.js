@@ -105,7 +105,7 @@ module.exports = ({ findOneSnapshotFn, eventStreamFn, handlers }) => async (
           ) {
             result[key] = event.context[key];
           } else {
-            result[key] = "";
+            result[key] = false;
           }
           return result;
         }, {});
