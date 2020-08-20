@@ -58,7 +58,9 @@ const queueName = ({ config }) => {
         config.domain ? `-${config.domain}` : ""
       }-${config.name}`;
     case "projection":
-      return `projection-${config.context}-${config.name}-replay`;
+      return `projection${config.context ? `-${config.context}` : ""}-${
+        config.name
+      }-replay`;
   }
 };
 
