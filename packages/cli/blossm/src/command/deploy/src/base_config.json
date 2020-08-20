@@ -21,7 +21,6 @@
     "@blossm/datetime": "*",
     "@blossm/request": "*",
     "@blossm/uuid": "*",
-    "@blossm/view-store-rpc": "*",
     "@blossm/create-event": "*"
   }
 }

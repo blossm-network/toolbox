@@ -3,16 +3,26 @@ const { expect } = require("chai");
 
 const request = require("@blossm/request");
 const uuid = require("@blossm/uuid");
+const eventStore = require("@blossm/event-store-rpc");
+const createEvent = require("@blossm/create-event");
 
 const { schema } = require("../../config.json");
 
 const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 
-const { testing, one, indexes } = require("../../config.json");
+const { testing, one, group, indexes } = require("../../config.json");
 
 const contextRoot = "some-context-root";
 const contextService = "some-context-service";
 const contextNetwork = "some-context-network";
+
+const principalRoot = "some-principal-root";
+const principalService = "some-principal-service";
+const principalNetwork = "some-principal-network";
+
+const groupRoot = "some-group-root";
+const groupService = "some-group-service";
+const groupNetwork = "some-group-network";
 
 //TODO test idStream
 describe("View store base integration tests", () => {
@@ -30,6 +40,13 @@ describe("View store base integration tests", () => {
                 root: contextRoot,
                 service: contextService,
                 network: contextNetwork,
+              },
+            }),
+            ...(group && {
+              principal: {
+                root: principalRoot,
+                service: principalService,
+                network: principalNetwork,
               },
             }),
           },
@@ -63,7 +80,25 @@ describe("View store base integration tests", () => {
               network: contextNetwork,
             },
           }),
+          ...(group && {
+            groups: [
+              {
+                root: groupRoot,
+                service: groupService,
+                network: groupNetwork,
+              },
+            ],
+          }),
         },
+        ...(group && {
+          groups: [
+            {
+              root: groupRoot,
+              service: groupService,
+              network: groupNetwork,
+            },
+          ],
+        }),
       },
     });
 
@@ -78,6 +113,13 @@ describe("View store base integration tests", () => {
               service: contextService,
               network: contextNetwork,
             },
+            ...(group && {
+              principal: {
+                root: principalRoot,
+                service: principalService,
+                network: principalNetwork,
+              },
+            }),
           }),
         },
       },
@@ -115,6 +157,15 @@ describe("View store base integration tests", () => {
               },
             }),
           },
+          ...(group && {
+            groups: [
+              {
+                root: groupRoot,
+                service: groupService,
+                network: groupNetwork,
+              },
+            ],
+          }),
         },
       });
 
@@ -130,6 +181,13 @@ describe("View store base integration tests", () => {
                 service: contextService,
                 network: contextNetwork,
               },
+              ...(group && {
+                principal: {
+                  root: principalRoot,
+                  service: principalService,
+                  network: principalNetwork,
+                },
+              }),
             }),
           },
         },
@@ -164,6 +222,15 @@ describe("View store base integration tests", () => {
             },
           }),
         },
+        ...(group && {
+          groups: [
+            {
+              root: groupRoot,
+              service: groupService,
+              network: groupNetwork,
+            },
+          ],
+        }),
       },
     });
 
@@ -177,6 +244,13 @@ describe("View store base integration tests", () => {
               root: contextRoot,
               service: contextService,
               network: contextNetwork,
+            },
+          }),
+          ...(group && {
+            principal: {
+              root: principalRoot,
+              service: principalService,
+              network: principalNetwork,
             },
           }),
         },
@@ -217,6 +291,15 @@ describe("View store base integration tests", () => {
                   },
                 }),
               },
+              ...(group && {
+                groups: [
+                  {
+                    root: groupRoot,
+                    service: groupService,
+                    network: groupNetwork,
+                  },
+                ],
+              }),
             },
           });
         }
@@ -228,6 +311,13 @@ describe("View store base integration tests", () => {
                   root: newContextRoot,
                   service: contextService,
                   network: contextNetwork,
+                },
+              }),
+              ...(group && {
+                principal: {
+                  root: principalRoot,
+                  service: principalService,
+                  network: principalNetwork,
                 },
               }),
             },
@@ -255,6 +345,13 @@ describe("View store base integration tests", () => {
                   root: newContextRoot,
                   service: contextService,
                   network: contextNetwork,
+                },
+              }),
+              ...(group && {
+                principal: {
+                  root: principalRoot,
+                  service: principalService,
+                  network: principalNetwork,
                 },
               }),
             },
@@ -294,6 +391,15 @@ describe("View store base integration tests", () => {
                   },
                 }),
               },
+              ...(group && {
+                groups: [
+                  {
+                    root: groupRoot,
+                    service: groupService,
+                    network: groupNetwork,
+                  },
+                ],
+              }),
             },
           });
         }
@@ -306,6 +412,13 @@ describe("View store base integration tests", () => {
                     root: newContextRoot,
                     service: contextService,
                     network: contextNetwork,
+                  },
+                }),
+                ...(group && {
+                  principal: {
+                    root: principalRoot,
+                    service: principalService,
+                    network: principalNetwork,
                   },
                 }),
               },
@@ -335,6 +448,15 @@ describe("View store base integration tests", () => {
                   },
                 }),
               },
+              ...(group && {
+                groups: [
+                  {
+                    root: groupRoot,
+                    service: groupService,
+                    network: groupNetwork,
+                  },
+                ],
+              }),
             },
           });
         }
@@ -347,6 +469,13 @@ describe("View store base integration tests", () => {
                   root: newContextRoot,
                   service: contextService,
                   network: contextNetwork,
+                },
+              }),
+              ...(group && {
+                principal: {
+                  root: principalRoot,
+                  service: principalService,
+                  network: principalNetwork,
                 },
               }),
             },
@@ -492,6 +621,32 @@ describe("View store base integration tests", () => {
   // };
 
   it("should return successfully", async () => {
+    if (group) {
+      const addGroupEvent = createEvent({
+        root: principalRoot,
+        payload: {
+          groups: [
+            {
+              root: groupRoot,
+              service: groupService,
+              network: groupNetwork,
+            },
+          ],
+        },
+        action: "add-groups",
+        domain: "principal",
+        service: "core",
+        network: process.env.CORE_NETWORK,
+      });
+
+      await eventStore({
+        domain: "principal",
+        service: "core",
+        network: process.env.CORE_NETWORK,
+      }).add({
+        eventData: [{ event: addGroupEvent }],
+      });
+    }
     await testParamQueries();
     // await testStreaming();
   });
@@ -518,6 +673,15 @@ describe("View store base integration tests", () => {
               },
             }),
           },
+          ...(group && {
+            groups: [
+              {
+                root: groupRoot,
+                service: groupService,
+                network: groupNetwork,
+              },
+            ],
+          }),
         },
       });
       expect(response.statusCode).to.equal(500);

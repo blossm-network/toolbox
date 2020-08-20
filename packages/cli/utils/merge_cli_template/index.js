@@ -477,6 +477,22 @@ const addDefaultDependencies = ({ config, localCoreNetwork }) => {
             };
           }),
       ];
+    case "view-store":
+      return [
+        {
+          name: "groups",
+          domain: "principal",
+          service: "core",
+          network: localCoreNetwork,
+          procedure: "fact",
+        },
+        {
+          domain: "principal",
+          service: "core",
+          network: localCoreNetwork,
+          procedure: "event-store",
+        },
+      ];
     default:
       return config.testing.dependencies;
   }

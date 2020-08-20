@@ -35,6 +35,9 @@ module.exports = ({
         token: req.query.token,
       }));
 
+    //TODO
+    console.log({ group, context, principalGroups });
+
     const query = {
       ...(!req.query.bootstrap && { ...formattedQueryBody }),
       ...(req.params.id && { "headers.id": req.params.id }),
