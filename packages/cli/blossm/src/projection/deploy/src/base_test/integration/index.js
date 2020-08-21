@@ -70,13 +70,7 @@ describe("Projection integration tests", () => {
             },
           }),
         },
-        groupsAdded: [
-          {
-            root: groupRoot,
-            service: groupService,
-            network: groupNetwork,
-          },
-        ],
+        groupsAdded: [],
       });
 
       await eventStore({
