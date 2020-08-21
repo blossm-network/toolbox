@@ -150,7 +150,7 @@ describe("View store get", () => {
       count: 200,
     });
   });
-  it("should call with the correct params with no env context and group to true", async () => {
+  it("should call with the correct params with no env context, group as true, and text in query", async () => {
     const results = [];
     const formattedResults = [];
 
@@ -178,6 +178,7 @@ describe("View store get", () => {
     replace(deps, "urlEncodeQueryData", urlEncodeQueryDataFake);
 
     const token = "some-token";
+    const text = "some-text";
     const req = {
       query: {
         sort,
@@ -189,6 +190,7 @@ describe("View store get", () => {
         },
         query,
         token,
+        text,
       },
       params: {
         id,
@@ -213,6 +215,7 @@ describe("View store get", () => {
       limit: 100,
       skip: 0,
       sort: { "body.a": 1 },
+      text,
       query: {
         "body.some-query-key": 1,
         "headers.id": id,
@@ -224,6 +227,7 @@ describe("View store get", () => {
       },
     });
     expect(countFake).to.have.been.calledWith({
+      text,
       query: {
         "body.some-query-key": 1,
         "headers.id": id,

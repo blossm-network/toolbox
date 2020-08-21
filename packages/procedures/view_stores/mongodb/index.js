@@ -144,10 +144,13 @@ module.exports = async ({
     return await cursor.eachAsync(fn, { parallel });
   };
 
-  const findFn = async ({ query, limit, skip, sort }) =>
+  const findFn = async ({ query, text, limit, skip, sort }) =>
     await deps.db.find({
       store,
-      query,
+      query: {
+        ...query,
+        ...(text && { $text: { $search: text } }),
+      },
       ...(limit && { limit }),
       ...(skip && { skip }),
       ...(sort && { sort }),
@@ -156,10 +159,13 @@ module.exports = async ({
       },
     });
 
-  const countFn = async ({ query }) =>
+  const countFn = async ({ query, text }) =>
     await deps.db.count({
       store,
-      query,
+      query: {
+        ...query,
+        ...(text && { $text: { $search: text } }),
+      },
     });
 
   const writeFn = async ({ query, data }) => {

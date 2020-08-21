@@ -20,7 +20,7 @@ const userPassword = "some-db-user-password";
 const host = "some-host";
 const database = "some-db";
 const password = "some-password";
-const query = "some-query";
+const query = { a: 1 };
 const sort = "some-sort";
 const sort2 = "some-other-sort";
 const query2 = "some-other-query";
@@ -306,7 +306,7 @@ describe("View store", () => {
     await mongodbViewStore({ schema });
     expect(storeFake).to.have.been.calledOnce;
   });
-  it("should call with the correct params without domain and in local env", async () => {
+  it("should call with the correct params without domain and in local env, and with text", async () => {
     const store = "some-store";
     const storeFake = fake.returns(store);
 
@@ -749,14 +749,19 @@ describe("View store", () => {
     });
     expect(secretFake).to.have.been.calledWith("mongodb-view-store");
 
+    const text = "some-text";
     const findFnResult = await viewStoreFake.lastCall.lastArg.findFn({
       query,
+      text,
       sort,
     });
 
     expect(findFake).to.have.been.calledWith({
       store,
-      query,
+      query: {
+        ...query,
+        $text: { $search: text },
+      },
       sort,
       options: {
         lean: true,
@@ -766,11 +771,15 @@ describe("View store", () => {
 
     const countFnResult = await viewStoreFake.lastCall.lastArg.countFn({
       query,
+      text,
     });
 
     expect(countFake).to.have.been.calledWith({
       store,
-      query,
+      query: {
+        ...query,
+        $text: { $search: text },
+      },
     });
     expect(countFnResult).to.equal(count);
 

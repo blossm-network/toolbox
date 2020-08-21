@@ -83,9 +83,14 @@ module.exports = ({
         query,
         limit,
         skip,
+        ...(req.query.text && { text: req.query.text }),
         ...(formattedSort && { sort: formattedSort }),
       }),
-      ...(one || req.query.bootstrap ? [] : [countFn({ query })]),
+      ...(one || req.query.bootstrap
+        ? []
+        : [
+            countFn({ query, ...(req.query.text && { text: req.query.text }) }),
+          ]),
     ]);
 
     const updates = `https://updates.${
