@@ -74,6 +74,7 @@ const saveId = async ({ aggregate, id, update, push, context }) => {
 
   //TODO
   console.log({ newView, groups: newView.headers.groups });
+
   if (!newView || !push) return;
 
   if (newView.headers.context) {
@@ -93,8 +94,8 @@ const saveId = async ({ aggregate, id, update, push, context }) => {
       fact({
         name: "principals",
         domain: "group",
-        service: group.service,
-        network: group.network,
+        service: "core",
+        network: process.env.CORE_NETWORK,
       })
         .set({
           token: {

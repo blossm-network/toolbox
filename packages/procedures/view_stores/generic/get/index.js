@@ -104,6 +104,9 @@ module.exports = ({
           ]),
     ]);
 
+    //TODO
+    console.log({ results });
+
     const updates = `https://updates.${
       process.env.CORE_NETWORK
     }/channel?query%5Bname%5D=${process.env.NAME}${

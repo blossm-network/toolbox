@@ -17,8 +17,8 @@ const principalNetwork = "some-principal-network";
 
 //These must match whats in merge-cli-template
 const groupRoot = "some-group-root";
-const groupService = "core";
-const groupNetwork = process.env.CORE_NETWORK;
+const groupService = "some-group-service";
+const groupNetwork = "some-group-network";
 
 //TODO add integration tests for /replay
 describe("Projection integration tests", () => {
