@@ -16,6 +16,12 @@ module.exports = ({
   groupsLookupFn,
 }) => {
   return async (req, res) => {
+    //TODO
+    console.log({
+      bootstrap: req.query.bootstrap,
+      context: req.query.context,
+      BC: process.env.BOOTSTRAP_CONTEXT,
+    });
     if (
       req.query.bootstrap &&
       (!process.env.BOOTSTRAP_CONTEXT ||
