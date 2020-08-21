@@ -3,8 +3,8 @@ const { expect } = require("chai");
 
 const request = require("@blossm/request");
 const uuid = require("@blossm/uuid");
-const eventStore = require("@blossm/event-store-rpc");
-const createEvent = require("@blossm/create-event");
+// const eventStore = require("@blossm/event-store-rpc");
+// const createEvent = require("@blossm/create-event");
 
 const { schema } = require("../../config.json");
 
@@ -621,32 +621,32 @@ describe("View store base integration tests", () => {
   // };
 
   it("should return successfully", async () => {
-    if (group) {
-      const addGroupEvent = createEvent({
-        root: principalRoot,
-        payload: {
-          groups: [
-            {
-              root: groupRoot,
-              service: groupService,
-              network: groupNetwork,
-            },
-          ],
-        },
-        action: "add-groups",
-        domain: "principal",
-        service: "core",
-        network: process.env.NETWORK,
-      });
+    // if (group) {
+    //   const addGroupEvent = createEvent({
+    //     root: principalRoot,
+    //     payload: {
+    //       groups: [
+    //         {
+    //           root: groupRoot,
+    //           service: groupService,
+    //           network: groupNetwork,
+    //         },
+    //       ],
+    //     },
+    //     action: "add-groups",
+    //     domain: "principal",
+    //     service: "core",
+    //     network: process.env.NETWORK,
+    //   });
 
-      await eventStore({
-        domain: "principal",
-        service: "core",
-        network: process.env.CORE_NETWORK,
-      }).add({
-        eventData: [{ event: addGroupEvent }],
-      });
-    }
+    //   await eventStore({
+    //     domain: "principal",
+    //     service: "core",
+    //     network: process.env.CORE_NETWORK,
+    //   }).add({
+    //     eventData: [{ event: addGroupEvent }],
+    //   });
+    // }
     await testParamQueries();
     // await testStreaming();
   });

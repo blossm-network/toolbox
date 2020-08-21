@@ -480,11 +480,24 @@ const addDefaultDependencies = ({ config, localCoreNetwork }) => {
     case "view-store":
       return [
         {
-          name: "groups",
+          procedure: "fact-gateway",
           domain: "principal",
           service: "core",
           network: localCoreNetwork,
-          procedure: "fact",
+          mocks: [
+            {
+              method: "get",
+              path: `/groups`,
+              code: 200,
+              response: [
+                {
+                  root: "some-group-root",
+                  service: "some-group-service",
+                  network: "some-group-network",
+                },
+              ],
+            },
+          ],
         },
         {
           domain: "principal",
@@ -555,7 +568,7 @@ const writeConfig = ({
           procedure: "http",
           host: `f${dependency.domain ? `.${dependency.domain}` : ""}${
             dependency.service ? `.${dependency.service}` : ""
-          }.${localCoreNetwork}`,
+          }.${dependency.network || localCoreNetwork}`,
           mocks: dependency.mocks.map((mock) => {
             return {
               method: "get",
