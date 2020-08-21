@@ -36,7 +36,7 @@ module.exports = ({
       }));
 
     //TODO
-    console.log({ group, context, principalGroups });
+    console.log({ group, context: req.query.context, principalGroups });
 
     const query = {
       ...(!req.query.bootstrap && { ...formattedQueryBody }),

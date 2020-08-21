@@ -498,12 +498,12 @@ const addDefaultDependencies = ({ config, localCoreNetwork }) => {
             },
           ],
         },
-        {
-          domain: "principal",
-          service: "core",
-          network: localCoreNetwork,
-          procedure: "event-store",
-        },
+        // {
+        //   domain: "principal",
+        //   service: "core",
+        //   network: localCoreNetwork,
+        //   procedure: "event-store",
+        // },
       ];
     default:
       return config.testing.dependencies;
