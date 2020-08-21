@@ -636,7 +636,7 @@ describe("View store base integration tests", () => {
         action: "add-groups",
         domain: "principal",
         service: "core",
-        network: process.env.CORE_NETWORK,
+        network: process.env.NETWORK,
       });
 
       await eventStore({
