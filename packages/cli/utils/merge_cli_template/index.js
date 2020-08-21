@@ -486,8 +486,7 @@ const addDefaultDependencies = ({ config, localCoreNetwork }) => {
           network: localCoreNetwork,
           mocks: [
             {
-              method: "get",
-              path: `/groups`,
+              fact: "groups",
               code: 200,
               response: [
                 {
