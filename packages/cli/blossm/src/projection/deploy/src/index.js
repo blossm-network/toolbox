@@ -40,6 +40,8 @@ const pushToChannel = async ({ channel, newView }) => {
 };
 
 const saveId = async ({ aggregate, id, update, push, context }) => {
+  //TODO
+  console.log({ aggregate });
   const { body: newView } = await viewStore({
     name: config.name,
     context: config.context,
@@ -70,6 +72,8 @@ const saveId = async ({ aggregate, id, update, push, context }) => {
       }),
     });
 
+  //TODO
+  console.log({ newView });
   if (!newView || !push) return;
 
   if (newView.headers.context) {
