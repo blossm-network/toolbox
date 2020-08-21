@@ -24,9 +24,6 @@ module.exports = ({ writeFn, formatFn, updateFn = defaultFn }) => {
         network: group.network,
       }));
 
-    //TODO
-    console.log({ putGroups: groups });
-
     const formattedBody = {};
 
     for (const key in customUpdate)

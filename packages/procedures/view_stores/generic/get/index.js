@@ -14,8 +14,6 @@ module.exports = ({
   groupsLookupFn,
 }) => {
   return async (req, res) => {
-    //TODO
-    console.log({ group, qContext: req.query.context });
     if (group && (!req.query.context || !req.query.context.principal))
       throw deps.forbiddenError.message("This request is missing a context.");
 
@@ -36,9 +34,6 @@ module.exports = ({
       (await groupsLookupFn({
         token: req.query.token,
       }));
-
-    //TODO
-    console.log({ group, context: req.query.context, principalGroups });
 
     const query = {
       ...(!req.query.bootstrap && { ...formattedQueryBody }),

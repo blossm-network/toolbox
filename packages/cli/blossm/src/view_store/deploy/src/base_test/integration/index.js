@@ -20,6 +20,7 @@ const principalRoot = "some-principal-root";
 const principalService = "some-principal-service";
 const principalNetwork = "some-principal-network";
 
+//These must match whats in merge-cli-template
 const groupRoot = "some-group-root";
 const groupService = "some-group-service";
 const groupNetwork = "some-group-network";
@@ -103,6 +104,16 @@ describe("View store base integration tests", () => {
     });
 
     expect(response0.statusCode).to.equal(200);
+
+    if (group) {
+      const forbiddenResponse = await request.get(url, {
+        query: {
+          context: {},
+        },
+      });
+
+      expect(forbiddenResponse.statusCode).to.equal(403);
+    }
 
     const response1 = await request.get(url, {
       query: {
@@ -621,32 +632,6 @@ describe("View store base integration tests", () => {
   // };
 
   it("should return successfully", async () => {
-    // if (group) {
-    //   const addGroupEvent = createEvent({
-    //     root: principalRoot,
-    //     payload: {
-    //       groups: [
-    //         {
-    //           root: groupRoot,
-    //           service: groupService,
-    //           network: groupNetwork,
-    //         },
-    //       ],
-    //     },
-    //     action: "add-groups",
-    //     domain: "principal",
-    //     service: "core",
-    //     network: process.env.NETWORK,
-    //   });
-
-    //   await eventStore({
-    //     domain: "principal",
-    //     service: "core",
-    //     network: process.env.CORE_NETWORK,
-    //   }).add({
-    //     eventData: [{ event: addGroupEvent }],
-    //   });
-    // }
     await testParamQueries();
     // await testStreaming();
   });
