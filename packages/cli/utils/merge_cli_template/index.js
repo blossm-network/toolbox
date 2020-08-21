@@ -440,6 +440,18 @@ const addDefaultDependencies = ({ config, localCoreNetwork }) => {
             },
           ],
         },
+        {
+          procedure: "fact-gateway",
+          domain: "group",
+          service: "core",
+          network: localCoreNetwork,
+          mocks: [
+            {
+              fact: "principals",
+              code: 200,
+            },
+          ],
+        },
       ];
     case "command-gateway": {
       const dependencies = [

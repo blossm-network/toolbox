@@ -17,8 +17,8 @@ const principalNetwork = "some-principal-network";
 
 //These must match whats in merge-cli-template
 const groupRoot = "some-group-root";
-const groupService = "some-group-service";
-const groupNetwork = "some-group-network";
+const groupService = "core";
+const groupNetwork = process.env.CORE_NETWORK;
 
 //TODO add integration tests for /replay
 describe("Projection integration tests", () => {
@@ -70,7 +70,13 @@ describe("Projection integration tests", () => {
             },
           }),
         },
-        groupsAdded: [],
+        groupsAdded: [
+          {
+            root: groupRoot,
+            service: groupService,
+            network: groupNetwork,
+          },
+        ],
       });
 
       await eventStore({
@@ -128,7 +134,6 @@ describe("Projection integration tests", () => {
           }
         }
       } else if (step.result.values) {
-        console.log({ values: step.result.values, c: v.contents });
         expect(step.result.values.length).to.equal(v.content.length);
         for (let i = 0; i < step.result.values.length; i++) {
           let value = step.result.values[i];
