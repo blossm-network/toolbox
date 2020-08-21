@@ -73,7 +73,7 @@ const saveId = async ({ aggregate, id, update, push, context }) => {
     });
 
   //TODO
-  console.log({ newView });
+  console.log({ newView, groups: newView.headers.groups });
   if (!newView || !push) return;
 
   if (newView.headers.context) {

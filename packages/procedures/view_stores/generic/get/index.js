@@ -70,6 +70,9 @@ module.exports = ({
       }),
     };
 
+    //TODO
+    console.log({ query });
+
     const sortBody = sortFn(req.query.sort);
     let formattedSort;
     if (!bootstrap) {
