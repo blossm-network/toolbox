@@ -113,13 +113,13 @@ describe("View store base integration tests", () => {
               service: contextService,
               network: contextNetwork,
             },
-            ...(group && {
-              principal: {
-                root: principalRoot,
-                service: principalService,
-                network: principalNetwork,
-              },
-            }),
+          }),
+          ...(group && {
+            principal: {
+              root: principalRoot,
+              service: principalService,
+              network: principalNetwork,
+            },
           }),
         },
       },
@@ -181,13 +181,13 @@ describe("View store base integration tests", () => {
                 service: contextService,
                 network: contextNetwork,
               },
-              ...(group && {
-                principal: {
-                  root: principalRoot,
-                  service: principalService,
-                  network: principalNetwork,
-                },
-              }),
+            }),
+            ...(group && {
+              principal: {
+                root: principalRoot,
+                service: principalService,
+                network: principalNetwork,
+              },
             }),
           },
         },
