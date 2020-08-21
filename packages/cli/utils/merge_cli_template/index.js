@@ -421,6 +421,25 @@ const addDefaultDependencies = ({ config, localCoreNetwork }) => {
             },
           ],
         },
+        {
+          procedure: "fact-gateway",
+          domain: "principal",
+          service: "core",
+          network: localCoreNetwork,
+          mocks: [
+            {
+              fact: "groups",
+              code: 200,
+              response: [
+                {
+                  root: "some-group-root",
+                  service: "some-group-service",
+                  network: "some-group-network",
+                },
+              ],
+            },
+          ],
+        },
       ];
     case "command-gateway": {
       const dependencies = [
@@ -498,12 +517,6 @@ const addDefaultDependencies = ({ config, localCoreNetwork }) => {
             },
           ],
         },
-        // {
-        //   domain: "principal",
-        //   service: "core",
-        //   network: localCoreNetwork,
-        //   procedure: "event-store",
-        // },
       ];
     default:
       return config.testing.dependencies;

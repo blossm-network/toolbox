@@ -11,6 +11,15 @@ const { dateString } = require("@blossm/command-rpc/deps");
 
 const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 
+const principalRoot = "some-principal-root";
+const principalService = "some-principal-service";
+const principalNetwork = "some-principal-network";
+
+//These must match whats in merge-cli-template
+const groupRoot = "some-group-root";
+const groupService = "some-group-service";
+const groupNetwork = "some-group-network";
+
 //TODO add integration tests for /replay
 describe("Projection integration tests", () => {
   it("should return successfully", async () => {
@@ -53,12 +62,21 @@ describe("Projection integration tests", () => {
         service: step.event.service,
         network: process.env.NETWORK,
         context: {
-          [context]: {
-            root: step.contextRoot || "some-context-root",
-            service: process.env.CONTEXT,
-            network: process.env.NETWORK,
-          },
+          ...(context && {
+            [context]: {
+              root: step.contextRoot || "some-context-root",
+              service: process.env.CONTEXT,
+              network: process.env.NETWORK,
+            },
+          }),
         },
+        groupsAdded: [
+          {
+            root: groupRoot,
+            service: groupService,
+            network: groupNetwork,
+          },
+        ],
       });
 
       await eventStore({
@@ -90,10 +108,17 @@ describe("Projection integration tests", () => {
       })
         .set({
           context: {
-            [context]: {
-              root: step.contextRoot || "some-context-root",
-              service: process.env.CONTEXT,
-              network: process.env.NETWORK,
+            ...(context && {
+              [context]: {
+                root: step.contextRoot || "some-context-root",
+                service: process.env.CONTEXT,
+                network: process.env.NETWORK,
+              },
+            }),
+            principal: {
+              root: principalRoot,
+              service: principalService,
+              network: principalNetwork,
             },
           },
         })
