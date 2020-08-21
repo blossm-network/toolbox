@@ -44,9 +44,6 @@ module.exports = ({
         token: req.query.token,
       }));
 
-    //TODO
-    console.log({ principalGroups, group });
-
     const query = {
       ...(!bootstrap && { ...formattedQueryBody }),
       ...(req.params.id && { "headers.id": req.params.id }),
@@ -69,9 +66,6 @@ module.exports = ({
         },
       }),
     };
-
-    //TODO
-    console.log({ query });
 
     const sortBody = sortFn(req.query.sort);
     let formattedSort;
@@ -103,9 +97,6 @@ module.exports = ({
             countFn({ query, ...(req.query.text && { text: req.query.text }) }),
           ]),
     ]);
-
-    //TODO
-    console.log({ results });
 
     const updates = `https://updates.${
       process.env.CORE_NETWORK
