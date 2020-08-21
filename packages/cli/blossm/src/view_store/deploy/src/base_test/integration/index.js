@@ -26,6 +26,7 @@ const groupService = "some-group-service";
 const groupNetwork = "some-group-network";
 
 //TODO test idStream
+//TODO test text query
 describe("View store base integration tests", () => {
   const testParamQueries = async () => {
     const id = "some-id";

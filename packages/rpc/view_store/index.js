@@ -10,12 +10,13 @@ module.exports = ({ name, context = process.env.CONTEXT, network }) => {
       externalFn: externalTokenFn,
       key,
     } = {},
-  } = {}) => ({ query, sort, text, id, limit, bootstrap } = {}) =>
+  } = {}) => ({ query, sort, text, id, skip, limit, bootstrap } = {}) =>
     deps
       .rpc(name, ...(context ? [context] : []), "view-store")
       .get({
         ...(query && { query }),
         ...(text && { text }),
+        ...(skip && { skip }),
         ...(limit && { limit }),
         ...(bootstrap && { bootstrap }),
         ...(sort && { sort }),

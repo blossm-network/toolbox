@@ -18,6 +18,7 @@ const id = "some-id";
 const sort = "some-sort";
 const bootstrap = "some-bootstrap";
 const limit = "some-limit";
+const skip = "some-skip";
 const text = "some-text";
 const contexts = { c: 2 };
 
@@ -60,7 +61,7 @@ describe("Get views", () => {
           key,
         },
       })
-      .read({ query, sort, id, bootstrap, text, limit });
+      .read({ query, sort, id, bootstrap, text, limit, skip });
 
     expect(rpcFake).to.have.been.calledWith(name, context, "view-store");
     expect(getFake).to.have.been.calledWith({
@@ -70,6 +71,7 @@ describe("Get views", () => {
       bootstrap,
       text,
       limit,
+      skip,
     });
     expect(inFake).to.have.been.calledWith({ context: contexts });
     expect(withFake).to.have.been.calledWith({
