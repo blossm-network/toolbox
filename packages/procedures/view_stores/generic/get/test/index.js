@@ -774,7 +774,94 @@ describe("View store get", () => {
         "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
     });
   });
-  it("should call with the correct params with bootstrap as true without env variable", async () => {
+  it("should call with the correct params with bootstrap as true, ignoring a call to group", async () => {
+    const findFake = fake.returns([
+      {
+        body: obj,
+        headers: { id, context: foundContext },
+        trace: {
+          "some-service": { "some-domain": [txId0] },
+          "some-other-service": { "some-other-domain": [txId1] },
+          "amother-service": { "another-domain": [txId2] },
+        },
+      },
+    ]);
+    const formattedResult = { formatted: "result" };
+    const formatFake = fake.returns(formattedResult);
+    const countFake = fake.returns(count);
+
+    const query = { "some-query-key": 1 };
+
+    const urlEncodeQueryDataFake = fake.returns(nextUrl);
+    replace(deps, "urlEncodeQueryData", urlEncodeQueryDataFake);
+
+    const bootstrapContext = "some-bootstrap-context";
+    const bootstrapRoot = "some-bootstrap-root";
+    const req = {
+      query: {
+        sort,
+        context: {
+          ...context,
+          [bootstrapContext]: {
+            root: bootstrapRoot,
+          },
+        },
+        query,
+        bootstrap: true,
+      },
+      params: {},
+    };
+
+    const sendFake = fake();
+    const res = {
+      send: sendFake,
+    };
+
+    const otherQuery = { "some-other-query-key": 1 };
+    const queryFnFake = fake.returns(otherQuery);
+    delete process.env.DOMAIN;
+    process.env.BOOTSTRAP_CONTEXT = bootstrapContext;
+    const groupsLookupFnFake = fake();
+    await get({
+      findFn: findFake,
+      countFn: countFake,
+      queryFn: queryFnFake,
+      formatFn: formatFake,
+      groupsLookupFn: groupsLookupFnFake,
+      group: true,
+    })(req, res);
+    expect(groupsLookupFnFake).to.not.have.been.called;
+    expect(queryFnFake).to.have.been.calledWith(query);
+    expect(findFake).to.have.been.calledWith({
+      limit: 1,
+      skip: 0,
+      query: {
+        "headers.id": bootstrapRoot,
+        "headers.context": {
+          root: envContextRoot,
+          domain: "some-env-context",
+          service: envContextService,
+          network: envContextNetwork,
+        },
+      },
+    });
+    expect(countFake).to.not.have.been.called;
+    expect(formatFake).to.have.been.calledWith({
+      body: obj,
+      id,
+      updates:
+        "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
+    });
+    expect(sendFake).to.have.been.calledWith({
+      content: {
+        ...formattedResult,
+        headers: { trace: [txId0, txId1, txId2], id, context: foundContext },
+      },
+      updates:
+        "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
+    });
+  });
+  it("should throw with bootstrap as true without env variable", async () => {
     const findFake = fake.returns([
       {
         body: obj,
@@ -821,40 +908,27 @@ describe("View store get", () => {
     const queryFnFake = fake.returns(otherQuery);
     delete process.env.DOMAIN;
     delete process.env.BOOTSTRAP_CONTEXT;
-    await get({
-      findFn: findFake,
-      countFn: countFake,
-      queryFn: queryFnFake,
-      formatFn: formatFake,
-    })(req, res);
-    expect(queryFnFake).to.have.been.calledWith(query);
-    expect(findFake).to.have.been.calledWith({
-      limit: 1,
-      skip: 0,
-      query: {
-        "headers.context": {
-          root: envContextRoot,
-          domain: "some-env-context",
-          service: envContextService,
-          network: envContextNetwork,
-        },
-      },
+
+    const error = "some-error";
+    const messageFake = fake.returns(error);
+    replace(deps, "forbiddenError", {
+      message: messageFake,
     });
-    expect(countFake).to.not.have.been.called;
-    expect(formatFake).to.have.been.calledWith({
-      body: obj,
-      id,
-      updates:
-        "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
-    });
-    expect(sendFake).to.have.been.calledWith({
-      content: {
-        ...formattedResult,
-        headers: { trace: [txId0, txId1, txId2], id, context: foundContext },
-      },
-      updates:
-        "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
-    });
+
+    try {
+      process.env.BOOTSTRAP_CONTEXT = "something";
+      await get({
+        findFn: findFake,
+        countFn: countFake,
+        queryFn: queryFnFake,
+        formatFn: formatFake,
+      })(req, res);
+    } catch (e) {
+      expect(messageFake).to.have.been.calledWith(
+        "There isn't a context to bootstrap."
+      );
+      expect(e).to.equal(error);
+    }
   });
   it("should throw correctly if bootstrap forbidden", async () => {
     const findFake = fake.returns([]);

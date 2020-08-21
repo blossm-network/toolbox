@@ -16,7 +16,20 @@ module.exports = ({
   groupsLookupFn,
 }) => {
   return async (req, res) => {
-    if (group && (!req.query.context || !req.query.context.principal))
+    if (
+      req.query.bootstrap &&
+      (!process.env.BOOTSTRAP_CONTEXT ||
+        !req.query.context[process.env.BOOTSTRAP_CONTEXT])
+    )
+      throw deps.forbiddenError.message("There isn't a context to bootstrap.");
+
+    const bootstrap = req.query.bootstrap && process.env.BOOTSTRAP_CONTEXT;
+
+    if (
+      group &&
+      (!req.query.context || !req.query.context.principal) &&
+      !bootstrap
+    )
       throw deps.forbiddenError.message("This request is missing a context.");
 
     const queryBody = queryFn(req.query.query || {});
@@ -24,26 +37,19 @@ module.exports = ({
     for (const key in queryBody)
       formattedQueryBody[`body.${key}`] = queryBody[key];
 
-    if (
-      req.query.bootstrap &&
-      process.env.BOOTSTRAP_CONTEXT &&
-      !req.query.context[process.env.BOOTSTRAP_CONTEXT]
-    )
-      throw deps.forbiddenError.message("There isn't a context to bootstrap.");
-
     const principalGroups =
       group &&
+      !bootstrap &&
       (await groupsLookupFn({
         token: req.query.token,
       }));
 
     const query = {
-      ...(!req.query.bootstrap && { ...formattedQueryBody }),
+      ...(!bootstrap && { ...formattedQueryBody }),
       ...(req.params.id && { "headers.id": req.params.id }),
-      ...(req.query.bootstrap &&
-        process.env.BOOTSTRAP_CONTEXT && {
-          "headers.id": req.query.context[process.env.BOOTSTRAP_CONTEXT].root,
-        }),
+      ...(bootstrap && {
+        "headers.id": req.query.context[process.env.BOOTSTRAP_CONTEXT].root,
+      }),
       ...(process.env.CONTEXT && {
         "headers.context": {
           root: req.query.context[process.env.CONTEXT].root,
@@ -63,7 +69,7 @@ module.exports = ({
 
     const sortBody = sortFn(req.query.sort);
     let formattedSort;
-    if (!req.query.bootstrap) {
+    if (!bootstrap) {
       if (req.query.limit) req.query.limit = parseInt(req.query.limit);
       if (req.query.skip) req.query.skip = parseInt(req.query.skip);
       if (sortBody) {
@@ -74,9 +80,8 @@ module.exports = ({
       }
     }
 
-    const limit =
-      one || req.query.bootstrap ? 1 : req.query.limit || defaultLimit;
-    const skip = one || req.query.bootstrap ? 0 : req.query.skip || 0;
+    const limit = one || bootstrap ? 1 : req.query.limit || defaultLimit;
+    const skip = one || bootstrap ? 0 : req.query.skip || 0;
 
     const [results, count] = await Promise.all([
       findFn({
@@ -86,7 +91,7 @@ module.exports = ({
         ...(req.query.text && { text: req.query.text }),
         ...(formattedSort && { sort: formattedSort }),
       }),
-      ...(one || req.query.bootstrap
+      ...(one || bootstrap
         ? []
         : [
             countFn({ query, ...(req.query.text && { text: req.query.text }) }),
@@ -123,7 +128,7 @@ module.exports = ({
       };
     });
 
-    if (!one && !req.query.bootstrap) {
+    if (!one && !bootstrap) {
       const limit = req.query.limit || defaultLimit;
       const url = `https://v${
         process.env.CONTEXT ? `.${process.env.CONTEXT}` : ``
