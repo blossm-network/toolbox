@@ -100,7 +100,8 @@ describe("View store", () => {
     const formatSchemaFake = fake.returns(formattedSchema);
     replace(deps, "formatSchema", formatSchemaFake);
 
-    const getFn = "some-get-fn";
+    const queryFn = "some-query-fn";
+    const sortFn = "some-sort-fn";
     const updateFn = "some-update-fn";
     const formatFn = "some-format-fn";
     const emptyFn = "some-empty-fn";
@@ -109,7 +110,8 @@ describe("View store", () => {
       schema,
       indexes,
       secretFn: secretFake,
-      getFn,
+      queryFn,
+      sortFn,
       updateFn,
       formatFn,
       emptyFn,
@@ -292,7 +294,8 @@ describe("View store", () => {
       writeFn: match((fn) => expect(fn({ query, data })).to.exist),
       removeFn: match((fn) => expect(fn(query)).to.exist),
       groupsLookupFn,
-      getFn,
+      queryFn,
+      sortFn,
       updateFn,
       formatFn,
       emptyFn,
@@ -343,7 +346,8 @@ describe("View store", () => {
     const viewStoreFake = fake();
     replace(deps, "viewStore", viewStoreFake);
 
-    const getFn = "some-get-fn";
+    const queryFn = "some-query-fn";
+    const sortFn = "some-sort-fn";
     const updateFn = "some-update-fn";
     const formatFn = "some-format-fn";
     const emptyFn = "some-empty-fn";
@@ -357,7 +361,8 @@ describe("View store", () => {
       schema,
       indexes,
       secretFn: secretFake,
-      getFn,
+      queryFn,
+      sortFn,
       updateFn,
       formatFn,
       emptyFn,
@@ -490,7 +495,8 @@ describe("View store", () => {
     const viewStoreFake = fake();
     replace(deps, "viewStore", viewStoreFake);
 
-    const getFn = "some-get-fn";
+    const queryFn = "some-query-fn";
+    const sortFn = "some-sort-fn";
     const updateFn = "some-update-fn";
     const formatFn = "some-format-fn";
     const emptyFn = "some-empty-fn";
@@ -510,7 +516,8 @@ describe("View store", () => {
       schema,
       indexes,
       secretFn: secretFake,
-      getFn,
+      queryFn,
+      sortFn,
       updateFn,
       formatFn,
       emptyFn,

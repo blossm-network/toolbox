@@ -7,6 +7,8 @@ const gcpToken = require("@blossm/gcp-token");
 
 const query =
   fs.existsSync(path.resolve(__dirname, "./query.js")) && require("./query");
+const sort =
+  fs.existsSync(path.resolve(__dirname, "./sort.js")) && require("./sort");
 const update =
   fs.existsSync(path.resolve(__dirname, "./update.js")) && require("./update");
 const format =
@@ -21,6 +23,7 @@ module.exports = viewStore({
   indexes: config.indexes,
   secretFn: secret,
   ...(query && { queryFn: query }),
+  ...(sort && { sortFn: sort }),
   ...(update && { updateFn: update }),
   ...(format && { formatFn: format }),
   ...(empty && { emptyFn: empty }),

@@ -643,20 +643,24 @@ describe("View store get", () => {
     };
 
     const otherQuery = { "some-other-query-key": 1 };
+    const otherSort = { "some-other-sort-key": 1 };
     const queryFnFake = fake.returns(otherQuery);
+    const sortFnFake = fake.returns(otherSort);
     delete process.env.DOMAIN;
     await get({
       findFn: findFake,
       countFn: countFake,
       one: true,
       queryFn: queryFnFake,
+      sortFn: sortFnFake,
       formatFn: formatFake,
     })(req, res);
     expect(queryFnFake).to.have.been.calledWith(query);
+    expect(sortFnFake).to.have.been.calledWith(sort);
     expect(findFake).to.have.been.calledWith({
       limit: 1,
       skip: 0,
-      sort: { "body.a": 1 },
+      sort: { "body.some-other-sort-key": 1 },
       query: {
         "body.some-other-query-key": 1,
         "headers.context": {

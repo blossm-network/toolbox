@@ -55,6 +55,7 @@ describe("View store", () => {
     const writeFn = "some-write-fn";
     const removeFn = "some-remove-fn";
     const queryFn = "some-query-fn";
+    const sortFn = "some-sort-fn";
     const updateFn = "some-update-fn";
     const formatFn = "some-format-fn";
     const emptyFn = "some-empty-fn";
@@ -69,6 +70,7 @@ describe("View store", () => {
       writeFn,
       removeFn,
       queryFn,
+      sortFn,
       updateFn,
       formatFn,
       emptyFn,
@@ -91,6 +93,7 @@ describe("View store", () => {
       findFn,
       countFn,
       queryFn,
+      sortFn,
       formatFn,
       emptyFn,
       groupsLookupFn,

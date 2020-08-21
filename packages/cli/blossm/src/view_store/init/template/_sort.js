@@ -1,6 +1,6 @@
 /**
  * This file is optional. Get rid of the leading underscore _ from the file's name to require it.
- * It can be used to customize your get queries to the view store.
+ * It can be used to customize your get sorts to the view store.
  *
  * - Sorting
  * - MongoDB query syntax
@@ -14,6 +14,6 @@
  *
  */
 
-// module.exports = (query) => {
-//   return { name: query.firstName + query.lastName };
+// module.exports = (sort) => {
+//   return { name: sort.name };
 // };

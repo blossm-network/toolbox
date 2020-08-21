@@ -1,6 +1,7 @@
 const deps = require("./deps");
 
 const defaultQueryFn = (query) => query;
+const defaultSortFn = (sort) => sort;
 const defaultLimit = 100;
 
 module.exports = ({
@@ -11,6 +12,7 @@ module.exports = ({
   formatFn,
   emptyFn,
   queryFn = defaultQueryFn,
+  sortFn = defaultSortFn,
   groupsLookupFn,
 }) => {
   return async (req, res) => {
@@ -59,14 +61,15 @@ module.exports = ({
       }),
     };
 
+    const sortBody = sortFn(req.query.sort);
     let formattedSort;
     if (!req.query.bootstrap) {
       if (req.query.limit) req.query.limit = parseInt(req.query.limit);
       if (req.query.skip) req.query.skip = parseInt(req.query.skip);
-      if (req.query.sort) {
+      if (sortBody) {
         formattedSort = {};
-        for (const key in req.query.sort) {
-          formattedSort[`body.${key}`] = parseInt(req.query.sort[key]);
+        for (const key in sortBody) {
+          formattedSort[`body.${key}`] = parseInt(sortBody[key]);
         }
       }
     }
