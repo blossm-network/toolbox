@@ -1,5 +1,5 @@
 const { expect } = require("chai").use(require("sinon-chai"));
-const { restore, fake, stub, replace, useFakeTimers } = require("sinon");
+const { restore, fake, stub, replace, useFakeTimers, match } = require("sinon");
 
 const post = require("..");
 const deps = require("../deps");
@@ -169,6 +169,7 @@ describe("Command handler post", () => {
       readFactFn,
       streamFactFn,
       countFn,
+      submitEventsFn: match(() => true),
     });
 
     expect(createEventFake).to.have.been.calledWith({
@@ -230,6 +231,158 @@ describe("Command handler post", () => {
       _id: commandId,
       _tx: txId,
     });
+  });
+  it("should call with the correct params with events coming from the submitEventsFn with main returning nothing", async () => {
+    const validateFnFake = fake();
+    const normalizeFnFake = fake.returns(cleanedPayload);
+
+    const createEventFake = fake.returns(event);
+    replace(deps, "createEvent", createEventFake);
+
+    replace(
+      deps,
+      "uuid",
+      stub().onFirstCall().returns(commandId).onSecondCall().returns(txId)
+    );
+
+    const events = [
+      {
+        payload: eventPayload,
+        action: eventAction,
+        correctNumber,
+      },
+    ];
+    const mainFnFake = stub().yieldsTo("submitEventsFn", events);
+
+    const req = {
+      body: {
+        payload,
+        headers,
+        tx,
+      },
+    };
+
+    const sendStatusFake = fake();
+    const setResponseFake = fake.returns({
+      sendStatus: sendStatusFake,
+    });
+    const res = {
+      set: setResponseFake,
+    };
+
+    const addFnFake = fake();
+    const aggregateFnFake = fake.returns(aggregateFn);
+    const commandFnFake = fake.returns(commandFn);
+    const queryAggregatesFnFake = fake.returns(queryAggregatesFn);
+    const readFactFnFake = fake.returns(readFactFn);
+    const streamFactFnFake = fake.returns(streamFactFn);
+    const countFnFake = fake.returns(countFn);
+
+    await post({
+      mainFn: mainFnFake,
+      validateFn: validateFnFake,
+      normalizeFn: normalizeFnFake,
+      addFn: addFnFake,
+      aggregateFn: aggregateFnFake,
+      commandFn: commandFnFake,
+      queryAggregatesFn: queryAggregatesFnFake,
+      readFactFn: readFactFnFake,
+      streamFactFn: streamFactFnFake,
+      countFn: countFnFake,
+    })(req, res);
+
+    expect(aggregateFnFake).to.have.been.calledWith({});
+    expect(queryAggregatesFnFake).to.have.been.calledWith({});
+    expect(readFactFnFake).to.have.been.calledWith({});
+    expect(streamFactFnFake).to.have.been.calledWith({});
+    expect(countFnFake).to.have.been.calledWith({});
+    expect(commandFnFake).to.have.been.calledWith({
+      idempotency,
+      txId,
+      ip,
+      path: [
+        {
+          procedure,
+          hash,
+          id: commandId,
+          issued,
+          timestamp: deps.dateString(),
+          name,
+          domain,
+          service,
+          network,
+          host,
+        },
+      ],
+    });
+    expect(normalizeFnFake).to.have.been.calledWith(payload);
+    expect(validateFnFake).to.have.been.calledWith(payload);
+    expect(mainFnFake).to.have.been.calledWith({
+      payload: cleanedPayload,
+      ip,
+      aggregateFn,
+      commandFn,
+      queryAggregatesFn,
+      readFactFn,
+      streamFactFn,
+      countFn,
+      submitEventsFn: match(() => true),
+    });
+
+    expect(createEventFake).to.have.been.calledWith({
+      payload: eventPayload,
+      action: eventAction,
+      domain,
+      service,
+      network,
+      version: 0,
+      idempotency,
+      path: [
+        {
+          procedure,
+          hash,
+          id: commandId,
+          issued,
+          timestamp: deps.dateString(),
+          name,
+          domain,
+          service,
+          network,
+          host,
+        },
+      ],
+    });
+    expect(addFnFake).to.have.been.calledWith({
+      domain,
+      service,
+      eventData: [
+        {
+          event,
+          number: correctNumber,
+        },
+      ],
+      tx: {
+        ip,
+        id: txId,
+        path: [
+          {
+            procedure,
+            hash,
+            id: commandId,
+            issued,
+            timestamp: deps.dateString(),
+            name,
+            domain,
+            service,
+            network,
+            host,
+          },
+        ],
+      },
+      async: false,
+    });
+    expect(setResponseFake).to.have.been.calledWith({});
+    expect(sendStatusFake).to.have.been.calledWith(204);
   });
   it("should call with the correct params with status code and headers and txid", async () => {
     const validateFnFake = fake();
@@ -339,6 +492,7 @@ describe("Command handler post", () => {
       readFactFn,
       streamFactFn,
       countFn,
+      submitEventsFn: match(() => true),
     });
 
     expect(createEventFake).to.have.been.calledWith({
@@ -788,6 +942,7 @@ describe("Command handler post", () => {
       readFactFn,
       streamFactFn,
       countFn,
+      submitEventsFn: match(() => true),
     });
     expect(addFnFake).to.have.been.calledWith({
       domain,
@@ -934,6 +1089,7 @@ describe("Command handler post", () => {
       readFactFn,
       streamFactFn,
       countFn,
+      submitEventsFn: match(() => true),
     });
 
     expect(setResponseFake).to.have.been.calledWith({});
@@ -1028,6 +1184,7 @@ describe("Command handler post", () => {
       readFactFn,
       streamFactFn,
       countFn,
+      submitEventsFn: match(() => true),
     });
 
     expect(setResponseFake).to.have.been.calledWith({});
@@ -1172,6 +1329,7 @@ describe("Command handler post", () => {
       readFactFn,
       streamFactFn,
       countFn,
+      submitEventsFn: match(() => true),
     });
 
     expect(addFnFake).to.have.been.calledWith({
@@ -1324,6 +1482,7 @@ describe("Command handler post", () => {
       readFactFn,
       streamFactFn,
       countFn,
+      submitEventsFn: match(() => true),
     });
 
     expect(addFnFake).to.have.been.calledWith({
@@ -1493,6 +1652,7 @@ describe("Command handler post", () => {
       readFactFn,
       streamFactFn,
       countFn,
+      submitEventsFn: match(() => true),
     });
 
     expect(addFnFake).to.have.been.calledWith({
@@ -1664,6 +1824,7 @@ describe("Command handler post", () => {
       readFactFn,
       streamFactFn,
       countFn,
+      submitEventsFn: match(() => true),
     });
 
     expect(createEventFake).to.have.been.calledWith({
@@ -1865,6 +2026,7 @@ describe("Command handler post", () => {
       readFactFn,
       streamFactFn,
       countFn,
+      submitEventsFn: match(() => true),
     });
 
     expect(createEventFake).to.have.been.calledWith({
@@ -2076,6 +2238,7 @@ describe("Command handler post", () => {
       readFactFn,
       streamFactFn,
       countFn,
+      submitEventsFn: match(() => true),
     });
 
     expect(createEventFake).to.have.been.calledWith({

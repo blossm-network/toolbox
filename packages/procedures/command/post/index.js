@@ -1,5 +1,84 @@
 const deps = require("./deps");
 
+const processEvents = async ({
+  events,
+  addFn,
+  idempotency,
+  context,
+  claims,
+  path,
+  tx,
+  txId,
+}) => {
+  const eventDataPerStore = {};
+  for (const {
+    root,
+    payload = {},
+    correctNumber,
+    version = 0,
+    action,
+    context: contextOverride,
+    groupsAdded,
+    groupsRemoved,
+    domain = process.env.DOMAIN,
+    service = process.env.SERVICE,
+  } of events) {
+    const event = deps.createEvent({
+      ...(root && { root }),
+      payload,
+      version,
+      action,
+      domain,
+      service,
+      network: process.env.NETWORK,
+      ...(idempotency && {
+        idempotency,
+      }),
+      ...((contextOverride || context) && {
+        context: contextOverride || context,
+      }),
+      ...(groupsAdded && { groupsAdded }),
+      ...(groupsRemoved && { groupsRemoved }),
+      path,
+    });
+    const normalizedEventData = {
+      event,
+      ...(correctNumber && { number: correctNumber }),
+    };
+
+    eventDataPerStore[service] = eventDataPerStore[service] || {};
+
+    eventDataPerStore[service][domain] = eventDataPerStore[service][domain]
+      ? eventDataPerStore[service][domain].concat([normalizedEventData])
+      : [normalizedEventData];
+  }
+
+  const fns = [];
+  for (const service in eventDataPerStore) {
+    for (const domain in eventDataPerStore[service]) {
+      fns.push(
+        addFn({
+          domain,
+          service,
+          ...(context && { context }),
+          ...(claims && { claims }),
+          eventData: eventDataPerStore[service][domain],
+          async: !eventDataPerStore[service][domain].some(
+            (normalizedEvent) => normalizedEvent.number != undefined
+          ),
+          tx: {
+            ...(tx.ip && { ip: tx.ip }),
+            id: txId,
+            path,
+          },
+        })
+      );
+    }
+  }
+
+  await Promise.all(fns);
+};
+
 module.exports = ({
   mainFn,
   validateFn,
@@ -48,125 +127,75 @@ module.exports = ({
     },
   ];
 
-  const {
-    events = [],
-    response,
-    headers = {},
-    statusCode,
-    thenFn,
-  } = await mainFn({
-    payload: req.body.payload,
-    ...(req.body.root && { root: req.body.root }),
-    ...(req.body.options && { options: req.body.options }),
-    ...(req.body.claims && { claims: req.body.claims }),
-    ...(req.body.context && { context: req.body.context }),
-    ...(req.body.tx.ip && { ip: req.body.tx.ip }),
-    aggregateFn: aggregateFn({
-      ...(req.body.context && { context: req.body.context }),
-      ...(req.body.claims && { claims: req.body.claims }),
-      ...(req.body.token && { token: req.body.token }),
-    }),
-    queryAggregatesFn: queryAggregatesFn({
-      ...(req.body.context && { context: req.body.context }),
-      ...(req.body.claims && { claims: req.body.claims }),
-      ...(req.body.token && { token: req.body.token }),
-    }),
-    readFactFn: readFactFn({
-      ...(req.body.context && { context: req.body.context }),
-      ...(req.body.claims && { claims: req.body.claims }),
-      ...(req.body.token && { token: req.body.token }),
-    }),
-    streamFactFn: streamFactFn({
-      ...(req.body.context && { context: req.body.context }),
-      ...(req.body.claims && { claims: req.body.claims }),
-      ...(req.body.token && { token: req.body.token }),
-    }),
-    commandFn: commandFn({
+  console.log("about ot");
+  const { events = [], response, headers = {}, statusCode, thenFn } =
+    (await mainFn({
+      payload: req.body.payload,
+      ...(req.body.root && { root: req.body.root }),
+      ...(req.body.options && { options: req.body.options }),
       ...(req.body.claims && { claims: req.body.claims }),
       ...(req.body.context && { context: req.body.context }),
-      ...(req.body.token && { token: req.body.token }),
       ...(req.body.tx.ip && { ip: req.body.tx.ip }),
-      ...(req.body.headers.idempotency && {
-        idempotency: req.body.headers.idempotency,
+      aggregateFn: aggregateFn({
+        ...(req.body.context && { context: req.body.context }),
+        ...(req.body.claims && { claims: req.body.claims }),
+        ...(req.body.token && { token: req.body.token }),
       }),
-      txId,
-      path,
-    }),
-    countFn: countFn({
-      ...(req.body.context && { context: req.body.context }),
-      ...(req.body.claims && { claims: req.body.claims }),
-      ...(req.body.token && { token: req.body.token }),
-    }),
+      queryAggregatesFn: queryAggregatesFn({
+        ...(req.body.context && { context: req.body.context }),
+        ...(req.body.claims && { claims: req.body.claims }),
+        ...(req.body.token && { token: req.body.token }),
+      }),
+      readFactFn: readFactFn({
+        ...(req.body.context && { context: req.body.context }),
+        ...(req.body.claims && { claims: req.body.claims }),
+        ...(req.body.token && { token: req.body.token }),
+      }),
+      streamFactFn: streamFactFn({
+        ...(req.body.context && { context: req.body.context }),
+        ...(req.body.claims && { claims: req.body.claims }),
+        ...(req.body.token && { token: req.body.token }),
+      }),
+      commandFn: commandFn({
+        ...(req.body.claims && { claims: req.body.claims }),
+        ...(req.body.context && { context: req.body.context }),
+        ...(req.body.token && { token: req.body.token }),
+        ...(req.body.tx.ip && { ip: req.body.tx.ip }),
+        ...(req.body.headers.idempotency && {
+          idempotency: req.body.headers.idempotency,
+        }),
+        txId,
+        path,
+      }),
+      countFn: countFn({
+        ...(req.body.context && { context: req.body.context }),
+        ...(req.body.claims && { claims: req.body.claims }),
+        ...(req.body.token && { token: req.body.token }),
+      }),
+      submitEventsFn: (events) =>
+        processEvents({
+          events,
+          addFn,
+          idempotency: req.body.headers.idempotency,
+          context: req.body.context,
+          claims: req.body.claims,
+          path,
+          tx: req.body.tx,
+          txId,
+        }),
+    })) || {};
+  console.log("dont");
+
+  await processEvents({
+    events,
+    addFn,
+    idempotency: req.body.headers.idempotency,
+    context: req.body.context,
+    claims: req.body.claims,
+    path,
+    tx: req.body.tx,
+    txId,
   });
-
-  const eventDataPerStore = {};
-
-  for (const {
-    root,
-    payload = {},
-    correctNumber,
-    version = 0,
-    action,
-    context,
-    groupsAdded,
-    groupsRemoved,
-    domain = process.env.DOMAIN,
-    service = process.env.SERVICE,
-  } of events) {
-    const event = deps.createEvent({
-      ...(root && { root }),
-      payload,
-      version,
-      action,
-      domain,
-      service,
-      network: process.env.NETWORK,
-      ...(req.body.headers.idempotency && {
-        idempotency: req.body.headers.idempotency,
-      }),
-      ...((context || req.body.context) && {
-        context: context || req.body.context,
-      }),
-      ...(groupsAdded && { groupsAdded }),
-      ...(groupsRemoved && { groupsRemoved }),
-      path,
-    });
-    const normalizedEventData = {
-      event,
-      ...(correctNumber && { number: correctNumber }),
-    };
-
-    eventDataPerStore[service] = eventDataPerStore[service] || {};
-
-    eventDataPerStore[service][domain] = eventDataPerStore[service][domain]
-      ? eventDataPerStore[service][domain].concat([normalizedEventData])
-      : [normalizedEventData];
-  }
-
-  const fns = [];
-  for (const service in eventDataPerStore) {
-    for (const domain in eventDataPerStore[service]) {
-      fns.push(
-        addFn({
-          domain,
-          service,
-          ...(req.body.context && { context: req.body.context }),
-          ...(req.body.claims && { claims: req.body.claims }),
-          eventData: eventDataPerStore[service][domain],
-          async: !eventDataPerStore[service][domain].some(
-            (normalizedEvent) => normalizedEvent.number != undefined
-          ),
-          tx: {
-            ...(req.body.tx.ip && { ip: req.body.tx.ip }),
-            id: txId,
-            path,
-          },
-        })
-      );
-    }
-  }
-
-  await Promise.all(fns);
 
   if (thenFn) await thenFn();
 
