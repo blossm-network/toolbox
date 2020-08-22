@@ -29,7 +29,7 @@ const event = {
     root,
   },
 };
-const correctNumber = 4;
+const correctNumber = 0;
 const claims = "some-claims";
 const txId = "some-txId";
 const issued = "some-issued";

@@ -48,7 +48,7 @@ const processEvents = async ({
     });
     const normalizedEventData = {
       event,
-      ...(correctNumber && { number: correctNumber }),
+      ...(correctNumber != undefined && { number: correctNumber }),
     };
 
     eventDataPerStore[service] = eventDataPerStore[service] || {};
