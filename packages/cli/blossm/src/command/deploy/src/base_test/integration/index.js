@@ -70,7 +70,7 @@ const executeStep = async (step) => {
       domain,
       service,
       root,
-      payload,
+      payload = {},
       groupsAdded,
     } of step.pre) {
       const stateEvent = createEvent({
