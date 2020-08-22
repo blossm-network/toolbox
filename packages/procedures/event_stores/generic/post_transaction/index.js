@@ -76,6 +76,13 @@ module.exports = ({
             currentEventCounts[event.headers.root] +
             eventNumberOffsets[event.headers.root];
 
+          //TODO
+          console.log({
+            allottedNumber,
+            root: event.headers.root,
+            number,
+            event,
+          });
           if (number != undefined && number != allottedNumber)
             throw deps.preconditionFailedError.message(
               "Event number incorrect.",
