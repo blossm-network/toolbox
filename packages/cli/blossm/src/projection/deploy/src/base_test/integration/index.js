@@ -20,6 +20,35 @@ const groupRoot = "some-group-root";
 const groupService = "some-group-service";
 const groupNetwork = "some-group-network";
 
+const checkResponse = ({ data, expected }) => {
+  for (const property in expected) {
+    expect(data[property]).to.exist;
+    if (expected[property]) {
+      if (
+        typeof expected[property] == "object" &&
+        !(expected[property] instanceof Array)
+      ) {
+        checkResponse({
+          data: data[property],
+          expected: expected[property],
+        });
+      } else if (expected[property] instanceof Array) {
+        expect(data[property]).to.be.an("array");
+        let i = 0;
+        for (const expectedValue of expected[property]) {
+          checkResponse({
+            data: data[property][i],
+            expected: expectedValue[i],
+          });
+          i++;
+        }
+      } else {
+        expect(data[property]).to.deep.equal(expected[property]);
+      }
+    }
+  }
+};
+
 //TODO add integration tests for /replay
 describe("Projection integration tests", () => {
   it("should return successfully", async () => {
@@ -124,27 +153,33 @@ describe("Projection integration tests", () => {
         })
         .read(step.result.query || {});
 
-      //TODO
-      console.log({ vcontent: v.content });
       if (step.result.value) {
-        for (const property in step.result.value) {
-          expect(v.content[property]).to.exist;
-          if (step.result.value[property] != undefined) {
-            expect(v.content[property]).to.deep.equal(
-              step.result.value[property]
-            );
-          }
-        }
+        checkResponse({
+          expected: step.result.value,
+          data: v.content,
+        });
+        // for (const property in step.result.value) {
+        //   expect(v.content[property]).to.exist;
+        //   if (step.result.value[property] != undefined) {
+        //     expect(v.content[property]).to.deep.equal(
+        //       step.result.value[property]
+        //     );
+        //   }
+        // }
       } else if (step.result.values) {
         expect(step.result.values.length).to.equal(v.content.length);
         for (let i = 0; i < step.result.values.length; i++) {
           let value = step.result.values[i];
-          for (const property in value) {
-            expect(v.content[i][property]).to.exist;
-            if (value[property] != undefined) {
-              expect(v.content[i][property]).to.deep.equal(value[property]);
-            }
-          }
+          checkResponse({
+            expected: value,
+            data: v.content[i],
+          });
+          // for (const property in value) {
+          //   expect(v.content[i][property]).to.exist;
+          //   if (value[property] != undefined) {
+          //     expect(v.content[i][property]).to.deep.equal(value[property]);
+          //   }
+          // }
         }
       }
     }
