@@ -365,6 +365,26 @@ const addDefaultDependencies = ({ config, localCoreNetwork }) => {
     },
   ];
 
+  const groupsFactProcedure = {
+    procedure: "fact-gateway",
+    domain: "principal",
+    service: "core",
+    network: localCoreNetwork,
+    mocks: [
+      {
+        fact: "groups",
+        code: 200,
+        response: [
+          {
+            root: "some-group-root",
+            service: "some-group-service",
+            network: "some-group-network",
+          },
+        ],
+      },
+    ],
+  };
+
   switch (config.procedure) {
     case "command":
       return [
@@ -421,25 +441,7 @@ const addDefaultDependencies = ({ config, localCoreNetwork }) => {
             },
           ],
         },
-        {
-          procedure: "fact-gateway",
-          domain: "principal",
-          service: "core",
-          network: localCoreNetwork,
-          mocks: [
-            {
-              fact: "groups",
-              code: 200,
-              response: [
-                {
-                  root: "some-group-root",
-                  service: "some-group-service",
-                  network: "some-group-network",
-                },
-              ],
-            },
-          ],
-        },
+        groupsFactProcedure,
         {
           procedure: "fact-gateway",
           domain: "group",
@@ -509,27 +511,7 @@ const addDefaultDependencies = ({ config, localCoreNetwork }) => {
           }),
       ];
     case "view-store":
-      return [
-        {
-          procedure: "fact-gateway",
-          domain: "principal",
-          service: "core",
-          network: localCoreNetwork,
-          mocks: [
-            {
-              fact: "groups",
-              code: 200,
-              response: [
-                {
-                  root: "some-group-root",
-                  service: "some-group-service",
-                  network: "some-group-network",
-                },
-              ],
-            },
-          ],
-        },
-      ];
+      return [groupsFactProcedure];
     default:
       return config.testing.dependencies;
   }
