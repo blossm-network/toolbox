@@ -127,7 +127,6 @@ module.exports = ({
     },
   ];
 
-  console.log("about ot");
   const { events = [], response, headers = {}, statusCode, thenFn } =
     (await mainFn({
       payload: req.body.payload,
@@ -184,7 +183,6 @@ module.exports = ({
           txId,
         }),
     })) || {};
-  console.log("dont");
 
   await processEvents({
     events,
