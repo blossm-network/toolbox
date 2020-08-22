@@ -124,6 +124,7 @@ describe("Projection integration tests", () => {
         })
         .read(step.result.query || {});
 
+      //TODO
       console.log({ vcontent: v.content });
       if (step.result.value) {
         for (const property in step.result.value) {
