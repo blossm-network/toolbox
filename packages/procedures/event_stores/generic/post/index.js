@@ -28,7 +28,7 @@ module.exports = ({
         )
           return;
       }
-      uniqueEventData.push({ event, ...(number && { number }) });
+      uniqueEventData.push({ event, ...(number != undefined && { number }) });
     })
   );
 

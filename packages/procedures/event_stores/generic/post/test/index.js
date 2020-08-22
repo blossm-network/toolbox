@@ -5,7 +5,10 @@ const { restore, fake, stub, replace, useFakeTimers } = require("sinon");
 const post = require("..");
 const deps = require("../deps");
 
-const eventData = [{ event: { headers: {} } }, { event: { headers: {} } }];
+const eventData = [
+  { event: { headers: {} }, number: 0 },
+  { event: { headers: {} } },
+];
 const tx = "some-tx";
 
 const savedEventHeadersTopic = "some-saved-event-headers-topic";
