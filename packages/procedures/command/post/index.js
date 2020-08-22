@@ -23,6 +23,11 @@ const processEvents = async ({
     domain = process.env.DOMAIN,
     service = process.env.SERVICE,
   } of events) {
+    //TODO
+    console.log({
+      root,
+      correctNumber,
+    });
     const event = deps.createEvent({
       ...(root && { root }),
       payload,
