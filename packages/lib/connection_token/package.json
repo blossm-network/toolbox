@@ -16,7 +16,8 @@
   "dependencies": {
     "@blossm/basic-token": "^0.0.7",
     "@blossm/command-rpc": "^0.0.225",
-    "@blossm/jwt": "^0.0.57"
+    "@blossm/jwt": "^0.0.57",
+    "@blossm/redis": "*"
   },
   "devDependencies": {
     "mocha": "^7.1.1"

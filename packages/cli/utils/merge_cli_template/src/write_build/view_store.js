@@ -38,7 +38,7 @@ module.exports = ({
   computeUrlId,
   operationHash,
   serviceName,
-  cacheIp,
+  redisIp,
   rolesBucket,
   secretBucket,
   secretBucketKeyLocation,
@@ -116,7 +116,7 @@ module.exports = ({
             secretBucketKeyLocation,
             secretBucketKeyRing,
             nodeEnv: env,
-            cacheIp,
+            redisIp,
             env: {
               NAME: name,
               ...(context && { CONTEXT: context }),

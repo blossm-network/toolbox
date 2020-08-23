@@ -50,7 +50,7 @@ module.exports = ({
   runBaseUnitTests,
   runIntegrationTests,
   runBaseIntegrationTests,
-  cacheIp,
+  redisIp,
   strict,
 }) => {
   const authUri = `c.${domain}.${service}.${envUriSpecifier}${network}`;
@@ -75,7 +75,7 @@ module.exports = ({
       secretBucketKeyRing,
       secretBucketKeyLocation,
       serviceName,
-      cacheIp,
+      redisIp,
       custom: {
         DOMAIN: domain,
         SERVICE: service,

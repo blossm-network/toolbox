@@ -691,7 +691,7 @@ const configure = async (workingDir, configFn, env, strict) => {
     const name = config.name;
     const envVars = config.env && config.env[env];
     const devEnvVars = config.devEnv && config.devEnv[env];
-    const cacheIp = config.cacheIp;
+    const redisIp = config.redisIp;
 
     const dependencyKeyEnvironmentVariables = envDependencyKeyEnvironmentVariables(
       { env, config: blossmConfig }
@@ -746,7 +746,7 @@ const configure = async (workingDir, configFn, env, strict) => {
       procedure,
       network,
       host,
-      cacheIp,
+      redisIp,
       timeout: configTimeout({ config, blossmConfig }),
       memory: configMemory({ config, blossmConfig }),
       mongodbUser: envMongodbUser({ env, config: blossmConfig, procedure }),

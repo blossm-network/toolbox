@@ -1,5 +1,5 @@
 const { expect } = require("chai").use(require("sinon-chai"));
-const { restore, fake, replace, match } = require("sinon");
+const { restore, fake, replace, match, stub } = require("sinon");
 const deps = require("../deps");
 const connectionToken = require("..");
 
@@ -31,6 +31,20 @@ describe("Connection token", () => {
     const basicTokenFake = fake.returns(basicToken);
     replace(deps, "basicToken", basicTokenFake);
     const credentialsFnFake = fake.returns({ root, secret });
+
+    const writeObjectFake = fake();
+    const readObjectFake = stub()
+      .onFirstCall()
+      .returns(null)
+      .onSecondCall()
+      .returns({
+        token,
+        exp,
+      });
+    replace(deps, "redis", {
+      writeObject: writeObjectFake,
+      readObject: readObjectFake,
+    });
     const result = await connectionToken({
       credentialsFn: credentialsFnFake,
     })({ network, key });
@@ -54,6 +68,14 @@ describe("Connection token", () => {
     const anotherResult = await connectionToken({
       credentialsFn: credentialsFnFake,
     })({ network, key });
+    expect(readObjectFake).to.have.been.calledWith(`_cToken.${network}.${key}`);
+    expect(writeObjectFake).to.have.been.calledOnceWith(
+      `_cToken.${network}.${key}`,
+      {
+        token,
+        exp: new Date(Date.parse(exp)),
+      }
+    );
     expect(commandFake).to.have.been.calledOnce;
     expect(anotherResult).to.deep.equal({ token, type: "Bearer" });
     const yetAnotherResult = await connectionToken({
@@ -72,20 +94,25 @@ describe("Connection token", () => {
       set: setFake,
     });
     replace(deps, "command", commandFake);
-    const decodeFake = fake.returns({ exp: expiredExp });
+    const decodeFake = fake.returns({ exp });
     replace(deps, "decode", decodeFake);
     const basicTokenFake = fake.returns(basicToken);
     replace(deps, "basicToken", basicTokenFake);
     const credentialsFnFake = fake.returns({ root, secret });
+    const writeObjectFake = fake();
+    const readObjectFake = fake.returns({
+      token,
+      exp: expiredExp,
+    });
+    replace(deps, "redis", {
+      writeObject: writeObjectFake,
+      readObject: readObjectFake,
+    });
     const result = await connectionToken({
       credentialsFn: credentialsFnFake,
     })({ network: anotherNetwork, key });
     expect(result).to.deep.equal({ token, type: "Bearer" });
-    const anotherResult = await connectionToken({
-      credentialsFn: credentialsFnFake,
-    })({ network: anotherNetwork, key });
-    expect(commandFake).to.have.been.calledTwice;
-    expect(anotherResult).to.deep.equal({ token, type: "Bearer" });
+    expect(commandFake).to.have.been.calledOnce;
   });
   it("should call correctly if no token", async () => {
     const issueFake = fake.returns({ body: {} });
@@ -101,6 +128,12 @@ describe("Connection token", () => {
     const basicTokenFake = fake.returns(basicToken);
     replace(deps, "basicToken", basicTokenFake);
     const credentialsFnFake = fake.returns({ root, secret });
+    const writeObjectFake = fake();
+    const readObjectFake = fake.returns();
+    replace(deps, "redis", {
+      writeObject: writeObjectFake,
+      readObject: readObjectFake,
+    });
     const result = await connectionToken({
       credentialsFn: credentialsFnFake,
     })({ network: "some-random-network", key });

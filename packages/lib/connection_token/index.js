@@ -1,15 +1,15 @@
 const deps = require("./deps");
 
-let cache = {};
-
+const cacheKeyPrefix = "_cToken";
 module.exports = ({ credentialsFn }) => async ({ network, key }) => {
   const credentials = await credentialsFn({ network });
   if (!credentials) return null;
   const { root, secret } = credentials;
-  const { token, exp } = cache[`${network}.${key}`] || {};
-  if (!token || exp < new Date()) {
+  let { token, exp } =
+    (await deps.redis.readObject(`${cacheKeyPrefix}.${network}.${key}`)) || {};
+  if (!token || new Date(Date.parse(exp)) < new Date()) {
     const {
-      body: { token },
+      body: { token: newToken },
     } = await deps
       .command({
         name: "open",
@@ -29,14 +29,20 @@ module.exports = ({ credentialsFn }) => async ({ network, key }) => {
       })
       .issue({ key });
 
-    if (!token) return null;
+    if (!newToken) return null;
 
-    const claims = await deps.decode(token.value);
-    cache[`${network}.${key}`] = {
-      token: token.value,
-      exp: new Date(Date.parse(claims.exp)),
-    };
+    const claims = await deps.decode(newToken.value);
+    token = newToken.value;
+    exp = new Date(Date.parse(claims.exp));
+
+    await deps.redis.writeObject(`${cacheKeyPrefix}.${network}.${key}`, {
+      token,
+      exp,
+    });
   }
 
-  return { token: cache[`${network}.${key}`].token, type: "Bearer" };
+  return {
+    token,
+    type: "Bearer",
+  };
 };

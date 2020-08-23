@@ -56,7 +56,7 @@ module.exports = ({
   runIntegrationTests,
   runBaseIntegrationTests,
   dependencyKeyEnvironmentVariables,
-  cacheIp,
+  redisIp,
   strict,
 }) => {
   return [
@@ -119,7 +119,7 @@ module.exports = ({
             project,
             network,
             envUriSpecifier,
-            cacheIp,
+            redisIp,
             env: {
               NAME: name,
               ...(context && { CONTEXT: context }),
