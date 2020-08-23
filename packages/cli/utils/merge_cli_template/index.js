@@ -73,7 +73,7 @@ const envProject = ({ env, config }) => {
   }
 };
 const envRedisIp = ({ env, config }) => {
-  if (!config.vendors.cache.redis) return;
+  if (!config.vendors.cache || !config.vendors.cache.redis) return;
   switch (env) {
     case "production":
       return config.vendors.cache.redis.ip.production;
