@@ -98,7 +98,7 @@ module.exports = ({
           ]),
     ]);
 
-    const updates = `https://updates.${
+    const updates = `http://updates.${
       process.env.CORE_NETWORK
     }/channel?query%5Bname%5D=${process.env.NAME}${
       process.env.CONTEXT ? `&query%5Bcontext%5D=${process.env.CONTEXT}` : ""
@@ -107,6 +107,13 @@ module.exports = ({
         ? `&query%5Bprincipal%5D=${req.query.context.principal.root}`
         : ""
     }`;
+
+    res.cookie("updates", req.token, {
+      domain: process.env.CORE_NETWORK,
+      httpOnly: true,
+      secure: true,
+      expires: new Date(Date.now() + 8 * 3600000),
+    });
 
     const formattedResults = results.map((r) => {
       const formattedTrace = [];

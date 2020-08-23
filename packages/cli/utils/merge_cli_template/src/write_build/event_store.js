@@ -61,6 +61,7 @@ module.exports = ({
   runIntegrationTests,
   runBaseIntegrationTests,
   dependencyKeyEnvironmentVariables,
+  cacheIp,
   strict,
 }) => {
   return [
@@ -139,6 +140,7 @@ module.exports = ({
             envUriSpecifier,
             network,
             nodeEnv: env,
+            cacheIp,
             env: {
               DOMAIN: domain,
               SERVICE: service,

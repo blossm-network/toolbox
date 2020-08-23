@@ -44,6 +44,7 @@ module.exports = ({
   secretBucketKeyRing,
   env,
   uri,
+  cacheIp,
   imageExtension,
   runUnitTests,
   runBaseUnitTests,
@@ -111,6 +112,7 @@ module.exports = ({
             secretBucket,
             secretBucketKeyLocation,
             secretBucketKeyRing,
+            cacheIp,
             nodeEnv: env,
             env: {
               NAME: name,

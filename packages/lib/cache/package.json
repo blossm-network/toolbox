@@ -1,0 +1,23 @@
+{
+  "name": "@blossm/cache",
+  "version": "0.0.0",
+  "description": "Cache interactions.",
+  "main": "index.js",
+  "author": "blossm.network",
+  "engines": {
+    "node": ">= 10.16.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "redis": "^3.0.2",
+    "@blossm/logger": "*"
+  },
+  "scripts": {
+    "test": "mocha --recursive"
+  },
+  "devDependencies": {
+    "mocha": "^7.1.1"
+  }
+}

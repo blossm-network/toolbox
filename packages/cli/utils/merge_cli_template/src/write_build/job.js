@@ -51,6 +51,7 @@ module.exports = ({
   runUnitTests,
   runBaseUnitTests,
   runIntegrationTests,
+  cacheIp,
   runBaseIntegrationTests,
   dependencyKeyEnvironmentVariables,
   strict,
@@ -115,6 +116,7 @@ module.exports = ({
             network,
             region,
             project,
+            cacheIp,
             nodeEnv: env,
             env: {
               NAME: name,

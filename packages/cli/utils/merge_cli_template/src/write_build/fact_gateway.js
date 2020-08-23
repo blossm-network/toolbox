@@ -38,6 +38,7 @@ module.exports = ({
   host,
   memory,
   env,
+  cacheIp,
   rolesBucket,
   secretBucket,
   secretBucketKeyLocation,
@@ -112,6 +113,7 @@ module.exports = ({
             region,
             project,
             network,
+            cacheIp,
             envUriSpecifier,
             env: {
               ...dependencyKeyEnvironmentVariables,
