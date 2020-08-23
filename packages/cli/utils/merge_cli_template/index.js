@@ -72,6 +72,21 @@ const envProject = ({ env, config }) => {
       return "";
   }
 };
+const envRedisIp = ({ env, config }) => {
+  if (!config.vendors.cache.redis) return;
+  switch (env) {
+    case "production":
+      return config.vendors.cache.redis.ip.production;
+    case "sandbox":
+      return config.vendors.cache.redis.ip.sandbox;
+    case "staging":
+      return config.vendors.cache.redis.ip.staging;
+    case "development":
+      return config.vendors.cache.redis.ip.development;
+    default:
+      return "";
+  }
+};
 
 const envPublicKeyUrl = ({ env, config }) =>
   config.core && config.core.network != config.network
@@ -691,7 +706,6 @@ const configure = async (workingDir, configFn, env, strict) => {
     const name = config.name;
     const envVars = config.env && config.env[env];
     const devEnvVars = config.devEnv && config.devEnv[env];
-    const redisIp = config.redisIp;
 
     const dependencyKeyEnvironmentVariables = envDependencyKeyEnvironmentVariables(
       { env, config: blossmConfig }
@@ -700,6 +714,8 @@ const configure = async (workingDir, configFn, env, strict) => {
     const rolesBucket = envRolesBucket({ env, config: blossmConfig });
     const secretBucket = envSecretsBucket({ env, config: blossmConfig });
     const publicKeyUrl = envPublicKeyUrl({ env, config: blossmConfig });
+
+    const redisIp = envRedisIp({ env, config: blossmConfig });
 
     const secretBucketKeyLocation = "global";
     const secretBucketKeyRing = "secrets-bucket";

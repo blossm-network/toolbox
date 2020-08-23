@@ -12,18 +12,20 @@ client &&
     logger.error("The cache had an error.", { error });
   });
 
+const fallbackObjectCache = {};
 module.exports = {
   writeObject: (key, object) =>
-    client &&
-    new Promise((resolve, reject) =>
-      client.hmset(key, object, (err) => (err ? reject(err) : resolve()))
-    ),
+    client
+      ? new Promise((resolve, reject) =>
+          client.hmset(key, object, (err) => (err ? reject(err) : resolve()))
+        )
+      : (fallbackObjectCache[key] = object),
   readObject: (key) =>
-    new Promise((resolve, reject) =>
-      client
-        ? client.hgetall(key, (err, object) =>
+    client
+      ? new Promise((resolve, reject) =>
+          client.hgetall(key, (err, object) =>
             err ? reject(err) : resolve(object)
           )
-        : resolve()
-    ),
+        )
+      : fallbackObjectCache[key],
 };
