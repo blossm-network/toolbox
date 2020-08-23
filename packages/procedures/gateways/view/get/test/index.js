@@ -96,10 +96,9 @@ describe("View gateway get", () => {
     expect(readFake).to.have.been.calledWith(query);
     expect(sendFake).to.have.been.calledWith(results);
   });
-  it("should call with the correct params with view-store procedure with no env context and with updates", async () => {
-    const updates = "some-updates";
+  it("should call with the correct params with view-store procedure with no env context", async () => {
     const readFake = fake.returns({
-      body: { ...results, updates },
+      body: results,
     });
     const setFake = fake.returns({
       read: readFake,
@@ -123,10 +122,8 @@ describe("View gateway get", () => {
       send: sendFake,
     });
 
-    const cookieFake = fake();
     const res = {
       status: statusFake,
-      cookie: cookieFake,
     };
 
     const nodeExternalTokenResult = "some-external-token-result";
@@ -139,14 +136,8 @@ describe("View gateway get", () => {
       key,
     })(req, res);
 
-    expect(cookieFake).to.have.been.calledWith("updates", token, {
-      domain: coreNetwork,
-      httpOnly: true,
-      secure: true,
-      expires: new Date(Date.now() + 8 * 3600000),
-    });
     expect(readFake).to.have.been.calledWith(query);
-    expect(sendFake).to.have.been.calledWith({ ...results, updates });
+    expect(sendFake).to.have.been.calledWith(results);
   });
   it("should call with the correct params with context, domain, params with view-store procedure, token, context, and claims in req", async () => {
     const readFake = fake.returns({ body: results });

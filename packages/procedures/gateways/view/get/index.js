@@ -98,20 +98,6 @@ module.exports = ({
       key,
       currentToken: req.token,
     });
-    if (response.updates) {
-      //TODO
-      console.log({
-        core: process.env.CORE_NETWORK,
-        updates: response.updates,
-        token: req.token,
-      });
-      res.cookie("updates", req.token, {
-        domain: process.env.CORE_NETWORK,
-        httpOnly: true,
-        secure: true,
-        expires: new Date(Date.now() + 8 * 3600000),
-      });
-    }
     res.status(200).send(response);
   } catch (err) {
     throw err.statusCode == 403
