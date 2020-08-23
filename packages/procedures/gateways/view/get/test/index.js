@@ -1,10 +1,10 @@
 const { expect } = require("chai").use(require("sinon-chai"));
-const { restore, replace, fake, match } = require("sinon");
+const { restore, replace, fake, match, useFakeTimers } = require("sinon");
 
 const deps = require("../deps");
 const get = require("..");
 
-const results = "some-result";
+const results = { some: "results " };
 const query = { a: 1 };
 const name = "some-name";
 const claims = "some-claims";
@@ -26,11 +26,16 @@ const context = {
   [envContext]: "some-thing",
 };
 
+let clock;
+const now = new Date();
+
 describe("View gateway get", () => {
   beforeEach(() => {
     delete process.env.NETWORK;
+    clock = useFakeTimers(now.getTime());
   });
   afterEach(() => {
+    clock.restore();
     restore();
   });
   it("should call with the correct params with view-store procedure", async () => {
@@ -91,8 +96,11 @@ describe("View gateway get", () => {
     expect(readFake).to.have.been.calledWith(query);
     expect(sendFake).to.have.been.calledWith(results);
   });
-  it("should call with the correct params with view-store procedure with no env context", async () => {
-    const readFake = fake.returns({ body: results });
+  it("should call with the correct params with view-store procedure with no env context and with updates", async () => {
+    const updates = "some-updates";
+    const readFake = fake.returns({
+      body: { ...results, updates },
+    });
     const setFake = fake.returns({
       read: readFake,
     });
@@ -101,23 +109,28 @@ describe("View gateway get", () => {
     });
     replace(deps, "viewStore", viewStoreFake);
 
+    const token = "some-token";
+
     const req = {
       context,
       query,
       params: {},
+      token,
     };
 
     const sendFake = fake();
     const statusFake = fake.returns({
       send: sendFake,
     });
+
+    const cookieFake = fake();
     const res = {
       status: statusFake,
+      cookie: cookieFake,
     };
 
     const nodeExternalTokenResult = "some-external-token-result";
     const nodeExternalTokenFnFake = fake.returns(nodeExternalTokenResult);
-    delete process.env.CONTEXT;
     await get({
       procedure: "view-store",
       name,
@@ -126,8 +139,14 @@ describe("View gateway get", () => {
       key,
     })(req, res);
 
+    expect(cookieFake).to.have.been.calledWith("updates", token, {
+      domain: coreNetwork,
+      httpOnly: true,
+      secure: true,
+      expires: new Date(Date.now() + 8 * 3600000),
+    });
     expect(readFake).to.have.been.calledWith(query);
-    expect(sendFake).to.have.been.calledWith(results);
+    expect(sendFake).to.have.been.calledWith({ ...results, updates });
   });
   it("should call with the correct params with context, domain, params with view-store procedure, token, context, and claims in req", async () => {
     const readFake = fake.returns({ body: results });

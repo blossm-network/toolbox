@@ -108,13 +108,6 @@ module.exports = ({
         : ""
     }`;
 
-    res.cookie("updates", req.token, {
-      domain: process.env.CORE_NETWORK,
-      httpOnly: true,
-      secure: true,
-      expires: new Date(Date.now() + 8 * 3600000),
-    });
-
     const formattedResults = results.map((r) => {
       const formattedTrace = [];
       for (const service in r.trace) {
