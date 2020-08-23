@@ -21,6 +21,7 @@ replace(deps, "redis", {
 
 const { set, get } = require("..");
 
+//TODO improve this test
 describe("Cache", () => {
   afterEach(() => {
     restore();
