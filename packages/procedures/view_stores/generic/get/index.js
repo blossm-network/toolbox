@@ -98,8 +98,8 @@ module.exports = ({
           ]),
     ]);
 
-    const updates = `http://updates.${
-      process.env.CORE_NETWORK
+    const updates = `https://updates.${
+      process.env.NETWORK
     }/channel?query%5Bname%5D=${process.env.NAME}${
       process.env.CONTEXT ? `&query%5Bcontext%5D=${process.env.CONTEXT}` : ""
     }&query%5Bnetwork%5D=${process.env.NETWORK}${

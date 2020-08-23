@@ -75,7 +75,6 @@ module.exports = ({
       secretBucketKeyRing,
       secretBucketKeyLocation,
       serviceName,
-      redisIp,
       custom: {
         DOMAIN: domain,
         SERVICE: service,
@@ -117,6 +116,7 @@ module.exports = ({
             project,
             network,
             envUriSpecifier,
+            redisIp,
             env: {
               DOMAIN: domain,
               SERVICE: service,
