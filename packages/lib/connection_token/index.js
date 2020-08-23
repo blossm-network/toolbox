@@ -2,10 +2,7 @@ const deps = require("./deps");
 
 const cacheKeyPrefix = "_cToken";
 module.exports = ({ credentialsFn }) => async ({ network, key }) => {
-  const credentials = await credentialsFn({ network });
-  if (!credentials) return null;
   const cacheKey = `${cacheKeyPrefix}.${network}.${key}`;
-  const { root, secret } = credentials;
   let { token, exp } = (await deps.redis.readObject(cacheKey)) || {};
   //TODO
   if (token) {
@@ -14,6 +11,9 @@ module.exports = ({ credentialsFn }) => async ({ network, key }) => {
     console.log(`NOT FOUND FOR ${cacheKey}`);
   }
   if (!token || new Date(Date.parse(exp)) < new Date()) {
+    const credentials = await credentialsFn({ network });
+    if (!credentials) return null;
+    const { root, secret } = credentials;
     const {
       body: { token: newToken },
     } = await deps
