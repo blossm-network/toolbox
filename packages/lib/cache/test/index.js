@@ -1,13 +1,22 @@
-const { expect, fake, replace, restore } = require("chai");
+const { expect } = require("chai").use(require("sinon-chai"));
+const { fake, stub, replace, restore } = require("sinon");
 
 const deps = require("../deps");
 
-const setFake = fake();
-const getFake = fake();
+process.env.CACHE_IP = "some-cache-ip";
 
-replace(deps, "redis", {
+const value = { some: "value" };
+const setFake = fake();
+const getFake = stub().yields(null, value);
+const onFake = fake();
+const createClientFake = fake.returns({
+  on: onFake,
   set: setFake,
   get: getFake,
+});
+
+replace(deps, "redis", {
+  createClient: createClientFake,
 });
 
 const { set, get } = require("..");
@@ -18,7 +27,6 @@ describe("Cache", () => {
   });
   it("It should set and get correctly;", async () => {
     const key = "some-key";
-    const value = { some: "value" };
     await set(key, value);
 
     expect(setFake).to.have.been.calledWith(key, value);

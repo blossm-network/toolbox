@@ -11,10 +11,12 @@ client.on("error", function (error) {
   logger.error("The cache had an error.", { error });
 });
 
-module.exports = async () => ({
-  set: (key, value) => client.set(key, value),
+module.exports = {
+  set: (key, value) => client && client.set(key, value),
   get: (key) =>
     new Promise((resolve, reject) =>
-      client.get(key, (err, reply) => (err ? reject(err) : resolve(reply)))
+      client
+        ? client.get(key, (err, reply) => (err ? reject(err) : resolve(reply)))
+        : resolve()
     ),
-});
+};
