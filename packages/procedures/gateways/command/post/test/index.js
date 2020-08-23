@@ -452,7 +452,7 @@ describe("Command gateway post", () => {
       set: setFake,
     });
     replace(deps, "command", commandFake);
-    const decodeFake = fake.returns({ headers: { exp: dateString() } });
+    const decodeFake = fake.returns({ claims: { exp: dateString() } });
     replace(deps, "decode", decodeFake);
     const reqToken = "some-req-token";
     const idempotency = "some-idempotency";

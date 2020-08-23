@@ -60,30 +60,18 @@ module.exports = ({
         },
       });
 
-    if (name == "change-scene") {
-      console.log({
-        response,
-        responseHeaders,
-        statusCode,
-      });
-    }
-
     // If the response has tokens, send them as cookies.
     if (response && response.tokens) {
       for (const token of response.tokens) {
-        if (name == "change-scene") {
-          console.log({
-            token,
-          });
-        }
         if (!token.network || !token.type || !token.value) continue;
         const cookieName = token.type;
-        const { headers } = deps.decode(token.value);
+        const { claims } = deps.decode(token.value);
         res.cookie(cookieName, token.value, {
           domain: token.network,
           httpOnly: true,
           secure: true,
-          expires: new Date(headers.exp),
+          //this might be incorrect. headers.exp?
+          expires: new Date(claims.exp),
         });
       }
 
