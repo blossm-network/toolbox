@@ -111,11 +111,13 @@ describe("Fact get", () => {
       queryAggregatesFn: queryAggregatesFnFake,
       aggregateFn: aggregateFnFake,
       contexts: [context1, context2],
+      claims,
     })(req, res);
 
     expect(mainFnFake).to.have.been.calledWith({
       query,
       context,
+      claims,
       root,
       queryAggregatesFn,
       aggregateFn,

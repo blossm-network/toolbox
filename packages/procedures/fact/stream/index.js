@@ -13,6 +13,7 @@ module.exports = ({ mainFn, queryAggregatesFn, aggregateFn, contexts }) => {
       query: req.query.query,
       ...(req.params.root && { root: req.params.root }),
       ...(req.query.context && { context: req.query.context }),
+      ...(req.query.claims && { claims: req.query.claims }),
       queryAggregatesFn: queryAggregatesFn({
         ...(req.query.context && { context: req.query.context }),
         ...(req.query.claims && { claims: req.query.claims }),

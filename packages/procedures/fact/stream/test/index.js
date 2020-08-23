@@ -115,6 +115,7 @@ describe("Fact stream", () => {
       query,
       context,
       root,
+      claims,
       streamFn: match((fn) => {
         const data = { a: 4 };
         fn(data);
