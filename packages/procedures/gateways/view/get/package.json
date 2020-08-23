@@ -1,7 +1,7 @@
 {
   "name": "@blossm/view-gateway-get",
   "description": "A view gateway server GET handler.",
-  "version": "0.0.279",
+  "version": "0.0.280",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
