@@ -4,9 +4,15 @@ const cacheKeyPrefix = "_cToken";
 module.exports = ({ credentialsFn }) => async ({ network, key }) => {
   const credentials = await credentialsFn({ network });
   if (!credentials) return null;
+  const cacheKey = `${cacheKeyPrefix}.${network}.${key}`;
   const { root, secret } = credentials;
-  let { token, exp } =
-    (await deps.redis.readObject(`${cacheKeyPrefix}.${network}.${key}`)) || {};
+  let { token, exp } = (await deps.redis.readObject(cacheKey)) || {};
+  //TODO
+  if (token) {
+    console.log(`FOUND FOR ${cacheKey}`);
+  } else {
+    console.log(`NOT FOUND FOR ${cacheKey}`);
+  }
   if (!token || new Date(Date.parse(exp)) < new Date()) {
     const {
       body: { token: newToken },
@@ -35,10 +41,13 @@ module.exports = ({ credentialsFn }) => async ({ network, key }) => {
     token = newToken.value;
     exp = new Date(Date.parse(claims.exp));
 
-    await deps.redis.writeObject(`${cacheKeyPrefix}.${network}.${key}`, {
+    await deps.redis.writeObject(cacheKey, {
       token,
       exp,
     });
+
+    //TODO
+    console.log(`SAVED FOR ${cacheKey}`);
   }
 
   return {
