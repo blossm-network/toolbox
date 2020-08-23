@@ -99,6 +99,12 @@ module.exports = ({
       currentToken: req.token,
     });
     if (response.updates) {
+      //TODO
+      console.log({
+        core: process.env.CORE_NETWORK,
+        updates: response.updates,
+        token: req.token,
+      });
       res.cookie("updates", req.token, {
         domain: process.env.CORE_NETWORK,
         httpOnly: true,
