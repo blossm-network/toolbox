@@ -144,16 +144,27 @@ module.exports = async ({
     return await cursor.eachAsync(fn, { parallel });
   };
 
-  const findFn = async ({ query, text, limit, skip, sort }) =>
+  const findFn = async ({ query, text, limit, select, skip, sort }) =>
     await deps.db.find({
       store,
       query: {
         ...query,
         ...(text && { $text: { $search: text } }),
       },
+      ...((select || text) && {
+        select: {
+          ...select,
+          ...(text && { score: { $meta: "textScore" } }),
+        },
+      }),
       ...(limit && { limit }),
       ...(skip && { skip }),
-      ...(sort && { sort }),
+      ...((sort || text) && {
+        sort: {
+          ...sort,
+          ...(text && { score: { $meta: "textScore" } }),
+        },
+      }),
       options: {
         lean: true,
       },

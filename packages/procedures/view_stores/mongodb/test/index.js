@@ -21,7 +21,7 @@ const host = "some-host";
 const database = "some-db";
 const password = "some-password";
 const query = { a: 1 };
-const sort = "some-sort";
+const sort = { b: 2 };
 const sort2 = "some-other-sort";
 const query2 = "some-other-query";
 const count = "some-count";
@@ -209,9 +209,11 @@ describe("View store", () => {
     expect(secretFake).to.have.been.calledWith("mongodb-view-store");
 
     const limit = "some-limit";
+    const select = { c: 3 };
     const skip = "some-skip";
     const findFnResult = await viewStoreFake.lastCall.lastArg.findFn({
       limit,
+      select,
       skip,
       query,
       sort,
@@ -221,6 +223,7 @@ describe("View store", () => {
       store,
       query,
       limit,
+      select,
       skip,
       sort,
       options: {
@@ -753,7 +756,6 @@ describe("View store", () => {
     const findFnResult = await viewStoreFake.lastCall.lastArg.findFn({
       query,
       text,
-      sort,
     });
 
     expect(findFake).to.have.been.calledWith({
@@ -762,7 +764,14 @@ describe("View store", () => {
         ...query,
         $text: { $search: text },
       },
-      sort,
+      select: {
+        score: { $meta: "textScore" },
+      },
+      sort: {
+        score: {
+          $meta: "textScore",
+        },
+      },
       options: {
         lean: true,
       },
