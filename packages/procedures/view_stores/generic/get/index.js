@@ -98,15 +98,16 @@ module.exports = ({
           ]),
     ]);
 
-    const updates = `https://updates.${
-      process.env.NETWORK
-    }/channel?query%5Bname%5D=${process.env.NAME}${
-      process.env.CONTEXT ? `&query%5Bcontext%5D=${process.env.CONTEXT}` : ""
-    }&query%5Bnetwork%5D=${process.env.NETWORK}${
-      !process.env.CONTEXT && req.query.context && req.query.context.principal
-        ? `&query%5Bprincipal%5D=${req.query.context.principal.root}`
-        : ""
-    }`;
+    //TODO
+    // const updates = `https://updates.${
+    //   process.env.NETWORK
+    // }/channel?query%5Bname%5D=${process.env.NAME}${
+    //   process.env.CONTEXT ? `&query%5Bcontext%5D=${process.env.CONTEXT}` : ""
+    // }&query%5Bnetwork%5D=${process.env.NETWORK}${
+    //   !process.env.CONTEXT && req.query.context && req.query.context.principal
+    //     ? `&query%5Bprincipal%5D=${req.query.context.principal.root}`
+    //     : ""
+    // }`;
 
     const formattedResults = results.map((r) => {
       const formattedTrace = [];
@@ -118,7 +119,12 @@ module.exports = ({
       }
 
       return {
-        ...formatFn({ body: r.body, id: r.headers.id, updates }),
+        ...formatFn({
+          body: r.body,
+          id: r.headers.id,
+          //TODO
+          // updates
+        }),
         headers: {
           trace: formattedTrace,
           id: r.headers.id,
@@ -152,14 +158,16 @@ module.exports = ({
           formattedResults.length == 0 && emptyFn
             ? emptyFn(queryBody)
             : formattedResults,
-        updates,
+        //TODO
+        // updates,
         ...(next && { next }),
         count,
       });
     } else if (formattedResults.length > 0) {
       res.send({
         content: formattedResults[0],
-        updates,
+        //TODO
+        // updates,
       });
     } else {
       throw deps.resourceNotFoundError.message("This view wasn't found.");
