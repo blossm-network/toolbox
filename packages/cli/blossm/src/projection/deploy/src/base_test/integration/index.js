@@ -21,8 +21,6 @@ const groupService = "some-group-service";
 const groupNetwork = "some-group-network";
 
 const checkResponse = ({ data, expected }) => {
-  //TODO
-  console.log({ data, expected });
   for (const property in expected) {
     expect(data[property]).to.exist;
     if (expected[property]) {

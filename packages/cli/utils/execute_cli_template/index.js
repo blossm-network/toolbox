@@ -97,7 +97,6 @@ const execute = async (input, configFn) => {
 
     await enqueue({
       queue: input.queue || queueName({ config: blossmConfig }),
-      serviceAccountEmail: `executer@${project}.iam.gserviceaccount.com`,
       location: "us-central1",
       computeUrlId,
       project,
