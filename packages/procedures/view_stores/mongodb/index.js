@@ -109,6 +109,7 @@ module.exports = async ({
     ],
   ];
 
+  const textIndexes = [];
   if (indexes) {
     const customIndexes = [];
     for (const index of indexes) {
@@ -116,6 +117,7 @@ module.exports = async ({
       for (const element of index) {
         for (const key in element) {
           customElement[`body.${key}`] = element[key];
+          if (element[key] == "text") textIndexes.push(`body.${key}`);
         }
       }
       customIndexes.push([customElement]);
@@ -141,13 +143,22 @@ module.exports = async ({
             ...((select || text) && {
               select: {
                 ...select,
-                data: 1,
+                ...(select &&
+                  textIndexes.reduce((result, index) => {
+                    result[index] = 1;
+                    return result;
+                  }, {})),
+                ...(!select && {
+                  body: 1,
+                  headers: 1,
+                  trace: 1,
+                }),
                 score: {
                   $add: [
                     { $meta: "textScore" },
-                    {
-                      $cond: [{ $eq: ["$data", text] }, 10, 0],
-                    },
+                    ...textIndexes.map((index) => ({
+                      $cond: [{ $eq: [`$${index}`, text] }, 10, 0],
+                    })),
                   ],
                 },
               },
@@ -186,13 +197,22 @@ module.exports = async ({
           ...((select || text) && {
             select: {
               ...select,
-              data: 1,
+              ...(select &&
+                textIndexes.reduce((result, index) => {
+                  result[index] = 1;
+                  return result;
+                }, {})),
+              ...(!select && {
+                body: 1,
+                headers: 1,
+                trace: 1,
+              }),
               score: {
                 $add: [
                   { $meta: "textScore" },
-                  {
-                    $cond: [{ $eq: ["$data", text] }, 10, 0],
-                  },
+                  ...textIndexes.map((index) => ({
+                    $cond: [{ $eq: [`$${index}`, text] }, 10, 0],
+                  })),
                 ],
               },
             },

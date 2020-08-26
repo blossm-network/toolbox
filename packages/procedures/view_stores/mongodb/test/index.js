@@ -309,7 +309,7 @@ describe("View store", () => {
     await mongodbViewStore({ schema });
     expect(storeFake).to.have.been.calledOnce;
   });
-  it("should call with the correct params without domain and in local env, and with text", async () => {
+  it("should call with the correct params without domain and in local env, and with text and text index", async () => {
     const store = "some-store";
     const storeFake = fake.returns(store);
 
@@ -326,14 +326,14 @@ describe("View store", () => {
     const foundObjs = {
       cursor: cursorFake,
     };
-    const findFake = fake.returns(foundObjs);
+    const aggregateFake = fake.returns(foundObjs);
     const countFake = fake.returns(count);
     const writeFake = fake.returns(writeResult);
     const removeFake = fake.returns(removeResult);
 
     const db = {
       store: storeFake,
-      find: findFake,
+      aggregate: aggregateFake,
       count: countFake,
       write: writeFake,
       remove: removeFake,
@@ -362,7 +362,7 @@ describe("View store", () => {
     process.env.NODE_ENV = "local";
     await mongodbViewStore({
       schema,
-      indexes,
+      indexes: [...indexes, [{ some: "text" }]],
       secretFn: secretFake,
       queryFn,
       sortFn,
@@ -442,6 +442,7 @@ describe("View store", () => {
           { ["headers.groups.network"]: 1 },
         ],
         [{ "body.some-index": 1 }],
+        [{ "body.some": "text" }],
       ],
       connection: {
         protocol,
@@ -457,6 +458,107 @@ describe("View store", () => {
         autoIndex: true,
       },
     });
+
+    const text = "some-text";
+    const findFnResult = await viewStoreFake.lastCall.lastArg.findFn({
+      query,
+      text,
+    });
+
+    expect(aggregateFake).to.have.been.calledWith({
+      store,
+      query: {
+        ...query,
+        $text: { $search: text },
+      },
+      select: {
+        score: {
+          $add: [
+            { $meta: "textScore" },
+            { $cond: [{ $eq: ["$body.some", "some-text"] }, 10, 0] },
+          ],
+        },
+        body: 1,
+        headers: 1,
+        trace: 1,
+      },
+      sort: { score: -1 },
+    });
+    expect(findFnResult).to.equal(foundObjs);
+
+    const countFnResult = await viewStoreFake.lastCall.lastArg.countFn({
+      query,
+      text,
+    });
+
+    expect(countFake).to.have.been.calledWith({
+      store,
+      query: {
+        ...query,
+        $text: { $search: text },
+      },
+    });
+    expect(countFnResult).to.equal(count);
+
+    const steamFnResult = await viewStoreFake.lastCall.lastArg.streamFn({
+      text,
+      query: query2,
+      sort: sort2,
+      parallel,
+      fn: fnFake,
+    });
+
+    expect(aggregateFake).to.have.been.calledWith({
+      store,
+      query: {
+        ...query2,
+        $text: { $search: text },
+      },
+      select: {
+        score: {
+          $add: [
+            { $meta: "textScore" },
+            { $cond: [{ $eq: ["$body.some", "some-text"] }, 10, 0] },
+          ],
+        },
+        body: 1,
+        headers: 1,
+        trace: 1,
+      },
+      sort: { c: 3, score: -1 },
+    });
+    expect(steamFnResult).to.equal(foundObjs);
+
+    const writeFnResult = await viewStoreFake.lastCall.lastArg.writeFn({
+      query,
+      data,
+    });
+    expect(writeFake).to.have.been.calledWith({
+      store,
+      query,
+      update: {
+        $set: data,
+      },
+      options: {
+        lean: true,
+        omitUndefined: true,
+        upsert: true,
+        new: true,
+        runValidators: true,
+        setDefaultsOnInsert: true,
+      },
+    });
+    expect(writeFnResult).to.equal(writeResult);
+
+    const removeFnResult = await viewStoreFake.lastCall.lastArg.removeFn(query);
+    expect(removeFake).to.have.been.calledWith({
+      store,
+      query,
+    });
+    expect(removeFnResult).to.equal(removeResult);
+
+    await mongodbViewStore();
+    expect(storeFake).to.have.been.calledOnce;
   });
   it("should call with the correct params with no root's in nested objs", async () => {
     const store = "some-store";
@@ -613,7 +715,7 @@ describe("View store", () => {
       },
     });
   });
-  it("should call with the correct params without fns, one, group, or upsert", async () => {
+  it("should call with the correct params without fns, one, group, or upsert. With text and select", async () => {
     const store = "some-store";
     const storeFake = fake.returns(store);
 
@@ -659,7 +761,7 @@ describe("View store", () => {
 
     await mongodbViewStore({
       schema,
-      indexes,
+      indexes: [...indexes, [{ some: "text" }]],
       secretFn: secretFake,
       groupsLookupFn,
     });
@@ -735,6 +837,7 @@ describe("View store", () => {
           { ["headers.groups.network"]: 1 },
         ],
         [{ "body.some-index": 1 }],
+        [{ "body.some": "text" }],
       ],
       connection: {
         protocol,
@@ -753,9 +856,11 @@ describe("View store", () => {
     expect(secretFake).to.have.been.calledWith("mongodb-view-store");
 
     const text = "some-text";
+    const select = { some: "select" };
     const findFnResult = await viewStoreFake.lastCall.lastArg.findFn({
       query,
       text,
+      select,
     });
 
     expect(aggregateFake).to.have.been.calledWith({
@@ -765,13 +870,12 @@ describe("View store", () => {
         $text: { $search: text },
       },
       select: {
-        data: 1,
+        some: "select",
+        "body.some": 1,
         score: {
           $add: [
             { $meta: "textScore" },
-            {
-              $cond: [{ $eq: ["$data", text] }, 10, 0],
-            },
+            { $cond: [{ $eq: ["$body.some", "some-text"] }, 10, 0] },
           ],
         },
       },
@@ -797,6 +901,7 @@ describe("View store", () => {
       text,
       query: query2,
       sort: sort2,
+      select,
       parallel,
       fn: fnFake,
     });
@@ -808,13 +913,12 @@ describe("View store", () => {
         $text: { $search: text },
       },
       select: {
-        data: 1,
+        some: "select",
+        "body.some": 1,
         score: {
           $add: [
             { $meta: "textScore" },
-            {
-              $cond: [{ $eq: ["$data", text] }, 10, 0],
-            },
+            { $cond: [{ $eq: ["$body.some", "some-text"] }, 10, 0] },
           ],
         },
       },
