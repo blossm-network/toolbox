@@ -67,7 +67,7 @@ const processEvents = async ({
             (normalizedEvent) => normalizedEvent.number != undefined
           ),
           tx: {
-            ...(tx.ip && { ip: tx.ip }),
+            ...(tx && tx.ip && { ip: tx.ip }),
             id: txId,
             path,
           },
