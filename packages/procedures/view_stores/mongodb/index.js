@@ -129,46 +129,92 @@ module.exports = async ({
     secretFn,
   });
 
-  const streamFn = async ({ query, sort, parallel, fn }) => {
-    const cursor = deps.db
-      .find({
-        store,
-        query,
-        ...(sort && { sort }),
-        options: {
-          lean: true,
-        },
-      })
-      .cursor();
+  const streamFn = async ({ query, text, sort, select, parallel, fn }) => {
+    const cursor = text
+      ? deps.db
+          .aggregate({
+            store,
+            query: {
+              ...query,
+              ...(text && { $text: { $search: text } }),
+            },
+            ...((select || text) && {
+              select: {
+                ...select,
+                data: 1,
+                score: {
+                  $add: [
+                    { $meta: "textScore" },
+                    {
+                      $cond: [{ $eq: ["$data", text] }, 10, 0],
+                    },
+                  ],
+                },
+              },
+            }),
+            ...((sort || text) && {
+              sort: {
+                ...sort,
+                score: -1,
+              },
+            }),
+          })
+          .cursor()
+      : deps.db
+          .find({
+            store,
+            query,
+            ...(sort && { sort }),
+            ...(select && { select }),
+            options: {
+              lean: true,
+            },
+          })
+          .cursor();
 
     return await cursor.eachAsync(fn, { parallel });
   };
 
-  const findFn = async ({ query, text, limit, select, skip, sort }) =>
-    await deps.db.find({
-      store,
-      query: {
-        ...query,
-        ...(text && { $text: { $search: text } }),
-      },
-      ...((select || text) && {
-        select: {
-          ...select,
-          ...(text && { score: { $meta: "textScore" } }),
-        },
-      }),
-      ...(limit && { limit }),
-      ...(skip && { skip }),
-      ...((sort || text) && {
-        sort: {
-          ...sort,
-          ...(text && { score: { $meta: "textScore" } }),
-        },
-      }),
-      options: {
-        lean: true,
-      },
-    });
+  const findFn = ({ query, text, limit, select, skip, sort }) =>
+    text
+      ? deps.db.aggregate({
+          store,
+          query: {
+            ...query,
+            ...(text && { $text: { $search: text } }),
+          },
+          ...((select || text) && {
+            select: {
+              ...select,
+              data: 1,
+              score: {
+                $add: [
+                  { $meta: "textScore" },
+                  {
+                    $cond: [{ $eq: ["$data", text] }, 10, 0],
+                  },
+                ],
+              },
+            },
+          }),
+          ...((sort || text) && {
+            sort: {
+              ...sort,
+              score: -1,
+            },
+          }),
+        })
+      : deps.db.find({
+          store,
+          query,
+          ...(select && { select }),
+          ...(limit && { limit }),
+          ...(skip && { skip }),
+          ...(sort && { sort }),
+          options: {
+            lean: true,
+          },
+        });
 
   const countFn = async ({ query, text }) =>
     await deps.db.count({

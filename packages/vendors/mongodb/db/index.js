@@ -1,5 +1,6 @@
 const remove = require("./src/operations/remove");
 const find = require("./src/operations/find");
+const aggregate = require("./src/operations/aggregate");
 const findOne = require("./src/operations/find_one");
 const write = require("./src/operations/write");
 const create = require("./src/operations/create");
@@ -13,6 +14,7 @@ const startSession = require("./src/start_session");
 
 module.exports = {
   find,
+  aggregate,
   remove,
   create,
   findOne,

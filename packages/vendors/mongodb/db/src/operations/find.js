@@ -6,21 +6,8 @@ module.exports = ({
   skip = 0,
   limit = null,
   options = null,
-}) => {
-  //TODO
-  console.log([
-    query,
-    {
-      ...select,
-      ...((!select ||
-        !Object.keys(select).some((key) => select[key] === 1)) && {
-        _id: 0,
-        __v: 0,
-      }),
-    },
-    sort,
-  ]);
-  return store.find(
+}) =>
+  store.find(
     query,
     {
       ...select,
@@ -37,4 +24,3 @@ module.exports = ({
       ...options,
     }
   );
-};

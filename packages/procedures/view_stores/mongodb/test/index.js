@@ -22,8 +22,8 @@ const database = "some-db";
 const password = "some-password";
 const query = { a: 1 };
 const sort = { b: 2 };
-const sort2 = "some-other-sort";
-const query2 = "some-other-query";
+const sort2 = { c: 3 };
+const query2 = { d: 4 };
 const count = "some-count";
 
 const writeResult = "some-write-result";
@@ -630,14 +630,14 @@ describe("View store", () => {
     const foundObjs = {
       cursor: cursorFake,
     };
-    const findFake = fake.returns(foundObjs);
+    const aggregateFake = fake.returns(foundObjs);
     const countFake = fake.returns(count);
     const writeFake = fake.returns(writeResult);
     const removeFake = fake.returns(removeResult);
 
     const db = {
       store: storeFake,
-      find: findFake,
+      aggregate: aggregateFake,
       count: countFake,
       write: writeFake,
       remove: removeFake,
@@ -758,23 +758,24 @@ describe("View store", () => {
       text,
     });
 
-    expect(findFake).to.have.been.calledWith({
+    expect(aggregateFake).to.have.been.calledWith({
       store,
       query: {
         ...query,
         $text: { $search: text },
       },
       select: {
-        score: { $meta: "textScore" },
-      },
-      sort: {
+        data: 1,
         score: {
-          $meta: "textScore",
+          $add: [
+            { $meta: "textScore" },
+            {
+              $cond: [{ $eq: ["$data", text] }, 10, 0],
+            },
+          ],
         },
       },
-      options: {
-        lean: true,
-      },
+      sort: { score: -1 },
     });
     expect(findFnResult).to.equal(foundObjs);
 
@@ -793,19 +794,31 @@ describe("View store", () => {
     expect(countFnResult).to.equal(count);
 
     const steamFnResult = await viewStoreFake.lastCall.lastArg.streamFn({
+      text,
       query: query2,
       sort: sort2,
       parallel,
       fn: fnFake,
     });
 
-    expect(findFake).to.have.been.calledWith({
+    expect(aggregateFake).to.have.been.calledWith({
       store,
-      query: query2,
-      sort: sort2,
-      options: {
-        lean: true,
+      query: {
+        ...query2,
+        $text: { $search: text },
       },
+      select: {
+        data: 1,
+        score: {
+          $add: [
+            { $meta: "textScore" },
+            {
+              $cond: [{ $eq: ["$data", text] }, 10, 0],
+            },
+          ],
+        },
+      },
+      sort: { c: 3, score: -1 },
     });
     expect(steamFnResult).to.equal(foundObjs);
 
@@ -839,9 +852,9 @@ describe("View store", () => {
 
     expect(viewStoreFake).to.have.been.calledWith({
       streamFn: match(
-        (fn) => expect(fn({ query, sort, parallel, fn: fnFake })).to.exist
+        (fn) => expect(fn({ query, text, sort, parallel, fn: fnFake })).to.exist
       ),
-      findFn: match((fn) => expect(fn({ query, sort })).to.exist),
+      findFn: match((fn) => expect(fn({ query, text, sort })).to.exist),
       countFn: match((fn) => expect(fn({ query, sort })).to.exist),
       writeFn: match((fn) => expect(fn({ query, data })).to.exist),
       removeFn: match((fn) => expect(fn(query)).to.exist),
