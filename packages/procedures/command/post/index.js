@@ -67,7 +67,7 @@ const processEvents = async ({
             (normalizedEvent) => normalizedEvent.number != undefined
           ),
           tx: {
-            ...(tx.ip && { ip: tx.ip }),
+            ...(tx && tx.ip && { ip: tx.ip }),
             id: txId,
             path,
           },
@@ -112,7 +112,7 @@ module.exports = ({
   const txId = (req.body.tx && req.body.tx.id) || deps.uuid();
 
   const path = [
-    ...(req.body.tx.path || []),
+    ...((req.body.tx && req.body.tx.path) || []),
     {
       procedure: process.env.PROCEDURE,
       id: commandId,
@@ -134,7 +134,7 @@ module.exports = ({
       ...(req.body.options && { options: req.body.options }),
       ...(req.body.claims && { claims: req.body.claims }),
       ...(req.body.context && { context: req.body.context }),
-      ...(req.body.tx.ip && { ip: req.body.tx.ip }),
+      ...(req.body.tx && req.body.tx.ip && { ip: req.body.tx.ip }),
       aggregateFn: aggregateFn({
         ...(req.body.context && { context: req.body.context }),
         ...(req.body.claims && { claims: req.body.claims }),
@@ -159,7 +159,7 @@ module.exports = ({
         ...(req.body.claims && { claims: req.body.claims }),
         ...(req.body.context && { context: req.body.context }),
         ...(req.body.token && { token: req.body.token }),
-        ...(req.body.tx.ip && { ip: req.body.tx.ip }),
+        ...(req.body.tx && req.body.tx.ip && { ip: req.body.tx.ip }),
         ...(req.body.headers.idempotency && {
           idempotency: req.body.headers.idempotency,
         }),
@@ -175,11 +175,14 @@ module.exports = ({
         processEvents({
           events,
           addFn,
-          idempotency: req.body.headers.idempotency,
-          context: req.body.context,
-          claims: req.body.claims,
+          ...(req.body.headers.idempotency && {
+            idempotency: req.body.headers.idempotency,
+          }),
+          ...(req.body.context && { context: req.body.context }),
+          ...(req.body.context && { context: req.body.context }),
+          ...(req.body.claims && { claims: req.body.claims }),
           path,
-          tx: req.body.tx,
+          ...(req.body.tx && { tx: req.body.tx }),
           txId,
         }),
     })) || {};
@@ -187,11 +190,14 @@ module.exports = ({
   await processEvents({
     events,
     addFn,
-    idempotency: req.body.headers.idempotency,
-    context: req.body.context,
-    claims: req.body.claims,
+    ...(req.body.headers.idempotency && {
+      idempotency: req.body.headers.idempotency,
+    }),
+    ...(req.body.context && { context: req.body.context }),
+    ...(req.body.context && { context: req.body.context }),
+    ...(req.body.claims && { claims: req.body.claims }),
     path,
-    tx: req.body.tx,
+    ...(req.body.tx && { tx: req.body.tx }),
     txId,
   });
 
