@@ -99,6 +99,11 @@ module.exports = ({
     ]);
 
     //TODO
+    if (req.query.text) {
+      console.log({ results: JSON.stringify(results) });
+    }
+
+    //TODO
     // const updates = `https://updates.${
     //   process.env.NETWORK
     // }/channel?query%5Bname%5D=${process.env.NAME}${

@@ -18,6 +18,7 @@ module.exports = ({
         __v: 0,
       }),
     },
+    sort,
   ]);
   return store.find(
     query,
