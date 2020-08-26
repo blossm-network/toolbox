@@ -8,9 +8,7 @@ process.env.REDIS_IP = "some-cache-ip";
 const value = { some: "value" };
 const hmsetFake = stub().yields(null);
 const hgetallFake = stub().yields(null, value);
-const onFake = fake();
 const createClientFake = fake.returns({
-  on: onFake,
   hmset: hmsetFake,
   hgetall: hgetallFake,
 });

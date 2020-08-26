@@ -1,31 +1,35 @@
-const logger = require("@blossm/logger");
 const deps = require("./deps");
 
-const client =
-  process.env.REDIS_IP &&
-  deps.redis.createClient({
-    host: process.env.REDIS_IP,
-  });
-
-client &&
-  client.on("error", function (error) {
-    logger.error("The cache had an error.", { error });
-  });
-
+//TODO, lazy load
+let client;
 const fallbackObjectCache = {};
 module.exports = {
-  writeObject: (key, object) =>
-    client
+  writeObject: (key, object) => {
+    if ((!client || !client.connected) && process.env.REDIS_IP) {
+      client = deps.redis.createClient({
+        host: process.env.REDIS_IP,
+      });
+    }
+
+    return client
       ? new Promise((resolve, reject) =>
           client.hmset(key, object, (err) => (err ? reject(err) : resolve()))
         )
-      : (fallbackObjectCache[key] = object),
-  readObject: (key) =>
-    client
+      : (fallbackObjectCache[key] = object);
+  },
+  readObject: (key) => {
+    if ((!client || !client.connected) && process.env.REDIS_IP) {
+      client = deps.redis.createClient({
+        host: process.env.REDIS_IP,
+      });
+    }
+
+    return client
       ? new Promise((resolve, reject) =>
           client.hgetall(key, (err, object) =>
             err ? reject(err) : resolve(object)
           )
         )
-      : fallbackObjectCache[key],
+      : fallbackObjectCache[key];
+  },
 };
