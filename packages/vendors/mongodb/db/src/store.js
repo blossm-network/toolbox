@@ -53,7 +53,7 @@ module.exports = ({
   });
 
   //TODO
-  console.log({ store });
+  console.log({ indexes, store });
 
   for (const index of indexes) store.index(...index);
 
