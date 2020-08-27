@@ -522,7 +522,6 @@ describe("View store", () => {
       store,
       query: {
         ...query2,
-        $text: { $search: text },
         $or: [
           {
             $text: { $search: text },
