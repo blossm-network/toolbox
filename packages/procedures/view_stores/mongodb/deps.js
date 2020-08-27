@@ -1,6 +1,7 @@
 const {
   store,
   find,
+  aggregate,
   count,
   write,
   remove,
@@ -14,4 +15,4 @@ exports.dateString = dateString;
 exports.viewStore = viewStore;
 exports.formatSchema = formatSchema;
 exports.uuid = uuid;
-exports.db = { store, find, count, write, remove };
+exports.db = { store, find, count, write, remove, aggregate };
