@@ -474,7 +474,10 @@ describe("View store", () => {
             $text: { $search: text },
           },
           {
-            "body.some": { $regexFindAllegex: "some-text" },
+            "body.some": {
+              $regex: "some-text",
+              $options: "i",
+            },
           },
         ],
       },
@@ -519,12 +522,16 @@ describe("View store", () => {
       store,
       query: {
         ...query2,
+        $text: { $search: text },
         $or: [
           {
             $text: { $search: text },
           },
           {
-            "body.some": { $regexFindAll: "some-text" },
+            "body.some": {
+              $regex: "some-text",
+              $options: "i",
+            },
           },
         ],
       },
@@ -886,7 +893,10 @@ describe("View store", () => {
             $text: { $search: text },
           },
           {
-            "body.some": { $regexFindAll: "some-text" },
+            "body.some": {
+              $regex: "some-text",
+              $options: "i",
+            },
           },
         ],
       },
@@ -936,7 +946,7 @@ describe("View store", () => {
             $text: { $search: text },
           },
           {
-            "body.some": { $regexFindAll: "some-text" },
+            "body.some": { $regex: "some-text", $options: "i" },
           },
         ],
       },
