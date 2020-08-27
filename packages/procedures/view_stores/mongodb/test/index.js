@@ -469,7 +469,14 @@ describe("View store", () => {
       store,
       query: {
         ...query,
-        $text: { $search: text },
+        $or: [
+          {
+            $text: { $search: text },
+          },
+          {
+            "body.some": { $regex: "some-text" },
+          },
+        ],
       },
       select: {
         score: {
@@ -512,7 +519,14 @@ describe("View store", () => {
       store,
       query: {
         ...query2,
-        $text: { $search: text },
+        $or: [
+          {
+            $text: { $search: text },
+          },
+          {
+            "body.some": { $regex: "some-text" },
+          },
+        ],
       },
       select: {
         score: {
@@ -867,7 +881,14 @@ describe("View store", () => {
       store,
       query: {
         ...query,
-        $text: { $search: text },
+        $or: [
+          {
+            $text: { $search: text },
+          },
+          {
+            "body.some": { $regex: "some-text" },
+          },
+        ],
       },
       select: {
         some: "select",
@@ -910,7 +931,14 @@ describe("View store", () => {
       store,
       query: {
         ...query2,
-        $text: { $search: text },
+        $or: [
+          {
+            $text: { $search: text },
+          },
+          {
+            "body.some": { $regex: "some-text" },
+          },
+        ],
       },
       select: {
         some: "select",

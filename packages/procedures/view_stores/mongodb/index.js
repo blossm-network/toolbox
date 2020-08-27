@@ -139,7 +139,16 @@ module.exports = async ({
             store,
             query: {
               ...query,
-              ...(text && { $text: { $search: text } }),
+              $or: [
+                {
+                  ...(text && { $text: { $search: text } }),
+                },
+                ...textIndexes.map((index) => ({
+                  [index]: {
+                    $regex: text,
+                  },
+                })),
+              ],
             },
             ...((select || text) && {
               select: {
@@ -193,7 +202,16 @@ module.exports = async ({
           store,
           query: {
             ...query,
-            ...(text && { $text: { $search: text } }),
+            $or: [
+              {
+                ...(text && { $text: { $search: text } }),
+              },
+              ...textIndexes.map((index) => ({
+                [index]: {
+                  $regex: text,
+                },
+              })),
+            ],
           },
           ...((select || text) && {
             select: {
