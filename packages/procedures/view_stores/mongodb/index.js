@@ -169,13 +169,14 @@ module.exports = async ({
                 {
                   $text: { $search: text },
                 },
-                ...(!deps.uuidValidator(text) &&
-                  partialWordTextIndexes.map((index) => ({
-                    [index]: {
-                      $regex: text,
-                      $options: "i",
-                    },
-                  }))),
+                ...(!deps.uuidValidator(text)
+                  ? partialWordTextIndexes.map((index) => ({
+                      [index]: {
+                        $regex: text,
+                        $options: "i",
+                      },
+                    }))
+                  : []),
               ],
             },
             ...((select || text) && {
@@ -234,13 +235,14 @@ module.exports = async ({
               {
                 $text: { $search: text },
               },
-              ...(!deps.uuidValidator(text) &&
-                partialWordTextIndexes.map((index) => ({
-                  [index]: {
-                    $regex: text,
-                    $options: "i",
-                  },
-                }))),
+              ...(!deps.uuidValidator(text)
+                ? partialWordTextIndexes.map((index) => ({
+                    [index]: {
+                      $regex: text,
+                      $options: "i",
+                    },
+                  }))
+                : []),
             ],
           },
           ...((select || text) && {
