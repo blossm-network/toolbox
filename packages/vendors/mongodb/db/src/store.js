@@ -53,7 +53,7 @@ module.exports = ({
   });
 
   //TODO
-  console.log({ indexes, store });
+  console.log({ indexes: JSON.stringify(indexes), store });
 
   for (const index of indexes) store.index(...index);
 
