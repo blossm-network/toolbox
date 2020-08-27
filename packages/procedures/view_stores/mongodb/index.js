@@ -117,7 +117,8 @@ module.exports = async ({
       for (const element of index) {
         for (const key in element) {
           customElement[`body.${key}`] = element[key];
-          if (element[key] == "text") textIndexes.push(`body.${key}`);
+          if (element[key] == "text" && key != "$**")
+            textIndexes.push(`body.${key}`);
         }
       }
       customIndexes.push([customElement]);
