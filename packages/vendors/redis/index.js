@@ -1,6 +1,5 @@
 const deps = require("./deps");
 
-//TODO, lazy load
 let client;
 const fallbackObjectCache = {};
 module.exports = {
