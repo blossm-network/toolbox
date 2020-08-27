@@ -54,12 +54,6 @@ module.exports = ({ writeFn, formatFn, updateFn = defaultFn }) => {
       query: {
         "headers.id": req.params.id,
         ...formattedQuery,
-        ...(context && {
-          "headers.context.root": context.root,
-          "headers.context.domain": context.domain,
-          "headers.context.service": context.service,
-          "headers.context.network": context.network,
-        }),
       },
       data,
     });

@@ -111,10 +111,6 @@ describe("View store put", () => {
     expect(writeFake).to.have.been.calledWith({
       query: {
         "headers.id": id,
-        "headers.context.root": envContextRoot,
-        "headers.context.domain": "some-env-context",
-        "headers.context.service": envContextService,
-        "headers.context.network": envContextNetwork,
       },
       data: {
         "body.a": 1,
@@ -314,10 +310,6 @@ describe("View store put", () => {
     expect(writeFake).to.have.been.calledWith({
       query: {
         "headers.id": id,
-        "headers.context.root": envContextRoot,
-        "headers.context.domain": "some-env-context",
-        "headers.context.service": envContextService,
-        "headers.context.network": envContextNetwork,
       },
       data: {
         "body.a": 1,
