@@ -19,6 +19,7 @@
     "@blossm/logger": "^0.0.8",
     "@blossm/mongodb-database": "^0.0.100",
     "@blossm/uuid": "*",
+    "@blossm/uuid-validator": "*",
     "@blossm/view-store": "^0.0.252"
   },
   "devDependencies": {

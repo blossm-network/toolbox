@@ -1,0 +1,22 @@
+{
+  "name": "@blossm/uuid-validator",
+  "version": "0.0.0",
+  "description": "Validates a uuid.",
+  "main": "index.js",
+  "author": "blossm.network",
+  "engines": {
+    "node": ">= 10.16.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "mocha --recursive"
+  },
+  "dependencies": {
+    "is-uuid": "^1.0.2"
+  },
+  "devDependencies": {
+    "mocha": "^7.1.1"
+  }
+}

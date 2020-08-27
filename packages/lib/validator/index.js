@@ -28,6 +28,7 @@ const positiveNumber = require("./src/positive_number");
 const findError = require("./src/find_error");
 const findErrorInArray = require("./src/find_error_in_array");
 const email = require("./src/email");
+const uuid = require("./src/uuid");
 const phoneNumber = require("./src/phone_number");
 const numeric = require("./src/numeric");
 const imageUrl = require("./src/image_url");
@@ -58,6 +59,7 @@ module.exports = {
   dayTimeRange,
   percentRange,
   name,
+  uuid,
   location,
   dateComponents,
   positiveNumber,

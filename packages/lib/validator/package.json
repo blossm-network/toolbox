@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@blossm/email-validator": "^0.0.7",
+    "@blossm/uuid-validator": "*",
     "@blossm/errors": "^0.0.37",
     "@blossm/phone-number": "^0.0.5",
     "@blossm/validation": "^0.0.8",
