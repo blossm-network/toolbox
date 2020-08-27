@@ -109,22 +109,46 @@ module.exports = async ({
     ],
   ];
 
-  const textIndexes = [];
+  const partialWordTextIndexes = [];
+
   if (indexes) {
     const customIndexes = [];
     for (const index of indexes) {
       let customElement = {};
-      for (const element of index) {
-        for (const key in element) {
-          customElement[`body.${key}`] = element[key];
-          if (element[key] == "text" && key != "$**")
-            textIndexes.push(`body.${key}`);
-          if (element[key] == "text")
+      let hasTextIndex = false;
+      for (const key in index[0]) {
+        customElement[`body.${key}`] = index[0][key];
+        //Make text indexes partially searchable, with the exception of ids.
+        if (index[0][key] == "text") {
+          hasTextIndex = true;
+          if (!key.endsWith(".id")) {
             customIndexes.push([{ [`body.${key}`]: 1 }]);
+            partialWordTextIndexes.push(`body.${key}`);
+          }
         }
       }
-      customIndexes.push([customElement]);
+
+      const customOptions = {};
+
+      //Make the id searchable.
+      if (hasTextIndex) {
+        customElement["headers.id"] = "text";
+        customOptions.name = "text-search";
+      }
+
+      if (index[1] && index[1].weights) {
+        customOptions.weights = {};
+        for (const key in index[1].weights) {
+          customOptions.weights[`body.${key}`] = index[1].weights[key];
+        }
+      }
+
+      customIndexes.push([
+        customElement,
+        ...(Object.keys(customOptions).length > 0 ? [customOptions] : []),
+      ]);
     }
+
     allIndexes.push(...customIndexes);
   }
 
@@ -145,7 +169,7 @@ module.exports = async ({
                 {
                   $text: { $search: text },
                 },
-                ...textIndexes.map((index) => ({
+                ...partialWordTextIndexes.map((index) => ({
                   [index]: {
                     $regex: text,
                     $options: "i",
@@ -157,7 +181,7 @@ module.exports = async ({
               select: {
                 ...select,
                 ...(select &&
-                  textIndexes.reduce((result, index) => {
+                  partialWordTextIndexes.reduce((result, index) => {
                     result[index] = 1;
                     return result;
                   }, {})),
@@ -169,7 +193,7 @@ module.exports = async ({
                 score: {
                   $add: [
                     { $meta: "textScore" },
-                    ...textIndexes.map((index) => ({
+                    ...partialWordTextIndexes.map((index) => ({
                       $cond: [{ $eq: [`$${index}`, text] }, 10, 0],
                     })),
                   ],
@@ -209,7 +233,7 @@ module.exports = async ({
               {
                 $text: { $search: text },
               },
-              ...textIndexes.map((index) => ({
+              ...partialWordTextIndexes.map((index) => ({
                 [index]: {
                   $regex: text,
                   $options: "i",
@@ -221,7 +245,7 @@ module.exports = async ({
             select: {
               ...select,
               ...(select &&
-                textIndexes.reduce((result, index) => {
+                partialWordTextIndexes.reduce((result, index) => {
                   result[index] = 1;
                   return result;
                 }, {})),
@@ -233,7 +257,7 @@ module.exports = async ({
               score: {
                 $add: [
                   { $meta: "textScore" },
-                  ...textIndexes.map((index) => ({
+                  ...partialWordTextIndexes.map((index) => ({
                     $cond: [{ $eq: [`$${index}`, text] }, 10, 0],
                   })),
                 ],

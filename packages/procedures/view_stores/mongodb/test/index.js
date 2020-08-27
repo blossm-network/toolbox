@@ -362,7 +362,10 @@ describe("View store", () => {
     process.env.NODE_ENV = "local";
     await mongodbViewStore({
       schema,
-      indexes: [...indexes, [{ some: "text" }]],
+      indexes: [
+        ...indexes,
+        [{ some: "text", "some.id": "text" }, { weights: { some: 10 } }],
+      ],
       secretFn: secretFake,
       queryFn,
       sortFn,
@@ -443,7 +446,10 @@ describe("View store", () => {
         ],
         [{ "body.some-index": 1 }],
         [{ "body.some": 1 }],
-        [{ "body.some": "text" }],
+        [
+          { "body.some": "text", "body.some.id": "text", "headers.id": "text" },
+          { name: "text-search", weights: { "body.some": 10 } },
+        ],
       ],
       connection: {
         protocol,
@@ -859,7 +865,10 @@ describe("View store", () => {
         ],
         [{ "body.some-index": 1 }],
         [{ "body.some": 1 }],
-        [{ "body.some": "text" }],
+        [
+          { "body.some": "text", "headers.id": "text" },
+          { name: "text-search" },
+        ],
       ],
       connection: {
         protocol,
