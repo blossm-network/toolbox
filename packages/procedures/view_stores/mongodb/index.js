@@ -121,12 +121,12 @@ module.exports = async ({
         //Make text indexes partially searchable, with the exception of ids.
         if (index[0][key] == "text") {
           hasTextIndex = true;
-          if (!key.endsWith(".id")) {
-            customIndexes.push([{ [`body.${key}`]: 1 }]);
-            partialWordTextIndexes.push(`body.${key}`);
-          }
+          if (!key.endsWith(".id")) partialWordTextIndexes.push(`body.${key}`);
         }
       }
+
+      for (const index of partialWordTextIndexes)
+        customIndexes.push([{ [index]: 1 }]);
 
       const customOptions = {};
 
