@@ -1,6 +1,6 @@
 {
   "name": "@blossm/create-event",
-  "version": "0.0.46",
+  "version": "0.0.47",
   "description": "Creates a normalized event.",
   "main": "index.js",
   "author": "blossm.network",
@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@blossm/cononical-string": "*",
-    "@blossm/uuid": "^0.0.5"
+    "@blossm/uuid": "^0.0.6"
   },
   "scripts": {
     "test": "mocha --recursive"

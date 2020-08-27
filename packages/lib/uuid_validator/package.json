@@ -1,6 +1,6 @@
 {
   "name": "@blossm/uuid-validator",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Validates a uuid.",
   "main": "index.js",
   "author": "blossm.network",

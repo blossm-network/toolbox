@@ -1,6 +1,6 @@
 {
   "name": "@blossm/validator",
-  "version": "0.0.50",
+  "version": "0.0.51",
   "description": "Value validation for common and custom types.",
   "main": "index.js",
   "author": "blossm.network",
@@ -12,9 +12,9 @@
   },
   "dependencies": {
     "@blossm/email-validator": "^0.0.7",
-    "@blossm/uuid-validator": "*",
     "@blossm/errors": "^0.0.37",
     "@blossm/phone-number": "^0.0.5",
+    "@blossm/uuid-validator": "^0.0.1",
     "@blossm/validation": "^0.0.8",
     "is-image-url": "1.1.8"
   },
