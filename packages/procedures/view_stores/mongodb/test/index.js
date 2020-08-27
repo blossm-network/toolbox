@@ -587,6 +587,284 @@ describe("View store", () => {
     await mongodbViewStore();
     expect(storeFake).to.have.been.calledOnce;
   });
+  it("should call with uuid text", async () => {
+    const store = "some-store";
+    const storeFake = fake.returns(store);
+
+    const cursorFake = fake.returns({
+      eachAsync: async (fn, options) => {
+        const view = { a: 1 };
+        await fn(view);
+        expect(fnFake).to.have.been.calledWith(view);
+        expect(options).to.deep.equal({ parallel });
+        return foundObjs;
+      },
+    });
+
+    const foundObjs = {
+      cursor: cursorFake,
+    };
+    const aggregateFake = fake.returns(foundObjs);
+    const countFake = fake.returns(count);
+    const writeFake = fake.returns(writeResult);
+    const removeFake = fake.returns(removeResult);
+
+    const db = {
+      store: storeFake,
+      aggregate: aggregateFake,
+      count: countFake,
+      write: writeFake,
+      remove: removeFake,
+    };
+    replace(deps, "db", db);
+
+    const secretFake = fake.returns(password);
+
+    const dateString = "some-date";
+    const dateStringFake = fake.returns(dateString);
+    replace(deps, "dateString", dateStringFake);
+
+    const viewStoreFake = fake();
+    replace(deps, "viewStore", viewStoreFake);
+
+    const queryFn = "some-query-fn";
+    const sortFn = "some-sort-fn";
+    const updateFn = "some-update-fn";
+    const formatFn = "some-format-fn";
+    const emptyFn = "some-empty-fn";
+
+    const formattedSchema = { a: 1 };
+    const formatSchemaFake = fake.returns(formattedSchema);
+    replace(deps, "formatSchema", formatSchemaFake);
+
+    process.env.NODE_ENV = "local";
+    await mongodbViewStore({
+      schema,
+      indexes: [
+        ...indexes,
+        [{ some: "text", "some.id": "text" }, { weights: { some: 10 } }],
+      ],
+      secretFn: secretFake,
+      queryFn,
+      sortFn,
+      updateFn,
+      formatFn,
+      emptyFn,
+    });
+
+    expect(formatSchemaFake).to.have.been.calledWith(
+      { body: { type: schema, default: {} } },
+      "$type"
+    );
+    expect(storeFake).to.have.been.calledWith({
+      name: "views",
+      schema: {
+        a: 1,
+        headers: {
+          _id: false,
+          id: {
+            $type: String,
+            required: true,
+            unique: true,
+            default: deps.uuid,
+          },
+          context: {
+            $type: {
+              root: String,
+              domain: String,
+              service: String,
+              network: String,
+              _id: false,
+            },
+            required: true,
+          },
+          groups: {
+            $type: [
+              {
+                root: String,
+                service: String,
+                network: String,
+                _id: false,
+              },
+            ],
+            default: undefined,
+          },
+          created: {
+            $type: Date,
+            required: true,
+            default: match((fn) => {
+              const date = fn();
+              return date == dateString;
+            }),
+          },
+          modified: {
+            $type: Date,
+            required: true,
+            default: match((fn) => {
+              const date = fn();
+              return date == dateString;
+            }),
+          },
+        },
+        trace: { $type: Object },
+      },
+      typeKey: "$type",
+      indexes: [
+        [{ "headers.id": 1 }],
+        [
+          { "headers.context.root": 1 },
+          { "headers.context.domain": 1 },
+          { "headers.context.service": 1 },
+          { "headers.context.network": 1 },
+        ],
+        [
+          { ["headers.groups.root"]: 1 },
+          { ["headers.groups.service"]: 1 },
+          { ["headers.groups.network"]: 1 },
+        ],
+        [{ "body.some-index": 1 }],
+        [{ "body.some": 1 }],
+        [
+          { "body.some": "text", "body.some.id": "text", "headers.id": "text" },
+          { name: "text-search", weights: { "body.some": 10 } },
+        ],
+      ],
+      connection: {
+        protocol,
+        user,
+        password: userPassword,
+        host,
+        database,
+        parameters: {
+          authSource: "admin",
+          retryWrites: true,
+          w: "majority",
+        },
+        autoIndex: true,
+      },
+    });
+
+    const text = "945c24c3-ae66-4759-a1c7-1079bac8eb5e";
+    const findFnResult = await viewStoreFake.lastCall.lastArg.findFn({
+      query,
+      text,
+    });
+
+    expect(aggregateFake).to.have.been.calledWith({
+      store,
+      query: {
+        ...query,
+        $or: [
+          {
+            $text: { $search: '"945c24c3-ae66-4759-a1c7-1079bac8eb5e"' },
+          },
+        ],
+      },
+      select: {
+        score: {
+          $add: [
+            { $meta: "textScore" },
+            {
+              $cond: [
+                { $eq: ["$body.some", "945c24c3-ae66-4759-a1c7-1079bac8eb5e"] },
+                10,
+                0,
+              ],
+            },
+          ],
+        },
+        body: 1,
+        headers: 1,
+        trace: 1,
+      },
+      sort: { score: -1 },
+    });
+    expect(findFnResult).to.equal(foundObjs);
+
+    const countFnResult = await viewStoreFake.lastCall.lastArg.countFn({
+      query,
+      text,
+    });
+
+    expect(countFake).to.have.been.calledWith({
+      store,
+      query: {
+        ...query,
+        $text: { $search: text },
+      },
+    });
+    expect(countFnResult).to.equal(count);
+
+    const steamFnResult = await viewStoreFake.lastCall.lastArg.streamFn({
+      text,
+      query: query2,
+      sort: sort2,
+      parallel,
+      fn: fnFake,
+    });
+
+    expect(aggregateFake).to.have.been.calledWith({
+      store,
+      query: {
+        ...query2,
+        $or: [
+          {
+            $text: { $search: '"945c24c3-ae66-4759-a1c7-1079bac8eb5e"' },
+          },
+        ],
+      },
+      select: {
+        score: {
+          $add: [
+            { $meta: "textScore" },
+            {
+              $cond: [
+                { $eq: ["$body.some", "945c24c3-ae66-4759-a1c7-1079bac8eb5e"] },
+                10,
+                0,
+              ],
+            },
+          ],
+        },
+        body: 1,
+        headers: 1,
+        trace: 1,
+      },
+      sort: { c: 3, score: -1 },
+    });
+    expect(steamFnResult).to.equal(foundObjs);
+
+    const writeFnResult = await viewStoreFake.lastCall.lastArg.writeFn({
+      query,
+      data,
+    });
+    expect(writeFake).to.have.been.calledWith({
+      store,
+      query,
+      update: {
+        $set: data,
+      },
+      options: {
+        lean: true,
+        omitUndefined: true,
+        upsert: true,
+        new: true,
+        runValidators: true,
+        setDefaultsOnInsert: true,
+      },
+    });
+    expect(writeFnResult).to.equal(writeResult);
+
+    const removeFnResult = await viewStoreFake.lastCall.lastArg.removeFn(query);
+    expect(removeFake).to.have.been.calledWith({
+      store,
+      query,
+    });
+    expect(removeFnResult).to.equal(removeResult);
+
+    await mongodbViewStore();
+    expect(storeFake).to.have.been.calledOnce;
+  });
   it("should call with the correct params with no root's in nested objs", async () => {
     const store = "some-store";
     const storeFake = fake.returns(store);

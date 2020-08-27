@@ -159,6 +159,7 @@ module.exports = async ({
   });
 
   const streamFn = async ({ query, text, sort, select, parallel, fn }) => {
+    const textIdUuuid = deps.uuidValidator(text);
     const cursor = text
       ? deps.db
           .aggregate({
@@ -167,9 +168,9 @@ module.exports = async ({
               ...query,
               $or: [
                 {
-                  $text: { $search: text },
+                  $text: { $search: textIdUuuid ? `"${text}"` : text },
                 },
-                ...(!deps.uuidValidator(text)
+                ...(!textIdUuuid
                   ? partialWordTextIndexes.map((index) => ({
                       [index]: {
                         $regex: text,
@@ -225,17 +226,18 @@ module.exports = async ({
     return await cursor.eachAsync(fn, { parallel });
   };
 
-  const findFn = ({ query, text, limit, select, skip, sort }) =>
-    text
+  const findFn = ({ query, text, limit, select, skip, sort }) => {
+    const textIdUuuid = deps.uuidValidator(text);
+    return text
       ? deps.db.aggregate({
           store,
           query: {
             ...query,
             $or: [
               {
-                $text: { $search: text },
+                $text: { $search: textIdUuuid ? `"${text}"` : text },
               },
-              ...(!deps.uuidValidator(text)
+              ...(!textIdUuuid
                 ? partialWordTextIndexes.map((index) => ({
                     [index]: {
                       $regex: text,
@@ -286,6 +288,7 @@ module.exports = async ({
             lean: true,
           },
         });
+  };
 
   const countFn = async ({ query, text }) =>
     await deps.db.count({
