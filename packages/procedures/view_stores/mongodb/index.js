@@ -145,7 +145,7 @@ module.exports = async ({
                 },
                 ...textIndexes.map((index) => ({
                   [index]: {
-                    $regex: text,
+                    $regexFindAll: text,
                   },
                 })),
               ],
@@ -208,7 +208,7 @@ module.exports = async ({
               },
               ...textIndexes.map((index) => ({
                 [index]: {
-                  $regex: text,
+                  $regexFindAll: text,
                 },
               })),
             ],
