@@ -442,6 +442,7 @@ describe("View store", () => {
           { ["headers.groups.network"]: 1 },
         ],
         [{ "body.some-index": 1 }],
+        [{ "body.some": 1 }],
         [{ "body.some": "text" }],
       ],
       connection: {
@@ -857,6 +858,7 @@ describe("View store", () => {
           { ["headers.groups.network"]: 1 },
         ],
         [{ "body.some-index": 1 }],
+        [{ "body.some": 1 }],
         [{ "body.some": "text" }],
       ],
       connection: {

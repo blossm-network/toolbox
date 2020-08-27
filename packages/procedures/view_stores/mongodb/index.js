@@ -119,6 +119,8 @@ module.exports = async ({
           customElement[`body.${key}`] = element[key];
           if (element[key] == "text" && key != "$**")
             textIndexes.push(`body.${key}`);
+          if (element[key] == "text")
+            customIndexes.push([{ [`body.${key}`]: 1 }]);
         }
       }
       customIndexes.push([customElement]);
@@ -141,7 +143,7 @@ module.exports = async ({
               ...query,
               $or: [
                 {
-                  ...(text && { $text: { $search: text } }),
+                  $text: { $search: text },
                 },
                 ...textIndexes.map((index) => ({
                   [index]: {
@@ -205,7 +207,7 @@ module.exports = async ({
             ...query,
             $or: [
               {
-                ...(text && { $text: { $search: text } }),
+                $text: { $search: text },
               },
               ...textIndexes.map((index) => ({
                 [index]: {
