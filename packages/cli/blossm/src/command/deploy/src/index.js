@@ -23,6 +23,7 @@ const config = require("./config.json");
 module.exports = commandProcedure({
   mainFn: main,
   ...(config.contexts && { contexts: config.contexts }),
+  ...(config.root && { requiresRoot: config.root }),
   ...(validate && { validateFn: validate }),
   ...(normalize && { normalizeFn: normalize }),
   ...(fill && { fillFn: fill }),

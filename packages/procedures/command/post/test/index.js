@@ -2354,4 +2354,30 @@ describe("Command handler post", () => {
       expect(e).to.equal(error);
     }
   });
+  it("should redirect correctly with no root and requires root", async () => {
+    const req = {
+      body: {},
+    };
+    const sendFake = fake();
+    const statusFake = fake.returns({
+      send: sendFake,
+    });
+    const res = {
+      status: statusFake,
+    };
+
+    const error = "some-error";
+    const messageFake = fake.returns(error);
+    replace(deps, "badRequestError", {
+      message: messageFake,
+    });
+    try {
+      await post({
+        requiresRoot: true,
+      })(req, res);
+    } catch (e) {
+      expect(messageFake).to.have.been.calledWith("A root is required.");
+      expect(e).to.equal(error);
+    }
+  });
 });

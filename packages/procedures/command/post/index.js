@@ -92,6 +92,7 @@ module.exports = ({
   countFn,
   addFn,
   contexts,
+  requiresRoot,
 }) => async (req, res) => {
   if (
     contexts &&
@@ -99,6 +100,9 @@ module.exports = ({
       contexts.filter((c) => req.body.context[c]).length != contexts.length)
   )
     throw deps.forbiddenError.message("This context is forbidden.");
+
+  if (requiresRoot && !req.body.root)
+    throw deps.badRequestError.message("A root is required.");
 
   if (validateFn) {
     await validateFn(req.body.payload, {
