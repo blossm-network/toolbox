@@ -22,7 +22,16 @@ const groupNetwork = "some-group-network";
 
 const checkResponse = ({ data, expected }) => {
   for (const property in expected) {
-    expect(data[property]).to.exist;
+    try {
+      expect(data[property]).to.exist;
+    } catch (err) {
+      //eslint-disable-next-line no-console
+      console.log("Expectation doesn't exist.", {
+        property,
+        actual: data,
+        expected,
+      });
+    }
     if (expected[property]) {
       if (
         typeof expected[property] == "object" &&

@@ -63,7 +63,7 @@ exports.get = async (url, { query, headers } = {}) =>
   });
 
 exports.stream = async (url, onDataFn, { query, headers } = {}) => {
-  let finishedProcessingAllData = false;
+  let ended = false;
   let rejected = false;
   let processingCount = 0;
 
@@ -79,8 +79,7 @@ exports.stream = async (url, onDataFn, { query, headers } = {}) => {
           rejected = true;
         }
       }
-      if (!rejected && processingCount == 0 && finishedProcessingAllData)
-        resolve();
+      if (!rejected && processingCount == 0 && ended) resolve();
     };
 
     return deps
@@ -96,7 +95,7 @@ exports.stream = async (url, onDataFn, { query, headers } = {}) => {
         reject(err);
       })
       .on("end", () => {
-        finishedProcessingAllData = true;
+        ended = true;
         if (!rejected && processingCount == 0) resolve();
       });
   });
@@ -111,7 +110,7 @@ exports.streamMany = async (requests, onDataFn, sortFn) => {
     })
   );
 
-  let finishedProcessingAllData = false;
+  let ended = false;
   let rejected = false;
   let processingCount = 0;
 
@@ -127,8 +126,7 @@ exports.streamMany = async (requests, onDataFn, sortFn) => {
           rejected = true;
         }
       }
-      if (!rejected && processingCount == 0 && finishedProcessingAllData)
-        resolve();
+      if (!rejected && processingCount == 0 && ended) resolve();
     };
 
     return jointStream(requestStreams, sortFn)
@@ -139,7 +137,7 @@ exports.streamMany = async (requests, onDataFn, sortFn) => {
         reject(err);
       })
       .on("end", () => {
-        finishedProcessingAllData = true;
+        ended = true;
         if (!rejected && processingCount == 0) resolve();
       });
   });
