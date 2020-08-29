@@ -228,12 +228,12 @@ const replayIfNeeded = async ({
           });
 
           fullUpdate = {
-            ...fullUpdate,
-            recursiveFullUpdate,
+            ...update,
+            ...recursiveFullUpdate,
           };
           fullQuery = {
-            ...fullQuery,
-            recursiveFullQuery,
+            ...query,
+            ...recursiveFullQuery,
           };
         } catch (_) {
           return;
@@ -241,6 +241,8 @@ const replayIfNeeded = async ({
       })
     );
   }
+
+  console.log({ fullUpdate, fullQuery });
   return { fullUpdate, fullQuery };
 };
 
