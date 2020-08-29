@@ -142,7 +142,7 @@ const formatUpdate = (update) => {
     };
   }
 
-  console.log({ resul });
+  console.log({ result });
   return result;
 };
 
