@@ -127,9 +127,12 @@ const formatUpdate = (update, query) => {
   const result = {};
 
   const matchUpdates = [];
+
+  const matchDelimiter = ".$.";
+
   for (const key in update) {
     console.log({ key });
-    const components = key.split(".$.");
+    const components = key.split(matchDelimiter);
     console.log({ components });
     if (components.length > 1) {
       matchUpdates.push({
@@ -158,7 +161,7 @@ const formatUpdate = (update, query) => {
     }
 
     console.log({ relevantQueryKey, relevantQueryValue });
-    if (result[matchUpdate.root] instanceof Array)
+    if (result[matchUpdate.root] instanceof Array) {
       result[matchUpdate.root] = result[matchUpdate.root].map((element) => ({
         ...element,
         ...(relevantQueryKey &&
@@ -166,6 +169,10 @@ const formatUpdate = (update, query) => {
             [matchUpdate.key]: matchUpdate.value,
           }),
       }));
+    } else {
+      result[`${matchUpdate.root}${matchDelimiter}${matchUpdate.key}`] =
+        matchUpdate.value;
+    }
   }
 
   console.log({ result });
