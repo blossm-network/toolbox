@@ -184,6 +184,66 @@ const formatUpdate = (update, query) => {
   return result;
 };
 
+const replayIfNeeded = async ({
+  replay,
+  aggregateFn,
+  readFactFn,
+  update,
+  query,
+}) => {
+  let fullUpdate = {
+    ...update,
+  };
+  let fullQuery = {
+    ...query,
+  };
+  if (replay && replay.length != 0) {
+    await Promise.all(
+      replay.map(async (r) => {
+        try {
+          const aggregate = await aggregateFn({
+            domain: r.domain,
+            service: r.service,
+            root: r.root,
+          });
+
+          const {
+            query: replayQuery,
+            update: replayUpdate,
+            replay: replayReplay,
+          } = handlers[r.service][r.domain]({
+            state: aggregate.state,
+            id: r.root,
+            readFactFn,
+          });
+          const {
+            fullUpdate: recursiveFullUpdate,
+            fullQuery: recursiveFullQuery,
+          } = await replayIfNeeded({
+            aggregateFn,
+            readFactFn,
+            replay: replayReplay,
+            update: replayUpdate,
+            query: replayQuery,
+          });
+
+          fullUpdate = {
+            ...update,
+            recursiveFullUpdate,
+          };
+          fullQuery = {
+            ...query,
+            recursiveFullQuery,
+          };
+        } catch (_) {
+          return;
+        }
+      })
+    );
+  }
+  return { fullUpdate, fullQuery };
+};
+
 module.exports = projection({
   mainFn: async ({ aggregate, action, push, aggregateFn, readFactFn }) => {
     //Must be able to handle this aggregate.
@@ -211,37 +271,13 @@ module.exports = projection({
       ...(action && { action }),
     });
 
-    if (replay && replay.length != 0) {
-      await Promise.all(
-        replay.map(async (r) => {
-          try {
-            const aggregate = await aggregateFn({
-              domain: r.domain,
-              service: r.service,
-              root: r.root,
-            });
-
-            const { query: replayQuery, update: replayUpdate } = handlers[
-              r.service
-            ][r.domain]({
-              state: aggregate.state,
-              id: r.root,
-              readFactFn,
-            });
-            update = {
-              ...update,
-              ...replayUpdate,
-            };
-            query = {
-              ...query,
-              ...replayQuery,
-            };
-          } catch (_) {
-            return;
-          }
-        })
-      );
-    }
+    const { fullQuery, fullUpdate } = await replayIfNeeded({
+      replay,
+      aggregateFn,
+      readFactFn,
+      update,
+      query,
+    });
 
     if (!query && !id) return;
 
@@ -250,8 +286,8 @@ module.exports = projection({
       (context ||
         (aggregate.context && aggregate.context[process.env.CONTEXT]));
 
-    console.log({ update, query });
-    const formattedUpdate = formatUpdate(update, query);
+    console.log({ fullUpdate, fullQuery });
+    const { formattedUpdate } = formatUpdate(fullUpdate, fullQuery);
     console.log({ formatUpdate });
 
     if (id) {
@@ -286,13 +322,13 @@ module.exports = projection({
               aggregateContext,
               id,
               //Pass query here so that match `.$.` queries will work.
-              query,
+              query: fullQuery,
               update: formattedUpdate,
               push,
             }),
           {
             parallel: 100,
-            ...(query && { query }),
+            ...(fullQuery && { query: fullQuery }),
           }
         );
     }
