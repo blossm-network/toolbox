@@ -290,7 +290,7 @@ module.exports = projection({
 
     console.log({ fullUpdate, fullQuery });
     const { formattedUpdate } = formatUpdate(fullUpdate, fullQuery);
-    console.log({ formatUpdate });
+    console.log({ formattedUpdate });
 
     if (id) {
       await saveId({
