@@ -16,6 +16,8 @@ module.exports = ({ mainFn, aggregateFn, readFactFn }) => async (req, res) => {
     ? data(req)
     : { ...req.body, action: undefined, push: false };
 
+  if (!root) throw deps.badRequestError.message("A root wasn't specified.");
+
   const aggregate = await aggregateFn({
     root,
     domain,

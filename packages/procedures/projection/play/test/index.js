@@ -137,4 +137,31 @@ describe("Command handler post", () => {
       expect(e).to.equal(error);
     }
   });
+  it("should throw if no root", async () => {
+    const mainFnFake = fake();
+
+    const req = {
+      body: {},
+    };
+
+    const sendFake = fake();
+    const statusFake = fake.returns({
+      send: sendFake,
+    });
+    const res = {
+      status: statusFake,
+    };
+
+    const error = new Error();
+    const messageFake = fake.returns(error);
+    replace(deps, "badRequestError", {
+      message: messageFake,
+    });
+    try {
+      await play({ mainFn: mainFnFake })(req, res);
+    } catch (e) {
+      expect(messageFake).to.have.been.calledWith("A root wasn't specified.");
+      expect(e).to.equal(error);
+    }
+  });
 });

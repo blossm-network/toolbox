@@ -283,7 +283,7 @@ module.exports = projection({
       query,
     });
 
-    if (!query && !id) return;
+    if (!fullQuery && !id) return;
 
     const aggregateContext =
       process.env.CONTEXT &&
