@@ -126,7 +126,9 @@ const saveId = async ({ aggregate, id, update, push, context }) => {
 const formatUpdate = (update) => {
   const result = {};
   for (const key in update) {
+    console.log({ key });
     const components = key.split(".$.");
+    console.log({ components });
     if (components.length < 2 || update[components[0]] == undefined) {
       result[key] = {
         ...result[key],
@@ -140,6 +142,7 @@ const formatUpdate = (update) => {
     };
   }
 
+  console.log({ resul });
   return result;
 };
 
@@ -209,7 +212,9 @@ module.exports = projection({
       (context ||
         (aggregate.context && aggregate.context[process.env.CONTEXT]));
 
+    console.log({ update });
     const formattedUpdate = formatUpdate(update);
+    console.log({ formatUpdate });
 
     if (id) {
       await saveId({
