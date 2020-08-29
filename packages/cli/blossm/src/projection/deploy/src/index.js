@@ -39,7 +39,7 @@ const pushToChannel = async ({ channel, newView }) => {
   }
 };
 
-const saveId = async ({ aggregate, id, update, push, context }) => {
+const saveId = async ({ aggregate, id, query, update, push, context }) => {
   const { body: newView } = await viewStore({
     name: config.name,
     context: config.context,
@@ -60,6 +60,7 @@ const saveId = async ({ aggregate, id, update, push, context }) => {
     .update({
       id,
       update,
+      ...(query && { query }),
       ...(aggregate.groups && { groups: aggregate.groups }),
       ...(aggregate.txIds && {
         trace: {
@@ -284,6 +285,8 @@ module.exports = projection({
               aggregate,
               aggregateContext,
               id,
+              //Pass query here so that match `.$.` queries will work.
+              query,
               update: formattedUpdate,
               push,
             }),
