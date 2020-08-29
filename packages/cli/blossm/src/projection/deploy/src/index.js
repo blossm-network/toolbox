@@ -123,23 +123,49 @@ const saveId = async ({ aggregate, id, update, push, context }) => {
   );
 };
 
-const formatUpdate = (update) => {
+const formatUpdate = (update, query) => {
   const result = {};
+
+  const matchUpdates = [];
   for (const key in update) {
     console.log({ key });
     const components = key.split(".$.");
     console.log({ components });
-    if (components.length < 2 || update[components[0]] == undefined) {
-      result[key] = {
-        ...result[key],
-        ...update[key],
-      };
-      continue;
+    if (components.length > 1) {
+      matchUpdates.push({
+        root: components[0],
+        key: components[1],
+        value: update[key],
+      });
+    } else {
+      result[key] = update[key];
     }
-    result[components[0]] = {
-      ...result[components[0]],
-      [components[1]]: update[key],
-    };
+  }
+
+  console.log({ matchUpdates, result });
+
+  if (matchUpdates.length == 0) return result;
+
+  for (const matchUpdate of matchUpdates) {
+    let relevantQueryKey;
+    let relevantQueryValue;
+    for (const queryKey in query) {
+      const querySplit = queryKey.split(`${matchUpdate.root}.`);
+      if (querySplit.length > 1) {
+        relevantQueryKey = querySplit[1];
+        relevantQueryValue = query[queryKey];
+      }
+    }
+
+    console.log({ relevantQueryKey, relevantQueryValue });
+    if (result[matchUpdate.root] instanceof Array)
+      result[matchUpdate.root] = result[matchUpdate.root].map((element) => ({
+        ...element,
+        ...(relevantQueryKey &&
+          element[relevantQueryKey] == relevantQueryValue && {
+            [matchUpdate.key]: matchUpdate.value,
+          }),
+      }));
   }
 
   console.log({ result });
