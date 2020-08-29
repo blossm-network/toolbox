@@ -39,7 +39,7 @@ const pushToChannel = async ({ channel, newView }) => {
   }
 };
 
-const saveId = async ({ aggregate, id, update, push, context }) => {
+const saveId = async ({ aggregate, id, update, query, push, context }) => {
   const { body: newView } = await viewStore({
     name: config.name,
     context: config.context,
@@ -60,6 +60,7 @@ const saveId = async ({ aggregate, id, update, push, context }) => {
     .update({
       id,
       update,
+      ...(query && { query }),
       ...(aggregate.groups && { groups: aggregate.groups }),
       ...(aggregate.txIds && {
         trace: {
@@ -124,7 +125,7 @@ const saveId = async ({ aggregate, id, update, push, context }) => {
 };
 
 const formatUpdate = (update, query) => {
-  const result = {};
+  const formattedUpdate = {};
 
   const matchUpdates = [];
 
@@ -141,14 +142,15 @@ const formatUpdate = (update, query) => {
         value: update[key],
       });
     } else {
-      result[key] = update[key];
+      formattedUpdate[key] = update[key];
     }
   }
 
-  console.log({ matchUpdates, result });
+  console.log({ matchUpdates, formattedUpdate });
 
-  if (matchUpdates.length == 0) return result;
+  if (matchUpdates.length == 0) return { formattedUpdate };
 
+  const formattedQuery = {};
   for (const matchUpdate of matchUpdates) {
     let relevantQueryParams = [];
     for (const queryKey in query) {
@@ -158,29 +160,33 @@ const formatUpdate = (update, query) => {
           key: querySplit[1],
           value: query[queryKey],
         });
+        formattedQuery[queryKey] = query[queryKey];
       }
     }
 
-    console.log({ relevantQueryParams });
+    console.log({ relevantQueryParams, formattedQuery });
 
-    if (result[matchUpdate.root] instanceof Array) {
-      result[matchUpdate.root] = result[matchUpdate.root].map((element) => {
-        for (const param of relevantQueryParams)
-          if (element[param.key] != param.value) return element;
+    if (formattedUpdate[matchUpdate.root] instanceof Array) {
+      formattedUpdate[matchUpdate.root] = formattedUpdate[matchUpdate.root].map(
+        (element) => {
+          for (const param of relevantQueryParams)
+            if (element[param.key] != param.value) return element;
 
-        return {
-          ...element,
-          [matchUpdate.key]: matchUpdate.value,
-        };
-      });
+          return {
+            ...element,
+            [matchUpdate.key]: matchUpdate.value,
+          };
+        }
+      );
     } else {
-      result[`${matchUpdate.root}${matchDelimiter}${matchUpdate.key}`] =
-        matchUpdate.value;
+      formattedUpdate[
+        `${matchUpdate.root}${matchDelimiter}${matchUpdate.key}`
+      ] = matchUpdate.value;
     }
   }
 
-  console.log({ result });
-  return result;
+  console.log({ formattedUpdate, formattedQuery });
+  return { formattedUpdate, formattedQuery };
 };
 
 module.exports = projection({
@@ -250,7 +256,7 @@ module.exports = projection({
         (aggregate.context && aggregate.context[process.env.CONTEXT]));
 
     console.log({ update, query });
-    const formattedUpdate = formatUpdate(update, query);
+    const { formattedUpdate, formattedQuery } = formatUpdate(update, query);
     console.log({ formatUpdate });
 
     if (id) {
@@ -258,6 +264,7 @@ module.exports = projection({
         aggregate,
         context: aggregateContext,
         id,
+        ...(formattedQuery && { query: formattedQuery }),
         update: formattedUpdate,
         push,
       });
@@ -284,6 +291,7 @@ module.exports = projection({
               aggregate,
               aggregateContext,
               id,
+              ...(formattedQuery && { query: formattedQuery }),
               update: formattedUpdate,
               push,
             }),
