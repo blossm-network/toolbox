@@ -228,11 +228,11 @@ const replayIfNeeded = async ({
           });
 
           fullUpdate = {
-            ...update,
+            ...fullUpdate,
             ...recursiveFullUpdate,
           };
           fullQuery = {
-            ...query,
+            ...fullQuery,
             ...recursiveFullQuery,
           };
         } catch (_) {
