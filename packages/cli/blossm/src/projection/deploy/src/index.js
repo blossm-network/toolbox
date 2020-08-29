@@ -150,25 +150,29 @@ const formatUpdate = (update, query) => {
   if (matchUpdates.length == 0) return result;
 
   for (const matchUpdate of matchUpdates) {
-    let relevantQueryKey;
-    let relevantQueryValue;
+    let relevantQueryParams = [];
     for (const queryKey in query) {
       const querySplit = queryKey.split(`${matchUpdate.root}.`);
       if (querySplit.length > 1) {
-        relevantQueryKey = querySplit[1];
-        relevantQueryValue = query[queryKey];
+        relevantQueryParams.push({
+          key: querySplit[1],
+          value: query[queryKey],
+        });
       }
     }
 
-    console.log({ relevantQueryKey, relevantQueryValue });
+    console.log({ relevantQueryParams });
+
     if (result[matchUpdate.root] instanceof Array) {
-      result[matchUpdate.root] = result[matchUpdate.root].map((element) => ({
-        ...element,
-        ...(relevantQueryKey &&
-          element[relevantQueryKey] == relevantQueryValue && {
-            [matchUpdate.key]: matchUpdate.value,
-          }),
-      }));
+      result[matchUpdate.root] = result[matchUpdate.root].map((element) => {
+        for (const param of relevantQueryParams)
+          if (element[param.key] != param.value) return element;
+
+        return {
+          ...element,
+          [matchUpdate.key]: matchUpdate.value,
+        };
+      });
     } else {
       result[`${matchUpdate.root}${matchDelimiter}${matchUpdate.key}`] =
         matchUpdate.value;
@@ -245,7 +249,7 @@ module.exports = projection({
       (context ||
         (aggregate.context && aggregate.context[process.env.CONTEXT]));
 
-    console.log({ update });
+    console.log({ update, query });
     const formattedUpdate = formatUpdate(update, query);
     console.log({ formatUpdate });
 
