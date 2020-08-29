@@ -40,7 +40,6 @@ const pushToChannel = async ({ channel, newView }) => {
 };
 
 const saveId = async ({ aggregate, id, query, update, push, context }) => {
-  console.log({ update, id, query });
   const { body: newView } = await viewStore({
     name: config.name,
     context: config.context,
@@ -72,7 +71,6 @@ const saveId = async ({ aggregate, id, query, update, push, context }) => {
       }),
     });
 
-  console.log({ newView });
   if (!newView || !push) return;
 
   if (newView.headers.context) {
@@ -134,9 +132,7 @@ const formatUpdate = (update, query) => {
   const matchDelimiter = ".$.";
 
   for (const key in update) {
-    console.log({ key });
     const components = key.split(matchDelimiter);
-    console.log({ components });
     if (components.length > 1) {
       matchUpdates.push({
         root: components[0],
@@ -147,8 +143,6 @@ const formatUpdate = (update, query) => {
       result[key] = update[key];
     }
   }
-
-  console.log({ matchUpdates, result });
 
   if (matchUpdates.length == 0) return result;
 
@@ -163,8 +157,6 @@ const formatUpdate = (update, query) => {
         });
       }
     }
-
-    console.log({ relevantQueryParams });
 
     if (result[matchUpdate.root] instanceof Array) {
       result[matchUpdate.root] = result[matchUpdate.root].map((element) => {
@@ -182,7 +174,6 @@ const formatUpdate = (update, query) => {
     }
   }
 
-  console.log({ result });
   return result;
 };
 
@@ -244,7 +235,6 @@ const replayIfNeeded = async ({
     );
   }
 
-  console.log({ fullUpdate, fullQuery });
   return { fullUpdate, fullQuery };
 };
 
@@ -290,9 +280,7 @@ module.exports = projection({
       (context ||
         (aggregate.context && aggregate.context[process.env.CONTEXT]));
 
-    console.log({ fullUpdate, fullQuery });
     const formattedUpdate = formatUpdate(fullUpdate, fullQuery);
-    console.log({ formattedUpdate, fullQuery });
 
     if (id) {
       await saveId({
