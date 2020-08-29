@@ -123,6 +123,26 @@ const saveId = async ({ aggregate, id, update, push, context }) => {
   );
 };
 
+const formatUpdate = (update) => {
+  const result = {};
+  for (const key in update) {
+    const components = key.split(".$.");
+    if (components.length < 2 || update[components[0]] == undefined) {
+      result[key] = {
+        ...result[key],
+        ...update[key],
+      };
+      continue;
+    }
+    result[components[0]] = {
+      ...result[components[0]],
+      [components[1]]: update[key],
+    };
+  }
+
+  return result;
+};
+
 module.exports = projection({
   mainFn: async ({ aggregate, action, push, aggregateFn, readFactFn }) => {
     //Must be able to handle this aggregate.
@@ -189,8 +209,16 @@ module.exports = projection({
       (context ||
         (aggregate.context && aggregate.context[process.env.CONTEXT]));
 
+    const formattedUpdate = formatUpdate(update);
+
     if (id) {
-      await saveId({ aggregate, context: aggregateContext, id, update, push });
+      await saveId({
+        aggregate,
+        context: aggregateContext,
+        id,
+        update: formattedUpdate,
+        push,
+      });
     } else {
       await viewStore({
         name: config.name,
@@ -209,7 +237,14 @@ module.exports = projection({
           }),
         })
         .idStream(
-          ({ id }) => saveId({ aggregate, aggregateContext, id, update, push }),
+          ({ id }) =>
+            saveId({
+              aggregate,
+              aggregateContext,
+              id,
+              update: formattedUpdated,
+              push,
+            }),
           {
             parallel: 100,
             ...(query && { query }),
