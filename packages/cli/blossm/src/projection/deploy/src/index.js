@@ -242,7 +242,7 @@ module.exports = projection({
               aggregate,
               aggregateContext,
               id,
-              update: formattedUpdated,
+              update: formattedUpdate,
               push,
             }),
           {
