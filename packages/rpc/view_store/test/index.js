@@ -289,6 +289,7 @@ describe("Get views", () => {
       update,
       trace,
       groups,
+      query,
     });
     expect(inFake).to.have.been.calledWith({ context: contexts });
     expect(withFake).to.have.been.calledWith({
