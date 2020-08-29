@@ -246,7 +246,7 @@ module.exports = projection({
         (aggregate.context && aggregate.context[process.env.CONTEXT]));
 
     console.log({ update });
-    const formattedUpdate = formatUpdate(update);
+    const formattedUpdate = formatUpdate(update, query);
     console.log({ formatUpdate });
 
     if (id) {
