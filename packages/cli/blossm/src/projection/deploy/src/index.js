@@ -291,7 +291,7 @@ module.exports = projection({
         (aggregate.context && aggregate.context[process.env.CONTEXT]));
 
     console.log({ fullUpdate, fullQuery });
-    const { formattedUpdate } = formatUpdate(fullUpdate, fullQuery);
+    const formattedUpdate = formatUpdate(fullUpdate, fullQuery);
     console.log({ formattedUpdate, fullQuery });
 
     if (id) {
