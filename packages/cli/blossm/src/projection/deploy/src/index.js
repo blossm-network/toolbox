@@ -40,6 +40,7 @@ const pushToChannel = async ({ channel, newView }) => {
 };
 
 const saveId = async ({ aggregate, id, query, update, push, context }) => {
+  console.log({ update, id, query });
   const { body: newView } = await viewStore({
     name: config.name,
     context: config.context,
@@ -71,6 +72,7 @@ const saveId = async ({ aggregate, id, query, update, push, context }) => {
       }),
     });
 
+  console.log({ newView });
   if (!newView || !push) return;
 
   if (newView.headers.context) {
@@ -290,7 +292,7 @@ module.exports = projection({
 
     console.log({ fullUpdate, fullQuery });
     const { formattedUpdate } = formatUpdate(fullUpdate, fullQuery);
-    console.log({ formattedUpdate });
+    console.log({ formattedUpdate, fullQuery });
 
     if (id) {
       await saveId({
