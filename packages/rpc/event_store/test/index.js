@@ -175,6 +175,8 @@ describe("Event store", () => {
 
     const root = "user";
 
+    const notFoundThrows = "some-not-found-throws";
+
     const result = await eventStore({ domain, service })
       .set({
         context,
@@ -185,10 +187,10 @@ describe("Event store", () => {
           key,
         },
       })
-      .aggregate(root);
+      .aggregate(root, { notFoundThrows });
 
     expect(rpcFake).to.have.been.calledWith(domain, service, "event-store");
-    expect(getFake).to.have.been.calledWith({ id: root });
+    expect(getFake).to.have.been.calledWith({ id: root, notFoundThrows });
     expect(inFake).to.have.been.calledWith({
       context,
     });

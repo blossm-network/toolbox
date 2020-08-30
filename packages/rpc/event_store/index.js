@@ -49,10 +49,10 @@ module.exports = ({ domain, service = process.env.SERVICE } = {}) => {
       externalFn: externalTokenFn,
       key,
     } = {},
-  } = {}) => (root) =>
+  } = {}) => (root, { notFoundThrows } = {}) =>
     deps
       .rpc(domain, service, "event-store")
-      .get({ id: root })
+      .get({ id: root, ...(notFoundThrows != undefined && { notFoundThrows }) })
       .in({
         ...(context && { context }),
       })
