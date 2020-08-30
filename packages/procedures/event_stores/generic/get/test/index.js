@@ -91,6 +91,9 @@ describe("Event store get", () => {
     };
     const req = {
       params,
+      query: {
+        notFoundThrows: true,
+      },
     };
     const res = {};
 
@@ -115,5 +118,37 @@ describe("Event store get", () => {
       expect(messageFake).to.have.been.calledWith("This root wasn't found.");
       expect(e).to.equal(error);
     }
+  });
+  it("should return null correctly if not found", async () => {
+    const aggregateFnFake = fake();
+    const aggregateOuterFnFake = fake.returns(aggregateFnFake);
+    replace(deps, "aggregate", aggregateOuterFnFake);
+    const params = {
+      root,
+    };
+    const req = {
+      params,
+      query: {},
+    };
+    const sendFake = fake();
+    const res = {
+      send: sendFake,
+    };
+
+    const error = "some-error";
+    const messageFake = fake.returns(error);
+    replace(deps, "resourceNotFoundError", {
+      message: messageFake,
+    });
+
+    await get({
+      findSnapshotsFn,
+      findEventsFn,
+      findOneSnapshotFn,
+      eventStreamFn,
+      handlers,
+    })(req, res);
+
+    expect(sendFake).to.have.been.calledWith();
   });
 });

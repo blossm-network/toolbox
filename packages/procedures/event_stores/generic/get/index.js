@@ -14,10 +14,13 @@ module.exports = ({
       handlers,
     })(req.params.root);
 
-    if (!result)
-      throw deps.resourceNotFoundError.message("This root wasn't found.", {
-        info: { root: req.params.root },
-      });
+    if (!result) {
+      if (req.query.notFoundThrows)
+        throw deps.resourceNotFoundError.message("This root wasn't found.", {
+          info: { root: req.params.root },
+        });
+      return res.send();
+    }
 
     res.send(result);
   } else {

@@ -136,6 +136,7 @@ const executeStep = async (step) => {
   });
 };
 
+//TODO test for root: true config property
 describe("Command handler integration tests", () => {
   it("should return successfully", async () => {
     if (contexts) {

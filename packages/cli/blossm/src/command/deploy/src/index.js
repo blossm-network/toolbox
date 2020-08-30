@@ -33,6 +33,7 @@ module.exports = commandProcedure({
       domain = process.env.DOMAIN,
       service = process.env.SERVICE,
       network = process.env.NETWORK,
+      notFound = "throw",
     } = {}
   ) => {
     const { body: aggregate } = await eventStore({ domain, service, network })
@@ -42,7 +43,7 @@ module.exports = commandProcedure({
         ...(token && { currentToken: token }),
         token: { internalFn: gcpToken },
       })
-      .aggregate(root);
+      .aggregate(root, { notFound });
 
     return {
       lastEventNumber: aggregate.headers.lastEventNumber,

@@ -275,10 +275,10 @@ module.exports = projection({
 
     if (!fullQuery && !id) return;
 
-    const aggregateContext =
-      process.env.CONTEXT &&
-      (context ||
-        (aggregate.context && aggregate.context[process.env.CONTEXT]));
+    const aggregateContext = process.env.CONTEXT && {
+      ...(aggregate.context && aggregate.context[process.env.CONTEXT]),
+      ...context,
+    };
 
     const formattedUpdate = formatUpdate(fullUpdate, fullQuery);
 

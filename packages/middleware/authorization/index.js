@@ -38,6 +38,7 @@ module.exports = ({
             }),
           ]
         : []),
+      //TODO deleted scene check
     ]);
 
     next();
