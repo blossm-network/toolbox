@@ -15,7 +15,7 @@ module.exports = ({
     })(req.params.root);
 
     if (!result) {
-      if (req.query.notFoundThrows)
+      if (req.query.notFoundThrows !== false)
         throw deps.resourceNotFoundError.message("This root wasn't found.", {
           info: { root: req.params.root },
         });
