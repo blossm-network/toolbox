@@ -72,6 +72,7 @@ const validateObject = ({ object, expectation, path, context }) => {
                     : value == expectation[property].type[0].is;
                 }
                 if (expectation[property].type[0].in) {
+                  console.log({ in: expectation[property].type[0].in });
                   if (value instanceof Array) {
                     for (const item of value)
                       if (!expectation[property].type[0].in.includes(item))
