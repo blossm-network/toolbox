@@ -63,6 +63,8 @@ const validateObject = ({ object, expectation, path, context }) => {
               expectation[property].type[0].is) && {
               fn: (value) => {
                 console.log({ value });
+                if (typeof expectation[property].type[0] != "object")
+                  return true;
                 if (expectation[property].type[0].is) {
                   return expectation[property].type[0].is == "$network" &&
                     context
