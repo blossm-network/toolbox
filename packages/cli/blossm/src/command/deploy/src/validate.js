@@ -45,7 +45,7 @@ const validateObject = ({ object, expectation, path, context }) => {
           validator[
             typeof expectation[property].type[0] != "object"
               ? expectation[property].type[0]
-              : !expectation[property].type[0].type
+              : expectation[property].type[0].type
               ? expectation[property].type[0].type.toLowerCase()
               : "object"
           ](item, {
