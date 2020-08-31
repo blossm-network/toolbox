@@ -3,9 +3,7 @@ const validator = require("@blossm/validator");
 const config = require("./config.json");
 
 const validateObject = ({ object, expectation, path, context }) => {
-  console.log({ expectation });
   for (const property in expectation) {
-    console.log({ property, ex: expectation[property] });
     if (
       typeof expectation[property] == "string" ||
       expectation[property] instanceof Array
@@ -16,7 +14,6 @@ const validateObject = ({ object, expectation, path, context }) => {
     }
 
     if (expectation[property].type instanceof Array) {
-      console.log(1);
       const error = validator.findError([
         validator[
           `${
@@ -36,11 +33,8 @@ const validateObject = ({ object, expectation, path, context }) => {
       ]);
       if (error) throw error;
 
-      console.log(2);
       for (const item of object[property]) {
-        console.log({ item });
         if (typeof item == "object") {
-          console.log(3);
           validateObject({
             object: item,
             expectation: expectation[property].type[0],
@@ -48,7 +42,6 @@ const validateObject = ({ object, expectation, path, context }) => {
             ...(context && { context }),
           });
         } else {
-          console.log({ blah: expectation[property].type });
           const error = validator.findError([
             validator[
               typeof expectation[property].type[0] != "object"
@@ -63,7 +56,6 @@ const validateObject = ({ object, expectation, path, context }) => {
               ...((expectation[property].type[0].in ||
                 expectation[property].type[0].is) && {
                 fn: (value) => {
-                  console.log({ value });
                   if (typeof expectation[property].type[0] != "object")
                     return true;
                   if (expectation[property].type[0].is) {
@@ -73,7 +65,6 @@ const validateObject = ({ object, expectation, path, context }) => {
                       : value == expectation[property].type[0].is;
                   }
                   if (expectation[property].type[0].in) {
-                    console.log({ in: expectation[property].type[0].in });
                     if (value instanceof Array) {
                       for (const item of value)
                         if (!expectation[property].type[0].in.includes(item))
@@ -100,7 +91,6 @@ const validateObject = ({ object, expectation, path, context }) => {
         path: `${path}.${property}`,
         ...((expectation[property].in || expectation[property].is) && {
           fn: (value) => {
-            console.log({ value2: value });
             if (expectation[property].is) {
               return expectation[property].is == "$network" && context
                 ? value == context.network
