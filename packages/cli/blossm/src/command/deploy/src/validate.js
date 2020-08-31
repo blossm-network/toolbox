@@ -63,7 +63,13 @@ const validateObject = ({ object, expectation, path, context }) => {
                 : value == expectation[property].is;
             }
             if (expectation[property].in) {
-              return expectation[property].in.includes(value);
+              if (value instanceof Array) {
+                for (const item of value)
+                  if (!expectation[property].in.includes(item)) return false;
+                return true;
+              } else {
+                return expectation[property].in.includes(value);
+              }
             }
           },
         }),
