@@ -96,7 +96,7 @@ const validateObject = ({ object, expectation, path, context }) => {
         path: `${path}.${property}`,
         ...((expectation[property].in || expectation[property].is) && {
           fn: (value) => {
-            console.log({ value });
+            console.log({ value2: value });
             if (expectation[property].is) {
               return expectation[property].is == "$network" && context
                 ? value == context.network
