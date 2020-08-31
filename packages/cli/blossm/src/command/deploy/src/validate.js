@@ -3,7 +3,9 @@ const validator = require("@blossm/validator");
 const config = require("./config.json");
 
 const validateObject = ({ object, expectation, path, context }) => {
+  console.log({ expectation });
   for (const property in expectation) {
+    console.log({ property });
     if (
       typeof expectation[property] == "string" ||
       expectation[property] instanceof Array
@@ -34,6 +36,7 @@ const validateObject = ({ object, expectation, path, context }) => {
       if (error) throw error;
 
       for (const item of object[property]) {
+        console.log({ item });
         if (typeof item == "object") {
           validateObject({
             object: item,
@@ -65,6 +68,7 @@ const validateObject = ({ object, expectation, path, context }) => {
         path: `${path}.${property}`,
         ...((expectation[property].in || expectation[property].is) && {
           fn: (value) => {
+            console.log({ value });
             if (expectation[property].is) {
               return expectation[property].is == "$network" && context
                 ? value == context.network
