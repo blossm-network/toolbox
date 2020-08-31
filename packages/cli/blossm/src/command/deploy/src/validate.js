@@ -18,7 +18,9 @@ const validateObject = ({ object, expectation, path, context }) => {
         validator[
           `${
             typeof expectation[property].type[0] == "object"
-              ? "object"
+              ? expectation[property].type[0].type
+                ? expectation[property].type[0].type.toLowerCase()
+                : "object"
               : expectation[property].type[0].toLowerCase()
           }Array`
         ](object[property], {
