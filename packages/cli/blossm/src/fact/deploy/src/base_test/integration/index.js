@@ -99,7 +99,7 @@ const executeStep = async (step) => {
     {
       query: {
         context: { ...necessaryContext, ...step.context },
-        ...(step.query && { query: step.query }),
+        query: step.query || {},
         ...(step.claims && { claims: step.claims }),
       },
     }
