@@ -16,6 +16,7 @@ const validateObject = ({ object, expectation, path, context }) => {
     }
 
     if (expectation[property].type instanceof Array) {
+      console.log(1);
       const error = validator.findError([
         validator[
           `${
@@ -35,9 +36,11 @@ const validateObject = ({ object, expectation, path, context }) => {
       ]);
       if (error) throw error;
 
+      console.log(2);
       for (const item of object[property]) {
         console.log({ item });
         if (typeof item == "object") {
+          console.log(3);
           validateObject({
             object: item,
             expectation: expectation[property].type[0],
@@ -45,6 +48,7 @@ const validateObject = ({ object, expectation, path, context }) => {
             ...(context && { context }),
           });
         } else {
+          console.log({ blah: expectation[property].type });
           validator[
             typeof expectation[property].type[0] != "object"
               ? expectation[property].type[0]
@@ -52,9 +56,31 @@ const validateObject = ({ object, expectation, path, context }) => {
               ? expectation[property].type[0].type.toLowerCase()
               : "object"
           ](item, {
-            title: `${expectation[property].title || property} item`,
+            title: `${expectation[property].type[0].title || property} item`,
             path: `${path}.${property}`,
-            optional: expectation[property].optional,
+            optional: expectation[property].type[0].optional,
+            ...((expectation[property].type[0].in ||
+              expectation[property].type[0].is) && {
+              fn: (value) => {
+                console.log({ value });
+                if (expectation[property].type[0].is) {
+                  return expectation[property].type[0].is == "$network" &&
+                    context
+                    ? value == context.network
+                    : value == expectation[property].type[0].is;
+                }
+                if (expectation[property].type[0].in) {
+                  if (value instanceof Array) {
+                    for (const item of value)
+                      if (!expectation[property].type[0].in.includes(item))
+                        return false;
+                    return true;
+                  } else {
+                    return expectation[property].type[0].in.includes(value);
+                  }
+                }
+              },
+            }),
           });
         }
       }
