@@ -49,42 +49,45 @@ const validateObject = ({ object, expectation, path, context }) => {
           });
         } else {
           console.log({ blah: expectation[property].type });
-          validator[
-            typeof expectation[property].type[0] != "object"
-              ? expectation[property].type[0]
-              : expectation[property].type[0].type
-              ? expectation[property].type[0].type.toLowerCase()
-              : "object"
-          ](item, {
-            title: `${expectation[property].type[0].title || property} item`,
-            path: `${path}.${property}`,
-            optional: expectation[property].type[0].optional,
-            ...((expectation[property].type[0].in ||
-              expectation[property].type[0].is) && {
-              fn: (value) => {
-                console.log({ value });
-                if (typeof expectation[property].type[0] != "object")
-                  return true;
-                if (expectation[property].type[0].is) {
-                  return expectation[property].type[0].is == "$network" &&
-                    context
-                    ? value == context.network
-                    : value == expectation[property].type[0].is;
-                }
-                if (expectation[property].type[0].in) {
-                  console.log({ in: expectation[property].type[0].in });
-                  if (value instanceof Array) {
-                    for (const item of value)
-                      if (!expectation[property].type[0].in.includes(item))
-                        return false;
+          const error = validator.findError([
+            validator[
+              typeof expectation[property].type[0] != "object"
+                ? expectation[property].type[0]
+                : expectation[property].type[0].type
+                ? expectation[property].type[0].type.toLowerCase()
+                : "object"
+            ](item, {
+              title: `${expectation[property].type[0].title || property} item`,
+              path: `${path}.${property}`,
+              optional: expectation[property].type[0].optional,
+              ...((expectation[property].type[0].in ||
+                expectation[property].type[0].is) && {
+                fn: (value) => {
+                  console.log({ value });
+                  if (typeof expectation[property].type[0] != "object")
                     return true;
-                  } else {
-                    return expectation[property].type[0].in.includes(value);
+                  if (expectation[property].type[0].is) {
+                    return expectation[property].type[0].is == "$network" &&
+                      context
+                      ? value == context.network
+                      : value == expectation[property].type[0].is;
                   }
-                }
-              },
+                  if (expectation[property].type[0].in) {
+                    console.log({ in: expectation[property].type[0].in });
+                    if (value instanceof Array) {
+                      for (const item of value)
+                        if (!expectation[property].type[0].in.includes(item))
+                          return false;
+                      return true;
+                    } else {
+                      return expectation[property].type[0].in.includes(value);
+                    }
+                  }
+                },
+              }),
             }),
-          });
+          ]);
+          if (error) throw error;
         }
       }
 
