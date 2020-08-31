@@ -88,7 +88,6 @@ describe("Fact get", () => {
         root,
       },
       query: {
-        query,
         context,
         claims,
         token,
@@ -115,7 +114,7 @@ describe("Fact get", () => {
     })(req, res);
 
     expect(mainFnFake).to.have.been.calledWith({
-      query,
+      query: {},
       context,
       claims,
       root,
