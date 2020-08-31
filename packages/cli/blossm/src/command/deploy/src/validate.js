@@ -5,7 +5,7 @@ const config = require("./config.json");
 const validateObject = ({ object, expectation, path, context }) => {
   console.log({ expectation });
   for (const property in expectation) {
-    console.log({ property });
+    console.log({ property, ex: expectation[property] });
     if (
       typeof expectation[property] == "string" ||
       expectation[property] instanceof Array
