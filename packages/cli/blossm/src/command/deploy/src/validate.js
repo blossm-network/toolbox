@@ -35,6 +35,11 @@ const validateObject = ({ object, expectation, path, context }) => {
 
       for (const item of object[property]) {
         if (typeof item == "object") {
+          console.log({
+            item,
+            ex: expectation[property],
+            t: expectation[property].type,
+          });
           validateObject({
             object: item,
             expectation: expectation[property].type[0],
