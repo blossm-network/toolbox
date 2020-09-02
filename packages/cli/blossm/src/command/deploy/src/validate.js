@@ -13,11 +13,6 @@ const validateObject = ({ object, expectation, path, context }) => {
       };
     }
 
-    //TODO
-    console.log({
-      objProp: object[property],
-      exProp: expectation[property],
-    });
     if (!object[property] && expectation[property].optional) continue;
 
     if (expectation[property].type instanceof Array) {
