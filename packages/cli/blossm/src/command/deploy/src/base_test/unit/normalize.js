@@ -10,11 +10,11 @@ const { testing } = require("../../config.json");
 
 describe("Command handler store normalize tests", () => {
   it("should have at least one example", async () => {
-    if (!normalize) return;
+    if (!normalize || !testing.normalize) return;
     expect(testing.normalize).to.exist;
   });
   it("should clean correctly", async () => {
-    if (!normalize) return;
+    if (!testing.normalize) return;
     for (const { payload, normalized } of testing.normalize) {
       const cleanedPayload = await normalize({
         ...payload,
