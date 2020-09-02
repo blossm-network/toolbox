@@ -113,12 +113,16 @@ const validateObject = ({ object, expectation, path, context }) => {
       }),
     ]);
     if (error) throw error;
-    if (expectation[property].type == "object") {
+    if (
+      expectation[property].type == "object" &&
+      (object[property] || expectation[property].optional)
+    ) {
       validateObject({
         object: object[property],
         expectation: expectation[property].properties,
         path: `${path}.${property}`,
         ...(context && { context }),
+        optional: expectation[property].optional,
       });
     }
     if (!expectation[property].type) {
