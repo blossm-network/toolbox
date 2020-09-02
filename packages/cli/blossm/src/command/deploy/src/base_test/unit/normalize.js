@@ -14,7 +14,7 @@ describe("Command handler store normalize tests", () => {
     expect(testing.normalize).to.exist;
   });
   it("should clean correctly", async () => {
-    if (!testing.normalize) return;
+    if (!normalize || !testing.normalize) return;
     for (const { payload, normalized } of testing.normalize) {
       const cleanedPayload = await normalize({
         ...payload,
