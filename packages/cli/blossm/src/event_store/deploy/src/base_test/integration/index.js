@@ -516,7 +516,21 @@ describe("Event store integration tests", () => {
       element != "Number"
     ) {
       for (const objProperty in element) {
-        const badValue = findBadValue(element, objProperty);
+        const badValue =
+          typeof element[objProperty] == "object"
+            ? badObjectValue(objProperty, element)
+            : findBadValue(element, objProperty);
+        console.log({
+          badValye234: badValue,
+          property,
+          full: JSON.stringify({
+            payload: {
+              ...exampleToUse.payload,
+              [property]: [{ [objProperty]: badValue }],
+            },
+            action: exampleToUse.action,
+          }),
+        });
         await testIncorrectParams({
           payload: {
             ...exampleToUse.payload,
@@ -539,6 +553,7 @@ describe("Event store integration tests", () => {
   it("should return an error if incorrect params", async () => {
     //Grab a property from the schema and pass a wrong value to it.
     for (const property in schema) {
+      console.log({ property });
       if (schema[property] == "Object") continue;
       let badValue;
       if (
@@ -546,17 +561,22 @@ describe("Event store integration tests", () => {
         !(schema[property] instanceof Array) &&
         schema[property]["type"] == undefined
       ) {
+        console.log("1: ", { schemaP: schema[property], property });
         badValue = await badObjectValue(property, schema[property]);
       } else if (schema[property] instanceof Array) {
+        console.log("1: ", { sp: schema[property], property });
         badValue = await badArrayValue(property, schema[property]);
       } else {
+        console.log("1: ", { schema, property });
         badValue = findBadValue(schema, property);
       }
 
+      console.log({ badValue });
       const [exampleToUse] = testing.examples.filter(
         (example) => example.payload[property] != undefined
       );
 
+      console.log({ exampleToUseP: exampleToUse.payload });
       if (!exampleToUse) return;
 
       await testIncorrectParams({
