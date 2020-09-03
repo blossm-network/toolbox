@@ -518,7 +518,7 @@ describe("Event store integration tests", () => {
       for (const objProperty in element) {
         const badValue =
           typeof element[objProperty] == "object"
-            ? badObjectValue(objProperty, element)
+            ? await badObjectValue(objProperty, element)
             : findBadValue(element, objProperty);
         console.log({
           badValye234: badValue,
