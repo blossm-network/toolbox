@@ -52,9 +52,7 @@ describe("Command handler store validator tests", () => {
 const createBadPayload = ({ bad, ok }) => {
   let payload = { ...bad };
 
-  console.log({ ok, bad });
   for (const property in ok) {
-    console.log({ property, payload, ok: ok[property], bad: bad[property] });
     if (bad[property] == undefined) payload[property] = ok[property];
     else if (
       typeof ok[property] == "object" &&
@@ -78,6 +76,5 @@ const createBadPayload = ({ bad, ok }) => {
     }
   }
 
-  console.log({ returning: JSON.stringify(payload) });
   return payload;
 };
