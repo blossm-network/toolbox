@@ -543,7 +543,7 @@ describe("Server", () => {
       postMiddleware
     );
     expect(getFake).to.have.been.calledWith(
-      "/_sup",
+      "/_check-in",
       match((fn) => {
         const sendFake = fake();
         const nextFake = fake();
@@ -554,7 +554,7 @@ describe("Server", () => {
           },
           nextFake
         );
-        return sendFake.calledWith("nmjc") && nextFake.called;
+        return sendFake.calledWith(1) && nextFake.called;
       })
     );
     expect(asyncHandlerFake).to.have.been.calledWith(fn);
