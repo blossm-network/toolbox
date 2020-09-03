@@ -7,6 +7,7 @@
     "@blossm/gcp-storage": "*",
     "@blossm/key-claims": "*",
     "@blossm/terminated-session-check": "*",
+    "@blossm/deleted-scene-check": "*",
     "@blossm/permissions-lookup": "*",
     "@blossm/node-external-token": "*"
   },
