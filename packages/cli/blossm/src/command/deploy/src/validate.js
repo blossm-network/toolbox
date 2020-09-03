@@ -4,7 +4,6 @@ const config = require("./config.json");
 
 const validateObject = ({ object, expectation, path, context }) => {
   for (const property in expectation) {
-    console.log({ objProp: object[property], exProp: expectation[property] });
     if (
       typeof expectation[property] == "string" ||
       expectation[property] instanceof Array
@@ -14,12 +13,9 @@ const validateObject = ({ object, expectation, path, context }) => {
       };
     }
 
-    console.log(1);
     if (!object[property] && expectation[property].optional) continue;
-    console.log(2);
 
     if (expectation[property].type instanceof Array) {
-      console.log("3: ", { exp0: expectation[property].type[0] });
       const error = validator.findError([
         validator[
           `${
@@ -39,9 +35,7 @@ const validateObject = ({ object, expectation, path, context }) => {
       ]);
       if (error) throw error;
 
-      console.log(4);
       for (const item of object[property]) {
-        console.log({ item });
         if (typeof item == "object") {
           validateObject({
             object: item,
@@ -93,7 +87,6 @@ const validateObject = ({ object, expectation, path, context }) => {
       continue;
     }
 
-    console.log(5);
     const error = validator.findError([
       validator[expectation[property].type || "object"](object[property], {
         title: expectation[property].title || property,
@@ -122,7 +115,6 @@ const validateObject = ({ object, expectation, path, context }) => {
       }),
     ]);
     if (error) throw error;
-    console.log(6);
     if (
       expectation[property].type == "object" &&
       (object[property] || expectation[property].optional)
