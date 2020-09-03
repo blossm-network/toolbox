@@ -494,7 +494,28 @@ describe("Event store integration tests", () => {
       await testIncorrectParams({
         payload: {
           ...example0.payload,
-          [key]: { [property]: badValue },
+          [key]: {
+            ...example0.payload[key],
+            [property]: badValue,
+          },
+        },
+        action: example0.action,
+      });
+    }
+    return "bad-object";
+  };
+  const badSubObjectValue = async (key, subkey, schema) => {
+    for (const property in schema[key][subkey]) {
+      const badValue = findBadValue(schema, property);
+      await testIncorrectParams({
+        payload: {
+          ...example0.payload,
+          [key]: {
+            ...example0.payload[key],
+            [subkey]: {
+              [property]: badValue,
+            },
+          },
         },
         action: example0.action,
       });
@@ -516,13 +537,15 @@ describe("Event store integration tests", () => {
       element != "Number"
     ) {
       for (const objProperty in element) {
+        console.log({ objProperty, property, schema });
         const badValue =
           typeof element[objProperty] == "object"
-            ? await badObjectValue(objProperty, element)
+            ? await badSubObjectValue(property, objProperty, schema)
             : findBadValue(element, objProperty);
         console.log({
           badValye234: badValue,
           property,
+          objProperty,
           full: JSON.stringify({
             payload: {
               ...exampleToUse.payload,
