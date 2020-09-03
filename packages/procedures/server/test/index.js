@@ -40,7 +40,7 @@ describe("Server", () => {
 
     expect(result).to.equal(app);
     expect(getFake).to.have.been.calledWith(
-      "/_sup",
+      "/_check-in",
       match((fn) => {
         const sendFake = fake();
         const nextFake = fake();
@@ -51,7 +51,7 @@ describe("Server", () => {
           },
           nextFake
         );
-        return sendFake.calledWith("nmjc") && nextFake.called;
+        return sendFake.calledWith(1) && nextFake.called;
       })
     );
     expect(asyncHandlerFake).to.have.been.calledWith(fn);
@@ -88,7 +88,7 @@ describe("Server", () => {
     expect(getFake).to.have.been.calledTwice;
     expect(getFake.getCall(0)).to.have.been.calledWith("/:id?", asyncFn);
     expect(getFake.getCall(1)).to.have.been.calledWith(
-      "/_sup",
+      "/_check-in",
       match((fn) => {
         const sendFake = fake();
         const nextFake = fake();
@@ -99,7 +99,7 @@ describe("Server", () => {
           },
           nextFake
         );
-        return sendFake.calledWith("nmjc") && nextFake.called;
+        return sendFake.calledWith(1) && nextFake.called;
       })
     );
     expect(asyncHandlerFake).to.have.been.calledWith(fn);
@@ -136,7 +136,7 @@ describe("Server", () => {
     expect(result).to.equal(app);
     expect(postFake).to.have.been.calledWith(newPath, asyncFn);
     expect(getFake).to.have.been.calledWith(
-      "/_sup",
+      "/_check-in",
       match((fn) => {
         const sendFake = fake();
         const nextFake = fake();
@@ -147,7 +147,7 @@ describe("Server", () => {
           },
           nextFake
         );
-        return sendFake.calledWith("nmjc") && nextFake.called;
+        return sendFake.calledWith(1) && nextFake.called;
       })
     );
     expect(asyncHandlerFake).to.have.been.calledWith(fn);
@@ -181,7 +181,7 @@ describe("Server", () => {
     expect(result).to.equal(app);
     expect(postFake).to.have.been.calledWith("/", asyncFn);
     expect(getFake).to.have.been.calledWith(
-      "/_sup",
+      "/_check-in",
       match((fn) => {
         const sendFake = fake();
         const nextFake = fake();
@@ -192,7 +192,7 @@ describe("Server", () => {
           },
           nextFake
         );
-        return sendFake.calledWith("nmjc") && nextFake.called;
+        return sendFake.calledWith(1) && nextFake.called;
       })
     );
     expect(asyncHandlerFake).to.have.been.calledWith(fn);
@@ -230,7 +230,7 @@ describe("Server", () => {
     expect(result).to.equal(app);
     expect(postFake).to.have.been.calledWith("/", asyncFn);
     expect(getFake).to.have.been.calledWith(
-      "/_sup",
+      "/_check-in",
       match((fn) => {
         const sendFake = fake();
         const nextFake = fake();
@@ -241,7 +241,7 @@ describe("Server", () => {
           },
           nextFake
         );
-        return sendFake.calledWith("nmjc") && nextFake.called;
+        return sendFake.calledWith(1) && nextFake.called;
       })
     );
     expect(asyncHandlerFake).to.have.been.calledWith(fn);
@@ -287,7 +287,7 @@ describe("Server", () => {
       postMiddleware
     );
     expect(getFake).to.have.been.calledWith(
-      "/_sup",
+      "/_check-in",
       match((fn) => {
         const sendFake = fake();
         const nextFake = fake();
@@ -298,7 +298,7 @@ describe("Server", () => {
           },
           nextFake
         );
-        return sendFake.calledWith("nmjc") && nextFake.called;
+        return sendFake.calledWith(1) && nextFake.called;
       })
     );
     expect(asyncHandlerFake).to.have.been.calledWith(fn);
@@ -329,7 +329,7 @@ describe("Server", () => {
     expect(result).to.equal(app);
     expect(getFake.getCall(0)).to.have.been.calledWith("/:id?", asyncFn);
     expect(getFake.getCall(1)).to.have.been.calledWith(
-      "/_sup",
+      "/_check-in",
       match((fn) => {
         const sendFake = fake();
         const nextFake = fake();
@@ -340,7 +340,7 @@ describe("Server", () => {
           },
           nextFake
         );
-        return sendFake.calledWith("nmjc") && nextFake.called;
+        return sendFake.calledWith(1) && nextFake.called;
       })
     );
     expect(asyncHandlerFake).to.have.been.calledWith(fn);
@@ -384,7 +384,7 @@ describe("Server", () => {
       postMiddleware
     );
     expect(getFake.getCall(1)).to.have.been.calledWith(
-      "/_sup",
+      "/_check-in",
       match((fn) => {
         const sendFake = fake();
         const nextFake = fake();
@@ -395,7 +395,7 @@ describe("Server", () => {
           },
           nextFake
         );
-        return sendFake.calledWith("nmjc") && nextFake.called;
+        return sendFake.calledWith(1) && nextFake.called;
       })
     );
     expect(asyncHandlerFake).to.have.been.calledWith(fn);
@@ -442,7 +442,7 @@ describe("Server", () => {
       postMiddleware
     );
     expect(getFake).to.have.been.calledWith(
-      "/_sup",
+      "/_check-in",
       match((fn) => {
         const sendFake = fake();
         const nextFake = fake();
@@ -453,7 +453,7 @@ describe("Server", () => {
           },
           nextFake
         );
-        return sendFake.calledWith("nmjc") && nextFake.called;
+        return sendFake.calledWith(1) && nextFake.called;
       })
     );
     expect(asyncHandlerFake).to.have.been.calledWith(fn);
@@ -486,7 +486,7 @@ describe("Server", () => {
     expect(result).to.equal(app);
     expect(deleteFake).to.have.been.calledWith("/:id?", asyncFn);
     expect(getFake).to.have.been.calledWith(
-      "/_sup",
+      "/_check-in",
       match((fn) => {
         const sendFake = fake();
         const nextFake = fake();
@@ -497,7 +497,7 @@ describe("Server", () => {
           },
           nextFake
         );
-        return sendFake.calledWith("nmjc") && nextFake.called;
+        return sendFake.calledWith(1) && nextFake.called;
       })
     );
     expect(asyncHandlerFake).to.have.been.calledWith(fn);

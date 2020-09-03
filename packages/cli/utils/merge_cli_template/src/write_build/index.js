@@ -13,6 +13,9 @@ const job = require("./job");
 const fact = require("./fact");
 const viewComposite = require("./view_composite");
 
+const checkInPath = "/_check-in";
+const checkInSchedule = "0 * * * *";
+
 const steps = ({
   region,
   domain,
@@ -102,6 +105,8 @@ const steps = ({
         runIntegrationTests,
         runBaseIntegrationTests,
         strict,
+        checkInPath,
+        checkInSchedule,
       });
     case "view-composite":
       return viewComposite({
@@ -141,6 +146,8 @@ const steps = ({
         runIntegrationTests,
         runBaseIntegrationTests,
         strict,
+        checkInPath,
+        checkInSchedule,
       });
     case "event-store":
       return eventStore({
@@ -182,6 +189,8 @@ const steps = ({
         runIntegrationTests,
         runBaseIntegrationTests,
         strict,
+        checkInPath,
+        checkInSchedule,
       });
     case "projection":
       return projection({
@@ -222,6 +231,8 @@ const steps = ({
         runIntegrationTests,
         runBaseIntegrationTests,
         strict,
+        checkInPath,
+        checkInSchedule,
       });
     case "command":
       return command({
@@ -261,6 +272,8 @@ const steps = ({
         runIntegrationTests,
         runBaseIntegrationTests,
         strict,
+        checkInPath,
+        checkInSchedule,
       });
     case "job":
       return job({
@@ -300,6 +313,8 @@ const steps = ({
         envVars,
         devEnvVars,
         strict,
+        checkInPath,
+        checkInSchedule,
       });
     case "fact":
       return fact({
@@ -339,6 +354,8 @@ const steps = ({
         envVars,
         devEnvVars,
         strict,
+        checkInPath,
+        checkInSchedule,
       });
     case "command-gateway":
       return commandGateway({
@@ -378,6 +395,8 @@ const steps = ({
         runIntegrationTests,
         runBaseIntegrationTests,
         strict,
+        checkInPath,
+        checkInSchedule,
       });
     case "view-gateway":
       return viewGateway({
@@ -414,6 +433,8 @@ const steps = ({
         runIntegrationTests,
         runBaseIntegrationTests,
         strict,
+        checkInPath,
+        checkInSchedule,
       });
     case "fact-gateway":
       return factGateway({
@@ -451,6 +472,8 @@ const steps = ({
         runIntegrationTests,
         runBaseIntegrationTests,
         strict,
+        checkInPath,
+        checkInSchedule,
       });
   }
 };

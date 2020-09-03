@@ -11,8 +11,8 @@ module.exports = ({ prehook, posthook } = {}) => {
 
   const listen = ({ port } = {}) => {
     port = port || process.env.PORT || 3000;
-    app.get("/_sup", (_, res, next) => {
-      res.send("nmjc");
+    app.get("/_check-in", (_, res, next) => {
+      res.send(1);
       next();
     });
     if (posthook) posthook(app);
