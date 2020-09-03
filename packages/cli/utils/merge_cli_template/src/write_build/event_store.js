@@ -63,6 +63,8 @@ module.exports = ({
   dependencyKeyEnvironmentVariables,
   redisIp,
   strict,
+  checkInPath,
+  checkInSchedule,
 }) => {
   return [
     yarnInstall,
@@ -194,6 +196,14 @@ module.exports = ({
           updateScheduledJob({
             name: `event-store-${service}-${domain}-create-block`,
             schedule: blockSchedule,
+            project,
+          }),
+          scheduleJob({
+            name: `event-store-${service}-${domain}-check-in`,
+            schedule: checkInSchedule,
+            serviceName,
+            computeUrlId,
+            uri: `${uri}/${checkInPath}`,
             project,
           }),
         ]

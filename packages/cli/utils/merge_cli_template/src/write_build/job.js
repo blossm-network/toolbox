@@ -12,6 +12,7 @@ const deployRun = require("./steps/deploy_run");
 const startDnsTransaction = require("./steps/start_dns_transaction");
 const addDnsTransaction = require("./steps/add_dns_transaction");
 const executeDnsTransaction = require("./steps/execute_dns_transaction");
+const scheduleJob = require("./steps/schedule_job");
 const abortDnsTransaction = require("./steps/abort_dns_transaction");
 const mapDomain = require("./steps/map_domain");
 const writeEnv = require("./steps/write_env");
@@ -55,6 +56,8 @@ module.exports = ({
   runBaseIntegrationTests,
   dependencyKeyEnvironmentVariables,
   strict,
+  checkInPath,
+  checkInSchedule,
 }) => {
   return [
     yarnInstall,
@@ -157,6 +160,16 @@ module.exports = ({
             uri,
             project,
             region,
+          }),
+          scheduleJob({
+            name: `job${service ? `-${service}` : ""}${
+              domain ? `-${domain}` : ""
+            }-${name}-check-in`,
+            schedule: checkInSchedule,
+            serviceName,
+            computeUrlId,
+            uri: `${uri}/${checkInPath}`,
+            project,
           }),
         ]
       : [dockerComposeLogs]),

@@ -10,6 +10,7 @@ const dockerComposeLogs = require("./steps/docker_compose_logs");
 const dockerPush = require("./steps/docker_push");
 const deployRun = require("./steps/deploy_run");
 const startDnsTransaction = require("./steps/start_dns_transaction");
+const scheduleJob = require("./steps/schedule_job");
 const addDnsTransaction = require("./steps/add_dns_transaction");
 const executeDnsTransaction = require("./steps/execute_dns_transaction");
 const abortDnsTransaction = require("./steps/abort_dns_transaction");
@@ -52,6 +53,8 @@ module.exports = ({
   runBaseIntegrationTests,
   dependencyKeyEnvironmentVariables,
   strict,
+  checkInPath,
+  checkInSchedule,
 }) => {
   return [
     yarnInstall,
@@ -137,6 +140,16 @@ module.exports = ({
             uri,
             project,
             region,
+          }),
+          scheduleJob({
+            name: `view-composite${
+              context ? `-${context}` : ""
+            }-${name}-check-in`,
+            schedule: checkInSchedule,
+            serviceName,
+            computeUrlId,
+            uri: `${uri}/${checkInPath}`,
+            project,
           }),
         ]
       : [dockerComposeLogs]),

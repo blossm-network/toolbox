@@ -7,6 +7,7 @@ const dockerComposeProcesses = require("./steps/docker_compose_processes");
 const baseIntegrationTests = require("./steps/base_integration_tests");
 const integrationTests = require("./steps/integration_tests");
 const dockerComposeLogs = require("./steps/docker_compose_logs");
+const scheduleJob = require("./steps/schedule_job");
 const dockerPush = require("./steps/docker_push");
 const deployRun = require("./steps/deploy_run");
 const startDnsTransaction = require("./steps/start_dns_transaction");
@@ -49,6 +50,8 @@ module.exports = ({
   runBaseIntegrationTests,
   dependencyKeyEnvironmentVariables,
   strict,
+  checkInPath,
+  checkInSchedule,
 }) => {
   const authUri = `v${
     context ? `.${context}` : ""
@@ -131,6 +134,14 @@ module.exports = ({
             project,
             region,
             serviceName,
+          }),
+          scheduleJob({
+            name: `view-gateway${context ? `-${context}` : ""}-check-in`,
+            schedule: checkInSchedule,
+            serviceName,
+            computeUrlId,
+            uri: `${authUri}/${checkInPath}`,
+            project,
           }),
         ]
       : [dockerComposeLogs]),

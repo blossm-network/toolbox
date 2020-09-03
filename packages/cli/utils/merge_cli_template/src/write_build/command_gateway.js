@@ -5,6 +5,7 @@ const buildImage = require("./steps/build_image");
 const dockerComposeUp = require("./steps/docker_compose_up");
 const dockerComposeProcesses = require("./steps/docker_compose_processes");
 const integrationTests = require("./steps/integration_tests");
+const scheduleJob = require("./steps/schedule_job");
 const baseIntegrationTests = require("./steps/base_integration_tests");
 const dockerComposeLogs = require("./steps/docker_compose_logs");
 const dockerPush = require("./steps/docker_push");
@@ -52,6 +53,8 @@ module.exports = ({
   runBaseIntegrationTests,
   redisIp,
   strict,
+  checkInPath,
+  checkInSchedule,
 }) => {
   const authUri = `c.${domain}.${service}.${envUriSpecifier}${network}`;
   return [
@@ -135,6 +138,14 @@ module.exports = ({
             project,
             region,
             serviceName,
+          }),
+          scheduleJob({
+            name: `command-gateway-${service}-${domain}-check-in`,
+            schedule: checkInSchedule,
+            serviceName,
+            computeUrlId,
+            uri: `${authUri}/${checkInPath}`,
+            project,
           }),
         ]
       : [dockerComposeLogs]),

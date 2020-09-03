@@ -10,6 +10,7 @@ const dockerComposeLogs = require("./steps/docker_compose_logs");
 const dockerPush = require("./steps/docker_push");
 const deployRun = require("./steps/deploy_run");
 const startDnsTransaction = require("./steps/start_dns_transaction");
+const scheduleJob = require("./steps/schedule_job");
 const addDnsTransaction = require("./steps/add_dns_transaction");
 const executeDnsTransaction = require("./steps/execute_dns_transaction");
 const abortDnsTransaction = require("./steps/abort_dns_transaction");
@@ -50,6 +51,8 @@ module.exports = ({
   runBaseIntegrationTests,
   dependencyKeyEnvironmentVariables,
   strict,
+  checkInPath,
+  checkInSchedule,
 }) => {
   const authUri = `f${domain ? `.${domain}` : ""}${
     service ? `.${service}` : ""
@@ -132,6 +135,16 @@ module.exports = ({
             project,
             region,
             serviceName,
+          }),
+          scheduleJob({
+            name: `fact-gateway${service ? `-${service}` : ""}${
+              domain ? `-${domain}` : ""
+            }-check-in`,
+            schedule: checkInSchedule,
+            serviceName,
+            computeUrlId,
+            uri: `${authUri}/${checkInPath}`,
+            project,
           }),
         ]
       : [dockerComposeLogs]),
