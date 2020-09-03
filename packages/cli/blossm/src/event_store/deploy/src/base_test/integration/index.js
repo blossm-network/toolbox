@@ -507,7 +507,7 @@ describe("Event store integration tests", () => {
 
   const badArraySubObjectValue = async (key, subkey, schema) => {
     for (const property in schema[0][subkey]) {
-      const badValue = findBadValue(schema[0], property);
+      const badValue = findBadValue(schema[0][subkey], property);
       console.log({
         property,
         schema,
