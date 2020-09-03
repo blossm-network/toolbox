@@ -52,32 +52,32 @@ describe("Command handler store validator tests", () => {
 const createBadPayload = ({ bad, ok }) => {
   let payload = { ...bad };
 
+  console.log({ ok, bad });
   for (const property in ok) {
+    console.log({ property, payload, ok: ok[property], bad: bad[property] });
     if (bad[property] == undefined) payload[property] = ok[property];
     else if (
       typeof ok[property] == "object" &&
       !(ok[property] instanceof Array) &&
       typeof bad[property] == "object" &&
       !(bad[property] instanceof Array)
-    ) {
+    )
       payload[property] = createBadPayload({
         bad: bad[property],
         ok: ok[property],
       });
-    } else if (
-      ok[property] instanceof Array &&
-      bad[property] instanceof Array
-    ) {
+    else if (ok[property] instanceof Array && bad[property] instanceof Array)
       payload[property] = [
         createBadPayload({
           bad: bad[property][0],
           ok: ok[property][0],
         }),
       ];
-    } else {
+    else {
       payload[property] = bad[property];
     }
   }
 
+  console.log({ returning: JSON.stringify(payload) });
   return payload;
 };
