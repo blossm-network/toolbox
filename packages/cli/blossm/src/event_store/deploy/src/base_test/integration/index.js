@@ -558,30 +558,31 @@ describe("Event store integration tests", () => {
       element != "Number"
     ) {
       for (const objProperty in element) {
-        console.log({ objProperty, property, schema });
-        const badValue =
-          typeof element[objProperty] == "object"
-            ? await badArraySubObjectValue(property, objProperty, schema)
-            : findBadValue(element, objProperty);
-        console.log({
-          badValye234: badValue,
-          property,
-          objProperty,
-          full: JSON.stringify({
+        if (typeof element[objProperty] == "object") {
+          console.log({ objProperty, property, schema });
+          await badArraySubObjectValue(property, objProperty, schema);
+        } else {
+          const badValue = findBadValue(element, objProperty);
+          console.log({
+            badValye234: badValue,
+            property,
+            objProperty,
+            full: JSON.stringify({
+              payload: {
+                ...exampleToUse.payload,
+                [property]: [{ [objProperty]: badValue }],
+              },
+              action: exampleToUse.action,
+            }),
+          });
+          await testIncorrectParams({
             payload: {
               ...exampleToUse.payload,
               [property]: [{ [objProperty]: badValue }],
             },
             action: exampleToUse.action,
-          }),
-        });
-        await testIncorrectParams({
-          payload: {
-            ...exampleToUse.payload,
-            [property]: [{ [objProperty]: badValue }],
-          },
-          action: exampleToUse.action,
-        });
+          });
+        }
       }
       return "bad-array";
     } else {
