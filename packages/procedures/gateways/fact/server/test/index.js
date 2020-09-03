@@ -6,6 +6,7 @@ const gateway = require("..");
 const whitelist = "some-whitelist";
 const permissionsLookupFn = "some-permissions-fn";
 const terminatedSessionCheckFn = "some-terminated-session-check-fn";
+const deletedSceneCheckFn = "some-deleted-scene-check-fn";
 const domain = "some-domain";
 const service = "some-service";
 const network = "some-network";
@@ -61,6 +62,7 @@ describe("Fact gateway", () => {
       whitelist,
       permissionsLookupFn,
       terminatedSessionCheckFn,
+      deletedSceneCheckFn,
       verifyFn: verifyFnFake,
       internalTokenFn,
       nodeExternalTokenFn,
@@ -104,6 +106,7 @@ describe("Fact gateway", () => {
     expect(authorizationFake).to.have.been.calledWith({
       permissionsLookupFn,
       terminatedSessionCheckFn,
+      deletedSceneCheckFn,
       internalTokenFn,
       context,
       permissions: privileges.map((privilege) => {
@@ -149,6 +152,7 @@ describe("Fact gateway", () => {
       whitelist,
       permissionsLookupFn,
       terminatedSessionCheckFn,
+      deletedSceneCheckFn,
       verifyFn: verifyFnFake,
       internalTokenFn,
       nodeExternalTokenFn,
@@ -192,6 +196,7 @@ describe("Fact gateway", () => {
     expect(authorizationFake).to.have.been.calledWith({
       permissionsLookupFn,
       terminatedSessionCheckFn,
+      deletedSceneCheckFn,
       internalTokenFn,
       permissions: "none",
       context,
@@ -236,6 +241,7 @@ describe("Fact gateway", () => {
       whitelist,
       permissionsLookupFn,
       terminatedSessionCheckFn,
+      deletedSceneCheckFn,
       verifyFn: verifyFnFake,
       internalTokenFn,
       nodeExternalTokenFn,
@@ -301,6 +307,7 @@ describe("Fact gateway", () => {
       whitelist,
       permissionsLookupFn,
       terminatedSessionCheckFn,
+      deletedSceneCheckFn,
       verifyFn: verifyFnFake,
       internalTokenFn,
       nodeExternalTokenFn,
@@ -360,6 +367,7 @@ describe("Fact gateway", () => {
     expect(authorizationFake).to.have.been.calledWith({
       permissionsLookupFn,
       terminatedSessionCheckFn,
+      deletedSceneCheckFn,
       internalTokenFn,
       context,
       permissions: privileges.map((privilege) => {
@@ -411,6 +419,7 @@ describe("Fact gateway", () => {
       whitelist,
       permissionsLookupFn,
       terminatedSessionCheckFn,
+      deletedSceneCheckFn,
       verifyFn: verifyFnFake,
       internalTokenFn,
       nodeExternalTokenFn,
@@ -428,6 +437,7 @@ describe("Fact gateway", () => {
     expect(authorizationFake).to.have.been.calledWith({
       permissionsLookupFn,
       terminatedSessionCheckFn,
+      deletedSceneCheckFn,
       internalTokenFn,
       context,
       permissions: privileges.map((privilege) => {
@@ -445,6 +455,7 @@ describe("Fact gateway", () => {
         whitelist,
         permissionsLookupFn,
         terminatedSessionCheckFn,
+        deletedSceneCheckFn,
         internalTokenFn,
         nodeExternalTokenFn,
         algorithm,

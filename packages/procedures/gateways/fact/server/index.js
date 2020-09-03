@@ -7,6 +7,7 @@ module.exports = async ({
   whitelist,
   permissionsLookupFn,
   terminatedSessionCheckFn,
+  deletedSceneCheckFn,
   verifyFn,
   internalTokenFn,
   nodeExternalTokenFn,
@@ -54,6 +55,7 @@ module.exports = async ({
                   deps.authorization({
                     permissionsLookupFn,
                     terminatedSessionCheckFn,
+                    deletedSceneCheckFn,
                     internalTokenFn,
                     context,
                     permissions:

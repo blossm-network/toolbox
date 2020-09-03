@@ -6,6 +6,7 @@ const gateway = require("..");
 const whitelist = "some-whitelist";
 const permissionsLookupFn = "some-permissions-fn";
 const terminatedSessionCheckFn = "some-terminated-session-check-fn";
+const deletedSceneCheckFn = "some-deleted-scene-check-fn";
 const context = "some-context";
 const network = "some-network";
 const algorithm = "some-algorithm";
@@ -78,6 +79,7 @@ describe("View gateway", () => {
       whitelist,
       permissionsLookupFn,
       terminatedSessionCheckFn,
+      deletedSceneCheckFn,
       verifyFn: verifyFnFake,
       internalTokenFn,
       nodeExternalTokenFn,
@@ -124,6 +126,7 @@ describe("View gateway", () => {
             authorizationFake.calledWith({
               permissionsLookupFn,
               terminatedSessionCheckFn,
+              deletedSceneCheckFn,
               internalTokenFn,
               context,
               permissions: [
@@ -158,6 +161,7 @@ describe("View gateway", () => {
     expect(authorizationFake).to.have.been.calledWith({
       permissionsLookupFn,
       terminatedSessionCheckFn,
+      deletedSceneCheckFn,
       internalTokenFn,
       context,
       permissions: [
@@ -225,6 +229,7 @@ describe("View gateway", () => {
       whitelist,
       permissionsLookupFn,
       terminatedSessionCheckFn,
+      deletedSceneCheckFn,
       verifyFn: verifyFnFake,
       algorithm,
       internalTokenFn,
@@ -270,6 +275,7 @@ describe("View gateway", () => {
     expect(authorizationFake).to.have.been.calledWith({
       permissionsLookupFn,
       terminatedSessionCheckFn,
+      deletedSceneCheckFn,
       internalTokenFn,
       context,
       permissions: [
@@ -329,6 +335,7 @@ describe("View gateway", () => {
       whitelist,
       permissionsLookupFn,
       terminatedSessionCheckFn,
+      deletedSceneCheckFn,
       verifyFn: verifyFnFake,
       algorithm,
       internalTokenFn,
@@ -375,6 +382,7 @@ describe("View gateway", () => {
     expect(authorizationFake).to.have.been.calledWith({
       permissionsLookupFn,
       terminatedSessionCheckFn,
+      deletedSceneCheckFn,
       internalTokenFn,
       permissions: "none",
       context,
@@ -435,6 +443,7 @@ describe("View gateway", () => {
       whitelist,
       permissionsLookupFn,
       terminatedSessionCheckFn,
+      deletedSceneCheckFn,
       verifyFn: verifyFnFake,
       algorithm,
       internalTokenFn,
@@ -473,6 +482,7 @@ describe("View gateway", () => {
             authorizationFake.calledWith({
               permissionsLookupFn,
               terminatedSessionCheckFn,
+              deletedSceneCheckFn,
               internalTokenFn,
               context,
               permissions: [
@@ -556,6 +566,7 @@ describe("View gateway", () => {
       whitelist,
       permissionsLookupFn,
       terminatedSessionCheckFn,
+      deletedSceneCheckFn,
       verifyFn: verifyFnFake,
       algorithm,
       internalTokenFn,
@@ -621,6 +632,7 @@ describe("View gateway", () => {
     expect(authorizationFake).to.have.been.calledWith({
       permissionsLookupFn,
       terminatedSessionCheckFn,
+      deletedSceneCheckFn,
       internalTokenFn,
       context,
       permissions: [
@@ -642,6 +654,7 @@ describe("View gateway", () => {
         whitelist,
         permissionsLookupFn,
         terminatedSessionCheckFn,
+        deletedSceneCheckFn,
         algorithm,
       });
       //shouldn't get called

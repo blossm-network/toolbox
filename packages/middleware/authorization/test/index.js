@@ -13,6 +13,7 @@ process.env.NETWORK = envNetwork;
 process.env.SERVICE = envService;
 
 const session = "some-session";
+const scene = "some-scene";
 const principal = "some-principal";
 const internalTokenFn = "some-internal-token-fn";
 
@@ -23,7 +24,7 @@ describe("Authorization middleware", () => {
   it("should call correctly", async () => {
     const contextObj = "some-context-obj";
     const contextKey = "some-context-key";
-    const context = { session, principal, [contextKey]: contextObj };
+    const context = { session, scene, principal, [contextKey]: contextObj };
     const path = "some-path";
     const req = {
       path,
@@ -36,10 +37,12 @@ describe("Authorization middleware", () => {
 
     const nextFake = fake();
     const terminatedSessionCheckFake = fake();
+    const deletedSceneCheckFake = fake();
 
     await authorizationMiddleware({
       permissionsLookupFn,
       terminatedSessionCheckFn: terminatedSessionCheckFake,
+      deletedSessionCheckFn: deletedSceneCheckFake,
       internalTokenFn,
       permissions,
       context: contextKey,
@@ -66,6 +69,16 @@ describe("Authorization middleware", () => {
         }),
       },
     });
+    expect(deletedSceneCheckFake).to.have.been.calledWith({
+      scene,
+      token: {
+        internalFn: internalTokenFn,
+        externalFn: match((fn) => {
+          const result = fn();
+          return result.token == token && result.type == "Bearer";
+        }),
+      },
+    });
 
     expect(nextFake).to.have.been.calledOnce;
   });
@@ -82,16 +95,19 @@ describe("Authorization middleware", () => {
     replace(deps, "authorize", authorizationFake);
 
     const terminatedSessionCheckFake = fake();
+    const deletedSceneCheckFake = fake();
 
     const nextFake = fake();
     await authorizationMiddleware({
       terminatedSessionCheckFn: terminatedSessionCheckFake,
+      deletedSceneCheckFn: deletedSceneCheckFake,
       internalTokenFn,
       permissions,
     })(req, null, nextFake);
 
     expect(authorizationFake).to.not.have.been.called;
     expect(terminatedSessionCheckFake).to.not.have.been.called;
+    expect(deletedSceneCheckFake).to.not.have.been.called;
 
     expect(nextFake).to.have.been.calledOnce;
   });
@@ -108,11 +124,13 @@ describe("Authorization middleware", () => {
     replace(deps, "authorize", authorizationFake);
 
     const terminatedSessionCheckFake = fake();
+    const deletedSceneCheckFake = fake();
     const nextFake = fake();
 
     await authorizationMiddleware({
       permissionsLookupFn,
       terminatedSessionCheckFn: terminatedSessionCheckFake,
+      deletedSceneCheckFn: deletedSceneCheckFake,
       internalTokenFn,
       permissions,
     })(req, null, nextFake);

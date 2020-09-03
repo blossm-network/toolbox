@@ -18,5 +18,5 @@ module.exports = async ({ session, token: { internalFn, externalFn } }) => {
     .read();
 
   if (terminated)
-    throw invalidCredentials.message("This token has already been terminated.");
+    throw invalidCredentials.message("This token has been terminated.");
 };

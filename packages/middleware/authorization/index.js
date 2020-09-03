@@ -4,6 +4,7 @@ const deps = require("./deps");
 module.exports = ({
   permissionsLookupFn,
   terminatedSessionCheckFn,
+  deletedSessionCheckFn,
   internalTokenFn,
   permissions,
   context,
@@ -38,7 +39,18 @@ module.exports = ({
             }),
           ]
         : []),
-      //TODO deleted scene check
+      // If there is a scene, check if it's deleted.
+      ...(req.context && req.context.scene
+        ? [
+            deletedSessionCheckFn({
+              scene: req.context.scene,
+              token: {
+                internalFn: internalTokenFn,
+                externalFn: externalTokenFn,
+              },
+            }),
+          ]
+        : []),
     ]);
 
     next();

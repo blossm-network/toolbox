@@ -6,6 +6,7 @@ const gateway = require("..");
 const whitelist = "some-whitelist";
 const permissionsLookupFn = "some-permissions-fn";
 const terminatedSessionCheckFn = "some-terminated-session-check-fn";
+const deletedSceneCheckFn = "some-deleted-scene-check-fn";
 const domain = "some-domain";
 const service = "some-service";
 const network = "some-network";
@@ -65,6 +66,7 @@ describe("Command gateway", () => {
       nodeExternalTokenFn,
       permissionsLookupFn,
       terminatedSessionCheckFn,
+      deletedSceneCheckFn,
       verifyFn: verifyFnFake,
       keyClaimsFn,
       algorithm,
@@ -112,6 +114,7 @@ describe("Command gateway", () => {
     expect(authorizationFake).to.have.been.calledWith({
       permissionsLookupFn,
       terminatedSessionCheckFn,
+      deletedSceneCheckFn,
       internalTokenFn,
       permissions: privileges.map((privilege) => {
         return { service, domain, privilege };
@@ -159,6 +162,7 @@ describe("Command gateway", () => {
       nodeExternalTokenFn,
       permissionsLookupFn,
       terminatedSessionCheckFn,
+      deletedSceneCheckFn,
       verifyFn: verifyFnFake,
       keyClaimsFn,
       algorithm,
@@ -207,6 +211,7 @@ describe("Command gateway", () => {
     expect(authorizationFake).to.have.been.calledWith({
       permissionsLookupFn,
       terminatedSessionCheckFn,
+      deletedSceneCheckFn,
       internalTokenFn,
       context,
       permissions: "none",
@@ -254,6 +259,7 @@ describe("Command gateway", () => {
       whitelist,
       permissionsLookupFn,
       terminatedSessionCheckFn,
+      deletedSceneCheckFn,
       verifyFn: verifyFnFake,
       keyClaimsFn,
       internalTokenFn,
@@ -332,6 +338,7 @@ describe("Command gateway", () => {
       nodeExternalTokenFn,
       permissionsLookupFn,
       terminatedSessionCheckFn,
+      deletedSceneCheckFn,
       verifyFn: verifyFnFake,
       keyClaimsFn,
       algorithm,
@@ -386,6 +393,7 @@ describe("Command gateway", () => {
     expect(authorizationFake).to.have.been.calledWith({
       permissionsLookupFn,
       terminatedSessionCheckFn,
+      deletedSceneCheckFn,
       internalTokenFn,
       context,
       permissions: privileges.map((privilege) => {
@@ -440,6 +448,7 @@ describe("Command gateway", () => {
       nodeExternalTokenFn,
       permissionsLookupFn,
       terminatedSessionCheckFn,
+      deletedSceneCheckFn,
       verifyFn: verifyFnFake,
       keyClaimsFn,
       redirect,
@@ -457,6 +466,7 @@ describe("Command gateway", () => {
     expect(authorizationFake).to.have.been.calledWith({
       permissionsLookupFn,
       terminatedSessionCheckFn,
+      deletedSceneCheckFn,
       internalTokenFn,
       context,
       permissions: privileges.map((privilege) => {
@@ -474,6 +484,7 @@ describe("Command gateway", () => {
         whitelist,
         permissionsLookupFn,
         terminatedSessionCheckFn,
+        deletedSceneCheckFn,
       });
       //shouldn't get called
       expect(2).to.equal(1);

@@ -4,6 +4,7 @@ const verify = require("@blossm/verify-access-token");
 const gcpToken = require("@blossm/gcp-token");
 const keyClaims = require("@blossm/key-claims");
 const terminatedSessionCheck = require("@blossm/terminated-session-check");
+const deletedSceneCheck = require("@blossm/deleted-scene-check");
 const permissionsLookup = require("@blossm/permissions-lookup");
 const nodeExternalToken = require("@blossm/node-external-token");
 const { download: downloadFile } = require("@blossm/gcp-storage");
@@ -26,6 +27,7 @@ module.exports = gateway({
       }),
   }),
   terminatedSessionCheckFn: terminatedSessionCheck,
+  deletedSceneCheckFn: deletedSceneCheck,
   verifyFn: ({ key }) =>
     // The public key is an access key.
     // The local dev uses the images from the core network that uses gcp keys.

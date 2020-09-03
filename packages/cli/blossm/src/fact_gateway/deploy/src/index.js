@@ -3,6 +3,7 @@ const { verify: verifyGcp } = require("@blossm/gcp-kms");
 const verify = require("@blossm/verify-access-token");
 const gcpToken = require("@blossm/gcp-token");
 const terminatedSessionCheck = require("@blossm/terminated-session-check");
+const deletedSceneCheck = require("@blossm/deleted-scene-check");
 const permissionsLookup = require("@blossm/permissions-lookup");
 const nodeExternalToken = require("@blossm/node-external-token");
 const { download: downloadFile } = require("@blossm/gcp-storage");
@@ -24,6 +25,7 @@ module.exports = gateway({
       }),
   }),
   terminatedSessionCheckFn: terminatedSessionCheck,
+  deletedSceneCheckFn: deletedSceneCheck,
   verifyFn: ({ key }) =>
     key == "access" && process.env.NODE_ENV != "local"
       ? verify({
