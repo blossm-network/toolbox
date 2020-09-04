@@ -22,6 +22,7 @@ module.exports = ({ downloadFileFn }) => async ({
   if (!principal) throw forbidden.message("Missing required permissions.");
 
   //Download files if they aren't downloaded already.
+  //TODO cache for ~5 mins
   if (!defaultRoles) {
     const fileName = uuid();
     const extension = ".yaml";
