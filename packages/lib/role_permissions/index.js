@@ -20,9 +20,9 @@ module.exports = async ({
     console.log({ role });
     if (
       context &&
-      role.subject.root != context.root &&
-      role.subject.service != context.service &&
-      role.subject.network != context.network
+      (role.subject.root != context.root ||
+        role.subject.service != context.service ||
+        role.subject.network != context.network)
     )
       continue;
 
