@@ -7,9 +7,12 @@ const network = "some-network";
 const roles = [
   {
     id: "some-role-id",
-    root: "some-role-root",
-    service: "some-role-service",
-    network,
+    subject: {
+      root: "some-role-root",
+      domain: "some-role-domain",
+      service: "some-role-service",
+      network,
+    },
   },
 ];
 
@@ -73,9 +76,12 @@ describe("Role permissions", () => {
         ...roles.map((role) => {
           return {
             id: role.id,
-            root: contextRoot,
-            service: contextService,
-            network: contextNetwork,
+            subject: {
+              root: contextRoot,
+              domain: "some-role-subject-domain",
+              service: contextService,
+              network: contextNetwork,
+            },
           };
         }),
       ],
@@ -100,9 +106,12 @@ describe("Role permissions", () => {
     const customRolesPermissionsFnFake = fake.resolves(customRolePermissions);
     const customRole = {
       id: "some-custom-role-id",
-      root: "some-custom-role-root",
-      service: "some-custom-role-service",
-      network,
+      subject: {
+        root: "some-custom-role-root",
+        domain: "some-custom-role-domain",
+        service: "some-custom-role-service",
+        network,
+      },
     };
     const result = await rolePermissions({
       roles: [...roles, customRole],
@@ -126,9 +135,12 @@ describe("Role permissions", () => {
     const customRolesPermissionsFnFake = fake.resolves(customRolePermissions);
     const customRole = {
       id: "some-custom-role-id",
-      root: "some-custom-role-root",
-      service: "some-custom-role-service",
-      network: "some-random-network",
+      subject: {
+        root: "some-custom-role-root",
+        domain: "some-custom-role-domain",
+        service: "some-custom-role-service",
+        network: "some-random-network",
+      },
     };
     const result = await rolePermissions({
       roles: [...roles, customRole],
@@ -154,7 +166,7 @@ describe("Role permissions", () => {
     ];
 
     const result = await rolePermissions({
-      roles: [...roles, { id: "some-other-role-id" }],
+      roles: [...roles, { id: "some-other-role-id", subject: {} }],
       defaultRoles: {
         ...defaultRole,
         "some-other-role-id": {

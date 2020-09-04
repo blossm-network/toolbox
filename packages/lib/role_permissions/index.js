@@ -12,9 +12,9 @@ module.exports = async ({
   for (const role of roles) {
     if (
       context &&
-      role.root != context.root &&
-      role.service != context.service &&
-      role.network != context.network
+      role.subject.root != context.root &&
+      role.subject.service != context.service &&
+      role.subject.network != context.network
     )
       continue;
 
@@ -37,16 +37,21 @@ module.exports = async ({
 
   const customRoleCandidates = difference(
     roles
-      .filter((role) => role.network == process.env.NETWORK)
-      .map((role) => `${role.id}:${role.root}:${role.service}:${role.network}`),
+      .filter((role) => role.subject.network == process.env.NETWORK)
+      .map(
+        (role) =>
+          `${role.id}:${role.subject.root}:${role.subject.domain}:${role.subject.service}:${role.subject.network}`
+      ),
     rolesFound.map(
-      (role) => `${role.id}:${role.root}:${role.service}:${role.network}`
+      (role) =>
+        `${role.id}:${role.subject.root}:${role.subject.domain}:${role.subject.service}:${role.subject.network}`
     )
   ).map((stringRole) => {
-    const [id, root, service, network] = stringRole.split(":");
+    const [id, root, domain, service, network] = stringRole.split(":");
     return {
       id,
       root,
+      domain,
       service,
       network,
     };
