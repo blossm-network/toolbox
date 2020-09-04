@@ -936,7 +936,9 @@ describe("View store get", () => {
 
     const req = {
       query: {
-        context: {},
+        context: {
+          [envContext]: {},
+        },
         bootstrap: true,
       },
       params: {},
@@ -963,10 +965,50 @@ describe("View store get", () => {
       expect(e).to.equal(error);
     }
   });
-  it("should throw correctly if cant group", async () => {
+  it("should throw correctly if context forbidden", async () => {
+    const findFake = fake.returns([]);
+    const countFake = fake.returns(0);
+
     const req = {
       query: {
         context: {},
+        bootstrap: true,
+      },
+      params: {},
+    };
+
+    const sendFake = fake();
+    const res = {
+      send: sendFake,
+    };
+
+    const error = "some-error";
+    const messageFake = fake.returns(error);
+    replace(deps, "forbiddenError", {
+      message: messageFake,
+    });
+
+    try {
+      process.env.CONTEXT = "something-other-context";
+      await get({ findFn: findFake, countFn: countFake })(req, res);
+    } catch (e) {
+      expect(messageFake).to.have.been.calledWith(
+        "This context is forbidden.",
+        {
+          info: {
+            context: {},
+          },
+        }
+      );
+      expect(e).to.equal(error);
+    }
+  });
+  it("should throw correctly if cant group", async () => {
+    const req = {
+      query: {
+        context: {
+          [envContext]: {},
+        },
       },
       params: {},
     };

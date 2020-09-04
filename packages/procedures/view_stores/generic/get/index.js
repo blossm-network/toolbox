@@ -17,6 +17,16 @@ module.exports = ({
 }) => {
   return async (req, res) => {
     if (
+      process.env.CONTEXT &&
+      (!req.query.context || !req.query.context[process.env.CONTEXT])
+    )
+      throw deps.forbiddenError.message("This context is forbidden.", {
+        info: {
+          context: req.query.context,
+        },
+      });
+
+    if (
       req.query.bootstrap &&
       (!process.env.BOOTSTRAP_CONTEXT ||
         !req.query.context[process.env.BOOTSTRAP_CONTEXT])
