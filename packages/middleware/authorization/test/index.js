@@ -42,7 +42,7 @@ describe("Authorization middleware", () => {
     await authorizationMiddleware({
       permissionsLookupFn,
       terminatedSessionCheckFn: terminatedSessionCheckFake,
-      deletedSessionCheckFn: deletedSceneCheckFake,
+      deletedSceneCheckFn: deletedSceneCheckFake,
       internalTokenFn,
       permissions,
       context: contextKey,
