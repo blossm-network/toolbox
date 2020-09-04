@@ -12,7 +12,7 @@ module.exports = ({ prehook, posthook } = {}) => {
   const listen = ({ port } = {}) => {
     port = port || process.env.PORT || 3000;
     app.get("/_check-in", (_, res, next) => {
-      res.send(1);
+      res.send("ok");
       next();
     });
     if (posthook) posthook(app);
