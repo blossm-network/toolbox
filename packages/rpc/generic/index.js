@@ -130,7 +130,14 @@ const common = ({ method, dataParam, operation, id, data }) => {
             throw deps.constructError({
               statusCode: response.statusCode,
               message: (parsedBody && parsedBody.message) || "Not specified",
-              ...(parsedBody && parsedBody.info && { info: parsedBody.info }),
+              info: {
+                ...(parsedBody && parsedBody.info),
+                url,
+                data: requestData,
+                context,
+                network,
+                token,
+              },
               ...(parsedBody && parsedBody.code && { code: parsedBody.code }),
             });
           }
