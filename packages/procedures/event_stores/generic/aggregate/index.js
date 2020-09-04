@@ -80,35 +80,22 @@ module.exports = ({ findOneSnapshotFn, eventStreamFn, handlers }) => async (
         .slice(0, 10);
 
       if (aggregate.context) {
-        // const keys = Object.keys(aggregate.context);
-        // const commonContextKeys = keys.filter((key) => {
-        //   const value = event.context[key];
-        //   return (
-        //     value === aggregate.context[key] ||
-        //     (value &&
-        //       value.root == aggregate.context[key].root &&
-        //       value.service == aggregate.context[key].service &&
-        //       value.network == aggregate.context[key].network)
-        //   );
-        // });
-        const aggregateContextKeys = Object.keys(aggregate.context);
         aggregate.context = Object.keys(event.context).reduce((result, key) => {
+          const resultKeys = Object.keys(result);
           const value = event.context[key];
-          if (!aggregateContextKeys.includes(key)) {
-            result[key] = event.context[key];
+          if (!resultKeys.includes(key)) {
+            result[key] = value;
           } else if (
-            value === aggregate.context[key] ||
-            (typeof value == "object" &&
-              value.root == aggregate.context[key].root &&
-              value.service == aggregate.context[key].service &&
-              value.network == aggregate.context[key].network)
+            value !== result[key] &&
+            (typeof value != "object" ||
+              value.root != result[key].root ||
+              value.service != result[key].service ||
+              value.network != result[key].network)
           ) {
-            result[key] = event.context[key];
-          } else {
             result[key] = false;
           }
           return result;
-        }, {});
+        }, aggregate.context);
       } else {
         aggregate.context = event.context;
       }

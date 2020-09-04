@@ -60,25 +60,6 @@ const handlers = {
 const txId = "some-txid";
 const snapshotHash = "some-snapshot-hash";
 
-const findOneResult = {
-  hash: snapshotHash,
-  headers: {
-    root,
-    lastEventNumber: 6,
-    created: snapshotCreated,
-  },
-  state: { a: 1, b: 1 },
-  context: {
-    a: {
-      root: aRoot,
-      service: aService,
-      network: aNetwork,
-    },
-    c: "some-c",
-  },
-  txIds: [txId],
-};
-
 const envDomain = "some-env-domain";
 const envService = "some-env-service";
 const envNetwork = "some-env-network";
@@ -92,6 +73,24 @@ describe("Mongodb event store aggregate", () => {
     restore();
   });
   it("should call with the correct params", async () => {
+    const findOneResult = {
+      hash: snapshotHash,
+      headers: {
+        root,
+        lastEventNumber: 6,
+        created: snapshotCreated,
+      },
+      state: { a: 1, b: 1 },
+      context: {
+        a: {
+          root: aRoot,
+          service: aService,
+          network: aNetwork,
+        },
+        c: "some-c",
+      },
+      txIds: [txId],
+    };
     const eventStreamFnFake = stub().yieldsTo("fn", event);
     const findOneSnapshotFnFake = fake.returns({
       ...findOneResult,
@@ -154,6 +153,24 @@ describe("Mongodb event store aggregate", () => {
     });
   });
   it("should call with the correct params with group adding", async () => {
+    const findOneResult = {
+      hash: snapshotHash,
+      headers: {
+        root,
+        lastEventNumber: 6,
+        created: snapshotCreated,
+      },
+      state: { a: 1, b: 1 },
+      context: {
+        a: {
+          root: aRoot,
+          service: aService,
+          network: aNetwork,
+        },
+        c: "some-c",
+      },
+      txIds: [txId],
+    };
     const eventStreamFnFake = stub().yieldsTo("fn", {
       ...event,
       groupsAdded: ["some-added-group"],
@@ -219,6 +236,24 @@ describe("Mongodb event store aggregate", () => {
     });
   });
   it("should call with the correct params with group removing and ignored context", async () => {
+    const findOneResult = {
+      hash: snapshotHash,
+      headers: {
+        root,
+        lastEventNumber: 6,
+        created: snapshotCreated,
+      },
+      state: { a: 1, b: 1 },
+      context: {
+        a: {
+          root: aRoot,
+          service: aService,
+          network: aNetwork,
+        },
+        c: "some-c",
+      },
+      txIds: [txId],
+    };
     const eventStreamFnFake = stub().yieldsTo("fn", {
       ...event,
       groupsRemoved: [
@@ -316,6 +351,24 @@ describe("Mongodb event store aggregate", () => {
     });
   });
   it("should call with the correct params if includeEvents and theres a timestamp and eventLimit ", async () => {
+    const findOneResult = {
+      hash: snapshotHash,
+      headers: {
+        root,
+        lastEventNumber: 6,
+        created: snapshotCreated,
+      },
+      state: { a: 1, b: 1 },
+      context: {
+        a: {
+          root: aRoot,
+          service: aService,
+          network: aNetwork,
+        },
+        c: "some-c",
+      },
+      txIds: [txId],
+    };
     const eventStreamFnFake = stub().yieldsTo("fn", event);
     const findOneSnapshotFnFake = fake.returns(findOneResult);
 
@@ -382,6 +435,24 @@ describe("Mongodb event store aggregate", () => {
     });
   });
   it("should call with the correct params with no events", async () => {
+    const findOneResult = {
+      hash: snapshotHash,
+      headers: {
+        root,
+        lastEventNumber: 6,
+        created: snapshotCreated,
+      },
+      state: { a: 1, b: 1 },
+      context: {
+        a: {
+          root: aRoot,
+          service: aService,
+          network: aNetwork,
+        },
+        c: "some-c",
+      },
+      txIds: [txId],
+    };
     const eventStreamFnFake = fake();
     const findOneSnapshotFnFake = fake.returns(findOneResult);
 
@@ -525,6 +596,24 @@ describe("Mongodb event store aggregate", () => {
     expect(result).to.be.undefined;
   });
   it("should throw if a handler isn't specified", async () => {
+    const findOneResult = {
+      hash: snapshotHash,
+      headers: {
+        root,
+        lastEventNumber: 6,
+        created: snapshotCreated,
+      },
+      state: { a: 1, b: 1 },
+      context: {
+        a: {
+          root: aRoot,
+          service: aService,
+          network: aNetwork,
+        },
+        c: "some-c",
+      },
+      txIds: [txId],
+    };
     const eventStreamFnFake = stub().yieldsTo("fn", event);
     const findOneSnapshotFnFake = fake.returns(findOneResult);
 
