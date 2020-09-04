@@ -9,6 +9,13 @@ module.exports = async ({
   const permissions = [];
   const rolesFound = [];
 
+  //TODO
+  console.log({
+    roles: JSON.stringify(roles),
+    context,
+    defaultRoles: JSON.stringify(defaultRoles),
+  });
+
   for (const role of roles) {
     if (
       context &&
