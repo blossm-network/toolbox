@@ -1,5 +1,3 @@
-const difference = require("@blossm/array-difference");
-
 module.exports = async ({
   roles,
   defaultRoles,
@@ -8,16 +6,11 @@ module.exports = async ({
 }) => {
   const permissions = [];
   const rolesFound = [];
+  const nonDefaultRoles = [];
 
-  //TODO
-  console.log({
-    roles: JSON.stringify(roles),
-    context,
-    defaultRoles: JSON.stringify(defaultRoles),
-  });
-
-  for (const role of roles) {
-    console.log({ role });
+  for (const role of roles.filter(
+    (role) => role.subject.network == process.env.NETWORK
+  )) {
     if (
       context &&
       (role.subject.root != context.root ||
@@ -26,12 +19,12 @@ module.exports = async ({
     )
       continue;
 
-    console.log(1);
     const defaultRole = defaultRoles[role.id];
-    //TODO
-    console.log({ defaultRole });
 
-    if (!defaultRole) continue;
+    if (!defaultRole) {
+      nonDefaultRoles.push(role);
+      continue;
+    }
 
     permissions.push(
       ...defaultRole.permissions.map((permission) => {
@@ -46,43 +39,15 @@ module.exports = async ({
     rolesFound.push(role);
   }
 
-  const customRoleCandidates = difference(
-    roles
-      .filter((role) => role.subject.network == process.env.NETWORK)
-      .map(
-        (role) =>
-          `${role.id}:${role.subject.root}:${role.subject.domain}:${role.subject.service}:${role.subject.network}`
-      ),
-    rolesFound.map(
-      (role) =>
-        `${role.id}:${role.subject.root}:${role.subject.domain}:${role.subject.service}:${role.subject.network}`
-    )
-  ).map((stringRole) => {
-    //TODO
-    console.log({ stringRole });
-    const [id, root, domain, service, network] = stringRole.split(":");
-    return {
-      id,
-      root,
-      domain,
-      service,
-      network,
-    };
-  });
-
-  //TODO
-  console.log({ candiddates: JSON.stringify(customRoleCandidates) });
-
-  if (!customRolePermissionsFn || customRoleCandidates.length == 0)
+  if (!customRolePermissionsFn || nonDefaultRoles.length == 0)
     return permissions;
 
   permissions.push(
     ...(
       await Promise.all(
-        customRoleCandidates.map((customRole) =>
+        nonDefaultRoles.map((nonDefaultRole) =>
           customRolePermissionsFn({
-            roleId: customRole.id,
-            ...(context && { context }),
+            roleId: nonDefaultRole.id,
           })
         )
       )

@@ -69,7 +69,6 @@ describe("Role permissions", () => {
   it("should return the correct roles with no custom roles and context", async () => {
     const contextRoot = "some-context-root";
     const contextService = "some-context-service";
-    const contextNetwork = "some-context-network";
 
     const result = await rolePermissions({
       roles: [
@@ -80,7 +79,7 @@ describe("Role permissions", () => {
               root: contextRoot,
               domain: "some-role-subject-domain",
               service: contextService,
-              network: contextNetwork,
+              network,
             },
           };
         }),
@@ -89,7 +88,7 @@ describe("Role permissions", () => {
       context: {
         root: contextRoot,
         service: contextService,
-        network: contextNetwork,
+        network,
       },
     });
 
@@ -166,7 +165,7 @@ describe("Role permissions", () => {
     ];
 
     const result = await rolePermissions({
-      roles: [...roles, { id: "some-other-role-id", subject: {} }],
+      roles: [...roles, { id: "some-other-role-id", subject: { network } }],
       defaultRoles: {
         ...defaultRole,
         "some-other-role-id": {

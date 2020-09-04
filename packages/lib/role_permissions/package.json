@@ -13,9 +13,7 @@
   "scripts": {
     "test": "mocha --recursive"
   },
-  "dependencies": {
-    "@blossm/array-difference": "^0.0.6"
-  },
+  "dependencies": {},
   "devDependencies": {
     "mocha": "^7.1.1",
     "sinon": "^7.3.2",
