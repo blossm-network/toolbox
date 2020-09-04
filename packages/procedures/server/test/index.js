@@ -86,8 +86,7 @@ describe("Server", () => {
     expect(result).to.equal(app);
     expect(postFake).to.have.been.calledWith("/", asyncFn);
     expect(getFake).to.have.been.calledTwice;
-    expect(getFake.getCall(0)).to.have.been.calledWith("/:id?", asyncFn);
-    expect(getFake.getCall(1)).to.have.been.calledWith(
+    expect(getFake.getCall(0)).to.have.been.calledWith(
       "/_check-in",
       match((fn) => {
         const sendFake = fake();
@@ -102,6 +101,7 @@ describe("Server", () => {
         return sendFake.calledWith("ok") && nextFake.called;
       })
     );
+    expect(getFake.getCall(1)).to.have.been.calledWith("/:id?", asyncFn);
     expect(asyncHandlerFake).to.have.been.calledWith(fn);
     expect(useFake).to.have.been.calledWith(deps.errorMiddleware);
     expect(listenFake).to.have.been.calledWith(port);
@@ -327,8 +327,7 @@ describe("Server", () => {
     const result = server().get(fn).listen();
 
     expect(result).to.equal(app);
-    expect(getFake.getCall(0)).to.have.been.calledWith("/:id?", asyncFn);
-    expect(getFake.getCall(1)).to.have.been.calledWith(
+    expect(getFake.getCall(0)).to.have.been.calledWith(
       "/_check-in",
       match((fn) => {
         const sendFake = fake();
@@ -343,6 +342,7 @@ describe("Server", () => {
         return sendFake.calledWith("ok") && nextFake.called;
       })
     );
+    expect(getFake.getCall(1)).to.have.been.calledWith("/:id?", asyncFn);
     expect(asyncHandlerFake).to.have.been.calledWith(fn);
     expect(useFake).to.have.been.calledWith(deps.errorMiddleware);
     expect(listenFake).to.have.been.calledWith(port);
@@ -378,12 +378,6 @@ describe("Server", () => {
 
     expect(result).to.equal(app);
     expect(getFake.getCall(0)).to.have.been.calledWith(
-      "/:id?",
-      preMiddleware,
-      asyncFn,
-      postMiddleware
-    );
-    expect(getFake.getCall(1)).to.have.been.calledWith(
       "/_check-in",
       match((fn) => {
         const sendFake = fake();
@@ -397,6 +391,12 @@ describe("Server", () => {
         );
         return sendFake.calledWith("ok") && nextFake.called;
       })
+    );
+    expect(getFake.getCall(1)).to.have.been.calledWith(
+      "/:id?",
+      preMiddleware,
+      asyncFn,
+      postMiddleware
     );
     expect(asyncHandlerFake).to.have.been.calledWith(fn);
     expect(useFake).to.have.been.calledWith(deps.errorMiddleware);
