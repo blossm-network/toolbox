@@ -1,6 +1,6 @@
 {
   "name": "@blossm/role-permissions",
-  "version": "0.0.25",
+  "version": "0.0.26",
   "description": "Finds the permissions associated with the given roles.",
   "main": "index.js",
   "author": "blossm.network",
@@ -13,7 +13,6 @@
   "scripts": {
     "test": "mocha --recursive"
   },
-  "dependencies": {},
   "devDependencies": {
     "mocha": "^7.1.1",
     "sinon": "^7.3.2",
