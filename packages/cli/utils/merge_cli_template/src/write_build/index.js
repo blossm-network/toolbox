@@ -13,7 +13,7 @@ const job = require("./job");
 const fact = require("./fact");
 const viewComposite = require("./view_composite");
 
-const checkInPath = "/_check-in";
+const checkInPath = "_check-in";
 const checkInSchedule = "0 * * * *";
 
 const steps = ({
