@@ -793,20 +793,32 @@ describe("Operation", () => {
     const constructErrorFake = fake.returns(error);
     replace(deps, "constructError", constructErrorFake);
 
+    const network = "some-network";
     try {
       await operation(operarationPart1, operarationPart2)
         .delete(query)
-        .in({ context, host })
+        .in({ context, host, network })
         .with({ tokenFn, claims });
 
       expect(3).to.equal(4);
     } catch (e) {
-      // expect(constructErrorFake).to.have.been.calledWith({
-      //   statusCode: errorStatusCode,
-      //   message: errorMessage,
-      //   info,
-      //   code,
-      // });
+      expect(constructErrorFake).to.have.been.calledWith({
+        statusCode: errorStatusCode,
+        message: errorMessage,
+        code,
+        info: {
+          ...info,
+          context: { b: 4 },
+          data: {
+            claims: "some-claims",
+            context: { b: 4 },
+            query: "some-query",
+          },
+          network,
+          token: "some-token",
+          url: "some-url",
+        },
+      });
       expect(e).to.equal(error);
     }
   });
@@ -831,18 +843,26 @@ describe("Operation", () => {
     const constructErrorFake = fake.returns(error);
     replace(deps, "constructError", constructErrorFake);
 
+    const network = "some-network";
     try {
       await operation(operarationPart1, operarationPart2)
         .delete(query)
-        .in({ context, host })
+        .in({ context, host, network })
         .with({ tokenFn, claims });
 
       expect(3).to.equal(4);
     } catch (e) {
-      // expect(constructErrorFake).to.have.been.calledWith({
-      //   statusCode: errorStatusCode,
-      //   message: "Not specified",
-      // });
+      expect(constructErrorFake).to.have.been.calledWith({
+        statusCode: errorStatusCode,
+        message: "Not specified",
+        info: {
+          context: { b: 4 },
+          data: { claims: "some-claims", context, query: "some-query" },
+          network,
+          token: "some-token",
+          url: "some-url",
+        },
+      });
       expect(e).to.equal(error);
     }
   });
