@@ -6,6 +6,7 @@ module.exports = ({
   serviceName,
   computeUrlId,
   project,
+  method = "post",
 }) => {
   return {
     name: "gcr.io/cloud-builders/gcloud",
@@ -16,6 +17,7 @@ module.exports = ({
       gcloud beta scheduler jobs create http ${name}
       --schedule="${schedule}"
       --uri=https://${uri}
+      --http-method=${method}
       --oidc-service-account-email=executer@${project}.iam.gserviceaccount.com
       --oidc-token-audience=https://${serviceName}-${computeUrlId}-uc.a.run.app
       --project=${project} 

@@ -144,6 +144,7 @@ module.exports = ({
             serviceName,
             computeUrlId,
             uri: `${authUri}/${checkInPath}`,
+            method: "get",
             project,
           }),
         ]
