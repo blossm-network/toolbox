@@ -5,7 +5,8 @@ module.exports = ({ credentialsFn }) => async ({ network, key }) => {
   const cacheKey = `${cacheKeyPrefix}.${network}.${key}`;
   //TODO
   // let { token, exp } = (await deps.redis.readObject(cacheKey)) || {};
-  let token = false;
+  let token;
+  let exp;
   if (!token) {
     // || new Date(Date.parse(exp)) < new Date()) {
     const credentials = await credentialsFn({ network });
