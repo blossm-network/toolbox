@@ -3,12 +3,8 @@ const deps = require("./deps");
 const cacheKeyPrefix = "_cToken";
 module.exports = ({ credentialsFn }) => async ({ network, key }) => {
   const cacheKey = `${cacheKeyPrefix}.${network}.${key}`;
-  //TODO
-  // let { token, exp } = (await deps.redis.readObject(cacheKey)) || {};
-  let token;
-  let exp;
-  if (!token) {
-    // || new Date(Date.parse(exp)) < new Date()) {
+  let { token, exp } = (await deps.redis.readObject(cacheKey)) || {};
+  if (!token || new Date(Date.parse(exp)) < new Date()) {
     const credentials = await credentialsFn({ network });
     if (!credentials) return null;
     const { root, secret } = credentials;
