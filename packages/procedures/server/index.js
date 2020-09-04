@@ -9,12 +9,13 @@ module.exports = ({ prehook, posthook } = {}) => {
   if (prehook) prehook(app);
   deps.expressMiddleware(app);
 
+  app.get("/_check-in", (_, res, next) => {
+    res.send("ok");
+    next();
+  });
+
   const listen = ({ port } = {}) => {
     port = port || process.env.PORT || 3000;
-    app.get("/_check-in", (_, res, next) => {
-      res.send("ok");
-      next();
-    });
     if (posthook) posthook(app);
     app.use(deps.errorMiddleware);
     app.listen(port);
