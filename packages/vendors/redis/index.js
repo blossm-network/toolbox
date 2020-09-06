@@ -8,6 +8,7 @@ module.exports = {
       client = deps.redis.createClient({
         host: process.env.REDIS_IP,
       });
+      client.on("error", () => {});
     }
 
     return client
@@ -21,6 +22,7 @@ module.exports = {
       client = deps.redis.createClient({
         host: process.env.REDIS_IP,
       });
+      client.on("error", () => {});
     }
 
     return client
