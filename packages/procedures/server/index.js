@@ -11,7 +11,6 @@ module.exports = ({ prehook, posthook } = {}) => {
 
   app.get("/_check-in", (_, res, next) => {
     res.send("ok");
-    next();
   });
 
   const listen = ({ port } = {}) => {
