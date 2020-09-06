@@ -8,15 +8,15 @@ process.env.REDIS_IP = "some-cache-ip";
 const value = { some: "value" };
 const hmsetFake = stub().yields(null);
 const hgetallFake = stub().yields(null, value);
+const onFake = fake();
 const createClientFake = fake.returns({
   hmset: hmsetFake,
   hgetall: hgetallFake,
+  on: onFake,
 });
 
-const onFake = fake();
 replace(deps, "redis", {
   createClient: createClientFake,
-  on: onFake,
 });
 
 const { writeObject, readObject } = require("..");
