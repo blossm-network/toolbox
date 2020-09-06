@@ -43,15 +43,10 @@ describe("Server", () => {
       "/_check-in",
       match((fn) => {
         const sendFake = fake();
-        const nextFake = fake();
-        fn(
-          null,
-          {
-            send: sendFake,
-          },
-          nextFake
-        );
-        return sendFake.calledWith("ok") && nextFake.called;
+        fn(null, {
+          send: sendFake,
+        });
+        return sendFake.calledWith("ok");
       })
     );
     expect(asyncHandlerFake).to.have.been.calledWith(fn);
@@ -90,15 +85,10 @@ describe("Server", () => {
       "/_check-in",
       match((fn) => {
         const sendFake = fake();
-        const nextFake = fake();
-        fn(
-          null,
-          {
-            send: sendFake,
-          },
-          nextFake
-        );
-        return sendFake.calledWith("ok") && nextFake.called;
+        fn(null, {
+          send: sendFake,
+        });
+        return sendFake.calledWith("ok");
       })
     );
     expect(getFake.getCall(1)).to.have.been.calledWith("/:id?", asyncFn);
@@ -139,15 +129,10 @@ describe("Server", () => {
       "/_check-in",
       match((fn) => {
         const sendFake = fake();
-        const nextFake = fake();
-        fn(
-          null,
-          {
-            send: sendFake,
-          },
-          nextFake
-        );
-        return sendFake.calledWith("ok") && nextFake.called;
+        fn(null, {
+          send: sendFake,
+        });
+        return sendFake.calledWith("ok");
       })
     );
     expect(asyncHandlerFake).to.have.been.calledWith(fn);
@@ -184,15 +169,10 @@ describe("Server", () => {
       "/_check-in",
       match((fn) => {
         const sendFake = fake();
-        const nextFake = fake();
-        fn(
-          null,
-          {
-            send: sendFake,
-          },
-          nextFake
-        );
-        return sendFake.calledWith("ok") && nextFake.called;
+        fn(null, {
+          send: sendFake,
+        });
+        return sendFake.calledWith("ok");
       })
     );
     expect(asyncHandlerFake).to.have.been.calledWith(fn);
@@ -233,15 +213,10 @@ describe("Server", () => {
       "/_check-in",
       match((fn) => {
         const sendFake = fake();
-        const nextFake = fake();
-        fn(
-          null,
-          {
-            send: sendFake,
-          },
-          nextFake
-        );
-        return sendFake.calledWith("ok") && nextFake.called;
+        fn(null, {
+          send: sendFake,
+        });
+        return sendFake.calledWith("ok");
       })
     );
     expect(asyncHandlerFake).to.have.been.calledWith(fn);
@@ -290,15 +265,10 @@ describe("Server", () => {
       "/_check-in",
       match((fn) => {
         const sendFake = fake();
-        const nextFake = fake();
-        fn(
-          null,
-          {
-            send: sendFake,
-          },
-          nextFake
-        );
-        return sendFake.calledWith("ok") && nextFake.called;
+        fn(null, {
+          send: sendFake,
+        });
+        return sendFake.calledWith("ok");
       })
     );
     expect(asyncHandlerFake).to.have.been.calledWith(fn);
@@ -331,15 +301,10 @@ describe("Server", () => {
       "/_check-in",
       match((fn) => {
         const sendFake = fake();
-        const nextFake = fake();
-        fn(
-          null,
-          {
-            send: sendFake,
-          },
-          nextFake
-        );
-        return sendFake.calledWith("ok") && nextFake.called;
+        fn(null, {
+          send: sendFake,
+        });
+        return sendFake.calledWith("ok");
       })
     );
     expect(getFake.getCall(1)).to.have.been.calledWith("/:id?", asyncFn);
@@ -381,15 +346,10 @@ describe("Server", () => {
       "/_check-in",
       match((fn) => {
         const sendFake = fake();
-        const nextFake = fake();
-        fn(
-          null,
-          {
-            send: sendFake,
-          },
-          nextFake
-        );
-        return sendFake.calledWith("ok") && nextFake.called;
+        fn(null, {
+          send: sendFake,
+        });
+        return sendFake.calledWith("ok");
       })
     );
     expect(getFake.getCall(1)).to.have.been.calledWith(
@@ -445,15 +405,10 @@ describe("Server", () => {
       "/_check-in",
       match((fn) => {
         const sendFake = fake();
-        const nextFake = fake();
-        fn(
-          null,
-          {
-            send: sendFake,
-          },
-          nextFake
-        );
-        return sendFake.calledWith("ok") && nextFake.called;
+        fn(null, {
+          send: sendFake,
+        });
+        return sendFake.calledWith("ok");
       })
     );
     expect(asyncHandlerFake).to.have.been.calledWith(fn);
@@ -489,15 +444,10 @@ describe("Server", () => {
       "/_check-in",
       match((fn) => {
         const sendFake = fake();
-        const nextFake = fake();
-        fn(
-          null,
-          {
-            send: sendFake,
-          },
-          nextFake
-        );
-        return sendFake.calledWith("ok") && nextFake.called;
+        fn(null, {
+          send: sendFake,
+        });
+        return sendFake.calledWith("ok");
       })
     );
     expect(asyncHandlerFake).to.have.been.calledWith(fn);
@@ -546,15 +496,10 @@ describe("Server", () => {
       "/_check-in",
       match((fn) => {
         const sendFake = fake();
-        const nextFake = fake();
-        fn(
-          null,
-          {
-            send: sendFake,
-          },
-          nextFake
-        );
-        return sendFake.calledWith("ok") && nextFake.called;
+        fn(null, {
+          send: sendFake,
+        });
+        return sendFake.calledWith("ok");
       })
     );
     expect(asyncHandlerFake).to.have.been.calledWith(fn);
