@@ -13,8 +13,10 @@ const createClientFake = fake.returns({
   hgetall: hgetallFake,
 });
 
+const onFake = fake();
 replace(deps, "redis", {
   createClient: createClientFake,
+  on: onFake,
 });
 
 const { writeObject, readObject } = require("..");
