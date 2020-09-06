@@ -45,12 +45,14 @@ module.exports = commandProcedure({
       })
       .aggregate(root, { notFoundThrows });
 
-    return {
-      lastEventNumber: aggregate.headers.lastEventNumber,
-      state: aggregate.state,
-      root: aggregate.headers.root,
-      groups: aggregate.groups,
-    };
+    return (
+      aggregate && {
+        lastEventNumber: aggregate.headers.lastEventNumber,
+        state: aggregate.state,
+        root: aggregate.headers.root,
+        groups: aggregate.groups,
+      }
+    );
   },
   commandFn: ({ path, idempotency, context, claims, token, txId, ip }) => ({
     name,

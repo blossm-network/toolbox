@@ -50,6 +50,7 @@ module.exports = fact({
       domain = process.env.DOMAIN,
       service = process.env.SERVICE,
       network = process.env.NETWORK,
+      notFoundThrows = true,
     } = {}
   ) => {
     const { body: aggregate } = await eventStore({ domain, service, network })
@@ -59,12 +60,15 @@ module.exports = fact({
         ...(token && { currentToken: token }),
         token: { internalFn: gcpToken },
       })
-      .aggregate(root);
+      .aggregate(root, { notFoundThrows });
 
-    return {
-      lastEventNumber: aggregate.headers.lastEventNumber,
-      state: aggregate.state,
-      groups: aggregate.groups,
-    };
+    return (
+      aggregate && {
+        lastEventNumber: aggregate.headers.lastEventNumber,
+        state: aggregate.state,
+        root: aggregate.headers.root,
+        groups: aggregate.groups,
+      }
+    );
   },
 });
