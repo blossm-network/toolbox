@@ -7,7 +7,12 @@ module.exports = ({ mainFn, queryAggregatesFn, aggregateFn, contexts }) => {
       (!req.query.context ||
         contexts.filter((c) => req.query.context[c]).length != contexts.length)
     )
-      throw deps.forbiddenError.message("This context is forbidden.");
+      throw deps.forbiddenError.message("This context is forbidden.", {
+        info: {
+          query: req.query.context,
+          contexts,
+        },
+      });
 
     const { headers = {}, response } = await mainFn({
       query: req.query.query || {},

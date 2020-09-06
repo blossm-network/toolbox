@@ -189,7 +189,15 @@ describe("Fact get", () => {
         contexts: [context],
       })(req, res);
     } catch (e) {
-      expect(messageFake).to.have.been.calledWith("This context is forbidden.");
+      expect(messageFake).to.have.been.calledWith(
+        "This context is forbidden.",
+        {
+          info: {
+            contexts: [context],
+            query: undefined,
+          },
+        }
+      );
       expect(e).to.equal(error);
     }
   });
