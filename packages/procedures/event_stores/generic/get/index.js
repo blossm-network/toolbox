@@ -14,10 +14,8 @@ module.exports = ({
       handlers,
     })(req.params.root);
 
-    //TODO
-    console.log({ query: req.query });
     if (!result) {
-      if (req.query.notFoundThrows !== false)
+      if (req.query.notFoundThrows !== "false")
         throw deps.resourceNotFoundError.message("This root wasn't found.", {
           info: { root: req.params.root },
         });

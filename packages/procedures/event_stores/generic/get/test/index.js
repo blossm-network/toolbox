@@ -127,7 +127,7 @@ describe("Event store get", () => {
     const req = {
       params,
       query: {
-        notFoundThrows: false,
+        notFoundThrows: "false",
       },
     };
     const sendFake = fake();
