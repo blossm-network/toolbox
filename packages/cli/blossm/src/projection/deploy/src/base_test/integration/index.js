@@ -102,7 +102,7 @@ describe("Projection integration tests", () => {
         context: {
           ...(context && {
             [context]: {
-              root: step.contextRoot || "some-context-root",
+              root: (step.context && step.context.root) || "some-context-root",
               service: process.env.CONTEXT,
               network: process.env.NETWORK,
             },
@@ -148,9 +148,12 @@ describe("Projection integration tests", () => {
           context: {
             ...(context && {
               [context]: {
-                root: step.contextRoot || "some-context-root",
-                service: process.env.CONTEXT,
-                network: process.env.NETWORK,
+                root:
+                  (step.context && step.context.root) || "some-context-root",
+                service:
+                  (step.context && step.context.service) || process.env.CONTEXT,
+                network:
+                  (step.context && step.context.network) || process.env.NETWORK,
               },
             }),
             principal: {
@@ -167,14 +170,6 @@ describe("Projection integration tests", () => {
           expected: step.result.value,
           data: v.content,
         });
-        // for (const property in step.result.value) {
-        //   expect(v.content[property]).to.exist;
-        //   if (step.result.value[property] != undefined) {
-        //     expect(v.content[property]).to.deep.equal(
-        //       step.result.value[property]
-        //     );
-        //   }
-        // }
       } else if (step.result.values) {
         expect(step.result.values.length).to.equal(v.content.length);
         for (let i = 0; i < step.result.values.length; i++) {
@@ -183,12 +178,6 @@ describe("Projection integration tests", () => {
             expected: value,
             data: v.content[i],
           });
-          // for (const property in value) {
-          //   expect(v.content[i][property]).to.exist;
-          //   if (value[property] != undefined) {
-          //     expect(v.content[i][property]).to.deep.equal(value[property]);
-          //   }
-          // }
         }
       }
     }
