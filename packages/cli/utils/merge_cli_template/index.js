@@ -488,12 +488,10 @@ const addDefaultDependencies = ({ config, localCoreNetwork }) => {
             };
           }),
       ];
-      return [
-        ...(!config.testing || config.testing.store !== false
-          ? eventStoreDependencies({ dependencies })
-          : []),
-        ...dependencies,
-      ];
+      return [...eventStoreDependencies({ dependencies }), ...dependencies];
+      // ...(!config.testing || config.testing.store !== false
+      //   ? eventStoreDependencies({ dependencies })
+      //   : []),
     }
     case "view-gateway":
       return [
