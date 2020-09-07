@@ -103,7 +103,7 @@ describe("Projection integration tests", () => {
           ...(context && {
             [context]: step.context || {
               root: "some-context-root",
-              service: process.env.CONTEXT,
+              service: "some-context-service",
               network: process.env.NETWORK,
             },
           }),
@@ -149,7 +149,7 @@ describe("Projection integration tests", () => {
             ...(context && {
               [context]: step.result.context || {
                 root: "some-context-root",
-                service: process.env.CONTEXT,
+                service: "some-context-service",
                 network: process.env.NETWORK,
               },
             }),
