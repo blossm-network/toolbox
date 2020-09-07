@@ -491,7 +491,7 @@ const addDefaultDependencies = ({ config, localCoreNetwork }) => {
       console.log({ testingS: config.testing });
       return [
         ...(!config.testing || config.testing.store !== false
-          ? [eventStoreDependencies({ dependencies })]
+          ? eventStoreDependencies({ dependencies })
           : []),
         ...dependencies,
       ];
