@@ -23,11 +23,15 @@ const resolveTransientDependencies = (config) => {
     case "command":
       return [
         ...(config.testing.dependencies || []),
-        {
-          domain: config.domain,
-          service: config.service,
-          procedure: "event-store",
-        },
+        ...(config.testing.store !== false
+          ? [
+              {
+                domain: config.domain,
+                service: config.service,
+                procedure: "event-store",
+              },
+            ]
+          : []),
       ];
     case "projection":
       return [
