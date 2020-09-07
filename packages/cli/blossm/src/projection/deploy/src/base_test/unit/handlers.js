@@ -5,6 +5,8 @@ const { testing } = require("../../config.json");
 
 const handlers = require("../../handlers.js");
 
+process.env.NETWORK = "local.network";
+
 describe("Projection handlers tests", () => {
   afterEach(() => restore());
   it("should return correctly", async () => {
