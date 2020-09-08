@@ -15,7 +15,7 @@ const handlers = require("./handlers.js");
 
 const config = require("./config.json");
 
-const matchDelimiter = "$";
+const matchDelimiter = ".$.";
 
 const pushToChannel = async ({ channel, newView }) => {
   try {
@@ -143,7 +143,7 @@ const formatUpdate = (update, query) => {
   const matchUpdates = [];
 
   for (const key in update) {
-    const components = key.split(`.${matchDelimiter}.`);
+    const components = key.split(matchDelimiter);
     if (components.length > 1) {
       matchUpdates.push({
         root: components[0],
@@ -180,9 +180,8 @@ const formatUpdate = (update, query) => {
         };
       });
     } else {
-      result[
-        `${matchUpdate.root}.${matchDelimiter}[${matchUpdate.root}].${matchUpdate.key}`
-      ] = matchUpdate.value;
+      result[`${matchUpdate.root}${matchDelimiter}${matchUpdate.key}`] =
+        matchUpdate.value;
     }
   }
 
