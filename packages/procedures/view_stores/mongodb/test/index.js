@@ -273,7 +273,7 @@ describe("View store", () => {
       options: {
         lean: true,
         omitUndefined: true,
-        // upsert: true,
+        upsert: true,
         new: true,
         runValidators: true,
         setDefaultsOnInsert: true,
@@ -569,7 +569,7 @@ describe("View store", () => {
       options: {
         lean: true,
         omitUndefined: true,
-        // upsert: true,
+        upsert: true,
         new: true,
         runValidators: true,
         setDefaultsOnInsert: true,
@@ -836,18 +836,24 @@ describe("View store", () => {
 
     const writeFnResult = await viewStoreFake.lastCall.lastArg.writeFn({
       query,
-      data,
+      data: {
+        ...data,
+        "some.$.key": "something",
+      },
     });
     expect(writeFake).to.have.been.calledWith({
       store,
       query,
       update: {
-        $set: data,
+        $set: {
+          ...data,
+          "some.$.key": "something",
+        },
       },
       options: {
         lean: true,
         omitUndefined: true,
-        // upsert: true,
+        upsert: false,
         new: true,
         runValidators: true,
         setDefaultsOnInsert: true,
@@ -1265,7 +1271,7 @@ describe("View store", () => {
       options: {
         lean: true,
         omitUndefined: true,
-        // upsert: true,
+        upsert: true,
         new: true,
         runValidators: true,
         setDefaultsOnInsert: true,
@@ -1492,7 +1498,7 @@ describe("View store", () => {
       options: {
         lean: true,
         omitUndefined: true,
-        // upsert: true,
+        upsert: true,
         new: true,
         runValidators: true,
         setDefaultsOnInsert: true,

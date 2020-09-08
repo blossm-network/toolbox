@@ -302,6 +302,7 @@ module.exports = async ({
   const writeFn = async ({ query, data }) => {
     const update = {};
     const setKey = "$set";
+    let containsMatcher = false;
     for (const key of Object.keys(data)) {
       if (key.charAt(0) == "$") {
         update[key] = {
@@ -309,6 +310,7 @@ module.exports = async ({
           ...data[key],
         };
       } else {
+        if (key.includes(".$.")) containsMatcher = true;
         update[setKey] = {
           ...update[setKey],
           [key]: data[key],
@@ -325,7 +327,7 @@ module.exports = async ({
       options: {
         lean: true,
         omitUndefined: true,
-        // upsert: true,
+        upsert: !containsMatcher,
         new: true,
         runValidators: true,
         setDefaultsOnInsert: true,
