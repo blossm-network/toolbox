@@ -327,7 +327,7 @@ module.exports = projection({
               aggregateContext,
               id,
               // query: fullQuery,
-              arrayFilter: [fullQuery],
+              arrayFilters: [fullQuery],
               update: formattedUpdate,
               push,
             }),
