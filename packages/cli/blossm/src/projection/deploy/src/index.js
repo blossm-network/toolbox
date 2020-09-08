@@ -282,8 +282,6 @@ module.exports = projection({
       });
 
     const formattedUpdate = formatUpdate(fullUpdate, fullQuery);
-    //TODO
-    console.log({ fullUpdate, formattedUpdate, fullQuery });
 
     if (id) {
       await saveId({
