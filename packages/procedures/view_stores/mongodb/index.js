@@ -325,7 +325,7 @@ module.exports = async ({
       options: {
         lean: true,
         omitUndefined: true,
-        upsert: true,
+        // upsert: true,
         new: true,
         runValidators: true,
         setDefaultsOnInsert: true,
