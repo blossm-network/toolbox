@@ -41,17 +41,7 @@ const pushToChannel = async ({ channel, newView }) => {
   }
 };
 
-const saveId = async ({
-  aggregate,
-  id,
-  query,
-  update,
-  arrayFilters,
-  push,
-  context,
-}) => {
-  //TODO
-  console.log({ id, query, update, arrayFilters });
+const saveId = async ({ aggregate, id, query, update, push, context }) => {
   const { body: newView } = await viewStore({
     name: config.name,
     context: config.context,
@@ -73,7 +63,6 @@ const saveId = async ({
       id,
       update,
       ...(query && { query }),
-      ...(arrayFilters && { arrayFilters }),
       ...(aggregate.groups && { groups: aggregate.groups }),
       ...(aggregate.txIds && {
         trace: {
@@ -325,11 +314,7 @@ module.exports = projection({
               aggregate,
               aggregateContext,
               id,
-              //If someone ever have to touch this again, here are a few notes:
-              //  It might be the case that `query` needs to be passed in IF there is an intent to
-              // specify one document. In this case, no arrayFilters should get passed.
               query: fullQuery,
-              // arrayFilters: [fullQuery],
               update: formattedUpdate,
               push,
             }),

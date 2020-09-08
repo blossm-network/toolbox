@@ -70,13 +70,12 @@ module.exports = ({ name, context = process.env.CONTEXT, network }) => {
     contexts,
     token: { internalFn: internalTokenFn } = {},
     enqueue: { fn: enqueueFn, wait: enqueueWait } = {},
-  } = {}) => ({ id, query, update, arrayFilters, groups, trace }) =>
+  } = {}) => ({ id, query, update, groups, trace }) =>
     deps
       .rpc(name, ...(context ? [context] : []), "view-store")
       .put(id, {
         ...(trace && { trace }),
         ...(query && { query }),
-        ...(arrayFilters && { arrayFilters }),
         ...(groups && { groups }),
         update,
       })

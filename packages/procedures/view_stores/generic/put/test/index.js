@@ -206,7 +206,7 @@ describe("View store put", () => {
       },
     });
   });
-  it("should call with the correct params with groups, arrayFilters and no env context", async () => {
+  it("should call with the correct params with groups and no env context", async () => {
     const writeFake = fake.returns(writeResult);
     const formatFake = fake.returns(formattedWriteResult);
 
@@ -232,11 +232,6 @@ describe("View store put", () => {
             root: group2Root,
             service: group2Service,
             network: group2Network,
-          },
-        ],
-        arrayFilters: [
-          {
-            some: "filter",
           },
         ],
       },
@@ -278,11 +273,6 @@ describe("View store put", () => {
         ],
         [`trace.${traceService}.${traceDomain}`]: traceTxIds,
       },
-      arrayFilters: [
-        {
-          "body.some": "filter",
-        },
-      ],
     });
     expect(formatFake).to.have.been.calledWith({
       body: writeResultBody,

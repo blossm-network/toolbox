@@ -299,7 +299,7 @@ module.exports = async ({
       },
     });
 
-  const writeFn = async ({ query, data, arrayFilters }) => {
+  const writeFn = async ({ query, data }) => {
     const update = {};
     const setKey = "$set";
     for (const key of Object.keys(data)) {
@@ -316,6 +316,8 @@ module.exports = async ({
       }
     }
 
+    //TODO
+    console.log({ query, update });
     return await deps.db.write({
       store,
       query,
@@ -327,7 +329,6 @@ module.exports = async ({
         new: true,
         runValidators: true,
         setDefaultsOnInsert: true,
-        ...(arrayFilters && { arrayFilters }),
       },
     });
   };
