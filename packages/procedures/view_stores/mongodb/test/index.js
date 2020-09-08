@@ -273,7 +273,7 @@ describe("View store", () => {
       options: {
         lean: true,
         omitUndefined: true,
-        upsert: true,
+        // upsert: true,
         new: true,
         runValidators: true,
         setDefaultsOnInsert: true,
@@ -847,7 +847,7 @@ describe("View store", () => {
       options: {
         lean: true,
         omitUndefined: true,
-        upsert: true,
+        // upsert: true,
         new: true,
         runValidators: true,
         setDefaultsOnInsert: true,
@@ -1265,7 +1265,7 @@ describe("View store", () => {
       options: {
         lean: true,
         omitUndefined: true,
-        upsert: true,
+        // upsert: true,
         new: true,
         runValidators: true,
         setDefaultsOnInsert: true,
@@ -1492,7 +1492,7 @@ describe("View store", () => {
       options: {
         lean: true,
         omitUndefined: true,
-        upsert: true,
+        // upsert: true,
         new: true,
         runValidators: true,
         setDefaultsOnInsert: true,
