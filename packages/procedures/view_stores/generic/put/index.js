@@ -44,7 +44,7 @@ module.exports = ({ writeFn, formatFn, updateFn = defaultFn }) => {
     let formattedQuery;
 
     if (req.body.query) {
-      if (!formattedQuery) formattedQuery = {};
+      formattedQuery = {};
       for (const key in req.body.query) {
         formattedQuery[`body.${key}`] = req.body.query[key];
       }
@@ -52,7 +52,7 @@ module.exports = ({ writeFn, formatFn, updateFn = defaultFn }) => {
 
     let formattedArrayFilters;
     if (req.body.arrayFilters) {
-      if (!formattedArrayFilters) formattedArrayFilters = [];
+      formattedArrayFilters = [];
       for (const filter of req.body.arrayFilters) {
         let formattedArrayFilter = {};
         for (const key in filter) {
@@ -69,6 +69,7 @@ module.exports = ({ writeFn, formatFn, updateFn = defaultFn }) => {
         ...formattedQuery,
       },
       data,
+      bodyArrF: req.body.arrayFilters,
       formattedArrayFilters,
     });
 

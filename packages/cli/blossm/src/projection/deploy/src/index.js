@@ -46,12 +46,12 @@ const saveId = async ({
   id,
   query,
   update,
-  arrayFilter,
+  arrayFilters,
   push,
   context,
 }) => {
   //TODO
-  console.log({ id, query, update, arrayFilter });
+  console.log({ id, query, update, arrayFilters });
   const { body: newView } = await viewStore({
     name: config.name,
     context: config.context,
@@ -73,7 +73,7 @@ const saveId = async ({
       id,
       update,
       ...(query && { query }),
-      ...(arrayFilter && { arrayFilter }),
+      ...(arrayFilters && { arrayFilters }),
       ...(aggregate.groups && { groups: aggregate.groups }),
       ...(aggregate.txIds && {
         trace: {
