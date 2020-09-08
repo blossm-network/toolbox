@@ -316,6 +316,9 @@ module.exports = async ({
       }
     }
 
+    //TODO
+    console.log({ query, update });
+
     return await deps.db.write({
       store,
       query,

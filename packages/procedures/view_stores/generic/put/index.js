@@ -52,6 +52,7 @@ module.exports = ({ writeFn, formatFn, updateFn = defaultFn }) => {
 
     //TODO
     console.log({ formattedQuery, data });
+
     const newView = await writeFn({
       query: {
         "headers.id": req.params.id,
