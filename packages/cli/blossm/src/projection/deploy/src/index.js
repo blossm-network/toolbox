@@ -15,6 +15,8 @@ const handlers = require("./handlers.js");
 
 const config = require("./config.json");
 
+const matchDelimiter = "$";
+
 const pushToChannel = async ({ channel, newView }) => {
   try {
     await command({
@@ -39,7 +41,17 @@ const pushToChannel = async ({ channel, newView }) => {
   }
 };
 
-const saveId = async ({ aggregate, id, query, update, push, context }) => {
+const saveId = async ({
+  aggregate,
+  id,
+  query,
+  update,
+  arrayFilter,
+  push,
+  context,
+}) => {
+  //TODO
+  console.log({ id, query, update, arrayFilter });
   const { body: newView } = await viewStore({
     name: config.name,
     context: config.context,
@@ -61,6 +73,7 @@ const saveId = async ({ aggregate, id, query, update, push, context }) => {
       id,
       update,
       ...(query && { query }),
+      ...(arrayFilter && { arrayFilter }),
       ...(aggregate.groups && { groups: aggregate.groups }),
       ...(aggregate.txIds && {
         trace: {
@@ -129,10 +142,8 @@ const formatUpdate = (update, query) => {
 
   const matchUpdates = [];
 
-  const matchDelimiter = ".$.";
-
   for (const key in update) {
-    const components = key.split(matchDelimiter);
+    const components = key.split(`.${matchDelimiter}.`);
     if (components.length > 1) {
       matchUpdates.push({
         root: components[0],
@@ -169,8 +180,9 @@ const formatUpdate = (update, query) => {
         };
       });
     } else {
-      result[`${matchUpdate.root}${matchDelimiter}${matchUpdate.key}`] =
-        matchUpdate.value;
+      result[
+        `${matchUpdate.root}.${matchDelimiter}[${matchUpdate.root}].${matchUpdate.key}`
+      ] = matchUpdate.value;
     }
   }
 
@@ -314,8 +326,8 @@ module.exports = projection({
               aggregate,
               aggregateContext,
               id,
-              //Pass query here so that match `.$.` queries will work.
-              query: fullQuery,
+              // query: fullQuery,
+              arrayFilter: [fullQuery],
               update: formattedUpdate,
               push,
             }),

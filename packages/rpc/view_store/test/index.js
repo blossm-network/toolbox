@@ -267,6 +267,7 @@ describe("Get views", () => {
     const trace = "some-trace";
     const groups = "some-groups";
     const query = "some-query";
+    const arrayFilters = "some-array-filters";
 
     const enqueueFnResult = "some-enqueue-fn-result";
     const enqueueFnFake = fake.returns(enqueueFnResult);
@@ -282,7 +283,7 @@ describe("Get views", () => {
           wait: enqueueWait,
         },
       })
-      .update({ update, query, id, trace, groups });
+      .update({ update, query, id, trace, groups, arrayFilters });
 
     expect(rpcFake).to.have.been.calledWith(name, context, "view-store");
     expect(putFake).to.have.been.calledWith(id, {
@@ -290,6 +291,7 @@ describe("Get views", () => {
       trace,
       groups,
       query,
+      arrayFilters,
     });
     expect(inFake).to.have.been.calledWith({ context: contexts });
     expect(withFake).to.have.been.calledWith({

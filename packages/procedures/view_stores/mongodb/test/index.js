@@ -556,9 +556,11 @@ describe("View store", () => {
     });
     expect(steamFnResult).to.equal(foundObjs);
 
+    const arrayFilters = "some-array-filters";
     const writeFnResult = await viewStoreFake.lastCall.lastArg.writeFn({
       query,
       data,
+      arrayFilters,
     });
     expect(writeFake).to.have.been.calledWith({
       store,
@@ -573,6 +575,7 @@ describe("View store", () => {
         new: true,
         runValidators: true,
         setDefaultsOnInsert: true,
+        arrayFilters,
       },
     });
     expect(writeFnResult).to.equal(writeResult);

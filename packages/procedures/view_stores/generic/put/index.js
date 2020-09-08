@@ -50,8 +50,27 @@ module.exports = ({ writeFn, formatFn, updateFn = defaultFn }) => {
       }
     }
 
+    let formattedArrayFilters;
+    if (req.body.arrayFilters) {
+      if (!formattedArrayFilters) formattedArrayFilters = [];
+      for (const filter of req.body.arrayFilters) {
+        let formattedArrayFilter = {};
+        for (const key in filter) {
+          formattedArrayFilter[`body.${key}`] = filter[key];
+        }
+        formattedArrayFilters.push(formattedArrayFilter);
+      }
+    }
+
     //TODO
-    console.log({ formattedQuery, data });
+    console.log({
+      query: {
+        "headers.id": req.params.id,
+        ...formattedQuery,
+      },
+      data,
+      formattedArrayFilters,
+    });
 
     const newView = await writeFn({
       query: {
@@ -59,6 +78,7 @@ module.exports = ({ writeFn, formatFn, updateFn = defaultFn }) => {
         ...formattedQuery,
       },
       data,
+      ...(formattedArrayFilters && { arrayFilters: formattedArrayFilters }),
     });
 
     if (!newView) return res.sendStatus(204);
