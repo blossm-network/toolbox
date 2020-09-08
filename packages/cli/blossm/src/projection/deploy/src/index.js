@@ -326,8 +326,11 @@ module.exports = projection({
               aggregate,
               aggregateContext,
               id,
-              // query: fullQuery,
-              arrayFilters: [fullQuery],
+              //If someone ever have to touch this again, here are a few notes:
+              //  It might be the case that `query` needs to be passed in IF there is an intent to
+              // specify one document. In this case, no arrayFilters should get passed.
+              query: fullQuery,
+              // arrayFilters: [fullQuery],
               update: formattedUpdate,
               push,
             }),
