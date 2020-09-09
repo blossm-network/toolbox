@@ -171,7 +171,6 @@ const deleteId = async ({ aggregate, id, query, update, push, context }) => {
     })
     .delete({
       id,
-      update,
       ...(query && { query }),
       ...(aggregate.groups && { groups: aggregate.groups }),
     });

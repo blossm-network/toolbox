@@ -153,7 +153,7 @@ describe("Operation", () => {
 
     const enqueueFn = "some-enqueue-fn";
     await operation(operarationPart1, operarationPart2)
-      .delete(query)
+      .delete(id, data)
       .in({ context, host })
       .with({ internalTokenFn: tokenFn, claims, enqueueFn });
 
@@ -161,7 +161,7 @@ describe("Operation", () => {
       enqueueFn,
       url,
       data: {
-        query,
+        ...data,
         context,
         claims,
       },
@@ -744,13 +744,13 @@ describe("Operation", () => {
     replace(deps, "operationUrl", operationUrlFake);
 
     const result = await operation(operarationPart1, operarationPart2)
-      .delete(query)
+      .delete(id, data)
       .in({ context, host })
       .with({ internalTokenFn: tokenFn, currentToken, claims });
 
     expect(del).to.have.been.calledWith(url, {
       body: {
-        query,
+        ...data,
         context,
         token: currentToken,
         claims,
@@ -766,6 +766,7 @@ describe("Operation", () => {
     expect(operationUrlFake).to.have.been.calledWith({
       operation: [operarationPart1, operarationPart2],
       host,
+      id,
     });
     expect(result).to.deep.equal({ statusCode });
   });
@@ -796,7 +797,7 @@ describe("Operation", () => {
     const network = "some-network";
     try {
       await operation(operarationPart1, operarationPart2)
-        .delete(query)
+        .delete(id)
         .in({ context, host, network })
         .with({ tokenFn, claims });
 
@@ -812,7 +813,6 @@ describe("Operation", () => {
           data: {
             claims: "some-claims",
             context: { b: 4 },
-            query: "some-query",
           },
           network,
           token: "some-token",
@@ -846,7 +846,7 @@ describe("Operation", () => {
     const network = "some-network";
     try {
       await operation(operarationPart1, operarationPart2)
-        .delete(query)
+        .delete(id)
         .in({ context, host, network })
         .with({ tokenFn, claims });
 
@@ -857,7 +857,7 @@ describe("Operation", () => {
         message: "Not specified",
         info: {
           context: { b: 4 },
-          data: { claims: "some-claims", context, query: "some-query" },
+          data: { claims: "some-claims", context },
           network,
           token: "some-token",
           url: "some-url",

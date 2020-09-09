@@ -169,12 +169,13 @@ module.exports = (...operation) => {
       }),
     put: (id, data) =>
       common({ method: deps.put, dataParam: "body", operation, id, data }),
-    delete: (query) =>
+    delete: (id, data) =>
       common({
         method: deps.delete,
         dataParam: "body",
         operation,
-        data: { query },
+        id,
+        data,
       }),
     get: (query) => {
       const id = query.id;

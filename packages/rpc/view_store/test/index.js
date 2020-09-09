@@ -357,6 +357,7 @@ describe("Get views", () => {
     });
     replace(deps, "rpc", rpcFake);
 
+    const groups = "some-groups";
     await viewStore({ name, context })
       .set({
         context: contexts,
@@ -364,10 +365,13 @@ describe("Get views", () => {
           internalFn: internalTokenFn,
         },
       })
-      .delete(query);
+      .delete(id, { query, groups });
 
     expect(rpcFake).to.have.been.calledWith(name, context, "view-store");
-    expect(deleteFake).to.have.been.calledWith(query);
+    expect(deleteFake).to.have.been.calledWith(id, {
+      query,
+      groups,
+    });
     expect(inFake).to.have.been.calledWith({ context: contexts });
     expect(withFake).to.have.been.calledWith({
       internalTokenFn,
@@ -386,10 +390,10 @@ describe("Get views", () => {
     });
     replace(deps, "rpc", rpcFake);
 
-    await viewStore({ name }).delete(query);
+    await viewStore({ name }).delete(id);
 
     expect(rpcFake).to.have.been.calledWith(name, envContext, "view-store");
-    expect(deleteFake).to.have.been.calledWith(query);
+    expect(deleteFake).to.have.been.calledWith(id);
     expect(inFake).to.have.been.calledWith({});
     expect(withFake).to.have.been.calledWith();
   });

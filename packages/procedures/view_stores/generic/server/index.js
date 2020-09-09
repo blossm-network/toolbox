@@ -50,6 +50,13 @@ module.exports = async ({
         }
       )
     )
-    .delete(deps.delete({ removeFn, groupsLookupFn, ...(group && { group }) }))
+    .delete(
+      deps.delete(
+        { removeFn, groupsLookupFn, ...(group && { group }) },
+        {
+          path: "/:id",
+        }
+      )
+    )
     .listen();
 };

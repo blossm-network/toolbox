@@ -88,7 +88,9 @@ describe("View store", () => {
       path: "/stream-ids",
     });
     expect(putFake).to.have.been.calledWith(viewStorePutResult);
-    expect(deleteFake).to.have.been.calledWith(viewStoreDeleteResult);
+    expect(deleteFake).to.have.been.calledWith(viewStoreDeleteResult, {
+      path: "/:id",
+    });
     expect(viewStoreGetFake).to.have.been.calledWith({
       findFn,
       countFn,
