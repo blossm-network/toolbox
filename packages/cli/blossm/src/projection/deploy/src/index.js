@@ -17,7 +17,7 @@ const config = require("./config.json");
 
 const matchDelimiter = ".$.";
 
-const pushToChannel = async ({ channel, newView }) => {
+const pushToChannel = async ({ channel, view, id, trace, type }) => {
   try {
     await command({
       name: "push",
@@ -33,12 +33,77 @@ const pushToChannel = async ({ channel, newView }) => {
         },
       })
       .issue({
-        view: newView,
+        ...(view && { view }),
+        ...(trace && { trace }),
+        id,
+        type,
         channel,
       });
   } catch (err) {
     logger.error("Failed to push updates.", { err });
   }
+};
+
+const pushToChannels = async ({ context, groups, view, id, trace, type }) => {
+  if (context) {
+    const channel = channelName({
+      name: process.env.NAME,
+      context,
+    });
+
+    await pushToChannel({
+      channel,
+      ...(view && { view }),
+      id,
+      ...(trace && { trace }),
+      type,
+    });
+  }
+
+  //Const get all principals
+  await Promise.all(
+    (groups || []).map((group) =>
+      fact({
+        name: "principals",
+        domain: "group",
+        service: "core",
+        network: process.env.CORE_NETWORK,
+      })
+        .set({
+          token: {
+            externalFn: nodeExternalToken,
+            internalFn: gcpToken,
+            key: "access",
+          },
+        })
+        .stream(
+          async (principal) => {
+            const channel = channelName({
+              name: process.env.NAME,
+              ...(context && {
+                context,
+              }),
+              principal,
+            });
+
+            //If there is no context, the channel is always the principal's channel.
+            await pushToChannel({
+              channel,
+              ...(view && { view }),
+              id,
+              ...(trace && { trace }),
+              type,
+            });
+          },
+          {
+            root: group.root,
+            query: {
+              parallel: 100,
+            },
+          }
+        )
+    )
+  );
 };
 
 const saveId = async ({ aggregate, id, query, update, push, context }) => {
@@ -75,55 +140,50 @@ const saveId = async ({ aggregate, id, query, update, push, context }) => {
 
   if (!newView || !push) return;
 
-  if (newView.headers.context) {
-    const channel = channelName({
-      name: process.env.NAME,
-      ...(newView.headers.context && {
-        context: newView.headers.context,
+  await pushToChannels({
+    ...(newView.headers.context && { context: newView.headers.context }),
+    ...(newView.headers.groups && { groups: newView.headers.groups }),
+    view: newView,
+    id: newView.headers.id,
+    trace: newView.trace,
+    type:
+      newView.headers.created == newView.headers.modified ? "create" : "update",
+  });
+};
+
+const deleteId = async ({ aggregate, id, query, update, push, context }) => {
+  await viewStore({
+    name: config.name,
+    context: config.context,
+  })
+    .set({
+      token: { internalFn: gcpToken },
+      ...(context && {
+        context: {
+          [process.env.CONTEXT]: {
+            root: context.root,
+            service: context.service,
+            network: context.network,
+          },
+        },
       }),
+      ...(!push && { enqueue: { fn: enqueue } }),
+    })
+    .delete({
+      id,
+      update,
+      ...(query && { query }),
+      ...(aggregate.groups && { groups: aggregate.groups }),
     });
 
-    await pushToChannel({ channel, newView });
-  }
+  if (!push) return;
 
-  //Const get all principals
-  await Promise.all(
-    (newView.headers.groups || []).map((group) =>
-      fact({
-        name: "principals",
-        domain: "group",
-        service: "core",
-        network: process.env.CORE_NETWORK,
-      })
-        .set({
-          token: {
-            externalFn: nodeExternalToken,
-            internalFn: gcpToken,
-            key: "access",
-          },
-        })
-        .stream(
-          async (principal) => {
-            const channel = channelName({
-              name: process.env.NAME,
-              ...(newView.headers.context && {
-                context: newView.headers.context,
-              }),
-              principal,
-            });
-
-            //If there is no context, the channel is always the principal's channel.
-            await pushToChannel({ channel, newView });
-          },
-          {
-            root: group.root,
-            query: {
-              parallel: 100,
-            },
-          }
-        )
-    )
-  );
+  await pushToChannels({
+    context,
+    groups: aggregate.groups,
+    id,
+    type: "delete",
+  });
 };
 
 const formatUpdate = (update, query) => {
@@ -258,6 +318,8 @@ module.exports = projection({
       replay,
       //A context to be added to the view.
       context,
+      //If the views matching the query should be deleted.
+      del,
     } = await handlers[aggregate.headers.service][aggregate.headers.domain]({
       state: aggregate.state,
       id: aggregate.headers.root,
@@ -284,13 +346,21 @@ module.exports = projection({
     const formattedUpdate = formatUpdate(fullUpdate, fullQuery);
 
     if (id) {
-      await saveId({
-        aggregate,
-        context: aggregateContext,
-        id,
-        update: formattedUpdate,
-        push,
-      });
+      (await del)
+        ? deleteId({
+            aggregate,
+            context: aggregateContext,
+            id,
+            update: formattedUpdate,
+            push,
+          })
+        : saveId({
+            aggregate,
+            context: aggregateContext,
+            id,
+            update: formattedUpdate,
+            push,
+          });
     } else {
       await viewStore({
         name: config.name,
@@ -310,14 +380,23 @@ module.exports = projection({
         })
         .idStream(
           ({ id }) =>
-            saveId({
-              aggregate,
-              aggregateContext,
-              id,
-              query: fullQuery,
-              update: formattedUpdate,
-              push,
-            }),
+            del
+              ? deleteId({
+                  aggregate,
+                  aggregateContext,
+                  id,
+                  query: fullQuery,
+                  update: formattedUpdate,
+                  push,
+                })
+              : saveId({
+                  aggregate,
+                  aggregateContext,
+                  id,
+                  query: fullQuery,
+                  update: formattedUpdate,
+                  push,
+                }),
           {
             parallel: 100,
             ...(fullQuery && { query: fullQuery }),

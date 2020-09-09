@@ -105,7 +105,11 @@ describe("View store", () => {
       updateFn,
       formatFn,
     });
-    expect(viewStoreDeleteFake).to.have.been.calledWith({ removeFn });
+    expect(viewStoreDeleteFake).to.have.been.calledWith({
+      removeFn,
+      groupsLookupFn,
+      group,
+    });
   });
   it("should call with the correct params with optionals missing", async () => {
     const viewStore = require("..");
@@ -189,6 +193,9 @@ describe("View store", () => {
         return input == output;
       }),
     });
-    expect(viewStoreDeleteFake).to.have.been.calledWith({ removeFn });
+    expect(viewStoreDeleteFake).to.have.been.calledWith({
+      removeFn,
+      groupsLookupFn,
+    });
   });
 });

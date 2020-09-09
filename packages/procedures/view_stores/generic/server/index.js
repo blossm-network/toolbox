@@ -50,6 +50,6 @@ module.exports = async ({
         }
       )
     )
-    .delete(deps.delete({ removeFn }))
+    .delete(deps.delete({ removeFn, groupsLookupFn, ...(group && { group }) }))
     .listen();
 };

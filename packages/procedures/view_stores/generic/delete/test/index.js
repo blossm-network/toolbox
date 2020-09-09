@@ -49,20 +49,25 @@ describe("View store delete", () => {
     await del({ removeFn: removeFake })(req, res);
     expect(removeFake).to.have.been.calledWith({
       "headers.id": id,
-      "headers.context.root": contextRoot,
-      "headers.context.domain": contextDomain,
-      "headers.context.service": contextService,
-      "headers.context.network": contextNetwork,
+      "headers.context": {
+        root: contextRoot,
+        domain: contextDomain,
+        service: contextService,
+        network: contextNetwork,
+      },
     });
     expect(statusFake).to.have.been.calledWith(200);
     expect(sendFake).to.have.been.calledWith({ deletedCount });
   });
-  it("should call with the correct params with query", async () => {
+  it("should call with the correct params with query and group", async () => {
     const removeFake = fake.returns({ deletedCount });
 
+    const token = "some-token";
     const req = {
       query: {
+        context,
         query,
+        token,
       },
     };
 
@@ -74,8 +79,30 @@ describe("View store delete", () => {
       status: statusFake,
     };
 
-    await del({ removeFn: removeFake })(req, res);
-    expect(removeFake).to.have.been.calledWith({ "body.a": 1 });
+    const groups = "some-groups";
+    const groupsLookupFnFake = fake.returns(groups);
+    await del({
+      removeFn: removeFake,
+      group: true,
+      groupsLookupFn: groupsLookupFnFake,
+    })(req, res);
+    expect(removeFake).to.have.been.calledWith({
+      "body.a": 1,
+      "headers.context": {
+        root: contextRoot,
+        domain: contextDomain,
+        service: contextService,
+        network: contextNetwork,
+      },
+      "headers.groups": {
+        $elemMatch: {
+          $in: groups,
+        },
+      },
+    });
+    expect(groupsLookupFnFake).to.have.been.calledWith({
+      token,
+    });
     expect(statusFake).to.have.been.calledWith(200);
     expect(sendFake).to.have.been.calledWith({ deletedCount });
   });
@@ -100,10 +127,12 @@ describe("View store delete", () => {
     await del({ removeFn: removeFake })(req, res);
     expect(removeFake).to.have.been.calledWith({
       "body.a": 1,
-      "headers.context.root": contextRoot,
-      "headers.context.domain": contextDomain,
-      "headers.context.service": contextService,
-      "headers.context.network": contextNetwork,
+      "headers.context": {
+        root: contextRoot,
+        domain: contextDomain,
+        service: contextService,
+        network: contextNetwork,
+      },
     });
     expect(statusFake).to.have.been.calledWith(200);
     expect(sendFake).to.have.been.calledWith({ deletedCount });
@@ -136,28 +165,6 @@ describe("View store delete", () => {
     expect(statusFake).to.have.been.calledWith(200);
     expect(sendFake).to.have.been.calledWith({ deletedCount });
   });
-  it("should call with the correct params with query", async () => {
-    const removeFake = fake.returns({ deletedCount });
-
-    const req = {
-      query: {
-        query,
-      },
-    };
-
-    const sendFake = fake();
-    const statusFake = fake.returns({
-      send: sendFake,
-    });
-    const res = {
-      status: statusFake,
-    };
-
-    await del({ removeFn: removeFake })(req, res);
-    expect(removeFake).to.have.been.calledWith({ "body.a": 1 });
-    expect(statusFake).to.have.been.calledWith(200);
-    expect(sendFake).to.have.been.calledWith({ deletedCount });
-  });
   it("should throw if missing root params", async () => {
     const removeFake = fake.returns({ deletedCount });
 
@@ -181,6 +188,40 @@ describe("View store delete", () => {
     } catch (e) {
       expect(e).to.equal(error);
       expect(messageFake).to.have.been.calledWith("Missing query.");
+    }
+  });
+  it("should throw correctly if context forbidden", async () => {
+    const req = {
+      query: {
+        context: {},
+        query: {},
+      },
+    };
+
+    const sendFake = fake();
+    const res = {
+      send: sendFake,
+    };
+
+    const error = "some-error";
+    const messageFake = fake.returns(error);
+    replace(deps, "forbiddenError", {
+      message: messageFake,
+    });
+
+    try {
+      process.env.CONTEXT = "something-other-context";
+      await del({})(req, res);
+    } catch (e) {
+      expect(messageFake).to.have.been.calledWith(
+        "This context is forbidden.",
+        {
+          info: {
+            context: {},
+          },
+        }
+      );
+      expect(e).to.equal(error);
     }
   });
 });
