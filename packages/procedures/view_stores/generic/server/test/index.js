@@ -88,9 +88,7 @@ describe("View store", () => {
       path: "/stream-ids",
     });
     expect(putFake).to.have.been.calledWith(viewStorePutResult);
-    expect(deleteFake).to.have.been.calledWith(viewStoreDeleteResult, {
-      path: "/:id",
-    });
+    expect(deleteFake).to.have.been.calledWith(viewStoreDeleteResult);
     expect(viewStoreGetFake).to.have.been.calledWith({
       findFn,
       countFn,
@@ -107,11 +105,16 @@ describe("View store", () => {
       updateFn,
       formatFn,
     });
-    expect(viewStoreDeleteFake).to.have.been.calledWith({
-      removeFn,
-      groupsLookupFn,
-      group,
-    });
+    expect(viewStoreDeleteFake).to.have.been.calledWith(
+      {
+        removeFn,
+        groupsLookupFn,
+        group,
+      },
+      {
+        path: "/:id?",
+      }
+    );
   });
   it("should call with the correct params with optionals missing", async () => {
     const viewStore = require("..");
