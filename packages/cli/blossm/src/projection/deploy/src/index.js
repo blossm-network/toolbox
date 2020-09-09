@@ -151,7 +151,7 @@ const saveId = async ({ aggregate, id, query, update, push, context }) => {
   });
 };
 
-const deleteId = async ({ aggregate, id, query, update, push, context }) => {
+const deleteId = async ({ aggregate, id, query, push, context }) => {
   await viewStore({
     name: config.name,
     context: config.context,
@@ -169,8 +169,7 @@ const deleteId = async ({ aggregate, id, query, update, push, context }) => {
       }),
       ...(!push && { enqueue: { fn: enqueue } }),
     })
-    .delete({
-      id,
+    .delete(id, {
       ...(query && { query }),
       ...(aggregate.groups && { groups: aggregate.groups }),
     });
