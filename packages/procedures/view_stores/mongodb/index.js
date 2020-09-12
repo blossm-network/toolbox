@@ -97,15 +97,19 @@ module.exports = async ({
   const allIndexes = [
     [{ "headers.id": 1 }],
     [
-      { ["headers.context.root"]: 1 },
-      { ["headers.context.domain"]: 1 },
-      { ["headers.context.service"]: 1 },
-      { ["headers.context.network"]: 1 },
+      {
+        "headers.context.root": 1,
+        "headers.context.domain": 1,
+        "headers.context.service": 1,
+        "headers.context.network": 1,
+      },
     ],
     [
-      { ["headers.groups.root"]: 1 },
-      { ["headers.groups.service"]: 1 },
-      { ["headers.groups.network"]: 1 },
+      {
+        "headers.groups.root": 1,
+        "headers.groups.service": 1,
+        "headers.groups.network": 1,
+      },
     ],
   ];
 

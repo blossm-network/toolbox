@@ -180,15 +180,19 @@ describe("View store", () => {
       indexes: [
         [{ "headers.id": 1 }],
         [
-          { "headers.context.root": 1 },
-          { "headers.context.domain": 1 },
-          { "headers.context.service": 1 },
-          { "headers.context.network": 1 },
+          {
+            "headers.context.root": 1,
+            "headers.context.domain": 1,
+            "headers.context.service": 1,
+            "headers.context.network": 1,
+          },
         ],
         [
-          { ["headers.groups.root"]: 1 },
-          { ["headers.groups.service"]: 1 },
-          { ["headers.groups.network"]: 1 },
+          {
+            "headers.groups.root": 1,
+            "headers.groups.service": 1,
+            "headers.groups.network": 1,
+          },
         ],
         [{ "body.some-index": 1 }],
       ],
@@ -434,15 +438,19 @@ describe("View store", () => {
       indexes: [
         [{ "headers.id": 1 }],
         [
-          { "headers.context.root": 1 },
-          { "headers.context.domain": 1 },
-          { "headers.context.service": 1 },
-          { "headers.context.network": 1 },
+          {
+            "headers.context.root": 1,
+            "headers.context.domain": 1,
+            "headers.context.service": 1,
+            "headers.context.network": 1,
+          },
         ],
         [
-          { ["headers.groups.root"]: 1 },
-          { ["headers.groups.service"]: 1 },
-          { ["headers.groups.network"]: 1 },
+          {
+            "headers.groups.root": 1,
+            "headers.groups.service": 1,
+            "headers.groups.network": 1,
+          },
         ],
         [{ "body.some-index": 1 }],
         [{ "body.some": 1 }],
@@ -712,15 +720,19 @@ describe("View store", () => {
       indexes: [
         [{ "headers.id": 1 }],
         [
-          { "headers.context.root": 1 },
-          { "headers.context.domain": 1 },
-          { "headers.context.service": 1 },
-          { "headers.context.network": 1 },
+          {
+            "headers.context.root": 1,
+            "headers.context.domain": 1,
+            "headers.context.service": 1,
+            "headers.context.network": 1,
+          },
         ],
         [
-          { ["headers.groups.root"]: 1 },
-          { ["headers.groups.service"]: 1 },
-          { ["headers.groups.network"]: 1 },
+          {
+            "headers.groups.root": 1,
+            "headers.groups.service": 1,
+            "headers.groups.network": 1,
+          },
         ],
         [{ "body.some-index": 1 }],
         [{ "body.some": 1 }],
@@ -999,15 +1011,19 @@ describe("View store", () => {
       indexes: [
         [{ "headers.id": 1 }],
         [
-          { "headers.context.root": 1 },
-          { "headers.context.domain": 1 },
-          { "headers.context.service": 1 },
-          { "headers.context.network": 1 },
+          {
+            "headers.context.root": 1,
+            "headers.context.domain": 1,
+            "headers.context.service": 1,
+            "headers.context.network": 1,
+          },
         ],
         [
-          { ["headers.groups.root"]: 1 },
-          { ["headers.groups.service"]: 1 },
-          { ["headers.groups.network"]: 1 },
+          {
+            "headers.groups.root": 1,
+            "headers.groups.service": 1,
+            "headers.groups.network": 1,
+          },
         ],
         [{ "body.some-index": 1 }],
       ],
@@ -1137,15 +1153,19 @@ describe("View store", () => {
       indexes: [
         [{ "headers.id": 1 }],
         [
-          { "headers.context.root": 1 },
-          { "headers.context.domain": 1 },
-          { "headers.context.service": 1 },
-          { "headers.context.network": 1 },
+          {
+            "headers.context.root": 1,
+            "headers.context.domain": 1,
+            "headers.context.service": 1,
+            "headers.context.network": 1,
+          },
         ],
         [
-          { ["headers.groups.root"]: 1 },
-          { ["headers.groups.service"]: 1 },
-          { ["headers.groups.network"]: 1 },
+          {
+            "headers.groups.root": 1,
+            "headers.groups.service": 1,
+            "headers.groups.network": 1,
+          },
         ],
         [{ "body.some-index": 1 }],
         [{ "body.some": 1 }],
@@ -1405,15 +1425,19 @@ describe("View store", () => {
       indexes: [
         [{ "headers.id": 1 }],
         [
-          { "headers.context.root": 1 },
-          { "headers.context.domain": 1 },
-          { "headers.context.service": 1 },
-          { "headers.context.network": 1 },
+          {
+            "headers.context.root": 1,
+            "headers.context.domain": 1,
+            "headers.context.service": 1,
+            "headers.context.network": 1,
+          },
         ],
         [
-          { ["headers.groups.root"]: 1 },
-          { ["headers.groups.service"]: 1 },
-          { ["headers.groups.network"]: 1 },
+          {
+            "headers.groups.root": 1,
+            "headers.groups.service": 1,
+            "headers.groups.network": 1,
+          },
         ],
         [{ "body.some-index": 1 }],
       ],
