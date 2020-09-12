@@ -46,16 +46,24 @@ describe("Fact gateway integration tests", () => {
           ];
     }, []);
 
-    const needsToken = facts.some(
-      (c) => c.protection == undefined || c.protection == "strict"
-    );
-
-    const { token } = needsToken
-      ? await getToken({ permissions: requiredPermissions })
-      : {};
-
     const parallelFns = [];
     for (const fact of facts) {
+      const needsToken =
+        fact.protection == undefined ||
+        fact.protection == "strict" ||
+        typeof fact.protection == "object";
+
+      const { token } = needsToken
+        ? await getToken({
+            permissions: requiredPermissions,
+            ...(typeof fact.protection == "object" && {
+              ...Object.keys(fact.protection).reduce((result, key) => {
+                result[key] = fact.protection[key][0];
+                return result;
+              }, {}),
+            }),
+          })
+        : {};
       parallelFns.push(async () => {
         const response0 = await request.get(`${url}/${fact.name}`, {
           body: {

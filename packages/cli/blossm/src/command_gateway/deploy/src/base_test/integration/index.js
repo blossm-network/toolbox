@@ -41,17 +41,26 @@ describe("Command gateway integration tests", () => {
           ];
     }, []);
 
-    const needsToken = commands.some(
-      (c) => c.protection == undefined || c.protection == "strict"
-    );
-
-    const { token } = needsToken
-      ? await getToken({ permissions: requiredPermissions })
-      : {};
-
     const parallelFns = [];
     for (const command of commands) {
       parallelFns.push(async () => {
+        const needsToken =
+          command.protection == undefined ||
+          command.protection == "strict" ||
+          typeof command.protection == "object";
+
+        const { token } = needsToken
+          ? await getToken({
+              permissions: requiredPermissions,
+              ...(typeof command.protection == "object" && {
+                ...Object.keys(command.protection).reduce((result, key) => {
+                  result[key] = command.protection[key][0];
+                  return result;
+                }, {}),
+              }),
+            })
+          : {};
+
         const response0 = await request.post(`${url}/${command.action}`, {
           body: {
             headers: {

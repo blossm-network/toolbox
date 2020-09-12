@@ -34,16 +34,24 @@ describe("View gateway integration tests", () => {
         : [...new Set([...permissions, ...view.permissions])];
     }, []);
 
-    const needsToken = views.some(
-      (c) => c.protection == undefined || c.protection == "strict"
-    );
-
-    const { token } = needsToken
-      ? await getToken({ permissions: requiredPermissions })
-      : {};
-
     const parallelFns = [];
     for (const view of views) {
+      const needsToken =
+        view.protection == undefined ||
+        view.protection == "strict" ||
+        typeof view.protection == "object";
+
+      const { token } = needsToken
+        ? await getToken({
+            permissions: requiredPermissions,
+            ...(typeof view.protection == "object" && {
+              ...Object.keys(view.protection).reduce((result, key) => {
+                result[key] = view.protection[key][0];
+                return result;
+              }, {}),
+            }),
+          })
+        : {};
       parallelFns.push(async () => {
         //Channels are only available to contexts.
         if (!token) return;
