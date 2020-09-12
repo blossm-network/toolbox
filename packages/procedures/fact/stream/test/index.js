@@ -184,6 +184,8 @@ describe("Fact stream", () => {
       await stream({
         contexts: [context],
       })(req, res);
+      //shouldn't get called
+      expect(2).to.equal(1);
     } catch (e) {
       expect(messageFake).to.have.been.calledWith("This context is forbidden.");
       expect(e).to.equal(error);
@@ -211,6 +213,8 @@ describe("Fact stream", () => {
       await stream({
         contexts: [context],
       })(req, res);
+      //shouldn't get called
+      expect(2).to.equal(1);
     } catch (e) {
       expect(messageFake).to.have.been.calledWith("This context is forbidden.");
       expect(e).to.equal(error);

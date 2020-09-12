@@ -800,6 +800,8 @@ describe("Event store post", () => {
         saveEventsFn: saveEventsFnFake,
         reserveRootCountsFn: reserveRootCountsFnFake,
       })(req);
+      //shouldn't get called
+      expect(2).to.equal(1);
     } catch (e) {
       expect(e.statusCode).to.equal(412);
     }
@@ -817,6 +819,8 @@ describe("Event store post", () => {
         saveEventsFn: saveEventsFnFake,
         reserveRootCountsFn: reserveRootCountsFnFake,
       })(transaction);
+      //shouldn't get called
+      expect(2).to.equal(1);
     } catch (e) {
       expect(e).to.equal(error);
     }
@@ -845,6 +849,8 @@ describe("Event store post", () => {
         tx,
         reserveRootCountsFn: reserveRootCountsFnFake,
       })(transaction);
+      //shouldn't get called
+      expect(2).to.equal(1);
     } catch (e) {
       expect(messageFake).to.have.been.calledWith(
         "This event store can't accept this event."
@@ -876,6 +882,8 @@ describe("Event store post", () => {
         tx,
         reserveRootCountsFn: reserveRootCountsFnFake,
       })(transaction);
+      //shouldn't get called
+      expect(2).to.equal(1);
     } catch (e) {
       expect(messageFake).to.have.been.calledWith(
         "This event store can't accept this event."
@@ -907,6 +915,8 @@ describe("Event store post", () => {
         tx,
         reserveRootCountsFn: reserveRootCountsFnFake,
       })(transaction);
+      //shouldn't get called
+      expect(2).to.equal(1);
     } catch (e) {
       expect(messageFake).to.have.been.calledWith(
         "This event store can't accept this event."

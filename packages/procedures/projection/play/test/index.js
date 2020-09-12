@@ -132,6 +132,8 @@ describe("Command handler post", () => {
     });
     try {
       await play({ mainFn: mainFnFake })(req, res);
+      //shouldn't get called
+      expect(2).to.equal(1);
     } catch (e) {
       expect(messageFake).to.have.been.calledWith("Invalid data format.");
       expect(e).to.equal(error);
@@ -159,6 +161,8 @@ describe("Command handler post", () => {
     });
     try {
       await play({ mainFn: mainFnFake })(req, res);
+      //shouldn't get called
+      expect(2).to.equal(1);
     } catch (e) {
       expect(messageFake).to.have.been.calledWith("A root wasn't specified.");
       expect(e).to.equal(error);

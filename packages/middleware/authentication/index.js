@@ -5,7 +5,7 @@ const deps = require("./deps");
 module.exports = ({
   verifyFn,
   keyClaimsFn,
-  strict = true,
+  protection = "strict",
   audience,
   algorithm,
   cookieKey,
@@ -16,6 +16,8 @@ module.exports = ({
     const jwt = tokens.bearer || tokens.cookie;
 
     if (jwt) req.token = jwt;
+
+    let shouldThrow = protection == "strict";
     try {
       const claims = await deps.authenticate({
         ...(jwt && { jwt }),
@@ -25,6 +27,24 @@ module.exports = ({
         audience,
         algorithm,
       });
+
+      if (typeof protection == "object") {
+        shouldThrow = true;
+        for (const key in protection) {
+          if (claims.context[key] == undefined)
+            throw deps.unauthorizedError.message("This route is protected.");
+          if (
+            !protection[key].some(
+              (value) =>
+                value.root == claims.context[key].root &&
+                value.service == claims.context[key].service &&
+                value.network == claims.context[key].network
+            )
+          )
+            throw deps.unauthorizedError.message("This route is protected.");
+        }
+      }
+
       req.context = claims.context;
       req.claims = {
         iss: claims.iss,
@@ -35,7 +55,7 @@ module.exports = ({
         jti: claims.jti,
       };
     } catch (err) {
-      if (strict) throw err;
+      if (shouldThrow) throw err;
     }
 
     next();

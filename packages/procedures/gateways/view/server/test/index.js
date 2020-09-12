@@ -154,7 +154,7 @@ describe("View gateway", () => {
       verifyFn: verifyFnResult,
       audience,
       algorithm,
-      strict: true,
+      protection: "strict",
       cookieKey: "access",
     });
     expect(verifyFnFake).to.have.been.calledWith({ key: "access" });
@@ -268,7 +268,7 @@ describe("View gateway", () => {
       verifyFn: verifyFnResult,
       audience,
       algorithm,
-      strict: true,
+      protection: "strict",
       cookieKey: "access",
     });
     expect(verifyFnFake).to.have.been.calledWith({ key: "access" });
@@ -375,7 +375,7 @@ describe("View gateway", () => {
       verifyFn: verifyFnResult,
       audience,
       algorithm,
-      strict: true,
+      protection: "strict",
       cookieKey: "access",
     });
     expect(verifyFnFake).to.have.been.calledWith({ key: "access" });
@@ -463,7 +463,7 @@ describe("View gateway", () => {
       verifyFn: verifyFnResult,
       audience,
       algorithm,
-      strict: true,
+      protection: "strict",
       cookieKey: key,
     });
     expect(verifyFnFake).to.have.been.calledWith({ key });
@@ -617,14 +617,14 @@ describe("View gateway", () => {
       verifyFn: verifyFnResult,
       audience,
       algorithm,
-      strict: false,
+      protection: "none",
       cookieKey: "access",
     });
     expect(authenticationFake).to.have.been.calledWith({
       verifyFn: verifyFnResult,
       audience,
       algorithm,
-      strict: true,
+      protection: "strict",
       cookieKey: "access",
     });
     expect(verifyFnFake).to.have.been.calledWith({ key: "access" });

@@ -71,6 +71,76 @@ describe("Authentication middleware", () => {
     });
     expect(nextFake).to.have.been.calledOnce;
   });
+  it("should call correctly with context protection", async () => {
+    const iss = "some-iss";
+    const aud = "some-aud";
+    const sub = "some-sub";
+    const exp = "some-exp";
+    const iat = "some-iat";
+    const jti = "some-jti";
+    const context = {
+      some: {
+        root: "some-root",
+        service: "some-service",
+        network: "some-network",
+      },
+    };
+    const jwt = "some-jwt";
+    const claims = {
+      context,
+      iss,
+      aud,
+      sub,
+      exp,
+      iat,
+      jti,
+    };
+    const req = {};
+
+    const tokensFromReqFake = fake.returns({ bearer: jwt });
+    replace(deps, "tokensFromReq", tokensFromReqFake);
+    const authenticateFake = fake.returns(claims);
+    replace(deps, "authenticate", authenticateFake);
+
+    const nextFake = fake();
+
+    await authenticationMiddleware({
+      verifyFn,
+      keyClaimsFn,
+      audience,
+      algorithm,
+      cookieKey,
+      protection: {
+        some: [
+          {
+            root: "some-root",
+            service: "some-service",
+            network: "some-network",
+          },
+        ],
+      },
+    })(req, null, nextFake);
+
+    expect(tokensFromReqFake).to.have.been.calledWith(req, { cookieKey });
+    expect(authenticateFake).to.have.been.calledWith({
+      jwt,
+      verifyFn,
+      keyClaimsFn,
+      audience,
+      algorithm,
+    });
+    expect(req.context).to.deep.equal(context);
+    expect(req.token).to.deep.equal(jwt);
+    expect(req.claims).to.deep.equal({
+      iss,
+      aud,
+      sub,
+      exp,
+      iat,
+      jti,
+    });
+    expect(nextFake).to.have.been.calledOnce;
+  });
   it("should call correctly with cookie token", async () => {
     const iss = "some-iss";
     const aud = "some-aud";
@@ -242,7 +312,7 @@ describe("Authentication middleware", () => {
       keyClaimsFn,
       audience,
       algorithm,
-      strict: false,
+      protection: "bogus",
       allowBasic,
       cookieKey,
     })(req, null, nextFake);
@@ -256,6 +326,116 @@ describe("Authentication middleware", () => {
     });
     expect(req.token).to.equal(jwt);
     expect(nextFake).to.have.been.calledOnce;
+  });
+  it("should throw correctly with wrong protection", async () => {
+    const iss = "some-iss";
+    const aud = "some-aud";
+    const sub = "some-sub";
+    const exp = "some-exp";
+    const iat = "some-iat";
+    const jti = "some-jti";
+    const context = {
+      some: {
+        root: "some-bogus-root",
+        service: "some-service",
+        network: "some-network",
+      },
+    };
+    const claims = {
+      context,
+      iss,
+      aud,
+      sub,
+      exp,
+      iat,
+      jti,
+    };
+    const req = {};
+
+    const basic = "some-basic";
+    const tokensFromReqFake = fake.returns({ basic });
+    replace(deps, "tokensFromReq", tokensFromReqFake);
+    const authenticateFake = fake.returns(claims);
+    replace(deps, "authenticate", authenticateFake);
+
+    const nextFake = fake();
+
+    const error = "some-error";
+    const messageFake = fake.returns(error);
+    replace(deps, "unauthorizedError", {
+      message: messageFake,
+    });
+    await authenticationMiddleware({
+      verifyFn,
+      keyClaimsFn,
+      audience,
+      algorithm,
+      protection: {
+        some: [
+          {
+            root: "some-root",
+            service: "some-service",
+            network: "some-network",
+          },
+        ],
+      },
+      allowBasic,
+      cookieKey,
+    })(req, null, nextFake);
+    expect(messageFake).to.have.been.calledWith("This route is protected.");
+    expect(nextFake).to.have.been.calledWith(error);
+  });
+  it("should throw correctly with no protection", async () => {
+    const iss = "some-iss";
+    const aud = "some-aud";
+    const sub = "some-sub";
+    const exp = "some-exp";
+    const iat = "some-iat";
+    const jti = "some-jti";
+    const context = "some-context";
+    const claims = {
+      context,
+      iss,
+      aud,
+      sub,
+      exp,
+      iat,
+      jti,
+    };
+    const req = {};
+
+    const basic = "some-basic";
+    const tokensFromReqFake = fake.returns({ basic });
+    replace(deps, "tokensFromReq", tokensFromReqFake);
+    const authenticateFake = fake.returns(claims);
+    replace(deps, "authenticate", authenticateFake);
+
+    const nextFake = fake();
+
+    const error = "some-error";
+    const messageFake = fake.returns(error);
+    replace(deps, "unauthorizedError", {
+      message: messageFake,
+    });
+    await authenticationMiddleware({
+      verifyFn,
+      keyClaimsFn,
+      audience,
+      algorithm,
+      protection: {
+        some: [
+          {
+            root: "some-root",
+            service: "some-service",
+            network: "some-network",
+          },
+        ],
+      },
+      allowBasic,
+      cookieKey,
+    })(req, null, nextFake);
+    expect(messageFake).to.have.been.calledWith("This route is protected.");
+    expect(nextFake).to.have.been.calledWith(error);
   });
   it("should throw correctly", async () => {
     const tokensFromReqFake = fake.returns({ bearer: jwt });

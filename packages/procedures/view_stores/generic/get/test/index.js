@@ -923,6 +923,8 @@ describe("View store get", () => {
         queryFn: queryFnFake,
         formatFn: formatFake,
       })(req, res);
+      //shouldn't get called
+      expect(2).to.equal(1);
     } catch (e) {
       expect(messageFake).to.have.been.calledWith(
         "There isn't a context to bootstrap."
@@ -958,6 +960,8 @@ describe("View store get", () => {
     try {
       process.env.BOOTSTRAP_CONTEXT = "something";
       await get({ findFn: findFake, countFn: countFake })(req, res);
+      //shouldn't get called
+      expect(2).to.equal(1);
     } catch (e) {
       expect(messageFake).to.have.been.calledWith(
         "There isn't a context to bootstrap."
@@ -991,6 +995,8 @@ describe("View store get", () => {
     try {
       process.env.CONTEXT = "something-other-context";
       await get({ findFn: findFake, countFn: countFake })(req, res);
+      //shouldn't get called
+      expect(2).to.equal(1);
     } catch (e) {
       expect(messageFake).to.have.been.calledWith(
         "This context is forbidden.",
@@ -1026,6 +1032,8 @@ describe("View store get", () => {
 
     try {
       await get({ group: true })(req, res);
+      //shouldn't get called
+      expect(2).to.equal(1);
     } catch (e) {
       expect(messageFake).to.have.been.calledWith(
         "This request is missing a context."
@@ -1057,6 +1065,8 @@ describe("View store get", () => {
 
     try {
       await get({ findFn: findFake, countFn: countFake, one: true })(req, res);
+      //shouldn't get called
+      expect(2).to.equal(1);
     } catch (e) {
       expect(messageFake).to.have.been.calledWith("This view wasn't found.");
       expect(e).to.equal(error);

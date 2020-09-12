@@ -634,6 +634,8 @@ describe("Command gateway post", () => {
         key,
         redirect,
       })(req, res);
+      //shouldn't get called
+      expect(2).to.equal(1);
     } catch (e) {
       expect(messageFake).to.have.been.calledWith(errMessage, {
         info: { redirect },

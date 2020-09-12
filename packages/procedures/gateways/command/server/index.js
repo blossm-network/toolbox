@@ -56,7 +56,7 @@ module.exports = async ({
             keyClaimsFn,
             audience,
             algorithm,
-            strict: protection == "strict",
+            protection,
             allowBasic: basic,
           }),
           ...(protection == "strict"

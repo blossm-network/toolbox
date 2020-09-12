@@ -107,7 +107,7 @@ describe("Command gateway", () => {
       keyClaimsFn,
       audience,
       algorithm,
-      strict: true,
+      protection: "strict",
       allowBasic: false,
     });
     expect(verifyFnFake).to.have.been.calledWith({ key: "access" });
@@ -204,7 +204,7 @@ describe("Command gateway", () => {
       keyClaimsFn,
       audience,
       algorithm,
-      strict: true,
+      protection: "strict",
       allowBasic: true,
     });
     expect(verifyFnFake).to.have.been.calledWith({ key: "access" });
@@ -276,7 +276,7 @@ describe("Command gateway", () => {
       keyClaimsFn,
       audience,
       algorithm,
-      strict: true,
+      protection: "strict",
       allowBasic: false,
     });
 
@@ -376,7 +376,7 @@ describe("Command gateway", () => {
       keyClaimsFn,
       algorithm,
       audience,
-      strict: true,
+      protection: "strict",
       allowBasic: false,
     });
     expect(authenticationFake).to.have.been.calledWith({
@@ -385,7 +385,7 @@ describe("Command gateway", () => {
       keyClaimsFn,
       algorithm,
       audience,
-      strict: false,
+      protection: "none",
       allowBasic: false,
     });
     expect(verifyFnFake).to.have.been.calledWith({ key: "access" });

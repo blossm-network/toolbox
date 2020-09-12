@@ -99,7 +99,7 @@ describe("Fact gateway", () => {
       verifyFn: verifyFnResult,
       audience,
       algorithm,
-      strict: true,
+      protection: "strict",
       cookieKey: "access",
     });
     expect(verifyFnFake).to.have.been.calledWith({ key: "access" });
@@ -189,7 +189,7 @@ describe("Fact gateway", () => {
       verifyFn: verifyFnResult,
       audience,
       algorithm,
-      strict: true,
+      protection: "strict",
       cookieKey: key,
     });
     expect(verifyFnFake).to.have.been.calledWith({ key });
@@ -252,7 +252,7 @@ describe("Fact gateway", () => {
       verifyFn: verifyFnResult,
       audience,
       algorithm,
-      strict: true,
+      protection: "strict",
       cookieKey: key,
     });
     expect(verifyFnFake).to.have.been.calledWith({ key });
@@ -348,18 +348,18 @@ describe("Fact gateway", () => {
       path: `/${name3}`,
       preMiddleware: [authenticationResult, authorizationResult],
     });
-    expect(authenticationFake).to.have.been.calledWith({
+    expect(authenticationFake.getCall(0)).to.have.been.calledWith({
       verifyFn: verifyFnResult,
       audience,
       algorithm,
-      strict: true,
+      protection: "context",
       cookieKey: "access",
     });
-    expect(authenticationFake).to.have.been.calledWith({
+    expect(authenticationFake.getCall(1)).to.have.been.calledWith({
       verifyFn: verifyFnResult,
       audience,
       algorithm,
-      strict: false,
+      protection: "strict",
       cookieKey: "access",
     });
     expect(verifyFnFake).to.have.been.calledWith({ key: "access" });

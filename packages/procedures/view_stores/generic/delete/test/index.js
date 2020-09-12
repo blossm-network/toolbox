@@ -212,6 +212,8 @@ describe("View store delete", () => {
     try {
       process.env.CONTEXT = "something-other-context";
       await del({})(req, res);
+      //shouldn't get called
+      expect(2).to.equal(1);
     } catch (e) {
       expect(messageFake).to.have.been.calledWith(
         "This context is forbidden.",

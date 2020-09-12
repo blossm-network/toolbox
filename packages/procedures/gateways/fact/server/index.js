@@ -47,7 +47,7 @@ module.exports = async ({
               verifyFn: verifyFn({ key }),
               audience,
               algorithm,
-              strict: protection == "strict",
+              protection,
               cookieKey: key,
             }),
             ...(protection == "strict"

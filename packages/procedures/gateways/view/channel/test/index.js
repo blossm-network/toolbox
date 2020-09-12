@@ -116,6 +116,8 @@ describe("View gateway get", () => {
 
     try {
       await get({ query: { context: {} } });
+      //shouldn't get called
+      expect(2).to.equal(1);
     } catch (e) {
       expect(messageFake).to.have.been.calledWith(
         "Missing required permissions."
@@ -132,6 +134,8 @@ describe("View gateway get", () => {
 
     try {
       await get({ query: {} });
+      //shouldn't get called
+      expect(2).to.equal(1);
     } catch (e) {
       expect(messageFake).to.have.been.calledWith(
         "Missing required permissions."

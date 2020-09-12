@@ -404,6 +404,8 @@ describe("View gateway get", () => {
       await get({
         redirect,
       })(req, res);
+      //shouldn't get called
+      expect(2).to.equal(1);
     } catch (e) {
       expect(messageFake).to.have.been.calledWith(
         "This context is forbidden.",
@@ -438,6 +440,8 @@ describe("View gateway get", () => {
       await get({
         redirect,
       })(req, res);
+      //shouldn't get called
+      expect(2).to.equal(1);
     } catch (e) {
       expect(messageFake).to.have.been.calledWith(
         "This context is forbidden.",
@@ -491,6 +495,8 @@ describe("View gateway get", () => {
         key,
         redirect,
       })(req, res);
+      //shouldn't get called
+      expect(2).to.equal(1);
     } catch (e) {
       expect(messageFake).to.have.been.calledWith(errMessage, {
         info: { redirect },
@@ -543,6 +549,8 @@ describe("View gateway get", () => {
         key,
         redirect,
       })(req, res);
+      //shouldn't get called
+      expect(2).to.equal(1);
     } catch (e) {
       expect(messageFake).to.have.been.calledWith(errMessage, {
         info: { redirect },
