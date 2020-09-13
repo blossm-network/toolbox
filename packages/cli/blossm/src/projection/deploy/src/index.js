@@ -343,16 +343,6 @@ module.exports = projection({
 
     const formattedUpdate = formatUpdate(fullUpdate, fullQuery);
 
-    //TODO
-    console.log({
-      formattedUpdate,
-      id,
-      fullQuery,
-      context,
-      envC: process.env.CONTEXT,
-      aggregateContext,
-    });
-
     if (id) {
       (await del)
         ? deleteId({

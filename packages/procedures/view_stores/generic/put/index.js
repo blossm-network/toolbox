@@ -44,7 +44,7 @@ module.exports = ({ writeFn, formatFn, updateFn = defaultFn }) => {
     let formattedQuery;
 
     if (req.body.query) {
-      formattedQuery = {};
+      if (!formattedQuery) formattedQuery = {};
       for (const key in req.body.query) {
         formattedQuery[`body.${key}`] = req.body.query[key];
       }
@@ -57,6 +57,9 @@ module.exports = ({ writeFn, formatFn, updateFn = defaultFn }) => {
       },
       data,
     });
+
+    //TODO
+    console.log({ newView, json: JSON.stringify(formattedQuery) });
 
     if (!newView) return res.sendStatus(204);
 
