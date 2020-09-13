@@ -96,12 +96,19 @@ const removeIds = ({ schema, typeKey, subdocumentsOnly = true }) => {
         for (const key in schema[property][typeKey]) {
           newSchema[property][typeKey][key] =
             typeof schema[property][typeKey][key] == "object"
-              ? removeIds({
-                  schema: schema[property][typeKey][key],
-                  typeKey,
-                  subdocumentsOnly:
-                    schema[property][typeKey][key] instanceof Array,
-                })
+              ? schema[property][typeKey][key] instanceof Array
+                ? [
+                    removeIds({
+                      schema: schema[property][typeKey][key][0],
+                      typeKey,
+                      subdocumentsOnly: false,
+                    }),
+                  ]
+                : removeIds({
+                    schema: schema[property][typeKey][key],
+                    typeKey,
+                    subdocumentsOnly: false,
+                  })
               : schema[property][typeKey][key];
         }
         newSchema[property][typeKey]._id = false;
