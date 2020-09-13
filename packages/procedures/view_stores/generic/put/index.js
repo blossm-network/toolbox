@@ -59,7 +59,7 @@ module.exports = ({ writeFn, formatFn, updateFn = defaultFn }) => {
     });
 
     //TODO
-    console.log({ newView, json: JSON.stringify(formattedQuery) });
+    console.log({ newView, json: JSON.stringify(data) });
 
     if (!newView) return res.sendStatus(204);
 
