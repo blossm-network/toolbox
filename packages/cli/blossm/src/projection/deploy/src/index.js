@@ -344,15 +344,15 @@ module.exports = projection({
     const formattedUpdate = formatUpdate(fullUpdate, fullQuery);
 
     if (id) {
-      (await del)
-        ? deleteId({
+      del
+        ? await deleteId({
             aggregate,
             context: aggregateContext,
             id,
             update: formattedUpdate,
             push,
           })
-        : saveId({
+        : await saveId({
             aggregate,
             context: aggregateContext,
             id,
