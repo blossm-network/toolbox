@@ -341,6 +341,8 @@ module.exports = projection({
         ...(aggregate.context && aggregate.context[process.env.CONTEXT]),
       });
 
+    const formattedUpdate = formatUpdate(fullUpdate, fullQuery);
+
     //TODO
     console.log({
       formattedUpdate,
@@ -350,7 +352,6 @@ module.exports = projection({
       envC: process.env.CONTEXT,
       aggregateContext,
     });
-    const formattedUpdate = formatUpdate(fullUpdate, fullQuery);
 
     if (id) {
       (await del)
