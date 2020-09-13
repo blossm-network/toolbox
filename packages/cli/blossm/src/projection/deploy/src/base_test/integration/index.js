@@ -117,8 +117,9 @@ describe("Projection integration tests", () => {
         ],
       });
 
+      //TODO
       console.log({
-        event,
+        eventC: event.context,
         context: {
           ...(context && {
             [context]: step.context || {
