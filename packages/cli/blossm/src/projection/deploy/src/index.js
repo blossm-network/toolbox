@@ -343,7 +343,7 @@ module.exports = projection({
 
     //TODO
     console.log({
-      formatUpdate,
+      formattedUpdate,
       id,
       fullQuery,
       context,
