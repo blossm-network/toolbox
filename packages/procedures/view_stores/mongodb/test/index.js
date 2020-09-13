@@ -120,14 +120,13 @@ describe("View store", () => {
       groupsLookupFn,
     });
 
-    expect(formatSchemaFake).to.have.been.calledWith(
-      { body: { type: schema, default: {} } },
-      "$type"
-    );
+    expect(formatSchemaFake).to.have.been.calledWith(schema, "$type");
     expect(storeFake).to.have.been.calledWith({
       name: "views",
       schema: {
-        a: 1,
+        body: {
+          a: 1,
+        },
         headers: {
           _id: false,
           id: {
@@ -378,14 +377,13 @@ describe("View store", () => {
       emptyFn,
     });
 
-    expect(formatSchemaFake).to.have.been.calledWith(
-      { body: { type: schema, default: {} } },
-      "$type"
-    );
+    expect(formatSchemaFake).to.have.been.calledWith(schema, "$type");
     expect(storeFake).to.have.been.calledWith({
       name: "views",
       schema: {
-        a: 1,
+        body: {
+          a: 1,
+        },
         headers: {
           _id: false,
           id: {
@@ -660,14 +658,13 @@ describe("View store", () => {
       emptyFn,
     });
 
-    expect(formatSchemaFake).to.have.been.calledWith(
-      { body: { type: schema, default: {} } },
-      "$type"
-    );
+    expect(formatSchemaFake).to.have.been.calledWith(schema, "$type");
     expect(storeFake).to.have.been.calledWith({
       name: "views",
       schema: {
-        a: 1,
+        body: {
+          a: 1,
+        },
         headers: {
           _id: false,
           id: {
@@ -958,14 +955,11 @@ describe("View store", () => {
       emptyFn,
     });
 
-    expect(formatSchemaFake).to.have.been.calledWith(
-      { body: { type: schema, default: {} } },
-      "$type"
-    );
+    expect(formatSchemaFake).to.have.been.calledWith(schema, "$type");
     expect(storeFake).to.have.been.calledWith({
       name: "views",
       schema: {
-        c: 3,
+        body: { c: 3 },
         headers: {
           _id: false,
           id: {
@@ -1127,14 +1121,11 @@ describe("View store", () => {
       groupsLookupFn,
     });
 
-    expect(formatSchemaFake).to.have.been.calledWith(
-      { body: { type: schema, default: {} } },
-      "$type"
-    );
+    expect(formatSchemaFake).to.have.been.calledWith(schema, "$type");
     expect(storeFake).to.have.been.calledWith({
       name: "views",
       schema: {
-        b: 2,
+        body: { b: 2 },
         headers: {
           _id: false,
           id: {
@@ -1391,14 +1382,11 @@ describe("View store", () => {
 
     await mongodbViewStore({ schema, indexes, secretFn: secretFake });
 
-    expect(formatSchemaFake).to.have.been.calledWith(
-      { body: { type: schema, default: {} } },
-      "$type"
-    );
+    expect(formatSchemaFake).to.have.been.calledWith(schema, "$type");
     expect(storeFake).to.have.been.calledWith({
       name: "views",
       schema: {
-        a: 1,
+        body: { a: 1 },
         headers: {
           _id: false,
           id: {
