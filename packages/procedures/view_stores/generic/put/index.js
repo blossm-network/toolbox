@@ -58,9 +58,6 @@ module.exports = ({ writeFn, formatFn, updateFn = defaultFn }) => {
       data,
     });
 
-    //TODO
-    console.log({ newView, json: JSON.stringify(data) });
-
     if (!newView) return res.sendStatus(204);
 
     //TODO this function is duplicated in /get. Refactor.
