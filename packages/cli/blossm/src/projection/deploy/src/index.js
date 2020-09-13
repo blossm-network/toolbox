@@ -138,6 +138,20 @@ const saveId = async ({ aggregate, id, query, update, push, context }) => {
       }),
     });
 
+  //TODO
+  console.log({
+    newView,
+    update,
+    id,
+    query,
+    context: {
+      [process.env.CONTEXT]: {
+        root: context.root,
+        service: context.service,
+        network: context.network,
+      },
+    },
+  });
   if (!newView || !push) return;
 
   await pushToChannels({
