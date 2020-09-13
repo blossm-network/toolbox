@@ -144,13 +144,15 @@ const saveId = async ({ aggregate, id, query, update, push, context }) => {
     update,
     id,
     query,
-    context: {
-      [process.env.CONTEXT]: {
-        root: context.root,
-        service: context.service,
-        network: context.network,
+    ...(context && {
+      context: {
+        [process.env.CONTEXT]: {
+          root: context.root,
+          service: context.service,
+          network: context.network,
+        },
       },
-    },
+    }),
   });
   if (!newView || !push) return;
 
