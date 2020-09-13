@@ -117,6 +117,18 @@ describe("Projection integration tests", () => {
         ],
       });
 
+      console.log({
+        event,
+        context: {
+          ...(context && {
+            [context]: step.context || {
+              root: "some-context-root",
+              service: "some-context-service",
+              network: process.env.NETWORK,
+            },
+          }),
+        },
+      });
       await eventStore({
         domain: step.event.domain,
         service: step.event.service,
@@ -162,6 +174,24 @@ describe("Projection integration tests", () => {
         })
         .read(step.result.query || {});
 
+      console.log({
+        v,
+        query: step.result.query,
+        context: {
+          ...(context && {
+            [context]: step.result.context || {
+              root: "some-context-root",
+              service: "some-context-service",
+              network: process.env.NETWORK,
+            },
+          }),
+          principal: {
+            root: principalRoot,
+            service: principalService,
+            network: principalNetwork,
+          },
+        },
+      });
       if (step.result.value) {
         checkResponse({
           expected: step.result.value,
