@@ -21,6 +21,7 @@ const config = require("./config.json");
 module.exports = viewStore({
   schema: config.schema,
   indexes: config.indexes,
+  sorts: config.sorts,
   secretFn: secret,
   ...(query && { queryFn: query }),
   ...(sort && { sortFn: sort }),

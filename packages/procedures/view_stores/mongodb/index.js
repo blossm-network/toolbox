@@ -84,6 +84,7 @@ const viewStore = async ({ schema, indexes, secretFn }) => {
 module.exports = async ({
   schema,
   indexes,
+  sorts,
   secretFn,
   queryFn,
   sortFn,
@@ -96,14 +97,32 @@ module.exports = async ({
 } = {}) => {
   const allIndexes = [
     [{ "headers.id": 1 }],
-    [
-      {
-        "headers.context.root": 1,
-        "headers.context.domain": 1,
-        "headers.context.service": 1,
-        "headers.context.network": 1,
-      },
-    ],
+    ...(process.env.CONTEXT
+      ? [
+          [
+            {
+              "headers.context.root": 1,
+              "headers.context.domain": 1,
+              "headers.context.service": 1,
+              "headers.context.network": 1,
+            },
+          ],
+          ...(sorts
+            ? sorts.map((sort) => [
+                {
+                  "headers.context.root": 1,
+                  "headers.context.domain": 1,
+                  "headers.context.service": 1,
+                  "headers.context.network": 1,
+                  ...Object.keys(sort).reduce((result, key) => {
+                    result[`body.${key}`] = sort[key];
+                    return result;
+                  }, {}),
+                },
+              ])
+            : []),
+        ]
+      : []),
     [
       {
         "headers.groups.root": 1,
@@ -151,6 +170,20 @@ module.exports = async ({
         customElement,
         ...(Object.keys(customOptions).length > 0 ? [customOptions] : []),
       ]);
+
+      if (sorts && !hasTextIndex) {
+        for (const sort of sorts) {
+          const sortIndex = {
+            ...customElement,
+            ...Object.keys(sort).reduce((result, key) => {
+              result[`body.${key}`] = sort[key];
+              return result;
+            }, {}),
+          };
+          if (Object.keys(sortIndex).length > Object.keys(customElement).length)
+            customIndexes.push([sortIndex]);
+        }
+      }
     }
 
     allIndexes.push(...customIndexes);

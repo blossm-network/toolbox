@@ -36,7 +36,6 @@ const group = "some-group";
 const groupsLookupFn = "some-group-lookup-fn";
 
 process.env.NAME = name;
-process.env.CONTEXT = context;
 process.env.MONGODB_PROTOCOL = protocol;
 process.env.MONGODB_USER = user;
 process.env.MONGODB_USER_PASSWORD = userPassword;
@@ -49,6 +48,7 @@ describe("View store", () => {
     delete require.cache[require.resolve("..")];
     mongodbViewStore = require("..");
     process.env.NODE_ENV = "some-env";
+    process.env.CONTEXT = context;
     clock = useFakeTimers(now.getTime());
   });
   afterEach(() => {
@@ -883,7 +883,7 @@ describe("View store", () => {
     await mongodbViewStore();
     expect(storeFake).to.have.been.calledOnce;
   });
-  it("should call with the correct params with no root's in nested objs", async () => {
+  it("should call with the correct params with no root's in nested objs, with sorts", async () => {
     const store = "some-store";
     const storeFake = fake.returns(store);
 
@@ -940,9 +940,16 @@ describe("View store", () => {
       e: { type: [{ type: { type: String } }] },
       f: [{ g: 1 }],
     };
+
+    const sorts = [
+      { "some-index": 1 },
+      { "some-other-index": 1, "another-index": -1 },
+    ];
+
     await mongodbViewStore({
       schema,
       indexes,
+      sorts,
       secretFn: secretFake,
       queryFn,
       sortFn,
@@ -1020,12 +1027,38 @@ describe("View store", () => {
         ],
         [
           {
+            "headers.context.root": 1,
+            "headers.context.domain": 1,
+            "headers.context.service": 1,
+            "headers.context.network": 1,
+            "body.some-index": 1,
+          },
+        ],
+        [
+          {
+            "headers.context.root": 1,
+            "headers.context.domain": 1,
+            "headers.context.service": 1,
+            "headers.context.network": 1,
+            "body.some-other-index": 1,
+            "body.another-index": -1,
+          },
+        ],
+        [
+          {
             "headers.groups.root": 1,
             "headers.groups.service": 1,
             "headers.groups.network": 1,
           },
         ],
         [{ "body.some-index": 1 }],
+        [
+          {
+            "body.some-index": 1,
+            "body.some-other-index": 1,
+            "body.another-index": -1,
+          },
+        ],
       ],
       connection: {
         protocol,
@@ -1042,7 +1075,7 @@ describe("View store", () => {
       },
     });
   });
-  it("should call with the correct params without fns, one, group, or upsert. With text and select", async () => {
+  it("should call with the correct params without fns, one, group, or upsert. With text and select. No env context", async () => {
     const store = "some-store";
     const storeFake = fake.returns(store);
 
@@ -1086,6 +1119,7 @@ describe("View store", () => {
     const formatSchemaFake = fake.returns(formattedSchema);
     replace(deps, "formatSchema", formatSchemaFake);
 
+    delete process.env.CONTEXT;
     await mongodbViewStore({
       schema,
       indexes: [...indexes, [{ some: "text" }]],
@@ -1152,14 +1186,6 @@ describe("View store", () => {
       typeKey: "$type",
       indexes: [
         [{ "headers.id": 1 }],
-        [
-          {
-            "headers.context.root": 1,
-            "headers.context.domain": 1,
-            "headers.context.service": 1,
-            "headers.context.network": 1,
-          },
-        ],
         [
           {
             "headers.groups.root": 1,
