@@ -12,8 +12,10 @@ const viewStore = async ({ schema, indexes, secretFn }) => {
     return _viewStore;
   }
 
+  console.log({ schema: JSON.stringify(schema) });
   const formattedSchema = deps.formatSchema(schema, typeKey);
 
+  console.log({ json: JSON.stringify(formattedSchema) });
   _viewStore = deps.db.store({
     name: "views",
     schema: {
