@@ -95,42 +95,6 @@ describe("Validate command", () => {
       expect(e.statusCode).to.equal(409);
     }
   });
-  it("should throw if a future issued is passed", async () => {
-    const params = {
-      ...goodParams,
-      headers: {
-        ...goodParams.headers,
-        issued: stringFromDate(new Date(now.getTime() + 60000)),
-      },
-    };
-
-    try {
-      await validateCommand(params);
-
-      //shouldn't get called
-      expect(1).to.equal(0);
-    } catch (e) {
-      expect(e.statusCode).to.equal(400);
-    }
-  });
-  it("should throw if a distant past issued is passed", async () => {
-    const params = {
-      ...goodParams,
-      headers: {
-        ...goodParams.headers,
-        issued: stringFromDate(new Date(234)),
-      },
-    };
-
-    try {
-      await validateCommand(params);
-
-      //shouldn't get called
-      expect(1).to.equal(0);
-    } catch (e) {
-      expect(e.statusCode).to.equal(400);
-    }
-  });
   it("should throw if a bad payload is passed", async () => {
     const params = {
       ...goodParams,

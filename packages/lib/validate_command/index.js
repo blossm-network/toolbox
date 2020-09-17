@@ -33,12 +33,4 @@ module.exports = async (params) => {
   ]);
 
   if (headersError) throw headersError;
-
-  if (
-    new Date() < new Date(params.headers.issued) ||
-    new Date().getTime() - new Date(params.headers.issued).getTime() >
-      SECONDS_IN_DAY * 1000
-  ) {
-    throw deps.badRequestError.message("The issued timestamp seems incorrect.");
-  }
 };
