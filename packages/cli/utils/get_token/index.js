@@ -33,6 +33,7 @@ module.exports = async ({
             },
             phone: await hash(phone),
             id,
+            normalizedId: id,
           },
           action: "register",
           domain: "identity",
