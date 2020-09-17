@@ -1,7 +1,7 @@
 {
   "name": "@blossm/event-store",
   "description": "An event store server.",
-  "version": "0.0.276",
+  "version": "0.0.277",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -21,7 +21,7 @@
     "@blossm/event-store-post": "^0.0.142",
     "@blossm/event-store-root-stream": "^0.0.9",
     "@blossm/logger": "^0.0.8",
-    "@blossm/server": "^0.0.32"
+    "@blossm/server": "^0.0.33"
   },
   "devDependencies": {
     "chai-datetime": "^1.5.0",
