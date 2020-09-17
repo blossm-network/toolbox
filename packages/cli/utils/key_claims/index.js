@@ -2,6 +2,7 @@ const fact = require("@blossm/fact-rpc");
 const { invalidCredentials } = require("@blossm/errors");
 const { compare } = require("@blossm/crypt");
 
+//TODO write unit tests
 module.exports = ({ token }) => async ({ root, secret }) => {
   const { body: key } = await fact({
     name: "state",
@@ -10,7 +11,7 @@ module.exports = ({ token }) => async ({ root, secret }) => {
     ...(process.env.CORE_NETWORK && { network: process.env.CORE_NETWORK }),
   })
     .set({ token: { internalFn: token } })
-    .read({ root });
+    .read({ root, secret });
 
   if (!key) throw invalidCredentials.message("This key wasn't found.");
 

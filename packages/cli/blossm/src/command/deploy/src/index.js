@@ -80,13 +80,10 @@ module.exports = commandProcedure({
         ...(token && { currentToken: token }),
         token: {
           internalFn: gcpToken,
-          externalFn: ({ network, key } = {}) => {
-            //TODO
-            console.log("3: ", { network, key, principal });
-            return principal == "user"
+          externalFn: ({ network, key } = {}) =>
+            principal == "user"
               ? { token, type: "Bearer" }
-              : nodeExternalToken({ network, key });
-          },
+              : nodeExternalToken({ network, key }),
           key: "access",
         },
         ...(async && { enqueue: { fn: enqueue, wait } }),
