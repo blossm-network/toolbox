@@ -35,6 +35,7 @@ module.exports = fact({
             principal == "user"
               ? { token, type: "Bearer" }
               : nodeExternalToken({ network, key }),
+          key: "access",
         },
       })
       .query({ key, value });

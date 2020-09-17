@@ -84,6 +84,7 @@ module.exports = commandProcedure({
             principal == "user"
               ? { token, type: "Bearer" }
               : nodeExternalToken({ network, key }),
+          key: "access",
         },
         ...(async && { enqueue: { fn: enqueue, wait } }),
       })
@@ -124,6 +125,7 @@ module.exports = commandProcedure({
             principal == "user"
               ? { token, type: "Bearer" }
               : nodeExternalToken({ network, key }),
+          key: "access",
         },
       })
       .query({ key, value });
@@ -159,6 +161,7 @@ module.exports = commandProcedure({
             principal == "user"
               ? { token, type: "Bearer" }
               : nodeExternalToken({ network, key }),
+          key: "access",
         },
       })
       .read({ query, root }),
@@ -190,6 +193,7 @@ module.exports = commandProcedure({
             principal == "user"
               ? { token, type: "Bearer" }
               : nodeExternalToken({ network, key }),
+          key: "access",
         },
       })
       .stream(fn, { query, root }),
