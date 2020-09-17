@@ -15,7 +15,12 @@ module.exports = ({ credentialsFn }) => async ({ network, key }) => {
   if (!credentials) return null;
   const { root, secret } = credentials;
   //TODO
-  console.log({ root });
+  console.log({
+    basicToken: deps.basicToken({
+      root,
+      secret,
+    }),
+  });
   const {
     body: { token: newToken },
   } = await deps

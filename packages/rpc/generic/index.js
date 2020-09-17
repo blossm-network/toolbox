@@ -64,6 +64,8 @@ const common = ({ method, dataParam, operation, id, data }) => {
                   key,
                 })) || {};
 
+          //TODO
+          console.log("1.4: ", { token });
           const url = internal
             ? deps.operationUrl({
                 operation,
