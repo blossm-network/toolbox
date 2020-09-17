@@ -11,6 +11,14 @@ module.exports = (err, req, res, next) => {
       ...(req.query && { query: req.query }),
       ...(req.params && { params: req.params }),
     });
+  } else if (err.statusCode >= 400) {
+    logger.info("A user error occured: ", {
+      err,
+      stack: err.stack,
+      ...(req.body && { body: req.body }),
+      ...(req.query && { query: req.query }),
+      ...(req.params && { params: req.params }),
+    });
   }
 
   //If unauthorized, remove cookie; TODO change to 'access'
