@@ -2,6 +2,8 @@ const deps = require("./deps");
 
 const cacheKeyPrefix = "_cToken";
 module.exports = ({ credentialsFn }) => async ({ network, key }) => {
+  //TODO
+  console.log({ network, key });
   const cacheKey = `${cacheKeyPrefix}.${network}.${key}`;
   let { token, exp } = (await deps.redis.readObject(cacheKey)) || {};
   if (!token || new Date(Date.parse(exp)) < new Date()) {

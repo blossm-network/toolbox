@@ -50,6 +50,8 @@ const common = ({ method, dataParam, operation, id, data }) => {
         } = {}) => {
           const internal = host == process.env.HOST;
 
+          //TODO
+          console.log({ network, key });
           const { token, type } =
             (internal
               ? await deps.operationToken({
