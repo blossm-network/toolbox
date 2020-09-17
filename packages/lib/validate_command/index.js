@@ -1,5 +1,5 @@
 const { object, string, date, findError } = require("@blossm/validator");
-const { SECONDS_IN_DAY } = require("@blossm/duration-consts");
+const { MILLISECONDS_IN_HOUR } = require("@blossm/duration-consts");
 
 const deps = require("./deps");
 
@@ -33,4 +33,11 @@ module.exports = async (params) => {
   ]);
 
   if (headersError) throw headersError;
+
+  if (
+    new Date(params.headers.issued).getTime() - new Date().getTime() >
+    MILLISECONDS_IN_HOUR
+  ) {
+    throw deps.badRequestError.message("The issued timestamp seems incorrect.");
+  }
 };
