@@ -14,6 +14,7 @@ module.exports = ({ token }) => async ({ root, secret }) => {
 
   if (!key) throw invalidCredentials.message("This key wasn't found.");
 
+  //TODO move this into the key.state fact. Send key over, don't receive.
   if (!(await compare(secret, key.secret)))
     throw invalidCredentials.message("This secret isn't right.");
 

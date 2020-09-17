@@ -3,45 +3,54 @@ const deps = require("./deps");
 const cacheKeyPrefix = "_cToken";
 module.exports = ({ credentialsFn }) => async ({ network, key }) => {
   //TODO
-  console.log("2: ", { network, key });
+  // console.log("2: ", { network, key });
   const cacheKey = `${cacheKeyPrefix}.${network}.${key}`;
-  let { token, exp } = (await deps.redis.readObject(cacheKey)) || {};
-  if (!token || new Date(Date.parse(exp)) < new Date()) {
-    const credentials = await credentialsFn({ network });
-    if (!credentials) return null;
-    const { root, secret } = credentials;
-    const {
-      body: { token: newToken },
-    } = await deps
-      .command({
-        name: "open",
-        domain: "connection",
-        service: "system",
-        network,
-      })
-      .set({
-        token: {
-          externalFn: () =>
-            deps.basicToken({
-              root,
-              secret,
-            }),
-          key: "access",
-        },
-      })
-      .issue({ key });
+  // let { token, exp } = (await deps.redis.readObject(cacheKey)) || {};
+  // if (!token || new Date(Date.parse(exp)) < new Date()) {
+  let token;
+  let exp;
+  const credentials = await credentialsFn({ network });
+  //TODO
+  console.log({ credentials });
+  if (!credentials) return null;
+  const { root, secret } = credentials;
+  //TODO
+  console.log({ root });
+  const {
+    body: { token: newToken },
+  } = await deps
+    .command({
+      name: "open",
+      domain: "connection",
+      service: "system",
+      network,
+    })
+    .set({
+      token: {
+        externalFn: () =>
+          deps.basicToken({
+            root,
+            secret,
+          }),
+        key: "access",
+      },
+    })
+    .issue({ key });
 
-    if (!newToken) return null;
+  //TODO
+  console.log({ newToken });
 
-    const claims = await deps.decode(newToken.value);
-    token = newToken.value;
-    exp = new Date(Date.parse(claims.exp));
+  if (!newToken) return null;
 
-    await deps.redis.writeObject(cacheKey, {
-      token,
-      exp,
-    });
-  }
+  const claims = await deps.decode(newToken.value);
+  token = newToken.value;
+  exp = new Date(Date.parse(claims.exp));
+
+  await deps.redis.writeObject(cacheKey, {
+    token,
+    exp,
+  });
+  // }
 
   return {
     token,
