@@ -63,6 +63,9 @@ module.exports = fact({
       })
       .aggregate(root, { notFoundThrows });
 
+    //TODO
+    console.log({ aggregate, headers: aggregate.headers });
+
     return (
       aggregate && {
         lastEventNumber: aggregate.headers.lastEventNumber,
