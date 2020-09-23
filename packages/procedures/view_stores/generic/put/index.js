@@ -71,7 +71,7 @@ module.exports = ({ writeFn, formatFn, updateFn = defaultFn }) => {
 
     const updates =
       process.env.CONTEXT &&
-      `https://updates.${process.env.CORE_NETWORK}/channel?query%5Bname%5D=${process.env.NAME}&query%5Bcontext%5D=${process.env.CONTEXT}&query%5Bnetwork%5D=${process.env.NETWORK}`;
+      `https://updates.${process.env.NETWORK}/channel?query%5Bname%5D=${process.env.NAME}&query%5Bcontext%5D=${process.env.CONTEXT}&query%5Bnetwork%5D=${process.env.NETWORK}`;
 
     res.status(200).send({
       ...formatFn({
