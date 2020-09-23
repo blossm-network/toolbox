@@ -58,14 +58,13 @@ describe("View store base integration tests", () => {
       expect(emptyResponse.statusCode).to.equal(200);
 
       const {
-        //TODO
-        // updates: emptyUpdates,
+        updates: emptyUpdates,
         count: emptyCount,
         content: emptyContent,
       } = JSON.parse(emptyResponse.body);
 
       expect(emptyCount).to.equal(0);
-      // expect(emptyUpdates).to.exist;
+      expect(emptyUpdates).to.exist;
 
       for (const key in testing.empty) {
         expect(emptyContent[key]).to.deep.equal(testing.empty[key]);

@@ -128,8 +128,8 @@ describe("View store put", () => {
     expect(formatFake).to.have.been.calledWith({
       body: writeResultBody,
       id: writeResultId,
-      // updates:
-      //   "https://updates.some-env-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
+      updates:
+        "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
     });
     expect(statusFake).to.have.been.calledWith(200);
     expect(sendFake).to.have.been.calledWith({
@@ -192,8 +192,8 @@ describe("View store put", () => {
     expect(formatFake).to.have.been.calledWith({
       body: writeResultBody,
       id: writeResultId,
-      // updates:
-      //   "https://updates.some-env-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
+      updates:
+        "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
     });
     expect(statusFake).to.have.been.calledWith(200);
     expect(sendFake).to.have.been.calledWith({

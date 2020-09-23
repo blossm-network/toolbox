@@ -131,8 +131,8 @@ describe("View store get", () => {
       expect(formatFake.getCall(i)).to.have.been.calledWith({
         body: results[i].body,
         id: results[i].headers.id,
-        // updates:
-        //   "https://updates.some-env-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
+        updates:
+          "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
       });
     }
     expect(sendFake).to.have.been.calledWith({
@@ -144,8 +144,8 @@ describe("View store get", () => {
           trace: [txId0, txId1, txId2],
         },
       })),
-      // updates:
-      //   "https://updates.some-env-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
+      updates:
+        "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
       next: nextUrl,
       count: 200,
     });
@@ -254,8 +254,8 @@ describe("View store get", () => {
       expect(formatFake.getCall(i)).to.have.been.calledWith({
         body: results[i].body,
         id: results[i].headers.id,
-        // updates:
-        //   "https://updates.some-env-network/channel?query%5Bname%5D=some-env-name&query%5Bnetwork%5D=some-env-network&query%5Bprincipal%5D=some-context-principal-root",
+        updates:
+          "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bnetwork%5D=some-env-network&query%5Bprincipal%5D=some-context-principal-root",
       });
     }
     expect(sendFake).to.have.been.calledWith({
@@ -267,8 +267,8 @@ describe("View store get", () => {
           trace: [txId0, txId1, txId2],
         },
       })),
-      // updates:
-      //   "https://updates.some-env-network/channel?query%5Bname%5D=some-env-name&query%5Bnetwork%5D=some-env-network&query%5Bprincipal%5D=some-context-principal-root",
+      updates:
+        "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bnetwork%5D=some-env-network&query%5Bprincipal%5D=some-context-principal-root",
       next: nextUrl,
       count: 200,
     });
@@ -338,8 +338,8 @@ describe("View store get", () => {
     expect(emptyFnFake).to.have.been.calledWith(query);
     expect(sendFake).to.have.been.calledWith({
       content: someEmptyFnResponse,
-      // updates:
-      //   "https://updates.some-env-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
+      updates:
+        "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
       count: 200,
     });
   });
@@ -423,8 +423,8 @@ describe("View store get", () => {
     expect(formatFake.getCall(0)).to.have.been.calledWith({
       body: obj,
       id,
-      // updates:
-      //   "https://updates.some-env-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
+      updates:
+        "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
     });
     expect(formatFake).to.have.been.calledOnce;
     expect(sendFake).to.have.been.calledWith({
@@ -438,8 +438,8 @@ describe("View store get", () => {
           },
         },
       ],
-      // updates:
-      //   "https://updates.some-env-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
+      updates:
+        "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
       next: nextUrl,
       count: 3,
     });
@@ -516,8 +516,8 @@ describe("View store get", () => {
     expect(formatFake.getCall(0)).to.have.been.calledWith({
       body: obj,
       id,
-      // updates:
-      //   "https://updates.some-env-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
+      updates:
+        "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
     });
     expect(formatFake).to.have.been.calledOnce;
     expect(sendFake).to.have.been.calledWith({
@@ -527,8 +527,8 @@ describe("View store get", () => {
           headers: { id, context: foundContext, trace: [txId0, txId1] },
         },
       ],
-      // updates:
-      //   "https://updates.some-env-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
+      updates:
+        "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
       count: 1,
     });
   });
@@ -595,8 +595,8 @@ describe("View store get", () => {
     expect(formatFake.getCall(0)).to.have.been.calledWith({
       body: obj,
       id,
-      // updates:
-      //   "https://updates.some-env-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
+      updates:
+        "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
     });
     expect(formatFake).to.have.been.calledOnce;
     expect(sendFake).to.have.been.calledWith({
@@ -606,8 +606,8 @@ describe("View store get", () => {
           headers: { trace: [txId0, txId1, txId2], id, context: foundContext },
         },
       ],
-      // updates:
-      //   "https://updates.some-env-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
+      updates:
+        "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
       count,
     });
   });
@@ -679,16 +679,16 @@ describe("View store get", () => {
     expect(formatFake).to.have.been.calledWith({
       body: obj,
       id,
-      // updates:
-      //   "https://updates.some-env-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
+      updates:
+        "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
     });
     expect(sendFake).to.have.been.calledWith({
       content: {
         ...formattedResult,
         headers: { trace: [txId0, txId1, txId2], id, context: foundContext },
       },
-      // updates:
-      //   "https://updates.some-env-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
+      updates:
+        "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
     });
   });
   it("should call with the correct params with bootstrap as true", async () => {
@@ -762,16 +762,16 @@ describe("View store get", () => {
     expect(formatFake).to.have.been.calledWith({
       body: obj,
       id,
-      // updates:
-      //   "https://updates.some-env-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
+      updates:
+        "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
     });
     expect(sendFake).to.have.been.calledWith({
       content: {
         ...formattedResult,
         headers: { trace: [txId0, txId1, txId2], id, context: foundContext },
       },
-      // updates:
-      //   "https://updates.some-env-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
+      updates:
+        "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
     });
   });
   it("should call with the correct params with bootstrap as true, ignoring a call to group", async () => {
@@ -849,16 +849,16 @@ describe("View store get", () => {
     expect(formatFake).to.have.been.calledWith({
       body: obj,
       id,
-      // updates:
-      //   "https://updates.some-env-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
+      updates:
+        "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
     });
     expect(sendFake).to.have.been.calledWith({
       content: {
         ...formattedResult,
         headers: { trace: [txId0, txId1, txId2], id, context: foundContext },
       },
-      // updates:
-      //   "https://updates.some-env-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
+      updates:
+        "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
     });
   });
   it("should throw with bootstrap as true without env variable", async () => {
