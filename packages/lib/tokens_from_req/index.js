@@ -8,6 +8,9 @@ module.exports = (req, { cookieKey } = {}) => {
     ...(token != undefined && { cookie: token }),
   };
 
+  //TODO
+  console.log({ cookies, token });
+
   if (authorization == undefined) return tokens;
 
   const components = authorization.split(" ");
