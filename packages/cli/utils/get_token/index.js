@@ -114,7 +114,7 @@ module.exports = async ({
   });
 
   const {
-    body: { tokens },
+    body: { _tokens },
   } = await command({
     name: "upgrade",
     domain: "session",
@@ -147,5 +147,5 @@ module.exports = async ({
       { root: sessionRoot }
     );
 
-  return { token: tokens[0].value };
+  return { token: _tokens[0].value };
 };
