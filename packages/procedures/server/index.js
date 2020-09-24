@@ -9,7 +9,7 @@ module.exports = ({ prehook, posthook } = {}) => {
   if (prehook) prehook(app);
   deps.expressMiddleware(app);
 
-  app.get("/_check-in", (_, res, _) => {
+  app.get("/_check-in", (_, res) => {
     res.send("ok");
   });
 
