@@ -843,7 +843,11 @@ describe("Command handler post", () => {
         },
       ],
     });
-    expect(clearCookieFake).to.have.been.calledWith(key);
+    expect(clearCookieFake).to.have.been.calledWith(key, {
+      network,
+      httpOnly: true,
+      secure: true,
+    });
     expect(thenFnFake).to.have.been.calledWith();
     expect(normalizeFnFake).to.have.been.calledWith(payload);
     expect(validateFnFake).to.have.been.calledWith(payload);

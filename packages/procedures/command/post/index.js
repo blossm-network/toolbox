@@ -214,7 +214,13 @@ module.exports = ({
 
   if (thenFn) await thenFn();
 
-  for (const key of revokeKeys) res.clearCookie(key);
+  for (const key of revokeKeys)
+    res.clearCookie(key, {
+      network:
+        (req.body.context && req.body.context.network) || process.env.NETWORK,
+      httpOnly: true,
+      secure: true,
+    });
 
   if (response || events.length) {
     res
