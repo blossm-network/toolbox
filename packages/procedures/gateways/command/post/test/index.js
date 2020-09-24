@@ -65,8 +65,8 @@ describe("Command gateway post", () => {
     const issueFake = fake.returns({
       body: {
         ...response,
-        tokens: [{ a: 1 }],
-        revokeKeys: [keyToRevoke],
+        _tokens: [{ a: 1 }],
+        _revokeKeys: [keyToRevoke],
       },
       statusCode,
     });
@@ -157,7 +157,7 @@ describe("Command gateway post", () => {
     const issueFake = fake.returns({
       body: {
         ...response,
-        tokens: [{ a: 1 }],
+        _tokens: [{ a: 1 }],
       },
       statusCode,
     });
@@ -257,7 +257,7 @@ describe("Command gateway post", () => {
     const issueFake = fake.returns({
       body: {
         ...response,
-        tokens: [{ a: 1 }],
+        _tokens: [{ a: 1 }],
       },
       statusCode,
     });
@@ -446,7 +446,7 @@ describe("Command gateway post", () => {
     };
     const cookie = "some-cookie";
     const issueFake = fake.returns({
-      body: { tokens: [token1, token2] },
+      body: { _tokens: [token1, token2] },
       headers: { "set-cookie": cookie },
       statusCode,
     });

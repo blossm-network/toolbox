@@ -62,8 +62,8 @@ module.exports = ({
 
     // If the response has tokens, send them as cookies.
     if (response) {
-      if (response.tokens) {
-        for (const token of response.tokens) {
+      if (response._tokens) {
+        for (const token of response._tokens) {
           if (!token.network || !token.type || !token.value) continue;
           const cookieName = token.type;
           const { claims } = deps.decode(token.value);
@@ -74,11 +74,11 @@ module.exports = ({
             expires: new Date(claims.exp),
           });
         }
-        delete response.tokens;
+        delete response._tokens;
       }
-      if (response.revokeKeys) {
-        for (const key of response.revokeKeys) res.clearCookie(key);
-        delete response.revokeKeys;
+      if (response._revokeKeys) {
+        for (const key of response._revokeKeys) res.clearCookie(key);
+        delete response._revokeKeys;
       }
     }
 

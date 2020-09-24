@@ -131,7 +131,15 @@ module.exports = ({
     },
   ];
 
-  const { events = [], response, headers = {}, statusCode, thenFn } =
+  let {
+    events = [],
+    response,
+    headers = {},
+    statusCode,
+    thenFn,
+    tokens,
+    revokeKeys,
+  } =
     (await mainFn({
       payload: req.body.payload,
       ...(req.body.root && { root: req.body.root }),
@@ -206,6 +214,12 @@ module.exports = ({
   });
 
   if (thenFn) await thenFn();
+
+  if (tokens || revokeKeys) {
+    if (!response) response = {};
+    response._tokens = tokens;
+    response._revokeKeys = revokeKeys;
+  }
 
   if (response || events.length) {
     res
