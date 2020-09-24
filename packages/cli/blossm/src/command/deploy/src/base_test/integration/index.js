@@ -12,8 +12,12 @@ const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 
 const { testing, contexts } = require("../../config.json");
 
-const checkResponse = ({ data, expected }) => {
-  for (const property in expected) {
+const checkResponse = ({ data, expected, tokens, revokeKeys }) => {
+  for (const property in {
+    ...expected,
+    ...(tokens && { _tokens: tokens }),
+    ...(revokeKeys && { _revokeKeys: revokeKeys }),
+  }) {
     expect(data[property]).to.exist;
     if (expected[property]) {
       if (
@@ -132,6 +136,8 @@ const executeStep = async (step) => {
 
   checkResponse({
     expected: step.response,
+    tokens: step.tokens,
+    revokeKeys: step.revokeKeys,
     data: parsedBody,
   });
 };
