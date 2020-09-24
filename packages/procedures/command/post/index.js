@@ -138,7 +138,7 @@ module.exports = ({
     statusCode,
     thenFn,
     tokens,
-    revokeKeys,
+    revoke,
   } =
     (await mainFn({
       payload: req.body.payload,
@@ -215,10 +215,10 @@ module.exports = ({
 
   if (thenFn) await thenFn();
 
-  if (tokens || revokeKeys) {
+  if (tokens || revoke) {
     if (!response) response = {};
     response._tokens = tokens;
-    response._revokeKeys = revokeKeys;
+    response._revoke = revoke;
   }
 
   if (response || events.length) {

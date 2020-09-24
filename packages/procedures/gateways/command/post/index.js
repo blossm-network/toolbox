@@ -65,9 +65,8 @@ module.exports = ({
       if (response._tokens) {
         for (const token of response._tokens) {
           if (!token.network || !token.type || !token.value) continue;
-          const cookieName = token.type;
           const { claims } = deps.decode(token.value);
-          res.cookie(cookieName, token.value, {
+          res.cookie(token.type, token.value, {
             domain: token.network,
             httpOnly: true,
             secure: true,
@@ -76,9 +75,14 @@ module.exports = ({
         }
         delete response._tokens;
       }
-      if (response._revokeKeys) {
-        for (const key of response._revokeKeys) res.clearCookie(key);
-        delete response._revokeKeys;
+      if (response._revoke) {
+        for (const token of response._revoke)
+          res.clearCookie(token.type, {
+            domain: token.network,
+            httpOnly: true,
+            secure: true,
+          });
+        delete response._revoke;
       }
     }
 

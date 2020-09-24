@@ -147,7 +147,5 @@ module.exports = async ({
       { root: sessionRoot }
     );
 
-  //TODO
-  console.log({ _tokens });
   return { token: _tokens[0].value };
 };
