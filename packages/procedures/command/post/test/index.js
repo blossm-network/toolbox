@@ -749,7 +749,7 @@ describe("Command handler post", () => {
     expect(normalizeFnFake).to.have.been.calledWith(filledPayload);
     expect(validateFnFake).to.have.been.calledWith(payload);
   });
-  it("should call with the correct params will thenFn", async () => {
+  it("should call with the correct params will thenFn and revokeKeys", async () => {
     const validateFnFake = fake();
     const normalizeFnFake = fake.returns(cleanedPayload);
 
@@ -769,10 +769,12 @@ describe("Command handler post", () => {
       },
     ];
     const thenFnFake = fake();
+    const key = "some-revoke-key";
     const mainFnFake = fake.returns({
       events,
       response,
       thenFn: thenFnFake,
+      revokeKeys: [key],
     });
 
     const req = {
@@ -790,8 +792,10 @@ describe("Command handler post", () => {
     const setResponseFake = fake.returns({
       status: statusFake,
     });
+    const clearCookieFake = fake();
     const res = {
       set: setResponseFake,
+      clearCookie: clearCookieFake,
     };
 
     const addFnFake = fake();
@@ -839,6 +843,7 @@ describe("Command handler post", () => {
         },
       ],
     });
+    expect(clearCookieFake).to.have.been.calledWith(key);
     expect(thenFnFake).to.have.been.calledWith();
     expect(normalizeFnFake).to.have.been.calledWith(payload);
     expect(validateFnFake).to.have.been.calledWith(payload);
