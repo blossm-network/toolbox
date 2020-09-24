@@ -61,10 +61,12 @@ describe("Command gateway post", () => {
   it("should call with the correct params", async () => {
     const validateFake = fake();
     replace(deps, "validate", validateFake);
+    const keyToRevoke = "some-key-to-revoke";
     const issueFake = fake.returns({
       body: {
         ...response,
         tokens: [{ a: 1 }],
+        revokeKeys: [keyToRevoke],
       },
       statusCode,
     });
@@ -87,9 +89,11 @@ describe("Command gateway post", () => {
       send: sendFake,
     });
     const cookieFake = fake();
+    const clearCookieFake = fake();
     const res = {
       cookie: cookieFake,
       status: statusFake,
+      clearCookie: clearCookieFake,
     };
     const nodeExternalTokenResult = "some-external-token-result";
     const nodeExternalTokenFnFake = fake.returns(nodeExternalTokenResult);
@@ -105,6 +109,7 @@ describe("Command gateway post", () => {
       name,
       domain,
     });
+    expect(clearCookieFake).to.have.been.calledWith(keyToRevoke);
     expect(setFake).to.have.been.calledWith({
       token: {
         internalFn: internalTokenFn,

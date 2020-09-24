@@ -131,14 +131,7 @@ module.exports = ({
     },
   ];
 
-  const {
-    events = [],
-    response,
-    headers = {},
-    statusCode,
-    revokeKeys = [],
-    thenFn,
-  } =
+  const { events = [], response, headers = {}, statusCode, thenFn } =
     (await mainFn({
       payload: req.body.payload,
       ...(req.body.root && { root: req.body.root }),
@@ -213,14 +206,6 @@ module.exports = ({
   });
 
   if (thenFn) await thenFn();
-
-  for (const key of revokeKeys)
-    res.clearCookie(key, {
-      network:
-        (req.body.context && req.body.context.network) || process.env.NETWORK,
-      httpOnly: true,
-      secure: true,
-    });
 
   if (response || events.length) {
     res
