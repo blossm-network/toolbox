@@ -337,9 +337,8 @@ module.exports = projection({
 
     const aggregateContext =
       process.env.CONTEXT &&
-      (context || {
-        ...(aggregate.context && aggregate.context[process.env.CONTEXT]),
-      });
+      (context ||
+        (aggregate.context && aggregate.context[process.env.CONTEXT]));
 
     const formattedUpdate = formatUpdate(fullUpdate, fullQuery);
 
