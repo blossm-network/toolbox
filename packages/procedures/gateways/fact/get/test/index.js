@@ -19,6 +19,7 @@ const externalTokenKey = "some-external-token-key";
 describe("Fact gateway get", () => {
   beforeEach(() => {
     delete process.env.NETWORK;
+    process.env.NODE_ENV = "production";
   });
   afterEach(() => {
     restore();
@@ -85,7 +86,7 @@ describe("Fact gateway get", () => {
     expect(sendFake).to.have.been.calledWith(results);
     expect(setResponseFake).to.have.been.calledWith({});
   });
-  it("should call with the correct params when headers are passed back and token, claims, context in req", async () => {
+  it("should call with the correct params when headers are passed back and token, claims, context in req, service and network passed in", async () => {
     const headers = "some-headers";
     const readFake = fake.returns({ body: results, headers });
     const setFake = fake.returns({
@@ -116,9 +117,13 @@ describe("Fact gateway get", () => {
     };
 
     const nodeExternalTokenFnFake = fake();
+    const service = "some-service";
+    const network = "some-network";
     await get({
       name,
       domain,
+      service,
+      network,
       internalTokenFn,
       nodeExternalTokenFn: nodeExternalTokenFnFake,
       key,
@@ -128,6 +133,8 @@ describe("Fact gateway get", () => {
     expect(factFake).to.have.been.calledWith({
       name,
       domain,
+      service,
+      network,
     });
     expect(setFake).to.have.been.calledWith({
       context,
@@ -145,6 +152,72 @@ describe("Fact gateway get", () => {
     expect(readFake).to.have.been.calledWith(query);
     expect(sendFake).to.have.been.calledWith(results);
     expect(setResponseFake).to.have.been.calledWith(headers);
+  });
+  it("should call with the correct params with node env not prod and network", async () => {
+    const readFake = fake.returns({ body: results });
+    const setFake = fake.returns({
+      read: readFake,
+    });
+    const factFake = fake.returns({
+      set: setFake,
+    });
+    replace(deps, "fact", factFake);
+
+    const req = {
+      query,
+    };
+
+    const sendFake = fake();
+    const statusFake = fake.returns({
+      send: sendFake,
+    });
+    const setResponseFake = fake.returns({
+      status: statusFake,
+    });
+    const res = {
+      set: setResponseFake,
+    };
+
+    const nodeExternalTokenResult = "some-node-external-token-result";
+    const nodeExternalTokenFnFake = fake.returns(nodeExternalTokenResult);
+    const network = "some-network";
+    process.env.NODE_ENV = "bogus";
+    await get({
+      name,
+      domain,
+      network,
+      internalTokenFn,
+      nodeExternalTokenFn: nodeExternalTokenFnFake,
+      key,
+    })(req, res);
+
+    expect(factFake).to.have.been.calledWith({
+      name,
+      domain,
+      network: `snd.${network}`,
+    });
+    expect(setFake).to.have.been.calledWith({
+      token: {
+        internalFn: internalTokenFn,
+        externalFn: match((fn) => {
+          const result = fn({
+            network: externalTokenNetwork,
+            key: externalTokenKey,
+          });
+          return (
+            result == nodeExternalTokenResult &&
+            nodeExternalTokenFnFake.calledWith({
+              network: externalTokenNetwork,
+              key: externalTokenKey,
+            })
+          );
+        }),
+        key,
+      },
+    });
+    expect(readFake).to.have.been.calledWith(query);
+    expect(sendFake).to.have.been.calledWith(results);
+    expect(setResponseFake).to.have.been.calledWith({});
   });
   it("should throw correctly", async () => {
     const errorMessage = "error-message";

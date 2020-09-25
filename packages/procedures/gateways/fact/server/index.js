@@ -26,6 +26,8 @@ module.exports = async ({
 
   for (const {
     name,
+    network,
+    service: factService,
     key = "access",
     privileges,
     protection = "strict",
@@ -35,6 +37,8 @@ module.exports = async ({
       deps.get({
         name,
         domain,
+        service: factService || service,
+        ...(network && { network }),
         internalTokenFn,
         nodeExternalTokenFn,
         key,

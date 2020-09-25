@@ -3,6 +3,8 @@ const deps = require("./deps");
 module.exports = ({
   name,
   domain,
+  service,
+  network,
   internalTokenFn,
   nodeExternalTokenFn,
   key,
@@ -11,6 +13,12 @@ module.exports = ({
     .fact({
       name,
       domain,
+      ...(service && { service }),
+      ...(network && {
+        network: `${
+          process.env.NODE_ENV == "production" ? "" : "snd."
+        }${network}`,
+      }),
     })
     .set({
       token: {

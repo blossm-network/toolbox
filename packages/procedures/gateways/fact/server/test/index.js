@@ -73,6 +73,7 @@ describe("Fact gateway", () => {
     expect(gatewayGetFake).to.have.been.calledWith({
       name,
       domain,
+      service,
       internalTokenFn,
       nodeExternalTokenFn,
       key: "access",
@@ -114,7 +115,7 @@ describe("Fact gateway", () => {
       }),
     });
   });
-  it("should call with the correct params with privileges set to none and custom key", async () => {
+  it("should call with the correct params with privileges set to none and custom key, with service and network passed back", async () => {
     const corsMiddlewareFake = fake();
     replace(deps, "corsMiddleware", corsMiddlewareFake);
 
@@ -142,7 +143,18 @@ describe("Fact gateway", () => {
     const privileges = "none";
     const name = "some-name";
     const key = "some-custom-key";
-    const facts = [{ name, privileges, context, key }];
+    const factNetwork = "some-fact-network";
+    const factService = "some-fact-service";
+    const facts = [
+      {
+        name,
+        privileges,
+        context,
+        key,
+        network: factNetwork,
+        service: factService,
+      },
+    ];
 
     const verifyFnResult = "some-verify-fn";
     const verifyFnFake = fake.returns(verifyFnResult);
@@ -163,6 +175,8 @@ describe("Fact gateway", () => {
     expect(gatewayGetFake).to.have.been.calledWith({
       name,
       domain,
+      service: factService,
+      network: factNetwork,
       internalTokenFn,
       nodeExternalTokenFn,
       key,
@@ -318,6 +332,7 @@ describe("Fact gateway", () => {
     expect(gatewayGetFake).to.have.been.calledWith({
       name: name1,
       domain,
+      service,
       internalTokenFn,
       nodeExternalTokenFn,
       key: "access",
@@ -325,6 +340,7 @@ describe("Fact gateway", () => {
     expect(gatewayGetFake).to.have.been.calledWith({
       name: name2,
       domain,
+      service,
       internalTokenFn,
       nodeExternalTokenFn,
       key: "access",
@@ -332,6 +348,7 @@ describe("Fact gateway", () => {
     expect(gatewayGetFake).to.have.been.calledWith({
       name: name3,
       domain,
+      service,
       internalTokenFn,
       nodeExternalTokenFn,
       key: "access",
@@ -430,6 +447,7 @@ describe("Fact gateway", () => {
     expect(gatewayGetFake).to.have.been.calledWith({
       name,
       domain: otherDomain,
+      service: otherService,
       internalTokenFn,
       nodeExternalTokenFn,
       key: "access",
