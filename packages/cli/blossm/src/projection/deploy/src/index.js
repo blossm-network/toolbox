@@ -39,12 +39,15 @@ const pushToChannel = async ({ channel, view, id, trace, type }) => {
         type,
         channel,
       });
+    console.log("PUSHED!", { channel, view, type });
   } catch (err) {
     logger.error("Failed to push updates.", { err });
   }
 };
 
 const pushToChannels = async ({ context, groups, view, id, trace, type }) => {
+  //TODO
+  console.log("PUSHING TO CHANNELS", { context, view, id, type });
   if (context) {
     const channel = channelName({
       name: process.env.NAME,
