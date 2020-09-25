@@ -226,6 +226,8 @@ describe("Secrets", () => {
   it("should throw correctly with create", async () => {
     const error = new Error("some-error");
     const encryptFake = fake.rejects(error);
+    const createKeyFake = fake();
+    replace(deps, "createKey", createKeyFake);
     replace(deps, "encrypt", encryptFake);
     try {
       await create(key, secret);
