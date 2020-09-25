@@ -141,6 +141,9 @@ const saveId = async ({ aggregate, id, query, update, push, context }) => {
       }),
     });
 
+  //TODO
+  console.log({ newViewExists: newView != undefined, push });
+
   if (!newView || !push) return;
 
   await pushToChannels({
