@@ -4,7 +4,6 @@ const defaultFn = (update) => update;
 
 //This is duplicated in put
 const getValue = (object, key) => {
-  console.log({ key });
   const keyParts = key.split(".");
   return keyParts.length > 1
     ? object[keyParts[0]] instanceof Array
