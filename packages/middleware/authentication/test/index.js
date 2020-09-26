@@ -8,6 +8,7 @@ const keyClaimsFn = "some-claims-fn";
 const algorithm = "some-algorithm";
 const audience = "some-audience";
 const allowBasic = "some-allow-basic";
+const allowsQueryToken = "some-allow-query-token";
 const cookieKey = "some-cookie-key";
 
 const jwt = "some-bearer";
@@ -230,9 +231,13 @@ describe("Authentication middleware", () => {
       algorithm,
       cookieKey,
       allowBasic: true,
+      allowsQueryToken,
     })(req, null, nextFake);
 
-    expect(tokensFromReqFake).to.have.been.calledWith(req, { cookieKey });
+    expect(tokensFromReqFake).to.have.been.calledWith(req, {
+      cookieKey,
+      allowsQueryToken,
+    });
     expect(authenticateFake).to.have.been.calledWith({
       basic,
       verifyFn,

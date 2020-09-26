@@ -102,6 +102,7 @@ describe("Fact gateway", () => {
       algorithm,
       protection: "strict",
       cookieKey: "access",
+      allowsQueryToken: false,
     });
     expect(verifyFnFake).to.have.been.calledWith({ key: "access" });
     expect(authorizationFake).to.have.been.calledWith({
@@ -205,6 +206,7 @@ describe("Fact gateway", () => {
       algorithm,
       protection: "strict",
       cookieKey: key,
+      allowsQueryToken: false,
     });
     expect(verifyFnFake).to.have.been.calledWith({ key });
     expect(authorizationFake).to.have.been.calledWith({
@@ -268,6 +270,7 @@ describe("Fact gateway", () => {
       algorithm,
       protection: "strict",
       cookieKey: key,
+      allowsQueryToken: false,
     });
     expect(verifyFnFake).to.have.been.calledWith({ key });
   });
@@ -307,10 +310,11 @@ describe("Fact gateway", () => {
     const name1 = "some-name1";
     const name2 = "some-name2";
     const name3 = "some-name3";
+    const allowsQueryToken = "some-allows-query-token";
     const facts = [
       { name: name1, protection: "none" },
       { name: name2, protection: "context" },
-      { name: name3, privileges, context },
+      { name: name3, privileges, context, allowsQueryToken },
     ];
 
     const verifyFnResult = "some-verify-fn";
@@ -371,6 +375,7 @@ describe("Fact gateway", () => {
       algorithm,
       protection: "context",
       cookieKey: "access",
+      allowsQueryToken: false,
     });
     expect(authenticationFake.getCall(1)).to.have.been.calledWith({
       verifyFn: verifyFnResult,
@@ -378,6 +383,7 @@ describe("Fact gateway", () => {
       algorithm,
       protection: "strict",
       cookieKey: "access",
+      allowsQueryToken,
     });
     expect(verifyFnFake).to.have.been.calledWith({ key: "access" });
     expect(authorizationFake).to.have.been.calledOnce;

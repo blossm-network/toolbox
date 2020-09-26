@@ -31,6 +31,7 @@ module.exports = async ({
     key = "access",
     privileges,
     protection = "strict",
+    allowsQueryToken = false,
     context,
   } of facts) {
     server = server.get(
@@ -53,6 +54,7 @@ module.exports = async ({
               algorithm,
               protection,
               cookieKey: key,
+              allowsQueryToken,
             }),
             ...(protection == "strict"
               ? [
