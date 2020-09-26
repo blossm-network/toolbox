@@ -122,7 +122,9 @@ module.exports = ({
     }/channel?query%5Bname%5D=${process.env.NAME}${
       process.env.CONTEXT ? `&query%5Bcontext%5D=${process.env.CONTEXT}` : ""
     }&query%5Bnetwork%5D=${process.env.NETWORK}${
-      updateKey ? `&query%5Bkey%5D=${getValue(req.query.query, updateKey)}` : ""
+      updateKey && req.query.query && getValue(req.query.query, updateKey)
+        ? `&query%5Bkey%5D=${getValue(req.query.query, updateKey)}`
+        : ""
     }${
       !process.env.CONTEXT && req.query.context && req.query.context.principal
         ? `&query%5Bprincipal%5D=${req.query.context.principal.root}`
