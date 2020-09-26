@@ -14,19 +14,6 @@ describe("Tokens from req", () => {
     };
     expect(tokensFromReq(req)).to.deep.equal({ bearer: token });
   });
-  it("should return the correct bearer token from query.", () => {
-    const token = "some-token-name";
-    const req = {
-      headers: {},
-      query: {
-        bearer: token,
-      },
-      cookies: {},
-    };
-    expect(tokensFromReq(req, { allowsQueryToken: true })).to.deep.equal({
-      bearer: token,
-    });
-  });
   it("should return the correct cookie token.", () => {
     const token = "some-token-name";
     const req = {

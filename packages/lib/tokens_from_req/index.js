@@ -1,4 +1,4 @@
-module.exports = (req, { cookieKey, allowsQueryToken = false } = {}) => {
+module.exports = (req, { cookieKey } = {}) => {
   const authorization = req.headers.authorization;
   const cookies = req.cookies || {};
 
@@ -8,18 +8,13 @@ module.exports = (req, { cookieKey, allowsQueryToken = false } = {}) => {
     ...(token != undefined && { cookie: token }),
   };
 
-  //TODO
-  console.log({ cookies, token, query: req.query });
+  if (authorization == undefined) return tokens;
 
-  if (authorization == undefined && (!allowsQueryToken || !req.query.bearer))
-    return tokens;
-
-  const components = authorization && authorization.split(" ");
+  const components = authorization.split(" ");
 
   return {
     ...tokens,
-    ...(components && components[0] == "Bearer" && { bearer: components[1] }),
-    ...(allowsQueryToken && req.query.bearer && { bearer: req.query.bearer }),
-    ...(components && components[0] == "Basic" && { basic: components[1] }),
+    ...(components[0] == "Bearer" && { bearer: components[1] }),
+    ...(components[0] == "Basic" && { basic: components[1] }),
   };
 };

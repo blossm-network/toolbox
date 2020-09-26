@@ -10,13 +10,9 @@ module.exports = ({
   algorithm,
   cookieKey,
   allowBasic = false,
-  allowsQueryToken,
 }) =>
   asyncHandler(async (req, _, next) => {
-    const tokens = deps.tokensFromReq(req, {
-      cookieKey,
-      ...(allowsQueryToken && { allowsQueryToken }),
-    });
+    const tokens = deps.tokensFromReq(req, { cookieKey });
     const jwt = tokens.bearer || tokens.cookie;
 
     if (jwt) req.token = jwt;
