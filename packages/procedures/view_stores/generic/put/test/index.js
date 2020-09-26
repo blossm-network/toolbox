@@ -224,7 +224,10 @@ describe("View store put", () => {
     });
   });
   it("should call with the correct params with groups and no env context", async () => {
-    const writeFake = fake.returns(writeResult);
+    const writeFake = fake.returns({
+      ...writeResult,
+      body: { g: 10 },
+    });
     const formatFake = fake.returns(formattedWriteResult);
 
     const group1Root = "some-group1-root";
@@ -266,7 +269,10 @@ describe("View store put", () => {
     };
 
     delete process.env.CONTEXT;
-    await put({ writeFn: writeFake, formatFn: formatFake })(req, res);
+    await put({ writeFn: writeFake, formatFn: formatFake, updateKey: "g" })(
+      req,
+      res
+    );
 
     expect(writeFake).to.have.been.calledWith({
       query: {
@@ -292,7 +298,7 @@ describe("View store put", () => {
       },
     });
     expect(formatFake).to.have.been.calledWith({
-      body: writeResultBody,
+      body: { g: 10 },
       id: writeResultId,
     });
     expect(statusFake).to.have.been.calledWith(200);
@@ -308,6 +314,7 @@ describe("View store put", () => {
           modified: writeResultModified,
         },
       },
+      keys: [10],
     });
   });
   it("should call with the correct params with no write result", async () => {
