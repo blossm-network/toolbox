@@ -157,7 +157,10 @@ describe("View store get", () => {
     const formatFake = stub();
     for (let i = 0; i < 100; i++) {
       results.push({
-        body: obj,
+        body: {
+          ...obj,
+          "some-other-query-key": { a: { b: 2 } },
+        },
         headers: { id, context: foundContext },
         trace: {
           "some-service": { "some-domain": [txId0] },
@@ -174,7 +177,6 @@ describe("View store get", () => {
 
     const query = {
       "some-query-key": 1,
-      "some-other-query-key": { a: { b: 2 } },
       "another-query-key": 3,
     };
 
@@ -223,7 +225,6 @@ describe("View store get", () => {
       text,
       query: {
         "body.some-query-key": 1,
-        "body.some-other-query-key": { a: { b: 2 } },
         "body.another-query-key": 3,
         "headers.id": id,
         "headers.groups": {
@@ -237,7 +238,6 @@ describe("View store get", () => {
       text,
       query: {
         "body.some-query-key": 1,
-        "body.some-other-query-key": { a: { b: 2 } },
         "body.another-query-key": 3,
         "headers.id": id,
         "headers.groups": {
