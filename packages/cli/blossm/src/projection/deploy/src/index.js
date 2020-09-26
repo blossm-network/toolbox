@@ -54,6 +54,7 @@ const pushToChannels = async ({
   type,
 }) => {
   if (context) {
+    //Run once if there are no keys
     for (const key of keys || [null]) {
       const channel = channelName({
         name: process.env.NAME,

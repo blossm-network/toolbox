@@ -194,7 +194,10 @@ describe("View store get", () => {
             root: "some-context-principal-root",
           },
         },
-        query,
+        query: {
+          ...query,
+          "some-other-query-key.a.b": "something",
+        },
         token,
         text,
       },
@@ -226,6 +229,7 @@ describe("View store get", () => {
       query: {
         "body.some-query-key": 1,
         "body.another-query-key": 3,
+        "body.some-other-query-key.a.b": "something",
         "headers.id": id,
         "headers.groups": {
           $elemMatch: {
@@ -239,6 +243,7 @@ describe("View store get", () => {
       query: {
         "body.some-query-key": 1,
         "body.another-query-key": 3,
+        "body.some-other-query-key.a.b": "something",
         "headers.id": id,
         "headers.groups": {
           $elemMatch: {
@@ -254,7 +259,10 @@ describe("View store get", () => {
       `https://v.${envNetwork}/${envName}`,
       {
         sort: { a: "1" },
-        query,
+        query: {
+          ...query,
+          "some-other-query-key.a.b": "something",
+        },
         skip: 100,
         limit: 100,
       }

@@ -2,7 +2,7 @@ const deps = require("./deps");
 
 const defaultFn = (update) => update;
 
-//This is duplicated in put
+//Returns the value, or values, of a given key in an object.
 const getValue = (object, key) => {
   const keyParts = key.split(".");
   return keyParts.length > 1

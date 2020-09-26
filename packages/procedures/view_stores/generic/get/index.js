@@ -4,11 +4,15 @@ const defaultQueryFn = (query) => query;
 const defaultSortFn = (sort) => sort;
 const defaultLimit = 100;
 
-//TODO this is duplicated in put
+//Returns at most one value of a given key in an object.
 const getValue = (object, key) => {
   const keyParts = key.split(".");
   return keyParts.length > 1
-    ? getValue(object[keyParts[0]], keyParts.slice(1).join("."))
+    ? object[keyParts[0]] instanceof Array
+      ? object[keyParts[0]].map((element) =>
+          getValue(element, keyParts.slice(1).join("."))
+        )[0]
+      : getValue(object[keyParts[0]], keyParts.slice(1).join("."))
     : object[keyParts[0]];
 };
 
@@ -122,7 +126,13 @@ module.exports = ({
     }/channel?query%5Bname%5D=${process.env.NAME}${
       process.env.CONTEXT ? `&query%5Bcontext%5D=${process.env.CONTEXT}` : ""
     }&query%5Bnetwork%5D=${process.env.NETWORK}${
-      updateKey && results.length >= 1
+      //TODO write better tests for this.
+      //If there's only one result, use it's updateKey value.
+      //If there's more than one result, use the first element's value if the updateKey was queried for.
+      updateKey &&
+      ((results.length > 1 &&
+        (req.query.query || {})[updateKey] != undefined) ||
+        results.length == 1)
         ? `&query%5Bkey%5D=${getValue(results[0].body, updateKey)}`
         : ""
     }${
