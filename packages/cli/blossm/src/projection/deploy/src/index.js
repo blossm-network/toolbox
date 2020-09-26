@@ -54,19 +54,21 @@ const pushToChannels = async ({
   type,
 }) => {
   if (context) {
-    const channel = channelName({
-      name: process.env.NAME,
-      context,
-      keys: Object.keys(keys).map((key) => keys[key]),
-    });
+    for (const key of keys || [null]) {
+      const channel = channelName({
+        name: process.env.NAME,
+        context,
+        ...(key && { key }),
+      });
 
-    await pushToChannel({
-      channel,
-      ...(view && { view }),
-      id,
-      ...(trace && { trace }),
-      type,
-    });
+      await pushToChannel({
+        channel,
+        ...(view && { view }),
+        id,
+        ...(trace && { trace }),
+        type,
+      });
+    }
   }
 
   //Const get all principals
@@ -87,23 +89,25 @@ const pushToChannels = async ({
         })
         .stream(
           async (principal) => {
-            const channel = channelName({
-              name: process.env.NAME,
-              ...(context && {
-                context,
-              }),
-              principal,
-              keys: Object.keys(keys).map((key) => keys[key]),
-            });
+            for (const key of keys || [null]) {
+              const channel = channelName({
+                name: process.env.NAME,
+                ...(context && {
+                  context,
+                }),
+                principal,
+                ...(key && { key }),
+              });
 
-            //If there is no context, the channel is always the principal's channel.
-            await pushToChannel({
-              channel,
-              ...(view && { view }),
-              id,
-              ...(trace && { trace }),
-              type,
-            });
+              //If there is no context, the channel is always the principal's channel.
+              await pushToChannel({
+                channel,
+                ...(view && { view }),
+                id,
+                ...(trace && { trace }),
+                type,
+              });
+            }
           },
           {
             root: group.root,

@@ -147,14 +147,13 @@ describe("View store put", () => {
           modified: writeResultModified,
         },
       },
-      keys: {},
     });
   });
 
-  it("should call with the correct params with custom fn no context, with updateKeys", async () => {
+  it("should call with the correct params with custom fn no context, with updateKey", async () => {
     const writeFake = fake.returns({
       ...writeResult,
-      body: { g: { m: { n: 10 } }, h: 40, k: 4 },
+      body: { g: { m: [{ n: 10 }, { n: 11 }] } },
     });
     const formatFake = fake.returns(formattedWriteResult);
 
@@ -187,7 +186,7 @@ describe("View store put", () => {
       writeFn: writeFake,
       updateFn: fnFake,
       formatFn: formatFake,
-      updateKeys: ["g.m.n", "h"],
+      updateKey: "g.m.n",
     })(req, res);
 
     expect(writeFake).to.have.been.calledWith({
@@ -205,7 +204,7 @@ describe("View store put", () => {
     });
     expect(fnFake).to.have.been.calledWith({ a: 1 });
     expect(formatFake).to.have.been.calledWith({
-      body: { g: { m: { n: 10 } }, h: 40, k: 4 },
+      body: { g: { m: [{ n: 10 }, { n: 11 }] } },
       id: writeResultId,
     });
     expect(statusFake).to.have.been.calledWith(200);
@@ -221,10 +220,7 @@ describe("View store put", () => {
           modified: writeResultModified,
         },
       },
-      keys: {
-        "g.m.n": 10,
-        h: 40,
-      },
+      keys: [10, 11],
     });
   });
   it("should call with the correct params with groups and no env context", async () => {
@@ -312,7 +308,6 @@ describe("View store put", () => {
           modified: writeResultModified,
         },
       },
-      keys: {},
     });
   });
   it("should call with the correct params with no write result", async () => {

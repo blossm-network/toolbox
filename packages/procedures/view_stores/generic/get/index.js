@@ -22,7 +22,7 @@ module.exports = ({
   queryFn = defaultQueryFn,
   sortFn = defaultSortFn,
   groupsLookupFn,
-  updateKeys = [],
+  updateKey,
 }) => {
   return async (req, res) => {
     if (
@@ -121,17 +121,9 @@ module.exports = ({
       process.env.CORE_NETWORK
     }/channel?query%5Bname%5D=${process.env.NAME}${
       process.env.CONTEXT ? `&query%5Bcontext%5D=${process.env.CONTEXT}` : ""
-    }&query%5Bnetwork%5D=${process.env.NETWORK}${updateKeys.reduce(
-      (result, key) => {
-        const value = getValue(req.query.query, key);
-        result +=
-          value && typeof value != "object"
-            ? `&query%5Bkeys%5D%5B${key}%5D=${value}`
-            : "";
-        return result;
-      },
-      ""
-    )}${
+    }&query%5Bnetwork%5D=${process.env.NETWORK}${
+      updateKey ? `&query%5Bkey%5D=${getValue(req.query.query, updateKey)}` : ""
+    }${
       !process.env.CONTEXT && req.query.context && req.query.context.principal
         ? `&query%5Bprincipal%5D=${req.query.context.principal.root}`
         : ""

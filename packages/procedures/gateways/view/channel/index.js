@@ -17,8 +17,8 @@ module.exports = (req, res) => {
         network: req.query.context[process.env.CONTEXT].network,
       },
     }),
-    ...(req.query.keys && {
-      keys: Object.keys(req.query.keys).map((key) => req.query.keys[key]),
+    ...(req.query.key && {
+      key: req.query.key,
     }),
     ...(!process.env.CONTEXT &&
       req.query.context.principal && {

@@ -33,6 +33,7 @@ const fnFake = fake();
 const parallel = "some-parallel";
 const one = "some-one";
 const group = "some-group";
+const updateKey = "some-update-key";
 const groupsLookupFn = "some-group-lookup-fn";
 
 process.env.NAME = name;
@@ -117,6 +118,7 @@ describe("View store", () => {
       emptyFn,
       one,
       group,
+      updateKey,
       groupsLookupFn,
     });
 
@@ -307,6 +309,7 @@ describe("View store", () => {
       emptyFn,
       one,
       group,
+      updateKey,
     });
 
     await mongodbViewStore({ schema });

@@ -6,17 +6,16 @@ const defaultFn = (update) => update;
 const getValue = (object, key) => {
   const keyParts = key.split(".");
   return keyParts.length > 1
-    ? getValue(object[keyParts[0]], keyParts.slice(1).join("."))
+    ? object[keyParts[0]] instanceof Array
+      ? object[keyParts[0]].map((element) =>
+          getValue(element, keyParts.slice(1).join("."))
+        )
+      : getValue(object[keyParts[0]], keyParts.slice(1).join("."))
     : object[keyParts[0]];
 };
 
 //NOT MEANT TO BE PUBLIC SINCE THERES NO REQUIRED CONTEXT CHECK.
-module.exports = ({
-  writeFn,
-  formatFn,
-  updateFn = defaultFn,
-  updateKeys = [],
-}) => {
+module.exports = ({ writeFn, formatFn, updateFn = defaultFn, updateKey }) => {
   return async (req, res) => {
     const customUpdate = updateFn(req.body.update);
 
@@ -82,6 +81,8 @@ module.exports = ({
       }
     }
 
+    const value = updateKey && getValue(newView.body, updateKey);
+
     res.status(200).send({
       view: {
         ...formatFn({
@@ -97,13 +98,7 @@ module.exports = ({
           modified: newView.headers.modified,
         },
       },
-      keys: updateKeys.reduce((result, key) => {
-        const value = getValue(newView.body, key);
-        return {
-          ...result,
-          [key]: value,
-        };
-      }, {}),
+      ...(value && { keys: value instanceof Array ? value : [value] }),
     });
   };
 };

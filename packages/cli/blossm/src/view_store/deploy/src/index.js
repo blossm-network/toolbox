@@ -23,7 +23,7 @@ module.exports = viewStore({
   indexes: config.indexes,
   sorts: config.sorts,
   secretFn: secret,
-  ...(config.updateKeys && { updateKeys: config.updateKeys }),
+  ...(config.key && { updateKey: config.key }),
   ...(query && { queryFn: query }),
   ...(sort && { sortFn: sort }),
   ...(update && { updateFn: update }),

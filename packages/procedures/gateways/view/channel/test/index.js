@@ -26,14 +26,11 @@ describe("View gateway get", () => {
         network: queryContextNetwork,
       },
     };
-    const keys = {
-      a: "some-a-key",
-      b: "some-b-key",
-    };
+    const key = "some-a-key";
     const query = {
       name,
       context: queryContext,
-      keys,
+      key,
     };
 
     const req = {
@@ -56,7 +53,7 @@ describe("View gateway get", () => {
     expect(sendFake).to.have.been.calledWith(channelName);
     expect(channelNameFake).to.have.been.calledWith({
       name,
-      keys: ["some-a-key", "some-b-key"],
+      key: "some-a-key",
       context: {
         root: queryContextRoot,
         domain: context,
