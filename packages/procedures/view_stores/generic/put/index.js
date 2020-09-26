@@ -84,6 +84,8 @@ module.exports = ({ writeFn, formatFn, updateFn = defaultFn }) => {
         context: newView.headers.context,
         ...(newView.headers.groups && { groups: newView.headers.groups }),
         trace: formattedTrace,
+        created: newView.headers.created,
+        modified: newView.headers.modified,
       },
     });
   };

@@ -15,6 +15,9 @@ const writeResultBody = "some-write-result-body";
 const writeResultId = "some-write-result-id";
 const writeResultContext = "some-write-result-context";
 const writeResultGroups = "some-write-result-groups";
+const writeResultCreated = "some-write-result-created";
+const writeResultModified = "some-write-result-modified";
+
 const trace1 = "some-trace";
 const trace2 = "some-other-trace";
 const writeResult = {
@@ -23,6 +26,8 @@ const writeResult = {
     id: writeResultId,
     context: writeResultContext,
     groups: writeResultGroups,
+    created: writeResultCreated,
+    modified: writeResultModified,
   },
   trace: {
     "some-service": {
@@ -139,6 +144,8 @@ describe("View store put", () => {
         context: writeResultContext,
         trace: [trace1, trace2],
         groups: writeResultGroups,
+        created: writeResultCreated,
+        modified: writeResultModified,
       },
     });
   });
@@ -203,6 +210,8 @@ describe("View store put", () => {
         context: writeResultContext,
         trace: [trace1, trace2],
         groups: writeResultGroups,
+        created: writeResultCreated,
+        modified: writeResultModified,
       },
     });
   });
@@ -286,6 +295,8 @@ describe("View store put", () => {
         context: writeResultContext,
         trace: [trace1, trace2],
         groups: writeResultGroups,
+        created: writeResultCreated,
+        modified: writeResultModified,
       },
     });
   });
