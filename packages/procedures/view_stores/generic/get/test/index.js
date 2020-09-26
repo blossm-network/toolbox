@@ -150,7 +150,7 @@ describe("View store get", () => {
       count: 200,
     });
   });
-  it("should call with the correct params with no env context, group as true, and text in query", async () => {
+  it("should call with the correct params with no env context, group as true, text in query, update keys", async () => {
     const results = [];
     const formattedResults = [];
 
@@ -172,7 +172,11 @@ describe("View store get", () => {
     const findFake = fake.returns(results);
     const countFake = fake.returns(200);
 
-    const query = { "some-query-key": 1 };
+    const query = {
+      "some-query-key": 1,
+      "some-other-query-key": { a: { b: 2 } },
+      "another-query-key": 3,
+    };
 
     const urlEncodeQueryDataFake = fake.returns(nextUrl);
     replace(deps, "urlEncodeQueryData", urlEncodeQueryDataFake);
@@ -210,6 +214,7 @@ describe("View store get", () => {
       formatFn: formatFake,
       group: true,
       groupsLookupFn: groupsLookupFnFake,
+      updateKeys: ["some-other-query-key.a.b", "another-query-key"],
     })(req, res);
     expect(findFake).to.have.been.calledWith({
       limit: 100,
@@ -218,6 +223,8 @@ describe("View store get", () => {
       text,
       query: {
         "body.some-query-key": 1,
+        "body.some-other-query-key": { a: { b: 2 } },
+        "body.another-query-key": 3,
         "headers.id": id,
         "headers.groups": {
           $elemMatch: {
@@ -230,6 +237,8 @@ describe("View store get", () => {
       text,
       query: {
         "body.some-query-key": 1,
+        "body.some-other-query-key": { a: { b: 2 } },
+        "body.another-query-key": 3,
         "headers.id": id,
         "headers.groups": {
           $elemMatch: {
@@ -255,7 +264,7 @@ describe("View store get", () => {
         body: results[i].body,
         id: results[i].headers.id,
         updates:
-          "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bnetwork%5D=some-env-network&query%5Bprincipal%5D=some-context-principal-root",
+          "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bnetwork%5D=some-env-network&query%5Bkeys%5D%5Bsome-other-query-key.a.b%5D=2&query%5Bkeys%5D%5Banother-query-key%5D=3&query%5Bprincipal%5D=some-context-principal-root",
       });
     }
     expect(sendFake).to.have.been.calledWith({
@@ -268,7 +277,7 @@ describe("View store get", () => {
         },
       })),
       updates:
-        "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bnetwork%5D=some-env-network&query%5Bprincipal%5D=some-context-principal-root",
+        "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bnetwork%5D=some-env-network&query%5Bkeys%5D%5Bsome-other-query-key.a.b%5D=2&query%5Bkeys%5D%5Banother-query-key%5D=3&query%5Bprincipal%5D=some-context-principal-root",
       next: nextUrl,
       count: 200,
     });

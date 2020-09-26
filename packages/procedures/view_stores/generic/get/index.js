@@ -4,6 +4,14 @@ const defaultQueryFn = (query) => query;
 const defaultSortFn = (sort) => sort;
 const defaultLimit = 100;
 
+//TODO this is duplicated in put
+const getValue = (object, key) => {
+  const keyParts = key.split(".");
+  return keyParts.length > 1
+    ? getValue(object[keyParts[0]], keyParts.slice(1).join("."))
+    : object[keyParts[0]];
+};
+
 module.exports = ({
   findFn,
   countFn,
@@ -14,6 +22,7 @@ module.exports = ({
   queryFn = defaultQueryFn,
   sortFn = defaultSortFn,
   groupsLookupFn,
+  updateKeys = [],
 }) => {
   return async (req, res) => {
     if (
@@ -112,7 +121,17 @@ module.exports = ({
       process.env.CORE_NETWORK
     }/channel?query%5Bname%5D=${process.env.NAME}${
       process.env.CONTEXT ? `&query%5Bcontext%5D=${process.env.CONTEXT}` : ""
-    }&query%5Bnetwork%5D=${process.env.NETWORK}${
+    }&query%5Bnetwork%5D=${process.env.NETWORK}${updateKeys.reduce(
+      (result, key) => {
+        const value = getValue(req.query.query, key);
+        result +=
+          value && typeof value != "object"
+            ? `&query%5Bkeys%5D%5B${key}%5D=${value}`
+            : "";
+        return result;
+      },
+      ""
+    )}${
       !process.env.CONTEXT && req.query.context && req.query.context.principal
         ? `&query%5Bprincipal%5D=${req.query.context.principal.root}`
         : ""

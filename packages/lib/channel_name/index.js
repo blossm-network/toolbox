@@ -6,6 +6,7 @@ module.exports = ({
     service: contextService,
     network: contextNetwork,
   } = {},
+  keys = [],
   principal: {
     root: principalRoot,
     service: principalService,
@@ -16,6 +17,8 @@ module.exports = ({
     contextDomain ? `.${contextDomain}` : ""
   }${contextService ? `.${contextService}` : ""}${
     contextNetwork ? `.${contextNetwork}` : ""
-  }${principalRoot ? `.${principalRoot}` : ""}${
-    principalService ? `.${principalService}` : ""
-  }${principalNetwork ? `.${principalNetwork}` : ""}`;
+  }${keys.reduce((result, key) => (result += `.${key}`), "")}${
+    principalRoot ? `.${principalRoot}` : ""
+  }${principalService ? `.${principalService}` : ""}${
+    principalNetwork ? `.${principalNetwork}` : ""
+  }`;

@@ -39,19 +39,25 @@ const pushToChannel = async ({ channel, view, id, trace, type }) => {
         type,
         channel,
       });
-    console.log("PUSHED!", { channel, view, type });
   } catch (err) {
     logger.error("Failed to push updates.", { err });
   }
 };
 
-const pushToChannels = async ({ context, groups, view, id, trace, type }) => {
-  //TODO
-  console.log("PUSHING TO CHANNELS", { context, view, id, type });
+const pushToChannels = async ({
+  context,
+  groups,
+  keys,
+  view,
+  id,
+  trace,
+  type,
+}) => {
   if (context) {
     const channel = channelName({
       name: process.env.NAME,
       context,
+      keys: Object.keys(keys).map((key) => keys[key]),
     });
 
     await pushToChannel({
@@ -87,6 +93,7 @@ const pushToChannels = async ({ context, groups, view, id, trace, type }) => {
                 context,
               }),
               principal,
+              keys: Object.keys(keys).map((key) => keys[key]),
             });
 
             //If there is no context, the channel is always the principal's channel.
@@ -110,7 +117,9 @@ const pushToChannels = async ({ context, groups, view, id, trace, type }) => {
 };
 
 const saveId = async ({ aggregate, id, query, update, push, context }) => {
-  const { body: newView } = await viewStore({
+  const {
+    body: { view: newView, keys },
+  } = await viewStore({
     name: config.name,
     context: config.context,
   })
@@ -141,15 +150,13 @@ const saveId = async ({ aggregate, id, query, update, push, context }) => {
       }),
     });
 
-  //TODO
-  console.log({ newViewExists: newView != undefined, push });
-
   if (!newView || !push) return;
 
   await pushToChannels({
     ...(newView.headers.context && { context: newView.headers.context }),
     ...(newView.headers.groups && { groups: newView.headers.groups }),
     view: newView,
+    keys,
     id: newView.headers.id,
     trace: newView.trace,
     type:
@@ -157,8 +164,8 @@ const saveId = async ({ aggregate, id, query, update, push, context }) => {
   });
 };
 
-const deleteId = async ({ aggregate, id, query, push, context }) => {
-  await viewStore({
+const deleteId = ({ aggregate, id, query, push, context }) =>
+  viewStore({
     name: config.name,
     context: config.context,
   })
@@ -179,16 +186,6 @@ const deleteId = async ({ aggregate, id, query, push, context }) => {
       ...(query && { query }),
       ...(aggregate.groups && { groups: aggregate.groups }),
     });
-
-  if (!push) return;
-
-  await pushToChannels({
-    context,
-    groups: aggregate.groups,
-    id,
-    type: "delete",
-  });
-};
 
 const formatUpdate = (update, query) => {
   const result = {};
@@ -386,7 +383,7 @@ module.exports = projection({
             del
               ? deleteId({
                   aggregate,
-                  aggregateContext,
+                  context: aggregateContext,
                   id,
                   query: fullQuery,
                   update: formattedUpdate,
@@ -394,7 +391,7 @@ module.exports = projection({
                 })
               : saveId({
                   aggregate,
-                  aggregateContext,
+                  context: aggregateContext,
                   id,
                   query: fullQuery,
                   update: formattedUpdate,

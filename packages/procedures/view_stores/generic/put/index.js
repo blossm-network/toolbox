@@ -2,8 +2,21 @@ const deps = require("./deps");
 
 const defaultFn = (update) => update;
 
+//This is duplicated in put
+const getValue = (object, key) => {
+  const keyParts = key.split(".");
+  return keyParts.length > 1
+    ? getValue(object[keyParts[0]], keyParts.slice(1).join("."))
+    : object[keyParts[0]];
+};
+
 //NOT MEANT TO BE PUBLIC SINCE THERES NO REQUIRED CONTEXT CHECK.
-module.exports = ({ writeFn, formatFn, updateFn = defaultFn }) => {
+module.exports = ({
+  writeFn,
+  formatFn,
+  updateFn = defaultFn,
+  updateKeys = [],
+}) => {
   return async (req, res) => {
     const customUpdate = updateFn(req.body.update);
 
@@ -69,24 +82,28 @@ module.exports = ({ writeFn, formatFn, updateFn = defaultFn }) => {
       }
     }
 
-    const updates =
-      process.env.CONTEXT &&
-      `https://updates.${process.env.CORE_NETWORK}/channel?query%5Bname%5D=${process.env.NAME}&query%5Bcontext%5D=${process.env.CONTEXT}&query%5Bnetwork%5D=${process.env.NETWORK}`;
-
     res.status(200).send({
-      ...formatFn({
-        body: newView.body,
-        id: newView.headers.id,
-        ...(updates && { updates }),
-      }),
-      headers: {
-        id: newView.headers.id,
-        context: newView.headers.context,
-        ...(newView.headers.groups && { groups: newView.headers.groups }),
-        trace: formattedTrace,
-        created: newView.headers.created,
-        modified: newView.headers.modified,
+      view: {
+        ...formatFn({
+          body: newView.body,
+          id: newView.headers.id,
+        }),
+        headers: {
+          id: newView.headers.id,
+          context: newView.headers.context,
+          ...(newView.headers.groups && { groups: newView.headers.groups }),
+          trace: formattedTrace,
+          created: newView.headers.created,
+          modified: newView.headers.modified,
+        },
       },
+      keys: updateKeys.reduce((result, key) => {
+        const value = getValue(newView.body, key);
+        return {
+          ...result,
+          [key]: value,
+        };
+      }, {}),
     });
   };
 };

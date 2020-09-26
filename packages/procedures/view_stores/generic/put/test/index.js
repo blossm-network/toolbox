@@ -133,25 +133,29 @@ describe("View store put", () => {
     expect(formatFake).to.have.been.calledWith({
       body: writeResultBody,
       id: writeResultId,
-      updates:
-        "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
     });
     expect(statusFake).to.have.been.calledWith(200);
     expect(sendFake).to.have.been.calledWith({
-      ...formattedWriteResult,
-      headers: {
-        id: writeResultId,
-        context: writeResultContext,
-        trace: [trace1, trace2],
-        groups: writeResultGroups,
-        created: writeResultCreated,
-        modified: writeResultModified,
+      view: {
+        ...formattedWriteResult,
+        headers: {
+          id: writeResultId,
+          context: writeResultContext,
+          trace: [trace1, trace2],
+          groups: writeResultGroups,
+          created: writeResultCreated,
+          modified: writeResultModified,
+        },
       },
+      keys: {},
     });
   });
 
-  it("should call with the correct params with custom fn no context", async () => {
-    const writeFake = fake.returns(writeResult);
+  it("should call with the correct params with custom fn no context, with updateKeys", async () => {
+    const writeFake = fake.returns({
+      ...writeResult,
+      body: { g: { m: { n: 10 } }, h: 40, k: 4 },
+    });
     const formatFake = fake.returns(formattedWriteResult);
 
     const req = {
@@ -178,11 +182,13 @@ describe("View store put", () => {
       status: statusFake,
     };
 
-    const fnFake = fake.returns({ c: 3 });
-    await put({ writeFn: writeFake, updateFn: fnFake, formatFn: formatFake })(
-      req,
-      res
-    );
+    const fnFake = fake.returns({ c: 3, d: 4, e: 5 });
+    await put({
+      writeFn: writeFake,
+      updateFn: fnFake,
+      formatFn: formatFake,
+      updateKeys: ["g.m.n", "h"],
+    })(req, res);
 
     expect(writeFake).to.have.been.calledWith({
       query: {
@@ -190,6 +196,8 @@ describe("View store put", () => {
       },
       data: {
         "body.c": 3,
+        "body.d": 4,
+        "body.e": 5,
         "headers.id": id,
         "headers.modified": deps.dateString(),
         [`trace.${traceService}.${traceDomain}`]: traceTxIds,
@@ -197,21 +205,25 @@ describe("View store put", () => {
     });
     expect(fnFake).to.have.been.calledWith({ a: 1 });
     expect(formatFake).to.have.been.calledWith({
-      body: writeResultBody,
+      body: { g: { m: { n: 10 } }, h: 40, k: 4 },
       id: writeResultId,
-      updates:
-        "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
     });
     expect(statusFake).to.have.been.calledWith(200);
     expect(sendFake).to.have.been.calledWith({
-      ...formattedWriteResult,
-      headers: {
-        id: writeResultId,
-        context: writeResultContext,
-        trace: [trace1, trace2],
-        groups: writeResultGroups,
-        created: writeResultCreated,
-        modified: writeResultModified,
+      view: {
+        ...formattedWriteResult,
+        headers: {
+          id: writeResultId,
+          context: writeResultContext,
+          trace: [trace1, trace2],
+          groups: writeResultGroups,
+          created: writeResultCreated,
+          modified: writeResultModified,
+        },
+      },
+      keys: {
+        "g.m.n": 10,
+        h: 40,
       },
     });
   });
@@ -289,15 +301,18 @@ describe("View store put", () => {
     });
     expect(statusFake).to.have.been.calledWith(200);
     expect(sendFake).to.have.been.calledWith({
-      ...formattedWriteResult,
-      headers: {
-        id: writeResultId,
-        context: writeResultContext,
-        trace: [trace1, trace2],
-        groups: writeResultGroups,
-        created: writeResultCreated,
-        modified: writeResultModified,
+      view: {
+        ...formattedWriteResult,
+        headers: {
+          id: writeResultId,
+          context: writeResultContext,
+          trace: [trace1, trace2],
+          groups: writeResultGroups,
+          created: writeResultCreated,
+          modified: writeResultModified,
+        },
       },
+      keys: {},
     });
   });
   it("should call with the correct params with no write result", async () => {
