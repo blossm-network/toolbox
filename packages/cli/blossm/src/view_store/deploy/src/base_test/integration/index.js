@@ -106,8 +106,7 @@ describe("View store base integration tests", () => {
 
     expect(response0.statusCode).to.equal(200);
     if (key) {
-      //TODO
-      console.log({ k: response0.body });
+      expect(JSON.parse(response0.body).keys).to.exist;
     }
 
     if (group) {
