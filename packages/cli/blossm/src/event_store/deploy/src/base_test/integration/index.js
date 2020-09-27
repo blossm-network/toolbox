@@ -277,9 +277,10 @@ describe("Event store integration tests", () => {
 
     const beforeDate = dateString();
     ///Test block limit
-    const eventData = [];
-    for (let i = 0; i < 150; i++) {
-      eventData.push({
+    const eventData1 = [];
+    const eventData2 = [];
+    for (let i = 0; i < 100; i++) {
+      eventData1.push({
         event: {
           headers: {
             root: uuid(),
@@ -296,37 +297,36 @@ describe("Event store integration tests", () => {
         },
       });
     }
-    const r = await request.post(url, {
-      body: {
-        eventData,
-      },
-    });
-
-    //TODO
-    console.log({
-      data: {
-        headers: {
-          root: uuid(),
-          topic,
-          idempotency: uuid(),
-          created: beforeDate,
-          version,
-          action: example1.action,
-          domain,
-          service,
-          network: process.env.NETWORK,
+    for (let i = 0; i < 50; i++) {
+      eventData2.push({
+        event: {
+          headers: {
+            root: uuid(),
+            topic,
+            idempotency: uuid(),
+            created: beforeDate,
+            version,
+            action: example1.action,
+            domain,
+            service,
+            network: process.env.NETWORK,
+          },
+          payload: example1.payload,
         },
-        payload: example1.payload,
+      });
+    }
+    await request.post(url, {
+      body: {
+        eventData: eventData1,
       },
     });
-
-    //TODO
-    console.log({ r: JSON.parse(r.body) });
+    await request.post(url, {
+      body: {
+        eventData: eventData2,
+      },
+    });
 
     const bigBlockResponse = await request.post(`${url}/create-block`);
-
-    //TODO
-    console.log({ bigBlockResponse });
 
     expect(bigBlockResponse.statusCode).to.equal(200);
     const parsedBigBlockBody = JSON.parse(bigBlockResponse.body);
