@@ -18,6 +18,7 @@
     "@blossm/fact-rpc": "^0.0.142",
     "@blossm/role-permissions": "^0.0.26",
     "@blossm/uuid": "^0.0.6",
+    "@blossm/redis": "*",
     "yaml": "^1.7.0"
   },
   "devDependencies": {

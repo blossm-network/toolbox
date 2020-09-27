@@ -28,9 +28,8 @@ module.exports = ({ token }) => async ({ root, secret }) => {
       },
       principal: key.principal,
       scene: key.scene,
-      //TODO either shouldnt be optional, or should be removed
       ...(key.domain && {
-        [key.domain.domain]: {
+        [key.domain.name]: {
           root: key.domain.root,
           service: key.domain.service,
           network: key.domain.network,

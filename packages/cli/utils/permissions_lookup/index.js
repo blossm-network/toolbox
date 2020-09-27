@@ -4,6 +4,7 @@ const { promisify } = require("util");
 const fact = require("@blossm/fact-rpc");
 const rolePermissions = require("@blossm/role-permissions");
 const uuid = require("@blossm/uuid");
+const redis = require("@blossm/redis");
 const { forbidden } = require("@blossm/errors");
 const nodeExternalToken = require("@blossm/node-external-token");
 
@@ -13,6 +14,9 @@ const unlinkAsync = promisify(unlink);
 
 let defaultRoles;
 
+const cacheKeyPrefix = "_permissions";
+const FIVE_MINUTES_IN_SECONDS = 60 * 5;
+
 module.exports = ({ downloadFileFn }) => async ({
   internalTokenFn,
   externalTokenFn,
@@ -21,8 +25,14 @@ module.exports = ({ downloadFileFn }) => async ({
 }) => {
   if (!principal) throw forbidden.message("Missing required permissions.");
 
+  const cacheKey = `${cacheKeyPrefix}.${principal.root}.${principal.service}.${principal.network}`;
+
+  //Lookup permissions in cache. If found, use them.
+  let { permissions: cachedPermissions } =
+    (await redis.readObject(cacheKey)) || {};
+  if (cachedPermissions) return cachedPermissions;
+
   //Download files if they aren't downloaded already.
-  //TODO cache for ~5 mins
   if (!defaultRoles) {
     const fileName = uuid();
     const extension = ".yaml";
@@ -60,7 +70,7 @@ module.exports = ({ downloadFileFn }) => async ({
     })
     .read();
 
-  return await rolePermissions({
+  const permissions = await rolePermissions({
     roles,
     defaultRoles,
     context,
@@ -86,4 +96,11 @@ module.exports = ({ downloadFileFn }) => async ({
       return permissions;
     },
   });
+
+  await redis.writeObject(cacheKey, {
+    permissions,
+  });
+  await redis.setExpiry({ key: cacheKey, FIVE_MINUTES_IN_SECONDS });
+
+  return permissions;
 };

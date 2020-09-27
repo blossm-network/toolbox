@@ -331,12 +331,6 @@ describe("Event store integration tests", () => {
     expect(bigBlockResponse.statusCode).to.equal(200);
     const parsedBigBlockBody = JSON.parse(bigBlockResponse.body);
     expect(parsedBigBlockBody.headers.sCount).to.equal(150);
-
-    //TODO remove.
-    // const anotherBlockResponse = await request.post(`${url}/create-block`);
-    // expect(anotherBlockResponse.statusCode).to.equal(200);
-    // const parsedAnotherBlockBody = JSON.parse(anotherBlockResponse.body);
-    // expect(parsedAnotherBlockBody.headers.sCount).to.equal(50);
   });
   it("should return successfully adding two events together", async () => {
     const root = uuid();

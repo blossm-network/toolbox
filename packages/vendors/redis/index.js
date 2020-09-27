@@ -24,4 +24,10 @@ module.exports = {
           )
         )
       : fallbackObjectCache[key],
+  setExpiry: ({ key, seconds }) =>
+    client
+      ? new Promise((resolve, reject) => {
+          client.expire(key, seconds, (err) => (err ? reject(err) : resolve()));
+        })
+      : fallbackObjectCache[key],
 };

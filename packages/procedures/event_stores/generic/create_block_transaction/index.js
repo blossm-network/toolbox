@@ -90,7 +90,7 @@ module.exports = ({
     updatedBefore: end,
     //If the previous block was full, the last item of the previous block will be played again, but wont be saved
     //because aggregate.events.length will be 0.
-    //TODO find a way to unit test. This is integration tested though.
+    //If ever uncomment next line, find a way to unit test. This is integration tested though.
     // limit: blockLimit,
     reverse: true,
     fn: async ({ root, updated }) => {

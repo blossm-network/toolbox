@@ -19,7 +19,7 @@ replace(deps, "redis", {
   createClient: createClientFake,
 });
 
-const { writeObject, readObject } = require("..");
+const { writeObject, readObject, setExpiry } = require("..");
 
 //TODO improve this test
 describe("Cache", () => {
@@ -38,5 +38,8 @@ describe("Cache", () => {
 
     const result = await readObject(key);
     expect(result).to.equal(value);
+
+    await setExpiry(key);
+    expect(1).to.equal(1);
   });
 });
