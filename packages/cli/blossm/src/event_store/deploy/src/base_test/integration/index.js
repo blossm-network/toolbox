@@ -319,6 +319,7 @@ describe("Event store integration tests", () => {
         payload: example1.payload,
       },
     });
+
     //TODO
     console.log({ r: JSON.parse(r.body) });
 
