@@ -9,9 +9,11 @@ const value = { some: "value" };
 const hmsetFake = stub().yields(null);
 const hgetallFake = stub().yields(null, value);
 const onFake = fake();
+const expireFake = stub().yields(null);
 const createClientFake = fake.returns({
   hmset: hmsetFake,
   hgetall: hgetallFake,
+  expire: expireFake,
   on: onFake,
 });
 
@@ -21,7 +23,6 @@ replace(deps, "redis", {
 
 const { writeObject, readObject, setExpiry } = require("..");
 
-//TODO improve this test
 describe("Cache", () => {
   afterEach(() => {
     restore();
@@ -38,8 +39,11 @@ describe("Cache", () => {
 
     const result = await readObject(key);
     expect(result).to.equal(value);
+    expect(hgetallFake).to.have.been.calledWith(key);
 
-    await setExpiry(key);
+    const seconds = 2;
+    await setExpiry({ key, seconds });
+    expect(expireFake).to.have.been.calledWith(key, seconds);
     expect(1).to.equal(1);
   });
 });
