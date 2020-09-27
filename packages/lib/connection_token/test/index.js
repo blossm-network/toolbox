@@ -40,9 +40,13 @@ describe("Connection token", () => {
         token,
         exp,
       });
+
+    const setExpiryFake = fake();
+
     replace(deps, "redis", {
       writeObject: writeObjectFake,
       readObject: readObjectFake,
+      setExpiry: setExpiryFake,
     });
     const result = await connectionToken({
       credentialsFn: credentialsFnFake,
@@ -103,9 +107,11 @@ describe("Connection token", () => {
       token,
       exp: expiredExp,
     });
+    const setExpiryFake = fake();
     replace(deps, "redis", {
       writeObject: writeObjectFake,
       readObject: readObjectFake,
+      setExpiry: setExpiryFake,
     });
     const result = await connectionToken({
       credentialsFn: credentialsFnFake,
@@ -128,10 +134,12 @@ describe("Connection token", () => {
     replace(deps, "basicToken", basicTokenFake);
     const credentialsFnFake = fake.returns({ root, secret });
     const writeObjectFake = fake();
-    const readObjectFake = fake.returns();
+    const readObjectFake = fake();
+    const setExpiryFake = fake();
     replace(deps, "redis", {
       writeObject: writeObjectFake,
       readObject: readObjectFake,
+      setExpiry: setExpiryFake,
     });
     const result = await connectionToken({
       credentialsFn: credentialsFnFake,

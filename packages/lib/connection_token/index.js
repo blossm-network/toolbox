@@ -1,6 +1,8 @@
 const deps = require("./deps");
 
 const cacheKeyPrefix = "_cToken";
+const WEEK_IN_SECONDS = 604800;
+
 module.exports = ({ credentialsFn }) => async ({ network, key }) => {
   const cacheKey = `${cacheKeyPrefix}.${network}.${key}`;
   let { token, exp } = (await deps.redis.readObject(cacheKey)) || {};
@@ -40,6 +42,9 @@ module.exports = ({ credentialsFn }) => async ({ network, key }) => {
       exp,
     });
   }
+  await deps.redis.setExpiry(cacheKey, {
+    seconds: WEEK_IN_SECONDS,
+  });
 
   return {
     token,

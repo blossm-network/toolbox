@@ -96,7 +96,7 @@ module.exports = ({ downloadFileFn }) => async ({
   await redis.writeObject(cacheKey, {
     permissions,
   });
-  await redis.setExpiry({ key: cacheKey, FIVE_MINUTES_IN_SECONDS });
+  await redis.setExpiry(cacheKey, { FIVE_MINUTES_IN_SECONDS });
 
   return permissions;
 };

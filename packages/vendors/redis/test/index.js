@@ -42,7 +42,7 @@ describe("Cache", () => {
     expect(hgetallFake).to.have.been.calledWith(key);
 
     const seconds = 2;
-    await setExpiry({ key, seconds });
+    await setExpiry(key, { seconds });
     expect(expireFake).to.have.been.calledWith(key, seconds);
     expect(1).to.equal(1);
   });
