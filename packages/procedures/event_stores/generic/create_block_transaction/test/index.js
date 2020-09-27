@@ -274,7 +274,7 @@ describe("Event store create block transaction", () => {
       updatedOnOrAfter: previousEnd,
       updatedBefore: deps.dateString(),
       parallel: 10,
-      limit: 100,
+      // limit: 100,
       reverse: true,
       fn: match(() => true),
     });
@@ -422,9 +422,9 @@ describe("Event store create block transaction", () => {
           domain,
           key: Buffer.from(publicKey).toString("base64"),
         },
-        events: encodedAllEventPairs,
-        snapshots: encodedSnapshotPairs,
-        txs: encodedTxPairs,
+        // events: encodedAllEventPairs,
+        // snapshots: encodedSnapshotPairs,
+        // txs: encodedTxPairs,
       },
       transaction,
     });
@@ -572,7 +572,7 @@ describe("Event store create block transaction", () => {
       updatedOnOrAfter: previousEnd,
       updatedBefore: deps.dateString(),
       parallel: 10,
-      limit: 100,
+      // limit: 100,
       reverse: true,
       fn: match(() => true),
     });
@@ -716,9 +716,9 @@ describe("Event store create block transaction", () => {
           domain,
           key: Buffer.from(publicKey).toString("base64"),
         },
-        events: encodedAllEventPairs,
-        txs: encodedTxPairs,
-        snapshots: encodedSnapshotPairs,
+        // events: encodedAllEventPairs,
+        // txs: encodedTxPairs,
+        // snapshots: encodedSnapshotPairs,
       },
     });
   });
@@ -811,7 +811,7 @@ describe("Event store create block transaction", () => {
       updatedOnOrAfter: date.toISOString(),
       updatedBefore: deps.dateString(),
       parallel: 10,
-      limit: 100,
+      // limit: 100,
       reverse: true,
       fn: match(() => true),
     });
@@ -871,9 +871,9 @@ describe("Event store create block transaction", () => {
           domain,
           key: Buffer.from(publicKey).toString("base64"),
         },
-        events: encodedAllEventPairs,
-        snapshots: encodedSnapshotPairs,
-        txs: encodedTxPairs,
+        // events: encodedAllEventPairs,
+        // snapshots: encodedSnapshotPairs,
+        // txs: encodedTxPairs,
       },
       transaction,
     });
@@ -1014,7 +1014,7 @@ describe("Event store create block transaction", () => {
       updatedOnOrAfter: previousEnd,
       updatedBefore: deps.dateString(),
       parallel: 10,
-      limit: 100,
+      // limit: 100,
       reverse: true,
       fn: match(() => true),
     });
@@ -1145,9 +1145,9 @@ describe("Event store create block transaction", () => {
           domain,
           key: Buffer.from(publicKey).toString("base64"),
         },
-        events: encodedAllEventPairs,
-        snapshots: encodedSnapshotPairs,
-        txs: encodedTxPairs,
+        // events: encodedAllEventPairs,
+        // snapshots: encodedSnapshotPairs,
+        // txs: encodedTxPairs,
       },
       transaction,
     });

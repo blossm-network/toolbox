@@ -1,6 +1,6 @@
 const deps = require("./deps");
 
-const blockLimit = 100;
+// const blockLimit = 100;
 
 //TODO store the merkle proofs elsewhere for O(log(n)) verification. Not important now.
 module.exports = ({
@@ -91,7 +91,7 @@ module.exports = ({
     //If the previous block was full, the last item of the previous block will be played again, but wont be saved
     //because aggregate.events.length will be 0.
     //TODO find a way to unit test. This is integration tested though.
-    limit: blockLimit,
+    // limit: blockLimit,
     reverse: true,
     fn: async ({ root, updated }) => {
       const aggregate = await aggregateFn(root, { includeEvents: true });
@@ -228,7 +228,7 @@ module.exports = ({
     created: deps.dateString(),
     number: previousBlock.headers.number + 1,
     start: previousBlock.headers.end,
-    end: sCount == blockLimit ? lastRootEnd : end,
+    end, //: sCount == blockLimit ? lastRootEnd : end,
     eCount: allStringifiedEventPairs.length,
     sCount,
     tCount: stringifiedTxPairs.length,
@@ -251,9 +251,9 @@ module.exports = ({
     signature: signedBlockHeadersHash,
     hash: blockHeadersHash,
     headers: blockHeaders,
-    events: encodedAllEvents,
-    snapshots: encodedSnapshots,
-    txs: encodedTxs,
+    // events: encodedAllEvents,
+    // snapshots: encodedSnapshots,
+    // txs: encodedTxs,
   };
 
   const block = await saveBlockFn({
