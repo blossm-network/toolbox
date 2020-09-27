@@ -304,6 +304,9 @@ describe("Event store integration tests", () => {
 
     const bigBlockResponse = await request.post(`${url}/create-block`);
 
+    //TODO
+    console.log({ json: JSON.stringify(bigBlockResponse) });
+
     expect(bigBlockResponse.statusCode).to.equal(200);
     const parsedBigBlockBody = JSON.parse(bigBlockResponse.body);
     expect(parsedBigBlockBody.headers.sCount).to.equal(150);
