@@ -12,8 +12,6 @@ const readFileAsync = promisify(readFile);
 const readDirAsync = promisify(readdir);
 const unlinkAsync = promisify(unlink);
 
-let defaultRoles;
-
 const cacheKeyPrefix = "_permissions";
 const FIVE_MINUTES_IN_SECONDS = 60 * 5;
 
@@ -33,27 +31,25 @@ module.exports = ({ downloadFileFn }) => async ({
   if (cachedPermissions) return cachedPermissions;
 
   //Download files if they aren't downloaded already.
-  if (!defaultRoles) {
-    const fileName = uuid();
-    const extension = ".yaml";
-    defaultRoles = {};
-    await downloadFileFn({ fileName, extension });
-    const files = (await readDirAsync(".")).filter(
-      (file) => file.startsWith(fileName) && file.endsWith(extension)
-    );
+  const fileName = uuid();
+  const extension = ".yaml";
+  let defaultRoles = {};
+  await downloadFileFn({ fileName, extension });
+  const files = (await readDirAsync(".")).filter(
+    (file) => file.startsWith(fileName) && file.endsWith(extension)
+  );
 
-    await Promise.all(
-      files.map(async (file) => {
-        const role = await readFileAsync(file);
-        const defaultRole = yaml.parse(role.toString());
-        defaultRoles = {
-          ...defaultRoles,
-          ...defaultRole,
-        };
-        await unlinkAsync(file);
-      })
-    );
-  }
+  await Promise.all(
+    files.map(async (file) => {
+      const role = await readFileAsync(file);
+      const defaultRole = yaml.parse(role.toString());
+      defaultRoles = {
+        ...defaultRoles,
+        ...defaultRole,
+      };
+      await unlinkAsync(file);
+    })
+  );
 
   const { body: roles } = await fact({
     name: "roles",
