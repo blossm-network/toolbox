@@ -21,6 +21,7 @@ module.exports = (req, res) => {
       key: req.query.key,
     }),
     ...(!process.env.CONTEXT &&
+      req.query.context &&
       req.query.context.principal && {
         principal: {
           root: req.query.context.principal.root,
