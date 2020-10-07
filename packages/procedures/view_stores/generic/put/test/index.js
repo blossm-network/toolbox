@@ -133,6 +133,8 @@ describe("View store put", () => {
     expect(formatFake).to.have.been.calledWith({
       body: writeResultBody,
       id: writeResultId,
+      created: writeResultCreated,
+      modified: writeResultModified,
     });
     expect(statusFake).to.have.been.calledWith(200);
     expect(sendFake).to.have.been.calledWith({
@@ -206,6 +208,8 @@ describe("View store put", () => {
     expect(formatFake).to.have.been.calledWith({
       body: { g: { m: [{ n: 10 }, { n: 11 }] } },
       id: writeResultId,
+      created: writeResultCreated,
+      modified: writeResultModified,
     });
     expect(statusFake).to.have.been.calledWith(200);
     expect(sendFake).to.have.been.calledWith({
@@ -300,6 +304,8 @@ describe("View store put", () => {
     expect(formatFake).to.have.been.calledWith({
       body: { g: 10 },
       id: writeResultId,
+      created: writeResultCreated,
+      modified: writeResultModified,
     });
     expect(statusFake).to.have.been.calledWith(200);
     expect(sendFake).to.have.been.calledWith({

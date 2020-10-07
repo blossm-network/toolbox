@@ -154,7 +154,8 @@ module.exports = ({
         ...formatFn({
           body: r.body,
           id: r.headers.id,
-          updates,
+          created: r.headers.created,
+          modified: r.headers.modified,
         }),
         headers: {
           trace: formattedTrace,

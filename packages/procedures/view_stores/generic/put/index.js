@@ -88,6 +88,8 @@ module.exports = ({ writeFn, formatFn, updateFn = defaultFn, updateKey }) => {
         ...formatFn({
           body: newView.body,
           id: newView.headers.id,
+          created: newView.headers.created,
+          modified: newView.headers.modified,
         }),
         headers: {
           id: newView.headers.id,

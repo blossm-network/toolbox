@@ -12,6 +12,8 @@ const txId0 = "some-tx-id0";
 const txId1 = "some-tx-id1";
 const txId2 = "some-tx-id2";
 const id = "some-id";
+const created = "some-created";
+const modified = "some-modified";
 const foundContext = "some-found-context";
 
 const envContext = "some-env-context";
@@ -53,7 +55,7 @@ describe("View store get", () => {
     for (let i = 0; i < 100; i++) {
       results.push({
         body: obj,
-        headers: { id, context: foundContext },
+        headers: { id, created, modified, context: foundContext },
         trace: {
           "some-service": { "some-domain": [txId0] },
           "some-other-service": { "some-other-domain": [txId1] },
@@ -131,8 +133,8 @@ describe("View store get", () => {
       expect(formatFake.getCall(i)).to.have.been.calledWith({
         body: results[i].body,
         id: results[i].headers.id,
-        updates:
-          "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
+        created,
+        modified,
       });
     }
     expect(sendFake).to.have.been.calledWith({
@@ -161,7 +163,7 @@ describe("View store get", () => {
           ...obj,
           "some-other-query-key": { a: { b: 2 } },
         },
-        headers: { id, context: foundContext },
+        headers: { id, created, modified, context: foundContext },
         trace: {
           "some-service": { "some-domain": [txId0] },
           "some-other-service": { "some-other-domain": [txId1] },
@@ -271,8 +273,8 @@ describe("View store get", () => {
       expect(formatFake.getCall(i)).to.have.been.calledWith({
         body: results[i].body,
         id: results[i].headers.id,
-        updates:
-          "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bnetwork%5D=some-env-network&query%5Bkey%5D=2&query%5Bprincipal%5D=some-context-principal-root",
+        created,
+        modified,
       });
     }
     expect(sendFake).to.have.been.calledWith({
@@ -364,7 +366,7 @@ describe("View store get", () => {
     const findFake = fake.returns([
       {
         body: obj,
-        headers: { id, context: foundContext },
+        headers: { id, created, modified, context: foundContext },
         trace: {
           "some-service": { "some-domain": [txId0] },
           "some-other-service": { "some-other-domain": [txId1] },
@@ -440,8 +442,8 @@ describe("View store get", () => {
     expect(formatFake.getCall(0)).to.have.been.calledWith({
       body: obj,
       id,
-      updates:
-        "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
+      created,
+      modified,
     });
     expect(formatFake).to.have.been.calledOnce;
     expect(sendFake).to.have.been.calledWith({
@@ -465,7 +467,7 @@ describe("View store get", () => {
     const findFake = fake.returns([
       {
         body: obj,
-        headers: { id, context: foundContext },
+        headers: { id, created, modified, context: foundContext },
         trace: {
           "some-service": { "some-domain": [txId0] },
           "some-other-service": { "some-other-domain": [txId1] },
@@ -533,15 +535,19 @@ describe("View store get", () => {
     expect(formatFake.getCall(0)).to.have.been.calledWith({
       body: obj,
       id,
-      updates:
-        "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
+      created,
+      modified,
     });
     expect(formatFake).to.have.been.calledOnce;
     expect(sendFake).to.have.been.calledWith({
       content: [
         {
           ...formattedResult,
-          headers: { id, context: foundContext, trace: [txId0, txId1] },
+          headers: {
+            id,
+            context: foundContext,
+            trace: [txId0, txId1],
+          },
         },
       ],
       updates:
@@ -555,6 +561,8 @@ describe("View store get", () => {
         body: obj,
         headers: {
           id,
+          created,
+          modified,
           context: foundContext,
         },
         trace: {
@@ -612,8 +620,8 @@ describe("View store get", () => {
     expect(formatFake.getCall(0)).to.have.been.calledWith({
       body: obj,
       id,
-      updates:
-        "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
+      created,
+      modified,
     });
     expect(formatFake).to.have.been.calledOnce;
     expect(sendFake).to.have.been.calledWith({
@@ -632,7 +640,7 @@ describe("View store get", () => {
     const findFake = fake.returns([
       {
         body: obj,
-        headers: { id, context: foundContext },
+        headers: { id, created, modified, context: foundContext },
         trace: {
           "some-service": { "some-domain": [txId0] },
           "some-other-service": { "some-other-domain": [txId1] },
@@ -696,8 +704,8 @@ describe("View store get", () => {
     expect(formatFake).to.have.been.calledWith({
       body: obj,
       id,
-      updates:
-        "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
+      created,
+      modified,
     });
     expect(sendFake).to.have.been.calledWith({
       content: {
@@ -712,7 +720,7 @@ describe("View store get", () => {
     const findFake = fake.returns([
       {
         body: obj,
-        headers: { id, context: foundContext },
+        headers: { id, created, modified, context: foundContext },
         trace: {
           "some-service": { "some-domain": [txId0] },
           "some-other-service": { "some-other-domain": [txId1] },
@@ -779,8 +787,8 @@ describe("View store get", () => {
     expect(formatFake).to.have.been.calledWith({
       body: obj,
       id,
-      updates:
-        "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
+      created,
+      modified,
     });
     expect(sendFake).to.have.been.calledWith({
       content: {
@@ -795,7 +803,7 @@ describe("View store get", () => {
     const findFake = fake.returns([
       {
         body: obj,
-        headers: { id, context: foundContext },
+        headers: { id, created, modified, context: foundContext },
         trace: {
           "some-service": { "some-domain": [txId0] },
           "some-other-service": { "some-other-domain": [txId1] },
@@ -866,8 +874,8 @@ describe("View store get", () => {
     expect(formatFake).to.have.been.calledWith({
       body: obj,
       id,
-      updates:
-        "https://updates.some-core-network/channel?query%5Bname%5D=some-env-name&query%5Bcontext%5D=some-env-context&query%5Bnetwork%5D=some-env-network",
+      created,
+      modified,
     });
     expect(sendFake).to.have.been.calledWith({
       content: {
