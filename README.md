@@ -10,7 +10,7 @@ Blossm does this with 8 types of procedures, all of which can be run as lambda f
 
 #### On the write side:
 
-* __Event Store__ - Deployed to log events with a shared schema. Events that share a `root` refer to the same entity, and can be aggregated to determine the state of that entity at any point in time. Event Store's connect to a Collection in a MongoDB Atlas instance. 
+* `__Event Store__` - Deployed to log events with a shared schema. Events that share a `root` refer to the same entity, and can be aggregated to determine the state of that entity at any point in time. Event Store's connect to a Collection in a MongoDB Atlas instance. 
 
 * __Command__ - Deployed to do a single-purpose job on-demand which has the oportunity to log events throughout it's execution. Commands can call other commands.
 
