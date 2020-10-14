@@ -95,6 +95,10 @@ TODO
 
 ## Setup 
 
+## Table of Contents
+1. [GCP](#gcp)
+1. [Others](#others)
+
 ### GCP 
 
 Below are instructions for how to orchestrate your Blossm procedures on Google's Cloud Run serverless infrastructure. Each GCP Organization corresponds to a `network`, and each GCP project within that network corresponds to an environment. The `production` environment is required, but feel free to skip setting up `development`, `staging`, and `sandbox`, if you don't yet need them.
@@ -110,6 +114,10 @@ Within each GCP project, you'll be using:
 * __Cloud IAM__ to manage permissions and create Service Accounts.
 * __Cloud Scheduler__ to schedule commands to be executed later.
 
+
+### Others
+
+Only a GCP adapter is currently implemented. If other's are needed, I'd be happy to support their development.
 
 ---
 ... documentation to be continued ...
