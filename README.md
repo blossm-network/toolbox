@@ -56,7 +56,7 @@ Non-`production` gateways are addressed with a network prefix of `.dev | .stg | 
 
 ### Read-side organization
 
-Functionality is organized in 2 layers that are based on permissions. The way these layers work are slightly different from how the read-side works.
+Functionality is organized in 2 layers that are based on permissions. The way these layers work are slightly different from how the read-side works, although the nesting structure is similar. 
 
 * `context` - Without going into the specifics of how permissions work, note that requests are made to `view-gateways` with a cookie containing a JWT token with information about the `contexts` that are accessible. `view-stores` can be placed in a `context` if it can only be accessed by tokens that have that `context` specified.
 
@@ -78,3 +78,6 @@ Again, non-`production` gateways are addressed with a network prefix of `.dev | 
 ---
 
 ... documentation to be continued ...
+
+### Anatomy of an Event
+### Life of an Event
