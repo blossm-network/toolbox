@@ -94,6 +94,12 @@ TODO
 
 ## Setup 
 
+If you already use Node, The only thing you'll have to install is the Blossm CLI tool which makes it easy to spin up procedures, run tests, deploy to any environment, replay events over projections, and manage various other details of your application.
+
+```javascript
+npm install -g @blossm/cli
+```
+
 1. [GCP](#gcp)
 2. [Others](#others)
 

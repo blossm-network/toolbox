@@ -37,7 +37,7 @@ const create = async (input) => {
 module.exports = async (args) => {
   const input = await normalize({
     entrypointType: "dir",
-    default: "blossm",
+    entrypointDefault: "blossm",
     args,
   });
 
