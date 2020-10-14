@@ -34,11 +34,11 @@ On the read side:
 
 Functionality is organized in 3 layers that outline how to configure procedures, and are named by the application designer.
 
-* `<domain>` - Each `domain` has one `event-store` and can have one `command-gateway` to allow external access to it's `commands`.
+* `domain` - Each `domain` has one `event-store` and can have one `command-gateway` to allow external access to it's `commands`.
 
-* `<service>` - Each `service` is made up of any number of interdependant `domains`, meaning any `commands` from within a `service` can freely log events to any of it's `event-stores`. `services` can also depend on functionality from other `services` unidirectionally.
+* `service` - Each `service` is made up of any number of interdependant `domains`, meaning any `commands` from within a `service` can freely log events to any of it's `event-stores`. `services` can also depend on functionality from other `services` unidirectionally.
 
-* `<network>` - Each network is made up of any number of `services` who's `commands` can call each other directly without a gateway. The network can have up to 4 environments: `development`, `staging`, `sandbox`, and `production`.
+* `network` - Each network is made up of any number of `services` who's `commands` can call each other directly without a gateway. The network can have up to 4 environments: `development`, `staging`, `sandbox`, and `production`.
 
 ![alt text](/imgs/write-layers.png "Write organizational layers")
 
@@ -58,15 +58,15 @@ Non-`production` gateways are addressed with a network prefix of `.dev | .stg | 
 
 Functionality is organized in 2 layers that are based on permissions. The way these layers work are slightly different from how the read-side works.
 
-* `<context>` - Without going into the specifics of how permissions work, note that requests are made to `view-gateways` with a cookie containing a JWT token with information about the `contexts` that are accessible. `view-stores` can be placed in a `context` if it can only be accessed by tokens that have that `context` specified.
+* `context` - Without going into the specifics of how permissions work, note that requests are made to `view-gateways` with a cookie containing a JWT token with information about the `contexts` that are accessible. `view-stores` can be placed in a `context` if it can only be accessed by tokens that have that `context` specified.
 
-* `<network>` - This is the same network as the write-side.
+* `network` - This is the same `network` as the write-side.
 
 ![alt text](/imgs/read-layers.png "Read organizational layers")
 
 In the example above, the `home-feed` and `search-feed` stores are accessible by any token, and the `history` and `profile` stores are only accessible to a token containing an `account` context.
 
-`view-gateways` are addressed by `v.<context>.<network>`, so in the above examples the views would be accessible at:
+`view-gateways` are addressed by `v(.<context>)?.<network>`, so in the above examples the views would be accessible at:
 
 * `v.youtube.com/home-feed`
 * `v.youtube.com/search-feed`
