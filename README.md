@@ -30,7 +30,7 @@ On the read side:
 
 ### Write-side Organization
 
-Functionality is organized in 3 layers that outline how to configure procedures, and are named according to the design of the application being designed.
+Functionality is organized in 3 subset layers that outline how to configure procedures, and are named by the application designer.
 
 * `<domain>` - Each `domain` has one `event-store` and can have one `command-gateway` to allow external access to it's `command`s.
 
@@ -38,11 +38,15 @@ Functionality is organized in 3 layers that outline how to configure procedures,
 
 * `<network>` - Each network is made up of any number of `service`s who's `command`s can call each other directly without a gateway. The network can have up to 4 environments: `development`, `staging`, `sandbox`, and `production`.
 
-`command-gateway`s are addressed by `c.<domain>.<service>.<network>`
+![alt text](/imgs/layers.png "Layers")
+
+`command-gateway`s are addressed by `c.<domain>.<service>.<network>`, so in the above example the commands would be accessible at:
+
+* `c.video.content.youtube.com/upload`
+* `c.video.content.youtube.com/change-visibility`
+* `c.video.content.youtube.com/finish-viewing`
+* etc.
+
 `fact-gateway`s are addressed by `f.<domain>.<service>.<network>`
 
 Non-`production` gateways are addressed with a network prefix of `.dev | .stg | .snd`.
-
-Here's a simple visualization of the mapping:
-
-![alt text](/imgs/layers.png "Layers")
