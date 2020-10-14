@@ -11,10 +11,8 @@
  */
 
 module.exports = {
-  "some-action": (state, payload) => {
-    return {
-      ...state,
-      ...payload,
-    };
-  },
+  "some-action": (state, payload) => ({
+    ...state,
+    ...payload,
+  }),
 };
