@@ -51,9 +51,15 @@ module.exports = ({ domain, dir, customActionSuggestions }) => async (args) => {
           Running unit and integration tests remotely, 
           and printing the integration test logs from each server.
 
-       • \`blossm test\`: Running unit tests locally.
+       • \`blossm test\` 
+         Running unit tests locally.
+       ${
+         customActionSuggestions
+           ? `
 
-       ${customActionSuggestions}
+       ${customActionSuggestions}`
+           : ""
+       }
        `
     )
   );
