@@ -1,3 +1,11 @@
+# Blossm
+
+## Table of Contents
+1. [Overview](#overview)
+2. [Setup](#setup)
+
+## Overview
+
 ### Blossm is a javascript Event Sourcing CQRS orchestrator. 
 
 CQRS is an Event Sourcing software architecture pattern where the write and read responsibilites are organized around seperate data stores. 
@@ -75,10 +83,15 @@ In the example above, the `home-feed` and `search-feed` stores are accessible by
 
 Again, non-`production` gateways are addressed with a network prefix of `.dev | .stg | .snd`.
 
----
-
-... documentation to be continued ...
-
 ### Anatomy of an Event
+TODO
 
 ### Life of an Event
+TODO
+
+## Overview
+
+TODO
+
+---
+... documentation to be continued ...
