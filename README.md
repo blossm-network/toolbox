@@ -40,13 +40,13 @@ Functionality is organized in 3 subset layers that outline how to configure proc
 
 ![alt text](/imgs/layers.png "Layers")
 
-`command-gateway`s are addressed by `c.<domain>.<service>.<network>`, so in the above example the commands would be accessible at:
+`command-gateways` are addressed by `c.<domain>.<service>.<network>`, so in the above examples the commands would be accessible at:
 
 * `c.video.content.youtube.com/upload`
 * `c.video.content.youtube.com/change-visibility`
 * `c.video.content.youtube.com/finish-viewing`
 * etc.
 
-`fact-gateway`s are addressed by `f.<domain>.<service>.<network>`
+`fact-gateways` are addressed by `f.<domain>.<service>.<network>`
 
 Non-`production` gateways are addressed with a network prefix of `.dev | .stg | .snd`.
