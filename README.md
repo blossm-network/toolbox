@@ -1,6 +1,6 @@
 ### Blossm is a javascript Event Sourcing CQRS orchestrator. 
 
-CQRS is a Event Sourcing software architecture pattern where the write and read responsibilites are organized around seperate data stores. 
+CQRS is an Event Sourcing software architecture pattern where the write and read responsibilites are organized around seperate data stores. 
 The write side takes a request, performs a routine, and optionally logs some events with metadata to a store, thus modifying the state of the app forever — the event stores meant to be immutable. 
 The read side listens for logged events and uses their metadata to write to any number of denormalized view stores to be queried, and which can be destroyed and recreated at any time based on the event log. 
 
@@ -8,35 +8,35 @@ Blossm does this with 8 types of procedures, all of which can be run as lambda f
 
 On the write side:
 
-* `event-store` - Deployed to log events with a shared schema. Events that share a `root` refer to the same entity, and can be aggregated to determine the state of that entity at any point in time. `event-store`s connect to a Collection in a MongoDB Atlas instance. 
+* `event-store` - Deployed to log events with a shared schema. Events that share a `root` refer to the same entity, and can be aggregated to determine the state of that entity at any point in time. `event-stores` connect to a Collection in a MongoDB Atlas instance. 
 
 * `command` - Deployed to do a single-purpose job on-demand which has the oportunity to log events throughout it's execution. Commands can call other commands.
 
 * `fact` - Deployed to deliver some specic information about the state of the app.
 
-* `command-gateway` - Deployed to permit access to a set of `command`s under specified conditions.
+* `command-gateway` - Deployed to permit access to a set of `commands` under specified conditions.
 
-* `fact-gateway` - Deployed to permit access to a set of `fact`s under specified conditions.
+* `fact-gateway` - Deployed to permit access to a set of `facts` under specified conditions.
 
 
 On the read side:
 
-* `view-store` - Deployed to store denormalized data that is intended to be queried. `view-store`s connects to a Collection in a MongoDB Atlas.
+* `view-store` - Deployed to store denormalized data that is intended to be queried. `view-stores` connects to a Collection in a MongoDB Atlas.
 
-* `projection` - Deployed to listen for Events and map their data to a `view-store`. If the projection is changed, it can be replayed on-demand using a CLI, which will update the `view-store` with the most recent mapping.
+* `projection` - Deployed to listen for Events and map their data to a `view-stores`. If the projection is changed, it can be replayed on-demand using a CLI, which will update the `view-stores` with the most recent mapping.
 
-* `view-gateway` - Deployed to permit access to a set of `view-store`s under specified conditions.
+* `view-gateway` - Deployed to permit access to a set of `view-stores` under specified conditions.
 
 
 ### Write-side Organization
 
 Functionality is organized in 3 subset layers that outline how to configure procedures, and are named by the application designer.
 
-* `<domain>` - Each `domain` has one `event-store` and can have one `command-gateway` to allow external access to it's `command`s.
+* `<domain>` - Each `domain` has one `event-store` and can have one `command-gateway` to allow external access to it's `commands`.
 
-* `<service>` - Each `service` is made up of any number of interdependant `domain`s, meaning any `command`s from within a `service` can freely log events to any of it's `event-store`s. `service`s can also depend on functionality from other `service`s unidirectionally.
+* `<service>` - Each `service` is made up of any number of interdependant `domains`, meaning any `commands` from within a `service` can freely log events to any of it's `event-stores`. `services` can also depend on functionality from other `services` unidirectionally.
 
-* `<network>` - Each network is made up of any number of `service`s who's `command`s can call each other directly without a gateway. The network can have up to 4 environments: `development`, `staging`, `sandbox`, and `production`.
+* `<network>` - Each network is made up of any number of `services` who's `commands` can call each other directly without a gateway. The network can have up to 4 environments: `development`, `staging`, `sandbox`, and `production`.
 
 ![alt text](/imgs/layers.png "Layers")
 
