@@ -1,7 +1,7 @@
 ### Blossm is a javascript Event Sourcing CQRS orchestrator. 
 
 CQRS is a Event Sourcing software architecture pattern where the write and read responsibilites are organized around seperate data stores. 
-The write side takes a request, performs a routine, and optionally logs some events with metadata to a store, thus modifying the state of the app forever — the event stores are immutable. 
+The write side takes a request, performs a routine, and optionally logs some events with metadata to a store, thus modifying the state of the app forever — the event stores meant to be immutable. 
 The read side listens for logged events and uses their metadata to write to any number of denormalized view stores to be queried, and which can be destroyed and recreated at any time based on the event log. 
 
 Blossm does this with 8 types of procedures, all of which can be run as lambda functions on GCP Cloud Run, configured entirely with blossm.yaml files, and deployed with a CLI:
@@ -30,15 +30,19 @@ On the read side:
 
 ### Write-side Organization
 
-Functionality is organized in 3 layers that outline how to configure procedures.
+Functionality is organized in 3 layers that outline how to configure procedures, and are named according to the design of the application being designed.
 
-* `domain` - Each `domain` has one `event-store` and can have one `command-gateway` to allow external access to it's `command`s.
+* `<domain>` - Each `domain` has one `event-store` and can have one `command-gateway` to allow external access to it's `command`s.
 
-* `service` - Each `service` is made up of any number of interdependant `domain`s, meaning any `command`s from within a `service` can freely log events to any of it's `event-store`s. `service`s can also depend on functionality from other `service`s unidirectionally.
+* `<service>` - Each `service` is made up of any number of interdependant `domain`s, meaning any `command`s from within a `service` can freely log events to any of it's `event-store`s. `service`s can also depend on functionality from other `service`s unidirectionally.
 
-* `network` - Each network is made up of any number of `service`s who's `command`s can call each other directly without a gateway. The network can have up to 4 environments: `development`, `staging`, `sandbox`, and `production`.
+* `<network>` - Each network is made up of any number of `service`s who's `command`s can call each other directly without a gateway. The network can have up to 4 environments: `development`, `staging`, `sandbox`, and `production`.
 
-`command-gateways` are addressed by c.<domain>.<service>.<network>
-`fact-gateways` are addressed by f.<domain>.<service>.<network>
+`command-gateway`s are addressed by `c.<domain>.<service>.<network>`
+`fact-gateway`s are addressed by `f.<domain>.<service>.<network>`
 
-Non-`production` gateways are addressed with a network prefix of .dev | .stg | .snd.
+Non-`production` gateways are addressed with a network prefix of `.dev | .stg | .snd`.
+
+Here's a simple visualization of the mapping:
+
+![alt text](/imgs/layers.png "Layers")
