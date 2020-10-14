@@ -56,8 +56,7 @@ module.exports = ({ domain, dir, customActionSuggestions }) => async (args) => {
        ${
          customActionSuggestions
            ? `
-
-        ${customActionSuggestions}`
+         ${customActionSuggestions}`
            : ""
        }
        `
