@@ -30,9 +30,9 @@ On the read side:
 * `view-gateway` - Deployed to permit access to a set of `view-stores` under specified conditions.
 
 
-### Write-side Organization
+### Write-side organization
 
-Functionality is organized in 3 subset layers that outline how to configure procedures, and are named by the application designer.
+Functionality is organized in 3 layers that outline how to configure procedures, and are named by the application designer.
 
 * `<domain>` - Each `domain` has one `event-store` and can have one `command-gateway` to allow external access to it's `commands`.
 
