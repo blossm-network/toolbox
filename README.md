@@ -4,6 +4,8 @@
 1. [Overview](#overview)
 2. [Setup](#setup)
 
+---
+
 ## Overview
 
 ### Blossm is a javascript Event Sourcing CQRS orchestrator. 
@@ -88,6 +90,8 @@ TODO
 
 ### Life of an Event
 TODO
+
+---
 
 ## Setup 
 
