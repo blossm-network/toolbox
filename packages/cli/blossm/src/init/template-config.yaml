@@ -1,6 +1,7 @@
 network: # your.network
 
-# If you're deploying an implementation of a Blossm Core network,
+# Specify which implementation of the Blossm Core network your application will be built around.
+# If instead you're deploying an implementation of a Blossm Core network,
 # omit the `core` and `dependencies` properties that follow.
 core:
   network: sustainers.network

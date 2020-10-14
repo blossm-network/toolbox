@@ -6,6 +6,8 @@ const roboSay = require("@blossm/robo-say");
 
 const create = async (input) => {
   const blossmDir = path.resolve(process.cwd(), input.dir || "");
+
+  //If there's already a directory in the intended location, ask if it should be overwritten.
   if (fs.existsSync(blossmDir) && input.dir) {
     const { flag } = await prompt({
       type: "Boolean",
@@ -28,9 +30,9 @@ const create = async (input) => {
     fs.mkdirSync(blossmDir);
   }
 
-  const templateConfigPath = path.resolve(__dirname, "config.yaml");
+  // Copy the template config.yaml file into the directory
+  const templateConfigPath = path.resolve(__dirname, "template-config.yaml");
   const destinationConfigPath = path.resolve(blossmDir, "config.yaml");
-
   fs.copyFileSync(templateConfigPath, destinationConfigPath);
 };
 
