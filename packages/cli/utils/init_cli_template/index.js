@@ -53,12 +53,7 @@ module.exports = ({ domain, dir, customActionSuggestions }) => async (args) => {
 
        • \`blossm test\` 
          Running unit tests locally.
-       ${
-         customActionSuggestions
-           ? `
-         ${customActionSuggestions}`
-           : ""
-       }
+       ${customActionSuggestions ? `${customActionSuggestions}` : ""}
        `
     )
   );
