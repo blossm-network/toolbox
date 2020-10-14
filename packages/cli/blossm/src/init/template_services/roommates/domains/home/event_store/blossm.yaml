@@ -2,8 +2,8 @@
 # Specify which domain and service your event-store is for,
 # write it's schema, and specify what it should be indexed by.
 #
-domain: some-domain
-service: some-service
+domain: home
+service: roommates
 
 #
 # Specify whether the data in this view store should be publicly readable.
