@@ -1,0 +1,23 @@
+domain: session
+service: core
+
+commands:
+  - name: start
+    protection: none
+    service: core
+    network: $core
+  - name: save
+    protection: none
+    service: core
+    network: $core
+  - name: change-scene
+    protection: none
+    service: core
+    network: $core
+  - name: terminate
+    protection: none
+    service: core
+    network: $core
+
+#don't change
+procedure: command-gateway

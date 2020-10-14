@@ -12,7 +12,13 @@ const { download: downloadFile } = require("@blossm/gcp-storage");
 const config = require("./config.json");
 
 module.exports = gateway({
-  commands: config.commands,
+  commands: config.commands.map((command) => ({
+    ...command,
+    ...(command.network && {
+      network:
+        command.network == "$core" ? process.env.CORE_NETWORK : command.network,
+    }),
+  })),
   whitelist: config.whitelist,
   algorithm: "ES256",
   audience: process.env.NETWORK,
