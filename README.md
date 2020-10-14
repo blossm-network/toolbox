@@ -117,6 +117,7 @@ Within each GCP project, you'll be using:
 * __Cloud KMS__ to manage cryptographic keys for JWT token signing and to encrypt any secrets you may want to add to your app.
 * __Cloud IAM__ to manage permissions and create Service Accounts.
 * __Cloud Scheduler__ to schedule commands to be executed later.
+* __Cloud Memorystore__ for using a shared cache between procedures for optimization.
 
 
 ### Others

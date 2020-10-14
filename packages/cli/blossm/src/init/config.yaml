@@ -1,56 +1,110 @@
-network:
+network: # your.network
+
+# If you're deploying an implementation of a Blossm Core network,
+# omit the following `core` and `dependencies` properties.
+core:
+  network: sustainers.network
+  # The core network should have public container registeries for pull procedures from
+  # to use for running integration tests within the bounds of your network.
+  registries:
+    production: us.gcr.io/production-271815
+    sandbox: us.gcr.io/sandbox-271815
+    staging: us.gcr.io/staging-271815
+    development: us.gcr.io/development-271815
+
+# You should get keys from your core network for connecting to it and to any other network that shares the core.
+dependencies:
+  sustainers.network:
+    keys:
+      production:
+        root: # your-key-root
+        secretName: sustainers-network-secret
+      sandbox:
+        root: # your-key-root
+        secretName: sustainers-network-secret
+      staging:
+        root: # your-key-root
+        secretName: sustainers-network-secret
+      development:
+        root: # your-key-root
+        secretName: sustainers-network-secret
+
+# Snapshots are taken according to the block schedule.
+blockSchedule: "0 5 * * *"
+
+# Specifications for running Blossm on top of your infrastructure.
 vendors:
+  # The cache that you want to use and how to connect to it.
+  cache:
+    redis:
+      ip:
+        production: # 10.79.5.20
+
+  # The cloud computing service you want to use and how to connect to it.
   cloud:
     gcp:
       projects:
-        production:
-        sandbox:
-        staging:
-        development:
+        production: # production-12345
+        sandbox: # sandbox-12345
+        staging: # staging-12345
+        development: # development-12345
       computeUrlIds:
-        production:
-        sandbox:
-        staging:
-        development:
+        production: # 1234qwer
+        sandbox: #2345wert
+        staging: #3456erty
+        development: # 4567rtyu
       dnsZone: network
       secretsBuckets:
-        production:
-        sandbox:
-        staging:
-        development:
+        production: production-secrets-12345
+        sandbox: sandbox-secrets-12345
+        staging: staging-secrets-12345
+        development: development-secrets-12345
+      rolesBuckets:
+        production: production-roles-12345
+        sandbox: sandbox-roles-12345
+        staging: staging-roles-12345
+        development: development-roles-12345
       defaults:
         region: us-central1
+        timeout: 120s
         memory: 128Mi
         memoryOverrides:
-          eventStore: 256Mi
-          viewStore: 256Mi
-  viewStore:
-    mongodb:
-      users:
-        production:
-        sandbox:
-        staging:
-        development:
-      hosts:
-        production:
-        sandbox:
-        staging:
-        development:
-      protocol: mongodb+srv
+          eventStore: 512Mi
+          viewStore: 512Mi
+
+  # The event store database you want to use, and how to connect to it.
   eventStore:
     mongodb:
       users:
-        production:
-        sandbox:
-        staging:
-        development:
+        production: blossm
+        sandbox: blossm
+        staging: blossm
+        development: blossm
       hosts:
-        production:
-        sandbox:
-        staging:
-        development:
+        production: # event-store-qwert.gcp.mongodb.net
+        sandbox: # event-store-qwert.gcp.mongodb.net
+        staging: # event-store-qwert.gcp.mongodb.net
+        development: # event-store-qwerty.gcp.mongodb.net
       protocol: mongodb+srv
+
+  # The view store database you want to use, and how to connect to it.
+  viewStore:
+    mongodb:
+      users:
+        production: blossm
+        sandbox: blossm
+        staging: blossm
+        development: blossm
+      hosts:
+        production: # view-store.qwerty.gcp.mongodb.net
+        sandbox: # view-store.qwert.gcp.mongodb.net
+        staging: # view-store.qwert.gcp.mongodb.net
+        development: # view-store.qwerty.gcp.mongodb.net
+      protocol: mongodb+srv
+
+# The services Blossm should use to build your application that have been specified above.
 defaults:
   viewStore: mongodb
   eventStore: mongodb
   cloud: gcp
+  cache: redis
