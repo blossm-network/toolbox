@@ -8,21 +8,21 @@ First, here's a high level overview of what they each do:
 
 On the write side:
 
-⋅⋅* Event Stores - Deployed to log events with a shared schema. Events that share a `root` refer to the same entity, and can be aggregated to determine the state of that entity at any point in time. Event Store's connect to a Collection in a MongoDB Atlas instance. 
+* Event Stores - Deployed to log events with a shared schema. Events that share a `root` refer to the same entity, and can be aggregated to determine the state of that entity at any point in time. Event Store's connect to a Collection in a MongoDB Atlas instance. 
 
-⋅⋅* Commands - Deployed to do a single-purpose job on-demand which has the oportunity to log events throughout it's execution. 
+* Commands - Deployed to do a single-purpose job on-demand which has the oportunity to log events throughout it's execution. 
 
-⋅⋅* Facts - Deployed to deliver some specic information about the state of the app.
+* Facts - Deployed to deliver some specic information about the state of the app.
 
-⋅⋅* Command Gateways - Deployed to permit access to a set of Commands under specified conditions.
+* Command Gateways - Deployed to permit access to a set of Commands under specified conditions.
 
-⋅⋅* Fact Gateways - Deployed to permit access to a set of Facts under specified conditions.
+* Fact Gateways - Deployed to permit access to a set of Facts under specified conditions.
 
 
 On the read side:
 
-⋅⋅* View Stores - Deployed to store denormalized data that is intended to be queried. Connects to a Collection in a MongoDB Atlas.
+* View Stores - Deployed to store denormalized data that is intended to be queried. Connects to a Collection in a MongoDB Atlas.
 
-⋅⋅* Projections - Deployed to take Events and map their data to a View Store. If the projection is changed, it can be replayed on-demand using a CLI, which will update the View Store with the most recent mapping.
+* Projections - Deployed to take Events and map their data to a View Store. If the projection is changed, it can be replayed on-demand using a CLI, which will update the View Store with the most recent mapping.
 
-⋅⋅* View Gateways - Deployed to permit access to a set of View stores under specified conditions.
+* View Gateways - Deployed to permit access to a set of View stores under specified conditions.
