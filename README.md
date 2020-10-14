@@ -10,23 +10,32 @@ Blossm does this with 8 types of procedures, all of which can be run as lambda f
 
 #### On the write side:
 
-* __Event Stores__ - Deployed to log events with a shared schema. Events that share a `root` refer to the same entity, and can be aggregated to determine the state of that entity at any point in time. Event Store's connect to a Collection in a MongoDB Atlas instance. 
+* __Event Store__ - Deployed to log events with a shared schema. Events that share a `root` refer to the same entity, and can be aggregated to determine the state of that entity at any point in time. Event Store's connect to a Collection in a MongoDB Atlas instance. 
 
-* __Commands__ - Deployed to do a single-purpose job on-demand which has the oportunity to log events throughout it's execution. Commands can call other commands.
+* __Command__ - Deployed to do a single-purpose job on-demand which has the oportunity to log events throughout it's execution. Commands can call other commands.
 
-* __Facts__ - Deployed to deliver some specic information about the state of the app.
+* __Fact__ - Deployed to deliver some specic information about the state of the app.
 
-* __Command Gateways__ - Deployed to permit access to a set of Commands under specified conditions.
+* __Command Gateway__ - Deployed to permit access to a set of Commands under specified conditions.
 
-* __Fact Gateways__ - Deployed to permit access to a set of Facts under specified conditions.
+* __Fact Gateway__ - Deployed to permit access to a set of Facts under specified conditions.
 
 
 #### On the read side:
 
-* __View Stores__ - Deployed to store denormalized data that is intended to be queried. Connects to a Collection in a MongoDB Atlas.
+* __View Store__ - Deployed to store denormalized data that is intended to be queried. Connects to a Collection in a MongoDB Atlas.
 
-* __Projections__ - Deployed to listen for Events and map their data to a View Store. If the projection is changed, it can be replayed on-demand using a CLI, which will update the View Store with the most recent mapping.
+* __Projection__ - Deployed to listen for Events and map their data to a View Store. If the projection is changed, it can be replayed on-demand using a CLI, which will update the View Store with the most recent mapping.
 
-* __View Gateways__ - Deployed to permit access to a set of View stores under specified conditions.
+* __View Gateway__ - Deployed to permit access to a set of View stores under specified conditions.
 
 
+### Write-side Procedure Organization
+
+Functionality is organized in 3 layers that help you organize your code:
+
+* __Domain__ - Each domain has one __Event Store__ and can have one __Command Gateway__ to allow external access to it's __Command__s.
+
+* __Services__ - Each service is made up of any number of interdependant __Domain__s, meaning the __Command__s from within a __Service__ can freely save events to any of it's __View Store__s. __Service's can also depend on other services unidirectionally. 
+
+* __Network__ - Each network is made up of any number of __Services__ who's __Commands__ can call each other directly without a gateway.
