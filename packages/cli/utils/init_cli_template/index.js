@@ -7,13 +7,15 @@ const { promisify } = require("util");
 
 const access = promisify(fs.access);
 
-module.exports = ({ domain, dir }) => async (args) => {
+module.exports = ({ domain, dir, customActionSuggestions }) => async (args) => {
   //eslint-disable-next-line no-console
   console.log(roboSay(`Initializing your ${domain} codebase...`));
 
+  const folderDomainName = domain.replace("-", "_");
+
   const input = await normalize({
     entrypointType: "path",
-    entrypointDefault: domain.replace("-", "_"),
+    entrypointDefault: folderDomainName,
     args,
   });
 
@@ -37,11 +39,16 @@ module.exports = ({ domain, dir }) => async (args) => {
   await fs.copy(templateDirectory, targetDirectory);
 
   //eslint-disable-next-line no-console
-  console.log(roboSay("Woohoo!"), green.bold("done"));
+  console.log(roboSay(""), green.bold("done"));
   //eslint-disable-next-line no-console
   console.log(
     roboSay(
-      `When you wanna deploy, type \`blossm deploy\` within your new ${domain} directory.`
+      `What you can do now from your new ${folderDomainName} directory:
+       \`blossm deploy\`: Attemp to deploy after running unit and integration tests remotely.
+       \`blossm deploy --dry-run\`: Running unit and integration tests remotely.
+       \`blossm test\`: Running unit tests locally.
+       ${customActionSuggestions}
+       `
     )
   );
 

@@ -101,7 +101,7 @@ module.exports = ({ domain, dir }) => async (args, configFn) => {
           await testCliTemplate({ workingDir, input });
           fs.removeSync(workingDir);
           //eslint-disable-next-line no-console
-          console.log(roboSay("Woohoo!"), green.bold("done"));
+          console.log(roboSay(""), green.bold("done"));
         } else {
           //eslint-disable-next-line no-console
           console.log(
@@ -124,5 +124,5 @@ module.exports = ({ domain, dir }) => async (args, configFn) => {
   );
 
   //eslint-disable-next-line no-console
-  console.log(roboSay("Woohoo!"), green.bold("done"));
+  console.log(roboSay(""), green.bold("done"));
 };
