@@ -80,4 +80,5 @@ Again, non-`production` gateways are addressed with a network prefix of `.dev | 
 ... documentation to be continued ...
 
 ### Anatomy of an Event
+
 ### Life of an Event
