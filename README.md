@@ -25,9 +25,9 @@ On the write side:
 
 * `fact` - Deployed to deliver some specic information about the state of the app.
 
-* `command-gateway` - Deployed to permit access to a set of `commands` under specified conditions.
+* `command-gateway` - Deployed to permit external access to a set of `commands` under specified conditions.
 
-* `fact-gateway` - Deployed to permit access to a set of `facts` under specified conditions.
+* `fact-gateway` - Deployed to permit external access to a set of `facts` under specified conditions.
 
 
 On the read side:
@@ -36,7 +36,7 @@ On the read side:
 
 * `projection` - Deployed to listen for Events and map their data to a `view-store`. If the projection is changed, it can be replayed on-demand using a CLI, which will update the `view-stores` with the most recent mapping.
 
-* `view-gateway` - Deployed to permit access to a set of `view-stores` under specified conditions.
+* `view-gateway` - Deployed to permit external access to a set of `view-stores` under specified conditions.
 
 
 ### Write-side organization
@@ -114,7 +114,7 @@ Within each GCP project, you'll be using:
 * __Cloud Tasks__ to schedule procedure execution on a queue to manage load.
 * __Cloud DNS__ to manage your network's top-level domain and any subdomains in your network.
 * __Cloud Storage__ to store any static Roles your Blossm application may want to reference, and any encrypted secrets you may want to save ahead of time to give your app runtime access to.
-* __Cloud KMS__ to manage cryptographic keys for JWT token signing and to encrypt any secrets you may want to add to your app.
+* __Cloud KMS__ to manage cryptographic keys for JWT token signing and to encrypt any secrets you may want to reference during the runtime of your app.
 * __Cloud IAM__ to manage permissions and create Service Accounts.
 * __Cloud Scheduler__ to schedule commands to be executed later.
 * __Cloud Memorystore__ for using a shared cache between procedures for optimization.

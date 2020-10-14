@@ -30,10 +30,17 @@ const create = async (input) => {
     fs.mkdirSync(blossmDir);
   }
 
-  // Copy the template config.yaml file into the directory
-  const templateConfigPath = path.resolve(__dirname, "template-config.yaml");
+  // Copy the template config.yaml file and template service and context dirs
+  // into the directory
+  const templateConfigPath = path.resolve(__dirname, "template_config.yaml");
+  const templateServicesDir = path.resolve(__dirname, "template_services");
+  const templateContextsDir = path.resolve(__dirname, "template_contexts");
   const destinationConfigPath = path.resolve(blossmDir, "config.yaml");
+  const destinationServicesDir = path.resolve(blossmDir, "services");
+  const destinationContextsDir = path.resolve(blossmDir, "contexts");
   fs.copyFileSync(templateConfigPath, destinationConfigPath);
+  await fs.copy(templateServicesDir, destinationServicesDir);
+  await fs.copy(templateContextsDir, destinationContextsDir);
 };
 
 module.exports = async (args) => {

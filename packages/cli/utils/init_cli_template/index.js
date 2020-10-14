@@ -13,7 +13,7 @@ module.exports = ({ domain, dir }) => async (args) => {
 
   const input = await normalize({
     entrypointType: "path",
-    entrypointDefault: domain,
+    entrypointDefault: domain.replace("-", "_"),
     args,
   });
 

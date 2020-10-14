@@ -1,0 +1,17 @@
+domain: challenge
+service: core
+
+# Specifies commands that get forwarded to the core network to fulfill.
+commands:
+  - name: issue
+    protection: none
+    service: core
+    network: $core
+  - name: answer
+    protection: none
+    key: challenge
+    service: core
+    network: $core
+
+#don't change
+procedure: command-gateway

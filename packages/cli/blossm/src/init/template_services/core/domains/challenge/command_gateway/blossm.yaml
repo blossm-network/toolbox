@@ -1,6 +1,7 @@
 domain: session
 service: core
 
+# Specifies commands that get forwarded to the core network to fulfill.
 commands:
   - name: start
     protection: none
