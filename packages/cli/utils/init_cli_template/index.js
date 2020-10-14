@@ -53,7 +53,7 @@ module.exports = ({ domain, dir, customActionSuggestions }) => async (args) => {
           and printing the integration test logs from each server.
 
        • \`blossm test\` 
-         Run unit tests locally.
+          Run unit tests locally.
        ${customActionSuggestions ? `${customActionSuggestions}` : ""}
        `
     )

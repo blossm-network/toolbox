@@ -4,5 +4,5 @@ module.exports = init({
   dir: __dirname,
   customActionSuggestions: `
        • \`blossm replay\`
-         Run all relevant aggregates through the projection.`,
+          Run all relevant aggregates through the projection.`,
 });
