@@ -45,14 +45,14 @@ module.exports = ({ domain, dir, customActionSuggestions }) => async (args) => {
     roboSay(
       `What you can do now from your new ${folderDomainName} directory:
        • \`blossm deploy\`
-          Attemp to deploy after running unit and integration tests remotely.
+          Attempt to deploy after running unit and integration tests remotely.
 
        • \`blossm deploy --dry-run\` 
-          Running unit and integration tests remotely, 
+          Run unit and integration tests remotely, 
           and printing the integration test logs from each server.
 
        • \`blossm test\` 
-         Running unit tests locally.
+         Run unit tests locally.
        ${customActionSuggestions ? `${customActionSuggestions}` : ""}
        `
     )
