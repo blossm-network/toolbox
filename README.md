@@ -1,8 +1,8 @@
 ### Blossm is a javascript Event Sourcing CQRS orchestrator. 
 
 CQRS is an Event Sourcing software architecture pattern where the write and read responsibilites are organized around seperate data stores. 
-The write side takes a request, performs a routine, and optionally logs some events with metadata to a store, thus modifying the state of the app forever — the event stores meant to be immutable. 
-The read side listens for logged events and uses their metadata to write to any number of denormalized view stores to be queried, and which can be destroyed and recreated at any time based on the event log. 
+The write side takes a request, performs a routine, and optionally logs some events with metadata to a store, thus modifying the state of the app forever — the event stores meant to be immutable.
+The read side listens for logged events and uses their metadata to write to any number of denormalized view stores to be queried. All view stores can be destroyed and recreated at any time based on the event log. 
 
 Blossm does this with 8 types of procedures, all of which can be run as lambda functions on GCP Cloud Run, configured entirely with blossm.yaml files, and deployed with a CLI:
 
