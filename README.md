@@ -4,7 +4,7 @@ CQRS is an Event Sourcing software architecture pattern where the write and read
 The write side takes a request, performs a routine, and optionally logs some events with metadata to a store, thus modifying the state of the app forever — the event stores meant to be immutable.
 The read side listens for logged events and uses their metadata to write to any number of denormalized view stores to be queried. All view stores can be destroyed and recreated at any time based on the event log. 
 
-Blossm currently has adapters to run on GCP using a MongoDB database for its event stores and view stores, but adapters can be built to deploy procedures on any compute server using a database of your choice.
+Blossm currently has adapters to run on GCP using a MongoDB database for its stores, but adapters can be built to deploy procedures on any compute server using a database of your choice.
 
 Blossm does this with 8 types of procedures, all of which can be run as lambda functions on GCP Cloud Run, configured entirely with `blossm.yaml` files, and deployed with a CLI tool:
 
