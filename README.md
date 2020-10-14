@@ -1,6 +1,5 @@
 # Blossm
 
-## Table of Contents
 1. [Overview](#overview)
 2. [Setup](#setup)
 
@@ -95,9 +94,8 @@ TODO
 
 ## Setup 
 
-## Table of Contents
 1. [GCP](#gcp)
-1. [Others](#others)
+2. [Others](#others)
 
 ### GCP 
 
