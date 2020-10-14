@@ -30,10 +30,15 @@ On the read side:
 
 ### Write-side Organization
 
-Functionality is organized in 3 layers that outline how to organize your procedures.
+Functionality is organized in 3 layers that outline how to configure procedures.
 
 * `domain` - Each `domain` has one `event-store` and can have one `command-gateway` to allow external access to it's `command`s.
 
 * `service` - Each `service` is made up of any number of interdependant `domain`s, meaning any `command`s from within a `service` can freely log events to any of it's `event-store`s. `service`s can also depend on functionality from other `service`s unidirectionally.
 
-* `network` - Each network is made up of any number of `service`s who's `command`s can call each other directly without a gateway.
+* `network` - Each network is made up of any number of `service`s who's `command`s can call each other directly without a gateway. The network can have up to 4 environments: `development`, `staging`, `sandbox`, and `production`.
+
+`command-gateways` are addressed by c.<domain>.<service>.<network>
+`fact-gateways` are addressed by f.<domain>.<service>.<network>
+
+Non-`production` gateways are addressed with a network prefix of .dev | .stg | .snd.
