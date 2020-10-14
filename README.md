@@ -25,7 +25,7 @@ On the read side:
 
 * `view-store` - Deployed to store denormalized data that is intended to be queried. `view-stores` connects to a Collection in a MongoDB Atlas.
 
-* `projection` - Deployed to listen for Events and map their data to a `view-stores`. If the projection is changed, it can be replayed on-demand using a CLI, which will update the `view-stores` with the most recent mapping.
+* `projection` - Deployed to listen for Events and map their data to a `view-store`. If the projection is changed, it can be replayed on-demand using a CLI, which will update the `view-stores` with the most recent mapping.
 
 * `view-gateway` - Deployed to permit access to a set of `view-stores` under specified conditions.
 
