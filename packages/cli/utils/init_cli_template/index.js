@@ -44,6 +44,7 @@ module.exports = ({ domain, dir, customActionSuggestions }) => async (args) => {
   console.log(
     roboSay(
       `What you can do now from your new ${folderDomainName} directory:
+
        • \`blossm deploy\`
           Attempt to deploy after running unit and integration tests remotely.
 
