@@ -36,6 +36,6 @@ Functionality is organized in 3 layers that help you organize your code:
 
 * __Domain__ - Each domain has one __Event Store__ and can have one __Command Gateway__ to allow external access to it's __Command__s.
 
-* __Services__ - Each service is made up of any number of interdependant __Domain__s, meaning the __Command__s from within a __Service__ can freely save events to any of it's __View Store__s. __Service's can also depend on other services unidirectionally. 
+* __Services__ - Each service is made up of any number of interdependant __Domain__s, meaning the __Command__s from within a __Service__ s can freely save events to any of it's __View Store__s. __Service's can also depend on other services unidirectionally. 
 
-* __Network__ - Each network is made up of any number of __Services__ who's __Commands__ can call each other directly without a gateway.
+* __Network__ - Each network is made up of any number of __Services__'s who's __Commands__ can call each other directly without a gateway.
