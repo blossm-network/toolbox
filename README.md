@@ -25,7 +25,7 @@ Blossm does this with 8 types of procedures, all of which can be run as lambda f
 
 * __View Stores__ - Deployed to store denormalized data that is intended to be queried. Connects to a Collection in a MongoDB Atlas.
 
-* __Projections__ - Deployed to take Events and map their data to a View Store. If the projection is changed, it can be replayed on-demand using a CLI, which will update the View Store with the most recent mapping.
+* __Projections__ - Deployed to listen for Events and map their data to a View Store. If the projection is changed, it can be replayed on-demand using a CLI, which will update the View Store with the most recent mapping.
 
 * __View Gateways__ - Deployed to permit access to a set of View stores under specified conditions.
 
