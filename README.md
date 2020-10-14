@@ -8,15 +8,15 @@ First, here's a high level overview of what they each do:
 
 On the write side:
 
-* Event Stores - Deployed to log events with a shared schema. Events that share a `root` refer to the same entity, and can be aggregated to determine the state of that entity at any point in time. Event Store's connect to a Collection in a MongoDB Atlas instance. 
+* __Event Stores__ - Deployed to log events with a shared schema. Events that share a `root` refer to the same entity, and can be aggregated to determine the state of that entity at any point in time. Event Store's connect to a Collection in a MongoDB Atlas instance. 
 
-* Commands - Deployed to do a single-purpose job on-demand which has the oportunity to log events throughout it's execution. 
+* __Commands__ - Deployed to do a single-purpose job on-demand which has the oportunity to log events throughout it's execution. 
 
-* Facts - Deployed to deliver some specic information about the state of the app.
+* __Facts__ - Deployed to deliver some specic information about the state of the app.
 
-* Command Gateways - Deployed to permit access to a set of Commands under specified conditions.
+* __Command Gateways__ - Deployed to permit access to a set of Commands under specified conditions.
 
-* Fact Gateways - Deployed to permit access to a set of Facts under specified conditions.
+* __Fact Gateways__ - Deployed to permit access to a set of Facts under specified conditions.
 
 
 On the read side:
