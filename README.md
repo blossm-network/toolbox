@@ -307,11 +307,13 @@ Within each GCP project, you'll be using:
 * __Cloud Scheduler__ to schedule commands to be executed later.
 * __Cloud Memorystore__ for using a shared cache between procedures for optimization.
 
-#### Initial setup
+#### Prereqs
 
 1. Download and install gcloud at https://cloud.google.com/sdk/docs/quickstarts.
 
 #### Networking
+
+Set up your network domain.
 
 1. Verify that you own the domain on [this site](https://search.google.com/u/1/search-console/users?resource_id=sc-domain:sm.network).
     * Click Add property on the top right.
@@ -346,6 +348,8 @@ Within each GCP project, you'll be using:
 
 #### VPC
 
+Create a private network for your serverless procedures to interact with one another through.
+
 1. In the `development` project:
     * In **VPC network > Serverless VPC** access, enable Serverless VPC access API.
     * Create a connector named **“us-central1”** in the us-central1 region under the default network with ip range 10.8.0.0/28.
@@ -354,6 +358,8 @@ Within each GCP project, you'll be using:
 
 
 #### Permissions
+
+Let specific Blossm processes manipulate specific parts of your compute infrastructure on your behalf, and gives your developers specified access to certain Blossm CLI tools.
 
 1. In the `development` project:
   * In **Cloud Build**, enable the Cloud Build API. 
@@ -396,7 +402,41 @@ Within each GCP project, you'll be using:
 
 4. Repeat step 3 with the **production**, **sandbox** and **staging** projects.
 
+#### Authentication
 
+Create keys that will be used your application to verify the authenticity of certain functionality.
+
+1. In the `development` project:
+    * In **Security > Cryptographic Keys**, enable **Cloud KMS**.
+    * Create a global Key Ring named **“jwt”**. 
+      * Create a Generated key named **“access”** for Asymmetric signing using Elliptic Curve P-256 - SHA256 Digest.
+      * Create two other keys with the same specs named **“challenge”** and **"updates"**.
+
+2. Repeat step 1 with the `production`, `sandbox` and `staging` projects. 
+
+#### Secrets 
+
+Configure the storage of secrets that your application uses during runtime.
+
+1. In the `development` project:
+    * In **Security > Cryptographic Keys**, create a global Key ring named **“secrets-bucket”**.
+
+2. Repeat step 1 with the `production`, `sandbox` and `staging` projects. 
+
+3. Back in the `development` project:
+    * In **Storage > Browser**, create a storage bucket where encrypted secrets will be stored.
+    * Give it some unique name, like "development-secrets-12345".
+    * Keep all the default options, or change them if you want.
+
+4. Repeat step 3 with the `production`, `sandbox` and `staging` projects. 
+
+5. Update the top level Blossm `config.yaml` so that the properties **vendors.cloud.gcp.secretsBuckets** reference that secrets Storage bucket names.
+
+The command to save a secret is using the CLI is:
+
+```javascript```
+blossm secret create mongodb -m <YOUR-SECRET> -e <development, staging, sandbox, or production>
+```
 
 
 ### Others
@@ -405,7 +445,7 @@ Only a GCP adapter is currently implemented. If other's are needed, I'd be happy
 
 ---
 
-## TODOs
+## TODOs (open to contribution and new internet collaborator friends, but you gotta be good at what you do)
 
 #### Organizational
 
@@ -413,14 +453,15 @@ Only a GCP adapter is currently implemented. If other's are needed, I'd be happy
 - [ ] Add a hello world application that is included with `blossm init`. 
 - [ ] Create richer docs with more specifics about the inputs and expected outputs of certin procedure functions. 
 
-#### Code 
+#### Code (help would be great)
 
 - [ ] Pull out GCP functionality from the `cli` directory into an `adapters` directory to make it easy to implement Blossm on other prociders.
 - [ ] Pull out `//cli/src/projection/deploy/src/index` into `//procedures/projection` and write tests for it.
 - [ ] Resolve leftover `TODO`s in the codebase.
+- [ ] Write a script that automates the GCP deployment setup.
 
 
-#### Design
+#### Design (help plz)
 
 - [ ] Implement a brand for Blossm.
 - [ ] Implement a landing page website for Blossm.
