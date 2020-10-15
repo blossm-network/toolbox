@@ -114,17 +114,50 @@ Each procedure is made up of a `blossm.yaml` file where it's configured, and one
   - `blossm.yaml` - Specify what the `domain` and `service` of this command are, specifiy the schema of a valid payload that should be accepted, and write some examples for the unit tests and integration tests to check against that must pass before deployment is possible.
   * `blossm.yaml` - Specify what the `domain` and `service` of this command are, specifiy the schema of a valid payload that should be accepted, and write some examples for the unit tests and integration tests to check against that must pass before deployment is possible.
 * `main.js` - Export a function that runs when the command is called.
-  - input: 
-      - `payload` - the payload that the command is being called with that fulfills the schema defined in the `blossm.yaml` file.
-      * `context` - the context of the token being used to make the request. This provides info about the address that is issuing the command.
-      - `root (optional)` - the root to associate with the command.
-      - `aggregateFn` - a function to call if you want to get the current state of any root in your network.
-        - gmmmm
-        * saaa
 
-- - output: asdfasf
+```javascript
+//main.js input
 
+{
+  // The payload that the command is being called with that fulfills the schema defined in the `blossm.yaml` file."
+  payload: {
+    some: "data"
+  },
 
+  // The context of the token being used to make the request. This provides info about the address that is issuing the command.",
+  context: {
+    session: {
+      root: "be214f0a-17c0-4d46-9a2b-742d6e65f100",
+      service: "core",
+      network: "sustainers.network"
+    },
+    principal: {
+      root: "cf325g1b-28d1-5e57-10b3c-853e7f76g211",
+      service: "core",
+      network: "sustainers.network"
+    },
+    // A function to call if you want to get the current state of any root in your network.
+    aggregateFn: async ({
+      root, // The root to aggregate
+      { // optional
+        domain, // The root's domain. Defaults to the current domain.
+        service, // The root's service. Defaults to the current service.
+        network, // The root's network. Defaults to the current network.
+        notFoundThrows // If true, an error will be thrown if the root isn't found. If false, null is returned. Defaults to true. 
+      } = {}
+    }) => {
+      // The state of the aggregate.
+      state: {
+        some: state
+      },
+      // The number of the last event of this aggregate.
+      lastEventNumber: aggregate.headers.lastEventNumber,
+      // The root that was aggregated.
+      root: aggregate.headers.root,
+    }
+  },
+}
+```
 
 
 1. [GCP](#gcp)
