@@ -365,7 +365,7 @@ Within each GCP project, you'll be using:
     * **cloudtasks.queues.create** - allows the machine to create task queues.
     * **cloudtasks.tasks.create** - allows the machine to create tasks.
     * **iam.serviceAccounts.actAs** - allows the machine to execute commands.
-    * In **IAM & Admin > Service Accounts**, grant the **Service Account User** role to the **Cloud Build** service account on the **\[projectNumber\]-compute@developer.gserviceaccount.com** Service Account. See [here](https\://cloud.google.com/cloud-build/docs/deploying-builds/deploy-cloud-run) and [here](https://cloud.google.com/run/docs/reference/iam/roles#additional-configuration) for more info.
+    * In **IAM & Admin > Service Accounts**, grant the **Service Account User** role to the **Cloud Build** service account on the **\[projectNumber\]-compute\@developer.gserviceaccount.com** Service Account. See [here](https\://cloud.google.com/cloud-build/docs/deploying-builds/deploy-cloud-run) and [here](https://cloud.google.com/run/docs/reference/iam/roles#additional-configuration) for more info.
     * **In IAM & Admin > IAM**, add the following roles to the @cloudbuild.gserviceaccount.com service Account:
     Cloud Run Admin
       * **Cloud Tasks Queue Admin** - allows the build process to create queues.
@@ -376,7 +376,7 @@ Within each GCP project, you'll be using:
       * **Cloud KMS CryptoKey Encrypter/Decrypter** - to encrypt and decrypt messages. Used in integration tests.
       * **Cloud KMS Admin** - to create keys, used to create keys for private event-stores.
       * **Service Account User** - to assign a push subscription to a Run service. 
-    * In **IAM & Admin > IAM**, grant the following Roles to the **\[projectNumber\]-compute@developer.gserviceaccount.com** service account:
+    * In **IAM & Admin > IAM**, grant the following Roles to the **\[projectNumber\]-compute\@developer.gserviceaccount.com** service account:
       * **Cloud Run Invoker** - allows a service to invoke other services.
       * **Cloud KMS CryptoKey Encrypter/Decrypter** - to decrypt encrypted values.
       * **Cloud KMS CryptoKey Signer/Verifier** - allows a service to sign data with encryption keys, and verify the signatures.
