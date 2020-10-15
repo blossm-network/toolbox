@@ -108,40 +108,43 @@ blossm init
 
 The provided `config.yaml` is where you'll specify the configurations of your app, the `services` folder is where you'll write your write-side procedures, and the `contexts` folder is where you'll write your read-side procedures. There are some examples in there for you.
 
-Each procedure is made up of a `blossm.yaml` file where it's configured, and one-or-two other files where the necessary peices of functionality can be coded. Here are the specifics for each type of procedure:
+Each procedure is made up of a `blossm.yaml` file where it's configured, and a few other files where the necessary peices of functionality can be coded. Here are the specifics for each type of procedure:
+
+On the write-side:
+
+* `event-store`
+  * `blossm.yaml` - Specify what the `domain` and `service` of this event store are, list the event actions that can be handled, defined the schema of a valid event that should be accepted and stored, and write some examples for the unit tests and integration tests to check against that must pass before deployment is possible.
+  * `handlers.js` - Exports instructions for how to transform the state of an aggregate given all permitted event actions. 
 
 * `command`
-  * `blossm.yaml` - Specify what the `domain` and `service` of this command are, specifiy the schema of a valid payload that should be accepted, and write some examples for the unit tests and integration tests to check against that must pass before deployment is possible.
-  * `main.js` - Export a function that runs when the command is called that lets you do a specific routine and easily call other commands, read from the state of the app, log `events`, and return some data to the command issuer.
+  * `blossm.yaml` - Specify what the `domain` and `service` of this command are, define the schema of a valid payload that should be accepted, and write some examples for the unit tests and integration tests to check against that must pass before deployment is possible.
+  * `main.js` - Exports a function that runs when the command is called that lets you do a specific routine and easily call other commands, read from the state of the app, conditionally log new `events`, and return some data to the command issuer.
   * `normalize.js` - Simply takes in a valid payload and cleans or formats it.
   * `deps.js` - A place to expose external dependencies that can be used in `main.js` and easily mocked out in tests.
 
-```javascript
-//main.js 
+* `fact`
+  * `blossm.yaml` - Specify what the `domain` and `service` of this fact are, define the schema of a valid payload that should be accepted, and write some examples for the unit tests and integration tests to check against that must pass before deployment is possible.
+  * `main.js` - Exports a function that runs when the fact is called that lets you easily read from the state of the app or from anywhere else on the internet to produce some formatted data to return the requester.
 
-// Available object passed in as input:
+* `command-gateway`
+  * `blossm.yaml` - Specify what the `domain` and `service` of this command-gateway are, list the commands that it exposes, and define the conditions that must be met for a requester to issue each command. 
 
-{
-  // The payload that the command is being called with that fulfills the schema defined in the `blossm.yaml` file."
-  payload,
-  // The context of the token being used to make the request. This provides info about the address that is issuing the command.",
-  context,
-    // A function to call to get the current state of any root in your network.
-    aggregateFn,
-    // A function to call to query for an aggregate in your network by key and value.
-    queryAggregatesFn,
-    // A function to call to read from a fact procedure in your network.
-    readFactFn,
-    // A function to call to stream from a fact procedure in your network.
-      streamFactFn,
-      // A function to call other commands in your network.
-      commandFn,
-      // A function to call to get the count of events for a particular root in your network.
-      countFn,
-      // A function to call to log events.
-      submitEventsFn,
-}
-```
+* `fact-gateway`
+  * `blossm.yaml` - Specify what the `domain` and `service` of this fact-gateway are, list the commands that it exposes, and define the conditions that must be met for a requester to get each fact. 
+
+On the read side:
+
+* `view-store`
+  * `blossm.yaml` - Specify what the `context` of this view store is, define the schema of a valid view that should be accepted and stored, list the indexes that the store can be queried and sorted by, and write some examples for the unit tests and integration tests to check against that must pass before deployment is possible.
+  * `format.js` - A function that each view is passed through on its way to the requester, letting you store raw data that's easy to query and manipulate, while returning a richer determanistically transformed version of that data.
+
+* `projection`
+  * `blossm.yaml` - Specify which `view-store` event data gets mapped to, list the event actions that are listened for, and write some examples for the unit tests and integration tests to check against that must pass before deployment is possible.
+  * `handlers.js` - Write instructions for how to map aggregate state into views for each state change is listened for. 
+
+* `view-gateway`
+  * `blossm.yaml` - Specify what the `context` of this view-gateway fateway, list the view stores that it exposes, and define the conditions that must be met for a requester to query each store. 
+
 
 
 1. [GCP](#gcp)
