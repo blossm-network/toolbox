@@ -314,11 +314,11 @@ Within each GCP project, you'll be using:
 #### Networking
 
 1. In the production project:
-  * In **Network Services > Cloud DNS**, enable Cloud DNS.
-    * Create a public DNS Zone named **“network”**. With DNS name \[your-domain\].
-      * Turn on DNSSEC.
-    * Set the Name servers of your domain in its domain registry to the data of the NS record set.
-    * If you set TXT and MX records in your domain registry as part of step 3 of Initial Setup, move those records to GCP also.
+    * In **Network Services > Cloud DNS**, enable Cloud DNS.
+      * Create a public DNS Zone named **“network”**. With DNS name \[your-domain\].
+        * Turn on DNSSEC.
+      * Set the Name servers of your domain in its domain registry to the data of the NS record set.
+      * If you set TXT and MX records in your domain registry as part of step 3 of Initial Setup, move those records to GCP also.
 
 
 
