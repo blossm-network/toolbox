@@ -490,7 +490,9 @@ TODO
 
 ---
 
-## TODOs (open to contribution and new internet collaborator friends, but you gotta be good at what you do)
+## TODOs 
+
+##### open to contribution and new internet collaborator friends, but you gotta be good at what you do
 
 #### Organizational
 
