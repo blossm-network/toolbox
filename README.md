@@ -8,6 +8,7 @@
 
 #### The project also aspires to interoperate with the Ethereum blockchain to provide an application experience layer that can interact with Contracts and respond to events, while providing an event storage layer for trivial intraday application data that doesn't need to be on-chain in real time.
 
+## Contents:
 1. [Overview](#overview)
 2. [Blossm base layer](#blossm-base-layer)
 3. [Setup](#setup)
