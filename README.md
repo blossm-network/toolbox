@@ -365,7 +365,7 @@ Within each GCP project, you'll be using:
     * **cloudtasks.queues.create** - allows the machine to create task queues.
     * **cloudtasks.tasks.create** - allows the machine to create tasks.
     * **iam.serviceAccounts.actAs** - allows the machine to execute commands.
-    * In **IAM & Admin > Service Accounts**, grant the **Service Account User** role to the **Cloud Build** service account on the **\[projectNumber\]-compute\@developer.gserviceaccount.com** Service Account. See [here](https://cloud.google.com/cloud-build/docs/deploying-builds/deploy-cloud-run) and [here](https://cloud.google.com/run/docs/reference/iam/roles#additional-configuration) for more info.
+    * In **IAM & Admin > Service Accounts**, grant the **Service Account User** role to the **Cloud Build** service account on the **\[projectNumber\]-<span>compute</span>@developer.gserviceaccount.com** Service Account. See [here](https://cloud.google.com/cloud-build/docs/deploying-builds/deploy-cloud-run) and [here](https://cloud.google.com/run/docs/reference/iam/roles#additional-configuration) for more info.
     * **In IAM & Admin > IAM**, add the following roles to the @cloudbuild.gserviceaccount.com service Account:
     Cloud Run Admin
       * **Cloud Tasks Queue Admin** - allows the build process to create queues.
