@@ -1,4 +1,4 @@
-# Blossm
+## Blossm
 
 1. [Overview](#overview)
 1. [Blossm Core network](#blossm-core-network)
@@ -8,7 +8,7 @@
 
 ---
 
-## Overview
+# Overview
 
 ### Blossm is a javascript Event Sourcing CQRS orchestrator, and includes a description for setting up multi-project interoperability through a Blossm Core network.
 
@@ -170,7 +170,7 @@ Again, non-`production` gateways are addressed with a network prefix of `.dev | 
 
 ---
 
-## Blossm Core network
+# Blossm Core network
 
 Blossm applications must be built around an implementation of the Blossm Core network, which manages all of the basic stuff that applications need such as accounts, sessions, token issuance, permissions, roles, authentication, and publishing updated views to connected clients. Any application built around the same Blossm Core network can easily interoperate with one another.
 
@@ -189,7 +189,7 @@ Blossm Core networks are set up just like any other Blossm network though.
 
 ---
 
-## Setup 
+# Setup 
 
 Here's how to set up your Blossm workflow.
 
@@ -286,7 +286,12 @@ blossm replay
 ```
 
 
-## Deploy 
+# Deploy 
+
+1. [Compute](#compute)
+2. [Databases](#databases)
+
+## Compute 
 
 1. [GCP](#gcp)
 2. [Others](#others)
@@ -416,7 +421,7 @@ Create keys that will be used your application to verify the authenticity of cer
 
 #### Secrets 
 
-Configure the storage of secrets that your application uses during runtime.
+Configure the storage of encrypted secrets that your application decrypts and uses during runtime using Blossm tools.
 
 1. In the `development` project:
     * In **Security > Cryptographic Keys**, create a global Key ring named **“secrets-bucket”**.
@@ -430,7 +435,7 @@ Configure the storage of secrets that your application uses during runtime.
 
 4. Repeat step 3 with the `production`, `sandbox` and `staging` projects. 
 
-5. Update the top level Blossm `config.yaml` so that the properties **vendors.cloud.gcp.secretsBuckets** reference that secrets Storage bucket names.
+5. Update the top level Blossm `config.yaml` so that the properties **vendors.cloud.gcp.secretsBuckets** reference the secrets Storage bucket names.
 
 The command to save a secret is using the CLI is:
 
@@ -438,10 +443,39 @@ The command to save a secret is using the CLI is:
 blossm secret create mongodb -m <YOUR-SECRET> -e <development, staging, sandbox, or production>
 ```
 
+#### Roles
+
+Configure the storage of roles that your application uses during runtime.
+
+1. In the `development` project:
+    * In **Storage > Browser**, create a storage bucket where your roles.yaml file will be stored.
+    * Give it some unique name, like "development-roles-12345".
+    * Keep all the default options, or change them if you want.
+
+2. Repeat step 1 with the `production`, `sandbox` and `staging` projects. 
+
+5. Update the top level Blossm `config.yaml` so that the properties **vendors.cloud.gcp.rolesBuckets** reference the role Storage bucket names.
+
+#### Tasks
+
+Configure the task queues that Blossm uses to manage load and asychronisity.
+
+1. In the `development` project:
+    * In **APIs & Services**, select the **Cloud Tasks API**.
+      * Enable the API.
+    * In **App Engine**, click **"Create an Application"** in us-central1.
+      * There’s no need to fill out subsequent forms. Just cancel out.
+ 
+2. Repeat step 1 with the `production`, `sandbox` and `staging` projects. 
 
 ### Others
 
 Only a GCP adapter is currently implemented. If other's are needed, I'd be happy to support their development.
+
+## Databases
+
+1. [MongoDB Atlas](#mongodb-atlas)
+2. [Others](#others)
 
 ---
 
