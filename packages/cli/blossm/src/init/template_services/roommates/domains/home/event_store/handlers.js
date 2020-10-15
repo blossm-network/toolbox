@@ -10,7 +10,7 @@
  */
 
 module.exports = {
-  "some-action": (state, payload) => {
+  "set-name": (state, payload) => {
     return {
       ...state,
       ...payload,

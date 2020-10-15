@@ -50,7 +50,7 @@ module.exports = ({ domain, dir, customActionSuggestions }) => async (args) => {
 
        • \`blossm deploy --dry-run\` 
           Run unit and integration tests remotely, 
-          and printing the integration test logs from each server.
+          and print the integration test logs from each server.
 
        • \`blossm test\` 
           Run unit tests locally.

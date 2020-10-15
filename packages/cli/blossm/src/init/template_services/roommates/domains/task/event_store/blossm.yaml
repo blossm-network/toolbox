@@ -1,38 +1,28 @@
 #
-# Specify which domain and service your event-store is for,
-# write it's schema, and specify what it should be indexed by.
+# Specify which domain and service your event-store is for.
 #
-domain: home
-service: roommates
+domain: some-domain
+service: some-service
 
 #
 # Specify whether the data in this view store should be publicly readable.
 #
-public: true
+public: false
 
 # Specify the actions that this event-store can handle.
 actions:
-  - create
-  - join
-  - set-name
+  - some-action
 
 #
 # Give your event-store a schema.
 #
+# Schemas are MongoDB-esque.
 # How to write a schema -> https://mongoosejs.com/docs/schematypes.html
 # Types and validators should always be specified,
 # and default values and required flags should be set if intended.
 #
 schema:
   name: String
-  scene:
-    root: String
-    service: String
-    network: String
-  group:
-    root: String
-    service: String
-    network: String
 
 #
 # Specify how this event-store can be indexed.
@@ -67,7 +57,7 @@ testing:
   # overwrites the state of the aggregate.
   #
   handlers:
-    - action: set-name
+    - action: some-action
       examples:
         - state:
             name: some-name
@@ -86,11 +76,11 @@ testing:
   #
   examples:
     first:
-      action: set-name
+      action: some-action
       payload:
         name: some-name
     second:
-      action: set-name
+      action: some-action
       payload:
         name: some-other-name
     more: []
