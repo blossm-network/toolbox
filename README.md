@@ -1,14 +1,11 @@
 ## Blossm
 
 1. [Overview](#overview)
-1. [Blossm base layer](#blossm-base-layer)
-2. [Setup](#setup)
-3. [Deploy](#deploy)
-4. [TODO](#todo)
+2. [Blossm base layer](#blossm-base-layer)
+3. [Setup](#setup)
+4. [Deploy](#deploy)
+5. [TODO](#todo)
 
----
-
-# Overview
 
 ### Blossm is a javascript Event Sourcing CQRS orchestrator, and includes a description for setting up multi-project interoperability through a Blossm base layer.
 
@@ -18,9 +15,22 @@
 
 #### The project also aspires to interoperate with the Ethereum blockchain to provide an application experience layer that can interact with Contracts and respond to events, while providing an event storage layer for trivial intraday application data that doesn't need to be on-chain in real time.
 
+---
+
+# Overview
+
 CQRS is an Event Sourcing software architecture pattern where the write and read responsibilites are organized around seperate data stores. 
 The write side takes a request, performs a routine, and optionally logs some events with metadata to a store, thus modifying the state of the app forever — the event stores meant to be immutable.
 The read side listens for logged events and uses their metadata to write to any number of denormalized view stores to be queried. All view stores can be destroyed and recreated at any time based on the event log. 
+
+Each Event Sourcing implementation may be slightly different, but many share common design gotchas and pitfalls. Here are some well-articulated videos and papers by some incredible folks, many of which inspired the choices that were made when designing Blossm. 
+
+* Martin Fowler - https://www.youtube.com/watch?v=STKCRSUsyP0&t=206s
+* Greg Young - https://www.youtube.com/watch?v=LDW0QWie21s
+* David Schmitz - https://www.youtube.com/watch?v=GzrZworHpIk&t=1612s
+* Carson Farmer and the folks at Textile - https://docsend.com/view/gu3ywqi
+
+Thank you for all the work you've done!
 
 Blossm currently has adapters to run on GCP using a MongoDB database for its stores, but adapters can be built to deploy procedures on any compute server using a database of your choice.
 
