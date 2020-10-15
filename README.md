@@ -141,7 +141,8 @@ For example, let's say you're building a task manager application for a team. Le
       root: "q1w2e3r4t5y6",
       service: "your-team-service",
       network: "your-team.network"
-    }
+    },
+    //... there'll be other things in the context that.
   }
 }
 ```
