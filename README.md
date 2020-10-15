@@ -23,7 +23,7 @@ CQRS is an Event Sourcing software architecture pattern where the write and read
 The write side takes a request, performs a routine, and optionally logs some events with metadata to a store, thus modifying the state of the app forever — the event stores meant to be immutable.
 The read side listens for logged events and uses their metadata to write to any number of denormalized view stores to be queried. All view stores can be destroyed and recreated at any time based on the event log. 
 
-Each Event Sourcing implementation may be slightly different, but many share common design gotchas and pitfalls. Here are some well-articulated videos and papers by some incredible folks around the topic, many of which inspired the choices that were made when developing Blossm:
+Each Event Sourcing implementation may be slightly different, but many share common design gotchas and pitfalls. If you're less familiar with the pattern, I'd highly recomment spending some time doing a little background research. Here are some well-articulated videos and papers by some incredible folks around the topic, many of which inspired the choices that were made when developing Blossm:
 
 * Martin Fowler - https://www.youtube.com/watch?v=STKCRSUsyP0&t=206s
 * Martin Fowler - https://martinfowler.com/bliki/StranglerFigApplication.html
@@ -31,7 +31,7 @@ Each Event Sourcing implementation may be slightly different, but many share com
 * David Schmitz - https://www.youtube.com/watch?v=GzrZworHpIk&t=1612s
 * Carson Farmer and the folks at Textile - https://docsend.com/view/gu3ywqi
 
-Thank you for all the work you've done!
+(Thank you for all the work you've done!)
 
 Blossm currently has adapters to run on GCP using a MongoDB database for its stores, but adapters can be built to deploy procedures on any compute server using a database of your choice.
 
