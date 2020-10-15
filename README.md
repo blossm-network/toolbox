@@ -95,7 +95,7 @@ TODO
 
 ## Setup 
 
-If you already use Node, The only thing you'll have to install is the Blossm CLI tool which makes it easy to spin up procedures, run tests, deploy to any environment, replay events over projections, and manage various other details of your application:
+If you already use Node, the only thing you'll have to install is the Blossm CLI tool which makes it easy to spin up procedures, run tests, deploy to any environment, replay events over projections, and manage various other details of your application:
 
 ```javascript
 npm install -g @blossm/cli
@@ -130,18 +130,18 @@ Each procedure is a small directory made up of a `blossm.yaml` file where it's c
 On the write side:
 
 * `event-store`
-  * `blossm.yaml` - Specify what the `domain` and `service` of this event store are, list the event actions that can be handled, defined the schema of a valid event that should be accepted and stored, and write some example events for the unit tests and integration tests to check against that must pass before deployment is possible.
-  * `handlers.js` - Exports instructions for how to transform the state of an aggregate given all permitted event actions. 
+  * `blossm.yaml` - Specify what the `domain` and `service` of this event store are, list the event actions that can be handled, define the schema of a valid event that should be accepted and stored, and write some example events for the unit tests and integration tests to check against that must pass before deployment is possible.
+  * `handlers.js` - Write instructions for how to transform the state of an aggregate for each event actions. 
 
 * `command`
   * `blossm.yaml` - Specify what the `domain` and `service` of this command are, define the schema of a valid payload that should be accepted, and write some example payloads for the unit tests and integration tests to check against that must pass before deployment is possible.
-  * `main.js` - Exports a function that runs when the command is called that lets you do a specific routine and easily call other commands, read from the state of the app, conditionally log new `events`, and return some data to the command issuer.
-  * `normalize.js` - Simply takes in a valid payload and cleans/formats it.
-  * `deps.js` - A place to expose external dependencies that can be used in `main.js` and easily mocked out in tests.
+  * `main.js` - Write a function that runs when the command is called that does a specific routine. Blossm provides tools to make it easy to call other commands, read from the state of the app, conditionally log new `events`, and return some data to the command issuer from within this function.
+  * `normalize.js` - Specify how a valid payload should be cleaned/formatted before its given to `main.js`.
+  * `deps.js` - Export external dependencies that can be used in `main.js` and easily mocked out in tests.
 
 * `fact`
   * `blossm.yaml` - Specify what the `domain` and `service` of this fact are, define the schema of a valid payload that should be accepted, and write some example queries for the unit tests and integration tests to check against that must pass before deployment is possible.
-  * `main.js` - Exports a function that runs when the fact is called that lets you easily read from the state of the app or from anywhere else on the internet to produce some formatted data to return the requester.
+  * `main.js` - Write a function that runs when the fact is called that reads from the state of the app or from anywhere else on the internet to produces some formatted data to return the requester.
 
 * `command-gateway`
   * `blossm.yaml` - Specify what the `domain` and `service` of this command-gateway are, list the commands that it exposes, and define the conditions that must be met for a requester to issue each command. 
@@ -153,7 +153,7 @@ On the read side:
 
 * `view-store`
   * `blossm.yaml` - Specify what the `context` of this view store is, define the schema of a valid view that should be accepted and stored, list the indexes that the store can be queried and sorted by, and write some example queries for the unit tests and integration tests to check against that must pass before deployment is possible.
-  * `format.js` - A function that each view is passed through on its way to the requester, letting you store raw data that's easy to query and manipulate, while returning a richer determanistically transformed version of that data.
+  * `format.js` - Optionally write a function that each view is passed through on its way to the requester, letting you store raw data that's easy to query and manipulate, while returning a richer determanistically transformed version of that data.
 
 * `projection`
   * `blossm.yaml` - Specify which `view-store` event data gets mapped to, list the event actions that are listened for, and write some example events for the unit tests and integration tests to check against that must pass before deployment is possible.
