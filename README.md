@@ -1,7 +1,7 @@
 ## Blossm
 
 1. [Overview](#overview)
-1. [Blossm Core network](#blossm-core-network)
+1. [Blossm base layer network](#blossm-base-layer-network)
 2. [Setup](#setup)
 3. [Deploy](#deploy)
 4. [TODO](#todo)
@@ -10,13 +10,13 @@
 
 # Overview
 
-### Blossm is a javascript Event Sourcing CQRS orchestrator, and includes a description for setting up multi-project interoperability through a Blossm Core network.
+### Blossm is a javascript Event Sourcing CQRS orchestrator, and includes a description for setting up multi-project interoperability through a Blossm base layer network.
 
-#### With Blossm you can architect, fully-test, and deploy just about any peice of software functionality using small javascript functions and YAML configs, in a way that keep each historical state of your app entirely queriable and auditable, and with the opportunity to connect many independantly developed networks together through a shared Core. It's also extremely cheap to run and extremely easy to maintain. 
+#### With Blossm you can architect, fully-test, and deploy just about any peice of software functionality using small javascript functions and YAML configs, in a way that keep each historical state of your app entirely queriable and auditable, and with the opportunity to connect many independently developed networks together through a shared base layer. It's also extremely cheap to run and extremely easy to maintain. 
 
-##### The project aspires to make sure the data produced in Blossm systems can be owned and delegated entirely by the users and groups that produced it, giving Blossm network operators no data aggregation and manipulation advantages over the public. 
+#### The project aspires to make sure the data produced in Blossm systems can be owned and delegated entirely by the users and groups that produced it, giving Blossm network operators no data aggregation and manipulation advantages over the public. 
 
-##### The project also aspires to interoperate with the Ethereum blockchain to provide an application experience layer that can interact with Contracts and respond to events, while providing an event storage layer for trivial intraday application data that doesn't need to be on-chain in real time.
+#### The project also aspires to interoperate with the Ethereum blockchain to provide an application experience layer that can interact with Contracts and respond to events, while providing an event storage layer for trivial intraday application data that doesn't need to be on-chain in real time.
 
 CQRS is an Event Sourcing software architecture pattern where the write and read responsibilites are organized around seperate data stores. 
 The write side takes a request, performs a routine, and optionally logs some events with metadata to a store, thus modifying the state of the app forever — the event stores meant to be immutable.
@@ -176,22 +176,22 @@ Again, non-`production` gateways are addressed with a network prefix of `.dev | 
 
 ---
 
-# Blossm Core network
+# Blossm base layer 
 
-Blossm applications must be built around an implementation of the Blossm Core network, which manages all of the basic stuff that applications need such as accounts, sessions, token issuance, permissions, roles, authentication, and publishing updated views to connected clients. Any application built around the same Blossm Core network can easily interoperate with one another.
+Blossm applications must be built around an implementation of the Blossm base layer network, which manages all of the basic stuff that applications need such as accounts, sessions, token issuance, permissions, roles, authentication, and publishing updated views to connected clients. Any application built around the same Blossm base layer network can easily interoperate with one another.
 
-There are a few non-required traits of a Blossm Core network that are strongly encouraged:
+There are a few non-required traits of a Blossm base layer network that are strongly encouraged:
 
-* A Blossm Core network is encouraged to not collect any personal information to associate with accounts. It is encouraged that accounts be created, verified, and managed through email addresses or Ethereum addresses (or ENS) only.
+* A Blossm base layer network is encouraged to not collect any personal information to associate with accounts. It is encouraged that accounts be created, verified, and managed through email addresses or Ethereum addresses (or ENS) only.
 
-* A Blossm Core network is encouraged to keep regular snapshots of it's data on an open file system, like FileCoin, for public auditability.
+* A Blossm base layer network is encouraged to keep regular snapshots of it's data on an open file system, like FileCoin, for public auditability.
 
-* A Blossm Core network is encouraged to associate wallets to accounts that can be used by any application built around it for sending / receiving payments on Ethereum. Fiat is encouraged, but often requires KYC which is at odds the first bullet. Find a balance and push for progress when it comes to open value transfer.
+* A Blossm base layer network is encouraged to associate wallets to accounts that can be used by any application built around it for sending / receiving payments on Ethereum. Fiat is encouraged, but often requires KYC which is at odds the first bullet. Find a balance and push for progress when it comes to open value transfer.
 
-There aren't yet clear guidelines on how to implement your own Blossm Core network according to a specified interface, but there is one implementation currently in Beta done by `sustainers.network`. The implementation can be found here: <https://github.com/sustainers-network/blossm>. I've spent my time implementing, not documenting.
+There aren't yet clear guidelines on how to implement your own Blossm base layer network according to a specified interface, but there is one implementation currently in Beta done by `sustainers.network`. The implementation can be found here: <https://github.com/sustainers-network/blossm>. I've spent my time implementing, not documenting.
 
 
-Blossm Core networks are set up just like any other Blossm network though.
+Blossm base layer networks are set up just like any other Blossm network though.
 
 ---
 
