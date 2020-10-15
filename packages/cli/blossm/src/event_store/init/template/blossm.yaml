@@ -16,7 +16,7 @@ actions:
 #
 # Give your event-store a schema.
 #
-# Schemas are MongoDB-esque.
+# Schemas are Mongo-esque.
 # How to write a schema -> https://mongoosejs.com/docs/schematypes.html
 # Types and validators should always be specified,
 # and default values and required flags should be set if intended.

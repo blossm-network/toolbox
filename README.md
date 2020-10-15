@@ -94,11 +94,30 @@ TODO
 
 ## Setup 
 
-If you already use Node, The only thing you'll have to install is the Blossm CLI tool which makes it easy to spin up procedures, run tests, deploy to any environment, replay events over projections, and manage various other details of your application.
+If you already use Node, The only thing you'll have to install is the Blossm CLI tool which makes it easy to spin up procedures, run tests, deploy to any environment, replay events over projections, and manage various other details of your application:
 
 ```javascript
 npm install -g @blossm/cli
 ```
+
+Then initialize a Blossm project:
+
+```javascript
+blossm init
+```
+
+The provided `config.yaml` is where you'll specify the configurations of your app, the `services` folder is where you'll write your write-side procedures, and the `contexts` folder is where you'll write your read-side procedures. There are some examples in there for you.
+
+Each procedure is made up of a `blossm.yaml` file where it's configured, and one-or-two other files where a peice of functionality can be coded. Here are the specifics for each type of procedure:
+
+* `command`
+* - `blossm.yaml` - Specify what the `domain` and `service` of this command are, specifiy the schema of a valid payload that should be accepted, and write some examples for the unit tests and integration tests to check against that must pass before deployment is possible.
+* - `main.js` - Export a function that runs when the command is called.
+* - - input: asdfasf
+* - - output: asdfasf
+
+
+
 
 1. [GCP](#gcp)
 2. [Others](#others)
