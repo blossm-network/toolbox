@@ -1,8 +1,10 @@
 # Blossm
 
 1. [Overview](#overview)
+1. [Blossm Core network](#blossmcorenetwork)
 2. [Setup](#setup)
-2. [Deploy](#deploy)
+3. [Deploy](#deploy)
+4. [TODO](#todo)
 
 ---
 
@@ -168,9 +170,9 @@ Again, non-`production` gateways are addressed with a network prefix of `.dev | 
 
 ---
 
-## Implementing the Blossm Core network
+## Blossm Core network
 
-Blossm applications must be built around an implementation of the Blossm Core network, which manages all of the basic stuff that applications need such as accounts, sessions, token issuance, permissions, roles, authentication Any application built around the same Blossm Core network can easily interoperate.
+Blossm applications must be built around an implementation of the Blossm Core network, which manages all of the basic stuff that applications need such as accounts, sessions, token issuance, permissions, roles, authentication, and publishing updated views to connected clients. Any application built around the same Blossm Core network can easily interoperate with one another.
 
 There are a few non-required traits of a Blossm Core network that are strongly encouraged:
 
@@ -180,7 +182,7 @@ There are a few non-required traits of a Blossm Core network that are strongly e
 
 * A Blossm Core network is encouraged to associate wallets to accounts that can be used by any application built around it for sending / receiving payments on Ethereum. Fiat is encouraged, but often requires KYC which is at odds the first bullet. Find a balance and push for progress when it comes to open value transfer.
 
-There isn't clear guidelines on how to implement your own Blossm Core network according to a specified interface, but there is one implementation currently in Beta done by `sustainers.network`. The implementation can be found here: <https://github.com/sustainers-network/blossm>.
+There aren't yet clear guidelines on how to implement your own Blossm Core network according to a specified interface, but there is one implementation currently in Beta done by `sustainers.network`. The implementation can be found here: <https://github.com/sustainers-network/blossm>. I've spent my time implementing, not documenting.
 
 ---
 
@@ -306,6 +308,25 @@ Within each GCP project, you'll be using:
 Only a GCP adapter is currently implemented. If other's are needed, I'd be happy to support their development.
 
 ---
+
+## TODOs
+
+#### Organizational
+
+- [x] Start documentation for Blossm. 
+- [ ] Create richer docs with more specifics about the inputs and expected outputs of certin procedure functions. 
+
+#### Code 
+
+- [ ] Pull out GCP functionality from the `cli` directory into an `adapters` directory to make it easy to implement Blossm on other prociders.
+- [ ] Pull out `//cli/src/projection/deploy/src/index` into `//procedures/projection` and write tests for it.
+- [ ] Resolve leftover `TODO`s in the codebase.
+
+
+#### Design
+
+- [ ] Implement a brand for Blossm.
+
 ... documentation to be continued ...
       <!-- root, // The root to aggregate
       { // optional
