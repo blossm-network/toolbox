@@ -307,6 +307,21 @@ Within each GCP project, you'll be using:
 * __Cloud Scheduler__ to schedule commands to be executed later.
 * __Cloud Memorystore__ for using a shared cache between procedures for optimization.
 
+#### Initial setup
+
+1. Download and install gcloud at https://cloud.google.com/sdk/docs/quickstarts.
+
+#### Networking
+
+1. In the production project:
+  * In **Network Services > Cloud DNS**, enable Cloud DNS.
+    * Create a public DNS Zone named **“network”**. With DNS name \[your-domain\].
+      * Turn on DNSSEC.
+    * Set the Name servers of your domain in its domain registry to the data of the NS record set.
+    * If you set TXT and MX records in your domain registry as part of step 3 of Initial Setup, move those records to GCP also.
+
+
+
 
 ### Others
 
@@ -319,6 +334,7 @@ Only a GCP adapter is currently implemented. If other's are needed, I'd be happy
 #### Organizational
 
 - [x] Start documentation for Blossm. 
+- [ ] Add a hello world application that is included with `blossm init`. 
 - [ ] Create richer docs with more specifics about the inputs and expected outputs of certin procedure functions. 
 
 #### Code 
