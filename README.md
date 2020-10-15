@@ -170,7 +170,7 @@ For example, let's say you're building a task manager application for a team. Le
 }
 ```
 
-Each time you make a request, the Blossm procedures know that you have access to this specific team, and can prevent access at the gateway level if the requesting token seems to be lacking permissions. 
+Each time you make a request, the Blossm procedures know that you have access to this specific team, and can prevent access at the gateway level if the requesting token is lacking permissions. 
 
 If calling a `view-store` within the "team" context, you'll only be able to access data that was created from the team with `root` "q1w2e3r4t5y6".
 
