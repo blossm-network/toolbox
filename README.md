@@ -2,6 +2,7 @@
 
 1. [Overview](#overview)
 2. [Setup](#setup)
+2. [Deploy](#deploy)
 
 ---
 
