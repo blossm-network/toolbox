@@ -168,6 +168,22 @@ Again, non-`production` gateways are addressed with a network prefix of `.dev | 
 
 ---
 
+## Implementing the Blossm Core network
+
+Blossm applications must be built around an implementation of the Blossm Core network, which manages all of the basic stuff that applications need such as accounts, sessions, token issuance, permissions, roles, authentication Any application built around the same Blossm Core network can easily interoperate.
+
+There are a few non-required traits of a Blossm Core network that are strongly encouraged:
+
+* A Blossm Core network is encouraged to not collect any personal information to associate with accounts. It is encouraged that accounts be created, verified, and managed through email addresses or Ethereum addresses (or ENS) only.
+
+* A Blossm Core network is encouraged to keep regular snapshots of it's data on an open file system, like FileCoin, for public auditability.
+
+* A Blossm Core network is encouraged to associate wallets to accounts that can be used by any application built around it for sending / receiving payments on Ethereum. Fiat is encouraged, but often requires KYC which is at odds the first bullet. Find a balance and push for progress when it comes to open value transfer.
+
+There isn't clear guidelines on how to implement your own Blossm Core network according to a specified interface, but there is one implementation currently in Beta done by `sustainers.network`. The implementation can be found here: <https://github.com/sustainers-network/blossm>.
+
+---
+
 ## Setup 
 
 If you already use Node, the only thing you'll have to install is the Blossm CLI tool which makes it easy to spin up procedures, run tests, deploy to any environment, replay events over projections, and manage various other details of your application:
