@@ -1,7 +1,7 @@
 # Blossm
 
 1. [Overview](#overview)
-1. [Blossm Core network](#blossmcorenetwork)
+1. [Blossm Core network](#blossm-core-network)
 2. [Setup](#setup)
 3. [Deploy](#deploy)
 4. [TODO](#todo)
