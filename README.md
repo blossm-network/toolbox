@@ -35,7 +35,7 @@ Each Event Sourcing implementation may be slightly different, but many share com
 * **Carson Farmer** and the folks at Textile
   * https://docsend.com/view/gu3ywqi
 
-*Thank you for all the work you've done!*
+*Thank you for all the work you've done and continue to do!*
 
 Blossm currently has adapters to run on GCP using a MongoDB database for its stores, but adapters can be built to deploy procedures on any compute server using a database of your choice.
 
