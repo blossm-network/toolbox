@@ -481,6 +481,11 @@ Only a GCP adapter is currently implemented. If other's are needed, I'd be happy
 ## Databases
 
 1. [MongoDB Atlas](#mongodb-atlas)
+
+Below are instructions for setting up `view-stores` or `event-stores` on MongoDB Atlas.
+
+TODO
+
 2. [Others](#others)
 
 ---
