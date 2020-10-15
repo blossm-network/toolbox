@@ -355,6 +355,49 @@ Within each GCP project, you'll be using:
 
 #### Permissions
 
+1. In the `development` project:
+  * In **Cloud Build**, enable the Cloud Build API. 
+  * In **IAM & Admin > Roles**, create a Role named **“Blossm Developer”** with id **“BlossmDeveloper”**. This will be the role given to developers’ machines. Give it the permissions:
+    * **storage.buckets.create** - allows the machine to create storage buckets.
+    * **storage.objects.create** - allows the machine to store objects in buckets, including the build artifacts and the encrypted key in a storage bucket.
+    * **cloudkms.cryptoKeys.create** - allows the machine to create crypto keys.
+    * **cloudkms.cryptoKeyVersions.useToEncrypt** - allows the machine to encrypt a message using a Crypto key.
+    * **cloudtasks.queues.create** - allows the machine to create task queues.
+    * **cloudtasks.tasks.create** - allows the machine to create tasks.
+    * **iam.serviceAccounts.actAs** - allows the machine to execute commands.
+    * In **IAM & Admin > Service Accounts**, grant the **Service Account User** role to the Cloud Build service account on the \[projectNumber\]-compute@developer.gserviceaccount.com Service Account. See [here](https://cloud.google.com/cloud-build/docs/deploying-builds/deploy-cloud-run) and [here](https://cloud.google.com/run/docs/reference/iam/roles#additional-configuration) for more info.
+    * **In IAM & Admin > IAM**, add the following roles to the @cloudbuild.gserviceaccount.com service Account:
+    Cloud Run Admin
+      * **Cloud Tasks Queue Admin** - allows the build process to create queues.
+      * **DNS Administrator** - to configure domains.
+      * **Pub/Sub Admin** - to create topics and subscriptions.
+      * **Cloud Scheduler Admin** - to create and modify jobs.
+      * **Cloud KMS CryptoKey Signer/Verifier** - to sign and verify messages. Used in integration tests.
+      * **Cloud KMS CryptoKey Encrypter/Decrypter** - to encrypt and decrypt messages. Used in integration tests.
+      * **Cloud KMS Admin** - to create keys, used to create keys for private event-stores.
+      * **Service Account User** - to assign a push subscription to a Run service. 
+    * In **IAM & Admin > IAM**, grant the following Roles to the **\[projectNumber\]-compute@developer.gserviceaccount.com** service account:
+      * **Cloud Run Invoker** - allows a service to invoke other services.
+      * **Cloud KMS CryptoKey Encrypter/Decrypter** - to decrypt encrypted values.
+      * **Cloud KMS CryptoKey Signer/Verifier** - allows a service to sign data with encryption keys, and verify the signatures.
+    * In **IAM & Admin > Service Accounts**
+      * Create a service account named **“Executer”** with ID **executer@**. Give it roles **Service Account User** and **Cloud Run Invoker**.
+      * Create a service account named **“Cloud Run Pub/Sub Invoker”** with ID **cloud-run-pubsub-invoker@**.
+        * Give it the **Cloud Run Invoker** role.
+
+2. Repeat step 1 with the `production`, `sandbox` and `staging` projects.
+
+3. In the **development** project:
+    * Give the **@cloudbuild.gserviceaccount.com** service account ownership over the domain you registered in the Networking section by going to [this site](https://search.google.com/u/1/search-console/users?resource_id=sc-domain:sm.network) and clicking settings.
+      * Next to your name, it should say Owner and have a three-dot menu. Click the menu and select Manage Property Owners.
+        * In the new site, click on your domain in the Properties list.
+          * At the bottom you should see a button to Add an owner. 
+            * Add the email address of the **@cloudbuild.gserviceaccount.com** service account.	
+
+4. Repeat step 3 with the **production**, **sandbox** and **staging** projects.
+
+
+
 
 ### Others
 
