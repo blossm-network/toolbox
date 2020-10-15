@@ -380,6 +380,8 @@ Only a GCP adapter is currently implemented. If other's are needed, I'd be happy
 #### Design
 
 - [ ] Implement a brand for Blossm.
+- [ ] Implement a landing page website for Blossm.
+- [ ] Implement a documentation website with rich implementation guidelines.
 
 ... documentation to be continued ...
       <!-- root, // The root to aggregate
