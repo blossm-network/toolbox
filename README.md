@@ -108,54 +108,38 @@ blossm init
 
 The provided `config.yaml` is where you'll specify the configurations of your app, the `services` folder is where you'll write your write-side procedures, and the `contexts` folder is where you'll write your read-side procedures. There are some examples in there for you.
 
-Each procedure is made up of a `blossm.yaml` file where it's configured, and one-or-two other files where a peice of functionality can be coded. Here are the specifics for each type of procedure:
+Each procedure is made up of a `blossm.yaml` file where it's configured, and one-or-two other files where the necessary peices of functionality can be coded. Here are the specifics for each type of procedure:
 
 * `command`
-  - `blossm.yaml` - Specify what the `domain` and `service` of this command are, specifiy the schema of a valid payload that should be accepted, and write some examples for the unit tests and integration tests to check against that must pass before deployment is possible.
   * `blossm.yaml` - Specify what the `domain` and `service` of this command are, specifiy the schema of a valid payload that should be accepted, and write some examples for the unit tests and integration tests to check against that must pass before deployment is possible.
-* `main.js` - Export a function that runs when the command is called.
+  * `main.js` - Export a function that runs when the command is called that lets you do a specific routine and easily call other commands, read from the state of the app, log `events`, and return some data to the command issuer.
+  * `normalize.js` - Simply takes in a valid payload and cleans or formats it.
+  * `deps.js` - A place to expose external dependencies that can be used in `main.js` and easily mocked out in tests.
 
 ```javascript
-//main.js input
+//main.js 
+
+// Available object passed in as input:
 
 {
   // The payload that the command is being called with that fulfills the schema defined in the `blossm.yaml` file."
-  payload: {
-    some: "data"
-  },
-
+  payload,
   // The context of the token being used to make the request. This provides info about the address that is issuing the command.",
-  context: {
-    session: {
-      root: "be214f0a-17c0-4d46-9a2b-742d6e65f100",
-      service: "core",
-      network: "sustainers.network"
-    },
-    principal: {
-      root: "cf325g1b-28d1-5e57-10b3c-853e7f76g211",
-      service: "core",
-      network: "sustainers.network"
-    },
-    // A function to call if you want to get the current state of any root in your network.
-    aggregateFn: async ({
-      root, // The root to aggregate
-      { // optional
-        domain, // The root's domain. Defaults to the current domain.
-        service, // The root's service. Defaults to the current service.
-        network, // The root's network. Defaults to the current network.
-        notFoundThrows // If true, an error will be thrown if the root isn't found. If false, null is returned. Defaults to true. 
-      } = {}
-    }) => {
-      // The state of the aggregate.
-      state: {
-        some: state
-      },
-      // The number of the last event of this aggregate.
-      lastEventNumber: aggregate.headers.lastEventNumber,
-      // The root that was aggregated.
-      root: aggregate.headers.root,
-    }
-  },
+  context,
+    // A function to call to get the current state of any root in your network.
+    aggregateFn,
+    // A function to call to query for an aggregate in your network by key and value.
+    queryAggregatesFn,
+    // A function to call to read from a fact procedure in your network.
+    readFactFn,
+    // A function to call to stream from a fact procedure in your network.
+      streamFactFn,
+      // A function to call other commands in your network.
+      commandFn,
+      // A function to call to get the count of events for a particular root in your network.
+      countFn,
+      // A function to call to log events.
+      submitEventsFn,
 }
 ```
 
@@ -186,3 +170,20 @@ Only a GCP adapter is currently implemented. If other's are needed, I'd be happy
 
 ---
 ... documentation to be continued ...
+      <!-- root, // The root to aggregate
+      { // optional
+        domain, // The root's domain. Defaults to the current domain.
+        service, // The root's service. Defaults to the current service.
+        network, // The root's network. Defaults to the current network.
+        notFoundThrows // If true, an error will be thrown if the root isn't found. If false, null is returned. Defaults to true. 
+      } = {}
+    }) => {
+      // The state of the aggregate.
+      state: {
+        some: state
+      },
+      // The number of the last event of this aggregate.
+      lastEventNumber: aggregate.headers.lastEventNumber,
+      // The root that was aggregated.
+      root: aggregate.headers.root,
+    } -->
