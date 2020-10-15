@@ -43,7 +43,7 @@ On the read side:
 
 Once the purpose of each of the above procedures makes some sense to you, the big question becomes how to use them to solve your applications needs.
 
-Blossm works off of the event sourcing pattern, meaning the state of the app is determined entirely by the chronological aggregation of immutable events that are logged. Events that affect the same *thing* affect the current state of that thing. In Blossm, the `root` of an event (a UUID) refers the to *thing* that it affects, and when you add all events that have happened to a specic `root` over each other, the result is called the *aggregate root*.  
+Blossm works off of the event sourcing pattern, meaning the state of the app is determined entirely by the chronological aggregation of immutable events that are logged. Events that affect the same *thing* can overwrite previous states of that thing. In Blossm, the `root` of an event (a UUID) refers to the *thing* that it affects, and when you add all events that have happened to a specic `root` over each other, the result is called the *aggregate root*, which represents the current state of that thing.  
 
 For example, if two events have been logged into an `event-store`: 
 
