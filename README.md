@@ -108,22 +108,38 @@ blossm init
 
 The provided `config.yaml` is where you'll specify the configurations of your app, the `services` folder is where you'll write your write-side procedures, and the `contexts` folder is where you'll write your read-side procedures. There are some examples in there for you.
 
-Each procedure is made up of a `blossm.yaml` file where it's configured, and a few other files where the necessary peices of functionality can be coded. Here are the specifics for each type of procedure:
+Once you're ready to write procedures and have made sense of how the files are organized, here's how to init each of them:
 
-On the write-side:
+```javascript
+// write side:
+blossm event-store init
+blossm command init
+blossm fact init
+blossm command-gateway init
+blossm fact-gateway init
+
+// read side:
+blossm view-store init
+blossm projection init
+blossm view-gateway init
+```
+
+Each procedure is a small directory made up of a `blossm.yaml` file where it's configured, and a few other files where the necessary peices of functionality can be coded. Here's some info about the file contents of each type of procedure:
+
+On the write side:
 
 * `event-store`
-  * `blossm.yaml` - Specify what the `domain` and `service` of this event store are, list the event actions that can be handled, defined the schema of a valid event that should be accepted and stored, and write some examples for the unit tests and integration tests to check against that must pass before deployment is possible.
+  * `blossm.yaml` - Specify what the `domain` and `service` of this event store are, list the event actions that can be handled, defined the schema of a valid event that should be accepted and stored, and write some example events for the unit tests and integration tests to check against that must pass before deployment is possible.
   * `handlers.js` - Exports instructions for how to transform the state of an aggregate given all permitted event actions. 
 
 * `command`
-  * `blossm.yaml` - Specify what the `domain` and `service` of this command are, define the schema of a valid payload that should be accepted, and write some examples for the unit tests and integration tests to check against that must pass before deployment is possible.
+  * `blossm.yaml` - Specify what the `domain` and `service` of this command are, define the schema of a valid payload that should be accepted, and write some example payloads for the unit tests and integration tests to check against that must pass before deployment is possible.
   * `main.js` - Exports a function that runs when the command is called that lets you do a specific routine and easily call other commands, read from the state of the app, conditionally log new `events`, and return some data to the command issuer.
   * `normalize.js` - Simply takes in a valid payload and cleans or formats it.
   * `deps.js` - A place to expose external dependencies that can be used in `main.js` and easily mocked out in tests.
 
 * `fact`
-  * `blossm.yaml` - Specify what the `domain` and `service` of this fact are, define the schema of a valid payload that should be accepted, and write some examples for the unit tests and integration tests to check against that must pass before deployment is possible.
+  * `blossm.yaml` - Specify what the `domain` and `service` of this fact are, define the schema of a valid payload that should be accepted, and write some example queries for the unit tests and integration tests to check against that must pass before deployment is possible.
   * `main.js` - Exports a function that runs when the fact is called that lets you easily read from the state of the app or from anywhere else on the internet to produce some formatted data to return the requester.
 
 * `command-gateway`
@@ -135,17 +151,18 @@ On the write-side:
 On the read side:
 
 * `view-store`
-  * `blossm.yaml` - Specify what the `context` of this view store is, define the schema of a valid view that should be accepted and stored, list the indexes that the store can be queried and sorted by, and write some examples for the unit tests and integration tests to check against that must pass before deployment is possible.
+  * `blossm.yaml` - Specify what the `context` of this view store is, define the schema of a valid view that should be accepted and stored, list the indexes that the store can be queried and sorted by, and write some example queries for the unit tests and integration tests to check against that must pass before deployment is possible.
   * `format.js` - A function that each view is passed through on its way to the requester, letting you store raw data that's easy to query and manipulate, while returning a richer determanistically transformed version of that data.
 
 * `projection`
-  * `blossm.yaml` - Specify which `view-store` event data gets mapped to, list the event actions that are listened for, and write some examples for the unit tests and integration tests to check against that must pass before deployment is possible.
+  * `blossm.yaml` - Specify which `view-store` event data gets mapped to, list the event actions that are listened for, and write some example events for the unit tests and integration tests to check against that must pass before deployment is possible.
   * `handlers.js` - Write instructions for how to map aggregate state into views for each state change is listened for. 
 
 * `view-gateway`
   * `blossm.yaml` - Specify what the `context` of this view-gateway fateway, list the view stores that it exposes, and define the conditions that must be met for a requester to query each store. 
 
 
+## Deploy 
 
 1. [GCP](#gcp)
 2. [Others](#others)
