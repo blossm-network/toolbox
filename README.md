@@ -45,28 +45,41 @@ Once the purpose of each of the above procedures makes some sense to you, the bi
 
 Blossm works off of the event sourcing pattern, meaning the state of the app is determined entirely by the chronological aggregation of immutable events that are logged. Events that affect the same *thing* can overwrite previous states of that thing. In Blossm, the `root` of an event (a UUID) refers to the *thing* that it affects, and when you add all events that have happened to a specic `root` over each other, the result is called the *aggregate root*, which represents the current state of that thing.  
 
-For example, if two events have been logged into an `event-store`: 
+For example, if 3 events have been logged into an `event-store`: 
 
 ```javascript
 {
   headers: {
     root: "a1s2d3f4",
     action: "paint"
-    created: "<yesterday>"
+    created: "<last week>",
+    number: 1
   }
   payload: {
-    bodyColor: "pink",
-    detailColor: "yellow"
+    frameColor: "pink",
+    handlebarColor: "yellow"
   }
 }
 {
   headers: {
     root: "a1s2d3f4",
     action: "paint"
-    created: "<today>"
+    created: "<yesterday>",
+    number: 2
   }
   payload: {
-    bodyColor: "orange",
+    frameColor: "orange",
+  }
+}
+{
+  headers: {
+    root: "a1s2d3f4",
+    action: "add-basket"
+    created: "<today>",
+    number: 3
+  }
+  payload: {
+    basketLocation: "front",
   }
 }
 ```
@@ -77,29 +90,31 @@ The aggregate root, which is the current state of the thing described by `a1s2d3
 {
   headers: {
     root: "a1s2d3f4",
-    action: "paint"
-    created: "<today>"
+    lastEventNumber: 3
   }
   payload: {
     bodyColor: "orange",
-    detailColor: "yellow"
+    handlebarColor: "yellow"
+    basketLocation: "front",
   }
 }
 ```
 
-With this bit of concrete information in mind, here's an effective way to organize your procedures:
+With this bit of concrete information in mind, here's an effective way to organize your procedures to get the most out of events:
 
 #### Write-side organization
 
-* `domain` - Each `domain` has one `event-store` and can have one `command-gateway` to allow external access to it's `commands`. You can think of a domain as a labeled category of like *things*, where similar operations can be done to an instance of a particular thing. In the example above, you can imagine each event belonging to the "car" `domain`.
+* `domain` - You can think of a `domain` as a labeled category of like *things*, where similar operations can be done to an instance of a particular thing. In the example above, you can imagine each event belonging to a "bicycle" `domain`. Each `domain` has one `event-store` that stores similar events of various `roots`, and can have one `command-gateway` to allow external access to it's `commands`. 
 
-* `service` - Each `service` is made up of any number of interdependant `domains`, meaning any `commands` from within a `service` can freely log events to any of it's `event-stores`. `services` can also depend on functionality from other `services` unidirectionally.
+* `service` - You can think of a `service` as a labeled category of `domains` that tend to be interdependant. In the example above, you can imagine the "bicycle" `domain` belonging to a "shop" `service`, which may also contain "helmet" and  "lights" as other `domains`. Each `service` is made up of any number of interdependant `domains`, meaning any `commands` from within a `service` can freely log events to any of it's `event-stores`. `services` can also depend on functionality from other `services` unidirectionally.
 
-* `network` - Each network is made up of any number of `services` who's `commands` can call each other directly without a gateway. The network can have up to 4 environments: `development`, `staging`, `sandbox`, and `production`.
+* `network` - You can think of the `network` as the top level container of your application. In the example above, you can imagine the "shop" `service` belonging to the "bicyclecity.com" `network`, which may also contain an "staff" service that manages functionality and events relating to hiring and scheduling. Each network is made up of any number of `services` who's `commands` can call each other directly without a gateway. The network can have up to 4 environments: `development`, `staging`, `sandbox`, and `production`.
+
+Here's a visual metaphor:
 
 ![alt text](/imgs/write-layers.png "Write organizational layers")
 
-`command-gateways` are addressed by `c.<domain>.<service>.<network>`, so in the above examples the commands would be accessible at:
+`command-gateways` are addressed by `c.<domain>.<service>.<network>`, so in the example diagram above the commands would be accessible at:
 
 * `c.video.content.youtube.com/upload`
 * `c.video.content.youtube.com/change-visibility`
@@ -113,15 +128,33 @@ Non-`production` gateways are addressed with a network prefix of `.dev | .stg | 
 
 #### Read-side organization
 
-Functionality is organized in 2 layers that are based on permissions. The way these layers work are slightly different from how the read-side works, although the nesting structure is similar. 
+Read-side functionality is organized around permissions. Blossm read-side procedures can be organized and easily configured to pull off very specific intents, such as "I only want a certain account to have access to these views", or "I only want certain group of accounts to have access to these views", or "I want everyone who is authenticated to have access to these views", or the most broad "I want everyone on the internet to have access to these views".
 
-* `context` - Without going into the specifics of how permissions work, note that requests are made to `view-gateways` with a cookie containing a JWT token with information about the `contexts` that are accessible. `view-stores` can be placed in a `context` if it can only be accessed by tokens that have that `context` specified.
+* `context` - Blossm manages permissions most broadly through `contexts`. Without going into the specifics of how permissions work, note that requests are made to `view-gateways` with a cookie containing a JWT token with information about the `contexts` that are accessible by this token. `view-stores` can be placed in a `context` if it can only be accessed by tokens that have that `context` specified.
 
-* `network` - This is the same `network` as the write-side.
+For example, let's say you're building a task manager application for a team. Let's say there is a "team" `domain`, and that the `root` of your team is "q1w2e3r4t5y6". Since your account is associated with this team, your session token will have a `context` in it like so:
+
+```javascript
+{
+  context: {
+    team: {
+      root: "q1w2e3r4t5y6",
+      service: "your-team-service",
+      network: "your-team.network"
+    }
+  }
+}
+```
+
+Each time you make a request, the Blossm procedures know that you have access to this specific team, and can prevent access at the gateway level if the requesting token seems to be lacking permissions. 
+
+If calling a `view-store` within the "team" context, you'll only be able to access data that was created from the team with `root` "q1w2e3r4t5y6".
+
+The basic use cases of Blossm don't require the knowledge to weild `contexts` in custom ways. 
 
 ![alt text](/imgs/read-layers.png "Read organizational layers")
 
-In the example above, the `home-feed` and `search-feed` stores are accessible by any token, and the `history` and `profile` stores are only accessible to a token containing an `account` context.
+In the example diagram above, the `home-feed` and `search-feed` stores are accessible by any token, and the `history` and `profile` stores are only accessible to a token containing an `account` context.
 
 `view-gateways` are addressed by `v(.<context>)?.<network>`, so in the above examples the views would be accessible at:
 
@@ -131,12 +164,6 @@ In the example above, the `home-feed` and `search-feed` stores are accessible by
 * `v.account.youtube.com/profile`
 
 Again, non-`production` gateways are addressed with a network prefix of `.dev | .stg | .snd`.
-
-### Anatomy of an Event
-TODO
-
-### Life of an Event
-TODO
 
 ---
 
@@ -246,7 +273,7 @@ Below are instructions for how to orchestrate your Blossm procedures on Google's
 
 Within each GCP project, you'll be using:
 
-* __Cloud Run__ to serve your Blossm procedures.
+* __Cloud Run__ to serve your Blossm procedures as serverless functions.
 * __Cloud Pub/Sub__ to publish messages when `events` are logged, which in turn trigger the execution of relevant `projections`.
 * __Cloud Tasks__ to schedule procedure execution on a queue to manage load.
 * __Cloud DNS__ to manage your network's top-level domain and any subdomains in your network.
