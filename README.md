@@ -205,7 +205,7 @@ Then initialize a Blossm project:
 blossm init
 ```
 
-The provided `config.yaml` is where you'll specify the configurations of your app, the `services` folder is where you'll write your write-side procedures, and the `contexts` folder is where you'll write your read-side procedures. There are some examples in there for you.
+The provided `config.yaml` is where you'll specify the configurations of your app, the `services` folder is where you'll write your write-side procedures, and the `contexts` folder is where you'll write your read-side procedures. 
 
 Once you're ready to write procedures and have made sense of how the files are organized, here's how to init each of them:
 
