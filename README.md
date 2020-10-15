@@ -184,9 +184,14 @@ There are a few non-required traits of a Blossm Core network that are strongly e
 
 There aren't yet clear guidelines on how to implement your own Blossm Core network according to a specified interface, but there is one implementation currently in Beta done by `sustainers.network`. The implementation can be found here: <https://github.com/sustainers-network/blossm>. I've spent my time implementing, not documenting.
 
+
+Blossm Core networks are set up just like any other Blossm network though.
+
 ---
 
 ## Setup 
+
+Here's how to set up your Blossm workflow.
 
 If you already use Node, the only thing you'll have to install is the Blossm CLI tool which makes it easy to spin up procedures, run tests, deploy to any environment, replay events over projections, and manage various other details of your application:
 
