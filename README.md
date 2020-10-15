@@ -39,12 +39,59 @@ On the read side:
 
 * `view-gateway` - Deployed to permit external access to a set of `view-stores` under specified conditions.
 
+### How ideas are organized within Blossm
 
-### Write-side organization
+Once the purpose of each of these procedures makes some sense to you, the big question becomes how to use them to solve your applications needs.
 
-Functionality is organized in 3 layers that outline how to configure procedures, and are named by the application designer.
+Blossm works off of the event sourcing pattern, meaning the state of the app is determined entirely by the chronological aggregation of immutable events that are logged. Events that affect the same *thing* affect the current state of that thing. In Blossm, the `root` of an event (a UUID) refers the to *thing* that it affects, and when you add all events that have happened to a specic `root` over each other, the result is called the *aggregate root*.  
 
-* `domain` - Each `domain` has one `event-store` and can have one `command-gateway` to allow external access to it's `commands`.
+For example, if two events have been logged into an `event-store`: 
+
+```javascript
+{
+  headers: {
+    root: "a1s2d3f4",
+    action: "paint"
+    created: "<yesterday>"
+  }
+  payload: {
+    bodyColor: "pink",
+    detailColor: "yellow"
+  }
+}
+{
+  headers: {
+    root: "a1s2d3f4",
+    action: "paint"
+    created: "<today>"
+  }
+  payload: {
+    bodyColor: "orange",
+  }
+}
+```
+
+The aggregate root, which is the current state of the thing described by `a1s2d3f4` would be:
+
+```javascript
+{
+  headers: {
+    root: "a1s2d3f4",
+    action: "paint"
+    created: "<today>"
+  }
+  payload: {
+    bodyColor: "orange",
+    detailColor: "yellow"
+  }
+}
+```
+
+With this bit of concrete information in mind, here's an effective way to organize your procedures:
+
+#### Write-side organization
+
+* `domain` - Each `domain` has one `event-store` and can have one `command-gateway` to allow external access to it's `commands`. You can think of a domain as a labeled category of like *things*, where similar operations can be done to an instance of a particular thing. In the example above, you can imagine each event belonging to the "car" `domain`.
 
 * `service` - Each `service` is made up of any number of interdependant `domains`, meaning any `commands` from within a `service` can freely log events to any of it's `event-stores`. `services` can also depend on functionality from other `services` unidirectionally.
 
@@ -64,7 +111,7 @@ Functionality is organized in 3 layers that outline how to configure procedures,
 Non-`production` gateways are addressed with a network prefix of `.dev | .stg | .snd`.
 
 
-### Read-side organization
+#### Read-side organization
 
 Functionality is organized in 2 layers that are based on permissions. The way these layers work are slightly different from how the read-side works, although the nesting structure is similar. 
 
