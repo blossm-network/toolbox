@@ -10,7 +10,7 @@
 
 ## Overview
 
-### Blossm is a javascript Event Sourcing CQRS orchestrator. 
+### Blossm is a javascript Event Sourcing CQRS orchestrator, and includes a description for setting up multi-project interoperability through a Blossm Core network.
 
 CQRS is an Event Sourcing software architecture pattern where the write and read responsibilites are organized around seperate data stores. 
 The write side takes a request, performs a routine, and optionally logs some events with metadata to a store, thus modifying the state of the app forever — the event stores meant to be immutable.
@@ -342,6 +342,18 @@ Within each GCP project, you'll be using:
     * Add a record set for your domain of type TXT. For the value, use the one show on the page from step 7. 
 
 8. Click Verify on this site from step 7. Sometimes it takes a little while for the TXT record to propagate, so keep trying to verify if you don’t succeed at first.
+
+
+#### VPC
+
+1. In the `development` project:
+    * In **VPC network > Serverless VPC** access, enable Serverless VPC access API.
+    * Create a connector named **“us-central1”** in the us-central1 region under the default network with ip range 10.8.0.0/28.
+
+2. Repeat step 1 with the `production`, `sandbox` and `staging` projects. 
+
+
+#### Permissions
 
 
 ### Others
