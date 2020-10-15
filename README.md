@@ -1,6 +1,6 @@
 ## Blossm
 
-### An Event Sourcing CQRS orchestrator currently written only for javascript, that includes a description for setting up multi-project interoperability through shared a Blossm base layer that handles core components like sessions, accounts, permissions, roles, and more.
+### An Event Sourcing CQRS orchestrator currently written only for javascript, that includes a description for setting up multi-project interoperability through shared a Blossm base layer that handles core components like sessions, accounts, permissions, roles, data publishing, and more.
 
 #### With Blossm you can architect, fully-test, and deploy just about any peice of software functionality using small javascript functions and YAML configs, in a way that keeps each historical state of your app entirely queriable and auditable, and with the opportunity to connect many independently developed networks together through a shared base layer. It's also extremely cheap to run, scales reliably and automatically, and is extremely easy to maintain. 
 
