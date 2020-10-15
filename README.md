@@ -1,7 +1,7 @@
 ## Blossm
 
 1. [Overview](#overview)
-1. [Blossm base layer network](#blossm-base-layer-network)
+1. [Blossm base layer](#blossm-base-layer)
 2. [Setup](#setup)
 3. [Deploy](#deploy)
 4. [TODO](#todo)
@@ -10,7 +10,7 @@
 
 # Overview
 
-### Blossm is a javascript Event Sourcing CQRS orchestrator, and includes a description for setting up multi-project interoperability through a Blossm base layer network.
+### Blossm is a javascript Event Sourcing CQRS orchestrator, and includes a description for setting up multi-project interoperability through a Blossm base layer.
 
 #### With Blossm you can architect, fully-test, and deploy just about any peice of software functionality using small javascript functions and YAML configs, in a way that keep each historical state of your app entirely queriable and auditable, and with the opportunity to connect many independently developed networks together through a shared base layer. It's also extremely cheap to run and extremely easy to maintain. 
 
@@ -178,20 +178,20 @@ Again, non-`production` gateways are addressed with a network prefix of `.dev | 
 
 # Blossm base layer 
 
-Blossm applications must be built around an implementation of the Blossm base layer network, which manages all of the basic stuff that applications need such as accounts, sessions, token issuance, permissions, roles, authentication, and publishing updated views to connected clients. Any application built around the same Blossm base layer network can easily interoperate with one another.
+Blossm applications must be built around an implementation of the Blossm base layer, which manages all of the basic stuff that applications need such as accounts, sessions, token issuance, permissions, roles, authentication, and publishing updated views to connected clients. Any application built around the same Blossm base layer can easily interoperate with one another.
 
-There are a few non-required traits of a Blossm base layer network that are strongly encouraged:
+There are a few non-required traits of a Blossm base layer that are strongly encouraged:
 
-* A Blossm base layer network is encouraged to not collect any personal information to associate with accounts. It is encouraged that accounts be created, verified, and managed through email addresses or Ethereum addresses (or ENS) only.
+* A Blossm base layer is encouraged to not collect any personal information to associate with accounts. It is encouraged that accounts be created, verified, and managed through email addresses or Ethereum addresses (or ENS) only.
 
-* A Blossm base layer network is encouraged to keep regular snapshots of it's data on an open file system, like FileCoin, for public auditability.
+* A Blossm base layer is encouraged to keep regular snapshots of it's data on an open file system, like FileCoin, for public auditability.
 
-* A Blossm base layer network is encouraged to associate wallets to accounts that can be used by any application built around it for sending / receiving payments on Ethereum. Fiat is encouraged, but often requires KYC which is at odds the first bullet. Find a balance and push for progress when it comes to open value transfer.
+* A Blossm base layer is encouraged to associate wallets to accounts that can be used by any application built around it for sending / receiving payments on Ethereum. Fiat is encouraged, but often requires KYC which is at odds the first bullet. Find a balance and push for progress when it comes to open value transfer.
 
-There aren't yet clear guidelines on how to implement your own Blossm base layer network according to a specified interface, but there is one implementation currently in Beta done by `sustainers.network`. The implementation can be found here: <https://github.com/sustainers-network/blossm>. I've spent my time implementing, not documenting.
+There aren't yet clear guidelines on how to implement your own Blossm base layer according to a specified interface, but there is one implementation currently in Beta done by `sustainers.network`. The implementation can be found here: <https://github.com/sustainers-network/blossm>. I've spent my time implementing, not documenting.
 
 
-Blossm base layer networks are set up just like any other Blossm network though.
+Blossm base layers are set up just like any other Blossm network.
 
 ---
 
