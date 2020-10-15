@@ -111,10 +111,15 @@ The provided `config.yaml` is where you'll specify the configurations of your ap
 Each procedure is made up of a `blossm.yaml` file where it's configured, and one-or-two other files where a peice of functionality can be coded. Here are the specifics for each type of procedure:
 
 * `command`
-* - `blossm.yaml` - Specify what the `domain` and `service` of this command are, specifiy the schema of a valid payload that should be accepted, and write some examples for the unit tests and integration tests to check against that must pass before deployment is possible.
-* - `main.js` - Export a function that runs when the command is called.
-* - - input: asdfasf
-* - - output: asdfasf
+  - `blossm.yaml` - Specify what the `domain` and `service` of this command are, specifiy the schema of a valid payload that should be accepted, and write some examples for the unit tests and integration tests to check against that must pass before deployment is possible.
+ - `main.js` - Export a function that runs when the command is called.
+  - input: 
+      `payload` - the payload that the command is being called with that fulfills the schema defined in the `blossm.yaml` file.
+      `context` - the context of the token being used to make the request. This provides info about the address that is issuing the command.
+      `root (optional)` - the root to associate with the command.
+      `aggregateFn` - a function to call if you want to get the current state of any root in your network.
+
+- - output: asdfasf
 
 
 
