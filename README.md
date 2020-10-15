@@ -135,7 +135,7 @@ On the write side:
 * `command`
   * `blossm.yaml` - Specify what the `domain` and `service` of this command are, define the schema of a valid payload that should be accepted, and write some example payloads for the unit tests and integration tests to check against that must pass before deployment is possible.
   * `main.js` - Exports a function that runs when the command is called that lets you do a specific routine and easily call other commands, read from the state of the app, conditionally log new `events`, and return some data to the command issuer.
-  * `normalize.js` - Simply takes in a valid payload and cleans or formats it.
+  * `normalize.js` - Simply takes in a valid payload and cleans/formats it.
   * `deps.js` - A place to expose external dependencies that can be used in `main.js` and easily mocked out in tests.
 
 * `fact`
@@ -160,6 +160,31 @@ On the read side:
 
 * `view-gateway`
   * `blossm.yaml` - Specify what the `context` of this view-gateway fateway, list the view stores that it exposes, and define the conditions that must be met for a requester to query each store. 
+
+
+Once you're ready to run unit tests locally:
+
+```javascript
+blossm test
+```
+
+Once you're ready to run unit tests and integration tests remotely:
+
+```javascript
+blossm deploy --dry-run 
+```
+
+And finally once you're ready to deploy after running unit and integration tests remotely:
+
+```javascript
+blossm deploy 
+```
+
+You can always replay a projection with:
+
+```javascript
+blossm replay 
+```
 
 
 ## Deploy 
