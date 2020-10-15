@@ -313,14 +313,35 @@ Within each GCP project, you'll be using:
 
 #### Networking
 
-1. In the production project:
+1. Verify that you own the domain on [this site](https://search.google.com/u/1/search-console/users?resource_id=sc-domain:sm.network).
+    * Click Add property on the top right.
+      * Go through the steps until the property is verified.
+
+2. In the `production` project:
     * In **Network Services > Cloud DNS**, enable Cloud DNS.
       * Create a public DNS Zone named **“network”**. With DNS name \[your-domain\].
         * Turn on DNSSEC.
       * Set the Name servers of your domain in its domain registry to the data of the NS record set.
       * If you set TXT and MX records in your domain registry as part of step 3 of Initial Setup, move those records to GCP also.
+  
+3. In the `development` project:
+    * In **Network Services > Cloud DNS**, enable Cloud DNS.
+      * Create a public DNS Zone named **“network”**. With DNS name dev.\[your-domain\].
+        * Turn on DNSSEC.
+      * Note the NS Data domains. There should be four.
 
+4. Back in the `production` project:
+    * Add a record set named dev.\[your-domain\] of type NS. 
+    * Add the NS data domains from step 2 as name servers.
 
+5. Repeat steps 2 & 3 with the `sandbox` and `staging` projects using snd.[your domain] and stg.[your domain].
+
+6. Visit [this](https://www.google.com/webmasters/verification/home?hl=en) site and add your domain as a property. You’ll be given a TXT record to use. Keep this site open.
+
+7. Back in the `production` project:
+    * Add a record set for your domain of type TXT. For the value, use the one show on the page from step 7. 
+
+8. Click Verify on this site from step 7. Sometimes it takes a little while for the TXT record to propagate, so keep trying to verify if you don’t succeed at first.
 
 
 ### Others
