@@ -1,19 +1,18 @@
 ## Blossm
 
-1. [Overview](#overview)
-2. [Blossm base layer](#blossm-base-layer)
-3. [Setup](#setup)
-4. [Deploy](#deploy)
-5. [TODO](#todo)
-
-
-### Blossm is a javascript Event Sourcing CQRS orchestrator, and includes a description for setting up multi-project interoperability through a Blossm base layer.
+### An Event Sourcing CQRS orchestrator currently written only for javascript, that includes a description for setting up multi-project interoperability through shared a Blossm base layer that handles core components like sessions, accounts, permissions, roles, and more.
 
 #### With Blossm you can architect, fully-test, and deploy just about any peice of software functionality using small javascript functions and YAML configs, in a way that keeps each historical state of your app entirely queriable and auditable, and with the opportunity to connect many independently developed networks together through a shared base layer. It's also extremely cheap to run, scales reliably and automatically, and is extremely easy to maintain. 
 
 #### The project aspires to make sure the data produced in Blossm systems can be owned and delegated entirely by the users and groups that produced it, giving Blossm network operators no data aggregation and manipulation advantages over the public. 
 
 #### The project also aspires to interoperate with the Ethereum blockchain to provide an application experience layer that can interact with Contracts and respond to events, while providing an event storage layer for trivial intraday application data that doesn't need to be on-chain in real time.
+
+1. [Overview](#overview)
+2. [Blossm base layer](#blossm-base-layer)
+3. [Setup](#setup)
+4. [Deploy](#deploy)
+5. [TODO](#todo)
 
 ---
 
