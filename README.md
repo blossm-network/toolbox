@@ -434,7 +434,7 @@ Configure the storage of secrets that your application uses during runtime.
 
 The command to save a secret is using the CLI is:
 
-```javascript```
+```javascript
 blossm secret create mongodb -m <YOUR-SECRET> -e <development, staging, sandbox, or production>
 ```
 
