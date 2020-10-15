@@ -25,11 +25,15 @@ The read side listens for logged events and uses their metadata to write to any 
 
 Each Event Sourcing implementation may be slightly different, but many share common design gotchas and pitfalls. If you're less familiar with the pattern, I'd highly recomment spending some time doing a little background research. Here are some well-articulated videos and papers by some incredible folks around the topic, many of which inspired the choices that were made when developing Blossm:
 
-* Martin Fowler - https://www.youtube.com/watch?v=STKCRSUsyP0&t=206s
-* Martin Fowler - https://martinfowler.com/bliki/StranglerFigApplication.html
-* Greg Young - https://www.youtube.com/watch?v=LDW0QWie21s
-* David Schmitz - https://www.youtube.com/watch?v=GzrZworHpIk&t=1612s
-* Carson Farmer and the folks at Textile - https://docsend.com/view/gu3ywqi
+* **Martin Fowler**
+  * https://www.youtube.com/watch?v=STKCRSUsyP0&t=206s
+  * https://martinfowler.com/bliki/StranglerFigApplication.html
+* **Greg Young**
+  * https://www.youtube.com/watch?v=LDW0QWie21s
+* **David Schmitz** 
+  * https://www.youtube.com/watch?v=GzrZworHpIk&t=1612s
+* **Carson Farmer** and the folks at Textile
+  * https://docsend.com/view/gu3ywqi
 
 (Thank you for all the work you've done!)
 
