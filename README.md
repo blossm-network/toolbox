@@ -142,7 +142,7 @@ For example, let's say you're building a task manager application for a team. Le
       service: "your-team-service",
       network: "your-team.network"
     },
-    //... there'll be other things in the context that.
+    //... there'll be other things in the context.
   }
 }
 ```
