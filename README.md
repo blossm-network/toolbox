@@ -12,7 +12,7 @@
 ### Contents:
 1. [Quickstart](#quickstart)
 2. [Overview](#overview)
-3. [Blossm base layer](#blossm-base-layer)
+3. [Base layer](#base-layer)
 4. [Setup CLI](#setup-cli)
 5. [Setup deployment infrastructure](#setup-deployment-infrastructure)
 6. [TODO](#todo)
@@ -289,7 +289,7 @@ Again, non-`production` gateways are addressed with a network prefix of `.dev | 
 
 ---
 
-# Blossm base layer 
+# Base layer 
 
 Blossm applications must be built around an implementation of the Blossm base layer, which manages all of the basic stuff that applications need such as accounts, sessions, token issuance, permissions, roles, authentication, and publishing updated views to connected clients. Any application built around the same Blossm base layer can easily interoperate with one another.
 
