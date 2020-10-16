@@ -13,8 +13,8 @@
 1. [Quickstart](#quickstart)
 2. [Overview](#overview)
 3. [Blossm base layer](#blossm-base-layer)
-4. [Setup](#setup)
-5. [Deploy](#deploy)
+4. [Setup cli](#setup-cli)
+5. [Setup deployment infrastructure](#setup-deployment-infrastructure)
 6. [TODO](#todo)
 
 ---
@@ -307,7 +307,7 @@ It's worth nothing that Blossm base layers are set up just like any other Blossm
 
 ---
 
-# Setup 
+# Setup CLI 
 
 Here's how to set up your Blossm workflow.
 
@@ -404,7 +404,7 @@ blossm replay
 ```
 
 
-# Deploy 
+# Setup deployment infrastructure 
 
 1. [Compute](#compute)
 2. [Databases](#databases)
