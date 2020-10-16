@@ -171,7 +171,7 @@ describe("Command handler post", () => {
       countFn,
       submitEventsFn: match(() => true),
       logEventsFn: match(() => true),
-      newRootFn: match(() => true),
+      generateRootFn: match(() => true),
     });
 
     expect(createEventFake).to.have.been.calledWith({
@@ -330,7 +330,7 @@ describe("Command handler post", () => {
       countFn,
       submitEventsFn: match(() => true),
       logEventsFn: match(() => true),
-      newRootFn: match(() => true),
+      generateRootFn: match(() => true),
     });
 
     expect(createEventFake).to.have.been.calledWith({
@@ -498,7 +498,7 @@ describe("Command handler post", () => {
       countFn,
       submitEventsFn: match(() => true),
       logEventsFn: match(() => true),
-      newRootFn: match(() => true),
+      generateRootFn: match(() => true),
     });
 
     expect(createEventFake).to.have.been.calledWith({
@@ -961,7 +961,7 @@ describe("Command handler post", () => {
       countFn,
       submitEventsFn: match(() => true),
       logEventsFn: match(() => true),
-      newRootFn: match(() => true),
+      generateRootFn: match(() => true),
     });
     expect(addFnFake).to.have.been.calledWith({
       domain,
@@ -1110,7 +1110,7 @@ describe("Command handler post", () => {
       countFn,
       submitEventsFn: match(() => true),
       logEventsFn: match(() => true),
-      newRootFn: match(() => true),
+      generateRootFn: match(() => true),
     });
 
     expect(setResponseFake).to.have.been.calledWith({});
@@ -1207,7 +1207,7 @@ describe("Command handler post", () => {
       countFn,
       submitEventsFn: match(() => true),
       logEventsFn: match(() => true),
-      newRootFn: match(() => true),
+      generateRootFn: match(() => true),
     });
 
     expect(setResponseFake).to.have.been.calledWith({});
@@ -1354,7 +1354,7 @@ describe("Command handler post", () => {
       countFn,
       submitEventsFn: match(() => true),
       logEventsFn: match(() => true),
-      newRootFn: match(() => true),
+      generateRootFn: match(() => true),
     });
 
     expect(addFnFake).to.have.been.calledWith({
@@ -1509,7 +1509,7 @@ describe("Command handler post", () => {
       countFn,
       submitEventsFn: match(() => true),
       logEventsFn: match(() => true),
-      newRootFn: match(() => true),
+      generateRootFn: match(() => true),
     });
 
     expect(addFnFake).to.have.been.calledWith({
@@ -1681,7 +1681,7 @@ describe("Command handler post", () => {
       countFn,
       submitEventsFn: match(() => true),
       logEventsFn: match(() => true),
-      newRootFn: match(() => true),
+      generateRootFn: match(() => true),
     });
 
     expect(addFnFake).to.have.been.calledWith({
@@ -1855,7 +1855,7 @@ describe("Command handler post", () => {
       countFn,
       submitEventsFn: match(() => true),
       logEventsFn: match(() => true),
-      newRootFn: match(() => true),
+      generateRootFn: match(() => true),
     });
 
     expect(createEventFake).to.have.been.calledWith({
@@ -2059,7 +2059,7 @@ describe("Command handler post", () => {
       countFn,
       submitEventsFn: match(() => true),
       logEventsFn: match(() => true),
-      newRootFn: match(() => true),
+      generateRootFn: match(() => true),
     });
 
     expect(createEventFake).to.have.been.calledWith({
@@ -2273,7 +2273,7 @@ describe("Command handler post", () => {
       countFn,
       submitEventsFn: match(() => true),
       logEventsFn: match(() => true),
-      newRootFn: match(() => true),
+      generateRootFn: match(() => true),
     });
 
     expect(createEventFake).to.have.been.calledWith({

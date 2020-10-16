@@ -21,7 +21,7 @@ module.exports = async ({
   streamFactFn,
   countFn,
   logEventsFn,
-  newRootFn,
+  generateRootFn,
 }) => {
   // ** Perform a routine if needed. **
 
@@ -159,7 +159,7 @@ The function is passed destructured arguments:
         that can be submitted through the returned value of the function.
     and doesn't return anything.
 
-  • a `newRootFn`
+  • a `generateRootFn`
     that takes no arguments,
     and returns a new root to for you to associate with events.
 

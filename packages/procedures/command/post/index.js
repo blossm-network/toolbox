@@ -212,7 +212,7 @@ module.exports = ({
           ...(req.body.tx && { tx: req.body.tx }),
           txId,
         }),
-      newRootFn: deps.uuid,
+      generateRootFn: deps.uuid,
     })) || {};
 
   await processEvents({
