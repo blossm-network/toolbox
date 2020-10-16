@@ -6,7 +6,7 @@ const fs = require("fs-extra");
 const { spawnSync } = require("child_process");
 const rootDir = require("@blossm/cli-root-dir");
 const path = require("path");
-const { green } = require("chalk");
+const { green, red } = require("chalk");
 const os = require("os");
 
 const envProject = ({ env, config }) => {
@@ -116,13 +116,14 @@ module.exports = ({ domain, dir }) => async (args, configFn) => {
 
           await build({ workingDir, env: e });
           fs.removeSync(workingDir);
+          //eslint-disable-next-line no-console
+          console.log(roboSay("⚡️"), green.bold("done"));
         }
       } catch (e) {
         fs.removeSync(workingDir);
+        //eslint-disable-next-line no-console
+        console.log(roboSay("Something went wrong"), red.bold("error"));
       }
     })
   );
-
-  //eslint-disable-next-line no-console
-  console.log(roboSay("⚡️"), green.bold("done"));
 };
