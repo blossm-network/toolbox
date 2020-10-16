@@ -20,6 +20,8 @@
 
 # Quickstart 
 
+The goal is the create a "meow" command in a "cat" domain that logs a "meow" event, then create a projection that listens for this event and maps the latest cat state over to a "dashboard" view-store for your viewing pleasure.
+
 ```javascript
 npm install -g @blossm/cli
 blossm init
