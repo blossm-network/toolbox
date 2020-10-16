@@ -1,5 +1,5 @@
 ### 🌸  Blossm   
-###### NodeJS
+###### Written for NodeJS
 
 ### Blossm is an Event Sourcing CQRS orchestrator, that includes an interace for setting up multi-project interoperability through a shared Blossm base layer that handles core components like sessions, accounts, permissions, roles, data subscriptions, and more.
 
