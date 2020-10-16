@@ -609,6 +609,7 @@ TODO
 #### Organizational
 
 - [x] Start documentation for Blossm. 
+- [ ] Add an "examples" top level directory with a bunch of examples of what each procedure can do, from simple cases to more complex ones. 
 - [ ] Document MongoDB Atlas deployment info. 
 - [ ] Add documentation about adding a permission once a subscription has been made. 
 - [ ] Add a hello world application that is included with `blossm init`. 
