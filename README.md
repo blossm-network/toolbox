@@ -95,7 +95,7 @@ Each Event Sourcing implementation may be slightly different, but many share com
 * **Carson Farmer** and the folks at Textile
   * https://docsend.com/view/gu3ywqi
 
-*Thank you for all the work you've done and continue to do.*
+*Thank you for all the work you've done and continue to do.* **🍻**
 
 Blossm uses 8 types of procedures, all of which can be run as lambda functions on GCP Cloud Run, configured entirely with `blossm.yaml` files, and deployed with a CLI tool:
 
