@@ -106,11 +106,8 @@ module.exports = ({ domain, dir }) => async (args, configFn) => {
           const modules = "node_modules";
           const lock = "yarn.lock";
 
-          //TODO
-          console.log({ cwd: process.cwd() });
           const modulesPath = path.resolve(process.cwd(), modules);
           const lockPath = path.resolve(process.cwd(), lock);
-          console.log({ modulesPath, lockPath });
 
           fs.removeSync(modulesPath);
           fs.removeSync(lockPath);
