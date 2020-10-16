@@ -608,6 +608,8 @@ TODO
 #### Organizational
 
 - [x] Start documentation for Blossm. 
+- [ ] Document MongoDB Atlas deployment info. 
+- [ ] Add documentation about adding a permission once a subscription has been made. 
 - [ ] Add a hello world application that is included with `blossm init`. 
 - [ ] Create richer docs with more specifics about the inputs and expected outputs of certin procedure functions. 
 
@@ -625,7 +627,6 @@ TODO
 - [ ] Implement a landing page website for Blossm.
 - [ ] Implement a documentation website to accommodate rich implementation guidelines.
 
-... documentation to be continued ...
       <!-- root, // The root to aggregate
       { // optional
         domain, // The root's domain. Defaults to the current domain.
