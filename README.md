@@ -623,7 +623,6 @@ TODO
 
 #### Design (help plz)
 
-- [ ] Implement a brand for Blossm.
 - [ ] Implement a landing page website for Blossm.
 - [ ] Implement a documentation website to accommodate rich implementation guidelines.
 
