@@ -75,8 +75,8 @@ blossm view-gateway init
 # Overview
 
 CQRS is an Event Sourcing software architecture pattern where the write and read responsibilites are organized around seperate data stores. 
-The write side takes a request, performs a routine, and optionally logs some events with metadata to a store, thus modifying the state of the app forever — the event stores meant to be immutable.
-The read side listens for logged events and uses their metadata to write to any number of denormalized view stores to be queried. All view stores can be destroyed and recreated at any time based on the event log. 
+The write side takes a request, performs a routine, and optionally logs some events with metadata to a store, thus modifying the state of the app forever — the event stores are meant to be immutable.
+The read side listens for logged events and uses their payload to write to any number of denormalized view stores to be effeciently queried. All view stores can be destroyed and recreated at any time based on the event log.
 
 Each Event Sourcing implementation may be slightly different, but many share common design gotchas and pitfalls. If you're less familiar with the pattern, I'd highly recomment spending some time doing a little background research. Here are some well-articulated videos and papers by some incredible folks around the topic, many of which inspired the choices that were made when developing Blossm:
 
@@ -90,7 +90,7 @@ Each Event Sourcing implementation may be slightly different, but many share com
 * **Carson Farmer** and the folks at Textile
   * https://docsend.com/view/gu3ywqi
 
-*Thank you for all the work you've done and continue to do!*
+*Thank you for all the work you've done and continue to do.*
 
 Blossm uses 8 types of procedures, all of which can be run as lambda functions on GCP Cloud Run, configured entirely with `blossm.yaml` files, and deployed with a CLI tool:
 
@@ -142,14 +142,14 @@ On the read side:
 
 Once the purpose of each of the above procedures makes some sense to you, the big question becomes how to use them to solve your applications needs.
 
-Blossm works off of the event sourcing pattern, meaning the state of the app is determined entirely by the chronological aggregation of immutable events that are logged. Events that affect the same *thing* can overwrite previous states of that thing. In Blossm, the `root` of an event (a UUID) refers to the *thing* that it affects. When you add all events that have happened to a specic `root` over each other, the result is called the *aggregate root*, which represents the current state of that *thing*.  
+Blossm works off of the event sourcing pattern, meaning the state of the app is determined entirely by the chronological aggregation of immutable events that are logged. Events that affect the same *thing* can overwrite previous states of that *thing*. In Blossm, the `root` of an event (a UUID) refers to the *thing* that it affects. When you add all events that have happened to a specic `root` over each other, the result is called the `aggregate root`, which represents the current state of that *thing*.  
 
 For example, if 3 events have been logged into an `event-store`: 
 
 ```javascript
 {
   headers: {
-    root: "a1s2d3f4",
+    root: "123",
     action: "paint"
     created: "<last week>",
     number: 1
@@ -161,7 +161,7 @@ For example, if 3 events have been logged into an `event-store`:
 }
 {
   headers: {
-    root: "a1s2d3f4",
+    root: "123",
     action: "paint"
     created: "<yesterday>",
     number: 2
@@ -172,7 +172,7 @@ For example, if 3 events have been logged into an `event-store`:
 }
 {
   headers: {
-    root: "a1s2d3f4",
+    root: "123",
     action: "add-basket"
     created: "<today>",
     number: 3
@@ -183,12 +183,12 @@ For example, if 3 events have been logged into an `event-store`:
 }
 ```
 
-The aggregate root, which is the current state of the thing described by `a1s2d3f4` would be:
+The aggregate root, which is the current state of the thing described by `123` would be:
 
 ```javascript
 {
   headers: {
-    root: "a1s2d3f4",
+    root: "123",
     lastEventNumber: 3
   }
   payload: {
@@ -253,7 +253,7 @@ Read-side functionality is organized around permissions. Blossm read-side proced
 {
   context: {
     team: {
-      root: "q1w2e3r4t5y6",
+      root: "789",
       service: "your-team-service",
       network: "your-team.network"
     },
