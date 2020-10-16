@@ -13,7 +13,7 @@
 1. [Quickstart](#quickstart)
 2. [Overview](#overview)
 3. [Blossm base layer](#blossm-base-layer)
-4. [Setup cli](#setup-cli)
+4. [Setup CLI](#setup-cli)
 5. [Setup deployment infrastructure](#setup-deployment-infrastructure)
 6. [TODO](#todo)
 
