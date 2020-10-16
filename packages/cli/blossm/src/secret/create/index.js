@@ -83,6 +83,9 @@ module.exports = async (args) => {
       },
     ],
   });
+  //TODO
+  console.log({ input });
+
   if (!input.message && !input.file) {
     const { message } = await prompt({
       type: "string",
