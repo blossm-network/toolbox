@@ -11,8 +11,6 @@
  *
  */
 
-module.exports = async (payload) => {
-  return {
-    name: payload.name.toLowerCase(),
-  };
-};
+module.exports = async (payload) => ({
+  onomonopeoa: payload.onomonopeoa.toLowerCase(),
+});

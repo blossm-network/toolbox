@@ -66,7 +66,7 @@ module.exports = commandProcedure({
     claims: claimsOverride = claims,
     async = false,
     wait = 0,
-    principal = "user",
+    principal = "issuer",
   }) =>
     command({
       name,
@@ -81,7 +81,7 @@ module.exports = commandProcedure({
         token: {
           internalFn: gcpToken,
           externalFn: ({ network, key } = {}) =>
-            principal == "user"
+            principal == "user" || principal == "issuer"
               ? { token, type: "Bearer" }
               : nodeExternalToken({ network, key }),
           key: "access",
@@ -108,7 +108,7 @@ module.exports = commandProcedure({
     value,
     context: contextOverride = context,
     claims: claimsOverride = claims,
-    principal = "user",
+    principal = "issuer",
   }) => {
     const { body: aggregates } = await eventStore({
       domain,
@@ -122,7 +122,7 @@ module.exports = commandProcedure({
         token: {
           internalFn: gcpToken,
           externalFn: ({ network, key } = {}) =>
-            principal == "user"
+            principal == "user" || principal == "issuer"
               ? { token, type: "Bearer" }
               : nodeExternalToken({ network, key }),
           key: "access",
@@ -143,7 +143,7 @@ module.exports = commandProcedure({
     root,
     context: contextOverride = context,
     claims: claimsOverride = claims,
-    principal = "user",
+    principal = "issuer",
   }) =>
     fact({
       name,
@@ -158,7 +158,7 @@ module.exports = commandProcedure({
         token: {
           internalFn: gcpToken,
           externalFn: ({ network, key } = {}) =>
-            principal == "user"
+            principal == "user" || principal == "issuer"
               ? { token, type: "Bearer" }
               : nodeExternalToken({ network, key }),
           key: "access",
@@ -208,8 +208,10 @@ module.exports = commandProcedure({
         ...(async && { enqueue: { fn: enqueue } }),
       })
       .add({ eventData, tx }),
-  countFn: ({ context, claims, token }) => ({ domain, service, root }) =>
-    eventStore({ domain, service })
+  countFn: ({ context, claims, token }) => ({ domain, service, root }) => {
+    const {
+      body: { count },
+    } = eventStore({ domain, service })
       .set({
         ...(context && { context }),
         ...(claims && { claims }),
@@ -218,5 +220,8 @@ module.exports = commandProcedure({
           internalFn: gcpToken,
         },
       })
-      .count(root),
+      .count(root);
+
+    return count;
+  },
 });

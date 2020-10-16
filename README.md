@@ -34,19 +34,19 @@ mkdir blossm/services/animals/domains/cat
 cd blossm/services/animals/domains/cat
 blossm event-store init
 
-// ** configure your event-store's blossm.yaml **
+// ** Configure your event-store's blossm.yaml. **
 
 mkdir commands
 cd commands
 
 blossm command init meow
 
-// ** configure your `meow` command's blossm.yaml and write it's main.js, normalize.js functions, and test. **
+// ** Configure your `meow` command's blossm.yaml and write it's main.js, normalize.js functions, and tests. There are a bunch of docs in these files to help. **
 
 cd ..
 blossm command-gateway init
 
-// ** configure the command gateway's blossm.yaml file to give public access to the `meow` command. **
+// ** Configure the command gateway's blossm.yaml file to give public access to the `meow` command. **
 
 // Once the event-store, command and gateway have been deployed, the command can be reached via a POST to https://c.cat.animals.your.network/meow 
 

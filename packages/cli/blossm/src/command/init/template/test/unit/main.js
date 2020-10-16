@@ -5,6 +5,8 @@ const { restore, useFakeTimers } = require("sinon");
 
 const main = require("../../main");
 
+// None of the clock and time stuff in the file is needed if
+// you don't need to freeze time before running your tests.
 let clock;
 const now = new Date();
 

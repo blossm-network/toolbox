@@ -183,6 +183,7 @@ module.exports = ({
         ...(req.body.claims && { claims: req.body.claims }),
         ...(req.body.token && { token: req.body.token }),
       }),
+      //TODO change to logEventsFn.
       submitEventsFn: (events) =>
         processEvents({
           events,

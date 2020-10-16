@@ -1,10 +1,10 @@
 #
 # Give your command a name,
-# and specify which domain and service it's for.
+# and specify which domain and service it's within.
 #
-name: some-name
-domain: some-domain
-service: core
+name: meow
+domain: cat
+service: animals
 
 #
 # Describe what the incoming payload should include.
@@ -15,7 +15,7 @@ service: core
 # Specify an array by setting the 'type' to [<element_type>], where element_type
 # is something exported from @blossm/validator.
 #
-# Mark properties as optional by setting the optional characteristic to 'true'.
+# Mark properties as optional by setting the `optional` characteristic to 'true'.
 #
 # You can optionally set a 'title' characteristic for payload properties. This will
 # be used in the response to the issuer if the property isn't valid. The property's name
@@ -24,15 +24,30 @@ service: core
 # You can also optionally set a 'default' characteristic for payload properties which
 # will be added as the value of the property if the issuer did not specify one.
 #
+# If the expected value of the characteristic should be an enumeration,
+# specify an array of accepted values in a key named `in`.
+#
 payload:
-  name:
+  volume:
+    type: number
+    title: meow volume
+    in:
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+    default: 3
+    optional: true
+
+  onomonopeoa:
     type: string
 
 #
-# Add dependencies and devDependencies, just like a package.json file.
+# Optionally add dependencies and devDependencies, just like a package.json file.
 #
+dependencies:
 devDependencies:
-  "chai-datetime": "^1.5.0"
 
 #
 # The following properties are used for automated testing.
@@ -43,18 +58,23 @@ testing:
   #
   validate:
     ok:
-      - name: Some-name
+      - volume: 2
+        onomonopeoa: meeeoow
+      - onomonopeoa: purrr
     bad:
-      - name: 3
+      - volume: 0
+      - volume: 6
 
   #
   # Add any outcomes of normalized payloads that you want to test against.
   #
   normalize:
     - payload:
-        name: Some-name
+        volume: 1
+        onomonopeoa: grrererrrrr
       normalized:
-        name: some-name
+        volume: 1
+        onomonopeoa: grrererrrrr
 
   #
   # Add network dependencies that will be used when running integration tests.
@@ -72,9 +92,9 @@ testing:
   # 'code' as the status code that the mock returns, and 'response' as the http response the mock returns.
   #
   dependencies:
-    - domain: some-domain
+    - domain: some-other-domain
+      service: some-other-service
       procedure: event-store
-      service: some-service
 
   #
   # Add each integration test you want to run as a 'step'.
