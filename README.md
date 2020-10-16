@@ -41,7 +41,7 @@ cd commands
 
 blossm command init meow
 
-// ** configure your `meow` command's blossm.yaml and write it's main.js and normalize.js functions. **
+// ** configure your `meow` command's blossm.yaml and write it's main.js, normalize.js functions, and test. **
 
 cd ..
 blossm command-gateway init
@@ -61,7 +61,7 @@ blossm view-store init
 
 blossm projection init
 
-// ** configure the projection's blossm.yaml.
+// ** configure the projection's blossm.yaml and write its handlers.js functions and tests.
 
 cd ..
 blossm view-gateway init
