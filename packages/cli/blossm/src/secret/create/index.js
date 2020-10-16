@@ -43,7 +43,7 @@ const create = async (input) => {
 
   const message =
     input.message ||
-    fs.readFileSync(path.resolve(process.cwd(), "blossm.yaml"), "utf8");
+    fs.readFileSync(path.resolve(process.cwd(), input.file), "utf8");
 
   //TODO remove
   console.log({ message });
