@@ -68,7 +68,9 @@ blossm view-gateway init
 
 // ** configure the view gateway's blossm.yaml file to give public access to the `dashboard` view store. **
 
-
+// If you want to replay events of any projection:
+cd dashboard/projection
+blossm replay
 
 ```
 
