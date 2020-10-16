@@ -68,6 +68,9 @@ blossm view-gateway init
 
 // ** configure the view gateway's blossm.yaml file to give public access to the `dashboard` view store. **
 
+// Once the view-store, projection and gateway have been deployed, the projection will start mapping specified events to the store, and the store can be reached via a GET to https://v.your.network/dashboard 
+
+
 // If you want to replay events of any projection:
 cd dashboard/projection
 blossm replay
