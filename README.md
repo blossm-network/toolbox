@@ -107,7 +107,7 @@ On the write side:
 
 
 * `command`
-  Deployed to do a single-purpose job on-demand which has the oportunity to log events throughout it's execution. Commands can call other commands.
+  Deployed to do a single-purpose job on-demand which has the oportunity to log events throughout it's execution. Commands can call other commands and easily interact with other Blossm procedures. They can also include any other NPM dependency that you want.
 
 
 * `fact`

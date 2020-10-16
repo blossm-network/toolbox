@@ -170,6 +170,8 @@ describe("Command handler post", () => {
       streamFactFn,
       countFn,
       submitEventsFn: match(() => true),
+      logEventsFn: match(() => true),
+      newRootFn: match(() => true),
     });
 
     expect(createEventFake).to.have.been.calledWith({
@@ -232,7 +234,7 @@ describe("Command handler post", () => {
       _tx: txId,
     });
   });
-  it("should call with the correct params with events coming from the submitEventsFn with main returning nothing", async () => {
+  it("should call with the correct params with events coming from the logEventsFn with main returning nothing", async () => {
     const validateFnFake = fake();
     const normalizeFnFake = fake.returns(cleanedPayload);
 
@@ -252,7 +254,7 @@ describe("Command handler post", () => {
         correctNumber,
       },
     ];
-    const mainFnFake = stub().yieldsTo("submitEventsFn", events);
+    const mainFnFake = stub().yieldsTo("logEventsFn", events);
 
     const req = {
       body: {
@@ -327,6 +329,8 @@ describe("Command handler post", () => {
       streamFactFn,
       countFn,
       submitEventsFn: match(() => true),
+      logEventsFn: match(() => true),
+      newRootFn: match(() => true),
     });
 
     expect(createEventFake).to.have.been.calledWith({
@@ -493,6 +497,8 @@ describe("Command handler post", () => {
       streamFactFn,
       countFn,
       submitEventsFn: match(() => true),
+      logEventsFn: match(() => true),
+      newRootFn: match(() => true),
     });
 
     expect(createEventFake).to.have.been.calledWith({
@@ -954,6 +960,8 @@ describe("Command handler post", () => {
       streamFactFn,
       countFn,
       submitEventsFn: match(() => true),
+      logEventsFn: match(() => true),
+      newRootFn: match(() => true),
     });
     expect(addFnFake).to.have.been.calledWith({
       domain,
@@ -1101,6 +1109,8 @@ describe("Command handler post", () => {
       streamFactFn,
       countFn,
       submitEventsFn: match(() => true),
+      logEventsFn: match(() => true),
+      newRootFn: match(() => true),
     });
 
     expect(setResponseFake).to.have.been.calledWith({});
@@ -1196,6 +1206,8 @@ describe("Command handler post", () => {
       streamFactFn,
       countFn,
       submitEventsFn: match(() => true),
+      logEventsFn: match(() => true),
+      newRootFn: match(() => true),
     });
 
     expect(setResponseFake).to.have.been.calledWith({});
@@ -1341,6 +1353,8 @@ describe("Command handler post", () => {
       streamFactFn,
       countFn,
       submitEventsFn: match(() => true),
+      logEventsFn: match(() => true),
+      newRootFn: match(() => true),
     });
 
     expect(addFnFake).to.have.been.calledWith({
@@ -1494,6 +1508,8 @@ describe("Command handler post", () => {
       streamFactFn,
       countFn,
       submitEventsFn: match(() => true),
+      logEventsFn: match(() => true),
+      newRootFn: match(() => true),
     });
 
     expect(addFnFake).to.have.been.calledWith({
@@ -1664,6 +1680,8 @@ describe("Command handler post", () => {
       streamFactFn,
       countFn,
       submitEventsFn: match(() => true),
+      logEventsFn: match(() => true),
+      newRootFn: match(() => true),
     });
 
     expect(addFnFake).to.have.been.calledWith({
@@ -1836,6 +1854,8 @@ describe("Command handler post", () => {
       streamFactFn,
       countFn,
       submitEventsFn: match(() => true),
+      logEventsFn: match(() => true),
+      newRootFn: match(() => true),
     });
 
     expect(createEventFake).to.have.been.calledWith({
@@ -2038,6 +2058,8 @@ describe("Command handler post", () => {
       streamFactFn,
       countFn,
       submitEventsFn: match(() => true),
+      logEventsFn: match(() => true),
+      newRootFn: match(() => true),
     });
 
     expect(createEventFake).to.have.been.calledWith({
@@ -2250,6 +2272,8 @@ describe("Command handler post", () => {
       streamFactFn,
       countFn,
       submitEventsFn: match(() => true),
+      logEventsFn: match(() => true),
+      newRootFn: match(() => true),
     });
 
     expect(createEventFake).to.have.been.calledWith({
