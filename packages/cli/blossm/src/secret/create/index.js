@@ -41,6 +41,9 @@ const create = async (input) => {
 
   const blossmConfig = rootDir.config();
 
+  console.log({ cwd: process.cwd(), file: input.file });
+  console.log({ path: path.resolve(process.cwd(), input.file) });
+
   const message =
     input.message ||
     fs.readFileSync(path.resolve(process.cwd(), input.file), "utf8");
