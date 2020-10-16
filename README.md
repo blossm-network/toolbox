@@ -156,7 +156,7 @@ For example, if 3 events have been logged into an `event-store`:
   }
   payload: {
     frameColor: "pink",
-    handlebarColor: "yellow"
+    handlebarColor: "yellow",
   }
 }
 {
@@ -164,7 +164,7 @@ For example, if 3 events have been logged into an `event-store`:
     root: "123",
     action: "paint"
     created: "<yesterday>",
-    number: 2
+    number: 2,
   }
   payload: {
     frameColor: "orange",
@@ -175,7 +175,7 @@ For example, if 3 events have been logged into an `event-store`:
     root: "123",
     action: "add-basket"
     created: "<today>",
-    number: 3
+    number: 3,
   }
   payload: {
     basketLocation: "front",
@@ -189,11 +189,11 @@ The aggregate root, which is the current state of the thing described by `123` w
 {
   headers: {
     root: "123",
-    lastEventNumber: 3
+    lastEventNumber: 3,
   }
   payload: {
     bodyColor: "orange",
-    handlebarColor: "yellow"
+    handlebarColor: "yellow",
     basketLocation: "front",
   }
 }
