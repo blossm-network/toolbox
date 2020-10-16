@@ -9,13 +9,41 @@
 #### The project also aspires to interoperate with the Ethereum blockchain to provide an application experience layer that can interact with Contracts and respond to events, while providing an event storage layer for trivial intraday application data that doesn't need to be on-chain in real time.
 
 ### Contents:
-1. [Overview](#overview)
-2. [Blossm base layer](#blossm-base-layer)
-3. [Setup](#setup)
-4. [Deploy](#deploy)
-5. [TODO](#todo)
+1. [Quickstart](#quickstart)
+2. [Overview](#overview)
+3. [Blossm base layer](#blossm-base-layer)
+4. [Setup](#setup)
+5. [Deploy](#deploy)
+6. [TODO](#todo)
 
 ---
+
+# Quickstart 
+
+```javascript
+npm install -g @blossm/cli
+blossm init
+mkdir blossm/services/animals
+mkdir blossm/services/animals/domains
+mkdir blossm/services/animals/domains/cat
+cd blossm/serviecs/animals/domains/cat
+blossm event-store init
+
+// ** configure your event-store's blossm.yaml **
+
+mkdir commands
+cd commands
+
+blossm command init meow
+
+// ** configure your `meow` command's blossm.yaml and write it's main.js and normalize.js functions. **
+
+cd ..
+blossm command-gateway init
+
+// ** configure the command gateway's blossm.yaml file to give public access to the `meow` command. **
+
+```
 
 # Overview
 
