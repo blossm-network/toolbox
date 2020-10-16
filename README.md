@@ -103,44 +103,36 @@ Blossm uses 8 types of procedures, all of which can be run as lambda functions o
 On the write side:
 
 * `event-store` 
-
   Deployed to log events with a shared schema. Events that share a `root` refer to the same entity, and can be aggregated to determine the state of that entity at any point in time. `event-stores` connect to a Collection in a MongoDB Atlas instance. 
 
 
 * `command`
-
   Deployed to do a single-purpose job on-demand which has the oportunity to log events throughout it's execution. Commands can call other commands.
 
 
 * `fact`
-
   Deployed to deliver some specic information about the state of the app.
 
 
 * `command-gateway` 
-
- Deployed to permit external access to a set of `commands` under specified conditions.
+  Deployed to permit external access to a set of `commands` under specified conditions.
 
 
 * `fact-gateway` 
-
-Deployed to permit external access to a set of `facts` under specified conditions.
+  Deployed to permit external access to a set of `facts` under specified conditions.
 
 
 On the read side:
 
 * `view-store` 
-
   Deployed to store denormalized data that is intended to be queried. `view-stores` connects to a Collection in a MongoDB Atlas.
   
 
 * `projection`
-
   Deployed to listen for Events and map their data to a `view-store`. If the projection is changed, it can be replayed on-demand using a CLI, which will update the `view-stores` with the most recent mapping.
 
 
 * `view-gateway` 
-
   Deployed to permit external access to a set of `view-stores` under specified conditions.
 
 
@@ -210,21 +202,18 @@ With this bit of concrete information in mind, here's an effective way to organi
 #### Write-side organization
 
 * `domain` 
-
   You can think of a `domain` as a labeled category of like *things*, where similar operations can be done to an instance of a particular thing. In the example above, you can imagine these particular set of events with actions "paint" and "add-basket" belonging to a "bicycle" `domain`. 
 
   Each `domain` has one `event-store` that stores similar events of various `roots`, and can have one `command-gateway` to allow external access to it's `commands`. 
 
 
 * `service` 
-
   You can think of a `service` as a labeled category of `domains` that tend to be interdependant. In the example above, you can imagine the "bicycle" `domain` belonging to a "shop" `service`, which may also contain "helmet" and "lights" as other `domains`. 
 
   Each `service` is made up of any number of interdependant `domains`, meaning any `commands` from within a `service` can freely log events to any of it's `event-stores`. `services` can also depend on functionality from other `services` unidirectionally.
 
 
 * `network` 
-
   You can think of the `network` as the top level container of your application. In the example above, you can imagine the "shop" `service` belonging to the "bicyclecity.com" `network`, which may also contain a "staff" `service` that manages functionality and events relating to hiring and scheduling. 
   
   Each `network` is made up of any number of `services` whose `commands` can call each other directly without a gateway. The network can have up to 4 environments: `development`, `staging`, `sandbox`, and `production`.
@@ -250,7 +239,6 @@ Non-`production` gateways are addressed with a network prefix of `.dev | .stg | 
 Read-side functionality is organized around permissions. Blossm read-side procedures can be organized and easily configured to behave according to very specific intents, such as: only certain accounts should have access to these views, or only certain groups of accounts have access to these views, or: everyone who is authenticated should have access to these views, or the most broad: everyone on the internet should have access to these views.
 
 * `context` 
-
   Blossm manages permissions most broadly through `contexts`. Without going into the specifics of how permissions work, note that requests are made to `view-gateways` with a cookie containing a JWT token with information about the `contexts` that are accessible by this token. `view-stores` can be placed in a `context` if it can only be accessed by tokens that have that `context` specified.
 
   For example, let's say you're building a task manager application for a team. Let's say there is a "team" `domain`, and that the `root` of your team is "q1w2e3r4t5y6". Since your account is associated with this team, your session token will have a `context` in it like so:
