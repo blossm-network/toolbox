@@ -37,30 +37,34 @@ Each Event Sourcing implementation may be slightly different, but many share com
 
 *Thank you for all the work you've done and continue to do!*
 
-Blossm currently has adapters to run on GCP using a MongoDB database for its stores, but adapters can be built to deploy procedures on any compute server and using a database of your choice.
-
 Blossm uses 8 types of procedures, all of which can be run as lambda functions on GCP Cloud Run, configured entirely with `blossm.yaml` files, and deployed with a CLI tool:
 
 On the write side:
 
-* `event-store` - Deployed to log events with a shared schema. Events that share a `root` refer to the same entity, and can be aggregated to determine the state of that entity at any point in time. `event-stores` connect to a Collection in a MongoDB Atlas instance. 
+* `event-store` 
+  Deployed to log events with a shared schema. Events that share a `root` refer to the same entity, and can be aggregated to determine the state of that entity at any point in time. `event-stores` connect to a Collection in a MongoDB Atlas instance. 
 
-* `command` - Deployed to do a single-purpose job on-demand which has the oportunity to log events throughout it's execution. Commands can call other commands.
+* `command`
+  Deployed to do a single-purpose job on-demand which has the oportunity to log events throughout it's execution. Commands can call other commands.
 
-* `fact` - Deployed to deliver some specic information about the state of the app.
+* `fact`
+  Deployed to deliver some specic information about the state of the app.
 
-* `command-gateway` - Deployed to permit external access to a set of `commands` under specified conditions.
+* `command-gateway` 
+ Deployed to permit external access to a set of `commands` under specified conditions.
 
 * `fact-gateway` - Deployed to permit external access to a set of `facts` under specified conditions.
 
 
 On the read side:
 
-* `view-store` - Deployed to store denormalized data that is intended to be queried. `view-stores` connects to a Collection in a MongoDB Atlas.
+* `view-store` 
+  Deployed to store denormalized data that is intended to be queried. `view-stores` connects to a Collection in a MongoDB Atlas.
 
-* `projection` - Deployed to listen for Events and map their data to a `view-store`. If the projection is changed, it can be replayed on-demand using a CLI, which will update the `view-stores` with the most recent mapping.
+* `projection`
+  Deployed to listen for Events and map their data to a `view-store`. If the projection is changed, it can be replayed on-demand using a CLI, which will update the `view-stores` with the most recent mapping.
 
-* `view-gateway` - Deployed to permit external access to a set of `view-stores` under specified conditions.
+* `view-gateway` Deployed to permit external access to a set of `view-stores` under specified conditions.
 
 ### How ideas are organized within Blossm
 
