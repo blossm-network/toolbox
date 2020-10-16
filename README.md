@@ -1,6 +1,6 @@
 ## Blossm for NodeJS
 
-### Blossm is an Event Sourcing CQRS orchestrator, that includes a description for setting up multi-project interoperability through shared a Blossm base layer that handles core components like sessions, accounts, permissions, roles, data subscriptions, and more.
+### Blossm is an Event Sourcing CQRS orchestrator, that includes an interace for setting up multi-project interoperability through a shared Blossm base layer that handles core components like sessions, accounts, permissions, roles, data subscriptions, and more.
 
 #### With Blossm you can architect, fully-test, and deploy just about any peice of software functionality using small javascript functions and YAML configs, in a way that keeps each historical state of your app entirely queriable and auditable, and with the opportunity to connect many independently developed networks together through a shared base layer. It's also extremely cheap to run, scales reliably and automatically, and is extremely easy to maintain. 
 
@@ -37,9 +37,9 @@ Each Event Sourcing implementation may be slightly different, but many share com
 
 *Thank you for all the work you've done and continue to do!*
 
-Blossm currently has adapters to run on GCP using a MongoDB database for its stores, but adapters can be built to deploy procedures on any compute server using a database of your choice.
+Blossm currently has adapters to run on GCP using a MongoDB database for its stores, but adapters can be built to deploy procedures on any compute server and using a database of your choice.
 
-Blossm does this with 8 types of procedures, all of which can be run as lambda functions on GCP Cloud Run, configured entirely with `blossm.yaml` files, and deployed with a CLI tool:
+Blossm uses 8 types of procedures, all of which can be run as lambda functions on GCP Cloud Run, configured entirely with `blossm.yaml` files, and deployed with a CLI tool:
 
 On the write side:
 
@@ -66,7 +66,7 @@ On the read side:
 
 Once the purpose of each of the above procedures makes some sense to you, the big question becomes how to use them to solve your applications needs.
 
-Blossm works off of the event sourcing pattern, meaning the state of the app is determined entirely by the chronological aggregation of immutable events that are logged. Events that affect the same *thing* can overwrite previous states of that thing. In Blossm, the `root` of an event (a UUID) refers to the *thing* that it affects, and when you add all events that have happened to a specic `root` over each other, the result is called the *aggregate root*, which represents the current state of that thing.  
+Blossm works off of the event sourcing pattern, meaning the state of the app is determined entirely by the chronological aggregation of immutable events that are logged. Events that affect the same *thing* can overwrite previous states of that thing. In Blossm, the `root` of an event (a UUID) refers to the *thing* that it affects. When you add all events that have happened to a specic `root` over each other, the result is called the *aggregate root*, which represents the current state of that *thing*.  
 
 For example, if 3 events have been logged into an `event-store`: 
 
@@ -127,11 +127,20 @@ With this bit of concrete information in mind, here's an effective way to organi
 
 #### Write-side organization
 
-* `domain` - You can think of a `domain` as a labeled category of like *things*, where similar operations can be done to an instance of a particular thing. In the example above, you can imagine each event belonging to a "bicycle" `domain`. Each `domain` has one `event-store` that stores similar events of various `roots`, and can have one `command-gateway` to allow external access to it's `commands`. 
+* `domain` 
+  You can think of a `domain` as a labeled category of like *things*, where similar operations can be done to an instance of a particular thing. In the example above, you can imagine these particular set of events with actions "paint" and "add-basket" belonging to a "bicycle" `domain`. 
 
-* `service` - You can think of a `service` as a labeled category of `domains` that tend to be interdependant. In the example above, you can imagine the "bicycle" `domain` belonging to a "shop" `service`, which may also contain "helmet" and  "lights" as other `domains`. Each `service` is made up of any number of interdependant `domains`, meaning any `commands` from within a `service` can freely log events to any of it's `event-stores`. `services` can also depend on functionality from other `services` unidirectionally.
+  Each `domain` has one `event-store` that stores similar events of various `roots`, and can have one `command-gateway` to allow external access to it's `commands`. 
 
-* `network` - You can think of the `network` as the top level container of your application. In the example above, you can imagine the "shop" `service` belonging to the "bicyclecity.com" `network`, which may also contain an "staff" service that manages functionality and events relating to hiring and scheduling. Each network is made up of any number of `services` who's `commands` can call each other directly without a gateway. The network can have up to 4 environments: `development`, `staging`, `sandbox`, and `production`.
+* `service` 
+  You can think of a `service` as a labeled category of `domains` that tend to be interdependant. In the example above, you can imagine the "bicycle" `domain` belonging to a "shop" `service`, which may also contain "helmet" and "lights" as other `domains`. 
+
+  Each `service` is made up of any number of interdependant `domains`, meaning any `commands` from within a `service` can freely log events to any of it's `event-stores`. `services` can also depend on functionality from other `services` unidirectionally.
+
+* `network` 
+  You can think of the `network` as the top level container of your application. In the example above, you can imagine the "shop" `service` belonging to the "bicyclecity.com" `network`, which may also contain a "staff" `service` that manages functionality and events relating to hiring and scheduling. 
+  
+  Each `network` is made up of any number of `services` whose `commands` can call each other directly without a gateway. The network can have up to 4 environments: `development`, `staging`, `sandbox`, and `production`.
 
 Here's a visual metaphor:
 
@@ -151,11 +160,12 @@ Non-`production` gateways are addressed with a network prefix of `.dev | .stg | 
 
 #### Read-side organization
 
-Read-side functionality is organized around permissions. Blossm read-side procedures can be organized and easily configured to pull off very specific intents, such as "I only want a certain account to have access to these views", or "I only want certain group of accounts to have access to these views", or "I want everyone who is authenticated to have access to these views", or the most broad "I want everyone on the internet to have access to these views".
+Read-side functionality is organized around permissions. Blossm read-side procedures can be organized and easily configured to behave according to very specific intents, such as: only certain accounts should have access to these views, or only certain groups of accounts have access to these views, or: everyone who is authenticated should have access to these views, or the most broad: everyone on the internet should have access to these views.
 
-* `context` - Blossm manages permissions most broadly through `contexts`. Without going into the specifics of how permissions work, note that requests are made to `view-gateways` with a cookie containing a JWT token with information about the `contexts` that are accessible by this token. `view-stores` can be placed in a `context` if it can only be accessed by tokens that have that `context` specified.
+* `context` 
+  Blossm manages permissions most broadly through `contexts`. Without going into the specifics of how permissions work, note that requests are made to `view-gateways` with a cookie containing a JWT token with information about the `contexts` that are accessible by this token. `view-stores` can be placed in a `context` if it can only be accessed by tokens that have that `context` specified.
 
-For example, let's say you're building a task manager application for a team. Let's say there is a "team" `domain`, and that the `root` of your team is "q1w2e3r4t5y6". Since your account is associated with this team, your session token will have a `context` in it like so:
+  For example, let's say you're building a task manager application for a team. Let's say there is a "team" `domain`, and that the `root` of your team is "q1w2e3r4t5y6". Since your account is associated with this team, your session token will have a `context` in it like so:
 
 ```javascript
 {
