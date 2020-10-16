@@ -23,10 +23,13 @@
 ```javascript
 npm install -g @blossm/cli
 blossm init
+
+// ** configure your config.yaml **
+
 mkdir blossm/services/animals
 mkdir blossm/services/animals/domains
 mkdir blossm/services/animals/domains/cat
-cd blossm/serviecs/animals/domains/cat
+cd blossm/services/animals/domains/cat
 blossm event-store init
 
 // ** configure your event-store's blossm.yaml **
@@ -42,6 +45,28 @@ cd ..
 blossm command-gateway init
 
 // ** configure the command gateway's blossm.yaml file to give public access to the `meow` command. **
+
+// Once the event-store, command and gateway have been deployed, the command can be reached via a POST to https://c.cat.animals.your.network/meow 
+
+
+cd ../../../../views
+mkdir stores
+mkdir stores/dashboard
+cd stores/dashboard
+blossm view-store init
+
+// ** configure the view-store's blossm.yaml
+
+blossm projection init
+
+// ** configure the projection's blossm.yaml.
+
+cd ..
+blossm view-gateway init
+
+// ** configure the view gateway's blossm.yaml file to give public access to the `dashboard` view store. **
+
+
 
 ```
 

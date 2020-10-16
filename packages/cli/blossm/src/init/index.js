@@ -34,13 +34,13 @@ const create = async (input) => {
   // into the directory
   const templateConfigPath = path.resolve(__dirname, "template_config.yaml");
   const templateServicesDir = path.resolve(__dirname, "template_services");
-  const templateContextsDir = path.resolve(__dirname, "template_contexts");
+  const templateViewsDir = path.resolve(__dirname, "template_views");
   const destinationConfigPath = path.resolve(blossmDir, "config.yaml");
   const destinationServicesDir = path.resolve(blossmDir, "services");
-  const destinationContextsDir = path.resolve(blossmDir, "contexts");
+  const destinationViewsDir = path.resolve(blossmDir, "views");
   fs.copyFileSync(templateConfigPath, destinationConfigPath);
   await fs.copy(templateServicesDir, destinationServicesDir);
-  await fs.copy(templateContextsDir, destinationContextsDir);
+  await fs.copy(templateViewsDir, destinationViewsDir);
 };
 
 module.exports = async (args) => {
