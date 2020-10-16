@@ -302,7 +302,7 @@ There are a few non-required traits of a Blossm base layer that are strongly enc
 
 There aren't yet documented guidelines on how to implement your own Blossm base layer according to a specified interface, but there is one implementation currently in Beta done by the Blossm team over at `sustainers.network`. The implementation can be found here: <https://github.com/sustainers-network/blossm>. Reach out if you want to implement a base layer, or help out with the one at sustainers.network. 
 
-It's worth nothing, Blossm base layers are set up just like any other Blossm network.
+It's worth nothing that Blossm base layers are set up just like any other Blossm network, and it's also possible to implement a base layer that's private to your network if interoperability isn't important for you and you want to implement your own core componentry. 
 
 ---
 
