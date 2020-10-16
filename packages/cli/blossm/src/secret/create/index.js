@@ -3,6 +3,8 @@ const normalize = require("@blossm/normalize-cli");
 const roboSay = require("@blossm/robo-say");
 const { create: createSecret } = require("@blossm/gcp-secret");
 const rootDir = require("@blossm/cli-root-dir");
+const fs = require("fs");
+const path = require("path");
 
 const envProject = ({ env, config }) => {
   switch (env) {
@@ -38,7 +40,14 @@ const create = async (input) => {
   const env = input.env;
 
   const blossmConfig = rootDir.config();
-  await createSecret(input.name, input.message, {
+
+  const message =
+    input.message ||
+    fs.readFileSync(path.resolve(process.cwd(), "blossm.yaml"), "utf8");
+
+  //TODO remove
+  console.log({ message });
+  await createSecret(input.name, message, {
     project: envProject({ config: blossmConfig, env }),
     ring: "secrets-bucket",
     location: "global",
@@ -61,6 +70,11 @@ module.exports = async (args) => {
         type: String,
       },
       {
+        name: "file",
+        short: "f",
+        type: String,
+      },
+      {
         name: "env",
         short: "e",
         type: String,
@@ -69,7 +83,7 @@ module.exports = async (args) => {
       },
     ],
   });
-  if (!input.message) {
+  if (!input.message && !input.file) {
     const { message } = await prompt({
       type: "string",
       name: "message",
