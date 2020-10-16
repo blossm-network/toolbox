@@ -300,10 +300,9 @@ There are a few non-required traits of a Blossm base layer that are strongly enc
 
 * A Blossm base layer is encouraged to associate wallets to accounts that can be used by any application built around it for sending / receiving payments on Ethereum. Fiat is encouraged, but often requires KYC which is at odds the first bullet. Find a balance and push for progress when it comes to open value transfer.
 
-There aren't yet clear guidelines on how to implement your own Blossm base layer according to a specified interface, but there is one implementation currently in Beta done by `sustainers.network`. The implementation can be found here: <https://github.com/sustainers-network/blossm>. I've spent my time implementing, not documenting.
+There aren't yet documented guidelines on how to implement your own Blossm base layer according to a specified interface, but there is one implementation currently in Beta done by the Blossm team over at `sustainers.network`. The implementation can be found here: <https://github.com/sustainers-network/blossm>. Reach out if you want to implement a base layer, or help out with the one at sustainers.network. 
 
-
-Blossm base layers are set up just like any other Blossm network.
+It's worth nothing, Blossm base layers are set up just like any other Blossm network.
 
 ---
 
