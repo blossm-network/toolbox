@@ -10,21 +10,21 @@ module.exports = async ({
   password = "asdfasdfasdf",
   email,
 } = {}) => {
-  const identityRoot = uuid();
+  const accountRoot = uuid();
   const roleRoot = uuid();
   const roleId = uuid();
   const principalRoot = uuid();
   const sessionRoot = uuid();
 
-  // Create the identity for the token.
+  // Create the account for the token.
   await eventStore({
-    domain: "identity",
+    domain: "account",
     service: "core",
   }).add({
     eventData: [
       {
         event: createEvent({
-          root: identityRoot,
+          root: accountRoot,
           payload: {
             principal: {
               root: principalRoot,
@@ -35,7 +35,7 @@ module.exports = async ({
             email,
           },
           action: "register",
-          domain: "identity",
+          domain: "account",
           service: "core",
           network: process.env.NETWORK,
         }),
