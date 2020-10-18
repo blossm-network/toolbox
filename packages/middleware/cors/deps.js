@@ -1,7 +1,7 @@
 const { unauthorized } = require("@blossm/errors");
 const cors = require("cors");
-const whitelist = require("./src/whitelist");
+const allow = require("./src/allow");
 
 exports.cors = cors;
-exports.whitelist = whitelist;
+exports.allow = allow;
 exports.unauthorizedError = unauthorized;

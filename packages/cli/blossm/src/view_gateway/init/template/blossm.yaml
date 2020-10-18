@@ -30,7 +30,7 @@ views:
     procedure: view-composite
     protection: none
 
-whitelist:
+allow:
   - "http://localhost:4200"
 
 #don't change

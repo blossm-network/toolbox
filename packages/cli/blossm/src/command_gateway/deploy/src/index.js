@@ -19,7 +19,7 @@ module.exports = gateway({
         command.network == "$base" ? process.env.BASE_NETWORK : command.network,
     }),
   })),
-  whitelist: config.whitelist,
+  allow: config.allow,
   algorithm: "ES256",
   audience: process.env.NETWORK,
   internalTokenFn: gcpToken,

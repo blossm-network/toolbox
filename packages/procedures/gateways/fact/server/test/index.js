@@ -3,7 +3,7 @@ const { restore, replace, fake, match } = require("sinon");
 
 const deps = require("../deps");
 const gateway = require("..");
-const whitelist = "some-whitelist";
+const allow = "some-allow";
 const permissionsLookupFn = "some-permissions-fn";
 const terminatedSessionCheckFn = "some-terminated-session-check-fn";
 const deletedSceneCheckFn = "some-deleted-scene-check-fn";
@@ -59,7 +59,7 @@ describe("Fact gateway", () => {
 
     await gateway({
       facts,
-      whitelist,
+      allow,
       permissionsLookupFn,
       terminatedSessionCheckFn,
       deletedSceneCheckFn,
@@ -86,7 +86,7 @@ describe("Fact gateway", () => {
         fn(app);
         return corsMiddlewareFake.calledWith({
           app,
-          whitelist,
+          allow,
           credentials: true,
           methods: ["GET"],
         });
@@ -161,7 +161,7 @@ describe("Fact gateway", () => {
 
     await gateway({
       facts,
-      whitelist,
+      allow,
       permissionsLookupFn,
       terminatedSessionCheckFn,
       deletedSceneCheckFn,
@@ -189,7 +189,7 @@ describe("Fact gateway", () => {
         fn(app);
         return corsMiddlewareFake.calledWith({
           app,
-          whitelist,
+          allow,
           credentials: true,
           methods: ["GET"],
         });
@@ -252,7 +252,7 @@ describe("Fact gateway", () => {
 
     await gateway({
       facts,
-      whitelist,
+      allow,
       permissionsLookupFn,
       terminatedSessionCheckFn,
       deletedSceneCheckFn,
@@ -318,7 +318,7 @@ describe("Fact gateway", () => {
 
     await gateway({
       facts,
-      whitelist,
+      allow,
       permissionsLookupFn,
       terminatedSessionCheckFn,
       deletedSceneCheckFn,
@@ -433,7 +433,7 @@ describe("Fact gateway", () => {
       facts,
       domain: otherDomain,
       service: otherService,
-      whitelist,
+      allow,
       permissionsLookupFn,
       terminatedSessionCheckFn,
       deletedSceneCheckFn,
@@ -470,7 +470,7 @@ describe("Fact gateway", () => {
     try {
       await gateway({
         facts: [],
-        whitelist,
+        allow,
         permissionsLookupFn,
         terminatedSessionCheckFn,
         deletedSceneCheckFn,

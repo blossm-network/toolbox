@@ -18,7 +18,7 @@ module.exports = gateway({
         fact.network == "$base" ? process.env.BASE_NETWORK : fact.network,
     }),
   })),
-  whitelist: config.whitelist,
+  allow: config.allow,
   algorithm: "ES256",
   audience: process.env.NETWORK,
   internalTokenFn: gcpToken,

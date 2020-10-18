@@ -18,7 +18,7 @@ module.exports = gateway({
         view.network == "$base" ? process.env.BASE_NETWORK : view.network,
     }),
   })),
-  whitelist: config.whitelist,
+  allow: config.allow,
   algorithm: "ES256",
   audience: process.env.NETWORK,
   redirect: config.redirect || "/auth",

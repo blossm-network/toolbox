@@ -4,7 +4,7 @@ module.exports = async ({
   facts,
   domain = process.env.DOMAIN,
   service = process.env.SERVICE,
-  whitelist,
+  allow,
   permissionsLookupFn,
   terminatedSessionCheckFn,
   deletedSceneCheckFn,
@@ -18,7 +18,7 @@ module.exports = async ({
     prehook: (app) =>
       deps.corsMiddleware({
         app,
-        whitelist,
+        allow,
         credentials: true,
         methods: ["GET"],
       }),

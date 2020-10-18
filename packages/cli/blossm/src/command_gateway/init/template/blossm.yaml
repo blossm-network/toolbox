@@ -31,7 +31,7 @@ commands:
   - name: some-other-name
     protection: none
 
-whitelist:
+allow:
   - "http://localhost:4200"
 
 #don't change

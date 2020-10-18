@@ -3,7 +3,7 @@ const { restore, replace, fake, match } = require("sinon");
 
 const deps = require("../deps");
 const gateway = require("..");
-const whitelist = "some-whitelist";
+const allow = "some-allow";
 const permissionsLookupFn = "some-permissions-fn";
 const terminatedSessionCheckFn = "some-terminated-session-check-fn";
 const deletedSceneCheckFn = "some-deleted-scene-check-fn";
@@ -61,7 +61,7 @@ describe("Command gateway", () => {
 
     await gateway({
       commands,
-      whitelist,
+      allow,
       internalTokenFn,
       nodeExternalTokenFn,
       permissionsLookupFn,
@@ -91,7 +91,7 @@ describe("Command gateway", () => {
         fn(app);
         return corsMiddlewareFake.calledWith({
           app,
-          whitelist,
+          allow,
           credentials: true,
           methods: ["POST"],
         });
@@ -157,7 +157,7 @@ describe("Command gateway", () => {
 
     await gateway({
       commands,
-      whitelist,
+      allow,
       internalTokenFn,
       nodeExternalTokenFn,
       permissionsLookupFn,
@@ -188,7 +188,7 @@ describe("Command gateway", () => {
         fn(app);
         return corsMiddlewareFake.calledWith({
           app,
-          whitelist,
+          allow,
           credentials: true,
           methods: ["POST"],
         });
@@ -256,7 +256,7 @@ describe("Command gateway", () => {
 
     await gateway({
       commands,
-      whitelist,
+      allow,
       permissionsLookupFn,
       terminatedSessionCheckFn,
       deletedSceneCheckFn,
@@ -333,7 +333,7 @@ describe("Command gateway", () => {
 
     await gateway({
       commands,
-      whitelist,
+      allow,
       internalTokenFn,
       nodeExternalTokenFn,
       permissionsLookupFn,
@@ -443,7 +443,7 @@ describe("Command gateway", () => {
       commands,
       domain: otherDomain,
       service: otherService,
-      whitelist,
+      allow,
       internalTokenFn,
       nodeExternalTokenFn,
       permissionsLookupFn,
@@ -481,7 +481,7 @@ describe("Command gateway", () => {
     try {
       await gateway({
         commands: [],
-        whitelist,
+        allow,
         permissionsLookupFn,
         terminatedSessionCheckFn,
         deletedSceneCheckFn,

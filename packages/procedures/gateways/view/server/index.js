@@ -3,7 +3,7 @@ const deps = require("./deps");
 module.exports = async ({
   views,
   context = process.env.CONTEXT,
-  whitelist,
+  allow,
   permissionsLookupFn,
   terminatedSessionCheckFn,
   deletedSceneCheckFn,
@@ -19,7 +19,7 @@ module.exports = async ({
       prehook: (app) =>
         deps.corsMiddleware({
           app,
-          whitelist,
+          allow,
           credentials: true,
           methods: ["GET"],
         }),
