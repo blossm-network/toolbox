@@ -54,7 +54,7 @@ describe("Connection token", () => {
     expect(commandFake).to.have.been.calledWith({
       name: "open",
       domain: "connection",
-      service: "system",
+      service: "base",
       network,
     });
     expect(decodeFake).to.have.been.calledWith(token);

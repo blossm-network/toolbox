@@ -7,7 +7,7 @@ module.exports = ({ token }) => async ({ root, secret }) => {
   const { body: key } = await fact({
     name: "state",
     domain: "key",
-    service: "system",
+    service: "base",
     ...(process.env.BASE_NETWORK && { network: process.env.BASE_NETWORK }),
   })
     .set({ token: { internalFn: token } })
@@ -23,7 +23,7 @@ module.exports = ({ token }) => async ({ root, secret }) => {
       network: key.network,
       key: {
         root: key.root,
-        service: "system",
+        service: "base",
         network: process.env.NETWORK,
       },
       principal: key.principal,
