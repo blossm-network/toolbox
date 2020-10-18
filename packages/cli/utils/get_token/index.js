@@ -7,8 +7,8 @@ const { hash } = require("@blossm/crypt");
 module.exports = async ({
   permissions = [],
   context = {},
-  phone = "+19195551144",
-  id,
+  password = "asdfasdfasdf",
+  email,
 } = {}) => {
   const identityRoot = uuid();
   const roleRoot = uuid();
@@ -31,9 +31,8 @@ module.exports = async ({
               service: process.env.SERVICE,
               network: process.env.NETWORK,
             },
-            phone: await hash(phone),
-            id,
-            normalizedId: id,
+            password: await hash(password),
+            email,
           },
           action: "register",
           domain: "identity",
