@@ -23,7 +23,7 @@ const pushToChannel = async ({ channel, view, id, trace, type }) => {
       name: "push",
       domain: "updates",
       service: "system",
-      network: process.env.CORE_NETWORK,
+      network: process.env.BASE_NETWORK,
     })
       .set({
         token: {
@@ -79,7 +79,7 @@ const pushToChannels = async ({
         name: "principals",
         domain: "group",
         service: "core",
-        network: process.env.CORE_NETWORK,
+        network: process.env.BASE_NETWORK,
       })
         .set({
           token: {

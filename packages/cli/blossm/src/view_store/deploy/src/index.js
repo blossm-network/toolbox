@@ -36,7 +36,7 @@ module.exports = viewStore({
       name: "groups",
       domain: "principal",
       service: "core",
-      network: process.env.CORE_NETWORK,
+      network: process.env.BASE_NETWORK,
     })
       .set({
         token: {

@@ -43,7 +43,9 @@ module.exports = ({
       `--set-env-vars=${Object.entries({
         NODE_ENV: nodeEnv,
         NETWORK: `${envUriSpecifier}${network}`,
+        //TODO deprecate core
         CORE_NETWORK: coreNetwork,
+        BASE_NETWORK: coreNetwork,
         HOST: host,
         PROCEDURE: procedure,
         OPERATION_HASH: operationHash,

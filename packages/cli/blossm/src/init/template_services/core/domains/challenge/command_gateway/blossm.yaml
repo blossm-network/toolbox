@@ -1,24 +1,24 @@
 domain: session
 service: core
 
-# Specifies commands that get forwarded to the core network to fulfill.
+# Specifies commands that get forwarded to the base layer network to fulfill.
 commands:
   - name: start
     protection: none
     service: core
-    network: $core
+    network: $base
   - name: save
     protection: none
     service: core
-    network: $core
+    network: $base
   - name: change-scene
     protection: none
     service: core
-    network: $core
+    network: $base
   - name: terminate
     protection: none
     service: core
-    network: $core
+    network: $base
 
 #don't change
 procedure: command-gateway

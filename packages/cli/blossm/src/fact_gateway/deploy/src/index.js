@@ -15,7 +15,7 @@ module.exports = gateway({
     ...fact,
     ...(fact.network && {
       network:
-        fact.network == "$core" ? process.env.CORE_NETWORK : fact.network,
+        fact.network == "$base" ? process.env.BASE_NETWORK : fact.network,
     }),
   })),
   whitelist: config.whitelist,

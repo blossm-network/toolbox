@@ -60,7 +60,9 @@ module.exports = ({
     PORT: `${port}`,
     NODE_ENV: "local",
     NETWORK: network,
+    //TODO deprecate core
     CORE_NETWORK: localCoreNetwork,
+    BASE_NETWORK: localCoreNetwork,
     HOST: host,
     GCP_PROJECT: project,
     GCP_REGION: region,

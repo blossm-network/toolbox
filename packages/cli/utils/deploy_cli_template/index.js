@@ -101,7 +101,7 @@ module.exports = ({ domain, dir }) => async (args, configFn) => {
           await testCliTemplate({ workingDir, input });
           fs.removeSync(workingDir);
           //eslint-disable-next-line no-console
-          console.log(roboSay("⚡️"), green.bold("done"));
+          console.log(roboSay(""), green.bold("done"));
         } else {
           const modules = "node_modules";
           const lock = "yarn.lock";
@@ -126,7 +126,7 @@ module.exports = ({ domain, dir }) => async (args, configFn) => {
           await build({ workingDir, env: e });
           fs.removeSync(workingDir);
           //eslint-disable-next-line no-console
-          console.log(roboSay("⚡️"), green.bold("done"));
+          console.log(roboSay(), green.bold("done"));
         }
       } catch (e) {
         fs.removeSync(workingDir);

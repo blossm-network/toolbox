@@ -8,7 +8,7 @@ module.exports = ({ token }) => async ({ root, secret }) => {
     name: "state",
     domain: "key",
     service: "system",
-    ...(process.env.CORE_NETWORK && { network: process.env.CORE_NETWORK }),
+    ...(process.env.BASE_NETWORK && { network: process.env.BASE_NETWORK }),
   })
     .set({ token: { internalFn: token } })
     .read({ root, query: { secret } });

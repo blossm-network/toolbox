@@ -18,7 +18,7 @@ const externalTokenKey = "some-external-token-key";
 const coreNetwork = "some-core-network";
 const network = "some-network";
 const envContext = "some-env-context";
-process.env.CORE_NETWORK = coreNetwork;
+process.env.BASE_NETWORK = coreNetwork;
 process.env.NETWORK = network;
 process.env.CONTEXT = envContext;
 

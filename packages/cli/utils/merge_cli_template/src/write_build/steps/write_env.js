@@ -25,7 +25,9 @@ module.exports = ({
       NETWORK: localNetwork,
       HOST: localNetwork,
       NODE_ENV: "local",
+      //TODO deprecate core
       CORE_NETWORK: localCoreNetwork,
+      BASE_NETWORK: localCoreNetwork,
       PROCEDURE: procedure,
       OPERATION_HASH: operationHash,
       SERVICE_NAME: serviceName,

@@ -34,7 +34,9 @@ module.exports = ({
       PORT: `${port}`,
       NODE_ENV: "local",
       NETWORK: network,
+      //TODO deprecate core
       CORE_NETWORK: localCoreNetwork,
+      BASE_NETWORK: localCoreNetwork,
       HOST: host,
       PROCEDURE: procedure,
       OPERATION_HASH: operationHash,

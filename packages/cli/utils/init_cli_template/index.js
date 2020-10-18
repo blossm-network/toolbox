@@ -39,7 +39,7 @@ module.exports = ({ domain, dir, customActionSuggestions }) => async (args) => {
   await fs.copy(templateDirectory, targetDirectory);
 
   //eslint-disable-next-line no-console
-  console.log(roboSay("⚡️"), green.bold("done"));
+  console.log(roboSay(), green.bold("done"));
   //eslint-disable-next-line no-console
   console.log(
     roboSay(

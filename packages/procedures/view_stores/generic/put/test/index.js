@@ -48,7 +48,6 @@ const envContextService = "some-env-context-service";
 const envContextNetwork = "some-env-context-network";
 const envNetwork = "some-env-network";
 const envName = "some-env-name";
-const coreNetwork = "some-core-network";
 
 const context = {
   [envContext]: {
@@ -80,7 +79,6 @@ const body = {
 
 process.env.NAME = envName;
 process.env.NETWORK = envNetwork;
-process.env.CORE_NETWORK = coreNetwork;
 
 describe("View store put", () => {
   beforeEach(() => {
