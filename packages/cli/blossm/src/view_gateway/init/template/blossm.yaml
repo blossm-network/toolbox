@@ -30,6 +30,8 @@ views:
     procedure: view-composite
     protection: none
 
+# Allow access from origins other than your network.
+# Use "*" to allow access from anywhere.
 allow:
   - "http://localhost:4200"
 

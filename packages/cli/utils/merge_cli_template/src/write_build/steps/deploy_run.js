@@ -6,7 +6,7 @@ module.exports = ({
   procedure,
   memory,
   timeout,
-  coreNetwork,
+  baseNetwork,
   operationHash,
   containerRegistery,
   envUriSpecifier,
@@ -43,9 +43,7 @@ module.exports = ({
       `--set-env-vars=${Object.entries({
         NODE_ENV: nodeEnv,
         NETWORK: `${envUriSpecifier}${network}`,
-        //TODO deprecate core
-        CORE_NETWORK: coreNetwork,
-        BASE_NETWORK: coreNetwork,
+        BASE_NETWORK: baseNetwork,
         HOST: host,
         PROCEDURE: procedure,
         OPERATION_HASH: operationHash,

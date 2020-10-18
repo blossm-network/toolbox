@@ -298,11 +298,11 @@ const topicsForDependencies = (config, events) => {
             (f) => f.protection == undefined || f.protection == "strict"
           ))
         ? [
-            "start.session.core",
-            "upgrade.session.core",
-            "register.identity.core",
-            "create.role.core",
-            "add-roles.principal.core",
+            "start.session.base",
+            "upgrade.session.base",
+            "register.identity.base",
+            "create.role.base",
+            "add-roles.principal.base",
           ]
         : []
     );
@@ -336,45 +336,45 @@ const addDefaultDependencies = ({ config, localBaseNetwork }) => {
     {
       name: "upgrade",
       domain: "session",
-      service: "core",
+      service: "base",
       network: localBaseNetwork,
       procedure: "command",
     },
     {
       domain: "session",
-      service: "core",
+      service: "base",
       network: localBaseNetwork,
       procedure: "event-store",
     },
     {
       domain: "role",
-      service: "core",
+      service: "base",
       network: localBaseNetwork,
       procedure: "event-store",
     },
     {
       domain: "principal",
-      service: "core",
+      service: "base",
       network: localBaseNetwork,
       procedure: "event-store",
     },
     {
       domain: "identity",
-      service: "core",
+      service: "base",
       network: localBaseNetwork,
       procedure: "event-store",
     },
     {
       name: "terminated",
       domain: "session",
-      service: "core",
+      service: "base",
       network: localBaseNetwork,
       procedure: "fact",
     },
     {
       name: "permissions",
       domain: "role",
-      service: "core",
+      service: "base",
       network: localBaseNetwork,
       procedure: "fact",
     },
@@ -383,7 +383,7 @@ const addDefaultDependencies = ({ config, localBaseNetwork }) => {
   const groupsFactProcedure = {
     procedure: "fact-gateway",
     domain: "principal",
-    service: "core",
+    service: "base",
     network: localBaseNetwork,
     mocks: [
       {
@@ -460,7 +460,7 @@ const addDefaultDependencies = ({ config, localBaseNetwork }) => {
         {
           procedure: "fact-gateway",
           domain: "group",
-          service: "core",
+          service: "base",
           network: localBaseNetwork,
           mocks: [
             {
@@ -724,7 +724,7 @@ const configure = async (workingDir, configFn, env, strict) => {
     const secretBucketKeyRing = "secrets-bucket";
 
     const containerRegistery = `us.gcr.io/${project}`;
-    const baseContainerRegistery = blossmConfig.core
+    const baseContainerRegistery = blossmConfig.base
       ? envBaseContainerRegistry({
           env,
           config: blossmConfig,

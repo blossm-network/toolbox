@@ -35,7 +35,7 @@ module.exports = viewStore({
     const { body } = await fact({
       name: "groups",
       domain: "principal",
-      service: "core",
+      service: "base",
       network: process.env.BASE_NETWORK,
     })
       .set({

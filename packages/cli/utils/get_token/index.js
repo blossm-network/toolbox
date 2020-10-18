@@ -19,7 +19,7 @@ module.exports = async ({
   // Create the account for the token.
   await eventStore({
     domain: "account",
-    service: "core",
+    service: "base",
   }).add({
     eventData: [
       {
@@ -36,7 +36,7 @@ module.exports = async ({
           },
           action: "register",
           domain: "account",
-          service: "core",
+          service: "base",
           network: process.env.NETWORK,
         }),
       },
@@ -48,7 +48,7 @@ module.exports = async ({
   await Promise.all([
     eventStore({
       domain: "role",
-      service: "core",
+      service: "base",
     }).add({
       eventData: [
         {
@@ -60,7 +60,7 @@ module.exports = async ({
             },
             action: "create",
             domain: "role",
-            service: "core",
+            service: "base",
             network: process.env.NETWORK,
           }),
         },
@@ -68,7 +68,7 @@ module.exports = async ({
     }),
     eventStore({
       domain: "principal",
-      service: "core",
+      service: "base",
     }).add({
       eventData: [
         {
@@ -85,7 +85,7 @@ module.exports = async ({
             },
             action: "add-roles",
             domain: "principal",
-            service: "core",
+            service: "base",
             network: process.env.NETWORK,
           }),
         },
@@ -96,7 +96,7 @@ module.exports = async ({
   // Add a session.
   await eventStore({
     domain: "session",
-    service: "core",
+    service: "base",
   }).add({
     eventData: [
       {
@@ -105,7 +105,7 @@ module.exports = async ({
           payload: {},
           action: "start",
           domain: "session",
-          service: "core",
+          service: "base",
           network: process.env.NETWORK,
         }),
       },
@@ -117,7 +117,7 @@ module.exports = async ({
   } = await command({
     name: "upgrade",
     domain: "session",
-    service: "core",
+    service: "base",
   })
     .set({
       context: {
@@ -130,7 +130,7 @@ module.exports = async ({
         },
       },
       claims: {
-        iss: `session.core.${process.env.NETWORK}/upgrade`,
+        iss: `session.base.${process.env.NETWORK}/upgrade`,
         aud: `${process.env.NETWORK}`,
         exp: "9999-12-31T00:00:00.000Z",
       },
@@ -139,7 +139,7 @@ module.exports = async ({
       {
         principal: {
           root: principalRoot,
-          service: "core",
+          service: "base",
           network: process.env.NETWORK,
         },
       },

@@ -2,7 +2,7 @@
 # The base URL of this gateway will be c.[domain].[service].[network]
 #
 domain: some-domain
-service: core
+service: some-service
 
 #
 # Specify the commands that this gateway should accept requests for.
@@ -31,6 +31,8 @@ commands:
   - name: some-other-name
     protection: none
 
+# Allow access from origins other than your network.
+# Use "*" to allow access from anywhere.
 allow:
   - "http://localhost:4200"
 

@@ -78,7 +78,7 @@ const pushToChannels = async ({
       fact({
         name: "principals",
         domain: "group",
-        service: "core",
+        service: "base",
         network: process.env.BASE_NETWORK,
       })
         .set({

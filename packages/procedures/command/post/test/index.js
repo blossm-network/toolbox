@@ -2169,7 +2169,7 @@ describe("Command handler post", () => {
       _tx: txId,
     });
   });
-  it("should call with the correct params with core network removed from aud", async () => {
+  it("should call with the correct params with base network removed from aud", async () => {
     const validateFnFake = fake();
     const normalizeFnFake = fake.returns(cleanedPayload);
 

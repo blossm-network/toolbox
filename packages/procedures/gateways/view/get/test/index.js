@@ -15,10 +15,10 @@ const key = "some-key";
 const externalTokenNetwork = "some-external-token-network";
 const externalTokenKey = "some-external-token-key";
 
-const coreNetwork = "some-core-network";
+const baseNetwork = "some-base-network";
 const network = "some-network";
 const envContext = "some-env-context";
-process.env.BASE_NETWORK = coreNetwork;
+process.env.BASE_NETWORK = baseNetwork;
 process.env.NETWORK = network;
 process.env.CONTEXT = envContext;
 

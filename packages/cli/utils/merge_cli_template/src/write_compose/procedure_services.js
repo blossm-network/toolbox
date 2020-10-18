@@ -33,13 +33,13 @@ module.exports = ({
   databaseServiceKey,
   project,
   port,
-  localCoreNetwork,
+  localBaseNetwork,
   network,
   host,
   region,
   env,
   containerRegistery,
-  coreContainerRegistery,
+  baseContainerRegistery,
   secretBucket,
   secretBucketKeyLocation,
   secretBucketKeyRing,
@@ -60,9 +60,7 @@ module.exports = ({
     PORT: `${port}`,
     NODE_ENV: "local",
     NETWORK: network,
-    //TODO deprecate core
-    CORE_NETWORK: localCoreNetwork,
-    BASE_NETWORK: localCoreNetwork,
+    BASE_NETWORK: localBaseNetwork,
     HOST: host,
     GCP_PROJECT: project,
     GCP_REGION: region,
@@ -85,8 +83,8 @@ module.exports = ({
     const customEnv = findEnvForDependency(env, dependency, rootDir.path());
 
     const commonServiceImagePrefix = `${
-      localCoreNetwork && dependency.network == localCoreNetwork
-        ? coreContainerRegistery
+      localBaseNetwork && dependency.network == localBaseNetwork
+        ? baseContainerRegistery
         : containerRegistery
     }/${dependency.procedure}`;
 

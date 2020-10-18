@@ -9,7 +9,7 @@ context: some-context
 #
 events:
   - domain: some-event-domain
-    service: core
+    service: some-event-service
     actions:
       - some-action
 
@@ -19,7 +19,7 @@ events:
 #
 replay:
   - domain: some-event-domain
-    service: core
+    service: some-event-service
 #
 # The following properties are used for automated testing.
 #
