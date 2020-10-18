@@ -16,7 +16,7 @@ module.exports = ({ credentialsFn }) => async ({ network, key }) => {
       .command({
         name: "open",
         domain: "connection",
-        service: "base",
+        service: "system",
         network,
       })
       .set({
