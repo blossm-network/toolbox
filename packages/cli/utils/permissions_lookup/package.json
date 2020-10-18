@@ -1,6 +1,6 @@
 {
   "name": "@blossm/permissions-lookup",
-  "version": "0.0.99",
+  "version": "0.0.100",
   "description": "Looks up permissions for a role.",
   "main": "index.js",
   "author": "blossm.network",
