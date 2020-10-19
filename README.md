@@ -125,7 +125,7 @@ On the write side:
 On the read side:
 
 * `view-store` 
-  Deployed to store denormalized data that is intended to be queried. `view-stores` connects to a Collection in a MongoDB Atlas.
+  Deployed to store denormalized data that is intended to be queried. `view-stores` connect to a Collection in a MongoDB Atlas.
   
 
 * `projection`
