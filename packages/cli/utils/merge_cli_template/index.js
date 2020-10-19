@@ -224,7 +224,13 @@ const configMemory = ({ config, blossmConfig }) => {
 
 const configTimeout = ({ config, blossmConfig }) => {
   if (config.timeout) return config.timeout;
-  return blossmConfig.vendors.cloud.gcp.defaults.timeout;
+  return (
+    (blossmConfig.vendors.cloud.gcp.defaults.timeoutOverrides &&
+      blossmConfig.vendors.cloud.gcp.defaults.timeoutOverrides[
+        config.procedure
+      ]) ||
+    blossmConfig.vendors.cloud.gcp.defaults.timeout
+  );
 };
 
 const copyScript = async (scriptDir, workingDir) => {
