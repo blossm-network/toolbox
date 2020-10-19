@@ -115,6 +115,7 @@ const execute = async (input, configFn) => {
 };
 
 module.exports = ({ domain }) => async (args, configFn) => {
+  const blossmConfig = rootDir.config();
   const input = await normalize({
     entrypointType: "path",
     entrypointDefault: ".",
@@ -125,7 +126,7 @@ module.exports = ({ domain }) => async (args, configFn) => {
         type: String,
         short: "e",
         choices: ["production", "sandbox", "staging", "development"],
-        default: "development",
+        default: blossmConfig.defaultEnv || "development",
       },
       {
         name: "data",

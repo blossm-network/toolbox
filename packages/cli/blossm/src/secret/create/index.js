@@ -58,6 +58,7 @@ const create = async (input) => {
 };
 
 module.exports = async (args) => {
+  const blossmConfig = rootDir.config();
   const input = await normalize({
     entrypointType: "name",
     args,
@@ -77,7 +78,7 @@ module.exports = async (args) => {
         short: "e",
         type: String,
         choices: ["production", "sandbox", "staging", "development"],
-        default: "development",
+        default: blossmConfig.defaultEnv || "development",
       },
     ],
   });

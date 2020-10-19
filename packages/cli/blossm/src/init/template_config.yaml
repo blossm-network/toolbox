@@ -106,3 +106,6 @@ defaults:
   eventStore: mongodb
   cloud: gcp
   cache: redis
+
+# The environment your CLI will use if no flag is provided.
+defaultEnv: development

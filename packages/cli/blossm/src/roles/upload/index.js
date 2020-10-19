@@ -77,6 +77,7 @@ const upload = async (input) => {
 };
 
 module.exports = async (args) => {
+  const blossmConfig = rootDir.config();
   const input = await normalize({
     entrypointType: "path",
     entrypointDefault: "roles.yaml",
@@ -87,7 +88,7 @@ module.exports = async (args) => {
         short: "e",
         type: String,
         choices: ["production", "sandbox", "staging", "development"],
-        default: "development",
+        default: blossmConfig.defaultEnv || "development",
       },
       {
         name: "directory",
