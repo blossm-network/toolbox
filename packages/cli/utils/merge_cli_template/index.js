@@ -368,7 +368,7 @@ const addDefaultDependencies = ({ config, localBaseNetwork }) => {
       procedure: "event-store",
     },
     {
-      domain: "identity",
+      domain: "account",
       service: "base",
       network: localBaseNetwork,
       procedure: "event-store",
