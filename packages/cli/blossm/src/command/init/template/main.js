@@ -10,18 +10,17 @@ The docs at the bottom give in-depth info of the tools you have at your disposal
 
 module.exports = async ({
   payload,
-  root,
-
-  // remove the stuff you don't need.
-  context,
-  aggregateFn,
-  commandFn,
-  queryAggregatesFn,
-  readFactFn,
-  streamFactFn,
-  countFn,
-  logEventsFn,
-  generateRootFn,
+  // uncomment the stuff you need.
+  // root,
+  // context,
+  // aggregateFn,
+  // commandFn,
+  // queryAggregatesFn,
+  // readFactFn,
+  // streamFactFn,
+  // countFn,
+  // logEventsFn,
+  // generateRootFn,
 }) => {
   // ** Perform a routine if needed. **
 
@@ -30,7 +29,7 @@ module.exports = async ({
       {
         action: "meow",
         payload,
-        root,
+        // root,
         correctNumber: 0,
       },
     ],

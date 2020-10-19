@@ -1,6 +1,6 @@
 const deps = require("./deps");
 
-module.exports = ({ app, allow, credentials = false, methods = [] }) => {
+module.exports = ({ app, allow = [], credentials = false, methods = [] }) => {
   app.use(
     deps.cors({
       origin: deps.allow([`https://${process.env.NETWORK}`, ...allow]).check,

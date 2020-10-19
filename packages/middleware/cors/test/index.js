@@ -44,7 +44,7 @@ describe("Cors middleware", () => {
     expect(allowFake).to.have.been.calledWith([`https://${network}`, ...allow]);
     expect(optionsFake).to.have.been.calledWith("*", corsResult);
   });
-  it("should call correctly if credentials is true", async () => {
+  it("should call correctly if credentials is true and no allow list", async () => {
     const corsFake = fake.returns(corsResult);
 
     replace(deps, "cors", corsFake);
@@ -58,7 +58,7 @@ describe("Cors middleware", () => {
       use: useFake,
       options: optionsFake,
     };
-    await corsMiddleware({ app, allow, credentials: true, methods });
+    await corsMiddleware({ app, credentials: true, methods });
 
     expect(corsFake).to.have.been.calledWith({
       origin: check,
@@ -68,7 +68,7 @@ describe("Cors middleware", () => {
       credentials: true,
     });
     expect(useFake).to.have.been.calledWith(corsResult);
-    expect(allowFake).to.have.been.calledWith([`https://${network}`, ...allow]);
+    expect(allowFake).to.have.been.calledWith([`https://${network}`]);
     expect(optionsFake).to.have.been.calledWith("*", corsResult);
   });
 });

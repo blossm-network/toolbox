@@ -1,13 +1,13 @@
 ### 🌸  Blossm   
 ###### Written for NodeJS
 
-### Blossm is an Event Sourcing CQRS orchestrator, that includes an interace for setting up multi-project interoperability through a shared Blossm base layer that handles core components like sessions, accounts, permissions, roles, delivering updated data to subscribers, and more.
+### Blossm is an Event Sourcing CQRS orchestrator, that includes an interace for setting up multi-project interoperability through a shared base layer that handles core components like sessions, accounts, permissions, roles, delivering updated data to subscribers, and more.
 
 #### With Blossm you can architect, fully-test, and deploy just about any peice of software functionality using small javascript functions and YAML configs, in a way that keeps each historical state of your app entirely queriable and auditable, and with the opportunity to interoperate with independently developed networks through a shared base layer. It's also cheap to run, scales reliably and automatically, and is easy to test and maintain. 
 
-#### The project aspires to make sure the data produced in Blossm systems can be owned and delegated entirely by the users and groups that produced it, giving Blossm network operators no data aggregation and manipulation advantages over the public. 
+#### The project aspires to make sure the data produced in Blossm systems can be owned and delegated entirely by the users and groups that produced it, giving Blossm network operators no data aggregation and manipulation advantages over its constituent projects, or even the public.
 
-#### The project also aspires to interoperate with the Ethereum blockchain to provide an application experience layer that can interact with Contracts and respond to events, while providing an event storage layer for trivial intraday application data that doesn't need to be on-chain in real time.
+#### The project also aspires to interoperate with the Ethereum blockchain to provide an application experience layer that can interact with Contracts and respond to events, while providing a function execution and event storage layer for trivial intraday application events that don't need to be on-chain in real time.
 
 ### Contents:
 1. [Quickstart](#quickstart)
