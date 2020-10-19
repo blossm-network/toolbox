@@ -214,7 +214,10 @@ const mongodbProtocol = ({ config, procedure }) => {
 const configMemory = ({ config, blossmConfig }) => {
   if (config.memory) return config.memory;
   return (
-    blossmConfig.vendors.cloud.gcp.defaults.memoryOverrides[config.procedure] ||
+    (blossmConfig.vendors.cloud.gcp.defaults.memoryOverrides &&
+      blossmConfig.vendors.cloud.gcp.defaults.memoryOverrides[
+        config.procedure
+      ]) ||
     blossmConfig.vendors.cloud.gcp.defaults.memory
   );
 };
