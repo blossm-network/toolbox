@@ -75,7 +75,7 @@ module.exports = ({
       procedure,
       host,
       serviceName,
-      localCoreNetwork,
+      localBaseNetwork,
       localNetwork,
       operationHash,
       secretBucket,
