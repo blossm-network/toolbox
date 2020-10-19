@@ -68,10 +68,7 @@ vendors:
       defaults:
         region: us-central1
         timeout: 120s
-        memory: 128Mi
-        memoryOverrides:
-          eventStore: 512Mi
-          viewStore: 512Mi
+        memory: 512Mi
 
   # The event store database you want to use, and how to connect to it.
   eventStore:
