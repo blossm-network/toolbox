@@ -15,7 +15,8 @@
 3. [Base layer](#base-layer)
 4. [Setup CLI](#setup-cli)
 5. [Setup deployment infrastructure](#setup-deployment-infrastructure)
-6. [TODO](#todo)
+6. [New developer onboarding](#new-developer-onboarding)
+7. [TODO](#todo)
 
 ---
 
