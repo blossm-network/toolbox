@@ -422,17 +422,40 @@ Within each GCP project, you'll be using:
 * __Cloud Scheduler__ to schedule commands to be executed later.
 * __Cloud Memorystore__ for using a shared cache between procedures for optimization.
 
-#### Prereqs
 
-1. Download and install gcloud at https://cloud.google.com/sdk/docs/quickstarts.
+#### Web domains
+
+1. Get a domain where your network and websites can be accessed.
+    * Update the **config.yaml** file `network` property to your domain name.
+    * If you're planning on building on top of a Blossm base layer network, set core to the domain of the network running the base layer that your network will rely on, such as `sustainers.network`.
+
+2. Setup a [Google Workspace](https://workspace.google.com/) account for your domain and create an email address for yourself under this domain. 
+    * Go through the steps to setup and verify your domain and setup a gMail account. Sometimes the verification process takes some time to work properly, the MX and TXT records take up to 12 hours to take effect.
+    
+You should now have access to GCP under your new Google account!
+
+#### GCP project environments
+
+1. Go to GCP. Create separate projects called "production", "sandbox", "staging", and "development" where each environment is contained within your domain’s organization. The project ID’s can be whatever.
+    * Set the billing account for the projects when prompted.
+
+2. Update the blossm **config.yaml** file **vendors.cloud.gcp.projects** properties in the repo to point to your newly created projects.
+
+#### CLI prereqs
+
+1. Download and install the gcloud at https://cloud.google.com/sdk/docs/quickstarts. Move the folder into your home directory and make it invisible ~/.google-cloud-sdk.
+Install by running `~/.google-cloud-sdk/install.sh`
+
+2. Run `gcloud auth login` and login to your 
 
 #### Networking
 
 Set up your network domain.
 
 1. Verify that you own the domain on [this site](https://search.google.com/u/1/search-console/users?resource_id=sc-domain).
-    * Click Add property on the top right.
-      * Go through the steps until the property is verified.
+    * Click **Search Property** at the top left.
+      * Click Add property.
+      * Add your domain on the left side under *Domain*, and click continue.
 
 2. In the `production` project:
     * In **Network Services > Cloud DNS**, enable Cloud DNS.
@@ -467,14 +490,14 @@ Create a private network for your serverless procedures to interact with one ano
 
 1. In the `development` project:
     * In **VPC network > Serverless VPC** access, enable Serverless VPC access API.
-    * Create a connector named **“us-central1”** in the us-central1 region under the default network with ip range 10.8.0.0/28.
+    * Create a connector named **“us-central1”** in the us-central1 region under the default network with ip range **10.8.0.0/28**.
 
 2. Repeat step 1 with the `production`, `sandbox` and `staging` projects. 
 
 
 #### Permissions
 
-Let specific Blossm processes manipulate specific parts of your compute infrastructure on your behalf, and gives your developers specified access to certain Blossm CLI tools.
+Lets specific Blossm processes manipulate specific parts of your compute infrastructure on your behalf, and gives your developers specified access to certain Blossm CLI tools.
 
 1. In the `development` project:
   * In **Cloud Build**, enable the Cloud Build API. 
