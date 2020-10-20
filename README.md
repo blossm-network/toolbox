@@ -609,9 +609,14 @@ Configure the task queues that Blossm uses to manage load and asychronisity.
  
 2. Repeat step 1 with the `production`, `sandbox` and `staging` projects. 
 
-#### [Deploy your database](#databases) and [onboard a developer](#new-developer-onboarding), then proceed to the next section.
+###### [Deploy your database](#databases) and [onboard a developer](#new-developer-onboarding), then proceed to the next section.
 
 #### Deploying 
+
+At this point you should have the majority of GCP configured, your MongoDB Atlas stores configured, and your **config.yaml** almost entirely filled out to tie it all together.
+  * **vendors.gcp.computeUrlIds** should still be blank. You'll get to this soon. 
+
+You're now ready to deploy your first procedures. You'll do so while filling out a few final peices of your GCP 
 
 ### Others
 
