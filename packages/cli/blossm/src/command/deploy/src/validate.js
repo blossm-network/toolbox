@@ -56,7 +56,7 @@ const validateObject = ({ object, expectation, path, context }) => {
             ](item, {
               title: `${expectation[property].type[0].title || property} item`,
               path: `${path}.${property}`,
-              optional: expectation[property].type[0].optional,
+              optional: false, //TODO this may be needed. expectation[property].type[0].optional,
               ...((expectation[property].type[0].in ||
                 expectation[property].type[0].is) && {
                 fn: (value) => {
@@ -99,12 +99,16 @@ const validateObject = ({ object, expectation, path, context }) => {
         path: `${path}.${property}`,
         ...((expectation[property].in || expectation[property].is) && {
           fn: (value) => {
+            //TODO
+            console.log({ value2: value });
             if (expectation[property].is) {
               return expectation[property].is == "$network" && context
                 ? value == context.network
                 : value == expectation[property].is;
             }
             if (expectation[property].in) {
+              //TODO
+              console.log({ in2: expectation[property].in });
               if (value instanceof Array) {
                 for (const item of value)
                   if (!expectation[property].in.includes(item)) return false;
@@ -116,8 +120,9 @@ const validateObject = ({ object, expectation, path, context }) => {
           },
         }),
         optional:
-          expectation[property].optional ||
-          expectation[property].default != undefined,
+          (expectation[property].optional ||
+            expectation[property].default != undefined) &&
+          object[property] == undefined,
       }),
     ]);
     if (error) throw error;
