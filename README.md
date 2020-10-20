@@ -645,7 +645,7 @@ Below are instructions for setting up `view-stores` or `event-stores` on MongoDB
 6. On the left side of the screen, click back to **Clusters**.
     * Click **"Connect"** on your "event-store" cluster, and then "Connect to your application".
     * You should see a connection string. You’ll want to pick out pieces of this string and them to the **config.yaml** file under **vendors.eventStore.mongodb**
-      * The protocol is the bit before the ://. i
+      * The protocol is the bit before the ://
         * i.e. mongodb+srv
       * The host is the bit between the @ and the first /
 
@@ -656,7 +656,9 @@ Below are instructions for setting up `view-stores` or `event-stores` on MongoDB
 
 
 ### Others
+
 Only a MongoDB adapter is currently implemented. Again, if other's are needed, I'd be happy to support.
+
 ---
 
 # New developer onboarding
