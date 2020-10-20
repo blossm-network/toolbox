@@ -13,8 +13,6 @@ const now = new Date();
 
 const transaction = "some-transaction";
 
-const snapshotNonce = "some-snapshot-nonce";
-const blockNonce = "some-block-nonce";
 const previousHash = "some-previous-hash";
 const root = "some-root";
 const publicKey = "some-public-key";
@@ -226,13 +224,6 @@ describe("Event store create block transaction", () => {
 
     replace(deps, "hash", hashFake);
 
-    const nonceFake = stub()
-      .onCall(0)
-      .returns(snapshotNonce)
-      .onCall(1)
-      .returns(blockNonce);
-
-    replace(deps, "nonce", nonceFake);
     const saveSnapshotFnFake = fake.returns(snapshot);
 
     const saveBlockResponse = "some-save-block-response";
@@ -295,7 +286,7 @@ describe("Event store create block transaction", () => {
     expect(hashFake.getCall(4)).to.have.been.calledWith(aggregateGroups);
     expect(hashFake.getCall(5)).to.have.been.calledWith(aggregateState);
     expect(hashFake.getCall(6)).to.have.been.calledWith({
-      nonce: snapshotNonce,
+      nonce: `${root}_${previousNumber + 1}`,
       block: previousNumber + 1,
       cHash: contextHash,
       sHash: stateHash,
@@ -321,7 +312,7 @@ describe("Event store create block transaction", () => {
       snapshot: {
         hash: snapshotHeadersHash,
         headers: {
-          nonce: snapshotNonce,
+          nonce: `${root}_${previousNumber + 1}`,
           block: previousNumber + 1,
           cHash: contextHash,
           sHash: stateHash,
@@ -375,7 +366,6 @@ describe("Event store create block transaction", () => {
       yetAnotherEventHash,
     ]);
     expect(hashFake.getCall(10)).to.have.been.calledWith({
-      nonce: blockNonce,
       pHash: previousHash,
       created: deps.dateString(),
       number: previousNumber + 1,
@@ -402,7 +392,6 @@ describe("Event store create block transaction", () => {
         signature: signedBlockHeaderHash,
         hash: blockHeadersHash,
         headers: {
-          nonce: blockNonce,
           pHash: previousHash,
           created: deps.dateString(),
           number: previousNumber + 1,
@@ -520,13 +509,6 @@ describe("Event store create block transaction", () => {
 
     replace(deps, "hash", hashFake);
 
-    const nonceFake = stub()
-      .onCall(0)
-      .returns(snapshotNonce)
-      .onCall(1)
-      .returns(blockNonce);
-
-    replace(deps, "nonce", nonceFake);
     const saveSnapshotFnFake = fake.returns(snapshot);
 
     const saveBlockFnFake = fake();
@@ -596,7 +578,7 @@ describe("Event store create block transaction", () => {
     expect(hashFake.getCall(2)).to.have.been.calledWith(aggregateGroups);
     expect(hashFake.getCall(3)).to.have.been.calledWith(aggregateState);
     expect(hashFake.getCall(4)).to.have.been.calledWith({
-      nonce: snapshotNonce,
+      nonce: `${root}_${previousNumber + 1}`,
       block: previousNumber + 1,
       cHash: contextHash,
       sHash: stateHash,
@@ -620,7 +602,7 @@ describe("Event store create block transaction", () => {
       snapshot: {
         hash: snapshotHeadersHash,
         headers: {
-          nonce: snapshotNonce,
+          nonce: `${root}_${previousNumber + 1}`,
           block: previousNumber + 1,
           cHash: contextHash,
           sHash: stateHash,
@@ -669,7 +651,6 @@ describe("Event store create block transaction", () => {
     expect(hashFake.getCall(6)).to.have.been.calledWith(txId);
     expect(cononicalStringFake.getCall(4)).to.have.been.calledWith([eventHash]);
     expect(hashFake.getCall(7)).to.have.been.calledWith({
-      nonce: blockNonce,
       pHash: previousHash,
       created: deps.dateString(),
       number: previousNumber + 1,
@@ -696,7 +677,6 @@ describe("Event store create block transaction", () => {
         signature: signedBlockHeaderHash,
         hash: blockHeadersHash,
         headers: {
-          nonce: blockNonce,
           pHash: previousHash,
           created: deps.dateString(),
           number: previousNumber + 1,
@@ -771,8 +751,6 @@ describe("Event store create block transaction", () => {
 
     replace(deps, "hash", hashFake);
 
-    const nonceFake = fake.returns(blockNonce);
-    replace(deps, "nonce", nonceFake);
     const saveSnapshotFnFake = fake();
 
     const saveBlockFnFake = fake();
@@ -824,7 +802,6 @@ describe("Event store create block transaction", () => {
     expect(merkleRootFake.getCall(1)).to.have.been.calledWith([]);
     expect(merkleRootFake.getCall(2)).to.have.been.calledWith([]);
     expect(hashFake).to.have.been.calledOnceWith({
-      nonce: blockNonce,
       pHash: previousHash,
       created: deps.dateString(),
       number: previousNumber + 1,
@@ -851,7 +828,6 @@ describe("Event store create block transaction", () => {
         signature: signedBlockHeaderHash,
         hash: blockHeadersHash,
         headers: {
-          nonce: blockNonce,
           pHash: previousHash,
           created: deps.dateString(),
           number: previousNumber + 1,
@@ -968,12 +944,6 @@ describe("Event store create block transaction", () => {
 
     replace(deps, "hash", hashFake);
 
-    const nonceFake = stub()
-      .onCall(0)
-      .returns(snapshotNonce)
-      .onCall(1)
-      .returns(blockNonce);
-    replace(deps, "nonce", nonceFake);
     const saveSnapshotFnFake = fake.returns(snapshot);
 
     const saveBlockFnFake = fake();
@@ -1030,7 +1000,7 @@ describe("Event store create block transaction", () => {
     expect(hashFake.getCall(3)).to.have.been.calledWith(aggregateState);
     expect(hashFake.getCall(4)).to.have.been.calledWith("~");
     expect(hashFake.getCall(5)).to.have.been.calledWith({
-      nonce: snapshotNonce,
+      nonce: `${root}_${previousNumber + 1}`,
       block: previousNumber + 1,
       cHash: contextHash,
       sHash: stateHash,
@@ -1054,7 +1024,7 @@ describe("Event store create block transaction", () => {
       snapshot: {
         hash: snapshotHeadersHash,
         headers: {
-          nonce: snapshotNonce,
+          nonce: `${root}_${previousNumber + 1}`,
           block: previousNumber + 1,
           cHash: contextHash,
           sHash: stateHash,
@@ -1098,7 +1068,6 @@ describe("Event store create block transaction", () => {
     expect(hashFake.getCall(7)).to.have.been.calledWith(txId);
     expect(cononicalStringFake.getCall(2)).to.have.been.calledWith([eventHash]);
     expect(hashFake.getCall(8)).to.have.been.calledWith({
-      nonce: blockNonce,
       pHash: previousHash,
       created: deps.dateString(),
       number: previousNumber + 1,
@@ -1125,7 +1094,6 @@ describe("Event store create block transaction", () => {
         signature: signedBlockHeaderHash,
         hash: blockHeadersHash,
         headers: {
-          nonce: blockNonce,
           pHash: previousHash,
           created: deps.dateString(),
           number: previousNumber + 1,
@@ -1176,9 +1144,6 @@ describe("Event store create block transaction", () => {
 
     replace(deps, "hash", hashFake);
 
-    const nonceFake = stub().onCall(0).returns(blockNonce);
-    replace(deps, "nonce", nonceFake);
-
     const genesisBlock = "some-genesis-bock";
     const saveBlockFnFake = fake.returns(genesisBlock);
     const encryptFnFake = fake();
@@ -1209,7 +1174,6 @@ describe("Event store create block transaction", () => {
     expect(hashFake.getCall(0)).to.have.been.calledWith("~");
     expect(merkleRootFake.getCall(0)).to.have.been.calledWith([]);
     expect(hashFake.getCall(1)).to.have.been.calledWith({
-      nonce: blockNonce,
       pHash: genesisPreviousHash,
       created: deps.dateString(),
       number: 0,
@@ -1236,7 +1200,6 @@ describe("Event store create block transaction", () => {
         signature: signedBlockHeaderHash,
         hash: blockHeadersHash,
         headers: {
-          nonce: blockNonce,
           pHash: genesisPreviousHash,
           created: deps.dateString(),
           number: 0,

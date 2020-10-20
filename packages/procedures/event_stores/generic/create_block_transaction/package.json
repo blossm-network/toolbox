@@ -19,7 +19,6 @@
     "@blossm/event-store-aggregate": "^0.0.13",
     "@blossm/hash": "^0.0.10",
     "@blossm/merkle-tree": "^0.0.6",
-    "@blossm/nonce": "*",
     "@blossm/rlp": "*"
   },
   "devDependencies": {

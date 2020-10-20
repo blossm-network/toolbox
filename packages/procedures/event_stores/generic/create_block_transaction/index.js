@@ -29,7 +29,6 @@ module.exports = ({
     const emptyByteLength = Buffer.byteLength(emptyEncoding);
 
     const blockHeaders = {
-      nonce: deps.nonce(),
       pHash: deps.hash(genesisPrevious).create(),
       created: deps.dateString(),
       number: 0,
@@ -131,7 +130,7 @@ module.exports = ({
       const encodedEvents = deps.encode(stringifiedEventPairs);
 
       const snapshotHeaders = {
-        nonce: deps.nonce(),
+        nonce: `${root}_${nextBlockNumber}`,
         block: nextBlockNumber,
         cHash: contextHash,
         gHash: groupsHash,
@@ -223,7 +222,6 @@ module.exports = ({
 
   const sCount = stringifiedSnapshotPairs.length;
   const blockHeaders = {
-    nonce: deps.nonce(),
     pHash: previousBlock.hash,
     created: deps.dateString(),
     number: previousBlock.headers.number + 1,

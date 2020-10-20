@@ -616,7 +616,15 @@ Configure the task queues that Blossm uses to manage load and asychronisity.
 At this point you should have the majority of GCP configured, your MongoDB Atlas stores configured, and your **config.yaml** almost entirely filled out to tie it all together.
   * **vendors.gcp.computeUrlIds** should still be blank. You'll get to this soon. 
 
-You're now ready to deploy your first procedures. You'll do so while filling out a few final peices of your GCP 
+You're now ready to deploy your first procedures. You'll do so while filling out a few final peices of your GCP along the way.
+
+1. In your blossm directory, `cd services/animals/domains/birds/event-store`.
+2. Deploy your `event-store`, `blossm deploy`. This should take about 5 minutes as it runs all of your unit and integration tests, wires up the store with everything it needs to do its job, and deploys it to the network where it immediately becomes available.
+3. Now let's go to your command, `cd ../commands/chirp`.
+4. Deploy it with `blossm deploy`. Instead if you had wanted to run unit test locally, try `blossm test`. If you want to run unit and integrations tests remotely, go with `blossm deploy --dry-run`. Add `-e <production | sandbox | staging | development>`, otherwise the default environment specified in **config.yaml** is used.
+5. Now let's go to the `command-gateway`, `cd ../../command-gateway`.
+6. Deploy it with `blossm deploy`. By the way, check out the **blossm.yaml** of each of these folders were deploying from to get a sense of how they work.
+7. You can now issue a command
 
 ### Others
 

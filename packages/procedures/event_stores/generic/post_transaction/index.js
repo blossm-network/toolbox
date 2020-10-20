@@ -115,7 +115,7 @@ module.exports = ({
             created: event.headers.created,
             idempotency: event.headers.idempotency,
             committed: deps.dateString(),
-            nonce: deps.nonce(),
+            nonce: `${event.headers.root}_${allottedNumber}`,
             number: allottedNumber,
             pHash: hashedPayload,
             cHash: hashedContext,

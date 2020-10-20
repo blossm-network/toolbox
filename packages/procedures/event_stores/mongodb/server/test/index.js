@@ -344,11 +344,6 @@ describe("Mongodb event store", () => {
         hash: { $type: String, required: true, unique: true },
         signature: { $type: String, required: true },
         headers: {
-          nonce: {
-            $type: String,
-            required: true,
-            unique: true,
-          },
           pHash: { $type: String, required: true },
           created: { $type: Date, required: true },
           number: { $type: Number, required: true, unique: true },
@@ -749,11 +744,6 @@ describe("Mongodb event store", () => {
         hash: { $type: String, required: true, unique: true },
         signature: { $type: String, required: true },
         headers: {
-          nonce: {
-            $type: String,
-            required: true,
-            unique: true,
-          },
           pHash: { $type: String, required: true },
           created: { $type: Date, required: true },
           number: { $type: Number, required: true, unique: true },
@@ -1092,11 +1082,6 @@ describe("Mongodb event store", () => {
         hash: { $type: String, required: true, unique: true },
         signature: { $type: String, required: true },
         headers: {
-          nonce: {
-            $type: String,
-            required: true,
-            unique: true,
-          },
           pHash: { $type: String, required: true },
           created: { $type: Date, required: true },
           number: { $type: Number, required: true, unique: true },

@@ -16,7 +16,6 @@ const service = "some-service";
 const network = "some-network";
 
 const topic = `some-topic`;
-const nonce = "some-nonce";
 
 const transaction = "some-transaction";
 
@@ -32,7 +31,6 @@ const headers = {
   domain,
   service,
   network,
-  nonce,
   created,
   version,
   idempotency,
@@ -98,9 +96,6 @@ describe("Event store post", () => {
 
     replace(deps, "hash", hashFake);
 
-    const nonceFake = fake.returns(nonce);
-    replace(deps, "nonce", nonceFake);
-
     const result = await postTransaction({
       eventData,
       tx,
@@ -120,7 +115,7 @@ describe("Event store post", () => {
             number: currentEventsForRoot,
             topic,
             committed: deps.dateString(),
-            nonce,
+            nonce: `${root}_${currentEventsForRoot}`,
             action,
             domain,
             service,
@@ -163,7 +158,7 @@ describe("Event store post", () => {
       number: currentEventsForRoot,
       topic,
       committed: deps.dateString(),
-      nonce,
+      nonce: `${root}_${currentEventsForRoot}`,
       action,
       domain,
       service,
@@ -203,9 +198,6 @@ describe("Event store post", () => {
       });
     replace(deps, "hash", hashFake);
 
-    const nonceFake = fake.returns(nonce);
-    replace(deps, "nonce", nonceFake);
-
     const result = await postTransaction({
       eventData: [
         {
@@ -230,7 +222,7 @@ describe("Event store post", () => {
             number,
             topic,
             committed: deps.dateString(),
-            nonce,
+            nonce: `${root}_${number}`,
             action,
             domain,
             service,
@@ -273,7 +265,7 @@ describe("Event store post", () => {
       number,
       topic,
       committed: deps.dateString(),
-      nonce,
+      nonce: `${root}_${number}`,
       action,
       domain,
       service,
@@ -309,9 +301,6 @@ describe("Event store post", () => {
 
     replace(deps, "hash", hashFake);
 
-    const nonceFake = fake.returns(nonce);
-    replace(deps, "nonce", nonceFake);
-
     const result = await postTransaction({
       eventData: [
         {
@@ -336,7 +325,7 @@ describe("Event store post", () => {
             number: currentEventsForRoot,
             topic,
             committed: deps.dateString(),
-            nonce,
+            nonce: `${root}_${currentEventsForRoot}`,
             action,
             domain,
             service,
@@ -369,7 +358,7 @@ describe("Event store post", () => {
       number: currentEventsForRoot,
       topic,
       committed: deps.dateString(),
-      nonce,
+      nonce: `${root}_${currentEventsForRoot}`,
       action,
       domain,
       service,
@@ -465,23 +454,6 @@ describe("Event store post", () => {
 
     replace(deps, "hash", hashFake);
 
-    const nonce1 = "some-nonce1";
-    const nonce2 = "some-nonce2";
-    const nonce3 = "some-nonce3";
-    const nonce4 = "some-nonce4";
-
-    const nonceFake = stub()
-      .onFirstCall()
-      .returns(nonce1)
-      .onSecondCall()
-      .returns(nonce2)
-      .onThirdCall()
-      .returns(nonce3)
-      .onCall(3)
-      .returns(nonce4);
-
-    replace(deps, "nonce", nonceFake);
-
     const groupsAdded = "some-groups-added";
     const groupsRemoved = "some-groups-removed";
     const result = await postTransaction({
@@ -524,7 +496,7 @@ describe("Event store post", () => {
             number: currentEventsForRoot,
             topic,
             committed: deps.dateString(),
-            nonce: nonce1,
+            nonce: `${root}_${currentEventsForRoot}`,
             action,
             domain,
             service,
@@ -552,7 +524,7 @@ describe("Event store post", () => {
             number: currentEventsForRoot + 1,
             topic,
             committed: deps.dateString(),
-            nonce: nonce2,
+            nonce: `${root}_${currentEventsForRoot + 1}`,
             action,
             domain,
             service,
@@ -580,7 +552,7 @@ describe("Event store post", () => {
             number: 9,
             topic,
             committed: deps.dateString(),
-            nonce: nonce3,
+            nonce: `some-other-root_9`,
             action,
             domain,
             service,
@@ -625,7 +597,7 @@ describe("Event store post", () => {
       number: currentEventsForRoot,
       topic,
       committed: deps.dateString(),
-      nonce: nonce1,
+      nonce: `${root}_${currentEventsForRoot}`,
       action,
       domain,
       service,
@@ -642,7 +614,7 @@ describe("Event store post", () => {
       number: currentEventsForRoot + 1,
       topic,
       committed: deps.dateString(),
-      nonce: nonce2,
+      nonce: `${root}_${currentEventsForRoot + 1}`,
       action,
       domain,
       service,
@@ -667,7 +639,7 @@ describe("Event store post", () => {
       number: 9,
       topic,
       committed: deps.dateString(),
-      nonce: nonce3,
+      nonce: `some-other-root_9`,
       action,
       domain,
       service,
@@ -704,9 +676,6 @@ describe("Event store post", () => {
       });
     replace(deps, "hash", hashFake);
 
-    const nonceFake = fake.returns(nonce);
-    replace(deps, "nonce", nonceFake);
-
     const result = await postTransaction({
       eventData,
       tx,
@@ -728,7 +697,7 @@ describe("Event store post", () => {
             committed: deps.dateString(),
             created,
             idempotency,
-            nonce,
+            nonce: `${root}_${currentEventsForRoot}`,
             action,
             domain,
             service,
@@ -767,7 +736,7 @@ describe("Event store post", () => {
       number: currentEventsForRoot,
       topic,
       committed: deps.dateString(),
-      nonce,
+      nonce: `${root}_${currentEventsForRoot}`,
       action,
       domain,
       service,

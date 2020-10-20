@@ -157,7 +157,7 @@ const snapshotStore = async ({ schema, indexes }) => {
       hash: { $type: String, required: true, unique: true },
       headers: {
         nonce: {
-          $type: String,
+          [typeKey]: String,
           required: true,
           unique: true,
         },
@@ -247,11 +247,6 @@ const blockchainStore = async () => {
       hash: { [typeKey]: String, required: true, unique: true },
       signature: { [typeKey]: String, required: true },
       headers: {
-        nonce: {
-          [typeKey]: String,
-          required: true,
-          unique: true,
-        },
         pHash: { [typeKey]: String, required: true },
         created: { [typeKey]: Date, required: true },
         number: { [typeKey]: Number, required: true, unique: true },
