@@ -502,26 +502,26 @@ Lets specific Blossm processes manipulate specific parts of your compute infrast
 1. In the `development` project:
   * In **Cloud Build**, enable the Cloud Build API. 
   * In **IAM & Admin > Roles**, create a Role named **“Blossm Developer”** with id **“BlossmDeveloper”** in Alpha role launch stage. This will be the role given to developers’ machines. Give it the permissions:
-    * **storage.buckets.create** - allows the machine to create storage buckets.
-    * **storage.objects.create** - allows the machine to store objects in buckets, including the build artifacts and the encrypted key in a storage bucket.
-    * **cloudkms.cryptoKeys.create** - allows the machine to create crypto keys.
-    * **cloudkms.cryptoKeyVersions.useToEncrypt** - allows the machine to encrypt a message using a Crypto key.
-    * **cloudtasks.queues.create** - allows the machine to create task queues.
-    * **cloudtasks.tasks.create** - allows the machine to create tasks.
-    * **iam.serviceAccounts.actAs** - allows the machine to execute commands.
+      * **storage.buckets.create** - allows the machine to create storage buckets.
+      * **storage.objects.create** - allows the machine to store objects in buckets, including the build artifacts and the encrypted key in a storage bucket.
+      * **cloudkms.cryptoKeys.create** - allows the machine to create crypto keys.
+      * **cloudkms.cryptoKeyVersions.useToEncrypt** - allows the machine to encrypt a message using a Crypto key.
+      * **cloudtasks.queues.create** - allows the machine to create task queues.
+      * **cloudtasks.tasks.create** - allows the machine to create tasks.
+      * **iam.serviceAccounts.actAs** - allows the machine to execute commands.
    * In **IAM & Admin > Service Accounts**, grant the **Service Account User** role to the **Cloud Build** service account on the **\[projectNumber\]-<span>compute</span>@developer.gserviceaccount.com** Service Account. See [here](https://cloud.google.com/cloud-build/docs/deploying-builds/deploy-cloud-run) and [here](https://cloud.google.com/run/docs/reference/iam/roles#additional-configuration) for more info.
       * Do this by clicking the checkbox next to the **\[projectNumber\]-<span>compute</span>@developer.gserviceaccount.com** Service Account in the table, then clicking **Show info panel** at the top right.
-      * Click **Add member** and locate the **@gcp-sa-cloudbuild.iam.gserviceaccount.com**. Select the **Service Account User** role.
+      * Click **Add member** and locate the **\[projectNumber\]@cloudbuild.gserviceaccount.com**. Select the **Service Account User** role, then save.
    * **In IAM & Admin > IAM**, add the following roles to the @cloudbuild.gserviceaccount.com service Account:
     Cloud Run Admin
-    * **Cloud Tasks Queue Admin** - allows the build process to create queues.
-    * **DNS Administrator** - to configure domains.
-    * **Pub/Sub Admin** - to create topics and subscriptions.
-    * **Cloud Scheduler Admin** - to create and modify jobs.
-    * **Cloud KMS CryptoKey Signer/Verifier** - to sign and verify messages. Used in integration tests.
-    * **Cloud KMS CryptoKey Encrypter/Decrypter** - to encrypt and decrypt messages. Used in integration tests.
-    * **Cloud KMS Admin** - to create keys, used to create keys for private event-stores.
-    * **Service Account User** - to assign a push subscription to a Run service. 
+      * **Cloud Tasks Queue Admin** - allows the build process to create queues.
+      * **DNS Administrator** - to configure domains.
+      * **Pub/Sub Admin** - to create topics and subscriptions.
+      * **Cloud Scheduler Admin** - to create and modify jobs.
+      * **Cloud KMS CryptoKey Signer/Verifier** - to sign and verify messages. Used in integration tests.
+      * **Cloud KMS CryptoKey Encrypter/Decrypter** - to encrypt and decrypt messages. Used in integration tests.
+      * **Cloud KMS Admin** - to create keys, used to create keys for private event-stores.
+      * **Service Account User** - to assign a push subscription to a Run service. 
    * In **IAM & Admin > IAM**, grant the following Roles to the **\[projectNumber\]-<span>compute</span>@developer.gserviceaccount.com** service account:
     * **Cloud Run Invoker** - allows a service to invoke other services.
     * **Cloud KMS CryptoKey Encrypter/Decrypter** - to decrypt encrypted values.
