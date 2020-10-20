@@ -33,7 +33,6 @@
     "@blossm/mongodb-event-store-save-block": "^0.0.32",
     "@blossm/mongodb-event-store-save-events": "^0.0.106",
     "@blossm/mongodb-event-store-save-snapshot": "^0.0.38",
-    "@blossm/nonce": "^0.0.5",
     "@blossm/uuid": "^0.0.6"
   },
   "devDependencies": {
