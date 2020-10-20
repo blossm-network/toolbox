@@ -626,9 +626,6 @@ TODO
 
 Once you've got a deployment environment set up, here's how to get a new developer writing, testing, and deploying Blossm procedures.
 
-1. [GCP](#gcp)
-2. [Others](#others)
-
 ### GCP
 
 1. In the `development` project:
