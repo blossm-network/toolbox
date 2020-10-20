@@ -430,7 +430,7 @@ Within each GCP project, you'll be using:
 
 Set up your network domain.
 
-1. Verify that you own the domain on [this site](https://search.google.com/u/1/search-console/users?resource_id=sc-domain:sm.network).
+1. Verify that you own the domain on [this site](https://search.google.com/u/1/search-console/users?resource_id=sc-domain).
     * Click Add property on the top right.
       * Go through the steps until the property is verified.
 
