@@ -183,21 +183,6 @@ module.exports = ({
         ...(req.body.claims && { claims: req.body.claims }),
         ...(req.body.token && { token: req.body.token }),
       }),
-      //TODO deprecate this in favor of logEventsFn.
-      submitEventsFn: (events) =>
-        processEvents({
-          events,
-          addFn,
-          ...(req.body.headers.idempotency && {
-            idempotency: req.body.headers.idempotency,
-          }),
-          ...(req.body.context && { context: req.body.context }),
-          ...(req.body.context && { context: req.body.context }),
-          ...(req.body.claims && { claims: req.body.claims }),
-          path,
-          ...(req.body.tx && { tx: req.body.tx }),
-          txId,
-        }),
       logEventsFn: (events) =>
         processEvents({
           events,

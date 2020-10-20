@@ -169,7 +169,6 @@ describe("Command handler post", () => {
       readFactFn,
       streamFactFn,
       countFn,
-      submitEventsFn: match(() => true),
       logEventsFn: match(() => true),
       generateRootFn: match(() => true),
     });
@@ -328,7 +327,6 @@ describe("Command handler post", () => {
       readFactFn,
       streamFactFn,
       countFn,
-      submitEventsFn: match(() => true),
       logEventsFn: match(() => true),
       generateRootFn: match(() => true),
     });
@@ -496,7 +494,6 @@ describe("Command handler post", () => {
       readFactFn,
       streamFactFn,
       countFn,
-      submitEventsFn: match(() => true),
       logEventsFn: match(() => true),
       generateRootFn: match(() => true),
     });
@@ -959,7 +956,6 @@ describe("Command handler post", () => {
       readFactFn,
       streamFactFn,
       countFn,
-      submitEventsFn: match(() => true),
       logEventsFn: match(() => true),
       generateRootFn: match(() => true),
     });
@@ -1108,7 +1104,6 @@ describe("Command handler post", () => {
       readFactFn,
       streamFactFn,
       countFn,
-      submitEventsFn: match(() => true),
       logEventsFn: match(() => true),
       generateRootFn: match(() => true),
     });
@@ -1205,7 +1200,6 @@ describe("Command handler post", () => {
       readFactFn,
       streamFactFn,
       countFn,
-      submitEventsFn: match(() => true),
       logEventsFn: match(() => true),
       generateRootFn: match(() => true),
     });
@@ -1352,7 +1346,6 @@ describe("Command handler post", () => {
       readFactFn,
       streamFactFn,
       countFn,
-      submitEventsFn: match(() => true),
       logEventsFn: match(() => true),
       generateRootFn: match(() => true),
     });
@@ -1507,7 +1500,6 @@ describe("Command handler post", () => {
       readFactFn,
       streamFactFn,
       countFn,
-      submitEventsFn: match(() => true),
       logEventsFn: match(() => true),
       generateRootFn: match(() => true),
     });
@@ -1679,7 +1671,6 @@ describe("Command handler post", () => {
       readFactFn,
       streamFactFn,
       countFn,
-      submitEventsFn: match(() => true),
       logEventsFn: match(() => true),
       generateRootFn: match(() => true),
     });
@@ -1853,7 +1844,6 @@ describe("Command handler post", () => {
       readFactFn,
       streamFactFn,
       countFn,
-      submitEventsFn: match(() => true),
       logEventsFn: match(() => true),
       generateRootFn: match(() => true),
     });
@@ -2057,7 +2047,6 @@ describe("Command handler post", () => {
       readFactFn,
       streamFactFn,
       countFn,
-      submitEventsFn: match(() => true),
       logEventsFn: match(() => true),
       generateRootFn: match(() => true),
     });
@@ -2271,7 +2260,6 @@ describe("Command handler post", () => {
       readFactFn,
       streamFactFn,
       countFn,
-      submitEventsFn: match(() => true),
       logEventsFn: match(() => true),
       generateRootFn: match(() => true),
     });
