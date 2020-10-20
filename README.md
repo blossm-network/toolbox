@@ -512,7 +512,7 @@ Lets specific Blossm processes manipulate specific parts of your compute infrast
    * In **IAM & Admin > Service Accounts**, grant the **Service Account User** role to the **Cloud Build** service account on the **\[projectNumber\]-<span>compute</span>@developer.gserviceaccount.com** Service Account. See [here](https://cloud.google.com/cloud-build/docs/deploying-builds/deploy-cloud-run) and [here](https://cloud.google.com/run/docs/reference/iam/roles#additional-configuration) for more info.
       * Do this by clicking the checkbox next to the **\[projectNumber\]-<span>compute</span>@developer.gserviceaccount.com** Service Account in the table, then clicking **Show info panel** at the top right.
       * Click **Add member** and locate the **\[projectNumber\]@cloudbuild.gserviceaccount.com**. Select the **Service Account User** role, then save.
-   * **In IAM & Admin > IAM**, add the following roles to the **@cloudbuild.gserviceaccount.com** Service Account (the same one from the previous step):
+   * **In IAM & Admin > IAM**, add the following roles to the **@cloudbuild.gserviceaccount.com** service account (the same one from the previous step):
       * **Cloud Run Admin** - allows the build process to deploy services.
       * **Cloud Tasks Queue Admin** - allows the build process to create queues.
       * **DNS Administrator** - to configure domains.
@@ -522,7 +522,7 @@ Lets specific Blossm processes manipulate specific parts of your compute infrast
       * **Cloud KMS CryptoKey Encrypter/Decrypter** - to encrypt and decrypt messages. Used in integration tests.
       * **Cloud KMS Admin** - to create keys for private event-stores.
       * **Service Account User** - to assign a push subscription to a Cloud Run service. 
-   * In **IAM & Admin > IAM**, grant the following Roles to the **\[projectNumber\]-<span>compute</span>@developer.gserviceaccount.com** service account:
+   * In **IAM & Admin > IAM**, remove any roles associated with the **\[projectNumber\]-<span>compute</span>@developer.gserviceaccount.com** service account, and instead grant it the following roles:
       * **Cloud Run Invoker** - allows a service to invoke other services.
       * **Cloud KMS CryptoKey Encrypter/Decrypter** - to decrypt encrypted values.
       * **Cloud KMS CryptoKey Signer/Verifier** - allows a service to sign data with encryption keys, and verify the signatures.
