@@ -1,7 +1,7 @@
 domain: challenge
 service: base
 
-# Specifies commands that get forwarded to the base network to fulfill.
+# Specifies commands that get forwarded to the base layer network to fulfill.
 commands:
   - name: issue
     protection: none

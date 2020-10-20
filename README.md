@@ -596,8 +596,6 @@ TODO
 
 ## TODOs 
 
-##### open to contribution and new internet collaborator friends, but you gotta be good at what you do
-
 #### Organizational
 
 - [x] Start documentation for Blossm. 
@@ -607,7 +605,7 @@ TODO
 - [ ] Add a hello world application that is included with `blossm init`. 
 - [ ] Create richer docs with more specifics about the inputs and expected outputs of certin procedure functions. 
 
-#### Code (help would be great)
+#### Code
 
 - [ ] Pull out GCP functionality from the `cli` directory into an `adapters` directory to make it easy to implement Blossm on other prociders.
 - [ ] Pull out `//cli/src/projection/deploy/src/index` into `//procedures/projection` and write tests for it.
@@ -615,7 +613,7 @@ TODO
 - [ ] Write a script that automates the GCP deployment setup.
 
 
-#### Design (help plz)
+#### Design
 
 - [ ] Implement a landing page website for Blossm.
 - [ ] Implement a documentation website to accommodate rich implementation guidelines.
