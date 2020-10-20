@@ -536,7 +536,7 @@ Lets specific Blossm processes manipulate specific parts of your compute infrast
 2. Repeat step 1 with the `production`, `sandbox` and `staging` projects.
 
 3. In the **development** project:
-    * Give the **@cloudbuild.gserviceaccount.com** service account ownership over the domain you registered in the Networking section by going to [this site](https://search.google.com/u/1/search-console/users?resource_id=sc-domain) and clicking settings.
+    * Give the **@cloudbuild.gserviceaccount.com** service account ownership over the domain you registered in the Networking section by going to [this site](https://search.google.com/u/1/search-console/users?resource_id=sc-domain), selecting your domain from the top-left menu, and clicking settings.
       * Next to your name, it should say Owner and have a three-dot menu. Click the menu and select Manage Property Owners.
         * In the new site, click on your domain in the Properties list.
           * At the bottom you should see a button to Add an owner. 
@@ -546,13 +546,13 @@ Lets specific Blossm processes manipulate specific parts of your compute infrast
 
 #### Authentication
 
-Create keys that will be used your application to verify the authenticity of certain functionality.
+Create keys that will be used by your application to verify the authenticity of certain functionality.
 
 1. In the `development` project:
     * In **Security > Cryptographic Keys**, enable **Cloud KMS**.
     * Create a global Key Ring named **“jwt”**. 
       * Create a Generated key named **“access”** for Asymmetric signing using Elliptic Curve P-256 - SHA256 Digest.
-      * Create two other keys with the same specs named **“challenge”** and **"updates"**.
+      * Create two other keys in the same ring with the same specs named **“challenge”** and **"updates"**.
 
 2. Repeat step 1 with the `production`, `sandbox` and `staging` projects. 
 
@@ -561,7 +561,7 @@ Create keys that will be used your application to verify the authenticity of cer
 Configure the storage of encrypted secrets that your application decrypts and uses during runtime using Blossm tools.
 
 1. In the `development` project:
-    * In **Security > Cryptographic Keys**, create a global Key ring named **“secrets-bucket”**.
+    * In **Security > Cryptographic Keys**, create a global Key ring named **“secrets-bucket”**. No need to create a key in it.
 
 2. Repeat step 1 with the `production`, `sandbox` and `staging` projects. 
 
@@ -574,7 +574,7 @@ Configure the storage of encrypted secrets that your application decrypts and us
 
 5. Update the top level Blossm `config.yaml` so that the properties **vendors.cloud.gcp.secretsBuckets** reference the secrets Storage bucket names.
 
-The command to save a secret is using the CLI is:
+The command to save a secret using the CLI is:
 
 ```javascript
 blossm secret create mongodb -m <YOUR-SECRET> -e <development, staging, sandbox, or production>
