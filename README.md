@@ -284,7 +284,7 @@ Again, non-`production` gateways are addressed with a network prefix of `.dev | 
 
 # Base layer 
 
-Blossm applications must be built around an implementation of the Blossm base layer, which manages all of the basic stuff that applications need such as accounts, sessions, token issuance, permissions, roles, authentication, and publishing updated views to connected clients. Any application built around the same Blossm base layer can easily interoperate with one another.
+Blossm applications must be built around an implementation of the Blossm base layer, which manages all of the basic stuff that applications need such as accounts, sessions, token issuance, permissions, roles, authentication, and publishing updated views to connected clients. Any application built around the same Blossm base layer can seamlessly interoperate.
 
 There are a few non-required traits of a Blossm base layer that are strongly encouraged:
 

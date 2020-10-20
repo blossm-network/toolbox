@@ -21,6 +21,10 @@ actions:
 # Types and validators should always be specified,
 # and default values and required flags should be set if intended.
 #
+# All event-store schema properties are optional,
+# but nothing will be saved to events or snapshots that is not defined here.
+#
+#
 schema:
   name: String
 
