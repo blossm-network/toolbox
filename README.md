@@ -614,13 +614,49 @@ Only a GCP adapter is currently implemented. If other's are needed, I'd be happy
 ## Databases
 
 1. [MongoDB Atlas](#mongodb-atlas)
-
-Below are instructions for setting up `view-stores` or `event-stores` on MongoDB Atlas.
-
-TODO
-
 2. [Others](#others)
 
+### MongoDB Atlas
+
+Below are instructions for setting up `view-stores` or `event-stores` on MongoDB Atlas, connected to from GCP. To connect from another compute infrastructure, some modifications may be warranted to get the most out of your setup.
+
+1. (Create a MongoDB Atlas account)[https://account.mongodb.com/account/register].
+
+2. Create an Organization with the name of your `network`, and a project named **"development-event-store"**.
+
+3. Create a **Shared** cluster for free (you can upgrade this later).
+    * If your compute is through GCP, have your databases also run on GCP. The **"us-central1"** region is a good starting spot if you're unsure of a region to setup in. 
+    * The Cluster Tier can be kept as M0 Sandbox, and the additional settings left as-is.
+    * Change the cluster name to **"event-store"**, and click Create.
+
+4. On the left side of the screen, click on **Database access**.
+    * Add a new database user.
+      * Name the user **"blossm"**, create a password for it, and make sure it has access to read and write from any database.
+      * Save the password to blossm on the cli with:
+      ```javascript
+      blossm secrets create mongodb-event-store -m <YOUR MONGODB USERPASSWORD> -e development
+      ```
+
+5. On the left side of the screen, click on **Network access**.
+    * Add a new IP address to the access list.
+      * If your compute is through GCP, enter the same IP address specified for your GCP VPC serverless setup, **10.8.0.0/28**.
+      * You can leave a description such as "GCP default VPC serverless connection".
+
+6. On the left side of the screen, click back to **Clusters**.
+    * Click **"Connect"** on your "event-store" cluster, and then "Connect to your application".
+    * You should see a connection string. You’ll want to pick out pieces of this string and them to the **config.yaml** file under **vendors.eventStore.mongodb**
+      * The protocol is the bit before the ://. i
+        * i.e. mongodb+srv
+      * The host is the bit between the @ and the first /
+
+7. In the second dropdown from the top-left, you'll see an option to **"Create a new project"**. Name this project **"development-view-store"**
+  * Repeat steps 3-6 for this project.
+
+8. Repeat steps 2-7 for the rest of your staging, sandbox, and production stores. 
+
+
+### Others
+Only a MongoDB adapter is currently implemented. Again, if other's are needed, I'd be happy to support.
 ---
 
 # New developer onboarding
