@@ -520,15 +520,15 @@ Lets specific Blossm processes manipulate specific parts of your compute infrast
       * **Cloud Scheduler Admin** - to create and modify jobs.
       * **Cloud KMS CryptoKey Signer/Verifier** - to sign and verify messages. Used in integration tests.
       * **Cloud KMS CryptoKey Encrypter/Decrypter** - to encrypt and decrypt messages. Used in integration tests.
-      * **Cloud KMS Admin** - to create keys, used to create keys for private event-stores.
-      * **Service Account User** - to assign a push subscription to a Run service. 
+      * **Cloud KMS Admin** - to create keys for private event-stores.
+      * **Service Account User** - to assign a push subscription to a Cloud Run service. 
    * In **IAM & Admin > IAM**, grant the following Roles to the **\[projectNumber\]-<span>compute</span>@developer.gserviceaccount.com** service account:
-    * **Cloud Run Invoker** - allows a service to invoke other services.
-    * **Cloud KMS CryptoKey Encrypter/Decrypter** - to decrypt encrypted values.
-    * **Cloud KMS CryptoKey Signer/Verifier** - allows a service to sign data with encryption keys, and verify the signatures.
+      * **Cloud Run Invoker** - allows a service to invoke other services.
+      * **Cloud KMS CryptoKey Encrypter/Decrypter** - to decrypt encrypted values.
+      * **Cloud KMS CryptoKey Signer/Verifier** - allows a service to sign data with encryption keys, and verify the signatures.
    * In **IAM & Admin > Service Accounts**
-    * Create a service account named **“Executer”** with ID **executer@**. Give it roles **Service Account User** and **Cloud Run Invoker**.
-    * Create a service account named **“Cloud Run Pub/Sub Invoker”** with ID **cloud-run-pubsub-invoker@**.
+      * Create a service account named **“Executer”** with ID **executer@**. Give it roles **Service Account User** and **Cloud Run Invoker**.
+      * Create a service account named **“Cloud Run Pub/Sub Invoker”** with ID **cloud-run-pubsub-invoker@**.
       * Give it the **Cloud Run Invoker** role.
 
 2. Repeat step 1 with the `production`, `sandbox` and `staging` projects.
