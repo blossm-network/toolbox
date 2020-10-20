@@ -624,7 +624,7 @@ You're now ready to deploy your first procedures. You'll do so while filling out
 4. Deploy it with `blossm deploy`. Instead if you had wanted to run unit test locally, try `blossm test`. If you want to run unit and integrations tests remotely, go with `blossm deploy --dry-run`. Add `-e <production | sandbox | staging | development>`, otherwise the default environment specified in **config.yaml** is used.
 5. Now let's go to the `command-gateway`, `cd ../../command-gateway`.
 6. Deploy it with `blossm deploy`. By the way, check out the **blossm.yaml** of each of these folders were deploying from to get a sense of how they work.
-7. You can now issue a command
+7. You can now issue your first command!
 
 ### Others
 

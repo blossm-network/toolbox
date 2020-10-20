@@ -72,6 +72,7 @@ module.exports = async (args) => {
         name: "file",
         short: "f",
         type: String,
+        optional: true,
       },
       {
         name: "env",
