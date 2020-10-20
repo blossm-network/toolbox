@@ -490,7 +490,7 @@ Create a private network for your serverless procedures to interact with one ano
 
 1. In the `development` project:
     * In **VPC network > Serverless VPC** access, enable Serverless VPC access API.
-    * Create a connector named **“us-central1”** in the us-central1 region under the default network with ip range **10.8.0.0/28**.
+    * Create a connector named **"us-central1-network"** in the us-central1 region under the default network with ip range **10.8.0.0/28**.
 
 2. Repeat step 1 with the `production`, `sandbox` and `staging` projects. 
 
@@ -524,6 +524,7 @@ Lets specific Blossm processes manipulate specific parts of your compute infrast
       * **Service Account User** - to assign a push subscription to a Cloud Run service. 
    * In **IAM & Admin > IAM**, remove any roles associated with the **\[projectNumber\]-<span>compute</span>@developer.gserviceaccount.com** service account, and instead grant it the following roles:
       * **Cloud Run Invoker** - allows a service to invoke other services.
+      * **Storage Object Viewer** - allows a service to access buckets for secrets and roles.
       * **Cloud KMS CryptoKey Encrypter/Decrypter** - to decrypt encrypted values.
       * **Cloud KMS CryptoKey Signer/Verifier** - to sign data with encryption keys, and verify the signatures.
    * In **IAM & Admin > Service Accounts**
@@ -563,7 +564,7 @@ Blossm keeps a blockchain in your `event-store` which can be useful when auditin
 1. In the `development` project:
     * In **Security > Cryptographic Keys**, enable **Cloud KMS**.
     * Create a global Key Ring named **“blockchain”**. 
-      * Create a Generated key named **“producer”** for Asymmetric signing using Elliptic Curve P-256 - SHA256 Digest.
+      * In it, create a Generated key named **“producer”** for Asymmetric signing using Elliptic Curve P-256 - SHA256 Digest.
       * Create another Generated key named **“private”** for Symmetric signing with a rotation period of your choosing. 90 days is fine.
 
 2. Repeat step 1 with the `production`, `sandbox` and `staging` projects. 
@@ -628,6 +629,8 @@ At this point you should have the majority of GCP configured, your MongoDB Atlas
 
 You're now ready to deploy your first procedures. You'll do so while filling out a few final peices of your GCP along the way.
 
+1. * In **APIs & Services**, select the **Cloud Run API**.
+      * Enable the API.
 1. In your blossm directory, `cd services/animals/domains/birds/event-store`.
 2. Deploy your `event-store`, `blossm deploy`. This should take about 5 minutes as it runs all of your unit and integration tests, wires up the store with everything it needs to do its job, and deploys it to the network where it immediately becomes available.
 3. Now let's go to your command, `cd ../commands/chirp`.

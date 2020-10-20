@@ -79,15 +79,12 @@ testing:
   # Feel free to add more events to test your handler outcomes.
   #
   examples:
-    first:
-      action: some-action
+    - action: some-action
       payload:
         name: some-name
-    second:
-      action: some-action
+    - action: some-action
       payload:
         name: some-other-name
-    more: []
 
 #don't change
 procedure: event-store
