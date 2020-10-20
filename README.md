@@ -536,7 +536,7 @@ Lets specific Blossm processes manipulate specific parts of your compute infrast
 2. Repeat step 1 with the `production`, `sandbox` and `staging` projects.
 
 3. In the **development** project:
-    * Give the **@cloudbuild.gserviceaccount.com** service account ownership over the domain you registered in the Networking section by going to [this site](https://search.google.com/u/1/search-console/users?resource_id=sc-domain:sm.network) and clicking settings.
+    * Give the **@cloudbuild.gserviceaccount.com** service account ownership over the domain you registered in the Networking section by going to [this site](https://search.google.com/u/1/search-console/users?resource_id=sc-domain) and clicking settings.
       * Next to your name, it should say Owner and have a three-dot menu. Click the menu and select Manage Property Owners.
         * In the new site, click on your domain in the Properties list.
           * At the bottom you should see a button to Add an owner. 
