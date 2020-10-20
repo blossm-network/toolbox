@@ -501,7 +501,7 @@ Lets specific Blossm processes manipulate specific parts of your compute infrast
 
 1. In the `development` project:
   * In **Cloud Build**, enable the Cloud Build API. 
-  * In **IAM & Admin > Roles**, create a Role named **“Blossm Developer”** with id **“BlossmDeveloper”**. This will be the role given to developers’ machines. Give it the permissions:
+  * In **IAM & Admin > Roles**, create a Role named **“Blossm Developer”** with id **“BlossmDeveloper”** in Alpha role launch stage. This will be the role given to developers’ machines. Give it the permissions:
     * **storage.buckets.create** - allows the machine to create storage buckets.
     * **storage.objects.create** - allows the machine to store objects in buckets, including the build artifacts and the encrypted key in a storage bucket.
     * **cloudkms.cryptoKeys.create** - allows the machine to create crypto keys.
