@@ -22,7 +22,7 @@
 
 # Quickstart 
 
-The goal is the create a "meow" command in a "cat" domain that logs a "meow" event, then create a projection that listens for this event and maps the latest cat state over to a "dashboard" view-store for your viewing pleasure.
+The goal is the create a "chirp" command in a "bird" domain that logs a "chirpped" event, then create a projection that listens for this event and maps the latest bird state over to a "dashboard" view-store for your viewing pleasure.
 
 ```javascript
 npm install -g @blossm/cli
@@ -30,27 +30,23 @@ blossm init
 
 // ** configure your config.yaml **
 
-mkdir blossm/services/animals
-mkdir blossm/services/animals/domains
-mkdir blossm/services/animals/domains/cat
-cd blossm/services/animals/domains/cat
+cd blossm/services/animals/domains/bird
 blossm event-store init
 
 // ** Configure your event-store's blossm.yaml. **
 
-mkdir commands
 cd commands
 
-blossm command init meow
+blossm command init chirp
 
-// ** Configure your `meow` command's blossm.yaml and write it's main.js, normalize.js functions, and tests. There are a bunch of docs in these files to help. **
+// ** Configure your `chirp` command's blossm.yaml and write it's main.js, normalize.js functions, and tests. There are a bunch of docs in these files to help. **
 
 cd ..
 blossm command-gateway init
 
 // ** Configure the command gateway's blossm.yaml file to give public access to the `meow` command. **
 
-// Once the event-store, command and gateway have been deployed, the command can be reached via a POST to https://c.cat.animals.your.network/meow 
+// Once the event-store, command and gateway have been deployed, the command can be reached via a POST to https://c.bird.animals.your.network/chirp 
 
 
 cd ../../../../views
