@@ -27,7 +27,7 @@ module.exports = async ({
   return {
     events: [
       {
-        action: "meow",
+        action: "chirp",
         payload,
         // root,
         correctNumber: 0,

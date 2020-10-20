@@ -2,8 +2,8 @@
 # Give your command a name,
 # and specify which domain and service it's within.
 #
-name: meow
-domain: cat
+name: chirp
+domain: bird
 service: animals
 
 #
@@ -30,18 +30,16 @@ service: animals
 payload:
   volume:
     type: number
-    title: meow volume
+    title: chirp volume
     in:
       - 1
       - 2
       - 3
       - 4
       - 5
-    default: 3
-    optional: true
+    default: 4
 
-  onomonopeoa:
-    type: string
+  sound: string
 
 #
 # Optionally add dependencies and devDependencies, just like a package.json file.
@@ -59,8 +57,8 @@ testing:
   validate:
     ok:
       - volume: 2
-        onomonopeoa: meeeoow
-      - onomonopeoa: purrr
+        sound: weetweeeeeeeet
+      - sound: cackaawwcackawwww
     bad:
       - volume: 0
       - volume: 6
@@ -71,10 +69,10 @@ testing:
   normalize:
     - payload:
         volume: 1
-        onomonopeoa: grrererrrrr
+        sound: teeeeterteeeeeterteeet
       normalized:
         volume: 1
-        onomonopeoa: grrererrrrr
+        sound: teeeeterteeeeeterteeet
 
   #
   # Add network dependencies that will be used when running integration tests.

@@ -36,6 +36,8 @@ const validateObject = ({ object, expectation, path, context }) => {
       if (error) throw error;
 
       for (const item of object[property]) {
+        //TODO
+        console.log({ item });
         if (typeof item == "object") {
           validateObject({
             object: item,
@@ -58,8 +60,12 @@ const validateObject = ({ object, expectation, path, context }) => {
               ...((expectation[property].type[0].in ||
                 expectation[property].type[0].is) && {
                 fn: (value) => {
+                  //TODO
+                  console.log({ value });
                   if (typeof expectation[property].type[0] != "object")
                     return true;
+                  //TODO
+                  console.log({ in: expectation[property].type[0].in });
                   if (expectation[property].type[0].is) {
                     return expectation[property].type[0].is == "$network" &&
                       context
