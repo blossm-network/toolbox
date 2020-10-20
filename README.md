@@ -556,6 +556,20 @@ Create keys that will be used by your application to verify the authenticity of 
 
 2. Repeat step 1 with the `production`, `sandbox` and `staging` projects. 
 
+#### Blockchain 
+
+Blossm keeps a blockchain in your `event-store` which can be useful when auditing your system. Information for verifying the authenticity of any event is stored in your blockchain. Configuring it is easy:
+
+1. In the `development` project:
+    * In **Security > Cryptographic Keys**, enable **Cloud KMS**.
+    * Create a global Key Ring named **“blockchain”**. 
+      * Create a Generated key named **“producer”** for Asymmetric signing using Elliptic Curve P-256 - SHA256 Digest.
+      * Create another Generated key named **“private”** for Symmetric signing with a rotation period of your choosing. 90 days is fine.
+
+2. Repeat step 1 with the `production`, `sandbox` and `staging` projects. 
+
+3. In your **config.yaml** file, change the `blockSchedule` property to reflect how often you want blocks issued. Note that snapshots of each root also get made and stored when creating a block. 
+
 #### Secrets 
 
 Configure the storage of encrypted secrets that your application decrypts and uses during runtime using Blossm tools.
