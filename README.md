@@ -400,6 +400,8 @@ blossm replay
 
 # Setup deployment infrastructure 
 
+Make sure you've setup your CLI (previous section) before taking this on.
+
 1. [Compute](#compute)
 2. [Databases](#databases)
 
@@ -607,6 +609,10 @@ Configure the task queues that Blossm uses to manage load and asychronisity.
  
 2. Repeat step 1 with the `production`, `sandbox` and `staging` projects. 
 
+#### [Deploy your database](#databases) and [onboard a developer](#new-developer-onboarding), then proceed to the next section.
+
+#### Deploying 
+
 ### Others
 
 Only a GCP adapter is currently implemented. If other's are needed, I'd be happy to support their development.
@@ -689,7 +695,7 @@ Only a GCP adapter is currently implemented.
 
 - [x] Start documentation for Blossm. 
 - [ ] Add an "examples" top level directory with a bunch of examples of what each procedure can do, from simple cases to more complex ones. 
-- [ ] Document MongoDB Atlas deployment info. 
+- [x] Document MongoDB Atlas deployment info. 
 - [ ] Add documentation about adding a permission once a subscription has been made. 
 - [ ] Add a hello world application that is included with `blossm init`. 
 - [ ] Create richer docs with more specifics about the inputs and expected outputs of certin procedure functions. 
