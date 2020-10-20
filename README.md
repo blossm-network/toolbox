@@ -512,8 +512,8 @@ Lets specific Blossm processes manipulate specific parts of your compute infrast
    * In **IAM & Admin > Service Accounts**, grant the **Service Account User** role to the **Cloud Build** service account on the **\[projectNumber\]-<span>compute</span>@developer.gserviceaccount.com** Service Account. See [here](https://cloud.google.com/cloud-build/docs/deploying-builds/deploy-cloud-run) and [here](https://cloud.google.com/run/docs/reference/iam/roles#additional-configuration) for more info.
       * Do this by clicking the checkbox next to the **\[projectNumber\]-<span>compute</span>@developer.gserviceaccount.com** Service Account in the table, then clicking **Show info panel** at the top right.
       * Click **Add member** and locate the **\[projectNumber\]@cloudbuild.gserviceaccount.com**. Select the **Service Account User** role, then save.
-   * **In IAM & Admin > IAM**, add the following roles to the @cloudbuild.gserviceaccount.com service Account:
-    Cloud Run Admin
+   * **In IAM & Admin > IAM**, add the following roles to the **@cloudbuild.gserviceaccount.com** Service Account (the same one from the previous step):
+      * **Cloud Run Admin** - allows the build process to deploy services.
       * **Cloud Tasks Queue Admin** - allows the build process to create queues.
       * **DNS Administrator** - to configure domains.
       * **Pub/Sub Admin** - to create topics and subscriptions.
