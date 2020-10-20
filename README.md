@@ -440,7 +440,7 @@ You should now have access to GCP under your new Google account!
 1. Go to GCP. Create separate projects called "production", "sandbox", "staging", and "development" where each environment is contained within your domain’s organization. The project ID’s can be whatever.
     * Set the billing account for the projects when prompted.
 
-2. Update the blossm **config.yaml** file **vendors.cloud.gcp.projects** properties in the repo to point to your newly created projects.
+2. Update the blossm **config.yaml** file **vendors.cloud.gcp.projects** properties in the repo to point to your newly created project ids.
 
 #### CLI prereqs
 

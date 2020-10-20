@@ -14,6 +14,7 @@ base:
     development: us.gcr.io/development-271815
 
 # You should get keys from your base layer network for connecting to it and to any other network that shares the base layer.
+# Save the secrets with `blossm secret create <secretName> -m <secret> -e <production | sandbox | staging | development>`
 dependencies:
   sustainers.network:
     keys:
@@ -35,7 +36,7 @@ blockSchedule: "0 5 * * *"
 
 # Specifications for running Blossm on top of your infrastructure.
 vendors:
-  # The cache that you want to use and how to connect to it.
+  # The cache that you want to use and how to connect to it. This is optional.
   cache:
     redis:
       ip:
@@ -105,7 +106,7 @@ defaults:
   viewStore: mongodb
   eventStore: mongodb
   cloud: gcp
-  cache: redis
+  cache: redis # optional. Remove if not wanted.
 
 # The environment your CLI will use if no flag is provided.
 defaultEnv: development
