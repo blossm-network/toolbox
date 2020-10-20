@@ -514,7 +514,7 @@ Lets specific Blossm processes manipulate specific parts of your compute infrast
       * Click **Add member** and locate the **\[projectNumber\]@cloudbuild.gserviceaccount.com**. Select the **Service Account User** role, then save.
    * **In IAM & Admin > IAM**, add the following roles to the **@cloudbuild.gserviceaccount.com** service account (the same one from the previous step):
       * **Cloud Run Admin** - allows the build process to deploy services.
-      * **Cloud Tasks Queue Admin** - allows the build process to create queues.
+      * **Cloud Tasks Queue Admin** - to create queues.
       * **DNS Administrator** - to configure domains.
       * **Pub/Sub Admin** - to create topics and subscriptions.
       * **Cloud Scheduler Admin** - to create and modify jobs.
@@ -525,11 +525,13 @@ Lets specific Blossm processes manipulate specific parts of your compute infrast
    * In **IAM & Admin > IAM**, remove any roles associated with the **\[projectNumber\]-<span>compute</span>@developer.gserviceaccount.com** service account, and instead grant it the following roles:
       * **Cloud Run Invoker** - allows a service to invoke other services.
       * **Cloud KMS CryptoKey Encrypter/Decrypter** - to decrypt encrypted values.
-      * **Cloud KMS CryptoKey Signer/Verifier** - allows a service to sign data with encryption keys, and verify the signatures.
+      * **Cloud KMS CryptoKey Signer/Verifier** - to sign data with encryption keys, and verify the signatures.
    * In **IAM & Admin > Service Accounts**
-      * Create a service account named **“Executer”** with ID **executer@**. Give it roles **Service Account User** and **Cloud Run Invoker**.
-      * Create a service account named **“Cloud Run Pub/Sub Invoker”** with ID **cloud-run-pubsub-invoker@**.
-      * Give it the **Cloud Run Invoker** role.
+      * Create a service account named **“Executer”** with ID **executer@**. Give it roles:     
+        * **Cloud Run Invoker** - allows the tasks queue executer to invoke Blossm services.
+        <!-- * **Service Account User** - not quite sure why. TODO. -->
+      * Create a service account named **“Cloud Run PubSub Invoker”** with ID **cloud-run-pubsub-invoker@**. Give it the roles:
+        * **Cloud Run Invoker** - allows pubsub to invoke Blossm services.
 
 2. Repeat step 1 with the `production`, `sandbox` and `staging` projects.
 
