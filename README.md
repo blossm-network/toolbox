@@ -395,6 +395,7 @@ You can always replay a projection with:
 blossm replay 
 ```
 
+---
 
 # Setup deployment infrastructure 
 
@@ -621,7 +622,32 @@ TODO
 
 ---
 
-## TODOs 
+# New developer onboarding
+
+Once you've got a deployment environment set up, here's how to get a new developer writing, testing, and deploying Blossm procedures.
+
+1. [GCP](#gcp)
+2. [Others](#others)
+
+### GCP
+
+1. In the `development` project:
+    * In **IAM > Service Accounts**, create a Service Account for a developer’s machine with the role **Blossm Developer** given to it.
+    * Create a key for this Service Account. Download it to the developers machine, and create an environment variable named **GOOGLE_APPLICATION_CREDENTIALS** that points to where the key file is stored.
+
+2. In the `staging` project:
+    * In **IAM & Admin > IAM**, add a service account.
+      * Add the email of the service account created in step 1 with the role **Blossm Developer**.
+
+3. Repeat step 2 with the `production` and `sandbox` projects if the developer should have access to those environments.
+
+### Others
+
+Only a GCP adapter is currently implemented.
+
+----
+
+# TODOs 
 
 #### Organizational
 
