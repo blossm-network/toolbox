@@ -2,20 +2,13 @@ const { booleanArray: booleanArrayValidator } = require("@blossm/validation");
 
 module.exports = (
   booleanArray,
-  {
-    baseMessageFn,
-    refinementFn,
-    refinementMessageFn,
-    title,
-    path,
-    optional,
-  } = {}
+  { baseMessageFn, fn, refinementMessageFn, title, path, optional } = {}
 ) =>
   booleanArrayValidator({
     value: booleanArray,
     baseMessageFn,
     refinementMessageFn,
-    refinementFn,
+    refinementFn: fn,
     title,
     path,
     optional,

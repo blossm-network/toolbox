@@ -3,8 +3,6 @@ const validator = require("@blossm/validator");
 const config = require("./config.json");
 
 const validateObject = ({ object, expectation, path, context }) => {
-  //TODO
-  console.log({ object, expectation });
   for (const property in expectation) {
     if (
       typeof expectation[property] == "string" ||
@@ -15,7 +13,6 @@ const validateObject = ({ object, expectation, path, context }) => {
       };
     }
 
-    console.log({ prop9: property, v: object[property] });
     if (
       object[property] == undefined &&
       (expectation[property].optional ||
@@ -23,7 +20,6 @@ const validateObject = ({ object, expectation, path, context }) => {
     )
       continue;
 
-    console.log("sup");
     if (expectation[property].type instanceof Array) {
       const error = validator.findError([
         validator[
@@ -96,15 +92,6 @@ const validateObject = ({ object, expectation, path, context }) => {
       continue;
     }
 
-    console.log("AY", {
-      property,
-      v: object[property],
-      ex: expectation[property],
-      optional:
-        (expectation[property].optional ||
-          expectation[property].default != undefined) &&
-        object[property] == undefined,
-    });
     const error = validator.findError([
       validator[expectation[property].type || "object"](object[property], {
         title: expectation[property].title || property,
@@ -112,7 +99,6 @@ const validateObject = ({ object, expectation, path, context }) => {
         ...((expectation[property].in ||
           expectation[property].is != undefined) && {
           fn: (value) => {
-            console.log({ value, in: expectation[property].in });
             if (expectation[property].is) {
               return expectation[property].is == "$network" && context
                 ? value == context.network
@@ -135,7 +121,6 @@ const validateObject = ({ object, expectation, path, context }) => {
           object[property] == undefined,
       }),
     ]);
-    console.log({ error });
     if (error) throw error;
 
     if (
@@ -144,7 +129,6 @@ const validateObject = ({ object, expectation, path, context }) => {
         expectation[property].optional ||
         expectation[property].default != undefined)
     ) {
-      console.log("hmm");
       validateObject({
         object: object[property],
         expectation: expectation[property].properties,

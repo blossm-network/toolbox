@@ -2,14 +2,7 @@ const { numberArray: numberArrayValidator } = require("@blossm/validation");
 
 module.exports = (
   numberArray,
-  {
-    baseMessageFn,
-    refinementFn,
-    refinementMessageFn,
-    title,
-    path,
-    optional,
-  } = {}
+  { baseMessageFn, fn, refinementMessageFn, title, path, optional } = {}
 ) =>
   numberArrayValidator({
     value: numberArray,
@@ -18,5 +11,5 @@ module.exports = (
     baseMessageFn,
     refinementMessageFn,
     optional,
-    refinementFn,
+    refinementFn: fn,
   });
