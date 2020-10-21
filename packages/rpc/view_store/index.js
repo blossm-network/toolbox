@@ -1,6 +1,9 @@
 const deps = require("./deps");
 
 module.exports = ({ name, context = process.env.CONTEXT, network }) => {
+  //TODO write a test for this.
+  if (network == "$base") network = process.env.BASE_NETWORK;
+
   const internal = !network || network == process.env.NETWORK;
   const read = ({
     contexts,
