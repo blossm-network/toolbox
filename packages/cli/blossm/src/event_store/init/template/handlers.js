@@ -11,7 +11,7 @@
  */
 
 module.exports = {
-  "some-action": (state, payload) => ({
+  chirp: (state, payload) => ({
     ...state,
     ...payload,
   }),

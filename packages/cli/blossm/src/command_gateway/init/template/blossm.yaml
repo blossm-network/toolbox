@@ -1,8 +1,8 @@
 #
 # The base URL of this gateway will be c.[domain].[service].[network]
 #
-domain: some-domain
-service: some-service
+domain: bird
+service: animals
 
 #
 # Specify the commands that this gateway should accept requests for.
@@ -24,12 +24,12 @@ service: some-service
 # the request context should be parsed from it and passed along to the command.
 #
 commands:
-  - name: some-name
-    context: some-context
-    privileges:
-      - some-permission
-  - name: some-other-name
+  - name: chirp
     protection: none
+  # - name: some-name
+  #   context: some-context
+  #   privileges:
+  #     - some-permission
 
 # Allow access from origins other than your network.
 # Use "*" to allow access from anywhere.

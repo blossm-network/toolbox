@@ -6,6 +6,13 @@ name: chirp
 domain: bird
 service: animals
 
+# Uncomment if a root is required by this command.
+# root: true
+
+# Uncomment if the command issuer must be in the specified contexts. 403 otherwise.
+# contexts:
+#   - principal
+
 #
 # Describe what the incoming payload should include.
 #

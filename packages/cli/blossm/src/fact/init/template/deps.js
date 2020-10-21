@@ -1,5 +1,5 @@
 /**
- * Add services that should be faked
+ * Add dependencies that should be faked
  * in this file.
  */
 

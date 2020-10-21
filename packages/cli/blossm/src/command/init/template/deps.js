@@ -1,3 +1,3 @@
 /**
- * Add services that should be stubbed in tests to this file.
+ * Add dependencies that should be stubbed in tests to this file.
  */
