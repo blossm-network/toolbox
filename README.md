@@ -3,7 +3,7 @@
 
 ### Blossm is an Event Sourcing CQRS orchestrator, that includes an interace for setting up multi-project interoperability through a shared base layer that handles core components like sessions, accounts, permissions, roles, delivering updated data to subscribers, and more.
 
-#### With Blossm you can architect, fully-test, and deploy just about any peice of software functionality using small javascript functions and YAML configs, in a way that keeps each historical state of your app entirely queriable and auditable, and with the opportunity to interoperate with independently developed networks through a shared base layer. It's also cheap to run, scales reliably and automatically, and is easy to test and maintain. 
+#### With Blossm you can architect, fully-test, and deploy just about any peice of software functionality using small javascript functions and YAML configs, in a way that keeps each historical state of your app entirely queriable and auditable, and with the opportunity to interoperate with independently developed networks through a shared base layer. It's also cheap to run, scales reliably and automatically, and is easy to test and maintain.
 
 #### The project aspires to make sure the data produced in Blossm systems can be owned and delegated entirely by the users and groups that produced it, giving Blossm network operators no data aggregation and manipulation advantages over its constituent projects, or even the public.
 
@@ -33,7 +33,7 @@ CQRS is an Event Sourcing software architecture pattern where the write and read
 The write side takes a request, performs a routine, and optionally logs some events with metadata to a store, thus modifying the state of the app forever — the event stores are meant to be immutable.
 The read side listens for logged events and uses their payload to write to any number of denormalized view stores to be effeciently queried. All view stores can be destroyed and recreated at any time based on the event log.
 
-Each Event Sourcing implementation may be slightly different, but many share common design gotchas and pitfalls. If you're less familiar with the pattern, I'd recommend meandering through some content. Here are some well-articulated videos and papers by some incredible folks around the topic, all of which inspired the choices that were made when developing Blossm in some way or another:
+For all of its goodness, the tradeoff of CQRS is that it requires a solid understanding of each component - there are several moving parts that must be choreographed. Blossm tries to take as much of this off your hands as possible while giving you total flexibility at the application layer, but getting up and running for the first time is going to take several steps. Each Event Sourcing implementation may be slightly different, but many share common design gotchas and pitfalls. If you're less familiar with the pattern, I'd recommend meandering through some content. Here are some well-articulated videos and papers by some incredible folks around the topic, all of which inspired the choices that were made when developing Blossm in some way or another:
 
 * **Martin Fowler**
   * https://www.youtube.com/watch?v=STKCRSUsyP0&t=206s
