@@ -100,6 +100,10 @@ const validateObject = ({ object, expectation, path, context }) => {
       property,
       v: object[property],
       ex: expectation[property],
+      optional:
+        (expectation[property].optional ||
+          expectation[property].default != undefined) &&
+        object[property] == undefined,
     });
     const error = validator.findError([
       validator[expectation[property].type || "object"](object[property], {
@@ -131,6 +135,7 @@ const validateObject = ({ object, expectation, path, context }) => {
           object[property] == undefined,
       }),
     ]);
+    console.log({ error });
     if (error) throw error;
 
     if (
