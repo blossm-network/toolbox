@@ -631,13 +631,16 @@ You're now ready to deploy your first procedures. You'll do so while filling out
 
 1. * In **APIs & Services**, select the **Cloud Run API**.
       * Enable the API.
-1. In your blossm directory, `cd services/animals/domains/birds/event-store`.
-2. Deploy your `event-store`, `blossm deploy`. This should take about 5 minutes as it runs all of your unit and integration tests, wires up the store with everything it needs to do its job, and deploys it to the network where it immediately becomes available.
-3. Now let's go to your command, `cd ../commands/chirp`.
-4. Deploy it with `blossm deploy`. Instead if you had wanted to run unit test locally, try `blossm test`. If you want to run unit and integrations tests remotely, go with `blossm deploy --dry-run`. Add `-e <production | sandbox | staging | development>`, otherwise the default environment specified in **config.yaml** is used.
-5. Now let's go to the `command-gateway`, `cd ../../command-gateway`.
-6. Deploy it with `blossm deploy`. By the way, check out the **blossm.yaml** of each of these folders were deploying from to get a sense of how they work.
-7. You can now issue your first command!
+
+2. In your blossm directory, `cd services/animals/domains/birds/event-store`.
+3. Deploy your `event-store`, `blossm deploy`. This should take about 5 minutes as it runs all of your unit and integration tests, wires up the store with everything it needs to do its job, and deploys it to the network where it immediately becomes available.
+4. Now let's go to your command, `cd ../commands/chirp`.
+5. Deploy it with `blossm deploy`. Instead if you had wanted to run unit test locally, try `blossm test`. If you want to run unit and integrations tests remotely, go with `blossm deploy --dry-run`. Add `-e <production | sandbox | staging | development>`, otherwise the default environment specified in **config.yaml** is used.
+6. Now let's go to the `command-gateway`, `cd ../../command-gateway`.
+7. Deploy it with `blossm deploy`. By the way, check out the **blossm.yaml** of each of these folders were deploying from to get a sense of how they work.
+8. It takes about 20 minutes for a new URL to become available the first time you deploy it, so sit tight, you'll soon be able to issue your first command to `https://c.bird.animals.<YOUR_NETWORK>/chirp`
+9. Now let's deploy the procedures you'll need to read the data. Go to your projection `cd ../../../../../views/stores/dashboard/view_store`.
+10. Deploy it with `blossm deploy`. 
 
 ### Others
 
