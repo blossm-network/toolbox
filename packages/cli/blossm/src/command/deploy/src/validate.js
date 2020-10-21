@@ -15,7 +15,7 @@ const validateObject = ({ object, expectation, path, context }) => {
       };
     }
 
-    console.log({ v: object[property] });
+    console.log({ prop9: property, v: object[property] });
     if (
       object[property] == undefined &&
       (expectation[property].optional ||
