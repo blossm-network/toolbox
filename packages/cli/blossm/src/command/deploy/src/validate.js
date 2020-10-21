@@ -15,8 +15,14 @@ const validateObject = ({ object, expectation, path, context }) => {
       };
     }
 
-    if (!object[property] && expectation[property].optional) continue;
+    if (
+      object[property] == undefined &&
+      (expectation[property].optional ||
+        expectation[property].default != undefined)
+    )
+      continue;
 
+    console.log("sup");
     if (expectation[property].type instanceof Array) {
       const error = validator.findError([
         validator[
@@ -89,12 +95,19 @@ const validateObject = ({ object, expectation, path, context }) => {
       continue;
     }
 
+    console.log("AY", {
+      property,
+      v: object[property],
+      ex: expectation[property],
+    });
     const error = validator.findError([
       validator[expectation[property].type || "object"](object[property], {
         title: expectation[property].title || property,
         path: `${path}.${property}`,
-        ...((expectation[property].in || expectation[property].is) && {
+        ...((expectation[property].in ||
+          expectation[property].is != undefined) && {
           fn: (value) => {
+            console.log({ value, in: expectation[property].in });
             if (expectation[property].is) {
               return expectation[property].is == "$network" && context
                 ? value == context.network
@@ -118,16 +131,23 @@ const validateObject = ({ object, expectation, path, context }) => {
       }),
     ]);
     if (error) throw error;
+
     if (
       expectation[property].type == "object" &&
-      (object[property] || expectation[property].optional)
+      (object[property] ||
+        expectation[property].optional ||
+        expectation[property].default != undefined)
     ) {
+      console.log("hmm");
       validateObject({
         object: object[property],
         expectation: expectation[property].properties,
         path: `${path}.${property}`,
         ...(context && { context }),
-        optional: expectation[property].optional,
+        optional:
+          (expectation[property].optional ||
+            expectation[property].default != undefined) &&
+          object[property] == undefined,
       });
     }
     if (!expectation[property].type) {
