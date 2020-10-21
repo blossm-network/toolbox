@@ -1,0 +1,39 @@
+#
+# The base URL of this gateway will be v(.context)?.[network].
+#
+# context: some-context
+
+#
+# Specify the views that this gateway should accept requests for.
+#
+# The 'name' property correlates to the view name.
+# Each view can be accessed by adding the URL path /<name> to the base URL.
+#
+# The 'procedure' property should be either 'view-store' or 'view-composite', depending on
+# if the procedure being accessed is a view-store or a view-composite.
+#
+# The 'permissions' property describes the permissions are needed by the requester
+# to access this view. Set this to 'none' if no specific permissions are needed,
+# but the route should still require by a valid token.
+#
+# Set the 'protection' property to 'none' if this route should be accessible by
+# anyone on the internet. Set 'protection' to 'context' if the route should be
+# accessible by anyone on the internet, but if a valid token is used, then
+# the request context should be parsed from it and passed along to the fact.
+#
+views:
+  # - name: some-name
+  #   procedure: view-store
+  #   permissions:
+  #     - some-service:some-domain:some-privilege
+  - name: dashboard
+    procedure: view-store
+    protection: none
+
+# Allow access from origins other than your network.
+# Use "*" to allow access from anywhere.
+allow:
+  - "http://localhost:4200"
+
+#don't change
+procedure: view-gateway

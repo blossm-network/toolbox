@@ -1,0 +1,31 @@
+#
+# The base URL of this gateway will be c.[domain].[service].[network]
+#
+domain: bird
+service: animals
+
+#
+# Specify the commands that this gateway should accept requests for.
+#
+# The 'name' property correlates to the command name.
+# Each command can be accessed by adding the URL path /<name> to the base URL.
+#
+# The 'privileges' property describes the privileges needed by the requester
+# to access this command. Set this to 'none' if no specific privileges are needed,
+# but the route should still require by a valid token.
+#
+# The 'context' property describes which property in the requesting token's context
+# that the specified privileges should refer to.
+# If a context is specified but it isn't found, the 'redirect' is used.
+#
+# Set the 'protection' property to 'none' if this route should be accessible by
+# anyone on the internet. Set 'protection' to 'context' if the route should be
+# accessible by anyone on the internet, but if a valid token is used, then
+# the request context should be parsed from it and passed along to the command.
+#
+commands:
+  - name: chirp
+    protection: none
+
+#don't change
+procedure: command-gateway

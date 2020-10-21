@@ -25,6 +25,7 @@ actions:
 # but nothing will be saved to events or snapshots that is not defined here.
 #
 schema:
+  volume: Number
   sound: String
 
 #
