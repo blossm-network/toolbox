@@ -57,7 +57,7 @@ testing:
           result:
             id: some-id
             update:
-              sound: cawwwcawww
+              latestSound: cawwwcawww
         - action: chirp
           id: some-id
           state:
@@ -66,7 +66,7 @@ testing:
           result:
             id: some-id
             update:
-              sound: CAWWWCAWWW!
+              latestSound: CAWWWCAWWW!
   #
   # Add steps to run integration tests for.
   #
@@ -103,7 +103,7 @@ testing:
         query: {}
         values:
           - body:
-              sound: piuiupiu
+              latestSound: piuiupiu
 
 #don't change
 procedure: projection

@@ -584,15 +584,40 @@ You're now ready to deploy your first procedures. You'll do so while filling out
 1. * In **APIs & Services**, select the **Cloud Run API**.
       * Enable the API.
 
-2. In your blossm directory, `cd services/animals/domains/birds/event-store`.
-3. Deploy your `event-store`, `blossm deploy`. This should take about 5 minutes as it runs all of your unit and integration tests, wires up the store with everything it needs to do its job, and deploys it to the network where it immediately becomes available.
-4. Now let's go to your command, `cd ../commands/chirp`.
-5. Deploy it with `blossm deploy`. Instead if you had wanted to run unit test locally, try `blossm test`. If you want to run unit and integrations tests remotely, go with `blossm deploy --dry-run`. Add `-e <production | sandbox | staging | development>`, otherwise the default environment specified in **config.yaml** is used.
-6. Now let's go to the `command-gateway`, `cd ../../command-gateway`.
-7. Deploy it with `blossm deploy`. By the way, check out the **blossm.yaml** of each of these folders were deploying from to get a sense of how they work.
-8. It takes about 20 minutes for a new URL to become available the first time you deploy it, so sit tight, you'll soon be able to issue your first command to `https://c.bird.animals.<YOUR_NETWORK>/chirp`
-9. Now let's deploy the procedures you'll need to read the data. Go to your projection `cd ../../../../../views/stores/dashboard/view_store`.
-10. Deploy it with `blossm deploy`. 
+2. In your blossm directory, `cd services/animals/domains/birds/event_store`.
+
+3. Deploy your event store, `blossm deploy`. This should take about 5 minutes as it runs all of your unit and integration tests, wires up the store with everything it needs to do its job, and deploys it to the network where it immediately becomes available.
+
+4. In **Cloud Run**, there should be one row in the table, which represents the event store you just deployed. Click it.
+Somewhere at the top, you should see the service’s URL, which ends in **XXXXXXXXX--uc.a.run.app**. Copy the **XXXXXXXXX** part of the address and paste it in your **config.yaml** for the **computeUrlIds** property.
+
+5. Now let's go to your command, `cd ../commands/chirp`.
+
+6. Deploy it with `blossm deploy`. Instead if you had wanted to run unit test locally, try `blossm test`. If you want to run unit and integrations tests remotely, go with `blossm deploy --dry-run`. Add `-e <production | sandbox | staging | development>`, otherwise the default environment specified in **config.yaml** is used.
+
+7. Now let's go to the command gateway, `cd ../../command_gateway`.
+
+8. Deploy it with `blossm deploy`. By the way, check out the **blossm.yaml** of each of these folders were deploying from to get a sense of how they work.
+
+9. It takes about 20 minutes for a new URL to become available the first time you deploy it, so sit tight, you'll soon be able to issue your first command to `https://c.bird.animals.<YOUR_NETWORK>/chirp`
+
+10. Now let's deploy the procedures you'll need to read the data. Go to your projection `cd ../../../../../views/stores/dashboard/view_store`.
+
+11. Deploy it with `blossm deploy`. 
+
+12. Next, your projection `cd ../projection` followed by `blossm deploy`
+
+13. * In **Pub/Sub > Subscriptions**, there should be one row in the table, which represents the subscription from the projection you just deployed. Click it.
+      * Click **Edit** at the top. 
+      * Under "Enable authentication", you should see a form that pops up that says "Cloud Pub/Sub needs the role roles/iam.serviceAccountTokenCreator granted to service account [<SOME IDENTIFIER>]@gcp-sa-pubsub.iam.gserviceaccount.com on this project to create identity tokens. You can change this later.".
+        * Click **"Grant"**. You'll only have to do this once.
+
+14. Lastly you'll want to deploy your view gateway, `cd ../../view_gateway` and `blossm deploy`
+
+15. Again, it takes about 20 minutes for a new URL to become available the first time you deploy it, so sit tight, you'll soon be able to access your first view at `https://v.<YOUR_NETWORK>/dashboard`
+
+16. If you ever want to replay events over your projection to update the view store, run `blossm replay` within the projection directory.
+
 
 ### Others
 

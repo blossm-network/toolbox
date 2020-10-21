@@ -13,7 +13,7 @@ module.exports = {
         //   },
         // },
         update: {
-          sound:
+          latestSound:
             state.volume < 4 ? state.sound : `${state.sound.toUpperCase()}!`,
         },
       };
