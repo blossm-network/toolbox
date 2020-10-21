@@ -14,7 +14,6 @@ const unlinkAsync = promisify(unlink);
 
 const cacheKeyPrefix = "_permissions";
 const FIVE_MINUTES_IN_SECONDS = 60 * 5;
-const encodingDelimeter = ":";
 
 module.exports = ({ downloadFileFn }) => async ({
   internalTokenFn,
@@ -27,19 +26,9 @@ module.exports = ({ downloadFileFn }) => async ({
   const cacheKey = `${cacheKeyPrefix}.${principal.root}.${principal.service}.${principal.network}`;
 
   //Lookup permissions in cache. If found, use them.
-  let { permissions: encodedCachedPermissions } =
+  let { permissions: cachedPermissions } =
     (await redis.readObject(cacheKey)) || {};
-  if (encodedCachedPermissions)
-    return encodedCachedPermissions.map((encodedCachedPermission) => {
-      const [priviledge, domain, service] = encodedCachedPermission.split(
-        encodingDelimeter
-      );
-      return {
-        priviledge,
-        domain,
-        service,
-      };
-    });
+  if (cachedPermissions) return JSON.parse(cachedPermissions);
 
   //Download files if they aren't downloaded already.
   const fileName = uuid();
@@ -105,10 +94,7 @@ module.exports = ({ downloadFileFn }) => async ({
   });
 
   await redis.writeObject(cacheKey, {
-    permissions: permissions.map(
-      (permission) =>
-        `${permission.priviledge}${encodingDelimeter}${permission.domain}${encodingDelimeter}${permission.service}`
-    ),
+    permissions: JSON.stringify(permissions),
   });
   await redis.setExpiry(cacheKey, { FIVE_MINUTES_IN_SECONDS });
 
