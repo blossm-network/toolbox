@@ -4,7 +4,7 @@ const config = require("./config.json");
 
 const validateObject = ({ object, expectation, path, context }) => {
   //TODO
-  console.log({ object });
+  console.log({ object, expectation });
   for (const property in expectation) {
     if (
       typeof expectation[property] == "string" ||
@@ -15,6 +15,7 @@ const validateObject = ({ object, expectation, path, context }) => {
       };
     }
 
+    console.log({ v: object[property] });
     if (
       object[property] == undefined &&
       (expectation[property].optional ||
@@ -161,12 +162,10 @@ const validateObject = ({ object, expectation, path, context }) => {
   }
 };
 
-module.exports = async (payload, { context } = {}) => {
-  console.log("AAA");
-  return validateObject({
+module.exports = (payload, { context } = {}) =>
+  validateObject({
     object: payload,
     expectation: config.payload,
     path: "payload",
     ...(context != undefined && { context }),
   });
-};
