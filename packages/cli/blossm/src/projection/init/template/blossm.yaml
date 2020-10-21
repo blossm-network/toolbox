@@ -1,25 +1,25 @@
 #
-# Specify the name and context of this projection.
+# Specify the name and context of the view store that this projection maps to.
 #
-name: some-name
-context: some-context
+name: dashboard
+# context: some-context
 
 #
 # Set the events that this projection listens to.
 #
 events:
-  - domain: some-event-domain
-    service: some-event-service
+  - domain: bird
+    service: animals
     actions:
-      - some-action
+      - chirp
 
 #
 # Optionally set the stores that should be replayed when `blossm replay` is triggered.
 # If omitted, all stores specified above will replay.
 #
-replay:
-  - domain: some-event-domain
-    service: some-event-service
+# replay:
+#   - domain: some-event-domain
+#     service: some-event-service
 #
 # The following properties are used for automated testing.
 #
@@ -33,7 +33,7 @@ testing:
   #
   # The 'state' property specifies the state of the aggregate before
   # the event is applied. The 'action' property specifies the action,
-  # the 'root' property specifies the root,
+  # the 'id' property corresponds to the root,
   # and the 'result' property specifies the expected state once the event is applied.
   #
   # The readFact property takes an array of 'calls', each of which represents an instance
@@ -46,20 +46,27 @@ testing:
   #
   handlers:
     - event:
-        domain: some-domain
-        service: some-service
+        domain: bird
+        service: animals
       examples:
-        - action: register
-          root: some-root
+        - action: chirp
+          id: some-id
           state:
-            name: some-name
-          readFact:
-            calls:
-              - params:
-                returns:
+            volume: 1
+            sound: cawwwcawww
           result:
+            id: some-id
             update:
-              name: some-name
+              sound: cawwwcawww
+        - action: chirp
+          id: some-id
+          state:
+            volume: 5
+            sound: cawwwcawww
+          result:
+            id: some-id
+            update:
+              sound: CAWWWCAWWW!
   #
   # Add steps to run integration tests for.
   #
@@ -86,15 +93,17 @@ testing:
   steps:
     - pre:
       event:
-        action: some-action
-        domain: some-domain
-        service: some-service
+        action: chirp
+        domain: bird
+        service: animals
       payload:
-        name: some-name
+        volume: 1
+        sound: piuiupiu
       result:
         query: {}
         values:
-          - name: some-name
+          - body:
+              sound: piuiupiu
 
 #don't change
 procedure: projection

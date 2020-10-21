@@ -10,7 +10,7 @@
 #### The project also aspires to interoperate with the Ethereum blockchain to provide an application experience layer that can interact with Contracts and respond to events, while providing a function execution and event storage layer for trivial intraday application events that don't need to be on-chain in real time.
 
 ### Contents:
-1. [Quickstart](#quickstart)
+1. [Install](#install)
 2. [Overview](#overview)
 3. [Base layer](#base-layer)
 4. [Setup CLI](#setup-cli)
@@ -20,59 +20,11 @@
 
 ---
 
-# Quickstart 
-
-The goal is the create a "chirp" command in a "bird" domain that logs a "chirpped" event, then create a projection that listens for this event and maps the latest bird state over to a "dashboard" view-store for your viewing pleasure.
+# Install 
 
 ```javascript
 npm install -g @blossm/cli
 blossm init
-
-// ** configure your config.yaml **
-
-cd blossm/services/animals/domains/bird
-blossm event-store init
-
-// ** Configure your event-store's blossm.yaml. **
-
-cd commands
-
-blossm command init chirp
-
-// ** Configure your `chirp` command's blossm.yaml and write it's main.js, normalize.js functions, and tests. There are a bunch of docs in these files to help. **
-
-cd ..
-blossm command-gateway init
-
-// ** Configure the command gateway's blossm.yaml file to give public access to the `meow` command. **
-
-// Once the event-store, command and gateway have been deployed, the command can be reached via a POST to https://c.bird.animals.your.network/chirp 
-
-
-cd ../../../../views
-mkdir stores
-mkdir stores/dashboard
-cd stores/dashboard
-blossm view-store init
-
-// ** configure the view-store's blossm.yaml
-
-blossm projection init
-
-// ** configure the projection's blossm.yaml and write its handlers.js functions and tests.
-
-cd ..
-blossm view-gateway init
-
-// ** configure the view gateway's blossm.yaml file to give public access to the `dashboard` view store. **
-
-// Once the view-store, projection and gateway have been deployed, the projection will start mapping specified events to the store, and the store can be reached via a GET to https://v.your.network/dashboard 
-
-
-// If you want to replay events of any projection:
-cd dashboard/projection
-blossm replay
-
 ```
 
 # Overview
@@ -735,6 +687,7 @@ Only a GCP adapter is currently implemented.
 - [ ] Pull out `//cli/src/projection/deploy/src/index` into `//procedures/projection` and write tests for it.
 - [ ] Resolve leftover `TODO`s in the codebase.
 - [ ] Write a script that automates the GCP deployment setup.
+- [ ] Create gRPC interfaces for each procedure.
 
 
 #### Design

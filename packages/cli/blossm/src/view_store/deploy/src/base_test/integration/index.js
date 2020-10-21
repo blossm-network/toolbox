@@ -147,9 +147,6 @@ describe("View store base integration tests", () => {
 
     const parsedBody0 = one ? content0 : content0[0];
 
-    //TODO
-    console.log({ parsedBody0, updates0, count0 });
-
     expect(updates0).to.exist;
     !one ? expect(count0).to.equal(1) : expect(count0).to.be.undefined;
 
