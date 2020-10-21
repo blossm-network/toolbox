@@ -24,13 +24,6 @@ describe("Command handler store validator tests", () => {
     if (!testing.validate || !testing.validate.bad) return;
     for (const value of testing.validate.bad) {
       try {
-        //TODO
-        console.log({
-          bad: createBadPayload({
-            bad: value,
-            ok: testing.validate.ok[0] || {},
-          }),
-        });
         await validate(
           createBadPayload({
             bad: value,

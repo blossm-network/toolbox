@@ -3,6 +3,8 @@ const validator = require("@blossm/validator");
 const config = require("./config.json");
 
 const validateObject = ({ object, expectation, path, context }) => {
+  //TODO
+  console.log({ object });
   for (const property in expectation) {
     if (
       typeof expectation[property] == "string" ||
@@ -36,8 +38,6 @@ const validateObject = ({ object, expectation, path, context }) => {
       if (error) throw error;
 
       for (const item of object[property]) {
-        //TODO
-        console.log({ item });
         if (typeof item == "object") {
           validateObject({
             object: item,
@@ -60,12 +60,8 @@ const validateObject = ({ object, expectation, path, context }) => {
               ...((expectation[property].type[0].in ||
                 expectation[property].type[0].is) && {
                 fn: (value) => {
-                  //TODO
-                  console.log({ value });
                   if (typeof expectation[property].type[0] != "object")
                     return true;
-                  //TODO
-                  console.log({ in: expectation[property].type[0].in });
                   if (expectation[property].type[0].is) {
                     return expectation[property].type[0].is == "$network" &&
                       context
@@ -99,16 +95,12 @@ const validateObject = ({ object, expectation, path, context }) => {
         path: `${path}.${property}`,
         ...((expectation[property].in || expectation[property].is) && {
           fn: (value) => {
-            //TODO
-            console.log({ value2: value });
             if (expectation[property].is) {
               return expectation[property].is == "$network" && context
                 ? value == context.network
                 : value == expectation[property].is;
             }
             if (expectation[property].in) {
-              //TODO
-              console.log({ in2: expectation[property].in });
               if (value instanceof Array) {
                 for (const item of value)
                   if (!expectation[property].in.includes(item)) return false;
@@ -150,6 +142,7 @@ const validateObject = ({ object, expectation, path, context }) => {
 };
 
 module.exports = async (payload, { context } = {}) => {
+  console.log("AAA");
   return validateObject({
     object: payload,
     expectation: config.payload,
