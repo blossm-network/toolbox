@@ -15,13 +15,10 @@ module.exports = (
     value,
     title,
     path,
-    refinementFn: (string) => {
-      return (
-        (fn == undefined || fn(string)) &&
-        (shouldAllowEmptyString || stringIsNotEmpty(string)) &&
-        isWithinBounds(string)
-      );
-    },
+    refinementFn: (string) =>
+      (fn == undefined || fn(string)) &&
+      (shouldAllowEmptyString || stringIsNotEmpty(string)) &&
+      isWithinBounds(string),
     refinementMessageFn: (value, title) => {
       if (!optional && !stringIsNotEmpty(value)) {
         return stringEmptyMessage(title);

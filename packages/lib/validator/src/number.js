@@ -1,22 +1,13 @@
 const { number: numberValidator } = require("@blossm/validation");
 
-module.exports = (
-  number,
-  {
-    baseMessageFn,
-    refinementMessageFn,
-    refinementFn,
-    title,
-    path,
-    optional,
-  } = {}
-) =>
+module.exports = (number, { fn, title, path, optional } = {}) =>
   numberValidator({
     value: number,
     title,
     path,
-    baseMessageFn,
-    refinementMessageFn,
+    refinementMessageFn: (value, title) =>
+      `The value ${value} is invalid for the ${title}.`,
+
     optional,
-    refinementFn,
+    refinementFn: fn,
   });
