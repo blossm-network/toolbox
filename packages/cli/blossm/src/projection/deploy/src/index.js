@@ -339,12 +339,17 @@ module.exports = projection({
       ...(action && { action }),
     });
 
+    console.log({ replay });
     const { fullQuery, fullUpdate } = await replayIfNeeded({
       replay,
       aggregateFn,
       readFactFn,
       update,
       query,
+    });
+    console.log({
+      fullQuery: JSON.stringify(fullQuery),
+      fullUpdate: JSON.stringify(fullUpdate),
     });
 
     if (!fullQuery && !id) return;
