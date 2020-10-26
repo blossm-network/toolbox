@@ -122,6 +122,11 @@ const pushToChannels = async ({
 };
 
 const saveId = async ({ aggregate, id, query, update, push, context }) => {
+  console.log({
+    update: JSON.stringify(update),
+    id,
+    query: JSON.stringify(query),
+  });
   const {
     body: { view: newView, keys },
   } = await viewStore({
