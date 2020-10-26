@@ -42,9 +42,11 @@ const checkResponse = ({ data, expected }) => {
           expected: expected[property],
         });
       } else if (expected[property] instanceof Array) {
+        console.log("ARRAY IN HURR: ", { ex: expected[property] });
         expect(data[property]).to.be.an("array");
         let i = 0;
         for (const expectedValue of expected[property]) {
+          console.log({ expectedValue, dataProp: data[property] });
           checkResponse({
             data: data[property][i],
             expected: expectedValue[i],
@@ -91,7 +93,6 @@ describe("Projection integration tests", () => {
         }
       }
 
-      console.log("1");
       const now = dateString();
       const event = createEvent({
         root: step.root,
@@ -118,13 +119,11 @@ describe("Projection integration tests", () => {
         ],
       });
 
-      console.log("2");
       await eventStore({
         domain: step.event.domain,
         service: step.event.service,
       }).add({ eventData: [{ event }] });
 
-      console.log("3");
       const response = await request.post(url, {
         body: {
           message: {
@@ -143,7 +142,6 @@ describe("Projection integration tests", () => {
 
       expect(response.statusCode).to.equal(204);
 
-      console.log("4");
       const { body: v } = await viewStore({
         name,
         context,
@@ -166,22 +164,15 @@ describe("Projection integration tests", () => {
         })
         .read(step.result.query || {});
 
-      console.log("5: ", { v });
       if (step.result.value) {
-        console.log("meh");
         checkResponse({
           expected: step.result.value,
           data: v.content,
         });
       } else if (step.result.values) {
-        console.log("6", {
-          vl: step.result.values.length,
-          cl: v.content.length,
-        });
         expect(step.result.values.length).to.equal(v.content.length);
         for (let i = 0; i < step.result.values.length; i++) {
           let value = step.result.values[i];
-          console.log({ value, data: v.content[i] });
           checkResponse({
             expected: value,
             data: v.content[i],
