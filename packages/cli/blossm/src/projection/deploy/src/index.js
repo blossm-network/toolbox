@@ -272,6 +272,8 @@ const replayIfNeeded = async ({
             root: r.root,
           });
 
+          //TODO
+          console.log("k");
           const {
             query: replayQuery,
             update: replayUpdate,
@@ -281,6 +283,8 @@ const replayIfNeeded = async ({
             id: r.root,
             readFactFn,
           });
+          //TODO
+          console.log("m: ", { query });
           const {
             fullUpdate: recursiveFullUpdate,
             fullQuery: recursiveFullQuery,
@@ -292,6 +296,9 @@ const replayIfNeeded = async ({
             query: replayQuery,
           });
 
+          console.log({
+            recursiveFullQuery: JSON.stringify(recursiveFullQuery),
+          });
           fullUpdate = {
             ...fullUpdate,
             ...recursiveFullUpdate,
@@ -300,6 +307,9 @@ const replayIfNeeded = async ({
             ...fullQuery,
             ...recursiveFullQuery,
           };
+          console.log({
+            ffffullQuery: JSON.stringify(fullQuery),
+          });
         } catch (_) {
           return;
         }
@@ -349,6 +359,7 @@ module.exports = projection({
     });
     console.log({
       fullQuery: JSON.stringify(fullQuery),
+      query: JSON.stringify(query),
       fullUpdate: JSON.stringify(fullUpdate),
     });
 
