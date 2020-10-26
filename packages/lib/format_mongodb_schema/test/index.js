@@ -23,7 +23,7 @@ describe("Format schema", () => {
       u: [{ g: Number }],
       g: { a: { b: Number } },
       h: { a: { b: String, c: String, d: String } },
-      i: { a: { b: String } },
+      i: { a: { b: String, c: [String] } },
       j: { a: { b: { c: { d: String } } } },
       k: { type: { a: { b: { c: { d: String } } } }, default: {} },
       l: { m: String, n: [{ o: String, p: String }] },
@@ -80,7 +80,7 @@ describe("Format schema", () => {
       },
       i: {
         [typeKey]: {
-          a: { b: String, _id: false },
+          a: { b: String, c: [String], _id: false },
           _id: false,
         },
       },
