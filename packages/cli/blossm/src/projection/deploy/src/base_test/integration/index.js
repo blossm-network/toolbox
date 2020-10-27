@@ -42,17 +42,8 @@ const checkResponse = ({ data, expected }) => {
           expected: expected[property],
         });
       } else if (expected[property] instanceof Array) {
-        console.log("ARRAY IN HURR: ", {
-          dp: data[property],
-          ex: expected[property],
-        });
         expect(data[property]).to.be.an("array");
         for (let i = 0; i < expected[property].length; i++) {
-          console.log({
-            expectedProp: expected[property][i],
-            dataProp: data[property][i],
-            i,
-          });
           checkResponse({
             data: data[property][i],
             expected: expected[property][i],
@@ -178,8 +169,6 @@ describe("Projection integration tests", () => {
         expect(step.result.values.length).to.equal(v.content.length);
         for (let i = 0; i < step.result.values.length; i++) {
           let value = step.result.values[i];
-          //TODO
-          console.log({ e: value, d: v.content[i] });
           checkResponse({
             expected: value,
             data: v.content[i],

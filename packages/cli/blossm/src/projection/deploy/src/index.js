@@ -122,12 +122,6 @@ const pushToChannels = async ({
 };
 
 const saveId = async ({ aggregate, id, query, update, push, context }) => {
-  //TODO
-  console.log({
-    update: JSON.stringify(update),
-    id,
-    query: JSON.stringify(query),
-  });
   const {
     body: { view: newView, keys },
   } = await viewStore({
@@ -272,8 +266,6 @@ const replayIfNeeded = async ({
             root: r.root,
           });
 
-          //TODO
-          console.log("k");
           const {
             query: replayQuery,
             update: replayUpdate,
@@ -283,8 +275,7 @@ const replayIfNeeded = async ({
             id: r.root,
             readFactFn,
           });
-          //TODO
-          console.log("m: ", { query, replayQuery });
+
           const {
             fullUpdate: recursiveFullUpdate,
             fullQuery: recursiveFullQuery,
@@ -296,9 +287,6 @@ const replayIfNeeded = async ({
             query: replayQuery,
           });
 
-          console.log({
-            recursiveFullQuery: JSON.stringify(recursiveFullQuery),
-          });
           fullUpdate = {
             ...fullUpdate,
             ...recursiveFullUpdate,
@@ -307,9 +295,6 @@ const replayIfNeeded = async ({
             ...fullQuery,
             ...recursiveFullQuery,
           };
-          console.log({
-            ffffullQuery: JSON.stringify(fullQuery),
-          });
         } catch (_) {
           return;
         }
@@ -349,18 +334,12 @@ module.exports = projection({
       ...(action && { action }),
     });
 
-    console.log({ replay });
     const { fullQuery, fullUpdate } = await replayIfNeeded({
       replay,
       aggregateFn,
       readFactFn,
       update,
       query,
-    });
-    console.log({
-      fullQuery: JSON.stringify(fullQuery),
-      query: JSON.stringify(query),
-      fullUpdate: JSON.stringify(fullUpdate),
     });
 
     if (!fullQuery && !id) return;
