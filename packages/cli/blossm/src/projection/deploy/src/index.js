@@ -278,13 +278,13 @@ const replayIfNeeded = async ({
             query: replayQuery,
             update: replayUpdate,
             replay: replayReplay,
-          } = handlers[r.service][r.domain]({
+          } = await handlers[r.service][r.domain]({
             state: aggregate.state,
             id: r.root,
             readFactFn,
           });
           //TODO
-          console.log("m: ", { query });
+          console.log("m: ", { query, replayQuery });
           const {
             fullUpdate: recursiveFullUpdate,
             fullQuery: recursiveFullQuery,
