@@ -11,7 +11,8 @@
     "@blossm/fact-rpc": "*",
     "@blossm/channel-name": "*",
     "@blossm/logger": "*",
-    "@blossm/gcp-queue": "*"
+    "@blossm/gcp-queue": "*",
+    "@blossm/compose-update": "*"
   },
   "devDependencies": {
     "localenv": "^0.2.2",

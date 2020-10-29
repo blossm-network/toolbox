@@ -10,6 +10,7 @@ const channelName = require("@blossm/channel-name");
 const logger = require("@blossm/logger");
 const { get: secret } = require("@blossm/gcp-secret");
 const { enqueue } = require("@blossm/gcp-queue");
+const composeUpdate = require("@blossm/compose-update");
 
 const handlers = require("./handlers.js");
 
@@ -199,57 +200,6 @@ const deleteId = ({ aggregate, id, query, push, context }) =>
       ...(aggregate.groups && { groups: aggregate.groups }),
     });
 
-const formatUpdate = (update, query) => {
-  const result = {};
-
-  const matchUpdates = [];
-
-  for (const key in update) {
-    const components = key.split(matchDelimiter);
-    if (components.length > 1) {
-      matchUpdates.push({
-        root: components[0],
-        key: components[1],
-        value: update[key],
-      });
-    } else {
-      result[key] = update[key];
-    }
-  }
-
-  if (matchUpdates.length == 0) return result;
-
-  for (const matchUpdate of matchUpdates) {
-    let relevantQueryParams = [];
-    for (const queryKey in query) {
-      const querySplit = queryKey.split(`${matchUpdate.root}.`);
-      if (querySplit.length > 1) {
-        relevantQueryParams.push({
-          key: querySplit[1],
-          value: query[queryKey],
-        });
-      }
-    }
-
-    if (result[matchUpdate.root] instanceof Array) {
-      result[matchUpdate.root] = result[matchUpdate.root].map((element) => {
-        for (const param of relevantQueryParams)
-          if (element[param.key] != param.value) return element;
-
-        return {
-          ...element,
-          [matchUpdate.key]: matchUpdate.value,
-        };
-      });
-    } else {
-      result[`${matchUpdate.root}${matchDelimiter}${matchUpdate.key}`] =
-        matchUpdate.value;
-    }
-  }
-
-  return result;
-};
-
 const replayIfNeeded = async ({
   replay,
   aggregateFn,
@@ -356,7 +306,7 @@ module.exports = projection({
       (context ||
         (aggregate.context && aggregate.context[process.env.CONTEXT]));
 
-    const formattedUpdate = formatUpdate(fullUpdate, fullQuery);
+    const composedUpdate = composeUpdate(fullUpdate, fullQuery, matchDelimiter);
 
     if (id) {
       del
@@ -364,14 +314,14 @@ module.exports = projection({
             aggregate,
             context: aggregateContext,
             id,
-            update: formattedUpdate,
+            update: composedUpdate,
             push,
           })
         : await saveId({
             aggregate,
             context: aggregateContext,
             id,
-            update: formattedUpdate,
+            update: composedUpdate,
             push,
           });
     } else {
@@ -399,7 +349,7 @@ module.exports = projection({
                   context: aggregateContext,
                   id,
                   query: fullQuery,
-                  update: formattedUpdate,
+                  update: composedUpdate,
                   push,
                 })
               : saveId({
@@ -407,7 +357,7 @@ module.exports = projection({
                   context: aggregateContext,
                   id,
                   query: fullQuery,
-                  update: formattedUpdate,
+                  update: composedUpdate,
                   push,
                 }),
           {

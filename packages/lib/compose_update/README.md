@@ -1,0 +1,1 @@
+Composes an update from many independently specified parts.

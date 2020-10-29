@@ -1,0 +1,19 @@
+{
+  "name": "@blossm/compose-update",
+  "version": "0.0.0",
+  "description": "Composes an update from many independently specified parts.",
+  "main": "index.js",
+  "author": "blossm.network",
+  "engines": {
+    "node": ">= 10.16.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "mocha --recursive"
+  },
+  "devDependencies": {
+    "mocha": "^7.1.1"
+  }
+}
