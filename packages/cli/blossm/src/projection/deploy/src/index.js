@@ -122,6 +122,13 @@ const pushToChannels = async ({
 };
 
 const saveId = async ({ aggregate, id, query, update, push, context }) => {
+  //TODO
+  //eslint-disable-next-line no-console
+  console.log({
+    update: JSON.stringify(update),
+    query: JSON.stringify(query),
+    id,
+  });
   const {
     body: { view: newView, keys },
   } = await viewStore({
