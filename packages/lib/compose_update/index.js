@@ -3,6 +3,9 @@ module.exports = (update, query, matchDelimiter) => {
 
   const matchUpdates = [];
 
+  //TODO
+  console.log({ update: JSON.stringify(update), query: JSON.stringify(query) });
+
   //sort array properties first
   update = {
     ...Object.keys(update)
@@ -15,6 +18,9 @@ module.exports = (update, query, matchDelimiter) => {
         {}
       ),
   };
+
+  //TODO
+  console.log({ update2: JSON.stringify(update) });
 
   for (const key in update) {
     const components = key.split(matchDelimiter);

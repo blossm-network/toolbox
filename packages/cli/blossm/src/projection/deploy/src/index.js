@@ -233,14 +233,14 @@ const replayIfNeeded = async ({
             readFactFn,
           });
 
-          const composedUpdate = composeUpdate(
-            replayUpdate,
-            {
-              ...fullQuery,
-              ...replayQuery,
-            },
-            matchDelimiter
-          );
+          // const composedUpdate = composeUpdate(
+          //   replayUpdate,
+          //   // {
+          //   //   ...fullQuery,
+          //   //   ...replayQuery,
+          //   // },
+          //   matchDelimiter
+          // );
           const {
             fullUpdate: recursiveFullUpdate,
             fullQuery: recursiveFullQuery,
@@ -248,7 +248,8 @@ const replayIfNeeded = async ({
             aggregateFn,
             readFactFn,
             replay: replayReplay,
-            update: composedUpdate,
+            // update: composedUpdate,
+            update: replayUpdate,
             query: replayQuery,
           });
 
@@ -309,6 +310,8 @@ module.exports = projection({
 
     if (!fullQuery && !id) return;
 
+    const composedUpdate = composeUpdate(fullUpdate, fullQuery, matchDelimiter);
+
     const aggregateContext =
       process.env.CONTEXT &&
       (context ||
@@ -320,14 +323,14 @@ module.exports = projection({
             aggregate,
             context: aggregateContext,
             id,
-            update: fullUpdate,
+            update: composedUpdate,
             push,
           })
         : await saveId({
             aggregate,
             context: aggregateContext,
             id,
-            update: fullUpdate,
+            update: composedUpdate,
             push,
           });
     } else {
@@ -355,7 +358,7 @@ module.exports = projection({
                   context: aggregateContext,
                   id,
                   query: fullQuery,
-                  update: fullUpdate,
+                  update: composedUpdate,
                   push,
                 })
               : saveId({
@@ -363,7 +366,7 @@ module.exports = projection({
                   context: aggregateContext,
                   id,
                   query: fullQuery,
-                  update: fullUpdate,
+                  update: composedUpdate,
                   push,
                 }),
           {
