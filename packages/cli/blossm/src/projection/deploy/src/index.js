@@ -282,7 +282,7 @@ const replayIfNeeded = async ({
 
           console.log({
             j,
-            composedUpdate,
+            composedUpdate: JSON.stringify(composedUpdate),
           });
 
           fullUpdate = {
