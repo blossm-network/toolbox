@@ -336,6 +336,15 @@ module.exports = projection({
     const composedQuery = fullQuery && composeQuery(fullQuery);
     console.log({ composedQuery });
 
+    //TODO
+    console.log({ fullUpdate });
+    const composedUpdate = composeUpdate(
+      fullUpdate,
+      composedQuery,
+      matchDelimiter
+    );
+    console.log({ composedUpdate });
+
     if (!fullQuery && !id) return;
 
     const aggregateContext =
@@ -349,14 +358,14 @@ module.exports = projection({
             aggregate,
             context: aggregateContext,
             id,
-            update: fullUpdate,
+            update: composedUpdate,
             push,
           })
         : await saveId({
             aggregate,
             context: aggregateContext,
             id,
-            update: fullUpdate,
+            update: composedUpdate,
             push,
           });
     } else {
@@ -384,7 +393,7 @@ module.exports = projection({
                   context: aggregateContext,
                   id,
                   query: composedQuery,
-                  update: fullUpdate,
+                  update: composedUpdate,
                   push,
                 })
               : saveId({
@@ -392,7 +401,7 @@ module.exports = projection({
                   context: aggregateContext,
                   id,
                   query: composedQuery,
-                  update: fullUpdate,
+                  update: composedUpdate,
                   push,
                 }),
           {
