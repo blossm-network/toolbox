@@ -241,11 +241,25 @@ const replayIfNeeded = async ({
           console.log({
             recursiveFullUpdate: JSON.stringify(recursiveFullUpdate),
             recursiveFullQuery: JSON.stringify(recursiveFullQuery),
+            k: {
+              ...fullUpdate,
+              ...recursiveFullUpdate,
+            },
+            a: {
+              ...fullQuery,
+              ...recursiveFullQuery,
+            },
           });
 
           const composedRecursiveFullUpdate = composeUpdate(
-            recursiveFullUpdate,
-            recursiveFullQuery,
+            {
+              ...fullUpdate,
+              ...recursiveFullUpdate,
+            },
+            {
+              ...fullQuery,
+              ...recursiveFullQuery,
+            },
             matchDelimiter
           );
 
