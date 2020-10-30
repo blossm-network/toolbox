@@ -336,6 +336,7 @@ module.exports = projection({
     const composedQuery = fullQuery && composeQuery(fullQuery);
     console.log({ composedQuery });
 
+    console.log("ASDFASDFA");
     //TODO
     console.log({ fullUpdate });
     const composedUpdate = composeUpdate(
