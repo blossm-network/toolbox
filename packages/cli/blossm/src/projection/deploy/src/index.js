@@ -233,14 +233,15 @@ const replayIfNeeded = async ({
             readFactFn,
           });
 
-          // const composedUpdate = composeUpdate(
-          //   replayUpdate,
-          //   // {
-          //   //   ...fullQuery,
-          //   //   ...replayQuery,
-          //   // },
-          //   matchDelimiter
-          // );
+          const composedUpdate = composeUpdate(
+            replayUpdate,
+            {
+              ...fullQuery,
+              ...replayQuery,
+            },
+            matchDelimiter
+          );
+
           const {
             fullUpdate: recursiveFullUpdate,
             fullQuery: recursiveFullQuery,
@@ -248,8 +249,7 @@ const replayIfNeeded = async ({
             aggregateFn,
             readFactFn,
             replay: replayReplay,
-            // update: composedUpdate,
-            update: replayUpdate,
+            update: composedUpdate,
             query: replayQuery,
           });
 
@@ -269,6 +269,24 @@ const replayIfNeeded = async ({
   }
 
   return { fullUpdate, fullQuery };
+};
+
+const composeQuery = (query) => {
+  for (const key in query) {
+    if (key.includes(matchDelimiter)) continue;
+    const propertySplit = key.split(".");
+    if (propertySplit.length < 2) continue;
+
+    if (query[propertySplit[0]] != undefined) {
+      if (query[propertySplit[0]] instanceof Array) {
+        query[propertySplit[0]] = query[propertySplit[0]].map((element) => ({
+          ...element,
+          [propertySplit]: query[key],
+        }));
+      }
+    }
+  }
+  return query;
 };
 
 module.exports = projection({
@@ -308,9 +326,12 @@ module.exports = projection({
       query,
     });
 
-    if (!fullQuery && !id) return;
+    //TODO
+    console.log({ fullQuery });
+    const composedQuery = fullQuery && composeQuery(fullQuery);
+    console.log({ composedQuery });
 
-    const composedUpdate = composeUpdate(fullUpdate, fullQuery, matchDelimiter);
+    if (!fullQuery && !id) return;
 
     const aggregateContext =
       process.env.CONTEXT &&
@@ -323,14 +344,14 @@ module.exports = projection({
             aggregate,
             context: aggregateContext,
             id,
-            update: composedUpdate,
+            update: fullUpdate,
             push,
           })
         : await saveId({
             aggregate,
             context: aggregateContext,
             id,
-            update: composedUpdate,
+            update: fullUpdate,
             push,
           });
     } else {
@@ -357,21 +378,21 @@ module.exports = projection({
                   aggregate,
                   context: aggregateContext,
                   id,
-                  query: fullQuery,
-                  update: composedUpdate,
+                  query: composedQuery,
+                  update: fullUpdate,
                   push,
                 })
               : saveId({
                   aggregate,
                   context: aggregateContext,
                   id,
-                  query: fullQuery,
-                  update: composedUpdate,
+                  query: composedQuery,
+                  update: fullUpdate,
                   push,
                 }),
           {
             parallel: 100,
-            ...(fullQuery && { query: fullQuery }),
+            ...(composedQuery && { query: composedQuery }),
           }
         );
     }

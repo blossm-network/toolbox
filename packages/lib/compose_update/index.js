@@ -1,8 +1,4 @@
 module.exports = (update, query, matchDelimiter) => {
-  const result = {};
-
-  const matchUpdates = [];
-
   //TODO
   console.log({ update: JSON.stringify(update), query: JSON.stringify(query) });
 
@@ -21,6 +17,10 @@ module.exports = (update, query, matchDelimiter) => {
 
   //TODO
   console.log({ update2: JSON.stringify(update) });
+
+  const result = {};
+
+  const matchUpdates = [];
 
   for (const key in update) {
     const components = key.split(matchDelimiter);
@@ -62,8 +62,8 @@ module.exports = (update, query, matchDelimiter) => {
         };
       });
     } else if (
+      propertySplit.length > 1 &&
       matchUpdates.some((mu) => {
-        if (propertySplit.length < 2) return false;
         return (
           mu.root == propertySplit[0] &&
           mu.key == propertySplit[1] &&
@@ -75,19 +75,16 @@ module.exports = (update, query, matchDelimiter) => {
         );
       })
     ) {
-      result[
-        `${propertySplit[0]}${matchDelimiter}${propertySplit[1]}`
-      ] = result[`${propertySplit[0]}${matchDelimiter}${propertySplit[1]}`].map(
-        (element) => {
-          for (const param of relevantQueryParams)
-            if (element[param.key] != param.value) return element;
+      const key = `${propertySplit[0]}${matchDelimiter}${propertySplit[1]}`;
+      result[key] = result[key].map((element) => {
+        for (const param of relevantQueryParams)
+          if (element[param.key] != param.value) return element;
 
-          return {
-            ...element,
-            [matchUpdate.key]: matchUpdate.value,
-          };
-        }
-      );
+        return {
+          ...element,
+          [matchUpdate.key]: matchUpdate.value,
+        };
+      });
     } else {
       result[`${matchUpdate.root}${matchDelimiter}${matchUpdate.key}`] =
         matchUpdate.value;
