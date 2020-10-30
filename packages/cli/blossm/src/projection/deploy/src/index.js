@@ -285,10 +285,10 @@ const replayIfNeeded = async ({
             composedUpdate: JSON.stringify(composedUpdate),
           });
 
-          fullUpdate = {
-            ...fullUpdate,
-            ...recursiveFullUpdate,
-          };
+          fullUpdate = composedUpdate;
+          // l { ...fullUpdate,
+          //   ...recursiveFullUpdate,
+          // };
           fullQuery = {
             ...fullQuery,
             ...recursiveFullQuery,
