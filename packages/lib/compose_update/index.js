@@ -5,7 +5,8 @@ module.exports = (update, query, matchDelimiter) => {
   //sort array properties first
   update = {
     ...Object.keys(update)
-      .sort((a) => (update[a] instanceof Array ? -1 : 1))
+      // .sort((a) => (update[a] instanceof Array ? -1 : 1))
+      .sort((a, b) => (a.split(".").length > b.split(".").length ? 1 : -1))
       .reduce(
         (result, key) => ({
           ...result,
@@ -37,7 +38,34 @@ module.exports = (update, query, matchDelimiter) => {
 
   if (matchUpdates.length == 0) return result;
 
+  console.log({ matchUpdates });
   for (const matchUpdate of matchUpdates) {
+    const propertySplit = matchUpdate.root.split(".");
+
+    if (result[matchUpdate.root] != undefined) {
+      result[matchUpdate.root] = result[matchUpdate.root].map((element) => ({
+        ...element,
+        [matchUpdate.key]: matchUpdate.value,
+      }));
+      continue;
+    }
+    //Supports max 2 layers.
+    else if (
+      propertySplit.length > 1 &&
+      result[propertySplit[0]] != undefined
+    ) {
+      result[propertySplit[0]] = result[propertySplit[0]].map(
+        (outerElement) => ({
+          ...outerElement,
+          [propertySplit[1]]: outerElement[propertySplit[1]].map((element) => ({
+            ...element,
+            [matchUpdate.key]: matchUpdate.value,
+          })),
+        })
+      );
+      continue;
+    }
+
     let relevantQueryParams = [];
     for (const queryKey in query) {
       const querySplit = queryKey.split(`${matchUpdate.root}.`);
@@ -48,8 +76,6 @@ module.exports = (update, query, matchDelimiter) => {
         });
       }
     }
-
-    const propertySplit = matchUpdate.root.split(".");
 
     if (result[matchUpdate.root] instanceof Array) {
       result[matchUpdate.root] = result[matchUpdate.root].map((element) => {

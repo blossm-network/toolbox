@@ -80,4 +80,38 @@ describe("Format update", () => {
       ],
     });
   });
+  it("should return the composed update with four parts", () => {
+    const query = {
+      "things.id": "some-thing-id",
+      "things.subthings.id": "some-subthing-id",
+    };
+    const update = {
+      things: [{ id: "some-thing-id" }],
+      "things.$.name": "some-thing-name",
+      "things.$.subthings": [
+        {
+          id: "some-subthing-id",
+          some: "value",
+        },
+      ],
+      "things.subthings.$.some-other": "other-value",
+    };
+
+    const result = formatUpdate(update, query, ".$.");
+    expect(result).to.deep.equal({
+      things: [
+        {
+          id: "some-thing-id",
+          name: "some-thing-name",
+          subthings: [
+            {
+              id: "some-subthing-id",
+              some: "value",
+              "some-other": "other-value",
+            },
+          ],
+        },
+      ],
+    });
+  });
 });
