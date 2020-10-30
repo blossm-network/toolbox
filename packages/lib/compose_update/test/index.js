@@ -120,12 +120,19 @@ describe("Format update", () => {
       "things.subthings.id": "some-subthing-id",
     };
     const update = {
-      things: [{ id: "some-thing-id" }, { id: "some-other-thing-id" }],
+      things: [
+        { id: "some-thing-id" },
+        { id: "some-other-thing-id", a: "random-value" },
+      ],
       "things.$.name": "some-thing-name",
       "things.$.subthings": [
         {
           id: "some-subthing-id",
           some: "value",
+        },
+        {
+          id: "some-other-subthing-id",
+          x: "other-random-value",
         },
       ],
       "things.subthings.$.some-other": "other-value",
@@ -143,10 +150,15 @@ describe("Format update", () => {
               some: "value",
               "some-other": "other-value",
             },
+            {
+              id: "some-other-subthing-id",
+              x: "other-random-value",
+            },
           ],
         },
         {
           id: "some-other-thing-id",
+          a: "random-value",
         },
       ],
     });

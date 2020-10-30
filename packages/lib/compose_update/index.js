@@ -72,10 +72,18 @@ module.exports = (update, query, matchDelimiter) => {
           return {
             ...outerElement,
             [propertySplit[1]]: outerElement[propertySplit[1]].map(
-              (element) => ({
-                ...element,
-                [matchUpdate.key]: matchUpdate.value,
-              })
+              (element) => {
+                for (const param of relevantQueryParams)
+                  if (
+                    element[param.key] != undefined &&
+                    element[param.key] != param.value
+                  )
+                    return element;
+                return {
+                  ...element,
+                  [matchUpdate.key]: matchUpdate.value,
+                };
+              }
             ),
           };
         }
