@@ -246,12 +246,6 @@ const replayIfNeeded = async ({
             query: replayQuery,
           });
 
-          console.log({
-            j,
-            recursiveFullQuery: JSON.stringify(recursiveFullQuery),
-            recursiveFullUpdate: JSON.stringify(recursiveFullUpdate),
-          });
-
           //Supports multi-item array replays
           for (const key in recursiveFullUpdate) {
             if (
@@ -264,6 +258,18 @@ const replayIfNeeded = async ({
               ];
             }
           }
+
+          console.log({
+            j,
+            recursiveFullQuery: JSON.stringify(recursiveFullQuery),
+            recursiveFullUpdate: JSON.stringify(recursiveFullUpdate),
+          });
+
+          console.log({
+            j,
+            fullUpdate: JSON.stringify(fullUpdate),
+            fullQuery: JSON.stringify(fullQuery),
+          });
 
           fullUpdate = {
             ...fullUpdate,
