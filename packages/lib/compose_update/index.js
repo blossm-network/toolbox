@@ -33,32 +33,6 @@ module.exports = (update, query, matchDelimiter) => {
   if (matchUpdates.length == 0) return result;
 
   for (const matchUpdate of matchUpdates) {
-    const propertySplit = matchUpdate.root.split(".");
-
-    if (result[matchUpdate.root] != undefined) {
-      result[matchUpdate.root] = result[matchUpdate.root].map((element) => ({
-        ...element,
-        [matchUpdate.key]: matchUpdate.value,
-      }));
-      continue;
-    }
-    //Supports max 2 layers.
-    else if (
-      propertySplit.length > 1 &&
-      result[propertySplit[0]] != undefined
-    ) {
-      result[propertySplit[0]] = result[propertySplit[0]].map(
-        (outerElement) => ({
-          ...outerElement,
-          [propertySplit[1]]: outerElement[propertySplit[1]].map((element) => ({
-            ...element,
-            [matchUpdate.key]: matchUpdate.value,
-          })),
-        })
-      );
-      continue;
-    }
-
     let relevantQueryParams = [];
     for (const queryKey in query) {
       const querySplit = queryKey.split(`${matchUpdate.root}.`);
@@ -68,6 +42,45 @@ module.exports = (update, query, matchDelimiter) => {
           value: query[queryKey],
         });
       }
+    }
+    const propertySplit = matchUpdate.root.split(".");
+
+    if (result[matchUpdate.root] != undefined) {
+      result[matchUpdate.root] = result[matchUpdate.root].map((element) => {
+        for (const param of relevantQueryParams)
+          if (
+            element[param.key] != undefined &&
+            element[param.key] != param.value
+          )
+            return element;
+
+        return {
+          ...element,
+          [matchUpdate.key]: matchUpdate.value,
+        };
+      });
+      continue;
+    }
+    //Supports max 2 layers.
+    else if (
+      propertySplit.length > 1 &&
+      result[propertySplit[0]] != undefined
+    ) {
+      result[propertySplit[0]] = result[propertySplit[0]].map(
+        (outerElement) => {
+          if (outerElement[propertySplit[1]] == undefined) return outerElement;
+          return {
+            ...outerElement,
+            [propertySplit[1]]: outerElement[propertySplit[1]].map(
+              (element) => ({
+                ...element,
+                [matchUpdate.key]: matchUpdate.value,
+              })
+            ),
+          };
+        }
+      );
+      continue;
     }
 
     if (result[matchUpdate.root] instanceof Array) {
