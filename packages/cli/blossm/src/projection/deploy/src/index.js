@@ -284,27 +284,17 @@ const replayIfNeeded = async ({
   return { fullUpdate, fullQuery };
 };
 
-const composeQuery = (query) => {
+// prevents queries like
+// { some: { id: "some-id"}, some.id: "some-id"}
+const cleanQuery = (query) => {
+  const cleanedQuery = {};
   for (const key in query) {
-    if (key.includes(matchDelimiter)) continue;
-    const propertySplit = key.split(".");
-    if (propertySplit.length < 2) continue;
-
-    if (query[propertySplit[0]] != undefined) {
-      if (query[propertySplit[0]] instanceof Array) {
-        query[propertySplit[0]] = query[propertySplit[0]].map((element) => ({
-          ...element,
-          [propertySplit]: query[key],
-        }));
-      } else {
-        query[propertySplit[0]] = {
-          ...query[propertySplit[0]],
-          [propertySplit]: query[key],
-        };
-      }
+    const split = key.split(".");
+    if (split.length < 2 || query[split[0]] == undefined) {
+      cleanedQuery[key] = query[key];
     }
   }
-  return query;
+  return cleanedQuery;
 };
 
 module.exports = projection({
@@ -346,7 +336,7 @@ module.exports = projection({
 
     //TODO
     console.log({ fullQuery });
-    const composedQuery = fullQuery && composeQuery(fullQuery);
+    const composedQuery = fullQuery && cleanQuery(fullQuery);
     console.log({ composedQuery });
 
     console.log("ASDFASDFA");
