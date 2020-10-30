@@ -237,6 +237,18 @@ const replayIfNeeded = async ({
             query: replayQuery,
           });
 
+          //TODO
+          console.log({
+            recursiveFullUpdate: JSON.stringify(recursiveFullUpdate),
+            recursiveFullQuery: JSON.stringify(recursiveFullQuery),
+          });
+
+          const composedRecursiveFullUpdate = composeUpdate(
+            recursiveFullUpdate,
+            recursiveFullQuery,
+            matchDelimiter
+          );
+
           //Supports multi-item array replays
           for (const key in recursiveFullUpdate) {
             if (
@@ -249,12 +261,6 @@ const replayIfNeeded = async ({
               ];
             }
           }
-
-          const composedRecursiveFullUpdate = composeUpdate(
-            recursiveFullUpdate,
-            recursiveFullQuery,
-            matchDelimiter
-          );
 
           fullUpdate = {
             ...fullUpdate,
