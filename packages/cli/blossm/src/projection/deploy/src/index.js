@@ -193,6 +193,7 @@ const deleteId = ({ aggregate, id, query, push, context }) =>
       ...(aggregate.groups && { groups: aggregate.groups }),
     });
 
+let i = 0;
 const replayIfNeeded = async ({
   replay,
   aggregateFn,
@@ -209,6 +210,8 @@ const replayIfNeeded = async ({
   if (replay && replay.length != 0) {
     await Promise.all(
       replay.map(async (r) => {
+        const j = i++;
+        console.log(`playing ${j}`);
         try {
           const aggregate = await aggregateFn({
             domain: r.domain,
@@ -226,6 +229,12 @@ const replayIfNeeded = async ({
             readFactFn,
           });
 
+          console.log({
+            j,
+            replayQuery: JSON.stringify(replayQuery),
+            replayUpdate: JSON.stringify(replayUpdate),
+          });
+
           const {
             fullUpdate: recursiveFullUpdate,
             fullQuery: recursiveFullQuery,
@@ -235,6 +244,12 @@ const replayIfNeeded = async ({
             replay: replayReplay,
             update: replayUpdate,
             query: replayQuery,
+          });
+
+          console.log({
+            j,
+            recursiveFullQuery: JSON.stringify(recursiveFullQuery),
+            recursiveFullUpdate: JSON.stringify(recursiveFullUpdate),
           });
 
           //Supports multi-item array replays
