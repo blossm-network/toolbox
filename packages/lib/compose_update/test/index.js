@@ -52,4 +52,32 @@ describe("Format update", () => {
       ],
     });
   });
+  it("should return the composed update with three parts in different array order", () => {
+    const query = {
+      "things.id": "some-thing-id",
+      "things.subthings.id": "some-subthing-id",
+    };
+    const update = {
+      "things.$.name": "some-thing-name",
+      "things.subthings.$.some-other": "other-value",
+      "things.$.subthings": [
+        {
+          id: "some-subthing-id",
+          some: "value",
+        },
+      ],
+    };
+
+    const result = formatUpdate(update, query, ".$.");
+    expect(result).to.deep.equal({
+      "things.$.name": "some-thing-name",
+      "things.$.subthings": [
+        {
+          id: "some-subthing-id",
+          some: "value",
+          "some-other": "other-value",
+        },
+      ],
+    });
+  });
 });

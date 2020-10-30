@@ -3,6 +3,19 @@ module.exports = (update, query, matchDelimiter) => {
 
   const matchUpdates = [];
 
+  //sort array properties first
+  update = {
+    ...Object.keys(update)
+      .sort((a) => (update[a] instanceof Array ? -1 : 1))
+      .reduce(
+        (result, key) => ({
+          ...result,
+          [key]: update[key],
+        }),
+        {}
+      ),
+  };
+
   for (const key in update) {
     const components = key.split(matchDelimiter);
     if (components.length > 1) {
