@@ -276,7 +276,10 @@ const replayIfNeeded = async ({
               ...fullUpdate,
               ...recursiveFullUpdate,
             },
-            fullQuery,
+            {
+              ...fullQuery,
+              ...recursiveFullQuery,
+            },
             matchDelimiter
           );
 
