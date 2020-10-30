@@ -283,6 +283,11 @@ const composeQuery = (query) => {
           ...element,
           [propertySplit]: query[key],
         }));
+      } else {
+        query[propertySplit[0]] = {
+          ...query[propertySplit[0]],
+          [propertySplit]: query[key],
+        };
       }
     }
   }
