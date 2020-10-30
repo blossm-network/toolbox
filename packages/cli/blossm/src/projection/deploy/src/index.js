@@ -123,13 +123,6 @@ const pushToChannels = async ({
 };
 
 const saveId = async ({ aggregate, id, query, update, push, context }) => {
-  //TODO
-  //eslint-disable-next-line no-console
-  console.log({
-    update: JSON.stringify(update),
-    query: JSON.stringify(query),
-    id,
-  });
   const {
     body: { view: newView, keys },
   } = await viewStore({
@@ -334,20 +327,13 @@ module.exports = projection({
       query,
     });
 
-    //TODO
-    console.log({ fullQuery });
     const composedQuery = fullQuery && cleanQuery(fullQuery);
-    console.log({ composedQuery });
 
-    console.log("ASDFASDFA");
-    //TODO
-    console.log({ fullUpdate });
     const composedUpdate = composeUpdate(
       fullUpdate,
       composedQuery,
       matchDelimiter
     );
-    console.log({ composedUpdate });
 
     if (!fullQuery && !id) return;
 
