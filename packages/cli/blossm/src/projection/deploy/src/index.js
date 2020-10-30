@@ -249,18 +249,32 @@ const replayIfNeeded = async ({
             matchDelimiter
           );
 
+          //TODO
+          console.log({
+            composedRecursiveFullUpdate: JSON.stringify(
+              composedRecursiveFullUpdate
+            ),
+          });
+
           //Supports multi-item array replays
-          for (const key in recursiveFullUpdate) {
+          for (const key in composedRecursiveFullUpdate) {
             if (
-              recursiveFullUpdate[key] instanceof Array &&
+              composedRecursiveFullUpdate[key] instanceof Array &&
               fullUpdate[key] instanceof Array
             ) {
-              recursiveFullUpdate[key] = [
+              composedRecursiveFullUpdate[key] = [
                 ...fullUpdate[key],
-                ...recursiveFullUpdate[key],
+                ...composedRecursiveFullUpdate[key],
               ];
             }
           }
+
+          //TODO
+          console.log({
+            composedRecursiveFullUpdate2: JSON.stringify(
+              composedRecursiveFullUpdate
+            ),
+          });
 
           fullUpdate = {
             ...fullUpdate,
@@ -330,6 +344,11 @@ module.exports = projection({
       query,
     });
 
+    //TODO
+    console.log({
+      fullUpdate: JSON.stringify(fullUpdate),
+      fullQuery: JSON.stringify(fullQuery),
+    });
     const composedQuery = fullQuery && cleanQuery(fullQuery);
 
     const composedUpdate = composeUpdate(
