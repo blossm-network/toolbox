@@ -233,6 +233,14 @@ const replayIfNeeded = async ({
             readFactFn,
           });
 
+          const composedUpdate = composeUpdate(
+            replayUpdate,
+            {
+              ...fullQuery,
+              ...replayQuery,
+            },
+            matchDelimiter
+          );
           const {
             fullUpdate: recursiveFullUpdate,
             fullQuery: recursiveFullQuery,
@@ -240,7 +248,7 @@ const replayIfNeeded = async ({
             aggregateFn,
             readFactFn,
             replay: replayReplay,
-            update: replayUpdate,
+            update: composedUpdate,
             query: replayQuery,
           });
 
@@ -306,22 +314,20 @@ module.exports = projection({
       (context ||
         (aggregate.context && aggregate.context[process.env.CONTEXT]));
 
-    const composedUpdate = composeUpdate(fullUpdate, fullQuery, matchDelimiter);
-
     if (id) {
       del
         ? await deleteId({
             aggregate,
             context: aggregateContext,
             id,
-            update: composedUpdate,
+            update: fullUpdate,
             push,
           })
         : await saveId({
             aggregate,
             context: aggregateContext,
             id,
-            update: composedUpdate,
+            update: fullUpdate,
             push,
           });
     } else {
@@ -349,7 +355,7 @@ module.exports = projection({
                   context: aggregateContext,
                   id,
                   query: fullQuery,
-                  update: composedUpdate,
+                  update: fullUpdate,
                   push,
                 })
               : saveId({
@@ -357,7 +363,7 @@ module.exports = projection({
                   context: aggregateContext,
                   id,
                   query: fullQuery,
-                  update: composedUpdate,
+                  update: fullUpdate,
                   push,
                 }),
           {
