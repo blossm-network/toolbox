@@ -237,62 +237,22 @@ const replayIfNeeded = async ({
             query: replayQuery,
           });
 
-          //TODO
-          console.log({
-            recursiveFullUpdate: JSON.stringify(recursiveFullUpdate),
-            recursiveFullQuery: JSON.stringify(recursiveFullQuery),
-            k: {
-              ...fullUpdate,
-              ...recursiveFullUpdate,
-            },
-            a: {
-              ...fullQuery,
-              ...recursiveFullQuery,
-            },
-          });
-
-          const composedRecursiveFullUpdate = composeUpdate(
-            {
-              ...fullUpdate,
-              ...recursiveFullUpdate,
-            },
-            {
-              ...fullQuery,
-              ...recursiveFullQuery,
-            },
-            matchDelimiter
-          );
-
-          //TODO
-          console.log({
-            composedRecursiveFullUpdate: JSON.stringify(
-              composedRecursiveFullUpdate
-            ),
-          });
-
           //Supports multi-item array replays
-          for (const key in composedRecursiveFullUpdate) {
+          for (const key in recursiveFullUpdate) {
             if (
-              composedRecursiveFullUpdate[key] instanceof Array &&
+              recursiveFullUpdate[key] instanceof Array &&
               fullUpdate[key] instanceof Array
             ) {
-              composedRecursiveFullUpdate[key] = [
+              recursiveFullUpdate[key] = [
                 ...fullUpdate[key],
-                ...composedRecursiveFullUpdate[key],
+                ...recursiveFullUpdate[key],
               ];
             }
           }
 
-          //TODO
-          console.log({
-            composedRecursiveFullUpdate2: JSON.stringify(
-              composedRecursiveFullUpdate
-            ),
-          });
-
           fullUpdate = {
             ...fullUpdate,
-            ...composedRecursiveFullUpdate,
+            ...recursiveFullUpdate,
           };
           fullQuery = {
             ...fullQuery,
@@ -358,11 +318,6 @@ module.exports = projection({
       query,
     });
 
-    //TODO
-    console.log({
-      fullUpdate: JSON.stringify(fullUpdate),
-      fullQuery: JSON.stringify(fullQuery),
-    });
     const composedQuery = fullQuery && cleanQuery(fullQuery);
 
     const composedUpdate = composeUpdate(
