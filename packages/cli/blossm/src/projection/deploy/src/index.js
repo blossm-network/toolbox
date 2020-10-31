@@ -206,52 +206,51 @@ const replayIfNeeded = async ({
   let fullQuery = {
     ...query,
   };
-  // for (const r of replay || []) {
-  await Promise.all(
-    replay.map(async (r) => {
-      try {
-        const aggregate = await aggregateFn({
-          domain: r.domain,
-          service: r.service,
-          root: r.root,
-        });
+  for (const r of replay || []) {
+    // await Promise.all(
+    // replay.map(async (r) => {
+    try {
+      const aggregate = await aggregateFn({
+        domain: r.domain,
+        service: r.service,
+        root: r.root,
+      });
 
-        const {
-          query: replayQuery,
-          update: replayUpdate,
-          replay: replayReplay,
-        } = await handlers[r.service][r.domain]({
-          state: aggregate.state,
-          id: r.root,
-          readFactFn,
-        });
+      const {
+        query: replayQuery,
+        update: replayUpdate,
+        replay: replayReplay,
+      } = await handlers[r.service][r.domain]({
+        state: aggregate.state,
+        id: r.root,
+        readFactFn,
+      });
 
-        const {
-          fullUpdate: recursiveFullUpdate,
-          fullQuery: recursiveFullQuery,
-        } = await replayIfNeeded({
-          aggregateFn,
-          readFactFn,
-          replay: replayReplay,
-          update: {
-            ...fullUpdate,
-            ...replayUpdate,
-          },
-          query: {
-            ...replayQuery,
-            ...replayUpdate,
-          },
-        });
-        fullUpdate = { ...fullUpdate, ...recursiveFullUpdate };
-        fullQuery = {
-          ...fullQuery,
-          ...recursiveFullQuery,
-        };
-      } catch (_) {
-        return;
-      }
-    })
-  );
+      const {
+        fullUpdate: recursiveFullUpdate,
+        fullQuery: recursiveFullQuery,
+      } = await replayIfNeeded({
+        aggregateFn,
+        readFactFn,
+        replay: replayReplay,
+        update: {
+          ...fullUpdate,
+          ...replayUpdate,
+        },
+        query: {
+          ...replayQuery,
+          ...replayUpdate,
+        },
+      });
+      fullUpdate = { ...fullUpdate, ...recursiveFullUpdate };
+      fullQuery = {
+        ...fullQuery,
+        ...recursiveFullQuery,
+      };
+    } catch (_) {
+      return;
+    }
+  }
 
   return { fullUpdate, fullQuery };
 };
@@ -313,6 +312,12 @@ module.exports = projection({
       composedQuery,
       matchDelimiter
     );
+
+    //TODO
+    console.log({
+      composedQuery: JSON.stringify(composedQuery),
+      composedUpdate: JSON.stringify(composedUpdate),
+    });
 
     if (!fullQuery && !id) return;
 
