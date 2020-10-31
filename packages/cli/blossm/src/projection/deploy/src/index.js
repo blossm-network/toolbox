@@ -208,99 +208,101 @@ const replayIfNeeded = async ({
     ...query,
   };
   if (replay && replay.length != 0) {
-    await Promise.all(
-      replay.map(async (r) => {
-        const j = i++;
-        console.log(`playing ${j}`);
-        try {
-          const aggregate = await aggregateFn({
-            domain: r.domain,
-            service: r.service,
-            root: r.root,
-          });
+    for (const r of replay) {
+      // await Promise.all(
+      // replay.map(async (r) => {
+      const j = i++;
+      console.log(`playing ${j}`);
+      try {
+        const aggregate = await aggregateFn({
+          domain: r.domain,
+          service: r.service,
+          root: r.root,
+        });
 
-          const {
-            query: replayQuery,
-            update: replayUpdate,
-            replay: replayReplay,
-          } = await handlers[r.service][r.domain]({
-            state: aggregate.state,
-            id: r.root,
-            readFactFn,
-          });
+        const {
+          query: replayQuery,
+          update: replayUpdate,
+          replay: replayReplay,
+        } = await handlers[r.service][r.domain]({
+          state: aggregate.state,
+          id: r.root,
+          readFactFn,
+        });
 
-          console.log({
-            j,
-            replayQuery: JSON.stringify(replayQuery),
-            replayUpdate: JSON.stringify(replayUpdate),
-          });
+        console.log({
+          j,
+          replayQuery: JSON.stringify(replayQuery),
+          replayUpdate: JSON.stringify(replayUpdate),
+        });
 
-          const {
-            fullUpdate: recursiveFullUpdate,
-            fullQuery: recursiveFullQuery,
-          } = await replayIfNeeded({
-            aggregateFn,
-            readFactFn,
-            replay: replayReplay,
-            update: replayUpdate,
-            query: replayQuery,
-          });
+        const {
+          fullUpdate: recursiveFullUpdate,
+          fullQuery: recursiveFullQuery,
+        } = await replayIfNeeded({
+          aggregateFn,
+          readFactFn,
+          replay: replayReplay,
+          update: replayUpdate,
+          query: replayQuery,
+        });
 
-          //Supports multi-item array replays
-          for (const key in recursiveFullUpdate) {
-            if (
-              recursiveFullUpdate[key] instanceof Array &&
-              fullUpdate[key] instanceof Array
-            ) {
-              recursiveFullUpdate[key] = [
-                ...fullUpdate[key],
-                ...recursiveFullUpdate[key],
-              ];
-            }
+        //Supports multi-item array replays
+        for (const key in recursiveFullUpdate) {
+          if (
+            recursiveFullUpdate[key] instanceof Array &&
+            fullUpdate[key] instanceof Array
+          ) {
+            recursiveFullUpdate[key] = [
+              ...fullUpdate[key],
+              ...recursiveFullUpdate[key],
+            ];
           }
+        }
 
-          console.log({
-            j,
-            recursiveFullQuery: JSON.stringify(recursiveFullQuery),
-            recursiveFullUpdate: JSON.stringify(recursiveFullUpdate),
-          });
+        console.log({
+          j,
+          recursiveFullQuery: JSON.stringify(recursiveFullQuery),
+          recursiveFullUpdate: JSON.stringify(recursiveFullUpdate),
+        });
 
-          console.log({
-            j,
-            fullUpdate: JSON.stringify(fullUpdate),
-            fullQuery: JSON.stringify(fullQuery),
-          });
+        console.log({
+          j,
+          fullUpdate: JSON.stringify(fullUpdate),
+          fullQuery: JSON.stringify(fullQuery),
+        });
 
-          const composedUpdate = composeUpdate(
-            {
-              ...fullUpdate,
-              ...recursiveFullUpdate,
-            },
-            {
-              ...fullQuery,
-              ...recursiveFullQuery,
-            },
-            matchDelimiter
-          );
-
-          console.log({
-            j,
-            composedUpdate: JSON.stringify(composedUpdate),
-          });
-
-          fullUpdate = composedUpdate;
-          // l { ...fullUpdate,
-          //   ...recursiveFullUpdate,
-          // };
-          fullQuery = {
+        const composedUpdate = composeUpdate(
+          {
+            ...fullUpdate,
+            ...recursiveFullUpdate,
+          },
+          {
             ...fullQuery,
             ...recursiveFullQuery,
-          };
-        } catch (_) {
-          return;
-        }
-      })
-    );
+          },
+          matchDelimiter
+        );
+
+        console.log({
+          j,
+          composedUpdate: JSON.stringify(composedUpdate),
+        });
+
+        fullUpdate = composedUpdate;
+        // l { ...fullUpdate,
+        //   ...recursiveFullUpdate,
+        // };
+        fullQuery = {
+          ...fullQuery,
+          ...recursiveFullQuery,
+        };
+      } catch (_) {
+        return;
+      }
+      // })
+      // );
+    }
   }
 
   return { fullUpdate, fullQuery };
