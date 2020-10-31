@@ -235,6 +235,18 @@ const replayIfNeeded = async ({
         replayUpdate: JSON.stringify(replayUpdate),
       });
 
+      const composedUpdate = composeUpdate(
+        {
+          ...fullUpdate,
+          ...replayUpdate,
+        },
+        {
+          ...fullQuery,
+          ...replayQuery,
+        },
+        matchDelimiter
+      );
+
       const {
         fullUpdate: recursiveFullUpdate,
         fullQuery: recursiveFullQuery,
@@ -242,13 +254,10 @@ const replayIfNeeded = async ({
         aggregateFn,
         readFactFn,
         replay: replayReplay,
-        update: {
-          ...fullUpdate,
-          ...replayUpdate,
-        },
+        update: composedUpdate,
         query: {
           ...fullQuery,
-          ...replayUpdate,
+          ...replayQuery,
         },
       });
 
@@ -277,24 +286,12 @@ const replayIfNeeded = async ({
         fullQuery: JSON.stringify(fullQuery),
       });
 
-      const composedUpdate = composeUpdate(
-        {
-          ...fullUpdate,
-          ...recursiveFullUpdate,
-        },
-        {
-          ...fullQuery,
-          ...recursiveFullQuery,
-        },
-        matchDelimiter
-      );
-
       console.log({
         j,
         composedUpdate: JSON.stringify(composedUpdate),
       });
 
-      fullUpdate = composedUpdate;
+      fullUpdate = recursiveFullUpdate;
       // fullUpdate = { ...fullUpdate, ...recursiveFullUpdate };
       fullQuery = {
         ...fullQuery,
