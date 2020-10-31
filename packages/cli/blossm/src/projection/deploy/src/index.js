@@ -237,11 +237,11 @@ const replayIfNeeded = async ({
 
       const composedUpdate = composeUpdate(
         {
-          ...update,
+          ...fullUpdate,
           ...replayUpdate,
         },
         {
-          ...query,
+          ...fullQuery,
           ...replayQuery,
         },
         matchDelimiter
@@ -256,7 +256,7 @@ const replayIfNeeded = async ({
         replay: replayReplay,
         update: composedUpdate,
         query: {
-          ...query,
+          ...fullQuery,
           ...replayQuery,
         },
       });
@@ -291,8 +291,8 @@ const replayIfNeeded = async ({
         composedUpdate: JSON.stringify(composedUpdate),
       });
 
-      // fullUpdate = recursiveFullUpdate;
-      fullUpdate = { ...fullUpdate, ...recursiveFullUpdate };
+      fullUpdate = recursiveFullUpdate;
+      // fullUpdate = { ...fullUpdate, ...recursiveFullUpdate };
       fullQuery = {
         ...fullQuery,
         ...recursiveFullQuery,
