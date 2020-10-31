@@ -193,7 +193,6 @@ const deleteId = ({ aggregate, id, query, push, context }) =>
       ...(aggregate.groups && { groups: aggregate.groups }),
     });
 
-let i = 0;
 const replayIfNeeded = async ({
   replay,
   aggregateFn,
@@ -208,10 +207,6 @@ const replayIfNeeded = async ({
     ...query,
   };
   for (const r of replay || []) {
-    // await Promise.all(
-    // replay.map(async (r) => {
-    const j = i++;
-    console.log(`playing ${j}`);
     try {
       const aggregate = await aggregateFn({
         domain: r.domain,
@@ -227,12 +222,6 @@ const replayIfNeeded = async ({
         state: aggregate.state,
         id: r.root,
         readFactFn,
-      });
-
-      console.log({
-        j,
-        replayQuery: JSON.stringify(replayQuery),
-        replayUpdate: JSON.stringify(replayUpdate),
       });
 
       const composedUpdate = composeUpdate(
@@ -261,38 +250,7 @@ const replayIfNeeded = async ({
         },
       });
 
-      // //Supports multi-item array replays
-      // for (const key in recursiveFullUpdate) {
-      //   if (
-      //     recursiveFullUpdate[key] instanceof Array &&
-      //     fullUpdate[key] instanceof Array
-      //   ) {
-      //     recursiveFullUpdate[key] = [
-      //       ...fullUpdate[key],
-      //       ...recursiveFullUpdate[key],
-      //     ];
-      //   }
-      // }
-
-      console.log({
-        j,
-        recursiveFullQuery: JSON.stringify(recursiveFullQuery),
-        recursiveFullUpdate: JSON.stringify(recursiveFullUpdate),
-      });
-
-      console.log({
-        j,
-        fullUpdate: JSON.stringify(fullUpdate),
-        fullQuery: JSON.stringify(fullQuery),
-      });
-
-      console.log({
-        j,
-        composedUpdate: JSON.stringify(composedUpdate),
-      });
-
       fullUpdate = recursiveFullUpdate;
-      // fullUpdate = { ...fullUpdate, ...recursiveFullUpdate };
       fullQuery = {
         ...fullQuery,
         ...recursiveFullQuery,
@@ -300,8 +258,6 @@ const replayIfNeeded = async ({
     } catch (_) {
       return;
     }
-    // })
-    // );
   }
 
   return { fullUpdate, fullQuery };
@@ -364,12 +320,6 @@ module.exports = projection({
       composedQuery,
       matchDelimiter
     );
-
-    //TODO
-    console.log({
-      composedQuery: JSON.stringify(composedQuery),
-      composedUpdate: JSON.stringify(composedUpdate),
-    });
 
     if (!fullQuery && !id) return;
 
