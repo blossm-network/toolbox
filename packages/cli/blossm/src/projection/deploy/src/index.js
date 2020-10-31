@@ -277,27 +277,25 @@ const replayIfNeeded = async ({
         fullQuery: JSON.stringify(fullQuery),
       });
 
-      const composedUpdate = composeUpdate(
-        {
-          ...fullUpdate,
-          ...recursiveFullUpdate,
-        },
-        {
-          ...fullQuery,
-          ...recursiveFullQuery,
-        },
-        matchDelimiter
-      );
+      // const composedUpdate = composeUpdate(
+      //   {
+      //     ...fullUpdate,
+      //     ...recursiveFullUpdate,
+      //   },
+      //   {
+      //     ...fullQuery,
+      //     ...recursiveFullQuery,
+      //   },
+      //   matchDelimiter
+      // );
 
-      console.log({
-        j,
-        composedUpdate: JSON.stringify(composedUpdate),
-      });
+      // console.log({
+      //   j,
+      //   composedUpdate: JSON.stringify(composedUpdate),
+      // });
 
-      fullUpdate = composedUpdate;
-      // l { ...fullUpdate,
-      //   ...recursiveFullUpdate,
-      // };
+      // fullUpdate = composedUpdate;
+      fullUpdate = { ...fullUpdate, ...recursiveFullUpdate };
       fullQuery = {
         ...fullQuery,
         ...recursiveFullQuery,
