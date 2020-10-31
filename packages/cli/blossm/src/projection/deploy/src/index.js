@@ -193,6 +193,7 @@ const deleteId = ({ aggregate, id, query, push, context }) =>
       ...(aggregate.groups && { groups: aggregate.groups }),
     });
 
+let i = 0;
 const replayIfNeeded = async ({
   replay,
   aggregateFn,
@@ -209,6 +210,8 @@ const replayIfNeeded = async ({
   for (const r of replay || []) {
     // await Promise.all(
     // replay.map(async (r) => {
+    const j = i++;
+    console.log(`playing ${j}`);
     try {
       const aggregate = await aggregateFn({
         domain: r.domain,
@@ -224,6 +227,12 @@ const replayIfNeeded = async ({
         state: aggregate.state,
         id: r.root,
         readFactFn,
+      });
+
+      console.log({
+        j,
+        replayQuery: JSON.stringify(replayQuery),
+        replayUpdate: JSON.stringify(replayUpdate),
       });
 
       const {
@@ -242,6 +251,50 @@ const replayIfNeeded = async ({
           ...replayUpdate,
         },
       });
+
+      // //Supports multi-item array replays
+      // for (const key in recursiveFullUpdate) {
+      //   if (
+      //     recursiveFullUpdate[key] instanceof Array &&
+      //     fullUpdate[key] instanceof Array
+      //   ) {
+      //     recursiveFullUpdate[key] = [
+      //       ...fullUpdate[key],
+      //       ...recursiveFullUpdate[key],
+      //     ];
+      //   }
+      // }
+
+      console.log({
+        j,
+        recursiveFullQuery: JSON.stringify(recursiveFullQuery),
+        recursiveFullUpdate: JSON.stringify(recursiveFullUpdate),
+      });
+
+      console.log({
+        j,
+        fullUpdate: JSON.stringify(fullUpdate),
+        fullQuery: JSON.stringify(fullQuery),
+      });
+
+      // const composedUpdate = composeUpdate(
+      //   {
+      //     ...fullUpdate,
+      //     ...recursiveFullUpdate,
+      //   },
+      //   {
+      //     ...fullQuery,
+      //     ...recursiveFullQuery,
+      //   },
+      //   matchDelimiter
+      // );
+
+      // console.log({
+      //   j,
+      //   composedUpdate: JSON.stringify(composedUpdate),
+      // });
+
+      // fullUpdate = composedUpdate;
       fullUpdate = { ...fullUpdate, ...recursiveFullUpdate };
       fullQuery = {
         ...fullQuery,
@@ -250,6 +303,8 @@ const replayIfNeeded = async ({
     } catch (_) {
       return;
     }
+    // })
+    // );
   }
 
   return { fullUpdate, fullQuery };
