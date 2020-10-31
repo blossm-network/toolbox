@@ -253,17 +253,17 @@ const replayIfNeeded = async ({
       });
 
       // //Supports multi-item array replays
-      for (const key in recursiveFullUpdate) {
-        if (
-          recursiveFullUpdate[key] instanceof Array &&
-          fullUpdate[key] instanceof Array
-        ) {
-          recursiveFullUpdate[key] = [
-            ...fullUpdate[key],
-            ...recursiveFullUpdate[key],
-          ];
-        }
-      }
+      // for (const key in recursiveFullUpdate) {
+      //   if (
+      //     recursiveFullUpdate[key] instanceof Array &&
+      //     fullUpdate[key] instanceof Array
+      //   ) {
+      //     recursiveFullUpdate[key] = [
+      //       ...fullUpdate[key],
+      //       ...recursiveFullUpdate[key],
+      //     ];
+      //   }
+      // }
 
       console.log({
         j,
