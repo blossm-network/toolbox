@@ -18,10 +18,21 @@ const config = require("./config.json");
 
 const matchDelimiter = ".$.";
 
+//Given a query { obj.id: "some-obj-id", obj.subobj.id: "some-subobj-id"}
+//Returns only { obj.id: "some-obj-id" }
+
 const idQuery = (query) => {
   const newQuery = {};
   for (const key in query) {
-    if (key.endsWith(".id")) newQuery[key] = query[key];
+    if (
+      key.endsWith(".id") &&
+      !Object.keys(query).some((k) => {
+        k.endsWith(".id") &&
+          k.startsWith(`${key.split(".")[0]}.`) &&
+          key.split(".").length < k.split(".").length;
+      })
+    )
+      newQuery[key] = query[key];
   }
   return newQuery;
 };
@@ -367,6 +378,8 @@ module.exports = projection({
           });
     } else {
       const composedIdQuery = idQuery(composedQuery);
+      //TODO
+      console.log({ composedIdQuery });
       await viewStore({
         name: config.name,
         context: config.context,
