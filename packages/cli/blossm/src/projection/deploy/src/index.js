@@ -29,9 +29,11 @@ const idQuery = (query) => {
       key.endsWith(".id") &&
       !Object.keys(query).some((k) => {
         console.log({ k, kSplit: k.split(".") });
-        k.endsWith(".id") &&
+        return (
+          k.endsWith(".id") &&
           k.startsWith(`${key.split(".")[0]}.`) &&
-          k.split(".").length < key.split(".").length;
+          k.split(".").length < key.split(".").length
+        );
       })
     ) {
       console.log("ADDING!: ", { key });
