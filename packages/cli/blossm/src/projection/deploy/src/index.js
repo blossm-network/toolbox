@@ -24,12 +24,14 @@ const matchDelimiter = ".$.";
 const idQuery = (query) => {
   const newQuery = {};
   for (const key in query) {
+    console.log({ key, keySplit: key.split(".") });
     if (
       key.endsWith(".id") &&
       !Object.keys(query).some((k) => {
+        console.log({ k, kSplit: k.split(".") });
         k.endsWith(".id") &&
           k.startsWith(`${key.split(".")[0]}.`) &&
-          key.split(".").length < k.split(".").length;
+          k.split(".").length < key.split(".").length;
       })
     )
       newQuery[key] = query[key];
