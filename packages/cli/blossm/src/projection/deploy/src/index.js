@@ -206,13 +206,17 @@ const replayIfNeeded = async ({
   let fullQuery = {
     ...query,
   };
+  // Must be synchronous
   for (const r of replay || []) {
     try {
       const aggregate = await aggregateFn({
         domain: r.domain,
         service: r.service,
         root: r.root,
+        notFoundThrows: false,
       });
+
+      if (!aggregate) continue;
 
       const {
         query: replayQuery,
@@ -387,12 +391,12 @@ module.exports = projection({
         );
     }
   },
-  aggregateFn: async ({ root, domain, service }) => {
+  aggregateFn: async ({ root, domain, service, notFoundThrows = true }) => {
     const { body: aggregate } = await eventStore({ domain, service })
       .set({
         token: { internalFn: gcpToken },
       })
-      .aggregate(root);
+      .aggregate(root, { notFoundThrows });
     return aggregate;
   },
   readFactFn: async ({ name, domain, service, network, query, root }) => {
