@@ -18,30 +18,6 @@ const config = require("./config.json");
 
 const matchDelimiter = ".$.";
 
-//Given a query { obj.id: "some-obj-id", obj.subobj.id: "some-subobj-id"}
-//Returns only { obj.id: "some-obj-id" }
-
-const idQuery = (query) => {
-  const newQuery = {};
-  for (const key in query) {
-    console.log({ key, keySplit: key.split(".") });
-    if (
-      key.endsWith(".id") &&
-      !Object.keys(query).some(
-        (k) =>
-          k != key &&
-          k.endsWith(".id") &&
-          k.startsWith(`${key.split(".")[0]}.`) &&
-          k.split(".").length < key.split(".").length
-      )
-    ) {
-      console.log("ADDING!: ", { key });
-      newQuery[key] = query[key];
-    }
-  }
-  return newQuery;
-};
-
 const pushToChannel = async ({ channel, view, id, trace, type }) => {
   try {
     await command({
@@ -298,6 +274,26 @@ const replayIfNeeded = async ({
   return { fullUpdate, fullQuery, id };
 };
 
+//Given a query { obj.id: "some-obj-id", obj.subobj.id: "some-subobj-id"}
+//Returns only { obj.id: "some-obj-id" }
+const cleanIdQuery = (query) => {
+  const newQuery = {};
+  for (const key in query) {
+    if (
+      !key.endsWith(".id") ||
+      !Object.keys(query).some(
+        (k) =>
+          k != key &&
+          k.endsWith(".id") &&
+          k.startsWith(`${key.split(".")[0]}.`) &&
+          k.split(".").length < key.split(".").length
+      )
+    )
+      newQuery[key] = query[key];
+  }
+  return newQuery;
+};
+
 // prevents queries like
 // { some: { id: "some-id"}, some.id: "some-id"}
 const cleanQuery = (query) => {
@@ -382,7 +378,7 @@ module.exports = projection({
             push,
           });
     } else {
-      const composedIdQuery = idQuery(composedQuery);
+      const composedIdQuery = cleanIdQuery(composedQuery);
       //TODO
       console.log({ composedIdQuery });
       await viewStore({
@@ -408,7 +404,7 @@ module.exports = projection({
                   aggregate,
                   context: aggregateContext,
                   id,
-                  query: composedQuery,
+                  query: composedIdQuery,
                   update: composedUpdate,
                   push,
                 })
@@ -416,7 +412,7 @@ module.exports = projection({
                   aggregate,
                   context: aggregateContext,
                   id,
-                  query: composedQuery,
+                  query: composedIdQuery,
                   update: composedUpdate,
                   push,
                 }),
