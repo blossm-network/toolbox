@@ -345,7 +345,7 @@ module.exports = async ({
           ...data[key],
         };
       } else {
-        if (key.includes(".$.")) containsMatcher = true;
+        if (key.includes(".$")) containsMatcher = true;
         update[setKey] = {
           ...update[setKey],
           [key]: data[key],
