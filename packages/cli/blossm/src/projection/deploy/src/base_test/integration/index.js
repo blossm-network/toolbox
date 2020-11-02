@@ -90,35 +90,38 @@ describe("Projection integration tests", () => {
       }
 
       const now = dateString();
-      const event = createEvent({
-        root: step.root,
-        action: step.event.action,
-        payload: step.payload,
-        domain: step.event.domain,
-        service: step.event.service,
-        network: process.env.NETWORK,
-        context: {
-          ...(context && {
-            [context]: step.context || {
-              root: "some-context-root",
-              service: "some-context-service",
-              network: process.env.NETWORK,
-            },
-          }),
-        },
-        groupsAdded: [
-          {
-            root: groupRoot,
-            service: groupService,
-            network: groupNetwork,
-          },
-        ],
-      });
 
-      await eventStore({
-        domain: step.event.domain,
-        service: step.event.service,
-      }).add({ eventData: [{ event }] });
+      if (step.event.action != undefined) {
+        const event = createEvent({
+          root: step.root,
+          action: step.event.action,
+          payload: step.payload,
+          domain: step.event.domain,
+          service: step.event.service,
+          network: process.env.NETWORK,
+          context: {
+            ...(context && {
+              [context]: step.context || {
+                root: "some-context-root",
+                service: "some-context-service",
+                network: process.env.NETWORK,
+              },
+            }),
+          },
+          groupsAdded: [
+            {
+              root: groupRoot,
+              service: groupService,
+              network: groupNetwork,
+            },
+          ],
+        });
+
+        await eventStore({
+          domain: step.event.domain,
+          service: step.event.service,
+        }).add({ eventData: [{ event }] });
+      }
 
       const response = await request.post(url, {
         body: {
