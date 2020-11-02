@@ -379,8 +379,6 @@ module.exports = projection({
           });
     } else {
       const composedIdQuery = cleanIdQuery(composedQuery);
-      //TODO
-      console.log({ composedIdQuery });
       await viewStore({
         name: config.name,
         context: config.context,
