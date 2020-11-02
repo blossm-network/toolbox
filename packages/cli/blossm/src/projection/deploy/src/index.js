@@ -27,14 +27,13 @@ const idQuery = (query) => {
     console.log({ key, keySplit: key.split(".") });
     if (
       key.endsWith(".id") &&
-      !Object.keys(query).some((k) => {
-        console.log({ k, kSplit: k.split(".") });
-        return (
+      !Object.keys(query).some(
+        (k) =>
+          k != key &&
           k.endsWith(".id") &&
           k.startsWith(`${key.split(".")[0]}.`) &&
           k.split(".").length < key.split(".").length
-        );
-      })
+      )
     ) {
       console.log("ADDING!: ", { key });
       newQuery[key] = query[key];
