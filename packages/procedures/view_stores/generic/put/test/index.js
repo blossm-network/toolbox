@@ -150,7 +150,7 @@ describe("View store put", () => {
     });
   });
 
-  it("should call with the correct params with custom fn no context, with updateKey", async () => {
+  it("should call with the correct params with custom fn no context, with updateKey and $ update", async () => {
     const writeFake = fake.returns({
       ...writeResult,
       body: { g: { m: [{ n: 10 }, { n: 11 }] } },
@@ -181,7 +181,14 @@ describe("View store put", () => {
       status: statusFake,
     };
 
-    const fnFake = fake.returns({ c: 3, d: 4, e: 5 });
+    const fnFake = fake.returns({
+      c: 3,
+      d: 4,
+      e: 5,
+      $push: {
+        f: 7,
+      },
+    });
     await put({
       writeFn: writeFake,
       updateFn: fnFake,
@@ -197,6 +204,9 @@ describe("View store put", () => {
         "body.c": 3,
         "body.d": 4,
         "body.e": 5,
+        $push: {
+          "body.f": 7,
+        },
         "headers.id": id,
         "headers.modified": deps.dateString(),
         [`trace.${traceService}.${traceDomain}`]: traceTxIds,

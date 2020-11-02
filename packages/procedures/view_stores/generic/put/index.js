@@ -14,6 +14,20 @@ const getValue = (object, key) => {
     : object[keyParts[0]];
 };
 
+const formatBody = (value) => {
+  const formattedBody = {};
+
+  for (const key in value) {
+    if (key.startsWith("$") && typeof value[key] == "object") {
+      formattedBody[key] = formatBody(value[key]);
+    } else {
+      formattedBody[`body.${key}`] = value[key];
+    }
+  }
+
+  return formattedBody;
+};
+
 //NOT MEANT TO BE PUBLIC SINCE THERES NO REQUIRED CONTEXT CHECK.
 module.exports = ({ writeFn, formatFn, updateFn = defaultFn, updateKey }) => {
   return async (req, res) => {
@@ -36,10 +50,7 @@ module.exports = ({ writeFn, formatFn, updateFn = defaultFn, updateKey }) => {
         network: group.network,
       }));
 
-    const formattedBody = {};
-
-    for (const key in customUpdate)
-      formattedBody[`body.${key}`] = customUpdate[key];
+    const formattedBody = formatBody(customUpdate);
 
     const data = {
       "headers.id": req.params.id,

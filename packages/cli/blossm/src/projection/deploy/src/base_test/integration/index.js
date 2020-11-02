@@ -129,7 +129,7 @@ describe("Projection integration tests", () => {
             data: Buffer.from(
               JSON.stringify({
                 root: step.root,
-                action: step.event.action,
+                ...(step.event.action && { action: step.event.action }),
                 domain: step.event.domain,
                 service: step.event.service,
                 timestamp: now,
