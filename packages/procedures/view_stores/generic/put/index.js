@@ -79,6 +79,7 @@ module.exports = ({ writeFn, formatFn, updateFn = defaultFn, updateKey }) => {
         ...formattedQuery,
       },
       data,
+      ...(req.body.arrayFilters && { arrayFilters: req.body.arrayFilters }),
     });
 
     if (!newView) return res.sendStatus(204);

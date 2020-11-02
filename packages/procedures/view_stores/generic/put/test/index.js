@@ -150,12 +150,14 @@ describe("View store put", () => {
     });
   });
 
-  it("should call with the correct params with custom fn no context, with updateKey and $ update", async () => {
+  it("should call with the correct params with custom fn no context, with updateKey, $ update, and array filters", async () => {
     const writeFake = fake.returns({
       ...writeResult,
       body: { g: { m: [{ n: 10 }, { n: 11 }] } },
     });
     const formatFake = fake.returns(formattedWriteResult);
+
+    const arrayFilters = "some-array-filters";
 
     const req = {
       body: {
@@ -167,6 +169,7 @@ describe("View store put", () => {
         update: {
           a: 1,
         },
+        arrayFilters,
       },
       params: {
         id,
@@ -211,6 +214,7 @@ describe("View store put", () => {
         "headers.modified": deps.dateString(),
         [`trace.${traceService}.${traceDomain}`]: traceTxIds,
       },
+      arrayFilters,
     });
     expect(fnFake).to.have.been.calledWith({ a: 1 });
     expect(formatFake).to.have.been.calledWith({

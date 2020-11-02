@@ -122,7 +122,15 @@ const pushToChannels = async ({
   );
 };
 
-const saveId = async ({ aggregate, id, query, update, push, context }) => {
+const saveId = async ({
+  aggregate,
+  id,
+  query,
+  update,
+  arrayFilters,
+  push,
+  context,
+}) => {
   const {
     body: { view: newView, keys },
   } = await viewStore({
@@ -146,6 +154,7 @@ const saveId = async ({ aggregate, id, query, update, push, context }) => {
       id,
       update,
       ...(query && { query }),
+      ...(arrayFilters && { arrayFilters }),
       ...(aggregate.groups && { groups: aggregate.groups }),
       ...(aggregate.txIds && {
         trace: {
@@ -327,6 +336,8 @@ module.exports = projection({
       replay,
       //A context to be added to the view.
       context,
+      //If arrayFilters should be applied.
+      arrayFilters,
       //If the views matching the query should be deleted.
       del,
     } = await handlers[aggregate.headers.service][aggregate.headers.domain]({
@@ -405,6 +416,7 @@ module.exports = projection({
                   query: composedIdQuery,
                   update: composedUpdate,
                   push,
+                  ...(arrayFilters && { arrayFilters }),
                 })
               : saveId({
                   aggregate,
@@ -412,6 +424,7 @@ module.exports = projection({
                   id,
                   query: composedIdQuery,
                   update: composedUpdate,
+                  ...(arrayFilters && { arrayFilters }),
                   push,
                 }),
           {

@@ -334,7 +334,7 @@ module.exports = async ({
       },
     });
 
-  const writeFn = async ({ query, data }) => {
+  const writeFn = async ({ query, data, arrayFilters }) => {
     const update = {};
     const setKey = "$set";
     let containsMatcher = false;
@@ -364,6 +364,7 @@ module.exports = async ({
         new: true,
         runValidators: true,
         setDefaultsOnInsert: true,
+        ...(arrayFilters && { arrayFilters }),
       },
     });
   };
