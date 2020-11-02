@@ -18,6 +18,14 @@ const config = require("./config.json");
 
 const matchDelimiter = ".$.";
 
+const idQuery = (query) => {
+  const newQuery = {};
+  for (const key in query) {
+    if (key.endsWith(".id")) newQuery[key] = query[key];
+  }
+  return newQuery;
+};
+
 const pushToChannel = async ({ channel, view, id, trace, type }) => {
   try {
     await command({
@@ -358,6 +366,7 @@ module.exports = projection({
             push,
           });
     } else {
+      const composedIdQuery = idQuery(composedQuery);
       await viewStore({
         name: config.name,
         context: config.context,
@@ -395,7 +404,7 @@ module.exports = projection({
                 }),
           {
             parallel: 100,
-            ...(composedQuery && { query: composedQuery }),
+            ...(composedIdQuery && { query: composedIdQuery }),
           }
         );
     }
