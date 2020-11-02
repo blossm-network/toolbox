@@ -206,6 +206,9 @@ const replayIfNeeded = async ({
   let fullQuery = {
     ...query,
   };
+
+  let id;
+
   // Must be synchronous
   for (const r of replay || []) {
     try {
@@ -219,6 +222,7 @@ const replayIfNeeded = async ({
       if (!aggregate) continue;
 
       const {
+        id: replayId,
         query: replayQuery,
         update: replayUpdate,
         replay: replayReplay,
@@ -227,6 +231,8 @@ const replayIfNeeded = async ({
         id: r.root,
         readFactFn,
       });
+
+      if (replayId) id = replayId;
 
       const composedUpdate = composeUpdate(
         {
@@ -264,7 +270,7 @@ const replayIfNeeded = async ({
     }
   }
 
-  return { fullUpdate, fullQuery };
+  return { fullUpdate, fullQuery, id };
 };
 
 // prevents queries like
@@ -309,13 +315,15 @@ module.exports = projection({
       ...(action && { action }),
     });
 
-    const { fullQuery, fullUpdate } = await replayIfNeeded({
+    const { fullQuery, fullUpdate, id: replayId } = await replayIfNeeded({
       replay,
       aggregateFn,
       readFactFn,
       update,
       query,
     });
+
+    id = id || replayId;
 
     const composedQuery = fullQuery && cleanQuery(fullQuery);
 
