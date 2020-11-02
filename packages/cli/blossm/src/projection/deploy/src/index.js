@@ -33,8 +33,10 @@ const idQuery = (query) => {
           k.startsWith(`${key.split(".")[0]}.`) &&
           k.split(".").length < key.split(".").length;
       })
-    )
+    ) {
+      console.log("ADDING!: ", { key });
       newQuery[key] = query[key];
+    }
   }
   return newQuery;
 };
