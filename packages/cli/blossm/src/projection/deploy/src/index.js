@@ -232,8 +232,6 @@ const replayIfNeeded = async ({
         readFactFn,
       });
 
-      if (replayId) id = replayId;
-
       const composedUpdate = composeUpdate(
         {
           ...fullUpdate,
@@ -249,6 +247,7 @@ const replayIfNeeded = async ({
       const {
         fullUpdate: recursiveFullUpdate,
         fullQuery: recursiveFullQuery,
+        id: recursiveId,
       } = await replayIfNeeded({
         aggregateFn,
         readFactFn,
@@ -259,6 +258,8 @@ const replayIfNeeded = async ({
           ...replayQuery,
         },
       });
+
+      if (recursiveId || replayId) id = recursiveId || replayId;
 
       fullUpdate = recursiveFullUpdate;
       fullQuery = {
