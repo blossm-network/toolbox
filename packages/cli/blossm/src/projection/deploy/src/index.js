@@ -220,64 +220,60 @@ const replayIfNeeded = async ({
 
   // Must be synchronous
   for (const r of replay || []) {
-    try {
-      const aggregate = await aggregateFn({
-        domain: r.domain,
-        service: r.service,
-        root: r.root,
-        notFoundThrows: false,
-      });
+    const aggregate = await aggregateFn({
+      domain: r.domain,
+      service: r.service,
+      root: r.root,
+      notFoundThrows: false,
+    });
 
-      if (!aggregate) continue;
+    if (!aggregate) continue;
 
-      const {
-        id: replayId,
-        query: replayQuery,
-        update: replayUpdate,
-        replay: replayReplay,
-      } = await handlers[r.service][r.domain]({
-        state: aggregate.state,
-        id: r.root,
-        readFactFn,
-      });
+    const {
+      id: replayId,
+      query: replayQuery,
+      update: replayUpdate,
+      replay: replayReplay,
+    } = await handlers[r.service][r.domain]({
+      state: aggregate.state,
+      id: r.root,
+      readFactFn,
+    });
 
-      const composedUpdate = composeUpdate(
-        {
-          ...fullUpdate,
-          ...replayUpdate,
-        },
-        {
-          ...fullQuery,
-          ...replayQuery,
-        },
-        matchDelimiter
-      );
-
-      const {
-        fullUpdate: recursiveFullUpdate,
-        fullQuery: recursiveFullQuery,
-        id: recursiveId,
-      } = await replayIfNeeded({
-        aggregateFn,
-        readFactFn,
-        replay: replayReplay,
-        update: composedUpdate,
-        query: {
-          ...fullQuery,
-          ...replayQuery,
-        },
-      });
-
-      if (recursiveId || replayId) id = recursiveId || replayId;
-
-      fullUpdate = recursiveFullUpdate;
-      fullQuery = {
+    const composedUpdate = composeUpdate(
+      {
+        ...fullUpdate,
+        ...replayUpdate,
+      },
+      {
         ...fullQuery,
-        ...recursiveFullQuery,
-      };
-    } catch (_) {
-      return;
-    }
+        ...replayQuery,
+      },
+      matchDelimiter
+    );
+
+    const {
+      fullUpdate: recursiveFullUpdate,
+      fullQuery: recursiveFullQuery,
+      id: recursiveId,
+    } = await replayIfNeeded({
+      aggregateFn,
+      readFactFn,
+      replay: replayReplay,
+      update: composedUpdate,
+      query: {
+        ...fullQuery,
+        ...replayQuery,
+      },
+    });
+
+    if (recursiveId || replayId) id = recursiveId || replayId;
+
+    fullUpdate = recursiveFullUpdate;
+    fullQuery = {
+      ...fullQuery,
+      ...recursiveFullQuery,
+    };
   }
 
   return { fullUpdate, fullQuery, id };
