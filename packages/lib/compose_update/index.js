@@ -136,10 +136,14 @@ module.exports = (update, query, matchDelimiter) => {
     const split = key.split(".");
     if (split.length <= 1) continue;
     const root = split[0];
-    if (result[root] != undefined) {
-      for (const subkey in result[root])
-        if (query[`${key}.${subkey}`] != result[root][subkey]) break;
-
+    if (
+      result[root] != undefined &&
+      !Object.keys(result[root]).some(
+        (subkey) =>
+          query[`${key}.${subkey}`] != undefined &&
+          query[`${key}.${subkey}`] != result[root][subkey]
+      )
+    ) {
       result[split[0]] = {
         ...result[split[0]],
         [split[1]]: result[key],

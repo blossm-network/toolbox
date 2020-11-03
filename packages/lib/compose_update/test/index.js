@@ -47,6 +47,10 @@ describe("Format update", () => {
         },
       ],
       "things.subthings.$.some-other": "other-value",
+      a: {
+        b: "c",
+      },
+      "a.d": "e",
     };
 
     const result = formatUpdate(update, query, ".$.");
@@ -59,6 +63,10 @@ describe("Format update", () => {
           "some-other": "other-value",
         },
       ],
+      a: {
+        b: "c",
+        d: "e",
+      },
     });
   });
   it("should return the composed update with three parts in different array order", () => {
