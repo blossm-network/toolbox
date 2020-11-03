@@ -6,6 +6,7 @@ describe("Format update", () => {
     const query = {
       "some.thing-id": "some-thing-id",
       "some.sub.thing-id": "some-sub-thing-id",
+      "a.b": "c",
     };
     const update = {
       "some.things": [
@@ -15,6 +16,10 @@ describe("Format update", () => {
         },
       ],
       "some.things.$.some-other": "other-value",
+      a: {
+        b: "c",
+      },
+      "a.d": "e",
     };
 
     const result = formatUpdate(update, query, ".$.");
@@ -22,6 +27,10 @@ describe("Format update", () => {
       "some.things": [
         { id: "some-thing-id", some: "value", "some-other": "other-value" },
       ],
+      a: {
+        b: "c",
+        d: "e",
+      },
     });
   });
   it("should return the composed update with three parts", () => {

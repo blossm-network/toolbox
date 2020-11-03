@@ -353,10 +353,6 @@ module.exports = async ({
       }
     }
 
-    //TODO
-    console.log({ query: JSON.stringify(query) });
-    console.log({ update: JSON.stringify(update) });
-
     return await deps.db.write({
       store,
       query,

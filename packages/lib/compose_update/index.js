@@ -131,5 +131,22 @@ module.exports = (update, query, matchDelimiter) => {
     }
   }
 
+  // Combine objects if needed.
+  for (const key in result) {
+    const split = key.split(".");
+    if (split.length <= 1) continue;
+    const root = split[0];
+    if (result[root] != undefined) {
+      for (const subkey in result[root])
+        if (query[`${key}.${subkey}`] != result[root][subkey]) break;
+
+      result[split[0]] = {
+        ...result[split[0]],
+        [split[1]]: result[key],
+      };
+      delete result[key];
+    }
+  }
+
   return result;
 };
