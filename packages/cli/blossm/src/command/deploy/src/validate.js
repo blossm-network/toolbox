@@ -59,7 +59,7 @@ const validateObject = ({ object, expectation, path, context }) => {
             ](item, {
               title: `${expectation[property].type[0].title || property} item`,
               path: `${path}.${property}`,
-              optional: false, //TODO this may be needed. expectation[property].type[0].optional,
+              optional: false,
               ...((expectation[property].type[0].in ||
                 expectation[property].type[0].is) && {
                 fn: (value) => {
