@@ -1,8 +1,4 @@
 module.exports = (update, query, matchDelimiter) => {
-  //TODO
-  console.log({ update: JSON.stringify(update) });
-  console.log({ query: JSON.stringify(query) });
-
   //sort array properties first
   update = {
     ...Object.keys(update)
@@ -154,7 +150,5 @@ module.exports = (update, query, matchDelimiter) => {
     }
   }
 
-  //TODO
-  console.log({ result: JSON.stringify(result) });
   return result;
 };
