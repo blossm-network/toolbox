@@ -43,6 +43,9 @@ module.exports = ({
     });
   }
 
+  //TODO
+  console.log({ schema, json: JSON.stringify(schema) });
+
   const store = new deps.mongoose.Schema(schema || {}, {
     strict: schema != undefined,
     typePojoToMixed: false,
@@ -53,7 +56,7 @@ module.exports = ({
   });
 
   //TODO
-  console.log({ schema, store });
+  console.log({ store });
 
   for (const index of indexes) store.index(...index);
 
