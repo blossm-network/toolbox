@@ -98,11 +98,13 @@ const removeIds = ({ schema, typeKey, subdocumentsOnly = true }) => {
             typeof schema[property][typeKey][key] == "object"
               ? schema[property][typeKey][key] instanceof Array
                 ? [
-                    removeIds({
-                      schema: schema[property][typeKey][key][0],
-                      typeKey,
-                      subdocumentsOnly: false,
-                    }),
+                    typeof schema[property][typeKey][key][0] == "object"
+                      ? removeIds({
+                          schema: schema[property][typeKey][key][0],
+                          typeKey,
+                          subdocumentsOnly: false,
+                        })
+                      : schema[property][typeKey][key][0],
                   ]
                 : removeIds({
                     schema: schema[property][typeKey][key],
