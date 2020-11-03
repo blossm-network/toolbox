@@ -156,5 +156,7 @@ module.exports = (update, query, matchDelimiter) => {
     }
   }
 
+  //TODO
+  console.log({ result: JSON.stringify(result) });
   return result;
 };
