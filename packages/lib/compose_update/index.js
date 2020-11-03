@@ -34,8 +34,6 @@ module.exports = (update, query, matchDelimiter) => {
     }
   }
 
-  if (matchUpdates.length == 0) return result;
-
   for (const matchUpdate of matchUpdates) {
     let relevantQueryParams = [];
     for (const queryKey in query) {
