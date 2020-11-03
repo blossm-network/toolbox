@@ -170,6 +170,7 @@ describe("View store delete", () => {
 
     const req = {
       query: {},
+      params: {},
     };
 
     const res = {};

@@ -1,7 +1,7 @@
 const deps = require("./deps");
 
 module.exports = ({ removeFn, groupsLookupFn, group }) => async (req, res) => {
-  if (!req.query.query && !req.query.id)
+  if (!req.query.query && !req.params.id)
     throw deps.badRequestError.message("Missing query.");
 
   if (
