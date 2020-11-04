@@ -11,7 +11,7 @@ module.exports = ({ removeFn }) => async (req, res) => {
 
   const { deletedCount } = await removeFn({
     ...formattedQueryBody,
-    ...(req.query.id && { "headers.id": req.query.id }),
+    ...(req.params.id && { "headers.id": req.params.id }),
   });
 
   res.status(200).send({ deletedCount });

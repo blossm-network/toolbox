@@ -33,6 +33,8 @@ describe("View store delete", () => {
     const req = {
       query: {
         query: {},
+      },
+      params: {
         id,
       },
     };
@@ -61,6 +63,7 @@ describe("View store delete", () => {
         query,
         token,
       },
+      params: {},
     };
 
     const sendFake = fake();
@@ -87,6 +90,7 @@ describe("View store delete", () => {
       query: {
         query,
       },
+      params: {},
     };
 
     const sendFake = fake();
@@ -112,6 +116,8 @@ describe("View store delete", () => {
       query: {
         context,
         query: {},
+      },
+      params: {
         id,
       },
     };
