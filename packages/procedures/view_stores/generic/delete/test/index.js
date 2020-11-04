@@ -32,7 +32,6 @@ describe("View store delete", () => {
     const id = "some-id";
     const req = {
       query: {
-        context,
         query: {},
         id,
       },
@@ -49,12 +48,6 @@ describe("View store delete", () => {
     await del({ removeFn: removeFake })(req, res);
     expect(removeFake).to.have.been.calledWith({
       "headers.id": id,
-      "headers.context": {
-        root: contextRoot,
-        domain: contextDomain,
-        service: contextService,
-        network: contextNetwork,
-      },
     });
     expect(statusFake).to.have.been.calledWith(200);
     expect(sendFake).to.have.been.calledWith({ deletedCount });
@@ -65,7 +58,6 @@ describe("View store delete", () => {
     const token = "some-token";
     const req = {
       query: {
-        context,
         query,
         token,
       },
@@ -79,29 +71,11 @@ describe("View store delete", () => {
       status: statusFake,
     };
 
-    const groups = "some-groups";
-    const groupsLookupFnFake = fake.returns(groups);
     await del({
       removeFn: removeFake,
-      group: true,
-      groupsLookupFn: groupsLookupFnFake,
     })(req, res);
     expect(removeFake).to.have.been.calledWith({
       "body.a": 1,
-      "headers.context": {
-        root: contextRoot,
-        domain: contextDomain,
-        service: contextService,
-        network: contextNetwork,
-      },
-      "headers.groups": {
-        $elemMatch: {
-          $in: groups,
-        },
-      },
-    });
-    expect(groupsLookupFnFake).to.have.been.calledWith({
-      token,
     });
     expect(statusFake).to.have.been.calledWith(200);
     expect(sendFake).to.have.been.calledWith({ deletedCount });
@@ -112,7 +86,6 @@ describe("View store delete", () => {
     const req = {
       query: {
         query,
-        context,
       },
     };
 
@@ -127,12 +100,6 @@ describe("View store delete", () => {
     await del({ removeFn: removeFake })(req, res);
     expect(removeFake).to.have.been.calledWith({
       "body.a": 1,
-      "headers.context": {
-        root: contextRoot,
-        domain: contextDomain,
-        service: contextService,
-        network: contextNetwork,
-      },
     });
     expect(statusFake).to.have.been.calledWith(200);
     expect(sendFake).to.have.been.calledWith({ deletedCount });
