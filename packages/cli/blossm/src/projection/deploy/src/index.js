@@ -368,6 +368,8 @@ module.exports = projection({
       (context ||
         (aggregate.context && aggregate.context[process.env.CONTEXT]));
 
+    //TODO
+    console.log({ aggregateContext });
     if (id) {
       del
         ? await deleteId({

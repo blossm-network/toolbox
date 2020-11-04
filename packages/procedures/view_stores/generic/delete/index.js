@@ -4,6 +4,11 @@ module.exports = ({ removeFn, groupsLookupFn, group }) => async (req, res) => {
   if (!req.query.query && !req.params.id)
     throw deps.badRequestError.message("Missing query.");
 
+  //TODO
+  console.log({
+    CONTEXT: process.env.CONTEXT,
+    queryContext: req.query.context,
+  });
   if (
     process.env.CONTEXT &&
     (!req.query.context || !req.query.context[process.env.CONTEXT])
