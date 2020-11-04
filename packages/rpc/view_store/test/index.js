@@ -359,7 +359,6 @@ describe("Get views", () => {
     });
     replace(deps, "rpc", rpcFake);
 
-    const groups = "some-groups";
     await viewStore({ name, context })
       .set({
         context: contexts,
@@ -367,12 +366,11 @@ describe("Get views", () => {
           internalFn: internalTokenFn,
         },
       })
-      .delete(id, { query, groups });
+      .delete(id, { query });
 
     expect(rpcFake).to.have.been.calledWith(name, context, "view-store");
     expect(deleteFake).to.have.been.calledWith(id, {
       query,
-      groups,
     });
     expect(inFake).to.have.been.calledWith({ context: contexts });
     expect(withFake).to.have.been.calledWith({

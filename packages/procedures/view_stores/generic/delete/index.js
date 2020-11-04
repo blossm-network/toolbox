@@ -5,9 +5,8 @@ module.exports = ({ removeFn }) => async (req, res) => {
     throw deps.badRequestError.message("Missing query.");
 
   const formattedQueryBody = {};
-  for (const key in req.query.query || {}) {
+  for (const key in req.query.query || {})
     formattedQueryBody[`body.${key}`] = req.query.query[key];
-  }
 
   const { deletedCount } = await removeFn({
     ...formattedQueryBody,

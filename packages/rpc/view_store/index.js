@@ -95,12 +95,11 @@ module.exports = ({ name, context = process.env.CONTEXT, network }) => {
   const del = ({
     contexts,
     token: { internalFn: internalTokenFn } = {},
-  } = {}) => (id, { query, groups } = {}) =>
+  } = {}) => (id, { query } = {}) =>
     deps
       .rpc(name, ...(context ? [context] : []), "view-store")
       .delete(id, {
         ...(query && { query }),
-        ...(groups && { groups }),
       })
       .in({
         ...(contexts && { context: contexts }),

@@ -369,8 +369,8 @@ module.exports = async ({
     });
   };
 
-  const removeFn = async (query) =>
-    await deps.db.remove({
+  const removeFn = (query) =>
+    deps.db.remove({
       store,
       query,
     });

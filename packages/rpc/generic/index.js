@@ -172,7 +172,7 @@ module.exports = (...operation) => {
     delete: (id, data) =>
       common({
         method: deps.delete,
-        dataParam: "body",
+        dataParam: "query",
         operation,
         id,
         data,

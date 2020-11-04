@@ -179,7 +179,7 @@ const saveId = async ({
   });
 };
 
-const deleteId = ({ aggregate, id, query, push, context }) =>
+const deleteId = ({ id, query, push, context }) =>
   viewStore({
     name: config.name,
     context: config.context,
@@ -199,7 +199,6 @@ const deleteId = ({ aggregate, id, query, push, context }) =>
     })
     .delete(id, {
       ...(query && { query }),
-      ...(aggregate.groups && { groups: aggregate.groups }),
     });
 
 const replayIfNeeded = async ({
@@ -371,10 +370,8 @@ module.exports = projection({
     if (id) {
       del
         ? await deleteId({
-            aggregate,
             context: aggregateContext,
             id,
-            update: composedUpdate,
             push,
           })
         : await saveId({
@@ -406,13 +403,10 @@ module.exports = projection({
           ({ id }) =>
             del
               ? deleteId({
-                  aggregate,
                   context: aggregateContext,
                   id,
                   query: composedIdQuery,
-                  update: composedUpdate,
                   push,
-                  ...(arrayFilters && { arrayFilters }),
                 })
               : saveId({
                   aggregate,

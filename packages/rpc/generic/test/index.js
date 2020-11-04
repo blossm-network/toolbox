@@ -749,7 +749,7 @@ describe("Operation", () => {
       .with({ internalTokenFn: tokenFn, currentToken, claims });
 
     expect(del).to.have.been.calledWith(url, {
-      body: {
+      query: {
         ...data,
         context,
         token: currentToken,

@@ -1,1 +1,1 @@
-module.exports = async ({ store, query }) => await store.deleteOne(query);
+module.exports = ({ store, query }) => store.deleteOne(query);
