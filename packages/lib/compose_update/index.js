@@ -2,7 +2,6 @@ module.exports = (update, query, matchDelimiter) => {
   //sort array properties first
   update = {
     ...Object.keys(update)
-      // .sort((a) => (update[a] instanceof Array ? -1 : 1))
       .sort((a, b) => (a.split(".").length > b.split(".").length ? 1 : -1))
       .reduce(
         (result, key) => ({
@@ -133,7 +132,9 @@ module.exports = (update, query, matchDelimiter) => {
   for (const key in result) {
     const split = key.split(".");
     if (split.length <= 1) continue;
-    const root = split[0];
+    const last = split.pop();
+    //pop removes the last element, so root is everything except last.
+    const root = split.join(".");
     if (
       result[root] != undefined &&
       !Object.keys(result[root]).some(
@@ -142,10 +143,14 @@ module.exports = (update, query, matchDelimiter) => {
           query[`${key}.${subkey}`] != result[root][subkey]
       )
     ) {
-      result[split[0]] = {
-        ...result[split[0]],
-        [split[1]]: result[key],
-      };
+      if (result[key] === null) {
+        result[root] = undefined;
+      } else {
+        result[root] = {
+          ...result[root],
+          [last]: result[key],
+        };
+      }
       delete result[key];
     }
   }

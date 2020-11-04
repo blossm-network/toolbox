@@ -13,7 +13,5 @@ module.exports = ({ removeFn }) => async (req, res) => {
     ...(req.params.id && { "headers.id": req.params.id }),
   });
 
-  //TODO
-  console.log({ deletedCount, formattedQueryBody, id: req.params.id });
   res.status(200).send({ deletedCount });
 };
