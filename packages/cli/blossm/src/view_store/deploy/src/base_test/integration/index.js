@@ -521,9 +521,8 @@ describe("View store base integration tests", () => {
       }
     }
 
-    const response9 = await request.delete(url, {
+    const response9 = await request.delete(`${url}/${id}`, {
       query: {
-        id,
         context: {
           ...(process.env.CONTEXT && {
             [process.env.CONTEXT]: {
