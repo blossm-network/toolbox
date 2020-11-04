@@ -191,40 +191,4 @@ describe("View store delete", () => {
       expect(messageFake).to.have.been.calledWith("Missing query.");
     }
   });
-  it("should throw correctly if context forbidden", async () => {
-    const req = {
-      query: {
-        context: {},
-        query: {},
-      },
-    };
-
-    const sendFake = fake();
-    const res = {
-      send: sendFake,
-    };
-
-    const error = "some-error";
-    const messageFake = fake.returns(error);
-    replace(deps, "forbiddenError", {
-      message: messageFake,
-    });
-
-    try {
-      process.env.CONTEXT = "something-other-context";
-      await del({})(req, res);
-      //shouldn't get called
-      expect(2).to.equal(1);
-    } catch (e) {
-      expect(messageFake).to.have.been.calledWith(
-        "This context is forbidden.",
-        {
-          info: {
-            context: {},
-          },
-        }
-      );
-      expect(e).to.equal(error);
-    }
-  });
 });
