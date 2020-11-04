@@ -20,6 +20,12 @@ describe("Format update", () => {
         b: "c",
       },
       "a.d": "e",
+      w: {
+        x: {
+          y: "z",
+        },
+      },
+      "w.x.c": "e",
     };
 
     const result = formatUpdate(update, query, ".$.");
@@ -30,6 +36,12 @@ describe("Format update", () => {
       a: {
         b: "c",
         d: "e",
+      },
+      w: {
+        x: {
+          y: "z",
+          c: "e",
+        },
       },
     });
   });

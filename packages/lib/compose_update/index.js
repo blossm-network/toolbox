@@ -1,4 +1,6 @@
-module.exports = (update, query, matchDelimiter) => {
+//TODO this function is such a hack, but it works.
+
+const composeUpdate = (update, query, matchDelimiter) => {
   //sort array properties first
   update = {
     ...Object.keys(update)
@@ -133,8 +135,29 @@ module.exports = (update, query, matchDelimiter) => {
     const split = key.split(".");
     if (split.length <= 1) continue;
     const last = split.pop();
+    const rootSplit = [...split];
     //pop removes the last element, so root is everything except last.
-    const root = split.join(".");
+    let root = split.join(".");
+
+    if (rootSplit.length > 1) {
+      const rootRoot = rootSplit[0];
+      if (
+        result[rootRoot] != undefined &&
+        typeof result[rootRoot] == "object"
+      ) {
+        result[rootRoot] = composeUpdate(
+          {
+            ...result[rootRoot],
+            [`${rootSplit
+              .join(".")
+              .replace(`${rootRoot}.`, "")}.${last}`]: result[key],
+          },
+          {},
+          matchDelimiter
+        );
+        delete result[key];
+      }
+    }
     if (
       result[root] != undefined &&
       !Object.keys(result[root]).some(
@@ -157,3 +180,5 @@ module.exports = (update, query, matchDelimiter) => {
 
   return result;
 };
+
+module.exports = composeUpdate;
