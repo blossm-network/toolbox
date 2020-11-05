@@ -233,6 +233,7 @@ const replayIfNeeded = async ({
       query: replayQuery,
       update: replayUpdate,
       replay: replayReplay,
+      ops: replayOps = [],
     } = await handlers[r.service][r.domain]({
       state: aggregate.state,
       id: r.root,
@@ -240,14 +241,30 @@ const replayIfNeeded = async ({
     });
 
     const composedUpdate = composeUpdate(
-      {
-        ...fullUpdate,
-        ...replayUpdate,
-      },
-      {
-        ...fullQuery,
-        ...replayQuery,
-      },
+      replayOps.reduce(
+        (result, op) => {
+          return {
+            ...result,
+            ...op.update,
+          };
+        },
+        {
+          ...fullUpdate,
+          ...replayUpdate,
+        }
+      ),
+      replayOps.reduce(
+        (result, op) => {
+          return {
+            ...result,
+            ...op.query,
+          };
+        },
+        {
+          ...fullQuery,
+          ...replayQuery,
+        }
+      ),
       matchDelimiter
     );
 
