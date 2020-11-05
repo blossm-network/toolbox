@@ -347,11 +347,8 @@ module.exports = projection({
 
     ops.push({ query, update });
 
-    console.log({ ops: JSON.stringify(ops) });
     await Promise.all(
-      ops.map(async ({ query, update }) => {
-        //TODO
-        console.log({ query, update });
+      ops.map(({ query, update }) => async () => {
         const { fullQuery, fullUpdate, id: replayId } = await replayIfNeeded({
           replay,
           aggregateFn,
