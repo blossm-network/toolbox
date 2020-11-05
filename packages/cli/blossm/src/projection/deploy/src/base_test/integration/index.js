@@ -169,11 +169,6 @@ describe("Projection integration tests", () => {
           data: v.content,
         });
       } else if (step.result.values) {
-        //TODO
-        console.log({
-          srv: JSON.stringify(step.result.values),
-          vc: JSON.stringify(v.content),
-        });
         expect(step.result.values.length).to.equal(v.content.length);
         for (let i = 0; i < step.result.values.length; i++) {
           let value = step.result.values[i];
