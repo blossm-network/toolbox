@@ -327,7 +327,7 @@ module.exports = projection({
       update,
       //An optional array of operations including `query`'s and `update`'s.
       //To be used instad of `query` and `update.
-      ops,
+      ops = [],
       //The id of the view.
       id,
       //Events that need to be replayed.
