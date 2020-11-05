@@ -325,6 +325,9 @@ module.exports = projection({
       query,
       //The changes to the body of the view.
       update,
+      //An optional array of operations including `query`'s and `update`'s.
+      //To be used instad of `query` and `update.
+      ops,
       //The id of the view.
       id,
       //Events that need to be replayed.
@@ -342,87 +345,93 @@ module.exports = projection({
       ...(action && { action }),
     });
 
-    const { fullQuery, fullUpdate, id: replayId } = await replayIfNeeded({
-      replay,
-      aggregateFn,
-      readFactFn,
-      update,
-      query,
-    });
+    if (!ops) ops = [{ query, update }];
 
-    id = id || replayId;
+    await Promise.all(
+      ops.map(async ({ query, update }) => {
+        const { fullQuery, fullUpdate, id: replayId } = await replayIfNeeded({
+          replay,
+          aggregateFn,
+          readFactFn,
+          update,
+          query,
+        });
 
-    const composedQuery = fullQuery && cleanQuery(fullQuery);
+        id = id || replayId;
 
-    const composedUpdate = composeUpdate(
-      fullUpdate,
-      composedQuery,
-      matchDelimiter
-    );
+        const composedQuery = fullQuery && cleanQuery(fullQuery);
 
-    if (!fullQuery && !id) return;
-
-    const aggregateContext =
-      process.env.CONTEXT &&
-      (context ||
-        (aggregate.context && aggregate.context[process.env.CONTEXT]));
-
-    if (id) {
-      del
-        ? await deleteId({
-            context: aggregateContext,
-            id,
-            push,
-          })
-        : await saveId({
-            aggregate,
-            context: aggregateContext,
-            id,
-            update: composedUpdate,
-            push,
-          });
-    } else {
-      const composedIdQuery = cleanIdQuery(composedQuery);
-      await viewStore({
-        name: config.name,
-        context: config.context,
-      })
-        .set({
-          token: { internalFn: gcpToken },
-          ...(aggregateContext && {
-            context: {
-              [process.env.CONTEXT]: {
-                root: aggregateContext.root,
-                service: aggregateContext.service,
-                network: aggregateContext.network,
-              },
-            },
-          }),
-        })
-        .idStream(
-          ({ id }) =>
-            del
-              ? deleteId({
-                  context: aggregateContext,
-                  id,
-                  query: composedIdQuery,
-                  push,
-                })
-              : saveId({
-                  aggregate,
-                  context: aggregateContext,
-                  id,
-                  query: composedIdQuery,
-                  update: composedUpdate,
-                  ...(arrayFilters && { arrayFilters }),
-                  push,
-                }),
-          {
-            parallel: 100,
-            ...(composedIdQuery && { query: composedIdQuery }),
-          }
+        const composedUpdate = composeUpdate(
+          fullUpdate,
+          composedQuery,
+          matchDelimiter
         );
-    }
+
+        if (!fullQuery && !id) return;
+
+        const aggregateContext =
+          process.env.CONTEXT &&
+          (context ||
+            (aggregate.context && aggregate.context[process.env.CONTEXT]));
+
+        if (id) {
+          del
+            ? await deleteId({
+                context: aggregateContext,
+                id,
+                push,
+              })
+            : await saveId({
+                aggregate,
+                context: aggregateContext,
+                id,
+                update: composedUpdate,
+                push,
+              });
+        } else {
+          const composedIdQuery = cleanIdQuery(composedQuery);
+          await viewStore({
+            name: config.name,
+            context: config.context,
+          })
+            .set({
+              token: { internalFn: gcpToken },
+              ...(aggregateContext && {
+                context: {
+                  [process.env.CONTEXT]: {
+                    root: aggregateContext.root,
+                    service: aggregateContext.service,
+                    network: aggregateContext.network,
+                  },
+                },
+              }),
+            })
+            .idStream(
+              ({ id }) =>
+                del
+                  ? deleteId({
+                      context: aggregateContext,
+                      id,
+                      query: composedIdQuery,
+                      push,
+                    })
+                  : saveId({
+                      aggregate,
+                      context: aggregateContext,
+                      id,
+                      query: composedIdQuery,
+                      update: composedUpdate,
+                      ...(arrayFilters && { arrayFilters }),
+                      push,
+                    }),
+              {
+                parallel: 100,
+                ...(composedIdQuery && { query: composedIdQuery }),
+              }
+            );
+        }
+      })
+    );
   },
   aggregateFn: async ({ root, domain, service, notFoundThrows = true }) => {
     const { body: aggregate } = await eventStore({ domain, service })
