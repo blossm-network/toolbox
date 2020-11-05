@@ -379,12 +379,8 @@ module.exports = projection({
       del,
     });
 
-    console.log({ ops: JSON.stringify(ops) });
-
     await Promise.all(
       ops.map(async ({ id, query, update, arrayFilters, del }) => {
-        console.log({ query, update });
-
         if (!query && !id) return;
 
         const composedQuery = query && cleanQuery(query);
