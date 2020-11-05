@@ -1,6 +1,6 @@
 {
   "name": "@blossm/compose-update",
-  "version": "0.0.16",
+  "version": "0.0.17",
   "description": "Composes an update from many independently specified parts.",
   "main": "index.js",
   "author": "blossm.network",
