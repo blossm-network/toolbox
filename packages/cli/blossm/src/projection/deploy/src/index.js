@@ -350,94 +350,92 @@ module.exports = projection({
     console.log({ ops: JSON.stringify(ops) });
 
     await Promise.all(
-      ops.map(
-        ({ id, query, update, replay, arrayFilters, del }) => async () => {
-          //TODO
-          console.log({ query, update });
+      ops.map(async ({ id, query, update, replay, arrayFilters, del }) => {
+        //TODO
+        console.log({ query, update });
 
-          const { fullQuery, fullUpdate, id: replayId } = await replayIfNeeded({
-            replay,
-            aggregateFn,
-            readFactFn,
-            update,
-            query,
-          });
+        const { fullQuery, fullUpdate, id: replayId } = await replayIfNeeded({
+          replay,
+          aggregateFn,
+          readFactFn,
+          update,
+          query,
+        });
 
-          id = id || replayId;
+        id = id || replayId;
 
-          const composedQuery = fullQuery && cleanQuery(fullQuery);
+        const composedQuery = fullQuery && cleanQuery(fullQuery);
 
-          const composedUpdate = composeUpdate(
-            fullUpdate,
-            composedQuery,
-            matchDelimiter
-          );
+        const composedUpdate = composeUpdate(
+          fullUpdate,
+          composedQuery,
+          matchDelimiter
+        );
 
-          if (!fullQuery && !id) return;
+        if (!fullQuery && !id) return;
 
-          const aggregateContext =
-            process.env.CONTEXT &&
-            (context ||
-              (aggregate.context && aggregate.context[process.env.CONTEXT]));
+        const aggregateContext =
+          process.env.CONTEXT &&
+          (context ||
+            (aggregate.context && aggregate.context[process.env.CONTEXT]));
 
-          if (id) {
-            del
-              ? await deleteId({
-                  context: aggregateContext,
-                  id,
-                  push,
-                })
-              : await saveId({
-                  aggregate,
-                  context: aggregateContext,
-                  id,
-                  update: composedUpdate,
-                  push,
-                });
-          } else {
-            const composedIdQuery = cleanIdQuery(composedQuery);
-            await viewStore({
-              name: config.name,
-              context: config.context,
-            })
-              .set({
-                token: { internalFn: gcpToken },
-                ...(aggregateContext && {
-                  context: {
-                    [process.env.CONTEXT]: {
-                      root: aggregateContext.root,
-                      service: aggregateContext.service,
-                      network: aggregateContext.network,
-                    },
-                  },
-                }),
+        if (id) {
+          del
+            ? await deleteId({
+                context: aggregateContext,
+                id,
+                push,
               })
-              .idStream(
-                ({ id }) =>
-                  del
-                    ? deleteId({
-                        context: aggregateContext,
-                        id,
-                        query: composedIdQuery,
-                        push,
-                      })
-                    : saveId({
-                        aggregate,
-                        context: aggregateContext,
-                        id,
-                        query: composedIdQuery,
-                        update: composedUpdate,
-                        ...(arrayFilters && { arrayFilters }),
-                        push,
-                      }),
-                {
-                  parallel: 100,
-                  ...(composedIdQuery && { query: composedIdQuery }),
-                }
-              );
-          }
+            : await saveId({
+                aggregate,
+                context: aggregateContext,
+                id,
+                update: composedUpdate,
+                push,
+              });
+        } else {
+          const composedIdQuery = cleanIdQuery(composedQuery);
+          await viewStore({
+            name: config.name,
+            context: config.context,
+          })
+            .set({
+              token: { internalFn: gcpToken },
+              ...(aggregateContext && {
+                context: {
+                  [process.env.CONTEXT]: {
+                    root: aggregateContext.root,
+                    service: aggregateContext.service,
+                    network: aggregateContext.network,
+                  },
+                },
+              }),
+            })
+            .idStream(
+              ({ id }) =>
+                del
+                  ? deleteId({
+                      context: aggregateContext,
+                      id,
+                      query: composedIdQuery,
+                      push,
+                    })
+                  : saveId({
+                      aggregate,
+                      context: aggregateContext,
+                      id,
+                      query: composedIdQuery,
+                      update: composedUpdate,
+                      ...(arrayFilters && { arrayFilters }),
+                      push,
+                    }),
+              {
+                parallel: 100,
+                ...(composedIdQuery && { query: composedIdQuery }),
+              }
+            );
         }
-      )
+      })
     );
     // const { fullQuery, fullUpdate, id: replayId } = await replayIfNeeded({
     //   replay,
