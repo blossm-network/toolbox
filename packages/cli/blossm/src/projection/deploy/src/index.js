@@ -345,100 +345,102 @@ module.exports = projection({
       ...(action && { action }),
     });
 
-    ops.push({ id, query, update, replay, arrayFilters, del });
+    const { fullQuery, fullUpdate, id: replayId } = await replayIfNeeded({
+      replay,
+      aggregateFn,
+      readFactFn,
+      update,
+      query,
+    });
+
+    ops.push({
+      id: id || replayId,
+      query: fullQuery,
+      update: fullUpdate,
+      replay,
+      arrayFilters,
+      del,
+    });
 
     console.log({ ops: JSON.stringify(ops) });
 
-    // await Promise.all(
-    //   ops.map(async ({ id, query, update, replay, arrayFilters, del }) => {
-    //     //TODO
-    for (let { id, query, update, replay, arrayFilters, del } of ops) {
-      console.log({ query, update });
+    await Promise.all(
+      ops.map(async ({ id, query, update, arrayFilters, del }) => {
+        console.log({ query, update });
 
-      const { fullQuery, fullUpdate, id: replayId } = await replayIfNeeded({
-        replay,
-        aggregateFn,
-        readFactFn,
-        update,
-        query,
-      });
+        if (!query && !id) return;
 
-      id = id || replayId;
+        const composedQuery = query && cleanQuery(query);
 
-      const composedQuery = fullQuery && cleanQuery(fullQuery);
+        const composedUpdate = composeUpdate(
+          update,
+          composedQuery,
+          matchDelimiter
+        );
 
-      const composedUpdate = composeUpdate(
-        fullUpdate,
-        composedQuery,
-        matchDelimiter
-      );
+        const aggregateContext =
+          process.env.CONTEXT &&
+          (context ||
+            (aggregate.context && aggregate.context[process.env.CONTEXT]));
 
-      if (!fullQuery && !id) return;
-
-      const aggregateContext =
-        process.env.CONTEXT &&
-        (context ||
-          (aggregate.context && aggregate.context[process.env.CONTEXT]));
-
-      if (id) {
-        del
-          ? await deleteId({
-              context: aggregateContext,
-              id,
-              push,
-            })
-          : await saveId({
-              aggregate,
-              context: aggregateContext,
-              id,
-              update: composedUpdate,
-              push,
-            });
-      } else {
-        const composedIdQuery = cleanIdQuery(composedQuery);
-        await viewStore({
-          name: config.name,
-          context: config.context,
-        })
-          .set({
-            token: { internalFn: gcpToken },
-            ...(aggregateContext && {
-              context: {
-                [process.env.CONTEXT]: {
-                  root: aggregateContext.root,
-                  service: aggregateContext.service,
-                  network: aggregateContext.network,
-                },
-              },
-            }),
+        if (id) {
+          del
+            ? await deleteId({
+                context: aggregateContext,
+                id,
+                push,
+              })
+            : await saveId({
+                aggregate,
+                context: aggregateContext,
+                id,
+                update: composedUpdate,
+                push,
+              });
+        } else {
+          const composedIdQuery = cleanIdQuery(composedQuery);
+          await viewStore({
+            name: config.name,
+            context: config.context,
           })
-          .idStream(
-            ({ id }) =>
-              del
-                ? deleteId({
-                    context: aggregateContext,
-                    id,
-                    query: composedIdQuery,
-                    push,
-                  })
-                : saveId({
-                    aggregate,
-                    context: aggregateContext,
-                    id,
-                    query: composedIdQuery,
-                    update: composedUpdate,
-                    ...(arrayFilters && { arrayFilters }),
-                    push,
-                  }),
-            {
-              parallel: 100,
-              ...(composedIdQuery && { query: composedIdQuery }),
-            }
-          );
-      }
-      // })
-      // );
-    }
+            .set({
+              token: { internalFn: gcpToken },
+              ...(aggregateContext && {
+                context: {
+                  [process.env.CONTEXT]: {
+                    root: aggregateContext.root,
+                    service: aggregateContext.service,
+                    network: aggregateContext.network,
+                  },
+                },
+              }),
+            })
+            .idStream(
+              ({ id }) =>
+                del
+                  ? deleteId({
+                      context: aggregateContext,
+                      id,
+                      query: composedIdQuery,
+                      push,
+                    })
+                  : saveId({
+                      aggregate,
+                      context: aggregateContext,
+                      id,
+                      query: composedIdQuery,
+                      update: composedUpdate,
+                      ...(arrayFilters && { arrayFilters }),
+                      push,
+                    }),
+              {
+                parallel: 100,
+                ...(composedIdQuery && { query: composedIdQuery }),
+              }
+            );
+        }
+      })
+    );
   },
   aggregateFn: async ({ root, domain, service, notFoundThrows = true }) => {
     const { body: aggregate } = await eventStore({ domain, service })
