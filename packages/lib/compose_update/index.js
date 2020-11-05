@@ -1,4 +1,4 @@
-//TODO this function is such a hack, but it works.
+//TODO this function is such a hack, but it works. It's also the reason projections are magic.
 
 const composeUpdate = (update, query, matchDelimiter) => {
   //sort array properties first
