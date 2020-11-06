@@ -315,16 +315,31 @@ const cleanIdQuery = (query) => {
   return newQuery;
 };
 
+const getValue = (object, key) => {
+  const keyParts = key.split(".");
+  return keyParts.length > 1
+    ? object[keyParts[0]] instanceof Array
+      ? object[keyParts[0]].map((element) =>
+          getValue(element, keyParts.slice(1).join("."))
+        )[0]
+      : getValue(object[keyParts[0]], keyParts.slice(1).join("."))
+    : object[keyParts[0]];
+};
+
 // prevents queries like
 // { some: { id: "some-id"}, some.id: "some-id"}
-const cleanQuery = (query) => {
+// also if an update has some: { id: "some-id"} and the query has some.id as a key, it'll remove it from the query.
+const cleanQuery = (query, update) => {
   const cleanedQuery = {};
+  console.log({ queryIn: query });
   for (const key in query) {
+    if (getValue(update, key) != undefined) continue;
     const split = key.split(".");
     if (split.length < 2 || query[split[0]] == undefined) {
       cleanedQuery[key] = query[key];
     }
   }
+  console.log({ cleanedQuery });
   return cleanedQuery;
 };
 
