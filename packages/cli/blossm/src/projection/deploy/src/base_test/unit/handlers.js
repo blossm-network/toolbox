@@ -26,6 +26,7 @@ describe("Projection handlers tests", () => {
           state: example.state,
           ...(example.id && { id: example.id }),
           ...(example.action && { action: example.action }),
+          ...(example.replayFlag && { replayFlag: example.replayFlag }),
           ...(readFactFnFake && { readFactFn: readFactFnFake }),
         });
         if (readFactFnFake) {

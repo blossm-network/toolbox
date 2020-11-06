@@ -238,6 +238,7 @@ const replayIfNeeded = async ({
       state: aggregate.state,
       id: r.root,
       readFactFn,
+      replayFlag: r.flag,
     });
 
     const composedUpdate = composeUpdate(
@@ -414,7 +415,7 @@ module.exports = projection({
         );
 
         //TODO
-        console.log({ query: JSON.stringify(composedQuery) });
+        console.log({ id, query: JSON.stringify(composedQuery) });
         console.log({ update: JSON.stringify(composedUpdate) });
 
         const aggregateContext =
