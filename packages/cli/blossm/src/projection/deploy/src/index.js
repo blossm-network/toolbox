@@ -333,7 +333,6 @@ const getValue = (object, key) => {
 // also if an update has some: { id: "some-id"} and the query has some.id as a key, it'll remove it from the query.
 const cleanQuery = (query, update) => {
   const cleanedQuery = {};
-  console.log({ queryIn: query, update });
   for (const key in query) {
     if (getValue(update, key) != undefined) continue;
     const split = key.split(".");
@@ -341,7 +340,6 @@ const cleanQuery = (query, update) => {
       cleanedQuery[key] = query[key];
     }
   }
-  console.log({ cleanedQuery });
   return cleanedQuery;
 };
 
@@ -407,12 +405,6 @@ module.exports = projection({
           composedQuery,
           matchDelimiter
         );
-
-        //TODO
-        console.log({
-          composdQuery: JSON.stringify(composedQuery),
-          composedUpdate: JSON.stringify(composedUpdate),
-        });
 
         const aggregateContext =
           process.env.CONTEXT &&
