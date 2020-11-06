@@ -317,7 +317,7 @@ const cleanIdQuery = (query) => {
 
 //TODO  this should be a package. it's used it lots of places.
 const getValue = (object, key) => {
-  if (!object) return;
+  if (object == undefined) return;
   const keyParts = key.split(".");
   return keyParts.length > 1
     ? object[keyParts[0]] instanceof Array
