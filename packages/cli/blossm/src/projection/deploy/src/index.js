@@ -315,6 +315,7 @@ const cleanIdQuery = (query) => {
   return newQuery;
 };
 
+//TODO  this should be a package. it's used it lots of places.
 const getValue = (object, key) => {
   const keyParts = key.split(".");
   return keyParts.length > 1
@@ -398,7 +399,7 @@ module.exports = projection({
       ops.map(async ({ id, query, update, arrayFilters, del }) => {
         if (!query && !id) return;
 
-        const composedQuery = query && cleanQuery(query);
+        const composedQuery = query && cleanQuery(query, update);
 
         const composedUpdate = composeUpdate(
           update,
