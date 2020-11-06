@@ -63,7 +63,7 @@ const composeUpdate = (update, query, matchDelimiter) => {
     //Supports max 2 layers.
     else if (
       propertySplit.length > 1 &&
-      result[propertySplit[0]] != undefined
+      result[propertySplit[0]] instanceof Array
     ) {
       result[propertySplit[0]] = result[propertySplit[0]].map(
         (outerElement) => {
