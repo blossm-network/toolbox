@@ -413,6 +413,10 @@ module.exports = projection({
           matchDelimiter
         );
 
+        //TODO
+        console.log({ query: JSON.stringify(composedQuery) });
+        console.log({ update: JSON.stringify(composedUpdate) });
+
         const aggregateContext =
           process.env.CONTEXT &&
           (context ||
