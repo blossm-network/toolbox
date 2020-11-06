@@ -332,7 +332,7 @@ const getValue = (object, key) => {
 // also if an update has some: { id: "some-id"} and the query has some.id as a key, it'll remove it from the query.
 const cleanQuery = (query, update) => {
   const cleanedQuery = {};
-  console.log({ queryIn: query });
+  console.log({ queryIn: query, update });
   for (const key in query) {
     if (getValue(update, key) != undefined) continue;
     const split = key.split(".");
