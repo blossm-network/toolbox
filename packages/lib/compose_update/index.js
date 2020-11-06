@@ -65,8 +65,6 @@ const composeUpdate = (update, query, matchDelimiter) => {
       propertySplit.length > 1 &&
       result[propertySplit[0]] instanceof Array
     ) {
-      //TODO
-      console.log({ k: propertySplit[0], v: result[propertySplit[0]] });
       result[propertySplit[0]] = result[propertySplit[0]].map(
         (outerElement) => {
           if (outerElement[propertySplit[1]] == undefined) return outerElement;
