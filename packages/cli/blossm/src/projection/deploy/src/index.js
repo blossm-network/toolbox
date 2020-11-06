@@ -319,13 +319,20 @@ const cleanIdQuery = (query) => {
 const getValue = (object, key) => {
   if (object == undefined) return;
   const keyParts = key.split(".");
-  return keyParts.length > 1
-    ? object[keyParts[0]] instanceof Array
-      ? object[keyParts[0]].map((element) =>
-          getValue(element, keyParts.slice(1).join("."))
-        )[0]
-      : getValue(object[keyParts[0]], keyParts.slice(1).join("."))
-    : object[keyParts[0]];
+  if (keyParts.length <= 1) return object[keyParts[0]];
+  return object[keyParts[0]] instanceof Array
+    ? object[keyParts[0]].map((element) =>
+        getValue(element, keyParts.slice(1).join("."))
+      )[0]
+    : object[`${keyParts[0]}.${keyParts[1]}`] instanceof Array
+    ? object[`${keyParts[0]}.${keyParts[1]}`].map((element) =>
+        getValue(element, keyParts.slice(2).join("."))
+      )[0]
+    : getValue(object[keyParts[0]], keyParts.slice(1).join(".")) ||
+      getValue(
+        object[`${keyParts[0]}.${keyParts[1]}`],
+        keyParts.slice(2).join(".")
+      );
 };
 
 // prevents queries like
