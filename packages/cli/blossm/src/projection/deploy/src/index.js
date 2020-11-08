@@ -131,9 +131,7 @@ const saveId = async ({
   push,
   context,
 }) => {
-  const {
-    body: { view: newView, keys },
-  } = await viewStore({
+  const updateResponse = await viewStore({
     name: config.name,
     context: config.context,
   })
@@ -165,7 +163,12 @@ const saveId = async ({
       }),
     });
 
-  if (!newView || !push) return;
+  if (!push) return;
+
+  // If push is true, body.view and body.keys should exist.
+  const { view: newView, keys } = updateResponse.body;
+
+  if (!newView) return;
 
   await pushToChannels({
     ...(newView.headers.context && { context: newView.headers.context }),

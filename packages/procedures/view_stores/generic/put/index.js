@@ -77,17 +77,6 @@ module.exports = ({
     }
   }
 
-  //TODO
-  console.log({
-    query: JSON.stringify({
-      "headers.id": req.params.id,
-      ...formattedQuery,
-    }),
-    data: JSON.stringify(data),
-    ...(req.body.arrayFilters && {
-      arrayFilters: JSON.stringify(req.body.arrayFilters),
-    }),
-  });
   const newView = await writeFn({
     query: {
       "headers.id": req.params.id,
@@ -97,8 +86,6 @@ module.exports = ({
     ...(req.body.arrayFilters && { arrayFilters: req.body.arrayFilters }),
   });
 
-  //TODO
-  console.log({ newView });
   if (!newView) return res.sendStatus(204);
 
   //TODO this function is duplicated in /get. Refactor.
