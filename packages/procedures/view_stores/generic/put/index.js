@@ -29,90 +29,104 @@ const formatBody = (value) => {
 };
 
 //NOT MEANT TO BE PUBLIC SINCE THERES NO REQUIRED CONTEXT CHECK.
-module.exports = ({ writeFn, formatFn, updateFn = defaultFn, updateKey }) => {
-  return async (req, res) => {
-    const customUpdate = updateFn(req.body.update);
+module.exports = ({
+  writeFn,
+  formatFn,
+  updateFn = defaultFn,
+  updateKey,
+}) => async (req, res) => {
+  const customUpdate = updateFn(req.body.update);
 
-    const context = req.body.context &&
-      process.env.CONTEXT &&
-      req.body.context[process.env.CONTEXT] && {
-        root: req.body.context[process.env.CONTEXT].root,
-        domain: process.env.CONTEXT,
-        service: req.body.context[process.env.CONTEXT].service,
-        network: req.body.context[process.env.CONTEXT].network,
-      };
-
-    const groups =
-      req.body.groups &&
-      req.body.groups.map((group) => ({
-        root: group.root,
-        service: group.service,
-        network: group.network,
-      }));
-
-    const formattedBody = formatBody(customUpdate);
-
-    const data = {
-      "headers.id": req.params.id,
-      "headers.modified": deps.dateString(),
-      ...formattedBody,
-      ...(req.body.trace && {
-        [`trace.${req.body.trace.service}.${req.body.trace.domain}`]: req.body
-          .trace.txIds,
-      }),
-      ...(context && { "headers.context": context }),
-      ...(groups && { "headers.groups": groups }),
+  const context = req.body.context &&
+    process.env.CONTEXT &&
+    req.body.context[process.env.CONTEXT] && {
+      root: req.body.context[process.env.CONTEXT].root,
+      domain: process.env.CONTEXT,
+      service: req.body.context[process.env.CONTEXT].service,
+      network: req.body.context[process.env.CONTEXT].network,
     };
 
-    let formattedQuery;
+  const groups =
+    req.body.groups &&
+    req.body.groups.map((group) => ({
+      root: group.root,
+      service: group.service,
+      network: group.network,
+    }));
 
-    if (req.body.query) {
-      if (!formattedQuery) formattedQuery = {};
-      for (const key in req.body.query) {
-        formattedQuery[`body.${key}`] = req.body.query[key];
-      }
-    }
+  const formattedBody = formatBody(customUpdate);
 
-    const newView = await writeFn({
-      query: {
-        "headers.id": req.params.id,
-        ...formattedQuery,
-      },
-      data,
-      ...(req.body.arrayFilters && { arrayFilters: req.body.arrayFilters }),
-    });
-
-    if (!newView) return res.sendStatus(204);
-
-    //TODO this function is duplicated in /get. Refactor.
-    const formattedTrace = [];
-    for (const service in newView.trace) {
-      for (const domain in newView.trace[service]) {
-        for (const txId of newView.trace[service][domain])
-          if (!formattedTrace.includes(txId)) formattedTrace.push(txId);
-      }
-    }
-
-    const value = updateKey && getValue(newView.body, updateKey);
-
-    res.status(200).send({
-      view: {
-        ...formatFn({
-          body: newView.body,
-          id: newView.headers.id,
-          created: newView.headers.created,
-          modified: newView.headers.modified,
-        }),
-        headers: {
-          id: newView.headers.id,
-          context: newView.headers.context,
-          ...(newView.headers.groups && { groups: newView.headers.groups }),
-          trace: formattedTrace,
-          created: newView.headers.created,
-          modified: newView.headers.modified,
-        },
-      },
-      ...(value && { keys: value instanceof Array ? value : [value] }),
-    });
+  const data = {
+    "headers.id": req.params.id,
+    "headers.modified": deps.dateString(),
+    ...formattedBody,
+    ...(req.body.trace && {
+      [`trace.${req.body.trace.service}.${req.body.trace.domain}`]: req.body
+        .trace.txIds,
+    }),
+    ...(context && { "headers.context": context }),
+    ...(groups && { "headers.groups": groups }),
   };
+
+  let formattedQuery;
+
+  if (req.body.query) {
+    if (!formattedQuery) formattedQuery = {};
+    for (const key in req.body.query) {
+      formattedQuery[`body.${key}`] = req.body.query[key];
+    }
+  }
+
+  //TODO
+  console.log({
+    query: JSON.stringify({
+      "headers.id": req.params.id,
+      ...formattedQuery,
+    }),
+    data: JSON.stringify(data),
+    ...(req.body.arrayFilters && {
+      arrayFilters: JSON.stringify(req.body.arrayFilters),
+    }),
+  });
+  const newView = await writeFn({
+    query: {
+      "headers.id": req.params.id,
+      ...formattedQuery,
+    },
+    data,
+    ...(req.body.arrayFilters && { arrayFilters: req.body.arrayFilters }),
+  });
+
+  if (!newView) return res.sendStatus(204);
+
+  //TODO this function is duplicated in /get. Refactor.
+  const formattedTrace = [];
+  for (const service in newView.trace) {
+    for (const domain in newView.trace[service]) {
+      for (const txId of newView.trace[service][domain])
+        if (!formattedTrace.includes(txId)) formattedTrace.push(txId);
+    }
+  }
+
+  const value = updateKey && getValue(newView.body, updateKey);
+
+  res.status(200).send({
+    view: {
+      ...formatFn({
+        body: newView.body,
+        id: newView.headers.id,
+        created: newView.headers.created,
+        modified: newView.headers.modified,
+      }),
+      headers: {
+        id: newView.headers.id,
+        context: newView.headers.context,
+        ...(newView.headers.groups && { groups: newView.headers.groups }),
+        trace: formattedTrace,
+        created: newView.headers.created,
+        modified: newView.headers.modified,
+      },
+    },
+    ...(value && { keys: value instanceof Array ? value : [value] }),
+  });
 };
