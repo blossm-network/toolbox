@@ -97,6 +97,8 @@ module.exports = ({
     ...(req.body.arrayFilters && { arrayFilters: req.body.arrayFilters }),
   });
 
+  //TODO
+  console.log({ newView });
   if (!newView) return res.sendStatus(204);
 
   //TODO this function is duplicated in /get. Refactor.
