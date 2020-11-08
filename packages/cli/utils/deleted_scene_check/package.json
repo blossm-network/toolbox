@@ -1,6 +1,6 @@
 {
   "name": "@blossm/deleted-scene-check",
-  "version": "0.0.14",
+  "version": "0.0.15",
   "description": "Checks to see if the scene has been deleted.",
   "main": "index.js",
   "author": "blossm.network",
