@@ -1,7 +1,7 @@
 {
   "name": "@blossm/view-gateway-get",
   "description": "A view gateway server GET handler.",
-  "version": "0.0.304",
+  "version": "0.0.305",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -15,8 +15,8 @@
   },
   "dependencies": {
     "@blossm/errors": "*",
-    "@blossm/view-composite-rpc": "^0.0.105",
-    "@blossm/view-store-rpc": "^0.0.258"
+    "@blossm/view-composite-rpc": "^0.0.106",
+    "@blossm/view-store-rpc": "^0.0.259"
   },
   "devDependencies": {
     "chai-datetime": "^1.5.0",
