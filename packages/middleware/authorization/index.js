@@ -13,8 +13,7 @@ module.exports = ({
     const externalTokenFn = () => {
       return { token: req.token, type: "Bearer" };
     };
-    //TODO
-    console.log({ context: req.context });
+
     await Promise.all([
       // If there are permissions with a lookup fn, check if the permissions are met.
       ...(permissions && permissionsLookupFn

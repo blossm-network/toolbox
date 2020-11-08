@@ -2,8 +2,6 @@ const fact = require("@blossm/fact-rpc");
 const { invalidCredentials } = require("@blossm/errors");
 
 module.exports = async ({ scene, token: { internalFn, externalFn } }) => {
-  //TODO
-  console.log({ scene });
   const { body: deleted } = await fact({
     name: "deleted",
     domain: "scene",
