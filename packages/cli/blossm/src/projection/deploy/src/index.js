@@ -422,6 +422,8 @@ module.exports = projection({
           (context ||
             (aggregate.context && aggregate.context[process.env.CONTEXT]));
 
+        if (process.env.CONTEXT && !aggregateContext) return;
+
         if (id) {
           del
             ? await deleteId({
