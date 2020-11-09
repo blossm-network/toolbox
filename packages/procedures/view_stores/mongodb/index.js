@@ -91,7 +91,7 @@ module.exports = async ({
   groupsLookupFn,
   one,
   group,
-  updateKey,
+  updateKeys,
 } = {}) => {
   const allIndexes = [
     [{ "headers.id": 1 }],
@@ -389,6 +389,6 @@ module.exports = async ({
     ...(emptyFn && { emptyFn }),
     ...(one && { one }),
     ...(group && { group }),
-    ...(updateKey && { updateKey }),
+    ...(updateKeys && { updateKeys }),
   });
 };

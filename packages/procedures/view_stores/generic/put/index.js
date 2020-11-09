@@ -33,7 +33,7 @@ module.exports = ({
   writeFn,
   formatFn,
   updateFn = defaultFn,
-  updateKey,
+  updateKeys,
 }) => async (req, res) => {
   const customUpdate = updateFn(req.body.update);
 
@@ -97,7 +97,8 @@ module.exports = ({
     }
   }
 
-  const value = updateKey && getValue(newView.body, updateKey);
+  const values =
+    updateKeys && updateKeys.map((key) => getValue(newView.body, key));
 
   res.status(200).send({
     view: {
@@ -116,6 +117,8 @@ module.exports = ({
         modified: newView.headers.modified,
       },
     },
-    ...(value && { keys: value instanceof Array ? value : [value] }),
+    ...(values && {
+      keys: values.flat(),
+    }),
   });
 };

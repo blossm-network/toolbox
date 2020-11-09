@@ -26,7 +26,7 @@ module.exports = ({
   queryFn = defaultQueryFn,
   sortFn = defaultSortFn,
   groupsLookupFn,
-  updateKey,
+  updateKeys,
 }) => {
   return async (req, res) => {
     if (
@@ -120,6 +120,10 @@ module.exports = ({
             countFn({ query, ...(req.query.text && { text: req.query.text }) }),
           ]),
     ]);
+
+    const updateKey =
+      updateKeys &&
+      Object.keys(req.query.query).find((key) => updateKeys.includes(key));
 
     const updates = `https://updates.${
       process.env.BASE_NETWORK

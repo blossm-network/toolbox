@@ -196,7 +196,7 @@ describe("View store put", () => {
       writeFn: writeFake,
       updateFn: fnFake,
       formatFn: formatFake,
-      updateKey: "g.m.n",
+      updateKeys: ["g.m.n"],
     })(req, res);
 
     expect(writeFake).to.have.been.calledWith({
@@ -285,7 +285,7 @@ describe("View store put", () => {
     };
 
     delete process.env.CONTEXT;
-    await put({ writeFn: writeFake, formatFn: formatFake, updateKey: "g" })(
+    await put({ writeFn: writeFake, formatFn: formatFake, updateKeys: ["g"] })(
       req,
       res
     );

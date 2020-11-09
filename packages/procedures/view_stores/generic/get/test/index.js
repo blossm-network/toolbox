@@ -221,7 +221,7 @@ describe("View store get", () => {
       formatFn: formatFake,
       group: true,
       groupsLookupFn: groupsLookupFnFake,
-      updateKey: "some-other-query-key.a.b",
+      updateKeys: ["some-other-query-key.a.b"],
     })(req, res);
     expect(findFake).to.have.been.calledWith({
       limit: 100,

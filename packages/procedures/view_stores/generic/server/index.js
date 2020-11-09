@@ -16,7 +16,7 @@ module.exports = async ({
   groupsLookupFn,
   one,
   group,
-  updateKey,
+  updateKeys,
 } = {}) => {
   deps
     .server()
@@ -34,7 +34,7 @@ module.exports = async ({
         ...(emptyFn && { emptyFn }),
         ...(one && { one }),
         ...(group && { group }),
-        ...(updateKey && { updateKey }),
+        ...(updateKeys && { updateKeys }),
       }),
       {
         path: "/:id?",
@@ -46,7 +46,7 @@ module.exports = async ({
           writeFn,
           ...(updateFn && { updateFn }),
           ...(formatFn && { formatFn }),
-          ...(updateKey && { updateKey }),
+          ...(updateKeys && { updateKeys }),
         },
         {
           path: "/:id",

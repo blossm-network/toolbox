@@ -62,7 +62,7 @@ describe("View store", () => {
     const groupsLookupFn = "some-group-lookup-fn";
     const one = "some-one";
     const group = "some-group";
-    const updateKey = "some-update-key";
+    const updateKeys = "some-update-keys";
 
     await viewStore({
       streamFn,
@@ -78,7 +78,7 @@ describe("View store", () => {
       groupsLookupFn,
       one,
       group,
-      updateKey,
+      updateKeys,
     });
 
     expect(listenFake).to.have.been.calledOnce;
@@ -101,13 +101,13 @@ describe("View store", () => {
       groupsLookupFn,
       one,
       group,
-      updateKey,
+      updateKeys,
     });
     expect(viewStorePutFake).to.have.been.calledWith({
       writeFn,
       updateFn,
       formatFn,
-      updateKey,
+      updateKeys,
     });
     expect(viewStoreDeleteFake).to.have.been.calledWith(
       {
