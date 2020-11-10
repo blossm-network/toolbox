@@ -118,7 +118,8 @@ module.exports = ({
       },
     },
     ...(values && {
-      keys: values.flat(),
+      // Fallback for .flat().
+      keys: [].concat(...values),
     }),
   });
 };
