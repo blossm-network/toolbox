@@ -2,7 +2,7 @@ const deps = require("./deps");
 
 const defaultQueryFn = (query) => query;
 const defaultSortFn = (sort) => sort;
-const defaultLimit = 100;
+const defaultLimit = 20;
 
 //Returns at most one value of a given key in an object.
 const getValue = (object, key) => {
