@@ -479,9 +479,13 @@ describe("View store", () => {
     });
 
     const text = "some-text";
+    const limit = 100;
+    const skip = 23;
     const findFnResult = await viewStoreFake.lastCall.lastArg.findFn({
       query,
       text,
+      limit,
+      skip,
     });
 
     expect(aggregateFake).to.have.been.calledWith({
@@ -512,6 +516,8 @@ describe("View store", () => {
         trace: 1,
       },
       sort: { score: -1 },
+      limit,
+      skip,
     });
     expect(findFnResult).to.equal(foundObjs);
 
