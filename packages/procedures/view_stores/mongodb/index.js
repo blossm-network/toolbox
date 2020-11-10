@@ -311,6 +311,8 @@ module.exports = async ({
               score: -1,
             },
           }),
+          ...(limit && { limit }),
+          ...(skip && { skip }),
         })
       : deps.db.find({
           store,

@@ -52,7 +52,7 @@ describe("View store get", () => {
     const formattedResults = [];
 
     const formatFake = stub();
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < 50; i++) {
       results.push({
         body: obj,
         headers: { id, created, modified, context: foundContext },
@@ -94,7 +94,7 @@ describe("View store get", () => {
       res
     );
     expect(findFake).to.have.been.calledWith({
-      limit: 20,
+      limit: 50,
       skip: 0,
       sort: { "body.a": 1 },
       query: {
@@ -125,8 +125,8 @@ describe("View store get", () => {
       {
         sort: { a: "1" },
         query,
-        skip: 20,
-        limit: 20,
+        skip: 50,
+        limit: 50,
       }
     );
     for (let i = 0; i < results.length; i++) {
@@ -157,7 +157,7 @@ describe("View store get", () => {
     const formattedResults = [];
 
     const formatFake = stub();
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < 50; i++) {
       results.push({
         body: {
           ...obj,
@@ -225,7 +225,7 @@ describe("View store get", () => {
     })(req, res);
 
     expect(findFake).to.have.been.calledWith({
-      limit: 20,
+      limit: 50,
       skip: 0,
       sort: { "body.a": 1 },
       text,
@@ -266,8 +266,8 @@ describe("View store get", () => {
           ...query,
           "some-other-query-key.a.b": "something",
         },
-        skip: 20,
-        limit: 20,
+        skip: 50,
+        limit: 50,
       }
     );
     for (let i = 0; i < results.length; i++) {
@@ -328,7 +328,7 @@ describe("View store get", () => {
     })(req, res);
 
     expect(findFake).to.have.been.calledWith({
-      limit: 20,
+      limit: 50,
       skip: 0,
       sort: { "body.a": 1 },
       query: {
@@ -596,7 +596,7 @@ describe("View store get", () => {
       res
     );
     expect(findFake).to.have.been.calledWith({
-      limit: 20,
+      limit: 50,
       skip: 0,
       query: {
         "headers.context": {
