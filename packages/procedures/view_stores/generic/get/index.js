@@ -123,6 +123,7 @@ module.exports = ({
 
     const updateKey =
       updateKeys &&
+      req.query.query &&
       Object.keys(req.query.query).find((key) => updateKeys.includes(key));
 
     const updates = `https://updates.${
