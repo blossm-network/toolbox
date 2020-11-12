@@ -1,6 +1,6 @@
 {
   "name": "@blossm/authenticate",
-  "version": "0.0.88",
+  "version": "0.0.89",
   "description": "Authenticate requests.",
   "main": "index.js",
   "author": "blossm.network",
@@ -11,8 +11,8 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/datetime": "^0.0.9",
-    "@blossm/jwt": "^0.0.62"
+    "@blossm/datetime": "^0.0.10",
+    "@blossm/jwt": "^0.0.63"
   },
   "scripts": {
     "test": "mocha --recursive"
