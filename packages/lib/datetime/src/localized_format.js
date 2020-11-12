@@ -1,14 +1,12 @@
 //https://stackoverflow.com/questions/11887934/how-to-check-if-dst-daylight-saving-time-is-in-effect-and-if-so-the-offset
 
-const moment = require("moment");
+const moment = require("moment-timezone");
 
-module.exports = (string, offset) => {
-  console.log({ isDST: moment(string).isDST() });
-  console.log({ offset });
-  console.log({ moment: moment(string).format() });
-  console.log({ utcMoment: moment(string).utcOffset(offset).format() });
-  return moment(string)
-    .utcOffset(offset)
-    .add(moment(string).isDST() ? 1 : 0, "h")
+// Check to see if it's daylight savings in New York at
+// the given time. If so, append to the offset.
+module.exports = (string, offset) =>
+  moment(string)
+    .utcOffset(
+      offset + (moment.tz(string, "America/New_York").isDST() ? 60 : 0)
+    )
     .format();
-};
