@@ -508,7 +508,7 @@ describe("View store", () => {
         score: {
           $add: [
             { $meta: "textScore" },
-            { $cond: [{ $eq: ["$body.some", "some-text"] }, 10, 0] },
+            { $cond: [{ $eq: ["$body.some", "some-text"] }, 9, 0] },
           ],
         },
         body: 1,
@@ -563,7 +563,7 @@ describe("View store", () => {
         score: {
           $add: [
             { $meta: "textScore" },
-            { $cond: [{ $eq: ["$body.some", "some-text"] }, 10, 0] },
+            { $cond: [{ $eq: ["$body.some", "some-text"] }, 9, 0] },
           ],
         },
         body: 1,
@@ -788,7 +788,7 @@ describe("View store", () => {
             {
               $cond: [
                 { $eq: ["$body.some", "945c24c3-ae66-4759-a1c7-1079bac8eb5e"] },
-                10,
+                9,
                 0,
               ],
             },
@@ -841,7 +841,7 @@ describe("View store", () => {
             {
               $cond: [
                 { $eq: ["$body.some", "945c24c3-ae66-4759-a1c7-1079bac8eb5e"] },
-                10,
+                9,
                 0,
               ],
             },
@@ -1249,7 +1249,7 @@ describe("View store", () => {
         score: {
           $add: [
             { $meta: "textScore" },
-            { $cond: [{ $eq: ["$body.some", "some-text"] }, 10, 0] },
+            { $cond: [{ $eq: ["$body.some", "some-text"] }, 9, 0] },
           ],
         },
       },
@@ -1299,7 +1299,7 @@ describe("View store", () => {
         score: {
           $add: [
             { $meta: "textScore" },
-            { $cond: [{ $eq: ["$body.some", "some-text"] }, 10, 0] },
+            { $cond: [{ $eq: ["$body.some", "some-text"] }, 9, 0] },
           ],
         },
       },

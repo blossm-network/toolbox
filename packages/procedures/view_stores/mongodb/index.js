@@ -232,7 +232,7 @@ module.exports = async ({
                   $add: [
                     { $meta: "textScore" },
                     ...partialWordTextIndexes.map((index) => ({
-                      $cond: [{ $eq: [`$${index}`, text] }, 10, 0],
+                      $cond: [{ $eq: [`$${index}`, text] }, 9, 0],
                     })),
                   ],
                 },
@@ -262,7 +262,7 @@ module.exports = async ({
   };
 
   const findFn = ({ query, text, limit, select, skip, sort }) => {
-    const textIdUuuid = deps.uuidValidator(text);
+    const textIdUuid = deps.uuidValidator(text);
     return text
       ? deps.db.aggregate({
           store,
@@ -270,9 +270,9 @@ module.exports = async ({
             ...query,
             $or: [
               {
-                $text: { $search: textIdUuuid ? `"${text}"` : text },
+                $text: { $search: textIdUuid ? `"${text}"` : text },
               },
-              ...(!textIdUuuid
+              ...(!textIdUuid
                 ? partialWordTextIndexes.map((index) => ({
                     [index]: {
                       $regex: text,
