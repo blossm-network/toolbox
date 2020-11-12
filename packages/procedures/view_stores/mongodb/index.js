@@ -229,25 +229,25 @@ module.exports = async ({
                   headers: 1,
                   trace: 1,
                 }),
-                score: {
-                  $add: [
-                    { $meta: "textScore" },
-                    //prioritize exact matches
-                    ...partialWordTextIndexes.map((index) => ({
-                      // $cond: [{ $eq: [`$${index}`, text] }, 10, 0],
-                      $cond: [
-                        {
-                          $regexMatch: {
-                            input: `$${index}`,
-                            regex: new RegExp(text, "i"),
-                          },
-                        },
-                        10,
-                        0,
-                      ],
-                    })),
-                  ],
-                },
+                // score: {
+                //   $add: [
+                //     { $meta: "textScore" },
+                //     //prioritize exact matches
+                //     ...partialWordTextIndexes.map((index) => ({
+                //       // $cond: [{ $eq: [`$${index}`, text] }, 10, 0],
+                //       $cond: [
+                //         {
+                //           $regexMatch: {
+                //             input: `$${index}`,
+                //             regex: new RegExp(text, "i"),
+                //           },
+                //         },
+                //         10,
+                //         0,
+                //       ],
+                //     })),
+                //   ],
+                // },
               },
             }),
             ...((sort || text) && {
@@ -308,24 +308,24 @@ module.exports = async ({
                 headers: 1,
                 trace: 1,
               }),
-              score: {
-                $add: [
-                  { $meta: "textScore" },
-                  //prioritize exact matches
-                  ...partialWordTextIndexes.map((index) => ({
-                    $cond: [
-                      {
-                        $regexMatch: {
-                          input: `$${index}`,
-                          regex: new RegExp(text, "i"),
-                        },
-                      },
-                      10,
-                      0,
-                    ],
-                  })),
-                ],
-              },
+              // score: {
+              //   $add: [
+              //     { $meta: "textScore" },
+              //     //prioritize exact matches
+              //     ...partialWordTextIndexes.map((index) => ({
+              //       $cond: [
+              //         {
+              //           $regexMatch: {
+              //             input: `$${index}`,
+              //             regex: new RegExp(text, "i"),
+              //           },
+              //         },
+              //         10,
+              //         0,
+              //       ],
+              //     })),
+              //   ],
+              // },
             },
           }),
           ...((sort || text) && {
