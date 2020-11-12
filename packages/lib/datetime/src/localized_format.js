@@ -9,6 +9,6 @@ module.exports = (string, offset) => {
   console.log({ utcMoment: moment(string).utcOffset(offset).format() });
   return moment(string)
     .utcOffset(offset)
-    .subtract(moment(string).isDST() ? 1 : 0, "h")
+    .add(moment(string).isDST() ? 1 : 0, "h")
     .format();
 };

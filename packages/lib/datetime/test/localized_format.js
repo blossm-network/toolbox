@@ -19,15 +19,15 @@ describe("Creates correctly", () => {
   });
 
   it("it should return the correct formatted timestamp in dst", async () => {
-    const now = "2020-06-12T05:40:03.995Z";
-    const formatted = localizedFormat(now, 300);
+    const now = "2020-06-05T23:42:50.000Z";
+    const formatted = localizedFormat(now, -300);
 
-    expect(formatted).to.equal("2020-06-12T09:40:03+05:00");
+    expect(formatted).to.equal("2020-06-05T19:42:50-05:00");
   });
   it("it should return the correct formatted timestamp outside of dst", async () => {
-    const now = "2020-11-12T05:40:03.995Z";
-    const formatted = localizedFormat(now, 300);
+    const now = "2020-01-05T23:42:50.000Z";
+    const formatted = localizedFormat(now, -300);
 
-    expect(formatted).to.equal("2020-11-12T10:40:03+05:00");
+    expect(formatted).to.equal("2020-01-05T18:42:50-05:00");
   });
 });
