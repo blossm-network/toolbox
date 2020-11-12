@@ -233,7 +233,17 @@ module.exports = async ({
                     { $meta: "textScore" },
                     //prioritize exact matches
                     ...partialWordTextIndexes.map((index) => ({
-                      $cond: [{ $eq: [`$${index}`, text] }, 10, 0],
+                      // $cond: [{ $eq: [`$${index}`, text] }, 10, 0],
+                      $cond: [
+                        {
+                          $regexMatch: {
+                            input: `$${index}`,
+                            regex: new RegExp(text, "i"),
+                          },
+                        },
+                        10,
+                        0,
+                      ],
                     })),
                   ],
                 },
@@ -302,7 +312,16 @@ module.exports = async ({
                   { $meta: "textScore" },
                   //prioritize exact matches
                   ...partialWordTextIndexes.map((index) => ({
-                    $cond: [{ $eq: [`$${index}`, text] }, 10, 0],
+                    $cond: [
+                      {
+                        $regexMatch: {
+                          input: `$${index}`,
+                          regex: new RegExp(text, "i"),
+                        },
+                      },
+                      10,
+                      0,
+                    ],
                   })),
                 ],
               },
