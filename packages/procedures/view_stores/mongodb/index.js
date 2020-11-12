@@ -194,7 +194,7 @@ module.exports = async ({
   });
 
   const streamFn = async ({ query, text, sort, select, parallel, fn }) => {
-    const textIdUuuid = deps.uuidValidator(text);
+    const textIdUuid = deps.uuidValidator(text);
     const cursor = text
       ? deps.db
           .aggregate({
@@ -203,9 +203,10 @@ module.exports = async ({
               ...query,
               $or: [
                 {
-                  $text: { $search: `"${text}"` }, //textIdUuuid ? `"${text}"` : text },
+                  // $text: { $search: `"${text}"` }, //textIdUuuid ? `"${text}"` : text },
+                  $text: { $search: textIdUuid ? `"${text}"` : text },
                 },
-                ...(!textIdUuuid
+                ...(!textIdUuid
                   ? partialWordTextIndexes.map((index) => ({
                       [index]: {
                         $regex: text,
@@ -241,7 +242,7 @@ module.exports = async ({
                             regex: new RegExp(text, "i"),
                           },
                         },
-                        10,
+                        100,
                         0,
                       ],
                     })),
@@ -252,8 +253,8 @@ module.exports = async ({
             ...((sort || text) && {
               sort: {
                 ...sort,
-                // score: -1,
-                score: { $meta: "textScore" },
+                score: -1,
+                // score: { $meta: "textScore" },
               },
             }),
           })
@@ -282,7 +283,8 @@ module.exports = async ({
             ...query,
             $or: [
               {
-                $text: { $search: `"${text}"` }, //textIdUuid ? `"${text}"` : text },
+                // $text: { $search: `"${text}"` }, //textIdUuid ? `"${text}"` : text },
+                $text: { $search: textIdUuid ? `"${text}"` : text },
               },
               ...(!textIdUuid
                 ? partialWordTextIndexes.map((index) => ({
@@ -319,7 +321,7 @@ module.exports = async ({
                           regex: new RegExp(text, "i"),
                         },
                       },
-                      10,
+                      100,
                       0,
                     ],
                   })),
@@ -330,8 +332,8 @@ module.exports = async ({
           ...((sort || text) && {
             sort: {
               ...sort,
-              // score: -1,
-              score: { $meta: "textScore" },
+              score: -1,
+              // score: { $meta: "textScore" },
             },
           }),
           ...(limit && { limit }),
@@ -350,17 +352,19 @@ module.exports = async ({
         });
   };
 
-  const countFn = async ({ query, text }) =>
-    await deps.db.count({
+  const countFn = async ({ query, text }) => {
+    const textIdUuid = deps.uuidValidator(text);
+    return await deps.db.count({
       store,
       query: {
         ...query,
         ...(text && {
           $or: [
             {
-              $text: { $search: `"${text}"` }, //textIdUuid ? `"${text}"` : text },
+              // $text: { $search: `"${text}"` }, //textIdUuid ? `"${text}"` : text },
+              $text: { $search: textIdUuid ? `"${text}"` : text },
             },
-            ...(!deps.uuidValidator(text)
+            ...(!textIdUuid
               ? partialWordTextIndexes.map((index) => ({
                   [index]: {
                     $regex: text,
@@ -372,6 +376,7 @@ module.exports = async ({
         }),
       },
     });
+  };
 
   const writeFn = async ({ query, data, arrayFilters }) => {
     const update = {};
