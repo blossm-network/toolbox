@@ -2,8 +2,13 @@
 
 const moment = require("moment");
 
-module.exports = (string, offset) =>
-  moment(string)
+module.exports = (string, offset) => {
+  console.log({ isDST: moment(string).isDST() });
+  console.log({ offset });
+  console.log({ moment: moment(string).format() });
+  console.log({ utcMoment: moment(string).utcOffset(offset).format() });
+  return moment(string)
     .utcOffset(offset)
     .subtract(moment(string).isDST() ? 1 : 0, "h")
     .format();
+};
