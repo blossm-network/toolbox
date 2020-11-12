@@ -506,28 +506,29 @@ describe("View store", () => {
         ],
       },
       select: {
-        score: {
-          $add: [
-            { $meta: "textScore" },
-            {
-              $cond: [
-                {
-                  $regexMatch: {
-                    input: "$body.some",
-                    regex: /some-text/i,
-                  },
-                },
-                100,
-                0,
-              ],
-            },
-          ],
-        },
+        score: { $meta: "textScore" },
+        // score: {
+        //   $add: [
+        //     { $meta: "textScore" },
+        //     {
+        //       $cond: [
+        //         {
+        //           $regexMatch: {
+        //             input: "$body.some",
+        //             regex: /some-text/i,
+        //           },
+        //         },
+        //         100,
+        //         0,
+        //       ],
+        //     },
+        //   ],
+        // },
         body: 1,
         headers: 1,
         trace: 1,
       },
-      sort: { score: -1 },
+      sort: { score: { $meta: "textScore" } },
       limit,
       skip,
     });
@@ -584,28 +585,29 @@ describe("View store", () => {
         ],
       },
       select: {
-        score: {
-          $add: [
-            { $meta: "textScore" },
-            {
-              $cond: [
-                {
-                  $regexMatch: {
-                    input: "$body.some",
-                    regex: /some-text/i,
-                  },
-                },
-                100,
-                0,
-              ],
-            },
-          ],
-        },
+        score: { $meta: "textScore" },
+        // score: {
+        //   $add: [
+        //     { $meta: "textScore" },
+        //     {
+        //       $cond: [
+        //         {
+        //           $regexMatch: {
+        //             input: "$body.some",
+        //             regex: /some-text/i,
+        //           },
+        //         },
+        //         100,
+        //         0,
+        //       ],
+        //     },
+        //   ],
+        // },
         body: 1,
         headers: 1,
         trace: 1,
       },
-      sort: { c: 3, score: -1 },
+      sort: { c: 3, score: { $meta: "textScore" } },
     });
     expect(steamFnResult).to.equal(foundObjs);
 
@@ -817,28 +819,29 @@ describe("View store", () => {
         ],
       },
       select: {
-        score: {
-          $add: [
-            { $meta: "textScore" },
-            {
-              $cond: [
-                {
-                  $regexMatch: {
-                    input: "$body.some",
-                    regex: /945c24c3-ae66-4759-a1c7-1079bac8eb5e/i,
-                  },
-                },
-                100,
-                0,
-              ],
-            },
-          ],
-        },
+        score: { $meta: "textScore" },
+        // score: {
+        //   $add: [
+        //     { $meta: "textScore" },
+        //     {
+        //       $cond: [
+        //         {
+        //           $regexMatch: {
+        //             input: "$body.some",
+        //             regex: /945c24c3-ae66-4759-a1c7-1079bac8eb5e/i,
+        //           },
+        //         },
+        //         100,
+        //         0,
+        //       ],
+        //     },
+        //   ],
+        // },
         body: 1,
         headers: 1,
         trace: 1,
       },
-      sort: { score: -1 },
+      sort: { score: { $meta: "textScore" } },
     });
     expect(findFnResult).to.equal(foundObjs);
 
@@ -879,28 +882,29 @@ describe("View store", () => {
         ],
       },
       select: {
-        score: {
-          $add: [
-            { $meta: "textScore" },
-            {
-              $cond: [
-                {
-                  $regexMatch: {
-                    input: "$body.some",
-                    regex: /945c24c3-ae66-4759-a1c7-1079bac8eb5e/i,
-                  },
-                },
-                100,
-                0,
-              ],
-            },
-          ],
-        },
+        score: { $meta: "textScore" },
+        // score: {
+        //   $add: [
+        //     { $meta: "textScore" },
+        //     {
+        //       $cond: [
+        //         {
+        //           $regexMatch: {
+        //             input: "$body.some",
+        //             regex: /945c24c3-ae66-4759-a1c7-1079bac8eb5e/i,
+        //           },
+        //         },
+        //         100,
+        //         0,
+        //       ],
+        //     },
+        //   ],
+        // },
         body: 1,
         headers: 1,
         trace: 1,
       },
-      sort: { c: 3, score: -1 },
+      sort: { c: 3, score: { $meta: "textScore" } },
     });
     expect(steamFnResult).to.equal(foundObjs);
 
@@ -1297,22 +1301,23 @@ describe("View store", () => {
       select: {
         some: "select",
         "body.some": 1,
-        score: {
-          $add: [
-            { $meta: "textScore" },
-            // { $cond: [{ $eq: ["$body.some", "some-text"] }, 10, 0] },
-            {
-              $cond: [
-                { $regexMatch: { input: "$body.some", regex: /some-text/i } },
-                100,
-                0,
-              ],
-            },
-          ],
-        },
+        score: { $meta: "textScore" },
+        // score: {
+        //   $add: [
+        //     { $meta: "textScore" },
+        //     // { $cond: [{ $eq: ["$body.some", "some-text"] }, 10, 0] },
+        //     {
+        //       $cond: [
+        //         { $regexMatch: { input: "$body.some", regex: /some-text/i } },
+        //         100,
+        //         0,
+        //       ],
+        //     },
+        //   ],
+        // },
       },
       sort: {
-        score: -1,
+        score: { $meta: "textScore" },
       },
     });
     expect(findFnResult).to.equal(foundObjs);
@@ -1368,25 +1373,26 @@ describe("View store", () => {
       select: {
         some: "select",
         "body.some": 1,
-        score: {
-          $add: [
-            { $meta: "textScore" },
-            {
-              $cond: [
-                {
-                  $regexMatch: {
-                    input: "$body.some",
-                    regex: /some-text/i,
-                  },
-                },
-                100,
-                0,
-              ],
-            },
-          ],
-        },
+        score: { $meta: "textScore" },
+        // score: {
+        //   $add: [
+        //     { $meta: "textScore" },
+        //     {
+        //       $cond: [
+        //         {
+        //           $regexMatch: {
+        //             input: "$body.some",
+        //             regex: /some-text/i,
+        //           },
+        //         },
+        //         100,
+        //         0,
+        //       ],
+        //     },
+        //   ],
+        // },
       },
-      sort: { c: 3, score: -1 },
+      sort: { c: 3, score: { $meta: "textScore" } },
     });
     expect(steamFnResult).to.equal(foundObjs);
 
