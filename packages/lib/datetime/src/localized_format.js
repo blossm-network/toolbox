@@ -2,17 +2,8 @@
 
 const moment = require("moment");
 
-module.exports = (string, offset) => {
-  const date = new Date(string);
-  const jan = new Date(date.getFullYear(), 0, 1);
-  const jul = new Date(date.getFullYear(), 6, 1);
-  const stdTimezoneOffset = Math.max(
-    jan.getTimezoneOffset(),
-    jul.getTimezoneOffset()
-  );
-  const isDstObserved = date.getTimezoneOffset() < stdTimezoneOffset;
-  return moment(string)
+module.exports = (string, offset) =>
+  moment(string)
     .utcOffset(offset)
-    .subtract(isDstObserved ? 1 : 0, "h")
+    .subtract(moment(string).isDST() ? 1 : 0, "h")
     .format();
-};
