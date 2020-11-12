@@ -1,5 +1,3 @@
-//https://stackoverflow.com/questions/11887934/how-to-check-if-dst-daylight-saving-time-is-in-effect-and-if-so-the-offset
-
 const moment = require("moment-timezone");
 
 // Check to see if it's daylight savings in New York at
