@@ -241,7 +241,8 @@ module.exports = async ({
             ...((sort || text) && {
               sort: {
                 ...sort,
-                score: -1,
+                // score: -1,
+                score: { $meta: "textScore" },
               },
             }),
           })
@@ -308,7 +309,8 @@ module.exports = async ({
           ...((sort || text) && {
             sort: {
               ...sort,
-              score: -1,
+              // score: -1,
+              score: { $meta: "textScore" },
             },
           }),
           ...(limit && { limit }),

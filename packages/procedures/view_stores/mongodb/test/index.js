@@ -515,7 +515,7 @@ describe("View store", () => {
         headers: 1,
         trace: 1,
       },
-      sort: { score: -1 },
+      sort: { score: { $meta: "textScore" } },
       limit,
       skip,
     });
@@ -570,7 +570,7 @@ describe("View store", () => {
         headers: 1,
         trace: 1,
       },
-      sort: { c: 3, score: -1 },
+      sort: { c: 3, score: { $meta: "textScore" } },
     });
     expect(steamFnResult).to.equal(foundObjs);
 
@@ -798,7 +798,7 @@ describe("View store", () => {
         headers: 1,
         trace: 1,
       },
-      sort: { score: -1 },
+      sort: { score: { $meta: "textScore" } },
     });
     expect(findFnResult).to.equal(foundObjs);
 
@@ -851,7 +851,7 @@ describe("View store", () => {
         headers: 1,
         trace: 1,
       },
-      sort: { c: 3, score: -1 },
+      sort: { c: 3, score: { $meta: "textScore" } },
     });
     expect(steamFnResult).to.equal(foundObjs);
 
@@ -950,6 +950,7 @@ describe("View store", () => {
       f: [{ g: 1 }],
     };
 
+    const indexes = [[{ "some-index": 1 }]];
     const sorts = [
       { "some-index": 1 },
       { "some-other-index": 1, "another-index": -1 },
@@ -1253,7 +1254,9 @@ describe("View store", () => {
           ],
         },
       },
-      sort: { score: -1 },
+      sort: {
+        score: { $meta: "textScore" },
+      },
     });
     expect(findFnResult).to.equal(foundObjs);
 
@@ -1303,7 +1306,7 @@ describe("View store", () => {
           ],
         },
       },
-      sort: { c: 3, score: -1 },
+      sort: { c: 3, score: { $meta: "textScore" } },
     });
     expect(steamFnResult).to.equal(foundObjs);
 
