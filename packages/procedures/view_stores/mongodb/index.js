@@ -299,7 +299,7 @@ module.exports = async ({
                 $add: [
                   { $meta: "textScore" },
                   ...partialWordTextIndexes.map((index) => ({
-                    $cond: [{ $eq: [`$${index}`, text] }, 10, 0],
+                    $cond: [{ $eq: [`$${index}`, text] }, 9, 0],
                   })),
                 ],
               },
