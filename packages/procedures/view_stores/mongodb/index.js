@@ -201,20 +201,20 @@ module.exports = async ({
             store,
             query: {
               ...query,
-              $or: [
-                {
-                  // $text: { $search: `"${text}"` }, //textIdUuuid ? `"${text}"` : text },
-                  $text: { $search: textIdUuid ? `"${text}"` : text },
-                },
-                ...(!textIdUuid
-                  ? partialWordTextIndexes.map((index) => ({
-                      [index]: {
-                        $regex: text,
-                        $options: "i",
-                      },
-                    }))
-                  : []),
-              ],
+              // $or: [
+              //   {
+              // $text: { $search: `"${text}"` }, //textIdUuuid ? `"${text}"` : text },
+              $text: { $search: textIdUuid ? `"${text}"` : text },
+              // },
+              // ...(!textIdUuid
+              //   ? partialWordTextIndexes.map((index) => ({
+              //       [index]: {
+              //         $regex: text,
+              //         $options: "i",
+              //       },
+              //     }))
+              //   : []),
+              // ],
             },
             ...((select || text) && {
               select: {
@@ -281,20 +281,20 @@ module.exports = async ({
           store,
           query: {
             ...query,
-            $or: [
-              {
-                // $text: { $search: `"${text}"` }, //textIdUuid ? `"${text}"` : text },
-                $text: { $search: textIdUuid ? `"${text}"` : text },
-              },
-              ...(!textIdUuid
-                ? partialWordTextIndexes.map((index) => ({
-                    [index]: {
-                      $regex: text,
-                      $options: "i",
-                    },
-                  }))
-                : []),
-            ],
+            // $or: [
+            //   {
+            // $text: { $search: `"${text}"` }, //textIdUuid ? `"${text}"` : text },
+            $text: { $search: textIdUuid ? `"${text}"` : text },
+            //   },
+            //   ...(!textIdUuid
+            //     ? partialWordTextIndexes.map((index) => ({
+            //         [index]: {
+            //           $regex: text,
+            //           $options: "i",
+            //         },
+            //       }))
+            //     : []),
+            // ],
           },
           ...((select || text) && {
             select: {
@@ -360,20 +360,20 @@ module.exports = async ({
       query: {
         ...query,
         ...(text && {
-          $or: [
-            {
-              // $text: { $search: `"${text}"` }, //textIdUuid ? `"${text}"` : text },
-              $text: { $search: textIdUuid ? `"${text}"` : text },
-            },
-            ...(!textIdUuid
-              ? partialWordTextIndexes.map((index) => ({
-                  [index]: {
-                    $regex: text,
-                    $options: "i",
-                  },
-                }))
-              : []),
-          ],
+          // $or: [
+          //   {
+          // $text: { $search: `"${text}"` }, //textIdUuid ? `"${text}"` : text },
+          $text: { $search: textIdUuid ? `"${text}"` : text },
+          //   },
+          //   ...(!textIdUuid
+          //     ? partialWordTextIndexes.map((index) => ({
+          //         [index]: {
+          //           $regex: text,
+          //           $options: "i",
+          //         },
+          //       }))
+          //     : []),
+          // ],
         }),
       },
     });

@@ -492,18 +492,18 @@ describe("View store", () => {
       store,
       query: {
         ...query,
-        $or: [
-          {
-            // $text: { $search: `"${text}"` },
-            $text: { $search: text },
-          },
-          {
-            "body.some": {
-              $regex: "some-text",
-              $options: "i",
-            },
-          },
-        ],
+        // $or: [
+        //   {
+        // $text: { $search: `"${text}"` },
+        $text: { $search: text },
+        //   },
+        //   {
+        //     "body.some": {
+        //       $regex: "some-text",
+        //       $options: "i",
+        //     },
+        //   },
+        // ],
       },
       select: {
         score: { $meta: "textScore" },
@@ -543,18 +543,18 @@ describe("View store", () => {
       store,
       query: {
         ...query,
-        $or: [
-          {
-            // $text: { $search: `"${text}"` },
-            $text: { $search: text },
-          },
-          {
-            "body.some": {
-              $regex: "some-text",
-              $options: "i",
-            },
-          },
-        ],
+        // $or: [
+        //   {
+        // $text: { $search: `"${text}"` },
+        $text: { $search: text },
+        //   },
+        //   {
+        //     "body.some": {
+        //       $regex: "some-text",
+        //       $options: "i",
+        //     },
+        //   },
+        // ],
       },
     });
     expect(countFnResult).to.equal(count);
@@ -571,18 +571,18 @@ describe("View store", () => {
       store,
       query: {
         ...query2,
-        $or: [
-          {
-            // $text: { $search: `"${text}"` },
-            $text: { $search: text },
-          },
-          {
-            "body.some": {
-              $regex: "some-text",
-              $options: "i",
-            },
-          },
-        ],
+        // $or: [
+        //   {
+        // $text: { $search: `"${text}"` },
+        $text: { $search: text },
+        //   },
+        //   {
+        //     "body.some": {
+        //       $regex: "some-text",
+        //       $options: "i",
+        //     },
+        //   },
+        // ],
       },
       select: {
         score: { $meta: "textScore" },
@@ -812,11 +812,11 @@ describe("View store", () => {
       store,
       query: {
         ...query,
-        $or: [
-          {
-            $text: { $search: '"945c24c3-ae66-4759-a1c7-1079bac8eb5e"' },
-          },
-        ],
+        // $or: [
+        //   {
+        $text: { $search: '"945c24c3-ae66-4759-a1c7-1079bac8eb5e"' },
+        //   },
+        // ],
       },
       select: {
         score: { $meta: "textScore" },
@@ -854,11 +854,11 @@ describe("View store", () => {
       store,
       query: {
         ...query,
-        $or: [
-          {
-            $text: { $search: '"945c24c3-ae66-4759-a1c7-1079bac8eb5e"' },
-          },
-        ],
+        // $or: [
+        //   {
+        $text: { $search: '"945c24c3-ae66-4759-a1c7-1079bac8eb5e"' },
+        //   },
+        // ],
       },
     });
     expect(countFnResult).to.equal(count);
@@ -875,11 +875,11 @@ describe("View store", () => {
       store,
       query: {
         ...query2,
-        $or: [
-          {
-            $text: { $search: '"945c24c3-ae66-4759-a1c7-1079bac8eb5e"' },
-          },
-        ],
+        // $or: [
+        //   {
+        $text: { $search: '"945c24c3-ae66-4759-a1c7-1079bac8eb5e"' },
+        //   },
+        // ],
       },
       select: {
         score: { $meta: "textScore" },
@@ -1285,18 +1285,18 @@ describe("View store", () => {
       store,
       query: {
         ...query,
-        $or: [
-          {
-            // $text: { $search: `"${text}"` },
-            $text: { $search: text },
-          },
-          {
-            "body.some": {
-              $regex: "some-text",
-              $options: "i",
-            },
-          },
-        ],
+        // $or: [
+        //   {
+        // $text: { $search: `"${text}"` },
+        $text: { $search: text },
+        //   },
+        //   {
+        //     "body.some": {
+        //       $regex: "some-text",
+        //       $options: "i",
+        //     },
+        //   },
+        // ],
       },
       select: {
         some: "select",
@@ -1331,18 +1331,18 @@ describe("View store", () => {
       store,
       query: {
         ...query,
-        $or: [
-          {
-            // $text: { $search: `"${text}"` },
-            $text: { $search: text },
-          },
-          {
-            "body.some": {
-              $regex: "some-text",
-              $options: "i",
-            },
-          },
-        ],
+        // $or: [
+        //   {
+        // $text: { $search: `"${text}"` },
+        $text: { $search: text },
+        //   },
+        //   {
+        //     "body.some": {
+        //       $regex: "some-text",
+        //       $options: "i",
+        //     },
+        //   },
+        // ],
       },
     });
     expect(countFnResult).to.equal(count);
@@ -1360,15 +1360,15 @@ describe("View store", () => {
       store,
       query: {
         ...query2,
-        $or: [
-          {
-            // $text: { $search: `"${text}"` },
-            $text: { $search: text },
-          },
-          {
-            "body.some": { $regex: "some-text", $options: "i" },
-          },
-        ],
+        // $or: [
+        //   {
+        // $text: { $search: `"${text}"` },
+        $text: { $search: text },
+        //   },
+        //   {
+        //     "body.some": { $regex: "some-text", $options: "i" },
+        //   },
+        // ],
       },
       select: {
         some: "select",
