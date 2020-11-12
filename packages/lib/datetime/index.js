@@ -14,6 +14,7 @@ const componentsFromMoment = require("./src/components_from_moment");
 const componentsFromTimestamp = require("./src/components_from_timestamp");
 const momentFromComponents = require("./src/moment_from_components");
 const timestampFromComponents = require("./src/timestamp_from_components");
+const localizedFormat = require("./src/localized_format");
 
 module.exports = {
   timestampFromDate,
@@ -32,4 +33,5 @@ module.exports = {
   componentsFromTimestamp,
   momentFromComponents,
   timestampFromComponents,
+  localizedFormat,
 };
