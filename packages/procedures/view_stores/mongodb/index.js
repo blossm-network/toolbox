@@ -203,7 +203,7 @@ module.exports = async ({
               ...query,
               $or: [
                 {
-                  $text: { $search: textIdUuuid ? `"${text}"` : text },
+                  $text: { $search: `"${text}"` }, //textIdUuuid ? `"${text}"` : text },
                 },
                 ...(!textIdUuuid
                   ? partialWordTextIndexes.map((index) => ({
@@ -282,7 +282,7 @@ module.exports = async ({
             ...query,
             $or: [
               {
-                $text: { $search: textIdUuid ? `"${text}"` : text },
+                $text: { $search: `"${text}"` }, //textIdUuid ? `"${text}"` : text },
               },
               ...(!textIdUuid
                 ? partialWordTextIndexes.map((index) => ({
@@ -355,7 +355,21 @@ module.exports = async ({
       store,
       query: {
         ...query,
-        ...(text && { $text: { $search: text } }),
+        ...(text && {
+          $or: [
+            {
+              $text: { $search: `"${text}"` }, //textIdUuid ? `"${text}"` : text },
+            },
+            ...(!deps.uuidValidator(text)
+              ? partialWordTextIndexes.map((index) => ({
+                  [index]: {
+                    $regex: text,
+                    $options: "i",
+                  },
+                }))
+              : []),
+          ],
+        }),
       },
     });
 

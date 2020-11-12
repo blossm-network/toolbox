@@ -494,7 +494,7 @@ describe("View store", () => {
         ...query,
         $or: [
           {
-            $text: { $search: text },
+            $text: { $search: `"${text}"` },
           },
           {
             "body.some": {
@@ -541,7 +541,17 @@ describe("View store", () => {
       store,
       query: {
         ...query,
-        $text: { $search: text },
+        $or: [
+          {
+            $text: { $search: `"${text}"` },
+          },
+          {
+            "body.some": {
+              $regex: "some-text",
+              $options: "i",
+            },
+          },
+        ],
       },
     });
     expect(countFnResult).to.equal(count);
@@ -560,7 +570,7 @@ describe("View store", () => {
         ...query2,
         $or: [
           {
-            $text: { $search: text },
+            $text: { $search: `"${text}"` },
           },
           {
             "body.some": {
@@ -838,7 +848,11 @@ describe("View store", () => {
       store,
       query: {
         ...query,
-        $text: { $search: text },
+        $or: [
+          {
+            $text: { $search: '"945c24c3-ae66-4759-a1c7-1079bac8eb5e"' },
+          },
+        ],
       },
     });
     expect(countFnResult).to.equal(count);
@@ -1266,7 +1280,7 @@ describe("View store", () => {
         ...query,
         $or: [
           {
-            $text: { $search: text },
+            $text: { $search: `"${text}"` },
           },
           {
             "body.some": {
@@ -1308,7 +1322,17 @@ describe("View store", () => {
       store,
       query: {
         ...query,
-        $text: { $search: text },
+        $or: [
+          {
+            $text: { $search: `"${text}"` },
+          },
+          {
+            "body.some": {
+              $regex: "some-text",
+              $options: "i",
+            },
+          },
+        ],
       },
     });
     expect(countFnResult).to.equal(count);
@@ -1328,7 +1352,7 @@ describe("View store", () => {
         ...query2,
         $or: [
           {
-            $text: { $search: text },
+            $text: { $search: `"${text}"` },
           },
           {
             "body.some": { $regex: "some-text", $options: "i" },
