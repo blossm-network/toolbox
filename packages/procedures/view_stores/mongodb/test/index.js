@@ -524,9 +524,9 @@ describe("View store", () => {
         //     },
         //   ],
         // },
-        // body: 1,
-        // headers: 1,
-        // trace: 1,
+        body: 1,
+        headers: 1,
+        trace: 1,
       },
       sort: { score: { $meta: "textScore" } },
       limit,
@@ -603,9 +603,9 @@ describe("View store", () => {
         //     },
         //   ],
         // },
-        // body: 1,
-        // headers: 1,
-        // trace: 1,
+        body: 1,
+        headers: 1,
+        trace: 1,
       },
       sort: { c: 3, score: { $meta: "textScore" } },
     });
@@ -837,8 +837,9 @@ describe("View store", () => {
         //     },
         //   ],
         // },
-        // headers: 1,
-        // trace: 1,
+        body: 1,
+        headers: 1,
+        trace: 1,
       },
       sort: { score: { $meta: "textScore" } },
     });
@@ -899,9 +900,9 @@ describe("View store", () => {
         //     },
         //   ],
         // },
-        // body: 1,
-        // headers: 1,
-        // trace: 1,
+        body: 1,
+        headers: 1,
+        trace: 1,
       },
       sort: { c: 3, score: { $meta: "textScore" } },
     });
@@ -1298,8 +1299,8 @@ describe("View store", () => {
         // ],
       },
       select: {
-        // some: "select",
-        // "body.some": 1,
+        some: "select",
+        "body.some": 1,
         score: { $meta: "textScore" },
         //   score: {
         //     $add: [
@@ -1370,8 +1371,8 @@ describe("View store", () => {
         // ],
       },
       select: {
-        // some: "select",
-        // "body.some": 1,
+        some: "select",
+        "body.some": 1,
         score: { $meta: "textScore" },
         // score: {
         //   $add: [
