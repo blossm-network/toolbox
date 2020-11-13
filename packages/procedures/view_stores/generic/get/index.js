@@ -121,6 +121,8 @@ module.exports = ({
           ]),
     ]);
 
+    console.log({ RESULTS: results });
+
     const updateKey =
       updateKeys &&
       req.query.query &&
