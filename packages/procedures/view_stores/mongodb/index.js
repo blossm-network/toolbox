@@ -229,6 +229,7 @@ module.exports = async ({
                   headers: 1,
                   trace: 1,
                 }),
+                score: { $meta: "textScore" },
                 // score: {
                 //   $add: [
                 //     { $meta: "textScore" },
@@ -310,6 +311,7 @@ module.exports = async ({
                 headers: 1,
                 trace: 1,
               }),
+              score: { $meta: "textScore" },
               // score: {
               //   $add: [
               //     { $meta: "textScore" },

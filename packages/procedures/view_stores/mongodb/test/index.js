@@ -506,6 +506,7 @@ describe("View store", () => {
         // ],
       },
       select: {
+        score: { $meta: "textScore" },
         // score: {
         //   $add: [
         //     { $meta: "textScore" },
@@ -584,6 +585,7 @@ describe("View store", () => {
         // ],
       },
       select: {
+        score: { $meta: "textScore" },
         // score: {
         //   $add: [
         //     { $meta: "textScore" },
@@ -817,6 +819,7 @@ describe("View store", () => {
         // ],
       },
       select: {
+        score: { $meta: "textScore" },
         // score: {
         //   $add: [
         //     { $meta: "textScore" },
@@ -879,6 +882,7 @@ describe("View store", () => {
         // ],
       },
       select: {
+        score: { $meta: "textScore" },
         // score: {
         //   $add: [
         //     { $meta: "textScore" },
@@ -1297,6 +1301,7 @@ describe("View store", () => {
       select: {
         some: "select",
         "body.some": 1,
+        score: { $meta: "textScore" },
         //   score: {
         //     $add: [
         //       { $meta: "textScore" },
@@ -1368,6 +1373,7 @@ describe("View store", () => {
       select: {
         some: "select",
         "body.some": 1,
+        score: { $meta: "textScore" },
         // score: {
         //   $add: [
         //     { $meta: "textScore" },
