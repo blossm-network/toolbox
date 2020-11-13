@@ -8,6 +8,7 @@ module.exports = ({
 }) =>
   store.aggregate([
     { $match: query },
+    ...(sort ? [{ $sort: sort }] : []),
     {
       $project: {
         ...select,
@@ -19,7 +20,6 @@ module.exports = ({
           }),
       },
     },
-    ...(sort ? [{ $sort: sort }] : []),
     ...(skip ? [{ $skip: skip }] : []),
     ...(limit ? [{ $limit: limit }] : []),
   ]);

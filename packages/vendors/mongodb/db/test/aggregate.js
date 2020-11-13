@@ -62,9 +62,9 @@ describe("Aggregate", () => {
     expect(result).to.equal(execResult);
     expect(aggregateFake).to.have.been.calledWith([
       { $match: query },
+      { $sort: sort },
       // { $project: { a: 0, _id: 0, __v: 0 } },
       { $project: { a: 0 } },
-      { $sort: sort },
       { $skip: skip },
       { $limit: limit },
     ]);
