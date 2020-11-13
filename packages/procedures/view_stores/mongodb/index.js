@@ -218,17 +218,17 @@ module.exports = async ({
             },
             ...((select || text) && {
               select: {
-                ...select,
-                ...(select &&
-                  partialWordTextIndexes.reduce((result, index) => {
-                    result[index] = 1;
-                    return result;
-                  }, {})),
-                ...(!select && {
-                  body: 1,
-                  headers: 1,
-                  trace: 1,
-                }),
+                // ...select,
+                // ...(select &&
+                //   partialWordTextIndexes.reduce((result, index) => {
+                //     result[index] = 1;
+                //     return result;
+                //   }, {})),
+                // ...(!select && {
+                //   body: 1,
+                //   headers: 1,
+                //   trace: 1,
+                // }),
                 score: { $meta: "textScore" },
                 // score: {
                 //   $add: [
@@ -300,17 +300,17 @@ module.exports = async ({
           },
           ...((select || text) && {
             select: {
-              ...select,
-              ...(select &&
-                partialWordTextIndexes.reduce((result, index) => {
-                  result[index] = 1;
-                  return result;
-                }, {})),
-              ...(!select && {
-                body: 1,
-                headers: 1,
-                trace: 1,
-              }),
+              // ...select,
+              // ...(select &&
+              //   partialWordTextIndexes.reduce((result, index) => {
+              //     result[index] = 1;
+              //     return result;
+              //   }, {})),
+              // ...(!select && {
+              //   body: 1,
+              //   headers: 1,
+              //   trace: 1,
+              // }),
               score: { $meta: "textScore" },
               // score: {
               //   $add: [

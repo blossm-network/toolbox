@@ -1299,8 +1299,8 @@ describe("View store", () => {
         // ],
       },
       select: {
-        some: "select",
-        "body.some": 1,
+        // some: "select",
+        // "body.some": 1,
         score: { $meta: "textScore" },
         //   score: {
         //     $add: [
@@ -1371,8 +1371,8 @@ describe("View store", () => {
         // ],
       },
       select: {
-        some: "select",
-        "body.some": 1,
+        // some: "select",
+        // "body.some": 1,
         score: { $meta: "textScore" },
         // score: {
         //   $add: [
