@@ -106,8 +106,6 @@ module.exports = ({
     const limit = one || bootstrap ? 1 : req.query.limit || defaultLimit;
     const skip = one || bootstrap ? 0 : req.query.skip || 0;
 
-    //TODO
-    console.log({ query: req.query });
     const [results, count] = await Promise.all([
       findFn({
         query,
@@ -122,8 +120,6 @@ module.exports = ({
             countFn({ query, ...(req.query.text && { text: req.query.text }) }),
           ]),
     ]);
-
-    console.log({ RESULTS: results });
 
     const updateKey =
       updateKeys &&
