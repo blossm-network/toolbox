@@ -5,8 +5,11 @@ module.exports = ({
   select = null,
   skip = 0,
   limit = null,
-}) =>
-  store.aggregate([
+}) => {
+  console.log({ sort });
+  console.log({ query });
+  console.log({ select });
+  return store.aggregate([
     { $match: query },
     ...(sort ? [{ $sort: sort }] : []),
     {
@@ -23,3 +26,4 @@ module.exports = ({
     ...(skip ? [{ $skip: skip }] : []),
     ...(limit ? [{ $limit: limit }] : []),
   ]);
+};
