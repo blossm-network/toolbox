@@ -106,6 +106,11 @@ module.exports = ({
     const limit = one || bootstrap ? 1 : req.query.limit || defaultLimit;
     const skip = one || bootstrap ? 0 : req.query.skip || 0;
 
+    //TODO
+    console.log({
+      query: JSON.stringify(req.query),
+    });
+
     const [results, count] = await Promise.all([
       findFn({
         query,
