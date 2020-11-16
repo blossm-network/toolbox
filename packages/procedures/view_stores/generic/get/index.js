@@ -109,6 +109,7 @@ module.exports = ({
     //TODO
     console.log({
       query: JSON.stringify(req.query),
+      formatted: JSON.stringify(query),
     });
 
     const [results, count] = await Promise.all([
