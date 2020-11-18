@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@blossm/errors": "^0.0.37",
+    "@blossm/json-to-csv": "*",
     "@blossm/url-encode-query-data": "^0.0.5"
   },
   "devDependencies": {

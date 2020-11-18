@@ -11,6 +11,7 @@ module.exports = async ({
   sortFn,
   updateFn,
   formatFn = defaultFormatFn,
+  formatCsvFn,
   emptyFn,
   countFn,
   groupsLookupFn,
@@ -23,6 +24,24 @@ module.exports = async ({
     .get(deps.idStream({ streamFn, ...(queryFn && { queryFn }) }), {
       path: "/stream-ids",
     })
+    .get(
+      deps.get({
+        findFn,
+        countFn,
+        groupsLookupFn,
+        ...(formatCsvFn && { formatCsvFn }),
+        ...(queryFn && { queryFn }),
+        ...(sortFn && { sortFn }),
+        ...(formatFn && { formatFn }),
+        ...(emptyFn && { emptyFn }),
+        ...(one && { one }),
+        ...(group && { group }),
+        ...(updateKeys && { updateKeys }),
+      }),
+      {
+        path: "/download/csv/:id?",
+      }
+    )
     .get(
       deps.get({
         findFn,

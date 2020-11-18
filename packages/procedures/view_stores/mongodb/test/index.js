@@ -102,6 +102,7 @@ describe("View store", () => {
     replace(deps, "formatSchema", formatSchemaFake);
 
     const queryFn = "some-query-fn";
+    const formatCsvFn = "some-format-csv-fn";
     const sortFn = "some-sort-fn";
     const updateFn = "some-update-fn";
     const formatFn = "some-format-fn";
@@ -112,6 +113,7 @@ describe("View store", () => {
       indexes,
       secretFn: secretFake,
       queryFn,
+      formatCsvFn,
       sortFn,
       updateFn,
       formatFn,
@@ -306,6 +308,7 @@ describe("View store", () => {
       removeFn: match((fn) => expect(fn(query)).to.exist),
       groupsLookupFn,
       queryFn,
+      formatCsvFn,
       sortFn,
       updateFn,
       formatFn,

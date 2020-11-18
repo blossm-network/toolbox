@@ -25,6 +25,7 @@ module.exports = ({
   emptyFn,
   queryFn = defaultQueryFn,
   sortFn = defaultSortFn,
+  formatCsvFn,
   groupsLookupFn,
   updateKeys,
 }) => {
@@ -106,12 +107,6 @@ module.exports = ({
     const limit = one || bootstrap ? 1 : req.query.limit || defaultLimit;
     const skip = one || bootstrap ? 0 : req.query.skip || 0;
 
-    //TODO
-    console.log({
-      query: JSON.stringify(req.query),
-      formatted: JSON.stringify(query),
-    });
-
     const [results, count] = await Promise.all([
       findFn({
         query,
@@ -126,6 +121,17 @@ module.exports = ({
             countFn({ query, ...(req.query.text && { text: req.query.text }) }),
           ]),
     ]);
+
+    if (formatCsvFn) {
+      const { data, fields } = formatCsvFn(results);
+      const csv = deps.jsonToCsv({ data, fields });
+      res.writeHead(200, {
+        "Content-Type": "text/csv",
+        "Content-Disposition": "attachment; filename=transactions.csv",
+      });
+      res.end(csv);
+      return;
+    }
 
     const updateKey =
       updateKeys &&

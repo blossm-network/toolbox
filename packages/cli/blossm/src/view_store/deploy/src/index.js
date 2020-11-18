@@ -15,6 +15,9 @@ const format =
   fs.existsSync(path.resolve(__dirname, "./format.js")) && require("./format");
 const empty =
   fs.existsSync(path.resolve(__dirname, "./empty.js")) && require("./empty");
+const formatCsv =
+  fs.existsSync(path.resolve(__dirname, "./format_csv.js")) &&
+  require("./format_csv");
 
 const config = require("./config.json");
 
@@ -25,6 +28,7 @@ module.exports = viewStore({
   secretFn: secret,
   ...(config.keys && { updateKeys: config.keys }),
   ...(query && { queryFn: query }),
+  ...(formatCsv && { formatCsvFn: formatCsv }),
   ...(sort && { sortFn: sort }),
   ...(update && { updateFn: update }),
   ...(format && { formatFn: format }),

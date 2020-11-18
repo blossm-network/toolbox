@@ -1,0 +1,22 @@
+{
+  "name": "@blossm/json-to-csv",
+  "version": "0.0.0",
+  "description": "Converts JSON to a downloadable CSV.",
+  "main": "index.js",
+  "author": "blossm.network",
+  "engines": {
+    "node": ">= 10.16.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "mocha --recursive"
+  },
+  "dependencies": {
+    "json2csv": "^5.0.5"
+  },
+  "devDependencies": {
+    "mocha": "^7.1.1"
+  }
+}

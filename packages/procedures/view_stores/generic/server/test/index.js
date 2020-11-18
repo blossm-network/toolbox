@@ -25,8 +25,11 @@ describe("View store", () => {
     const getFake = fake.returns({
       put: putFake,
     });
-    const firstGetFake = fake.returns({
+    const secondGetFake = fake.returns({
       get: getFake,
+    });
+    const firstGetFake = fake.returns({
+      get: secondGetFake,
     });
     const serverFake = fake.returns({
       get: firstGetFake,
@@ -60,6 +63,7 @@ describe("View store", () => {
     const formatFn = "some-format-fn";
     const emptyFn = "some-empty-fn";
     const groupsLookupFn = "some-group-lookup-fn";
+    const formatCsvFn = "some-format-csv-fn";
     const one = "some-one";
     const group = "some-group";
     const updateKeys = "some-update-keys";
@@ -76,6 +80,7 @@ describe("View store", () => {
       formatFn,
       emptyFn,
       groupsLookupFn,
+      formatCsvFn,
       one,
       group,
       updateKeys,
@@ -86,12 +91,28 @@ describe("View store", () => {
     expect(getFake).to.have.been.calledWith(viewStoreGetResult, {
       path: "/:id?",
     });
+    expect(secondGetFake).to.have.been.calledWith(viewStoreGetResult, {
+      path: "/download/csv/:id?",
+    });
     expect(firstGetFake).to.have.been.calledWith(viewStoreStreamResult, {
       path: "/stream-ids",
     });
     expect(putFake).to.have.been.calledWith(viewStorePutResult);
     expect(deleteFake).to.have.been.calledWith(viewStoreDeleteResult);
-    expect(viewStoreGetFake).to.have.been.calledWith({
+    expect(viewStoreGetFake.getCall(0)).to.have.been.calledWith({
+      findFn,
+      countFn,
+      queryFn,
+      sortFn,
+      formatFn,
+      emptyFn,
+      groupsLookupFn,
+      formatCsvFn,
+      one,
+      group,
+      updateKeys,
+    });
+    expect(viewStoreGetFake.getCall(1)).to.have.been.calledWith({
       findFn,
       countFn,
       queryFn,
@@ -133,8 +154,11 @@ describe("View store", () => {
     const getFake = fake.returns({
       put: putFake,
     });
-    const firstGetFake = fake.returns({
+    const secondGetFake = fake.returns({
       get: getFake,
+    });
+    const firstGetFake = fake.returns({
+      get: secondGetFake,
     });
     const serverFake = fake.returns({
       get: firstGetFake,
@@ -177,6 +201,9 @@ describe("View store", () => {
     expect(serverFake).to.have.been.calledOnce;
     expect(getFake).to.have.been.calledWith(viewStoreGetResult, {
       path: "/:id?",
+    });
+    expect(secondGetFake).to.have.been.calledWith(viewStoreGetResult, {
+      path: "/download/csv/:id?",
     });
     expect(firstGetFake).to.have.been.calledWith(viewStoreStreamResult, {
       path: "/stream-ids",

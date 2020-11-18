@@ -152,6 +152,105 @@ describe("View store get", () => {
       count: 200,
     });
   });
+  it("should call with the correct params exporting to csv", async () => {
+    const results = [];
+    const formattedResults = [];
+
+    const formatFake = stub();
+    for (let i = 0; i < 50; i++) {
+      results.push({
+        body: obj,
+        headers: { id, created, modified, context: foundContext },
+        trace: {
+          "some-service": { "some-domain": [txId0] },
+          "some-other-service": { "some-other-domain": [txId1] },
+          "amother-service": { "another-domain": [txId2] },
+        },
+      });
+      const formattedResult = { i: "something" };
+      formattedResults.push(formattedResult);
+      formatFake.onCall(i).returns(formattedResult);
+    }
+    const findFake = fake.returns(results);
+    const countFake = fake.returns(200);
+
+    const query = { "some-query-key": 1 };
+
+    const urlEncodeQueryDataFake = fake.returns(nextUrl);
+    replace(deps, "urlEncodeQueryData", urlEncodeQueryDataFake);
+
+    const req = {
+      query: {
+        sort,
+        context,
+        query,
+      },
+      params: {
+        id,
+      },
+    };
+
+    const writeHeadFake = fake();
+    const endFake = fake();
+    const res = {
+      writeHead: writeHeadFake,
+      end: endFake,
+    };
+    const csvData = "some-data";
+    const csvFields = "some-fields";
+
+    const formatCsvFn = fake.returns({
+      data: csvData,
+      fields: csvFields,
+    });
+
+    const csvResult = "some-csv-result";
+    const jsonToCsvFake = fake.returns(csvResult);
+    replace(deps, "jsonToCsv", jsonToCsvFake);
+
+    await get({
+      formatCsvFn,
+      findFn: findFake,
+      countFn: countFake,
+      formatFn: formatFake,
+    })(req, res);
+    expect(findFake).to.have.been.calledWith({
+      limit: 50,
+      skip: 0,
+      sort: { "body.a": 1 },
+      query: {
+        "body.some-query-key": 1,
+        "headers.id": id,
+        "headers.context": {
+          root: envContextRoot,
+          domain: "some-env-context",
+          service: envContextService,
+          network: envContextNetwork,
+        },
+      },
+    });
+    expect(countFake).to.have.been.calledWith({
+      query: {
+        "body.some-query-key": 1,
+        "headers.id": id,
+        "headers.context": {
+          root: envContextRoot,
+          domain: "some-env-context",
+          service: envContextService,
+          network: envContextNetwork,
+        },
+      },
+    });
+    expect(jsonToCsvFake).to.have.been.calledWith({
+      data: csvData,
+      fields: csvFields,
+    });
+    expect(writeHeadFake).to.have.been.calledWith(200, {
+      "Content-Type": "text/csv",
+      "Content-Disposition": "attachment; filename=transactions.csv",
+    });
+    expect(endFake).to.have.been.calledWith(csvResult);
+  });
   it("should call with the correct params with no env context, group as true, text in query, update keys", async () => {
     const results = [];
     const formattedResults = [];
