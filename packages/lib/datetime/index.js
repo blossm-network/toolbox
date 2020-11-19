@@ -9,6 +9,7 @@ const moment = require("./src/moment");
 const copyMoment = require("./src/copy_moment");
 const momentFromTimestamp = require("./src/moment_from_timestamp");
 const longDateStringFromTimestamp = require("./src/long_date_string_from_timestamp");
+const longDateString = require("./src/long_date_string");
 const weekdayDateStringFromTimestamp = require("./src/weekday_date_string_from_timestamp");
 const componentsFromMoment = require("./src/components_from_moment");
 const componentsFromTimestamp = require("./src/components_from_timestamp");
@@ -28,6 +29,7 @@ module.exports = {
   copyMoment,
   momentFromTimestamp,
   longDateStringFromTimestamp,
+  longDateString,
   weekdayDateStringFromTimestamp,
   componentsFromMoment,
   componentsFromTimestamp,
