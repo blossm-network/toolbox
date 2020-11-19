@@ -201,9 +201,10 @@ describe("View store get", () => {
     const csvField = "some-field";
 
     const formatCsvFn = fake.returns(csvData);
+    const fieldsFn = fake.returns([csvField]);
 
     const formatCsv = {
-      fields: [csvField],
+      fields: fieldsFn,
       fn: formatCsvFn,
     };
 
@@ -252,6 +253,8 @@ describe("View store get", () => {
       })),
       fields: ["some-field", "id"],
     });
+    expect(fieldsFn).to.have.been.calledWith(results);
+
     for (let i = 0; i < results.length; i++) {
       expect(formatCsvFn.getCall(i)).to.have.been.calledWith(results[i].body);
     }
