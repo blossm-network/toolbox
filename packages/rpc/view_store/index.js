@@ -10,7 +10,16 @@ module.exports = ({ name, context = process.env.CONTEXT, network }) => {
       externalFn: externalTokenFn,
       key,
     } = {},
-  } = {}) => ({ query, sort, text, id, skip, limit, bootstrap } = {}) =>
+  } = {}) => ({
+    query,
+    sort,
+    download,
+    text,
+    id,
+    skip,
+    limit,
+    bootstrap,
+  } = {}) =>
     deps
       .rpc(name, ...(context ? [context] : []), "view-store")
       .get({
@@ -20,6 +29,7 @@ module.exports = ({ name, context = process.env.CONTEXT, network }) => {
         ...(limit && { limit }),
         ...(bootstrap && { bootstrap }),
         ...(sort && { sort }),
+        ...(download && { download }),
         ...(id && { id }),
       })
       .in({

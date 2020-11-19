@@ -16,6 +16,7 @@ const key = "some-key";
 const query = "some-query";
 const id = "some-id";
 const sort = "some-sort";
+const download = "some-download";
 const bootstrap = "some-bootstrap";
 const limit = "some-limit";
 const skip = "some-skip";
@@ -61,12 +62,13 @@ describe("Get views", () => {
           key,
         },
       })
-      .read({ query, sort, id, bootstrap, text, limit, skip });
+      .read({ query, sort, download, id, bootstrap, text, limit, skip });
 
     expect(rpcFake).to.have.been.calledWith(name, context, "view-store");
     expect(getFake).to.have.been.calledWith({
       query,
       sort,
+      download,
       id,
       bootstrap,
       text,
