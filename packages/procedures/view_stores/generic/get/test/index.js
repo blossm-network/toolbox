@@ -248,7 +248,7 @@ describe("View store get", () => {
     });
     expect(writeHeadFake).to.have.been.calledWith(200, {
       "Content-Type": "text/csv",
-      "Content-Disposition": "attachment; filename=transactions.csv",
+      "Content-Disposition": "attachment",
     });
     expect(endFake).to.have.been.calledWith(csvResult);
   });
