@@ -8,9 +8,9 @@
  * The function must be deterministic, meaning the output should always be the same for every input.
  */
 
-// module.exports = (results) => {
+// module.exports = (views) => {
 // return {
-//   data: [{ a: results.b + results.c, d: "some value" }],
+//   data: views.map((view) => ({ a: view.b + view.c, d: "some value" })),
 //   fields: ["a", "d"],
 // };
 // };
