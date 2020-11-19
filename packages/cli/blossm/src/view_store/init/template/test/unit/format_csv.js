@@ -9,7 +9,8 @@ const formatCsv =
 describe("View store format csv tests", () => {
   if (!formatCsv) return;
   it("should convert correctly", async () => {
-    const result = formatCsv([{ b: 1, c: 2 }]);
-    expect(result).to.deep.equal([{ a: 3, d: "some-value" }], ["a", "d"]);
+    const result = formatCsv.fn({ name: "some-name" });
+    expect(result).to.deep.equal({ name: "some-name" });
+    expect(formatCsv.fields).to.equal(["name"]);
   });
 });
