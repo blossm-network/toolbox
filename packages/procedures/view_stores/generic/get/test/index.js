@@ -184,6 +184,7 @@ describe("View store get", () => {
         sort,
         context,
         query,
+        download: "csv",
       },
       params: {
         id,

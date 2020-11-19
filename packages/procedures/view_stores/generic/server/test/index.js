@@ -25,11 +25,8 @@ describe("View store", () => {
     const getFake = fake.returns({
       put: putFake,
     });
-    const secondGetFake = fake.returns({
-      get: getFake,
-    });
     const firstGetFake = fake.returns({
-      get: secondGetFake,
+      get: getFake,
     });
     const serverFake = fake.returns({
       get: firstGetFake,
@@ -91,15 +88,12 @@ describe("View store", () => {
     expect(getFake).to.have.been.calledWith(viewStoreGetResult, {
       path: "/:id?",
     });
-    expect(secondGetFake).to.have.been.calledWith(viewStoreGetResult, {
-      path: "/download/csv/:id?",
-    });
     expect(firstGetFake).to.have.been.calledWith(viewStoreStreamResult, {
       path: "/stream-ids",
     });
     expect(putFake).to.have.been.calledWith(viewStorePutResult);
     expect(deleteFake).to.have.been.calledWith(viewStoreDeleteResult);
-    expect(viewStoreGetFake.getCall(0)).to.have.been.calledWith({
+    expect(viewStoreGetFake).to.have.been.calledWith({
       findFn,
       countFn,
       queryFn,
@@ -108,18 +102,6 @@ describe("View store", () => {
       emptyFn,
       groupsLookupFn,
       formatCsvFn,
-      one,
-      group,
-      updateKeys,
-    });
-    expect(viewStoreGetFake.getCall(1)).to.have.been.calledWith({
-      findFn,
-      countFn,
-      queryFn,
-      sortFn,
-      formatFn,
-      emptyFn,
-      groupsLookupFn,
       one,
       group,
       updateKeys,
@@ -154,11 +136,8 @@ describe("View store", () => {
     const getFake = fake.returns({
       put: putFake,
     });
-    const secondGetFake = fake.returns({
-      get: getFake,
-    });
     const firstGetFake = fake.returns({
-      get: secondGetFake,
+      get: getFake,
     });
     const serverFake = fake.returns({
       get: firstGetFake,
@@ -201,9 +180,6 @@ describe("View store", () => {
     expect(serverFake).to.have.been.calledOnce;
     expect(getFake).to.have.been.calledWith(viewStoreGetResult, {
       path: "/:id?",
-    });
-    expect(secondGetFake).to.have.been.calledWith(viewStoreGetResult, {
-      path: "/download/csv/:id?",
     });
     expect(firstGetFake).to.have.been.calledWith(viewStoreStreamResult, {
       path: "/stream-ids",

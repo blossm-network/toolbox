@@ -29,25 +29,8 @@ module.exports = async ({
         findFn,
         countFn,
         groupsLookupFn,
+        ...(queryFn && { queryFn }),
         ...(formatCsvFn && { formatCsvFn }),
-        ...(queryFn && { queryFn }),
-        ...(sortFn && { sortFn }),
-        ...(formatFn && { formatFn }),
-        ...(emptyFn && { emptyFn }),
-        ...(one && { one }),
-        ...(group && { group }),
-        ...(updateKeys && { updateKeys }),
-      }),
-      {
-        path: "/download/csv/:id?",
-      }
-    )
-    .get(
-      deps.get({
-        findFn,
-        countFn,
-        groupsLookupFn,
-        ...(queryFn && { queryFn }),
         ...(sortFn && { sortFn }),
         ...(formatFn && { formatFn }),
         ...(emptyFn && { emptyFn }),

@@ -122,7 +122,7 @@ module.exports = ({
           ]),
     ]);
 
-    if (formatCsvFn) {
+    if (req.query.download == "csv" && formatCsvFn) {
       const { data, fields } = formatCsvFn(results);
       const csv = deps.jsonToCsv({ data, fields });
       res.writeHead(200, {
