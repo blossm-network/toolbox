@@ -3,7 +3,7 @@ const path = require("path");
 const { expect } = require("chai").use(require("sinon-chai"));
 
 const format =
-  fs.existsSync(path.resolve(__dirname, "../../get.js")) &&
+  fs.existsSync(path.resolve(__dirname, "../../format_csv.js")) &&
   require("../../format");
 
 describe("View store format tests", () => {

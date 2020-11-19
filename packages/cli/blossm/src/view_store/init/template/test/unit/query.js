@@ -3,8 +3,8 @@ const path = require("path");
 const { expect } = require("chai").use(require("sinon-chai"));
 
 const get =
-  fs.existsSync(path.resolve(__dirname, "../../get.js")) &&
-  require("../../get");
+  fs.existsSync(path.resolve(__dirname, "../../query.js")) &&
+  require("../../query");
 
 describe("View store get tests", () => {
   if (!get) return;
