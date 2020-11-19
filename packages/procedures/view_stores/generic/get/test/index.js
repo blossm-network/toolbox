@@ -253,7 +253,7 @@ describe("View store get", () => {
       })),
       fields: ["some-field", "id"],
     });
-    expect(fieldsFn).to.have.been.calledWith(results);
+    expect(fieldsFn).to.have.been.calledWith(results.map((r) => r.body));
 
     for (let i = 0; i < results.length; i++) {
       expect(formatCsvFn.getCall(i)).to.have.been.calledWith(results[i].body);

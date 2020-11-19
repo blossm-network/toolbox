@@ -123,7 +123,10 @@ module.exports = ({
     ]);
 
     if (req.query.download == "csv" && formatCsv) {
-      const fields = [...formatCsv.fields(results), "id"];
+      const fields = [
+        ...formatCsv.fields(results.map((result) => result.body)),
+        "id",
+      ];
       const data = results.map((result) => ({
         id: result.headers.id,
         ...formatCsv.fn(result.body),
