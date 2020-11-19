@@ -125,6 +125,7 @@ module.exports = ({
     if (req.query.download == "csv" && formatCsvFn) {
       const { data, fields } = formatCsvFn(results);
       const csv = deps.jsonToCsv({ data, fields });
+      console.log({ csv });
       res.writeHead(200, {
         "Content-Type": "text/csv",
         "Content-Disposition": "attachment; filename=transactions.csv",
