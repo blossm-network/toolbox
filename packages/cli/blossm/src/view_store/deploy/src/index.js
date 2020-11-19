@@ -28,7 +28,7 @@ module.exports = viewStore({
   secretFn: secret,
   ...(config.keys && { updateKeys: config.keys }),
   ...(query && { queryFn: query }),
-  ...(formatCsv && { formatCsvFn: formatCsv }),
+  ...(formatCsv && { formatCsv: formatCsv }),
   ...(sort && { sortFn: sort }),
   ...(update && { updateFn: update }),
   ...(format && { formatFn: format }),

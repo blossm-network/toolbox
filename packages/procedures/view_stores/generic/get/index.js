@@ -25,7 +25,7 @@ module.exports = ({
   emptyFn,
   queryFn = defaultQueryFn,
   sortFn = defaultSortFn,
-  formatCsvFn,
+  formatCsv,
   groupsLookupFn,
   updateKeys,
 }) => {
@@ -122,8 +122,12 @@ module.exports = ({
           ]),
     ]);
 
-    if (req.query.download == "csv" && formatCsvFn) {
-      const { data, fields } = formatCsvFn(results);
+    if (req.query.download == "csv" && formatCsv) {
+      const fields = [...formatCsv.fields, "id"];
+      const data = results.map((result) => ({
+        id: result.headers.id,
+        ...formatCsv.fn(result.body),
+      }));
       const csv = deps.jsonToCsv({ data, fields });
       res.writeHead(200, {
         "Content-Type": "text/csv",

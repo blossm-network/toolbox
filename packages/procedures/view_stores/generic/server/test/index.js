@@ -60,7 +60,7 @@ describe("View store", () => {
     const formatFn = "some-format-fn";
     const emptyFn = "some-empty-fn";
     const groupsLookupFn = "some-group-lookup-fn";
-    const formatCsvFn = "some-format-csv-fn";
+    const formatCsv = "some-format-csv-fn";
     const one = "some-one";
     const group = "some-group";
     const updateKeys = "some-update-keys";
@@ -77,7 +77,7 @@ describe("View store", () => {
       formatFn,
       emptyFn,
       groupsLookupFn,
-      formatCsvFn,
+      formatCsv,
       one,
       group,
       updateKeys,
@@ -101,7 +101,7 @@ describe("View store", () => {
       formatFn,
       emptyFn,
       groupsLookupFn,
-      formatCsvFn,
+      formatCsv,
       one,
       group,
       updateKeys,

@@ -197,24 +197,27 @@ describe("View store get", () => {
       writeHead: writeHeadFake,
       end: endFake,
     };
-    const csvData = "some-data";
-    const csvFields = "some-fields";
+    const csvData = { some: "csv-data" };
+    const csvField = "some-field";
 
-    const formatCsvFn = fake.returns({
-      data: csvData,
-      fields: csvFields,
-    });
+    const formatCsvFn = fake.returns(csvData);
+
+    const formatCsv = {
+      fields: [csvField],
+      fn: formatCsvFn,
+    };
 
     const csvResult = "some-csv-result";
     const jsonToCsvFake = fake.returns(csvResult);
     replace(deps, "jsonToCsv", jsonToCsvFake);
 
     await get({
-      formatCsvFn,
+      formatCsv,
       findFn: findFake,
       countFn: countFake,
       formatFn: formatFake,
     })(req, res);
+
     expect(findFake).to.have.been.calledWith({
       limit: 50,
       skip: 0,
@@ -243,9 +246,15 @@ describe("View store get", () => {
       },
     });
     expect(jsonToCsvFake).to.have.been.calledWith({
-      data: csvData,
-      fields: csvFields,
+      data: results.map((result) => ({
+        id: result.headers.id,
+        some: "csv-data",
+      })),
+      fields: ["some-field", "id"],
     });
+    for (let i = 0; i < results.length; i++) {
+      expect(formatCsvFn.getCall(i)).to.have.been.calledWith(results[i].body);
+    }
     expect(writeHeadFake).to.have.been.calledWith(200, {
       "Content-Type": "text/csv",
       "Content-Disposition": "attachment",
