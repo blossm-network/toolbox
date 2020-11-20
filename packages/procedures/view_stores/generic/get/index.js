@@ -142,10 +142,11 @@ module.exports = ({
         limit: req.query.limit,
         csv,
       });
-      res.writeHead(200, {
-        "Content-Type": "text/csv",
-        "Content-Disposition": "attachment",
-      });
+      // res.writeHead(200, {
+      //   "Content-Type": "text/csv",
+      //   "Content-Disposition": "attachment",
+      // });
+      res.attachment("filename.csv");
       res.end(csv);
       return;
     }
