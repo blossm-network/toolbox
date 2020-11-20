@@ -191,10 +191,10 @@ describe("View store get", () => {
       },
     };
 
-    const attachmentFake = fake();
+    const writeHeadFake = fake();
     const endFake = fake();
     const res = {
-      attachment: attachmentFake,
+      writeHead: writeHeadFake,
       end: endFake,
     };
     const csvData = { some: "csv-data" };
@@ -258,11 +258,10 @@ describe("View store get", () => {
     for (let i = 0; i < results.length; i++) {
       expect(formatCsvFn.getCall(i)).to.have.been.calledWith(results[i].body);
     }
-    expect(attachmentFake).to.have.been.calledWith("filename.csv");
-    // 200, {
-    //   "Content-Type": "text/csv",
-    //   "Content-Disposition": "attachment",
-    // });
+    expect(writeHeadFake).to.have.been.calledWith(200, {
+      "Content-Type": "text/csv",
+      "Content-Disposition": "attachment",
+    });
     expect(endFake).to.have.been.calledWith(csvResult);
   });
   it("should call with the correct params with no env context, group as true, text in query, update keys", async () => {

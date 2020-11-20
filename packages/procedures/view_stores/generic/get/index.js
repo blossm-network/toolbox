@@ -135,18 +135,11 @@ module.exports = ({
       }));
 
       const csv = deps.jsonToCsv({ data, fields });
-      //TODO
-      console.log({
-        rLen: results.length,
-        dLen: data.length,
-        limit: req.query.limit,
-        csv,
+
+      res.writeHead(200, {
+        "Content-Type": "text/csv",
+        "Content-Disposition": "attachment",
       });
-      // res.writeHead(200, {
-      //   "Content-Type": "text/csv",
-      //   "Content-Disposition": "attachment",
-      // });
-      res.attachment("filename.csv");
       res.end(csv);
       return;
     }
