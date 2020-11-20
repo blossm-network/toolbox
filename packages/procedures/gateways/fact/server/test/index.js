@@ -93,7 +93,7 @@ describe("Fact gateway", () => {
       }),
     });
     expect(getFake).to.have.been.calledWith(gatewayGetResult, {
-      path: `/${name}/:id?`,
+      path: `/${name}/:root?`,
       preMiddleware: [authenticationResult, authorizationResult],
     });
     expect(authenticationFake).to.have.been.calledWith({
@@ -196,7 +196,7 @@ describe("Fact gateway", () => {
       }),
     });
     expect(getFake).to.have.been.calledWith(gatewayGetResult, {
-      path: `/${name}/:id?`,
+      path: `/${name}/:root?`,
       preMiddleware: [authenticationResult, authorizationResult],
     });
     expect(authenticationFake).to.have.been.calledWith({
@@ -355,14 +355,14 @@ describe("Fact gateway", () => {
     });
     expect(gatewayGetFake).to.have.been.calledThrice;
     expect(getFake).to.have.been.calledWith(gatewayGetResult, {
-      path: `/${name1}/:id?`,
+      path: `/${name1}/:root?`,
     });
     expect(secondGetFake).to.have.been.calledWith(gatewayGetResult, {
-      path: `/${name2}/:id?`,
+      path: `/${name2}/:root?`,
       preMiddleware: [authenticationResult],
     });
     expect(thirdGetFake).to.have.been.calledWith(gatewayGetResult, {
-      path: `/${name3}/:id?`,
+      path: `/${name3}/:root?`,
       preMiddleware: [authenticationResult, authorizationResult],
     });
     expect(authenticationFake.getCall(0)).to.have.been.calledWith({

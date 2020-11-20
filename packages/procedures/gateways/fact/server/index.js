@@ -44,7 +44,7 @@ module.exports = async ({
         key,
       }),
       {
-        path: `/${name}/:id?`,
+        path: `/${name}/:root?`,
         ...(protection != "none" && {
           preMiddleware: [
             deps.authentication({
