@@ -122,12 +122,6 @@ module.exports = ({
           ]),
     ]);
 
-    //TODO
-    console.log({
-      rLen: results.length,
-      limit: req.query.limit,
-    });
-
     if (req.query.download == "csv" && formatCsv) {
       const fields = [
         ...(formatCsv.fieldsFn
@@ -139,7 +133,15 @@ module.exports = ({
         id: result.headers.id,
         ...formatCsv.fn(result.body),
       }));
+
       const csv = deps.jsonToCsv({ data, fields });
+      //TODO
+      console.log({
+        rLen: results.length,
+        dLen: data.length,
+        limit: req.query.limit,
+        csv,
+      });
       res.writeHead(200, {
         "Content-Type": "text/csv",
         "Content-Disposition": "attachment",
