@@ -33,7 +33,10 @@ module.exports = ({
       ...(req.context && { context: req.context }),
       ...(req.claims && { claims: req.claims }),
     })
-    .read(req.query);
+    .read({
+      query: req.query,
+      ...(req.params.root && { root: req.params.root }),
+    });
 
   res.set(headers).status(200).send(response);
 };

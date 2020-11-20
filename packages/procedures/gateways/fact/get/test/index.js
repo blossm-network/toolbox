@@ -34,8 +34,12 @@ describe("Fact gateway get", () => {
     });
     replace(deps, "fact", factFake);
 
+    const root = "some-root";
     const req = {
       query,
+      params: {
+        root,
+      },
     };
 
     const sendFake = fake();
@@ -82,7 +86,7 @@ describe("Fact gateway get", () => {
         key,
       },
     });
-    expect(readFake).to.have.been.calledWith(query);
+    expect(readFake).to.have.been.calledWith({ query, root });
     expect(sendFake).to.have.been.calledWith(results);
     expect(setResponseFake).to.have.been.calledWith({});
   });
@@ -103,6 +107,7 @@ describe("Fact gateway get", () => {
       claims,
       query,
       token: reqToken,
+      params: {},
     };
 
     const sendFake = fake();
@@ -149,7 +154,7 @@ describe("Fact gateway get", () => {
         key,
       },
     });
-    expect(readFake).to.have.been.calledWith(query);
+    expect(readFake).to.have.been.calledWith({ query });
     expect(sendFake).to.have.been.calledWith(results);
     expect(setResponseFake).to.have.been.calledWith(headers);
   });
@@ -165,6 +170,7 @@ describe("Fact gateway get", () => {
 
     const req = {
       query,
+      params: {},
     };
 
     const sendFake = fake();
@@ -215,7 +221,7 @@ describe("Fact gateway get", () => {
         key,
       },
     });
-    expect(readFake).to.have.been.calledWith(query);
+    expect(readFake).to.have.been.calledWith({ query });
     expect(sendFake).to.have.been.calledWith(results);
     expect(setResponseFake).to.have.been.calledWith({});
   });
@@ -233,6 +239,7 @@ describe("Fact gateway get", () => {
     const req = {
       context,
       query,
+      params: {},
     };
 
     const res = {};
