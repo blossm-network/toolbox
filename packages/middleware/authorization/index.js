@@ -8,15 +8,20 @@ module.exports = ({
   internalTokenFn,
   permissions,
   context,
+  node,
 }) =>
   asyncHandler(async (req, _, next) => {
     const externalTokenFn = () => {
       return { token: req.token, type: "Bearer" };
     };
 
+    const relevantContext = req.context && context && req.context[context];
+
     await Promise.all([
       // If there are permissions with a lookup fn, check if the permissions are met.
-      ...(permissions && permissionsLookupFn
+      ...(permissions &&
+      (!node || relevantContext.network != req.context.network) &&
+      permissionsLookupFn
         ? [
             deps.authorize({
               principal: req.context.principal,
@@ -24,7 +29,7 @@ module.exports = ({
               internalTokenFn,
               externalTokenFn,
               permissions,
-              ...(req.context && context && { context: req.context[context] }),
+              ...(req.context && context && { context: relevantContext }),
             }),
           ]
         : []),

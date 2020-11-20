@@ -35,6 +35,7 @@ module.exports = async ({
     protection = "strict",
     basic = false,
     context,
+    node = false,
   } of commands) {
     server = server.post(
       deps.post({
@@ -67,6 +68,7 @@ module.exports = async ({
                   deletedSceneCheckFn,
                   internalTokenFn,
                   context,
+                  node,
                   permissions:
                     privileges instanceof Array
                       ? privileges.map((privilege) => {

@@ -116,6 +116,7 @@ describe("Command gateway", () => {
       terminatedSessionCheckFn,
       deletedSceneCheckFn,
       internalTokenFn,
+      node: false,
       permissions: privileges.map((privilege) => {
         return { service, domain, privilege };
       }),
@@ -150,7 +151,9 @@ describe("Command gateway", () => {
     const privileges = "none";
     const name = "some-name";
     const network = "some-network";
-    const commands = [{ name, network, privileges, context, basic: true }];
+    const commands = [
+      { name, network, privileges, context, basic: true, node: true },
+    ];
 
     const verifyFnResult = "some-verify-fn";
     const verifyFnFake = fake.returns(verifyFnResult);
@@ -215,6 +218,7 @@ describe("Command gateway", () => {
       internalTokenFn,
       context,
       permissions: "none",
+      node: true,
     });
   });
   it("should call with the correct params with a command key and command server", async () => {
@@ -396,6 +400,7 @@ describe("Command gateway", () => {
       deletedSceneCheckFn,
       internalTokenFn,
       context,
+      node: false,
       permissions: privileges.map((privilege) => {
         return { service, domain, privilege };
       }),
@@ -469,6 +474,7 @@ describe("Command gateway", () => {
       deletedSceneCheckFn,
       internalTokenFn,
       context,
+      node: false,
       permissions: privileges.map((privilege) => {
         return { service: otherService, domain: otherDomain, privilege };
       }),
