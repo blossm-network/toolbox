@@ -122,9 +122,17 @@ module.exports = ({
           ]),
     ]);
 
+    //TODO
+    console.log({
+      rLen: results.length,
+      limit: req.query.limit,
+    });
+
     if (req.query.download == "csv" && formatCsv) {
       const fields = [
-        ...formatCsv.fields(results.map((result) => result.body)),
+        ...(formatCsv.fieldsFn
+          ? formatCsv.fieldsFn(results.map((result) => result.body))
+          : formatCsv.fields),
         "id",
       ];
       const data = results.map((result) => ({

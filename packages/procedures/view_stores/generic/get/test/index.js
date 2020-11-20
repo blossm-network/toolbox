@@ -204,7 +204,7 @@ describe("View store get", () => {
     const fieldsFn = fake.returns([csvField]);
 
     const formatCsv = {
-      fields: fieldsFn,
+      fieldsFn,
       fn: formatCsvFn,
     };
 
