@@ -1,7 +1,5 @@
 const deps = require("./deps");
 
-const blockLimit = 100;
-
 //TODO store the merkle proofs elsewhere for O(log(n)) verification. Not important now.
 module.exports = ({
   saveSnapshotFn,
@@ -14,8 +12,8 @@ module.exports = ({
   eventStreamFn,
   handlers,
   blockPublisherPublicKeyFn,
-  createBlockFn,
   public,
+  blockLimit,
 }) => async (transaction) => {
   const previousBlock = await latestBlockFn();
 
@@ -263,8 +261,6 @@ module.exports = ({
     block: normalizedBlock,
     ...(transaction && { transaction }),
   });
-
-  if (isBlockFull) await createBlockFn();
 
   return block;
 };

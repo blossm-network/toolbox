@@ -13,6 +13,7 @@ const now = new Date();
 const transaction = "some-transaction";
 
 const previousHash = "some-previous-hash";
+const blockLimit = 100;
 const root = "some-root";
 const publicKey = "some-public-key";
 const snapshotHash = "some-snapshot-hash";
@@ -243,7 +244,6 @@ describe("Event store create block transaction", () => {
     replace(deps, "encode", encodeFake);
 
     const blockPublisherPublicKeyFnFake = fake.returns(publicKey);
-    const createBlockFnFake = fake();
     const response = await create({
       saveSnapshotFn: saveSnapshotFnFake,
       aggregateFn: aggregateFnFake,
@@ -255,13 +255,12 @@ describe("Event store create block transaction", () => {
       blockPublisherPublicKeyFn: blockPublisherPublicKeyFnFake,
       findOneSnapshotFn,
       eventStreamFn,
-      createBlockFn: createBlockFnFake,
+      blockLimit,
       handlers,
       public,
     })(transaction);
 
     expect(response).to.deep.equal(saveBlockResponse);
-    expect(createBlockFnFake).to.not.have.been.called;
     expect(latestBlockFnFake).to.have.been.calledOnceWith();
     expect(rootStreamFnFake).to.have.been.calledOnceWith({
       updatedOnOrAfter: previousEnd,
@@ -536,7 +535,6 @@ describe("Event store create block transaction", () => {
     replace(deps, "encode", encodeFake);
 
     const blockPublisherPublicKeyFnFake = fake.returns(publicKey);
-    const createBlockFnFake = fake();
     await create({
       saveSnapshotFn: saveSnapshotFnFake,
       aggregateFn: aggregateFnFake,
@@ -548,12 +546,11 @@ describe("Event store create block transaction", () => {
       blockPublisherPublicKeyFn: blockPublisherPublicKeyFnFake,
       findOneSnapshotFn,
       eventStreamFn,
-      createBlockFn: createBlockFnFake,
+      blockLimit,
       handlers,
       public: false,
     })();
 
-    expect(createBlockFnFake).to.not.have.been.called;
     expect(latestBlockFnFake).to.have.been.calledOnceWith();
     expect(rootStreamFnFake).to.have.been.calledOnceWith({
       updatedOnOrAfter: previousEnd,
@@ -774,7 +771,6 @@ describe("Event store create block transaction", () => {
     replace(deps, "encode", encodeFake);
 
     const blockPublisherPublicKeyFnFake = fake.returns(publicKey);
-    const createBlockFnFake = fake();
     await create({
       saveSnapshotFn: saveSnapshotFnFake,
       aggregateFn: aggregateFnFake,
@@ -786,12 +782,11 @@ describe("Event store create block transaction", () => {
       blockPublisherPublicKeyFn: blockPublisherPublicKeyFnFake,
       findOneSnapshotFn,
       eventStreamFn,
-      createBlockFn: createBlockFnFake,
+      blockLimit,
       handlers,
       public,
     })(transaction);
 
-    expect(createBlockFnFake).to.not.have.been.called;
     expect(latestBlockFnFake).to.have.been.calledOnceWith();
     expect(rootStreamFnFake).to.have.been.calledOnceWith({
       updatedOnOrAfter: date.toISOString(),
@@ -972,7 +967,6 @@ describe("Event store create block transaction", () => {
     replace(deps, "encode", encodeFake);
 
     const blockPublisherPublicKeyFnFake = fake.returns(publicKey);
-    const createBlockFnFake = fake();
     await create({
       saveSnapshotFn: saveSnapshotFnFake,
       aggregateFn: aggregateFnFake,
@@ -984,12 +978,11 @@ describe("Event store create block transaction", () => {
       blockPublisherPublicKeyFn: blockPublisherPublicKeyFnFake,
       findOneSnapshotFn,
       eventStreamFn,
-      createBlockFn: createBlockFnFake,
+      blockLimit,
       handlers,
       public,
     })(transaction);
 
-    expect(createBlockFnFake).to.not.have.been.called;
     expect(latestBlockFnFake).to.have.been.calledOnceWith();
     expect(rootStreamFnFake).to.have.been.calledOnceWith({
       updatedOnOrAfter: previousEnd,
@@ -1166,7 +1159,6 @@ describe("Event store create block transaction", () => {
     replace(deps, "encode", encodeFake);
 
     const blockPublisherPublicKeyFnFake = fake.returns(publicKey);
-    const createBlockFnFake = fake();
     const result = await create({
       rootStreamFn: rootStreamFnFake,
       latestBlockFn: latestBlockFnFake,
@@ -1176,13 +1168,11 @@ describe("Event store create block transaction", () => {
       blockPublisherPublicKeyFn: blockPublisherPublicKeyFnFake,
       findOneSnapshotFn,
       eventStreamFn,
-      createBlockFn: createBlockFnFake,
       handlers,
       public,
     })(transaction);
 
     expect(result).to.deep.equal(genesisBlock);
-    expect(createBlockFnFake).to.not.have.been.called;
     expect(latestBlockFnFake).to.have.been.calledOnceWith();
 
     expect(hashFake.getCall(0)).to.have.been.calledWith("~");

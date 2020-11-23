@@ -1,5 +1,7 @@
 const deps = require("./deps");
 
+const blockLimit = 100;
+
 module.exports = ({
   saveSnapshotFn,
   rootStreamFn,
@@ -27,10 +29,13 @@ module.exports = ({
       eventStreamFn,
       handlers,
       blockPublisherPublicKeyFn,
-      createBlockFn,
       public,
+      blockLimit,
     })
   );
+
+  //Create another block if there are outstanding snapshots to secure.
+  if (block.headers.sCount >= blockLimit - 1) await createBlockFn();
 
   res.send(block);
 };
