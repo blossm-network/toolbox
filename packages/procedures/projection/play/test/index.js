@@ -61,6 +61,48 @@ describe("Command handler post", () => {
 
     expect(sendStatusFake).to.have.been.calledWith(204);
   });
+  it("should call with the correct params with muted events", async () => {
+    const mainFnFake = fake();
+
+    const aggregate = "some-aggregate";
+    const aggregateFnFake = fake.returns(aggregate);
+
+    const req = {
+      body: {
+        message: { data },
+      },
+    };
+
+    const sendStatusFake = fake();
+    const res = {
+      sendStatus: sendStatusFake,
+    };
+
+    const mutedEvents = [{ action, domain, service }];
+
+    await play({
+      mainFn: mainFnFake,
+      aggregateFn: aggregateFnFake,
+      readFactFn,
+      mutedEvents,
+    })(req, res);
+
+    expect(aggregateFnFake).to.have.been.calledWith({
+      root,
+      domain,
+      service,
+    });
+
+    expect(mainFnFake).to.have.been.calledWith({
+      aggregate,
+      aggregateFn: aggregateFnFake,
+      readFactFn,
+      push: false,
+      action,
+    });
+
+    expect(sendStatusFake).to.have.been.calledWith(204);
+  });
   it("should call with the correct params with no message", async () => {
     const mainFnFake = fake();
 

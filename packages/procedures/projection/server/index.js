@@ -7,6 +7,7 @@ module.exports = async ({
   playFn,
   aggregateFn,
   readFactFn,
+  mutedEvents,
 } = {}) => {
   deps
     .server()
@@ -23,6 +24,7 @@ module.exports = async ({
         mainFn,
         aggregateFn,
         readFactFn,
+        mutedEvents,
       })
     )
     .listen();

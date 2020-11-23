@@ -36,6 +36,7 @@ describe("Event handler", () => {
     replace(deps, "play", playFake);
     replace(deps, "replay", replayFake);
 
+    const mutedEvents = "some-muted-events";
     await projection({
       replayStores,
       mainFn,
@@ -43,6 +44,7 @@ describe("Event handler", () => {
       playFn,
       aggregateFn,
       readFactFn,
+      mutedEvents,
     });
 
     expect(listenFake).to.have.been.calledOnce;
@@ -60,6 +62,7 @@ describe("Event handler", () => {
       mainFn,
       aggregateFn,
       readFactFn,
+      mutedEvents,
     });
   });
   it("should throw correctly", async () => {

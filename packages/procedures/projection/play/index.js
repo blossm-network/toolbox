@@ -11,12 +11,23 @@ const data = (req) => {
   }
 };
 
-module.exports = ({ mainFn, aggregateFn, readFactFn }) => async (req, res) => {
-  const { root, action, domain, service, push = true } = req.body.message
+module.exports = ({
+  mainFn,
+  aggregateFn,
+  readFactFn,
+  mutedEvents = [],
+}) => async (req, res) => {
+  const { root, action, domain, service } = req.body.message
     ? data(req)
-    : { ...req.body, action: undefined, push: false };
+    : { ...req.body, action: undefined };
 
   if (!root) throw deps.badRequestError.message("A root wasn't specified.");
+
+  const push =
+    action != undefined &&
+    !mutedEvents.some(
+      (e) => e.service == service && e.domain == domain && e.action == action
+    );
 
   const aggregate = await aggregateFn({
     root,
