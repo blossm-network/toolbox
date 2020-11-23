@@ -222,12 +222,13 @@ const replayIfNeeded = async ({
 
   console.log("REPLAYING: ", {
     replay,
-    fullUpdate: JSON.stringify(fullUpdate),
-    fullQuery: JSON.stringify(fullQuery),
   });
 
   // Must be synchronous
   for (const r of replay || []) {
+    console.log("REPLAY part: ", {
+      r,
+    });
     const aggregate = await aggregateFn({
       domain: r.domain,
       service: r.service,
@@ -278,6 +279,13 @@ const replayIfNeeded = async ({
       matchDelimiter
     );
 
+    console.log("REPLAY part: ", {
+      composeUpdate: JSON.stringify(composedUpdate),
+      fullQuery: JSON.stringify({
+        ...fullQuery,
+        ...recursiveFullQuery,
+      }),
+    });
     const {
       fullUpdate: recursiveFullUpdate,
       fullQuery: recursiveFullQuery,
