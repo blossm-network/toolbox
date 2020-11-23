@@ -42,5 +42,7 @@ module.exports = ({
   //Create another block if there are outstanding snapshots to secure.
   if (block.headers.sCount >= blockLimit - 1) await createBlockFn();
 
+  console.log("BLAHHH");
+
   res.send(block);
 };
