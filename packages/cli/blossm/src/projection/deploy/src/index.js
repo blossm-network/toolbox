@@ -220,15 +220,8 @@ const replayIfNeeded = async ({
 
   let id;
 
-  console.log("REPLAYING: ", {
-    replay,
-  });
-
   // Must be synchronous
   for (const r of replay || []) {
-    console.log("REPLAY part: ", {
-      r,
-    });
     const aggregate = await aggregateFn({
       domain: r.domain,
       service: r.service,
@@ -279,18 +272,6 @@ const replayIfNeeded = async ({
       matchDelimiter
     );
 
-    console.log("ASFDSF: ", {
-      composeUpdate: JSON.stringify(composedUpdate),
-      baseUpdate: JSON.stringify({
-        ...fullUpdate,
-        ...replayUpdate,
-      }),
-      baseQuery: JSON.stringify({
-        ...fullQuery,
-        ...replayQuery,
-      }),
-      replayOps,
-    });
     const {
       fullUpdate: recursiveFullUpdate,
       fullQuery: recursiveFullQuery,
@@ -428,18 +409,13 @@ module.exports = projection({
       ops.map(async ({ id, query, update, arrayFilters, del }) => {
         if (!query && !id) return;
 
-        console.log({ preCleanQuery: JSON.stringify(query) });
         const composedQuery = query && cleanQuery(query, update);
-        console.log({ composedQuery: JSON.stringify(composedQuery) });
 
-        console.log({ preCleanUpdate: JSON.stringify(update) });
         const composedUpdate = composeUpdate(
           update,
           composedQuery,
           matchDelimiter
         );
-
-        console.log({ composedUpdate: JSON.stringify(composedUpdate) });
 
         const aggregateContext =
           process.env.CONTEXT &&
