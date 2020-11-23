@@ -34,15 +34,8 @@ module.exports = ({
     })
   );
 
-  console.log({
-    blockHeaders: block.headers,
-    blockLimit,
-  });
-
-  //Create another block if there are outstanding snapshots to secure.
-  if (block.headers.sCount >= blockLimit - 1) await createBlockFn();
-
-  console.log("BLAHHH");
+  //Create another block if the.
+  if (block.headers.sCount > 0) await createBlockFn();
 
   res.send(block);
 };

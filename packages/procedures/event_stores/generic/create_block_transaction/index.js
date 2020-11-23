@@ -88,7 +88,7 @@ module.exports = ({
     updatedBefore: end,
     //If the previous block was full, the last item of the previous block will be played again, but wont be saved
     //because aggregate.events.length will be 0.
-    //Find a way to unit test. This is integration tested though.
+    //Find a way to test.
     limit: blockLimit,
     reverse: true,
     fn: async ({ root, updated }) => {
@@ -230,15 +230,12 @@ module.exports = ({
 
   const sCount = stringifiedSnapshotPairs.length;
 
-  //Full block might have limit - 1. See note for stream.
-  const isBlockFull = sCount >= blockLimit - 1;
-
   const blockHeaders = {
     pHash: previousBlock.hash,
     created: deps.dateString(),
     number: previousBlock.headers.number + 1,
     start: previousBlock.headers.end,
-    end: isBlockFull ? lastRootEnd : end,
+    end: lastRootEnd || end,
     eCount: allStringifiedEventPairs.length,
     sCount,
     tCount: stringifiedTxPairs.length,

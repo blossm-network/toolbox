@@ -162,6 +162,7 @@ const snapshotStore = async ({ schema, indexes }) => {
           unique: true,
         },
         block: { [typeKey]: Number, required: true },
+        number: { [typeKey]: Number, required: true },
         cHash: { [typeKey]: String, required: true },
         gHash: { [typeKey]: String, required: true },
         sHash: { [typeKey]: String, required: true },
