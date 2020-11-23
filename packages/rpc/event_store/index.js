@@ -166,6 +166,7 @@ module.exports = ({ domain, service = process.env.SERVICE } = {}) => {
       externalFn: externalTokenFn,
       key,
     } = {},
+    enqueue: { fn: enqueueFn, wait: enqueueWait } = {},
   } = {}) => () =>
     deps
       .rpc(domain, service, "event-store")
@@ -179,6 +180,12 @@ module.exports = ({ domain, service = process.env.SERVICE } = {}) => {
         ...(externalTokenFn && { externalTokenFn }),
         ...(key && { key }),
         ...(claims && { claims }),
+        ...(enqueueFn && {
+          enqueueFn: enqueueFn({
+            queue: `event-store-${service}-${domain}`,
+            ...(enqueueWait && { wait: enqueueWait }),
+          }),
+        }),
       });
 
   return {
@@ -190,7 +197,7 @@ module.exports = ({ domain, service = process.env.SERVICE } = {}) => {
         rootStream: rootStream({ context, claims, token }),
         count: count({ context, claims, token }),
         aggregate: aggregate({ context, claims, token }),
-        createBlock: createBlock({ context, claims, token }),
+        createBlock: createBlock({ context, claims, token, enqueue }),
       };
     },
     add: add(),

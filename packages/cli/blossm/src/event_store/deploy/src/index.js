@@ -3,6 +3,7 @@ const pubsub = require("@blossm/gcp-pubsub");
 const { get: secret } = require("@blossm/gcp-secret");
 const { sign, encrypt, publicKey } = require("@blossm/gcp-kms");
 const gcpToken = require("@blossm/gcp-token");
+const { enqueue } = require("@blossm/gcp-queue");
 const handlers = require("./handlers");
 
 const config = require("./config.json");
@@ -39,7 +40,10 @@ module.exports = eventStore({
     }),
   createBlockFn: () =>
     eventStore({ domain: process.env.DOMAIN, service: process.env.SERVICE })
-      .set({ token: { internalFn: gcpToken } })
+      .set({
+        token: { internalFn: gcpToken },
+        enqueue: { fn: enqueue },
+      })
       .createBlock(),
   blockPublisherPublicKeyFn: async () => {
     if (!blockPublisherPublicKey) {

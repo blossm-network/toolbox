@@ -514,6 +514,10 @@ describe("Event store", () => {
     });
     replace(deps, "rpc", rpcFake);
 
+    const enqueueFnResult = "some-enqueue-fn-result";
+    const enqueueFnFake = fake.returns(enqueueFnResult);
+    const enqueueWait = "some-enqueue-wait";
+
     const result = await eventStore({ domain, service })
       .set({
         context,
@@ -522,6 +526,10 @@ describe("Event store", () => {
           internalFn: internalTokenFn,
           externalFn: externalTokenFn,
           key,
+        },
+        enqueue: {
+          fn: enqueueFnFake,
+          wait: enqueueWait,
         },
       })
       .createBlock();
@@ -537,6 +545,11 @@ describe("Event store", () => {
       externalTokenFn,
       key,
       claims,
+      enqueueFn: enqueueFnResult,
+    });
+    expect(enqueueFnFake).to.have.been.calledWith({
+      queue: `event-store-${service}-${domain}`,
+      wait: enqueueWait,
     });
     expect(result).to.equal(block);
   });
