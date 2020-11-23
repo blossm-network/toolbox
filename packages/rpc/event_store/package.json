@@ -1,7 +1,7 @@
 {
   "name": "@blossm/event-store-rpc",
   "description": "Access to an event store.",
-  "version": "0.0.248",
+  "version": "0.0.249",
   "scripts": {
     "test": "mocha --recursive"
   },
