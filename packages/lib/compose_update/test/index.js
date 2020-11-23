@@ -200,4 +200,29 @@ describe("Format update", () => {
       ],
     });
   });
+  it("temp should return the composed update with two parts", () => {
+    const query = {
+      "creator.id": "some-cretor-id",
+      "creator.invitations.id": "some-invitation-id",
+    };
+    const update = {
+      "creator.invitations.$.key": "some-invitation-key",
+      "creator.invitations": [
+        {
+          id: "some-invitation-id",
+        },
+        {
+          id: "some-other-invitation-id",
+        },
+      ],
+    };
+
+    const result = formatUpdate(update, query, ".$.");
+    expect(result).to.deep.equal({
+      "creator.invitations": [
+        { id: "some-invitation-id", key: "some-invitation-key" },
+        { id: "some-other-invitation-id" },
+      ],
+    });
+  });
 });

@@ -279,6 +279,18 @@ const replayIfNeeded = async ({
       matchDelimiter
     );
 
+    console.log("ASFDSF: ", {
+      composeUpdate: JSON.stringify(composedUpdate),
+      baseUpdate: JSON.stringify({
+        ...fullUpdate,
+        ...replayUpdate,
+      }),
+      baseQuery: JSON.stringify({
+        ...fullQuery,
+        ...replayQuery,
+      }),
+      replayOps,
+    });
     const {
       fullUpdate: recursiveFullUpdate,
       fullQuery: recursiveFullQuery,
@@ -292,14 +304,6 @@ const replayIfNeeded = async ({
         ...fullQuery,
         ...replayQuery,
       },
-    });
-
-    console.log("REPLAY part: ", {
-      composeUpdate: JSON.stringify(recursiveFullUpdate),
-      fullQuery: JSON.stringify({
-        ...fullQuery,
-        ...recursiveFullQuery,
-      }),
     });
 
     if (recursiveId || replayId) id = recursiveId || replayId;
