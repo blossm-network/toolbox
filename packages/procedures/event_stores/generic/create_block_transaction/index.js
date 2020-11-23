@@ -128,14 +128,23 @@ module.exports = ({
 
       const encodedEvents = deps.encode(stringifiedEventPairs);
 
+      //TODO this is a crutch so i dont have to delete all dbs rn.
+      // in the future get rid of the first case.
+      const nextSnapshotNumber = aggregate.headers.nonce
+        ? aggregate.headers.nonce.split("_")[1] + 1
+        : aggregate.headers.number == undefined
+        ? 0
+        : aggregate.headers.number + 1;
+
       const snapshotHeaders = {
-        nonce: `${root}_${nextBlockNumber}`,
+        nonce: `${root}_${nextSnapshotNumber}`,
         block: nextBlockNumber,
         cHash: contextHash,
         gHash: groupsHash,
         sHash: stateHash,
         pHash: previousHash,
         created: deps.dateString(),
+        number: nextSnapshotNumber,
         root,
         public,
         domain: process.env.DOMAIN,

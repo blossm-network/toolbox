@@ -26,6 +26,8 @@ module.exports = ({ findOneSnapshotFn, eventStreamFn, handlers }) => async (
       service: process.env.SERVICE,
       network: process.env.NETWORK,
       ...(snapshot && {
+        nonce: snapshot.headers.nonce,
+        number: snapshot.headers.number,
         lastEventNumber: snapshot.headers.lastEventNumber,
         snapshotHash: snapshot.hash,
         timestamp: snapshot.headers.created,

@@ -19,6 +19,7 @@ const publicKey = "some-public-key";
 const snapshotHash = "some-snapshot-hash";
 const txIds = "some-txids";
 const aggregateLastEventNumber = "some-snapshot-last-event-number";
+const aggregateLastNumber = 40;
 const aggregateState = "some-aggregate-state";
 const aggregateGroups = "some-aggregate-groups";
 const aggregateContext = "some-aggregate-context";
@@ -129,6 +130,7 @@ describe("Event store create block transaction", () => {
       headers: {
         snapshotHash,
         lastEventNumber: aggregateLastEventNumber,
+        number: aggregateLastNumber,
       },
       events: [event, otherEvent, yetAnotherEvent],
       context: aggregateContext,
@@ -287,7 +289,8 @@ describe("Event store create block transaction", () => {
     expect(hashFake.getCall(4)).to.have.been.calledWith(aggregateGroups);
     expect(hashFake.getCall(5)).to.have.been.calledWith(aggregateState);
     expect(hashFake.getCall(6)).to.have.been.calledWith({
-      nonce: `${root}_${previousNumber + 1}`,
+      nonce: `${root}_${aggregateLastNumber + 1}`,
+      number: aggregateLastNumber + 1,
       block: previousNumber + 1,
       cHash: contextHash,
       sHash: stateHash,
@@ -313,7 +316,8 @@ describe("Event store create block transaction", () => {
       snapshot: {
         hash: snapshotHeadersHash,
         headers: {
-          nonce: `${root}_${previousNumber + 1}`,
+          nonce: `${root}_${aggregateLastNumber + 1}`,
+          number: aggregateLastNumber + 1,
           block: previousNumber + 1,
           cHash: contextHash,
           sHash: stateHash,
@@ -580,7 +584,8 @@ describe("Event store create block transaction", () => {
     expect(hashFake.getCall(2)).to.have.been.calledWith(aggregateGroups);
     expect(hashFake.getCall(3)).to.have.been.calledWith(aggregateState);
     expect(hashFake.getCall(4)).to.have.been.calledWith({
-      nonce: `${root}_${previousNumber + 1}`,
+      nonce: `${root}_0`,
+      number: 0,
       block: previousNumber + 1,
       cHash: contextHash,
       sHash: stateHash,
@@ -604,7 +609,8 @@ describe("Event store create block transaction", () => {
       snapshot: {
         hash: snapshotHeadersHash,
         headers: {
-          nonce: `${root}_${previousNumber + 1}`,
+          nonce: `${root}_0`,
+          number: 0,
           block: previousNumber + 1,
           cHash: contextHash,
           sHash: stateHash,
@@ -874,6 +880,7 @@ describe("Event store create block transaction", () => {
     const aggregate = {
       headers: {
         lastEventNumber: aggregateLastEventNumber,
+        number: aggregateLastNumber,
       },
       events: [event],
       context: aggregateContext,
@@ -1004,7 +1011,8 @@ describe("Event store create block transaction", () => {
     expect(hashFake.getCall(3)).to.have.been.calledWith(aggregateState);
     expect(hashFake.getCall(4)).to.have.been.calledWith("~");
     expect(hashFake.getCall(5)).to.have.been.calledWith({
-      nonce: `${root}_${previousNumber + 1}`,
+      nonce: `${root}_${aggregateLastNumber + 1}`,
+      number: aggregateLastNumber + 1,
       block: previousNumber + 1,
       cHash: contextHash,
       sHash: stateHash,
@@ -1028,7 +1036,8 @@ describe("Event store create block transaction", () => {
       snapshot: {
         hash: snapshotHeadersHash,
         headers: {
-          nonce: `${root}_${previousNumber + 1}`,
+          nonce: `${root}_${aggregateLastNumber + 1}`,
+          number: aggregateLastNumber + 1,
           block: previousNumber + 1,
           cHash: contextHash,
           sHash: stateHash,

@@ -78,6 +78,8 @@ describe("Mongodb event store aggregate", () => {
       headers: {
         root,
         lastEventNumber: 6,
+        number: 23,
+        nonce: "some-nonce",
         created: snapshotCreated,
       },
       state: { a: 1, b: 1 },
@@ -132,6 +134,8 @@ describe("Mongodb event store aggregate", () => {
         service: envService,
         network: envNetwork,
         lastEventNumber: 1,
+        number: 23,
+        nonce: "some-nonce",
         timestamp: eventCreated,
       },
       state: { a: 1, b: 2, c: 2 },
@@ -158,6 +162,8 @@ describe("Mongodb event store aggregate", () => {
       headers: {
         root,
         lastEventNumber: 6,
+        number: 23,
+        nonce: "some-nonce",
         created: snapshotCreated,
       },
       state: { a: 1, b: 1 },
@@ -215,6 +221,8 @@ describe("Mongodb event store aggregate", () => {
         service: envService,
         network: envNetwork,
         lastEventNumber: 1,
+        number: 23,
+        nonce: "some-nonce",
         timestamp: eventCreated,
       },
       state: { a: 1, b: 2, c: 2 },
@@ -241,6 +249,8 @@ describe("Mongodb event store aggregate", () => {
       headers: {
         root,
         lastEventNumber: 6,
+        number: 23,
+        nonce: "some-nonce",
         created: snapshotCreated,
       },
       state: { a: 1, b: 1 },
@@ -328,6 +338,8 @@ describe("Mongodb event store aggregate", () => {
         service: envService,
         network: envNetwork,
         lastEventNumber: 1,
+        number: 23,
+        nonce: "some-nonce",
         timestamp: eventCreated,
       },
       state: { a: 1, b: 2, c: 2 },
@@ -356,6 +368,8 @@ describe("Mongodb event store aggregate", () => {
       headers: {
         root,
         lastEventNumber: 6,
+        number: 23,
+        nonce: "some-nonce",
         created: snapshotCreated,
       },
       state: { a: 1, b: 1 },
@@ -413,6 +427,8 @@ describe("Mongodb event store aggregate", () => {
         service: envService,
         network: envNetwork,
         lastEventNumber: 1,
+        number: 23,
+        nonce: "some-nonce",
         timestamp: eventCreated,
       },
       state: { a: 1, b: 2, c: 2 },
@@ -440,6 +456,8 @@ describe("Mongodb event store aggregate", () => {
       headers: {
         root,
         lastEventNumber: 6,
+        number: 23,
+        nonce: "some-nonce",
         created: snapshotCreated,
       },
       state: { a: 1, b: 1 },
@@ -486,6 +504,8 @@ describe("Mongodb event store aggregate", () => {
     expect(result).to.deep.equal({
       headers: {
         lastEventNumber: 6,
+        number: 23,
+        nonce: "some-nonce",
         domain: envDomain,
         service: envService,
         network: envNetwork,
@@ -601,6 +621,7 @@ describe("Mongodb event store aggregate", () => {
       headers: {
         root,
         lastEventNumber: 6,
+        number: 23,
         created: snapshotCreated,
       },
       state: { a: 1, b: 1 },
