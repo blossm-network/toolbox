@@ -182,7 +182,7 @@ module.exports = ({ domain, service = process.env.SERVICE } = {}) => {
         ...(claims && { claims }),
         ...(enqueueFn && {
           enqueueFn: enqueueFn({
-            queue: `event-store-${service}-${domain}`,
+            queue: `event-store-${service}-${domain}-create-block`,
             ...(enqueueWait && { wait: enqueueWait }),
           }),
         }),
