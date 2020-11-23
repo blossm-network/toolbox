@@ -279,7 +279,7 @@ describe("Event store integration tests", () => {
     ///Test block limit
     const eventData1 = [];
     const eventData2 = [];
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < 500; i++) {
       eventData1.push({
         event: {
           headers: {
@@ -330,7 +330,7 @@ describe("Event store integration tests", () => {
 
     expect(bigBlockResponse.statusCode).to.equal(200);
     const parsedBigBlockBody = JSON.parse(bigBlockResponse.body);
-    expect(parsedBigBlockBody.headers.sCount).to.equal(150);
+    expect(parsedBigBlockBody.headers.sCount).to.equal(500);
   });
   it("should return successfully adding two events together", async () => {
     const root = uuid();
