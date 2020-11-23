@@ -3,7 +3,8 @@
     "@blossm/mongodb-event-store": "*",
     "@blossm/gcp-pubsub": "*",
     "@blossm/gcp-secret": "*",
-    "@blossm/gcp-token": "*"
+    "@blossm/gcp-token": "*",
+    "@blossm/gcp-queue": "*"
   },
   "devDependencies": {
     "localenv": "^0.2.2",
