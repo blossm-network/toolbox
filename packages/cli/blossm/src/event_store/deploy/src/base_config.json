@@ -4,7 +4,8 @@
     "@blossm/gcp-pubsub": "*",
     "@blossm/gcp-secret": "*",
     "@blossm/gcp-token": "*",
-    "@blossm/gcp-queue": "*"
+    "@blossm/gcp-queue": "*",
+    "@blossm/event-store-rpc": "*"
   },
   "devDependencies": {
     "localenv": "^0.2.2",
