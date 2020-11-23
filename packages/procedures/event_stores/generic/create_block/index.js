@@ -34,8 +34,8 @@ module.exports = ({
     })
   );
 
-  //Create another block if the.
-  if (block.headers.sCount > 0) await createBlockFn();
+  //Create another block if there are outstanding snapshots to secure.
+  if (block.headers.sCount >= blockLimit - 1) await createBlockFn();
 
   res.send(block);
 };
