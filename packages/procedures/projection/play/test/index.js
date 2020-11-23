@@ -78,7 +78,7 @@ describe("Command handler post", () => {
       sendStatus: sendStatusFake,
     };
 
-    const mutedEvents = [{ action, domain, service }];
+    const mutedEvents = [{ actions: [action], domain, service }];
 
     await play({
       mainFn: mainFnFake,

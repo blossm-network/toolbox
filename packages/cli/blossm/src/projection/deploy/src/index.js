@@ -537,5 +537,5 @@ module.exports = projection({
       }),
   replayStores: config.replay || config.events,
   secretFn: secret,
-  mutedEvents: config.mutedEvents || [],
+  mutedEvents: config.muted || [],
 });

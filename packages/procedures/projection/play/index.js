@@ -26,7 +26,8 @@ module.exports = ({
   const push =
     action != undefined &&
     !mutedEvents.some(
-      (e) => e.service == service && e.domain == domain && e.action == action
+      (e) =>
+        e.service == service && e.domain == domain && e.actions.includes(action)
     );
 
   const aggregate = await aggregateFn({
