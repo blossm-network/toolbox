@@ -1,5 +1,18 @@
 //TODO this function is such a hack, but it works. It's also the reason projections are magic.
 
+//Returns at most one value of a given key in an object.
+const getValue = (object, key) => {
+  if (object == undefined) return;
+  const keyParts = key.split(".");
+  return keyParts.length > 1
+    ? object[keyParts[0]] instanceof Array
+      ? object[keyParts[0]].map((element) =>
+          getValue(element, keyParts.slice(1).join("."))
+        )[0]
+      : getValue(object[keyParts[0]], keyParts.slice(1).join("."))
+    : object[keyParts[0]];
+};
+
 const composeUpdate = (update, query, matchDelimiter) => {
   //sort array properties first
   update = {
@@ -39,6 +52,7 @@ const composeUpdate = (update, query, matchDelimiter) => {
         relevantQueryParams.push({
           key: querySplit[1],
           value: query[queryKey],
+          context: matchUpdate.root,
         });
       }
     }
@@ -46,12 +60,13 @@ const composeUpdate = (update, query, matchDelimiter) => {
 
     if (result[matchUpdate.root] != undefined) {
       result[matchUpdate.root] = result[matchUpdate.root].map((element) => {
-        for (const param of relevantQueryParams)
+        for (const param of relevantQueryParams) {
           if (
             element[param.key] != undefined &&
             element[param.key] != param.value
           )
             return element;
+        }
 
         return {
           ...element,
@@ -84,6 +99,24 @@ const composeUpdate = (update, query, matchDelimiter) => {
                 };
               }
             ),
+          };
+        }
+      );
+      continue;
+    } else if (getValue(result, matchUpdate.root) != undefined) {
+      result[matchUpdate.root] = getValue(result, matchUpdate.root).map(
+        (element) => {
+          for (const param of relevantQueryParams) {
+            if (
+              element[param.key] != undefined &&
+              element[param.key] != param.value
+            )
+              return element;
+          }
+
+          return {
+            ...element,
+            [matchUpdate.key]: matchUpdate.value,
           };
         }
       );
