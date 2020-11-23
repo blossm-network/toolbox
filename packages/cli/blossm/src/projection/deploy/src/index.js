@@ -411,6 +411,7 @@ module.exports = projection({
 
         const composedQuery = query && cleanQuery(query, update);
 
+        console.log({ update: JSON.stringify(update) });
         const composedUpdate = composeUpdate(
           update,
           composedQuery,
@@ -424,6 +425,7 @@ module.exports = projection({
 
         if (process.env.CONTEXT && !aggregateContext) return;
 
+        console.log({ composeUpdate: JSON.stringify(composedUpdate) });
         if (id) {
           del
             ? await deleteId({
