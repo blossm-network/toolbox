@@ -262,13 +262,12 @@ describe("Event store create block transaction", () => {
       public,
     })(transaction);
 
-    expect(response).to.deep.equal(saveBlockResponse);
+    expect(response).to.deep.equal({ block: saveBlockResponse, full: false });
     expect(latestBlockFnFake).to.have.been.calledOnceWith();
     expect(rootStreamFnFake).to.have.been.calledOnceWith({
       updatedOnOrAfter: previousEnd,
       updatedBefore: deps.dateString(),
       parallel: 10,
-      limit: 100,
       reverse: true,
       fn: match(() => true),
     });
@@ -560,7 +559,6 @@ describe("Event store create block transaction", () => {
       updatedOnOrAfter: previousEnd,
       updatedBefore: deps.dateString(),
       parallel: 10,
-      limit: 100,
       reverse: true,
       fn: match(() => true),
     });
@@ -798,7 +796,6 @@ describe("Event store create block transaction", () => {
       updatedOnOrAfter: date.toISOString(),
       updatedBefore: deps.dateString(),
       parallel: 10,
-      limit: 100,
       reverse: true,
       fn: match(() => true),
     });
@@ -995,7 +992,6 @@ describe("Event store create block transaction", () => {
       updatedOnOrAfter: previousEnd,
       updatedBefore: deps.dateString(),
       parallel: 10,
-      limit: 100,
       reverse: true,
       fn: match(() => true),
     });

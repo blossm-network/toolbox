@@ -36,8 +36,11 @@ describe("Event store post", () => {
     const blockPublisherPublicKeyFn = "some-block-publisher-key-fn";
     const public = "some public";
 
-    const createdTransactionResult = { headers: { sCount: 3 } };
-    const createTransactionFnFake = fake.returns(createdTransactionResult);
+    const createdTransactionResult = "some-created-transaction-result";
+    const createTransactionFnFake = fake.returns({
+      block: createdTransactionResult,
+      full: false,
+    });
     const createBlockFnFake = fake();
     await createBlock({
       saveSnapshotFn,
@@ -101,8 +104,11 @@ describe("Event store post", () => {
     const blockPublisherPublicKeyFn = "some-block-publisher-key-fn";
     const public = "some public";
 
-    const createdTransactionResult = { headers: { sCount: 99 } };
-    const createTransactionFnFake = fake.returns(createdTransactionResult);
+    const createdTransactionResult = "some-created-transaction-result";
+    const createTransactionFnFake = fake.returns({
+      block: createdTransactionResult,
+      full: true,
+    });
     const createBlockFnFake = fake();
     await createBlock({
       saveSnapshotFn,

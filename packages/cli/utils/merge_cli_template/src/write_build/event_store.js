@@ -13,7 +13,7 @@ const createKeyRing = require("./steps/create_key_ring");
 const createSymmetricEncryptKey = require("./steps/create_symmetric_encrypt_key");
 const createAsymmetricSignKey = require("./steps/create_asymmetric_sign_key");
 const scheduleJob = require("./steps/schedule_job");
-// const updateScheduledJob = require("./steps/update_scheduled_job");
+const updateScheduledJob = require("./steps/update_scheduled_job");
 const startDnsTransaction = require("./steps/start_dns_transaction");
 const addDnsTransaction = require("./steps/add_dns_transaction");
 const executeDnsTransaction = require("./steps/execute_dns_transaction");
@@ -40,7 +40,7 @@ module.exports = ({
   memory,
   env,
   serviceName,
-  // blockSchedule,
+  blockSchedule,
   host,
   containerRegistery,
   mainContainerName,
@@ -184,20 +184,20 @@ module.exports = ({
               project,
             })
           ),
-          // scheduleJob({
-          //   name: `event-store-${service}-${domain}-create-block`,
-          //   schedule: blockSchedule,
-          //   serviceName,
-          //   computeUrlId,
-          //   uri: `${uri}/create-block`,
-          //   project,
-          // }),
-          // //Update the schedule if it's changed.
-          // updateScheduledJob({
-          //   name: `event-store-${service}-${domain}-create-block`,
-          //   schedule: blockSchedule,
-          //   project,
-          // }),
+          scheduleJob({
+            name: `event-store-${service}-${domain}-create-block`,
+            schedule: blockSchedule,
+            serviceName,
+            computeUrlId,
+            uri: `${uri}/create-block`,
+            project,
+          }),
+          //Update the schedule if it's changed.
+          updateScheduledJob({
+            name: `event-store-${service}-${domain}-create-block`,
+            schedule: blockSchedule,
+            project,
+          }),
           scheduleJob({
             name: `event-store-${service}-${domain}-check-in`,
             schedule: checkInSchedule,

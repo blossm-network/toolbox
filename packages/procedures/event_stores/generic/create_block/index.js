@@ -17,7 +17,7 @@ module.exports = ({
   createBlockFn,
   public,
 }) => async (_, res) => {
-  const block = await createTransactionFn(
+  const { block, full } = await createTransactionFn(
     deps.createBlockTransaction({
       saveSnapshotFn,
       rootStreamFn,
@@ -34,8 +34,8 @@ module.exports = ({
     })
   );
 
-  //Create another block if there are outstanding snapshots to secure.
-  if (block.headers.sCount >= blockLimit - 1) await createBlockFn();
+  //Create another block if the one just created was full.
+  if (full) await createBlockFn();
 
   res.send(block);
 };

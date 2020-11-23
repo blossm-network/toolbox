@@ -83,18 +83,26 @@ module.exports = ({
   let lastRootEnd;
   let end = deps.dateString();
 
+  let count;
+  let full = false;
+
+  const increment = Math.round(blockLimit * 0.1);
+
   await rootStreamFn({
     updatedOnOrAfter: previousBlock.headers.end,
     updatedBefore: end,
-    //If the previous block was full, the last item of the previous block will be played again, but wont be saved
-    //because aggregate.events.length will be 0.
-    //Find a way to test.
-    limit: blockLimit,
     reverse: true,
     fn: async ({ root, updated }) => {
+      if (count >= blockLimit - increment) {
+        full = true;
+        return;
+      }
+
       const aggregate = await aggregateFn(root, { includeEvents: true });
 
       if (aggregate.events.length == 0) return;
+
+      count++;
 
       const stringifiedEventPairs = [];
       await Promise.all(
@@ -185,7 +193,7 @@ module.exports = ({
           ? updated
           : lastRootEnd;
     },
-    parallel: blockLimit * 0.1,
+    parallel: increment,
   });
 
   const stringifiedSnapshotPairs = [];
@@ -268,5 +276,5 @@ module.exports = ({
     ...(transaction && { transaction }),
   });
 
-  return block;
+  return { block, full };
 };
