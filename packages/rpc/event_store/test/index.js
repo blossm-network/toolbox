@@ -500,4 +500,44 @@ describe("Event store", () => {
     });
     expect(result).to.equal(count);
   });
+  it("should call create block with the right params", async () => {
+    const block = "some-block";
+    const withFake = fake.returns(block);
+    const inFake = fake.returns({
+      with: withFake,
+    });
+    const postFake = fake.returns({
+      in: inFake,
+    });
+    const rpcFake = fake.returns({
+      post: postFake,
+    });
+    replace(deps, "rpc", rpcFake);
+
+    const result = await eventStore({ domain, service })
+      .set({
+        context,
+        claims,
+        token: {
+          internalFn: internalTokenFn,
+          externalFn: externalTokenFn,
+          key,
+        },
+      })
+      .createBlock();
+
+    expect(rpcFake).to.have.been.calledWith(domain, service, "event-store");
+    expect(postFake).to.have.been.calledWith();
+    expect(inFake).to.have.been.calledWith({
+      context,
+    });
+    expect(withFake).to.have.been.calledWith({
+      path: "/create-block",
+      internalTokenFn,
+      externalTokenFn,
+      key,
+      claims,
+    });
+    expect(result).to.equal(block);
+  });
 });

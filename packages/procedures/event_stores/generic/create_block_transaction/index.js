@@ -1,6 +1,6 @@
 const deps = require("./deps");
 
-// const blockLimit = 100;
+const blockLimit = 500;
 
 //TODO store the merkle proofs elsewhere for O(log(n)) verification. Not important now.
 module.exports = ({
@@ -14,6 +14,7 @@ module.exports = ({
   eventStreamFn,
   handlers,
   blockPublisherPublicKeyFn,
+  createBlockFn,
   public,
 }) => async (transaction) => {
   const previousBlock = await latestBlockFn();
@@ -89,8 +90,8 @@ module.exports = ({
     updatedBefore: end,
     //If the previous block was full, the last item of the previous block will be played again, but wont be saved
     //because aggregate.events.length will be 0.
-    //If ever uncomment next line, find a way to unit test. This is integration tested though.
-    // limit: blockLimit,
+    //Find a way to unit test. This is integration tested though.
+    limit: blockLimit,
     reverse: true,
     fn: async ({ root, updated }) => {
       const aggregate = await aggregateFn(root, { includeEvents: true });
@@ -177,7 +178,7 @@ module.exports = ({
           ? updated
           : lastRootEnd;
     },
-    parallel: 10,
+    parallel: blockLimit * 0.1,
   });
 
   const stringifiedSnapshotPairs = [];
@@ -221,12 +222,16 @@ module.exports = ({
   const encodedTxs = deps.encode(stringifiedTxPairs);
 
   const sCount = stringifiedSnapshotPairs.length;
+
+  //Full block might have limit - 1. See note for stream.
+  const isBlockFull = sCount >= blockLimit - 1;
+
   const blockHeaders = {
     pHash: previousBlock.hash,
     created: deps.dateString(),
     number: previousBlock.headers.number + 1,
     start: previousBlock.headers.end,
-    end, //: sCount == blockLimit ? lastRootEnd : end,
+    end: isBlockFull ? lastRootEnd : end,
     eCount: allStringifiedEventPairs.length,
     sCount,
     tCount: stringifiedTxPairs.length,
@@ -249,15 +254,17 @@ module.exports = ({
     signature: signedBlockHeadersHash,
     hash: blockHeadersHash,
     headers: blockHeaders,
-    // events: encodedAllEvents,
-    // snapshots: encodedSnapshots,
-    // txs: encodedTxs,
+    events: encodedAllEvents,
+    snapshots: encodedSnapshots,
+    txs: encodedTxs,
   };
 
   const block = await saveBlockFn({
     block: normalizedBlock,
     ...(transaction && { transaction }),
   });
+
+  if (isBlockFull) await createBlockFn();
 
   return block;
 };

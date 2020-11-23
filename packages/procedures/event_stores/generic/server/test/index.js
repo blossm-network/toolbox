@@ -19,6 +19,7 @@ const idempotencyConflictCheckFn = "some-idempotency-conflict-check-fn";
 const latestBlockFn = "some-latest-block-fn";
 const saveSnapshotFn = "some-save-snapshot-fn";
 const encryptFn = "some-encrypt-fn";
+const createBlockFn = "some-create-block-fn";
 const signFn = "some-sign-fn";
 const blockPublisherPublicKeyFn = "some-block-publisher-public-key-fn";
 
@@ -92,6 +93,7 @@ describe("Event store", () => {
       countFn,
       saveSnapshotFn,
       encryptFn,
+      createBlockFn,
       signFn,
       blockPublisherPublicKeyFn,
       public,
@@ -142,6 +144,7 @@ describe("Event store", () => {
       saveBlockFn,
       latestBlockFn,
       encryptFn,
+      createBlockFn,
       signFn,
       blockPublisherPublicKeyFn,
       findOneSnapshotFn,

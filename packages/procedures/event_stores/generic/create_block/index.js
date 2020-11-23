@@ -12,6 +12,7 @@ module.exports = ({
   findOneSnapshotFn,
   eventStreamFn,
   handlers,
+  createBlockFn,
   public,
 }) => async (_, res) => {
   const block = await createTransactionFn(
@@ -26,6 +27,7 @@ module.exports = ({
       eventStreamFn,
       handlers,
       blockPublisherPublicKeyFn,
+      createBlockFn,
       public,
     })
   );

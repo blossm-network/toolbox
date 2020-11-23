@@ -29,6 +29,7 @@ describe("Event store post", () => {
     const latestBlockFn = "some-latest-block-fn";
     const saveBlockFn = "some-save-block-fn";
     const encryptFn = "some-encrypt-fn";
+    const createBlockFn = "some-create-block-fn";
     const signFn = "some-sign-fn";
     const findOneSnapshotFn = "some-find-one-snapshot-fn";
     const eventStreamFn = "some-event-stream-fn";
@@ -45,6 +46,7 @@ describe("Event store post", () => {
       saveBlockFn,
       createTransactionFn: createTransactionFnFake,
       encryptFn,
+      createBlockFn,
       signFn,
       blockPublisherPublicKeyFn,
       findOneSnapshotFn,
@@ -62,6 +64,7 @@ describe("Event store post", () => {
       latestBlockFn,
       saveBlockFn,
       encryptFn,
+      createBlockFn,
       signFn,
       findOneSnapshotFn,
       eventStreamFn,

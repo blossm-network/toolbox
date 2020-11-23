@@ -158,6 +158,29 @@ module.exports = ({ domain, service = process.env.SERVICE } = {}) => {
         ...(claims && { claims }),
       });
 
+  const createBlock = ({
+    context,
+    claims,
+    token: {
+      internalFn: internalTokenFn,
+      externalFn: externalTokenFn,
+      key,
+    } = {},
+  } = {}) => () =>
+    deps
+      .rpc(domain, service, "event-store")
+      .post()
+      .in({
+        ...(context && { context }),
+      })
+      .with({
+        path: `/create-block`,
+        ...(internalTokenFn && { internalTokenFn }),
+        ...(externalTokenFn && { externalTokenFn }),
+        ...(key && { key }),
+        ...(claims && { claims }),
+      });
+
   return {
     set: ({ context, claims, token, enqueue } = {}) => {
       return {
@@ -167,6 +190,7 @@ module.exports = ({ domain, service = process.env.SERVICE } = {}) => {
         rootStream: rootStream({ context, claims, token }),
         count: count({ context, claims, token }),
         aggregate: aggregate({ context, claims, token }),
+        createBlock: createBlock({ context, claims, token }),
       };
     },
     add: add(),
@@ -175,5 +199,6 @@ module.exports = ({ domain, service = process.env.SERVICE } = {}) => {
     aggregateStream: aggregateStream(),
     rootStream: rootStream(),
     count: count(),
+    createBlock: createBlock(),
   };
 };

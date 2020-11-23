@@ -6,7 +6,6 @@ const { restore, fake, match, stub, replace, useFakeTimers } = require("sinon");
 
 const create = require("..");
 const deps = require("../deps");
-const { dateString } = require("@blossm/command-rpc/deps");
 
 let clock;
 const now = new Date();
@@ -95,7 +94,7 @@ describe("Event store create block transaction", () => {
   });
 
   it("should call with the correct params", async () => {
-    const previousEnd = dateString();
+    const previousEnd = deps.dateString();
     const updated = deps.dateString();
     const latestBlock = {
       hash: previousHash,
@@ -244,6 +243,7 @@ describe("Event store create block transaction", () => {
     replace(deps, "encode", encodeFake);
 
     const blockPublisherPublicKeyFnFake = fake.returns(publicKey);
+    const createBlockFnFake = fake();
     const response = await create({
       saveSnapshotFn: saveSnapshotFnFake,
       aggregateFn: aggregateFnFake,
@@ -255,17 +255,19 @@ describe("Event store create block transaction", () => {
       blockPublisherPublicKeyFn: blockPublisherPublicKeyFnFake,
       findOneSnapshotFn,
       eventStreamFn,
+      createBlockFn: createBlockFnFake,
       handlers,
       public,
     })(transaction);
 
     expect(response).to.deep.equal(saveBlockResponse);
+    expect(createBlockFnFake).to.not.have.been.called;
     expect(latestBlockFnFake).to.have.been.calledOnceWith();
     expect(rootStreamFnFake).to.have.been.calledOnceWith({
       updatedOnOrAfter: previousEnd,
       updatedBefore: deps.dateString(),
       parallel: 10,
-      // limit: 100,
+      limit: 500,
       reverse: true,
       fn: match(() => true),
     });
@@ -411,15 +413,15 @@ describe("Event store create block transaction", () => {
           domain,
           key: Buffer.from(publicKey).toString("base64"),
         },
-        // events: encodedAllEventPairs,
-        // snapshots: encodedSnapshotPairs,
-        // txs: encodedTxPairs,
+        events: encodedAllEventPairs,
+        snapshots: encodedSnapshotPairs,
+        txs: encodedTxPairs,
       },
       transaction,
     });
   });
   it("should call with the correct params with public keys and no transaction", async () => {
-    const previousEnd = dateString();
+    const previousEnd = deps.dateString();
     const updated = deps.dateString();
     const latestBlock = {
       hash: previousHash,
@@ -534,6 +536,7 @@ describe("Event store create block transaction", () => {
     replace(deps, "encode", encodeFake);
 
     const blockPublisherPublicKeyFnFake = fake.returns(publicKey);
+    const createBlockFnFake = fake();
     await create({
       saveSnapshotFn: saveSnapshotFnFake,
       aggregateFn: aggregateFnFake,
@@ -545,16 +548,18 @@ describe("Event store create block transaction", () => {
       blockPublisherPublicKeyFn: blockPublisherPublicKeyFnFake,
       findOneSnapshotFn,
       eventStreamFn,
+      createBlockFn: createBlockFnFake,
       handlers,
       public: false,
     })();
 
+    expect(createBlockFnFake).to.not.have.been.called;
     expect(latestBlockFnFake).to.have.been.calledOnceWith();
     expect(rootStreamFnFake).to.have.been.calledOnceWith({
       updatedOnOrAfter: previousEnd,
       updatedBefore: deps.dateString(),
       parallel: 10,
-      // limit: 100,
+      limit: 500,
       reverse: true,
       fn: match(() => true),
     });
@@ -696,9 +701,9 @@ describe("Event store create block transaction", () => {
           domain,
           key: Buffer.from(publicKey).toString("base64"),
         },
-        // events: encodedAllEventPairs,
-        // txs: encodedTxPairs,
-        // snapshots: encodedSnapshotPairs,
+        events: encodedAllEventPairs,
+        txs: encodedTxPairs,
+        snapshots: encodedSnapshotPairs,
       },
     });
   });
@@ -769,6 +774,7 @@ describe("Event store create block transaction", () => {
     replace(deps, "encode", encodeFake);
 
     const blockPublisherPublicKeyFnFake = fake.returns(publicKey);
+    const createBlockFnFake = fake();
     await create({
       saveSnapshotFn: saveSnapshotFnFake,
       aggregateFn: aggregateFnFake,
@@ -780,16 +786,18 @@ describe("Event store create block transaction", () => {
       blockPublisherPublicKeyFn: blockPublisherPublicKeyFnFake,
       findOneSnapshotFn,
       eventStreamFn,
+      createBlockFn: createBlockFnFake,
       handlers,
       public,
     })(transaction);
 
+    expect(createBlockFnFake).to.not.have.been.called;
     expect(latestBlockFnFake).to.have.been.calledOnceWith();
     expect(rootStreamFnFake).to.have.been.calledOnceWith({
       updatedOnOrAfter: date.toISOString(),
       updatedBefore: deps.dateString(),
       parallel: 10,
-      // limit: 100,
+      limit: 500,
       reverse: true,
       fn: match(() => true),
     });
@@ -847,15 +855,15 @@ describe("Event store create block transaction", () => {
           domain,
           key: Buffer.from(publicKey).toString("base64"),
         },
-        // events: encodedAllEventPairs,
-        // snapshots: encodedSnapshotPairs,
-        // txs: encodedTxPairs,
+        events: encodedAllEventPairs,
+        snapshots: encodedSnapshotPairs,
+        txs: encodedTxPairs,
       },
       transaction,
     });
   });
   it("should call with the correct params with no previous snapshot", async () => {
-    const previousEnd = dateString();
+    const previousEnd = deps.dateString();
     const updated = deps.dateString();
     const latestBlock = {
       hash: previousHash,
@@ -964,6 +972,7 @@ describe("Event store create block transaction", () => {
     replace(deps, "encode", encodeFake);
 
     const blockPublisherPublicKeyFnFake = fake.returns(publicKey);
+    const createBlockFnFake = fake();
     await create({
       saveSnapshotFn: saveSnapshotFnFake,
       aggregateFn: aggregateFnFake,
@@ -975,16 +984,18 @@ describe("Event store create block transaction", () => {
       blockPublisherPublicKeyFn: blockPublisherPublicKeyFnFake,
       findOneSnapshotFn,
       eventStreamFn,
+      createBlockFn: createBlockFnFake,
       handlers,
       public,
     })(transaction);
 
+    expect(createBlockFnFake).to.not.have.been.called;
     expect(latestBlockFnFake).to.have.been.calledOnceWith();
     expect(rootStreamFnFake).to.have.been.calledOnceWith({
       updatedOnOrAfter: previousEnd,
       updatedBefore: deps.dateString(),
       parallel: 10,
-      // limit: 100,
+      limit: 500,
       reverse: true,
       fn: match(() => true),
     });
@@ -1113,9 +1124,9 @@ describe("Event store create block transaction", () => {
           domain,
           key: Buffer.from(publicKey).toString("base64"),
         },
-        // events: encodedAllEventPairs,
-        // snapshots: encodedSnapshotPairs,
-        // txs: encodedTxPairs,
+        events: encodedAllEventPairs,
+        snapshots: encodedSnapshotPairs,
+        txs: encodedTxPairs,
       },
       transaction,
     });
@@ -1155,6 +1166,7 @@ describe("Event store create block transaction", () => {
     replace(deps, "encode", encodeFake);
 
     const blockPublisherPublicKeyFnFake = fake.returns(publicKey);
+    const createBlockFnFake = fake();
     const result = await create({
       rootStreamFn: rootStreamFnFake,
       latestBlockFn: latestBlockFnFake,
@@ -1164,11 +1176,13 @@ describe("Event store create block transaction", () => {
       blockPublisherPublicKeyFn: blockPublisherPublicKeyFnFake,
       findOneSnapshotFn,
       eventStreamFn,
+      createBlockFn: createBlockFnFake,
       handlers,
       public,
     })(transaction);
 
     expect(result).to.deep.equal(genesisBlock);
+    expect(createBlockFnFake).to.not.have.been.called;
     expect(latestBlockFnFake).to.have.been.calledOnceWith();
 
     expect(hashFake.getCall(0)).to.have.been.calledWith("~");

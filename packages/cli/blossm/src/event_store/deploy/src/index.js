@@ -2,6 +2,7 @@ const eventStore = require("@blossm/mongodb-event-store");
 const pubsub = require("@blossm/gcp-pubsub");
 const { get: secret } = require("@blossm/gcp-secret");
 const { sign, encrypt, publicKey } = require("@blossm/gcp-kms");
+const gcpToken = require("@blossm/gcp-token");
 const handlers = require("./handlers");
 
 const config = require("./config.json");
@@ -36,6 +37,10 @@ module.exports = eventStore({
       project: process.env.GCP_PROJECT,
       format: "base64",
     }),
+  createBlockFn: () =>
+    eventStore({ domain: process.env.DOMAIN, service: process.env.SERVICE })
+      .set({ token: { internalFn: gcpToken } })
+      .createBlock(),
   blockPublisherPublicKeyFn: async () => {
     if (!blockPublisherPublicKey) {
       blockPublisherPublicKey = await publicKey({
