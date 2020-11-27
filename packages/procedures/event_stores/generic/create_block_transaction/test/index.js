@@ -1177,7 +1177,7 @@ describe("Event store create block transaction", () => {
       public,
     })(transaction);
 
-    expect(result).to.deep.equal(genesisBlock);
+    expect(result).to.deep.equal({ block: genesisBlock, full: false });
     expect(latestBlockFnFake).to.have.been.calledOnceWith();
 
     expect(hashFake.getCall(0)).to.have.been.calledWith("~");

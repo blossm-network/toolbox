@@ -65,7 +65,7 @@ module.exports = ({
       ...(transaction && { transaction }),
     });
 
-    return savedGenesisBlock;
+    return { block: savedGenesisBlock, full: false };
   }
 
   const snapshots = [];
