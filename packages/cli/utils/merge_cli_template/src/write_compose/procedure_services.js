@@ -94,6 +94,7 @@ module.exports = ({
           ...services,
           [dependency.host]: {
             ...common,
+            ...(dependency.port && { ports: [`${dependency.port}`] }),
             build: "./http_dependency",
             container_name: dependency.host,
             environment: {
