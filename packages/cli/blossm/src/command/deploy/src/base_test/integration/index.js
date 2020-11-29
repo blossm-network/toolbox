@@ -153,7 +153,7 @@ describe("Command handler integration tests", () => {
   it("should return successfully", async () => {
     console.log("MEEEP");
     if (contexts) {
-      console.log("SHHOP");
+      console.log("SHHOP", { url });
       const response = await request.post(url, {
         body: {
           context: {},
