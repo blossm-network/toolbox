@@ -7,20 +7,24 @@ module.exports = ({
   limit = null,
   options = null,
 }) => {
-  console.log({ query: JSON.stringify(query) });
+  if (query) {
+    console.log({ query: JSON.stringify(query) });
+  }
   console.log({
-    select: JSON.stringify(
+    select: JSON.stringify({
       ...select,
       ...((!select ||
         !Object.keys(select).some((key) => select[key] === 1)) && {
         _id: 0,
         __v: 0,
-      })
-    ),
+      }),
+    }),
   });
-  console.log({
-    sort: JSON.stringify(sort),
-  });
+  if (sort) {
+    console.log({
+      sort: JSON.stringify(sort),
+    });
+  }
   return store.find(
     query,
     {
