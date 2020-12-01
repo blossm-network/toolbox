@@ -170,8 +170,6 @@ module.exports = ({
     }`;
 
     const formattedResults = results.map((r) => {
-      //TODO
-      console.log({ r });
       const formattedTrace = [];
       for (const service in r.trace) {
         for (const domain in r.trace[service]) {
