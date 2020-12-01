@@ -234,8 +234,8 @@ module.exports = async ({
             }),
             ...((sort || text) && {
               sort: {
-                ...sort,
                 score: { $meta: "textScore" },
+                ...sort,
               },
             }),
           })

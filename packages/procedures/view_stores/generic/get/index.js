@@ -122,6 +122,9 @@ module.exports = ({
           ]),
     ]);
 
+    //TODO
+    console.log({ results: JSON.stringify(results) });
+
     if (req.query.download == "csv" && formatCsv) {
       const fields = [
         ...(formatCsv.fieldsFn
