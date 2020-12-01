@@ -122,9 +122,6 @@ module.exports = ({
           ]),
     ]);
 
-    //TODO
-    console.log({ results: JSON.stringify(results) });
-
     if (req.query.download == "csv" && formatCsv) {
       const fields = [
         ...(formatCsv.fieldsFn
@@ -173,6 +170,8 @@ module.exports = ({
     }`;
 
     const formattedResults = results.map((r) => {
+      //TODO
+      console.log({ r });
       const formattedTrace = [];
       for (const service in r.trace) {
         for (const domain in r.trace[service]) {

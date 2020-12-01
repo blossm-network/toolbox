@@ -11,11 +11,11 @@ module.exports = ({
     query,
     {
       ...select,
-      ...((!select || !Object.keys(select).some((key) => select[key] === 1)) &&
-        {
-          // _id: 0,
-          // __v: 0,
-        }),
+      ...((!select ||
+        !Object.keys(select).some((key) => select[key] === 1)) && {
+        _id: 0,
+        __v: 0,
+      }),
     },
     {
       ...(skip && { skip }),
