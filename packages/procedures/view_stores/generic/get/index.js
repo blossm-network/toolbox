@@ -29,7 +29,6 @@ module.exports = ({
   groupsLookupFn,
   updateKeys,
 }) => async (req, res) => {
-  console.log({ REQ_QUERY: JSON.stringify(req.query) });
   if (
     process.env.CONTEXT &&
     (!req.query.context || !req.query.context[process.env.CONTEXT])

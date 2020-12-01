@@ -188,10 +188,6 @@ module.exports = async ({
     allIndexes.push(...customIndexes);
   }
 
-  //TODO
-  console.log({
-    allIndexes: JSON.stringify(allIndexes),
-  });
   const store = await viewStore({
     schema,
     indexes: allIndexes,
@@ -236,17 +232,10 @@ module.exports = async ({
                 score: { $meta: "textScore" },
               },
             }),
-            ...(text
-              ? {
-                  sort: {
-                    score: { $meta: "textScore" },
-                  },
-                }
-              : sort
-              ? {
-                  sort,
-                }
-              : {}),
+            sort: {
+              score: { $meta: "textScore" },
+              ...sort,
+            },
           })
           .cursor()
       : deps.db
@@ -266,7 +255,6 @@ module.exports = async ({
 
   const findFn = ({ query, text, limit, select, skip, sort }) => {
     const textIdUuid = deps.uuidValidator(text);
-    console.log({ text, q: JSON.stringify(query) });
     return text
       ? deps.db.aggregate({
           store,
@@ -302,6 +290,7 @@ module.exports = async ({
           },
           sort: {
             score: { $meta: "textScore" },
+            ...sort,
           },
           ...(limit && { limit }),
           ...(skip && { skip }),

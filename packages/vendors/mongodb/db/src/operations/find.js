@@ -6,26 +6,8 @@ module.exports = ({
   skip = 0,
   limit = null,
   options = null,
-}) => {
-  if (query) {
-    console.log({ query: JSON.stringify(query) });
-  }
-  console.log({
-    select: JSON.stringify({
-      ...select,
-      ...((!select ||
-        !Object.keys(select).some((key) => select[key] === 1)) && {
-        _id: 0,
-        __v: 0,
-      }),
-    }),
-  });
-  if (sort) {
-    console.log({
-      sort: JSON.stringify(sort),
-    });
-  }
-  return store.find(
+}) =>
+  store.find(
     query,
     {
       ...select,
@@ -42,4 +24,3 @@ module.exports = ({
       ...options,
     }
   );
-};
