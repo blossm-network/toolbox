@@ -266,6 +266,7 @@ module.exports = async ({
 
   const findFn = ({ query, text, limit, select, skip, sort }) => {
     const textIdUuid = deps.uuidValidator(text);
+    console.log({ text, q: JSON.stringify(query) });
     return text
       ? deps.db.aggregate({
           store,
@@ -285,33 +286,23 @@ module.exports = async ({
                 : []),
             ],
           },
-          ...((select || text) && {
-            select: {
-              ...select,
-              ...(select &&
-                partialWordTextIndexes.reduce((result, index) => {
-                  result[index] = 1;
-                  return result;
-                }, {})),
-              ...(!select && {
-                body: 1,
-                headers: 1,
-                trace: 1,
-              }),
-              score: { $meta: "textScore" },
-            },
-          }),
-          ...(text
-            ? {
-                sort: {
-                  score: { $meta: "textScore" },
-                },
-              }
-            : sort
-            ? {
-                sort,
-              }
-            : {}),
+          select: {
+            ...select,
+            ...(select &&
+              partialWordTextIndexes.reduce((result, index) => {
+                result[index] = 1;
+                return result;
+              }, {})),
+            ...(!select && {
+              body: 1,
+              headers: 1,
+              trace: 1,
+            }),
+            score: { $meta: "textScore" },
+          },
+          sort: {
+            score: { $meta: "textScore" },
+          },
           ...(limit && { limit }),
           ...(skip && { skip }),
         })
