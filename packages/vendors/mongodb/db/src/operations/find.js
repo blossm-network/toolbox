@@ -6,10 +6,8 @@ module.exports = ({
   skip = 0,
   limit = null,
   options = null,
-}) => {
-  //TODO
-  console.log({ query: JSON.stringify(query) });
-  return store.find(
+}) =>
+  store.find(
     query,
     {
       ...select,
@@ -26,4 +24,3 @@ module.exports = ({
       ...options,
     }
   );
-};
