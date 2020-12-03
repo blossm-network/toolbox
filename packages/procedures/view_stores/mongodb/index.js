@@ -188,6 +188,9 @@ module.exports = async ({
     allIndexes.push(...customIndexes);
   }
 
+  //TODO
+  console.log({ allIndexes: JSON.stringify(allIndexes) });
+
   const store = await viewStore({
     schema,
     indexes: allIndexes,
