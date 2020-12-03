@@ -157,9 +157,6 @@ module.exports = async ({
           ),
         ]);
 
-      //TODO
-      console.log({ customIndexes });
-
       const customOptions = {};
 
       //Make the id searchable.
