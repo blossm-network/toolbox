@@ -157,6 +157,7 @@ module.exports = async ({
           ),
         ]);
 
+      //TODO
       console.log({ customIndexes });
 
       const customOptions = {};
@@ -169,9 +170,8 @@ module.exports = async ({
 
       if (index[1] && index[1].weights) {
         customOptions.weights = {};
-        for (const key in index[1].weights) {
+        for (const key in index[1].weights)
           customOptions.weights[`body.${key}`] = index[1].weights[key];
-        }
       }
 
       customIndexes.push([

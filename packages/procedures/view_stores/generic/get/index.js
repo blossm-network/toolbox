@@ -16,6 +16,18 @@ const getValue = (object, key) => {
     : object[keyParts[0]];
 };
 
+const parseInts = (obj) => {
+  const result = {};
+  for (const key in obj) {
+    if (typeof obj[key] == "object") result[key] = parseInts(obj[key]);
+    else if (typeof obj[key] == "string" && obj[key].charAt(0) == "#")
+      result[key] = parseInt(obj[key].substring(1));
+    else result[key] = obj[key];
+  }
+
+  return result;
+};
+
 module.exports = ({
   findFn,
   countFn,
@@ -55,7 +67,7 @@ module.exports = ({
   )
     throw deps.forbiddenError.message("This request is missing a context.");
 
-  const queryBody = queryFn(req.query.query || {});
+  const queryBody = queryFn(parseInts(req.query.query) || {});
   const formattedQueryBody = {};
   for (const key in queryBody)
     formattedQueryBody[`body.${key}`] = queryBody[key];
