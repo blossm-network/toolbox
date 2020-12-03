@@ -147,8 +147,17 @@ module.exports = async ({
         }
       }
 
-      for (const index of partialWordTextIndexes)
-        customIndexes.push([{ [index]: 1 }]);
+      // for (const index of partialWordTextIndexes)
+      //   customIndexes.push([{ [index]: 1 }]);
+      if (partialWordTextIndexes.length > 0)
+        customIndexes.push([
+          partialWordTextIndexes.reduce(
+            (result, i) => ({ ...result, [i]: 1 }),
+            {}
+          ),
+        ]);
+
+      console.log({ customIndexes });
 
       const customOptions = {};
 

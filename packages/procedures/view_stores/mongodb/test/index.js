@@ -376,7 +376,10 @@ describe("View store", () => {
       schema,
       indexes: [
         ...indexes,
-        [{ some: "text", "some.id": "text" }, { weights: { some: 10 } }],
+        [
+          { some: "text", "some.id": "text", "some-other": "text" },
+          { weights: { some: 10, "some-other": 5 } },
+        ],
       ],
       secretFn: secretFake,
       queryFn,
@@ -460,10 +463,18 @@ describe("View store", () => {
           },
         ],
         [{ "body.some-index": 1 }],
-        [{ "body.some": 1 }],
+        [{ "body.some": 1, "body.some-other": 1 }],
         [
-          { "body.some": "text", "body.some.id": "text", "headers.id": "text" },
-          { name: "text-search", weights: { "body.some": 10 } },
+          {
+            "body.some": "text",
+            "body.some-other": "text",
+            "body.some.id": "text",
+            "headers.id": "text",
+          },
+          {
+            name: "text-search",
+            weights: { "body.some": 10, "body.some-other": 5 },
+          },
         ],
       ],
       connection: {
@@ -505,6 +516,12 @@ describe("View store", () => {
               $options: "i",
             },
           },
+          {
+            "body.some-other": {
+              $regex: "some-text",
+              $options: "i",
+            },
+          },
         ],
       },
       select: {
@@ -538,6 +555,12 @@ describe("View store", () => {
               $options: "i",
             },
           },
+          {
+            "body.some-other": {
+              $regex: "some-text",
+              $options: "i",
+            },
+          },
         ],
       },
     });
@@ -561,6 +584,12 @@ describe("View store", () => {
           },
           {
             "body.some": {
+              $regex: "some-text",
+              $options: "i",
+            },
+          },
+          {
+            "body.some-other": {
               $regex: "some-text",
               $options: "i",
             },
