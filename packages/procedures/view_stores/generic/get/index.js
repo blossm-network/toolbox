@@ -69,6 +69,11 @@ module.exports = ({
   )
     throw deps.forbiddenError.message("This request is missing a context.");
 
+  //TODO
+  console.log({
+    parsedInts: JSON.stringy(parseInts(req.query.query)),
+    query: JSON.stringify(req.query.query),
+  });
   const queryBody = queryFn(req.query.query ? parseInts(req.query.query) : {});
   const formattedQueryBody = {};
   for (const key in queryBody)
