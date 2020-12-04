@@ -5,10 +5,8 @@ module.exports = ({
   select = null,
   skip = 0,
   limit = null,
-}) => {
-  //TODO
-  console.log({ query: JSON.stringify(query) });
-  return store.aggregate([
+}) =>
+  store.aggregate([
     { $match: query },
     {
       $project: {
@@ -24,4 +22,3 @@ module.exports = ({
     ...(skip ? [{ $skip: skip }] : []),
     ...(limit ? [{ $limit: limit }] : []),
   ]);
-};

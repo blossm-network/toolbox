@@ -41,8 +41,6 @@ module.exports = ({
   groupsLookupFn,
   updateKeys,
 }) => async (req, res) => {
-  //TODO
-  console.log({ originalUrl: req.originalUrl });
   if (
     process.env.CONTEXT &&
     (!req.query.context || !req.query.context[process.env.CONTEXT])
@@ -68,12 +66,6 @@ module.exports = ({
     !bootstrap
   )
     throw deps.forbiddenError.message("This request is missing a context.");
-
-  //TODO
-  console.log({
-    parsedInts: JSON.stringify(parseInts(req.query.query)),
-    query: JSON.stringify(req.query.query),
-  });
 
   const queryBody = queryFn(req.query.query ? parseInts(req.query.query) : {});
   const formattedQueryBody = {};
