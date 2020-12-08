@@ -100,19 +100,13 @@ module.exports = async ({
       ? [
           [
             {
-              "headers.context.root": 1,
-              "headers.context.domain": 1,
-              "headers.context.service": 1,
-              "headers.context.network": 1,
+              "headers.context": 1,
             },
           ],
           ...(sorts
             ? sorts.map((sort) => [
                 {
-                  "headers.context.root": 1,
-                  "headers.context.domain": 1,
-                  "headers.context.service": 1,
-                  "headers.context.network": 1,
+                  "headers.context": 1,
                   ...Object.keys(sort).reduce((result, key) => {
                     result[`body.${key}`] = sort[key];
                     return result;
@@ -124,9 +118,7 @@ module.exports = async ({
       : []),
     [
       {
-        "headers.groups.root": 1,
-        "headers.groups.service": 1,
-        "headers.groups.network": 1,
+        "headers.groups": 1,
       },
     ],
   ];
