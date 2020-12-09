@@ -35,7 +35,6 @@ module.exports = (operationQueries, fn, sortFn) => {
           internalTokenFn,
           externalTokenFn,
           currentToken,
-          key,
           claims,
         } = {}) => {
           const internal = host == process.env.HOST;
@@ -53,7 +52,6 @@ module.exports = (operationQueries, fn, sortFn) => {
                 : await deps.networkToken({
                     tokenFn: externalTokenFn,
                     network,
-                    key,
                   })) || {};
 
             const url = internal

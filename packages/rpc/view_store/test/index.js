@@ -11,7 +11,6 @@ const network = "some-network";
 const internalTokenFn = "some-internal-token-fn";
 const externalTokenFn = "some-external-token-fn";
 const currentToken = "some-current-token";
-const key = "some-key";
 
 const query = "some-query";
 const id = "some-id";
@@ -59,7 +58,6 @@ describe("Get views", () => {
         token: {
           internalFn: internalTokenFn,
           externalFn: externalTokenFn,
-          key,
         },
       })
       .read({ query, sort, download, id, bootstrap, text, limit, skip });
@@ -80,7 +78,6 @@ describe("Get views", () => {
       internalTokenFn,
       externalTokenFn,
       currentToken,
-      key,
     });
     expect(result).to.equal(views);
   });
@@ -126,7 +123,7 @@ describe("Get views", () => {
       name,
       network: otherNetwork,
     })
-      .set({ context: contexts, token: { externalFn: externalTokenFn, key } })
+      .set({ context: contexts, token: { externalFn: externalTokenFn } })
       .read({ query, sort });
 
     expect(rpcFake).to.have.been.calledWith(name, "view-store");
@@ -138,7 +135,6 @@ describe("Get views", () => {
     });
     expect(withFake).to.have.been.calledWith({
       externalTokenFn,
-      key,
       path: "/some-name",
     });
     expect(result).to.equal(views);
@@ -170,7 +166,6 @@ describe("Get views", () => {
         token: {
           internalFn: internalTokenFn,
           externalFn: externalTokenFn,
-          key,
         },
       })
       .idStream(fn, { query, sort, id, parallel });
@@ -183,7 +178,6 @@ describe("Get views", () => {
       internalTokenFn,
       externalTokenFn,
       currentToken,
-      key,
     });
     expect(result).to.equal(views);
   });
@@ -235,7 +229,7 @@ describe("Get views", () => {
       name,
       network: otherNetwork,
     })
-      .set({ context: contexts, token: { externalFn: externalTokenFn, key } })
+      .set({ context: contexts, token: { externalFn: externalTokenFn } })
       .idStream(fn, { query, sort });
 
     expect(rpcFake).to.have.been.calledWith(name, "view-store");
@@ -248,7 +242,6 @@ describe("Get views", () => {
     expect(withFake).to.have.been.calledWith({
       path: "/some-name/stream-ids",
       externalTokenFn,
-      key,
     });
     expect(result).to.equal(views);
   });

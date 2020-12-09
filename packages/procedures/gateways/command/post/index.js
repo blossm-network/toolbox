@@ -28,11 +28,10 @@ module.exports = ({
       .set({
         token: {
           internalFn: internalTokenFn,
-          externalFn: ({ network, key } = {}) =>
+          externalFn: ({ network } = {}) =>
             req.token
               ? { token: req.token, type: "Bearer" }
-              : nodeExternalTokenFn({ network, key }),
-          key,
+              : nodeExternalTokenFn({ network }),
         },
         ...(req.token && { currentToken: req.token }),
         ...(req.context && { context: req.context }),

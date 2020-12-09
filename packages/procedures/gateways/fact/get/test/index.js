@@ -79,11 +79,9 @@ describe("Fact gateway get", () => {
             result == nodeExternalTokenResult &&
             nodeExternalTokenFnFake.calledWith({
               network: externalTokenNetwork,
-              key: externalTokenKey,
             })
           );
         }),
-        key,
       },
     });
     expect(readFake).to.have.been.calledWith({ query, root });
@@ -151,7 +149,6 @@ describe("Fact gateway get", () => {
           const result = fn();
           return result.token == reqToken && result.type == "Bearer";
         }),
-        key,
       },
     });
     expect(readFake).to.have.been.calledWith({ query });
@@ -214,11 +211,9 @@ describe("Fact gateway get", () => {
             result == nodeExternalTokenResult &&
             nodeExternalTokenFnFake.calledWith({
               network: externalTokenNetwork,
-              key: externalTokenKey,
             })
           );
         }),
-        key,
       },
     });
     expect(readFake).to.have.been.calledWith({ query });

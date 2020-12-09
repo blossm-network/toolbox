@@ -57,7 +57,7 @@ describe("Connection token", () => {
     });
     expect(decodeFake).to.have.been.calledWith(token);
     expect(setFake).to.have.been.calledWith({
-      token: { externalFn: match((fn) => fn() == basicToken), key: "access" },
+      token: { externalFn: match((fn) => fn() == basicToken) },
     });
     expect(basicTokenFake).to.have.been.calledWith({
       root,

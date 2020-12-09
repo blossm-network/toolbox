@@ -28,7 +28,7 @@ module.exports = viewStore({
   secretFn: secret,
   ...(config.keys && { updateKeys: config.keys }),
   ...(query && { queryFn: query }),
-  ...(formatCsv && { formatCsv: formatCsv }),
+  ...(formatCsv && { formatCsv }),
   ...(sort && { sortFn: sort }),
   ...(update && { updateFn: update }),
   ...(format && { formatFn: format }),
@@ -46,7 +46,6 @@ module.exports = viewStore({
         token: {
           externalFn: () => ({ token, type: "Bearer" }),
           internalFn: gcpToken,
-          key: "access",
         },
       })
       .read();

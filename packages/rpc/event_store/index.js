@@ -4,11 +4,7 @@ module.exports = ({ domain, service = process.env.SERVICE } = {}) => {
   const add = ({
     context,
     claims,
-    token: {
-      internalFn: internalTokenFn,
-      externalFn: externalTokenFn,
-      key,
-    } = {},
+    token: { internalFn: internalTokenFn, externalFn: externalTokenFn } = {},
     enqueue: { fn: enqueueFn, wait: enqueueWait } = {},
   } = {}) => ({ eventData, tx: { id: txId, path: txPath, ip: txIp } = {} }) => {
     return deps
@@ -30,7 +26,6 @@ module.exports = ({ domain, service = process.env.SERVICE } = {}) => {
       .with({
         ...(internalTokenFn && { internalTokenFn }),
         ...(externalTokenFn && { externalTokenFn }),
-        ...(key && { key }),
         ...(claims && { claims }),
         ...(enqueueFn && {
           enqueueFn: enqueueFn({
@@ -44,11 +39,7 @@ module.exports = ({ domain, service = process.env.SERVICE } = {}) => {
   const aggregate = ({
     context,
     claims,
-    token: {
-      internalFn: internalTokenFn,
-      externalFn: externalTokenFn,
-      key,
-    } = {},
+    token: { internalFn: internalTokenFn, externalFn: externalTokenFn } = {},
   } = {}) => (root, { notFoundThrows } = {}) =>
     deps
       .rpc(domain, service, "event-store")
@@ -59,18 +50,13 @@ module.exports = ({ domain, service = process.env.SERVICE } = {}) => {
       .with({
         ...(internalTokenFn && { internalTokenFn }),
         ...(externalTokenFn && { externalTokenFn }),
-        ...(key && { key }),
         ...(claims && { claims }),
       });
 
   const query = ({
     context,
     claims,
-    token: {
-      internalFn: internalTokenFn,
-      externalFn: externalTokenFn,
-      key: tokenKey,
-    } = {},
+    token: { internalFn: internalTokenFn, externalFn: externalTokenFn } = {},
   } = {}) => ({ key, value }) =>
     deps
       .rpc(domain, service, "event-store")
@@ -81,17 +67,12 @@ module.exports = ({ domain, service = process.env.SERVICE } = {}) => {
       .with({
         ...(internalTokenFn && { internalTokenFn }),
         ...(externalTokenFn && { externalTokenFn }),
-        ...(tokenKey && { key: tokenKey }),
         ...(claims && { claims }),
       });
   const aggregateStream = ({
     context,
     claims,
-    token: {
-      internalFn: internalTokenFn,
-      externalFn: externalTokenFn,
-      key,
-    } = {},
+    token: { internalFn: internalTokenFn, externalFn: externalTokenFn } = {},
   } = {}) => (fn, { timestamp, updatedOnOrAfter, parallel, root }) =>
     deps
       .rpc(domain, service, "event-store")
@@ -108,18 +89,13 @@ module.exports = ({ domain, service = process.env.SERVICE } = {}) => {
         path: `/stream-aggregates`,
         ...(internalTokenFn && { internalTokenFn }),
         ...(externalTokenFn && { externalTokenFn }),
-        ...(key && { key }),
         ...(claims && { claims }),
       });
 
   const rootStream = ({
     context,
     claims,
-    token: {
-      internalFn: internalTokenFn,
-      externalFn: externalTokenFn,
-      key,
-    } = {},
+    token: { internalFn: internalTokenFn, externalFn: externalTokenFn } = {},
   } = {}) => (fn, { parallel } = {}) =>
     deps
       .rpc(domain, service, "event-store")
@@ -131,18 +107,13 @@ module.exports = ({ domain, service = process.env.SERVICE } = {}) => {
         path: `/roots`,
         ...(internalTokenFn && { internalTokenFn }),
         ...(externalTokenFn && { externalTokenFn }),
-        ...(key && { key }),
         ...(claims && { claims }),
       });
 
   const count = ({
     context,
     claims,
-    token: {
-      internalFn: internalTokenFn,
-      externalFn: externalTokenFn,
-      key,
-    } = {},
+    token: { internalFn: internalTokenFn, externalFn: externalTokenFn } = {},
   } = {}) => (root) =>
     deps
       .rpc(domain, service, "event-store")
@@ -154,18 +125,13 @@ module.exports = ({ domain, service = process.env.SERVICE } = {}) => {
         path: `/count`,
         ...(internalTokenFn && { internalTokenFn }),
         ...(externalTokenFn && { externalTokenFn }),
-        ...(key && { key }),
         ...(claims && { claims }),
       });
 
   const createBlock = ({
     context,
     claims,
-    token: {
-      internalFn: internalTokenFn,
-      externalFn: externalTokenFn,
-      key,
-    } = {},
+    token: { internalFn: internalTokenFn, externalFn: externalTokenFn } = {},
     enqueue: { fn: enqueueFn, wait: enqueueWait } = {},
   } = {}) => () =>
     deps
@@ -178,7 +144,6 @@ module.exports = ({ domain, service = process.env.SERVICE } = {}) => {
         path: `/create-block`,
         ...(internalTokenFn && { internalTokenFn }),
         ...(externalTokenFn && { externalTokenFn }),
-        ...(key && { key }),
         ...(claims && { claims }),
         ...(enqueueFn && {
           enqueueFn: enqueueFn({

@@ -80,11 +80,10 @@ module.exports = commandProcedure({
         ...(token && { currentToken: token }),
         token: {
           internalFn: gcpToken,
-          externalFn: ({ network, key } = {}) =>
+          externalFn: ({ network } = {}) =>
             principal == "user" || principal == "issuer"
               ? { token, type: "Bearer" }
-              : nodeExternalToken({ network, key }),
-          key: "access",
+              : nodeExternalToken({ network }),
         },
         ...(async && { enqueue: { fn: enqueue, wait } }),
       })
@@ -121,11 +120,10 @@ module.exports = commandProcedure({
         ...(token && { currentToken: token }),
         token: {
           internalFn: gcpToken,
-          externalFn: ({ network, key } = {}) =>
+          externalFn: ({ network } = {}) =>
             principal == "user" || principal == "issuer"
               ? { token, type: "Bearer" }
-              : nodeExternalToken({ network, key }),
-          key: "access",
+              : nodeExternalToken({ network }),
         },
       })
       .query({ key, value });
@@ -157,11 +155,10 @@ module.exports = commandProcedure({
         ...(token && { currentToken: token }),
         token: {
           internalFn: gcpToken,
-          externalFn: ({ network, key } = {}) =>
+          externalFn: ({ network } = {}) =>
             principal == "user" || principal == "issuer"
               ? { token, type: "Bearer" }
-              : nodeExternalToken({ network, key }),
-          key: "access",
+              : nodeExternalToken({ network }),
         },
       })
       .read({ query, root }),
@@ -189,11 +186,10 @@ module.exports = commandProcedure({
         ...(token && { currentToken: token }),
         token: {
           internalFn: gcpToken,
-          externalFn: ({ network, key } = {}) =>
+          externalFn: ({ network } = {}) =>
             principal == "user"
               ? { token, type: "Bearer" }
-              : nodeExternalToken({ network, key }),
-          key: "access",
+              : nodeExternalToken({ network }),
         },
       })
       .stream(fn, { query, root }),

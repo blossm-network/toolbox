@@ -10,7 +10,6 @@ const context = "some-context";
 const internalTokenFn = "some-internal-token-fn";
 const externalTokenFn = "some-external-token-fn";
 const currentToken = "some-current-token";
-const key = "some-key";
 
 const query = "some-query";
 const sort = "some-sort";
@@ -49,7 +48,6 @@ describe("Get composite views", () => {
         token: {
           internalFn: internalTokenFn,
           externalFn: externalTokenFn,
-          key,
         },
       })
       .read({ query, sort, root });
@@ -61,7 +59,6 @@ describe("Get composite views", () => {
       internalTokenFn,
       externalTokenFn,
       currentToken,
-      key,
     });
     expect(result).to.equal(view);
   });
@@ -114,7 +111,6 @@ describe("Get composite views", () => {
   //       token: {
   //         internalFn: internalTokenFn,
   //         externalFn: externalTokenFn,
-  //         key,
   //       },
   //     })
   //     .stream(fn, { query, sort, root });

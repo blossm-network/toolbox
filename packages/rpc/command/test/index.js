@@ -23,7 +23,6 @@ const externalTokenFn = "some-external-token-fn";
 
 const context = { c: 2 };
 const claims = "some-claims";
-const key = "some-key";
 const currentToken = "some-current-token";
 
 const root = "some-root";
@@ -80,7 +79,6 @@ describe("Issue command", () => {
         token: {
           internalFn: internalTokenFn,
           externalFn: externalTokenFn,
-          key,
         },
         enqueue: {
           fn: enqueueFnFake,
@@ -123,7 +121,6 @@ describe("Issue command", () => {
       internalTokenFn,
       externalTokenFn,
       currentToken,
-      key,
       claims,
       enqueueFn: enqueueFnResult,
     });

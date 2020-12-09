@@ -19,7 +19,6 @@ const query = { a: 1 };
 const internalTokenFn = "some-internal-token-fn";
 const externalTokenFn = "some-external-token-fn";
 const currentToken = "some-current-token";
-const key = "some-key";
 
 const context = { c: 2 };
 const claims = "some-claims";
@@ -59,7 +58,6 @@ describe("Fact", () => {
         token: {
           internalFn: internalTokenFn,
           externalFn: externalTokenFn,
-          key,
         },
       })
       .read({ query });
@@ -74,7 +72,6 @@ describe("Fact", () => {
       internalTokenFn,
       externalTokenFn,
       currentToken,
-      key,
       claims,
     });
   });
@@ -146,7 +143,7 @@ describe("Fact", () => {
       .set({
         context,
         claims,
-        token: { externalFn: externalTokenFn, key },
+        token: { externalFn: externalTokenFn },
       })
       .read({ query });
 
@@ -160,7 +157,6 @@ describe("Fact", () => {
     });
     expect(withFake).to.have.been.calledWith({
       externalTokenFn,
-      key,
       claims,
       path: `/${name}`,
     });
@@ -189,7 +185,6 @@ describe("Fact", () => {
         token: {
           internalFn: internalTokenFn,
           externalFn: externalTokenFn,
-          key,
         },
       })
       .stream(fn, { query, root });
@@ -205,7 +200,6 @@ describe("Fact", () => {
       internalTokenFn,
       externalTokenFn,
       currentToken,
-      key,
       claims,
     });
   });
@@ -253,7 +247,6 @@ describe("Fact", () => {
         token: {
           internalFn: internalTokenFn,
           externalFn: externalTokenFn,
-          key,
         },
       })
       .stream(fn, { root });
@@ -268,7 +261,6 @@ describe("Fact", () => {
       path: "/stream",
       internalTokenFn,
       externalTokenFn,
-      key,
       claims,
     });
   });
@@ -296,7 +288,7 @@ describe("Fact", () => {
       .set({
         context,
         claims,
-        token: { externalFn: externalTokenFn, key },
+        token: { externalFn: externalTokenFn },
       })
       .stream(fn, { query });
 
@@ -311,7 +303,6 @@ describe("Fact", () => {
     expect(withFake).to.have.been.calledWith({
       path: "/stream",
       externalTokenFn,
-      key,
       claims,
     });
   });

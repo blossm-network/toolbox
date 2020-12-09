@@ -5,11 +5,7 @@ module.exports = ({ name, context = process.env.CONTEXT, network }) => {
   const read = ({
     contexts,
     currentToken,
-    token: {
-      internalFn: internalTokenFn,
-      externalFn: externalTokenFn,
-      key,
-    } = {},
+    token: { internalFn: internalTokenFn, externalFn: externalTokenFn } = {},
   } = {}) => ({
     query,
     sort,
@@ -43,17 +39,12 @@ module.exports = ({ name, context = process.env.CONTEXT, network }) => {
         ...(internalTokenFn && { internalTokenFn }),
         ...(externalTokenFn && { externalTokenFn }),
         ...(currentToken && { currentToken }),
-        ...(key && { key }),
         ...(!internal && { path: `/${name}` }),
       });
   const idStream = ({
     contexts,
     currentToken,
-    token: {
-      internalFn: internalTokenFn,
-      externalFn: externalTokenFn,
-      key,
-    } = {},
+    token: { internalFn: internalTokenFn, externalFn: externalTokenFn } = {},
   } = {}) => (fn, { query, sort, parallel } = {}) =>
     deps
       .rpc(name, ...(context ? [context] : []), "view-store")
@@ -74,7 +65,6 @@ module.exports = ({ name, context = process.env.CONTEXT, network }) => {
         ...(internalTokenFn && { internalTokenFn }),
         ...(externalTokenFn && { externalTokenFn }),
         ...(currentToken && { currentToken }),
-        ...(key && { key }),
       });
   const update = ({
     contexts,

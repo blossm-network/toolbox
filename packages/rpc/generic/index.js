@@ -44,7 +44,6 @@ const common = ({ method, dataParam, operation, id, data }) => {
           internalTokenFn,
           externalTokenFn,
           currentToken,
-          key,
           claims,
           enqueueFn,
         } = {}) => {
@@ -59,7 +58,6 @@ const common = ({ method, dataParam, operation, id, data }) => {
               : await deps.networkToken({
                   tokenFn: externalTokenFn,
                   network,
-                  key,
                 })) || {};
 
           const url = internal

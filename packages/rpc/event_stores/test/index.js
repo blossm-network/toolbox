@@ -10,8 +10,6 @@ let clock;
 
 const now = new Date();
 
-const key = "some-key";
-
 const envService = "some-env-service";
 
 process.env.SERVICE = envService;
@@ -54,7 +52,6 @@ describe("Event store", () => {
         token: {
           internalFn: internalTokenFn,
           externalFn: externalTokenFn,
-          key,
         },
       })
       .stream(fn, sortFn);
@@ -67,7 +64,6 @@ describe("Event store", () => {
       path: "/stream",
       internalTokenFn,
       externalTokenFn,
-      key,
       claims,
     });
     expect(result).to.equal(stream);

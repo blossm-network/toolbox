@@ -18,7 +18,6 @@ const payload = { a: 1 };
 const internalTokenFn = "some-internal-token-fn";
 const externalTokenFn = "some-external-token-fn";
 const currentToken = "some-current-token";
-const key = "some-key";
 
 const context = { c: 2 };
 const claims = "some-claims";
@@ -57,7 +56,6 @@ describe("Job", () => {
         token: {
           internalFn: internalTokenFn,
           externalFn: externalTokenFn,
-          key,
         },
         enqueue: {
           fn: enqueueFnFake,
@@ -78,7 +76,6 @@ describe("Job", () => {
       internalTokenFn,
       externalTokenFn,
       currentToken,
-      key,
       claims,
       enqueueFn: enqueueFnResult,
     });

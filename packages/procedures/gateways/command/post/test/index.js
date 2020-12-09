@@ -127,11 +127,9 @@ describe("Command gateway post", () => {
             result == nodeExternalTokenResult &&
             nodeExternalTokenFnFake.calledWith({
               network: externalTokenNetwork,
-              key: externalTokenKey,
             })
           );
         }),
-        key,
       },
     });
     expect(issueFake).to.have.been.calledWith(payload, {
@@ -227,7 +225,6 @@ describe("Command gateway post", () => {
           return result.token == reqToken && result.type == "Bearer";
         }),
         internalFn: internalTokenFn,
-        key,
       },
       currentToken: req.token,
       claims,
@@ -321,7 +318,6 @@ describe("Command gateway post", () => {
           return result.token == reqToken && result.type == "Bearer";
         }),
         internalFn: internalTokenFn,
-        key,
       },
       currentToken: req.token,
       claims,
@@ -401,11 +397,9 @@ describe("Command gateway post", () => {
             result == nodeExternalTokenResult &&
             nodeExternalTokenFnFake.calledWith({
               network: externalTokenNetwork,
-              key: externalTokenKey,
             })
           );
         }),
-        key,
       },
       context,
       claims,
@@ -537,7 +531,6 @@ describe("Command gateway post", () => {
           const result = fn();
           return result.token == reqToken && result.type == "Bearer";
         }),
-        key,
       },
       currentToken: reqToken,
       context,

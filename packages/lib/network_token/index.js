@@ -1,2 +1,2 @@
-module.exports = ({ tokenFn, network, key }) =>
-  tokenFn ? tokenFn({ network, key }) : null;
+module.exports = ({ tokenFn, network }) =>
+  tokenFn ? tokenFn({ network }) : null;

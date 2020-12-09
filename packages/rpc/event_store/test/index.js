@@ -14,7 +14,6 @@ const service = "some-service";
 const domain = "some-domain";
 const root = "some-root";
 const parallel = "some-parallel";
-const key = "some-key";
 
 const envService = "some-env-service";
 
@@ -69,7 +68,6 @@ describe("Event store", () => {
         token: {
           internalFn: internalTokenFn,
           externalFn: externalTokenFn,
-          key,
         },
         enqueue: {
           fn: enqueueFnFake,
@@ -89,7 +87,6 @@ describe("Event store", () => {
     expect(withFake).to.have.been.calledWith({
       internalTokenFn,
       externalTokenFn,
-      key,
       claims,
       enqueueFn: enqueueFnResult,
     });
@@ -118,7 +115,6 @@ describe("Event store", () => {
         token: {
           internalFn: internalTokenFn,
           externalFn: externalTokenFn,
-          key,
         },
       })
       .add({ eventData, tx: { path } });
@@ -133,7 +129,6 @@ describe("Event store", () => {
     expect(withFake).to.have.been.calledWith({
       internalTokenFn,
       externalTokenFn,
-      key,
       claims,
     });
   });
@@ -184,7 +179,6 @@ describe("Event store", () => {
         token: {
           internalFn: internalTokenFn,
           externalFn: externalTokenFn,
-          key,
         },
       })
       .aggregate(root, { notFoundThrows });
@@ -197,7 +191,6 @@ describe("Event store", () => {
     expect(withFake).to.have.been.calledWith({
       internalTokenFn,
       externalTokenFn,
-      key,
       claims,
     });
     expect(result).to.equal(aggregate);
@@ -247,7 +240,6 @@ describe("Event store", () => {
         token: {
           internalFn: internalTokenFn,
           externalFn: externalTokenFn,
-          key,
         },
       })
       .query(query);
@@ -260,7 +252,6 @@ describe("Event store", () => {
     expect(withFake).to.have.been.calledWith({
       internalTokenFn,
       externalTokenFn,
-      key,
       claims,
     });
     expect(result).to.equal(queryResult);
@@ -312,7 +303,6 @@ describe("Event store", () => {
         token: {
           internalFn: internalTokenFn,
           externalFn: externalTokenFn,
-          key,
         },
       })
       .aggregateStream(fn, { timestamp, updatedOnOrAfter, parallel, root });
@@ -331,7 +321,6 @@ describe("Event store", () => {
       path: "/stream-aggregates",
       internalTokenFn,
       externalTokenFn,
-      key,
       claims,
     });
     expect(result).to.equal(stream);
@@ -386,7 +375,6 @@ describe("Event store", () => {
         token: {
           internalFn: internalTokenFn,
           externalFn: externalTokenFn,
-          key,
         },
       })
       .rootStream(fn, { parallel });
@@ -402,7 +390,6 @@ describe("Event store", () => {
       path: "/roots",
       internalTokenFn,
       externalTokenFn,
-      key,
       claims,
     });
     expect(result).to.equal(stream);
@@ -453,7 +440,6 @@ describe("Event store", () => {
         token: {
           internalFn: internalTokenFn,
           externalFn: externalTokenFn,
-          key,
         },
       })
       .count(root);
@@ -469,7 +455,6 @@ describe("Event store", () => {
       path: "/count",
       internalTokenFn,
       externalTokenFn,
-      key,
       claims,
     });
     expect(result).to.equal(count);
@@ -525,7 +510,6 @@ describe("Event store", () => {
         token: {
           internalFn: internalTokenFn,
           externalFn: externalTokenFn,
-          key,
         },
         enqueue: {
           fn: enqueueFnFake,
@@ -543,7 +527,6 @@ describe("Event store", () => {
       path: "/create-block",
       internalTokenFn,
       externalTokenFn,
-      key,
       claims,
       enqueueFn: enqueueFnResult,
     });

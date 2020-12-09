@@ -4,11 +4,7 @@ module.exports = ({ name, context = process.env.CONTEXT }) => {
   const read = ({
     contexts,
     currentToken,
-    token: {
-      internalFn: internalTokenFn,
-      externalFn: externalTokenFn,
-      key,
-    } = {},
+    token: { internalFn: internalTokenFn, externalFn: externalTokenFn } = {},
   } = {}) => ({ query, sort, root }) =>
     deps
       .rpc(name, context, "view-composite")
@@ -20,7 +16,6 @@ module.exports = ({ name, context = process.env.CONTEXT }) => {
         ...(internalTokenFn && { internalTokenFn }),
         ...(externalTokenFn && { externalTokenFn }),
         ...(currentToken && { currentToken }),
-        ...(key && { key }),
       });
   // const stream = ({
   //   contexts,

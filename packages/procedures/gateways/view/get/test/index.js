@@ -86,11 +86,9 @@ describe("View gateway get", () => {
             result == nodeExternalTokenResult &&
             nodeExternalTokenFnFake.calledWith({
               network: externalTokenNetwork,
-              key: externalTokenKey,
             })
           );
         }),
-        key,
       },
     });
     expect(readFake).to.have.been.calledWith(query);
@@ -192,7 +190,6 @@ describe("View gateway get", () => {
           const result = fn();
           return result.token == reqToken && result.type == "Bearer";
         }),
-        key,
       },
     });
     expect(readFake).to.have.been.calledWith({ ...query, id });
@@ -279,11 +276,9 @@ describe("View gateway get", () => {
             result == nodeExternalTokenResult &&
             nodeExternalTokenFnFake.calledWith({
               network: externalTokenNetwork,
-              key: externalTokenKey,
             })
           );
         }),
-        key,
       },
     });
     expect(readFake).to.have.been.calledWith(query);
@@ -341,7 +336,6 @@ describe("View gateway get", () => {
           const result = fn();
           return result.token == reqToken && result.type == "Bearer";
         }),
-        key,
       },
     });
     expect(readFake).to.have.been.calledWith({ ...query, id });

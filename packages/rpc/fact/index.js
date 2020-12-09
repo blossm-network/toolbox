@@ -6,11 +6,7 @@ module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
     context,
     claims,
     currentToken,
-    token: {
-      internalFn: internalTokenFn,
-      externalFn: externalTokenFn,
-      key,
-    } = {},
+    token: { internalFn: internalTokenFn, externalFn: externalTokenFn } = {},
   } = {}) => ({ query, root } = {}) =>
     deps
       .rpc(
@@ -31,7 +27,6 @@ module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
         ...(internalTokenFn && { internalTokenFn }),
         ...(externalTokenFn && { externalTokenFn }),
         ...(currentToken && { currentToken }),
-        ...(key && { key }),
         ...(claims && { claims }),
         ...(!internal && { path: `/${name}` }),
       });
@@ -39,11 +34,7 @@ module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
     context,
     claims,
     currentToken,
-    token: {
-      internalFn: internalTokenFn,
-      externalFn: externalTokenFn,
-      key,
-    } = {},
+    token: { internalFn: internalTokenFn, externalFn: externalTokenFn } = {},
   } = {}) => (fn, { query, root } = {}) =>
     deps
       .rpc(
@@ -68,7 +59,6 @@ module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
         ...(internalTokenFn && { internalTokenFn }),
         ...(externalTokenFn && { externalTokenFn }),
         ...(currentToken && { currentToken }),
-        ...(key && { key }),
         ...(claims && { claims }),
       });
 

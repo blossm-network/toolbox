@@ -4,11 +4,7 @@ module.exports = (storeQueries) => {
   const stream = ({
     context,
     claims,
-    token: {
-      internalFn: internalTokenFn,
-      externalFn: externalTokenFn,
-      key,
-    } = {},
+    token: { internalFn: internalTokenFn, externalFn: externalTokenFn } = {},
   } = {}) => (fn, sortFn) =>
     deps
       .stream(storeQueries, fn, sortFn)
@@ -19,7 +15,6 @@ module.exports = (storeQueries) => {
         path: `/stream`,
         ...(internalTokenFn && { internalTokenFn }),
         ...(externalTokenFn && { externalTokenFn }),
-        ...(key && { key }),
         ...(claims && { claims }),
       });
 

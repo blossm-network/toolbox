@@ -31,11 +31,10 @@ module.exports = fact({
         ...(token && { currentToken: token }),
         token: {
           internalFn: gcpToken,
-          externalFn: ({ network, key } = {}) =>
+          externalFn: ({ network } = {}) =>
             principal == "user"
               ? { token, type: "Bearer" }
-              : nodeExternalToken({ network, key }),
-          key: "access",
+              : nodeExternalToken({ network }),
         },
       })
       .query({ key, value });

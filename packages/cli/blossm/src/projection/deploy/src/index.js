@@ -30,7 +30,6 @@ const pushToChannel = async ({ channel, view, id, trace, type }) => {
         token: {
           externalFn: nodeExternalToken,
           internalFn: gcpToken,
-          key: "access",
         },
       })
       .issue({
@@ -86,7 +85,6 @@ const pushToChannels = async ({
           token: {
             externalFn: nodeExternalToken,
             internalFn: gcpToken,
-            key: "access",
           },
         })
         .stream(

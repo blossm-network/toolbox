@@ -26,7 +26,6 @@ module.exports = ({ credentialsFn }) => async ({ network, key }) => {
               root,
               secret,
             }),
-          key: "access",
         },
       })
       .issue({ key });

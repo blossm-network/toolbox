@@ -23,11 +23,10 @@ const getResponse = async ({
         .set({
           token: {
             internalFn: internalTokenFn,
-            externalFn: ({ network, key } = {}) =>
+            externalFn: ({ network } = {}) =>
               currentToken
                 ? { token: currentToken, type: "Bearer" }
-                : nodeExternalTokenFn({ network, key }),
-            key,
+                : nodeExternalTokenFn({ network }),
           },
           ...(currentToken && { currentToken }),
           ...(context && { context }),
@@ -48,11 +47,10 @@ const getResponse = async ({
         .set({
           token: {
             internalFn: internalTokenFn,
-            externalFn: ({ network, key } = {}) =>
+            externalFn: ({ network } = {}) =>
               currentToken
                 ? { token: currentToken, type: "Bearer" }
-                : nodeExternalTokenFn({ network, key }),
-            key,
+                : nodeExternalTokenFn({ network }),
           },
           ...(currentToken && { currentToken }),
           ...(context && { context }),

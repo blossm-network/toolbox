@@ -83,7 +83,6 @@ module.exports = ({ downloadFileFn }) => async ({
           token: {
             internalFn: internalTokenFn,
             externalFn: nodeExternalToken,
-            key: "access",
           },
           context: { principal, network: process.env.NETWORK },
         })

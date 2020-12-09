@@ -5,11 +5,7 @@ module.exports = ({ name, domain, service }) => {
     context,
     claims,
     currentToken,
-    token: {
-      internalFn: internalTokenFn,
-      externalFn: externalTokenFn,
-      key,
-    } = {},
+    token: { internalFn: internalTokenFn, externalFn: externalTokenFn } = {},
     enqueue: { fn: enqueueFn, wait: enqueueWait } = {},
   } = {}) => (payload) => {
     const data = { payload };
@@ -28,7 +24,6 @@ module.exports = ({ name, domain, service }) => {
         ...(internalTokenFn && { internalTokenFn }),
         ...(externalTokenFn && { externalTokenFn }),
         ...(currentToken && { currentToken }),
-        ...(key && { key }),
         ...(claims && { claims }),
         ...(enqueueFn && {
           enqueueFn: enqueueFn({
