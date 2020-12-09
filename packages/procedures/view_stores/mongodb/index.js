@@ -139,8 +139,6 @@ module.exports = async ({
         }
       }
 
-      // for (const index of partialWordTextIndexes)
-      //   customIndexes.push([{ [index]: 1 }]);
       if (partialWordTextIndexes.length > 0)
         customIndexes.push([
           partialWordTextIndexes.reduce(
@@ -253,6 +251,8 @@ module.exports = async ({
 
   const findFn = ({ query, text, limit, select, skip, sort }) => {
     const textIdUuid = deps.uuidValidator(text);
+    //TODO
+    console.log({ text, query: JSON.stringify(query) });
     return text
       ? deps.db.aggregate({
           store,
