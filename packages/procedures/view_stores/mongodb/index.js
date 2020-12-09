@@ -251,8 +251,6 @@ module.exports = async ({
 
   const findFn = ({ query, text, limit, select, skip, sort }) => {
     const textIdUuid = deps.uuidValidator(text);
-    //TODO
-    console.log({ text, query: JSON.stringify(query) });
     return text
       ? deps.db.aggregate({
           store,

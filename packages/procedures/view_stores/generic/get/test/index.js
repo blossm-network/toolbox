@@ -69,7 +69,11 @@ describe("View store get", () => {
     const findFake = fake.returns(results);
     const countFake = fake.returns(200);
 
-    const query = { "some-query-key": 1, "some-other-query-key": "#2" };
+    const query = {
+      "some-query-key": 1,
+      "some-other-query-key": "#2",
+      "another-query-key": "@2020-12-09T02:50:59.076Z",
+    };
 
     const urlEncodeQueryDataFake = fake.returns(nextUrl);
     replace(deps, "urlEncodeQueryData", urlEncodeQueryDataFake);
@@ -100,6 +104,7 @@ describe("View store get", () => {
       query: {
         "body.some-query-key": 1,
         "body.some-other-query-key": 2,
+        "body.another-query-key": new Date("2020-12-09T02:50:59.076Z"),
         "headers.id": id,
         "headers.context": {
           root: envContextRoot,
@@ -113,6 +118,7 @@ describe("View store get", () => {
       query: {
         "body.some-query-key": 1,
         "body.some-other-query-key": 2,
+        "body.another-query-key": new Date("2020-12-09T02:50:59.076Z"),
         "headers.id": id,
         "headers.context": {
           root: envContextRoot,

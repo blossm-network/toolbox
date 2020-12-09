@@ -16,12 +16,14 @@ const getValue = (object, key) => {
     : object[keyParts[0]];
 };
 
-const parseInts = (obj) => {
+const parseSpecialValues = (obj) => {
   const result = {};
   for (const key in obj) {
-    if (typeof obj[key] == "object") result[key] = parseInts(obj[key]);
+    if (typeof obj[key] == "object") result[key] = parseSpecialValues(obj[key]);
     else if (typeof obj[key] == "string" && obj[key].charAt(0) == "#")
       result[key] = parseInt(obj[key].substring(1));
+    else if (typeof obj[key] == "string" && obj[key].charAt(0) == "@")
+      result[key] = new Date(obj[key].substring(1));
     else result[key] = obj[key];
   }
 
@@ -41,8 +43,6 @@ module.exports = ({
   groupsLookupFn,
   updateKeys,
 }) => async (req, res) => {
-  //TODO
-  console.log({ reqQuery: JSON.stringify(req.query) });
   if (
     process.env.CONTEXT &&
     (!req.query.context || !req.query.context[process.env.CONTEXT])
@@ -69,7 +69,9 @@ module.exports = ({
   )
     throw deps.forbiddenError.message("This request is missing a context.");
 
-  const queryBody = queryFn(req.query.query ? parseInts(req.query.query) : {});
+  const queryBody = queryFn(
+    req.query.query ? parseSpecialValues(req.query.query) : {}
+  );
   const formattedQueryBody = {};
   for (const key in queryBody)
     formattedQueryBody[`body.${key}`] = queryBody[key];
