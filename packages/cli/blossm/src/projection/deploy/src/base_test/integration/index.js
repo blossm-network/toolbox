@@ -83,9 +83,12 @@ describe("Projection integration tests", () => {
             groupsAdded,
           });
 
+          //TODO
+          console.log({ event: { action, domain, service } });
           await eventStore({ domain, service }).add({
             eventData: [{ event: stateEvent }],
           });
+          console.log("done!");
         }
       }
 
@@ -117,10 +120,15 @@ describe("Projection integration tests", () => {
           ],
         });
 
+        //TODO
+        console.log({
+          event2: { domain: step.event.domain, service: step.event.service },
+        });
         await eventStore({
           domain: step.event.domain,
           service: step.event.service,
         }).add({ eventData: [{ event }] });
+        console.log("event 2 done");
       }
 
       const response = await request.post(url, {
