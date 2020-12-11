@@ -199,7 +199,7 @@ const deleteId = ({ id, query, push, context }) =>
       ...(!push && { enqueue: { fn: enqueue } }),
     })
     .delete(id, {
-      ...query,
+      query,
     });
 
 const replayIfNeeded = async ({
