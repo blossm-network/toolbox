@@ -27,6 +27,7 @@ describe("Format schema", () => {
       j: { a: { b: { c: { d: String } } } },
       k: { type: { a: { b: { c: { d: String } } } }, default: {} },
       l: { m: String, n: [{ o: String, p: String }] },
+      m: [{ q: String, type: String }],
     };
     const typeKey = "some-type-key";
 
@@ -116,6 +117,7 @@ describe("Format schema", () => {
           _id: false,
         },
       },
+      m: { [typeKey]: [{ q: String, type: String, _id: false }] },
     });
   });
   it("should format correctly with options", () => {

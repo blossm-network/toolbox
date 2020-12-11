@@ -1,17 +1,9 @@
-const formatSchemaValue = (
-  value,
-  typeKey,
-  { wrapType = true, depth = 0 } = {}
-) => {
+const formatSchemaValue = (value, typeKey, { wrapType = true } = {}) => {
   if (typeof value != "object") {
     return wrapType ? { [typeKey]: value } : value;
   } else if (value instanceof Array) {
     return {
-      [typeKey]: value.map((e) =>
-        formatSchemaValue(e, typeKey, {
-          wrapType: false,
-        })
-      ),
+      [typeKey]: value,
     };
   } else if (value.type != undefined && typeof value.type != "object") {
     let formattedObj = {
@@ -37,7 +29,6 @@ const formatSchemaValue = (
         if (value[key].type != undefined) {
           newSchema[key] = formatSchemaValue(value[key].type, typeKey, {
             wrapType: false,
-            depth: depth + 1,
           });
         } else {
           newSchema[typeKey] = value[key];
