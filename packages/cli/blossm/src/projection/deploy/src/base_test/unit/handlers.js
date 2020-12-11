@@ -20,24 +20,32 @@ describe("Projection handlers tests", () => {
             readFactFnFake.onCall(callCount++).returns(call.returns);
           }
         }
-        const result = await handlers[handler.event.service][
-          handler.event.domain
-        ]({
-          state: example.state,
-          ...(example.id && { id: example.id }),
-          ...(example.action && { action: example.action }),
-          ...(example.replayFlag && { replayFlag: example.replayFlag }),
-          ...(readFactFnFake && { readFactFn: readFactFnFake }),
-        });
-        if (readFactFnFake) {
-          let callCount = 0;
-          for (const call of example.readFact.calls) {
-            expect(readFactFnFake.getCall(callCount++)).to.have.been.calledWith(
-              call.params
-            );
+
+        const run = async (action) => {
+          const result = await handlers[handler.event.service][
+            handler.event.domain
+          ]({
+            state: example.state,
+            ...(example.id && { id: example.id }),
+            ...(action && { action }),
+            ...(example.replayFlag && { replayFlag: example.replayFlag }),
+            ...(readFactFnFake && { readFactFn: readFactFnFake }),
+          });
+          if (readFactFnFake) {
+            let callCount = 0;
+            for (const call of example.readFact.calls) {
+              expect(
+                readFactFnFake.getCall(callCount++)
+              ).to.have.been.calledWith(call.params);
+            }
           }
+          expect(result).to.deep.equal(example.result);
+        };
+        if (example.actions) {
+          for (const action of example.actions) await run(action);
+        } else {
+          await run(example.action);
         }
-        expect(result).to.deep.equal(example.result);
       }
     }
   });
