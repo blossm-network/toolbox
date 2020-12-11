@@ -453,7 +453,8 @@ describe("View store", () => {
           },
         ],
         [{ "body.some-index": 1 }],
-        [{ "body.some": 1, "body.some-other": 1 }],
+        [{ "body.some": 1 }],
+        [{ "body.some-other": 1 }],
         [
           {
             "body.some": "text",
