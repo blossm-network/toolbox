@@ -555,8 +555,9 @@ describe("Operation", () => {
     replace(deps, "operationUrl", operationUrlFake);
 
     const fnFake = fake();
+    const onResponseFn = "some-on-response-fn";
     const result = await operation(operarationPart1, operarationPart2)
-      .stream(fnFake, data)
+      .stream(fnFake, data, { onResponseFn })
       .in({ context, host })
       .with({ internalTokenFn: tokenFn, currentToken, claims });
 
@@ -576,6 +577,7 @@ describe("Operation", () => {
         headers: {
           authorization: `${type} ${token}`,
         },
+        onResponseFn,
       }
     );
     expect(operationTokenFake).to.have.been.calledWith({
@@ -616,8 +618,9 @@ describe("Operation", () => {
     replace(deps, "operationUrl", operationUrlFake);
 
     const fnFake = fake();
+    const onResponseFn = "some-on-response-fn";
     const result = await operation(operarationPart1, operarationPart2)
-      .stream(fnFake, { ...data, id })
+      .stream(fnFake, { ...data, id }, { onResponseFn })
       .in({ context, host })
       .with({ internalTokenFn: tokenFn, currentToken, claims });
 
@@ -640,6 +643,7 @@ describe("Operation", () => {
         headers: {
           authorization: `${type} ${token}`,
         },
+        onResponseFn,
       }
     );
     expect(operationTokenFake).to.have.been.calledWith({

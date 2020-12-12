@@ -36,6 +36,11 @@ module.exports = ({
     await procedure.stream((data) => res.write(data), {
       query: req.query,
       ...(req.params.root && { root: req.params.root }),
+      onResponseFn: (response) => {
+        //TODO
+        console.log({ ONRESPONSE: JSON.stringify(response) });
+        res.set(response.headers).status(response.statusCode);
+      },
     });
     res.end();
   } else {

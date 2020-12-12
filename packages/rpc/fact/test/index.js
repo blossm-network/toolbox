@@ -177,6 +177,7 @@ describe("Fact", () => {
 
     const root = "some-root";
 
+    const onResponseFn = "some-on-response-fn";
     const { body: result } = await fact({ name, domain, service })
       .set({
         context,
@@ -187,11 +188,15 @@ describe("Fact", () => {
           externalFn: externalTokenFn,
         },
       })
-      .stream(fn, { query, root });
+      .stream(fn, { query, root, onResponseFn });
 
     expect(result).to.equal(response);
     expect(rpcFake).to.have.been.calledWith(name, domain, service, "fact");
-    expect(streamFake).to.have.been.calledWith(fn, { query, id: root });
+    expect(streamFake).to.have.been.calledWith(
+      fn,
+      { query, id: root },
+      { onResponseFn }
+    );
     expect(inFake).to.have.been.calledWith({
       context,
     });

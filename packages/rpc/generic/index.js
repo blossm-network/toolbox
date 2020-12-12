@@ -186,7 +186,7 @@ module.exports = (...operation) => {
         data: query,
       });
     },
-    stream: (fn, query) => {
+    stream: (fn, query, { onResponseFn } = {}) => {
       const id = query.id;
       delete query.id;
       let progress = "";
@@ -200,7 +200,7 @@ module.exports = (...operation) => {
               progress = leftover;
               for (const d of parsedData) await fn(d);
             },
-            data
+            { ...data, ...(onResponseFn && { onResponseFn }) }
           ),
         dataParam: "query",
         operation,

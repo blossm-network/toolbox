@@ -62,7 +62,11 @@ exports.get = async (url, { query, headers } = {}) =>
     headers,
   });
 
-exports.stream = async (url, onDataFn, { query, headers } = {}) => {
+exports.stream = async (
+  url,
+  onDataFn,
+  { query, headers, onResponseFn } = {}
+) => {
   let ended = false;
   let rejected = false;
   let processingCount = 0;
@@ -88,6 +92,7 @@ exports.stream = async (url, onDataFn, { query, headers } = {}) => {
         method: "GET",
         ...(headers != undefined && { headers }),
       })
+      .on("response", (response) => onResponseFn && onResponseFn(response))
       .on("data", (data) => processData(data))
       .on("error", (err) => {
         if (rejected) return;

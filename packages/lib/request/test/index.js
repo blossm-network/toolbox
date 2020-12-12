@@ -184,6 +184,8 @@ describe("Request", () => {
       switch (status) {
         case "error":
           return { on: onDataFn };
+        case "response":
+          return { on: onDataFn };
         case "data":
           fn(body);
           return { on: onDataFn };
@@ -205,6 +207,46 @@ describe("Request", () => {
     await request.stream(url, onDataFnFake, { query: params });
     expect(onDataFnFake).to.have.been.calledWith(body);
   });
+  it("should call stream with correct params and onResponse", async () => {
+    const params = {
+      hello: "there",
+      how: ["are", "you"],
+      andy: [0, "ur dogs?"],
+    };
+    const res = "some-res";
+    const onDataFn = (status, fn) => {
+      switch (status) {
+        case "error":
+          return { on: onDataFn };
+        case "response":
+          fn(res);
+          return { on: onDataFn };
+        case "data":
+          fn(body);
+          return { on: onDataFn };
+        case "end":
+          fn();
+          break;
+      }
+    };
+    const urlEncodeQueryDataFake = fake.returns(resultingUrl);
+    replace(deps, "urlEncodeQueryData", urlEncodeQueryDataFake);
+    replace(deps, "request", (options) => {
+      expect(options.url).to.equal(resultingUrl);
+      return {
+        on: onDataFn,
+      };
+    });
+    const url = "http://google.com";
+    const onDataFnFake = fake();
+    const onResponseFnFake = fake();
+    await request.stream(url, onDataFnFake, {
+      query: params,
+      onResponseFn: onResponseFnFake,
+    });
+    expect(onDataFnFake).to.have.been.calledWith(body);
+    expect(onResponseFnFake).to.have.been.calledWith(res);
+  });
   it("should throw in stream correctly", async () => {
     const params = {
       hello: "there",
@@ -217,6 +259,8 @@ describe("Request", () => {
         case "error":
           fn(new Error(errorMessage));
           return;
+        case "response":
+          return { on: onDataFn };
         case "data":
           fn(body);
           return { on: onDataFn };

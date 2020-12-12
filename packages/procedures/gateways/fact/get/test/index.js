@@ -108,9 +108,14 @@ describe("Fact gateway get", () => {
 
     const endFake = fake();
     const writeFake = fake();
+    const statusFake = fake();
+    const setResponseFake = fake.returns({
+      status: statusFake,
+    });
     const res = {
       end: endFake,
       write: writeFake,
+      set: setResponseFake,
     };
 
     const nodeExternalTokenResult = "some-node-external-token-result";
@@ -151,7 +156,19 @@ describe("Fact gateway get", () => {
         fn(data);
         return writeFake.calledWith(data);
       })
-    );
+    ),
+      {
+        query,
+        root,
+        onResponseFn: match((fn) => {
+          const statusCode = "some-status-code";
+          const headers = "some-headers";
+          fn({ statusCode, headers });
+          return (
+            setFake.calledWith(headers) && statusFake.calledWith(statusCode)
+          );
+        }),
+      };
     expect(endFake).to.have.been.calledOnceWith();
   });
   it("should call with the correct params when headers are passed back and token, claims, context in req, service and network passed in", async () => {
