@@ -86,22 +86,12 @@ exports.stream = async (
       if (!rejected && processingCount == 0 && ended) resolve();
     };
 
-    let count = 0;
     return deps
-      .request(
-        {
-          url: deps.urlEncodeQueryData(url, query),
-          method: "GET",
-          ...(headers != undefined && { headers }),
-        },
-        function (err, response, body) {
-          if (count++ > 0) return;
-          //TODO
-          console.log("MEEEEP: ", { count: count++ });
-          onResponseFn && onResponseFn(response);
-          console.log({ err, body });
-        }
-      )
+      .request({
+        url: deps.urlEncodeQueryData(url, query),
+        method: "GET",
+        ...(headers != undefined && { headers }),
+      })
       .on("response", (response) => {
         //TODO
         console.log("ONRESOOOOOOO: ", { response });
