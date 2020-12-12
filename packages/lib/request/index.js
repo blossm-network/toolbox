@@ -87,11 +87,19 @@ exports.stream = async (
     };
 
     return deps
-      .request({
-        url: deps.urlEncodeQueryData(url, query),
-        method: "GET",
-        ...(headers != undefined && { headers }),
-      })
+      .request(
+        {
+          url: deps.urlEncodeQueryData(url, query),
+          method: "GET",
+          ...(headers != undefined && { headers }),
+        },
+        function (err, response, body) {
+          //TODO
+          console.log("MEEEEP: ", { response });
+          onResponseFn && onResponseFn(response);
+          console.log({ err, body });
+        }
+      )
       .on("response", (response) => {
         //TODO
         console.log("ONRESOOOOOOO: ", { response });
