@@ -39,7 +39,7 @@ module.exports = ({
       onResponseFn: (response) => {
         //TODO
         console.log({ ONRESPONSE: JSON.stringify(response) });
-        res.set(response.headers).status(response.statusCode);
+        res.writeHead(response.statusCode, response.headers);
       },
     });
     res.end();

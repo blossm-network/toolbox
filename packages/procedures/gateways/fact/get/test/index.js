@@ -108,14 +108,11 @@ describe("Fact gateway get", () => {
 
     const endFake = fake();
     const writeFake = fake();
-    const statusFake = fake();
-    const setResponseFake = fake.returns({
-      status: statusFake,
-    });
+    const writeHeadFake = fake();
     const res = {
       end: endFake,
       write: writeFake,
-      set: setResponseFake,
+      writeHead: writeHeadFake,
     };
 
     const nodeExternalTokenResult = "some-node-external-token-result";
@@ -164,9 +161,7 @@ describe("Fact gateway get", () => {
           const statusCode = "some-status-code";
           const headers = "some-headers";
           fn({ statusCode, headers });
-          return (
-            setFake.calledWith(headers) && statusFake.calledWith(statusCode)
-          );
+          return writeHeadFake.calledWith(statusCode, headers);
         }),
       };
     expect(endFake).to.have.been.calledOnceWith();
