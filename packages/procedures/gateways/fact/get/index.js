@@ -45,7 +45,7 @@ module.exports = ({
         ...(req.params.root && { root: req.params.root }),
         onResponseFn: (response) => {
           //TODO
-          console.log({ ONRESPONSE: JSON.stringify(response) });
+          console.log({ sc: response.statusCode, h: response.headers });
           res.writeHead(response.statusCode, response.headers);
         },
       }
