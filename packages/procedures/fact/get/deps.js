@@ -1,5 +1,5 @@
 const { forbidden } = require("@blossm/errors");
-const { unlink } = require("fs");
+const { unlinkSync } = require("fs");
 
 exports.forbiddenError = forbidden;
-exports.unlinkFile = unlink;
+exports.unlinkFile = unlinkSync;
