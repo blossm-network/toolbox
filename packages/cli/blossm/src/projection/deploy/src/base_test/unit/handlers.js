@@ -43,8 +43,8 @@ describe("Projection handlers tests", () => {
         }
         if (readFactFnFake) {
           const actions = example.actions || [example.action];
+          let callCount = 0;
           for (let i = 0; i < actions.length; i++) {
-            let callCount = 0;
             for (const call of example.readFact.calls) {
               expect(
                 readFactFnFake.getCall(callCount++)
