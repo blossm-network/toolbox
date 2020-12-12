@@ -1,7 +1,7 @@
 {
   "name": "@blossm/fact-stream",
   "description": "A fact server GET stream handler.",
-  "version": "0.0.18",
+  "version": "0.0.19",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
