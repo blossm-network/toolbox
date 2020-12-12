@@ -37,8 +37,11 @@ describe("Fact gateway", () => {
     replace(deps, "authorization", authorizationFake);
 
     const listenFake = fake();
-    const getFake = fake.returns({
+    const secondGetFake = fake.returns({
       listen: listenFake,
+    });
+    const getFake = fake.returns({
+      get: secondGetFake,
     });
     const serverFake = fake.returns({
       get: getFake,
@@ -70,7 +73,7 @@ describe("Fact gateway", () => {
       audience,
     });
 
-    expect(gatewayGetFake).to.have.been.calledWith({
+    expect(gatewayGetFake.getCall(0)).to.have.been.calledWith({
       name,
       domain,
       service,
@@ -79,7 +82,15 @@ describe("Fact gateway", () => {
       key: "access",
       stream: false,
     });
-    expect(gatewayGetFake).to.have.been.calledOnce;
+    expect(gatewayGetFake.getCall(1)).to.have.been.calledWith({
+      name,
+      domain,
+      service,
+      internalTokenFn,
+      nodeExternalTokenFn,
+      key: "access",
+      stream: true,
+    });
     expect(listenFake).to.have.been.calledWith();
     expect(serverFake).to.have.been.calledWith({
       prehook: match((fn) => {
@@ -95,6 +106,10 @@ describe("Fact gateway", () => {
     });
     expect(getFake).to.have.been.calledWith(gatewayGetResult, {
       path: `/${name}/:root?`,
+      preMiddleware: [authenticationResult, authorizationResult],
+    });
+    expect(secondGetFake).to.have.been.calledWith(gatewayGetResult, {
+      path: `/${name}/stream/:root?`,
       preMiddleware: [authenticationResult, authorizationResult],
     });
     expect(authenticationFake).to.have.been.calledWith({
@@ -129,8 +144,11 @@ describe("Fact gateway", () => {
     replace(deps, "authorization", authorizationFake);
 
     const listenFake = fake();
-    const getFake = fake.returns({
+    const secondGetFake = fake.returns({
       listen: listenFake,
+    });
+    const getFake = fake.returns({
+      get: secondGetFake,
     });
     const serverFake = fake.returns({
       get: getFake,
@@ -144,7 +162,6 @@ describe("Fact gateway", () => {
     const privileges = "none";
     const name = "some-name";
     const key = "some-custom-key";
-    const stream = "some-stream";
     const factNetwork = "some-fact-network";
     const factService = "some-fact-service";
     const facts = [
@@ -153,7 +170,6 @@ describe("Fact gateway", () => {
         privileges,
         context,
         key,
-        stream,
         network: factNetwork,
         service: factService,
       },
@@ -175,7 +191,7 @@ describe("Fact gateway", () => {
       audience,
     });
 
-    expect(gatewayGetFake).to.have.been.calledWith({
+    expect(gatewayGetFake.getCall(0)).to.have.been.calledWith({
       name,
       domain,
       service: factService,
@@ -183,9 +199,18 @@ describe("Fact gateway", () => {
       internalTokenFn,
       nodeExternalTokenFn,
       key,
-      stream,
+      stream: false,
     });
-    expect(gatewayGetFake).to.have.been.calledOnce;
+    expect(gatewayGetFake.getCall(1)).to.have.been.calledWith({
+      name,
+      domain,
+      service: factService,
+      network: factNetwork,
+      internalTokenFn,
+      nodeExternalTokenFn,
+      key,
+      stream: true,
+    });
     expect(listenFake).to.have.been.calledWith();
     expect(serverFake).to.have.been.calledWith({
       prehook: match((fn) => {
@@ -201,6 +226,10 @@ describe("Fact gateway", () => {
     });
     expect(getFake).to.have.been.calledWith(gatewayGetResult, {
       path: `/${name}/:root?`,
+      preMiddleware: [authenticationResult, authorizationResult],
+    });
+    expect(secondGetFake).to.have.been.calledWith(gatewayGetResult, {
+      path: `/${name}/stream/:root?`,
       preMiddleware: [authenticationResult, authorizationResult],
     });
     expect(authenticationFake).to.have.been.calledWith({
@@ -233,8 +262,11 @@ describe("Fact gateway", () => {
     replace(deps, "authorization", authorizationFake);
 
     const listenFake = fake();
-    const getFake = fake.returns({
+    const secondGetFake = fake.returns({
       listen: listenFake,
+    });
+    const getFake = fake.returns({
+      get: secondGetFake,
     });
     const serverFake = fake.returns({
       get: getFake,
@@ -288,8 +320,17 @@ describe("Fact gateway", () => {
     replace(deps, "authorization", authorizationFake);
 
     const listenFake = fake();
-    const thirdGetFake = fake.returns({
+    const sixthGetFake = fake.returns({
       listen: listenFake,
+    });
+    const fifthGetFake = fake.returns({
+      get: sixthGetFake,
+    });
+    const fourthGetFake = fake.returns({
+      get: fifthGetFake,
+    });
+    const thirdGetFake = fake.returns({
+      get: fourthGetFake,
     });
     const secondGetFake = fake.returns({
       get: thirdGetFake,
@@ -333,7 +374,7 @@ describe("Fact gateway", () => {
       audience,
     });
 
-    expect(gatewayGetFake).to.have.been.calledWith({
+    expect(gatewayGetFake.getCall(0)).to.have.been.calledWith({
       name: name1,
       domain,
       service,
@@ -342,7 +383,16 @@ describe("Fact gateway", () => {
       key: "access",
       stream: false,
     });
-    expect(gatewayGetFake).to.have.been.calledWith({
+    expect(gatewayGetFake.getCall(1)).to.have.been.calledWith({
+      name: name1,
+      domain,
+      service,
+      internalTokenFn,
+      nodeExternalTokenFn,
+      key: "access",
+      stream: true,
+    });
+    expect(gatewayGetFake.getCall(2)).to.have.been.calledWith({
       name: name2,
       domain,
       service,
@@ -351,7 +401,16 @@ describe("Fact gateway", () => {
       key: "access",
       stream: false,
     });
-    expect(gatewayGetFake).to.have.been.calledWith({
+    expect(gatewayGetFake.getCall(3)).to.have.been.calledWith({
+      name: name2,
+      domain,
+      service,
+      internalTokenFn,
+      nodeExternalTokenFn,
+      key: "access",
+      stream: true,
+    });
+    expect(gatewayGetFake.getCall(4)).to.have.been.calledWith({
       name: name3,
       domain,
       service,
@@ -360,16 +419,35 @@ describe("Fact gateway", () => {
       key: "access",
       stream: false,
     });
-    expect(gatewayGetFake).to.have.been.calledThrice;
+    expect(gatewayGetFake.getCall(5)).to.have.been.calledWith({
+      name: name3,
+      domain,
+      service,
+      internalTokenFn,
+      nodeExternalTokenFn,
+      key: "access",
+      stream: true,
+    });
     expect(getFake).to.have.been.calledWith(gatewayGetResult, {
       path: `/${name1}/:root?`,
     });
     expect(secondGetFake).to.have.been.calledWith(gatewayGetResult, {
+      path: `/${name1}/stream/:root?`,
+    });
+    expect(thirdGetFake).to.have.been.calledWith(gatewayGetResult, {
       path: `/${name2}/:root?`,
       preMiddleware: [authenticationResult],
     });
-    expect(thirdGetFake).to.have.been.calledWith(gatewayGetResult, {
+    expect(fourthGetFake).to.have.been.calledWith(gatewayGetResult, {
+      path: `/${name2}/stream/:root?`,
+      preMiddleware: [authenticationResult],
+    });
+    expect(fifthGetFake).to.have.been.calledWith(gatewayGetResult, {
       path: `/${name3}/:root?`,
+      preMiddleware: [authenticationResult, authorizationResult],
+    });
+    expect(sixthGetFake).to.have.been.calledWith(gatewayGetResult, {
+      path: `/${name3}/stream/:root?`,
       preMiddleware: [authenticationResult, authorizationResult],
     });
     expect(authenticationFake.getCall(0)).to.have.been.calledWith({
@@ -413,8 +491,11 @@ describe("Fact gateway", () => {
     replace(deps, "authorization", authorizationFake);
 
     const listenFake = fake();
-    const getFake = fake.returns({
+    const secondGetFake = fake.returns({
       listen: listenFake,
+    });
+    const getFake = fake.returns({
+      get: secondGetFake,
     });
     const serverFake = fake.returns({
       get: getFake,
@@ -451,7 +532,7 @@ describe("Fact gateway", () => {
       audience,
     });
 
-    expect(gatewayGetFake).to.have.been.calledWith({
+    expect(gatewayGetFake.getCall(0)).to.have.been.calledWith({
       name,
       domain: otherDomain,
       service: otherService,
@@ -459,6 +540,15 @@ describe("Fact gateway", () => {
       nodeExternalTokenFn,
       key: "access",
       stream: false,
+    });
+    expect(gatewayGetFake.getCall(1)).to.have.been.calledWith({
+      name,
+      domain: otherDomain,
+      service: otherService,
+      internalTokenFn,
+      nodeExternalTokenFn,
+      key: "access",
+      stream: true,
     });
     expect(authorizationFake).to.have.been.calledWith({
       permissionsLookupFn,

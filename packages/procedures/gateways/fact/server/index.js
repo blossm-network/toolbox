@@ -32,9 +32,8 @@ module.exports = async ({
     privileges,
     protection = "strict",
     context,
-    stream = false,
   } of facts) {
-    server = server.get(
+    const get = ({ stream }) =>
       deps.get({
         name,
         domain,
@@ -44,39 +43,46 @@ module.exports = async ({
         nodeExternalTokenFn,
         key,
         stream,
+      });
+    const preMiddleware = {
+      ...(protection != "none" && {
+        preMiddleware: [
+          deps.authentication({
+            verifyFn: verifyFn({ key }),
+            audience,
+            algorithm,
+            protection,
+            cookieKey: key,
+          }),
+          ...(protection == "strict"
+            ? [
+                deps.authorization({
+                  permissionsLookupFn,
+                  terminatedSessionCheckFn,
+                  deletedSceneCheckFn,
+                  internalTokenFn,
+                  context,
+                  permissions:
+                    privileges instanceof Array
+                      ? privileges.map((privilege) => {
+                          return { service, domain, privilege };
+                        })
+                      : privileges,
+                }),
+              ]
+            : []),
+        ],
       }),
-      {
+    };
+    server = server
+      .get(get({ stream: false }), {
         path: `/${name}/:root?`,
-        ...(protection != "none" && {
-          preMiddleware: [
-            deps.authentication({
-              verifyFn: verifyFn({ key }),
-              audience,
-              algorithm,
-              protection,
-              cookieKey: key,
-            }),
-            ...(protection == "strict"
-              ? [
-                  deps.authorization({
-                    permissionsLookupFn,
-                    terminatedSessionCheckFn,
-                    deletedSceneCheckFn,
-                    internalTokenFn,
-                    context,
-                    permissions:
-                      privileges instanceof Array
-                        ? privileges.map((privilege) => {
-                            return { service, domain, privilege };
-                          })
-                        : privileges,
-                  }),
-                ]
-              : []),
-          ],
-        }),
-      }
-    );
+        ...preMiddleware,
+      })
+      .get(get({ stream: true }), {
+        path: `/${name}/stream/:root?`,
+        ...preMiddleware,
+      });
   }
 
   server.listen();
