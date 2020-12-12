@@ -6,6 +6,8 @@ const fact = require("..");
 
 const mainFn = "some-main-fn";
 const queryAggregatesFn = "some-query-aggregates-fn";
+const readFactFn = "some-read-fact-fn";
+const streamFactFn = "some-stream-fact-fn";
 const aggregateFn = "some-aggregate-fn";
 const contexts = "some-contexts";
 
@@ -39,6 +41,8 @@ describe("Fact", () => {
     const result = await fact({
       mainFn,
       queryAggregatesFn,
+      readFactFn,
+      streamFactFn,
       aggregateFn,
       contexts,
     });
@@ -54,12 +58,16 @@ describe("Fact", () => {
       mainFn,
       queryAggregatesFn,
       aggregateFn,
+      readFactFn,
+      streamFactFn,
       contexts,
     });
     expect(factStreamFake).to.have.been.calledWith({
       mainFn,
       queryAggregatesFn,
       aggregateFn,
+      readFactFn,
+      streamFactFn,
       contexts,
     });
   });

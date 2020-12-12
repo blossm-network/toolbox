@@ -7,7 +7,6 @@ module.exports = ({
   network,
   internalTokenFn,
   nodeExternalTokenFn,
-  key,
 } = {}) => async (req, res) => {
   const { body: response, headers = {} } = await deps
     .fact({

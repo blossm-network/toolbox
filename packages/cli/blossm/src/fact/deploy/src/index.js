@@ -1,4 +1,5 @@
 const fact = require("@blossm/fact");
+const factRpc = require("@blossm/fact-rpc");
 const eventStore = require("@blossm/event-store-rpc");
 const nodeExternalToken = require("@blossm/node-external-token");
 const gcpToken = require("@blossm/gcp-token");
@@ -71,4 +72,65 @@ module.exports = fact({
       }
     );
   },
+  readFactFn: ({ context, claims, token }) => ({
+    name,
+    domain,
+    service,
+    network,
+    query,
+    root,
+    context: contextOverride = context,
+    claims: claimsOverride = claims,
+    principal = "issuer",
+  }) =>
+    factRpc({
+      name,
+      ...(domain && { domain }),
+      service,
+      ...(network && { network }),
+    })
+      .set({
+        ...(contextOverride && { context: contextOverride }),
+        ...(claimsOverride && { claims: claimsOverride }),
+        ...(token && { currentToken: token }),
+        token: {
+          internalFn: gcpToken,
+          externalFn: ({ network } = {}) =>
+            principal == "user" || principal == "issuer"
+              ? { token, type: "Bearer" }
+              : nodeExternalToken({ network }),
+        },
+      })
+      .read({ query, root }),
+  streamFactFn: ({ context, claims, token }) => ({
+    name,
+    domain,
+    service,
+    network,
+    query,
+    root,
+    context: contextOverride = context,
+    claims: claimsOverride = claims,
+    principal = "user",
+    fn,
+  }) =>
+    factRpc({
+      name,
+      domain,
+      ...(service && { service }),
+      ...(network && { network }),
+    })
+      .set({
+        ...(contextOverride && { context: contextOverride }),
+        ...(claimsOverride && { claims: claimsOverride }),
+        ...(token && { currentToken: token }),
+        token: {
+          internalFn: gcpToken,
+          externalFn: ({ network } = {}) =>
+            principal == "user"
+              ? { token, type: "Bearer" }
+              : nodeExternalToken({ network }),
+        },
+      })
+      .stream(fn, { query, root }),
 });
