@@ -95,6 +95,7 @@ exports.stream = async (
           ...(headers != undefined && { headers }),
         },
         function (err, response, body) {
+          if (count++ > 0) return;
           //TODO
           console.log("MEEEEP: ", { count: count++ });
           onResponseFn && onResponseFn(response);

@@ -206,14 +206,14 @@ module.exports = (...operation) => {
             {
               ...data,
               onResponseFn: (response) => {
-                //TODO
                 onResponseFn && onResponseFn(response);
-                console.log({ DARESPONSE: response });
                 sendRaw =
                   response.headers["Content-Type"] &&
                   !response.headers["Content-Type"].startsWith(
                     "application/json"
                   );
+                //TODO
+                console.log({ sendRaw });
               },
             }
           );
