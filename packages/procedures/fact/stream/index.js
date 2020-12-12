@@ -32,7 +32,8 @@ module.exports = ({
         ...(req.query.token && { token: req.query.token }),
       }),
       headersFn: (headers) => res.writeHead(200, headers),
-      streamFn: (data) => res.write(JSON.stringify(data)),
+      streamFn: (data) =>
+        res.write(typeof data === "object" ? JSON.stringify(data) : data),
       readFactFn: readFactFn({
         ...(req.query.context && { context: req.query.context }),
         ...(req.query.claims && { claims: req.query.claims }),
