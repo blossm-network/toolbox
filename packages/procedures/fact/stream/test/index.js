@@ -42,10 +42,12 @@ describe("Fact stream", () => {
     };
 
     const writeFake = fake.returns(true);
+    const setFake = fake.returns(true);
     const endFake = fake();
 
     const res = {
       write: writeFake,
+      set: setFake,
       end: endFake,
     };
 
@@ -63,6 +65,11 @@ describe("Fact stream", () => {
         const data = { a: 4 };
         fn(data);
         return writeFake.calledWith(JSON.stringify(data));
+      }),
+      headersFn: match((fn) => {
+        const headers = { a: 4 };
+        fn(headers);
+        return setFake.calledWith(headers);
       }),
       parallel: 100,
       queryAggregatesFn,
@@ -109,10 +116,12 @@ describe("Fact stream", () => {
     };
 
     const writeFake = fake.returns(true);
+    const setFake = fake.returns(true);
     const endFake = fake();
 
     const res = {
       write: writeFake,
+      set: setFake,
       end: endFake,
     };
 
@@ -134,6 +143,11 @@ describe("Fact stream", () => {
         const data = { a: 4 };
         fn(data);
         return writeFake.calledWith(JSON.stringify(data));
+      }),
+      headersFn: match((fn) => {
+        const data = { a: 4 };
+        fn(data);
+        return setFake.calledWith(data);
       }),
       parallel,
       queryAggregatesFn,
