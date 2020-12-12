@@ -32,7 +32,7 @@ module.exports = async ({
     privileges,
     protection = "strict",
     context,
-    stream,
+    stream = false,
   } of facts) {
     server = server.get(
       deps.get({
