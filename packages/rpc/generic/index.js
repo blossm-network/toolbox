@@ -191,17 +191,33 @@ module.exports = (...operation) => {
       delete query.id;
       let progress = "";
       return common({
-        method: (url, data) =>
-          deps.stream(
+        method: async (url, data) => {
+          let sendRaw;
+          return await deps.stream(
             url,
             async (data) => {
+              console.log("IN DATA: ", { sendRaw });
+              if (sendRaw) return await fn(data);
               const string = data.toString();
               let { parsedData, leftover } = jsonString(progress + string);
               progress = leftover;
               for (const d of parsedData) await fn(d);
             },
-            { ...data, ...(onResponseFn && { onResponseFn }) }
-          ),
+            {
+              ...data,
+              onResponseFn: (response) => {
+                //TODO
+                onResponseFn && onResponseFn(response);
+                console.log({ DARESPONSE: response });
+                sendRaw =
+                  response.headers["Content-Type"] &&
+                  !response.headers["Content-Type"].startsWith(
+                    "application/json"
+                  );
+              },
+            }
+          );
+        },
         dataParam: "query",
         operation,
         id,

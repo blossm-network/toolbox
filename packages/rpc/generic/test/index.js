@@ -532,6 +532,11 @@ describe("Operation", () => {
         headers: {
           authorization: `${type} ${token}`,
         },
+        onResponseFn: match((fn) => {
+          const param = { headers: { some: "param" } };
+          fn(param);
+          return true;
+        }),
       }
     );
     expect(operationTokenFake).to.have.been.calledWith({
@@ -555,9 +560,9 @@ describe("Operation", () => {
     replace(deps, "operationUrl", operationUrlFake);
 
     const fnFake = fake();
-    const onResponseFn = "some-on-response-fn";
+    const onResponseFnFake = fake();
     const result = await operation(operarationPart1, operarationPart2)
-      .stream(fnFake, data, { onResponseFn })
+      .stream(fnFake, data, { onResponseFn: onResponseFnFake })
       .in({ context, host })
       .with({ internalTokenFn: tokenFn, currentToken, claims });
 
@@ -577,7 +582,11 @@ describe("Operation", () => {
         headers: {
           authorization: `${type} ${token}`,
         },
-        onResponseFn,
+        onResponseFn: match((fn) => {
+          const param = { headers: { some: "param" } };
+          fn(param);
+          return onResponseFnFake.calledWith(param);
+        }),
       }
     );
     expect(operationTokenFake).to.have.been.calledWith({
@@ -618,9 +627,9 @@ describe("Operation", () => {
     replace(deps, "operationUrl", operationUrlFake);
 
     const fnFake = fake();
-    const onResponseFn = "some-on-response-fn";
+    const onResponseFnFake = fake();
     const result = await operation(operarationPart1, operarationPart2)
-      .stream(fnFake, { ...data, id }, { onResponseFn })
+      .stream(fnFake, { ...data, id }, { onResponseFn: onResponseFnFake })
       .in({ context, host })
       .with({ internalTokenFn: tokenFn, currentToken, claims });
 
@@ -643,7 +652,11 @@ describe("Operation", () => {
         headers: {
           authorization: `${type} ${token}`,
         },
-        onResponseFn,
+        onResponseFn: match((fn) => {
+          const param = { headers: { some: "param" } };
+          fn(param);
+          return onResponseFnFake.calledWith(param);
+        }),
       }
     );
     expect(operationTokenFake).to.have.been.calledWith({
