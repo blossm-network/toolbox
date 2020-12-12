@@ -86,6 +86,7 @@ exports.stream = async (
       if (!rejected && processingCount == 0 && ended) resolve();
     };
 
+    let count = 0;
     return deps
       .request(
         {
@@ -95,7 +96,7 @@ exports.stream = async (
         },
         function (err, response, body) {
           //TODO
-          console.log("MEEEEP: ", { response });
+          console.log("MEEEEP: ", { count: count++ });
           onResponseFn && onResponseFn(response);
           console.log({ err, body });
         }

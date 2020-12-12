@@ -68,7 +68,6 @@ const formattedPayload = async (payload) => {
   return result;
 };
 const executeStep = async (step) => {
-  console.log("a1");
   if (step.pre) {
     for (const {
       action,
@@ -88,15 +87,12 @@ const executeStep = async (step) => {
         groupsAdded,
       });
 
-      console.log({ domain, service });
       await eventStore({ domain, service }).add({
         eventData: [{ event: stateEvent }],
       });
-      console.log("YAYAA");
     }
   }
 
-  console.log("a2");
   const necessaryContext = {};
   if (contexts) {
     for (const c of contexts) {
@@ -104,7 +100,6 @@ const executeStep = async (step) => {
     }
   }
 
-  console.log("a3");
   const response = await request.post(url, {
     body: {
       root: step.root,
@@ -127,7 +122,6 @@ const executeStep = async (step) => {
       claims: step.claims,
     },
   });
-  console.log("a4");
 
   if (response.statusCode != step.code) {
     //eslint-disable-next-line no-console
@@ -151,15 +145,12 @@ const executeStep = async (step) => {
 //TODO test for root: true config property
 describe("Command handler integration tests", () => {
   it("should return successfully", async () => {
-    console.log("MEEEP");
     if (contexts) {
-      console.log("SHHOP", { url });
       const response = await request.post(url, {
         body: {
           context: {},
         },
       });
-      console.log("RROOP");
 
       expect(response.statusCode).to.equal(403);
     }
