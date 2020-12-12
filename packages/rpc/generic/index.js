@@ -113,9 +113,6 @@ const common = ({ method, dataParam, operation, id, data }) => {
           //Stream doesn't have a reponse.
           if (!response) return;
 
-          //TODO
-          console.log({ response: JSON.stringify(response) });
-
           if (response.statusCode >= 300) {
             logger.info("response errored: ", {
               response,
