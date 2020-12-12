@@ -7,8 +7,9 @@ module.exports = ({
   network,
   internalTokenFn,
   nodeExternalTokenFn,
+  stream,
 } = {}) => async (req, res) => {
-  const { body: response, headers = {} } = await deps
+  const procedure = deps
     .fact({
       name,
       domain,
@@ -30,11 +31,19 @@ module.exports = ({
       ...(req.token && { currentToken: req.token }),
       ...(req.context && { context: req.context }),
       ...(req.claims && { claims: req.claims }),
-    })
-    .read({
+    });
+  if (stream) {
+    await procedure.stream((data) => res.write(data), {
+      query: req.query,
+      ...(req.params.root && { root: req.params.root }),
+    });
+    res.end();
+  } else {
+    const { body: response, headers = {} } = await procedure.read({
       query: req.query,
       ...(req.params.root && { root: req.params.root }),
     });
 
-  res.set(headers).status(200).send(response);
+    res.set(headers).status(200).send(response);
+  }
 };

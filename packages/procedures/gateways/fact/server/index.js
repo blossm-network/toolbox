@@ -32,6 +32,7 @@ module.exports = async ({
     privileges,
     protection = "strict",
     context,
+    stream,
   } of facts) {
     server = server.get(
       deps.get({
@@ -42,6 +43,7 @@ module.exports = async ({
         internalTokenFn,
         nodeExternalTokenFn,
         key,
+        stream,
       }),
       {
         path: `/${name}/:root?`,

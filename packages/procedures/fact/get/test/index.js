@@ -75,6 +75,58 @@ describe("Fact get", () => {
     expect(statusFake).to.have.been.calledWith(200);
     expect(sendFake).to.have.been.calledWith(response);
   });
+  it("should call with the correct params with file", async () => {
+    const file = "some-file";
+    const mainFnFake = fake.returns({ file });
+    const queryAggregatesFnFake = fake.returns(queryAggregatesFn);
+    const readFactFake = fake.returns(readFactFn);
+    const streamFactFake = fake.returns(streamFactFn);
+    const aggregateFnFake = fake.returns(aggregateFn);
+
+    const unlinkFileFake = fake();
+    replace(deps, "unlinkFile", unlinkFileFake);
+    const req = {
+      params,
+      query: {
+        query,
+      },
+    };
+
+    const sendFileFake = fake();
+    const statusFake = fake.returns({
+      sendFile: sendFileFake,
+    });
+    const setFake = fake.returns({
+      status: statusFake,
+    });
+    const res = {
+      set: setFake,
+    };
+
+    await get({
+      mainFn: mainFnFake,
+      queryAggregatesFn: queryAggregatesFnFake,
+      readFactFn: readFactFake,
+      streamFactFn: streamFactFake,
+      aggregateFn: aggregateFnFake,
+    })(req, res);
+
+    expect(mainFnFake).to.have.been.calledWith({
+      query,
+      queryAggregatesFn,
+      readFactFn,
+      streamFactFn,
+      aggregateFn,
+    });
+    expect(queryAggregatesFnFake).to.have.been.calledWith({});
+    expect(readFactFake).to.have.been.calledWith({});
+    expect(streamFactFake).to.have.been.calledWith({});
+    expect(aggregateFnFake).to.have.been.calledWith({});
+    expect(setFake).to.have.been.calledWith({});
+    expect(statusFake).to.have.been.calledWith(200);
+    expect(sendFileFake).to.have.been.calledWith(file);
+    expect(unlinkFileFake).to.have.been.calledOnceWith();
+  });
   it("should call with the correct params with context and headers", async () => {
     const response = "some-response";
     const headers = "some-headers";

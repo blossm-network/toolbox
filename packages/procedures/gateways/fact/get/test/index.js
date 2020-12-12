@@ -88,6 +88,72 @@ describe("Fact gateway get", () => {
     expect(sendFake).to.have.been.calledWith(results);
     expect(setResponseFake).to.have.been.calledWith({});
   });
+  it("should call with the correct params streamed", async () => {
+    const streamFake = fake();
+    const setFake = fake.returns({
+      stream: streamFake,
+    });
+    const factFake = fake.returns({
+      set: setFake,
+    });
+    replace(deps, "fact", factFake);
+
+    const root = "some-root";
+    const req = {
+      query,
+      params: {
+        root,
+      },
+    };
+
+    const endFake = fake();
+    const writeFake = fake();
+    const res = {
+      end: endFake,
+      write: writeFake,
+    };
+
+    const nodeExternalTokenResult = "some-node-external-token-result";
+    const nodeExternalTokenFnFake = fake.returns(nodeExternalTokenResult);
+    await get({
+      name,
+      domain,
+      internalTokenFn,
+      nodeExternalTokenFn: nodeExternalTokenFnFake,
+      key,
+      stream: true,
+    })(req, res);
+
+    expect(factFake).to.have.been.calledWith({
+      name,
+      domain,
+    });
+    expect(setFake).to.have.been.calledWith({
+      token: {
+        internalFn: internalTokenFn,
+        externalFn: match((fn) => {
+          const result = fn({
+            network: externalTokenNetwork,
+            key: externalTokenKey,
+          });
+          return (
+            result == nodeExternalTokenResult &&
+            nodeExternalTokenFnFake.calledWith({
+              network: externalTokenNetwork,
+            })
+          );
+        }),
+      },
+    });
+    expect(streamFake).to.have.been.calledWith(
+      match((fn) => {
+        const data = "some-data";
+        fn(data);
+        return writeFake.calledWith(data);
+      })
+    );
+    expect(endFake).to.have.been.calledOnceWith();
+  });
   it("should call with the correct params when headers are passed back and token, claims, context in req, service and network passed in", async () => {
     const headers = "some-headers";
     const readFake = fake.returns({ body: results, headers });

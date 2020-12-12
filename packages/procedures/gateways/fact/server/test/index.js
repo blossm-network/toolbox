@@ -77,6 +77,7 @@ describe("Fact gateway", () => {
       internalTokenFn,
       nodeExternalTokenFn,
       key: "access",
+      stream: false,
     });
     expect(gatewayGetFake).to.have.been.calledOnce;
     expect(listenFake).to.have.been.calledWith();
@@ -143,6 +144,7 @@ describe("Fact gateway", () => {
     const privileges = "none";
     const name = "some-name";
     const key = "some-custom-key";
+    const stream = "some-stream";
     const factNetwork = "some-fact-network";
     const factService = "some-fact-service";
     const facts = [
@@ -151,6 +153,7 @@ describe("Fact gateway", () => {
         privileges,
         context,
         key,
+        stream,
         network: factNetwork,
         service: factService,
       },
@@ -180,6 +183,7 @@ describe("Fact gateway", () => {
       internalTokenFn,
       nodeExternalTokenFn,
       key,
+      stream,
     });
     expect(gatewayGetFake).to.have.been.calledOnce;
     expect(listenFake).to.have.been.calledWith();
@@ -336,6 +340,7 @@ describe("Fact gateway", () => {
       internalTokenFn,
       nodeExternalTokenFn,
       key: "access",
+      stream: false,
     });
     expect(gatewayGetFake).to.have.been.calledWith({
       name: name2,
@@ -344,6 +349,7 @@ describe("Fact gateway", () => {
       internalTokenFn,
       nodeExternalTokenFn,
       key: "access",
+      stream: false,
     });
     expect(gatewayGetFake).to.have.been.calledWith({
       name: name3,
@@ -352,6 +358,7 @@ describe("Fact gateway", () => {
       internalTokenFn,
       nodeExternalTokenFn,
       key: "access",
+      stream: false,
     });
     expect(gatewayGetFake).to.have.been.calledThrice;
     expect(getFake).to.have.been.calledWith(gatewayGetResult, {
@@ -451,6 +458,7 @@ describe("Fact gateway", () => {
       internalTokenFn,
       nodeExternalTokenFn,
       key: "access",
+      stream: false,
     });
     expect(authorizationFake).to.have.been.calledWith({
       permissionsLookupFn,
