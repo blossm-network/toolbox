@@ -92,7 +92,11 @@ exports.stream = async (
         method: "GET",
         ...(headers != undefined && { headers }),
       })
-      .on("response", (response) => onResponseFn && onResponseFn(response))
+      .on("response", (response) => {
+        //TODO
+        console.log("ONRESOOOOOOO: ", { response });
+        onResponseFn && onResponseFn(response);
+      })
       .on("data", (data) => processData(data))
       .on("error", (err) => {
         if (rejected) return;
