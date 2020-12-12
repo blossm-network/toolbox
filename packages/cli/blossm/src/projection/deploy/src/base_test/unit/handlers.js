@@ -16,12 +16,10 @@ describe("Projection handlers tests", () => {
         if (example.readFact) {
           readFactFnFake = stub();
           const actions = example.actions || [example.action];
+          let callCount = 0;
           for (let i = 0; i < actions.length; i++) {
-            let callCount = 0;
             for (const call of example.readFact.calls) {
-              readFactFnFake
-                .onCall((i + 1) * callCount++)
-                .returns(call.returns);
+              readFactFnFake.onCall(callCount++).returns(call.returns);
             }
           }
         }
@@ -49,7 +47,7 @@ describe("Projection handlers tests", () => {
             let callCount = 0;
             for (const call of example.readFact.calls) {
               expect(
-                readFactFnFake.getCall((i + 1) * callCount++)
+                readFactFnFake.getCall(callCount++)
               ).to.have.been.calledWith(call.params);
             }
           }
