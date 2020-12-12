@@ -35,7 +35,7 @@ module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
     claims,
     currentToken,
     token: { internalFn: internalTokenFn, externalFn: externalTokenFn } = {},
-  } = {}) => (fn, { query, root, onResponseFn } = {}) =>
+  } = {}) => (fn, { query, root, onResponseFn, raw = false } = {}) =>
     deps
       .rpc(
         name,
@@ -51,6 +51,7 @@ module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
         },
         {
           ...(onResponseFn && { onResponseFn }),
+          raw,
         }
       )
       .in({

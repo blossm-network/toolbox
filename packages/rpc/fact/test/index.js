@@ -195,7 +195,7 @@ describe("Fact", () => {
     expect(streamFake).to.have.been.calledWith(
       fn,
       { query, id: root },
-      { onResponseFn }
+      { onResponseFn, raw: false }
     );
     expect(inFake).to.have.been.calledWith({
       context,

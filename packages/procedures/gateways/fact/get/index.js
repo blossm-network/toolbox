@@ -48,6 +48,7 @@ module.exports = ({
           console.log({ sc: response.statusCode, h: response.headers });
           res.writeHead(response.statusCode, response.headers);
         },
+        raw: true,
       }
     );
     res.end();

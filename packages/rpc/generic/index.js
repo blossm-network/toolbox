@@ -186,7 +186,7 @@ module.exports = (...operation) => {
         data: query,
       });
     },
-    stream: (fn, query, { onResponseFn } = {}) => {
+    stream: (fn, query, { raw, onResponseFn } = {}) => {
       const id = query.id;
       delete query.id;
       let progress = "";
@@ -196,11 +196,9 @@ module.exports = (...operation) => {
           return await deps.stream(
             url,
             async (data) => {
-              // if (Buffer.isBuffer(data)) return await fn(data);
+              if (raw) return await fn(data);
               const string = data.toString();
-              console.log({ string });
               let { parsedData, leftover } = jsonString(progress + string);
-              console.log({ parsedData });
               progress = leftover;
               for (const d of parsedData) await fn(d);
             },
