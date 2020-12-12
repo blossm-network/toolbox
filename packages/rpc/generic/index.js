@@ -196,7 +196,7 @@ module.exports = (...operation) => {
           return await deps.stream(
             url,
             async (data) => {
-              console.log("IN DATA: ", { sendRaw });
+              console.log("IN DATA: ", { data });
               if (sendRaw) return await fn(data);
               const string = data.toString();
               let { parsedData, leftover } = jsonString(progress + string);
