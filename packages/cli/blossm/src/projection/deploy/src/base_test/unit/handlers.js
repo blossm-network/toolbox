@@ -15,9 +15,14 @@ describe("Projection handlers tests", () => {
         let readFactFnFake;
         if (example.readFact) {
           readFactFnFake = stub();
-          let callCount = 0;
-          for (const call of example.readFact.calls) {
-            readFactFnFake.onCall(callCount++).returns(call.returns);
+          const actions = example.actions || [example.action];
+          for (let i = 0; i < actions.length; i++) {
+            let callCount = 0;
+            for (const call of example.readFact.calls) {
+              readFactFnFake
+                .onCall((i + 1) * callCount++)
+                .returns(call.returns);
+            }
           }
         }
 
@@ -31,20 +36,23 @@ describe("Projection handlers tests", () => {
             ...(example.replayFlag && { replayFlag: example.replayFlag }),
             ...(readFactFnFake && { readFactFn: readFactFnFake }),
           });
-          if (readFactFnFake) {
-            let callCount = 0;
-            for (const call of example.readFact.calls) {
-              expect(
-                readFactFnFake.getCall(callCount++)
-              ).to.have.been.calledWith(call.params);
-            }
-          }
           expect(result).to.deep.equal(example.result);
         };
         if (example.actions) {
           for (const action of example.actions) await run(action);
         } else {
           await run(example.action);
+        }
+        if (readFactFnFake) {
+          const actions = example.actions || [example.action];
+          for (let i = 0; i < actions.length; i++) {
+            let callCount = 0;
+            for (const call of example.readFact.calls) {
+              expect(
+                readFactFnFake.getCall((i + 1) * callCount++)
+              ).to.have.been.calledWith(call.params);
+            }
+          }
         }
       }
     }
