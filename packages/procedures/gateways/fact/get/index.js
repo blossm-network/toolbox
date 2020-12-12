@@ -35,7 +35,11 @@ module.exports = ({
   if (stream) {
     await procedure.stream(
       (data) =>
-        res.write(typeof data === "object" ? JSON.stringify(data) : data),
+        res.write(
+          typeof data === "object" && !Buffer.isBuffer(data) && data !== null
+            ? JSON.stringify(data)
+            : data
+        ),
       {
         query: req.query,
         ...(req.params.root && { root: req.params.root }),

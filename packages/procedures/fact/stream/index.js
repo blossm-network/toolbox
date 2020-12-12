@@ -33,7 +33,11 @@ module.exports = ({
       }),
       headersFn: (headers) => res.writeHead(200, headers),
       streamFn: (data) =>
-        res.write(typeof data === "object" ? JSON.stringify(data) : data),
+        res.write(
+          typeof data === "object" && !Buffer.isBuffer(data) && data !== null
+            ? JSON.stringify(data)
+            : data
+        ),
       readFactFn: readFactFn({
         ...(req.query.context && { context: req.query.context }),
         ...(req.query.claims && { claims: req.query.claims }),
