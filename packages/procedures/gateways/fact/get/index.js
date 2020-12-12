@@ -33,7 +33,7 @@ module.exports = ({
       ...(req.claims && { claims: req.claims }),
     });
   if (stream) {
-    await procedure.stream((data) => res.write(data), {
+    await procedure.stream((data) => res.write(JSON.stringify(data)), {
       query: req.query,
       ...(req.params.root && { root: req.params.root }),
       onResponseFn: (response) => {
