@@ -91,6 +91,7 @@ exports.stream = async (
         url: deps.urlEncodeQueryData(url, query),
         method: "GET",
         ...(headers != undefined && { headers }),
+        gzip: true,
       })
       .on("response", (response) => {
         //TODO
