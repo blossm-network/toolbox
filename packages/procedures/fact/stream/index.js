@@ -31,7 +31,10 @@ module.exports = ({
         ...(req.query.claims && { claims: req.query.claims }),
         ...(req.query.token && { token: req.query.token }),
       }),
-      headersFn: (headers) => res.writeHead(200, headers),
+      headersFn: (headers) => {
+        res.writeHead(200, headers);
+        res.flushHeaders();
+      },
       streamFn: (data) =>
         res.write(
           typeof data === "object" && !Buffer.isBuffer(data) && data !== null
