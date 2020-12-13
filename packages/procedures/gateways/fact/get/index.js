@@ -33,6 +33,7 @@ module.exports = ({
       ...(req.claims && { claims: req.claims }),
     });
   if (stream) {
+    res.writeHead(200, "image/jpeg");
     await procedure.stream(
       (data) =>
         res.write(
