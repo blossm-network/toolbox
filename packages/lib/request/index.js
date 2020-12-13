@@ -73,6 +73,9 @@ exports.stream = async (
 
   return new Promise((resolve, reject) => {
     const processData = async (data) => {
+      if (processingCount == 0) {
+        console.log("processing!");
+      }
       try {
         processingCount++;
         await onDataFn(data);
