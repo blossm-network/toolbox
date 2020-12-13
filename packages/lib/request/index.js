@@ -87,11 +87,17 @@ exports.stream = async (
     };
 
     return deps
-      .request({
-        url: deps.urlEncodeQueryData(url, query),
-        method: "GET",
-        ...(headers != undefined && { headers }),
-      })
+      .request(
+        {
+          url: deps.urlEncodeQueryData(url, query),
+          method: "GET",
+          ...(headers != undefined && { headers }),
+        },
+        (err, response) => {
+          //TODO
+          console.log({ headers: response.headers });
+        }
+      )
       .on("response", (response) => {
         //TODO
         console.log("ONRESOOOOOOO: ", { response });
@@ -115,6 +121,9 @@ exports.stream = async (
       })
       .on("request", () => {
         console.log("request");
+      })
+      .on("information", () => {
+        console.log("information");
       });
   });
 };
