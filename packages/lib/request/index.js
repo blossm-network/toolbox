@@ -106,6 +106,15 @@ exports.stream = async (
       .on("end", () => {
         ended = true;
         if (!rejected && processingCount == 0) resolve();
+      })
+      .on("pipe", () => {
+        console.log("piping");
+      })
+      .on("complete", () => {
+        console.log("complete");
+      })
+      .on("request", () => {
+        console.log("request");
       });
   });
 };
