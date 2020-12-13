@@ -33,7 +33,8 @@ module.exports = ({
       ...(req.claims && { claims: req.claims }),
     });
   if (stream) {
-    res.writeHead(200, "image/jpeg");
+    console.log("streaming");
+    res.writeHead(200, { "Content-Type": "image/jpeg" });
     await procedure.stream(
       (data) =>
         res.write(
