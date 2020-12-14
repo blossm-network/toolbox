@@ -1,26 +1,28 @@
 const deps = require("./deps");
 
-const common = async ({ method, url, params, headers }) =>
+const common = async ({ method, url, params, headers, onData = () => {} }) =>
   new Promise((resolve, reject) =>
-    deps.request(
-      {
-        url: url.startsWith("http")
-          ? url
-          : `${process.env.NODE_ENV == "local" ? "http" : "https"}://${url}`,
-        method,
-        ...(params != undefined && { json: params }),
-        ...(headers != undefined && { headers }),
-      },
-      (err, response, body) =>
-        err
-          ? reject(err)
-          : resolve({
-              headers: response.headers,
-              statusCode: response.statusCode,
-              statusMessage: response.statusMessage,
-              body,
-            })
-    )
+    deps
+      .request(
+        {
+          url: url.startsWith("http")
+            ? url
+            : `${process.env.NODE_ENV == "local" ? "http" : "https"}://${url}`,
+          method,
+          ...(params != undefined && { json: params }),
+          ...(headers != undefined && { headers }),
+        },
+        (err, response, body) =>
+          err
+            ? reject(err)
+            : resolve({
+                headers: response.headers,
+                statusCode: response.statusCode,
+                statusMessage: response.statusMessage,
+                body,
+              })
+      )
+      .on("data", onData)
   );
 
 const jointStream = (streams, sortFn) => {
@@ -55,11 +57,12 @@ exports.delete = async (url, { query, headers } = {}) =>
     headers,
   });
 
-exports.get = async (url, { query, headers } = {}) =>
+exports.get = async (url, { query, headers, onData } = {}) =>
   await common({
     method: "GET",
     url: deps.urlEncodeQueryData(url, query),
     headers,
+    onData,
   });
 
 exports.stream = async (

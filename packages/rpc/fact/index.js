@@ -7,7 +7,7 @@ module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
     claims,
     currentToken,
     token: { internalFn: internalTokenFn, externalFn: externalTokenFn } = {},
-  } = {}) => ({ query, root, raw = false } = {}) =>
+  } = {}) => ({ query, root, raw = false, onData } = {}) =>
     deps
       .rpc(
         name,
@@ -15,7 +15,10 @@ module.exports = ({ name, domain, service = process.env.SERVICE, network }) => {
         ...(service ? [service] : []),
         "fact"
       )
-      .get({ ...(query && { query }), ...(root && { id: root }) }, { raw })
+      .get(
+        { ...(query && { query }), ...(root && { id: root }) },
+        { raw, onData }
+      )
       .in({
         ...(context && { context }),
         ...(!internal && {

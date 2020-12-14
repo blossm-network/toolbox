@@ -35,7 +35,7 @@ const jsonString = (string) => {
   return { parsedData, leftover: string.substr(objectCloseIndex) };
 };
 
-const common = ({ method, dataParam, operation, id, data, raw }) => {
+const common = ({ method, dataParam, operation, id, data, raw, onData }) => {
   return {
     in: ({ context, network, host = process.env.HOST }) => {
       return {
@@ -108,6 +108,7 @@ const common = ({ method, dataParam, operation, id, data, raw }) => {
                       authorization: `${type} ${token}`,
                     },
                   }),
+                  ...(onData && { onData }),
                 });
 
           //Stream doesn't have a reponse.
@@ -177,7 +178,7 @@ module.exports = (...operation) => {
         id,
         data,
       }),
-    get: (query, { raw } = {}) => {
+    get: (query, { raw, onData } = {}) => {
       const id = query.id;
       delete query.id;
       return common({
@@ -187,6 +188,7 @@ module.exports = (...operation) => {
         id,
         data: query,
         raw,
+        onData,
       });
     },
     stream: (fn, query, { raw, onResponseFn } = {}) => {
