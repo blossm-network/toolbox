@@ -29,8 +29,8 @@ const common = async ({
                 body,
               })
       )
-      .on("data", onData)
       .on("response", onResponse)
+      .on("data", onData)
   );
 
 const jointStream = (streams, sortFn) => {
