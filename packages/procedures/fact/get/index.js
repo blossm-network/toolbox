@@ -48,6 +48,7 @@ module.exports = ({
       }),
     });
 
+    //TODO test
     if (file) res.write(file);
 
     res.set(headers).status(200).send(response);
