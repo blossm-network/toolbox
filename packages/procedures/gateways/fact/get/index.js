@@ -51,6 +51,7 @@ module.exports = ({
     );
     res.end();
   } else {
+    console.log({ query: req.query });
     if (req.query.contentType)
       res.writeHead(200, { "Content-Type": req.query.contentType });
     const { body: response, headers = {} } = await procedure.read({
