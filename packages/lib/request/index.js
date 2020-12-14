@@ -1,13 +1,6 @@
 const deps = require("./deps");
 
-const common = async ({
-  method,
-  url,
-  params,
-  headers,
-  onData = () => {},
-  onResponse = () => {},
-}) =>
+const common = async ({ method, url, params, headers, onDataFn = () => {} }) =>
   new Promise((resolve, reject) =>
     deps
       .request(
@@ -29,8 +22,7 @@ const common = async ({
                 body,
               })
       )
-      .on("response", onResponse)
-      .on("data", onData)
+      .on("data", onDataFn)
   );
 
 const jointStream = (streams, sortFn) => {
@@ -65,20 +57,15 @@ exports.delete = async (url, { query, headers } = {}) =>
     headers,
   });
 
-exports.get = async (url, { query, headers, onData, onResponse } = {}) =>
+exports.get = async (url, { query, headers, onDataFn } = {}) =>
   await common({
     method: "GET",
     url: deps.urlEncodeQueryData(url, query),
     headers,
-    onData,
-    onResponse,
+    onDataFn,
   });
 
-exports.stream = async (
-  url,
-  onDataFn,
-  { query, headers, onResponseFn } = {}
-) => {
+exports.stream = async (url, onDataFn, { query, headers } = {}) => {
   let ended = false;
   let rejected = false;
   let processingCount = 0;
@@ -99,21 +86,10 @@ exports.stream = async (
     };
 
     return deps
-      .request(
-        {
-          url: deps.urlEncodeQueryData(url, query),
-          method: "GET",
-          ...(headers != undefined && { headers }),
-        },
-        (err, response) => {
-          //TODO
-          console.log({ headers: response.headers });
-        }
-      )
-      .on("response", (response) => {
-        //TODO
-        console.log("ONRESOOOOOOO: ", { response });
-        onResponseFn && onResponseFn(response);
+      .request({
+        url: deps.urlEncodeQueryData(url, query),
+        method: "GET",
+        ...(headers != undefined && { headers }),
       })
       .on("data", (data) => processData(data))
       .on("error", (err) => {
@@ -124,18 +100,6 @@ exports.stream = async (
       .on("end", () => {
         ended = true;
         if (!rejected && processingCount == 0) resolve();
-      })
-      .on("pipe", () => {
-        console.log("piping");
-      })
-      .on("complete", () => {
-        console.log("complete");
-      })
-      .on("request", () => {
-        console.log("request");
-      })
-      .on("information", () => {
-        console.log("information");
       });
   });
 };

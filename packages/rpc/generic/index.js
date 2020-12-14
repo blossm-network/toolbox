@@ -35,16 +35,7 @@ const jsonString = (string) => {
   return { parsedData, leftover: string.substr(objectCloseIndex) };
 };
 
-const common = ({
-  method,
-  dataParam,
-  operation,
-  id,
-  data,
-  raw,
-  onData,
-  onResponse,
-}) => {
+const common = ({ method, dataParam, operation, id, data, raw, onDataFn }) => {
   return {
     in: ({ context, network, host = process.env.HOST }) => {
       return {
@@ -117,8 +108,7 @@ const common = ({
                       authorization: `${type} ${token}`,
                     },
                   }),
-                  ...(onData && { onData }),
-                  ...(onResponse && { onResponse }),
+                  ...(onDataFn && { onDataFn }),
                 });
 
           //Stream doesn't have a reponse.
@@ -188,7 +178,7 @@ module.exports = (...operation) => {
         id,
         data,
       }),
-    get: (query, { raw, onData, onResponse } = {}) => {
+    get: (query, { raw, onDataFn } = {}) => {
       const id = query.id;
       delete query.id;
       return common({
@@ -198,8 +188,7 @@ module.exports = (...operation) => {
         id,
         data: query,
         raw,
-        onData,
-        onResponse,
+        onDataFn,
       });
     },
     stream: (fn, query, { raw, onResponseFn } = {}) => {
@@ -208,7 +197,6 @@ module.exports = (...operation) => {
       let progress = "";
       return common({
         method: async (url, data) => {
-          let sendRaw;
           return await deps.stream(
             url,
             async (data) => {
@@ -218,19 +206,7 @@ module.exports = (...operation) => {
               progress = leftover;
               for (const d of parsedData) await fn(d);
             },
-            {
-              ...data,
-              onResponseFn: (response) => {
-                onResponseFn && onResponseFn(response);
-                sendRaw =
-                  response.headers["Content-Type"] &&
-                  !response.headers["Content-Type"].startsWith(
-                    "application/json"
-                  );
-                //TODO
-                console.log({ sendRaw });
-              },
-            }
+            data
           );
         },
         dataParam: "query",

@@ -32,6 +32,7 @@ module.exports = async ({
     privileges,
     protection = "strict",
     context,
+    raw = false,
   } of facts) {
     const get = ({ stream }) =>
       deps.get({
@@ -43,6 +44,7 @@ module.exports = async ({
         nodeExternalTokenFn,
         key,
         stream,
+        raw,
       });
     const preMiddleware = {
       ...(protection != "none" && {

@@ -8,6 +8,7 @@ module.exports = ({
   internalTokenFn,
   nodeExternalTokenFn,
   stream,
+  raw,
 } = {}) => async (req, res) => {
   const procedure = deps
     .fact({
@@ -50,19 +51,17 @@ module.exports = ({
     );
     res.end();
   } else {
+    if (req.query.contentType)
+      res.writeHead(200, { "Content-Type": req.query.contentType });
     const { body: response, headers = {} } = await procedure.read({
       query: req.query,
       ...(req.params.root && { root: req.params.root }),
-      //TODO not always. specify in blossm.yaml
-      raw: true,
-      onData: (data) => res.write(data),
-      onResponse: (response) => {
-        console.log("ATYY: ", { headers: response.headers });
-        res.writeHead(200, response.headers);
-      },
+      ...(raw && {
+        onDataFn: (data) => res.write(data),
+      }),
     });
 
-    // res.set(headers).status(200).send(response);
-    res.end();
+    if (raw) res.end();
+    else res.set(headers).status(200).send(response);
   }
 };
