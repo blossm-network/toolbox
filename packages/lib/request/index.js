@@ -22,6 +22,7 @@ const common = async ({ method, url, params, headers, onDataFn = () => {} }) =>
                 body,
               })
       )
+      .on("response", () => console.log("YES FINALLY!"))
       .on("data", onDataFn)
   );
 
