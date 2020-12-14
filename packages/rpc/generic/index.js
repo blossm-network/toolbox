@@ -35,7 +35,7 @@ const jsonString = (string) => {
   return { parsedData, leftover: string.substr(objectCloseIndex) };
 };
 
-const common = ({ method, dataParam, operation, id, data }) => {
+const common = ({ method, dataParam, operation, id, data, raw }) => {
   return {
     in: ({ context, network, host = process.env.HOST }) => {
       return {
@@ -144,7 +144,9 @@ const common = ({ method, dataParam, operation, id, data }) => {
           return shouldEnqueue && process.env.NODE_ENV == "local"
             ? {}
             : {
-                ...(response.body && { body: formatResponse(response.body) }),
+                ...(response.body && {
+                  body: raw ? response.body : formatResponse(response.body),
+                }),
                 ...(response.headers && {
                   headers: formatResponse(response.headers),
                 }),
@@ -175,7 +177,7 @@ module.exports = (...operation) => {
         id,
         data,
       }),
-    get: (query) => {
+    get: (query, { raw } = {}) => {
       const id = query.id;
       delete query.id;
       return common({
@@ -184,6 +186,7 @@ module.exports = (...operation) => {
         operation,
         id,
         data: query,
+        raw,
       });
     },
     stream: (fn, query, { raw, onResponseFn } = {}) => {
