@@ -1,6 +1,13 @@
 const deps = require("./deps");
 
-const common = async ({ method, url, params, headers, onData, onResponse }) =>
+const common = async ({
+  method,
+  url,
+  params,
+  headers,
+  onData = () => {},
+  onResponse = () => {},
+}) =>
   new Promise((resolve, reject) =>
     deps
       .request(
@@ -22,8 +29,8 @@ const common = async ({ method, url, params, headers, onData, onResponse }) =>
                 body,
               })
       )
-      .on("data", onData && onData)
-      .on("response", onResponse && onResponse)
+      .on("data", onData)
+      .on("response", onResponse)
   );
 
 const jointStream = (streams, sortFn) => {
