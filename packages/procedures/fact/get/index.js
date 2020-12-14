@@ -49,6 +49,7 @@ module.exports = ({
     });
 
     //TODO test
+    console.log({ response });
     if (Buffer.isBuffer(response)) {
       res.writeHead(200, headers);
       res.write(response);
