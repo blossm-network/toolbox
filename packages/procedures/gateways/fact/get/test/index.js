@@ -84,7 +84,7 @@ describe("Fact gateway get", () => {
         }),
       },
     });
-    expect(readFake).to.have.been.calledWith({ query, root });
+    expect(readFake).to.have.been.calledWith({ query, root, raw: true });
     expect(sendFake).to.have.been.calledWith(results);
     expect(setResponseFake).to.have.been.calledWith({});
   });
@@ -229,7 +229,7 @@ describe("Fact gateway get", () => {
         }),
       },
     });
-    expect(readFake).to.have.been.calledWith({ query });
+    expect(readFake).to.have.been.calledWith({ query, raw: true });
     expect(sendFake).to.have.been.calledWith(results);
     expect(setResponseFake).to.have.been.calledWith(headers);
   });
@@ -294,7 +294,7 @@ describe("Fact gateway get", () => {
         }),
       },
     });
-    expect(readFake).to.have.been.calledWith({ query });
+    expect(readFake).to.have.been.calledWith({ query, raw: true });
     expect(sendFake).to.have.been.calledWith(results);
     expect(setResponseFake).to.have.been.calledWith({});
   });
