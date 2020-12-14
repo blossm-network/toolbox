@@ -21,7 +21,7 @@ module.exports = ({
         },
       });
 
-    const { headers = {}, response, file } = await mainFn({
+    const { headers = {}, response } = await mainFn({
       query: req.query.query || {},
       ...(req.params.root && { root: req.params.root }),
       ...(req.query.context && { context: req.query.context }),
@@ -49,8 +49,12 @@ module.exports = ({
     });
 
     //TODO test
-    if (file) res.write(file);
-
-    res.set(headers).status(200).send(response);
+    if (Buffer.isBuffer(response)) {
+      res.writeHead(200, headers);
+      res.write(response);
+      res.end();
+    } else {
+      res.set(headers).status(200).send(response);
+    }
   };
 };
