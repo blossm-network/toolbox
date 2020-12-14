@@ -21,7 +21,7 @@ module.exports = ({
         },
       });
 
-    const { headers = {}, response } = await mainFn({
+    const { headers = {}, response, file } = await mainFn({
       query: req.query.query || {},
       ...(req.params.root && { root: req.params.root }),
       ...(req.query.context && { context: req.query.context }),
@@ -47,6 +47,8 @@ module.exports = ({
         ...(req.query.token && { token: req.query.token }),
       }),
     });
+
+    if (file) res.write(file);
 
     res.set(headers).status(200).send(response);
   };
