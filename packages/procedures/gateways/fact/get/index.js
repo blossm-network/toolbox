@@ -50,13 +50,16 @@ module.exports = ({
     );
     res.end();
   } else {
-    res.writeHead(200, { "content-type": "image/jpeg" });
     const { body: response, headers = {} } = await procedure.read({
       query: req.query,
       ...(req.params.root && { root: req.params.root }),
       //TODO not always. specify in blossm.yaml
       raw: true,
       onData: (data) => res.write(data),
+      onResponse: (response) => {
+        console.log("ATYY: ", { headers: response.headers });
+        res.writeHead(200, response.headers);
+      },
     });
 
     // res.set(headers).status(200).send(response);

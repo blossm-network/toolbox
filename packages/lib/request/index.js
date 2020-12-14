@@ -1,6 +1,6 @@
 const deps = require("./deps");
 
-const common = async ({ method, url, params, headers, onData = () => {} }) =>
+const common = async ({ method, url, params, headers, onData, onResponse }) =>
   new Promise((resolve, reject) =>
     deps
       .request(
@@ -22,7 +22,8 @@ const common = async ({ method, url, params, headers, onData = () => {} }) =>
                 body,
               })
       )
-      .on("data", onData)
+      .on("data", onData && onData)
+      .on("response", onResponse && onResponse)
   );
 
 const jointStream = (streams, sortFn) => {
@@ -57,12 +58,13 @@ exports.delete = async (url, { query, headers } = {}) =>
     headers,
   });
 
-exports.get = async (url, { query, headers, onData } = {}) =>
+exports.get = async (url, { query, headers, onData, onResponse } = {}) =>
   await common({
     method: "GET",
     url: deps.urlEncodeQueryData(url, query),
     headers,
     onData,
+    onResponse,
   });
 
 exports.stream = async (
