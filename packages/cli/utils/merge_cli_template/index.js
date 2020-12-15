@@ -519,7 +519,10 @@ const addDefaultDependencies = ({ config, localBaseNetwork }) => {
             };
           }),
       ];
-    case "fact-gateway":
+    case "fact-gateway": {
+      const services =
+        fs.existsSync(path.resolve(__dirname, "./services.js")) &&
+        require("./services");
       return [
         ...(config.facts.some(
           (f) => f.protection == undefined || f.protection == "strict"
@@ -527,7 +530,9 @@ const addDefaultDependencies = ({ config, localBaseNetwork }) => {
           ? tokenDependencies
           : []),
         ...config.facts
-          .filter((f) => f.network == undefined)
+          .filter(
+            (f) => f.network == undefined && (!services || !services[f.name])
+          )
           .map((fact) => {
             return {
               name: fact.name,
@@ -537,6 +542,7 @@ const addDefaultDependencies = ({ config, localBaseNetwork }) => {
             };
           }),
       ];
+    }
     case "view-store":
       return [groupsFactProcedure];
     default:
