@@ -178,7 +178,7 @@ module.exports = (...operation) => {
         id,
         data,
       }),
-    get: (query, { raw, onDataFn } = {}) => {
+    get: (query, { raw } = {}) => {
       const id = query.id;
       delete query.id;
       return common({
@@ -188,10 +188,9 @@ module.exports = (...operation) => {
         id,
         data: query,
         raw,
-        onDataFn,
       });
     },
-    stream: (fn, query, { raw, onResponseFn } = {}) => {
+    stream: (fn, query, { raw } = {}) => {
       const id = query.id;
       delete query.id;
       let progress = "";

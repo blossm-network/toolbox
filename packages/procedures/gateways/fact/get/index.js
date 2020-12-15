@@ -51,18 +51,12 @@ module.exports = ({
     );
     res.end();
   } else {
-    console.log({ raw, query: req.query });
-    if (req.query.contentType)
-      res.writeHead(200, { "Content-Type": req.query.contentType });
     const { body: response, headers = {} } = await procedure.read({
       query: req.query,
       ...(req.params.root && { root: req.params.root }),
-      ...(raw && {
-        onDataFn: (data) => res.write(data),
-      }),
+      ...(raw && { raw }),
     });
 
-    if (raw) res.end();
-    else res.set(headers).status(200).send(response);
+    res.set(headers).status(200).send(response);
   }
 };

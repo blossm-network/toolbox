@@ -9,6 +9,7 @@ module.exports = async ({
   terminatedSessionCheckFn,
   deletedSceneCheckFn,
   verifyFn,
+  services,
   internalTokenFn,
   nodeExternalTokenFn,
   algorithm,
@@ -35,17 +36,19 @@ module.exports = async ({
     raw = false,
   } of facts) {
     const get = ({ stream }) =>
-      deps.get({
-        name,
-        domain,
-        service: factService || service,
-        ...(network && { network }),
-        internalTokenFn,
-        nodeExternalTokenFn,
-        key,
-        stream,
-        raw,
-      });
+      services && services[name]
+        ? services[name]
+        : deps.get({
+            name,
+            domain,
+            service: factService || service,
+            ...(network && { network }),
+            internalTokenFn,
+            nodeExternalTokenFn,
+            key,
+            stream,
+            raw,
+          });
     const preMiddleware = {
       ...(protection != "none" && {
         preMiddleware: [

@@ -48,14 +48,6 @@ module.exports = ({
       }),
     });
 
-    //TODO test
-    console.log({ response });
-    if (Buffer.isBuffer(response)) {
-      res.writeHead(200, headers);
-      res.write(response);
-      res.end();
-    } else {
-      res.set(headers).status(200).send(response);
-    }
+    res.set(headers).status(200).send(response);
   };
 };

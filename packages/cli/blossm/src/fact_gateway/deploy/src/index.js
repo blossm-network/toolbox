@@ -1,3 +1,5 @@
+const fs = require("fs");
+const path = require("path");
 const gateway = require("@blossm/fact-gateway");
 const { verify: verifyGcp } = require("@blossm/gcp-kms");
 const verify = require("@blossm/verify-access-token");
@@ -9,6 +11,10 @@ const nodeExternalToken = require("@blossm/node-external-token");
 const { download: downloadFile } = require("@blossm/gcp-storage");
 
 const config = require("./config.json");
+
+const services =
+  fs.existsSync(path.resolve(__dirname, "./services.js")) &&
+  require("./services");
 
 module.exports = gateway({
   facts: config.facts.map((fact) => ({
@@ -45,4 +51,5 @@ module.exports = gateway({
           version: "1",
           project: process.env.GCP_PROJECT,
         }),
+  ...(services && { services }),
 });

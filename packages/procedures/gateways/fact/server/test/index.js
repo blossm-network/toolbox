@@ -133,6 +133,101 @@ describe("Fact gateway", () => {
       }),
     });
   });
+  it("should call with the correct params with gateway services", async () => {
+    const corsMiddlewareFake = fake();
+    replace(deps, "corsMiddleware", corsMiddlewareFake);
+
+    const authenticationResult = "some-authentication";
+    const authenticationFake = fake.returns(authenticationResult);
+    replace(deps, "authentication", authenticationFake);
+
+    const authorizationResult = "some-authorization";
+    const authorizationFake = fake.returns(authorizationResult);
+    replace(deps, "authorization", authorizationFake);
+
+    const listenFake = fake();
+    const secondGetFake = fake.returns({
+      listen: listenFake,
+    });
+    const getFake = fake.returns({
+      get: secondGetFake,
+    });
+    const serverFake = fake.returns({
+      get: getFake,
+    });
+    replace(deps, "server", serverFake);
+
+    const gatewayGetResult = "some-get-result";
+    const gatewayGetFake = fake.returns(gatewayGetResult);
+    replace(deps, "get", gatewayGetFake);
+
+    const privilege = "some-privilege";
+    const privileges = [privilege];
+    const name = "some-name";
+    const facts = [{ name, privileges, context }];
+
+    const verifyFnResult = "some-verify-fn";
+    const verifyFnFake = fake.returns(verifyFnResult);
+
+    const nameService = "some-name-service";
+    const services = {
+      [name]: nameService,
+    };
+    await gateway({
+      facts,
+      allow,
+      permissionsLookupFn,
+      terminatedSessionCheckFn,
+      deletedSceneCheckFn,
+      verifyFn: verifyFnFake,
+      internalTokenFn,
+      nodeExternalTokenFn,
+      algorithm,
+      audience,
+      services,
+    });
+
+    expect(gatewayGetFake).to.not.have.been.called;
+    expect(listenFake).to.have.been.calledWith();
+    expect(serverFake).to.have.been.calledWith({
+      prehook: match((fn) => {
+        const app = "some-app";
+        fn(app);
+        return corsMiddlewareFake.calledWith({
+          app,
+          allow,
+          credentials: true,
+          methods: ["GET"],
+        });
+      }),
+    });
+    expect(getFake).to.have.been.calledWith(nameService, {
+      path: `/${name}/:root?`,
+      preMiddleware: [authenticationResult, authorizationResult],
+    });
+    expect(secondGetFake).to.have.been.calledWith(nameService, {
+      path: `/${name}/stream/:root?`,
+      preMiddleware: [authenticationResult, authorizationResult],
+    });
+    expect(authenticationFake).to.have.been.calledWith({
+      verifyFn: verifyFnResult,
+      audience,
+      algorithm,
+      protection: "strict",
+      cookieKey: "access",
+    });
+    expect(verifyFnFake).to.have.been.calledWith({ key: "access" });
+    expect(authorizationFake).to.have.been.calledWith({
+      permissionsLookupFn,
+      terminatedSessionCheckFn,
+      deletedSceneCheckFn,
+      internalTokenFn,
+      context,
+      permissions: privileges.map((privilege) => {
+        return { service, domain, privilege };
+      }),
+    });
+  });
   it("should call with the correct params with privileges set to none and custom key, with service and network passed back", async () => {
     const corsMiddlewareFake = fake();
     replace(deps, "corsMiddleware", corsMiddlewareFake);
