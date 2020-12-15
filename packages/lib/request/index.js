@@ -55,12 +55,14 @@ exports.delete = async (url, { query, headers } = {}) =>
     headers,
   });
 
-exports.get = async (url, { query, headers } = {}) =>
-  await common({
+exports.get = async (url, { query, headers } = {}) => {
+  console.log({ url: deps.urlEncodeQueryData(url, query) });
+  return await common({
     method: "GET",
     url: deps.urlEncodeQueryData(url, query),
     headers,
   });
+};
 
 exports.stream = async (url, onDataFn, { query, headers } = {}) => {
   let ended = false;

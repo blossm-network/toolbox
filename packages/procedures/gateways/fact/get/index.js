@@ -55,6 +55,7 @@ module.exports = ({
     );
     res.end();
   } else {
+    console.log({ reqQuery: req.query });
     const { body: response, headers = {} } = await procedure.read({
       query: req.query,
       ...(req.params.root && { root: req.params.root }),
