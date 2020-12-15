@@ -480,6 +480,9 @@ const addDefaultDependencies = ({ config, localBaseNetwork }) => {
         },
       ];
     case "command-gateway": {
+      const services =
+        fs.existsSync(path.resolve(__dirname, "./services.js")) &&
+        require("./services");
       const dependencies = [
         ...(config.commands.some(
           (c) => c.protection == undefined || c.protection == "strict"
@@ -487,7 +490,9 @@ const addDefaultDependencies = ({ config, localBaseNetwork }) => {
           ? tokenDependencies
           : []),
         ...config.commands
-          .filter((c) => c.network == undefined)
+          .filter(
+            (c) => c.network == undefined && (!services || !services[c.name])
+          )
           .map((command) => {
             return {
               name: command.name,
