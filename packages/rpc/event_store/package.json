@@ -1,7 +1,7 @@
 {
   "name": "@blossm/event-store-rpc",
   "description": "Access to an event store.",
-  "version": "0.0.276",
+  "version": "0.0.277",
   "scripts": {
     "test": "mocha --recursive"
   },
@@ -12,8 +12,8 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/request": "^0.0.54",
-    "@blossm/rpc": "^0.0.237"
+    "@blossm/request": "^0.0.55",
+    "@blossm/rpc": "^0.0.238"
   },
   "devDependencies": {
     "chai-datetime": "^1.5.0",
