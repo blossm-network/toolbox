@@ -42,27 +42,25 @@ const jointStream = (streams, sortFn) => {
   }
 };
 
-exports.post = async (url, { body, headers } = {}) =>
-  await common({ method: "POST", url, params: body, headers });
+exports.post = (url, { body, headers } = {}) =>
+  common({ method: "POST", url, params: body, headers });
 
-exports.put = async (url, { body, headers } = {}) =>
-  await common({ method: "PUT", url, params: body, headers });
+exports.put = (url, { body, headers } = {}) =>
+  common({ method: "PUT", url, params: body, headers });
 
-exports.delete = async (url, { query, headers } = {}) =>
-  await common({
+exports.delete = (url, { query, headers } = {}) =>
+  common({
     method: "DELETE",
     url: deps.urlEncodeQueryData(url, query),
     headers,
   });
 
-exports.get = async (url, { query, headers } = {}) => {
-  console.log({ url: deps.urlEncodeQueryData(url, query) });
-  return await common({
+exports.get = (url, { query, headers } = {}) =>
+  common({
     method: "GET",
     url: deps.urlEncodeQueryData(url, query),
     headers,
   });
-};
 
 exports.stream = async (url, onDataFn, { query, headers } = {}) => {
   let ended = false;

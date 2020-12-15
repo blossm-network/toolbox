@@ -84,7 +84,6 @@ const common = ({ method, dataParam, operation, id, data, raw, onDataFn }) => {
 
           const shouldEnqueue = enqueueFn && method != deps.get;
 
-          console.log({ requestData });
           const response =
             //don't enqueue if on local
             shouldEnqueue && process.env.NODE_ENV != "local"

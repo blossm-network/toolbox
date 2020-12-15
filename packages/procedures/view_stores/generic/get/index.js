@@ -163,20 +163,20 @@ module.exports = ({
 
   const updates = `https://updates.${
     process.env.BASE_NETWORK
-  }/channel?query%5Bname%5D=${process.env.NAME}${
-    process.env.CONTEXT ? `&query%5Bcontext%5D=${process.env.CONTEXT}` : ""
-  }&query%5Bnetwork%5D=${process.env.NETWORK}${
+  }/channel?name%5B=${process.env.NAME}${
+    process.env.CONTEXT ? `&context%5B=${process.env.CONTEXT}` : ""
+  }&network%5B=${process.env.NETWORK}${
     //TODO write better tests for this.
     //If there's only one result, use it's updateKey value.
     //If there's more than one result, use the first element's value if the updateKey was queried for.
     updateKey &&
     ((results.length > 1 && (req.query.query || {})[updateKey] != undefined) ||
       results.length == 1)
-      ? `&query%5Bkey%5D=${getValue(results[0].body, updateKey)}`
+      ? `&key%5B=${getValue(results[0].body, updateKey)}`
       : ""
   }${
     !process.env.CONTEXT && req.query.context && req.query.context.principal
-      ? `&query%5Bprincipal%5D=${req.query.context.principal.root}`
+      ? `&principal%5B=${req.query.context.principal.root}`
       : ""
   }`;
 
