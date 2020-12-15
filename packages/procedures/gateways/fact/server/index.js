@@ -34,10 +34,11 @@ module.exports = async ({
     protection = "strict",
     context,
     raw = false,
+    root = false,
   } of facts) {
     const get = ({ stream }) =>
       services && services[name]
-        ? services[name]
+        ? services[name]({ internalTokenFn })
         : deps.get({
             name,
             domain,
@@ -48,6 +49,7 @@ module.exports = async ({
             key,
             stream,
             raw,
+            root,
           });
     const preMiddleware = {
       ...(protection != "none" && {

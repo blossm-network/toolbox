@@ -82,6 +82,7 @@ describe("Fact gateway", () => {
       key: "access",
       stream: false,
       raw: false,
+      root: false,
     });
     expect(gatewayGetFake.getCall(1)).to.have.been.calledWith({
       name,
@@ -92,6 +93,7 @@ describe("Fact gateway", () => {
       key: "access",
       stream: true,
       raw: false,
+      root: false,
     });
     expect(listenFake).to.have.been.calledWith();
     expect(serverFake).to.have.been.calledWith({
@@ -170,8 +172,9 @@ describe("Fact gateway", () => {
     const verifyFnFake = fake.returns(verifyFnResult);
 
     const nameService = "some-name-service";
+    const serviceFake = fake.returns(nameService);
     const services = {
-      [name]: nameService,
+      [name]: serviceFake,
     };
     await gateway({
       facts,
@@ -209,6 +212,7 @@ describe("Fact gateway", () => {
       path: `/${name}/stream/:root?`,
       preMiddleware: [authenticationResult, authorizationResult],
     });
+    expect(serviceFake).to.have.been.calledWith({ internalTokenFn });
     expect(authenticationFake).to.have.been.calledWith({
       verifyFn: verifyFnResult,
       audience,
@@ -228,7 +232,7 @@ describe("Fact gateway", () => {
       }),
     });
   });
-  it("should call with the correct params with privileges set to none and custom key, with service and network passed back", async () => {
+  it("should call with the correct params with privileges set to none and custom key, with raw, root, service and network passed back", async () => {
     const corsMiddlewareFake = fake();
     replace(deps, "corsMiddleware", corsMiddlewareFake);
 
@@ -262,6 +266,7 @@ describe("Fact gateway", () => {
     const factNetwork = "some-fact-network";
     const factService = "some-fact-service";
     const raw = "some-raw";
+    const root = "some-root";
     const facts = [
       {
         name,
@@ -271,6 +276,7 @@ describe("Fact gateway", () => {
         network: factNetwork,
         service: factService,
         raw,
+        root,
       },
     ];
 
@@ -300,6 +306,7 @@ describe("Fact gateway", () => {
       key,
       stream: false,
       raw,
+      root,
     });
     expect(gatewayGetFake.getCall(1)).to.have.been.calledWith({
       name,
@@ -311,6 +318,7 @@ describe("Fact gateway", () => {
       key,
       stream: true,
       raw,
+      root,
     });
     expect(listenFake).to.have.been.calledWith();
     expect(serverFake).to.have.been.calledWith({
@@ -484,6 +492,7 @@ describe("Fact gateway", () => {
       key: "access",
       stream: false,
       raw: false,
+      root: false,
     });
     expect(gatewayGetFake.getCall(1)).to.have.been.calledWith({
       name: name1,
@@ -494,6 +503,7 @@ describe("Fact gateway", () => {
       key: "access",
       stream: true,
       raw: false,
+      root: false,
     });
     expect(gatewayGetFake.getCall(2)).to.have.been.calledWith({
       name: name2,
@@ -504,6 +514,7 @@ describe("Fact gateway", () => {
       key: "access",
       stream: false,
       raw: false,
+      root: false,
     });
     expect(gatewayGetFake.getCall(3)).to.have.been.calledWith({
       name: name2,
@@ -514,6 +525,7 @@ describe("Fact gateway", () => {
       key: "access",
       stream: true,
       raw: false,
+      root: false,
     });
     expect(gatewayGetFake.getCall(4)).to.have.been.calledWith({
       name: name3,
@@ -524,6 +536,7 @@ describe("Fact gateway", () => {
       key: "access",
       stream: false,
       raw: false,
+      root: false,
     });
     expect(gatewayGetFake.getCall(5)).to.have.been.calledWith({
       name: name3,
@@ -534,6 +547,7 @@ describe("Fact gateway", () => {
       key: "access",
       stream: true,
       raw: false,
+      root: false,
     });
     expect(getFake).to.have.been.calledWith(gatewayGetResult, {
       path: `/${name1}/:root?`,
@@ -648,6 +662,7 @@ describe("Fact gateway", () => {
       key: "access",
       stream: false,
       raw: false,
+      root: false,
     });
     expect(gatewayGetFake.getCall(1)).to.have.been.calledWith({
       name,
@@ -658,6 +673,7 @@ describe("Fact gateway", () => {
       key: "access",
       stream: true,
       raw: false,
+      root: false,
     });
     expect(authorizationFake).to.have.been.calledWith({
       permissionsLookupFn,

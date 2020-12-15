@@ -288,6 +288,27 @@ describe("Fact gateway get", () => {
     expect(sendFake).to.have.been.calledWith(results);
     expect(setResponseFake).to.have.been.calledWith({});
   });
+  it("should throw correctly if no root but root needed", async () => {
+    const req = {
+      context,
+      query,
+      params: {},
+    };
+    const res = {};
+    const error = "some-error";
+    const messageFake = fake.returns(error);
+    replace(deps, "badRequestError", {
+      message: messageFake,
+    });
+    try {
+      await get({ root: true })(req, res);
+      //shouldn't get called
+      expect(2).to.equal(1);
+    } catch (e) {
+      expect(messageFake).to.have.been.calledWith("A root is required.");
+      expect(e).to.equal(error);
+    }
+  });
   it("should throw correctly", async () => {
     const errorMessage = "error-message";
     const readFake = fake.rejects(new Error(errorMessage));

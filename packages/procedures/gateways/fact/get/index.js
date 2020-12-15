@@ -9,7 +9,11 @@ module.exports = ({
   nodeExternalTokenFn,
   stream,
   raw,
+  root,
 } = {}) => async (req, res) => {
+  if (root && !req.params.root)
+    throw deps.badRequestError.message("A root is required.");
+
   const procedure = deps
     .fact({
       name,
