@@ -15,6 +15,7 @@ module.exports = async ({
   verifyFn,
   keyClaimsFn,
   redirect,
+  services,
 }) => {
   let server = deps.server({
     prehook: (app) =>
@@ -38,16 +39,18 @@ module.exports = async ({
     node = false,
   } of commands) {
     server = server.post(
-      deps.post({
-        name,
-        domain,
-        service: commandService || service,
-        ...(network && { network }),
-        internalTokenFn,
-        nodeExternalTokenFn,
-        key,
-        ...(redirect && { redirect }),
-      }),
+      services && services[name]
+        ? services[name]({ internalTokenFn })
+        : deps.post({
+            name,
+            domain,
+            service: commandService || service,
+            ...(network && { network }),
+            internalTokenFn,
+            nodeExternalTokenFn,
+            key,
+            ...(redirect && { redirect }),
+          }),
       {
         path: `/${name}`,
         preMiddleware: [

@@ -6,7 +6,7 @@ const services =
   fs.existsSync(path.resolve(__dirname, "../../services.js")) &&
   require("../../services");
 
-describe("Fact gateway services tests", () => {
+describe("Command gateway services tests", () => {
   if (!services) return;
   it("should execute service correctly", async () => {
     const sendFake = fake();

@@ -1,3 +1,5 @@
+const fs = require("fs");
+const path = require("path");
 const gateway = require("@blossm/command-gateway");
 const { verify: verifyGcp } = require("@blossm/gcp-kms");
 const verify = require("@blossm/verify-access-token");
@@ -10,6 +12,10 @@ const nodeExternalToken = require("@blossm/node-external-token");
 const { download: downloadFile } = require("@blossm/gcp-storage");
 
 const config = require("./config.json");
+
+const services =
+  fs.existsSync(path.resolve(__dirname, "./services.js")) &&
+  require("./services");
 
 module.exports = gateway({
   commands: config.commands.map((command) => ({
@@ -34,6 +40,7 @@ module.exports = gateway({
   }),
   terminatedSessionCheckFn: terminatedSessionCheck,
   deletedSceneCheckFn: deletedSceneCheck,
+  ...(services && { services }),
   verifyFn: ({ key }) =>
     // The public key is an access key.
     // The local dev uses the images from the base network that uses gcp keys.
