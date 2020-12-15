@@ -34,6 +34,7 @@ describe("View store base integration tests", () => {
     expect(examples.length).to.be.greaterThan(1);
 
     if (testing.empty) {
+      console.log({ empty: url });
       const emptyResponse = await request.get(url, {
         query: {
           context: {
@@ -55,6 +56,7 @@ describe("View store base integration tests", () => {
         },
       });
 
+      console.log("empty test done");
       expect(emptyResponse.statusCode).to.equal(200);
 
       const {
@@ -71,6 +73,7 @@ describe("View store base integration tests", () => {
       }
     }
 
+    console.log(`test put: ${url}/${id}`);
     const response0 = await request.put(`${url}/${id}`, {
       body: {
         update: examples[0].update,
@@ -103,6 +106,7 @@ describe("View store base integration tests", () => {
         }),
       },
     });
+    console.log("put test done");
 
     expect(response0.statusCode).to.equal(200);
     if (key) {
@@ -119,6 +123,7 @@ describe("View store base integration tests", () => {
       expect(forbiddenResponse.statusCode).to.equal(403);
     }
 
+    console.log(`test get: ${url}`);
     const response1 = await request.get(url, {
       query: {
         context: {
@@ -140,6 +145,7 @@ describe("View store base integration tests", () => {
       },
     });
 
+    console.log(`get test done`);
     expect(response1.statusCode).to.equal(200);
     const { updates: updates0, count: count0, content: content0 } = JSON.parse(
       response1.body

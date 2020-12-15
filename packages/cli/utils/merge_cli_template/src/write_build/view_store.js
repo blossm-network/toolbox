@@ -62,6 +62,8 @@ module.exports = ({
 }) => {
   return [
     yarnInstall,
+    ...(runUnitTests ? [unitTests] : []),
+    ...(runBaseUnitTests ? [baseUnitTests] : []),
     buildImage({
       extension: imageExtension,
       containerRegistery,
@@ -87,9 +89,6 @@ module.exports = ({
       },
     }),
     dockerComposeUp,
-    //Unit tests can be anywhere, but im putting them here to give the compose up some time.
-    ...(runUnitTests ? [unitTests] : []),
-    ...(runBaseUnitTests ? [baseUnitTests] : []),
     dockerComposeProcesses,
     ...(runBaseIntegrationTests ? [baseIntegrationTests({ strict })] : []),
     ...(runIntegrationTests ? [integrationTests({ strict })] : []),
