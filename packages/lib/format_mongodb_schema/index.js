@@ -3,7 +3,16 @@ const formatSchemaValue = (value, typeKey, { wrapType = true } = {}) => {
     return wrapType ? { [typeKey]: value } : value;
   } else if (value instanceof Array) {
     return {
-      [typeKey]: value,
+      [typeKey]:
+        typeof value[0] == "object" &&
+        value[0].type &&
+        typeof value[0].type == "object"
+          ? [
+              formatSchemaValue(value[0], typeKey, {
+                wrapType: false,
+              }),
+            ]
+          : value,
     };
   } else if (value.type != undefined && typeof value.type != "object") {
     let formattedObj = {
