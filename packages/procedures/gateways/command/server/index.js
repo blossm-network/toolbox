@@ -55,7 +55,7 @@ module.exports = async ({
       {
         path: `/${name}`,
         preMiddleware: [
-          ...(multipart ? [deps.uploader.array("files", 6)] : []),
+          ...(multipart ? [deps.uploader.any()] : []),
           deps.authentication({
             verifyFn: verifyFn({ key }),
             cookieKey: key,
