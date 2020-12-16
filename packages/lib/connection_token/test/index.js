@@ -11,8 +11,6 @@ const expiredExp = "2000-01-03T00:02:12.000Z";
 const network = "some-network";
 const basicToken = "some-basic-token";
 
-const key = "some-key";
-
 describe("Connection token", () => {
   afterEach(() => {
     restore();
@@ -48,7 +46,7 @@ describe("Connection token", () => {
     });
     const result = await connectionToken({
       credentialsFn: credentialsFnFake,
-    })({ network, key });
+    })({ network });
     expect(commandFake).to.have.been.calledWith({
       name: "open",
       domain: "connection",
@@ -63,25 +61,22 @@ describe("Connection token", () => {
       root,
       secret,
     });
-    expect(issueFake).to.have.been.calledWith({ key });
+    expect(issueFake).to.have.been.calledWith();
     expect(credentialsFnFake).to.have.been.calledWith({ network });
     expect(result).to.deep.equal({ token, type: "Bearer" });
     const anotherResult = await connectionToken({
       credentialsFn: credentialsFnFake,
-    })({ network, key });
-    expect(readObjectFake).to.have.been.calledWith(`_cToken.${network}.${key}`);
-    expect(writeObjectFake).to.have.been.calledOnceWith(
-      `_cToken.${network}.${key}`,
-      {
-        token,
-        exp: new Date(Date.parse(exp)),
-      }
-    );
+    })({ network });
+    expect(readObjectFake).to.have.been.calledWith(`_cToken.${network}`);
+    expect(writeObjectFake).to.have.been.calledOnceWith(`_cToken.${network}`, {
+      token,
+      exp: new Date(Date.parse(exp)),
+    });
     expect(commandFake).to.have.been.calledOnce;
     expect(anotherResult).to.deep.equal({ token, type: "Bearer" });
     const yetAnotherResult = await connectionToken({
       credentialsFn: credentialsFnFake,
-    })({ network, key: "new-key" });
+    })({ network });
     expect(commandFake).to.have.been.calledTwice;
     expect(yetAnotherResult).to.deep.equal({ token, type: "Bearer" });
   });
@@ -113,7 +108,7 @@ describe("Connection token", () => {
     });
     const result = await connectionToken({
       credentialsFn: credentialsFnFake,
-    })({ network: anotherNetwork, key });
+    })({ network: anotherNetwork });
     expect(result).to.deep.equal({ token, type: "Bearer" });
     expect(commandFake).to.have.been.calledOnce;
   });
@@ -141,7 +136,7 @@ describe("Connection token", () => {
     });
     const result = await connectionToken({
       credentialsFn: credentialsFnFake,
-    })({ network: "some-random-network", key });
+    })({ network: "some-random-network" });
     expect(result).to.be.null;
   });
   it("should call correctly if no credentials", async () => {
