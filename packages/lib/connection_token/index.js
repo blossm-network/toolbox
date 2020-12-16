@@ -8,15 +8,8 @@ module.exports = ({ credentialsFn }) => async ({ network }) => {
   let { token, exp } = (await deps.redis.readObject(cacheKey)) || {};
   if (!token || new Date(Date.parse(exp)) < new Date()) {
     const credentials = await credentialsFn({ network });
-    console.log({ credentials });
     if (!credentials) return null;
     const { root, secret } = credentials;
-    console.log({
-      basic: deps.basicToken({
-        root,
-        secret,
-      }),
-    });
     const {
       body: { token: newToken },
     } = await deps
@@ -37,15 +30,12 @@ module.exports = ({ credentialsFn }) => async ({ network }) => {
       })
       .issue();
 
-    console.log({ newToken });
-    console.log({ cacheKey });
     if (!newToken) return null;
 
     const claims = await deps.decode(newToken.value);
     token = newToken.value;
     exp = new Date(Date.parse(claims.exp));
 
-    console.log({ token, exp });
     await deps.redis.writeObject(cacheKey, {
       token,
       exp,

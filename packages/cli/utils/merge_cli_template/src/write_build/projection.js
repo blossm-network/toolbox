@@ -125,6 +125,7 @@ module.exports = ({
             redisIp,
             env: {
               NAME: name,
+              ...dependencyKeyEnvironmentVariables,
               ...(context && { CONTEXT: context }),
               ...envVars,
             },
