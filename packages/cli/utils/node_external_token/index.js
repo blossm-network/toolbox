@@ -8,6 +8,11 @@ module.exports = connectionToken({
     const root = process.env[`${nameRoot}_KEY_ROOT`];
     const secretName = process.env[`${nameRoot}_KEY_SECRET_NAME`];
 
+    console.log({
+      root,
+      secretName,
+      s: secretName && (await secret(secretName)),
+    });
     if (!root || !secretName) return null;
     return {
       root,

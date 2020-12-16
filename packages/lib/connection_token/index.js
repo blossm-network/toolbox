@@ -5,11 +5,10 @@ const WEEK_IN_SECONDS = 604800;
 
 module.exports = ({ credentialsFn }) => async ({ network }) => {
   const cacheKey = `${cacheKeyPrefix}.${network}`;
-  let token;
-  let exp;
-  // let { token, exp } = (await deps.redis.readObject(cacheKey)) || {};
+  let { token, exp } = (await deps.redis.readObject(cacheKey)) || {};
   if (!token || new Date(Date.parse(exp)) < new Date()) {
     const credentials = await credentialsFn({ network });
+    console.log({ credentials });
     if (!credentials) return null;
     const { root, secret } = credentials;
     console.log({
