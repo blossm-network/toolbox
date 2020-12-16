@@ -283,7 +283,7 @@ describe("Command gateway", () => {
       redirect,
     });
 
-    expect(arrayFake).to.have.been.calledWith("uploads", 6);
+    expect(arrayFake).to.have.been.calledWith("files", 6);
     expect(gatewayPostFake).to.have.been.calledWith({
       name,
       network,
