@@ -161,22 +161,22 @@ module.exports = ({
     req.query.query &&
     Object.keys(req.query.query).find((key) => updateKeys.includes(key));
 
-  const updates = `https://updates.${
-    process.env.BASE_NETWORK
-  }/channel?name%5B=${process.env.NAME}${
-    process.env.CONTEXT ? `&context%5B=${process.env.CONTEXT}` : ""
-  }&network%5B=${process.env.NETWORK}${
+  const updates = `https://updates.${process.env.BASE_NETWORK}/channel?name=${
+    process.env.NAME
+  }${process.env.CONTEXT ? `&context=${process.env.CONTEXT}` : ""}&network=${
+    process.env.NETWORK
+  }${
     //TODO write better tests for this.
     //If there's only one result, use it's updateKey value.
     //If there's more than one result, use the first element's value if the updateKey was queried for.
     updateKey &&
     ((results.length > 1 && (req.query.query || {})[updateKey] != undefined) ||
       results.length == 1)
-      ? `&key%5B=${getValue(results[0].body, updateKey)}`
+      ? `&key=${getValue(results[0].body, updateKey)}`
       : ""
   }${
     !process.env.CONTEXT && req.query.context && req.query.context.principal
-      ? `&principal%5B=${req.query.context.principal.root}`
+      ? `&principal=${req.query.context.principal.root}`
       : ""
   }`;
 

@@ -155,7 +155,7 @@ describe("View store get", () => {
         },
       })),
       updates:
-        "https://updates.some-base-network/channel?name%5B=some-env-name&context%5B=some-env-context&network%5B=some-env-network",
+        "https://updates.some-base-network/channel?name=some-env-name&context=some-env-context&network=some-env-network",
       next: nextUrl,
       count: 200,
     });
@@ -408,7 +408,7 @@ describe("View store get", () => {
         },
       })),
       updates:
-        "https://updates.some-base-network/channel?name%5B=some-env-name&network%5B=some-env-network&key%5B=2&principal%5B=some-context-principal-root",
+        "https://updates.some-base-network/channel?name=some-env-name&network=some-env-network&key=2&principal=some-context-principal-root",
       next: nextUrl,
       count: 200,
     });
@@ -479,7 +479,7 @@ describe("View store get", () => {
     expect(sendFake).to.have.been.calledWith({
       content: someEmptyFnResponse,
       updates:
-        "https://updates.some-base-network/channel?name%5B=some-env-name&context%5B=some-env-context&network%5B=some-env-network",
+        "https://updates.some-base-network/channel?name=some-env-name&context=some-env-context&network=some-env-network",
       count: 200,
     });
   });
@@ -579,7 +579,7 @@ describe("View store get", () => {
         },
       ],
       updates:
-        "https://updates.some-base-network/channel?name%5B=some-env-name&context%5B=some-env-context&network%5B=some-env-network",
+        "https://updates.some-base-network/channel?name=some-env-name&context=some-env-context&network=some-env-network",
       next: nextUrl,
       count: 3,
     });
@@ -672,7 +672,7 @@ describe("View store get", () => {
         },
       ],
       updates:
-        "https://updates.some-base-network/channel?name%5B=some-env-name&context%5B=some-env-context&network%5B=some-env-network",
+        "https://updates.some-base-network/channel?name=some-env-name&context=some-env-context&network=some-env-network",
       count: 1,
     });
   });
@@ -753,7 +753,7 @@ describe("View store get", () => {
         },
       ],
       updates:
-        "https://updates.some-base-network/channel?name%5B=some-env-name&context%5B=some-env-context&network%5B=some-env-network",
+        "https://updates.some-base-network/channel?name=some-env-name&context=some-env-context&network=some-env-network",
       count,
     });
   });
@@ -834,7 +834,7 @@ describe("View store get", () => {
         headers: { trace: [txId0, txId1, txId2], id, context: foundContext },
       },
       updates:
-        "https://updates.some-base-network/channel?name%5B=some-env-name&context%5B=some-env-context&network%5B=some-env-network",
+        "https://updates.some-base-network/channel?name=some-env-name&context=some-env-context&network=some-env-network",
     });
   });
   it("should call with the correct params with bootstrap as true", async () => {
@@ -917,7 +917,7 @@ describe("View store get", () => {
         headers: { trace: [txId0, txId1, txId2], id, context: foundContext },
       },
       updates:
-        "https://updates.some-base-network/channel?name%5B=some-env-name&context%5B=some-env-context&network%5B=some-env-network",
+        "https://updates.some-base-network/channel?name=some-env-name&context=some-env-context&network=some-env-network",
     });
   });
   it("should call with the correct params with bootstrap as true, ignoring a call to group", async () => {
@@ -1004,7 +1004,7 @@ describe("View store get", () => {
         headers: { trace: [txId0, txId1, txId2], id, context: foundContext },
       },
       updates:
-        "https://updates.some-base-network/channel?name%5B=some-env-name&context%5B=some-env-context&network%5B=some-env-network",
+        "https://updates.some-base-network/channel?name=some-env-name&context=some-env-context&network=some-env-network",
     });
   });
   it("should throw with bootstrap as true without env variable", async () => {
