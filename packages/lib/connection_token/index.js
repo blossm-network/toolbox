@@ -3,9 +3,11 @@ const deps = require("./deps");
 const cacheKeyPrefix = "_cToken";
 const WEEK_IN_SECONDS = 604800;
 
-module.exports = ({ credentialsFn }) => async ({ network, key }) => {
-  const cacheKey = `${cacheKeyPrefix}.${network}.${key}`;
-  let { token, exp } = (await deps.redis.readObject(cacheKey)) || {};
+module.exports = ({ credentialsFn }) => async ({ network }) => {
+  const cacheKey = `${cacheKeyPrefix}.${network}`;
+  let token;
+  let exp;
+  // let { token, exp } = (await deps.redis.readObject(cacheKey)) || {};
   if (!token || new Date(Date.parse(exp)) < new Date()) {
     const credentials = await credentialsFn({ network });
     if (!credentials) return null;
@@ -28,7 +30,7 @@ module.exports = ({ credentialsFn }) => async ({ network, key }) => {
             }),
         },
       })
-      .issue({ key });
+      .issue();
 
     if (!newToken) return null;
 
