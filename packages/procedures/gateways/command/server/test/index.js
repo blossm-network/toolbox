@@ -247,11 +247,26 @@ describe("Command gateway", () => {
     const name = "some-name";
     const network = "some-network";
     const commands = [
-      { name, network, privileges, context, basic: true, node: true },
+      {
+        name,
+        network,
+        privileges,
+        context,
+        basic: true,
+        node: true,
+        multipart: true,
+      },
     ];
 
     const verifyFnResult = "some-verify-fn";
     const verifyFnFake = fake.returns(verifyFnResult);
+
+    const arrayResult = "some-array-results";
+    const arrayFake = fake.returns(arrayResult);
+
+    replace(deps, "uploader", {
+      array: arrayFake,
+    });
 
     await gateway({
       commands,
@@ -268,6 +283,7 @@ describe("Command gateway", () => {
       redirect,
     });
 
+    expect(arrayFake).to.have.been.calledWith("uploads", 6);
     expect(gatewayPostFake).to.have.been.calledWith({
       name,
       network,
@@ -294,7 +310,7 @@ describe("Command gateway", () => {
     });
     expect(postFake).to.have.been.calledWith(gatewayPostResult, {
       path: `/${name}`,
-      preMiddleware: [authenticationResult, authorizationResult],
+      preMiddleware: [arrayResult, authenticationResult, authorizationResult],
     });
     expect(authenticationFake).to.have.been.calledWith({
       verifyFn: verifyFnResult,

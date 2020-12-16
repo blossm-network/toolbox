@@ -37,6 +37,7 @@ module.exports = async ({
     basic = false,
     context,
     node = false,
+    multipart = false,
   } of commands) {
     server = server.post(
       services && services[name]
@@ -54,6 +55,7 @@ module.exports = async ({
       {
         path: `/${name}`,
         preMiddleware: [
+          ...(multipart ? [deps.uploader.array("uploads", 6)] : []),
           deps.authentication({
             verifyFn: verifyFn({ key }),
             cookieKey: key,

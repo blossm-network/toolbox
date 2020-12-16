@@ -95,6 +95,7 @@ describe("Server", () => {
     expect(asyncHandlerFake).to.have.been.calledWith(fn);
     expect(useFake).to.have.been.calledWith(deps.errorMiddleware);
     expect(listenFake).to.have.been.calledWith(port);
+    expect(expressMiddlewareFake).to.have.been.calledWith(app);
   });
   it("should call post with the correct params and custom path and port", async () => {
     const useFake = fake();
