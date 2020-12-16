@@ -1,6 +1,6 @@
 {
   "name": "@blossm/express-middleware",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Express middleware for the network.",
   "main": "index.js",
   "author": "blossm.network",
