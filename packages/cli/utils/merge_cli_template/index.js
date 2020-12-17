@@ -482,9 +482,8 @@ const addDefaultDependencies = ({ config, localBaseNetwork, workingDir }) => {
       ];
     case "command-gateway": {
       console.log("gello");
-      const services =
-        fs.existsSync(path.resolve(workingDir, "./services.js")) &&
-        require("./services");
+      const servicesPath = path.resolve(workingDir, "./services.js");
+      const services = fs.existsSync(servicesPath) && require(servicesPath);
 
       console.log({
         services,
