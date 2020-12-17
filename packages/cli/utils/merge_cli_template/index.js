@@ -484,7 +484,10 @@ const addDefaultDependencies = ({ config, localBaseNetwork }) => {
         fs.existsSync(path.resolve(__dirname, "./services.js")) &&
         require("./services");
 
-      console.log({ services });
+      console.log({
+        services,
+        exists: fs.existsSync(path.resolve(__dirname, "./services.js")),
+      });
 
       const dependencies = [
         ...(config.commands.some(
@@ -496,14 +499,12 @@ const addDefaultDependencies = ({ config, localBaseNetwork }) => {
           .filter(
             (c) => c.network == undefined && (!services || !services[c.name])
           )
-          .map((command) => {
-            return {
-              name: command.name,
-              domain: config.domain,
-              service: config.service,
-              procedure: "command",
-            };
-          }),
+          .map((command) => ({
+            name: command.name,
+            domain: config.domain,
+            service: config.service,
+            procedure: "command",
+          })),
       ];
       return dependencies;
       // ...(!config.testing || config.testing.store !== false
