@@ -8,9 +8,7 @@ const common = async ({ method, url, params, headers, formData }) =>
           ? url
           : `${process.env.NODE_ENV == "local" ? "http" : "https"}://${url}`,
         method,
-        ...(params != undefined && {
-          ...(formData ? { body: params } : { json: params }),
-        }),
+        ...(params != undefined && { json: params }),
         ...(headers != undefined && { headers }),
         ...(formData != undefined && { formData }),
       },
