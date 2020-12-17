@@ -10,7 +10,7 @@ const common = async ({ method, url, params, headers, formData }) =>
         method,
         ...(params != undefined && { json: params }),
         ...(headers != undefined && { headers }),
-        ...(formData != undefined && { formData }),
+        // ...(formData != undefined && { formData }),
       },
       (err, response, body) =>
         err
