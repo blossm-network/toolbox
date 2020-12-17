@@ -340,8 +340,7 @@ const eventStoreDependencies = ({ dependencies }) => {
   return result;
 };
 
-const addDefaultDependencies = ({ config, localBaseNetwork, workingDir }) => {
-  console.log("here");
+const addDefaultDependencies = ({ config, localBaseNetwork }) => {
   const tokenDependencies = [
     {
       name: "upgrade",
@@ -481,15 +480,6 @@ const addDefaultDependencies = ({ config, localBaseNetwork, workingDir }) => {
         },
       ];
     case "command-gateway": {
-      console.log("gello");
-      const servicesPath = path.resolve(workingDir, "./services.js");
-      const services = fs.existsSync(servicesPath) && require(servicesPath);
-
-      console.log({
-        services,
-        exists: fs.existsSync(path.resolve(workingDir, "./services.js")),
-      });
-
       const dependencies = [
         ...(config.commands.some(
           (c) => c.protection == undefined || c.protection == "strict"
@@ -497,9 +487,7 @@ const addDefaultDependencies = ({ config, localBaseNetwork, workingDir }) => {
           ? tokenDependencies
           : []),
         ...config.commands
-          .filter(
-            (c) => c.network == undefined && (!services || !services[c.name])
-          )
+          .filter((c) => c.network == undefined && !c.local)
           .map((command) => ({
             name: command.name,
             domain: config.domain,
@@ -520,7 +508,7 @@ const addDefaultDependencies = ({ config, localBaseNetwork, workingDir }) => {
           ? tokenDependencies
           : []),
         ...config.views
-          .filter((v) => v.network == undefined)
+          .filter((v) => v.network == undefined && !v.local)
           .map((view) => {
             return {
               name: view.name,
@@ -530,9 +518,6 @@ const addDefaultDependencies = ({ config, localBaseNetwork, workingDir }) => {
           }),
       ];
     case "fact-gateway": {
-      const services =
-        fs.existsSync(path.resolve(__dirname, "./services.js")) &&
-        require("./services");
       return [
         ...(config.facts.some(
           (f) => f.protection == undefined || f.protection == "strict"
@@ -540,9 +525,7 @@ const addDefaultDependencies = ({ config, localBaseNetwork, workingDir }) => {
           ? tokenDependencies
           : []),
         ...config.facts
-          .filter(
-            (f) => f.network == undefined && (!services || !services[f.name])
-          )
+          .filter((f) => f.network == undefined && !f.local)
           .map((fact) => {
             return {
               name: fact.name,
@@ -571,7 +554,7 @@ const writeConfig = ({
   if (!config.testing.dependencies) config.testing.dependencies = [];
 
   const { dependencies, events } = resolveTransientInfo(
-    addDefaultDependencies({ config, localBaseNetwork, workingDir })
+    addDefaultDependencies({ config, localBaseNetwork })
   );
 
   const adjustedDependencies = [];

@@ -35,9 +35,10 @@ module.exports = async ({
     context,
     raw = false,
     root = false,
+    local = false,
   } of facts) {
     const get = ({ stream }) =>
-      services && services[name]
+      local && services && services[name]
         ? services[name]({ internalTokenFn })
         : deps.get({
             name,

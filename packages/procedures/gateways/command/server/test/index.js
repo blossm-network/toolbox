@@ -151,7 +151,7 @@ describe("Command gateway", () => {
     const privilege = "some-privilege";
     const privileges = [privilege];
     const name = "some-name";
-    const commands = [{ name, privileges, context }];
+    const commands = [{ name, privileges, context, local: true }];
 
     const verifyFnResult = "some-verify-fn";
     const verifyFnFake = fake.returns(verifyFnResult);

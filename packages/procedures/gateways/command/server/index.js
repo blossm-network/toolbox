@@ -38,9 +38,10 @@ module.exports = async ({
     context,
     node = false,
     multipart = false,
+    local = false,
   } of commands) {
     server = server.post(
-      services && services[name]
+      local && services && services[name]
         ? services[name]({ internalTokenFn })
         : deps.post({
             name,
