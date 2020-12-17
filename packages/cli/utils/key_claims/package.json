@@ -1,6 +1,6 @@
 {
   "name": "@blossm/key-claims",
-  "version": "0.0.169",
+  "version": "0.0.170",
   "description": "Establishes the claims from the key.",
   "main": "index.js",
   "author": "blossm.network",
@@ -16,8 +16,8 @@
   "dependencies": {
     "@blossm/crypt": "*",
     "@blossm/errors": "^0.0.37",
-    "@blossm/fact-rpc": "^0.0.182",
-    "@blossm/gcp-token": "^0.0.72"
+    "@blossm/fact-rpc": "^0.0.183",
+    "@blossm/gcp-token": "^0.0.73"
   },
   "devDependencies": {
     "mocha": "^7.1.1"
