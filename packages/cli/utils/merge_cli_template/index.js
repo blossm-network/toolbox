@@ -340,7 +340,7 @@ const eventStoreDependencies = ({ dependencies }) => {
   return result;
 };
 
-const addDefaultDependencies = ({ config, localBaseNetwork }) => {
+const addDefaultDependencies = ({ config, localBaseNetwork, workingDir }) => {
   console.log("here");
   const tokenDependencies = [
     {
@@ -483,12 +483,12 @@ const addDefaultDependencies = ({ config, localBaseNetwork }) => {
     case "command-gateway": {
       console.log("gello");
       const services =
-        fs.existsSync(path.resolve(__dirname, "./services.js")) &&
+        fs.existsSync(path.resolve(workingDir, "./services.js")) &&
         require("./services");
 
       console.log({
         services,
-        exists: fs.existsSync(path.resolve(__dirname, "./services.js")),
+        exists: fs.existsSync(path.resolve(workingDir, "./services.js")),
       });
 
       const dependencies = [
@@ -572,7 +572,7 @@ const writeConfig = ({
   if (!config.testing.dependencies) config.testing.dependencies = [];
 
   const { dependencies, events } = resolveTransientInfo(
-    addDefaultDependencies({ config, localBaseNetwork })
+    addDefaultDependencies({ config, localBaseNetwork, workingDir })
   );
 
   const adjustedDependencies = [];
