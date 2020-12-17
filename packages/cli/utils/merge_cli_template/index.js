@@ -341,6 +341,7 @@ const eventStoreDependencies = ({ dependencies }) => {
 };
 
 const addDefaultDependencies = ({ config, localBaseNetwork }) => {
+  console.log("here");
   const tokenDependencies = [
     {
       name: "upgrade",
@@ -480,6 +481,7 @@ const addDefaultDependencies = ({ config, localBaseNetwork }) => {
         },
       ];
     case "command-gateway": {
+      console.log("gello");
       const services =
         fs.existsSync(path.resolve(__dirname, "./services.js")) &&
         require("./services");
