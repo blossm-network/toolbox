@@ -1,6 +1,6 @@
 const deps = require("./deps");
 
-const common = async ({ method, url, params, headers }) =>
+const common = async ({ method, url, params, headers, formData }) =>
   new Promise((resolve, reject) =>
     deps.request(
       {
@@ -10,6 +10,7 @@ const common = async ({ method, url, params, headers }) =>
         method,
         ...(params != undefined && { json: params }),
         ...(headers != undefined && { headers }),
+        ...(formData != undefined && { formData }),
       },
       (err, response, body) =>
         err
@@ -42,8 +43,8 @@ const jointStream = (streams, sortFn) => {
   }
 };
 
-exports.post = (url, { body, headers } = {}) =>
-  common({ method: "POST", url, params: body, headers });
+exports.post = (url, { body, headers, formData } = {}) =>
+  common({ method: "POST", url, params: body, headers, formData });
 
 exports.put = (url, { body, headers } = {}) =>
   common({ method: "PUT", url, params: body, headers });

@@ -65,9 +65,10 @@ describe("Request", () => {
     const reply = await request.post(url, { body: params });
     expect(reply).to.deep.equal({ ...response, body });
   });
-  it("should call post with correct params with header", async () => {
+  it("should call post with correct params with header and formData", async () => {
     const params = { hello: "there" };
     const reqHeaders = { hi: "there" };
+    const reqFormData = { some: "form-data" };
     const url = "http://google.com";
     replace(deps, "request", (options, callback) => {
       expect(options).to.deep.equal({
@@ -75,12 +76,14 @@ describe("Request", () => {
         method: "POST",
         json: params,
         headers: reqHeaders,
+        formData: reqFormData,
       });
       callback(null, response, body);
     });
     const reply = await request.post(url, {
       body: params,
       headers: reqHeaders,
+      formData: reqFormData,
     });
     expect(reply).to.deep.equal({ ...response, body });
   });
