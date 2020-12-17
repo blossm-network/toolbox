@@ -483,6 +483,9 @@ const addDefaultDependencies = ({ config, localBaseNetwork }) => {
       const services =
         fs.existsSync(path.resolve(__dirname, "./services.js")) &&
         require("./services");
+
+      console.log({ services });
+
       const dependencies = [
         ...(config.commands.some(
           (c) => c.protection == undefined || c.protection == "strict"
