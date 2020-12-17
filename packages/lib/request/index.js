@@ -1,8 +1,8 @@
 const deps = require("./deps");
 
 const common = async ({ method, url, params, headers, formData }) =>
-  new Promise((resolve, reject) =>
-    deps.request(
+  new Promise((resolve, reject) => {
+    const r = deps.request(
       {
         url: url.startsWith("http")
           ? url
@@ -21,8 +21,12 @@ const common = async ({ method, url, params, headers, formData }) =>
               statusMessage: response.statusMessage,
               body,
             })
-    )
-  );
+    );
+    if (formData) {
+      const form = r.form();
+      form.append("my_buffer", Buffer.from([1, 2, 3]));
+    }
+  });
 
 const jointStream = (streams, sortFn) => {
   switch (streams.length) {
