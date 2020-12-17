@@ -74,7 +74,7 @@ describe("Request", () => {
       expect(options).to.deep.equal({
         url,
         method: "POST",
-        json: params,
+        body: params,
         headers: reqHeaders,
         formData: reqFormData,
       });
