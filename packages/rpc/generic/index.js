@@ -32,7 +32,10 @@ const jsonString = (string) => {
       }
     }
   }
-  return { parsedData, leftover: string.substr(objectCloseIndex) };
+  return {
+    parsedData,
+    leftover: objectCloseIndex ? string.substr(objectCloseIndex) : "",
+  };
 };
 
 const common = ({ method, dataParam, operation, id, data, raw, onDataFn }) => {
