@@ -83,13 +83,6 @@ module.exports = ({
       token: req.query.token,
     }));
 
-  //TODO
-  console.log({
-    reqQuery: req.query,
-    formattedQueryBody,
-    jsonFB: JSON.stringify(formattedQueryBody),
-  });
-
   const query = {
     ...(!bootstrap && { ...formattedQueryBody }),
     ...(req.params.id && { "headers.id": req.params.id }),
