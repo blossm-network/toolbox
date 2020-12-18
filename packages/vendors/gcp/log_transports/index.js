@@ -10,7 +10,14 @@ const loggerTransports = createLogger({
       ? [
           new LoggingWinston({
             serviceContext: {
-              service: process.env.SERVICE,
+              ...(process.env.NAME && { name: process.env.NAME }),
+              ...(process.env.DOMAIN && { domain: process.env.DOMAIN }),
+              ...(process.env.SERVICE && { service: process.env.SERVICE }),
+              ...(process.env.CONTEXT && { context: process.env.CONTEXT }),
+              ...(process.env.PROCEDURE && {
+                procedure: process.env.PROCEDURE,
+              }),
+              ...(process.env.NETWORK && { network: process.env.NETWORK }),
               version: "0",
             },
           }),
