@@ -18,7 +18,11 @@ const getValue = (object, key) => {
 
 const parseSpecialValues = (obj) => {
   const result = {};
+  const array = [];
   for (const key in obj) {
+    const parsedInt = parseInt(key);
+    if ((parsedInt === 0 || parsedInt) && array.length == parsedInt)
+      array.push(obj[key]);
     if (typeof obj[key] == "object") result[key] = parseSpecialValues(obj[key]);
     else if (typeof obj[key] == "string" && obj[key].charAt(0) == "#")
       result[key] = parseInt(obj[key].substring(1));
@@ -27,6 +31,7 @@ const parseSpecialValues = (obj) => {
     else result[key] = obj[key];
   }
 
+  if (Object.keys(obj).length == array.length) return array;
   return result;
 };
 

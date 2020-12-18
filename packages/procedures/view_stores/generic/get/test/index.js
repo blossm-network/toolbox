@@ -70,9 +70,10 @@ describe("View store get", () => {
     const countFake = fake.returns(200);
 
     const query = {
-      "some-query-key": 1,
+      "some-query-key": { a: "b" },
       "some-other-query-key": "#2",
       "another-query-key": "@2020-12-09T02:50:59.076Z",
+      "even-another-query-key": { 0: "some-0", 1: "some-1" },
     };
 
     const urlEncodeQueryDataFake = fake.returns(nextUrl);
@@ -102,9 +103,10 @@ describe("View store get", () => {
       skip: 0,
       sort: { "body.a": 1 },
       query: {
-        "body.some-query-key": 1,
+        "body.some-query-key": { a: "b" },
         "body.some-other-query-key": 2,
         "body.another-query-key": new Date("2020-12-09T02:50:59.076Z"),
+        "body.even-another-query-key": ["some-0", "some-1"],
         "headers.id": id,
         "headers.context": {
           root: envContextRoot,
@@ -116,9 +118,10 @@ describe("View store get", () => {
     });
     expect(countFake).to.have.been.calledWith({
       query: {
-        "body.some-query-key": 1,
+        "body.some-query-key": { a: "b" },
         "body.some-other-query-key": 2,
         "body.another-query-key": new Date("2020-12-09T02:50:59.076Z"),
+        "body.even-another-query-key": ["some-0", "some-1"],
         "headers.id": id,
         "headers.context": {
           root: envContextRoot,
