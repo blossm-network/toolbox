@@ -1,7 +1,7 @@
 {
   "name": "@blossm/view-store",
   "description": "A view store server.",
-  "version": "0.0.343",
+  "version": "0.0.344",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -15,8 +15,8 @@
   },
   "dependencies": {
     "@blossm/datetime": "^0.0.13",
-    "@blossm/logger": "^0.0.8",
-    "@blossm/server": "^0.0.35",
+    "@blossm/logger": "^0.0.9",
+    "@blossm/server": "^0.0.36",
     "@blossm/view-store-delete": "^0.0.73",
     "@blossm/view-store-get": "^0.0.184",
     "@blossm/view-store-id-stream": "^0.0.2",

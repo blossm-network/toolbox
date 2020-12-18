@@ -1,7 +1,7 @@
 {
   "name": "@blossm/mongodb-view-store",
   "description": "A mongodb view store server.",
-  "version": "0.0.491",
+  "version": "0.0.492",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -16,11 +16,11 @@
   "dependencies": {
     "@blossm/datetime": "^0.0.13",
     "@blossm/format-mongodb-schema": "^0.0.15",
-    "@blossm/logger": "^0.0.8",
+    "@blossm/logger": "^0.0.9",
     "@blossm/mongodb-database": "^0.0.126",
     "@blossm/uuid": "^0.0.6",
     "@blossm/uuid-validator": "^0.0.1",
-    "@blossm/view-store": "^0.0.343"
+    "@blossm/view-store": "^0.0.344"
   },
   "devDependencies": {
     "chai-datetime": "^1.5.0",
