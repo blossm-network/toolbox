@@ -14,6 +14,9 @@ const loggerTransports = createLogger({
               ...(process.env.DOMAIN && { domain: process.env.DOMAIN }),
               ...(process.env.SERVICE && { service: process.env.SERVICE }),
               ...(process.env.CONTEXT && { context: process.env.CONTEXT }),
+              ...(process.env.OPERATION_HASH && {
+                operationHash: process.env.OPERATION_HASH,
+              }),
               ...(process.env.PROCEDURE && {
                 procedure: process.env.PROCEDURE,
               }),
