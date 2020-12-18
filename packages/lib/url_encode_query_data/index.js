@@ -1,6 +1,4 @@
 const queryString = require("qs");
 
 module.exports = (url, params) =>
-  params == undefined
-    ? url
-    : `${url}?${queryString.stringify(params, { arrayFormat: "brackets" })}`;
+  params == undefined ? url : `${url}?${queryString.stringify(params)}`;
