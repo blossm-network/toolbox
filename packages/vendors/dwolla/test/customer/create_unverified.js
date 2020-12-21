@@ -22,9 +22,11 @@ describe("Dwolla create unverified customer", () => {
     restore();
   });
   it("it should post correctly", async () => {
-    const responseBody = "some-response-body";
+    const responseLocation = "some-response-location";
     const response = {
-      body: responseBody,
+      headers: {
+        location: responseLocation,
+      },
     };
     const postFake = fake.returns(response);
     const dwollaClient = {
@@ -47,7 +49,7 @@ describe("Dwolla create unverified customer", () => {
       { idempotencyKey }
     );
 
-    expect(result).to.equal(responseBody);
+    expect(result).to.equal(responseLocation);
     expect(dwollaFake).to.have.been.calledWith(key, secret, { environment });
     expect(postFake).to.have.been.calledWith(
       "customers",
@@ -63,9 +65,11 @@ describe("Dwolla create unverified customer", () => {
     );
   });
   it("it should post correctly without optionals", async () => {
-    const responseBody = "some-response-body";
+    const responseLocation = "some-response-location";
     const response = {
-      body: responseBody,
+      headers: {
+        location: responseLocation,
+      },
     };
     const postFake = fake.returns(response);
     const dwollaClient = {
@@ -86,7 +90,7 @@ describe("Dwolla create unverified customer", () => {
       { idempotencyKey }
     );
 
-    expect(result).to.equal(responseBody);
+    expect(result).to.equal(responseLocation);
     expect(dwollaFake).to.have.been.calledWith(key, secret, { environment });
     expect(postFake).to.have.been.calledWith(
       "customers",

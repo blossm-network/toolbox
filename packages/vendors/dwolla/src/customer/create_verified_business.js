@@ -52,7 +52,9 @@ module.exports = (dwolla) => async (
     businessType &&
     ["llc", "corporation", "partnership"].includes(businessType);
   try {
-    const { body } = await dwolla.post(
+    const {
+      headers: { location },
+    } = await dwolla.post(
       "customers",
       {
         firstName,
@@ -104,7 +106,7 @@ module.exports = (dwolla) => async (
       idempotencyKey && { "Idempotency-Key": idempotencyKey }
     );
 
-    return body;
+    return location;
   } catch (err) {
     switch (err.statusCode) {
       case 400:

@@ -48,9 +48,11 @@ describe("Dwolla create verified business customer", () => {
     restore();
   });
   it("it should post correctly with type business sole-prop", async () => {
-    const responseBody = "some-response-body";
+    const responseLocation = "some-response-location";
     const response = {
-      body: responseBody,
+      headers: {
+        location: responseLocation,
+      },
     };
     const postFake = fake.returns(response);
     const dwollaClient = {
@@ -86,7 +88,7 @@ describe("Dwolla create verified business customer", () => {
       { idempotencyKey }
     );
 
-    expect(result).to.equal(responseBody);
+    expect(result).to.equal(responseLocation);
     expect(dwollaFake).to.have.been.calledWith(key, secret, { environment });
     expect(postFake).to.have.been.calledWith(
       "customers",
@@ -115,9 +117,11 @@ describe("Dwolla create verified business customer", () => {
     );
   });
   it("it should post correctly with type business sole-prop with no optionals", async () => {
-    const responseBody = "some-response-body";
+    const responseLocation = "some-response-location";
     const response = {
-      body: responseBody,
+      headers: {
+        location: responseLocation,
+      },
     };
     const postFake = fake.returns(response);
     const dwollaClient = {
@@ -148,7 +152,7 @@ describe("Dwolla create verified business customer", () => {
       { idempotencyKey }
     );
 
-    expect(result).to.equal(responseBody);
+    expect(result).to.equal(responseLocation);
     expect(dwollaFake).to.have.been.calledWith(key, secret, { environment });
     expect(postFake).to.have.been.calledWith(
       "customers",
@@ -172,9 +176,11 @@ describe("Dwolla create verified business customer", () => {
     );
   });
   it("it should post correctly with type business llc", async () => {
-    const responseBody = "some-response-body";
+    const responseLocation = "some-response-location";
     const response = {
-      body: responseBody,
+      headers: {
+        location: responseLocation,
+      },
     };
     const postFake = fake.returns(response);
     const dwollaClient = {
@@ -210,7 +216,7 @@ describe("Dwolla create verified business customer", () => {
       { idempotencyKey }
     );
 
-    expect(result).to.equal(responseBody);
+    expect(result).to.equal(responseLocation);
     expect(dwollaFake).to.have.been.calledWith(key, secret, { environment });
     expect(postFake).to.have.been.calledWith(
       "customers",
@@ -254,9 +260,11 @@ describe("Dwolla create verified business customer", () => {
     );
   });
   it("it should post correctly with type business llc without optionals and controller info", async () => {
-    const responseBody = "some-response-body";
+    const responseLocation = "some-response-location";
     const response = {
-      body: responseBody,
+      headers: {
+        location: responseLocation,
+      },
     };
     const postFake = fake.returns(response);
     const dwollaClient = {
@@ -307,7 +315,7 @@ describe("Dwolla create verified business customer", () => {
       { idempotencyKey }
     );
 
-    expect(result).to.equal(responseBody);
+    expect(result).to.equal(responseLocation);
     expect(dwollaFake).to.have.been.calledWith(key, secret, { environment });
     expect(postFake).to.have.been.calledWith(
       "customers",
@@ -351,9 +359,11 @@ describe("Dwolla create verified business customer", () => {
     );
   });
   it("it should post correctly with type business corporation", async () => {
-    const responseBody = "some-response-body";
+    const responseLocation = "some-response-location";
     const response = {
-      body: responseBody,
+      headers: {
+        location: responseLocation,
+      },
     };
     const postFake = fake.returns(response);
     const dwollaClient = {
@@ -388,7 +398,7 @@ describe("Dwolla create verified business customer", () => {
       { idempotencyKey }
     );
 
-    expect(result).to.equal(responseBody);
+    expect(result).to.equal(responseLocation);
     expect(dwollaFake).to.have.been.calledWith(key, secret, { environment });
     expect(postFake).to.have.been.calledWith(
       "customers",
@@ -431,9 +441,11 @@ describe("Dwolla create verified business customer", () => {
     );
   });
   it("it should post correctly with type business corporation without optionals and with controller info", async () => {
-    const responseBody = "some-response-body";
+    const responseLocation = "some-response-location";
     const response = {
-      body: responseBody,
+      headers: {
+        location: responseLocation,
+      },
     };
     const postFake = fake.returns(response);
     const dwollaClient = {
@@ -484,7 +496,7 @@ describe("Dwolla create verified business customer", () => {
       { idempotencyKey }
     );
 
-    expect(result).to.equal(responseBody);
+    expect(result).to.equal(responseLocation);
     expect(dwollaFake).to.have.been.calledWith(key, secret, { environment });
     expect(postFake).to.have.been.calledWith(
       "customers",
@@ -528,9 +540,11 @@ describe("Dwolla create verified business customer", () => {
     );
   });
   it("it should post correctly with type business partnership", async () => {
-    const responseBody = "some-response-body";
+    const responseLocation = "some-response-location";
     const response = {
-      body: responseBody,
+      headers: {
+        location: responseLocation,
+      },
     };
     const postFake = fake.returns(response);
     const dwollaClient = {
@@ -565,7 +579,7 @@ describe("Dwolla create verified business customer", () => {
       { idempotencyKey }
     );
 
-    expect(result).to.equal(responseBody);
+    expect(result).to.equal(responseLocation);
     expect(dwollaFake).to.have.been.calledWith(key, secret, { environment });
     expect(postFake).to.have.been.calledWith(
       "customers",
