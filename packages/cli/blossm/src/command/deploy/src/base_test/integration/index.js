@@ -132,14 +132,11 @@ const executeStep = async (step) => {
 
   if (!step.response) return;
 
-  console.log({ body: response.body });
-  const parsedBody = JSON.parse(response.body);
-
   checkResponse({
     expected: step.response,
     tokens: step.tokens,
     revokeKeys: step.revokeKeys,
-    data: parsedBody,
+    data: response.body,
   });
 };
 
