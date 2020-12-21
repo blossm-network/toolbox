@@ -20,6 +20,7 @@ const city = "some-city";
 const state = "some-state";
 const postalCode = "some-postal-code";
 const phone = "some-phone";
+const correlationId = "some-correlation-id";
 
 const idempotencyKey = "some-idempotency-key";
 
@@ -56,6 +57,7 @@ describe("Dwolla create verified personal customer", () => {
         state,
         postalCode,
         phone,
+        correlationId,
       },
       { idempotencyKey }
     );
@@ -78,6 +80,7 @@ describe("Dwolla create verified personal customer", () => {
         state,
         postalCode,
         phone,
+        correlationId,
       },
       { "Idempotency-Key": idempotencyKey }
     );

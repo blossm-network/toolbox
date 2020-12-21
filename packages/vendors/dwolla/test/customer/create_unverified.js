@@ -13,6 +13,7 @@ const lastName = "some-last-name";
 const email = "some-email";
 const ipAddress = "some-ip";
 const businessName = "some-business-name";
+const correlationId = "some-correlation-id";
 
 const idempotencyKey = "some-idempotency-key";
 
@@ -41,6 +42,7 @@ describe("Dwolla create unverified customer", () => {
         email,
         ipAddress,
         businessName,
+        correlationId,
       },
       { idempotencyKey }
     );
@@ -55,6 +57,7 @@ describe("Dwolla create unverified customer", () => {
         email,
         ipAddress,
         businessName,
+        correlationId,
       },
       { "Idempotency-Key": idempotencyKey }
     );

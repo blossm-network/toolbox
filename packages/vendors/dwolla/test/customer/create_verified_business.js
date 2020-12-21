@@ -20,6 +20,7 @@ const city = "some-city";
 const state = "some-state";
 const postalCode = "some-postal-code";
 const phone = "some-phone";
+const correlationId = "some-correlation-id";
 
 const businessName = "some-business-name";
 const businessClassification = "some-classification";
@@ -80,6 +81,7 @@ describe("Dwolla create verified business customer", () => {
         ein,
         website,
         phone,
+        correlationId,
       },
       { idempotencyKey }
     );
@@ -107,6 +109,7 @@ describe("Dwolla create verified business customer", () => {
         ein,
         website,
         phone,
+        correlationId,
       },
       { "Idempotency-Key": idempotencyKey }
     );
@@ -202,6 +205,7 @@ describe("Dwolla create verified business customer", () => {
         ein,
         website,
         phone,
+        correlationId,
       },
       { idempotencyKey }
     );
@@ -244,6 +248,7 @@ describe("Dwolla create verified business customer", () => {
             country: "US",
           },
         },
+        correlationId,
       },
       { "Idempotency-Key": idempotencyKey }
     );

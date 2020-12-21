@@ -16,6 +16,7 @@ module.exports = (dwolla) => async (
     state,
     postalCode,
     phone,
+    correlationId,
   },
   { idempotencyKey } = {}
 ) => {
@@ -36,6 +37,7 @@ module.exports = (dwolla) => async (
         state,
         postalCode,
         ...(phone && { phone }),
+        ...(correlationId && { correlationId }),
       },
       idempotencyKey && { "Idempotency-Key": idempotencyKey }
     );

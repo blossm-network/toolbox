@@ -3,7 +3,7 @@ const validationErrorInfo = require("../utils/validation_error_info");
 const deps = require("../../deps");
 
 module.exports = (dwolla) => async (
-  { firstName, lastName, email, businessName, ipAddress },
+  { firstName, lastName, email, businessName, ipAddress, correlationId },
   { idempotencyKey } = {}
 ) => {
   try {
@@ -15,6 +15,7 @@ module.exports = (dwolla) => async (
         email,
         ipAddress,
         ...(businessName && { businessName }),
+        ...(correlationId && { correlationId }),
       },
       idempotencyKey && { "Idempotency-Key": idempotencyKey }
     );

@@ -12,6 +12,7 @@ module.exports = async ({
   payload,
   // uncomment the stuff you need.
   // root,
+  // ip,
   // context,
   // aggregateFn,
   // commandFn,
