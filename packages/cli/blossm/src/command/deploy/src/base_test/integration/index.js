@@ -132,6 +132,7 @@ const executeStep = async (step) => {
 
   if (!step.response) return;
 
+  console.log({ response });
   const parsedBody = JSON.parse(response.body);
 
   checkResponse({
