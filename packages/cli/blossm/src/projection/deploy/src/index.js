@@ -473,7 +473,7 @@ module.exports = projection({
                       push,
                     }),
               {
-                parallel: 100,
+                parallel: 10,
                 ...(composedIdQuery && { query: composedIdQuery }),
               }
             );
