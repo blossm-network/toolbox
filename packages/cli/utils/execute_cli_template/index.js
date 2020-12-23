@@ -90,6 +90,13 @@ const execute = async (input, configFn) => {
       env: input.env,
     });
 
+    console.log({
+      data: input.data,
+      path: urlPath({
+        config: blossmConfig,
+        data: input.data,
+      }),
+    });
     await enqueue({
       queue: input.queue || queueName({ config: blossmConfig }),
       location: "us-central1",
