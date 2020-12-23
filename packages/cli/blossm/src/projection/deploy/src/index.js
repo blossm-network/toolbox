@@ -244,24 +244,20 @@ const replayIfNeeded = async ({
 
     const composedUpdate = composeUpdate(
       replayOps.reduce(
-        (result, op) => {
-          return {
-            ...result,
-            ...op.update,
-          };
-        },
+        (result, op) => ({
+          ...result,
+          ...op.update,
+        }),
         {
           ...fullUpdate,
           ...replayUpdate,
         }
       ),
       replayOps.reduce(
-        (result, op) => {
-          return {
-            ...result,
-            ...op.query,
-          };
-        },
+        (result, op) => ({
+          ...result,
+          ...op.query,
+        }),
         {
           ...fullQuery,
           ...replayQuery,
@@ -398,7 +394,6 @@ module.exports = projection({
       id: id || replayId,
       query: fullQuery,
       update: fullUpdate,
-      replay,
       arrayFilters,
       del,
     });

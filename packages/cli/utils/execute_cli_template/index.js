@@ -64,13 +64,8 @@ const queueName = ({ config }) => {
   }
 };
 
-const urlPath = ({ config }) => {
-  switch (config.procedure) {
-    case "projection":
-      return "replay";
-  }
-  return "";
-};
+const urlPath = ({ config, data }) =>
+  config.procedure == "projection" && !data.data ? "replay" : "";
 
 const execute = async (input, configFn) => {
   const functionPath = path.resolve(
@@ -103,7 +98,10 @@ const execute = async (input, configFn) => {
     })({
       url: `https://${operationHash}.${input.region}.${envUriSpecifier(
         input.env
-      )}${rootConfig.network}/${urlPath({ config: blossmConfig })}`,
+      )}${rootConfig.network}/${urlPath({
+        config: blossmConfig,
+        data: input.data,
+      })}`,
       name: operationName,
       hash: operationHash,
       ...(input.data && { data: JSON.parse(input.data) }),
