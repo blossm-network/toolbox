@@ -424,6 +424,8 @@ module.exports = projection({
 
         const composedIdQuery = cleanIdQuery(composedQuery);
 
+        if (arrayFilters) arrayFilters.push(query);
+
         if (id) {
           del
             ? await deleteId({

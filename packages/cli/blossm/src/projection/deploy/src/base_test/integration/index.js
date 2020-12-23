@@ -50,8 +50,6 @@ const checkResponse = ({ data, expected }) => {
           });
         }
       } else {
-        //TODO
-        console.log({ data, expected, property });
         expect(data[property]).to.deep.equal(expected[property]);
       }
     }
