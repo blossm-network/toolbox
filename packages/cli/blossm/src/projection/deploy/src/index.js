@@ -218,6 +218,12 @@ const replayIfNeeded = async ({
 
   let id;
 
+  //TODO
+  console.log({
+    ogUpdate: fullUpdate,
+    ogQuery: fullQuery,
+    ogReplay: replay,
+  });
   // Must be synchronous
   for (const r of replay || []) {
     const aggregate = await aggregateFn({
@@ -225,6 +231,14 @@ const replayIfNeeded = async ({
       service: r.service,
       root: r.root,
       notFoundThrows: false,
+    });
+
+    //TODO
+    console.log({
+      domain: r.domain,
+      service: r.service,
+      root: r.root,
+      aggExists: aggregate != undefined,
     });
 
     if (!aggregate) continue;
@@ -289,6 +303,12 @@ const replayIfNeeded = async ({
       ...recursiveFullQuery,
     };
   }
+
+  //TODO
+  console.log({
+    endUpdate: fullUpdate,
+    endQuery: fullQuery,
+  });
 
   return { fullUpdate, fullQuery, id };
 };
