@@ -424,11 +424,15 @@ module.exports = projection({
 
         const composedQuery = query && cleanQuery(query, update);
 
+        console.log({ composedQuery });
+
         const composedUpdate = composeUpdate(
           update,
           composedQuery,
           matchDelimiter
         );
+
+        console.log({ composedUpdate });
 
         const aggregateContext =
           process.env.CONTEXT &&
@@ -439,6 +443,9 @@ module.exports = projection({
 
         const composedIdQuery = cleanIdQuery(composedQuery);
 
+        console.log({ composedIdQuery });
+
+        console.log({ id });
         if (arrayFilters) arrayFilters.push(query);
 
         if (id) {
