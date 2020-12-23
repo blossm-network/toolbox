@@ -161,6 +161,7 @@ const saveId = async ({
       }),
     });
 
+  console.log({ updateResponse });
   if (!push) return;
 
   // If push is true, body.view and body.keys should exist.
@@ -445,7 +446,7 @@ module.exports = projection({
 
         console.log({ composedIdQuery });
 
-        console.log({ id });
+        console.log({ id, del });
         if (arrayFilters) arrayFilters.push(query);
 
         if (id) {
