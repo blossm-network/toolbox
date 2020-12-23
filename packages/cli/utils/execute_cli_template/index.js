@@ -65,7 +65,7 @@ const queueName = ({ config }) => {
 };
 
 const urlPath = ({ config, data }) =>
-  config.procedure == "projection" && !data.data ? "replay" : "";
+  config.procedure == "projection" && !data ? "replay" : "";
 
 const execute = async (input, configFn) => {
   const functionPath = path.resolve(
