@@ -49,7 +49,7 @@ const envComputeUrlId = ({ env, config }) => {
   }
 };
 
-const queueName = ({ config }) => {
+const queueName = ({ config, data }) => {
   switch (config.procedure) {
     case "command":
       return `command-${config.service}-${config.domain}-${config.name}`;
@@ -60,7 +60,7 @@ const queueName = ({ config }) => {
     case "projection":
       return `projection${config.context ? `-${config.context}` : ""}-${
         config.name
-      }-replay`;
+      }-${data ? "play" : "replay"}`;
   }
 };
 
