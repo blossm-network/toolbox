@@ -161,7 +161,6 @@ const saveId = async ({
       }),
     });
 
-  console.log({ updateResponse });
   if (!push) return;
 
   // If push is true, body.view and body.keys should exist.
@@ -219,12 +218,6 @@ const replayIfNeeded = async ({
 
   let id;
 
-  //TODO
-  console.log({
-    ogUpdate: fullUpdate,
-    ogQuery: fullQuery,
-    ogReplay: replay,
-  });
   // Must be synchronous
   for (const r of replay || []) {
     const aggregate = await aggregateFn({
@@ -232,14 +225,6 @@ const replayIfNeeded = async ({
       service: r.service,
       root: r.root,
       notFoundThrows: false,
-    });
-
-    //TODO
-    console.log({
-      domain: r.domain,
-      service: r.service,
-      root: r.root,
-      aggExists: aggregate != undefined,
     });
 
     if (!aggregate) continue;
@@ -304,12 +289,6 @@ const replayIfNeeded = async ({
       ...recursiveFullQuery,
     };
   }
-
-  //TODO
-  console.log({
-    endUpdate: fullUpdate,
-    endQuery: fullQuery,
-  });
 
   return { fullUpdate, fullQuery, id };
 };
@@ -425,15 +404,11 @@ module.exports = projection({
 
         const composedQuery = query && cleanQuery(query, update);
 
-        console.log({ composedQuery });
-
         const composedUpdate = composeUpdate(
           update,
           composedQuery,
           matchDelimiter
         );
-
-        console.log({ composedUpdate });
 
         const aggregateContext =
           process.env.CONTEXT &&
@@ -444,9 +419,6 @@ module.exports = projection({
 
         const composedIdQuery = cleanIdQuery(composedQuery);
 
-        console.log({ composedIdQuery });
-
-        console.log({ id, del });
         if (arrayFilters) arrayFilters.push(query);
 
         if (id) {
