@@ -244,24 +244,20 @@ const replayIfNeeded = async ({
 
     const composedUpdate = composeUpdate(
       replayOps.reduce(
-        (result, op) => {
-          return {
-            ...result,
-            ...op.update,
-          };
-        },
+        (result, op) => ({
+          ...result,
+          ...op.update,
+        }),
         {
           ...fullUpdate,
           ...replayUpdate,
         }
       ),
       replayOps.reduce(
-        (result, op) => {
-          return {
-            ...result,
-            ...op.query,
-          };
-        },
+        (result, op) => ({
+          ...result,
+          ...op.query,
+        }),
         {
           ...fullQuery,
           ...replayQuery,
@@ -398,7 +394,6 @@ module.exports = projection({
       id: id || replayId,
       query: fullQuery,
       update: fullUpdate,
-      replay,
       arrayFilters,
       del,
     });
@@ -422,6 +417,10 @@ module.exports = projection({
 
         if (process.env.CONTEXT && !aggregateContext) return;
 
+        const composedIdQuery = cleanIdQuery(composedQuery);
+
+        if (arrayFilters) arrayFilters.push(query);
+
         if (id) {
           del
             ? await deleteId({
@@ -436,8 +435,7 @@ module.exports = projection({
                 update: composedUpdate,
                 push,
               });
-        } else {
-          const composedIdQuery = cleanIdQuery(composedQuery);
+        } else if (Object.keys(composedIdQuery).length > 0) {
           await viewStore({
             name: config.name,
             context: config.context,
@@ -473,8 +471,8 @@ module.exports = projection({
                       push,
                     }),
               {
-                parallel: 100,
-                ...(composedIdQuery && { query: composedIdQuery }),
+                parallel: 10,
+                query: composedIdQuery,
               }
             );
         }

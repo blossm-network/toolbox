@@ -162,60 +162,58 @@ const common = ({ method, dataParam, operation, id, data, raw, onDataFn }) => {
   };
 };
 
-module.exports = (...operation) => {
-  return {
-    post: (data) =>
-      common({
-        method: deps.post,
-        dataParam: "body",
-        operation,
-        data,
-      }),
-    put: (id, data) =>
-      common({ method: deps.put, dataParam: "body", operation, id, data }),
-    delete: (id, data) =>
-      common({
-        method: deps.delete,
-        dataParam: "query",
-        operation,
-        id,
-        data,
-      }),
-    get: (query, { raw } = {}) => {
-      const id = query.id;
-      delete query.id;
-      return common({
-        method: deps.get,
-        dataParam: "query",
-        operation,
-        id,
-        data: query,
-        raw,
-      });
-    },
-    stream: (fn, query, { raw } = {}) => {
-      const id = query.id;
-      delete query.id;
-      let progress = "";
-      return common({
-        method: async (url, data) => {
-          return await deps.stream(
-            url,
-            async (data) => {
-              if (raw) return await fn(data);
-              const string = data.toString();
-              let { parsedData, leftover } = jsonString(progress + string);
-              progress = leftover;
-              for (const d of parsedData) await fn(d);
-            },
-            data
-          );
-        },
-        dataParam: "query",
-        operation,
-        id,
-        data: query,
-      });
-    },
-  };
-};
+module.exports = (...operation) => ({
+  post: (data) =>
+    common({
+      method: deps.post,
+      dataParam: "body",
+      operation,
+      data,
+    }),
+  put: (id, data) =>
+    common({ method: deps.put, dataParam: "body", operation, id, data }),
+  delete: (id, data) =>
+    common({
+      method: deps.delete,
+      dataParam: "query",
+      operation,
+      id,
+      data,
+    }),
+  get: (query, { raw } = {}) => {
+    const id = query.id;
+    delete query.id;
+    return common({
+      method: deps.get,
+      dataParam: "query",
+      operation,
+      id,
+      data: query,
+      raw,
+    });
+  },
+  stream: (fn, query, { raw } = {}) => {
+    const id = query.id;
+    delete query.id;
+    let progress = "";
+    return common({
+      method: async (url, data) => {
+        return await deps.stream(
+          url,
+          async (data) => {
+            if (raw) return await fn(data);
+            const string = data.toString();
+            let { parsedData, leftover } = jsonString(progress + string);
+            progress = leftover;
+            for (const d of parsedData) await fn(d);
+          },
+          data
+        );
+      },
+      dataParam: "query",
+      operation,
+      id,
+      data: query,
+    });
+  },
+});
