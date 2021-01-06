@@ -49,7 +49,7 @@ const envComputeUrlId = ({ env, config }) => {
   }
 };
 
-const queueName = ({ config }) => {
+const queueName = ({ config, data }) => {
   switch (config.procedure) {
     case "command":
       return `command-${config.service}-${config.domain}-${config.name}`;
@@ -60,15 +60,12 @@ const queueName = ({ config }) => {
     case "projection":
       return `projection${config.context ? `-${config.context}` : ""}-${
         config.name
-      }-replay`;
+      }-${data ? "play" : "replay"}`;
   }
 };
 
-const urlPath = ({ config }) => {
-  switch (config.procedure) {
-    case "projection":
-      return "replay";
-  }
+const urlPath = ({ config, data }) => {
+  if (config.procedure == "projection" && !data) return "replay";
   return "";
 };
 
@@ -96,14 +93,18 @@ const execute = async (input, configFn) => {
     });
 
     await enqueue({
-      queue: input.queue || queueName({ config: blossmConfig }),
+      queue:
+        input.queue || queueName({ config: blossmConfig, data: input.data }),
       location: "us-central1",
       computeUrlId,
       project,
     })({
       url: `https://${operationHash}.${input.region}.${envUriSpecifier(
         input.env
-      )}${rootConfig.network}/${urlPath({ config: blossmConfig })}`,
+      )}${rootConfig.network}/${urlPath({
+        config: blossmConfig,
+        data: input.data,
+      })}`,
       name: operationName,
       hash: operationHash,
       ...(input.data && { data: JSON.parse(input.data) }),
