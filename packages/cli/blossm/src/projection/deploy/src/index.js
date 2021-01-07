@@ -389,7 +389,12 @@ module.exports = projection({
       ...(action && { action }),
     });
 
-    const { fullQuery, fullUpdate, id: replayId } = await replayIfNeeded({
+    const {
+      fullQuery,
+      fullUpdate,
+      id: replayId,
+      del: replayDel,
+    } = await replayIfNeeded({
       replay,
       aggregateFn,
       readFactFn,
@@ -402,7 +407,7 @@ module.exports = projection({
       query: fullQuery,
       update: fullUpdate,
       arrayFilters,
-      del,
+      del: del || replayDel,
     });
 
     await Promise.all(
