@@ -218,8 +218,16 @@ const replayIfNeeded = async ({
 
   let id;
 
+  console.log("start: ", {
+    fullUpdate: JSON.stringify(fullUpdate),
+    fullQuery: JSON.stringify(fullQuery),
+  });
+
   // Must be synchronous
   for (const r of replay || []) {
+    console.log("replaying: ", {
+      r,
+    });
     const aggregate = await aggregateFn({
       domain: r.domain,
       service: r.service,
@@ -249,30 +257,6 @@ const replayIfNeeded = async ({
       replayFlag: r.flag,
     });
 
-    const composedUpdate = composeUpdate(
-      replayOps.reduce(
-        (result, op) => ({
-          ...result,
-          ...op.update,
-        }),
-        {
-          ...fullUpdate,
-          ...replayUpdate,
-        }
-      ),
-      replayOps.reduce(
-        (result, op) => ({
-          ...result,
-          ...op.query,
-        }),
-        {
-          ...fullQuery,
-          ...replayQuery,
-        }
-      ),
-      matchDelimiter
-    );
-
     const {
       fullUpdate: recursiveFullUpdate,
       fullQuery: recursiveFullQuery,
@@ -281,24 +265,165 @@ const replayIfNeeded = async ({
       aggregateFn,
       readFactFn,
       replay: replayReplay,
-      update: composedUpdate,
+      update: {
+        ...fullUpdate,
+        ...replayUpdate,
+      },
       query: {
         ...fullQuery,
         ...replayQuery,
       },
     });
 
+    const composedUpdate = composeUpdate(
+      replayOps.reduce(
+        (result, op) => ({
+          ...result,
+          ...op.update,
+        }),
+        recursiveFullUpdate
+      ),
+      replayOps.reduce(
+        (result, op) => ({
+          ...result,
+          ...op.query,
+        }),
+        recursiveFullQuery
+      ),
+      matchDelimiter
+    );
+
+    console.log("mid: ", {
+      composedUpdate: JSON.stringify(composedUpdate),
+    });
+
     if (recursiveId || replayId) id = recursiveId || replayId;
 
-    fullUpdate = recursiveFullUpdate;
+    fullUpdate = composedUpdate;
     fullQuery = {
       ...fullQuery,
       ...recursiveFullQuery,
     };
   }
 
+  console.log("returning: ", {
+    fullUpdate: JSON.stringify(fullUpdate),
+    fullQuery: JSON.stringify(fullQuery),
+  });
   return { fullUpdate, fullQuery, id };
 };
+// const replayIfNeeded = async ({
+//   replay,
+//   aggregateFn,
+//   readFactFn,
+//   update,
+//   query,
+// }) => {
+//   let fullUpdate = {
+//     ...update,
+//   };
+//   let fullQuery = {
+//     ...query,
+//   };
+
+//   let id;
+
+//   console.log("start: ", {
+//     fullUpdate: JSON.stringify(fullUpdate),
+//     fullQuery: JSON.stringify(fullQuery),
+//   });
+//   // Must be synchronous
+//   for (const r of replay || []) {
+//     console.log("replaying: ", {
+//       r,
+//     });
+//     const aggregate = await aggregateFn({
+//       domain: r.domain,
+//       service: r.service,
+//       root: r.root,
+//       notFoundThrows: false,
+//     });
+
+//     if (!aggregate) {
+//       logger.warn("PROJECTION REPLAY AGGREGATE NOT FOUND: ", {
+//         replay,
+//         update,
+//         query,
+//       });
+//       continue;
+//     }
+
+//     const {
+//       id: replayId,
+//       query: replayQuery,
+//       update: replayUpdate,
+//       replay: replayReplay,
+//       ops: replayOps = [],
+//     } = await handlers[r.service][r.domain]({
+//       state: aggregate.state,
+//       id: r.root,
+//       readFactFn,
+//       replayFlag: r.flag,
+//     });
+
+//     const composedUpdate = composeUpdate(
+//       replayOps.reduce(
+//         (result, op) => ({
+//           ...result,
+//           ...op.update,
+//         }),
+//         {
+//           ...fullUpdate,
+//           ...replayUpdate,
+//         }
+//       ),
+//       replayOps.reduce(
+//         (result, op) => ({
+//           ...result,
+//           ...op.query,
+//         }),
+//         {
+//           ...fullQuery,
+//           ...replayQuery,
+//         }
+//       ),
+//       matchDelimiter
+//     );
+
+//     console.log("mid: ", {
+//       composedUpdate: JSON.stringify(composedUpdate),
+//     });
+
+//     const {
+//       fullUpdate: recursiveFullUpdate,
+//       fullQuery: recursiveFullQuery,
+//       id: recursiveId,
+//     } = await replayIfNeeded({
+//       aggregateFn,
+//       readFactFn,
+//       replay: replayReplay,
+//       update: composedUpdate,
+//       query: {
+//         ...fullQuery,
+//         ...replayQuery,
+//       },
+//     });
+
+//     if (recursiveId || replayId) id = recursiveId || replayId;
+
+//     fullUpdate = recursiveFullUpdate;
+//     fullQuery = {
+//       ...fullQuery,
+//       ...recursiveFullQuery,
+//     };
+//   }
+
+//   console.log("returning: ", {
+//     fullUpdate: JSON.stringify(fullUpdate),
+//     fullQuery: JSON.stringify(fullQuery),
+//   });
+//   return { fullUpdate, fullQuery, id };
+// };
 
 //Given a query { obj.id: "some-obj-id", obj.subobj.id: "some-subobj-id"}
 //Returns only { obj.id: "some-obj-id" }
