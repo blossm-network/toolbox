@@ -218,6 +218,12 @@ const replayIfNeeded = async ({
 
   let id;
 
+  //TODO
+  console.log({
+    fullUpdate: JSON.stringify(fullUpdate),
+    fullQueue: JSON.stringify(fullQuery),
+  });
+
   // Must be synchronous
   for (const r of replay || []) {
     const aggregate = await aggregateFn({
@@ -228,6 +234,13 @@ const replayIfNeeded = async ({
     });
 
     if (!aggregate) continue;
+
+    //TODO
+    console.log("HI: ", {
+      domain: r.domain,
+      service: r.service,
+      root: r.root,
+    });
 
     const {
       id: replayId,
@@ -240,6 +253,13 @@ const replayIfNeeded = async ({
       id: r.root,
       readFactFn,
       replayFlag: r.flag,
+    });
+
+    //TODO
+    console.log("AYY:", {
+      id: replayId,
+      query: replayQuery,
+      update: replayUpdate,
     });
 
     const composedUpdate = composeUpdate(
@@ -290,6 +310,12 @@ const replayIfNeeded = async ({
     };
   }
 
+  //TODO
+  console.log("FINAL: ", {
+    query: JSON.stringify(fullUpdate),
+    update: JSON.stringify(fullQuery),
+  });
+
   return { fullUpdate, fullQuery, id };
 };
 
@@ -313,7 +339,7 @@ const cleanIdQuery = (query) => {
   return newQuery;
 };
 
-//TODO  this should be a package. it's used it lots of places.
+//TODO this should be a package. it's used it lots of places.
 const getValue = (object, key) => {
   if (object == undefined) return;
   const keyParts = key.split(".");
@@ -420,6 +446,12 @@ module.exports = projection({
         const composedIdQuery = cleanIdQuery(composedQuery);
 
         if (arrayFilters) arrayFilters.push(query);
+
+        // TODO
+        console.log({
+          composedUpdate: JSON.stringify(composedUpdate),
+          composedIdQuery,
+        });
 
         if (id) {
           del
