@@ -222,6 +222,7 @@ const replayIfNeeded = async ({
   console.log({
     fullUpdate: JSON.stringify(fullUpdate),
     fullQueue: JSON.stringify(fullQuery),
+    replay,
   });
 
   // Must be synchronous
