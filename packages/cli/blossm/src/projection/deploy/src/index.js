@@ -228,7 +228,7 @@ const replayIfNeeded = async ({
     });
 
     if (!aggregate) {
-      logger.error("PROJECTION REPLAY AGGREGATE NOT FOUND: ", {
+      logger.warn("PROJECTION REPLAY AGGREGATE NOT FOUND: ", {
         replay,
         update,
         query,
