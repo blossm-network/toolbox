@@ -16,7 +16,8 @@
     "@blossm/phone-number": "^0.0.6",
     "@blossm/uuid-validator": "^0.0.1",
     "@blossm/validation": "^0.0.8",
-    "is-image-url": "1.1.8"
+    "is-image-url": "^1.1.8",
+    "ethereumjs-util": "^7.0.7"
   },
   "scripts": {
     "test": "mocha --recursive"

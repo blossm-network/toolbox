@@ -29,6 +29,7 @@ const findError = require("./src/find_error");
 const findErrorInArray = require("./src/find_error_in_array");
 const email = require("./src/email");
 const uuid = require("./src/uuid");
+const ethAddress = require("./src/eth_address");
 const phoneNumber = require("./src/phone_number");
 const numeric = require("./src/numeric");
 const imageUrl = require("./src/image_url");
@@ -60,6 +61,7 @@ module.exports = {
   percentRange,
   name,
   uuid,
+  ethAddress,
   location,
   dateComponents,
   positiveNumber,
