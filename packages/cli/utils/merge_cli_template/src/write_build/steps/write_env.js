@@ -15,7 +15,7 @@ module.exports = ({
   custom = {},
 } = {}) => {
   return {
-    name: "node:10.16.0",
+    name: "node:20.19.0",
     entrypoint: "bash",
     args: [
       "-c",

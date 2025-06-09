@@ -381,7 +381,7 @@
 90 silly install resolved     description: 'Deploys a template to cloud build.',
 90 silly install resolved     main: 'index.js',
 90 silly install resolved     author: { name: 'blossm.network' },
-90 silly install resolved     engines: { node: '>= 10.16.0' },
+90 silly install resolved     engines: { node: '>= 20.19.0' },
 90 silly install resolved     publishConfig: { access: 'public' },
 90 silly install resolved     scripts: { test: 'echo "Error: no test specified" && exit 0' },
 90 silly install resolved     dependencies:
@@ -394,8 +394,8 @@
 90 silly install resolved        yaml: '^1.7.0' },
 90 silly install resolved     devDependencies: { mocha: '^6.1.4' },
 90 silly install resolved     _id: '@blossm/deploy-cli-template@0.0.256',
-90 silly install resolved     _nodeVersion: '10.16.0',
-90 silly install resolved     _npmVersion: 'lerna/3.19.0/node@v10.16.0+x64 (linux)',
+90 silly install resolved     _nodeVersion: '20.19.0',
+90 silly install resolved     _npmVersion: 'lerna/3.19.0/node@v20.19.0+x64 (linux)',
 90 silly install resolved     dist:
 90 silly install resolved      { integrity: 'sha512-tbvzzyDizmGOXemzes0dby6TvOUoovN3aHKKJOfqNMO3LJbyEmTG9tOTh12PPpKUusXHaFWSUhqrWkJ3Fp69Rg==',
 90 silly install resolved        shasum: '4af811d42ac25ca5acb725dbb11cf8619a7e0e50',
@@ -417,7 +417,7 @@
 92 info installOne @blossm/deploy-cli-template@0.0.256
 93 verbose installOne of @blossm/deploy-cli-template to /Users/joao/blossm/blossm/packages/cli/blossm not in flight; installing
 94 verbose lock using /Users/joao/.npm/_locks/blossm-deploy-cli-templa-3a85bacafd9acb29.lock for /Users/joao/blossm/blossm/packages/cli/blossm/node_modules/@blossm/deploy-cli-template
-95 warn engine @blossm/deploy-cli-template@0.0.256: wanted: {"node":">= 10.16.0"} (current: {"node":"0.12.0","npm":"2.5.1"})
+95 warn engine @blossm/deploy-cli-template@0.0.256: wanted: {"node":">= 20.19.0"} (current: {"node":"0.12.0","npm":"2.5.1"})
 96 silly install write writing @blossm/deploy-cli-template 0.0.256 to /Users/joao/blossm/blossm/packages/cli/blossm/node_modules/@blossm/deploy-cli-template
 97 silly cache addNamed cb @blossm/deploy-cli-template@0.0.256
 98 verbose unbuild node_modules/@blossm/deploy-cli-template
@@ -761,7 +761,7 @@
 167 silly install resolved     description: 'Merges the contents of a file with a template.',
 167 silly install resolved     main: 'index.js',
 167 silly install resolved     author: { name: 'blossm.network' },
-167 silly install resolved     engines: { node: '>= 10.16.0' },
+167 silly install resolved     engines: { node: '>= 20.19.0' },
 167 silly install resolved     publishConfig: { access: 'public' },
 167 silly install resolved     scripts: { test: 'echo "Error: no test specified" && exit 0' },
 167 silly install resolved     dependencies:
@@ -775,8 +775,8 @@
 167 silly install resolved        yaml: '^1.7.0' },
 167 silly install resolved     devDependencies: { mocha: '^6.1.4' },
 167 silly install resolved     _id: '@blossm/merge-cli-template@0.0.243',
-167 silly install resolved     _nodeVersion: '10.16.0',
-167 silly install resolved     _npmVersion: 'lerna/3.19.0/node@v10.16.0+x64 (linux)',
+167 silly install resolved     _nodeVersion: '20.19.0',
+167 silly install resolved     _npmVersion: 'lerna/3.19.0/node@v20.19.0+x64 (linux)',
 167 silly install resolved     dist:
 167 silly install resolved      { integrity: 'sha512-uac5sfmHnOwFVFTf26DgcSR5k03xeXIYh03O37gLmH2A/Jj7dqbXyB+fsrThOTOPQSvz69vOjS1NdLq0p2OjYg==',
 167 silly install resolved        shasum: 'f1b7cd4db0c268b51fa35b65f1d957c61d08ee17',
@@ -798,7 +798,7 @@
 169 info installOne @blossm/merge-cli-template@0.0.243
 170 verbose installOne of @blossm/merge-cli-template to /Users/joao/blossm/blossm/packages/cli/blossm/node_modules/@blossm/deploy-cli-template not in flight; installing
 171 verbose lock using /Users/joao/.npm/_locks/blossm-merge-cli-templat-9d2a808646093bd0.lock for /Users/joao/blossm/blossm/packages/cli/blossm/node_modules/@blossm/deploy-cli-template/node_modules/@blossm/merge-cli-template
-172 warn engine @blossm/merge-cli-template@0.0.243: wanted: {"node":">= 10.16.0"} (current: {"node":"0.12.0","npm":"2.5.1"})
+172 warn engine @blossm/merge-cli-template@0.0.243: wanted: {"node":">= 20.19.0"} (current: {"node":"0.12.0","npm":"2.5.1"})
 173 silly install write writing @blossm/merge-cli-template 0.0.243 to /Users/joao/blossm/blossm/packages/cli/blossm/node_modules/@blossm/deploy-cli-template/node_modules/@blossm/merge-cli-template
 174 silly cache addNamed cb @blossm/merge-cli-template@0.0.243
 175 verbose unbuild node_modules/@blossm/deploy-cli-template/node_modules/@blossm/merge-cli-template

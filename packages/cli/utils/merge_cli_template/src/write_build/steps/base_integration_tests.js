@@ -1,6 +1,6 @@
 module.exports = ({ strict = true } = {}) => {
   return {
-    name: "node:10.16.0",
+    name: "node:20.19.0",
     entrypoint: strict ? "yarn" : "bash",
     args: strict
       ? ["test:base-integration"]
