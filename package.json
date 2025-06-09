@@ -16,7 +16,7 @@
   },
   "homepage": "https://github.com/blossm-network/toolbox#readme",
   "engines": {
-    "node": ">= 10.16.0"
+    "node": ">= 20.19.0"
   },
   "scripts": {
     "preversion": "yarn test",

@@ -10,7 +10,7 @@ steps:
     args: ["lerna-publish"]
 
 substitutions:
-  _NODE_IMAGE: node:10.16.0
+  _NODE_IMAGE: node:20.19.1
 
 options:
   env:

@@ -5,7 +5,7 @@
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
-    "node": ">= 10.16.0"
+    "node": ">= 20.19.0"
   },
   "publishConfig": {
     "access": "public"
