@@ -1,6 +1,6 @@
 {
   "name": "@blossm/json-to-csv",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Converts JSON to a downloadable CSV.",
   "main": "index.js",
   "author": "blossm.network",

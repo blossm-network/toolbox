@@ -1,6 +1,6 @@
 {
   "name": "@blossm/connection-token",
-  "version": "0.0.216",
+  "version": "0.0.217",
   "description": "Opens a connection to get a token to another node.",
   "main": "index.js",
   "author": "blossm.network",
@@ -14,10 +14,10 @@
     "test": "mocha --recursive"
   },
   "dependencies": {
-    "@blossm/basic-token": "^0.0.8",
-    "@blossm/command-rpc": "^0.0.290",
-    "@blossm/jwt": "^0.0.66",
-    "@blossm/redis": "^0.0.8"
+    "@blossm/basic-token": "^0.0.9",
+    "@blossm/command-rpc": "^0.0.291",
+    "@blossm/jwt": "^0.0.67",
+    "@blossm/redis": "^0.0.9"
   },
   "devDependencies": {
     "mocha": "^7.1.1"

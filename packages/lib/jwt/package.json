@@ -1,6 +1,6 @@
 {
   "name": "@blossm/jwt",
-  "version": "0.0.66",
+  "version": "0.0.67",
   "description": "JWT token creating and validating.",
   "main": "index.js",
   "author": "blossm.network",
@@ -11,9 +11,9 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/datetime": "^0.0.13",
-    "@blossm/errors": "^0.0.37",
-    "@blossm/uuid": "^0.0.6",
+    "@blossm/datetime": "^0.0.14",
+    "@blossm/errors": "^0.0.38",
+    "@blossm/uuid": "^0.0.7",
     "base64url": "^3.0.1",
     "jwt-decode": "^2.2.0"
   },
