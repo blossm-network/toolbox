@@ -1,6 +1,6 @@
 set -e
 
-mongo <<EOF
+mongosh <<EOF
 // Login to admin database with admin user
 use $MONGODB_INITDB_DATABASE
 // db.auth('$MONGODB_INITDB_ROOT_USERNAME', '$MONGODB_INITDB_ROOT_PASSWORD')
@@ -11,6 +11,12 @@ db.createUser({
   pwd: '$MONGODB_USER_PASSWORD',
   roles: [{
     role: 'readWrite',
+    db: '$MONGODB_DATABASE'
+  }, {
+    role: 'dbAdmin',
+    db: '$MONGODB_DATABASE'
+  }, {
+    role: 'userAdmin',
     db: '$MONGODB_DATABASE'
   }]
 })

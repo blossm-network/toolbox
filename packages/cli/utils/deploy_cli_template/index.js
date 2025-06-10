@@ -35,7 +35,7 @@ const build = async ({ workingDir, env }) => {
         "submit",
         ".",
         "--config=build.yaml",
-        `--project=${envProject({ config: blossmConfig, env })}`,
+        `--project=${envProject({ config: blossmConfig, env })}`
       ],
       {
         stdio: [process.stdin, process.stdout, process.stderr],

@@ -14,6 +14,7 @@ module.exports = ({
       oneLine`
     gcloud tasks queues create ${name}
     --log-sampling-ratio=0.1
+    --location=us-central1
     --max-dispatches-per-second=${maxDispatchPerSecond}
     --max-concurrent-dispatches=${maxConcurrentDispatches}
     --project=${project} 

@@ -8,6 +8,7 @@ module.exports = ({ name, maxDispatchPerSecond, maxConcurrentDispatches }) => {
       "-c",
       oneLine`
     gcloud tasks queues update ${name}
+    --location=us-central1
     --max-dispatches-per-second=${maxDispatchPerSecond}
     --max-concurrent-dispatches=${maxConcurrentDispatches}
     --max-concurrent-dispatches=100 || exit 0
