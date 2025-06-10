@@ -10,12 +10,12 @@ module.exports = ({
     image: "mongo:4.2",
     container_name: "mongodb",
     environment: {
-      MONGO_INITDB_ROOT_USERNAME: `${adminUser}`,
-      MONGO_INITDB_ROOT_PASSWORD: `${adminUserPassword}`,
-      MONGO_INITDB_DATABASE: `${adminDatabase}`,
-      MONGO_DATABASE: `${database}`,
-      MONGO_USER: `${user}`,
-      MONGO_USER_PASSWORD: `${userPassword}`,
+      MONGODB_INITDB_ROOT_USERNAME: `${adminUser}`,
+      MONGODB_INITDB_ROOT_PASSWORD: `${adminUserPassword}`,
+      MONGODB_INITDB_DATABASE: `${adminDatabase}`,
+      MONGODB_DATABASE: `${database}`,
+      MONGODB_USER: `${user}`,
+      MONGODB_USER_PASSWORD: `${userPassword}`,
     },
     volumes: [
       "./mongodb-init.sh:/docker-entrypoint-initdb.d/mongodb-init.sh:ro",
