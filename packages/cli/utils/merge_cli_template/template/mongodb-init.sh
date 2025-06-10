@@ -1,6 +1,6 @@
 set -e
 
-mongosh <<EOF
+mongo <<EOF
 // Login to admin database with admin user
 use $MONGO_INITDB_DATABASE
 // db.auth('$MONGO_INITDB_ROOT_USERNAME', '$MONGO_INITDB_ROOT_PASSWORD')

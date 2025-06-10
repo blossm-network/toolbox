@@ -7,8 +7,7 @@ module.exports = ({
   userPassword,
 }) => {
   return {
-    // image: "mongo:8.0",
-    image: "mongodb/mongodb-community-server:latest",
+    image: "mongo:4.2",
     container_name: "mongodb",
     environment: {
       MONGO_INITDB_ROOT_USERNAME: `${adminUser}`,
