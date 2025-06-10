@@ -43,8 +43,6 @@ module.exports = ({
   secretBucket,
   secretBucketKeyLocation,
   secretBucketKeyRing,
-  mongodbAdminUser,
-  mongodbAdminUserPassword,
   mongodbAdminDatabase,
   mongodbDatabase,
   mongodbHost,
@@ -266,8 +264,6 @@ module.exports = ({
     ...(includeDatabase
       ? {
           [databaseServiceKey]: databaseService({
-            adminUser: mongodbAdminUser,
-            adminUserPassword: mongodbAdminUserPassword,
             adminDatabase: mongodbAdminDatabase,
             database: mongodbDatabase,
             user: mongodbUser,
