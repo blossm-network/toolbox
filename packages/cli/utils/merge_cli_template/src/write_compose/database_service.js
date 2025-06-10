@@ -7,15 +7,15 @@ module.exports = ({
   userPassword,
 }) => {
   return {
-    image: "mongo:latest",
+    image: "mongo:8.0",
     container_name: "mongodb",
     environment: {
-      MONGODB_INITDB_ROOT_USERNAME: `${adminUser}`,
-      MONGODB_INITDB_ROOT_PASSWORD: `${adminUserPassword}`,
-      MONGODB_INITDB_DATABASE: `${adminDatabase}`,
-      MONGODB_DATABASE: `${database}`,
-      MONGODB_USER: `${user}`,
-      MONGODB_USER_PASSWORD: `${userPassword}`,
+      MONGO_INITDB_ROOT_USERNAME: `${adminUser}`,
+      MONGO_INITDB_ROOT_PASSWORD: `${adminUserPassword}`,
+      MONGO_INITDB_DATABASE: `${adminDatabase}`,
+      MONGO_DATABASE: `${database}`,
+      MONGO_USER: `${user}`,
+      MONGO_USER_PASSWORD: `${userPassword}`,
     },
     volumes: [
       "./mongodb-init.sh:/docker-entrypoint-initdb.d/mongodb-init.sh:ro",
