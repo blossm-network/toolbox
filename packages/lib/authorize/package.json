@@ -1,6 +1,6 @@
 {
   "name": "@blossm/authorize",
-  "version": "0.0.124",
+  "version": "0.0.125",
   "description": "Authorize requests.",
   "main": "index.js",
   "author": "blossm.network",
@@ -11,7 +11,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/jwt": "^0.0.67",
+    "@blossm/jwt": "^0.0.68",
     "@blossm/tokens-from-req": "^0.0.32"
   },
   "scripts": {

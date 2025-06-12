@@ -1,7 +1,7 @@
 {
   "name": "@blossm/mongodb-event-store-save-events",
   "description": "A mongodb event store server event saving function.",
-  "version": "0.0.132",
+  "version": "0.0.133",
   "main": "index.js",
   "author": "blossm.network",
   "engines": {
@@ -14,9 +14,9 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/errors": "^0.0.38",
-    "@blossm/logger": "^0.0.10",
-    "@blossm/mongodb-database": "^0.0.127"
+    "@blossm/errors": "^0.0.39",
+    "@blossm/logger": "^0.0.11",
+    "@blossm/mongodb-database": "^0.0.128"
   },
   "devDependencies": {
     "chai-datetime": "^1.5.0",

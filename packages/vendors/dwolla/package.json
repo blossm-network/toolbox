@@ -1,6 +1,6 @@
 {
   "name": "@blossm/dwolla",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Dwolla payment functionality.",
   "main": "index.js",
   "author": "sustainers.market",

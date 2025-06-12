@@ -1,6 +1,6 @@
 {
   "name": "@blossm/email-validator",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "Email address validation.",
   "main": "index.js",
   "author": "blossm.network",
