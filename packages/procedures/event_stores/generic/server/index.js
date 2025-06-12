@@ -20,7 +20,7 @@ module.exports = async ({
   findOneSnapshotFn,
   eventStreamFn,
   handlers,
-  public,
+  isPublic,
 } = {}) => {
   deps
     .server()
@@ -65,7 +65,7 @@ module.exports = async ({
         findOneSnapshotFn,
         eventStreamFn,
         handlers,
-        public,
+        isPublic,
       }),
       { path: "/create-block" }
     )

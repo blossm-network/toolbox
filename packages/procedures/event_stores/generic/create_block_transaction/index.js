@@ -12,7 +12,7 @@ module.exports = ({
   eventStreamFn,
   handlers,
   blockPublisherPublicKeyFn,
-  public,
+  isPublic,
   blockLimit,
 }) => async (transaction) => {
   const previousBlock = await latestBlockFn();
@@ -110,7 +110,7 @@ module.exports = ({
           stringifiedEventPairs.push([
             deps.hash(e.hash).create(),
             deps.cononicalString(
-              public
+              isPublic
                 ? e
                 : {
                     ...e,
@@ -154,7 +154,7 @@ module.exports = ({
         created: deps.dateString(),
         number: nextSnapshotNumber,
         root,
-        public,
+        isPublic,
         domain: process.env.DOMAIN,
         service: process.env.SERVICE,
         network: process.env.NETWORK,
@@ -203,7 +203,7 @@ module.exports = ({
         //The root is the key so that we can ask "does this block contain a state change for this root?".
         deps.hash(s.headers.root).create(),
         deps.cononicalString(
-          public
+          isPublic
             ? s
             : {
                 ...s,

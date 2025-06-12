@@ -7,7 +7,7 @@ service: animals
 #
 # Specify whether the data in this view store should be publicly readable.
 #
-public: true
+isPublic: true
 
 # Specify the actions that this event-store can handle.
 actions:

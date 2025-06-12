@@ -22,7 +22,7 @@ const encryptFn = "some-encrypt-fn";
 const createBlockFn = "some-create-block-fn";
 const signFn = "some-sign-fn";
 const blockPublisherPublicKeyFn = "some-block-publisher-public-key-fn";
-const public = "some-public";
+const isPublic = "some-public";
 
 process.env.DOMAIN = domain;
 process.env.SERVICE = service;
@@ -135,7 +135,7 @@ describe("Mongodb event store", () => {
       createBlockFn,
       signFn,
       blockPublisherPublicKeyFn,
-      public,
+      isPublic,
     });
 
     expect(formatSchemaFake.getCall(0)).to.have.been.calledWith(
@@ -295,7 +295,7 @@ describe("Mongodb event store", () => {
           pHash: { $type: String, required: true },
           created: { $type: Date, required: true },
           root: { $type: String, required: true },
-          public: { $type: Boolean, required: true },
+          isPublic: { $type: Boolean, required: true },
           domain: { $type: String, required: true },
           service: { $type: String, required: true },
           network: { $type: String, required: true },
@@ -438,7 +438,7 @@ describe("Mongodb event store", () => {
       encryptFn,
       createBlockFn,
       blockPublisherPublicKeyFn,
-      public,
+      isPublic,
       idempotencyConflictCheckFn: idempotencyConflictCheckResult,
     });
 
@@ -535,7 +535,7 @@ describe("Mongodb event store", () => {
       createBlockFn,
       signFn,
       blockPublisherPublicKeyFn,
-      public,
+      isPublic,
       handlers,
     });
 
@@ -697,7 +697,7 @@ describe("Mongodb event store", () => {
           pHash: { $type: String, required: true },
           created: { $type: Date, required: true },
           root: { $type: String, required: true },
-          public: { $type: Boolean, required: true },
+          isPublic: { $type: Boolean, required: true },
           domain: { $type: String, required: true },
           service: { $type: String, required: true },
           network: { $type: String, required: true },
@@ -797,7 +797,7 @@ describe("Mongodb event store", () => {
       encryptFn,
       createBlockFn,
       blockPublisherPublicKeyFn,
-      public,
+      isPublic,
       createTransactionFn: deps.createTransaction,
     });
   });
@@ -879,7 +879,7 @@ describe("Mongodb event store", () => {
       createBlockFn,
       signFn,
       blockPublisherPublicKeyFn,
-      public,
+      isPublic,
     });
 
     expect(formatSchemaFake.getCall(0)).to.have.been.calledWith(
@@ -1039,7 +1039,7 @@ describe("Mongodb event store", () => {
           pHash: { $type: String, required: true },
           created: { $type: Date, required: true },
           root: { $type: String, required: true },
-          public: { $type: Boolean, required: true },
+          isPublic: { $type: Boolean, required: true },
           domain: { $type: String, required: true },
           service: { $type: String, required: true },
           network: { $type: String, required: true },

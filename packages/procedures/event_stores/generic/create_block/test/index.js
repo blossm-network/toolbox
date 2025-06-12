@@ -34,7 +34,7 @@ describe("Event store post", () => {
     const eventStreamFn = "some-event-stream-fn";
     const handlers = "some-handlers";
     const blockPublisherPublicKeyFn = "some-block-publisher-key-fn";
-    const public = "some public";
+    const isPublic = "some public";
 
     const createdTransactionResult = "some-created-transaction-result";
     const createTransactionFnFake = fake.returns({
@@ -55,7 +55,7 @@ describe("Event store post", () => {
       eventStreamFn,
       createBlockFn: createBlockFnFake,
       handlers,
-      public,
+      isPublic,
     })(req, res);
 
     expect(createTransactionFnFake).to.have.been.calledWith(
@@ -73,7 +73,7 @@ describe("Event store post", () => {
       eventStreamFn,
       handlers,
       blockPublisherPublicKeyFn,
-      public,
+      isPublic,
       blockLimit: 100,
     });
     expect(sendFake).to.have.been.calledWith(createdTransactionResult);
@@ -102,7 +102,7 @@ describe("Event store post", () => {
     const eventStreamFn = "some-event-stream-fn";
     const handlers = "some-handlers";
     const blockPublisherPublicKeyFn = "some-block-publisher-key-fn";
-    const public = "some public";
+    const isPublic = "some public";
 
     const createdTransactionResult = "some-created-transaction-result";
     const createTransactionFnFake = fake.returns({
@@ -123,7 +123,7 @@ describe("Event store post", () => {
       eventStreamFn,
       createBlockFn: createBlockFnFake,
       handlers,
-      public,
+      isPublic,
     })(req, res);
 
     expect(createTransactionFnFake).to.have.been.calledWith(
@@ -141,7 +141,7 @@ describe("Event store post", () => {
       eventStreamFn,
       handlers,
       blockPublisherPublicKeyFn,
-      public,
+      isPublic,
       blockLimit: 100,
     });
     expect(sendFake).to.have.been.calledWith(createdTransactionResult);

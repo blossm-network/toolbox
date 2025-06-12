@@ -15,7 +15,7 @@ module.exports = ({
   eventStreamFn,
   handlers,
   createBlockFn,
-  public,
+  isPublic,
 }) => async (_, res) => {
   const { block, full } = await createTransactionFn(
     deps.createBlockTransaction({
@@ -29,7 +29,7 @@ module.exports = ({
       eventStreamFn,
       handlers,
       blockPublisherPublicKeyFn,
-      public,
+      isPublic,
       blockLimit,
     })
   );

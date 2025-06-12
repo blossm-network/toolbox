@@ -169,7 +169,7 @@ const snapshotStore = async ({ schema, indexes }) => {
         pHash: { [typeKey]: String, required: true },
         created: { [typeKey]: Date, required: true },
         root: { [typeKey]: String, required: true },
-        public: { [typeKey]: Boolean, required: true },
+        isPublic: { [typeKey]: Boolean, required: true },
         domain: { [typeKey]: String, required: true },
         service: { [typeKey]: String, required: true },
         network: { [typeKey]: String, required: true },
@@ -289,7 +289,7 @@ module.exports = async ({
   createBlockFn,
   signFn,
   blockPublisherPublicKeyFn,
-  public,
+  isPublic,
 } = {}) => {
   const eStore = await eventStore({
     schema: deps.formatSchema(schema, typeKey, {
@@ -361,6 +361,6 @@ module.exports = async ({
     createBlockFn,
     signFn,
     blockPublisherPublicKeyFn,
-    public,
+    isPublic,
   });
 };

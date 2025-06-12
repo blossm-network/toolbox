@@ -58,5 +58,5 @@ module.exports = eventStore({
     }
     return blockPublisherPublicKey;
   },
-  public: config.public || false,
+  isPublic: config.isPublic || false,
 });

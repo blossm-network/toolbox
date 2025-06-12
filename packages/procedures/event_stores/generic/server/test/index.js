@@ -75,7 +75,7 @@ describe("Event store", () => {
     const eventStorePostResult = "some-post-result";
     const eventStorePostFake = fake.returns(eventStorePostResult);
     replace(deps, "post", eventStorePostFake);
-    const public = "some-public";
+    const isPublic = "some-public";
     await eventStore({
       findSnapshotsFn,
       findEventsFn,
@@ -96,7 +96,7 @@ describe("Event store", () => {
       createBlockFn,
       signFn,
       blockPublisherPublicKeyFn,
-      public,
+      isPublic,
     });
     expect(listenFake).to.have.been.calledOnce;
     expect(serverFake).to.have.been.calledOnce;
@@ -150,7 +150,7 @@ describe("Event store", () => {
       findOneSnapshotFn,
       eventStreamFn,
       handlers,
-      public,
+      isPublic,
     });
     expect(eventStorePostFake).to.have.been.calledWith({
       saveEventsFn,

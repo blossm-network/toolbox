@@ -77,7 +77,7 @@ const event = {
 const findOneSnapshotFn = "some-find-one-snapshot-fn";
 const eventStreamFn = "some-event-stream-fn";
 const handlers = "some-handlers";
-const public = true;
+const isPublic = true;
 
 const network = "some-env-network";
 const service = "some-env-service";
@@ -259,7 +259,7 @@ describe("Event store create block transaction", () => {
       eventStreamFn,
       blockLimit,
       handlers,
-      public,
+      isPublic,
     })(transaction);
 
     expect(response).to.deep.equal({ block: saveBlockResponse, full: false });
@@ -297,7 +297,7 @@ describe("Event store create block transaction", () => {
       pHash: snapshotHash,
       created: deps.dateString(),
       root,
-      public,
+      isPublic,
       domain,
       service,
       network,
@@ -324,7 +324,7 @@ describe("Event store create block transaction", () => {
           pHash: snapshotHash,
           created: deps.dateString(),
           root,
-          public,
+          isPublic,
           domain,
           service,
           network,
@@ -551,7 +551,7 @@ describe("Event store create block transaction", () => {
       eventStreamFn,
       blockLimit,
       handlers,
-      public: false,
+      isPublic: false,
     })();
 
     expect(latestBlockFnFake).to.have.been.calledOnceWith();
@@ -591,7 +591,7 @@ describe("Event store create block transaction", () => {
       pHash: snapshotHash,
       created: deps.dateString(),
       root,
-      public: false,
+      isPublic: false,
       domain,
       service,
       network,
@@ -616,7 +616,7 @@ describe("Event store create block transaction", () => {
           pHash: snapshotHash,
           created: deps.dateString(),
           root,
-          public: false,
+          isPublic: false,
           domain,
           service,
           network,
@@ -788,7 +788,7 @@ describe("Event store create block transaction", () => {
       eventStreamFn,
       blockLimit,
       handlers,
-      public,
+      isPublic,
     })(transaction);
 
     expect(latestBlockFnFake).to.have.been.calledOnceWith();
@@ -984,7 +984,7 @@ describe("Event store create block transaction", () => {
       eventStreamFn,
       blockLimit,
       handlers,
-      public,
+      isPublic,
     })(transaction);
 
     expect(latestBlockFnFake).to.have.been.calledOnceWith();
@@ -1016,7 +1016,7 @@ describe("Event store create block transaction", () => {
       pHash: previousHash,
       created: deps.dateString(),
       root,
-      public,
+      isPublic,
       domain,
       service,
       network,
@@ -1041,7 +1041,7 @@ describe("Event store create block transaction", () => {
           pHash: previousHash,
           created: deps.dateString(),
           root,
-          public,
+          isPublic,
           domain,
           service,
           network,
@@ -1174,7 +1174,7 @@ describe("Event store create block transaction", () => {
       findOneSnapshotFn,
       eventStreamFn,
       handlers,
-      public,
+      isPublic,
     })(transaction);
 
     expect(result).to.deep.equal({ block: genesisBlock, full: false });
