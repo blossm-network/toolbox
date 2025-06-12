@@ -1,4 +1,7 @@
-const { expect } = require("chai").use(require("sinon-chai"));
+const chai = require("chai");
+const sinonChai = require("sinon-chai");
+chai.use(sinonChai);
+const { expect } = chai;
 const { restore, replace, stub, fake, useFakeTimers } = require("sinon");
 const createEvent = require("../");
 const { string: dateString } = require("@blossm/datetime");

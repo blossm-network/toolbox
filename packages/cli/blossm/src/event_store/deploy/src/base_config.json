@@ -9,7 +9,7 @@
   },
   "devDependencies": {
     "localenv": "^0.2.2",
-    "mocha": "^7.1.1",
+    "mocha": "^11.6.0",
     "chai": "^4.2.0",
     "chai-datetime": "^1.5.0",
     "@blossm/request": "*",

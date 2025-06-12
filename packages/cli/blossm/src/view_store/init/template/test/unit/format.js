@@ -1,6 +1,9 @@
 const fs = require("fs");
 const path = require("path");
-const { expect } = require("chai").use(require("sinon-chai"));
+const chai = require("chai");
+const sinonChai = require("sinon-chai");
+chai.use(sinonChai);
+const { expect } = chai;
 
 const format =
   fs.existsSync(path.resolve(__dirname, "../../format_csv.js")) &&

@@ -1,4 +1,7 @@
-const { expect } = require("chai").use(require("sinon-chai"));
+const chai = require("chai");
+const sinonChai = require("sinon-chai");
+chai.use(sinonChai);
+const { expect } = chai;
 const { restore, fake, replace, match, stub } = require("sinon");
 const deps = require("../deps");
 const connectionToken = require("..");
