@@ -15,9 +15,9 @@
   },
   "dependencies": {
     "@blossm/robo-say": "^0.0.10",
-    "chalk": "^2.4.2",
-    "find-up": "^4.1.0",
-    "yaml": "^1.7.0"
+    "chalk": "^5.4.1",
+    "find-up": "^701.0",
+    "yaml": "^2.8.0"
   },
   "devDependencies": {
     "mocha": "^7.1.1"

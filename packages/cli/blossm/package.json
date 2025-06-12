@@ -26,8 +26,8 @@
     "@blossm/robo-say": "^0.0.10",
     "@blossm/service-name-consts": "^0.0.3",
     "@blossm/trim-string": "^0.0.5",
-    "chalk": "^2.4.2",
+    "chalk": "^5.4.1",
     "esm": "^3.2.25",
-    "yaml": "^1.7.0"
+    "yaml": "^2.8.0"
   }
 }
