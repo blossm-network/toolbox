@@ -1,6 +1,6 @@
 {
   "name": "@blossm/cli",
-  "version": "0.0.1848",
+  "version": "0.0.1849",
   "description": "A command line tool for interacting with blossm.",
   "main": "index.js",
   "scripts": {
@@ -14,14 +14,14 @@
   },
   "author": "blossm.network",
   "dependencies": {
-    "@blossm/cli-root-dir": "^0.0.11",
-    "@blossm/deploy-cli-template": "^0.0.641",
-    "@blossm/execute-cli-template": "^0.0.65",
+    "@blossm/cli-root-dir": "^0.0.12",
+    "@blossm/deploy-cli-template": "^0.0.642",
+    "@blossm/execute-cli-template": "^0.0.66",
     "@blossm/gcp-queue": "^0.0.29",
     "@blossm/gcp-secret": "^0.0.57",
     "@blossm/gcp-storage": "^0.0.13",
-    "@blossm/init-cli-template": "^0.0.36",
-    "@blossm/normalize-cli": "^0.0.18",
+    "@blossm/init-cli-template": "^0.0.37",
+    "@blossm/normalize-cli": "^0.0.19",
     "@blossm/operation-hash": "^0.0.15",
     "@blossm/robo-say": "^0.0.10",
     "@blossm/service-name-consts": "^0.0.3",
