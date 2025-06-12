@@ -16,12 +16,12 @@
   "dependencies": {
     "@blossm/url-encode-query-data": "^0.0.8",
     "request": "^2.88.2",
-    "sorted-union-stream": "^3.0.1"
+    "sorted-union-stream": "^3.2.3"
   },
   "devDependencies": {
     "mocha": "^7.1.1",
     "sinon": "^7.3.2",
     "sinon-chai": "^3.5.0",
-    "streamx": "^2.6.4"
+    "streamx": "^2.22.1"
   }
 }

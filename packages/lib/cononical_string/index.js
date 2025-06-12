@@ -1,3 +1,3 @@
-const stringify = require("canonical-json");
+const canonicalJson = require("canonical-json");
 
-module.exports = stringify;
+module.exports = canonicalJson.stringify;

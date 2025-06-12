@@ -14,7 +14,7 @@
     "access": "public"
   },
   "dependencies": {
-    "restify-errors": "^8.0.0"
+    "restify-errors": "^8.0.2"
   },
   "devDependencies": {
     "mocha": "^7.1.1"

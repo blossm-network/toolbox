@@ -14,7 +14,7 @@
     "test": "mocha --recursive"
   },
   "dependencies": {
-    "merkle-patricia-tree": "^4.0.0"
+    "merkle-patricia-tree": "^4.2.4"
   },
   "devDependencies": {
     "mocha": "^7.1.1"

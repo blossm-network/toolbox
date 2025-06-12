@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@blossm/cononical-string": "^0.0.7",
-    "keccak": "^3.0.1"
+    "keccak": "^3.0.4"
   },
   "scripts": {
     "test": "mocha --recursive"

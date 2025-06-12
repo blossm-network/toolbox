@@ -1,12 +1,12 @@
-const phone = require("phone");
+const { phone } = require("phone");
 const libphonenumber = require("google-libphonenumber");
 
 const phoneUtil = libphonenumber.PhoneNumberUtil.getInstance();
 const PNF = libphonenumber.PhoneNumberFormat;
 
 function defaultFormatter(number) {
-  const formattedNumber = phone(number);
-  return formattedNumber.length === 2 ? formattedNumber[0] : null;
+  const { phoneNumber } = phone(number);
+  return phoneNumber;
 }
 
 function backupFormatter(number) {

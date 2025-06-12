@@ -11,7 +11,7 @@
     "access": "public"
   },
   "dependencies": {
-    "validator": "^10.11.0"
+    "validator": "^13.15.15"
   },
   "scripts": {
     "test": "mocha --recursive"

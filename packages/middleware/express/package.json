@@ -14,8 +14,8 @@
     "test": "mocha --recursive"
   },
   "dependencies": {
-    "body-parser": "^1.19.0",
-    "cookie-parser": "^1.4.4"
+    "body-parser": "^2.2.0",
+    "cookie-parser": "^1.4.7"
   },
   "devDependencies": {
     "mocha": "^7.1.1"

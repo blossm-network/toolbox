@@ -1,5 +1,5 @@
 const { expect } = require("chai");
-const stringify = require("..");
+const canonicalJson = require("..");
 
 describe("Stringify object", () => {
   it("should return the correct values", () => {
@@ -13,7 +13,7 @@ describe("Stringify object", () => {
         },
       },
       g: [{ h: 8, i: 9 }, { j: 10 }, { k: 11 }],
-      h: stringify({ o: 9 }),
+      h: canonicalJson({ o: 9 }),
     };
     const obj2 = {
       b: {
@@ -23,14 +23,14 @@ describe("Stringify object", () => {
         },
         d: [4, 5, 6],
       },
-      h: stringify({ o: 9 }),
+      h: canonicalJson({ o: 9 }),
       g: [{ i: 9, h: 8 }, { j: 10 }, { k: 11 }],
       a: 2,
     };
     const obj3 = ["some", "object"];
-    const string1 = stringify(obj1);
-    const string2 = stringify(obj2);
-    const string3 = stringify(obj3);
+    const string1 = canonicalJson(obj1);
+    const string2 = canonicalJson(obj2);
+    const string3 = canonicalJson(obj3);
     expect(string1).to.deep.equal(string2);
     expect(string3).to.deep.equal(string3);
   });

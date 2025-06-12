@@ -14,7 +14,7 @@
     "test": "mocha --recursive"
   },
   "dependencies": {
-    "canonical-json": "^0.0.4"
+    "canonical-json": "^0.2.0"
   },
   "devDependencies": {
     "mocha": "^7.1.1"

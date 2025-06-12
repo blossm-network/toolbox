@@ -14,7 +14,7 @@
     "test": "mocha --recursive"
   },
   "dependencies": {
-    "@google-cloud/pubsub": "^0.31.1"
+    "@google-cloud/pubsub": "^5.1.0"
   },
   "devDependencies": {
     "mocha": "^7.1.1",

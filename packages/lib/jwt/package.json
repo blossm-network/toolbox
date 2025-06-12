@@ -15,7 +15,7 @@
     "@blossm/errors": "^0.0.38",
     "@blossm/uuid": "^0.0.7",
     "base64url": "^3.0.1",
-    "jwt-decode": "^2.2.0"
+    "jwt-decode": "^4.0.0"
   },
   "scripts": {
     "test": "mocha --recursive"

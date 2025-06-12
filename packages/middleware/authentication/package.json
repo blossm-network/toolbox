@@ -18,7 +18,7 @@
     "@blossm/errors": "^0.0.38",
     "@blossm/gcp-kms": "^0.0.37",
     "@blossm/tokens-from-req": "^0.0.32",
-    "express-async-handler": "^1.1.4"
+    "express-async-handler": "^1.2.0"
   },
   "devDependencies": {
     "mocha": "^7.1.1"

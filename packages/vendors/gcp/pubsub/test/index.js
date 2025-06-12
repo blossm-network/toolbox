@@ -1,5 +1,5 @@
 const { expect } = require("chai").use(require("sinon-chai"));
-const { restore, replace, fake } = require("sinon");
+const { restore, replaceGetter, fake } = require("sinon");
 const gcp = require("@google-cloud/pubsub");
 
 let eventBus;
@@ -23,7 +23,7 @@ describe("Pub sub", () => {
         publish: publishFake,
       };
     };
-    replace(gcp, "PubSub", pubsub);
+    replaceGetter(gcp, "PubSub", () => pubsub);
     eventBus = require("..");
     const data = "some-data";
     await eventBus.publish(data, topic);
@@ -45,7 +45,7 @@ describe("Pub sub", () => {
         subscription: subscriptionFake,
       };
     };
-    replace(gcp, "PubSub", pubsub);
+    replaceGetter(gcp, "PubSub", () => pubsub);
     eventBus = require("..");
     await eventBus.subscribe({ topic, name, fn });
     expect(subscriptionFake).to.have.been.calledWith(name);
@@ -68,7 +68,7 @@ describe("Pub sub", () => {
         subscription: subscriptionFake,
       };
     };
-    replace(gcp, "PubSub", pubsub);
+    replaceGetter(gcp, "PubSub", () => pubsub);
     eventBus = require("..");
     await eventBus.subscribe({ topic, name, fn });
     expect(subscriptionFake).to.have.been.calledWith(name);
@@ -90,7 +90,7 @@ describe("Pub sub", () => {
         subscription: subscriptionFake,
       };
     };
-    replace(gcp, "PubSub", pubsub);
+    replaceGetter(gcp, "PubSub", () => pubsub);
     eventBus = require("..");
     await eventBus.unsubscribe({ topic, name, fn });
     expect(subscriptionFake).to.have.been.calledWith(name);
@@ -113,7 +113,7 @@ describe("Pub sub", () => {
         subscription: subscriptionFake,
       };
     };
-    replace(gcp, "PubSub", pubsub);
+    replaceGetter(gcp, "PubSub", () => pubsub);
     eventBus = require("..");
     await eventBus.unsubscribe({ topic, name, fn });
     expect(subscriptionFake).to.have.been.calledWith(name);
@@ -131,7 +131,7 @@ describe("Pub sub", () => {
         exists: existsFake,
       };
     };
-    replace(gcp, "PubSub", pubsub);
+    replaceGetter(gcp, "PubSub", () => pubsub);
     eventBus = require("..");
     await eventBus.create(topic);
     expect(existsFake).to.have.been.calledWith();
@@ -148,7 +148,7 @@ describe("Pub sub", () => {
         exists: existsFake,
       };
     };
-    replace(gcp, "PubSub", pubsub);
+    replaceGetter(gcp, "PubSub", () => pubsub);
     eventBus = require("..");
     await eventBus.create(topic);
     expect(existsFake).to.have.been.calledWith();
@@ -165,7 +165,7 @@ describe("Pub sub", () => {
         exists: existsFake,
       };
     };
-    replace(gcp, "PubSub", pubsub);
+    replaceGetter(gcp, "PubSub", () => pubsub);
     eventBus = require("..");
     await eventBus.delete(topic);
     expect(existsFake).to.have.been.calledWith();
@@ -182,7 +182,7 @@ describe("Pub sub", () => {
         exists: existsFake,
       };
     };
-    replace(gcp, "PubSub", pubsub);
+    replaceGetter(gcp, "PubSub", () => pubsub);
     eventBus = require("..");
     await eventBus.delete(topic);
     expect(existsFake).to.have.been.calledWith();
@@ -198,7 +198,7 @@ describe("Pub sub", () => {
         exists: existsFake,
       };
     };
-    replace(gcp, "PubSub", pubsub);
+    replaceGetter(gcp, "PubSub", () => pubsub);
     eventBus = require("..");
     const result = await eventBus.exists(topic);
     expect(result).to.equal(exists);

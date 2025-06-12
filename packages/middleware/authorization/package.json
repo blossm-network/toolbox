@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@blossm/authorize": "^0.0.124",
-    "express-async-handler": "^1.1.4"
+    "express-async-handler": "^1.2.0"
   },
   "devDependencies": {
     "mocha": "^7.1.1"

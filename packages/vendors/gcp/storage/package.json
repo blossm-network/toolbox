@@ -14,7 +14,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@google-cloud/storage": "^3.3.0"
+    "@google-cloud/storage": "^7.16.0"
   },
   "devDependencies": {
     "mocha": "^7.1.1",
