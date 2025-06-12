@@ -16,7 +16,7 @@
   "dependencies": {
     "@blossm/robo-say": "^0.0.10",
     "chalk": "^5.4.1",
-    "find-up": "^701.0",
+    "find-up": "^7.0.0",
     "yaml": "^2.8.0"
   },
   "devDependencies": {
